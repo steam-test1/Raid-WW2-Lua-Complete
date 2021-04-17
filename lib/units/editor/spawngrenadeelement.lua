@@ -1,5 +1,6 @@
 SpawnGrenadeUnitElement = SpawnGrenadeUnitElement or class(MissionElement)
 
+-- Lines 3-13
 function SpawnGrenadeUnitElement:init(unit)
 	SpawnGrenadeUnitElement.super.init(self, unit)
 
@@ -12,16 +13,19 @@ function SpawnGrenadeUnitElement:init(unit)
 	table.insert(self._save_values, "strength")
 end
 
+-- Lines 15-19
 function SpawnGrenadeUnitElement:test_element()
 	if self._hed.grenade_type == "m24" then
 		ProjectileBase.throw_projectile(1, self._unit:position(), self._hed.spawn_dir * self._hed.strength)
 	end
 end
 
+-- Lines 21-23
 function SpawnGrenadeUnitElement:update_selected(time, rel_time)
 	Application:draw_arrow(self._unit:position(), self._unit:position() + self._hed.spawn_dir * 35, 0.75, 0.75, 0.75, 0.075)
 end
 
+-- Lines 25-48
 function SpawnGrenadeUnitElement:update_editing(time, rel_time)
 	local kb = Input:keyboard()
 	local speed = 60 * rel_time
@@ -55,6 +59,7 @@ function SpawnGrenadeUnitElement:update_editing(time, rel_time)
 	end
 end
 
+-- Lines 50-60
 function SpawnGrenadeUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

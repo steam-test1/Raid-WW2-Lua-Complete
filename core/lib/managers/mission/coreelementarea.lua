@@ -7,6 +7,7 @@ core:import("CoreTable")
 
 ElementAreaTrigger = ElementAreaTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 11-30
 function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
 
@@ -37,6 +38,7 @@ function ElementAreaTrigger:init(...)
 	self._inside = {}
 end
 
+-- Lines 32-50
 function ElementAreaTrigger:on_script_activated()
 	self._on_script_activated_done = true
 
@@ -63,14 +65,17 @@ function ElementAreaTrigger:on_script_activated()
 	end
 end
 
+-- Lines 52-54
 function ElementAreaTrigger:_add_shape(shape)
 	table.insert(self._shapes, shape)
 end
 
+-- Lines 56-58
 function ElementAreaTrigger:get_shapes()
 	return self._shapes
 end
 
+-- Lines 60-67
 function ElementAreaTrigger:is_inside(pos)
 	for _, shape in ipairs(self._shapes) do
 		if shape:is_inside(pos) then
@@ -81,6 +86,7 @@ function ElementAreaTrigger:is_inside(pos)
 	return false
 end
 
+-- Lines 69-80
 function ElementAreaTrigger:_is_inside(pos)
 	if self:is_inside(pos) then
 		return true
@@ -97,6 +103,7 @@ function ElementAreaTrigger:_is_inside(pos)
 	return false
 end
 
+-- Lines 82-101
 function ElementAreaTrigger:set_enabled(enabled)
 	if not enabled and Network:is_server() and self._values.trigger_on == "both" then
 		for _, unit in ipairs(CoreTable.clone(self._inside)) do
@@ -115,12 +122,14 @@ function ElementAreaTrigger:set_enabled(enabled)
 	end
 end
 
+-- Lines 103-107
 function ElementAreaTrigger:add_callback()
 	if not self._callback then
 		self._callback = self._mission_script:add(callback(self, self, "update_area"), self._values.interval)
 	end
 end
 
+-- Lines 109-114
 function ElementAreaTrigger:remove_callback()
 	if self._callback then
 		self._mission_script:remove(self._callback)
@@ -129,6 +138,7 @@ function ElementAreaTrigger:remove_callback()
 	end
 end
 
+-- Lines 116-129
 function ElementAreaTrigger:on_executed(instigator, ...)
 	if not self._values.enabled then
 		return
@@ -141,6 +151,7 @@ function ElementAreaTrigger:on_executed(instigator, ...)
 	end
 end
 
+-- Lines 135-159
 function ElementAreaTrigger:instigators()
 	if self._values.unit_ids then
 		local instigators = {}
@@ -173,22 +184,27 @@ function ElementAreaTrigger:instigators()
 	return instigators
 end
 
+-- Lines 162-164
 function ElementAreaTrigger:project_instigators()
 	return {}
 end
 
+-- Lines 167-169
 function ElementAreaTrigger:project_amount_all()
 	return nil
 end
 
+-- Lines 172-174
 function ElementAreaTrigger:project_amount_inside()
 	return #self._inside
 end
 
+-- Lines 177-179
 function ElementAreaTrigger:is_instigator_valid(unit)
 	return true
 end
 
+-- Lines 182-193
 function ElementAreaTrigger:debug_draw()
 	if self._values.instigator == "loot" or self._values.instigator == "unique_loot" then
 		for _, shape in ipairs(self._shapes) do
@@ -203,6 +219,7 @@ function ElementAreaTrigger:debug_draw()
 	end
 end
 
+-- Lines 195-241
 function ElementAreaTrigger:update_area()
 	if not self._values.enabled then
 		return
@@ -243,6 +260,7 @@ function ElementAreaTrigger:update_area()
 	end
 end
 
+-- Lines 243-248
 function ElementAreaTrigger:sync_enter_area(unit)
 	table.insert(self._inside, unit)
 
@@ -251,6 +269,7 @@ function ElementAreaTrigger:sync_enter_area(unit)
 	end
 end
 
+-- Lines 250-255
 function ElementAreaTrigger:sync_exit_area(unit)
 	table.delete(self._inside, unit)
 
@@ -259,10 +278,12 @@ function ElementAreaTrigger:sync_exit_area(unit)
 	end
 end
 
+-- Lines 257-259
 function ElementAreaTrigger:sync_while_in_area(unit)
 	self:_check_amount(unit)
 end
 
+-- Lines 261-289
 function ElementAreaTrigger:_check_amount(unit)
 	if self._values.trigger_on == "on_enter" then
 		local amount = self._values.amount == "all" and self:project_amount_all()
@@ -291,6 +312,7 @@ function ElementAreaTrigger:_check_amount(unit)
 	end
 end
 
+-- Lines 291-345
 function ElementAreaTrigger:_should_trigger(unit)
 	if alive(unit) then
 		local rule_ok = self:_check_instigator_rules(unit)
@@ -340,6 +362,7 @@ function ElementAreaTrigger:_should_trigger(unit)
 	return false
 end
 
+-- Lines 348-356
 function ElementAreaTrigger:_check_instigator_rules(unit)
 	for _, element in ipairs(self._rules_elements) do
 		if not element:check_rules(self._values.instigator, unit) then
@@ -350,6 +373,7 @@ function ElementAreaTrigger:_check_instigator_rules(unit)
 	return true
 end
 
+-- Lines 359-368
 function ElementAreaTrigger:_clean_destroyed_units()
 	local i = 1
 
@@ -362,6 +386,7 @@ function ElementAreaTrigger:_clean_destroyed_units()
 	end
 end
 
+-- Lines 371-397
 function ElementAreaTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
 	local inside = self:_is_inside(unit:position())
@@ -379,6 +404,7 @@ function ElementAreaTrigger:_client_check_state(unit)
 	end
 end
 
+-- Lines 400-406
 function ElementAreaTrigger:operation_set_interval(interval)
 	self._values.interval = interval
 
@@ -389,20 +415,24 @@ function ElementAreaTrigger:operation_set_interval(interval)
 	end
 end
 
+-- Lines 408-410
 function ElementAreaTrigger:operation_set_use_disabled_shapes(use_disabled_shapes)
 	self._values.use_disabled_shapes = use_disabled_shapes
 end
 
+-- Lines 412-414
 function ElementAreaTrigger:operation_clear_inside()
 	self._inside = {}
 end
 
+-- Lines 417-421
 function ElementAreaTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.interval = self._values.interval
 	data.use_disabled_shapes = self._values.use_disabled_shapes
 end
 
+-- Lines 423-430
 function ElementAreaTrigger:load(data)
 	if not self._on_script_activated_done then
 		self:on_script_activated()
@@ -416,14 +446,17 @@ end
 
 ElementAreaOperator = ElementAreaOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 436-438
 function ElementAreaOperator:init(...)
 	ElementAreaOperator.super.init(self, ...)
 end
 
+-- Lines 440-442
 function ElementAreaOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 444-466
 function ElementAreaOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -452,6 +485,7 @@ end
 
 ElementAreaReportTrigger = ElementAreaReportTrigger or class(ElementAreaTrigger)
 
+-- Lines 472-493
 function ElementAreaReportTrigger:update_area()
 	if not self._values.enabled then
 		return
@@ -474,6 +508,7 @@ function ElementAreaReportTrigger:update_area()
 	end
 end
 
+-- Lines 495-538
 function ElementAreaReportTrigger:_check_state(unit)
 	self:_clean_destroyed_units()
 
@@ -517,6 +552,7 @@ function ElementAreaReportTrigger:_check_state(unit)
 	return false
 end
 
+-- Lines 540-549
 function ElementAreaReportTrigger:_add_inside(unit)
 	table.insert(self._inside, unit)
 
@@ -529,6 +565,7 @@ function ElementAreaReportTrigger:_add_inside(unit)
 	self:_check_on_executed_reached_amount(unit)
 end
 
+-- Lines 551-560
 function ElementAreaReportTrigger:_check_on_executed_reached_amount(unit)
 	local amount = self._values.amount == "all" and self:project_amount_all()
 	amount = amount or tonumber(self._values.amount)
@@ -538,18 +575,21 @@ function ElementAreaReportTrigger:_check_on_executed_reached_amount(unit)
 	end
 end
 
+-- Lines 562-566
 function ElementAreaReportTrigger:_while_inside(unit)
 	if self:_has_on_executed_alternative("while_inside") then
 		self:on_executed(unit, "while_inside")
 	end
 end
 
+-- Lines 568-572
 function ElementAreaReportTrigger:_rule_failed(unit)
 	if self:_has_on_executed_alternative("rule_failed") then
 		self:on_executed(unit, "rule_failed")
 	end
 end
 
+-- Lines 574-581
 function ElementAreaReportTrigger:_remove_inside(unit)
 	table.delete(self._inside, unit)
 	self:on_executed(unit, "leave")
@@ -561,6 +601,7 @@ function ElementAreaReportTrigger:_remove_inside(unit)
 	self:_check_on_executed_reached_amount(unit)
 end
 
+-- Lines 583-590
 function ElementAreaReportTrigger:_remove_inside_by_index(index)
 	table.remove(self._inside, index)
 	self:on_executed(nil, "leave")
@@ -572,6 +613,7 @@ function ElementAreaReportTrigger:_remove_inside_by_index(index)
 	self:_check_on_executed_reached_amount(nil)
 end
 
+-- Lines 593-607
 function ElementAreaReportTrigger:_clean_destroyed_units()
 	local i = 1
 
@@ -590,6 +632,7 @@ function ElementAreaReportTrigger:_clean_destroyed_units()
 	end
 end
 
+-- Lines 610-637
 function ElementAreaReportTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
 	local inside = self:_is_inside(unit:position())
@@ -615,18 +658,22 @@ function ElementAreaReportTrigger:_client_check_state(unit)
 	end
 end
 
+-- Lines 640-642
 function ElementAreaReportTrigger:sync_enter_area(unit)
 	self:_add_inside(unit)
 end
 
+-- Lines 645-647
 function ElementAreaReportTrigger:sync_exit_area(unit)
 	self:_remove_inside(unit)
 end
 
+-- Lines 650-652
 function ElementAreaReportTrigger:sync_while_in_area(unit)
 	self:_while_inside(unit)
 end
 
+-- Lines 655-657
 function ElementAreaReportTrigger:sync_rule_failed(unit)
 	self:_rule_failed(unit)
 end

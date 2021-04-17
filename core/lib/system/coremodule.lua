@@ -124,6 +124,7 @@ local CoreModule = {
 		assert(Application:production_build(), "core:_lookup(...) is for debugging only!")
 
 		if not self.__obj2nametable[object] then
+			-- Lines 126-133
 			local function find(o, n, t)
 				for k, v in pairs(t) do
 					if v == o then

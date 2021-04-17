@@ -17,6 +17,7 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"enable_accepting_loot"
 }
 
+-- Lines 8-21
 function VehicleOperatorUnitElement:init(unit)
 	VehicleOperatorUnitElement.super.init(self, unit)
 
@@ -32,6 +33,7 @@ function VehicleOperatorUnitElement:init(unit)
 	self._actions = VehicleOperatorUnitElement.ACTIONS
 end
 
+-- Lines 24-35
 function VehicleOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body",
@@ -50,10 +52,12 @@ function VehicleOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 39-41
 function VehicleOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 45-54
 function VehicleOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body",
@@ -70,6 +74,7 @@ function VehicleOperatorUnitElement:update_editing()
 	end
 end
 
+-- Lines 57-73
 function VehicleOperatorUnitElement:draw_links_unselected(...)
 	VehicleOperatorUnitElement.super.draw_links_unselected(self, ...)
 
@@ -91,6 +96,7 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 	end
 end
 
+-- Lines 76-90
 function VehicleOperatorUnitElement:draw_links_selected(...)
 	VehicleOperatorUnitElement.super.draw_links_selected(self, ...)
 
@@ -109,9 +115,11 @@ function VehicleOperatorUnitElement:draw_links_selected(...)
 	end
 end
 
+-- Lines 93-111
 function VehicleOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
+	-- Lines 95-104
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -135,7 +143,9 @@ function VehicleOperatorUnitElement:add_unit_list_btn()
 	end
 end
 
+-- Lines 113-120
 function VehicleOperatorUnitElement:remove_unit_list_btn()
+	-- Lines 114-114
 	local function f(unit)
 		return table.contains(self._hed.elements, unit:unit_data().unit_id)
 	end
@@ -149,6 +159,7 @@ function VehicleOperatorUnitElement:remove_unit_list_btn()
 	end
 end
 
+-- Lines 122-146
 function VehicleOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

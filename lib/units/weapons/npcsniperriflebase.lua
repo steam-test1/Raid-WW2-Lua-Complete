@@ -5,12 +5,14 @@ local idstr_trail = Idstring("trail")
 local idstr_simulator_length = Idstring("simulator_length")
 local idstr_size = Idstring("size")
 
+-- Lines 9-12
 function NPCSniperRifleBase:init(unit)
 	NPCSniperRifleBase.super.init(self, unit)
 
 	self._trail_length = World:effect_manager():get_initial_simulator_var_vector2(self.TRAIL_EFFECT, idstr_trail, idstr_simulator_length, idstr_size)
 end
 
+-- Lines 16-32
 function NPCSniperRifleBase:set_laser_enabled(enabled)
 	Application:trace("[NPCSniperRifleBase:show_sniper_flare] **************************", self._unit, self._unit:damage())
 
@@ -29,6 +31,7 @@ function NPCSniperRifleBase:set_laser_enabled(enabled)
 	NPCSniperRifleBase.unit = self._unit
 end
 
+-- Lines 36-44
 function NPCSniperRifleBase:_spawn_trail_effect(direction, col_ray)
 	self._obj_fire:m_position(self._trail_effect_table.position)
 	mvector3.set(self._trail_effect_table.normal, direction)

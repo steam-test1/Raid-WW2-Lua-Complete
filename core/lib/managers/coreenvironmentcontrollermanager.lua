@@ -8,6 +8,7 @@ CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_PULSE_AMPLITUDE = 0.4
 CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_PULSE_FREQ = 200
 CoreEnvironmentControllerManager.DEFAULT_DOF_DISTANCE = 10
 
+-- Lines 22-94
 function CoreEnvironmentControllerManager:init()
 	self._dof_distance = CoreEnvironmentControllerManager.DEFAULT_DOF_DISTANCE
 	self._current_dof_distance = self._dof_distance
@@ -58,11 +59,13 @@ function CoreEnvironmentControllerManager:init()
 	self:set_dome_occ_default()
 end
 
+-- Lines 96-99
 function CoreEnvironmentControllerManager:update(t, dt)
 	self:_update_values(t, dt)
 	self:set_post_composite(t, dt)
 end
 
+-- Lines 101-113
 function CoreEnvironmentControllerManager:_update_values(t, dt)
 	if self._current_dof_distance ~= self._dof_distance then
 		self._current_dof_distance = math.lerp(self._current_dof_distance, self._dof_distance, 5 * dt)
@@ -73,93 +76,114 @@ function CoreEnvironmentControllerManager:_update_values(t, dt)
 	end
 end
 
+-- Lines 115-117
 function CoreEnvironmentControllerManager:get_dof_distance()
 	return self._dof_distance
 end
 
+-- Lines 120-123
 function CoreEnvironmentControllerManager:set_dof_distance(distance, in_steelsight, position)
 	self._dof_distance = math.max(CoreEnvironmentControllerManager.DEFAULT_DOF_DISTANCE, distance or CoreEnvironmentControllerManager.DEFAULT_DOF_DISTANCE)
 	self._in_steelsight = in_steelsight
 end
 
+-- Lines 125-127
 function CoreEnvironmentControllerManager:get_default_lens_distortion_value()
 	return 1.02
 end
 
+-- Lines 129-131
 function CoreEnvironmentControllerManager:get_lens_distortion_value()
 	return self._lens_distortion
 end
 
+-- Lines 133-135
 function CoreEnvironmentControllerManager:reset_lens_distortion_value()
 	self:set_lens_distortion_power(self:get_default_lens_distortion_value())
 end
 
+-- Lines 137-139
 function CoreEnvironmentControllerManager:set_lens_distortion_power(lens_distortion)
 	self._lens_distortion = lens_distortion
 end
 
+-- Lines 141-143
 function CoreEnvironmentControllerManager:set_vignette(vignette)
 	self._vignette = vignette
 end
 
+-- Lines 145-147
 function CoreEnvironmentControllerManager:set_hurt_value(hurt)
 	self._hurt_value = hurt
 end
 
+-- Lines 149-151
 function CoreEnvironmentControllerManager:set_health_effect_value(health_effect_value)
 	self._health_effect_value = health_effect_value
 end
 
+-- Lines 153-155
 function CoreEnvironmentControllerManager:set_downed_value(downed_value)
 	self._downed_value = downed_value
 end
 
+-- Lines 157-159
 function CoreEnvironmentControllerManager:set_last_life(last_life)
 	self._last_life = last_life
 end
 
+-- Lines 161-163
 function CoreEnvironmentControllerManager:set_last_life_mod(last_life_mod)
 	self._last_life_mod = last_life_mod
 end
 
+-- Lines 165-167
 function CoreEnvironmentControllerManager:hurt_value()
 	return self._hurt_value
 end
 
+-- Lines 169-171
 function CoreEnvironmentControllerManager:set_suppression_value(effective_value, raw_value)
 	self._suppression_value = effective_value > 0 and 1 or 0
 end
 
+-- Lines 173-176
 function CoreEnvironmentControllerManager:hit_feedback_front()
 	self._hit_front = math.min(self._hit_front + self._hit_amount, 1)
 	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
 end
 
+-- Lines 178-181
 function CoreEnvironmentControllerManager:hit_feedback_back()
 	self._hit_back = math.min(self._hit_back + self._hit_amount, 1)
 	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
 end
 
+-- Lines 184-190
 function CoreEnvironmentControllerManager:hit_feedback_right()
 	self._hit_right = math.min(self._hit_right + self._hit_amount, 1)
 	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
 end
 
+-- Lines 191-197
 function CoreEnvironmentControllerManager:hit_feedback_left()
 	self._hit_left = math.min(self._hit_left + self._hit_amount, 1)
 	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
 end
 
+-- Lines 198-204
 function CoreEnvironmentControllerManager:hit_feedback_up()
 	self._hit_up = math.min(self._hit_up + self._hit_amount, 1)
 	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
 end
 
+-- Lines 205-211
 function CoreEnvironmentControllerManager:hit_feedback_down()
 	self._hit_down = math.min(self._hit_down + self._hit_amount, 1)
 	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
 end
 
+-- Lines 213-277
 function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, height, delete_after_fadeout)
 	local blurzone = self._blurzones[id]
 
@@ -217,12 +241,14 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 	end
 end
 
+-- Lines 279-283
 function CoreEnvironmentControllerManager:set_all_blurzones(mode)
 	for id, blurzone in pairs(self._blurzones) do
 		self:set_blurzone(id, mode)
 	end
 end
 
+-- Lines 285-303
 function CoreEnvironmentControllerManager:_blurzones_update(t, dt, camera_pos)
 	local result = 0
 
@@ -241,6 +267,7 @@ function CoreEnvironmentControllerManager:_blurzones_update(t, dt, camera_pos)
 	return result
 end
 
+-- Lines 305-317
 function CoreEnvironmentControllerManager:blurzone_flash_in_line_of_sight(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity - dt * 0.3
 	self._HE_blinding = self:test_line_of_sight(blurzone.pos, 150, 1000, 2000)
@@ -253,6 +280,7 @@ function CoreEnvironmentControllerManager:blurzone_flash_in_line_of_sight(self, 
 	return blurzone:check(blurzone, camera_pos) * (1 + 11 * (blurzone.opacity - 1))
 end
 
+-- Lines 319-330
 function CoreEnvironmentControllerManager:blurzone_flash_in(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity - dt * 0.3
 
@@ -264,6 +292,7 @@ function CoreEnvironmentControllerManager:blurzone_flash_in(self, t, dt, camera_
 	return blurzone:check(blurzone, camera_pos) * (1 + 11 * (blurzone.opacity - 1))
 end
 
+-- Lines 332-343
 function CoreEnvironmentControllerManager:blurzone_fade_in(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity + dt
 
@@ -275,6 +304,7 @@ function CoreEnvironmentControllerManager:blurzone_fade_in(self, t, dt, camera_p
 	return blurzone:check(blurzone, camera_pos)
 end
 
+-- Lines 345-355
 function CoreEnvironmentControllerManager:blurzone_fade_out(self, t, dt, camera_pos, blurzone)
 	blurzone.opacity = blurzone.opacity - dt
 
@@ -287,20 +317,24 @@ function CoreEnvironmentControllerManager:blurzone_fade_out(self, t, dt, camera_
 	return blurzone:check(blurzone, camera_pos)
 end
 
+-- Lines 357-361
 function CoreEnvironmentControllerManager:blurzone_fade_idle_line_of_sight(self, t, dt, camera_pos, blurzone)
 	self._HE_blinding = self:test_line_of_sight(blurzone.pos, 150, 1000, 2000)
 
 	return blurzone:check(blurzone, camera_pos)
 end
 
+-- Lines 363-365
 function CoreEnvironmentControllerManager:blurzone_fade_idle(self, t, dt, camera_pos, blurzone)
 	return blurzone:check(blurzone, camera_pos)
 end
 
+-- Lines 367-371
 function CoreEnvironmentControllerManager:blurzone_fade_out_switch(self, t, dt, camera_pos, blurzone)
 	return blurzone:check(blurzone, camera_pos)
 end
 
+-- Lines 373-392
 function CoreEnvironmentControllerManager:blurzone_check_cylinder(blurzone, camera_pos)
 	local pos_z = blurzone.pos.z
 	local cam_z = camera_pos.z
@@ -320,6 +354,7 @@ function CoreEnvironmentControllerManager:blurzone_check_cylinder(blurzone, came
 	return (1 - result) * blurzone.opacity
 end
 
+-- Lines 394-402
 function CoreEnvironmentControllerManager:blurzone_check_sphere(blurzone, camera_pos)
 	local len = (blurzone.pos - camera_pos):length()
 	local result = math.min(len / blurzone.radius, 1)
@@ -352,10 +387,12 @@ local ids_lens_distortion_post = Idstring("lens_distortion")
 local ids_lens_distortion_settings = Idstring("lens_distortion_mod")
 local ids_lens_distortion_power = Idstring("distortion_power")
 
+-- Lines 437-439
 function CoreEnvironmentControllerManager:set_lut_lerp_value(lut_lerp_value)
 	self._lut_lerp_value = lut_lerp_value
 end
 
+-- Lines 441-576
 function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -484,6 +521,7 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 	self._lut_modifier_material:set_variable(ids_low_health_params, Vector3(low_health_effect, low_health_effect_power, self._vignette))
 end
 
+-- Lines 578-587
 function CoreEnvironmentControllerManager:_update_post_process_effects()
 	self:set_volumetric_light_scatter_setting(managers.user:get_setting("vls_setting"))
 	self:set_motion_blur_setting(managers.user:get_setting("motion_blur_setting"))
@@ -495,6 +533,7 @@ function CoreEnvironmentControllerManager:_update_post_process_effects()
 	managers.viewport:first_active_viewport():set_force_feeder_update()
 end
 
+-- Lines 589-607
 function CoreEnvironmentControllerManager:_create_dof_tweak_data()
 	local new_dof_settings = {
 		none = {
@@ -517,6 +556,7 @@ function CoreEnvironmentControllerManager:_create_dof_tweak_data()
 	self._dof_tweaks = new_dof_settings
 end
 
+-- Lines 609-620
 function CoreEnvironmentControllerManager:set_AA_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -531,6 +571,7 @@ function CoreEnvironmentControllerManager:set_AA_setting(setting)
 	end
 end
 
+-- Lines 622-627
 function CoreEnvironmentControllerManager:set_parallax_setting(setting)
 	local global_material = Application:global_material()
 
@@ -539,6 +580,7 @@ function CoreEnvironmentControllerManager:set_parallax_setting(setting)
 	end
 end
 
+-- Lines 629-638
 function CoreEnvironmentControllerManager:set_dof_setting(setting)
 	if not self._dof_tweaks[setting] then
 		Application:error("[CoreEnvironmentControllerManager:set_dof_setting] DOF setting do not exist!", setting)
@@ -553,6 +595,7 @@ function CoreEnvironmentControllerManager:set_dof_setting(setting)
 	end
 end
 
+-- Lines 640-648
 function CoreEnvironmentControllerManager:set_colorblind_mode(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -565,6 +608,7 @@ function CoreEnvironmentControllerManager:set_colorblind_mode(setting)
 	World:set_colorblind_mode(Idstring(setting))
 end
 
+-- Lines 650-681
 function CoreEnvironmentControllerManager:set_ssao_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -601,6 +645,7 @@ function CoreEnvironmentControllerManager:set_ssao_setting(setting)
 	end
 end
 
+-- Lines 683-691
 function CoreEnvironmentControllerManager:set_motion_blur_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -613,6 +658,7 @@ function CoreEnvironmentControllerManager:set_motion_blur_setting(setting)
 	end
 end
 
+-- Lines 693-708
 function CoreEnvironmentControllerManager:set_volumetric_light_scatter_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -632,6 +678,7 @@ function CoreEnvironmentControllerManager:set_volumetric_light_scatter_setting(s
 	end
 end
 
+-- Lines 710-725
 function CoreEnvironmentControllerManager:remove_dof_tweak_data(remove_setting_name)
 	if not self._dof_tweaks[new_setting_name] then
 		Application:error("[CoreEnvironmentControllerManager:remove_dof_tweak_data] DOF setting do not exist!", remove_setting_name)
@@ -650,6 +697,7 @@ function CoreEnvironmentControllerManager:remove_dof_tweak_data(remove_setting_n
 	end
 end
 
+-- Lines 727-734
 function CoreEnvironmentControllerManager:add_dof_tweak_data(new_setting_name, new_setting_tweak_data)
 	if self._dof_tweaks[new_setting_name] then
 		Application:error("[CoreEnvironmentControllerManager:add_dof_tweak_data] DOF setting already exists!", new_setting_name)
@@ -660,6 +708,7 @@ function CoreEnvironmentControllerManager:add_dof_tweak_data(new_setting_name, n
 	self._dof_tweaks[new_setting_name] = new_setting_tweak_data
 end
 
+-- Lines 736-802
 function CoreEnvironmentControllerManager:_update_dof(t, dt)
 	local mvec_set = mvector3.set_static
 	local mvec = mvec1
@@ -724,6 +773,7 @@ function CoreEnvironmentControllerManager:_update_dof(t, dt)
 	end
 end
 
+-- Lines 804-818
 function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration)
 	local flash = self:test_line_of_sight(flashbang_pos + flashbang_test_offset, 200, 1000, 3000)
 	self._flashbang_duration = duration
@@ -740,11 +790,13 @@ function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_s
 	})
 end
 
+-- Lines 820-824
 function CoreEnvironmentControllerManager:set_flashbang_multiplier(multiplier)
 	self._flashbang_multiplier = multiplier ~= 0 and multiplier or 1
 	self._flashbang_multiplier = 1 + (1 - self._flashbang_multiplier) * 2
 end
 
+-- Lines 826-884
 function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_distance, dot_distance, max_distance)
 	local tmp_vec1 = Vector3()
 	local tmp_vec2 = Vector3()
@@ -796,14 +848,17 @@ function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_dista
 	return flash
 end
 
+-- Lines 886-888
 function CoreEnvironmentControllerManager:set_dof_override(mode)
 	self._dof_override = mode
 end
 
+-- Lines 890-892
 function CoreEnvironmentControllerManager:get_dof_override_ranges()
 	return self._dof_override_near, self._dof_override_near_pad, self._dof_override_far, self._dof_override_far_pad
 end
 
+-- Lines 894-899
 function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad, far, far_pad)
 	self._dof_override_near = near
 	self._dof_override_near_pad = near_pad
@@ -811,6 +866,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad
 	self._dof_override_far_pad = far_pad
 end
 
+-- Lines 902-919
 function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(time, near, near_pad, far, far_pad)
 	self:set_dof_override(true)
 
@@ -831,6 +887,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(tim
 	}
 end
 
+-- Lines 921-925
 function CoreEnvironmentControllerManager:set_dome_occ_default()
 	local area = 20000
 	local occ_texture = "core/textures/dome_occ_test"
@@ -838,6 +895,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_default()
 	self:set_dome_occ_params(Vector3(-(area * 0.5), -(area * 0.5), 0), Vector3(area, area, 1200), occ_texture)
 end
 
+-- Lines 927-935
 function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size, occ_texture)
 	self._occ_dirty = true
 	self._occ_pos = occ_pos
@@ -846,6 +904,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size,
 	self._occ_texture = occ_texture
 end
 
+-- Lines 937-961
 function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 	local deferred_processor = (vp or self._vp):vp():get_post_processor_effect("World", Idstring("deferred"))
 
@@ -874,18 +933,22 @@ function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 	end
 end
 
+-- Lines 964-966
 function CoreEnvironmentControllerManager:set_custom_dof_settings(custom_dof_settings)
 	self._custom_dof_settings = custom_dof_settings
 end
 
+-- Lines 968-970
 function CoreEnvironmentControllerManager:set_base_contrast(base_contrast)
 	self._base_contrast = base_contrast
 end
 
+-- Lines 972-974
 function CoreEnvironmentControllerManager:base_contrast()
 	return self._base_contrast
 end
 
+-- Lines 976-979
 function CoreEnvironmentControllerManager:feed_param_underlay(material_name, param_name, param_value)
 	local material = Underlay:material(Idstring(material_name))
 

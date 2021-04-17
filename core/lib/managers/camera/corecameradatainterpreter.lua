@@ -11,6 +11,7 @@ local mrotation_mul = mrotation.multiply
 local mrotation_set_zero = mrotation.set_zero
 CameraDataInterpreter = CameraDataInterpreter or CoreClass.class()
 
+-- Lines 15-39
 function CameraDataInterpreter:init(cud)
 	if cud then
 		self._position = cud._position
@@ -37,6 +38,7 @@ function CameraDataInterpreter:init(cud)
 	end
 end
 
+-- Lines 41-52
 function CameraDataInterpreter:reset()
 	self._position = Vector3(0, 0, 0)
 	self._rotation = Rotation()
@@ -50,38 +52,47 @@ function CameraDataInterpreter:reset()
 	self._dof_far_max = 0
 end
 
+-- Lines 54-56
 function CameraDataInterpreter:position()
 	return self._position
 end
 
+-- Lines 58-60
 function CameraDataInterpreter:set_position(position)
 	self._position = position
 end
 
+-- Lines 62-64
 function CameraDataInterpreter:rotation()
 	return self._rotation
 end
 
+-- Lines 66-68
 function CameraDataInterpreter:set_rotation(rotation)
 	self._rotation = rotation
 end
 
+-- Lines 70-72
 function CameraDataInterpreter:set_pivot_position(position)
 	self._pivot_position = position
 end
 
+-- Lines 74-76
 function CameraDataInterpreter:set_pivot_rotation(rotation)
 	self._pivot_rotation = rotation
 end
 
+-- Lines 78-80
 function CameraDataInterpreter:fov()
 	return self._fov
 end
 
+-- Lines 82-84
 function CameraDataInterpreter:set_fov(fov)
 	self._fov = fov
 end
 
+-- Lines 86-88
 function CameraDataInterpreter:dof()
 	return {
 		amount = self._dof_amount,
@@ -92,6 +103,7 @@ function CameraDataInterpreter:dof()
 	}
 end
 
+-- Lines 90-96
 function CameraDataInterpreter:set_dof(amount, near_min, near_max, far_min, far_max)
 	self._dof_amount = amount
 	self._dof_near_min = near_min
@@ -100,6 +112,7 @@ function CameraDataInterpreter:set_dof(amount, near_min, near_max, far_min, far_
 	self._dof_far_max = far_max
 end
 
+-- Lines 98-119
 function CameraDataInterpreter:transform_with(cud)
 	if cud._pivot_position then
 		self._position = self._position + cud._pivot_position:rotate_with(self._rotation)
@@ -119,6 +132,7 @@ function CameraDataInterpreter:transform_with(cud)
 	self._dof_far_max = self._dof_far_max + cud._dof_far_max
 end
 
+-- Lines 121-143
 function CameraDataInterpreter:interpolate_to_target(cud_target, fraction)
 	local position = self._position
 	self._position = mvector3_copy(cud_target._position)

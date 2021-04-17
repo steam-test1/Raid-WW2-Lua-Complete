@@ -1,5 +1,6 @@
 PlayerStateTriggerUnitElement = PlayerStateTriggerUnitElement or class(MissionElement)
 
+-- Lines 3-10
 function PlayerStateTriggerUnitElement:init(unit)
 	PlayerStateTriggerUnitElement.super.init(self, unit)
 
@@ -9,6 +10,7 @@ function PlayerStateTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
+-- Lines 12-21
 function PlayerStateTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

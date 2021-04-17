@@ -4,12 +4,14 @@ core:import("CoreMenuStatePreFrontEnd")
 
 FrontEnd = FrontEnd or class()
 
+-- Lines 7-10
 function FrontEnd:init()
 	local menu_handler = self.menu_state._menu_handler
 
 	menu_handler:front_end()
 end
 
+-- Lines 12-20
 function FrontEnd:transition()
 	local game_state = self.menu_state._game_state
 

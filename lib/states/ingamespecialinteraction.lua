@@ -5,12 +5,14 @@ IngameSpecialInteraction.FAILED_COOLDOWN = 1
 IngameSpecialInteraction.COMPLETED_DELAY = 0.5
 IngameSpecialInteraction.LOCKPICK_DOF_DIST = 3
 
+-- Lines 10-13
 function IngameSpecialInteraction:init(game_state_machine)
 	IngameSpecialInteraction.super.init(self, "ingame_special_interaction", game_state_machine)
 
 	self._current_stage = 1
 end
 
+-- Lines 15-29
 function IngameSpecialInteraction:_setup_controller()
 	managers.menu:get_controller():disable()
 
@@ -23,6 +25,7 @@ function IngameSpecialInteraction:_setup_controller()
 	self._controller:set_enabled(true)
 end
 
+-- Lines 33-47
 function IngameSpecialInteraction:_clear_controller()
 	local menu_controller = managers.menu:get_controller()
 
@@ -40,12 +43,14 @@ function IngameSpecialInteraction:_clear_controller()
 	end
 end
 
+-- Lines 49-53
 function IngameSpecialInteraction:set_controller_enabled(enabled)
 	if self._controller then
 		self._controller:set_enabled(enabled)
 	end
 end
 
+-- Lines 55-61
 function IngameSpecialInteraction:cb_leave()
 	Application:debug("[IngameSpecialInteraction:cb_leave()]")
 
@@ -56,6 +61,7 @@ function IngameSpecialInteraction:cb_leave()
 	game_state_machine:change_state_by_name(self._old_state)
 end
 
+-- Lines 63-70
 function IngameSpecialInteraction:cb_interact()
 	if self._cooldown > 0 or self._completed then
 		return
@@ -65,9 +71,11 @@ function IngameSpecialInteraction:cb_interact()
 	self:_check_all_complete()
 end
 
+-- Lines 72-73
 function IngameSpecialInteraction:on_destroyed()
 end
 
+-- Lines 75-113
 function IngameSpecialInteraction:update(t, dt)
 	if not self._hud then
 		return
@@ -113,6 +121,7 @@ function IngameSpecialInteraction:update(t, dt)
 	end
 end
 
+-- Lines 115-121
 function IngameSpecialInteraction:update_player_stamina(t, dt)
 	local player = managers.player:player_unit()
 
@@ -121,9 +130,11 @@ function IngameSpecialInteraction:update_player_stamina(t, dt)
 	end
 end
 
+-- Lines 123-125
 function IngameSpecialInteraction:_player_damage(info)
 end
 
+-- Lines 127-179
 function IngameSpecialInteraction:at_enter(old_state, params)
 	local player = managers.player:player_unit()
 
@@ -169,6 +180,7 @@ function IngameSpecialInteraction:at_enter(old_state, params)
 	managers.network:session():send_to_peers("enter_lockpicking_state")
 end
 
+-- Lines 182-218
 function IngameSpecialInteraction:at_exit()
 	self._sound_source:stop()
 
@@ -208,6 +220,7 @@ function IngameSpecialInteraction:at_exit()
 	managers.network:session():send_to_peers("exit_lockpicking_state")
 end
 
+-- Lines 220-265
 function IngameSpecialInteraction:_check_stage_complete()
 	local current_stage_data, current_stage = nil
 
@@ -264,6 +277,7 @@ function IngameSpecialInteraction:_check_stage_complete()
 	end
 end
 
+-- Lines 267-279
 function IngameSpecialInteraction:_check_all_complete(t, dt)
 	local completed = true
 
@@ -282,6 +296,7 @@ function IngameSpecialInteraction:_check_all_complete(t, dt)
 	end
 end
 
+-- Lines 281-289
 function IngameSpecialInteraction:_play_sound(event, no_stop)
 	if event then
 		if not no_stop then

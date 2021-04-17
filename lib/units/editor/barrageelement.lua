@@ -2,6 +2,7 @@ BarrageUnitElement = BarrageUnitElement or class(MissionElement)
 BarrageUnitElement.SAVE_UNIT_POSITION = false
 BarrageUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-15
 function BarrageUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -13,6 +14,7 @@ function BarrageUnitElement:init(unit)
 	table.insert(self._save_values, "type")
 end
 
+-- Lines 20-28
 function BarrageUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

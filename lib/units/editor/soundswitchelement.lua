@@ -1,5 +1,6 @@
 SoundSwitchElement = SoundSwitchElement or class(MissionElement)
 
+-- Lines 4-10
 function SoundSwitchElement:init(unit)
 	SoundSwitchElement.super.init(self, unit)
 
@@ -8,6 +9,7 @@ function SoundSwitchElement:init(unit)
 	table.insert(self._save_values, "switch")
 end
 
+-- Lines 12-19
 function SoundSwitchElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

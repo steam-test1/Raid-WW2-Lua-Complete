@@ -19,6 +19,7 @@ TeamAILogicTravel.get_pathing_prio = CopLogicTravel.get_pathing_prio
 TeamAILogicTravel.on_action_completed = CopLogicTravel.on_action_completed
 TeamAILogicTravel.on_intimidated = TeamAILogicIdle.on_intimidated
 
+-- Lines 27-91
 function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -91,6 +92,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	end
 end
 
+-- Lines 95-106
 function TeamAILogicTravel.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -102,12 +104,14 @@ function TeamAILogicTravel.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
+-- Lines 110-115
 function TeamAILogicTravel.update(data)
 	TeamAILogicTravel._upd_ai_perceptors(data)
 
 	return CopLogicTravel.upd_advance(data)
 end
 
+-- Lines 119-188
 function TeamAILogicTravel._upd_enemy_detection(data)
 	data.t = TimerManager:game():time()
 	local my_data = data.internal_data
@@ -170,6 +174,7 @@ function TeamAILogicTravel._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicTravel._upd_enemy_detection, data, data.t + delay)
 end
 
+-- Lines 192-199
 function TeamAILogicTravel._remove_enemy_attention(param)
 	local data = param.data
 
@@ -180,6 +185,7 @@ function TeamAILogicTravel._remove_enemy_attention(param)
 	CopLogicBase._reset_attention(data)
 end
 
+-- Lines 203-214
 function TeamAILogicTravel.is_available_for_assignment(data, new_objective)
 	if new_objective and new_objective.forced then
 		return true
@@ -194,6 +200,7 @@ function TeamAILogicTravel.is_available_for_assignment(data, new_objective)
 	end
 end
 
+-- Lines 222-318
 function TeamAILogicTravel._upd_ai_perceptors(data)
 	if not TeamAILogicTravel._ai_perceptors_t then
 		TeamAILogicTravel._ai_perceptors_t = data.t
@@ -261,6 +268,7 @@ function TeamAILogicTravel._upd_ai_perceptors(data)
 	TeamAILogicTravel._ai_perceptors_t = TeamAILogicTravel._ai_perceptors_t + 0.5
 end
 
+-- Lines 330-337
 function TeamAILogicTravel._is_player_camping(p)
 	if not TeamAILogicTravel._ai_perceptors then
 		return
@@ -271,6 +279,7 @@ function TeamAILogicTravel._is_player_camping(p)
 	return not TeamAILogicTravel._ai_perceptors[id].is_moving and not TeamAILogicTravel._ai_perceptors[id].is_rotating
 end
 
+-- Lines 341-350
 function TeamAILogicTravel._players_that_are_camping()
 	local players = managers.player:players()
 	local campers = {}
@@ -284,6 +293,7 @@ function TeamAILogicTravel._players_that_are_camping()
 	return campers
 end
 
+-- Lines 355-370
 function TeamAILogicTravel._unit_cones(units, cone_depth)
 	local cones = {}
 
@@ -314,6 +324,7 @@ function TeamAILogicTravel._unit_cones(units, cone_depth)
 	return cones
 end
 
+-- Lines 372-507
 function TeamAILogicTravel._determine_destination_occupation(data, objective)
 	local occupation = nil
 
@@ -493,6 +504,7 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 	return occupation
 end
 
+-- Lines 514-523
 function TeamAILogicTravel._draw_debug_unit_cones(cones)
 	local brush = Draw:brush(Color.green:with_alpha(0.5), 2)
 

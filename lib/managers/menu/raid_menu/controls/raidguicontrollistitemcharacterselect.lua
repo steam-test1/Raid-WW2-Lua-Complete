@@ -10,6 +10,7 @@ RaidGUIControlListItemCharacterSelect.SLOTS = {
 	}
 }
 
+-- Lines 6-35
 function RaidGUIControlListItemCharacterSelect:init(parent, params, item_data)
 	RaidGUIControlListItemCharacterSelect.super.init(self, parent, params, item_data)
 
@@ -41,6 +42,7 @@ function RaidGUIControlListItemCharacterSelect:init(parent, params, item_data)
 	self:_load_data()
 end
 
+-- Lines 37-51
 function RaidGUIControlListItemCharacterSelect:_layout()
 	self._background = self._object:rect({
 		visible = false,
@@ -88,6 +90,7 @@ function RaidGUIControlListItemCharacterSelect:_layout()
 	})
 end
 
+-- Lines 53-92
 function RaidGUIControlListItemCharacterSelect:_load_data()
 	local profile_name = self:translate("character_selection_empty_slot", true)
 	local character_nationality = nil
@@ -152,6 +155,7 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 	end
 end
 
+-- Lines 94-102
 function RaidGUIControlListItemCharacterSelect:_layout_breadcrumb(character_nationality)
 	local breadcrumb_params = {
 		category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION,
@@ -165,24 +169,29 @@ function RaidGUIControlListItemCharacterSelect:_layout_breadcrumb(character_nati
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 106-108
 function RaidGUIControlListItemCharacterSelect:data()
 	return self._item_data
 end
 
+-- Lines 110-114
 function RaidGUIControlListItemCharacterSelect:inside(x, y)
 	return self._object and self._object:inside(x, y) and self._object:tree_visible() and self._background:inside(x, y) or self._create_button and self._create_button:inside(x, y) or self._delete_button and self._delete_button:inside(x, y) or self._customize_button and self._customize_button:inside(x, y)
 end
 
+-- Lines 116-130
 function RaidGUIControlListItemCharacterSelect:highlight_on()
 	self._background:show()
 end
 
+-- Lines 132-153
 function RaidGUIControlListItemCharacterSelect:highlight_off()
 	if not self._selected and not self._active and self._background and self._red_selected_line and self._background and alive(self._background) then
 		self._background:set_visible(false)
 	end
 end
 
+-- Lines 155-161
 function RaidGUIControlListItemCharacterSelect:activate_on()
 	self._background:show()
 	self._red_selected_line:show()
@@ -190,6 +199,7 @@ function RaidGUIControlListItemCharacterSelect:activate_on()
 	self._character_name_label:set_color(tweak_data.gui.colors.raid_red)
 end
 
+-- Lines 163-175
 function RaidGUIControlListItemCharacterSelect:activate_off()
 	self:highlight_off()
 
@@ -206,6 +216,7 @@ function RaidGUIControlListItemCharacterSelect:activate_off()
 	end
 end
 
+-- Lines 177-193
 function RaidGUIControlListItemCharacterSelect:mouse_released(o, button, x, y)
 	if self._special_action_buttons then
 		for _, special_button in ipairs(self._special_action_buttons) do
@@ -220,6 +231,7 @@ function RaidGUIControlListItemCharacterSelect:mouse_released(o, button, x, y)
 	end
 end
 
+-- Lines 195-205
 function RaidGUIControlListItemCharacterSelect:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(nil, self, self._character_slot, true)
@@ -228,6 +240,7 @@ function RaidGUIControlListItemCharacterSelect:on_mouse_released(button)
 	end
 end
 
+-- Lines 207-218
 function RaidGUIControlListItemCharacterSelect:confirm_pressed()
 	if not self._item_data or not self._item_data.cache then
 		return self._create_button:on_mouse_released()
@@ -240,6 +253,7 @@ function RaidGUIControlListItemCharacterSelect:confirm_pressed()
 	end
 end
 
+-- Lines 220-230
 function RaidGUIControlListItemCharacterSelect:mouse_double_click(o, button, x, y)
 	if self._on_double_click_callback then
 		self._on_double_click_callback(nil, self, self._character_slot)
@@ -248,6 +262,7 @@ function RaidGUIControlListItemCharacterSelect:mouse_double_click(o, button, x, 
 	end
 end
 
+-- Lines 232-264
 function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_callback)
 	self._selected = true
 
@@ -280,6 +295,7 @@ function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_call
 	end
 end
 
+-- Lines 266-282
 function RaidGUIControlListItemCharacterSelect:unselect()
 	self._selected = false
 
@@ -298,10 +314,12 @@ function RaidGUIControlListItemCharacterSelect:unselect()
 	end
 end
 
+-- Lines 284-286
 function RaidGUIControlListItemCharacterSelect:selected()
 	return self._selected
 end
 
+-- Lines 288-293
 function RaidGUIControlListItemCharacterSelect:activate()
 	self._active = true
 
@@ -309,20 +327,24 @@ function RaidGUIControlListItemCharacterSelect:activate()
 	self:highlight_on()
 end
 
+-- Lines 295-299
 function RaidGUIControlListItemCharacterSelect:deactivate()
 	self._active = false
 
 	self:activate_off()
 end
 
+-- Lines 301-303
 function RaidGUIControlListItemCharacterSelect:activated()
 	return self._active
 end
 
+-- Lines 305-307
 function RaidGUIControlListItemCharacterSelect:empty()
 	return not self._item_data or not self._item_data.cache
 end
 
+-- Lines 309-312
 function RaidGUIControlListItemCharacterSelect:_set_button_slot(button_ref, slot_index)
 	button_ref:set_x(RaidGUIControlListItemCharacterSelect.SLOTS[slot_index].x)
 	button_ref:set_y(RaidGUIControlListItemCharacterSelect.SLOTS[slot_index].y)

@@ -1,6 +1,7 @@
 AlphaRefControl = AlphaRefControl or class()
 local ids_alpha_ref = Idstring("alpha_ref")
 
+-- Lines 5-24
 function AlphaRefControl:init(unit)
 	self._unit = unit
 	self._materials = {}
@@ -23,6 +24,7 @@ function AlphaRefControl:init(unit)
 	end
 end
 
+-- Lines 26-36
 function AlphaRefControl:update(unit, t, dt)
 	for _, data in pairs(self._materials) do
 		if not data[3] then
@@ -35,6 +37,7 @@ function AlphaRefControl:update(unit, t, dt)
 	end
 end
 
+-- Lines 38-48
 function AlphaRefControl:play(material_name, speed)
 	local ids_material_name = Idstring(material_name)
 
@@ -48,6 +51,7 @@ function AlphaRefControl:play(material_name, speed)
 	end
 end
 
+-- Lines 51-61
 function AlphaRefControl:stop(material_name)
 	local ids_material_name = Idstring(material_name)
 
@@ -61,6 +65,7 @@ function AlphaRefControl:stop(material_name)
 	end
 end
 
+-- Lines 64-73
 function AlphaRefControl:pause(material_name)
 	local ids_material_name = Idstring(material_name)
 
@@ -73,6 +78,7 @@ function AlphaRefControl:pause(material_name)
 	end
 end
 
+-- Lines 76-85
 function AlphaRefControl:set_alpha_ref(material_name, alpha_ref)
 	local ids_material_name = Idstring(material_name)
 

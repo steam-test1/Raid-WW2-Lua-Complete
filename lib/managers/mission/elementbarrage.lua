@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementBarrage = ElementBarrage or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementBarrage:init(...)
 	ElementBarrage.super.init(self, ...)
 end
 
+-- Lines 9-39
 function ElementBarrage:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -44,6 +46,7 @@ function ElementBarrage:on_executed(instigator)
 	ElementBarrage.super.on_executed(self, instigator)
 end
 
+-- Lines 41-43
 function ElementBarrage:client_on_executed(...)
 	ElementBarrage.super.on_executed(self)
 end

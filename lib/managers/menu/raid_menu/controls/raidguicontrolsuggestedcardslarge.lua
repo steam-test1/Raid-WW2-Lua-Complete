@@ -1,5 +1,6 @@
 RaidGUIControlSuggestedCardsLarge = RaidGUIControlSuggestedCardsLarge or class(RaidGUIControl)
 
+-- Lines 3-18
 function RaidGUIControlSuggestedCardsLarge:init(parent, params)
 	RaidGUIControlSuggestedCardsLarge.super.init(self, parent, params)
 
@@ -15,6 +16,7 @@ function RaidGUIControlSuggestedCardsLarge:init(parent, params)
 	self:layout()
 end
 
+-- Lines 20-30
 function RaidGUIControlSuggestedCardsLarge:layout()
 	self._suggested_cards_panel = self._panel:panel({
 		name = "suggested_cards_panel_large_" .. self._name,
@@ -28,6 +30,7 @@ function RaidGUIControlSuggestedCardsLarge:layout()
 	self:_create_items()
 end
 
+-- Lines 32-64
 function RaidGUIControlSuggestedCardsLarge:_create_items()
 	local item_data = {}
 	local item_params = {}
@@ -55,10 +58,12 @@ function RaidGUIControlSuggestedCardsLarge:_create_items()
 	end
 end
 
+-- Lines 66-70
 function RaidGUIControlSuggestedCardsLarge:_item_selected_callback(item_idx)
 	self:select_item(item_idx)
 end
 
+-- Lines 72-80
 function RaidGUIControlSuggestedCardsLarge:_delete_items()
 	for index, control in pairs(self._suggested_cards_panel._controls) do
 		-- Nothing
@@ -67,11 +72,13 @@ function RaidGUIControlSuggestedCardsLarge:_delete_items()
 	self._suggested_cards_panel:clear()
 end
 
+-- Lines 82-85
 function RaidGUIControlSuggestedCardsLarge:refresh_data()
 	self:_delete_items()
 	self:_create_items()
 end
 
+-- Lines 87-99
 function RaidGUIControlSuggestedCardsLarge:mouse_released(o, button, x, y)
 	for _, grid_item in ipairs(self._grid_items) do
 		if grid_item:inside(x, y) then
@@ -86,6 +93,7 @@ function RaidGUIControlSuggestedCardsLarge:mouse_released(o, button, x, y)
 	return false
 end
 
+-- Lines 101-111
 function RaidGUIControlSuggestedCardsLarge:mouse_moved(o, x, y)
 	if self._grid_items then
 		for i = 1, #self._grid_items do
@@ -98,6 +106,7 @@ function RaidGUIControlSuggestedCardsLarge:mouse_moved(o, x, y)
 	return false
 end
 
+-- Lines 113-133
 function RaidGUIControlSuggestedCardsLarge:move_selection_right()
 	local index = self._selected_item._params.item_idx
 	local start_index = index
@@ -121,6 +130,7 @@ function RaidGUIControlSuggestedCardsLarge:move_selection_right()
 	end
 end
 
+-- Lines 135-156
 function RaidGUIControlSuggestedCardsLarge:move_selection_left()
 	local index = self._selected_item._params.item_idx
 	local start_index = index
@@ -144,6 +154,7 @@ function RaidGUIControlSuggestedCardsLarge:move_selection_left()
 	end
 end
 
+-- Lines 158-165
 function RaidGUIControlSuggestedCardsLarge:select_first_available_item()
 	for i_item_data = 1, #self._grid_items do
 		local selected_item = self:select_item(i_item_data)
@@ -154,6 +165,7 @@ function RaidGUIControlSuggestedCardsLarge:select_first_available_item()
 	end
 end
 
+-- Lines 167-183
 function RaidGUIControlSuggestedCardsLarge:select_item(item_idx)
 	if not self._grid_items[item_idx] or not self._grid_items[item_idx]:get_data() or self._grid_items[item_idx]:get_data().key_name == ChallengeCardsManager.CARD_PASS_KEY_NAME then
 		return
@@ -172,10 +184,12 @@ function RaidGUIControlSuggestedCardsLarge:select_item(item_idx)
 	return self._selected_item
 end
 
+-- Lines 185-187
 function RaidGUIControlSuggestedCardsLarge:selected_item()
 	return self._selected_item
 end
 
+-- Lines 189-194
 function RaidGUIControlSuggestedCardsLarge:lock_selected_grid_item()
 	if self._selected_item then
 		self._locked_item = self._selected_item
@@ -184,6 +198,7 @@ function RaidGUIControlSuggestedCardsLarge:lock_selected_grid_item()
 	end
 end
 
+-- Lines 196-201
 function RaidGUIControlSuggestedCardsLarge:unlock_grid_item()
 	if self._locked_item then
 		self._locked_item:unlock()
@@ -192,6 +207,7 @@ function RaidGUIControlSuggestedCardsLarge:unlock_grid_item()
 	end
 end
 
+-- Lines 203-205
 function RaidGUIControlSuggestedCardsLarge:locked_grid_item()
 	return self._locked_item
 end

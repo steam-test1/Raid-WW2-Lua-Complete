@@ -2,6 +2,7 @@ TeamRelationElement = TeamRelationElement or class(MissionElement)
 TeamRelationElement.SAVE_UNIT_POSITION = false
 TeamRelationElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-18
 function TeamRelationElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -16,6 +17,7 @@ function TeamRelationElement:init(unit)
 	table.insert(self._save_values, "mutual")
 end
 
+-- Lines 21-31
 function TeamRelationElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

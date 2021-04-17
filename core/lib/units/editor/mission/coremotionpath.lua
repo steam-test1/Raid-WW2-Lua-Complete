@@ -1,10 +1,12 @@
 CoreMotionPathOperatorUnitElement = CoreMotionPathOperatorUnitElement or class(MissionElement)
 MotionPathOperatorUnitElement = MotionPathOperatorUnitElement or class(CoreMotionPathOperatorUnitElement)
 
+-- Lines 6-8
 function MotionPathOperatorUnitElement:init(...)
 	MotionPathOperatorUnitElement.super.init(self, ...)
 end
 
+-- Lines 10-23
 function CoreMotionPathOperatorUnitElement:init(unit)
 	CoreMotionPathOperatorUnitElement.super.init(self, unit)
 
@@ -19,6 +21,7 @@ function CoreMotionPathOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "marker_ids")
 end
 
+-- Lines 25-46
 function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreMotionPathOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -53,11 +56,13 @@ function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_
 	end
 end
 
+-- Lines 48-51
 function CoreMotionPathOperatorUnitElement:get_links_to_unit(...)
 	CoreMotionPathOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
+-- Lines 53-58
 function CoreMotionPathOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -70,10 +75,12 @@ function CoreMotionPathOperatorUnitElement:update_editing()
 	end
 end
 
+-- Lines 60-62
 function CoreMotionPathOperatorUnitElement:update_selected()
 	Application:draw_cone(self._unit:position(), self._unit:position() + self._unit:rotation():y() * 75, 35, 1, 1, 1)
 end
 
+-- Lines 64-77
 function CoreMotionPathOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -91,6 +98,7 @@ function CoreMotionPathOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 79-85
 function CoreMotionPathOperatorUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -99,10 +107,12 @@ function CoreMotionPathOperatorUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 88-90
 function CoreMotionPathOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 92-103
 function CoreMotionPathOperatorUnitElement:_motion_path_markers()
 	self._hed.marker_ids = {}
 	local motion_path_markers = {
@@ -121,6 +131,7 @@ function CoreMotionPathOperatorUnitElement:_motion_path_markers()
 	return motion_path_markers
 end
 
+-- Lines 105-117
 function CoreMotionPathOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -147,6 +158,7 @@ function CoreMotionPathOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element can modify motion path marker elements. Select motion path marker elements to modify using insert and clicking on the elements.")
 end
 
+-- Lines 119-124
 function CoreMotionPathOperatorUnitElement:on_executed_marker_selected()
 	Application:debug("CoreMotionPathOperatorUnitElement:_build_panel( panel, panel_sizer ): ", self._hed.marker, self._hed.marker_ids[self._hed.marker])
 
@@ -158,10 +170,12 @@ end
 CoreMotionPathTriggerUnitElement = CoreMotionPathTriggerUnitElement or class(MissionElement)
 MotionPathTriggerUnitElement = MotionPathTriggerUnitElement or class(CoreMotionPathTriggerUnitElement)
 
+-- Lines 132-134
 function MotionPathTriggerUnitElement:init(...)
 	MotionPathTriggerUnitElement.super.init(self, ...)
 end
 
+-- Lines 136-144
 function CoreMotionPathTriggerUnitElement:init(unit)
 	CoreMotionPathTriggerUnitElement.super.init(self, unit)
 
@@ -172,6 +186,7 @@ function CoreMotionPathTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 146-155
 function CoreMotionPathTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreMotionPathTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -191,11 +206,13 @@ function CoreMotionPathTriggerUnitElement:draw_links(t, dt, selected_unit, all_u
 	end
 end
 
+-- Lines 157-160
 function CoreMotionPathTriggerUnitElement:get_links_to_unit(...)
 	CoreMotionPathTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
+-- Lines 162-167
 function CoreMotionPathTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -208,6 +225,7 @@ function CoreMotionPathTriggerUnitElement:update_editing()
 	end
 end
 
+-- Lines 169-182
 function CoreMotionPathTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -225,6 +243,7 @@ function CoreMotionPathTriggerUnitElement:add_element()
 	end
 end
 
+-- Lines 184-190
 function CoreMotionPathTriggerUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -233,10 +252,12 @@ function CoreMotionPathTriggerUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 193-195
 function CoreMotionPathTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 197-206
 function CoreMotionPathTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -20,6 +20,7 @@ HUDWeaponGeneric.FIREMODE_AUTO_ICON = "weapon_panel_indicator_rapid_fire"
 HUDWeaponGeneric.FIREMODE_SINGLE_ICON = "weapon_panel_indicator_single_fire"
 HUDWeaponGeneric.FIREMODE_DISTANCE_FROM_RIGHT_EDGE = 19
 
+-- Lines 31-42
 function HUDWeaponGeneric:init(index, weapons_panel, tweak_data)
 	HUDWeaponGeneric.super.init(self, index, weapons_panel, tweak_data)
 
@@ -31,6 +32,7 @@ function HUDWeaponGeneric:init(index, weapons_panel, tweak_data)
 	self:_create_firemodes()
 end
 
+-- Lines 44-52
 function HUDWeaponGeneric:_create_panel(weapons_panel)
 	local panel_params = {
 		halign = "right",
@@ -42,6 +44,7 @@ function HUDWeaponGeneric:_create_panel(weapons_panel)
 	self._object = weapons_panel:panel(panel_params)
 end
 
+-- Lines 54-73
 function HUDWeaponGeneric:_create_icon(icon)
 	local icon_panel_params = {
 		halign = "center",
@@ -65,6 +68,7 @@ function HUDWeaponGeneric:_create_icon(icon)
 	self._icon:set_center_y(self._icon_panel:h() / 2)
 end
 
+-- Lines 75-133
 function HUDWeaponGeneric:_create_ammo_info(weapons_panel)
 	local ammo_panel_params = {
 		name = "ammo_panel",
@@ -133,6 +137,7 @@ function HUDWeaponGeneric:_create_ammo_info(weapons_panel)
 	self:set_current_left(0)
 end
 
+-- Lines 135-159
 function HUDWeaponGeneric:_create_firemodes()
 	local firemode_auto_params = {
 		name = "firemode_auto",
@@ -162,6 +167,7 @@ function HUDWeaponGeneric:_create_firemodes()
 	self:set_firemode(self._tweak_data.FIRE_MODE)
 end
 
+-- Lines 161-173
 function HUDWeaponGeneric:set_current_clip(current_clip)
 	self._current_clip_text:set_text(string.format("%03d", current_clip))
 
@@ -177,6 +183,7 @@ function HUDWeaponGeneric:set_current_clip(current_clip)
 	self._current_clip_background:set_color(self:_get_color_for_percentage(HUDWeaponGeneric.CLIP_BACKGROUND_COLORS, clip_percentage))
 end
 
+-- Lines 175-190
 function HUDWeaponGeneric:set_current_left(current_left)
 	self._ammo_left_text:set_text(string.format("%03d", current_left))
 
@@ -194,19 +201,23 @@ function HUDWeaponGeneric:set_current_left(current_left)
 	end
 end
 
+-- Lines 192-194
 function HUDWeaponGeneric:set_max_clip(max_clip)
 	self._max_clip = max_clip
 end
 
+-- Lines 196-198
 function HUDWeaponGeneric:set_max(max)
 	self._max = max
 end
 
+-- Lines 200-203
 function HUDWeaponGeneric:set_firemode(mode)
 	self._firemode_single:set_visible(mode == "single" and true or false)
 	self._firemode_auto:set_visible(mode == "auto" and true or false)
 end
 
+-- Lines 205-213
 function HUDWeaponGeneric:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
 		if color_table[i].start_percentage < percentage then
@@ -217,6 +228,7 @@ function HUDWeaponGeneric:_get_color_for_percentage(color_table, percentage)
 	return color_table[1].color
 end
 
+-- Lines 216-247
 function HUDWeaponGeneric:_animate_alpha(root_panel, new_alpha)
 	local start_alpha = new_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED and HUDWeaponBase.ALPHA_WHEN_UNSELECTED or HUDWeaponBase.ALPHA_WHEN_SELECTED
 	local start_ammo_left_alpha = start_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED and HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_SELECTED or HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_UNSELECTED

@@ -30,6 +30,7 @@ RaidGUIControlXPRewardDetails.XP_VALUE_LABEL_FONT_SIZE = tweak_data.gui.font_siz
 RaidGUIControlXPRewardDetails.XP_VALUE_LABEL_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlXPRewardDetails.XP_VALUE_LABEL_VALUE_PADDING = 0
 
+-- Lines 45-66
 function RaidGUIControlXPRewardDetails:init(parent, params)
 	RaidGUIControlXPRewardDetails.super.init(self, parent, params)
 
@@ -50,6 +51,7 @@ function RaidGUIControlXPRewardDetails:init(parent, params)
 	RaidGUIControlXPRewardDetails.gui = self
 end
 
+-- Lines 69-78
 function RaidGUIControlXPRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -61,6 +63,7 @@ function RaidGUIControlXPRewardDetails:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 80-87
 function RaidGUIControlXPRewardDetails:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -70,6 +73,7 @@ function RaidGUIControlXPRewardDetails:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
+-- Lines 89-122
 function RaidGUIControlXPRewardDetails:_create_title()
 	local title_description_params = {
 		name = "title_description",
@@ -104,6 +108,7 @@ function RaidGUIControlXPRewardDetails:_create_title()
 	self:_layout_title()
 end
 
+-- Lines 124-131
 function RaidGUIControlXPRewardDetails:_layout_title()
 	local _, _, w, h = self._customization_name:text_rect()
 
@@ -113,6 +118,7 @@ function RaidGUIControlXPRewardDetails:_layout_title()
 	self._title_description:set_x(self._customization_name:x())
 end
 
+-- Lines 133-151
 function RaidGUIControlXPRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
 		name = "reward_image_panel",
@@ -133,6 +139,7 @@ function RaidGUIControlXPRewardDetails:_create_reward_image()
 	self._reward_image:set_center_y(self._reward_image_panel:h() / 2)
 end
 
+-- Lines 153-176
 function RaidGUIControlXPRewardDetails:_create_xp_value()
 	local xp_value_params = {
 		text = "456 XP",
@@ -156,6 +163,7 @@ function RaidGUIControlXPRewardDetails:_create_xp_value()
 	self:_layout_xp_value()
 end
 
+-- Lines 178-190
 function RaidGUIControlXPRewardDetails:_layout_xp_value()
 	local _, _, w, h = self._xp_value_text:text_rect()
 
@@ -172,6 +180,7 @@ function RaidGUIControlXPRewardDetails:_layout_xp_value()
 	self._xp_value_label:set_y(self._xp_value_text:y() + self._xp_value_text:h() + RaidGUIControlXPRewardDetails.XP_VALUE_LABEL_VALUE_PADDING)
 end
 
+-- Lines 192-277
 function RaidGUIControlXPRewardDetails:show()
 	RaidGUIControlXPRewardDetails.super.show(self)
 
@@ -266,6 +275,7 @@ function RaidGUIControlXPRewardDetails:show()
 	self._title_description_right:set_x(title_description_right_x)
 end
 
+-- Lines 282-290
 function RaidGUIControlXPRewardDetails:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -277,6 +287,7 @@ function RaidGUIControlXPRewardDetails:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
+-- Lines 292-326
 function RaidGUIControlXPRewardDetails:_create_description()
 	local description_params = {
 		vertical = "top",
@@ -315,6 +326,7 @@ function RaidGUIControlXPRewardDetails:_create_description()
 	self:_layout_description()
 end
 
+-- Lines 328-332
 function RaidGUIControlXPRewardDetails:_layout_description()
 	local x, y, w, h = self._description:text_rect()
 
@@ -322,6 +334,7 @@ function RaidGUIControlXPRewardDetails:_layout_description()
 	self._description:set_h(h)
 end
 
+-- Lines 334-338
 function RaidGUIControlXPRewardDetails:set_xp_reward(xp_reward)
 	self._xp_value_text:set_text("+" .. xp_reward)
 	self:_layout_xp_value()

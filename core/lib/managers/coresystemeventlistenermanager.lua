@@ -18,18 +18,22 @@ SystemEventListenerManager.PLAYER_LEFT = "ReadyUpGui:_on_peer_left"
 SystemEventListenerManager.PEER_LEVEL_UP = "UnitNetworkHandler:sync_character_level"
 SystemEventListenerManager.PUMPKIN_DESTROYED = "RevivePumpkinExt:destroy"
 
+-- Lines 30-33
 function SystemEventListenerManager:init()
 	self._listener_holder = CoreSystemEventListenerHolder.SystemEventListenerHolder:new()
 end
 
+-- Lines 35-37
 function SystemEventListenerManager:call_listeners(event, params)
 	self._listener_holder:call(event, params)
 end
 
+-- Lines 40-42
 function SystemEventListenerManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
+-- Lines 44-46
 function SystemEventListenerManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end

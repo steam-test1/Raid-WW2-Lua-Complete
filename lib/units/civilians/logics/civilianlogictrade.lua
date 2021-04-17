@@ -1,5 +1,6 @@
 CivilianLogicTrade = class(CopLogicTrade)
 
+-- Lines 9-18
 function CivilianLogicTrade._chk_request_action_walk_to_flee_pos(data, my_data, end_rot)
 	local new_action_data = {
 		type = "walk",

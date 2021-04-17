@@ -1,6 +1,7 @@
 FlamethrowerEffectExtension = FlamethrowerEffectExtension or class()
 FlamethrowerEffectExtension.MIN_EFFECT_INTERVAL = 0.01
 
+-- Lines 5-13
 function FlamethrowerEffectExtension:init(unit, ...)
 	self._unit = unit
 	self._name_id = self.name_id or "test_raycast_weapon"
@@ -10,6 +11,7 @@ function FlamethrowerEffectExtension:init(unit, ...)
 	self._unit:set_extension_update_enabled(Idstring("flamethrower_effect_extension"), true)
 end
 
+-- Lines 15-30
 function FlamethrowerEffectExtension:setup_default()
 	self._flame_effect = {
 		effect = Idstring("effects/vanilla/fire/fire_flame_burst_001")
@@ -28,6 +30,7 @@ end
 
 local mvec1 = Vector3()
 
+-- Lines 33-86
 function FlamethrowerEffectExtension:update(unit, t, dt)
 	if self._flamethrower_effect_collection ~= nil then
 		local flame_effect_dt = self._single_flame_effect_duration / dt
@@ -69,6 +72,7 @@ function FlamethrowerEffectExtension:update(unit, t, dt)
 	end
 end
 
+-- Lines 89-104
 function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 	if self._next_fire_time and managers.player:player_timer():time() < self._next_fire_time then
 		return

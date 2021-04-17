@@ -1,5 +1,6 @@
 CoreMaterialEditor = CoreMaterialEditor or class()
 
+-- Lines 5-33
 function CoreMaterialEditor:_on_material_popup()
 	local popup = EWS:Menu("")
 
@@ -23,6 +24,7 @@ function CoreMaterialEditor:_on_material_popup()
 	self._material_list_box:popup_menu(popup, Vector3(-1, -1, 0))
 end
 
+-- Lines 35-66
 function CoreMaterialEditor:_on_parameter_popup()
 	local popup = EWS:Menu("")
 
@@ -58,6 +60,7 @@ function CoreMaterialEditor:_on_parameter_popup()
 	self._parent_btn:popup_menu(popup, Vector3(-1, -1, 0))
 end
 
+-- Lines 68-75
 function CoreMaterialEditor:_on_edit_global_popup(event)
 	local popup = EWS:Menu("")
 

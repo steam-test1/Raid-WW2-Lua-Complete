@@ -3,6 +3,7 @@ TeamAILogicSurrender.on_cop_neutralized = TeamAILogicIdle.on_cop_neutralized
 TeamAILogicSurrender.on_alert = TeamAILogicIdle.on_alert
 TeamAILogicSurrender.on_recovered = TeamAILogicDisabled.on_recovered
 
+-- Lines 12-57
 function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -45,6 +46,7 @@ function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
 	end
 end
 
+-- Lines 61-79
 function TeamAILogicSurrender.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -63,15 +65,19 @@ function TeamAILogicSurrender.exit(data, new_logic_name, enter_params)
 	data.unit:interaction():set_active(false, false)
 end
 
+-- Lines 83-84
 function TeamAILogicSurrender.on_action_completed(data, action)
 end
 
+-- Lines 88-89
 function TeamAILogicSurrender.can_activate()
 end
 
+-- Lines 93-95
 function TeamAILogicSurrender.on_detected_enemy_destroyed(data, enemy_unit)
 	TeamAILogicIdle.on_cop_neutralized(data, enemy_unit:key())
 end
 
+-- Lines 99-100
 function TeamAILogicSurrender.is_available_for_assignment(data)
 end

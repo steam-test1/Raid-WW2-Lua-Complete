@@ -4,6 +4,7 @@ core:import("CoreCode")
 
 ElementUnitSequenceTrigger = ElementUnitSequenceTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 7-12
 function ElementUnitSequenceTrigger:init(...)
 	ElementUnitSequenceTrigger.super.init(self, ...)
 
@@ -17,6 +18,7 @@ function ElementUnitSequenceTrigger:init(...)
 	end
 end
 
+-- Lines 14-41
 function ElementUnitSequenceTrigger:on_script_activated()
 	if not Network:is_client() then
 		self._mission_script:add_save_state_cb(self._id)
@@ -35,15 +37,18 @@ function ElementUnitSequenceTrigger:on_script_activated()
 	self._has_active_callback = true
 end
 
+-- Lines 43-50
 function ElementUnitSequenceTrigger:send_to_host(instigator)
 	if alive(instigator) then
 		managers.network:session():send_to_host("to_server_mission_element_trigger", self._id, instigator)
 	end
 end
 
+-- Lines 52-54
 function ElementUnitSequenceTrigger:client_on_executed(...)
 end
 
+-- Lines 56-67
 function ElementUnitSequenceTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -52,11 +57,13 @@ function ElementUnitSequenceTrigger:on_executed(instigator)
 	ElementUnitSequenceTrigger.super.on_executed(self, instigator)
 end
 
+-- Lines 69-72
 function ElementUnitSequenceTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.save_me = true
 end
 
+-- Lines 74-82
 function ElementUnitSequenceTrigger:load(data)
 	self._values.enabled = data.enabled
 

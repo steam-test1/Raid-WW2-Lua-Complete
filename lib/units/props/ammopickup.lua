@@ -1,13 +1,16 @@
 AmmoPickup = AmmoPickup or class()
 
+-- Lines 6-8
 function AmmoPickup:init(unit)
 	self._unit = unit
 end
 
+-- Lines 10-12
 function AmmoPickup:set_multiplier(mul)
 	self._ammo_mul = mul
 end
 
+-- Lines 14-28
 function AmmoPickup:pickup()
 	if self._ammo_mul then
 		local player_unit = managers.player:player_unit()

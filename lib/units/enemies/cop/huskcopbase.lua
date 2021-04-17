@@ -1,5 +1,6 @@
 HuskCopBase = HuskCopBase or class(CopBase)
 
+-- Lines 5-20
 function HuskCopBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -21,6 +22,7 @@ function HuskCopBase:post_init()
 	end
 end
 
+-- Lines 22-31
 function HuskCopBase:_do_post_init()
 	Application:debug("[HuskCopBase:post_init()] Navigation READY!", self._nav_ready_listener_key)
 	self._ext_movement:post_init()
@@ -33,6 +35,7 @@ function HuskCopBase:_do_post_init()
 	end
 end
 
+-- Lines 34-40
 function HuskCopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)

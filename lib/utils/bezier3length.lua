@@ -53,6 +53,7 @@ local weights = {
 	0.0123412297999872
 }
 
+-- Lines 66-80
 local function length_function(coefficients, derivative1_for)
 	return function (t, x1, y1, x2, y2, x3, y3, x4, y4)
 		local ax, bx, cx = coefficients(x1, x2, x3, x4)

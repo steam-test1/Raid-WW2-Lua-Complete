@@ -7,6 +7,7 @@ WarcryManager.CLASS_TO_WARCRY = {
 	infiltrator = "ghost"
 }
 
+-- Lines 12-22
 function WarcryManager.get_instance()
 	if not Global.warcry_manager then
 		Global.warcry_manager = WarcryManager:new()
@@ -18,6 +19,7 @@ function WarcryManager.get_instance()
 	return Global.warcry_manager
 end
 
+-- Lines 24-33
 function WarcryManager:init()
 	self._meter_value = 0
 	self._meter_max_value = 1
@@ -27,6 +29,7 @@ function WarcryManager:init()
 	self._ids_warcry_modifier = Idstring("warcry")
 end
 
+-- Lines 35-41
 function WarcryManager:_setup()
 	self:reset()
 
@@ -38,6 +41,7 @@ function WarcryManager:_setup()
 	end
 end
 
+-- Lines 43-48
 function WarcryManager:set_warcry_post_effect(ids_effect)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -46,6 +50,7 @@ function WarcryManager:set_warcry_post_effect(ids_effect)
 	end
 end
 
+-- Lines 50-61
 function WarcryManager:warcry_post_material()
 	local vp = managers.viewport:first_active_viewport()
 
@@ -62,6 +67,7 @@ function WarcryManager:warcry_post_material()
 	end
 end
 
+-- Lines 63-80
 function WarcryManager:acquire_warcry(warcry_name)
 	if self:warcry_acquired(warcry_name) then
 		return
@@ -80,6 +86,7 @@ function WarcryManager:acquire_warcry(warcry_name)
 	self:set_active_warcry(warcry)
 end
 
+-- Lines 82-95
 function WarcryManager:set_active_warcry(warcry)
 	if self._active_warcry then
 		self._active_warcry:cleanup()
@@ -98,14 +105,17 @@ function WarcryManager:set_active_warcry(warcry)
 	end
 end
 
+-- Lines 97-99
 function WarcryManager:get_active_warcry()
 	return self._active_warcry
 end
 
+-- Lines 101-103
 function WarcryManager:get_active_warcry_name()
 	return self._active_warcry_name
 end
 
+-- Lines 105-129
 function WarcryManager:increase_warcry_level(warcry_name, amount)
 	local increase_amount = amount or 1
 
@@ -128,6 +138,7 @@ function WarcryManager:increase_warcry_level(warcry_name, amount)
 	end
 end
 
+-- Lines 131-139
 function WarcryManager:warcry_acquired(warcry_name)
 	for i = 1, #self._warcries do
 		if self._warcries[i].name == warcry_name then
@@ -138,6 +149,7 @@ function WarcryManager:warcry_acquired(warcry_name)
 	return false
 end
 
+-- Lines 141-145
 function WarcryManager:activate_peer_warcry(peer_id, warcry_type, level)
 	self._peer_warcries[peer_id] = {
 		type = warcry_type,
@@ -145,10 +157,12 @@ function WarcryManager:activate_peer_warcry(peer_id, warcry_type, level)
 	}
 end
 
+-- Lines 147-149
 function WarcryManager:deactivate_peer_warcry(peer_id)
 	self._peer_warcries[peer_id] = nil
 end
 
+-- Lines 151-186
 function WarcryManager:activate_warcry()
 	if not self._active_warcry then
 		return
@@ -185,6 +199,7 @@ function WarcryManager:activate_warcry()
 	end
 end
 
+-- Lines 188-201
 function WarcryManager:deactivate_warcry()
 	self:_fill_meter_by_value(-self._meter_value, true)
 
@@ -201,6 +216,7 @@ function WarcryManager:deactivate_warcry()
 	self:_deactivate_warcry()
 end
 
+-- Lines 203-212
 function WarcryManager:fill_meter_by_value(value, sync)
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_WARCRIES_DISABLED) then
 		return
@@ -213,6 +229,7 @@ function WarcryManager:fill_meter_by_value(value, sync)
 	self:_fill_meter_by_value(value, sync)
 end
 
+-- Lines 215-237
 function WarcryManager:_fill_meter_by_value(value, sync)
 	self._meter_value = self._meter_value + value
 
@@ -240,6 +257,7 @@ function WarcryManager:_fill_meter_by_value(value, sync)
 	end
 end
 
+-- Lines 239-249
 function WarcryManager:add_warcry_comm_wheel_option(index)
 	local warcry_comm_wheel_option = {
 		id = "warcry",
@@ -252,10 +270,12 @@ function WarcryManager:add_warcry_comm_wheel_option(index)
 	managers.hud:add_comm_wheel_option(warcry_comm_wheel_option, index)
 end
 
+-- Lines 252-254
 function WarcryManager:current_meter_percentage()
 	return self._meter_value / self._meter_max_value * 100
 end
 
+-- Lines 256-284
 function WarcryManager:_on_meter_full()
 	self._meter_full = true
 
@@ -291,6 +311,7 @@ function WarcryManager:_on_meter_full()
 	})
 end
 
+-- Lines 286-310
 function WarcryManager:_deactivate_warcry()
 	if self._active_warcry then
 		self._active_warcry:deactivate()
@@ -315,6 +336,7 @@ function WarcryManager:_deactivate_warcry()
 	end
 end
 
+-- Lines 312-331
 function WarcryManager:update(t, dt)
 	if not self._active then
 		return
@@ -338,26 +360,32 @@ function WarcryManager:update(t, dt)
 	end
 end
 
+-- Lines 333-335
 function WarcryManager:remaining()
 	return self._remaining
 end
 
+-- Lines 337-339
 function WarcryManager:duration()
 	return self._duration
 end
 
+-- Lines 341-343
 function WarcryManager:active()
 	return self._active
 end
 
+-- Lines 345-347
 function WarcryManager:current_meter_value()
 	return self._meter_value
 end
 
+-- Lines 349-351
 function WarcryManager:meter_full()
 	return self._meter_full
 end
 
+-- Lines 353-371
 function WarcryManager:reset()
 	if self._active_warcry then
 		self:_fill_meter_by_value(-self._meter_value, true)
@@ -376,6 +404,7 @@ function WarcryManager:reset()
 	end
 end
 
+-- Lines 373-384
 function WarcryManager:clear_active_warcry()
 	if self._active_warcry then
 		self:_fill_meter_by_value(-self._meter_value, true)
@@ -388,6 +417,7 @@ function WarcryManager:clear_active_warcry()
 	self._active_warcry = nil
 end
 
+-- Lines 386-421
 function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgrade_definition_name, default_value)
 	local peer_warcry = self._peer_warcries[peer_id]
 
@@ -426,6 +456,7 @@ function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgr
 	return default_value
 end
 
+-- Lines 423-432
 function WarcryManager:save(data)
 	if self._warcries then
 		local manager_data = {
@@ -436,6 +467,7 @@ function WarcryManager:save(data)
 	end
 end
 
+-- Lines 434-453
 function WarcryManager:load(data, version)
 	if data.warcry_manager and data.warcry_manager.warcries then
 		self:reset()
@@ -458,10 +490,12 @@ function WarcryManager:load(data, version)
 	end
 end
 
+-- Lines 456-458
 function WarcryManager:on_simulation_ended()
 	self._meter_value = 0
 end
 
+-- Lines 460-463
 function WarcryManager:on_mission_end_callback()
 	self:_deactivate_warcry()
 	self:_fill_meter_by_value(-self._meter_value, true)

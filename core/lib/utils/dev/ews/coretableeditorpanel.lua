@@ -1,5 +1,6 @@
 CoreTableEditorPanel = CoreTableEditorPanel or class()
 
+-- Lines 3-12
 function CoreTableEditorPanel:init(parent)
 	self.__column_names = {}
 	self.__panel = EWS:Panel(parent)
@@ -11,12 +12,14 @@ function CoreTableEditorPanel:init(parent)
 	panel_sizer:add(self:_create_fields_panel(self.__panel), 0, 0, "EXPAND")
 end
 
+-- Lines 14-17
 function CoreTableEditorPanel:destroy()
 	self.__panel:destroy()
 
 	self.__panel = nil
 end
 
+-- Lines 19-24
 function CoreTableEditorPanel:clear()
 	self:freeze()
 	self.__list_ctrl:delete_all_items()
@@ -24,20 +27,24 @@ function CoreTableEditorPanel:clear()
 	self:thaw()
 end
 
+-- Lines 26-28
 function CoreTableEditorPanel:add_to_sizer(sizer, proportion, border, flags)
 	sizer:add(self.__panel, proportion, border, flags)
 end
 
+-- Lines 30-32
 function CoreTableEditorPanel:detach_from_sizer(sizer)
 	sizer:detach(self.__panel)
 end
 
+-- Lines 34-37
 function CoreTableEditorPanel:freeze()
 	self.__frozen = true
 
 	self.__panel:freeze()
 end
 
+-- Lines 39-47
 function CoreTableEditorPanel:thaw()
 	self.__frozen = nil
 
@@ -51,12 +58,14 @@ function CoreTableEditorPanel:thaw()
 	end
 end
 
+-- Lines 49-53
 function CoreTableEditorPanel:add_column(heading, format_style)
 	table.insert(self.__column_names, heading)
 	self.__list_ctrl:append_column(heading, format_style or "LIST_FORMAT_LEFT")
 	self:_refresh_fields_panel()
 end
 
+-- Lines 55-65
 function CoreTableEditorPanel:add_item(...)
 	local values = {
 		...
@@ -72,37 +81,44 @@ function CoreTableEditorPanel:add_item(...)
 	return item_index
 end
 
+-- Lines 67-70
 function CoreTableEditorPanel:remove_item(item_index)
 	self.__list_ctrl:delete_item(item_index)
 	self:set_selected_item(nil)
 end
 
+-- Lines 72-74
 function CoreTableEditorPanel:item_value(item_index, column_name)
 	return self:_string_to_value(self.__list_ctrl:get_item(item_index, self:_column_index(column_name)), column_name)
 end
 
+-- Lines 76-78
 function CoreTableEditorPanel:set_item_value(item_index, column_name, value)
 	self.__list_ctrl:set_item(item_index, self:_column_index(column_name), self:_value_to_string(value, column_name))
 end
 
+-- Lines 80-83
 function CoreTableEditorPanel:selected_item()
 	local item_index = self.__list_ctrl:selected_item()
 
 	return item_index >= 0 and item_index or nil
 end
 
+-- Lines 85-89
 function CoreTableEditorPanel:set_selected_item(item_index)
 	self.__list_ctrl:set_item_selected(item_index or -1, true)
 	self:_refresh_fields_panel()
 	self:_refresh_buttons_panel()
 end
 
+-- Lines 91-94
 function CoreTableEditorPanel:selected_item_value(column_name)
 	local selected_item_index = self:selected_item()
 
 	return selected_item_index and self:item_value(selected_item_index, column_name)
 end
 
+-- Lines 96-101
 function CoreTableEditorPanel:set_selected_item_value(column_name, value)
 	local selected_item_index = self:selected_item()
 
@@ -111,6 +127,7 @@ function CoreTableEditorPanel:set_selected_item_value(column_name, value)
 	end
 end
 
+-- Lines 103-108
 function CoreTableEditorPanel:_create_list_ctrl(parent)
 	self.__list_ctrl = EWS:ListCtrl(parent, "", "LC_REPORT,LC_SINGLE_SEL")
 
@@ -120,6 +137,7 @@ function CoreTableEditorPanel:_create_list_ctrl(parent)
 	return self.__list_ctrl
 end
 
+-- Lines 110-125
 function CoreTableEditorPanel:_create_buttons_panel(parent)
 	self.__buttons_panel = EWS:Panel(parent)
 	local panel_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -139,6 +157,7 @@ function CoreTableEditorPanel:_create_buttons_panel(parent)
 	return self.__buttons_panel
 end
 
+-- Lines 127-131
 function CoreTableEditorPanel:_create_fields_panel(parent)
 	self.__fields_panel = EWS:Panel(parent)
 
@@ -147,10 +166,12 @@ function CoreTableEditorPanel:_create_fields_panel(parent)
 	return self.__fields_panel
 end
 
+-- Lines 133-135
 function CoreTableEditorPanel:_refresh_buttons_panel()
 	self.__remove_button:set_enabled(self:selected_item() ~= nil)
 end
 
+-- Lines 137-152
 function CoreTableEditorPanel:_refresh_fields_panel()
 	if self.__frozen then
 		self.__needs_refresh = true
@@ -169,6 +190,7 @@ function CoreTableEditorPanel:_refresh_fields_panel()
 	end
 end
 
+-- Lines 154-169
 function CoreTableEditorPanel:_sizer_with_editable_fields(parent)
 	local sizer = EWS:BoxSizer("VERTICAL")
 	local first_control = nil
@@ -186,6 +208,7 @@ function CoreTableEditorPanel:_sizer_with_editable_fields(parent)
 	return sizer
 end
 
+-- Lines 171-185
 function CoreTableEditorPanel:_create_labeled_text_field(column_name, parent, sizer)
 	local enabled = self:selected_item() ~= nil
 	local label = EWS:StaticText(parent, string.pretty(column_name, true) .. ":")
@@ -202,45 +225,54 @@ function CoreTableEditorPanel:_create_labeled_text_field(column_name, parent, si
 	return control
 end
 
+-- Lines 187-190
 function CoreTableEditorPanel:_column_index(column_name)
 	local column_index = column_name and table.get_vector_index(self.__column_names, column_name) or assert(nil, string.format("Column \"%s\" does not exist.", tostring(column_name)))
 
 	return column_index - 1
 end
 
+-- Lines 192-195
 function CoreTableEditorPanel:_string_to_value(str, column_name)
 	return str or ""
 end
 
+-- Lines 197-200
 function CoreTableEditorPanel:_value_to_string(value, column_name)
 	return value == nil and "" or tostring(value)
 end
 
+-- Lines 202-206
 function CoreTableEditorPanel:_make_control_edited_callback(control, column_name, value_method_name)
 	return function ()
 		self:_on_control_edited(control, column_name, value_method_name)
 	end
 end
 
+-- Lines 208-211
 function CoreTableEditorPanel:_top_level_window(window)
 	window = window or self.__panel
 
 	return (type_name(window) == "EWSFrame" or type_name(window) == "EWSDialog") and window or self:_top_level_window(assert(window:parent()))
 end
 
+-- Lines 214-217
 function CoreTableEditorPanel:_on_selection_changed(sender)
 	self:_refresh_fields_panel()
 	self:_refresh_buttons_panel()
 end
 
+-- Lines 219-221
 function CoreTableEditorPanel:_on_add_button_clicked(sender)
 	self:add_item("<New Entry>")
 end
 
+-- Lines 223-225
 function CoreTableEditorPanel:_on_remove_button_clicked(sender)
 	self:remove_item(self:selected_item())
 end
 
+-- Lines 227-231
 function CoreTableEditorPanel:_on_control_edited(control, column_name, value_method_name)
 	value_method_name = value_method_name or "get_value"
 	local value = control[value_method_name](control)

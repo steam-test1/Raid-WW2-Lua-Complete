@@ -3,12 +3,14 @@ core:import("CoreMenuItem")
 MenuItemCustomizeController = MenuItemCustomizeController or class(CoreMenuItem.Item)
 MenuItemCustomizeController.TYPE = "customize_controller"
 
+-- Lines 6-10
 function MenuItemCustomizeController:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
 	self._type = MenuItemCustomizeController.TYPE
 end
 
+-- Lines 14-28
 function MenuItemCustomizeController:setup_gui(node, row_item)
 	row_item.gui_panel = node.item_panel:panel({
 		w = 450
@@ -27,6 +29,7 @@ function MenuItemCustomizeController:setup_gui(node, row_item)
 	return true
 end
 
+-- Lines 30-38
 function MenuItemCustomizeController:reload(row_item, node)
 	if self:parameters().axis then
 		row_item.controller_binding:set_text(string.upper(self:parameters().binding))
@@ -37,6 +40,7 @@ function MenuItemCustomizeController:reload(row_item, node)
 	return true
 end
 
+-- Lines 40-47
 function MenuItemCustomizeController:highlight_row_item(node, row_item, mouse_over)
 	row_item.controller_binding:set_color(row_item.color)
 	row_item.controller_binding:set_font(row_item.font and Idstring(row_item.font) or tweak_data.menu.default_font_no_outline_id)
@@ -46,6 +50,7 @@ function MenuItemCustomizeController:highlight_row_item(node, row_item, mouse_ov
 	return true
 end
 
+-- Lines 49-56
 function MenuItemCustomizeController:fade_row_item(node, row_item)
 	row_item.controller_name:set_color(row_item.color)
 	row_item.controller_name:set_font(row_item.font and Idstring(row_item.font) or tweak_data.menu.default_font_id)
@@ -55,6 +60,7 @@ function MenuItemCustomizeController:fade_row_item(node, row_item)
 	return true
 end
 
+-- Lines 58-71
 function MenuItemCustomizeController:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 

@@ -1,5 +1,6 @@
 TipsTweakData = TipsTweakData or class()
 
+-- Lines 3-20
 function TipsTweakData:init()
 	table.insert(self, {
 		string_id = "tip_tactical_reload"
@@ -39,6 +40,7 @@ function TipsTweakData:init()
 	})
 end
 
+-- Lines 23-33
 function TipsTweakData:get_a_tip()
 	local lvl = managers.experience:current_level()
 	local ids = {}

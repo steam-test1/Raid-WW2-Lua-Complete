@@ -1,5 +1,6 @@
 CoreAiEditorData = CoreAiEditorData or class()
 
+-- Lines 3-10
 function CoreAiEditorData:init(unit)
 	self.visibilty_exlude_filter = {}
 	self.visibilty_include_filter = {}

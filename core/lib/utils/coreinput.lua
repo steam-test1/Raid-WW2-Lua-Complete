@@ -1,20 +1,24 @@
 core:module("CoreInput")
 core:import("CoreClass")
 
+-- Lines 18-20
 function shift()
 	return Input:keyboard():down(Idstring("left shift")) or Input:keyboard():down(Idstring("right shift"))
 end
 
+-- Lines 22-24
 function ctrl()
 	return Input:keyboard():down(Idstring("left ctrl")) or Input:keyboard():down(Idstring("right ctrl"))
 end
 
+-- Lines 26-28
 function alt()
 	return Input:keyboard():down(Idstring("left alt"))
 end
 
 RepKey = RepKey or CoreClass.class()
 
+-- Lines 41-49
 function RepKey:init(keys, pause, rep)
 	self._keys = keys or {}
 	self._current_time = 0
@@ -24,10 +28,12 @@ function RepKey:init(keys, pause, rep)
 	self._input = Input:keyboard()
 end
 
+-- Lines 51-53
 function RepKey:set_input(input)
 	self._input = input
 end
 
+-- Lines 55-91
 function RepKey:update(d, dt)
 	local anykey = false
 

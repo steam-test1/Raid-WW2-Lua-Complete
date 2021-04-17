@@ -2,15 +2,18 @@ core:import("CoreSubtitlePresenter")
 
 DramaExt = DramaExt or class()
 
+-- Lines 5-8
 function DramaExt:init(unit)
 	self._unit = unit
 	self._cue = nil
 end
 
+-- Lines 10-12
 function DramaExt:name()
 	return self.character_name
 end
 
+-- Lines 14-26
 function DramaExt:play_sound(sound, sound_source)
 	self._cue = self._cue or {}
 	self._cue.sound = sound
@@ -24,6 +27,7 @@ function DramaExt:play_sound(sound, sound_source)
 	end
 end
 
+-- Lines 28-42
 function DramaExt:play_subtitle(string_id, duration, color, nationality_icon)
 	self._cue = self._cue or {}
 	self._cue.string_id = string_id
@@ -39,11 +43,13 @@ function DramaExt:play_subtitle(string_id, duration, color, nationality_icon)
 	managers.queued_tasks:queue(nil, self._do_show_subtitle, self, nil, 0.1, nil)
 end
 
+-- Lines 44-47
 function DramaExt:_do_show_subtitle()
 	managers.subtitle:set_visible(true)
 	managers.subtitle:set_enabled(true)
 end
 
+-- Lines 49-68
 function DramaExt:stop_cue()
 	if self._cue then
 		if self._cue.string_id then
@@ -60,6 +66,7 @@ function DramaExt:stop_cue()
 	end
 end
 
+-- Lines 70-91
 function DramaExt:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
 	if event_type == "end_of_event" then
 		managers.subtitle:clear_subtitle()
@@ -73,6 +80,7 @@ function DramaExt:sound_callback(instance, event_type, unit, sound_source, label
 	end
 end
 
+-- Lines 93-100
 function DramaExt:_subtitle_len(id)
 	local text = managers.localization:text(id)
 	local duration = text:len() * tweak_data.dialog.DURATION_PER_CHAR
@@ -84,6 +92,7 @@ function DramaExt:_subtitle_len(id)
 	return duration
 end
 
+-- Lines 102-106
 function DramaExt:set_voice(voice)
 	local ss = self._unit:sound_source()
 

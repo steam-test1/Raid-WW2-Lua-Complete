@@ -1,5 +1,6 @@
 VehicleCamera = VehicleCamera or class()
 
+-- Lines 3-12
 function VehicleCamera:init(unit)
 	self._unit = unit
 	self._camera = World:create_camera()
@@ -10,6 +11,7 @@ function VehicleCamera:init(unit)
 	self._camera:set_far_range(managers.viewport.CAMERA_FAR_RANGE)
 end
 
+-- Lines 14-39
 function VehicleCamera:setup()
 	self._viewport = managers.viewport:first_active_viewport()
 	self._director = self._viewport:director()
@@ -34,6 +36,7 @@ function VehicleCamera:setup()
 	end
 end
 
+-- Lines 42-52
 function VehicleCamera:_setup_sound_listener()
 	self._listener_id = managers.listener:add_listener("access_camera", self._camera, self._camera, nil, false)
 
@@ -52,6 +55,7 @@ end
 local pos = Vector3()
 local target = Vector3()
 
+-- Lines 56-73
 function VehicleCamera:update_camera()
 	if not self._active then
 		return
@@ -69,6 +73,7 @@ function VehicleCamera:update_camera()
 	self._camera_controller:set_default_up(target)
 end
 
+-- Lines 75-85
 function VehicleCamera:activate(player_unit)
 	self._active = true
 
@@ -82,6 +87,7 @@ function VehicleCamera:activate(player_unit)
 	end
 end
 
+-- Lines 87-98
 function VehicleCamera:deactivate(player_unit)
 	self._active = false
 	self._rear_cam_active = false
@@ -96,6 +102,7 @@ function VehicleCamera:deactivate(player_unit)
 	end
 end
 
+-- Lines 101-116
 function VehicleCamera:show_next(player_unit)
 	if #self._camera_list == 0 then
 		return
@@ -114,6 +121,7 @@ function VehicleCamera:show_next(player_unit)
 	end
 end
 
+-- Lines 118-140
 function VehicleCamera:set_rear_cam_active(active, player_unit)
 	if not self._back_camera_object then
 		return
@@ -141,10 +149,12 @@ function VehicleCamera:set_rear_cam_active(active, player_unit)
 	end
 end
 
+-- Lines 142-144
 function VehicleCamera:rear_cam_active()
 	return self._rear_cam_active
 end
 
+-- Lines 146-158
 function VehicleCamera:destroy()
 	if alive(self._camera) then
 		World:delete_camera(self._camera)

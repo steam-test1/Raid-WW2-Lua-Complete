@@ -1,5 +1,6 @@
 RaidGUIControlListItem = RaidGUIControlListItem or class(RaidGUIControl)
 
+-- Lines 4-42
 function RaidGUIControlListItem:init(parent, params, data)
 	RaidGUIControlListItem.super.init(self, parent, params)
 
@@ -68,6 +69,7 @@ function RaidGUIControlListItem:init(parent, params, data)
 	self:highlight_off()
 end
 
+-- Lines 44-48
 function RaidGUIControlListItem:_layout_breadcrumb()
 	self._breadcrumb = self._object:breadcrumb(self._data.breadcrumb)
 
@@ -75,6 +77,7 @@ function RaidGUIControlListItem:_layout_breadcrumb()
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 50-58
 function RaidGUIControlListItem:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(button, self, self._data)
@@ -85,10 +88,12 @@ function RaidGUIControlListItem:on_mouse_released(button)
 	end
 end
 
+-- Lines 60-62
 function RaidGUIControlListItem:selected()
 	return self._selected
 end
 
+-- Lines 64-79
 function RaidGUIControlListItem:select(dont_trigger_selected_callback)
 	self._selected = true
 
@@ -107,10 +112,12 @@ function RaidGUIControlListItem:select(dont_trigger_selected_callback)
 	end
 end
 
+-- Lines 81-83
 function RaidGUIControlListItem:unfocus()
 	self:unselect(true)
 end
 
+-- Lines 85-92
 function RaidGUIControlListItem:unselect(force)
 	self._selected = false
 
@@ -121,10 +128,12 @@ function RaidGUIControlListItem:unselect(force)
 	end
 end
 
+-- Lines 94-96
 function RaidGUIControlListItem:data()
 	return self._data
 end
 
+-- Lines 98-106
 function RaidGUIControlListItem:highlight_on()
 	if alive(self._item_background) then
 		self._item_background:show()
@@ -135,12 +144,14 @@ function RaidGUIControlListItem:highlight_on()
 	end
 end
 
+-- Lines 108-112
 function RaidGUIControlListItem:highlight_off(force)
 	if (force or not self._selected) and alive(self._item_background) then
 		self._item_background:hide()
 	end
 end
 
+-- Lines 114-127
 function RaidGUIControlListItem:confirm_pressed(button)
 	if self._selected then
 		if self._on_click_callback then

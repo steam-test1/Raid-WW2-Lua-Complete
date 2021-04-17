@@ -1,10 +1,12 @@
 HealthPackPickup = HealthPackPickup or class(Pickup)
 
+-- Lines 3-6
 function HealthPackPickup:init(unit)
 	HealthPackPickup.super.init(self, unit)
 	self:_randomize_glow_effect()
 end
 
+-- Lines 8-59
 function HealthPackPickup:_pickup(unit)
 	if self._picked_up then
 		return
@@ -55,9 +57,11 @@ function HealthPackPickup:_pickup(unit)
 	return false
 end
 
+-- Lines 61-62
 function HealthPackPickup:sync_net_event(event, peer)
 end
 
+-- Lines 64-66
 function HealthPackPickup:get_pickup_type()
 	return "health"
 end

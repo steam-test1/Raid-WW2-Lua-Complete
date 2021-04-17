@@ -10,6 +10,7 @@ RaidGUIControlTopStatSmall.PLAYER_NAME_FONT_SIZE = tweak_data.gui.font_sizes.sma
 RaidGUIControlTopStatSmall.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlTopStatSmall.ICON_SIZE = 64
 
+-- Lines 19-29
 function RaidGUIControlTopStatSmall:init(parent, params)
 	RaidGUIControlTopStatSmall.super.init(self, parent, params)
 
@@ -23,9 +24,11 @@ function RaidGUIControlTopStatSmall:init(parent, params)
 	self:_create_stat_info()
 end
 
+-- Lines 32-33
 function RaidGUIControlTopStatSmall:close()
 end
 
+-- Lines 36-45
 function RaidGUIControlTopStatSmall:_create_panel()
 	local control_params = clone(self._params)
 	control_params.w = RaidGUIControlTopStatSmall.WIDTH
@@ -36,6 +39,7 @@ function RaidGUIControlTopStatSmall:_create_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 48-78
 function RaidGUIControlTopStatSmall:_create_stat_info()
 	local player_name_params = {
 		name = "player_name_label",
@@ -71,6 +75,7 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 	self._stat_name_label:set_y(self._player_name_label:y() + self._player_name_label:h())
 end
 
+-- Lines 80-92
 function RaidGUIControlTopStatSmall:set_data(data)
 	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
 	self._stat_name_label:set_text(self:translate(data.stat, true))

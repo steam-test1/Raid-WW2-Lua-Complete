@@ -9,10 +9,12 @@ CoreShakeCameraCutsceneKey:register_serialized_attribute("amplitude", 1, tonumbe
 CoreShakeCameraCutsceneKey:register_serialized_attribute("frequency", 1, tonumber)
 CoreShakeCameraCutsceneKey:register_serialized_attribute("offset", 0, tonumber)
 
+-- Lines 11-13
 function CoreShakeCameraCutsceneKey:__tostring()
 	return "Trigger camera shake \"" .. self:name() .. "\"."
 end
 
+-- Lines 15-22
 function CoreShakeCameraCutsceneKey:play(player, undo, fast_forward)
 	if undo then
 		self:stop()
@@ -23,6 +25,7 @@ function CoreShakeCameraCutsceneKey:play(player, undo, fast_forward)
 	end
 end
 
+-- Lines 24-29
 function CoreShakeCameraCutsceneKey:stop()
 	if self._shake_abort_func then
 		self._shake_abort_func()

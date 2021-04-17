@@ -1,10 +1,12 @@
 NewShotgunBase = NewShotgunBase or class(NewRaycastWeaponBase)
 
+-- Lines 3-6
 function NewShotgunBase:init(...)
 	NewShotgunBase.super.init(self, ...)
 	self:setup_default()
 end
 
+-- Lines 8-18
 function NewShotgunBase:setup_default()
 	self._damage_falloff_near = tweak_data.weapon[self._name_id].damage_falloff_near
 	self._damage_falloff_far = tweak_data.weapon[self._name_id].damage_falloff_far
@@ -14,6 +16,7 @@ function NewShotgunBase:setup_default()
 	self._use_shotgun_reload = self._use_shotgun_reload or self._use_shotgun_reload == nil
 end
 
+-- Lines 22-32
 function NewShotgunBase:_create_use_setups()
 	local use_data = {}
 	local player_setup = {
@@ -29,6 +32,7 @@ function NewShotgunBase:_create_use_setups()
 	self._use_data = use_data
 end
 
+-- Lines 37-54
 function NewShotgunBase:_update_stats_values()
 	NewShotgunBase.super._update_stats_values(self)
 	self:setup_default()
@@ -52,6 +56,7 @@ local mvec_to = Vector3()
 local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
+-- Lines 62-264
 function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local result = nil
 	local hit_enemies = {}
@@ -67,6 +72,7 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 	local weight = 0.1
 	local enemy_died = false
 
+	-- Lines 80-107
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() then
 			local enemy_key = col_ray.unit:key()
@@ -243,6 +249,7 @@ end
 
 SaigaShotgun = SaigaShotgun or class(NewShotgunBase)
 
+-- Lines 269-272
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
@@ -251,6 +258,7 @@ end
 
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
+-- Lines 282-297
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {

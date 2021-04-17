@@ -1,5 +1,6 @@
 TeamAIInventory = TeamAIInventory or class(CopInventory)
 
+-- Lines 3-15
 function TeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 	local setup_data = {
@@ -19,6 +20,7 @@ function TeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	self:add_unit(new_unit, equip)
 end
 
+-- Lines 19-21
 function TeamAIInventory:pre_destroy(unit)
 	TeamAIInventory.super.pre_destroy(self, unit)
 end

@@ -3,6 +3,7 @@ require("core/lib/utils/dev/ews/tree_control/CoreManagedTreeControl")
 
 CoreMaterialEditor = CoreMaterialEditor or class()
 
+-- Lines 8-217
 function CoreMaterialEditor:_create_main_frame()
 	self._main_frame = EWS:Frame(self.FRAME_TITLE, Vector3(-1, -1, 0), Vector3(450, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
@@ -218,6 +219,7 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
+-- Lines 219-236
 function CoreMaterialEditor:_build_shader_options()
 	local shader_name = self._compilable_shader_combo_box:get_value()
 
@@ -237,12 +239,14 @@ function CoreMaterialEditor:_build_shader_options()
 	end
 end
 
+-- Lines 238-241
 function CoreMaterialEditor:_set_shader_option_tooltip(node, item)
 	local tooltip = node:parameter("tooltip") or ""
 
 	self._shader_option_tree:set_tooltip(item, tooltip)
 end
 
+-- Lines 243-262
 function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	for child in node:children() do
 		local project = child:parameter("project")
@@ -270,6 +274,7 @@ function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	end
 end
 
+-- Lines 264-330
 function CoreMaterialEditor:_create_parameter_panel()
 	local progress_dialog = nil
 

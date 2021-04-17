@@ -1,6 +1,7 @@
 RaidGUIControlList = RaidGUIControlList or class(RaidGUIControl)
 RaidGUIControlList.DIVIDER_HEIGHT = 2
 
+-- Lines 5-36
 function RaidGUIControlList:init(parent, params)
 	RaidGUIControlList.super.init(self, parent, params)
 
@@ -19,32 +20,39 @@ function RaidGUIControlList:init(parent, params)
 	self._abort_selection = false
 end
 
+-- Lines 38-40
 function RaidGUIControlList:scrollable_area_post_setup(params)
 	self:_reposition_selected_item()
 end
 
+-- Lines 44-46
 function RaidGUIControlList:set_abort_selection(value)
 	self._abort_selection = value
 end
 
+-- Lines 48-50
 function RaidGUIControlList:get_abort_selection()
 	return self._abort_selection
 end
 
+-- Lines 54-56
 function RaidGUIControlList:close()
 	self:_delete_items()
 end
 
+-- Lines 58-60
 function RaidGUIControlList:get_data()
 	return self._list_data
 end
 
+-- Lines 62-67
 function RaidGUIControlList:_create_list_panel()
 	local list_params = clone(self._params)
 	list_params.name = list_params.name .. "_list"
 	self._object = self._panel:panel(list_params)
 end
 
+-- Lines 69-139
 function RaidGUIControlList:_create_items()
 	self._list_data = self._data_source_callback()
 
@@ -116,10 +124,12 @@ function RaidGUIControlList:_create_items()
 	self._object:fit_content_height()
 end
 
+-- Lines 141-143
 function RaidGUIControlList:_create_item(item_class, item_params, item_data)
 	return self._object:create_custom_control(item_class, item_params, item_data)
 end
 
+-- Lines 145-155
 function RaidGUIControlList:_delete_items()
 	if self._list_items then
 		for _, item in ipairs(self._list_items) do
@@ -134,6 +144,7 @@ function RaidGUIControlList:_delete_items()
 	self._object:clear()
 end
 
+-- Lines 157-181
 function RaidGUIControlList:mouse_moved(o, x, y)
 	if not self:inside(x, y) then
 		if self._mouse_inside then
@@ -163,18 +174,22 @@ function RaidGUIControlList:mouse_moved(o, x, y)
 	return used, pointer
 end
 
+-- Lines 183-184
 function RaidGUIControlList:highlight_on()
 end
 
+-- Lines 186-187
 function RaidGUIControlList:highlight_off()
 end
 
+-- Lines 189-193
 function RaidGUIControlList:selected_item()
 	if self._selected_item and self._selected_item:data() then
 		return self._selected_item
 	end
 end
 
+-- Lines 195-212
 function RaidGUIControlList:_select_item(item, dont_trigger_selected_callback)
 	if self._selected_item then
 		self._selected_item:unselect()
@@ -197,6 +212,7 @@ function RaidGUIControlList:_select_item(item, dont_trigger_selected_callback)
 	end
 end
 
+-- Lines 214-247
 function RaidGUIControlList:_reposition_selected_item()
 	if self._params.scrollable_area_ref and self._selected_item then
 		self._inner_panel = self._params.scrollable_area_ref._inner_panel
@@ -221,12 +237,14 @@ function RaidGUIControlList:_reposition_selected_item()
 	end
 end
 
+-- Lines 249-253
 function RaidGUIControlList:click_item(item_index)
 	if self._list_items[item_index] then
 		self._list_items[item_index]:on_mouse_released(Idstring("0"))
 	end
 end
 
+-- Lines 255-275
 function RaidGUIControlList:select_item_by_index(item_index, dont_trigger_selected_callback, regaining_focus)
 	local new_item = self._list_items[item_index]
 
@@ -251,6 +269,7 @@ function RaidGUIControlList:select_item_by_index(item_index, dont_trigger_select
 	end
 end
 
+-- Lines 277-296
 function RaidGUIControlList:select_item_by_value(item_value)
 	if self._selected_item then
 		self._selected_item:unselect()
@@ -277,6 +296,7 @@ function RaidGUIControlList:select_item_by_value(item_value)
 	end
 end
 
+-- Lines 298-311
 function RaidGUIControlList:on_item_clicked(button, item, data, skip_select)
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlList:on_item_clicked] ABORT SELECTION")
@@ -291,6 +311,7 @@ function RaidGUIControlList:on_item_clicked(button, item, data, skip_select)
 	end
 end
 
+-- Lines 313-326
 function RaidGUIControlList:on_item_double_clicked(button, item, data, skip_select)
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlList:on_item_double_clicked] ABORT SELECTION")
@@ -307,6 +328,7 @@ function RaidGUIControlList:on_item_double_clicked(button, item, data, skip_sele
 	end
 end
 
+-- Lines 328-337
 function RaidGUIControlList:on_item_selected(item, data)
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlList:on_item_selected] ABORT SELECTION")
@@ -319,6 +341,7 @@ function RaidGUIControlList:on_item_selected(item, data)
 	end
 end
 
+-- Lines 339-344
 function RaidGUIControlList:refresh_data()
 	local cached_selected_value = self._selected
 
@@ -328,6 +351,7 @@ function RaidGUIControlList:refresh_data()
 	self._selected = cached_selected_value
 end
 
+-- Lines 347-372
 function RaidGUIControlList:set_selected(value, dont_trigger_selected_callback)
 	if self._selected_item and self._selected then
 		self._selected_item:unfocus()
@@ -352,10 +376,12 @@ function RaidGUIControlList:set_selected(value, dont_trigger_selected_callback)
 	end
 end
 
+-- Lines 374-376
 function RaidGUIControlList:selected_item_index()
 	return self._selected_item_idx
 end
 
+-- Lines 378-387
 function RaidGUIControlList:move_up()
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlList:move_up] ABORT SELECTION")
@@ -368,6 +394,7 @@ function RaidGUIControlList:move_up()
 	end
 end
 
+-- Lines 389-395
 function RaidGUIControlList:select_previous_row()
 	if self:_previous_row_idx() then
 		self:select_item_by_index(self._selected_item_idx)
@@ -377,6 +404,7 @@ function RaidGUIControlList:select_previous_row()
 	end
 end
 
+-- Lines 397-412
 function RaidGUIControlList:move_down()
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlList:move_down] ABORT SELECTION")
@@ -395,6 +423,7 @@ function RaidGUIControlList:move_down()
 	end
 end
 
+-- Lines 414-420
 function RaidGUIControlList:select_next_row()
 	if self:_next_row_idx() then
 		self:select_item_by_index(self._selected_item_idx)
@@ -404,6 +433,7 @@ function RaidGUIControlList:select_next_row()
 	end
 end
 
+-- Lines 422-429
 function RaidGUIControlList:confirm_pressed()
 	if self._selected and self._selected_item then
 		self._selected_item:confirm_pressed()
@@ -412,9 +442,11 @@ function RaidGUIControlList:confirm_pressed()
 	end
 end
 
+-- Lines 431-432
 function RaidGUIControlList:special_btn_pressed(...)
 end
 
+-- Lines 435-469
 function RaidGUIControlList:_previous_row_idx()
 	self._new_selected_item_idx = self._selected_item_idx - 1
 
@@ -451,6 +483,7 @@ function RaidGUIControlList:_previous_row_idx()
 	return false
 end
 
+-- Lines 471-506
 function RaidGUIControlList:_next_row_idx()
 	self._new_selected_item_idx = self._selected_item_idx + 1
 

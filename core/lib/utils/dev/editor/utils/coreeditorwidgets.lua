@@ -4,6 +4,7 @@ core:import("CoreTable")
 
 Widget = Widget or CoreClass.class()
 
+-- Lines 9-20
 function Widget:init(layer, name)
 	self._layer = layer
 	self._widget = World:spawn_unit(Idstring("core/units/" .. name .. "/" .. name), Vector3())
@@ -17,41 +18,51 @@ function Widget:init(layer, name)
 	self._yellow_pen = Draw:pen("no_z", "yellow")
 end
 
+-- Lines 22-24
 function Widget:widget()
 	return self._widget
 end
 
+-- Lines 26-28
 function Widget:set_enabled(enabled)
 	self._widget:set_enabled(self._use and enabled)
 end
 
+-- Lines 30-32
 function Widget:set_use(use)
 	self._use = use
 end
 
+-- Lines 34-36
 function Widget:enabled()
 	return self._widget:enabled()
 end
 
+-- Lines 38-40
 function Widget:set_position(pos)
 	self._widget:set_position(pos)
 end
 
+-- Lines 42-44
 function Widget:set_rotation(rot)
 	self._widget:set_rotation(rot)
 end
 
+-- Lines 46-47
 function Widget:update()
 end
 
+-- Lines 49-50
 function Widget:calculate()
 end
 
+-- Lines 52-53
 function Widget:reset_values()
 end
 
 MoveWidget = MoveWidget or CoreClass.class(Widget)
 
+-- Lines 59-66
 function MoveWidget:init(layer)
 	MoveWidget.super.init(self, layer, "move_widget")
 
@@ -62,12 +73,14 @@ function MoveWidget:init(layer)
 	self._widget:set_visible(false)
 end
 
+-- Lines 68-72
 function MoveWidget:reset_values()
 	self._move_widget_axis = {}
 	self._draw_axis = {}
 	self._move_widget_offset = Vector3()
 end
 
+-- Lines 74-132
 function MoveWidget:update(t, dt)
 	local u_pos = self._widget:position()
 	local u_rot = self._widget:rotation()
@@ -128,6 +141,7 @@ function MoveWidget:update(t, dt)
 	end
 end
 
+-- Lines 134-140
 function MoveWidget:calculate(unit, widget_rot)
 	local result_pos = self:calc_move_widget_pos(unit, widget_rot)
 	result_pos = result_pos + self._move_widget_offset
@@ -135,6 +149,7 @@ function MoveWidget:calculate(unit, widget_rot)
 	return result_pos
 end
 
+-- Lines 142-193
 function MoveWidget:calc_move_widget_pos(unit, widget_rot)
 	local result_pos = Vector3()
 
@@ -174,6 +189,7 @@ function MoveWidget:calc_move_widget_pos(unit, widget_rot)
 	return result_pos + self._unit_start_pos
 end
 
+-- Lines 195-225
 function MoveWidget:add_move_widget_axis(axis)
 	if axis == "x" then
 		table.insert(self._move_widget_axis, "x")
@@ -207,6 +223,7 @@ function MoveWidget:add_move_widget_axis(axis)
 	return table
 end
 
+-- Lines 227-230
 function MoveWidget:set_move_widget_offset(unit, widget_rot)
 	self._unit_start_pos = unit:position()
 	self._move_widget_offset = unit:position() - self:calc_move_widget_pos(unit, widget_rot)
@@ -214,32 +231,39 @@ end
 
 RotationWidget = RotationWidget or CoreClass.class(Widget)
 
+-- Lines 236-239
 function RotationWidget:init(layer)
 	RotationWidget.super.init(self, layer, "rotation_widget")
 
 	self._rotate_widget_axis = nil
 end
 
+-- Lines 241-243
 function RotationWidget:reset_values()
 	self._rotate_widget_axis = nil
 end
 
+-- Lines 245-247
 function RotationWidget:set_rotate_widget_axis(axis)
 	self._rotate_widget_axis = axis
 end
 
+-- Lines 249-251
 function RotationWidget:set_rotate_widget_start_screen_position(pos)
 	self._rotate_widget_start_screen_position = pos
 end
 
+-- Lines 253-255
 function RotationWidget:set_rotate_widget_unit_rot(rot)
 	self._rotate_widget_unit_rot = rot
 end
 
+-- Lines 257-259
 function RotationWidget:set_world_dir(ray_pos)
 	self._world_dir = ray_pos - self._widget:position()
 end
 
+-- Lines 261-279
 function RotationWidget:update(t, dt)
 	local u_pos = self._widget:position()
 	local u_rot = self._widget:rotation()
@@ -265,6 +289,7 @@ function RotationWidget:update(t, dt)
 	end
 end
 
+-- Lines 281-349
 function RotationWidget:calculate(unit, widget_rot, widget_pos, widget_screen_pos)
 	managers.editor:world_to_screen(unit:position())
 

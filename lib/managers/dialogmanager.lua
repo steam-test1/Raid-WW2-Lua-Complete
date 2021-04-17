@@ -82,6 +82,7 @@ DialogManager.CHARS = {
 	DialogManager.FEMALE_SPY
 }
 
+-- Lines 42-51
 function DialogManager:init()
 	self._dialog_list = {}
 	self._random_list = {}
@@ -91,10 +92,12 @@ function DialogManager:init()
 	self._ventrilo_unit = World:spawn_unit(Idstring("units/vanilla/characters/players/fps_mover/mrs_white"), Vector3(), Rotation())
 end
 
+-- Lines 53-55
 function DialogManager:init_finalize()
 	self:_load_dialogs()
 end
 
+-- Lines 57-110
 function DialogManager:_create_dialogue_instance(id, instigator, test)
 	local dialogue = deep_clone(self._dialog_list[id])
 	local nr_criminals = managers.criminals:nr_taken_criminals()
@@ -156,6 +159,7 @@ function DialogManager:_create_dialogue_instance(id, instigator, test)
 	return dialogue
 end
 
+-- Lines 112-137
 function DialogManager:_parse_dialog_character(char, charA, charB, charC, dialogue, line, instigator, default_char)
 	local result = nil
 
@@ -186,10 +190,12 @@ function DialogManager:_parse_dialog_character(char, charA, charB, charC, dialog
 	return result
 end
 
+-- Lines 139-141
 function DialogManager:_random_criminal(nr_criminals)
 	return math.floor(math.random() * 100 % nr_criminals + 1)
 end
 
+-- Lines 144-166
 function DialogManager:queue_random(id, params)
 	local r = self._random_list[id]
 
@@ -222,6 +228,7 @@ function DialogManager:queue_random(id, params)
 	end
 end
 
+-- Lines 168-174
 function DialogManager:sync_queue_dialog(id, instigator)
 	if self._paused then
 		return
@@ -232,6 +239,7 @@ function DialogManager:sync_queue_dialog(id, instigator)
 	})
 end
 
+-- Lines 176-207
 function DialogManager:queue_dialog(id, params, test)
 	if not self._dialog_list[id] then
 		Application:error("[DialogManager:queue_dialog] The dialog script tries to queue a dialog with id '" .. tostring(id) .. "' which doesn't seem to exist!")
@@ -266,6 +274,7 @@ function DialogManager:queue_dialog(id, params, test)
 	end
 end
 
+-- Lines 209-221
 function DialogManager:_calc_instigator_string(params)
 	local instigator = nil
 
@@ -282,6 +291,7 @@ function DialogManager:_calc_instigator_string(params)
 	return instigator
 end
 
+-- Lines 223-228
 function DialogManager:set_paused(value)
 	self._paused = value
 
@@ -290,10 +300,12 @@ function DialogManager:set_paused(value)
 	end
 end
 
+-- Lines 230-232
 function DialogManager:paused()
 	return self._paused
 end
 
+-- Lines 234-281
 function DialogManager:do_queue_dialog(id, params, test)
 	local instigator = self:_calc_instigator_string(params)
 
@@ -345,6 +357,7 @@ function DialogManager:do_queue_dialog(id, params, test)
 	return true
 end
 
+-- Lines 283-310
 function DialogManager:finished()
 	self:_stop_dialog()
 
@@ -382,12 +395,14 @@ function DialogManager:finished()
 	end
 end
 
+-- Lines 312-317
 function DialogManager:on_dialog_completed()
 	if self._current_dialog.params and self._current_dialog.params.done_cbk then
 		self:_call_done_callback(self._current_dialog.params.done_cbk, "done")
 	end
 end
 
+-- Lines 319-333
 function DialogManager:quit_dialog(no_done_cbk)
 	managers.queued_tasks:unqueue_all(nil, self)
 	managers.subtitle:clear_subtitle()
@@ -403,6 +418,7 @@ function DialogManager:quit_dialog(no_done_cbk)
 	self._next_dialog = nil
 end
 
+-- Lines 335-342
 function DialogManager:conversation_names()
 	local t = {}
 
@@ -415,6 +431,7 @@ function DialogManager:conversation_names()
 	return t
 end
 
+-- Lines 344-351
 function DialogManager:random_names()
 	local t = {}
 
@@ -427,10 +444,12 @@ function DialogManager:random_names()
 	return t
 end
 
+-- Lines 353-355
 function DialogManager:on_simulation_ended()
 	self:quit_dialog(true)
 end
 
+-- Lines 357-380
 function DialogManager:_setup_position(dialog, char_data)
 	Application:debug("[DialogManager:_setup_position]", inspect(char_data))
 
@@ -455,6 +474,7 @@ function DialogManager:_setup_position(dialog, char_data)
 	return unit
 end
 
+-- Lines 382-479
 function DialogManager:_play_dialog(data)
 	local dialog = data.dialog
 	local unit = dialog.params.on_unit or dialog.params.override_characters and managers.player:player_unit()
@@ -558,12 +578,14 @@ function DialogManager:_play_dialog(data)
 	end
 end
 
+-- Lines 481-487
 function DialogManager:_stop_dialog()
 	if self._current_dialog and alive(self._current_dialog.unit) then
 		self._current_dialog.unit:drama():stop_cue()
 	end
 end
 
+-- Lines 489-494
 function DialogManager:_call_done_callback(done_cbk, reason)
 	if done_cbk then
 		done_cbk(reason)
@@ -571,6 +593,7 @@ function DialogManager:_call_done_callback(done_cbk, reason)
 	end
 end
 
+-- Lines 496-505
 function DialogManager:_load_dialogs()
 	local file_name = "gamedata/dialogs/index"
 	local data = PackageManager:script_data(Idstring("dialog_index"), file_name:id())
@@ -582,6 +605,7 @@ function DialogManager:_load_dialogs()
 	end
 end
 
+-- Lines 507-560
 function DialogManager:_load_dialog_data(name)
 	local file_name = "gamedata/dialogs/" .. name
 	local data = PackageManager:script_data(Idstring("dialog"), file_name:id())
@@ -646,6 +670,7 @@ function DialogManager:_load_dialog_data(name)
 	end
 end
 
+-- Lines 562-574
 function DialogManager:_parse_line_node(node)
 	local censored = node.censored
 	local sound = node.sound
@@ -662,6 +687,7 @@ function DialogManager:_parse_line_node(node)
 	}
 end
 
+-- Lines 576-587
 function DialogManager:_parse_case_node(parent_id, node)
 	self._dialog_list[parent_id].cases = self._dialog_list[parent_id].cases or {}
 	local case_node = {
@@ -681,6 +707,7 @@ function DialogManager:_parse_case_node(parent_id, node)
 	table.insert(self._dialog_list[parent_id].cases, case_node)
 end
 
+-- Lines 589-608
 function DialogManager:is_dialogue_playing_for_local_player()
 	local res = false
 
@@ -704,6 +731,7 @@ function DialogManager:is_dialogue_playing_for_local_player()
 	return res
 end
 
+-- Lines 610-621
 function DialogManager:register_character(char, unit)
 	local found = nil
 
@@ -719,9 +747,11 @@ function DialogManager:register_character(char, unit)
 	end
 end
 
+-- Lines 623-625
 function DialogManager:update(t, dt)
 end
 
+-- Lines 627-672
 function DialogManager:debug_print_missiong_strings()
 	for dialog_id, data in pairs(managers.dialog._dialog_list) do
 		if data.cases then
@@ -744,10 +774,12 @@ function DialogManager:debug_print_missiong_strings()
 	end
 end
 
+-- Lines 674-676
 function DialogManager:set_subtitles_shown(show_subtitles)
 	self._show_subtitles = not not show_subtitles
 end
 
+-- Lines 678-680
 function DialogManager:is_showing_subtitles()
 	return self._show_subtitles
 end

@@ -1,5 +1,6 @@
 WarcrySharpshooter = WarcrySharpshooter or class(Warcry)
 
+-- Lines 3-13
 function WarcrySharpshooter:init()
 	WarcrySharpshooter.super.init(self)
 	managers.system_event_listener:add_listener("warcry_sharpshooter_enemy_killed", {
@@ -14,6 +15,7 @@ end
 local ids_layer1_animate_factor = Idstring("layer1_animate_factor")
 local ids_blend_factor = Idstring("blend_factor")
 
+-- Lines 17-41
 function WarcrySharpshooter:update(dt)
 	local lerp = WarcrySharpshooter.super.update(self, dt)
 	local material = managers.warcry:warcry_post_material()
@@ -45,6 +47,7 @@ local ids_contour = Idstring("contour")
 local ids_empty = Idstring("empty")
 local ids_contour_color = Idstring("contour_color")
 
+-- Lines 47-59
 function WarcrySharpshooter:activate()
 	WarcrySharpshooter.super.activate(self)
 
@@ -59,6 +62,7 @@ function WarcrySharpshooter:activate()
 	end
 end
 
+-- Lines 61-77
 function WarcrySharpshooter:deactivate()
 	WarcrySharpshooter.super.deactivate(self)
 
@@ -77,16 +81,19 @@ function WarcrySharpshooter:deactivate()
 	managers.enemy:disable_countours_on_dead_enemies()
 end
 
+-- Lines 79-81
 function WarcrySharpshooter:duration()
 	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
 end
 
+-- Lines 83-86
 function WarcrySharpshooter:get_level_description(level)
 	level = math.clamp(level, 1, #self._tweak_data.buffs)
 
 	return managers.localization:text("skill_warcry_sharpshooter_level_" .. tostring(level) .. "_desc")
 end
 
+-- Lines 88-108
 function WarcrySharpshooter:_on_enemy_killed(params)
 	local unit = managers.player:player_unit()
 
@@ -109,6 +116,7 @@ function WarcrySharpshooter:_on_enemy_killed(params)
 	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)
 end
 
+-- Lines 110-112
 function WarcrySharpshooter:cleanup()
 	managers.system_event_listener:remove_listener("warcry_sharpshooter_enemy_killed")
 end

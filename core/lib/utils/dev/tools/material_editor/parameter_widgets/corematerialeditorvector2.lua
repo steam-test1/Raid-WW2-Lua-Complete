@@ -3,6 +3,7 @@ require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_editor/parameter_widgets/CoreMaterialEditorParameter")
 local CoreMaterialEditorVector2 = CoreMaterialEditorVector2 or class(CoreMaterialEditorParameter)
 
+-- Lines 8-39
 function CoreMaterialEditorVector2:init(parent, editor, parameter_info, parameter_node)
 	CoreMaterialEditorParameter.init(self, parent, editor, parameter_info, parameter_node)
 
@@ -41,14 +42,17 @@ function CoreMaterialEditorVector2:init(parent, editor, parameter_info, paramete
 	self._right_box:add(main_box, 1, 0, "EXPAND")
 end
 
+-- Lines 41-43
 function CoreMaterialEditorVector2:update(t, dt)
 	CoreMaterialEditorParameter.update(self, t, dt)
 end
 
+-- Lines 45-47
 function CoreMaterialEditorVector2:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
+-- Lines 49-65
 function CoreMaterialEditorVector2:on_toggle_customize()
 	self._customize = not self._customize
 
@@ -65,6 +69,7 @@ function CoreMaterialEditorVector2:on_toggle_customize()
 	self:update_live()
 end
 
+-- Lines 69-80
 function CoreMaterialEditorVector2:_on_slider()
 	self._value = self:_from_slider_range(Vector3(self._x_slider:get_value(), self._y_slider:get_value()))
 
@@ -74,6 +79,7 @@ function CoreMaterialEditorVector2:_on_slider()
 	self._y_text_ctrl:set_value(string.format("%.3f", self._value.y))
 end
 
+-- Lines 82-96
 function CoreMaterialEditorVector2:_on_text_ctrl()
 	self._value = Vector3(tonumber(self._x_text_ctrl:get_value()) or 0, tonumber(self._y_text_ctrl:get_value()) or 0)
 
@@ -87,6 +93,7 @@ function CoreMaterialEditorVector2:_on_text_ctrl()
 	self._editor:_update_output()
 end
 
+-- Lines 98-114
 function CoreMaterialEditorVector2:_to_slider_range(v)
 	local step_x = self._parameter_info.step.x
 
@@ -103,6 +110,7 @@ function CoreMaterialEditorVector2:_to_slider_range(v)
 	return Vector3(CoreMaterialEditorParameter.to_slider_range(self, v.x, self._parameter_info.min.x, step_x), CoreMaterialEditorParameter.to_slider_range(self, v.y, self._parameter_info.min.y, step_y))
 end
 
+-- Lines 116-132
 function CoreMaterialEditorVector2:_from_slider_range(v)
 	local step_x = self._parameter_info.step.x
 

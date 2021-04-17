@@ -1,5 +1,6 @@
 CopActionCrouch = CopActionCrouch or class()
 
+-- Lines 4-56
 function CopActionCrouch:init(action_desc, common_data)
 	self._ext_movement = common_data.ext_movement
 	local enter_t = nil
@@ -58,6 +59,7 @@ function CopActionCrouch:init(action_desc, common_data)
 	end
 end
 
+-- Lines 60-66
 function CopActionCrouch:update(t)
 	if self._ext_anim.base_need_upd then
 		self._ext_movement:upd_m_head_pos()
@@ -66,10 +68,12 @@ function CopActionCrouch:update(t)
 	end
 end
 
+-- Lines 70-72
 function CopActionCrouch:expired()
 	return self._expired
 end
 
+-- Lines 76-78
 function CopActionCrouch:type()
 	return "crouch"
 end

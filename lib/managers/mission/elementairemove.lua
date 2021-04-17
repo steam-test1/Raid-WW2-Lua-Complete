@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementAIRemove = ElementAIRemove or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementAIRemove:init(...)
 	ElementAIRemove.super.init(self, ...)
 end
 
+-- Lines 9-33
 function ElementAIRemove:on_executed(instigator)
 	if not self._values.enabled then
 		return

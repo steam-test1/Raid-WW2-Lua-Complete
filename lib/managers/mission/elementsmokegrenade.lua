@@ -2,13 +2,16 @@ core:import("CoreMissionScriptElement")
 
 ElementSmokeGrenade = ElementSmokeGrenade or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementSmokeGrenade:init(...)
 	ElementSmokeGrenade.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementSmokeGrenade:client_on_executed(...)
 end
 
+-- Lines 13-43
 function ElementSmokeGrenade:on_executed(instigator)
 	if not self._values.enabled then
 		return

@@ -2,18 +2,22 @@ core:import("CoreMissionScriptElement")
 
 ElementAwardAchievment = ElementAwardAchievment or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementAwardAchievment:init(...)
 	ElementAwardAchievment.super.init(self, ...)
 end
 
+-- Lines 10-12
 function ElementAwardAchievment:client_on_executed_end_screen(...)
 	self:on_executed(...)
 end
 
+-- Lines 14-16
 function ElementAwardAchievment:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 18-50
 function ElementAwardAchievment:on_executed(instigator)
 	if not self._values.enabled then
 		return

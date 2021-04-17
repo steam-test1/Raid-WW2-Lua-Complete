@@ -1,5 +1,6 @@
 HUDInteraction = HUDInteraction or class()
 
+-- Lines 4-36
 function HUDInteraction:init(hud, child_name)
 	self._hud_panel = hud.panel
 	self._progress_bar_width = 288
@@ -60,6 +61,7 @@ function HUDInteraction:init(hud, child_name)
 	self._panels_being_animated = {}
 end
 
+-- Lines 39-61
 function HUDInteraction:show_interact(data)
 	self._prompt_id = nil
 	self._saved_text = data and data.text or self._saved_text
@@ -88,12 +90,14 @@ function HUDInteraction:show_interact(data)
 	end
 end
 
+-- Lines 63-67
 function HUDInteraction:hide_prompt(id)
 	if self._prompt_id == id then
 		self._hud_panel:child(self._child_name_text):set_visible(false)
 	end
 end
 
+-- Lines 69-75
 function HUDInteraction:remove_interact()
 	if not alive(self._hud_panel) then
 		return
@@ -103,6 +107,7 @@ function HUDInteraction:remove_interact()
 	self._hud_panel:child(self._child_ivalid_name_text):set_visible(false)
 end
 
+-- Lines 77-91
 function HUDInteraction:show_interaction_bar(current, total)
 	self:remove_interact()
 
@@ -128,6 +133,7 @@ function HUDInteraction:show_interaction_bar(current, total)
 	self._progress_bar:animate(callback(self, self, "_animate_interaction_start"), 0.25)
 end
 
+-- Lines 96-103
 function HUDInteraction:set_interaction_bar_width(current, total)
 	if not self._progress_bar then
 		return
@@ -138,6 +144,7 @@ function HUDInteraction:set_interaction_bar_width(current, total)
 	self._progress_bar:set_width(progress * self._progress_bar_width)
 end
 
+-- Lines 108-113
 function HUDInteraction:animate_progress(duration)
 	if not self._progress_bar then
 		self:show_interaction_bar(0, duration)
@@ -146,6 +153,7 @@ function HUDInteraction:animate_progress(duration)
 	self._auto_animation = self._progress_bar:animate(callback(self, self, "_animate_interaction_duration"), duration)
 end
 
+-- Lines 115-135
 function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 	if complete then
 		local progress_full = self._hud_panel:rect({
@@ -189,6 +197,7 @@ function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 	end
 end
 
+-- Lines 137-145
 function HUDInteraction:set_bar_valid(valid, text_id)
 	self._hud_panel:child(self._child_name_text):set_visible(valid)
 
@@ -201,6 +210,7 @@ function HUDInteraction:set_bar_valid(valid, text_id)
 	invalid_text:set_visible(not valid)
 end
 
+-- Lines 147-162
 function HUDInteraction:destroy()
 	self._hud_panel:remove(self._hud_panel:child(self._child_name_text))
 	self._hud_panel:remove(self._hud_panel:child(self._child_ivalid_name_text))
@@ -218,6 +228,7 @@ function HUDInteraction:destroy()
 	end
 end
 
+-- Lines 166-182
 function HUDInteraction:_animate_interaction_start(progress_bar, duration)
 	local t = 0
 	self._panels_being_animated[tostring(progress_bar)] = true
@@ -236,6 +247,7 @@ function HUDInteraction:_animate_interaction_start(progress_bar, duration)
 	self._panels_being_animated[tostring(progress_bar)] = false
 end
 
+-- Lines 184-193
 function HUDInteraction:_animate_interaction_duration(progress_bar, duration)
 	local t = 0
 
@@ -251,6 +263,7 @@ function HUDInteraction:_animate_interaction_duration(progress_bar, duration)
 	self:set_interaction_bar_width(duration, duration)
 end
 
+-- Lines 195-210
 function HUDInteraction:_animate_interaction_cancel(progress_bar, duration)
 	local t = 0
 	local start_height = progress_bar:h()
@@ -268,6 +281,7 @@ function HUDInteraction:_animate_interaction_cancel(progress_bar, duration)
 	progress_bar:parent():remove(progress_bar)
 end
 
+-- Lines 212-229
 function HUDInteraction:_animate_interaction_complete(progress_bar)
 	local duration = 0.5
 	local t = 0
@@ -287,6 +301,7 @@ function HUDInteraction:_animate_interaction_complete(progress_bar)
 	progress_bar:parent():remove(progress_bar)
 end
 
+-- Lines 231-238
 function HUDInteraction:ease_in_out_multiple(t, starting_value, change, duration)
 	t = t / (duration / 2)
 
@@ -299,18 +314,21 @@ function HUDInteraction:ease_in_out_multiple(t, starting_value, change, duration
 	return -change / 2 * (t * (t - 2) - 1) + starting_value
 end
 
+-- Lines 240-243
 function HUDInteraction:_ease_in_quart(t, starting_value, change, duration)
 	t = t / duration
 
 	return change * t * t * t * t + starting_value
 end
 
+-- Lines 245-248
 function HUDInteraction:_ease_in_quint(t, starting_value, change, duration)
 	t = t / duration
 
 	return change * t * t * t * t * t + starting_value
 end
 
+-- Lines 250-254
 function HUDInteraction:_ease_out_quint(t, starting_value, change, duration)
 	t = t / duration
 	t = t - 1

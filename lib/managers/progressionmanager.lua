@@ -17,6 +17,7 @@ ProgressionManager.TROPHY_MAX_ROTATION_OFFSET = 22
 ProgressionManager.TROPHY_MAX_X_OFFSET = 8
 ProgressionManager.TROPHY_MAX_Y_OFFSET = 5
 
+-- Lines 37-45
 function ProgressionManager.get_instance()
 	if not Global.progression_manager then
 		Global.progression_manager = ProgressionManager:new()
@@ -27,6 +28,7 @@ function ProgressionManager.get_instance()
 	return Global.progression_manager
 end
 
+-- Lines 48-59
 function ProgressionManager:init()
 	self._mission_progression_completion_pending = false
 	self._mission_progression_completed = false
@@ -40,14 +42,17 @@ function ProgressionManager:init()
 	self:_unlock_first_time_missions()
 end
 
+-- Lines 62-64
 function ProgressionManager:reset()
 	self:init()
 end
 
+-- Lines 67-69
 function ProgressionManager:_setup()
 	self:_setup_mission_states()
 end
 
+-- Lines 72-103
 function ProgressionManager:_setup_mission_states()
 	if not self._mission_progression[OperationsTweakData.JOB_TYPE_RAID] then
 		self._mission_progression[OperationsTweakData.JOB_TYPE_RAID] = {}
@@ -80,6 +85,7 @@ function ProgressionManager:_setup_mission_states()
 	end
 end
 
+-- Lines 106-111
 function ProgressionManager:_unlock_mission(job_type, mission_id)
 	Application:trace("[ProgressionManager][_unlock_mission] Unlocking mission " .. tostring(mission_id))
 
@@ -88,12 +94,14 @@ function ProgressionManager:_unlock_mission(job_type, mission_id)
 	self._mission_progression[job_type][mission_id].difficulty_completed = 0
 end
 
+-- Lines 114-117
 function ProgressionManager:_offer_mission(mission_id)
 	Application:trace("[ProgressionManager][_offer_mission] Offering mission " .. tostring(mission_id))
 
 	self._mission_progression[OperationsTweakData.JOB_TYPE_RAID][mission_id].state = ProgressionManager.MISSION_STATE_OFFERED
 end
 
+-- Lines 120-126
 function ProgressionManager:mission_unlocked(job_type, mission_id)
 	if self._mission_progression[job_type][mission_id] and self._mission_progression[job_type][mission_id].state == ProgressionManager.MISSION_STATE_UNLOCKED then
 		return true
@@ -102,6 +110,7 @@ function ProgressionManager:mission_unlocked(job_type, mission_id)
 	return false
 end
 
+-- Lines 129-139
 function ProgressionManager:have_pending_missions_to_unlock()
 	for mission_type, mission_group in pairs(self._mission_progression) do
 		for mission_id, mission_data in pairs(mission_group) do
@@ -114,6 +123,7 @@ function ProgressionManager:have_pending_missions_to_unlock()
 	return false
 end
 
+-- Lines 142-154
 function ProgressionManager:pending_missions_to_unlock()
 	local pending_missions = {}
 
@@ -128,10 +138,12 @@ function ProgressionManager:pending_missions_to_unlock()
 	return pending_missions
 end
 
+-- Lines 157-159
 function ProgressionManager:mission_progression_completed()
 	return self._mission_progression_completed
 end
 
+-- Lines 163-177
 function ProgressionManager:set_operations_state(state)
 	if self._operations_state == state then
 		return
@@ -150,14 +162,17 @@ function ProgressionManager:set_operations_state(state)
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
+-- Lines 180-182
 function ProgressionManager:operations_state()
 	return self._operations_state
 end
 
+-- Lines 185-187
 function ProgressionManager:operations_unlocked()
 	return self._operations_state == ProgressionManager.OPERATIONS_STATE_UNLOCKED
 end
 
+-- Lines 190-196
 function ProgressionManager:at_final_unlock_cycle()
 	if not self._mission_progression_completed and (self._unlock_cycles_completed == tweak_data.operations.progression.unlock_cycles - 1 or self._unlock_cycles_completed == tweak_data.operations.progression.unlock_cycles) then
 		return true
@@ -166,6 +181,7 @@ function ProgressionManager:at_final_unlock_cycle()
 	return false
 end
 
+-- Lines 199-205
 function ProgressionManager:time_until_next_unlock()
 	if self._mission_progression_completed or self._mission_progression_completion_pending then
 		return 0
@@ -174,6 +190,7 @@ function ProgressionManager:time_until_next_unlock()
 	return self._mission_unlock_timer
 end
 
+-- Lines 208-214
 function ProgressionManager:get_mission_progression(mission_type, mission_id)
 	if not self:mission_unlocked(mission_type, mission_id) then
 		return
@@ -182,6 +199,7 @@ function ProgressionManager:get_mission_progression(mission_type, mission_id)
 	return self._mission_progression[mission_type][mission_id].difficulty_available, self._mission_progression[mission_type][mission_id].difficulty_completed
 end
 
+-- Lines 217-230
 function ProgressionManager:complete_mission_on_difficulty(job_type, mission_id, difficulty)
 	Application:trace("[ProgressionManager][complete_mission_on_difficulty] Completing mission " .. tostring(mission_id) .. " on difficulty " .. tostring(difficulty))
 
@@ -198,6 +216,7 @@ function ProgressionManager:complete_mission_on_difficulty(job_type, mission_id,
 	end
 end
 
+-- Lines 233-266
 function ProgressionManager:choose_offered_mission(mission_id)
 	Application:trace("[ProgressionManager][choose_offered_mission] The player has chosen to unlock mission " .. tostring(mission_id))
 
@@ -237,6 +256,7 @@ function ProgressionManager:choose_offered_mission(mission_id)
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
+-- Lines 269-279
 function ProgressionManager:clear_last_unlocked_raid()
 	local last_unlocked = nil
 
@@ -250,6 +270,7 @@ function ProgressionManager:clear_last_unlocked_raid()
 	return last_unlocked
 end
 
+-- Lines 282-299
 function ProgressionManager:_unlock_first_time_missions()
 	Application:trace("[ProgressionManager][_unlock_first_time_missions] Unlocking first-time missions!")
 
@@ -271,6 +292,7 @@ function ProgressionManager:_unlock_first_time_missions()
 	self._first_time_missions_unlocked = true
 end
 
+-- Lines 302-326
 function ProgressionManager:_unlock_all_missions()
 	Application:trace("[ProgressionManager][_unlock_all_missions] Unlocking all remaining missions!")
 
@@ -305,10 +327,12 @@ function ProgressionManager:_unlock_all_missions()
 	self._mission_progression_completion_pending = true
 end
 
+-- Lines 329-331
 function ProgressionManager:mission_progression_completion_pending()
 	return self._mission_progression_completion_pending
 end
 
+-- Lines 334-340
 function ProgressionManager:complete_mission_progression()
 	Application:trace("[ProgressionManager][complete_mission_progression] Mission progression completed!")
 
@@ -318,6 +342,7 @@ function ProgressionManager:complete_mission_progression()
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
+-- Lines 343-386
 function ProgressionManager:_offer_new_missions()
 	Application:trace("[ProgressionManager][_offer_new_missions] Offering a couple of new missions!")
 
@@ -370,6 +395,7 @@ function ProgressionManager:_offer_new_missions()
 	})
 end
 
+-- Lines 389-398
 function ProgressionManager:update(t, dt)
 	local is_in_mission = BaseNetworkHandler._gamestate_filter.any_ingame_mission[game_state_machine:current_state_name()] and not managers.raid_job:is_camp_loaded()
 
@@ -382,6 +408,7 @@ function ProgressionManager:update(t, dt)
 	end
 end
 
+-- Lines 401-412
 function ProgressionManager:_on_cycle_completed()
 	Application:trace("[ProgressionManager][_on_cycle_completed] Progression cycle completed. Determining what to do...")
 
@@ -397,6 +424,7 @@ function ProgressionManager:_on_cycle_completed()
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
+-- Lines 415-453
 function ProgressionManager:layout_camp()
 	Application:trace("[ProgressionManager][layout_camp] Laying out camp.")
 
@@ -436,12 +464,14 @@ function ProgressionManager:layout_camp()
 	end
 end
 
+-- Lines 455-458
 function ProgressionManager:sync_trophy_level(unit, trophy_level)
 	local difficulty_sequence_to_run = ProgressionManager.TROPHY_DIFFICULTY_SEQUENCES[trophy_level]
 
 	unit:damage():run_sequence_simple(difficulty_sequence_to_run)
 end
 
+-- Lines 461-473
 function ProgressionManager:_get_trophy_case_unit()
 	local units = World:find_units_quick("all", managers.slot:get_mask("world_geometry"))
 
@@ -456,6 +486,7 @@ function ProgressionManager:_get_trophy_case_unit()
 	Application:error("[ProgressionManager][_get_trophy_case_unit] Did not find the trophy case!")
 end
 
+-- Lines 476-488
 function ProgressionManager:save_profile_slot(data)
 	local state = {
 		version = ProgressionManager.VERSION,
@@ -470,6 +501,7 @@ function ProgressionManager:save_profile_slot(data)
 	data.ProgressionManager = state
 end
 
+-- Lines 491-517
 function ProgressionManager:load_profile_slot(data, version)
 	local state = data.ProgressionManager
 

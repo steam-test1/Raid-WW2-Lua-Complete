@@ -4,6 +4,7 @@ RaidGUIControlPagedGridCharacterCustomization.DEFAULT_ITEM_PADDING = 16
 RaidGUIControlPagedGridCharacterCustomization.PAGING_PANEL_HEIGHT = 25
 RaidGUIControlPagedGridCharacterCustomization.PAGING_STEPPER_WIDTH = 100
 
+-- Lines 27-74
 function RaidGUIControlPagedGridCharacterCustomization:init(parent, params)
 	RaidGUIControlPagedGridCharacterCustomization.super.init(self, parent, params)
 
@@ -50,13 +51,16 @@ function RaidGUIControlPagedGridCharacterCustomization:init(parent, params)
 	self:_create_items()
 end
 
+-- Lines 77-78
 function RaidGUIControlPagedGridCharacterCustomization:close()
 end
 
+-- Lines 80-82
 function RaidGUIControlPagedGridCharacterCustomization:mouse_moved(o, x, y)
 	return self._grid_panel:mouse_moved(o, x, y)
 end
 
+-- Lines 84-97
 function RaidGUIControlPagedGridCharacterCustomization:mouse_released(o, button, x, y)
 	for _, grid_item in ipairs(self._grid_items) do
 		if grid_item:inside(x, y) then
@@ -73,6 +77,7 @@ function RaidGUIControlPagedGridCharacterCustomization:mouse_released(o, button,
 	return false
 end
 
+-- Lines 99-129
 function RaidGUIControlPagedGridCharacterCustomization:_get_data()
 	local grid_data = self._data_source_callback()
 	self._grid_data = {}
@@ -100,6 +105,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_get_data()
 	self:_refresh_filtering_control()
 end
 
+-- Lines 131-141
 function RaidGUIControlPagedGridCharacterCustomization:_create_grid_panel()
 	local grid_params = clone(self._params)
 	grid_params.name = grid_params.name .. "_grid"
@@ -110,6 +116,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_grid_panel()
 	self._grid_panel = self._paged_grid_panel:panel(grid_params, true)
 end
 
+-- Lines 143-176
 function RaidGUIControlPagedGridCharacterCustomization:_create_items()
 	local item_count = 0
 	local i_vertical = 1
@@ -142,6 +149,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_items()
 	end
 end
 
+-- Lines 178-182
 function RaidGUIControlPagedGridCharacterCustomization:_create_item(item_params, item_data, grid_params)
 	local item_class = RaidGUIControlCustomizationPiece
 	local item = self._grid_panel:create_custom_control(item_class, item_params, item_data, grid_params)
@@ -149,6 +157,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_item(item_params,
 	return item
 end
 
+-- Lines 186-220
 function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 	if self._paging_controls_panel then
 		self._paging_controls_panel:clear()
@@ -194,6 +203,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 	self:_show_hide_paging()
 end
 
+-- Lines 222-229
 function RaidGUIControlPagedGridCharacterCustomization:data_source_grid_page_stepper()
 	local pages = {}
 
@@ -207,12 +217,14 @@ function RaidGUIControlPagedGridCharacterCustomization:data_source_grid_page_ste
 	return pages
 end
 
+-- Lines 231-235
 function RaidGUIControlPagedGridCharacterCustomization:on_item_selected_grid_page(item)
 	self._current_page = item.value
 
 	self:refresh_data()
 end
 
+-- Lines 237-244
 function RaidGUIControlPagedGridCharacterCustomization:_refresh_paging_control()
 	if self._page_stepper then
 		self._page_stepper:refresh_data()
@@ -222,6 +234,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_refresh_paging_control()
 	self:_show_hide_paging()
 end
 
+-- Lines 246-256
 function RaidGUIControlPagedGridCharacterCustomization:_show_hide_paging()
 	if self._paging_controls_panel then
 		if self._total_pages <= 1 then
@@ -232,6 +245,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_show_hide_paging()
 	end
 end
 
+-- Lines 260-291
 function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_controls()
 	if self._filtering_controls_panel then
 		self._filtering_controls_panel:clear()
@@ -275,6 +289,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 	end
 end
 
+-- Lines 293-301
 function RaidGUIControlPagedGridCharacterCustomization:data_source_grid_filter_stepper()
 	local filters = {}
 
@@ -294,6 +309,7 @@ function RaidGUIControlPagedGridCharacterCustomization:data_source_grid_filter_s
 	return filters
 end
 
+-- Lines 303-313
 function RaidGUIControlPagedGridCharacterCustomization:on_item_selected_grid_filter(item)
 	if self._filter == item.value then
 		return
@@ -305,6 +321,7 @@ function RaidGUIControlPagedGridCharacterCustomization:on_item_selected_grid_fil
 	self:refresh_data()
 end
 
+-- Lines 315-320
 function RaidGUIControlPagedGridCharacterCustomization:_refresh_filtering_control()
 	if self._filter_stepper then
 		self._filter_stepper:refresh_data()
@@ -312,6 +329,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_refresh_filtering_contro
 	end
 end
 
+-- Lines 324-333
 function RaidGUIControlPagedGridCharacterCustomization:select_grid_item_by_item(grid_item)
 	if self._selected_item then
 		self._selected_item:unselect()
@@ -324,6 +342,7 @@ function RaidGUIControlPagedGridCharacterCustomization:select_grid_item_by_item(
 	end
 end
 
+-- Lines 335-339
 function RaidGUIControlPagedGridCharacterCustomization:_delete_items()
 	self._grid_items = {}
 	self._selected_item = nil
@@ -331,16 +350,19 @@ function RaidGUIControlPagedGridCharacterCustomization:_delete_items()
 	self._grid_panel:clear()
 end
 
+-- Lines 341-345
 function RaidGUIControlPagedGridCharacterCustomization:refresh_data()
 	self:_delete_items()
 	self:_get_data()
 	self:_create_items()
 end
 
+-- Lines 347-349
 function RaidGUIControlPagedGridCharacterCustomization:get_filter_value()
 	return self._filter
 end
 
+-- Lines 354-361
 function RaidGUIControlPagedGridCharacterCustomization:set_selected(value)
 	self._selected = value
 
@@ -353,6 +375,7 @@ function RaidGUIControlPagedGridCharacterCustomization:set_selected(value)
 	end
 end
 
+-- Lines 363-369
 function RaidGUIControlPagedGridCharacterCustomization:_unselect_all()
 	self._selected_item = nil
 	self._selected_item_idx = 0
@@ -362,6 +385,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_unselect_all()
 	end
 end
 
+-- Lines 371-405
 function RaidGUIControlPagedGridCharacterCustomization:move_up()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx - self._num_horizontal_items
@@ -396,6 +420,7 @@ function RaidGUIControlPagedGridCharacterCustomization:move_up()
 	end
 end
 
+-- Lines 407-450
 function RaidGUIControlPagedGridCharacterCustomization:move_down()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx + self._num_horizontal_items
@@ -427,6 +452,7 @@ function RaidGUIControlPagedGridCharacterCustomization:move_down()
 	end
 end
 
+-- Lines 452-492
 function RaidGUIControlPagedGridCharacterCustomization:move_left()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx - 1
@@ -469,6 +495,7 @@ function RaidGUIControlPagedGridCharacterCustomization:move_left()
 	end
 end
 
+-- Lines 494-534
 function RaidGUIControlPagedGridCharacterCustomization:move_right()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx + 1
@@ -511,6 +538,7 @@ function RaidGUIControlPagedGridCharacterCustomization:move_right()
 	end
 end
 
+-- Lines 536-545
 function RaidGUIControlPagedGridCharacterCustomization:confirm_pressed()
 	if self._selected then
 		if self._selected_item_idx == 0 then

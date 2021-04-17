@@ -5,10 +5,12 @@ core:import("CoreCode")
 
 UnitLinkCameraNode = UnitLinkCameraNode or CoreClass.class(CoreTransformCameraNode.TransformCameraNode)
 
+-- Lines 8-10
 function UnitLinkCameraNode:init(settings)
 	UnitLinkCameraNode.super.init(self, settings)
 end
 
+-- Lines 12-42
 function UnitLinkCameraNode.compile_settings(xml_node, settings)
 	UnitLinkCameraNode.super.compile_settings(xml_node, settings)
 
@@ -44,6 +46,7 @@ function UnitLinkCameraNode.compile_settings(xml_node, settings)
 	end
 end
 
+-- Lines 44-61
 function UnitLinkCameraNode:set_unit(unit)
 	local settings = self._settings
 
@@ -66,6 +69,7 @@ function UnitLinkCameraNode:set_unit(unit)
 	self._unit = unit
 end
 
+-- Lines 63-87
 function UnitLinkCameraNode:update(t, dt, in_data, out_data)
 	local local_position = self._local_position
 

@@ -1,5 +1,6 @@
 RaidGUIControlCardSuggested = RaidGUIControlCardSuggested or class(RaidGUIControlCardBase)
 
+-- Lines 3-56
 function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params)
 	local card_image_params = {
 		x = 16,
@@ -70,6 +71,7 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 	self._sound_source = SoundDevice:create_source("challenge_card")
 end
 
+-- Lines 59-90
 function RaidGUIControlCardSuggested:_show_controls_for_empty_cardback()
 	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
 
@@ -113,6 +115,7 @@ function RaidGUIControlCardSuggested:_show_controls_for_empty_cardback()
 	end
 end
 
+-- Lines 93-124
 function RaidGUIControlCardSuggested:_show_controls_for_empty_suggestion()
 	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
 
@@ -152,6 +155,7 @@ function RaidGUIControlCardSuggested:_show_controls_for_empty_suggestion()
 	end
 end
 
+-- Lines 127-152
 function RaidGUIControlCardSuggested:_show_controls_for_suggestion()
 	self._card_not_selected_label:set_visible(false)
 	self._card_panel:show()
@@ -172,6 +176,7 @@ function RaidGUIControlCardSuggested:_show_controls_for_suggestion()
 	end
 end
 
+-- Lines 154-166
 function RaidGUIControlCardSuggested:set_visible(flag)
 	RaidGUIControlCardSuggested.super.set_visible(self, flag)
 
@@ -184,6 +189,7 @@ function RaidGUIControlCardSuggested:set_visible(flag)
 	end
 end
 
+-- Lines 168-193
 function RaidGUIControlCardSuggested:set_card(card_data)
 	RaidGUIControlCardSuggested.super.set_card(self, card_data)
 	self:set_visible(true)
@@ -209,12 +215,14 @@ function RaidGUIControlCardSuggested:set_card(card_data)
 	end
 end
 
+-- Lines 195-199
 function RaidGUIControlCardSuggested:mouse_released(o, button, x, y)
 	self:on_mouse_released(button, x, y)
 
 	return true
 end
 
+-- Lines 201-212
 function RaidGUIControlCardSuggested:on_mouse_released(button, x, y)
 	if self._remove_card_button and self._remove_card_button:inside(x, y) and self._on_remove_callback and not self._item_data.locked_suggestion then
 		self._on_remove_callback(button, self, self._item_data)
@@ -227,6 +235,7 @@ function RaidGUIControlCardSuggested:on_mouse_released(button, x, y)
 	end
 end
 
+-- Lines 214-219
 function RaidGUIControlCardSuggested:on_mouse_over(x, y)
 	RaidGUIControlCardSuggested.super.on_mouse_over(self, x, y)
 	self._sound_source:post_event("card_mouse_over")

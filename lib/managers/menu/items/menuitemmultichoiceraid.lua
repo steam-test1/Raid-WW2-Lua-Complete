@@ -1,12 +1,14 @@
 MenuItemMultiChoiceRaid = MenuItemMultiChoiceRaid or class(MenuItemMultiChoice)
 MenuItemMultiChoiceRaid.TYPE = "multi_choice"
 
+-- Lines 4-9
 function MenuItemMultiChoiceRaid:init(data_node, parameters)
 	MenuItemMultiChoiceRaid.super.init(self, data_node, parameters)
 
 	self._type = MenuItemMultiChoiceRaid.TYPE
 end
 
+-- Lines 20-68
 function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 	local right_align = node:_right_align()
 	row_item.gui_panel = node.item_panel:panel({
@@ -82,6 +84,7 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 	return true
 end
 
+-- Lines 70-182
 function MenuItemMultiChoiceRaid:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local right_align = node:_right_align()

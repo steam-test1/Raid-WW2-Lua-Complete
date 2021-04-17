@@ -12,6 +12,7 @@ PRIO_GAMEPLAY = 40
 PRIO_DEFAULT = PRIO_GAMEPLAY
 ManagerBase = ManagerBase or class()
 
+-- Lines 20-27
 function ManagerBase:init(name)
 	self.__name = name
 	self.__aos = {}
@@ -21,6 +22,7 @@ function ManagerBase:init(name)
 	self.__changed = false
 end
 
+-- Lines 30-36
 function ManagerBase:_add_accessobj(accessobj, prio)
 	assert(accessobj:active_requested() == false)
 	assert(accessobj:really_active() == false)
@@ -31,6 +33,7 @@ function ManagerBase:_add_accessobj(accessobj, prio)
 	table.insert(self.__aos, accessobj)
 end
 
+-- Lines 39-45
 function ManagerBase:_del_accessobj(accessobj)
 	self.__ao2prio[accessobj] = nil
 
@@ -40,42 +43,50 @@ function ManagerBase:_del_accessobj(accessobj)
 	accessobj:_really_deactivate()
 end
 
+-- Lines 47-49
 function ManagerBase:_all_ao()
 	return self.__aos
 end
 
+-- Lines 51-53
 function ManagerBase:_all_really_active()
 	return self.__really_active
 end
 
+-- Lines 55-57
 function ManagerBase:_all_active_requested()
 	return self.__active_requested
 end
 
+-- Lines 59-61
 function ManagerBase:_ao_by_name(name)
 	return table.find_value(self.__aos, function (ao)
 		return ao:name() == name
 	end)
 end
 
+-- Lines 63-65
 function ManagerBase:_all_ao_by_prio(prio)
 	return table.find_all_values(self.__aos, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
+-- Lines 67-69
 function ManagerBase:_all_really_active_by_prio(prio)
 	return table.find_all_values(self.__really_active, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
+-- Lines 71-73
 function ManagerBase:_all_active_requested_by_prio(prio)
 	return table.find_all_values(self.__active_requested, function (ao)
 		return self.__ao2prio[ao] == prio
 	end)
 end
 
+-- Lines 76-106
 function ManagerBase:_prioritize_and_activate()
 	self.__active_requested = table.find_all_values(self.__aos, function (ao)
 		return ao:active_requested()
@@ -112,6 +123,7 @@ function ManagerBase:_prioritize_and_activate()
 	self.__changed = true
 end
 
+-- Lines 108-124
 function ManagerBase:end_update(t, dt)
 	if self.__changed then
 		local p2aos = {}

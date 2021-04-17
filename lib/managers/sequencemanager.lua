@@ -4,6 +4,7 @@ core:import("CoreClass")
 
 SequenceManager = SequenceManager or class(CoreSequenceManager.SequenceManager)
 
+-- Lines 8-15
 function SequenceManager:init()
 	SequenceManager.super.init(self, managers.slot:get_mask("body_area_damage"), managers.slot:get_mask("area_damage_blocker"), managers.slot:get_mask("unit_area_damage"))
 	self:register_event_element_class(InteractionElement)
@@ -11,6 +12,7 @@ function SequenceManager:init()
 	self._proximity_masks.players = managers.slot:get_mask("players")
 end
 
+-- Lines 17-30
 function SequenceManager:on_level_transition()
 	self._start_time_callback_list = {}
 	self._startup_callback_map = {}
@@ -29,12 +31,14 @@ end
 InteractionElement = InteractionElement or class(CoreSequenceManager.BaseElement)
 InteractionElement.NAME = "interaction"
 
+-- Lines 35-39
 function InteractionElement:init(node, unit_element)
 	InteractionElement.super.init(self, node, unit_element)
 
 	self._enabled = self:get("enabled")
 end
 
+-- Lines 41-48
 function InteractionElement:activate_callback(env)
 	local enabled = self:run_parsed_func(env, self._enabled)
 

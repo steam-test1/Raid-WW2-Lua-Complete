@@ -1,5 +1,6 @@
 HUDPlayerCustody = HUDPlayerCustody or class()
 
+-- Lines 3-104
 function HUDPlayerCustody:init(hud)
 	self._hud = hud
 	self._hud_panel = hud.panel
@@ -56,6 +57,7 @@ function HUDPlayerCustody:init(hud)
 	self._last_trade_delay_time = -1
 end
 
+-- Lines 106-112
 function HUDPlayerCustody:set_pumpkin_challenge()
 	local top_text = utf8.to_upper(managers.localization:text("card_ra_season_of_resurrection_name_id"))
 
@@ -66,12 +68,14 @@ function HUDPlayerCustody:set_pumpkin_challenge()
 	self._timer:set_text(bottom_text)
 end
 
+-- Lines 114-119
 function HUDPlayerCustody:set_timer_visibility(visible)
 	self._hud_panel:child("custody_panel"):child("timer_msg"):set_text(utf8.to_upper(managers.localization:text("hud_respawning_in")))
 	self._timer:set_visible(visible)
 	self._hud_panel:child("custody_panel"):child("timer_msg"):set_visible(visible)
 end
 
+-- Lines 121-129
 function HUDPlayerCustody:set_respawn_time(time)
 	if math.floor(time) == math.floor(self._last_time) then
 		return
@@ -83,21 +87,27 @@ function HUDPlayerCustody:set_respawn_time(time)
 	self._timer:set_text(utf8.to_upper(tostring(time_text)))
 end
 
+-- Lines 131-135
 function HUDPlayerCustody:set_civilians_killed(amount)
 end
 
+-- Lines 137-146
 function HUDPlayerCustody:set_trade_delay(time)
 end
 
+-- Lines 148-151
 function HUDPlayerCustody:set_trade_delay_visible(visible)
 end
 
+-- Lines 153-159
 function HUDPlayerCustody:set_negotiating_visible(visible)
 end
 
+-- Lines 161-167
 function HUDPlayerCustody:set_can_be_trade_visible(visible)
 end
 
+-- Lines 169-178
 function HUDPlayerCustody:_get_time_text(time)
 	time = math.max(math.floor(time), 0)
 	local minutes = math.floor(time / 60)
@@ -108,6 +118,7 @@ function HUDPlayerCustody:_get_time_text(time)
 	return text .. (minutes < 10 and "0" .. minutes or minutes) .. ":" .. (seconds < 10 and "0" .. seconds or seconds)
 end
 
+-- Lines 180-188
 function HUDPlayerCustody:_animate_text_pulse(text)
 	local t = 0
 
@@ -120,6 +131,7 @@ function HUDPlayerCustody:_animate_text_pulse(text)
 	end
 end
 
+-- Lines 190-196
 function HUDPlayerCustody:set_respawn_type(is_ai_trade)
 	if self._last_respawn_type_is_ai_trade ~= is_ai_trade then
 		local text = utf8.to_upper(managers.localization:text(is_ai_trade and "hud_ai_traded_in" or "hud_respawning_in"))

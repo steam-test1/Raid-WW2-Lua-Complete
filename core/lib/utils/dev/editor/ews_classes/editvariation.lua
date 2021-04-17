@@ -3,6 +3,7 @@ core:import("CoreEws")
 
 EditUnitVariation = EditUnitVariation or class(EditUnitBase)
 
+-- Lines 6-55
 function EditUnitVariation:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Variations",
@@ -51,6 +52,7 @@ function EditUnitVariation:init(editor)
 	panel:set_enabled(false)
 end
 
+-- Lines 57-81
 function EditUnitVariation:change_variation()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -76,6 +78,7 @@ function EditUnitVariation:change_variation()
 	end
 end
 
+-- Lines 83-99
 function EditUnitVariation:change_material()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -93,6 +96,7 @@ function EditUnitVariation:change_material()
 	end
 end
 
+-- Lines 101-123
 function EditUnitVariation:is_editable(unit, units)
 	if alive(unit) then
 		local variations = managers.sequence:get_editable_state_sequence_list(unit:name())
@@ -116,6 +120,7 @@ function EditUnitVariation:is_editable(unit, units)
 	return false
 end
 
+-- Lines 125-155
 function EditUnitVariation:get_material_configs_from_meta(unit_name)
 	self._avalible_material_groups = self._avalible_material_groups or {}
 

@@ -1,10 +1,12 @@
 CorePhysicsPushUnitElement = CorePhysicsPushUnitElement or class(MissionElement)
 PhysicsPushUnitElement = PhysicsPushUnitElement or class(CorePhysicsPushUnitElement)
 
+-- Lines 5-7
 function PhysicsPushUnitElement:init(...)
 	CorePhysicsPushUnitElement.init(self, ...)
 end
 
+-- Lines 9-19
 function CorePhysicsPushUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -17,10 +19,12 @@ function CorePhysicsPushUnitElement:init(unit)
 	table.insert(self._save_values, "physicspush_mass")
 end
 
+-- Lines 21-23
 function CorePhysicsPushUnitElement:update_selected()
 	Application:draw_sphere(self._unit:position(), self._hed.physicspush_range, 0, 1, 0)
 end
 
+-- Lines 25-52
 function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -69,6 +73,7 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(mass_sizer, 0, 0, "EXPAND")
 end
 
+-- Lines 54-56
 function CorePhysicsPushUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "core/physic_effects/hubelement_push",

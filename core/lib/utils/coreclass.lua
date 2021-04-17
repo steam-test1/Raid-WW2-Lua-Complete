@@ -3,6 +3,7 @@ core:module("CoreClass")
 __overrides = {}
 __everyclass = {}
 
+-- Lines 16-40
 function class(...)
 	local super = ...
 
@@ -22,6 +23,7 @@ function class(...)
 
 	setmetatable(class_table, __overrides[super] or super)
 
+	-- Lines 31-38
 	function class_table.new(klass, ...)
 		local object = {}
 
@@ -37,6 +39,7 @@ function class(...)
 	return class_table
 end
 
+-- Lines 42-51
 function override_class(old_class, new_class)
 	assert(__everyclass, "Too late to override class now.")
 
@@ -51,10 +54,12 @@ function override_class(old_class, new_class)
 	__overrides[old_class] = new_class
 end
 
+-- Lines 53-55
 function close_override()
 	__everyclass = nil
 end
 
+-- Lines 62-68
 function type_name(value)
 	local name = type(value)
 
@@ -65,6 +70,7 @@ function type_name(value)
 	return name
 end
 
+-- Lines 74-83
 function mixin(res, ...)
 	for _, t in ipairs({
 		...
@@ -79,10 +85,12 @@ function mixin(res, ...)
 	return res
 end
 
+-- Lines 85-87
 function mix(...)
 	return mixin({}, ...)
 end
 
+-- Lines 89-94
 function mixin_add(res, ...)
 	for _, t in ipairs({
 		...
@@ -95,10 +103,12 @@ function mixin_add(res, ...)
 	return res
 end
 
+-- Lines 96-98
 function mix_add(...)
 	return mixin_add({}, ...)
 end
 
+-- Lines 104-119
 function hijack_func(instance_or_meta, func_name, func)
 	local meta = getmetatable(instance_or_meta) or instance_or_meta
 
@@ -117,6 +127,7 @@ function hijack_func(instance_or_meta, func_name, func)
 	end
 end
 
+-- Lines 121-134
 function unhijack_func(instance_or_meta, func_name)
 	local meta = getmetatable(instance_or_meta) or instance_or_meta
 
@@ -136,6 +147,7 @@ __frozen__newindex = __frozen__newindex or function (self, key, value)
 	error(string.format("Attempt to set %s = %s in frozen %s.", tostring(key), tostring(value), type_or_class_name(self)))
 end
 
+-- Lines 140-152
 function freeze(...)
 	for _, instance in ipairs({
 		...
@@ -160,16 +172,19 @@ function freeze(...)
 	return ...
 end
 
+-- Lines 154-157
 function is_frozen(instance)
 	local metatable = debug.getmetatable(instance)
 
 	return metatable and metatable.__newindex == __frozen__newindex
 end
 
+-- Lines 159-167
 function frozen_class(...)
 	local class_table = class(...)
 	local new = class_table.new
 
+	-- Lines 162-165
 	function class_table.new(klass, ...)
 		local instance, ret = new(klass, ...)
 
@@ -179,11 +194,13 @@ function frozen_class(...)
 	return class_table
 end
 
+-- Lines 177-181
 function responder(...)
 	local response = {
 		...
 	}
 
+	-- Lines 179-179
 	local function responder_function()
 		return unpack(response)
 	end
@@ -195,6 +212,7 @@ function responder(...)
 	})
 end
 
+-- Lines 190-200
 function responder_map(response_table)
 	local responder = {}
 
@@ -219,6 +237,7 @@ end
 
 GetSet = GetSet or class()
 
+-- Lines 209-215
 function GetSet:init(t)
 	for k, v in pairs(t) do
 		self["_" .. k] = v

@@ -1,11 +1,13 @@
 MountedWeaponTweakData = MountedWeaponTweakData or class()
 
+-- Lines 3-7
 function MountedWeaponTweakData:init(tweak_data)
 	self:_init_data_sherman()
 	self:_init_data_tiger()
 	self:_init_data_luchs()
 end
 
+-- Lines 10-36
 function MountedWeaponTweakData:_init_data_sherman()
 	self.sherman = {
 		sound = {
@@ -31,6 +33,7 @@ function MountedWeaponTweakData:_init_data_sherman()
 	}
 end
 
+-- Lines 39-65
 function MountedWeaponTweakData:_init_data_tiger()
 	self.tiger = {
 		sound = {
@@ -56,6 +59,7 @@ function MountedWeaponTweakData:_init_data_tiger()
 	}
 end
 
+-- Lines 68-94
 function MountedWeaponTweakData:_init_data_luchs()
 	self.luchs = {
 		sound = {

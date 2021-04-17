@@ -1,9 +1,11 @@
 SpecialInteractionExt = SpecialInteractionExt or class(UseInteractionExt)
 
+-- Lines 3-5
 function SpecialInteractionExt:_interact_blocked(player)
 	return false
 end
 
+-- Lines 7-28
 function SpecialInteractionExt:interact(player)
 	if not self:can_interact(player) then
 		return
@@ -31,11 +33,13 @@ function SpecialInteractionExt:interact(player)
 	return true
 end
 
+-- Lines 30-33
 function SpecialInteractionExt:special_interaction_done()
 	SpecialInteractionExt.super.interact(self, self._player)
 	managers.network:session():send_to_peers("special_interaction_done", self._unit)
 end
 
+-- Lines 36-40
 function SpecialInteractionExt:set_special_interaction_done()
 	Application:debug("[SpecialInteractionExt:set_special_interaction_done()]")
 

@@ -1,5 +1,6 @@
 ProjectilesTweakData = ProjectilesTweakData or class()
 
+-- Lines 3-465
 function ProjectilesTweakData:init(tweak_data)
 	self.m24 = {
 		name_id = "bm_grenade_frag",
@@ -277,10 +278,12 @@ function ProjectilesTweakData:init(tweak_data)
 	self:_add_desc_from_name_macro(self)
 end
 
+-- Lines 467-469
 function BlackMarketTweakData:get_projectiles_index()
 	return tweak_data.projectiles._projectiles_index
 end
 
+-- Lines 471-478
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(tweak_data.projectiles._projectiles_index) do
 		if entry_name == projectile_id then
@@ -291,10 +294,12 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
+-- Lines 480-482
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return tweak_data.projectiles._projectiles_index[index]
 end
 
+-- Lines 484-493
 function ProjectilesTweakData:_add_desc_from_name_macro(tweak_data)
 	for id, data in pairs(tweak_data) do
 		if data.name_id and not data.desc_id then

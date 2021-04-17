@@ -1,9 +1,11 @@
 QueuedEventListenerHolder = QueuedEventListenerHolder or class(EventListenerHolder)
 
+-- Lines 3-5
 function QueuedEventListenerHolder:init()
 	self._queue = {}
 end
 
+-- Lines 7-16
 function QueuedEventListenerHolder:add(key, event_types, clbk)
 	QueuedEventListenerHolder.super.add(self, key, event_types, clbk)
 
@@ -16,6 +18,7 @@ function QueuedEventListenerHolder:add(key, event_types, clbk)
 	end
 end
 
+-- Lines 20-34
 function QueuedEventListenerHolder:remove(key)
 	QueuedEventListenerHolder.super.remove(self, key)
 
@@ -34,6 +37,7 @@ function QueuedEventListenerHolder:remove(key)
 	end
 end
 
+-- Lines 38-51
 function QueuedEventListenerHolder:call(event, ...)
 	if self._queue[event] then
 		for _, queue_key in ipairs(self._queue[event]) do

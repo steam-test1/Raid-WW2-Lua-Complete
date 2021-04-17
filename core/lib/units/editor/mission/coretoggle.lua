@@ -3,10 +3,12 @@ CoreToggleUnitElement.SAVE_UNIT_POSITION = false
 CoreToggleUnitElement.SAVE_UNIT_ROTATION = false
 ToggleUnitElement = ToggleUnitElement or class(CoreToggleUnitElement)
 
+-- Lines 7-9
 function ToggleUnitElement:init(...)
 	CoreToggleUnitElement.init(self, ...)
 end
 
+-- Lines 11-21
 function CoreToggleUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -19,6 +21,7 @@ function CoreToggleUnitElement:init(unit)
 	table.insert(self._save_values, "set_trigger_times")
 end
 
+-- Lines 23-32
 function CoreToggleUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -38,14 +41,17 @@ function CoreToggleUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 34-37
 function CoreToggleUnitElement:get_links_to_unit(...)
 	CoreToggleUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
+-- Lines 39-40
 function CoreToggleUnitElement:update_editing()
 end
 
+-- Lines 42-52
 function CoreToggleUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -63,6 +69,7 @@ function CoreToggleUnitElement:add_element()
 	end
 end
 
+-- Lines 54-60
 function CoreToggleUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -71,10 +78,12 @@ function CoreToggleUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 63-65
 function CoreToggleUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 67-78
 function CoreToggleUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

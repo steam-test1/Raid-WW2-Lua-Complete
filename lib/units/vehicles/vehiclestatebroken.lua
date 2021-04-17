@@ -1,9 +1,11 @@
 VehicleStateBroken = VehicleStateBroken or class(BaseVehicleState)
 
+-- Lines 3-5
 function VehicleStateBroken:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
+-- Lines 9-38
 function VehicleStateBroken:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 	self._unit:vehicle_driving():_start_broken_engine_sound()
@@ -28,6 +30,7 @@ function VehicleStateBroken:enter(state_data, enter_data)
 	self._unit:interaction():set_contour("standard_color", 1)
 end
 
+-- Lines 42-59
 function VehicleStateBroken:adjust_interactions()
 	VehicleStateBroken.super.adjust_interactions(self)
 
@@ -49,6 +52,7 @@ function VehicleStateBroken:adjust_interactions()
 	end
 end
 
+-- Lines 65-84
 function VehicleStateBroken:get_action_for_interaction(pos, locator, tweak_data)
 	local action = VehicleDrivingExt.INTERACT_INVALID
 	local seat, seat_distance = self._unit:vehicle_driving():get_available_seat(pos)
@@ -67,10 +71,12 @@ function VehicleStateBroken:get_action_for_interaction(pos, locator, tweak_data)
 	return action
 end
 
+-- Lines 88-90
 function VehicleStateBroken:stop_vehicle()
 	return true
 end
 
+-- Lines 92-94
 function VehicleStateBroken:exit(state_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 end

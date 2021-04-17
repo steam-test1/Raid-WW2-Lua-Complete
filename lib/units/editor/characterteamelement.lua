@@ -2,6 +2,7 @@ CharacterTeamElement = CharacterTeamElement or class(MissionElement)
 CharacterTeamElement.SAVE_UNIT_POSITION = false
 CharacterTeamElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-18
 function CharacterTeamElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -16,13 +17,16 @@ function CharacterTeamElement:init(unit)
 	table.insert(self._save_values, "use_instigator")
 end
 
+-- Lines 20-22
 function CharacterTeamElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
+-- Lines 24-25
 function CharacterTeamElement:update_editing()
 end
 
+-- Lines 27-35
 function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -40,6 +44,7 @@ function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 37-47
 function CharacterTeamElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -57,6 +62,7 @@ function CharacterTeamElement:add_element()
 	end
 end
 
+-- Lines 49-55
 function CharacterTeamElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -65,10 +71,12 @@ function CharacterTeamElement:remove_links(unit)
 	end
 end
 
+-- Lines 58-60
 function CharacterTeamElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 63-100
 function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

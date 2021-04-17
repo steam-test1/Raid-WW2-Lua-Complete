@@ -1,10 +1,12 @@
 CoreAreaUnitElement = CoreAreaUnitElement or class(MissionElement)
 AreaUnitElement = AreaUnitElement or class(CoreAreaUnitElement)
 
+-- Lines 5-7
 function AreaUnitElement:init(...)
 	CoreAreaUnitElement.init(self, ...)
 end
 
+-- Lines 9-33
 function CoreAreaUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -37,6 +39,7 @@ function CoreAreaUnitElement:init(unit)
 	table.insert(self._hed.action_types, "deactivate")
 end
 
+-- Lines 36-41
 function CoreAreaUnitElement:populate_shapes_list()
 	self._shapes_list:clear()
 
@@ -45,10 +48,12 @@ function CoreAreaUnitElement:populate_shapes_list()
 	end
 end
 
+-- Lines 44-46
 function CoreAreaUnitElement:set_shape_type(types)
 	self._shape_type = types:get_value()
 end
 
+-- Lines 49-55
 function CoreAreaUnitElement:selected_shape(shapes)
 	local i = shapes:selected_index()
 
@@ -59,6 +64,7 @@ function CoreAreaUnitElement:selected_shape(shapes)
 	end
 end
 
+-- Lines 58-63
 function CoreAreaUnitElement:set_start_altitude()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].position = self._hed.shapes[self._current_shape].position:with_z(self._start_altitude:get_value())
@@ -67,6 +73,7 @@ function CoreAreaUnitElement:set_start_altitude()
 	self:set_shape_values()
 end
 
+-- Lines 65-77
 function CoreAreaUnitElement:set_altitude_text(data)
 	if not self._current_shape then
 		return
@@ -83,6 +90,7 @@ function CoreAreaUnitElement:set_altitude_text(data)
 	self:set_shape_values()
 end
 
+-- Lines 79-92
 function CoreAreaUnitElement:set_altitude_spin(data)
 	if not self._current_shape then
 		return
@@ -98,6 +106,7 @@ function CoreAreaUnitElement:set_altitude_spin(data)
 	self:set_shape_values()
 end
 
+-- Lines 95-100
 function CoreAreaUnitElement:set_height()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].height = self._height:get_value()
@@ -106,6 +115,7 @@ function CoreAreaUnitElement:set_height()
 	self:set_shape_values()
 end
 
+-- Lines 103-109
 function CoreAreaUnitElement:set_2d()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].position = self._hed.shapes[self._current_shape].position:with_z(0)
@@ -115,12 +125,14 @@ function CoreAreaUnitElement:set_2d()
 	self:set_shape_values()
 end
 
+-- Lines 112-116
 function CoreAreaUnitElement:set_size()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape].size_mul = math.pow(self._size:get_value() / 10, 2)
 	end
 end
 
+-- Lines 119-133
 function CoreAreaUnitElement:size_release()
 	local current_shape = self._hed.shapes[self._current_shape]
 
@@ -140,6 +152,7 @@ function CoreAreaUnitElement:size_release()
 	end
 end
 
+-- Lines 137-170
 function CoreAreaUnitElement:set_shape_values()
 	local current_shape = self._hed.shapes[self._current_shape]
 
@@ -172,6 +185,7 @@ function CoreAreaUnitElement:set_shape_values()
 	end
 end
 
+-- Lines 173-180
 function CoreAreaUnitElement:update_selected(time)
 	for _, shape in pairs(self._hed.shapes) do
 		self:draw(shape, 0, 0.5 + (1 + math.sin(time * 100)) * 0.5 * 0.5, 0)
@@ -182,6 +196,7 @@ function CoreAreaUnitElement:update_selected(time)
 	end
 end
 
+-- Lines 183-231
 function CoreAreaUnitElement:draw(shape, r, g, b)
 	local start_z = -20000
 	local height = 40000
@@ -234,6 +249,7 @@ function CoreAreaUnitElement:draw(shape, r, g, b)
 	end
 end
 
+-- Lines 233-300
 function CoreAreaUnitElement:update_editing(t, dt)
 	local p1 = managers.editor:get_cursor_look_point(0)
 	local p2 = managers.editor:get_cursor_look_point(100)
@@ -301,6 +317,7 @@ function CoreAreaUnitElement:update_editing(t, dt)
 	Application:draw_rotation(self._current_pos, self._unit:rotation())
 end
 
+-- Lines 303-325
 function CoreAreaUnitElement:load_data(data)
 	if not data then
 		return
@@ -329,10 +346,12 @@ function CoreAreaUnitElement:load_data(data)
 	end
 end
 
+-- Lines 328-330
 function CoreAreaUnitElement:round_position(p)
 	return Vector3(math.round(p.x / self._grid_size) * self._grid_size, math.round(p.y / self._grid_size) * self._grid_size, 0)
 end
 
+-- Lines 333-352
 function CoreAreaUnitElement:create_shape()
 	local p1 = managers.editor:get_cursor_look_point(0)
 	local p2 = managers.editor:get_cursor_look_point(100)
@@ -354,6 +373,7 @@ function CoreAreaUnitElement:create_shape()
 	self:set_shape_values()
 end
 
+-- Lines 355-362
 function CoreAreaUnitElement:new_shape_name()
 	for i = 1, 100 do
 		local name = "shape" .. i
@@ -364,6 +384,7 @@ function CoreAreaUnitElement:new_shape_name()
 	end
 end
 
+-- Lines 366-385
 function CoreAreaUnitElement:set_shape_properties(type, pos, end_pos)
 	local t = {
 		type = type,
@@ -389,6 +410,7 @@ function CoreAreaUnitElement:set_shape_properties(type, pos, end_pos)
 	return t
 end
 
+-- Lines 388-395
 function CoreAreaUnitElement:delete()
 	if self._current_shape then
 		self._hed.shapes[self._current_shape] = nil
@@ -399,10 +421,12 @@ function CoreAreaUnitElement:delete()
 	self:set_shape_values()
 end
 
+-- Lines 398-400
 function CoreAreaUnitElement:create_shape_release()
 	self._creating = false
 end
 
+-- Lines 403-409
 function CoreAreaUnitElement:move_shape()
 	self._grab_shape = true
 
@@ -413,6 +437,7 @@ function CoreAreaUnitElement:move_shape()
 	self._move_all_shapes = shift()
 end
 
+-- Lines 412-418
 function CoreAreaUnitElement:release_shape()
 	self._grab_shape = false
 	self._move_all_shapes = false
@@ -422,6 +447,7 @@ function CoreAreaUnitElement:release_shape()
 	end
 end
 
+-- Lines 421-427
 function CoreAreaUnitElement:add_triggers(vc)
 	vc:add_trigger("lmb", callback(self, self, "create_shape"))
 	vc:add_release_trigger("lmb", callback(self, self, "create_shape_release"))
@@ -430,10 +456,12 @@ function CoreAreaUnitElement:add_triggers(vc)
 	vc:add_trigger("destroy", callback(self, self, "delete"))
 end
 
+-- Lines 430-432
 function CoreAreaUnitElement:save_mission_trigger(file, tab)
 	file:puts(tab .. "<trigger type=\"UnitInArea\" name=\"area" .. self._unit:unit_data().unit_id .. "\"/>")
 end
 
+-- Lines 434-439
 function CoreAreaUnitElement:set_interval(data)
 	local value = tonumber(data.ctrlr:get_value())
 	value = math.clamp(value, 0, 1000000)
@@ -442,6 +470,7 @@ function CoreAreaUnitElement:set_interval(data)
 	data.ctrlr:change_value(string.format("%.2f", self._hed.area_interval))
 end
 
+-- Lines 442-540
 function CoreAreaUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -547,6 +576,7 @@ function CoreAreaUnitElement:_build_panel(panel, panel_sizer)
 	self:set_shape_values()
 end
 
+-- Lines 543-565
 function CoreAreaUnitElement:_altitude_ctrlr(panel, name, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -584,5 +614,6 @@ function CoreAreaUnitElement:_altitude_ctrlr(panel, name, value, type, sizer)
 	return ctrl, spin
 end
 
+-- Lines 567-569
 function CoreAreaUnitElement:destroy()
 end

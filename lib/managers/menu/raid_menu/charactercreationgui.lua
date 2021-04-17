@@ -1,6 +1,7 @@
 CharacterCreationGui = CharacterCreationGui or class(RaidGuiBase)
 CharacterCreationGui.STEP_TWO_INDICATOR_DEFAULT_X = 224
 
+-- Lines 5-18
 function CharacterCreationGui:init(ws, fullscreen_ws, node, component_name)
 	self._loading_units = {}
 
@@ -14,6 +15,7 @@ function CharacterCreationGui:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:hide_background()
 end
 
+-- Lines 20-24
 function CharacterCreationGui:_setup_properties()
 	CharacterCreationGui.super._setup_properties(self)
 
@@ -21,6 +23,7 @@ function CharacterCreationGui:_setup_properties()
 	self._background_rect = nil
 end
 
+-- Lines 26-32
 function CharacterCreationGui:_set_initial_data()
 	managers.character_customization:reset_current_version_to_attach()
 
@@ -29,6 +32,7 @@ function CharacterCreationGui:_set_initial_data()
 	managers.savefile:add_save_done_callback(self._character_save_done_callback_ref)
 end
 
+-- Lines 35-73
 function CharacterCreationGui:_update_control_visibility()
 	local show_class_controls = self._current_screen == "class"
 	local show_nationality_screen = not show_class_controls
@@ -69,6 +73,7 @@ function CharacterCreationGui:_update_control_visibility()
 	self._number_2:set_texture_rect(icon_data2.texture_rect)
 end
 
+-- Lines 75-182
 function CharacterCreationGui:_layout()
 	self._loaded_weapons = {}
 
@@ -258,12 +263,14 @@ function CharacterCreationGui:_layout()
 	self:_spawn_empty_character_skeleton()
 end
 
+-- Lines 184-188
 function CharacterCreationGui:set_character_select_allowed(value)
 	self._character_select_allowed = value
 
 	self._class_list:set_abort_selection(not value)
 end
 
+-- Lines 192-200
 function CharacterCreationGui:_set_class_default_nationality()
 	self._selected_nation = tweak_data.skilltree.classes[self._selected_class].default_natioanlity
 
@@ -272,6 +279,7 @@ function CharacterCreationGui:_set_class_default_nationality()
 	self._nation_list:activate_item_by_value(self._selected_nation)
 end
 
+-- Lines 202-225
 function CharacterCreationGui:_on_nation_click_callback(data)
 	if self._selected_nation == data.value then
 		return
@@ -294,6 +302,7 @@ function CharacterCreationGui:_on_nation_click_callback(data)
 	end
 end
 
+-- Lines 227-236
 function CharacterCreationGui:_on_nation_select_callback(data)
 	if self._current_screen ~= "nationality" then
 		return
@@ -303,6 +312,7 @@ function CharacterCreationGui:_on_nation_select_callback(data)
 	self._nation_list:activate_item_by_value(data.value)
 end
 
+-- Lines 238-267
 function CharacterCreationGui:_on_class_click_callback(data)
 	if self._selected_class == data.value then
 		return
@@ -332,6 +342,7 @@ function CharacterCreationGui:_on_class_click_callback(data)
 	end
 end
 
+-- Lines 269-278
 function CharacterCreationGui:_on_class_select_callback(data)
 	if self._current_screen ~= "class" then
 		return
@@ -341,6 +352,7 @@ function CharacterCreationGui:_on_class_select_callback(data)
 	self._class_list:activate_item_by_value(data.value)
 end
 
+-- Lines 280-290
 function CharacterCreationGui:_data_source_nation_list()
 	local nationalities = {}
 
@@ -357,6 +369,7 @@ function CharacterCreationGui:_data_source_nation_list()
 	return nationalities
 end
 
+-- Lines 292-301
 function CharacterCreationGui:_data_source_class_list()
 	local classes = {}
 
@@ -372,6 +385,7 @@ function CharacterCreationGui:_data_source_class_list()
 	return classes
 end
 
+-- Lines 303-320
 function CharacterCreationGui:_on_click_button_next()
 	if self._current_screen == "class" then
 		self._current_screen = "nationality"
@@ -394,6 +408,7 @@ function CharacterCreationGui:_on_click_button_next()
 	end
 end
 
+-- Lines 322-342
 function CharacterCreationGui:back_pressed()
 	if self._current_screen == "nationality" then
 		self._current_screen = "class"
@@ -414,11 +429,13 @@ function CharacterCreationGui:back_pressed()
 	end
 end
 
+-- Lines 344-347
 function CharacterCreationGui:on_click_character_name()
 	self:input_focus()
 	self:_on_focus()
 end
 
+-- Lines 351-356
 function CharacterCreationGui:show_selected_character_description()
 	local right_side_info = self._current_screen == "class" and self._right_side_info_class or self._right_side_info_nationality
 
@@ -430,6 +447,7 @@ function CharacterCreationGui:show_selected_character_description()
 	})
 end
 
+-- Lines 359-371
 function CharacterCreationGui:show_selected_character()
 	if self._spawned_character_unit then
 		local anim_state_name = "character_creation_" .. tweak_data.skilltree.default_weapons[self._selected_class].primary
@@ -442,6 +460,7 @@ function CharacterCreationGui:show_selected_character()
 	self:show_selected_character_default_customization(self._selected_nation)
 end
 
+-- Lines 373-381
 function CharacterCreationGui:_spawn_empty_character_skeleton()
 	self:set_character_select_allowed(false)
 
@@ -450,6 +469,7 @@ function CharacterCreationGui:_spawn_empty_character_skeleton()
 	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_empty_character_skeleton_loaded"))
 end
 
+-- Lines 383-408
 function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
 	self._loading_units[CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT] = nil
 
@@ -470,6 +490,7 @@ function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
 	self:set_character_select_allowed(true)
 end
 
+-- Lines 410-423
 function CharacterCreationGui:get_character_spawn_location()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 
@@ -484,6 +505,7 @@ function CharacterCreationGui:get_character_spawn_location()
 	end
 end
 
+-- Lines 425-476
 function CharacterCreationGui:close()
 	if self._parts_being_loaded then
 		for _, parts in pairs(self._parts_being_loaded) do
@@ -521,6 +543,7 @@ function CharacterCreationGui:close()
 	managers.weapon_skills:update_weapon_part_animation_weights()
 end
 
+-- Lines 478-489
 function CharacterCreationGui:show_selected_character_default_customization(nationality)
 	self._spawned_character_unit:customization():destroy_all_parts_on_character()
 
@@ -532,6 +555,7 @@ function CharacterCreationGui:show_selected_character_default_customization(nati
 	self._spawned_character_unit:customization():attach_all_parts_to_character_by_parts(nationality, default_head, default_upper, default_lower)
 end
 
+-- Lines 491-498
 function CharacterCreationGui:_destroy_character_unit()
 	if self._spawned_character_unit then
 		self._spawned_character_unit:customization():destroy_all_parts_on_character()
@@ -541,6 +565,7 @@ function CharacterCreationGui:_destroy_character_unit()
 	end
 end
 
+-- Lines 500-509
 function CharacterCreationGui:show_character_create_input_textbox(callback_yes_function, callback_no_function)
 	local slot_index = managers.savefile:get_create_character_slot()
 	local params = {
@@ -552,10 +577,12 @@ function CharacterCreationGui:show_character_create_input_textbox(callback_yes_f
 	managers.menu:show_character_create_dialog(params)
 end
 
+-- Lines 511-513
 function trim(s)
 	return s:gsub("^%s*(.-)%s*$", "%1")
 end
 
+-- Lines 515-528
 function character_name_exists(name)
 	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		local slot_data = Global.savefile_manager.meta_data_list[slot_index]
@@ -572,10 +599,12 @@ function character_name_exists(name)
 	return false
 end
 
+-- Lines 530-532
 function CharacterCreationGui:_callback_error_ok_function()
 	self._should_show_character_create_input_textbox = true
 end
 
+-- Lines 534-554
 function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	local new_profile_name = trim(data.input_field_text)
 
@@ -602,6 +631,7 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	self:create_new_character(new_profile_name)
 end
 
+-- Lines 556-560
 function CharacterCreationGui:_callback_no_function()
 	self._current_screen = "nationality"
 
@@ -609,6 +639,7 @@ function CharacterCreationGui:_callback_no_function()
 	self._next_button:enable()
 end
 
+-- Lines 562-609
 function CharacterCreationGui:create_new_character(character_profile_name)
 	local character_profile_nation = self._selected_nation
 	local character_profile_base_class = self._selected_class
@@ -642,6 +673,7 @@ function CharacterCreationGui:create_new_character(character_profile_name)
 	managers.global_state.fire_character_created_event = true
 end
 
+-- Lines 611-636
 function CharacterCreationGui:_character_save_done_callback(slot, success, is_setting_slot, cache_only, aborted)
 	local saving_character_slot = managers.savefile:get_save_progress_slot()
 
@@ -657,6 +689,7 @@ function CharacterCreationGui:_character_save_done_callback(slot, success, is_se
 	managers.raid_menu:on_escape()
 end
 
+-- Lines 638-653
 function CharacterCreationGui:update(t, dt)
 	if self._should_show_character_create_input_textbox then
 		self._should_show_character_create_input_textbox = nil
@@ -675,6 +708,7 @@ function CharacterCreationGui:update(t, dt)
 	end
 end
 
+-- Lines 657-672
 function CharacterCreationGui:_load_class_default_weapons()
 	self._parts_being_loaded = {}
 
@@ -692,6 +726,7 @@ function CharacterCreationGui:_load_class_default_weapons()
 	end
 end
 
+-- Lines 674-693
 function CharacterCreationGui:_weapon_unit_load_complete_callback(params)
 	self._loading_units[params.unit_path] = nil
 	local right_hand_locator = self._spawned_character_unit:get_object(Idstring("a_weapon_right_front"))
@@ -710,6 +745,7 @@ function CharacterCreationGui:_weapon_unit_load_complete_callback(params)
 	weapon_unit:set_visible(false)
 end
 
+-- Lines 696-706
 function CharacterCreationGui:_assemble_completed(params, parts, blueprint)
 	self._parts_being_loaded[params.weapon_id] = nil
 
@@ -721,6 +757,7 @@ function CharacterCreationGui:_assemble_completed(params, parts, blueprint)
 	end
 end
 
+-- Lines 708-721
 function CharacterCreationGui:_show_weapon(weapon_id)
 	if not self._loaded_weapons then
 		return
@@ -735,6 +772,7 @@ function CharacterCreationGui:_show_weapon(weapon_id)
 	end
 end
 
+-- Lines 723-736
 function CharacterCreationGui:_destroy_weapon_parts_and_weapon_units()
 	for wpn_id, wpn_units in pairs(self._loaded_weapons) do
 		for _, unit in ipairs(wpn_units) do
@@ -749,6 +787,7 @@ function CharacterCreationGui:_destroy_weapon_parts_and_weapon_units()
 	self._loaded_weapons = nil
 end
 
+-- Lines 740-756
 function CharacterCreationGui:_bind_controller_inputs()
 	local bindings = {
 		{

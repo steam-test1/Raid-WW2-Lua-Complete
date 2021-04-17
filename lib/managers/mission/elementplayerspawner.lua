@@ -12,11 +12,13 @@ end
 
 ElementPlayerSpawner.BASE_DELAY = 2
 
+-- Lines 18-22
 function ElementPlayerSpawner:init(...)
 	ElementPlayerSpawner.super.init(self, ...)
 	managers.player:preload()
 end
 
+-- Lines 24-30
 function ElementPlayerSpawner:get_spawn_position()
 	local peer_id = managers.network:session():local_peer():id()
 	local position = self._values.position
@@ -26,10 +28,12 @@ function ElementPlayerSpawner:get_spawn_position()
 	return position
 end
 
+-- Lines 33-35
 function ElementPlayerSpawner:value(name)
 	return self._values[name]
 end
 
+-- Lines 37-56
 function ElementPlayerSpawner:client_on_executed(...)
 	if not self._values.enabled then
 		return
@@ -46,6 +50,7 @@ function ElementPlayerSpawner:client_on_executed(...)
 	self:_end_transition(true)
 end
 
+-- Lines 58-83
 function ElementPlayerSpawner:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -71,6 +76,7 @@ function ElementPlayerSpawner:on_executed(instigator)
 	self:_end_transition()
 end
 
+-- Lines 85-102
 function ElementPlayerSpawner:_end_transition(client)
 	local cnt = managers.worldcollection.world_counter or 0
 	local player_spawned = true
@@ -94,6 +100,7 @@ function ElementPlayerSpawner:_end_transition(client)
 	end
 end
 
+-- Lines 104-118
 function ElementPlayerSpawner:_do_hide_loading_screen()
 	if not managers.raid_job:is_camp_loaded() and managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
 		managers.player:get_current_state():_start_action_unequip_weapon(managers.player:player_timer():time(), {
@@ -109,6 +116,7 @@ function ElementPlayerSpawner:_do_hide_loading_screen()
 	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 0.2)
 end
 
+-- Lines 120-128
 function ElementPlayerSpawner:_first_login_check()
 	if managers.worldcollection.first_login_check then
 		managers.worldcollection.first_login_check = false
@@ -121,6 +129,7 @@ function ElementPlayerSpawner:_first_login_check()
 	end
 end
 
+-- Lines 130-133
 function ElementPlayerSpawner:destroy()
 	ElementPlayerSpawner.super.destroy(self)
 	managers.queued_tasks:unqueue_all(nil, self)

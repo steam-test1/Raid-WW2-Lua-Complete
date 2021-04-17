@@ -1,5 +1,6 @@
 InputTweakData = InputTweakData or class()
 
+-- Lines 7-86
 function InputTweakData:init(tweak_data)
 	self.gamepad = {
 		aim_assist_move_speed = 10,
@@ -33,6 +34,7 @@ function InputTweakData:init(tweak_data)
 		}
 	}
 
+	-- Lines 58-76
 	local function valid_range(data, var, b, c, ex_b, ex_c)
 		local a = data[var]
 		local valid = true

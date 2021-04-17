@@ -3,6 +3,7 @@ core:import("CoreEws")
 
 EditLadder = EditLadder or class(EditUnitBase)
 
+-- Lines 6-48
 function EditLadder:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Ladder",
@@ -60,6 +61,7 @@ function EditLadder:init(editor)
 	panel:set_enabled(false)
 end
 
+-- Lines 50-56
 function EditLadder:update(t, dt)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -68,6 +70,7 @@ function EditLadder:update(t, dt)
 	end
 end
 
+-- Lines 58-64
 function EditLadder:_update_width(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -76,6 +79,7 @@ function EditLadder:_update_width(params)
 	end
 end
 
+-- Lines 66-72
 function EditLadder:_update_height(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:ladder() then
@@ -84,6 +88,7 @@ function EditLadder:_update_height(params)
 	end
 end
 
+-- Lines 74-91
 function EditLadder:is_editable(unit, units)
 	if alive(unit) and unit:ladder() then
 		self._reference_unit = unit

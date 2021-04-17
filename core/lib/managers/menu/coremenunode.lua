@@ -5,6 +5,7 @@ core:import("CoreMenuItemToggle")
 
 MenuNode = MenuNode or class()
 
+-- Lines 8-82
 function MenuNode:init(data_node)
 	local parameters = {}
 
@@ -76,6 +77,7 @@ function MenuNode:init(data_node)
 	self._selected_item = nil
 end
 
+-- Lines 84-103
 function MenuNode:_parse_items(data_node)
 	self._items = {}
 	self._legends = {}
@@ -99,13 +101,16 @@ function MenuNode:_parse_items(data_node)
 	end
 end
 
+-- Lines 105-107
 function MenuNode:update(t, dt)
 end
 
+-- Lines 109-111
 function MenuNode:clean_items()
 	self._items = {}
 end
 
+-- Lines 113-126
 function MenuNode:create_item(data_node, parameters)
 	local item = CoreMenuItem.Item
 
@@ -123,22 +128,27 @@ function MenuNode:create_item(data_node, parameters)
 	return item
 end
 
+-- Lines 128-130
 function MenuNode:default_item_name()
 	return self._default_item_name
 end
 
+-- Lines 132-134
 function MenuNode:set_default_item_name(default_item_name)
 	self._default_item_name = default_item_name
 end
 
+-- Lines 136-138
 function MenuNode:parameters()
 	return self._parameters
 end
 
+-- Lines 140-142
 function MenuNode:set_parameters(parameters)
 	self._parameters = parameters
 end
 
+-- Lines 144-156
 function MenuNode:add_item(item)
 	item.dirty_callback = callback(self, self, "item_dirty")
 
@@ -156,6 +166,7 @@ function MenuNode:add_item(item)
 	end
 end
 
+-- Lines 158-164
 function MenuNode:insert_item(item, i)
 	item.dirty_callback = callback(self, self, "item_dirty")
 
@@ -166,6 +177,7 @@ function MenuNode:insert_item(item, i)
 	table.insert(self._items, i, item)
 end
 
+-- Lines 166-177
 function MenuNode:delete_item(item_name)
 	for i, item in ipairs(self:items()) do
 		if item:parameters().name == item_name then
@@ -182,6 +194,7 @@ function MenuNode:delete_item(item_name)
 	end
 end
 
+-- Lines 179-192
 function MenuNode:item(item_name)
 	item_name = item_name or self._default_item_name
 	local item = nil
@@ -197,18 +210,22 @@ function MenuNode:item(item_name)
 	return item
 end
 
+-- Lines 194-196
 function MenuNode:items()
 	return self._items
 end
 
+-- Lines 198-200
 function MenuNode:set_items(items)
 	self._items = items
 end
 
+-- Lines 202-204
 function MenuNode:selected_item()
 	return self._selected_item
 end
 
+-- Lines 206-218
 function MenuNode:select_item(item_name)
 	if not item_name and self:item() and not self:item():visible() then
 		for i, item in ipairs(self:items()) do
@@ -223,6 +240,7 @@ function MenuNode:select_item(item_name)
 	self._selected_item = self:item(item_name)
 end
 
+-- Lines 220-234
 function MenuNode:set_callback_handler(callback_handler)
 	self.callback_handler = callback_handler
 
@@ -239,6 +257,7 @@ function MenuNode:set_callback_handler(callback_handler)
 	end
 end
 
+-- Lines 236-247
 function MenuNode:trigger_back()
 	if self:parameters().block_back then
 		return true
@@ -253,18 +272,21 @@ function MenuNode:trigger_back()
 	return block_back
 end
 
+-- Lines 249-255
 function MenuNode:trigger_focus_changed(in_focus, ...)
 	for _, callback in pairs(self:parameters().focus_changed_callback) do
 		callback(self, in_focus, ...)
 	end
 end
 
+-- Lines 257-261
 function MenuNode:item_dirty(item)
 	if self.dirty_callback then
 		self:dirty_callback(item)
 	end
 end
 
+-- Lines 263-265
 function MenuNode:legends()
 	return self._legends
 end

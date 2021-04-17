@@ -1,5 +1,6 @@
 GroupAIRaidTweakData = GroupAIRaidTweakData or class()
 
+-- Lines 3-370
 function GroupAIRaidTweakData:init(difficulty_index)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.regroup = {}

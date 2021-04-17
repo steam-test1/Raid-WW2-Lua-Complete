@@ -3,6 +3,7 @@ core:import("CoreCode")
 
 OverlayEffectManager = OverlayEffectManager or class()
 
+-- Lines 10-28
 function OverlayEffectManager:init()
 	local gui = Overlay:newgui()
 	self._vp_overlay = Application:create_scene_viewport(0, 0, 1, 1)
@@ -29,28 +30,34 @@ function OverlayEffectManager:init()
 	managers.viewport:add_resolution_changed_func(callback(self, self, "change_resolution"))
 end
 
+-- Lines 32-34
 function OverlayEffectManager:set_visible(visible)
 	self._ws:panel():set_visible(visible)
 end
 
+-- Lines 36-38
 function OverlayEffectManager:add_preset(name, settings)
 	self._presets[name] = settings
 end
 
+-- Lines 40-42
 function OverlayEffectManager:presets()
 	return self._presets
 end
 
+-- Lines 44-46
 function OverlayEffectManager:set_default_layer(layer)
 	self._default_layer = layer
 end
 
+-- Lines 50-54
 function OverlayEffectManager:update(t, dt)
 	self._vp_overlay:update()
 	self:check_pause_state()
 	self:progress_effects(t, dt)
 end
 
+-- Lines 58-73
 function OverlayEffectManager:destroy()
 	if CoreCode.alive(self._overlay_camera) then
 		Overlay:delete_camera(self._overlay_camera)
@@ -71,12 +78,14 @@ function OverlayEffectManager:destroy()
 	end
 end
 
+-- Lines 75-79
 function OverlayEffectManager:render()
 	if Global.render_debug.render_overlay then
 		Application:render("Overlay", self._vp_overlay)
 	end
 end
 
+-- Lines 81-116
 function OverlayEffectManager:progress_effects(t, dt, paused)
 	for key, effect in pairs(self._playing_effects) do
 		local data = effect.data
@@ -121,11 +130,13 @@ function OverlayEffectManager:progress_effects(t, dt, paused)
 	end
 end
 
+-- Lines 120-123
 function OverlayEffectManager:paused_update(t, dt)
 	self:check_pause_state(true)
 	self:progress_effects(t, dt, true)
 end
 
+-- Lines 127-145
 function OverlayEffectManager:check_pause_state(paused)
 	if self._paused then
 		if not paused then
@@ -148,6 +159,7 @@ function OverlayEffectManager:check_pause_state(paused)
 	end
 end
 
+-- Lines 159-198
 function OverlayEffectManager:play_effect(data)
 	if data then
 		local spawn_alpha = data.color.alpha * (data.fade_in > 0 and 0 or 1)
@@ -222,6 +234,7 @@ function OverlayEffectManager:play_effect(data)
 	end
 end
 
+-- Lines 202-216
 function OverlayEffectManager:stop_effect(id)
 	if id then
 		if self._playing_effects[id] then
@@ -240,6 +253,7 @@ function OverlayEffectManager:stop_effect(id)
 	end
 end
 
+-- Lines 220-237
 function OverlayEffectManager:fade_out_effect(id)
 	if id then
 		local effect = self._playing_effects[id]
@@ -260,6 +274,7 @@ function OverlayEffectManager:fade_out_effect(id)
 	end
 end
 
+-- Lines 241-246
 function OverlayEffectManager:change_resolution()
 	local res = RenderSettings.resolution
 

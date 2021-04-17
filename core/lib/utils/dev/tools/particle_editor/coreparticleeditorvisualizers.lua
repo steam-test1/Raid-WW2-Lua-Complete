@@ -2,6 +2,7 @@ CoreParticleEditorVisualizers = CoreParticleEditorVisualizers or class()
 local min_keys = 1
 local max_keys = 8
 
+-- Lines 6-242
 function CoreParticleEditorVisualizers:create_billboard()
 	local visualizer = CoreEffectStackMember:new("billboard", "visualizer", "Billboard")
 
@@ -355,6 +356,7 @@ channel - read from channel]]
 	return visualizer
 end
 
+-- Lines 245-440
 function CoreParticleEditorVisualizers:create_trail()
 	local visualizer = CoreEffectStackMember:new("trail", "visualizer", "Trail")
 
@@ -575,6 +577,7 @@ channel - read from channel]]
 	return visualizer
 end
 
+-- Lines 443-503
 function CoreParticleEditorVisualizers:create_light()
 	local visualizer = CoreEffectStackMember:new("light", "visualizer", "Light")
 
@@ -658,6 +661,7 @@ channel - read from channel]]
 	return visualizer
 end
 
+-- Lines 505-519
 function CoreParticleEditorVisualizers:create_model()
 	local visualizer = CoreEffectStackMember:new("model", "visualizer", "Model")
 

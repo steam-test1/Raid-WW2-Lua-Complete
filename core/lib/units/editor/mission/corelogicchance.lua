@@ -1,10 +1,12 @@
 CoreLogicChanceUnitElement = CoreLogicChanceUnitElement or class(MissionElement)
 LogicChanceUnitElement = LogicChanceUnitElement or class(CoreLogicChanceUnitElement)
 
+-- Lines 5-7
 function LogicChanceUnitElement:init(...)
 	CoreLogicChanceUnitElement.init(self, ...)
 end
 
+-- Lines 9-18
 function CoreLogicChanceUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -15,6 +17,7 @@ function CoreLogicChanceUnitElement:init(unit)
 	table.insert(self._save_values, "chance")
 end
 
+-- Lines 20-27
 function CoreLogicChanceUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -28,10 +31,12 @@ function CoreLogicChanceUnitElement:_build_panel(panel, panel_sizer)
 	}, "Specifies chance that this element will call its on executed elements (in percent)")
 end
 
+-- Lines 29-31
 function CoreLogicChanceUnitElement:register_debug_output_unit(output_monitor_id)
 	self._hed.output_monitor_id = output_monitor_id
 end
 
+-- Lines 34-36
 function CoreLogicChanceUnitElement:unregister_debug_output_unit()
 	self._hed.output_monitor_id = nil
 end
@@ -39,10 +44,12 @@ end
 CoreLogicChanceOperatorUnitElement = CoreLogicChanceOperatorUnitElement or class(MissionElement)
 LogicChanceOperatorUnitElement = LogicChanceOperatorUnitElement or class(CoreLogicChanceOperatorUnitElement)
 
+-- Lines 44-46
 function LogicChanceOperatorUnitElement:init(...)
 	LogicChanceOperatorUnitElement.super.init(self, ...)
 end
 
+-- Lines 48-58
 function CoreLogicChanceOperatorUnitElement:init(unit)
 	CoreLogicChanceOperatorUnitElement.super.init(self, unit)
 
@@ -55,6 +62,7 @@ function CoreLogicChanceOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 60-70
 function CoreLogicChanceOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreLogicChanceOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -74,14 +82,17 @@ function CoreLogicChanceOperatorUnitElement:draw_links(t, dt, selected_unit, all
 	end
 end
 
+-- Lines 72-75
 function CoreLogicChanceOperatorUnitElement:get_links_to_unit(...)
 	CoreLogicChanceOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
+-- Lines 77-78
 function CoreLogicChanceOperatorUnitElement:update_editing()
 end
 
+-- Lines 80-93
 function CoreLogicChanceOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -99,6 +110,7 @@ function CoreLogicChanceOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 95-101
 function CoreLogicChanceOperatorUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -107,10 +119,12 @@ function CoreLogicChanceOperatorUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 104-106
 function CoreLogicChanceOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 108-121
 function CoreLogicChanceOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -139,10 +153,12 @@ end
 CoreLogicChanceTriggerUnitElement = CoreLogicChanceTriggerUnitElement or class(MissionElement)
 LogicChanceTriggerUnitElement = LogicChanceTriggerUnitElement or class(CoreLogicChanceTriggerUnitElement)
 
+-- Lines 129-131
 function LogicChanceTriggerUnitElement:init(...)
 	LogicChanceTriggerUnitElement.super.init(self, ...)
 end
 
+-- Lines 133-141
 function CoreLogicChanceTriggerUnitElement:init(unit)
 	CoreLogicChanceTriggerUnitElement.super.init(self, unit)
 
@@ -153,6 +169,7 @@ function CoreLogicChanceTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 143-152
 function CoreLogicChanceTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreLogicChanceTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -172,14 +189,17 @@ function CoreLogicChanceTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 	end
 end
 
+-- Lines 154-157
 function CoreLogicChanceTriggerUnitElement:get_links_to_unit(...)
 	CoreLogicChanceTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
+-- Lines 159-160
 function CoreLogicChanceTriggerUnitElement:update_editing()
 end
 
+-- Lines 162-175
 function CoreLogicChanceTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -197,6 +217,7 @@ function CoreLogicChanceTriggerUnitElement:add_element()
 	end
 end
 
+-- Lines 177-183
 function CoreLogicChanceTriggerUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -205,10 +226,12 @@ function CoreLogicChanceTriggerUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 186-188
 function CoreLogicChanceTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 190-202
 function CoreLogicChanceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

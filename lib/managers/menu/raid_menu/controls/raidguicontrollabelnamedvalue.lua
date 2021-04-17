@@ -1,5 +1,6 @@
 RaidGUIControlLabelNamedValue = RaidGUIControlLabelNamedValue or class(RaidGUIControl)
 
+-- Lines 3-35
 function RaidGUIControlLabelNamedValue:init(parent, params)
 	self._object = parent:panel(params)
 	self._params = clone(params)
@@ -27,16 +28,19 @@ function RaidGUIControlLabelNamedValue:init(parent, params)
 	self._label_text = self._object:label(label_text_params)
 end
 
+-- Lines 38-41
 function RaidGUIControlLabelNamedValue:set_text(text)
 	self._text = text
 
 	self._label_text:set_text(text)
 end
 
+-- Lines 43-45
 function RaidGUIControlLabelNamedValue:text()
 	return self._label_text:text()
 end
 
+-- Lines 47-53
 function RaidGUIControlLabelNamedValue:set_value(text)
 	self._label_value:set_text(text)
 
@@ -46,25 +50,31 @@ function RaidGUIControlLabelNamedValue:set_value(text)
 	self._label_value:set_center_x(self._object:w() / 2)
 end
 
+-- Lines 55-57
 function RaidGUIControlLabelNamedValue:value()
 	return self._label_value:text()
 end
 
+-- Lines 59-60
 function RaidGUIControlLabelNamedValue:highlight_on()
 end
 
+-- Lines 62-63
 function RaidGUIControlLabelNamedValue:highlight_off()
 end
 
+-- Lines 65-68
 function RaidGUIControlLabelNamedValue:mouse_released(o, button, x, y)
 	return false
 end
 
+-- Lines 70-73
 function RaidGUIControlLabelNamedValue:set_label_color(color)
 	self._label_value:set_color(color)
 	self._label_text:set_color(color)
 end
 
+-- Lines 75-78
 function RaidGUIControlLabelNamedValue:set_label_default_color()
 	self._label_value:set_color(self._params.value_color or tweak_data.gui.colors.raid_white)
 	self._label_text:set_color(self._params.color or tweak_data.gui.colors.raid_white)

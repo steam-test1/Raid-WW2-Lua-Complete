@@ -1,12 +1,14 @@
 PlayerIncapacitated = PlayerIncapacitated or class(PlayerStandard)
 PlayerIncapacitated._update_movement = PlayerBleedOut._update_movement
 
+-- Lines 5-8
 function PlayerIncapacitated:init(unit)
 	PlayerIncapacitated.super.init(self, unit)
 
 	self._ids_tased_exit = Idstring("tased_exit")
 end
 
+-- Lines 12-52
 function PlayerIncapacitated:enter(state_data, enter_data)
 	PlayerIncapacitated.super.enter(self, state_data, enter_data)
 	self:_interupt_action_steelsight()
@@ -47,6 +49,7 @@ function PlayerIncapacitated:enter(state_data, enter_data)
 	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), true, 1, 1)
 end
 
+-- Lines 56-68
 function PlayerIncapacitated:_enter(enter_data)
 	local preset = nil
 
@@ -71,6 +74,7 @@ function PlayerIncapacitated:_enter(enter_data)
 	end
 end
 
+-- Lines 72-84
 function PlayerIncapacitated:exit(state_data, new_state_name)
 	PlayerIncapacitated.super.exit(self, state_data, new_state_name)
 	self:_end_action_incapacitated(managers.player:player_timer():time())
@@ -83,14 +87,17 @@ function PlayerIncapacitated:exit(state_data, new_state_name)
 	}
 end
 
+-- Lines 88-90
 function PlayerIncapacitated:interaction_blocked()
 	return true
 end
 
+-- Lines 94-96
 function PlayerIncapacitated:update(t, dt)
 	PlayerIncapacitated.super.update(self, t, dt)
 end
 
+-- Lines 102-162
 function PlayerIncapacitated:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -126,6 +133,7 @@ function PlayerIncapacitated:_update_check_actions(t, dt)
 	self:_check_action_interact(t, input)
 end
 
+-- Lines 168-175
 function PlayerIncapacitated:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) then
 		self._intimidate_t = t
@@ -134,6 +142,7 @@ function PlayerIncapacitated:_check_action_interact(t, input)
 	end
 end
 
+-- Lines 179-191
 function PlayerIncapacitated:_start_action_incapacitated(t)
 	self:_interupt_action_running(t)
 
@@ -147,6 +156,7 @@ function PlayerIncapacitated:_start_action_incapacitated(t)
 	self._unit:camera()._camera_unit:base():animate_fov(75)
 end
 
+-- Lines 195-208
 function PlayerIncapacitated:_end_action_incapacitated(t)
 	if not self:_can_stand() then
 		return
@@ -160,10 +170,12 @@ function PlayerIncapacitated:_end_action_incapacitated(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
+-- Lines 212-215
 function PlayerIncapacitated:pre_destroy(unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 end
 
+-- Lines 217-220
 function PlayerIncapacitated:destroy(unit)
 	PlayerBleedOut._unregister_revive_SO(self)
 	managers.environment_controller:set_taser_value(1)

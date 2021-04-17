@@ -5,6 +5,7 @@ core:import("CoreInteractionEditorGenericPanel")
 
 InteractionEditorPropUI = InteractionEditorPropUI or CoreClass.class()
 
+-- Lines 10-17
 function InteractionEditorPropUI:init(parent, owner)
 	self._prop_panel = EWS:Panel(parent, "", "")
 	self._box = EWS:BoxSizer("VERTICAL")
@@ -16,10 +17,12 @@ function InteractionEditorPropUI:init(parent, owner)
 	}
 end
 
+-- Lines 19-21
 function InteractionEditorPropUI:window()
 	return self._prop_panel
 end
 
+-- Lines 23-28
 function InteractionEditorPropUI:clean()
 	if self._current_panel then
 		self._current_panel:set_visible(false)
@@ -28,6 +31,7 @@ function InteractionEditorPropUI:clean()
 	end
 end
 
+-- Lines 30-33
 function InteractionEditorPropUI:rebuild(desc, node)
 	self._current_panel = self._node_panels[desc:node_type(node)] or self._node_panels[CoreInteractionEditorGenericPanel.NAME]
 

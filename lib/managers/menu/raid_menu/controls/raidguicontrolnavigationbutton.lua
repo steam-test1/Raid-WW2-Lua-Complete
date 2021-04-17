@@ -5,6 +5,7 @@ RaidGUIControlNavigationButton.COLOR_NORMAL = tweak_data.gui.colors.raid_grey_ef
 RaidGUIControlNavigationButton.COLOR_HOVER = tweak_data.gui.colors.raid_red
 RaidGUIControlNavigationButton.COLOR_ACTIVE = tweak_data.gui.colors.raid_dark_red
 
+-- Lines 10-73
 function RaidGUIControlNavigationButton:init(parent, params)
 	RaidGUIControlNavigationButton.super.init(self, parent, params)
 
@@ -82,16 +83,19 @@ function RaidGUIControlNavigationButton:init(parent, params)
 	end
 end
 
+-- Lines 75-79
 function RaidGUIControlNavigationButton:highlight_on()
 	self._icon:set_color(RaidGUIControlNavigationButton.COLOR_HOVER)
 	self._text:set_color(RaidGUIControlNavigationButton.COLOR_HOVER)
 end
 
+-- Lines 81-85
 function RaidGUIControlNavigationButton:highlight_off()
 	self._icon:set_color(RaidGUIControlNavigationButton.COLOR_NORMAL)
 	self._text:set_color(RaidGUIControlNavigationButton.COLOR_NORMAL)
 end
 
+-- Lines 87-96
 function RaidGUIControlNavigationButton:on_mouse_released(button)
 	self._icon:set_color(RaidGUIControlNavigationButton.COLOR_HOVER)
 	self._text:set_color(RaidGUIControlNavigationButton.COLOR_HOVER)
@@ -101,6 +105,7 @@ function RaidGUIControlNavigationButton:on_mouse_released(button)
 	end
 end
 
+-- Lines 98-103
 function RaidGUIControlNavigationButton:on_mouse_pressed(button)
 	self._icon:set_color(RaidGUIControlNavigationButton.COLOR_ACTIVE)
 	self._text:set_color(RaidGUIControlNavigationButton.COLOR_ACTIVE)

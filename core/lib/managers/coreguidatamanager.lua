@@ -4,6 +4,7 @@ end
 
 GuiDataManager = GuiDataManager or class()
 
+-- Lines 7-15
 function GuiDataManager:init(scene_gui, res, safe_rect_pixels, safe_rect, static_aspect_ratio)
 	self._scene_gui = scene_gui
 	self._static_resolution = res
@@ -14,9 +15,11 @@ function GuiDataManager:init(scene_gui, res, safe_rect_pixels, safe_rect, static
 	self:_setup_workspace_data()
 end
 
+-- Lines 17-19
 function GuiDataManager:destroy()
 end
 
+-- Lines 21-25
 function GuiDataManager:create_saferect_workspace()
 	local ws = (self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
@@ -25,6 +28,7 @@ function GuiDataManager:create_saferect_workspace()
 	return ws
 end
 
+-- Lines 27-31
 function GuiDataManager:create_fullscreen_workspace()
 	local ws = (self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
@@ -33,6 +37,7 @@ function GuiDataManager:create_fullscreen_workspace()
 	return ws
 end
 
+-- Lines 33-37
 function GuiDataManager:create_fullscreen_16_9_workspace()
 	local ws = (self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
@@ -41,6 +46,7 @@ function GuiDataManager:create_fullscreen_16_9_workspace()
 	return ws
 end
 
+-- Lines 39-43
 function GuiDataManager:create_corner_saferect_workspace()
 	local ws = (self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
@@ -49,6 +55,7 @@ function GuiDataManager:create_corner_saferect_workspace()
 	return ws
 end
 
+-- Lines 45-49
 function GuiDataManager:create_1280_workspace()
 	local ws = (self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
@@ -57,6 +64,7 @@ function GuiDataManager:create_1280_workspace()
 	return ws
 end
 
+-- Lines 51-55
 function GuiDataManager:create_corner_saferect_1280_workspace()
 	local ws = (self._scene_gui or Overlay:gui()):create_scaled_screen_workspace(10, 10, 10, 10, 10)
 
@@ -65,14 +73,17 @@ function GuiDataManager:create_corner_saferect_1280_workspace()
 	return ws
 end
 
+-- Lines 58-60
 function GuiDataManager:destroy_workspace(ws)
 	(self._scene_gui or Overlay:gui()):destroy_workspace(ws)
 end
 
+-- Lines 62-64
 function GuiDataManager:get_scene_gui()
 	return self._scene_gui or Overlay:gui()
 end
 
+-- Lines 69-75
 function GuiDataManager:_get_safe_rect_pixels()
 	if self._safe_rect_pixels then
 		return self._safe_rect_pixels
@@ -81,6 +92,7 @@ function GuiDataManager:_get_safe_rect_pixels()
 	return managers.viewport:get_safe_rect_pixels()
 end
 
+-- Lines 77-83
 function GuiDataManager:_get_safe_rect()
 	if self._safe_rect then
 		return self._safe_rect
@@ -89,6 +101,7 @@ function GuiDataManager:_get_safe_rect()
 	return managers.viewport:get_safe_rect()
 end
 
+-- Lines 85-91
 function GuiDataManager:_aspect_ratio()
 	if self._static_aspect_ratio then
 		return self._static_aspect_ratio
@@ -102,6 +115,7 @@ local base_res = {
 	y = 1080
 }
 
+-- Lines 95-237
 function GuiDataManager:_setup_workspace_data()
 	print("[GuiDataManager:_setup_workspace_data]")
 
@@ -205,30 +219,37 @@ function GuiDataManager:_setup_workspace_data()
 	self._corner_saferect_1280_data.on_screen_width = safe_w
 end
 
+-- Lines 239-241
 function GuiDataManager:layout_workspace(ws)
 	ws:set_screen(self._saferect_data.w, self._saferect_data.h, self._saferect_data.x, self._saferect_data.y, self._saferect_data.on_screen_width)
 end
 
+-- Lines 243-245
 function GuiDataManager:layout_fullscreen_workspace(ws)
 	ws:set_screen(self._fullrect_data.w, self._fullrect_data.h, self._fullrect_data.x, self._fullrect_data.y, self._fullrect_data.on_screen_width)
 end
 
+-- Lines 247-249
 function GuiDataManager:layout_fullscreen_16_9_workspace(ws)
 	ws:set_screen(self._fullrect_16_9_data.w, self._fullrect_16_9_data.h, self._fullrect_16_9_data.x, self._fullrect_16_9_data.y, self._fullrect_16_9_data.on_screen_width)
 end
 
+-- Lines 251-253
 function GuiDataManager:layout_corner_saferect_workspace(ws)
 	ws:set_screen(self._corner_saferect_data.w, self._corner_saferect_data.h, self._corner_saferect_data.x, self._corner_saferect_data.y, self._corner_saferect_data.on_screen_width)
 end
 
+-- Lines 255-257
 function GuiDataManager:layout_1280_workspace(ws)
 	ws:set_screen(self._fullrect_1280_data.w, self._fullrect_1280_data.h, self._fullrect_1280_data.x, self._fullrect_1280_data.y, self._fullrect_1280_data.on_screen_width)
 end
 
+-- Lines 259-261
 function GuiDataManager:layout_corner_saferect_1280_workspace(ws)
 	ws:set_screen(self._corner_saferect_1280_data.w, self._corner_saferect_1280_data.h, self._corner_saferect_1280_data.x, self._corner_saferect_1280_data.y, self._corner_saferect_1280_data.on_screen_width)
 end
 
+-- Lines 276-282
 function GuiDataManager:scaled_size()
 	local w = math.round(self:_get_safe_rect().width * base_res.x)
 	local h = math.round(self:_get_safe_rect().height * base_res.y)
@@ -241,54 +262,67 @@ function GuiDataManager:scaled_size()
 	}
 end
 
+-- Lines 284-286
 function GuiDataManager:safe_scaled_size()
 	return self._saferect_data
 end
 
+-- Lines 288-290
 function GuiDataManager:corner_scaled_size()
 	return self._corner_saferect_data
 end
 
+-- Lines 292-294
 function GuiDataManager:full_scaled_size()
 	return self._fullrect_data
 end
 
+-- Lines 296-298
 function GuiDataManager:full_16_9_size()
 	return self._fullrect_16_9_data
 end
 
+-- Lines 300-302
 function GuiDataManager:full_1280_size()
 	return self._fullrect_1280_data
 end
 
+-- Lines 305-308
 function GuiDataManager:full_to_full_16_9(in_x, in_y)
 	return self:safe_to_full_16_9(self:full_to_safe(in_x, in_y))
 end
 
+-- Lines 310-312
 function GuiDataManager:safe_to_full_16_9(in_x, in_y)
 	return self._fullrect_16_9_data.convert_x + in_x, self._fullrect_16_9_data.convert_y + in_y
 end
 
+-- Lines 314-316
 function GuiDataManager:full_16_9_to_safe(in_x, in_y)
 	return in_x - self._fullrect_16_9_data.convert_x, in_y - self._fullrect_16_9_data.convert_y
 end
 
+-- Lines 319-321
 function GuiDataManager:safe_to_full(in_x, in_y)
 	return self._fullrect_data.convert_x + in_x, self._fullrect_data.convert_y + in_y
 end
 
+-- Lines 323-325
 function GuiDataManager:full_to_safe(in_x, in_y)
 	return in_x - self._fullrect_data.convert_x, in_y - self._fullrect_data.convert_y
 end
 
+-- Lines 327-329
 function GuiDataManager:corner_safe_to_full(in_x, in_y)
 	return self._fullrect_data.corner_convert_x + in_x, self._fullrect_data.corner_convert_y + in_y
 end
 
+-- Lines 331-333
 function GuiDataManager:y_safe_to_full(in_y)
 	return self._fullrect_data.convert_y + in_y
 end
 
+-- Lines 335-337
 function GuiDataManager:resolution_changed()
 	self:_setup_workspace_data()
 end

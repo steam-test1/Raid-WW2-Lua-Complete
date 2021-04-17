@@ -7,6 +7,7 @@ MotionpathMarkerUnitElement.PATH_TYPES = {
 	"ground"
 }
 
+-- Lines 12-35
 function MotionpathMarkerUnitElement:init(unit)
 	MotionpathMarkerUnitElement.super.init(self, unit)
 	self:_add_wp_options()
@@ -32,16 +33,19 @@ function MotionpathMarkerUnitElement:init(unit)
 	table.insert(self._save_values, "motion_state")
 end
 
+-- Lines 37-39
 function MotionpathMarkerUnitElement:_add_wp_options()
 	self._text_options = {
 		"debug_none"
 	}
 end
 
+-- Lines 41-43
 function MotionpathMarkerUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
+-- Lines 45-52
 function MotionpathMarkerUnitElement:set_element_data(params, ...)
 	MotionpathMarkerUnitElement.super.set_element_data(self, params, ...)
 
@@ -52,10 +56,12 @@ function MotionpathMarkerUnitElement:set_element_data(params, ...)
 	self:_recreate_motion_path(self._unit, true, false)
 end
 
+-- Lines 54-56
 function MotionpathMarkerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 58-61
 function MotionpathMarkerUnitElement:add_trigger(id, outcome, callback)
 	self._triggers[id] = {
 		outcome = outcome,
@@ -63,9 +69,11 @@ function MotionpathMarkerUnitElement:add_trigger(id, outcome, callback)
 	}
 end
 
+-- Lines 64-66
 function MotionpathMarkerUnitElement:on_unselected()
 end
 
+-- Lines 69-140
 function MotionpathMarkerUnitElement:clear()
 	local path = managers.motion_path:get_path_of_marker(self._unit:unit_data().unit_id)
 
@@ -127,6 +135,7 @@ function MotionpathMarkerUnitElement:clear()
 	managers.motion_path:sanitize_paths()
 end
 
+-- Lines 143-169
 function MotionpathMarkerUnitElement:_is_infinite_loop(candidate_unit)
 	local linked_markers = MotionpathMarkerUnitElement._linked_markers
 	local candidate_unit_id = candidate_unit:unit_data().unit_id
@@ -142,6 +151,7 @@ function MotionpathMarkerUnitElement:_is_infinite_loop(candidate_unit)
 	return false
 end
 
+-- Lines 171-178
 function MotionpathMarkerUnitElement:_bridge_exists(unit_id_from, unit_id_to)
 	for idx, bridge in ipairs(self._hed.bridges) do
 		if bridge.marker_from == unit_id_from and bridge.marker_to == unit_id_to or bridge.marker_from == unit_id_to and bridge.marker_to == unit_id_from then
@@ -152,6 +162,7 @@ function MotionpathMarkerUnitElement:_bridge_exists(unit_id_from, unit_id_to)
 	return -1
 end
 
+-- Lines 181-246
 function MotionpathMarkerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -216,6 +227,7 @@ function MotionpathMarkerUnitElement:add_element()
 	end
 end
 
+-- Lines 249-254
 function MotionpathMarkerUnitElement:remove_unit(unit_id)
 	local index = table.index_of(self._hed.markers.units, unit_id)
 
@@ -224,6 +236,7 @@ function MotionpathMarkerUnitElement:remove_unit(unit_id)
 	end
 end
 
+-- Lines 257-298
 function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MotionpathMarkerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -277,6 +290,7 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 301-306
 function MotionpathMarkerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -289,6 +303,7 @@ function MotionpathMarkerUnitElement:update_editing()
 	end
 end
 
+-- Lines 308-367
 function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -385,9 +400,11 @@ local width = 0
 local angle_tolerance = 0
 local cusp_limit = 0
 
+-- Lines 385-387
 function MotionpathMarkerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 end
 
+-- Lines 389-401
 function MotionpathMarkerUnitElement:update_selected(t, dt, selected_unit, all_units)
 	Application:draw_cylinder(self._unit:position(), self._unit:position() + self._unit:rotation():y() * self._hed.cp_length, 10, 0.514, 0.849, 0.01)
 
@@ -396,6 +413,7 @@ function MotionpathMarkerUnitElement:update_selected(t, dt, selected_unit, all_u
 	end
 end
 
+-- Lines 403-451
 function MotionpathMarkerUnitElement:_add_marker_to_path()
 	local target_marker_id = self._hed.markers.child or self._hed.markers.parent
 
@@ -433,6 +451,7 @@ function MotionpathMarkerUnitElement:_add_marker_to_path()
 	self:_recreate_motion_path(self._unit, true, false)
 end
 
+-- Lines 453-470
 function MotionpathMarkerUnitElement:_get_middle_point(path, selected_marker_id, target_marker_id)
 	local selected_point_offset, target_point_offset = nil
 
@@ -451,6 +470,7 @@ function MotionpathMarkerUnitElement:_get_middle_point(path, selected_marker_id,
 	return path.points[offset]
 end
 
+-- Lines 473-699
 function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_update, skip_recreate)
 	if not force_update and (self._last_marker_pos == selected_unit:position() or self._last_marker_pos == selected_unit:position()) and self._last_marker_rot == selected_unit:rotation() then
 		return
@@ -648,6 +668,7 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 	managers.motion_path:update_path(path, skip_recreate)
 end
 
+-- Lines 701-707
 function MotionpathMarkerUnitElement:_get_unit(unit_id)
 	if Application:editor() then
 		return managers.editor:unit_with_id(unit_id)
@@ -656,6 +677,7 @@ function MotionpathMarkerUnitElement:_get_unit(unit_id)
 	end
 end
 
+-- Lines 710-740
 function MotionpathMarkerUnitElement:_build_points(from_unit, to_unit)
 	local cp1 = from_unit:position() + from_unit:rotation():y() * from_unit:mission_element_data().cp_length * -1
 	local x1 = from_unit:position().x
@@ -694,6 +716,7 @@ function MotionpathMarkerUnitElement:_build_points(from_unit, to_unit)
 	}
 end
 
+-- Lines 743-758
 function MotionpathMarkerUnitElement:bez_interpolate(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, ...)
 	local n = 0
 	self._bezier_points = {}
@@ -707,6 +730,7 @@ function MotionpathMarkerUnitElement:bez_interpolate(x1, y1, z1, x2, y2, z2, x3,
 	return n
 end
 
+-- Lines 760-782
 function MotionpathMarkerUnitElement:bez_draw(id, b, t)
 	local x, y, z, w, h, d = bezier3.bounding_box(unpack(b))
 	local ax1, ay1, az1, ax2, ay2, az2, ax3, ay3, az3, ax4, ay4, az4, bx1, by1, bz1, bx2, by2, bz2, bx3, by3, bz3, bx4, by4, bz4 = nil

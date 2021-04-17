@@ -1,5 +1,6 @@
 core:import("CoreEditorUtils")
 
+-- Lines 4-18
 function CoreEditor:init_create_dome_occlusion(shape, res)
 	print("CoreEditor:init_create_dome_occlusion()")
 	self:viewport():vp():set_post_processor_effect("World", Idstring("dof_prepare_post_processor"), Idstring("empty"))
@@ -17,6 +18,7 @@ function CoreEditor:init_create_dome_occlusion(shape, res)
 	self:_create_dome_occlusion(params)
 end
 
+-- Lines 21-125
 function CoreEditor:_create_dome_occlusion(params)
 	self._dome_occlusion_params = params
 
@@ -124,6 +126,7 @@ function CoreEditor:_create_dome_occlusion(params)
 	self:generate_dome_occlusion(path .. "\\")
 end
 
+-- Lines 127-136
 function CoreEditor:_tick_generate_dome_occlusion(t, dt)
 	if self._dome_occlusion_params then
 		self._dome_occlusion_params.step = self._dome_occlusion_params.step + 1
@@ -136,12 +139,14 @@ function CoreEditor:_tick_generate_dome_occlusion(t, dt)
 	end
 end
 
+-- Lines 138-141
 function CoreEditor:generate_dome_occlusion(path)
 	local x1, y1, x2, y2 = self._camera_controller:_get_screen_size()
 
 	Application:screenshot(path .. self._dome_occlusion_params.file_name .. ".tga", x1, y1, x2, y2)
 end
 
+-- Lines 143-158
 function CoreEditor:_convert_dome_occlusion()
 	local path = self._dome_occlusion_params.output_path .. "\\"
 	local execute = managers.database:root_path() .. "aux_assets/engine/tools/spotmapgen.bat "
@@ -157,6 +162,7 @@ function CoreEditor:_convert_dome_occlusion()
 	self._camera_controller:_add_meta_data(output_path, "colormap_no_alpha_no_mips")
 end
 
+-- Lines 161-216
 function CoreEditor:dome_occlusion_done()
 	if not self._dome_occlusion_params then
 		Application:error("CoreEditor:dome_occlusion_done. Generate has not been started")

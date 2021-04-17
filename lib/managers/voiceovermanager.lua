@@ -1,9 +1,11 @@
 VoiceOverManager = VoiceOverManager or class()
 
+-- Lines 3-5
 function VoiceOverManager:init()
 	self:_setup()
 end
 
+-- Lines 7-22
 function VoiceOverManager:_setup()
 	self._disabled = false
 	self._investigated = {}
@@ -17,6 +19,7 @@ function VoiceOverManager:_setup()
 	self._units_speaking = {}
 end
 
+-- Lines 25-76
 function VoiceOverManager:update(t, dt)
 	if self._disabled then
 		return
@@ -64,6 +67,7 @@ function VoiceOverManager:update(t, dt)
 	end
 end
 
+-- Lines 78-88
 function VoiceOverManager:guard_register_idle(source_unit)
 	if self._disabled then
 		return
@@ -77,6 +81,7 @@ function VoiceOverManager:guard_register_idle(source_unit)
 	}
 end
 
+-- Lines 90-97
 function VoiceOverManager:guard_unregister_idle(source_unit)
 	if self._disabled then
 		return
@@ -85,6 +90,7 @@ function VoiceOverManager:guard_unregister_idle(source_unit)
 	self._idle_queue[source_unit:key()] = nil
 end
 
+-- Lines 99-113
 function VoiceOverManager:guard_investigate(source_unit)
 	if self._disabled then
 		return
@@ -103,6 +109,7 @@ function VoiceOverManager:guard_investigate(source_unit)
 	end
 end
 
+-- Lines 115-127
 function VoiceOverManager:guard_saw_something_ot(source_unit)
 	if self._disabled then
 		return
@@ -117,6 +124,7 @@ function VoiceOverManager:guard_saw_something_ot(source_unit)
 	end
 end
 
+-- Lines 129-136
 function VoiceOverManager:guard_saw_something_ut(source_unit)
 	if true or self._disabled then
 		return
@@ -125,6 +133,7 @@ function VoiceOverManager:guard_saw_something_ut(source_unit)
 	self:_play_sound(source_unit, "ste_sawsomethingut")
 end
 
+-- Lines 138-144
 function VoiceOverManager:guard_saw_enemy(source_unit)
 	if self._disabled then
 		return
@@ -133,6 +142,7 @@ function VoiceOverManager:guard_saw_enemy(source_unit)
 	self:_play_sound(source_unit, "ste_sawenemy")
 end
 
+-- Lines 146-152
 function VoiceOverManager:guard_saw_body(source_unit)
 	if self._disabled then
 		return
@@ -141,6 +151,7 @@ function VoiceOverManager:guard_saw_body(source_unit)
 	self:_play_sound(source_unit, "ste_sawbody")
 end
 
+-- Lines 154-160
 function VoiceOverManager:guard_saw_bag(source_unit)
 	if self._disabled then
 		return
@@ -149,10 +160,12 @@ function VoiceOverManager:guard_saw_bag(source_unit)
 	self:_play_sound(source_unit, "ste_sawbag")
 end
 
+-- Lines 162-172
 function VoiceOverManager:guard_raise_alarm(source_unit)
 	self:_play_sound(source_unit, "ste_raisealarm")
 end
 
+-- Lines 174-186
 function VoiceOverManager:guard_back_to_patrol(source_unit)
 	if self._disabled then
 		return
@@ -167,6 +180,7 @@ function VoiceOverManager:guard_back_to_patrol(source_unit)
 	end
 end
 
+-- Lines 188-193
 function VoiceOverManager:enemy_reload(source_unit)
 	if self._disabled then
 		return
@@ -175,12 +189,14 @@ function VoiceOverManager:enemy_reload(source_unit)
 	self:_play_sound(source_unit, "reload", false)
 end
 
+-- Lines 196-199
 function VoiceOverManager:disable()
 	Application:trace("VoiceOverManager:disable()")
 
 	self._disabled = true
 end
 
+-- Lines 201-222
 function VoiceOverManager:_play_sound(source_unit, event)
 	if self._disabled then
 		return
@@ -195,10 +211,12 @@ function VoiceOverManager:_play_sound(source_unit, event)
 	end
 end
 
+-- Lines 229-231
 function VoiceOverManager:on_simulation_ended()
 	self._disabled = false
 end
 
+-- Lines 233-235
 function VoiceOverManager:on_tweak_data_reloaded()
 	self:_setup()
 end

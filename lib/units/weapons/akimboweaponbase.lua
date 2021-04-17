@@ -1,12 +1,14 @@
 AkimboWeaponBase = AkimboWeaponBase or class(NewRaycastWeaponBase)
 AkimboWeaponBase.AKIMBO = true
 
+-- Lines 4-8
 function AkimboWeaponBase:init(...)
 	AkimboWeaponBase.super.init(self, ...)
 
 	self._manual_fire_second_gun = self:weapon_tweak_data().manual_fire_second_gun
 end
 
+-- Lines 10-37
 function AkimboWeaponBase:_create_second_gun()
 	local factory_weapon = tweak_data.weapon.factory[self._factory_id]
 	local ids_unit_name = Idstring(factory_weapon.unit)
@@ -41,11 +43,13 @@ function AkimboWeaponBase:_create_second_gun()
 	end
 end
 
+-- Lines 39-42
 function AkimboWeaponBase:create_second_gun()
 	self:_create_second_gun()
 	self._setup.user_unit:camera()._camera_unit:link(Idstring("a_weapon_left"), self._second_gun, self._second_gun:orientation_object():name())
 end
 
+-- Lines 44-71
 function AkimboWeaponBase:fire(...)
 	if not self._manual_fire_second_gun then
 		local result = AkimboWeaponBase.super.fire(self, ...)
@@ -81,6 +85,7 @@ function AkimboWeaponBase:fire(...)
 	end
 end
 
+-- Lines 73-84
 function AkimboWeaponBase:_fire_second(params)
 	if alive(self._second_gun) and self._setup and alive(self._setup.user_unit) then
 		local fired = self._second_gun:base().super.fire(self._second_gun:base(), unpack(params))
@@ -95,6 +100,7 @@ function AkimboWeaponBase:_fire_second(params)
 	end
 end
 
+-- Lines 105-110
 function AkimboWeaponBase:on_enabled(...)
 	AkimboWeaponBase.super.on_enabled(self, ...)
 
@@ -103,6 +109,7 @@ function AkimboWeaponBase:on_enabled(...)
 	end
 end
 
+-- Lines 112-117
 function AkimboWeaponBase:on_disabled(...)
 	AkimboWeaponBase.super.on_disabled(self, ...)
 
@@ -111,6 +118,7 @@ function AkimboWeaponBase:on_disabled(...)
 	end
 end
 
+-- Lines 119-124
 function AkimboWeaponBase:set_gadget_on(...)
 	AkimboWeaponBase.super.set_gadget_on(self, ...)
 
@@ -119,6 +127,7 @@ function AkimboWeaponBase:set_gadget_on(...)
 	end
 end
 
+-- Lines 160-165
 function AkimboWeaponBase:_second_gun_tweak_data_anim_version(anim)
 	if not self:weapon_tweak_data().animations.second_gun_versions then
 		return anim
@@ -127,6 +136,7 @@ function AkimboWeaponBase:_second_gun_tweak_data_anim_version(anim)
 	return self:weapon_tweak_data().animations.second_gun_versions[anim] or anim
 end
 
+-- Lines 167-175
 function AkimboWeaponBase:tweak_data_anim_play(anim, ...)
 	if alive(self._second_gun) and anim ~= "fire" then
 		local second_gun_anim = self:_second_gun_tweak_data_anim_version(anim)
@@ -137,6 +147,7 @@ function AkimboWeaponBase:tweak_data_anim_play(anim, ...)
 	return AkimboWeaponBase.super.tweak_data_anim_play(self, anim, ...)
 end
 
+-- Lines 177-183
 function AkimboWeaponBase:tweak_data_anim_stop(anim, ...)
 	AkimboWeaponBase.super.tweak_data_anim_stop(self, anim, ...)
 
@@ -147,6 +158,7 @@ function AkimboWeaponBase:tweak_data_anim_stop(anim, ...)
 	end
 end
 
+-- Lines 185-190
 function AkimboWeaponBase:destroy(...)
 	AkimboWeaponBase.super.destroy(self, ...)
 
@@ -158,17 +170,20 @@ end
 NPCAkimboWeaponBase = NPCAkimboWeaponBase or class(NewNPCRaycastWeaponBase)
 NPCAkimboWeaponBase.AKIMBO = true
 
+-- Lines 197-201
 function NPCAkimboWeaponBase:init(...)
 	NPCAkimboWeaponBase.super.init(self, ...)
 
 	self._manual_fire_second_gun = self:weapon_tweak_data().manual_fire_second_gun
 end
 
+-- Lines 203-206
 function NPCAkimboWeaponBase:create_second_gun()
 	AkimboWeaponBase._create_second_gun(self)
 	self._setup.user_unit:link(Idstring("a_weapon_left_front"), self._second_gun, self._second_gun:orientation_object():name())
 end
 
+-- Lines 208-230
 function NPCAkimboWeaponBase:fire_blank(...)
 	if not self._manual_fire_second_gun then
 		NPCAkimboWeaponBase.super.fire_blank(self, ...)
@@ -195,12 +210,14 @@ function NPCAkimboWeaponBase:fire_blank(...)
 	end
 end
 
+-- Lines 232-236
 function NPCAkimboWeaponBase:_fire_blank_second(params)
 	if alive(self._second_gun) and alive(self._setup.user_unit) then
 		self._second_gun:base():fire_blank(unpack(params))
 	end
 end
 
+-- Lines 238-243
 function NPCAkimboWeaponBase:on_enabled(...)
 	NPCAkimboWeaponBase.super.on_enabled(self, ...)
 
@@ -209,6 +226,7 @@ function NPCAkimboWeaponBase:on_enabled(...)
 	end
 end
 
+-- Lines 245-250
 function NPCAkimboWeaponBase:on_disabled(...)
 	NPCAkimboWeaponBase.super.on_disabled(self, ...)
 
@@ -217,12 +235,14 @@ function NPCAkimboWeaponBase:on_disabled(...)
 	end
 end
 
+-- Lines 252-256
 function NPCAkimboWeaponBase:on_melee_item_shown()
 	if alive(self._second_gun) then
 		self._second_gun:base():on_disabled()
 	end
 end
 
+-- Lines 258-263
 function NPCAkimboWeaponBase:on_melee_item_hidden()
 	if alive(self._second_gun) then
 		self._second_gun:base():on_enabled()
@@ -230,6 +250,7 @@ function NPCAkimboWeaponBase:on_melee_item_hidden()
 	end
 end
 
+-- Lines 265-270
 function NPCAkimboWeaponBase:set_gadget_on(...)
 	NPCAkimboWeaponBase.super.set_gadget_on(self, ...)
 
@@ -238,6 +259,7 @@ function NPCAkimboWeaponBase:set_gadget_on(...)
 	end
 end
 
+-- Lines 272-277
 function NPCAkimboWeaponBase:destroy(...)
 	NPCAkimboWeaponBase.super.destroy(self, ...)
 

@@ -3,6 +3,7 @@ RaidGUIControlProgressBarSimple.DEFAULT_HEIGHT = 20
 RaidGUIControlProgressBarSimple.DEFAULT_BACKGROUND_COLOR = Color.white:with_alpha(0.2)
 RaidGUIControlProgressBarSimple.DEFAULT_FOREGROUND_COLOR = tweak_data.gui.colors.raid_red
 
+-- Lines 8-21
 function RaidGUIControlProgressBarSimple:init(parent, params)
 	RaidGUIControlProgressBarSimple.super.init(self, parent, params)
 	self:_create_panel()
@@ -14,6 +15,7 @@ function RaidGUIControlProgressBarSimple:init(parent, params)
 	self:set_progress(initial_progress)
 end
 
+-- Lines 23-31
 function RaidGUIControlProgressBarSimple:_create_panel()
 	local progress_bar_params = clone(self._params)
 	progress_bar_params.name = progress_bar_params.name
@@ -24,6 +26,7 @@ function RaidGUIControlProgressBarSimple:_create_panel()
 	self._object = self._slider_panel
 end
 
+-- Lines 33-45
 function RaidGUIControlProgressBarSimple:_create_background_bar(...)
 	local background_bar_params = {
 		name = "background_bar",
@@ -40,6 +43,7 @@ function RaidGUIControlProgressBarSimple:_create_background_bar(...)
 	self._background = self._object:three_cut_bitmap(background_bar_params)
 end
 
+-- Lines 47-66
 function RaidGUIControlProgressBarSimple:_create_foreground_bar()
 	local foreground_panel_params = {
 		name = "foreground_panel",
@@ -64,6 +68,7 @@ function RaidGUIControlProgressBarSimple:_create_foreground_bar()
 	self._foreground_image = self._foreground:three_cut_bitmap(foreground_image_params)
 end
 
+-- Lines 68-72
 function RaidGUIControlProgressBarSimple:set_progress(progress)
 	self._progress = progress
 
@@ -71,6 +76,7 @@ function RaidGUIControlProgressBarSimple:set_progress(progress)
 	self._foreground_image:set_w(self._foreground:w())
 end
 
+-- Lines 74-78
 function RaidGUIControlProgressBarSimple:set_foreground_progress(progress)
 	self._progress = progress
 
@@ -78,14 +84,17 @@ function RaidGUIControlProgressBarSimple:set_foreground_progress(progress)
 	self._foreground_image:set_w(self._background:w())
 end
 
+-- Lines 80-82
 function RaidGUIControlProgressBarSimple:get_progress()
 	return self._progress
 end
 
+-- Lines 86-88
 function RaidGUIControlProgressBarSimple:show()
 	self._object:set_alpha(1)
 end
 
+-- Lines 90-92
 function RaidGUIControlProgressBarSimple:hide()
 	self._object:set_alpha(0)
 end

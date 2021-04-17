@@ -1,5 +1,6 @@
 HintUnitElement = HintUnitElement or class(MissionElement)
 
+-- Lines 3-9
 function HintUnitElement:init(unit)
 	HintUnitElement.super.init(self, unit)
 
@@ -8,9 +9,11 @@ function HintUnitElement:init(unit)
 	table.insert(self._save_values, "hint_id")
 end
 
+-- Lines 11-12
 function HintUnitElement:_set_text()
 end
 
+-- Lines 14-19
 function HintUnitElement:set_element_data(params, ...)
 	HintUnitElement.super.set_element_data(self, params, ...)
 
@@ -19,6 +22,7 @@ function HintUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 21-37
 function HintUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

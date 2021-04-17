@@ -1,5 +1,6 @@
 core:module("CoreString")
 
+-- Lines 15-21
 function utf8.find_char(text, char)
 	for i, c in ipairs(utf8.characters(text)) do
 		if c == char then
@@ -8,6 +9,7 @@ function utf8.find_char(text, char)
 	end
 end
 
+-- Lines 27-33
 function string.begins(s, beginning)
 	if s and beginning then
 		return s:sub(1, #beginning) == beginning
@@ -16,6 +18,7 @@ function string.begins(s, beginning)
 	return false
 end
 
+-- Lines 35-41
 function string.ends(s, ending)
 	if s and ending then
 		return #ending == 0 or s:sub(-(#ending)) == ending
@@ -24,10 +27,12 @@ function string.ends(s, ending)
 	return false
 end
 
+-- Lines 46-48
 function string.case_insensitive_compare(a, b)
 	return string.lower(a) < string.lower(b)
 end
 
+-- Lines 57-76
 function string.split(s, separator_pattern, keep_empty, max_splits)
 	local result = {}
 	local pattern = "(.-)" .. separator_pattern .. "()"
@@ -53,6 +58,7 @@ function string.split(s, separator_pattern, keep_empty, max_splits)
 	return result
 end
 
+-- Lines 78-87
 function string.join(separator, elements, keep_empty)
 	local strings = table.collect(elements, function (element)
 		local as_string = tostring(element)
@@ -65,24 +71,28 @@ function string.join(separator, elements, keep_empty)
 	return table.concat(strings, separator)
 end
 
+-- Lines 89-92
 function string.trim(s, pattern)
 	pattern = pattern or "%s*"
 
 	return string.match(s, "^" .. pattern .. "(.-)" .. pattern .. "$")
 end
 
+-- Lines 94-96
 function string.capitalize(s)
 	return string.gsub(s, "(%w)(%w*)", function (first_letter, remaining_letters)
 		return string.upper(first_letter) .. string.lower(remaining_letters)
 	end)
 end
 
+-- Lines 98-101
 function string.pretty(s, capitalize)
 	local pretty = string.gsub(s, "%W", " ")
 
 	return capitalize and string.capitalize(pretty) or pretty
 end
 
+-- Lines 103-107
 function string:rep(n)
 	local out = ""
 
@@ -93,10 +103,12 @@ function string:rep(n)
 	return out
 end
 
+-- Lines 109-111
 function string:left(n)
 	return self .. (" "):rep(n - self:len())
 end
 
+-- Lines 113-121
 function string.add_decimal_marks_to_string(str)
 	local total = str
 	local reverse = string.reverse(total)

@@ -1,6 +1,7 @@
 RaidGUIControlThreeCutBitmap = RaidGUIControlThreeCutBitmap or class(RaidGUIControl)
 RaidGUIControlThreeCutBitmap.CENTER_OVERFLOW = 1
 
+-- Lines 5-15
 function RaidGUIControlThreeCutBitmap:init(parent, params)
 	RaidGUIControlThreeCutBitmap.super.init(self, parent, params)
 
@@ -14,6 +15,7 @@ function RaidGUIControlThreeCutBitmap:init(parent, params)
 	self:_layout_parts()
 end
 
+-- Lines 17-25
 function RaidGUIControlThreeCutBitmap:_create_panel()
 	local three_cut_params = clone(self._params)
 	three_cut_params.name = three_cut_params.name .. "_three_cut_bitmap"
@@ -23,6 +25,7 @@ function RaidGUIControlThreeCutBitmap:_create_panel()
 	self._object = self._slider_panel
 end
 
+-- Lines 27-106
 function RaidGUIControlThreeCutBitmap:_layout_parts()
 	self._h = self:h()
 	local left_texture_rect = {
@@ -83,16 +86,19 @@ function RaidGUIControlThreeCutBitmap:_layout_parts()
 	self._center = self._object:bitmap(center_params)
 end
 
+-- Lines 108-112
 function RaidGUIControlThreeCutBitmap:set_color(color)
 	self._left:set_color(color)
 	self._center:set_color(color)
 	self._right:set_color(color)
 end
 
+-- Lines 114-116
 function RaidGUIControlThreeCutBitmap:color()
 	return self._left:color()
 end
 
+-- Lines 126-144
 function RaidGUIControlThreeCutBitmap:set_w(w)
 	self._object:set_w(w)
 	self._left:set_x(0)
@@ -115,10 +121,12 @@ function RaidGUIControlThreeCutBitmap:set_w(w)
 	self._right:set_x(self._center:x() + self._center:w() - RaidGUIControlThreeCutBitmap.CENTER_OVERFLOW)
 end
 
+-- Lines 146-148
 function RaidGUIControlThreeCutBitmap:mouse_released(o, button, x, y)
 	return false
 end
 
+-- Lines 150-162
 function RaidGUIControlThreeCutBitmap:h()
 	local height = tweak_data.gui.icons[self._params.left].texture_rect[4]
 

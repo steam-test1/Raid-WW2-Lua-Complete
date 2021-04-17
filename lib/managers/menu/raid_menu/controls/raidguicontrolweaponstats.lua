@@ -1,6 +1,7 @@
 RaidGUIControlWeaponStats = RaidGUIControlWeaponStats or class(RaidGUIControlTabs)
 RaidGUIControlWeaponStats.TAB_HEIGHT = 96
 
+-- Lines 5-14
 function RaidGUIControlWeaponStats:init(parent, params)
 	params.item_class = RaidGUIControlTabWeaponStats
 
@@ -12,6 +13,7 @@ function RaidGUIControlWeaponStats:init(parent, params)
 	RaidGUIControlWeaponStats.super.init(self, parent, params)
 end
 
+-- Lines 16-42
 function RaidGUIControlWeaponStats:_create_items()
 	if self._params.tabs_params then
 		for index, tabs_params in ipairs(self._params.tabs_params) do
@@ -42,6 +44,7 @@ function RaidGUIControlWeaponStats:_create_items()
 	end
 end
 
+-- Lines 44-53
 function RaidGUIControlWeaponStats:_set_default_values()
 	self._values = {
 		damage = {
@@ -77,6 +80,7 @@ function RaidGUIControlWeaponStats:_set_default_values()
 	}
 end
 
+-- Lines 57-67
 function RaidGUIControlWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
@@ -120,6 +124,7 @@ function RaidGUIControlWeaponStats:_get_tabs_params()
 	return tabs_params
 end
 
+-- Lines 69-97
 function RaidGUIControlWeaponStats:set_modified_stats(params)
 	self._values.damage.modified_value = params.damage_modified_value
 	self._values.magazine.modified_value = params.magazine_modified_value
@@ -147,6 +152,7 @@ function RaidGUIControlWeaponStats:set_modified_stats(params)
 	end
 end
 
+-- Lines 102-111
 function RaidGUIControlWeaponStats:set_applied_stats(params)
 	self._values.damage.applied_value = params.damage_applied_value
 	self._values.magazine.applied_value = params.magazine_applied_value
@@ -156,46 +162,59 @@ function RaidGUIControlWeaponStats:set_applied_stats(params)
 	self._values.stability.applied_value = params.stability_applied_value
 end
 
+-- Lines 113-115
 function RaidGUIControlWeaponStats:refresh_data()
 	Application:trace("[RaidGUIControlWeaponStats:refresh_data]")
 end
 
+-- Lines 117-118
 function RaidGUIControlWeaponStats:_create_bottom_line()
 end
 
+-- Lines 120-121
 function RaidGUIControlWeaponStats:_initial_tab_selected(tab_idx)
 end
 
+-- Lines 123-124
 function RaidGUIControlWeaponStats:_tab_selected(tab_idx, callback_param)
 end
 
+-- Lines 126-127
 function RaidGUIControlWeaponStats:_unselect_all()
 end
 
+-- Lines 133-136
 function RaidGUIControlWeaponStats:set_selected(value)
 	Application:error("[RaidGUIControlWeaponStats:set_selected] weapon stats control can't be selected")
 
 	self._selected = false
 end
 
+-- Lines 138-139
 function RaidGUIControlWeaponStats:move_up()
 end
 
+-- Lines 141-142
 function RaidGUIControlWeaponStats:move_down()
 end
 
+-- Lines 144-145
 function RaidGUIControlWeaponStats:move_left()
 end
 
+-- Lines 147-148
 function RaidGUIControlWeaponStats:move_right()
 end
 
+-- Lines 151-152
 function RaidGUIControlWeaponStats:highlight_on()
 end
 
+-- Lines 154-155
 function RaidGUIControlWeaponStats:highlight_off()
 end
 
+-- Lines 157-159
 function RaidGUIControlWeaponStats:mouse_released(o, button, x, y)
 	return false
 end

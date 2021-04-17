@@ -16,20 +16,24 @@ ElementSoundSwitch.SWITCH_VALUES = {
 	}
 }
 
+-- Lines 9-12
 function ElementSoundSwitch:init(...)
 	self._has_executed = false
 
 	ElementSoundSwitch.super.init(self, ...)
 end
 
+-- Lines 14-16
 function ElementSoundSwitch:stop_simulation(...)
 	ElementSoundSwitch.super.destroy(self, ...)
 end
 
+-- Lines 18-20
 function ElementSoundSwitch:save(data)
 	data.has_executed = self._has_executed
 end
 
+-- Lines 22-27
 function ElementSoundSwitch:load(data)
 	self._has_executed = data.has_executed
 
@@ -38,10 +42,12 @@ function ElementSoundSwitch:load(data)
 	end
 end
 
+-- Lines 29-31
 function ElementSoundSwitch:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 33-41
 function ElementSoundSwitch:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -53,6 +59,7 @@ function ElementSoundSwitch:on_executed(instigator)
 	ElementSoundSwitch.super.on_executed(self, instigator)
 end
 
+-- Lines 43-54
 function ElementSoundSwitch:_apply_switch()
 	local switch = ElementSoundSwitch.SWITCH_VALUES[self._values.switch]
 

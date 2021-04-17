@@ -2,17 +2,20 @@ require("core/lib/utils/dev/ews/tree_control/CoreBaseTreeNode")
 
 CoreTreeNode = CoreTreeNode or class(CoreBaseTreeNode)
 
+-- Lines 4-8
 function CoreTreeNode:init(text)
 	self._text = text or ""
 	self._parent = nil
 	self._children = {}
 end
 
+-- Lines 10-13
 function CoreTreeNode:set_callback(event_name, func)
 	self._callbacks = self._callbacks or {}
 	self._callbacks[event_name] = func
 end
 
+-- Lines 15-23
 function CoreTreeNode:_invoke_callback(event_name, ...)
 	local callback_table = self._callbacks
 
@@ -27,24 +30,29 @@ function CoreTreeNode:_invoke_callback(event_name, ...)
 	end
 end
 
+-- Lines 29-31
 function CoreTreeNode:text()
 	return self._text
 end
 
+-- Lines 33-37
 function CoreTreeNode:parent()
 	if self._parent and self._parent._parent then
 		return self._parent
 	end
 end
 
+-- Lines 40-42
 function CoreTreeNode:remove_children()
 	return self.super.remove_children(self)
 end
 
+-- Lines 45-47
 function CoreTreeNode:children()
 	return self._children
 end
 
+-- Lines 49-56
 function CoreTreeNode:append(text)
 	local new_node = CoreTreeNode:new(text)
 	new_node._callbacks = self._callbacks
@@ -56,6 +64,7 @@ function CoreTreeNode:append(text)
 	return new_node
 end
 
+-- Lines 58-68
 function CoreTreeNode:remove()
 	self:_invoke_callback("on_remove", self)
 

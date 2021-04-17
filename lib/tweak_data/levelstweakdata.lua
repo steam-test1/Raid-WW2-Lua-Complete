@@ -1,5 +1,6 @@
 LevelsTweakData = LevelsTweakData or class()
 
+-- Lines 3-634
 function LevelsTweakData:init()
 	self.altitude_difference_limit = 300
 	self.editor_level = "zone_germany_park"
@@ -317,10 +318,12 @@ function LevelsTweakData:init()
 	self.escape_levels = {}
 end
 
+-- Lines 638-640
 function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
+-- Lines 642-647
 function LevelsTweakData:get_world_name_from_index(index)
 	if not self._level_index[index] then
 		return
@@ -329,10 +332,12 @@ function LevelsTweakData:get_world_name_from_index(index)
 	return self[self._level_index[index]].world_name
 end
 
+-- Lines 651-653
 function LevelsTweakData:get_level_name_from_index(index)
 	return self._level_index[index]
 end
 
+-- Lines 657-663
 function LevelsTweakData:get_index_from_world_name(world_name)
 	for index, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -341,6 +346,7 @@ function LevelsTweakData:get_index_from_world_name(world_name)
 	end
 end
 
+-- Lines 667-673
 function LevelsTweakData:get_index_from_level_id(level_id)
 	for index, entry_name in ipairs(self._level_index) do
 		if entry_name == level_id then
@@ -349,14 +355,17 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
+-- Lines 675-677
 function LevelsTweakData:requires_dlc(level_id)
 	return self[level_id].dlc
 end
 
+-- Lines 679-681
 function LevelsTweakData:requires_dlc_by_index(index)
 	return self[self._level_index[index]].dlc
 end
 
+-- Lines 685-691
 function LevelsTweakData:get_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -365,6 +374,7 @@ function LevelsTweakData:get_level_name_from_world_name(world_name)
 	end
 end
 
+-- Lines 693-699
 function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -373,6 +383,7 @@ function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	end
 end
 
+-- Lines 701-707
 function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	for _, entry_name in ipairs(self._level_index) do
 		if level_id == entry_name then
@@ -381,6 +392,7 @@ function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	end
 end
 
+-- Lines 710-728
 function LevelsTweakData:get_default_team_ID(type)
 	local lvl_tweak = self[Global.level_data.level_id]
 
@@ -403,6 +415,7 @@ function LevelsTweakData:get_default_team_ID(type)
 	end
 end
 
+-- Lines 730-757
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -457,6 +470,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
+-- Lines 759-777
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -471,6 +485,7 @@ function LevelsTweakData:get_default_team_IDs()
 	return default_team_IDs
 end
 
+-- Lines 779-793
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -490,6 +505,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
+-- Lines 795-802
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 

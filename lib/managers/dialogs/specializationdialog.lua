@@ -3,6 +3,7 @@ require("lib/managers/dialogs/GenericDialog")
 
 SpecializationDialog = SpecializationDialog or class(GenericDialog)
 
+-- Lines 8-43
 function SpecializationDialog:init(manager, data, is_title_outside)
 	Dialog.init(self, manager, data)
 
@@ -52,12 +53,14 @@ function SpecializationDialog:init(manager, data, is_title_outside)
 	self._sound_event = data.sound_event
 end
 
+-- Lines 45-49
 function SpecializationDialog:fade_in()
 	SpecializationDialog.super.fade_in(self)
 
 	self._start_sound_t = self._sound_event and TimerManager:main():time() + 0.2
 end
 
+-- Lines 51-58
 function SpecializationDialog:update(t, dt)
 	SpecializationDialog.super.update(self, t, dt)
 
@@ -68,6 +71,7 @@ function SpecializationDialog:update(t, dt)
 	end
 end
 
+-- Lines 60-66
 function SpecializationDialog:fade_out_close()
 	self._conversion_ended = self._panel_script:chk_close()
 
@@ -78,6 +82,7 @@ function SpecializationDialog:fade_out_close()
 	managers.menu:post_event("prompt_exit")
 end
 
+-- Lines 68-83
 function SpecializationDialog:remove_mouse()
 	if not self._conversion_ended then
 		return

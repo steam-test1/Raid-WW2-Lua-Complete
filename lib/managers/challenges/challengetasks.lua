@@ -4,6 +4,7 @@ ChallengeTask.STATE_ACTIVE = "active"
 ChallengeTask.STATE_COMPLETED = "completed"
 ChallengeTask.STATE_FAILED = "failed"
 
+-- Lines 8-14
 function ChallengeTask.create(task_type, challenge_category, challenge_id, task_data)
 	if task_type == ChallengeTweakData.TASK_KILL_ENEMIES then
 		return ChallengeTaskKillEnemies:new(challenge_category, challenge_id, task_data)
@@ -12,6 +13,7 @@ function ChallengeTask.create(task_type, challenge_category, challenge_id, task_
 	end
 end
 
+-- Lines 16-22
 function ChallengeTask.get_metatable(task_type)
 	if task_type == ChallengeTweakData.TASK_KILL_ENEMIES then
 		return ChallengeTaskKillEnemies
@@ -20,10 +22,12 @@ function ChallengeTask.get_metatable(task_type)
 	end
 end
 
+-- Lines 24-26
 function ChallengeTask:init()
 	self._state = ChallengeTask.STATE_INACTIVE
 end
 
+-- Lines 28-33
 function ChallengeTask:setup()
 	if self._state == ChallengeTask.STATE_ACTIVE then
 		self._state = ChallengeTask.STATE_INACTIVE
@@ -32,36 +36,44 @@ function ChallengeTask:setup()
 	end
 end
 
+-- Lines 35-37
 function ChallengeTask:activate()
 	self._state = ChallengeTask.STATE_ACTIVE
 end
 
+-- Lines 39-41
 function ChallengeTask:deactivate()
 	self._state = ChallengeTask.STATE_INACTIVE
 end
 
+-- Lines 43-47
 function ChallengeTask:reset()
 	if self._state == Challenge.STATE_COMPLETED or self._state == Challenge.STATE_FAILED then
 		self._state = Challenge.STATE_INACTIVE
 	end
 end
 
+-- Lines 49-51
 function ChallengeTask:active()
 	return self._state == ChallengeTask.STATE_ACTIVE and true or false
 end
 
+-- Lines 53-55
 function ChallengeTask:completed()
 	return self._state == ChallengeTask.STATE_COMPLETED and true or false
 end
 
+-- Lines 57-59
 function ChallengeTask:id()
 	return self._id
 end
 
+-- Lines 61-63
 function ChallengeTask:type()
 	return self._type
 end
 
+-- Lines 65-71
 function ChallengeTask:force_complete()
 	if self:completed() then
 		return
@@ -72,6 +84,7 @@ end
 
 ChallengeTaskKillEnemies = ChallengeTaskKillEnemies or class(ChallengeTask)
 
+-- Lines 82-94
 function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_data)
 	ChallengeTaskKillEnemies.super.init(self)
 
@@ -86,6 +99,7 @@ function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_da
 	self._reminders = task_data.reminders or {}
 end
 
+-- Lines 96-102
 function ChallengeTaskKillEnemies:activate()
 	ChallengeTaskKillEnemies.super.activate(self)
 	managers.system_event_listener:add_listener(self._id, {
@@ -93,37 +107,45 @@ function ChallengeTaskKillEnemies:activate()
 	}, callback(self, self, "on_enemy_killed"))
 end
 
+-- Lines 104-108
 function ChallengeTaskKillEnemies:deactivate()
 	ChallengeTaskKillEnemies.super.deactivate(self)
 	managers.system_event_listener:remove_listener(self._id)
 end
 
+-- Lines 110-114
 function ChallengeTaskKillEnemies:reset()
 	ChallengeTaskKillEnemies.super.reset(self)
 
 	self._count = 0
 end
 
+-- Lines 116-118
 function ChallengeTaskKillEnemies:current_count()
 	return self._count
 end
 
+-- Lines 120-122
 function ChallengeTaskKillEnemies:target()
 	return self._target
 end
 
+-- Lines 124-126
 function ChallengeTaskKillEnemies:min_range()
 	return self._modifiers.min_range or 0
 end
 
+-- Lines 128-130
 function ChallengeTaskKillEnemies:set_reminders(reminders)
 	self._reminders = reminders
 end
 
+-- Lines 132-134
 function ChallengeTaskKillEnemies:set_modifiers(modifiers)
 	self._modifiers = modifiers
 end
 
+-- Lines 136-194
 function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 	if kill_data.using_turret then
 		return
@@ -176,12 +198,14 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 	self:_check_status()
 end
 
+-- Lines 196-200
 function ChallengeTaskKillEnemies:_check_status()
 	if self._target <= self._count then
 		self:_on_completed()
 	end
 end
 
+-- Lines 202-207
 function ChallengeTaskKillEnemies:_on_completed()
 	self._state = ChallengeTask.STATE_COMPLETED
 
@@ -189,6 +213,7 @@ function ChallengeTaskKillEnemies:_on_completed()
 	managers.system_event_listener:remove_listener(self._id)
 end
 
+-- Lines 209-218
 function ChallengeTaskKillEnemies:force_complete()
 	if self:completed() then
 		return
@@ -202,6 +227,7 @@ end
 
 ChallengeTaskCollectAmmo = ChallengeTaskCollectAmmo or class(ChallengeTask)
 
+-- Lines 245-255
 function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_data)
 	ChallengeTaskCollectAmmo.super.init(self)
 
@@ -214,6 +240,7 @@ function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_da
 	self._reminders = task_data.reminders or {}
 end
 
+-- Lines 257-263
 function ChallengeTaskCollectAmmo:activate()
 	ChallengeTaskCollectAmmo.super.activate(self)
 	managers.system_event_listener:add_listener(self._id, {
@@ -221,37 +248,45 @@ function ChallengeTaskCollectAmmo:activate()
 	}, callback(self, self, "on_ammo_collected"))
 end
 
+-- Lines 265-269
 function ChallengeTaskCollectAmmo:deactivate()
 	ChallengeTaskCollectAmmo.super.deactivate(self)
 	managers.system_event_listener:remove_listener(self._id)
 end
 
+-- Lines 271-275
 function ChallengeTaskCollectAmmo:reset()
 	ChallengeTaskKillEnemies.super.reset(self)
 
 	self._count = 0
 end
 
+-- Lines 277-279
 function ChallengeTaskCollectAmmo:current_count()
 	return self._count
 end
 
+-- Lines 281-283
 function ChallengeTaskCollectAmmo:target()
 	return self._target
 end
 
+-- Lines 285-287
 function ChallengeTaskCollectAmmo:min_range()
 	return 0
 end
 
+-- Lines 289-291
 function ChallengeTaskCollectAmmo:set_reminders(reminders)
 	self._reminders = reminders
 end
 
+-- Lines 293-295
 function ChallengeTaskCollectAmmo:set_modifiers(modifiers)
 	self._modifiers = modifiers
 end
 
+-- Lines 297-316
 function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 	if managers.raid_job:is_camp_loaded() then
 		return
@@ -274,12 +309,14 @@ function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 	self:_check_status()
 end
 
+-- Lines 318-322
 function ChallengeTaskCollectAmmo:_check_status()
 	if self._target <= self._count then
 		self:_on_completed()
 	end
 end
 
+-- Lines 324-329
 function ChallengeTaskCollectAmmo:_on_completed()
 	self._state = ChallengeTask.STATE_COMPLETED
 
@@ -287,6 +324,7 @@ function ChallengeTaskCollectAmmo:_on_completed()
 	managers.system_event_listener:remove_listener(self._id)
 end
 
+-- Lines 331-340
 function ChallengeTaskCollectAmmo:force_complete()
 	if self:completed() then
 		return

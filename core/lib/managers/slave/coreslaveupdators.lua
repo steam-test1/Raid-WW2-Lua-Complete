@@ -11,21 +11,26 @@ UNITS_PER_FRAME = 1
 SlaveManager = SlaveManager or class()
 Updator = Updator or class()
 
+-- Lines 21-23
 function Updator:init()
 end
 
+-- Lines 25-27
 function Updator:peer()
 	return self._peer
 end
 
+-- Lines 29-31
 function Updator:update()
 end
 
+-- Lines 33-35
 function Updator:set_batch_count()
 end
 
 SlaveUpdator = SlaveUpdator or class(Updator)
 
+-- Lines 43-52
 function SlaveUpdator:init(vp, port)
 	Network:bind(port or DEFAULT_NETWORK_PORT, self)
 	Network:set_receiver(NETWORK_SLAVE_RECEIVER, self)
@@ -38,10 +43,12 @@ function SlaveUpdator:init(vp, port)
 	return true
 end
 
+-- Lines 54-56
 function SlaveUpdator:type()
 	return "slave"
 end
 
+-- Lines 58-71
 function SlaveUpdator:slaveupdators_sync(key, name, pos, rot, rpc)
 	local unit = self._units[key]
 
@@ -60,6 +67,7 @@ function SlaveUpdator:slaveupdators_sync(key, name, pos, rot, rpc)
 	rpc:slaveupdators_ready_to_send()
 end
 
+-- Lines 73-82
 function SlaveUpdator:slaveupdators_reset(rpc)
 	for _, unit in pairs(self._pings) do
 		if CoreCode.alive(unit) then
@@ -72,6 +80,7 @@ function SlaveUpdator:slaveupdators_reset(rpc)
 	rpc:slaveupdators_ready_to_send()
 end
 
+-- Lines 84-93
 function SlaveUpdator:slaveupdators_init()
 	for _, unit in ipairs(World:find_units_quick("all")) do
 		if CoreCode.alive(unit) then
@@ -85,6 +94,7 @@ end
 
 MasterUpdator = MasterUpdator or class(Updator)
 
+-- Lines 101-119
 function MasterUpdator:init(vp, host, port, master_listener_port, manual_pumping)
 	self._peer = Network:handshake(host or "localhost", port or DEFAULT_NETWORK_PORT)
 
@@ -105,14 +115,17 @@ function MasterUpdator:init(vp, host, port, master_listener_port, manual_pumping
 	return true
 end
 
+-- Lines 121-123
 function MasterUpdator:type()
 	return "master"
 end
 
+-- Lines 125-127
 function MasterUpdator:set_batch_count(count)
 	self._units_per_frame = count or UNITS_PER_FRAME
 end
 
+-- Lines 129-154
 function MasterUpdator:update(t, dt)
 	if #self._unitqueue == 0 then
 		self._peer:slaveupdators_reset()
@@ -144,6 +157,7 @@ function MasterUpdator:update(t, dt)
 	end
 end
 
+-- Lines 156-158
 function MasterUpdator:slaveupdators_ready_to_send()
 	self._ready_to_send = true
 end

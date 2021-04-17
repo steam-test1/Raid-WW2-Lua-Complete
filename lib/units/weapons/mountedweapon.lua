@@ -1,6 +1,7 @@
 MountedWeapon = MountedWeapon or class()
 MountedWeapon.SEQUENCE_FIRE = "fire"
 
+-- Lines 5-29
 function MountedWeapon:init(unit)
 	self._unit = unit
 
@@ -18,6 +19,7 @@ function MountedWeapon:init(unit)
 	self._main_cannon_locator = self._unit:get_object(Idstring(self._unit:vehicle_driving()._tweak_data.seats.gunner.fire_point))
 end
 
+-- Lines 31-44
 function MountedWeapon:set_cannon_sound_source()
 	self._main_cannon_soundsource = nil
 	local snd_main_cannon = nil
@@ -33,6 +35,7 @@ function MountedWeapon:set_cannon_sound_source()
 	end
 end
 
+-- Lines 46-56
 function MountedWeapon:set_tweak_data(data)
 	self._tweak_data = data
 
@@ -45,10 +48,12 @@ function MountedWeapon:set_tweak_data(data)
 	end
 end
 
+-- Lines 58-62
 function MountedWeapon:update(unit, t, dt)
 	self:update_turret(t, dt)
 end
 
+-- Lines 64-90
 function MountedWeapon:main_cannon_fire()
 	if self._main_cannon_cooldown < self._main_cannon_cooldown_counter then
 		self._main_cannon_locator = self._unit:get_object(Idstring(self._unit:vehicle_driving()._tweak_data.seats.gunner.fire_point))
@@ -76,6 +81,7 @@ function MountedWeapon:main_cannon_fire()
 	end
 end
 
+-- Lines 96-109
 function MountedWeapon:set_turret_target_rot(rot, dt)
 	self._turret.target_rot_yaw = rot:yaw()
 	self._turret.target_rot_pitch = rot:pitch()
@@ -93,6 +99,7 @@ function MountedWeapon:set_turret_target_rot(rot, dt)
 	end
 end
 
+-- Lines 111-214
 function MountedWeapon:update_turret(t, dt)
 	if not self._turret or not self._turret.object then
 		return
@@ -170,6 +177,7 @@ function MountedWeapon:update_turret(t, dt)
 	self._main_cannon_cooldown_counter = self._main_cannon_cooldown_counter + dt
 end
 
+-- Lines 216-264
 function MountedWeapon:_update_tank_input(dt)
 	local move_d = self._controller:get_input_axis("drive")
 	local forced_gear = -1
@@ -220,6 +228,7 @@ function MountedWeapon:_update_tank_input(dt)
 	end
 end
 
+-- Lines 266-297
 function MountedWeapon:_tank_main_cannon_hit_explosion(raycast, hit_position)
 	local pos = hit_position
 	local normal = raycast.normal
@@ -248,6 +257,7 @@ function MountedWeapon:_tank_main_cannon_hit_explosion(raycast, hit_position)
 	managers.network:session():send_to_peers_synched("sync_tank_cannon_explosion", self._unit, pos, damage_radius, damage, player_damage, curve_pow)
 end
 
+-- Lines 299-309
 function MountedWeapon:_tank_main_cannon_hit_explosion_on_client(position, radius, damage, player_damage, curve_pow)
 	local sound_event = "grenade_explode"
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000

@@ -1,5 +1,6 @@
 StatisticsTweakData = StatisticsTweakData or class()
 
+-- Lines 3-39
 function StatisticsTweakData:init()
 	self.session = {}
 	self.killed = {
@@ -43,6 +44,7 @@ function StatisticsTweakData:init()
 	self:_init_bottom_stats()
 end
 
+-- Lines 41-105
 function StatisticsTweakData:_init_top_stats()
 	self.top_stats = {
 		top_stat_most_kills = {}
@@ -109,6 +111,7 @@ function StatisticsTweakData:_init_top_stats()
 	}
 end
 
+-- Lines 107-161
 function StatisticsTweakData:_init_bottom_stats()
 	self.bottom_stats = {
 		bottom_stat_least_kills = {}
@@ -164,10 +167,12 @@ function StatisticsTweakData:_init_bottom_stats()
 	}
 end
 
+-- Lines 163-165
 function StatisticsTweakData:statistics_specializations()
 	return 12
 end
 
+-- Lines 167-312
 function StatisticsTweakData:statistics_table()
 	local level_list = {
 		"flakturm",
@@ -267,6 +272,7 @@ function StatisticsTweakData:statistics_table()
 	return level_list, job_list, weapon_list, melee_list, grenade_list, enemy_list, character_list
 end
 
+-- Lines 314-316
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"3840x2160",

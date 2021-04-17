@@ -8,6 +8,7 @@ VehicleTriggerUnitElement.events = {
 	VehicleTriggerUnitElement.ON_ALL_INSIDE
 }
 
+-- Lines 13-21
 function VehicleTriggerUnitElement:init(unit)
 	Application:debug("VehicleTriggerUnitElement:init")
 	VehicleTriggerUnitElement.super.init(self, unit)
@@ -18,6 +19,7 @@ function VehicleTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "event")
 end
 
+-- Lines 23-33
 function VehicleTriggerUnitElement:_build_panel(panel, panel_sizer)
 	Application:debug("VehicleTriggerUnitElement:_build_panel")
 	self:_create_panel()

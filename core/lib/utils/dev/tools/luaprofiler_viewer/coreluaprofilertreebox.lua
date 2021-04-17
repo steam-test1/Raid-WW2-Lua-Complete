@@ -13,6 +13,7 @@ local DEFAULT_FORMAT = PERCENT
 local DEFAULT_INFOKEY = "total_time"
 LuaProfilerTreeBox = LuaProfilerTreeBox or CoreClass.class()
 
+-- Lines 29-50
 function LuaProfilerTreeBox:init(...)
 	local args = CoreKeywordArguments.KeywordArguments:new(...)
 	self._ews_parent = args:mandatory_object("parent")
@@ -34,12 +35,14 @@ function LuaProfilerTreeBox:init(...)
 	self.panel:set_sizer(self.box_sizer)
 end
 
+-- Lines 52-54
 function LuaProfilerTreeBox:set_gridview(...)
 	self._gridview = parse_kwargs({
 		...
 	}, "table:gridview")
 end
 
+-- Lines 56-62
 function LuaProfilerTreeBox:destroy()
 	self._lpd = nil
 
@@ -50,6 +53,7 @@ function LuaProfilerTreeBox:destroy()
 	self._gridview = nil
 end
 
+-- Lines 64-67
 function LuaProfilerTreeBox:set_profilerdata(...)
 	self._lpd, self._displayformat = parse_kwargs({
 		...
@@ -58,12 +62,14 @@ function LuaProfilerTreeBox:set_profilerdata(...)
 	self:_redraw()
 end
 
+-- Lines 70-93
 function LuaProfilerTreeBox:set_displayformat(...)
 	self._displayformat = parse_kwargs({
 		...
 	}, "number:displayformat")
 
 	if self._lpd then
+		-- Lines 73-90
 		function relabel(cnid)
 			if self._lpd:cn_treenodeid(cnid) ~= -1 then
 				local label = self:_makelabel(cnid)
@@ -91,6 +97,7 @@ function LuaProfilerTreeBox:set_displayformat(...)
 	end
 end
 
+-- Lines 100-108
 function LuaProfilerTreeBox:_redraw()
 	if self._lpd then
 		self:_clear()
@@ -103,7 +110,9 @@ function LuaProfilerTreeBox:_redraw()
 	end
 end
 
+-- Lines 110-121
 function LuaProfilerTreeBox:_clear()
+	-- Lines 111-118
 	local function clear_treenodeid(cnid)
 		if self._lpd:cn_treenodeid(cnid) ~= -1 then
 			self._lpd:cn_settreenodeid(cnid, -1)
@@ -118,6 +127,7 @@ function LuaProfilerTreeBox:_clear()
 	self._treectrl:clear()
 end
 
+-- Lines 123-128
 function LuaProfilerTreeBox:_populate_rootnode()
 	local rnid = self._lpd:rootcallnode()
 	local label = self:_makelabel(rnid)
@@ -126,6 +136,7 @@ function LuaProfilerTreeBox:_populate_rootnode()
 	self._lpd:cn_settreenodeid(rnid, treerootid)
 end
 
+-- Lines 130-152
 function LuaProfilerTreeBox:_populate_plus2(cnid, plus1)
 	local populated_children = false
 
@@ -155,6 +166,7 @@ function LuaProfilerTreeBox:_populate_plus2(cnid, plus1)
 	end
 end
 
+-- Lines 154-163
 function LuaProfilerTreeBox:_populate_path(cnid)
 	local nodes2expand = {}
 
@@ -169,6 +181,7 @@ function LuaProfilerTreeBox:_populate_path(cnid)
 	end
 end
 
+-- Lines 165-169
 function LuaProfilerTreeBox:_on_item_expanded(_, tree_event)
 	local tnid = tree_event:get_item()
 	local cnid = self._lpd:find_callnode(tnid)
@@ -176,6 +189,7 @@ function LuaProfilerTreeBox:_on_item_expanded(_, tree_event)
 	self:_populate_plus2(cnid)
 end
 
+-- Lines 171-204
 function LuaProfilerTreeBox:_makelabel(cnid)
 	local frametime = self._lpd:frametime()
 	local label = ""
@@ -208,6 +222,7 @@ function LuaProfilerTreeBox:_makelabel(cnid)
 	return label
 end
 
+-- Lines 211-228
 function LuaProfilerTreeBox:deselect_and_expand(...)
 	local fnid = parse_kwargs({
 		...
@@ -230,7 +245,9 @@ function LuaProfilerTreeBox:deselect_and_expand(...)
 	self._treectrl:connect("EVT_COMMAND_TREE_ITEM_EXPANDED", self.__on_item_expanded_cb)
 end
 
+-- Lines 230-242
 function LuaProfilerTreeBox:_collapse_all()
+	-- Lines 231-240
 	function collapse(cnid)
 		tnid = self._lpd:cn_treenodeid(cnid)
 
@@ -248,6 +265,7 @@ function LuaProfilerTreeBox:_collapse_all()
 	collapse(self._lpd:rootcallnode())
 end
 
+-- Lines 244-249
 function LuaProfilerTreeBox:_expand_path(cnid)
 	while cnid ~= self._lpd:rootcallnode() do
 		cnid = self._lpd:cn_parent(cnid)
@@ -256,6 +274,7 @@ function LuaProfilerTreeBox:_expand_path(cnid)
 	end
 end
 
+-- Lines 256-260
 function LuaProfilerTreeBox:deselect_and_highlight(...)
 	local fnid = parse_kwargs({
 		...
@@ -265,7 +284,9 @@ function LuaProfilerTreeBox:deselect_and_highlight(...)
 	self:_highlight_funcnode(fnid)
 end
 
+-- Lines 262-274
 function LuaProfilerTreeBox:_clear_highlights()
+	-- Lines 263-272
 	function clear_highlight(cnid)
 		local tnid = self._lpd:cn_treenodeid(cnid)
 
@@ -283,6 +304,7 @@ function LuaProfilerTreeBox:_clear_highlights()
 	clear_highlight(self._lpd:rootcallnode())
 end
 
+-- Lines 276-282
 function LuaProfilerTreeBox:_highlight_funcnode(fnid)
 	self:_clear_highlights()
 
@@ -293,6 +315,7 @@ function LuaProfilerTreeBox:_highlight_funcnode(fnid)
 	end
 end
 
+-- Lines 284-289
 function LuaProfilerTreeBox:_highlight_callnode(cnid)
 	local tnid = self._lpd:cn_treenodeid(cnid)
 
@@ -301,6 +324,7 @@ function LuaProfilerTreeBox:_highlight_callnode(cnid)
 	end
 end
 
+-- Lines 296-304
 function LuaProfilerTreeBox:_on_select()
 	local tnid = self._treectrl:selected_item()
 

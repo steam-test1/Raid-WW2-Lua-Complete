@@ -1,5 +1,6 @@
 CoreEnvEditor = CoreEnvEditor or class()
 
+-- Lines 3-136
 function CoreEnvEditor:create_interface()
 	local gui = self:add_sky_param("sun_ray_color", EnvEdColorBox:new(self, self:get_tab("Global illumination"), "Sun color"))
 
@@ -162,5 +163,6 @@ function CoreEnvEditor:create_interface()
 	self:add_gui_element(gui, "Global textures", "Colorgrade")
 end
 
+-- Lines 138-140
 function CoreEnvEditor:create_simple_interface()
 end

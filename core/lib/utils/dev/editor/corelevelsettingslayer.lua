@@ -4,6 +4,7 @@ core:import("CoreEws")
 
 LevelSettingsLayer = LevelSettingsLayer or class(CoreLayer.Layer)
 
+-- Lines 10-15
 function LevelSettingsLayer:init(owner)
 	LevelSettingsLayer.super.init(self, owner, "level_settings")
 
@@ -11,14 +12,17 @@ function LevelSettingsLayer:init(owner)
 	self._settings_ctrlrs = {}
 end
 
+-- Lines 17-19
 function LevelSettingsLayer:get_layer_name()
 	return "Level Settings"
 end
 
+-- Lines 21-23
 function LevelSettingsLayer:get_setting(setting)
 	return self._settings[setting]
 end
 
+-- Lines 25-33
 function LevelSettingsLayer:get_mission_filter()
 	local t = {}
 
@@ -31,6 +35,7 @@ function LevelSettingsLayer:get_mission_filter()
 	return t
 end
 
+-- Lines 35-42
 function LevelSettingsLayer:load(world_holder, offset)
 	self._settings = world_holder:create_world("world", self._save_name, offset)
 
@@ -41,6 +46,7 @@ function LevelSettingsLayer:load(world_holder, offset)
 	end
 end
 
+-- Lines 44-55
 function LevelSettingsLayer:save(save_params)
 	local t = {
 		single_data_block = true,
@@ -54,9 +60,11 @@ function LevelSettingsLayer:save(save_params)
 	managers.editor:add_save_data(t)
 end
 
+-- Lines 58-60
 function LevelSettingsLayer:update(t, dt)
 end
 
+-- Lines 62-78
 function LevelSettingsLayer:build_panel(notebook)
 	cat_print("editor", "LevelSettingsLayer:build_panel")
 
@@ -75,6 +83,7 @@ function LevelSettingsLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
+-- Lines 80-99
 function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	local id = "simulation_level_id"
 	local params = {
@@ -104,6 +113,7 @@ function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	}
 end
 
+-- Lines 101-120
 function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 	for i = 1, 5 do
 		local id = "mission_filter_" .. i
@@ -124,6 +134,7 @@ function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 	end
 end
 
+-- Lines 122-149
 function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	local id = "chunk_name"
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -161,25 +172,30 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	}
 end
 
+-- Lines 151-154
 function LevelSettingsLayer:_set_data(data)
 	self._settings[data.value] = data.ctrlr:get_value()
 	self._settings[data.value] = tonumber(self._settings[data.value]) or self._settings[data.value]
 end
 
+-- Lines 156-161
 function LevelSettingsLayer:add_triggers()
 	LevelSettingsLayer.super.add_triggers(self)
 
 	local vc = self._editor_data.virtual_controller
 end
 
+-- Lines 163-165
 function LevelSettingsLayer:activate()
 	LevelSettingsLayer.super.activate(self)
 end
 
+-- Lines 167-169
 function LevelSettingsLayer:deactivate()
 	LevelSettingsLayer.super.deactivate(self)
 end
 
+-- Lines 171-182
 function LevelSettingsLayer:clear()
 	LevelSettingsLayer.super.clear(self)
 

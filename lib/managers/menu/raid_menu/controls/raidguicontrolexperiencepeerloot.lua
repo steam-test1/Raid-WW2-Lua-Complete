@@ -11,6 +11,7 @@ RaidGUIControlExperiencePeerLoot.XP_VALUE_COLOR = tweak_data.gui.colors.raid_gre
 RaidGUIControlExperiencePeerLoot.XP_VALUE_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 RaidGUIControlExperiencePeerLoot.TEXT_X = 128
 
+-- Lines 21-31
 function RaidGUIControlExperiencePeerLoot:init(parent, params)
 	RaidGUIControlExperiencePeerLoot.super.init(self, parent, params)
 
@@ -24,9 +25,11 @@ function RaidGUIControlExperiencePeerLoot:init(parent, params)
 	self:_create_experience_details()
 end
 
+-- Lines 34-35
 function RaidGUIControlExperiencePeerLoot:close()
 end
 
+-- Lines 38-47
 function RaidGUIControlExperiencePeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -38,6 +41,7 @@ function RaidGUIControlExperiencePeerLoot:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 50-91
 function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 	local params_xp_image = {
 		name = "xp_image",
@@ -84,16 +88,19 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 	self._xp_value_label:set_h(h)
 end
 
+-- Lines 93-96
 function RaidGUIControlExperiencePeerLoot:set_xp(xp)
 	self._xp_value_label:set_text("+" .. xp .. " " .. self:translate("experience_points", true))
 	self:_layout_text()
 end
 
+-- Lines 98-101
 function RaidGUIControlExperiencePeerLoot:set_player_name(name)
 	self._name_label:set_text(utf8.to_upper(name))
 	self:_layout_text()
 end
 
+-- Lines 103-109
 function RaidGUIControlExperiencePeerLoot:_layout_text()
 	local _, _, _, h = self._name_label:text_rect()
 

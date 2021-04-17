@@ -27,6 +27,7 @@ SpecialHonorsGui.GAMERCARD_BUTTONS = {
 	}
 }
 
+-- Lines 25-34
 function SpecialHonorsGui:init(ws, fullscreen_ws, node, component_name)
 	print("[SpecialHonorsGui:init()]")
 
@@ -38,11 +39,13 @@ function SpecialHonorsGui:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:register_on_escape_callback(callback(self, self, "on_escape"))
 end
 
+-- Lines 36-39
 function SpecialHonorsGui:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_experience_success")
 	self._node.components.raid_menu_header._screen_name_label:set_alpha(0)
 end
 
+-- Lines 41-52
 function SpecialHonorsGui:_layout()
 	SpecialHonorsGui.super._layout(self)
 	self:_layout_first_screen()
@@ -54,6 +57,7 @@ function SpecialHonorsGui:_layout()
 	self:bind_controller_inputs()
 end
 
+-- Lines 54-89
 function SpecialHonorsGui:_layout_first_screen()
 	local top_stats_big_panel_params = {
 		halign = "scale",
@@ -90,10 +94,12 @@ function SpecialHonorsGui:_layout_first_screen()
 	end
 end
 
+-- Lines 92-94
 function SpecialHonorsGui:_continue_button_on_click()
 	managers.raid_menu:close_menu()
 end
 
+-- Lines 96-105
 function SpecialHonorsGui:close()
 	if self._closing then
 		return
@@ -108,6 +114,7 @@ function SpecialHonorsGui:close()
 	SpecialHonorsGui.super.close(self)
 end
 
+-- Lines 107-142
 function SpecialHonorsGui:show_honors()
 	local top_stats_title = self._top_stats_big_panel:child("top_stats_title")
 
@@ -147,6 +154,7 @@ function SpecialHonorsGui:show_honors()
 	end
 end
 
+-- Lines 144-152
 function SpecialHonorsGui:show_gamercard(i)
 	local peer_id = game_state_machine:current_state().special_honors[i].peer_id
 	local peer = managers.network:session():peer(peer_id)
@@ -156,6 +164,7 @@ function SpecialHonorsGui:show_gamercard(i)
 	self._callback_handler:view_gamer_card(peer:xuid())
 end
 
+-- Lines 154-172
 function SpecialHonorsGui:_fade_in_label(text, duration, delay)
 	local anim_duration = duration or 0.15
 	local t = text:alpha() * anim_duration
@@ -175,14 +184,17 @@ function SpecialHonorsGui:_fade_in_label(text, duration, delay)
 	text:set_alpha(1)
 end
 
+-- Lines 175-177
 function SpecialHonorsGui:confirm_pressed()
 	self:_continue_button_on_click()
 end
 
+-- Lines 179-181
 function SpecialHonorsGui:on_escape()
 	return true
 end
 
+-- Lines 183-240
 function SpecialHonorsGui:bind_controller_inputs()
 	local bindings = {
 		{

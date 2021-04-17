@@ -7,10 +7,12 @@ mixin(CoreCutscene, CoreCutsceneKeyCollection)
 
 local CUTSCENE_FRAMES_PER_SECOND = 30
 
+-- Lines 10-12
 function CoreCutscene:_all_keys_sorted_by_time()
 	return self._keys or {}
 end
 
+-- Lines 14-52
 function CoreCutscene:init(cutscene_node, cutscene_manager)
 	assert(cutscene_node, "No cutscene XML node supplied.")
 	assert(cutscene_manager, "Must supply a reference to the CutsceneManager.")
@@ -54,38 +56,47 @@ function CoreCutscene:init(cutscene_node, cutscene_manager)
 	freeze(self._keys, self._unit_types, self._unit_animations, self._unit_blend_sets, self._camera_names)
 end
 
+-- Lines 54-56
 function CoreCutscene:is_valid()
 	return table.empty(self._unit_types) or DB:has("unit", self:unit_name())
 end
 
+-- Lines 58-60
 function CoreCutscene:name()
 	return self._name or ""
 end
 
+-- Lines 62-64
 function CoreCutscene:unit_name()
 	return self._unit_name or ""
 end
 
+-- Lines 66-68
 function CoreCutscene:frames_per_second()
 	return CUTSCENE_FRAMES_PER_SECOND
 end
 
+-- Lines 70-72
 function CoreCutscene:frame_count()
 	return self._frame_count or 1
 end
 
+-- Lines 74-76
 function CoreCutscene:duration()
 	return self:frame_count() / self:frames_per_second()
 end
 
+-- Lines 78-84
 function CoreCutscene:is_optimized()
 	return table.empty(self._unit_animations)
 end
 
+-- Lines 86-88
 function CoreCutscene:has_cameras()
 	return not table.empty(self._camera_names)
 end
 
+-- Lines 90-104
 function CoreCutscene:has_unit(unit_name, include_units_spawned_through_keys)
 	if self:controlled_unit_types()[unit_name] ~= nil then
 		return true
@@ -102,40 +113,49 @@ function CoreCutscene:has_unit(unit_name, include_units_spawned_through_keys)
 	return false
 end
 
+-- Lines 106-108
 function CoreCutscene:controlled_unit_types()
 	return self._unit_types
 end
 
+-- Lines 110-112
 function CoreCutscene:camera_names()
 	return self._camera_names
 end
 
+-- Lines 114-118
 function CoreCutscene:default_camera()
 	for _, name in ipairs(self:camera_names()) do
 		return name
 	end
 end
 
+-- Lines 120-122
 function CoreCutscene:objects_in_unit(unit_name)
 	return self:_actor_database_info(unit_name):object_names()
 end
 
+-- Lines 124-126
 function CoreCutscene:extensions_on_unit(unit_name)
 	return self:_actor_database_info(unit_name):extensions()
 end
 
+-- Lines 128-130
 function CoreCutscene:animation_for_unit(unit_name)
 	return self._unit_animations[unit_name]
 end
 
+-- Lines 132-134
 function CoreCutscene:blend_set_for_unit(unit_name)
 	return self._unit_blend_sets[unit_name] or "all"
 end
 
+-- Lines 136-138
 function CoreCutscene:animation_blobs()
 	return self._animation_blobs
 end
 
+-- Lines 140-147
 function CoreCutscene:find_spawned_orientation_unit()
 	local spawned_cutscene_units = World:unit_manager():get_units(managers.slot:get_mask("cutscenes"))
 
@@ -146,10 +166,12 @@ function CoreCutscene:find_spawned_orientation_unit()
 	end
 end
 
+-- Lines 154-156
 function CoreCutscene:_parse_animation_blobs(cutscene_node)
 	return self:_parse_animation_blob_list(cutscene_node) or self:_parse_single_animation_blob(cutscene_node)
 end
 
+-- Lines 158-174
 function CoreCutscene:_parse_animation_blob_list(cutscene_node)
 	for collection_node in cutscene_node:children() do
 		if collection_node:name() == "animation_blobs" then
@@ -170,6 +192,7 @@ function CoreCutscene:_parse_animation_blob_list(cutscene_node)
 	return nil
 end
 
+-- Lines 176-185
 function CoreCutscene:_parse_single_animation_blob(cutscene_node)
 	for collection_node in cutscene_node:children() do
 		if collection_node:name() == "controlled_units" then
@@ -184,6 +207,7 @@ function CoreCutscene:_parse_single_animation_blob(cutscene_node)
 	return nil
 end
 
+-- Lines 187-191
 function CoreCutscene:_actor_database_info(unit_name)
 	local unit_type = assert(self:controlled_unit_types()[unit_name], string.format("Unit \"%s\" is not in cutscene \"%s\".", unit_name, self:name()))
 	local unit_info = assert(managers.cutscene:actor_database():unit_type_info(unit_type), string.format("Unit type \"%s\", used in cutscene \"%s\", is not registered in the actor database.", unit_type, self:name()))
@@ -191,6 +215,7 @@ function CoreCutscene:_actor_database_info(unit_name)
 	return unit_info
 end
 
+-- Lines 193-202
 function CoreCutscene:_cutscene_specific_unit_type(unit_type)
 	if unit_type ~= "locator" and DB:has("unit", unit_type .. "_cutscene") then
 		unit_type = unit_type .. "_cutscene"
@@ -199,6 +224,7 @@ function CoreCutscene:_cutscene_specific_unit_type(unit_type)
 	return unit_type
 end
 
+-- Lines 209-224
 function CoreCutscene:_debug_persistent_keys()
 	local persistent_keys = {}
 	local unit_types = self:controlled_unit_types()

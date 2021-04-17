@@ -1,9 +1,11 @@
 CharacterCustomizationFps = CharacterCustomizationFps or class(CharacterCustomization)
 
+-- Lines 3-6
 function CharacterCustomizationFps:init(unit)
 	self._unit = unit
 end
 
+-- Lines 8-20
 function CharacterCustomizationFps:attach_fps_hands(character_nationality_name, equiped_upper_name, customization_version)
 	Application:trace("[CharacterCustomizationFps:attach_fps_hands] character_nationality_name, equiped_upper_name, customization_version ", character_nationality_name, equiped_upper_name, customization_version)
 
@@ -17,6 +19,7 @@ function CharacterCustomizationFps:attach_fps_hands(character_nationality_name, 
 	self:_attach_unit("fps_hands", upper_data.path_fps_hands)
 end
 
+-- Lines 22-29
 function CharacterCustomizationFps:_attach_unit(slot, name)
 	managers.dyn_resource:load(Idstring("unit"), Idstring(name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_part_loaded_callback", {
 		name = name,
@@ -24,6 +27,7 @@ function CharacterCustomizationFps:_attach_unit(slot, name)
 	}))
 end
 
+-- Lines 31-59
 function CharacterCustomizationFps:_part_loaded_callback(params)
 	if not self._unit or not alive(self._unit) then
 		return

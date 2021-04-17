@@ -4,6 +4,7 @@ core:import("CoreClass")
 
 SlotManager = SlotManager or class(CoreSlotManager.SlotManager)
 
+-- Lines 8-166
 function SlotManager:init()
 	SlotManager.super.init(self)
 

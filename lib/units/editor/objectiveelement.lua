@@ -10,6 +10,7 @@ ObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	}
 }
 
+-- Lines 4-18
 function ObjectiveUnitElement:init(unit)
 	ObjectiveUnitElement.super.init(self, unit)
 
@@ -26,6 +27,7 @@ function ObjectiveUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 22-31
 function ObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	ObjectiveUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -45,14 +47,17 @@ function ObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 33-36
 function ObjectiveUnitElement:get_links_to_unit(...)
 	ObjectiveUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
+-- Lines 38-39
 function ObjectiveUnitElement:update_editing()
 end
 
+-- Lines 41-55
 function ObjectiveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -70,6 +75,7 @@ function ObjectiveUnitElement:add_element()
 	end
 end
 
+-- Lines 57-63
 function ObjectiveUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -78,10 +84,12 @@ function ObjectiveUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 66-68
 function ObjectiveUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 71-76
 function ObjectiveUnitElement:update_sub_objectives()
 	local sub_objectives = table.list_add({
 		"none"
@@ -92,6 +100,7 @@ function ObjectiveUnitElement:update_sub_objectives()
 	CoreEws.change_combobox_value(self._sub_objective_params, self._hed.sub_objective)
 end
 
+-- Lines 78-83
 function ObjectiveUnitElement:set_element_data(params, ...)
 	ObjectiveUnitElement.super.set_element_data(self, params, ...)
 
@@ -100,6 +109,7 @@ function ObjectiveUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 85-105
 function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

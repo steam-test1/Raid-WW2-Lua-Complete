@@ -1,5 +1,6 @@
 MapChangeFloorElement = MapChangeFloorElement or class(MissionElement)
 
+-- Lines 3-9
 function MapChangeFloorElement:init(unit)
 	MapChangeFloorElement.super.init(self, unit)
 
@@ -8,6 +9,7 @@ function MapChangeFloorElement:init(unit)
 	table.insert(self._save_values, "floor")
 end
 
+-- Lines 11-20
 function MapChangeFloorElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

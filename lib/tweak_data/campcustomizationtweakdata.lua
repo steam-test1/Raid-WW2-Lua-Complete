@@ -1,10 +1,12 @@
 CampCustomizationTweakData = CampCustomizationTweakData or class()
 
+-- Lines 3-7
 function CampCustomizationTweakData:init()
 	self:_setup_camp_assets()
 	self:_setup_default_camp_list()
 end
 
+-- Lines 9-249
 function CampCustomizationTweakData:_setup_camp_assets()
 	self.camp_upgrades_automatic = {
 		gold_pile = {
@@ -327,6 +329,7 @@ function CampCustomizationTweakData:_setup_camp_assets()
 	}
 end
 
+-- Lines 251-268
 function CampCustomizationTweakData:_setup_default_camp_list()
 	self.default_camp = {
 		{
@@ -387,6 +390,7 @@ function CampCustomizationTweakData:_setup_default_camp_list()
 	}
 end
 
+-- Lines 271-284
 function CampCustomizationTweakData:get_applyable_upgrades()
 	local upgrades = {}
 
@@ -404,6 +408,7 @@ function CampCustomizationTweakData:get_applyable_upgrades()
 	return upgrades
 end
 
+-- Lines 287-306
 function CampCustomizationTweakData:is_upgrade_applyable(upgrade, upgrade_slot_name, upgrade_level)
 	if self:is_default_upgrade(upgrade_slot_name, upgrade_level) then
 		return true
@@ -420,6 +425,7 @@ function CampCustomizationTweakData:is_upgrade_applyable(upgrade, upgrade_slot_n
 	return false
 end
 
+-- Lines 309-322
 function CampCustomizationTweakData:is_upgrade_unlocked(upgrade)
 	if not upgrade.dlc and upgrade.gold_price then
 		return true
@@ -432,6 +438,7 @@ function CampCustomizationTweakData:is_upgrade_unlocked(upgrade)
 	return false
 end
 
+-- Lines 325-331
 function CampCustomizationTweakData:is_default_upgrade(upgrade_slot_name, upgrade_level)
 	if upgrade_level == self:get_default_upgrade_level(upgrade_slot_name) and upgrade_level > 0 then
 		return true
@@ -440,6 +447,7 @@ function CampCustomizationTweakData:is_default_upgrade(upgrade_slot_name, upgrad
 	return false
 end
 
+-- Lines 334-341
 function CampCustomizationTweakData:get_default_upgrade_level(upgrade_slot_name)
 	for key, upgrade in pairs(self.default_camp) do
 		if upgrade.upgrade == upgrade_slot_name then

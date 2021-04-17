@@ -13,6 +13,7 @@ CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER = "commander"
 CharacterTweakData.SPECIAL_UNIT_TYPE_SNIPER = "sniper"
 CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER = "spotter"
 
+-- Lines 15-53
 function CharacterTweakData:init(tweak_data)
 	self:_create_table_structure()
 
@@ -50,6 +51,7 @@ function CharacterTweakData:init(tweak_data)
 	self:_init_escort(presets)
 end
 
+-- Lines 59-86
 function CharacterTweakData:_init_russian(presets)
 	self.russian = {
 		damage = presets.gang_member_damage
@@ -77,6 +79,7 @@ function CharacterTweakData:_init_russian(presets)
 	self.russian.vision = presets.vision.easy
 end
 
+-- Lines 92-118
 function CharacterTweakData:_init_german(presets)
 	self.german = {
 		damage = presets.gang_member_damage
@@ -103,6 +106,7 @@ function CharacterTweakData:_init_german(presets)
 	self.german.vision = presets.vision.easy
 end
 
+-- Lines 126-150
 function CharacterTweakData:_init_british(presets)
 	self.british = {
 		damage = presets.gang_member_damage
@@ -129,6 +133,7 @@ function CharacterTweakData:_init_british(presets)
 	self.british.vision = presets.vision.easy
 end
 
+-- Lines 157-182
 function CharacterTweakData:_init_american(presets)
 	self.american = {
 		damage = presets.gang_member_damage
@@ -155,6 +160,7 @@ function CharacterTweakData:_init_american(presets)
 	self.american.vision = presets.vision.easy
 end
 
+-- Lines 188-223
 function CharacterTweakData:_init_civilian(presets)
 	self.civilian = {
 		experience = {},
@@ -199,6 +205,7 @@ function CharacterTweakData:_init_civilian(presets)
 	self.civilian_female.vision = presets.vision.civilian
 end
 
+-- Lines 230-273
 function CharacterTweakData:_init_dismemberment_data(presets)
 	self.dismemberment_data = {}
 	local dismembers = {
@@ -280,6 +287,7 @@ function CharacterTweakData:_init_dismemberment_data(presets)
 	self.dismemberment_data.blood_decal_data = blood_decal_data
 end
 
+-- Lines 276-322
 function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light = deep_clone(presets.base)
 	self.german_grunt_light.experience = {}
@@ -329,6 +337,7 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	table.insert(self._enemies_list, "german_grunt_light_shotgun")
 end
 
+-- Lines 324-369
 function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid = deep_clone(presets.base)
 	self.german_grunt_mid.experience = {}
@@ -378,6 +387,7 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	table.insert(self._enemies_list, "german_grunt_mid_shotgun")
 end
 
+-- Lines 371-412
 function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy = deep_clone(presets.base)
 	self.german_grunt_heavy.experience = {}
@@ -423,6 +433,7 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy_shotgun = clone(self.german_grunt_heavy)
 end
 
+-- Lines 414-459
 function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light = deep_clone(presets.base)
 	self.german_gebirgsjager_light.experience = {}
@@ -472,6 +483,7 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	table.insert(self._enemies_list, "german_gebirgsjager_light_shotgun")
 end
 
+-- Lines 461-507
 function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy = deep_clone(presets.base)
 	self.german_gebirgsjager_heavy.experience = {}
@@ -522,6 +534,7 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	table.insert(self._enemies_list, "german_gebirgsjager_heavy_shotgun")
 end
 
+-- Lines 509-554
 function CharacterTweakData:_init_german_light(presets)
 	self.german_light = deep_clone(presets.base)
 	self.german_light.experience = {}
@@ -569,6 +582,7 @@ function CharacterTweakData:_init_german_light(presets)
 	table.insert(self._enemies_list, "german_light_shotgun")
 end
 
+-- Lines 556-603
 function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy = deep_clone(presets.base)
 	self.german_heavy.experience = {}
@@ -619,6 +633,7 @@ function CharacterTweakData:_init_german_heavy(presets)
 	table.insert(self._enemies_list, "german_heavy_shotgun")
 end
 
+-- Lines 605-650
 function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light = deep_clone(presets.base)
 	self.german_fallschirmjager_light.experience = {}
@@ -668,6 +683,7 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	table.insert(self._enemies_list, "german_fallschirmjager_light_shotgun")
 end
 
+-- Lines 652-696
 function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask = deep_clone(presets.base)
 	self.german_gasmask.experience = {}
@@ -715,6 +731,7 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	table.insert(self._enemies_list, "german_gasmask")
 end
 
+-- Lines 698-714
 function CharacterTweakData:_init_german_commander_backup(presets)
 	self.german_light_commander_backup = deep_clone(self.german_light)
 	self.german_light_commander_backup.carry_tweak_corpse = "german_black_waffen_sentry_light_commander_body"
@@ -735,6 +752,7 @@ function CharacterTweakData:_init_german_commander_backup(presets)
 	table.insert(self._enemies_list, "german_gasmask_commander_backup_shotgun")
 end
 
+-- Lines 716-762
 function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy = deep_clone(presets.base)
 	self.german_fallschirmjager_heavy.experience = {}
@@ -786,6 +804,7 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	table.insert(self._enemies_list, "german_fallschirmjager_heavy_shotgun")
 end
 
+-- Lines 764-812
 function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss = deep_clone(presets.base)
 	self.german_waffen_ss.experience = {}
@@ -838,6 +857,7 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	table.insert(self._enemies_list, "german_waffen_ss_shotgun")
 end
 
+-- Lines 815-856
 function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander = deep_clone(presets.base)
 	self.german_commander.experience = {}
@@ -885,6 +905,7 @@ function CharacterTweakData:_init_german_commander(presets)
 	table.insert(self._enemies_list, "german_commander")
 end
 
+-- Lines 860-902
 function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander = deep_clone(presets.base)
 	self.german_og_commander.experience = {}
@@ -932,6 +953,7 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	table.insert(self._enemies_list, "german_og_commander")
 end
 
+-- Lines 905-943
 function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer = deep_clone(presets.base)
 	self.german_officer.experience = {}
@@ -975,6 +997,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	table.insert(self._enemies_list, "german_officer")
 end
 
+-- Lines 946-984
 function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain = deep_clone(presets.base)
 	self.soviet_nkvd_int_security_captain.experience = {}
@@ -1018,6 +1041,7 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	table.insert(self._enemies_list, "soviet_nkvd_int_security_captain")
 end
 
+-- Lines 987-995
 function CharacterTweakData:_init_soviet_nkvd_int_security_captain_b(presets)
 	self.soviet_nkvd_int_security_captain_b = deep_clone(self.soviet_nkvd_int_security_captain)
 	self.soviet_nkvd_int_security_captain_b.weapon_voice = "1"
@@ -1028,6 +1052,7 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain_b(presets)
 	table.insert(self._enemies_list, "soviet_nkvd_int_security_captain_b")
 end
 
+-- Lines 998-1083
 function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer = deep_clone(presets.base)
 	self.german_flamer.experience = {}
@@ -1179,6 +1204,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 end
 
+-- Lines 1089-1156
 function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper = deep_clone(presets.base)
 	self.german_sniper.experience = {}
@@ -1272,6 +1298,7 @@ function CharacterTweakData:_init_german_sniper(presets)
 	table.insert(self._enemies_list, "german_sniper")
 end
 
+-- Lines 1163-1219
 function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter = deep_clone(presets.base)
 	self.german_spotter.experience = {}
@@ -1356,6 +1383,7 @@ function CharacterTweakData:_init_german_spotter(presets)
 	table.insert(self._enemies_list, "german_spotter")
 end
 
+-- Lines 1226-1237
 function CharacterTweakData:_init_escort(presets)
 	self.escort = deep_clone(self.civilian)
 	self.escort.HEALTH_INIT = 80
@@ -1368,6 +1396,7 @@ function CharacterTweakData:_init_escort(presets)
 	self.escort.damage = presets.base.damage
 end
 
+-- Lines 1248-3128
 function CharacterTweakData:_presets(tweak_data)
 	local presets = {
 		hurt_severities = {}
@@ -7338,6 +7367,7 @@ function CharacterTweakData:_presets(tweak_data)
 	return presets
 end
 
+-- Lines 3134-3193
 function CharacterTweakData:_create_table_structure()
 	self.weap_ids = {
 		"m42_flammenwerfer",
@@ -7397,6 +7427,7 @@ function CharacterTweakData:_create_table_structure()
 	}
 end
 
+-- Lines 3197-3217
 function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -7421,6 +7452,7 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	end
 end
 
+-- Lines 3221-3253
 function CharacterTweakData:_set_difficulty_1()
 	self:_multiply_all_hp(0.75)
 	self:_multiply_weapon_delay(self.presets.weapon.normal, 1)
@@ -7496,6 +7528,7 @@ function CharacterTweakData:_set_difficulty_1()
 	self.german_flamer.HEALTH_INIT = 2000
 end
 
+-- Lines 3257-3292
 function CharacterTweakData:_set_difficulty_2()
 	self:_multiply_all_hp(1)
 	self:_multiply_weapon_delay(self.presets.weapon.normal, 1)
@@ -7571,6 +7604,7 @@ function CharacterTweakData:_set_difficulty_2()
 	self.german_flamer.HEALTH_INIT = 3000
 end
 
+-- Lines 3296-3331
 function CharacterTweakData:_set_difficulty_3()
 	self:_multiply_all_hp(1)
 	self:_multiply_weapon_delay(self.presets.weapon.normal, 1)
@@ -7646,6 +7680,7 @@ function CharacterTweakData:_set_difficulty_3()
 	self.german_flamer.HEALTH_INIT = 4000
 end
 
+-- Lines 3335-3375
 function CharacterTweakData:_set_difficulty_4()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(1.2)
@@ -7727,6 +7762,7 @@ function CharacterTweakData:_set_difficulty_4()
 	self.german_flamer.HEALTH_INIT = 5000
 end
 
+-- Lines 3379-3386
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -7737,12 +7773,14 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
+-- Lines 3390-3394
 function CharacterTweakData:_multiply_all_hp(hp_mul)
 	for _, name in ipairs(self._enemies_list) do
 		self[name].HEALTH_INIT = self[name].BASE_HEALTH_INIT * hp_mul
 	end
 end
 
+-- Lines 3398-3404
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	for _, name in ipairs(self._enemies_list) do
 		local speed_table = self[name].SPEED_WALK
@@ -7751,6 +7789,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	end
 end
 
+-- Lines 3407-3416
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	return
 
@@ -7759,6 +7798,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
+-- Lines 3420-3452
 function CharacterTweakData:character_map()
 	local char_map = {
 		raidww2 = {
@@ -7793,6 +7833,7 @@ function CharacterTweakData:character_map()
 	return char_map
 end
 
+-- Lines 3454-3459
 function CharacterTweakData:get_special_enemies()
 	local special_enemies = {}
 

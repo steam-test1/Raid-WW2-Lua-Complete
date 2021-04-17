@@ -2,13 +2,16 @@ core:import("CoreMissionScriptElement")
 
 ElementSpawnGrenade = ElementSpawnGrenade or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementSpawnGrenade:init(...)
 	ElementSpawnGrenade.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementSpawnGrenade:client_on_executed(...)
 end
 
+-- Lines 13-26
 function ElementSpawnGrenade:on_executed(instigator)
 	if not self._values.enabled then
 		return

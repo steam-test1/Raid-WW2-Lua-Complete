@@ -11,6 +11,7 @@ RaidGUIControlLootRewardCards.TITLE_FONT_SIZE = tweak_data.gui.font_sizes.size_7
 RaidGUIControlLootRewardCards.TITLE_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlLootRewardCards.CARD_DETAILS_Y = 533
 
+-- Lines 19-28
 function RaidGUIControlLootRewardCards:init(parent, params)
 	RaidGUIControlLootRewardCards.super.init(self, parent, params)
 
@@ -21,6 +22,7 @@ function RaidGUIControlLootRewardCards:init(parent, params)
 	self:layout()
 end
 
+-- Lines 30-39
 function RaidGUIControlLootRewardCards:layout()
 	self._object = self._panel:panel({
 		name = "loot_rewards_cards_panel",
@@ -38,6 +40,7 @@ function RaidGUIControlLootRewardCards:layout()
 	self:_create_card_details()
 end
 
+-- Lines 41-70
 function RaidGUIControlLootRewardCards:_create_items()
 	local horizontal_spacing = 0
 
@@ -67,6 +70,7 @@ function RaidGUIControlLootRewardCards:_create_items()
 	end
 end
 
+-- Lines 72-112
 function RaidGUIControlLootRewardCards:_create_title()
 	local title_panel_params = {
 		name = "title_panel"
@@ -109,6 +113,7 @@ function RaidGUIControlLootRewardCards:_create_title()
 	self._title_description:set_x(self._pack_title:x())
 end
 
+-- Lines 114-158
 function RaidGUIControlLootRewardCards:_create_card_details()
 	local details_panel_params = {
 		alpha = 0,
@@ -161,37 +166,44 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 	self._malus_label = self._details_panel:label(malus_label_params)
 end
 
+-- Lines 160-162
 function RaidGUIControlLootRewardCards:get_items()
 	return self._items
 end
 
+-- Lines 164-168
 function RaidGUIControlLootRewardCards:set_cards(loot_list)
 	self._params.loot_list = loot_list
 
 	self:_create_items()
 end
 
+-- Lines 170-174
 function RaidGUIControlLootRewardCards:mouse_released(o, button, x, y)
 	return false
 end
 
+-- Lines 176-180
 function RaidGUIControlLootRewardCards:on_card_click(item_data, revealed)
 	if not revealed then
 		self:show_card_details(item_data.key_name, item_data.positive_description, item_data.negative_description)
 	end
 end
 
+-- Lines 182-186
 function RaidGUIControlLootRewardCards:on_card_hover(item_data, revealed)
 	if revealed and item_data.key_name ~= self._shown_card_key then
 		self:show_card_details(item_data.key_name, item_data.positive_description, item_data.negative_description)
 	end
 end
 
+-- Lines 188-191
 function RaidGUIControlLootRewardCards:show_card_details(key_name, positive_description, negative_description)
 	self._pack_title:stop()
 	self._pack_title:animate(callback(self, self, "_animate_show_card_details"), key_name, positive_description, negative_description)
 end
 
+-- Lines 193-260
 function RaidGUIControlLootRewardCards:_animate_show_card_details(object, key_name, positive_description, negative_description)
 	local fade_out_duration = 0.2
 	local fade_out_object = nil
@@ -266,11 +278,13 @@ function RaidGUIControlLootRewardCards:_animate_show_card_details(object, key_na
 	self._details_panel:set_alpha(1)
 end
 
+-- Lines 263-266
 function RaidGUIControlLootRewardCards:animate_show()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_show"))
 end
 
+-- Lines 268-331
 function RaidGUIControlLootRewardCards:_animate_show(panel)
 	local initial_offset = {}
 	local timings = {}

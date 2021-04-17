@@ -6,6 +6,7 @@ GlobalStateTriggerElement.ACTIONS = {
 	"on_value"
 }
 
+-- Lines 5-30
 function GlobalStateTriggerElement:init(unit)
 	GlobalStateTriggerElement.super.init(self, unit)
 
@@ -26,6 +27,7 @@ function GlobalStateTriggerElement:init(unit)
 	table.sort(self._flags)
 end
 
+-- Lines 32-72
 function GlobalStateTriggerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

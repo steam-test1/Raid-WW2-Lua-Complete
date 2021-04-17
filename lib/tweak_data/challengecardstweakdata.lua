@@ -22,6 +22,7 @@ ChallengeCardsTweakData.STACKABLE_AREA = {
 	height = 680
 }
 
+-- Lines 32-1154
 function ChallengeCardsTweakData:init(tweak_data)
 	self.challenge_card_texture_path = "ui/challenge_cards/"
 	self.challenge_card_texture_rect = {
@@ -1481,6 +1482,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	}
 end
 
+-- Lines 1158-1169
 function ChallengeCardsTweakData:get_all_cards_indexed()
 	local result = {}
 	local counter = 1
@@ -1494,6 +1496,7 @@ function ChallengeCardsTweakData:get_all_cards_indexed()
 	return result
 end
 
+-- Lines 1171-1184
 function ChallengeCardsTweakData:get_card_by_key_name(card_key_name)
 	local result = {}
 	local card_data = self.cards[card_key_name]
@@ -1508,6 +1511,7 @@ function ChallengeCardsTweakData:get_card_by_key_name(card_key_name)
 	return result
 end
 
+-- Lines 1187-1195
 function ChallengeCardsTweakData:get_cards_by_rarity(rarity)
 	local cards = {}
 

@@ -1,13 +1,16 @@
 ElementGlobalStateFilter = ElementGlobalStateFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 3-5
 function ElementGlobalStateFilter:init(...)
 	ElementGlobalStateFilter.super.init(self, ...)
 end
 
+-- Lines 7-9
 function ElementGlobalStateFilter:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 11-32
 function ElementGlobalStateFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return

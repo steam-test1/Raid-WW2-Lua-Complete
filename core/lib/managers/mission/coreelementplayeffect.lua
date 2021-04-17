@@ -5,6 +5,7 @@ core:import("CoreMissionScriptElement")
 ElementPlayEffect = ElementPlayEffect or class(CoreMissionScriptElement.MissionScriptElement)
 ElementPlayEffect.IDS_EFFECT = Idstring("effect")
 
+-- Lines 8-18
 function ElementPlayEffect:init(...)
 	ElementPlayEffect.super.init(self, ...)
 
@@ -17,10 +18,12 @@ function ElementPlayEffect:init(...)
 	end
 end
 
+-- Lines 20-22
 function ElementPlayEffect:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 24-32
 function ElementPlayEffect:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -30,6 +33,7 @@ function ElementPlayEffect:on_executed(instigator)
 	ElementPlayEffect.super.on_executed(self, instigator)
 end
 
+-- Lines 34-48
 function ElementPlayEffect:play_effect()
 	if self._values.effect ~= "none" then
 		local params = {
@@ -48,24 +52,29 @@ function ElementPlayEffect:play_effect()
 	end
 end
 
+-- Lines 50-52
 function ElementPlayEffect:kill()
 	managers.environment_effects:kill_mission_effect(self:_unique_string_id())
 end
 
+-- Lines 54-56
 function ElementPlayEffect:fade_kill()
 	managers.environment_effects:fade_kill_mission_effect(self:_unique_string_id())
 end
 
 ElementStopEffect = ElementStopEffect or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 62-64
 function ElementStopEffect:init(...)
 	ElementStopEffect.super.init(self, ...)
 end
 
+-- Lines 66-68
 function ElementStopEffect:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 70-87
 function ElementStopEffect:on_executed(instigator)
 	if not self._values.enabled then
 		return

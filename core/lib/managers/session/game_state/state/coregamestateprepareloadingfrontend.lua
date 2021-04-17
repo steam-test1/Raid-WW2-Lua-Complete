@@ -3,6 +3,7 @@ core:import("CoreGameStateLoadingFrontEnd")
 
 PrepareLoadingFrontEnd = PrepareLoadingFrontEnd or class()
 
+-- Lines 6-11
 function PrepareLoadingFrontEnd:init(level_handler)
 	self.game_state._is_preparing_for_loading_front_end = true
 
@@ -12,6 +13,7 @@ function PrepareLoadingFrontEnd:init(level_handler)
 	self._level_handler = level_handler
 end
 
+-- Lines 13-22
 function PrepareLoadingFrontEnd:destroy()
 	self.game_state._front_end_requester:task_completed()
 
@@ -23,6 +25,7 @@ function PrepareLoadingFrontEnd:destroy()
 	self._level_handler:destroy()
 end
 
+-- Lines 24-28
 function PrepareLoadingFrontEnd:transition()
 	if self.game_state._session_manager:all_systems_are_stable_for_loading() then
 		return CoreGameStateLoadingFrontEnd.LoadingFrontEnd

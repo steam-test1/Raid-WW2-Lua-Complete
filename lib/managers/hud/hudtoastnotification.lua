@@ -5,6 +5,7 @@ HUDToastNotification.BORDER_COLOR = tweak_data.gui.colors.toast_notification_bor
 HUDToastNotification.TEXT_FONT = tweak_data.gui.fonts.din_compressed_outlined_24
 HUDToastNotification.TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 
+-- Lines 10-18
 function HUDToastNotification:init(hud)
 	if hud.panel:child("present_panel") then
 		hud.panel:remove(hud.panel:child("present_panel"))
@@ -15,6 +16,7 @@ function HUDToastNotification:init(hud)
 	self:_create_text()
 end
 
+-- Lines 20-28
 function HUDToastNotification:_create_panel(hud)
 	local panel_params = {
 		name = "toast_notification_panel",
@@ -25,6 +27,7 @@ function HUDToastNotification:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
+-- Lines 30-38
 function HUDToastNotification:_create_background()
 	local background_params = {
 		name = "background",
@@ -36,6 +39,7 @@ function HUDToastNotification:_create_background()
 	self._background = self._object:bitmap(background_params)
 end
 
+-- Lines 40-58
 function HUDToastNotification:_create_text()
 	local text_params = {
 		vertical = "center",
@@ -57,6 +61,7 @@ function HUDToastNotification:_create_text()
 	self._text:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 61-72
 function HUDToastNotification:present(params)
 	self._present_queue = self._present_queue or {}
 
@@ -71,10 +76,12 @@ function HUDToastNotification:present(params)
 	end
 end
 
+-- Lines 74-76
 function HUDToastNotification:cleanup()
 	self._object:parent():remove(self._object)
 end
 
+-- Lines 78-93
 function HUDToastNotification:_present_information(params)
 	self:_set_text(params.text)
 	self._object:set_visible(true)
@@ -92,6 +99,7 @@ function HUDToastNotification:_present_information(params)
 	self._presenting = true
 end
 
+-- Lines 95-104
 function HUDToastNotification:_set_text(text)
 	self._text:set_text(utf8.to_upper(text))
 
@@ -103,6 +111,7 @@ function HUDToastNotification:_set_text(text)
 	self._text:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 106-117
 function HUDToastNotification:_present_done()
 	self._object:set_visible(false)
 	managers.hud:show_objectives()
@@ -115,22 +124,27 @@ function HUDToastNotification:_present_done()
 	end
 end
 
+-- Lines 119-121
 function HUDToastNotification:w()
 	return self._object:w()
 end
 
+-- Lines 123-125
 function HUDToastNotification:h()
 	return self._object:h()
 end
 
+-- Lines 127-129
 function HUDToastNotification:set_x(x)
 	self._object:set_x(x)
 end
 
+-- Lines 131-133
 function HUDToastNotification:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 135-203
 function HUDToastNotification:_animate_present(panel, duration)
 	local x_travel = 60
 	local fade_in_duration = duration * 0.1

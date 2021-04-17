@@ -14,6 +14,7 @@ RaidGUIControlGoldBarPeerLoot.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_sizes.
 RaidGUIControlGoldBarPeerLoot.IMAGE_PADDING_RIGHT = 10
 RaidGUIControlGoldBarPeerLoot.TEXT_X = 128
 
+-- Lines 23-33
 function RaidGUIControlGoldBarPeerLoot:init(parent, params)
 	RaidGUIControlGoldBarPeerLoot.super.init(self, parent, params)
 
@@ -27,6 +28,7 @@ function RaidGUIControlGoldBarPeerLoot:init(parent, params)
 	self:_create_gold_bar_details()
 end
 
+-- Lines 36-46
 function RaidGUIControlGoldBarPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -38,6 +40,7 @@ function RaidGUIControlGoldBarPeerLoot:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 49-89
 function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 	local params_gold_bar_image = {
 		name = "melee_weapon_image",
@@ -82,11 +85,13 @@ function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 	self._gold_bars_value_label:set_h(h)
 end
 
+-- Lines 91-94
 function RaidGUIControlGoldBarPeerLoot:set_player_name(name)
 	self._name_label:set_text(utf8.to_upper(name))
 	self:_layout_text()
 end
 
+-- Lines 96-102
 function RaidGUIControlGoldBarPeerLoot:_layout_text()
 	local _, _, _, h = self._name_label:text_rect()
 
@@ -95,10 +100,12 @@ function RaidGUIControlGoldBarPeerLoot:_layout_text()
 	self._gold_bars_value_label:set_y(self._name_label:y() + self._name_label:h() + RaidGUIControlGoldBarPeerLoot.NAME_PADDING_DOWN)
 end
 
+-- Lines 104-106
 function RaidGUIControlGoldBarPeerLoot:set_gold_bar_reward(amount)
 	self._gold_bars_value_label:set_text((amount or 0) .. " " .. self:translate("menu_loot_screen_gold_bars", true))
 end
 
+-- Lines 108-126
 function RaidGUIControlGoldBarPeerLoot:set_gold_bar_reward(amount)
 	local text = ""
 

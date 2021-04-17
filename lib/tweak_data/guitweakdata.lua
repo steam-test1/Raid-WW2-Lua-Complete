@@ -1,5 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
+-- Lines 3-29
 function GuiTweakData:init()
 	self.base_resolution = {
 		z = 60,
@@ -30,6 +31,7 @@ function GuiTweakData:init()
 	self:_setup_old_tweak_data()
 end
 
+-- Lines 31-36
 function GuiTweakData:_setup_layers()
 	self.PLAYER_PANELS_LAYER = 1300
 	self.SAVEFILE_LAYER = 1500
@@ -37,6 +39,7 @@ function GuiTweakData:_setup_layers()
 	self.DEBRIEF_VIDEO_LAYER = 2000
 end
 
+-- Lines 38-60
 function GuiTweakData:_setup_colors()
 	self.colors = {
 		raid_debug = Color("deaf3e"),
@@ -61,6 +64,7 @@ function GuiTweakData:_setup_colors()
 	self.colors.raid_grey_effects = Color("787878")
 end
 
+-- Lines 62-116
 function GuiTweakData:_setup_hud_colors()
 	self.colors.ammo_background_outline = Color("1f1f22")
 	self.colors.ammo_text = Color("222222")
@@ -146,6 +150,7 @@ function GuiTweakData:_setup_hud_colors()
 	}
 end
 
+-- Lines 118-147
 function GuiTweakData:_setup_fonts()
 	self.fonts = {
 		din_compressed = "din_compressed",
@@ -178,6 +183,7 @@ function GuiTweakData:_setup_fonts()
 	}
 end
 
+-- Lines 154-162
 function GuiTweakData:_setup_font_paths()
 	self.font_paths = {}
 
@@ -187,6 +193,7 @@ function GuiTweakData:_setup_font_paths()
 	self:_setup_lato_font_paths()
 end
 
+-- Lines 164-184
 function GuiTweakData:_setup_din_compressed_font_paths()
 	self.font_paths.din_compressed = {
 		[18] = "ui/fonts/pf_din_text_comp_pro_medium_18_mf",
@@ -208,6 +215,7 @@ function GuiTweakData:_setup_din_compressed_font_paths()
 	}
 end
 
+-- Lines 186-195
 function GuiTweakData:_setup_din_compressed_outlined_fonts()
 	self.fonts.din_compressed_outlined_18 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_18_mf"
 	self.fonts.din_compressed_outlined_20 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_20_mf"
@@ -219,11 +227,13 @@ function GuiTweakData:_setup_din_compressed_outlined_fonts()
 	self.fonts.din_compressed_outlined_42 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_42_mf"
 end
 
+-- Lines 197-200
 function GuiTweakData:_setup_lato_outlined_fonts()
 	self.fonts.lato_outlined_18 = "ui/fonts/lato_regular_outlined_18_mf"
 	self.fonts.lato_outlined_20 = "ui/fonts/lato_regular_outlined_20_mf"
 end
 
+-- Lines 202-215
 function GuiTweakData:_setup_lato_font_paths()
 	self.font_paths.lato = {
 		[18] = "ui/fonts/lato_regular_18_mf",
@@ -238,6 +248,7 @@ function GuiTweakData:_setup_lato_font_paths()
 	}
 end
 
+-- Lines 217-230
 function GuiTweakData:_setup_noto_fonts()
 	self.fonts.noto = {
 		[18] = "ui/fonts/noto_18",
@@ -252,6 +263,7 @@ function GuiTweakData:_setup_noto_fonts()
 	}
 end
 
+-- Lines 232-260
 function GuiTweakData:get_font_path(font, font_size)
 	local font_paths = self.font_paths[font]
 
@@ -284,6 +296,7 @@ function GuiTweakData:get_font_path(font, font_size)
 	return font_paths.default
 end
 
+-- Lines 262-1448
 function GuiTweakData:_setup_icons()
 	self.icons = {
 		credits_logo_lgl = {}
@@ -2880,6 +2893,7 @@ function GuiTweakData:_setup_icons()
 	}
 end
 
+-- Lines 1451-1493
 function GuiTweakData:_setup_menu_elements_icons()
 	self.icons.gold_bar_single = {
 		texture = "ui/elements/gold_hud",
@@ -2955,6 +2969,7 @@ function GuiTweakData:_setup_menu_elements_icons()
 	}
 end
 
+-- Lines 1496-1554
 function GuiTweakData:_setup_radial_icons()
 	self.icons.interact_lockpick_tool = {
 		texture = "ui/hud/parts/interact_lockpick_tool_hud",
@@ -3076,6 +3091,7 @@ function GuiTweakData:_setup_radial_icons()
 	}
 end
 
+-- Lines 1556-2164
 function GuiTweakData:_setup_hud_icons()
 	self.icons.aa_gun_bg = {
 		texture = "ui/atlas/raid_atlas_hud",
@@ -4438,6 +4454,7 @@ function GuiTweakData:_setup_hud_icons()
 	}
 end
 
+-- Lines 2167-2453
 function GuiTweakData:_setup_hud_waypoint_icons()
 	self.icons.damage_indicator_1 = {
 		texture = "ui/hud/atlas/raid_atlas_waypoints",
@@ -5080,6 +5097,7 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 	}
 end
 
+-- Lines 2455-2517
 function GuiTweakData:_setup_hud_reticles()
 	self.icons.weapons_reticles_ass_carbine = {
 		texture = "ui/hud/atlas/raid_atlas_reticles",
@@ -5218,6 +5236,7 @@ function GuiTweakData:_setup_hud_reticles()
 	}
 end
 
+-- Lines 2519-2545
 function GuiTweakData:_setup_map_icons()
 	self.icons.map = {
 		texture = "ui/hud/atlas/raid_atlas_map",
@@ -5275,6 +5294,7 @@ function GuiTweakData:_setup_map_icons()
 	}
 end
 
+-- Lines 2547-2869
 function GuiTweakData:_setup_skill_icons()
 	self.icons.skills_dealing_damage_assault_rifle_multiplier = {
 		texture = "ui/atlas/raid_atlas_skills",
@@ -5998,6 +6018,7 @@ function GuiTweakData:_setup_skill_icons()
 	}
 end
 
+-- Lines 2871-3321
 function GuiTweakData:_setup_skill_big_icons()
 	self.icons.experience_mission_fail_large = {
 		texture = "ui/atlas/raid_atlas_experience_1",
@@ -6982,6 +7003,7 @@ function GuiTweakData:_setup_skill_big_icons()
 	}
 end
 
+-- Lines 3323-3343
 function GuiTweakData:_setup_backgrounds()
 	self.backgrounds = {
 		splash_screen = {}
@@ -7013,6 +7035,7 @@ function GuiTweakData:_setup_backgrounds()
 	}
 end
 
+-- Lines 3345-3351
 function GuiTweakData:_setup_images()
 	self.images = {
 		menu_paper = {}
@@ -7026,6 +7049,7 @@ function GuiTweakData:_setup_images()
 	}
 end
 
+-- Lines 3353-3955
 function GuiTweakData:_setup_mission_photos()
 	self.mission_photos = {
 		intel_bank_01 = {}
@@ -8029,6 +8053,7 @@ function GuiTweakData:_setup_mission_photos()
 	}
 end
 
+-- Lines 3957-3977
 function GuiTweakData:_setup_optical_flares()
 	self.icons.lens_glint = {
 		texture = "ui/optical_flares/raid_reward_lens_glint_df",
@@ -8077,6 +8102,7 @@ function GuiTweakData:_setup_optical_flares()
 	}
 end
 
+-- Lines 3979-4058
 function GuiTweakData:_setup_xp_icons()
 	self.icons.xp_events_mission_raid_railyard = {
 		texture = "ui/atlas/raid_atlas_xp",
@@ -8251,6 +8277,7 @@ function GuiTweakData:_setup_xp_icons()
 	}
 end
 
+-- Lines 4060-4082
 function GuiTweakData:_setup_paper_icons()
 	self.icons.folder_mission = {
 		texture = "ui/atlas/raid_atlas_papers_2",
@@ -8299,14 +8326,17 @@ function GuiTweakData:_setup_paper_icons()
 	}
 end
 
+-- Lines 4084-4086
 function GuiTweakData:icon_w(icon)
 	return self.icons[icon].texture_rect[3]
 end
 
+-- Lines 4088-4090
 function GuiTweakData:icon_h(icon)
 	return self.icons[icon].texture_rect[4]
 end
 
+-- Lines 4118-4255
 function GuiTweakData:_setup_old_tweak_data()
 	self.content_updates = {
 		title_id = "menu_content_updates",

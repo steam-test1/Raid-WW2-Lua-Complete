@@ -1,5 +1,6 @@
 RaidGUIControlReadyUpPlayerDescription = RaidGUIControlReadyUpPlayerDescription or class(RaidGUIControl)
 
+-- Lines 4-13
 function RaidGUIControlReadyUpPlayerDescription:init(parent, params)
 	RaidGUIControlReadyUpPlayerDescription.super.init(self, parent, params)
 
@@ -10,6 +11,7 @@ function RaidGUIControlReadyUpPlayerDescription:init(parent, params)
 	self:_layout()
 end
 
+-- Lines 15-46
 function RaidGUIControlReadyUpPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
@@ -99,6 +101,7 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 	self._bottom_select_triangle:hide()
 end
 
+-- Lines 48-75
 function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 	if not data then
 		return
@@ -133,10 +136,12 @@ function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 	end
 end
 
+-- Lines 77-79
 function RaidGUIControlReadyUpPlayerDescription:params()
 	return self._params
 end
 
+-- Lines 81-92
 function RaidGUIControlReadyUpPlayerDescription:highlight_on()
 	if not self._enabled then
 		return
@@ -151,6 +156,7 @@ function RaidGUIControlReadyUpPlayerDescription:highlight_on()
 	end
 end
 
+-- Lines 94-101
 function RaidGUIControlReadyUpPlayerDescription:highlight_off()
 	if self._selected then
 		return
@@ -161,6 +167,7 @@ function RaidGUIControlReadyUpPlayerDescription:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
+-- Lines 103-113
 function RaidGUIControlReadyUpPlayerDescription:on_mouse_clicked()
 	if not self._enabled then
 		return
@@ -173,18 +180,21 @@ function RaidGUIControlReadyUpPlayerDescription:on_mouse_clicked()
 	self:select_on()
 end
 
+-- Lines 115-119
 function RaidGUIControlReadyUpPlayerDescription:select_on()
 	self:set_selected(true)
 	self._top_select_triangle:show()
 	self._bottom_select_triangle:show()
 end
 
+-- Lines 121-125
 function RaidGUIControlReadyUpPlayerDescription:select_off()
 	self:set_selected(false)
 	self._top_select_triangle:hide()
 	self._bottom_select_triangle:hide()
 end
 
+-- Lines 127-156
 function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 	if state == "ready" then
 		self._status_label:set_text(self:translate("menu_ready", true))
@@ -214,6 +224,7 @@ function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 	end
 end
 
+-- Lines 159-165
 function RaidGUIControlReadyUpPlayerDescription:set_challenge_card_selected(selected)
 	if selected then
 		self._selected_card_icon:set_image(tweak_data.gui.icons.ready_up_card_selected_active.texture, unpack(tweak_data.gui.icons.ready_up_card_selected_active.texture_rect))

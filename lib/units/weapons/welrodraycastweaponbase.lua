@@ -1,5 +1,6 @@
 WelrodRaycastWeaponBase = WelrodRaycastWeaponBase or class(NewRaycastWeaponBase)
 
+-- Lines 4-51
 function WelrodRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier, noJump)
 	local data = tweak_data.weapon.factory[self._factory_id]
 

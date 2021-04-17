@@ -1,5 +1,6 @@
 TeamAISound = TeamAISound or class(PlayerSound)
 
+-- Lines 3-10
 function TeamAISound:init(unit)
 	self._unit = unit
 
@@ -11,6 +12,7 @@ function TeamAISound:init(unit)
 	ss:set_switch("int_ext", "third")
 end
 
+-- Lines 14-18
 function TeamAISound:set_voice(voice)
 	local ss = self._unit:sound_source()
 

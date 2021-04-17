@@ -54,12 +54,14 @@ CharacterCustomization.BONES = {
 	"RightFoot"
 }
 
+-- Lines 58-67
 function CharacterCustomization:init(unit)
 	self._unit = unit
 	self._visible = true
 	self._loading_units = {}
 end
 
+-- Lines 70-80
 function CharacterCustomization:set_visible(visible)
 	self._visible = visible
 
@@ -72,16 +74,19 @@ function CharacterCustomization:set_visible(visible)
 	end
 end
 
+-- Lines 82-84
 function CharacterCustomization:visible()
 	return self._visible
 end
 
+-- Lines 86-91
 function CharacterCustomization:set_unit(slot, name)
 	if self._attached_units[slot] and alive(self._attached_units[slot]) then
 		self:_attach_unit(slot, name)
 	end
 end
 
+-- Lines 93-101
 function CharacterCustomization:_attach_unit(slot, name, current_version, loading_entire_outfit)
 	self._loading_units[name] = true
 
@@ -94,6 +99,7 @@ function CharacterCustomization:_attach_unit(slot, name, current_version, loadin
 	}))
 end
 
+-- Lines 103-149
 function CharacterCustomization:_part_loaded_callback(params)
 	self._loading_units[params.name] = nil
 
@@ -141,6 +147,7 @@ function CharacterCustomization:_part_loaded_callback(params)
 	end
 end
 
+-- Lines 151-178
 function CharacterCustomization:attach_all_parts_to_character(slot_index, current_version)
 	local slot_cache_data = Global.savefile_manager.meta_data_list[slot_index].cache
 
@@ -163,6 +170,7 @@ function CharacterCustomization:attach_all_parts_to_character(slot_index, curren
 	end
 end
 
+-- Lines 180-193
 function CharacterCustomization:attach_all_parts_to_character_by_parts(character_nationality_name, equiped_head_name, equiped_upper_name, equiped_lower_name)
 	local owned_heads = managers.character_customization:get_owned_customizations_indexed(CharacterCustomizationTweakData.PART_TYPE_HEAD, character_nationality_name)
 	local equiped_head_object = owned_heads[managers.character_customization:get_equiped_part_index(character_nationality_name, CharacterCustomizationTweakData.PART_TYPE_HEAD, equiped_head_name)]
@@ -174,6 +182,7 @@ function CharacterCustomization:attach_all_parts_to_character_by_parts(character
 	self:_attach_unit_parts(equiped_head_object, equiped_upper_object, equiped_lower_object, managers.character_customization:get_current_version_to_attach())
 end
 
+-- Lines 195-218
 function CharacterCustomization:attach_all_parts_to_character_by_parts_for_husk(character_nationality_name, equiped_head_name, equiped_upper_name, equiped_lower_name, peer)
 	local head_name = managers.character_customization:get_default_part_key_name(peer:character(), CharacterCustomizationTweakData.PART_TYPE_HEAD)
 	local equiped_head_name = managers.character_customization:check_part_key_name(CharacterCustomizationTweakData.PART_TYPE_HEAD, head_name, peer:character())
@@ -190,6 +199,7 @@ function CharacterCustomization:attach_all_parts_to_character_by_parts_for_husk(
 	self:_attach_unit_parts(equiped_head_object, equiped_upper_object, equiped_lower_object, managers.character_customization:get_current_version_to_attach())
 end
 
+-- Lines 220-233
 function CharacterCustomization:_attach_unit_parts(equiped_head_object, equiped_upper_object, equiped_lower_object, current_version)
 	local lower_path = equiped_upper_object.length == CharacterCustomizationTweakData.PART_LENGTH_SHORT and equiped_lower_object.path_long or equiped_lower_object.path_short
 	self._attached_units = {}
@@ -203,6 +213,7 @@ function CharacterCustomization:_attach_unit_parts(equiped_head_object, equiped_
 	end
 end
 
+-- Lines 235-250
 function CharacterCustomization:attach_head_for_husk(head_path)
 	local head_unit = self._attached_units[CharacterCustomizationTweakData.PART_TYPE_HEAD]
 
@@ -219,6 +230,7 @@ function CharacterCustomization:attach_head_for_husk(head_path)
 	end
 end
 
+-- Lines 252-274
 function CharacterCustomization:destroy_all_parts_on_character()
 	if self._loading_units then
 		for unit_name, _ in pairs(self._loading_units) do
@@ -240,6 +252,7 @@ function CharacterCustomization:destroy_all_parts_on_character()
 	end
 end
 
+-- Lines 276-279
 function CharacterCustomization:destroy()
 	Application:trace("[CharacterCustomization][destroy]")
 	self:destroy_all_parts_on_character()

@@ -1,5 +1,6 @@
 HybridReloadRaycastWeaponBase = HybridReloadRaycastWeaponBase or class(NewRaycastWeaponBase)
 
+-- Lines 4-10
 function HybridReloadRaycastWeaponBase:start_reload(...)
 	self._started_reload_empty = self:clip_empty()
 
@@ -9,18 +10,21 @@ function HybridReloadRaycastWeaponBase:start_reload(...)
 	end
 end
 
+-- Lines 12-15
 function HybridReloadRaycastWeaponBase:use_shotgun_reload()
 	local is_empty = self:mag_is_empty()
 
 	return not is_empty
 end
 
+-- Lines 17-20
 function HybridReloadRaycastWeaponBase:mag_is_empty()
 	self._mag_is_empty = self:clip_empty()
 
 	return self._mag_is_empty
 end
 
+-- Lines 23-28
 function HybridReloadRaycastWeaponBase:reload_interuptable()
 	if self._started_reload_empty and not self:use_shotgun_reload() then
 		return false
@@ -29,6 +33,7 @@ function HybridReloadRaycastWeaponBase:reload_interuptable()
 	return true
 end
 
+-- Lines 30-41
 function HybridReloadRaycastWeaponBase:update_reloading(t, dt, time_left)
 	if self:use_shotgun_reload() and self._next_shell_reloded_t and self._next_shell_reloded_t < t then
 		local speed_multiplier = self:reload_speed_multiplier()

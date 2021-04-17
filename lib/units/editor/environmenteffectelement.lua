@@ -4,6 +4,7 @@ EnvironmentEffectElement.ACTIONS = {
 	"remove"
 }
 
+-- Lines 8-21
 function EnvironmentEffectElement:init(unit)
 	EnvironmentEffectElement.super.init(self, unit)
 
@@ -19,12 +20,15 @@ function EnvironmentEffectElement:init(unit)
 	self._actions = EnvironmentEffectElement.ACTIONS
 end
 
+-- Lines 23-24
 function EnvironmentEffectElement:clear(...)
 end
 
+-- Lines 26-27
 function EnvironmentEffectElement:add_to_mission_package()
 end
 
+-- Lines 29-38
 function EnvironmentEffectElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

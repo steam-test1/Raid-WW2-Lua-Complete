@@ -8,6 +8,7 @@ RaidGUIControlLegend.FONT_SIZE = tweak_data.gui.font_sizes.large
 RaidGUIControlLegend.COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlLegend.LABEL_PADDING = 15
 
+-- Lines 12-26
 function RaidGUIControlLegend:init(parent, params)
 	params.x = params.x or RaidGUIControlLegend.X
 	params.y = params.y or RaidGUIControlLegend.Y
@@ -23,21 +24,25 @@ function RaidGUIControlLegend:init(parent, params)
 	managers.controller:add_hotswap_callback("menu_legend", callback(self, self, "controller_hotswap_triggered"))
 end
 
+-- Lines 28-31
 function RaidGUIControlLegend:close()
 	managers.raid_menu:set_current_legend_control(nil)
 	RaidGUIControlLegend.super.close(self)
 end
 
+-- Lines 33-35
 function RaidGUIControlLegend:controller_hotswap_triggered()
 	self:_create_legend()
 end
 
+-- Lines 37-41
 function RaidGUIControlLegend:set_labels(legend)
 	self._legend = legend
 
 	self:_create_legend()
 end
 
+-- Lines 43-63
 function RaidGUIControlLegend:_create_legend()
 	if not self._object or not alive(self._object._engine_panel) or not self._legend then
 		return
@@ -64,6 +69,7 @@ function RaidGUIControlLegend:_create_legend()
 	end
 end
 
+-- Lines 65-92
 function RaidGUIControlLegend:_create_console_legend(label_params)
 	if not self._legend.controller then
 		return
@@ -97,6 +103,7 @@ function RaidGUIControlLegend:_create_console_legend(label_params)
 	end
 end
 
+-- Lines 94-119
 function RaidGUIControlLegend:_create_pc_legend()
 	if not self._legend.keyboard then
 		return

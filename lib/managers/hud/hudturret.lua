@@ -17,6 +17,7 @@ HUDTurret.DISMOUNT_PROMPT_DELAY = 8
 HUDTurret.DEFAULT_RETICLE = "weapons_reticles_ass_carbine"
 HUDTurret.SHELL_POSITION_CENTER_X = 770
 
+-- Lines 25-38
 function HUDTurret:init(hud)
 	self._hud_panel = hud.panel
 
@@ -33,6 +34,7 @@ function HUDTurret:init(hud)
 	self._is_flak = false
 end
 
+-- Lines 40-47
 function HUDTurret:_create_panel(hud)
 	local panel_params = {
 		alpha = 0,
@@ -43,6 +45,7 @@ function HUDTurret:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
+-- Lines 49-84
 function HUDTurret:_create_heat_indicator()
 	local heat_indicator_panel_params = {
 		name = "heat_indicator_panel",
@@ -81,6 +84,7 @@ function HUDTurret:_create_heat_indicator()
 	self._heat_indicator_foreground = self._heat_indicator_foreground_panel:bitmap(heat_indicator_foreground_params)
 end
 
+-- Lines 86-116
 function HUDTurret:_create_dismount_prompt()
 	local dismount_prompt_panel_params = {
 		alpha = 0,
@@ -116,6 +120,7 @@ function HUDTurret:_create_dismount_prompt()
 	self._dismount_prompt_text:set_center_y(self._dismount_prompt_panel:h() / 2)
 end
 
+-- Lines 118-129
 function HUDTurret:_create_reticle()
 	local reticle_params = {
 		name = "turret_reticle",
@@ -131,6 +136,7 @@ function HUDTurret:_create_reticle()
 	self._reticle:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 131-167
 function HUDTurret:_create_shell()
 	local params_bg = {
 		name = "shell_bg",
@@ -175,6 +181,7 @@ function HUDTurret:_create_shell()
 	self._shell:set_center_y(self._shell_bg:center_y())
 end
 
+-- Lines 169-178
 function HUDTurret:set_reticle(reticle)
 	self._reticle:set_image(tweak_data.gui.icons[reticle].texture)
 	self._reticle:set_texture_rect(unpack(tweak_data.gui.icons[reticle].texture_rect))
@@ -184,6 +191,7 @@ function HUDTurret:set_reticle(reticle)
 	self._reticle:animate(callback(self, self, "_animate_show"), 0.15)
 end
 
+-- Lines 180-201
 function HUDTurret:show(turret_unit, bullet_type)
 	self._dismount_prompt_panel:set_alpha(0)
 	self._object:stop()
@@ -209,6 +217,7 @@ function HUDTurret:show(turret_unit, bullet_type)
 	end
 end
 
+-- Lines 203-210
 function HUDTurret:hide()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide"))
@@ -217,6 +226,7 @@ function HUDTurret:hide()
 	self._reticle:animate(callback(self, self, "_animate_hide"), 0.15)
 end
 
+-- Lines 212-224
 function HUDTurret:show_prompt()
 	self._dismount_prompt_panel:stop()
 	self._dismount_prompt_text:set_text(utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT, {
@@ -226,12 +236,14 @@ function HUDTurret:show_prompt()
 	managers.queued_tasks:queue("hud_turret_prompt", self.hide_prompt, self, nil, HUDTurret.DISMOUNT_PROMPT_HOLD_TIME, nil)
 end
 
+-- Lines 226-230
 function HUDTurret:hide_prompt()
 	self._dismount_prompt_panel:stop()
 	self._dismount_prompt_panel:animate(callback(self, self, "_animate_hide"))
 	managers.queued_tasks:queue("hud_turret_prompt", self.show_prompt, self, nil, HUDTurret.DISMOUNT_PROMPT_DELAY, nil)
 end
 
+-- Lines 232-244
 function HUDTurret:update_heat_indicator(current)
 	if self._is_flak then
 		return
@@ -246,10 +258,12 @@ function HUDTurret:update_heat_indicator(current)
 	end
 end
 
+-- Lines 246-248
 function HUDTurret:set_overheating(value)
 	self._overheating = value
 end
 
+-- Lines 250-259
 function HUDTurret:overheat(turret_unit)
 	local turret_tweak_data = turret_unit:weapon():weapon_tweak_data()
 
@@ -262,26 +276,32 @@ function HUDTurret:overheat(turret_unit)
 	end
 end
 
+-- Lines 261-263
 function HUDTurret:cooldown()
 	self._overheating = false
 end
 
+-- Lines 265-267
 function HUDTurret:w()
 	return self._object:w()
 end
 
+-- Lines 269-271
 function HUDTurret:h()
 	return self._object:h()
 end
 
+-- Lines 273-275
 function HUDTurret:set_x(x)
 	self._object:set_x(x)
 end
 
+-- Lines 277-279
 function HUDTurret:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 281-289
 function HUDTurret:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
 		if color_table[i].start_percentage < percentage then
@@ -292,6 +312,7 @@ function HUDTurret:_get_color_for_percentage(color_table, percentage)
 	return color_table[1].color
 end
 
+-- Lines 291-304
 function HUDTurret:_animate_show(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = object:alpha() * duration
@@ -307,6 +328,7 @@ function HUDTurret:_animate_show(object, animation_duration)
 	object:set_alpha(1)
 end
 
+-- Lines 307-329
 function HUDTurret:_animate_normal_show(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = 0
@@ -329,6 +351,7 @@ function HUDTurret:_animate_normal_show(object, animation_duration)
 	self._heat_indicator_background:set_alpha(1)
 end
 
+-- Lines 331-365
 function HUDTurret:_animate_flak_show(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = 0
@@ -368,6 +391,7 @@ function HUDTurret:_animate_flak_show(object, animation_duration)
 	end
 end
 
+-- Lines 367-380
 function HUDTurret:_animate_hide(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = (1 - object:alpha()) * duration
@@ -383,16 +407,19 @@ function HUDTurret:_animate_hide(object, animation_duration)
 	object:set_alpha(0)
 end
 
+-- Lines 383-385
 function HUDTurret:flak_fire()
 	self._shell:animate(callback(self, self, "_animate_shell_fire"))
 end
 
+-- Lines 387-391
 function HUDTurret:flak_insert()
 	if self._is_flak then
 		self._shell:animate(callback(self, self, "_animate_shell_insert"))
 	end
 end
 
+-- Lines 394-406
 function HUDTurret:_animate_shell_insert()
 	local duration = 0.7
 	local t = 0
@@ -411,6 +438,7 @@ function HUDTurret:_animate_shell_insert()
 	self._shell:set_alpha(1)
 end
 
+-- Lines 409-432
 function HUDTurret:_animate_shell_fire()
 	local duration = 0.2
 	local t = 0

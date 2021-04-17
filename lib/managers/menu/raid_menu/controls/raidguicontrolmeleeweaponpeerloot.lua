@@ -12,6 +12,7 @@ RaidGUIControlMeleeWeaponPeerLoot.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_si
 RaidGUIControlMeleeWeaponPeerLoot.IMAGE_PADDING_RIGHT = 10
 RaidGUIControlMeleeWeaponPeerLoot.TEXT_X = 128
 
+-- Lines 21-31
 function RaidGUIControlMeleeWeaponPeerLoot:init(parent, params)
 	RaidGUIControlMeleeWeaponPeerLoot.super.init(self, parent, params)
 
@@ -25,6 +26,7 @@ function RaidGUIControlMeleeWeaponPeerLoot:init(parent, params)
 	self:_create_weapon_point_details()
 end
 
+-- Lines 34-44
 function RaidGUIControlMeleeWeaponPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -36,6 +38,7 @@ function RaidGUIControlMeleeWeaponPeerLoot:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 47-87
 function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 	local params_weapon_point_image = {
 		name = "melee_weapon_image",
@@ -80,11 +83,13 @@ function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 	self._xp_value_label:set_h(h)
 end
 
+-- Lines 89-92
 function RaidGUIControlMeleeWeaponPeerLoot:set_player_name(name)
 	self._name_label:set_text(utf8.to_upper(name))
 	self:_layout_text()
 end
 
+-- Lines 94-100
 function RaidGUIControlMeleeWeaponPeerLoot:_layout_text()
 	local _, _, _, h = self._name_label:text_rect()
 
@@ -93,6 +98,7 @@ function RaidGUIControlMeleeWeaponPeerLoot:_layout_text()
 	self._xp_value_label:set_y(self._name_label:y() + self._name_label:h() + RaidGUIControlMeleeWeaponPeerLoot.NAME_PADDING_DOWN)
 end
 
+-- Lines 102-109
 function RaidGUIControlMeleeWeaponPeerLoot:set_melee_weapon(weapon_id)
 	local weapon_name = ""
 	local tweak_data = tweak_data.blackmarket.melee_weapons[weapon_id]

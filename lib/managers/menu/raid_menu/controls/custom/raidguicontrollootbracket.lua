@@ -18,6 +18,7 @@ RaidGUIControlLootBracket.NOTCH_COLOR_ACTIVE = tweak_data.gui.colors.raid_red
 RaidGUIControlLootBracket.NOTCH_PADDING_TOP = 19
 RaidGUIControlLootBracket.NOTCH_PADDING_BOTTOM = 13
 
+-- Lines 25-38
 function RaidGUIControlLootBracket:init(parent, params)
 	RaidGUIControlLootBracket.super.init(self, parent, params)
 
@@ -34,6 +35,7 @@ function RaidGUIControlLootBracket:init(parent, params)
 	self:_create_bracket_icon()
 end
 
+-- Lines 41-49
 function RaidGUIControlLootBracket:_create_panel()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_panel"
@@ -44,6 +46,7 @@ function RaidGUIControlLootBracket:_create_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 51-63
 function RaidGUIControlLootBracket:_create_notch()
 	local notch_params = {
 		name = "notch",
@@ -60,6 +63,7 @@ function RaidGUIControlLootBracket:_create_notch()
 	self._notch:set_bottom(self._object:h() - RaidGUIControlLootBracket.NOTCH_PADDING_BOTTOM)
 end
 
+-- Lines 65-79
 function RaidGUIControlLootBracket:_create_bracket_icon()
 	local bracket_icon_params = {
 		name = "bracket_icon",
@@ -78,16 +82,19 @@ function RaidGUIControlLootBracket:_create_bracket_icon()
 	self._bracket_icon:set_bottom(self._notch:y() - RaidGUIControlLootBracket.NOTCH_PADDING_TOP)
 end
 
+-- Lines 81-84
 function RaidGUIControlLootBracket:activate()
 	self._bracket_icon:stop()
 	self._bracket_icon:animate(callback(self, self, "_animate_activate"))
 end
 
+-- Lines 86-89
 function RaidGUIControlLootBracket:deactivate()
 	self._bracket_icon:stop()
 	self._bracket_icon:animate(callback(self, self, "_animate_deactivate"))
 end
 
+-- Lines 95-124
 function RaidGUIControlLootBracket:_animate_activate()
 	local duration = 0.25
 	local t = (self._bracket_icon:w() - RaidGUIControlLootBracket.ICON_INACTIVE_SIZE) / (self._object:w() - RaidGUIControlLootBracket.ICON_INACTIVE_SIZE) * duration
@@ -117,6 +124,7 @@ function RaidGUIControlLootBracket:_animate_activate()
 	self._bracket_icon:set_bottom(self._notch:y() - RaidGUIControlLootBracket.NOTCH_PADDING_TOP - RaidGUIControlLootBracket.ICON_ACTIVE_PADDING_BOTTOM)
 end
 
+-- Lines 126-147
 function RaidGUIControlLootBracket:_animate_deactivate()
 	local duration = 0.25
 	local t = (1 - (self._bracket_icon:w() - RaidGUIControlLootBracket.ICON_INACTIVE_SIZE) / (self._object:w() - RaidGUIControlLootBracket.ICON_INACTIVE_SIZE)) * duration

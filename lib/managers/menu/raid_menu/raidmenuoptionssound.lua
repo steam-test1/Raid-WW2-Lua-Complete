@@ -1,13 +1,16 @@
 RaidMenuOptionsSound = RaidMenuOptionsSound or class(RaidGuiBase)
 
+-- Lines 3-5
 function RaidMenuOptionsSound:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuOptionsSound.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
+-- Lines 7-9
 function RaidMenuOptionsSound:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_sound_subtitle")
 end
 
+-- Lines 12-21
 function RaidMenuOptionsSound:_layout()
 	RaidMenuOptionsSound.super._layout(self)
 	self:_layout_sound()
@@ -16,6 +19,7 @@ function RaidMenuOptionsSound:_layout()
 	self:bind_controller_inputs()
 end
 
+-- Lines 23-30
 function RaidMenuOptionsSound:close()
 	self:_save_sound_values()
 
@@ -25,6 +29,7 @@ function RaidMenuOptionsSound:close()
 	RaidMenuOptionsSound.super.close(self)
 end
 
+-- Lines 33-116
 function RaidMenuOptionsSound:_layout_sound()
 	local start_x = 0
 	local start_y = 320
@@ -125,6 +130,7 @@ function RaidMenuOptionsSound:_layout_sound()
 	self._toggle_menu_push_to_talk_toggle = self._root_panel:toggle_button(push_to_talk_params)
 end
 
+-- Lines 118-135
 function RaidMenuOptionsSound:_load_sound_values()
 	local master_volume = math.clamp(managers.user:get_setting("master_volume"), 0, 100)
 	local music_volume = math.clamp(managers.user:get_setting("music_volume"), 0, 100)
@@ -143,6 +149,7 @@ function RaidMenuOptionsSound:_load_sound_values()
 	self._toggle_menu_push_to_talk_toggle:set_value_and_render(push_to_talk)
 end
 
+-- Lines 137-148
 function RaidMenuOptionsSound:_save_sound_values()
 	self:on_value_change_master_volume()
 	self:on_value_change_music_volume()
@@ -157,36 +164,42 @@ function RaidMenuOptionsSound:_save_sound_values()
 	managers.savefile:save_setting(true)
 end
 
+-- Lines 150-153
 function RaidMenuOptionsSound:on_value_change_master_volume()
 	local master_volume = math.clamp(self._progress_bar_menu_master_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_master_volume_raid(master_volume)
 end
 
+-- Lines 155-158
 function RaidMenuOptionsSound:on_value_change_music_volume()
 	local music_volume = math.clamp(self._progress_bar_menu_music_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_music_volume_raid(music_volume)
 end
 
+-- Lines 160-163
 function RaidMenuOptionsSound:on_value_change_sfx_volume()
 	local sfx_volume = math.clamp(self._progress_bar_menu_sfx_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_sfx_volume_raid(sfx_volume)
 end
 
+-- Lines 165-168
 function RaidMenuOptionsSound:on_value_change_voice_over_volume()
 	local voice_over_volume = math.clamp(self._progress_bar_menu_voice_over_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_voice_over_volume_raid(voice_over_volume)
 end
 
+-- Lines 170-173
 function RaidMenuOptionsSound:on_value_change_voice_volume()
 	local voice_volume = math.clamp(self._progress_bar_menu_voice_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_voice_volume_raid(voice_volume)
 end
 
+-- Lines 175-179
 function RaidMenuOptionsSound:on_click_voice_chat()
 	local voice_chat = self._toggle_menu_voicechat_toggle:get_value()
 
@@ -194,6 +207,7 @@ function RaidMenuOptionsSound:on_click_voice_chat()
 	managers.network.voice_chat:update_settings()
 end
 
+-- Lines 181-185
 function RaidMenuOptionsSound:on_click_push_to_talk()
 	local push_to_talk = self._toggle_menu_push_to_talk_toggle:get_value()
 
@@ -201,12 +215,14 @@ function RaidMenuOptionsSound:on_click_push_to_talk()
 	managers.network.voice_chat:update_settings()
 end
 
+-- Lines 187-191
 function RaidMenuOptionsSound:close()
 	Application:trace("RaidMenuOptionsSound:close()")
 	self:_save_sound_values()
 	RaidMenuOptionsSound.super.close(self)
 end
 
+-- Lines 198-209
 function RaidMenuOptionsSound:bind_controller_inputs()
 	local legend = {
 		controller = {

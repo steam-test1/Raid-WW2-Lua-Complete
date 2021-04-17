@@ -2,6 +2,7 @@ InstigatorRuleUnitElement = InstigatorRuleUnitElement or class(MissionElement)
 InstigatorRuleUnitElement.SAVE_UNIT_POSITION = false
 InstigatorRuleUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 5-15
 function InstigatorRuleUnitElement:init(unit)
 	InstigatorRuleUnitElement.super.init(self, unit)
 
@@ -14,15 +15,18 @@ function InstigatorRuleUnitElement:init(unit)
 	table.insert(self._save_values, "invert")
 end
 
+-- Lines 17-20
 function InstigatorRuleUnitElement:_rule_updated(category, value)
 	self._hed.rules[self._hed.instigator] = self._hed.rules[self._hed.instigator] or {}
 	self._hed.rules[self._hed.instigator][category] = #value > 0 and value or nil
 end
 
+-- Lines 22-24
 function InstigatorRuleUnitElement:_instigator_changed(params)
 	self:_update_rules_panel()
 end
 
+-- Lines 26-59
 function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -59,6 +63,7 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 	self:_update_rules_panel()
 end
 
+-- Lines 61-173
 function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	panel = self._rules_panel
 	panel_sizer = self._rules_panel_sizer

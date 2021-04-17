@@ -3,14 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementActivateScript = ElementActivateScript or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 6-8
 function ElementActivateScript:init(...)
 	ElementActivateScript.super.init(self, ...)
 end
 
+-- Lines 10-12
 function ElementActivateScript:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 14-27
 function ElementActivateScript:on_executed(instigator)
 	if not self._values.enabled then
 		return

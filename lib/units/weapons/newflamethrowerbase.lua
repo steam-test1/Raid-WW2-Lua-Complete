@@ -3,11 +3,13 @@ NewFlamethrowerBase.EVENT_IDS = {
 	flamethrower_effect = 1
 }
 
+-- Lines 5-8
 function NewFlamethrowerBase:init(...)
 	NewFlamethrowerBase.super.init(self, ...)
 	self:setup_default()
 end
 
+-- Lines 10-18
 function NewFlamethrowerBase:setup_default()
 	self._rays = tweak_data.weapon[self._name_id].rays or 6
 	self._range = tweak_data.weapon[self._name_id].flame_max_range or 1000
@@ -16,9 +18,11 @@ function NewFlamethrowerBase:setup_default()
 	self._bullet_class = FlameBulletBase
 end
 
+-- Lines 21-24
 function NewFlamethrowerBase:update(unit, t, dt)
 end
 
+-- Lines 28-38
 function NewFlamethrowerBase:_create_use_setups()
 	local use_data = {}
 	local player_setup = {
@@ -34,6 +38,7 @@ function NewFlamethrowerBase:_create_use_setups()
 	self._use_data = use_data
 end
 
+-- Lines 43-53
 function NewFlamethrowerBase:_update_stats_values()
 	NewFlamethrowerBase.super._update_stats_values(self)
 	self:setup_default()
@@ -43,9 +48,11 @@ function NewFlamethrowerBase:_update_stats_values()
 	end
 end
 
+-- Lines 57-58
 function NewFlamethrowerBase:get_damage_falloff(damage, col_ray, user_unit)
 end
 
+-- Lines 61-63
 function NewFlamethrowerBase:_spawn_muzzle_effect(from_pos, direction)
 	self._unit:flamethrower_effect_extension():_spawn_muzzle_effect(from_pos, direction)
 end
@@ -54,6 +61,7 @@ local mvec_to = Vector3()
 local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
+-- Lines 69-220
 function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	if self._rays == 1 then
 		local result = NewFlamethrowerBase.super._fire_raycast(self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
@@ -74,6 +82,7 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 	local weight = 0.1
 	local enemy_died = false
 
+	-- Lines 88-97
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() and col_ray.unit:character_damage().is_head then
 			local enemy_key = col_ray.unit:key()
@@ -221,14 +230,17 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 	return result
 end
 
+-- Lines 224-226
 function NewFlamethrowerBase:reload_interuptable()
 	return false
 end
 
+-- Lines 230-233
 function NewFlamethrowerBase:calculate_vertical_recoil_kick()
 	return 0
 end
 
+-- Lines 236-238
 function NewFlamethrowerBase:third_person_important()
 	return true
 end

@@ -2,10 +2,12 @@ require("lib/states/GameState")
 
 IngameParachuting = IngameParachuting or class(IngamePlayerBaseState)
 
+-- Lines 5-7
 function IngameParachuting:init(game_state_machine)
 	IngameParachuting.super.init(self, "ingame_parachuting", game_state_machine)
 end
 
+-- Lines 9-30
 function IngameParachuting:at_enter()
 	local players = managers.player:players()
 
@@ -30,6 +32,7 @@ function IngameParachuting:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 32-45
 function IngameParachuting:at_exit()
 	local player = managers.player:player_unit()
 
@@ -47,6 +50,7 @@ function IngameParachuting:at_exit()
 	managers.hud:hide(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 47-49
 function IngameParachuting:is_joinable()
 	return false
 end

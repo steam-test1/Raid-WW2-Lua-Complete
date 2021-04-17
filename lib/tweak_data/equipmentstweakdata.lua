@@ -1,5 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
+-- Lines 3-363
 function EquipmentsTweakData:init()
 	self.first_aid_kit = {
 		deploy_time = 1,

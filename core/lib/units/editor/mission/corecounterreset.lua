@@ -1,10 +1,12 @@
 CoreCounterResetUnitElement = CoreCounterResetUnitElement or class(MissionElement)
 CounterResetUnitElement = CounterResetUnitElement or class(CoreCounterResetUnitElement)
 
+-- Lines 5-7
 function CounterResetUnitElement:init(...)
 	CoreCounterResetUnitElement.init(self, ...)
 end
 
+-- Lines 9-17
 function CoreCounterResetUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -15,6 +17,7 @@ function CoreCounterResetUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 19-28
 function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -34,9 +37,11 @@ function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 30-31
 function CoreCounterResetUnitElement:update_editing()
 end
 
+-- Lines 33-43
 function CoreCounterResetUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -54,6 +59,7 @@ function CoreCounterResetUnitElement:add_element()
 	end
 end
 
+-- Lines 45-52
 function CoreCounterResetUnitElement:remove_links(unit)
 	MissionElement.remove_links(self, unit)
 
@@ -64,10 +70,12 @@ function CoreCounterResetUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 55-57
 function CoreCounterResetUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 59-85
 function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

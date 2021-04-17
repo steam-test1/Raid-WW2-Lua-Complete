@@ -1,5 +1,6 @@
 LookAtTriggerUnitElement = LookAtTriggerUnitElement or class(MissionElement)
 
+-- Lines 3-16
 function LookAtTriggerUnitElement:init(unit)
 	LookAtTriggerUnitElement.super.init(self, unit)
 
@@ -15,6 +16,7 @@ function LookAtTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "in_front")
 end
 
+-- Lines 18-31
 function LookAtTriggerUnitElement:update_selected(t, dt)
 	if self._hed.distance ~= 0 then
 		local brush = Draw:brush()
@@ -33,6 +35,7 @@ function LookAtTriggerUnitElement:update_selected(t, dt)
 	end
 end
 
+-- Lines 34-66
 function LookAtTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

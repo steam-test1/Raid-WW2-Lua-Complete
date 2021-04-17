@@ -2,6 +2,7 @@ PickupUnitElement = PickupUnitElement or class(MissionElement)
 PickupUnitElement.SAVE_UNIT_POSITION = false
 PickupUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-12
 function PickupUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -10,10 +11,12 @@ function PickupUnitElement:init(unit)
 	table.insert(self._save_values, "pickup")
 end
 
+-- Lines 15-17
 function PickupUnitElement.get_options()
 	return table.map_keys(tweak_data.pickups)
 end
 
+-- Lines 20-27
 function PickupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

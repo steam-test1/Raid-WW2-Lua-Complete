@@ -17,16 +17,19 @@ CoreUnitCallbackCutsceneKey.control_for_unit_name = CoreCutsceneKeyBase.standard
 CoreUnitCallbackCutsceneKey.control_for_extension = CoreCutsceneKeyBase.standard_combo_box_control
 CoreUnitCallbackCutsceneKey.control_for_method = CoreCutsceneKeyBase.standard_combo_box_control
 
+-- Lines 18-20
 function CoreUnitCallbackCutsceneKey:__tostring()
 	return "Call " .. self:unit_name() .. ":" .. self:extension() .. "():" .. self:method() .. "(" .. self:arguments_string() .. ")"
 end
 
+-- Lines 22-24
 function CoreUnitCallbackCutsceneKey:arguments_string()
 	return string.join(", ", table.collect(self._method_params and self._method_params[self:method()] or {}, function (p)
 		return p:inspect()
 	end))
 end
 
+-- Lines 26-40
 function CoreUnitCallbackCutsceneKey:load(key_node, loading_class)
 	self.super.load(self, key_node, loading_class)
 
@@ -45,6 +48,7 @@ function CoreUnitCallbackCutsceneKey:load(key_node, loading_class)
 	end
 end
 
+-- Lines 42-52
 function CoreUnitCallbackCutsceneKey:_save_under(parent_node)
 	local key_node = self.super._save_under(self, parent_node)
 
@@ -57,6 +61,7 @@ function CoreUnitCallbackCutsceneKey:_save_under(parent_node)
 	return key_node
 end
 
+-- Lines 54-59
 function CoreUnitCallbackCutsceneKey:play(player, undo, fast_forward)
 	if self:enabled() then
 		local method_name = undo and "undo_" .. self:method() or self:method()
@@ -65,26 +70,31 @@ function CoreUnitCallbackCutsceneKey:play(player, undo, fast_forward)
 	end
 end
 
+-- Lines 61-65
 function CoreUnitCallbackCutsceneKey:skip(player)
 	if self:enabled() then
 		self:_invoke_if_exists("skip_" .. self:method(), player)
 	end
 end
 
+-- Lines 67-69
 function CoreUnitCallbackCutsceneKey:is_valid_unit_name(unit_name)
 	return self.super.is_valid_unit_name(self, unit_name) and not table.empty(self:_unit_extension_info(unit_name))
 end
 
+-- Lines 71-74
 function CoreUnitCallbackCutsceneKey:is_valid_extension(extension)
 	local methods = self:_unit_extension_info(self:unit_name())[extension]
 
 	return methods and not table.empty(methods)
 end
 
+-- Lines 76-78
 function CoreUnitCallbackCutsceneKey:is_valid_method(method)
 	return method ~= nil and not string.begins(method, "undo_") and not string.begins(method, "skip_")
 end
 
+-- Lines 80-97
 function CoreUnitCallbackCutsceneKey:refresh_control_for_extension(control)
 	control:freeze()
 	control:clear()
@@ -112,6 +122,7 @@ function CoreUnitCallbackCutsceneKey:refresh_control_for_extension(control)
 	control:thaw()
 end
 
+-- Lines 99-116
 function CoreUnitCallbackCutsceneKey:refresh_control_for_method(control)
 	control:freeze()
 	control:clear()
@@ -137,6 +148,7 @@ function CoreUnitCallbackCutsceneKey:refresh_control_for_method(control)
 	control:thaw()
 end
 
+-- Lines 118-166
 function CoreUnitCallbackCutsceneKey:refresh_control_for_arguments(panel)
 	panel:freeze()
 	panel:destroy_children()
@@ -200,12 +212,14 @@ function CoreUnitCallbackCutsceneKey:refresh_control_for_arguments(panel)
 	panel:thaw()
 end
 
+-- Lines 168-171
 function CoreUnitCallbackCutsceneKey:control_for_arguments(parent_frame, callback_func)
 	local panel = EWS:Panel(parent_frame)
 
 	return panel
 end
 
+-- Lines 173-200
 function CoreUnitCallbackCutsceneKey:_invoke_if_exists(method_name, player)
 	local extension = self:_unit_extension(self:unit_name(), self:extension(), true)
 
@@ -245,6 +259,7 @@ function CoreUnitCallbackCutsceneKey:_invoke_if_exists(method_name, player)
 	func(extension, table.unpack_sparse(param_values))
 end
 
+-- Lines 202-220
 function CoreUnitCallbackCutsceneKey:_param_with_name(param_name)
 	assert(self:is_valid_method(self:method()), "Method \"" .. self:method() .. "\" is invalid.")
 
@@ -272,22 +287,26 @@ end
 
 CoreUnitCallbackCutsceneKeyParam = CoreUnitCallbackCutsceneKeyParam or class()
 
+-- Lines 229-231
 function CoreUnitCallbackCutsceneKeyParam:__tostring()
 	return tostring(self.name) .. "=" .. tostring(self:inspect())
 end
 
+-- Lines 233-237
 function CoreUnitCallbackCutsceneKeyParam:init()
 	self.value_type = "nil"
 	self.name = "nil"
 	self.string_value = ""
 end
 
+-- Lines 239-243
 function CoreUnitCallbackCutsceneKeyParam:load(param_node)
 	self.value_type = param_node:name()
 	self.name = param_node:parameter("name")
 	self.string_value = param_node:parameter("value")
 end
 
+-- Lines 245-259
 function CoreUnitCallbackCutsceneKeyParam:value(cutscene_key)
 	if not self:is_nil() then
 		if self.value_type == "string" then
@@ -304,14 +323,17 @@ function CoreUnitCallbackCutsceneKeyParam:value(cutscene_key)
 	return nil
 end
 
+-- Lines 261-263
 function CoreUnitCallbackCutsceneKeyParam:is_nil()
 	return self.value_type == "nil"
 end
 
+-- Lines 265-267
 function CoreUnitCallbackCutsceneKeyParam:inspect()
 	return self.string_value
 end
 
+-- Lines 269-274
 function CoreUnitCallbackCutsceneKeyParam:_save_under(parent_node)
 	local param_node = parent_node:make_child(self.value_type)
 

@@ -2,6 +2,7 @@ CarryUnitElement = CarryUnitElement or class(MissionElement)
 CarryUnitElement.SAVE_UNIT_POSITION = false
 CarryUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-15
 function CarryUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -13,6 +14,7 @@ function CarryUnitElement:init(unit)
 	table.insert(self._save_values, "type_filter")
 end
 
+-- Lines 20-28
 function CarryUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

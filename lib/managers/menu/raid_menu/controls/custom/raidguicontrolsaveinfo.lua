@@ -1,6 +1,7 @@
 RaidGUIControlSaveInfo = RaidGUIControlSaveInfo or class(RaidGUIControl)
 RaidGUIControlSaveInfo.DOG_TAG_LABEL_X = 76
 
+-- Lines 5-15
 function RaidGUIControlSaveInfo:init(parent, params)
 	RaidGUIControlSaveInfo.super.init(self, parent, params)
 
@@ -13,6 +14,7 @@ function RaidGUIControlSaveInfo:init(parent, params)
 	self:_create_peer_details()
 end
 
+-- Lines 17-27
 function RaidGUIControlSaveInfo:_create_panel()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_panel"
@@ -24,6 +26,7 @@ function RaidGUIControlSaveInfo:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 29-83
 function RaidGUIControlSaveInfo:_create_info_icons()
 	local info_icons_panel_params = {
 		name = "info_icons_panel",
@@ -86,6 +89,7 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	self._info_icons_panel:set_h(h)
 end
 
+-- Lines 85-93
 function RaidGUIControlSaveInfo:_create_separator()
 	local separator_params = {
 		name = "separator",
@@ -98,6 +102,7 @@ function RaidGUIControlSaveInfo:_create_separator()
 	self._separator = self._object:rect(separator_params)
 end
 
+-- Lines 95-108
 function RaidGUIControlSaveInfo:_create_peer_details_title()
 	local peer_details_title_params = {
 		name = "peer_details_title",
@@ -115,6 +120,7 @@ function RaidGUIControlSaveInfo:_create_peer_details_title()
 	self._peer_details_title = self._object:text(peer_details_title_params)
 end
 
+-- Lines 110-130
 function RaidGUIControlSaveInfo:_create_peer_details()
 	local peer_info_panel_params = {
 		name = "peer_info_panel",
@@ -141,6 +147,7 @@ function RaidGUIControlSaveInfo:_create_peer_details()
 	end
 end
 
+-- Lines 132-204
 function RaidGUIControlSaveInfo:set_save_info(slot_index)
 	local save_slot = managers.raid_job:get_save_slots()[slot_index]
 
@@ -219,29 +226,36 @@ function RaidGUIControlSaveInfo:set_save_info(slot_index)
 	end
 end
 
+-- Lines 207-209
 function RaidGUIControlSaveInfo:set_left(left)
 	self._object:set_left(left)
 end
 
+-- Lines 211-213
 function RaidGUIControlSaveInfo:set_right(right)
 	self._object:set_right(right)
 end
 
+-- Lines 215-217
 function RaidGUIControlSaveInfo:set_top(top)
 	self._object:set_top(top)
 end
 
+-- Lines 219-221
 function RaidGUIControlSaveInfo:set_bottom(bottom)
 	self._object:set_bottom(bottom)
 end
 
+-- Lines 223-225
 function RaidGUIControlSaveInfo:set_center_x(center_x)
 	self._object:set_center_x(center_x)
 end
 
+-- Lines 227-229
 function RaidGUIControlSaveInfo:set_center_y(center_y)
 	self._object:set_center_y(center_y)
 end
 
+-- Lines 232-233
 function RaidGUIControlSaveInfo:close()
 end

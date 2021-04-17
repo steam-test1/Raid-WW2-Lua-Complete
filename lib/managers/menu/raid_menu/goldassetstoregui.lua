@@ -2,6 +2,7 @@ GoldAssetStoreGui = GoldAssetStoreGui or class(RaidGuiBase)
 GoldAssetStoreGui.CONFIRM_PRESSED_STATE_BUY = "state_buy"
 GoldAssetStoreGui.CONFIRM_PRESSED_STATE_APPLY = "state_apply"
 
+-- Lines 6-16
 function GoldAssetStoreGui:init(ws, fullscreen_ws, node, component_name)
 	GoldAssetStoreGui.super.init(self, ws, fullscreen_ws, node, component_name)
 	self._node.components.raid_menu_header:set_screen_name("menu_gold_asset_store_title")
@@ -11,6 +12,7 @@ function GoldAssetStoreGui:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:hide_background()
 end
 
+-- Lines 18-22
 function GoldAssetStoreGui:_setup_properties()
 	GoldAssetStoreGui.super._setup_properties(self)
 
@@ -18,11 +20,13 @@ function GoldAssetStoreGui:_setup_properties()
 	self._background_rect = nil
 end
 
+-- Lines 24-28
 function GoldAssetStoreGui:_set_initial_data()
 	self._loaded_units = {}
 	self._unit_data_to_show = nil
 end
 
+-- Lines 30-141
 function GoldAssetStoreGui:_layout()
 	self:_disable_dof()
 
@@ -188,6 +192,7 @@ function GoldAssetStoreGui:_layout()
 	end
 end
 
+-- Lines 143-176
 function GoldAssetStoreGui:_layout_greed_info()
 	local greed_panel_default_h = 288
 	local greed_panel_bottom = 896
@@ -227,6 +232,7 @@ function GoldAssetStoreGui:_layout_greed_info()
 	self._greed_info_panel:set_bottom(greed_panel_bottom)
 end
 
+-- Lines 181-189
 function GoldAssetStoreGui:_data_source_gold_asset_store()
 	local gold_items_data_source = managers.gold_economy:get_store_items_data()
 
@@ -237,18 +243,22 @@ function GoldAssetStoreGui:_data_source_gold_asset_store()
 	return gold_items_data_source
 end
 
+-- Lines 192-196
 function GoldAssetStoreGui:_on_click_gold_asset_store(item_data)
 	self:_grid_item_clicked_selected(item_data)
 end
 
+-- Lines 199-203
 function GoldAssetStoreGui:_on_double_click_gold_asset_store(item_data)
 	self:_grid_item_clicked_selected(item_data)
 end
 
+-- Lines 206-210
 function GoldAssetStoreGui:_on_selected_gold_asset_store(item_idx, item_data)
 	self:_grid_item_clicked_selected(item_data)
 end
 
+-- Lines 213-221
 function GoldAssetStoreGui:_on_click_button_buy()
 	local selected_item = self._gold_asset_store_grid:selected_grid_item()
 	local selected_item_data = selected_item:get_data()
@@ -261,6 +271,7 @@ function GoldAssetStoreGui:_on_click_button_buy()
 	managers.menu:show_gold_asset_store_purchase_dialog(dialog_params)
 end
 
+-- Lines 224-232
 function GoldAssetStoreGui:_on_click_button_apply()
 	local selected_item = self._gold_asset_store_grid:selected_grid_item()
 	local selected_item_data = selected_item:get_data()
@@ -268,6 +279,7 @@ function GoldAssetStoreGui:_on_click_button_apply()
 	self:_apply_upgrade_to_camp(selected_item_data.upgrade_name, selected_item_data.level)
 end
 
+-- Lines 234-241
 function GoldAssetStoreGui:update(t, dt)
 	if self._unit_data_to_show and self._loaded_units[self._unit_data_to_show.scene_unit] and self._unit_data_to_show_changed then
 		self:_spawn_scene_camp_unit(self._unit_data_to_show)
@@ -276,6 +288,7 @@ function GoldAssetStoreGui:update(t, dt)
 	end
 end
 
+-- Lines 245-255
 function GoldAssetStoreGui:_grid_item_clicked_selected(item_data)
 	if self._unit_data_to_show == item_data then
 		return
@@ -289,6 +302,7 @@ function GoldAssetStoreGui:_grid_item_clicked_selected(item_data)
 	self:_populate_selected_item_data_and_load(item_data)
 end
 
+-- Lines 257-272
 function GoldAssetStoreGui:_populate_selected_item_data_and_load(item_data)
 	self:_load_scene_camp_unit(item_data)
 	self._item_description:set_text(self:translate(item_data.description_id, false))
@@ -304,6 +318,7 @@ function GoldAssetStoreGui:_populate_selected_item_data_and_load(item_data)
 	self:_process_controls_states()
 end
 
+-- Lines 274-284
 function GoldAssetStoreGui:_load_scene_camp_unit(item_data)
 	if not item_data.scene_unit or item_data.scene_unit == "" then
 		return
@@ -314,6 +329,7 @@ function GoldAssetStoreGui:_load_scene_camp_unit(item_data)
 	managers.dyn_resource:load(Idstring("unit"), Idstring(item_data.scene_unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_camp_scene_unit_loaded_callback", item_data))
 end
 
+-- Lines 286-296
 function GoldAssetStoreGui:_spawn_scene_camp_unit(unit_data_to_show)
 	self._spawned_unit_position = self:get_character_spawn_location()
 	self._spawned_unit = World:spawn_unit(Idstring(unit_data_to_show.scene_unit), self._spawned_unit_position, Rotation(0, 0, 0))
@@ -325,6 +341,7 @@ function GoldAssetStoreGui:_spawn_scene_camp_unit(unit_data_to_show)
 	self._rotate_gold_item:set_unit(self._spawned_unit, self._spawned_unit_position, 90, self._spawned_unit_offset, Vector3(0, 0, 0))
 end
 
+-- Lines 298-313
 function GoldAssetStoreGui:get_character_spawn_location()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 	local result = nil
@@ -342,6 +359,7 @@ function GoldAssetStoreGui:get_character_spawn_location()
 	return result
 end
 
+-- Lines 315-319
 function GoldAssetStoreGui:pix_to_screen(px_x, px_y)
 	local sx = 2 * px_x / self._root_panel:w() - 1
 	local sy = 2 * px_y / self._root_panel:h() - 1
@@ -349,6 +367,7 @@ function GoldAssetStoreGui:pix_to_screen(px_x, px_y)
 	return sx, sy
 end
 
+-- Lines 321-326
 function GoldAssetStoreGui:_despawn_scene_camp_unit()
 	if self._spawned_unit then
 		self._spawned_unit:set_slot(0)
@@ -357,10 +376,12 @@ function GoldAssetStoreGui:_despawn_scene_camp_unit()
 	end
 end
 
+-- Lines 328-331
 function GoldAssetStoreGui:_camp_scene_unit_loaded_callback(item_data)
 	self._loaded_units[item_data.scene_unit] = true
 end
 
+-- Lines 333-422
 function GoldAssetStoreGui:_process_controls_states()
 	local selected_item_data = self._gold_asset_store_grid:selected_grid_item():get_data()
 
@@ -431,12 +452,14 @@ function GoldAssetStoreGui:_process_controls_states()
 	end
 end
 
+-- Lines 424-431
 function GoldAssetStoreGui:_buy_gold_item_yes_callback(item_data)
 	Application:trace("[GoldAssetStoreGui:_buy_gold_item_yes_callback] item_data ", inspect(item_data))
 	managers.gold_economy:spend_gold(item_data.gold_price)
 	self:_apply_upgrade_to_camp(item_data.upgrade_name, item_data.level)
 end
 
+-- Lines 434-451
 function GoldAssetStoreGui:_apply_upgrade_to_camp(upgrade_name, level)
 	managers.gold_economy:update_camp_upgrade(upgrade_name, level)
 	self._gold_asset_store_grid:refresh_data()
@@ -451,6 +474,7 @@ function GoldAssetStoreGui:_apply_upgrade_to_camp(upgrade_name, level)
 	managers.menu_component:post_event("gold_spending_apply")
 end
 
+-- Lines 453-465
 function GoldAssetStoreGui:close()
 	for scene_unit, loaded in pairs(self._loaded_units) do
 		if not loaded then
@@ -464,6 +488,7 @@ function GoldAssetStoreGui:close()
 	GoldAssetStoreGui.super.close(self)
 end
 
+-- Lines 471-483
 function GoldAssetStoreGui:bind_controller_inputs()
 	local legend = {
 		controller = {
@@ -482,6 +507,7 @@ function GoldAssetStoreGui:bind_controller_inputs()
 	self._confirm_pressed_state = nil
 end
 
+-- Lines 485-498
 function GoldAssetStoreGui:bind_controller_inputs_buy()
 	local legend = {
 		controller = {
@@ -501,6 +527,7 @@ function GoldAssetStoreGui:bind_controller_inputs_buy()
 	self._confirm_pressed_state = GoldAssetStoreGui.CONFIRM_PRESSED_STATE_BUY
 end
 
+-- Lines 500-513
 function GoldAssetStoreGui:bind_controller_inputs_apply()
 	local legend = {
 		controller = {
@@ -520,6 +547,7 @@ function GoldAssetStoreGui:bind_controller_inputs_apply()
 	self._confirm_pressed_state = GoldAssetStoreGui.CONFIRM_PRESSED_STATE_APPLY
 end
 
+-- Lines 515-528
 function GoldAssetStoreGui:confirm_pressed()
 	local selected_item = self._gold_asset_store_grid:selected_grid_item()
 

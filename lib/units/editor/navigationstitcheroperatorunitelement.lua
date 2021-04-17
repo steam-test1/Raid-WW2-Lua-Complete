@@ -4,6 +4,7 @@ NavigationStitcherOperatorUnitElement.ACTIONS = {
 	"tear"
 }
 
+-- Lines 8-19
 function NavigationStitcherOperatorUnitElement:init(unit)
 	NavigationStitcherOperatorUnitElement.super.init(self, unit)
 
@@ -17,6 +18,7 @@ function NavigationStitcherOperatorUnitElement:init(unit)
 	self._actions = NavigationStitcherOperatorUnitElement.ACTIONS
 end
 
+-- Lines 22-33
 function NavigationStitcherOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -34,10 +36,12 @@ function NavigationStitcherOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 37-39
 function NavigationStitcherOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 43-52
 function NavigationStitcherOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -53,6 +57,7 @@ function NavigationStitcherOperatorUnitElement:update_editing()
 	end
 end
 
+-- Lines 55-71
 function NavigationStitcherOperatorUnitElement:draw_links_unselected(...)
 	NavigationStitcherOperatorUnitElement.super.draw_links_unselected(self, ...)
 
@@ -74,6 +79,7 @@ function NavigationStitcherOperatorUnitElement:draw_links_unselected(...)
 	end
 end
 
+-- Lines 74-88
 function NavigationStitcherOperatorUnitElement:draw_links_selected(...)
 	NavigationStitcherOperatorUnitElement.super.draw_links_selected(self, ...)
 
@@ -92,9 +98,11 @@ function NavigationStitcherOperatorUnitElement:draw_links_selected(...)
 	end
 end
 
+-- Lines 91-109
 function NavigationStitcherOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
+	-- Lines 93-102
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -118,7 +126,9 @@ function NavigationStitcherOperatorUnitElement:add_unit_list_btn()
 	end
 end
 
+-- Lines 111-118
 function NavigationStitcherOperatorUnitElement:remove_unit_list_btn()
+	-- Lines 112-112
 	local function f(unit)
 		return table.contains(self._hed.elements, unit:unit_data().unit_id)
 	end
@@ -132,6 +142,7 @@ function NavigationStitcherOperatorUnitElement:remove_unit_list_btn()
 	end
 end
 
+-- Lines 120-141
 function NavigationStitcherOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

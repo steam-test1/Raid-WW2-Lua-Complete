@@ -1,5 +1,6 @@
 CoreMacroToolbar = CoreMacroToolbar or class()
 
+-- Lines 3-11
 function CoreMacroToolbar:init(toolbar_panel, toolbar_box, default_icon, macro_file, self_str)
 	self._toolbar_panel = toolbar_panel
 	self._toolbar_box = toolbar_box
@@ -10,6 +11,7 @@ function CoreMacroToolbar:init(toolbar_panel, toolbar_box, default_icon, macro_f
 	self:reload_macros()
 end
 
+-- Lines 13-42
 function CoreMacroToolbar:reload_macros()
 	if self._macros then
 		for name, macro in pairs(self._macros) do
@@ -48,6 +50,7 @@ function CoreMacroToolbar:reload_macros()
 	end
 end
 
+-- Lines 44-52
 function CoreMacroToolbar:trigger_event(event_name)
 	if self._macros then
 		for _, macro in pairs(self._macros) do

@@ -18,6 +18,7 @@ RaidGUIControlGreedBarSmall.LOOT_BAR_W = 96
 RaidGUIControlGreedBarSmall.LOOT_BAR_COLOR = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlGreedBarSmall.LOOT_BAR_FOREGROUND_COLOR = tweak_data.gui.colors.raid_gold
 
+-- Lines 27-36
 function RaidGUIControlGreedBarSmall:init(parent, params)
 	RaidGUIControlGreedBarSmall.super.init(self, parent, params)
 	self:_create_panel()
@@ -27,6 +28,7 @@ function RaidGUIControlGreedBarSmall:init(parent, params)
 	self:_fit_size()
 end
 
+-- Lines 38-47
 function RaidGUIControlGreedBarSmall:_create_panel()
 	local panel_params = {
 		name = "greed_bar_small",
@@ -38,6 +40,7 @@ function RaidGUIControlGreedBarSmall:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 49-59
 function RaidGUIControlGreedBarSmall:_create_loot_icon()
 	local loot_icon_params = {
 		name = "loot_icon",
@@ -52,6 +55,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_icon()
 	self._loot_icon:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 61-76
 function RaidGUIControlGreedBarSmall:_create_loot_title()
 	local loot_title_params = {
 		name = "loot_title",
@@ -71,6 +75,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_title()
 	self._title:set_w(w)
 end
 
+-- Lines 78-121
 function RaidGUIControlGreedBarSmall:_create_loot_bar()
 	local loot_bar_panel_params = {
 		name = "loot_bar_panel",
@@ -119,6 +124,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 	local loot_bar_foreground = self._loot_bar_progress_panel:three_cut_bitmap(loot_bar_foreground_params)
 end
 
+-- Lines 123-136
 function RaidGUIControlGreedBarSmall:_fit_size()
 	if self._loot_bar_background:w() < self._title:w() then
 		self._title:set_x(64)
@@ -135,6 +141,7 @@ function RaidGUIControlGreedBarSmall:_fit_size()
 	end
 end
 
+-- Lines 138-144
 function RaidGUIControlGreedBarSmall:set_data_from_manager()
 	local progress = managers.greed:current_loot_counter() / managers.greed:loot_needed_for_gold_bar()
 

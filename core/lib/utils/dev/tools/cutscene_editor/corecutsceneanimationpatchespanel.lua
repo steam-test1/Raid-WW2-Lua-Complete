@@ -3,6 +3,7 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneEditorProject")
 
 CoreCutsceneAnimationPatchesPanel = CoreCutsceneAnimationPatchesPanel or class(CoreTableEditorPanel)
 
+-- Lines 6-14
 function CoreCutsceneAnimationPatchesPanel:init(parent)
 	self.super.init(self, parent)
 
@@ -15,10 +16,12 @@ function CoreCutsceneAnimationPatchesPanel:init(parent)
 	self:thaw()
 end
 
+-- Lines 16-18
 function CoreCutsceneAnimationPatchesPanel:unit_types()
 	return self.__unit_types or {}
 end
 
+-- Lines 20-25
 function CoreCutsceneAnimationPatchesPanel:set_unit_types(unit_types)
 	assert(type(unit_types) == "table" and table.true_for_all(table.map_values(unit_types), function (v)
 		return DB:has("unit", tostring(v):id())
@@ -30,6 +33,7 @@ function CoreCutsceneAnimationPatchesPanel:set_unit_types(unit_types)
 	self:_refresh_buttons_panel()
 end
 
+-- Lines 27-41
 function CoreCutsceneAnimationPatchesPanel:patches()
 	local patches = {}
 	local list_ctrl = self.__list_ctrl
@@ -46,6 +50,7 @@ function CoreCutsceneAnimationPatchesPanel:patches()
 	return patches
 end
 
+-- Lines 43-54
 function CoreCutsceneAnimationPatchesPanel:set_patches(patches)
 	self:freeze()
 	self:clear()
@@ -59,6 +64,7 @@ function CoreCutsceneAnimationPatchesPanel:set_patches(patches)
 	self:thaw()
 end
 
+-- Lines 56-78
 function CoreCutsceneAnimationPatchesPanel:_sizer_with_editable_fields(parent)
 	local sizer = EWS:BoxSizer("VERTICAL")
 	local unit_name_enabled = self:selected_item() ~= nil and not table.empty(self:unit_types())
@@ -84,6 +90,7 @@ function CoreCutsceneAnimationPatchesPanel:_sizer_with_editable_fields(parent)
 	return sizer
 end
 
+-- Lines 80-100
 function CoreCutsceneAnimationPatchesPanel:_create_unit_name_dropdown(parent)
 	local value = self:selected_item_value("Unit Name")
 	local control = EWS:ComboBox(parent, "", "", "CB_DROPDOWN,CB_READONLY,CB_SORT")
@@ -109,6 +116,7 @@ function CoreCutsceneAnimationPatchesPanel:_create_unit_name_dropdown(parent)
 	return control
 end
 
+-- Lines 102-115
 function CoreCutsceneAnimationPatchesPanel:_create_animation_text_field(parent)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	local labeled_text_field_sizer = EWS:BoxSizer("VERTICAL")
@@ -123,11 +131,13 @@ function CoreCutsceneAnimationPatchesPanel:_create_animation_text_field(parent)
 	return sizer
 end
 
+-- Lines 117-120
 function CoreCutsceneAnimationPatchesPanel:_refresh_buttons_panel()
 	self.super._refresh_buttons_panel(self)
 	self.__add_button:set_enabled(not table.empty(self:unit_types()))
 end
 
+-- Lines 122-133
 function CoreCutsceneAnimationPatchesPanel:_on_browse_for_animation(text_ctrl)
 	local dir, path = self:_absolute_dir_and_path(text_ctrl:get_value())
 	dir = dir or self.__default_dir or managers.database:base_path() .. "data"
@@ -142,6 +152,7 @@ function CoreCutsceneAnimationPatchesPanel:_on_browse_for_animation(text_ctrl)
 	end
 end
 
+-- Lines 135-147
 function CoreCutsceneAnimationPatchesPanel:_absolute_dir_and_path(relative_path)
 	relative_path = Application:nice_path(relative_path or "", false)
 

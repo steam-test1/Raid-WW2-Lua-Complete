@@ -12,6 +12,7 @@ HUDObjectiveMain.TIMER_FILL_ICON = "teammate_circle_fill_small"
 HUDObjectiveMain.TIMER_SECONDS_FONT = tweak_data.gui.fonts.din_compressed_outlined_24
 HUDObjectiveMain.TIMER_SECONDS_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 
+-- Lines 19-28
 function HUDObjectiveMain:init(objectives_panel, active_objective)
 	HUDObjectiveMain.super.init(self, objectives_panel, active_objective)
 	self._objective_text:set_center_y(self._object:h() / 2 - 4)
@@ -20,6 +21,7 @@ function HUDObjectiveMain:init(objectives_panel, active_objective)
 	self:set_hidden()
 end
 
+-- Lines 30-38
 function HUDObjectiveMain:_create_panel(objectives_panel)
 	local panel_params = {
 		name = "main_objective",
@@ -31,6 +33,7 @@ function HUDObjectiveMain:_create_panel(objectives_panel)
 	self._object = objectives_panel:panel(panel_params)
 end
 
+-- Lines 40-118
 function HUDObjectiveMain:_create_timer()
 	local timer_panel_params = {
 		name = "timer_panel",
@@ -126,14 +129,17 @@ function HUDObjectiveMain:_create_timer()
 	self._timer_text_seconds:set_center_y(self._timer_panel:h() / 2 - 3)
 end
 
+-- Lines 120-121
 function HUDObjectiveMain:_create_checkbox()
 end
 
+-- Lines 123-126
 function HUDObjectiveMain:show_timer()
 	self._timer_panel:set_right(self._object:w())
 	self._objective_text:set_right(self._object:w() - self._timer_panel:w() - HUDObjectiveSub.OBJECTIVE_TEXT_PADDING_RIGHT)
 end
 
+-- Lines 128-136
 function HUDObjectiveMain:hide_timer()
 	self._timer_panel:set_x(self._object:w() + HUDObjectiveSub.OBJECTIVE_TEXT_PADDING_RIGHT)
 
@@ -144,6 +150,7 @@ function HUDObjectiveMain:hide_timer()
 	end
 end
 
+-- Lines 138-173
 function HUDObjectiveMain:set_timer_value(current, total)
 	local remaining = total - current
 	local minutes_text = string.format("%02d", remaining / 60) .. ":" .. string.format("%02d", remaining % 60)

@@ -1,6 +1,7 @@
 RaidGUIControlScrollableArea = RaidGUIControlScrollableArea or class(RaidGUIControl)
 RaidGUIControlScrollableArea.SCROLLBAR_WIDTH = 5
 
+-- Lines 5-38
 function RaidGUIControlScrollableArea:init(parent, params)
 	RaidGUIControlScrollableArea.super.init(self, parent, params)
 
@@ -30,10 +31,12 @@ function RaidGUIControlScrollableArea:init(parent, params)
 	self._scrollbar = self._object:scrollbar(scrollbar_params)
 end
 
+-- Lines 40-42
 function RaidGUIControlScrollableArea:get_panel()
 	return self._inner_panel
 end
 
+-- Lines 44-69
 function RaidGUIControlScrollableArea:setup_scroll_area()
 	self._inner_panel:set_y(0)
 	self._inner_panel:fit_content_height()
@@ -61,6 +64,7 @@ function RaidGUIControlScrollableArea:setup_scroll_area()
 	end
 end
 
+-- Lines 72-79
 function RaidGUIControlScrollableArea:move_scrollbar_manually()
 	local new_y = self._inner_panel:y()
 	local ep_h = self._inner_panel:h()
@@ -72,6 +76,7 @@ function RaidGUIControlScrollableArea:move_scrollbar_manually()
 	self._scrollbar:set_y(scroll_y)
 end
 
+-- Lines 81-95
 function RaidGUIControlScrollableArea:mouse_scroll_up(o, button, x, y)
 	if self._scrolling_enabled then
 		local ep_h = self._inner_panel:h()
@@ -91,6 +96,7 @@ function RaidGUIControlScrollableArea:mouse_scroll_up(o, button, x, y)
 	return self._inner_panel:mouse_scroll_up(o, button, x, y)
 end
 
+-- Lines 97-113
 function RaidGUIControlScrollableArea:mouse_scroll_down(o, button, x, y)
 	if self._scrolling_enabled then
 		local ep_y = self._inner_panel:y()
@@ -112,6 +118,7 @@ function RaidGUIControlScrollableArea:mouse_scroll_down(o, button, x, y)
 	return self._inner_panel:mouse_scroll_down(o, button, x, y)
 end
 
+-- Lines 115-129
 function RaidGUIControlScrollableArea:scroll_up()
 	if self._scrolling_enabled then
 		local ep_h = self._inner_panel:h()
@@ -129,6 +136,7 @@ function RaidGUIControlScrollableArea:scroll_up()
 	end
 end
 
+-- Lines 131-147
 function RaidGUIControlScrollableArea:scroll_down()
 	if self._scrolling_enabled then
 		local ep_y = self._inner_panel:y()
@@ -148,8 +156,10 @@ function RaidGUIControlScrollableArea:scroll_down()
 	end
 end
 
+-- Lines 150-151
 function RaidGUIControlScrollableArea:highlight_on()
 end
 
+-- Lines 153-154
 function RaidGUIControlScrollableArea:highlight_off()
 end

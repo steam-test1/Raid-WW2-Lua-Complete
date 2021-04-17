@@ -4,6 +4,7 @@ ElementSpecialObjectiveGroup = ElementSpecialObjectiveGroup or class(CoreMission
 ElementSpecialObjectiveGroup.add_event_callback = ElementSpecialObjective.add_event_callback
 ElementSpecialObjectiveGroup.event = ElementSpecialObjective.event
 
+-- Lines 8-37
 function ElementSpecialObjectiveGroup:init(...)
 	ElementSpecialObjectiveGroup.super.init(self, ...)
 
@@ -36,12 +37,14 @@ function ElementSpecialObjectiveGroup:init(...)
 	end
 end
 
+-- Lines 41-44
 function ElementSpecialObjectiveGroup:clbk_verify_administration(unit)
 	Application:trace("ElementSpecialObjectiveGroup:clbk_verify_administration( unit )")
 
 	return ElementSpecialObjective.clbk_verify_administration(self, unit)
 end
 
+-- Lines 48-84
 function ElementSpecialObjectiveGroup:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -81,6 +84,7 @@ function ElementSpecialObjectiveGroup:on_executed(instigator)
 	ElementSpecialObjectiveGroup.super.on_executed(self, instigator)
 end
 
+-- Lines 88-96
 function ElementSpecialObjectiveGroup:operation_remove()
 	if self._registered_in_groupai then
 		self:_unregister_from_group_AI()
@@ -91,6 +95,7 @@ function ElementSpecialObjectiveGroup:operation_remove()
 	end
 end
 
+-- Lines 100-105
 function ElementSpecialObjectiveGroup:_unregister_from_group_AI()
 	if self._registered_in_groupai then
 		self._registered_in_groupai = nil
@@ -99,6 +104,7 @@ function ElementSpecialObjectiveGroup:_unregister_from_group_AI()
 	end
 end
 
+-- Lines 109-116
 function ElementSpecialObjectiveGroup:_register_to_group_AI()
 	if self._registered_in_groupai then
 		return
@@ -109,10 +115,12 @@ function ElementSpecialObjectiveGroup:_register_to_group_AI()
 	self._registered_in_groupai = true
 end
 
+-- Lines 120-122
 function ElementSpecialObjectiveGroup:_select_units_from_spawners()
 	return ElementSpecialObjective._select_units_from_spawners(self)
 end
 
+-- Lines 126-137
 function ElementSpecialObjectiveGroup:choose_followup_SO(unit, skip_element_ids)
 	if skip_element_ids and skip_element_ids[self._id] then
 		return
@@ -128,6 +136,7 @@ function ElementSpecialObjectiveGroup:choose_followup_SO(unit, skip_element_ids)
 	return res_element
 end
 
+-- Lines 141-166
 function ElementSpecialObjectiveGroup:get_as_followup(unit, skip_element_ids)
 	if skip_element_ids[self._id] then
 		return
@@ -154,6 +163,7 @@ function ElementSpecialObjectiveGroup:get_as_followup(unit, skip_element_ids)
 	return res_element, self._values.base_chance
 end
 
+-- Lines 170-178
 function ElementSpecialObjectiveGroup:_execute_random_SO(instigator)
 	local random_SO = ElementSpecialObjective.choose_followup_SO(self, instigator, {
 		[self._id] = true
@@ -168,6 +178,7 @@ function ElementSpecialObjectiveGroup:_execute_random_SO(instigator)
 	end
 end
 
+-- Lines 182-190
 function ElementSpecialObjectiveGroup:get_random_SO(receiver_unit)
 	local random_SO_element = ElementSpecialObjective.choose_followup_SO(self, receiver_unit, {
 		[self._id] = true
@@ -182,10 +193,12 @@ function ElementSpecialObjectiveGroup:get_random_SO(receiver_unit)
 	return objective
 end
 
+-- Lines 194-196
 function ElementSpecialObjectiveGroup:get_SO_spawn_group_types()
 	return self._values.allowed_group_types
 end
 
+-- Lines 200-219
 function ElementSpecialObjectiveGroup:get_grp_objective()
 	if not self._area then
 		local nav_seg_id = managers.navigation:get_nav_seg_from_pos(self._values.position, nil)
@@ -203,6 +216,7 @@ function ElementSpecialObjectiveGroup:get_grp_objective()
 	return grp_objective
 end
 
+-- Lines 223-229
 function ElementSpecialObjectiveGroup:clbk_objective_failed(group)
 	if managers.editor and managers.editor._stopping_simulation then
 		return

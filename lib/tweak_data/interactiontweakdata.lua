@@ -1,5 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
+-- Lines 3-5873
 function InteractionTweakData:init()
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -4402,6 +4403,7 @@ function InteractionTweakData:init()
 	}
 	local com_wheel_color = Color(1, 0.8, 0)
 
+	-- Lines 4339-4376
 	local function com_wheel_clbk(say_target_id, default_say_id, post_prefix, past_prefix)
 		local character = managers.network:session():local_peer()._character
 		local nationality = CriminalsManager.comm_wheel_callout_from_nationality(character)

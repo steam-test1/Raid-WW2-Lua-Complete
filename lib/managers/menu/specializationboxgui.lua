@@ -1,6 +1,7 @@
 SpecializationBoxGui = SpecializationBoxGui or class(TextBoxGui)
 SpecializationBoxGui.TEXT = ""
 
+-- Lines 5-11
 function SpecializationBoxGui:init(...)
 	local ws, title, text, content_data, config = ...
 	config.forced_h = 210
@@ -10,6 +11,7 @@ function SpecializationBoxGui:init(...)
 	SpecializationBoxGui.super.init(self, ...)
 end
 
+-- Lines 13-21
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -22,6 +24,7 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
+-- Lines 23-155
 function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local panel = SpecializationBoxGui.super._create_text_box(self, ws, title, text, content_data, config)
 	local xp_present = content_data.xp_present
@@ -193,6 +196,7 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local conversion_rate_number = math.round(xp_present / points_present)
 end
 
+-- Lines 157-164
 function SpecializationBoxGui:chk_close()
 	if not self._anim_data or self._anim_data.conversion_ended then
 		return true
@@ -203,6 +207,7 @@ function SpecializationBoxGui:chk_close()
 	return false
 end
 
+-- Lines 166-213
 function SpecializationBoxGui._update(o, self)
 	local init_done = false
 

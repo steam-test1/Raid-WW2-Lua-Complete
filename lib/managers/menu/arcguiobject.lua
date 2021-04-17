@@ -1,5 +1,6 @@
 ArcGuiObject = ArcGuiObject or class()
 
+-- Lines 3-15
 function ArcGuiObject:init(panel, config)
 	self._panel = panel
 	self._radius_inner = config.radius_inner or 10
@@ -12,6 +13,7 @@ function ArcGuiObject:init(panel, config)
 	self._circle = self._panel:polygon(config)
 end
 
+-- Lines 17-35
 function ArcGuiObject:_create_triangles(config)
 	local amount = 360 * (config.current or 1) / (config.total or 1)
 	local s = self._radius_outer
@@ -32,6 +34,7 @@ function ArcGuiObject:_create_triangles(config)
 	return triangles
 end
 
+-- Lines 37-41
 function ArcGuiObject:set_current(current)
 	local triangles = self:_create_triangles({
 		current = current,
@@ -42,18 +45,22 @@ function ArcGuiObject:set_current(current)
 	self._circle:add_triangles(triangles)
 end
 
+-- Lines 43-45
 function ArcGuiObject:set_position(x, y)
 	self._circle:set_position(x, y)
 end
 
+-- Lines 47-49
 function ArcGuiObject:set_layer(layer)
 	self._circle:set_layer(layer)
 end
 
+-- Lines 51-53
 function ArcGuiObject:layer()
 	return self._circle:layer()
 end
 
+-- Lines 55-57
 function ArcGuiObject:remove()
 	self._panel:remove(self._circle)
 end

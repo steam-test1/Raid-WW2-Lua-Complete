@@ -1,5 +1,6 @@
 EscortUnitElement = EscortUnitElement or class(MissionElement)
 
+-- Lines 3-20
 function EscortUnitElement:init(unit)
 	EscortUnitElement.super.init(self, unit)
 
@@ -18,12 +19,14 @@ function EscortUnitElement:init(unit)
 	table.insert(self._save_values, "usage_times")
 end
 
+-- Lines 22-25
 function EscortUnitElement:post_init()
 	self:set_break_point_icon_color(self._hed.break_point)
 
 	return EscortUnitElement.super.post_init(self)
 end
 
+-- Lines 27-41
 function EscortUnitElement:_raycast_get_type()
 	local unit_type, unit, id = nil
 	local ray = managers.editor:unit_by_raycast({
@@ -44,6 +47,7 @@ function EscortUnitElement:_raycast_get_type()
 	end
 end
 
+-- Lines 43-55
 function EscortUnitElement:_lmb()
 	local id, unit, unit_type = self:_raycast_get_type()
 
@@ -60,6 +64,7 @@ function EscortUnitElement:_lmb()
 	end
 end
 
+-- Lines 57-87
 function EscortUnitElement:test_element()
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test spawn unit without ready navigation data (AI-graph)", "Spawn", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -89,6 +94,7 @@ function EscortUnitElement:test_element()
 	test_unit:movement():action_request(action)
 end
 
+-- Lines 89-94
 function EscortUnitElement:stop_test_element()
 	for _, test_unit in ipairs(self._test_units) do
 		test_unit:set_slot(0)
@@ -97,10 +103,12 @@ function EscortUnitElement:stop_test_element()
 	self._test_units = {}
 end
 
+-- Lines 96-98
 function EscortUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
+-- Lines 100-116
 function EscortUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -123,9 +131,11 @@ function EscortUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "test_unit", test_units, "Select a unit to use when testing the SO")
 end
 
+-- Lines 118-119
 function EscortUnitElement:update_editing()
 end
 
+-- Lines 121-164
 function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 	EscortUnitElement.super.draw_links(self, t, dt, selected_unit, all_units)
 
@@ -200,10 +210,12 @@ function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 166-168
 function EscortUnitElement:set_break_point_icon_color(is_break_point)
 	self._icon_script.icon_bitmap:set_color(Color(is_break_point and "fffc4c4c" or self._iconcolor))
 end
 
+-- Lines 170-178
 function EscortUnitElement:set_element_data(data)
 	if data.value == "break_point" then
 		local is_break_point = data.ctrlr:get_value()
@@ -215,6 +227,7 @@ function EscortUnitElement:set_element_data(data)
 	return EscortUnitElement.super.set_element_data(self, data)
 end
 
+-- Lines 180-189
 function EscortUnitElement:_base_check_removed_units(all_units)
 	EscortUnitElement.super._base_check_removed_units(self, all_units)
 

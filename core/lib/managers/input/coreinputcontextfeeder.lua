@@ -3,6 +3,7 @@ core:import("CoreInputProvider")
 
 Feeder = Feeder or class()
 
+-- Lines 6-12
 function Feeder:init(engine_controller, input_layer_descriptions)
 	self._engine_controller = engine_controller
 	self._device_type = self._engine_controller:type()
@@ -10,10 +11,12 @@ function Feeder:init(engine_controller, input_layer_descriptions)
 	self._previous_state = {}
 end
 
+-- Lines 14-16
 function Feeder:input_provider()
 	return self._input_provider
 end
 
+-- Lines 18-52
 function Feeder:update(t, dt)
 	local target_input_context = self._input_provider:context()
 

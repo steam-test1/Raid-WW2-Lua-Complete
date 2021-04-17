@@ -10,6 +10,7 @@ local mrotation_set_zero = mrotation.set_zero
 local mrotation_mul = mrotation.multiply
 TransformCameraNode = TransformCameraNode or CoreClass.class()
 
+-- Lines 15-40
 function TransformCameraNode:init(settings)
 	self._child = nil
 	self._parent_camera = nil
@@ -27,6 +28,7 @@ function TransformCameraNode:init(settings)
 	self._settings = settings
 end
 
+-- Lines 42-92
 function TransformCameraNode.compile_settings(xml_node, settings)
 	if xml_node:has_parameter("name") then
 		settings.name = xml_node:parameter("name")
@@ -81,32 +83,39 @@ function TransformCameraNode.compile_settings(xml_node, settings)
 	end
 end
 
+-- Lines 94-97
 function TransformCameraNode:destroy()
 	self._child = nil
 	self._parent_camera = nil
 end
 
+-- Lines 99-101
 function TransformCameraNode:name()
 	return self._name
 end
 
+-- Lines 103-106
 function TransformCameraNode:set_parent(camera)
 	camera._child = self
 	self._parent_camera = camera
 end
 
+-- Lines 108-110
 function TransformCameraNode:child()
 	return self._child
 end
 
+-- Lines 113-115
 function TransformCameraNode:set_local_position(position)
 	self._local_position = position
 end
 
+-- Lines 117-119
 function TransformCameraNode:set_local_rotation(rotation)
 	self._local_rotation = rotation
 end
 
+-- Lines 121-132
 function TransformCameraNode:set_local_position_from_world_position(position)
 	local parent_camera = self._parent_camera
 
@@ -122,6 +131,7 @@ function TransformCameraNode:set_local_position_from_world_position(position)
 	end
 end
 
+-- Lines 134-142
 function TransformCameraNode:set_local_rotation_from_world_rotation(rotation)
 	local parent_camera = self._parent_camera
 
@@ -133,22 +143,27 @@ function TransformCameraNode:set_local_rotation_from_world_rotation(rotation)
 	end
 end
 
+-- Lines 144-146
 function TransformCameraNode:position()
 	return self._position
 end
 
+-- Lines 148-150
 function TransformCameraNode:rotation()
 	return self._rotation
 end
 
+-- Lines 152-154
 function TransformCameraNode:local_position()
 	return self._local_position
 end
 
+-- Lines 156-158
 function TransformCameraNode:local_rotation()
 	return self._local_rotation
 end
 
+-- Lines 161-172
 function TransformCameraNode:update(t, dt, in_data, out_data)
 	if self._pivot_position then
 		out_data:set_pivot_position(self._pivot_position)
@@ -164,6 +179,7 @@ function TransformCameraNode:update(t, dt, in_data, out_data)
 	out_data:set_dof(self._local_dof_amount, self._local_dof_near_min, self._local_dof_near_max, self._local_dof_far_min, self._local_dof_far_max)
 end
 
+-- Lines 174-188
 function TransformCameraNode:debug_render(t, dt)
 	local x_pen = Draw:pen(Color(0.05, 1, 0, 0))
 	local y_pen = Draw:pen(Color(0.05, 0, 1, 0))
@@ -180,6 +196,7 @@ function TransformCameraNode:debug_render(t, dt)
 	brush:sphere(position, 1)
 end
 
+-- Lines 190-192
 function TransformCameraNode:parent_camera()
 	return self._parent_camera
 end

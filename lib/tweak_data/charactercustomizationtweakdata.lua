@@ -13,6 +13,7 @@ CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT = "units/vanilla/chara
 CharacterCustomizationTweakData.PART_LENGTH_SHORT = "length_short"
 CharacterCustomizationTweakData.PART_LENGTH_LONG = "length_long"
 
+-- Lines 21-31
 function CharacterCustomizationTweakData:init()
 	self:initialization()
 
@@ -44,6 +45,7 @@ function CharacterCustomizationTweakData:init()
 	}
 end
 
+-- Lines 33-1806
 function CharacterCustomizationTweakData:initialization()
 	self.customizations = {
 		american_default_head = {}
@@ -1746,6 +1748,7 @@ function CharacterCustomizationTweakData:initialization()
 	}
 end
 
+-- Lines 1808-1818
 function CharacterCustomizationTweakData:get_index_table(part_type)
 	local source_table = {}
 
@@ -1760,6 +1763,7 @@ function CharacterCustomizationTweakData:get_index_table(part_type)
 	return source_table
 end
 
+-- Lines 1820-1833
 function CharacterCustomizationTweakData:get_all_parts_indexed(part_type, nationality, owned)
 	local result = {}
 	local source_table = self:get_index_table(part_type)
@@ -1774,6 +1778,7 @@ function CharacterCustomizationTweakData:get_all_parts_indexed(part_type, nation
 	return result
 end
 
+-- Lines 1835-1848
 function CharacterCustomizationTweakData:get_all_parts(part_type)
 	local result = {}
 	local source_table = self:get_index_table(part_type)
@@ -1788,6 +1793,7 @@ function CharacterCustomizationTweakData:get_all_parts(part_type)
 	return result
 end
 
+-- Lines 1851-1863
 function CharacterCustomizationTweakData:get_defaults()
 	local customizations = {}
 
@@ -1800,6 +1806,7 @@ function CharacterCustomizationTweakData:get_defaults()
 	return customizations
 end
 
+-- Lines 1866-1876
 function CharacterCustomizationTweakData:get_reward_loot_by_rarity(rarity)
 	local customizations = {}
 
@@ -1812,6 +1819,7 @@ function CharacterCustomizationTweakData:get_reward_loot_by_rarity(rarity)
 	return customizations
 end
 
+-- Lines 1879-1887
 function CharacterCustomizationTweakData:get_droppable_customizations()
 	local customizations = {}
 
@@ -1824,6 +1832,7 @@ function CharacterCustomizationTweakData:get_droppable_customizations()
 	return customizations
 end
 
+-- Lines 1890-1908
 function CharacterCustomizationTweakData:_is_customization_droppable(customization)
 	if not customization.droppable then
 		return false
@@ -1840,6 +1849,7 @@ function CharacterCustomizationTweakData:_is_customization_droppable(customizati
 	return true
 end
 
+-- Lines 1911-1925
 function CharacterCustomizationTweakData:_is_customization_default(key, customization)
 	if customization.droppable or customization.gold_price then
 		return false

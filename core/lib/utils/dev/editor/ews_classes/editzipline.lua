@@ -3,6 +3,7 @@ core:import("CoreEws")
 
 EditZipLine = EditZipLine or class(EditUnitBase)
 
+-- Lines 6-87
 function EditZipLine:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "ZipLine",
@@ -97,6 +98,7 @@ function EditZipLine:init(editor)
 	panel:set_enabled(false)
 end
 
+-- Lines 89-95
 function EditZipLine:update(t, dt)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:zipline() then
@@ -105,6 +107,7 @@ function EditZipLine:update(t, dt)
 	end
 end
 
+-- Lines 97-103
 function EditZipLine:_use_camera_pos()
 	for _, unit in ipairs(self._selected_units) do
 		if unit:zipline() then
@@ -113,6 +116,7 @@ function EditZipLine:_use_camera_pos()
 	end
 end
 
+-- Lines 105-111
 function EditZipLine:_use_camera_pos_for_line()
 	for _, unit in ipairs(self._selected_units) do
 		if unit:zipline() then
@@ -121,6 +125,7 @@ function EditZipLine:_use_camera_pos_for_line()
 	end
 end
 
+-- Lines 113-119
 function EditZipLine:_update_speed(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:zipline() then
@@ -129,6 +134,7 @@ function EditZipLine:_update_speed(params)
 	end
 end
 
+-- Lines 121-127
 function EditZipLine:_update_slack(params)
 	for _, unit in ipairs(self._selected_units) do
 		if unit:zipline() then
@@ -137,6 +143,7 @@ function EditZipLine:_update_slack(params)
 	end
 end
 
+-- Lines 129-137
 function EditZipLine:_change_type()
 	for _, unit in ipairs(self._selected_units) do
 		if alive(unit) and unit:zipline() then
@@ -147,6 +154,7 @@ function EditZipLine:_change_type()
 	end
 end
 
+-- Lines 139-145
 function EditZipLine:set_ai_ignores_bag()
 	for _, unit in ipairs(self._selected_units) do
 		if alive(unit) and unit:zipline() then
@@ -155,6 +163,7 @@ function EditZipLine:set_ai_ignores_bag()
 	end
 end
 
+-- Lines 147-169
 function EditZipLine:is_editable(unit, units)
 	if alive(unit) and unit:zipline() then
 		self._reference_unit = unit

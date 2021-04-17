@@ -2,6 +2,7 @@ require("lib/tweak_data/group_ai/GroupAIRaidTweakData")
 
 GroupAITweakData = GroupAITweakData or class()
 
+-- Lines 6-32
 function GroupAITweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -30,6 +31,7 @@ function GroupAITweakData:init(tweak_data)
 	self:_init_enemy_spawn_groups(difficulty_index)
 end
 
+-- Lines 38-121
 function GroupAITweakData:_init_chatter_data()
 	self.enemy_chatter = {
 		spotted_player = {
@@ -183,6 +185,7 @@ local access_type_all = {
 	walk = true
 }
 
+-- Lines 128-159
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.special_unit_spawn_limits = {
@@ -211,6 +214,7 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 	self:_init_unit_categories_german(difficulty_index)
 end
 
+-- Lines 162-518
 function GroupAITweakData:_init_unit_categories_german(difficulty_index)
 	self.unit_categories.german = {
 		german_grunt_light = {
@@ -508,6 +512,7 @@ function GroupAITweakData:_init_unit_categories_german(difficulty_index)
 	}
 end
 
+-- Lines 554-600
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		ranged_fire = {
@@ -618,6 +623,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self:_init_enemy_spawn_groups_german(difficulty_index)
 end
 
+-- Lines 603-1187
 function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	self.enemy_spawn_groups.german = {}
 
@@ -2303,6 +2309,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	}
 end
 
+-- Lines 1191-1260
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.difficulty_curve_points = {
@@ -2362,6 +2369,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	end
 end
 
+-- Lines 1269-1275
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -2371,6 +2379,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
+-- Lines 1279-1303
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.phalanx = {

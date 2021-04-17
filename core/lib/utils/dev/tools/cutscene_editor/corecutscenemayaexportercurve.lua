@@ -22,6 +22,7 @@ for _, char in ipairs({
 	table.insert(VALID_MAYA_NODE_TYPES, "animCurveU" .. char)
 end
 
+-- Lines 18-27
 function CoreCutsceneMayaExporterCurve:init(maya_node_type, node_name, attribute_name)
 	self.__samples = {}
 	self.__sample_count = 0
@@ -33,6 +34,7 @@ function CoreCutsceneMayaExporterCurve:init(maya_node_type, node_name, attribute
 	assert(string.match(self.__node_name, "^%l"), string.format("Unsupported node name \"%s\". Must start with a lower-case letter.", self.__node_name))
 end
 
+-- Lines 29-41
 function CoreCutsceneMayaExporterCurve:add_sample(frame, value)
 	if frame ~= (self.__previous_frame or -1) + 1 then
 		self.__previous_value = nil
@@ -47,10 +49,12 @@ function CoreCutsceneMayaExporterCurve:add_sample(frame, value)
 	self.__previous_frame = frame
 end
 
+-- Lines 43-45
 function CoreCutsceneMayaExporterCurve:last_added_value()
 	return self.__previous_value
 end
 
+-- Lines 47-73
 function CoreCutsceneMayaExporterCurve:write(file)
 	if self.__sample_count >= 1 then
 		local curve_name = string.gsub(self.__node_name, "[:|]", "_") .. "_" .. self.__attribute_name
@@ -80,6 +84,7 @@ function CoreCutsceneMayaExporterCurve:write(file)
 	end
 end
 
+-- Lines 80-86
 function CoreCutsceneMayaExporterCurveSet:init(target_object_name)
 	self.__curves = {}
 
@@ -89,6 +94,7 @@ function CoreCutsceneMayaExporterCurveSet:init(target_object_name)
 	end
 end
 
+-- Lines 88-102
 function CoreCutsceneMayaExporterCurveSet:add_sample(frame, object)
 	local position = object:local_position()
 	local rotation = object:new_local_rotation()
@@ -105,6 +111,7 @@ function CoreCutsceneMayaExporterCurveSet:add_sample(frame, object)
 	end
 end
 
+-- Lines 104-108
 function CoreCutsceneMayaExporterCurveSet:write(file)
 	for _, curve in pairs(self.__curves) do
 		curve:write(file)

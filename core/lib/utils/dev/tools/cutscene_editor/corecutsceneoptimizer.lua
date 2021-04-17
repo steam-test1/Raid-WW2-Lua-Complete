@@ -4,6 +4,7 @@ require("core/lib/managers/cutscene/CoreCutscene")
 CoreCutsceneOptimizer = CoreCutsceneOptimizer or class(CoreCutsceneExporter)
 CoreCutsceneOptimizer.ANIMATION_BLOB_PART_DURATION = 5
 
+-- Lines 7-10
 function CoreCutsceneOptimizer:init()
 	self.super.init(self)
 
@@ -14,6 +15,7 @@ function CoreCutsceneOptimizer:init()
 	}
 end
 
+-- Lines 12-21
 function CoreCutsceneOptimizer:export_to_database(optimized_cutscene_path)
 	self:_assert_is_valid()
 
@@ -27,12 +29,14 @@ function CoreCutsceneOptimizer:export_to_database(optimized_cutscene_path)
 	managers.database:recompile()
 end
 
+-- Lines 23-26
 function CoreCutsceneOptimizer:compression_enabled(platform)
 	assert(self.__compression_enabled[platform] ~= nil, "Unsupported platform \"" .. tostring(platform) .. "\"")
 
 	return self.__compression_enabled[platform]
 end
 
+-- Lines 28-32
 function CoreCutsceneOptimizer:set_compression_enabled(platform, should_compress)
 	assert(self.__compression_enabled[platform] ~= nil, "Unsupported platform \"" .. tostring(platform) .. "\"")
 	assert(type(should_compress) == "boolean", "Expected boolean")
@@ -40,6 +44,7 @@ function CoreCutsceneOptimizer:set_compression_enabled(platform, should_compress
 	self.__compression_enabled[platform] = should_compress
 end
 
+-- Lines 34-85
 function CoreCutsceneOptimizer:_write_cutscene_xml(path, animation_blobs)
 	local cutscene_node = Node("cutscene")
 
@@ -59,6 +64,7 @@ function CoreCutsceneOptimizer:_write_cutscene_xml(path, animation_blobs)
 	if not table.empty(self:_all_controlled_unit_names(true)) then
 		local controlled_units_node = cutscene_node:make_child("controlled_units")
 
+		-- Lines 51-61
 		local function add_controlled_unit(unit_type, unit_name)
 			local unit_node = controlled_units_node:make_child("unit")
 
@@ -98,6 +104,7 @@ function CoreCutsceneOptimizer:_write_cutscene_xml(path, animation_blobs)
 	managers.database:save_node(cutscene_node, path)
 end
 
+-- Lines 87-116
 function CoreCutsceneOptimizer:_add_unit_visibility_keys(keys_node)
 	local unit_names = self:_all_controlled_unit_names()
 	local was_visible = {}
@@ -122,6 +129,7 @@ function CoreCutsceneOptimizer:_add_unit_visibility_keys(keys_node)
 				if visible ~= was_visible[unit_name] then
 					local visibility_key = CoreCutsceneKey:create(CoreUnitVisibleCutsceneKey.ELEMENT_NAME)
 
+					-- Lines 106-106
 					function visibility_key.is_valid_unit_name()
 						return true
 					end
@@ -138,6 +146,7 @@ function CoreCutsceneOptimizer:_add_unit_visibility_keys(keys_node)
 	end
 end
 
+-- Lines 118-132
 function CoreCutsceneOptimizer:_add_discontinuity_keys(keys_node)
 	local previous_clip = nil
 
@@ -159,6 +168,7 @@ function CoreCutsceneOptimizer:_add_discontinuity_keys(keys_node)
 	end
 end
 
+-- Lines 134-152
 function CoreCutsceneOptimizer:_write_cutscene_unit_xml(path)
 	local unit_node = Node("unit")
 
@@ -169,6 +179,7 @@ function CoreCutsceneOptimizer:_write_cutscene_unit_xml(path)
 
 	model_node:set_parameter("file", "locator")
 
+	-- Lines 142-146
 	local function add_extension_node(name, class)
 		local extension_node = unit_node:make_child("extension")
 
@@ -181,6 +192,7 @@ function CoreCutsceneOptimizer:_write_cutscene_unit_xml(path)
 	managers.database:save_node(unit_node, path)
 end
 
+-- Lines 154-179
 function CoreCutsceneOptimizer:_create_merged_animation()
 	local unit_animation_map = {}
 
@@ -206,6 +218,7 @@ function CoreCutsceneOptimizer:_create_merged_animation()
 	return merged_animation
 end
 
+-- Lines 181-206
 function CoreCutsceneOptimizer:_write_animation_blobs(full_animation, part_path_pattern)
 	local animation_blob_names = {}
 	local default_settings = {
@@ -237,6 +250,7 @@ function CoreCutsceneOptimizer:_write_animation_blobs(full_animation, part_path_
 	return animation_blob_names
 end
 
+-- Lines 208-230
 function CoreCutsceneOptimizer:_write_animation_part(path, animation, compressed_animation)
 	local platforms_to_export = {}
 	local base_path = path
@@ -261,9 +275,11 @@ function CoreCutsceneOptimizer:_write_animation_part(path, animation, compressed
 	end
 end
 
+-- Lines 232-241
 function CoreCutsceneOptimizer:_problem_map()
 	local problem_map = self.super._problem_map(self)
 
+	-- Lines 234-234
 	local function add_problem(problem)
 		problem_map[problem] = true
 	end

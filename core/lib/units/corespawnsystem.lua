@@ -1,5 +1,6 @@
 CoreAiArea = CoreAiArea or class()
 
+-- Lines 2-10
 function CoreAiArea:init(unit, surface_name, obj_name, xml)
 	self._unit = unit
 	self._spawn_point_index = 1
@@ -13,6 +14,7 @@ function CoreAiArea:init(unit, surface_name, obj_name, xml)
 	self:find_spawnpoints(xml)
 end
 
+-- Lines 12-33
 function CoreAiArea:spawn(unit_name, spawn_point_name)
 	local spawn_point = nil
 
@@ -40,6 +42,7 @@ function CoreAiArea:spawn(unit_name, spawn_point_name)
 	end
 end
 
+-- Lines 35-45
 function CoreAiArea:find_spawnpoints(xml)
 	for point in xml:children() do
 		if point:name() == "ai_spawn_point" and point:parameter("name") ~= "" then
@@ -55,6 +58,7 @@ end
 
 CoreSpawnSystem = CoreSpawnSystem or class()
 
+-- Lines 48-59
 function CoreSpawnSystem:init(unit)
 	self._unit = unit
 	self._post_init = false
@@ -64,6 +68,7 @@ function CoreSpawnSystem:init(unit)
 	self:read_spawn_xml()
 end
 
+-- Lines 61-73
 function CoreSpawnSystem:get_linked_unit_list()
 	local linked_unit_list = {}
 
@@ -78,6 +83,7 @@ function CoreSpawnSystem:get_linked_unit_list()
 	return linked_unit_list
 end
 
+-- Lines 75-86
 function CoreSpawnSystem:destroy()
 	if self._linked_unit_map then
 		for _, unit_map in pairs(self._linked_unit_map) do
@@ -91,6 +97,7 @@ function CoreSpawnSystem:destroy()
 	end
 end
 
+-- Lines 88-99
 function CoreSpawnSystem:update(unit, t, dt)
 	if self._delayed_var_and_cb_init then
 		for lv2, unit in pairs(self._delayed_var_and_cb_init) do
@@ -105,6 +112,7 @@ function CoreSpawnSystem:update(unit, t, dt)
 	self._post_init = true
 end
 
+-- Lines 101-111
 function CoreSpawnSystem:get_child_unit(socket_name, unit_name)
 	if self._linked_unit_map then
 		local unit_map = self._linked_unit_map[socket_name]
@@ -117,6 +125,7 @@ function CoreSpawnSystem:get_child_unit(socket_name, unit_name)
 	return nil
 end
 
+-- Lines 113-118
 function CoreSpawnSystem:init_ai_area(name, xml)
 	local object = self._unit:get_object(Idstring(name))
 
@@ -125,6 +134,7 @@ function CoreSpawnSystem:init_ai_area(name, xml)
 	end
 end
 
+-- Lines 120-128
 function CoreSpawnSystem:find_spawn_node(xml)
 	for spawn_node in xml:children() do
 		if spawn_node:name() == "spawn" then
@@ -137,6 +147,7 @@ function CoreSpawnSystem:find_spawn_node(xml)
 	Application:error("[CoreSpawnSystem] Could not find spawn node on: " .. self._unit:name())
 end
 
+-- Lines 130-137
 function CoreSpawnSystem:set_var_and_cb_delayed(new_unit, lv2)
 	if not self._post_init then
 		self._delayed_var_and_cb_init = self._delayed_var_and_cb_init or {}
@@ -146,6 +157,7 @@ function CoreSpawnSystem:set_var_and_cb_delayed(new_unit, lv2)
 	end
 end
 
+-- Lines 139-179
 function CoreSpawnSystem:set_var_and_cb(new_unit, lv2)
 	for lv3 in lv2:children() do
 		if lv3:name() == "variables" and lv3:parameter("extension") ~= "" then
@@ -190,6 +202,7 @@ function CoreSpawnSystem:set_var_and_cb(new_unit, lv2)
 	end
 end
 
+-- Lines 181-233
 function CoreSpawnSystem:read_spawn_xml()
 	local xml_data = self:find_spawn_node(PackageManager:unit_data(self._unit:name():id(), ""):model_script_data())
 
@@ -244,6 +257,7 @@ function CoreSpawnSystem:read_spawn_xml()
 	end
 end
 
+-- Lines 235-292
 function CoreSpawnSystem:setup_unit(lv1, lv2)
 	local lv1_name = lv1:parameter("name")
 	local lv2_name = lv2:parameter("name")
@@ -304,6 +318,7 @@ function CoreSpawnSystem:setup_unit(lv1, lv2)
 	self:set_var_and_cb_delayed(new_unit, lv2)
 end
 
+-- Lines 295-320
 function CoreSpawnSystem:set_unit_enabled(socket_name, unit_name, enabled)
 	local unit_map = self._enabled_unit_map[socket_name]
 
@@ -331,6 +346,7 @@ function CoreSpawnSystem:set_unit_enabled(socket_name, unit_name, enabled)
 	end
 end
 
+-- Lines 322-340
 function CoreSpawnSystem:get_socket_nodes(socket_name, unit_name)
 	local xml_data = self:find_spawn_node(PackageManager:unit_data(self._unit:name():id(), ""):model_script_data())
 

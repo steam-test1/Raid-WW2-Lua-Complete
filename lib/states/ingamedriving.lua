@@ -2,10 +2,12 @@ require("lib/states/GameState")
 
 IngameDriving = IngameDriving or class(IngamePlayerBaseState)
 
+-- Lines 5-7
 function IngameDriving:init(game_state_machine)
 	IngameDriving.super.init(self, "ingame_driving", game_state_machine)
 end
 
+-- Lines 10-23
 function IngameDriving:_update_driving_hud()
 	local vehicle = managers.player:get_vehicle().vehicle_unit:vehicle()
 	local vehicle_state = vehicle:get_state()
@@ -22,6 +24,7 @@ function IngameDriving:_update_driving_hud()
 	managers.hud:set_driving_vehicle_state(speed, rpm, gear)
 end
 
+-- Lines 25-53
 function IngameDriving:at_enter(old_state, ...)
 	print("IngameDriving:at_enter()")
 
@@ -51,6 +54,7 @@ function IngameDriving:at_enter(old_state, ...)
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 56-64
 function IngameDriving:at_exit()
 	local player = managers.player:player_unit()
 

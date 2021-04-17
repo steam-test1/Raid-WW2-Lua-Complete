@@ -3,14 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementRopeOperator = ElementRopeOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 8-10
 function ElementRopeOperator:init(...)
 	ElementRopeOperator.super.init(self, ...)
 end
 
+-- Lines 12-14
 function ElementRopeOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 16-31
 function ElementRopeOperator:on_executed(instigator)
 	if not self._values.enabled or not self._values.rope_unit_id then
 		return
@@ -29,6 +32,7 @@ function ElementRopeOperator:on_executed(instigator)
 	ElementRopeOperator.super.on_executed(self, instigator)
 end
 
+-- Lines 33-52
 function ElementRopeOperator:_attach_rope(rope_unit)
 	local dragged_unit = rope_unit
 	local steering_joint = rope_unit:get_object(Idstring("anim_rope_start"))
@@ -47,6 +51,7 @@ function ElementRopeOperator:_attach_rope(rope_unit)
 	steering_joint:set_rotation(target_rotation)
 end
 
+-- Lines 54-59
 function ElementRopeOperator:_detach_rope(rope_unit)
 	local dragged_unit = rope_unit
 	local steering_body = rope_unit:body("body_collision_start")
@@ -56,10 +61,12 @@ end
 
 ElementRopeTrigger = ElementRopeTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 65-67
 function ElementRopeTrigger:init(...)
 	ElementRopeTrigger.super.init(self, ...)
 end
 
+-- Lines 69-74
 function ElementRopeTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -68,9 +75,11 @@ function ElementRopeTrigger:on_script_activated()
 	end
 end
 
+-- Lines 76-78
 function ElementRopeTrigger:client_on_executed(...)
 end
 
+-- Lines 80-86
 function ElementRopeTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

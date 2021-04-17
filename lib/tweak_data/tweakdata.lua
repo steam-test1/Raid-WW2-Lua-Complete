@@ -49,6 +49,7 @@ TweakData.DIFFICULTY_2 = 2
 TweakData.DIFFICULTY_3 = 3
 TweakData.DIFFICULTY_4 = 4
 
+-- Lines 57-65
 function TweakData:digest_tweak_data()
 	self.digested_tables = {
 		"experience_manager"
@@ -59,6 +60,7 @@ function TweakData:digest_tweak_data()
 	end
 end
 
+-- Lines 67-76
 function TweakData:digest_recursive(key, parent)
 	local value = parent and parent[key] or key
 
@@ -71,6 +73,7 @@ function TweakData:digest_recursive(key, parent)
 	end
 end
 
+-- Lines 78-97
 function TweakData:get_value(...)
 	local arg = {
 		...
@@ -96,6 +99,7 @@ function TweakData:get_value(...)
 	return value
 end
 
+-- Lines 99-112
 function TweakData:get_raw_value(...)
 	local arg = {
 		...
@@ -116,6 +120,7 @@ function TweakData:get_raw_value(...)
 	return value
 end
 
+-- Lines 114-124
 function TweakData:set_mode()
 	if not Global.game_settings then
 		return
@@ -128,14 +133,17 @@ function TweakData:set_mode()
 	end
 end
 
+-- Lines 126-128
 function TweakData:_set_singleplayer()
 	self.player:_set_singleplayer()
 end
 
+-- Lines 130-132
 function TweakData:_set_multiplayer()
 	self.player:_set_multiplayer()
 end
 
+-- Lines 134-152
 function TweakData:set_difficulty(value)
 	if not value then
 		debug_pause("[TweakData:set_difficulty] is nil")
@@ -158,6 +166,7 @@ function TweakData:set_difficulty(value)
 	end
 end
 
+-- Lines 154-161
 function TweakData:_set_difficulty_1()
 	self.player:_set_difficulty_1()
 	self.character:_set_difficulty_1()
@@ -168,6 +177,7 @@ function TweakData:_set_difficulty_1()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_1
 end
 
+-- Lines 163-170
 function TweakData:_set_difficulty_2()
 	self.player:_set_difficulty_2()
 	self.character:_set_difficulty_2()
@@ -178,6 +188,7 @@ function TweakData:_set_difficulty_2()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_2
 end
 
+-- Lines 172-179
 function TweakData:_set_difficulty_3()
 	self.player:_set_difficulty_3()
 	self.character:_set_difficulty_3()
@@ -188,6 +199,7 @@ function TweakData:_set_difficulty_3()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_3
 end
 
+-- Lines 181-188
 function TweakData:_set_difficulty_4()
 	self.player:_set_difficulty_4()
 	self.character:_set_difficulty_4()
@@ -198,40 +210,49 @@ function TweakData:_set_difficulty_4()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_4
 end
 
+-- Lines 190-192
 function TweakData:number_of_difficulties()
 	return #self.difficulties
 end
 
+-- Lines 194-196
 function TweakData:difficulty_to_index(difficulty)
 	return table.index_of(self.difficulties, difficulty)
 end
 
+-- Lines 198-200
 function TweakData:index_to_difficulty(index)
 	return self.difficulties[index]
 end
 
+-- Lines 202-205
 function TweakData:get_difficulty_string_name_from_index(index)
 	local difficulty_index_name = self:index_to_difficulty(index)
 
 	return self.difficulty_name_ids[difficulty_index_name]
 end
 
+-- Lines 207-209
 function TweakData:permission_to_index(permission)
 	return table.index_of(self.permissions, permission)
 end
 
+-- Lines 211-213
 function TweakData:index_to_permission(index)
 	return self.permissions[index]
 end
 
+-- Lines 215-217
 function TweakData:server_state_to_index(state)
 	return table.index_of(self.server_states, state)
 end
 
+-- Lines 219-221
 function TweakData:index_to_server_state(index)
 	return self.server_states[index]
 end
 
+-- Lines 224-233
 function TweakData:menu_sync_state_to_index(state)
 	if not state then
 		return false
@@ -244,10 +265,12 @@ function TweakData:menu_sync_state_to_index(state)
 	end
 end
 
+-- Lines 234-236
 function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
+-- Lines 238-1156
 function TweakData:init()
 	self.difficulties = {
 		"difficulty_1",
@@ -1133,10 +1156,12 @@ You've reached the end of our PAX EAST demo.
 	self:digest_tweak_data()
 end
 
+-- Lines 1160-1162
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
+-- Lines 1166-1174
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -1147,6 +1172,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
+-- Lines 1178-1181
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -1156,6 +1182,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
+-- Lines 1185-1194
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -1168,6 +1195,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
+-- Lines 1198-1370
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -1352,6 +1380,7 @@ function TweakData:set_scale()
 	}
 end
 
+-- Lines 1372-1539
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -1459,6 +1488,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
+-- Lines 1541-1626
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -1542,6 +1572,7 @@ function TweakData:set_hud_values()
 	self.menu.default_changeable_text_color = self.hud.accent_orange
 end
 
+-- Lines 1629-1633
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -1559,6 +1590,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
+-- Lines 1650-1855
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

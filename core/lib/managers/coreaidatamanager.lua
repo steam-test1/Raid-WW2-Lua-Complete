@@ -3,16 +3,19 @@ core:import("CoreTable")
 
 AiDataManager = AiDataManager or class()
 
+-- Lines 7-9
 function AiDataManager:init()
 	self:_setup()
 end
 
+-- Lines 11-14
 function AiDataManager:_setup()
 	self._data = {
 		patrol_paths = {}
 	}
 end
 
+-- Lines 16-24
 function AiDataManager:add_patrol_path(name)
 	if self._data.patrol_paths[name] then
 		Application:error("Patrol path with name " .. name .. " already exists!")
@@ -27,6 +30,7 @@ function AiDataManager:add_patrol_path(name)
 	return true
 end
 
+-- Lines 26-34
 function AiDataManager:remove_patrol_path(name)
 	if not self._data.patrol_paths[name] then
 		Application:error("Patrol path with name " .. name .. " doesn't exist!")
@@ -39,6 +43,7 @@ function AiDataManager:remove_patrol_path(name)
 	return true
 end
 
+-- Lines 36-50
 function AiDataManager:add_patrol_point(name, unit)
 	if not self._data.patrol_paths[name] then
 		Application:error("Patrol path with name " .. name .. " doesn't exist!")
@@ -56,6 +61,7 @@ function AiDataManager:add_patrol_point(name, unit)
 	table.insert(self._data.patrol_paths[name].points, t)
 end
 
+-- Lines 52-61
 function AiDataManager:delete_point_by_unit(unit)
 	for name, path in pairs(self._data.patrol_paths) do
 		for i, point in ipairs(path.points) do
@@ -68,6 +74,7 @@ function AiDataManager:delete_point_by_unit(unit)
 	end
 end
 
+-- Lines 63-71
 function AiDataManager:patrol_path_by_unit(unit)
 	for name, path in pairs(self._data.patrol_paths) do
 		for i, point in ipairs(path.points) do
@@ -78,6 +85,7 @@ function AiDataManager:patrol_path_by_unit(unit)
 	end
 end
 
+-- Lines 73-81
 function AiDataManager:patrol_point_index_by_unit(unit)
 	for name, path in pairs(self._data.patrol_paths) do
 		for i, point in ipairs(path.points) do
@@ -88,14 +96,17 @@ function AiDataManager:patrol_point_index_by_unit(unit)
 	end
 end
 
+-- Lines 83-85
 function AiDataManager:patrol_path(name)
 	return self._data.patrol_paths[name]
 end
 
+-- Lines 87-89
 function AiDataManager:all_patrol_paths()
 	return self._data.patrol_paths
 end
 
+-- Lines 91-98
 function AiDataManager:patrol_path_names()
 	local t = {}
 
@@ -108,6 +119,7 @@ function AiDataManager:patrol_path_names()
 	return t
 end
 
+-- Lines 101-103
 function AiDataManager:destination_path(position, rotation)
 	return {
 		points = {
@@ -119,10 +131,12 @@ function AiDataManager:destination_path(position, rotation)
 	}
 end
 
+-- Lines 105-107
 function AiDataManager:clear()
 	self:_setup()
 end
 
+-- Lines 109-122
 function AiDataManager:save_data()
 	local t = CoreTable.deep_clone(self._data)
 
@@ -137,6 +151,7 @@ function AiDataManager:save_data()
 	return t
 end
 
+-- Lines 124-130
 function AiDataManager:load_data(data)
 	if not data then
 		return
@@ -145,6 +160,7 @@ function AiDataManager:load_data(data)
 	self._data = data
 end
 
+-- Lines 132-142
 function AiDataManager:load_units(units)
 	for _, unit in ipairs(units) do
 		for name, path in pairs(self._data.patrol_paths) do

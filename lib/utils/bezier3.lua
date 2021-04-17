@@ -3,22 +3,27 @@ local min = math.min
 local max = math.max
 local sqrt = math.sqrt
 
+-- Lines 9-11
 local function value(t, x1, x2, x3, x4)
 	return (1 - t)^3 * x1 + 3 * (1 - t)^2 * t * x2 + 3 * (1 - t) * t^2 * x3 + t^3 * x4
 end
 
+-- Lines 14-16
 local function coefficients(x1, x2, x3, x4)
 	return x4 - x1 + 3 * (x2 - x3), 3 * x1 - 6 * x2 + 3 * x3, 3 * (x2 - x1), x1
 end
 
+-- Lines 19-21
 local function value_for(t, a, b, c, d)
 	return d + t * (c + t * (b + t * a))
 end
 
+-- Lines 24-26
 local function derivative1_for(t, a, b, c)
 	return c + t * (2 * b + 3 * a * t)
 end
 
+-- Lines 29-43
 local function derivative1_roots(x1, x2, x3, x4)
 	local base = -x1 * x3 + x1 * x4 + x2^2 - x2 * x3 - x2 * x4 + x3^2
 	local denom = -x1 + 3 * x2 - 3 * x3 + x4
@@ -36,6 +41,7 @@ local function derivative1_roots(x1, x2, x3, x4)
 	end
 end
 
+-- Lines 46-63
 local function minmax(x1, x2, x3, x4)
 	local minx = min(x1, x4)
 	local maxx = max(x1, x4)
@@ -56,6 +62,7 @@ local function minmax(x1, x2, x3, x4)
 	return minx, maxx
 end
 
+-- Lines 66-71
 local function bounding_box(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4)
 	local minx, maxx = minmax(x1, x2, x3, x4)
 	local miny, maxy = minmax(y1, y2, y3, y4)
@@ -64,16 +71,19 @@ local function bounding_box(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4)
 	return minx, miny, minz, maxx - minx, maxy - miny, maxz - minz
 end
 
+-- Lines 75-80
 local function to_bezier2(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4)
 	return -0.25 * x1 + 0.75 * x2 + 0.75 * x3 - 0.25 * x4, -0.25 * y1 + 0.75 * y2 + 0.75 * y3 - 0.25 * y4, -0.25 * z1 + 0.75 * z2 + 0.75 * z3 - 0.25 * z4
 end
 
+-- Lines 84-89
 local function point(t, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4)
 	return value(t, x1, x2, x3, x4), value(t, y1, y2, y3, y4), value(t, z1, z2, z3, z4)
 end
 
 local length = length_function(coefficients, derivative1_for)
 
+-- Lines 95-118
 local function split(t, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4)
 	local mt = 1 - t
 	local x12 = x1 * mt + x2 * t
@@ -100,6 +110,7 @@ end
 
 local distance2 = require("lib/utils/Bezier3Point").distance2
 
+-- Lines 128-130
 local function distance3(x1, y1, z1, x2, y2, z2)
 	return (x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2
 end
@@ -113,6 +124,7 @@ local curve_angle_tolerance_epsilon = 0.01
 local curve_recursion_limit = 32
 local recursive_bezier = nil
 
+-- Lines 143-153
 function interpolate(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, m_approximation_scale, m_angle_tolerance, m_cusp_limit)
 	m_approximation_scale = m_approximation_scale or 1
 	m_angle_tolerance = m_angle_tolerance and radians(m_angle_tolerance) or 0
@@ -123,14 +135,17 @@ function interpolate(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, m_ap
 	write("line", x4, y4, z4)
 end
 
+-- Lines 155-157
 function dot(x, y)
 	return x[1] * y[1] + x[2] * y[2] + x[3] * y[3]
 end
 
+-- Lines 159-161
 function magnitude(x)
 	return sqrt(x[1]^2 + x[2]^2 + x[3]^2)
 end
 
+-- Lines 163-356
 function recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, level, m_distance_tolerance2, m_angle_tolerance, m_cusp_limit)
 	if curve_recursion_limit < level then
 		return

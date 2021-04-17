@@ -2,10 +2,12 @@ require("lib/states/GameState")
 
 IngameFatalState = IngameFatalState or class(IngamePlayerBaseState)
 
+-- Lines 5-7
 function IngameFatalState:init(game_state_machine)
 	IngameFatalState.super.init(self, "ingame_fatal", game_state_machine)
 end
 
+-- Lines 9-15
 function IngameFatalState.on_local_player_dead()
 	local peer_id = managers.network:session():local_peer():id()
 	local player = managers.player:player_unit()
@@ -14,6 +16,7 @@ function IngameFatalState.on_local_player_dead()
 	managers.groupai:state():on_player_criminal_death(peer_id)
 end
 
+-- Lines 17-37
 function IngameFatalState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -35,6 +38,7 @@ function IngameFatalState:update(t, dt)
 	end
 end
 
+-- Lines 40-61
 function IngameFatalState:at_enter()
 	local players = managers.player:players()
 
@@ -62,6 +66,7 @@ function IngameFatalState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 63-71
 function IngameFatalState:at_exit()
 	local player = managers.player:player_unit()
 

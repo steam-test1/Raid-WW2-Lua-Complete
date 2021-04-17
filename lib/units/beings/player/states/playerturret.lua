@@ -1,9 +1,11 @@
 PlayerTurret = PlayerTurret or class(PlayerStandard)
 
+-- Lines 5-7
 function PlayerTurret:init(unit)
 	PlayerTurret.super.init(self, unit)
 end
 
+-- Lines 11-68
 function PlayerTurret:enter(state_data, enter_data)
 	PlayerTurret.super.enter(self, state_data, enter_data)
 
@@ -49,16 +51,19 @@ function PlayerTurret:enter(state_data, enter_data)
 	self:_hide_hud_prompts()
 end
 
+-- Lines 72-79
 function PlayerTurret:_enter(enter_data)
 	if self._unit and self._unit:base().is_local_player then
 		self._unit_deploy_position = self._unit:position()
 	end
 end
 
+-- Lines 82-84
 function PlayerTurret:get_camera_speed_limit()
 	return self._camera_speed_limit
 end
 
+-- Lines 88-107
 function PlayerTurret:_init_locators()
 	self._turret_unit = managers.player:get_turret_unit()
 
@@ -76,6 +81,7 @@ function PlayerTurret:_init_locators()
 	self._unit:camera():camera_unit():base():set_limits(self._camera_limit_h, self._camera_limit_v, nil, self._camera_limit_v_mid)
 end
 
+-- Lines 112-123
 function PlayerTurret:_hide_hud_prompts()
 	local player_equipped_unit_base = managers.player:local_player():inventory():equipped_unit():base()
 
@@ -89,6 +95,7 @@ function PlayerTurret:_hide_hud_prompts()
 	managers.hud:hide_prompt("hud_no_ammo_prompt")
 end
 
+-- Lines 126-134
 function PlayerTurret:_show_hud_prompts()
 	if self._out_of_ammo_prompt_hidden then
 		managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
@@ -103,6 +110,7 @@ function PlayerTurret:_show_hud_prompts()
 	end
 end
 
+-- Lines 138-201
 function PlayerTurret:exit(state_data, new_state_name)
 	PlayerTurret.super.exit(self, state_data or self._state_data, new_state_name)
 
@@ -153,6 +161,7 @@ function PlayerTurret:exit(state_data, new_state_name)
 	end
 end
 
+-- Lines 205-216
 function PlayerTurret:_husk_turret_data()
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local husk_pos = self._turret_weapon._locator_tpp:position()
@@ -172,6 +181,7 @@ function PlayerTurret:_husk_turret_data()
 	managers.network:session():send_to_peers_synched("sync_ground_turret_husk", husk_pos, turret_rot, enter_animation, exit_animation, self._turret_unit)
 end
 
+-- Lines 220-258
 function PlayerTurret:update(t, dt)
 	PlayerTurret.super.update(self, t, dt)
 
@@ -207,9 +217,11 @@ function PlayerTurret:update(t, dt)
 	managers.hud:update_heat_indicator(self._turret_weapon:get_current_heat())
 end
 
+-- Lines 264-265
 function PlayerTurret:set_tweak_data(name)
 end
 
+-- Lines 272-295
 function PlayerTurret:_update_check_actions(t, dt)
 	local input = self:_get_input()
 
@@ -220,6 +232,7 @@ function PlayerTurret:_update_check_actions(t, dt)
 	self:_check_warcry(t, input)
 end
 
+-- Lines 297-305
 function PlayerTurret:_check_action_exit_turret(t, input)
 	if input.btn_interact_press then
 		self:_start_action_exit_turret(t)
@@ -230,10 +243,12 @@ function PlayerTurret:_check_action_exit_turret(t, input)
 	end
 end
 
+-- Lines 307-318
 function PlayerTurret:_start_action_exit_turret(t)
 	self:_end_action_exit_turret()
 end
 
+-- Lines 320-326
 function PlayerTurret:_interupt_action_exit_turret()
 	if self._exit_turret_expire_t then
 		self._exit_turret_expire_t = nil
@@ -243,6 +258,7 @@ function PlayerTurret:_interupt_action_exit_turret()
 	end
 end
 
+-- Lines 328-336
 function PlayerTurret:_update_action_timers(t, dt)
 	if self._exit_turret_expire_t then
 		managers.hud:set_progress_timer_bar_width(self._exit_turret_timer - (self._exit_turret_expire_t - t), self._exit_turret_timer)
@@ -255,6 +271,7 @@ function PlayerTurret:_update_action_timers(t, dt)
 	end
 end
 
+-- Lines 339-351
 function PlayerTurret:_end_action_exit_turret()
 	if self._turret_weapon._moving then
 		self._turret_weapon:stop_moving_sound()
@@ -265,10 +282,12 @@ function PlayerTurret:_end_action_exit_turret()
 	managers.player:set_player_state("standard")
 end
 
+-- Lines 354-356
 function PlayerTurret:interaction_blocked()
 	return true
 end
 
+-- Lines 358-372
 function PlayerTurret:_announce_cooldown()
 	self._announce_shooting_clbk_id = "announce_shooting_" .. tostring(managers.network:session():local_peer()._id)
 	local weapon_name = self._turret_weapon:get_name_id()
@@ -283,10 +302,12 @@ function PlayerTurret:_announce_cooldown()
 	managers.queued_tasks:queue(self._announce_shooting_clbk_id, self._enable_announcing, self, nil, final_cooldown)
 end
 
+-- Lines 374-377
 function PlayerTurret:_enable_announcing()
 	self._announce_shooting = false
 end
 
+-- Lines 379-422
 function PlayerTurret:_check_action_primary_attack(t, input)
 	if not self._turret_weapon then
 		return
@@ -335,6 +356,7 @@ function PlayerTurret:_check_action_primary_attack(t, input)
 	end
 end
 
+-- Lines 424-438
 function PlayerTurret:_check_stop_shooting()
 	if self._shooting then
 		self._equipped_unit:base():stop_shooting()
@@ -351,18 +373,23 @@ function PlayerTurret:_check_stop_shooting()
 	end
 end
 
+-- Lines 441-442
 function PlayerTurret:_check_step(t)
 end
 
+-- Lines 444-445
 function PlayerTurret:_check_action_reload(t, input)
 end
 
+-- Lines 447-448
 function PlayerTurret:_check_action_run(...)
 end
 
+-- Lines 450-451
 function PlayerTurret:_check_use_item(t, input)
 end
 
+-- Lines 455-471
 function PlayerTurret:_check_change_weapon(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_switch_weapon_press
@@ -383,6 +410,7 @@ function PlayerTurret:_check_change_weapon(t, input)
 	return new_action
 end
 
+-- Lines 473-493
 function PlayerTurret:_check_action_equip(t, input)
 	local new_action = nil
 	local selection_wanted = input.btn_primary_choice
@@ -404,6 +432,7 @@ function PlayerTurret:_check_action_equip(t, input)
 	return new_action
 end
 
+-- Lines 496-517
 function PlayerTurret:_check_action_jump(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_jump_press
@@ -427,20 +456,25 @@ function PlayerTurret:_check_action_jump(t, input)
 	return new_action
 end
 
+-- Lines 520-521
 function PlayerTurret:_check_action_steelsight(t, input)
 end
 
+-- Lines 525-526
 function PlayerTurret:_update_movement(t, dt)
 end
 
+-- Lines 530-532
 function PlayerTurret:_get_max_walk_speed(...)
 	return 0
 end
 
+-- Lines 534-536
 function PlayerTurret:_get_walk_headbob(...)
 	return 0
 end
 
+-- Lines 539-555
 function PlayerTurret:_postion_player()
 	self._player_original_position = self._unit:position()
 	local rot = self._turret_unit:rotation()
@@ -456,6 +490,7 @@ function PlayerTurret:_postion_player()
 	self._unit:camera():camera_unit():base():set_pitch(0)
 end
 
+-- Lines 560-571
 function PlayerTurret:_reposition_player()
 	if not managers.raid_job:current_level_id() then
 		return
@@ -469,12 +504,15 @@ function PlayerTurret:_reposition_player()
 	end
 end
 
+-- Lines 576-578
 function PlayerTurret:pre_destroy(unit)
 end
 
+-- Lines 582-584
 function PlayerTurret:destroy()
 end
 
+-- Lines 588-611
 function PlayerTurret:_debug_draw_positions()
 	Application:trace([[
 

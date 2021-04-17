@@ -24,6 +24,7 @@ TextGui.GUI_EVENT_IDS = {
 	number_set = 7
 }
 
+-- Lines 26-67
 function TextGui:init(unit)
 	self._unit = unit
 	self._visible = true
@@ -61,11 +62,13 @@ function TextGui:init(unit)
 	self._unit:set_extension_update_enabled(Idstring("text_gui"), true)
 end
 
+-- Lines 69-72
 function TextGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(self.WIDTH, self.HEIGHT, gui_object, Vector3(0, 0, 0))
 	self._panel = self._ws:panel()
 end
 
+-- Lines 74-90
 function TextGui:setup()
 	self._panel:clear()
 
@@ -79,6 +82,7 @@ function TextGui:setup()
 	local font_size = self.FONT_SIZE
 end
 
+-- Lines 92-149
 function TextGui:_create_text_gui(row)
 	local data = self._texts_data[row]
 	local text_data = data.texts_data[data.iterator]
@@ -151,6 +155,7 @@ function TextGui:_create_text_gui(row)
 	end
 end
 
+-- Lines 151-183
 function TextGui:update(unit, t, dt)
 	if not self._visible then
 		return
@@ -184,11 +189,13 @@ function TextGui:update(unit, t, dt)
 	end
 end
 
+-- Lines 185-188
 function TextGui:set_color_type(type)
 	self.COLOR_TYPE = type
 	self.TEXT_COLOR = TextGui.COLORS[self.COLOR_TYPE]
 end
 
+-- Lines 190-200
 function TextGui:set_bg_color_type(type)
 	self.BG_COLOR_TYPE = type
 	self.BG_COLOR = self.BG_COLOR_TYPE and TextGui.COLORS[self.BG_COLOR_TYPE] or nil
@@ -207,11 +214,13 @@ function TextGui:set_bg_color_type(type)
 	end
 end
 
+-- Lines 202-205
 function TextGui:add_once_text(...)
 	local t = self:add_text(...)
 	t.once = true
 end
 
+-- Lines 207-212
 function TextGui:add_text(row, text, color_type, font_size, align_h, font)
 	local data = self._texts_data[row]
 
@@ -226,16 +235,19 @@ function TextGui:add_text(row, text, color_type, font_size, align_h, font)
 	return data.texts_data[#data.texts_data]
 end
 
+-- Lines 214-217
 function TextGui:set_row_speed(row, speed)
 	local data = self._texts_data[row]
 	data.speed = speed
 end
 
+-- Lines 219-222
 function TextGui:set_row_gap(row, gap)
 	local data = self._texts_data[row]
 	data.gap = gap
 end
 
+-- Lines 224-231
 function TextGui:clear_row_and_guis(row)
 	local data = self._texts_data[row]
 
@@ -248,12 +260,14 @@ function TextGui:clear_row_and_guis(row)
 	self:clear_row(row)
 end
 
+-- Lines 233-238
 function TextGui:clear_row(row)
 	local data = self._texts_data[row]
 	data.texts_data = {}
 	data.iterator = 1
 end
 
+-- Lines 240-252
 function TextGui:_test()
 	for i = 1, self.ROWS do
 		self:clear_row_and_guis(i)
@@ -290,6 +304,7 @@ function TextGui:_test()
 	end
 end
 
+-- Lines 254-267
 function TextGui:_test2()
 	for i = 1, self.ROWS do
 		self:clear_row_and_guis(i)
@@ -322,6 +337,7 @@ function TextGui:_test2()
 	end
 end
 
+-- Lines 269-276
 function TextGui:_sequence_trigger(sequence_name)
 	if not Network:is_server() then
 		return
@@ -332,6 +348,7 @@ function TextGui:_sequence_trigger(sequence_name)
 	end
 end
 
+-- Lines 278-285
 function TextGui:set_visible(visible)
 	self._visible = visible
 
@@ -342,11 +359,13 @@ function TextGui:set_visible(visible)
 	end
 end
 
+-- Lines 287-290
 function TextGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
+-- Lines 292-310
 function TextGui:sync_gui_net_event(event_id, value)
 	if event_id == TextGui.GUI_EVENT_IDS.syncronize then
 		self:timer_set(value)
@@ -365,6 +384,7 @@ function TextGui:sync_gui_net_event(event_id, value)
 	end
 end
 
+-- Lines 312-318
 function TextGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -374,6 +394,7 @@ function TextGui:destroy()
 	end
 end
 
+-- Lines 320-328
 function TextGui:save(data)
 	local state = {
 		COLOR_TYPE = self.COLOR_TYPE,
@@ -383,6 +404,7 @@ function TextGui:save(data)
 	data.TextGui = state
 end
 
+-- Lines 330-339
 function TextGui:load(data)
 	local state = data.TextGui
 

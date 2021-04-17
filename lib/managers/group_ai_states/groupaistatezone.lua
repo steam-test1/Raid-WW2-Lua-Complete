@@ -1,14 +1,17 @@
 GroupAIStateZone = GroupAIStateZone or class(GroupAIStateRaid)
 GroupAIStateZone.MAX_DISTANCE_TO_PLAYER = 64000000
 
+-- Lines 4-6
 function GroupAIStateZone:init()
 	GroupAIStateZone.super.init(self)
 end
 
+-- Lines 8-10
 function GroupAIStateZone:nav_ready_listener_key()
 	return "GroupAIStateZone"
 end
 
+-- Lines 12-32
 function GroupAIStateZone:_upd_assault_spawning(task_data, primary_target_area)
 	GroupAIStateZone.super._upd_assault_spawning(self, task_data, primary_target_area)
 

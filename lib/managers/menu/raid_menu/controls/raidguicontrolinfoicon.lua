@@ -9,6 +9,7 @@ RaidGUIControlInfoIcon.TOP_PADDING_DOWN = 5
 RaidGUIControlInfoIcon.TOP_W = 48
 RaidGUIControlInfoIcon.TOP_H = 48
 
+-- Lines 13-82
 function RaidGUIControlInfoIcon:init(parent, params)
 	RaidGUIControlInfoIcon.super.init(self, parent, params)
 
@@ -93,6 +94,7 @@ function RaidGUIControlInfoIcon:init(parent, params)
 	self._align = self._params.align or "left"
 end
 
+-- Lines 84-94
 function RaidGUIControlInfoIcon:_init_panel()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_info_icon"
@@ -104,6 +106,7 @@ function RaidGUIControlInfoIcon:_init_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 97-119
 function RaidGUIControlInfoIcon:_fit_size()
 	if not self._params.w then
 		if self._text:w() <= self._top:w() then
@@ -128,6 +131,7 @@ function RaidGUIControlInfoIcon:_fit_size()
 	self._text:set_bottom(self._object:h())
 end
 
+-- Lines 121-145
 function RaidGUIControlInfoIcon:set_icon(icon, params)
 	if self._top then
 		self._object:remove(self._top)
@@ -156,6 +160,7 @@ function RaidGUIControlInfoIcon:set_icon(icon, params)
 	self:_fit_size()
 end
 
+-- Lines 147-192
 function RaidGUIControlInfoIcon:set_title(title, params)
 	local h = nil
 
@@ -208,6 +213,7 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 	end
 end
 
+-- Lines 194-235
 function RaidGUIControlInfoIcon:set_text(text, params)
 	if self._text then
 		self._object:remove(self._text)
@@ -251,44 +257,53 @@ function RaidGUIControlInfoIcon:set_text(text, params)
 	end
 end
 
+-- Lines 237-240
 function RaidGUIControlInfoIcon:set_x(x)
 	self._object:set_x(x)
 
 	self._align = "left"
 end
 
+-- Lines 242-245
 function RaidGUIControlInfoIcon:set_center_x(x)
 	self._object:set_center_x(x)
 
 	self._align = "center"
 end
 
+-- Lines 247-249
 function RaidGUIControlInfoIcon:set_center_y(y)
 	self._object:set_center_y(y)
 end
 
+-- Lines 251-254
 function RaidGUIControlInfoIcon:set_right(x)
 	self._object:set_right(x)
 
 	self._align = "right"
 end
 
+-- Lines 256-258
 function RaidGUIControlInfoIcon:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 260-262
 function RaidGUIControlInfoIcon:set_bottom(bottom)
 	self._object:set_bottom(bottom)
 end
 
+-- Lines 270-272
 function RaidGUIControlInfoIcon:set_alpha(alpha)
 	self._object:set_alpha(alpha)
 end
 
+-- Lines 274-276
 function RaidGUIControlInfoIcon:show()
 	self._object:set_visible(true)
 end
 
+-- Lines 278-280
 function RaidGUIControlInfoIcon:hide()
 	self._object:set_visible(false)
 end

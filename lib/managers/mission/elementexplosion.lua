@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementExplosion = ElementExplosion or class(ElementFeedback)
 
+-- Lines 5-13
 function ElementExplosion:init(...)
 	ElementExplosion.super.init(self, ...)
 
@@ -10,10 +11,12 @@ function ElementExplosion:init(...)
 	end
 end
 
+-- Lines 15-17
 function ElementExplosion:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 19-50
 function ElementExplosion:on_executed(instigator)
 	if not self._values.enabled then
 		return

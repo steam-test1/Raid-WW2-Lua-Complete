@@ -1,6 +1,7 @@
 AIAreaElement = AIAreaElement or class(MissionElement)
 AIAreaElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 5-13
 function AIAreaElement:init(unit)
 	AIAreaElement.super.init(self, unit)
 
@@ -9,10 +10,12 @@ function AIAreaElement:init(unit)
 	table.insert(self._save_values, "nav_segs")
 end
 
+-- Lines 17-19
 function AIAreaElement:post_init(...)
 	AIAreaElement.super.post_init(self, ...)
 end
 
+-- Lines 24-37
 function AIAreaElement:layer_finished()
 	AIAreaElement.super.layer_finished(self)
 
@@ -29,10 +32,12 @@ function AIAreaElement:layer_finished()
 	end
 end
 
+-- Lines 41-43
 function AIAreaElement:load_nav_seg_unit(unit)
 	self._nav_seg_units[unit:unit_data().unit_id] = unit
 end
 
+-- Lines 47-57
 function AIAreaElement:draw_links(t, dt, selected_unit, all_units)
 	AIAreaElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -51,6 +56,7 @@ function AIAreaElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 61-70
 function AIAreaElement:update_selected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 	managers.editor:layer("Ai"):external_draw(t, dt)
@@ -58,10 +64,12 @@ function AIAreaElement:update_selected(t, dt, selected_unit, all_units)
 	SpecialObjectiveUnitElement._highlight_if_outside_the_nav_field(self, t)
 end
 
+-- Lines 74-76
 function AIAreaElement:update_unselected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 end
 
+-- Lines 80-87
 function AIAreaElement:_chk_units_alive()
 	for u_id, unit in pairs(self._nav_seg_units) do
 		if not alive(unit) then
@@ -72,10 +80,12 @@ function AIAreaElement:_chk_units_alive()
 	end
 end
 
+-- Lines 91-93
 function AIAreaElement:update_editing()
 	self:_raycast()
 end
 
+-- Lines 97-109
 function AIAreaElement:_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -95,6 +105,7 @@ function AIAreaElement:_raycast()
 	end
 end
 
+-- Lines 113-125
 function AIAreaElement:_lmb()
 	local unit = self:_raycast()
 
@@ -111,6 +122,7 @@ function AIAreaElement:_lmb()
 	end
 end
 
+-- Lines 127-131
 function AIAreaElement:_add_unit(unit)
 	local u_id = unit:unit_data().unit_id
 	self._nav_seg_units[u_id] = unit
@@ -118,6 +130,7 @@ function AIAreaElement:_add_unit(unit)
 	self:_add_nav_seg(unit)
 end
 
+-- Lines 133-137
 function AIAreaElement:_remove_unit(unit)
 	local u_id = unit:unit_data().unit_id
 	self._nav_seg_units[u_id] = nil
@@ -125,15 +138,18 @@ function AIAreaElement:_remove_unit(unit)
 	self:_remove_nav_seg(u_id)
 end
 
+-- Lines 141-143
 function AIAreaElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
+-- Lines 149-152
 function AIAreaElement:selected()
 	AIAreaElement.super.selected(self)
 	self:_chk_units_alive()
 end
 
+-- Lines 156-173
 function AIAreaElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -149,7 +165,9 @@ function AIAreaElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
 
+-- Lines 177-195
 function AIAreaElement:add_unit_list_btn()
+	-- Lines 178-187
 	local function f(unit)
 		if self._nav_seg_units[unit:unit_data().unit_id] then
 			return false
@@ -171,7 +189,9 @@ function AIAreaElement:add_unit_list_btn()
 	end
 end
 
+-- Lines 197-205
 function AIAreaElement:remove_unit_list_btn()
+	-- Lines 198-198
 	local function f(unit)
 		return self._nav_seg_units[unit:unit_data().unit_id]
 	end
@@ -185,15 +205,18 @@ function AIAreaElement:remove_unit_list_btn()
 	end
 end
 
+-- Lines 208-211
 function AIAreaElement:add_to_mission_package()
 end
 
+-- Lines 215-218
 function AIAreaElement:_add_nav_seg(unit)
 	self._hed.nav_segs = self._hed.nav_segs or {}
 
 	table.insert(self._hed.nav_segs, unit:unit_data().unit_id)
 end
 
+-- Lines 222-232
 function AIAreaElement:_remove_nav_seg(u_id)
 	for i, test_u_id in ipairs(self._hed.nav_segs) do
 		if u_id == test_u_id then

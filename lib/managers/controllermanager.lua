@@ -4,6 +4,7 @@ core:import("CoreClass")
 
 ControllerManager = ControllerManager or class(CoreControllerManager.ControllerManager)
 
+-- Lines 8-22
 function ControllerManager:init(path, default_settings_path)
 	default_settings_path = "settings/controller_settings"
 	path = default_settings_path
@@ -16,15 +17,18 @@ function ControllerManager:init(path, default_settings_path)
 	self:_initial_connected_xbox_controllers()
 end
 
+-- Lines 24-28
 function ControllerManager:update(t, dt)
 	ControllerManager.super.update(self, t, dt)
 	self:_poll_reconnected_controller()
 end
 
+-- Lines 30-32
 function ControllerManager:is_using_controller()
 	return managers.controller:is_xbox_controller_present() and not managers.menu:is_pc_controller()
 end
 
+-- Lines 35-45
 function ControllerManager:is_xbox_controller_present()
 	if not self._connected_xbox_controllers then
 		return false
@@ -39,10 +43,12 @@ function ControllerManager:is_xbox_controller_present()
 	return false
 end
 
+-- Lines 47-49
 function ControllerManager:_initial_connected_xbox_controllers()
 	self._connected_xbox_controllers = self:_collect_connected_xbox_controllers()
 end
 
+-- Lines 52-65
 function ControllerManager:_collect_connected_xbox_controllers()
 	local controllers_list = {}
 
@@ -61,6 +67,7 @@ function ControllerManager:_collect_connected_xbox_controllers()
 	return controllers_list
 end
 
+-- Lines 67-98
 function ControllerManager:_handle_xbox_keyboard_hotswap()
 	local current_controllers_connection_state = self:_collect_connected_xbox_controllers()
 	local trigger_hotswap = false
@@ -91,6 +98,7 @@ function ControllerManager:_handle_xbox_keyboard_hotswap()
 	end
 end
 
+-- Lines 100-124
 function ControllerManager:_poll_reconnected_controller()
 	self:_handle_xbox_keyboard_hotswap()
 
@@ -109,6 +117,7 @@ function ControllerManager:_poll_reconnected_controller()
 	end
 end
 
+-- Lines 126-131
 function ControllerManager:controller_mod_changed()
 	if not Global.controller_manager.user_mod then
 		Global.controller_manager.user_mod = managers.user:get_setting("controller_mod")
@@ -117,6 +126,7 @@ function ControllerManager:controller_mod_changed()
 	end
 end
 
+-- Lines 133-143
 function ControllerManager:set_user_mod(connection_name, params)
 	Global.controller_manager.user_mod = Global.controller_manager.user_mod or {}
 
@@ -133,6 +143,7 @@ function ControllerManager:set_user_mod(connection_name, params)
 	managers.user:set_setting("controller_mod", Global.controller_manager.user_mod, true)
 end
 
+-- Lines 145-160
 function ControllerManager:clear_user_mod(category, CONTROLS_INFO)
 	Global.controller_manager.user_mod = Global.controller_manager.user_mod or {}
 	local names = table.map_keys(Global.controller_manager.user_mod)
@@ -148,6 +159,7 @@ function ControllerManager:clear_user_mod(category, CONTROLS_INFO)
 	self:load_user_mod()
 end
 
+-- Lines 162-181
 function ControllerManager:load_user_mod()
 	if Global.controller_manager.user_mod then
 		local connections = managers.controller:get_settings(managers.user:get_setting("controller_mod_type")):get_connection_map()
@@ -171,6 +183,7 @@ function ControllerManager:load_user_mod()
 	end
 end
 
+-- Lines 183-189
 function ControllerManager:init_finalize()
 	managers.user:add_setting_changed_callback("controller_mod", callback(self, self, "controller_mod_changed"), true)
 
@@ -181,6 +194,7 @@ function ControllerManager:init_finalize()
 	self:_check_dialog()
 end
 
+-- Lines 191-206
 function ControllerManager:default_controller_connect_change(connected)
 	ControllerManager.super.default_controller_connect_change(self, connected)
 
@@ -189,16 +203,19 @@ function ControllerManager:default_controller_connect_change(connected)
 	end
 end
 
+-- Lines 208-213
 function ControllerManager:_check_dialog()
 	if Global.controller_manager.connect_controller_dialog_visible and not self:_controller_changed_dialog_active() then
 		self:_show_controller_changed_dialog()
 	end
 end
 
+-- Lines 215-217
 function ControllerManager:_controller_changed_dialog_active()
 	return managers.system_menu:is_active_by_id("connect_controller_dialog") and true or false
 end
 
+-- Lines 219-243
 function ControllerManager:_show_controller_changed_dialog()
 	if self:_controller_changed_dialog_active() then
 		return
@@ -232,10 +249,12 @@ function ControllerManager:_show_controller_changed_dialog()
 	managers.system_menu:show(data)
 end
 
+-- Lines 245-251
 function ControllerManager:_change_mode(mode)
 	self:change_default_wrapper_mode(mode)
 end
 
+-- Lines 253-267
 function ControllerManager:set_menu_mode_enabled(enabled)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
@@ -253,10 +272,12 @@ function ControllerManager:set_menu_mode_enabled(enabled)
 	end
 end
 
+-- Lines 269-271
 function ControllerManager:get_menu_mode_enabled()
 	return self._menu_mode_enabled and self._menu_mode_enabled > 0
 end
 
+-- Lines 273-283
 function ControllerManager:set_ingame_mode(mode)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		if mode then
@@ -269,6 +290,7 @@ function ControllerManager:set_ingame_mode(mode)
 	end
 end
 
+-- Lines 292-300
 function ControllerManager:_close_controller_changed_dialog(hard)
 	if Global.controller_manager.connect_controller_dialog_visible or self:_controller_changed_dialog_active() then
 		print("[ControllerManager:_close_controller_changed_dialog] closing")
@@ -277,10 +299,12 @@ function ControllerManager:_close_controller_changed_dialog(hard)
 	end
 end
 
+-- Lines 302-311
 function ControllerManager:connect_controller_dialog_callback()
 	Global.controller_manager.connect_controller_dialog_visible = nil
 end
 
+-- Lines 313-328
 function ControllerManager:get_mouse_controller()
 	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]

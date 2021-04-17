@@ -3,10 +3,12 @@ core:import("CoreShapeManager")
 CoreShapeUnitElement = CoreShapeUnitElement or class(MissionElement)
 ShapeUnitElement = ShapeUnitElement or class(CoreShapeUnitElement)
 
+-- Lines 7-9
 function ShapeUnitElement:init(...)
 	CoreShapeUnitElement.init(self, ...)
 end
 
+-- Lines 11-36
 function CoreShapeUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -30,6 +32,7 @@ function CoreShapeUnitElement:init(unit)
 	table.insert(self._save_values, "unit_ids")
 end
 
+-- Lines 41-46
 function CoreShapeUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local shape = self:get_shape()
 
@@ -38,6 +41,7 @@ function CoreShapeUnitElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 48-54
 function CoreShapeUnitElement:get_shape()
 	if not self._shape then
 		self:_create_shapes()
@@ -46,11 +50,13 @@ function CoreShapeUnitElement:get_shape()
 	return self._hed.shape_type == "box" and self._shape or self._hed.shape_type == "cylinder" and self._cylinder_shape
 end
 
+-- Lines 56-59
 function CoreShapeUnitElement:set_shape_property(params)
 	self._shape:set_property(params.property, self._hed[params.value])
 	self._cylinder_shape:set_property(params.property, self._hed[params.value])
 end
 
+-- Lines 61-76
 function CoreShapeUnitElement:_set_shape_type()
 	local is_box = self._hed.shape_type == "box"
 	local is_cylinder = self._hed.shape_type == "cylinder"
@@ -68,6 +74,7 @@ function CoreShapeUnitElement:_set_shape_type()
 	self._sliders.grow:set_enabled(is_unit)
 end
 
+-- Lines 78-84
 function CoreShapeUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
 		width = self._hed.width,
@@ -85,6 +92,7 @@ function CoreShapeUnitElement:_create_shapes()
 	self._cylinder_shape:set_unit(self._unit)
 end
 
+-- Lines 86-91
 function CoreShapeUnitElement:set_element_data(params, ...)
 	CoreShapeUnitElement.super.set_element_data(self, params, ...)
 
@@ -93,6 +101,7 @@ function CoreShapeUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 94-141
 function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -198,6 +207,7 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self:_set_shape_type()
 end
 
+-- Lines 143-160
 function CoreShapeUnitElement:scale_slider(panel, sizer, number_ctrlr_params, value, name)
 	local slider_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -232,6 +242,7 @@ function CoreShapeUnitElement:scale_slider(panel, sizer, number_ctrlr_params, va
 	self._sliders[value] = slider
 end
 
+-- Lines 162-167
 function CoreShapeUnitElement:set_size(params)
 	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
 
@@ -240,12 +251,14 @@ function CoreShapeUnitElement:set_size(params)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
 
+-- Lines 169-172
 function CoreShapeUnitElement:size_release(params)
 	self._hed[params.value] = params.number_ctrlr_params.value
 
 	params.ctrlr:set_value(100)
 end
 
+-- Lines 174-190
 function CoreShapeUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 
@@ -271,6 +284,7 @@ function CoreShapeUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 192-203
 function CoreShapeUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -290,19 +304,23 @@ function CoreShapeUnitElement:add_element()
 	end
 end
 
+-- Lines 205-207
 function CoreShapeUnitElement:_add_unit_id(id)
 	table.insert(self._hed.unit_ids, id)
 end
 
+-- Lines 209-212
 function CoreShapeUnitElement:_remove_unit_id(id)
 	table.delete(self._hed.unit_ids, id)
 
 	self._hed.unit_ids = #self._hed.unit_ids > 0 and self._hed.unit_ids or nil
 end
 
+-- Lines 214-215
 function CoreShapeUnitElement:update_editing()
 end
 
+-- Lines 218-220
 function CoreShapeUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

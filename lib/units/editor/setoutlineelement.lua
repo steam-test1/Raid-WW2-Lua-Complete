@@ -1,5 +1,6 @@
 SetOutlineElement = SetOutlineElement or class(MissionElement)
 
+-- Lines 3-11
 function SetOutlineElement:init(unit)
 	SetOutlineElement.super.init(self, unit)
 
@@ -10,6 +11,7 @@ function SetOutlineElement:init(unit)
 	table.insert(self._save_values, "set_outline")
 end
 
+-- Lines 15-28
 function SetOutlineElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -32,13 +34,16 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(set_outline, 0, 0, "EXPAND")
 end
 
+-- Lines 32-34
 function SetOutlineElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
+-- Lines 36-37
 function SetOutlineElement:update_editing()
 end
 
+-- Lines 40-48
 function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -56,6 +61,7 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 50-62
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -73,6 +79,7 @@ function SetOutlineElement:add_element()
 	end
 end
 
+-- Lines 64-70
 function SetOutlineElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -81,6 +88,7 @@ function SetOutlineElement:remove_links(unit)
 	end
 end
 
+-- Lines 73-75
 function SetOutlineElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

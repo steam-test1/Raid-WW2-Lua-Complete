@@ -1,6 +1,7 @@
 WeaponSimpleAnim = WeaponSimpleAnim or class(WeaponGadgetBase)
 WeaponSimpleAnim.GADGET_TYPE = "simple_anim"
 
+-- Lines 4-14
 function WeaponSimpleAnim:init(unit)
 	WeaponSimpleAnim.super.init(self, unit)
 
@@ -13,6 +14,7 @@ function WeaponSimpleAnim:init(unit)
 	end
 end
 
+-- Lines 18-25
 function WeaponSimpleAnim:_check_state(...)
 	WeaponSimpleAnim.super._check_state(self, ...)
 
@@ -23,6 +25,7 @@ function WeaponSimpleAnim:_check_state(...)
 	end
 end
 
+-- Lines 27-35
 function WeaponSimpleAnim:play_anim()
 	if not self._anim then
 		return
@@ -34,10 +37,12 @@ function WeaponSimpleAnim:play_anim()
 	self._unit:anim_play_to(self._anim, self._anim_state and length or 0, speed)
 end
 
+-- Lines 37-39
 function WeaponSimpleAnim:toggle_requires_stance_update()
 	return true
 end
 
+-- Lines 43-45
 function WeaponSimpleAnim:destroy(unit)
 	WeaponSimpleAnim.super.destroy(self, unit)
 end

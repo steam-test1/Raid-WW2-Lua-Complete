@@ -9,6 +9,7 @@ NetworkMatchMakingXBL.SMARTMATCH_CLIENT_TIMEOUT_T = 30
 NetworkMatchMakingXBL.SMARTMATCH_CLIENT_TIMEOUT_T2 = 30
 NetworkMatchMakingXBL.SMARTMATCH_STRICT = true
 
+-- Lines 79-91
 function NetworkMatchMakingXBL:init()
 	self._callback_map = {}
 	self._distance_filter = -1
@@ -23,6 +24,7 @@ function NetworkMatchMakingXBL:init()
 	managers.platform:add_event_callback("invite_accepted", callback(self, self, "invite_accepted_callback"))
 end
 
+-- Lines 93-185
 function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 	print("[NetworkMatchMakingXBL:invite_accepted_callback]", invitee_xuid)
 
@@ -91,6 +93,7 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 	self:_check_invite_requirements(invitation)
 end
 
+-- Lines 187-210
 function NetworkMatchMakingXBL:join_boot_invite()
 	local invitation = Global.boot_invite[tostring(managers.user:get_platform_id())]
 
@@ -122,6 +125,7 @@ function NetworkMatchMakingXBL:join_boot_invite()
 	Global.boot_invite[tostring(managers.user:get_platform_id())] = nil
 end
 
+-- Lines 212-242
 function NetworkMatchMakingXBL:_check_invite_requirements(invitation)
 	Global.game_settings.single_player = false
 	self._test_invitation = invitation
@@ -151,6 +155,7 @@ function NetworkMatchMakingXBL:_check_invite_requirements(invitation)
 	end)
 end
 
+-- Lines 244-257
 function NetworkMatchMakingXBL:_join_invite_accepted(host_info, host_name)
 	managers.system_menu:close("server_left_dialog")
 	print("_join_invite_accepted", host_info)
@@ -170,10 +175,12 @@ function NetworkMatchMakingXBL:_join_invite_accepted(host_info, host_name)
 	})
 end
 
+-- Lines 259-261
 function NetworkMatchMakingXBL:register_callback(event, callback)
 	self._callback_map[event] = callback
 end
 
+-- Lines 263-269
 function NetworkMatchMakingXBL:_call_callback(name, ...)
 	if self._callback_map[name] then
 		return self._callback_map[name](...)
@@ -182,6 +189,7 @@ function NetworkMatchMakingXBL:_call_callback(name, ...)
 	end
 end
 
+-- Lines 271-277
 function NetworkMatchMakingXBL:_has_callback(name)
 	if self._callback_map[name] then
 		return true
@@ -190,6 +198,7 @@ function NetworkMatchMakingXBL:_has_callback(name)
 	return false
 end
 
+-- Lines 280-287
 function NetworkMatchMakingXBL:_split_attribute_number(attribute_number, splitter)
 	if not splitter or splitter == 0 or type(splitter) ~= "number" then
 		Application:error("NetworkMatchMakingXBL:_split_attribute_number. splitter needs to be a non 0 number!", "attribute_number", attribute_number, "splitter", splitter)
@@ -201,10 +210,12 @@ function NetworkMatchMakingXBL:_split_attribute_number(attribute_number, splitte
 	return attribute_number % splitter, math.floor(attribute_number / splitter)
 end
 
+-- Lines 290-292
 function NetworkMatchMakingXBL:destroy_game()
 	self:leave_game()
 end
 
+-- Lines 294-298
 function NetworkMatchMakingXBL:add_cancelable_callback()
 	self._next_cancel_callback_id = self._next_cancel_callback_id + 1
 	self._cancel_callback_map[self._next_cancel_callback_id] = false
@@ -212,6 +223,7 @@ function NetworkMatchMakingXBL:add_cancelable_callback()
 	return self._next_cancel_callback_id
 end
 
+-- Lines 300-341
 function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 	self._searching_lobbys = nil
 
@@ -254,6 +266,7 @@ function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 	local player_index = managers.user:get_platform_id()
 end
 
+-- Lines 343-353
 function NetworkMatchMakingXBL:check_callback_canceled(id)
 	local is_canceled = self._cancel_callback_map[id]
 	self._cancel_callback_map[id] = nil
@@ -265,6 +278,7 @@ function NetworkMatchMakingXBL:check_callback_canceled(id)
 	return is_canceled
 end
 
+-- Lines 355-403
 function NetworkMatchMakingXBL:leave_game()
 	print("NetworkMatchMakingXBL:leave_game()", self._session and self._session:state())
 	Application:stack_dump()
@@ -308,6 +322,7 @@ function NetworkMatchMakingXBL:leave_game()
 	self._game_owner_name = nil
 end
 
+-- Lines 405-440
 function NetworkMatchMakingXBL:_load_globals()
 	if Global.xbl and Global.xbl.match then
 		self._session = Global.xbl.match.session
@@ -331,6 +346,7 @@ function NetworkMatchMakingXBL:_load_globals()
 	end
 end
 
+-- Lines 441-465
 function NetworkMatchMakingXBL:_save_globals()
 	Global.xbl = Global.xbl or {}
 	Global.xbl.match = {
@@ -346,11 +362,13 @@ function NetworkMatchMakingXBL:_save_globals()
 	}
 end
 
+-- Lines 468-471
 function NetworkMatchMakingXBL:update()
 	self:_chk_advertise_session_for_smartmatch()
 	self:_update_queued_join_by_smartmatch()
 end
 
+-- Lines 473-506
 function NetworkMatchMakingXBL:_chk_advertise_session_for_smartmatch()
 	if self._session and managers.network:session() and managers.network:session():is_host() and self:is_server_joinable() and XboxLive:smartmatch_state() ~= "searching" and self:is_host_lobby_public() then
 		self._smartmatch_idle_start_t = self._smartmatch_idle_start_t or TimerManager:wall_running():time()
@@ -386,44 +404,56 @@ function NetworkMatchMakingXBL:_chk_advertise_session_for_smartmatch()
 	end
 end
 
+-- Lines 516-518
 function NetworkMatchMakingXBL:get_friends_lobbies()
 end
 
+-- Lines 520-522
 function NetworkMatchMakingXBL:search_friends_only()
 	return self._search_friends_only
 end
 
+-- Lines 524-526
 function NetworkMatchMakingXBL:distance_filter()
 	return self._distance_filter
 end
 
+-- Lines 528-530
 function NetworkMatchMakingXBL:set_distance_filter(filter)
 	self._distance_filter = filter
 end
 
+-- Lines 532-534
 function NetworkMatchMakingXBL:difficulty_filter()
 	return self._difficulty_filter
 end
 
+-- Lines 536-538
 function NetworkMatchMakingXBL:set_difficulty_filter(filter)
 	self._difficulty_filter = filter
 end
 
+-- Lines 542-544
 function NetworkMatchMakingXBL:get_lobby_return_count()
 end
 
+-- Lines 546-548
 function NetworkMatchMakingXBL:set_lobby_return_count(lobby_return_count)
 end
 
+-- Lines 550-552
 function NetworkMatchMakingXBL:lobby_filters()
 end
 
+-- Lines 554-556
 function NetworkMatchMakingXBL:set_lobby_filters(filters)
 end
 
+-- Lines 558-560
 function NetworkMatchMakingXBL:add_lobby_filter(key, value, comparision_type)
 end
 
+-- Lines 562-591
 function NetworkMatchMakingXBL:search_lobby(friends_only)
 	if self._searching_lobbys then
 		print("Allready searching lobbys, waiting result")
@@ -448,6 +478,7 @@ function NetworkMatchMakingXBL:search_lobby(friends_only)
 	self._searching_lobbys = true
 end
 
+-- Lines 593-634
 function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 	self._searching_lobbys = nil
 
@@ -488,20 +519,24 @@ function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 	self:_call_callback("search_lobby", info)
 end
 
+-- Lines 636-638
 function NetworkMatchMakingXBL:searching_lobbys()
 	return self._searching_lobbys
 end
 
+-- Lines 640-643
 function NetworkMatchMakingXBL:search_lobby_done()
 	managers.system_menu:close("find_server")
 
 	self.browser = nil
 end
 
+-- Lines 646-649
 function NetworkMatchMakingXBL:game_owner_name()
 	return self._game_owner_name
 end
 
+-- Lines 660-691
 function NetworkMatchMakingXBL:is_server_ok(friends_only, session_id, attributes_numbers)
 	local permission = tweak_data:index_to_permission(attributes_numbers[3])
 	local level_index, job_index = self:_split_attribute_number(attributes_numbers[1], 1000)
@@ -531,6 +566,7 @@ function NetworkMatchMakingXBL:is_server_ok(friends_only, session_id, attributes
 	return true
 end
 
+-- Lines 694-781
 function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permission_check, data)
 	print("NetworkMatchMakingXBL:join_server_with_check", session_id)
 
@@ -544,11 +580,13 @@ function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permissio
 
 	managers.menu:show_joining_lobby_dialog()
 
+	-- Lines 705-705
 	local function empty()
 	end
 
 	local cancel_id = self:add_cancelable_callback()
 
+	-- Lines 707-765
 	local function f(servers)
 		if self:check_callback_canceled(cancel_id) then
 			return
@@ -611,19 +649,23 @@ function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permissio
 	end
 end
 
+-- Lines 827-829
 function NetworkMatchMakingXBL._on_data_update(...)
 end
 
+-- Lines 831-834
 function NetworkMatchMakingXBL._on_chat_message(user, message)
 	print("[NetworkMatchMakingXBL._on_chat_message]", user, message)
 end
 
+-- Lines 835-840
 function NetworkMatchMakingXBL._handle_chat_message(user, message)
 	local s = "" .. message
 
 	managers.chat:receive_message_by_name(ChatManager.GLOBAL, user:name(), s)
 end
 
+-- Lines 842-860
 function NetworkMatchMakingXBL:_update_queued_join_by_smartmatch()
 	if not self._queued_join_by_smartmatch then
 		return
@@ -647,6 +689,7 @@ function NetworkMatchMakingXBL:_update_queued_join_by_smartmatch()
 	self:_join_by_smartmatch(params.job_id_filter, params.difficulty_filter)
 end
 
+-- Lines 864-911
 function NetworkMatchMakingXBL:_join_by_smartmatch(job_id_filter, difficulty_filter)
 	print("[NetworkMatchMakingXBL:_join_by_smartmatch] job_id_filter", job_id_filter, "difficulty_filter", difficulty_filter)
 
@@ -700,6 +743,7 @@ function NetworkMatchMakingXBL:_join_by_smartmatch(job_id_filter, difficulty_fil
 	end
 end
 
+-- Lines 915-935
 function NetworkMatchMakingXBL:join_by_smartmatch(job_id_filter, difficulty_filter)
 	print("[NetworkMatchMakingXBL:join_by_smartmatch] job_id_filter", job_id_filter, "difficulty_filter", difficulty_filter)
 
@@ -723,6 +767,7 @@ function NetworkMatchMakingXBL:join_by_smartmatch(job_id_filter, difficulty_filt
 	return true
 end
 
+-- Lines 937-943
 function NetworkMatchMakingXBL:clbk_btn_cancel_match()
 	print("[NetworkMatchMakingXBL:clbk_btn_cancel_match]")
 
@@ -733,6 +778,7 @@ function NetworkMatchMakingXBL:clbk_btn_cancel_match()
 	self:leave_game()
 end
 
+-- Lines 945-977
 function NetworkMatchMakingXBL:clbk_create_client_lobby(params, session)
 	print("[NetworkMatchMakingXBL:clbk_create_client_lobby] session", session)
 
@@ -770,6 +816,7 @@ function NetworkMatchMakingXBL:clbk_create_client_lobby(params, session)
 	end
 end
 
+-- Lines 980-1093
 function NetworkMatchMakingXBL:clbk_join_session_result(status)
 	print("[NetworkMatchMakingXBL:clbk_join_session_result] self._session", self._session, "status", status)
 	managers.system_menu:close("join_server")
@@ -824,6 +871,7 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 		end
 	})
 
+	-- Lines 1029-1090
 	local function joined_game(res, level_index, difficulty_index, state_index)
 		managers.system_menu:close("waiting_for_server_response")
 		print("[NetworkMatchMakingXBL:clbk_join_session_result:joined_game] res", res, "level_index", level_index, "difficulty_index", difficulty_index, "state_index", state_index)
@@ -893,6 +941,7 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 	managers.network:join_game_at_host_rpc(self._server_rpc, joined_game)
 end
 
+-- Lines 1095-1138
 function NetworkMatchMakingXBL:join_server(session_id, server, skip_showing_dialog)
 	local xs_info = server.info
 
@@ -939,9 +988,11 @@ function NetworkMatchMakingXBL:join_server(session_id, server, skip_showing_dial
 	end
 end
 
+-- Lines 1141-1142
 function NetworkMatchMakingXBL:send_join_invite(friend)
 end
 
+-- Lines 1145-1150
 function NetworkMatchMakingXBL:set_server_attributes(settings)
 	self:set_attributes(settings)
 
@@ -950,6 +1001,7 @@ function NetworkMatchMakingXBL:set_server_attributes(settings)
 	end
 end
 
+-- Lines 1152-1279
 function NetworkMatchMakingXBL:create_lobby(settings)
 	local attributes_numbers = settings.numbers
 	self._num_players = nil
@@ -1013,6 +1065,7 @@ function NetworkMatchMakingXBL:create_lobby(settings)
 	print("[NetworkMatchMakingXBL:create_lobby] create_session result", success)
 end
 
+-- Lines 1281-1288
 function NetworkMatchMakingXBL:_create_lobby_failed()
 	self:_create_lobby_done()
 
@@ -1030,16 +1083,19 @@ function NetworkMatchMakingXBL:_create_lobby_failed()
 	managers.system_menu:show(dialog_data)
 end
 
+-- Lines 1290-1293
 function NetworkMatchMakingXBL:_create_lobby_done()
 	self._creating_lobby = nil
 
 	managers.system_menu:close("create_lobby")
 end
 
+-- Lines 1296-1318
 function NetworkMatchMakingXBL:clbk_smartmatch_host(params, session, smartmatch_status)
 	print("[NetworkMatchMakingXBL:clbk_smartmatch_host] params\n", inspect(params), "session", session, "status:", smartmatch_status)
 end
 
+-- Lines 1320-1328
 function NetworkMatchMakingXBL:_begin_smartmatch(params, progress_clbk)
 	print("[NetworkMatchMakingXBL:_begin_smartmatch] self._hopper_variables", inspect(self._hopper_variables))
 
@@ -1052,6 +1108,7 @@ function NetworkMatchMakingXBL:_begin_smartmatch(params, progress_clbk)
 	return status
 end
 
+-- Lines 1330-1420
 function NetworkMatchMakingXBL:_create_lobby_callback(params, session)
 	if self:check_callback_canceled(params.cancel_id) then
 		cat_print("lobby", "create_server canceled")
@@ -1088,16 +1145,19 @@ function NetworkMatchMakingXBL:_create_lobby_callback(params, session)
 	managers.menu:created_lobby()
 end
 
+-- Lines 1422-1424
 function NetworkMatchMakingXBL:clbk_smartmatch_client_inexact_join_yes()
 	self:clbk_join_session_result(true)
 end
 
+-- Lines 1426-1431
 function NetworkMatchMakingXBL:clbk_smartmatch_client_inexact_join_no()
 	managers.system_menu:close("join_server")
 	managers.system_menu:close("search_match")
 	self:leave_game()
 end
 
+-- Lines 1433-1546
 function NetworkMatchMakingXBL:clbk_smartmatch_client(params, session, smartmatch_status)
 	print("[NetworkMatchMakingXBL:clbk_smartmatch_client] params", inspect(params), "session", session, "status:", smartmatch_status)
 
@@ -1242,6 +1302,7 @@ function NetworkMatchMakingXBL:clbk_smartmatch_client(params, session, smartmatc
 	end
 end
 
+-- Lines 1548-1554
 function NetworkMatchMakingXBL:set_num_players(num)
 	print("NetworkMatchMakingXBL:set_num_players", num)
 
@@ -1251,6 +1312,7 @@ function NetworkMatchMakingXBL:set_num_players(num)
 	XboxLive:set_property("NUMPLAYERS", self._num_players)
 end
 
+-- Lines 1556-1561
 function NetworkMatchMakingXBL:set_server_state(state)
 	local player_index = managers.user:get_platform_id()
 	local state_id = tweak_data:server_state_to_index(state)
@@ -1258,6 +1320,7 @@ function NetworkMatchMakingXBL:set_server_state(state)
 	XboxLive:set_property("SERVERSTATE", state_id)
 end
 
+-- Lines 1563-1571
 function NetworkMatchMakingXBL:set_server_joinable(state)
 	print("[NetworkMatchMakingXBL:set_server_joinable]", state)
 	Application:stack_dump()
@@ -1269,13 +1332,16 @@ function NetworkMatchMakingXBL:set_server_joinable(state)
 	end
 end
 
+-- Lines 1573-1575
 function NetworkMatchMakingXBL:is_server_joinable()
 	return self._server_joinable_state and XboxLive:is_joinable(self._session)
 end
 
+-- Lines 1577-1579
 function NetworkMatchMakingXBL:server_state_name()
 end
 
+-- Lines 1581-1607
 function NetworkMatchMakingXBL:on_peer_added(peer)
 	print("NetworkMatchMakingXBL:on_peer_added", peer:id(), peer:xuid(), self._session, self._private)
 
@@ -1310,6 +1376,7 @@ function NetworkMatchMakingXBL:on_peer_added(peer)
 	managers.network.voice_chat:open_channel_to(player_info, "game")
 end
 
+-- Lines 1609-1627
 function NetworkMatchMakingXBL:on_peer_removed(peer)
 	print("NetworkMatchMakingXBL:on_peer_removed", peer:id(), peer:xuid(), self._session)
 
@@ -1337,10 +1404,12 @@ function NetworkMatchMakingXBL:on_peer_removed(peer)
 	managers.network.voice_chat:close_channel_to(player_info)
 end
 
+-- Lines 1629-1631
 function NetworkMatchMakingXBL:is_host_lobby_public()
 	return self._host_session_attributes and self._host_session_attributes.numbers[3] == 1
 end
 
+-- Lines 1642-1681
 function NetworkMatchMakingXBL:set_attributes(settings)
 	local player_index = managers.user:get_platform_id()
 
@@ -1356,6 +1425,7 @@ function NetworkMatchMakingXBL:set_attributes(settings)
 	self._host_session_attributes = settings
 end
 
+-- Lines 1683-1692
 function NetworkMatchMakingXBL:_server_to_numbers(server)
 	local properties = server.properties
 
@@ -1370,6 +1440,7 @@ function NetworkMatchMakingXBL:_server_to_numbers(server)
 	}
 end
 
+-- Lines 1694-1701
 function NetworkMatchMakingXBL:external_address(rpc)
 	if not self._session then
 		Application:error("NetworkMatchMakingXBL:translate_to_xnaddr, had no session!")
@@ -1380,6 +1451,7 @@ function NetworkMatchMakingXBL:external_address(rpc)
 	return XboxLive:external_address(rpc)
 end
 
+-- Lines 1703-1714
 function NetworkMatchMakingXBL:internal_address(xuid)
 	if not self._session then
 		Application:error("NetworkMatchMakingXBL:internal_address, had no session!")
@@ -1396,6 +1468,7 @@ function NetworkMatchMakingXBL:internal_address(xuid)
 	return address
 end
 
+-- Lines 1716-1726
 function NetworkMatchMakingXBL:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMakingXBL::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 
@@ -1410,6 +1483,7 @@ function NetworkMatchMakingXBL:from_host_lobby_re_opened(status)
 	end
 end
 
+-- Lines 1730-1745
 function NetworkMatchMakingXBL:_test_search(settings)
 	local player_index = managers.user:get_platform_id()
 	local prop = {
@@ -1423,6 +1497,7 @@ function NetworkMatchMakingXBL:_test_search(settings)
 	XboxLive:search_session("Find Matches", player_index, 25, prop, con, callback(self, self, "_find_test_server_callback", self:add_cancelable_callback()))
 end
 
+-- Lines 1747-1779
 function NetworkMatchMakingXBL:_find_test_server_callback(cancel_id, servers, mode)
 	if self:check_callback_canceled(cancel_id) then
 		return
@@ -1450,6 +1525,7 @@ function NetworkMatchMakingXBL:_find_test_server_callback(cancel_id, servers, mo
 	local player_index = managers.user:get_platform_id()
 end
 
+-- Lines 1781-1905
 function NetworkMatchMakingXBL:_test_join(xs_info, skip_showing_dialog)
 	xs_info = xs_info or self._test_server.info
 	local player_index = managers.user:get_platform_id()
@@ -1501,6 +1577,7 @@ function NetworkMatchMakingXBL:_test_join(xs_info, skip_showing_dialog)
 			end
 		})
 
+		-- Lines 1831-1885
 		local function joined_game(res, level_index, difficulty_index, state_index)
 			managers.system_menu:close("waiting_for_server_response")
 			print("[NetworkMatchMakingXBL:join_server:joined_game]", res, level_index, difficulty_index, state_index)
@@ -1560,13 +1637,16 @@ function NetworkMatchMakingXBL:_test_join(xs_info, skip_showing_dialog)
 	end
 end
 
+-- Lines 1907-1908
 function NetworkMatchMakingXBL:_join_server_callback()
 end
 
+-- Lines 1910-1912
 function NetworkMatchMakingXBL:_get_smartmatch_player_level()
 	return math.floor(managers.experience:current_level() / 20)
 end
 
+-- Lines 1914-1970
 function NetworkMatchMakingXBL:_test_create(settings)
 	print("settings\n", inspect(settings))
 
@@ -1607,6 +1687,7 @@ function NetworkMatchMakingXBL:_test_create(settings)
 	print("create return value", session)
 end
 
+-- Lines 1972-2017
 function NetworkMatchMakingXBL:_create_server_callback(cancel_id, session)
 	if self:check_callback_canceled(cancel_id) then
 		cat_print("lobby", "create_server canceled")
@@ -1641,6 +1722,7 @@ function NetworkMatchMakingXBL:_create_server_callback(cancel_id, session)
 	self._server_rpc = nil
 end
 
+-- Lines 2726-2732
 function NetworkMatchMakingXBL:_is_server(set)
 	if set == true or set == false then
 		self._is_server_var = set
@@ -1649,6 +1731,7 @@ function NetworkMatchMakingXBL:_is_server(set)
 	end
 end
 
+-- Lines 2734-2740
 function NetworkMatchMakingXBL:_is_client(set)
 	if set == true or set == false then
 		self._is_client_var = set

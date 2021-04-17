@@ -2,19 +2,23 @@ core:import("CoreMissionScriptElement")
 
 ElementCharacterSequence = ElementCharacterSequence or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementCharacterSequence:init(...)
 	ElementCharacterSequence.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementCharacterSequence:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 13-43
 function ElementCharacterSequence:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
+	-- Lines 18-20
 	local function f(unit)
 		unit:damage():run_sequence_simple(self._values.sequence)
 	end

@@ -1,5 +1,6 @@
 ParseAllDramas = ParseAllDramas or class()
 
+-- Lines 3-10
 function ParseAllDramas:init()
 	self:load_all_soundbanks()
 	self:parse_all_dramas()
@@ -7,12 +8,14 @@ function ParseAllDramas:init()
 	self:start_parsing()
 end
 
+-- Lines 12-18
 function ParseAllDramas:load_all_soundbanks()
 	for i, soundbank in pairs(SoundDevice:sound_banks()) do
 		CoreEngineAccess._editor_load(("bnk"):id(), Idstring(soundbank))
 	end
 end
 
+-- Lines 20-31
 function ParseAllDramas:parse_all_dramas()
 	self._dramas = {}
 	local file_name = "gamedata/dramas/index"
@@ -25,6 +28,7 @@ function ParseAllDramas:parse_all_dramas()
 	end
 end
 
+-- Lines 33-47
 function ParseAllDramas:_load_drama(name)
 	local file_name = "gamedata/dramas/" .. name
 	local data = PackageManager:script_data(Idstring("drama"), file_name:id())
@@ -41,6 +45,7 @@ function ParseAllDramas:_load_drama(name)
 	end
 end
 
+-- Lines 49-53
 function ParseAllDramas:create_sound_devices()
 	self._sound_source = SoundDevice:create_source("ParseAllDramas")
 	self._sound_listener = SoundDevice:create_listener("ParseAllDramas")
@@ -48,6 +53,7 @@ function ParseAllDramas:create_sound_devices()
 	self._sound_listener:activate(true)
 end
 
+-- Lines 55-179
 function ParseAllDramas:start_parsing()
 	if self._ws then
 		Overlay:gui():destroy_workspace(self._ws)
@@ -75,6 +81,7 @@ function ParseAllDramas:start_parsing()
 
 	self._parsed_sound_events = {}
 
+	-- Lines 73-176
 	local function update_anim(panel)
 		local text = panel:child("text")
 		local print_text = ""
@@ -196,6 +203,7 @@ function ParseAllDramas:start_parsing()
 	self._panel:animate(update_anim)
 end
 
+-- Lines 181-184
 function ParseAllDramas:marker_callback(instance, sound_source, event_type, cookie, label, identifier, position)
 	self._non_string_events[cookie] = nil
 	self._parsed_sound_events[cookie] = label

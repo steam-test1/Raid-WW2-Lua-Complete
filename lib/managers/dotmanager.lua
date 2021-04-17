@@ -1,11 +1,13 @@
 DOTManager = DOTManager or class()
 local tmp_vec3 = Vector3()
 
+-- Lines 5-9
 function DOTManager:init()
 	self._doted_enemies = {}
 	self._dot_grace_period = 0.25
 end
 
+-- Lines 11-28
 function DOTManager:update(t, dt)
 	for index = #self._doted_enemies, 1, -1 do
 		local dot_info = self._doted_enemies[index]
@@ -24,10 +26,12 @@ function DOTManager:update(t, dt)
 	end
 end
 
+-- Lines 30-33
 function DOTManager:add_doted_enemy(enemy_unit, dot_damage_received_time, weapon_unit, dot_length, dot_damage, hurt_animation, variant)
 	local dot_info = self:_add_doted_enemy(enemy_unit, dot_damage_received_time, weapon_unit, dot_length, dot_damage, hurt_animation, variant)
 end
 
+-- Lines 36-41
 function DOTManager:sync_add_dot_damage(enemy_unit, dot_damage_received_time, weapon_unit, dot_length, dot_damage)
 	if enemy_unit then
 		local t = TimerManager:game():time()
@@ -36,6 +40,7 @@ function DOTManager:sync_add_dot_damage(enemy_unit, dot_damage_received_time, we
 	end
 end
 
+-- Lines 44-66
 function DOTManager:_add_doted_enemy(enemy_unit, dot_damage_received_time, weapon_unit, dot_length, dot_damage, hurt_animation, variant)
 	local contains = false
 
@@ -70,6 +75,7 @@ function DOTManager:_add_doted_enemy(enemy_unit, dot_damage_received_time, weapo
 	end
 end
 
+-- Lines 68-87
 function DOTManager:check_achievemnts(unit, t)
 	if not unit and not alive(unit) then
 		return
@@ -92,6 +98,7 @@ function DOTManager:check_achievemnts(unit, t)
 	end
 end
 
+-- Lines 89-103
 function DOTManager:_damage_dot(dot_info)
 	local attacker_unit = managers.player:player_unit()
 	local col_ray = {
@@ -106,6 +113,7 @@ function DOTManager:_damage_dot(dot_info)
 	end
 end
 
+-- Lines 105-114
 function DOTManager:create_dot_data(type, custom_data)
 	local dot_data = deep_clone(tweak_data:get_dot_type_data(type))
 
@@ -117,6 +125,7 @@ function DOTManager:create_dot_data(type, custom_data)
 	return dot_data
 end
 
+-- Lines 116-118
 function DOTManager:on_simulation_ended()
 	self._doted_enemies = {}
 end

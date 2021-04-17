@@ -1,5 +1,6 @@
 ModifyPlayerElement = ModifyPlayerElement or class(MissionElement)
 
+-- Lines 3-11
 function ModifyPlayerElement:init(unit)
 	ModifyPlayerElement.super.init(self, unit)
 
@@ -10,6 +11,7 @@ function ModifyPlayerElement:init(unit)
 	table.insert(self._save_values, "invulnerable")
 end
 
+-- Lines 13-23
 function ModifyPlayerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

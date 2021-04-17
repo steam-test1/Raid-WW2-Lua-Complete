@@ -15,6 +15,7 @@ local tmp_vec2 = Vector3()
 local tmp_vec3 = Vector3()
 DP28RaycastWeaponBase = DP28RaycastWeaponBase or class(NewRaycastWeaponBase)
 
+-- Lines 22-103
 function DP28RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	local start_ammo = self:get_ammo_remaining_in_clip()
 	local weapon_tweak = self:weapon_tweak_data()
@@ -68,6 +69,7 @@ function DP28RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, 
 	return ray_res
 end
 
+-- Lines 106-114
 function DP28RaycastWeaponBase:update(unit, t, dt)
 	local is_reloading = self._unit:anim_is_playing(Idstring("reload")) or self._unit:anim_is_playing(Idstring("reload_not_empty"))
 
@@ -78,6 +80,7 @@ function DP28RaycastWeaponBase:update(unit, t, dt)
 	DP28RaycastWeaponBase.super.update(self, unit, t, dt)
 end
 
+-- Lines 116-130
 function DP28RaycastWeaponBase:set_magazine_pos_based_on_ammo(count_max)
 	local percent_of_anim = 0
 
@@ -96,16 +99,19 @@ function DP28RaycastWeaponBase:set_magazine_pos_based_on_ammo(count_max)
 	end
 end
 
+-- Lines 132-135
 function DP28RaycastWeaponBase:get_magazine_true_pos()
 	local pos = (0 + self:get_ammo_remaining_in_clip()) / (0 + self:get_ammo_max_per_clip())
 
 	return 1 - pos
 end
 
+-- Lines 137-140
 function DP28RaycastWeaponBase:get_magazine_object()
 	return self._parts.wpn_fps_lmg_dp28_m_standard or self._parts.wpn_fps_lmg_dp28_m_extended
 end
 
+-- Lines 142-171
 function DP28RaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	local data = tweak_data.weapon.factory[self._factory_id]
 
@@ -141,6 +147,7 @@ function DP28RaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	return true
 end
 
+-- Lines 173-181
 function DP28RaycastWeaponBase:play_magazine_anim(speed_multiplier)
 	local data = self:get_magazine_object()
 	local anim_name = data.animations.fire
@@ -150,6 +157,7 @@ function DP28RaycastWeaponBase:play_magazine_anim(speed_multiplier)
 	data.unit:anim_play_to(Idstring(anim_name), self.length, speed_multiplier)
 end
 
+-- Lines 183-196
 function DP28RaycastWeaponBase:weapon_parts_anim_pause()
 	local data = self:get_magazine_object()
 	local anim_name = data.animations.fire
@@ -167,6 +175,7 @@ function DP28RaycastWeaponBase:weapon_parts_anim_pause()
 	self._playing = false
 end
 
+-- Lines 198-207
 function DP28RaycastWeaponBase:get_anim_length()
 	if self.length then
 		return self.length
@@ -179,16 +188,19 @@ function DP28RaycastWeaponBase:get_anim_length()
 	end
 end
 
+-- Lines 210-213
 function DP28RaycastWeaponBase:start_reload(...)
 	DP28RaycastWeaponBase.super.start_reload(self, ...)
 end
 
+-- Lines 215-219
 function DP28RaycastWeaponBase:set_magazine_time_stamp(time)
 	local data = self:get_magazine_object()
 
 	data.unit:anim_set_time(Idstring(data.animations.fire), time)
 end
 
+-- Lines 221-229
 function DP28RaycastWeaponBase:tweak_data_anim_stop(anim, force_fire)
 	if anim == "fire" and not force_fire then
 		return
@@ -197,6 +209,7 @@ function DP28RaycastWeaponBase:tweak_data_anim_stop(anim, force_fire)
 	DP28RaycastWeaponBase.super.tweak_data_anim_stop(self, anim)
 end
 
+-- Lines 231-235
 function DP28RaycastWeaponBase:reset_magazine_anim_pos()
 	self:set_magazine_pos_based_on_ammo(true)
 	print("--Realoaded dp28")

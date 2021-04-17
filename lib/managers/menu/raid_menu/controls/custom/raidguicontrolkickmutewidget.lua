@@ -11,6 +11,7 @@ RaidGUIControlKickMuteWidget.NAME_FONT_COLOR_INACTIVE = tweak_data.gui.colors.ra
 RaidGUIControlKickMuteWidget.NAME_FONT_COLOR_ACTIVE = tweak_data.gui.colors.raid_dirty_white
 RaidGUIControlKickMuteWidget.BUTTON_PADDING = 96
 
+-- Lines 19-35
 function RaidGUIControlKickMuteWidget:init(parent, params)
 	self._params = clone(params)
 	self._index = params.index
@@ -32,6 +33,7 @@ function RaidGUIControlKickMuteWidget:init(parent, params)
 	self:_create_invite_button()
 end
 
+-- Lines 37-46
 function RaidGUIControlKickMuteWidget:_create_panel(parent, params)
 	local parent_params = {
 		halign = "scale",
@@ -44,6 +46,7 @@ function RaidGUIControlKickMuteWidget:_create_panel(parent, params)
 	self._object = parent:panel(parent_params)
 end
 
+-- Lines 48-60
 function RaidGUIControlKickMuteWidget:_create_highlight_line()
 	local highlight_params = {
 		name = "highlight_line",
@@ -59,6 +62,7 @@ function RaidGUIControlKickMuteWidget:_create_highlight_line()
 	self._highlight_line:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 62-76
 function RaidGUIControlKickMuteWidget:_create_name_text()
 	local name_params = {
 		name = "name",
@@ -76,6 +80,7 @@ function RaidGUIControlKickMuteWidget:_create_name_text()
 	self._name = self._object:text(name_params)
 end
 
+-- Lines 78-98
 function RaidGUIControlKickMuteWidget:_create_kick_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
@@ -101,6 +106,7 @@ function RaidGUIControlKickMuteWidget:_create_kick_button()
 	table.insert(self._buttons, self._kick_button)
 end
 
+-- Lines 100-122
 function RaidGUIControlKickMuteWidget:_create_mute_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
@@ -129,6 +135,7 @@ function RaidGUIControlKickMuteWidget:_create_mute_button()
 	table.insert(self._buttons, self._mute_button)
 end
 
+-- Lines 124-140
 function RaidGUIControlKickMuteWidget:_create_gamercard_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
@@ -152,6 +159,7 @@ function RaidGUIControlKickMuteWidget:_create_gamercard_button()
 	table.insert(self._buttons, self._gamercard_button)
 end
 
+-- Lines 142-160
 function RaidGUIControlKickMuteWidget:_create_invite_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
@@ -176,10 +184,12 @@ function RaidGUIControlKickMuteWidget:_create_invite_button()
 	table.insert(self._buttons, self._invite_button)
 end
 
+-- Lines 162-164
 function RaidGUIControlKickMuteWidget:_refresh_mute_button()
 	self._mute_button:set_value(self._peer:is_muted())
 end
 
+-- Lines 166-176
 function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._peer = peer
 
@@ -194,6 +204,7 @@ function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._object:set_visible(true)
 end
 
+-- Lines 178-196
 function RaidGUIControlKickMuteWidget:calculate_width()
 	local w = 0
 	local leftmost_button_x = self._object:w()
@@ -212,11 +223,13 @@ function RaidGUIControlKickMuteWidget:calculate_width()
 	return w
 end
 
+-- Lines 198-201
 function RaidGUIControlKickMuteWidget:set_w(w)
 	RaidGUIControlKickMuteWidget.super.set_w(self, w)
 	self:_fit_size()
 end
 
+-- Lines 203-231
 function RaidGUIControlKickMuteWidget:_fit_size()
 	local _, _, w, _ = self._name:text_rect()
 
@@ -249,12 +262,14 @@ function RaidGUIControlKickMuteWidget:_fit_size()
 	self._name:set_x(RaidGUIControlKickMuteWidget.NAME_X)
 end
 
+-- Lines 233-237
 function RaidGUIControlKickMuteWidget:on_mute_selected()
 	if self._params.on_button_selected_callback then
 		self._params.on_button_selected_callback(self._mute_button:get_value() and "unmute" or "mute")
 	end
 end
 
+-- Lines 239-248
 function RaidGUIControlKickMuteWidget:on_mute_pressed()
 	if not self._peer then
 		return
@@ -265,6 +280,7 @@ function RaidGUIControlKickMuteWidget:on_mute_pressed()
 	self:_refresh_mute_button()
 end
 
+-- Lines 250-260
 function RaidGUIControlKickMuteWidget:on_kick_pressed()
 	if not self._peer then
 		return
@@ -278,10 +294,12 @@ function RaidGUIControlKickMuteWidget:on_kick_pressed()
 	managers.menu:show_kick_peer_dialog(params)
 end
 
+-- Lines 262-264
 function RaidGUIControlKickMuteWidget:on_invite_pressed()
 	RaidMenuCallbackHandler.invite_friend()
 end
 
+-- Lines 266-275
 function RaidGUIControlKickMuteWidget:set_invite_widget()
 	for index, button in pairs(self._buttons) do
 		button:set_visible(false)
@@ -292,6 +310,7 @@ function RaidGUIControlKickMuteWidget:set_invite_widget()
 	self._name:set_text(self:translate("menu_widget_label_invite_player", true))
 end
 
+-- Lines 277-329
 function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown, invite_widget_shown)
 	if number_of_widgets_shown < 2 then
 		local invite_button_move = {
@@ -346,27 +365,32 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	self._invite_button:set_menu_move_controls(on_menu_move)
 end
 
+-- Lines 331-336
 function RaidGUIControlKickMuteWidget:show_gamercard()
 	Application:trace("[RaidGUIControlKickMuteWidget:show_gamercard] showing gamercard for peer " .. tostring(self._peer:name()))
 	Application:debug("[RaidGUIControlKickMuteWidget:show_gamercard]", inspect(self._peer))
 	self._callback_handler:view_gamer_card(self._peer:xuid())
 end
 
+-- Lines 338-341
 function RaidGUIControlKickMuteWidget:on_kick_confirmed()
 	managers.vote:host_kick(self._peer)
 	managers.menu_component:post_event("kick_player")
 end
 
+-- Lines 343-346
 function RaidGUIControlKickMuteWidget:highlight_on()
 	self._highlight_line:stop()
 	self._highlight_line:animate(callback(self, self, "_animate_highlight_on"))
 end
 
+-- Lines 348-351
 function RaidGUIControlKickMuteWidget:highlight_off()
 	self._highlight_line:stop()
 	self._highlight_line:animate(callback(self, self, "_animate_highlight_off"))
 end
 
+-- Lines 353-363
 function RaidGUIControlKickMuteWidget:set_selected(selected)
 	self._selected = selected
 
@@ -379,18 +403,21 @@ function RaidGUIControlKickMuteWidget:set_selected(selected)
 	end
 end
 
+-- Lines 365-369
 function RaidGUIControlKickMuteWidget:on_button_selected(button)
 	if self._params.on_button_selected_callback then
 		self._params.on_button_selected_callback(button)
 	end
 end
 
+-- Lines 371-375
 function RaidGUIControlKickMuteWidget:on_button_unselected(button)
 	if self._params.on_button_unselected_callback then
 		self._params.on_button_unselected_callback(button)
 	end
 end
 
+-- Lines 377-390
 function RaidGUIControlKickMuteWidget:_animate_highlight_on()
 	local duration = 0.2
 	local t = self._highlight_line:alpha() * duration
@@ -406,6 +433,7 @@ function RaidGUIControlKickMuteWidget:_animate_highlight_on()
 	self._highlight_line:set_alpha(1)
 end
 
+-- Lines 392-405
 function RaidGUIControlKickMuteWidget:_animate_highlight_off()
 	local duration = 0.2
 	local t = (1 - self._highlight_line:alpha()) * duration

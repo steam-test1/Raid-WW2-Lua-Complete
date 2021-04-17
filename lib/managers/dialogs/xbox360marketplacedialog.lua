@@ -3,10 +3,12 @@ require("lib/managers/dialogs/MarketplaceDialog")
 
 Xbox360MarketplaceDialog = Xbox360MarketplaceDialog or class(MarketplaceDialog)
 
+-- Lines 7-13
 function Xbox360MarketplaceDialog:init(manager, data)
 	MarketplaceDialog.init(self, manager, data)
 end
 
+-- Lines 15-27
 function Xbox360MarketplaceDialog:show()
 	self._manager:event_dialog_shown(self)
 
@@ -21,12 +23,14 @@ function Xbox360MarketplaceDialog:show()
 	return true
 end
 
+-- Lines 29-33
 function Xbox360MarketplaceDialog:update(t, dt)
 	if self._show_time and self._show_time ~= t and not Application:is_showing_system_dialog() then
 		self:done_callback()
 	end
 end
 
+-- Lines 35-39
 function Xbox360MarketplaceDialog:done_callback()
 	self._show_time = nil
 

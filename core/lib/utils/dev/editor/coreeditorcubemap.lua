@@ -1,5 +1,6 @@
 core:import("CoreEditorUtils")
 
+-- Lines 4-69
 function CoreEditor:create_projection_light(type)
 	local lights = {}
 	local units = {}
@@ -87,6 +88,7 @@ function CoreEditor:create_projection_light(type)
 	})
 end
 
+-- Lines 72-83
 function CoreEditor:_create_cube_light(params)
 	if not self._lastdir then
 		return
@@ -103,6 +105,7 @@ function CoreEditor:_create_cube_light(params)
 	self:create_cube_map(params)
 end
 
+-- Lines 87-145
 function CoreEditor:create_cube_map(params)
 	assert(self._vp:push_ref_fov(500))
 	self._vp:set_width_mul_enabled(false)
@@ -172,6 +175,7 @@ function CoreEditor:create_cube_map(params)
 	self:next_cube()
 end
 
+-- Lines 147-168
 function CoreEditor:next_cube()
 	if #self._cubes_que > 0 then
 		local cube = table.remove(self._cubes_que, 1)
@@ -202,6 +206,7 @@ function CoreEditor:next_cube()
 	return false
 end
 
+-- Lines 171-232
 function CoreEditor:cube_map_done()
 	if self:next_cube() then
 		return

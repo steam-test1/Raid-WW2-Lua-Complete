@@ -1,5 +1,6 @@
 RaidGUIControlListItemCharacterCreateClass = RaidGUIControlListItemCharacterCreateClass or class(RaidGUIControl)
 
+-- Lines 4-18
 function RaidGUIControlListItemCharacterCreateClass:init(parent, params, item_data)
 	RaidGUIControlListItemCharacterCreateClass.super.init(self, parent, params, item_data)
 
@@ -18,6 +19,7 @@ function RaidGUIControlListItemCharacterCreateClass:init(parent, params, item_da
 	self:_layout()
 end
 
+-- Lines 20-36
 function RaidGUIControlListItemCharacterCreateClass:_layout()
 	local class_icon_data = tweak_data.gui.icons["ico_class_" .. self._class_name] or tweak_data.gui.icons.ico_flag_empty
 	self._background = self._object:rect({
@@ -65,14 +67,17 @@ function RaidGUIControlListItemCharacterCreateClass:_layout()
 	self._class_icon:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 38-40
 function RaidGUIControlListItemCharacterCreateClass:data()
 	return self._data
 end
 
+-- Lines 42-45
 function RaidGUIControlListItemCharacterCreateClass:highlight_on()
 	self._background:show()
 end
 
+-- Lines 47-53
 function RaidGUIControlListItemCharacterCreateClass:highlight_off()
 	if not self._selected and not self._active and self._background and self._red_selected_line then
 		self._background:hide()
@@ -80,6 +85,7 @@ function RaidGUIControlListItemCharacterCreateClass:highlight_off()
 	end
 end
 
+-- Lines 55-66
 function RaidGUIControlListItemCharacterCreateClass:activate_on()
 	self._background:show()
 	self._red_selected_line:show()
@@ -93,6 +99,7 @@ function RaidGUIControlListItemCharacterCreateClass:activate_on()
 	end
 end
 
+-- Lines 68-77
 function RaidGUIControlListItemCharacterCreateClass:activate_off()
 	self:highlight_off()
 
@@ -105,12 +112,14 @@ function RaidGUIControlListItemCharacterCreateClass:activate_off()
 	end
 end
 
+-- Lines 79-86
 function RaidGUIControlListItemCharacterCreateClass:mouse_released(o, button, x, y)
 	if self:inside(x, y) then
 		return self:on_mouse_released(button)
 	end
 end
 
+-- Lines 88-95
 function RaidGUIControlListItemCharacterCreateClass:on_mouse_released(button)
 	if self.on_click_callback then
 		self.on_click_callback(button, self, self._data)
@@ -119,6 +128,7 @@ function RaidGUIControlListItemCharacterCreateClass:on_mouse_released(button)
 	end
 end
 
+-- Lines 97-107
 function RaidGUIControlListItemCharacterCreateClass:select()
 	self._selected = true
 
@@ -130,6 +140,7 @@ function RaidGUIControlListItemCharacterCreateClass:select()
 	end
 end
 
+-- Lines 109-115
 function RaidGUIControlListItemCharacterCreateClass:unselect()
 	self._selected = false
 
@@ -137,10 +148,12 @@ function RaidGUIControlListItemCharacterCreateClass:unselect()
 	self._class_icon:set_color(tweak_data.gui.colors.raid_dirty_white)
 end
 
+-- Lines 117-119
 function RaidGUIControlListItemCharacterCreateClass:selected()
 	return self._selected
 end
 
+-- Lines 121-127
 function RaidGUIControlListItemCharacterCreateClass:activate()
 	self._active = true
 
@@ -148,16 +161,19 @@ function RaidGUIControlListItemCharacterCreateClass:activate()
 	self:highlight_on()
 end
 
+-- Lines 129-134
 function RaidGUIControlListItemCharacterCreateClass:deactivate()
 	self._active = false
 
 	self:activate_off()
 end
 
+-- Lines 136-138
 function RaidGUIControlListItemCharacterCreateClass:activated()
 	return self._active
 end
 
+-- Lines 140-149
 function RaidGUIControlListItemCharacterCreateClass:confirm_pressed()
 	if not self._selected then
 		return false
@@ -170,6 +186,7 @@ function RaidGUIControlListItemCharacterCreateClass:confirm_pressed()
 	end
 end
 
+-- Lines 151-156
 function RaidGUIControlListItemCharacterCreateClass:mouse_double_click(o, button, x, y)
 	if self._on_double_click_callback then
 		self._on_double_click_callback(nil, self, self._data)

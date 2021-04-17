@@ -3,6 +3,7 @@ RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_CUSTOMIZE = "button_cust
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_DELETE = "button_delete"
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_CREATE = "button_create"
 
+-- Lines 8-22
 function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	RaidGUIControlListItemCharacterSelectButton.super.init(self, parent, params)
 
@@ -46,6 +47,7 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	})
 end
 
+-- Lines 24-48
 function RaidGUIControlListItemCharacterSelectButton:set_button(button_type)
 	if button_type == RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_CUSTOMIZE then
 		self._icon:set_image(tweak_data.gui.icons.list_btn_ico_customize.texture)
@@ -68,20 +70,24 @@ function RaidGUIControlListItemCharacterSelectButton:set_button(button_type)
 	end
 end
 
+-- Lines 50-53
 function RaidGUIControlListItemCharacterSelectButton:highlight_on()
 	self._background:set_image(tweak_data.gui.icons.btn_list_rect_hover.texture)
 	self._background:set_texture_rect(tweak_data.gui.icons.btn_list_rect_hover.texture_rect)
 end
 
+-- Lines 55-58
 function RaidGUIControlListItemCharacterSelectButton:highlight_off()
 	self._background:set_image(tweak_data.gui.icons.btn_list_rect.texture)
 	self._background:set_texture_rect(tweak_data.gui.icons.btn_list_rect.texture_rect)
 end
 
+-- Lines 60-63
 function RaidGUIControlListItemCharacterSelectButton:mouse_released(o, button, x, y)
 	return self:on_mouse_released()
 end
 
+-- Lines 65-72
 function RaidGUIControlListItemCharacterSelectButton:on_mouse_released()
 	if self._special_action_callback then
 		self._special_action_callback(self._params.slot_index, self._button_type)

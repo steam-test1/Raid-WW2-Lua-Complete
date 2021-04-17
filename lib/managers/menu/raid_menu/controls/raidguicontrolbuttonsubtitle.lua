@@ -13,6 +13,7 @@ RaidGUIControlButtonSubtitle.PRESSED_SIZE = 0.9
 RaidGUIControlButtonSubtitle.SELECTOR_TOP_LEFT = "ico_sel_rect_small_top_left"
 RaidGUIControlButtonSubtitle.SELECTOR_BOTTOM_RIGHT = "ico_sel_rect_small_bottom_right"
 
+-- Lines 18-80
 function RaidGUIControlButtonSubtitle:init(parent, params)
 	RaidGUIControlButtonSubtitle.super.init(self, parent, params)
 
@@ -83,6 +84,7 @@ function RaidGUIControlButtonSubtitle:init(parent, params)
 	self._auto_deactivate = params.auto_deactivate
 end
 
+-- Lines 82-92
 function RaidGUIControlButtonSubtitle:_init_panel()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_subtitle_button"
@@ -94,6 +96,7 @@ function RaidGUIControlButtonSubtitle:_init_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 94-119
 function RaidGUIControlButtonSubtitle:_create_selectors()
 	local selector_panel_params = {
 		alpha = 0,
@@ -121,6 +124,7 @@ function RaidGUIControlButtonSubtitle:_create_selectors()
 	selector_bottom_right:set_bottom(self._selector_panel:h())
 end
 
+-- Lines 122-143
 function RaidGUIControlButtonSubtitle:_fit_size()
 	local _, _, w, h = self._text:text_rect()
 
@@ -144,36 +148,43 @@ function RaidGUIControlButtonSubtitle:_fit_size()
 	self._text:set_bottom(self._object:h() / 2 + h / 2)
 end
 
+-- Lines 145-148
 function RaidGUIControlButtonSubtitle:set_x(x)
 	self._object:set_x(x)
 
 	self._align = "left"
 end
 
+-- Lines 150-153
 function RaidGUIControlButtonSubtitle:set_center_x(x)
 	self._object:set_center_x(x)
 
 	self._align = "center"
 end
 
+-- Lines 155-157
 function RaidGUIControlButtonSubtitle:set_center_y(y)
 	self._object:set_center_y(y)
 end
 
+-- Lines 159-162
 function RaidGUIControlButtonSubtitle:set_right(x)
 	self._object:set_right(x)
 
 	self._align = "right"
 end
 
+-- Lines 164-166
 function RaidGUIControlButtonSubtitle:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 168-170
 function RaidGUIControlButtonSubtitle:set_bottom(bottom)
 	self._object:set_bottom(bottom)
 end
 
+-- Lines 173-190
 function RaidGUIControlButtonSubtitle:highlight_on(skip_animation)
 	if self._params.no_highlight then
 		return
@@ -194,6 +205,7 @@ function RaidGUIControlButtonSubtitle:highlight_on(skip_animation)
 	end
 end
 
+-- Lines 193-207
 function RaidGUIControlButtonSubtitle:highlight_off(skip_animation)
 	if self._params.no_highlight or self._active then
 		return
@@ -210,12 +222,14 @@ function RaidGUIControlButtonSubtitle:highlight_off(skip_animation)
 	self._play_mouse_over_sound = true
 end
 
+-- Lines 209-212
 function RaidGUIControlButtonSubtitle:mouse_released(o, button, x, y)
 	self:on_mouse_released(button)
 
 	return true
 end
 
+-- Lines 214-221
 function RaidGUIControlButtonSubtitle:on_mouse_pressed(button)
 	if self._params.no_click then
 		return
@@ -225,6 +239,7 @@ function RaidGUIControlButtonSubtitle:on_mouse_pressed(button)
 	self._icon:animate(callback(self, self, "_animate_press"))
 end
 
+-- Lines 223-235
 function RaidGUIControlButtonSubtitle:on_mouse_released(button)
 	if self._params.no_click then
 		return
@@ -238,16 +253,19 @@ function RaidGUIControlButtonSubtitle:on_mouse_released(button)
 	end
 end
 
+-- Lines 237-241
 function RaidGUIControlButtonSubtitle:on_double_click(button)
 	if self.on_double_click_callback then
 		self.on_double_click_callback(button, self, self._data)
 	end
 end
 
+-- Lines 251-253
 function RaidGUIControlButtonSubtitle:set_alpha(alpha)
 	self._object:set_alpha(alpha)
 end
 
+-- Lines 255-263
 function RaidGUIControlButtonSubtitle:set_selected(value)
 	self._selected = value
 
@@ -258,10 +276,12 @@ function RaidGUIControlButtonSubtitle:set_selected(value)
 	end
 end
 
+-- Lines 265-267
 function RaidGUIControlButtonSubtitle:selected()
 	return self._selected
 end
 
+-- Lines 269-277
 function RaidGUIControlButtonSubtitle:set_active(value)
 	self._active = value
 
@@ -272,19 +292,23 @@ function RaidGUIControlButtonSubtitle:set_active(value)
 	end
 end
 
+-- Lines 279-281
 function RaidGUIControlButtonSubtitle:active()
 	return self._active
 end
 
+-- Lines 283-285
 function RaidGUIControlButtonSubtitle:show()
 	self._object:set_visible(true)
 end
 
+-- Lines 287-291
 function RaidGUIControlButtonSubtitle:hide()
 	self._object:stop()
 	self._object:set_visible(false)
 end
 
+-- Lines 293-299
 function RaidGUIControlButtonSubtitle:enable(active_texture_color)
 	self._icon:set_alpha(1)
 	self._text:set_alpha(1)
@@ -294,6 +318,7 @@ function RaidGUIControlButtonSubtitle:enable(active_texture_color)
 	self._enabled = true
 end
 
+-- Lines 301-307
 function RaidGUIControlButtonSubtitle:disable(inactive_texture_color)
 	self._icon:set_alpha(RaidGUIControlButtonSubtitle.DISABLED_ALPHA)
 	self._text:set_alpha(RaidGUIControlButtonSubtitle.DISABLED_ALPHA)
@@ -303,12 +328,14 @@ function RaidGUIControlButtonSubtitle:disable(inactive_texture_color)
 	self._enabled = false
 end
 
+-- Lines 309-313
 function RaidGUIControlButtonSubtitle:confirm_pressed()
 	if self._selected then
 		self:on_mouse_released(Idstring("0"))
 	end
 end
 
+-- Lines 319-347
 function RaidGUIControlButtonSubtitle:_animate_highlight_on()
 	local starting_color = self._text:color()
 	local duration = 0.2
@@ -339,6 +366,7 @@ function RaidGUIControlButtonSubtitle:_animate_highlight_on()
 	end
 end
 
+-- Lines 349-372
 function RaidGUIControlButtonSubtitle:_animate_highlight_off()
 	local starting_color = self._text:color()
 	local duration = 0.2
@@ -363,6 +391,7 @@ function RaidGUIControlButtonSubtitle:_animate_highlight_off()
 	self._color_t = 0
 end
 
+-- Lines 374-390
 function RaidGUIControlButtonSubtitle:_animate_press()
 	local t = 0
 	local duration = 0.05
@@ -380,6 +409,7 @@ function RaidGUIControlButtonSubtitle:_animate_press()
 	self._icon:set_center(self._icon_center_x, self._icon_center_y)
 end
 
+-- Lines 392-411
 function RaidGUIControlButtonSubtitle:_animate_release()
 	local t = 0
 	local duration = 0.25

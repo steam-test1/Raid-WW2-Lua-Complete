@@ -5,28 +5,34 @@ SubtitleSequence = SubtitleSequence or CoreClass.class()
 Subtitle = Subtitle or CoreClass.class()
 StringIDSubtitle = StringIDSubtitle or CoreClass.class(Subtitle)
 
+-- Lines 13-17
 function SubtitleSequence:init(sequence_node)
 	if sequence_node then
 		self:_load_from_xml(sequence_node)
 	end
 end
 
+-- Lines 19-21
 function SubtitleSequence:name()
 	return self:parameters().name or ""
 end
 
+-- Lines 23-25
 function SubtitleSequence:duration()
 	return self.__subtitles and self.__subtitles[#self.__subtitles]:end_time()
 end
 
+-- Lines 27-29
 function SubtitleSequence:parameters()
 	return self.__parameters or {}
 end
 
+-- Lines 31-33
 function SubtitleSequence:subtitles()
 	return self.__subtitles or {}
 end
 
+-- Lines 35-38
 function SubtitleSequence:add_subtitle(subtitle)
 	self.__subtitles = self.__subtitles or {}
 
@@ -35,6 +41,7 @@ function SubtitleSequence:add_subtitle(subtitle)
 	end)
 end
 
+-- Lines 40-60
 function SubtitleSequence:_load_from_xml(sequence_node)
 	assert(managers.localization, "Localization Manager not ready.")
 	assert(sequence_node and sequence_node:name() == "sequence", "Attempting to construct from non-sequence XML node.")
@@ -59,14 +66,17 @@ function SubtitleSequence:_load_from_xml(sequence_node)
 	CoreClass.freeze(self.__subtitles)
 end
 
+-- Lines 62-64
 function SubtitleSequence:_report_bad_string_id(string_id)
 	Localizer:lookup(string_id)
 end
 
+-- Lines 66-68
 function SubtitleSequence:_xml_assert(condition, node, message)
 	return condition or error(string.format("Error parsing \"%s\" - %s", string.gsub(node:file(), "^.*[/\\]", ""), message))
 end
 
+-- Lines 75-81
 function Subtitle:init(string_data, start_time, duration, color, nationality_icon)
 	self.__string_data = string_data ~= nil and assert(tostring(string_data), "Invalid string argument.") or ""
 	self.__start_time = assert(tonumber(start_time), "Invalid start time argument.")
@@ -75,34 +85,42 @@ function Subtitle:init(string_data, start_time, duration, color, nationality_ico
 	self.__nationality_icon = nationality_icon
 end
 
+-- Lines 83-85
 function Subtitle:string()
 	return self.__string_data
 end
 
+-- Lines 87-89
 function Subtitle:color()
 	return self.__color
 end
 
+-- Lines 91-93
 function Subtitle:start_time()
 	return self.__start_time
 end
 
+-- Lines 95-97
 function Subtitle:nationality_icon()
 	return self.__nationality_icon
 end
 
+-- Lines 99-101
 function Subtitle:end_time()
 	return self:start_time() + (self:duration() or math.huge)
 end
 
+-- Lines 103-105
 function Subtitle:duration()
 	return self.__duration
 end
 
+-- Lines 107-109
 function Subtitle:is_active_at_time(time)
 	return self:start_time() < time and time < self:end_time()
 end
 
+-- Lines 116-119
 function StringIDSubtitle:string()
 	assert(managers.localization, "Localization Manager not ready.")
 

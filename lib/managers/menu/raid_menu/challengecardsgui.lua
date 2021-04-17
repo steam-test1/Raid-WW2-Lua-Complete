@@ -2,6 +2,7 @@ ChallengeCardsGui = ChallengeCardsGui or class(RaidGuiBase)
 ChallengeCardsGui.PHASE = 1
 ChallengeCardsGui.SUGGESTED_CARDS_Y = 540
 
+-- Lines 8-26
 function ChallengeCardsGui:init(ws, fullscreen_ws, node, component_name)
 	ChallengeCardsGui.super.init(self, ws, fullscreen_ws, node, component_name)
 
@@ -17,6 +18,7 @@ function ChallengeCardsGui:init(ws, fullscreen_ws, node, component_name)
 	}, callback(self, self, "_players_inventory_processed"))
 end
 
+-- Lines 28-36
 function ChallengeCardsGui:_set_initial_data()
 	self._challenge_cards_data_source = {}
 	self._challenge_cards_steam_data_source = {}
@@ -25,6 +27,7 @@ function ChallengeCardsGui:_set_initial_data()
 	self._sound_source = SoundDevice:create_source("challenge_card")
 end
 
+-- Lines 38-212
 function ChallengeCardsGui:_layout()
 	self._phase_one_panel = self._root_panel:panel({
 		name = "phase_one_panel",
@@ -294,6 +297,7 @@ function ChallengeCardsGui:_layout()
 	})
 end
 
+-- Lines 214-226
 function ChallengeCardsGui:_setup_single_player()
 	self._is_single_player = managers.network:session():count_all_peers() == 1
 	self._suggest_button_string_id = "menu_suggest_card_buton"
@@ -307,15 +311,18 @@ function ChallengeCardsGui:_setup_single_player()
 	self._suggest_card_button:set_text(self:translate(self._suggest_button_string_id, true))
 end
 
+-- Lines 230-234
 function ChallengeCardsGui:host_skip_suggestions()
 	self:phase_two_cancel()
 	self:redirect_to_level_loading()
 end
 
+-- Lines 236-240
 function ChallengeCardsGui:on_item_host_clicks_suggested_card_grid(selected_item_data)
 	self:select_suggested_card(selected_item_data)
 end
 
+-- Lines 242-258
 function ChallengeCardsGui:sync_host_selects_suggested_card(card_key_name, peer_id, steam_instance_id)
 	if card_key_name == nil and peer_id == nil and steam_instance_id == nil then
 		self._host_selected_card = nil
@@ -333,18 +340,21 @@ function ChallengeCardsGui:sync_host_selects_suggested_card(card_key_name, peer_
 	end
 end
 
+-- Lines 260-265
 function ChallengeCardsGui:on_click_filter_rarity(rarity)
 	self._filter_rarity = rarity
 
 	self:reload_filtered_data()
 end
 
+-- Lines 267-273
 function ChallengeCardsGui:filter_cards_by_type(type)
 	self._filter_type = managers.raid_job:current_job_type()
 
 	self:reload_filtered_data()
 end
 
+-- Lines 275-329
 function ChallengeCardsGui:reload_filtered_data()
 	if self._challenge_cards_steam_data_source and (self._filter_rarity == LootDropTweakData.RARITY_ALL or not self._filter_rarity) then
 		self._challenge_cards_data_source = clone(self._challenge_cards_steam_data_source)
@@ -378,12 +388,14 @@ function ChallengeCardsGui:reload_filtered_data()
 	self._card_grid:set_selected(true)
 end
 
+-- Lines 331-335
 function ChallengeCardsGui:data_source_inventory_cards()
 	self._challenge_cards_data_source = self._challenge_cards_data_source or {}
 
 	return self._challenge_cards_data_source
 end
 
+-- Lines 337-349
 function ChallengeCardsGui:_on_click_inventory_cards(item_data)
 	if item_data then
 		self._card_details:set_card(item_data.key_name, item_data.steam_instance_ids[1])
@@ -394,6 +406,7 @@ function ChallengeCardsGui:_on_click_inventory_cards(item_data)
 	self:_update_suggest_card_button()
 end
 
+-- Lines 351-361
 function ChallengeCardsGui:_on_select_inventory_cards(item_idx, item_data)
 	if item_data then
 		self._card_details:set_card(item_data.key_name, item_data.steam_instance_ids[1])
@@ -404,6 +417,7 @@ function ChallengeCardsGui:_on_select_inventory_cards(item_idx, item_data)
 	self:_update_suggest_card_button()
 end
 
+-- Lines 363-374
 function ChallengeCardsGui:suggest_card()
 	local card, steam_instance_id = self._card_details:get_card()
 
@@ -415,12 +429,14 @@ function ChallengeCardsGui:suggest_card()
 	managers.raid_menu:on_escape()
 end
 
+-- Lines 376-382
 function ChallengeCardsGui:cancel_card()
 	managers.challenge_cards:remove_suggested_challenge_card()
 	managers.raid_menu:register_on_escape_callback(nil)
 	managers.raid_menu:on_escape()
 end
 
+-- Lines 384-397
 function ChallengeCardsGui:phase_two_activate()
 	local peer_id = nil
 
@@ -433,23 +449,27 @@ function ChallengeCardsGui:phase_two_activate()
 	self:redirect_to_level_loading()
 end
 
+-- Lines 399-402
 function ChallengeCardsGui:_on_continue_without_card()
 	self:host_skip_suggestions()
 
 	return true, nil
 end
 
+-- Lines 404-409
 function ChallengeCardsGui:phase_two_cancel()
 	self:sync_phase_two_execute_action("CANCEL", nil)
 	managers.network:session():send_to_peers_synched("sync_phase_two_execute_action", "CANCEL", nil)
 end
 
+-- Lines 411-421
 function ChallengeCardsGui:sync_phase_two_execute_action(action, peer_id)
 	if action == "ACTIVATE" and self._host_selected_card then
 		managers.challenge_cards:select_challenge_card(peer_id)
 	end
 end
 
+-- Lines 425-439
 function ChallengeCardsGui:_players_inventory_processed(params)
 	self._challenge_cards_steam_data_source = managers.challenge_cards:get_readyup_card_cache()
 	self._challenge_cards_data_source = clone(self._challenge_cards_steam_data_source)
@@ -460,11 +480,13 @@ function ChallengeCardsGui:_players_inventory_processed(params)
 	self._card_grid:set_selected(true)
 end
 
+-- Lines 442-446
 function ChallengeCardsGui:suggestions_changed()
 	self._suggested_cards_grid:refresh_data()
 	self._host_activates_card_grid:refresh_data()
 end
 
+-- Lines 448-461
 function ChallengeCardsGui:close()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(false)
 	managers.system_event_listener:remove_listener("challenge_cards_gui_suggestions_changed")
@@ -475,6 +497,7 @@ function ChallengeCardsGui:close()
 	ChallengeCardsGui.super.close(self)
 end
 
+-- Lines 463-478
 function ChallengeCardsGui:select_suggested_card(selected_item_data)
 	local is_host = Network:is_server()
 
@@ -492,6 +515,7 @@ function ChallengeCardsGui:select_suggested_card(selected_item_data)
 	end
 end
 
+-- Lines 482-498
 function ChallengeCardsGui:_update_suggest_card_button()
 	local local_peer = managers.network:session():local_peer()
 	local suggested_card = managers.challenge_cards:get_suggested_cards()[local_peer._id]
@@ -509,6 +533,7 @@ function ChallengeCardsGui:_update_suggest_card_button()
 	end
 end
 
+-- Lines 500-524
 function ChallengeCardsGui:_auto_select_first_card_in_grid()
 	local card_data = nil
 
@@ -527,6 +552,7 @@ function ChallengeCardsGui:_auto_select_first_card_in_grid()
 	self:_update_suggest_card_button()
 end
 
+-- Lines 526-546
 function ChallengeCardsGui:update(t, dt)
 	if ChallengeCardsGui.PHASE == 2 then
 		if self._phase_two_timer > 0 then
@@ -549,6 +575,7 @@ function ChallengeCardsGui:update(t, dt)
 	end
 end
 
+-- Lines 548-591
 function ChallengeCardsGui:redirect_to_phase_two_screen()
 	if not self._phase_one_completed then
 		self._phase_one_completed = true
@@ -592,6 +619,7 @@ function ChallengeCardsGui:redirect_to_phase_two_screen()
 	end
 end
 
+-- Lines 593-597
 function ChallengeCardsGui:redirect_to_level_loading()
 	self._phase_two_completed = true
 
@@ -599,6 +627,7 @@ function ChallengeCardsGui:redirect_to_level_loading()
 	managers.global_state:fire_event(GlobalStateManager.EVENT_START_RAID)
 end
 
+-- Lines 603-654
 function ChallengeCardsGui:bind_controller_inputs()
 	local legend = {
 		controller = {},
@@ -687,18 +716,21 @@ function ChallengeCardsGui:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 656-660
 function ChallengeCardsGui:_on_tabs_rarity_left()
 	self._rarity_filters_tabs:_move_left()
 
 	return true, nil
 end
 
+-- Lines 662-666
 function ChallengeCardsGui:_on_tabs_rarity_right()
 	self._rarity_filters_tabs:_move_right()
 
 	return true, nil
 end
 
+-- Lines 668-672
 function ChallengeCardsGui:_on_select_card_left()
 	local item_data = self._host_activates_card_grid:move_selection_left()
 
@@ -707,6 +739,7 @@ function ChallengeCardsGui:_on_select_card_left()
 	return true, nil
 end
 
+-- Lines 674-678
 function ChallengeCardsGui:_on_select_card_right()
 	local item_data = self._host_activates_card_grid:move_selection_right()
 
@@ -715,6 +748,7 @@ function ChallengeCardsGui:_on_select_card_right()
 	return true, nil
 end
 
+-- Lines 681-690
 function ChallengeCardsGui:back_pressed()
 	if ChallengeCardsGui.PHASE == 2 then
 		return true
@@ -726,6 +760,7 @@ function ChallengeCardsGui:back_pressed()
 	end
 end
 
+-- Lines 692-700
 function ChallengeCardsGui:confirm_pressed()
 	if ChallengeCardsGui.PHASE == 1 then
 		self:suggest_card()

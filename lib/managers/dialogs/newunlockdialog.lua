@@ -3,6 +3,7 @@ require("lib/managers/dialogs/GenericDialog")
 
 NewUnlockDialog = NewUnlockDialog or class(GenericDialog)
 
+-- Lines 8-48
 function NewUnlockDialog:init(manager, data, is_title_outside)
 	Dialog.init(self, manager, data)
 
@@ -74,12 +75,14 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 	self._sound_event = data.sound_event
 end
 
+-- Lines 50-54
 function NewUnlockDialog:fade_in()
 	NewUnlockDialog.super.fade_in(self)
 
 	self._start_sound_t = self._sound_event and TimerManager:main():time() + 0.2
 end
 
+-- Lines 56-63
 function NewUnlockDialog:update(t, dt)
 	NewUnlockDialog.super.update(self, t, dt)
 

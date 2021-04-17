@@ -4,12 +4,14 @@ core:import("CoreClass")
 
 RumbleManager = RumbleManager or class(CoreRumbleManager.RumbleManager)
 
+-- Lines 8-13
 function RumbleManager:init()
 	RumbleManager.super.init(self)
 	_G.tweak_data:add_reload_callback(self, callback(self, self, "setup_preset_rumbles"))
 	self:setup_preset_rumbles()
 end
 
+-- Lines 15-29
 function RumbleManager:setup_preset_rumbles()
 	self:add_preset_rumbles("weapon_fire", {
 		sustain = 0.1,

@@ -3,6 +3,7 @@ require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_editor/parameter_widgets/CoreMaterialEditorParameter")
 local CoreMaterialEditorDBValue = CoreMaterialEditorDBValue or class(CoreMaterialEditorParameter)
 
+-- Lines 8-17
 function CoreMaterialEditorDBValue:init(parent, editor, parameter_info, parameter_node)
 	CoreMaterialEditorParameter.init(self, parent, editor, parameter_info, parameter_node)
 
@@ -14,14 +15,17 @@ function CoreMaterialEditorDBValue:init(parent, editor, parameter_info, paramete
 	self._right_box:add(self._combobox, 0, 4, "ALL,EXPAND")
 end
 
+-- Lines 19-21
 function CoreMaterialEditorDBValue:update(t, dt)
 	CoreMaterialEditorParameter.update(self, t, dt)
 end
 
+-- Lines 23-25
 function CoreMaterialEditorDBValue:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
+-- Lines 27-37
 function CoreMaterialEditorDBValue:on_toggle_customize()
 	self._customize = not self._customize
 
@@ -32,6 +36,7 @@ function CoreMaterialEditorDBValue:on_toggle_customize()
 	self:update_live()
 end
 
+-- Lines 41-45
 function CoreMaterialEditorDBValue:_on_combobox_changed()
 	self._value = self._combobox:get_value()
 
@@ -39,6 +44,7 @@ function CoreMaterialEditorDBValue:_on_combobox_changed()
 	self:update_live()
 end
 
+-- Lines 47-51
 function CoreMaterialEditorDBValue:_fill_combobox()
 	for _, v in ipairs(LightIntensityDB:list()) do
 		self._combobox:append(v:s())

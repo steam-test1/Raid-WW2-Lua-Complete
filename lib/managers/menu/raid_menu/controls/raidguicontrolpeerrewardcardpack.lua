@@ -13,6 +13,7 @@ RaidGUIControlPeerRewardCardPack.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_siz
 RaidGUIControlPeerRewardCardPack.IMAGE_PADDING_RIGHT = 10
 RaidGUIControlPeerRewardCardPack.TEXT_X = 128
 
+-- Lines 23-33
 function RaidGUIControlPeerRewardCardPack:init(parent, params)
 	RaidGUIControlPeerRewardCardPack.super.init(self, parent, params)
 
@@ -26,6 +27,7 @@ function RaidGUIControlPeerRewardCardPack:init(parent, params)
 	self:_create_card_pack_details()
 end
 
+-- Lines 36-46
 function RaidGUIControlPeerRewardCardPack:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -37,6 +39,7 @@ function RaidGUIControlPeerRewardCardPack:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 49-89
 function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 	local params_weapon_point_image = {
 		name = "card_pack_image",
@@ -81,11 +84,13 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 	self._card_pack_description_label:set_h(h)
 end
 
+-- Lines 91-94
 function RaidGUIControlPeerRewardCardPack:set_player_name(name)
 	self._name_label:set_text(utf8.to_upper(name))
 	self:_layout_text()
 end
 
+-- Lines 96-102
 function RaidGUIControlPeerRewardCardPack:_layout_text()
 	local _, _, _, h = self._name_label:text_rect()
 

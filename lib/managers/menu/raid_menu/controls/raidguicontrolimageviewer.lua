@@ -6,6 +6,7 @@ RaidGUIControlImageViewer.BULLET_WIDTH = 16
 RaidGUIControlImageViewer.BULLET_HEIGHT = 16
 RaidGUIControlImageViewer.BULLET_PADDING = 2
 
+-- Lines 10-16
 function RaidGUIControlImageViewer:init(parent, params)
 	RaidGUIControlImageViewer.super.init(self, parent, params)
 
@@ -14,6 +15,7 @@ function RaidGUIControlImageViewer:init(parent, params)
 	self:_layout()
 end
 
+-- Lines 18-36
 function RaidGUIControlImageViewer:_layout()
 	self._image_frames = {}
 	self._bullets = {}
@@ -54,6 +56,7 @@ function RaidGUIControlImageViewer:_layout()
 	})
 end
 
+-- Lines 38-49
 function RaidGUIControlImageViewer:set_data(item_value)
 	self._object:stop()
 	self:_reset_animation_state()
@@ -65,6 +68,7 @@ function RaidGUIControlImageViewer:set_data(item_value)
 	end
 end
 
+-- Lines 51-68
 function RaidGUIControlImageViewer:_reset_animation_state()
 	self._image_frames[1]:set_x(0)
 	self._image_frames[2]:set_x(self._params.w)
@@ -86,6 +90,7 @@ function RaidGUIControlImageViewer:_reset_animation_state()
 	end
 end
 
+-- Lines 70-97
 function RaidGUIControlImageViewer:start()
 	if not self._data then
 		return
@@ -122,6 +127,7 @@ function RaidGUIControlImageViewer:start()
 	end
 end
 
+-- Lines 99-199
 function RaidGUIControlImageViewer:_animate_image_rotation()
 	self._current_image_index = 1
 	self._active_image_frame = 1
@@ -188,6 +194,7 @@ function RaidGUIControlImageViewer:_animate_image_rotation()
 	end
 end
 
+-- Lines 201-209
 function RaidGUIControlImageViewer:_get_next_index(current_index, table_size)
 	local next_index = (current_index + 1) % table_size
 
@@ -198,6 +205,7 @@ function RaidGUIControlImageViewer:_get_next_index(current_index, table_size)
 	return next_index
 end
 
+-- Lines 211-215
 function RaidGUIControlImageViewer:destroy()
 	self._object:stop()
 	self:_reset_animation_state()

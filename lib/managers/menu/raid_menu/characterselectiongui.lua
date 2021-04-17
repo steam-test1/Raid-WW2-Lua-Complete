@@ -1,5 +1,6 @@
 CharacterSelectionGui = CharacterSelectionGui or class(RaidGuiBase)
 
+-- Lines 5-27
 function CharacterSelectionGui:init(ws, fullscreen_ws, node, component_name)
 	self._loading_units = {}
 
@@ -20,6 +21,7 @@ function CharacterSelectionGui:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:hide_background()
 end
 
+-- Lines 29-33
 function CharacterSelectionGui:_setup_properties()
 	CharacterSelectionGui.super._setup_properties(self)
 
@@ -27,6 +29,7 @@ function CharacterSelectionGui:_setup_properties()
 	self._background_rect = nil
 end
 
+-- Lines 35-42
 function CharacterSelectionGui:_set_initial_data()
 	managers.character_customization:reset_current_version_to_attach()
 
@@ -35,6 +38,7 @@ function CharacterSelectionGui:_set_initial_data()
 	self:_load_all_slots()
 end
 
+-- Lines 44-97
 function CharacterSelectionGui:_layout()
 	self:_disable_dof()
 	self._root_panel:label({
@@ -138,6 +142,7 @@ function CharacterSelectionGui:_layout()
 	self._right_side_info:set_right(self._root_panel:right())
 end
 
+-- Lines 102-118
 function CharacterSelectionGui:_data_source_characters_list()
 	local characters = {}
 
@@ -164,11 +169,13 @@ function CharacterSelectionGui:_data_source_characters_list()
 	return characters
 end
 
+-- Lines 121-124
 function CharacterSelectionGui:on_select_character_button()
 	self:activate_selected_character()
 	self._characters_list:selected_item():select()
 end
 
+-- Lines 127-144
 function CharacterSelectionGui:_character_action_callback(slot_index, action)
 	Application:trace("[CharacterSelectionGui:_character_action_callback] slot_index, action ", slot_index, action)
 
@@ -189,6 +196,7 @@ function CharacterSelectionGui:_character_action_callback(slot_index, action)
 	end
 end
 
+-- Lines 147-152
 function CharacterSelectionGui:_customize_character()
 	self._open_customization_screen_flag = true
 	self._open_creation_screen_flag = false
@@ -196,6 +204,7 @@ function CharacterSelectionGui:_customize_character()
 	self:_pre_close_screen()
 end
 
+-- Lines 155-169
 function CharacterSelectionGui:_delete_character(slot_index)
 	if managers.network:session():has_other_peers() and managers.savefile:get_active_characters_count() <= 1 then
 		local params = {
@@ -214,6 +223,7 @@ function CharacterSelectionGui:_delete_character(slot_index)
 	self:show_character_delete_confirmation(callback(self, self, "on_item_yes_delete_characters_list"))
 end
 
+-- Lines 172-180
 function CharacterSelectionGui:_create_character()
 	managers.savefile:set_create_character_slot(self._selected_character_slot)
 
@@ -223,22 +233,26 @@ function CharacterSelectionGui:_create_character()
 	self:_pre_close_screen()
 end
 
+-- Lines 183-188
 function CharacterSelectionGui:_on_item_click(slot_index)
 	Application:trace("[CharacterSelectionGui:_on_item_click]")
 	self:_select_character_slot(slot_index)
 end
 
+-- Lines 191-197
 function CharacterSelectionGui:_on_item_selected(slot_index)
 	Application:trace("[CharacterSelectionGui:_on_item_selected] slot_index ", slot_index)
 	self:_select_character_slot(slot_index)
 end
 
+-- Lines 200-207
 function CharacterSelectionGui:_on_item_double_click(slot_index)
 	self:_select_character_slot(slot_index)
 	self:activate_selected_character()
 	self._characters_list:selected_item():select()
 end
 
+-- Lines 209-220
 function CharacterSelectionGui:_rebind_controller_buttons(slot_index)
 	local cache = Global.savefile_manager.meta_data_list[slot_index].cache
 
@@ -251,6 +265,7 @@ function CharacterSelectionGui:_rebind_controller_buttons(slot_index)
 	end
 end
 
+-- Lines 225-245
 function CharacterSelectionGui:_load_all_slots()
 	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		if Global.savefile_manager.meta_data_list and Global.savefile_manager.meta_data_list[slot_index] then
@@ -270,6 +285,7 @@ function CharacterSelectionGui:_load_all_slots()
 	self._active_character_slot = last_selected_slot
 end
 
+-- Lines 248-272
 function CharacterSelectionGui:_load_slot_data(slot_index, save_as_last_selected_slot)
 	managers.warcry:reset()
 
@@ -281,6 +297,7 @@ function CharacterSelectionGui:_load_slot_data(slot_index, save_as_last_selected
 	managers.savefile:_load(slot_index, false, nil)
 end
 
+-- Lines 277-311
 function CharacterSelectionGui:_select_character_slot(slot_index)
 	Application:trace("[CharacterSelectionGui:_select_character_slot] slot_index, self._selected_character_slot, self._active_character_slot ", slot_index, self._selected_character_slot, self._active_character_slot)
 	self:_rebind_controller_buttons(slot_index)
@@ -309,6 +326,7 @@ function CharacterSelectionGui:_select_character_slot(slot_index)
 	end
 end
 
+-- Lines 314-341
 function CharacterSelectionGui:activate_selected_character()
 	Application:trace("[CharacterSelectionGui:activate_selected_character] selected_slot, active_slot ", self._selected_character_slot, self._active_character_slot)
 	managers.menu_component:post_event("character_selection_doubleclick")
@@ -333,6 +351,7 @@ function CharacterSelectionGui:activate_selected_character()
 	self:_activate_character_profile(self._selected_character_slot)
 end
 
+-- Lines 344-398
 function CharacterSelectionGui:_activate_character_profile(slot_index)
 	Application:trace("[CharacterSelectionGui:_activate_character_profile] slot_index ", slot_index)
 
@@ -348,6 +367,7 @@ function CharacterSelectionGui:_activate_character_profile(slot_index)
 	self._characters_list:activate_item_by_value(self._active_character_slot)
 end
 
+-- Lines 401-449
 function CharacterSelectionGui:show_selected_character_details(slot_index)
 	local cache = nil
 	local profile_name = ""
@@ -399,12 +419,14 @@ function CharacterSelectionGui:show_selected_character_details(slot_index)
 	end
 end
 
+-- Lines 452-458
 function CharacterSelectionGui:show_selected_character(slot_index)
 	self._loading_units[CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT] = true
 
 	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_show_selected_character_loaded", slot_index))
 end
 
+-- Lines 460-496
 function CharacterSelectionGui:_show_selected_character_loaded(slot_index)
 	if self._closing_screen then
 		if self._spawned_character_unit then
@@ -439,6 +461,7 @@ function CharacterSelectionGui:_show_selected_character_loaded(slot_index)
 	self._spawned_character_unit:customization():attach_all_parts_to_character(slot_index, managers.character_customization:get_current_version_to_attach())
 end
 
+-- Lines 498-505
 function CharacterSelectionGui:destroy_character_unit()
 	if self._spawned_character_unit then
 		self._spawned_character_unit:customization():destroy_all_parts_on_character()
@@ -448,6 +471,7 @@ function CharacterSelectionGui:destroy_character_unit()
 	end
 end
 
+-- Lines 507-517
 function CharacterSelectionGui:get_character_spawn_location()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 
@@ -460,6 +484,7 @@ function CharacterSelectionGui:get_character_spawn_location()
 	end
 end
 
+-- Lines 519-529
 function CharacterSelectionGui:back_pressed()
 	Application:trace("[CharacterSelectionGui:back_pressed] ")
 
@@ -470,6 +495,7 @@ function CharacterSelectionGui:back_pressed()
 	CharacterSelectionGui.super.back_pressed(self)
 end
 
+-- Lines 531-566
 function CharacterSelectionGui:_pre_close_screen()
 	Application:trace("[CharacterSelectionGui][_pre_close_screen]")
 	self:destroy_character_unit()
@@ -497,6 +523,7 @@ function CharacterSelectionGui:_pre_close_screen()
 	self:reset_weapon_challenges()
 end
 
+-- Lines 568-603
 function CharacterSelectionGui:_extra_character_setup()
 	Application:trace("[CharacterSelectionGui:_extra_character_setup]")
 	managers.hud:refresh_player_panel()
@@ -526,6 +553,7 @@ function CharacterSelectionGui:_extra_character_setup()
 	managers.weapon_skills:update_weapon_part_animation_weights()
 end
 
+-- Lines 605-640
 function CharacterSelectionGui:_pre_close_screen_loading_done()
 	Application:trace("[CharacterSelectionGui:_pre_close_screen_loading_done]")
 	managers.savefile:remove_load_done_callback(self._pre_close_screen_loading_done_callback)
@@ -553,11 +581,13 @@ function CharacterSelectionGui:_pre_close_screen_loading_done()
 	self:reset_weapon_challenges()
 end
 
+-- Lines 642-646
 function CharacterSelectionGui:reset_weapon_challenges()
 	managers.challenge:deactivate_all_challenges()
 	managers.weapon_skills:activate_current_challenges_for_weapon(managers.player:get_current_state()._equipped_unit:base()._name_id)
 end
 
+-- Lines 648-667
 function CharacterSelectionGui:close()
 	Application:trace("[CharacterSelectionGui][close] ")
 
@@ -574,11 +604,13 @@ function CharacterSelectionGui:close()
 	self._closing_screen = true
 end
 
+-- Lines 669-672
 function CharacterSelectionGui:on_escape()
 	Application:trace("[CharacterSelectionGui:on_escape]")
 	self:_pre_close_screen()
 end
 
+-- Lines 674-682
 function CharacterSelectionGui:show_character_delete_confirmation(callback_yes_function)
 	local params = {
 		text = managers.localization:text("dialog_character_delete_message"),
@@ -589,6 +621,7 @@ function CharacterSelectionGui:show_character_delete_confirmation(callback_yes_f
 	managers.menu_component:post_event("delete_character_prompt")
 end
 
+-- Lines 685-737
 function CharacterSelectionGui:on_item_yes_delete_characters_list()
 	Application:trace("[CharacterSelectionGui:on_item_yes_delete_characters_list] self._character_slot_to_delete ", self._character_slot_to_delete)
 
@@ -636,6 +669,7 @@ function CharacterSelectionGui:on_item_yes_delete_characters_list()
 	self._character_slot_to_delete = nil
 end
 
+-- Lines 739-832
 function CharacterSelectionGui:update(t, dt)
 	if not self._is_load_done and not self._is_render_done then
 		self._is_load_done = true
@@ -695,6 +729,7 @@ function CharacterSelectionGui:update(t, dt)
 	end
 end
 
+-- Lines 837-854
 function CharacterSelectionGui:_bind_active_slot_controller_inputs()
 	local bindings = {
 		{
@@ -726,6 +761,7 @@ function CharacterSelectionGui:_bind_active_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 856-873
 function CharacterSelectionGui:_bind_inactive_slot_controller_inputs()
 	local bindings = {
 		{
@@ -757,6 +793,7 @@ function CharacterSelectionGui:_bind_inactive_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 875-890
 function CharacterSelectionGui:_bind_empty_slot_controller_inputs()
 	local bindings = {
 		{
@@ -783,21 +820,25 @@ function CharacterSelectionGui:_bind_empty_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 893-896
 function CharacterSelectionGui:_on_character_customize()
 	Application:trace("[CharacterSelectionGui:_on_character_customize]")
 	self:_customize_character()
 end
 
+-- Lines 898-901
 function CharacterSelectionGui:_on_character_delete()
 	Application:trace("[CharacterSelectionGui:_on_character_delete]")
 	self:_delete_character(self._selected_character_slot)
 end
 
+-- Lines 903-906
 function CharacterSelectionGui:_on_character_select()
 	Application:trace("[CharacterSelectionGui:_on_character_select]")
 	self:activate_selected_character()
 end
 
+-- Lines 908-911
 function CharacterSelectionGui:_on_character_create()
 	Application:trace("[CharacterSelectionGui:_on_character_create]")
 	self:_create_character()

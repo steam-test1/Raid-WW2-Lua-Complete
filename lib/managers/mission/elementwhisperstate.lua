@@ -2,14 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementWhisperState = ElementWhisperState or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementWhisperState:init(...)
 	ElementWhisperState.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementWhisperState:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 13-21
 function ElementWhisperState:on_executed(instigator)
 	if not self._values.enabled then
 		return

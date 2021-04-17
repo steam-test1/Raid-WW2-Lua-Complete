@@ -10,6 +10,7 @@ RaidGUIControlWeaponSkillRow.LINE_Y = 56
 RaidGUIControlWeaponSkillRow.LINE_LENGTH = 64
 RaidGUIControlWeaponSkillRow.LINE_THICKNESS = 3
 
+-- Lines 16-22
 function RaidGUIControlWeaponSkillRow:init(parent, params)
 	RaidGUIControlWeaponSkillRow.super.init(self, parent, params)
 
@@ -19,6 +20,7 @@ function RaidGUIControlWeaponSkillRow:init(parent, params)
 	self:_create_items()
 end
 
+-- Lines 24-48
 function RaidGUIControlWeaponSkillRow:set_weapon_skill(weapon_id, weapon_skills, i_skill)
 	self._weapon_id = weapon_id
 	self._weapon_skills = weapon_skills
@@ -45,6 +47,7 @@ function RaidGUIControlWeaponSkillRow:set_weapon_skill(weapon_id, weapon_skills,
 	end
 end
 
+-- Lines 54-68
 function RaidGUIControlWeaponSkillRow:_create_skill_label()
 	local name_label_params = {
 		vertical = "center",
@@ -63,6 +66,7 @@ function RaidGUIControlWeaponSkillRow:_create_skill_label()
 	self._name_label = self._object:label(name_label_params)
 end
 
+-- Lines 70-109
 function RaidGUIControlWeaponSkillRow:_create_items()
 	local lines_params = {
 		x = RaidGUIControlWeaponSkillRow.LINE_START_X,
@@ -111,18 +115,23 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 	end
 end
 
+-- Lines 111-113
 function RaidGUIControlWeaponSkillRow:get_skill_buttons()
 	return self._buttons
 end
 
+-- Lines 115-116
 function RaidGUIControlWeaponSkillRow:on_click_weapon_skill_button()
 end
 
+-- Lines 118-119
 function RaidGUIControlWeaponSkillRow:on_mouse_enter_weapon_skill_button()
 end
 
+-- Lines 121-122
 function RaidGUIControlWeaponSkillRow:on_mouse_exit_weapon_skill_button()
 end
 
+-- Lines 124-148
 function RaidGUIControlWeaponSkillRow:mouse_moved(o, x, y)
 end

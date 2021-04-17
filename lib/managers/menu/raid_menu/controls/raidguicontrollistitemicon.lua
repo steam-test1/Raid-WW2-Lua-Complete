@@ -3,6 +3,7 @@ RaidGUIControlListItemIcon.ICON_PADDING = 28
 RaidGUIControlListItemIcon.ICON_WIDTH = 42
 RaidGUIControlListItemIcon.ICON_HEIGHT = 42
 
+-- Lines 7-42
 function RaidGUIControlListItemIcon:init(parent, params, data)
 	RaidGUIControlListItemIcon.super.init(self, parent, params)
 
@@ -73,6 +74,7 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 	self:highlight_off()
 end
 
+-- Lines 44-52
 function RaidGUIControlListItemIcon:_layout_breadcrumb()
 	local breadcrumb_params = {
 		category = self._data.breadcrumb.category,
@@ -84,6 +86,7 @@ function RaidGUIControlListItemIcon:_layout_breadcrumb()
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 54-65
 function RaidGUIControlListItemIcon:on_mouse_released(button)
 	if self._data.breadcrumb then
 		managers.breadcrumb:remove_breadcrumb(self._data.breadcrumb.category, self._data.breadcrumb.identifiers)
@@ -98,6 +101,7 @@ function RaidGUIControlListItemIcon:on_mouse_released(button)
 	end
 end
 
+-- Lines 67-76
 function RaidGUIControlListItemIcon:mouse_double_click(o, button, x, y)
 	if self._params.no_click then
 		return
@@ -110,10 +114,12 @@ function RaidGUIControlListItemIcon:mouse_double_click(o, button, x, y)
 	end
 end
 
+-- Lines 78-80
 function RaidGUIControlListItemIcon:selected()
 	return self._selected
 end
 
+-- Lines 82-96
 function RaidGUIControlListItemIcon:select()
 	self._selected = true
 
@@ -130,11 +136,13 @@ function RaidGUIControlListItemIcon:select()
 	end
 end
 
+-- Lines 98-101
 function RaidGUIControlListItemIcon:unfocus()
 	self._item_background:hide()
 	self._item_highlight_marker:hide()
 end
 
+-- Lines 103-109
 function RaidGUIControlListItemIcon:unselect()
 	self._selected = false
 
@@ -143,10 +151,12 @@ function RaidGUIControlListItemIcon:unselect()
 	self._item_highlight_marker:hide()
 end
 
+-- Lines 111-113
 function RaidGUIControlListItemIcon:data()
 	return self._data
 end
 
+-- Lines 115-122
 function RaidGUIControlListItemIcon:highlight_on()
 	self._item_background:show()
 
@@ -157,6 +167,7 @@ function RaidGUIControlListItemIcon:highlight_on()
 	end
 end
 
+-- Lines 124-135
 function RaidGUIControlListItemIcon:highlight_off()
 	if not managers.menu:is_pc_controller() then
 		self._item_highlight_marker:hide()
@@ -168,6 +179,7 @@ function RaidGUIControlListItemIcon:highlight_off()
 	end
 end
 
+-- Lines 137-142
 function RaidGUIControlListItemIcon:confirm_pressed()
 	if self._selected then
 		self:on_mouse_released(self._name)

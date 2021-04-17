@@ -3,6 +3,7 @@ RaidGUIControlBranchingBarLootScreenPath.COLOR_ACTIVE = Color(0.6941176470588235
 RaidGUIControlBranchingBarLootScreenPath.COLOR_FILL = tweak_data.menu.raid_red
 RaidGUIControlBranchingBarLootScreenPath.COLOR_DISABLED = Color(0.34509803921568627, 0.34509803921568627, 0.34509803921568627)
 
+-- Lines 7-30
 function RaidGUIControlBranchingBarLootScreenPath:init(parent, params)
 	RaidGUIControlBranchingBarLootScreenPath.super.init(self, parent, params)
 
@@ -33,6 +34,7 @@ function RaidGUIControlBranchingBarLootScreenPath:init(parent, params)
 	self._object = self._line
 end
 
+-- Lines 32-50
 function RaidGUIControlBranchingBarLootScreenPath:_init_state_data()
 	self._state_data = {
 		STATE_ACTIVE = {}
@@ -63,24 +65,28 @@ function RaidGUIControlBranchingBarLootScreenPath:_init_state_data()
 	}
 end
 
+-- Lines 54-57
 function RaidGUIControlBranchingBarLootScreenPath:set_active()
 	self._state = self.STATE_ACTIVE
 
 	self:init_to_state(self._state)
 end
 
+-- Lines 61-64
 function RaidGUIControlBranchingBarLootScreenPath:set_full()
 	self._state = self.STATE_FULL
 
 	self:init_to_state(self._state)
 end
 
+-- Lines 68-71
 function RaidGUIControlBranchingBarLootScreenPath:set_disabled()
 	self._state = self.STATE_DISABLED
 
 	self:init_to_state(self._state)
 end
 
+-- Lines 73-85
 function RaidGUIControlBranchingBarLootScreenPath:set_progress(progress)
 	RaidGUIControlBranchingBarLootScreenPath.super.set_progress(self, progress)
 
@@ -94,6 +100,7 @@ function RaidGUIControlBranchingBarLootScreenPath:set_progress(progress)
 	self._active_line:set_points(points)
 end
 
+-- Lines 87-99
 function RaidGUIControlBranchingBarLootScreenPath:init_to_state(state)
 	local state_data = self._state_data[state]
 

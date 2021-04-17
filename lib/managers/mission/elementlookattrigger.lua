@@ -2,14 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementLookAtTrigger = ElementLookAtTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementLookAtTrigger:init(...)
 	ElementLookAtTrigger.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementLookAtTrigger:on_script_activated()
 	self:add_callback()
 end
 
+-- Lines 13-18
 function ElementLookAtTrigger:set_enabled(enabled)
 	ElementLookAtTrigger.super.set_enabled(self, enabled)
 
@@ -18,12 +21,14 @@ function ElementLookAtTrigger:set_enabled(enabled)
 	end
 end
 
+-- Lines 20-24
 function ElementLookAtTrigger:add_callback()
 	if not self._callback then
 		self._callback = self._mission_script:add(callback(self, self, "update_lookat"), self._values.interval)
 	end
 end
 
+-- Lines 26-31
 function ElementLookAtTrigger:remove_callback()
 	if self._callback then
 		self._mission_script:remove(self._callback)
@@ -32,6 +37,7 @@ function ElementLookAtTrigger:remove_callback()
 	end
 end
 
+-- Lines 33-44
 function ElementLookAtTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -44,6 +50,7 @@ function ElementLookAtTrigger:on_executed(instigator)
 	end
 end
 
+-- Lines 47-79
 function ElementLookAtTrigger:update_lookat()
 	if not self._values.enabled then
 		return

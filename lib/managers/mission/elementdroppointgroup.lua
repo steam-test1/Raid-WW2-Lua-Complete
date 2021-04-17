@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementDropPointGroup = ElementDropPointGroup or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-12
 function ElementDropPointGroup:init(...)
 	ElementDropPointGroup.super.init(self, ...)
 
@@ -12,14 +13,17 @@ function ElementDropPointGroup:init(...)
 	end
 end
 
+-- Lines 14-16
 function ElementDropPointGroup:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
+-- Lines 18-20
 function ElementDropPointGroup:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 22-33
 function ElementDropPointGroup:get_random_drop_point()
 	local eligible_points = {}
 
@@ -34,6 +38,7 @@ function ElementDropPointGroup:get_random_drop_point()
 	return eligible_points[math.random(#eligible_points)]
 end
 
+-- Lines 35-48
 function ElementDropPointGroup:on_executed(instigator)
 	return
 
@@ -45,5 +50,6 @@ function ElementDropPointGroup:on_executed(instigator)
 	ElementDropPointGroup.super.on_executed(self, instigator)
 end
 
+-- Lines 50-51
 function ElementDropPointGroup:operation_remove()
 end

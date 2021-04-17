@@ -4,6 +4,7 @@ RaidGUIControlButtonShortPrimaryDisabled.HOVER_ICON = "btn_dissabled_192_hover"
 RaidGUIControlButtonShortPrimaryDisabled.W = tweak_data.gui.icons[RaidGUIControlButtonShortPrimaryDisabled.ICON].texture_rect[3]
 RaidGUIControlButtonShortPrimaryDisabled.H = tweak_data.gui.icons[RaidGUIControlButtonShortPrimaryDisabled.ICON].texture_rect[4]
 
+-- Lines 8-36
 function RaidGUIControlButtonShortPrimaryDisabled:init(parent, params)
 	if not params then
 		Application:error("Trying to create a short primary disabled button without parameters!", debug.traceback())
@@ -27,6 +28,7 @@ function RaidGUIControlButtonShortPrimaryDisabled:init(parent, params)
 	RaidGUIControlButtonShortPrimaryDisabled.super.init(self, parent, params)
 end
 
+-- Lines 38-42
 function RaidGUIControlButtonShortPrimaryDisabled:show()
 	RaidGUIControlButtonShortPrimaryDisabled.super.show(self)
 
@@ -34,6 +36,7 @@ function RaidGUIControlButtonShortPrimaryDisabled:show()
 	self._params.no_highlight = true
 end
 
+-- Lines 44-48
 function RaidGUIControlButtonShortPrimaryDisabled:hide()
 	RaidGUIControlButtonShortPrimaryDisabled.super.hide(self)
 

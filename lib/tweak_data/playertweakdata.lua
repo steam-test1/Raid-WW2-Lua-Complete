@@ -1,34 +1,41 @@
 PlayerTweakData = PlayerTweakData or class()
 
+-- Lines 3-5
 function PlayerTweakData:_set_difficulty_1()
 	self.damage.automatic_respawn_time = 30
 end
 
+-- Lines 7-12
 function PlayerTweakData:_set_difficulty_2()
 	self.damage.automatic_respawn_time = 60
 	self.damage.DOWNED_TIME_DEC = 7
 	self.damage.DOWNED_TIME_MIN = 5
 end
 
+-- Lines 14-19
 function PlayerTweakData:_set_difficulty_3()
 	self.damage.automatic_respawn_time = 90
 	self.damage.DOWNED_TIME_DEC = 10
 	self.damage.DOWNED_TIME_MIN = 5
 end
 
+-- Lines 21-26
 function PlayerTweakData:_set_difficulty_4()
 	self.damage.automatic_respawn_time = 220
 	self.damage.DOWNED_TIME_DEC = 15
 	self.damage.DOWNED_TIME_MIN = 1
 end
 
+-- Lines 28-32
 function PlayerTweakData:_set_singleplayer()
 	self.damage.REGENERATE_TIME = 1.75
 end
 
+-- Lines 34-36
 function PlayerTweakData:_set_multiplayer()
 end
 
+-- Lines 38-242
 function PlayerTweakData:init()
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.run_move_dir_treshold = 0.7
@@ -239,6 +246,7 @@ function PlayerTweakData:init()
 	self:_init_team_ai_tweak_data()
 end
 
+-- Lines 244-252
 function PlayerTweakData:get_tweak_data_for_class(class)
 	if not class or not self.class_defaults[class] then
 		Application:error("[PlayerTweakData] get_tweak_data_for_class(): trying to get tweak data for non-existent class: ", class)
@@ -250,6 +258,7 @@ function PlayerTweakData:get_tweak_data_for_class(class)
 	return self.class_defaults[class]
 end
 
+-- Lines 254-263
 function PlayerTweakData:_init_class_specific_tweak_data()
 	self.class_defaults = {}
 
@@ -260,6 +269,7 @@ function PlayerTweakData:_init_class_specific_tweak_data()
 	self:_init_demolitions_tweak_data()
 end
 
+-- Lines 265-271
 function PlayerTweakData:_init_team_ai_tweak_data()
 	self.team_ai = {
 		movement = {}
@@ -269,6 +279,7 @@ function PlayerTweakData:_init_team_ai_tweak_data()
 	}
 end
 
+-- Lines 273-318
 function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default = {
 		damage = {}
@@ -313,6 +324,7 @@ function PlayerTweakData:_init_default_class_tweak_data()
 	}
 end
 
+-- Lines 320-329
 function PlayerTweakData:_init_recon_tweak_data()
 	local recon = SkillTreeTweakData.CLASS_RECON
 	self.class_defaults[recon] = deep_clone(self.class_defaults.default)
@@ -323,6 +335,7 @@ function PlayerTweakData:_init_recon_tweak_data()
 	self.class_defaults[recon].movement.speed.STEELSIGHT_SPEED = 203.5
 end
 
+-- Lines 331-340
 function PlayerTweakData:_init_assault_tweak_data()
 	local assault = SkillTreeTweakData.CLASS_ASSAULT
 	self.class_defaults[assault] = deep_clone(self.class_defaults.default)
@@ -332,6 +345,7 @@ function PlayerTweakData:_init_assault_tweak_data()
 	self.class_defaults[assault].movement.speed.RUNNING_SPEED = 517.5
 end
 
+-- Lines 342-352
 function PlayerTweakData:_init_insurgent_tweak_data()
 	local insurgent = SkillTreeTweakData.CLASS_INFILTRATOR
 	self.class_defaults[insurgent] = deep_clone(self.class_defaults.default)
@@ -342,11 +356,13 @@ function PlayerTweakData:_init_insurgent_tweak_data()
 	self.class_defaults[insurgent].movement.speed.RUNNING_SPEED = 603.75
 end
 
+-- Lines 354-358
 function PlayerTweakData:_init_demolitions_tweak_data()
 	local demolitions = SkillTreeTweakData.CLASS_DEMOLITIONS
 	self.class_defaults[demolitions] = deep_clone(self.class_defaults.default)
 end
 
+-- Lines 360-404
 function PlayerTweakData:_init_parachute()
 	self.freefall = {
 		gravity = 982,
@@ -388,6 +404,7 @@ function PlayerTweakData:_init_parachute()
 	}
 end
 
+-- Lines 407-720
 function PlayerTweakData:_init_pistol_stances()
 	self.stances.m1911 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.1257, 29.4187, 1.86738)
@@ -581,6 +598,7 @@ function PlayerTweakData:_init_pistol_stances()
 	self.stances.webley.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -55, 0)
 end
 
+-- Lines 722-884
 function PlayerTweakData:_init_smg_stances()
 	self.stances.sterling = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(7.98744, 8.04285, -5.10392)
@@ -703,6 +721,7 @@ function PlayerTweakData:_init_smg_stances()
 	self.stances.mp38.crouched.vel_overshot.pitch_pos = -5
 end
 
+-- Lines 886-1038
 function PlayerTweakData:_init_shotgun_stances()
 	self.stances.geco = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.4127, 15.7764, -5.20036)
@@ -810,6 +829,7 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.browning.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
 end
 
+-- Lines 1041-1524
 function PlayerTweakData:_init_new_stances()
 	self.stances.dp28 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(12.6977, 8.57658, -6.68822)

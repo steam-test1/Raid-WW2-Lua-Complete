@@ -1,10 +1,12 @@
 CoreUnitSequenceUnitElement = CoreUnitSequenceUnitElement or class(MissionElement)
 UnitSequenceUnitElement = UnitSequenceUnitElement or class(CoreUnitSequenceUnitElement)
 
+-- Lines 5-7
 function UnitSequenceUnitElement:init(...)
 	CoreUnitSequenceUnitElement.init(self, ...)
 end
 
+-- Lines 9-15
 function CoreUnitSequenceUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -13,15 +15,18 @@ function CoreUnitSequenceUnitElement:init(unit)
 	table.insert(self._save_values, "trigger_list")
 end
 
+-- Lines 17-19
 function CoreUnitSequenceUnitElement:update_unselected(...)
 	MissionElement.update_unselected(self, ...)
 end
 
+-- Lines 21-24
 function CoreUnitSequenceUnitElement:update_selected(...)
 	MissionElement.update_selected(self, ...)
 	self:_draw_trigger_units(0, 1, 1)
 end
 
+-- Lines 26-34
 function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units)
 	CoreUnitSequenceUnitElement.super.get_links_to_unit(self, to_unit, links, all_units)
 
@@ -35,11 +40,13 @@ function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units
 	end
 end
 
+-- Lines 36-39
 function CoreUnitSequenceUnitElement:draw_links_unselected(...)
 	CoreUnitSequenceUnitElement.super.draw_links_unselected(self, ...)
 	self:_draw_trigger_units(0, 0.75, 0.75)
 end
 
+-- Lines 41-57
 function CoreUnitSequenceUnitElement:_get_sequence_units()
 	local units = {}
 	local trigger_name_list = self._unit:damage():get_trigger_name_list()
@@ -61,6 +68,7 @@ function CoreUnitSequenceUnitElement:_get_sequence_units()
 	return units
 end
 
+-- Lines 59-71
 function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	for _, unit in ipairs(self:_get_sequence_units()) do
 		local params = {
@@ -76,17 +84,20 @@ function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	end
 end
 
+-- Lines 73-76
 function CoreUnitSequenceUnitElement:new_save_values(...)
 	self:_set_trigger_list()
 
 	return MissionElement.new_save_values(self, ...)
 end
 
+-- Lines 78-81
 function CoreUnitSequenceUnitElement:save_values(...)
 	self:_set_trigger_list()
 	MissionElement.save_values(self, ...)
 end
 
+-- Lines 83-107
 function CoreUnitSequenceUnitElement:_set_trigger_list()
 	self._hed.trigger_list = {}
 	local triggers = managers.sequence:get_trigger_list(self._unit:name())
@@ -114,6 +125,7 @@ function CoreUnitSequenceUnitElement:_set_trigger_list()
 	end
 end
 
+-- Lines 109-121
 function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -128,6 +140,7 @@ function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 	self:add_help_text(help)
 end
 
+-- Lines 123-126
 function CoreUnitSequenceUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "core/units/run_sequence_dummy/run_sequence_dummy",

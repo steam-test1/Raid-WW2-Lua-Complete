@@ -22,6 +22,7 @@ RaidGUIControlCardBase.ICON_LEFT_PADDING = 0.085
 RaidGUIControlCardBase.ICON_TOP_PADDING = 0.045
 RaidGUIControlCardBase.ICON_DISTANCE = 0
 
+-- Lines 31-186
 function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	RaidGUIControlCardBase.super.init(self, parent, params)
 
@@ -222,6 +223,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	self._card_panel:set_visible(false)
 end
 
+-- Lines 188-206
 function RaidGUIControlCardBase:_refit_card_title_text(original_font_size)
 	local font_sizes = {}
 
@@ -244,10 +246,12 @@ function RaidGUIControlCardBase:_refit_card_title_text(original_font_size)
 	end
 end
 
+-- Lines 208-210
 function RaidGUIControlCardBase:get_data()
 	return self._item_data
 end
 
+-- Lines 212-314
 function RaidGUIControlCardBase:set_card(card_data)
 	self._item_data = card_data
 
@@ -347,49 +351,60 @@ function RaidGUIControlCardBase:set_card(card_data)
 	end
 end
 
+-- Lines 316-320
 function RaidGUIControlCardBase:set_card_image(texture, texture_rect)
 	Application:trace("[RaidGUIControlCardBase:set_card_image]")
 	self._card_image:set_image(texture)
 	self._card_image:set_texture_rect(texture_rect)
 end
 
+-- Lines 322-324
 function RaidGUIControlCardBase:set_title(title)
 	self._card_title:set_text(title)
 end
 
+-- Lines 326-328
 function RaidGUIControlCardBase:set_description(description)
 	self._card_description:set_text(description)
 end
 
+-- Lines 330-332
 function RaidGUIControlCardBase:set_xp_bonus(xp_bonus)
 	self._xp_bonus:set_text(xp_bonus)
 end
 
+-- Lines 334-337
 function RaidGUIControlCardBase:set_color(color)
 	self._card_title:set_color(color)
 	self._xp_bonus:set_color(color)
 end
 
+-- Lines 339-341
 function RaidGUIControlCardBase:set_title_visible(flag)
 	self._card_title:set_visible(flag)
 end
 
+-- Lines 343-345
 function RaidGUIControlCardBase:set_description_visible(flag)
 	self._card_description:set_visible(flag)
 end
 
+-- Lines 347-349
 function RaidGUIControlCardBase:set_xp_bonus_visible(flag)
 	self._xp_bonus:set_visible(flag)
 end
 
+-- Lines 351-353
 function RaidGUIControlCardBase:set_rarity_icon_visible(flag)
 	self._card_type_icon:set_visible(flag)
 end
 
+-- Lines 355-357
 function RaidGUIControlCardBase:set_type_icon_visible(flag)
 	self._card_rarity_icon:set_visible(flag)
 end
 
+-- Lines 359-368
 function RaidGUIControlCardBase:set_visible(flag)
 	self._card_image:set_visible(flag)
 	self:set_title_visible(flag)
@@ -397,6 +412,7 @@ function RaidGUIControlCardBase:set_visible(flag)
 	self:set_type_icon_visible(flag)
 end
 
+-- Lines 370-378
 function RaidGUIControlCardBase:show_card_only()
 	self._card_image:set_visible(true)
 	self:set_title_visible(false)
@@ -405,46 +421,56 @@ function RaidGUIControlCardBase:show_card_only()
 	self:set_type_icon_visible(false)
 end
 
+-- Lines 382-386
 function RaidGUIControlCardBase:mouse_released(o, button, x, y)
 	self:on_mouse_released(button, x, y)
 
 	return true
 end
 
+-- Lines 388-397
 function RaidGUIControlCardBase:on_mouse_released(button, x, y)
 	if self._on_click_callback then
 		self._on_click_callback(button, self, self._item_data)
 	end
 end
 
+-- Lines 399-401
 function RaidGUIControlCardBase:selected()
 	return self._selected
 end
 
+-- Lines 403-405
 function RaidGUIControlCardBase:select()
 	self._selected = true
 end
 
+-- Lines 407-409
 function RaidGUIControlCardBase:unselect()
 	self._selected = false
 end
 
+-- Lines 413-415
 function RaidGUIControlCardBase:w()
 	return self._card_image:w()
 end
 
+-- Lines 417-419
 function RaidGUIControlCardBase:h()
 	return self._card_image:h()
 end
 
+-- Lines 421-423
 function RaidGUIControlCardBase:left()
 	return self._card_image:x()
 end
 
+-- Lines 425-427
 function RaidGUIControlCardBase:right()
 	return self:left() + self:w()
 end
 
+-- Lines 429-431
 function RaidGUIControlCardBase:set_center_x(x)
 	self._object:set_center_x(x)
 end

@@ -3,6 +3,7 @@ EnvironmentAreaOperatorElement.ACTIONS = {
 	"set"
 }
 
+-- Lines 5-18
 function EnvironmentAreaOperatorElement:init(unit)
 	EnvironmentAreaOperatorElement.super.init(self, unit)
 
@@ -18,9 +19,11 @@ function EnvironmentAreaOperatorElement:init(unit)
 	self._actions = EnvironmentAreaOperatorElement.ACTIONS
 end
 
+-- Lines 20-21
 function EnvironmentAreaOperatorElement:clear(...)
 end
 
+-- Lines 23-26
 function EnvironmentAreaOperatorElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		category = "script_data",
@@ -32,6 +35,7 @@ function EnvironmentAreaOperatorElement:add_to_mission_package()
 	})
 end
 
+-- Lines 28-43
 function EnvironmentAreaOperatorElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

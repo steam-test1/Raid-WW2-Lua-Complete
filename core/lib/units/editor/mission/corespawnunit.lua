@@ -1,10 +1,12 @@
 CoreSpawnUnitUnitElement = CoreSpawnUnitUnitElement or class(MissionElement)
 SpawnUnitUnitElement = SpawnUnitUnitElement or class(CoreSpawnUnitUnitElement)
 
+-- Lines 5-7
 function SpawnUnitUnitElement:init(...)
 	CoreSpawnUnitUnitElement.init(self, ...)
 end
 
+-- Lines 9-23
 function CoreSpawnUnitUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -21,6 +23,7 @@ function CoreSpawnUnitUnitElement:init(unit)
 	self._test_units = {}
 end
 
+-- Lines 25-31
 function CoreSpawnUnitUnitElement:test_element()
 	if self._hed.unit_name ~= "none" then
 		local unit = safe_spawn_unit(self._hed.unit_name, self._unit:position(), self._unit:rotation())
@@ -30,6 +33,7 @@ function CoreSpawnUnitUnitElement:test_element()
 	end
 end
 
+-- Lines 33-40
 function CoreSpawnUnitUnitElement:stop_test_element()
 	for _, unit in ipairs(self._test_units) do
 		if alive(unit) then
@@ -40,10 +44,12 @@ function CoreSpawnUnitUnitElement:stop_test_element()
 	self._test_units = {}
 end
 
+-- Lines 42-44
 function CoreSpawnUnitUnitElement:update_selected(time, rel_time)
 	Application:draw_arrow(self._unit:position(), self._unit:position() + self._hed.unit_spawn_dir * 400, 0.75, 0.75, 0.75)
 end
 
+-- Lines 46-69
 function CoreSpawnUnitUnitElement:update_editing(time, rel_time)
 	local kb = Input:keyboard()
 	local speed = 60 * rel_time
@@ -77,6 +83,7 @@ function CoreSpawnUnitUnitElement:update_editing(time, rel_time)
 	end
 end
 
+-- Lines 71-87
 function CoreSpawnUnitUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -109,6 +116,7 @@ Fist punch (8 kg, 10 m/s)
 Bullet hit (10 g, 900 m/s)]])
 end
 
+-- Lines 89-91
 function CoreSpawnUnitUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		category = "units",

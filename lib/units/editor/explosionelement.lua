@@ -1,5 +1,6 @@
 ExplosionUnitElement = ExplosionUnitElement or class(FeedbackUnitElement)
 
+-- Lines 3-17
 function ExplosionUnitElement:init(unit)
 	ExplosionUnitElement.super.init(self, unit)
 
@@ -16,10 +17,12 @@ function ExplosionUnitElement:init(unit)
 	table.insert(self._save_values, "sound_event")
 end
 
+-- Lines 25-27
 function ExplosionUnitElement:update_selected(...)
 	ExplosionUnitElement.super.update_selected(self, ...)
 end
 
+-- Lines 29-42
 function ExplosionUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -45,6 +48,7 @@ function ExplosionUnitElement:_build_panel(panel, panel_sizer)
 	ExplosionUnitElement.super._build_panel(self, panel, panel_sizer)
 end
 
+-- Lines 44-49
 function ExplosionUnitElement:add_to_mission_package()
 	ExplosionUnitElement.super.add_to_mission_package(self)
 

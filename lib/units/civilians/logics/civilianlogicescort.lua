@@ -1,5 +1,6 @@
 CivilianLogicEscort = class(CivilianLogicBase)
 
+-- Lines 7-59
 function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -67,6 +68,7 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	my_data.safe_distance_offset = math.rand(100)
 end
 
+-- Lines 63-80
 function CivilianLogicEscort.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -84,6 +86,7 @@ function CivilianLogicEscort.exit(data, new_logic_name, enter_params)
 	my_data.safe_distance_offset = nil
 end
 
+-- Lines 84-165
 function CivilianLogicEscort.update(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -185,9 +188,11 @@ function CivilianLogicEscort.update(data)
 	end
 end
 
+-- Lines 169-170
 function CivilianLogicEscort.on_intimidated(data, amount, aggressor_unit)
 end
 
+-- Lines 174-187
 function CivilianLogicEscort.on_action_completed(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -203,6 +208,7 @@ function CivilianLogicEscort.on_action_completed(data, action)
 	end
 end
 
+-- Lines 191-220
 function CivilianLogicEscort._upd_pathing(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -239,13 +245,16 @@ function CivilianLogicEscort._upd_pathing(data, my_data)
 	end
 end
 
+-- Lines 224-226
 function CivilianLogicEscort.on_new_objective(data, old_objective)
 	CivilianLogicIdle.on_new_objective(data, old_objective)
 end
 
+-- Lines 230-231
 function CivilianLogicEscort.damage_clbk(data, damage_info)
 end
 
+-- Lines 235-273
 function CivilianLogicEscort._get_objective_path_data(data, my_data)
 	local objective = data.objective
 	local path_data = objective.path_data
@@ -317,6 +326,7 @@ function CivilianLogicEscort._get_objective_path_data(data, my_data)
 	end
 end
 
+-- Lines 277-310
 function CivilianLogicEscort.too_scared_to_move(data)
 	local my_data = data.internal_data
 	local nobody_close = true
@@ -353,6 +363,7 @@ function CivilianLogicEscort.too_scared_to_move(data)
 	end
 end
 
+-- Lines 314-333
 function CivilianLogicEscort._begin_advance_action(data, my_data)
 	CopLogicAttack._adjust_path_start_pos(data, my_data.advance_path)
 
@@ -376,6 +387,7 @@ function CivilianLogicEscort._begin_advance_action(data, my_data)
 	end
 end
 
+-- Lines 337-351
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
 		clamp_to_graph = true,
@@ -392,15 +404,18 @@ function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	my_data.getting_up = data.unit:movement():action_request(action)
 end
 
+-- Lines 355-359
 function CivilianLogicEscort._get_all_paths(data)
 	return {
 		advance_path = data.internal_data.advance_path
 	}
 end
 
+-- Lines 363-365
 function CivilianLogicEscort._set_verified_paths(data, verified_paths)
 	data.internal_data.stare_path = verified_paths.stare_path
 end
 
+-- Lines 370-371
 function CivilianLogicEscort.on_alert()
 end

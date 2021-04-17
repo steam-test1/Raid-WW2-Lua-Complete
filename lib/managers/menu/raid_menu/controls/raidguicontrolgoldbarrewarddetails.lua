@@ -30,6 +30,7 @@ RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_H = 64
 RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_FONT_SIZE = tweak_data.gui.font_sizes.size_38
 RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_COLOR = tweak_data.gui.colors.raid_white
 
+-- Lines 46-64
 function RaidGUIControlGoldBarRewardDetails:init(parent, params)
 	RaidGUIControlGoldBarRewardDetails.super.init(self, parent, params)
 
@@ -48,6 +49,7 @@ function RaidGUIControlGoldBarRewardDetails:init(parent, params)
 	self:_create_item_type()
 end
 
+-- Lines 67-76
 function RaidGUIControlGoldBarRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -59,6 +61,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 78-85
 function RaidGUIControlGoldBarRewardDetails:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -68,6 +71,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
+-- Lines 87-118
 function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	local title_description_params = {
 		name = "title_description",
@@ -102,6 +106,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	self:_layout_gold_bar_value()
 end
 
+-- Lines 120-127
 function RaidGUIControlGoldBarRewardDetails:_layout_gold_bar_value()
 	local _, _, w, h = self._gold_bar_value:text_rect()
 
@@ -111,6 +116,7 @@ function RaidGUIControlGoldBarRewardDetails:_layout_gold_bar_value()
 	self._title_description:set_x(self._gold_bar_value:x())
 end
 
+-- Lines 129-147
 function RaidGUIControlGoldBarRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
 		name = "reward_image_panel",
@@ -131,6 +137,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_reward_image()
 	self._reward_image:set_center_y(self._reward_image_panel:h() / 2)
 end
 
+-- Lines 149-157
 function RaidGUIControlGoldBarRewardDetails:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -142,6 +149,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
+-- Lines 159-174
 function RaidGUIControlGoldBarRewardDetails:_create_description()
 	local description_params = {
 		vertical = "top",
@@ -161,6 +169,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 end
 
+-- Lines 176-191
 function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 	local item_type_params = {
 		name = "item_type",
@@ -179,6 +188,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 	self._item_type = self._right_panel:text(item_type_params)
 end
 
+-- Lines 193-271
 function RaidGUIControlGoldBarRewardDetails:show()
 	RaidGUIControlGoldBarRewardDetails.super.show(self)
 
@@ -260,6 +270,7 @@ function RaidGUIControlGoldBarRewardDetails:show()
 	self._item_type:set_x(item_type_x)
 end
 
+-- Lines 273-292
 function RaidGUIControlGoldBarRewardDetails:set_gold_bar_reward(amount)
 	local text = ""
 

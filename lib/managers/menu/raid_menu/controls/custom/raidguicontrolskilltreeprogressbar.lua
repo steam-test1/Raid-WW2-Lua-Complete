@@ -17,6 +17,7 @@ RaidGUIControlSkilltreeProgressBar.LEVEL_MARK_ICON_SIZE = 8
 RaidGUIControlSkilltreeProgressBar.SLIDER_PIMPLE_ICON = "slider_pimple"
 RaidGUIControlSkilltreeProgressBar.SLIDER_PIMPLE_COLOR = tweak_data.gui.colors.raid_red
 
+-- Lines 27-54
 function RaidGUIControlSkilltreeProgressBar:init(parent, params)
 	params.horizontal_padding = params.horizontal_padding or 0
 
@@ -45,9 +46,11 @@ function RaidGUIControlSkilltreeProgressBar:init(parent, params)
 	self:set_progress(self._progress)
 end
 
+-- Lines 57-58
 function RaidGUIControlSkilltreeProgressBar:close()
 end
 
+-- Lines 61-75
 function RaidGUIControlSkilltreeProgressBar:_create_panels()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_panel"
@@ -63,6 +66,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_panels()
 	self._inner_panel = self._object:panel(control_params)
 end
 
+-- Lines 77-93
 function RaidGUIControlSkilltreeProgressBar:_create_progress_bar()
 	local progress_bar_params = {
 		left = "slider_large_left",
@@ -82,6 +86,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_progress_bar()
 	self._progress_multiplier = self._bar_w / self._progress_bar:w()
 end
 
+-- Lines 95-134
 function RaidGUIControlSkilltreeProgressBar:_create_background()
 	local background_panel_params = {
 		name = "background_panel",
@@ -121,6 +126,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 	self._progress_line = self._background_panel:image(progress_line_params)
 end
 
+-- Lines 136-170
 function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 	local icon = RaidGUIControlSkilltreeProgressBar.SLIDER_PIMPLE_ICON
 	local icon_w = tweak_data.gui:icon_w(icon)
@@ -158,6 +164,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 	end
 end
 
+-- Lines 172-204
 function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar()
 	local level_marks_panel_params = {
 		name = "level_marks_panel",
@@ -194,6 +201,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar(
 	end
 end
 
+-- Lines 206-236
 function RaidGUIControlSkilltreeProgressBar:_create_level_and_weapons_info()
 	local level_labels_panel_params = {
 		name = "level_labels_panel",
@@ -228,6 +236,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_and_weapons_info()
 	end
 end
 
+-- Lines 238-338
 function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_level_label, number_of_weapon_unlocks)
 	local level_label_panel_params = {
 		y = 0,
@@ -341,6 +350,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_
 	return level_label_panel
 end
 
+-- Lines 340-397
 function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 	local level_labels_panel_params = {
 		name = "level_labels_panel",
@@ -410,6 +420,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 	table.insert(self._level_labels, level_label)
 end
 
+-- Lines 399-446
 function RaidGUIControlSkilltreeProgressBar:_create_weapon_unlock_icons()
 	local weapon_unlock_icons_panel_params = {
 		name = "weapon_unlock_icons_panel",
@@ -464,6 +475,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_weapon_unlock_icons()
 	end
 end
 
+-- Lines 448-465
 function RaidGUIControlSkilltreeProgressBar:set_progress(progress)
 	self._progress_bar:set_foreground_progress(self._progress_padding + progress * self._progress_multiplier)
 	self._slider_pimples_panel:set_w((self._progress_padding + progress * self._progress_multiplier) * self._progress_bar:w())
@@ -482,6 +494,7 @@ function RaidGUIControlSkilltreeProgressBar:set_progress(progress)
 	end
 end
 
+-- Lines 467-476
 function RaidGUIControlSkilltreeProgressBar:unlock_level(level)
 	for i = self._current_level, level do
 		if self._weapon_unlock_icons[i] then
@@ -494,6 +507,7 @@ function RaidGUIControlSkilltreeProgressBar:unlock_level(level)
 	self._current_level = level
 end
 
+-- Lines 478-487
 function RaidGUIControlSkilltreeProgressBar:set_level(level)
 	for i = 1, level do
 		if self._weapon_unlock_icons[i] then
@@ -506,14 +520,17 @@ function RaidGUIControlSkilltreeProgressBar:set_level(level)
 	self._current_level = level
 end
 
+-- Lines 489-491
 function RaidGUIControlSkilltreeProgressBar:hide()
 	self._object:set_alpha(0)
 end
 
+-- Lines 493-495
 function RaidGUIControlSkilltreeProgressBar:fade_in()
 	self._object:get_engine_panel():animate(callback(self, self, "_animate_fade_in"))
 end
 
+-- Lines 497-511
 function RaidGUIControlSkilltreeProgressBar:_animate_fade_in()
 	local duration = 0.3
 	local t = self._object:alpha() * duration

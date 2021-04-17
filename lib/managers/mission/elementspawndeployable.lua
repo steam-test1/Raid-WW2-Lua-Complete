@@ -2,13 +2,16 @@ core:import("CoreMissionScriptElement")
 
 ElementSpawnDeployable = ElementSpawnDeployable or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementSpawnDeployable:init(...)
 	ElementSpawnDeployable.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementSpawnDeployable:client_on_executed(...)
 end
 
+-- Lines 13-32
 function ElementSpawnDeployable:on_executed(instigator)
 	if not self._values.enabled then
 		return

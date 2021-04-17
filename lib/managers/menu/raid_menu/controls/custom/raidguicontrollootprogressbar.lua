@@ -3,6 +3,7 @@ RaidGUIControlLootProgressBar.DEFAULT_W = 1600
 RaidGUIControlLootProgressBar.DEFAULT_H = 384
 RaidGUIControlLootProgressBar.PROGRESS_BAR_H = 32
 
+-- Lines 9-26
 function RaidGUIControlLootProgressBar:init(parent, params)
 	RaidGUIControlLootProgressBar.super.init(self, parent, params)
 
@@ -23,9 +24,11 @@ function RaidGUIControlLootProgressBar:init(parent, params)
 	self:set_progress(self._progress)
 end
 
+-- Lines 29-30
 function RaidGUIControlLootProgressBar:close()
 end
 
+-- Lines 33-41
 function RaidGUIControlLootProgressBar:_create_panel()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_panel"
@@ -36,6 +39,7 @@ function RaidGUIControlLootProgressBar:_create_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 43-53
 function RaidGUIControlLootProgressBar:_create_progress_bar()
 	local progress_bar_params = {
 		name = "progress_bar",
@@ -50,6 +54,7 @@ function RaidGUIControlLootProgressBar:_create_progress_bar()
 	self._progress_bar:set_y(self._object:h() - self._progress_bar:h())
 end
 
+-- Lines 55-73
 function RaidGUIControlLootProgressBar:_create_brackets()
 	self._brackets = {}
 	local brackets = self._params.brackets
@@ -77,6 +82,7 @@ function RaidGUIControlLootProgressBar:_create_brackets()
 	end
 end
 
+-- Lines 76-89
 function RaidGUIControlLootProgressBar:set_progress(progress)
 	self._progress_bar:set_progress(progress)
 
@@ -93,14 +99,17 @@ function RaidGUIControlLootProgressBar:set_progress(progress)
 	end
 end
 
+-- Lines 91-93
 function RaidGUIControlLootProgressBar:hide()
 	self._object:set_alpha(0)
 end
 
+-- Lines 95-97
 function RaidGUIControlLootProgressBar:fade_in()
 	self._object:get_engine_panel():animate(callback(self, self, "_animate_fade_in"))
 end
 
+-- Lines 99-113
 function RaidGUIControlLootProgressBar:_animate_fade_in()
 	local duration = 0.3
 	local t = self._object:alpha() * duration

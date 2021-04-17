@@ -2,6 +2,7 @@ core:module("CoreUnit")
 core:import("CoreEngineAccess")
 core:import("CoreCode")
 
+-- Lines 12-21
 function table.get_ray_ignore_args(...)
 	local arg_list = {}
 
@@ -17,6 +18,7 @@ function table.get_ray_ignore_args(...)
 	return unpack(arg_list)
 end
 
+-- Lines 23-34
 function get_distance_to_body(body, pos)
 	local root_obj = body:root_object()
 	local min_dist = root_obj:distance_to_bounding_volume(pos)
@@ -33,6 +35,7 @@ function get_distance_to_body(body, pos)
 	return min_dist
 end
 
+-- Lines 36-63
 function reload_units(unit_name)
 	local units = World:find_units_quick("all")
 	local num_reloads = 0
@@ -64,6 +67,7 @@ function reload_units(unit_name)
 	return num_reloads
 end
 
+-- Lines 65-73
 function set_unit_and_children_visible(unit, visible, filter_func)
 	if filter_func == nil or filter_func(unit) then
 		unit:set_visible(visible)
@@ -74,6 +78,7 @@ function set_unit_and_children_visible(unit, visible, filter_func)
 	end
 end
 
+-- Lines 75-91
 function editor_load_unit(unit_name)
 	if Application:editor() then
 		local type_ids = Idstring("unit")
@@ -94,18 +99,21 @@ function editor_load_unit(unit_name)
 	end
 end
 
+-- Lines 93-97
 function safe_spawn_unit(unit_name, ...)
 	if editor_load_unit(unit_name) then
 		return World:spawn_unit(unit_name:id(), ...)
 	end
 end
 
+-- Lines 99-103
 function safe_spawn_unit_from_package(unit_name, package, ...)
 	if editor_load_unit(unit_name) then
 		return World:spawn_unit_from_package(unit_name:id(), package, ...)
 	end
 end
 
+-- Lines 105-108
 function safe_spawn_unit_without_extensions(unit_name, ...)
 	editor_load_unit(unit_name)
 

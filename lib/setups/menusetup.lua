@@ -16,6 +16,7 @@ core:import("SequenceManager")
 MenuSetup = MenuSetup or class(Setup)
 MenuSetup.IS_START_MENU = true
 
+-- Lines 24-81
 function MenuSetup:load_packages()
 	Application:debug("[MenuSetup:load_packages()]")
 	Setup.load_packages(self)
@@ -58,6 +59,7 @@ function MenuSetup:load_packages()
 			Global._game_base_package_loaded = true
 		end
 	elseif not PackageManager:loaded("packages/game_base_init") then
+		-- Lines 61-69
 		local function _load_wip_func()
 			if PackageManager:package_exists("packages/wip/game_base") then
 				if not PackageManager:loaded("packages/wip/game_base") then
@@ -70,6 +72,7 @@ function MenuSetup:load_packages()
 			end
 		end
 
+		-- Lines 70-72
 		local function load_base_func()
 			PackageManager:load("packages/game_base", _load_wip_func)
 		end
@@ -82,6 +85,7 @@ function MenuSetup:load_packages()
 	end
 end
 
+-- Lines 83-101
 function MenuSetup:_load_pkg_with_init(pkg)
 	local init_pkg = pkg .. "_init"
 
@@ -99,9 +103,11 @@ function MenuSetup:_load_pkg_with_init(pkg)
 	end
 end
 
+-- Lines 103-113
 function MenuSetup:load_stream_level_packages()
 	Application:debug("[MenuSetup:load_stream_level_packages]")
 
+	-- Lines 105-105
 	local function _empty_func()
 	end
 
@@ -115,9 +121,11 @@ function MenuSetup:load_stream_level_packages()
 	self:_load_pkg_with_init("levels/vanilla/streaming_level/world/world")
 end
 
+-- Lines 115-131
 function MenuSetup:load_camp_packages()
 	Application:debug("[MenuSetup:load_camp_packages]")
 
+	-- Lines 117-117
 	local function _empty_func()
 	end
 
@@ -132,6 +140,7 @@ function MenuSetup:load_camp_packages()
 	self:_load_pkg_with_init("levels/vanilla/camp/world/world")
 end
 
+-- Lines 133-159
 function MenuSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -161,6 +170,7 @@ function MenuSetup:gather_packages_to_unload()
 	end
 end
 
+-- Lines 161-167
 function MenuSetup:unload_packages()
 	Setup.unload_packages(self)
 
@@ -169,6 +179,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
+-- Lines 169-270
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -237,6 +248,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
+-- Lines 272-290
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	Application:debug("[MenuSetup:init_managers]")
@@ -253,6 +265,7 @@ function MenuSetup:init_managers(managers)
 	end
 end
 
+-- Lines 292-317
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -281,6 +294,7 @@ function MenuSetup:init_finalize()
 	managers.dyn_resource:post_init()
 end
 
+-- Lines 319-338
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -298,26 +312,31 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
+-- Lines 340-344
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
+-- Lines 346-350
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
+-- Lines 352-380
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
+-- Lines 382-386
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
+-- Lines 388-390
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 end

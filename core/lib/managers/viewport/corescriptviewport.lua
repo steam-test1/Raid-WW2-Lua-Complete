@@ -12,6 +12,7 @@ DEFAULT_NETWORK_LSPORT = 31255
 NETWORK_SLAVE_RECEIVER = Idstring("scriptviewport_slave")
 NETWORK_MASTER_RECEIVER = Idstring("scriptviewport_master")
 
+-- Lines 24-37
 function _ScriptViewport:init(x, y, width, height, vpm, name)
 	_ScriptViewport.super.init(self, vpm, name)
 
@@ -34,24 +35,29 @@ function _ScriptViewport:init(x, y, width, height, vpm, name)
 	self._init_trace = debug.traceback()
 end
 
+-- Lines 39-41
 function _ScriptViewport:enable_slave(port)
 	Application:stack_dump_error("Deprecated call")
 end
 
+-- Lines 43-45
 function _ScriptViewport:enable_master(host_name, port, master_listener_port, net_pump)
 	Application:stack_dump_error("Deprecated call")
 end
 
+-- Lines 47-49
 function _ScriptViewport:render_params()
 	return self._render_params
 end
 
+-- Lines 51-53
 function _ScriptViewport:set_render_params(...)
 	self._render_params = {
 		...
 	}
 end
 
+-- Lines 55-63
 function _ScriptViewport:destroy()
 	self:set_active(false)
 
@@ -65,50 +71,62 @@ function _ScriptViewport:destroy()
 	self._env_handler:destroy()
 end
 
+-- Lines 65-67
 function _ScriptViewport:set_width_mul_enabled(b)
 	self._width_mul_enabled = b
 end
 
+-- Lines 69-71
 function _ScriptViewport:width_mul_enabled()
 	return self._width_mul_enabled
 end
 
+-- Lines 73-75
 function _ScriptViewport:set_first_viewport(set_first_viewport)
 	self._env_handler:set_first_viewport(set_first_viewport)
 end
 
+-- Lines 77-79
 function _ScriptViewport:get_environment_value(data_path_key)
 	return self._env_handler:get_value(data_path_key)
 end
 
+-- Lines 81-83
 function _ScriptViewport:get_environment_path()
 	return self._env_handler:get_path()
 end
 
+-- Lines 85-87
 function _ScriptViewport:set_environment(environment_path, blend_duration, blend_bezier_curve, filter_list, unfiltered_environment_path)
 	self._env_handler:set_environment(environment_path, blend_duration, blend_bezier_curve, filter_list, unfiltered_environment_path)
 end
 
+-- Lines 89-91
 function _ScriptViewport:set_force_feeder_update()
 	self._env_handler:set_force_feeder_update()
 end
 
+-- Lines 93-95
 function _ScriptViewport:on_default_environment_changed(environment_path, blend_duration, blend_bezier_curve)
 	self._env_handler:on_default_environment_changed(environment_path, blend_duration, blend_bezier_curve)
 end
 
+-- Lines 97-99
 function _ScriptViewport:create_environment_modifier(data_path_key, is_override, modifier_func)
 	return self._env_handler:create_modifier(data_path_key, is_override, modifier_func)
 end
 
+-- Lines 101-103
 function _ScriptViewport:destroy_environment_modifier(data_path_key)
 	self._env_handler:destroy_modifier(data_path_key)
 end
 
+-- Lines 105-107
 function _ScriptViewport:update_environment_value(data_path_key)
 	return self._env_handler:update_value(data_path_key)
 end
 
+-- Lines 109-119
 function _ScriptViewport:update_environment_area(area_list, position_offset)
 	local camera = self._vp:camera()
 
@@ -122,35 +140,43 @@ function _ScriptViewport:update_environment_area(area_list, position_offset)
 	self._env_handler:update_environment_area(check_pos, area_list)
 end
 
+-- Lines 121-123
 function _ScriptViewport:on_environment_area_removed(area)
 	self._env_handler:on_environment_area_removed(area)
 end
 
+-- Lines 125-128
 function _ScriptViewport:set_camera(camera)
 	self._vp:set_camera(camera)
 	self:_set_width_multiplier()
 end
 
+-- Lines 130-132
 function _ScriptViewport:camera()
 	return self._vp:camera()
 end
 
+-- Lines 134-136
 function _ScriptViewport:director()
 	return self._vp:director()
 end
 
+-- Lines 138-140
 function _ScriptViewport:shaker()
 	return self:director():shaker()
 end
 
+-- Lines 142-144
 function _ScriptViewport:vp()
 	return self._vp
 end
 
+-- Lines 146-148
 function _ScriptViewport:alive()
 	return CoreCode.alive(self._vp)
 end
 
+-- Lines 150-161
 function _ScriptViewport:reference_fov()
 	local scene = self._render_params[1]
 	local fov = -1
@@ -167,6 +193,7 @@ function _ScriptViewport:reference_fov()
 	return fov
 end
 
+-- Lines 163-179
 function _ScriptViewport:push_ref_fov(fov)
 	local scene = self._render_params[1]
 
@@ -190,6 +217,7 @@ function _ScriptViewport:push_ref_fov(fov)
 	return false
 end
 
+-- Lines 181-196
 function _ScriptViewport:pop_ref_fov()
 	local scene = self._render_params[1]
 	local sh_pro = self._vp:get_post_processor_effect(scene, Idstring("shadow_processor"), Idstring("shadow_rendering"))
@@ -212,6 +240,7 @@ function _ScriptViewport:pop_ref_fov()
 	return false
 end
 
+-- Lines 198-224
 function _ScriptViewport:set_visualization_mode(effect_name)
 	local scene = self._render_params[1]
 	local effects = {
@@ -239,6 +268,7 @@ function _ScriptViewport:set_visualization_mode(effect_name)
 	self._vp:set_post_processor_effect(scene, Idstring("deferred"), Idstring(effect_name)):set_visibility(true)
 end
 
+-- Lines 226-233
 function _ScriptViewport:is_rendering_scene(scene_name)
 	for _, param in ipairs(self:render_params()) do
 		if param == scene_name then
@@ -249,9 +279,11 @@ function _ScriptViewport:is_rendering_scene(scene_name)
 	return false
 end
 
+-- Lines 235-239
 function _ScriptViewport:set_dof(clamp, near_focus_distance_min, near_focus_distance_max, far_focus_distance_min, far_focus_distance_max)
 end
 
+-- Lines 242-246
 function _ScriptViewport:replace_engine_vp(vp)
 	self:destroy()
 
@@ -259,10 +291,12 @@ function _ScriptViewport:replace_engine_vp(vp)
 	self._vp = vp
 end
 
+-- Lines 248-250
 function _ScriptViewport:set_environment_editor_callback(env_editor_callback)
 	self._env_editor_callback = env_editor_callback
 end
 
+-- Lines 259-271
 function _ScriptViewport:_update(is_first_viewport, t, dt)
 	local scene = self._render_params[1]
 
@@ -277,16 +311,19 @@ function _ScriptViewport:_update(is_first_viewport, t, dt)
 	self._env_handler:apply(is_first_viewport, self._vp, scene)
 end
 
+-- Lines 273-278
 function _ScriptViewport:_render(nr)
 	if Global.render_debug.render_world then
 		Application:render(unpack(self._render_params))
 	end
 end
 
+-- Lines 280-282
 function _ScriptViewport:_resolution_changed()
 	self:_set_width_multiplier()
 end
 
+-- Lines 284-299
 function _ScriptViewport:_set_width_multiplier()
 	local camera = self:camera()
 
@@ -304,6 +341,7 @@ function _ScriptViewport:_set_width_multiplier()
 	end
 end
 
+-- Lines 301-306
 function _ScriptViewport:set_active(state)
 	_ScriptViewport.super.set_active(self, state)
 

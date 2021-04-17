@@ -12,6 +12,7 @@ GlobalStateManager.EVENT_CHARACTER_CREATED = "system_character_created"
 GlobalStateManager.TYPE_BOOL = "bool"
 GlobalStateManager.TYPE_VALUE = "value"
 
+-- Lines 21-50
 function GlobalStateManager:init()
 	self._triggers = {}
 	self._states = {}
@@ -47,14 +48,17 @@ function GlobalStateManager:init()
 	}, callback(managers.criminals, managers.criminals, "on_mission_start_callback"))
 end
 
+-- Lines 53-56
 function GlobalStateManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
+-- Lines 58-60
 function GlobalStateManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
+-- Lines 62-69
 function GlobalStateManager:register_trigger(trigger, flag)
 	if not flag then
 		Application:error("[GlobalStateManager:register_trigger] Trying to register trigger without flag!", inspect(trigger))
@@ -67,6 +71,7 @@ function GlobalStateManager:register_trigger(trigger, flag)
 	table.insert(self._triggers[flag], trigger)
 end
 
+-- Lines 71-85
 function GlobalStateManager:unregister_trigger(trigger, flag)
 	if not flag then
 		Application:error("[GlobalStateManager:register_trigger] Trying to unregister trigger without flag!", inspect(trigger))
@@ -87,6 +92,7 @@ function GlobalStateManager:unregister_trigger(trigger, flag)
 	end
 end
 
+-- Lines 87-93
 function GlobalStateManager:flag_names()
 	local flag_names = {}
 
@@ -97,6 +103,7 @@ function GlobalStateManager:flag_names()
 	return flag_names
 end
 
+-- Lines 95-102
 function GlobalStateManager:flag(flag_name)
 	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
 
@@ -109,6 +116,7 @@ function GlobalStateManager:flag(flag_name)
 	return flag.value
 end
 
+-- Lines 104-113
 function GlobalStateManager:set_flag(flag_name)
 	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
 
@@ -124,6 +132,7 @@ function GlobalStateManager:set_flag(flag_name)
 	self:_fire_triggers(flag_name, old_state, true)
 end
 
+-- Lines 115-124
 function GlobalStateManager:set_value_flag(flag_name, value)
 	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
 
@@ -139,14 +148,17 @@ function GlobalStateManager:set_value_flag(flag_name, value)
 	self:_fire_triggers(flag_name, old_state, value)
 end
 
+-- Lines 127-129
 function GlobalStateManager:set_implicit_flag(flag_name)
 	self:_fire_triggers(flag_name, false, true)
 end
 
+-- Lines 131-133
 function GlobalStateManager:clear_implicit_flag(flag_name)
 	self:_fire_triggers(flag_name, true, false)
 end
 
+-- Lines 135-146
 function GlobalStateManager:clear_flag(flag_name)
 	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
 
@@ -162,6 +174,7 @@ function GlobalStateManager:clear_flag(flag_name)
 	self:_fire_triggers(flag_name, old_state, false)
 end
 
+-- Lines 149-206
 function GlobalStateManager:fire_event(flag_name)
 	if flag_name == GlobalStateManager.EVENT_START_RAID then
 		managers.raid_menu:set_pause_menu_enabled(false)
@@ -221,10 +234,12 @@ function GlobalStateManager:fire_event(flag_name)
 	end
 end
 
+-- Lines 209-211
 function GlobalStateManager:set_to_default(flag_name)
 	self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name].value = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name].default
 end
 
+-- Lines 213-220
 function GlobalStateManager:reset_flags_for_job(job_id)
 	for name, flag in pairs(self._states[GlobalStateManager.GLOBAL_STATE_NAME]) do
 		if flag.job_id == job_id then
@@ -233,12 +248,14 @@ function GlobalStateManager:reset_flags_for_job(job_id)
 	end
 end
 
+-- Lines 222-226
 function GlobalStateManager:reset_all_flags()
 	for name, flag in pairs(self._states[GlobalStateManager.GLOBAL_STATE_NAME]) do
 		flag.value = flag.default
 	end
 end
 
+-- Lines 228-233
 function GlobalStateManager:sync_save(data)
 	local state = {
 		data = self._states
@@ -246,6 +263,7 @@ function GlobalStateManager:sync_save(data)
 	data.GlobalStateManager = state
 end
 
+-- Lines 235-240
 function GlobalStateManager:sync_load(data)
 	local state = data.GlobalStateManager
 
@@ -254,6 +272,7 @@ function GlobalStateManager:sync_load(data)
 	end
 end
 
+-- Lines 242-251
 function GlobalStateManager:get_all_global_states()
 	local global_states = {}
 
@@ -274,12 +293,14 @@ function GlobalStateManager:get_all_global_states()
 	return global_states
 end
 
+-- Lines 253-257
 function GlobalStateManager:set_global_states(states)
 	for i = 1, #states do
 		self._states.global_init[states[i].id].value = states[i].value
 	end
 end
 
+-- Lines 259-268
 function GlobalStateManager:save_game(data)
 	local global_states = {}
 
@@ -300,6 +321,7 @@ function GlobalStateManager:save_game(data)
 	data.global_state = global_states
 end
 
+-- Lines 270-276
 function GlobalStateManager:load_game(data)
 	if data.global_state then
 		for i = 1, #data.global_state do
@@ -308,6 +330,7 @@ function GlobalStateManager:load_game(data)
 	end
 end
 
+-- Lines 278-282
 function GlobalStateManager:on_simulation_ended()
 	self._triggers = {}
 	self._states = {}
@@ -315,6 +338,7 @@ function GlobalStateManager:on_simulation_ended()
 	self:_parse_states()
 end
 
+-- Lines 284-305
 function GlobalStateManager:check_flag_value(check_type, value1, value2)
 	if check_type == "equal" then
 		return value1 == value2
@@ -337,6 +361,7 @@ function GlobalStateManager:check_flag_value(check_type, value1, value2)
 	end
 end
 
+-- Lines 310-328
 function GlobalStateManager:_parse_states()
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 	local states = list.states
@@ -358,6 +383,7 @@ function GlobalStateManager:_parse_states()
 	end
 end
 
+-- Lines 330-340
 function GlobalStateManager:_parse_value(value, data_type)
 	if data_type == GlobalStateManager.TYPE_VALUE then
 		return value
@@ -368,6 +394,7 @@ function GlobalStateManager:_parse_value(value, data_type)
 	end
 end
 
+-- Lines 342-359
 function GlobalStateManager:_fire_triggers(flag, old_state, new_state)
 	if old_state == new_state then
 		return
@@ -382,6 +409,7 @@ function GlobalStateManager:_fire_triggers(flag, old_state, new_state)
 	end
 end
 
+-- Lines 361-364
 function GlobalStateManager:_call_listeners(event, params)
 	self._listener_holder:call(event, params)
 end

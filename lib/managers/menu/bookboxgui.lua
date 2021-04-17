@@ -1,5 +1,6 @@
 BookBoxGui = BookBoxGui or class(TextBoxGui)
 
+-- Lines 3-17
 function BookBoxGui:init(ws, title, config)
 	config = config or {}
 	config.h = config.h or 310
@@ -15,6 +16,7 @@ function BookBoxGui:init(ws, title, config)
 	self._page_panels = {}
 end
 
+-- Lines 19-42
 function BookBoxGui:add_page(name, box_gui, visible)
 	local panel = self._panel:panel({
 		h = 20,
@@ -61,10 +63,12 @@ function BookBoxGui:add_page(name, box_gui, visible)
 	end
 end
 
+-- Lines 44-46
 function BookBoxGui:has_page(name)
 	return self._pages[name]
 end
 
+-- Lines 48-70
 function BookBoxGui:_layout_page_panels()
 	local total_w = 0
 
@@ -95,6 +99,7 @@ function BookBoxGui:_layout_page_panels()
 	end
 end
 
+-- Lines 72-103
 function BookBoxGui:remove_page(name)
 	print("BookBoxGui:remove_page( name )", name)
 
@@ -130,6 +135,7 @@ function BookBoxGui:remove_page(name)
 	self:_layout_page_panels()
 end
 
+-- Lines 105-110
 function BookBoxGui:set_size(x, y)
 	BookBoxGui.super.set_size(self, x, y)
 
@@ -138,6 +144,7 @@ function BookBoxGui:set_size(x, y)
 	end
 end
 
+-- Lines 112-117
 function BookBoxGui:set_centered()
 	BookBoxGui.super.set_centered(self)
 
@@ -146,6 +153,7 @@ function BookBoxGui:set_centered()
 	end
 end
 
+-- Lines 119-124
 function BookBoxGui:set_position(x, y)
 	BookBoxGui.super.set_position(self, x, y)
 
@@ -154,6 +162,7 @@ function BookBoxGui:set_position(x, y)
 	end
 end
 
+-- Lines 126-131
 function BookBoxGui:set_visible(visible)
 	BookBoxGui.super.set_visible(self, visible)
 
@@ -162,6 +171,7 @@ function BookBoxGui:set_visible(visible)
 	end
 end
 
+-- Lines 133-138
 function BookBoxGui:set_enabled(enabled)
 	BookBoxGui.super.set_enabled(self, enabled)
 
@@ -170,6 +180,7 @@ function BookBoxGui:set_enabled(enabled)
 	end
 end
 
+-- Lines 140-145
 function BookBoxGui:set_layer(layer)
 	BookBoxGui.super.set_layer(self, layer)
 
@@ -178,6 +189,7 @@ function BookBoxGui:set_layer(layer)
 	end
 end
 
+-- Lines 147-155
 function BookBoxGui:close()
 	BookBoxGui.super.close(self)
 
@@ -188,6 +200,7 @@ function BookBoxGui:close()
 	end
 end
 
+-- Lines 157-171
 function BookBoxGui:set_page(name)
 	if self._active_page_name == name then
 		return
@@ -207,6 +220,7 @@ function BookBoxGui:set_page(name)
 	self._pages[self._active_page_name].box_gui:open_page()
 end
 
+-- Lines 173-181
 function BookBoxGui:input_focus()
 	if not self._active_page_name then
 		return false
@@ -217,6 +231,7 @@ function BookBoxGui:input_focus()
 	end
 end
 
+-- Lines 183-204
 function BookBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() then
 		return
@@ -241,6 +256,7 @@ function BookBoxGui:mouse_pressed(button, x, y)
 	end
 end
 
+-- Lines 206-228
 function BookBoxGui:check_grab_scroll_bar(x, y)
 	if not self:can_take_input() then
 		return false
@@ -263,6 +279,7 @@ function BookBoxGui:check_grab_scroll_bar(x, y)
 	end
 end
 
+-- Lines 230-243
 function BookBoxGui:release_scroll_bar()
 	local used, pointer = BookBoxGui.super.release_scroll_bar(self)
 
@@ -279,6 +296,7 @@ function BookBoxGui:release_scroll_bar()
 	end
 end
 
+-- Lines 245-257
 function BookBoxGui:mouse_wheel_down(x, y)
 	if not self._visible then
 		return
@@ -293,6 +311,7 @@ function BookBoxGui:mouse_wheel_down(x, y)
 	end
 end
 
+-- Lines 259-271
 function BookBoxGui:mouse_wheel_up(x, y)
 	if not self._visible then
 		return
@@ -307,6 +326,7 @@ function BookBoxGui:mouse_wheel_up(x, y)
 	end
 end
 
+-- Lines 273-286
 function BookBoxGui:moved_scroll_bar(x, y)
 	local used, pointer = BookBoxGui.super.moved_scroll_bar(self, x, y)
 
@@ -323,6 +343,7 @@ function BookBoxGui:moved_scroll_bar(x, y)
 	end
 end
 
+-- Lines 288-320
 function BookBoxGui:mouse_moved(x, y)
 	local pointer = nil
 
@@ -350,6 +371,7 @@ function BookBoxGui:mouse_moved(x, y)
 	return false, pointer
 end
 
+-- Lines 322-329
 function BookBoxGui:_mouse_over_page_panel(x, y)
 	for _, panel in ipairs(self._page_panels) do
 		if panel:inside(x, y) then

@@ -1,5 +1,6 @@
 HUDSuspicion = HUDSuspicion or class()
 
+-- Lines 3-21
 function HUDSuspicion:init(hud, sound_source)
 	self._hud_panel = hud.panel
 	self._sound_source = sound_source
@@ -36,9 +37,11 @@ function HUDSuspicion:init(hud, sound_source)
 	ring:set_center_y(self._suspicion_panel:h() / 2)
 end
 
+-- Lines 24-26
 function HUDSuspicion:show()
 end
 
+-- Lines 28-36
 function HUDSuspicion:hide()
 	self._suspicion_value = 0
 	self._discovered = nil
@@ -49,12 +52,14 @@ function HUDSuspicion:hide()
 	end
 end
 
+-- Lines 38-41
 function HUDSuspicion:back_to_stealth()
 	self._back_to_stealth = true
 
 	self:hide()
 end
 
+-- Lines 43-45
 function HUDSuspicion:discovered()
 	self._discovered = true
 end

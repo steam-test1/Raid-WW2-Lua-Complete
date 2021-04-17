@@ -1,5 +1,6 @@
 SmokeGrenadeElement = SmokeGrenadeElement or class(MissionElement)
 
+-- Lines 4-16
 function SmokeGrenadeElement:init(unit)
 	SmokeGrenadeElement.super.init(self, unit)
 
@@ -14,6 +15,7 @@ function SmokeGrenadeElement:init(unit)
 	table.insert(self._save_values, "effect_type")
 end
 
+-- Lines 18-32
 function SmokeGrenadeElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

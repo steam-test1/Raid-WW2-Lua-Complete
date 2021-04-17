@@ -2,6 +2,7 @@ MenuNodeCreditsGui = MenuNodeCreditsGui or class(MenuNodeGui)
 MenuNodeCreditsGui.PATH = "gamedata/"
 MenuNodeCreditsGui.FILE_EXTENSION = "credits"
 
+-- Lines 7-21
 function MenuNodeCreditsGui:init(node, layer, parameters)
 	MenuNodeCreditsGui.super.init(self, node, layer, parameters)
 	Application:trace("layer      ", inspect(layer))
@@ -9,6 +10,7 @@ function MenuNodeCreditsGui:init(node, layer, parameters)
 	managers.music:post_event(MusicManager.CREDITS_MUSIC)
 end
 
+-- Lines 23-209
 function MenuNodeCreditsGui:_build_credits_panel(file)
 	local lang_key = SystemInfo:language():key()
 	local files = {
@@ -92,6 +94,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		}
 	})
 
+	-- Lines 83-85
 	local function animate_fade_in(o)
 		over(1, function (p)
 			o:set_alpha(p)
@@ -108,6 +111,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		layer = self.layers.background - 1
 	})
 
+	-- Lines 90-93
 	local function func(o)
 		local start_blur = 0
 
@@ -198,6 +202,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 
 	self._credits_panel:set_height(ypos + 50)
 
+	-- Lines 182-205
 	local function scroll_func(o)
 		local y = o:top()
 		local speed = 50 * global_scale
@@ -226,26 +231,32 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	self._credits_panel_thread = self._credits_panel:animate(scroll_func)
 end
 
+-- Lines 212-216
 function MenuNodeCreditsGui:_setup_panels(node)
 	MenuNodeCreditsGui.super._setup_panels(self, node)
 end
 
+-- Lines 243-245
 function MenuNodeCreditsGui:_create_menu_item(row_item)
 	MenuNodeCreditsGui.super._create_menu_item(self, row_item)
 end
 
+-- Lines 247-249
 function MenuNodeCreditsGui:_setup_item_panel_parent(safe_rect)
 	MenuNodeCreditsGui.super._setup_item_panel_parent(self, safe_rect)
 end
 
+-- Lines 251-253
 function MenuNodeCreditsGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCreditsGui.super._setup_item_panel(self, safe_rect, res)
 end
 
+-- Lines 255-259
 function MenuNodeCreditsGui:resolution_changed()
 	MenuNodeCreditsGui.super.resolution_changed(self)
 end
 
+-- Lines 261-268
 function MenuNodeCreditsGui:set_visible(visible)
 	MenuNodeCreditsGui.super.set_visible(self, visible)
 
@@ -256,6 +267,7 @@ function MenuNodeCreditsGui:set_visible(visible)
 	end
 end
 
+-- Lines 270-285
 function MenuNodeCreditsGui:close(...)
 	self._credits_panel:stop(self._credits_panel_thread)
 	Overlay:gui():destroy_workspace(self._fullscreen_ws)
@@ -263,48 +275,59 @@ function MenuNodeCreditsGui:close(...)
 	managers.music:post_event(MusicManager.MENU_MUSIC)
 end
 
+-- Lines 287-289
 function MenuNodeCreditsGui:mouse_moved(o, x, y)
 	return true
 end
 
+-- Lines 291-293
 function MenuNodeCreditsGui:mouse_released(o, button, x, y)
 	return true
 end
 
+-- Lines 295-297
 function MenuNodeCreditsGui:mouse_pressed(button, x, y)
 	return true
 end
 
+-- Lines 299-301
 function MenuNodeCreditsGui:mouse_clicked(button, x, y)
 	return true
 end
 
+-- Lines 303-305
 function MenuNodeCreditsGui:mouse_double_click(o, button, x, y)
 	return true
 end
 
+-- Lines 307-309
 function MenuNodeCreditsGui:confirm_pressed()
 	return true
 end
 
+-- Lines 311-314
 function MenuNodeCreditsGui:back_pressed()
 	managers.raid_menu:on_escape()
 
 	return true
 end
 
+-- Lines 316-318
 function MenuNodeCreditsGui:move_up()
 	return true
 end
 
+-- Lines 320-322
 function MenuNodeCreditsGui:move_down()
 	return true
 end
 
+-- Lines 324-326
 function MenuNodeCreditsGui:move_left()
 	return true
 end
 
+-- Lines 328-330
 function MenuNodeCreditsGui:move_right()
 	return true
 end

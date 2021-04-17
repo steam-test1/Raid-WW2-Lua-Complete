@@ -1,9 +1,11 @@
 GrenadeCluster = GrenadeCluster or class(GrenadeBase)
 
+-- Lines 5-7
 function GrenadeCluster:init(unit)
 	GrenadeCluster.super.init(self, unit)
 end
 
+-- Lines 9-28
 function GrenadeCluster:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -25,14 +27,17 @@ function GrenadeCluster:_setup_from_tweak_data()
 	}
 end
 
+-- Lines 33-35
 function GrenadeCluster:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
+-- Lines 37-39
 function GrenadeCluster:_on_collision(col_ray)
 	self:_detonate()
 end
 
+-- Lines 42-78
 function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -70,14 +75,17 @@ function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, posit
 	self._unit:set_slot(0)
 end
 
+-- Lines 80-82
 function GrenadeCluster:set_range(range)
 	self._range = range
 end
 
+-- Lines 84-86
 function GrenadeCluster:set_damage(damage)
 	self._damage = damage
 end
 
+-- Lines 90-111
 function GrenadeCluster:_detonate_on_client()
 	local pos = self._unit:position()
 	local range = self._range
@@ -101,6 +109,7 @@ function GrenadeCluster:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
+-- Lines 115-122
 function GrenadeCluster:bullet_hit()
 	if not Network:is_server() then
 		return

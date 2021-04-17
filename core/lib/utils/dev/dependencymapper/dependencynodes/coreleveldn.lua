@@ -27,10 +27,12 @@ LEVEL_SKIP = {
 }
 LevelDependencyNode = LevelDependencyNode or CoreClass.class(CoreDependencyNode.DependencyNodeBase)
 
+-- Lines 32-34
 function LevelDependencyNode:init(name, get_dn_cb, database)
 	self.super.init(self, LEVEL, nil, name, get_dn_cb, database)
 end
 
+-- Lines 36-46
 function LevelDependencyNode:_parse()
 	local file = string.format(LEVEL_FILE, self._name)
 	local f = File:open(file, "r")
@@ -50,6 +52,7 @@ function LevelDependencyNode:_parse()
 	}
 end
 
+-- Lines 48-70
 function LevelDependencyNode:_walkxml2dependencies(xmlnode, deps)
 	local node_name = xmlnode:name()
 

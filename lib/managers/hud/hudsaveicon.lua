@@ -13,6 +13,7 @@ HUDSaveIcon.RADIUS = 13
 HUDSaveIcon.ONE_CIRCLE_DURATION = 1
 HUDSaveIcon.DEFAULT_TEXT = "savefile_saving"
 
+-- Lines 20-32
 function HUDSaveIcon:init(workspace)
 	self._ws = workspace
 	self._workspace_panel = self._ws:panel()
@@ -26,6 +27,7 @@ function HUDSaveIcon:init(workspace)
 	self:_create_bullets()
 end
 
+-- Lines 34-45
 function HUDSaveIcon:_create_panel()
 	local panel_params = {
 		name = "save_icon_panel",
@@ -40,6 +42,7 @@ function HUDSaveIcon:_create_panel()
 	self._panel:set_center_x(self._workspace_panel:w() / 2)
 end
 
+-- Lines 47-57
 function HUDSaveIcon:_create_background()
 	local background_params = {
 		name = "background",
@@ -52,6 +55,7 @@ function HUDSaveIcon:_create_background()
 	self._background:set_center_y(self._panel:h() / 2)
 end
 
+-- Lines 59-71
 function HUDSaveIcon:_create_text()
 	local text_params = {
 		name = "save_icon_text",
@@ -67,6 +71,7 @@ function HUDSaveIcon:_create_text()
 	self._text = self._panel:text(text_params)
 end
 
+-- Lines 73-102
 function HUDSaveIcon:_create_bullets()
 	local bullet_panel_params = {
 		halign = "left",
@@ -98,6 +103,7 @@ function HUDSaveIcon:_create_bullets()
 	end
 end
 
+-- Lines 104-132
 function HUDSaveIcon:show(params)
 	local text = params.text or HUDSaveIcon.DEFAULT_TEXT
 
@@ -128,6 +134,7 @@ function HUDSaveIcon:show(params)
 	end
 end
 
+-- Lines 134-138
 function HUDSaveIcon:hide()
 	self._panel:stop()
 	self._panel:animate(callback(self, self, "_animate_hide"))
@@ -135,6 +142,7 @@ function HUDSaveIcon:hide()
 	self._shown = false
 end
 
+-- Lines 140-222
 function HUDSaveIcon:_animate_bullets()
 	while true do
 		local shoot_duration = 0.1
@@ -212,6 +220,7 @@ function HUDSaveIcon:_animate_bullets()
 	end
 end
 
+-- Lines 225-239
 function HUDSaveIcon:_animate_show()
 	local duration = 0.2
 	local t = self._panel:alpha() * duration
@@ -227,6 +236,7 @@ function HUDSaveIcon:_animate_show()
 	self._panel:set_alpha(1)
 end
 
+-- Lines 241-256
 function HUDSaveIcon:_animate_hide()
 	local duration = 0.4
 	local t = (1 - self._panel:alpha()) * duration

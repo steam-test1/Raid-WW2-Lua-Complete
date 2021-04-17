@@ -1,5 +1,6 @@
 SimpleVehicle = SimpleVehicle or class()
 
+-- Lines 4-23
 function SimpleVehicle:init(unit)
 	self._unit = unit
 
@@ -19,6 +20,7 @@ function SimpleVehicle:init(unit)
 	self._target_anim_speed = self._current_anim_speed
 end
 
+-- Lines 25-158
 function SimpleVehicle:update(unit, t, dt)
 	if not self._started then
 		return
@@ -99,16 +101,19 @@ function SimpleVehicle:update(unit, t, dt)
 	self:_check_reached_target_anim_time()
 end
 
+-- Lines 160-165
 function SimpleVehicle:_check_reached_target_anim_time()
 	if self._target_anim_time <= self._unit:anim_time(self.ANIM_GROUP) then
 		-- Nothing
 	end
 end
 
+-- Lines 167-169
 function SimpleVehicle:anim_time()
 	return self._unit:anim_time(self.ANIM_GROUP)
 end
 
+-- Lines 171-177
 function SimpleVehicle:stop()
 	self._runned_end_t = self._unit:anim_time(self.ANIM_GROUP)
 	self._stopped_end_t = self._runned_end_t + 1
@@ -116,10 +121,12 @@ function SimpleVehicle:stop()
 	self._bezier_v = 0
 end
 
+-- Lines 179-181
 function SimpleVehicle:start()
 	self:start_anim_from_to(self:anim_time(), 20)
 end
 
+-- Lines 183-201
 function SimpleVehicle:start_anim_from_to(from, to, max_time_speed)
 	self._max_time_speed = max_time_speed or self._max_time_speed
 	self._state = "start"
@@ -142,14 +149,17 @@ function SimpleVehicle:start_anim_from_to(from, to, max_time_speed)
 	print("length", length)
 end
 
+-- Lines 203-205
 function SimpleVehicle:anim_set_time(anim_time)
 	self._unit:anim_set_time(self.ANIM_GROUP, anim_time)
 end
 
+-- Lines 207-209
 function SimpleVehicle:set_target_anim_time(anim_time)
 	self._target_anim_time = anim_time
 end
 
+-- Lines 211-242
 function SimpleVehicle:set_target_time_speed(time_speed)
 	self._target_time_speed = time_speed
 	self._acc = math.abs(time_speed - 0) / self._acc_time
@@ -171,37 +181,45 @@ function SimpleVehicle:set_target_time_speed(time_speed)
 	print(inspect(self._anim_time_speed_params))
 end
 
+-- Lines 244-247
 function SimpleVehicle:accelerate_to(anim_speed)
 	self._target_anim_speed = anim_speed
 	self._stopped = false
 end
 
+-- Lines 249-252
 function SimpleVehicle:deaccelerate_to(anim_speed)
 	self._target_anim_speed = anim_speed
 	self._stopped = false
 end
 
+-- Lines 254-258
 function SimpleVehicle:_anim_stop()
 	print("SimpleVehicle:_anim_stop()")
 
 	self._stopped = true
 end
 
+-- Lines 260-262
 function SimpleVehicle:_set_anim_time(anim_time)
 	self._unit:anim_set_time(self.ANIM_GROUP, anim_time)
 end
 
+-- Lines 264-268
 function SimpleVehicle:_set_anim_speed(anim_speed)
 end
 
+-- Lines 270-274
 function SimpleVehicle:save(data)
 	local state = {}
 	data.SimpleVehicle = state
 end
 
+-- Lines 276-279
 function SimpleVehicle:load(data)
 	local state = data.SimpleVehicle
 end
 
+-- Lines 281-283
 function SimpleVehicle:destroy()
 end

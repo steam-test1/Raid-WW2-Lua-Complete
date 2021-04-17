@@ -1,5 +1,6 @@
 HuskPlayerInventory = HuskPlayerInventory or class(PlayerInventory)
 
+-- Lines 4-10
 function HuskPlayerInventory:init(unit)
 	HuskPlayerInventory.super.init(self, unit)
 
@@ -14,9 +15,11 @@ function HuskPlayerInventory:init(unit)
 	self._peer_weapons = {}
 end
 
+-- Lines 14-15
 function HuskPlayerInventory:_send_equipped_weapon()
 end
 
+-- Lines 20-60
 function HuskPlayerInventory:synch_equipped_weapon(send_equipped_weapon_type, equipped_weapon_category_id, equipped_weapon_identifier, blueprint_string, cosmetics_string, peer)
 	local weapon_name = ""
 
@@ -44,6 +47,7 @@ function HuskPlayerInventory:synch_equipped_weapon(send_equipped_weapon_type, eq
 	end
 end
 
+-- Lines 62-79
 function HuskPlayerInventory:check_peer_weapon_spawn()
 	if SystemInfo:platform() ~= Idstring("PS3") then
 		return true
@@ -65,6 +69,7 @@ function HuskPlayerInventory:check_peer_weapon_spawn()
 	end
 end
 
+-- Lines 83-88
 function HuskPlayerInventory:set_melee_weapon_by_peer(peer)
 	local blackmarket_outfit = peer and peer:blackmarket_outfit()
 
@@ -73,6 +78,7 @@ function HuskPlayerInventory:set_melee_weapon_by_peer(peer)
 	end
 end
 
+-- Lines 92-108
 function HuskPlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	if not managers.dyn_resource:is_resource_ready(Idstring("unit"), new_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE) then
 		managers.dyn_resource:load(Idstring("unit"), new_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
@@ -95,12 +101,14 @@ function HuskPlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	self:add_unit(new_unit, equip, instant)
 end
 
+-- Lines 110-114
 function HuskPlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, blueprint_string, cosmetics_string)
 	local blueprint = managers.weapon_factory:unpack_blueprint_from_string(factory_name, blueprint_string)
 
 	self:add_unit_by_factory_blueprint(factory_name, equip, instant, blueprint)
 end
 
+-- Lines 116-146
 function HuskPlayerInventory:add_unit_by_factory_blueprint(factory_name, equip, instant, blueprint, cosmetics)
 	local factory_weapon = tweak_data.weapon.factory[factory_name]
 
@@ -136,6 +144,7 @@ function HuskPlayerInventory:add_unit_by_factory_blueprint(factory_name, equip, 
 	end
 end
 
+-- Lines 148-157
 function HuskPlayerInventory:synch_weapon_gadget_state(state)
 	if self:equipped_unit():base().set_gadget_on then
 		self:equipped_unit():base():set_gadget_on(state, true)
@@ -148,6 +157,7 @@ function HuskPlayerInventory:synch_weapon_gadget_state(state)
 	end
 end
 
+-- Lines 161-172
 function HuskPlayerInventory:on_melee_item_shown()
 	local selection = self._available_selections[self._equipped_selection]
 
@@ -160,6 +170,7 @@ function HuskPlayerInventory:on_melee_item_shown()
 	end
 end
 
+-- Lines 174-184
 function HuskPlayerInventory:on_melee_item_hidden()
 	local selection = self._available_selections[self._equipped_selection]
 
@@ -172,6 +183,7 @@ function HuskPlayerInventory:on_melee_item_hidden()
 	end
 end
 
+-- Lines 188-203
 function HuskPlayerInventory._get_weapon_name_from_sync_index(w_index)
 	if w_index <= #tweak_data.character.weap_unit_names then
 		return tweak_data.character.weap_unit_names[w_index]

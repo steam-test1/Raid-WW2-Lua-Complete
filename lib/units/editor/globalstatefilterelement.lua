@@ -5,6 +5,7 @@ GlobalStateFilterElement.STATES = {
 	"value"
 }
 
+-- Lines 5-19
 function GlobalStateFilterElement:init(unit)
 	GlobalStateFilterElement.super.init(self, unit)
 
@@ -22,6 +23,7 @@ function GlobalStateFilterElement:init(unit)
 	table.sort(self._flags)
 end
 
+-- Lines 21-50
 function GlobalStateFilterElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

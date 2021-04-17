@@ -1,10 +1,12 @@
 CoreOverlayEffectHubElement = CoreOverlayEffectHubElement or class(HubElement)
 OverlayEffectHubElement = OverlayEffectHubElement or class(CoreOverlayEffectHubElement)
 
+-- Lines 5-7
 function OverlayEffectHubElement:init(...)
 	CoreOverlayEffectHubElement.init(self, ...)
 end
 
+-- Lines 9-19
 function CoreOverlayEffectHubElement:init(unit)
 	HubElement.init(self, unit)
 
@@ -16,6 +18,7 @@ function CoreOverlayEffectHubElement:init(unit)
 	table.insert(self._save_values, "overlay_effect_fade_out")
 end
 
+-- Lines 21-29
 function CoreOverlayEffectHubElement:test_element()
 	if self._hed.overlay_effect ~= "none" then
 		local effect = clone(managers.overlay_effect:presets()[self._hed.overlay_effect])
@@ -27,10 +30,12 @@ function CoreOverlayEffectHubElement:test_element()
 	end
 end
 
+-- Lines 31-33
 function CoreOverlayEffectHubElement:stop_test_element()
 	managers.overlay_effect:stop_effect()
 end
 
+-- Lines 35-46
 function CoreOverlayEffectHubElement:changed_effect()
 	if self._hed.overlay_effect == "none" then
 		self._fade_in_default:set_value("-")
@@ -45,6 +50,7 @@ function CoreOverlayEffectHubElement:changed_effect()
 	end
 end
 
+-- Lines 48-57
 function CoreOverlayEffectHubElement:set_option_time(data)
 	local c = data.ctrlr
 	local value = c:get_value()
@@ -58,6 +64,7 @@ function CoreOverlayEffectHubElement:set_option_time(data)
 	self._hed[data.value] = value
 end
 
+-- Lines 59-143
 function CoreOverlayEffectHubElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

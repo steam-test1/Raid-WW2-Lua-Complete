@@ -15,6 +15,7 @@ HUDHitDirection.SEVERITY_THRESHOLDS = {
 	9
 }
 
+-- Lines 18-24
 function HUDHitDirection:init(hud)
 	self:_create_panel(hud)
 	self:_create_directional_indicators()
@@ -24,6 +25,7 @@ function HUDHitDirection:init(hud)
 	managers.hud:add_updator("hit_direction_indicators", callback(self, self, "update"))
 end
 
+-- Lines 26-41
 function HUDHitDirection:_create_panel(hud)
 	if hud.panel:child("hit_direction_panel") then
 		hud.panel:remove(hud.panel:child("hit_direction_panel"))
@@ -43,6 +45,7 @@ function HUDHitDirection:_create_panel(hud)
 	self._object:set_center(hud.panel:w() / 2, hud.panel:h() / 2)
 end
 
+-- Lines 43-59
 function HUDHitDirection:_create_directional_indicators()
 	local left = self:_create_indicator("left", -90, "left", "center")
 
@@ -65,6 +68,7 @@ function HUDHitDirection:_create_directional_indicators()
 	down:set_center_x(self._object:w() / 2)
 end
 
+-- Lines 61-73
 function HUDHitDirection:_create_indicator(name, rotation, halign, valign)
 	local indicator_params = {
 		alpha = 0,
@@ -81,6 +85,7 @@ function HUDHitDirection:_create_indicator(name, rotation, halign, valign)
 	return indicator
 end
 
+-- Lines 76-81
 function HUDHitDirection:on_hit_direction(direction, unit_type_hit)
 	local direction = self._object:child(direction)
 
@@ -88,6 +93,7 @@ function HUDHitDirection:on_hit_direction(direction, unit_type_hit)
 	direction:animate(callback(self, self, "_animate_hit_direction"))
 end
 
+-- Lines 83-97
 function HUDHitDirection:_animate_hit_direction(direction)
 	local duration = 0.6
 	local t = duration
@@ -104,6 +110,7 @@ function HUDHitDirection:_animate_hit_direction(direction)
 	direction:set_alpha(0)
 end
 
+-- Lines 101-125
 function HUDHitDirection:on_hit_unit(attack_data, unit_type_hit)
 	local attacker_id = tostring(attack_data.attacker_unit:key())
 
@@ -129,6 +136,7 @@ function HUDHitDirection:on_hit_unit(attack_data, unit_type_hit)
 	end
 end
 
+-- Lines 127-137
 function HUDHitDirection:_set_proper_severity(id)
 	if self._indicators[id].severity == #HUDHitDirection.SEVERITY_THRESHOLDS then
 		return
@@ -141,6 +149,7 @@ function HUDHitDirection:_set_proper_severity(id)
 	end
 end
 
+-- Lines 139-184
 function HUDHitDirection:update(t, dt)
 	if not managers.player:player_unit() or not managers.player:player_unit():movement() then
 		return
@@ -187,12 +196,14 @@ function HUDHitDirection:update(t, dt)
 	end
 end
 
+-- Lines 186-189
 function HUDHitDirection:_remove_indicator(id)
 	self._object:remove(self._indicators[id].indicator)
 
 	self._indicators[id] = nil
 end
 
+-- Lines 191-198
 function HUDHitDirection:clean_up()
 	for index, indicator_data in pairs(self._indicators) do
 		indicator_data.indicator:stop()

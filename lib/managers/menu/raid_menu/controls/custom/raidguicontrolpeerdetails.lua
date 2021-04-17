@@ -11,6 +11,7 @@ RaidGUIControlPeerDetails.ICON_TITLE_FONT_SIZE = 38
 RaidGUIControlPeerDetails.ICON_FONT_SIZE = 14
 RaidGUIControlPeerDetails.LEVEL_W = 64
 
+-- Lines 16-31
 function RaidGUIControlPeerDetails:init(parent, params)
 	RaidGUIControlPeerDetails.super.init(self, parent, params)
 
@@ -28,6 +29,7 @@ function RaidGUIControlPeerDetails:init(parent, params)
 	self:_create_profile_details()
 end
 
+-- Lines 33-43
 function RaidGUIControlPeerDetails:_create_panel()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_panel"
@@ -39,6 +41,7 @@ function RaidGUIControlPeerDetails:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 45-58
 function RaidGUIControlPeerDetails:_create_profile_name()
 	local profile_name_params = {
 		name = "profile_name",
@@ -56,6 +59,7 @@ function RaidGUIControlPeerDetails:_create_profile_name()
 	self._profile_name = self._object:text(profile_name_params)
 end
 
+-- Lines 60-98
 function RaidGUIControlPeerDetails:_create_profile_details()
 	local class_icon_params = {
 		name = "class_icon",
@@ -100,15 +104,18 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 	self._level_text:set_right(self._object:w())
 end
 
+-- Lines 100-102
 function RaidGUIControlPeerDetails:set_profile_name(name)
 	self._profile_name:set_text(utf8.to_upper(name))
 end
 
+-- Lines 104-107
 function RaidGUIControlPeerDetails:set_class(character_class)
 	self._class_icon:set_image(tweak_data.gui.icons["ico_class_" .. character_class].texture)
 	self._class_icon:set_texture_rect(unpack(tweak_data.gui.icons["ico_class_" .. character_class].texture_rect))
 end
 
+-- Lines 109-116
 function RaidGUIControlPeerDetails:set_nationality(nationality)
 	local params = {
 		icon_h = 48,
@@ -118,9 +125,11 @@ function RaidGUIControlPeerDetails:set_nationality(nationality)
 	self._nationality:set_text(utf8.to_upper(managers.localization:text("nationality_" .. nationality)))
 end
 
+-- Lines 118-120
 function RaidGUIControlPeerDetails:set_level(level)
 	self._level_text:set_text(tostring(level))
 end
 
+-- Lines 122-123
 function RaidGUIControlPeerDetails:close()
 end

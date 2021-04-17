@@ -7,6 +7,7 @@ GlobalStateOperatorElement.ACTIONS = {
 	"event"
 }
 
+-- Lines 5-19
 function GlobalStateOperatorElement:init(unit)
 	GlobalStateOperatorElement.super.init(self, unit)
 
@@ -24,6 +25,7 @@ function GlobalStateOperatorElement:init(unit)
 	table.sort(self._flags)
 end
 
+-- Lines 21-49
 function GlobalStateOperatorElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -14,6 +14,7 @@ local mvector3_copy = mvector3.copy
 local mvector3_rotate_with = mvector3.rotate_with
 SpringCameraNode = SpringCameraNode or CoreClass.class(CoreTransformCameraNode.TransformCameraNode)
 
+-- Lines 19-32
 function SpringCameraNode:init(settings)
 	SpringCameraNode.super.init(self, settings)
 
@@ -28,6 +29,7 @@ function SpringCameraNode:init(settings)
 	self:reset()
 end
 
+-- Lines 34-75
 function SpringCameraNode.compile_settings(xml_node, settings)
 	SpringCameraNode.super.compile_settings(xml_node, settings)
 
@@ -76,6 +78,7 @@ function SpringCameraNode.compile_settings(xml_node, settings)
 	end
 end
 
+-- Lines 77-86
 function SpringCameraNode:acceleration(displacement, velocity, force)
 	local spring = self._spring
 	local damping = self._damping
@@ -83,6 +86,7 @@ function SpringCameraNode:acceleration(displacement, velocity, force)
 	return Vector3(-(displacement.x * spring.x) - damping.x * velocity.x + force.x, -(displacement.y * spring.y) - damping.y * velocity.y + force.y, -(displacement.z * spring.z) - damping.z * velocity.z + force.z)
 end
 
+-- Lines 88-96
 function SpringCameraNode:euler_integration(dt, force)
 	local displacement = self._displacement
 	local velocity = self._velocity
@@ -91,6 +95,7 @@ function SpringCameraNode:euler_integration(dt, force)
 	self._velocity = self._displacement + velocity * dt + 0.5 * a1 * dt * dt
 end
 
+-- Lines 98-140
 function SpringCameraNode:rk2_integration(dt, force)
 	local xf = self._displacement
 	local vf = self._velocity
@@ -115,6 +120,7 @@ function SpringCameraNode:rk2_integration(dt, force)
 	mvector3_add(vf, v1)
 end
 
+-- Lines 142-165
 function SpringCameraNode:rk4_integration(dt, force)
 	local x1 = self._displacement
 	local v1 = self._velocity
@@ -134,6 +140,7 @@ function SpringCameraNode:rk4_integration(dt, force)
 	self._velocity = vf
 end
 
+-- Lines 167-189
 function SpringCameraNode:update(t, dt, in_data, out_data)
 	local displacement = self._displacement
 	local max_displacement = self._max_displacement
@@ -148,6 +155,7 @@ function SpringCameraNode:update(t, dt, in_data, out_data)
 	SpringCameraNode.super.update(self, t, dt, in_data, out_data)
 end
 
+-- Lines 191-197
 function SpringCameraNode:reset()
 	self._velocity = Vector3(0, 0, 0)
 	self._displacement = Vector3(0, 0, 0)
@@ -157,6 +165,7 @@ function SpringCameraNode:reset()
 	end
 end
 
+-- Lines 199-210
 function SpringCameraNode:debug_render(t, dt)
 	SpringCameraNode.super.debug_render(self, t, dt)
 
@@ -176,21 +185,26 @@ end
 
 SpringCameraForce = SpringCameraForce or CoreClass.class()
 
+-- Lines 215-216
 function SpringCameraForce:init()
 end
 
+-- Lines 218-219
 function SpringCameraForce:force(t, dt, force, parent_position, parent_rotation)
 end
 
+-- Lines 221-222
 function SpringCameraForce:reset()
 end
 
 SpringCameraPosition = SpringCameraPosition or CoreClass.class(SpringCameraForce)
 
+-- Lines 226-228
 function SpringCameraPosition:init()
 	self:reset()
 end
 
+-- Lines 230-241
 function SpringCameraPosition:force(t, dt, force, parent_position, parent_rotation)
 	if not self._reset then
 		mvector3_set(force, parent_position)
@@ -206,6 +220,7 @@ function SpringCameraPosition:force(t, dt, force, parent_position, parent_rotati
 	mvector3_set(self._previous_parent_position, parent_position)
 end
 
+-- Lines 243-246
 function SpringCameraPosition:reset()
 	self._reset = true
 	self._previous_parent_position = Vector3(0, 0, 0)
@@ -213,10 +228,12 @@ end
 
 SpringCameraVelocity = SpringCameraVelocity or CoreClass.class(SpringCameraForce)
 
+-- Lines 250-252
 function SpringCameraVelocity:init()
 	self:reset()
 end
 
+-- Lines 254-270
 function SpringCameraVelocity:force(t, dt, force, parent_position, parent_rotation)
 	if not self._reset then
 		mvector3_set(force, parent_position)
@@ -239,6 +256,7 @@ function SpringCameraVelocity:force(t, dt, force, parent_position, parent_rotati
 	mvector3_set(self._previous_parent_position, parent_position)
 end
 
+-- Lines 272-276
 function SpringCameraVelocity:reset()
 	self._reset = true
 	self._velocity = Vector3(0, 0, 0)
@@ -247,10 +265,12 @@ end
 
 SpringCameraAcceleration = SpringCameraAcceleration or CoreClass.class(SpringCameraForce)
 
+-- Lines 280-282
 function SpringCameraAcceleration:init()
 	self:reset()
 end
 
+-- Lines 284-301
 function SpringCameraAcceleration:force(t, dt, force, parent_position, parent_rotation)
 	if not self._reset then
 		mvector3_set(force, parent_position)
@@ -274,6 +294,7 @@ function SpringCameraAcceleration:force(t, dt, force, parent_position, parent_ro
 	mvector3_set(self._previous_parent_position, parent_position)
 end
 
+-- Lines 303-307
 function SpringCameraAcceleration:reset()
 	self._reset = true
 	self._velocity = Vector3(0, 0, 0)

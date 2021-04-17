@@ -9,10 +9,12 @@ CoreTimerUnitElement.INSTANCE_VAR_NAMES = {
 }
 TimerUnitElement = TimerUnitElement or class(CoreTimerUnitElement)
 
+-- Lines 8-10
 function TimerUnitElement:init(...)
 	TimerUnitElement.super.init(self, ...)
 end
 
+-- Lines 12-25
 function CoreTimerUnitElement:init(unit)
 	CoreTimerUnitElement.super.init(self, unit)
 
@@ -26,6 +28,7 @@ function CoreTimerUnitElement:init(unit)
 	table.insert(self._save_values, "digital_gui_unit_ids")
 end
 
+-- Lines 28-37
 function CoreTimerUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -38,12 +41,14 @@ function CoreTimerUnitElement:layer_finished()
 	end
 end
 
+-- Lines 39-43
 function CoreTimerUnitElement:load_unit(unit)
 	if unit then
 		self._digital_gui_units[unit:unit_data().unit_id] = unit
 	end
 end
 
+-- Lines 45-68
 function CoreTimerUnitElement:update_selected()
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -73,6 +78,7 @@ function CoreTimerUnitElement:update_selected()
 	end
 end
 
+-- Lines 70-83
 function CoreTimerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -91,6 +97,7 @@ function CoreTimerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 85-98
 function CoreTimerUnitElement:draw_links_unselected(...)
 	CoreTimerUnitElement.super.draw_links_unselected(self, ...)
 
@@ -108,6 +115,7 @@ function CoreTimerUnitElement:draw_links_unselected(...)
 	end
 end
 
+-- Lines 100-105
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -120,6 +128,7 @@ function CoreTimerUnitElement:update_editing()
 	end
 end
 
+-- Lines 107-119
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -138,22 +147,26 @@ function CoreTimerUnitElement:select_unit()
 	end
 end
 
+-- Lines 121-124
 function CoreTimerUnitElement:_remove_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
+-- Lines 126-129
 function CoreTimerUnitElement:_add_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
+-- Lines 131-133
 function CoreTimerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
+-- Lines 135-140
 function CoreTimerUnitElement:_add_unit_filter(unit)
 	if self._digital_gui_units[unit:unit_data().unit_id] then
 		return false
@@ -162,10 +175,12 @@ function CoreTimerUnitElement:_add_unit_filter(unit)
 	return unit:digital_gui() and unit:digital_gui():is_timer()
 end
 
+-- Lines 142-144
 function CoreTimerUnitElement:_remove_unit_filter(unit)
 	return self._digital_gui_units[unit:unit_data().unit_id]
 end
 
+-- Lines 146-160
 function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -185,10 +200,12 @@ function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("Creates a timer element. When the timer runs out, execute will be run. The timer element can be operated on using the logic_timer_operator")
 end
 
+-- Lines 162-164
 function CoreTimerUnitElement:register_debug_output_unit(output_monitor_id)
 	self._hed.output_monitor_id = output_monitor_id
 end
 
+-- Lines 167-169
 function CoreTimerUnitElement:unregister_debug_output_unit()
 	self._hed.output_monitor_id = nil
 end
@@ -196,10 +213,12 @@ end
 CoreTimerOperatorUnitElement = CoreTimerOperatorUnitElement or class(MissionElement)
 TimerOperatorUnitElement = TimerOperatorUnitElement or class(CoreTimerOperatorUnitElement)
 
+-- Lines 177-179
 function TimerOperatorUnitElement:init(...)
 	TimerOperatorUnitElement.super.init(self, ...)
 end
 
+-- Lines 181-191
 function CoreTimerOperatorUnitElement:init(unit)
 	CoreTimerOperatorUnitElement.super.init(self, unit)
 
@@ -212,6 +231,7 @@ function CoreTimerOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 193-202
 function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreTimerOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -231,14 +251,17 @@ function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
+-- Lines 204-207
 function CoreTimerOperatorUnitElement:get_links_to_unit(...)
 	CoreTimerOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
+-- Lines 209-210
 function CoreTimerOperatorUnitElement:update_editing()
 end
 
+-- Lines 212-226
 function CoreTimerOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -256,6 +279,7 @@ function CoreTimerOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 228-234
 function CoreTimerOperatorUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -264,10 +288,12 @@ function CoreTimerOperatorUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 237-239
 function CoreTimerOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 241-254
 function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -299,10 +325,12 @@ end
 CoreTimerTriggerUnitElement = CoreTimerTriggerUnitElement or class(MissionElement)
 TimerTriggerUnitElement = TimerTriggerUnitElement or class(CoreTimerTriggerUnitElement)
 
+-- Lines 262-264
 function TimerTriggerUnitElement:init(...)
 	TimerTriggerUnitElement.super.init(self, ...)
 end
 
+-- Lines 266-274
 function CoreTimerTriggerUnitElement:init(unit)
 	CoreTimerTriggerUnitElement.super.init(self, unit)
 
@@ -313,6 +341,7 @@ function CoreTimerTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 276-285
 function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreTimerTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -332,14 +361,17 @@ function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 287-290
 function CoreTimerTriggerUnitElement:get_links_to_unit(...)
 	CoreTimerTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
+-- Lines 292-293
 function CoreTimerTriggerUnitElement:update_editing()
 end
 
+-- Lines 295-311
 function CoreTimerTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -357,6 +389,7 @@ function CoreTimerTriggerUnitElement:add_element()
 	end
 end
 
+-- Lines 313-319
 function CoreTimerTriggerUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -365,10 +398,12 @@ function CoreTimerTriggerUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 322-324
 function CoreTimerTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 326-338
 function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

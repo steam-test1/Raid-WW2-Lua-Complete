@@ -3,6 +3,7 @@ local ids_lod1 = Idstring("lod1")
 local ids_ik_aim = Idstring("ik_aim")
 HuskCivilianBase = HuskCivilianBase or class(HuskCopBase)
 
+-- Lines 7-32
 function HuskCivilianBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -30,9 +31,11 @@ function HuskCivilianBase:post_init()
 	managers.enemy:register_civilian(self._unit)
 end
 
+-- Lines 36-36
 function HuskCivilianBase:default_weapon_name()
 end
 
+-- Lines 40-46
 function HuskCivilianBase:sync_net_event(event_id)
 	if event_id == 1 then
 		managers.groupai:state():on_hostage_follow(managers.player:player_unit(), self._unit, true)

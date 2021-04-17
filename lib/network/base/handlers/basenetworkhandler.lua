@@ -92,6 +92,7 @@ BaseNetworkHandler._gamestate_filter = {
 	}
 }
 
+-- Lines 98-105
 function BaseNetworkHandler._verify_in_session()
 	local session = managers.network:session()
 
@@ -103,6 +104,7 @@ function BaseNetworkHandler._verify_in_session()
 	return session
 end
 
+-- Lines 109-117
 function BaseNetworkHandler._verify_in_server_session()
 	local session = managers.network:session()
 	session = session and session:is_host()
@@ -115,6 +117,7 @@ function BaseNetworkHandler._verify_in_server_session()
 	return session
 end
 
+-- Lines 121-129
 function BaseNetworkHandler._verify_in_client_session()
 	local session = managers.network:session()
 	session = session and session:is_client()
@@ -127,6 +130,7 @@ function BaseNetworkHandler._verify_in_client_session()
 	return session
 end
 
+-- Lines 133-149
 function BaseNetworkHandler._verify_sender(rpc)
 	local session = managers.network:session()
 	local peer = nil
@@ -147,14 +151,17 @@ function BaseNetworkHandler._verify_sender(rpc)
 	Application:stack_dump()
 end
 
+-- Lines 153-155
 function BaseNetworkHandler._verify_character_and_sender(unit, rpc)
 	return BaseNetworkHandler._verify_sender(rpc) and BaseNetworkHandler._verify_character(unit)
 end
 
+-- Lines 159-161
 function BaseNetworkHandler._verify_character(unit)
 	return alive(unit) and not unit:character_damage():dead()
 end
 
+-- Lines 165-173
 function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
 	local correct_state = acceptable_gamestates[game_state_machine:last_queued_state_name()]
 
@@ -166,6 +173,7 @@ function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
 	Application:stack_dump()
 end
 
+-- Lines 177-215
 function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 	if self._flushing_unit_too_early_packets then
 		return
@@ -212,6 +220,7 @@ function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 	self._flushing_unit_too_early_packets = nil
 end
 
+-- Lines 219-244
 function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, unit_param_index, ...)
 	if self._flushing_unit_too_early_packets then
 		return

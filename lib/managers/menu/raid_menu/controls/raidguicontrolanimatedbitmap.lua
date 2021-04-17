@@ -1,5 +1,6 @@
 RaidGUIControlAnimatedBitmap = RaidGUIControlAnimatedBitmap or class(RaidGUIControl)
 
+-- Lines 3-26
 function RaidGUIControlAnimatedBitmap:init(parent, params)
 	RaidGUIControlAnimatedBitmap.super.init(self, parent, params)
 
@@ -24,6 +25,7 @@ function RaidGUIControlAnimatedBitmap:init(parent, params)
 	self._frames_in_row = math.floor(self._params.texture_width / self._w)
 end
 
+-- Lines 28-58
 function RaidGUIControlAnimatedBitmap:_update(t, dt)
 	if self._paused then
 		return
@@ -57,6 +59,7 @@ function RaidGUIControlAnimatedBitmap:_update(t, dt)
 	end
 end
 
+-- Lines 61-72
 function RaidGUIControlAnimatedBitmap:_get_frame(frame_index)
 	local row, row_index = self:_get_frame_row(frame_index)
 	local x = row_index * self._w
@@ -70,6 +73,7 @@ function RaidGUIControlAnimatedBitmap:_get_frame(frame_index)
 	return x, y, self._w, self._h
 end
 
+-- Lines 75-90
 function RaidGUIControlAnimatedBitmap:_get_frame_row(frame_index)
 	local row = 0
 	local row_index = frame_index
@@ -87,11 +91,13 @@ function RaidGUIControlAnimatedBitmap:_get_frame_row(frame_index)
 	return row, row_index
 end
 
+-- Lines 92-95
 function RaidGUIControlAnimatedBitmap:pause()
 	self._paused = true
 	self._pause_time = TimerManager:game():time()
 end
 
+-- Lines 97-107
 function RaidGUIControlAnimatedBitmap:unpause()
 	if not self._paused then
 		return
@@ -103,10 +109,12 @@ function RaidGUIControlAnimatedBitmap:unpause()
 	self._pause_time = nil
 end
 
+-- Lines 110-112
 function RaidGUIControlAnimatedBitmap:stop()
 	self._stop = true
 end
 
+-- Lines 114-126
 function RaidGUIControlAnimatedBitmap:close()
 	if self._closed then
 		return
@@ -121,6 +129,7 @@ function RaidGUIControlAnimatedBitmap:close()
 	self._closed = true
 end
 
+-- Lines 130-152
 function RaidGUIControlAnimatedBitmap:_params_valid()
 	if not self._params.texture then
 		Application:error("[RaidGUIControlAnimatedBitmap:init] Texture not specified for the animated bitmap control: ", self._params.name)

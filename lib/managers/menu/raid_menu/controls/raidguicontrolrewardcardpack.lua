@@ -22,6 +22,7 @@ RaidGUIControlRewardCardPack.ITEM_TYPE_H = 64
 RaidGUIControlRewardCardPack.ITEM_TYPE_FONT_SIZE = tweak_data.gui.font_sizes.size_38
 RaidGUIControlRewardCardPack.ITEM_TYPE_COLOR = tweak_data.gui.colors.raid_white
 
+-- Lines 33-44
 function RaidGUIControlRewardCardPack:init(parent, params)
 	RaidGUIControlRewardCardPack.super.init(self, parent, params)
 	self:_create_panel()
@@ -32,6 +33,7 @@ function RaidGUIControlRewardCardPack:init(parent, params)
 	self:_create_item_description_name()
 end
 
+-- Lines 46-57
 function RaidGUIControlRewardCardPack:_create_panel()
 	local panel_params = {
 		visible = false,
@@ -45,6 +47,7 @@ function RaidGUIControlRewardCardPack:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 59-68
 function RaidGUIControlRewardCardPack:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -56,6 +59,7 @@ function RaidGUIControlRewardCardPack:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 70-77
 function RaidGUIControlRewardCardPack:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -65,6 +69,7 @@ function RaidGUIControlRewardCardPack:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
+-- Lines 79-115
 function RaidGUIControlRewardCardPack:_create_title()
 	local title_description_params = {
 		name = "title_description",
@@ -106,6 +111,7 @@ function RaidGUIControlRewardCardPack:_create_title()
 	self._title_description:set_x(self._pack_title:x())
 end
 
+-- Lines 117-130
 function RaidGUIControlRewardCardPack:_create_cards_control()
 	local cards_control_params = {
 		visible = false,
@@ -126,6 +132,7 @@ function RaidGUIControlRewardCardPack:_create_cards_control()
 	self._cards_control:set_center_y(self._left_panel:h() / 2 + RaidGUIControlRewardCardPack.CARD_PACK_Y_OFFSET)
 end
 
+-- Lines 132-140
 function RaidGUIControlRewardCardPack:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -137,6 +144,7 @@ function RaidGUIControlRewardCardPack:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
+-- Lines 142-156
 function RaidGUIControlRewardCardPack:_create_description()
 	local description_params = {
 		vertical = "top",
@@ -156,6 +164,7 @@ function RaidGUIControlRewardCardPack:_create_description()
 	self._description:set_right(self._right_panel:w())
 end
 
+-- Lines 158-173
 function RaidGUIControlRewardCardPack:_create_item_description_name()
 	local item_type_params = {
 		name = "item_type",
@@ -174,6 +183,7 @@ function RaidGUIControlRewardCardPack:_create_item_description_name()
 	self._item_description_name = self._right_panel:text(item_type_params)
 end
 
+-- Lines 175-255
 function RaidGUIControlRewardCardPack:show()
 	RaidGUIControlRewardCardPack.super.show(self)
 
@@ -217,18 +227,22 @@ function RaidGUIControlRewardCardPack:show()
 	self._item_description_name:set_x(item_description_name_x)
 end
 
+-- Lines 257-259
 function RaidGUIControlRewardCardPack:set_cards(card_list)
 	self._cards_control:set_cards(card_list)
 end
 
+-- Lines 261-263
 function RaidGUIControlRewardCardPack:is_selected_card_revealed()
 	return self._selected_item_idx ~= nil and self._cards_control:get_items()[self._selected_item_idx]:revealed() or false
 end
 
+-- Lines 265-267
 function RaidGUIControlRewardCardPack:selected_item_idx()
 	return self._selected_item_idx
 end
 
+-- Lines 271-284
 function RaidGUIControlRewardCardPack:set_selected(flag)
 	self._selected = flag
 	self._selected_item_idx = 0
@@ -246,6 +260,7 @@ function RaidGUIControlRewardCardPack:set_selected(flag)
 	end
 end
 
+-- Lines 286-302
 function RaidGUIControlRewardCardPack:move_left()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx - 1
@@ -264,6 +279,7 @@ function RaidGUIControlRewardCardPack:move_left()
 	end
 end
 
+-- Lines 304-320
 function RaidGUIControlRewardCardPack:move_right()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx + 1
@@ -282,6 +298,7 @@ function RaidGUIControlRewardCardPack:move_right()
 	end
 end
 
+-- Lines 322-331
 function RaidGUIControlRewardCardPack:confirm_pressed()
 	local selected_card_item = self._cards_control:get_items()[self._selected_item_idx]
 

@@ -1,5 +1,6 @@
 AIRemoveUnitElement = AIRemoveUnitElement or class(MissionElement)
 
+-- Lines 3-17
 function AIRemoveUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -16,13 +17,16 @@ function AIRemoveUnitElement:init(unit)
 	table.insert(self._save_values, "drop_loot")
 end
 
+-- Lines 19-21
 function AIRemoveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
+-- Lines 23-24
 function AIRemoveUnitElement:update_editing()
 end
 
+-- Lines 26-34
 function AIRemoveUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -40,6 +44,7 @@ function AIRemoveUnitElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 36-48
 function AIRemoveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -57,6 +62,7 @@ function AIRemoveUnitElement:add_element()
 	end
 end
 
+-- Lines 50-56
 function AIRemoveUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -65,10 +71,12 @@ function AIRemoveUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 59-61
 function AIRemoveUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 64-92
 function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

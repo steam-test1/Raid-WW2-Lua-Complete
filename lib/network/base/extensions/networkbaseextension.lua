@@ -1,9 +1,11 @@
 NetworkBaseExtension = NetworkBaseExtension or class()
 
+-- Lines 3-5
 function NetworkBaseExtension:init(unit)
 	self._unit = unit
 end
 
+-- Lines 9-18
 function NetworkBaseExtension:send(func, ...)
 	if managers.network:session() then
 		local peer = managers.network:session():local_peer()
@@ -16,6 +18,7 @@ function NetworkBaseExtension:send(func, ...)
 	end
 end
 
+-- Lines 22-31
 function NetworkBaseExtension:send_to_host(func, ...)
 	if managers.network:session() then
 		local peer = managers.network:session():local_peer()
@@ -28,6 +31,7 @@ function NetworkBaseExtension:send_to_host(func, ...)
 	end
 end
 
+-- Lines 35-47
 function NetworkBaseExtension:send_to_unit(params)
 	if managers.network:session() then
 		local peer = managers.network:session():local_peer()
@@ -44,6 +48,7 @@ function NetworkBaseExtension:send_to_unit(params)
 	end
 end
 
+-- Lines 51-55
 function NetworkBaseExtension:peer()
 	if managers.network:session() then
 		return managers.network:session():peer_by_unit(self._unit)

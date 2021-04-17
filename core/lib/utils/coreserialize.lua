@@ -1,5 +1,6 @@
 core:module("CoreSerialize")
 
+-- Lines 12-30
 function string_to_classtable(s)
 	local module_name, name = nil
 
@@ -26,6 +27,7 @@ function string_to_classtable(s)
 	end
 end
 
+-- Lines 32-40
 function classtable_to_string(ct)
 	local module_name = core:_module_to_name(ct.__module__)
 

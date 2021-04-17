@@ -1,5 +1,6 @@
 RaidGUIControlDialogTest = RaidGUIControlDialogTest or class(RaidGUIControl)
 
+-- Lines 3-33
 function RaidGUIControlDialogTest:init(parent, params)
 	RaidGUIControlDialogTest.super.init(self, parent, params)
 
@@ -76,10 +77,12 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._no_button:set_visible(true)
 end
 
+-- Lines 35-37
 function RaidGUIControlDialogTest:get_new_profile_name()
 	return self._input_box:get_text()
 end
 
+-- Lines 39-41
 function RaidGUIControlDialogTest:confirm_pressed()
 	return true
 end

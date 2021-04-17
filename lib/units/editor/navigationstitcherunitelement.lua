@@ -2,6 +2,7 @@ core:import("CoreShapeManager")
 
 NavigationStitcherUnitElement = NavigationStitcherUnitElement or class(MissionElement)
 
+-- Lines 5-24
 function NavigationStitcherUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -22,6 +23,7 @@ function NavigationStitcherUnitElement:init(unit)
 	table.insert(self._save_values, "use_shape_element_ids")
 end
 
+-- Lines 26-37
 function NavigationStitcherUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 
@@ -44,15 +46,19 @@ function NavigationStitcherUnitElement:draw_links(t, dt, selected_unit, all_unit
 	end
 end
 
+-- Lines 39-40
 function NavigationStitcherUnitElement:update_editing()
 end
 
+-- Lines 42-43
 function NavigationStitcherUnitElement:add_element()
 end
 
+-- Lines 45-46
 function NavigationStitcherUnitElement:remove_links(unit)
 end
 
+-- Lines 48-53
 function NavigationStitcherUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local shape = self:get_shape()
 
@@ -61,6 +67,7 @@ function NavigationStitcherUnitElement:update_selected(t, dt, selected_unit, all
 	end
 end
 
+-- Lines 55-61
 function NavigationStitcherUnitElement:get_shape()
 	if not self._shape then
 		self:_create_shapes()
@@ -69,13 +76,16 @@ function NavigationStitcherUnitElement:get_shape()
 	return self._shape
 end
 
+-- Lines 63-65
 function NavigationStitcherUnitElement:set_shape_property(params)
 	self._shape:set_property(params.property, self._hed[params.value])
 end
 
+-- Lines 68-69
 function NavigationStitcherUnitElement:add_triggers(vc)
 end
 
+-- Lines 71-80
 function NavigationStitcherUnitElement:_set_shape_type()
 	self._spacing_params.number_ctrlr:set_enabled(true)
 	self._depth_params.number_ctrlr:set_enabled(true)
@@ -86,6 +96,7 @@ function NavigationStitcherUnitElement:_set_shape_type()
 	self._sliders.height:set_enabled(true)
 end
 
+-- Lines 82-85
 function NavigationStitcherUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
 		width = self._hed.width,
@@ -96,16 +107,19 @@ function NavigationStitcherUnitElement:_create_shapes()
 	self._shape:set_unit(self._unit)
 end
 
+-- Lines 87-91
 function NavigationStitcherUnitElement:_recreate_shapes()
 	self._shape = nil
 
 	self:_create_shapes()
 end
 
+-- Lines 93-95
 function NavigationStitcherUnitElement:set_element_data(params, ...)
 	NavigationStitcherUnitElement.super.set_element_data(self, params, ...)
 end
 
+-- Lines 98-135
 function NavigationStitcherUnitElement:_build_panel(panel, panel_sizer, disable_params)
 	self:_create_panel()
 
@@ -191,6 +205,7 @@ function NavigationStitcherUnitElement:_build_panel(panel, panel_sizer, disable_
 	self:_set_shape_type()
 end
 
+-- Lines 137-154
 function NavigationStitcherUnitElement:scale_slider(panel, sizer, number_ctrlr_params, value, name)
 	local slider_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -225,6 +240,7 @@ function NavigationStitcherUnitElement:scale_slider(panel, sizer, number_ctrlr_p
 	self._sliders[value] = slider
 end
 
+-- Lines 156-160
 function NavigationStitcherUnitElement:set_size(params)
 	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
 
@@ -232,12 +248,14 @@ function NavigationStitcherUnitElement:set_size(params)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
 
+-- Lines 162-165
 function NavigationStitcherUnitElement:size_release(params)
 	self._hed[params.value] = params.number_ctrlr_params.value
 
 	params.ctrlr:set_value(100)
 end
 
+-- Lines 167-170
 function NavigationStitcherUnitElement:clone_data(...)
 	NavigationStitcherUnitElement.super.clone_data(self, ...)
 	self:_recreate_shapes()

@@ -1,5 +1,6 @@
 core:import("CoreEngineAccess")
 
+-- Lines 3-13
 function CoreEditor:build_lower_panel(parent)
 	self._lower_panel = EWS:Panel(Global.frame_panel, "", "TAB_TRAVERSAL")
 	local lower_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -12,6 +13,7 @@ function CoreEditor:build_lower_panel(parent)
 	return self._lower_panel
 end
 
+-- Lines 16-48
 function CoreEditor:add_edit_buttons(edit_btn_sizer)
 	cat_print("editor", " CoreEditor:add_edit_buttons( edit_btn_sizer )")
 
@@ -22,6 +24,7 @@ function CoreEditor:add_edit_buttons(edit_btn_sizer)
 	end
 end
 
+-- Lines 50-92
 function CoreEditor:build_info_frame(parent)
 	self._info_frame = EWS:Panel(parent, "Info Frame", "TAB_TRAVERSAL")
 	self._info_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -66,6 +69,7 @@ function CoreEditor:build_info_frame(parent)
 	return self._info_frame
 end
 
+-- Lines 94-129
 function CoreEditor:add_open_unit_file_buttons()
 	self._open_unit_file_buttons = {}
 
@@ -110,9 +114,11 @@ function CoreEditor:add_open_unit_file_buttons()
 	end
 end
 
+-- Lines 131-132
 function CoreEditor:_change_unit_info(notebook)
 end
 
+-- Lines 134-176
 function CoreEditor:on_open_unit_file(data)
 	if alive(self:selected_unit()) then
 		local unit = self:selected_unit()
@@ -164,6 +170,7 @@ function CoreEditor:on_open_unit_file(data)
 	end
 end
 
+-- Lines 178-197
 function CoreEditor:sequence_file(unit)
 	if alive(unit) then
 		local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
@@ -187,6 +194,7 @@ function CoreEditor:sequence_file(unit)
 	return false
 end
 
+-- Lines 199-223
 function CoreEditor:build_edit_frame(parent)
 	self._edit_panel = EWS:Panel(parent, "Edit Panel", "TAB_TRAVERSAL")
 	local main_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -197,6 +205,7 @@ function CoreEditor:build_edit_frame(parent)
 	return self._edit_panel, main_sizer
 end
 
+-- Lines 229-235
 function CoreEditor:show_edit(data)
 	self[data.panel]:set_visible(self._left_toolbar:tool_state(data.btn))
 	self._info_frame:set_visible(not self:check_edit_buttons())
@@ -205,6 +214,7 @@ function CoreEditor:show_edit(data)
 	self._lower_panel:layout()
 end
 
+-- Lines 237-243
 function CoreEditor:check_edit_buttons()
 	local value = false
 
@@ -215,11 +225,13 @@ function CoreEditor:check_edit_buttons()
 	return value
 end
 
+-- Lines 246-249
 function CoreEditor:layout_edit_panel()
 	self._edit_panel:layout()
 	self._lower_panel:layout()
 end
 
+-- Lines 252-308
 function CoreEditor:unit_output(unit)
 	if alive(unit) then
 		local n = "\n"
@@ -282,6 +294,7 @@ function CoreEditor:unit_output(unit)
 	end
 end
 
+-- Lines 311-319
 function CoreEditor:_unit_materials(unit)
 	local names = {}
 

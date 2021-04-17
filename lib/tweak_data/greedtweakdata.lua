@@ -3,6 +3,7 @@ GreedTweakData.HIGH_END_ITEM_VALUE = 80
 GreedTweakData.MID_END_ITEM_VALUE = 55
 GreedTweakData.LOW_END_ITEM_VALUE = 30
 
+-- Lines 7-17
 function GreedTweakData:init()
 	self.points_needed_for_gold_bar = 1000
 	self.points_spawned_on_level_default = 800
@@ -24,6 +25,7 @@ function GreedTweakData:init()
 	self:_init_cache_items()
 end
 
+-- Lines 19-75
 function GreedTweakData:_init_greed_items()
 	self.greed_items = {
 		egg_decoration = {}
@@ -79,6 +81,7 @@ function GreedTweakData:_init_greed_items()
 	}
 end
 
+-- Lines 77-104
 function GreedTweakData:_init_cache_items()
 	self.cache_items = {
 		regular_cache_box = {}

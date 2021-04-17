@@ -1,5 +1,6 @@
 RaidGUIControlIntelRaidPersonel = RaidGUIControlIntelRaidPersonel or class(RaidGUIControl)
 
+-- Lines 3-10
 function RaidGUIControlIntelRaidPersonel:init(parent, params)
 	RaidGUIControlIntelRaidPersonel.super.init(self, parent, params)
 
@@ -9,6 +10,7 @@ function RaidGUIControlIntelRaidPersonel:init(parent, params)
 	self:_layout()
 end
 
+-- Lines 12-55
 function RaidGUIControlIntelRaidPersonel:_layout()
 	self._bg_image = self._object:bitmap({
 		y = 0,
@@ -116,6 +118,7 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 	})
 end
 
+-- Lines 57-78
 function RaidGUIControlIntelRaidPersonel:set_data(item_value)
 	self._data = tweak_data.intel:get_item_data(self._category_name, item_value)
 
@@ -134,6 +137,7 @@ function RaidGUIControlIntelRaidPersonel:set_data(item_value)
 	self._profile_photo:set_texture_rect(unpack(self._data.texture_rect))
 end
 
+-- Lines 80-82
 function RaidGUIControlIntelRaidPersonel:get_data()
 	return self._data
 end

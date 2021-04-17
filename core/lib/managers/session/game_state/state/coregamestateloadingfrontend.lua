@@ -3,6 +3,7 @@ core:import("CoreGameStatePreFrontEnd")
 
 LoadingFrontEnd = LoadingFrontEnd or class()
 
+-- Lines 6-11
 function LoadingFrontEnd:init()
 	self._debug_time = self.game_state._session_manager:_debug_time()
 
@@ -11,9 +12,11 @@ function LoadingFrontEnd:init()
 	end
 end
 
+-- Lines 13-14
 function LoadingFrontEnd:destroy()
 end
 
+-- Lines 16-21
 function LoadingFrontEnd:transition()
 	local current_time = self.game_state._session_manager:_debug_time()
 

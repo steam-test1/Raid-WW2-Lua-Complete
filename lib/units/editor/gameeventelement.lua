@@ -2,6 +2,7 @@ GameEventElement = GameEventElement or class(MissionElement)
 GameEventElement.SAVE_UNIT_POSITION = false
 GameEventElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-15
 function GameEventElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -13,6 +14,7 @@ function GameEventElement:init(unit)
 	table.insert(self._save_values, "event")
 end
 
+-- Lines 20-52
 function GameEventElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

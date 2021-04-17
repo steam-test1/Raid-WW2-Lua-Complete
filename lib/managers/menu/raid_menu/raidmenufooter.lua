@@ -1,10 +1,12 @@
 RaidMenuFooter = RaidMenuFooter or class(RaidGuiBase)
 RaidMenuFooter.PROFILE_NAME_W = 550
 
+-- Lines 5-7
 function RaidMenuFooter:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuFooter.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
+-- Lines 9-29
 function RaidMenuFooter:_layout()
 	self._object = self._root_panel:panel({
 		name = "footer_object_panel",
@@ -20,10 +22,12 @@ function RaidMenuFooter:_layout()
 	self:_create_name_and_gold_panel()
 end
 
+-- Lines 31-33
 function RaidMenuFooter:set_navigation_button_visibility(flag)
 	self._navigation_button:set_visible(flag)
 end
 
+-- Lines 36-43
 function RaidMenuFooter:_setup_properties()
 	self._panel_x = 0
 	self._panel_y = self._ws:height() - RaidGuiBase.PADDING
@@ -33,6 +37,7 @@ function RaidMenuFooter:_setup_properties()
 	self._panel_is_root_panel = true
 end
 
+-- Lines 45-90
 function RaidMenuFooter:_create_name_and_gold_panel()
 	local string_width_measure_text_field = self._object:child("string_width") or self._object:text({
 		name = "string_width",
@@ -117,19 +122,23 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	self._separator = self._name_and_gold_panel:rect(separator_params)
 end
 
+-- Lines 92-94
 function RaidMenuFooter:hide_name_and_gold_panel()
 	self._name_and_gold_panel:hide()
 end
 
+-- Lines 96-99
 function RaidMenuFooter:refresh_gold_amount()
 	local gold_amount = managers.gold_economy:gold_string(managers.gold_economy:current())
 
 	self._profile_name_label:set_text(gold_amount)
 end
 
+-- Lines 126-127
 function RaidMenuFooter:back_pressed()
 end
 
+-- Lines 129-131
 function RaidMenuFooter:confirm_pressed()
 	return false
 end

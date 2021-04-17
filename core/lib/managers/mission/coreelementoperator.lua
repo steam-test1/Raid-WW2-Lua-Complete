@@ -3,14 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementOperator = ElementOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 6-8
 function ElementOperator:init(...)
 	ElementOperator.super.init(self, ...)
 end
 
+-- Lines 10-12
 function ElementOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 14-32
 function ElementOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return

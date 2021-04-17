@@ -10,6 +10,7 @@ local idstr_no_material = Idstring("no_material")
 local idstr_bullet_hit = Idstring("bullet_hit")
 GamePlayCentralManager = GamePlayCentralManager or class()
 
+-- Lines 14-54
 function GamePlayCentralManager:init()
 	self._bullet_hits = {}
 	self._play_effects = {}
@@ -52,6 +53,7 @@ function GamePlayCentralManager:init()
 	self._block_blood_decals = is_x360
 end
 
+-- Lines 56-64
 function GamePlayCentralManager:setup_effects(level_id)
 	local lvl_id = level_id or Global.level_data and Global.level_data.level_id
 	local lvl_tweak_data = Global.level_data and tweak_data.levels[lvl_id]
@@ -63,6 +65,7 @@ function GamePlayCentralManager:setup_effects(level_id)
 	end
 end
 
+-- Lines 68-75
 function GamePlayCentralManager:restart_portal_effects()
 	if not self._portal_effects_restarted then
 		self._portal_effects_restarted = true
@@ -73,6 +76,7 @@ function GamePlayCentralManager:restart_portal_effects()
 	end
 end
 
+-- Lines 77-83
 function GamePlayCentralManager:_init_impact_sources()
 	self._impact_sounds = {
 		index = 1,
@@ -86,6 +90,7 @@ function GamePlayCentralManager:_init_impact_sources()
 	self._impact_sounds.max_index = #self._impact_sounds.sources
 end
 
+-- Lines 85-89
 function GamePlayCentralManager:_get_impact_source()
 	local source = self._impact_sounds.sources[self._impact_sounds.index]
 	self._impact_sounds.index = self._impact_sounds.index < self._impact_sounds.max_index and self._impact_sounds.index + 1 or 1
@@ -93,6 +98,7 @@ function GamePlayCentralManager:_get_impact_source()
 	return source
 end
 
+-- Lines 93-98
 function GamePlayCentralManager:test_current_weapon_cycle(limited, manual)
 	local unit = managers.player:player_unit()
 	local weapon = unit:inventory():equipped_unit()
@@ -101,6 +107,7 @@ function GamePlayCentralManager:test_current_weapon_cycle(limited, manual)
 	self:test_weapon_cycle(weapon, blueprints, manual)
 end
 
+-- Lines 100-108
 function GamePlayCentralManager:test_weapon_cycle(weapon, blueprints, manual)
 	self._test_weapon = weapon
 	self._test_weapon_force_gadget = not manual
@@ -111,10 +118,12 @@ function GamePlayCentralManager:test_weapon_cycle(weapon, blueprints, manual)
 	self._pause_weapon_cycle = false
 end
 
+-- Lines 110-112
 function GamePlayCentralManager:toggle_pause_weapon_cycle()
 	self._pause_weapon_cycle = not self._pause_weapon_cycle
 end
 
+-- Lines 114-131
 function GamePlayCentralManager:next_weapon()
 	if alive(self._test_weapon) then
 		local blueprint = self._blueprint_random and self._blueprints[math.random(#self._blueprints)] or self._blueprints[self._blueprint_i]
@@ -137,10 +146,12 @@ function GamePlayCentralManager:next_weapon()
 	end
 end
 
+-- Lines 133-135
 function GamePlayCentralManager:stop_test_weapon_cycle()
 	self._test_weapon = nil
 end
 
+-- Lines 139-205
 function GamePlayCentralManager:update(t, dt)
 	if alive(self._test_weapon) and self._blueprint_t and self._blueprint_t < t then
 		self._blueprint_t = Application:time() + 0.1
@@ -201,6 +212,7 @@ function GamePlayCentralManager:update(t, dt)
 	end
 end
 
+-- Lines 207-228
 function GamePlayCentralManager:end_update(t, dt)
 	self._camera_pos = managers.viewport:get_current_camera_position()
 
@@ -211,10 +223,12 @@ function GamePlayCentralManager:end_update(t, dt)
 	self:_flush_queue_fire_raycast()
 end
 
+-- Lines 237-239
 function GamePlayCentralManager:play_impact_sound_and_effects(params)
 	table.insert(self._bullet_hits, params)
 end
 
+-- Lines 241-250
 function GamePlayCentralManager:request_play_footstep(unit, m_pos)
 	if self._camera_pos then
 		local dis = mvector3.distance_sq(self._camera_pos, m_pos)
@@ -228,6 +242,7 @@ function GamePlayCentralManager:request_play_footstep(unit, m_pos)
 	end
 end
 
+-- Lines 252-288
 function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 	local unit = col_ray.unit
 	push_multiplier = push_multiplier or 1
@@ -276,6 +291,7 @@ function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 	end
 end
 
+-- Lines 290-311
 function GamePlayCentralManager:play_impact_flesh(params)
 	local col_ray = params.col_ray
 
@@ -300,6 +316,7 @@ function GamePlayCentralManager:play_impact_flesh(params)
 	end
 end
 
+-- Lines 314-337
 function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 	local splatter_from = from
 	local splatter_to = from + dir * 1000
@@ -331,6 +348,7 @@ function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 	sound_source:post_event("bullet_hit")
 end
 
+-- Lines 340-347
 function GamePlayCentralManager:material_name(idstring)
 	local material = tweak_data.materials[idstring:key()]
 
@@ -343,6 +361,7 @@ function GamePlayCentralManager:material_name(idstring)
 	return material
 end
 
+-- Lines 349-364
 function GamePlayCentralManager:spawn_pickup(params)
 	if not tweak_data.pickups[params.name] then
 		Application:error("No pickup definition for " .. tostring(params.name))
@@ -362,18 +381,21 @@ function GamePlayCentralManager:spawn_pickup(params)
 	return unit
 end
 
+-- Lines 367-372
 function GamePlayCentralManager:_flush_bullet_hits()
 	if #self._bullet_hits > 0 then
 		self:_play_bullet_hit(table.remove(self._bullet_hits, 1))
 	end
 end
 
+-- Lines 375-379
 function GamePlayCentralManager:_flush_play_effects()
 	while #self._play_effects > 0 do
 		self._effect_manager:spawn(table.remove(self._play_effects, 1))
 	end
 end
 
+-- Lines 381-385
 function GamePlayCentralManager:_flush_play_sounds()
 	while #self._play_sounds > 0 do
 		self:_play_sound(table.remove(self._play_sounds, 1))
@@ -382,6 +404,7 @@ end
 
 local zero_vector = Vector3()
 
+-- Lines 388-485
 function GamePlayCentralManager:_play_bullet_hit(params)
 	local hit_pos = params.col_ray.position
 	local need_sound = not params.no_sound and World:in_view_with_options(hit_pos, 2000, 0, 0)
@@ -474,6 +497,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	end
 end
 
+-- Lines 487-500
 function GamePlayCentralManager:_turret_effect(effects, effect, normal, position)
 	local spawn_rotation = Rotation(normal, math.UP)
 	local spawn_1 = Vector3(1, 1, 0):rotate_with(spawn_rotation)
@@ -509,6 +533,7 @@ function GamePlayCentralManager:_turret_effect(effects, effect, normal, position
 	})
 end
 
+-- Lines 502-515
 function GamePlayCentralManager:_play_sound(params)
 	local sound_source = self:_get_impact_source()
 
@@ -520,6 +545,7 @@ function GamePlayCentralManager:_play_sound(params)
 	local result = sound_source:post_event(params.event)
 end
 
+-- Lines 517-556
 function GamePlayCentralManager:_flush_footsteps()
 	local footstep = table.remove(self._footsteps, 1)
 
@@ -566,6 +592,7 @@ function GamePlayCentralManager:_flush_footsteps()
 	end
 end
 
+-- Lines 560-572
 function GamePlayCentralManager:weapon_dropped(weapon)
 	local flashlight_data = weapon:base():flashlight_data()
 
@@ -589,6 +616,7 @@ function GamePlayCentralManager:weapon_dropped(weapon)
 	})
 end
 
+-- Lines 574-586
 function GamePlayCentralManager:set_flashlights_on(flashlights_on)
 	if self._flashlights_on == flashlights_on then
 		return
@@ -604,10 +632,12 @@ function GamePlayCentralManager:set_flashlights_on(flashlights_on)
 	end
 end
 
+-- Lines 588-590
 function GamePlayCentralManager:flashlights_on()
 	return self._flashlights_on
 end
 
+-- Lines 592-602
 function GamePlayCentralManager:on_simulation_ended()
 	self:set_flashlights_on(false)
 	self:set_flashlights_on_player_on(false)
@@ -622,6 +652,7 @@ function GamePlayCentralManager:on_simulation_ended()
 	end
 end
 
+-- Lines 604-614
 function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_player_on)
 	if self._flashlights_on_player_on == flashlights_on_player_on then
 		return
@@ -635,10 +666,12 @@ function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_play
 	end
 end
 
+-- Lines 616-618
 function GamePlayCentralManager:flashlights_on_player_on()
 	return self._flashlights_on_player_on
 end
 
+-- Lines 621-633
 function GamePlayCentralManager:mission_disable_unit(unit)
 	if alive(unit) then
 		self._mission_disabled_units[unit:unit_data().unit_id] = true
@@ -655,6 +688,7 @@ function GamePlayCentralManager:mission_disable_unit(unit)
 	end
 end
 
+-- Lines 636-647
 function GamePlayCentralManager:mission_enable_unit(unit)
 	if alive(unit) then
 		self._mission_disabled_units[unit:unit_data().unit_id] = nil
@@ -671,10 +705,12 @@ function GamePlayCentralManager:mission_enable_unit(unit)
 	end
 end
 
+-- Lines 650-652
 function GamePlayCentralManager:get_heist_timer()
 	return self._heist_timer and Application:time() - (self._heist_timer.start_time or 0) + (self._heist_timer.offset_time or 0) or 0
 end
 
+-- Lines 655-660
 function GamePlayCentralManager:start_heist_timer()
 	self._heist_timer.running = true
 	self._heist_timer.start_time = Application:time()
@@ -682,15 +718,18 @@ function GamePlayCentralManager:start_heist_timer()
 	self._heist_timer.next_sync = Application:time() + 10
 end
 
+-- Lines 663-665
 function GamePlayCentralManager:stop_heist_timer()
 	self._heist_timer.running = false
 end
 
+-- Lines 667-671
 function GamePlayCentralManager:sync_heist_time(heist_time)
 	self._heist_timer.offset_time = heist_time
 	self._heist_timer.start_time = Application:time()
 end
 
+-- Lines 677-691
 function GamePlayCentralManager:restart_the_game()
 	managers.challenge_cards:on_restart_to_camp()
 	managers.raid_job:stop_sounds()
@@ -706,6 +745,7 @@ function GamePlayCentralManager:restart_the_game()
 	managers.raid_job:external_end_mission(restart_camp, true)
 end
 
+-- Lines 694-702
 function GamePlayCentralManager:restart_the_mission()
 	managers.raid_job.reload_mission_flag = true
 
@@ -719,14 +759,17 @@ function GamePlayCentralManager:restart_the_mission()
 	managers.global_state:fire_event("system_start_raid")
 end
 
+-- Lines 705-707
 function GamePlayCentralManager:set_restarting(value)
 	self._restarting = value
 end
 
+-- Lines 709-711
 function GamePlayCentralManager:is_restarting(value)
 	return self._restarting
 end
 
+-- Lines 714-733
 function GamePlayCentralManager:stop_the_game()
 	Application:trace("[GamePlayCentralManager:stop_the_game()]")
 	World:set_extensions_update_enabled(false)
@@ -749,6 +792,7 @@ function GamePlayCentralManager:stop_the_game()
 	end
 end
 
+-- Lines 737-743
 function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	self._queue_fire_raycast = self._queue_fire_raycast or {}
 	local data = {
@@ -762,6 +806,7 @@ function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	table.insert(self._queue_fire_raycast, data)
 end
 
+-- Lines 745-763
 function GamePlayCentralManager:_flush_queue_fire_raycast()
 	local i = 1
 
@@ -783,6 +828,7 @@ function GamePlayCentralManager:_flush_queue_fire_raycast()
 	end
 end
 
+-- Lines 769-793
 function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	self._auto_highlighted_enemies = self._auto_highlighted_enemies or {}
 
@@ -812,6 +858,7 @@ function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	return true
 end
 
+-- Lines 797-824
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 	if distance > 500 then
 		return
@@ -842,6 +889,7 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 	end
 end
 
+-- Lines 828-834
 function GamePlayCentralManager:announcer_say(event)
 	if not self._announcer_sound_source then
 		self._announcer_sound_source = SoundDevice:create_source("announcer")
@@ -850,6 +898,7 @@ function GamePlayCentralManager:announcer_say(event)
 	self._announcer_sound_source:post_event(event)
 end
 
+-- Lines 838-847
 function GamePlayCentralManager:save(data)
 	local state = {
 		flashlights_on = self._flashlights_on,
@@ -861,6 +910,7 @@ function GamePlayCentralManager:save(data)
 	data.GamePlayCentralManager = state
 end
 
+-- Lines 849-862
 function GamePlayCentralManager:load(data)
 	local state = data.GamePlayCentralManager
 
@@ -880,6 +930,7 @@ function GamePlayCentralManager:load(data)
 	end
 end
 
+-- Lines 864-872
 function GamePlayCentralManager:on_world_loaded()
 	Application:debug("[GamePlayCentralManager:on_world_loaded()]")
 
@@ -891,6 +942,7 @@ function GamePlayCentralManager:on_world_loaded()
 	end
 end
 
+-- Lines 874-880
 function GamePlayCentralManager:on_level_tranistion()
 	self._mission_disabled_units = {}
 	self._bullet_hits = {}
@@ -899,6 +951,7 @@ function GamePlayCentralManager:on_level_tranistion()
 	self._spawned_pickups = {}
 end
 
+-- Lines 887-943
 function GamePlayCentralManager:debug_weapon()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {
@@ -910,6 +963,7 @@ function GamePlayCentralManager:debug_weapon()
 
 	gui:clear()
 
+	-- Lines 894-939
 	local function add_func()
 		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
 			return ""
@@ -920,6 +974,7 @@ function GamePlayCentralManager:debug_weapon()
 		local blueprint = weapon:base()._blueprint
 		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
 
+		-- Lines 904-906
 		local function add_line(text, s)
 			return text .. s .. "\n"
 		end

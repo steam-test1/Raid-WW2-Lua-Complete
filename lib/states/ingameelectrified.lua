@@ -2,13 +2,16 @@ require("lib/states/GameState")
 
 IngameElectrifiedState = IngameElectrifiedState or class(IngamePlayerBaseState)
 
+-- Lines 5-7
 function IngameElectrifiedState:init(game_state_machine)
 	IngamePlayerBaseState.super.init(self, "ingame_electrified", game_state_machine)
 end
 
+-- Lines 9-10
 function IngameElectrifiedState:update(t, dt)
 end
 
+-- Lines 12-34
 function IngameElectrifiedState:at_enter()
 	local players = managers.player:players()
 
@@ -32,6 +35,7 @@ function IngameElectrifiedState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 36-44
 function IngameElectrifiedState:at_exit()
 	local player = managers.player:player_unit()
 

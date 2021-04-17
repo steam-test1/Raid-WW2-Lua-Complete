@@ -4,6 +4,7 @@ core:import("CoreControllerWrapper")
 ControllerWrapperDebug = ControllerWrapperDebug or class(CoreControllerWrapper.ControllerWrapper)
 ControllerWrapperDebug.TYPE = "debug"
 
+-- Lines 8-19
 function ControllerWrapperDebug:init(controller_wrapper_list, manager, id, name, default_controller_wrapper, setup)
 	self._controller_wrapper_list = controller_wrapper_list
 	self._default_controller_wrapper = default_controller_wrapper
@@ -17,6 +18,7 @@ function ControllerWrapperDebug:init(controller_wrapper_list, manager, id, name,
 	end
 end
 
+-- Lines 21-27
 function ControllerWrapperDebug:destroy()
 	ControllerWrapperDebug.super.destroy(self)
 
@@ -25,6 +27,7 @@ function ControllerWrapperDebug:destroy()
 	end
 end
 
+-- Lines 29-35
 function ControllerWrapperDebug:update(t, dt)
 	ControllerWrapperDebug.super.update(self, t, dt)
 
@@ -33,6 +36,7 @@ function ControllerWrapperDebug:update(t, dt)
 	end
 end
 
+-- Lines 37-43
 function ControllerWrapperDebug:paused_update(t, dt)
 	ControllerWrapperDebug.super.paused_update(self, t, dt)
 
@@ -41,6 +45,7 @@ function ControllerWrapperDebug:paused_update(t, dt)
 	end
 end
 
+-- Lines 45-53
 function ControllerWrapperDebug:connected(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:connected(...) then
@@ -51,6 +56,7 @@ function ControllerWrapperDebug:connected(...)
 	return false
 end
 
+-- Lines 55-61
 function ControllerWrapperDebug:rebind_connections(setup, setup_map)
 	ControllerWrapperDebug.super.rebind_connections(self)
 
@@ -59,9 +65,11 @@ function ControllerWrapperDebug:rebind_connections(setup, setup_map)
 	end
 end
 
+-- Lines 63-64
 function ControllerWrapperDebug:setup(...)
 end
 
+-- Lines 66-74
 function ControllerWrapperDebug:get_any_input(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:get_any_input(...) then
@@ -72,6 +80,7 @@ function ControllerWrapperDebug:get_any_input(...)
 	return false
 end
 
+-- Lines 76-84
 function ControllerWrapperDebug:get_any_input_pressed(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:get_any_input_pressed(...) then
@@ -82,6 +91,7 @@ function ControllerWrapperDebug:get_any_input_pressed(...)
 	return false
 end
 
+-- Lines 86-94
 function ControllerWrapperDebug:get_input_pressed(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:connection_exist(...) and controller_wrapper:get_input_pressed(...) then
@@ -92,6 +102,7 @@ function ControllerWrapperDebug:get_input_pressed(...)
 	return false
 end
 
+-- Lines 96-104
 function ControllerWrapperDebug:get_input_bool(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:connection_exist(...) and controller_wrapper:get_input_bool(...) then
@@ -102,6 +113,7 @@ function ControllerWrapperDebug:get_input_bool(...)
 	return false
 end
 
+-- Lines 106-116
 function ControllerWrapperDebug:get_input_float(...)
 	local input_float = 0
 
@@ -114,6 +126,7 @@ function ControllerWrapperDebug:get_input_float(...)
 	return input_float
 end
 
+-- Lines 118-131
 function ControllerWrapperDebug:get_input_axis(...)
 	local input_axis = Vector3(0, 0, 0)
 
@@ -130,6 +143,7 @@ function ControllerWrapperDebug:get_input_axis(...)
 	return input_axis
 end
 
+-- Lines 133-145
 function ControllerWrapperDebug:get_connection_map(...)
 	local map = {}
 
@@ -144,6 +158,7 @@ function ControllerWrapperDebug:get_connection_map(...)
 	return map
 end
 
+-- Lines 147-155
 function ControllerWrapperDebug:connection_exist(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:connection_exist(...) then
@@ -154,12 +169,14 @@ function ControllerWrapperDebug:connection_exist(...)
 	return false
 end
 
+-- Lines 157-161
 function ControllerWrapperDebug:set_enabled(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:set_enabled(...)
 	end
 end
 
+-- Lines 163-169
 function ControllerWrapperDebug:enable(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:enable(...)
@@ -168,6 +185,7 @@ function ControllerWrapperDebug:enable(...)
 	self._enabled = true
 end
 
+-- Lines 171-177
 function ControllerWrapperDebug:disable(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:disable(...)
@@ -176,6 +194,7 @@ function ControllerWrapperDebug:disable(...)
 	self._enabled = false
 end
 
+-- Lines 179-185
 function ControllerWrapperDebug:add_trigger(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:connection_exist(...) then
@@ -184,6 +203,7 @@ function ControllerWrapperDebug:add_trigger(...)
 	end
 end
 
+-- Lines 187-193
 function ControllerWrapperDebug:add_release_trigger(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:connection_exist(...) then
@@ -192,6 +212,7 @@ function ControllerWrapperDebug:add_release_trigger(...)
 	end
 end
 
+-- Lines 195-201
 function ControllerWrapperDebug:remove_trigger(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:connection_exist(...) then
@@ -200,38 +221,45 @@ function ControllerWrapperDebug:remove_trigger(...)
 	end
 end
 
+-- Lines 203-207
 function ControllerWrapperDebug:clear_triggers(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:clear_triggers(...)
 	end
 end
 
+-- Lines 209-213
 function ControllerWrapperDebug:reset_cache(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:reset_cache(...)
 	end
 end
 
+-- Lines 215-219
 function ControllerWrapperDebug:restore_triggers(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:restore_triggers(...)
 	end
 end
 
+-- Lines 221-225
 function ControllerWrapperDebug:clear_connections(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:clear_connections(...)
 	end
 end
 
+-- Lines 227-229
 function ControllerWrapperDebug:get_setup(...)
 	return self._default_controller_wrapper and self._default_controller_wrapper:get_setup(...)
 end
 
+-- Lines 231-233
 function ControllerWrapperDebug:get_connection_settings(...)
 	return self._default_controller_wrapper and self._default_controller_wrapper:get_connection_settings(...)
 end
 
+-- Lines 235-243
 function ControllerWrapperDebug:get_connection_enabled(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		if controller_wrapper:get_connection_enabled(...) then
@@ -242,6 +270,7 @@ function ControllerWrapperDebug:get_connection_enabled(...)
 	return false
 end
 
+-- Lines 245-249
 function ControllerWrapperDebug:set_connection_enabled(...)
 	for _, controller_wrapper in ipairs(self._controller_wrapper_list) do
 		controller_wrapper:set_connection_enabled(...)

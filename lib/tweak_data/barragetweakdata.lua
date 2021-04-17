@@ -5,6 +5,7 @@ BarrageType = {
 	RANDOM = 3
 }
 
+-- Lines 13-150
 function BarrageTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -207,6 +208,7 @@ function BarrageTweakData:init(tweak_data)
 	}
 end
 
+-- Lines 153-162
 function BarrageTweakData:get_barrage_ids()
 	local t = {}
 

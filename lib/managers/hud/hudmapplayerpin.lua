@@ -2,6 +2,7 @@ HUDMapPlayerPin = HUDMapPlayerPin or class()
 HUDMapPlayerPin.W = 128
 HUDMapPlayerPin.H = 128
 
+-- Lines 6-13
 function HUDMapPlayerPin:init(panel, params)
 	self._id = params.id
 	self._ai = params.ai or false
@@ -11,6 +12,7 @@ function HUDMapPlayerPin:init(panel, params)
 	self:_create_nationality_icon(params)
 end
 
+-- Lines 15-24
 function HUDMapPlayerPin:_create_panel(panel)
 	local panel_params = {
 		visible = false,
@@ -23,6 +25,7 @@ function HUDMapPlayerPin:_create_panel(panel)
 	self._object = panel:panel(panel_params)
 end
 
+-- Lines 26-40
 function HUDMapPlayerPin:_create_nationality_icon(params)
 	local nationality = params.nationality or "german"
 	local nationality_icon = "player_panel_nationality_" .. nationality
@@ -39,6 +42,7 @@ function HUDMapPlayerPin:_create_nationality_icon(params)
 	self._nationality_icon:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 42-47
 function HUDMapPlayerPin:set_nationality(nationality)
 	local nationality_icon = "player_panel_nationality_" .. nationality
 
@@ -46,27 +50,33 @@ function HUDMapPlayerPin:set_nationality(nationality)
 	self._nationality_icon:set_texture_rect(unpack(tweak_data.gui.icons[nationality_icon].texture_rect))
 end
 
+-- Lines 49-51
 function HUDMapPlayerPin:set_center_x(x)
 	self._object:set_center_x(x)
 end
 
+-- Lines 53-55
 function HUDMapPlayerPin:set_center_y(y)
 	self._object:set_center_y(y)
 end
 
+-- Lines 57-60
 function HUDMapPlayerPin:set_position(x, y)
 	self:set_center_x(x)
 	self:set_center_y(y)
 end
 
+-- Lines 62-64
 function HUDMapPlayerPin:ai()
 	return self._ai
 end
 
+-- Lines 66-68
 function HUDMapPlayerPin:id()
 	return self._id
 end
 
+-- Lines 70-76
 function HUDMapPlayerPin:show()
 	self._shown = true
 
@@ -75,12 +85,14 @@ function HUDMapPlayerPin:show()
 	end
 end
 
+-- Lines 78-82
 function HUDMapPlayerPin:hide()
 	self._shown = false
 
 	self._object:set_visible(false)
 end
 
+-- Lines 85-94
 function HUDMapPlayerPin:set_hidden(value)
 	self._hidden = value
 

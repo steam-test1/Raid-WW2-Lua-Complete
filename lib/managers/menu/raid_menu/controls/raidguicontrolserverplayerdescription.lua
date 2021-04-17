@@ -1,5 +1,6 @@
 RaidGUIControlServerPlayerDescription = RaidGUIControlServerPlayerDescription or class(RaidGUIControl)
 
+-- Lines 5-14
 function RaidGUIControlServerPlayerDescription:init(parent, params)
 	RaidGUIControlServerPlayerDescription.super.init(self, parent, params)
 
@@ -12,6 +13,7 @@ function RaidGUIControlServerPlayerDescription:init(parent, params)
 	self._on_selected_callback = params.on_selected_callback
 end
 
+-- Lines 16-24
 function RaidGUIControlServerPlayerDescription:_create_selector()
 	local selector_params = {
 		name = "selector",
@@ -22,6 +24,7 @@ function RaidGUIControlServerPlayerDescription:_create_selector()
 	self._selector = self._object:rect(selector_params)
 end
 
+-- Lines 26-51
 function RaidGUIControlServerPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
@@ -98,6 +101,7 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_level:hide()
 end
 
+-- Lines 53-99
 function RaidGUIControlServerPlayerDescription:set_data(data)
 	if data == NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO or not data then
 		self:hide()
@@ -142,6 +146,7 @@ function RaidGUIControlServerPlayerDescription:set_data(data)
 	end
 end
 
+-- Lines 101-107
 function RaidGUIControlServerPlayerDescription:set_host(flag)
 	if flag then
 		self._host_icon:show()
@@ -150,6 +155,7 @@ function RaidGUIControlServerPlayerDescription:set_host(flag)
 	end
 end
 
+-- Lines 109-117
 function RaidGUIControlServerPlayerDescription:set_selected(value)
 	self._selected = value
 
@@ -160,14 +166,17 @@ function RaidGUIControlServerPlayerDescription:set_selected(value)
 	end
 end
 
+-- Lines 119-122
 function RaidGUIControlServerPlayerDescription:show()
 	self._object:show()
 end
 
+-- Lines 124-127
 function RaidGUIControlServerPlayerDescription:hide()
 	self._object:hide()
 end
 
+-- Lines 129-133
 function RaidGUIControlServerPlayerDescription:confirm_pressed()
 	if self._selected then
 		RaidMenuCallbackHandler.view_gamer_card(self._xuid)

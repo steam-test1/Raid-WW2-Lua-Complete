@@ -2,6 +2,7 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIPanel")
 
 RaidGUIControlTableRow = RaidGUIControlTableRow or class(RaidGUIPanel)
 
+-- Lines 5-52
 function RaidGUIControlTableRow:init(parent, params, row_data, table_params)
 	RaidGUIControlTableRow.super.init(self, parent, params)
 
@@ -51,10 +52,12 @@ function RaidGUIControlTableRow:init(parent, params, row_data, table_params)
 	end
 end
 
+-- Lines 54-56
 function RaidGUIControlTableRow:get_cells()
 	return self.cells
 end
 
+-- Lines 59-77
 function RaidGUIControlTableRow:mouse_moved(o, x, y)
 	if self:selected() then
 		return
@@ -75,22 +78,26 @@ function RaidGUIControlTableRow:mouse_moved(o, x, y)
 	return false
 end
 
+-- Lines 79-81
 function RaidGUIControlTableRow:selected()
 	return self._selected
 end
 
+-- Lines 83-88
 function RaidGUIControlTableRow:on_mouse_over(x, y)
 	self._mouse_inside = true
 
 	self:highlight_on()
 end
 
+-- Lines 90-95
 function RaidGUIControlTableRow:on_mouse_out(x, y)
 	self._mouse_inside = false
 
 	self:highlight_off()
 end
 
+-- Lines 97-113
 function RaidGUIControlTableRow:highlight_on()
 	if self._selected then
 		return
@@ -105,6 +112,7 @@ function RaidGUIControlTableRow:highlight_on()
 	end
 end
 
+-- Lines 115-131
 function RaidGUIControlTableRow:highlight_off()
 	if self._selected then
 		return
@@ -119,6 +127,7 @@ function RaidGUIControlTableRow:highlight_off()
 	end
 end
 
+-- Lines 133-146
 function RaidGUIControlTableRow:select_on()
 	for _, cell in pairs(self.cells) do
 		cell:select_on()
@@ -133,6 +142,7 @@ function RaidGUIControlTableRow:select_on()
 	end
 end
 
+-- Lines 148-161
 function RaidGUIControlTableRow:select_off()
 	for _, cell in pairs(self.cells) do
 		cell:select_off()
@@ -147,6 +157,7 @@ function RaidGUIControlTableRow:select_off()
 	end
 end
 
+-- Lines 163-168
 function RaidGUIControlTableRow:select()
 	self._selected = true
 
@@ -154,6 +165,7 @@ function RaidGUIControlTableRow:select()
 	self:highlight_on()
 end
 
+-- Lines 170-182
 function RaidGUIControlTableRow:unselect()
 	self._selected = false
 
@@ -161,6 +173,7 @@ function RaidGUIControlTableRow:unselect()
 	self:highlight_off()
 end
 
+-- Lines 185-191
 function RaidGUIControlTableRow:confirm_pressed()
 	for _, cell in pairs(self.cells) do
 		if cell.on_double_click then
@@ -169,10 +182,12 @@ function RaidGUIControlTableRow:confirm_pressed()
 	end
 end
 
+-- Lines 193-196
 function RaidGUIControlTableRow:mouse_released(o, button, x, y)
 	return self:on_mouse_released()
 end
 
+-- Lines 198-205
 function RaidGUIControlTableRow:on_mouse_released(button)
 	if self._params.on_row_click_callback then
 		self._params.on_row_click_callback(self.row_data, self._params.row_index)
@@ -181,6 +196,7 @@ function RaidGUIControlTableRow:on_mouse_released(button)
 	return true
 end
 
+-- Lines 207-212
 function RaidGUIControlTableRow:mouse_double_click(button)
 	if self._params.on_row_double_click_callback then
 		self._params.on_row_double_click_callback(self.row_data, self._params.row_index)
@@ -189,6 +205,7 @@ function RaidGUIControlTableRow:mouse_double_click(button)
 	return true
 end
 
+-- Lines 214-216
 function RaidGUIControlTableRow:get_data()
 	return self.row_data
 end

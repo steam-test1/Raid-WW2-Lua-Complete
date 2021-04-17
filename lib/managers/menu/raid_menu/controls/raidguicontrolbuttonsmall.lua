@@ -4,6 +4,7 @@ RaidGUIControlButtonSmall.HOVER_ICON = "btn_small_128_hover"
 RaidGUIControlButtonSmall.W = tweak_data.gui.icons[RaidGUIControlButtonSmall.ICON].texture_rect[3]
 RaidGUIControlButtonSmall.H = tweak_data.gui.icons[RaidGUIControlButtonSmall.ICON].texture_rect[4]
 
+-- Lines 8-33
 function RaidGUIControlButtonSmall:init(parent, params)
 	if not params then
 		Application:error("Trying to create a long primary button without parameters!", debug.traceback())

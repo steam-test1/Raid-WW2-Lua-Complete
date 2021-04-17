@@ -1,5 +1,6 @@
 WarcryGhost = WarcryGhost or class(Warcry)
 
+-- Lines 3-13
 function WarcryGhost:init()
 	WarcryGhost.super.init(self)
 	managers.system_event_listener:add_listener("warcry_ghost_enemy_killed", {
@@ -11,6 +12,7 @@ function WarcryGhost:init()
 	self._tweak_data = tweak_data.warcry[self._type]
 end
 
+-- Lines 15-45
 function WarcryGhost:_find_enemies_in_view()
 	local player_unit = managers.player:player_unit()
 
@@ -38,6 +40,7 @@ end
 local ids_blend_factor = Idstring("blend_factor")
 local ids_time = Idstring("time")
 
+-- Lines 49-68
 function WarcryGhost:update(dt)
 	local lerp = WarcryGhost.super.update(self, dt)
 	local material = managers.warcry:warcry_post_material()
@@ -56,10 +59,12 @@ function WarcryGhost:update(dt)
 	end
 end
 
+-- Lines 70-72
 function WarcryGhost:duration()
 	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
 end
 
+-- Lines 74-82
 function WarcryGhost:get_level_description(level)
 	level = math.clamp(level, 1, #self._tweak_data.buffs)
 
@@ -81,6 +86,7 @@ local ids_empty = Idstring("empty")
 local ids_tint = Idstring("tint")
 local ids_noise_strength = Idstring("noise_strength")
 
+-- Lines 90-103
 function WarcryGhost:activate()
 	WarcryGhost.super.activate(self)
 
@@ -97,6 +103,7 @@ function WarcryGhost:activate()
 	end
 end
 
+-- Lines 105-113
 function WarcryGhost:deactivate()
 	WarcryGhost.super.deactivate(self)
 
@@ -107,6 +114,7 @@ function WarcryGhost:deactivate()
 	end
 end
 
+-- Lines 115-134
 function WarcryGhost:_on_enemy_killed(params)
 	local unit = managers.player:player_unit()
 
@@ -129,6 +137,7 @@ function WarcryGhost:_on_enemy_killed(params)
 	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)
 end
 
+-- Lines 136-138
 function WarcryGhost:cleanup()
 	managers.system_event_listener:remove_listener("warcry_ghost_enemy_killed")
 end

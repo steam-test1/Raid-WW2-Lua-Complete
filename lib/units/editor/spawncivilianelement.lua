@@ -21,6 +21,7 @@ SpawnCivilianUnitElement._options = {
 	"units/vanilla/characters/enemies/models/male_spy/male_spy"
 }
 
+-- Lines 16-31
 function SpawnCivilianUnitElement:init(unit)
 	SpawnCivilianUnitElement.super.init(self, unit)
 
@@ -37,23 +38,28 @@ function SpawnCivilianUnitElement:init(unit)
 	table.insert(self._save_values, "team")
 end
 
+-- Lines 33-36
 function SpawnCivilianUnitElement:post_init(...)
 	SpawnCivilianUnitElement.super.post_init(self, ...)
 	self:_load_pickup()
 end
 
+-- Lines 38-40
 function SpawnCivilianUnitElement:_get_enemy()
 	return self._hed.enemy
 end
 
+-- Lines 42-44
 function SpawnCivilianUnitElement:test_element()
 	SpawnEnemyUnitElement.test_element(self)
 end
 
+-- Lines 46-48
 function SpawnCivilianUnitElement:get_spawn_anim()
 	return self._hed.state
 end
 
+-- Lines 50-59
 function SpawnCivilianUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		if enemy:base() and enemy:base().set_slot then
@@ -66,6 +72,7 @@ function SpawnCivilianUnitElement:stop_test_element()
 	self._enemies = {}
 end
 
+-- Lines 61-66
 function SpawnCivilianUnitElement:set_element_data(params, ...)
 	SpawnCivilianUnitElement.super.set_element_data(self, params, ...)
 
@@ -74,6 +81,7 @@ function SpawnCivilianUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 68-73
 function SpawnCivilianUnitElement:_reload_unit_list_btn()
 	self:stop_test_element()
 
@@ -84,6 +92,7 @@ function SpawnCivilianUnitElement:_reload_unit_list_btn()
 	end
 end
 
+-- Lines 75-102
 function SpawnCivilianUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -115,6 +124,7 @@ function SpawnCivilianUnitElement:_build_panel(panel, panel_sizer)
 	}, tweak_data.levels:get_team_names_indexed()), "Select the character's team.")
 end
 
+-- Lines 104-109
 function SpawnCivilianUnitElement:_load_pickup()
 	if self._hed.force_pickup ~= "none" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -123,6 +133,7 @@ function SpawnCivilianUnitElement:_load_pickup()
 	end
 end
 
+-- Lines 111-123
 function SpawnCivilianUnitElement:add_to_mission_package()
 	if self._hed.force_pickup ~= "none" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -148,6 +159,7 @@ function SpawnCivilianUnitElement:add_to_mission_package()
 	end
 end
 
+-- Lines 125-131
 function SpawnCivilianUnitElement:_resolve_team(unit)
 	if self._hed.team == "default" then
 		return tweak_data.levels:get_default_team_ID("non_combatant")
@@ -156,6 +168,7 @@ function SpawnCivilianUnitElement:_resolve_team(unit)
 	end
 end
 
+-- Lines 133-136
 function SpawnCivilianUnitElement:destroy(...)
 	SpawnCivilianUnitElement.super.destroy(self, ...)
 	self:stop_test_element()

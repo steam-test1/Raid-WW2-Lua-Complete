@@ -1,5 +1,6 @@
 DisableUnitUnitElement = DisableUnitUnitElement or class(MissionElement)
 
+-- Lines 3-13
 function DisableUnitUnitElement:init(unit)
 	DisableUnitUnitElement.super.init(self, unit)
 
@@ -11,6 +12,7 @@ function DisableUnitUnitElement:init(unit)
 	table.insert(self._save_values, "destroy_units")
 end
 
+-- Lines 16-25
 function DisableUnitUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -23,12 +25,14 @@ function DisableUnitUnitElement:layer_finished()
 	end
 end
 
+-- Lines 27-31
 function DisableUnitUnitElement:load_unit(unit)
 	if unit then
 		self._units[unit:unit_data().unit_id] = unit
 	end
 end
 
+-- Lines 33-56
 function DisableUnitUnitElement:update_selected()
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -58,6 +62,7 @@ function DisableUnitUnitElement:update_selected()
 	end
 end
 
+-- Lines 58-71
 function DisableUnitUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -76,6 +81,7 @@ function DisableUnitUnitElement:update_unselected(t, dt, selected_unit, all_unit
 	end
 end
 
+-- Lines 73-86
 function DisableUnitUnitElement:draw_links_unselected(...)
 	DisableUnitUnitElement.super.draw_links_unselected(self, ...)
 
@@ -93,6 +99,7 @@ function DisableUnitUnitElement:draw_links_unselected(...)
 	end
 end
 
+-- Lines 88-93
 function DisableUnitUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -105,6 +112,7 @@ function DisableUnitUnitElement:update_editing()
 	end
 end
 
+-- Lines 95-111
 function DisableUnitUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -123,23 +131,28 @@ function DisableUnitUnitElement:select_unit()
 	end
 end
 
+-- Lines 113-116
 function DisableUnitUnitElement:_remove_unit(unit)
 	self._units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
+-- Lines 118-121
 function DisableUnitUnitElement:_add_unit(unit)
 	self._units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
+-- Lines 123-125
 function DisableUnitUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
+-- Lines 127-141
 function DisableUnitUnitElement:add_unit_list_btn()
+	-- Lines 128-133
 	local function f(unit)
 		if self._units[unit:unit_data().unit_id] then
 			return false
@@ -157,7 +170,9 @@ function DisableUnitUnitElement:add_unit_list_btn()
 	end
 end
 
+-- Lines 143-151
 function DisableUnitUnitElement:remove_unit_list_btn()
+	-- Lines 144-144
 	local function f(unit)
 		return self._units[unit:unit_data().unit_id]
 	end
@@ -171,6 +186,7 @@ function DisableUnitUnitElement:remove_unit_list_btn()
 	end
 end
 
+-- Lines 153-171
 function DisableUnitUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -2,6 +2,7 @@ SlowMotionElement = SlowMotionElement or class(MissionElement)
 SlowMotionElement.SAVE_UNIT_POSITION = false
 SlowMotionElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-12
 function SlowMotionElement:init(unit)
 	SlowMotionElement.super.init(self, unit)
 
@@ -10,6 +11,7 @@ function SlowMotionElement:init(unit)
 	table.insert(self._save_values, "eff_name")
 end
 
+-- Lines 14-25
 function SlowMotionElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

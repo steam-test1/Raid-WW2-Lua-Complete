@@ -10,6 +10,7 @@ DebugManager = DebugManager or class()
 DebugManager.ROT_LINE_LENGTH = 20
 DebugManager.reload = true
 
+-- Lines 14-41
 function DebugManager:init()
 	self._enabled = false
 	self._enabled_paused = false
@@ -38,6 +39,7 @@ function DebugManager:init()
 	self.pos:set_skip_lines("ray", true)
 end
 
+-- Lines 43-49
 function DebugManager:destroy()
 	for _, system in pairs(self._system_list) do
 		if system.destroy then
@@ -46,6 +48,7 @@ function DebugManager:destroy()
 	end
 end
 
+-- Lines 51-61
 function DebugManager:update(t, dt)
 	if self._enabled then
 		if DebugManager.reload then
@@ -58,6 +61,7 @@ function DebugManager:update(t, dt)
 	end
 end
 
+-- Lines 63-73
 function DebugManager:paused_update(t, dt)
 	if self._enabled_paused then
 		if DebugManager.reload then
@@ -70,6 +74,7 @@ function DebugManager:paused_update(t, dt)
 	end
 end
 
+-- Lines 75-81
 function DebugManager:reloaded()
 	DebugManager.reload = false
 
@@ -78,20 +83,24 @@ function DebugManager:reloaded()
 	end
 end
 
+-- Lines 83-87
 function DebugManager:clear(...)
 	for _, system in pairs(self._system_list) do
 		system:clear(...)
 	end
 end
 
+-- Lines 89-91
 function DebugManager:toggle_enabled()
 	self:set_enabled(not self._enabled)
 end
 
+-- Lines 93-95
 function DebugManager:toggle_enabled_paused()
 	self:set_enabled_paused(not self._enabled_paused)
 end
 
+-- Lines 97-104
 function DebugManager:toggle_enabled_all()
 	self:set_enabled(not self._enabled)
 	self:set_enabled_paused(not self._enabled_paused)
@@ -101,14 +110,17 @@ function DebugManager:toggle_enabled_all()
 	end
 end
 
+-- Lines 106-108
 function DebugManager:enabled()
 	return self._enabled
 end
 
+-- Lines 110-112
 function DebugManager:enabled_paused()
 	return self._enabled_paused
 end
 
+-- Lines 114-121
 function DebugManager:set_enabled(enabled)
 	if self._enabled ~= enabled then
 		if enabled then
@@ -119,6 +131,7 @@ function DebugManager:set_enabled(enabled)
 	end
 end
 
+-- Lines 123-130
 function DebugManager:set_enabled_paused(enabled)
 	if self._enabled_paused ~= enabled then
 		if enabled then
@@ -129,6 +142,7 @@ function DebugManager:set_enabled_paused(enabled)
 	end
 end
 
+-- Lines 132-138
 function DebugManager:set_systems_enabled(enabled, include_non_preferred)
 	for system_name, system in pairs(self._system_list) do
 		if include_non_preferred or not system.IS_PREFERRED_DISABLED then
@@ -137,12 +151,14 @@ function DebugManager:set_systems_enabled(enabled, include_non_preferred)
 	end
 end
 
+-- Lines 140-144
 function DebugManager:set_enabled_all(enabled, include_non_preferred)
 	self:set_enabled(enabled)
 	self:set_enabled_paused(enabled)
 	self:set_systems_enabled(enabled, include_non_preferred)
 end
 
+-- Lines 148-154
 function DebugManager.trim_list(list, max_count)
 	if max_count > 0 then
 		while max_count < #list do
@@ -151,6 +167,7 @@ function DebugManager.trim_list(list, max_count)
 	end
 end
 
+-- Lines 156-163
 function DebugManager.draw_pos_list(list, skip_lines)
 	local old_point = nil
 
@@ -161,6 +178,7 @@ function DebugManager.draw_pos_list(list, skip_lines)
 	end
 end
 
+-- Lines 165-181
 function DebugManager.draw_point(index, count, old_point, point, skip_lines)
 	local color = nil
 
@@ -180,6 +198,7 @@ function DebugManager.draw_point(index, count, old_point, point, skip_lines)
 	end
 end
 
+-- Lines 183-198
 function DebugManager.draw_rot_list(list)
 	for index, point in ipairs(list) do
 		local color = nil
@@ -197,6 +216,7 @@ function DebugManager.draw_rot_list(list)
 	end
 end
 
+-- Lines 200-210
 function DebugManager.get_color_by_index(index, count)
 	local scale = nil
 
@@ -209,6 +229,7 @@ function DebugManager.get_color_by_index(index, count)
 	return DebugManager.get_color(scale)
 end
 
+-- Lines 212-226
 function DebugManager.get_color(scale)
 	if scale < 0.25 then
 		local b = DebugManager.get_interval_brightness(scale, 0, 0.25)
@@ -245,10 +266,12 @@ function DebugManager.get_color(scale)
 	end
 end
 
+-- Lines 228-230
 function DebugManager.get_interval_brightness(scale, min, max)
 	return (scale - min) / (max - min)
 end
 
+-- Lines 232-244
 function DebugManager.args_to_string(...)
 	local s = ""
 
@@ -265,11 +288,13 @@ function DebugManager.args_to_string(...)
 	return s
 end
 
+-- Lines 247-248
 function DebugManager:qa_debug(username)
 end
 
 DebugPoint = DebugPoint or class()
 
+-- Lines 254-263
 function DebugPoint:init(pos, rot, red, green, blue, radius)
 	self._pos = pos
 	self._rot = rot
@@ -287,6 +312,7 @@ end
 
 DebugFunction = DebugFunction or class()
 
+-- Lines 269-276
 function DebugFunction:init(func, start_delay, interval, call_count)
 	self._func = func
 	start_delay = tonumber(start_delay)
@@ -296,6 +322,7 @@ function DebugFunction:init(func, start_delay, interval, call_count)
 	self._call_count = tonumber(call_count)
 end
 
+-- Lines 278-298
 function DebugFunction:update(t, dt)
 	local can_start = not self._start_time or self._start_time <= t
 	local interval_done = not self._last_call_time or not self._interval or self._interval <= t - self._last_call_time
@@ -320,6 +347,7 @@ end
 DebugRaycast = DebugRaycast or class()
 DebugRaycast.MAX_ARROW_SIZE = 8
 
+-- Lines 305-316
 function DebugRaycast:init(copy_ray_wrapper)
 	self._arrow_size = nil
 	self._distance = nil
@@ -342,10 +370,12 @@ function DebugRaycast:init(copy_ray_wrapper)
 	self:update_from_to_vars()
 end
 
+-- Lines 318-320
 function DebugRaycast:from()
 	return self._from
 end
 
+-- Lines 322-328
 function DebugRaycast:set_from(from)
 	self._from = from
 
@@ -354,16 +384,19 @@ function DebugRaycast:set_from(from)
 	end
 end
 
+-- Lines 330-332
 function DebugRaycast:to()
 	return self._to
 end
 
+-- Lines 334-337
 function DebugRaycast:set_to(to)
 	self._to = to
 
 	self:update_from_to_vars()
 end
 
+-- Lines 339-350
 function DebugRaycast:update_from_to_vars()
 	if self._from and self._to then
 		self._dir = (self._to - self._from):normalized()
@@ -377,26 +410,32 @@ function DebugRaycast:update_from_to_vars()
 	end
 end
 
+-- Lines 352-354
 function DebugRaycast:radius()
 	return self._radius
 end
 
+-- Lines 356-358
 function DebugRaycast:set_radius(radius)
 	self._radius = radius
 end
 
+-- Lines 360-362
 function DebugRaycast:bundle()
 	return self._bundle
 end
 
+-- Lines 364-366
 function DebugRaycast:set_bundle(bundle)
 	self._bundle = bundle
 end
 
+-- Lines 368-370
 function DebugRaycast:color()
 	return self._color
 end
 
+-- Lines 372-374
 function DebugRaycast:set_color(red, green, blue)
 	self._color = {
 		red or 1,
@@ -405,18 +444,22 @@ function DebugRaycast:set_color(red, green, blue)
 	}
 end
 
+-- Lines 376-378
 function DebugRaycast:normal()
 	return self._normal
 end
 
+-- Lines 380-382
 function DebugRaycast:set_normal(normal)
 	self._normal = normal
 end
 
+-- Lines 384-386
 function DebugRaycast:normal_color()
 	return self._normal_color
 end
 
+-- Lines 388-390
 function DebugRaycast:set_normal_color(red, green, blue)
 	self._normal_color = {
 		red or 1,
@@ -425,6 +468,7 @@ function DebugRaycast:set_normal_color(red, green, blue)
 	}
 end
 
+-- Lines 392-421
 function DebugRaycast:update(t, dt)
 	if self._from and self._to then
 		if self._radius then
@@ -459,6 +503,7 @@ end
 
 DebugProfilerCounter = DebugProfilerCounter or class()
 
+-- Lines 427-453
 function DebugProfilerCounter:init(name, index, obj, func_name, color, min, max, enabled, graph_enabled, gui_enabled, instance_override)
 	self._instance_override = instance_override
 	self._old_func = nil
@@ -486,6 +531,7 @@ function DebugProfilerCounter:init(name, index, obj, func_name, color, min, max,
 	self:update_gui()
 end
 
+-- Lines 455-461
 function DebugProfilerCounter:reload()
 	if not self._instance_override and self._enabled then
 		self._old_func = nil
@@ -495,14 +541,17 @@ function DebugProfilerCounter:reload()
 	end
 end
 
+-- Lines 463-465
 function DebugProfilerCounter:name()
 	return self._name
 end
 
+-- Lines 467-469
 function DebugProfilerCounter:index()
 	return self._index
 end
 
+-- Lines 471-478
 function DebugProfilerCounter:set_index(index)
 	if self._index and self._gui_enabled then
 		managers.debug.gui:set(self._index, nil)
@@ -513,10 +562,12 @@ function DebugProfilerCounter:set_index(index)
 	self:update_gui()
 end
 
+-- Lines 480-482
 function DebugProfilerCounter:enabled()
 	return self._enabled
 end
 
+-- Lines 484-541
 function DebugProfilerCounter:set_enabled(enabled)
 	enabled = not not enabled
 
@@ -546,6 +597,7 @@ function DebugProfilerCounter:set_enabled(enabled)
 
 			self._old_func = self._old_func or old_func
 
+			-- Lines 512-517
 			function self._new_func(...)
 				local id = Profiler:start(name)
 				local return_list = {
@@ -582,10 +634,12 @@ function DebugProfilerCounter:set_enabled(enabled)
 	end
 end
 
+-- Lines 543-545
 function DebugProfilerCounter:graph_enabled()
 	return self._graph_enabled
 end
 
+-- Lines 547-556
 function DebugProfilerCounter:set_graph_enabled(enabled)
 	enabled = not not enabled
 
@@ -597,10 +651,12 @@ function DebugProfilerCounter:set_graph_enabled(enabled)
 	end
 end
 
+-- Lines 558-560
 function DebugProfilerCounter:gui_enabled()
 	return self._gui_enabled
 end
 
+-- Lines 562-573
 function DebugProfilerCounter:set_gui_enabled(enabled)
 	enabled = not not enabled
 
@@ -615,10 +671,12 @@ function DebugProfilerCounter:set_gui_enabled(enabled)
 	end
 end
 
+-- Lines 575-577
 function DebugProfilerCounter:range()
 	return self._min, self._max
 end
 
+-- Lines 579-583
 function DebugProfilerCounter:set_range(min, max)
 	self._min = tonumber(min) or 0
 	self._max = math.max(self._min, tonumber(max) or 100)
@@ -626,10 +684,12 @@ function DebugProfilerCounter:set_range(min, max)
 	self:update_graph()
 end
 
+-- Lines 585-587
 function DebugProfilerCounter:color()
 	return self._color
 end
 
+-- Lines 589-599
 function DebugProfilerCounter:set_color(color)
 	if color and color.type_name ~= "Color" then
 		color = nil
@@ -642,6 +702,7 @@ function DebugProfilerCounter:set_color(color)
 	self:update_gui()
 end
 
+-- Lines 601-609
 function DebugProfilerCounter:update_graph()
 	if self._initialized then
 		if self._enabled and self._graph_enabled then
@@ -652,6 +713,7 @@ function DebugProfilerCounter:update_graph()
 	end
 end
 
+-- Lines 611-620
 function DebugProfilerCounter:update_gui()
 	if self._initialized and self._index and self._gui_enabled then
 		managers.debug.gui:set(self._index, nil)
@@ -665,43 +727,53 @@ end
 
 BaseDebug = BaseDebug or class()
 
+-- Lines 626-628
 function BaseDebug:init()
 	self._enabled = false
 end
 
+-- Lines 630-631
 function BaseDebug:clear()
 end
 
+-- Lines 633-634
 function BaseDebug:update(t, dt)
 end
 
+-- Lines 636-638
 function BaseDebug:paused_update(t, dt)
 	self:update(t, dt)
 end
 
+-- Lines 640-642
 function BaseDebug:set_enabled(enabled)
 	self._enabled = enabled
 end
 
+-- Lines 644-646
 function BaseDebug:get_enabled()
 	return self._enabled
 end
 
+-- Lines 648-650
 function BaseDebug:toggle_enabled()
 	self:set_enabled(not self._enabled)
 end
 
+-- Lines 652-653
 function BaseDebug:reloaded()
 end
 
 FuncDebug = FuncDebug or class(BaseDebug)
 
+-- Lines 659-663
 function FuncDebug:init()
 	FuncDebug.super.init(self)
 
 	self._func_list = {}
 end
 
+-- Lines 665-671
 function FuncDebug:update(t, dt)
 	for index, wrapped_func in pairs(self._func_list) do
 		if wrapped_func:update(t, dt) then
@@ -710,16 +782,19 @@ function FuncDebug:update(t, dt)
 	end
 end
 
+-- Lines 673-677
 function FuncDebug:clear()
 	FuncDebug.super.clear(self)
 
 	self._func_list = {}
 end
 
+-- Lines 679-681
 function FuncDebug:add(func, start_delay, interval, call_count)
 	self:set(#self._func_list + 1, func, start_delay, interval, call_count)
 end
 
+-- Lines 683-695
 function FuncDebug:set(index, func, start_delay, interval, call_count)
 	index = index or 1
 
@@ -734,6 +809,7 @@ function FuncDebug:set(index, func, start_delay, interval, call_count)
 	end
 end
 
+-- Lines 697-712
 function FuncDebug:delete(func, all)
 	local count = 0
 
@@ -752,12 +828,14 @@ function FuncDebug:delete(func, all)
 	return count
 end
 
+-- Lines 714-716
 function FuncDebug:remove(index)
 	self._func_list[index] = nil
 end
 
 PosDebug = PosDebug or class(BaseDebug)
 
+-- Lines 722-729
 function PosDebug:init()
 	PosDebug.super.init(self)
 
@@ -767,12 +845,14 @@ function PosDebug:init()
 	self._skip_lines_map = {}
 end
 
+-- Lines 731-735
 function PosDebug:update(t, dt)
 	for list_index, list in pairs(self._pos_list) do
 		DebugManager.draw_pos_list(list, self._skip_lines_map[list_index])
 	end
 end
 
+-- Lines 737-745
 function PosDebug:clear(list_index)
 	PosDebug.super.clear(self)
 
@@ -783,26 +863,31 @@ function PosDebug:clear(list_index)
 	end
 end
 
+-- Lines 747-749
 function PosDebug:get_skip_lines(list_index)
 	return self._skip_lines_map[list_index]
 end
 
+-- Lines 751-753
 function PosDebug:set_skip_lines(list_index, skip_lines)
 	self._skip_lines_map[list_index] = skip_lines
 end
 
+-- Lines 755-758
 function PosDebug:add(pos, list_index, red, green, blue, radius)
 	list_index = list_index or 1
 
 	self:set(self:get_count(list_index) + 1, pos, list_index, red, green, blue, radius)
 end
 
+-- Lines 760-764
 function PosDebug:add_list(list, list_index, red, green, blue, radius)
 	for index, point in ipairs(list) do
 		self:set(index, point, list_index, red, green, blue, radius)
 	end
 end
 
+-- Lines 766-781
 function PosDebug:set(index, pos, list_index, red, green, blue, radius)
 	if not pos or type(pos) == "userdata" and pos.type_name == "Vector3" then
 		local point = nil
@@ -821,6 +906,7 @@ function PosDebug:set(index, pos, list_index, red, green, blue, radius)
 	end
 end
 
+-- Lines 783-793
 function PosDebug:remove(index, list_index)
 	list_index = list_index or 1
 
@@ -833,6 +919,7 @@ function PosDebug:remove(index, list_index)
 	end
 end
 
+-- Lines 795-803
 function PosDebug:get(index, list_index)
 	list_index = list_index or 1
 
@@ -843,6 +930,7 @@ function PosDebug:get(index, list_index)
 	return nil
 end
 
+-- Lines 805-815
 function PosDebug:get_count(list_index)
 	if list_index then
 		if self._pos_list[list_index] then
@@ -855,10 +943,12 @@ function PosDebug:get_count(list_index)
 	end
 end
 
+-- Lines 817-819
 function PosDebug:get_max_count(list_index)
 	return list_index and self._max_pos_count_map[list_index] or self._max_pos_count
 end
 
+-- Lines 821-831
 function PosDebug:set_max_count(list_index, max_count)
 	if list_index then
 		self._max_pos_count_map[list_index] = tonumber(max_count)
@@ -873,6 +963,7 @@ end
 
 RotDebug = RotDebug or class(BaseDebug)
 
+-- Lines 837-843
 function RotDebug:init()
 	RotDebug.super.init(self)
 
@@ -881,12 +972,14 @@ function RotDebug:init()
 	self._max_rot_count_map = {}
 end
 
+-- Lines 845-849
 function RotDebug:update(t, dt)
 	for _, list in pairs(self._rot_list) do
 		DebugManager.draw_rot_list(list)
 	end
 end
 
+-- Lines 851-859
 function RotDebug:clear(list_index)
 	RotDebug.super.clear(self)
 
@@ -897,12 +990,14 @@ function RotDebug:clear(list_index)
 	end
 end
 
+-- Lines 861-864
 function RotDebug:add(pos, list_index, rot, red, green, blue, radius)
 	list_index = list_index or 1
 
 	self:set(self:get_count(list_index) + 1, pos, list_index, rot, red, green, blue, radius)
 end
 
+-- Lines 866-883
 function RotDebug:set(index, pos, list_index, rot, red, green, blue, radius)
 	if pos and (type(pos) ~= "userdata" or pos.type_name ~= "Vector3") then
 		cat_error("debug", "Tried to set invalid position \"" .. tostring(pos) .. "\" to index \"" .. tostring(index) .. "\".")
@@ -923,6 +1018,7 @@ function RotDebug:set(index, pos, list_index, rot, red, green, blue, radius)
 	end
 end
 
+-- Lines 885-895
 function RotDebug:remove(index, list_index)
 	list_index = list_index or 1
 
@@ -935,6 +1031,7 @@ function RotDebug:remove(index, list_index)
 	end
 end
 
+-- Lines 897-907
 function RotDebug:get_count(list_index)
 	if list_index then
 		if self._rot_list[list_index] then
@@ -947,10 +1044,12 @@ function RotDebug:get_count(list_index)
 	end
 end
 
+-- Lines 909-911
 function RotDebug:get_max_count(list_index)
 	return list_index and self._max_rot_count_map[list_index] or self._max_rot_count
 end
 
+-- Lines 913-923
 function RotDebug:set_max_count(list_index, max_count)
 	if list_index then
 		self._max_rot_count_map[list_index] = tonumber(max_count)
@@ -966,12 +1065,14 @@ end
 GUIDebug = GUIDebug or class(BaseDebug)
 GUIDebug.GUI_TEXT_COUNT = 60
 
+-- Lines 930-940
 function GUIDebug:init()
 	GUIDebug.super.init(self)
 
 	self._text_func = {}
 end
 
+-- Lines 942-947
 function GUIDebug:destroy()
 	if alive(self._workspace) then
 		Overlay:gui():destroy_workspace(self._workspace)
@@ -980,6 +1081,7 @@ function GUIDebug:destroy()
 	end
 end
 
+-- Lines 949-954
 function GUIDebug:update(t, dt)
 	for index, func in pairs(self._text_func) do
 		local s = DebugManager.args_to_string(func(t, dt))
@@ -988,6 +1090,7 @@ function GUIDebug:update(t, dt)
 	end
 end
 
+-- Lines 956-973
 function GUIDebug:clear()
 	GUIDebug.super.clear(self)
 
@@ -1007,6 +1110,7 @@ function GUIDebug:clear()
 	end
 end
 
+-- Lines 975-985
 function GUIDebug:set_enabled(enabled)
 	if self._workspace and self._enabled ~= enabled then
 		if enabled then
@@ -1019,6 +1123,7 @@ function GUIDebug:set_enabled(enabled)
 	BaseDebug.set_enabled(self, enabled)
 end
 
+-- Lines 987-1012
 function GUIDebug:setup()
 	local gui_scene = Overlay:gui()
 	self._workspace = gui_scene:create_screen_workspace()
@@ -1046,6 +1151,7 @@ function GUIDebug:setup()
 	end
 end
 
+-- Lines 1014-1022
 function GUIDebug:set_func(index, func)
 	if index >= 1 and index <= self.GUI_TEXT_COUNT then
 		if self._workspace == nil then
@@ -1056,6 +1162,7 @@ function GUIDebug:set_func(index, func)
 	end
 end
 
+-- Lines 1024-1038
 function GUIDebug:get(index)
 	if index >= 1 and index <= self.GUI_TEXT_COUNT then
 		if self._workspace == nil then
@@ -1072,6 +1179,7 @@ function GUIDebug:get(index)
 	end
 end
 
+-- Lines 1040-1050
 function GUIDebug:set(index, ...)
 	if index >= 1 and index <= self.GUI_TEXT_COUNT then
 		if self._workspace == nil then
@@ -1086,6 +1194,7 @@ function GUIDebug:set(index, ...)
 	end
 end
 
+-- Lines 1052-1060
 function GUIDebug:get(index)
 	if index >= 1 and index <= self.GUI_TEXT_COUNT then
 		if self._workspace == nil then
@@ -1096,6 +1205,7 @@ function GUIDebug:get(index)
 	end
 end
 
+-- Lines 1062-1070
 function GUIDebug:set_color(index, red, green, blue, alpha)
 	if index >= 1 and index <= self.GUI_TEXT_COUNT then
 		if self._workspace == nil then
@@ -1111,6 +1221,7 @@ GraphDebug.AXIS_ARROW_SIZE = 20
 GraphDebug.GUI_WORLD_WIDTH = 1000
 GraphDebug.GUI_WORLD_HEIGHT = 250
 
+-- Lines 1078-1109
 function GraphDebug:init()
 	GraphDebug.super.init(self)
 
@@ -1137,6 +1248,7 @@ function GraphDebug:init()
 	self._fixed_range = nil
 end
 
+-- Lines 1111-1117
 function GraphDebug:set_fixed_range(fixed_range)
 	self._fixed_range = fixed_range
 
@@ -1145,6 +1257,7 @@ function GraphDebug:set_fixed_range(fixed_range)
 	end
 end
 
+-- Lines 1119-1148
 function GraphDebug:set_range(min, max)
 	self._min_x = min.x
 	self._max_x = max.x
@@ -1175,6 +1288,7 @@ function GraphDebug:set_range(min, max)
 	end
 end
 
+-- Lines 1150-1252
 function GraphDebug:update(t, dt)
 	if next(self._pos_list) then
 		if not self._workspace_map then
@@ -1279,6 +1393,7 @@ function GraphDebug:update(t, dt)
 	end
 end
 
+-- Lines 1254-1263
 function GraphDebug:set_gui_text(id, position, rotation, label, value)
 	local workspace = self._workspace_map[id]
 	local gui_text = workspace:panel():child(0)
@@ -1291,6 +1406,7 @@ function GraphDebug:set_gui_text(id, position, rotation, label, value)
 	workspace:set_world(self.GUI_WORLD_WIDTH, self.GUI_WORLD_HEIGHT, position - Vector3(self.GUI_WORLD_WIDTH / 2, 0, -self.GUI_WORLD_HEIGHT / 2):rotate_with(rotation), rotation:x() * self.GUI_WORLD_WIDTH, -rotation:z() * self.GUI_WORLD_HEIGHT)
 end
 
+-- Lines 1265-1276
 function GraphDebug:get_text_size(gui_text)
 	local w = 0
 	local h = 0
@@ -1304,10 +1420,12 @@ function GraphDebug:get_text_size(gui_text)
 	return w, h
 end
 
+-- Lines 1278-1280
 function GraphDebug:get_scaled_pos(pos)
 	return Vector3(pos.x * self._scale_x, pos.y * self._scale_y, pos.z * self._scale_z)
 end
 
+-- Lines 1282-1306
 function GraphDebug:setup()
 	self._workspace_map = {}
 	local text_config = {
@@ -1342,14 +1460,17 @@ function GraphDebug:setup()
 	self:create_gui_text("max_z", text_config)
 end
 
+-- Lines 1308-1310
 function GraphDebug:get_camera()
 	return self._camera
 end
 
+-- Lines 1312-1314
 function GraphDebug:set_camera(camera)
 	self._camera = camera
 end
 
+-- Lines 1316-1321
 function GraphDebug:create_gui_text(id, config)
 	local workspace = World:gui():create_world_workspace(self.GUI_WORLD_WIDTH, self.GUI_WORLD_HEIGHT, Vector3(), Vector3(1, 0, 0), Vector3(0, 0, 1))
 	self._workspace_map[id] = workspace
@@ -1358,45 +1479,55 @@ function GraphDebug:create_gui_text(id, config)
 	workspace:hide()
 end
 
+-- Lines 1323-1327
 function GraphDebug:clear(list_index)
 	GraphDebug.super.clear(self, list_index)
 
 	self._invalidated = true
 end
 
+-- Lines 1329-1332
 function GraphDebug:set_size(size)
 	self._size = size
 	self._invalidated = true
 end
 
+-- Lines 1334-1336
 function GraphDebug:get_size()
 	return self._size
 end
 
+-- Lines 1338-1340
 function GraphDebug:set_offset(offset)
 	self._cam_offset = offset
 end
 
+-- Lines 1342-1344
 function GraphDebug:get_offset()
 	return self._cam_offset
 end
 
+-- Lines 1346-1348
 function GraphDebug:set_is_fixed_rot(is_fixed_rot)
 	self._is_fixed_rot = is_fixed_rot
 end
 
+-- Lines 1350-1352
 function GraphDebug:is_fixed_rot()
 	return self._is_fixed_rot
 end
 
+-- Lines 1354-1356
 function GraphDebug:set_fixed_rot(fixed_rot)
 	self._fixed_rot = fixed_rot
 end
 
+-- Lines 1358-1360
 function GraphDebug:get_fixed_rot()
 	return self._fixed_rot
 end
 
+-- Lines 1362-1381
 function GraphDebug:set(index, pos, list_index, red, green, blue, radius)
 	list_index = list_index or 1
 
@@ -1419,6 +1550,7 @@ function GraphDebug:set(index, pos, list_index, red, green, blue, radius)
 	self._invalidated = true
 end
 
+-- Lines 1383-1400
 function GraphDebug:set_max_count(list_index, max_count)
 	if list_index then
 		local list = self._pos_list[list_index]
@@ -1441,18 +1573,21 @@ function GraphDebug:set_max_count(list_index, max_count)
 	GraphDebug.super.set_max_count(self, list_index, max_count)
 end
 
+-- Lines 1402-1406
 function GraphDebug:scroll_number_list(list_index, scroll)
 	for _, point in ipairs(self._pos_list[list_index]) do
 		point._pos = Vector3(point._pos.x - scroll, point._pos.y, point._pos.z)
 	end
 end
 
+-- Lines 1408-1412
 function GraphDebug:remove(list_index, ...)
 	GraphDebug.super.remove(self, list_index, ...)
 
 	self._invalidated = true
 end
 
+-- Lines 1414-1428
 function GraphDebug:set_enabled(enabled)
 	if self._enabled ~= enabled then
 		if enabled then
@@ -1469,6 +1604,7 @@ function GraphDebug:set_enabled(enabled)
 	GraphDebug.super.set_enabled(self, enabled)
 end
 
+-- Lines 1430-1442
 function GraphDebug:set_visible(visible)
 	if not self._visible ~= not visible then
 		self._visible = visible
@@ -1485,6 +1621,7 @@ end
 
 HijackDebug = HijackDebug or class(BaseDebug)
 
+-- Lines 1447-1457
 function HijackDebug:init()
 	HijackDebug.super.init(self)
 
@@ -1498,18 +1635,21 @@ function HijackDebug:init()
 	self._hijacked_statemachine_map = nil
 end
 
+-- Lines 1459-1463
 function HijackDebug:update(t, dt)
 	for _, ray in pairs(self._ray_list) do
 		ray:update(t, dt)
 	end
 end
 
+-- Lines 1465-1469
 function HijackDebug:clear()
 	HijackDebug.super.clear(self)
 
 	self._ray_list = {}
 end
 
+-- Lines 1471-1479
 function HijackDebug:add_ray_obj(obj)
 	if obj.key then
 		self._ray_obj_list[obj:key()] = obj
@@ -1520,6 +1660,7 @@ function HijackDebug:add_ray_obj(obj)
 	end
 end
 
+-- Lines 1481-1489
 function HijackDebug:delete_ray_obj(obj)
 	if obj.key then
 		self._ray_obj_list[obj:key()] = nil
@@ -1530,22 +1671,26 @@ function HijackDebug:delete_ray_obj(obj)
 	end
 end
 
+-- Lines 1491-1494
 function HijackDebug:reset_ray_obj_list()
 	self:clear_ray_obj_list()
 
 	self._ray_obj_list[World:key()] = World
 end
 
+-- Lines 1496-1500
 function HijackDebug:clear_ray_obj_list()
 	for _, obj in pairs(self._ray_obj_list) do
 		self:delete_ray_obj(obj)
 	end
 end
 
+-- Lines 1502-1504
 function HijackDebug:ray_enabled()
 	return self._hijack_ray_enabled
 end
 
+-- Lines 1506-1514
 function HijackDebug:set_ray_enabled(enabled)
 	if self._hijack_ray_enabled ~= enabled then
 		self._hijack_ray_enabled = enabled
@@ -1556,6 +1701,7 @@ function HijackDebug:set_ray_enabled(enabled)
 	end
 end
 
+-- Lines 1516-1532
 function HijackDebug:set_hijack_ray_obj(obj, enabled)
 	if not obj.alive or alive(obj) then
 		local meta_table = getmetatable(obj)
@@ -1574,10 +1720,12 @@ function HijackDebug:set_hijack_ray_obj(obj, enabled)
 	end
 end
 
+-- Lines 1534-1536
 function HijackDebug:is_hijack_ray_obj(obj)
 	return (not obj.alive or alive(obj)) and self._old_func_list[obj:key()] ~= nil
 end
 
+-- Lines 1538-1544
 function HijackDebug:set_hijack_ray_func(func)
 	if func then
 		self._hijack_ray_func = func
@@ -1586,6 +1734,7 @@ function HijackDebug:set_hijack_ray_func(func)
 	end
 end
 
+-- Lines 1546-1552
 function HijackDebug:hijacked_ray(obj, ...)
 	if self._old_func_list[obj:key()] then
 		return self._hijack_ray_func(obj, self._old_func_list[obj:key()], ...)
@@ -1594,6 +1743,7 @@ function HijackDebug:hijacked_ray(obj, ...)
 	end
 end
 
+-- Lines 1554-1664
 function HijackDebug:default_hijacked_ray_func(obj, old_func, ...)
 	local param_list = {
 		...
@@ -1711,10 +1861,12 @@ function HijackDebug:default_hijacked_ray_func(obj, old_func, ...)
 	return ray
 end
 
+-- Lines 1666-1668
 function HijackDebug:reloaded()
 	self:set_ray_enabled(false)
 end
 
+-- Lines 1670-1700
 function HijackDebug:hijack_statemachine(unit, unit_state_func, machine_state_func, redirect_func)
 	local machine = unit:anim_state_machine()
 
@@ -1746,6 +1898,7 @@ function HijackDebug:hijack_statemachine(unit, unit_state_func, machine_state_fu
 	end
 end
 
+-- Lines 1702-1713
 function HijackDebug:hijack_func(obj, func_name, func, is_metatable)
 	local meta = nil
 	meta = is_metatable and obj or getmetatable(obj) or obj
@@ -1754,6 +1907,7 @@ function HijackDebug:hijack_func(obj, func_name, func, is_metatable)
 	rawset(meta, func_name, func)
 end
 
+-- Lines 1715-1726
 function HijackDebug:unhijack_func(obj, func_name, is_metatable)
 	local meta = nil
 	meta = is_metatable and obj or getmetatable(obj) or obj
@@ -1762,6 +1916,7 @@ function HijackDebug:unhijack_func(obj, func_name, is_metatable)
 	rawset(meta, "hijacked_" .. func_name, nil)
 end
 
+-- Lines 1728-1736
 function HijackDebug:play_unit_state(unit, state)
 	local result = unit:hijacked_play_state(state)
 
@@ -1772,6 +1927,7 @@ function HijackDebug:play_unit_state(unit, state)
 	return result
 end
 
+-- Lines 1738-1746
 function HijackDebug:play_machine_state(machine, state)
 	local result = machine:hijacked_play(state)
 
@@ -1782,6 +1938,7 @@ function HijackDebug:play_machine_state(machine, state)
 	return result
 end
 
+-- Lines 1748-1756
 function HijackDebug:play_redirect(machine_or_unit, redirect)
 	local result = machine_or_unit:hijacked_play_redirect(redirect)
 
@@ -1794,12 +1951,14 @@ end
 
 SimpleDebug = SimpleDebug or class(BaseDebug)
 
+-- Lines 1762-1766
 function SimpleDebug:init()
 	SimpleDebug.super.init(self)
 
 	self._depricate_list = {}
 end
 
+-- Lines 1768-1776
 function SimpleDebug:add_depricate(dep_type, depricate_time, ...)
 	local dep = {
 		type = dep_type,
@@ -1813,6 +1972,7 @@ function SimpleDebug:add_depricate(dep_type, depricate_time, ...)
 	table.insert(self._depricate_list, dep)
 end
 
+-- Lines 1778-1784
 function SimpleDebug:draw_depricate(dep, red, green, blue)
 	if dep.type == "line" then
 		Application:draw_line(dep.arg[1], dep.arg[2], red, green, blue)
@@ -1821,14 +1981,17 @@ function SimpleDebug:draw_depricate(dep, red, green, blue)
 	end
 end
 
+-- Lines 1786-1788
 function SimpleDebug:draw_line(start_pos, end_pos, depricate_time)
 	self:add_depricate("line", depricate_time, start_pos, end_pos)
 end
 
+-- Lines 1790-1792
 function SimpleDebug:draw_sphere(pos, radie, depricate_time)
 	self:add_depricate("sphere", depricate_time, pos, radie)
 end
 
+-- Lines 1794-1810
 function SimpleDebug:update(time, rel_time)
 	local remove_list = {}
 
@@ -1850,6 +2013,7 @@ function SimpleDebug:update(time, rel_time)
 	end
 end
 
+-- Lines 1812-1816
 function SimpleDebug:clear()
 	SimpleDebug.super.clear(self)
 
@@ -1858,6 +2022,7 @@ end
 
 PrintDebug = PrintDebug or class(BaseDebug)
 
+-- Lines 1822-1832
 function PrintDebug:xml_file(file, indent, indent_string)
 	if not file or not SystemFS:exists(file) then
 		cat_error("debug", "\"" .. tostring(file) .. "\" does not exist.")
@@ -1871,6 +2036,7 @@ function PrintDebug:xml_file(file, indent, indent_string)
 	end
 end
 
+-- Lines 1834-1855
 function PrintDebug:node(node, indent, indent_string)
 	indent = indent or 0
 	indent_string = indent_string or "\t"
@@ -1895,6 +2061,7 @@ end
 
 ProfilerDebug = ProfilerDebug or class(BaseDebug)
 
+-- Lines 1860-1865
 function ProfilerDebug:init()
 	ProfilerDebug.super.init(self)
 
@@ -1902,6 +2069,7 @@ function ProfilerDebug:init()
 	self._counter_map = {}
 end
 
+-- Lines 1867-1876
 function ProfilerDebug:clear()
 	ProfilerDebug.super.clear(self)
 
@@ -1913,6 +2081,7 @@ function ProfilerDebug:clear()
 	self._counter_map = {}
 end
 
+-- Lines 1878-1894
 function ProfilerDebug:add_counter(counter_name, obj, func_name, color, min_range, max_range, disabled, graph_disabled, gui_disabled, print_counter, override_class)
 	local counter = self._counter_map[counter_name]
 
@@ -1931,6 +2100,7 @@ function ProfilerDebug:add_counter(counter_name, obj, func_name, color, min_rang
 	end
 end
 
+-- Lines 1896-1902
 function ProfilerDebug:remove_index(index, print_counter, skip_color_update)
 	local counter = self._counter_list[index]
 
@@ -1939,6 +2109,7 @@ function ProfilerDebug:remove_index(index, print_counter, skip_color_update)
 	end
 end
 
+-- Lines 1904-1910
 function ProfilerDebug:remove_name(counter_name, print_counter, skip_color_update)
 	local counter = self._counter_map[counter_name]
 
@@ -1947,6 +2118,7 @@ function ProfilerDebug:remove_name(counter_name, print_counter, skip_color_updat
 	end
 end
 
+-- Lines 1912-1932
 function ProfilerDebug:remove_counter(counter, print_counter, skip_color_update)
 	if counter then
 		local index = counter:index()
@@ -1971,6 +2143,7 @@ function ProfilerDebug:remove_counter(counter, print_counter, skip_color_update)
 	end
 end
 
+-- Lines 1934-1941
 function ProfilerDebug:update_colors()
 	for index, counter in ipairs(self._counter_list) do
 		local color_list = DebugManager.get_color_by_index(index, #self._counter_list)
@@ -1980,6 +2153,7 @@ function ProfilerDebug:update_colors()
 	end
 end
 
+-- Lines 1943-1964
 function ProfilerDebug:set_unit_enabled(unit, enabled, function_name_list, ignore_map, include_only_map, min_range, max_range, disabled, graph_disabled, gui_disabled, print_counters, class_override)
 	if alive(unit) and unit.type_name == "Unit" then
 		function_name_list = function_name_list or {
@@ -2006,6 +2180,7 @@ function ProfilerDebug:set_unit_enabled(unit, enabled, function_name_list, ignor
 	end
 end
 
+-- Lines 1966-1980
 function ProfilerDebug:set_managers_enabled(enabled, ignore_map, include_only_map, min_range, max_range, disabled, graph_disabled, gui_disabled, print_counters)
 	for manager_name, manager in pairs(managers) do
 		local counter_name = "managers." .. manager_name .. ":update()"
@@ -2020,12 +2195,14 @@ function ProfilerDebug:set_managers_enabled(enabled, ignore_map, include_only_ma
 	self:update_colors()
 end
 
+-- Lines 1982-1986
 function ProfilerDebug:reloaded()
 	for _, counter in ipairs(self._counter_list) do
 		counter:reload()
 	end
 end
 
+-- Lines 1988-2146
 function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, count, bundle_count, func_name)
 	local f = nil
 	local list = {}
@@ -2064,6 +2241,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 	local can_intersect = func_name ~= "find_units_quick"
 
 	if find_type == "cone" or find_type == "cylinder" or find_type == "capsule" then
+		-- Lines 2017-2019
 		function f(from, to)
 			result = World[func_name](World, "force_slot", find_type, from, to, radius, slotmask)
 		end
@@ -2073,6 +2251,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			counter = "find_" .. find_type
 		})
 
+		-- Lines 2022-2024
 		function f(from, to)
 			result = World[func_name](World, "force_physics", find_type, from, to, radius, slotmask)
 		end
@@ -2083,6 +2262,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		})
 
 		if can_intersect then
+			-- Lines 2028-2030
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_slot", find_type, from, to, radius, slotmask)
 			end
@@ -2092,6 +2272,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 				counter = "find_" .. find_type .. "_intersect"
 			})
 
+			-- Lines 2033-2035
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_physics", find_type, from, to, radius, slotmask)
 			end
@@ -2102,6 +2283,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			})
 		end
 	elseif find_type == "sphere" then
+		-- Lines 2039-2041
 		function f(from, to)
 			result = World[func_name](World, "force_slot", find_type, from, radius, slotmask)
 		end
@@ -2111,6 +2293,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			counter = "find_" .. find_type
 		})
 
+		-- Lines 2044-2046
 		function f(from, to)
 			result = World[func_name](World, "force_physics", find_type, from, radius, slotmask)
 		end
@@ -2121,6 +2304,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		})
 
 		if can_intersect then
+			-- Lines 2050-2052
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_slot", find_type, from, radius, slotmask)
 			end
@@ -2130,6 +2314,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 				counter = "find_" .. find_type .. "_intersect"
 			})
 
+			-- Lines 2055-2057
 			function f(from, to)
 				result = World[func_name](World, "intersect", "force_physics", find_type, from, radius, slotmask)
 			end
@@ -2161,6 +2346,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		return
 	end
 
+	-- Lines 2078-2080
 	function f(from, to)
 		result = World:raycast("ray", from, to, "sphere_cast_radius", radius, "bundle", bundle_count, "slot_mask", slotmask)
 	end
@@ -2170,6 +2356,7 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		func = f
 	})
 
+	-- Lines 2083-2085
 	function f(from, to)
 		result = World:raycast("ray", from, to, "sphere_cast_radius", radius, "slot_mask", slotmask)
 	end
@@ -2247,6 +2434,7 @@ end
 MacroDebug = MacroDebug or class(BaseDebug)
 MacroDebug.DEFAULT_LINE_DURATION = 2
 
+-- Lines 2153-2180
 function MacroDebug:init()
 	MacroDebug.super.init(self)
 
@@ -2260,6 +2448,7 @@ function MacroDebug:init()
 	self._profile_unit_map = {}
 end
 
+-- Lines 2182-2202
 function MacroDebug:get_ray(skip_last_unit_assign)
 	local cam = managers.viewport:get_current_camera()
 	local from = cam and cam:position() or Vector3()
@@ -2282,16 +2471,19 @@ function MacroDebug:get_ray(skip_last_unit_assign)
 	return ray
 end
 
+-- Lines 2204-2207
 function MacroDebug:set_last_ray(ray)
 	self._last_ray = ray
 
 	rawset(_G, "r", ray)
 end
 
+-- Lines 2209-2211
 function MacroDebug:get_last_ray()
 	return self._last_ray
 end
 
+-- Lines 2213-2217
 function MacroDebug:set_last_unit(unit)
 	self._last_unit = unit
 	self._last_unit_name = alive(unit) and unit:name() or nil
@@ -2299,10 +2491,12 @@ function MacroDebug:set_last_unit(unit)
 	rawset(_G, "u", unit)
 end
 
+-- Lines 2219-2221
 function MacroDebug:get_last_unit()
 	return self._last_unit
 end
 
+-- Lines 2223-2232
 function MacroDebug:ray()
 	local ray = self:get_ray()
 
@@ -2314,6 +2508,7 @@ function MacroDebug:ray()
 	end
 end
 
+-- Lines 2234-2255
 function MacroDebug:print_unit_info(unit)
 	if alive(unit) then
 		local unit_file, object_file, sequence_file, anim_machine = self:get_unit_files(unit)
@@ -2337,6 +2532,7 @@ function MacroDebug:print_unit_info(unit)
 	end
 end
 
+-- Lines 2257-2268
 function MacroDebug:get_unit_files(unit)
 	local object_file, unit_file = nil
 	local unit_data = PackageManager:unit_data(unit:name():id(), "")
@@ -2350,6 +2546,7 @@ function MacroDebug:get_unit_files(unit)
 	return self:get_cleaned_path(unit_file), self:get_cleaned_path(object_file), self:get_cleaned_path(sequence_file), tostring(unit_data:anim() and unit_data:anim():t())
 end
 
+-- Lines 2270-2283
 function MacroDebug:get_cleaned_path(path)
 	if path then
 		local clean_path = string.gsub(tostring(path), "(.-)[/\\]+(.-)", "%1/%2")
@@ -2365,6 +2562,7 @@ function MacroDebug:get_cleaned_path(path)
 	end
 end
 
+-- Lines 2285-2294
 function MacroDebug:ray_push(velocity_dir, velocity_length, mass)
 	local ray = self:get_ray()
 
@@ -2376,6 +2574,7 @@ function MacroDebug:ray_push(velocity_dir, velocity_length, mass)
 	end
 end
 
+-- Lines 2296-2302
 function MacroDebug:push(unit, velocity_dir, velocity_length, mass)
 	velocity_dir = velocity_dir or self._default_push_velocity_dir
 	velocity_length = velocity_length or self._default_push_velocity_length
@@ -2385,6 +2584,7 @@ function MacroDebug:push(unit, velocity_dir, velocity_length, mass)
 	World:play_physic_effect(effect_name, unit, velocity_dir * velocity_length, mass or self._default_push_mass)
 end
 
+-- Lines 2304-2313
 function MacroDebug:ray_gravitate(multiplier)
 	local ray = self:get_ray()
 
@@ -2396,6 +2596,7 @@ function MacroDebug:ray_gravitate(multiplier)
 	end
 end
 
+-- Lines 2315-2319
 function MacroDebug:gravitate(unit, multiplier)
 	local effect_name = Idstring("core/physic_effects/debugmanager_gravitate")
 
@@ -2403,6 +2604,7 @@ function MacroDebug:gravitate(unit, multiplier)
 	World:play_physic_effect(effect_name, unit, -World:gravity() * (multiplier or 1))
 end
 
+-- Lines 2321-2326
 function MacroDebug:stop_gravitate()
 	local effect_name_str = "core/physic_effects/debugmanager_gravitate"
 	local effect_name = Idstring(effect_name_str)
@@ -2411,6 +2613,7 @@ function MacroDebug:stop_gravitate()
 	World:stop_physic_effect(effect_name_str)
 end
 
+-- Lines 2328-2337
 function MacroDebug:ray_hover(multiplier)
 	local ray = self:get_ray()
 
@@ -2422,6 +2625,7 @@ function MacroDebug:ray_hover(multiplier)
 	end
 end
 
+-- Lines 2339-2343
 function MacroDebug:hover(unit, multiplier)
 	local effect_name = Idstring("core/physic_effects/debugmanager_hover")
 
@@ -2429,6 +2633,7 @@ function MacroDebug:hover(unit, multiplier)
 	World:play_physic_effect(effect_name, unit, -World:gravity() * (multiplier or 1))
 end
 
+-- Lines 2345-2350
 function MacroDebug:stop_hover()
 	local effect_name_str = "core/physic_effects/debugmanager_hover"
 	local effect_name = Idstring(effect_name_str)
@@ -2437,6 +2642,7 @@ function MacroDebug:stop_hover()
 	World:stop_physic_effect(effect_name_str)
 end
 
+-- Lines 2352-2363
 function MacroDebug:effect(effect)
 	local cam = managers.viewport:get_current_camera()
 	local effect_manager = World:effect_manager()
@@ -2448,6 +2654,7 @@ function MacroDebug:effect(effect)
 	})
 end
 
+-- Lines 2365-2385
 function MacroDebug:ray_run_sequence(sequence, damage_type, source_unit, dest_body, normal, position, direction, damage, velocity, params)
 	local ray = self:get_ray()
 
@@ -2470,6 +2677,7 @@ function MacroDebug:ray_run_sequence(sequence, damage_type, source_unit, dest_bo
 	end
 end
 
+-- Lines 2387-2396
 function MacroDebug:ray_select_unit()
 	local ray = self:get_ray()
 
@@ -2481,6 +2689,7 @@ function MacroDebug:ray_select_unit()
 	end
 end
 
+-- Lines 2398-2408
 function MacroDebug:select_unit(unit)
 	local selected_unit = World:selected_unit()
 
@@ -2493,6 +2702,7 @@ function MacroDebug:select_unit(unit)
 	end
 end
 
+-- Lines 2410-2428
 function MacroDebug:anim_verbose(unit)
 	local selected_unit = World:selected_unit()
 
@@ -2515,6 +2725,7 @@ function MacroDebug:anim_verbose(unit)
 	end
 end
 
+-- Lines 2430-2448
 function MacroDebug:spawn(unit_name, pos, rot)
 	unit_name = unit_name or self._last_unit_name
 
@@ -2535,6 +2746,7 @@ function MacroDebug:spawn(unit_name, pos, rot)
 	end
 end
 
+-- Lines 2450-2472
 function MacroDebug:multi_spawn(unit_name, unit_offset, count_x, count_y, count_z, pos, rot)
 	local cam = managers.viewport:get_current_camera()
 	local cam_rot = cam and cam:rotation() or Rotation()
@@ -2559,6 +2771,7 @@ function MacroDebug:multi_spawn(unit_name, unit_offset, count_x, count_y, count_
 	end
 end
 
+-- Lines 2474-2483
 function MacroDebug:ray_profile_unit(function_name_list, ignore_map, include_only_map, min_range, max_range, disabled, graph_disabled, gui_disabled, print_counters, instance_override)
 	local ray = self:get_ray()
 
@@ -2570,6 +2783,7 @@ function MacroDebug:ray_profile_unit(function_name_list, ignore_map, include_onl
 	end
 end
 
+-- Lines 2485-2496
 function MacroDebug:profile_unit(unit, function_name_list, ignore_map, include_only_map, min_range, max_range, disabled, graph_disabled, gui_disabled, print_counters, instance_override)
 	if alive(unit) then
 		self:set_last_unit(unit)
@@ -2584,6 +2798,7 @@ function MacroDebug:profile_unit(unit, function_name_list, ignore_map, include_o
 	end
 end
 
+-- Lines 2498-2518
 function MacroDebug:unit_goto(add_to_path, unit, pos)
 	unit = unit or self:get_last_unit()
 
@@ -2606,6 +2821,7 @@ function MacroDebug:unit_goto(add_to_path, unit, pos)
 	end
 end
 
+-- Lines 2520-2575
 function MacroDebug:fps(graph)
 	if not self._check_fps and not self._check_fps_pause_time then
 		managers.debug:set_enabled(true)
@@ -2665,16 +2881,19 @@ function MacroDebug:fps(graph)
 	end
 end
 
+-- Lines 2577-2579
 function MacroDebug:is_fps_enabled()
 	return self._check_fps or self._check_fps_pause_time
 end
 
+-- Lines 2581-2585
 function MacroDebug:set_fps_paused(paused)
 	if not paused ~= not self._check_fps_pause_time then
 		self:toggle_fps_paused()
 	end
 end
 
+-- Lines 2587-2600
 function MacroDebug:toggle_fps_paused()
 	local wall_time = TimerManager:wall():time()
 
@@ -2691,6 +2910,7 @@ function MacroDebug:toggle_fps_paused()
 	end
 end
 
+-- Lines 2602-2624
 function MacroDebug:test_spawn_all(layer_name, sub_type)
 	if not managers.editor then
 		cat_error("debug", "Need to run this in the editor.")
@@ -2715,6 +2935,7 @@ function MacroDebug:test_spawn_all(layer_name, sub_type)
 	end
 end
 
+-- Lines 2626-2678
 function MacroDebug:set_draw_unit_enabled(unit_name, is_enabled, draw_camera_line, draw_on_top, red, green, blue, disabled_color_scale)
 	local unit_name_id = nil
 
@@ -2769,6 +2990,7 @@ function MacroDebug:set_draw_unit_enabled(unit_name, is_enabled, draw_camera_lin
 	end
 end
 
+-- Lines 2680-2691
 function MacroDebug:get_file_list_by_type(file_type)
 	local index = "indices/types/" .. tostring(file_type)
 	local file = DB:has("index", index) and DB:open("index", index) or nil
@@ -2784,6 +3006,7 @@ function MacroDebug:get_file_list_by_type(file_type)
 	end
 end
 
+-- Lines 2693-2707
 function MacroDebug:get_asset_path()
 	local is_assetslocation_arg = nil
 	local relative_path = "../../assets/"
@@ -2801,6 +3024,7 @@ function MacroDebug:get_asset_path()
 	return self:get_cleaned_path(Application:nice_path(Application:base_path() .. relative_path, true))
 end
 
+-- Lines 2709-2809
 function MacroDebug:check_dangerous_network_slot(slot_list)
 	slot_list = slot_list or {
 		0
@@ -2836,6 +3060,7 @@ function MacroDebug:check_dangerous_network_slot(slot_list)
 			local unit_file_path = asset_path .. tostring(unit_file) .. ".unit"
 			local object_file_path = asset_path .. tostring(object_file) .. ".object"
 
+			-- Lines 2739-2754
 			local function check_slot_func(slot, sequence_file_path)
 				if table.contains(slot_list, tonumber(slot)) then
 					local sub_map = found_unit_file_map[slot]
@@ -2879,6 +3104,7 @@ function MacroDebug:check_dangerous_network_slot(slot_list)
 				if sequence_file and DB:has("sequence_manager", sequence_file) then
 					local sequence_data = PackageManager:editor_load_script_data(Idstring("sequence_manager"), Idstring(sequence_file))
 
+					-- Lines 2774-2792
 					local function find_slot_func(map, recursive_func)
 						for k, v in pairs(map) do
 							if type(v) == "table" then
@@ -2916,6 +3142,7 @@ function MacroDebug:check_dangerous_network_slot(slot_list)
 	return found_unit_file_map
 end
 
+-- Lines 2811-2922
 function MacroDebug:update(t, dt)
 	if self._check_fps then
 		local wall_time = TimerManager:wall():time()
@@ -3028,6 +3255,7 @@ function MacroDebug:update(t, dt)
 	end
 end
 
+-- Lines 2924-2932
 function MacroDebug:clear()
 	MacroDebug.super.clear(self)
 
@@ -3038,6 +3266,7 @@ function MacroDebug:clear()
 	self._draw_unit_map = nil
 end
 
+-- Lines 2934-2948
 function MacroDebug:toggle_endurance_damage_hook(skip_print, line_duration)
 	line_duration = line_duration or self.DEFAULT_LINE_DURATION
 
@@ -3059,6 +3288,7 @@ function MacroDebug:toggle_endurance_damage_hook(skip_print, line_duration)
 	end
 end
 
+-- Lines 2950-2960
 function MacroDebug:_hijacked_endurance_activate(option_map, endurance, env)
 	if not option_map.skip_print then
 		cat_print("debug", string.format("Damage: %d, Type: %s, Unit: %s, Body: %s", env.damage, env.damage_type, env.dest_unit:name(), env.dest_body:name()))
@@ -3086,6 +3316,7 @@ MemoryDebug.PRIMITIVE_VALUE_TYPE_MAP = DebugManager.PRIMITIVE_VALUE_TYPE_MAP or 
 	number = true
 }
 
+-- Lines 2968-2997
 function MemoryDebug:extensions()
 	local unit_list = World:find_units_quick("all")
 	local extension_class_map = {}
@@ -3117,8 +3348,10 @@ function MemoryDebug:extensions()
 	return extension_class_map
 end
 
+-- Lines 2999-3008
 function MemoryDebug:find_instance(find_value, is_meta_data, print_path, find_all, seen_map, map)
 	if find_value ~= nil then
+		-- Lines 3001-3003
 		local function func(path, key, value, populate_map, info_map, seen_map, func)
 			return self:find_instance_callback(print_path, path, key, value, populate_map, info_map, seen_map, find_value, is_meta_data, find_all)
 		end
@@ -3129,6 +3362,7 @@ function MemoryDebug:find_instance(find_value, is_meta_data, print_path, find_al
 	end
 end
 
+-- Lines 3010-3036
 function MemoryDebug:find_instance_callback(print_path, path, key, value, populate_map, info_map, seen_map, find_value, is_meta_data, find_all)
 	local found = nil
 
@@ -3157,6 +3391,7 @@ function MemoryDebug:find_instance_callback(print_path, path, key, value, popula
 	return found, find_all
 end
 
+-- Lines 3038-3091
 function MemoryDebug:traverse_instances(func, seen_map, map)
 	seen_map = seen_map or {}
 	local populate_map = {}
@@ -3214,6 +3449,7 @@ function MemoryDebug:traverse_instances(func, seen_map, map)
 	end
 end
 
+-- Lines 3093-3132
 function MemoryDebug:traverse_instances_recursively(path, key, value, func, populate_map, info_map, seen_map)
 	info_map.count = info_map.count + 1
 
@@ -3254,10 +3490,12 @@ function MemoryDebug:traverse_instances_recursively(path, key, value, func, popu
 	end
 end
 
+-- Lines 3134-3151
 function MemoryDebug:calc(map, seen_map)
 	local global_populate_map = nil
 
 	if map ~= nil then
+		-- Lines 3137-3146
 		local function func(path, key, value, populate_map, info_map, seen_map, func)
 			global_populate_map = global_populate_map or populate_map
 
@@ -3275,6 +3513,7 @@ function MemoryDebug:calc(map, seen_map)
 	end
 end
 
+-- Lines 3153-3184
 function MemoryDebug:add_calc(key, value, is_key, populate_map)
 	local check_value = is_key and key or value
 	local check_value_type = type(check_value)
@@ -3308,26 +3547,32 @@ function MemoryDebug:add_calc(key, value, is_key, populate_map)
 	end
 end
 
+-- Lines 3186-3188
 function MemoryDebug:add_calc_string(value, populate_map)
 	return #value * 2 * 8
 end
 
+-- Lines 3190-3192
 function MemoryDebug:add_calc_number(value, populate_map)
 	return 32
 end
 
+-- Lines 3194-3196
 function MemoryDebug:add_calc_boolean(value, populate_map)
 	return 1
 end
 
+-- Lines 3198-3200
 function MemoryDebug:add_calc_userdata(value, populate_map)
 	return 128
 end
 
+-- Lines 3202-3204
 function MemoryDebug:add_calc_table(value, populate_map)
 	return 0
 end
 
+-- Lines 3206-3208
 function MemoryDebug:add_calc_function(value, populate_map)
 	return 128
 end
@@ -3335,14 +3580,17 @@ end
 ConsoleDebug = ConsoleDebug or class(BaseDebug)
 ConsoleDebug.IS_PREFERRED_DISABLED = true
 
+-- Lines 3215-3228
 function ConsoleDebug:init()
 	ConsoleDebug.super.init(self)
 end
 
+-- Lines 3230-3232
 function ConsoleDebug:destroy()
 	self:clear()
 end
 
+-- Lines 3234-3260
 function ConsoleDebug:set_enabled(enabled)
 	local was_enabled = self._enabled
 
@@ -3371,26 +3619,31 @@ function ConsoleDebug:set_enabled(enabled)
 	end
 end
 
+-- Lines 3262-3265
 function ConsoleDebug:hijacked_print(...)
 	_G.hijacked_print(...)
 	self:add_print(...)
 end
 
+-- Lines 3267-3270
 function ConsoleDebug:hijacked_debug(app, ...)
 	app:hijacked_debug(...)
 	self:add_debug(...)
 end
 
+-- Lines 3272-3275
 function ConsoleDebug:hijacked_error(app, ...)
 	app:hijacked_error(...)
 	self:add_error(...)
 end
 
+-- Lines 3277-3280
 function ConsoleDebug:hijacked_stack_dump(app, ...)
 	app:hijacked_stack_dump(...)
 	self:add_print(self:get_stack_dump_text(3))
 end
 
+-- Lines 3282-3309
 function ConsoleDebug:get_stack_dump_text(skip_level)
 	local text = nil
 	local level = (skip_level or 0) + 1
@@ -3420,6 +3673,7 @@ function ConsoleDebug:get_stack_dump_text(skip_level)
 	return text or ""
 end
 
+-- Lines 3311-3327
 function ConsoleDebug:clear()
 	ConsoleDebug.super.clear(self)
 
@@ -3438,10 +3692,12 @@ function ConsoleDebug:clear()
 	self._scroll = nil
 end
 
+-- Lines 3329-3331
 function ConsoleDebug:toggle_visible()
 	self:set_visible(not self:get_visible())
 end
 
+-- Lines 3333-3347
 function ConsoleDebug:set_visible(visible)
 	if not self._visible ~= not visible then
 		self._visible = visible
@@ -3458,22 +3714,27 @@ function ConsoleDebug:set_visible(visible)
 	end
 end
 
+-- Lines 3349-3351
 function ConsoleDebug:get_visible()
 	return self._visible
 end
 
+-- Lines 3353-3355
 function ConsoleDebug:add_print(...)
 	self:add_text(self:get_arg_text(...), Color(1, 0, 1))
 end
 
+-- Lines 3357-3359
 function ConsoleDebug:add_debug(...)
 	self:add_text(self:get_arg_text(...), Color(0.23529411764705882, 0.6352941176470588, 0.2627450980392157))
 end
 
+-- Lines 3361-3363
 function ConsoleDebug:add_error(...)
 	self:add_text(self:get_arg_text(...), Color(1, 0, 0))
 end
 
+-- Lines 3365-3377
 function ConsoleDebug:get_arg_text(...)
 	local text = ""
 
@@ -3490,6 +3751,7 @@ function ConsoleDebug:get_arg_text(...)
 	return text
 end
 
+-- Lines 3379-3393
 function ConsoleDebug:add_text(text, color)
 	if not alive(self._workspace) then
 		self:setup()
@@ -3511,6 +3773,7 @@ function ConsoleDebug:add_text(text, color)
 	self:invalidate()
 end
 
+-- Lines 3395-3492
 function ConsoleDebug:invalidate()
 	if alive(self._workspace) then
 		local old_command_text = ""
@@ -3605,6 +3868,7 @@ function ConsoleDebug:invalidate()
 	end
 end
 
+-- Lines 3494-3526
 function ConsoleDebug:setup()
 	local gui_scene = Overlay:gui()
 	self._workspace = gui_scene:create_screen_workspace()
@@ -3638,6 +3902,7 @@ function ConsoleDebug:setup()
 	self:setup_controller()
 end
 
+-- Lines 3528-3536
 function ConsoleDebug:setup_controller()
 	if not self._controller and self._enabled then
 		self._controller = managers.controller:create_controller("core_debug_console", nil, true)
@@ -3649,6 +3914,7 @@ function ConsoleDebug:setup_controller()
 	end
 end
 
+-- Lines 3538-3543
 function ConsoleDebug:destroy_controller()
 	if self._controller then
 		self._controller:destroy()
@@ -3657,6 +3923,7 @@ function ConsoleDebug:destroy_controller()
 	end
 end
 
+-- Lines 3545-3555
 function ConsoleDebug:update(t, dt)
 	if self._enabled and self._visible and self._scroll then
 		local up = self._controller:get_input_float("console_scroll_up")
@@ -3669,22 +3936,26 @@ function ConsoleDebug:update(t, dt)
 	end
 end
 
+-- Lines 3557-3561
 function ConsoleDebug:scroll_page_up()
 	if self._scroll and self._visible then
 		self:add_scroll(10)
 	end
 end
 
+-- Lines 3563-3567
 function ConsoleDebug:scroll_page_down()
 	if self._scroll and self._visible then
 		self:add_scroll(-10)
 	end
 end
 
+-- Lines 3569-3571
 function ConsoleDebug:add_scroll(scroll)
 	self:set_scroll(self._scroll + scroll)
 end
 
+-- Lines 3573-3581
 function ConsoleDebug:set_scroll(scroll)
 	local old_scroll = self._scroll
 	self._scroll = math.clamp(scroll, 0, math.max(0, #self._text_list - 1))
@@ -3697,10 +3968,12 @@ end
 MenuDebug = MenuDebug or class(BaseDebug)
 MenuDebug.IS_PREFERRED_DISABLED = true
 
+-- Lines 3588-3612
 function MenuDebug:init()
 	MenuDebug.super.init(self)
 end
 
+-- Lines 3614-3629
 function MenuDebug:destroy()
 	self:destroy_controller()
 
@@ -3720,6 +3993,7 @@ function MenuDebug:destroy()
 	end
 end
 
+-- Lines 3631-3637
 function MenuDebug:destroy_controller()
 	if self._controller then
 		self:set_controller_triggers_enabled(self._controller, false)
@@ -3729,6 +4003,7 @@ function MenuDebug:destroy_controller()
 	end
 end
 
+-- Lines 3639-3661
 function MenuDebug:set_enabled(enabled)
 	local was_enabled = self._enabled
 
@@ -3753,10 +4028,12 @@ function MenuDebug:set_enabled(enabled)
 	end
 end
 
+-- Lines 3663-3665
 function MenuDebug:toggle_visible()
 	self:set_visible(not self:get_visible())
 end
 
+-- Lines 3667-3690
 function MenuDebug:set_visible(visible)
 	local always_visible = self._menu_data and self._menu_data.always_visible
 
@@ -3782,10 +4059,12 @@ function MenuDebug:set_visible(visible)
 	end
 end
 
+-- Lines 3692-3694
 function MenuDebug:get_visible()
 	return self._visible
 end
 
+-- Lines 3696-3701
 function MenuDebug:clear()
 	MenuDebug.super.clear(self)
 
@@ -3794,6 +4073,7 @@ function MenuDebug:clear()
 	self:setup_menu()
 end
 
+-- Lines 3703-3709
 function MenuDebug:setup_controller()
 	if not self._controller then
 		self._controller = managers.controller:create_controller("core_debug_menu", nil, true)
@@ -3803,6 +4083,7 @@ function MenuDebug:setup_controller()
 	end
 end
 
+-- Lines 3711-3747
 function MenuDebug:set_controller_triggers_enabled(controller, enabled)
 	if enabled then
 		if not self._toggle_visible_func then
@@ -3841,6 +4122,7 @@ function MenuDebug:set_controller_triggers_enabled(controller, enabled)
 	end
 end
 
+-- Lines 3749-3754
 function MenuDebug:change_selection(change)
 	local max_index = math.max(self._current_menu_data and #self._current_menu_data or 1, 1)
 	self._current_menu_index = ((self._current_menu_index or 1) + change - 1) % max_index + 1
@@ -3848,6 +4130,7 @@ function MenuDebug:change_selection(change)
 	self:setup_menu()
 end
 
+-- Lines 3756-3779
 function MenuDebug:confirm_button_pressed()
 	if self._current_menu_data then
 		local next_menu_data = self._current_menu_data[self._current_menu_index or 1]
@@ -3875,6 +4158,7 @@ function MenuDebug:confirm_button_pressed()
 	end
 end
 
+-- Lines 3781-3801
 function MenuDebug:cancel_button_pressed()
 	if self._prev_menu_data_list then
 		local prev_menu_data = self._prev_menu_data_list[#self._prev_menu_data_list]
@@ -3899,6 +4183,7 @@ function MenuDebug:cancel_button_pressed()
 	end
 end
 
+-- Lines 3803-3815
 function MenuDebug:left_button_pressed()
 	if self._current_menu_data then
 		local menu_data = self._current_menu_data[self._current_menu_index or 1]
@@ -3913,6 +4198,7 @@ function MenuDebug:left_button_pressed()
 	end
 end
 
+-- Lines 3817-3829
 function MenuDebug:right_button_pressed()
 	if self._current_menu_data then
 		local menu_data = self._current_menu_data[self._current_menu_index or 1]
@@ -3927,6 +4213,7 @@ function MenuDebug:right_button_pressed()
 	end
 end
 
+-- Lines 3831-3885
 function MenuDebug:setup_menu()
 	if not self._resolution_changed_callback_id then
 		self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "setup_menu"))
@@ -3988,6 +4275,7 @@ function MenuDebug:setup_menu()
 	end
 end
 
+-- Lines 3887-3953
 function MenuDebug:setup_menu_shape()
 	local res = RenderSettings.resolution
 	local option_spacing = self._current_menu_data.option_spacing or 5
@@ -4060,6 +4348,7 @@ function MenuDebug:setup_menu_shape()
 	self._option_panel:set_shape((res.x - option_w) / 2, panel_y, option_w, option_h)
 end
 
+-- Lines 3955-3975
 function MenuDebug:set(menu_data)
 	local old_data_controller = self._menu_data and self._menu_data.controller
 
@@ -4083,10 +4372,12 @@ function MenuDebug:set(menu_data)
 	end
 end
 
+-- Lines 3977-3979
 function MenuDebug:get_level()
 	return self._prev_menu_data_list and #self._prev_menu_data_list or 0
 end
 
+-- Lines 3981-4002
 function MenuDebug:update(t, dt)
 	dt = TimerManager:main():delta_time()
 	t = TimerManager:main():time()

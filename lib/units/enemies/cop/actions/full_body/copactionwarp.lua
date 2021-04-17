@@ -1,5 +1,6 @@
 CopActionWarp = CopActionWarp or class()
 
+-- Lines 4-62
 function CopActionWarp:init(action_desc, common_data)
 	self._unit = common_data.unit
 
@@ -64,6 +65,7 @@ function CopActionWarp:init(action_desc, common_data)
 	return true
 end
 
+-- Lines 66-77
 function CopActionWarp:update(t)
 	if self._i_update < 1 then
 		self._i_update = self._i_update + 1
@@ -78,18 +80,22 @@ function CopActionWarp:update(t)
 	end
 end
 
+-- Lines 81-83
 function CopActionWarp:type()
 	return "warp"
 end
 
+-- Lines 87-89
 function CopActionWarp:expired()
 	return self._expired
 end
 
+-- Lines 93-95
 function CopActionWarp:need_upd()
 	return true
 end
 
+-- Lines 99-105
 function CopActionWarp:chk_block(action_type, t)
 	if action_type == "death" then
 		return false

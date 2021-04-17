@@ -4,10 +4,12 @@ HuskCopBrain._NET_EVENTS = {
 	weapon_laser_on = 1
 }
 
+-- Lines 9-13
 function HuskCopBrain:init(unit)
 	self._unit = unit
 end
 
+-- Lines 17-30
 function HuskCopBrain:post_init()
 	self._alert_listen_key = "HuskCopBrain" .. tostring(self._unit:key())
 	local alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
@@ -33,10 +35,12 @@ function HuskCopBrain:post_init()
 	end
 end
 
+-- Lines 34-36
 function HuskCopBrain:interaction_voice()
 	return self._interaction_voice
 end
 
+-- Lines 40-45
 function HuskCopBrain:on_intimidated(amount, aggressor_unit)
 	amount = math.clamp(math.ceil(amount * 10), 0, 10)
 
@@ -45,6 +49,7 @@ function HuskCopBrain:on_intimidated(amount, aggressor_unit)
 	return self._interaction_voice
 end
 
+-- Lines 49-63
 function HuskCopBrain:clbk_death(my_unit, damage_info)
 	if self._alert_listen_key then
 		managers.groupai:state():remove_alert_listener(self._alert_listen_key)
@@ -63,10 +68,12 @@ function HuskCopBrain:clbk_death(my_unit, damage_info)
 	end
 end
 
+-- Lines 67-69
 function HuskCopBrain:set_interaction_voice(voice)
 	self._interaction_voice = voice
 end
 
+-- Lines 73-88
 function HuskCopBrain:load(load_data)
 	local my_load_data = load_data.brain
 
@@ -85,20 +92,25 @@ function HuskCopBrain:load(load_data)
 	end
 end
 
+-- Lines 92-94
 function HuskCopBrain:on_tied(aggressor_unit)
 	self._unit:network():send_to_host("unit_tied", aggressor_unit)
 end
 
+-- Lines 98-100
 function HuskCopBrain:on_trade(trading_unit)
 	self._unit:network():send_to_host("unit_traded", trading_unit)
 end
 
+-- Lines 104-105
 function HuskCopBrain:on_cool_state_changed(state)
 end
 
+-- Lines 109-110
 function HuskCopBrain:on_action_completed(action)
 end
 
+-- Lines 114-128
 function HuskCopBrain:on_alert(alert_data)
 	if self._unit:id() == -1 then
 		return
@@ -117,15 +129,18 @@ function HuskCopBrain:on_alert(alert_data)
 	self._last_alert_t = TimerManager:game():time()
 end
 
+-- Lines 132-135
 function HuskCopBrain:on_long_dis_interacted(amount, aggressor_unit)
 	amount = math.clamp(math.ceil(amount * 10), 0, 10)
 
 	self._unit:network():send_to_host("long_dis_interaction", amount, aggressor_unit)
 end
 
+-- Lines 139-139
 function HuskCopBrain:on_team_set(team_data)
 end
 
+-- Lines 143-157
 function HuskCopBrain:sync_net_event(event_id)
 	if event_id == self._NET_EVENTS.weapon_laser_on then
 		self._weapon_laser_on = true
@@ -145,6 +160,7 @@ function HuskCopBrain:sync_net_event(event_id)
 	end
 end
 
+-- Lines 161-177
 function HuskCopBrain:pre_destroy()
 	if Network:is_server() then
 		self._unit:movement():set_attention()
@@ -165,13 +181,16 @@ function HuskCopBrain:pre_destroy()
 	managers.enemy:_destroy_unit_gfx_lod_data(self._unit:key())
 end
 
+-- Lines 181-183
 function HuskCopBrain:distance_to_target()
 	return self._distance_to_target
 end
 
+-- Lines 185-187
 function HuskCopBrain:set_distance_to_target(distance)
 	self._distance_to_target = distance
 end
 
+-- Lines 189-190
 function HuskCopBrain:anim_clbk_throw_flare(unit)
 end

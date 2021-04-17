@@ -15,6 +15,7 @@ RaidGUIControlButtonToggle.CHECK_ICON = "checkbox_check_base"
 RaidGUIControlButtonToggle.CHECK_W = tweak_data.gui.icons[RaidGUIControlButtonToggle.CHECK_ICON].texture_rect[3]
 RaidGUIControlButtonToggle.CHECK_H = tweak_data.gui.icons[RaidGUIControlButtonToggle.CHECK_ICON].texture_rect[4]
 
+-- Lines 22-90
 function RaidGUIControlButtonToggle:init(parent, params)
 	RaidGUIControlButtonToggle.super.init(self, parent, params)
 
@@ -83,6 +84,7 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	self:_render_images()
 end
 
+-- Lines 92-105
 function RaidGUIControlButtonToggle:highlight_on()
 	self._highlighted = true
 
@@ -100,6 +102,7 @@ function RaidGUIControlButtonToggle:highlight_on()
 	end
 end
 
+-- Lines 108-118
 function RaidGUIControlButtonToggle:highlight_off()
 	self._highlighted = false
 
@@ -113,6 +116,7 @@ function RaidGUIControlButtonToggle:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
+-- Lines 120-129
 function RaidGUIControlButtonToggle:mouse_pressed(o, button, x, y)
 	if not self._enabled then
 		return
@@ -124,6 +128,7 @@ function RaidGUIControlButtonToggle:mouse_pressed(o, button, x, y)
 	end
 end
 
+-- Lines 131-154
 function RaidGUIControlButtonToggle:mouse_released(o, button, x, y)
 	if not self._enabled then
 		return
@@ -150,19 +155,23 @@ function RaidGUIControlButtonToggle:mouse_released(o, button, x, y)
 	end
 end
 
+-- Lines 156-158
 function RaidGUIControlButtonToggle:set_value(value)
 	self._value = value
 end
 
+-- Lines 160-162
 function RaidGUIControlButtonToggle:get_value()
 	return self._value
 end
 
+-- Lines 164-167
 function RaidGUIControlButtonToggle:set_value_and_render(value)
 	self:set_value(value)
 	self:_render_images()
 end
 
+-- Lines 169-180
 function RaidGUIControlButtonToggle:_render_images()
 	if self._visible == false then
 		self:hide()
@@ -175,20 +184,24 @@ function RaidGUIControlButtonToggle:_render_images()
 	end
 end
 
+-- Lines 182-184
 function RaidGUIControlButtonToggle:show()
 	self._object:show()
 end
 
+-- Lines 186-188
 function RaidGUIControlButtonToggle:hide()
 	self._object:hide()
 end
 
+-- Lines 190-193
 function RaidGUIControlButtonToggle:set_visible(flag)
 	self._visible = flag
 
 	self:_render_images()
 end
 
+-- Lines 195-214
 function RaidGUIControlButtonToggle:confirm_pressed()
 	if not self._enabled then
 		return
@@ -213,6 +226,7 @@ function RaidGUIControlButtonToggle:confirm_pressed()
 	return false
 end
 
+-- Lines 216-237
 function RaidGUIControlButtonToggle:set_enabled(enabled)
 	RaidGUIControlButtonToggle.super.set_enabled(self, enabled)
 
@@ -236,6 +250,7 @@ function RaidGUIControlButtonToggle:set_enabled(enabled)
 	end
 end
 
+-- Lines 244-275
 function RaidGUIControlButtonToggle:_animate_highlight_on()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2
@@ -266,6 +281,7 @@ function RaidGUIControlButtonToggle:_animate_highlight_on()
 	self._border:set_color(RaidGUIControlButtonToggle.BORDER_HOVER_COLOR)
 end
 
+-- Lines 277-308
 function RaidGUIControlButtonToggle:_animate_highlight_off()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2
@@ -296,6 +312,7 @@ function RaidGUIControlButtonToggle:_animate_highlight_off()
 	self._border:set_color(RaidGUIControlButtonToggle.BORDER_COLOR)
 end
 
+-- Lines 310-332
 function RaidGUIControlButtonToggle:_animate_checkbox_press()
 	local t = 0
 	local original_w = RaidGUIControlButtonToggle.W
@@ -319,6 +336,7 @@ function RaidGUIControlButtonToggle:_animate_checkbox_press()
 	self._checkbox_panel:set_center(center_x, center_y)
 end
 
+-- Lines 334-359
 function RaidGUIControlButtonToggle:_animate_checkbox_release()
 	local t = 0
 	local duration = 0.25

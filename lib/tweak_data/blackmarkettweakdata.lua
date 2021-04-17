@@ -9,6 +9,7 @@ require("lib/tweak_data/blackmarket/WeaponSkinsTweakData")
 
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 
+-- Lines 23-43
 function BlackMarketTweakData:init(tweak_data)
 	self:_init_colors()
 	self:_init_materials()
@@ -24,9 +25,11 @@ function BlackMarketTweakData:init(tweak_data)
 	self:_init_weapon_mods(tweak_data)
 end
 
+-- Lines 47-77
 function BlackMarketTweakData:print_missing_strings(skip_print_id)
 end
 
+-- Lines 79-88
 function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	for id, data in pairs(tweak_data) do
 		if data.name_id and not data.desc_id then
@@ -39,6 +42,7 @@ function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	end
 end
 
+-- Lines 92-111
 function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self.weapon_mods = {}
 
@@ -67,6 +71,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self:_add_desc_from_name_macro(self.weapon_mods)
 end
 
+-- Lines 115-169
 function BlackMarketTweakData:_init_characters()
 	self.characters = {
 		american = {}
@@ -118,6 +123,7 @@ function BlackMarketTweakData:_init_characters()
 	}
 end
 
+-- Lines 173-249
 function BlackMarketTweakData:_init_cash()
 	self.cash = {
 		cash10 = {}
@@ -232,6 +238,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
+-- Lines 253-315
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -333,6 +340,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
+-- Lines 319-358
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -374,6 +382,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
+-- Lines 362-385
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}

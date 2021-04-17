@@ -7,6 +7,7 @@ ControllerWrapperXbox360.CONTROLLER_TYPE_LIST = {
 	"xbox_controller"
 }
 
+-- Lines 9-16
 function ControllerWrapperXbox360:init(manager, id, name, controller, setup, debug, skip_virtual_controller)
 	local func_map = {
 		confirm = callback(self, self, "virtual_connect_confirm"),
@@ -20,10 +21,12 @@ function ControllerWrapperXbox360:init(manager, id, name, controller, setup, deb
 	})
 end
 
+-- Lines 18-20
 function ControllerWrapperXbox360:virtual_connect_confirm(controller_id, controller, input_name, connection_name, connection)
 	self:virtual_connect2(controller_id, controller, "a", connection_name, connection)
 end
 
+-- Lines 22-24
 function ControllerWrapperXbox360:virtual_connect_cancel(controller_id, controller, input_name, connection_name, connection)
 	self:virtual_connect2(controller_id, controller, "b", connection_name, connection)
 end

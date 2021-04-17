@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementSlowMotion = ElementSlowMotion or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-20
 function ElementSlowMotion:on_executed(instigator)
 	if not self._values.enabled then
 		return

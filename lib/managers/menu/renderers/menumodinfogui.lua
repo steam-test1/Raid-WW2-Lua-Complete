@@ -2,6 +2,7 @@ require("lib/managers/menu/renderers/MenuNodeBaseGui")
 
 MenuModInfoGui = MenuModInfoGui or class(MenuNodeBaseGui)
 
+-- Lines 5-12
 function MenuModInfoGui:init(node, layer, parameters)
 	MenuModInfoGui.super.init(self, node, layer, parameters)
 
@@ -12,6 +13,7 @@ function MenuModInfoGui:init(node, layer, parameters)
 	end
 end
 
+-- Lines 14-20
 function MenuModInfoGui:close()
 	local active_menu = managers.menu:active_menu()
 
@@ -22,6 +24,7 @@ function MenuModInfoGui:close()
 	MenuModInfoGui.super.close(self)
 end
 
+-- Lines 22-38
 function MenuModInfoGui:setup()
 	MenuModInfoGui.super.setup(self)
 
@@ -62,6 +65,7 @@ function MenuModInfoGui:setup()
 	self._mod_main_panel = panel
 end
 
+-- Lines 40-191
 function MenuModInfoGui:set_mod_info(item)
 	self.mod_info_panel:clear()
 
@@ -339,6 +343,7 @@ function MenuModInfoGui:set_mod_info(item)
 	end
 end
 
+-- Lines 193-226
 function MenuModInfoGui:check_pressed_scroll_bar(button, x, y)
 	if alive(self._scroll_bar_panel) and self._scroll_bar_panel:visible() then
 		local scroll_bar = self._scroll_bar_panel:child("scroll_bar")
@@ -378,6 +383,7 @@ function MenuModInfoGui:check_pressed_scroll_bar(button, x, y)
 	return false
 end
 
+-- Lines 228-235
 function MenuModInfoGui:release_scroll_bar()
 	if self._grabbed_scroll_bar then
 		self._grabbed_scroll_bar = nil
@@ -388,6 +394,7 @@ function MenuModInfoGui:release_scroll_bar()
 	return false
 end
 
+-- Lines 237-253
 function MenuModInfoGui:moved_scroll_bar(x, y)
 	if alive(self._scroll_bar_panel) then
 		local scroll_bar = self._scroll_bar_panel:child("scroll_bar")
@@ -408,6 +415,7 @@ function MenuModInfoGui:moved_scroll_bar(x, y)
 	return false, "arrow"
 end
 
+-- Lines 255-267
 function MenuModInfoGui:scroll_with_bar(target_y, current_y)
 	if alive(self._scroll_bar_panel) then
 		local diff = current_y - target_y
@@ -426,6 +434,7 @@ function MenuModInfoGui:scroll_with_bar(target_y, current_y)
 	return current_y
 end
 
+-- Lines 269-291
 function MenuModInfoGui:set_scroll_indicators(y)
 	if alive(self._scroll_bar_panel) then
 		self._scroll_y = math.clamp(y or 0, self._mod_main_panel:h() - self.mod_info_panel:h(), 0)
@@ -448,11 +457,13 @@ function MenuModInfoGui:set_scroll_indicators(y)
 	end
 end
 
+-- Lines 293-297
 function MenuModInfoGui:highlight_item(item, mouse_over)
 	MenuModInfoGui.super.highlight_item(self, item, mouse_over)
 	self:set_mod_info(item)
 end
 
+-- Lines 299-307
 function MenuModInfoGui:mouse_moved(o, x, y)
 	local used, icon = MenuModInfoGui.super.mouse_moved(self, x, y)
 
@@ -463,6 +474,7 @@ function MenuModInfoGui:mouse_moved(o, x, y)
 	return used, icon
 end
 
+-- Lines 309-317
 function MenuModInfoGui:mouse_pressed(button, x, y)
 	local used = MenuModInfoGui.super.mouse_pressed(self, button, x, y)
 	used = used or self:check_pressed_scroll_bar(button, x, y)
@@ -470,11 +482,13 @@ function MenuModInfoGui:mouse_pressed(button, x, y)
 	return used
 end
 
+-- Lines 319-323
 function MenuModInfoGui:mouse_released(button, x, y)
 	MenuModInfoGui.super.mouse_pressed(self, button, x, y)
 	self:release_scroll_bar()
 end
 
+-- Lines 325-331
 function MenuModInfoGui:previous_page()
 	if managers.menu:is_pc_controller() then
 		self:set_scroll_indicators(self._scroll_y and self._scroll_y - 40)
@@ -483,6 +497,7 @@ function MenuModInfoGui:previous_page()
 	end
 end
 
+-- Lines 333-339
 function MenuModInfoGui:next_page()
 	if managers.menu:is_pc_controller() then
 		self:set_scroll_indicators(self._scroll_y and self._scroll_y + 40)
@@ -491,6 +506,7 @@ function MenuModInfoGui:next_page()
 	end
 end
 
+-- Lines 341-346
 function MenuModInfoGui:update(t, dt)
 	local cx, cy = managers.menu_component:get_right_controller_axis()
 

@@ -1,17 +1,21 @@
 ImageBoxGui = ImageBoxGui or class(TextBoxGui)
 
+-- Lines 3-5
 function ImageBoxGui:init(...)
 	ImageBoxGui.super.init(self, ...)
 end
 
+-- Lines 7-8
 function ImageBoxGui:update(t, dt)
 end
 
+-- Lines 10-14
 function ImageBoxGui:_create_text_box(ws, title, text, content_data, text_config, image_config)
 	ImageBoxGui.super._create_text_box(self, ws, title, text, content_data, text_config)
 	self:_create_image_box(image_config)
 end
 
+-- Lines 16-175
 function ImageBoxGui:_create_image_box(image_config)
 	image_config = image_config or {}
 	local image_shapes = image_config.shapes or {}
@@ -180,6 +184,7 @@ function ImageBoxGui:_create_image_box(image_config)
 	main:set_center(main:parent():w() / 2, main:parent():h() / 2)
 end
 
+-- Lines 177-184
 function ImageBoxGui:request_texture(texture_path, panel, keep_aspect_ratio, blend_mode, layer, render_template)
 	if not managers.menu_component then
 		return
@@ -199,6 +204,7 @@ function ImageBoxGui:request_texture(texture_path, panel, keep_aspect_ratio, ble
 	})
 end
 
+-- Lines 186-194
 function ImageBoxGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -209,6 +215,7 @@ function ImageBoxGui:unretrieve_textures()
 	self._requested_textures = {}
 end
 
+-- Lines 196-236
 function ImageBoxGui:texture_done_clbk(params, texture_ids)
 	params = params or {}
 	local panel = params.panel or params[1]
@@ -259,6 +266,7 @@ function ImageBoxGui:texture_done_clbk(params, texture_ids)
 	end
 end
 
+-- Lines 238-241
 function ImageBoxGui:close()
 	self:unretrieve_textures()
 	ImageBoxGui.super.close(self)

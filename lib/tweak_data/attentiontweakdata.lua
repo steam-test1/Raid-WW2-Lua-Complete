@@ -1,5 +1,6 @@
 AttentionTweakData = AttentionTweakData or class()
 
+-- Lines 55-70
 function AttentionTweakData:init()
 	self.settings = {}
 	self.indexes = {}
@@ -16,6 +17,7 @@ function AttentionTweakData:init()
 	self:_post_init()
 end
 
+-- Lines 74-296
 function AttentionTweakData:_init_player()
 	self.settings.pl_civilian = {
 		max_range = 1,
@@ -246,6 +248,7 @@ function AttentionTweakData:_init_player()
 	self.settings.pl_foe_non_combatant_cbt_stand.filter = "non_combatant"
 end
 
+-- Lines 300-338
 function AttentionTweakData:_init_team_AI()
 	self.settings.team_team_idle = {
 		max_range = 1000,
@@ -295,6 +298,7 @@ function AttentionTweakData:_init_team_AI()
 	}
 end
 
+-- Lines 342-403
 function AttentionTweakData:_init_civilian()
 	self.settings.civ_all_peaceful = {
 		max_range = 2000,
@@ -364,6 +368,7 @@ function AttentionTweakData:_init_civilian()
 	}
 end
 
+-- Lines 407-473
 function AttentionTweakData:_init_enemy()
 	self.settings.enemy_team_idle = {
 		max_range = 2000,
@@ -435,6 +440,7 @@ function AttentionTweakData:_init_enemy()
 	}
 end
 
+-- Lines 477-787
 function AttentionTweakData:_init_custom()
 	self.settings.custom_void = {
 		max_range = 2000,
@@ -739,6 +745,7 @@ function AttentionTweakData:_init_custom()
 	}
 end
 
+-- Lines 791-812
 function AttentionTweakData:_init_drill()
 	self.settings.drill_civ_ene_ntl = {
 		suspicion_range = 1100,
@@ -762,6 +769,7 @@ function AttentionTweakData:_init_drill()
 	}
 end
 
+-- Lines 816-836
 function AttentionTweakData:_init_sentry_gun()
 	self.settings.sentry_gun_enemy_cbt = {
 		uncover_range = 300,
@@ -782,6 +790,7 @@ function AttentionTweakData:_init_sentry_gun()
 	}
 end
 
+-- Lines 840-988
 function AttentionTweakData:_init_prop()
 	self.settings.prop_carry_bag = {
 		max_range = 1800,
@@ -917,6 +926,7 @@ function AttentionTweakData:_init_prop()
 	}
 end
 
+-- Lines 993-1004
 function AttentionTweakData:_init_distraction_rock()
 	self.settings.distraction_ntl = {
 		suspicion_range = 1100,
@@ -930,6 +940,7 @@ function AttentionTweakData:_init_distraction_rock()
 	}
 end
 
+-- Lines 1007-1013
 function AttentionTweakData:get_attention_index(setting_name)
 	for i_setting, test_setting_name in ipairs(self.indexes) do
 		if setting_name == test_setting_name then
@@ -938,10 +949,12 @@ function AttentionTweakData:get_attention_index(setting_name)
 	end
 end
 
+-- Lines 1017-1019
 function AttentionTweakData:get_attention_name(index)
 	return self.indexes[index]
 end
 
+-- Lines 1023-1032
 function AttentionTweakData:_post_init()
 	for setting_name, setting in pairs(self.settings) do
 		local i_insert = 1

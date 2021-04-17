@@ -1,14 +1,17 @@
 CoreDeprecatedHubElement = CoreDeprecatedHubElement or class(HubElement)
 DeprecatedHubElement = DeprecatedHubElement or class(CoreDeprecatedHubElement)
 
+-- Lines 5-7
 function DeprecatedHubElement:init(...)
 	CoreDeprecatedHubElement.init(self, ...)
 end
 
+-- Lines 9-11
 function CoreDeprecatedHubElement:init(unit)
 	HubElement.init(self, unit)
 end
 
+-- Lines 13-27
 function CoreDeprecatedHubElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

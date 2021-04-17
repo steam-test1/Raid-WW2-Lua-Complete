@@ -2,6 +2,7 @@ require("lib/utils/Messages")
 
 MessageSystem = MessageSystem or class()
 
+-- Lines 8-14
 function MessageSystem:init()
 	self._listeners = {}
 	self._remove_list = {}
@@ -9,6 +10,7 @@ function MessageSystem:init()
 	self._messages = {}
 end
 
+-- Lines 16-18
 function MessageSystem:register(message, uid, func)
 	table.insert(self._add_list, {
 		message = message,
@@ -17,6 +19,7 @@ function MessageSystem:register(message, uid, func)
 	})
 end
 
+-- Lines 20-22
 function MessageSystem:unregister(message, uid)
 	table.insert(self._remove_list, {
 		message = message,
@@ -24,6 +27,7 @@ function MessageSystem:unregister(message, uid)
 	})
 end
 
+-- Lines 25-28
 function MessageSystem:notify(message, uid, ...)
 	local arg = {
 		...
@@ -36,6 +40,7 @@ function MessageSystem:notify(message, uid, ...)
 	})
 end
 
+-- Lines 31-42
 function MessageSystem:notify_now(message, uid, ...)
 	local arg = {
 		...
@@ -52,6 +57,7 @@ function MessageSystem:notify_now(message, uid, ...)
 	end
 end
 
+-- Lines 44-65
 function MessageSystem:_notify()
 	local messages = deep_clone(self._messages)
 	local count = #self._messages
@@ -76,6 +82,7 @@ function MessageSystem:_notify()
 	end
 end
 
+-- Lines 67-70
 function MessageSystem:flush()
 	if #self._remove_list > 0 then
 		self:_remove()
@@ -86,11 +93,13 @@ function MessageSystem:flush()
 	end
 end
 
+-- Lines 72-75
 function MessageSystem:update()
 	self:flush()
 	self:_notify()
 end
 
+-- Lines 78-88
 function MessageSystem:_remove()
 	local count = #self._remove_list
 
@@ -107,6 +116,7 @@ function MessageSystem:_remove()
 	self._remove_list = {}
 end
 
+-- Lines 90-101
 function MessageSystem:_add()
 	local count = #self._add_list
 
@@ -124,6 +134,7 @@ function MessageSystem:_add()
 	self._add_list = {}
 end
 
+-- Lines 103-111
 function MessageSystem:_register(message, uid, func)
 	if not self._listeners[message] then
 		self._listeners[message] = {}
@@ -134,6 +145,7 @@ function MessageSystem:_register(message, uid, func)
 	end
 end
 
+-- Lines 113-117
 function MessageSystem:_unregister(message, uid)
 	if self._listeners[message] then
 		self._listeners[message][uid] = nil

@@ -1,5 +1,6 @@
 SpawnCivilianGroupUnitElement = SpawnCivilianGroupUnitElement or class(MissionElement)
 
+-- Lines 3-17
 function SpawnCivilianGroupUnitElement:init(unit)
 	SpawnCivilianGroupUnitElement.super.init(self, unit)
 
@@ -16,13 +17,16 @@ function SpawnCivilianGroupUnitElement:init(unit)
 	table.insert(self._save_values, "team")
 end
 
+-- Lines 19-21
 function SpawnCivilianGroupUnitElement:draw_links(t, dt, selected_unit, all_units)
 	SpawnCivilianGroupUnitElement.super.draw_links(self, t, dt, selected_unit, all_units)
 end
 
+-- Lines 23-24
 function SpawnCivilianGroupUnitElement:update_editing()
 end
 
+-- Lines 26-34
 function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -40,6 +44,7 @@ function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all
 	end
 end
 
+-- Lines 36-46
 function SpawnCivilianGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -57,6 +62,7 @@ function SpawnCivilianGroupUnitElement:add_element()
 	end
 end
 
+-- Lines 48-54
 function SpawnCivilianGroupUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -65,15 +71,18 @@ function SpawnCivilianGroupUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 56-59
 function SpawnCivilianGroupUnitElement:get_links_to_unit(...)
 	SpawnCivilianGroupUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
 end
 
+-- Lines 62-64
 function SpawnCivilianGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 67-80
 function SpawnCivilianGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

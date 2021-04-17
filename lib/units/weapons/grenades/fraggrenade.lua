@@ -1,6 +1,7 @@
 FragGrenade = FragGrenade or class(GrenadeBase)
 FragGrenade.MAX_CLUSTER_ATTEMPTS = 15
 
+-- Lines 10-38
 function FragGrenade:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -33,6 +34,7 @@ function FragGrenade:_setup_from_tweak_data()
 	}
 end
 
+-- Lines 42-65
 function FragGrenade:set_thrower_unit(unit)
 	FragGrenade.super.set_thrower_unit(self, unit)
 
@@ -56,14 +58,17 @@ function FragGrenade:set_thrower_unit(unit)
 	print("----------Number of Cluster grenades:" .. self._clusters_to_spawn)
 end
 
+-- Lines 68-70
 function FragGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
+-- Lines 72-74
 function FragGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
+-- Lines 77-170
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -149,6 +154,7 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	end
 end
 
+-- Lines 174-179
 function FragGrenade:_detonate_on_client()
 	local pos = self._unit:position()
 	local range = self._range
@@ -157,6 +163,7 @@ function FragGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
+-- Lines 183-190
 function FragGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

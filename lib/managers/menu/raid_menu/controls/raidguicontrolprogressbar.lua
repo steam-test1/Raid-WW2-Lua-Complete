@@ -1,6 +1,7 @@
 RaidGUIControlProgressBar = RaidGUIControlProgressBar or class(RaidGUIControl)
 RaidGUIControlProgressBar.SLIDER_STEP = 0.1
 
+-- Lines 4-43
 function RaidGUIControlProgressBar:init(parent, params)
 	RaidGUIControlProgressBar.super.init(self, parent, params)
 
@@ -54,6 +55,7 @@ function RaidGUIControlProgressBar:init(parent, params)
 	self._on_value_change_callback = params.on_value_change_callback
 end
 
+-- Lines 45-49
 function RaidGUIControlProgressBar:close()
 	RaidGUIControlScrollbar.super.close()
 
@@ -61,6 +63,7 @@ function RaidGUIControlProgressBar:close()
 	self._draggable = false
 end
 
+-- Lines 51-59
 function RaidGUIControlProgressBar:set_progress(progress)
 	self._progress = math.clamp(progress, 0, 1)
 	local width = self._progress * self._width
@@ -68,10 +71,12 @@ function RaidGUIControlProgressBar:set_progress(progress)
 	self._bar:set_width(width)
 end
 
+-- Lines 61-63
 function RaidGUIControlProgressBar:get_progress()
 	return self._progress
 end
 
+-- Lines 66-82
 function RaidGUIControlProgressBar:on_mouse_moved(o, x, y)
 	if not self._draggable then
 		return
@@ -95,6 +100,7 @@ function RaidGUIControlProgressBar:on_mouse_moved(o, x, y)
 	return true, "grab"
 end
 
+-- Lines 85-91
 function RaidGUIControlProgressBar:on_mouse_over(x, y)
 	if not self._draggable then
 		return
@@ -105,6 +111,7 @@ function RaidGUIControlProgressBar:on_mouse_over(x, y)
 	self._pointer_type = "hand"
 end
 
+-- Lines 94-108
 function RaidGUIControlProgressBar:on_mouse_out(x, y)
 	if not self._draggable then
 		return
@@ -125,6 +132,7 @@ function RaidGUIControlProgressBar:on_mouse_out(x, y)
 	self._dragging = false
 end
 
+-- Lines 111-119
 function RaidGUIControlProgressBar:on_mouse_pressed()
 	if not self._draggable then
 		return
@@ -137,6 +145,7 @@ function RaidGUIControlProgressBar:on_mouse_pressed()
 	self._last_x = nil
 end
 
+-- Lines 122-131
 function RaidGUIControlProgressBar:on_mouse_released()
 	if not self._draggable then
 		return
@@ -150,18 +159,21 @@ function RaidGUIControlProgressBar:on_mouse_released()
 	end
 end
 
+-- Lines 133-137
 function RaidGUIControlProgressBar:show()
 	self._object:show()
 	self._bar:show()
 	self._bg:show()
 end
 
+-- Lines 139-143
 function RaidGUIControlProgressBar:hide()
 	self._object:hide()
 	self._bar:hide()
 	self._bg:hide()
 end
 
+-- Lines 145-152
 function RaidGUIControlProgressBar:set_selected(value)
 	self._selected = value
 
@@ -172,6 +184,7 @@ function RaidGUIControlProgressBar:set_selected(value)
 	end
 end
 
+-- Lines 154-161
 function RaidGUIControlProgressBar:highlight_on()
 	if self._params.no_highlight then
 		return
@@ -180,6 +193,7 @@ function RaidGUIControlProgressBar:highlight_on()
 	self._object:highlight_on()
 end
 
+-- Lines 163-169
 function RaidGUIControlProgressBar:highlight_off()
 	if self._params.no_highlight or self._selected then
 		return
@@ -188,6 +202,7 @@ function RaidGUIControlProgressBar:highlight_off()
 	self._object:highlight_off()
 end
 
+-- Lines 171-177
 function RaidGUIControlProgressBar:confirm_pressed()
 	if self._selected then
 		self._selected_control = not self._selected_control
@@ -198,12 +213,14 @@ function RaidGUIControlProgressBar:confirm_pressed()
 	end
 end
 
+-- Lines 179-182
 function RaidGUIControlProgressBar:_select_control(value)
 	local color = value and Color.white or self._bg_color
 
 	self._bg:set_color(color)
 end
 
+-- Lines 184-193
 function RaidGUIControlProgressBar:move_down()
 	if self._selected then
 		if self._selected_control then
@@ -216,6 +233,7 @@ function RaidGUIControlProgressBar:move_down()
 	end
 end
 
+-- Lines 195-204
 function RaidGUIControlProgressBar:move_up()
 	if self._selected then
 		if self._selected_control then
@@ -228,6 +246,7 @@ function RaidGUIControlProgressBar:move_up()
 	end
 end
 
+-- Lines 206-219
 function RaidGUIControlProgressBar:move_left()
 	if self._selected then
 		if self._selected_control then
@@ -246,6 +265,7 @@ function RaidGUIControlProgressBar:move_left()
 	end
 end
 
+-- Lines 221-234
 function RaidGUIControlProgressBar:move_right()
 	if self._selected then
 		if self._selected_control then

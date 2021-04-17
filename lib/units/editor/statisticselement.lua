@@ -2,6 +2,7 @@ StatisticsElement = StatisticsElement or class(MissionElement)
 StatisticsElement.SAVE_UNIT_POSITION = false
 StatisticsElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-13
 function StatisticsElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -11,6 +12,7 @@ function StatisticsElement:init(unit)
 	table.insert(self._save_values, "name")
 end
 
+-- Lines 18-25
 function StatisticsElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

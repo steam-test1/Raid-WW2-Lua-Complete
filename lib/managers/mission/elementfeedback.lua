@@ -3,6 +3,7 @@ core:import("CoreMissionScriptElement")
 ElementFeedback = ElementFeedback or class(CoreMissionScriptElement.MissionScriptElement)
 ElementFeedback.IDS_EFFECT = Idstring("effect")
 
+-- Lines 6-15
 function ElementFeedback:init(...)
 	ElementFeedback.super.init(self, ...)
 
@@ -13,10 +14,12 @@ function ElementFeedback:init(...)
 	end
 end
 
+-- Lines 17-19
 function ElementFeedback:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 21-58
 function ElementFeedback:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -54,6 +57,7 @@ function ElementFeedback:on_executed(instigator)
 	ElementFeedback.super.on_executed(self, instigator)
 end
 
+-- Lines 60-70
 function ElementFeedback:_check_value(params, cat, setting, value)
 	if not value then
 		return
@@ -66,6 +70,7 @@ function ElementFeedback:_check_value(params, cat, setting, value)
 	end
 end
 
+-- Lines 72-81
 function ElementFeedback:_calc_multiplier(player)
 	if self._values.range == 0 then
 		return 1

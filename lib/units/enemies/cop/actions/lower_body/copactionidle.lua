@@ -10,6 +10,7 @@ local idstr_look_upper_body = Idstring("look_upper_body")
 local idstr_look_head = Idstring("look_head")
 local idstr_head = Idstring("Head")
 
+-- Lines 18-83
 function CopActionIdle:init(action_desc, common_data)
 	if action_desc.non_persistent then
 		return
@@ -81,6 +82,7 @@ function CopActionIdle:init(action_desc, common_data)
 	return true
 end
 
+-- Lines 87-95
 function CopActionIdle:on_exit()
 	if self._modifier_on then
 		self._modifier_on = nil
@@ -93,6 +95,7 @@ function CopActionIdle:on_exit()
 	end
 end
 
+-- Lines 99-176
 function CopActionIdle:update(t)
 	if self._attention then
 		local ik_enable = true
@@ -183,10 +186,12 @@ function CopActionIdle:update(t)
 	end
 end
 
+-- Lines 180-182
 function CopActionIdle:type()
 	return "idle"
 end
 
+-- Lines 186-227
 function CopActionIdle:on_attention(attention)
 	if self._body_part ~= 1 and self._body_part ~= 3 then
 		return
@@ -243,10 +248,12 @@ function CopActionIdle:on_attention(attention)
 	self._ext_movement:enable_update()
 end
 
+-- Lines 231-233
 function CopActionIdle:need_upd()
 	return self._attention and (self._attention.unit or self._look_trans) and true or false
 end
 
+-- Lines 237-247
 function CopActionIdle:save(save_data)
 	if self._body_part == 1 then
 		save_data.is_save = true

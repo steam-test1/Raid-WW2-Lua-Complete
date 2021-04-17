@@ -8,6 +8,7 @@ core:import("CoreEditorUtils")
 
 BrushLayer = BrushLayer or class(CoreLayer.Layer)
 
+-- Lines 12-42
 function BrushLayer:init(owner, dont_load_unit_map)
 	BrushLayer.super.init(self, owner, "brush")
 
@@ -38,12 +39,14 @@ function BrushLayer:init(owner, dont_load_unit_map)
 	self:load_brushes()
 end
 
+-- Lines 44-47
 function BrushLayer:load(world_holder, offset)
 	world_holder:create_world("world", self._save_name, offset)
 
 	self._amount_dirty = true
 end
 
+-- Lines 49-64
 function BrushLayer:save(save_params)
 	local file_name = "massunit"
 	local t = {
@@ -59,6 +62,7 @@ function BrushLayer:save(save_params)
 	self:_save_brushfile(save_params.dir .. "\\" .. file_name .. ".massunit")
 end
 
+-- Lines 66-76
 function BrushLayer:_save_brushfile(path)
 	MassUnitManager:save(path)
 	managers.editor:add_to_world_package({
@@ -74,6 +78,7 @@ function BrushLayer:_save_brushfile(path)
 	end
 end
 
+-- Lines 78-138
 function BrushLayer:reposition_all()
 	managers.editor:output("Reposition all brushes:")
 
@@ -138,12 +143,14 @@ function BrushLayer:reposition_all()
 	end
 end
 
+-- Lines 140-145
 function BrushLayer:reload()
 	for name, unit in pairs(self._unit_map) do
 		name = self:get_real_name(name)
 	end
 end
 
+-- Lines 148-156
 function BrushLayer:clear_all()
 	local confirm = EWS:message_box(Global.frame_panel, "This will delete all brushes in this level, are you sure?", "Brush", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -156,6 +163,7 @@ function BrushLayer:clear_all()
 	self._amount_dirty = true
 end
 
+-- Lines 159-169
 function BrushLayer:clear_unit()
 	local confirm = EWS:message_box(Global.frame_panel, "This will delete all selected brushes in this level, are you sure?", "Brush", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -170,6 +178,7 @@ function BrushLayer:clear_unit()
 	self._amount_more_dirty = true
 end
 
+-- Lines 171-179
 function BrushLayer:clear_units_by_name(name)
 	local confirm = EWS:message_box(Global.frame_panel, "This will delete all " .. name .. " brushes in this level, are you sure?", "Brush", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -182,6 +191,7 @@ function BrushLayer:clear_units_by_name(name)
 	self._amount_more_dirty = true
 end
 
+-- Lines 181-189
 function BrushLayer:_on_amount_updated()
 	local brush_stats, total = self:get_brush_stats()
 
@@ -193,15 +203,18 @@ function BrushLayer:_on_amount_updated()
 	end
 end
 
+-- Lines 191-194
 function BrushLayer:set_visibility(cb)
 	self._visible = cb:get_value()
 
 	MassUnitManager:set_visibility(self._visible)
 end
 
+-- Lines 197-198
 function BrushLayer:select()
 end
 
+-- Lines 200-206
 function BrushLayer:spray_units()
 	if not self._visible then
 		return
@@ -212,12 +225,14 @@ function BrushLayer:spray_units()
 	self._spraying = true
 end
 
+-- Lines 207-211
 function BrushLayer:spray_units_release()
 	if self._spraying then
 		self._spraying = false
 	end
 end
 
+-- Lines 213-219
 function BrushLayer:erase_units()
 	if not self._visible then
 		return
@@ -228,12 +243,14 @@ function BrushLayer:erase_units()
 	self._erasing = true
 end
 
+-- Lines 220-224
 function BrushLayer:erase_units_release()
 	if self._erasing then
 		self._erasing = false
 	end
 end
 
+-- Lines 226-324
 function BrushLayer:update(time, rel_time)
 	if self._amount_dirty then
 		self._amount_dirty = nil
@@ -344,6 +361,7 @@ function BrushLayer:update(time, rel_time)
 	end
 end
 
+-- Lines 326-333
 function BrushLayer:_draw_unit_orientations()
 	local brush_stats = self:get_brush_stats()
 
@@ -354,6 +372,7 @@ function BrushLayer:_draw_unit_orientations()
 	end
 end
 
+-- Lines 335-344
 function BrushLayer:add_brush_header(name)
 	if not self._brush_types[name] then
 		local header = BrushHeader:new()
@@ -368,6 +387,7 @@ function BrushLayer:add_brush_header(name)
 	end
 end
 
+-- Lines 346-377
 function BrushLayer:create_brush(ray)
 	if #self._brush_names > 0 and ray then
 		local name = self._brush_names[math.floor(1 + math.rand(#self._brush_names))]
@@ -406,6 +426,7 @@ function BrushLayer:create_brush(ray)
 	end
 end
 
+-- Lines 379-505
 function BrushLayer:build_panel(notebook)
 	cat_print("editor", "BrushLayer:build_panel")
 
@@ -563,6 +584,7 @@ function BrushLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
+-- Lines 507-527
 function BrushLayer:show_create_brush(data)
 	if #self._brush_names > 0 then
 		local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the new brush configuration:", "Create brush", "new_brush", Vector3(-1, -1, 0), true)
@@ -590,12 +612,14 @@ function BrushLayer:show_create_brush(data)
 	end
 end
 
+-- Lines 529-532
 function BrushLayer:hide_create_brush(data)
 	data.dialog:end_modal()
 
 	self._cancel_dialog = data.cancel
 end
 
+-- Lines 534-542
 function BrushLayer:remove_brush(brushes)
 	local i = brushes:selected_index()
 
@@ -609,6 +633,7 @@ function BrushLayer:remove_brush(brushes)
 	end
 end
 
+-- Lines 544-557
 function BrushLayer:save_brushes()
 	local f = SystemFS:open(managers.database:base_path() .. self._brushed_path .. ".xml", "w")
 
@@ -629,6 +654,7 @@ function BrushLayer:save_brushes()
 	managers.database:recompile(self._brushed_path)
 end
 
+-- Lines 559-571
 function BrushLayer:load_brushes()
 	if DB:has("xml", self._brushed_path) then
 		local node = DB:load_node("xml", self._brushed_path)
@@ -646,6 +672,7 @@ function BrushLayer:load_brushes()
 	end
 end
 
+-- Lines 573-594
 function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 	local slider_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -683,6 +710,7 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 	return slider_sizer
 end
 
+-- Lines 596-607
 function BrushLayer:set_unit_name(units)
 	self._brush_names = {}
 	local selected = units:selected_items()
@@ -700,6 +728,7 @@ function BrushLayer:set_unit_name(units)
 	end
 end
 
+-- Lines 609-624
 function BrushLayer:select_brush(data)
 	self._brush_names = {}
 	local i = data.brushes:selected_index()
@@ -713,14 +742,17 @@ function BrushLayer:select_brush(data)
 	end
 end
 
+-- Lines 626-628
 function BrushLayer:update_slider(data)
 	self[data.value] = data.slider_params.value
 end
 
+-- Lines 630-632
 function BrushLayer:_on_gui_open_debug_list()
 	self._debug_list = _G.BrushLayerDebug:new()
 end
 
+-- Lines 634-650
 function BrushLayer:get_brush_stats()
 	local brush_stats = {}
 	local total = {
@@ -747,6 +779,7 @@ function BrushLayer:get_brush_stats()
 	return brush_stats, total
 end
 
+-- Lines 652-658
 function BrushLayer:activate(...)
 	BrushLayer.super.activate(self, ...)
 
@@ -757,6 +790,7 @@ function BrushLayer:activate(...)
 	end
 end
 
+-- Lines 660-666
 function BrushLayer:deactivate(...)
 	BrushLayer.super.deactivate(self, ...)
 
@@ -767,12 +801,14 @@ function BrushLayer:deactivate(...)
 	end
 end
 
+-- Lines 668-671
 function BrushLayer:clear()
 	MassUnitManager:delete_all_units()
 
 	self._amount_dirty = true
 end
 
+-- Lines 673-680
 function BrushLayer:add_triggers()
 	local vc = self._editor_data.virtual_controller
 
@@ -782,6 +818,7 @@ function BrushLayer:add_triggers()
 	vc:add_release_trigger(Idstring("rmb"), callback(self, self, "erase_units_release"))
 end
 
+-- Lines 682-688
 function BrushLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -791,17 +828,20 @@ function BrushLayer:get_help(text)
 	return text
 end
 
+-- Lines 690-692
 function BrushLayer:get_layer_name()
 	return "Props brush"
 end
 
 BrushHeader = BrushHeader or class()
 
+-- Lines 698-701
 function BrushHeader:init()
 	self._name = ""
 	self._distance = 0
 end
 
+-- Lines 702-708
 function BrushHeader:set_name(name)
 	self._name = name
 
@@ -812,6 +852,7 @@ function BrushHeader:set_name(name)
 	self:setup_brush_distance()
 end
 
+-- Lines 709-720
 function BrushHeader:setup_brush_distance()
 	if self._name then
 		local node = CoreEngineAccess._editor_unit_data(self._name:id()):script_data()
@@ -826,10 +867,12 @@ function BrushHeader:setup_brush_distance()
 	end
 end
 
+-- Lines 721-723
 function BrushHeader:get_spawn_dist()
 	return self._distance
 end
 
+-- Lines 725-729
 function BrushHeader:spawn_brush(position, rotation)
 	position = position + rotation:z() * self:get_spawn_dist()
 

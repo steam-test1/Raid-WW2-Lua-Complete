@@ -1,13 +1,16 @@
 RaidMenuOptionsNetwork = RaidMenuOptionsNetwork or class(RaidGuiBase)
 
+-- Lines 3-5
 function RaidMenuOptionsNetwork:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuOptionsNetwork.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
+-- Lines 7-9
 function RaidMenuOptionsNetwork:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_network_subtitle")
 end
 
+-- Lines 12-21
 function RaidMenuOptionsNetwork:_layout()
 	RaidMenuOptionsNetwork.super._layout(self)
 	self:_layout_network()
@@ -16,6 +19,7 @@ function RaidMenuOptionsNetwork:_layout()
 	self:bind_controller_inputs()
 end
 
+-- Lines 23-30
 function RaidMenuOptionsNetwork:close()
 	self:_save_network_values()
 
@@ -25,6 +29,7 @@ function RaidMenuOptionsNetwork:close()
 	RaidMenuOptionsNetwork.super.close(self)
 end
 
+-- Lines 33-71
 function RaidMenuOptionsNetwork:_layout_network()
 	local start_x = 0
 	local start_y = 320
@@ -68,6 +73,7 @@ function RaidMenuOptionsNetwork:_layout_network()
 	self._toggle_menu_net_use_compression = self._root_panel:toggle_button(use_compression_params)
 end
 
+-- Lines 73-82
 function RaidMenuOptionsNetwork:_load_network_values()
 	local net_packet_throttling = managers.user:get_setting("net_packet_throttling")
 	local net_forwarding = managers.user:get_setting("net_forwarding")
@@ -78,34 +84,40 @@ function RaidMenuOptionsNetwork:_load_network_values()
 	self._toggle_menu_net_use_compression:set_value_and_render(net_use_compression)
 end
 
+-- Lines 84-88
 function RaidMenuOptionsNetwork:_save_network_values()
 	self:on_click_toggle_packet_throttling()
 	self:on_click_toggle_net_forwarding()
 	self:on_click_toggle_net_use_compression()
 end
 
+-- Lines 92-95
 function RaidMenuOptionsNetwork:on_click_toggle_packet_throttling()
 	local net_packet_throttling = self._toggle_menu_packet_throttling:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_net_throttling_raid(net_packet_throttling)
 end
 
+-- Lines 97-100
 function RaidMenuOptionsNetwork:on_click_toggle_net_forwarding()
 	local net_forwarding = self._toggle_menu_net_forwarding:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_net_forwarding_raid(net_forwarding)
 end
 
+-- Lines 102-105
 function RaidMenuOptionsNetwork:on_click_toggle_net_use_compression()
 	local net_use_compression = self._toggle_menu_net_use_compression:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_net_use_compression_raid(net_use_compression)
 end
 
+-- Lines 107-109
 function RaidMenuOptionsNetwork:on_click_default_network()
 	managers.menu:active_menu().callback_handler:set_default_network_options_raid(self._node.components.raid_options)
 end
 
+-- Lines 115-126
 function RaidMenuOptionsNetwork:bind_controller_inputs()
 	local legend = {
 		controller = {

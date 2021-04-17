@@ -1,5 +1,6 @@
 WarcryBerserk = WarcryBerserk or class(Warcry)
 
+-- Lines 3-13
 function WarcryBerserk:init()
 	WarcryBerserk.super.init(self)
 	managers.system_event_listener:add_listener("warcry_berserk_enemy_killed", {
@@ -14,6 +15,7 @@ end
 local ids_layer1_animate_factor = Idstring("layer1_animate_factor")
 local ids_blend_factor = Idstring("blend_factor")
 
+-- Lines 17-39
 function WarcryBerserk:update(dt)
 	local lerp = WarcryBerserk.super.update(self, dt)
 	local distortion_a = managers.environment_controller:get_default_lens_distortion_value()
@@ -36,6 +38,7 @@ function WarcryBerserk:update(dt)
 	end
 end
 
+-- Lines 41-51
 function WarcryBerserk:activate()
 	WarcryBerserk.super.activate(self)
 
@@ -47,6 +50,7 @@ function WarcryBerserk:activate()
 	managers.network:session():send_to_peers_synched("restore_health_by_percentage", health_restoration_percentage)
 end
 
+-- Lines 53-57
 function WarcryBerserk:deactivate()
 	WarcryBerserk.super.deactivate(self)
 	managers.environment_controller:reset_lens_distortion_value()
@@ -54,10 +58,12 @@ function WarcryBerserk:deactivate()
 	self._ammo_consumption_counter = nil
 end
 
+-- Lines 59-61
 function WarcryBerserk:duration()
 	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
 end
 
+-- Lines 63-70
 function WarcryBerserk:get_level_description(level)
 	level = math.clamp(level, 1, #self._tweak_data.buffs)
 
@@ -68,6 +74,7 @@ function WarcryBerserk:get_level_description(level)
 	return "warcry_berserk_desc"
 end
 
+-- Lines 72-81
 function WarcryBerserk:check_ammo_consumption()
 	self._ammo_consumption_counter = self._ammo_consumption_counter - 1
 
@@ -80,6 +87,7 @@ function WarcryBerserk:check_ammo_consumption()
 	return false
 end
 
+-- Lines 83-108
 function WarcryBerserk:_on_enemy_killed(params)
 	local unit = managers.player:player_unit()
 
@@ -104,6 +112,7 @@ function WarcryBerserk:_on_enemy_killed(params)
 	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)
 end
 
+-- Lines 110-112
 function WarcryBerserk:cleanup()
 	managers.system_event_listener:remove_listener("warcry_berserk_enemy_killed")
 end

@@ -3,6 +3,7 @@ if core then
 	core:import("CoreDebug")
 end
 
+-- Lines 18-41
 function callback(o, base_callback_class, base_callback_func_name, base_callback_param)
 	if base_callback_class and base_callback_func_name and base_callback_class[base_callback_func_name] then
 		if base_callback_param ~= nil then
@@ -37,6 +38,7 @@ end
 
 local tc = 0
 
+-- Lines 49-51
 function get_ticket(delay)
 	return {
 		delay,
@@ -44,10 +46,12 @@ function get_ticket(delay)
 	}
 end
 
+-- Lines 53-55
 function valid_ticket(ticket)
 	return tc % ticket[1] == ticket[2]
 end
 
+-- Lines 57-62
 function update_tickets()
 	tc = tc + 1
 
@@ -61,6 +65,7 @@ BasicEventHandling = {
 		self._event_callbacks = self._event_callbacks or {}
 		self._event_callbacks[event_name] = self._event_callbacks[event_name] or {}
 
+		-- Lines 76-76
 		local function wrapped_func(...)
 			callback_func(data, ...)
 		end
@@ -95,15 +100,18 @@ BasicEventHandling = {
 }
 CallbackHandler = CallbackHandler or class()
 
+-- Lines 113-115
 function CallbackHandler:init()
 	self:clear()
 end
 
+-- Lines 117-120
 function CallbackHandler:clear()
 	self._t = 0
 	self._sorted = {}
 end
 
+-- Lines 122-128
 function CallbackHandler:__insert_sorted(cb)
 	local i = 1
 
@@ -114,6 +122,7 @@ function CallbackHandler:__insert_sorted(cb)
 	table.insert(self._sorted, i, cb)
 end
 
+-- Lines 130-143
 function CallbackHandler:add(f, interval, times)
 	times = times or -1
 	local cb = {
@@ -128,12 +137,14 @@ function CallbackHandler:add(f, interval, times)
 	return cb
 end
 
+-- Lines 145-149
 function CallbackHandler:remove(cb)
 	if cb then
 		cb.next = nil
 	end
 end
 
+-- Lines 151-177
 function CallbackHandler:update(dt)
 	self._t = self._t + dt
 
@@ -169,18 +180,22 @@ end
 
 CallbackEventHandler = CallbackEventHandler or class()
 
+-- Lines 184-189
 function CallbackEventHandler:init()
 end
 
+-- Lines 191-193
 function CallbackEventHandler:clear()
 	self._callback_map = nil
 end
 
+-- Lines 195-198
 function CallbackEventHandler:add(func)
 	self._callback_map = self._callback_map or {}
 	self._callback_map[func] = true
 end
 
+-- Lines 200-214
 function CallbackEventHandler:remove(func)
 	if not self._callback_map or not self._callback_map[func] then
 		return
@@ -197,6 +212,7 @@ function CallbackEventHandler:remove(func)
 	end
 end
 
+-- Lines 216-229
 function CallbackEventHandler:dispatch(...)
 	if self._callback_map then
 		self._next_callback = next(self._callback_map)
@@ -213,6 +229,7 @@ function CallbackEventHandler:dispatch(...)
 	end
 end
 
+-- Lines 244-253
 function over(seconds, f, fixed_dt)
 	local t = 0
 
@@ -230,6 +247,7 @@ function over(seconds, f, fixed_dt)
 	f(1, seconds)
 end
 
+-- Lines 259-270
 function seconds(s, t)
 	if not t then
 		return seconds, s, 0
@@ -253,6 +271,7 @@ function seconds(s, t)
 	end
 end
 
+-- Lines 273-279
 function wait(seconds, fixed_dt)
 	local t = 0
 

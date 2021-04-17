@@ -29,6 +29,7 @@ RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_FONT_SIZE = tweak_data.gui.f
 RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlWeaponPointRewardDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM = 92
 
+-- Lines 44-64
 function RaidGUIControlWeaponPointRewardDetails:init(parent, params)
 	RaidGUIControlWeaponPointRewardDetails.super.init(self, parent, params)
 
@@ -50,6 +51,7 @@ function RaidGUIControlWeaponPointRewardDetails:init(parent, params)
 	self:_create_description()
 end
 
+-- Lines 67-76
 function RaidGUIControlWeaponPointRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -61,6 +63,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 78-85
 function RaidGUIControlWeaponPointRewardDetails:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -70,6 +73,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
+-- Lines 87-115
 function RaidGUIControlWeaponPointRewardDetails:_create_title()
 	local title_description_params = {
 		align = "left",
@@ -101,6 +105,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_title()
 	self:_layout_title()
 end
 
+-- Lines 117-125
 function RaidGUIControlWeaponPointRewardDetails:_layout_title()
 	local _, _, w, h = self._customization_name:text_rect()
 
@@ -113,6 +118,7 @@ function RaidGUIControlWeaponPointRewardDetails:_layout_title()
 	title_description:set_x(self._customization_name:x())
 end
 
+-- Lines 127-144
 function RaidGUIControlWeaponPointRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
 		name = "reward_image_panel",
@@ -132,6 +138,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_reward_image()
 	self._reward_image:set_center_y(reward_image_panel:h() / 2)
 end
 
+-- Lines 146-179
 function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	local redeem_description_params = {
 		name = "redeem_description",
@@ -165,6 +172,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	self._redeem_button:set_center_x(self._left_panel:w() / 2)
 end
 
+-- Lines 181-194
 function RaidGUIControlWeaponPointRewardDetails:_layout_redeem_info()
 	local redeem_description = self._left_panel:child("redeem_description")
 	local _, _, w, h = redeem_description:text_rect()
@@ -182,6 +190,7 @@ function RaidGUIControlWeaponPointRewardDetails:_layout_redeem_info()
 	self._xp_redeem_value_text:set_center_y(self._left_panel:h() - RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_CENTER_Y_FROM_BOTTOM)
 end
 
+-- Lines 198-206
 function RaidGUIControlWeaponPointRewardDetails:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -193,6 +202,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
+-- Lines 208-221
 function RaidGUIControlWeaponPointRewardDetails:_create_item_type()
 	local item_type_params = {
 		vertical = "center",
@@ -209,6 +219,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_item_type()
 	self._item_type = self._right_panel:text(item_type_params)
 end
 
+-- Lines 223-237
 function RaidGUIControlWeaponPointRewardDetails:_create_description()
 	local description_params = {
 		vertical = "top",
@@ -227,6 +238,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 end
 
+-- Lines 239-243
 function RaidGUIControlWeaponPointRewardDetails:_on_click_redeem()
 	local params = {
 		callback = callback(self, self, "redeem"),
@@ -236,6 +248,7 @@ function RaidGUIControlWeaponPointRewardDetails:_on_click_redeem()
 	managers.menu:show_redeem_weapon_point_dialog(params)
 end
 
+-- Lines 245-256
 function RaidGUIControlWeaponPointRewardDetails:redeem()
 	managers.lootdrop:redeem_dropped_loot_for_xp()
 	game_state_machine:current_state():recalculate_xp()

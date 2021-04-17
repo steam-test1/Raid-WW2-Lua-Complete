@@ -5,6 +5,7 @@ InteractionUnitElement.ON_EXECUTED_ALTERNATIVES = {
 	"start"
 }
 
+-- Lines 4-12
 function InteractionUnitElement:init(unit)
 	InteractionUnitElement.super.init(self, unit)
 
@@ -15,6 +16,7 @@ function InteractionUnitElement:init(unit)
 	table.insert(self._save_values, "override_timer")
 end
 
+-- Lines 15-25
 function InteractionUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -31,6 +33,7 @@ function InteractionUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element creates an interaction. Override time is optional and will replace tweak data timer (-1 means do not overrride). Use disabled/enabled state on element to set active state on interaction.")
 end
 
+-- Lines 27-29
 function InteractionUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "units/dev_tools/mission_elements/point_interaction/interaction_dummy",

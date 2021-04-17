@@ -28,6 +28,7 @@ RaidGUIControlXPProgressBar.NEW_XP_TEXT_FONT = tweak_data.gui.fonts.din_compress
 RaidGUIControlXPProgressBar.NEW_XP_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_32
 RaidGUIControlXPProgressBar.NEW_XP_TEXT_COLOR = tweak_data.gui.colors.raid_white
 
+-- Lines 40-64
 function RaidGUIControlXPProgressBar:init(parent, params)
 	params.horizontal_padding = params.horizontal_padding or 0
 
@@ -56,9 +57,11 @@ function RaidGUIControlXPProgressBar:init(parent, params)
 	self:set_progress(self._progress, 0)
 end
 
+-- Lines 67-68
 function RaidGUIControlXPProgressBar:close()
 end
 
+-- Lines 71-85
 function RaidGUIControlXPProgressBar:_create_panels()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_panel"
@@ -74,6 +77,7 @@ function RaidGUIControlXPProgressBar:_create_panels()
 	self._inner_panel = self._object:panel(control_params)
 end
 
+-- Lines 87-103
 function RaidGUIControlXPProgressBar:_create_progress_bar()
 	local progress_bar_params = {
 		left = "slider_large_left",
@@ -93,6 +97,7 @@ function RaidGUIControlXPProgressBar:_create_progress_bar()
 	self._progress_multiplier = self._bar_w / self._progress_bar:w()
 end
 
+-- Lines 105-151
 function RaidGUIControlXPProgressBar:_create_slider_pimples()
 	local icon = RaidGUIControlXPProgressBar.SLIDER_PIMPLE_ICON
 	local icon_w = tweak_data.gui:icon_w(icon)
@@ -142,6 +147,7 @@ function RaidGUIControlXPProgressBar:_create_slider_pimples()
 	end
 end
 
+-- Lines 153-189
 function RaidGUIControlXPProgressBar:_create_level_marks_on_progress_bar()
 	local level_marks_panel_params = {
 		name = "level_marks_panel",
@@ -181,6 +187,7 @@ function RaidGUIControlXPProgressBar:_create_level_marks_on_progress_bar()
 	end
 end
 
+-- Lines 191-221
 function RaidGUIControlXPProgressBar:_create_level_and_weapons_info()
 	local level_labels_panel_params = {
 		name = "level_labels_panel",
@@ -215,6 +222,7 @@ function RaidGUIControlXPProgressBar:_create_level_and_weapons_info()
 	end
 end
 
+-- Lines 223-237
 function RaidGUIControlXPProgressBar:_create_new_xp_label()
 	local new_xp_params = {
 		vertical = "center",
@@ -233,6 +241,7 @@ function RaidGUIControlXPProgressBar:_create_new_xp_label()
 	self._new_xp_text:set_bottom(self._inner_panel:h())
 end
 
+-- Lines 239-339
 function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_label, number_of_weapon_unlocks)
 	local level_label_panel_params = {
 		y = 0,
@@ -346,6 +355,7 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 	return level_label_panel
 end
 
+-- Lines 341-358
 function RaidGUIControlXPProgressBar:set_progress(progress, points_added_total)
 	self._progress_bar:set_foreground_progress(self._progress_padding + progress * self._progress_multiplier)
 	self._slider_pimples_panel:set_w((self._progress_padding + progress * self._progress_multiplier) * self._progress_bar:w())
@@ -368,6 +378,7 @@ function RaidGUIControlXPProgressBar:set_progress(progress, points_added_total)
 	end
 end
 
+-- Lines 360-382
 function RaidGUIControlXPProgressBar:unlock_level(level)
 	for i = self._current_level, level do
 		if self._weapon_unlock_icons[i] then
@@ -394,6 +405,7 @@ function RaidGUIControlXPProgressBar:unlock_level(level)
 	self._inner_panel:get_engine_panel():animate(callback(self, self, "_animate_inner_panel_position"), inner_x)
 end
 
+-- Lines 384-403
 function RaidGUIControlXPProgressBar:set_level(level)
 	for i = 1, level do
 		if self._weapon_unlock_icons[i] then
@@ -419,14 +431,17 @@ function RaidGUIControlXPProgressBar:set_level(level)
 	self._inner_panel:set_x(inner_x)
 end
 
+-- Lines 405-407
 function RaidGUIControlXPProgressBar:hide()
 	self._object:set_alpha(0)
 end
 
+-- Lines 409-411
 function RaidGUIControlXPProgressBar:fade_in()
 	self._object:get_engine_panel():animate(callback(self, self, "_animate_fade_in"))
 end
 
+-- Lines 413-427
 function RaidGUIControlXPProgressBar:_animate_fade_in()
 	local duration = 0.3
 	local t = self._object:alpha() * duration
@@ -442,6 +457,7 @@ function RaidGUIControlXPProgressBar:_animate_fade_in()
 	self._object:set_alpha(1)
 end
 
+-- Lines 429-443
 function RaidGUIControlXPProgressBar:_animate_fade_in_object(object)
 	local duration = 0.3
 	local t = object:alpha() * duration
@@ -457,6 +473,7 @@ function RaidGUIControlXPProgressBar:_animate_fade_in_object(object)
 	object:set_alpha(1)
 end
 
+-- Lines 445-460
 function RaidGUIControlXPProgressBar:_animate_inner_panel_position(panel, new_x)
 	local duration = 0.7
 	local t = 0

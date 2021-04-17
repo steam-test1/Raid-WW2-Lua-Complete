@@ -2,6 +2,7 @@ require("lib/managers/menu/renderers/MenuNodeBaseGui")
 
 MenuNodeJukeboxGui = MenuNodeJukeboxGui or class(MenuNodeBaseGui)
 
+-- Lines 5-16
 function MenuNodeJukeboxGui:init(node, layer, parameters)
 	parameters.align = "left"
 	parameters._align_line_proportions = 0.5
@@ -14,6 +15,7 @@ function MenuNodeJukeboxGui:init(node, layer, parameters)
 	node:parameters().allow_pause_menu = true
 end
 
+-- Lines 18-20
 function MenuNodeJukeboxGui:close()
 	MenuNodeJukeboxGui.super.close(self)
 end

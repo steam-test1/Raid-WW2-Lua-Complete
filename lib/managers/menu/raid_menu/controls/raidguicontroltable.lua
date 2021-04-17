@@ -1,6 +1,7 @@
 RaidGUIControlTable = RaidGUIControlTable or class(RaidGUIControl)
 RaidGUIControlTable.DIVIDER_HEIGHT = 1
 
+-- Lines 5-36
 function RaidGUIControlTable:init(parent, params)
 	RaidGUIControlTable.super.init(self, parent, params)
 
@@ -36,15 +37,18 @@ function RaidGUIControlTable:init(parent, params)
 	end
 end
 
+-- Lines 38-40
 function RaidGUIControlTable:is_alive()
 	return self._object and alive(self._object._engine_panel)
 end
 
+-- Lines 42-45
 function RaidGUIControlTable:close()
 	self:_delete_items()
 	self._table_panel:clear()
 end
 
+-- Lines 47-53
 function RaidGUIControlTable:_create_table_panel()
 	local table_params = clone(self._params)
 	table_params.name = table_params.name .. "_table"
@@ -53,6 +57,7 @@ function RaidGUIControlTable:_create_table_panel()
 	self._object = self._table_panel
 end
 
+-- Lines 55-72
 function RaidGUIControlTable:_fit_panel()
 	local header_height = 0
 	local row_height = 0
@@ -75,6 +80,7 @@ function RaidGUIControlTable:_fit_panel()
 	self._object:set_h(object_height)
 end
 
+-- Lines 74-156
 function RaidGUIControlTable:_create_items(use_row_dividers)
 	local table_data = self._data_source_callback()
 
@@ -152,6 +158,7 @@ function RaidGUIControlTable:_create_items(use_row_dividers)
 	end
 end
 
+-- Lines 158-187
 function RaidGUIControlTable:_create_header()
 	local header_params = {
 		y = 0,
@@ -192,6 +199,7 @@ function RaidGUIControlTable:_create_header()
 	end
 end
 
+-- Lines 189-201
 function RaidGUIControlTable:_create_row(row_params, row_data, table_params)
 	row_params.x = 0
 	row_params.w = table_params.w
@@ -203,6 +211,7 @@ function RaidGUIControlTable:_create_row(row_params, row_data, table_params)
 	return row
 end
 
+-- Lines 203-211
 function RaidGUIControlTable:on_row_clicked(row_data, row_index)
 	self:select_table_row_by_row_idx(row_index)
 
@@ -211,6 +220,7 @@ function RaidGUIControlTable:on_row_clicked(row_data, row_index)
 	end
 end
 
+-- Lines 213-221
 function RaidGUIControlTable:on_row_double_clicked(row_data, row_index)
 	self:select_table_row_by_row_idx(row_index)
 
@@ -219,10 +229,12 @@ function RaidGUIControlTable:on_row_double_clicked(row_data, row_index)
 	end
 end
 
+-- Lines 223-225
 function RaidGUIControlTable:get_selected_row()
 	return self._selected_row
 end
 
+-- Lines 227-234
 function RaidGUIControlTable:_create_row_separator(y)
 	local divider_line = self._table_panel:rect({
 		h = 1,
@@ -233,6 +245,7 @@ function RaidGUIControlTable:_create_row_separator(y)
 	})
 end
 
+-- Lines 236-243
 function RaidGUIControlTable:_delete_items()
 	self._table_rows = {}
 	self._selected_row = nil
@@ -240,37 +253,46 @@ function RaidGUIControlTable:_delete_items()
 	self._table_panel:clear()
 end
 
+-- Lines 245-247
 function RaidGUIControlTable:get_rows()
 	return self._table_rows
 end
 
+-- Lines 249-251
 function RaidGUIControlTable:get_row(i)
 	return self._table_rows[i]
 end
 
+-- Lines 253-255
 function RaidGUIControlTable:get_last_row()
 	return self._table_rows and self._table_rows[#self._table_rows]
 end
 
+-- Lines 257-259
 function RaidGUIControlTable:mouse_moved(o, x, y)
 	return self._table_panel:mouse_moved(o, x, y)
 end
 
+-- Lines 261-264
 function RaidGUIControlTable:mouse_released(o, button, x, y)
 	return self._table_panel:mouse_released(o, x, y)
 end
 
+-- Lines 266-268
 function RaidGUIControlTable:highlight_on()
 end
 
+-- Lines 270-272
 function RaidGUIControlTable:highlight_off()
 end
 
+-- Lines 274-277
 function RaidGUIControlTable:refresh_data()
 	self:_delete_items()
 	self:_create_items(self._use_row_dividers)
 end
 
+-- Lines 279-290
 function RaidGUIControlTable:select_table_row_by_row_idx(row_index)
 	if self._selected_row then
 		self._selected_row:unselect()
@@ -285,6 +307,7 @@ function RaidGUIControlTable:select_table_row_by_row_idx(row_index)
 	end
 end
 
+-- Lines 292-300
 function RaidGUIControlTable:select_table_row_by_row(table_row)
 	if self._selected_row then
 		self._selected_row:unselect()
@@ -295,10 +318,12 @@ function RaidGUIControlTable:select_table_row_by_row(table_row)
 	self._selected_row:select()
 end
 
+-- Lines 302-304
 function RaidGUIControlTable:selected_table_row()
 	return self._selected_row
 end
 
+-- Lines 307-321
 function RaidGUIControlTable:set_selected(value)
 	self._selected = value
 
@@ -319,6 +344,7 @@ function RaidGUIControlTable:set_selected(value)
 	end
 end
 
+-- Lines 323-328
 function RaidGUIControlTable:_unselect_all()
 	self._selected_row = nil
 
@@ -327,6 +353,7 @@ function RaidGUIControlTable:_unselect_all()
 	end
 end
 
+-- Lines 330-348
 function RaidGUIControlTable:move_up()
 	if self._selected and #self:get_rows() > 0 then
 		local previous_row_idx = self:_previous_row_idx()
@@ -349,6 +376,7 @@ function RaidGUIControlTable:move_up()
 	end
 end
 
+-- Lines 350-368
 function RaidGUIControlTable:move_down()
 	if self._selected and #self:get_rows() > 0 then
 		local next_row = self:_next_row_idx()
@@ -371,12 +399,14 @@ function RaidGUIControlTable:move_down()
 	end
 end
 
+-- Lines 370-374
 function RaidGUIControlTable:move_left()
 	if self._selected then
 		return self.super.move_left(self)
 	end
 end
 
+-- Lines 376-383
 function RaidGUIControlTable:confirm_pressed()
 	if self._selected and self._selected_row then
 		self._selected_row:confirm_pressed()
@@ -385,6 +415,7 @@ function RaidGUIControlTable:confirm_pressed()
 	end
 end
 
+-- Lines 386-397
 function RaidGUIControlTable:_previous_row_idx()
 	self._selected_row_idx = self._selected_row_idx - 1
 
@@ -401,6 +432,7 @@ function RaidGUIControlTable:_previous_row_idx()
 	return true
 end
 
+-- Lines 399-410
 function RaidGUIControlTable:_next_row_idx()
 	self._selected_row_idx = self._selected_row_idx + 1
 
@@ -417,6 +449,7 @@ function RaidGUIControlTable:_next_row_idx()
 	return true
 end
 
+-- Lines 412-452
 function RaidGUIControlTable:_calculate_selected_item_position()
 	self._selected_item = self._selected_row
 

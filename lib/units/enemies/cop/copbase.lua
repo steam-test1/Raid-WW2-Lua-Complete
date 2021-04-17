@@ -34,6 +34,7 @@ for _, data in pairs(char_map) do
 	end
 end
 
+-- Lines 30-44
 function CopBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -47,6 +48,7 @@ function CopBase:init(unit)
 	self._is_in_original_material = true
 end
 
+-- Lines 48-63
 function CopBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -64,9 +66,11 @@ function CopBase:post_init()
 	self:_chk_spawn_gear()
 end
 
+-- Lines 67-70
 function CopBase:_chk_spawn_gear()
 end
 
+-- Lines 74-82
 function CopBase:default_weapon_name()
 	local default_weapon_id = self._default_weapon_id
 	local weap_ids = tweak_data.character.weap_ids
@@ -78,6 +82,7 @@ function CopBase:default_weapon_name()
 	end
 end
 
+-- Lines 85-91
 function CopBase:is_special()
 	if self._char_tweak.is_special == true then
 		return true
@@ -86,18 +91,22 @@ function CopBase:is_special()
 	return false
 end
 
+-- Lines 95-97
 function CopBase:visibility_state()
 	return self._visibility_state
 end
 
+-- Lines 101-103
 function CopBase:lod_stage()
 	return self._lod_stage
 end
 
+-- Lines 107-109
 function CopBase:set_allow_invisible(allow)
 	self._allow_invisible = allow
 end
 
+-- Lines 113-161
 function CopBase:set_visibility_state(stage)
 	local state = stage and true
 
@@ -154,14 +163,17 @@ function CopBase:set_visibility_state(stage)
 	self:chk_freeze_anims()
 end
 
+-- Lines 165-167
 function CopBase:set_anim_lod(stage)
 	self._unit:set_animation_lod(unpack(self._anim_lods[stage]))
 end
 
+-- Lines 171-173
 function CopBase:on_death_exit()
 	self._unit:set_animations_enabled(false)
 end
 
+-- Lines 177-189
 function CopBase:chk_freeze_anims()
 	if (not self._lod_stage or self._lod_stage > 1) and self._ext_anim.can_freeze and self._ext_anim.upper_body_empty then
 		if not self._anims_frozen then
@@ -178,6 +190,7 @@ function CopBase:chk_freeze_anims()
 	end
 end
 
+-- Lines 194-202
 function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	if send_to_action then
 		unit:movement():on_anim_act_clbk(anim_act)
@@ -186,6 +199,7 @@ function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	end
 end
 
+-- Lines 206-212
 function CopBase:save(data)
 	if self._unit:interaction() and self._unit:interaction().tweak_data == "hostage_trade" then
 		data.is_hostage_trade = true
@@ -194,6 +208,7 @@ function CopBase:save(data)
 	end
 end
 
+-- Lines 216-222
 function CopBase:load(data)
 	if data.is_hostage_trade then
 		CopLogicTrade.hostage_trade(self._unit, true, false)
@@ -202,6 +217,7 @@ function CopBase:load(data)
 	end
 end
 
+-- Lines 226-240
 function CopBase:swap_material_config(material_applied_clbk)
 	local new_material = self._material_translation_map[self._loading_material_key or tostring(self._unit:material_config():key())]
 
@@ -220,6 +236,7 @@ function CopBase:swap_material_config(material_applied_clbk)
 	end
 end
 
+-- Lines 244-258
 function CopBase:on_material_applied(material_applied_clbk)
 	if not alive(self._unit) then
 		return
@@ -236,24 +253,29 @@ function CopBase:on_material_applied(material_applied_clbk)
 	end
 end
 
+-- Lines 262-264
 function CopBase:is_in_original_material()
 	return self._is_in_original_material
 end
 
+-- Lines 268-272
 function CopBase:set_material_state(original)
 	if original and not self._is_in_original_material or not original and self._is_in_original_material then
 		self:swap_material_config()
 	end
 end
 
+-- Lines 276-278
 function CopBase:char_tweak()
 	return self._char_tweak
 end
 
+-- Lines 282-285
 function CopBase:melee_weapon()
 	return self._melee_weapon_table or self._char_tweak.melee_weapon or "weapon"
 end
 
+-- Lines 289-298
 function CopBase:pre_destroy(unit)
 	if self._unit:movement() then
 		self._unit:movement():anim_clbk_close_parachute()

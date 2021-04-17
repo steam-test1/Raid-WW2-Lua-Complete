@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementInteraction = ElementInteraction or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-18
 function ElementInteraction:init(...)
 	ElementInteraction.super.init(self, ...)
 
@@ -19,12 +20,14 @@ function ElementInteraction:init(...)
 	end
 end
 
+-- Lines 24-32
 function ElementInteraction:on_script_activated()
 	if alive(self._unit) and self._values.enabled then
 		self._unit:interaction():set_active(self._values.enabled, true)
 	end
 end
 
+-- Lines 34-39
 function ElementInteraction:set_enabled(enabled)
 	ElementInteraction.super.set_enabled(self, enabled)
 
@@ -33,6 +36,7 @@ function ElementInteraction:set_enabled(enabled)
 	end
 end
 
+-- Lines 41-47
 function ElementInteraction:on_executed(instigator, ...)
 	if not self._values.enabled then
 		return
@@ -41,18 +45,22 @@ function ElementInteraction:on_executed(instigator, ...)
 	ElementInteraction.super.on_executed(self, instigator, ...)
 end
 
+-- Lines 49-51
 function ElementInteraction:on_interacted(instigator)
 	self:on_executed(instigator, "interacted")
 end
 
+-- Lines 53-55
 function ElementInteraction:on_interact_start(instigator)
 	self:on_executed(instigator, "start")
 end
 
+-- Lines 57-59
 function ElementInteraction:on_interact_interupt(instigator)
 	self:on_executed(instigator, "interupt")
 end
 
+-- Lines 61-66
 function ElementInteraction:stop_simulation(...)
 	ElementInteraction.super.stop_simulation(self, ...)
 
@@ -61,12 +69,14 @@ function ElementInteraction:stop_simulation(...)
 	end
 end
 
+-- Lines 68-73
 function ElementInteraction:destroy()
 	if alive(self._unit) then
 		self._unit:set_slot(0)
 	end
 end
 
+-- Lines 75-78
 function ElementInteraction:stop_simulation(...)
 	self:destroy()
 end

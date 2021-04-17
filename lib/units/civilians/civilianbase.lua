@@ -1,5 +1,6 @@
 CivilianBase = CivilianBase or class(CopBase)
 
+-- Lines 3-23
 function CivilianBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -24,5 +25,6 @@ function CivilianBase:post_init()
 	managers.enemy:register_civilian(self._unit)
 end
 
+-- Lines 27-27
 function CivilianBase:default_weapon_name()
 end

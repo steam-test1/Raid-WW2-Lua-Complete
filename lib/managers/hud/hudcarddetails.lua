@@ -11,6 +11,7 @@ HUDCardDetails.TEXT_X = 75
 HUDCardDetails.TEXT_FONT = tweak_data.gui.fonts.lato
 HUDCardDetails.TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_20
 
+-- Lines 19-25
 function HUDCardDetails:init(panel, params)
 	self._params = params
 
@@ -20,6 +21,7 @@ function HUDCardDetails:init(panel, params)
 	self:_create_malus()
 end
 
+-- Lines 27-36
 function HUDCardDetails:_create_panel(panel, params)
 	local panel_params = {
 		name = "card_details_panel",
@@ -31,6 +33,7 @@ function HUDCardDetails:_create_panel(panel, params)
 	self._object = panel:panel(panel_params)
 end
 
+-- Lines 38-58
 function HUDCardDetails:_create_card()
 	local card_panel_params = {
 		visible = true,
@@ -53,6 +56,7 @@ function HUDCardDetails:_create_card()
 	self._card = self._card_panel:create_custom_control(RaidGUIControlCardBase, card_params)
 end
 
+-- Lines 60-90
 function HUDCardDetails:_create_bonus()
 	local bonus_panel_params = {
 		name = "bonus_panel",
@@ -86,6 +90,7 @@ function HUDCardDetails:_create_bonus()
 	self._bonus_text = self._bonus_panel:text(bonus_text_params)
 end
 
+-- Lines 92-122
 function HUDCardDetails:_create_malus()
 	local malus_panel_params = {
 		name = "malus_panel",
@@ -119,6 +124,7 @@ function HUDCardDetails:_create_malus()
 	self._malus_text = self._malus_panel:text(malus_text_params)
 end
 
+-- Lines 124-160
 function HUDCardDetails:set_card(card)
 	self._card:set_card(card)
 

@@ -1,5 +1,6 @@
 HuskTeamAIInventory = HuskTeamAIInventory or class(HuskCopInventory)
 
+-- Lines 3-14
 function HuskTeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 	local setup_data = {
@@ -18,6 +19,7 @@ function HuskTeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	CopInventory.add_unit(self, new_unit, equip)
 end
 
+-- Lines 16-18
 function HuskTeamAIInventory:pre_destroy()
 	HuskTeamAIInventory.super.pre_destroy(self)
 end

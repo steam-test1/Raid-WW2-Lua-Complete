@@ -4,6 +4,7 @@ local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mrot1 = Rotation()
 
+-- Lines 10-30
 function ProjectileBase:init(unit)
 	ProjectileBase.super.init(self, unit, true)
 
@@ -22,6 +23,7 @@ function ProjectileBase:init(unit)
 	end
 end
 
+-- Lines 34-53
 function ProjectileBase:set_thrower_unit_by_peer_id(peer_id)
 	if not peer_id then
 		return
@@ -38,65 +40,80 @@ function ProjectileBase:set_thrower_unit_by_peer_id(peer_id)
 	end
 end
 
+-- Lines 57-59
 function ProjectileBase:set_thrower_unit(unit)
 	self._thrower_unit = unit
 end
 
+-- Lines 61-63
 function ProjectileBase:thrower_unit()
 	return alive(self._thrower_unit) and self._thrower_unit or nil
 end
 
+-- Lines 67-69
 function ProjectileBase:set_thrower_peer_id(peer_id)
 	self._thrower_peer_id = peer_id
 end
 
+-- Lines 71-73
 function ProjectileBase:get_thrower_peer_id()
 	return self._thrower_peer_id or nil
 end
 
+-- Lines 75-77
 function ProjectileBase:set_parent_projectile_id(parent_projectile_id)
 	self._parent_projectile_id = parent_projectile_id
 end
 
+-- Lines 79-81
 function ProjectileBase:get_parent_projectile_id()
 	return self._parent_projectile_id or nil
 end
 
+-- Lines 83-84
 function ProjectileBase:get_aim_assist()
 end
 
+-- Lines 88-92
 function ProjectileBase:set_weapon_unit(weapon_unit)
 	self._weapon_unit = weapon_unit
 	self._weapon_id = weapon_unit and weapon_unit:base():get_name_id()
 	self._weapon_damage_mult = weapon_unit and weapon_unit:base().projectile_damage_multiplier and weapon_unit:base():projectile_damage_multiplier() or 1
 end
 
+-- Lines 94-96
 function ProjectileBase:weapon_unit()
 	return alive(self._weapon_unit) and self._weapon_unit or nil
 end
 
+-- Lines 100-102
 function ProjectileBase:set_projectile_entry(projectile_entry)
 	self._projectile_entry = projectile_entry
 end
 
+-- Lines 104-106
 function ProjectileBase:projectile_entry()
 	return self._projectile_entry or tweak_data.blackmarket:get_projectile_name_from_index(1)
 end
 
+-- Lines 108-110
 function ProjectileBase:get_name_id()
 	return alive(self._weapon_unit) and self._weapon_unit:base():get_name_id() or self._projectile_entry or self.name_id
 end
 
+-- Lines 114-117
 function ProjectileBase:set_active(active)
 	self._active = active
 
 	self._unit:set_extension_update_enabled(Idstring("base"), self._active)
 end
 
+-- Lines 119-121
 function ProjectileBase:active()
 	return self._active
 end
 
+-- Lines 126-131
 function ProjectileBase:create_sweep_data()
 	self._sweep_data = {
 		slot_mask = self._slot_mask,
@@ -105,6 +122,7 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
+-- Lines 135-196
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 	local velocity = params.dir
@@ -166,6 +184,7 @@ function ProjectileBase:throw(params)
 	end
 end
 
+-- Lines 200-203
 function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
 
@@ -175,6 +194,7 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	})
 end
 
+-- Lines 207-245
 function ProjectileBase:update(unit, t, dt)
 	if not self._simulated and not self._collided then
 		self._unit:m_position(mvec1)
@@ -220,6 +240,7 @@ function ProjectileBase:update(unit, t, dt)
 	end
 end
 
+-- Lines 250-278
 function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._sweep_data and not self._collided then
 		mvector3.set(mvec2, position)
@@ -248,14 +269,17 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 	end
 end
 
+-- Lines 282-284
 function ProjectileBase:_on_collision(col_ray)
 	print("_on_collision", inspect(col_ray))
 end
 
+-- Lines 288-290
 function ProjectileBase:_bounce(...)
 	print("_bounce", ...)
 end
 
+-- Lines 294-299
 function ProjectileBase:save(data)
 	local state = {
 		timer = self._timer
@@ -263,16 +287,19 @@ function ProjectileBase:save(data)
 	data.ProjectileBase = state
 end
 
+-- Lines 303-306
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 	self._timer = state.timer
 end
 
+-- Lines 310-311
 function ProjectileBase:destroy()
 end
 
 local ids_object3d = Idstring("object3d")
 
+-- Lines 318-379
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id, cooking_t, parent_projectile_id)
 	if not projectile_type then
 		Application:error("[ProjectileBase.throw_projectile] Trying to spawn an unknown projectile type: ", self._values.grenade_type, debug.traceback())
@@ -342,9 +369,11 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
+-- Lines 383-384
 function ProjectileBase:add_trail_effect()
 end
 
+-- Lines 388-405
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -365,15 +394,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
+-- Lines 409-420
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
+-- Lines 424-425
 function ProjectileBase._dispose_of_sound(...)
 end
 
+-- Lines 430-446
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -393,11 +425,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
+-- Lines 483-486
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
+-- Lines 514-516
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end

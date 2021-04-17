@@ -23,24 +23,29 @@ CoreSpawnUnitCutsceneKey.control_for_divider = CoreSetupCutsceneKeyBase.standard
 CoreSpawnUnitCutsceneKey.control_for_parent_unit_name = CoreSetupCutsceneKeyBase.standard_combo_box_control
 CoreSpawnUnitCutsceneKey.control_for_parent_object_name = CoreSetupCutsceneKeyBase.standard_combo_box_control
 
+-- Lines 25-27
 function CoreSpawnUnitCutsceneKey:__tostring()
 	return string.format("Spawn %s named \"%s\".", self:unit_type(), self:name())
 end
 
+-- Lines 29-31
 function CoreSpawnUnitCutsceneKey:prime(player)
 	self:_spawn_unit()
 end
 
+-- Lines 33-37
 function CoreSpawnUnitCutsceneKey:unload(player)
 	if self._cast then
 		self:_delete_unit()
 	end
 end
 
+-- Lines 39-41
 function CoreSpawnUnitCutsceneKey:play(player, undo, fast_forward)
 	self:_reparent_unit()
 end
 
+-- Lines 43-50
 function CoreSpawnUnitCutsceneKey:is_valid_unit_category(unit_category)
 	if not Application:ews_enabled() then
 		return true
@@ -49,10 +54,12 @@ function CoreSpawnUnitCutsceneKey:is_valid_unit_category(unit_category)
 	end
 end
 
+-- Lines 52-54
 function CoreSpawnUnitCutsceneKey:is_valid_unit_type(unit_type)
 	return unit_type ~= nil and DB:has("unit", unit_type)
 end
 
+-- Lines 56-65
 function CoreSpawnUnitCutsceneKey:is_valid_name(name)
 	if name == nil or #name <= 3 or string.match(name, "[a-z_0-9]+") ~= name then
 		return false
@@ -63,6 +70,7 @@ function CoreSpawnUnitCutsceneKey:is_valid_name(name)
 	return existing_unit == nil or existing_unit == self._spawned_unit
 end
 
+-- Lines 67-71
 function CoreSpawnUnitCutsceneKey:control_for_database_browser_button(parent_frame)
 	local button = EWS:Button(parent_frame, "Pick From Database Browser", "", "")
 
@@ -71,6 +79,7 @@ function CoreSpawnUnitCutsceneKey:control_for_database_browser_button(parent_fra
 	return button
 end
 
+-- Lines 73-84
 function CoreSpawnUnitCutsceneKey:refresh_control_for_unit_category(control)
 	control:freeze()
 	control:clear()
@@ -88,6 +97,7 @@ function CoreSpawnUnitCutsceneKey:refresh_control_for_unit_category(control)
 	control:thaw()
 end
 
+-- Lines 86-97
 function CoreSpawnUnitCutsceneKey:refresh_control_for_unit_type(control)
 	control:freeze()
 	control:clear()
@@ -105,6 +115,7 @@ function CoreSpawnUnitCutsceneKey:refresh_control_for_unit_type(control)
 	control:thaw()
 end
 
+-- Lines 99-116
 function CoreSpawnUnitCutsceneKey:refresh_control_for_parent_unit_name(control)
 	control:freeze()
 	control:clear()
@@ -130,6 +141,7 @@ function CoreSpawnUnitCutsceneKey:refresh_control_for_parent_unit_name(control)
 	control:thaw()
 end
 
+-- Lines 118-135
 function CoreSpawnUnitCutsceneKey:refresh_control_for_parent_object_name(control)
 	control:freeze()
 	control:clear()
@@ -155,6 +167,7 @@ function CoreSpawnUnitCutsceneKey:refresh_control_for_parent_object_name(control
 	control:thaw()
 end
 
+-- Lines 137-153
 function CoreSpawnUnitCutsceneKey:on_attribute_changed(attribute_name, value, previous_value)
 	assert(self._cast)
 
@@ -173,6 +186,7 @@ function CoreSpawnUnitCutsceneKey:on_attribute_changed(attribute_name, value, pr
 	end
 end
 
+-- Lines 155-160
 function CoreSpawnUnitCutsceneKey:_spawn_unit()
 	if self:is_valid() and self._cast and self._cast:unit(self:name()) == nil then
 		self._spawned_unit = self._cast:spawn_unit(self:name(), self:unit_type())
@@ -181,12 +195,14 @@ function CoreSpawnUnitCutsceneKey:_spawn_unit()
 	end
 end
 
+-- Lines 162-166
 function CoreSpawnUnitCutsceneKey:_delete_unit()
 	if self:is_valid() and self._cast then
 		self._cast:delete_unit(self:name())
 	end
 end
 
+-- Lines 168-180
 function CoreSpawnUnitCutsceneKey:_reparent_unit()
 	if self._spawned_unit then
 		self._spawned_unit:unlink()
@@ -204,6 +220,7 @@ function CoreSpawnUnitCutsceneKey:_reparent_unit()
 	end
 end
 
+-- Lines 182-192
 function CoreSpawnUnitCutsceneKey:update_gui(time, delta_time)
 	if self._database_browser and self._database_browser:update(time, delta_time) then
 		if alive(self._cutscene_editor_window) then
@@ -216,6 +233,7 @@ function CoreSpawnUnitCutsceneKey:update_gui(time, delta_time)
 	end
 end
 
+-- Lines 194-203
 function CoreSpawnUnitCutsceneKey:_on_database_browser_button_clicked(button)
 	self._cutscene_editor_window = button:parent()
 
@@ -229,6 +247,7 @@ function CoreSpawnUnitCutsceneKey:_on_database_browser_button_clicked(button)
 	self._database_browser = CoreDBDialog:new("unit", self, self._on_database_browser_entry_selected, ProjectDatabase)
 end
 
+-- Lines 205-216
 function CoreSpawnUnitCutsceneKey:_on_database_browser_entry_selected()
 	local selected_entry = self._database_browser and self._database_browser:get_value()
 

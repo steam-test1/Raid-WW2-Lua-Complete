@@ -1,5 +1,6 @@
 AirdropManager = AirdropManager or class()
 
+-- Lines 3-9
 function AirdropManager:init()
 	self._drop_point_groups = {}
 	self._planes = {}
@@ -8,10 +9,12 @@ function AirdropManager:init()
 	self._items_in_pods = {}
 end
 
+-- Lines 16-18
 function AirdropManager:register_drop_point_group(drop_point_group)
 	table.insert(self._drop_point_groups, drop_point_group)
 end
 
+-- Lines 23-29
 function AirdropManager:call_drop(unit)
 	if Network and Network:is_server() then
 		self:_call_drop(unit)
@@ -20,6 +23,7 @@ function AirdropManager:call_drop(unit)
 	end
 end
 
+-- Lines 35-69
 function AirdropManager:_call_drop(unit)
 	if self._in_cooldown == true then
 		Application:trace("AIRDROP IN COOLDOWN. Please wait " .. tostring(math.ceil(managers.queued_tasks:when("airdrop_cooldown"))) .. " second(s).")
@@ -60,6 +64,7 @@ function AirdropManager:_call_drop(unit)
 	managers.queued_tasks:queue("airdrop_cooldown", self.exit_cooldown, self, nil, tweak_data.interaction.drop_test.cooldown, nil)
 end
 
+-- Lines 75-91
 function AirdropManager:drop_item(data)
 	local angle = math.random(0, 359)
 	local dist = math.random(0, 150)
@@ -75,16 +80,19 @@ function AirdropManager:drop_item(data)
 	table.insert(self._planes, unit)
 end
 
+-- Lines 95-97
 function AirdropManager:set_plane_sequence(plane_unit, sequence_name)
 	plane_unit:damage():run_sequence_simple(sequence_name)
 end
 
+-- Lines 102-106
 function AirdropManager:spawn_pod(unit_to_spawn, plane_unit)
 	if Network and Network:is_server() then
 		self:_spawn_pod(unit_to_spawn, plane_unit)
 	end
 end
 
+-- Lines 109-117
 function AirdropManager:_spawn_pod(unit_to_spawn, plane_unit)
 	local pod_locator = plane_unit:get_object(Idstring("spawn_pod"))
 	local pod = World:spawn_unit(Idstring("units/vanilla/props/props_drop_pod/props_drop_pod"), pod_locator:position(), pod_locator:rotation())
@@ -96,6 +104,7 @@ function AirdropManager:_spawn_pod(unit_to_spawn, plane_unit)
 	table.insert(self._drop_pods, pod)
 end
 
+-- Lines 120-126
 function AirdropManager:spawn_unit_inside_pod(unit, position, yaw, pitch, roll)
 	if Network and Network:is_server() then
 		self:_spawn_unit_inside_pod(unit, position, Rotation(yaw, pitch, roll))
@@ -104,16 +113,19 @@ function AirdropManager:spawn_unit_inside_pod(unit, position, yaw, pitch, roll)
 	end
 end
 
+-- Lines 129-133
 function AirdropManager:_spawn_unit_inside_pod(unit, position, rotation)
 	if self._items_in_pods[unit] ~= nil then
 		World:spawn_unit(Idstring(self._items_in_pods[unit]), position, rotation)
 	end
 end
 
+-- Lines 137-139
 function AirdropManager:exit_cooldown()
 	self._in_cooldown = false
 end
 
+-- Lines 147-165
 function AirdropManager:on_simulation_ended()
 	managers.queued_tasks:unqueue_all(nil, self)
 

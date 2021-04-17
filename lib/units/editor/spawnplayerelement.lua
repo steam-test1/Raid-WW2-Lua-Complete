@@ -1,5 +1,6 @@
 SpawnPlayerElement = SpawnPlayerElement or class(MissionElement)
 
+-- Lines 3-11
 function SpawnPlayerElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -10,6 +11,7 @@ function SpawnPlayerElement:init(unit)
 	table.insert(self._save_values, "use_for_teleport")
 end
 
+-- Lines 13-22
 function SpawnPlayerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -21,5 +23,6 @@ function SpawnPlayerElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("The state defines how the player will be spawned/teleported")
 end
 
+-- Lines 24-26
 function SpawnPlayerElement:add_to_mission_package()
 end

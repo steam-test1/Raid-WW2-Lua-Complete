@@ -18,6 +18,7 @@ RaidGUIControlCardDetails.MALUS_EFFECT_Y = 320
 RaidGUIControlCardDetails.EFFECT_DISTANCE = 16
 RaidGUIControlCardDetails.FONT = tweak_data.gui.fonts.din_compressed
 
+-- Lines 29-48
 function RaidGUIControlCardDetails:init(parent, params)
 	RaidGUIControlCardDetails.super.init(self, parent, params)
 
@@ -34,9 +35,11 @@ function RaidGUIControlCardDetails:init(parent, params)
 	self:_create_card_details()
 end
 
+-- Lines 50-51
 function RaidGUIControlCardDetails:close()
 end
 
+-- Lines 53-63
 function RaidGUIControlCardDetails:_create_object()
 	local control_params = clone(self._params)
 	control_params.w = control_params.w or RaidGUIControlCardDetails.DEFAULT_WIDTH
@@ -48,6 +51,7 @@ function RaidGUIControlCardDetails:_create_object()
 	self._object = self._panel:panel(control_params)
 end
 
+-- Lines 65-120
 function RaidGUIControlCardDetails:_create_card_details()
 	local card_params = {
 		name = "player_loot_card",
@@ -207,6 +211,7 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 end
 
+-- Lines 122-219
 function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
 	self._card = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
 
@@ -309,14 +314,17 @@ function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
 	end
 end
 
+-- Lines 221-265
 function RaidGUIControlCardDetails:set_mode_layout()
 	self._type_icon:set_center_x(self._type_label:center_x())
 end
 
+-- Lines 267-270
 function RaidGUIControlCardDetails:get_card()
 	return self._card, self._card.steam_instance_id
 end
 
+-- Lines 272-276
 function RaidGUIControlCardDetails:set_control_mode(mode)
 	self._mode = mode
 

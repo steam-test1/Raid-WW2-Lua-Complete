@@ -10,20 +10,24 @@ CoreGuiCallbackCutsceneKey:register_serialized_attribute("enabled", true, tobool
 
 CoreGuiCallbackCutsceneKey.control_for_name = CoreCutsceneKeyBase.standard_combo_box_control
 
+-- Lines 11-13
 function CoreGuiCallbackCutsceneKey:__tostring()
 	return "Call " .. self:function_name() .. " in gui \"" .. self:name() .. "\"."
 end
 
+-- Lines 15-19
 function CoreGuiCallbackCutsceneKey:evaluate(player, fast_forward)
 	if self:enabled() then
 		player:invoke_callback_in_gui(self:name(), self:function_name(), player)
 	end
 end
 
+-- Lines 21-23
 function CoreGuiCallbackCutsceneKey:is_valid_name(name)
 	return DB:has("gui", name)
 end
 
+-- Lines 25-36
 function CoreGuiCallbackCutsceneKey:refresh_control_for_name(control)
 	control:freeze()
 	control:clear()

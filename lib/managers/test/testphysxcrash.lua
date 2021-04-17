@@ -18,18 +18,22 @@ TestPhysXCrash.testPositions = {
 }
 local counter = 1
 
+-- Lines 25-27
 function TestPhysXCrash:init()
 	counter = 1
 end
 
+-- Lines 29-31
 function TestPhysXCrash:update(t, dt)
 	self:hardcodeCrash(t, dt)
 end
 
+-- Lines 33-35
 function TestPhysXCrash:toggleTest()
 	counter = 1
 end
 
+-- Lines 37-43
 function TestPhysXCrash:hardcodeCrash(t, dt)
 	if counter < #TestPhysXCrash.testPositions + 1 then
 		managers.test.utils:spawn_projectile_at_pos(TestPhysXCrash.testPositions[counter])

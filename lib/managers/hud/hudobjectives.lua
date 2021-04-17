@@ -4,11 +4,13 @@ HUDObjectives.H = 366
 HUDObjectives.OBJECTIVES_PADDING = 16
 HUDObjectives.OBJECTIVE_DESCRIPTION_PADDING = 10
 
+-- Lines 10-14
 function HUDObjectives:init(panel)
 	self:_create_panel(panel)
 	self:_clear_objectives()
 end
 
+-- Lines 16-24
 function HUDObjectives:_create_panel(panel)
 	local panel_params = {
 		name = "objectives",
@@ -20,29 +22,36 @@ function HUDObjectives:_create_panel(panel)
 	self._object = panel:panel(panel_params)
 end
 
+-- Lines 26-28
 function HUDObjectives:set_x(x)
 	self._object:set_x(x)
 end
 
+-- Lines 30-32
 function HUDObjectives:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 34-36
 function HUDObjectives:w()
 	return self._object:w()
 end
 
+-- Lines 38-40
 function HUDObjectives:h()
 	return self._object:h()
 end
 
+-- Lines 42-46
 function HUDObjectives:show()
 	self:_animate_show()
 end
 
+-- Lines 48-52
 function HUDObjectives:hide()
 end
 
+-- Lines 54-101
 function HUDObjectives:render_objective()
 	local active_objective = managers.objectives:get_objective(self._active_objective_id)
 
@@ -94,26 +103,32 @@ function HUDObjectives:render_objective()
 	end
 end
 
+-- Lines 103-104
 function HUDObjectives:update_objectives()
 end
 
+-- Lines 106-110
 function HUDObjectives:activate_objective(data)
 	self._active_objective_id = data.id
 
 	self:render_objective()
 end
 
+-- Lines 112-114
 function HUDObjectives:remind_objective(id)
 	self:_animate_hide()
 end
 
+-- Lines 116-117
 function HUDObjectives:remind_sub_objective(id)
 end
 
+-- Lines 119-121
 function HUDObjectives:complete_objective(data)
 	self:_animate_hide()
 end
 
+-- Lines 123-129
 function HUDObjectives:complete_sub_objective(data)
 	for i = 1, #self._sub_objectives do
 		if self._sub_objectives[i]:id() == data.sub_id then
@@ -122,12 +137,14 @@ function HUDObjectives:complete_sub_objective(data)
 	end
 end
 
+-- Lines 131-135
 function HUDObjectives:update_amount_objective(data)
 	if self._main_objective:id() == data.id then
 		self._main_objective:set_current_amount(data.current_amount)
 	end
 end
 
+-- Lines 137-143
 function HUDObjectives:update_amount_sub_objective(data)
 	for i = 1, #self._sub_objectives do
 		if self._sub_objectives[i]:id() == data.sub_id then
@@ -136,21 +153,26 @@ function HUDObjectives:update_amount_sub_objective(data)
 	end
 end
 
+-- Lines 145-146
 function HUDObjectives:open_right_done(uses_amount)
 end
 
+-- Lines 148-150
 function HUDObjectives:show_timer()
 	self._main_objective:show_timer()
 end
 
+-- Lines 152-154
 function HUDObjectives:hide_timer()
 	self._main_objective:hide_timer()
 end
 
+-- Lines 156-158
 function HUDObjectives:set_timer_value(current, total)
 	self._main_objective:set_timer_value(current, total)
 end
 
+-- Lines 160-167
 function HUDObjectives:_clear_objectives()
 	self._object:clear()
 
@@ -160,6 +182,7 @@ function HUDObjectives:_clear_objectives()
 	self._objective_descriptions = {}
 end
 
+-- Lines 169-175
 function HUDObjectives:clean_up()
 	self._active_objective_id = nil
 
@@ -168,6 +191,7 @@ function HUDObjectives:clean_up()
 	end
 end
 
+-- Lines 177-200
 function HUDObjectives:_animate_show()
 	local delay = 0
 	local delay_step = 0.1
@@ -193,6 +217,7 @@ function HUDObjectives:_animate_show()
 	end
 end
 
+-- Lines 202-223
 function HUDObjectives:_animate_hide()
 	local delay = 0
 	local delay_step = 0.1

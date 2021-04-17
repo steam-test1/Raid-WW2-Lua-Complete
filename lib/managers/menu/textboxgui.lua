@@ -12,6 +12,7 @@ TextBoxGui.PRESETS = {
 	}
 }
 
+-- Lines 7-14
 function TextBoxGui:init(...)
 	self._target_alpha = {}
 	self._visible = true
@@ -23,6 +24,7 @@ function TextBoxGui:init(...)
 	self._thread = self._panel:animate(self._update, self)
 end
 
+-- Lines 16-26
 function TextBoxGui._update(o, self)
 	while true do
 		local dt = coroutine.yield()
@@ -37,6 +39,7 @@ function TextBoxGui._update(o, self)
 	end
 end
 
+-- Lines 28-34
 function TextBoxGui:set_layer(layer)
 	self._panel:set_layer(self._init_layer + layer)
 
@@ -45,10 +48,12 @@ function TextBoxGui:set_layer(layer)
 	end
 end
 
+-- Lines 36-38
 function TextBoxGui:layer()
 	return self._panel:layer()
 end
 
+-- Lines 40-48
 function TextBoxGui:add_background()
 	if alive(self._fullscreen_ws) then
 		Overlay:gui():destroy_workspace(self._fullscreen_ws)
@@ -68,10 +73,12 @@ function TextBoxGui:add_background()
 	})
 end
 
+-- Lines 50-52
 function TextBoxGui:set_centered()
 	self._panel:set_center(self._ws:panel():center())
 end
 
+-- Lines 54-58
 function TextBoxGui:recreate_text_box(...)
 	self:close()
 	self:_create_text_box(...)
@@ -79,6 +86,7 @@ function TextBoxGui:recreate_text_box(...)
 	self._thread = self._panel:animate(self._update, self)
 end
 
+-- Lines 60-284
 function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._ws = ws
 	self._init_layer = self._ws:panel():layer()
@@ -360,6 +368,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	return main
 end
 
+-- Lines 287-361
 function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	local has_stats = stats_list and #stats_list > 0
 	local stats_panel = scroll_panel:panel({
@@ -553,6 +562,7 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	return stats_panel
 end
 
+-- Lines 364-418
 function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local has_buttons = button_list and #button_list > 0
 	self._text_box_buttons_panel = info_area:panel({
@@ -627,6 +637,7 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 	return self._text_box_buttons_panel
 end
 
+-- Lines 420-461
 function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 	local info_area = self._panel:child("info_area")
 	local scroll_panel = info_area:child("scroll_panel")
@@ -671,6 +682,7 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 	return textbox_panel
 end
 
+-- Lines 463-469
 function TextBoxGui:_input_field_text_changed()
 	if not self._callback_data then
 		self._callback_data = {}
@@ -679,13 +691,16 @@ function TextBoxGui:_input_field_text_changed()
 	self._callback_data.input_field_text = self._input_field:get_text()
 end
 
+-- Lines 471-473
 function TextBoxGui:_create_lower_static_panel()
 end
 
+-- Lines 475-477
 function TextBoxGui:get_callback_data()
 	return self._callback_data
 end
 
+-- Lines 479-487
 function TextBoxGui:check_focus_button(x, y)
 	for i, panel in ipairs(self._text_box_buttons_panel:children()) do
 		if panel.child and panel:inside(x, y) then
@@ -698,6 +713,7 @@ function TextBoxGui:check_focus_button(x, y)
 	return false
 end
 
+-- Lines 489-500
 function TextBoxGui:set_focus_button(focus_button)
 	if focus_button ~= self._text_box_focus_button then
 		managers.menu:post_event("highlight")
@@ -712,6 +728,7 @@ function TextBoxGui:set_focus_button(focus_button)
 	end
 end
 
+-- Lines 502-507
 function TextBoxGui:unfocus_button(index)
 	if self._text_box_focus_button == index then
 		self:_set_button_selected(index, false)
@@ -720,6 +737,7 @@ function TextBoxGui:unfocus_button(index)
 	end
 end
 
+-- Lines 509-514
 function TextBoxGui:_set_button_selected(index, is_selected)
 	local button = self._buttons[index]
 
@@ -728,6 +746,7 @@ function TextBoxGui:_set_button_selected(index, is_selected)
 	end
 end
 
+-- Lines 516-530
 function TextBoxGui:change_focus_button(change)
 	if self._input_field and self._input_field:input_focus() and not managers.controller:is_xbox_controller_present() then
 		return
@@ -744,22 +763,27 @@ function TextBoxGui:change_focus_button(change)
 	self:set_focus_button(focus_button)
 end
 
+-- Lines 532-534
 function TextBoxGui:get_focus_button()
 	return self._text_box_focus_button
 end
 
+-- Lines 536-538
 function TextBoxGui:get_focus_button_id()
 	return self._text_box_buttons_panel:child(self._text_box_focus_button - 1):name()
 end
 
+-- Lines 540-542
 function TextBoxGui:input_focus()
 	return false
 end
 
+-- Lines 544-546
 function TextBoxGui:mouse_pressed(button, x, y)
 	return false
 end
 
+-- Lines 548-562
 function TextBoxGui:check_close(x, y)
 	if not self:can_take_input() then
 		return false
@@ -778,6 +802,7 @@ function TextBoxGui:check_close(x, y)
 	return false
 end
 
+-- Lines 564-578
 function TextBoxGui:check_minimize(x, y)
 	if not self:can_take_input() then
 		return false
@@ -796,6 +821,7 @@ function TextBoxGui:check_minimize(x, y)
 	return false
 end
 
+-- Lines 580-614
 function TextBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() or not alive(self._panel) then
 		return false, "arrow"
@@ -835,17 +861,21 @@ function TextBoxGui:mouse_moved(x, y)
 	return false, "arrow"
 end
 
+-- Lines 616-619
 function TextBoxGui:check_grab_scroll_bar()
 	return false
 end
 
+-- Lines 621-624
 function TextBoxGui:moved_scroll_bar()
 	return false, "arrow"
 end
 
+-- Lines 626-628
 function TextBoxGui:release_scroll_bar()
 end
 
+-- Lines 630-635
 function TextBoxGui:set_fade(fade)
 	self:_set_alpha(fade)
 
@@ -854,11 +884,13 @@ function TextBoxGui:set_fade(fade)
 	end
 end
 
+-- Lines 637-640
 function TextBoxGui:_set_alpha(alpha)
 	self._panel:set_alpha(alpha)
 	self._panel:set_visible(alpha ~= 0)
 end
 
+-- Lines 642-653
 function TextBoxGui:_set_alpha_recursive(obj, alpha)
 	if obj.set_color then
 		local a = self._target_alpha[obj:key()] and self._target_alpha[obj:key()] * alpha or alpha
@@ -873,6 +905,7 @@ function TextBoxGui:_set_alpha_recursive(obj, alpha)
 	end
 end
 
+-- Lines 655-662
 function TextBoxGui:set_title(title)
 	local title_text = self._panel:child("title")
 
@@ -885,24 +918,29 @@ function TextBoxGui:set_title(title)
 	title_text:set_visible(title and true or false)
 end
 
+-- Lines 664-667
 function TextBoxGui:set_text(txt, no_upper)
 	local text = self._panel:child("info_area"):child("scroll_panel"):child("text_box_gui_text")
 
 	text:set_text(no_upper and txt or utf8.to_upper(txt or ""))
 end
 
+-- Lines 669-671
 function TextBoxGui:set_use_minimize_legend(use)
 	self._panel:child("legend_minimize"):set_visible(use)
 end
 
+-- Lines 673-675
 function TextBoxGui:in_focus(x, y)
 	return self._panel:inside(x, y)
 end
 
+-- Lines 677-679
 function TextBoxGui:in_info_area_focus(x, y)
 	return self._panel:child("info_area"):inside(x, y)
 end
 
+-- Lines 681-688
 function TextBoxGui:_set_visible_state()
 	local visible = self._visible and self._enabled
 
@@ -913,16 +951,19 @@ function TextBoxGui:_set_visible_state()
 	end
 end
 
+-- Lines 690-692
 function TextBoxGui:can_take_input()
 	return self._visible and self._enabled
 end
 
+-- Lines 694-697
 function TextBoxGui:set_visible(visible)
 	self._visible = visible
 
 	self:_set_visible_state()
 end
 
+-- Lines 699-713
 function TextBoxGui:set_enabled(enabled)
 	if self._enabled == enabled then
 		return
@@ -941,16 +982,19 @@ function TextBoxGui:set_enabled(enabled)
 	end
 end
 
+-- Lines 715-717
 function TextBoxGui:enabled()
 	return self._enabled
 end
 
+-- Lines 719-724
 function TextBoxGui:_maximize(data)
 	self:set_visible(true)
 	self:set_minimized(false, nil)
 	self:_remove_minimized(data.id)
 end
 
+-- Lines 726-732
 function TextBoxGui:set_minimized(minimized, minimized_data)
 	self._minimized = minimized
 	self._minimized_data = minimized_data
@@ -960,6 +1004,7 @@ function TextBoxGui:set_minimized(minimized, minimized_data)
 	end
 end
 
+-- Lines 734-738
 function TextBoxGui:_add_minimized()
 	self._minimized_data.callback = callback(self, self, "_maximize")
 
@@ -968,24 +1013,29 @@ function TextBoxGui:_add_minimized()
 	self._minimized_id = managers.menu_component:add_minimized(self._minimized_data)
 end
 
+-- Lines 740-743
 function TextBoxGui:_remove_minimized(id)
 	self._minimized_id = nil
 
 	managers.menu_component:remove_minimized(id)
 end
 
+-- Lines 745-747
 function TextBoxGui:minimized()
 	return self._minimized
 end
 
+-- Lines 749-751
 function TextBoxGui:set_position(x, y)
 	self._panel:set_position(x, y)
 end
 
+-- Lines 753-755
 function TextBoxGui:position()
 	return self._panel:position()
 end
 
+-- Lines 757-790
 function TextBoxGui:set_size(x, y)
 	self._panel:set_size(x, y)
 
@@ -1027,40 +1077,50 @@ function TextBoxGui:set_size(x, y)
 	legend_minimize:set_right(top_line:right())
 end
 
+-- Lines 792-794
 function TextBoxGui:size()
 	return self._panel:size()
 end
 
+-- Lines 796-796
 function TextBoxGui:open_page()
 end
 
+-- Lines 797-797
 function TextBoxGui:close_page()
 end
 
+-- Lines 799-799
 function TextBoxGui:x()
 	return self._panel:x()
 end
 
+-- Lines 800-800
 function TextBoxGui:y()
 	return self._panel:y()
 end
 
+-- Lines 801-801
 function TextBoxGui:h()
 	return self._panel:h()
 end
 
+-- Lines 802-802
 function TextBoxGui:w()
 	return self._panel:w()
 end
 
+-- Lines 804-806
 function TextBoxGui:h()
 	return self._panel:h()
 end
 
+-- Lines 808-810
 function TextBoxGui:visible()
 	return self._visible
 end
 
+-- Lines 812-829
 function TextBoxGui:close()
 	if self._minimized then
 		self:_remove_minimized(self._minimized_id)

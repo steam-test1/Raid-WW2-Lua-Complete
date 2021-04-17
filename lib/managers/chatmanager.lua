@@ -4,16 +4,19 @@ ChatManager.CREW = 2
 ChatManager.GLOBAL = 3
 ChatManager.MESSAGE_BUFFER_SIZE = 20
 
+-- Lines 11-13
 function ChatManager:init()
 	self:_setup()
 end
 
+-- Lines 15-19
 function ChatManager:_setup()
 	self._chatlog = {}
 	self._receivers = {}
 	self._message_buffer = {}
 end
 
+-- Lines 21-42
 function ChatManager:register_receiver(channel_id, receiver)
 	self._receivers[channel_id] = self._receivers[channel_id] or {}
 	self._message_buffer[channel_id] = self._message_buffer[channel_id] or {}
@@ -36,6 +39,7 @@ function ChatManager:register_receiver(channel_id, receiver)
 	end
 end
 
+-- Lines 44-55
 function ChatManager:unregister_receiver(channel_id, receiver)
 	if not self._receivers[channel_id] then
 		return
@@ -50,6 +54,7 @@ function ChatManager:unregister_receiver(channel_id, receiver)
 	end
 end
 
+-- Lines 57-68
 function ChatManager:send_message(channel_id, sender, message)
 	if managers.network:session() then
 		sender = managers.network:session():local_peer()
@@ -61,12 +66,14 @@ function ChatManager:send_message(channel_id, sender, message)
 	end
 end
 
+-- Lines 70-74
 function ChatManager:feed_system_message(channel_id, message)
 	if not Global.game_settings.single_player then
 		self:_receive_message(channel_id, nil, nil, message, Color.white, nil, true)
 	end
 end
 
+-- Lines 76-87
 function ChatManager:receive_message_by_peer(channel_id, peer, message)
 	local color_id = peer:id()
 	local color = tweak_data.chat_colors[color_id]
@@ -74,14 +81,17 @@ function ChatManager:receive_message_by_peer(channel_id, peer, message)
 	self:_receive_message(channel_id, peer:name(), peer:id(), message, tweak_data.chat_colors[color_id], false)
 end
 
+-- Lines 89-91
 function ChatManager:receive_message_by_name(channel_id, name, message)
 	self:_receive_message(channel_id, name, nil, message, tweak_data.chat_colors[1])
 end
 
+-- Lines 93-95
 function ChatManager:clear_message_buffer(channel_id)
 	self._message_buffer[channel_id] = {}
 end
 
+-- Lines 97-105
 function ChatManager:_cache_message(channel_id, name, peer_id, message, color, icon, system_message)
 	table.insert(self._message_buffer[channel_id], {
 		name = name,
@@ -97,6 +107,7 @@ function ChatManager:_cache_message(channel_id, name, peer_id, message, color, i
 	end
 end
 
+-- Lines 107-121
 function ChatManager:_receive_message(channel_id, name, peer_id, message, color, icon, system_message)
 	if not self._receivers[channel_id] then
 		return
@@ -109,8 +120,10 @@ function ChatManager:_receive_message(channel_id, name, peer_id, message, color,
 	end
 end
 
+-- Lines 124-127
 function ChatManager:save(data)
 end
 
+-- Lines 130-133
 function ChatManager:load(data)
 end

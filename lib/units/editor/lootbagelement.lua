@@ -1,6 +1,7 @@
 LootBagUnitElement = LootBagUnitElement or class(MissionElement)
 LootBagUnitElement.USES_POINT_ORIENTATION = true
 
+-- Lines 4-14
 function LootBagUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -11,6 +12,7 @@ function LootBagUnitElement:init(unit)
 	self._hed.from_respawn = false
 end
 
+-- Lines 18-26
 function LootBagUnitElement:save(list)
 	if self._hed.push_multiplier ~= 0 then
 		list.spawn_dir = self._hed.spawn_dir
@@ -21,6 +23,7 @@ function LootBagUnitElement:save(list)
 	list.from_respawn = self._hed.from_respawn
 end
 
+-- Lines 28-40
 function LootBagUnitElement:test_element()
 	local unit_name = "units/vanilla/pickups/pku_gold_bar_bag/pku_gold_bar_bag"
 	local throw_distance_multiplier = 1
@@ -40,6 +43,7 @@ function LootBagUnitElement:test_element()
 	unit:push(100, 600 * push_value * throw_distance_multiplier)
 end
 
+-- Lines 42-49
 function LootBagUnitElement:stop_test_element()
 	for _, unit in ipairs(self._test_units) do
 		if alive(unit) then
@@ -50,10 +54,12 @@ function LootBagUnitElement:stop_test_element()
 	self._test_units = {}
 end
 
+-- Lines 51-53
 function LootBagUnitElement:update_selected(time, rel_time)
 	Application:draw_arrow(self._unit:position(), self._unit:position() + self._hed.spawn_dir * 50, 0.75, 0.75, 0.75, 0.1)
 end
 
+-- Lines 55-78
 function LootBagUnitElement:update_editing(time, rel_time)
 	local kb = Input:keyboard()
 	local speed = 60 * rel_time
@@ -87,6 +93,7 @@ function LootBagUnitElement:update_editing(time, rel_time)
 	end
 end
 
+-- Lines 81-90
 function LootBagUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -107,6 +114,7 @@ LootBagTriggerUnitElement = LootBagTriggerUnitElement or class(MissionElement)
 LootBagTriggerUnitElement.SAVE_UNIT_POSITION = false
 LootBagTriggerUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 98-106
 function LootBagTriggerUnitElement:init(unit)
 	LootBagTriggerUnitElement.super.init(self, unit)
 
@@ -117,6 +125,7 @@ function LootBagTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "trigger_type")
 end
 
+-- Lines 108-117
 function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	LootBagTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -136,9 +145,11 @@ function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 119-120
 function LootBagTriggerUnitElement:update_editing()
 end
 
+-- Lines 122-135
 function LootBagTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -156,6 +167,7 @@ function LootBagTriggerUnitElement:add_element()
 	end
 end
 
+-- Lines 137-143
 function LootBagTriggerUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -164,10 +176,12 @@ function LootBagTriggerUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 146-148
 function LootBagTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 150-161
 function LootBagTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -2,16 +2,19 @@ core:import("CoreMissionScriptElement")
 
 ElementJobValue = ElementJobValue or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementJobValue:init(...)
 	ElementJobValue.super.init(self, ...)
 end
 
+-- Lines 9-14
 function ElementJobValue:client_on_executed(...)
 	if self._values.save then
 		self:on_executed(...)
 	end
 end
 
+-- Lines 16-33
 function ElementJobValue:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -32,13 +35,16 @@ end
 
 ElementJobValueFilter = ElementJobValueFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 39-41
 function ElementJobValueFilter:init(...)
 	ElementJobValueFilter.super.init(self, ...)
 end
 
+-- Lines 43-45
 function ElementJobValueFilter:client_on_executed(...)
 end
 
+-- Lines 47-64
 function ElementJobValueFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -59,6 +65,7 @@ function ElementJobValueFilter:on_executed(instigator)
 	ElementJobValueFilter.super.on_executed(self, instigator)
 end
 
+-- Lines 66-100
 function ElementJobValueFilter:_check_value(value)
 	if self._values.check_type == "not_has_key" then
 		return not value
@@ -95,13 +102,16 @@ end
 
 ElementApplyJobValue = ElementApplyJobValue or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 106-108
 function ElementApplyJobValue:init(...)
 	ElementApplyJobValue.super.init(self, ...)
 end
 
+-- Lines 110-114
 function ElementApplyJobValue:client_on_executed(...)
 end
 
+-- Lines 116-136
 function ElementApplyJobValue:on_executed(instigator)
 	if not self._values.enabled then
 		return

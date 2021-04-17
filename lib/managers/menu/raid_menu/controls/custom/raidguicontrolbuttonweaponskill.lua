@@ -20,6 +20,7 @@ RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_W = 16
 RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_H = 16
 RaidGUIControlButtonWeaponSkill.SELECTOR_SIZE_EXTENSION = 10
 
+-- Lines 23-71
 function RaidGUIControlButtonWeaponSkill:init(parent, params, tier_number, line_object, left_button)
 	self:_init_state_data()
 
@@ -56,6 +57,7 @@ function RaidGUIControlButtonWeaponSkill:init(parent, params, tier_number, line_
 	self:_create_selector()
 end
 
+-- Lines 73-119
 function RaidGUIControlButtonWeaponSkill:_create_selector()
 	local selector_panel_params = {
 		halign = "scale",
@@ -108,10 +110,12 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 	self._selector_triangle_down = self._selector_panel:image(selector_triangle_down_params)
 end
 
+-- Lines 121-123
 function RaidGUIControlButtonWeaponSkill:set_right_button(button)
 	self._right_button = button
 end
 
+-- Lines 125-188
 function RaidGUIControlButtonWeaponSkill:set_skill(weapon_id, skill, skill_data, left_skill, unlocked, i_tier, i_skill)
 	self._unlocked = unlocked
 
@@ -175,6 +179,7 @@ function RaidGUIControlButtonWeaponSkill:set_skill(weapon_id, skill, skill_data,
 	self:_layout_breadcrumb(weapon_id, i_tier, i_skill)
 end
 
+-- Lines 190-209
 function RaidGUIControlButtonWeaponSkill:_layout_breadcrumb(weapon_id, i_tier, i_skill)
 	if self._breadcrumb then
 		self._breadcrumb:close()
@@ -202,6 +207,7 @@ function RaidGUIControlButtonWeaponSkill:_layout_breadcrumb(weapon_id, i_tier, i
 	self._breadcrumb:set_y(0)
 end
 
+-- Lines 211-219
 function RaidGUIControlButtonWeaponSkill:select_skill(dont_trigger_selected_callback)
 	self._mouse_inside = true
 
@@ -212,6 +218,7 @@ function RaidGUIControlButtonWeaponSkill:select_skill(dont_trigger_selected_call
 	end
 end
 
+-- Lines 221-226
 function RaidGUIControlButtonWeaponSkill:unselect_skill()
 	self._mouse_inside = false
 
@@ -219,6 +226,7 @@ function RaidGUIControlButtonWeaponSkill:unselect_skill()
 	self:_on_unselected_weapon_skill_callback(self._data)
 end
 
+-- Lines 228-253
 function RaidGUIControlButtonWeaponSkill:set_state(state)
 	if not self._unlocked and state ~= RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE then
 		return
@@ -241,6 +249,7 @@ function RaidGUIControlButtonWeaponSkill:set_state(state)
 	self._selector_triangle_down:set_alpha(self._state_data[state].show_selector_triangles_alpha)
 end
 
+-- Lines 255-293
 function RaidGUIControlButtonWeaponSkill:_init_state_data()
 	self._state_data = {
 		[RaidGUIControlButtonWeaponSkill.STATE_NORMAL] = {
@@ -282,14 +291,17 @@ function RaidGUIControlButtonWeaponSkill:_init_state_data()
 	}
 end
 
+-- Lines 295-297
 function RaidGUIControlButtonWeaponSkill:get_state()
 	return self._state
 end
 
+-- Lines 299-301
 function RaidGUIControlButtonWeaponSkill:get_data()
 	return self._data
 end
 
+-- Lines 303-316
 function RaidGUIControlButtonWeaponSkill:highlight_on()
 	local color = self._state_data[self._state].highlight_on
 
@@ -303,6 +315,7 @@ function RaidGUIControlButtonWeaponSkill:highlight_on()
 	self:show_hover_selector()
 end
 
+-- Lines 318-329
 function RaidGUIControlButtonWeaponSkill:highlight_off()
 	local color = self._state_data[self._state].highlight_off
 
@@ -315,6 +328,7 @@ function RaidGUIControlButtonWeaponSkill:highlight_off()
 	self:hide_hover_selector()
 end
 
+-- Lines 331-336
 function RaidGUIControlButtonWeaponSkill:show_hover_selector()
 	if self._selector_panel then
 		self._selector_panel:set_alpha(1)
@@ -322,12 +336,14 @@ function RaidGUIControlButtonWeaponSkill:show_hover_selector()
 	end
 end
 
+-- Lines 338-343
 function RaidGUIControlButtonWeaponSkill:hide_hover_selector()
 	if self._selector_panel then
 		self._selector_rect:set_alpha(0)
 	end
 end
 
+-- Lines 345-399
 function RaidGUIControlButtonWeaponSkill:on_mouse_released(button)
 	if self._state == RaidGUIControlButtonWeaponSkill.STATE_ACTIVE and self._data.value.active then
 		return
@@ -348,9 +364,11 @@ function RaidGUIControlButtonWeaponSkill:on_mouse_released(button)
 	self:show_hover_selector()
 end
 
+-- Lines 401-403
 function RaidGUIControlButtonWeaponSkill:on_mouse_pressed(button)
 end
 
+-- Lines 405-419
 function RaidGUIControlButtonWeaponSkill:mouse_moved(o, x, y)
 	if self:inside(x, y) then
 		if not self._mouse_inside then
@@ -369,6 +387,7 @@ function RaidGUIControlButtonWeaponSkill:mouse_moved(o, x, y)
 	return false
 end
 
+-- Lines 421-439
 function RaidGUIControlButtonWeaponSkill:propagating_skill_deallocating()
 	if self._state == RaidGUIControlButtonWeaponSkill.STATE_SELECTED then
 		self:set_state(RaidGUIControlButtonWeaponSkill.STATE_NORMAL)
@@ -384,12 +403,14 @@ function RaidGUIControlButtonWeaponSkill:propagating_skill_deallocating()
 	self:_get_available_points_callback()
 end
 
+-- Lines 441-448
 function RaidGUIControlButtonWeaponSkill:on_mouse_over(x, y)
 	self._mouse_inside = true
 
 	self._toggle_select_item_callback(true, self._data.i_skill, self._data.i_tier)
 end
 
+-- Lines 450-458
 function RaidGUIControlButtonWeaponSkill:on_mouse_out(x, y)
 	self._mouse_inside = false
 

@@ -1,5 +1,6 @@
 RevivePumpkinExt = RevivePumpkinExt or class()
 
+-- Lines 4-28
 function RevivePumpkinExt:init(unit)
 	local idstr_pumpkin_asset = Idstring("revive_pumpkin")
 	self._unit = unit
@@ -34,6 +35,7 @@ function RevivePumpkinExt:init(unit)
 	end
 end
 
+-- Lines 30-36
 function RevivePumpkinExt:local_player_enter_resapwn(level)
 	Application:debug("[RevivePumpkinExt:local_player_enter_resapwn]")
 
@@ -42,6 +44,7 @@ function RevivePumpkinExt:local_player_enter_resapwn(level)
 	end
 end
 
+-- Lines 38-44
 function RevivePumpkinExt:local_player_exit_resapwn(level)
 	Application:debug("[RevivePumpkinExt:local_player_exit_resapwn]")
 
@@ -50,6 +53,7 @@ function RevivePumpkinExt:local_player_exit_resapwn(level)
 	end
 end
 
+-- Lines 46-55
 function RevivePumpkinExt:destroy()
 	managers.system_event_listener:remove_listener(self._listener_key_enter)
 	managers.system_event_listener:remove_listener(self._listener_key_exit)
@@ -60,6 +64,7 @@ function RevivePumpkinExt:destroy()
 	end
 end
 
+-- Lines 57-59
 function RevivePumpkinExt:set_should_sync(should_sync)
 	self._should_sync = should_sync
 end

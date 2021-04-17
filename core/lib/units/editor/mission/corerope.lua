@@ -5,10 +5,12 @@ RopeOperatorUnitElement.OPERATIONS = {
 	"detach"
 }
 
+-- Lines 7-9
 function RopeOperatorUnitElement:init(...)
 	RopeOperatorUnitElement.super.init(self, ...)
 end
 
+-- Lines 13-21
 function CoreRopeOperatorUnitElement:init(unit)
 	CoreRopeOperatorUnitElement.super.init(self, unit)
 
@@ -19,6 +21,7 @@ function CoreRopeOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "rope_unit_id")
 end
 
+-- Lines 23-35
 function CoreRopeOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreRopeOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -38,11 +41,13 @@ function CoreRopeOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 37-40
 function CoreRopeOperatorUnitElement:get_links_to_unit(...)
 	CoreRopeOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.rope_units, "operator", ...)
 end
 
+-- Lines 42-47
 function CoreRopeOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -55,10 +60,12 @@ function CoreRopeOperatorUnitElement:update_editing()
 	end
 end
 
+-- Lines 49-51
 function CoreRopeOperatorUnitElement:update_selected()
 	Application:draw_arrow(self._unit:position(), self._unit:position() + self._unit:rotation():y() * -100, 1, 1, 1, 0.3)
 end
 
+-- Lines 53-66
 function CoreRopeOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -76,15 +83,19 @@ function CoreRopeOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 68-70
 function CoreRopeOperatorUnitElement:remove_links(unit)
 	self._hed.rope_unit_id = nil
 end
 
+-- Lines 73-75
 function CoreRopeOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 78-88
 function CoreRopeOperatorUnitElement:add_unit_list_btn()
+	-- Lines 79-82
 	local function f(unit)
 		return unit:unit_data().name_id:find("props_rope")
 	end
@@ -96,10 +107,12 @@ function CoreRopeOperatorUnitElement:add_unit_list_btn()
 	end
 end
 
+-- Lines 90-92
 function CoreRopeOperatorUnitElement:remove_unit_list_btn()
 	self._hed.rope_unit_id = nil
 end
 
+-- Lines 94-115
 function CoreRopeOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -119,9 +132,11 @@ function CoreRopeOperatorUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
 
+-- Lines 117-118
 function CoreRopeOperatorUnitElement:on_executed_marker_selected()
 end
 
+-- Lines 120-126
 function CoreRopeOperatorUnitElement:_get_unit(unit_id)
 	if Application:editor() then
 		return managers.editor:unit_with_id(unit_id)
@@ -133,10 +148,12 @@ end
 CoreRopeTriggerUnitElement = CoreRopeTriggerUnitElement or class(MissionElement)
 RopeTriggerUnitElement = RopeTriggerUnitElement or class(CoreRopeTriggerUnitElement)
 
+-- Lines 134-136
 function RopeTriggerUnitElement:init(...)
 	RopeTriggerUnitElement.super.init(self, ...)
 end
 
+-- Lines 138-146
 function CoreRopeTriggerUnitElement:init(unit)
 	CoreRopeTriggerUnitElement.super.init(self, unit)
 
@@ -147,6 +164,7 @@ function CoreRopeTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 148-157
 function CoreRopeTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreRopeTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -166,11 +184,13 @@ function CoreRopeTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 159-162
 function CoreRopeTriggerUnitElement:get_links_to_unit(...)
 	CoreRopeTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.rope_units, "trigger", ...)
 end
 
+-- Lines 164-169
 function CoreRopeTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -183,6 +203,7 @@ function CoreRopeTriggerUnitElement:update_editing()
 	end
 end
 
+-- Lines 171-184
 function CoreRopeTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -200,6 +221,7 @@ function CoreRopeTriggerUnitElement:add_element()
 	end
 end
 
+-- Lines 186-192
 function CoreRopeTriggerUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.rope_units) do
 		if id == unit:unit_data().unit_id then
@@ -208,10 +230,12 @@ function CoreRopeTriggerUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 195-197
 function CoreRopeTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 199-208
 function CoreRopeTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

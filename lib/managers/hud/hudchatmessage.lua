@@ -11,6 +11,7 @@ HUDChatMessage.PEER_MESSAGE_COLOR = tweak_data.gui.colors.chat_peer_message
 HUDChatMessage.SYSTEM_MESSAGE_COLOR = tweak_data.gui.colors.chat_system_message
 HUDChatMessagePlayer = HUDChatMessagePlayer or class(HUDChatMessage)
 
+-- Lines 23-29
 function HUDChatMessagePlayer:init(message_panel, name, message, peer_id)
 	self._message_color = HUDChatMessage.PLAYER_MESSAGE_COLOR
 	self._horizontal_text_align = "right"
@@ -21,6 +22,7 @@ end
 
 HUDChatMessagePeer = HUDChatMessagePeer or class(HUDChatMessage)
 
+-- Lines 37-43
 function HUDChatMessagePeer:init(message_panel, name, message, peer_id)
 	self._message_color = HUDChatMessage.PEER_MESSAGE_COLOR
 	self._horizontal_text_align = "left"
@@ -31,6 +33,7 @@ end
 
 HUDChatMessageSystem = HUDChatMessageSystem or class(HUDChatMessage)
 
+-- Lines 51-58
 function HUDChatMessageSystem:init(message_panel, name, message)
 	self._message_color = HUDChatMessage.SYSTEM_MESSAGE_COLOR
 	self._horizontal_text_align = "left"
@@ -40,6 +43,7 @@ function HUDChatMessageSystem:init(message_panel, name, message)
 	HUDChatMessageSystem.super.init(self, message_panel, system_name, message)
 end
 
+-- Lines 65-76
 function HUDChatMessage:init(message_panel, name, message, peer_id)
 	self._messages = {}
 
@@ -51,6 +55,7 @@ function HUDChatMessage:init(message_panel, name, message, peer_id)
 	self._peer_id = peer_id
 end
 
+-- Lines 78-85
 function HUDChatMessage:_create_panel(message_panel)
 	local panel_params = {
 		name = "player_message_panel",
@@ -61,6 +66,7 @@ function HUDChatMessage:_create_panel(message_panel)
 	self._object = message_panel:panel(panel_params)
 end
 
+-- Lines 87-102
 function HUDChatMessage:_create_name(name)
 	local name_params = {
 		name = "name",
@@ -81,6 +87,7 @@ function HUDChatMessage:_create_name(name)
 	self._name = self._object:text(name_params)
 end
 
+-- Lines 104-112
 function HUDChatMessage:_create_message_panel()
 	local message_panel_params = {
 		halign = "scale",
@@ -94,6 +101,7 @@ function HUDChatMessage:_create_message_panel()
 	self._message_panel = self._object:panel(message_panel_params)
 end
 
+-- Lines 114-131
 function HUDChatMessage:_create_message(message)
 	local message_params = {
 		name = "message",
@@ -116,6 +124,7 @@ function HUDChatMessage:_create_message(message)
 	self._message:set_h(h)
 end
 
+-- Lines 133-151
 function HUDChatMessage:_size_panel()
 	local h = self._name:h()
 	local bottom = self._message_panel:h()
@@ -137,6 +146,7 @@ function HUDChatMessage:_size_panel()
 	self._message_panel:set_bottom(h)
 end
 
+-- Lines 153-179
 function HUDChatMessage:add_message(message)
 	local message_params = {
 		vertical = "center",
@@ -169,39 +179,48 @@ function HUDChatMessage:add_message(message)
 	self:_size_panel()
 end
 
+-- Lines 181-184
 function HUDChatMessage:destroy()
 	self._object:clear()
 	self._object:parent():remove(self._object)
 end
 
+-- Lines 186-188
 function HUDChatMessage:x()
 	return self._object:x()
 end
 
+-- Lines 190-192
 function HUDChatMessage:y()
 	return self._object:y()
 end
 
+-- Lines 194-196
 function HUDChatMessage:w()
 	return self._object:w()
 end
 
+-- Lines 198-200
 function HUDChatMessage:h()
 	return self._object:h()
 end
 
+-- Lines 202-204
 function HUDChatMessage:set_x(x)
 	self._object:set_x(x)
 end
 
+-- Lines 206-208
 function HUDChatMessage:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 210-212
 function HUDChatMessage:set_top(top)
 	self._object:set_top(top)
 end
 
+-- Lines 214-230
 function HUDChatMessage:set_bottom(bottom)
 	if bottom > 0 and bottom - self:h() < 0 then
 		local h = bottom
@@ -220,10 +239,12 @@ function HUDChatMessage:set_bottom(bottom)
 	self._object:set_bottom(bottom)
 end
 
+-- Lines 232-234
 function HUDChatMessage:peer_id()
 	return self._peer_id
 end
 
+-- Lines 236-238
 function HUDChatMessage:system_message()
 	return self._system_message or false
 end

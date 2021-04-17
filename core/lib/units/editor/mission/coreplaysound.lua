@@ -1,10 +1,12 @@
 CorePlaySoundUnitElement = CorePlaySoundUnitElement or class(MissionElement)
 PlaySoundUnitElement = PlaySoundUnitElement or class(CorePlaySoundUnitElement)
 
+-- Lines 5-7
 function PlaySoundUnitElement:init(...)
 	PlaySoundUnitElement.super.init(self, ...)
 end
 
+-- Lines 9-21
 function CorePlaySoundUnitElement:init(unit)
 	CorePlaySoundUnitElement.super.init(self, unit)
 
@@ -18,13 +20,16 @@ function CorePlaySoundUnitElement:init(unit)
 	table.insert(self._save_values, "use_instigator")
 end
 
+-- Lines 24-26
 function CorePlaySoundUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
+-- Lines 28-29
 function CorePlaySoundUnitElement:update_editing()
 end
 
+-- Lines 31-39
 function CorePlaySoundUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -42,6 +47,7 @@ function CorePlaySoundUnitElement:update_selected(t, dt, selected_unit, all_unit
 	end
 end
 
+-- Lines 41-53
 function CorePlaySoundUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -59,6 +65,7 @@ function CorePlaySoundUnitElement:add_element()
 	end
 end
 
+-- Lines 55-61
 function CorePlaySoundUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -67,15 +74,18 @@ function CorePlaySoundUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 64-66
 function CorePlaySoundUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 73-76
 function CorePlaySoundUnitElement:post_init(...)
 	CorePlaySoundUnitElement.super.post_init(self, ...)
 	self:_add_soundbank()
 end
 
+-- Lines 78-92
 function CorePlaySoundUnitElement:test_element()
 	if self._hed.sound_event then
 		managers.editor:set_wanted_mute(false)
@@ -93,6 +103,7 @@ function CorePlaySoundUnitElement:test_element()
 	end
 end
 
+-- Lines 94-100
 function CorePlaySoundUnitElement:stop_test_element()
 	managers.editor:set_wanted_mute(true)
 	managers.editor:set_listener_enabled(false)
@@ -102,6 +113,7 @@ function CorePlaySoundUnitElement:stop_test_element()
 	end
 end
 
+-- Lines 102-108
 function CorePlaySoundUnitElement:set_category(params)
 	local value = params.value
 
@@ -113,11 +125,13 @@ function CorePlaySoundUnitElement:set_category(params)
 	self:_add_soundbank()
 end
 
+-- Lines 110-113
 function CorePlaySoundUnitElement:_add_soundbank()
 	self:stop_test_element()
 	managers.sound_environment:add_soundbank(managers.sound_environment:scene_soundbank(self._hed.sound_event))
 end
 
+-- Lines 115-120
 function CorePlaySoundUnitElement:set_element_data(params, ...)
 	CorePlaySoundUnitElement.super.set_element_data(self, params, ...)
 
@@ -126,6 +140,7 @@ function CorePlaySoundUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 122-159
 function CorePlaySoundUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -172,6 +187,7 @@ function CorePlaySoundUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "Play on instigator")
 end
 
+-- Lines 162-164
 function CorePlaySoundUnitElement:add_to_mission_package()
 	managers.editor:add_to_sound_package({
 		category = "soundbanks",
@@ -179,6 +195,7 @@ function CorePlaySoundUnitElement:add_to_mission_package()
 	})
 end
 
+-- Lines 166-169
 function CorePlaySoundUnitElement:destroy()
 	self:stop_test_element()
 	CorePlaySoundUnitElement.super.destroy(self)

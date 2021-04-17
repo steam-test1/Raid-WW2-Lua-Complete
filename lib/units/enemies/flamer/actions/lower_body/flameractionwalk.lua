@@ -84,12 +84,14 @@ FlamerActionWalk._walk_anim_lengths.stand.hos = FlamerActionWalk._walk_anim_leng
 FlamerActionWalk._walk_anim_lengths.stand.wnd = FlamerActionWalk._walk_anim_lengths.stand.cbt
 FlamerActionWalk._walk_anim_lengths.crouch = FlamerActionWalk._walk_anim_lengths.stand
 
+-- Lines 78-82
 function FlamerActionWalk:_get_max_walk_speed()
 	local speed = self._common_data.char_tweak.move_speed[self._ext_anim.pose][self._haste][self._stance.name]
 
 	return speed
 end
 
+-- Lines 84-304
 function FlamerActionWalk:update(t)
 	local dt = nil
 	local vis_state = self._ext_base:lod_stage()

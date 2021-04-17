@@ -2,6 +2,7 @@ core:module("CoreEditorUtils")
 core:import("CoreEngineAccess")
 core:import("CoreClass")
 
+-- Lines 7-16
 function all_lights()
 	local lights = {}
 	local all_units = World:find_units_quick("all")
@@ -15,6 +16,7 @@ function all_lights()
 	return lights
 end
 
+-- Lines 18-44
 function get_editable_lights(unit)
 	local has_lights = #unit:get_objects_by_type(Idstring("light")) > 0
 
@@ -41,12 +43,14 @@ function get_editable_lights(unit)
 	return lights
 end
 
+-- Lines 46-49
 function has_editable_lights(unit)
 	local lights = get_editable_lights(unit)
 
 	return lights and #lights > 0
 end
 
+-- Lines 51-57
 function has_any_projection_light(unit)
 	local has_lights = #unit:get_objects_by_type(Idstring("light")) > 0
 
@@ -57,6 +61,7 @@ function has_any_projection_light(unit)
 	return has_projection_light(unit, "shadow_projection") or has_projection_light(unit, "projection")
 end
 
+-- Lines 59-82
 function has_projection_light(unit, type)
 	type = type or "projection"
 	local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
@@ -77,6 +82,7 @@ function has_projection_light(unit, type)
 	return nil
 end
 
+-- Lines 85-106
 function is_projection_light(unit, light, type)
 	type = type or "projection"
 	local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
@@ -97,6 +103,7 @@ function is_projection_light(unit, light, type)
 	return false
 end
 
+-- Lines 108-115
 function intensity_value()
 	local t = {}
 
@@ -111,6 +118,7 @@ end
 
 INTENSITY_VALUES = intensity_value()
 
+-- Lines 120-146
 function get_intensity_preset(multiplier)
 	local intensity = LightIntensityDB:reverse_lookup(multiplier)
 
@@ -140,14 +148,17 @@ function get_intensity_preset(multiplier)
 	end
 end
 
+-- Lines 148-150
 function get_sequence_files_by_unit(unit, sequence_files)
 	_get_sequence_file(CoreEngineAccess._editor_unit_data(unit:name()), sequence_files)
 end
 
+-- Lines 152-154
 function get_sequence_files_by_unit_name(unit_name, sequence_files)
 	_get_sequence_file(CoreEngineAccess._editor_unit_data(unit_name), sequence_files)
 end
 
+-- Lines 156-161
 function _get_sequence_file(unit_data, sequence_files)
 	for _, unit_name in ipairs(unit_data:unit_dependencies()) do
 		_get_sequence_file(CoreEngineAccess._editor_unit_data(unit_name), sequence_files)
@@ -158,21 +169,25 @@ end
 
 GrabInfo = GrabInfo or CoreClass.class()
 
+-- Lines 165-168
 function GrabInfo:init(o, pos, rot)
 	self._pos = pos or o:position()
 	self._rot = rot or o:rotation()
 end
 
+-- Lines 170-172
 function GrabInfo:rotation()
 	return self._rot
 end
 
+-- Lines 173-175
 function GrabInfo:position()
 	return self._pos
 end
 
 layer_types = layer_types or {}
 
+-- Lines 178-198
 function parse_layer_types()
 	assert(DB:has("xml", "core/settings/editor_types"), "Editor type settings are missing from core settings.")
 
@@ -199,14 +214,17 @@ function parse_layer_types()
 	end
 end
 
+-- Lines 200-202
 function layer_type(layer)
 	return layer_types[layer]
 end
 
+-- Lines 204-206
 function get_layer_types()
 	return layer_types
 end
 
+-- Lines 214-221
 function toolbar_toggle(data, event)
 	local c = data.class
 	local toolbar = _G.type_name(data.toolbar) == "string" and c[data.toolbar] or data.toolbar
@@ -217,6 +235,7 @@ function toolbar_toggle(data, event)
 	end
 end
 
+-- Lines 232-240
 function toolbar_toggle_trg(data)
 	local c = data.class
 	local toolbar = c[data.toolbar]
@@ -230,6 +249,7 @@ function toolbar_toggle_trg(data)
 	end
 end
 
+-- Lines 246-300
 function dump_mesh(units, name, get_objects_string)
 	name = name or "dump_mesh"
 	get_objects_string = get_objects_string or "g_*"
@@ -282,6 +302,7 @@ function dump_mesh(units, name, get_objects_string)
 	MeshDumper:dump_meshes(managers.database:root_path() .. name, objects, Rotation(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0)))
 end
 
+-- Lines 303-350
 function dump_all(units, name, get_objects_string)
 	name = name or "all_dumped"
 	get_objects_string = get_objects_string or "g_*"
@@ -335,6 +356,7 @@ function dump_all(units, name, get_objects_string)
 	cat_print("editor", "  .. dumping done.")
 end
 
+-- Lines 352-374
 function find_unit_references(start, prefix)
 	if not start then
 		Application:error("No start point for search provided")
@@ -367,6 +389,7 @@ function find_unit_references(start, prefix)
 	return results
 end
 
+-- Lines 376-393
 function find_unit_references_recursive(table_name, t, visited, prefix, results)
 	if table.contains(visited, t) then
 		return
@@ -392,6 +415,7 @@ function find_unit_references_recursive(table_name, t, visited, prefix, results)
 	end
 end
 
+-- Lines 395-401
 function print_null_refs(references)
 	for i, ref in ipairs(references) do
 		if not alive(ref.userdata) then

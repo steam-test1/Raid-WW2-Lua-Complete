@@ -5,10 +5,12 @@ SpotterUnitElement.ON_EXECUTED_ALTERNATIVES = {
 	"on_spotted"
 }
 
+-- Lines 5-11
 function SpotterUnitElement:init(unit)
 	SpotterUnitElement.super.init(self, unit)
 end
 
+-- Lines 15-29
 function SpotterUnitElement:update_selected(time, rel_time)
 	local brush = Draw:brush(Color.white:with_alpha((1 - (math.sin(time * 100) + 1) / 2) * 0.15))
 	local len = (math.sin(time * 100) + 1) / 2 * 3000
@@ -19,6 +21,7 @@ function SpotterUnitElement:update_selected(time, rel_time)
 	Application:draw_cone(self._unit:position(), self._unit:position() + self._unit:rotation():y() * 3000, 3000, 0.75, 0.75, 0.75, 0.1)
 end
 
+-- Lines 32-79
 function SpotterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementCharacterDamage = ElementCharacterDamage or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 6-23
 function ElementCharacterDamage:init(...)
 	ElementCharacterDamage.super.init(self, ...)
 
@@ -18,12 +19,15 @@ function ElementCharacterDamage:init(...)
 	end
 end
 
+-- Lines 25-26
 function ElementCharacterDamage:destroy()
 end
 
+-- Lines 28-29
 function ElementCharacterDamage:on_created()
 end
 
+-- Lines 31-38
 function ElementCharacterDamage:on_script_activated()
 	for _, id in ipairs(self:value("elements")) do
 		local element = self:get_mission_element(id)
@@ -34,12 +38,14 @@ function ElementCharacterDamage:on_script_activated()
 	end
 end
 
+-- Lines 40-44
 function ElementCharacterDamage:unit_spawned(unit)
 	if alive(unit) and unit:character_damage() then
 		unit:character_damage():add_listener("character_damage_" .. tostring(unit:key()), nil, callback(self, self, "clbk_linked_unit_took_damage"))
 	end
 end
 
+-- Lines 46-58
 function ElementCharacterDamage:clbk_linked_unit_took_damage(unit, damage_info)
 	if not alive(unit) then
 		return
@@ -54,6 +60,7 @@ function ElementCharacterDamage:clbk_linked_unit_took_damage(unit, damage_info)
 	self:on_executed(damage_info.attacker_unit, damage, damage_info.variant)
 end
 
+-- Lines 60-75
 function ElementCharacterDamage:on_executed(instigator, damage, damage_type)
 	if not self._values.enabled then
 		return
@@ -73,10 +80,12 @@ function ElementCharacterDamage:on_executed(instigator, damage, damage_type)
 	end
 end
 
+-- Lines 77-79
 function ElementCharacterDamage:save(data)
 	data.enabled = self._values.enabled
 end
 
+-- Lines 81-83
 function ElementCharacterDamage:load(data)
 	self:set_enabled(data.enabled)
 end

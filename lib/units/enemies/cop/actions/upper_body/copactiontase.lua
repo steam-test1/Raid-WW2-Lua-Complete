@@ -2,6 +2,7 @@ CopActionTase = CopActionTase or class()
 local temp_vec1 = Vector3()
 local temp_vec2 = Vector3()
 
+-- Lines 7-39
 function CopActionTase:init(action_desc, common_data)
 	self._common_data = common_data
 	self._unit = common_data.unit
@@ -34,10 +35,12 @@ function CopActionTase:init(action_desc, common_data)
 	return true
 end
 
+-- Lines 43-45
 function CopActionTase:expired()
 	return self._expired
 end
 
+-- Lines 49-132
 function CopActionTase:on_attention(attention)
 	if self._expired then
 		self._attention = attention
@@ -129,11 +132,13 @@ function CopActionTase:on_attention(attention)
 	end
 end
 
+-- Lines 136-139
 function CopActionTase:save(save_data)
 	save_data.type = "tase"
 	save_data.body_part = self._body_part
 end
 
+-- Lines 143-176
 function CopActionTase:on_exit()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -178,6 +183,7 @@ function CopActionTase:on_exit()
 	end
 end
 
+-- Lines 178-187
 function CopActionTase:on_destroy()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -190,6 +196,7 @@ function CopActionTase:on_destroy()
 	end
 end
 
+-- Lines 191-295
 function CopActionTase:update(t)
 	if self._expired then
 		return
@@ -323,25 +330,31 @@ function CopActionTase:update(t)
 	end
 end
 
+-- Lines 299-301
 function CopActionTase:type()
 	return "tase"
 end
 
+-- Lines 305-307
 function CopActionTase:fire_taser()
 	self._shoot_t = 0
 end
 
+-- Lines 311-313
 function CopActionTase:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
+-- Lines 317-318
 function CopActionTase:_upd_empty(t)
 end
 
+-- Lines 322-324
 function CopActionTase:need_upd()
 	return true
 end
 
+-- Lines 328-335
 function CopActionTase:get_husk_interrupt_desc()
 	local action_desc = {
 		block_type = "action",
@@ -352,6 +365,7 @@ function CopActionTase:get_husk_interrupt_desc()
 	return action_desc
 end
 
+-- Lines 339-360
 function CopActionTase:clbk_malfunction()
 	self._malfunction_clbk_id = nil
 

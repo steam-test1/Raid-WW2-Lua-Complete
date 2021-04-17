@@ -1,5 +1,6 @@
 NPCSawWeaponBase = NPCSawWeaponBase or class(NewNPCRaycastWeaponBase)
 
+-- Lines 3-8
 function NPCSawWeaponBase:init(unit)
 	NPCSawWeaponBase.super.init(self, unit, false)
 
@@ -11,14 +12,17 @@ function NPCSawWeaponBase:init(unit)
 	}
 end
 
+-- Lines 12-14
 function NPCSawWeaponBase:_play_sound_sawing()
 	self:play_sound("Play_npc_saw_handheld_grind_generic")
 end
 
+-- Lines 16-18
 function NPCSawWeaponBase:_play_sound_idle()
 	self:play_sound("Play_npc_saw_handheld_loop_idle")
 end
 
+-- Lines 20-29
 function NPCSawWeaponBase:update(unit, t, dt)
 	if self._check_shooting_expired and self._check_shooting_expired.check_t < t then
 		self._check_shooting_expired = nil
@@ -29,6 +33,7 @@ function NPCSawWeaponBase:update(unit, t, dt)
 	end
 end
 
+-- Lines 31-34
 function NPCSawWeaponBase:change_fire_object(new_obj)
 	NPCSawWeaponBase.super.change_fire_object(self, new_obj)
 
@@ -38,6 +43,7 @@ end
 local mto = Vector3()
 local mfrom = Vector3()
 
+-- Lines 38-63
 function NPCSawWeaponBase:fire_blank(direction, impact)
 	if not self._check_shooting_expired then
 		self:play_tweak_data_sound("fire")
@@ -66,6 +72,7 @@ function NPCSawWeaponBase:fire_blank(direction, impact)
 	end
 end
 
+-- Lines 65-68
 function NPCSawWeaponBase:destroy(...)
 	NPCSawWeaponBase.super.destroy(self, ...)
 	SawWeaponBase._stop_sawing_effect(self)

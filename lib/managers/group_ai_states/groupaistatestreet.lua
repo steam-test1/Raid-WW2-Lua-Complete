@@ -1,15 +1,18 @@
 GroupAIStateStreet = GroupAIStateStreet or class(GroupAIStateRaid)
 
+-- Lines 4-6
 function GroupAIStateStreet:init()
 	GroupAIStateStreet.super.init(self)
 end
 
+-- Lines 8-10
 function GroupAIStateStreet:nav_ready_listener_key()
 	return "GroupAIStateStreet"
 end
 
 GroupAIStateStreet.MAX_SPAWN_RANGE = 10000
 
+-- Lines 13-153
 function GroupAIStateStreet:_begin_new_tasks()
 	local all_areas = self._area_data
 	local nav_manager = managers.navigation
@@ -170,6 +173,7 @@ function GroupAIStateStreet:_begin_new_tasks()
 	end
 end
 
+-- Lines 157-202
 function GroupAIStateStreet:_begin_assault()
 	local assault_data = self._task_data.assault
 	assault_data.active = true
@@ -209,6 +213,7 @@ function GroupAIStateStreet:_begin_assault()
 	self._task_data.recon.tasks = {}
 end
 
+-- Lines 206-260
 function GroupAIStateStreet:_upd_assault_task(task_data)
 	local assault_data = self._task_data.assault
 
@@ -227,6 +232,7 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 	end
 
 	if nr_wanted > 0 and assault_data.phase ~= "fade" and not next(self._spawning_groups) then
+		-- Lines 228-230
 		local function verif_clbk(test_spawn_group)
 			return test_spawn_group.area.id == target_area.id
 		end
@@ -267,6 +273,7 @@ function GroupAIStateStreet:_upd_assault_task(task_data)
 	end
 end
 
+-- Lines 264-274
 function GroupAIStateStreet:_begin_reenforce_task(reenforce_area)
 	local new_task = {
 		use_spawn_event = true,
@@ -280,6 +287,7 @@ function GroupAIStateStreet:_begin_reenforce_task(reenforce_area)
 	self._task_data.reenforce.next_dispatch_t = self._t + self:get_difficulty_dependent_value(tweak_data.group_ai.street.reenforce.interval)
 end
 
+-- Lines 278-546
 function GroupAIStateStreet:_upd_assault_tasks()
 	local assault_data = self._task_data.assault
 

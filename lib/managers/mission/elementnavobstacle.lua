@@ -2,12 +2,14 @@ core:import("CoreMissionScriptElement")
 
 ElementNavObstacle = ElementNavObstacle or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-9
 function ElementNavObstacle:init(...)
 	ElementDisableUnit.super.init(self, ...)
 
 	self._obstacle_units = {}
 end
 
+-- Lines 11-33
 function ElementNavObstacle:on_script_activated()
 	if not self._values.obstacle_list then
 		self._values.obstacle_list = {
@@ -41,6 +43,7 @@ function ElementNavObstacle:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
+-- Lines 35-38
 function ElementNavObstacle:_load_unit(obj_name, unit)
 	table.insert(self._obstacle_units, {
 		unit = unit,
@@ -48,10 +51,12 @@ function ElementNavObstacle:_load_unit(obj_name, unit)
 	})
 end
 
+-- Lines 40-42
 function ElementNavObstacle:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 44-65
 function ElementNavObstacle:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -72,11 +77,13 @@ function ElementNavObstacle:on_executed(instigator)
 	ElementNavObstacle.super.on_executed(self, instigator)
 end
 
+-- Lines 67-70
 function ElementNavObstacle:save(data)
 	data.save_me = true
 	data.enabled = self._values.enabled
 end
 
+-- Lines 72-78
 function ElementNavObstacle:load(data)
 	if not self._has_fetched_units then
 		self:on_script_activated()

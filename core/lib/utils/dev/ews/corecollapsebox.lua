@@ -1,5 +1,6 @@
 CoreCollapseBox = CoreCollapseBox or class()
 
+-- Lines 3-29
 function CoreCollapseBox:init(parent, orientation, caption, expanded_size, expand, style)
 	self._caption = caption or ""
 	self._expand = not expand
@@ -30,36 +31,44 @@ function CoreCollapseBox:init(parent, orientation, caption, expanded_size, expan
 	self:_cb()
 end
 
+-- Lines 31-33
 function CoreCollapseBox:connect(id, event, cb, data)
 	self._btn:connect(id, event, cb, data)
 end
 
+-- Lines 35-37
 function CoreCollapseBox:panel()
 	return self._panel
 end
 
+-- Lines 39-41
 function CoreCollapseBox:lower_panel()
 	return self._lower_panel
 end
 
+-- Lines 43-45
 function CoreCollapseBox:box()
 	return self._lower_box
 end
 
+-- Lines 47-49
 function CoreCollapseBox:expanded()
 	return self._expand
 end
 
+-- Lines 51-53
 function CoreCollapseBox:expanded_size()
 	return self._expanded_size
 end
 
+-- Lines 55-58
 function CoreCollapseBox:set_expand(b)
 	self._expand = not expand
 
 	self:_cb()
 end
 
+-- Lines 60-69
 function CoreCollapseBox:set_expanded_size(v)
 	self._parent:freeze()
 
@@ -71,6 +80,7 @@ function CoreCollapseBox:set_expanded_size(v)
 	self._parent:refresh()
 end
 
+-- Lines 71-82
 function CoreCollapseBox:_cb()
 	self._expand = not self._expand
 

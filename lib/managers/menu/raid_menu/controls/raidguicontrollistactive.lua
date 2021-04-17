@@ -1,5 +1,6 @@
 RaidGUIControlListActive = RaidGUIControlListActive or class(RaidGUIControlList)
 
+-- Lines 5-11
 function RaidGUIControlListActive:init(parent, params)
 	RaidGUIControlListActive.super.init(self, parent, params)
 
@@ -8,6 +9,7 @@ function RaidGUIControlListActive:init(parent, params)
 	self._unselected_callback = self._params.unselected_callback
 end
 
+-- Lines 13-28
 function RaidGUIControlListActive:activate_item_by_value(item_value)
 	if self._active_item then
 		self._active_item:deactivate()
@@ -28,14 +30,17 @@ function RaidGUIControlListActive:activate_item_by_value(item_value)
 	end
 end
 
+-- Lines 30-32
 function RaidGUIControlListActive:activate_item_by_index(index)
 	self:activate_item_by_value(self._list_items[index]:data().value)
 end
 
+-- Lines 34-36
 function RaidGUIControlListActive:get_active_item()
 	return self._active_item
 end
 
+-- Lines 38-50
 function RaidGUIControlListActive:get_active_item_index()
 	if self._active_item and self._list_items then
 		for index, item in pairs(self._list_items) do
@@ -48,6 +53,7 @@ function RaidGUIControlListActive:get_active_item_index()
 	return nil
 end
 
+-- Lines 52-58
 function RaidGUIControlListActive:_create_item(item_class, item_params, item_data)
 	if self._special_action_callback then
 		item_params.special_action_callback = self._special_action_callback
@@ -56,6 +62,7 @@ function RaidGUIControlListActive:_create_item(item_class, item_params, item_dat
 	return self._object:create_custom_control(item_class, item_params, item_data)
 end
 
+-- Lines 61-92
 function RaidGUIControlListActive:set_selected(value, dont_trigger_selected_callback)
 	self._selected = value
 

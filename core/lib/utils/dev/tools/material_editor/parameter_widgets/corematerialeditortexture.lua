@@ -3,6 +3,7 @@ require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_editor/parameter_widgets/CoreMaterialEditorParameter")
 local CoreMaterialEditorTexture = CoreMaterialEditorTexture or class(CoreMaterialEditorParameter)
 
+-- Lines 8-21
 function CoreMaterialEditorTexture:init(parent, editor, parameter_info, parameter_node)
 	CoreMaterialEditorParameter.init(self, parent, editor, parameter_info, parameter_node)
 
@@ -20,13 +21,16 @@ function CoreMaterialEditorTexture:init(parent, editor, parameter_info, paramete
 	self._right_box:add(self._button, 0, 4, "ALL")
 end
 
+-- Lines 23-24
 function CoreMaterialEditorTexture:update(t, dt)
 end
 
+-- Lines 26-28
 function CoreMaterialEditorTexture:destroy()
 	CoreMaterialEditorParameter.destroy(self)
 end
 
+-- Lines 30-42
 function CoreMaterialEditorTexture:on_toggle_customize()
 	self._customize = not self._customize
 
@@ -40,6 +44,7 @@ function CoreMaterialEditorTexture:on_toggle_customize()
 	end
 end
 
+-- Lines 44-59
 function CoreMaterialEditorTexture:on_open_texture()
 	local str = os.getenv("MATEDOPEN")
 	local s, e = string.find(str, "$FILE")
@@ -58,6 +63,7 @@ function CoreMaterialEditorTexture:on_open_texture()
 	end
 end
 
+-- Lines 61-84
 function CoreMaterialEditorTexture:on_pick_global_texture()
 	local texture_list = {}
 
@@ -85,6 +91,7 @@ function CoreMaterialEditorTexture:on_pick_global_texture()
 	end
 end
 
+-- Lines 88-116
 function CoreMaterialEditorTexture:_on_browse()
 	local current_path = nil
 

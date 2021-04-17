@@ -34,6 +34,7 @@ HUDTabGreedBar.FRAME_PULSE_SPEEDS = {
 	0.25
 }
 
+-- Lines 40-51
 function HUDTabGreedBar:init(panel, params)
 	self._gold_bars_obtained_in_mission = 0
 
@@ -45,6 +46,7 @@ function HUDTabGreedBar:init(panel, params)
 	self:_create_counter()
 end
 
+-- Lines 53-64
 function HUDTabGreedBar:_create_panel(panel, params)
 	local panel_params = {
 		halign = "right",
@@ -59,6 +61,7 @@ function HUDTabGreedBar:_create_panel(panel, params)
 	self._object = panel:panel(panel_params)
 end
 
+-- Lines 66-108
 function HUDTabGreedBar:_create_icons()
 	local icons_panel_params = {
 		name = "icons_panel",
@@ -110,6 +113,7 @@ function HUDTabGreedBar:_create_icons()
 	self._gold_icon:set_center_y(self._icons_panel:h() / 2)
 end
 
+-- Lines 110-119
 function HUDTabGreedBar:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -123,6 +127,7 @@ function HUDTabGreedBar:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
+-- Lines 121-135
 function HUDTabGreedBar:_create_title()
 	local title_params = {
 		vertical = "center",
@@ -141,6 +146,7 @@ function HUDTabGreedBar:_create_title()
 	self._title:set_center_y(32)
 end
 
+-- Lines 137-170
 function HUDTabGreedBar:_create_bar()
 	local progress_bar_background_params = {
 		name = "tab_greed_progress_bar_background",
@@ -178,6 +184,7 @@ function HUDTabGreedBar:_create_bar()
 	self._loot_bar_foreground = RaidGUIControlThreeCutBitmap:new(self._progress_bar_progress_panel, progress_bar_foreground_params)
 end
 
+-- Lines 172-186
 function HUDTabGreedBar:_create_counter()
 	local counter_params = {
 		vertical = "center",
@@ -196,6 +203,7 @@ function HUDTabGreedBar:_create_counter()
 	self._counter:set_center_y(self._progress_bar_background:center_y())
 end
 
+-- Lines 188-205
 function HUDTabGreedBar:_create_tutorialization()
 	local tutorialization_params = {
 		wrap = true,
@@ -214,6 +222,7 @@ function HUDTabGreedBar:_create_tutorialization()
 	self._object:set_h(self._icons_panel:h() + h)
 end
 
+-- Lines 207-216
 function HUDTabGreedBar:change_progress(old_progress, new_progress)
 	self._updated_progress = new_progress
 
@@ -225,15 +234,18 @@ function HUDTabGreedBar:change_progress(old_progress, new_progress)
 	end
 end
 
+-- Lines 218-220
 function HUDTabGreedBar:set_current_greed_amount(amount)
 	self:set_progress(amount % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar())
 end
 
+-- Lines 222-225
 function HUDTabGreedBar:set_progress(progress)
 	self._progress_bar_progress_panel:set_w(self._progress_bar_background:w() * progress)
 	self._loot_bar_foreground:set_alpha(1)
 end
 
+-- Lines 227-248
 function HUDTabGreedBar:reset_state()
 	self._frame_icon:stop()
 	self._frame_icon:set_w(tweak_data.gui:icon_w(HUDTabGreedBar.FRAME_ICON))
@@ -256,6 +268,7 @@ function HUDTabGreedBar:reset_state()
 	self:set_current_greed_amount(managers.greed:current_loot_counter())
 end
 
+-- Lines 250-276
 function HUDTabGreedBar:_animate_change_progress(o)
 	self._animating_progress_change = true
 	local points_per_second = 120
@@ -284,6 +297,7 @@ function HUDTabGreedBar:_animate_change_progress(o)
 	self._animating_progress_change = false
 end
 
+-- Lines 278-291
 function HUDTabGreedBar:_acquire_gold_bar()
 	self._gold_bars_obtained_in_mission = self._gold_bars_obtained_in_mission + 1
 
@@ -299,6 +313,7 @@ function HUDTabGreedBar:_acquire_gold_bar()
 	self._counter:animate(callback(self, self, "_animate_counter_increase"))
 end
 
+-- Lines 293-314
 function HUDTabGreedBar:_animate_counter_increase(o)
 	local duration = 0.5
 	local t = 0
@@ -323,6 +338,7 @@ function HUDTabGreedBar:_animate_counter_increase(o)
 	self._counter:set_color(HUDTabGreedBar.COUNTER_COLOR)
 end
 
+-- Lines 316-346
 function HUDTabGreedBar:_animate_pulse(o)
 	self._pulsing = true
 	local frame_default_w = tweak_data.gui:icon_w(HUDTabGreedBar.FRAME_ICON)
@@ -356,6 +372,7 @@ function HUDTabGreedBar:_animate_pulse(o)
 	end
 end
 
+-- Lines 348-407
 function HUDTabGreedBar:_animate_gold_bar(o)
 	self._animating_gold_bar = true
 	local duration_in = 0.5
@@ -415,6 +432,7 @@ function HUDTabGreedBar:_animate_gold_bar(o)
 	self._animating_gold_bar = false
 end
 
+-- Lines 409-411
 function HUDTabGreedBar:set_right(right)
 	self._object:set_right(right)
 end

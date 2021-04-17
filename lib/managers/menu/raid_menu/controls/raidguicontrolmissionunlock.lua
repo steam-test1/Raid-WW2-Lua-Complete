@@ -5,6 +5,7 @@ RaidGUIControlMissionUnlock.ACTIVE_Y_OFFSET = 85
 RaidGUIControlMissionUnlock.DESCRIPTION_Y = 480
 RaidGUIControlMissionUnlock.DESCRIPTION_Y_OFFSET = 30
 
+-- Lines 11-25
 function RaidGUIControlMissionUnlock:init(parent, params)
 	RaidGUIControlMissionUnlock.super.init(self, parent, params)
 
@@ -20,6 +21,7 @@ function RaidGUIControlMissionUnlock:init(parent, params)
 	self:_create_mission_description()
 end
 
+-- Lines 27-34
 function RaidGUIControlMissionUnlock:_create_panel()
 	local panel_params = {
 		name = "mission_unlock_" .. self._params.mission,
@@ -29,6 +31,7 @@ function RaidGUIControlMissionUnlock:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 36-44
 function RaidGUIControlMissionUnlock:_create_background()
 	local background_params = {
 		name = "background",
@@ -39,6 +42,7 @@ function RaidGUIControlMissionUnlock:_create_background()
 	self._background = self._object:rect(background_params)
 end
 
+-- Lines 46-67
 function RaidGUIControlMissionUnlock:_create_selector_triangles()
 	local top_select_triangle_params = {
 		layer = 3,
@@ -64,6 +68,7 @@ function RaidGUIControlMissionUnlock:_create_selector_triangles()
 	self._bottom_triangle:set_rotation(-90)
 end
 
+-- Lines 69-116
 function RaidGUIControlMissionUnlock:_create_active_border()
 	local border_color = tweak_data.gui.colors.raid_red
 	local border_thickness = 2
@@ -111,6 +116,7 @@ function RaidGUIControlMissionUnlock:_create_active_border()
 	right_border:set_right(self._border_panel:w())
 end
 
+-- Lines 118-267
 function RaidGUIControlMissionUnlock:_create_folder()
 	local mission_tweak_data = tweak_data.operations:mission_data(self._mission)
 	local folder_panel_params = {
@@ -261,6 +267,7 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	})
 end
 
+-- Lines 269-289
 function RaidGUIControlMissionUnlock:_fit_mission_title()
 	local default_font_size = tweak_data.gui.font_sizes.size_32
 	local font_sizes = {}
@@ -284,6 +291,7 @@ function RaidGUIControlMissionUnlock:_fit_mission_title()
 	end
 end
 
+-- Lines 291-326
 function RaidGUIControlMissionUnlock:_create_mission_description()
 	local mission_tweak_data = tweak_data.operations:mission_data(self._mission)
 	local mission_description_panel_params = {
@@ -325,13 +333,16 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 	self._mission_description:set_center_x(self._description_panel:w() / 2)
 end
 
+-- Lines 328-329
 function RaidGUIControlMissionUnlock:close()
 end
 
+-- Lines 331-333
 function RaidGUIControlMissionUnlock:mission()
 	return self._mission
 end
 
+-- Lines 336-345
 function RaidGUIControlMissionUnlock:on_mouse_released()
 	self:set_active(not self._active)
 
@@ -344,6 +355,7 @@ function RaidGUIControlMissionUnlock:on_mouse_released()
 	end
 end
 
+-- Lines 347-354
 function RaidGUIControlMissionUnlock:on_double_click()
 	if self._on_double_click_callback then
 		self._on_double_click_callback(self._mission, self._active)
@@ -354,10 +366,12 @@ function RaidGUIControlMissionUnlock:on_double_click()
 	return false
 end
 
+-- Lines 357-359
 function RaidGUIControlMissionUnlock:confirm_pressed()
 	self:on_double_click()
 end
 
+-- Lines 361-366
 function RaidGUIControlMissionUnlock:on_mouse_over(x, y)
 	RaidGUIControlMissionUnlock.super.on_mouse_over(self, x, y)
 
@@ -366,6 +380,7 @@ function RaidGUIControlMissionUnlock:on_mouse_over(x, y)
 	self:_highlight_on()
 end
 
+-- Lines 368-373
 function RaidGUIControlMissionUnlock:on_mouse_out(x, y)
 	RaidGUIControlMissionUnlock.super.on_mouse_out(self, x, y)
 
@@ -374,6 +389,7 @@ function RaidGUIControlMissionUnlock:on_mouse_out(x, y)
 	self:_highlight_off()
 end
 
+-- Lines 375-382
 function RaidGUIControlMissionUnlock:_highlight_on()
 	if self._active then
 		return
@@ -383,6 +399,7 @@ function RaidGUIControlMissionUnlock:_highlight_on()
 	self._folder_image:animate(callback(self, self, "_animate_open_folder"))
 end
 
+-- Lines 384-391
 function RaidGUIControlMissionUnlock:_highlight_off()
 	if self._active then
 		return
@@ -392,6 +409,7 @@ function RaidGUIControlMissionUnlock:_highlight_off()
 	self._folder_image:animate(callback(self, self, "_animate_close_folder"))
 end
 
+-- Lines 393-403
 function RaidGUIControlMissionUnlock:set_active(active)
 	self._active = active
 
@@ -404,6 +422,7 @@ function RaidGUIControlMissionUnlock:set_active(active)
 	end
 end
 
+-- Lines 405-413
 function RaidGUIControlMissionUnlock:set_selected(selected)
 	if selected then
 		self:select()
@@ -414,6 +433,7 @@ function RaidGUIControlMissionUnlock:set_selected(selected)
 	self:on_mouse_released()
 end
 
+-- Lines 415-420
 function RaidGUIControlMissionUnlock:select()
 	self._selected = true
 
@@ -421,6 +441,7 @@ function RaidGUIControlMissionUnlock:select()
 	self._folder_image:animate(callback(self, self, "_animate_open_folder"))
 end
 
+-- Lines 422-427
 function RaidGUIControlMissionUnlock:unselect()
 	self._selected = false
 
@@ -428,6 +449,7 @@ function RaidGUIControlMissionUnlock:unselect()
 	self._folder_image:animate(callback(self, self, "_animate_close_folder"))
 end
 
+-- Lines 429-476
 function RaidGUIControlMissionUnlock:_animate_open_folder(o)
 	local duration = 0.4
 	self._show_details_animation_t = self._show_details_animation_t or 0
@@ -482,6 +504,7 @@ function RaidGUIControlMissionUnlock:_animate_open_folder(o)
 	end
 end
 
+-- Lines 478-521
 function RaidGUIControlMissionUnlock:_animate_close_folder(o)
 	local duration = 0.4
 	self._show_details_animation_t = self._show_details_animation_t or 0

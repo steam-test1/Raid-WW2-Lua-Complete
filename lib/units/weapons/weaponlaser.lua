@@ -1,6 +1,7 @@
 WeaponLaser = WeaponLaser or class(WeaponGadgetBase)
 WeaponLaser.GADGET_TYPE = "laser"
 
+-- Lines 4-83
 function WeaponLaser:init(unit)
 	WeaponLaser.super.init(self, unit)
 
@@ -79,6 +80,7 @@ local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec_l_dir = Vector3()
 
+-- Lines 90-141
 function WeaponLaser:update(unit, t, dt)
 	mrotation.y(self._laser_obj:rotation(), mvec_l_dir)
 
@@ -126,6 +128,7 @@ function WeaponLaser:update(unit, t, dt)
 	end
 end
 
+-- Lines 145-152
 function WeaponLaser:_check_state()
 	WeaponLaser.super._check_state(self)
 	self._light:set_enable(self._on)
@@ -135,10 +138,12 @@ function WeaponLaser:_check_state()
 	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
 end
 
+-- Lines 154-156
 function WeaponLaser:set_npc()
 	self._is_npc = true
 end
 
+-- Lines 160-170
 function WeaponLaser:destroy(unit)
 	WeaponLaser.super.destroy(self, unit)
 
@@ -151,6 +156,7 @@ function WeaponLaser:destroy(unit)
 	end
 end
 
+-- Lines 174-186
 function WeaponLaser:set_color_by_theme(type)
 	self._theme_type = type
 	local theme = self._themes[type] or self._themes.default
@@ -162,10 +168,12 @@ function WeaponLaser:set_color_by_theme(type)
 	self._brush:set_color(theme.brush)
 end
 
+-- Lines 190-192
 function WeaponLaser:theme_type()
 	return self._theme_type
 end
 
+-- Lines 196-204
 function WeaponLaser:set_color(color)
 	self._light_color = Vector3(color.r * 10, color.g * 10, color.b * 10)
 
@@ -177,10 +185,12 @@ function WeaponLaser:set_color(color)
 	self._brush:set_color(color)
 end
 
+-- Lines 208-210
 function WeaponLaser:set_max_distace(dis)
 	self._max_distance = dis
 end
 
+-- Lines 214-217
 function WeaponLaser:add_ray_ignore_unit(unit)
 	self._ray_ignore_units = self._ray_ignore_units or {}
 

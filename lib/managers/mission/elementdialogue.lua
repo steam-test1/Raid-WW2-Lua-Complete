@@ -2,13 +2,16 @@ core:import("CoreMissionScriptElement")
 
 ElementDialogue = ElementDialogue or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementDialogue:init(...)
 	ElementDialogue.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementDialogue:client_on_executed(...)
 end
 
+-- Lines 13-36
 function ElementDialogue:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -43,6 +46,7 @@ function ElementDialogue:on_executed(instigator)
 	ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)
 end
 
+-- Lines 38-44
 function ElementDialogue:_done_callback(instigator, reason)
 	Application:debug("[ElementDialogue:_done_callback] reason", reason)
 
@@ -53,6 +57,7 @@ function ElementDialogue:_done_callback(instigator, reason)
 	end
 end
 
+-- Lines 46-48
 function ElementDialogue:_queueud_done()
 	ElementDialogue.super._trigger_execute_on_executed(self, self._instigator)
 end

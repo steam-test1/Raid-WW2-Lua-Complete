@@ -2,10 +2,12 @@ FlamerBrain = FlamerBrain or class(CopBrain)
 FlamerBrain.UPDATE_INTERVAL = 2
 FlamerBrain.ATTACK_INTERVAL = 0.5
 
+-- Lines 6-8
 function FlamerBrain:stealth_action_allowed()
 	return false
 end
 
+-- Lines 10-20
 function FlamerBrain:init(unit)
 	FlamerBrain.super.init(self, unit)
 
@@ -20,6 +22,7 @@ function FlamerBrain:init(unit)
 	self.is_flamer = true
 end
 
+-- Lines 22-37
 function FlamerBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
 	pos_rsrv.radius = pos_rsrv.radius * 2
 	local pos_reservations = self._logic_data.pos_rsrv
@@ -41,6 +44,7 @@ function FlamerBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
 	end
 end
 
+-- Lines 39-46
 function FlamerBrain:queued_update()
 	if not alive(self._unit) then
 		return
@@ -52,6 +56,7 @@ function FlamerBrain:queued_update()
 	self:_queued_update(t, dt)
 end
 
+-- Lines 48-112
 function FlamerBrain:_queued_update(t, dt)
 	if self._current_logic_name == "inactive" then
 		return
@@ -127,10 +132,12 @@ function FlamerBrain:_queued_update(t, dt)
 	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, FlamerBrain.UPDATE_INTERVAL)
 end
 
+-- Lines 114-116
 function FlamerBrain:distance_to_target()
 	return self._distance_to_target
 end
 
+-- Lines 118-134
 function FlamerBrain:_hunt(assalut_target)
 	if self._current_logic_name == "inactive" then
 		return
@@ -150,11 +157,13 @@ function FlamerBrain:_hunt(assalut_target)
 	end
 end
 
+-- Lines 137-142
 function FlamerBrain:clbk_death(my_unit, damage_info)
 	FlamerBrain.super.clbk_death(self, my_unit, damage_info)
 	self._unit:sound_source():post_event("flamer_breathing_break")
 end
 
+-- Lines 145-148
 function FlamerBrain:pre_destroy(unit)
 	managers.queued_tasks:unqueue_all(self._ukey, self)
 	FlamerBrain.super.pre_destroy(self, unit)

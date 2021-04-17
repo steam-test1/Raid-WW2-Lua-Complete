@@ -1,10 +1,12 @@
 CoreHubElement = CoreHubElement or class()
 HubElement = HubElement or class(CoreHubElement)
 
+-- Lines 6-8
 function HubElement:init(...)
 	CoreHubElement.init(self, ...)
 end
 
+-- Lines 12-32
 function CoreHubElement:init(unit)
 	self._unit = unit
 	self._hed = self._unit:hub_element_data()
@@ -23,6 +25,7 @@ function CoreHubElement:init(unit)
 	self:_createicon()
 end
 
+-- Lines 37-68
 function CoreHubElement:_createicon()
 	local iconsize = 128
 
@@ -59,6 +62,7 @@ function CoreHubElement:_createicon()
 	self._icon_script:seticon(self._icon, tostring(self._iconcolor))
 end
 
+-- Lines 71-88
 function CoreHubElement:_create_panel()
 	if self._panel then
 		return
@@ -67,10 +71,12 @@ function CoreHubElement:_create_panel()
 	self._panel, self._panel_sizer = self:_add_panel(self._parent_panel, self._parent_sizer)
 end
 
+-- Lines 93-95
 function CoreHubElement:_build_panel()
 	self._panel = nil
 end
 
+-- Lines 99-113
 function CoreHubElement:panel(id, parent, parent_sizer)
 	if id then
 		if self._panels[id] then
@@ -93,6 +99,7 @@ function CoreHubElement:panel(id, parent, parent_sizer)
 	return self._panel
 end
 
+-- Lines 115-128
 function CoreHubElement:_add_panel(parent, parent_sizer)
 	local panel = EWS:Panel(parent, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -109,12 +116,14 @@ function CoreHubElement:_add_panel(parent, parent_sizer)
 	return panel, panel_sizer
 end
 
+-- Lines 135-140
 function CoreHubElement:add_help_text(data)
 	if data.panel and data.sizer then
 		data.sizer:add(EWS:TextCtrl(data.panel, data.text, 0, "TE_MULTILINE,TE_READONLY,TE_WORDWRAP,TE_CENTRE"), 0, 5, "EXPAND,TOP,BOTTOM")
 	end
 end
 
+-- Lines 144-153
 function CoreHubElement:set_element_data(data)
 	if data.callback then
 		local he = self._unit:hub_element()
@@ -128,35 +137,45 @@ function CoreHubElement:set_element_data(data)
 	end
 end
 
+-- Lines 156-157
 function CoreHubElement:selected()
 end
 
+-- Lines 160-161
 function CoreHubElement:update_selected()
 end
 
+-- Lines 164-165
 function CoreHubElement:update_unselected()
 end
 
+-- Lines 167-169
 function CoreHubElement:begin_editing()
 end
 
+-- Lines 171-173
 function CoreHubElement:end_editing()
 end
 
+-- Lines 176-177
 function CoreHubElement:clone_data()
 end
 
+-- Lines 193-194
 function CoreHubElement:layer_finished()
 end
 
+-- Lines 197-199
 function CoreHubElement:action_type()
 	return self._action_type or self._type
 end
 
+-- Lines 202-204
 function CoreHubElement:trigger_type()
 	return self._trigger_type or self._type
 end
 
+-- Lines 207-219
 function CoreHubElement:save_mission_action(file, t, hub, dont_save_values)
 	local type = self:action_type()
 
@@ -175,6 +194,7 @@ function CoreHubElement:save_mission_action(file, t, hub, dont_save_values)
 	end
 end
 
+-- Lines 222-235
 function CoreHubElement:save_mission_action_enemy(file, t, hub)
 	local ha = hub:hub_element():get_hub_action(self._unit)
 	local pos = self._unit:position()
@@ -195,10 +215,12 @@ function CoreHubElement:save_mission_action_enemy(file, t, hub)
 	file:puts(t .. "</action>")
 end
 
+-- Lines 239-241
 function CoreHubElement:save_data(file, t)
 	self:save_values(file, t)
 end
 
+-- Lines 244-251
 function CoreHubElement:save_values(file, t)
 	t = t .. "\t"
 
@@ -211,12 +233,14 @@ function CoreHubElement:save_values(file, t)
 	file:puts(t .. "</values>")
 end
 
+-- Lines 255-258
 function CoreHubElement:save_value(file, t, name)
 	t = t .. "\t"
 
 	file:puts(save_value_string(self._hed, name, t, self._unit))
 end
 
+-- Lines 261-273
 function CoreHubElement:save_mission_trigger(file, t, hub)
 	if #self._mission_trigger_values > 0 then
 		local type = self:trigger_type()
@@ -235,13 +259,16 @@ function CoreHubElement:save_mission_trigger(file, t, hub)
 	end
 end
 
+-- Lines 275-277
 function CoreHubElement:name()
 	return self._unit:name() .. self._ud.unit_id
 end
 
+-- Lines 281-282
 function CoreHubElement:load_data(data)
 end
 
+-- Lines 285-294
 function CoreHubElement:get_color(type)
 	if type then
 		if type == "activate" or type == "enable" then
@@ -254,6 +281,7 @@ function CoreHubElement:get_color(type)
 	return 0, 1, 0
 end
 
+-- Lines 297-302
 function CoreHubElement:draw_connections_selected()
 	for _, hub in ipairs(self._hed.hubs) do
 		local r = 1
@@ -264,9 +292,11 @@ function CoreHubElement:draw_connections_selected()
 	end
 end
 
+-- Lines 305-307
 function CoreHubElement:draw_connections_unselected()
 end
 
+-- Lines 309-329
 function CoreHubElement:draw_arrow(from, to, r, g, b, thick)
 	self._arrow_brush:set_color(Color(r, g, b))
 
@@ -291,45 +321,57 @@ function CoreHubElement:draw_arrow(from, to, r, g, b, thick)
 	Application:draw_cone(to, to + (from - to):normalized() * 150, 48, r, g, b)
 end
 
+-- Lines 333-334
 function CoreHubElement:clear()
 end
 
+-- Lines 338-340
 function CoreHubElement:action_types()
 	return self._action_types
 end
 
+-- Lines 342-344
 function CoreHubElement:timeline_color()
 	return self._timeline_color
 end
 
+-- Lines 347-348
 function CoreHubElement:add_triggers()
 end
 
+-- Lines 351-352
 function CoreHubElement:clear_triggers()
 end
 
+-- Lines 355-357
 function CoreHubElement:widget_affect_object()
 	return nil
 end
 
+-- Lines 360-362
 function CoreHubElement:use_widget_position()
 	return nil
 end
 
+-- Lines 367-368
 function CoreHubElement:set_enabled()
 end
 
+-- Lines 373-374
 function CoreHubElement:set_disabled()
 end
 
+-- Lines 377-379
 function CoreHubElement:set_update_selected_on(value)
 	self._update_selected_on = value
 end
 
+-- Lines 382-384
 function CoreHubElement:update_selected_on()
 	return self._update_selected_on
 end
 
+-- Lines 387-397
 function CoreHubElement:destroy()
 	if self._panel then
 		self._panel:extension().alive = false

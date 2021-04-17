@@ -1,5 +1,6 @@
 CopActionStand = CopActionStand or class()
 
+-- Lines 4-58
 function CopActionStand:init(action_desc, common_data)
 	self._ext_movement = common_data.ext_movement
 
@@ -60,6 +61,7 @@ function CopActionStand:init(action_desc, common_data)
 	end
 end
 
+-- Lines 62-68
 function CopActionStand:update(t)
 	if self._ext_anim.base_need_upd then
 		self._ext_movement:upd_m_head_pos()
@@ -68,10 +70,12 @@ function CopActionStand:update(t)
 	end
 end
 
+-- Lines 72-74
 function CopActionStand:expired()
 	return self._expired
 end
 
+-- Lines 78-80
 function CopActionStand:type()
 	return "stand"
 end

@@ -1,6 +1,7 @@
 TradeManager = TradeManager or class()
 TradeManager.TRADE_DELAY = 5
 
+-- Lines 6-14
 function TradeManager:init()
 	self._criminals_to_respawn = {}
 	self._criminals_to_add = {}
@@ -11,6 +12,7 @@ function TradeManager:init()
 	self:set_trade_countdown(true)
 end
 
+-- Lines 18-41
 function TradeManager:save(save_data)
 	if not next(self._criminals_to_respawn) then
 		local my_save_data = {}
@@ -36,6 +38,7 @@ function TradeManager:save(save_data)
 	end
 end
 
+-- Lines 45-76
 function TradeManager:load(load_data)
 	local my_load_data = load_data.trade
 
@@ -69,6 +72,7 @@ function TradeManager:load(load_data)
 	end
 end
 
+-- Lines 79-89
 function TradeManager:handshake_complete(peer_id)
 	local crim = self._criminals_to_add[peer_id]
 
@@ -82,6 +86,7 @@ function TradeManager:handshake_complete(peer_id)
 	end
 end
 
+-- Lines 93-99
 function TradeManager:is_peer_in_custody(peer_id)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.peer_id == peer_id then
@@ -90,6 +95,7 @@ function TradeManager:is_peer_in_custody(peer_id)
 	end
 end
 
+-- Lines 101-107
 function TradeManager:is_criminal_in_custody(name)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.id == name then
@@ -98,10 +104,12 @@ function TradeManager:is_criminal_in_custody(name)
 	end
 end
 
+-- Lines 109-112
 function TradeManager:is_trading()
 	return (self._trading_hostage or self._hostage_trade_clbk or self._speaker_snd_event) and #self._criminals_to_respawn > 0
 end
 
+-- Lines 116-124
 function TradeManager:respawn_delay_by_name(character_name)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.id == character_name then
@@ -112,6 +120,7 @@ function TradeManager:respawn_delay_by_name(character_name)
 	return 0
 end
 
+-- Lines 126-134
 function TradeManager:hostages_killed_by_name(character_name)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.id == character_name then
@@ -122,6 +131,7 @@ function TradeManager:hostages_killed_by_name(character_name)
 	return 0
 end
 
+-- Lines 140-220
 function TradeManager:update(t, dt)
 	self._t = t
 
@@ -198,10 +208,12 @@ function TradeManager:update(t, dt)
 	end
 end
 
+-- Lines 224-233
 function TradeManager:is_trade_allowed()
 	return Network:is_server() and not self._trading_hostage and not self._hostage_trade_clbk and #self._criminals_to_respawn > 0 and not managers.groupai:state():whisper_mode() and not self._speaker_snd_event and (managers.groupai:state():hostage_count() > 0 or next(managers.groupai:state():all_converted_enemies()))
 end
 
+-- Lines 237-243
 function TradeManager:_increment_trade_index()
 	if self._hostage_trade_index > 10000 then
 		self._hostage_trade_index = 1
@@ -210,10 +222,12 @@ function TradeManager:_increment_trade_index()
 	end
 end
 
+-- Lines 247-249
 function TradeManager:num_in_trade_queue()
 	return #self._criminals_to_respawn
 end
 
+-- Lines 253-266
 function TradeManager:get_criminal_to_trade(wait_for_player)
 	local ai_crim, has_player = nil
 
@@ -232,6 +246,7 @@ function TradeManager:get_criminal_to_trade(wait_for_player)
 	return (not wait_for_player or not has_player) and ai_crim
 end
 
+-- Lines 270-291
 function TradeManager:sync_set_trade_death(criminal_name, respawn_penalty, hostages_killed, from_local)
 	if not from_local then
 		local crim_data = managers.criminals:character_data_by_name(criminal_name)
@@ -254,6 +269,7 @@ function TradeManager:sync_set_trade_death(criminal_name, respawn_penalty, hosta
 	end
 end
 
+-- Lines 295-306
 function TradeManager:_announce_spawn(criminal_name)
 	if not managers.groupai:state():bain_state() then
 		return
@@ -264,6 +280,7 @@ function TradeManager:_announce_spawn(criminal_name)
 	end
 end
 
+-- Lines 310-330
 function TradeManager:sync_set_trade_spawn(criminal_name)
 	local crim_data = managers.criminals:character_data_by_name(criminal_name)
 
@@ -284,6 +301,7 @@ function TradeManager:sync_set_trade_spawn(criminal_name)
 	end
 end
 
+-- Lines 333-339
 function TradeManager:sync_set_trade_replace(replace_ai, criminal_name1, criminal_name2, respawn_penalty)
 	if replace_ai then
 		self:replace_ai_with_player(criminal_name1, criminal_name2, respawn_penalty)
@@ -292,6 +310,7 @@ function TradeManager:sync_set_trade_replace(replace_ai, criminal_name1, crimina
 	end
 end
 
+-- Lines 343-373
 function TradeManager:play_custody_voice(criminal_name)
 	if managers.criminals:local_character_name() == criminal_name then
 		return
@@ -320,6 +339,7 @@ function TradeManager:play_custody_voice(criminal_name)
 	local character_code = managers.groupai:state():bain_state() and managers.criminals:character_static_data_by_name(criminal_name).ssuffix
 end
 
+-- Lines 377-399
 function TradeManager:on_AI_criminal_death(criminal_name, respawn_penalty, hostages_killed, skip_netsend)
 	print("[TradeManager:on_AI_criminal_death]", criminal_name, respawn_penalty, hostages_killed, skip_netsend)
 
@@ -353,6 +373,7 @@ function TradeManager:on_AI_criminal_death(criminal_name, respawn_penalty, hosta
 	return crim
 end
 
+-- Lines 403-454
 function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, hostages_killed, skip_netsend)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.id == criminal_name then
@@ -416,6 +437,7 @@ function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, h
 	return crim
 end
 
+-- Lines 458-464
 function TradeManager:set_trade_countdown(enabled)
 	self._trade_countdown = enabled
 
@@ -424,6 +446,7 @@ function TradeManager:set_trade_countdown(enabled)
 	end
 end
 
+-- Lines 468-494
 function TradeManager:replace_ai_with_player(ai_criminal, player_criminal, new_respawn_penalty)
 	local first_crim = self._criminals_to_respawn[1]
 
@@ -453,6 +476,7 @@ function TradeManager:replace_ai_with_player(ai_criminal, player_criminal, new_r
 	end
 end
 
+-- Lines 497-528
 function TradeManager:replace_player_with_ai(player_criminal, ai_criminal, new_respawn_penalty)
 	local first_crim = self._criminals_to_respawn[1]
 
@@ -487,6 +511,7 @@ function TradeManager:replace_player_with_ai(player_criminal, ai_criminal, new_r
 	end
 end
 
+-- Lines 532-549
 function TradeManager:on_player_criminal_removed(player_criminal)
 	if not Network:is_server() then
 		return
@@ -508,6 +533,7 @@ function TradeManager:on_player_criminal_removed(player_criminal)
 	end
 end
 
+-- Lines 553-567
 function TradeManager:remove_from_trade(criminal)
 	local first_crim = self._criminals_to_respawn[1]
 
@@ -524,10 +550,12 @@ function TradeManager:remove_from_trade(criminal)
 	end
 end
 
+-- Lines 571-575
 function TradeManager:remove_all_criminals_to_respawn()
 	self._criminals_to_respawn = {}
 end
 
+-- Lines 579-595
 function TradeManager:_send_finish_trade(criminal, respawn_delay, hostages_killed)
 	if criminal.ai == true then
 		return
@@ -548,6 +576,7 @@ function TradeManager:_send_finish_trade(criminal, respawn_delay, hostages_kille
 	end
 end
 
+-- Lines 599-615
 function TradeManager:_send_begin_trade(criminal)
 	if criminal.ai == true then
 		return
@@ -568,6 +597,7 @@ function TradeManager:_send_begin_trade(criminal)
 	end
 end
 
+-- Lines 619-634
 function TradeManager:_send_cancel_trade(criminal)
 	if criminal.ai == true then
 		return
@@ -588,12 +618,14 @@ function TradeManager:_send_cancel_trade(criminal)
 	end
 end
 
+-- Lines 638-643
 function TradeManager:change_hostage()
 	self:sync_hostage_trade_dialog(6)
 	managers.network:session():send_to_peers_synched("hostage_trade_dialog", 6)
 	self:cancel_trade()
 end
 
+-- Lines 647-688
 function TradeManager:cancel_trade()
 	if self._hostage_trade_clbk then
 		managers.enemy:remove_delayed_clbk(self._hostage_trade_clbk)
@@ -629,6 +661,7 @@ function TradeManager:cancel_trade()
 	managers.groupai:state():check_gameover_conditions()
 end
 
+-- Lines 692-711
 function TradeManager:_get_megaphone_sound_source()
 	local level_id = Global.level_data.level_id
 	local pos = nil
@@ -650,6 +683,7 @@ function TradeManager:_get_megaphone_sound_source()
 	return sound_source
 end
 
+-- Lines 715-735
 function TradeManager:sync_hostage_trade_dialog(i)
 	if game_state_machine:current_state_name() == "ingame_waiting_for_respawn" or not managers.groupai:state():bain_state() then
 		return
@@ -672,6 +706,7 @@ function TradeManager:sync_hostage_trade_dialog(i)
 	end
 end
 
+-- Lines 739-747
 function TradeManager:clbk_vo_end_begin_hostage_trade_dialog(data)
 	if data.hostage_trade_index ~= self._hostage_trade_index then
 		return
@@ -682,6 +717,7 @@ function TradeManager:clbk_vo_end_begin_hostage_trade_dialog(data)
 	self:clbk_begin_hostage_trade_dialog(data.i)
 end
 
+-- Lines 751-794
 function TradeManager:clbk_begin_hostage_trade_dialog(i)
 	self._hostage_trade_clbk = nil
 	local respawn_criminal = self:get_criminal_to_trade(false)
@@ -731,6 +767,7 @@ function TradeManager:clbk_begin_hostage_trade_dialog(i)
 	managers.network:session():send_to_peers_synched("hostage_trade_dialog", char_sync_index)
 end
 
+-- Lines 798-846
 function TradeManager:clbk_begin_hostage_trade()
 	self._hostage_trade_clbk = nil
 
@@ -781,6 +818,7 @@ function TradeManager:clbk_begin_hostage_trade()
 	end
 end
 
+-- Lines 850-888
 function TradeManager:get_best_hostage(pos)
 	local civilians = managers.enemy:all_civilians()
 	local trade_dist = tweak_data.group_ai.optimal_trade_distance
@@ -820,6 +858,7 @@ function TradeManager:get_best_hostage(pos)
 	return best_hostage
 end
 
+-- Lines 892-900
 function TradeManager:clbk_hostage_destroyed(hostage_unit)
 	if not self._hostage_to_trade or not self._hostage_to_trade.destroyed_clbk_key then
 		return
@@ -830,6 +869,7 @@ function TradeManager:clbk_hostage_destroyed(hostage_unit)
 	self:cancel_trade()
 end
 
+-- Lines 904-912
 function TradeManager:clbk_hostage_died(hostage_unit, damage_info)
 	if not self._hostage_to_trade or not self._hostage_to_trade.death_clbk_key then
 		return
@@ -840,6 +880,7 @@ function TradeManager:clbk_hostage_died(hostage_unit, damage_info)
 	self:cancel_trade()
 end
 
+-- Lines 916-936
 function TradeManager:on_hostage_traded(trading_unit)
 	print("RC: Traded hostage!!")
 
@@ -860,6 +901,7 @@ function TradeManager:on_hostage_traded(trading_unit)
 	managers.enemy:add_delayed_clbk(clbk_id, callback(self, self, "clbk_respawn_criminal", trading_unit), respawn_t)
 end
 
+-- Lines 940-1022
 function TradeManager:clbk_respawn_criminal(trading_unit)
 	self._criminal_respawn_clbk = nil
 	self._trading_hostage = nil
@@ -933,6 +975,7 @@ function TradeManager:clbk_respawn_criminal(trading_unit)
 	end
 end
 
+-- Lines 1024-1080
 function TradeManager:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 	if not alive(helped_unit) or not alive(helping_unit) then
 		return
@@ -972,6 +1015,7 @@ function TradeManager:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 	end
 end
 
+-- Lines 1082-1113
 function TradeManager:update_auto_assault_ai_trade(dt, is_trade_allowed)
 	if self._auto_assault_ai_trade_t then
 		self._auto_assault_ai_trade_t = self._auto_assault_ai_trade_t - dt
@@ -1009,6 +1053,7 @@ function TradeManager:update_auto_assault_ai_trade(dt, is_trade_allowed)
 	return time <= self.TRADE_DELAY
 end
 
+-- Lines 1117-1125
 function TradeManager:get_min_criminal_to_trade()
 	local min_crim = nil
 
@@ -1021,6 +1066,7 @@ function TradeManager:get_min_criminal_to_trade()
 	return min_crim
 end
 
+-- Lines 1129-1137
 function TradeManager:_set_auto_assault_ai_trade(character_name, time)
 	if self._auto_assault_ai_trade_criminal_name ~= character_name then
 		self._auto_assault_ai_trade_criminal_name = character_name
@@ -1031,11 +1077,13 @@ function TradeManager:_set_auto_assault_ai_trade(character_name, time)
 	end
 end
 
+-- Lines 1141-1144
 function TradeManager:sync_set_auto_assault_ai_trade(character_name, time)
 	self._auto_assault_ai_trade_criminal_name = character_name
 	self._auto_assault_ai_trade_t = time
 end
 
+-- Lines 1148-1154
 function TradeManager:get_auto_assault_ai_trade_time()
 	if not self._trade_countdown and managers.criminals:local_character_name() == self._auto_assault_ai_trade_criminal_name and managers.groupai:state():is_ai_trade_possible() then
 		return self._auto_assault_ai_trade_t
@@ -1044,6 +1092,7 @@ function TradeManager:get_auto_assault_ai_trade_time()
 	end
 end
 
+-- Lines 1158-1177
 function TradeManager:get_possible_criminals()
 	local possible_criminals = {}
 
@@ -1068,6 +1117,7 @@ function TradeManager:get_possible_criminals()
 	return possible_criminals, is_instant_trade
 end
 
+-- Lines 1181-1192
 function TradeManager:get_guard_hostage_time()
 	local min_crim = self:get_min_criminal_to_trade()
 	local penalty = min_crim and min_crim.respawn_penalty or 0

@@ -4,6 +4,7 @@ RaidGUIControlBranchingBarSkilltreePath.COLOR_FILL = tweak_data.gui.colors.raid_
 RaidGUIControlBranchingBarSkilltreePath.COLOR_LOCKED = tweak_data.gui.colors.raid_red:with_alpha(0)
 RaidGUIControlBranchingBarSkilltreePath.COLOR_DISABLED = Color(0.34509803921568627, 0.34509803921568627, 0.34509803921568627):with_alpha(0)
 
+-- Lines 8-31
 function RaidGUIControlBranchingBarSkilltreePath:init(parent, params)
 	RaidGUIControlBranchingBarSkilltreePath.super.init(self, parent, params)
 
@@ -34,6 +35,7 @@ function RaidGUIControlBranchingBarSkilltreePath:init(parent, params)
 	self._object = self._line
 end
 
+-- Lines 33-57
 function RaidGUIControlBranchingBarSkilltreePath:_init_state_data()
 	self._state_data = {
 		STATE_ACTIVE = {}
@@ -75,30 +77,35 @@ function RaidGUIControlBranchingBarSkilltreePath:_init_state_data()
 	}
 end
 
+-- Lines 61-64
 function RaidGUIControlBranchingBarSkilltreePath:set_active()
 	self._state = self.STATE_ACTIVE
 
 	self:init_to_state(self._state)
 end
 
+-- Lines 68-71
 function RaidGUIControlBranchingBarSkilltreePath:set_locked()
 	self._state = self.STATE_LOCKED
 
 	self:init_to_state(self._state)
 end
 
+-- Lines 75-78
 function RaidGUIControlBranchingBarSkilltreePath:set_full()
 	self._state = self.STATE_FULL
 
 	self:init_to_state(self._state)
 end
 
+-- Lines 82-85
 function RaidGUIControlBranchingBarSkilltreePath:set_disabled()
 	self._state = self.STATE_DISABLED
 
 	self:init_to_state(self._state)
 end
 
+-- Lines 87-99
 function RaidGUIControlBranchingBarSkilltreePath:set_progress(progress)
 	RaidGUIControlBranchingBarSkilltreePath.super.set_progress(self, progress)
 
@@ -112,6 +119,7 @@ function RaidGUIControlBranchingBarSkilltreePath:set_progress(progress)
 	self._active_line:set_points(points)
 end
 
+-- Lines 101-113
 function RaidGUIControlBranchingBarSkilltreePath:init_to_state(state)
 	local state_data = self._state_data[state]
 

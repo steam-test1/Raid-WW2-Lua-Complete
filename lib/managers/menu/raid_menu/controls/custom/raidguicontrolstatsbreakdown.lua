@@ -16,6 +16,7 @@ RaidGUIControlStatsBreakdown.TABLE_COLUMN_HEIGHT = 32
 RaidGUIControlStatsBreakdown.TABLE_DESCRIPTION_W_PERCENT = 70
 RaidGUIControlStatsBreakdown.TABLE_VALUE_W_PERCENT = 30
 
+-- Lines 29-48
 function RaidGUIControlStatsBreakdown:init(parent, params)
 	RaidGUIControlStatsBreakdown.super.init(self, parent, params)
 
@@ -37,9 +38,11 @@ function RaidGUIControlStatsBreakdown:init(parent, params)
 	end
 end
 
+-- Lines 51-52
 function RaidGUIControlStatsBreakdown:close()
 end
 
+-- Lines 55-63
 function RaidGUIControlStatsBreakdown:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_customization_panel"
@@ -50,6 +53,7 @@ function RaidGUIControlStatsBreakdown:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 65-76
 function RaidGUIControlStatsBreakdown:_create_stats_label()
 	local stats_label_params = {
 		name = "stats_label",
@@ -66,6 +70,7 @@ function RaidGUIControlStatsBreakdown:_create_stats_label()
 	self._stats_label = self._object:text(stats_label_params)
 end
 
+-- Lines 78-99
 function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 	local breakdown_table_params = {
 		name = "breakdown_table",
@@ -102,10 +107,12 @@ function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 	self._breakdown_table = self._control_panel:table(breakdown_table_params)
 end
 
+-- Lines 102-104
 function RaidGUIControlStatsBreakdown:_fit_panel()
 	self._object:set_h(self._breakdown_table:y() + self._breakdown_table:h())
 end
 
+-- Lines 106-119
 function RaidGUIControlStatsBreakdown:hide()
 	self._stats_label:set_alpha(0)
 	self._breakdown_table._table_panel:set_alpha(0)
@@ -121,10 +128,12 @@ function RaidGUIControlStatsBreakdown:hide()
 	end
 end
 
+-- Lines 121-123
 function RaidGUIControlStatsBreakdown:fade_in()
 	self._stats_label:animate(callback(self, self, "_animate_table_fade_in"))
 end
 
+-- Lines 125-186
 function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 	local t = 0
 	local label_duration = 0.4
@@ -172,6 +181,7 @@ function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 	wait(#rows * 0.1 + 0.1)
 end
 
+-- Lines 188-207
 function RaidGUIControlStatsBreakdown:_animate_table_row_fade_in(label, row, delay)
 	local t = 0
 	local duration = 0.2

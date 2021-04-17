@@ -1,5 +1,6 @@
 LightLoadingScreenGuiScript = LightLoadingScreenGuiScript or class()
 
+-- Lines 4-39
 function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, is_win32)
 	self._base_layer = base_layer
 	self._is_win32 = is_win32
@@ -62,6 +63,7 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	self:setup(res, progress)
 end
 
+-- Lines 41-50
 function LightLoadingScreenGuiScript:layout_saferect()
 	local scaled_size = {
 		x = 0,
@@ -79,6 +81,7 @@ function LightLoadingScreenGuiScript:layout_saferect()
 	self._saferect:set_screen(w, h, x, y, sw)
 end
 
+-- Lines 53-57
 function LightLoadingScreenGuiScript:get_safe_rect()
 	local a = self._is_win32 and 0.032 or 0.075
 	local b = 1 - a * 2
@@ -91,6 +94,7 @@ function LightLoadingScreenGuiScript:get_safe_rect()
 	}
 end
 
+-- Lines 60-71
 function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	local safe_rect_scale = self:get_safe_rect()
 	local safe_rect_pixels = {
@@ -103,6 +107,7 @@ function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	return safe_rect_pixels
 end
 
+-- Lines 73-93
 function LightLoadingScreenGuiScript:setup(res, progress)
 	self._gui_tweak_data = {
 		upper_saferect_border = 64,
@@ -125,6 +130,7 @@ function LightLoadingScreenGuiScript:setup(res, progress)
 	end
 end
 
+-- Lines 95-107
 function LightLoadingScreenGuiScript:update(progress, dt)
 	if self._init_progress < 100 and progress == -1 then
 		self._fake_progress = self._fake_progress + 20 * dt
@@ -137,9 +143,11 @@ function LightLoadingScreenGuiScript:update(progress, dt)
 	end
 end
 
+-- Lines 113-115
 function LightLoadingScreenGuiScript:set_text(text)
 end
 
+-- Lines 117-124
 function LightLoadingScreenGuiScript:destroy()
 	if alive(self._ws) then
 		self._scene_gui:destroy_workspace(self._ws)
@@ -150,10 +158,12 @@ function LightLoadingScreenGuiScript:destroy()
 	end
 end
 
+-- Lines 126-128
 function LightLoadingScreenGuiScript:visible()
 	return self._ws:visible()
 end
 
+-- Lines 130-146
 function LightLoadingScreenGuiScript:set_visible(visible, res)
 	if res then
 		self._res = res

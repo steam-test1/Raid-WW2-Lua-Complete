@@ -8,6 +8,7 @@ RaidGUIControlTab.BOTTOM_LINE_ACTIVE_HEIGHT = 5
 RaidGUIControlTab.BOTTOM_LINE_INACTIVE_ALPHA = 0.25
 RaidGUIControlTab.BOTTOM_LINE_ACTIVE_ALPHA = 1
 
+-- Lines 12-47
 function RaidGUIControlTab:init(parent, params)
 	RaidGUIControlTab.super.init(self, parent, params)
 
@@ -79,6 +80,7 @@ function RaidGUIControlTab:init(parent, params)
 	end
 end
 
+-- Lines 49-54
 function RaidGUIControlTab:_layout_breadcrumb()
 	self._params.breadcrumb.padding = 0
 	self._breadcrumb = self._object:breadcrumb(self._params.breadcrumb)
@@ -87,23 +89,28 @@ function RaidGUIControlTab:_layout_breadcrumb()
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 56-58
 function RaidGUIControlTab:needs_divider()
 	return false
 end
 
+-- Lines 60-62
 function RaidGUIControlTab:needs_bottom_line()
 	return true
 end
 
+-- Lines 64-66
 function RaidGUIControlTab:get_callback_param()
 	return self._callback_param
 end
 
+-- Lines 68-74
 function RaidGUIControlTab:highlight_on()
 	self._bottom_line:stop()
 	self._bottom_line:animate(callback(self, self, "_animate_highlight_on"))
 end
 
+-- Lines 76-84
 function RaidGUIControlTab:highlight_off()
 	if not self._selected then
 		self._bottom_line:stop()
@@ -111,6 +118,7 @@ function RaidGUIControlTab:highlight_off()
 	end
 end
 
+-- Lines 86-104
 function RaidGUIControlTab:select()
 	self._tab_label._object:stop()
 	self._tab_label._object:animate(callback(self, self, "_animate_select"))
@@ -120,6 +128,7 @@ function RaidGUIControlTab:select()
 	self._selected = true
 end
 
+-- Lines 106-124
 function RaidGUIControlTab:unselect()
 	self._tab_label._object:stop()
 	self._tab_label._object:animate(callback(self, self, "_animate_deselect"))
@@ -129,12 +138,14 @@ function RaidGUIControlTab:unselect()
 	self._selected = false
 end
 
+-- Lines 126-129
 function RaidGUIControlTab:mouse_released(o, button, x, y)
 	self:on_mouse_released(button, x, y)
 
 	return true
 end
 
+-- Lines 131-138
 function RaidGUIControlTab:on_mouse_released(button, x, y)
 	if self._params.tab_select_callback then
 		self._params.tab_select_callback(self._params.tab_idx, self._callback_param)
@@ -143,6 +154,7 @@ function RaidGUIControlTab:on_mouse_released(button, x, y)
 	return true
 end
 
+-- Lines 142-164
 function RaidGUIControlTab:_animate_highlight_on()
 	local duration = 0.3
 	local t = duration - (1 - self._highlight_t) * duration
@@ -167,6 +179,7 @@ function RaidGUIControlTab:_animate_highlight_on()
 	self._highlight_t = 1
 end
 
+-- Lines 166-188
 function RaidGUIControlTab:_animate_highlight_off()
 	local duration = 0.2
 	local t = duration - self._highlight_t * duration
@@ -191,6 +204,7 @@ function RaidGUIControlTab:_animate_highlight_off()
 	self._highlight_t = 0
 end
 
+-- Lines 190-215
 function RaidGUIControlTab:_animate_select()
 	local duration = 0.3
 	local t = duration - (1 - self._select_t) * duration
@@ -220,6 +234,7 @@ function RaidGUIControlTab:_animate_select()
 	self._select_t = 1
 end
 
+-- Lines 217-242
 function RaidGUIControlTab:_animate_deselect()
 	local duration = 0.3
 	local t = duration - self._select_t * duration

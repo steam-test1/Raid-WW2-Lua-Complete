@@ -1,5 +1,6 @@
 FirstAidKitBase = FirstAidKitBase or class(UnitBase)
 
+-- Lines 3-10
 function FirstAidKitBase.spawn(pos, rot, upgrade_lvl, peer_id)
 	local unit_name = "units/pd2_dlc_old_hoxton/equipment/gen_equipment_first_aid_kit/gen_equipment_first_aid_kit"
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
@@ -10,6 +11,7 @@ function FirstAidKitBase.spawn(pos, rot, upgrade_lvl, peer_id)
 	return unit
 end
 
+-- Lines 15-18
 function FirstAidKitBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
@@ -18,10 +20,12 @@ function FirstAidKitBase:set_server_information(peer_id)
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
+-- Lines 21-23
 function FirstAidKitBase:server_information()
 	return self._server_information
 end
 
+-- Lines 27-39
 function FirstAidKitBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -36,6 +40,7 @@ function FirstAidKitBase:init(unit)
 	end
 end
 
+-- Lines 43-50
 function FirstAidKitBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
@@ -46,6 +51,7 @@ function FirstAidKitBase:_clbk_validate()
 	end
 end
 
+-- Lines 54-63
 function FirstAidKitBase:sync_setup(upgrade_lvl, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -57,6 +63,7 @@ function FirstAidKitBase:sync_setup(upgrade_lvl, peer_id)
 	self:setup(upgrade_lvl)
 end
 
+-- Lines 67-84
 function FirstAidKitBase:setup(upgrade_lvl)
 	self._damage_reduction_upgrade = upgrade_lvl == 1
 
@@ -79,10 +86,12 @@ function FirstAidKitBase:setup(upgrade_lvl)
 	end
 end
 
+-- Lines 86-88
 function FirstAidKitBase:update(unit, t, dt)
 	self:_check_body()
 end
 
+-- Lines 91-119
 function FirstAidKitBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -109,6 +118,7 @@ function FirstAidKitBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
+-- Lines 123-128
 function FirstAidKitBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -117,6 +127,7 @@ function FirstAidKitBase:server_set_dynamic()
 	end
 end
 
+-- Lines 130-136
 function FirstAidKitBase:sync_net_event(event_id)
 	if event_id == 1 then
 		self:_set_dynamic()
@@ -125,12 +136,14 @@ function FirstAidKitBase:sync_net_event(event_id)
 	end
 end
 
+-- Lines 138-141
 function FirstAidKitBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
+-- Lines 145-159
 function FirstAidKitBase:take(unit)
 	if self._empty then
 		return
@@ -149,12 +162,14 @@ function FirstAidKitBase:take(unit)
 	self:_set_empty()
 end
 
+-- Lines 161-164
 function FirstAidKitBase:_set_empty()
 	self._empty = true
 
 	self._unit:set_slot(0)
 end
 
+-- Lines 168-172
 function FirstAidKitBase:save(data)
 	local state = {
 		is_dynamic = self._is_dynamic
@@ -162,6 +177,7 @@ function FirstAidKitBase:save(data)
 	data.FirstAidKitBase = state
 end
 
+-- Lines 174-181
 function FirstAidKitBase:load(data)
 	local state = data.FirstAidKitBase
 
@@ -172,6 +188,7 @@ function FirstAidKitBase:load(data)
 	self._was_dropin = true
 end
 
+-- Lines 185-190
 function FirstAidKitBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)

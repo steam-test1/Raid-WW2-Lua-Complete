@@ -10,6 +10,7 @@ RaidGUIControlGridItem.STATUS_PURCHASABLE = "grid_item_status_purchasable"
 RaidGUIControlGridItem.STATUS_NOT_ENOUGHT_RESOURCES = "grid_item_status_not_enought_resources"
 RaidGUIControlGridItem.STATUS_LOCKED_DLC = "grid_item_status_locked_dlc"
 
+-- Lines 16-84
 function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	RaidGUIControlGridItem.super.init(self, parent, params)
 
@@ -135,6 +136,7 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	end
 end
 
+-- Lines 86-96
 function RaidGUIControlGridItem:_layout_breadcrumb()
 	local breadcrumb_params = {
 		padding = 10,
@@ -148,6 +150,7 @@ function RaidGUIControlGridItem:_layout_breadcrumb()
 	self._breadcrumb:set_y(0)
 end
 
+-- Lines 98-134
 function RaidGUIControlGridItem:_toggle_visibility_status_icons()
 	if self._item_data.status == RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED then
 		self._item_status_resource_icon:hide()
@@ -172,38 +175,45 @@ function RaidGUIControlGridItem:_toggle_visibility_status_icons()
 	end
 end
 
+-- Lines 136-138
 function RaidGUIControlGridItem:get_data()
 	return self._item_data
 end
 
+-- Lines 140-143
 function RaidGUIControlGridItem:mouse_released(o, button, x, y)
 	self:on_mouse_released(button)
 
 	return true
 end
 
+-- Lines 145-151
 function RaidGUIControlGridItem:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(self._item_data, self._params.key_value_field)
 	end
 end
 
+-- Lines 153-156
 function RaidGUIControlGridItem:mouse_double_click(o, button, x, y)
 	self:on_mouse_double_click(button)
 
 	return true
 end
 
+-- Lines 158-164
 function RaidGUIControlGridItem:on_mouse_double_click(button)
 	if self._on_double_click_callback then
 		self._on_double_click_callback(self._item_data, self._params.key_value_field)
 	end
 end
 
+-- Lines 166-168
 function RaidGUIControlGridItem:selected()
 	return self._selected
 end
 
+-- Lines 170-181
 function RaidGUIControlGridItem:select(dont_fire_selected_callback)
 	self._selected = true
 
@@ -218,22 +228,26 @@ function RaidGUIControlGridItem:select(dont_fire_selected_callback)
 	end
 end
 
+-- Lines 183-187
 function RaidGUIControlGridItem:unselect()
 	self._selected = false
 
 	self:select_off()
 end
 
+-- Lines 189-192
 function RaidGUIControlGridItem:select_on()
 	self._select_background_panel:show()
 	self._triangle_markers_panel:show()
 end
 
+-- Lines 194-197
 function RaidGUIControlGridItem:select_off()
 	self._select_background_panel:hide()
 	self._triangle_markers_panel:hide()
 end
 
+-- Lines 200-202
 function RaidGUIControlGridItem:confirm_pressed()
 	self:on_mouse_released(nil)
 end

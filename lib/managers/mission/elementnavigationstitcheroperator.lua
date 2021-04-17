@@ -1,13 +1,16 @@
 ElementNavigationStitcherOperator = ElementNavigationStitcherOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 3-5
 function ElementNavigationStitcherOperator:init(...)
 	ElementNavigationStitcherOperator.super.init(self, ...)
 end
 
+-- Lines 7-12
 function ElementNavigationStitcherOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 14-25
 function ElementNavigationStitcherOperator:_apply_operator(mission_script_element)
 	if mission_script_element then
 		local call = mission_script_element[self._values.operation]
@@ -22,6 +25,7 @@ function ElementNavigationStitcherOperator:_apply_operator(mission_script_elemen
 	end
 end
 
+-- Lines 27-40
 function ElementNavigationStitcherOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return

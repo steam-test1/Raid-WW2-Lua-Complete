@@ -2,6 +2,7 @@ core:import("CoreOverlayEffectManager")
 
 OverlayEffectManager = OverlayEffectManager or class(CoreOverlayEffectManager.OverlayEffectManager)
 
+-- Lines 5-11
 function OverlayEffectManager:init()
 	OverlayEffectManager.super.init(self)
 

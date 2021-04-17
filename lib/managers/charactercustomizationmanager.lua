@@ -5,6 +5,7 @@ CharacterCustomizationManager.LOCKED_NOT_OWNED = "character_customization_locked
 CharacterCustomizationManager.LOCKED_GOLD_NOT_OWNED = "character_customization_locked_gold_not_owned"
 CharacterCustomizationManager.LOCKED_DLC_SPECIFIC = "character_customization_locked_dlc_specific"
 
+-- Lines 11-24
 function CharacterCustomizationManager:init()
 	self._tweak_data = tweak_data.character_customization.customizations
 
@@ -20,18 +21,22 @@ function CharacterCustomizationManager:init()
 	self._character_customization_version_to_attach = 1
 end
 
+-- Lines 28-30
 function CharacterCustomizationManager:get_current_version_to_attach()
 	return self._character_customization_version_to_attach
 end
 
+-- Lines 32-34
 function CharacterCustomizationManager:reset_current_version_to_attach()
 	self._character_customization_version_to_attach = 1
 end
 
+-- Lines 36-38
 function CharacterCustomizationManager:increase_current_version_to_attach()
 	self._character_customization_version_to_attach = self._character_customization_version_to_attach + 1
 end
 
+-- Lines 43-49
 function CharacterCustomizationManager:get_all_owned_customizations()
 	if self._global.owned_customizations == nil then
 		self._global.owned_customizations = tweak_data.character_customization:get_defaults()
@@ -40,6 +45,7 @@ function CharacterCustomizationManager:get_all_owned_customizations()
 	return self._global.owned_customizations
 end
 
+-- Lines 51-56
 function CharacterCustomizationManager:set_all_owned_customizations(customizations)
 	self:_filter_customizations(customizations)
 	self:_append_customizations(customizations, tweak_data.character_customization:get_defaults())
@@ -49,6 +55,7 @@ function CharacterCustomizationManager:set_all_owned_customizations(customizatio
 	self:_award_random_customizations()
 end
 
+-- Lines 58-66
 function CharacterCustomizationManager:_filter_customizations(customizations)
 	local locked_customizations = tweak_data.dlc:get_locked_customizations()
 
@@ -57,6 +64,7 @@ function CharacterCustomizationManager:_filter_customizations(customizations)
 	end
 end
 
+-- Lines 68-76
 function CharacterCustomizationManager:_append_customizations(customizations, to_append)
 	for name, data in pairs(to_append) do
 		if not customizations[name] then
@@ -66,6 +74,7 @@ function CharacterCustomizationManager:_append_customizations(customizations, to
 	end
 end
 
+-- Lines 79-111
 function CharacterCustomizationManager:_award_random_customizations()
 	Application:debug("[CharacterCustomizationManager][_award_random_customizations]")
 
@@ -109,6 +118,7 @@ function CharacterCustomizationManager:_award_random_customizations()
 	end
 end
 
+-- Lines 113-133
 function CharacterCustomizationManager:get_owned_customizations_indexed(part_type, nationality)
 	local result = {}
 	local owned_customizations = self:get_all_owned_customizations()
@@ -129,6 +139,7 @@ function CharacterCustomizationManager:get_owned_customizations_indexed(part_typ
 	return result
 end
 
+-- Lines 135-148
 function CharacterCustomizationManager:_can_nationality_use_customization(customization_data, nationality)
 	local result = false
 
@@ -145,6 +156,7 @@ function CharacterCustomizationManager:_can_nationality_use_customization(custom
 	return result
 end
 
+-- Lines 150-169
 function CharacterCustomizationManager:equipable_nationalities_to_string(part_key_name)
 	local result = ""
 	local item_data = tweak_data.character_customization.customizations[part_key_name]
@@ -166,6 +178,7 @@ function CharacterCustomizationManager:equipable_nationalities_to_string(part_ke
 	return result
 end
 
+-- Lines 171-203
 function CharacterCustomizationManager:get_equiped_part_from_character_save_slot(slot_index, part_type)
 	local result = nil
 	local slot_cache_data = Global.savefile_manager.meta_data_list[slot_index].cache
@@ -198,6 +211,7 @@ function CharacterCustomizationManager:get_equiped_part_from_character_save_slot
 	return result
 end
 
+-- Lines 205-232
 function CharacterCustomizationManager:get_equiped_part_index(character_nationality_name, part_type, equiped_name)
 	local parts_table = {}
 	parts_table = self:get_owned_customizations_indexed(part_type, character_nationality_name)
@@ -225,6 +239,7 @@ function CharacterCustomizationManager:get_equiped_part_index(character_national
 	return 1
 end
 
+-- Lines 234-242
 function CharacterCustomizationManager:verify_customization_ownership(character_nationality_name, part_type, equiped_name)
 	local owned_customizations = self:get_all_owned_customizations()
 
@@ -235,14 +250,17 @@ function CharacterCustomizationManager:verify_customization_ownership(character_
 	return self:get_default_part_key_name(character_nationality_name, part_type)
 end
 
+-- Lines 245-247
 function CharacterCustomizationManager:get_all_parts_indexed(part_type)
 	return tweak_data.character_customization:get_all_parts_indexed(part_type)
 end
 
+-- Lines 249-251
 function CharacterCustomizationManager:get_all_parts(part_type)
 	return tweak_data.character_customization:get_all_parts(part_type)
 end
 
+-- Lines 255-316
 function CharacterCustomizationManager:get_all_parts_indexed_filtered(part_type, nationality, owned_only)
 	local data = tweak_data.character_customization:get_all_parts_indexed(part_type)
 	local result = {}
@@ -304,6 +322,7 @@ function CharacterCustomizationManager:get_all_parts_indexed_filtered(part_type,
 	return result
 end
 
+-- Lines 319-360
 function CharacterCustomizationManager:_sort_by_unlocked(data)
 	local result = {}
 
@@ -344,6 +363,7 @@ function CharacterCustomizationManager:_sort_by_unlocked(data)
 	return result
 end
 
+-- Lines 365-374
 function CharacterCustomizationManager:check_part_key_name(part_type, part_key_name, nationality)
 	local result = part_key_name
 	local all_parts = self:get_all_parts(part_type)
@@ -355,6 +375,7 @@ function CharacterCustomizationManager:check_part_key_name(part_type, part_key_n
 	return result
 end
 
+-- Lines 376-388
 function CharacterCustomizationManager:get_default_part_key_name(nationality, part_type)
 	local result = ""
 
@@ -369,10 +390,12 @@ function CharacterCustomizationManager:get_default_part_key_name(nationality, pa
 	return result
 end
 
+-- Lines 391-394
 function CharacterCustomizationManager:reset()
 	self:set_all_owned_customizations(tweak_data.character_customization:get_defaults())
 end
 
+-- Lines 397-409
 function CharacterCustomizationManager:save(data)
 	local state = {
 		owned_customizations = self:get_all_owned_customizations(),
@@ -386,6 +409,7 @@ function CharacterCustomizationManager:save(data)
 	data.CharacterCustomizationManager = state
 end
 
+-- Lines 412-424
 function CharacterCustomizationManager:load(data)
 	local state = data.CharacterCustomizationManager
 
@@ -401,6 +425,7 @@ function CharacterCustomizationManager:load(data)
 	end
 end
 
+-- Lines 426-443
 function CharacterCustomizationManager:reset_customizations_on_load(previously_owned)
 	local currently_owned = {}
 
@@ -413,10 +438,12 @@ function CharacterCustomizationManager:reset_customizations_on_load(previously_o
 	self:set_all_owned_customizations(currently_owned)
 end
 
+-- Lines 446-448
 function CharacterCustomizationManager:is_character_customization_owned(part_key)
 	return self._global.owned_customizations[part_key] ~= nil
 end
 
+-- Lines 450-481
 function CharacterCustomizationManager:add_character_customization_to_inventory(part_key, bought)
 	self._global.owned_customizations[part_key] = tweak_data.character_customization.customizations[part_key]
 	local breadcrumb_category = nil
@@ -451,10 +478,12 @@ function CharacterCustomizationManager:add_character_customization_to_inventory(
 	end
 end
 
+-- Lines 483-485
 function CharacterCustomizationManager:remove_character_customization_from_inventory(part_key)
 	self._global.owned_customizations[part_key] = nil
 end
 
+-- Lines 489-497
 function CharacterCustomizationManager:reaply_character_criminal(preferred_character_name)
 	if Network:is_server() then
 		self:request_change_criminal_character(managers.network:session():local_peer():id(), preferred_character_name, managers.player:local_player())
@@ -463,6 +492,7 @@ function CharacterCustomizationManager:reaply_character_criminal(preferred_chara
 	end
 end
 
+-- Lines 500-523
 function CharacterCustomizationManager:request_change_criminal_character(peer_id, preferred_character_name, peer_unit)
 	if not Network:is_server() then
 		return
@@ -487,6 +517,7 @@ function CharacterCustomizationManager:request_change_criminal_character(peer_id
 	self:change_criminal_character(peer_id, new_character_name, peer_unit, remove_unit_in_source_slot)
 end
 
+-- Lines 525-554
 function CharacterCustomizationManager:change_criminal_character(peer_id, new_character_name, peer_unit, remove_unit_in_source_slot)
 	local unit_to_remove = managers.criminals:character_unit_by_name(new_character_name)
 
@@ -512,6 +543,7 @@ function CharacterCustomizationManager:change_criminal_character(peer_id, new_ch
 	end
 end
 
+-- Lines 556-570
 function CharacterCustomizationManager:get_default_head_data(nationality)
 	local result = {}
 

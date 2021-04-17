@@ -8,12 +8,14 @@ HUDCarry.PROMPT_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 HUDCarry.PROMPT_TEXT_ID = "hud_carry_throw_prompt"
 HUDCarry.GENERIC_THROW_ID = "carry_item_generic"
 
+-- Lines 14-18
 function HUDCarry:init(hud)
 	self:_create_panel(hud)
 	self:_create_icon()
 	self:_create_prompt()
 end
 
+-- Lines 20-28
 function HUDCarry:_create_panel(hud)
 	local panel_params = {
 		name = "carry_panel",
@@ -25,6 +27,7 @@ function HUDCarry:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
+-- Lines 30-40
 function HUDCarry:_create_icon()
 	local placeholder_icon = "carry_planks"
 	local icon_params = {
@@ -37,6 +40,7 @@ function HUDCarry:_create_icon()
 	self._icon = self._object:bitmap(icon_params)
 end
 
+-- Lines 42-55
 function HUDCarry:_create_prompt()
 	local prompt_params = {
 		vertical = "top",
@@ -54,6 +58,7 @@ function HUDCarry:_create_prompt()
 	self._prompt = self._object:text(prompt_params)
 end
 
+-- Lines 57-70
 function HUDCarry:_size_panel()
 	self._icon:set_x(0)
 	self._icon:set_center_y(self._object:h() / 2)
@@ -71,6 +76,7 @@ function HUDCarry:_size_panel()
 	self._object:set_center_x(center_x)
 end
 
+-- Lines 72-91
 function HUDCarry:show_carry_item(carry_id)
 	local carry_data = tweak_data.carry[carry_id]
 	local item_icon = carry_data.hud_icon or "carry_planks"
@@ -90,27 +96,33 @@ function HUDCarry:show_carry_item(carry_id)
 	self._object:animate(callback(self, self, "_animate_show_carry"))
 end
 
+-- Lines 93-96
 function HUDCarry:hide_carry_item()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide_carry"))
 end
 
+-- Lines 98-100
 function HUDCarry:w()
 	return self._object:w()
 end
 
+-- Lines 102-104
 function HUDCarry:h()
 	return self._object:h()
 end
 
+-- Lines 106-108
 function HUDCarry:set_x(x)
 	self._object:set_x(x)
 end
 
+-- Lines 110-112
 function HUDCarry:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 114-131
 function HUDCarry:_animate_show_carry()
 	local duration = 0.5
 	local t = self._object:alpha() * duration
@@ -131,6 +143,7 @@ function HUDCarry:_animate_show_carry()
 	self._object:set_bottom(self._object:parent():h())
 end
 
+-- Lines 133-150
 function HUDCarry:_animate_hide_carry()
 	local duration = 0.25
 	local t = (1 - self._object:alpha()) * duration

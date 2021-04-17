@@ -1,6 +1,7 @@
 core:module("CoreKeywordArguments")
 core:import("CoreClass")
 
+-- Lines 75-95
 function parse_kwargs(args, ...)
 	assert(#args == 1)
 	assert(type(args[1]) == "table")
@@ -31,6 +32,7 @@ end
 
 KeywordArguments = KeywordArguments or CoreClass.class()
 
+-- Lines 105-114
 function KeywordArguments:init(...)
 	local args = {
 		...
@@ -47,10 +49,12 @@ function KeywordArguments:init(...)
 	end
 end
 
+-- Lines 116-118
 function KeywordArguments:assert_all_consumed()
 	assert(table.size(self._unconsumed_kwargs) == 0, "unknown keyword argument(s): " .. string.join(", ", self._unconsumed_kwargs))
 end
 
+-- Lines 121-130
 function KeywordArguments:mandatory(...)
 	local ret_list = {}
 
@@ -68,6 +72,7 @@ function KeywordArguments:mandatory(...)
 	return unpack(ret_list)
 end
 
+-- Lines 132-142
 function KeywordArguments:mandatory_string(...)
 	local ret_list = {}
 
@@ -86,6 +91,7 @@ function KeywordArguments:mandatory_string(...)
 	return unpack(ret_list)
 end
 
+-- Lines 144-154
 function KeywordArguments:mandatory_number(...)
 	local ret_list = {}
 
@@ -104,6 +110,7 @@ function KeywordArguments:mandatory_number(...)
 	return unpack(ret_list)
 end
 
+-- Lines 156-166
 function KeywordArguments:mandatory_table(...)
 	local ret_list = {}
 
@@ -122,6 +129,7 @@ function KeywordArguments:mandatory_table(...)
 	return unpack(ret_list)
 end
 
+-- Lines 168-179
 function KeywordArguments:mandatory_function(...)
 	local ret_list = {}
 
@@ -140,6 +148,7 @@ function KeywordArguments:mandatory_function(...)
 	return unpack(ret_list)
 end
 
+-- Lines 181-192
 function KeywordArguments:mandatory_object(...)
 	local ret_list = {}
 
@@ -158,6 +167,7 @@ function KeywordArguments:mandatory_object(...)
 	return unpack(ret_list)
 end
 
+-- Lines 195-202
 function KeywordArguments:optional(...)
 	local ret_list = {}
 
@@ -172,6 +182,7 @@ function KeywordArguments:optional(...)
 	return unpack(ret_list)
 end
 
+-- Lines 204-214
 function KeywordArguments:optional_string(...)
 	local ret_list = {}
 
@@ -189,6 +200,7 @@ function KeywordArguments:optional_string(...)
 	return unpack(ret_list)
 end
 
+-- Lines 216-226
 function KeywordArguments:optional_number(...)
 	local ret_list = {}
 
@@ -206,6 +218,7 @@ function KeywordArguments:optional_number(...)
 	return unpack(ret_list)
 end
 
+-- Lines 228-238
 function KeywordArguments:optional_table(...)
 	local ret_list = {}
 
@@ -223,6 +236,7 @@ function KeywordArguments:optional_table(...)
 	return unpack(ret_list)
 end
 
+-- Lines 240-249
 function KeywordArguments:optional_function(...)
 	local ret_list = {}
 
@@ -240,6 +254,7 @@ function KeywordArguments:optional_function(...)
 	return unpack(ret_list)
 end
 
+-- Lines 251-261
 function KeywordArguments:optional_object(...)
 	local ret_list = {}
 

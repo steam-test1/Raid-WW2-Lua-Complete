@@ -8,6 +8,7 @@ ControllerWrapperPC.CONTROLLER_TYPE_LIST = {
 	"win32_mouse"
 }
 
+-- Lines 9-19
 function ControllerWrapperPC:init(manager, id, name, controller, setup, debug, skip_virtual_controller, gamepads)
 	local func_map = {
 		keyboard_axis_1 = callback(self, self, "virtual_connect_keyboard_axis_1"),
@@ -25,6 +26,7 @@ function ControllerWrapperPC:init(manager, id, name, controller, setup, debug, s
 	})
 end
 
+-- Lines 21-27
 function ControllerWrapperPC:virtual_connect_keyboard_axis_1(controller_id, controller, input_name, connection_name, connection)
 	self._virtual_controller:add_axis(Idstring(connection_name))
 	self._virtual_controller:connect(controller, Idstring("button"), Idstring("a"), Idstring("axis"), Idstring(connection_name), 0, Idstring("range"), 0, -1)
@@ -33,6 +35,7 @@ function ControllerWrapperPC:virtual_connect_keyboard_axis_1(controller_id, cont
 	self._virtual_controller:connect(controller, Idstring("button"), Idstring("s"), Idstring("axis"), Idstring(connection_name), 1, Idstring("range"), 0, -1)
 end
 
+-- Lines 29-35
 function ControllerWrapperPC:virtual_connect_keyboard_axis_2(controller_id, controller, input_name, connection_name, connection)
 	self._virtual_controller:add_axis(connection_name)
 	self._virtual_controller:connect(controller, Idstring("button"), Idstring("left"), Idstring("axis"), Idstring(connection_name), 0, Idstring("range"), 0, -1)
@@ -41,14 +44,17 @@ function ControllerWrapperPC:virtual_connect_keyboard_axis_2(controller_id, cont
 	self._virtual_controller:connect(controller, Idstring("button"), Idstring("down"), Idstring("axis"), Idstring(connection_name), 1, Idstring("range"), 0, -1)
 end
 
+-- Lines 37-39
 function ControllerWrapperPC:virtual_connect_confirm(controller_id, controller, input_name, connection_name, connection)
 	self:virtual_connect2(controller_id, controller, "enter", connection_name, connection)
 end
 
+-- Lines 41-43
 function ControllerWrapperPC:virtual_connect_cancel(controller_id, controller, input_name, connection_name, connection)
 	self:virtual_connect2(controller_id, controller, "esc", connection_name, connection)
 end
 
+-- Lines 46-91
 function ControllerWrapperPC:virtual_connect2(controller_id, controller, input_name, connection_name, connection)
 	local min_src, max_src, min_dest, max_dest = connection:get_range()
 	local connect_src_type = connection:get_connect_src_type()

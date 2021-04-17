@@ -1,5 +1,6 @@
 MissionEndUnitElement = MissionEndUnitElement or class(MissionElement)
 
+-- Lines 3-9
 function MissionEndUnitElement:init(unit)
 	MissionEndUnitElement.super.init(self, unit)
 
@@ -8,6 +9,7 @@ function MissionEndUnitElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
+-- Lines 11-18
 function MissionEndUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

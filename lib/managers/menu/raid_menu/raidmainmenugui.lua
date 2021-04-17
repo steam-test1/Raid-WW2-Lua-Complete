@@ -5,6 +5,7 @@ RaidMainMenuGui.WIDGET_PANEL_H = 256
 RaidMainMenuGui.STEAM_GROUP_BUTTON_W = 544
 RaidMainMenuGui.STEAM_GROUP_BUTTON_H = 306
 
+-- Lines 10-20
 function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 	RaidMainMenuGui.super.init(self, ws, fullscreen_ws, node, component_name)
 	managers.menu:mark_main_menu(true)
@@ -12,12 +13,14 @@ function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 	managers.gold_economy:get_gold_awards()
 end
 
+-- Lines 23-26
 function RaidMainMenuGui:_setup_properties()
 	RaidMainMenuGui.super._setup_properties(self)
 
 	self._background = "ui/backgrounds/raid_main_bg_hud"
 end
 
+-- Lines 28-44
 function RaidMainMenuGui:_layout()
 	self._display_invite_widget = SystemInfo:platform() ~= Idstring("WIN32")
 
@@ -40,6 +43,7 @@ function RaidMainMenuGui:_layout()
 	end
 end
 
+-- Lines 46-51
 function RaidMainMenuGui:close()
 	managers.system_event_listener:remove_listener("main_menu_drop_in")
 	managers.system_event_listener:remove_listener("main_menu_drop_out")
@@ -47,6 +51,7 @@ function RaidMainMenuGui:close()
 	RaidMainMenuGui.super.close(self)
 end
 
+-- Lines 53-124
 function RaidMainMenuGui:_layout_title_logo()
 	self._title_label = self._root_panel:text({
 		text = "",
@@ -125,9 +130,11 @@ function RaidMainMenuGui:_layout_title_logo()
 	end
 end
 
+-- Lines 126-128
 function RaidMainMenuGui:_layout_logo()
 end
 
+-- Lines 130-145
 function RaidMainMenuGui:_layout_list_menu()
 	local list_menu_params = {
 		selection_enabled = true,
@@ -146,6 +153,7 @@ function RaidMainMenuGui:_layout_list_menu()
 	self._list_menu:set_selected(true)
 end
 
+-- Lines 147-187
 function RaidMainMenuGui:_layout_steam_group_button()
 	local steam_group_panel_params = {
 		layer = 50,
@@ -189,27 +197,32 @@ function RaidMainMenuGui:_layout_steam_group_button()
 	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
 end
 
+-- Lines 189-191
 function RaidMainMenuGui:mouse_over_steam_group_button()
 	self._steam_group_button_frame:set_color(Color("ff8880"))
 end
 
+-- Lines 193-197
 function RaidMainMenuGui:mouse_exit_steam_group_button()
 	self._steam_group_button_frame:set_color(Color.white)
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
 end
 
+-- Lines 199-202
 function RaidMainMenuGui:mouse_pressed_steam_group_button()
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_press"))
 end
 
+-- Lines 204-209
 function RaidMainMenuGui:mouse_released_steam_group_button()
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
 	Steam:overlay_activate("url", "http://steamcommunity.com/games/414740")
 end
 
+-- Lines 211-237
 function RaidMainMenuGui:_animate_steam_group_button_press(o)
 	local duration = 0.15
 	local t = self._steam_button_t * duration
@@ -237,6 +250,7 @@ function RaidMainMenuGui:_animate_steam_group_button_press(o)
 	self._steam_button_t = 1
 end
 
+-- Lines 239-265
 function RaidMainMenuGui:_animate_steam_group_button_release(o)
 	local duration = 0.15
 	local t = (1 - self._steam_button_t) * duration
@@ -264,6 +278,7 @@ function RaidMainMenuGui:_animate_steam_group_button_release(o)
 	self._steam_button_t = 0
 end
 
+-- Lines 268-429
 function RaidMainMenuGui:_layout_kick_mute_widget()
 	if self._widget_panel then
 		self._widget_panel:clear()
@@ -424,6 +439,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	self._list_menu:set_menu_move_controls(menu_move)
 end
 
+-- Lines 431-446
 function RaidMainMenuGui:on_widget_button_selected(button)
 	local widget_action = nil
 
@@ -442,10 +458,12 @@ function RaidMainMenuGui:on_widget_button_selected(button)
 	self._widget_action_title:set_text(self:translate(widget_action, true))
 end
 
+-- Lines 448-450
 function RaidMainMenuGui:on_widget_button_unselected(button)
 	self._widget_action_title:set_text("")
 end
 
+-- Lines 452-537
 function RaidMainMenuGui:_list_menu_data_source()
 	local _list_items = {}
 
@@ -668,6 +686,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 	return _list_items
 end
 
+-- Lines 539-551
 function RaidMainMenuGui:_on_list_menu_item_selected(data)
 	if not data.callback then
 		return

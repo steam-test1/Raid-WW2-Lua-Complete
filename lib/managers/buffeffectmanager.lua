@@ -56,6 +56,7 @@ BuffEffectManager.FAIL_EFFECT_MESSAGE_COMPLETE_RAID_WITHIN_TIME = "challenge_car
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_USED_WARCRY = "challenge_card_effect_failed_message_player_used_warcry"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_EMPTIED_A_CLIP = "challenge_card_effect_failed_message_player_emptied_a_clip"
 
+-- Lines 174-180
 function BuffEffectManager:init()
 	self._active_effects = {}
 	self._effect_id_counter = 0
@@ -63,6 +64,7 @@ function BuffEffectManager:init()
 	self._dt_sum = 0
 end
 
+-- Lines 182-203
 function BuffEffectManager:activate_effect(effect_data)
 	local effect = BuffEffect:new(effect_data.name, effect_data.value, effect_data.challenge_card_key, effect_data.fail_message)
 	self._effect_id_counter = self._effect_id_counter + 1
@@ -89,6 +91,7 @@ function BuffEffectManager:activate_effect(effect_data)
 	return self._effect_id_counter
 end
 
+-- Lines 205-214
 function BuffEffectManager:deactivate_effect(active_effect_id)
 	self:deactivate_special_effect_and_timer(active_effect_id)
 
@@ -97,6 +100,7 @@ function BuffEffectManager:deactivate_effect(active_effect_id)
 	end
 end
 
+-- Lines 216-234
 function BuffEffectManager:deactivate_special_effect_and_timer(active_effect_id)
 	if self._active_effects and self._active_effects[active_effect_id] then
 		local effect = self._active_effects[active_effect_id]
@@ -115,6 +119,7 @@ function BuffEffectManager:deactivate_special_effect_and_timer(active_effect_id)
 	end
 end
 
+-- Lines 236-251
 function BuffEffectManager:is_effect_active(effect_name)
 	if managers.player:local_player_in_camp() then
 		return false
@@ -133,6 +138,7 @@ function BuffEffectManager:is_effect_active(effect_name)
 	return result
 end
 
+-- Lines 254-269
 function BuffEffectManager:get_effect_value(effect_name)
 	if managers.player:local_player_in_camp() then
 		return 0
@@ -151,6 +157,7 @@ function BuffEffectManager:get_effect_value(effect_name)
 	return result
 end
 
+-- Lines 271-286
 function BuffEffectManager:update(t, dt)
 	self._dt_sum = self._dt_sum + dt
 
@@ -169,10 +176,12 @@ function BuffEffectManager:update(t, dt)
 	end
 end
 
+-- Lines 288-290
 function BuffEffectManager:get_active_effect_by_effect_id(effect_id)
 	return self._active_effects[effect_id]
 end
 
+-- Lines 294-313
 function BuffEffectManager:player_failed_challenge_card_effect(failed_effect_name, peer_id)
 	if Network:is_server() then
 		local challenge_card_key = ""
@@ -195,6 +204,7 @@ function BuffEffectManager:player_failed_challenge_card_effect(failed_effect_nam
 	end
 end
 
+-- Lines 315-331
 function BuffEffectManager:fail_effect(failed_effect_name, peer_id)
 	local active_card = managers.challenge_cards:get_active_card()
 	local active_card_status = managers.challenge_cards:get_active_card_status()
@@ -210,6 +220,7 @@ function BuffEffectManager:fail_effect(failed_effect_name, peer_id)
 	end
 end
 
+-- Lines 336-347
 function BuffEffectManager:save_dropin(data)
 	local state = {
 		active_effects = self._active_effects,
@@ -220,6 +231,7 @@ function BuffEffectManager:save_dropin(data)
 	data.BuffEffectManager = state
 end
 
+-- Lines 350-365
 function BuffEffectManager:load_dropin(data)
 	local state = data.BuffEffectManager
 

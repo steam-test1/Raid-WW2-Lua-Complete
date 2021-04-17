@@ -12,6 +12,7 @@ CoreEnvEditor.TEMPLATE_IDENTIFIER = "template"
 CoreEnvEditor.MIX_MUL = 200
 CoreEnvEditor.REMOVE_DEPRECATED_DURING_LOAD = true
 
+-- Lines 17-89
 function CoreEnvEditor:init(env_file_name)
 	self._env_path = assert(managers.viewport:first_active_viewport():get_environment_path()) or "core/environments/default"
 	self._env_name = self._env_path
@@ -68,9 +69,11 @@ function CoreEnvEditor:init(env_file_name)
 	self:check_news(true)
 end
 
+-- Lines 91-93
 function CoreEnvEditor:read_mode()
 end
 
+-- Lines 95-109
 function CoreEnvEditor:read_templates()
 	for _, name in ipairs(managers.database:list_entries_of_type("environment")) do
 		if string.find(name, self.TEMPLATE_IDENTIFIER) then
@@ -87,20 +90,24 @@ function CoreEnvEditor:read_templates()
 	end
 end
 
+-- Lines 111-113
 function CoreEnvEditor:on_check_news()
 	self:check_news()
 end
 
+-- Lines 115-117
 function CoreEnvEditor:reg_mixer(widget)
 	table.insert(self._mixer_widgets, widget)
 end
 
+-- Lines 119-123
 function CoreEnvEditor:update_mix(env1, env2, blend)
 	for _, widget in ipairs(self._mixer_widgets) do
 		widget:update_mix(env1, env2, blend)
 	end
 end
 
+-- Lines 125-145
 function CoreEnvEditor:check_news(new_only)
 	local news = nil
 
@@ -125,6 +132,7 @@ function CoreEnvEditor:check_news(new_only)
 	end
 end
 
+-- Lines 147-177
 function CoreEnvEditor:feed(handler, viewport, scene)
 	for kpro, vpro in pairs(self._posteffect.post_processors) do
 		if kpro == "shadow_processor" then
@@ -157,6 +165,7 @@ function CoreEnvEditor:feed(handler, viewport, scene)
 	self:set_data_path("others/colorgrade", handler, self._colorgrade_param:get_value())
 end
 
+-- Lines 179-186
 function CoreEnvEditor:set_data_path(data_path, handler, value)
 	local data_path_key = Idstring(data_path):key()
 
@@ -167,6 +176,7 @@ function CoreEnvEditor:set_data_path(data_path, handler, value)
 	end
 end
 
+-- Lines 188-237
 function CoreEnvEditor:create_main_frame()
 	self._main_frame = EWS:Frame("", Vector3(250, 0, 0), Vector3(450, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
@@ -214,6 +224,7 @@ function CoreEnvEditor:create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
+-- Lines 240-255
 function CoreEnvEditor:_get_post_process_effect_name(post_processor)
 	if post_processor == "deferred" then
 		return "deferred_lighting"
@@ -232,6 +243,7 @@ function CoreEnvEditor:_get_post_process_effect_name(post_processor)
 	return "default"
 end
 
+-- Lines 257-295
 function CoreEnvEditor:add_post_processors_param(pro, mod, param, gui)
 	if not self._posteffect.post_processors then
 		self._posteffect.post_processors = {}
@@ -272,6 +284,7 @@ function CoreEnvEditor:add_post_processors_param(pro, mod, param, gui)
 	return gui
 end
 
+-- Lines 297-321
 function CoreEnvEditor:add_underlay_param(mat, param, gui)
 	if not self._underlayeffect.materials then
 		self._underlayeffect.materials = {}
@@ -299,6 +312,7 @@ function CoreEnvEditor:add_underlay_param(mat, param, gui)
 	return gui
 end
 
+-- Lines 323-330
 function CoreEnvEditor:add_sky_param(param, gui)
 	if not self._sky.params then
 		self._sky.params = {}
@@ -309,12 +323,14 @@ function CoreEnvEditor:add_sky_param(param, gui)
 	return gui
 end
 
+-- Lines 332-335
 function CoreEnvEditor:add_colorgrade(gui)
 	self._colorgrade_param = gui
 
 	return gui
 end
 
+-- Lines 337-358
 function CoreEnvEditor:retrive_posteffect_param(node, pro, mod, param)
 	for post_processor in node:children() do
 		if post_processor:parameter("name") == pro then
@@ -339,6 +355,7 @@ function CoreEnvEditor:retrive_posteffect_param(node, pro, mod, param)
 	end
 end
 
+-- Lines 360-377
 function CoreEnvEditor:retrive_underlay_param(node, mat, param)
 	for material in node:children() do
 		if material:parameter("name") == mat then
@@ -359,6 +376,7 @@ function CoreEnvEditor:retrive_underlay_param(node, mat, param)
 	end
 end
 
+-- Lines 379-392
 function CoreEnvEditor:retrive_sky_param(node, param)
 	for parameter in node:children() do
 		if parameter:parameter("key") == param then
@@ -375,6 +393,7 @@ function CoreEnvEditor:retrive_sky_param(node, param)
 	end
 end
 
+-- Lines 394-404
 function CoreEnvEditor:flipp(...)
 	local v = {
 		...
@@ -391,6 +410,7 @@ function CoreEnvEditor:flipp(...)
 	end
 end
 
+-- Lines 406-409
 function CoreEnvEditor:add_gui_element(gui, tab, ...)
 	local list = {
 		...
@@ -399,6 +419,7 @@ function CoreEnvEditor:add_gui_element(gui, tab, ...)
 	self:add_box(gui, self._tabs[tab], list, 1)
 end
 
+-- Lines 411-427
 function CoreEnvEditor:create_tab(tab)
 	if not self._tabs[tab] then
 		self._tabs[tab] = {
@@ -419,6 +440,7 @@ function CoreEnvEditor:create_tab(tab)
 	end
 end
 
+-- Lines 429-440
 function CoreEnvEditor:build_tab(tab)
 	if self._tabs[tab] then
 		self._tabs[tab].scrolled_window:set_sizer(self._tabs[tab].box)
@@ -430,12 +452,14 @@ function CoreEnvEditor:build_tab(tab)
 	end
 end
 
+-- Lines 442-446
 function CoreEnvEditor:get_tab(tab)
 	if self._tabs[tab] then
 		return self._tabs[tab].scrolled_window
 	end
 end
 
+-- Lines 448-466
 function CoreEnvEditor:add_box(gui, parent, list, index)
 	local this = parent.child[list[index]]
 
@@ -460,18 +484,22 @@ function CoreEnvEditor:add_box(gui, parent, list, index)
 	end
 end
 
+-- Lines 468-470
 function CoreEnvEditor:set_title()
 	self._main_frame:set_title(self._env_name .. " - Environment Editor")
 end
 
+-- Lines 472-474
 function CoreEnvEditor:value_is_changed()
 	self._value_is_changed = true
 end
 
+-- Lines 476-478
 function CoreEnvEditor:add_updator(upd)
 	table.insert(self._updators, upd)
 end
 
+-- Lines 480-487
 function CoreEnvEditor:get_child(node, name)
 	for child in node:children() do
 		if child:name() == name then
@@ -482,6 +510,7 @@ function CoreEnvEditor:get_child(node, name)
 	Application:error("Can't find child!")
 end
 
+-- Lines 489-499
 function CoreEnvEditor:on_encode_parameters()
 	local current_env = self._env_path
 
@@ -496,6 +525,7 @@ function CoreEnvEditor:on_encode_parameters()
 	self:database_load_env(current_env)
 end
 
+-- Lines 501-517
 function CoreEnvEditor:write_to_disk(path, new_name)
 	local file = SystemFS:open(path, "w")
 
@@ -515,6 +545,7 @@ function CoreEnvEditor:write_to_disk(path, new_name)
 	managers.viewport:editor_reload_environment(managers.database:entry_path(path))
 end
 
+-- Lines 519-552
 function CoreEnvEditor:write_posteffect(file)
 	file:print("\t\t<post_effect>\n")
 
@@ -559,6 +590,7 @@ function CoreEnvEditor:write_posteffect(file)
 	file:print("\t\t</post_effect>\n")
 end
 
+-- Lines 554-570
 function CoreEnvEditor:write_shadow_params(file)
 	local params = self:shadow_feed_params({})
 
@@ -581,6 +613,7 @@ function CoreEnvEditor:write_shadow_params(file)
 	file:print("\t\t\t\t</shadow_rendering>\n")
 end
 
+-- Lines 572-591
 function CoreEnvEditor:write_underlayeffect(file)
 	file:print("\t\t<underlay_effect>\n")
 
@@ -607,6 +640,7 @@ function CoreEnvEditor:write_underlayeffect(file)
 	file:print("\t\t</underlay_effect>\n")
 end
 
+-- Lines 593-608
 function CoreEnvEditor:write_sky(file)
 	file:print("\t\t<others>\n")
 
@@ -628,10 +662,12 @@ function CoreEnvEditor:write_sky(file)
 	file:print("\t\t</others>\n")
 end
 
+-- Lines 610-612
 function CoreEnvEditor:on_close()
 	managers.toolhub:close("Environment Editor")
 end
 
+-- Lines 613-670
 function CoreEnvEditor:database_load_posteffect(post_effect_node)
 	for post_processor in post_effect_node:children() do
 		local post_pro = self._posteffect.post_processors[post_processor:name()]
@@ -695,6 +731,7 @@ function CoreEnvEditor:database_load_posteffect(post_effect_node)
 	self:set_title()
 end
 
+-- Lines 672-720
 function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 	if underlay_effect_node:name() == "underlay_effect" then
 		for material in underlay_effect_node:children() do
@@ -748,6 +785,7 @@ function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 	self:set_title()
 end
 
+-- Lines 722-767
 function CoreEnvEditor:database_load_sky(sky_node)
 	if sky_node:name() == "others" then
 		for param in sky_node:children() do
@@ -797,6 +835,7 @@ function CoreEnvEditor:database_load_sky(sky_node)
 	self:set_title()
 end
 
+-- Lines 769-790
 function CoreEnvEditor:database_load_env(env_path)
 	local full_path = managers.database:entry_expanded_path("environment", env_path)
 	local env = managers.database:has(full_path) and managers.database:load_node(full_path)
@@ -824,6 +863,7 @@ function CoreEnvEditor:database_load_env(env_path)
 	return env
 end
 
+-- Lines 792-797
 function CoreEnvEditor:on_open_file()
 	local path = managers.database:open_file_dialog(self._main_frame, "Environments (*.environment)|*.environment")
 
@@ -832,10 +872,12 @@ function CoreEnvEditor:on_open_file()
 	end
 end
 
+-- Lines 799-801
 function CoreEnvEditor:on_save_file()
 	self:write_to_disk(managers.database:base_path() .. string.gsub(self._env_path, "/", "\\") .. ".environment")
 end
 
+-- Lines 803-809
 function CoreEnvEditor:on_save_file_as()
 	local path = managers.database:save_file_dialog(self._main_frame, false, "Environments (*.environment)|*.environment")
 
@@ -845,12 +887,14 @@ function CoreEnvEditor:on_save_file_as()
 	end
 end
 
+-- Lines 811-815
 function CoreEnvEditor:on_manager_flush()
 	if managers and managers.environment then
 		managers.environment:flush()
 	end
 end
 
+-- Lines 817-822
 function CoreEnvEditor:destroy()
 	if alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -859,6 +903,7 @@ function CoreEnvEditor:destroy()
 	end
 end
 
+-- Lines 824-841
 function CoreEnvEditor:close()
 	self._main_frame:destroy()
 
@@ -880,10 +925,12 @@ function CoreEnvEditor:close()
 	managers.viewport:first_active_viewport():set_environment(managers.viewport:first_active_viewport():get_environment_path())
 end
 
+-- Lines 843-845
 function CoreEnvEditor:set_position(newpos)
 	self._main_frame:set_position(newpos)
 end
 
+-- Lines 847-885
 function CoreEnvEditor:update(t, dt)
 	self:sync()
 
@@ -925,6 +972,7 @@ function CoreEnvEditor:update(t, dt)
 	end
 end
 
+-- Lines 887-912
 function CoreEnvEditor:step()
 	local undo = self._undo[self._undo_index]
 
@@ -953,6 +1001,7 @@ function CoreEnvEditor:step()
 	end
 end
 
+-- Lines 914-920
 function CoreEnvEditor:on_undo()
 	if self._undo_index > 1 then
 		self._undo_index = self._undo_index - 1
@@ -963,6 +1012,7 @@ function CoreEnvEditor:on_undo()
 	end
 end
 
+-- Lines 922-928
 function CoreEnvEditor:on_redo()
 	if self._undo_index <= self._max_undo_index then
 		self._undo_index = self._undo_index + 1
@@ -973,6 +1023,7 @@ function CoreEnvEditor:on_redo()
 	end
 end
 
+-- Lines 930-934
 function CoreEnvEditor:get_cursor_look_point(camera, dist)
 	local mouse_local = Vector3(0, 0, 0)
 	local cursor_pos = Vector3(mouse_local.x / self._screen_borders.x * 2 - 1, mouse_local.y / self._screen_borders.y * 2 - 1, dist)
@@ -980,6 +1031,7 @@ function CoreEnvEditor:get_cursor_look_point(camera, dist)
 	return camera:screen_to_world(cursor_pos)
 end
 
+-- Lines 936-945
 function CoreEnvEditor:draw_cursor()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -992,6 +1044,7 @@ function CoreEnvEditor:draw_cursor()
 	end
 end
 
+-- Lines 947-963
 function CoreEnvEditor:pick_depth()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1012,6 +1065,7 @@ function CoreEnvEditor:pick_depth()
 	return 0
 end
 
+-- Lines 965-980
 function CoreEnvEditor:pick_height()
 	if managers.viewport and managers.viewport.get_current_camera then
 		local camera = managers.viewport:get_current_camera()
@@ -1030,6 +1084,7 @@ function CoreEnvEditor:pick_height()
 	return 0
 end
 
+-- Lines 982-1091
 function CoreEnvEditor:sync()
 	local undo_struct = {}
 
@@ -1152,6 +1207,7 @@ function CoreEnvEditor:sync()
 	end
 end
 
+-- Lines 1093-1103
 function CoreEnvEditor:value_database_lookup(str)
 	local i = string.find(str, "#")
 	local db_key = string.sub(str, 1, i - 1)

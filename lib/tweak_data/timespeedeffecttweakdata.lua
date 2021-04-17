@@ -1,10 +1,12 @@
 TimeSpeedEffectTweakData = TimeSpeedEffectTweakData or class()
 
+-- Lines 3-6
 function TimeSpeedEffectTweakData:init()
 	self:_init_base_effects()
 	self:_init_mission_effects()
 end
 
+-- Lines 10-51
 function TimeSpeedEffectTweakData:_init_base_effects()
 	self.mask_on = {
 		sustain = 5,
@@ -40,6 +42,7 @@ function TimeSpeedEffectTweakData:_init_base_effects()
 	}
 end
 
+-- Lines 55-79
 function TimeSpeedEffectTweakData:_init_mission_effects()
 	self.mission_effects = {
 		quickdraw = {

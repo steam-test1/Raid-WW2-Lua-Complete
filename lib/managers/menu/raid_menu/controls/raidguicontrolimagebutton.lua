@@ -1,6 +1,7 @@
 RaidGUIControlImageButton = RaidGUIControlImageButton or class(RaidGUIControlImage)
 RaidGUIControlImageButton.DISABLED_COLOR = tweak_data.gui.colors.raid_dark_grey
 
+-- Lines 5-33
 function RaidGUIControlImageButton:init(parent, params)
 	RaidGUIControlImageButton.super.init(self, parent, params)
 
@@ -28,6 +29,7 @@ function RaidGUIControlImageButton:init(parent, params)
 	self._object:set_color(self._color)
 end
 
+-- Lines 35-49
 function RaidGUIControlImageButton:_create_highlight_image()
 	self._highlight_texture = self._params.highlight_texture
 	self._highlight_texture_rect = self._params.highlight_texture_rect
@@ -43,6 +45,7 @@ function RaidGUIControlImageButton:_create_highlight_image()
 	self._highlight_image = self._panel:bitmap(params)
 end
 
+-- Lines 51-72
 function RaidGUIControlImageButton:highlight_on()
 	if self._params.no_highlight then
 		return
@@ -66,6 +69,7 @@ function RaidGUIControlImageButton:highlight_on()
 	end
 end
 
+-- Lines 75-92
 function RaidGUIControlImageButton:highlight_off()
 	self._highlighted = false
 
@@ -85,6 +89,7 @@ function RaidGUIControlImageButton:highlight_off()
 	end
 end
 
+-- Lines 94-107
 function RaidGUIControlImageButton:on_mouse_pressed(button)
 	if not self._enabled then
 		return
@@ -101,6 +106,7 @@ function RaidGUIControlImageButton:on_mouse_pressed(button)
 	self._active_click_animation = self._object:animate(callback(self, self, "_animate_press"))
 end
 
+-- Lines 109-120
 function RaidGUIControlImageButton:mouse_released(o, button, x, y)
 	if not self._enabled then
 		return
@@ -115,6 +121,7 @@ function RaidGUIControlImageButton:mouse_released(o, button, x, y)
 	return true
 end
 
+-- Lines 122-130
 function RaidGUIControlImageButton:on_mouse_released(button)
 	if self._active_click_animation then
 		self._object:stop(self._active_click_animation)
@@ -125,6 +132,7 @@ function RaidGUIControlImageButton:on_mouse_released(button)
 	self._on_click_callback(button, self, self._data)
 end
 
+-- Lines 132-144
 function RaidGUIControlImageButton:set_enabled(enabled)
 	RaidGUIControlImageButton.super.set_enabled(self, enabled)
 
@@ -139,6 +147,7 @@ function RaidGUIControlImageButton:set_enabled(enabled)
 	end
 end
 
+-- Lines 150-173
 function RaidGUIControlImageButton:_animate_highlight_on()
 	self._highlight_animation_t = self._highlight_animation_t or 0
 	local duration = 0.2
@@ -161,6 +170,7 @@ function RaidGUIControlImageButton:_animate_highlight_on()
 	self._highlight_animation_t = 1
 end
 
+-- Lines 175-198
 function RaidGUIControlImageButton:_animate_highlight_off()
 	self._highlight_animation_t = self._highlight_animation_t or 0
 	local duration = 0.2
@@ -183,6 +193,7 @@ function RaidGUIControlImageButton:_animate_highlight_off()
 	self._highlight_animation_t = 0
 end
 
+-- Lines 200-222
 function RaidGUIControlImageButton:_animate_press()
 	local t = 0
 	local original_w = self._w
@@ -206,6 +217,7 @@ function RaidGUIControlImageButton:_animate_press()
 	self._object:set_center(center_x, center_y)
 end
 
+-- Lines 224-249
 function RaidGUIControlImageButton:_animate_release()
 	local t = 0
 	local duration = 0.25

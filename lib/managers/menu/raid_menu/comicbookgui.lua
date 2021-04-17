@@ -15,22 +15,26 @@ ComicBookGui.BULLET_PADDING = 2
 ComicBookGui.ANIMATION_DURATION = 1
 ComicBookGui.PAGE_NAME = "ui/comic_book/raid_comic_"
 
+-- Lines 24-32
 function ComicBookGui:init(ws, fullscreen_ws, node, component_name)
 	ComicBookGui.super.init(self, ws, fullscreen_ws, node, component_name)
 	self._node.components.raid_menu_header:set_screen_name("menu_comic_book_screen_name")
 	self:_process_comic_book()
 end
 
+-- Lines 34-39
 function ComicBookGui:_set_initial_data()
 	self._current_page = 1
 	self._bullets_normal = {}
 	self._bullets_active = {}
 end
 
+-- Lines 41-43
 function ComicBookGui:close()
 	ComicBookGui.super.close(self)
 end
 
+-- Lines 45-92
 function ComicBookGui:_layout()
 	self:_disable_dof()
 
@@ -136,6 +140,7 @@ function ComicBookGui:_layout()
 	self:bind_controller_inputs()
 end
 
+-- Lines 94-149
 function ComicBookGui:_process_comic_book()
 	managers.menu_component:post_event("paper_shuffle_menu")
 
@@ -172,6 +177,7 @@ function ComicBookGui:_process_comic_book()
 	self._comic_book_image:set_image(ComicBookGui.PAGE_NAME .. string.format("%03d", self._current_page))
 end
 
+-- Lines 151-196
 function ComicBookGui:_animate_bullets(params)
 	local current_page = params.current_page
 	local previous_page = params.previous_page
@@ -208,6 +214,7 @@ function ComicBookGui:_animate_bullets(params)
 	end
 end
 
+-- Lines 198-211
 function ComicBookGui:_stop_animation(current_page, previous_page)
 	if previous_page then
 		self._bullets_active[previous_page]:set_w(0)
@@ -222,6 +229,7 @@ function ComicBookGui:_stop_animation(current_page, previous_page)
 	self._bullet_panel:stop()
 end
 
+-- Lines 213-230
 function ComicBookGui:_page_left()
 	if self._current_page == 1 then
 		return
@@ -244,6 +252,7 @@ function ComicBookGui:_page_left()
 	Application:trace("[ComicBookGui:_page_left] self._current_page ", self._current_page)
 end
 
+-- Lines 232-249
 function ComicBookGui:_page_right()
 	if self._current_page == ComicBookGui.TOTAL_PAGE_COUNT then
 		return
@@ -266,14 +275,17 @@ function ComicBookGui:_page_right()
 	Application:trace("[ComicBookGui:_page_right] self._current_page ", self._current_page)
 end
 
+-- Lines 251-253
 function ComicBookGui:_on_left_arrow_clicked()
 	self:_page_left()
 end
 
+-- Lines 255-257
 function ComicBookGui:_on_right_arrow_clicked()
 	self:_page_right()
 end
 
+-- Lines 265-284
 function ComicBookGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -303,6 +315,7 @@ function ComicBookGui:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 286-303
 function ComicBookGui:bind_controller_inputs_left_only()
 	local bindings = {
 		{
@@ -327,6 +340,7 @@ function ComicBookGui:bind_controller_inputs_left_only()
 	self:set_legend(legend)
 end
 
+-- Lines 305-322
 function ComicBookGui:bind_controller_inputs_right_only()
 	local bindings = {
 		{
@@ -351,6 +365,7 @@ function ComicBookGui:bind_controller_inputs_right_only()
 	self:set_legend(legend)
 end
 
+-- Lines 324-327
 function ComicBookGui:confirm_pressed()
 	return false
 end

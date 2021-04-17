@@ -5,6 +5,7 @@ RaidGUIControlGrid.PAGING_PANEL_HEIGHT = 25
 RaidGUIControlGrid.PAGING_STEPPER_WIDTH = 100
 RaidGUIControlGrid.SCROLL_STEP = 30
 
+-- Lines 10-53
 function RaidGUIControlGrid:init(parent, params)
 	RaidGUIControlGrid.super.init(self, parent, params)
 
@@ -49,9 +50,11 @@ function RaidGUIControlGrid:init(parent, params)
 	self:_create_items()
 end
 
+-- Lines 55-56
 function RaidGUIControlGrid:close()
 end
 
+-- Lines 58-84
 function RaidGUIControlGrid:_get_data()
 	self._grid_panel:set_y(0)
 
@@ -70,6 +73,7 @@ function RaidGUIControlGrid:_get_data()
 	self._grid_panel:set_h(row_count * (self._selected_marker_h + self._vertical_spacing))
 end
 
+-- Lines 86-128
 function RaidGUIControlGrid:_create_items()
 	if self._total_items == 0 then
 		return
@@ -109,6 +113,7 @@ function RaidGUIControlGrid:_create_items()
 	end
 end
 
+-- Lines 130-140
 function RaidGUIControlGrid:_create_item(item_params, item_data, grid_params)
 	local item = self._grid_panel:create_custom_control(item_params.row_class or RaidGUIControlCardBase, item_params, item_data, grid_params)
 
@@ -119,6 +124,7 @@ function RaidGUIControlGrid:_create_item(item_params, item_data, grid_params)
 	return item
 end
 
+-- Lines 142-146
 function RaidGUIControlGrid:_delete_items()
 	self._grid_items = {}
 	self._selected_item = nil
@@ -126,18 +132,22 @@ function RaidGUIControlGrid:_delete_items()
 	self._grid_panel:clear()
 end
 
+-- Lines 148-149
 function RaidGUIControlGrid:highlight_on()
 end
 
+-- Lines 151-152
 function RaidGUIControlGrid:highlight_off()
 end
 
+-- Lines 154-159
 function RaidGUIControlGrid:refresh_data()
 	self:_delete_items()
 	self:_get_data()
 	self:_create_items()
 end
 
+-- Lines 161-171
 function RaidGUIControlGrid:select_grid_item_by_item(grid_item, dont_fire_select_callback)
 	if self._selected_item then
 		self._selected_item:unselect()
@@ -150,6 +160,7 @@ function RaidGUIControlGrid:select_grid_item_by_item(grid_item, dont_fire_select
 	end
 end
 
+-- Lines 173-190
 function RaidGUIControlGrid:select_grid_item_by_key_value(params)
 	for grid_item_index, grid_item in ipairs(self._grid_items) do
 		local grid_item_data = grid_item:get_data()
@@ -168,10 +179,12 @@ function RaidGUIControlGrid:select_grid_item_by_key_value(params)
 	return self._selected_item
 end
 
+-- Lines 192-194
 function RaidGUIControlGrid:selected_grid_item()
 	return self._selected_item
 end
 
+-- Lines 196-204
 function RaidGUIControlGrid:_on_item_clicked_callback(item_data, key_field_name)
 	self:select_grid_item_by_key_value({
 		dont_fire_select_callback = true,
@@ -184,18 +197,21 @@ function RaidGUIControlGrid:_on_item_clicked_callback(item_data, key_field_name)
 	end
 end
 
+-- Lines 206-214
 function RaidGUIControlGrid:_on_item_double_clicked_callback(item_data, key_field_name)
 	if self._on_double_click_callback then
 		self._on_double_click_callback(item_data)
 	end
 end
 
+-- Lines 216-222
 function RaidGUIControlGrid:_on_item_selected_callback(item_idx, item_data)
 	if self._on_select_callback then
 		self._on_select_callback(item_idx, item_data)
 	end
 end
 
+-- Lines 225-234
 function RaidGUIControlGrid:set_selected(value, dont_fire_select_callback)
 	self._selected = value
 
@@ -208,6 +224,7 @@ function RaidGUIControlGrid:set_selected(value, dont_fire_select_callback)
 	end
 end
 
+-- Lines 236-244
 function RaidGUIControlGrid:_unselect_all()
 	self._selected_item = nil
 	self._selected_item_idx = 0
@@ -217,6 +234,7 @@ function RaidGUIControlGrid:_unselect_all()
 	end
 end
 
+-- Lines 246-270
 function RaidGUIControlGrid:move_up()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx - self._num_horizontal_items
@@ -236,6 +254,7 @@ function RaidGUIControlGrid:move_up()
 	end
 end
 
+-- Lines 272-305
 function RaidGUIControlGrid:move_down()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx + self._num_horizontal_items
@@ -260,6 +279,7 @@ function RaidGUIControlGrid:move_down()
 	end
 end
 
+-- Lines 307-329
 function RaidGUIControlGrid:move_left()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx - 1
@@ -281,6 +301,7 @@ function RaidGUIControlGrid:move_left()
 	end
 end
 
+-- Lines 331-353
 function RaidGUIControlGrid:move_right()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx + 1
@@ -302,6 +323,7 @@ function RaidGUIControlGrid:move_right()
 	end
 end
 
+-- Lines 355-395
 function RaidGUIControlGrid:_calculate_selected_item_position()
 	if not self._selected_item or not self._params.scrollable_area_ref then
 		return
@@ -332,5 +354,6 @@ function RaidGUIControlGrid:_calculate_selected_item_position()
 	self._scrollbar:set_y(scroll_y)
 end
 
+-- Lines 397-399
 function RaidGUIControlGrid:confirm_pressed()
 end

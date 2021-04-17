@@ -1,6 +1,7 @@
 EventsTweakData = EventsTweakData or class()
 EventsTweakData.REWERD_TYPE_GOLD = "REWERD_TYPE_GOLD"
 
+-- Lines 5-27
 function EventsTweakData:init()
 	self.active_duty_bonus_rewards = {
 		{}

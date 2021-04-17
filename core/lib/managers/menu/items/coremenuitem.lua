@@ -3,6 +3,7 @@ core:module("CoreMenuItem")
 Item = Item or class()
 Item.TYPE = "item"
 
+-- Lines 6-74
 function Item:init(data_node, parameters)
 	self._type = ""
 	local params = parameters or {}
@@ -65,44 +66,54 @@ function Item:init(data_node, parameters)
 	self._enabled = true
 end
 
+-- Lines 76-79
 function Item:set_enabled(enabled)
 	self._enabled = enabled
 
 	self:dirty()
 end
 
+-- Lines 81-83
 function Item:enabled()
 	return self._enabled
 end
 
+-- Lines 85-87
 function Item:type()
 	return self._type
 end
 
+-- Lines 89-91
 function Item:name()
 	return self._parameters.name
 end
 
+-- Lines 93-95
 function Item:info_panel()
 	return self._parameters.info_panel
 end
 
+-- Lines 97-99
 function Item:parameters()
 	return self._parameters
 end
 
+-- Lines 101-103
 function Item:parameter(name)
 	return self._parameters[name]
 end
 
+-- Lines 105-107
 function Item:set_parameter(name, value)
 	self._parameters[name] = value
 end
 
+-- Lines 109-111
 function Item:set_parameters(parameters)
 	self._parameters = parameters
 end
 
+-- Lines 113-146
 function Item:set_callback_handler(callback_handler)
 	self._callback_handler = callback_handler
 
@@ -145,18 +156,21 @@ function Item:set_callback_handler(callback_handler)
 	end
 end
 
+-- Lines 148-152
 function Item:trigger()
 	for _, callback in pairs((self:enabled() or self:parameters().ignore_disabled) and self:parameters().callback or self:parameters().callback_disabled) do
 		callback(self)
 	end
 end
 
+-- Lines 154-158
 function Item:dirty()
 	if self.dirty_callback then
 		self:dirty_callback()
 	end
 end
 
+-- Lines 160-170
 function Item:visible()
 	if self._visible_callback_list then
 		for _, visible_callback in pairs(self._visible_callback_list) do
@@ -169,9 +183,11 @@ function Item:visible()
 	return true
 end
 
+-- Lines 172-174
 function Item:on_delete_row_item()
 end
 
+-- Lines 176-181
 function Item:on_delete_item()
 	self._parameters.callback = {}
 	self._parameters.callback_disabled = {}
@@ -179,36 +195,45 @@ function Item:on_delete_item()
 	self._icon_visible_callback_list = nil
 end
 
+-- Lines 183-184
 function Item:on_item_position(row_item, node)
 end
 
+-- Lines 186-187
 function Item:on_item_positions_done(row_item, node)
 end
 
+-- Lines 189-191
 function Item:get_h(row_item)
 	return nil
 end
 
+-- Lines 193-195
 function Item:setup_gui(node, row_item)
 	return false
 end
 
+-- Lines 197-199
 function Item:reload(row_item)
 	return false
 end
 
+-- Lines 201-203
 function Item:highlight_row_item(node, row_item, mouse_over)
 	return false
 end
 
+-- Lines 205-207
 function Item:fade_row_item(node, row_item)
 	return false
 end
 
+-- Lines 209-211
 function Item:menu_unselected_visible()
 	return true
 end
 
+-- Lines 213-222
 function Item:icon_visible()
 	if self._icon_visible_callback_list then
 		for _, visible_callback in pairs(self._icon_visible_callback_list) do

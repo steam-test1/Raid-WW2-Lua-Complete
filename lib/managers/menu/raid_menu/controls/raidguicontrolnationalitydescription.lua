@@ -1,6 +1,7 @@
 RaidGUIControlNationalityDescription = RaidGUIControlNationalityDescription or class(RaidGUIControl)
 RaidGUIControlNationalityDescription.PREFERRED_NATIONALITY_LABEL_DEFAULT_Y = 242
 
+-- Lines 6-12
 function RaidGUIControlNationalityDescription:init(parent, params, item_data)
 	RaidGUIControlNationalityDescription.super.init(self, parent, params, item_data)
 
@@ -9,6 +10,7 @@ function RaidGUIControlNationalityDescription:init(parent, params, item_data)
 	self:_layout()
 end
 
+-- Lines 14-38
 function RaidGUIControlNationalityDescription:_layout()
 	self._object = self._panel:panel({
 		name = "character_info_panel",
@@ -79,6 +81,7 @@ function RaidGUIControlNationalityDescription:_layout()
 	})
 end
 
+-- Lines 40-58
 function RaidGUIControlNationalityDescription:set_data(data)
 	local nation_icon_data = tweak_data.gui.icons["character_creation_nationality_" .. data.nationality] or tweak_data.gui.icons.ico_flag_empty
 

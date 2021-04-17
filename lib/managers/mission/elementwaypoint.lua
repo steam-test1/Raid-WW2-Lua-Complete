@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementWaypoint = ElementWaypoint or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-12
 function ElementWaypoint:init(...)
 	ElementWaypoint.super.init(self, ...)
 
@@ -12,20 +13,24 @@ function ElementWaypoint:init(...)
 	end
 end
 
+-- Lines 14-18
 function ElementWaypoint:_get_unique_id()
 	local uid = self._sync_id .. self._id
 
 	return uid
 end
 
+-- Lines 20-22
 function ElementWaypoint:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
+-- Lines 24-26
 function ElementWaypoint:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 28-40
 function ElementWaypoint:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -56,10 +61,12 @@ function ElementWaypoint:on_executed(instigator)
 	ElementWaypoint.super.on_executed(self, instigator)
 end
 
+-- Lines 42-44
 function ElementWaypoint:operation_remove()
 	managers.hud:remove_waypoint(self:_get_unique_id())
 end
 
+-- Lines 46-49
 function ElementWaypoint:pre_destroy()
 	managers.hud:remove_waypoint(self:_get_unique_id())
 end

@@ -14,6 +14,7 @@ RaidGUIControlSkillDetails.ACTIVE_LEVEL_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlSkillDetails.PENDING_LEVEL_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlSkillDetails.INACTIVE_LEVEL_COLOR = tweak_data.gui.colors.raid_dark_grey
 
+-- Lines 24-35
 function RaidGUIControlSkillDetails:init(parent, params)
 	RaidGUIControlSkillDetails.super.init(self, parent, params)
 
@@ -28,6 +29,7 @@ function RaidGUIControlSkillDetails:init(parent, params)
 	self:_create_skill_description()
 end
 
+-- Lines 38-46
 function RaidGUIControlSkillDetails:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_customization_panel"
@@ -38,6 +40,7 @@ function RaidGUIControlSkillDetails:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 48-63
 function RaidGUIControlSkillDetails:_create_skill_title()
 	local skill_title_params = {
 		vertical = "center",
@@ -56,6 +59,7 @@ function RaidGUIControlSkillDetails:_create_skill_title()
 	self._title = self._object:label(skill_title_params)
 end
 
+-- Lines 65-79
 function RaidGUIControlSkillDetails:_create_skill_description()
 	local description_text_params = {
 		name = "skill_description",
@@ -73,6 +77,7 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	self._description = self._object:text(description_text_params)
 end
 
+-- Lines 81-86
 function RaidGUIControlSkillDetails:set_skill(skill, title, description, color_changes)
 	if self._title:text() ~= title or self._description:text() ~= description then
 		self._object:get_engine_panel():stop()
@@ -80,6 +85,7 @@ function RaidGUIControlSkillDetails:set_skill(skill, title, description, color_c
 	end
 end
 
+-- Lines 88-140
 function RaidGUIControlSkillDetails:_animate_skill_change(skill_title_label, new_title, new_description, color_changes)
 	local t = 0
 	local starting_alpha = self._title._object:alpha()

@@ -1,5 +1,6 @@
 TeammateCommentUnitElement = TeammateCommentUnitElement or class(MissionElement)
 
+-- Lines 3-16
 function TeammateCommentUnitElement:init(unit)
 	TeammateCommentUnitElement.super.init(self, unit)
 
@@ -15,10 +16,12 @@ function TeammateCommentUnitElement:init(unit)
 	table.insert(self._save_values, "radius")
 end
 
+-- Lines 18-21
 function TeammateCommentUnitElement:post_init(...)
 	TeammateCommentUnitElement.super.post_init(self, ...)
 end
 
+-- Lines 23-31
 function TeammateCommentUnitElement:update_selected(t, dt)
 	if self._hed.radius ~= 0 then
 		local brush = Draw:brush()
@@ -32,6 +35,7 @@ function TeammateCommentUnitElement:update_selected(t, dt)
 	end
 end
 
+-- Lines 33-56
 function TeammateCommentUnitElement:test_element()
 	if self._hed.comment then
 		managers.editor:set_wanted_mute(false)
@@ -57,6 +61,7 @@ function TeammateCommentUnitElement:test_element()
 	end
 end
 
+-- Lines 58-64
 function TeammateCommentUnitElement:stop_test_element()
 	managers.editor:set_wanted_mute(true)
 	managers.editor:set_listener_enabled(false)
@@ -66,6 +71,7 @@ function TeammateCommentUnitElement:stop_test_element()
 	end
 end
 
+-- Lines 79-93
 function TeammateCommentUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -88,6 +94,7 @@ function TeammateCommentUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("If \"Play close to element\" is checked, the comment will be played on a teammate close to the element position, otherwise close to the player.")
 end
 
+-- Lines 99-102
 function TeammateCommentUnitElement:destroy()
 	self:stop_test_element()
 	TeammateCommentUnitElement.super.destroy(self)

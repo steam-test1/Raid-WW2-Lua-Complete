@@ -4,14 +4,17 @@ core:import("CorePlayerSlotStateLocalUserDebugBind")
 
 Init = Init or class()
 
+-- Lines 7-9
 function Init:init()
 	self.player_slot._init:task_started()
 end
 
+-- Lines 11-13
 function Init:destroy()
 	self.player_slot._init:task_completed()
 end
 
+-- Lines 15-21
 function Init:transition()
 	if self.player_slot._perform_debug_local_user_binding:is_requested() then
 		return CorePlayerSlotStateLocalUserDebugBind.LocalUserDebugBind

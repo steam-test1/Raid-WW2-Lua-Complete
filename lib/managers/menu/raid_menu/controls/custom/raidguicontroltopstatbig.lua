@@ -19,6 +19,7 @@ RaidGUIControlTopStatBig.PLAYER_NAME_FONT_SIZE = tweak_data.gui.font_sizes.menu_
 RaidGUIControlTopStatBig.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlTopStatBig.FONT_KERNING = tweak_data.hud.medium_kern
 
+-- Lines 31-44
 function RaidGUIControlTopStatBig:init(parent, params)
 	RaidGUIControlTopStatBig.super.init(self, parent, params)
 
@@ -35,9 +36,11 @@ function RaidGUIControlTopStatBig:init(parent, params)
 	self._shown = false
 end
 
+-- Lines 47-48
 function RaidGUIControlTopStatBig:close()
 end
 
+-- Lines 51-61
 function RaidGUIControlTopStatBig:_create_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x or 0
@@ -49,6 +52,7 @@ function RaidGUIControlTopStatBig:_create_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 64-108
 function RaidGUIControlTopStatBig:_create_stat_info()
 	local player_name_params = {
 		vertical = "center",
@@ -106,6 +110,7 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 	self._stat_value_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.STAT_VALUE_CENTER_Y_FROM_BOTTOM)
 end
 
+-- Lines 110-120
 function RaidGUIControlTopStatBig:_create_icon_background()
 	local icon_background_params = {
 		name = "icon_background",
@@ -119,6 +124,7 @@ function RaidGUIControlTopStatBig:_create_icon_background()
 	icon_background:set_center_y(RaidGUIControlTopStatBig.ICON_BACKGROUND_CENTER_Y)
 end
 
+-- Lines 122-150
 function RaidGUIControlTopStatBig:set_data(data)
 	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
 	self._stat_name_label:set_text(self:translate(data.text_id, true))
@@ -152,6 +158,7 @@ function RaidGUIControlTopStatBig:set_data(data)
 	end
 end
 
+-- Lines 152-158
 function RaidGUIControlTopStatBig:animate_show(delay, clbk)
 	Application:trace("RaidGUIControlTopStatBig:animate_show", delay, clbk)
 
@@ -161,10 +168,12 @@ function RaidGUIControlTopStatBig:animate_show(delay, clbk)
 	self._player_name_label._object:animate(callback(self, self, "_animate_show_result"), delay + 0.6, clbk)
 end
 
+-- Lines 160-162
 function RaidGUIControlTopStatBig:shown()
 	return self._shown
 end
 
+-- Lines 164-204
 function RaidGUIControlTopStatBig:_animate_show_stat(panel, delay, icon, label)
 	if delay then
 		wait(delay)
@@ -206,6 +215,7 @@ function RaidGUIControlTopStatBig:_animate_show_stat(panel, delay, icon, label)
 	label:set_alpha(1)
 end
 
+-- Lines 206-250
 function RaidGUIControlTopStatBig:_animate_show_result(label, delay, clbk)
 	if delay then
 		wait(delay)

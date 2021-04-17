@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementStatisticsJobs = ElementStatisticsJobs or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementStatisticsJobs:init(...)
 	ElementStatisticsJobs.super.init(self, ...)
 end
 
+-- Lines 9-20
 function ElementStatisticsJobs:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -20,10 +22,12 @@ function ElementStatisticsJobs:on_executed(instigator)
 	ElementStatisticsJobs.super.on_executed(self, instigator)
 end
 
+-- Lines 22-24
 function ElementStatisticsJobs:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 26-46
 function ElementStatisticsJobs:_completed_job_data(job_id, state, difficulty, prof, dropin)
 	local count = 0
 

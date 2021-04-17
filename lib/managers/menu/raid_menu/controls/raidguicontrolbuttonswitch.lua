@@ -17,6 +17,7 @@ RaidGUIControlButtonSwitch.THUMB_COLOR_OFF = tweak_data.gui.colors.raid_grey
 RaidGUIControlButtonSwitch.THUMB_COLOR_ON = tweak_data.gui.colors.raid_red
 RaidGUIControlButtonSwitch.THUMB_COLOR_HIGHLIGHT = tweak_data.gui.colors.raid_red
 
+-- Lines 25-87
 function RaidGUIControlButtonSwitch:init(parent, params)
 	RaidGUIControlButtonSwitch.super.init(self, parent, params)
 
@@ -77,6 +78,7 @@ function RaidGUIControlButtonSwitch:init(parent, params)
 	self:_render_images()
 end
 
+-- Lines 89-97
 function RaidGUIControlButtonSwitch:highlight_on()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_on"))
@@ -88,6 +90,7 @@ function RaidGUIControlButtonSwitch:highlight_on()
 	end
 end
 
+-- Lines 100-105
 function RaidGUIControlButtonSwitch:highlight_off()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_off"))
@@ -95,6 +98,7 @@ function RaidGUIControlButtonSwitch:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
+-- Lines 107-112
 function RaidGUIControlButtonSwitch:mouse_pressed(o, button, x, y)
 	if self:inside(x, y) then
 		self._switch_panel:stop()
@@ -102,6 +106,7 @@ function RaidGUIControlButtonSwitch:mouse_pressed(o, button, x, y)
 	end
 end
 
+-- Lines 114-133
 function RaidGUIControlButtonSwitch:mouse_released(o, button, x, y)
 	if self:inside(x, y) then
 		if self._value then
@@ -124,20 +129,24 @@ function RaidGUIControlButtonSwitch:mouse_released(o, button, x, y)
 	end
 end
 
+-- Lines 135-137
 function RaidGUIControlButtonSwitch:set_value(value)
 	self._value = value
 end
 
+-- Lines 139-141
 function RaidGUIControlButtonSwitch:get_value()
 	return self._value
 end
 
+-- Lines 143-147
 function RaidGUIControlButtonSwitch:set_value_and_render(value)
 	self:set_value(value)
 	self:_render_images()
 	self:highlight_off()
 end
 
+-- Lines 149-161
 function RaidGUIControlButtonSwitch:_render_images()
 	if self._visible == false then
 		self:hide()
@@ -154,12 +163,14 @@ function RaidGUIControlButtonSwitch:_render_images()
 	end
 end
 
+-- Lines 163-166
 function RaidGUIControlButtonSwitch:set_visible(flag)
 	self._visible = flag
 
 	self:_render_images()
 end
 
+-- Lines 168-180
 function RaidGUIControlButtonSwitch:confirm_pressed()
 	if self._value then
 		self._value = false
@@ -176,6 +187,7 @@ function RaidGUIControlButtonSwitch:confirm_pressed()
 	return true
 end
 
+-- Lines 186-215
 function RaidGUIControlButtonSwitch:_animate_highlight_on()
 	local duration = 0.2
 	local t = 0
@@ -207,6 +219,7 @@ function RaidGUIControlButtonSwitch:_animate_highlight_on()
 	self._border:set_color(RaidGUIControlButtonSwitch.SWITCH_BORDER_HIGHLIGHT_COLOR)
 end
 
+-- Lines 217-247
 function RaidGUIControlButtonSwitch:_animate_highlight_off()
 	local duration = 0.2
 	local t = 0
@@ -238,6 +251,7 @@ function RaidGUIControlButtonSwitch:_animate_highlight_off()
 	self._border:set_color(RaidGUIControlButtonSwitch.SWITCH_BORDER_COLOR)
 end
 
+-- Lines 249-271
 function RaidGUIControlButtonSwitch:_animate_switch_press()
 	local t = 0
 	local original_w = RaidGUIControlButtonSwitch.SWITCH_BORDER_W
@@ -261,6 +275,7 @@ function RaidGUIControlButtonSwitch:_animate_switch_press()
 	self._switch_panel:set_center(center_x, center_y)
 end
 
+-- Lines 273-298
 function RaidGUIControlButtonSwitch:_animate_switch_release()
 	local t = 0
 	local duration = 0.25

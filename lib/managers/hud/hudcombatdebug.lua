@@ -1,5 +1,6 @@
 HUDCombatDebug = HUDCombatDebug or class()
 
+-- Lines 3-106
 function HUDCombatDebug:init(hud)
 	self._hud_panel = hud.panel
 	self._is_shown = false
@@ -316,6 +317,7 @@ function HUDCombatDebug:init(hud)
 	managers.hud:add_updator("combat_debug_panel", callback(self, self, "update"))
 end
 
+-- Lines 108-175
 function HUDCombatDebug:update(t, dt)
 	self._current_phase_timer = self._current_phase_timer + dt
 
@@ -396,12 +398,14 @@ function HUDCombatDebug:update(t, dt)
 	end
 end
 
+-- Lines 177-181
 function HUDCombatDebug:set_music_state(state_flag)
 	self._music_state_val:set_text(tostring(state_flag))
 	self._music_state_val:stop()
 	self._music_state_val:animate(callback(self, self, "_animate_change"), Color(0.8823529411764706, 0.3568627450980392, 0.3568627450980392))
 end
 
+-- Lines 183-191
 function HUDCombatDebug:toggle()
 	if self._combat_debug_panel:visible() == true then
 		self._combat_debug_panel:set_visible(false)
@@ -414,15 +418,18 @@ function HUDCombatDebug:toggle()
 	end
 end
 
+-- Lines 193-195
 function HUDCombatDebug:is_shown()
 	return self._is_shown
 end
 
+-- Lines 197-200
 function HUDCombatDebug:clean_up()
 	managers.hud:remove_updator("combat_debug_panel")
 	self._combat_debug_panel:parent():remove(self._combat_debug_panel)
 end
 
+-- Lines 202-225
 function HUDCombatDebug:_animate_change(text, final_color)
 	local starting_color = Color.red
 	local curr_color = starting_color
@@ -447,6 +454,7 @@ function HUDCombatDebug:_animate_change(text, final_color)
 	text:set_color(final_color)
 end
 
+-- Lines 227-230
 function HUDCombatDebug:_ease_in_quart(t, starting_value, change, duration)
 	t = t / duration
 

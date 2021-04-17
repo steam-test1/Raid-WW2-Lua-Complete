@@ -2,10 +2,12 @@ InstigatorUnitElement = InstigatorUnitElement or class(MissionElement)
 InstigatorUnitElement.SAVE_UNIT_POSITION = false
 InstigatorUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 5-7
 function InstigatorUnitElement:init(unit)
 	InstigatorUnitElement.super.init(self, unit)
 end
 
+-- Lines 10-17
 function InstigatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -19,6 +21,7 @@ InstigatorOperatorUnitElement = InstigatorOperatorUnitElement or class(MissionEl
 InstigatorOperatorUnitElement.SAVE_UNIT_POSITION = false
 InstigatorOperatorUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 25-35
 function InstigatorOperatorUnitElement:init(unit)
 	InstigatorOperatorUnitElement.super.init(self, unit)
 
@@ -31,6 +34,7 @@ function InstigatorOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "keep_on_use")
 end
 
+-- Lines 37-46
 function InstigatorOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	InstigatorOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -50,14 +54,17 @@ function InstigatorOperatorUnitElement:draw_links(t, dt, selected_unit, all_unit
 	end
 end
 
+-- Lines 48-51
 function InstigatorOperatorUnitElement:get_links_to_unit(...)
 	InstigatorOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
+-- Lines 53-54
 function InstigatorOperatorUnitElement:update_editing()
 end
 
+-- Lines 56-69
 function InstigatorOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -75,6 +82,7 @@ function InstigatorOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 71-77
 function InstigatorOperatorUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -83,10 +91,12 @@ function InstigatorOperatorUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 80-82
 function InstigatorOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 84-97
 function InstigatorOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -116,6 +126,7 @@ InstigatorTriggerUnitElement = InstigatorTriggerUnitElement or class(MissionElem
 InstigatorTriggerUnitElement.SAVE_UNIT_POSITION = false
 InstigatorTriggerUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 105-113
 function InstigatorTriggerUnitElement:init(unit)
 	InstigatorTriggerUnitElement.super.init(self, unit)
 
@@ -126,6 +137,7 @@ function InstigatorTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 115-124
 function InstigatorTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	InstigatorTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -145,14 +157,17 @@ function InstigatorTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
+-- Lines 126-129
 function InstigatorTriggerUnitElement:get_links_to_unit(...)
 	InstigatorTriggerUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
+-- Lines 131-132
 function InstigatorTriggerUnitElement:update_editing()
 end
 
+-- Lines 134-147
 function InstigatorTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -170,6 +185,7 @@ function InstigatorTriggerUnitElement:add_element()
 	end
 end
 
+-- Lines 149-155
 function InstigatorTriggerUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -178,10 +194,12 @@ function InstigatorTriggerUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 158-160
 function InstigatorTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 162-174
 function InstigatorTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

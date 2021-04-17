@@ -1,5 +1,6 @@
 CoreUnitReloader = CoreUnitReloader or class()
 
+-- Lines 2-7
 function CoreUnitReloader:init()
 	self._unit_msg = {}
 	self._no_skipping = true
@@ -7,6 +8,7 @@ function CoreUnitReloader:init()
 	self:create_main_frame()
 end
 
+-- Lines 9-14
 function CoreUnitReloader:destroy()
 	if alive(self._unitreloader_frame) then
 		self._unitreloader_frame:destroy()
@@ -15,6 +17,7 @@ function CoreUnitReloader:destroy()
 	end
 end
 
+-- Lines 16-67
 function CoreUnitReloader:create_main_frame()
 	self._unitreloader_frame = EWS:Frame("Unit Reloader", Vector3(100, 400, 0), Vector3(250, 350, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 	local menu_bar = EWS:MenuBar()
@@ -62,10 +65,12 @@ function CoreUnitReloader:create_main_frame()
 	self._unitreloader_frame:set_visible(true)
 end
 
+-- Lines 69-71
 function CoreUnitReloader:set_position(newpos)
 	self._unitreloader_frame:set_position(newpos)
 end
 
+-- Lines 73-84
 function CoreUnitReloader:update(t, dt)
 	if not self._initialized then
 		self._initialized = true
@@ -80,10 +85,12 @@ function CoreUnitReloader:update(t, dt)
 	end
 end
 
+-- Lines 86-88
 function CoreUnitReloader:close()
 	self._unitreloader_frame:destroy()
 end
 
+-- Lines 90-102
 function CoreUnitReloader:check_extensions()
 	local units = World:find_units_quick("all")
 
@@ -100,12 +107,14 @@ function CoreUnitReloader:check_extensions()
 	return true
 end
 
+-- Lines 104-108
 function CoreUnitReloader:on_reload()
 	if self:check_extensions(self._main_box.unit_combo_box:get_value()) then
 		self:reload_units(self._main_box.unit_combo_box:get_value())
 	end
 end
 
+-- Lines 110-120
 function CoreUnitReloader:on_reload_all()
 	if self._warning_reload_all_dialog:show_modal() == "ID_OK" then
 		self._initialized = false
@@ -119,19 +128,23 @@ function CoreUnitReloader:on_reload_all()
 	end
 end
 
+-- Lines 122-124
 function CoreUnitReloader:on_reload_list()
 	self._initialized = false
 end
 
+-- Lines 126-128
 function CoreUnitReloader:on_close()
 	managers.toolhub:close("Unit Reloader")
 end
 
+-- Lines 130-133
 function CoreUnitReloader:log(string)
 	self._main_box.listbox:append(string)
 	self._main_box.listbox:select_index(self._main_box.listbox:nr_items() - 1)
 end
 
+-- Lines 135-138
 function CoreUnitReloader:reload_units(unit_name)
 	local num_reloads = reload_units(unit_name)
 

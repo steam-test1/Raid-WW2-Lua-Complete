@@ -6,6 +6,7 @@ ThrowableAmmoBag.LEVEL = {
 }
 local ammo_bag_ids = Idstring("units/vanilla/equipment/equip_throwable_ammo_bag/equip_throwable_ammo_bag")
 
+-- Lines 8-20
 function ThrowableAmmoBag.spawn(pos, dir, level_idx, user_unit)
 	if Network:is_server() then
 		local ammo_bag_unit = World:spawn_unit(ammo_bag_ids, pos, Rotation())
@@ -21,15 +22,18 @@ function ThrowableAmmoBag.spawn(pos, dir, level_idx, user_unit)
 	end
 end
 
+-- Lines 22-25
 function ThrowableAmmoBag.throw_bag(unit, dir)
 	managers.player:switch_carry_to_ragdoll(unit)
 	unit:push(100, dir * 800)
 end
 
+-- Lines 27-29
 function ThrowableAmmoBag.set_level(unit, level_idx)
 	unit:pickup():set_multiplier(ThrowableAmmoBag.LEVEL[level_idx])
 end
 
+-- Lines 31-40
 function ThrowableAmmoBag.interact_pickup(unit, player_unit, owner_peer_id)
 	if unit.interaction and player_unit.inventory and player_unit:inventory():need_ammo() then
 		unit:interaction():interact(player_unit)
@@ -46,16 +50,19 @@ function ThrowableAmmoBag.interact_pickup(unit, player_unit, owner_peer_id)
 	return false
 end
 
+-- Lines 42-45
 function ThrowableAmmoBag:init(unit)
 	self._unit = unit
 	self._slotmask_criminals = managers.slot:get_mask("all_criminals_no_player")
 end
 
+-- Lines 47-50
 function ThrowableAmmoBag:set_user_unit(user_unit)
 	self._user_unit = user_unit
 	self._peer_id = managers.network:session():peer_by_unit(user_unit):id()
 end
 
+-- Lines 52-79
 function ThrowableAmmoBag:update(unit, t, dt)
 	if Network:is_server() and not self._waiting_for_response then
 		local player_unit = managers.player:player_unit()
@@ -92,6 +99,7 @@ function ThrowableAmmoBag:update(unit, t, dt)
 	end
 end
 
+-- Lines 81-89
 function ThrowableAmmoBag:register_collision_callbacks()
 	self._unit:set_body_collision_callback(callback(self, self, "_collision_callback"))
 
@@ -104,6 +112,7 @@ function ThrowableAmmoBag:register_collision_callbacks()
 	end
 end
 
+-- Lines 91-97
 function ThrowableAmmoBag:from_client_response(picked_up)
 	if picked_up then
 		self:_clear()
@@ -112,14 +121,17 @@ function ThrowableAmmoBag:from_client_response(picked_up)
 	end
 end
 
+-- Lines 99-101
 function ThrowableAmmoBag:_collision_callback(tag, unit, body, other_unit, other_body, position, normal, velocity, ...)
 	self:_clear()
 end
 
+-- Lines 103-105
 function ThrowableAmmoBag:destroy()
 	self._unit:clear_body_collision_callbacks()
 end
 
+-- Lines 107-112
 function ThrowableAmmoBag:_clear()
 	if self._unit and alive(self._unit) then
 		self._unit:set_extension_update_enabled(Idstring("base"), false)

@@ -1,5 +1,6 @@
 FilterUnitElement = FilterUnitElement or class(MissionElement)
 
+-- Lines 3-47
 function FilterUnitElement:init(unit)
 	FilterUnitElement.super.init(self, unit)
 
@@ -36,17 +37,20 @@ function FilterUnitElement:init(unit)
 	table.insert(self._save_values, "alarm_off")
 end
 
+-- Lines 49-52
 function FilterUnitElement:post_init(...)
 	FilterUnitElement.super.post_init(self, ...)
 	self:_check_convertion()
 end
 
+-- Lines 54-59
 function FilterUnitElement:_check_convertion()
 	if self._hed.difficulty_overkill_290 == nil then
 		self._hed.difficulty_overkill_290 = self._hed.difficulty_overkill_145
 	end
 end
 
+-- Lines 62-161
 function FilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_check_convertion()
 	self:_create_panel()

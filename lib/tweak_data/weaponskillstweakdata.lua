@@ -8,6 +8,7 @@ WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE = "increase_magazine"
 WeaponSkillsTweakData.MAX_SKILLS_IN_TIER = 4
 WeaponSkillsTweakData.MAX_TIERS = 4
 
+-- Lines 13-123
 function WeaponSkillsTweakData:init()
 	self.skills = {}
 	self.skill_trees = {}
@@ -42,6 +43,7 @@ function WeaponSkillsTweakData:init()
 	self:_init_reedem_xp_values()
 end
 
+-- Lines 128-161
 function WeaponSkillsTweakData:_init_skills()
 	self.skills[WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE] = {
 		name_id = "weapon_skill_increase_damage_name",
@@ -75,6 +77,7 @@ function WeaponSkillsTweakData:_init_skills()
 	}
 end
 
+-- Lines 170-190
 function WeaponSkillsTweakData:_init_m1911_skill_tree()
 	self.skill_trees.m1911 = {
 		{}
@@ -380,6 +383,7 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 	}
 end
 
+-- Lines 193-207
 function WeaponSkillsTweakData:_init_c96_skill_tree()
 	self.skill_trees.c96 = {
 		{}
@@ -560,6 +564,7 @@ function WeaponSkillsTweakData:_init_c96_skill_tree()
 	}
 end
 
+-- Lines 210-223
 function WeaponSkillsTweakData:_init_webley_skill_tree()
 	self.skill_trees.webley = {
 		{}
@@ -686,6 +691,7 @@ function WeaponSkillsTweakData:_init_webley_skill_tree()
 	}
 end
 
+-- Lines 270-288
 function WeaponSkillsTweakData:_init_geco_skill_tree()
 	self.skill_trees.geco = {
 		{}
@@ -922,6 +928,7 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 	}
 end
 
+-- Lines 296-310
 function WeaponSkillsTweakData:_init_dp28_skill_tree()
 	self.skill_trees.dp28 = {
 		{}
@@ -1109,6 +1116,7 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree()
 	}
 end
 
+-- Lines 315-330
 function WeaponSkillsTweakData:_init_tt33_skill_tree()
 	self.skill_trees.tt33 = {
 		{}
@@ -1285,6 +1293,7 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree()
 	}
 end
 
+-- Lines 335-359
 function WeaponSkillsTweakData:_init_thompson_skill_tree()
 	self.skill_trees.thompson = {
 		{}
@@ -1674,6 +1683,7 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 	}
 end
 
+-- Lines 362-376
 function WeaponSkillsTweakData:_init_mp38_skill_tree()
 	self.skill_trees.mp38 = {
 		{}
@@ -1859,6 +1869,7 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree()
 	}
 end
 
+-- Lines 379-393
 function WeaponSkillsTweakData:_init_sterling_skill_tree()
 	self.skill_trees.sterling = {
 		{}
@@ -2036,6 +2047,7 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree()
 	}
 end
 
+-- Lines 396-421
 function WeaponSkillsTweakData:_init_sten_skill_tree()
 	self.skill_trees.sten = {
 		{}
@@ -2453,6 +2465,7 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 	}
 end
 
+-- Lines 424-437
 function WeaponSkillsTweakData:_init_m1903_skill_tree()
 	self.skill_trees.m1903 = {
 		{}
@@ -2613,6 +2626,7 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree()
 	}
 end
 
+-- Lines 441-456
 function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 	self.skill_trees.kar_98k = {
 		{}
@@ -2773,6 +2787,7 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 	}
 end
 
+-- Lines 461-475
 function WeaponSkillsTweakData:_init_lee_enfield_skill_tree()
 	self.skill_trees.lee_enfield = {
 		{}
@@ -2936,6 +2951,7 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree()
 	}
 end
 
+-- Lines 479-491
 function WeaponSkillsTweakData:_init_mosin_skill_tree()
 	self.skill_trees.mosin = {
 		{}
@@ -3074,6 +3090,7 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree()
 	}
 end
 
+-- Lines 494-516
 function WeaponSkillsTweakData:_init_garand_skill_tree()
 	self.skill_trees.garand = {
 		{}
@@ -3414,6 +3431,7 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 	}
 end
 
+-- Lines 519-541
 function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 	self.skill_trees.garand_golden = {
 		{}
@@ -3754,6 +3772,7 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 	}
 end
 
+-- Lines 544-558
 function WeaponSkillsTweakData:_init_m1918_skill_tree()
 	self.skill_trees.m1918 = {
 		{}
@@ -3939,6 +3958,7 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree()
 	}
 end
 
+-- Lines 561-575
 function WeaponSkillsTweakData:_init_bren_skill_tree()
 	self.skill_trees.bren = {
 		{}
@@ -4127,6 +4147,7 @@ function WeaponSkillsTweakData:_init_bren_skill_tree()
 	}
 end
 
+-- Lines 578-595
 function WeaponSkillsTweakData:_init_mg42_skill_tree()
 	self.skill_trees.mg42 = {
 		{}
@@ -4363,6 +4384,7 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 	}
 end
 
+-- Lines 598-612
 function WeaponSkillsTweakData:_init_mp44_skill_tree()
 	self.skill_trees.mp44 = {
 		{}
@@ -4536,6 +4558,7 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree()
 	}
 end
 
+-- Lines 615-635
 function WeaponSkillsTweakData:_init_m1912_skill_tree()
 	self.skill_trees.m1912 = {
 		{}
@@ -4840,6 +4863,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 	}
 end
 
+-- Lines 639-659
 function WeaponSkillsTweakData:_init_ithaca_skill_tree()
 	self.skill_trees.ithaca = {
 		{}
@@ -5135,6 +5159,7 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree()
 	}
 end
 
+-- Lines 664-682
 function WeaponSkillsTweakData:_init_browning_skill_tree()
 	self.skill_trees.browning = {
 		{}
@@ -5392,6 +5417,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree()
 	}
 end
 
+-- Lines 687-700
 function WeaponSkillsTweakData:_init_welrod_skill_tree()
 	self.skill_trees.welrod = {
 		{}
@@ -5518,6 +5544,7 @@ function WeaponSkillsTweakData:_init_welrod_skill_tree()
 	}
 end
 
+-- Lines 741-754
 function WeaponSkillsTweakData:_init_shotty_skill_tree()
 	self.skill_trees.shotty = {
 		{}
@@ -5644,6 +5671,7 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree()
 	}
 end
 
+-- Lines 757-771
 function WeaponSkillsTweakData:_init_carbine_skill_tree()
 	self.skill_trees.carbine = {
 		{}
@@ -5798,6 +5826,7 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree()
 	}
 end
 
+-- Lines 773-775
 function WeaponSkillsTweakData:_init_reedem_xp_values()
 	self.weapon_point_reedemed_xp = 50
 end

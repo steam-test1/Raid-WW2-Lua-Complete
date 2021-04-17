@@ -4,6 +4,7 @@ MissionUnlockGui.CONTENT_HEIGHT = 688
 MissionUnlockGui.CONTENT_Y = 96
 MissionUnlockGui.UNLOCK_BUTTON_CENTER_Y = 864
 
+-- Lines 9-23
 function MissionUnlockGui:init(ws, fullscreen_ws, node, component_name)
 	self._selected_mission = nil
 
@@ -22,10 +23,12 @@ function MissionUnlockGui:init(ws, fullscreen_ws, node, component_name)
 	managers.controller:add_hotswap_callback("mission_unlock_gui", callback(self, self, "on_controller_hotswap"))
 end
 
+-- Lines 25-27
 function MissionUnlockGui:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("mission_unlock_screen_title")
 end
 
+-- Lines 29-35
 function MissionUnlockGui:close()
 	managers.controller:remove_hotswap_callback("mission_unlock_gui")
 	Overlay:gui():destroy_workspace(self._fullscreen_ws)
@@ -33,6 +36,7 @@ function MissionUnlockGui:close()
 	MissionUnlockGui.super.close(self)
 end
 
+-- Lines 37-52
 function MissionUnlockGui:_layout()
 	MissionUnlockGui.super._layout(self)
 	self:_layout_contents_panel()
@@ -50,6 +54,7 @@ function MissionUnlockGui:_layout()
 	end
 end
 
+-- Lines 54-60
 function MissionUnlockGui:_layout_contents_panel()
 	local contents_panel_params = {
 		halign = "scale",
@@ -59,6 +64,7 @@ function MissionUnlockGui:_layout_contents_panel()
 	self._contents_panel = self._root_panel:panel(contents_panel_params)
 end
 
+-- Lines 62-103
 function MissionUnlockGui:_layout_offered_missions()
 	local offered_missions_panel_params = {
 		name = "offered_missions_panel",
@@ -112,6 +118,7 @@ function MissionUnlockGui:_layout_offered_missions()
 	end
 end
 
+-- Lines 105-116
 function MissionUnlockGui:_layout_unlock_button()
 	local unlock_button_params = {
 		name = "unlock_button",
@@ -125,6 +132,7 @@ function MissionUnlockGui:_layout_unlock_button()
 	self._unlock_button:disable()
 end
 
+-- Lines 118-125
 function MissionUnlockGui:_create_video_panels()
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
 	self._full_panel = self._fullscreen_ws:panel()
@@ -135,6 +143,7 @@ function MissionUnlockGui:_create_video_panels()
 	self._safe_panel = self._safe_rect_workspace:panel()
 end
 
+-- Lines 127-189
 function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	local potential_videos = tweak_data.operations.missions[mission_id].control_brief_video
 	local chosen_index = math.random(1, #potential_videos)
@@ -201,6 +210,7 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	managers.raid_menu:register_on_escape_callback(callback(self, self, "complete_video"))
 end
 
+-- Lines 191-206
 function MissionUnlockGui:_animate_show_press_any_key_prompt(prompt)
 	local duration = 0.7
 	local t = 0
@@ -218,6 +228,7 @@ function MissionUnlockGui:_animate_show_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.85)
 end
 
+-- Lines 208-241
 function MissionUnlockGui:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
@@ -256,6 +267,7 @@ function MissionUnlockGui:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.85)
 end
 
+-- Lines 243-258
 function MissionUnlockGui:on_controller_hotswap()
 	if self._playing_briefing_video then
 		local press_any_key_prompt = self._safe_panel:child("press_any_key_prompt")
@@ -271,12 +283,14 @@ function MissionUnlockGui:on_controller_hotswap()
 	end
 end
 
+-- Lines 260-264
 function MissionUnlockGui:update(t, dt)
 	if self._playing_briefing_video and (self:is_playing() and self:is_skipped() or not self:is_playing()) then
 		self:complete_video()
 	end
 end
 
+-- Lines 266-284
 function MissionUnlockGui:complete_video()
 	self._control_briefing_video:destroy()
 
@@ -301,6 +315,7 @@ function MissionUnlockGui:complete_video()
 	return true
 end
 
+-- Lines 286-292
 function MissionUnlockGui:is_playing()
 	if alive(self._control_briefing_video) then
 		return self._control_briefing_video:loop_count() < 1
@@ -309,6 +324,7 @@ function MissionUnlockGui:is_playing()
 	end
 end
 
+-- Lines 294-302
 function MissionUnlockGui:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -319,6 +335,7 @@ function MissionUnlockGui:is_skipped()
 	return false
 end
 
+-- Lines 304-312
 function MissionUnlockGui:_finish_video()
 	managers.menu_component:post_event("menu_volume_reset")
 	managers.music:stop()
@@ -327,6 +344,7 @@ function MissionUnlockGui:_finish_video()
 	managers.raid_menu:register_on_escape_callback(nil)
 end
 
+-- Lines 314-329
 function MissionUnlockGui:on_mission_chosen(control, mission, active)
 	if active then
 		self._selected_mission = mission
@@ -349,12 +367,14 @@ function MissionUnlockGui:on_mission_chosen(control, mission, active)
 	end
 end
 
+-- Lines 331-334
 function MissionUnlockGui:on_mission_double_click(mission)
 	self._selected_mission = mission
 
 	self:show_unlock_confirmation_prompt()
 end
 
+-- Lines 336-346
 function MissionUnlockGui:show_unlock_confirmation_prompt()
 	if not self._selected_mission then
 		return
@@ -368,6 +388,7 @@ function MissionUnlockGui:show_unlock_confirmation_prompt()
 	managers.menu:show_unlock_mission_confirm_dialog(confirmation_dialog_params)
 end
 
+-- Lines 348-362
 function MissionUnlockGui:on_unlock_confirmed()
 	managers.progression:choose_offered_mission(self._selected_mission)
 	managers.menu_component:post_event("new_raid_unlocked")
@@ -383,11 +404,13 @@ function MissionUnlockGui:on_unlock_confirmed()
 	end
 end
 
+-- Lines 364-367
 function MissionUnlockGui:_complete_mission_unlock_process()
 	managers.raid_menu:remove_menu_name_from_stack("mission_unlock_menu")
 	managers.raid_menu:open_menu("mission_selection_menu", false)
 end
 
+-- Lines 369-388
 function MissionUnlockGui:_bind_controller_inputs()
 	local bindings = {
 		{

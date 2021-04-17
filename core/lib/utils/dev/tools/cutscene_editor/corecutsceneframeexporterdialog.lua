@@ -1,5 +1,6 @@
 CoreCutsceneFrameExporterDialog = CoreCutsceneFrameExporterDialog or class()
 
+-- Lines 3-27
 function CoreCutsceneFrameExporterDialog:init(editor_self, editor_callback, parent_window, folder_name, start_frame, end_frame)
 	self.__editor_self = editor_self
 	self.__editor_callback = editor_callback
@@ -29,6 +30,7 @@ function CoreCutsceneFrameExporterDialog:init(editor_self, editor_callback, pare
 	self.__window:set_visible(true)
 end
 
+-- Lines 29-36
 function CoreCutsceneFrameExporterDialog:_create_folder_name_box(folder_name)
 	local folder_name_sizer = EWS:StaticBoxSizer(self.__window, "VERTICAL", "Enter a name for the new folder")
 	self.__folder_name_ctrl = EWS:TextCtrl(self.__window, folder_name)
@@ -38,6 +40,7 @@ function CoreCutsceneFrameExporterDialog:_create_folder_name_box(folder_name)
 	return folder_name_sizer
 end
 
+-- Lines 38-59
 function CoreCutsceneFrameExporterDialog:_create_range_box(start_frame, end_frame)
 	local frame_range_sizer = EWS:StaticBoxSizer(self.__window, "HORIZONTAL", "Frame range")
 	local all_button = EWS:RadioButton(self.__window, "All", "frame_range", "ALIGN_CENTER_VERTICAL")
@@ -60,6 +63,7 @@ function CoreCutsceneFrameExporterDialog:_create_range_box(start_frame, end_fram
 	return frame_range_sizer
 end
 
+-- Lines 61-73
 function CoreCutsceneFrameExporterDialog:_create_button_box()
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
 	local ok_button = EWS:Button(self.__window, "OK")
@@ -73,6 +77,7 @@ function CoreCutsceneFrameExporterDialog:_create_button_box()
 	return button_sizer
 end
 
+-- Lines 75-80
 function CoreCutsceneFrameExporterDialog:_destroy_window()
 	if alive(self.__window) then
 		self.__window:destroy()
@@ -81,16 +86,19 @@ function CoreCutsceneFrameExporterDialog:_destroy_window()
 	self.__window = nil
 end
 
+-- Lines 82-86
 function CoreCutsceneFrameExporterDialog:update(time, delta_time)
 	if not alive(self.__window) then
 		return true
 	end
 end
 
+-- Lines 88-90
 function CoreCutsceneFrameExporterDialog:_on_exit()
 	self:_destroy_window()
 end
 
+-- Lines 92-106
 function CoreCutsceneFrameExporterDialog:_on_ok_clicked()
 	local folder_name = self:_folder_name_input()
 	local start_frame, end_frame = nil
@@ -108,10 +116,12 @@ function CoreCutsceneFrameExporterDialog:_on_ok_clicked()
 	end
 end
 
+-- Lines 108-110
 function CoreCutsceneFrameExporterDialog:_on_range_ctrl_update()
 	self.__range_button:set_value(true)
 end
 
+-- Lines 112-131
 function CoreCutsceneFrameExporterDialog:_folder_name_input()
 	local folder_name = self.__folder_name_ctrl:get_value()
 
@@ -132,6 +142,7 @@ function CoreCutsceneFrameExporterDialog:_folder_name_input()
 	return folder_name
 end
 
+-- Lines 133-154
 function CoreCutsceneFrameExporterDialog:_start_end_frame_input()
 	local start_frame = self.__start_frame_ctrl:get_value()
 	local end_frame = self.__end_frame_ctrl:get_value()

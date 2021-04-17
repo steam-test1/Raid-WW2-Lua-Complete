@@ -17,6 +17,7 @@ WeaponInventoryManager.CATEGORY_NAME_SECONDARY = "secondary_weapons"
 WeaponInventoryManager.CATEGORY_NAME_GRENADES = "grenades"
 WeaponInventoryManager.CATEGORY_NAME_MELEE = "melee_weapons"
 
+-- Lines 39-49
 function WeaponInventoryManager.get_instance()
 	if not Global.weapon_inventory_manager then
 		Global.weapon_inventory_manager = WeaponInventoryManager:new()
@@ -29,6 +30,7 @@ function WeaponInventoryManager.get_instance()
 	return Global.weapon_inventory_manager
 end
 
+-- Lines 51-58
 function WeaponInventoryManager:init()
 	self._categories = {
 		[WeaponInventoryManager.CATEGORY_NAME_MELEE] = {
@@ -40,6 +42,7 @@ function WeaponInventoryManager:init()
 	}
 end
 
+-- Lines 60-69
 function WeaponInventoryManager:setup()
 	self.version_character_slot = WeaponInventoryManager.VERSION_CHARACTER_SLOT
 	self.version_account_wide = WeaponInventoryManager.VERSION_ACCOUNT_WIDE
@@ -48,6 +51,7 @@ function WeaponInventoryManager:setup()
 	self:_setup_initial_weapons()
 end
 
+-- Lines 71-102
 function WeaponInventoryManager:_setup_initial_weapons()
 	local unlocked_melee_weapons = tweak_data.dlc:get_unlocked_melee_weapons()
 
@@ -92,6 +96,7 @@ function WeaponInventoryManager:_setup_initial_weapons()
 	end
 end
 
+-- Lines 108-119
 function WeaponInventoryManager:get_all_weapons_from_category(category_name)
 	local category_data = self._categories[category_name]
 	local result = {}
@@ -103,6 +108,7 @@ function WeaponInventoryManager:get_all_weapons_from_category(category_name)
 	return result
 end
 
+-- Lines 123-136
 function WeaponInventoryManager:get_melee_weapon_loot_drop_candidates()
 	local all_melee_weapons = self:get_all_weapons_from_category(WeaponInventoryManager.CATEGORY_NAME_MELEE)
 	local result = {}
@@ -116,6 +122,7 @@ function WeaponInventoryManager:get_melee_weapon_loot_drop_candidates()
 	return result
 end
 
+-- Lines 141-147
 function WeaponInventoryManager:add_melee_weapon_as_drop(drop)
 	Application:trace("[WeaponInventoryManager:add_melee_weapon_as_drop] drop ", inspect(drop))
 
@@ -126,12 +133,14 @@ function WeaponInventoryManager:add_melee_weapon_as_drop(drop)
 	})
 end
 
+-- Lines 151-155
 function WeaponInventoryManager:remove_melee_weapon_as_drop(drop)
 	Application:trace("[WeaponInventoryManager:remove_melee_weapon_as_drop] drop ", inspect(drop))
 
 	self._weapons[WeaponInventoryManager.CATEGORY_NAME_MELEE][drop.weapon_id].unlocked = false
 end
 
+-- Lines 159-169
 function WeaponInventoryManager:get_weapon_data(weapon_category_name, weapon_id)
 	local result = nil
 	local weapon_category_data = self._categories[weapon_category_name]
@@ -145,6 +154,7 @@ function WeaponInventoryManager:get_weapon_data(weapon_category_name, weapon_id)
 	return result
 end
 
+-- Lines 172-179
 function WeaponInventoryManager:get_weapon_blueprint(bm_weapon_category_id, weapon_id)
 	local weapon_slot = self:get_weapon_slot_by_weapon_id(weapon_id, bm_weapon_category_id)
 	local bm_weapon_category_name = self:get_bm_weapon_category_name_by_bm_category_id(bm_weapon_category_id)
@@ -153,6 +163,7 @@ function WeaponInventoryManager:get_weapon_blueprint(bm_weapon_category_id, weap
 	return weapon_blueprint
 end
 
+-- Lines 182-190
 function WeaponInventoryManager:get_weapon_default_blueprint(bm_weapon_category_id, weapon_id)
 	local weapon_slot = self:get_weapon_slot_by_weapon_id(weapon_id, bm_weapon_category_id)
 	local bm_weapon_category_name = self:get_bm_weapon_category_name_by_bm_category_id(bm_weapon_category_id)
@@ -162,6 +173,7 @@ function WeaponInventoryManager:get_weapon_default_blueprint(bm_weapon_category_
 	return weapon_blueprint
 end
 
+-- Lines 194-204
 function WeaponInventoryManager:get_weapon_category_name_by_bm_category_name(bm_weapon_category_name)
 	if bm_weapon_category_name == WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME then
 		return WeaponInventoryManager.CATEGORY_NAME_PRIMARY
@@ -174,6 +186,7 @@ function WeaponInventoryManager:get_weapon_category_name_by_bm_category_name(bm_
 	end
 end
 
+-- Lines 206-216
 function WeaponInventoryManager:get_weapon_category_name_by_bm_category_id(bm_weapon_category_id)
 	if bm_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		return WeaponInventoryManager.CATEGORY_NAME_PRIMARY
@@ -186,6 +199,7 @@ function WeaponInventoryManager:get_weapon_category_name_by_bm_category_id(bm_we
 	end
 end
 
+-- Lines 218-228
 function WeaponInventoryManager:get_bm_weapon_category_name_by_bm_category_id(bm_weapon_category_id)
 	if bm_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		return WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME
@@ -198,6 +212,7 @@ function WeaponInventoryManager:get_bm_weapon_category_name_by_bm_category_id(bm
 	end
 end
 
+-- Lines 262-269
 function WeaponInventoryManager:save_account_wide_info(data)
 	local state = {
 		version_account_wide = self.version_account_wide,
@@ -206,6 +221,7 @@ function WeaponInventoryManager:save_account_wide_info(data)
 	data.WeaponInventoryManager = state
 end
 
+-- Lines 271-313
 function WeaponInventoryManager:load_account_wide_info(data, version_account_wide)
 	self:setup(true)
 
@@ -252,6 +268,7 @@ function WeaponInventoryManager:load_account_wide_info(data, version_account_wid
 	end
 end
 
+-- Lines 320-330
 function WeaponInventoryManager:get_weapon_category_by_weapon_category_id(weapon_category_id)
 	if weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		return WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME
@@ -264,6 +281,7 @@ function WeaponInventoryManager:get_weapon_category_by_weapon_category_id(weapon
 	end
 end
 
+-- Lines 332-343
 function WeaponInventoryManager:add_all_weapons_to_player_inventory()
 	for index, weapon_data in pairs(tweak_data.weapon_inventory.weapon_primaries_index) do
 		managers.blackmarket:on_buy_weapon_platform(WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME, weapon_data.weapon_id, weapon_data.slot, true)
@@ -274,6 +292,7 @@ function WeaponInventoryManager:add_all_weapons_to_player_inventory()
 	end
 end
 
+-- Lines 346-368
 function WeaponInventoryManager:get_weapon_slot_by_weapon_id(weapon_id, bm_weapon_category_id)
 	local weapon_source = {}
 
@@ -294,6 +313,7 @@ function WeaponInventoryManager:get_weapon_slot_by_weapon_id(weapon_id, bm_weapo
 	return 0
 end
 
+-- Lines 371-403
 function WeaponInventoryManager:get_owned_weapons(weapon_category_id)
 	local result = {}
 	local data_source = {}
@@ -321,6 +341,7 @@ function WeaponInventoryManager:get_owned_weapons(weapon_category_id)
 	return result
 end
 
+-- Lines 405-422
 function WeaponInventoryManager:get_owned_melee_weapons()
 	local result = {}
 	local unlocked_weapons = tweak_data.dlc:get_unlocked_melee_weapons()
@@ -348,12 +369,14 @@ function WeaponInventoryManager:get_owned_melee_weapons()
 	return result
 end
 
+-- Lines 424-429
 function WeaponInventoryManager:is_melee_weapon_owned(weapon_id)
 	local melee_weapon_data = managers.weapon_inventory._weapons.melee_weapons[weapon_id]
 
 	return melee_weapon_data and melee_weapon_data.unlocked or false
 end
 
+-- Lines 431-452
 function WeaponInventoryManager:get_owned_grenades()
 	local result = {}
 
@@ -371,30 +394,37 @@ function WeaponInventoryManager:get_owned_grenades()
 	return result
 end
 
+-- Lines 454-456
 function WeaponInventoryManager:get_equipped_primary_weapon()
 	return managers.blackmarket:equipped_item(WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME)
 end
 
+-- Lines 458-460
 function WeaponInventoryManager:get_equipped_secondary_weapon()
 	return managers.blackmarket:equipped_item(WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME)
 end
 
+-- Lines 462-464
 function WeaponInventoryManager:get_equipped_primary_weapon_id()
 	return self:get_equipped_primary_weapon().weapon_id
 end
 
+-- Lines 466-468
 function WeaponInventoryManager:get_equipped_secondary_weapon_id()
 	return self:get_equipped_secondary_weapon().weapon_id
 end
 
+-- Lines 470-472
 function WeaponInventoryManager:get_equipped_melee_weapon_id()
 	return managers.blackmarket:equipped_melee_weapon()
 end
 
+-- Lines 474-476
 function WeaponInventoryManager:get_equipped_grenade_id()
 	return managers.blackmarket:equipped_projectile()
 end
 
+-- Lines 478-494
 function WeaponInventoryManager:equip_weapon(weapon_category_id, item_data)
 	if weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		managers.blackmarket:equip_weapon(WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME, item_data.slot)
@@ -407,14 +437,17 @@ function WeaponInventoryManager:equip_weapon(weapon_category_id, item_data)
 	end
 end
 
+-- Lines 497-503
 function WeaponInventoryManager:get_weapon_stats(weapon_id, weapon_category, slot, blueprint)
 	return managers.blackmarket:_get_stats(weapon_id, weapon_category, slot, blueprint)
 end
 
+-- Lines 505-508
 function WeaponInventoryManager:get_melee_weapon_stats(weapon_id)
 	return managers.blackmarket:_get_melee_weapon_stats(weapon_id)
 end
 
+-- Lines 512-519
 function WeaponInventoryManager:debug_get_all_melee_weapons()
 	if managers.weapon_inventory._weapons.melee_weapons then
 		for _, melee_weapon_data in pairs(managers.weapon_inventory._weapons.melee_weapons) do

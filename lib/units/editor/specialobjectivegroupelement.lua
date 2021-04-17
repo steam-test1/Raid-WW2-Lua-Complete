@@ -1,5 +1,6 @@
 SpecialObjectiveGroupElement = SpecialObjectiveGroupElement or class(MissionElement)
 
+-- Lines 3-19
 function SpecialObjectiveGroupElement:init(unit)
 	SpecialObjectiveGroupElement.super.init(self, unit)
 
@@ -18,10 +19,12 @@ function SpecialObjectiveGroupElement:init(unit)
 	table.insert(self._save_values, "mode")
 end
 
+-- Lines 21-23
 function SpecialObjectiveGroupElement:post_init(...)
 	SpecialObjectiveGroupElement.super.post_init(self, ...)
 end
 
+-- Lines 25-49
 function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units)
 	self:_remove_deleted_units(all_units)
 
@@ -53,6 +56,7 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
+-- Lines 51-63
 function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_units)
 	self:_draw_follow_up(selected_unit, all_units)
 
@@ -74,6 +78,7 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 	end
 end
 
+-- Lines 65-89
 function SpecialObjectiveGroupElement:update_unselected(t, dt, selected_unit, all_units)
 	if self._hed.followup_elements then
 		local followup_elements = self._hed.followup_elements
@@ -106,6 +111,7 @@ function SpecialObjectiveGroupElement:update_unselected(t, dt, selected_unit, al
 	end
 end
 
+-- Lines 91-103
 function SpecialObjectiveGroupElement:_remove_deleted_units(all_units)
 	if self._hed.followup_patrol_elements then
 		local followup_elements = self._hed.followup_patrol_elements
@@ -123,16 +129,19 @@ function SpecialObjectiveGroupElement:_remove_deleted_units(all_units)
 	end
 end
 
+-- Lines 105-107
 function SpecialObjectiveGroupElement:_draw_follow_up(selected_unit, all_units)
 	SpecialObjectiveUnitElement._draw_follow_up(self, selected_unit, all_units)
 end
 
+-- Lines 109-113
 function SpecialObjectiveGroupElement:update_editing()
 	self:_so_raycast()
 	self:_spawn_raycast()
 	self:_raycast()
 end
 
+-- Lines 115-123
 function SpecialObjectiveGroupElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -150,6 +159,7 @@ function SpecialObjectiveGroupElement:_so_raycast()
 	return nil
 end
 
+-- Lines 125-142
 function SpecialObjectiveGroupElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -171,6 +181,7 @@ function SpecialObjectiveGroupElement:_spawn_raycast()
 	return id
 end
 
+-- Lines 144-153
 function SpecialObjectiveGroupElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -185,12 +196,14 @@ function SpecialObjectiveGroupElement:_raycast()
 	return nil
 end
 
+-- Lines 155-158
 function SpecialObjectiveGroupElement:_element_type(element_id)
 	local unit = managers.editor:unit_with_id(element_id)
 
 	return string.match(unit:name():s(), ".*/(.*)")
 end
 
+-- Lines 161-167
 function SpecialObjectiveGroupElement:_clear_followups(element_id)
 	local pso = managers.editor:unit_with_id(element_id)
 	local pso_med = pso:mission_element_data()
@@ -198,6 +211,7 @@ function SpecialObjectiveGroupElement:_clear_followups(element_id)
 	pso_med._patrol_group = true
 end
 
+-- Lines 170-195
 function SpecialObjectiveGroupElement:_relink_patrol_followups()
 	local ai_so_group_targets = {}
 
@@ -221,6 +235,7 @@ function SpecialObjectiveGroupElement:_relink_patrol_followups()
 	end
 end
 
+-- Lines 197-258
 function SpecialObjectiveGroupElement:_lmb()
 	local id = self:_so_raycast()
 
@@ -292,17 +307,21 @@ function SpecialObjectiveGroupElement:_lmb()
 	end
 end
 
+-- Lines 260-262
 function SpecialObjectiveGroupElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
+-- Lines 266-268
 function SpecialObjectiveGroupElement:selected()
 	SpecialObjectiveUnitElement.super.selected(self)
 end
 
+-- Lines 270-316
 function SpecialObjectiveGroupElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
+	-- Lines 272-293
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -342,7 +361,9 @@ function SpecialObjectiveGroupElement:add_unit_list_btn()
 	end
 end
 
+-- Lines 318-331
 function SpecialObjectiveGroupElement:remove_unit_list_btn()
+	-- Lines 319-320
 	local function f(unit)
 		return self._hed.spawn_instigator_ids and table.contains(self._hed.spawn_instigator_ids, unit:unit_data().unit_id) or self._hed.followup_elements and table.contains(self._hed.followup_elements, unit:unit_data().unit_id)
 	end
@@ -362,6 +383,7 @@ function SpecialObjectiveGroupElement:remove_unit_list_btn()
 	end
 end
 
+-- Lines 333-392
 function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -433,5 +455,6 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
 
+-- Lines 394-397
 function SpecialObjectiveGroupElement:add_to_mission_package()
 end

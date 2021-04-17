@@ -1,5 +1,6 @@
 RaidGUIControlLootCardDetails = RaidGUIControlLootCardDetails or class(RaidGUIControl)
 
+-- Lines 3-40
 function RaidGUIControlLootCardDetails:init(parent, params, item_data)
 	RaidGUIControlLootCardDetails.super.init(self, parent, params)
 
@@ -60,9 +61,11 @@ function RaidGUIControlLootCardDetails:init(parent, params, item_data)
 	self._sound_source = SoundDevice:create_source("challenge_card")
 end
 
+-- Lines 42-43
 function RaidGUIControlLootCardDetails:close()
 end
 
+-- Lines 46-52
 function RaidGUIControlLootCardDetails:_create_empty_card()
 	local card_back_texture, card_back_texture_rect = managers.challenge_cards:get_cards_back_texture(self._item_data)
 	self._card_empty = self._card_panel:image({
@@ -78,6 +81,7 @@ function RaidGUIControlLootCardDetails:_create_empty_card()
 	self._state = "card_empty"
 end
 
+-- Lines 54-109
 function RaidGUIControlLootCardDetails:_create_card_details()
 	local card_params = clone(self._params)
 	card_params.x = 0
@@ -172,17 +176,21 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 	self._malus_label:set_alpha(0)
 end
 
+-- Lines 111-113
 function RaidGUIControlLootCardDetails:_switch_card()
 end
 
+-- Lines 115-117
 function RaidGUIControlLootCardDetails:set_debug(value)
 	self._object:set_debug(value)
 end
 
+-- Lines 119-121
 function RaidGUIControlLootCardDetails:revealed()
 	return self._state == "card_details"
 end
 
+-- Lines 123-132
 function RaidGUIControlLootCardDetails:_reveal_card()
 	if self._state == "card_empty" then
 		self._state = "card_details"
@@ -193,6 +201,7 @@ function RaidGUIControlLootCardDetails:_reveal_card()
 	end
 end
 
+-- Lines 134-141
 function RaidGUIControlLootCardDetails:on_mouse_released()
 	if self._params.click_callback then
 		self._params.click_callback(self._item_data, self._state == "card_details")
@@ -201,10 +210,12 @@ function RaidGUIControlLootCardDetails:on_mouse_released()
 	self:_reveal_card()
 end
 
+-- Lines 144-146
 function RaidGUIControlLootCardDetails:confirm_pressed()
 	self:on_mouse_released()
 end
 
+-- Lines 148-157
 function RaidGUIControlLootCardDetails:on_mouse_over(x, y)
 	RaidGUIControlLootCardDetails.super.on_mouse_over(self, x, y)
 
@@ -216,21 +227,25 @@ function RaidGUIControlLootCardDetails:on_mouse_over(x, y)
 	self:_highlight_on()
 end
 
+-- Lines 159-164
 function RaidGUIControlLootCardDetails:on_mouse_out(x, y)
 	RaidGUIControlLootCardDetails.super.on_mouse_out(self, x, y)
 	self:_highlight_off()
 end
 
+-- Lines 166-168
 function RaidGUIControlLootCardDetails:_highlight_on()
 	self._select_background_panel:set_visible(true)
 end
 
+-- Lines 170-174
 function RaidGUIControlLootCardDetails:_highlight_off()
 	if self._select_background_panel and self._select_background_panel._engine_panel and alive(self._select_background_panel._engine_panel) then
 		self._select_background_panel:set_visible(false)
 	end
 end
 
+-- Lines 176-186
 function RaidGUIControlLootCardDetails:select()
 	self._selected = true
 
@@ -242,12 +257,14 @@ function RaidGUIControlLootCardDetails:select()
 	self:_highlight_on()
 end
 
+-- Lines 188-192
 function RaidGUIControlLootCardDetails:unselect()
 	self._selected = false
 
 	self:_highlight_off()
 end
 
+-- Lines 196-233
 function RaidGUIControlLootCardDetails:_animate_reveal_card()
 	self._sound_source:post_event("reward_reveal_card")
 
@@ -286,6 +303,7 @@ function RaidGUIControlLootCardDetails:_animate_reveal_card()
 	self._card_control:set_center_x(card_center_x)
 end
 
+-- Lines 235-274
 function RaidGUIControlLootCardDetails:_animate_show_card()
 	self._sound_source:post_event("reward_reveal_card")
 

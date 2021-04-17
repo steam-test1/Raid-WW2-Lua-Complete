@@ -12,6 +12,7 @@ RaidGUIControlCharacterCustomizationPeerLoot.DESCRIPTION_COLOR = tweak_data.gui.
 RaidGUIControlCharacterCustomizationPeerLoot.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 RaidGUIControlCharacterCustomizationPeerLoot.TEXT_X = 128
 
+-- Lines 22-32
 function RaidGUIControlCharacterCustomizationPeerLoot:init(parent, params)
 	RaidGUIControlCharacterCustomizationPeerLoot.super.init(self, parent, params)
 
@@ -25,6 +26,7 @@ function RaidGUIControlCharacterCustomizationPeerLoot:init(parent, params)
 	self:_create_customization_details(params)
 end
 
+-- Lines 35-45
 function RaidGUIControlCharacterCustomizationPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -36,6 +38,7 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 48-94
 function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_details(params)
 	local icon = nil
 
@@ -86,6 +89,7 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 	self._customization_description = self._object:text(params_customization_description)
 end
 
+-- Lines 97-101
 function RaidGUIControlCharacterCustomizationPeerLoot:set_customization(customization)
 	self._customization = customization
 
@@ -93,11 +97,13 @@ function RaidGUIControlCharacterCustomizationPeerLoot:set_customization(customiz
 	self:_layout_text()
 end
 
+-- Lines 103-106
 function RaidGUIControlCharacterCustomizationPeerLoot:set_player_name(name)
 	self._name_label:set_text(utf8.to_upper(name))
 	self:_layout_text()
 end
 
+-- Lines 108-114
 function RaidGUIControlCharacterCustomizationPeerLoot:_layout_text()
 	local _, _, _, h = self._name_label:text_rect()
 

@@ -5,15 +5,18 @@ IntelGui.CATEGORY_RAID_PERSONEL = "raid_personnel"
 IntelGui.CATEGORY_OPPOSITION_FORCES = "opposition_forces"
 IntelGui.CATEGORY_CONTROL_ARCHIVE = "control_archive"
 
+-- Lines 10-18
 function IntelGui:init(ws, fullscreen_ws, node, component_name)
 	IntelGui.super.init(self, ws, fullscreen_ws, node, component_name)
 	self._node.components.raid_menu_header:set_screen_name("menu_intel_screen_name")
 end
 
+-- Lines 20-22
 function IntelGui:_set_initial_data()
 	self._selected_category = IntelGui.CATEGORY_RAID_PERSONEL
 end
 
+-- Lines 24-33
 function IntelGui:_layout()
 	self:_disable_dof()
 	self:_layout_content()
@@ -23,6 +26,7 @@ function IntelGui:_layout()
 	self:bind_controller_inputs()
 end
 
+-- Lines 35-60
 function IntelGui:_layout_tab_categories()
 	local category_tabs_params = {
 		name = "category_tabs",
@@ -50,6 +54,7 @@ function IntelGui:_layout_tab_categories()
 	self._category_tabs = self._root_panel:tabs(category_tabs_params)
 end
 
+-- Lines 62-91
 function IntelGui:_layout_list()
 	local category_items_list_scrollable_area_params = {
 		scrollbar_width = 3,
@@ -83,15 +88,18 @@ function IntelGui:_layout_list()
 	self._category_items_list_scrollable_area:setup_scroll_area()
 end
 
+-- Lines 93-97
 function IntelGui:_layout_content()
 	self:_create_category_controls(self._selected_category)
 	self:_setup_category_controls(self._selected_category)
 end
 
+-- Lines 99-101
 function IntelGui:close()
 	IntelGui.super.close(self)
 end
 
+-- Lines 105-121
 function IntelGui:on_intel_category_selected(data)
 	self._selected_category = data
 
@@ -108,14 +116,17 @@ function IntelGui:on_intel_category_selected(data)
 	self._category_items_list:set_selected(true, false)
 end
 
+-- Lines 123-127
 function IntelGui:on_item_clicked_category_items_list(data)
 	self:_list_item_selected(data.value)
 end
 
+-- Lines 129-133
 function IntelGui:on_item_selected_category_items_list(data)
 	self:_list_item_selected(data.value)
 end
 
+-- Lines 135-171
 function IntelGui:data_source_category_items_list()
 	local result = {}
 	local is_unlocked = true
@@ -158,10 +169,12 @@ function IntelGui:data_source_category_items_list()
 	return result
 end
 
+-- Lines 175-180
 function IntelGui:_list_item_selected(list_item_value)
 	self:_show_selected_list_item_data(list_item_value)
 end
 
+-- Lines 183-190
 function IntelGui:_create_category_controls(selected_category)
 	self._bulletins_control = self._root_panel:create_custom_control(RaidGUIControlIntelBulletin, {
 		visible = false,
@@ -200,6 +213,7 @@ function IntelGui:_create_category_controls(selected_category)
 	})
 end
 
+-- Lines 192-231
 function IntelGui:_setup_category_controls(selected_category)
 	if selected_category == IntelGui.CATEGORY_BULLETINS then
 		self._active_category_control = self._bulletins_control
@@ -244,6 +258,7 @@ function IntelGui:_setup_category_controls(selected_category)
 	end
 end
 
+-- Lines 233-243
 function IntelGui:_show_selected_list_item_data(list_item_value)
 	self._active_category_control:set_data(list_item_value)
 
@@ -256,16 +271,19 @@ function IntelGui:_show_selected_list_item_data(list_item_value)
 	end
 end
 
+-- Lines 245-249
 function IntelGui:update(t, dt)
 	if self._control_archive_control then
 		self._control_archive_control:update(t, dt)
 	end
 end
 
+-- Lines 253-255
 function IntelGui:_play_intel_audio(intel_audio_id)
 	self._intel_audio = managers.menu_component:post_event(intel_audio_id)
 end
 
+-- Lines 257-264
 function IntelGui:_stop_intel_audio()
 	managers.queued_tasks:unqueue("play_intel_audio")
 
@@ -276,6 +294,7 @@ function IntelGui:_stop_intel_audio()
 	end
 end
 
+-- Lines 272-290
 function IntelGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -304,6 +323,7 @@ function IntelGui:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 292-311
 function IntelGui:bind_controller_inputs_play_video()
 	local bindings = {
 		{
@@ -333,18 +353,21 @@ function IntelGui:bind_controller_inputs_play_video()
 	self:set_legend(legend)
 end
 
+-- Lines 313-317
 function IntelGui:_on_weapon_category_tab_left()
 	self._category_tabs:_move_left()
 
 	return true, nil
 end
 
+-- Lines 319-323
 function IntelGui:_on_weapon_category_tab_right()
 	self._category_tabs:_move_right()
 
 	return true, nil
 end
 
+-- Lines 325-340
 function IntelGui:confirm_pressed()
 	if self._selected_category == IntelGui.CATEGORY_CONTROL_ARCHIVE then
 		local selected_item = self._category_items_list:selected_item()

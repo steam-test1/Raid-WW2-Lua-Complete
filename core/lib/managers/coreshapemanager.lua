@@ -4,6 +4,7 @@ core:import("CoreMath")
 
 ShapeManager = ShapeManager or class()
 
+-- Lines 8-15
 function ShapeManager:init()
 	self._shapes = {}
 	self._shape_types = {
@@ -14,12 +15,14 @@ function ShapeManager:init()
 	}
 end
 
+-- Lines 17-21
 function ShapeManager:update(t, dt)
 	for _, shape in ipairs(self._shapes) do
 		shape:draw(t, dt, 0.8, 0.8)
 	end
 end
 
+-- Lines 23-28
 function ShapeManager:add_shape(type, params)
 	params.type = type
 	local shape = self._shape_types[type]:new(params)
@@ -29,24 +32,29 @@ function ShapeManager:add_shape(type, params)
 	return shape
 end
 
+-- Lines 30-32
 function ShapeManager:shape_type(type)
 	return self._shape_types[type]
 end
 
+-- Lines 34-37
 function ShapeManager:remove_shape(shape)
 	shape:destroy()
 	table.delete(self._shapes, shape)
 end
 
+-- Lines 39-43
 function ShapeManager:clear_shapes()
 	for _, shape in ipairs(clone(self._shapes)) do
 		self:remove_shape(shape)
 	end
 end
 
+-- Lines 45-47
 function ShapeManager:save()
 end
 
+-- Lines 49-60
 function ShapeManager:parse(shape)
 	local t = {
 		type = shape:parameter("type"),
@@ -69,6 +77,7 @@ local mvec3 = Vector3()
 local mposition = Vector3()
 Shape = Shape or class()
 
+-- Lines 69-84
 function Shape:init(params)
 	self._name = params.name or ""
 	self._type = params.type or "none"
@@ -83,6 +92,7 @@ function Shape:init(params)
 	end
 end
 
+-- Lines 86-98
 function Shape:build_dialog()
 	if not Application:editor() then
 		return
@@ -95,45 +105,56 @@ function Shape:build_dialog()
 	self:build_properties_ctrls()
 end
 
+-- Lines 100-102
 function Shape:build_properties_ctrls()
 end
 
+-- Lines 104-106
 function Shape:name()
 	return self._unit and self._unit:unit_data().name_id or self._name
 end
 
+-- Lines 108-110
 function Shape:unit()
 	return self._unit
 end
 
+-- Lines 112-114
 function Shape:set_unit(unit)
 	self._unit = unit
 end
 
+-- Lines 116-118
 function Shape:position()
 	return self._unit and self._unit:position() or self._position
 end
 
+-- Lines 120-122
 function Shape:set_position(position)
 	self._position = position
 end
 
+-- Lines 124-126
 function Shape:rotation()
 	return self._unit and self._unit:rotation() or self._rotation
 end
 
+-- Lines 128-130
 function Shape:set_rotation(rotation)
 	self._rotation = rotation
 end
 
+-- Lines 132-134
 function Shape:properties()
 	return self._properties
 end
 
+-- Lines 136-138
 function Shape:property(property)
 	return self._properties[property]
 end
 
+-- Lines 140-154
 function Shape:set_property(property, value)
 	if not self._properties[property] then
 		return
@@ -149,13 +170,16 @@ function Shape:set_property(property, value)
 	end
 end
 
+-- Lines 156-158
 function Shape:set_property_string(property, value)
 	self._properties[property] = value
 end
 
+-- Lines 160-162
 function Shape:scale()
 end
 
+-- Lines 164-169
 function Shape:set_dialog_visible(visible)
 	if not self._dialog then
 		self:build_dialog()
@@ -164,6 +188,7 @@ function Shape:set_dialog_visible(visible)
 	self._dialog:set_visible(visible)
 end
 
+-- Lines 171-176
 function Shape:panel(panel, sizer)
 	if not self._panel and panel and sizer then
 		self:create_panel(panel, sizer)
@@ -172,6 +197,7 @@ function Shape:panel(panel, sizer)
 	return self._panel
 end
 
+-- Lines 178-185
 function Shape:create_panel(parent, sizer)
 	self._panel = EWS:Panel(parent, "", "TAB_TRAVERSAL")
 
@@ -185,6 +211,7 @@ function Shape:create_panel(parent, sizer)
 	sizer:add(self._panel, 0, 0, "EXPAND")
 end
 
+-- Lines 187-220
 function Shape:_create_size_ctrl(name, property, value, parent, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -237,6 +264,7 @@ function Shape:_create_size_ctrl(name, property, value, parent, sizer)
 	return ctrl
 end
 
+-- Lines 222-227
 function Shape:connect_event(name, event, callback, params)
 	local ctrls = self._properties_ctrls[name] or {}
 
@@ -245,6 +273,7 @@ function Shape:connect_event(name, event, callback, params)
 	end
 end
 
+-- Lines 229-233
 function Shape:update_size(data)
 	local value = data.ctrl:get_value()
 
@@ -252,12 +281,14 @@ function Shape:update_size(data)
 	data.ctrl:set_selection(-1, -1)
 end
 
+-- Lines 235-238
 function Shape:update_size_spin(data)
 	local value = data.ctrl:get_value() + data.step
 
 	self:set_property(data.property, value * 100)
 end
 
+-- Lines 240-245
 function Shape:update_slider_size(data)
 	data.start_value = data.start_value or data.ctrl:get_value()
 	local value = data.start_value
@@ -265,6 +296,7 @@ function Shape:update_slider_size(data)
 	self:set_property(data.property, value * data.slider:get_value() / 100 * 100)
 end
 
+-- Lines 247-253
 function Shape:update_slider_release(data)
 	local value = data.start_value
 
@@ -275,15 +307,19 @@ function Shape:update_slider_release(data)
 	data.slider:set_value(100)
 end
 
+-- Lines 255-256
 function Shape:draw(t, dt, r, g, b)
 end
 
+-- Lines 258-259
 function Shape:is_inside(pos)
 end
 
+-- Lines 261-262
 function Shape:is_outside(pos)
 end
 
+-- Lines 265-275
 function Shape:save(t)
 	local t = t or ""
 	local s = t
@@ -296,6 +332,7 @@ function Shape:save(t)
 	return s
 end
 
+-- Lines 278-287
 function Shape:save_level_data()
 	local t = {
 		type = self._type,
@@ -310,6 +347,7 @@ function Shape:save_level_data()
 	return t
 end
 
+-- Lines 289-297
 function Shape:destroy()
 	if self._panel then
 		self._panel:extension().alive = false
@@ -324,6 +362,7 @@ end
 
 ShapeBox = ShapeBox or class(Shape)
 
+-- Lines 303-311
 function ShapeBox:init(params)
 	Shape.init(self, params)
 
@@ -332,6 +371,7 @@ function ShapeBox:init(params)
 	self._properties.height = params.height or 1000
 end
 
+-- Lines 313-322
 function ShapeBox:create_panel(parent, sizer)
 	Shape.create_panel(self, parent, sizer)
 
@@ -344,6 +384,7 @@ function ShapeBox:create_panel(parent, sizer)
 	return width, depth, height
 end
 
+-- Lines 324-334
 function ShapeBox:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -355,38 +396,47 @@ function ShapeBox:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 90, 0))
 end
 
+-- Lines 336-338
 function ShapeBox:size()
 	return Vector3(self._properties.width, self._properties.depth, self._properties.height)
 end
 
+-- Lines 340-342
 function ShapeBox:width()
 	return self._properties.width
 end
 
+-- Lines 344-346
 function ShapeBox:set_width(width)
 	self:set_property("width", width)
 end
 
+-- Lines 348-350
 function ShapeBox:depth()
 	return self._properties.depth
 end
 
+-- Lines 352-354
 function ShapeBox:set_depth(depth)
 	self:set_property("depth", depth)
 end
 
+-- Lines 356-358
 function ShapeBox:height()
 	return self._properties.height
 end
 
+-- Lines 360-362
 function ShapeBox:set_height(height)
 	self:set_property("height", height)
 end
 
+-- Lines 364-366
 function ShapeBox:still_inside(pos)
 	return self:is_inside(pos)
 end
 
+-- Lines 368-390
 function ShapeBox:is_inside(pos)
 	mvector3.set(mvec1, pos)
 	mvector3.subtract(mvec1, self:position())
@@ -416,6 +466,7 @@ function ShapeBox:is_inside(pos)
 	return false
 end
 
+-- Lines 392-401
 function ShapeBox:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -429,6 +480,7 @@ function ShapeBox:draw(t, dt, r, g, b)
 	self:draw_outline(t, dt, r, g, b)
 end
 
+-- Lines 403-406
 function ShapeBox:draw_outline(t, dt, r, g, b)
 	local rot = self:rotation()
 
@@ -437,10 +489,12 @@ end
 
 ShapeBoxMiddle = ShapeBoxMiddle or class(ShapeBox)
 
+-- Lines 412-414
 function ShapeBoxMiddle:init(params)
 	ShapeBox.init(self, params)
 end
 
+-- Lines 416-460
 function ShapeBoxMiddle:is_inside(pos)
 	local rot = self:rotation()
 	local x = mvec1
@@ -488,6 +542,7 @@ function ShapeBoxMiddle:is_inside(pos)
 	return false
 end
 
+-- Lines 462-473
 function ShapeBoxMiddle:draw(t, dt, r, g, b, a)
 	local brush = Draw:brush()
 
@@ -505,10 +560,12 @@ end
 
 ShapeBoxMiddleBottom = ShapeBoxMiddleBottom or class(ShapeBox)
 
+-- Lines 479-481
 function ShapeBoxMiddleBottom:init(params)
 	ShapeBox.init(self, params)
 end
 
+-- Lines 483-503
 function ShapeBoxMiddleBottom:is_inside(pos)
 	local rot = self:rotation()
 	local x = rot:x() * self._properties.width / 2
@@ -532,6 +589,7 @@ function ShapeBoxMiddleBottom:is_inside(pos)
 	return false
 end
 
+-- Lines 505-517
 function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -550,12 +608,14 @@ end
 
 ShapeSphere = ShapeSphere or class(Shape)
 
+-- Lines 523-529
 function ShapeSphere:init(params)
 	Shape.init(self, params)
 
 	self._properties.radius = params.radius or 1000
 end
 
+-- Lines 531-539
 function ShapeSphere:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -565,18 +625,22 @@ function ShapeSphere:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 50, 0))
 end
 
+-- Lines 541-543
 function ShapeSphere:radius()
 	return self._properties.radius
 end
 
+-- Lines 545-547
 function ShapeSphere:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
+-- Lines 549-551
 function ShapeSphere:is_inside(pos)
 	return (pos - self:position()):length() < self._properties.radius
 end
 
+-- Lines 553-558
 function ShapeSphere:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -587,6 +651,7 @@ end
 
 ShapeCylinder = ShapeCylinder or class(Shape)
 
+-- Lines 564-571
 function ShapeCylinder:init(params)
 	Shape.init(self, params)
 
@@ -594,6 +659,7 @@ function ShapeCylinder:init(params)
 	self._properties.height = params.height or 1000
 end
 
+-- Lines 573-582
 function ShapeCylinder:build_properties_ctrls()
 	if not Application:editor() then
 		return
@@ -604,22 +670,27 @@ function ShapeCylinder:build_properties_ctrls()
 	self._dialog:set_size(Vector3(190, 70, 0))
 end
 
+-- Lines 584-586
 function ShapeCylinder:radius()
 	return self._properties.radius
 end
 
+-- Lines 588-590
 function ShapeCylinder:set_radius(radius)
 	self:set_property("radius", radius)
 end
 
+-- Lines 592-594
 function ShapeCylinder:height()
 	return self._properties.height
 end
 
+-- Lines 596-598
 function ShapeCylinder:set_height(height)
 	self:set_property("height", height)
 end
 
+-- Lines 600-607
 function ShapeCylinder:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 
@@ -632,6 +703,7 @@ function ShapeCylinder:draw(t, dt, r, g, b)
 	Application:draw_cylinder(pos, pos + rot:z() * self._properties.height, self._properties.radius, r, g, b)
 end
 
+-- Lines 609-624
 function ShapeCylinder:is_inside(pos)
 	local pos_dir = pos - self:position()
 	local rot = self:rotation()
@@ -651,10 +723,12 @@ end
 
 ShapeCylinderMiddle = ShapeCylinderMiddle or class(ShapeCylinder)
 
+-- Lines 628-630
 function ShapeCylinderMiddle:init(params)
 	ShapeCylinderMiddle.super.init(self, params)
 end
 
+-- Lines 632-672
 function ShapeCylinderMiddle:is_inside(pos)
 	local rot = self:rotation()
 	local z = mvec3
@@ -691,6 +765,7 @@ function ShapeCylinderMiddle:is_inside(pos)
 	return false
 end
 
+-- Lines 674-683
 function ShapeCylinderMiddle:draw(t, dt, r, g, b)
 	local brush = Draw:brush()
 

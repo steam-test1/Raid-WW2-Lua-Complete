@@ -1,5 +1,6 @@
 ContinentPanel = ContinentPanel or class()
 
+-- Lines 4-24
 function ContinentPanel:init(parent)
 	self:create_panel(parent, "VERTICAL")
 	self:create_continent_panel(self._panel, "VERTICAL")
@@ -14,6 +15,7 @@ function ContinentPanel:init(parent)
 	self._continent_panels = {}
 end
 
+-- Lines 26-42
 function ContinentPanel:create_toolbar()
 	local toolbar_sizer = EWS:BoxSizer("VERTICAL")
 	self._toolbar = EWS:ToolBar(self._panel, "", "TB_FLAT,TB_NODIVIDER,TB_VERTICAL")
@@ -28,6 +30,7 @@ function ContinentPanel:create_toolbar()
 	return toolbar_sizer
 end
 
+-- Lines 44-75
 function ContinentPanel:create_world_setting()
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	self._world_setting_toolbar = EWS:ToolBar(self._panel, "", "TB_FLAT,TB_NODIVIDER")
@@ -55,10 +58,12 @@ function ContinentPanel:create_world_setting()
 	return sizer
 end
 
+-- Lines 93-95
 function ContinentPanel:panel()
 	return self._panel
 end
 
+-- Lines 97-102
 function ContinentPanel:create_panel(parent, orientation)
 	self._panel = EWS:Panel(parent, "", "TAB_TRAVERSAL,ALWAYS_SHOW_SB")
 	self._panel_sizer = EWS:BoxSizer(orientation)
@@ -66,6 +71,7 @@ function ContinentPanel:create_panel(parent, orientation)
 	self._panel:set_sizer(self._panel_sizer)
 end
 
+-- Lines 104-113
 function ContinentPanel:create_continent_panel(parent, orientation)
 	self._continent_panel = EWS:ScrolledWindow(parent, "", "VSCROLL,TAB_TRAVERSAL,SIMPLE_BORDER")
 
@@ -79,6 +85,7 @@ function ContinentPanel:create_continent_panel(parent, orientation)
 	self._continent_panel:set_sizer(self._continent_panel_sizer)
 end
 
+-- Lines 115-124
 function ContinentPanel:create_continent_dialog()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for new continent:", "Create new continent", "", Vector3(-1, -1, 0), true)
 
@@ -91,6 +98,7 @@ function ContinentPanel:create_continent_dialog()
 	end
 end
 
+-- Lines 126-176
 function ContinentPanel:add_continent(params)
 	local panel = EWS:Panel(self._continent_panel, "", "TAB_TRAVERSAL")
 	params.panel = panel
@@ -131,14 +139,17 @@ function ContinentPanel:add_continent(params)
 	return panel
 end
 
+-- Lines 178-180
 function ContinentPanel:toggle_visible(params)
 end
 
+-- Lines 182-187
 function ContinentPanel:toggle_locked(params)
 	params.continent:set_locked(params.toolbar:tool_state("LOCKED"))
 	self:_set_toolbar_colour(params)
 end
 
+-- Lines 189-193
 function ContinentPanel:_set_toolbar_colour(params)
 	local locked = params.toolbar:tool_state("LOCKED")
 
@@ -146,26 +157,32 @@ function ContinentPanel:_set_toolbar_colour(params)
 	params.panel:refresh()
 end
 
+-- Lines 195-197
 function ContinentPanel:hide_all(params)
 	params.continent:set_visible(false)
 end
 
+-- Lines 199-201
 function ContinentPanel:unhide_all(params)
 	params.continent:set_visible(true)
 end
 
+-- Lines 203-205
 function ContinentPanel:toggle_enabled_in_simulation(params)
 	params.continent:set_value("enabled_in_simulation", params.toolbar:tool_state("ENABLED_IN_SIMULATION"))
 end
 
+-- Lines 207-209
 function ContinentPanel:toggle_editor_only(params)
 	params.continent:set_value("editor_only", params.toolbar:tool_state("EDITOR_ONLY"))
 end
 
+-- Lines 211-213
 function ContinentPanel:toggle_button_clicked(params)
 	managers.editor:set_continent(params.continent:name())
 end
 
+-- Lines 216-226
 function ContinentPanel:update_continent_panel(continent)
 	for _, params in ipairs(self._continent_panels) do
 		if params.continent == continent then
@@ -178,16 +195,19 @@ function ContinentPanel:update_continent_panel(continent)
 	end
 end
 
+-- Lines 228-232
 function ContinentPanel:set_continent(continent)
 	for _, params in ipairs(self._continent_panels) do
 		params.toggle_button:set_value(params.continent == continent)
 	end
 end
 
+-- Lines 235-237
 function ContinentPanel:delete_continent()
 	managers.editor:delete_continent()
 end
 
+-- Lines 239-246
 function ContinentPanel:destroy_continent(continent)
 	for _, params in ipairs(self._continent_panels) do
 		if params.continent == continent then
@@ -198,6 +218,7 @@ function ContinentPanel:destroy_continent(continent)
 	end
 end
 
+-- Lines 248-255
 function ContinentPanel:_destroy_continent(params)
 	if not table.contains(self._continent_panels, params) then
 		return
@@ -208,12 +229,14 @@ function ContinentPanel:_destroy_continent(params)
 	self._continent_panel:fit_inside()
 end
 
+-- Lines 257-261
 function ContinentPanel:destroy_all_continents()
 	for _, params in ipairs(clone(self._continent_panels)) do
 		self:_destroy_continent(params)
 	end
 end
 
+-- Lines 263-273
 function ContinentPanel:create_world_setting_dialog()
 	if not managers.editor:lastfile() then
 		local confirm = EWS:message_box(Global.frame_panel, "Can't create world setting when the level isn't saved.", "Continent", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -231,6 +254,7 @@ function ContinentPanel:create_world_setting_dialog()
 	end
 end
 
+-- Lines 275-280
 function ContinentPanel:open_world_setting_dialog()
 	local path, dir = managers.database:open_file_dialog(Global.frame, "World setting (*.world_setting)|*.world_setting", managers.editor:get_open_dir())
 
@@ -241,6 +265,7 @@ function ContinentPanel:open_world_setting_dialog()
 	end
 end
 
+-- Lines 282-287
 function ContinentPanel:set_simulation_world_setting_dialog()
 	local path, dir = managers.database:open_file_dialog(Global.frame, "World setting (*.world_setting)|*.world_setting", managers.editor:get_open_dir())
 
@@ -249,10 +274,12 @@ function ContinentPanel:set_simulation_world_setting_dialog()
 	end
 end
 
+-- Lines 289-291
 function ContinentPanel:remove_simulation_world_setting_dialog()
 	managers.editor:set_simulation_world_setting_path(nil)
 end
 
+-- Lines 293-296
 function ContinentPanel:set_world_setting_path(path)
 	self._world_setting_path:set_value(path or "-")
 	self._panel:layout()

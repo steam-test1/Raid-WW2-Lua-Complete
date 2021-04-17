@@ -4,10 +4,12 @@ core:import("CoreSerialize")
 
 Data = Data or class()
 
+-- Lines 7-13
 function Data:init()
 	self._nodes = {}
 end
 
+-- Lines 16-41
 function Data:get_node(node_name, ...)
 	local node = nil
 
@@ -38,6 +40,7 @@ function Data:get_node(node_name, ...)
 	return node
 end
 
+-- Lines 43-88
 function Data:load_data(file_path, menu_id)
 	local root = PackageManager:script_data(Idstring("menu"), file_path:id())
 	local menu = nil
@@ -80,6 +83,7 @@ function Data:load_data(file_path, menu_id)
 	end
 end
 
+-- Lines 90-94
 function Data:set_callback_handler(callback_handler)
 	for name, node in pairs(self._nodes) do
 		node:set_callback_handler(callback_handler)

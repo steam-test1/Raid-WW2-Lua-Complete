@@ -1,13 +1,16 @@
 RaidMenuOptionsControls = RaidMenuOptionsControls or class(RaidGuiBase)
 
+-- Lines 3-5
 function RaidMenuOptionsControls:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuOptionsControls.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
+-- Lines 7-9
 function RaidMenuOptionsControls:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_controls_subtitle")
 end
 
+-- Lines 12-21
 function RaidMenuOptionsControls:_layout()
 	RaidMenuOptionsControls.super._layout(self)
 	self:_layout_controls()
@@ -16,6 +19,7 @@ function RaidMenuOptionsControls:_layout()
 	self:bind_controller_inputs()
 end
 
+-- Lines 23-30
 function RaidMenuOptionsControls:close()
 	self:_save_controls_values()
 
@@ -25,6 +29,7 @@ function RaidMenuOptionsControls:close()
 	RaidMenuOptionsControls.super.close(self)
 end
 
+-- Lines 33-219
 function RaidMenuOptionsControls:_layout_controls()
 	local start_x = 0
 	local start_y = 320
@@ -229,6 +234,7 @@ function RaidMenuOptionsControls:_layout_controls()
 	end
 end
 
+-- Lines 221-235
 function RaidMenuOptionsControls:_modify_controller_layout()
 	if managers.raid_menu:is_pc_controller() then
 		self._toggle_menu_controller_vibration:hide()
@@ -244,30 +250,35 @@ function RaidMenuOptionsControls:_modify_controller_layout()
 	end
 end
 
+-- Lines 239-242
 function RaidMenuOptionsControls:on_click_toggle_controller_vibration()
 	local value = self._toggle_menu_controller_vibration:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_rumble(value)
 end
 
+-- Lines 244-247
 function RaidMenuOptionsControls:on_click_toggle_controller_aim_assist()
 	local value = self._toggle_menu_controller_aim_assist:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_aim_assist(value)
 end
 
+-- Lines 249-252
 function RaidMenuOptionsControls:on_click_toggle_controller_sticky_aim(item)
 	local value = self._toggle_menu_controller_sticky_aim:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_sticky_aim(value)
 end
 
+-- Lines 254-257
 function RaidMenuOptionsControls:on_click_toggle_controller_southpaw()
 	local value = self._toggle_menu_controller_southpaw:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_southpaw(value)
 end
 
+-- Lines 261-268
 function RaidMenuOptionsControls:on_click_options_controls_keybinds_button()
 	if managers.raid_menu:is_pc_controller() then
 		managers.raid_menu:open_menu("raid_menu_options_controls_keybinds")
@@ -276,6 +287,7 @@ function RaidMenuOptionsControls:on_click_options_controls_keybinds_button()
 	end
 end
 
+-- Lines 270-282
 function RaidMenuOptionsControls:on_value_change_camera_sensitivity_horizontal()
 	local camera_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_sensitivity_horizontal:get_value(), 0, 100)
 	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
@@ -290,6 +302,7 @@ function RaidMenuOptionsControls:on_value_change_camera_sensitivity_horizontal()
 	end
 end
 
+-- Lines 284-296
 function RaidMenuOptionsControls:on_value_change_camera_sensitivity_vertical()
 	local camera_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_sensitivity_vertical:get_value(), 0, 100)
 	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
@@ -304,6 +317,7 @@ function RaidMenuOptionsControls:on_value_change_camera_sensitivity_vertical()
 	end
 end
 
+-- Lines 298-312
 function RaidMenuOptionsControls:on_value_change_camera_zoom_sensitivity_horizontal()
 	local camera_zoom_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_zoom_sensitivity_horizontal:get_value(), 0, 100)
 	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
@@ -318,6 +332,7 @@ function RaidMenuOptionsControls:on_value_change_camera_zoom_sensitivity_horizon
 	end
 end
 
+-- Lines 314-328
 function RaidMenuOptionsControls:on_value_change_camera_zoom_sensitivity_vertical()
 	local camera_zoom_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_zoom_sensitivity_vertical:get_value(), 0, 100)
 	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
@@ -332,36 +347,42 @@ function RaidMenuOptionsControls:on_value_change_camera_zoom_sensitivity_vertica
 	end
 end
 
+-- Lines 330-333
 function RaidMenuOptionsControls:on_click_toggle_zoom_sensitivity()
 	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_zoom_sensitivity_raid(enable_camera_zoom_sensitivity)
 end
 
+-- Lines 335-338
 function RaidMenuOptionsControls:on_click_toggle_invert_camera_vertically()
 	local invert_camera_y = self._toggle_menu_invert_camera_vertically:get_value()
 
 	managers.menu:active_menu().callback_handler:invert_camera_vertically_raid(invert_camera_y)
 end
 
+-- Lines 340-343
 function RaidMenuOptionsControls:on_click_toggle_hold_to_steelsight()
 	local hold_to_steelsight = self._toggle_menu_hold_to_steelsight:get_value()
 
 	managers.menu:active_menu().callback_handler:hold_to_steelsight_raid(hold_to_steelsight)
 end
 
+-- Lines 345-348
 function RaidMenuOptionsControls:on_click_toggle_hold_to_run()
 	local hold_to_run = self._toggle_menu_hold_to_run:get_value()
 
 	managers.menu:active_menu().callback_handler:hold_to_run_raid(hold_to_run)
 end
 
+-- Lines 350-353
 function RaidMenuOptionsControls:on_click_toggle_hold_to_duck()
 	local hold_to_duck = self._toggle_menu_hold_to_duck:get_value()
 
 	managers.menu:active_menu().callback_handler:hold_to_duck_raid(hold_to_duck)
 end
 
+-- Lines 355-362
 function RaidMenuOptionsControls:on_click_default_controls()
 	local params = {
 		title = managers.localization:text("dialog_reset_controls_title"),
@@ -375,6 +396,7 @@ function RaidMenuOptionsControls:on_click_default_controls()
 	managers.menu:show_option_dialog(params)
 end
 
+-- Lines 364-400
 function RaidMenuOptionsControls:_load_controls_values()
 	local camera_sensitivity_x = math.clamp(managers.user:get_setting("camera_sensitivity_x"), 0, 100)
 	local camera_sensitivity_y = math.clamp(managers.user:get_setting("camera_sensitivity_y"), 0, 100)
@@ -411,6 +433,7 @@ function RaidMenuOptionsControls:_load_controls_values()
 	self._toggle_menu_controller_sticky_aim:set_value_and_render(sticky_aim)
 end
 
+-- Lines 402-417
 function RaidMenuOptionsControls:_save_controls_values()
 	self:on_value_change_camera_sensitivity_horizontal()
 	self:on_value_change_camera_sensitivity_vertical()
@@ -427,6 +450,7 @@ function RaidMenuOptionsControls:_save_controls_values()
 	self:on_click_toggle_controller_sticky_aim()
 end
 
+-- Lines 421-436
 function RaidMenuOptionsControls:bind_controller_inputs()
 	local bindings = {
 		{

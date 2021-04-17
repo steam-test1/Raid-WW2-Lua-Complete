@@ -13,6 +13,7 @@ SpawnEnemyUnitElement.INSTANCE_VAR_NAMES = {
 	}
 }
 
+-- Lines 7-31
 function SpawnEnemyUnitElement:init(unit)
 	SpawnEnemyUnitElement.super.init(self, unit)
 
@@ -38,6 +39,7 @@ function SpawnEnemyUnitElement:init(unit)
 	table.insert(self._save_values, "voice")
 end
 
+-- Lines 33-41
 function SpawnEnemyUnitElement:post_init(...)
 	SpawnEnemyUnitElement.super.post_init(self, ...)
 	self:_load_pickup()
@@ -47,12 +49,14 @@ function SpawnEnemyUnitElement:post_init(...)
 	end
 end
 
+-- Lines 43-46
 function SpawnEnemyUnitElement:_get_enemy()
 	local result = EnemyManager.ENEMIES[self._hed.enemy] or self._hed.enemy
 
 	return result
 end
 
+-- Lines 49-70
 function SpawnEnemyUnitElement:test_element()
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test spawn unit without ready navigation data (AI-graph)", "Spawn", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -81,10 +85,12 @@ function SpawnEnemyUnitElement:test_element()
 	end
 end
 
+-- Lines 72-74
 function SpawnEnemyUnitElement:get_spawn_anim()
 	return self._hed.spawn_action
 end
 
+-- Lines 76-81
 function SpawnEnemyUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		enemy:set_slot(0)
@@ -93,6 +99,7 @@ function SpawnEnemyUnitElement:stop_test_element()
 	self._enemies = {}
 end
 
+-- Lines 83-88
 function SpawnEnemyUnitElement:set_element_data(params, ...)
 	SpawnEnemyUnitElement.super.set_element_data(self, params, ...)
 
@@ -101,6 +108,7 @@ function SpawnEnemyUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 90-95
 function SpawnEnemyUnitElement:_reload_unit_list_btn()
 	self:stop_test_element()
 
@@ -111,6 +119,7 @@ function SpawnEnemyUnitElement:_reload_unit_list_btn()
 	end
 end
 
+-- Lines 97-135
 function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -163,6 +172,7 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	}, tweak_data.levels:get_team_names_indexed()), "Select the character's team.")
 end
 
+-- Lines 137-142
 function SpawnEnemyUnitElement:_load_pickup()
 	if self._hed.force_pickup ~= "none" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -171,6 +181,7 @@ function SpawnEnemyUnitElement:_load_pickup()
 	end
 end
 
+-- Lines 144-156
 function SpawnEnemyUnitElement:add_to_mission_package()
 	if self._hed.force_pickup ~= "none" then
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
@@ -196,6 +207,7 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 	end
 end
 
+-- Lines 158-164
 function SpawnEnemyUnitElement:_resolve_team(unit)
 	if self._hed.team == "default" then
 		return tweak_data.levels:get_default_team_ID(unit:base():char_tweak().access == "gangster" and "gangster" or "combatant")
@@ -204,6 +216,7 @@ function SpawnEnemyUnitElement:_resolve_team(unit)
 	end
 end
 
+-- Lines 166-169
 function SpawnEnemyUnitElement:destroy(...)
 	SpawnEnemyUnitElement.super.destroy(self, ...)
 	self:stop_test_element()

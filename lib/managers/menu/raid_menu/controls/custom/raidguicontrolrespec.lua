@@ -12,6 +12,7 @@ RaidGUIControlRespec.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_sizes.size_20
 RaidGUIControlRespec.DESCRIPTION_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlRespec.COST_PADDING_DOWN = 32
 
+-- Lines 20-31
 function RaidGUIControlRespec:init(parent, params)
 	RaidGUIControlRespec.super.init(self, parent, params)
 
@@ -26,6 +27,7 @@ function RaidGUIControlRespec:init(parent, params)
 	self:_create_respec_description()
 end
 
+-- Lines 34-42
 function RaidGUIControlRespec:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_customization_panel"
@@ -36,6 +38,7 @@ function RaidGUIControlRespec:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 44-58
 function RaidGUIControlRespec:_create_respec_title()
 	local skill_title_params = {
 		vertical = "center",
@@ -54,6 +57,7 @@ function RaidGUIControlRespec:_create_respec_title()
 	self._title = self._object:label(skill_title_params)
 end
 
+-- Lines 60-73
 function RaidGUIControlRespec:_create_respec_description()
 	local description_text_params = {
 		name = "respec_description",

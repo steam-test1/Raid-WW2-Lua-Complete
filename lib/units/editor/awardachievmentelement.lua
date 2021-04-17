@@ -1,5 +1,6 @@
 AwardAchievmentElement = AwardAchievmentElement or class(MissionElement)
 
+-- Lines 3-13
 function AwardAchievmentElement:init(unit)
 	AwardAchievmentElement.super.init(self, unit)
 
@@ -12,6 +13,7 @@ function AwardAchievmentElement:init(unit)
 	table.insert(self._save_values, "players_from_start")
 end
 
+-- Lines 16-32
 function AwardAchievmentElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

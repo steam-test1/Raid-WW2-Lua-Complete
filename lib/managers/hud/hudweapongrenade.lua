@@ -7,6 +7,7 @@ HUDWeaponGrenade.AMOUNT_TEXT_COLOR = Color.white
 HUDWeaponGrenade.AMOUNT_TEXT_ALPHA_WHEN_SELECTED = 1
 HUDWeaponGrenade.AMOUNT_TEXT_ALPHA_WHEN_UNSELECTED = 0.7
 
+-- Lines 13-20
 function HUDWeaponGrenade:init(index, weapons_panel, tweak_data)
 	HUDWeaponGrenade.super.init(self, index, weapons_panel, tweak_data)
 
@@ -17,6 +18,7 @@ function HUDWeaponGrenade:init(index, weapons_panel, tweak_data)
 	self:_create_amount_text(weapons_panel)
 end
 
+-- Lines 22-30
 function HUDWeaponGrenade:_create_panel(weapons_panel)
 	local panel_params = {
 		halign = "right",
@@ -28,6 +30,7 @@ function HUDWeaponGrenade:_create_panel(weapons_panel)
 	self._object = weapons_panel:panel(panel_params)
 end
 
+-- Lines 32-51
 function HUDWeaponGrenade:_create_icon(icon)
 	local icon_panel_params = {
 		halign = "center",
@@ -51,6 +54,7 @@ function HUDWeaponGrenade:_create_icon(icon)
 	self._icon:set_center_y(self._icon_panel:h() / 2)
 end
 
+-- Lines 53-64
 function HUDWeaponGrenade:_create_amount_text()
 	local amount_text_params = {
 		text = "",
@@ -65,6 +69,7 @@ function HUDWeaponGrenade:_create_amount_text()
 	self:set_amount(0)
 end
 
+-- Lines 66-81
 function HUDWeaponGrenade:set_amount(amount)
 	self._amount_text:set_text(string.format("%03d", amount))
 
@@ -82,6 +87,7 @@ function HUDWeaponGrenade:set_amount(amount)
 	end
 end
 
+-- Lines 83-103
 function HUDWeaponGrenade:_animate_alpha(root_panel, new_alpha)
 	local start_alpha = new_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED and HUDWeaponBase.ALPHA_WHEN_UNSELECTED or HUDWeaponBase.ALPHA_WHEN_SELECTED
 	local start_amount_text_alpha = start_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED and HUDWeaponGrenade.AMOUNT_TEXT_ALPHA_WHEN_SELECTED or HUDWeaponGrenade.AMOUNT_TEXT_ALPHA_WHEN_UNSELECTED

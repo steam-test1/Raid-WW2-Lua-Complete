@@ -15,14 +15,17 @@ CoreVolumeSetCutsceneKey.control_for_action = CoreCutsceneKeyBase.standard_combo
 CoreVolumeSetCutsceneKey.control_for_name = CoreCutsceneKeyBase.standard_combo_box_control
 CoreVolumeSetCutsceneKey.refresh_control_for_action = CoreCutsceneKeyBase:standard_combo_box_control_refresh("action", CoreVolumeSetCutsceneKey.VALID_ACTIONS)
 
+-- Lines 13-15
 function CoreVolumeSetCutsceneKey:__tostring()
 	return string.capitalize(self:action()) .. " volume set \"" .. self:name() .. "\"."
 end
 
+-- Lines 17-19
 function CoreVolumeSetCutsceneKey:unload(player)
 	self:play(player, true)
 end
 
+-- Lines 21-32
 function CoreVolumeSetCutsceneKey:play(player, undo, fast_forward)
 	if managers.volume == nil then
 		return
@@ -41,10 +44,12 @@ function CoreVolumeSetCutsceneKey:play(player, undo, fast_forward)
 	end
 end
 
+-- Lines 34-36
 function CoreVolumeSetCutsceneKey:inverse_action()
 	return self:action() == "activate" and "deactivate" or "activate"
 end
 
+-- Lines 38-44
 function CoreVolumeSetCutsceneKey:_perform_action(action)
 	if action == "deactivate" and managers.volume:is_active(self:name()) then
 		managers.volume:deactivate_set(self:name())
@@ -53,14 +58,17 @@ function CoreVolumeSetCutsceneKey:_perform_action(action)
 	end
 end
 
+-- Lines 46-48
 function CoreVolumeSetCutsceneKey:is_valid_action(action)
 	return table.contains(self.VALID_ACTIONS, action)
 end
 
+-- Lines 50-52
 function CoreVolumeSetCutsceneKey:is_valid_name(name)
 	return managers.volume and managers.volume:is_valid_volume_set_name(name) or false
 end
 
+-- Lines 54-67
 function CoreVolumeSetCutsceneKey:refresh_control_for_name(control)
 	control:freeze()
 	control:clear()

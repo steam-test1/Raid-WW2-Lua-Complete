@@ -1,5 +1,6 @@
 RaidMenuOptionsControlsControllerMapping = RaidMenuOptionsControlsControllerMapping or class(RaidGuiBase)
 
+-- Lines 3-8
 function RaidMenuOptionsControlsControllerMapping:init(ws, fullscreen_ws, node, component_name)
 	self._label_font = tweak_data.gui.fonts.din_compressed
 	self._label_font_size = tweak_data.gui.font_sizes.size_24
@@ -7,10 +8,12 @@ function RaidMenuOptionsControlsControllerMapping:init(ws, fullscreen_ws, node, 
 	RaidMenuOptionsControlsControllerMapping.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
+-- Lines 10-12
 function RaidMenuOptionsControlsControllerMapping:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_controls_controller_mapping_on_foot")
 end
 
+-- Lines 15-33
 function RaidMenuOptionsControlsControllerMapping:_layout()
 	RaidMenuOptionsControlsControllerMapping.super._layout(self)
 
@@ -44,10 +47,12 @@ function RaidMenuOptionsControlsControllerMapping:_layout()
 	self:bind_controller_inputs_on_foot()
 end
 
+-- Lines 35-37
 function RaidMenuOptionsControlsControllerMapping:close()
 	RaidMenuOptionsControlsControllerMapping.super.close(self)
 end
 
+-- Lines 39-113
 function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	local southpaw = managers.user:get_setting("southpaw")
 	local controller_bind_move_text = self:translate("menu_controller_keybind_move", true)
@@ -281,6 +286,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self._controller_keybind_warcry:set_y(self._controller_image:y() - 20)
 end
 
+-- Lines 115-180
 function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	local southpaw = managers.user:get_setting("southpaw")
 	local controller_bind_steering_text = self:translate("menu_controller_keybind_steering", true)
@@ -500,6 +506,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 end
 
+-- Lines 182-212
 function RaidMenuOptionsControlsControllerMapping:_set_position_size_controller_keybind_label(params)
 	local x, y, w, h = params.control:text_rect()
 
@@ -522,6 +529,7 @@ function RaidMenuOptionsControlsControllerMapping:_set_position_size_controller_
 	end
 end
 
+-- Lines 218-233
 function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_on_foot()
 	local bindings = {
 		{
@@ -548,6 +556,7 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_on_foot
 	self:set_legend(legend)
 end
 
+-- Lines 235-250
 function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_in_vehicle()
 	local bindings = {
 		{
@@ -574,6 +583,7 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_in_vehi
 	self:set_legend(legend)
 end
 
+-- Lines 252-257
 function RaidMenuOptionsControlsControllerMapping:_show_vehicle_mapping()
 	self._panel_on_foot:hide()
 	self._panel_in_vehicle:show()
@@ -581,6 +591,7 @@ function RaidMenuOptionsControlsControllerMapping:_show_vehicle_mapping()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_controls_controller_mapping_in_vehicle")
 end
 
+-- Lines 259-264
 function RaidMenuOptionsControlsControllerMapping:_show_on_foot_mapping()
 	self._panel_on_foot:show()
 	self._panel_in_vehicle:hide()

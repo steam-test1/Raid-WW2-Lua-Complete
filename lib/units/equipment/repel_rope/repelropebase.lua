@@ -1,5 +1,6 @@
 RepelRopeBase = RepelRopeBase or class()
 
+-- Lines 3-9
 function RepelRopeBase:init(unit)
 	self._tmp_vec3 = Vector3()
 
@@ -11,6 +12,7 @@ function RepelRopeBase:init(unit)
 	unit:set_extension_update_enabled(Idstring("base"), false)
 end
 
+-- Lines 13-30
 function RepelRopeBase:update(unit, t, dt)
 	if self._retracting then
 		local prog = (t - self._retract_start_t) / self._retract_duration
@@ -33,12 +35,14 @@ function RepelRopeBase:update(unit, t, dt)
 	end
 end
 
+-- Lines 34-37
 function RepelRopeBase:setup(attach_object)
 	self._attach_obj = attach_object
 
 	self._unit:set_extension_update_enabled(Idstring("base"), true)
 end
 
+-- Lines 41-50
 function RepelRopeBase:retract()
 	if not self._retracting then
 		self._retracting = true

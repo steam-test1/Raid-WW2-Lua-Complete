@@ -4,6 +4,7 @@ RaidGUIControlPagedGrid.DEFAULT_ITEM_PADDING = 16
 RaidGUIControlPagedGrid.PAGING_PANEL_HEIGHT = 25
 RaidGUIControlPagedGrid.PAGING_STEPPER_WIDTH = 100
 
+-- Lines 33-90
 function RaidGUIControlPagedGrid:init(parent, params)
 	RaidGUIControlPagedGrid.super.init(self, parent, params)
 
@@ -55,9 +56,11 @@ function RaidGUIControlPagedGrid:init(parent, params)
 	self:_create_items()
 end
 
+-- Lines 93-94
 function RaidGUIControlPagedGrid:close()
 end
 
+-- Lines 97-105
 function RaidGUIControlPagedGrid:_create_grid_panel()
 	local grid_params = clone(self._params)
 	grid_params.name = grid_params.name .. "_grid"
@@ -68,6 +71,7 @@ function RaidGUIControlPagedGrid:_create_grid_panel()
 	self._grid_panel = self._paged_grid_panel:panel(grid_params, true)
 end
 
+-- Lines 108-137
 function RaidGUIControlPagedGrid:_get_data()
 	local grid_data = self._data_source_callback()
 
@@ -96,6 +100,7 @@ function RaidGUIControlPagedGrid:_get_data()
 	self._total_pages = math.ceil(self._total_items / self._items_per_page)
 end
 
+-- Lines 139-172
 function RaidGUIControlPagedGrid:_create_items()
 	local item_count = 0
 	local i_vertical = 1
@@ -128,6 +133,7 @@ function RaidGUIControlPagedGrid:_create_items()
 	end
 end
 
+-- Lines 174-182
 function RaidGUIControlPagedGrid:_create_item(item_params, item_data, grid_params)
 	local item_class = RaidGUIControlCard
 	local item = self._grid_panel:create_custom_control(item_class, item_params, item_data, grid_params)
@@ -135,6 +141,7 @@ function RaidGUIControlPagedGrid:_create_item(item_params, item_data, grid_param
 	return item
 end
 
+-- Lines 184-202
 function RaidGUIControlPagedGrid:_create_paging_controls()
 	if self._paging_controls_panel then
 		self._paging_controls_panel:clear()
@@ -165,6 +172,7 @@ function RaidGUIControlPagedGrid:_create_paging_controls()
 	end
 end
 
+-- Lines 204-219
 function RaidGUIControlPagedGrid:_create_filter_controls()
 	if not self._paging_controls_panel then
 		self._paging_controls_panel_params = {
@@ -193,6 +201,7 @@ function RaidGUIControlPagedGrid:_create_filter_controls()
 	end
 end
 
+-- Lines 222-226
 function RaidGUIControlPagedGrid:_delete_items()
 	self._grid_items = {}
 	self._selected_item = nil
@@ -200,10 +209,12 @@ function RaidGUIControlPagedGrid:_delete_items()
 	self._grid_panel:clear()
 end
 
+-- Lines 229-231
 function RaidGUIControlPagedGrid:mouse_moved(o, x, y)
 	return self._grid_panel:mouse_moved(o, x, y)
 end
 
+-- Lines 234-247
 function RaidGUIControlPagedGrid:mouse_released(o, button, x, y)
 	for _, grid_item in ipairs(self._grid_items) do
 		if grid_item:inside(x, y) then
@@ -220,18 +231,22 @@ function RaidGUIControlPagedGrid:mouse_released(o, button, x, y)
 	return false
 end
 
+-- Lines 250-252
 function RaidGUIControlPagedGrid:highlight_on()
 end
 
+-- Lines 255-257
 function RaidGUIControlPagedGrid:highlight_off()
 end
 
+-- Lines 259-264
 function RaidGUIControlPagedGrid:refresh_data()
 	self:_delete_items()
 	self:_get_data()
 	self:_create_items()
 end
 
+-- Lines 266-275
 function RaidGUIControlPagedGrid:select_grid_item_by_item(grid_item)
 	if self._selected_item then
 		self._selected_item:unselect()
@@ -244,16 +259,19 @@ function RaidGUIControlPagedGrid:select_grid_item_by_item(grid_item)
 	end
 end
 
+-- Lines 277-279
 function RaidGUIControlPagedGrid:selected_grid_item()
 	return self._selected_item
 end
 
+-- Lines 282-288
 function RaidGUIControlPagedGrid:on_item_selected_grid_page(item)
 	self._current_page = item.value
 
 	self:refresh_data()
 end
 
+-- Lines 291-298
 function RaidGUIControlPagedGrid:data_source_grid_page_stepper()
 	local pages = {}
 
@@ -267,6 +285,7 @@ function RaidGUIControlPagedGrid:data_source_grid_page_stepper()
 	return pages
 end
 
+-- Lines 300-305
 function RaidGUIControlPagedGrid:on_item_selected_grid_filter(item)
 	self._filter_value = item.value
 	self._current_page = 1
@@ -274,6 +293,7 @@ function RaidGUIControlPagedGrid:on_item_selected_grid_filter(item)
 	self:refresh_data()
 end
 
+-- Lines 308-313
 function RaidGUIControlPagedGrid:data_source_grid_filter_stepper()
 	if self._data_source_filter_callback then
 		return self._data_source_filter_callback()

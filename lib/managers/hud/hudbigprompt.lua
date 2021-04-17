@@ -6,12 +6,14 @@ HUDBigPrompt.TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 HUDBigPrompt.DEFAULT_TEXT_COLOR = tweak_data.gui.colors.light_grey
 HUDBigPrompt.DEFAULT_BACKGROUND = "backgrounds_equipment_panel_msg"
 
+-- Lines 12-16
 function HUDBigPrompt:init(hud)
 	self:_create_panel(hud)
 	self:_create_background()
 	self:_create_text()
 end
 
+-- Lines 18-26
 function HUDBigPrompt:_create_panel(hud)
 	local panel_params = {
 		name = "big_prompt_panel",
@@ -23,6 +25,7 @@ function HUDBigPrompt:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
+-- Lines 28-39
 function HUDBigPrompt:_create_background()
 	local background_params = {
 		name = "big_prompt_background",
@@ -37,6 +40,7 @@ function HUDBigPrompt:_create_background()
 	self._background:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 41-55
 function HUDBigPrompt:_create_text()
 	local text_params = {
 		vertical = "center",
@@ -55,6 +59,7 @@ function HUDBigPrompt:_create_text()
 	self._text = self._object:text(text_params)
 end
 
+-- Lines 57-73
 function HUDBigPrompt:show_prompt(params)
 	if self._active_id == params.id then
 		if params.duration then
@@ -77,6 +82,7 @@ function HUDBigPrompt:show_prompt(params)
 	end
 end
 
+-- Lines 75-85
 function HUDBigPrompt:hide_prompt(id)
 	self._text:stop()
 	self._text:animate(callback(self, self, "_animate_hide"))
@@ -84,22 +90,27 @@ function HUDBigPrompt:hide_prompt(id)
 	self._active_id = nil
 end
 
+-- Lines 87-89
 function HUDBigPrompt:set_x(x)
 	self._object:set_x(x)
 end
 
+-- Lines 91-93
 function HUDBigPrompt:set_y(y)
 	self._object:set_y(y)
 end
 
+-- Lines 95-97
 function HUDBigPrompt:w()
 	return self._object:w()
 end
 
+-- Lines 99-101
 function HUDBigPrompt:h()
 	return self._object:h()
 end
 
+-- Lines 103-156
 function HUDBigPrompt:_animate_change_prompt(text_control, text, id, text_color, background)
 	local fade_out_duration = 0.2
 	local fade_in_duration = 0.3
@@ -159,6 +170,7 @@ function HUDBigPrompt:_animate_change_prompt(text_control, text, id, text_color,
 	self._background:set_alpha(1)
 end
 
+-- Lines 158-173
 function HUDBigPrompt:_animate_hide()
 	local fade_out_duration = 0.2
 	local t = (1 - self._text:alpha()) * fade_out_duration

@@ -4,6 +4,7 @@ CivilianLogicTravel.on_new_objective = CivilianLogicIdle.on_new_objective
 CivilianLogicTravel.on_action_completed = CopLogicTravel.on_action_completed
 CivilianLogicTravel.is_available_for_assignment = CopLogicTravel.is_available_for_assignment
 
+-- Lines 13-78
 function CivilianLogicTravel.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -78,6 +79,7 @@ function CivilianLogicTravel.enter(data, new_logic_name, enter_params)
 	my_data.state_enter_t = TimerManager:game():time()
 end
 
+-- Lines 82-107
 function CivilianLogicTravel.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -106,6 +108,7 @@ function CivilianLogicTravel.exit(data, new_logic_name, enter_params)
 	end
 end
 
+-- Lines 111-185
 function CivilianLogicTravel.update(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -193,6 +196,7 @@ function CivilianLogicTravel.update(data)
 	end
 end
 
+-- Lines 189-205
 function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	if not CivilianLogicIdle.is_obstructed(data, aggressor_unit) then
 		return
@@ -213,6 +217,7 @@ function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	data.unit:brain():set_objective(new_objective)
 end
 
+-- Lines 209-226
 function CivilianLogicTravel._determine_exact_destination(data, objective)
 	if objective.pos then
 		return objective.pos
@@ -230,11 +235,13 @@ function CivilianLogicTravel._determine_exact_destination(data, objective)
 	end
 end
 
+-- Lines 230-233
 function CivilianLogicTravel._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act and anim_data.needs_idle
 end
 
+-- Lines 237-244
 function CivilianLogicTravel._upd_stop_old_action(data, my_data, objective)
 	if not data.unit:anim_data().to_idle then
 		if not data.unit:movement():chk_action_forbidden("idle") and data.unit:anim_data().act and data.unit:anim_data().needs_idle then
@@ -245,6 +252,7 @@ function CivilianLogicTravel._upd_stop_old_action(data, my_data, objective)
 	end
 end
 
+-- Lines 248-254
 function CivilianLogicTravel.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true

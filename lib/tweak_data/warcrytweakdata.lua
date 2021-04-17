@@ -1,5 +1,6 @@
 WarcryTweakData = WarcryTweakData or class()
 
+-- Lines 3-8
 function WarcryTweakData:init(tweak_data)
 	self:_init_data_sharpshooter()
 	self:_init_data_berserk()
@@ -7,6 +8,7 @@ function WarcryTweakData:init(tweak_data)
 	self:_init_data_clustertruck()
 end
 
+-- Lines 10-41
 function WarcryTweakData:_init_data_sharpshooter()
 	self.sharpshooter = {
 		name_id = "warcry_sharpshooter_name",
@@ -74,6 +76,7 @@ function WarcryTweakData:_init_data_sharpshooter()
 	}
 end
 
+-- Lines 43-78
 function WarcryTweakData:_init_data_berserk()
 	self.berserk = {
 		name_id = "warcry_berserk_name",
@@ -122,6 +125,7 @@ function WarcryTweakData:_init_data_berserk()
 	}
 end
 
+-- Lines 80-111
 function WarcryTweakData:_init_data_ghost()
 	self.ghost = {
 		name_id = "warcry_ghost_name",
@@ -167,6 +171,7 @@ function WarcryTweakData:_init_data_ghost()
 	}
 end
 
+-- Lines 113-144
 function WarcryTweakData:_init_data_clustertruck()
 	self.clustertruck = {
 		name_id = "warcry_clustertruck_name",

@@ -10,6 +10,7 @@ RaidGUIControlWeaponSkills.ROMAN_NUMERALS = {
 RaidGUIControlWeaponSkills.TIER_LABEL_ACTIVE_ALPHA = 1
 RaidGUIControlWeaponSkills.TIER_LABEL_INACTIVE_ALPHA = 0.6
 
+-- Lines 10-27
 function RaidGUIControlWeaponSkills:init(parent, params)
 	RaidGUIControlWeaponSkills.super.init(self, parent, params)
 
@@ -25,6 +26,7 @@ function RaidGUIControlWeaponSkills:init(parent, params)
 	self._on_unselected_weapon_skill_callback = params.on_unselected_weapon_skill_callback
 end
 
+-- Lines 29-48
 function RaidGUIControlWeaponSkills:_create_items()
 	self._rows = {}
 	local row_params = {
@@ -49,6 +51,7 @@ function RaidGUIControlWeaponSkills:_create_items()
 	end
 end
 
+-- Lines 50-80
 function RaidGUIControlWeaponSkills:_create_tier_labels()
 	local tier_panel_params = {
 		h = 30,
@@ -80,28 +83,34 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 	end
 end
 
+-- Lines 82-84
 function RaidGUIControlWeaponSkills:get_rows()
 	return self._rows
 end
 
+-- Lines 86-88
 function RaidGUIControlWeaponSkills:get_temp_points()
 	return self._temp_weapon_points
 end
 
+-- Lines 90-92
 function RaidGUIControlWeaponSkills:set_temp_points(value)
 	self._temp_weapon_points = value
 end
 
+-- Lines 94-96
 function RaidGUIControlWeaponSkills:get_temp_skills()
 	return self._temp_skills
 end
 
+-- Lines 98-102
 function RaidGUIControlWeaponSkills:get_available_points()
 	local available_points = managers.weapon_skills:get_available_weapon_skill_points() - self._temp_weapon_points
 
 	return available_points
 end
 
+-- Lines 104-139
 function RaidGUIControlWeaponSkills:set_weapon(weapon_category_id, weapon_id)
 	local weapon_skills = managers.weapon_skills:get_weapon_skills(weapon_id)
 
@@ -137,6 +146,7 @@ function RaidGUIControlWeaponSkills:set_weapon(weapon_category_id, weapon_id)
 	end
 end
 
+-- Lines 141-166
 function RaidGUIControlWeaponSkills:apply_selected_skills()
 	for skill, _ in pairs(self._temp_skills) do
 		managers.weapon_skills:activate_skill(skill, self._weapon_category_id)
@@ -154,23 +164,29 @@ function RaidGUIControlWeaponSkills:apply_selected_skills()
 	self:set_weapon(self._weapon_category_id, self._weapon_id)
 end
 
+-- Lines 168-192
 function RaidGUIControlWeaponSkills:mouse_moved(o, x, y)
 end
 
+-- Lines 194-195
 function RaidGUIControlWeaponSkills:highlight_on()
 end
 
+-- Lines 197-198
 function RaidGUIControlWeaponSkills:highlight_off()
 end
 
+-- Lines 200-208
 function RaidGUIControlWeaponSkills:on_selected_weapon_skill_callback(button, data, skip_update_points)
 	self._on_selected_weapon_skill_callback(button, data)
 end
 
+-- Lines 210-217
 function RaidGUIControlWeaponSkills:on_unselected_weapon_skill_callback(button, data)
 	self._on_unselected_weapon_skill_callback(button, data)
 end
 
+-- Lines 219-276
 function RaidGUIControlWeaponSkills:unacquire_all_temp_skills(weapon_category_id)
 	local weapon_category = ""
 
@@ -221,6 +237,7 @@ function RaidGUIControlWeaponSkills:unacquire_all_temp_skills(weapon_category_id
 	end
 end
 
+-- Lines 280-290
 function RaidGUIControlWeaponSkills:set_selected(value, dont_trigger_selected_callback)
 	self._selected = value
 	self._selected_row_idx = 1
@@ -230,6 +247,7 @@ function RaidGUIControlWeaponSkills:set_selected(value, dont_trigger_selected_ca
 	current_skill_button:select_skill(dont_trigger_selected_callback)
 end
 
+-- Lines 295-321
 function RaidGUIControlWeaponSkills:toggle_select_item_callback(select_flag, row_idx, button_idx)
 	if select_flag then
 		local current_skill_button = self:get_current_weapon_skill_button()
@@ -257,6 +275,7 @@ function RaidGUIControlWeaponSkills:toggle_select_item_callback(select_flag, row
 	end
 end
 
+-- Lines 323-326
 function RaidGUIControlWeaponSkills:_consume_breadcrumb(tier_index, skill_index)
 	local weapon_category = managers.weapon_inventory:get_weapon_category_name_by_bm_category_id(self._weapon_category_id)
 
@@ -268,10 +287,12 @@ function RaidGUIControlWeaponSkills:_consume_breadcrumb(tier_index, skill_index)
 	})
 end
 
+-- Lines 330-332
 function RaidGUIControlWeaponSkills:get_current_weapon_skill_button()
 	return self:get_weapon_skill_button(self._selected_row_idx, self._selected_button_idx)
 end
 
+-- Lines 334-342
 function RaidGUIControlWeaponSkills:get_weapon_skill_button(i_row, i_button)
 	local skill_button = self._rows[i_row]:get_skill_buttons()[i_button]
 
@@ -282,38 +303,45 @@ function RaidGUIControlWeaponSkills:get_weapon_skill_button(i_row, i_button)
 	end
 end
 
+-- Lines 344-347
 function RaidGUIControlWeaponSkills:_select_weapon_skill_button(weapon_skill_button)
 	weapon_skill_button:select_skill()
 end
 
+-- Lines 349-352
 function RaidGUIControlWeaponSkills:_unselect_weapon_skill_button(weapon_skill_button)
 	weapon_skill_button:unselect_skill()
 end
 
+-- Lines 354-360
 function RaidGUIControlWeaponSkills:move_up()
 	self._move_controller_callback = callback(self, self, "_select_up_skill_button")
 
 	return self:_move_controller()
 end
 
+-- Lines 362-368
 function RaidGUIControlWeaponSkills:move_down()
 	self._move_controller_callback = callback(self, self, "_select_down_skill_button")
 
 	return self:_move_controller()
 end
 
+-- Lines 370-376
 function RaidGUIControlWeaponSkills:move_left()
 	self._move_controller_callback = callback(self, self, "_select_left_skill_button")
 
 	return self:_move_controller()
 end
 
+-- Lines 378-384
 function RaidGUIControlWeaponSkills:move_right()
 	self._move_controller_callback = callback(self, self, "_select_right_skill_button")
 
 	return self:_move_controller()
 end
 
+-- Lines 386-403
 function RaidGUIControlWeaponSkills:_move_controller()
 	if self._selected then
 		local current_skill_button = self:get_current_weapon_skill_button()
@@ -332,6 +360,7 @@ function RaidGUIControlWeaponSkills:_move_controller()
 	end
 end
 
+-- Lines 405-423
 function RaidGUIControlWeaponSkills:_select_up_skill_button()
 	self._new_selected_row_idx = self._selected_row_idx - 1
 
@@ -356,6 +385,7 @@ function RaidGUIControlWeaponSkills:_select_up_skill_button()
 	return skill_button
 end
 
+-- Lines 425-449
 function RaidGUIControlWeaponSkills:_select_down_skill_button()
 	self._new_selected_row_idx = self._selected_row_idx + 1
 
@@ -384,6 +414,7 @@ function RaidGUIControlWeaponSkills:_select_down_skill_button()
 	return skill_button
 end
 
+-- Lines 451-460
 function RaidGUIControlWeaponSkills:_select_left_skill_button()
 	self._new_selected_button_idx = self._selected_button_idx - 1
 	local skill_point = self:get_weapon_skill_button(self._selected_row_idx, self._new_selected_button_idx)
@@ -397,6 +428,7 @@ function RaidGUIControlWeaponSkills:_select_left_skill_button()
 	end
 end
 
+-- Lines 462-472
 function RaidGUIControlWeaponSkills:_select_right_skill_button()
 	self._new_selected_button_idx = self._selected_button_idx + 1
 
@@ -410,6 +442,7 @@ function RaidGUIControlWeaponSkills:_select_right_skill_button()
 	return self:get_weapon_skill_button(self._selected_row_idx, self._selected_button_idx)
 end
 
+-- Lines 474-478
 function RaidGUIControlWeaponSkills:confirm_pressed()
 	self._selected_skill_button = self:get_current_weapon_skill_button()
 

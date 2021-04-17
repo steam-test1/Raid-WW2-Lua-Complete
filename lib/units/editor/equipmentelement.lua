@@ -1,5 +1,6 @@
 EquipmentUnitElement = EquipmentUnitElement or class(MissionElement)
 
+-- Lines 3-11
 function EquipmentUnitElement:init(unit)
 	EquipmentUnitElement.super.init(self, unit)
 
@@ -10,6 +11,7 @@ function EquipmentUnitElement:init(unit)
 	table.insert(self._save_values, "amount")
 end
 
+-- Lines 13-21
 function EquipmentUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

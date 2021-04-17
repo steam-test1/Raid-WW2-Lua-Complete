@@ -1,6 +1,7 @@
 VehicleTweakData = VehicleTweakData or class()
 VehicleTweakData.AI_TELEPORT_DISTANCE = 20
 
+-- Lines 5-18
 function VehicleTweakData:init(tweak_data)
 	self:_init_data_jeep_willy()
 	self:_init_data_kubelwagen()
@@ -8,6 +9,7 @@ function VehicleTweakData:init(tweak_data)
 	self:_init_data_foxhole()
 end
 
+-- Lines 21-111
 function VehicleTweakData:_init_data_jeep_willy()
 	self.jeep_willy = {
 		unit = "units/vehicles/willy_jeep/fps_vehicle_jeep_willy",
@@ -91,6 +93,7 @@ function VehicleTweakData:_init_data_jeep_willy()
 	}
 end
 
+-- Lines 114-220
 function VehicleTweakData:_init_data_kubelwagen()
 	self.kubelwagen = {
 		unit = "units/vanilla/vehicles/fps_vehicle_kubelwagen/fps_vehicle_kubelwagen",
@@ -201,6 +204,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 	}
 end
 
+-- Lines 223-325
 function VehicleTweakData:_init_data_truck()
 	self.truck = {
 		unit = "units/vanilla/vehicles/fps_vehicle_truck_02/fps_vehicle_truck_02",
@@ -307,6 +311,7 @@ function VehicleTweakData:_init_data_truck()
 	}
 end
 
+-- Lines 650-744
 function VehicleTweakData:_init_data_foxhole()
 	self.foxhole = {
 		unit = "units/vanilla/vehicles/fps_foxhole/fps_foxhole",

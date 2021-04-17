@@ -1,5 +1,6 @@
 RaidGUIControlIntelOperationalStatus = RaidGUIControlIntelOperationalStatus or class(RaidGUIControl)
 
+-- Lines 3-10
 function RaidGUIControlIntelOperationalStatus:init(parent, params)
 	RaidGUIControlIntelOperationalStatus.super.init(self, parent, params)
 
@@ -9,6 +10,7 @@ function RaidGUIControlIntelOperationalStatus:init(parent, params)
 	self:_layout()
 end
 
+-- Lines 12-56
 function RaidGUIControlIntelOperationalStatus:_layout()
 	self._bg_image = self._object:bitmap({
 		y = 0,
@@ -107,6 +109,7 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	})
 end
 
+-- Lines 58-100
 function RaidGUIControlIntelOperationalStatus:set_data(item_value)
 	self._data = tweak_data.intel:get_item_data(self._category_name, item_value)
 	local text_top_coord = 0
@@ -149,6 +152,7 @@ function RaidGUIControlIntelOperationalStatus:set_data(item_value)
 	self.content_panel_scrollable_area:setup_scroll_area()
 end
 
+-- Lines 102-104
 function RaidGUIControlIntelOperationalStatus:get_data()
 	return self._data
 end

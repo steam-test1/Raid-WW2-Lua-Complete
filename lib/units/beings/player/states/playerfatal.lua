@@ -1,10 +1,12 @@
 PlayerFatal = PlayerFatal or class(PlayerStandard)
 PlayerFatal._update_movement = PlayerBleedOut._update_movement
 
+-- Lines 5-7
 function PlayerFatal:init(unit)
 	PlayerFatal.super.init(self, unit)
 end
 
+-- Lines 11-52
 function PlayerFatal:enter(state_data, enter_data)
 	PlayerFatal.super.enter(self, state_data, enter_data)
 	self:_interupt_action_steelsight()
@@ -47,6 +49,7 @@ function PlayerFatal:enter(state_data, enter_data)
 	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), true, 1, 1)
 end
 
+-- Lines 56-68
 function PlayerFatal:_enter(enter_data)
 	local preset = nil
 
@@ -71,6 +74,7 @@ function PlayerFatal:_enter(enter_data)
 	end
 end
 
+-- Lines 72-97
 function PlayerFatal:exit(state_data, new_state_name)
 	PlayerFatal.super.exit(self, state_data, new_state_name)
 	self:_end_action_dead(managers.player:player_timer():time())
@@ -100,14 +104,17 @@ function PlayerFatal:exit(state_data, new_state_name)
 	return exit_data
 end
 
+-- Lines 101-103
 function PlayerFatal:interaction_blocked()
 	return true
 end
 
+-- Lines 107-109
 function PlayerFatal:update(t, dt)
 	PlayerFatal.super.update(self, t, dt)
 end
 
+-- Lines 115-154
 function PlayerFatal:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -119,6 +126,7 @@ function PlayerFatal:_update_check_actions(t, dt)
 	self:_check_action_interact(t, input)
 end
 
+-- Lines 160-169
 function PlayerFatal:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) then
 		self._intimidate_t = t
@@ -129,6 +137,7 @@ function PlayerFatal:_check_action_interact(t, input)
 	end
 end
 
+-- Lines 172-180
 function PlayerFatal:_start_action_dead(t)
 	self:_interupt_action_running(t)
 
@@ -140,6 +149,7 @@ function PlayerFatal:_start_action_dead(t)
 	self:_activate_mover(Idstring("duck"))
 end
 
+-- Lines 184-195
 function PlayerFatal:_end_action_dead(t)
 	if not self:_can_stand() then
 		return
@@ -153,12 +163,14 @@ function PlayerFatal:_end_action_dead(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
+-- Lines 199-203
 function PlayerFatal:pre_destroy(unit)
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)
 	end
 end
 
+-- Lines 207-211
 function PlayerFatal:destroy()
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)

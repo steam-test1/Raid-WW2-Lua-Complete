@@ -4,15 +4,18 @@ core:import("CoreInputLayer")
 
 Provider = Provider or class()
 
+-- Lines 7-11
 function Provider:init(input_layer_descriptions)
 	self._layer_description_to_layer = {}
 	self._input_layer_descriptions = input_layer_descriptions
 	self._prioritizer = CoreInputLayerDescriptionPrioritizer.Prioritizer:new()
 end
 
+-- Lines 13-14
 function Provider:destroy()
 end
 
+-- Lines 16-24
 function Provider:context()
 	local layer_description = self._prioritizer:active_layer_description()
 
@@ -25,6 +28,7 @@ function Provider:context()
 	return layer:context()
 end
 
+-- Lines 26-37
 function Provider:create_layer(layer_description_name)
 	local layer_description = self._input_layer_descriptions[layer_description_name]
 
@@ -38,6 +42,7 @@ function Provider:create_layer(layer_description_name)
 	return layer
 end
 
+-- Lines 39-42
 function Provider:_layer_destroyed(layer)
 	local layer_description = layer:layer_description()
 

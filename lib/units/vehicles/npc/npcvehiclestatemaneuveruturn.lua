@@ -1,9 +1,11 @@
 NpcVehicleStateManeuverUTurn = NpcVehicleStateManeuverUTurn or class(NpcVehicleStateManeuver)
 
+-- Lines 4-6
 function NpcVehicleStateManeuverUTurn:init(unit)
 	NpcBaseVehicleState.init(self, unit)
 end
 
+-- Lines 10-26
 function NpcVehicleStateManeuverUTurn:on_enter(npc_driving_ext)
 	NpcVehicleStateManeuverUTurn.super.on_enter(self, npc_driving_ext)
 
@@ -47,6 +49,7 @@ function NpcVehicleStateManeuverUTurn:on_enter(npc_driving_ext)
 	local current_action = self._maneuver_actions[self._current_maneuver_action_idx]
 end
 
+-- Lines 29-53
 function NpcVehicleStateManeuverUTurn:update(npc_driving_ext, t, dt)
 	local current_action = self._maneuver_actions[self._current_maneuver_action_idx]
 
@@ -64,16 +67,19 @@ function NpcVehicleStateManeuverUTurn:update(npc_driving_ext, t, dt)
 	end
 end
 
+-- Lines 55-57
 function NpcVehicleStateManeuverUTurn:name()
 	return NpcVehicleDrivingExt.STATE_MANEUVER_U_TURN
 end
 
+-- Lines 61-67
 function NpcVehicleStateManeuverUTurn:change_state(npc_driving_ext)
 	if not self._maneuver_actions[self._current_maneuver_action_idx] then
 		npc_driving_ext:set_state(NpcVehicleDrivingExt.STATE_PURSUIT)
 	end
 end
 
+-- Lines 70-72
 function NpcVehicleStateManeuverUTurn:is_maneuvering()
 	return true
 end

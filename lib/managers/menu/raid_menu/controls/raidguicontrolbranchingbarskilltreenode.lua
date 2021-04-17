@@ -6,6 +6,7 @@ RaidGUIControlBranchingBarSkilltreeNode.PADDING_VERTICAL = 8
 RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_W = 16
 RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_H = 16
 
+-- Lines 12-45
 function RaidGUIControlBranchingBarSkilltreeNode:init(parent, params)
 	params.w = RaidGUIControlBranchingBarSkilltreeNode.W
 	params.h = RaidGUIControlBranchingBarSkilltreeNode.H
@@ -32,6 +33,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:init(parent, params)
 	self:_layout_breadcrumb()
 end
 
+-- Lines 47-57
 function RaidGUIControlBranchingBarSkilltreeNode:_layout_breadcrumb()
 	local breadcrumb_params = {
 		padding = 3,
@@ -47,6 +49,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:_layout_breadcrumb()
 	self._breadcrumb:set_y(0)
 end
 
+-- Lines 60-106
 function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 	local selector_panel_params = {
 		halign = "scale",
@@ -99,6 +102,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 	self._selector_triangle_down = self._selector_panel:image(selector_triangle_down_params)
 end
 
+-- Lines 108-123
 function RaidGUIControlBranchingBarSkilltreeNode:_create_icon()
 	local icon = tweak_data.skilltree.skills[self._data.skill].icon or "skill_placeholder"
 	local icon_params = {
@@ -118,6 +122,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_icon()
 	self._icon:set_center(self._object:w() / 2, self._object:h() / 2)
 end
 
+-- Lines 125-162
 function RaidGUIControlBranchingBarSkilltreeNode:_init_state_data()
 	self._state_data = {
 		STATE_INACTIVE = {}
@@ -157,17 +162,20 @@ function RaidGUIControlBranchingBarSkilltreeNode:_init_state_data()
 	}
 end
 
+-- Lines 164-172
 function RaidGUIControlBranchingBarSkilltreeNode:set_inactive()
 	self._state = self.STATE_INACTIVE
 
 	self:refresh_current_state()
 end
 
+-- Lines 174-181
 function RaidGUIControlBranchingBarSkilltreeNode:set_hovered()
 	self._selector_panel:set_alpha(1)
 	self._selector_rect:set_visible(true)
 end
 
+-- Lines 183-195
 function RaidGUIControlBranchingBarSkilltreeNode:set_selected()
 	self._state = self.STATE_SELECTED
 
@@ -180,30 +188,35 @@ function RaidGUIControlBranchingBarSkilltreeNode:set_selected()
 	end
 end
 
+-- Lines 197-204
 function RaidGUIControlBranchingBarSkilltreeNode:set_active()
 	self._state = self.STATE_ACTIVE
 
 	self:refresh_current_state()
 end
 
+-- Lines 206-213
 function RaidGUIControlBranchingBarSkilltreeNode:set_pending()
 	self._state = self.STATE_PENDING
 
 	self:refresh_current_state()
 end
 
+-- Lines 215-222
 function RaidGUIControlBranchingBarSkilltreeNode:set_pending_blocked()
 	self._state = self.STATE_PENDING_BLOCKED
 
 	self:refresh_current_state()
 end
 
+-- Lines 224-227
 function RaidGUIControlBranchingBarSkilltreeNode:set_disabled()
 	self._state = self.STATE_DISABLED
 
 	self:refresh_current_state()
 end
 
+-- Lines 229-236
 function RaidGUIControlBranchingBarSkilltreeNode:refresh_current_state()
 	self._icon:set_color(self._state_data[self._state].color)
 	self._selector_panel:set_alpha(self._state_data[self._state].selector_opacity)
@@ -214,11 +227,13 @@ function RaidGUIControlBranchingBarSkilltreeNode:refresh_current_state()
 	self._data.state = self._state
 end
 
+-- Lines 238-241
 function RaidGUIControlBranchingBarSkilltreeNode:init_to_state(state)
 	self._icon:set_color(self._state_data[state].color)
 	self:refresh_current_state()
 end
 
+-- Lines 243-249
 function RaidGUIControlBranchingBarSkilltreeNode:mouse_clicked(o, button, x, y)
 	if self:inside(x, y) then
 		self:on_mouse_clicked(button)
@@ -229,12 +244,14 @@ function RaidGUIControlBranchingBarSkilltreeNode:mouse_clicked(o, button, x, y)
 	return false
 end
 
+-- Lines 251-255
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_clicked(button)
 	if self._on_click_callback then
 		self:_on_click_callback(self._data)
 	end
 end
 
+-- Lines 257-266
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_pressed()
 	if self._on_mouse_pressed_callback then
 		self._on_mouse_pressed_callback()
@@ -247,12 +264,14 @@ function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_pressed()
 	end
 end
 
+-- Lines 268-272
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_moved(o, x, y)
 	if self._pressed and self._on_mouse_moved_callback then
 		self._on_mouse_moved_callback(o, x, y)
 	end
 end
 
+-- Lines 274-279
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_released()
 	if self._on_mouse_released_callback then
 		self._on_mouse_released_callback()
@@ -261,6 +280,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_released()
 	self._pressed = false
 end
 
+-- Lines 281-290
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_over(x, y)
 	self._mouse_inside = true
 
@@ -275,6 +295,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_over(x, y)
 	end
 end
 
+-- Lines 293-298
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_out(x, y)
 	self._mouse_inside = false
 
@@ -283,6 +304,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_out(x, y)
 	end
 end
 
+-- Lines 301-319
 function RaidGUIControlBranchingBarSkilltreeNode:_animate_pressed()
 	local t = 0
 	local duration = 0.15

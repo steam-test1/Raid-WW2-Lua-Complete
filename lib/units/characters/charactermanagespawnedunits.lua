@@ -1,6 +1,7 @@
 CharacterManageSpawnedUnits = CharacterManageSpawnedUnits or class(ManageSpawnedUnits)
 local mvec1 = Vector3()
 
+-- Lines 8-104
 function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_name, unit, push_mass)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local spawned_unit = nil
@@ -105,6 +106,7 @@ function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_n
 	managers.queued_tasks:queue("enable_bodies", self.enable_debris_bodies, self, que_data, 0.02, nil)
 end
 
+-- Lines 106-128
 function CharacterManageSpawnedUnits:enable_debris_bodies(data)
 	local unit = data.unit
 	local direction = data.push_direction
@@ -124,6 +126,7 @@ function CharacterManageSpawnedUnits:enable_debris_bodies(data)
 	unit:set_visible(true)
 end
 
+-- Lines 130-134
 function CharacterManageSpawnedUnits:destroy(unit)
 	CharacterManageSpawnedUnits.super.destroy(self, unit)
 	managers.queued_tasks:unqueue_all(nil, self)

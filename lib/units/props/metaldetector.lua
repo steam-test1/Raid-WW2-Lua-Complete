@@ -4,6 +4,7 @@ MetalDetector.DEFAULT_SOUND_START = "transmission_sound"
 MetalDetector.DEFAULT_SOUND_STOP = "transmission_sound_stop"
 MetalDetector.DEFAULT_RTPC = "distance"
 
+-- Lines 10-32
 function MetalDetector:init(unit)
 	self._unit = unit
 
@@ -30,6 +31,7 @@ function MetalDetector:init(unit)
 	self._soundsource:link(self._unit:get_object(Idstring(self._rp_name)))
 end
 
+-- Lines 36-57
 function MetalDetector:update(unit, t, dt)
 	local dist = self:poll_min_distances()
 
@@ -54,6 +56,7 @@ function MetalDetector:update(unit, t, dt)
 	end
 end
 
+-- Lines 59-76
 function MetalDetector:poll_min_distances()
 	local pos = self._unit:position()
 	local min_dist = managers.mission:find_closest_metal_object_position(pos)

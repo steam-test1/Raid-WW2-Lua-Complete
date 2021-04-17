@@ -1,5 +1,6 @@
 UIAnimation = UIAnimation or class()
 
+-- Lines 4-10
 function UIAnimation.linear(t, starting_value, change, duration)
 	if duration <= t then
 		return starting_value + change
@@ -8,6 +9,7 @@ function UIAnimation.linear(t, starting_value, change, duration)
 	return change * t / duration + starting_value
 end
 
+-- Lines 12-48
 function UIAnimation.animate_text_glow(text, new_color, duration_per_letter, delay_between_letters, delay, initial_delay)
 	if initial_delay ~= nil then
 		wait(initial_delay)

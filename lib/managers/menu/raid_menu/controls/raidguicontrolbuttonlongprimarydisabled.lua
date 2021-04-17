@@ -4,6 +4,7 @@ RaidGUIControlButtonLongPrimaryDisabled.HOVER_ICON = "btn_dissabled_256_hover"
 RaidGUIControlButtonLongPrimaryDisabled.W = tweak_data.gui.icons[RaidGUIControlButtonLongPrimaryDisabled.ICON].texture_rect[3]
 RaidGUIControlButtonLongPrimaryDisabled.H = tweak_data.gui.icons[RaidGUIControlButtonLongPrimaryDisabled.ICON].texture_rect[4]
 
+-- Lines 8-36
 function RaidGUIControlButtonLongPrimaryDisabled:init(parent, params)
 	if not params then
 		Application:error("Trying to create a long primary disabled button without parameters!", debug.traceback())
@@ -27,6 +28,7 @@ function RaidGUIControlButtonLongPrimaryDisabled:init(parent, params)
 	RaidGUIControlButtonLongPrimaryDisabled.super.init(self, parent, params)
 end
 
+-- Lines 38-42
 function RaidGUIControlButtonLongPrimaryDisabled:show()
 	RaidGUIControlButtonLongPrimaryDisabled.super.show(self)
 
@@ -34,6 +36,7 @@ function RaidGUIControlButtonLongPrimaryDisabled:show()
 	self._params.no_highlight = true
 end
 
+-- Lines 44-48
 function RaidGUIControlButtonLongPrimaryDisabled:hide()
 	RaidGUIControlButtonLongPrimaryDisabled.super.hide(self)
 

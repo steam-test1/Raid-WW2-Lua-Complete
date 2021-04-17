@@ -17,6 +17,7 @@ HUDSuspicionIndicator.CALLING_INDICATOR_ICON_OUT = "stealth_alarm_out"
 HUDSuspicionIndicator.PLAYER_ACTIVE_ALPHA = 1
 HUDSuspicionIndicator.TEAMMATE_ACTIVE_ALPHA = 0.6
 
+-- Lines 26-44
 function HUDSuspicionIndicator:init(hud, data)
 	self._observer = data.unit
 	self._suspect = data.suspect
@@ -35,6 +36,7 @@ function HUDSuspicionIndicator:init(hud, data)
 	self._object:animate(callback(self, self, "_animate_create"), 0.4)
 end
 
+-- Lines 48-53
 function HUDSuspicionIndicator:_init_public_properties()
 	self.in_timer = 1
 	self.out_timer = 0
@@ -43,6 +45,7 @@ function HUDSuspicionIndicator:_init_public_properties()
 	mvector3.set(self.current_position, self._observer_position)
 end
 
+-- Lines 55-63
 function HUDSuspicionIndicator:_create_panel(hud)
 	local panel_params = {
 		name = "suspicion_indicator",
@@ -53,6 +56,7 @@ function HUDSuspicionIndicator:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
+-- Lines 65-80
 function HUDSuspicionIndicator:_create_eye_background()
 	local eye_panel_params = {
 		halign = "scale",
@@ -71,6 +75,7 @@ function HUDSuspicionIndicator:_create_eye_background()
 	self._eye_background:set_center(self._eye_panel:w() / 2, self._eye_panel:h() / 2)
 end
 
+-- Lines 82-91
 function HUDSuspicionIndicator:_create_eye_outside_ring()
 	local eye_outside_ring_params = {
 		name = "eye_outside_ring",
@@ -83,6 +88,7 @@ function HUDSuspicionIndicator:_create_eye_outside_ring()
 	self._eye_outside_ring:set_center(self._eye_background:center())
 end
 
+-- Lines 93-105
 function HUDSuspicionIndicator:_create_eye_fill()
 	local eye_fill_params = {
 		name = "eye_fill",
@@ -104,6 +110,7 @@ function HUDSuspicionIndicator:_create_eye_fill()
 	self._eye_fill:set_center(self._eye_background:center())
 end
 
+-- Lines 107-151
 function HUDSuspicionIndicator:_create_calling_indicator()
 	local calling_indicator_panel_params = {
 		halign = "scale",
@@ -149,14 +156,17 @@ function HUDSuspicionIndicator:_create_calling_indicator()
 	table.insert(self._calling_indicators, calling_icon_out)
 end
 
+-- Lines 153-155
 function HUDSuspicionIndicator:observer_position()
 	return self._observer_position
 end
 
+-- Lines 157-159
 function HUDSuspicionIndicator:suspect()
 	return self._suspect
 end
 
+-- Lines 161-173
 function HUDSuspicionIndicator:set_progress(progress)
 	if progress == self._progress then
 		return
@@ -176,6 +186,7 @@ function HUDSuspicionIndicator:set_progress(progress)
 	self._progress = math.clamp(progress, 0, 1)
 end
 
+-- Lines 175-188
 function HUDSuspicionIndicator:update_progress(t, dt)
 	if self._progress and self._progress == 1 then
 		self._eye_fill:set_position_z(1)
@@ -196,14 +207,17 @@ function HUDSuspicionIndicator:update_progress(t, dt)
 	self._cdt = self._cdt + dt
 end
 
+-- Lines 190-192
 function HUDSuspicionIndicator:active_alpha()
 	return self._active_alpha
 end
 
+-- Lines 194-196
 function HUDSuspicionIndicator:state()
 	return self._state
 end
 
+-- Lines 197-229
 function HUDSuspicionIndicator:set_state(state, dont_animate)
 	if self._state == state then
 		return
@@ -240,6 +254,7 @@ function HUDSuspicionIndicator:set_state(state, dont_animate)
 	end
 end
 
+-- Lines 231-238
 function HUDSuspicionIndicator:_rotate_eye_ring()
 	if self._rotating_ring then
 		return
@@ -249,20 +264,25 @@ function HUDSuspicionIndicator:_rotate_eye_ring()
 	self._eye_background:animate(callback(self, self, "_animate_ring_rotate"))
 end
 
+-- Lines 240-243
 function HUDSuspicionIndicator:_change_color(new_color)
 	self._eye_fill:stop()
 	self._eye_fill:animate(callback(self, self, "_animate_color_change"), new_color)
 end
 
+-- Lines 245-246
 function HUDSuspicionIndicator:set_state_saw_something()
 end
 
+-- Lines 248-249
 function HUDSuspicionIndicator:set_state_investigating()
 end
 
+-- Lines 251-252
 function HUDSuspicionIndicator:set_state_alarmed()
 end
 
+-- Lines 254-263
 function HUDSuspicionIndicator:set_state_calling()
 	self._eye_panel:animate(callback(self, self, "_animate_hide_suspicion"))
 	self._calling_indicators[1]:stop()
@@ -273,10 +293,12 @@ function HUDSuspicionIndicator:set_state_calling()
 	self._calling_indicators[3]:animate(callback(self, self, "_animate_indicator_calling"), 0.8)
 end
 
+-- Lines 265-267
 function HUDSuspicionIndicator:set_center(x, y)
 	self._object:set_center(x, y)
 end
 
+-- Lines 269-280
 function HUDSuspicionIndicator:destroy()
 	if alive(self._object) then
 		self._object:stop()
@@ -284,30 +306,37 @@ function HUDSuspicionIndicator:destroy()
 	end
 end
 
+-- Lines 282-284
 function HUDSuspicionIndicator:set_alpha(alpha)
 	self._object:set_alpha(alpha)
 end
 
+-- Lines 286-288
 function HUDSuspicionIndicator:alpha()
 	return self._object:alpha()
 end
 
+-- Lines 290-292
 function HUDSuspicionIndicator:go_offscreen()
 	self._onscreen = false
 end
 
+-- Lines 294-296
 function HUDSuspicionIndicator:go_onscreen()
 	self._onscreen = true
 end
 
+-- Lines 298-300
 function HUDSuspicionIndicator:onscreen()
 	return self._onscreen
 end
 
+-- Lines 302-304
 function HUDSuspicionIndicator:parent()
 	return self._object:parent()
 end
 
+-- Lines 306-320
 function HUDSuspicionIndicator:_destroy()
 	self._eye_panel:stop()
 	self._calling_indicators[1]:stop()
@@ -322,6 +351,7 @@ function HUDSuspicionIndicator:_destroy()
 	self._onscreen = nil
 end
 
+-- Lines 322-330
 function HUDSuspicionIndicator:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
 		if color_table[i].start_percentage < percentage then
@@ -332,6 +362,7 @@ function HUDSuspicionIndicator:_get_color_for_percentage(color_table, percentage
 	return color_table[1].color
 end
 
+-- Lines 332-352
 function HUDSuspicionIndicator:_animate_ring_rotate(background)
 	local t = 0
 	local rotation_duration = 0.8
@@ -354,6 +385,7 @@ function HUDSuspicionIndicator:_animate_ring_rotate(background)
 	self._rotating_ring = false
 end
 
+-- Lines 354-374
 function HUDSuspicionIndicator:_animate_color_change(eye_fill, new_color)
 	local t = 0
 	local color_change_duration = 0.8
@@ -374,6 +406,7 @@ function HUDSuspicionIndicator:_animate_color_change(eye_fill, new_color)
 	self._eye_outside_ring:set_color(new_color)
 end
 
+-- Lines 376-389
 function HUDSuspicionIndicator:_animate_hide_suspicion()
 	local duration = 0.25
 	local t = 0
@@ -389,6 +422,7 @@ function HUDSuspicionIndicator:_animate_hide_suspicion()
 	self._eye_panel:set_alpha(0)
 end
 
+-- Lines 391-465
 function HUDSuspicionIndicator:_animate_indicator_calling(indicator, delay)
 	while true do
 		local final_size_multiplier = 1.3
@@ -467,6 +501,7 @@ function HUDSuspicionIndicator:_animate_indicator_calling(indicator, delay)
 	end
 end
 
+-- Lines 467-481
 function HUDSuspicionIndicator:_animate_destroy()
 	local duration = 0.3
 	local t = (1 - self._object:alpha() / self._active_alpha) * duration
@@ -483,6 +518,7 @@ function HUDSuspicionIndicator:_animate_destroy()
 	self:_destroy()
 end
 
+-- Lines 483-500
 function HUDSuspicionIndicator:_animate_create(object, fade_in_duration, delay, new_alpha)
 	local duration = fade_in_duration or 0.15
 	local t = 0

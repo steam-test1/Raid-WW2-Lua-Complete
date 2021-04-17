@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementKillZone = ElementKillZone or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementKillZone:init(...)
 	ElementKillZone.super.init(self, ...)
 end
 
+-- Lines 13-34
 function ElementKillZone:on_executed(instigator)
 	if not self._values.enabled then
 		return

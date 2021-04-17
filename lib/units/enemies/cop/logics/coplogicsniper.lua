@@ -4,6 +4,7 @@ CopLogicSniper.damage_clbk = CopLogicBase.damage_clbk
 CopLogicSniper.is_available_for_assignment = CopLogicAttack.is_available_for_assignment
 CopLogicSniper.death_clbk = CopLogicAttack.death_clbk
 
+-- Lines 14-67
 function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -71,6 +72,7 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	end
 end
 
+-- Lines 71-90
 function CopLogicSniper.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -92,6 +94,7 @@ function CopLogicSniper.exit(data, new_logic_name, enter_params)
 	end
 end
 
+-- Lines 94-148
 function CopLogicSniper._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -148,6 +151,7 @@ function CopLogicSniper._upd_enemy_detection(data)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
+-- Lines 152-157
 function CopLogicSniper._chk_stand_visibility(my_pos, target_pos, slotmask)
 	mvector3.set(tmp_vec1, my_pos)
 	mvector3.set_z(tmp_vec1, my_pos.z + 150)
@@ -157,6 +161,7 @@ function CopLogicSniper._chk_stand_visibility(my_pos, target_pos, slotmask)
 	return ray
 end
 
+-- Lines 161-166
 function CopLogicSniper._chk_crouch_visibility(my_pos, target_pos, slotmask)
 	mvector3.set(tmp_vec1, my_pos)
 	mvector3.set_z(tmp_vec1, my_pos.z + 50)
@@ -166,6 +171,7 @@ function CopLogicSniper._chk_crouch_visibility(my_pos, target_pos, slotmask)
 	return ray
 end
 
+-- Lines 170-188
 function CopLogicSniper.on_action_completed(data, action)
 	local action_type = action:type()
 	local my_data = data.internal_data
@@ -185,6 +191,7 @@ function CopLogicSniper.on_action_completed(data, action)
 	end
 end
 
+-- Lines 192-213
 function CopLogicSniper._upd_aim(data, my_data)
 	local aim, shoot = data.logic._should_aim_or_shoot(data, my_data)
 	local focus_enemy = data.attention_obj
@@ -207,6 +214,7 @@ function CopLogicSniper._upd_aim(data, my_data)
 	CopLogicAttack.aim_allow_fire(shoot, aim, data, my_data)
 end
 
+-- Lines 217-271
 function CopLogicSniper._upd_aim_action(data, my_data)
 	local focus_enemy = data.attention_obj
 	local action_taken = nil
@@ -255,6 +263,7 @@ function CopLogicSniper._upd_aim_action(data, my_data)
 	return action_taken
 end
 
+-- Lines 275-304
 function CopLogicSniper._should_aim_or_shoot(data, my_data)
 	local aim, shoot = nil
 	local focus_enemy = data.attention_obj
@@ -281,6 +290,7 @@ function CopLogicSniper._should_aim_or_shoot(data, my_data)
 	return aim, shoot
 end
 
+-- Lines 308-339
 function CopLogicSniper._aim_or_shoot(data, my_data, aim, shoot)
 	local focus_enemy = data.attention_obj
 
@@ -325,6 +335,7 @@ function CopLogicSniper._aim_or_shoot(data, my_data, aim, shoot)
 	end
 end
 
+-- Lines 343-352
 function CopLogicSniper._request_action_shoot(data, my_data)
 	if my_data.shooting or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
 		return
@@ -340,6 +351,7 @@ function CopLogicSniper._request_action_shoot(data, my_data)
 	end
 end
 
+-- Lines 357-383
 function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
@@ -367,6 +379,7 @@ function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, 
 	return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 end
 
+-- Lines 387-389
 function CopLogicSniper.should_duck_on_alert(data, alert_data)
 	return data.internal_data.attitude == "avoid" and CopLogicBase.should_duck_on_alert(data, alert_data)
 end

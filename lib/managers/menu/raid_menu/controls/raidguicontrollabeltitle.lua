@@ -1,5 +1,6 @@
 RaidGUIControlLabelTitle = RaidGUIControlLabelTitle or class(RaidGUIControlLabel)
 
+-- Lines 3-13
 function RaidGUIControlLabelTitle:init(parent, params)
 	params.font = tweak_data.gui.fonts.din_compressed
 	params.font_size = tweak_data.gui.font_sizes.size_56

@@ -1,5 +1,6 @@
 MissionElementListFlow = MissionElementListFlow or class(CoreEditorEwsDialog)
 
+-- Lines 5-109
 function MissionElementListFlow:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Mission List Flow", "", Vector3(300, 150, 0), Vector3(700, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
 	self:create_panel("VERTICAL")
@@ -85,10 +86,12 @@ function MissionElementListFlow:init(...)
 	self._unit_history_index = 0
 end
 
+-- Lines 111-113
 function MissionElementListFlow:_toolbar_toggle(params, event)
 	self[params.value] = params.toolbar:tool_state(event:get_id())
 end
 
+-- Lines 115-121
 function MissionElementListFlow:_on_gui_help()
 	local text = "Mission flow show connections between different mission components.\n\nAt the top is the current selected mission element. The left list shows what is affecting it and the right what it affects."
 	text = text .. "\n\nThe 'Type' column displays what type of connection it is. It can be on_executed, operator, trigger etc."
@@ -98,6 +101,7 @@ function MissionElementListFlow:_on_gui_help()
 	EWS:message_box(self._panel, text, "Help", "OK", Vector3())
 end
 
+-- Lines 124-178
 function MissionElementListFlow:on_unit_selected(unit)
 	self:freeze()
 	self._selected_list:delete_all_items()
@@ -162,12 +166,14 @@ function MissionElementListFlow:on_unit_selected(unit)
 	self:thaw()
 end
 
+-- Lines 180-184
 function MissionElementListFlow:_autosize_columns(list)
 	for i = 0, list:column_count() - 1 do
 		list:autosize_column(i)
 	end
 end
 
+-- Lines 186-195
 function MissionElementListFlow:_on_gui_previous()
 	if self._unit_history_index == 0 then
 		return
@@ -181,6 +187,7 @@ function MissionElementListFlow:_on_gui_previous()
 	})
 end
 
+-- Lines 197-206
 function MissionElementListFlow:_on_gui_next()
 	if self._unit_history_index > #self._unit_history then
 		return
@@ -194,6 +201,7 @@ function MissionElementListFlow:_on_gui_next()
 	})
 end
 
+-- Lines 208-213
 function MissionElementListFlow:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -202,6 +210,7 @@ function MissionElementListFlow:key_cancel(ctrlr, event)
 	end
 end
 
+-- Lines 215-222
 function MissionElementListFlow:_on_select_selected()
 	local current_data = self:_current_data()
 
@@ -210,6 +219,7 @@ function MissionElementListFlow:_on_select_selected()
 	end
 end
 
+-- Lines 224-229
 function MissionElementListFlow:_right_clicked(list)
 	local item_data = self:_selected_list_data(list)
 
@@ -218,10 +228,12 @@ function MissionElementListFlow:_right_clicked(list)
 	end
 end
 
+-- Lines 231-234
 function MissionElementListFlow:_on_mark_executer()
 	local item_data = self:_selected_executer_data()
 end
 
+-- Lines 236-244
 function MissionElementListFlow:_on_select_executer()
 	local item_data = self:_selected_executer_data()
 
@@ -236,10 +248,12 @@ function MissionElementListFlow:_on_select_executer()
 	end
 end
 
+-- Lines 246-249
 function MissionElementListFlow:_on_mark_on_executed()
 	local item_data = self:_selected_on_executed_data()
 end
 
+-- Lines 251-259
 function MissionElementListFlow:_on_select_on_executed()
 	local item_data = self:_selected_on_executed_data()
 
@@ -254,6 +268,7 @@ function MissionElementListFlow:_on_select_on_executed()
 	end
 end
 
+-- Lines 261-267
 function MissionElementListFlow:_current_data()
 	local index = self._selected_list:selected_item()
 
@@ -264,6 +279,7 @@ function MissionElementListFlow:_current_data()
 	return self._selected_list:get_item_data_ref(0)
 end
 
+-- Lines 269-275
 function MissionElementListFlow:_selected_list_data(list)
 	local index = list:selected_item()
 
@@ -274,6 +290,7 @@ function MissionElementListFlow:_selected_list_data(list)
 	return list:get_item_data_ref(index)
 end
 
+-- Lines 277-283
 function MissionElementListFlow:_selected_on_executed_data()
 	local index = self._on_executed_list:selected_item()
 
@@ -284,6 +301,7 @@ function MissionElementListFlow:_selected_on_executed_data()
 	return self._on_executed_list:get_item_data_ref(index)
 end
 
+-- Lines 285-291
 function MissionElementListFlow:_selected_executer_data()
 	local index = self._executers_list:selected_item()
 
@@ -294,24 +312,29 @@ function MissionElementListFlow:_selected_executer_data()
 	return self._executers_list:get_item_data_ref(index)
 end
 
+-- Lines 293-295
 function MissionElementListFlow:on_goto()
 end
 
+-- Lines 297-299
 function MissionElementListFlow:reset()
 end
 
+-- Lines 301-305
 function MissionElementListFlow:freeze()
 	self._selected_list:freeze()
 	self._executers_list:freeze()
 	self._on_executed_list:freeze()
 end
 
+-- Lines 307-311
 function MissionElementListFlow:thaw()
 	self._selected_list:thaw()
 	self._executers_list:thaw()
 	self._on_executed_list:thaw()
 end
 
+-- Lines 313-319
 function MissionElementListFlow:recreate()
 	for name, cb in pairs(self._continents_cbs) do
 		self._continents_sizer:detach(cb)

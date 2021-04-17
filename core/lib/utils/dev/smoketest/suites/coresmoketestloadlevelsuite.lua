@@ -4,12 +4,14 @@ core:import("CoreSmoketestCommonSuite")
 
 LoadLevelSuite = LoadLevelSuite or class(CoreSmoketestCommonSuite.CommonSuite)
 
+-- Lines 8-23
 function LoadLevelSuite:init()
 	LoadLevelSuite.super.init(self)
 	self:add_step("load_level", CoreSmoketestCommonSuite.CallAndWaitEventSubstep, CoreSmoketestCommonSuite.CallAndWaitEventSubstep.step_arguments(callback(self, self, "load_level"), Idstring("game_state_ingame")))
 	self:add_step("in_game", CoreSmoketestCommonSuite.DelaySubstep, CoreSmoketestCommonSuite.DelaySubstep.step_arguments(1))
 end
 
+-- Lines 25-30
 function LoadLevelSuite:load_level()
 	local session_info = self._session_state:session_info()
 

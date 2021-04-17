@@ -1,6 +1,7 @@
 MenuNodeUpdatesGui = MenuNodeUpdatesGui or class(MenuNodeGui)
 MenuNodeUpdatesGui.PADDING = 10
 
+-- Lines 4-45
 function MenuNodeUpdatesGui:init(node, layer, parameters)
 	MenuNodeUpdatesGui.super.init(self, node, layer, parameters)
 
@@ -13,6 +14,7 @@ function MenuNodeUpdatesGui:init(node, layer, parameters)
 		if self._panel then
 			local previous_content_updates = self._panel:child("previous_content_updates")
 
+			-- Lines 14-21
 			local function animate_loading_texture(o)
 				local time = coroutine.yield()
 				local start_rotation = o:rotation()
@@ -37,6 +39,7 @@ function MenuNodeUpdatesGui:init(node, layer, parameters)
 	end
 end
 
+-- Lines 47-107
 function MenuNodeUpdatesGui:_db_result_recieved(success, page)
 	if not self then
 		return
@@ -96,6 +99,7 @@ function MenuNodeUpdatesGui:_db_result_recieved(success, page)
 	self:set_latest_text()
 end
 
+-- Lines 109-119
 function MenuNodeUpdatesGui:_get_text(s, sp, ep)
 	local result = {}
 	local len = string.len(s)
@@ -111,6 +115,7 @@ function MenuNodeUpdatesGui:_get_text(s, sp, ep)
 	return string.sub(s, e1 + 1, s2 - 1) or ""
 end
 
+-- Lines 121-131
 function MenuNodeUpdatesGui:_get_db_text(id, category)
 	if not self._db_items then
 		return
@@ -123,6 +128,7 @@ function MenuNodeUpdatesGui:_get_db_text(id, category)
 	return self._db_items[id][category]
 end
 
+-- Lines 133-360
 function MenuNodeUpdatesGui:setup()
 	self:unretrieve_textures()
 
@@ -496,6 +502,7 @@ function MenuNodeUpdatesGui:setup()
 	end
 end
 
+-- Lines 362-367
 function MenuNodeUpdatesGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -505,6 +512,7 @@ function MenuNodeUpdatesGui:make_fine_text(text)
 	return x, y, w, h
 end
 
+-- Lines 369-371
 function MenuNodeUpdatesGui:texture_done_clbk(panel, texture_ids)
 	panel:bitmap({
 		name = "texture",
@@ -514,6 +522,7 @@ function MenuNodeUpdatesGui:texture_done_clbk(panel, texture_ids)
 	})
 end
 
+-- Lines 373-395
 function MenuNodeUpdatesGui:check_inside(x, y)
 	local ws = self.ws
 	local panel = ws:panel():child("MenuNodeUpdatesGui")
@@ -539,6 +548,7 @@ function MenuNodeUpdatesGui:check_inside(x, y)
 	return nil
 end
 
+-- Lines 397-504
 function MenuNodeUpdatesGui:mouse_moved(o, x, y)
 	local moved = self._mouse_x ~= x or self._mouse_y ~= y
 	self._mouse_x = x
@@ -642,6 +652,7 @@ function MenuNodeUpdatesGui:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
+-- Lines 506-545
 function MenuNodeUpdatesGui:mouse_pressed(button, x, y)
 	if alive(self._prev_page) and self._current_page > 1 and self._prev_page:inside(x, y) then
 		self._node:parameters().current_page = self._current_page - 1
@@ -683,6 +694,7 @@ function MenuNodeUpdatesGui:mouse_pressed(button, x, y)
 	end
 end
 
+-- Lines 547-555
 function MenuNodeUpdatesGui:mouse_released(button, x, y)
 	local released = self:check_inside(x, y)
 
@@ -693,12 +705,14 @@ function MenuNodeUpdatesGui:mouse_released(button, x, y)
 	self._pressed = nil
 end
 
+-- Lines 557-561
 function MenuNodeUpdatesGui:confirm_pressed()
 	if self._content_highlighted then
 		self:open(self._content_highlighted)
 	end
 end
 
+-- Lines 563-599
 function MenuNodeUpdatesGui:open(content_update)
 	self._content_highlighted = content_update
 
@@ -741,6 +755,7 @@ function MenuNodeUpdatesGui:open(content_update)
 	end
 end
 
+-- Lines 601-606
 function MenuNodeUpdatesGui:open_url(url)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		Steam:overlay_activate("url", url)
@@ -748,10 +763,12 @@ function MenuNodeUpdatesGui:open_url(url)
 	end
 end
 
+-- Lines 608-610
 function MenuNodeUpdatesGui:input_focus()
 	return 1
 end
 
+-- Lines 612-651
 function MenuNodeUpdatesGui:set_latest_text()
 	if not self._content_highlighted then
 		return
@@ -783,6 +800,7 @@ function MenuNodeUpdatesGui:set_latest_text()
 	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, latest_desc_panel:h() - desc_text:top() - self.PADDING)
 end
 
+-- Lines 653-686
 function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refresh)
 	local result = false
 
@@ -827,6 +845,7 @@ function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refre
 	return result
 end
 
+-- Lines 688-743
 function MenuNodeUpdatesGui:move_highlight(x, y)
 	local ws = self.ws
 	local panel = ws:panel():child("MenuNodeUpdatesGui")
@@ -860,6 +879,7 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 	end
 end
 
+-- Lines 745-751
 function MenuNodeUpdatesGui:previous_page()
 	if self._current_page > 1 then
 		self._node:parameters().current_page = self._current_page - 1
@@ -870,6 +890,7 @@ function MenuNodeUpdatesGui:previous_page()
 	end
 end
 
+-- Lines 753-760
 function MenuNodeUpdatesGui:next_page()
 	local num_pages = self._num_pages
 
@@ -882,24 +903,29 @@ function MenuNodeUpdatesGui:next_page()
 	end
 end
 
+-- Lines 762-765
 function MenuNodeUpdatesGui:move_up()
 end
 
+-- Lines 767-770
 function MenuNodeUpdatesGui:move_down()
 end
 
+-- Lines 772-775
 function MenuNodeUpdatesGui:move_left()
 	self:move_highlight(-1, 0)
 
 	return true
 end
 
+-- Lines 777-780
 function MenuNodeUpdatesGui:move_right()
 	self:move_highlight(1, 0)
 
 	return true
 end
 
+-- Lines 782-793
 function MenuNodeUpdatesGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -915,11 +941,13 @@ function MenuNodeUpdatesGui:unretrieve_textures()
 	self._lastest_texture_request = nil
 end
 
+-- Lines 795-805
 function MenuNodeUpdatesGui:close()
 	self:unretrieve_textures()
 	MenuNodeUpdatesGui.super.close(self)
 end
 
+-- Lines 807-809
 function MenuNodeUpdatesGui:_setup_panels(node)
 	MenuNodeUpdatesGui.super._setup_panels(self, node)
 end

@@ -2,12 +2,14 @@ core:import("CoreMissionScriptElement")
 
 ElementDisableUnit = ElementDisableUnit or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-9
 function ElementDisableUnit:init(...)
 	ElementDisableUnit.super.init(self, ...)
 
 	self._units = {}
 end
 
+-- Lines 11-23
 function ElementDisableUnit:on_script_activated()
 	local elementBroken = false
 
@@ -24,14 +26,17 @@ function ElementDisableUnit:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
+-- Lines 25-27
 function ElementDisableUnit:_load_unit(unit)
 	table.insert(self._units, unit)
 end
 
+-- Lines 29-31
 function ElementDisableUnit:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 33-51
 function ElementDisableUnit:on_executed(instigator)
 	self._has_executed = true
 
@@ -52,12 +57,14 @@ function ElementDisableUnit:on_executed(instigator)
 	ElementDisableUnit.super.on_executed(self, instigator)
 end
 
+-- Lines 53-57
 function ElementDisableUnit:save(data)
 	data.save_me = true
 	data.enabled = self._values.enabled
 	data.executed = self._has_executed
 end
 
+-- Lines 59-79
 function ElementDisableUnit:load(data)
 	if not self._has_fetched_units then
 		self:on_script_activated()

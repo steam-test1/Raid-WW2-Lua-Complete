@@ -4,6 +4,7 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneMayaExporterCurve"
 CoreCutsceneMayaExporter = CoreCutsceneMayaExporter or class(CoreCutsceneFrameVisitor)
 CoreCutsceneMayaExporter.MAYA_VERSION = 8.5
 
+-- Lines 6-12
 function CoreCutsceneMayaExporter:init(parent_window, cutscene_editor, start_frame, end_frame, output_path)
 	self.super.init(self, parent_window, cutscene_editor, start_frame, end_frame)
 
@@ -14,6 +15,7 @@ function CoreCutsceneMayaExporter:init(parent_window, cutscene_editor, start_fra
 	assert(type(self.__output_path) == "string", "Must supply a valid output path.")
 end
 
+-- Lines 14-21
 function CoreCutsceneMayaExporter:add_unit(unit_name, unit)
 	local existing_unit = self.__sampled_units[unit_name]
 
@@ -24,10 +26,12 @@ function CoreCutsceneMayaExporter:add_unit(unit_name, unit)
 	end
 end
 
+-- Lines 23-25
 function CoreCutsceneMayaExporter:_visit_frame(frame)
 	self:_sample_animation_curves()
 end
 
+-- Lines 27-37
 function CoreCutsceneMayaExporter:_done(aborted)
 	if not aborted then
 		local file = io.open(self.__output_path, "w")
@@ -40,6 +44,7 @@ function CoreCutsceneMayaExporter:_done(aborted)
 	end
 end
 
+-- Lines 39-50
 function CoreCutsceneMayaExporter:_combined_camera_node_name()
 	local node_name = "camera_directed"
 
@@ -52,6 +57,7 @@ function CoreCutsceneMayaExporter:_combined_camera_node_name()
 	return node_name
 end
 
+-- Lines 52-124
 function CoreCutsceneMayaExporter:_write_header(file)
 	file:write(string.format("//Maya ASCII %.1f scene\n", self.MAYA_VERSION))
 	file:write(string.format("requires maya \"%.1f\";\n", self.MAYA_VERSION))
@@ -126,6 +132,7 @@ function CoreCutsceneMayaExporter:_write_header(file)
 	file:write("\tsetAttr \".scriptType\" 6;\n")
 end
 
+-- Lines 126-145
 function CoreCutsceneMayaExporter:_write_hierarchies(file)
 	for unit_name, unit in pairs(self.__sampled_units) do
 		if string.begins(unit_name, "camera") then
@@ -148,6 +155,7 @@ function CoreCutsceneMayaExporter:_write_hierarchies(file)
 	end
 end
 
+-- Lines 147-167
 function CoreCutsceneMayaExporter:_write_hierarchy_entry_for_object(file, unit_name, object, parent_object)
 	if self:_should_export(unit_name, object) then
 		local object_name = self:_maya_node_name(unit_name, object)
@@ -172,6 +180,7 @@ function CoreCutsceneMayaExporter:_write_hierarchy_entry_for_object(file, unit_n
 	end
 end
 
+-- Lines 169-183
 function CoreCutsceneMayaExporter:_write_camera_node(file, camera_name)
 	file:write("createNode transform -name \"" .. camera_name .. "\";\n")
 	file:write(string.format("createNode camera -name \"%sShape\" -parent \"%s\";\n", camera_name, camera_name))
@@ -188,6 +197,7 @@ function CoreCutsceneMayaExporter:_write_camera_node(file, camera_name)
 	file:write("\tsetAttr \".maskName\" -type \"string\" \"" .. camera_name .. "_mask\";\n")
 end
 
+-- Lines 185-195
 function CoreCutsceneMayaExporter:_write_animation_curves(file)
 	for unit_name, curve_sets in pairs(self.__curve_sets) do
 		for _, curve_set in pairs(curve_sets) do
@@ -200,6 +210,7 @@ function CoreCutsceneMayaExporter:_write_animation_curves(file)
 	end
 end
 
+-- Lines 197-214
 function CoreCutsceneMayaExporter:_sample_animation_curves()
 	for unit_name, unit in pairs(self.__sampled_units) do
 		if string.begins(unit_name, "camera") or string.begins(unit_name, "locator") then
@@ -220,6 +231,7 @@ function CoreCutsceneMayaExporter:_sample_animation_curves()
 	end
 end
 
+-- Lines 216-225
 function CoreCutsceneMayaExporter:_sample_animation_curves_for_hierarchy(unit_name, object)
 	if self:_should_export(unit_name, object) then
 		self:_curve_set(unit_name, object):add_sample(self.__frame, object)
@@ -230,6 +242,7 @@ function CoreCutsceneMayaExporter:_sample_animation_curves_for_hierarchy(unit_na
 	end
 end
 
+-- Lines 227-243
 function CoreCutsceneMayaExporter:_curve_set(unit_name, object)
 	local curve_sets_for_unit = self.__curve_sets[unit_name]
 	local curve_set = curve_sets_for_unit and curve_sets_for_unit[object]
@@ -248,6 +261,7 @@ function CoreCutsceneMayaExporter:_curve_set(unit_name, object)
 	return curve_set
 end
 
+-- Lines 245-251
 function CoreCutsceneMayaExporter:_combined_camera_focal_length_curve()
 	if self.__combined_camera_focal_length_curve == nil then
 		self.__combined_camera_focal_length_curve = CoreCutsceneMayaExporterCurve:new("animCurveTU", self:_combined_camera_node_name() .. "Shape", "focalLength")
@@ -256,16 +270,19 @@ function CoreCutsceneMayaExporter:_combined_camera_focal_length_curve()
 	return self.__combined_camera_focal_length_curve
 end
 
+-- Lines 253-258
 function CoreCutsceneMayaExporter:_fov_to_focal_length(fov)
 	local focal_length = math.tan(math.deg(0.00872665 * fov))
 
 	return 0.89 / (focal_length * 0.03937)
 end
 
+-- Lines 260-262
 function CoreCutsceneMayaExporter:_should_export(unit_name, object)
 	return type_name(object) == "Object3D"
 end
 
+-- Lines 264-275
 function CoreCutsceneMayaExporter:_maya_node_name(unit_name, object, full_path)
 	if string.begins(unit_name, "camera") or string.begins(unit_name, "locator") then
 		return unit_name

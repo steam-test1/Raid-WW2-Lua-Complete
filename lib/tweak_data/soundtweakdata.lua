@@ -1,5 +1,6 @@
 SoundTweakData = SoundTweakData or class()
 
+-- Lines 3-42
 function SoundTweakData:init()
 	self.acoustics = {
 		acoustics_forest = {}

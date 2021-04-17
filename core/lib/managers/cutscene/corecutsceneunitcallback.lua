@@ -1,20 +1,24 @@
 CoreCutsceneUnitCallback = CoreCutsceneUnitCallback or class()
 
+-- Lines 3-6
 function CoreCutsceneUnitCallback:init(callback_name)
 	self._callback_name = callback_name
 	self._params = {}
 end
 
+-- Lines 8-10
 function CoreCutsceneUnitCallback:add_parameter(param)
 	self._params[param._name] = param
 end
 
+-- Lines 12-14
 function CoreCutsceneUnitCallback:get_parameter_map()
 	return self._params
 end
 
 CoreCutsceneInputParam = CoreCutsceneInputParam or class()
 
+-- Lines 19-26
 function CoreCutsceneInputParam:init(name, value_type, default_value, min_value, max_value, decimals)
 	self._name = name
 	self._value_type = value_type
@@ -24,6 +28,7 @@ function CoreCutsceneInputParam:init(name, value_type, default_value, min_value,
 	self._decimals = decimals
 end
 
+-- Lines 28-36
 function CoreCutsceneInputParam:float_to_string(number, decimals)
 	if type(number) == "boolean" then
 		return tostring(number)
@@ -34,6 +39,7 @@ function CoreCutsceneInputParam:float_to_string(number, decimals)
 	end
 end
 
+-- Lines 38-46
 function CoreCutsceneInputParam:validate(value)
 	if self._value_type == "number" then
 		value = self:float_to_string(self:validate_number(self._value_type, value, self._min_value, self._max_value, self._default_value, self._decimals), self._decimals)
@@ -44,6 +50,7 @@ function CoreCutsceneInputParam:validate(value)
 	return value
 end
 
+-- Lines 48-85
 function CoreCutsceneInputParam:validate_number(number, min_value, max_value, default_value, decimals)
 	if type(number) == "string" then
 		local stripped_number = ""
@@ -78,6 +85,7 @@ function CoreCutsceneInputParam:validate_number(number, min_value, max_value, de
 	return number
 end
 
+-- Lines 87-93
 function CoreCutsceneInputParam:validate_boolean(boolean)
 	if type(boolean) == "string" then
 		return boolean == "true"

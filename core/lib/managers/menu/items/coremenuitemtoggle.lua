@@ -5,6 +5,7 @@ core:import("CoreMenuItemOption")
 ItemToggle = ItemToggle or class(CoreMenuItem.Item)
 ItemToggle.TYPE = "toggle"
 
+-- Lines 9-29
 function ItemToggle:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -26,10 +27,12 @@ function ItemToggle:init(data_node, parameters)
 	end
 end
 
+-- Lines 31-33
 function ItemToggle:add_option(option)
 	table.insert(self.options, option)
 end
 
+-- Lines 35-46
 function ItemToggle:toggle()
 	if not self._enabled then
 		return
@@ -44,6 +47,7 @@ function ItemToggle:toggle()
 	self:dirty()
 end
 
+-- Lines 48-59
 function ItemToggle:toggle_back()
 	if not self._enabled then
 		return
@@ -58,10 +62,12 @@ function ItemToggle:toggle_back()
 	self:dirty()
 end
 
+-- Lines 61-63
 function ItemToggle:selected_option()
 	return self.options[self.selected]
 end
 
+-- Lines 65-72
 function ItemToggle:value()
 	local value = ""
 	local selected_option = self:selected_option()
@@ -73,6 +79,7 @@ function ItemToggle:value()
 	return value
 end
 
+-- Lines 74-82
 function ItemToggle:set_value(value)
 	for i, option in ipairs(self.options) do
 		if option:parameters().value == value then
@@ -85,6 +92,7 @@ function ItemToggle:set_value(value)
 	self:dirty()
 end
 
+-- Lines 86-134
 function ItemToggle:setup_gui(node, row_item)
 	row_item.gui_panel = node.item_panel:panel({
 		w = managers.menu:get_menu_item_width()
@@ -147,6 +155,7 @@ end
 
 local xl_pad = 64
 
+-- Lines 137-241
 function ItemToggle:reload(row_item, node)
 	if not row_item then
 		return
@@ -241,6 +250,7 @@ function ItemToggle:reload(row_item, node)
 	return true
 end
 
+-- Lines 243-266
 function ItemToggle:_set_toggle_item_image(row_item)
 	if self:selected_option():parameters().icon then
 		if row_item.highlighted and self:selected_option():parameters().s_icon then
@@ -269,6 +279,7 @@ function ItemToggle:_set_toggle_item_image(row_item)
 	end
 end
 
+-- Lines 268-287
 function ItemToggle:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(Idstring("ui/fonts/pf_din_text_comp_pro_medium_20"))
@@ -292,6 +303,7 @@ function ItemToggle:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
+-- Lines 289-308
 function ItemToggle:fade_row_item(node, row_item)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(Idstring("ui/fonts/pf_din_text_comp_pro_medium_20"))

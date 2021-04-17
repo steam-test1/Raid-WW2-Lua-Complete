@@ -81,6 +81,7 @@ BreadcrumbManager.CATEGORY_CARD = {
 	}
 }
 
+-- Lines 107-115
 function BreadcrumbManager.get_instance()
 	if not Global.breadcrumb_manager then
 		Global.breadcrumb_manager = BreadcrumbManager:new()
@@ -91,10 +92,12 @@ function BreadcrumbManager.get_instance()
 	return Global.breadcrumb_manager
 end
 
+-- Lines 117-119
 function BreadcrumbManager:init()
 	self:reset()
 end
 
+-- Lines 121-127
 function BreadcrumbManager:reset()
 	self._breadcrumbs = {
 		[BreadcrumbManager.SLOT_CHARACTER] = {},
@@ -103,6 +106,7 @@ function BreadcrumbManager:reset()
 	self._unique_breadcrumb_ids = {}
 end
 
+-- Lines 129-156
 function BreadcrumbManager:add_breadcrumb(category, identifiers)
 	if not category or not identifiers then
 		return
@@ -131,6 +135,7 @@ function BreadcrumbManager:add_breadcrumb(category, identifiers)
 	end
 end
 
+-- Lines 158-211
 function BreadcrumbManager:remove_breadcrumb(category, identifiers)
 	if not category or not identifiers then
 		return
@@ -189,6 +194,7 @@ function BreadcrumbManager:remove_breadcrumb(category, identifiers)
 	self:_notify_breadcrumb_change_listeners(category, identifiers)
 end
 
+-- Lines 213-221
 function BreadcrumbManager:_count_tree_level_elements(tree_level)
 	local count = 0
 
@@ -199,6 +205,7 @@ function BreadcrumbManager:_count_tree_level_elements(tree_level)
 	return count
 end
 
+-- Lines 238-273
 function BreadcrumbManager:category_has_breadcrumbs(category, identifiers)
 	if not category then
 		return
@@ -237,6 +244,7 @@ function BreadcrumbManager:category_has_breadcrumbs(category, identifiers)
 	return category_has_breadcrumbs or false
 end
 
+-- Lines 277-286
 function BreadcrumbManager:get_unique_breadcrumb_id()
 	local id = math.random(1, 99999)
 
@@ -249,10 +257,12 @@ function BreadcrumbManager:get_unique_breadcrumb_id()
 	return id
 end
 
+-- Lines 289-291
 function BreadcrumbManager:clear_unique_breadcrumb_id(id)
 	self._unique_breadcrumb_ids[id] = nil
 end
 
+-- Lines 296-300
 function BreadcrumbManager:register_breadcrumb_change_listener(key, category, identifiers, callback)
 	local event_id = self:_get_event_listener_id(category, identifiers)
 
@@ -261,10 +271,12 @@ function BreadcrumbManager:register_breadcrumb_change_listener(key, category, id
 	}, callback)
 end
 
+-- Lines 303-305
 function BreadcrumbManager:unregister_breadcrumb_change_listener(key)
 	managers.system_event_listener:remove_listener(key)
 end
 
+-- Lines 308-325
 function BreadcrumbManager:_notify_breadcrumb_change_listeners(category, identifiers)
 	local event_id = self:_get_event_listener_id(category)
 
@@ -283,6 +295,7 @@ function BreadcrumbManager:_notify_breadcrumb_change_listeners(category, identif
 	end
 end
 
+-- Lines 328-340
 function BreadcrumbManager:_get_event_listener_id(category, identifiers)
 	local listener_id = "breadcrumb_"
 	listener_id = listener_id .. tostring(category.identifier)
@@ -296,6 +309,7 @@ function BreadcrumbManager:_get_event_listener_id(category, identifiers)
 	return listener_id
 end
 
+-- Lines 343-349
 function BreadcrumbManager:save_character_slot(data)
 	local state = {
 		version = self.version,
@@ -304,6 +318,7 @@ function BreadcrumbManager:save_character_slot(data)
 	data.BreadcrumbManager = state
 end
 
+-- Lines 352-366
 function BreadcrumbManager:load_character_slot(data, version)
 	local state = data.BreadcrumbManager
 
@@ -322,6 +337,7 @@ function BreadcrumbManager:load_character_slot(data, version)
 	end
 end
 
+-- Lines 369-375
 function BreadcrumbManager:save_profile_slot(data)
 	local state = {
 		version = self.version,
@@ -330,6 +346,7 @@ function BreadcrumbManager:save_profile_slot(data)
 	data.BreadcrumbManager = state
 end
 
+-- Lines 378-392
 function BreadcrumbManager:load_profile_slot(data, version)
 	local state = data.BreadcrumbManager
 

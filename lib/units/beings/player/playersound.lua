@@ -1,5 +1,6 @@
 PlayerSound = PlayerSound or class()
 
+-- Lines 3-22
 function PlayerSound:init(unit)
 	self._unit = unit
 
@@ -18,9 +19,11 @@ function PlayerSound:init(unit)
 	self._queue = {}
 end
 
+-- Lines 25-26
 function PlayerSound:destroy(unit)
 end
 
+-- Lines 30-42
 function PlayerSound:_play(sound_name, source_name)
 	local source = nil
 
@@ -33,6 +36,7 @@ function PlayerSound:_play(sound_name, source_name)
 	return event
 end
 
+-- Lines 46-59
 function PlayerSound:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
 	if not alive(unit) then
 		return
@@ -48,6 +52,7 @@ function PlayerSound:sound_callback(instance, event_type, unit, sound_source, la
 	end
 end
 
+-- Lines 63-65
 function PlayerSound:queue_sound(id, sound_name, source_name, sync)
 	table.insert(self._queue, {
 		_id = id,
@@ -57,10 +62,12 @@ function PlayerSound:queue_sound(id, sound_name, source_name, sync)
 	})
 end
 
+-- Lines 67-69
 function PlayerSound:clear_queue()
 	self._queue = {}
 end
 
+-- Lines 73-92
 function PlayerSound:play(sound_name, source_name, sync)
 	local event_id = nil
 
@@ -81,6 +88,7 @@ function PlayerSound:play(sound_name, source_name, sync)
 	return event
 end
 
+-- Lines 96-102
 function PlayerSound:stop(source_name)
 	local source = nil
 
@@ -91,6 +99,7 @@ function PlayerSound:stop(source_name)
 	self._unit:sound_source(source):stop()
 end
 
+-- Lines 106-114
 function PlayerSound:play_footstep(foot, material_name)
 	if self._last_material ~= material_name then
 		self._last_material = material_name
@@ -104,6 +113,7 @@ function PlayerSound:play_footstep(foot, material_name)
 	self:_play(sound_name)
 end
 
+-- Lines 118-125
 function PlayerSound:play_land(material_name)
 	if self._last_material ~= material_name then
 		self._last_material = material_name
@@ -115,10 +125,12 @@ function PlayerSound:play_land(material_name)
 	self:_play("footstep_land_1p")
 end
 
+-- Lines 129-134
 function PlayerSound:play_whizby(params)
 	self:_play("whizby")
 end
 
+-- Lines 138-162
 function PlayerSound:say(sound_name, important_say, sync)
 	if self._last_speech and self._speaking and important_say == true then
 		self._last_speech:stop()
@@ -147,14 +159,17 @@ function PlayerSound:say(sound_name, important_say, sync)
 	return self._last_speech
 end
 
+-- Lines 166-168
 function PlayerSound:speaking()
 	return self._speaking
 end
 
+-- Lines 172-174
 function PlayerSound:set_voice(voice)
 	self._unit:sound_source():set_switch("robber", voice)
 end
 
+-- Lines 178-185
 function PlayerSound:stop_speaking()
 	if self._last_speech and self._speaking then
 		self._last_speech:stop()

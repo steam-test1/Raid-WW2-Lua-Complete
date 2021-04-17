@@ -5,6 +5,7 @@ EditUnitLight = EditUnitLight or class(EditUnitBase)
 EditUnitLight.DEFAULT_SHADOW_RESOLUTION = 128
 EditUnitLight.DEFAULT_SPOT_PROJECTION_TEXTURE = "units/lights/spot_light_projection_textures/default_df"
 
+-- Lines 8-264
 function EditUnitLight:init(editor)
 	EditUnitLight.super.init(self)
 
@@ -283,6 +284,7 @@ function EditUnitLight:init(editor)
 	self._panel = panel
 end
 
+-- Lines 266-275
 function EditUnitLight:get_spot_projection_textures()
 	local entry_path = managers.database:entry_path(managers.database:base_path() .. "units\\lights\\spot_light_projection_textures")
 	local files = SystemFS:list(managers.database:base_path() .. "units\\lights\\spot_light_projection_textures")
@@ -295,6 +297,7 @@ function EditUnitLight:get_spot_projection_textures()
 	return textures
 end
 
+-- Lines 277-282
 function EditUnitLight:change_light()
 	if alive(self._reference_unit) then
 		local light = self._reference_unit:get_object(Idstring(self._lights_params.ctrlr:get_value()))
@@ -303,6 +306,7 @@ function EditUnitLight:change_light()
 	end
 end
 
+-- Lines 284-325
 function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_combobox_value(self._lights_params, light:name():s())
 	self._enabled_ctrlr:set_value(light:enable())
@@ -351,24 +355,28 @@ function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_combobox_value(self._spot_projection_texture_params, projection_texture)
 end
 
+-- Lines 327-331
 function EditUnitLight:update_falloff()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_falloff_exponent(self._falloff_params.value)
 	end
 end
 
+-- Lines 333-337
 function EditUnitLight:update_linear_atten()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_linear_attenuation_factor(self._linear_atten_params.value)
 	end
 end
 
+-- Lines 339-343
 function EditUnitLight:update_enabled()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_enable(self._enabled_ctrlr:get_value())
 	end
 end
 
+-- Lines 345-353
 function EditUnitLight:show_color_dialog()
 	local colordlg = EWS:ColourDialog(self._panel, true, self._color_ctrlr:background_colour() / 255)
 
@@ -381,6 +389,7 @@ function EditUnitLight:show_color_dialog()
 	end
 end
 
+-- Lines 355-360
 function EditUnitLight:update_intensity()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_multiplier(LightIntensityDB:lookup(Idstring(self._intensity_params.value)))
@@ -388,18 +397,21 @@ function EditUnitLight:update_intensity()
 	end
 end
 
+-- Lines 362-366
 function EditUnitLight:update_near_range(params)
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_near_range(params.value)
 	end
 end
 
+-- Lines 368-372
 function EditUnitLight:update_far_range(params)
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_far_range(params.value)
 	end
 end
 
+-- Lines 374-385
 function EditUnitLight:update_clipping(value, params)
 	for _, light in ipairs(self:_selected_lights()) do
 		local clipping_values = light:clipping_values()
@@ -414,18 +426,21 @@ function EditUnitLight:update_clipping(value, params)
 	end
 end
 
+-- Lines 387-391
 function EditUnitLight:update_start_angle()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_spot_angle_start(self._spot_start_angle_params.value)
 	end
 end
 
+-- Lines 393-397
 function EditUnitLight:update_end_angle()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_spot_angle_end(self._spot_end_angle_params.value)
 	end
 end
 
+-- Lines 399-413
 function EditUnitLight:update_resolution()
 	local value = self._shadow_resolution_params.value
 
@@ -444,6 +459,7 @@ function EditUnitLight:update_resolution()
 	end
 end
 
+-- Lines 415-428
 function EditUnitLight:update_spot_projection_texture()
 	local value = self._spot_projection_texture_params.value
 
@@ -461,6 +477,7 @@ function EditUnitLight:update_spot_projection_texture()
 	end
 end
 
+-- Lines 430-441
 function EditUnitLight:_selected_lights()
 	local lights = {}
 
@@ -477,16 +494,19 @@ function EditUnitLight:_selected_lights()
 	return lights
 end
 
+-- Lines 443-447
 function EditUnitLight:_reference_light()
 	if alive(self._reference_unit) then
 		return self._reference_unit:get_object(Idstring(self._lights_params.ctrlr:get_value()))
 	end
 end
 
+-- Lines 449-451
 function EditUnitLight:_is_type(type)
 	return string.find(self:_reference_light():properties(), type)
 end
 
+-- Lines 453-474
 function EditUnitLight:is_editable(unit, units)
 	if alive(unit) then
 		local lights = CoreEditorUtils.get_editable_lights(unit) or {}
@@ -513,10 +533,12 @@ function EditUnitLight:is_editable(unit, units)
 	return false
 end
 
+-- Lines 476-478
 function EditUnitLight:update(t, dt)
 	self:_draw(t, dt)
 end
 
+-- Lines 480-488
 function EditUnitLight:_draw(t, dt)
 	if not self._debug then
 		return
@@ -527,6 +549,7 @@ function EditUnitLight:_draw(t, dt)
 	end
 end
 
+-- Lines 490-528
 function EditUnitLight:_draw_light(light, t, dt)
 	if not light:enable() then
 		return

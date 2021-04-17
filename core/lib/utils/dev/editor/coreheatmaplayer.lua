@@ -4,29 +4,36 @@ core:import("CoreEws")
 
 HeatmapLayer = HeatmapLayer or class(CoreLayer.Layer)
 
+-- Lines 9-13
 function HeatmapLayer:init(owner)
 	HeatmapLayer.super.init(self, owner, "heatmap")
 
 	self._heatmap_sets = {}
 end
 
+-- Lines 15-17
 function HeatmapLayer:get_layer_name()
 	return "Heatmap"
 end
 
+-- Lines 19-21
 function HeatmapLayer:get_setting(setting)
 end
 
+-- Lines 23-24
 function HeatmapLayer:load(world_holder, offset)
 end
 
+-- Lines 26-27
 function HeatmapLayer:save(save_params)
 end
 
+-- Lines 30-33
 function HeatmapLayer:update(t, dt)
 	self:_draw(t, dt)
 end
 
+-- Lines 35-60
 function HeatmapLayer:_draw(t, dt)
 	local colors = {
 		Vector3(0, 1, 0),
@@ -57,6 +64,7 @@ function HeatmapLayer:_draw(t, dt)
 	end
 end
 
+-- Lines 62-71
 function HeatmapLayer:_draw_path(path, color)
 	for i = 1, #path, 2 do
 		local p1 = path[i]
@@ -68,6 +76,7 @@ function HeatmapLayer:_draw_path(path, color)
 	end
 end
 
+-- Lines 75-101
 function HeatmapLayer:build_panel(notebook)
 	cat_print("editor", "HeatmapLayer:build_panel")
 
@@ -91,6 +100,7 @@ function HeatmapLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
+-- Lines 104-208
 function HeatmapLayer:_add_data()
 	local opendlg_path, opendlg_dir = managers.database:open_file_dialog(Global.frame, "Logs (*.txt)|*.txt")
 
@@ -194,22 +204,27 @@ function HeatmapLayer:_add_data()
 	end
 end
 
+-- Lines 210-212
 function HeatmapLayer:_clr_data()
 	self._heatmap_sets = {}
 end
 
+-- Lines 216-218
 function HeatmapLayer:add_triggers()
 	HeatmapLayer.super.add_triggers(self)
 end
 
+-- Lines 220-222
 function HeatmapLayer:activate()
 	HeatmapLayer.super.activate(self)
 end
 
+-- Lines 224-226
 function HeatmapLayer:deactivate()
 	HeatmapLayer.super.deactivate(self)
 end
 
+-- Lines 228-232
 function HeatmapLayer:clear()
 	HeatmapLayer.super.clear(self)
 	self:_clr_data()

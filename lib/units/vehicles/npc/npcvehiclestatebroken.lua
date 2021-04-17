@@ -1,16 +1,20 @@
 NpcVehicleStateBroken = NpcVehicleStateBroken or class(NpcBaseVehicleState)
 
+-- Lines 3-5
 function NpcVehicleStateBroken:init(unit)
 	NpcBaseVehicleState.init(self, unit)
 end
 
+-- Lines 9-10
 function NpcVehicleStateBroken:update(t, dt)
 end
 
+-- Lines 13-15
 function NpcVehicleStateBroken:name()
 	return NpcVehicleDrivingExt.STATE_BROKEN
 end
 
+-- Lines 18-26
 function NpcVehicleStateBroken:on_enter()
 	print("NpcVehicleStateBroken:on_enter()")
 

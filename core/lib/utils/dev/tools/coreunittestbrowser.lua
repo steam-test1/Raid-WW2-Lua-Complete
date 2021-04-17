@@ -1,5 +1,6 @@
 CoreUnitTestBrowser = CoreUnitTestBrowser or class()
 
+-- Lines 2-11
 function CoreUnitTestBrowser:init()
 	self._unit_msg = {}
 	self._ignore_list = {}
@@ -11,6 +12,7 @@ function CoreUnitTestBrowser:init()
 	end
 end
 
+-- Lines 13-71
 function CoreUnitTestBrowser:error_frame()
 	self._error_frame = EWS:Frame("Unit Test Browser", Vector3(100, 400, 0), Vector3(500, 500, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 	local menu_bar = EWS:MenuBar()
@@ -62,6 +64,7 @@ function CoreUnitTestBrowser:error_frame()
 	self._error_frame:set_visible(true)
 end
 
+-- Lines 73-111
 function CoreUnitTestBrowser:search_frame()
 	self._search_frame = EWS:Frame("Search Unit", Vector3(100, 400, 0), Vector3(250, 350, 0), "")
 
@@ -95,13 +98,16 @@ function CoreUnitTestBrowser:search_frame()
 	self._search_frame:set_visible(true)
 end
 
+-- Lines 113-115
 function CoreUnitTestBrowser:set_position(newpos)
 	self._error_frame:set_position(newpos)
 end
 
+-- Lines 117-119
 function CoreUnitTestBrowser:update(t, dt)
 end
 
+-- Lines 121-159
 function CoreUnitTestBrowser:on_popup()
 	local selected_item = self._error_box.tree_ctrl:selected_item()
 
@@ -152,6 +158,7 @@ function CoreUnitTestBrowser:on_popup()
 	end
 end
 
+-- Lines 161-166
 function CoreUnitTestBrowser:ignore_popup(critical)
 	local popup = EWS:Menu("")
 
@@ -160,6 +167,7 @@ function CoreUnitTestBrowser:ignore_popup(critical)
 	self._error_frame:popup_menu(popup, Vector3(-1, -1, 0))
 end
 
+-- Lines 168-173
 function CoreUnitTestBrowser:include_popup(critical)
 	local popup = EWS:Menu("")
 
@@ -168,6 +176,7 @@ function CoreUnitTestBrowser:include_popup(critical)
 	self._error_frame:popup_menu(popup, Vector3(-1, -1, 0))
 end
 
+-- Lines 175-185
 function CoreUnitTestBrowser:on_ignore(custom_data, event)
 	local id = self._error_box.tree_ctrl:selected_item()
 
@@ -182,6 +191,7 @@ function CoreUnitTestBrowser:on_ignore(custom_data, event)
 	table.insert(self._ignore_list, id)
 end
 
+-- Lines 187-197
 function CoreUnitTestBrowser:on_include(custom_data, event)
 	local id = self._error_box.tree_ctrl:selected_item()
 
@@ -196,6 +206,7 @@ function CoreUnitTestBrowser:on_include(custom_data, event)
 	table.delete(self._ignore_list, id)
 end
 
+-- Lines 199-231
 function CoreUnitTestBrowser:on_ignore_all()
 	for _, id in ipairs(self._error_box.tree_ctrl:get_children(self._failed_id)) do
 		local found = false
@@ -234,6 +245,7 @@ function CoreUnitTestBrowser:on_ignore_all()
 	end
 end
 
+-- Lines 233-262
 function CoreUnitTestBrowser:on_ignore_none()
 	while #self._ignore_list > 0 do
 		for _, ignore_id in ipairs(self._ignore_list) do
@@ -270,6 +282,7 @@ function CoreUnitTestBrowser:on_ignore_none()
 	end
 end
 
+-- Lines 264-274
 function CoreUnitTestBrowser:destroy()
 	if alive(self._error_frame) then
 		self._error_frame:destroy()
@@ -284,11 +297,13 @@ function CoreUnitTestBrowser:destroy()
 	end
 end
 
+-- Lines 276-279
 function CoreUnitTestBrowser:close()
 	self._error_frame:destroy()
 	self:close_search()
 end
 
+-- Lines 281-286
 function CoreUnitTestBrowser:close_search()
 	if self._search_frame then
 		self._search_frame:destroy()
@@ -297,10 +312,12 @@ function CoreUnitTestBrowser:close_search()
 	end
 end
 
+-- Lines 288-290
 function CoreUnitTestBrowser:on_find_unit()
 	self:search_frame()
 end
 
+-- Lines 292-298
 function CoreUnitTestBrowser:on_close()
 	if self._autorun then
 		self:close()
@@ -309,10 +326,12 @@ function CoreUnitTestBrowser:on_close()
 	end
 end
 
+-- Lines 300-302
 function CoreUnitTestBrowser:on_close_search()
 	self:close_search()
 end
 
+-- Lines 304-328
 function CoreUnitTestBrowser:on_search()
 	self._search_box.list_box:clear()
 
@@ -341,6 +360,7 @@ function CoreUnitTestBrowser:on_search()
 	end
 end
 
+-- Lines 330-340
 function CoreUnitTestBrowser:on_listbox_selected()
 	local unit_msg = self._unit_msg[self._search_box.list_box:get_string(self._search_box.list_box:selected_index())]
 
@@ -353,6 +373,7 @@ function CoreUnitTestBrowser:on_listbox_selected()
 	end
 end
 
+-- Lines 342-368
 function CoreUnitTestBrowser:on_send_emails()
 	if self._warning_mail_dialog:show_modal() == "ID_OK" then
 		local call = "ruby unit_test_report"
@@ -386,6 +407,7 @@ function CoreUnitTestBrowser:on_send_emails()
 	end
 end
 
+-- Lines 370-397
 function CoreUnitTestBrowser:on_send_emails_to()
 	if self._receiver_dialog:show_modal() then
 		local receiver_name = self._receiver_dialog:get_value()
@@ -420,6 +442,7 @@ function CoreUnitTestBrowser:on_send_emails_to()
 	end
 end
 
+-- Lines 399-412
 function CoreUnitTestBrowser:on_tree_ctrl_change()
 	local id = self._error_box.tree_ctrl:selected_item()
 
@@ -438,6 +461,7 @@ function CoreUnitTestBrowser:on_tree_ctrl_change()
 	end
 end
 
+-- Lines 414-473
 function CoreUnitTestBrowser:init_tree_view()
 	self._error_box.tree_ctrl:clear()
 
@@ -513,6 +537,7 @@ end
 
 CoreUnitTestBrowserInputDialog = CoreUnitTestBrowserInputDialog or class()
 
+-- Lines 479-501
 function CoreUnitTestBrowserInputDialog:init(p)
 	self._dialog = EWS:Dialog(p, "Receiver", "", Vector3(0, 0, 0), Vector3(300, 86, 0), "CAPTION,SYSTEM_MENU")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -537,6 +562,7 @@ function CoreUnitTestBrowserInputDialog:init(p)
 	self._dialog:set_sizer(box)
 end
 
+-- Lines 503-515
 function CoreUnitTestBrowserInputDialog:show_modal()
 	self._key_text_ctrl:set_value("")
 
@@ -552,6 +578,7 @@ function CoreUnitTestBrowserInputDialog:show_modal()
 	return self._return_val
 end
 
+-- Lines 517-521
 function CoreUnitTestBrowserInputDialog:on_send_button()
 	self._done = true
 	self._key = self._key_text_ctrl:get_value()
@@ -559,6 +586,7 @@ function CoreUnitTestBrowserInputDialog:on_send_button()
 	self._dialog:end_modal("")
 end
 
+-- Lines 523-527
 function CoreUnitTestBrowserInputDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -566,6 +594,7 @@ function CoreUnitTestBrowserInputDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
+-- Lines 529-531
 function CoreUnitTestBrowserInputDialog:get_value()
 	return self._key
 end

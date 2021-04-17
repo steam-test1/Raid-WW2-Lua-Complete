@@ -1,5 +1,6 @@
 NpcVehicleStatePursuit = NpcVehicleStatePursuit or class(NpcBaseVehicleState)
 
+-- Lines 3-19
 function NpcVehicleStatePursuit:init(unit)
 	NpcBaseVehicleState.init(self, unit)
 
@@ -37,6 +38,7 @@ function NpcVehicleStatePursuit:init(unit)
 	}
 end
 
+-- Lines 23-34
 function NpcVehicleStatePursuit:on_enter(npc_driving_ext)
 	print("Npc state change: ", self:name())
 
@@ -52,13 +54,16 @@ function NpcVehicleStatePursuit:on_enter(npc_driving_ext)
 	self._desired_direction = 0
 end
 
+-- Lines 37-38
 function NpcVehicleStatePursuit:update(t, dt)
 end
 
+-- Lines 41-43
 function NpcVehicleStatePursuit:name()
 	return NpcVehicleDrivingExt.STATE_PURSUIT
 end
 
+-- Lines 46-75
 function NpcVehicleStatePursuit:calc_steering(angle)
 	self._desired_direction = angle
 	local direction = 0
@@ -86,6 +91,7 @@ function NpcVehicleStatePursuit:calc_steering(angle)
 	return final_steer
 end
 
+-- Lines 78-99
 function NpcVehicleStatePursuit:calc_distance_threshold(angle)
 	local vehicle_state = self._vehicle:get_state()
 	local current_speed = vehicle_state:get_speed() * 3.6
@@ -100,6 +106,7 @@ function NpcVehicleStatePursuit:calc_distance_threshold(angle)
 	return threshold
 end
 
+-- Lines 102-122
 function NpcVehicleStatePursuit:calc_speed_limit(path, unit_and_pos)
 	local default_speed_limit = path.default_speed_limit or -1
 	local retval = default_speed_limit
@@ -120,6 +127,7 @@ function NpcVehicleStatePursuit:calc_speed_limit(path, unit_and_pos)
 	return retval
 end
 
+-- Lines 125-134
 function NpcVehicleStatePursuit:handle_hard_turn(npc_driving_ext, angle_to_target)
 	local vehicle_state = self._vehicle:get_state()
 	local current_speed = vehicle_state:get_speed() * 3.6
@@ -131,10 +139,12 @@ function NpcVehicleStatePursuit:handle_hard_turn(npc_driving_ext, angle_to_targe
 	end
 end
 
+-- Lines 137-139
 function NpcVehicleStatePursuit:evasion_maneuvers(npc_driving_ext, target_steering)
 	return self:_loco_unit_proximity(npc_driving_ext, target_steering)
 end
 
+-- Lines 142-192
 function NpcVehicleStatePursuit:_loco_unit_proximity(npc_driving_ext, target_steering)
 	local retval = nil
 	local player_unit = npc_driving_ext:_get_target_unit()
@@ -180,16 +190,19 @@ function NpcVehicleStatePursuit:_loco_unit_proximity(npc_driving_ext, target_ste
 	return retval
 end
 
+-- Lines 195-199
 function NpcVehicleStatePursuit:change_state(npc_driving_ext)
 	if self._next_state then
 		npc_driving_ext:set_state(self._next_state)
 	end
 end
 
+-- Lines 202-204
 function NpcVehicleStatePursuit:is_maneuvering()
 	return false
 end
 
+-- Lines 206-228
 function NpcVehicleStatePursuit:handle_stuck_vehicle(npc_driving_ext, t, dt)
 	if not self._tachograph then
 		return
@@ -207,6 +220,7 @@ function NpcVehicleStatePursuit:handle_stuck_vehicle(npc_driving_ext, t, dt)
 	end
 end
 
+-- Lines 233-245
 function NpcVehicleStatePursuit:_choose_recovery_maneuver()
 	local recovery_maneuver = nil
 

@@ -12,6 +12,7 @@ RaidGUIControlWeaponPointPeerLoot.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_si
 RaidGUIControlWeaponPointPeerLoot.IMAGE_PADDING_RIGHT = 10
 RaidGUIControlWeaponPointPeerLoot.TEXT_X = 128
 
+-- Lines 22-32
 function RaidGUIControlWeaponPointPeerLoot:init(parent, params)
 	RaidGUIControlWeaponPointPeerLoot.super.init(self, parent, params)
 
@@ -25,6 +26,7 @@ function RaidGUIControlWeaponPointPeerLoot:init(parent, params)
 	self:_create_weapon_point_details()
 end
 
+-- Lines 35-45
 function RaidGUIControlWeaponPointPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -36,6 +38,7 @@ function RaidGUIControlWeaponPointPeerLoot:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 48-88
 function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 	local params_weapon_point_image = {
 		name = "weapon_point_image",
@@ -80,11 +83,13 @@ function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 	self._xp_value_label:set_h(h)
 end
 
+-- Lines 90-93
 function RaidGUIControlWeaponPointPeerLoot:set_player_name(name)
 	self._name_label:set_text(utf8.to_upper(name))
 	self:_layout_text()
 end
 
+-- Lines 95-101
 function RaidGUIControlWeaponPointPeerLoot:_layout_text()
 	local _, _, _, h = self._name_label:text_rect()
 

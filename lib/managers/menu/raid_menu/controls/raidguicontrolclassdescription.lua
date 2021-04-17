@@ -6,6 +6,7 @@ RaidGUIControlClassDescription.WARCRY_DEFAULT_Y = 386
 RaidGUIControlClassDescription.WARCRY_DEFAULT_H = 64
 RaidGUIControlClassDescription.PERSONAL_BUFF_DEFAULT_Y = 470
 
+-- Lines 11-17
 function RaidGUIControlClassDescription:init(parent, params, item_data)
 	RaidGUIControlClassDescription.super.init(self, parent, params, item_data)
 
@@ -14,6 +15,7 @@ function RaidGUIControlClassDescription:init(parent, params, item_data)
 	self:_layout()
 end
 
+-- Lines 19-84
 function RaidGUIControlClassDescription:_layout()
 	self._object = self._panel:panel({
 		name = "character_info_panel",
@@ -231,6 +233,7 @@ function RaidGUIControlClassDescription:_layout()
 	})
 end
 
+-- Lines 86-198
 function RaidGUIControlClassDescription:set_data(data)
 	local class_icon_data = tweak_data.gui.icons["ico_class_" .. data.class_name] or tweak_data.gui.icons.ico_flag_empty
 

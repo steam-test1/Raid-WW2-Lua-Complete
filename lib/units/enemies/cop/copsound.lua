@@ -3,6 +3,7 @@ CopSound.MAX_DISTANCE_FROM_PLAYER = 2500
 CopSound.FOOTSTEP_COOLDOWN = 1.1
 CopSound.VO_COOLDOWN = 2
 
+-- Lines 7-23
 function CopSound:init(unit)
 	self._unit = unit
 	self._speak_expire_t = 0
@@ -21,9 +22,11 @@ function CopSound:init(unit)
 	unit:base():post_init()
 end
 
+-- Lines 27-28
 function CopSound:destroy(unit)
 end
 
+-- Lines 32-41
 function CopSound:set_voice_prefix(index)
 	local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 	local nr_variations = char_tweak.speech_prefix_count
@@ -35,6 +38,7 @@ function CopSound:set_voice_prefix(index)
 	self._prefix = (char_tweak.speech_prefix_p1 or "") .. (nr_variations and tostring(index or math.random(nr_variations)) or "") .. (char_tweak.speech_prefix_p2 or "") .. "_"
 end
 
+-- Lines 46-64
 function CopSound:_out_of_hearing_range()
 	local player_unit = nil
 
@@ -55,6 +59,7 @@ function CopSound:_out_of_hearing_range()
 	return CopSound.MAX_DISTANCE_FROM_PLAYER < distance_vector:length()
 end
 
+-- Lines 68-83
 function CopSound:_play(sound_name, source_name)
 	if self:_out_of_hearing_range() then
 		return
@@ -71,6 +76,7 @@ function CopSound:_play(sound_name, source_name)
 	return event
 end
 
+-- Lines 87-103
 function CopSound:play(sound_name, source_name, sync)
 	local event_id = nil
 
@@ -91,6 +97,7 @@ function CopSound:play(sound_name, source_name, sync)
 	return event
 end
 
+-- Lines 107-131
 function CopSound:corpse_play(sound_name, source_name, sync)
 	local event_id = nil
 
@@ -119,6 +126,7 @@ function CopSound:corpse_play(sound_name, source_name, sync)
 	return event
 end
 
+-- Lines 135-141
 function CopSound:stop(source_name)
 	local source = nil
 
@@ -129,6 +137,7 @@ function CopSound:stop(source_name)
 	self._unit:sound_source(source):stop()
 end
 
+-- Lines 145-176
 function CopSound:say(sound_name, sync, skip_prefix)
 	if self._last_speech then
 		self._last_speech:stop()
@@ -164,6 +173,7 @@ function CopSound:say(sound_name, sync, skip_prefix)
 	self._speak_expire_t = TimerManager:game():time() + CopSound.VO_COOLDOWN
 end
 
+-- Lines 180-185
 function CopSound:sync_say_str(full_sound)
 	if self._last_speech then
 		self._last_speech:stop()
@@ -172,14 +182,17 @@ function CopSound:sync_say_str(full_sound)
 	self._last_speech = self:play(full_sound)
 end
 
+-- Lines 189-191
 function CopSound:speaking(t)
 	return (t or TimerManager:game():time()) < self._speak_expire_t
 end
 
+-- Lines 195-197
 function CopSound:playing_footsteps(t)
 	return (t or TimerManager:game():time()) < self._footstep_expire_t
 end
 
+-- Lines 201-206
 function CopSound:anim_clbk_play_sound(unit, queue_name)
 	if not self:speaking() and not self:playing_footsteps() then
 		self._footstep_expire_t = self._footstep_expire_t + CopSound.FOOTSTEP_COOLDOWN

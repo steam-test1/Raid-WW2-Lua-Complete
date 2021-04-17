@@ -7,6 +7,7 @@ RaidGUIControlBreadcrumb.HIDE_ANIMATION_ROTATION = 30
 RaidGUIControlBreadcrumb.HIDE_ANIMATION_INITIAL_SCALE = 0.8
 RaidGUIControlBreadcrumb.HIDE_ANIMATION_FINAL_SCALE = 1.6
 
+-- Lines 13-31
 function RaidGUIControlBreadcrumb:init(parent, params)
 	RaidGUIControlBreadcrumb.super.init(self, parent, params or {})
 
@@ -26,6 +27,7 @@ function RaidGUIControlBreadcrumb:init(parent, params)
 	self:_subscribe_to_relevant_events()
 end
 
+-- Lines 33-42
 function RaidGUIControlBreadcrumb:_create_panel()
 	local panel_params = {
 		name = "breadcrumb_panel",
@@ -38,6 +40,7 @@ function RaidGUIControlBreadcrumb:_create_panel()
 	self._object = self._panel:panel(panel_params, true)
 end
 
+-- Lines 44-55
 function RaidGUIControlBreadcrumb:_create_breadcrumb_icon()
 	local icon_params = {
 		name = "breadcrumb_icon",
@@ -53,12 +56,14 @@ function RaidGUIControlBreadcrumb:_create_breadcrumb_icon()
 	self._icon:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 57-61
 function RaidGUIControlBreadcrumb:_subscribe_to_relevant_events()
 	if self._params.category or self._params.identifiers then
 		managers.breadcrumb:register_breadcrumb_change_listener("breadcrumb_" .. tostring(self._id) .. "_event_listener", self._params.category, self._params.identifiers, callback(self, self, "check_presence"))
 	end
 end
 
+-- Lines 64-87
 function RaidGUIControlBreadcrumb:check_presence()
 	if not self._params then
 		return
@@ -85,6 +90,7 @@ function RaidGUIControlBreadcrumb:check_presence()
 	end
 end
 
+-- Lines 89-100
 function RaidGUIControlBreadcrumb:consume()
 	if self._consumed then
 		return
@@ -99,6 +105,7 @@ function RaidGUIControlBreadcrumb:consume()
 	end
 end
 
+-- Lines 102-113
 function RaidGUIControlBreadcrumb:close()
 	managers.breadcrumb:unregister_breadcrumb_change_listener("breadcrumb_" .. tostring(self._id) .. "_event_listener")
 	managers.breadcrumb:clear_unique_breadcrumb_id(self._id)
@@ -111,6 +118,7 @@ function RaidGUIControlBreadcrumb:close()
 	self._object:clear()
 end
 
+-- Lines 115-131
 function RaidGUIControlBreadcrumb:_animate_show(icon, delay)
 	local t = 0
 	local duration = 0.25
@@ -129,6 +137,7 @@ function RaidGUIControlBreadcrumb:_animate_show(icon, delay)
 	self:_animate_attract(icon, delay)
 end
 
+-- Lines 133-165
 function RaidGUIControlBreadcrumb:_animate_attract(icon, delay)
 	while true do
 		local t = 0
@@ -159,10 +168,12 @@ function RaidGUIControlBreadcrumb:_animate_attract(icon, delay)
 	end
 end
 
+-- Lines 167-169
 function RaidGUIControlBreadcrumb:_get_sine_wave_interpolation(amplitude, t, duration)
 	return amplitude * math.sin(math.deg(math.pi) * t / duration) * math.sin(math.deg(17 * math.pi) * t / duration)
 end
 
+-- Lines 171-206
 function RaidGUIControlBreadcrumb:_animate_hide(icon)
 	local t = 0
 	local duration = 0.4

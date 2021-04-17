@@ -1,5 +1,6 @@
 CommWheelTweakData = CommWheelTweakData or class()
 
+-- Lines 3-25
 function CommWheelTweakData:init()
 	self.test = {
 		texture = "guis/textures/pd2/icon_detection",

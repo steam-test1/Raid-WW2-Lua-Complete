@@ -1,5 +1,6 @@
 HUDMapWaypointBase = HUDMapWaypointBase or class()
 
+-- Lines 3-13
 function HUDMapWaypointBase.create(panel, waypoint_data)
 	if waypoint_data.map_icon then
 		return HUDMapWaypointIcon:new(panel, waypoint_data)
@@ -12,38 +13,47 @@ function HUDMapWaypointBase.create(panel, waypoint_data)
 	return nil
 end
 
+-- Lines 15-17
 function HUDMapWaypointBase:init(waypoint_data)
 	self._id = waypoint_data.id_string
 end
 
+-- Lines 19-21
 function HUDMapWaypointBase:set_center_x(x)
 	self._object:set_center_x(x)
 end
 
+-- Lines 23-25
 function HUDMapWaypointBase:set_center_y(y)
 	self._object:set_center_y(y)
 end
 
+-- Lines 27-30
 function HUDMapWaypointBase:set_position(x, y)
 	self:set_center_x(x)
 	self:set_center_y(y)
 end
 
+-- Lines 32-33
 function HUDMapWaypointBase:set_data(waypoint_data)
 end
 
+-- Lines 35-37
 function HUDMapWaypointBase:id()
 	return self._id
 end
 
+-- Lines 39-41
 function HUDMapWaypointBase:show()
 	self._object:set_visible(true)
 end
 
+-- Lines 43-45
 function HUDMapWaypointBase:hide()
 	self._object:set_visible(false)
 end
 
+-- Lines 47-51
 function HUDMapWaypointBase:destroy()
 	self._id = nil
 
@@ -54,12 +64,14 @@ end
 HUDMapWaypointCircle = HUDMapWaypointCircle or class(HUDMapWaypointBase)
 HUDMapWaypointCircle.RADAR_ICON = "map_unknown_location"
 
+-- Lines 73-78
 function HUDMapWaypointCircle:init(panel, waypoint_data)
 	HUDMapWaypointCircle.super.init(self, waypoint_data)
 	self:_create_panel(panel, waypoint_data)
 	self:_create_radar_icon(waypoint_data)
 end
 
+-- Lines 80-91
 function HUDMapWaypointCircle:_create_panel(panel, waypoint_data)
 	local radius = waypoint_data.waypoint_radius
 	local panel_params = {
@@ -72,6 +84,7 @@ function HUDMapWaypointCircle:_create_panel(panel, waypoint_data)
 	self._object = RaidGUIPanel:new(panel, panel_params)
 end
 
+-- Lines 93-108
 function HUDMapWaypointCircle:_create_radar_icon(waypoint_data)
 	local radius = waypoint_data.waypoint_radius
 	local radar_icon_params = {
@@ -88,12 +101,14 @@ function HUDMapWaypointCircle:_create_radar_icon(waypoint_data)
 	self._radar_icon:animate(callback(self, self, "_animate_rotate_radar"))
 end
 
+-- Lines 110-114
 function HUDMapWaypointCircle:set_data(waypoint_data)
 	if not self._object:visible() then
 		self._object:set_visible(true)
 	end
 end
 
+-- Lines 116-161
 function HUDMapWaypointCircle:_animate_rotate_radar()
 	while true do
 		local low_speed = 0.6
@@ -142,6 +157,7 @@ function HUDMapWaypointCircle:_animate_rotate_radar()
 	end
 end
 
+-- Lines 163-167
 function HUDMapWaypointCircle:destroy()
 	self._radar_icon:stop()
 	HUDMapWaypointCircle.super.destroy(self)
@@ -159,6 +175,7 @@ HUDMapWaypointPoint.DISTANCE_FONT = tweak_data.gui.fonts.din_compressed_outlined
 HUDMapWaypointPoint.DISTANCE_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 HUDMapWaypointPoint.DISTANCE_LAYER = 2
 
+-- Lines 196-203
 function HUDMapWaypointPoint:init(panel, waypoint_data)
 	HUDMapWaypointPoint.super.init(self, waypoint_data)
 	self:_create_panel(panel)
@@ -167,6 +184,7 @@ function HUDMapWaypointPoint:init(panel, waypoint_data)
 	self:_create_distance()
 end
 
+-- Lines 206-215
 function HUDMapWaypointPoint:_create_panel(panel)
 	local panel_params = {
 		visible = false,
@@ -179,6 +197,7 @@ function HUDMapWaypointPoint:_create_panel(panel)
 	self._object = panel:panel(panel_params)
 end
 
+-- Lines 217-226
 function HUDMapWaypointPoint:_create_icon()
 	local icon_params = {
 		name = "icon",
@@ -191,6 +210,7 @@ function HUDMapWaypointPoint:_create_icon()
 	self._icon:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 229-240
 function HUDMapWaypointPoint:_create_background_icon()
 	local background_icon_params = {
 		name = "background_icon",
@@ -204,6 +224,7 @@ function HUDMapWaypointPoint:_create_background_icon()
 	self._background_icon:animate(callback(self, self, "_animate_background_icon"))
 end
 
+-- Lines 242-255
 function HUDMapWaypointPoint:_create_distance()
 	local distance_text_params = {
 		vertical = "center",
@@ -221,6 +242,7 @@ function HUDMapWaypointPoint:_create_distance()
 	self._distance:set_bottom(self._object:h())
 end
 
+-- Lines 257-270
 function HUDMapWaypointPoint:set_data(waypoint_data)
 	if not managers.player:player_unit() then
 		self._distance:set_visible(false)
@@ -236,6 +258,7 @@ function HUDMapWaypointPoint:set_data(waypoint_data)
 	self._distance:set_text(string.format("%.0f", waypoint_distance:length() / 100) .. "m")
 end
 
+-- Lines 272-301
 function HUDMapWaypointPoint:_animate_background_icon()
 	while true do
 		local enhance_factor = 2
@@ -266,6 +289,7 @@ function HUDMapWaypointPoint:_animate_background_icon()
 	end
 end
 
+-- Lines 303-307
 function HUDMapWaypointPoint:destroy()
 	self._background_icon:stop()
 	HUDMapWaypointPoint.super.destroy(self)
@@ -273,12 +297,14 @@ end
 
 HUDMapWaypointIcon = HUDMapWaypointIcon or class(HUDMapWaypointBase)
 
+-- Lines 319-324
 function HUDMapWaypointIcon:init(panel, waypoint_data)
 	HUDMapWaypointIcon.super.init(self, waypoint_data)
 	self:_create_panel(panel, waypoint_data)
 	self:_create_icon(waypoint_data)
 end
 
+-- Lines 326-335
 function HUDMapWaypointIcon:_create_panel(panel, waypoint_data)
 	local icon = waypoint_data.map_icon
 	local panel_params = {
@@ -291,6 +317,7 @@ function HUDMapWaypointIcon:_create_panel(panel, waypoint_data)
 	self._object = panel:panel(panel_params)
 end
 
+-- Lines 337-345
 function HUDMapWaypointIcon:_create_icon(waypoint_data)
 	local icon = waypoint_data.map_icon
 	local icon_params = {
@@ -301,10 +328,12 @@ function HUDMapWaypointIcon:_create_icon(waypoint_data)
 	self._icon = self._object:bitmap(icon_params)
 end
 
+-- Lines 347-349
 function HUDMapWaypointIcon:set_data(waypoint_data)
 	self:set_rotation(-waypoint_data.rotation:yaw())
 end
 
+-- Lines 351-353
 function HUDMapWaypointIcon:set_rotation(rotation)
 	self._icon:set_rotation(rotation)
 end

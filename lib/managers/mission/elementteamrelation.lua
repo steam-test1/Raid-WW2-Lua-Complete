@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementTeamRelation = ElementTeamRelation or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementTeamRelation:init(...)
 	ElementCharacterTeam.super.init(self, ...)
 end
 
+-- Lines 9-22
 function ElementTeamRelation:on_executed(instigator)
 	if not self._values.enabled then
 		return

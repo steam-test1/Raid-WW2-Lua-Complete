@@ -6,6 +6,7 @@ local empty_idstr = Idstring("")
 local molotov_effect = "effects/vanilla/fire/fire_molotov_grenade_001"
 local tmp_vec3 = Vector3()
 
+-- Lines 14-26
 function FireManager:init()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}
@@ -15,6 +16,7 @@ function FireManager:init()
 	self._fire_dot_tick_period = 1
 end
 
+-- Lines 28-66
 function FireManager:update(t, dt)
 	for index = #self._doted_enemies, 1, -1 do
 		local dot_info = self._doted_enemies[index]
@@ -51,6 +53,7 @@ function FireManager:update(t, dt)
 	end
 end
 
+-- Lines 68-90
 function FireManager:leave_flamethrower_patch(player)
 	if Network:is_server() then
 		if FireManager.MAX_FLAMETHROWER_FIRES <= #self._flamethrower_fire_patches then
@@ -82,6 +85,7 @@ function FireManager:leave_flamethrower_patch(player)
 	end
 end
 
+-- Lines 92-102
 function FireManager:_patches_intersect(pos1, pos2)
 	local r = 200
 	local x = math.pow(pos1.x - pos2.x, 2) + math.pow(pos1.y - pos2.y, 2)
@@ -95,6 +99,7 @@ function FireManager:_patches_intersect(pos1, pos2)
 	return result
 end
 
+-- Lines 104-137
 function FireManager:check_achievemnts(unit, t)
 	if not unit and not alive(unit) then
 		return
@@ -132,10 +137,12 @@ function FireManager:check_achievemnts(unit, t)
 	end
 end
 
+-- Lines 140-143
 function FireManager:remove_dead_dozer_from_overgrill(dozer_id)
 	self._dozers_on_fire[dozer_id] = nil
 end
 
+-- Lines 147-154
 function FireManager:is_set_on_fire(unit)
 	for key, dot_info in ipairs(self._doted_enemies) do
 		if dot_info.enemy_unit == unit then
@@ -146,6 +153,7 @@ function FireManager:is_set_on_fire(unit)
 	return false
 end
 
+-- Lines 157-177
 function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
 	local contains = false
 
@@ -176,6 +184,7 @@ function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, wea
 	end
 end
 
+-- Lines 180-185
 function FireManager:sync_add_fire_dot(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
 	if enemy_unit then
 		local t = TimerManager:game():time()
@@ -184,12 +193,14 @@ function FireManager:sync_add_fire_dot(enemy_unit, fire_damage_received_time, we
 	end
 end
 
+-- Lines 187-190
 function FireManager:add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
 	local dot_info = self:_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
 
 	managers.network:session():send_to_peers_synched("sync_add_doted_enemy", enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
 end
 
+-- Lines 194-205
 function FireManager:_remove_flame_effects_from_doted_unit(enemy_unit)
 	if self._doted_enemies then
 		for _, dot_info in ipairs(self._doted_enemies) do
@@ -202,6 +213,7 @@ function FireManager:_remove_flame_effects_from_doted_unit(enemy_unit)
 	end
 end
 
+-- Lines 208-217
 function FireManager:start_burn_body_sound(dot_info, delay)
 	local sound_loop_burn_body = SoundDevice:create_source("FireBurnBody")
 
@@ -217,13 +229,16 @@ function FireManager:start_burn_body_sound(dot_info, delay)
 	end
 end
 
+-- Lines 219-221
 function FireManager:_stop_burn_body_sound(sound_source)
 	self:_release_sound_source(sound_source)
 end
 
+-- Lines 223-224
 function FireManager:_release_sound_source(...)
 end
 
+-- Lines 226-251
 function FireManager:_start_enemy_fire_effect(dot_info)
 	local enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001_endless")
 	local bone_spine = dot_info.enemy_unit:get_object(Idstring("Spine"))
@@ -278,6 +293,7 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 	dot_info.fire_effects = effects_table
 end
 
+-- Lines 254-268
 function FireManager:_damage_fire_dot(dot_info)
 	if Network:is_server() then
 		local attacker_unit = managers.player:player_unit()
@@ -294,6 +310,7 @@ function FireManager:_damage_fire_dot(dot_info)
 	end
 end
 
+-- Lines 271-276
 function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	local player = managers.player:player_unit()
 
@@ -308,6 +325,7 @@ function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	end
 end
 
+-- Lines 279-505
 function FireManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -518,9 +536,11 @@ function FireManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
+-- Lines 507-509
 function FireManager:units_to_push(units_to_push, hit_pos, range)
 end
 
+-- Lines 511-563
 function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -564,11 +584,13 @@ function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, dam
 	end
 end
 
+-- Lines 565-568
 function FireManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
+-- Lines 570-590
 function FireManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -590,17 +612,20 @@ function FireManager:client_damage_and_push(position, normal, user_unit, dmg, ra
 	self:units_to_push(units_to_push, position, range)
 end
 
+-- Lines 592-596
 function FireManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table, custom_params.sound_event_burning, custom_params.sound_event_impact_duration)
 end
 
+-- Lines 598-600
 function FireManager:player_feedback(position, normal, range, custom_params)
 end
 
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
+-- Lines 604-664
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration)
 	effect_name = effect_name or "effects/vanilla/fire/fire_molotov_grenade_001"
 	local effect_id = nil
@@ -667,9 +692,11 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 	self:project_decal(ray, decal_ray_from, decal_ray_to, on_unit and ray and ray.unit, idstr_decal, idstr_effect)
 end
 
+-- Lines 666-668
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 end
 
+-- Lines 671-677
 function FireManager:_dispose_of_impact_sound(custom_params)
 	local sound_source_burning_loop = SoundDevice:create_source("MolotovBurning")
 
@@ -683,6 +710,7 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 	}), TimerManager:game():time() + tonumber(molotov_tweak.burn_duration) - custom_params.sound_event_impact_duration)
 end
 
+-- Lines 681-685
 function FireManager:on_simulation_ended()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}

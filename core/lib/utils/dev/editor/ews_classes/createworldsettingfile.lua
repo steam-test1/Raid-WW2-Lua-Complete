@@ -1,5 +1,6 @@
 CreateWorldSettingFile = CreateWorldSettingFile or class(CoreEditorEwsDialog)
 
+-- Lines 4-45
 function CreateWorldSettingFile:init(params)
 	CoreEditorEwsDialog.init(self, nil, "World Setting", "", Vector3(300, 150, 0), Vector3(200, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("VERTICAL")
@@ -44,6 +45,7 @@ function CreateWorldSettingFile:init(params)
 	self._dialog:show_modal()
 end
 
+-- Lines 47-57
 function CreateWorldSettingFile:_add_continent_cbs(params)
 	self._cbs = {}
 	local sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Exclude continents")
@@ -60,6 +62,7 @@ function CreateWorldSettingFile:_add_continent_cbs(params)
 	self._panel_sizer:add(sizer, 1, 0, "EXPAND")
 end
 
+-- Lines 59-71
 function CreateWorldSettingFile:on_create()
 	local t = {}
 
@@ -75,6 +78,7 @@ function CreateWorldSettingFile:on_create()
 	self:_compile(self._path)
 end
 
+-- Lines 73-87
 function CreateWorldSettingFile:_compile(path)
 	local t = {
 		target_db_name = "all",
@@ -94,14 +98,17 @@ function CreateWorldSettingFile:_compile(path)
 	managers.database:clear_all_cached_indices()
 end
 
+-- Lines 89-91
 function CreateWorldSettingFile:on_save()
 	self:on_create()
 end
 
+-- Lines 93-95
 function CreateWorldSettingFile:_serialize_to_script(type, name)
 	return PackageManager:editor_load_script_data(type:id(), name:id())
 end
 
+-- Lines 97-112
 function CreateWorldSettingFile:_parse_file(path)
 	if not DB:has("world_setting", path) then
 		return
@@ -122,6 +129,7 @@ function CreateWorldSettingFile:_parse_file(path)
 	end
 end
 
+-- Lines 114-116
 function CreateWorldSettingFile:on_cancel()
 	self:end_modal()
 end

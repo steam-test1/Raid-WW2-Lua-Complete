@@ -5,6 +5,7 @@ core:import("CoreColorPickerPanel")
 
 TemplateMixerDummy = TemplateMixerDummy or class()
 
+-- Lines 8-29
 function TemplateMixerDummy:init(editor, ...)
 	self._editor = editor
 	self._args = {
@@ -30,14 +31,17 @@ function TemplateMixerDummy:init(editor, ...)
 	self._editor:reg_mixer(self)
 end
 
+-- Lines 31-33
 function TemplateMixerDummy:get_value()
 	return self._val
 end
 
+-- Lines 35-37
 function TemplateMixerDummy:set_value(v)
 	self._val = v
 end
 
+-- Lines 39-68
 function TemplateMixerDummy:update_mix(env1, env2, blend)
 	local p1, p2 = nil
 
@@ -70,6 +74,7 @@ function TemplateMixerDummy:update_mix(env1, env2, blend)
 	end
 end
 
+-- Lines 70-74
 function TemplateMixerDummy:args()
 	local v = {
 		unpack(self._args)
@@ -83,6 +88,7 @@ end
 FormulaMixerDummy = FormulaMixerDummy or class()
 FormulaMixerDummy.STD_TOL = 0.01
 
+-- Lines 82-91
 function FormulaMixerDummy:init(editor, master, tol, formula, ...)
 	self._editor = editor
 	self._master = master
@@ -96,14 +102,17 @@ function FormulaMixerDummy:init(editor, master, tol, formula, ...)
 	self._editor:add_updator(self)
 end
 
+-- Lines 93-95
 function FormulaMixerDummy:get_value()
 	return self._value
 end
 
+-- Lines 97-99
 function FormulaMixerDummy:set_value(v)
 	self._value = v
 end
 
+-- Lines 101-111
 function FormulaMixerDummy:update(t, dt)
 	local value = self._formula(self._master:get_value(), unpack(self._params))
 	local t = type(value)
@@ -115,20 +124,24 @@ end
 
 DummyWidget = DummyWidget or class()
 
+-- Lines 117-119
 function DummyWidget:init(t)
 	self._val = t
 end
 
+-- Lines 121-123
 function DummyWidget:get_value()
 	return self._val
 end
 
+-- Lines 125-127
 function DummyWidget:set_value(v)
 	self._val = v
 end
 
 Vector2Slider = Vector2Slider or class()
 
+-- Lines 133-204
 function Vector2Slider:init(editor, p, name, picker_bottom, picker_top, min, max, scale, display_scale)
 	self._scale = scale
 	self._editor = editor
@@ -199,39 +212,47 @@ function Vector2Slider:init(editor, p, name, picker_bottom, picker_top, min, max
 	self._box:add(self._slider_g_box, 1, 0, "EXPAND")
 end
 
+-- Lines 206-209
 function Vector2Slider:on_slider_changed()
 	self:set_text()
 	self._editor:value_is_changed()
 end
 
+-- Lines 211-213
 function Vector2Slider:on_slider()
 	self:set_text()
 end
 
+-- Lines 215-218
 function Vector2Slider:on_pick_top_depth_button()
 	self._editor._update_pick_element = self
 	self._editor._update_pick_element_type = "depth_x"
 end
 
+-- Lines 220-223
 function Vector2Slider:on_pick_top_height_button()
 	self._editor._update_pick_element = self
 	self._editor._update_pick_element_type = "height_x"
 end
 
+-- Lines 225-228
 function Vector2Slider:on_pick_bottom_depth_button()
 	self._editor._update_pick_element = self
 	self._editor._update_pick_element_type = "depth_y"
 end
 
+-- Lines 230-233
 function Vector2Slider:on_pick_bottom_height_button()
 	self._editor._update_pick_element = self
 	self._editor._update_pick_element_type = "height_y"
 end
 
+-- Lines 235-237
 function Vector2Slider:get_value()
 	return Vector3(self._slider_r:get_value() / self._scale, self._slider_g:get_value() / self._scale, 0)
 end
 
+-- Lines 239-252
 function Vector2Slider:on_update_textctrl()
 	local r = tonumber(self._slider_r_textctrl:get_value())
 
@@ -249,11 +270,13 @@ function Vector2Slider:on_update_textctrl()
 	self._editor:value_is_changed()
 end
 
+-- Lines 254-257
 function Vector2Slider:set_text()
 	self._slider_r_textctrl:set_value(tostring(self._slider_r:get_value() / self._display_scale))
 	self._slider_g_textctrl:set_value(tostring(self._slider_g:get_value() / self._display_scale))
 end
 
+-- Lines 259-263
 function Vector2Slider:set_value(v)
 	self._slider_r:set_value(v.x * self._scale)
 	self._slider_g:set_value(v.y * self._scale)
@@ -262,6 +285,7 @@ end
 
 DBDropdown = DBDropdown or class()
 
+-- Lines 269-289
 function DBDropdown:init(editor, p, name, db_key)
 	self._editor = editor
 	self._name = name
@@ -280,6 +304,7 @@ function DBDropdown:init(editor, p, name, db_key)
 	self._box:add(self._value_box, 1, 0, "EXPAND")
 end
 
+-- Lines 291-301
 function DBDropdown:append_values()
 	local value = nil
 
@@ -294,14 +319,17 @@ function DBDropdown:append_values()
 	end
 end
 
+-- Lines 303-305
 function DBDropdown:get_value()
 	return "#" .. self._db_key .. "#" .. self._combobox:get_value()
 end
 
+-- Lines 307-309
 function DBDropdown:on_combobox_changed()
 	self._editor:value_is_changed()
 end
 
+-- Lines 311-327
 function DBDropdown:set_value(v)
 	if type(v) == "string" then
 		local str = string.sub(v, 2)
@@ -325,6 +353,7 @@ end
 
 SingelSlider = SingelSlider or class()
 
+-- Lines 333-382
 function SingelSlider:init(editor, p, name, picker, min, max, scale, display_scale, picky)
 	self._scale = scale
 	self._editor = editor
@@ -377,6 +406,7 @@ function SingelSlider:init(editor, p, name, picker, min, max, scale, display_sca
 	self:set_text()
 end
 
+-- Lines 384-390
 function SingelSlider:get_value()
 	if self._chackbox:get_value() then
 		return self._min
@@ -385,21 +415,25 @@ function SingelSlider:get_value()
 	end
 end
 
+-- Lines 392-395
 function SingelSlider:on_pick_depth_button()
 	self._editor._update_pick_element = self
 	self._editor._update_pick_element_type = "depth"
 end
 
+-- Lines 397-400
 function SingelSlider:on_pick_height_button()
 	self._editor._update_pick_element = self
 	self._editor._update_pick_element_type = "height"
 end
 
+-- Lines 402-405
 function SingelSlider:on_slider_changed()
 	self:set_text()
 	self._editor:value_is_changed()
 end
 
+-- Lines 407-412
 function SingelSlider:on_slider()
 	if self._picky then
 		self._editor:value_is_changed()
@@ -408,6 +442,7 @@ function SingelSlider:on_slider()
 	self:set_text()
 end
 
+-- Lines 414-422
 function SingelSlider:on_update_textctrl()
 	local n = tonumber(self._slider_textctrl:get_value())
 
@@ -419,10 +454,12 @@ function SingelSlider:on_update_textctrl()
 	self._editor:value_is_changed()
 end
 
+-- Lines 424-426
 function SingelSlider:set_text()
 	self._slider_textctrl:set_value(tostring(self._slider:get_value() / self._display_scale))
 end
 
+-- Lines 428-431
 function SingelSlider:set_value(v)
 	self._slider:set_value(v * self._scale)
 	self:set_text()
@@ -430,6 +467,7 @@ end
 
 EnvironmentEditorEnvMixer = EnvironmentEditorEnvMixer or class()
 
+-- Lines 437-455
 function EnvironmentEditorEnvMixer:init(editor, p, name)
 	self._editor = editor
 	self._name = name
@@ -448,15 +486,18 @@ function EnvironmentEditorEnvMixer:init(editor, p, name)
 	end
 end
 
+-- Lines 457-459
 function EnvironmentEditorEnvMixer:get_value()
 	return tostring(self._slider:get_value() / self._editor.MIX_MUL) .. " " .. self._name_str
 end
 
+-- Lines 461-464
 function EnvironmentEditorEnvMixer:on_slider_changed()
 	self._editor:value_is_changed()
 	self:on_slider_change()
 end
 
+-- Lines 466-485
 function EnvironmentEditorEnvMixer:on_slider_change()
 	local val = self._slider:get_value() / self._editor.MIX_MUL
 	local fval = math.floor(val)
@@ -477,16 +518,19 @@ function EnvironmentEditorEnvMixer:on_slider_change()
 	self._editor:update_mix(env1, env2, blend)
 end
 
+-- Lines 487-489
 function EnvironmentEditorEnvMixer:update_tool_tip(env1, env2, blend)
 	self._slider:set_tool_tip(string.format("%.1f", tostring(1 - blend)) .. "% " .. env1 .. " - " .. string.format("%.1f", tostring(blend)) .. "% " .. env2)
 end
 
+-- Lines 491-493
 function EnvironmentEditorEnvMixer:set_value(v)
 	self._slider:set_value(tonumber(string.match(v, "[%w_.]+")) * self._editor.MIX_MUL)
 end
 
 RgbBox = RgbBox or class()
 
+-- Lines 499-572
 function RgbBox:init(editor, p, name)
 	self._editor = editor
 	self._box = EWS:StaticBoxSizer(p, "VERTICAL", name)
@@ -550,15 +594,18 @@ function RgbBox:init(editor, p, name)
 	self._color_dialog = EWS:ColourDialog(p, true, self:get_value())
 end
 
+-- Lines 574-577
 function RgbBox:on_slider_changed()
 	self:set_value(Vector3(self._slider_r:get_value() / 255, self._slider_g:get_value() / 255, self._slider_b:get_value() / 255))
 	self._editor:value_is_changed()
 end
 
+-- Lines 579-581
 function RgbBox:on_slider()
 	self:set_value(Vector3(self._slider_r:get_value() / 255, self._slider_g:get_value() / 255, self._slider_b:get_value() / 255))
 end
 
+-- Lines 583-589
 function RgbBox:on_color_button()
 	if self._color_dialog:show_modal() then
 		self:set_value(self._color_dialog:get_colour())
@@ -567,11 +614,13 @@ function RgbBox:on_color_button()
 	end
 end
 
+-- Lines 591-594
 function RgbBox:on_pick_button()
 	self._editor._update_pick_element = self
 	self._editor._update_pick_element_type = "color"
 end
 
+-- Lines 596-614
 function RgbBox:on_update_textctrl()
 	local r = tonumber(self._slider_r_textctrl:get_value())
 
@@ -595,16 +644,19 @@ function RgbBox:on_update_textctrl()
 	self._editor:value_is_changed()
 end
 
+-- Lines 616-618
 function RgbBox:get_value()
 	return self._color
 end
 
+-- Lines 620-624
 function RgbBox:set_text()
 	self._slider_r_textctrl:set_value(tostring(self._color.x * 255))
 	self._slider_g_textctrl:set_value(tostring(self._color.y * 255))
 	self._slider_b_textctrl:set_value(tostring(self._color.z * 255))
 end
 
+-- Lines 626-633
 function RgbBox:set_value(v)
 	self._color = v
 
@@ -617,6 +669,7 @@ end
 
 EnvEdColorBox = EnvEdColorBox or class()
 
+-- Lines 639-650
 function EnvEdColorBox:init(editor, p, name, no_value)
 	self._editor = editor
 	self._box = EWS:StaticBoxSizer(p, "VERTICAL", name)
@@ -630,22 +683,27 @@ function EnvEdColorBox:init(editor, p, name, no_value)
 	self._color = Vector3(0, 0, 0)
 end
 
+-- Lines 652-654
 function EnvEdColorBox:update(t, dt)
 	self._picker_panel:update(t, dt)
 end
 
+-- Lines 656-658
 function EnvEdColorBox:on_changed(sender, color)
 	self._color = Vector3(color.r, color.g, color.b)
 end
 
+-- Lines 660-662
 function EnvEdColorBox:on_leftup()
 	self._editor:value_is_changed()
 end
 
+-- Lines 664-666
 function EnvEdColorBox:get_value()
 	return self._color
 end
 
+-- Lines 668-671
 function EnvEdColorBox:set_value(v)
 	self._color = v
 
@@ -654,6 +712,7 @@ end
 
 EnvEdEditBox = EnvEdEditBox or class()
 
+-- Lines 677-686
 function EnvEdEditBox:init(editor, p, name, no_value)
 	self._editor = editor
 	self._box = EWS:StaticBoxSizer(p, "VERTICAL", name)
@@ -664,16 +723,19 @@ function EnvEdEditBox:init(editor, p, name, no_value)
 	self._box:add(self._textctrl, 0, 0, "EXPAND")
 end
 
+-- Lines 688-691
 function EnvEdEditBox:text_changed()
 	self._value = self._textctrl:get_value()
 
 	self._editor:value_is_changed()
 end
 
+-- Lines 693-695
 function EnvEdEditBox:get_value()
 	return self._value
 end
 
+-- Lines 697-700
 function EnvEdEditBox:set_value(value)
 	self._value = value
 
@@ -682,6 +744,7 @@ end
 
 PathBox = PathBox or class()
 
+-- Lines 706-726
 function PathBox:init(editor, p, name)
 	self._editor = editor
 	self._box = EWS:StaticBoxSizer(p, "VERTICAL", name)
@@ -700,6 +763,7 @@ function PathBox:init(editor, p, name)
 	self._path_dialog = EWS:FileDialog(p, "Sky Scene", managers.database:base_path(), "", "Scene files (*.scene)|*.scene", "OPEN,FILE_MUST_EXIST")
 end
 
+-- Lines 728-734
 function PathBox:on_path_button()
 	if self._path_dialog:show_modal() then
 		local dialog_path = self._path_dialog:get_path()
@@ -709,10 +773,12 @@ function PathBox:on_path_button()
 	end
 end
 
+-- Lines 736-738
 function PathBox:get_value()
 	return self._path
 end
 
+-- Lines 740-743
 function PathBox:set_value(v)
 	self._path = v
 
@@ -721,6 +787,7 @@ end
 
 DBPickDialog = DBPickDialog or class()
 
+-- Lines 749-774
 function DBPickDialog:init(editor, p, name, pick_type)
 	self._editor = editor
 	self._parent = p
@@ -745,6 +812,7 @@ function DBPickDialog:init(editor, p, name, pick_type)
 	self._pick_type = pick_type or ""
 end
 
+-- Lines 776-781
 function DBPickDialog:on_path_button()
 	local path = managers.database:open_file_dialog(self._parent, "Textures (*.dds)|*.dds")
 
@@ -753,10 +821,12 @@ function DBPickDialog:on_path_button()
 	end
 end
 
+-- Lines 783-785
 function DBPickDialog:get_value()
 	return self._path
 end
 
+-- Lines 787-790
 function DBPickDialog:set_value(v)
 	self._path = v
 
@@ -765,6 +835,7 @@ end
 
 CustomCheckBox = CustomCheckBox or class()
 
+-- Lines 796-803
 function CustomCheckBox:init(editor, p, text)
 	self._editor = editor
 	self._box = EWS:StaticBoxSizer(p, "HORIZONTAL", "")
@@ -774,10 +845,12 @@ function CustomCheckBox:init(editor, p, text)
 	self._box:add(self._check_box, 1, 0, "EXPAND")
 end
 
+-- Lines 805-807
 function CustomCheckBox:on_checkbox()
 	self._editor:value_is_changed()
 end
 
+-- Lines 809-816
 function CustomCheckBox:get_value()
 	local v = self._check_box:get_value()
 
@@ -788,12 +861,14 @@ function CustomCheckBox:get_value()
 	end
 end
 
+-- Lines 818-820
 function CustomCheckBox:set_value(v)
 	self._check_box:set_value(v > 0)
 end
 
 ConnectDialog = ConnectDialog or class()
 
+-- Lines 826-856
 function ConnectDialog:init(p)
 	self._dialog = EWS:Dialog(p, "Connect Client", "", Vector3(0, 0, 0), Vector3(300, 75, 0), "CAPTION,SYSTEM_MENU")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -825,6 +900,7 @@ function ConnectDialog:init(p)
 	self._dialog:set_sizer(box)
 end
 
+-- Lines 858-867
 function ConnectDialog:show_modal()
 	self._done = false
 	self._return_val = true
@@ -837,12 +913,14 @@ function ConnectDialog:show_modal()
 	return self._return_val
 end
 
+-- Lines 869-872
 function ConnectDialog:on_connect_button()
 	self._done = true
 
 	self._dialog:end_modal("")
 end
 
+-- Lines 874-878
 function ConnectDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -850,10 +928,12 @@ function ConnectDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
+-- Lines 880-882
 function ConnectDialog:get_ip()
 	return self._text_ctrl:get_value()
 end
 
+-- Lines 884-886
 function ConnectDialog:get_port()
 	return tonumber(self._port_text_ctrl:get_value())
 end

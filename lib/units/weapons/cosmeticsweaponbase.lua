@@ -2,12 +2,14 @@ local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec3 = Vector3()
 
+-- Lines 23-26
 function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	self:set_cosmetics_data(cosmetics)
 	self:_apply_cosmetics(async_clbk or function ()
 	end)
 end
 
+-- Lines 29-45
 function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	print("NewRaycastWeaponBase:set_cosmetics_data", "cosmetics_id", cosmetics and cosmetics.id or "NONE")
 
@@ -26,22 +28,27 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	self._cosmetics_data = self._cosmetics_id and tweak_data.blackmarket.weapon_skins[self._cosmetics_id]
 end
 
+-- Lines 47-49
 function NewRaycastWeaponBase:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
+-- Lines 51-53
 function NewRaycastWeaponBase:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
+-- Lines 55-57
 function NewRaycastWeaponBase:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
+-- Lines 59-61
 function NewRaycastWeaponBase:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
+-- Lines 63-90
 function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_material_config)
 	if self:is_npc() then
 		if use_cc_material_config and tweak_data.weapon.factory.parts[part_id].cc_thq_material_config then
@@ -65,6 +72,7 @@ function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_m
 	return Idstring(unit_name .. "_cc")
 end
 
+-- Lines 92-143
 function NewRaycastWeaponBase:_update_materials()
 	if not self._parts then
 		return
@@ -144,6 +152,7 @@ local material_variables = {
 	wear_and_tear = Application:production_build() and "wear_tear_value" or nil
 }
 
+-- Lines 168-257
 function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	self:_update_materials()
 
@@ -219,6 +228,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	self:_chk_load_complete(async_clbk)
 end
 
+-- Lines 259-270
 function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -233,6 +243,7 @@ function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
+-- Lines 272-297
 function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -251,6 +262,7 @@ function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	end
 end
 
+-- Lines 299-326
 function NewRaycastWeaponBase:_set_material_textures()
 	local cosmetics_data = self:get_cosmetics_data()
 

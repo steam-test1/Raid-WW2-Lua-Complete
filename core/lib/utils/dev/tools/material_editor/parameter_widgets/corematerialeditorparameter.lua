@@ -2,6 +2,7 @@ require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 
 local CoreMaterialEditorParameter = CoreMaterialEditorParameter or class()
 
+-- Lines 7-43
 function CoreMaterialEditorParameter:init(parent, editor, parameter_info, parameter_node)
 	self:set_params(parent, editor, parameter_info, parameter_node)
 
@@ -41,6 +42,7 @@ function CoreMaterialEditorParameter:init(parent, editor, parameter_info, parame
 	self._editor:_update_output()
 end
 
+-- Lines 45-69
 function CoreMaterialEditorParameter:set_params(parent, editor, parameter_info, parameter_node)
 	self._parent = parent
 	self._editor = editor
@@ -69,6 +71,7 @@ function CoreMaterialEditorParameter:set_params(parent, editor, parameter_info, 
 	end
 end
 
+-- Lines 71-85
 function CoreMaterialEditorParameter:on_copy_to_parent()
 	if self._editor._parent_combo_box:get_value() ~= "[NONE]" then
 		self:_copy_to_parent()
@@ -87,33 +90,41 @@ function CoreMaterialEditorParameter:on_copy_to_parent()
 	self._editor:_create_parameter_panel()
 end
 
+-- Lines 87-89
 function CoreMaterialEditorParameter:update_live()
 	self._editor:live_update_parameter(self._parameter_info.name:s(), self._parameter_info.type, self._parameter_info.ui_type:s(), self._value)
 end
 
+-- Lines 91-93
 function CoreMaterialEditorParameter:update(t, dt)
 end
 
+-- Lines 95-97
 function CoreMaterialEditorParameter:destroy()
 	self._panel:destroy()
 end
 
+-- Lines 99-101
 function CoreMaterialEditorParameter:panel()
 	return self._panel
 end
 
+-- Lines 103-105
 function CoreMaterialEditorParameter:get_value()
 	return self._value
 end
 
+-- Lines 107-109
 function CoreMaterialEditorParameter:to_slider_range(v, min, step)
 	return (v - min) / step
 end
 
+-- Lines 111-113
 function CoreMaterialEditorParameter:from_slider_range(v, min, step)
 	return v * step + min
 end
 
+-- Lines 117-139
 function CoreMaterialEditorParameter:_create_node()
 	if self._parameter_info.type == "vector3" then
 		self._parameter_node = self._editor._current_material_node:make_child("variable")
@@ -142,6 +153,7 @@ function CoreMaterialEditorParameter:_create_node()
 	end
 end
 
+-- Lines 141-180
 function CoreMaterialEditorParameter:_load_value()
 	if self._editor._current_material_node:parameter("src") and not self._customize then
 		self._node = self._parent_param_node
@@ -179,6 +191,7 @@ function CoreMaterialEditorParameter:_load_value()
 	end
 end
 
+-- Lines 182-220
 function CoreMaterialEditorParameter:_copy_to_parent(name)
 	local material_node = nil
 

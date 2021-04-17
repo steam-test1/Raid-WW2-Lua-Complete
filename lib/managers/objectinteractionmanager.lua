@@ -1,6 +1,7 @@
 ObjectInteractionManager = ObjectInteractionManager or class()
 ObjectInteractionManager.FRAMES_TO_COMPLETE = 15
 
+-- Lines 4-18
 function ObjectInteractionManager:init()
 	self._interactive_units = {}
 	self._interactive_count = 0
@@ -13,6 +14,7 @@ function ObjectInteractionManager:init()
 	self._slotmask_interaction_obstruction = managers.slot:get_mask("interaction_obstruction")
 end
 
+-- Lines 20-28
 function ObjectInteractionManager:update(t, dt)
 	local player_unit = managers.player:player_unit()
 
@@ -23,6 +25,7 @@ function ObjectInteractionManager:update(t, dt)
 	end
 end
 
+-- Lines 32-43
 function ObjectInteractionManager:interact(player)
 	if alive(self._active_unit) then
 		local interacted, timer = self._active_unit:interaction():interact_start(player, self._active_locator)
@@ -37,6 +40,7 @@ function ObjectInteractionManager:interact(player)
 	return false
 end
 
+-- Lines 47-52
 function ObjectInteractionManager:end_action_interact(player)
 	self._active_object_locked_data = nil
 
@@ -45,19 +49,23 @@ function ObjectInteractionManager:end_action_interact(player)
 	end
 end
 
+-- Lines 56-58
 function ObjectInteractionManager:interupt_action_interact()
 	self._active_object_locked_data = nil
 end
 
+-- Lines 62-64
 function ObjectInteractionManager:active_unit()
 	return self._active_unit
 end
 
+-- Lines 68-71
 function ObjectInteractionManager:deactivate_unit()
 	self._active_unit = nil
 	self._current_dot = 0
 end
 
+-- Lines 75-80
 function ObjectInteractionManager:add_unit(unit)
 	table.insert(self._interactive_units, unit)
 
@@ -65,6 +73,7 @@ function ObjectInteractionManager:add_unit(unit)
 	self._close_freq = math.max(1, math.floor(#self._interactive_units / self.FRAMES_TO_COMPLETE))
 end
 
+-- Lines 84-103
 function ObjectInteractionManager:remove_unit(unit)
 	for k, v in pairs(self._interactive_units) do
 		if v == unit then
@@ -91,6 +100,7 @@ end
 local mvec1 = Vector3()
 local index_table = {}
 
+-- Lines 107-325
 function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 	local mvec3_dis = mvector3.distance
 
@@ -263,6 +273,7 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 	end
 end
 
+-- Lines 327-334
 function ObjectInteractionManager:_hide_bracket_indicator(unit)
 	if unit and alive(unit) then
 		local bracket_locator = unit:get_object(Idstring("g_bracket"))
@@ -275,6 +286,7 @@ end
 
 local m_obj_pos = Vector3()
 
+-- Lines 340-386
 function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	if locator then
 		local obstructed = World:raycast("ray", locator:position(), camera_pos, "ray_type", "bag body", "slot_mask", self._slotmask_interaction_obstruction, "report")
@@ -309,6 +321,7 @@ function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	return false
 end
 
+-- Lines 388-397
 function ObjectInteractionManager:_in_close_list(unit)
 	if #self._close_units > 0 then
 		for k, v in pairs(self._close_units) do

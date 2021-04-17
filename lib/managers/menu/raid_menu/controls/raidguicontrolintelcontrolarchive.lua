@@ -1,5 +1,6 @@
 RaidGUIControlIntelControlArchive = RaidGUIControlIntelControlArchive or class(RaidGUIControl)
 
+-- Lines 3-26
 function RaidGUIControlIntelControlArchive:init(parent, params)
 	RaidGUIControlIntelControlArchive.super.init(self, parent, params)
 	managers.raid_menu:register_on_escape_callback(callback(self, self, "on_escape"))
@@ -23,6 +24,7 @@ function RaidGUIControlIntelControlArchive:init(parent, params)
 	self._disable_input_timer = 0
 end
 
+-- Lines 28-48
 function RaidGUIControlIntelControlArchive:_layout()
 	self._bg_image = self._object:bitmap({
 		y = 0,
@@ -71,6 +73,7 @@ function RaidGUIControlIntelControlArchive:_layout()
 	})
 end
 
+-- Lines 50-74
 function RaidGUIControlIntelControlArchive:set_data(item_value)
 	self._data = tweak_data.intel:get_item_data(self._category_name, item_value)
 
@@ -89,16 +92,19 @@ function RaidGUIControlIntelControlArchive:set_data(item_value)
 	self._play_icon:set_visible(true)
 end
 
+-- Lines 76-78
 function RaidGUIControlIntelControlArchive:get_data()
 	return self._data
 end
 
+-- Lines 80-85
 function RaidGUIControlIntelControlArchive:mouse_released(o, button, x, y)
 	if self._play_panel and self._play_panel:inside(x, y) and (not self._disable_input_timer or self._disable_input_timer and self._disable_input_timer == 0) then
 		self:_play_video()
 	end
 end
 
+-- Lines 87-105
 function RaidGUIControlIntelControlArchive:mouse_moved(o, x, y)
 	if self:inside(x, y) then
 		if self._play_panel:inside(x, y) and not self._play_panel_inside then
@@ -119,6 +125,7 @@ function RaidGUIControlIntelControlArchive:mouse_moved(o, x, y)
 	return false
 end
 
+-- Lines 107-135
 function RaidGUIControlIntelControlArchive:update(t, dt)
 	if self._control_video and (self:is_playing() and self:is_skipped() or not self:is_playing()) then
 		self._control_video:destroy()
@@ -144,6 +151,7 @@ function RaidGUIControlIntelControlArchive:update(t, dt)
 	end
 end
 
+-- Lines 137-151
 function RaidGUIControlIntelControlArchive:close()
 	if self._control_video and self._panel then
 		self._control_video:destroy()
@@ -159,12 +167,14 @@ function RaidGUIControlIntelControlArchive:close()
 	end
 end
 
+-- Lines 153-158
 function RaidGUIControlIntelControlArchive:on_escape()
 	if self:is_playing() then
 		return true
 	end
 end
 
+-- Lines 160-233
 function RaidGUIControlIntelControlArchive:_animate_play_button()
 	local duration = 0.1
 	local t = 0
@@ -227,6 +237,7 @@ function RaidGUIControlIntelControlArchive:_animate_play_button()
 	self._play_icon:set_center_y(original_height / 2)
 end
 
+-- Lines 238-245
 function RaidGUIControlIntelControlArchive:play_video()
 	if not self:is_playing() then
 		self._disable_input_timer = 0.1
@@ -235,6 +246,7 @@ function RaidGUIControlIntelControlArchive:play_video()
 	end
 end
 
+-- Lines 247-302
 function RaidGUIControlIntelControlArchive:_play_video()
 	local gui = Overlay:gui()
 	self._full_workspace = gui:create_screen_workspace()
@@ -285,10 +297,12 @@ function RaidGUIControlIntelControlArchive:_play_video()
 	press_any_key_prompt:animate(callback(self, self, "_animate_show_press_any_key_prompt"))
 end
 
+-- Lines 304-306
 function RaidGUIControlIntelControlArchive:is_playing()
 	return self._control_video and self._control_video:loop_count() < 1
 end
 
+-- Lines 308-321
 function RaidGUIControlIntelControlArchive:is_skipped()
 	if self._disable_input_timer > 0 then
 		return
@@ -303,6 +317,7 @@ function RaidGUIControlIntelControlArchive:is_skipped()
 	return false
 end
 
+-- Lines 323-338
 function RaidGUIControlIntelControlArchive:_animate_show_press_any_key_prompt(prompt)
 	local duration = 0.7
 	local t = 0
@@ -320,6 +335,7 @@ function RaidGUIControlIntelControlArchive:_animate_show_press_any_key_prompt(pr
 	prompt:set_alpha(0.75)
 end
 
+-- Lines 340-373
 function RaidGUIControlIntelControlArchive:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
@@ -358,6 +374,7 @@ function RaidGUIControlIntelControlArchive:_animate_change_press_any_key_prompt(
 	prompt:set_alpha(0.75)
 end
 
+-- Lines 375-382
 function RaidGUIControlIntelControlArchive:on_controller_hotswap()
 	local press_any_key_prompt = self._safe_panel:child("press_any_key_prompt")
 
@@ -367,6 +384,7 @@ function RaidGUIControlIntelControlArchive:on_controller_hotswap()
 	end
 end
 
+-- Lines 384-387
 function RaidGUIControlIntelControlArchive:confirm_pressed()
 	return true
 end

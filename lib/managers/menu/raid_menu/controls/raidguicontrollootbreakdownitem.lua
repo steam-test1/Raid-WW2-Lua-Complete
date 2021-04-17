@@ -13,6 +13,7 @@ RaidGUIControlLootBreakdownItem.TITLE_COLOR = tweak_data.gui.colors.raid_grey_ef
 RaidGUIControlLootBreakdownItem.TEXT_PANEL_H = 96
 RaidGUIControlLootBreakdownItem.COLOR_EMPTY = tweak_data.gui.colors.raid_red
 
+-- Lines 21-40
 function RaidGUIControlLootBreakdownItem:init(parent, params)
 	RaidGUIControlLootBreakdownItem.super.init(self, parent, params)
 
@@ -33,16 +34,19 @@ function RaidGUIControlLootBreakdownItem:init(parent, params)
 	self:_refresh_layout()
 end
 
+-- Lines 42-44
 function RaidGUIControlLootBreakdownItem:acquired()
 	return self._acquired
 end
 
+-- Lines 46-49
 function RaidGUIControlLootBreakdownItem:add_points(amount)
 	self._current = self._current + amount
 
 	self:_refresh_counter()
 end
 
+-- Lines 51-57
 function RaidGUIControlLootBreakdownItem:add_point(duration)
 	self._icon:animate(callback(self, self, "_add_point"), duration)
 
@@ -51,6 +55,7 @@ function RaidGUIControlLootBreakdownItem:add_point(duration)
 	self:_refresh_counter()
 end
 
+-- Lines 59-88
 function RaidGUIControlLootBreakdownItem:_add_point(main_icon, duration)
 	local t = 0
 	local y_move = 160
@@ -83,6 +88,7 @@ function RaidGUIControlLootBreakdownItem:_add_point(main_icon, duration)
 	self._object:remove(icon)
 end
 
+-- Lines 90-97
 function RaidGUIControlLootBreakdownItem:_create_panel()
 	local panel_params = {
 		name = "loot_breakdown_item",
@@ -92,6 +98,7 @@ function RaidGUIControlLootBreakdownItem:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 99-107
 function RaidGUIControlLootBreakdownItem:_create_icon()
 	local icon_params = {
 		name = "loot_item_icon",
@@ -103,6 +110,7 @@ function RaidGUIControlLootBreakdownItem:_create_icon()
 	self._icon:set_center_y(RaidGUIControlLootBreakdownItem.TOP_PART_H / 2)
 end
 
+-- Lines 109-116
 function RaidGUIControlLootBreakdownItem:_create_text_panel()
 	local text_panel_params = {
 		name = "text_panel",
@@ -113,6 +121,7 @@ function RaidGUIControlLootBreakdownItem:_create_text_panel()
 	self._text_panel:set_center_y(RaidGUIControlLootBreakdownItem.TOP_PART_H / 2)
 end
 
+-- Lines 118-131
 function RaidGUIControlLootBreakdownItem:_create_counter()
 	local counter_params = {
 		vertical = "center",
@@ -131,6 +140,7 @@ function RaidGUIControlLootBreakdownItem:_create_counter()
 	self:_refresh_counter()
 end
 
+-- Lines 133-141
 function RaidGUIControlLootBreakdownItem:_refresh_counter()
 	local counter_text = tostring(self._current)
 
@@ -141,6 +151,7 @@ function RaidGUIControlLootBreakdownItem:_refresh_counter()
 	self._counter:set_text(counter_text)
 end
 
+-- Lines 143-156
 function RaidGUIControlLootBreakdownItem:_create_title()
 	local title_params = {
 		name = "counter",
@@ -158,6 +169,7 @@ function RaidGUIControlLootBreakdownItem:_create_title()
 	self._title = self._text_panel:text(title_params)
 end
 
+-- Lines 158-176
 function RaidGUIControlLootBreakdownItem:_refresh_layout()
 	local _, _, counter_w, _ = self._counter:text_rect()
 	local _, _, title_w, _ = self._title:text_rect()
@@ -178,9 +190,11 @@ function RaidGUIControlLootBreakdownItem:_refresh_layout()
 	self._text_panel:set_x(math.floor(self._icon:center_x() + RaidGUIControlLootBreakdownItem.ICON_LAYOUT_W / 2))
 end
 
+-- Lines 178-179
 function RaidGUIControlLootBreakdownItem:close()
 end
 
+-- Lines 181-186
 function RaidGUIControlLootBreakdownItem:animate_icon()
 	self._animating_icon = true
 
@@ -188,6 +202,7 @@ function RaidGUIControlLootBreakdownItem:animate_icon()
 	self._icon:animate(callback(self, self, "_animate_icon"))
 end
 
+-- Lines 189-210
 function RaidGUIControlLootBreakdownItem:animate_show()
 	local duration = 0.7
 	local y_offset = 50
@@ -212,6 +227,7 @@ function RaidGUIControlLootBreakdownItem:animate_show()
 	self._object:set_y(0)
 end
 
+-- Lines 213-252
 function RaidGUIControlLootBreakdownItem:animate_empty()
 	local duration = 0.7
 	local t = 0
@@ -255,11 +271,13 @@ function RaidGUIControlLootBreakdownItem:animate_empty()
 	self._title:set_color(RaidGUIControlLootBreakdownItem.COLOR_EMPTY)
 end
 
+-- Lines 254-257
 function RaidGUIControlLootBreakdownItem:hide(delay)
 	self._title:stop()
 	self._title:animate(callback(self, self, "_animate_hide"), delay)
 end
 
+-- Lines 259-265
 function RaidGUIControlLootBreakdownItem:finalize()
 	self._object:set_alpha(1)
 	self._object:set_y(0)
@@ -269,11 +287,13 @@ function RaidGUIControlLootBreakdownItem:finalize()
 	self:_refresh_counter()
 end
 
+-- Lines 267-270
 function RaidGUIControlLootBreakdownItem:fade()
 	self._object:set_alpha(0.5)
 	self._icon:set_alpha(0.7)
 end
 
+-- Lines 272-278
 function RaidGUIControlLootBreakdownItem:check_state()
 	if self._acquired == 0 then
 		self._icon:set_color(RaidGUIControlLootBreakdownItem.COLOR_EMPTY)
@@ -282,6 +302,7 @@ function RaidGUIControlLootBreakdownItem:check_state()
 	end
 end
 
+-- Lines 280-299
 function RaidGUIControlLootBreakdownItem:_animate_hide(panel, delay)
 	local duration = 0.3
 	local t = 0
@@ -302,11 +323,13 @@ function RaidGUIControlLootBreakdownItem:_animate_hide(panel, delay)
 	self._object:set_alpha(0)
 end
 
+-- Lines 301-304
 function RaidGUIControlLootBreakdownItem:animate_move_right(offset)
 	self._counter:stop()
 	self._counter:animate(callback(self, self, "_animate_move_right"), offset)
 end
 
+-- Lines 306-331
 function RaidGUIControlLootBreakdownItem:_animate_move_right(panel, offset)
 	local duration = 0.8
 	local t = 0
@@ -335,10 +358,12 @@ function RaidGUIControlLootBreakdownItem:_animate_move_right(panel, offset)
 	self._object:set_x(initial_x_position + offset)
 end
 
+-- Lines 333-335
 function RaidGUIControlLootBreakdownItem:stop_animating_icon()
 	self._animating_icon = false
 end
 
+-- Lines 337-375
 function RaidGUIControlLootBreakdownItem:_animate_icon(icon)
 	local y_move = 160
 	local t = 0

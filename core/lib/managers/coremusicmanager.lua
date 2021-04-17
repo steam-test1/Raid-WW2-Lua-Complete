@@ -1,5 +1,6 @@
 CoreMusicManager = CoreMusicManager or class()
 
+-- Lines 3-59
 function CoreMusicManager:init()
 	if not Global.music_manager then
 		Global.music_manager = {
@@ -54,6 +55,7 @@ function CoreMusicManager:init()
 	self._external_media_playing = false
 end
 
+-- Lines 61-69
 function CoreMusicManager:init_finalize()
 	if SystemInfo:platform() == Idstring("X360") then
 		self._has_music_control = XboxLive:app_has_playback_control()
@@ -64,13 +66,16 @@ function CoreMusicManager:init_finalize()
 	end
 end
 
+-- Lines 71-72
 function CoreMusicManager:init_globals()
 end
 
+-- Lines 74-76
 function CoreMusicManager:music_tracks()
 	return {}
 end
 
+-- Lines 78-92
 function CoreMusicManager:post_event(name)
 	if not name then
 		return
@@ -88,28 +93,34 @@ function CoreMusicManager:post_event(name)
 	end
 end
 
+-- Lines 96-99
 function CoreMusicManager:stop()
 	Global.music_manager.source:stop()
 
 	Global.music_manager.current_event = nil
 end
 
+-- Lines 101-103
 function CoreMusicManager:music_paths()
 	return self._path_list
 end
 
+-- Lines 105-107
 function CoreMusicManager:music_events(path)
 	return self._event_map[path]
 end
 
+-- Lines 109-111
 function CoreMusicManager:music_events_list()
 	return self._event_list
 end
 
+-- Lines 113-115
 function CoreMusicManager:music_path(event)
 	return self._path_map[event]
 end
 
+-- Lines 118-125
 function CoreMusicManager:set_volume(volume)
 	Global.music_manager.volume = volume
 
@@ -120,6 +131,7 @@ function CoreMusicManager:set_volume(volume)
 	end
 end
 
+-- Lines 128-137
 function CoreMusicManager:clbk_game_has_music_control(status)
 	print("[CoreMusicManager:clbk_game_has_music_control]", status)
 
@@ -132,10 +144,12 @@ function CoreMusicManager:clbk_game_has_music_control(status)
 	self._has_music_control = status
 end
 
+-- Lines 139-141
 function CoreMusicManager:has_music_control()
 	return self._has_music_control
 end
 
+-- Lines 144-154
 function CoreMusicManager:save(data)
 	local state = {}
 
@@ -147,6 +161,7 @@ function CoreMusicManager:save(data)
 	data.CoreMusicManager = state
 end
 
+-- Lines 156-163
 function CoreMusicManager:load(data)
 	local state = data.CoreMusicManager
 

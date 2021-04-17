@@ -37,6 +37,7 @@ CopActionShoot._ik_presets = {
 	}
 }
 
+-- Lines 42-104
 function CopActionShoot:init(action_desc, common_data)
 	self._common_data = common_data
 	local t = TimerManager:game():time()
@@ -98,6 +99,7 @@ function CopActionShoot:init(action_desc, common_data)
 	return true
 end
 
+-- Lines 108-151
 function CopActionShoot:on_inventory_event(event)
 	if self._weapon_unit and self._autofiring then
 		self._weapon_base:stop_autofire()
@@ -147,6 +149,7 @@ function CopActionShoot:on_inventory_event(event)
 	end
 end
 
+-- Lines 155-229
 function CopActionShoot:on_attention(attention, old_attention)
 	if self._shooting_player and old_attention and alive(old_attention.unit) then
 		old_attention.unit:movement():on_targetted_for_attack(false, self._common_data.unit)
@@ -232,11 +235,13 @@ function CopActionShoot:on_attention(attention, old_attention)
 	self._attention = attention
 end
 
+-- Lines 233-236
 function CopActionShoot:save(save_data)
 	save_data.type = "shoot"
 	save_data.body_part = 3
 end
 
+-- Lines 240-260
 function CopActionShoot:on_exit()
 	if Network:is_server() then
 		self._ext_movement:set_stance("hos")
@@ -263,6 +268,7 @@ function CopActionShoot:on_exit()
 	end
 end
 
+-- Lines 264-505
 function CopActionShoot:update(t)
 	local vis_state = self._ext_base:lod_stage()
 	vis_state = vis_state or 4
@@ -529,13 +535,16 @@ function CopActionShoot:update(t)
 	end
 end
 
+-- Lines 509-510
 function CopActionShoot:_upd_empty(t)
 end
 
+-- Lines 514-516
 function CopActionShoot:type()
 	return "shoot"
 end
 
+-- Lines 520-527
 function CopActionShoot:_get_shoot_falloff(target_dis, falloff)
 	for i_range, range_data in ipairs(falloff) do
 		if target_dis < range_data.r then
@@ -546,6 +555,7 @@ function CopActionShoot:_get_shoot_falloff(target_dis, falloff)
 	return falloff[#falloff], #falloff
 end
 
+-- Lines 529-542
 function CopActionShoot:_get_shoot_falloff_damage(falloff, target_dis, idx)
 	if idx == 1 then
 		return falloff[idx].dmg_mul
@@ -560,6 +570,7 @@ function CopActionShoot:_get_shoot_falloff_damage(falloff, target_dis, idx)
 	end
 end
 
+-- Lines 546-599
 function CopActionShoot:_get_unit_shoot_pos(t, pos, dis, w_tweak, falloff, i_range, shooting_local_player)
 	local shoot_hist = self._shoot_history
 	local focus_delay, focus_prog = nil
@@ -623,6 +634,7 @@ function CopActionShoot:_get_unit_shoot_pos(t, pos, dis, w_tweak, falloff, i_ran
 	end
 end
 
+-- Lines 603-618
 function CopActionShoot:on_death_drop()
 	if self._weapon_dropped then
 		return
@@ -643,6 +655,7 @@ function CopActionShoot:on_death_drop()
 	end
 end
 
+-- Lines 622-629
 function CopActionShoot:get_husk_interrupt_desc()
 	local old_action_desc = {
 		block_type = "action",
@@ -653,10 +666,12 @@ function CopActionShoot:get_husk_interrupt_desc()
 	return old_action_desc
 end
 
+-- Lines 633-635
 function CopActionShoot:need_upd()
 	return true
 end
 
+-- Lines 639-683
 function CopActionShoot:_get_transition_target_pos(shoot_from_pos, attention, t)
 	local transition = self._aim_transition
 
@@ -709,6 +724,7 @@ function CopActionShoot:_get_transition_target_pos(shoot_from_pos, attention, t)
 	return target_pos, target_vec, target_dis, autotarget
 end
 
+-- Lines 687-709
 function CopActionShoot:_get_target_pos(shoot_from_pos, attention)
 	local target_pos, target_vec, target_dis, autotarget = nil
 
@@ -738,6 +754,7 @@ function CopActionShoot:_get_target_pos(shoot_from_pos, attention)
 	return target_pos, target_vec, target_dis, autotarget
 end
 
+-- Lines 713-719
 function CopActionShoot:set_ik_preset(preset_name)
 	self[self._ik_preset.stop](self)
 
@@ -747,6 +764,7 @@ function CopActionShoot:set_ik_preset(preset_name)
 	self[preset_data.start](self)
 end
 
+-- Lines 723-734
 function CopActionShoot:_begin_ik_spine()
 	if self._modifier then
 		return
@@ -761,6 +779,7 @@ function CopActionShoot:_begin_ik_spine()
 	self._mod_enable_t = nil
 end
 
+-- Lines 738-747
 function CopActionShoot:_stop_ik_spine()
 	if not self._modifier then
 		return
@@ -773,6 +792,7 @@ function CopActionShoot:_stop_ik_spine()
 	self._modifier_on = nil
 end
 
+-- Lines 751-771
 function CopActionShoot:_upd_ik_spine(target_vec, fwd_dot, t)
 	if fwd_dot > 0.5 then
 		if not self._modifier_on then
@@ -798,10 +818,12 @@ function CopActionShoot:_upd_ik_spine(target_vec, fwd_dot, t)
 	end
 end
 
+-- Lines 775-777
 function CopActionShoot:_get_blend_ik_spine()
 	return self._modifier:blend()
 end
 
+-- Lines 781-794
 function CopActionShoot:_begin_ik_r_arm()
 	if self._head_modifier then
 		return
@@ -817,6 +839,7 @@ function CopActionShoot:_begin_ik_r_arm()
 	self:_set_ik_updator("_upd_ik_r_arm")
 end
 
+-- Lines 798-809
 function CopActionShoot:_stop_ik_r_arm()
 	if not self._head_modifier then
 		return
@@ -832,6 +855,7 @@ function CopActionShoot:_stop_ik_r_arm()
 	self._modifier_on = nil
 end
 
+-- Lines 813-836
 function CopActionShoot:_upd_ik_r_arm(target_vec, fwd_dot, t)
 	if fwd_dot > 0.01 then
 		if not self._modifier_on then
@@ -860,14 +884,17 @@ function CopActionShoot:_upd_ik_r_arm(target_vec, fwd_dot, t)
 	end
 end
 
+-- Lines 840-842
 function CopActionShoot:_get_blend_ik_r_arm()
 	return self._r_arm_modifier:blend()
 end
 
+-- Lines 846-848
 function CopActionShoot:_set_ik_updator(name)
 	self._upd_ik = self[name]
 end
 
+-- Lines 852-874
 function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, target_pos)
 	local melee_weapon = self._unit:base():melee_weapon()
 	local is_weapon = melee_weapon == "weapon"
@@ -901,6 +928,7 @@ function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, tar
 	return state and true
 end
 
+-- Lines 878-942
 function CopActionShoot:anim_clbk_melee_strike()
 	if not self._attention then
 		return

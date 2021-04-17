@@ -1,13 +1,16 @@
 ElementGlobalStateOperator = ElementGlobalStateOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 3-5
 function ElementGlobalStateOperator:init(...)
 	ElementGlobalStateOperator.super.init(self, ...)
 end
 
+-- Lines 7-9
 function ElementGlobalStateOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 11-33
 function ElementGlobalStateOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return

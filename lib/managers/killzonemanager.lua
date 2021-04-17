@@ -1,9 +1,11 @@
 KillzoneManager = KillzoneManager or class()
 
+-- Lines 3-5
 function KillzoneManager:init()
 	self._units = {}
 end
 
+-- Lines 7-41
 function KillzoneManager:update(t, dt)
 	for _, data in pairs(self._units) do
 		if alive(data.unit) then
@@ -45,6 +47,7 @@ function KillzoneManager:update(t, dt)
 	end
 end
 
+-- Lines 43-49
 function KillzoneManager:set_unit(unit, type)
 	if self._units[unit:key()] then
 		self:_remove_unit(unit)
@@ -53,6 +56,7 @@ function KillzoneManager:set_unit(unit, type)
 	end
 end
 
+-- Lines 51-64
 function KillzoneManager:_warning_shot(unit)
 	local rot = unit:camera():rotation()
 	rot = Rotation(rot:yaw(), 0, 0)
@@ -70,6 +74,7 @@ function KillzoneManager:_warning_shot(unit)
 	end
 end
 
+-- Lines 66-77
 function KillzoneManager:_deal_damage(unit)
 	if unit:character_damage():need_revive() then
 		return
@@ -87,6 +92,7 @@ function KillzoneManager:_deal_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
+-- Lines 79-82
 function KillzoneManager:_deal_gas_damage(unit)
 	local attack_data = {
 		damage = 0.75,
@@ -98,6 +104,7 @@ function KillzoneManager:_deal_gas_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
+-- Lines 84-87
 function KillzoneManager:_deal_fire_damage(unit)
 	local attack_data = {
 		damage = 0.5,
@@ -109,6 +116,7 @@ function KillzoneManager:_deal_fire_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
+-- Lines 89-101
 function KillzoneManager:_add_unit(unit, type)
 	if type == "sniper" then
 		local next_shot = math.rand(1)
@@ -137,6 +145,7 @@ function KillzoneManager:_add_unit(unit, type)
 	end
 end
 
+-- Lines 103-105
 function KillzoneManager:_remove_unit(unit)
 	self._units[unit:key()] = nil
 end

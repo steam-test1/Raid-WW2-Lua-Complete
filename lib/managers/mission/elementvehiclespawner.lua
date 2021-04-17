@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementVehicleSpawner = ElementVehicleSpawner or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-18
 function ElementVehicleSpawner:init(...)
 	ElementVehicleSpawner.super.init(self, ...)
 
@@ -16,16 +17,19 @@ function ElementVehicleSpawner:init(...)
 	self._vehicle_units = {}
 end
 
+-- Lines 21-24
 function ElementVehicleSpawner:value(name)
 	return self._values[name]
 end
 
+-- Lines 26-32
 function ElementVehicleSpawner:client_on_executed(...)
 	if not self._values.enabled then
 		return
 	end
 end
 
+-- Lines 34-44
 function ElementVehicleSpawner:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -38,6 +42,7 @@ function ElementVehicleSpawner:on_executed(instigator)
 	ElementVehicleSpawner.super.on_executed(self, self._unit or instigator)
 end
 
+-- Lines 46-53
 function ElementVehicleSpawner:unspawn_all_units()
 	for _, vehicle_unit in ipairs(self._vehicle_units) do
 		if alive(vehicle_unit) then
@@ -46,6 +51,7 @@ function ElementVehicleSpawner:unspawn_all_units()
 	end
 end
 
+-- Lines 55-58
 function ElementVehicleSpawner:stop_simulation(...)
 	self:unspawn_all_units()
 end

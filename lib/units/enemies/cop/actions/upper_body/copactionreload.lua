@@ -1,5 +1,6 @@
 CopActionReload = CopActionReload or class()
 
+-- Lines 4-68
 function CopActionReload:init(action_desc, common_data)
 	self._unit = common_data.unit
 	self._ext_movement = common_data.ext_movement
@@ -66,10 +67,12 @@ function CopActionReload:init(action_desc, common_data)
 	end
 end
 
+-- Lines 72-74
 function CopActionReload:type()
 	return "reload"
 end
 
+-- Lines 78-101
 function CopActionReload:update(t)
 	if self._modifier_on then
 		local target_pos = nil
@@ -102,6 +105,7 @@ function CopActionReload:update(t)
 	end
 end
 
+-- Lines 105-114
 function CopActionReload:_play_reload()
 	managers.voice_over:enemy_reload(self._unit)
 
@@ -116,10 +120,12 @@ function CopActionReload:_play_reload()
 	return redir_res
 end
 
+-- Lines 118-120
 function CopActionReload:expired()
 	return self._expired
 end
 
+-- Lines 124-133
 function CopActionReload:on_attention(attention)
 	if attention then
 		self._modifier_on = true
@@ -134,6 +140,7 @@ function CopActionReload:on_attention(attention)
 	self._attention = attention
 end
 
+-- Lines 137-142
 function CopActionReload:on_exit()
 	if self._modifier_on then
 		self._modifier_on = nil
@@ -142,10 +149,12 @@ function CopActionReload:on_exit()
 	end
 end
 
+-- Lines 146-148
 function CopActionReload:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
+-- Lines 152-154
 function CopActionReload:need_upd()
 	return true
 end

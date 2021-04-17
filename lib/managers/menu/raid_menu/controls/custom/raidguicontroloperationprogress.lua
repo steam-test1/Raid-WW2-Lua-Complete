@@ -9,6 +9,7 @@ RaidGUIControlOperationProgress.PARAGRAPH_COLOR = tweak_data.gui.colors.raid_bla
 RaidGUIControlOperationProgress.PADDING_DOWN = 10
 RaidGUIControlOperationProgress.SCROLL_ADVANCE = 20
 
+-- Lines 14-28
 function RaidGUIControlOperationProgress:init(parent, params)
 	RaidGUIControlOperationProgress.super.init(self, parent, params)
 
@@ -24,6 +25,7 @@ function RaidGUIControlOperationProgress:init(parent, params)
 	self:_create_panels()
 end
 
+-- Lines 30-42
 function RaidGUIControlOperationProgress:_create_panels()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_panel"
@@ -36,6 +38,7 @@ function RaidGUIControlOperationProgress:_create_panels()
 	self._inner_panel = self._object:panel(panel_params)
 end
 
+-- Lines 44-70
 function RaidGUIControlOperationProgress:_create_progress_report(current_operation_stage)
 	self._inner_panel:clear()
 	self._inner_panel:set_h(self._object:h())
@@ -64,6 +67,7 @@ function RaidGUIControlOperationProgress:_create_progress_report(current_operati
 	self:_check_scrollability()
 end
 
+-- Lines 72-113
 function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph_id)
 	local panel_params = {
 		x = 0,
@@ -109,18 +113,22 @@ function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph
 	return part_panel
 end
 
+-- Lines 115-117
 function RaidGUIControlOperationProgress:set_operation(operation)
 	self._operation = operation
 end
 
+-- Lines 119-121
 function RaidGUIControlOperationProgress:set_number_drawn(number)
 	self:_create_progress_report(number)
 end
 
+-- Lines 123-125
 function RaidGUIControlOperationProgress:set_event_index(event_index)
 	self._event_index = event_index
 end
 
+-- Lines 127-133
 function RaidGUIControlOperationProgress:_check_scrollability()
 	if self._inner_panel:h() <= self._object:h() then
 		return
@@ -129,6 +137,7 @@ function RaidGUIControlOperationProgress:_check_scrollability()
 	self._scrollable = true
 end
 
+-- Lines 135-147
 function RaidGUIControlOperationProgress:on_mouse_scroll_up()
 	if not self._scrollable then
 		return false
@@ -143,6 +152,7 @@ function RaidGUIControlOperationProgress:on_mouse_scroll_up()
 	return true
 end
 
+-- Lines 149-161
 function RaidGUIControlOperationProgress:on_mouse_scroll_down()
 	if not self._scrollable then
 		return false
@@ -157,5 +167,6 @@ function RaidGUIControlOperationProgress:on_mouse_scroll_down()
 	return true
 end
 
+-- Lines 164-165
 function RaidGUIControlOperationProgress:close()
 end

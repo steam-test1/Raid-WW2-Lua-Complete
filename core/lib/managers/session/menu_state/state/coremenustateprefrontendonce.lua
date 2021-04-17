@@ -5,10 +5,12 @@ core:import("CoreMenuStateLegal")
 
 PreFrontEndOnce = PreFrontEndOnce or class()
 
+-- Lines 8-10
 function PreFrontEndOnce:init()
 	self._state = CoreFiniteStateMachine.FiniteStateMachine:new(CoreMenuStateLegal.Legal, "pre_front_end_once", self)
 end
 
+-- Lines 12-20
 function PreFrontEndOnce:transition()
 	self._state:transition()
 

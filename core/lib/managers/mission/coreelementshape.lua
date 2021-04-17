@@ -7,6 +7,7 @@ core:import("CoreTable")
 
 ElementShape = ElementShape or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 11-27
 function ElementShape:init(...)
 	ElementShape.super.init(self, ...)
 
@@ -38,18 +39,22 @@ function ElementShape:init(...)
 	end
 end
 
+-- Lines 29-31
 function ElementShape:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
+-- Lines 33-35
 function ElementShape:_add_shape(shape)
 	table.insert(self._shapes, shape)
 end
 
+-- Lines 37-39
 function ElementShape:get_shapes()
 	return self._shapes
 end
 
+-- Lines 41-66
 function ElementShape:is_inside(pos)
 	for _, shape in ipairs(self._shapes) do
 		if shape:is_inside(pos) then
@@ -82,9 +87,11 @@ function ElementShape:is_inside(pos)
 	return false
 end
 
+-- Lines 68-70
 function ElementShape:client_on_executed(...)
 end
 
+-- Lines 72-78
 function ElementShape:on_executed(instigator)
 	if not self._values.enabled then
 		return

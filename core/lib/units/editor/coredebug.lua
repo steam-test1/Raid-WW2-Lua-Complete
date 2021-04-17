@@ -3,10 +3,12 @@ DebugUnitElement = DebugUnitElement or class(CoreDebugUnitElement)
 DebugUnitElement.SAVE_UNIT_POSITION = false
 DebugUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 7-9
 function DebugUnitElement:init(...)
 	CoreDebugUnitElement.init(self, ...)
 end
 
+-- Lines 11-28
 function CoreDebugUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -23,6 +25,7 @@ function CoreDebugUnitElement:init(unit)
 	table.insert(self._save_values, "color")
 end
 
+-- Lines 30-64
 function CoreDebugUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -43,6 +46,7 @@ function CoreDebugUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "show_instigator", "Show instigator")
 end
 
+-- Lines 67-72
 function CoreDebugUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -55,10 +59,12 @@ function CoreDebugUnitElement:update_editing()
 	end
 end
 
+-- Lines 74-76
 function CoreDebugUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_monitored_unit"))
 end
 
+-- Lines 78-93
 function CoreDebugUnitElement:add_monitored_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -78,6 +84,7 @@ function CoreDebugUnitElement:add_monitored_unit()
 	end
 end
 
+-- Lines 95-106
 function CoreDebugUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreDebugUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -97,16 +104,19 @@ function CoreDebugUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 108-110
 function CoreDebugUnitElement:on_delete()
 	Application:trace("CoreDebugUnitElement:on_delete()")
 end
 
+-- Lines 112-116
 function CoreDebugUnitElement:register_monitor(unit)
 	if unit:mission_element().register_debug_output_unit then
 		unit:mission_element():register_debug_output_unit(self._unit:unit_data().unit_id)
 	end
 end
 
+-- Lines 118-122
 function CoreDebugUnitElement:unregister_monitor(unit)
 	if unit:mission_element().unregister_debug_output_unit then
 		unit:mission_element():unregister_debug_output_unit()

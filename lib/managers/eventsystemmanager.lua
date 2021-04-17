@@ -2,6 +2,7 @@ EventSystemManager = EventSystemManager or class()
 EventSystemManager.VERSION = 1
 EventSystemManager.DAY_IN_SECONDS = 86400
 
+-- Lines 9-17
 function EventSystemManager.get_instance()
 	if not Global.event_manager then
 		Global.event_manager = EventSystemManager:new()
@@ -12,10 +13,12 @@ function EventSystemManager.get_instance()
 	return Global.event_manager
 end
 
+-- Lines 20-22
 function EventSystemManager:init()
 	self:reset()
 end
 
+-- Lines 25-30
 function EventSystemManager:reset()
 	self._last_login_utc = 0
 	self._last_login_day = 0
@@ -23,6 +26,7 @@ function EventSystemManager:reset()
 	self._consecutive_logins = 0
 end
 
+-- Lines 32-42
 function EventSystemManager:save_profile_slot(data)
 	local state = {
 		version = EventSystemManager.VERSION,
@@ -34,6 +38,7 @@ function EventSystemManager:save_profile_slot(data)
 	data.EventSystemManager = state
 end
 
+-- Lines 44-61
 function EventSystemManager:load_profile_slot(data)
 	local state = data.EventSystemManager
 
@@ -51,6 +56,7 @@ function EventSystemManager:load_profile_slot(data)
 	self._last_login_utc = state.last_login_utc or 0
 end
 
+-- Lines 63-91
 function EventSystemManager:on_camp_entered()
 	local server_time = Steam:server_time()
 	local time_table = os.date("!*t", server_time)
@@ -81,10 +87,12 @@ function EventSystemManager:on_camp_entered()
 	managers.savefile:save_setting(true)
 end
 
+-- Lines 93-95
 function EventSystemManager:consecutive_logins()
 	return self._consecutive_logins
 end
 
+-- Lines 97-121
 function EventSystemManager:_fire_daily_event()
 	self._consecutive_logins = self._consecutive_logins + 1
 

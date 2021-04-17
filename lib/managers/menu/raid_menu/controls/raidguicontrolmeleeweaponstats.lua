@@ -1,9 +1,11 @@
 RaidGUIControlMeleeWeaponStats = RaidGUIControlMeleeWeaponStats or class(RaidGUIControlWeaponStats)
 
+-- Lines 3-5
 function RaidGUIControlMeleeWeaponStats:init(parent, params)
 	RaidGUIControlMeleeWeaponStats.super.init(self, parent, params)
 end
 
+-- Lines 7-14
 function RaidGUIControlMeleeWeaponStats:_set_default_values()
 	self._values = {
 		damage = {
@@ -25,6 +27,7 @@ function RaidGUIControlMeleeWeaponStats:_set_default_values()
 	}
 end
 
+-- Lines 16-24
 function RaidGUIControlMeleeWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
@@ -52,6 +55,7 @@ function RaidGUIControlMeleeWeaponStats:_get_tabs_params()
 	return tabs_params
 end
 
+-- Lines 26-39
 function RaidGUIControlMeleeWeaponStats:set_stats(damage, knockback, range, charge_time)
 	self._values.damage.value = damage
 	self._values.knockback.value = knockback
@@ -66,46 +70,59 @@ function RaidGUIControlMeleeWeaponStats:set_stats(damage, knockback, range, char
 	end
 end
 
+-- Lines 41-43
 function RaidGUIControlMeleeWeaponStats:refresh_data()
 	Application:trace("[RaidGUIControlMeleeWeaponStats:refresh_data]")
 end
 
+-- Lines 45-46
 function RaidGUIControlMeleeWeaponStats:_create_bottom_line()
 end
 
+-- Lines 48-49
 function RaidGUIControlMeleeWeaponStats:_initial_tab_selected(tab_idx)
 end
 
+-- Lines 51-52
 function RaidGUIControlMeleeWeaponStats:_tab_selected(tab_idx, callback_param)
 end
 
+-- Lines 54-55
 function RaidGUIControlMeleeWeaponStats:_unselect_all()
 end
 
+-- Lines 61-64
 function RaidGUIControlMeleeWeaponStats:set_selected(value)
 	Application:error("[RaidGUIControlMeleeWeaponStats:set_selected] weapon stats control can't be selected")
 
 	self._selected = false
 end
 
+-- Lines 66-67
 function RaidGUIControlMeleeWeaponStats:move_up()
 end
 
+-- Lines 69-70
 function RaidGUIControlMeleeWeaponStats:move_down()
 end
 
+-- Lines 72-73
 function RaidGUIControlMeleeWeaponStats:move_left()
 end
 
+-- Lines 75-76
 function RaidGUIControlMeleeWeaponStats:move_right()
 end
 
+-- Lines 79-80
 function RaidGUIControlMeleeWeaponStats:highlight_on()
 end
 
+-- Lines 82-83
 function RaidGUIControlMeleeWeaponStats:highlight_off()
 end
 
+-- Lines 85-87
 function RaidGUIControlMeleeWeaponStats:mouse_released(o, button, x, y)
 	return false
 end

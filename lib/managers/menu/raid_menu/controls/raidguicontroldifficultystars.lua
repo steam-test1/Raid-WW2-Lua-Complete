@@ -8,6 +8,7 @@ RaidGuiControlDifficultyStars.STAR_UNAVAILABLE_COLOR = tweak_data.gui.colors.rai
 RaidGuiControlDifficultyStars.STARS_DISTANCE = 24
 RaidGuiControlDifficultyStars.FIRST_STAR_CENTER_X = 9
 
+-- Lines 15-25
 function RaidGuiControlDifficultyStars:init(parent, params)
 	RaidGuiControlDifficultyStars.super.init(self, parent, params)
 
@@ -20,6 +21,7 @@ function RaidGuiControlDifficultyStars:init(parent, params)
 	self:_create_stars()
 end
 
+-- Lines 27-36
 function RaidGuiControlDifficultyStars:_create_panel()
 	local panel_params = {
 		name = self._params.name or "difficulty_stars_panel",
@@ -31,6 +33,7 @@ function RaidGuiControlDifficultyStars:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 38-55
 function RaidGuiControlDifficultyStars:_create_stars()
 	self._stars = {}
 	local center_x = RaidGuiControlDifficultyStars.FIRST_STAR_CENTER_X
@@ -51,6 +54,7 @@ function RaidGuiControlDifficultyStars:_create_stars()
 	end
 end
 
+-- Lines 57-78
 function RaidGuiControlDifficultyStars:set_progress(available, completed)
 	for i = 1, #self._stars do
 		self._stars[i]:set_image(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture)
@@ -74,6 +78,7 @@ function RaidGuiControlDifficultyStars:set_progress(available, completed)
 	end
 end
 
+-- Lines 80-94
 function RaidGuiControlDifficultyStars:set_active_difficulty(difficulty)
 	for i = 1, #self._stars do
 		self._stars[i]:set_image(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture)

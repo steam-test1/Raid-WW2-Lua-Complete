@@ -4,6 +4,7 @@ core:import("CoreEws")
 
 CoverLayer = CoverLayer or class(CoreStaticLayer.StaticLayer)
 
+-- Lines 8-18
 function CoverLayer:init(owner, save_name, units_vector, slot_mask)
 	CoverLayer.super.init(self, owner, "cover", {
 		"cover"
@@ -19,6 +20,7 @@ function CoverLayer:init(owner, save_name, units_vector, slot_mask)
 	self._slot_mask = managers.slot:get_mask("cover")
 end
 
+-- Lines 20-39
 function CoverLayer:build_panel(notebook)
 	self._ews_panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	self._main_sizer = EWS:BoxSizer("VERTICAL")
@@ -40,10 +42,12 @@ function CoverLayer:build_panel(notebook)
 	return self._ews_panel, true
 end
 
+-- Lines 41-43
 function CoverLayer:add_btns_to_toolbar(...)
 	CoverLayer.super.add_btns_to_toolbar(self, ...)
 end
 
+-- Lines 45-53
 function CoverLayer:create_covers()
 	local all_static_units = World:find_units_quick("all", managers.slot:get_mask("world_geometry"))
 
@@ -56,6 +60,7 @@ function CoverLayer:create_covers()
 	end
 end
 
+-- Lines 55-62
 function CoverLayer:delete_covers()
 	local all_static_units = World:find_units_quick("all", managers.slot:get_mask("world_geometry"))
 
@@ -66,6 +71,7 @@ function CoverLayer:delete_covers()
 	end
 end
 
+-- Lines 64-69
 function CoverLayer:set_enabled(enabled)
 	if not enabled then
 		managers.editor:output_warning("Don't want to disable Cover layer since it is super cool.")

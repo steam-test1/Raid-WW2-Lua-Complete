@@ -1,5 +1,6 @@
 BlackscreenElement = BlackscreenElement or class(MissionElement)
 
+-- Lines 3-13
 function BlackscreenElement:init(unit)
 	BlackscreenElement.super.init(self, unit)
 
@@ -12,6 +13,7 @@ function BlackscreenElement:init(unit)
 	table.insert(self._save_values, "skip_delete_brushes")
 end
 
+-- Lines 15-23
 function BlackscreenElement:set_element_data(params, ...)
 	BlackscreenElement.super.set_element_data(self, params, ...)
 	Application:trace(inspect(self._hed.level))
@@ -21,12 +23,14 @@ function BlackscreenElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 25-29
 function BlackscreenElement:_set_action()
 	local action = self._hed.action
 
 	self._level:set_enabled(action == "fade_in")
 end
 
+-- Lines 32-48
 function BlackscreenElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

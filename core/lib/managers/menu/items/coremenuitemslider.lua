@@ -4,6 +4,7 @@ core:import("CoreMenuItem")
 ItemSlider = ItemSlider or class(CoreMenuItem.Item)
 ItemSlider.TYPE = "slider"
 
+-- Lines 8-32
 function ItemSlider:init(data_node, parameters)
 	CoreMenuItem.Item.init(self, data_node, parameters)
 
@@ -27,48 +28,59 @@ function ItemSlider:init(data_node, parameters)
 	self._value = self._min
 end
 
+-- Lines 34-36
 function ItemSlider:value()
 	return self._value
 end
 
+-- Lines 38-40
 function ItemSlider:show_value()
 	return self._show_value
 end
 
+-- Lines 42-45
 function ItemSlider:set_value(value)
 	self._value = math.min(math.max(self._min, value), self._max)
 
 	self:dirty()
 end
 
+-- Lines 47-49
 function ItemSlider:set_value_by_percentage(percent)
 	self:set_value(self._min + (self._max - self._min) * percent / 100)
 end
 
+-- Lines 51-53
 function ItemSlider:set_min(value)
 	self._min = value
 end
 
+-- Lines 55-57
 function ItemSlider:set_max(value)
 	self._max = value
 end
 
+-- Lines 59-61
 function ItemSlider:set_step(value)
 	self._step = value
 end
 
+-- Lines 63-65
 function ItemSlider:increase()
 	self:set_value(self._value + self._step)
 end
 
+-- Lines 67-69
 function ItemSlider:decrease()
 	self:set_value(self._value - self._step)
 end
 
+-- Lines 71-73
 function ItemSlider:percentage()
 	return (self._value - self._min) / (self._max - self._min) * 100
 end
 
+-- Lines 77-151
 function ItemSlider:setup_gui(node, row_item)
 	row_item.gui_panel = node.item_panel:panel({
 		w = node.item_panel:w()
@@ -161,6 +173,7 @@ function ItemSlider:setup_gui(node, row_item)
 	return true
 end
 
+-- Lines 153-175
 function ItemSlider:reload(row_item, node)
 	if not row_item then
 		return
@@ -179,6 +192,7 @@ function ItemSlider:reload(row_item, node)
 	return true
 end
 
+-- Lines 177-192
 function ItemSlider:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(row_item.font and Idstring(row_item.font) or _G.tweak_data.menu.default_font_no_outline_id)
@@ -198,6 +212,7 @@ function ItemSlider:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
+-- Lines 194-208
 function ItemSlider:fade_row_item(node, row_item)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.gui_text:set_font(row_item.font and Idstring(row_item.font) or _G.tweak_data.menu.default_font_id)
@@ -217,6 +232,7 @@ function ItemSlider:fade_row_item(node, row_item)
 	return true
 end
 
+-- Lines 210-298
 function ItemSlider:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 

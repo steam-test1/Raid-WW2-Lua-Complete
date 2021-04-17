@@ -1,11 +1,13 @@
 DropLootManager = DropLootManager or class()
 DropLootManager.DROPED_LOOT_DESPAWN_TIME = 120
 
+-- Lines 6-9
 function DropLootManager:init()
 	self._enabled = true
 	self._spawned_units = {}
 end
 
+-- Lines 11-40
 function DropLootManager:_choose_item(current_level_table, level, multiplier)
 	local chance = math.random()
 	local chance_interval = {
@@ -42,6 +44,7 @@ function DropLootManager:_choose_item(current_level_table, level, multiplier)
 	end
 end
 
+-- Lines 42-80
 function DropLootManager:drop_item(tweak_table, position, rotation)
 	if not self._enabled then
 		return nil
@@ -89,18 +92,22 @@ function DropLootManager:drop_item(tweak_table, position, rotation)
 	return nil
 end
 
+-- Lines 82-84
 function DropLootManager:clear()
 	self._spawned_units = {}
 end
 
+-- Lines 86-88
 function DropLootManager:set_enabled(enabled)
 	self._enabled = enabled
 end
 
+-- Lines 90-92
 function DropLootManager:on_simulation_ended()
 	self._difficulty_index = nil
 end
 
+-- Lines 94-101
 function DropLootManager:despawn_item(unit)
 	for index, spawned_unit in pairs(self._spawned_units) do
 		if alive(spawned_unit) and unit == spawned_unit then

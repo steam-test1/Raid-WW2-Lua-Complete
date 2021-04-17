@@ -1,9 +1,11 @@
 NpcVehicleStateManeuverBackRight = NpcVehicleStateManeuverBackRight or class(NpcVehicleStateManeuver)
 
+-- Lines 4-6
 function NpcVehicleStateManeuverBackRight:init(unit)
 	NpcBaseVehicleState.init(self, unit)
 end
 
+-- Lines 10-25
 function NpcVehicleStateManeuverBackRight:on_enter(npc_driving_ext)
 	NpcVehicleStateManeuverBackRight.super.on_enter(self, npc_driving_ext)
 
@@ -36,6 +38,7 @@ function NpcVehicleStateManeuverBackRight:on_enter(npc_driving_ext)
 	local current_action = self._maneuver_actions[self._current_maneuver_action_idx]
 end
 
+-- Lines 28-51
 function NpcVehicleStateManeuverBackRight:update(npc_driving_ext, t, dt)
 	local current_action = self._maneuver_actions[self._current_maneuver_action_idx]
 
@@ -53,16 +56,19 @@ function NpcVehicleStateManeuverBackRight:update(npc_driving_ext, t, dt)
 	end
 end
 
+-- Lines 53-55
 function NpcVehicleStateManeuverBackRight:name()
 	return NpcVehicleDrivingExt.STATE_MANEUVER_BACK_RIGHT
 end
 
+-- Lines 59-67
 function NpcVehicleStateManeuverBackRight:change_state(npc_driving_ext)
 	if not self._maneuver_actions[self._current_maneuver_action_idx] then
 		npc_driving_ext:set_state(NpcVehicleDrivingExt.STATE_PURSUIT)
 	end
 end
 
+-- Lines 70-72
 function NpcVehicleStateManeuverBackRight:is_maneuvering()
 	return true
 end

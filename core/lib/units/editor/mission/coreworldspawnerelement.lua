@@ -1,5 +1,6 @@
 CoreWorldEventUnitElement = CoreWorldEventUnitElement or class(MissionElement)
 
+-- Lines 4-13
 function CoreWorldEventUnitElement:init(type, ...)
 	CoreWorldEventUnitElement.super.init(self, ...)
 
@@ -10,23 +11,28 @@ function CoreWorldEventUnitElement:init(type, ...)
 	table.insert(self._save_values, "event_list")
 end
 
+-- Lines 15-18
 function CoreWorldEventUnitElement:layer_finished(...)
 	CoreWorldEventUnitElement.super.layer_finished(self, ...)
 end
 
+-- Lines 20-22
 function CoreWorldEventUnitElement:selected()
 	InstanceEventUnitElement.super.selected(self)
 end
 
+-- Lines 24-28
 function CoreWorldEventUnitElement:update_selected(t, dt)
 	for _, data in ipairs(self._hed.event_list) do
 		self:_draw_world_link(t, dt, data.world_name)
 	end
 end
 
+-- Lines 30-31
 function CoreWorldEventUnitElement:update_editing(t, dt)
 end
 
+-- Lines 33-40
 function CoreWorldEventUnitElement:_draw_world_link(t, dt, world_name)
 	local r, g, b = self:get_link_color()
 
@@ -37,6 +43,7 @@ function CoreWorldEventUnitElement:_draw_world_link(t, dt, world_name)
 	end
 end
 
+-- Lines 42-52
 function CoreWorldEventUnitElement:_world_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -56,6 +63,7 @@ function CoreWorldEventUnitElement:_world_name_raycast()
 	return world_name
 end
 
+-- Lines 55-68
 function CoreWorldEventUnitElement:on_world_changed_name(old_name, new_name)
 	for _, data in ipairs(self._hed.event_list) do
 		if data.world_name == old_name then
@@ -72,6 +80,7 @@ function CoreWorldEventUnitElement:on_world_changed_name(old_name, new_name)
 	end
 end
 
+-- Lines 71-78
 function CoreWorldEventUnitElement:on_world_deleted(name)
 	local clone_guis = clone(self._guis)
 
@@ -82,6 +91,7 @@ function CoreWorldEventUnitElement:on_world_deleted(name)
 	end
 end
 
+-- Lines 80-86
 function CoreWorldEventUnitElement:_get_events(world_name)
 	if self._type == "input" then
 		return managers.worldcollection:get_mission_elements_from_script(world_name, "ElementWorldInput")
@@ -90,6 +100,7 @@ function CoreWorldEventUnitElement:_get_events(world_name)
 	end
 end
 
+-- Lines 88-93
 function CoreWorldEventUnitElement:_set_world_by_raycast()
 	local world_name = self:_world_name_raycast()
 
@@ -98,6 +109,7 @@ function CoreWorldEventUnitElement:_set_world_by_raycast()
 	end
 end
 
+-- Lines 95-102
 function CoreWorldEventUnitElement:_add_world_by_name(world_name)
 	local world = managers.worldcollection:world_names()[world_name].world
 	local events = self:_get_events(world)
@@ -110,6 +122,7 @@ function CoreWorldEventUnitElement:_add_world_by_name(world_name)
 	self:_add_world_gui(world_name, events, event_list_data)
 end
 
+-- Lines 104-143
 function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list_data)
 	local panel = self._panel
 	local panel_sizer = self._panel_sizer
@@ -150,12 +163,14 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	panel:layout()
 end
 
+-- Lines 145-149
 function CoreWorldEventUnitElement:_on_gui_set_event_data(event_list_data)
 	local guis = self:_get_guis_by_event_list_data(event_list_data)
 	local event = guis.event:get_value()
 	event_list_data.event = event
 end
 
+-- Lines 151-157
 function CoreWorldEventUnitElement:_get_guis_by_event_list_data(event_list_data)
 	for i, entry in pairs(clone(self._hed.event_list)) do
 		if entry == event_list_data then
@@ -164,7 +179,9 @@ function CoreWorldEventUnitElement:_get_guis_by_event_list_data(event_list_data)
 	end
 end
 
+-- Lines 159-181
 function CoreWorldEventUnitElement:remove_entry(event_list_data)
+	-- Lines 160-172
 	local function _remove_guis(guis)
 		if guis then
 			guis.world_name_ctrlr:destroy()
@@ -190,10 +207,12 @@ function CoreWorldEventUnitElement:remove_entry(event_list_data)
 	end
 end
 
+-- Lines 183-185
 function CoreWorldEventUnitElement:destroy_panel(...)
 	CoreWorldEventUnitElement.super.destroy_panel(self, ...)
 end
 
+-- Lines 187-199
 function CoreWorldEventUnitElement:_on_gui_select_world_list()
 	local settings = {
 		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
@@ -210,6 +229,7 @@ function CoreWorldEventUnitElement:_on_gui_select_world_list()
 	end
 end
 
+-- Lines 201-221
 function CoreWorldEventUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -230,24 +250,28 @@ function CoreWorldEventUnitElement:_build_panel(panel, panel_sizer)
 	end
 end
 
+-- Lines 223-225
 function CoreWorldEventUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_set_world_by_raycast"))
 end
 
 CoreWorldInputEventUnitElement = CoreWorldInputEventUnitElement or class(CoreWorldEventUnitElement)
 
+-- Lines 230-232
 function CoreWorldInputEventUnitElement:init(...)
 	CoreWorldInputEventUnitElement.super.init(self, "input", ...)
 end
 
 CoreWorldOutputEventUnitElement = CoreWorldOutputEventUnitElement or class(CoreWorldEventUnitElement)
 
+-- Lines 237-239
 function CoreWorldOutputEventUnitElement:init(...)
 	CoreWorldOutputEventUnitElement.super.init(self, "output", ...)
 end
 
 CoreWorldInputUnitElement = CoreWorldInputUnitElement or class(MissionElement)
 
+-- Lines 245-249
 function CoreWorldInputUnitElement:init(...)
 	CoreWorldInputUnitElement.super.init(self, ...)
 
@@ -256,6 +280,7 @@ function CoreWorldInputUnitElement:init(...)
 	table.insert(self._save_values, "event")
 end
 
+-- Lines 251-263
 function CoreWorldInputUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -276,6 +301,7 @@ end
 
 CoreWorldOutputUnitElement = CoreWorldOutputUnitElement or class(MissionElement)
 
+-- Lines 269-273
 function CoreWorldOutputUnitElement:init(...)
 	CoreWorldOutputUnitElement.super.init(self, ...)
 
@@ -284,6 +310,7 @@ function CoreWorldOutputUnitElement:init(...)
 	table.insert(self._save_values, "event")
 end
 
+-- Lines 275-287
 function CoreWorldOutputUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -304,6 +331,7 @@ end
 
 CoreWorldSpawnerElement = CoreWorldSpawnerElement or class(MissionElement)
 
+-- Lines 293-301
 function CoreWorldSpawnerElement:init(unit)
 	CoreWorldSpawnerElement.super.init(self, unit)
 
@@ -313,6 +341,7 @@ function CoreWorldSpawnerElement:init(unit)
 	table.insert(self._save_values, "world")
 end
 
+-- Lines 303-317
 function CoreWorldSpawnerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -326,17 +355,20 @@ function CoreWorldSpawnerElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("The world that will be loaded")
 end
 
+-- Lines 319-323
 function CoreWorldSpawnerElement:set_element_data(...)
 	CoreWorldSpawnerElement.super.set_element_data(self, ...)
 	self:_change_world()
 end
 
+-- Lines 325-329
 function CoreWorldSpawnerElement:post_init()
 	CoreWorldSpawnerElement.super.post_init(self)
 	managers.worldcollection:register_editor_position(self._unit:unit_data().name_id, self._unit:position())
 	self:_change_world()
 end
 
+-- Lines 331-355
 function CoreWorldSpawnerElement:_change_world()
 	if self._low_poly_unit then
 		World:delete_unit(self._low_poly_unit)
@@ -367,6 +399,7 @@ function CoreWorldSpawnerElement:_change_world()
 	end
 end
 
+-- Lines 357-363
 function CoreWorldSpawnerElement:destroy()
 	if alive(self._low_poly_unit) then
 		World:delete_unit(self._low_poly_unit)
@@ -377,6 +410,7 @@ function CoreWorldSpawnerElement:destroy()
 	CoreWorldSpawnerElement.super.destroy(self)
 end
 
+-- Lines 365-370
 function CoreWorldSpawnerElement:set_disabled()
 	if self._low_poly_unit then
 		self._low_poly_unit:set_visible(false)
@@ -385,6 +419,7 @@ function CoreWorldSpawnerElement:set_disabled()
 	CoreWorldSpawnerElement.super.set_disabled(self)
 end
 
+-- Lines 372-377
 function CoreWorldSpawnerElement:set_enabled()
 	if self._low_poly_unit then
 		self._low_poly_unit:set_visible(true)
@@ -393,6 +428,7 @@ function CoreWorldSpawnerElement:set_enabled()
 	CoreWorldSpawnerElement.super.set_enabled(self)
 end
 
+-- Lines 379-390
 function CoreWorldSpawnerElement:on_name_changed(old_name, new_name)
 	Application:debug("[CoreWorldSpawnerElement:on_name_changed]", old_name, new_name)
 
@@ -414,6 +450,7 @@ function CoreWorldSpawnerElement:on_name_changed(old_name, new_name)
 	managers.worldcollection:on_editor_changed_name(old_name, new_name)
 end
 
+-- Lines 392-402
 function CoreWorldSpawnerElement:on_world_deleted()
 	Application:debug("[CoreWorldSpawnerElement:on_world_deleted()]")
 

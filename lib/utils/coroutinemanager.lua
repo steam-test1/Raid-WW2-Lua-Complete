@@ -1,6 +1,7 @@
 CoroutineManager = CoroutineManager or class()
 CoroutineManager.Size = 16
 
+-- Lines 7-14
 function CoroutineManager:init()
 	self._coroutines = {}
 	self._buffer = {}
@@ -11,6 +12,7 @@ function CoroutineManager:init()
 	end
 end
 
+-- Lines 16-31
 function CoroutineManager:update(t, dt)
 	self:_add()
 
@@ -32,6 +34,7 @@ function CoroutineManager:update(t, dt)
 	end
 end
 
+-- Lines 33-39
 function CoroutineManager:add_coroutine(name, func, ...)
 	local arg = {
 		...
@@ -47,6 +50,7 @@ function CoroutineManager:add_coroutine(name, func, ...)
 	end
 end
 
+-- Lines 42-50
 function CoroutineManager:add_and_run_coroutine(name, func, ...)
 	local arg = {
 		...
@@ -63,6 +67,7 @@ function CoroutineManager:add_and_run_coroutine(name, func, ...)
 	end
 end
 
+-- Lines 52-60
 function CoroutineManager:_add()
 	for key, value in pairs(self._buffer) do
 		local co = coroutine.create(value.func.Function)
@@ -77,6 +82,7 @@ function CoroutineManager:_add()
 	self._buffer = {}
 end
 
+-- Lines 62-69
 function CoroutineManager:is_running(name)
 	if self._buffer[name] then
 		return true

@@ -1,10 +1,12 @@
 PlayerMoveObject = PlayerMoveObject or class(PlayerStandard)
 PlayerMoveObject.target_tilt = -5
 
+-- Lines 4-6
 function PlayerMoveObject:init(unit)
 	PlayerMoveObject.super.init(self, unit)
 end
 
+-- Lines 10-33
 function PlayerMoveObject:enter(state_data, enter_data)
 	PlayerMoveObject.super.enter(self, state_data, enter_data)
 
@@ -20,14 +22,17 @@ function PlayerMoveObject:enter(state_data, enter_data)
 	end
 end
 
+-- Lines 37-38
 function PlayerMoveObject:_enter(enter_data)
 end
 
+-- Lines 42-46
 function PlayerMoveObject:exit(state_data, new_state_name)
 	PlayerMoveObject.super.exit(self, state_data, new_state_name)
 	self._unit:camera():camera_unit():base():set_target_tilt(0)
 end
 
+-- Lines 50-70
 function PlayerMoveObject:update(t, dt)
 	PlayerMoveObject.super.update(self, t, dt)
 
@@ -41,10 +46,12 @@ function PlayerMoveObject:update(t, dt)
 	end
 end
 
+-- Lines 72-74
 function PlayerMoveObject:set_tweak_data(name)
 	self._tweak_data_name = name
 end
 
+-- Lines 80-198
 function PlayerMoveObject:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -104,9 +111,11 @@ function PlayerMoveObject:_update_check_actions(t, dt)
 	self:_check_stats_screen(t, dt, input)
 end
 
+-- Lines 200-201
 function PlayerMoveObject:_check_action_run(...)
 end
 
+-- Lines 203-210
 function PlayerMoveObject:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 	local interaction_wanted = input.btn_interact_press
@@ -118,40 +127,49 @@ function PlayerMoveObject:_check_action_interact(t, input)
 	end
 end
 
+-- Lines 214-219
 function PlayerMoveObject:_check_change_weapon(...)
 	return PlayerMoveObject.super._check_change_weapon(self, ...)
 end
 
+-- Lines 221-226
 function PlayerMoveObject:_check_action_equip(...)
 	return PlayerMoveObject.super._check_action_equip(self, ...)
 end
 
+-- Lines 230-232
 function PlayerMoveObject:_update_movement(t, dt)
 	PlayerMoveObject.super._update_movement(self, t, dt)
 end
 
+-- Lines 236-239
 function PlayerMoveObject:_start_action_jump(...)
 	PlayerMoveObject.super._start_action_jump(self, ...)
 end
 
+-- Lines 241-243
 function PlayerMoveObject:_perform_jump(jump_vec)
 	PlayerMoveObject.super._perform_jump(self, jump_vec)
 end
 
+-- Lines 247-251
 function PlayerMoveObject:_get_max_walk_speed(...)
 	local multiplier = 0.5
 
 	return PlayerMoveObject.super._get_max_walk_speed(self, ...) * multiplier
 end
 
+-- Lines 253-256
 function PlayerMoveObject:_get_walk_headbob(...)
 	local multiplier = 0.5
 
 	return PlayerMoveObject.super._get_walk_headbob(self, ...) * multiplier
 end
 
+-- Lines 260-262
 function PlayerMoveObject:pre_destroy(unit)
 end
 
+-- Lines 266-268
 function PlayerMoveObject:destroy()
 end

@@ -1,6 +1,7 @@
 TurretWeapon = TurretWeapon or class()
 local mvec_to = Vector3()
 
+-- Lines 4-118
 function TurretWeapon:init(unit)
 	self._unit = unit
 	self._name_id = self.name_id
@@ -100,35 +101,44 @@ function TurretWeapon:init(unit)
 	managers.groupai:state():register_usable_turret(self)
 end
 
+-- Lines 120-121
 function TurretWeapon:_init()
 end
 
+-- Lines 123-125
 function TurretWeapon:post_init()
 	self._unit:base():post_init()
 end
 
+-- Lines 127-128
 function TurretWeapon:pre_destroy()
 end
 
+-- Lines 131-133
 function TurretWeapon:set_visibility_state(visible)
 	Application:error("[TurretWeapon] TurretWeapon:set_visibility_state: Implement me.")
 end
 
+-- Lines 135-138
 function TurretWeapon:out_of_ammo()
 	return false
 end
 
+-- Lines 140-142
 function TurretWeapon:can_auto_reload()
 	Application:error("[TurretWeapon] TurretWeapon:out_of_ammo(): Implement me.")
 end
 
+-- Lines 145-147
 function TurretWeapon:set_laser_enabled()
 	Application:error("[TurretWeapon] TurretWeapon:set_laser_enabled(): Implement me.")
 end
 
+-- Lines 149-150
 function TurretWeapon:setup(setup_data, damage_multiplier)
 end
 
+-- Lines 152-174
 function TurretWeapon:initialize_sentry(unit)
 	if not alive(self._unit) then
 		return
@@ -153,6 +163,7 @@ function TurretWeapon:initialize_sentry(unit)
 	self._setup.turret_weapon_initialized = true
 end
 
+-- Lines 177-194
 function TurretWeapon:_setup_fire_effects()
 	local muzzle_effect_tweak = tweak_data.weapon[self.name_id].muzzle_effect and Idstring(tweak_data.weapon[self.name_id].muzzle_effect)
 	self._muzzle_effect_table = {}
@@ -173,6 +184,7 @@ function TurretWeapon:_setup_fire_effects()
 	end
 end
 
+-- Lines 197-214
 function TurretWeapon:_setup_smoke_effects()
 	self._overheating_smoke_effect_table = {}
 	self._overheating_smoke_effect = Idstring("effects/vanilla/smoke/smoke_turret_heated_001")
@@ -192,6 +204,7 @@ function TurretWeapon:_setup_smoke_effects()
 	end
 end
 
+-- Lines 216-221
 function TurretWeapon:activate_sentry()
 	self._moving = false
 
@@ -199,6 +212,7 @@ function TurretWeapon:activate_sentry()
 	self._unit:movement():set_active(true)
 end
 
+-- Lines 223-228
 function TurretWeapon:deactivate_sentry()
 	self._moving = false
 
@@ -206,14 +220,17 @@ function TurretWeapon:deactivate_sentry()
 	self._unit:movement():set_active(false)
 end
 
+-- Lines 230-232
 function TurretWeapon:player_on()
 	return self._player_on
 end
 
+-- Lines 234-236
 function TurretWeapon:set_player_on(is_on)
 	self._player_on = is_on
 end
 
+-- Lines 238-251
 function TurretWeapon:set_mountable()
 	if self._administered_unit_data then
 		return
@@ -226,20 +243,24 @@ function TurretWeapon:set_mountable()
 	end
 end
 
+-- Lines 254-258
 function TurretWeapon:debug_switch_on()
 	self._unit:brain():switch_on()
 	self._unit:movement():set_active(true)
 end
 
+-- Lines 260-264
 function TurretWeapon:debug_switch_off()
 	self._unit:brain():switch_off(true)
 	self._unit:movement():set_active(false)
 end
 
+-- Lines 267-270
 function TurretWeapon:debug_deactivate()
 	self:deactivate()
 end
 
+-- Lines 273-332
 function TurretWeapon:update(unit, t, dt)
 	SoundDevice:set_rtpc("turret_heat_rtpc", self._overheat_current * 100)
 
@@ -283,10 +304,12 @@ function TurretWeapon:update(unit, t, dt)
 	end
 end
 
+-- Lines 334-336
 function TurretWeapon:on_unit_set_enabled(enable)
 	self._unit:interaction():set_active(enable, true)
 end
 
+-- Lines 338-356
 function TurretWeapon:set_turret_rot(dt)
 	if not alive(self._unit) or not self._turret_user or not self._joint_heading or not self._joint_pitch then
 		return
@@ -304,6 +327,7 @@ function TurretWeapon:set_turret_rot(dt)
 	self._player_rotation = player_rotation
 end
 
+-- Lines 358-396
 function TurretWeapon:deactivate()
 	self._unit:brain():switch_off(true)
 	self._unit:movement():set_active(false)
@@ -350,14 +374,17 @@ function TurretWeapon:deactivate()
 	managers.network:session():send_to_peers_synched("sync_ground_turret_deactivate", self._unit)
 end
 
+-- Lines 398-400
 function TurretWeapon:get_current_heat()
 	return self._overheat_current
 end
 
+-- Lines 402-404
 function TurretWeapon:is_overheating()
 	return self._overheated
 end
 
+-- Lines 406-420
 function TurretWeapon:_reduce_heat(dt)
 	if not self._shooting then
 		self._overheat_time = tweak_data.weapon[self.name_id].overheat_time or 1
@@ -373,6 +400,7 @@ function TurretWeapon:_reduce_heat(dt)
 	end
 end
 
+-- Lines 422-442
 function TurretWeapon:_increase_heat()
 	if alive(self._puppet_unit) then
 		return
@@ -395,6 +423,7 @@ function TurretWeapon:_increase_heat()
 	end
 end
 
+-- Lines 444-461
 function TurretWeapon:_enable_overheating_smoke(enabled)
 	if self._overheating_smoke_effect and enabled then
 		for barrel_id = 1, self._number_of_barrels do
@@ -416,6 +445,7 @@ function TurretWeapon:_enable_overheating_smoke(enabled)
 	end
 end
 
+-- Lines 470-476
 function TurretWeapon:_update_heading_rotation(dt, target_heading_rot)
 	local anim_lerp = dt * 4
 	local smooth_heading_rot = self._joint_heading:rotation():slerp(target_heading_rot, anim_lerp)
@@ -427,6 +457,7 @@ function TurretWeapon:_update_heading_rotation(dt, target_heading_rot)
 	return math.abs(heading_diff:yaw())
 end
 
+-- Lines 479-512
 function TurretWeapon:_update_animation_pitch(anim_name, dt, target_pitch)
 	local anims = self._unit:anim_groups()
 	local anim_exists = false
@@ -462,6 +493,7 @@ function TurretWeapon:_update_animation_pitch(anim_name, dt, target_pitch)
 	return math.abs(target_pitch - anim_pitch)
 end
 
+-- Lines 514-518
 function TurretWeapon:_reset_pitch()
 	local heading = self._joint_heading:rotation()
 
@@ -469,6 +501,7 @@ function TurretWeapon:_reset_pitch()
 	self:_reset_animation("anim_arm")
 end
 
+-- Lines 520-535
 function TurretWeapon:_update_rotation_pitch(dt, target_pitch_rot)
 	local anim_lerp = 4 * dt
 	local MAX_ANGLE = tweak_data.weapon[self.name_id].MAX_PITCH_ANGLE
@@ -485,6 +518,7 @@ function TurretWeapon:_update_rotation_pitch(dt, target_pitch_rot)
 	return math.abs(new_pitch - current_pitch)
 end
 
+-- Lines 538-558
 function TurretWeapon:_reset_animation(name)
 	local id_name = Idstring(name)
 	local anims = self._unit:anim_groups()
@@ -509,6 +543,7 @@ function TurretWeapon:_reset_animation(name)
 	self._unit:anim_set_time(id_name, 0)
 end
 
+-- Lines 565-575
 function TurretWeapon:_update_pitch(dt, target_pitch_rot)
 	local delta_pitch = 0
 	delta_pitch = delta_pitch + self:_update_rotation_pitch(dt, target_pitch_rot)
@@ -518,6 +553,7 @@ function TurretWeapon:_update_pitch(dt, target_pitch_rot)
 	return delta_pitch
 end
 
+-- Lines 579-628
 function TurretWeapon:_update_turret_rot(dt)
 	if not self._player_rotation then
 		return
@@ -564,19 +600,23 @@ function TurretWeapon:_update_turret_rot(dt)
 	end
 end
 
+-- Lines 630-634
 function TurretWeapon:stop_moving_sound()
 	if self._sound_movement then
 		self._sound_movement:stop()
 	end
 end
 
+-- Lines 637-639
 function TurretWeapon:sync_turret_rotation(player_rotation)
 	self._player_rotation = player_rotation
 end
 
+-- Lines 641-642
 function TurretWeapon:set_ammo(amount)
 end
 
+-- Lines 645-657
 function TurretWeapon:start_autofire()
 	if self._shooting or self._lock_fire then
 		return
@@ -592,6 +632,7 @@ function TurretWeapon:start_autofire()
 	self:_play_recoil_animation()
 end
 
+-- Lines 660-665
 function TurretWeapon:stop_autofire()
 	if self._shooting then
 		self:_sound_autofire_end()
@@ -600,6 +641,7 @@ function TurretWeapon:stop_autofire()
 	end
 end
 
+-- Lines 667-686
 function TurretWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_unit, damage_multiplier)
 	if not self._shooting then
 		return false
@@ -624,6 +666,7 @@ function TurretWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_uni
 	return fired
 end
 
+-- Lines 689-745
 function TurretWeapon:_upd_puppet_movement()
 	if self._puppet_stance == "sitting" then
 		return
@@ -664,12 +707,14 @@ function TurretWeapon:_upd_puppet_movement()
 	local result = self._puppet_unit:movement():play_redirect(redirect_animation)
 end
 
+-- Lines 748-752
 function TurretWeapon:_play_recoil_animation()
 	if alive(self._puppet_unit) then
 		self._puppet_unit:movement():play_redirect("recoil_turret_m2")
 	end
 end
 
+-- Lines 755-830
 function TurretWeapon:fire(blanks, expend_ammo, shoot_player, target_unit, damage_multiplier)
 	if self._overheated or self._lock_fire then
 		return
@@ -736,6 +781,7 @@ function TurretWeapon:fire(blanks, expend_ammo, shoot_player, target_unit, damag
 	return true
 end
 
+-- Lines 833-862
 function TurretWeapon:_update_shell_movement(dt)
 	if not self._turret_shell then
 		return
@@ -763,6 +809,7 @@ function TurretWeapon:_update_shell_movement(dt)
 	end
 end
 
+-- Lines 864-867
 function TurretWeapon:_fire_shell(from_pos, direction)
 	self._turret_shell = {
 		position = from_pos,
@@ -771,6 +818,7 @@ function TurretWeapon:_fire_shell(from_pos, direction)
 	self._shell_cumulative_gravity = 0
 end
 
+-- Lines 869-912
 function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 	local shell_position = from_pos
 
@@ -820,22 +868,26 @@ function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_shell_explosion", self._unit, pos, damage_radius, damage, player_damage, curve_pow)
 end
 
+-- Lines 915-918
 function TurretWeapon:_get_fire_locator()
 	local fire_locator = self["_locator_fire_" .. self._current_barrel] or self._locator_fire_1
 
 	return fire_locator
 end
 
+-- Lines 920-922
 function TurretWeapon:_get_puppet_locator()
 	return self._locator_tpp
 end
 
+-- Lines 924-927
 function TurretWeapon:_get_smoke_locator()
 	local smoke_locator = self["_locator_smoke_" .. self._current_barrel] or self._locator_smoke_1
 
 	return smoke_locator
 end
 
+-- Lines 929-935
 function TurretWeapon:_alert()
 	local weapon_stats = tweak_data.weapon.stats
 	local stats = tweak_data.weapon[self:get_name_id()].stats
@@ -854,6 +906,7 @@ end
 local mvec_spread_direction = Vector3()
 local mvec1 = Vector3()
 
+-- Lines 939-981
 function TurretWeapon:_fire_raycast(from_pos, direction, shoot_player, target_unit, damage_multiplier)
 	local result = {}
 	local hit_unit = nil
@@ -901,6 +954,7 @@ function TurretWeapon:_fire_raycast(from_pos, direction, shoot_player, target_un
 	return result
 end
 
+-- Lines 983-991
 function TurretWeapon:_spawn_trail_effect(direction, col_ray)
 	local current_fire_object_name = "_locator_fire_" .. self._current_barrel
 
@@ -914,6 +968,7 @@ function TurretWeapon:_spawn_trail_effect(direction, col_ray)
 	end
 end
 
+-- Lines 993-1016
 function TurretWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 	local damage_out = damage
 
@@ -941,6 +996,7 @@ function TurretWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 	return damage_out
 end
 
+-- Lines 1018-1024
 function TurretWeapon:_sound_autofire_start()
 	if self._fire_type == "auto" and self._sound_fire_start then
 		local sound_event = alive(self._turret_user) and self._turret_user == managers.player:player_unit() and self._sound_fire_start_fps or self._sound_fire_start
@@ -950,6 +1006,7 @@ function TurretWeapon:_sound_autofire_start()
 	end
 end
 
+-- Lines 1026-1035
 function TurretWeapon:_sound_autofire_end()
 	if self._fire_type == "auto" and self._sound_fire and self._sound_fire_stop then
 		local sound_event = alive(self._turret_user) and self._turret_user == managers.player:player_unit() and self._sound_fire_stop_fps or self._sound_fire_stop
@@ -963,6 +1020,7 @@ function TurretWeapon:_sound_autofire_end()
 	end
 end
 
+-- Lines 1037-1042
 function TurretWeapon:_sound_fire_single()
 	if self._fire_type == "single" then
 		local sound_event = alive(self._turret_user) and self._turret_user == managers.player:player_unit() and self._sound_fire_start_fps or self._sound_fire_start
@@ -971,46 +1029,59 @@ function TurretWeapon:_sound_fire_single()
 	end
 end
 
+-- Lines 1044-1045
 function TurretWeapon:_sound_autofire_end_empty()
 end
 
+-- Lines 1047-1048
 function TurretWeapon:_sound_autofire_end_cooldown()
 end
 
+-- Lines 1050-1051
 function TurretWeapon:ammo_total()
 end
 
+-- Lines 1053-1054
 function TurretWeapon:ammo_max()
 end
 
+-- Lines 1056-1058
 function TurretWeapon:on_team_set(team_data)
 	self._foe_teams = team_data.foes
 end
 
+-- Lines 1060-1062
 function TurretWeapon:get_name_id()
 	return self.name_id
 end
 
+-- Lines 1064-1066
 function TurretWeapon:weapon_tweak_data()
 	return tweak_data.weapon[self.name_id]
 end
 
+-- Lines 1068-1069
 function TurretWeapon:has_part()
 end
 
+-- Lines 1071-1072
 function TurretWeapon:update_laser()
 end
 
+-- Lines 1074-1075
 function TurretWeapon:on_death()
 end
 
+-- Lines 1077-1079
 function TurretWeapon:has_shield()
 	return false
 end
 
+-- Lines 1081-1082
 function TurretWeapon:unregister()
 end
 
+-- Lines 1084-1099
 function TurretWeapon:save(save_data)
 	local my_save_data = {}
 	save_data.weapon = my_save_data
@@ -1025,6 +1096,7 @@ function TurretWeapon:save(save_data)
 	end
 end
 
+-- Lines 1101-1117
 function TurretWeapon:load(save_data)
 	local my_save_data = save_data.weapon
 	self._foe_teams = my_save_data.foe_teams
@@ -1041,6 +1113,7 @@ function TurretWeapon:load(save_data)
 	end
 end
 
+-- Lines 1119-1135
 function TurretWeapon:_delay_sync_turret_unit(peer)
 	if not managers.network:session() then
 		return
@@ -1057,6 +1130,7 @@ function TurretWeapon:_delay_sync_turret_unit(peer)
 	peer:send_queued_sync("sync_ground_turret_SO_completed", self._unit, self._puppet_unit)
 end
 
+-- Lines 1138-1151
 function TurretWeapon:destroy(unit)
 	if self._sound_fire then
 		self._sound_fire:stop()
@@ -1077,6 +1151,7 @@ function TurretWeapon:destroy(unit)
 	end
 end
 
+-- Lines 1153-1232
 function TurretWeapon:_create_turret_SO()
 	if not alive(self._unit) then
 		return
@@ -1156,16 +1231,19 @@ function TurretWeapon:_create_turret_SO()
 	managers.groupai:state():add_special_objective(SO_id, SO_descriptor)
 end
 
+-- Lines 1234-1236
 function TurretWeapon:active()
 	return self._active
 end
 
+-- Lines 1238-1242
 function TurretWeapon:sync_administered_unit(unit)
 	self._administered_unit_data = {
 		unit = unit
 	}
 end
 
+-- Lines 1244-1255
 function TurretWeapon:on_turret_SO_administered(unit, SO)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_SO_administered", self._unit, unit)
 
@@ -1179,12 +1257,14 @@ function TurretWeapon:on_turret_SO_administered(unit, SO)
 	}
 end
 
+-- Lines 1257-1265
 function TurretWeapon:on_turret_SO_failed(unit)
 	self._administered_to_unit = nil
 	self._mode = nil
 	self._puppet_unit = nil
 end
 
+-- Lines 1267-1289
 function TurretWeapon:on_turret_SO_completed(unit)
 	if not alive(unit) then
 		return
@@ -1207,10 +1287,12 @@ function TurretWeapon:on_turret_SO_completed(unit)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_SO_completed", self._unit, unit)
 end
 
+-- Lines 1291-1294
 function TurretWeapon:sync_create_SO()
 	self:enable_automatic_SO(true)
 end
 
+-- Lines 1296-1320
 function TurretWeapon:sync_SO_completed(puppet_unit)
 	if not alive(puppet_unit) then
 		return
@@ -1229,23 +1311,28 @@ function TurretWeapon:sync_SO_completed(puppet_unit)
 	self._unit:interaction():set_active(false, true)
 end
 
+-- Lines 1322-1325
 function TurretWeapon:sync_cancel_SO()
 	self:enable_automatic_SO(false)
 end
 
+-- Lines 1327-1331
 function TurretWeapon:remove_administered_SO()
 	local result = self._SO_data and managers.groupai:state():remove_special_objective(self._SO_data.SO_id)
 end
 
+-- Lines 1334-1336
 function TurretWeapon:is_available()
 	return not self._mode and not self._administered_unit_data and self._active
 end
 
+-- Lines 1338-1341
 function TurretWeapon:set_weapon_user(user)
 	self._turret_user = user
 	self._player_rotation = nil
 end
 
+-- Lines 1343-1358
 function TurretWeapon:activate_turret()
 	if alive(self._puppet_unit) and self._puppet_stance == "sitting" then
 		self._unit:link(Idstring("third_person_placement"), self._puppet_unit)
@@ -1262,22 +1349,26 @@ function TurretWeapon:activate_turret()
 	end
 end
 
+-- Lines 1360-1362
 function TurretWeapon:keep_ai_attached()
 	self._unit:brain():keep_ai_attached()
 end
 
+-- Lines 1368-1372
 function TurretWeapon:add_outline()
 	if Network:is_server() then
 		self._unit:contour():add("highlight", true)
 	end
 end
 
+-- Lines 1374-1378
 function TurretWeapon:remove_outline()
 	if Network:is_server() then
 		self._unit:contour():remove("highlight", true)
 	end
 end
 
+-- Lines 1380-1390
 function TurretWeapon:enable_automatic_SO(enabled)
 	if not self._automatic_SO then
 		return
@@ -1290,6 +1381,7 @@ function TurretWeapon:enable_automatic_SO(enabled)
 	end
 end
 
+-- Lines 1393-1426
 function TurretWeapon:on_player_enter()
 	self._player_on = true
 
@@ -1318,6 +1410,7 @@ function TurretWeapon:on_player_enter()
 	self:enable_automatic_SO(false)
 end
 
+-- Lines 1428-1449
 function TurretWeapon:on_player_exit()
 	self._player_on = false
 
@@ -1338,6 +1431,7 @@ function TurretWeapon:on_player_exit()
 	self:stop_moving_sound()
 end
 
+-- Lines 1452-1465
 function TurretWeapon:sync_activate_triggers()
 	if self._unit:damage() and self._unit:damage():has_sequence("turret_is_occupied") then
 		self._unit:damage():run_sequence_simple("turret_is_occupied")
@@ -1352,6 +1446,7 @@ function TurretWeapon:sync_activate_triggers()
 	managers.network:session():send_to_peers_synched("sync_player_on", self._unit, self._player_on)
 end
 
+-- Lines 1467-1475
 function TurretWeapon:sync_exit_triggers()
 	if self._unit:damage() and self._unit:damage():has_sequence("player_exit") then
 		self._unit:damage():run_sequence_simple("player_exit")
@@ -1362,6 +1457,7 @@ function TurretWeapon:sync_exit_triggers()
 	managers.network:session():send_to_peers_synched("sync_player_on", self._unit, self._player_on)
 end
 
+-- Lines 1477-1500
 function TurretWeapon:_cancel_active_SO()
 	if self._administered_unit_data and alive(self._administered_unit_data.unit) and self._administered_unit_data.unit:character_damage() and self._administered_unit_data.unit:character_damage().dead and not self._administered_unit_data.unit:character_damage():dead() then
 		if Network:is_server() then
@@ -1383,6 +1479,7 @@ function TurretWeapon:_cancel_active_SO()
 	self:remove_administered_SO()
 end
 
+-- Lines 1503-1538
 function TurretWeapon:on_puppet_damaged(data, damage_info)
 	if not alive(self._puppet_unit) then
 		return
@@ -1422,6 +1519,7 @@ function TurretWeapon:on_puppet_damaged(data, damage_info)
 	managers.queued_tasks:queue(self._activate_turret_clbk_id, self.activate_turret, self, nil, dazed_duration)
 end
 
+-- Lines 1541-1549
 function TurretWeapon:on_puppet_death(data, damage_info)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_puppet_death", self._unit)
 	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
@@ -1429,6 +1527,7 @@ function TurretWeapon:on_puppet_death(data, damage_info)
 	self:_create_turret_SO()
 end
 
+-- Lines 1551-1588
 function TurretWeapon:on_puppet_damaged_client(attacker_unit)
 	if not alive(self._puppet_unit) then
 		return
@@ -1468,11 +1567,13 @@ function TurretWeapon:on_puppet_damaged_client(attacker_unit)
 	managers.queued_tasks:queue(self._activate_turret_clbk_id, self.activate_turret, self, nil, dazed_duration)
 end
 
+-- Lines 1590-1593
 function TurretWeapon:on_puppet_death_client()
 	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
 	self:deactivate()
 end
 
+-- Lines 1595-1602
 function TurretWeapon:set_active(state)
 	self._active = state
 
@@ -1483,12 +1584,14 @@ function TurretWeapon:set_active(state)
 	end
 end
 
+-- Lines 1604-1608
 function TurretWeapon:_disable_extension()
 	if alive(self._unit) and not self._active then
 		self._unit:set_extension_update_enabled(Idstring("weapon"), false)
 	end
 end
 
+-- Lines 1610-1671
 function TurretWeapon:deactivate_client()
 	Application:trace("TurretWeapon:deactivate_client")
 
@@ -1550,6 +1653,7 @@ function TurretWeapon:deactivate_client()
 	self._player_rotation = nil
 end
 
+-- Lines 1673-1681
 function TurretWeapon:lock_fire(lock)
 	self._lock_fire = lock
 
@@ -1558,16 +1662,19 @@ function TurretWeapon:lock_fire(lock)
 	end
 end
 
+-- Lines 1683-1685
 function TurretWeapon:locked_fire()
 	return self._lock_fire
 end
 
+-- Lines 1687-1690
 function TurretWeapon:weapon_unlocked()
 	Application:trace("TurretWeapon:weapon_unlocked: ", inspect(not self._lock_fire))
 
 	return not self._lock_fire
 end
 
+-- Lines 1692-1703
 function TurretWeapon:_shell_explosion_on_client(position, radius, damage, player_damage, curve_pow)
 	Application:trace("TurretWeapon:_shell_explosion_on_client")
 
@@ -1585,10 +1692,12 @@ function TurretWeapon:_shell_explosion_on_client(position, radius, damage, playe
 	managers.explosion:explode_on_client(position, math.UP, nil, damage, damage_radius, curve_pow, custom_params)
 end
 
+-- Lines 1709-1711
 function TurretWeapon:adjust_target_pos(target_pos)
 	return target_pos
 end
 
+-- Lines 1715-1723
 function TurretWeapon:get_damage()
 	if self._puppet_unit then
 		return self._damage_npc
@@ -1597,6 +1706,7 @@ function TurretWeapon:get_damage()
 	end
 end
 
+-- Lines 1725-1727
 function TurretWeapon:mode()
 	return self._mode
 end

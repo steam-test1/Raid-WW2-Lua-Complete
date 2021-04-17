@@ -1,5 +1,6 @@
 RaidGUIControlTableCellImage = RaidGUIControlTableCellImage or class(RaidGUIControlImage)
 
+-- Lines 3-14
 function RaidGUIControlTableCellImage:init(parent, params)
 	local local_params = clone(params)
 

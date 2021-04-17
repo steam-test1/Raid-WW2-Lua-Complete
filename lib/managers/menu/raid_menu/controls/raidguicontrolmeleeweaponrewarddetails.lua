@@ -30,6 +30,7 @@ RaidGUIControlMeleeWeaponRewardDetails.REDEEM_VALUE_FONT_SIZE = tweak_data.gui.f
 RaidGUIControlMeleeWeaponRewardDetails.REDEEM_VALUE_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlMeleeWeaponRewardDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM = 92
 
+-- Lines 45-65
 function RaidGUIControlMeleeWeaponRewardDetails:init(parent, params)
 	RaidGUIControlMeleeWeaponRewardDetails.super.init(self, parent, params)
 
@@ -50,6 +51,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:init(parent, params)
 	self:_create_item_title()
 end
 
+-- Lines 67-76
 function RaidGUIControlMeleeWeaponRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -61,6 +63,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 78-85
 function RaidGUIControlMeleeWeaponRewardDetails:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -70,6 +73,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
+-- Lines 87-124
 function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 	local title_description_params = {
 		name = "title_description",
@@ -108,6 +112,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 	self:_layout_title()
 end
 
+-- Lines 126-134
 function RaidGUIControlMeleeWeaponRewardDetails:_layout_title()
 	local _, _, w, h = self._melee_weapon_name:text_rect()
 
@@ -116,6 +121,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_layout_title()
 	self._title_description:set_x(self._melee_weapon_name:x())
 end
 
+-- Lines 136-154
 function RaidGUIControlMeleeWeaponRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
 		name = "reward_image_panel",
@@ -135,6 +141,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_reward_image()
 	self._reward_image:set_center_y(self._reward_image_panel:h() / 2)
 end
 
+-- Lines 156-191
 function RaidGUIControlMeleeWeaponRewardDetails:_create_redeem_info()
 	local redeem_description_params = {
 		name = "redeem_description",
@@ -170,6 +177,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_redeem_info()
 	self._redeem_button:set_center_x(self._left_panel:w() / 2)
 end
 
+-- Lines 193-206
 function RaidGUIControlMeleeWeaponRewardDetails:_layout_redeem_info()
 	local redeem_description = self._left_panel:child("redeem_description")
 	local _, _, w, h = redeem_description:text_rect()
@@ -187,6 +195,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_layout_redeem_info()
 	self._xp_redeem_value_text:set_center_y(self._left_panel:h() - RaidGUIControlMeleeWeaponRewardDetails.REDEEM_VALUE_CENTER_Y_FROM_BOTTOM)
 end
 
+-- Lines 210-218
 function RaidGUIControlMeleeWeaponRewardDetails:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -198,6 +207,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
+-- Lines 220-236
 function RaidGUIControlMeleeWeaponRewardDetails:_create_description()
 	local description_params = {
 		vertical = "top",
@@ -218,6 +228,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 end
 
+-- Lines 238-255
 function RaidGUIControlMeleeWeaponRewardDetails:_create_item_title()
 	local item_type_params = {
 		name = "item_type",
@@ -238,6 +249,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_item_title()
 	self._item_title = self._right_panel:text(item_type_params)
 end
 
+-- Lines 257-335
 function RaidGUIControlMeleeWeaponRewardDetails:show()
 	RaidGUIControlMeleeWeaponRewardDetails.super.show(self)
 
@@ -319,6 +331,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:show()
 	self._item_title:set_x(item_type_x)
 end
 
+-- Lines 337-341
 function RaidGUIControlMeleeWeaponRewardDetails:_on_click_redeem()
 	local params = {
 		callback = callback(self, self, "redeem"),
@@ -328,11 +341,13 @@ function RaidGUIControlMeleeWeaponRewardDetails:_on_click_redeem()
 	managers.menu:show_redeem_weapon_point_dialog(params)
 end
 
+-- Lines 343-354
 function RaidGUIControlMeleeWeaponRewardDetails:redeem()
 	managers.lootdrop:redeem_dropped_loot_for_xp()
 	game_state_machine:current_state():recalculate_xp()
 end
 
+-- Lines 356-366
 function RaidGUIControlMeleeWeaponRewardDetails:set_melee_weapon(weapon_id)
 	local melee_weapon = managers.weapon_inventory:get_weapon_data(WeaponInventoryManager.CATEGORY_NAME_MELEE, weapon_id)
 	local bm_tweak_data = tweak_data.blackmarket.melee_weapons[weapon_id]
@@ -344,6 +359,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:set_melee_weapon(weapon_id)
 	self._reward_image:set_image(bm_tweak_data.reward_image)
 end
 
+-- Lines 368-372
 function RaidGUIControlMeleeWeaponRewardDetails:close()
 	RaidGUIControlMeleeWeaponRewardDetails.super.close(self)
 end

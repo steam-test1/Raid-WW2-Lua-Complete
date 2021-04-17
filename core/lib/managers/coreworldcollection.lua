@@ -14,6 +14,7 @@ CoreWorldCollection.STATES_NOT_ALOWED_TRANSITION = {
 	"ingame_driving"
 }
 
+-- Lines 14-52
 function CoreWorldCollection:init(params)
 	self.queued_client_mission_executions = {}
 	self.queued_server_mission_executions = {}
@@ -46,24 +47,29 @@ function CoreWorldCollection:init(params)
 	World:occlusion_manager():set_max_occluder_tests(25)
 end
 
+-- Lines 54-56
 function CoreWorldCollection:first_pass()
 	return self._first_pass
 end
 
+-- Lines 58-61
 function CoreWorldCollection:unregister_editor_name(editor_name)
 	self._editor_world_names[editor_name] = nil
 end
 
+-- Lines 63-67
 function CoreWorldCollection:register_editor_name(editor_name, world)
 	self._editor_world_names[editor_name] = self._editor_world_names[editor_name] or {}
 	self._editor_world_names[editor_name].world = world
 end
 
+-- Lines 69-73
 function CoreWorldCollection:register_editor_position(editor_name, position)
 	self._editor_world_names[editor_name] = self._editor_world_names[editor_name] or {}
 	self._editor_world_names[editor_name].position = position
 end
 
+-- Lines 75-82
 function CoreWorldCollection:register_world_spawn(world_id, editor_name, spawn_loot)
 	self._world_spawns[world_id] = {
 		active = true,
@@ -77,6 +83,7 @@ function CoreWorldCollection:register_world_spawn(world_id, editor_name, spawn_l
 	end
 end
 
+-- Lines 84-90
 function CoreWorldCollection:register_world_despawn(world_id, editor_name)
 	if not self._world_spawns[world_id] then
 		return
@@ -86,6 +93,7 @@ function CoreWorldCollection:register_world_despawn(world_id, editor_name)
 	self._input_elements[editor_name] = nil
 end
 
+-- Lines 92-105
 function CoreWorldCollection:get_input_elements_for_world(world_editor_name, event)
 	local res, world_id = nil
 
@@ -102,6 +110,7 @@ function CoreWorldCollection:get_input_elements_for_world(world_editor_name, eve
 	return res
 end
 
+-- Lines 107-115
 function CoreWorldCollection:get_output_elements_for_world(world_id, event)
 	local res = nil
 	local world_spawn = self._world_spawns[world_id]
@@ -113,6 +122,7 @@ function CoreWorldCollection:get_output_elements_for_world(world_id, event)
 	return res
 end
 
+-- Lines 117-122
 function CoreWorldCollection:register_input_element(world_id, event, input_element)
 	self._input_elements[world_id] = self._input_elements[world_id] or {}
 	self._input_elements[world_id][event] = self._input_elements[world_id][event] or {}
@@ -120,6 +130,7 @@ function CoreWorldCollection:register_input_element(world_id, event, input_eleme
 	table.insert(self._input_elements[world_id][event], input_element)
 end
 
+-- Lines 124-129
 function CoreWorldCollection:unregister_input_element(world_id, event, input_element)
 	Application:debug("[CoreWorldCollection:unregister_input_element(]", world_id, event, input_element)
 
@@ -128,6 +139,7 @@ function CoreWorldCollection:unregister_input_element(world_id, event, input_ele
 	end
 end
 
+-- Lines 132-137
 function CoreWorldCollection:register_output_element(world_editor_name, event, output_element)
 	self._output_elements[world_editor_name] = self._output_elements[world_editor_name] or {}
 	self._output_elements[world_editor_name][event] = self._output_elements[world_editor_name][event] or {}
@@ -135,6 +147,7 @@ function CoreWorldCollection:register_output_element(world_editor_name, event, o
 	table.insert(self._output_elements[world_editor_name][event], output_element)
 end
 
+-- Lines 139-144
 function CoreWorldCollection:unregister_output_element(world_editor_name, event, output_element)
 	Application:debug("[CoreWorldCollection:unregister_output_element(]", world_editor_name, event, output_element)
 
@@ -143,12 +156,14 @@ function CoreWorldCollection:unregister_output_element(world_editor_name, event,
 	end
 end
 
+-- Lines 146-151
 function CoreWorldCollection:get_world_position(editor_name)
 	if self._editor_world_names[editor_name] then
 		return self._editor_world_names[editor_name].position
 	end
 end
 
+-- Lines 153-161
 function CoreWorldCollection:get_world_from_pos(position)
 	local result = nil
 	local nav_seg_id = managers.navigation:get_nav_seg_from_pos(position, true)
@@ -161,6 +176,7 @@ function CoreWorldCollection:get_world_from_pos(position)
 	return result
 end
 
+-- Lines 163-168
 function CoreWorldCollection:on_editor_changed_name(old_name, new_name)
 	if self._editor_world_names[old_name] then
 		self._editor_world_names[new_name] = self._editor_world_names[old_name]
@@ -168,6 +184,7 @@ function CoreWorldCollection:on_editor_changed_name(old_name, new_name)
 	end
 end
 
+-- Lines 170-176
 function CoreWorldCollection:_load_predefined_worlds()
 	if DB:has("xml", self._predefined_worlds_file) then
 		local file = DB:open("xml", self._predefined_worlds_file)
@@ -177,6 +194,7 @@ function CoreWorldCollection:_load_predefined_worlds()
 	end
 end
 
+-- Lines 178-195
 function CoreWorldCollection:get_next_world_id()
 	self._world_id_counter = self._world_id_counter + 1
 	local world_id_modulo = self._world_id_counter % WorldDefinition.MAX_WORLD_UNIT_ID
@@ -200,6 +218,7 @@ function CoreWorldCollection:get_next_world_id()
 	return self._world_id_counter
 end
 
+-- Lines 197-203
 function CoreWorldCollection:get_next_navstitcher_id()
 	self._stitcher_counter = self._stitcher_counter - 1
 
@@ -210,6 +229,7 @@ function CoreWorldCollection:get_next_navstitcher_id()
 	return self._stitcher_counter
 end
 
+-- Lines 205-253
 function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_counter, excluded_continents)
 	local start = TimerManager:now()
 	local file_type = "world"
@@ -261,6 +281,7 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	Application:debug("[CoreWorldCollection:prepare_world( world )] DURATION", t_end - start)
 end
 
+-- Lines 256-293
 function CoreWorldCollection:create(index, nav_graph_loaded)
 	local definition = self._world_definitions[index]
 
@@ -293,11 +314,13 @@ function CoreWorldCollection:create(index, nav_graph_loaded)
 	return true
 end
 
+-- Lines 295-298
 function CoreWorldCollection:set_world_counter(value)
 	self.world_counter = value
 	self.sync_world_counter = value
 end
 
+-- Lines 300-347
 function CoreWorldCollection:on_world_loaded(index)
 	Application:debug("[CoreWorldCollection:on_world_loaded]", index)
 
@@ -346,6 +369,7 @@ function CoreWorldCollection:on_world_loaded(index)
 	managers.mouse_pointer:acquire_input()
 end
 
+-- Lines 349-367
 function CoreWorldCollection:check_queued_client_mission_executions()
 	for i, exec in ipairs(self.queued_client_mission_executions) do
 		local mission = managers.worldcollection:mission_by_id(exec.mission_id)
@@ -372,6 +396,7 @@ function CoreWorldCollection:check_queued_client_mission_executions()
 	end
 end
 
+-- Lines 369-375
 function CoreWorldCollection:check_all_worlds_prepared()
 	local result = true
 
@@ -382,6 +407,7 @@ function CoreWorldCollection:check_all_worlds_prepared()
 	return result
 end
 
+-- Lines 377-384
 function CoreWorldCollection:reset_global_ref_counter()
 	self._temp_package_ref_added = false
 
@@ -392,6 +418,7 @@ function CoreWorldCollection:reset_global_ref_counter()
 	end
 end
 
+-- Lines 386-395
 function CoreWorldCollection:add_one_package_ref_to_all()
 	for key, _ in pairs(Global.package_ref_counter) do
 		if Global.package_ref_counter[key] > 0 then
@@ -402,6 +429,7 @@ function CoreWorldCollection:add_one_package_ref_to_all()
 	self._temp_package_ref_added = true
 end
 
+-- Lines 397-408
 function CoreWorldCollection:delete_one_package_ref_from_all()
 	if self._temp_package_ref_added then
 		for key, _ in pairs(Global.package_ref_counter) do
@@ -415,12 +443,14 @@ function CoreWorldCollection:delete_one_package_ref_from_all()
 	managers.raid_job.reload_mission_flag = false
 end
 
+-- Lines 410-414
 function CoreWorldCollection:unload_packages()
 	for _, definition in pairs(self._world_definitions) do
 		definition:unload_packages()
 	end
 end
 
+-- Lines 416-424
 function CoreWorldCollection:_send_to_peers_world_prepared(world_definition)
 	if not world_definition.prepare_synced then
 		world_definition.prepare_synced = true
@@ -432,6 +462,7 @@ function CoreWorldCollection:_send_to_peers_world_prepared(world_definition)
 	end
 end
 
+-- Lines 426-432
 function CoreWorldCollection:check_all_peers_synced_last_world(stage)
 	if self._world_id_counter > 1 then
 		return self:_check_all_peers_synced(self._world_id_counter, stage)
@@ -440,6 +471,7 @@ function CoreWorldCollection:check_all_peers_synced_last_world(stage)
 	end
 end
 
+-- Lines 435-450
 function CoreWorldCollection:_check_all_peers_synced(world_id, stage)
 	if not managers.network:session() then
 		return true
@@ -458,6 +490,7 @@ function CoreWorldCollection:_check_all_peers_synced(world_id, stage)
 	return result
 end
 
+-- Lines 453-460
 function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
 	local params = {
 		world_id = world_id,
@@ -471,6 +504,7 @@ function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
 	end
 end
 
+-- Lines 462-476
 function CoreWorldCollection:_do_complete_world_loading_stage(params)
 	local world_id = params.world_id
 	local stage = params.stage
@@ -487,6 +521,7 @@ function CoreWorldCollection:_do_complete_world_loading_stage(params)
 	managers.network:session():send_to_peers("sync_prepare_world", world_id, peer:id(), stage)
 end
 
+-- Lines 478-484
 function CoreWorldCollection:update_synced_worlds_to_peer(peer)
 	local local_peer = managers.network:session():local_peer()
 
@@ -495,6 +530,7 @@ function CoreWorldCollection:update_synced_worlds_to_peer(peer)
 	end
 end
 
+-- Lines 486-494
 function CoreWorldCollection:update_synced_worlds_to_all_peers()
 	Application:trace("[CoreWorldCollection:update_synced_worlds_to_all_peers()]")
 
@@ -507,6 +543,7 @@ function CoreWorldCollection:update_synced_worlds_to_all_peers()
 	end
 end
 
+-- Lines 496-504
 function CoreWorldCollection:sync_loading_status(t)
 	if not managers.network:session() then
 		return
@@ -519,6 +556,7 @@ function CoreWorldCollection:sync_loading_status(t)
 	end
 end
 
+-- Lines 506-586
 function CoreWorldCollection:update(t, dt, paused_update)
 	if managers.worldcollection.destroying then
 		return
@@ -605,6 +643,7 @@ function CoreWorldCollection:update(t, dt, paused_update)
 	self:check_finished_destroy()
 end
 
+-- Lines 588-593
 function CoreWorldCollection:sync_loading_status_to_peers()
 	if self._sync_loading_status_to_peers and self._sync_loading_packages == 0 then
 		self._sync_loading_status_to_peers = false
@@ -613,6 +652,7 @@ function CoreWorldCollection:sync_loading_status_to_peers()
 	end
 end
 
+-- Lines 595-611
 function CoreWorldCollection:check_drop_in_sync()
 	if managers.network:session() then
 		local local_peer = managers.network:session():local_peer()
@@ -631,6 +671,7 @@ function CoreWorldCollection:check_drop_in_sync()
 	end
 end
 
+-- Lines 614-625
 function CoreWorldCollection:check_queued_world_prepare()
 	if self.concurrent_prepare > 0 then
 		return
@@ -649,6 +690,7 @@ function CoreWorldCollection:check_queued_world_prepare()
 	end
 end
 
+-- Lines 628-641
 function CoreWorldCollection:check_queued_world_create()
 	if self.concurrent_create > 0 then
 		return
@@ -668,6 +710,7 @@ function CoreWorldCollection:check_queued_world_create()
 	end
 end
 
+-- Lines 643-652
 function CoreWorldCollection:check_queued_world_destroy()
 	if not self.level_transition_in_progress then
 		return
@@ -681,6 +724,7 @@ function CoreWorldCollection:check_queued_world_destroy()
 	end
 end
 
+-- Lines 654-667
 function CoreWorldCollection:check_finished_destroy()
 	for key, definition in pairs(self._world_definitions) do
 		if not definition.queued_destroyed then
@@ -701,10 +745,12 @@ function CoreWorldCollection:check_finished_destroy()
 	end
 end
 
+-- Lines 669-671
 function CoreWorldCollection:worlddefinitions()
 	return self._world_definitions
 end
 
+-- Lines 673-679
 function CoreWorldCollection:worlddefinition_by_id(id)
 	if id == 0 then
 		return managers.worlddefinition
@@ -713,18 +759,22 @@ function CoreWorldCollection:worlddefinition_by_id(id)
 	end
 end
 
+-- Lines 681-683
 function CoreWorldCollection:missions()
 	return self._missions
 end
 
+-- Lines 685-687
 function CoreWorldCollection:mission_by_id(id)
 	return self._missions[id]
 end
 
+-- Lines 689-691
 function CoreWorldCollection:motion_path_by_id(id)
 	return self._motion_paths[id]
 end
 
+-- Lines 693-703
 function CoreWorldCollection:mission_element_groups(type)
 	local result = {}
 
@@ -741,18 +791,21 @@ function CoreWorldCollection:mission_element_groups(type)
 	return result
 end
 
+-- Lines 705-709
 function CoreWorldCollection:pre_destroy()
 	for _, mission in pairs(self._missions) do
 		mission:pre_destroy()
 	end
 end
 
+-- Lines 711-715
 function CoreWorldCollection:destroy()
 	for _, mission in pairs(self._missions) do
 		mission:destroy()
 	end
 end
 
+-- Lines 717-798
 function CoreWorldCollection:destroy_world(id)
 	Application:debug("[CoreWorldCollection:destroy_world]", id)
 
@@ -825,6 +878,7 @@ function CoreWorldCollection:destroy_world(id)
 	self:complete_world_loading_stage(id, CoreWorldCollection.STAGE_DESTROY)
 end
 
+-- Lines 800-807
 function CoreWorldCollection:finish_destroy(data)
 	Application:debug("[CoreWorldCollection:finish_destroy]", data.world_id)
 
@@ -837,6 +891,7 @@ function CoreWorldCollection:finish_destroy(data)
 	self._world_definitions[data.world_id] = nil
 end
 
+-- Lines 809-841
 function CoreWorldCollection:_create_test(params)
 	print("CoreWorldCollection:_create_test( params )", inspect(params))
 
@@ -869,6 +924,7 @@ function CoreWorldCollection:_create_test(params)
 	return worlds
 end
 
+-- Lines 843-868
 function CoreWorldCollection:_new_random_world(worlds, ordered)
 	local files = {
 		"levels/tests/world_part1",
@@ -913,6 +969,7 @@ function CoreWorldCollection:_new_random_world(worlds, ordered)
 	end
 end
 
+-- Lines 870-900
 function CoreWorldCollection:on_simulation_ended()
 	Application:trace("CoreWorldCollection:on_simulation_ended()")
 
@@ -941,6 +998,7 @@ function CoreWorldCollection:on_simulation_ended()
 	end
 end
 
+-- Lines 903-916
 function CoreWorldCollection:clear()
 	self:on_simulation_ended()
 	MassUnitManager:delete_all_units()
@@ -957,6 +1015,7 @@ function CoreWorldCollection:clear()
 	self:pre_destroy()
 end
 
+-- Lines 919-931
 function CoreWorldCollection:get_worlddefinition_by_unit_id(unit_id)
 	if unit_id < WorldDefinition.UNIT_ID_BASE then
 		return managers.worlddefinition
@@ -972,6 +1031,7 @@ function CoreWorldCollection:get_worlddefinition_by_unit_id(unit_id)
 	end
 end
 
+-- Lines 934-952
 function CoreWorldCollection:sync_save(data)
 	Application:debug("[CoreWorldCollection:sync_save]", inspect(self._synced_peers))
 
@@ -1001,6 +1061,7 @@ function CoreWorldCollection:sync_save(data)
 	data.CoreWorldCollection = state
 end
 
+-- Lines 955-994
 function CoreWorldCollection:sync_load(data)
 	local state = data.CoreWorldCollection
 	self._drop_in_sync = {}
@@ -1044,6 +1105,7 @@ function CoreWorldCollection:sync_load(data)
 	self._first_pass = false
 end
 
+-- Lines 998-1005
 function CoreWorldCollection:get_world_meta_data(key)
 	local result = self._all_worlds[key]
 
@@ -1054,6 +1116,7 @@ function CoreWorldCollection:get_world_meta_data(key)
 	return result
 end
 
+-- Lines 1007-1014
 function CoreWorldCollection:get_all_worlds()
 	local res = {}
 
@@ -1066,6 +1129,7 @@ function CoreWorldCollection:get_all_worlds()
 	return res
 end
 
+-- Lines 1017-1039
 function CoreWorldCollection:get_unit_with_id(id, cb, world_id)
 	local unit = nil
 
@@ -1088,6 +1152,7 @@ function CoreWorldCollection:get_unit_with_id(id, cb, world_id)
 	return unit
 end
 
+-- Lines 1041-1066
 function CoreWorldCollection:debug_print_stats()
 	local all_units = World:unit_manager():get_units()
 	local i = 0
@@ -1119,6 +1184,7 @@ function CoreWorldCollection:debug_print_stats()
 	Application:debug("NavigationManager:pos_reservations:", l)
 end
 
+-- Lines 1068-1080
 function CoreWorldCollection:get_unit_with_real_id(id)
 	local all_units = World:unit_manager():get_units()
 	local unit = nil
@@ -1134,10 +1200,12 @@ function CoreWorldCollection:get_unit_with_real_id(id)
 	return unit
 end
 
+-- Lines 1082-1084
 function CoreWorldCollection:__get_unit_with_real_id(id)
 	return World:unit_manager():get_unit_by_id(id)
 end
 
+-- Lines 1086-1092
 function CoreWorldCollection:world_name_ids()
 	local names = {}
 
@@ -1148,10 +1216,12 @@ function CoreWorldCollection:world_name_ids()
 	return names
 end
 
+-- Lines 1094-1096
 function CoreWorldCollection:world_names()
 	return self._editor_world_names
 end
 
+-- Lines 1099-1115
 function CoreWorldCollection:get_mission_elements_from_script(name, element_class)
 	local path = self._all_worlds[name].file .. "/" .. "world/world"
 	local instance_data = self:_serialize_to_script("mission", Idstring(path))
@@ -1170,6 +1240,7 @@ function CoreWorldCollection:get_mission_elements_from_script(name, element_clas
 	return mission_elements
 end
 
+-- Lines 1117-1126
 function CoreWorldCollection:_serialize_to_script(type, name)
 	if Application:editor() then
 		return PackageManager:editor_load_script_data(type:id(), name:id())
@@ -1182,12 +1253,14 @@ function CoreWorldCollection:_serialize_to_script(type, name)
 	end
 end
 
+-- Lines 1128-1133
 function CoreWorldCollection:add_package_ref(package)
 	Global.package_ref_counter = Global.package_ref_counter or {}
 	Global.package_ref_counter[package] = Global.package_ref_counter[package] or 0
 	Global.package_ref_counter[package] = Global.package_ref_counter[package] + 1
 end
 
+-- Lines 1135-1141
 function CoreWorldCollection:delete_package_ref(package)
 	Global.package_ref_counter[package] = Global.package_ref_counter[package] or 1
 
@@ -1196,6 +1269,7 @@ function CoreWorldCollection:delete_package_ref(package)
 	end
 end
 
+-- Lines 1143-1157
 function CoreWorldCollection:has_queued_unloads()
 	local cnt = 0
 
@@ -1214,6 +1288,7 @@ function CoreWorldCollection:has_queued_unloads()
 	end
 end
 
+-- Lines 1161-1168
 function CoreWorldCollection:register_spawned_unit(unit, pos)
 	local nav_seg_id = managers.navigation:get_nav_seg_from_pos(pos, true)
 	local def_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
@@ -1224,6 +1299,7 @@ function CoreWorldCollection:register_spawned_unit(unit, pos)
 	end
 end
 
+-- Lines 1170-1178
 function CoreWorldCollection:register_spawned_unit_on_last_world(unit)
 	local definition = nil
 
@@ -1236,6 +1312,7 @@ function CoreWorldCollection:register_spawned_unit_on_last_world(unit)
 	definition:register_spawned_unit(unit)
 end
 
+-- Lines 1180-1191
 function CoreWorldCollection:get_alarm_for_world(world_id)
 	if world_id == 0 then
 		return managers.worlddefinition.alarmed
@@ -1250,6 +1327,7 @@ function CoreWorldCollection:get_alarm_for_world(world_id)
 	end
 end
 
+-- Lines 1194-1205
 function CoreWorldCollection:set_alarm_for_world(editor_name, alarm)
 	local found = false
 
@@ -1267,6 +1345,7 @@ function CoreWorldCollection:set_alarm_for_world(editor_name, alarm)
 	end
 end
 
+-- Lines 1208-1216
 function CoreWorldCollection:set_alarm_for_world_id(world_id, alarm)
 	Application:trace("[CoreWorldCollection:set_alarm_for_world_id]", world_id, alarm)
 
@@ -1278,6 +1357,7 @@ function CoreWorldCollection:set_alarm_for_world_id(world_id, alarm)
 	end
 end
 
+-- Lines 1218-1235
 function CoreWorldCollection:sync_world_prepared(world_id, peer, stage)
 	if not managers.network:session() then
 		return
@@ -1296,6 +1376,7 @@ function CoreWorldCollection:sync_world_prepared(world_id, peer, stage)
 	end
 end
 
+-- Lines 1238-1246
 function CoreWorldCollection:send_loaded_packages(peer)
 	Application:trace("[CoreWorldCollection:send_loaded_packages]")
 
@@ -1307,6 +1388,7 @@ function CoreWorldCollection:send_loaded_packages(peer)
 	end
 end
 
+-- Lines 1248-1258
 function CoreWorldCollection:remove_dropin_package_references()
 	if not self._packages_packed then
 		return
@@ -1321,6 +1403,7 @@ function CoreWorldCollection:remove_dropin_package_references()
 	self._packages_packed = nil
 end
 
+-- Lines 1261-1304
 function CoreWorldCollection:sync_loaded_packages(packages_packed)
 	Application:trace("[CoreWorldCollection:sync_loaded_packages]", inspect(packages_packed))
 
@@ -1374,6 +1457,7 @@ function CoreWorldCollection:sync_loaded_packages(packages_packed)
 	end
 end
 
+-- Lines 1306-1312
 function CoreWorldCollection:all_worlds_created()
 	local res = true
 
@@ -1384,6 +1468,7 @@ function CoreWorldCollection:all_worlds_created()
 	return res
 end
 
+-- Lines 1317-1347
 function CoreWorldCollection:level_transition_cleanup()
 	Application:trace("[CoreWorldCollection:level_transition_cleanup()]")
 
@@ -1415,6 +1500,7 @@ function CoreWorldCollection:level_transition_cleanup()
 	managers.drop_loot:clear()
 end
 
+-- Lines 1349-1427
 function CoreWorldCollection:level_transition_started()
 	Application:trace("[CoreWorldCollection:world_transition_started()]", self._first_pass, self.world_counter)
 
@@ -1476,6 +1562,7 @@ function CoreWorldCollection:level_transition_started()
 	managers.queued_tasks:queue(nil, managers.worldcollection.level_transition_cleanup, managers.worldcollection, nil, 1, nil)
 end
 
+-- Lines 1429-1465
 function CoreWorldCollection:level_transition_ended()
 	Application:trace("[CoreWorldCollection:world_transition_ended()]")
 	managers.raid_menu:set_pause_menu_enabled(true)
@@ -1503,17 +1590,20 @@ function CoreWorldCollection:level_transition_ended()
 	end
 end
 
+-- Lines 1467-1470
 function CoreWorldCollection:_do_spawn_players()
 	managers.network:session():spawn_players()
 
 	self.level_transition_in_progress = false
 end
 
+-- Lines 1472-1475
 function CoreWorldCollection:_fire_level_loaded_event()
 	Application:trace("[CoreWorldCollection:_fire_level_loaded_event()]")
 	managers.global_state:fire_event("system_level_loaded")
 end
 
+-- Lines 1478-1483
 function CoreWorldCollection:world_spawn(world_id)
 	if not world_id then
 		return
@@ -1522,6 +1612,7 @@ function CoreWorldCollection:world_spawn(world_id)
 	return self._world_spawns[world_id]
 end
 
+-- Lines 1485-1491
 function CoreWorldCollection:count_world_spawns()
 	local cnt = 0
 
@@ -1532,6 +1623,7 @@ function CoreWorldCollection:count_world_spawns()
 	return cnt
 end
 
+-- Lines 1493-1527
 function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	local job_data = managers.raid_job:current_job()
 	local job_id = job_data and job_data.job_id
@@ -1569,16 +1661,19 @@ function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	end
 end
 
+-- Lines 1529-1533
 function CoreWorldCollection:_reset_loot_planting_flags()
 	for world_id, data in pairs(self._world_spawns) do
 		data.plant_loot = false
 	end
 end
 
+-- Lines 1535-1537
 function CoreWorldCollection:test_package_loading(pkg)
 	return self._package_loading[pkg]
 end
 
+-- Lines 1539-1543
 function CoreWorldCollection:on_server_left()
 	Application:trace("CoreWorldCollection:on_server_left()")
 	self:destroy_all_worlds()
@@ -1586,6 +1681,7 @@ function CoreWorldCollection:on_server_left()
 	self._skip_one_loading_frame = true
 end
 
+-- Lines 1545-1550
 function CoreWorldCollection:destroy_all_worlds()
 	for w_id, w in pairs(self._world_definitions) do
 		table.insert(managers.worldcollection.queued_world_destruction, w_id)
@@ -1594,10 +1690,12 @@ function CoreWorldCollection:destroy_all_worlds()
 	managers.menu:hide_loading_screen()
 end
 
+-- Lines 1552-1555
 function CoreWorldCollection:add_world_loaded_callback(obj)
 	table.insert(self._world_loaded_callbacks, obj)
 end
 
+-- Lines 1557-1563
 function CoreWorldCollection:execute_world_loaded_callbacks()
 	Application:trace("[CoreWorldCollection:execute_world_loaded_callbacks()]")
 

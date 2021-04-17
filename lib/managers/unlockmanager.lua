@@ -5,6 +5,7 @@ UnlockManager.SLOT_CHARACTER = "character"
 UnlockManager.SLOT_PROFILE = "profile"
 UnlockManager.CATEGORY_CONTROL_ARCHIVE = "control_archive"
 
+-- Lines 16-24
 function UnlockManager.get_instance()
 	if not Global.unlock_manager then
 		Global.unlock_manager = UnlockManager:new()
@@ -15,10 +16,12 @@ function UnlockManager.get_instance()
 	return Global.unlock_manager
 end
 
+-- Lines 26-29
 function UnlockManager:init()
 	self:reset()
 end
 
+-- Lines 31-36
 function UnlockManager:reset()
 	self._categories = {
 		[UnlockManager.SLOT_CHARACTER] = {},
@@ -26,6 +29,7 @@ function UnlockManager:reset()
 	}
 end
 
+-- Lines 38-56
 function UnlockManager:unlock(category, identifiers)
 	if not self._categories[category.slot][category.identifier] then
 		self._categories[category.slot][category.identifier] = {}
@@ -43,6 +47,7 @@ function UnlockManager:unlock(category, identifiers)
 	end
 end
 
+-- Lines 58-82
 function UnlockManager:is_unlocked(category, identifiers)
 	local result = false
 
@@ -67,6 +72,7 @@ function UnlockManager:is_unlocked(category, identifiers)
 	return result
 end
 
+-- Lines 85-91
 function UnlockManager:save_profile_slot(data)
 	local state = {
 		version = UnlockManager.PROFILE_VERSION,
@@ -75,6 +81,7 @@ function UnlockManager:save_profile_slot(data)
 	data.UnlockManager = state
 end
 
+-- Lines 94-102
 function UnlockManager:load_profile_slot(data)
 	local state = data.UnlockManager
 

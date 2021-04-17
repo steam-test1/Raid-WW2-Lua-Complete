@@ -2,6 +2,7 @@ JobValueUnitElement = JobValueUnitElement or class(MissionElement)
 JobValueUnitElement.SAVE_UNIT_POSITION = false
 JobValueUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 5-15
 function JobValueUnitElement:init(unit)
 	JobValueUnitElement.super.init(self, unit)
 
@@ -14,6 +15,7 @@ function JobValueUnitElement:init(unit)
 	table.insert(self._save_values, "save")
 end
 
+-- Lines 20-52
 function JobValueUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -65,6 +67,7 @@ JobValueFilterUnitElement = JobValueFilterUnitElement or class(MissionElement)
 JobValueFilterUnitElement.SAVE_UNIT_POSITION = false
 JobValueFilterUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 60-72
 function JobValueFilterUnitElement:init(unit)
 	JobValueFilterUnitElement.super.init(self, unit)
 
@@ -79,6 +82,7 @@ function JobValueFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
+-- Lines 74-85
 function JobValueFilterUnitElement:_build_panel(panel, panel_sizer)
 	JobValueUnitElement._build_panel(self, panel, panel_sizer)
 
@@ -108,6 +112,7 @@ ApplyJobValueUnitElement = ApplyJobValueUnitElement or class(MissionElement)
 ApplyJobValueUnitElement.SAVE_UNIT_POSITION = false
 ApplyJobValueUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 93-103
 function ApplyJobValueUnitElement:init(unit)
 	ApplyJobValueUnitElement.super.init(self, unit)
 
@@ -120,9 +125,11 @@ function ApplyJobValueUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 105-106
 function ApplyJobValueUnitElement:update_editing()
 end
 
+-- Lines 108-117
 function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 	ApplyJobValueUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -142,6 +149,7 @@ function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 119-132
 function ApplyJobValueUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -159,6 +167,7 @@ function ApplyJobValueUnitElement:add_element()
 	end
 end
 
+-- Lines 134-140
 function ApplyJobValueUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -167,10 +176,12 @@ function ApplyJobValueUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 143-145
 function ApplyJobValueUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 148-173
 function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

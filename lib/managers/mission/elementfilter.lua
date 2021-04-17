@@ -2,14 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementFilter = ElementFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementFilter:init(...)
 	ElementFilter.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementFilter:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 13-39
 function ElementFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -44,6 +47,7 @@ local x360 = Idstring("X360")
 local ps4 = Idstring("PS4")
 local xb1 = Idstring("XB1")
 
+-- Lines 46-56
 function ElementFilter:_check_platform()
 	local platform = Global.running_simulation and Idstring(managers.editor:mission_platform())
 	platform = platform or SystemInfo:platform()
@@ -59,6 +63,7 @@ function ElementFilter:_check_platform()
 	return false
 end
 
+-- Lines 58-73
 function ElementFilter:_check_difficulty()
 	local diff = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 
@@ -81,6 +86,7 @@ function ElementFilter:_check_difficulty()
 	return false
 end
 
+-- Lines 75-94
 function ElementFilter:_check_players()
 	local players = Global.running_simulation and managers.editor:mission_player()
 	players = players or managers.network:session() and managers.network:session():amount_of_players()
@@ -108,6 +114,7 @@ function ElementFilter:_check_players()
 	return false
 end
 
+-- Lines 97-111
 function ElementFilter:_check_mode()
 	if self._values.mode_control == nil or self._values.mode_assault == nil then
 		return true
@@ -124,6 +131,7 @@ function ElementFilter:_check_mode()
 	return false
 end
 
+-- Lines 113-130
 function ElementFilter:_check_alarm()
 	local alarm = managers.worldcollection:get_alarm_for_world(self._sync_id)
 

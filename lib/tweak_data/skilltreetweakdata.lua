@@ -5,6 +5,7 @@ SkillTreeTweakData.CLASS_INFILTRATOR = "infiltrator"
 SkillTreeTweakData.CLASS_DEMOLITIONS = "demolitions"
 SkillTreeTweakData.STARTING_SUBCLASS_LEVEL = 5
 
+-- Lines 10-29
 function SkillTreeTweakData:init(tweak_data)
 	self:_init_classes(tweak_data)
 	self:_init_skill_list()
@@ -26,6 +27,7 @@ function SkillTreeTweakData:init(tweak_data)
 	self:_create_class_warcry_data()
 end
 
+-- Lines 31-60
 function SkillTreeTweakData:_create_class_warcry_data()
 	self.class_warcry_data = {}
 
@@ -46,6 +48,7 @@ function SkillTreeTweakData:_create_class_warcry_data()
 	end
 end
 
+-- Lines 62-151
 function SkillTreeTweakData:_init_classes(tweak_data)
 	self.classes = {}
 	self.base_classes = {
@@ -213,6 +216,7 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 	}
 end
 
+-- Lines 154-2535
 function SkillTreeTweakData:_init_skill_list()
 	self.skills = {
 		skill_empty_placeholder = {
@@ -3639,6 +3643,7 @@ function SkillTreeTweakData:_init_skill_list()
 	}
 end
 
+-- Lines 2538-2589
 function SkillTreeTweakData:_init_recon_skill_tree()
 	self.skill_trees.recon = {
 		{
@@ -4054,6 +4059,7 @@ function SkillTreeTweakData:_init_recon_skill_tree()
 	}
 end
 
+-- Lines 2592-2643
 function SkillTreeTweakData:_init_assault_skill_tree()
 	self.skill_trees.assault = {
 		{
@@ -4469,6 +4475,7 @@ function SkillTreeTweakData:_init_assault_skill_tree()
 	}
 end
 
+-- Lines 2646-2697
 function SkillTreeTweakData:_init_infiltrator_skill_tree()
 	self.skill_trees.infiltrator = {
 		{
@@ -4884,6 +4891,7 @@ function SkillTreeTweakData:_init_infiltrator_skill_tree()
 	}
 end
 
+-- Lines 2700-2752
 function SkillTreeTweakData:_init_demolitions_skill_tree()
 	self.skill_trees.demolitions = {
 		{
@@ -5299,6 +5307,7 @@ function SkillTreeTweakData:_init_demolitions_skill_tree()
 	}
 end
 
+-- Lines 2761-2780
 function SkillTreeTweakData:get_weapon_unlock_levels()
 	local ret = {}
 
@@ -5321,6 +5330,7 @@ function SkillTreeTweakData:get_weapon_unlock_levels()
 	return ret
 end
 
+-- Lines 2783-2797
 function SkillTreeTweakData:get_weapon_unlock_level(weapon_id, class_name)
 	for level, unlock_data in pairs(self.automatic_unlock_progressions[class_name]) do
 		if unlock_data.weapons then
@@ -5337,6 +5347,7 @@ function SkillTreeTweakData:get_weapon_unlock_level(weapon_id, class_name)
 	return nil
 end
 
+-- Lines 2799-2858
 function SkillTreeTweakData:_init_recon_unlock_progression()
 	self.automatic_unlock_progressions.recon = {
 		{
@@ -5458,6 +5469,7 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 	}
 end
 
+-- Lines 2860-2918
 function SkillTreeTweakData:_init_assault_unlock_progression()
 	self.automatic_unlock_progressions.assault = {
 		{
@@ -5580,6 +5592,7 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	}
 end
 
+-- Lines 2920-2976
 function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	self.automatic_unlock_progressions.infiltrator = {
 		{
@@ -5695,6 +5708,7 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	}
 end
 
+-- Lines 2978-3038
 function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions = {
 		{

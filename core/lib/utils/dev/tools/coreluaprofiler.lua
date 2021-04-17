@@ -3,6 +3,7 @@ core:import("CoreLuaDump")
 CoreLuaProfiler = CoreLuaProfiler or class()
 core_lua_profiler_reload = true
 
+-- Lines 7-32
 function CoreLuaProfiler:init()
 	self:create_main_frame()
 
@@ -28,15 +29,18 @@ function CoreLuaProfiler:init()
 	self:check_news(true)
 end
 
+-- Lines 34-185
 function CoreLuaProfiler:create_main_frame()
 	self._main_frame = EWS:Frame("LUA Profiler", Vector3(-1, -1, 0), Vector3(1000, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
+	-- Lines 38-38
 	function self._resource_sort_func(a, b)
 		return a._name < b._name
 	end
 
 	local sort_by_name = self._resource_sort_func
 
+	-- Lines 40-40
 	local function sort_by_mem_use(a, b)
 		return b._used < a._used
 	end
@@ -141,6 +145,7 @@ function CoreLuaProfiler:create_main_frame()
 	self._set_sample_rate_dialog = CoreLuaProfilerSampleRateDialog:new(self._main_frame)
 end
 
+-- Lines 187-194
 function CoreLuaProfiler:on_set_resource_sort_func(data, event)
 	self._resources_menu:set_checked("SORT_NAME", false)
 	self._resources_menu:set_checked("SORT_MEM_USE", false)
@@ -151,10 +156,12 @@ function CoreLuaProfiler:on_set_resource_sort_func(data, event)
 	self:on_update_resources()
 end
 
+-- Lines 196-198
 function CoreLuaProfiler:on_notebook_changing()
 	self._flag_notebook_change = true
 end
 
+-- Lines 200-209
 function CoreLuaProfiler:notebook_change()
 	if self._flag_notebook_change then
 		if self._main_notebook:get_current_page() == self._main_notebook:get_page(0) then
@@ -167,14 +174,17 @@ function CoreLuaProfiler:notebook_change()
 	end
 end
 
+-- Lines 211-213
 function CoreLuaProfiler:notebook_selected()
 	return self._main_notebook_page_selected
 end
 
+-- Lines 215-217
 function CoreLuaProfiler:on_check_news()
 	self:check_news()
 end
 
+-- Lines 219-239
 function CoreLuaProfiler:check_news(new_only)
 	local news = nil
 
@@ -199,6 +209,7 @@ function CoreLuaProfiler:check_news(new_only)
 	end
 end
 
+-- Lines 241-247
 function CoreLuaProfiler:binary_to_string(str)
 	local out_str = ""
 
@@ -209,6 +220,7 @@ function CoreLuaProfiler:binary_to_string(str)
 	return out_str
 end
 
+-- Lines 249-256
 function CoreLuaProfiler:dump_tree_expand(node)
 	self._dump_frame_table._tree_ctrl:expand(node._id)
 
@@ -220,6 +232,7 @@ function CoreLuaProfiler:dump_tree_expand(node)
 	end
 end
 
+-- Lines 258-297
 function CoreLuaProfiler:on_dump_search()
 	local found = nil
 	local str = self._dump_frame_table._search_text_ctrl:get_value()
@@ -266,6 +279,7 @@ function CoreLuaProfiler:on_dump_search()
 	self._dump_frame_table._tree_ctrl:thaw()
 end
 
+-- Lines 299-308
 function CoreLuaProfiler:on_open_dump()
 	local dialog = EWS:FileDialog(self._main_frame, "Open Lua Dump XML", managers.database:base_path(), "", "XML files (*.xml)|*.xml", "OPEN,FILE_MUST_EXIST")
 
@@ -278,6 +292,7 @@ function CoreLuaProfiler:on_open_dump()
 	end
 end
 
+-- Lines 310-325
 function CoreLuaProfiler:open_dump()
 	local node = SystemFS:parse_xml("/core/temp/dump.xml")
 
@@ -300,6 +315,7 @@ function CoreLuaProfiler:open_dump()
 	self._dump_frame_table._tree_ctrl:refresh()
 end
 
+-- Lines 327-336
 function CoreLuaProfiler:on_do_dump()
 	local str = EWS:get_text_from_user(self._main_frame, "Enter variable you want to dump.", "Dump", "_G", Vector3(-1, -1, -1), true)
 
@@ -313,6 +329,7 @@ function CoreLuaProfiler:on_do_dump()
 	end
 end
 
+-- Lines 338-360
 function CoreLuaProfiler:fill_dump_tree_ctrl(node, id)
 	for n in node:children() do
 		local name = n:name()
@@ -349,6 +366,7 @@ function CoreLuaProfiler:fill_dump_tree_ctrl(node, id)
 	end
 end
 
+-- Lines 362-390
 function CoreLuaProfiler:load_profilers()
 	if SystemFS:exists("/data/settings/lua_profiler.xml") then
 		local prev_class_name = self._class_name
@@ -382,6 +400,7 @@ function CoreLuaProfiler:load_profilers()
 	end
 end
 
+-- Lines 392-398
 function CoreLuaProfiler:get_child(node, name, key, value)
 	for n in node:children() do
 		if n:name() == name and n:parameter(key) == value then
@@ -390,6 +409,7 @@ function CoreLuaProfiler:get_child(node, name, key, value)
 	end
 end
 
+-- Lines 400-414
 function CoreLuaProfiler:save_profilers()
 	local node = Node("lua_profiler")
 
@@ -411,12 +431,14 @@ function CoreLuaProfiler:save_profilers()
 	file:close()
 end
 
+-- Lines 416-420
 function CoreLuaProfiler:on_set_sample_rate()
 	if self._set_sample_rate_dialog:show_modal() then
 		self._frames_sample_steps = self._set_sample_rate_dialog:get_value()
 	end
 end
 
+-- Lines 422-427
 function CoreLuaProfiler:on_goto_global()
 	self._class_table = {}
 
@@ -427,10 +449,12 @@ function CoreLuaProfiler:on_goto_global()
 	self:update_list()
 end
 
+-- Lines 429-431
 function CoreLuaProfiler:sort_by_name(a, b)
 	return string.lower(a._name) < string.lower(b._name)
 end
 
+-- Lines 433-446
 function CoreLuaProfiler:update_list()
 	table.sort(self._class_table, callback(self, self, "sort_by_name"))
 	self._main_frame_table._function_list_ctrl:delete_all_items()
@@ -447,6 +471,7 @@ function CoreLuaProfiler:update_list()
 	self._main_frame_table._function_list_ctrl:autosize_column(1)
 end
 
+-- Lines 448-454
 function CoreLuaProfiler:find_table(name)
 	for _, it in ipairs(self._g_table) do
 		if not it._source and it._name == name then
@@ -455,6 +480,7 @@ function CoreLuaProfiler:find_table(name)
 	end
 end
 
+-- Lines 456-462
 function CoreLuaProfiler:find_function(name)
 	for _, it in ipairs(self._class_table) do
 		if it._source and it._name == name then
@@ -463,14 +489,17 @@ function CoreLuaProfiler:find_function(name)
 	end
 end
 
+-- Lines 464-466
 function CoreLuaProfiler:set_position(newpos)
 	self._main_frame:set_position(newpos)
 end
 
+-- Lines 468-470
 function CoreLuaProfiler:on_close()
 	managers.toolhub:close("LUA Profiler")
 end
 
+-- Lines 472-495
 function CoreLuaProfiler:on_select_profiler()
 	local selected_idices = self._main_frame_table._profiler_list_ctrl:selected_items()
 	local sources = {}
@@ -497,6 +526,7 @@ function CoreLuaProfiler:on_select_profiler()
 	self:save_profilers()
 end
 
+-- Lines 497-506
 function CoreLuaProfiler:remove_all_profilers()
 	for k, v in pairs(self._profilers) do
 		rawget(_G, v._class_name)[v._function_name] = v._old_func
@@ -507,6 +537,7 @@ function CoreLuaProfiler:remove_all_profilers()
 	self._profilers = {}
 end
 
+-- Lines 508-536
 function CoreLuaProfiler:add_profiler(name)
 	local func_table = self:find_function(name)
 
@@ -539,6 +570,7 @@ function CoreLuaProfiler:add_profiler(name)
 	end
 end
 
+-- Lines 538-543
 function CoreLuaProfiler:on_select_function()
 	for _, selected_index in ipairs(self._main_frame_table._function_list_ctrl:selected_items()) do
 		self:add_profiler(self._main_frame_table._function_list_ctrl:get_item(selected_index, 0))
@@ -547,6 +579,7 @@ function CoreLuaProfiler:on_select_function()
 	self:save_profilers()
 end
 
+-- Lines 545-553
 function CoreLuaProfiler:on_select_table()
 	local name = self._main_frame_table._table_list_ctrl:get_item(self._main_frame_table._table_list_ctrl:selected_item(), 0)
 	self._class_table = {}
@@ -556,6 +589,7 @@ function CoreLuaProfiler:on_select_table()
 	self:update_list()
 end
 
+-- Lines 555-560
 function CoreLuaProfiler:destroy()
 	if alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -564,11 +598,13 @@ function CoreLuaProfiler:destroy()
 	end
 end
 
+-- Lines 562-565
 function CoreLuaProfiler:close()
 	self:remove_all_profilers()
 	self._main_frame:destroy()
 end
 
+-- Lines 567-577
 function CoreLuaProfiler:reset_profilers()
 	if self._frames_sample_steps <= self._frames_since_profilers_reset then
 		self._frames_since_profilers_reset = 1
@@ -582,6 +618,7 @@ function CoreLuaProfiler:reset_profilers()
 	end
 end
 
+-- Lines 579-584
 function CoreLuaProfiler:update_profilers()
 	for k, v in pairs(self._profilers) do
 		v._calls = v._calls + Profiler:counter_calls(k)
@@ -589,6 +626,7 @@ function CoreLuaProfiler:update_profilers()
 	end
 end
 
+-- Lines 586-593
 function CoreLuaProfiler:roundup(value)
 	local f = math.floor(value)
 
@@ -599,6 +637,7 @@ function CoreLuaProfiler:roundup(value)
 	end
 end
 
+-- Lines 595-619
 function CoreLuaProfiler:update_profiler_list()
 	for k, v in pairs(self._profilers) do
 		local calls = v._calls / self._frames_sample_steps
@@ -625,12 +664,14 @@ function CoreLuaProfiler:update_profiler_list()
 	end
 end
 
+-- Lines 621-624
 function CoreLuaProfiler:update_mem()
 	local memuse = collectgarbage("count") / 1024
 
 	self._main_frame_table._mem_usage_text:set_value("Lua mem usage: " .. string.format("%.1f", memuse) .. " Mb")
 end
 
+-- Lines 626-647
 function CoreLuaProfiler:update(t, dt)
 	self:notebook_change()
 
@@ -656,6 +697,7 @@ function CoreLuaProfiler:update(t, dt)
 	end
 end
 
+-- Lines 649-667
 function CoreLuaProfiler:find_methods(in_table, out_table)
 	for k, v in pairs(in_table) do
 		if type(v) == "function" then
@@ -681,9 +723,11 @@ function CoreLuaProfiler:find_methods(in_table, out_table)
 	end
 end
 
+-- Lines 669-721
 function CoreLuaProfiler:on_tree_ctrl_change()
 end
 
+-- Lines 723-785
 function CoreLuaProfiler:on_update_resources()
 	self._resources_frame_table._tree_ctrl:freeze()
 	self._resources_frame_table._tree_ctrl:clear()
@@ -758,6 +802,7 @@ end
 
 CoreLuaProfilerSampleRateDialog = CoreLuaProfilerSampleRateDialog or class()
 
+-- Lines 791-813
 function CoreLuaProfilerSampleRateDialog:init(p)
 	self._dialog = EWS:Dialog(p, "Sample Rate", "", Vector3(-1, -1, 0), Vector3(200, 86, 0), "CAPTION,SYSTEM_MENU")
 	local box = EWS:BoxSizer("VERTICAL")
@@ -782,6 +827,7 @@ function CoreLuaProfilerSampleRateDialog:init(p)
 	self._dialog:set_sizer(box)
 end
 
+-- Lines 815-827
 function CoreLuaProfilerSampleRateDialog:show_modal()
 	self._key_text_ctrl:set_value("1")
 
@@ -797,6 +843,7 @@ function CoreLuaProfilerSampleRateDialog:show_modal()
 	return self._return_val
 end
 
+-- Lines 829-833
 function CoreLuaProfilerSampleRateDialog:on_set_button()
 	self._done = true
 	self._key = self._key_text_ctrl:get_value()
@@ -804,6 +851,7 @@ function CoreLuaProfilerSampleRateDialog:on_set_button()
 	self._dialog:end_modal("")
 end
 
+-- Lines 835-839
 function CoreLuaProfilerSampleRateDialog:on_cancel_button()
 	self._done = true
 	self._return_val = false
@@ -811,6 +859,7 @@ function CoreLuaProfilerSampleRateDialog:on_cancel_button()
 	self._dialog:end_modal("")
 end
 
+-- Lines 841-843
 function CoreLuaProfilerSampleRateDialog:get_value()
 	return math.max(1, tonumber(self._key))
 end

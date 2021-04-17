@@ -1,5 +1,6 @@
 HUDNameVehicleLabel = HUDNameVehicleLabel or class(HUDNameLabel)
 
+-- Lines 15-22
 function HUDNameVehicleLabel:init(hud, params)
 	self._vehicle_name = params.vehicle_name
 	self._vehicle_unit = params.vehicle_unit
@@ -9,6 +10,7 @@ function HUDNameVehicleLabel:init(hud, params)
 	self:_create_name()
 end
 
+-- Lines 24-35
 function HUDNameVehicleLabel:_create_panel(hud)
 	self._object = hud.panel:panel({
 		name = "vehicle_name_label_" .. self._vehicle_name,
@@ -17,6 +19,7 @@ function HUDNameVehicleLabel:_create_panel(hud)
 	})
 end
 
+-- Lines 37-62
 function HUDNameVehicleLabel:_create_name()
 	local tabs_texture = "guis/textures/pd2/hud_tabs"
 	local bag_rect = {
@@ -90,23 +93,28 @@ function HUDNameVehicleLabel:_create_name()
 	})
 end
 
+-- Lines 120-122
 function HUDNameVehicleLabel:id()
 	return self._id
 end
 
+-- Lines 132-134
 function HUDNameVehicleLabel:panel()
 	return self._object
 end
 
+-- Lines 136-140
 function HUDNameVehicleLabel:destroy()
 	self._object:clear()
 	self._object:parent():remove(self._object)
 end
 
+-- Lines 142-144
 function HUDNameVehicleLabel:show()
 	self._object:set_visible(true)
 end
 
+-- Lines 146-148
 function HUDNameVehicleLabel:hide()
 	self._object:set_visible(false)
 end

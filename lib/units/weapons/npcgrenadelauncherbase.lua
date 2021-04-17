@@ -1,20 +1,24 @@
 NPCGrenadeLauncherBase = NPCGrenadeLauncherBase or class(NPCRaycastWeaponBase)
 
+-- Lines 3-6
 function NPCGrenadeLauncherBase:init(...)
 	NPCGrenadeLauncherBase.super.init(self, ...)
 
 	self._grenade_id = self.grenade_id or "m24"
 end
 
+-- Lines 10-12
 function NPCGrenadeLauncherBase:ejects_shells()
 	return false
 end
 
+-- Lines 16-19
 function NPCGrenadeLauncherBase:fire_blank(direction, impact)
 	World:effect_manager():spawn(self._muzzle_effect_table)
 	self:_sound_singleshot()
 end
 
+-- Lines 23-47
 function NPCGrenadeLauncherBase:singleshot(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	if not Network:is_server() then
 		return
@@ -46,6 +50,7 @@ local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 local mvec1 = Vector3()
 
+-- Lines 55-100
 function NPCGrenadeLauncherBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	local result = {}
 	local hit_unit = nil

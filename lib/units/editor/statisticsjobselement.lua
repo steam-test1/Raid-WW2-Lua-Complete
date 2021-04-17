@@ -2,6 +2,7 @@ StatisticsJobsElement = StatisticsJobsElement or class(MissionElement)
 StatisticsJobsElement.SAVE_UNIT_POSITION = false
 StatisticsJobsElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-23
 function StatisticsJobsElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -21,6 +22,7 @@ function StatisticsJobsElement:init(unit)
 	table.insert(self._save_values, "required")
 end
 
+-- Lines 28-53
 function StatisticsJobsElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

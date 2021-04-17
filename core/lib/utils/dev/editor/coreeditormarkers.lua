@@ -1,3 +1,4 @@
+-- Lines 1-30
 function CoreEditor:build_marker_panel()
 	self._marker_panel = EWS:Panel(self._ews_editor_frame, "Markers", "TAB_TRAVERSAL")
 	local marker_sizer = EWS:BoxSizer("VERTICAL")
@@ -30,6 +31,7 @@ function CoreEditor:build_marker_panel()
 	return self._marker_panel
 end
 
+-- Lines 32-38
 function CoreEditor:marker_name()
 	local i = 1
 
@@ -40,6 +42,7 @@ function CoreEditor:marker_name()
 	return "marker" .. i
 end
 
+-- Lines 39-48
 function CoreEditor:on_make_marker()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the marker:", "Create Marker", self:marker_name(), Vector3(-1, -1, 0), true)
 
@@ -52,6 +55,7 @@ function CoreEditor:on_make_marker()
 	end
 end
 
+-- Lines 49-57
 function CoreEditor:make_marker(name)
 	if self._current_layer then
 		local m = Marker:new(name)
@@ -64,6 +68,7 @@ function CoreEditor:make_marker(name)
 	end
 end
 
+-- Lines 58-63
 function CoreEditor:on_use_marker()
 	local s = self:get_marker_string()
 
@@ -72,12 +77,14 @@ function CoreEditor:on_use_marker()
 	end
 end
 
+-- Lines 64-70
 function CoreEditor:use_marker(name)
 	if self._current_layer and self._markers[name] then
 		self._current_layer:use_marker(self._markers[name])
 	end
 end
 
+-- Lines 72-77
 function CoreEditor:on_delete_marker()
 	local s = self:get_marker_string()
 
@@ -86,6 +93,7 @@ function CoreEditor:on_delete_marker()
 	end
 end
 
+-- Lines 78-83
 function CoreEditor:delete_marker(name)
 	if self._markers[name] then
 		self._markers[name] = nil
@@ -94,6 +102,7 @@ function CoreEditor:delete_marker(name)
 	self:remove_marker_from_list(name)
 end
 
+-- Lines 85-93
 function CoreEditor:get_marker_string()
 	if self._ews_markers:nr_items() > 0 then
 		local i = self._ews_markers:selected_index()
@@ -106,6 +115,7 @@ function CoreEditor:get_marker_string()
 	return nil
 end
 
+-- Lines 94-104
 function CoreEditor:remove_marker_from_list(s)
 	local i = 0
 	local size = self._ews_markers:nr_items()
@@ -121,10 +131,12 @@ function CoreEditor:remove_marker_from_list(s)
 	end
 end
 
+-- Lines 106-108
 function CoreEditor:create_marker(name, pos, rot)
 	self._markers[name] = Marker:new(name, pos, rot)
 end
 
+-- Lines 109-114
 function CoreEditor:get_marker(name)
 	if self._markers[name] then
 		return self._markers[name]
@@ -133,6 +145,7 @@ function CoreEditor:get_marker(name)
 	return nil
 end
 
+-- Lines 116-119
 function CoreEditor:clear_markers()
 	self._ews_markers:clear()
 
@@ -141,20 +154,24 @@ end
 
 Marker = Marker or class()
 
+-- Lines 123-127
 function Marker:init(name, pos, rot)
 	self._name = name
 	self._pos = pos
 	self._rot = rot
 end
 
+-- Lines 128-130
 function Marker:set_pos(pos)
 	self._pos = pos
 end
 
+-- Lines 131-133
 function Marker:set_rot(rot)
 	self._rot = rot
 end
 
+-- Lines 134-139
 function Marker:draw()
 	local l = 2000
 
@@ -163,6 +180,7 @@ function Marker:draw()
 	Application:draw_line(self._pos, self._pos + self._rot:z() * l, 0, 0, 0.5)
 end
 
+-- Lines 141-144
 function Marker:save(file, t)
 	t = t .. "\t"
 

@@ -1,9 +1,11 @@
 SyncUnitData = SyncUnitData or class()
 
+-- Lines 3-5
 function SyncUnitData:init(unit)
 	self._unit = unit
 end
 
+-- Lines 7-29
 function SyncUnitData:save(data)
 	local state = {
 		lights = {}
@@ -31,12 +33,14 @@ function SyncUnitData:save(data)
 	data.SyncUnitData = state
 end
 
+-- Lines 31-34
 function SyncUnitData:load(data)
 	self._sync_state = data.SyncUnitData
 
 	managers.worldcollection:add_world_loaded_callback(self)
 end
 
+-- Lines 36-46
 function SyncUnitData:on_world_loaded()
 	if not alive(self._unit) then
 		return

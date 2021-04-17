@@ -1,9 +1,11 @@
 VehicleStateDriving = VehicleStateDriving or class(BaseVehicleState)
 
+-- Lines 3-5
 function VehicleStateDriving:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
+-- Lines 9-18
 function VehicleStateDriving:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_start_engine_sound()
 	self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
@@ -11,6 +13,7 @@ function VehicleStateDriving:enter(state_data, enter_data)
 	self._unit:interaction():set_contour("standard_color", 0)
 end
 
+-- Lines 22-39
 function VehicleStateDriving:adjust_interactions()
 	VehicleStateDriving.super.adjust_interactions(self)
 
@@ -34,6 +37,7 @@ function VehicleStateDriving:adjust_interactions()
 	end
 end
 
+-- Lines 43-45
 function VehicleStateDriving:is_vulnerable()
 	return true
 end

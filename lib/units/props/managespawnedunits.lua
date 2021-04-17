@@ -1,11 +1,13 @@
 ManageSpawnedUnits = ManageSpawnedUnits or class()
 
+-- Lines 4-8
 function ManageSpawnedUnits:init(unit)
 	self._unit = unit
 	self._spawned_units = {}
 	self._temp_link_units = {}
 end
 
+-- Lines 24-56
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local spawn_unit = nil
@@ -38,12 +40,14 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	end
 end
 
+-- Lines 58-63
 function ManageSpawnedUnits:sync_link_unit(align_obj_name, spawn_unit)
 	if align_obj_name and spawn_unit then
 		self._unit:link(Idstring(align_obj_name), spawn_unit, spawn_unit:orientation_object():name(), true)
 	end
 end
 
+-- Lines 83-108
 function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	if not self[joint_table] then
 		Application:error("No table named:", joint_table, "in unit file:", self._unit:name())
@@ -79,6 +83,7 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	end
 end
 
+-- Lines 121-135
 function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -97,6 +102,7 @@ function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	self:_spawn_run_sequence(unit_id, sequence_name)
 end
 
+-- Lines 157-206
 function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, vec3_b)
 	if not unit_id then
 		Application:error("param1", "nil:\n", self._spawned_units[unit_id].unit:name())
@@ -158,6 +164,7 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 	end
 end
 
+-- Lines 216-233
 function ManageSpawnedUnits:remove_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
@@ -168,6 +175,7 @@ function ManageSpawnedUnits:remove_unit(unit_id)
 	self._spawned_units[unit_id] = nil
 end
 
+-- Lines 241-249
 function ManageSpawnedUnits:destroy(unit)
 	for i, entry in pairs(self._spawned_units) do
 		if alive(entry.unit) then
@@ -178,6 +186,7 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
+-- Lines 253-266
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -194,6 +203,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
+-- Lines 270-275
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -202,6 +212,7 @@ function ManageSpawnedUnits:load(data)
 	self._sync_spawn_and_link = data.managed_spawned_units.linked_joints or {}
 end
 
+-- Lines 279-299
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -226,6 +237,7 @@ function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	end
 end
 
+-- Lines 303-314
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	for index, value in ipairs(self[joint_table]) do
 		if index > 1 then
@@ -241,6 +253,7 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	self._unit:set_moving()
 end
 
+-- Lines 318-327
 function ManageSpawnedUnits:sync_unit_spawn(unit_id)
 	if self._sync_spawn_and_link and self._sync_spawn_and_link[unit_id] then
 		self:_link_joints(unit_id, self._sync_spawn_and_link[unit_id].joint_table)

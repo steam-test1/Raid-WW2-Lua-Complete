@@ -17,6 +17,7 @@ SpecialObjectiveUnitElement._AI_SO_types = {
 	"AI_turret"
 }
 
+-- Lines 6-69
 function SpecialObjectiveUnitElement:init(unit)
 	SpecialObjectiveUnitElement.super.init(self, unit)
 
@@ -72,6 +73,7 @@ function SpecialObjectiveUnitElement:init(unit)
 	table.insert(self._save_values, "is_alert_point")
 end
 
+-- Lines 71-78
 function SpecialObjectiveUnitElement:post_init(...)
 	SpecialObjectiveUnitElement.super.post_init(self, ...)
 
@@ -82,6 +84,7 @@ function SpecialObjectiveUnitElement:post_init(...)
 	end
 end
 
+-- Lines 80-123
 function SpecialObjectiveUnitElement:test_element()
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test spawn unit without ready navigation data (AI-graph)", "Spawn", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -134,6 +137,7 @@ function SpecialObjectiveUnitElement:test_element()
 	self._start_test_t = Application:time()
 end
 
+-- Lines 125-131
 function SpecialObjectiveUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		enemy:set_slot(0)
@@ -144,6 +148,7 @@ function SpecialObjectiveUnitElement:stop_test_element()
 	print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
 end
 
+-- Lines 133-140
 function SpecialObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	if self._hed._patrol_group then
 		return
@@ -153,6 +158,7 @@ function SpecialObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	self:_draw_follow_up(selected_unit, all_units)
 end
 
+-- Lines 142-174
 function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local brush = Draw:brush()
 
@@ -199,6 +205,7 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 	end
 end
 
+-- Lines 176-195
 function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 	if managers.navigation:is_data_ready() then
 		local my_pos = self._unit:position()
@@ -225,6 +232,7 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 	end
 end
 
+-- Lines 197-227
 function SpecialObjectiveUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	if self._hed.followup_elements then
 		local followup_elements = self._hed.followup_elements
@@ -265,6 +273,7 @@ function SpecialObjectiveUnitElement:update_unselected(t, dt, selected_unit, all
 	end
 end
 
+-- Lines 229-240
 function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 	if self._hed.followup_elements then
 		for _, element_id in ipairs(self._hed.followup_elements) do
@@ -284,6 +293,7 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 	end
 end
 
+-- Lines 242-247
 function SpecialObjectiveUnitElement:update_editing()
 	self:_so_raycast()
 	self:_spawn_raycast()
@@ -291,6 +301,7 @@ function SpecialObjectiveUnitElement:update_editing()
 	self:_turret_raycast()
 end
 
+-- Lines 249-257
 function SpecialObjectiveUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -308,6 +319,7 @@ function SpecialObjectiveUnitElement:_so_raycast()
 	return nil
 end
 
+-- Lines 259-276
 function SpecialObjectiveUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -329,6 +341,7 @@ function SpecialObjectiveUnitElement:_spawn_raycast()
 	return id
 end
 
+-- Lines 278-292
 function SpecialObjectiveUnitElement:_turret_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body",
@@ -350,6 +363,7 @@ function SpecialObjectiveUnitElement:_turret_raycast()
 	return id
 end
 
+-- Lines 294-303
 function SpecialObjectiveUnitElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -364,6 +378,7 @@ function SpecialObjectiveUnitElement:_raycast()
 	return nil
 end
 
+-- Lines 305-357
 function SpecialObjectiveUnitElement:_lmb()
 	local id = self:_so_raycast()
 
@@ -428,14 +443,17 @@ function SpecialObjectiveUnitElement:_lmb()
 	self._hed.search_position = self:_raycast() or self._hed.search_position
 end
 
+-- Lines 359-361
 function SpecialObjectiveUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
+-- Lines 365-367
 function SpecialObjectiveUnitElement:selected()
 	SpecialObjectiveUnitElement.super.selected(self)
 end
 
+-- Lines 369-383
 function SpecialObjectiveUnitElement:_apply_preset(params)
 	local value = params.ctrlr:get_value()
 	local confirm = EWS:message_box(Global.frame_panel, "Apply preset " .. value .. "?", "Special objective", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
@@ -453,6 +471,7 @@ function SpecialObjectiveUnitElement:_apply_preset(params)
 	end
 end
 
+-- Lines 385-390
 function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(true)
@@ -463,6 +482,7 @@ function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	end
 end
 
+-- Lines 392-397
 function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
@@ -473,6 +493,7 @@ function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	end
 end
 
+-- Lines 399-413
 function SpecialObjectiveUnitElement:_toggle_nav_link_filter_value(params)
 	local value = params.ctrlr:get_value()
 
@@ -492,6 +513,7 @@ function SpecialObjectiveUnitElement:_toggle_nav_link_filter_value(params)
 	SpecialObjectiveUnitElement.SO_access = self._hed.SO_access
 end
 
+-- Lines 415-501
 function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -608,5 +630,6 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "test_unit", test_units, "Select the unit to be used when testing.")
 end
 
+-- Lines 503-506
 function SpecialObjectiveUnitElement:add_to_mission_package()
 end

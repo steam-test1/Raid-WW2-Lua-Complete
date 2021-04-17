@@ -12,6 +12,7 @@ RaidGUIControlTopStat.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlTopStat.FONT_SIZE = tweak_data.gui.font_sizes.large
 RaidGUIControlTopStat.FONT_KERNING = tweak_data.hud.medium_kern
 
+-- Lines 21-36
 function RaidGUIControlTopStat:init(parent, params)
 	RaidGUIControlTopStat.super.init(self, parent, params)
 
@@ -29,9 +30,11 @@ function RaidGUIControlTopStat:init(parent, params)
 	self:_create_icon_panel()
 end
 
+-- Lines 39-40
 function RaidGUIControlTopStat:close()
 end
 
+-- Lines 43-52
 function RaidGUIControlTopStat:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.w = RaidGUIControlTopStat.WIDTH
@@ -42,6 +45,7 @@ function RaidGUIControlTopStat:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 55-79
 function RaidGUIControlTopStat:_create_stat_info()
 	local params_player_name = {
 		vertical = "center",
@@ -79,6 +83,7 @@ function RaidGUIControlTopStat:_create_stat_info()
 	self._stat_name_label = self._control_panel:label(params_stat_name)
 end
 
+-- Lines 81-89
 function RaidGUIControlTopStat:_create_icon_panel()
 	local icon_panel_params = {
 		name = "icon_panel",
@@ -91,6 +96,7 @@ function RaidGUIControlTopStat:_create_icon_panel()
 	self._icon_panel = self._object:panel(icon_panel_params)
 end
 
+-- Lines 91-103
 function RaidGUIControlTopStat:set_data(data)
 	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
 	self._stat_name_label:set_text(self:translate(data.stat, true))
@@ -111,6 +117,7 @@ function RaidGUIControlTopStat:set_data(data)
 	self._stat_icon:set_center_y(self._icon_panel:h() / 2)
 end
 
+-- Lines 105-110
 function RaidGUIControlTopStat:animate_show(delay)
 	delay = delay or 0
 
@@ -118,6 +125,7 @@ function RaidGUIControlTopStat:animate_show(delay)
 	self._player_name_label._object:animate(callback(self, self, "_animate_show_player_name"), delay + 0.6)
 end
 
+-- Lines 112-145
 function RaidGUIControlTopStat:_animate_show_stat(panel, delay, icon, label)
 	if delay then
 		wait(delay)
@@ -152,6 +160,7 @@ function RaidGUIControlTopStat:_animate_show_stat(panel, delay, icon, label)
 	label:set_alpha(1)
 end
 
+-- Lines 147-188
 function RaidGUIControlTopStat:_animate_show_player_name(label, delay)
 	if delay then
 		wait(delay)
@@ -197,6 +206,7 @@ function RaidGUIControlTopStat:_animate_show_player_name(label, delay)
 	self._player_name_label._object:set_center(center_x, center_y)
 end
 
+-- Lines 190-228
 function RaidGUIControlTopStat:_animate_text_glow(text, new_color, duration, number_of_laps, delay)
 	local number_of_letters = string.len(text:text())
 	local original_color = text:color()

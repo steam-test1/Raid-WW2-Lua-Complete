@@ -1,5 +1,6 @@
 KillzoneUnitElement = KillzoneUnitElement or class(MissionElement)
 
+-- Lines 3-9
 function KillzoneUnitElement:init(unit)
 	KillzoneUnitElement.super.init(self, unit)
 
@@ -8,6 +9,7 @@ function KillzoneUnitElement:init(unit)
 	table.insert(self._save_values, "type")
 end
 
+-- Lines 11-18
 function KillzoneUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

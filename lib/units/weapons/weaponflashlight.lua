@@ -1,6 +1,7 @@
 WeaponFlashLight = WeaponFlashLight or class(WeaponGadgetBase)
 WeaponFlashLight.GADGET_TYPE = "flashlight"
 
+-- Lines 4-31
 function WeaponFlashLight:init(unit)
 	WeaponFlashLight.super.init(self, unit)
 
@@ -30,6 +31,7 @@ function WeaponFlashLight:init(unit)
 	World:effect_manager():set_hidden(self._light_effect, true)
 end
 
+-- Lines 35-46
 function WeaponFlashLight:set_npc()
 	if self._light_effect then
 		World:effect_manager():kill(self._light_effect)
@@ -47,6 +49,7 @@ function WeaponFlashLight:set_npc()
 	self._is_npc = true
 end
 
+-- Lines 48-55
 function WeaponFlashLight:_check_state()
 	WeaponFlashLight.super._check_state(self)
 	self._light:set_enable(self._on)
@@ -58,6 +61,7 @@ function WeaponFlashLight:_check_state()
 	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
 end
 
+-- Lines 59-69
 function WeaponFlashLight:destroy(unit)
 	WeaponFlashLight.super.destroy(self, unit)
 
@@ -79,6 +83,7 @@ WeaponFlashLight.HALLOWEEN_FROZEN = 3
 WeaponFlashLight.HALLOWEEN_SPOOC = 4
 WeaponFlashLight.HALLOWEEN_WARP = 5
 
+-- Lines 80-102
 function WeaponFlashLight:sync_net_event(event_id)
 	if not managers.raid_job or managers.raid_job:current_job_id() ~= "haunted" then
 		return
@@ -102,6 +107,7 @@ function WeaponFlashLight:sync_net_event(event_id)
 	end
 end
 
+-- Lines 104-148
 function WeaponFlashLight:update(unit, t, dt)
 	self._light:link(self._a_flashlight_obj)
 	self._light:set_rotation(Rotation(self._a_flashlight_obj:rotation():z(), -self._a_flashlight_obj:rotation():x(), -self._a_flashlight_obj:rotation():y()))
@@ -141,10 +147,12 @@ function WeaponFlashLight:update(unit, t, dt)
 	end
 end
 
+-- Lines 150-153
 function WeaponFlashLight:run_net_event(event_id)
 	self:sync_net_event(event_id)
 end
 
+-- Lines 155-173
 function WeaponFlashLight:update_flicker(t, dt)
 	if self._flicker_t then
 		self._flicker_t = math.max(0, self._flicker_t - dt)
@@ -163,6 +171,7 @@ function WeaponFlashLight:update_flicker(t, dt)
 	end
 end
 
+-- Lines 175-194
 function WeaponFlashLight:update_laughter(t, dt)
 	if self._laughter_t then
 		self._laughter_t = math.max(0, self._laughter_t - dt)
@@ -183,6 +192,7 @@ function WeaponFlashLight:update_laughter(t, dt)
 	end
 end
 
+-- Lines 196-208
 function WeaponFlashLight:update_frozen(t, dt)
 	if self._frozen_t and self._frozen_t <= t then
 		local obj = self._unit:get_object(Idstring("a_flashlight"))

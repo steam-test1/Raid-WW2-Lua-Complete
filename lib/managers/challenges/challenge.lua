@@ -4,9 +4,11 @@ Challenge.STATE_ACTIVE = "active"
 Challenge.STATE_COMPLETED = "completed"
 Challenge.STATE_FAILED = "failed"
 
+-- Lines 8-9
 function Challenge.create()
 end
 
+-- Lines 11-23
 function Challenge:init(challenge_category, challenge_id, tasks, completion_callback, challenge_data)
 	self._category = challenge_category
 	self._id = challenge_id
@@ -22,6 +24,7 @@ function Challenge:init(challenge_category, challenge_id, tasks, completion_call
 	end
 end
 
+-- Lines 25-32
 function Challenge:setup()
 	for index, task in pairs(self._tasks) do
 		setmetatable(task, ChallengeTask.get_metatable(task._type))
@@ -31,14 +34,17 @@ function Challenge:setup()
 	self:deactivate()
 end
 
+-- Lines 34-36
 function Challenge:category()
 	return self._category
 end
 
+-- Lines 38-40
 function Challenge:id()
 	return self._id
 end
 
+-- Lines 42-52
 function Challenge:activate()
 	if self._state ~= Challenge.STATE_INACTIVE then
 		return
@@ -51,6 +57,7 @@ function Challenge:activate()
 	end
 end
 
+-- Lines 54-64
 function Challenge:deactivate()
 	if self._state ~= Challenge.STATE_ACTIVE then
 		return
@@ -63,6 +70,7 @@ function Challenge:deactivate()
 	end
 end
 
+-- Lines 66-74
 function Challenge:reset()
 	if self._state == Challenge.STATE_COMPLETED or self._state == Challenge.STATE_FAILED then
 		self._state = Challenge.STATE_INACTIVE
@@ -73,18 +81,22 @@ function Challenge:reset()
 	end
 end
 
+-- Lines 76-78
 function Challenge:tasks()
 	return self._tasks
 end
 
+-- Lines 80-82
 function Challenge:data()
 	return self._data
 end
 
+-- Lines 84-86
 function Challenge:completed()
 	return self._state == Challenge.STATE_COMPLETED and true or false
 end
 
+-- Lines 88-99
 function Challenge:on_task_completed()
 	local challenge_completed = true
 
@@ -99,6 +111,7 @@ function Challenge:on_task_completed()
 	self:_on_completed()
 end
 
+-- Lines 101-128
 function Challenge:_on_completed()
 	self._state = Challenge.STATE_COMPLETED
 
@@ -125,6 +138,7 @@ function Challenge:_on_completed()
 	end
 end
 
+-- Lines 130-140
 function Challenge:force_complete()
 	if self:completed() then
 		return

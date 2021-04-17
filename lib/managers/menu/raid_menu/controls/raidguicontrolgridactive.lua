@@ -1,9 +1,11 @@
 RaidGUIControlGridActive = RaidGUIControlGridActive or class(RaidGUIControlGrid)
 
+-- Lines 5-7
 function RaidGUIControlGridActive:init(parent, params)
 	RaidGUIControlGridActive.super.init(self, parent, params)
 end
 
+-- Lines 9-27
 function RaidGUIControlGridActive:activate_item_by_value(params)
 	for grid_item_index, grid_item in ipairs(self._grid_items) do
 		local grid_item_data = grid_item:get_data()
@@ -22,10 +24,12 @@ function RaidGUIControlGridActive:activate_item_by_value(params)
 	return self._active_item
 end
 
+-- Lines 29-31
 function RaidGUIControlGridActive:get_active_item()
 	return self._active_item
 end
 
+-- Lines 36-52
 function RaidGUIControlGridActive:set_selected(value, dont_fire_select_callback)
 	if value then
 		local first_item_data = self._grid_items[1]:get_data()

@@ -12,6 +12,7 @@ CoreLocatorConstraintCutsceneKey.control_for_locator_name = CoreCutsceneKeyBase.
 CoreLocatorConstraintCutsceneKey.control_for_parent_unit_name = CoreCutsceneKeyBase.standard_combo_box_control
 CoreLocatorConstraintCutsceneKey.control_for_parent_object_name = CoreCutsceneKeyBase.standard_combo_box_control
 
+-- Lines 13-20
 function CoreLocatorConstraintCutsceneKey:__tostring()
 	local attach_point_name = "disabled"
 
@@ -22,16 +23,19 @@ function CoreLocatorConstraintCutsceneKey:__tostring()
 	return string.format("Set constaint of locator \"%s\" to %s.", self:locator_name(), attach_point_name)
 end
 
+-- Lines 22-24
 function CoreLocatorConstraintCutsceneKey:can_evaluate_with_player(player)
 	return self._cast ~= nil
 end
 
+-- Lines 26-29
 function CoreLocatorConstraintCutsceneKey:evaluate(player, fast_forward)
 	local parent_object = self:_unit_object(self:parent_unit_name(), self:parent_object_name(), true)
 
 	self:_constrain_locator_to_object(parent_object)
 end
 
+-- Lines 31-38
 function CoreLocatorConstraintCutsceneKey:revert(player)
 	local preceeding_key = self:preceeding_key({
 		locator_name = self:locator_name()
@@ -44,6 +48,7 @@ function CoreLocatorConstraintCutsceneKey:revert(player)
 	end
 end
 
+-- Lines 40-57
 function CoreLocatorConstraintCutsceneKey:update_gui(time, delta_time, player)
 	local locator_object = self:_unit_object(self:locator_name(), "locator", true)
 
@@ -66,18 +71,22 @@ function CoreLocatorConstraintCutsceneKey:update_gui(time, delta_time, player)
 	end
 end
 
+-- Lines 59-61
 function CoreLocatorConstraintCutsceneKey:is_valid_locator_name(locator_name)
 	return string.begins(locator_name, "locator") and self:_unit_type(locator_name) == "locator"
 end
 
+-- Lines 63-65
 function CoreLocatorConstraintCutsceneKey:is_valid_parent_unit_name(unit_name)
 	return unit_name == nil or unit_name == "" or CoreCutsceneKeyBase.is_valid_unit_name(self, unit_name)
 end
 
+-- Lines 67-69
 function CoreLocatorConstraintCutsceneKey:is_valid_parent_object_name(object_name)
 	return object_name == nil or object_name == "" or CoreCutsceneKeyBase.is_valid_object_name(self, object_name, self:parent_unit_name())
 end
 
+-- Lines 71-84
 function CoreLocatorConstraintCutsceneKey:refresh_control_for_locator_name(control)
 	control:freeze()
 	control:clear()
@@ -96,6 +105,7 @@ function CoreLocatorConstraintCutsceneKey:refresh_control_for_locator_name(contr
 	control:thaw()
 end
 
+-- Lines 86-92
 function CoreLocatorConstraintCutsceneKey:refresh_control_for_parent_unit_name(control)
 	CoreCutsceneKeyBase.refresh_control_for_unit_name(self, control, self:parent_unit_name())
 	control:append("")
@@ -105,6 +115,7 @@ function CoreLocatorConstraintCutsceneKey:refresh_control_for_parent_unit_name(c
 	end
 end
 
+-- Lines 94-100
 function CoreLocatorConstraintCutsceneKey:refresh_control_for_parent_object_name(control)
 	CoreCutsceneKeyBase.refresh_control_for_object_name(self, control, self:parent_unit_name(), self:parent_object_name())
 	control:append("")
@@ -114,14 +125,17 @@ function CoreLocatorConstraintCutsceneKey:refresh_control_for_parent_object_name
 	end
 end
 
+-- Lines 102-104
 function CoreLocatorConstraintCutsceneKey:on_attribute_before_changed(attribute_name, value, previous_value)
 	self:revert(nil)
 end
 
+-- Lines 106-108
 function CoreLocatorConstraintCutsceneKey:on_attribute_changed(attribute_name, value, previous_value)
 	self:evaluate(nil)
 end
 
+-- Lines 110-136
 function CoreLocatorConstraintCutsceneKey:_constrain_locator_to_object(parent_object)
 	local locator_unit = self:_unit(self:locator_name(), true)
 

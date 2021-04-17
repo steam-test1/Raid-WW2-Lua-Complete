@@ -1,5 +1,6 @@
 FadeToBlackElement = FadeToBlackElement or class(MissionElement)
 
+-- Lines 3-9
 function FadeToBlackElement:init(unit)
 	FadeToBlackElement.super.init(self, unit)
 
@@ -8,6 +9,7 @@ function FadeToBlackElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
+-- Lines 12-29
 function FadeToBlackElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

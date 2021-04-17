@@ -5,6 +5,7 @@ SpawnEnemyGroupUnitElement.RANDOMS = {
 	"amount"
 }
 
+-- Lines 7-27
 function SpawnEnemyGroupUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -29,6 +30,7 @@ function SpawnEnemyGroupUnitElement:init(unit)
 	table.insert(self._save_values, "team")
 end
 
+-- Lines 30-51
 function SpawnEnemyGroupUnitElement:post_init(...)
 	SpawnEnemyGroupUnitElement.super.post_init(self, ...)
 
@@ -54,13 +56,16 @@ function SpawnEnemyGroupUnitElement:post_init(...)
 	end
 end
 
+-- Lines 53-55
 function SpawnEnemyGroupUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
+-- Lines 57-58
 function SpawnEnemyGroupUnitElement:update_editing()
 end
 
+-- Lines 60-68
 function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -78,6 +83,7 @@ function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_un
 	end
 end
 
+-- Lines 70-80
 function SpawnEnemyGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -95,6 +101,7 @@ function SpawnEnemyGroupUnitElement:add_element()
 	end
 end
 
+-- Lines 82-88
 function SpawnEnemyGroupUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -103,15 +110,18 @@ function SpawnEnemyGroupUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 90-93
 function SpawnEnemyGroupUnitElement:get_links_to_unit(...)
 	SpawnEnemyGroupUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
 end
 
+-- Lines 96-98
 function SpawnEnemyGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 101-163
 function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -192,6 +202,7 @@ function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	opt_sizer:add(filter_sizer, 1, 0, "EXPAND")
 end
 
+-- Lines 167-185
 function SpawnEnemyGroupUnitElement:on_preferred_spawn_groups_checkbox_changed(params)
 	local value = params.ctrlr:get_value()
 

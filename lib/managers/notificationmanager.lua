@@ -2,11 +2,13 @@ require("lib/managers/hud/HUDNotification")
 
 NotificationManager = NotificationManager or class()
 
+-- Lines 29-32
 function NotificationManager:init()
 	self._notification_queue = {}
 	self._currently_displayed_notification = nil
 end
 
+-- Lines 38-116
 function NotificationManager:add_notification(notification_data)
 	local prompt = nil
 
@@ -76,6 +78,7 @@ function NotificationManager:add_notification(notification_data)
 	end
 end
 
+-- Lines 119-131
 function NotificationManager:show_notification(index)
 	local notification = self._notification_queue[index]
 	local hud = HUDNotification.create(notification)
@@ -89,6 +92,7 @@ function NotificationManager:show_notification(index)
 	end
 end
 
+-- Lines 134-147
 function NotificationManager:hide_current_notification()
 	if self._reaction_in_progress then
 		self._delayed_hide = true
@@ -105,11 +109,13 @@ function NotificationManager:hide_current_notification()
 	end
 end
 
+-- Lines 150-153
 function NotificationManager:execute_current_notification()
 	self._currently_displayed_notification.hud:execute()
 	managers.queued_tasks:unqueue("notification_hide")
 end
 
+-- Lines 156-175
 function NotificationManager:react(t)
 	if not self._currently_displayed_notification or not self._currently_displayed_notification.reaction then
 		return false
@@ -132,6 +138,7 @@ function NotificationManager:react(t)
 	return false
 end
 
+-- Lines 178-189
 function NotificationManager:react_hold(t, dt)
 	if self._reaction_in_progress then
 		local progress = (t - self._reaction_start_t + self._release_hud_progress) / self._currently_displayed_notification.reaction.duration
@@ -146,6 +153,7 @@ function NotificationManager:react_hold(t, dt)
 	end
 end
 
+-- Lines 192-203
 function NotificationManager:react_cancel()
 	if self._waiting_for_release then
 		self:_execute_react()
@@ -160,6 +168,7 @@ function NotificationManager:react_cancel()
 	end
 end
 
+-- Lines 206-220
 function NotificationManager:_execute_react()
 	local reaction = self._currently_displayed_notification.reaction
 
@@ -179,6 +188,7 @@ function NotificationManager:_execute_react()
 	return false
 end
 
+-- Lines 225-233
 function NotificationManager:notification_done()
 	self._currently_displayed_notification = nil
 
@@ -189,6 +199,7 @@ function NotificationManager:notification_done()
 	end
 end
 
+-- Lines 237-244
 function NotificationManager:on_simulation_ended()
 	managers.queued_tasks:unqueue_all(nil, self)
 
@@ -201,6 +212,7 @@ function NotificationManager:on_simulation_ended()
 	self._currently_displayed_notification = nil
 end
 
+-- Lines 249-257
 function NotificationManager:_clear_outdated_notifications()
 	local t = TimerManager:game():time()
 

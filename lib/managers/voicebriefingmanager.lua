@@ -2,17 +2,20 @@ core:import("CoreSubtitlePresenter")
 
 VoiceBriefingManager = VoiceBriefingManager or class()
 
+-- Lines 5-8
 function VoiceBriefingManager:init()
 	self:_clear_event()
 	self:_setup()
 end
 
+-- Lines 10-13
 function VoiceBriefingManager:_setup()
 	self._sound_source = SoundDevice:create_source("VoiceBriefingManager")
 
 	managers.subtitle:set_presenter(CoreSubtitlePresenter.OverlayPresenter:new(tweak_data.gui.fonts.din_compressed_outlined_22, 22))
 end
 
+-- Lines 15-28
 function VoiceBriefingManager:_set_parameters(params)
 	params = params or {}
 	self._params.show_subtitle = params.show_subtitle and true or false
@@ -28,10 +31,12 @@ function VoiceBriefingManager:_set_parameters(params)
 	end
 end
 
+-- Lines 30-32
 function VoiceBriefingManager:_debug_callback(...)
 	self:_sound_callback(...)
 end
 
+-- Lines 34-45
 function VoiceBriefingManager:_sound_callback(instance, sound_source, event_type, cookie, label, identifier, position)
 	if event_type == "end_of_event" then
 		self:_end_of_event(cookie)
@@ -44,6 +49,7 @@ function VoiceBriefingManager:_sound_callback(instance, sound_source, event_type
 	end
 end
 
+-- Lines 47-56
 function VoiceBriefingManager:_end_of_event(cookie)
 	if self._listeners_enabled then
 		for _, listener in ipairs(self._listeners) do
@@ -56,6 +62,7 @@ function VoiceBriefingManager:_end_of_event(cookie)
 	self:_clear_event()
 end
 
+-- Lines 58-74
 function VoiceBriefingManager:_play_subtitle(string_id, cookie)
 	local duration = self:_subtitle_len(string_id)
 
@@ -74,6 +81,7 @@ function VoiceBriefingManager:_play_subtitle(string_id, cookie)
 	end
 end
 
+-- Lines 76-84
 function VoiceBriefingManager:_set_duration(duration, cookie)
 	if self._listeners_enabled then
 		for _, listener in ipairs(self._listeners) do
@@ -84,6 +92,7 @@ function VoiceBriefingManager:_set_duration(duration, cookie)
 	end
 end
 
+-- Lines 86-93
 function VoiceBriefingManager:_subtitle_len(id)
 	local text = managers.localization:text(id)
 	local duration = text:len() * tweak_data.dialog.DURATION_PER_CHAR
@@ -95,6 +104,7 @@ function VoiceBriefingManager:_subtitle_len(id)
 	return duration
 end
 
+-- Lines 95-109
 function VoiceBriefingManager:_check_event_ok()
 	if not self._event_instance then
 		if self._event_name ~= "nothing" then
@@ -114,6 +124,7 @@ function VoiceBriefingManager:_check_event_ok()
 	return true
 end
 
+-- Lines 111-121
 function VoiceBriefingManager:_clear_event()
 	self._event_name = nil
 	self._event_instance = nil
@@ -127,6 +138,7 @@ function VoiceBriefingManager:_clear_event()
 	self._listeners_enabled = true
 end
 
+-- Lines 125-136
 function VoiceBriefingManager:post_event_simple(event_name)
 	if not event_name or not self._post_event_enabled then
 		return
@@ -143,6 +155,7 @@ function VoiceBriefingManager:post_event_simple(event_name)
 	return self:_check_event_ok()
 end
 
+-- Lines 138-150
 function VoiceBriefingManager:post_event(event_name, params)
 	if not event_name or not self._post_event_enabled then
 		return
@@ -158,10 +171,12 @@ function VoiceBriefingManager:post_event(event_name, params)
 	return self:_check_event_ok()
 end
 
+-- Lines 152-154
 function VoiceBriefingManager:event_playing()
 	return self._event_instance and true or false
 end
 
+-- Lines 156-166
 function VoiceBriefingManager:stop_event(skip_end_of_event)
 	if self._event_instance then
 		self._event_instance:stop()
@@ -176,6 +191,7 @@ function VoiceBriefingManager:stop_event(skip_end_of_event)
 	self._event_cookie = nil
 end
 
+-- Lines 169-171
 function VoiceBriefingManager:add_listener(listener)
 	table.insert(self._listeners, listener)
 end

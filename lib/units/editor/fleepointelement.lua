@@ -1,6 +1,7 @@
 FleePointElement = FleePointElement or class(MissionElement)
 FleePointElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 5-17
 function FleePointElement:init(unit)
 	FleePointElement.super.init(self, unit)
 
@@ -15,6 +16,7 @@ function FleePointElement:init(unit)
 	self._enemies = {}
 end
 
+-- Lines 21-32
 function FleePointElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -34,6 +36,7 @@ function FleePointElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "test_unit", managers.enemy:enemy_units(), "Select the unit to be used when testing.")
 end
 
+-- Lines 34-67
 function FleePointElement:test_element()
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test flee point unit without ready navigation data (AI-graph)", "Flee point", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -74,6 +77,7 @@ function FleePointElement:test_element()
 	self._start_test_t = Application:time()
 end
 
+-- Lines 69-75
 function FleePointElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		enemy:set_slot(0)

@@ -7,12 +7,15 @@ require("core/lib/utils/CoreEvent")
 
 LevelLoadingSetup = LevelLoadingSetup or class(CoreLoadingSetup)
 
+-- Lines 10-11
 function LevelLoadingSetup:init()
 end
 
+-- Lines 13-14
 function LevelLoadingSetup:update(t, dt)
 end
 
+-- Lines 16-18
 function LevelLoadingSetup:destroy()
 	LevelLoadingSetup.super.destroy(self)
 end

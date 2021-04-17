@@ -2,10 +2,12 @@ require("lib/states/GameState")
 
 IngameIncapacitatedState = IngameIncapacitatedState or class(IngamePlayerBaseState)
 
+-- Lines 5-7
 function IngameIncapacitatedState:init(game_state_machine)
 	IngameIncapacitatedState.super.init(self, "ingame_incapacitated", game_state_machine)
 end
 
+-- Lines 9-29
 function IngameIncapacitatedState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -27,6 +29,7 @@ function IngameIncapacitatedState:update(t, dt)
 	end
 end
 
+-- Lines 31-52
 function IngameIncapacitatedState:at_enter()
 	local players = managers.player:players()
 
@@ -54,6 +57,7 @@ function IngameIncapacitatedState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 54-62
 function IngameIncapacitatedState:at_exit()
 	local player = managers.player:player_unit()
 

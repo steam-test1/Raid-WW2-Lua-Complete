@@ -3,10 +3,12 @@ FlamerTank.DETONATE_EVENT_ID = 1
 FlamerTank.EXTENSION = "base"
 FlamerTank.EXPLOSION_TYPE = "flamer_death_fake"
 
+-- Lines 6-12
 function FlamerTank:init(unit)
 	self._unit = unit
 end
 
+-- Lines 15-44
 function FlamerTank:detonate(in_pos, range, damage, player_damage)
 	Application:trace("[FlamerTank:detonate]")
 

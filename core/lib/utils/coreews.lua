@@ -2,6 +2,7 @@ core:module("CoreEws")
 core:import("CoreClass")
 core:import("CoreApp")
 
+-- Lines 23-41
 function verify_number(ctrlr, event)
 	if EWS:name_to_key_code("K_BACK") == event:key_code() or EWS:name_to_key_code("K_RIGHT") == event:key_code() or EWS:name_to_key_code("K_LEFT") == event:key_code() or event:key_code() >= 48 and event:key_code() <= 57 or event:key_code() == 45 or event:key_code() == 46 or EWS:name_to_key_code("K_RETURN") == event:key_code() or EWS:name_to_key_code("K_TAB") == event:key_code() or EWS:name_to_key_code("K_DELETE") == event:key_code() then
 		if event:key_code() == 46 then
@@ -16,6 +17,7 @@ function verify_number(ctrlr, event)
 	end
 end
 
+-- Lines 44-59
 function image_path(file_name)
 	file_name = file_name or ""
 	local base_path = managers.database and managers.database:base_path() or Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "../../") .. "assets\\"
@@ -30,6 +32,7 @@ end
 
 EWSConfirmDialog = EWSConfirmDialog or CoreClass.class()
 
+-- Lines 71-108
 function EWSConfirmDialog:init(label, message)
 	self._yes = false
 	self._no = false
@@ -68,52 +71,62 @@ function EWSConfirmDialog:init(label, message)
 	panel:fit()
 end
 
+-- Lines 110-113
 function EWSConfirmDialog:show_modal()
 	self._dialog:show_modal()
 
 	return true
 end
 
+-- Lines 115-118
 function EWSConfirmDialog:set_value(value)
 	self[value] = true
 
 	self._dialog:end_modal()
 end
 
+-- Lines 120-122
 function EWSConfirmDialog:yes()
 	return self._yes
 end
 
+-- Lines 123-125
 function EWSConfirmDialog:no()
 	return self._no
 end
 
+-- Lines 126-128
 function EWSConfirmDialog:cancel()
 	return self._cancel
 end
 
 LocalizerTextCtrl = LocalizerTextCtrl or CoreClass.class()
 
+-- Lines 139-142
 function LocalizerTextCtrl:init(panel, sizer, text)
 	self._text_ctrlr = EWS:TextCtrl(panel, Localizer:lookup(text), "", "TE_CENTRE,TE_READONLY")
 
 	sizer:add(self._text_ctrlr, 1, 0, "EXPAND")
 end
 
+-- Lines 144-146
 function LocalizerTextCtrl:get()
 	return self._text_ctrlr
 end
 
+-- Lines 148-150
 function LocalizerTextCtrl:get_value()
 	return self._text_ctrlr:get_value()
 end
 
+-- Lines 152-154
 function LocalizerTextCtrl:set_value(value)
 	return self._text_ctrlr:set_value(Localizer:lookup(value))
 end
 
 EWSRadioBitmapButton = EWSRadioBitmapButton or CoreClass.class()
 
+-- Lines 165-170
 function EWSRadioBitmapButton:init(panel, bmp, id, style)
 	self._on_bmp = bmp
 	self._off_bmp = bmp
@@ -121,18 +134,22 @@ function EWSRadioBitmapButton:init(panel, bmp, id, style)
 	self._value = true
 end
 
+-- Lines 172-174
 function EWSRadioBitmapButton:button()
 	return self._button
 end
 
+-- Lines 176-178
 function EWSRadioBitmapButton:set_on_bmp(bmp)
 	self._on_bmp = bmp
 end
 
+-- Lines 180-182
 function EWSRadioBitmapButton:set_off_bmp(bmp)
 	self._off_bmp = bmp
 end
 
+-- Lines 184-191
 function EWSRadioBitmapButton:set_value(value)
 	self._value = value
 
@@ -143,12 +160,14 @@ function EWSRadioBitmapButton:set_value(value)
 	end
 end
 
+-- Lines 193-195
 function EWSRadioBitmapButton:value()
 	return self._value
 end
 
 EwsTextDialog = EwsTextDialog or CoreClass.class()
 
+-- Lines 206-229
 function EwsTextDialog:init(name, init_text)
 	init_text = init_text or "new"
 	self._dialog = EWS:Dialog(nil, name, "", Vector3(525, 400, 0), Vector3(230, 150, 0), "CAPTION,CLOSE_BOX")
@@ -182,24 +201,29 @@ function EwsTextDialog:init(name, init_text)
 	dialog_main_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
 end
 
+-- Lines 231-234
 function EwsTextDialog:close(data)
 	data.dialog:end_modal()
 
 	self._cancel_dialog = data.cancel
 end
 
+-- Lines 236-238
 function EwsTextDialog:cancel_dialog()
 	return self._cancel_dialog
 end
 
+-- Lines 240-242
 function EwsTextDialog:dialog()
 	return self._dialog
 end
 
+-- Lines 244-246
 function EwsTextDialog:text()
 	return self._text
 end
 
+-- Lines 271-290
 function number_controller(params)
 	params.value = params.value or 0
 	params.name_proportions = params.name_proportions or 1
@@ -218,6 +242,7 @@ function number_controller(params)
 	return params.number_ctrlr, params.name_ctrlr, params
 end
 
+-- Lines 294-302
 function verify_entered_number(params)
 	local value = tonumber(params.number_ctrlr:get_value()) or 0
 
@@ -236,6 +261,7 @@ function verify_entered_number(params)
 	params.number_ctrlr:set_selection(-1, -1)
 end
 
+-- Lines 306-310
 function change_entered_number(params, value)
 	local floats = params.floats or 0
 	params.value = value
@@ -243,6 +269,7 @@ function change_entered_number(params, value)
 	params.number_ctrlr:change_value(string.format("%." .. floats .. "f", params.value))
 end
 
+-- Lines 312-316
 function change_slider_and_number_value(params, value)
 	params.value = value
 
@@ -250,6 +277,7 @@ function change_slider_and_number_value(params, value)
 	change_entered_number(params, value)
 end
 
+-- Lines 325-333
 function _connect_events(params)
 	if not params.events then
 		return
@@ -260,6 +288,7 @@ function _connect_events(params)
 	end
 end
 
+-- Lines 354-412
 function combobox(params)
 	local name = params.name
 	local panel = params.panel
@@ -318,6 +347,7 @@ function combobox(params)
 	return ctrlr, name_ctrlr, params
 end
 
+-- Lines 415-424
 function _set_combobox_value(params)
 	params.value = params.ctrlr:get_value()
 	params.value = params.numbers and tonumber(params.value) or params.value
@@ -331,6 +361,7 @@ function _set_combobox_value(params)
 	end
 end
 
+-- Lines 428-442
 function update_combobox_options(params, options)
 	params.ctrlr:freeze()
 	params.ctrlr:clear()
@@ -352,6 +383,7 @@ function update_combobox_options(params, options)
 	params.ctrlr:thaw()
 end
 
+-- Lines 445-455
 function change_combobox_value(params, value)
 	params.value = value
 	params.value = params.numbers and tonumber(params.value) or params.value
@@ -367,6 +399,7 @@ function change_combobox_value(params, value)
 	end
 end
 
+-- Lines 474-507
 function slider_and_number_controller(params)
 	params.value = params.value or 0
 	params.name_proportions = params.name_proportions or 1
@@ -398,6 +431,7 @@ function slider_and_number_controller(params)
 	return params
 end
 
+-- Lines 510-520
 function _ctrlr_tooltip(params)
 	local max = params.max
 	local min = params.min
@@ -411,12 +445,14 @@ function _ctrlr_tooltip(params)
 	end
 end
 
+-- Lines 523-526
 function _slider_ctrlr(params)
 	params.slider_ctrlr = EWS:Slider(params.panel, params.value * params.slider_multiplier, params.min * params.slider_multiplier, params.max * params.slider_multiplier, "", "")
 
 	params.slider_ctrlr:set_tool_tip(params.tooltip)
 end
 
+-- Lines 529-539
 function _number_ctrlr(params)
 	if CoreClass.type_name(params.value) ~= "number" then
 		params.value = params.min or 0
@@ -430,6 +466,7 @@ function _number_ctrlr(params)
 	params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(nil, _M, "verify_entered_number"), params)
 end
 
+-- Lines 542-547
 function _name_ctrlr(params)
 	if params.name then
 		params.name_ctrlr = EWS:StaticText(params.panel, params.name, 0, "")
@@ -438,6 +475,7 @@ function _name_ctrlr(params)
 	end
 end
 
+-- Lines 551-560
 function verify_entered_number(params)
 	local ctrlr = params.ctrlr or params.number_ctrlr
 	local value = tonumber(ctrlr:get_value()) or 0
@@ -457,16 +495,19 @@ function verify_entered_number(params)
 	ctrlr:set_selection(-1, -1)
 end
 
+-- Lines 562-564
 function update_slider_from_number(params)
 	params.slider_ctrlr:set_value(params.value * params.slider_multiplier)
 end
 
+-- Lines 566-569
 function update_number_from_slider(params)
 	params.value = params.slider_ctrlr:get_value() / params.slider_multiplier
 
 	change_entered_number(params, params.value)
 end
 
+-- Lines 571-575
 function update_slider_and_number_controller_value(params, value)
 	params.value = value
 
@@ -474,10 +515,12 @@ function update_slider_and_number_controller_value(params, value)
 	update_slider_from_number(params)
 end
 
+-- Lines 577-579
 function change_slider_and_number_controller_range(params, min, max)
 	params.slider_ctrlr:set_range(min * params.slider_multiplier, max * params.slider_multiplier)
 end
 
+-- Lines 595-649
 function list_selector(params)
 	params.title = params.title or ""
 	params.options = params.options or {}
@@ -530,6 +573,7 @@ function list_selector(params)
 	return params
 end
 
+-- Lines 651-668
 function _list_selector_add_from_list(params)
 	local dialog = _G.SelectNameModal:new("Add", _list_selector_get_left_box_value(params), {
 		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
@@ -554,6 +598,7 @@ function _list_selector_add_from_list(params)
 	_list_selector_on_left_box(params)
 end
 
+-- Lines 670-687
 function _list_selector_remove_from_list(params)
 	local dialog = _G.SelectNameModal:new("Remove", _list_selector_get_value(params), {
 		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
@@ -578,6 +623,7 @@ function _list_selector_remove_from_list(params)
 	_list_selector_on_right_box(params)
 end
 
+-- Lines 689-702
 function _list_selector_on_left_box(params)
 	local selected_indices = params.left_list_box:selected_indices()
 
@@ -595,6 +641,7 @@ function _list_selector_on_left_box(params)
 	_list_selector_updated_callback(params)
 end
 
+-- Lines 704-717
 function _list_selector_on_right_box(params)
 	local selected_indices = params.right_list_box:selected_indices()
 
@@ -612,6 +659,7 @@ function _list_selector_on_right_box(params)
 	_list_selector_updated_callback(params)
 end
 
+-- Lines 719-725
 function _list_selector_get_left_box_value(params)
 	local value = {}
 
@@ -622,6 +670,7 @@ function _list_selector_get_left_box_value(params)
 	return value
 end
 
+-- Lines 727-733
 function _list_selector_get_value(params)
 	local value = {}
 
@@ -632,12 +681,14 @@ function _list_selector_get_value(params)
 	return value
 end
 
+-- Lines 735-739
 function _list_selector_updated_callback(params)
 	if params.updated_callback then
 		params.updated_callback(_list_selector_get_value(params))
 	end
 end
 
+-- Lines 744-763
 function combobox_and_list(params)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -661,6 +712,7 @@ function combobox_and_list(params)
 	return ctrlr, params
 end
 
+-- Lines 766-774
 function _on_gui_value_combobox_toolbar_select_dialog(params)
 	local dialog = _G.SelectNameModal:new("Select name", params.combobox_params.options)
 
@@ -673,11 +725,13 @@ function _on_gui_value_combobox_toolbar_select_dialog(params)
 	end
 end
 
+-- Lines 776-779
 function set_combobox_and_list_enabled(params, enabled)
 	params.ctrlr:set_enabled(enabled)
 	params.toolbar:set_enabled(enabled)
 end
 
+-- Lines 784-792
 function get_notebook_current_page_index(notebook)
 	local page = notebook:get_current_page()
 

@@ -3,6 +3,7 @@ core:import("CoreMissionScriptElement")
 
 ElementInstanceInput = ElementInstanceInput or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 6-16
 function ElementInstanceInput:init(...)
 	ElementInstanceInput.super.init(self, ...)
 
@@ -11,9 +12,11 @@ function ElementInstanceInput:init(...)
 	end
 end
 
+-- Lines 18-20
 function ElementInstanceInput:client_on_executed(...)
 end
 
+-- Lines 22-30
 function ElementInstanceInput:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -24,17 +27,21 @@ end
 
 ElementInstanceOutput = ElementInstanceOutput or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 36-40
 function ElementInstanceOutput:init(...)
 	ElementInstanceOutput.super.init(self, ...)
 end
 
+-- Lines 42-45
 function ElementInstanceOutput:on_created()
 	self._output_elements = managers.world_instance:get_registered_output_event_elements(self._sync_id, self._values.instance_name, self._values.event)
 end
 
+-- Lines 47-49
 function ElementInstanceOutput:client_on_executed(...)
 end
 
+-- Lines 51-63
 function ElementInstanceOutput:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -51,16 +58,20 @@ end
 
 ElementInstanceInputEvent = ElementInstanceInputEvent or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 69-71
 function ElementInstanceInputEvent:init(...)
 	ElementInstanceInputEvent.super.init(self, ...)
 end
 
+-- Lines 73-77
 function ElementInstanceInputEvent:on_created()
 end
 
+-- Lines 79-81
 function ElementInstanceInputEvent:client_on_executed(...)
 end
 
+-- Lines 83-108
 function ElementInstanceInputEvent:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -91,6 +102,7 @@ end
 
 ElementInstanceOutputEvent = ElementInstanceOutputEvent or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 114-126
 function ElementInstanceOutputEvent:init(...)
 	ElementInstanceOutputEvent.super.init(self, ...)
 
@@ -105,9 +117,11 @@ function ElementInstanceOutputEvent:init(...)
 	end
 end
 
+-- Lines 128-130
 function ElementInstanceOutputEvent:client_on_executed(...)
 end
 
+-- Lines 132-140
 function ElementInstanceOutputEvent:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -118,11 +132,13 @@ end
 
 ElementInstancePoint = ElementInstancePoint or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 146-151
 function ElementInstancePoint:client_on_executed(...)
 	self:on_executed(...)
 	managers.worldcollection:check_queued_client_mission_executions()
 end
 
+-- Lines 153-162
 function ElementInstancePoint:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -132,6 +148,7 @@ function ElementInstancePoint:on_executed(instigator)
 	ElementInstancePoint.super.on_executed(self, instigator)
 end
 
+-- Lines 164-177
 function ElementInstancePoint:_create()
 	if self._has_created then
 		return
@@ -153,11 +170,13 @@ function ElementInstancePoint:_create()
 	end
 end
 
+-- Lines 180-183
 function ElementInstancePoint:save(data)
 	data.has_created = self._has_created
 	data.enabled = self._values.enabled
 end
 
+-- Lines 185-190
 function ElementInstancePoint:load(data)
 	if data.has_created then
 		self:_create()
@@ -169,6 +188,7 @@ end
 ElementInstanceParams = ElementInstanceParams or class(CoreMissionScriptElement.MissionScriptElement)
 ElementInstanceSetParams = ElementInstanceSetParams or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 201-207
 function ElementInstanceSetParams:init(...)
 	ElementInstanceOutputEvent.super.init(self, ...)
 
@@ -177,10 +197,12 @@ function ElementInstanceSetParams:init(...)
 	end
 end
 
+-- Lines 209-211
 function ElementInstanceSetParams:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 213-219
 function ElementInstanceSetParams:_apply_instance_params()
 	if self._values.instance then
 		managers.world_instance:set_instance_params(self._sync_id, self._values.instance, self._values.params)
@@ -189,6 +211,7 @@ function ElementInstanceSetParams:_apply_instance_params()
 	end
 end
 
+-- Lines 221-232
 function ElementInstanceSetParams:on_executed(instigator)
 	if not self._values.enabled then
 		return

@@ -14,6 +14,7 @@ OperationsTweakData.STATE_ZONE_MISSION_SELECTED = "system_zone_mission_selected"
 OperationsTweakData.STATE_LOCATION_MISSION_SELECTED = "system_location_mission_selected"
 OperationsTweakData.ENTRY_POINT_LEVEL = "streaming_level"
 
+-- Lines 24-45
 function OperationsTweakData:init()
 	self.missions = {}
 	self.HEAT_OTHER_JOBS_RATIO = 0.3
@@ -42,6 +43,7 @@ function OperationsTweakData:init()
 	self:_init_consumable_missions_data()
 end
 
+-- Lines 47-49
 function OperationsTweakData:_init_regions()
 	self.regions = {
 		"germany",
@@ -50,6 +52,7 @@ function OperationsTweakData:_init_regions()
 	}
 end
 
+-- Lines 51-90
 function OperationsTweakData:_init_progression_data()
 	self.progression = {
 		initially_unlocked_difficulty = TweakData.DIFFICULTY_2,
@@ -87,6 +90,7 @@ function OperationsTweakData:_init_progression_data()
 	end
 end
 
+-- Lines 92-96
 function OperationsTweakData:_init_consumable_missions_data()
 	self.consumable_missions = {
 		base_document_spawn_chance = {
@@ -99,6 +103,7 @@ function OperationsTweakData:_init_consumable_missions_data()
 	}
 end
 
+-- Lines 98-228
 function OperationsTweakData:_init_loading_screens()
 	self._loading_screens = {
 		generic = {}
@@ -210,6 +215,7 @@ function OperationsTweakData:_init_loading_screens()
 	}
 end
 
+-- Lines 230-1930
 function OperationsTweakData:_init_raids()
 	self._raids_index = {
 		"flakturm",
@@ -1224,6 +1230,7 @@ function OperationsTweakData:_init_raids()
 	}
 end
 
+-- Lines 1934-2359
 function OperationsTweakData:_init_operations()
 	self._operations_index = {
 		"clear_skies",
@@ -1786,10 +1793,12 @@ function OperationsTweakData:_init_operations()
 	}
 end
 
+-- Lines 2361-2363
 function OperationsTweakData:get_all_loading_screens()
 	return self._loading_screens
 end
 
+-- Lines 2365-2377
 function OperationsTweakData:get_loading_screen(level)
 	local level = self._loading_screens[level]
 
@@ -1804,6 +1813,7 @@ function OperationsTweakData:get_loading_screen(level)
 	end
 end
 
+-- Lines 2379-2386
 function OperationsTweakData:mission_data(mission_id)
 	if not mission_id or not self.missions[mission_id] then
 		return
@@ -1815,14 +1825,17 @@ function OperationsTweakData:mission_data(mission_id)
 	return res
 end
 
+-- Lines 2388-2390
 function OperationsTweakData:get_raids_index()
 	return self._raids_index
 end
 
+-- Lines 2392-2394
 function OperationsTweakData:get_operations_index()
 	return self._operations_index
 end
 
+-- Lines 2396-2403
 function OperationsTweakData:get_index_from_raid_id(raid_id)
 	for index, entry_name in ipairs(self._raids_index) do
 		if entry_name == raid_id then
@@ -1833,6 +1846,7 @@ function OperationsTweakData:get_index_from_raid_id(raid_id)
 	return 0
 end
 
+-- Lines 2405-2412
 function OperationsTweakData:get_index_from_operation_id(raid_id)
 	for index, entry_name in ipairs(self._operations_index) do
 		if entry_name == raid_id then
@@ -1843,6 +1857,7 @@ function OperationsTweakData:get_index_from_operation_id(raid_id)
 	return 0
 end
 
+-- Lines 2414-2421
 function OperationsTweakData:get_region_index_from_name(region_name)
 	for index, reg_name in ipairs(self.regions) do
 		if region_name == reg_name then
@@ -1853,14 +1868,17 @@ function OperationsTweakData:get_region_index_from_name(region_name)
 	return 0
 end
 
+-- Lines 2423-2425
 function OperationsTweakData:get_raid_name_from_index(index)
 	return self._raids_index[index]
 end
 
+-- Lines 2427-2429
 function OperationsTweakData:get_operation_name_from_index(index)
 	return self._operations_index[index]
 end
 
+-- Lines 2431-2443
 function OperationsTweakData:randomize_operation(operation_id)
 	local operation = self.missions[operation_id]
 	local template = operation.events_index_template
@@ -1877,10 +1895,12 @@ function OperationsTweakData:randomize_operation(operation_id)
 	Application:debug("[OperationsTweakData:randomize_operation]", operation_id, inspect(calculated_index))
 end
 
+-- Lines 2445-2447
 function OperationsTweakData:get_operation_indexes_delimited(operation_id)
 	return table.concat(self.missions[operation_id].events_index, "|")
 end
 
+-- Lines 2449-2451
 function OperationsTweakData:set_operation_indexes_delimited(operation_id, delimited_string)
 	self.missions[operation_id].events_index = string.split(delimited_string, "|")
 end

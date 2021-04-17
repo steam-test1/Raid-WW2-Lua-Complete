@@ -1,14 +1,17 @@
 ElementExecLuaOperator = ElementExecLuaOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 3-5
 function ElementExecLuaOperator:init(...)
 	ElementExecLuaOperator.super.init(self, ...)
 end
 
+-- Lines 7-10
 function ElementExecLuaOperator:client_on_executed(...)
 	Application:debug("[ElementExecLuaOperator:client_on_executed]", ...)
 	self:on_executed(...)
 end
 
+-- Lines 12-36
 function ElementExecLuaOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return

@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementSpawnEnemyGroup = ElementSpawnEnemyGroup or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-17
 function ElementSpawnEnemyGroup:init(...)
 	ElementSpawnEnemyGroup.super.init(self, ...)
 
@@ -16,6 +17,7 @@ function ElementSpawnEnemyGroup:init(...)
 	self:_finalize_values()
 end
 
+-- Lines 19-24
 function ElementSpawnEnemyGroup:_finalize_values()
 	local values = self._values
 
@@ -24,6 +26,7 @@ function ElementSpawnEnemyGroup:_finalize_values()
 	end
 end
 
+-- Lines 26-37
 function ElementSpawnEnemyGroup:on_script_activated()
 	for i, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -33,6 +36,7 @@ function ElementSpawnEnemyGroup:on_script_activated()
 	end
 end
 
+-- Lines 40-45
 function ElementSpawnEnemyGroup:add_event_callback(name, callback)
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -41,6 +45,7 @@ function ElementSpawnEnemyGroup:add_event_callback(name, callback)
 	end
 end
 
+-- Lines 48-64
 function ElementSpawnEnemyGroup:_check_spawn_points()
 	self._spawn_points = {}
 
@@ -63,6 +68,7 @@ function ElementSpawnEnemyGroup:_check_spawn_points()
 	end
 end
 
+-- Lines 66-87
 function ElementSpawnEnemyGroup:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -89,6 +95,7 @@ function ElementSpawnEnemyGroup:on_executed(instigator)
 	ElementSpawnEnemyGroup.super.on_executed(self, instigator)
 end
 
+-- Lines 89-102
 function ElementSpawnEnemyGroup:_get_spawn_point(i)
 	if self._group_data.spawn_type == "ordered" then
 		return 1 + math.mod(i, #self._spawn_points)
@@ -105,6 +112,7 @@ function ElementSpawnEnemyGroup:_get_spawn_point(i)
 	return table.remove(self._unused_randoms, rand)
 end
 
+-- Lines 104-113
 function ElementSpawnEnemyGroup:units()
 	local all_units = {}
 
@@ -119,32 +127,38 @@ function ElementSpawnEnemyGroup:units()
 	return all_units
 end
 
+-- Lines 115-119
 function ElementSpawnEnemyGroup:unspawn_all_units()
 	for _, element in ipairs(self._group_data.spawn_points) do
 		element:unspawn_all_units()
 	end
 end
 
+-- Lines 121-125
 function ElementSpawnEnemyGroup:kill_all_units()
 	for _, element in ipairs(self._group_data.spawn_points) do
 		element:kill_all_units()
 	end
 end
 
+-- Lines 127-131
 function ElementSpawnEnemyGroup:execute_on_all_units(func)
 	for _, element in ipairs(self._group_data.spawn_points) do
 		element:execute_on_all_units(func)
 	end
 end
 
+-- Lines 133-135
 function ElementSpawnEnemyGroup:spawn_points()
 	return self._group_data.spawn_points
 end
 
+-- Lines 137-139
 function ElementSpawnEnemyGroup:spawn_groups()
 	return self._values.preferred_spawn_groups
 end
 
+-- Lines 141-143
 function ElementSpawnEnemyGroup:nationality()
 	return self._values.nationality or "german"
 end

@@ -8,6 +8,7 @@ HuskCivilianEscortDamage._escort_damage = CivilianEscortDamage._escort_damage
 HuskCivilianEscortDamage._on_damage_received = CivilianDamage._on_damage_received
 HuskCivilianEscortDamage.grace_period = CivilianEscortDamage.grace_period
 
+-- Lines 12-17
 function HuskCivilianEscortDamage:init(...)
 	HuskCivilianEscortDamage.super.init(self, ...)
 
@@ -15,6 +16,7 @@ function HuskCivilianEscortDamage:init(...)
 	self._last_damage_t = 0
 end
 
+-- Lines 19-25
 function HuskCivilianEscortDamage:_apply_damage_to_health(damage)
 	HuskCivilianEscortDamage.super._apply_damage_to_health(self, damage)
 
@@ -23,6 +25,7 @@ function HuskCivilianEscortDamage:_apply_damage_to_health(damage)
 	end
 end
 
+-- Lines 27-34
 function HuskCivilianEscortDamage:die()
 	HuskCivilianEscortDamage.super.die(self)
 

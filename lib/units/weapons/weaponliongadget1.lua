@@ -3,31 +3,38 @@ WeaponLionGadget1.GADGET_TYPE = "bipod"
 WeaponLionGadget1._previous_state = nil
 WeaponLionGadget1.bipod_length = nil
 
+-- Lines 6-22
 function WeaponLionGadget1:init(unit)
 	self._unit = unit
 	self._is_npc = false
 	self._deployed = false
 end
 
+-- Lines 27-29
 function WeaponLionGadget1:update(unit, t, dt)
 end
 
+-- Lines 33-36
 function WeaponLionGadget1:set_npc()
 	self._is_npc = true
 end
 
+-- Lines 41-43
 function WeaponLionGadget1:is_bipod()
 	return true
 end
 
+-- Lines 48-50
 function WeaponLionGadget1:bipod_state()
 	return self._on
 end
 
+-- Lines 55-57
 function WeaponLionGadget1:is_deployed()
 	return self._deployed
 end
 
+-- Lines 61-71
 function WeaponLionGadget1:toggle()
 	Application:trace("WeaponLionGadget1:toggle() is_deployed: ", self:is_deployed())
 
@@ -38,6 +45,7 @@ function WeaponLionGadget1:toggle()
 	end
 end
 
+-- Lines 76-86
 function WeaponLionGadget1:is_usable()
 	if not self._center_ray_from or not self._center_ray_to then
 		return nil
@@ -50,6 +58,7 @@ function WeaponLionGadget1:is_usable()
 	return ray_bipod_center and (ray_bipod_left or ray_bipod_right)
 end
 
+-- Lines 90-94
 function WeaponLionGadget1:_unmount()
 	managers.player:set_player_state(self._previous_state or "standard")
 
@@ -57,6 +66,7 @@ function WeaponLionGadget1:_unmount()
 	self._deployed = false
 end
 
+-- Lines 98-157
 function WeaponLionGadget1:_is_deployable()
 	if self._is_npc then
 		return false
@@ -113,6 +123,7 @@ function WeaponLionGadget1:_is_deployable()
 	return false
 end
 
+-- Lines 161-254
 function WeaponLionGadget1:_shoot_bipod_rays(debug_draw)
 	local mvec1 = Vector3()
 	local mvec2 = Vector3()
@@ -239,6 +250,7 @@ function WeaponLionGadget1:_shoot_bipod_rays(debug_draw)
 	}
 end
 
+-- Lines 258-282
 function WeaponLionGadget1:check_state()
 	if self._is_npc then
 		return false
@@ -262,5 +274,6 @@ function WeaponLionGadget1:check_state()
 	self._unit:set_extension_update_enabled(Idstring("base"), self._deployed)
 end
 
+-- Lines 286-288
 function WeaponLionGadget1:destroy(unit)
 end

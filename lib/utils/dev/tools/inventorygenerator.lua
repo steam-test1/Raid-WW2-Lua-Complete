@@ -1,6 +1,7 @@
 InventoryGenerator = InventoryGenerator or class()
 InventoryGenerator.path = "aux_assets\\inventory\\"
 
+-- Lines 5-92
 function InventoryGenerator.generate()
 	local items, error = InventoryGenerator._items()
 	local json_path = InventoryGenerator._root_path() .. InventoryGenerator.path
@@ -18,6 +19,7 @@ function InventoryGenerator.generate()
 	Application:trace("Generation Completed.")
 end
 
+-- Lines 94-115
 function InventoryGenerator.next_defid(category, defid_list)
 	local start_index = 1
 
@@ -47,6 +49,7 @@ function InventoryGenerator.next_defid(category, defid_list)
 	Application:error("[InventoryGenerator.next_defid] - Couldn't find a free spot.")
 end
 
+-- Lines 117-197
 function InventoryGenerator.verify()
 	local error = false
 
@@ -145,6 +148,7 @@ function InventoryGenerator.verify()
 	return not error
 end
 
+-- Lines 201-230
 function InventoryGenerator._items_content(safe_items, contains)
 	for category, items in pairs(contains) do
 		for _, entry in pairs(items) do
@@ -193,6 +197,7 @@ function InventoryGenerator._items_content(safe_items, contains)
 	end
 end
 
+-- Lines 232-246
 function InventoryGenerator._items_add(category, entry, def_id, content_data, safe_items, unique_def_ids)
 	local id = InventoryGenerator._create_id(category, entry)
 	safe_items[id] = {
@@ -215,6 +220,7 @@ function InventoryGenerator._items_add(category, entry, def_id, content_data, sa
 	return 0
 end
 
+-- Lines 248-269
 function InventoryGenerator._items_containers(safe_items, contains, unique_def_ids)
 	local error = 0
 
@@ -241,6 +247,7 @@ function InventoryGenerator._items_containers(safe_items, contains, unique_def_i
 	return error
 end
 
+-- Lines 271-315
 function InventoryGenerator._items()
 	local items = {}
 	local error = 0
@@ -254,6 +261,7 @@ function InventoryGenerator._items()
 	return items, error > 0
 end
 
+-- Lines 319-347
 function InventoryGenerator._probability_list(content, item_list)
 	local id = nil
 	local probability_list = {}
@@ -308,6 +316,7 @@ function InventoryGenerator._probability_list(content, item_list)
 	return probability_list
 end
 
+-- Lines 349-368
 function InventoryGenerator._create_steam_itemdef_gameplay(json, tweak, defid_data)
 	json:puts("\t\"type\": \"playtimegenerator\",")
 
@@ -331,6 +340,7 @@ function InventoryGenerator._create_steam_itemdef_gameplay(json, tweak, defid_da
 	json:puts("\t\"bundle\": \"" .. bundle_string .. "\",")
 end
 
+-- Lines 370-382
 function InventoryGenerator._create_steam_itemdef_bundle(json, tweak, defid_data)
 	json:puts("\t\"type\": \"bundle\",")
 
@@ -346,6 +356,7 @@ function InventoryGenerator._create_steam_itemdef_bundle(json, tweak, defid_data
 	json:puts("\t\"bundle\": \"" .. bundle_string .. "\",")
 end
 
+-- Lines 384-425
 function InventoryGenerator._create_steam_itemdef_content(json, tweak, entry, defid_data)
 	json:puts("\t\"type\": \"generator\",")
 
@@ -395,12 +406,14 @@ function InventoryGenerator._create_steam_itemdef_content(json, tweak, entry, de
 	end
 end
 
+-- Lines 427-430
 function InventoryGenerator._create_hex_color(color)
 	local r, g, b = color:unpack()
 
 	return string.format("%02X", r * 255) .. string.format("%02X", g * 255) .. string.format("%02X", b * 255)
 end
 
+-- Lines 432-485
 function InventoryGenerator.create_description_safe(safe_entry)
 	local safe_td = tweak_data.economy.safes[safe_entry]
 
@@ -428,6 +441,7 @@ function InventoryGenerator.create_description_safe(safe_entry)
 
 	local x_td, y_td, xr_td, yr_td = nil
 
+	-- Lines 453-464
 	local function sort_func(x, y)
 		x_td = (tweak_data.economy[x.category] or tweak_data.blackmarket[x.category])[x.entry]
 		y_td = (tweak_data.economy[y.category] or tweak_data.blackmarket[y.category])[y.entry]
@@ -463,6 +477,7 @@ function InventoryGenerator.create_description_safe(safe_entry)
 	return text
 end
 
+-- Lines 487-514
 function InventoryGenerator._find_item_in_content(entry, category, content)
 	if category == "drills" or category == "safes" or category == "contents" then
 		return false
@@ -493,6 +508,7 @@ function InventoryGenerator._find_item_in_content(entry, category, content)
 	return false
 end
 
+-- Lines 516-579
 function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
 	local json = SystemFS:open(json_path, "w")
 
@@ -551,6 +567,7 @@ function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
 	SystemFS:close(json)
 end
 
+-- Lines 581-608
 function InventoryGenerator._create_steam_itemdef_clear(json_path, items, defid_data)
 	local json = SystemFS:open(json_path, "w")
 
@@ -579,6 +596,7 @@ function InventoryGenerator._create_steam_itemdef_clear(json_path, items, defid_
 	SystemFS:close(json)
 end
 
+-- Lines 612-628
 function InventoryGenerator._defids(json_path)
 	local defid_list = {}
 	local json_data = InventoryGenerator.json_load(json_path)
@@ -598,6 +616,7 @@ function InventoryGenerator._defids(json_path)
 	return defid_list
 end
 
+-- Lines 630-642
 function InventoryGenerator._create_id(category, entry, quality, bonus)
 	if not category or not entry then
 		return
@@ -612,6 +631,7 @@ function InventoryGenerator._create_id(category, entry, quality, bonus)
 	return id
 end
 
+-- Lines 644-672
 function InventoryGenerator._fill_defids(list, json_path)
 	local defid_list = {}
 	local defid_data = {}
@@ -647,6 +667,7 @@ function InventoryGenerator._fill_defids(list, json_path)
 	return defid_list, defid_data
 end
 
+-- Lines 674-697
 function InventoryGenerator._fill_defids_OLD(list, json_path)
 	local defid_list = {}
 	local defid_data = {}
@@ -680,6 +701,7 @@ function InventoryGenerator._fill_defids_OLD(list, json_path)
 	return defid_list, defid_data
 end
 
+-- Lines 701-714
 function InventoryGenerator.json_load(path)
 	if not SystemFS:exists(path) then
 		return
@@ -696,6 +718,7 @@ function InventoryGenerator.json_load(path)
 	return InventoryGenerator._json_entry(not start and json_data or json_data:sub(start + 1, stop and stop - 1))
 end
 
+-- Lines 716-764
 function InventoryGenerator._json_entry(data_string)
 	local key, temp = nil
 	local i1 = 1
@@ -745,6 +768,7 @@ function InventoryGenerator._json_entry(data_string)
 	return data
 end
 
+-- Lines 766-795
 function InventoryGenerator._json_value(data_string)
 	if not data_string or data_string == "" then
 		return
@@ -782,6 +806,7 @@ function InventoryGenerator._json_value(data_string)
 	end
 end
 
+-- Lines 797-813
 function InventoryGenerator._json_value_list(data_string)
 	local data = {}
 	local start = 1
@@ -800,6 +825,7 @@ function InventoryGenerator._json_value_list(data_string)
 	return data
 end
 
+-- Lines 815-850
 function InventoryGenerator._json_find_section(data_string, start_char, stop_char, pos)
 	local stop = pos or 1
 	local start = data_string:find(start_char, stop)
@@ -837,11 +863,13 @@ function InventoryGenerator._json_find_section(data_string, start_char, stop_cha
 	return start, stop or #data_string
 end
 
+-- Lines 854-861
 function InventoryGenerator._root_path()
 	local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "..\\..\\")
 	path = Application:nice_path(path, true)
 	local f = nil
 
+	-- Lines 859-859
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")
 

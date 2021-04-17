@@ -13,6 +13,7 @@ RaidGuiControlKeyBind.ICON_CENTER = "kb_center_base"
 RaidGuiControlKeyBind.ICON_RIGHT = "kb_right_base"
 RaidGuiControlKeyBind.CORNER_WIDTH = 10
 
+-- Lines 18-47
 function RaidGuiControlKeyBind:init(parent, params)
 	RaidGuiControlKeyBind.super.init(self, parent, params)
 
@@ -41,10 +42,12 @@ function RaidGuiControlKeyBind:init(parent, params)
 	self._listening_to_input = false
 end
 
+-- Lines 49-51
 function RaidGuiControlKeyBind:is_listening_to_input()
 	return self._listening_to_input
 end
 
+-- Lines 53-63
 function RaidGuiControlKeyBind:highlight_on()
 	self._description:set_color(RaidGuiControlKeyBind.TEXT_COLOR_ACTIVE)
 	self._keybind:set_color(RaidGuiControlKeyBind.TEXT_COLOR_ACTIVE)
@@ -58,6 +61,7 @@ function RaidGuiControlKeyBind:highlight_on()
 	end
 end
 
+-- Lines 65-74
 function RaidGuiControlKeyBind:highlight_off()
 	if not self._listening_to_input then
 		self._description:set_color(RaidGuiControlKeyBind.TEXT_COLOR_NORMAL)
@@ -69,6 +73,7 @@ function RaidGuiControlKeyBind:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
+-- Lines 76-99
 function RaidGuiControlKeyBind:_set_background_state(bg_state)
 	if bg_state == "active" then
 		self._background_left:hide()
@@ -87,6 +92,7 @@ function RaidGuiControlKeyBind:_set_background_state(bg_state)
 	end
 end
 
+-- Lines 101-107
 function RaidGuiControlKeyBind:on_mouse_released(button)
 	if managers.user:get_key_rebind_started() and not self._listening_to_input then
 		return
@@ -95,12 +101,14 @@ function RaidGuiControlKeyBind:on_mouse_released(button)
 	self:activate_customize_controller()
 end
 
+-- Lines 109-124
 function RaidGuiControlKeyBind:activate_customize_controller()
 	self._ws:connect_keyboard(Input:keyboard())
 	self._ws:connect_mouse(Input:mouse())
 
 	self._listening_to_input = true
 
+	-- Lines 115-115
 	local function f(o, key)
 		self:_key_press(o, key, "keyboard", nil)
 	end
@@ -108,12 +116,14 @@ function RaidGuiControlKeyBind:activate_customize_controller()
 	self._keybind:set_text("_")
 	self._keybind:key_release(f)
 
+	-- Lines 118-118
 	local function f(o, key)
 		self:_key_press(o, key, "mouse", nil)
 	end
 
 	self._keybind:mouse_click(f)
 
+	-- Lines 121-121
 	local function f(index, key)
 		self:_key_press(self._keybind, key, "mouse", true)
 	end
@@ -122,6 +132,7 @@ function RaidGuiControlKeyBind:activate_customize_controller()
 	self._mouse_wheel_down_trigger = Input:mouse():add_trigger(Input:mouse():button_index(Idstring("mouse wheel down")), f)
 end
 
+-- Lines 126-210
 function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 	if managers.system_menu:is_active() then
 		return
@@ -247,6 +258,7 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 	self:_end_customize_controller(o)
 end
 
+-- Lines 213-241
 function RaidGuiControlKeyBind:_end_customize_controller(o, skip_next_key_press)
 	if not alive(o) then
 		return
@@ -274,11 +286,13 @@ function RaidGuiControlKeyBind:_end_customize_controller(o, skip_next_key_press)
 	end
 end
 
+-- Lines 243-246
 function RaidGuiControlKeyBind:reload()
 	self._object:clear()
 	self:_create_keybind_layout()
 end
 
+-- Lines 248-253
 function RaidGuiControlKeyBind:confirm_pressed()
 	if self._selected then
 		self:on_mouse_released(self)
@@ -287,6 +301,7 @@ function RaidGuiControlKeyBind:confirm_pressed()
 	end
 end
 
+-- Lines 255-317
 function RaidGuiControlKeyBind:_create_keybind_layout()
 	local translated_keybind = managers.localization:check_keybind_translation(self._keybind_params.binding)
 	self._keybind = self._object:text({

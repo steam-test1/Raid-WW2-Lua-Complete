@@ -5,6 +5,7 @@ HUDMapTab.WAYPOINT_PANEL_LAYER = 3
 HUDMapTab.PLAYER_PINS_LAYER = 5
 HUDMapTab.PIN_PANEL_PADDING = 50
 
+-- Lines 9-18
 function HUDMapTab:init(panel, params)
 	HUDMapTab.super.init(self, params)
 	self:_create_panel(panel, params)
@@ -15,6 +16,7 @@ function HUDMapTab:init(panel, params)
 	self._waypoints = {}
 end
 
+-- Lines 20-27
 function HUDMapTab:_create_panel(panel, params)
 	local panel_params = {
 		halign = "scale",
@@ -25,6 +27,7 @@ function HUDMapTab:_create_panel(panel, params)
 	self._object = panel:panel(panel_params)
 end
 
+-- Lines 29-36
 function HUDMapTab:_create_inner_panel()
 	local inner_panel_params = {
 		halign = "center",
@@ -35,6 +38,7 @@ function HUDMapTab:_create_inner_panel()
 	self._inner_panel = self._object:panel(inner_panel_params)
 end
 
+-- Lines 38-50
 function HUDMapTab:_create_pin_panel()
 	if self._object:child("player_pins_panel") then
 		self._object:child("player_pins_panel"):clear()
@@ -50,6 +54,7 @@ function HUDMapTab:_create_pin_panel()
 	local player_pins_panel = self._inner_panel:panel(player_pins_panel_params)
 end
 
+-- Lines 52-64
 function HUDMapTab:_create_waypoint_panel()
 	if self._object:child("waypoint_panel") then
 		self._object:child("waypoint_panel"):clear()
@@ -65,6 +70,7 @@ function HUDMapTab:_create_waypoint_panel()
 	local waypoint_panel = self._inner_panel:panel(waypoint_panel_params)
 end
 
+-- Lines 66-76
 function HUDMapTab:_fit_inner_panel()
 	local panel_shape = tweak_data.levels[self._current_level].map.panel_shape
 	local background_panel = self._object:child("map_background_panel")
@@ -76,6 +82,7 @@ function HUDMapTab:_fit_inner_panel()
 	self._inner_panel:set_shape(x, y, w, h)
 end
 
+-- Lines 78-85
 function HUDMapTab:_create_player_pins()
 	local pin_panel = self._inner_panel:child("player_pins_panel")
 
@@ -87,6 +94,7 @@ function HUDMapTab:_create_player_pins()
 	self:_create_ai_pins(pin_panel)
 end
 
+-- Lines 88-104
 function HUDMapTab:_create_peer_pins(panel)
 	local peers = managers.network:session():all_peers()
 
@@ -105,6 +113,7 @@ function HUDMapTab:_create_peer_pins(panel)
 	end
 end
 
+-- Lines 107-121
 function HUDMapTab:_create_ai_pins(panel)
 	local ai_characters = managers.criminals:ai_criminals()
 	local peer_pins_number = #self._player_pins
@@ -121,6 +130,7 @@ function HUDMapTab:_create_ai_pins(panel)
 	end
 end
 
+-- Lines 123-130
 function HUDMapTab:_setup_level(level)
 	self:_set_level(level)
 	self:_create_map_background()
@@ -130,6 +140,7 @@ function HUDMapTab:_setup_level(level)
 	self:_create_waypoints()
 end
 
+-- Lines 132-155
 function HUDMapTab:_create_map_background()
 	if self._object:child("map_background_panel") then
 		self._object:remove(self._object:child("map_background_panel"))
@@ -157,6 +168,7 @@ function HUDMapTab:_create_map_background()
 	local background_image = background_panel:bitmap(background_image_params)
 end
 
+-- Lines 157-173
 function HUDMapTab:_create_base_icon()
 	local background_panel = self._object:child("map_background_panel")
 
@@ -177,6 +189,7 @@ function HUDMapTab:_create_base_icon()
 	base_icon:set_center_y(base_y)
 end
 
+-- Lines 175-185
 function HUDMapTab:_create_waypoints()
 	local waypoint_panel = self._inner_panel:child("waypoint_panel")
 	local waypoints = managers.hud:get_all_waypoints()
@@ -190,6 +203,7 @@ function HUDMapTab:_create_waypoints()
 	end
 end
 
+-- Lines 187-207
 function HUDMapTab:_create_waypoint(waypoint_data)
 	local waypoint_panel = self._inner_panel:child("waypoint_panel")
 
@@ -208,6 +222,7 @@ function HUDMapTab:_create_waypoint(waypoint_data)
 	end
 end
 
+-- Lines 209-222
 function HUDMapTab:show()
 	if not self:_current_level_has_map() then
 		return
@@ -223,11 +238,13 @@ function HUDMapTab:show()
 	HUDMapTab.super.show(self)
 end
 
+-- Lines 224-227
 function HUDMapTab:hide()
 	self._object:set_visible(false)
 	HUDMapTab.super.hide(self)
 end
 
+-- Lines 229-235
 function HUDMapTab:refresh_peers()
 	if not self:_current_level_has_map() then
 		return
@@ -236,10 +253,12 @@ function HUDMapTab:refresh_peers()
 	self:_create_player_pins()
 end
 
+-- Lines 237-239
 function HUDMapTab:add_waypoint(data)
 	self:_create_waypoint(data)
 end
 
+-- Lines 241-248
 function HUDMapTab:remove_waypoint(id)
 	local waypoint_panel = self._inner_panel:child("waypoint_panel")
 
@@ -250,24 +269,28 @@ function HUDMapTab:remove_waypoint(id)
 	end
 end
 
+-- Lines 250-261
 function HUDMapTab:peer_enter_vehicle(peer_id)
 	if not self._player_pins then
 		return
 	end
 end
 
+-- Lines 263-274
 function HUDMapTab:peer_exit_vehicle(peer_id)
 	if not self._player_pins then
 		return
 	end
 end
 
+-- Lines 276-280
 function HUDMapTab:update()
 	self:_update_peer_positions()
 	self:_update_ai_positions()
 	self:_update_waypoints()
 end
 
+-- Lines 282-297
 function HUDMapTab:_update_peer_positions()
 	local peers = managers.network:session():all_peers()
 
@@ -285,6 +308,7 @@ function HUDMapTab:_update_peer_positions()
 	end
 end
 
+-- Lines 299-317
 function HUDMapTab:_update_ai_positions()
 	local ai_characters = managers.criminals:ai_criminals()
 	local peer_pins_number = managers.network:session():count_all_peers()
@@ -305,6 +329,7 @@ function HUDMapTab:_update_ai_positions()
 	end
 end
 
+-- Lines 319-329
 function HUDMapTab:_update_waypoints()
 	local all_waypoints = managers.hud:get_all_waypoints()
 
@@ -318,6 +343,7 @@ function HUDMapTab:_update_waypoints()
 	end
 end
 
+-- Lines 331-336
 function HUDMapTab:_get_map_position(world_x, world_y)
 	local map_x = HUDMapTab.PIN_PANEL_PADDING + (world_x - self._world_borders.left) / math.abs(self._world_borders.right - self._world_borders.left) * (self._inner_panel:w() - HUDMapTab.PIN_PANEL_PADDING * 2)
 	local map_y = HUDMapTab.PIN_PANEL_PADDING + math.abs(world_y - self._world_borders.up) / math.abs(self._world_borders.down - self._world_borders.up) * (self._inner_panel:h() - HUDMapTab.PIN_PANEL_PADDING * 2)
@@ -325,6 +351,7 @@ function HUDMapTab:_get_map_position(world_x, world_y)
 	return map_x, map_y
 end
 
+-- Lines 339-348
 function HUDMapTab:_get_map_size_factor()
 	if not self._world_borders then
 		return 1

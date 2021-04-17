@@ -1,3 +1,4 @@
+-- Lines 1-151
 function CoreEditor:build_configuration()
 	self._config = {}
 	local frame_size_height = 200
@@ -174,11 +175,13 @@ function CoreEditor:build_configuration()
 	notebook:fit()
 end
 
+-- Lines 153-156
 function CoreEditor:on_configuration_ok()
 	self:on_configuration_apply()
 	self._configuration:end_modal()
 end
 
+-- Lines 158-164
 function CoreEditor:on_configuration_cancel()
 	for value, data in pairs(self._config) do
 		local ctrlr = data.ctrlr or data
@@ -189,6 +192,7 @@ function CoreEditor:on_configuration_cancel()
 	self._configuration:end_modal()
 end
 
+-- Lines 166-186
 function CoreEditor:on_configuration_apply()
 	for value, data in pairs(self._config) do
 		local ctrlr = data.ctrlr or data

@@ -11,6 +11,7 @@ MenuTitlescreenState.PRESS_ANY_KEY_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.si
 MenuTitlescreenState.GAME_LOGO_IMAGE = "raid_logo_big"
 MenuTitlescreenState.GAME_LOGO_CENTER_Y = 640
 
+-- Lines 17-28
 function MenuTitlescreenState:init(game_state_machine, setup)
 	GameState.init(self, "menu_titlescreen", game_state_machine)
 
@@ -25,6 +26,7 @@ local is_xb1 = SystemInfo:platform() == Idstring("XB1")
 local is_x360 = SystemInfo:platform() == Idstring("X360")
 local is_win32 = SystemInfo:platform() == Idstring("WIN32")
 
+-- Lines 35-189
 function MenuTitlescreenState:setup()
 	local res = RenderSettings.resolution
 	local gui = Overlay:gui()
@@ -184,6 +186,7 @@ function MenuTitlescreenState:setup()
 	self:reset_attract_video()
 end
 
+-- Lines 191-199
 function MenuTitlescreenState:_resolution_scale()
 	local screen_resolution = Application:screen_resolution()
 	local base_gui_resolution = tweak_data.gui.base_resolution
@@ -193,6 +196,7 @@ function MenuTitlescreenState:_resolution_scale()
 	return x_scale, y_scale
 end
 
+-- Lines 201-205
 function MenuTitlescreenState:_recalculate_y_for_current_resolution(y)
 	local screen_resolution = Application:screen_resolution()
 	local base_gui_resolution = tweak_data.gui.base_resolution
@@ -200,6 +204,7 @@ function MenuTitlescreenState:_recalculate_y_for_current_resolution(y)
 	return y / base_gui_resolution.y * screen_resolution.y
 end
 
+-- Lines 207-215
 function MenuTitlescreenState:_real_aspect_ratio()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return RenderSettings.aspect_ratio
@@ -211,6 +216,7 @@ function MenuTitlescreenState:_real_aspect_ratio()
 	end
 end
 
+-- Lines 217-230
 function MenuTitlescreenState:_update_pc_xbox_controller_connection(params)
 	local text_string = managers.localization:to_upper_text(params.text_id)
 	local added_text = nil
@@ -226,6 +232,7 @@ function MenuTitlescreenState:_update_pc_xbox_controller_connection(params)
 	params.text_gui:set_text(text_string)
 end
 
+-- Lines 232-260
 function MenuTitlescreenState:at_enter()
 	if not self._controller_list then
 		self:setup()
@@ -251,12 +258,14 @@ function MenuTitlescreenState:at_enter()
 	self._background:animate(callback(self, self, "_animate_screen_display"))
 end
 
+-- Lines 262-266
 function MenuTitlescreenState:clbk_game_has_music_control(status)
 	if alive(self._attract_video_gui) then
 		self._attract_video_gui:set_volume_gain(status and 1 or 0)
 	end
 end
 
+-- Lines 269-304
 function MenuTitlescreenState:update(t, dt)
 	if self._waiting_for_loaded_savegames then
 		if not managers.savefile:is_in_loading_sequence() and not self._user_has_changed and not self._any_key_pressed then
@@ -294,6 +303,7 @@ function MenuTitlescreenState:update(t, dt)
 	end
 end
 
+-- Lines 306-331
 function MenuTitlescreenState:get_start_pressed_controller_index()
 	for index, controller in ipairs(self._controller_list) do
 		if is_ps4 or is_xb1 then
@@ -318,6 +328,7 @@ function MenuTitlescreenState:get_start_pressed_controller_index()
 	return nil
 end
 
+-- Lines 333-357
 function MenuTitlescreenState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -347,6 +358,7 @@ function MenuTitlescreenState:check_confirm_pressed()
 	end
 end
 
+-- Lines 359-382
 function MenuTitlescreenState:check_user_callback(success)
 	managers.dlc:on_signin_complete()
 
@@ -375,6 +387,7 @@ function MenuTitlescreenState:check_user_callback(success)
 	end
 end
 
+-- Lines 384-409
 function MenuTitlescreenState:check_storage_callback(success)
 	if success then
 		self._waiting_for_loaded_savegames = true
@@ -401,21 +414,25 @@ function MenuTitlescreenState:check_storage_callback(success)
 	end
 end
 
+-- Lines 411-418
 function MenuTitlescreenState:_load_savegames_done()
 	self._background:stop()
 	self._background:animate(callback(self, self, "_animate_any_key_pressed"))
 end
 
+-- Lines 420-426
 function MenuTitlescreenState:continue_without_saving_yes_callback()
 	self._background:stop()
 	self._background:animate(callback(self, self, "_animate_any_key_pressed"))
 end
 
+-- Lines 428-431
 function MenuTitlescreenState:continue_without_saving_no_callback()
 	managers.user:set_index(nil)
 	managers.controller:set_default_wrapper_index(nil)
 end
 
+-- Lines 433-445
 function MenuTitlescreenState:check_attract_video()
 	if alive(self._attract_video_gui) then
 		if self._attract_video_gui:loop_count() > 0 or self:is_any_input_pressed() then
@@ -430,6 +447,7 @@ function MenuTitlescreenState:check_attract_video()
 	return false
 end
 
+-- Lines 447-455
 function MenuTitlescreenState:is_any_input_pressed()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -440,6 +458,7 @@ function MenuTitlescreenState:is_any_input_pressed()
 	return false
 end
 
+-- Lines 457-467
 function MenuTitlescreenState:reset_attract_video()
 	self._attract_video_time = TimerManager:main():time()
 
@@ -453,10 +472,12 @@ function MenuTitlescreenState:reset_attract_video()
 	end
 end
 
+-- Lines 469-471
 function MenuTitlescreenState:is_attract_video_delay_done()
 	return TimerManager:main():time() > self._attract_video_time + _G.tweak_data.states.title.ATTRACT_VIDEO_DELAY
 end
 
+-- Lines 473-502
 function MenuTitlescreenState:play_attract_video()
 	self:reset_attract_video()
 
@@ -494,6 +515,7 @@ function MenuTitlescreenState:play_attract_video()
 	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and 1 or 0)
 end
 
+-- Lines 504-534
 function MenuTitlescreenState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
@@ -522,6 +544,7 @@ function MenuTitlescreenState:at_exit()
 	managers.system_menu:init_finalize()
 end
 
+-- Lines 536-543
 function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_user_changed")
 
@@ -530,6 +553,7 @@ function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	end
 end
 
+-- Lines 545-550
 function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_storage_changed")
 
@@ -538,6 +562,7 @@ function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	end
 end
 
+-- Lines 552-605
 function MenuTitlescreenState:_animate_screen_display(background)
 	local t = 0
 	local fade_in_duration = 1
@@ -590,6 +615,7 @@ function MenuTitlescreenState:_animate_screen_display(background)
 	self._press_any_key_text:set_alpha(1)
 end
 
+-- Lines 607-628
 function MenuTitlescreenState:_animate_any_key_pressed(background)
 	local t = 0
 	local fade_out_duration = 0.4

@@ -1,5 +1,6 @@
 RaidGUIControlIntelBulletin = RaidGUIControlIntelBulletin or class(RaidGUIControl)
 
+-- Lines 3-10
 function RaidGUIControlIntelBulletin:init(parent, params)
 	RaidGUIControlIntelBulletin.super.init(self, parent, params)
 
@@ -9,6 +10,7 @@ function RaidGUIControlIntelBulletin:init(parent, params)
 	self:_layout()
 end
 
+-- Lines 12-54
 function RaidGUIControlIntelBulletin:_layout()
 	self._bg_image = self._object:bitmap({
 		y = 0,
@@ -104,6 +106,7 @@ function RaidGUIControlIntelBulletin:_layout()
 	})
 end
 
+-- Lines 56-98
 function RaidGUIControlIntelBulletin:set_data(item_value)
 	self._data = tweak_data.intel:get_item_data(self._category_name, item_value)
 	local text_top_coord = 0
@@ -146,6 +149,7 @@ function RaidGUIControlIntelBulletin:set_data(item_value)
 	self.content_panel_scrollable_area:setup_scroll_area()
 end
 
+-- Lines 100-102
 function RaidGUIControlIntelBulletin:get_data()
 	return self._data
 end

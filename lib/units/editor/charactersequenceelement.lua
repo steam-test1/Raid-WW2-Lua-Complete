@@ -2,6 +2,7 @@ CharacterSequenceElement = SequenceCharacterElement or class(MissionElement)
 CharacterSequenceElement.SAVE_UNIT_POSITION = false
 CharacterSequenceElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 6-15
 function CharacterSequenceElement:init(unit)
 	CharacterSequenceElement.super.init(self, unit)
 
@@ -13,6 +14,7 @@ function CharacterSequenceElement:init(unit)
 	table.insert(self._save_values, "sequence")
 end
 
+-- Lines 18-34
 function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -39,6 +41,7 @@ function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(text, 0, 0, "EXPAND")
 end
 
+-- Lines 36-45
 function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 	CharacterSequenceElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -58,6 +61,7 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 47-53
 function CharacterSequenceElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -66,6 +70,7 @@ function CharacterSequenceElement:remove_links(unit)
 	end
 end
 
+-- Lines 55-68
 function CharacterSequenceElement:on_lmb()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -83,9 +88,11 @@ function CharacterSequenceElement:on_lmb()
 	end
 end
 
+-- Lines 71-73
 function CharacterSequenceElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "on_lmb"))
 end
 
+-- Lines 75-76
 function CharacterSequenceElement:update_editing()
 end

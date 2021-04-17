@@ -1,11 +1,13 @@
 MolotovGrenade = MolotovGrenade or class(GrenadeBase)
 
+-- Lines 6-10
 function MolotovGrenade:destroy(unit)
 	for _, damage_effect_entry in pairs(self._molotov_damage_effect_table) do
 		World:effect_manager():fade_kill(damage_effect_entry.effect_id)
 	end
 end
 
+-- Lines 12-52
 function MolotovGrenade:_setup_from_tweak_data()
 	local grenade_entry = self.tweak_data or "molotov"
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -42,6 +44,7 @@ function MolotovGrenade:_setup_from_tweak_data()
 	self._last_position = nil
 end
 
+-- Lines 54-115
 function MolotovGrenade:update(unit, t, dt)
 	if self._hand_held then
 		return
@@ -90,6 +93,7 @@ function MolotovGrenade:update(unit, t, dt)
 	end
 end
 
+-- Lines 117-204
 function MolotovGrenade:_do_damage()
 	local pos = self._detonated_position
 	local normal = math.UP
@@ -155,10 +159,12 @@ function MolotovGrenade:_do_damage()
 	self._burn_tick_temp_counter = 0
 end
 
+-- Lines 207-209
 function MolotovGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity)
 	self:_detonate(normal)
 end
 
+-- Lines 212-388
 function MolotovGrenade:detonate(normal)
 	managers.explosion:detect_and_give_dmg({
 		range = 250,
@@ -297,6 +303,7 @@ function MolotovGrenade:detonate(normal)
 	self._unit:set_visible(false)
 end
 
+-- Lines 391-399
 function MolotovGrenade:_detonate(normal)
 	if self._detonated == false then
 		self:detonate(normal)
@@ -304,18 +311,21 @@ function MolotovGrenade:_detonate(normal)
 	end
 end
 
+-- Lines 401-405
 function MolotovGrenade:sync_detonate_molotov_grenade(event_id, normal)
 	if event_id == GrenadeBase.EVENT_IDS.detonate then
 		self:_detonate_on_client(normal)
 	end
 end
 
+-- Lines 407-413
 function MolotovGrenade:_detonate_on_client(normal)
 	if self._detonated == false then
 		self:detonate(normal)
 	end
 end
 
+-- Lines 415-444
 function MolotovGrenade:_detonate_on_client_OLD(normal)
 	if self._detonated == false then
 		self._detonated_position = self._unit:position()
@@ -331,6 +341,7 @@ function MolotovGrenade:_detonate_on_client_OLD(normal)
 	end
 end
 
+-- Lines 446-453
 function MolotovGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -341,6 +352,7 @@ function MolotovGrenade:bullet_hit()
 	self:_detonate()
 end
 
+-- Lines 456-476
 function MolotovGrenade:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return

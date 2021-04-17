@@ -2,14 +2,17 @@ core:import("CoreMissionScriptElement")
 
 ElementBlackscreen = ElementBlackscreen or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementBlackscreen:init(...)
 	ElementBlackscreen.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementBlackscreen:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 13-34
 function ElementBlackscreen:on_executed(instigator)
 	if not self._values.enabled then
 		return

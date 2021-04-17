@@ -12,6 +12,7 @@ TeamAILogicAssault.on_objective_unit_destroyed = TeamAILogicBase.on_objective_un
 TeamAILogicAssault.is_available_for_assignment = TeamAILogicIdle.is_available_for_assignment
 TeamAILogicAssault.clbk_heat = TeamAILogicIdle.clbk_heat
 
+-- Lines 22-68
 function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -50,6 +51,7 @@ function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
 end
 
+-- Lines 72-83
 function TeamAILogicAssault.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -61,6 +63,7 @@ function TeamAILogicAssault.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
+-- Lines 87-153
 function TeamAILogicAssault.update(data)
 	TeamAILogicTravel._upd_ai_perceptors(data)
 
@@ -128,6 +131,7 @@ function TeamAILogicAssault.update(data)
 	end
 end
 
+-- Lines 157-240
 function TeamAILogicAssault._upd_enemy_detection(data, is_synchronous)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -199,6 +203,7 @@ function TeamAILogicAssault._upd_enemy_detection(data, is_synchronous)
 	end
 end
 
+-- Lines 244-264
 function TeamAILogicAssault.find_enemy_to_mark(enemies)
 	local best_nmy, best_nmy_wgt = nil
 
@@ -212,6 +217,7 @@ function TeamAILogicAssault.find_enemy_to_mark(enemies)
 	return best_nmy
 end
 
+-- Lines 268-282
 function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play_action)
 	if play_sound then
 		criminal:sound():say(to_mark:base():char_tweak().priority_shout, true)
@@ -233,6 +239,7 @@ function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play
 	to_mark:contour():add("mark_enemy", true)
 end
 
+-- Lines 286-325
 function TeamAILogicAssault.on_action_completed(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -274,17 +281,21 @@ function TeamAILogicAssault.on_action_completed(data, action)
 	end
 end
 
+-- Lines 329-331
 function TeamAILogicAssault.damage_clbk(data, damage_info)
 	TeamAILogicIdle.damage_clbk(data, damage_info)
 end
 
+-- Lines 335-336
 function TeamAILogicAssault.death_clbk(data, damage_info)
 end
 
+-- Lines 340-342
 function TeamAILogicAssault.on_detected_enemy_destroyed(data, enemy_unit)
 	TeamAILogicIdle.on_cop_neutralized(data, enemy_unit:key())
 end
 
+-- Lines 346-356
 function TeamAILogicAssault._chk_request_combat_chatter(data, my_data)
 	local focus_enemy = data.attention_obj
 
@@ -293,6 +304,7 @@ function TeamAILogicAssault._chk_request_combat_chatter(data, my_data)
 	end
 end
 
+-- Lines 360-372
 function TeamAILogicAssault._chk_exit_attack_logic(data, new_reaction)
 	local wanted_state = TeamAILogicBase._get_logic_state_from_reaction(data, new_reaction)
 

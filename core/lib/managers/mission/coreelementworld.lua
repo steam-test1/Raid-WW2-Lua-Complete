@@ -3,6 +3,7 @@ core:import("CoreMissionScriptElement")
 
 ElementWorldOutputEvent = ElementWorldOutputEvent or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 8-15
 function ElementWorldOutputEvent:init(...)
 	ElementWorldOutputEvent.super.init(self, ...)
 
@@ -13,12 +14,15 @@ function ElementWorldOutputEvent:init(...)
 	end
 end
 
+-- Lines 17-19
 function ElementWorldOutputEvent:on_created()
 end
 
+-- Lines 21-23
 function ElementWorldOutputEvent:client_on_executed(...)
 end
 
+-- Lines 25-30
 function ElementWorldOutputEvent:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -27,6 +31,7 @@ function ElementWorldOutputEvent:on_executed(instigator)
 	ElementWorldOutputEvent.super.on_executed(self, instigator)
 end
 
+-- Lines 32-36
 function ElementWorldOutputEvent:destroy()
 	for _, event_list_data in ipairs(self._values.event_list) do
 		managers.worldcollection:unregister_output_element(event_list_data.world_name, event_list_data.event, self)
@@ -35,19 +40,23 @@ end
 
 ElementWorldOutput = ElementWorldOutput or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 42-44
 function ElementWorldOutput:init(...)
 	ElementWorldOutput.super.init(self, ...)
 end
 
+-- Lines 46-48
 function ElementWorldOutput:client_on_executed(...)
 end
 
+-- Lines 50-54
 function ElementWorldOutput:on_created()
 	Application:debug("[ElementWorldOutput:on_created()]", self._sync_id, self._values.event)
 
 	self._output_elements = managers.worldcollection:get_output_elements_for_world(self._sync_id, self._values.event)
 end
 
+-- Lines 56-68
 function ElementWorldOutput:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -64,14 +73,17 @@ end
 
 ElementWorldInput = ElementWorldInput or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 74-79
 function ElementWorldInput:init(...)
 	ElementWorldInput.super.init(self, ...)
 	managers.worldcollection:register_input_element(self._sync_id, self._values.event, self)
 end
 
+-- Lines 81-83
 function ElementWorldInput:client_on_executed(...)
 end
 
+-- Lines 85-93
 function ElementWorldInput:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -80,23 +92,28 @@ function ElementWorldInput:on_executed(instigator)
 	ElementWorldInput.super.on_executed(self, instigator)
 end
 
+-- Lines 95-97
 function ElementWorldInput:destroy()
 	managers.worldcollection:unregister_input_element(self._sync_id, self._values.event, self)
 end
 
 ElementWorldInputEvent = ElementWorldInputEvent or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 104-106
 function ElementWorldInputEvent:init(...)
 	ElementWorldInputEvent.super.init(self, ...)
 end
 
+-- Lines 108-112
 function ElementWorldInputEvent:on_created()
 	print("ElementWorldInputEvent:on_created()")
 end
 
+-- Lines 114-116
 function ElementWorldInputEvent:client_on_executed(...)
 end
 
+-- Lines 118-135
 function ElementWorldInputEvent:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -119,19 +136,23 @@ end
 
 ElementWorldPoint = ElementWorldPoint or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 141-145
 function ElementWorldPoint:init(...)
 	ElementWorldPoint.super.init(self, ...)
 
 	self._spawn_counter = 0
 end
 
+-- Lines 148-151
 function ElementWorldPoint:value(name)
 	return self._values[name]
 end
 
+-- Lines 153-155
 function ElementWorldPoint:client_on_executed(...)
 end
 
+-- Lines 157-159
 function ElementWorldPoint:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
@@ -141,6 +162,7 @@ ElementWorldPoint.DELAY_CREATE_SINGLE = 2
 ElementWorldPoint.DELAY_DESTROY_MULTI = 3
 ElementWorldPoint.DELAY_CREATE_MULTI = 5
 
+-- Lines 168-201
 function ElementWorldPoint:on_executed(instigator)
 	Application:debug("[ElementWorldPoint:on_executed] on_executed", self._values.world, self._values.enabled, self._world_id, self._action)
 
@@ -175,6 +197,7 @@ function ElementWorldPoint:on_executed(instigator)
 	ElementWorldPoint.super.on_executed(self, instigator)
 end
 
+-- Lines 203-214
 function ElementWorldPoint:_destroy_world()
 	Application:debug("[ElementWorldPoint:_destroy_world()]", self._world_id, self._has_created)
 
@@ -190,6 +213,7 @@ function ElementWorldPoint:_destroy_world()
 	self._world_id = nil
 end
 
+-- Lines 216-269
 function ElementWorldPoint:_create_world(world_id)
 	if self._has_created or not self._values.world then
 		Application:debug("[ElementWorldPoint:_create() World is alreaedy created, skipping!]", world_id)
@@ -236,6 +260,7 @@ function ElementWorldPoint:_create_world(world_id)
 	Application:debug("[ElementWorldPoint:_create] world created")
 end
 
+-- Lines 272-278
 function ElementWorldPoint:save(data)
 	data.has_created = self._has_created
 	data.world_id = self._world_id
@@ -244,6 +269,7 @@ function ElementWorldPoint:save(data)
 	data.world = self._values.world
 end
 
+-- Lines 280-287
 function ElementWorldPoint:load(data)
 	self._values.world = data.world
 	self._excluded_continents = data.excluded_continents
@@ -255,9 +281,11 @@ function ElementWorldPoint:load(data)
 	self:set_enabled(data.enabled)
 end
 
+-- Lines 289-291
 function ElementWorldPoint:stop_simulation(...)
 end
 
+-- Lines 293-297
 function ElementWorldPoint:execute_action(action)
 	Application:debug("[ElementWorldPoint:execute_action]", action)
 
@@ -266,6 +294,7 @@ function ElementWorldPoint:execute_action(action)
 	self:on_executed(nil)
 end
 
+-- Lines 299-301
 function ElementWorldPoint:destroy()
 	self:_destroy_world()
 end

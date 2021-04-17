@@ -1,5 +1,6 @@
 AIAttentionElement = AIAttentionElement or class(MissionElement)
 
+-- Lines 3-36
 function AIAttentionElement:init(unit)
 	AIAttentionElement.super.init(self, unit)
 
@@ -31,16 +32,19 @@ function AIAttentionElement:init(unit)
 	self._att_obj_unit = nil
 end
 
+-- Lines 40-42
 function AIAttentionElement:post_init(...)
 	AIAttentionElement.super.post_init(self, ...)
 end
 
+-- Lines 44-49
 function AIAttentionElement:save(t)
 	if not next(self._hed.instigator_ids) then
 		t.instigator_ids = nil
 	end
 end
 
+-- Lines 54-67
 function AIAttentionElement:layer_finished()
 	AIAttentionElement.super.layer_finished(self)
 
@@ -57,6 +61,7 @@ function AIAttentionElement:layer_finished()
 	end
 end
 
+-- Lines 71-77
 function AIAttentionElement:load_parent_unit(unit)
 	self._parent_unit = unit
 
@@ -65,10 +70,12 @@ function AIAttentionElement:load_parent_unit(unit)
 	end
 end
 
+-- Lines 81-84
 function AIAttentionElement:load_att_obj_unit(unit)
 	self._att_obj_unit = unit
 end
 
+-- Lines 88-109
 function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 	AIAttentionElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -112,6 +119,7 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 113-133
 function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 
@@ -152,10 +160,12 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 137-139
 function AIAttentionElement:update_unselected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 end
 
+-- Lines 143-156
 function AIAttentionElement:_chk_units_alive()
 	if self._parent_unit and not alive(self._parent_unit) then
 		self._parent_unit = nil
@@ -174,6 +184,7 @@ function AIAttentionElement:_chk_units_alive()
 	end
 end
 
+-- Lines 160-165
 function AIAttentionElement:update_editing()
 	self:_find_parent_raycast()
 	self:_find_att_obj_raycast()
@@ -181,6 +192,7 @@ function AIAttentionElement:update_editing()
 	self:_raycast()
 end
 
+-- Lines 169-183
 function AIAttentionElement:_find_parent_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -199,6 +211,7 @@ function AIAttentionElement:_find_parent_raycast()
 	return ray
 end
 
+-- Lines 187-196
 function AIAttentionElement:_find_att_obj_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		mask = 38
@@ -213,6 +226,7 @@ function AIAttentionElement:_find_att_obj_raycast()
 	return ray.unit
 end
 
+-- Lines 200-217
 function AIAttentionElement:_find_instigator_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -234,6 +248,7 @@ function AIAttentionElement:_find_instigator_raycast()
 	return id
 end
 
+-- Lines 221-230
 function AIAttentionElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -248,6 +263,7 @@ function AIAttentionElement:_raycast()
 	return nil
 end
 
+-- Lines 234-279
 function AIAttentionElement:_lmb()
 	local unit = self:_find_att_obj_raycast()
 
@@ -302,16 +318,19 @@ function AIAttentionElement:_lmb()
 	end
 end
 
+-- Lines 283-285
 function AIAttentionElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
+-- Lines 291-295
 function AIAttentionElement:selected()
 	AIAttentionElement.super.selected(self)
 	self:_chk_units_alive()
 	self:_chk_set_link_values()
 end
 
+-- Lines 299-312
 function AIAttentionElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -339,9 +358,11 @@ function AIAttentionElement:_build_panel(panel, panel_sizer)
 	}, tweak_data.attention.indexes), "Select the attention preset to be overriden. (valid only with override operation)")
 end
 
+-- Lines 316-319
 function AIAttentionElement:add_to_mission_package()
 end
 
+-- Lines 323-342
 function AIAttentionElement:_chk_set_link_values()
 	if self._att_obj_unit and self._parent_unit then
 		local att_obj_pos = self._att_obj_unit:position()

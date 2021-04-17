@@ -4,6 +4,7 @@ CopLogicSpotter.damage_clbk = CopLogicBase.damage_clbk
 CopLogicSpotter.is_available_for_assignment = CopLogicAttack.is_available_for_assignment
 CopLogicSpotter.death_clbk = CopLogicAttack.death_clbk
 
+-- Lines 14-58
 function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -60,6 +61,7 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
 end
 
+-- Lines 60-77
 function CopLogicSpotter.throw_flare_so(data)
 	local action_desc = {
 		variant = "spotter_cbt_sup_throw_flare",
@@ -78,6 +80,7 @@ function CopLogicSpotter.throw_flare_so(data)
 	data.unit:movement():action_request(action_desc)
 end
 
+-- Lines 79-87
 function CopLogicSpotter.exit(data, new_logic_name, enter_params)
 	CopLogicSpotter.super.exit(data, new_logic_name, enter_params)
 
@@ -87,12 +90,14 @@ function CopLogicSpotter.exit(data, new_logic_name, enter_params)
 	CopLogicBase.cancel_queued_tasks(my_data)
 end
 
+-- Lines 89-93
 function CopLogicSpotter._upd_spotter_detection(data)
 	for _, player in pairs(managers.player:players()) do
 		managers.groupai:state():on_spotter_detection_progress(player, data.unit, "empty")
 	end
 end
 
+-- Lines 95-125
 function CopLogicSpotter._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -119,6 +124,7 @@ function CopLogicSpotter._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSpotter._upd_enemy_detection, data, data.t + delay)
 end
 
+-- Lines 128-154
 function CopLogicSpotter._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
@@ -146,6 +152,7 @@ function CopLogicSpotter._chk_reaction_to_attention_object(data, attention_data,
 	return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 end
 
+-- Lines 156-375
 function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_reaction)
 	local t = data.t
 	local detected_obj = data.detected_attention_objects
@@ -355,6 +362,7 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 	return delay
 end
 
+-- Lines 377-401
 function CopLogicSpotter._upd_aim(data, my_data)
 	if not data.logic._should_aim_or_shoot then
 		return
@@ -381,6 +389,7 @@ function CopLogicSpotter._upd_aim(data, my_data)
 	CopLogicAttack.aim_allow_fire(shoot, aim, data, my_data)
 end
 
+-- Lines 403-413
 function CopLogicSpotter._should_aim_or_shoot(data, my_data)
 	local aim, shoot = nil
 	local focus_enemy = data.attention_obj
@@ -393,6 +402,7 @@ function CopLogicSpotter._should_aim_or_shoot(data, my_data)
 	return aim, shoot
 end
 
+-- Lines 415-469
 function CopLogicSpotter._upd_aim_action(data, my_data)
 	local focus_enemy = data.attention_obj
 	local action_taken = nil
@@ -441,6 +451,7 @@ function CopLogicSpotter._upd_aim_action(data, my_data)
 	return action_taken
 end
 
+-- Lines 471-502
 function CopLogicSpotter._aim_or_shoot(data, my_data, aim, shoot)
 	local focus_enemy = data.attention_obj
 
@@ -483,6 +494,7 @@ function CopLogicSpotter._aim_or_shoot(data, my_data, aim, shoot)
 	end
 end
 
+-- Lines 504-513
 function CopLogicSpotter._request_action_shoot(data, my_data)
 	if my_data.shooting or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
 		return
@@ -498,12 +510,15 @@ function CopLogicSpotter._request_action_shoot(data, my_data)
 	end
 end
 
+-- Lines 515-516
 function CopLogicSpotter._upd_look_for_player(data, attention_info)
 end
 
+-- Lines 518-519
 function CopLogicSpotter.on_alert(data, alert_data)
 end
 
+-- Lines 521-528
 function CopLogicSpotter.on_attention_obj_identified(data, attention_u_key, attention_info)
 	if not data.unit:brain().on_cooldown then
 		CopLogicSpotter.throw_flare_so(data)

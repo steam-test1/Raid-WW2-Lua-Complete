@@ -1,8 +1,10 @@
 DefaultNetworkHandler = DefaultNetworkHandler or class()
 
+-- Lines 3-4
 function DefaultNetworkHandler:init()
 end
 
+-- Lines 6-14
 function DefaultNetworkHandler.lost_peer(peer_ip)
 	cat_print("multiplayer_base", "Lost Peer (DefaultNetworkHandler)")
 
@@ -15,6 +17,7 @@ function DefaultNetworkHandler.lost_peer(peer_ip)
 	end
 end
 
+-- Lines 15-23
 function DefaultNetworkHandler.lost_client(peer_ip)
 	Application:error("[DefaultNetworkHandler] Lost client", peer_ip)
 
@@ -27,6 +30,7 @@ function DefaultNetworkHandler.lost_client(peer_ip)
 	end
 end
 
+-- Lines 24-32
 function DefaultNetworkHandler.lost_server(peer_ip)
 	Application:error("[DefaultNetworkHandler] Lost server", peer_ip)
 

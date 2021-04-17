@@ -1,5 +1,6 @@
 LevelLoadingScreenGuiScript = LevelLoadingScreenGuiScript or class()
 
+-- Lines 4-85
 function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	self._scene_gui = scene_gui
 	self._res = res
@@ -106,6 +107,7 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	end
 end
 
+-- Lines 87-178
 function LevelLoadingScreenGuiScript:setup(res, progress)
 	self._saferect_bottom_y = self._saferect_panel:h() - self._gui_tweak_data.upper_saferect_border
 
@@ -210,19 +212,23 @@ function LevelLoadingScreenGuiScript:setup(res, progress)
 	end
 end
 
+-- Lines 180-181
 function LevelLoadingScreenGuiScript:update(progress, t, dt)
 end
 
+-- Lines 183-185
 function LevelLoadingScreenGuiScript:get_loading_text(dot_count)
 	return self._init_text .. string.rep(".", math.floor(dot_count))
 end
 
+-- Lines 187-190
 function LevelLoadingScreenGuiScript:set_text(text)
 	self._text_gui:set_text(text)
 
 	self._init_text = text
 end
 
+-- Lines 192-211
 function LevelLoadingScreenGuiScript:destroy()
 	if alive(self._saferect) then
 		self._scene_gui:destroy_workspace(self._saferect)
@@ -249,10 +255,12 @@ function LevelLoadingScreenGuiScript:destroy()
 	end
 end
 
+-- Lines 213-215
 function LevelLoadingScreenGuiScript:visible()
 	return self._ws:visible()
 end
 
+-- Lines 217-223
 function LevelLoadingScreenGuiScript:set_visible(visible)
 	if visible then
 		self._ws:show()

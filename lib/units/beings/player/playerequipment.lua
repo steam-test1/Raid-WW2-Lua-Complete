@@ -1,9 +1,11 @@
 PlayerEquipment = PlayerEquipment or class()
 
+-- Lines 5-7
 function PlayerEquipment:init(unit)
 	self._unit = unit
 end
 
+-- Lines 11-16
 function PlayerEquipment:on_deploy_interupted()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)
@@ -12,6 +14,7 @@ function PlayerEquipment:on_deploy_interupted()
 	end
 end
 
+-- Lines 19-39
 function PlayerEquipment:valid_look_at_placement(equipment_data)
 	local from = self._unit:movement():m_head_pos()
 	local to = from + self._unit:movement():m_head_rot():y() * 200
@@ -38,6 +41,7 @@ function PlayerEquipment:valid_look_at_placement(equipment_data)
 	return ray
 end
 
+-- Lines 42-59
 function PlayerEquipment:valid_placement(equipment_data)
 	local valid = not self._unit:movement():current_state():in_air()
 	local pos = self._unit:movement():m_pos()
@@ -66,6 +70,7 @@ local ids_contour_color = Idstring("contour_color")
 local ids_contour_opacity = Idstring("contour_opacity")
 local ids_material = Idstring("material")
 
+-- Lines 64-71
 function PlayerEquipment:_disable_contour(unit)
 	local materials = unit:get_objects_by_type(ids_material)
 
@@ -74,6 +79,7 @@ function PlayerEquipment:_disable_contour(unit)
 	end
 end
 
+-- Lines 73-101
 function PlayerEquipment:use_ammo_bag()
 	local ray = self:valid_shape_placement("ammo_bag")
 
@@ -103,6 +109,7 @@ function PlayerEquipment:use_ammo_bag()
 	return false
 end
 
+-- Lines 103-125
 function PlayerEquipment:use_doctor_bag()
 	local ray = self:valid_shape_placement("doctor_bag")
 
@@ -128,6 +135,7 @@ function PlayerEquipment:use_doctor_bag()
 	return false
 end
 
+-- Lines 127-147
 function PlayerEquipment:use_first_aid_kit()
 	local ray = self:valid_shape_placement("first_aid_kit")
 
@@ -153,7 +161,9 @@ function PlayerEquipment:use_first_aid_kit()
 	return false
 end
 
+-- Lines 149-161
 function PlayerEquipment:use_armor_kit()
+	-- Lines 150-159
 	local function redirect()
 		if Network:is_client() then
 			managers.network:session():send_to_host("used_deployable")
@@ -168,12 +178,14 @@ function PlayerEquipment:use_armor_kit()
 	return true, redirect
 end
 
+-- Lines 163-166
 function PlayerEquipment:use_armor_kit_dropin_penalty()
 	MenuCallbackHandler:_update_outfit_information()
 
 	return true
 end
 
+-- Lines 168-181
 function PlayerEquipment:use_satchel()
 	local ray = self:valid_look_at_placement()
 
@@ -191,6 +203,7 @@ function PlayerEquipment:use_satchel()
 	return false
 end
 
+-- Lines 183-195
 function PlayerEquipment:_spawn_dummy(dummy_name, pos, rot)
 	if alive(self._dummy_unit) then
 		return self._dummy_unit
@@ -205,6 +218,7 @@ function PlayerEquipment:_spawn_dummy(dummy_name, pos, rot)
 	return self._dummy_unit
 end
 
+-- Lines 197-247
 function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	local from = self._unit:movement():m_head_pos()
 	local to = from + self._unit:movement():m_head_rot():y() * 220
@@ -260,6 +274,7 @@ function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	return valid and ray
 end
 
+-- Lines 249-290
 function PlayerEquipment:use_sentry_gun(selected_index)
 	if self._sentrygun_placement_requested then
 		return
@@ -301,24 +316,28 @@ function PlayerEquipment:use_sentry_gun(selected_index)
 	return false
 end
 
+-- Lines 293-297
 function PlayerEquipment:use_flash_grenade()
 	self._grenade_name = "units/dev_tools/deleted_unit/deleted_unit"
 
 	return true, "throw_grenade"
 end
 
+-- Lines 299-302
 function PlayerEquipment:use_smoke_grenade()
 	self._grenade_name = "units/dev_tools/deleted_unit/deleted_unit"
 
 	return true, "throw_grenade"
 end
 
+-- Lines 304-307
 function PlayerEquipment:use_frag_grenade()
 	self._grenade_name = "units/dev_tools/deleted_unit/deleted_unit"
 
 	return true, "throw_grenade"
 end
 
+-- Lines 310-322
 function PlayerEquipment:throw_flash_grenade()
 	if not self._grenade_name then
 		Application:error("Tried to throw a grenade with no name")
@@ -336,6 +355,7 @@ function PlayerEquipment:throw_flash_grenade()
 	self._grenade_name = nil
 end
 
+-- Lines 324-353
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.projectiles[projectile_entry]
@@ -368,6 +388,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
+-- Lines 355-380
 function PlayerEquipment:throw_grenade()
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
@@ -397,6 +418,7 @@ function PlayerEquipment:throw_grenade()
 	managers.player:on_throw_grenade()
 end
 
+-- Lines 392-396
 function PlayerEquipment:use_duck()
 	local soundsource = SoundDevice:create_source("duck")
 
@@ -405,10 +427,12 @@ function PlayerEquipment:use_duck()
 	return true
 end
 
+-- Lines 400-402
 function PlayerEquipment:from_server_sentry_gun_place_result()
 	self._sentrygun_placement_requested = nil
 end
 
+-- Lines 406-411
 function PlayerEquipment:destroy()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)

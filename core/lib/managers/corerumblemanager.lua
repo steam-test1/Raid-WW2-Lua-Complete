@@ -2,6 +2,7 @@ core:module("CoreRumbleManager")
 
 RumbleManager = RumbleManager or class()
 
+-- Lines 5-14
 function RumbleManager:init()
 	self._last_played_ids = {}
 	self._preset_rumbles = {}
@@ -15,10 +16,12 @@ function RumbleManager:init()
 	self._enabled = true
 end
 
+-- Lines 17-19
 function RumbleManager:add_preset_rumbles(name, data)
 	self._preset_rumbles[name] = data
 end
 
+-- Lines 21-26
 function RumbleManager:initialize_controller_types()
 	self._rumbling_controller_types.xbox360 = true
 	self._rumbling_controller_types.ps3 = true
@@ -26,6 +29,7 @@ function RumbleManager:initialize_controller_types()
 	self._rumbling_controller_types.xb1 = true
 end
 
+-- Lines 28-45
 function RumbleManager:stop(rumble_id)
 	if rumble_id then
 		if rumble_id == "all" then
@@ -46,6 +50,7 @@ function RumbleManager:stop(rumble_id)
 	end
 end
 
+-- Lines 47-57
 function RumbleManager:register_controller(controller, pos_callback)
 	if self._rumbling_controller_types[controller.TYPE] then
 		local ctrl = controller:get_controller()
@@ -59,6 +64,7 @@ function RumbleManager:register_controller(controller, pos_callback)
 	end
 end
 
+-- Lines 59-77
 function RumbleManager:unregister_controller(controller, pos_callback)
 	local ctrl = controller:get_controller()
 	local key = ctrl:key()
@@ -78,6 +84,7 @@ function RumbleManager:unregister_controller(controller, pos_callback)
 	end
 end
 
+-- Lines 79-85
 function RumbleManager:set_enabled(enabled)
 	self._enabled = enabled
 
@@ -86,10 +93,12 @@ function RumbleManager:set_enabled(enabled)
 	end
 end
 
+-- Lines 87-89
 function RumbleManager:enabled()
 	return self._enabled
 end
 
+-- Lines 91-156
 function RumbleManager:play(name, controller_wrapper, multiplier_data, custom_data)
 	if not self._enabled then
 		return false
@@ -172,6 +181,7 @@ function RumbleManager:play(name, controller_wrapper, multiplier_data, custom_da
 	end
 end
 
+-- Lines 158-171
 function RumbleManager:set_multiplier(rumble_id, multiplier)
 	if not self._enabled or not rumble_id or not multiplier then
 		return false
@@ -189,6 +199,7 @@ function RumbleManager:set_multiplier(rumble_id, multiplier)
 	end
 end
 
+-- Lines 173-198
 function RumbleManager:mult_distance_lerp(pos_func_list, params)
 	if pos_func_list then
 		local closest_pos = nil

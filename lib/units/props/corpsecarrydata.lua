@@ -1,5 +1,6 @@
 CorpseCarryData = CorpseCarryData or class(CarryData)
 
+-- Lines 4-9
 function CorpseCarryData:init(...)
 	CorpseCarryData.super.init(self, ...)
 
@@ -8,6 +9,7 @@ function CorpseCarryData:init(...)
 	end
 end
 
+-- Lines 11-24
 function CorpseCarryData:on_thrown()
 	self._dismembered_parts = self._dismembered_parts or managers.player:carry_temporary_data(self:carry_id())
 
@@ -20,6 +22,7 @@ function CorpseCarryData:on_thrown()
 	managers.player:clear_carry_temporary_data(self:carry_id())
 end
 
+-- Lines 26-47
 function CorpseCarryData:_dismember(part_name, decal_name)
 	if not self._unit:damage():has_sequence(part_name) then
 		return false
@@ -39,6 +42,7 @@ function CorpseCarryData:_dismember(part_name, decal_name)
 	end
 end
 
+-- Lines 49-54
 function CarryData:on_pickup()
 	if self._dismembered_parts then
 		managers.player:set_carry_temporary_data(self:carry_id(), self._dismembered_parts)

@@ -1,5 +1,6 @@
 RaidGUIControlCard = RaidGUIControlCard or class(RaidGUIControl)
 
+-- Lines 3-91
 function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 	RaidGUIControlCard.super.init(self, parent, item_params)
 
@@ -88,6 +89,7 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 	self._name = "card_control"
 end
 
+-- Lines 93-108
 function RaidGUIControlCard:_create_border()
 	local border_thickness = 1.6
 	self._border_left = self._card_panel:gradient({
@@ -169,22 +171,26 @@ function RaidGUIControlCard:_create_border()
 	})
 end
 
+-- Lines 110-114
 function RaidGUIControlCard:mouse_released(o, button, x, y)
 	self:on_mouse_released(button)
 
 	return true
 end
 
+-- Lines 116-121
 function RaidGUIControlCard:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(button, self, self._item_data)
 	end
 end
 
+-- Lines 123-125
 function RaidGUIControlCard:selected()
 	return self._selected
 end
 
+-- Lines 128-134
 function RaidGUIControlCard:select()
 	self._selected = true
 
@@ -194,6 +200,7 @@ function RaidGUIControlCard:select()
 	end
 end
 
+-- Lines 137-142
 function RaidGUIControlCard:unselect()
 	self._selected = false
 
@@ -202,10 +209,12 @@ function RaidGUIControlCard:unselect()
 	end
 end
 
+-- Lines 144-146
 function RaidGUIControlCard:locked()
 	return self._locked
 end
 
+-- Lines 149-155
 function RaidGUIControlCard:lock()
 	self._locked = true
 
@@ -215,6 +224,7 @@ function RaidGUIControlCard:lock()
 	end
 end
 
+-- Lines 158-163
 function RaidGUIControlCard:unlock()
 	self._locked = false
 

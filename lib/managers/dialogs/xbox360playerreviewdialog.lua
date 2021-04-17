@@ -3,10 +3,12 @@ require("lib/managers/dialogs/PlayerReviewDialog")
 
 Xbox360PlayerReviewDialog = Xbox360PlayerReviewDialog or class(PlayerReviewDialog)
 
+-- Lines 7-13
 function Xbox360PlayerReviewDialog:init(manager, data)
 	PlayerReviewDialog.init(self, manager, data)
 end
 
+-- Lines 15-28
 function Xbox360PlayerReviewDialog:show()
 	self._manager:event_dialog_shown(self)
 
@@ -23,12 +25,14 @@ function Xbox360PlayerReviewDialog:show()
 	return true
 end
 
+-- Lines 30-34
 function Xbox360PlayerReviewDialog:update(t, dt)
 	if self._show_time and self._show_time ~= t and not Application:is_showing_system_dialog() then
 		self:done_callback()
 	end
 end
 
+-- Lines 36-40
 function Xbox360PlayerReviewDialog:done_callback()
 	self._show_time = nil
 

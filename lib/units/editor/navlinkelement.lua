@@ -15,6 +15,7 @@ NavLinkUnitElement._AI_SO_types = {
 	"AI_sniper"
 }
 
+-- Lines 6-41
 function NavLinkUnitElement:init(unit)
 	NavLinkUnitElement.super.init(self, unit)
 
@@ -47,6 +48,7 @@ function NavLinkUnitElement:init(unit)
 	table.insert(self._save_values, "is_navigation_link")
 end
 
+-- Lines 43-50
 function NavLinkUnitElement:post_init(...)
 	NavLinkUnitElement.super.post_init(self, ...)
 
@@ -57,6 +59,7 @@ function NavLinkUnitElement:post_init(...)
 	end
 end
 
+-- Lines 52-92
 function NavLinkUnitElement:test_element()
 	Application:trace("NavLinkUnitElement:test_element: ")
 
@@ -107,6 +110,7 @@ function NavLinkUnitElement:test_element()
 	self._start_test_t = Application:time()
 end
 
+-- Lines 94-100
 function NavLinkUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		enemy:set_slot(0)
@@ -117,6 +121,7 @@ function NavLinkUnitElement:stop_test_element()
 	print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
 end
 
+-- Lines 102-109
 function NavLinkUnitElement:draw_links(t, dt, selected_unit, all_units)
 	if self._hed._patrol_group then
 		return
@@ -126,6 +131,7 @@ function NavLinkUnitElement:draw_links(t, dt, selected_unit, all_units)
 	self:_draw_follow_up(selected_unit, all_units)
 end
 
+-- Lines 111-125
 function NavLinkUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local brush = Draw:brush()
 
@@ -141,6 +147,7 @@ function NavLinkUnitElement:update_selected(t, dt, selected_unit, all_units)
 	self:_highlight_if_outside_the_nav_field(t)
 end
 
+-- Lines 127-146
 function NavLinkUnitElement:_highlight_if_outside_the_nav_field(t)
 	if managers.navigation:is_data_ready() then
 		local my_pos = self._unit:position()
@@ -167,6 +174,7 @@ function NavLinkUnitElement:_highlight_if_outside_the_nav_field(t)
 	end
 end
 
+-- Lines 148-163
 function NavLinkUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	if self._hed.followup_elements then
 		local followup_elements = self._hed.followup_elements
@@ -188,6 +196,7 @@ function NavLinkUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 165-176
 function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
 	if self._hed.followup_elements then
 		for _, element_id in ipairs(self._hed.followup_elements) do
@@ -207,12 +216,14 @@ function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
 	end
 end
 
+-- Lines 178-182
 function NavLinkUnitElement:update_editing()
 	self:_so_raycast()
 	self:_spawn_raycast()
 	self:_raycast()
 end
 
+-- Lines 184-192
 function NavLinkUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -230,6 +241,7 @@ function NavLinkUnitElement:_so_raycast()
 	return nil
 end
 
+-- Lines 194-211
 function NavLinkUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -251,6 +263,7 @@ function NavLinkUnitElement:_spawn_raycast()
 	return id
 end
 
+-- Lines 213-222
 function NavLinkUnitElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -265,6 +278,7 @@ function NavLinkUnitElement:_raycast()
 	return nil
 end
 
+-- Lines 224-247
 function NavLinkUnitElement:_lmb()
 	local id = self:_so_raycast()
 
@@ -293,14 +307,17 @@ function NavLinkUnitElement:_lmb()
 	self._hed.search_position = self:_raycast() or self._hed.search_position
 end
 
+-- Lines 249-251
 function NavLinkUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
+-- Lines 255-257
 function NavLinkUnitElement:selected()
 	NavLinkUnitElement.super.selected(self)
 end
 
+-- Lines 259-273
 function NavLinkUnitElement:_apply_preset(params)
 	local value = params.ctrlr:get_value()
 	local confirm = EWS:message_box(Global.frame_panel, "Apply preset " .. value .. "?", "Special objective", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
@@ -318,6 +335,7 @@ function NavLinkUnitElement:_apply_preset(params)
 	end
 end
 
+-- Lines 275-280
 function NavLinkUnitElement:_enable_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(true)
@@ -328,6 +346,7 @@ function NavLinkUnitElement:_enable_all_nav_link_filters()
 	end
 end
 
+-- Lines 282-287
 function NavLinkUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
@@ -338,6 +357,7 @@ function NavLinkUnitElement:_clear_all_nav_link_filters()
 	end
 end
 
+-- Lines 289-302
 function NavLinkUnitElement:_toggle_nav_link_filter_value(params)
 	local value = params.ctrlr:get_value()
 
@@ -356,6 +376,7 @@ function NavLinkUnitElement:_toggle_nav_link_filter_value(params)
 	self._hed.SO_access = managers.navigation:convert_access_filter_to_string(self._nav_link_filter)
 end
 
+-- Lines 304-369
 function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -436,5 +457,6 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "test_unit", test_units, "Select the unit to be used when testing.")
 end
 
+-- Lines 371-374
 function NavLinkUnitElement:add_to_mission_package()
 end

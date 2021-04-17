@@ -1,5 +1,6 @@
 FFCEditorController = FFCEditorController or class()
 
+-- Lines 25-36
 function FFCEditorController:init(cam, controller)
 	self._controller = controller
 	self._camera = cam
@@ -13,6 +14,7 @@ function FFCEditorController:init(cam, controller)
 	self._mul = 112
 end
 
+-- Lines 38-77
 function FFCEditorController:update(time, rel_time)
 	if self._camera then
 		if self._creating_cube_map then
@@ -57,10 +59,12 @@ function FFCEditorController:update(time, rel_time)
 	end
 end
 
+-- Lines 79-81
 function FFCEditorController:update_locked(time, rel_time)
 	self:_draw_frustum_freeze(time, rel_time)
 end
 
+-- Lines 83-116
 function FFCEditorController:_draw_frustum_freeze(time, rel_time)
 	if not self._frustum_frozen then
 		return
@@ -94,14 +98,17 @@ function FFCEditorController:_draw_frustum_freeze(time, rel_time)
 	Application:draw_line(f4, f1, R, G, B)
 end
 
+-- Lines 118-120
 function FFCEditorController:set_camera(cam)
 	self._camera = cam
 end
 
+-- Lines 122-124
 function FFCEditorController:set_camera_pos(pos)
 	self._camera:set_position(pos)
 end
 
+-- Lines 126-130
 function FFCEditorController:set_camera_rot(rot)
 	self._yaw = rot:yaw()
 	self._pitch = rot:pitch()
@@ -109,44 +116,54 @@ function FFCEditorController:set_camera_rot(rot)
 	self._camera:set_rotation(Rotation(self._yaw, self._pitch, rot:roll()))
 end
 
+-- Lines 132-136
 function FFCEditorController:set_camera_roll(roll)
 	local rot = Rotation(self._camera:rotation():y(), roll)
 
 	self._camera:set_rotation(Rotation(self._camera:rotation():y(), rot:z()))
 end
 
+-- Lines 138-140
 function FFCEditorController:set_controller(c)
 	self._controller = c
 end
 
+-- Lines 142-144
 function FFCEditorController:set_move_speed(speed)
 	self._move_speed = speed
 end
 
+-- Lines 146-148
 function FFCEditorController:set_turn_speed(t_speed)
 	self._turn_speed = t_speed
 end
 
+-- Lines 150-152
 function FFCEditorController:set_fov(fov)
 	self._camera:set_fov(fov)
 end
 
+-- Lines 154-156
 function FFCEditorController:get_camera_pos()
 	return self._camera:position()
 end
 
+-- Lines 158-160
 function FFCEditorController:get_camera_rot()
 	return self._camera:rotation()
 end
 
+-- Lines 162-164
 function FFCEditorController:get_move_speed()
 	return self._move_speed
 end
 
+-- Lines 166-168
 function FFCEditorController:get_turn_speed()
 	return self._turn_speed
 end
 
+-- Lines 170-187
 function FFCEditorController:frustum_freeze(camera)
 	self._frustum_frozen = true
 	local old_cam = camera
@@ -165,6 +182,7 @@ function FFCEditorController:frustum_freeze(camera)
 	self._frozen_camera = old_cam
 end
 
+-- Lines 189-197
 function FFCEditorController:frustum_unfreeze(camera)
 	self._frustum_frozen = false
 	local old_cam = camera
@@ -177,10 +195,12 @@ function FFCEditorController:frustum_unfreeze(camera)
 	self._frozen_camera = nil
 end
 
+-- Lines 199-201
 function FFCEditorController:frustum_frozen()
 	return self._frustum_frozen
 end
 
+-- Lines 203-247
 function FFCEditorController:start_cube_map(params)
 	self._params = params
 	self._cubemap_name = params.name or ""
@@ -229,10 +249,12 @@ function FFCEditorController:start_cube_map(params)
 	table.insert(self._name_ordered, self._names[1])
 end
 
+-- Lines 249-251
 function FFCEditorController:creating_cube_map()
 	return self._creating_cube_map
 end
 
+-- Lines 253-298
 function FFCEditorController:create_cube_map()
 	if self._wait_frames > 0 then
 		self._wait_frames = self._wait_frames - 1
@@ -282,6 +304,7 @@ function FFCEditorController:create_cube_map()
 	return false
 end
 
+-- Lines 300-309
 function FFCEditorController:_cubemap_done()
 	if alive(self._light) then
 		World:delete_light(self._light)
@@ -294,6 +317,7 @@ function FFCEditorController:_cubemap_done()
 	end
 end
 
+-- Lines 311-322
 function FFCEditorController:_get_screen_size()
 	local res = Application:screen_resolution()
 	local diff = res.x - res.y
@@ -305,6 +329,7 @@ function FFCEditorController:_get_screen_size()
 	return x1, y1, x2, y2
 end
 
+-- Lines 325-332
 function FFCEditorController:_create_spot_projection()
 	local x1, y1, x2, y2 = self:_get_screen_size()
 
@@ -315,6 +340,7 @@ function FFCEditorController:_create_spot_projection()
 	Application:screenshot(path .. self._name_ordered[1], x1, y1, x2, y2)
 end
 
+-- Lines 335-353
 function FFCEditorController:_generate_spot_projection()
 	local execute = managers.database:root_path() .. "aux_assets/engine/tools/spotmapgen.bat "
 	local path = self._params.source_path or managers.database:root_path()
@@ -326,6 +352,7 @@ function FFCEditorController:_generate_spot_projection()
 	self:_add_meta_data((self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds", "diffuse_colormap_gradient_alpha_manual_mips")
 end
 
+-- Lines 355-372
 function FFCEditorController:_generate_cubemap(file)
 	local execute = managers.database:root_path() .. "aux_assets/engine/tools/" .. file .. ".bat "
 
@@ -341,6 +368,7 @@ function FFCEditorController:_generate_cubemap(file)
 	self:_add_meta_data((self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds", "diffuse_colormap_gradient_alpha_manual_mips")
 end
 
+-- Lines 375-379
 function FFCEditorController:_add_meta_data(file, meta)
 	local execute = managers.database:root_path() .. "aux_assets/engine/tools/diesel_dds_tagger.exe "
 	execute = execute .. file .. " " .. meta
@@ -348,6 +376,7 @@ function FFCEditorController:_add_meta_data(file, meta)
 	os.execute(execute)
 end
 
+-- Lines 381-390
 function FFCEditorController:update_orthographic(time, rel_time)
 	local speed = self._move_speed * rel_time
 	local mov_x = (self._controller:button(Idstring("go_right")) - self._controller:button(Idstring("go_left"))) * speed
@@ -361,12 +390,14 @@ function FFCEditorController:update_orthographic(time, rel_time)
 	self:set_orthographic_screen()
 end
 
+-- Lines 392-395
 function FFCEditorController:set_orthographic_screen()
 	local res = Application:screen_resolution()
 
 	self._camera:set_orthographic_screen(-(res.x / 2) * self._mul, res.x / 2 * self._mul, -(res.y / 2) * self._mul, res.y / 2 * self._mul)
 end
 
+-- Lines 397-417
 function FFCEditorController:toggle_orthographic(use)
 	local camera = self._camera
 

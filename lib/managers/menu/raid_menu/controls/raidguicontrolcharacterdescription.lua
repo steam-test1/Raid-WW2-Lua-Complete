@@ -2,6 +2,7 @@ RaidGUIControlCharacterDescription = RaidGUIControlCharacterDescription or class
 RaidGUIControlCharacterDescription.MODE_SELECTION = "mode_selection"
 RaidGUIControlCharacterDescription.MODE_CUSTOMIZATION = "mode_customization"
 
+-- Lines 6-13
 function RaidGUIControlCharacterDescription:init(parent, params, item_data)
 	RaidGUIControlCharacterDescription.super.init(self, parent, params, item_data)
 
@@ -11,6 +12,7 @@ function RaidGUIControlCharacterDescription:init(parent, params, item_data)
 	self:_layout()
 end
 
+-- Lines 15-76
 function RaidGUIControlCharacterDescription:_layout()
 	self._object = self._panel:panel({
 		name = "character_info_panel",
@@ -238,6 +240,7 @@ function RaidGUIControlCharacterDescription:_layout()
 	end
 end
 
+-- Lines 78-147
 function RaidGUIControlCharacterDescription:set_data(data)
 	local class_icon_data = tweak_data.gui.icons["ico_class_" .. data.class_name] or tweak_data.gui.icons.ico_flag_empty
 

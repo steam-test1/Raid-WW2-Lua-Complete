@@ -2,6 +2,7 @@ core:import("CoreEngineAccess")
 
 CoreParticleEditorPanel = CoreParticleEditorPanel or class()
 
+-- Lines 5-20
 function CoreParticleEditorPanel:init(editor, parent, effect)
 	self._editor = editor
 	self._effect = effect
@@ -26,10 +27,12 @@ function CoreParticleEditorPanel:init(editor, parent, effect)
 	self:create_panel(parent)
 end
 
+-- Lines 22-24
 function CoreParticleEditorPanel:panel()
 	return self._panel
 end
 
+-- Lines 26-30
 function CoreParticleEditorPanel:set_box_help(h, t)
 	self._box_help_header = h
 	self._box_help = t
@@ -37,6 +40,7 @@ function CoreParticleEditorPanel:set_box_help(h, t)
 	self:update_status_box()
 end
 
+-- Lines 32-74
 function CoreParticleEditorPanel:create_panel(parent)
 	self._stacklist_boxes = {}
 	self._stack_member_combos = {}
@@ -74,6 +78,7 @@ function CoreParticleEditorPanel:create_panel(parent)
 	self._panel:set_visible(true)
 end
 
+-- Lines 76-82
 function CoreParticleEditorPanel:set_init_positions()
 	self._top_splitter:set_sash_position(250, true)
 	self._gv_splitter:set_sash_position(150, true)
@@ -82,6 +87,7 @@ function CoreParticleEditorPanel:set_init_positions()
 	self._panel:refresh()
 end
 
+-- Lines 85-93
 function CoreParticleEditorPanel:on_timeline_modify(arg, event)
 	if event:scale() then
 		self._atom:scale_timeline(event:istart(), event:iend(), event:tstart(), event:tend())
@@ -92,6 +98,7 @@ function CoreParticleEditorPanel:on_timeline_modify(arg, event)
 	self:update_view(false)
 end
 
+-- Lines 95-105
 function CoreParticleEditorPanel:fill_timelines()
 	self._timeline_edit:clear_timelines()
 	self._timeline_edit:add_timeline("atom")
@@ -108,6 +115,7 @@ function CoreParticleEditorPanel:fill_timelines()
 	self._timeline_edit:refresh()
 end
 
+-- Lines 107-112
 function CoreParticleEditorPanel:timeline_init(timeline)
 	timeline:connect("EVT_TIMELINE_MODIFIED", callback(self, self, "on_timeline_modify"), "")
 
@@ -116,6 +124,7 @@ function CoreParticleEditorPanel:timeline_init(timeline)
 	self:fill_timelines()
 end
 
+-- Lines 114-122
 function CoreParticleEditorPanel:on_rename_atom()
 	if self._effect:find_atom(self._atom_textctrl:get_value()) or #self._effect._atoms == 0 then
 		return
@@ -127,6 +136,7 @@ function CoreParticleEditorPanel:on_rename_atom()
 	self:on_select_atom()
 end
 
+-- Lines 124-132
 function CoreParticleEditorPanel:on_add_atom()
 	if self._effect:find_atom(self._atom_textctrl:get_value()) then
 		return
@@ -138,6 +148,7 @@ function CoreParticleEditorPanel:on_add_atom()
 	self:on_select_atom()
 end
 
+-- Lines 134-145
 function CoreParticleEditorPanel:on_remove_atom()
 	if not self._atom then
 		return
@@ -152,6 +163,7 @@ function CoreParticleEditorPanel:on_remove_atom()
 	end
 end
 
+-- Lines 148-154
 function CoreParticleEditorPanel:on_copy_atom()
 	local atom = self._effect:find_atom(self._atom_combo:get_value())
 
@@ -161,6 +173,7 @@ function CoreParticleEditorPanel:on_copy_atom()
 	end
 end
 
+-- Lines 156-172
 function CoreParticleEditorPanel:on_paste_atom()
 	if self._editor._clipboard_type == "atom" and self._editor._clipboard_object then
 		local e = self._effect:find_atom(self._editor._clipboard_object:name())
@@ -181,12 +194,14 @@ function CoreParticleEditorPanel:on_paste_atom()
 	end
 end
 
+-- Lines 174-178
 function CoreParticleEditorPanel:on_set_selected_only()
 	if self._valid_effect then
 		self:update_effect_instance()
 	end
 end
 
+-- Lines 181-232
 function CoreParticleEditorPanel:create_effect_panel(parent)
 	local panel = EWS:Panel(parent, "", "")
 	self._atom_combo = EWS:ComboBox(panel, "", "", "CB_DROPDOWN,CB_READONLY")
@@ -246,6 +261,7 @@ function CoreParticleEditorPanel:create_effect_panel(parent)
 	return panel
 end
 
+-- Lines 235-240
 function CoreParticleEditorPanel:show_stack_overview(b)
 	self._graph_view_dialog:show(b)
 
@@ -254,6 +270,7 @@ function CoreParticleEditorPanel:show_stack_overview(b)
 	end
 end
 
+-- Lines 242-257
 function CoreParticleEditorPanel:create_graph_view(parent)
 	self._graph_view_dialog = EWS:Dialog(parent, "Stacks And Channels Overview", "", Vector3(-1, -1, 0), Vector3(500, 400, 0), "CAPTION,RESIZE_BORDER")
 	self._graph = EWS:Graph()
@@ -273,10 +290,12 @@ function CoreParticleEditorPanel:create_graph_view(parent)
 	end
 end
 
+-- Lines 259-261
 function CoreParticleEditorPanel:create_status_box(parent)
 	return EWS:TextCtrl(parent, "", "", "TE_MULTILINE,TE_READONLY,TE_RICH2,TE_NOHIDESEL")
 end
 
+-- Lines 263-272
 function CoreParticleEditorPanel:on_stack_up(stacktype)
 	local box = self._stacklist_boxes[stacktype]
 	local selected = box:selected_index()
@@ -289,6 +308,7 @@ function CoreParticleEditorPanel:on_stack_up(stacktype)
 	self:update_view(true)
 end
 
+-- Lines 274-283
 function CoreParticleEditorPanel:on_stack_down(stacktype)
 	local box = self._stacklist_boxes[stacktype]
 	local selected = box:selected_index()
@@ -301,6 +321,7 @@ function CoreParticleEditorPanel:on_stack_down(stacktype)
 	self:update_view(true)
 end
 
+-- Lines 285-294
 function CoreParticleEditorPanel:on_stack_remove(stacktype)
 	local box = self._stacklist_boxes[stacktype]
 	local selected = box:selected_index()
@@ -313,6 +334,7 @@ function CoreParticleEditorPanel:on_stack_remove(stacktype)
 	self:update_view(true)
 end
 
+-- Lines 296-309
 function CoreParticleEditorPanel:on_stack_add(stacktype)
 	if not self._atom then
 		return
@@ -332,6 +354,7 @@ function CoreParticleEditorPanel:on_stack_add(stacktype)
 	self:on_select_stack_member(stacktype)
 end
 
+-- Lines 311-321
 function CoreParticleEditorPanel:on_select_stack_member(stacktype)
 	local stacklist = self._stacklist_boxes[stacktype]
 	local selected = stacklist:selected_index()
@@ -342,11 +365,13 @@ function CoreParticleEditorPanel:on_select_stack_member(stacktype)
 	end
 end
 
+-- Lines 324-327
 function CoreParticleEditorPanel:update_effect_instance(quality)
 	self._dirty_effect = true
 	self._quality = quality
 end
 
+-- Lines 329-339
 function CoreParticleEditorPanel:reload_effect_definition()
 	local n = Node("effect")
 
@@ -361,6 +386,7 @@ function CoreParticleEditorPanel:reload_effect_definition()
 	self._effect_id = nil
 end
 
+-- Lines 341-369
 function CoreParticleEditorPanel:update(t, dt)
 	if self._valid_effect then
 		if self._dirty_effect then
@@ -394,6 +420,7 @@ function CoreParticleEditorPanel:update(t, dt)
 	end
 end
 
+-- Lines 372-426
 function CoreParticleEditorPanel:update_graph_view()
 	self._graph:clear()
 
@@ -413,6 +440,7 @@ function CoreParticleEditorPanel:update_graph_view()
 	local affector_x = 0
 	local channel_x_count = 110
 
+	-- Lines 385-392
 	local function channel_x(channel)
 		if not channels[channel] then
 			channels[channel] = channel_x_count
@@ -465,6 +493,7 @@ function CoreParticleEditorPanel:update_graph_view()
 	self._graph_view:refresh()
 end
 
+-- Lines 428-510
 function CoreParticleEditorPanel:update_view(clear, undoredo)
 	local n = Node("effect")
 
@@ -554,6 +583,7 @@ function CoreParticleEditorPanel:update_view(clear, undoredo)
 	end
 end
 
+-- Lines 512-530
 function CoreParticleEditorPanel:update_status_box()
 	self._status_box:set_value("")
 
@@ -571,6 +601,7 @@ function CoreParticleEditorPanel:update_status_box()
 	self._status_box:append(self._box_help .. "\n")
 end
 
+-- Lines 532-536
 function CoreParticleEditorPanel:safety_backup()
 	local n = Node("effect")
 
@@ -578,6 +609,7 @@ function CoreParticleEditorPanel:safety_backup()
 	managers.database:save_node(n, "last_played_effect.xml")
 end
 
+-- Lines 538-546
 function CoreParticleEditorPanel:on_stack_copy(stacktype)
 	local box = self._stacklist_boxes[stacktype]
 	local selected = box:selected_index()
@@ -590,6 +622,7 @@ function CoreParticleEditorPanel:on_stack_copy(stacktype)
 	self._editor._clipboard_object = deep_clone(self._atom:stack(stacktype):member(selected + 1))
 end
 
+-- Lines 548-565
 function CoreParticleEditorPanel:on_stack_paste(stacktype)
 	if self._editor._clipboard_type ~= stacktype or not self._editor._clipboard_object then
 		return
@@ -613,6 +646,7 @@ function CoreParticleEditorPanel:on_stack_paste(stacktype)
 	self:update_view(true)
 end
 
+-- Lines 567-573
 function CoreParticleEditorPanel:on_lose_focus()
 	if self._effect_id and self._effect_id > 0 then
 		World:effect_manager():kill(self._effect_id)
@@ -621,6 +655,7 @@ function CoreParticleEditorPanel:on_lose_focus()
 	self:show_stack_overview(false)
 end
 
+-- Lines 575-583
 function CoreParticleEditorPanel:on_key_stack_member(stacktype, event)
 	if event:control_down() then
 		if event:key_code() == 67 then
@@ -631,6 +666,7 @@ function CoreParticleEditorPanel:on_key_stack_member(stacktype, event)
 	end
 end
 
+-- Lines 585-644
 function CoreParticleEditorPanel:create_stack_panel(parent, stacktype)
 	local panel = EWS:Panel(parent, "", "")
 	local stacklist = EWS:ListBox(panel, "particle_editor_stacklist", "LB_SINGLE,LB_HSCROLL")
@@ -696,11 +732,13 @@ function CoreParticleEditorPanel:create_stack_panel(parent, stacktype)
 	return panel
 end
 
+-- Lines 646-650
 function CoreParticleEditorPanel:clear_box_help(arg, e)
 	self:set_box_help("", "")
 	e:skip()
 end
 
+-- Lines 652-673
 function CoreParticleEditorPanel:create_atom_panel(parent)
 	local panel = EWS:Panel(parent, "", "")
 	local notebook = EWS:Notebook(panel, "", "")
@@ -727,14 +765,17 @@ function CoreParticleEditorPanel:create_atom_panel(parent)
 	return panel
 end
 
+-- Lines 675-677
 function CoreParticleEditorPanel:undo()
 	self:undoredo("undo")
 end
 
+-- Lines 679-681
 function CoreParticleEditorPanel:redo()
 	self:undoredo("redo")
 end
 
+-- Lines 683-700
 function CoreParticleEditorPanel:undoredo(f)
 	local undo_state = self._undo_stack[f](self._undo_stack)
 
@@ -758,12 +799,14 @@ function CoreParticleEditorPanel:undoredo(f)
 	end
 end
 
+-- Lines 703-706
 function CoreParticleEditorPanel:clear()
 	self._effect = CoreEffectDefinition:new()
 
 	self._atom_textctrl:set_value("")
 end
 
+-- Lines 708-713
 function CoreParticleEditorPanel:update_atom_combo()
 	self._atom_combo:clear()
 
@@ -772,6 +815,7 @@ function CoreParticleEditorPanel:update_atom_combo()
 	end
 end
 
+-- Lines 715-722
 function CoreParticleEditorPanel:on_select_atom()
 	local atom = self._effect:find_atom(self._atom_combo:get_value())
 	self._atom = atom
@@ -783,6 +827,7 @@ function CoreParticleEditorPanel:on_select_atom()
 	self:update_view(true, true)
 end
 
+-- Lines 725-731
 function CoreParticleEditorPanel:on_save()
 	if self._effect:name() == "" then
 		return self:on_save_as()
@@ -791,6 +836,7 @@ function CoreParticleEditorPanel:on_save()
 	end
 end
 
+-- Lines 733-752
 function CoreParticleEditorPanel:on_save_as()
 	local f = managers.database:save_file_dialog(self._panel, nil, "*.effect", self._editor._last_used_dir, false)
 
@@ -815,6 +861,7 @@ function CoreParticleEditorPanel:on_save_as()
 	return self:do_save(true)
 end
 
+-- Lines 754-783
 function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 	if warn_on_overwrite and managers.database:has(self._effect:name()) then
 		local ret = EWS:message_box(self._panel, "An effect named " .. self._effect:name() .. " already exists, overwrite?", "Overwrite", "YES_NO", Vector3(-1, -1, 0))
@@ -853,6 +900,7 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 	return true
 end
 
+-- Lines 785-813
 function CoreParticleEditorPanel:close()
 	local n = Node("effect")
 
@@ -890,6 +938,7 @@ end
 
 CoreUndoStack = CoreUndoStack or class()
 
+-- Lines 818-822
 function CoreUndoStack:init(startstate, stacksize)
 	self._stacksize = stacksize
 	self._stack = {
@@ -898,6 +947,7 @@ function CoreUndoStack:init(startstate, stacksize)
 	self._ptr = 1
 end
 
+-- Lines 824-834
 function CoreUndoStack:push(state)
 	if self._stack[self._ptr] == state then
 		return
@@ -916,6 +966,7 @@ function CoreUndoStack:push(state)
 	self._ptr = #self._stack
 end
 
+-- Lines 836-840
 function CoreUndoStack:undo()
 	if self._ptr == 1 then
 		return nil
@@ -926,6 +977,7 @@ function CoreUndoStack:undo()
 	return self._stack[self._ptr]
 end
 
+-- Lines 842-846
 function CoreUndoStack:redo()
 	if self._ptr == #self._stack then
 		return nil

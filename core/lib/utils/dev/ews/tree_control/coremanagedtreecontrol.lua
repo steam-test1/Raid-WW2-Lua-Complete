@@ -6,6 +6,7 @@ CoreManagedTreeControl.CHECKBOX_UPDATED_EVENT_NAME = "EVT_COMMAND_TREE_CHECKBOX_
 CoreManagedTreeControl.CHECKBOX_STATE0_ICON = CoreEWS.image_path("tree_checkbox_unchecked_16x16.png")
 CoreManagedTreeControl.CHECKBOX_STATE1_ICON = CoreEWS.image_path("tree_checkbox_checked_16x16.png")
 
+-- Lines 9-23
 function CoreManagedTreeControl:init(parent_frame, styles)
 	self._styles, self._checkbox_style = self:_eat_checkbox_style(styles or "TR_HAS_BUTTONS,TR_HIDE_ROOT,TR_LINES_AT_ROOT,TR_SINGLE")
 	self._tree_ctrl = EWS:TreeCtrl(parent_frame, "", self._styles)
@@ -23,6 +24,7 @@ function CoreManagedTreeControl:init(parent_frame, styles)
 	self._tooltips = {}
 end
 
+-- Lines 25-38
 function CoreManagedTreeControl:_eat_checkbox_style(styles)
 	local checkbox_style = false
 	local ret = ""
@@ -38,6 +40,7 @@ function CoreManagedTreeControl:_eat_checkbox_style(styles)
 	return ret, checkbox_style
 end
 
+-- Lines 40-46
 function CoreManagedTreeControl:_init_checkbox_icons()
 	if self._checkbox_style then
 		self:set_image_list(EWS:ImageList(16, 16, false))
@@ -46,6 +49,7 @@ function CoreManagedTreeControl:_init_checkbox_icons()
 	end
 end
 
+-- Lines 48-85
 function CoreManagedTreeControl:_change_state(data, event)
 	local id, hit = self._tree_ctrl:hit_test()
 
@@ -89,6 +93,7 @@ function CoreManagedTreeControl:_change_state(data, event)
 	event:skip()
 end
 
+-- Lines 87-92
 function CoreManagedTreeControl:_tooltip(data, event)
 	local id, hit = self._tree_ctrl:hit_test()
 
@@ -97,6 +102,7 @@ function CoreManagedTreeControl:_tooltip(data, event)
 	end
 end
 
+-- Lines 94-100
 function CoreManagedTreeControl:_find_and_do_custom_callback(cb_type, data)
 	for k, v in pairs(self._custom_callbacks) do
 		if v._event_type == cb_type then
@@ -105,28 +111,34 @@ function CoreManagedTreeControl:_find_and_do_custom_callback(cb_type, data)
 	end
 end
 
+-- Lines 102-104
 function CoreManagedTreeControl:_view_tree_root()
 	return self._visible_root_node
 end
 
+-- Lines 106-108
 function CoreManagedTreeControl:_tree_root()
 	return self._visible_root_node
 end
 
+-- Lines 110-112
 function CoreManagedTreeControl:set_tooltip(node, text)
 	self._tooltips[tostring(node._item_id)] = text
 end
 
+-- Lines 114-117
 function CoreManagedTreeControl:set_image_list(list)
 	self._image_list = list
 
 	self._tree_ctrl:set_image_list(list)
 end
 
+-- Lines 119-121
 function CoreManagedTreeControl:get_image_list()
 	return self._image_list
 end
 
+-- Lines 123-130
 function CoreManagedTreeControl:clear()
 	self:_tree_root():remove_children()
 
@@ -137,58 +149,72 @@ function CoreManagedTreeControl:clear()
 	end
 end
 
+-- Lines 132-134
 function CoreManagedTreeControl:set_size(size)
 	self._tree_ctrl:set_size(size)
 end
 
+-- Lines 136-138
 function CoreManagedTreeControl:set_min_size(size)
 	self._tree_ctrl:set_min_size(size)
 end
 
+-- Lines 140-142
 function CoreManagedTreeControl:add_to_sizer(sizer, proportion, border, flags)
 	return sizer:add(self._tree_ctrl, proportion, border, flags)
 end
 
+-- Lines 144-146
 function CoreManagedTreeControl:detach_from_sizer(sizer)
 	return sizer:detach(self._tree_ctrl)
 end
 
+-- Lines 148-150
 function CoreManagedTreeControl:freeze()
 	return self._tree_ctrl:freeze()
 end
 
+-- Lines 152-154
 function CoreManagedTreeControl:thaw()
 	return self._tree_ctrl:thaw()
 end
 
+-- Lines 156-158
 function CoreManagedTreeControl:append(item_text)
 	return self:_tree_root():append(item_text)
 end
 
+-- Lines 160-162
 function CoreManagedTreeControl:append_path(path)
 	return self:_tree_root():append_path(path)
 end
 
+-- Lines 164-166
 function CoreManagedTreeControl:append_copy_of_node(node, recurse)
 	return self:_tree_root():append_copy_of_node(node, recurse)
 end
 
+-- Lines 168-170
 function CoreManagedTreeControl:expand(recurse)
 	self:_view_tree_root():expand(recurse)
 end
 
+-- Lines 172-174
 function CoreManagedTreeControl:collapse(recurse)
 	self:_view_tree_root():collapse(recurse)
 end
 
+-- Lines 176-178
 function CoreManagedTreeControl:root_nodes()
 	return self:_tree_root():children()
 end
 
+-- Lines 180-182
 function CoreManagedTreeControl:root_node()
 	return self:_tree_root()
 end
 
+-- Lines 184-215
 function CoreManagedTreeControl:connect(event_type, script_callback, script_data)
 	if event_type == self.CHECKBOX_UPDATED_EVENT_NAME then
 		self._custom_callbacks[script_callback] = {
@@ -196,6 +222,7 @@ function CoreManagedTreeControl:connect(event_type, script_callback, script_data
 			_script_data = script_data
 		}
 	elseif string.begins(event_type, "EVT_COMMAND_TREE_") then
+		-- Lines 195-205
 		local function tree_event_wrapper(data, event, ...)
 			local event_metatable = getmetatable(event) or {}
 			local wrapped_event = setmetatable({}, {
@@ -204,10 +231,12 @@ function CoreManagedTreeControl:connect(event_type, script_callback, script_data
 			local item_id = event:get_item()
 			local old_item_id = event:get_old_item()
 
+			-- Lines 201-201
 			function wrapped_event.get_item()
 				return item_id ~= -1 and CoreEWSTreeCtrlTreeNode:new(self._tree_ctrl, item_id, self._checkbox_style) or nil
 			end
 
+			-- Lines 202-202
 			function wrapped_event.get_old_item()
 				return old_item_id ~= -1 and CoreEWSTreeCtrlTreeNode:new(self._tree_ctrl, old_item_id, self._checkbox_style) or nil
 			end
@@ -225,6 +254,7 @@ function CoreManagedTreeControl:connect(event_type, script_callback, script_data
 	end
 end
 
+-- Lines 217-231
 function CoreManagedTreeControl:disconnect(event_type, script_callback)
 	if event_type == self.CHECKBOX_UPDATED_EVENT_NAME then
 		self._custom_callbacks[script_callback] = nil

@@ -5,6 +5,7 @@ IngameWaitingForRespawnState = IngameWaitingForRespawnState or class(GameState)
 IngameWaitingForRespawnState.GUI_SPECTATOR_FULLSCREEN = Idstring("guis/spectator_mode_fullscreen")
 IngameWaitingForRespawnState.GUI_SPECTATOR = Idstring("guis/spectator_mode_saferect")
 
+-- Lines 9-20
 function IngameWaitingForRespawnState:init(game_state_machine)
 	GameState.init(self, "ingame_waiting_for_respawn", game_state_machine)
 
@@ -17,6 +18,7 @@ function IngameWaitingForRespawnState:init(game_state_machine)
 	self._vec_dir = Vector3()
 end
 
+-- Lines 24-36
 function IngameWaitingForRespawnState:_setup_controller()
 	self._controller = managers.controller:create_controller("waiting_for_respawn", managers.controller:get_default_wrapper_index(), false)
 	self._next_player_cb = callback(self, self, "cb_next_player")
@@ -30,6 +32,7 @@ function IngameWaitingForRespawnState:_setup_controller()
 	managers.controller:set_ingame_mode("main")
 end
 
+-- Lines 40-50
 function IngameWaitingForRespawnState:_clear_controller()
 	if self._controller then
 		self._controller:remove_trigger("left", self._prev_player_cb)
@@ -43,12 +46,14 @@ function IngameWaitingForRespawnState:_clear_controller()
 	end
 end
 
+-- Lines 52-56
 function IngameWaitingForRespawnState:set_controller_enabled(enabled)
 	if self._controller then
 		self._controller:set_enabled(enabled)
 	end
 end
 
+-- Lines 60-69
 function IngameWaitingForRespawnState:_setup_camera()
 	self._camera_object = World:create_camera()
 
@@ -62,6 +67,7 @@ function IngameWaitingForRespawnState:_setup_camera()
 	self._viewport:set_active(true)
 end
 
+-- Lines 73-79
 function IngameWaitingForRespawnState:_clear_camera()
 	self._viewport:destroy()
 
@@ -72,6 +78,7 @@ function IngameWaitingForRespawnState:_clear_camera()
 	self._camera_object = nil
 end
 
+-- Lines 83-88
 function IngameWaitingForRespawnState:_setup_sound_listener()
 	self._listener_id = managers.listener:add_listener("spectator_camera", self._camera_object, self._camera_object, nil, false)
 
@@ -87,6 +94,7 @@ function IngameWaitingForRespawnState:_setup_sound_listener()
 	})
 end
 
+-- Lines 92-97
 function IngameWaitingForRespawnState:_clear_sound_listener()
 	managers.sound_environment:remove_check_object(self._sound_check_object)
 	managers.listener:remove_listener(self._listener_id)
@@ -95,6 +103,7 @@ function IngameWaitingForRespawnState:_clear_sound_listener()
 	self._listener_id = nil
 end
 
+-- Lines 101-112
 function IngameWaitingForRespawnState:_create_spectator_data()
 	local all_teammates = managers.groupai:state():all_char_criminals()
 	local teammate_list = {}
@@ -110,6 +119,7 @@ function IngameWaitingForRespawnState:_create_spectator_data()
 	}
 end
 
+-- Lines 116-128
 function IngameWaitingForRespawnState:_begin_game_enter_transition()
 	if self._ready_to_spawn_t then
 		return
@@ -123,6 +133,7 @@ function IngameWaitingForRespawnState:_begin_game_enter_transition()
 	self._ready_to_spawn_t = TimerManager:game():time() + fade_in_duration
 end
 
+-- Lines 132-165
 function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 	if Network:is_client() then
 		managers.network:session():server_peer():send("request_spawn_member")
@@ -160,6 +171,7 @@ function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 	end
 end
 
+-- Lines 169-233
 function IngameWaitingForRespawnState:update(t, dt)
 	if self._player_state_change_needed and not alive(managers.player:player_unit()) then
 		self._player_state_change_needed = nil
@@ -248,6 +260,7 @@ local mrot_set_axis_angle = mrotation.set_axis_angle
 local mrot_set_look_at = mrotation.set_look_at
 local math_up = math.UP
 
+-- Lines 261-412
 function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	self:_refresh_teammate_list()
 
@@ -364,6 +377,7 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	end
 end
 
+-- Lines 416-494
 function IngameWaitingForRespawnState:at_enter()
 	Application:trace("[IngameWaitingForRespawnState:at_enter()]")
 
@@ -453,6 +467,7 @@ function IngameWaitingForRespawnState:at_enter()
 	managers.hud:hide(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 498-526
 function IngameWaitingForRespawnState:at_exit()
 	Application:trace("[IngameWaitingForRespawnState:at_exit()]")
 	managers.hud:hide(self.GUI_SPECTATOR)
@@ -483,6 +498,7 @@ function IngameWaitingForRespawnState:at_exit()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 530-573
 function IngameWaitingForRespawnState:_refresh_teammate_list()
 	local all_teammates = self._spectator_data.teammate_records
 	local teammate_list = self._spectator_data.teammate_list
@@ -532,6 +548,7 @@ function IngameWaitingForRespawnState:_refresh_teammate_list()
 	end
 end
 
+-- Lines 577-583
 function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	for i_key, test_u_key in ipairs(self._spectator_data.teammate_list) do
 		if test_u_key == u_key then
@@ -540,6 +557,7 @@ function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	end
 end
 
+-- Lines 587-604
 function IngameWaitingForRespawnState:cb_next_player()
 	self:_refresh_teammate_list()
 
@@ -556,6 +574,7 @@ function IngameWaitingForRespawnState:cb_next_player()
 	self._dis_curr = nil
 end
 
+-- Lines 608-625
 function IngameWaitingForRespawnState:cb_prev_player()
 	self:_refresh_teammate_list()
 
@@ -578,12 +597,14 @@ function IngameWaitingForRespawnState:cb_prev_player()
 	self._dis_curr = nil
 end
 
+-- Lines 629-636
 function IngameWaitingForRespawnState:currently_spectated_unit()
 	if self._spectator_data and self._spectator_data.teammate_records and self._spectator_data.watch_u_key and self._spectator_data.teammate_records[self._spectator_data.watch_u_key] then
 		return self._spectator_data.teammate_records[self._spectator_data.watch_u_key].unit
 	end
 end
 
+-- Lines 640-673
 function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed)
 	managers.hud:set_custody_can_be_trade_visible(false)
 
@@ -612,10 +633,12 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed
 	end
 end
 
+-- Lines 675-677
 function IngameWaitingForRespawnState:finish_trade()
 	self:_begin_game_enter_transition()
 end
 
+-- Lines 679-698
 function IngameWaitingForRespawnState:begin_trade()
 	managers.hud:set_custody_can_be_trade_visible(true)
 
@@ -635,6 +658,7 @@ function IngameWaitingForRespawnState:begin_trade()
 	self._play_too_long_line_t = Application:time() + 60
 end
 
+-- Lines 700-702
 function IngameWaitingForRespawnState:cancel_trade()
 	managers.hud:set_custody_can_be_trade_visible(false)
 end

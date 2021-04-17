@@ -4,6 +4,7 @@ core:import("CoreDebug")
 core:import("CoreClass")
 core:import("CoreApp")
 
+-- Lines 24-31
 local function open_lua_source_file(source)
 	if DB:is_bundled() then
 		return "[N/A in bundle]"
@@ -15,6 +16,7 @@ local function open_lua_source_file(source)
 	return DB:has(entry_type, entry_name:id()) and DB:open(entry_type, entry_name:id()) or nil
 end
 
+-- Lines 34-50
 function get_prototype(info)
 	if info.source == "=[C]" then
 		return "(C++ method)"
@@ -34,6 +36,7 @@ function get_prototype(info)
 	return prototype
 end
 
+-- Lines 53-78
 function get_source(info)
 	if info.source == "=[C]" then
 		return "(C++ method)"
@@ -61,6 +64,7 @@ function get_source(info)
 	return table.concat(lines, "\n")
 end
 
+-- Lines 80-97
 function traceback(max_level)
 	max_level = max_level or 2
 	local level = 2
@@ -82,6 +86,7 @@ function traceback(max_level)
 	end
 end
 
+-- Lines 99-104
 function alive(obj)
 	if obj and obj:alive() then
 		return true
@@ -90,10 +95,12 @@ function alive(obj)
 	return false
 end
 
+-- Lines 106-108
 function deprecation_warning(method_name, breaking_release_name)
 	CoreDebug.cat_print("debug", string.format("DEPRECATION WARNING: %s will be removed in %s", method_name, breaking_release_name or "a future release"))
 end
 
+-- Lines 119-150
 local function sort_iterator(t, raw)
 	local sorted = {}
 
@@ -129,6 +136,7 @@ local function sort_iterator(t, raw)
 	end
 end
 
+-- Lines 156-196
 function line_representation(x, seen, raw)
 	if DB:is_bundled() then
 		return "[N/A in bundle]"
@@ -185,6 +193,7 @@ function line_representation(x, seen, raw)
 	end
 end
 
+-- Lines 200-216
 function full_representation(x, seen)
 	if DB:is_bundled() then
 		return "[N/A in bundle]"
@@ -203,6 +212,7 @@ end
 
 inspect = full_representation
 
+-- Lines 219-225
 function properties(x)
 	local t = {}
 
@@ -213,9 +223,11 @@ function properties(x)
 	CoreDebug.cat_print("debug", ascii_table(t))
 end
 
+-- Lines 228-265
 function help(o)
 	local methods = {}
 
+	-- Lines 230-257
 	local function add_methods(t)
 		if type(t) == "table" then
 			for k, v in pairs(t) do
@@ -269,6 +281,7 @@ function help(o)
 	end
 end
 
+-- Lines 270-287
 function ascii_table(t, raw)
 	local out = ""
 	local klen = 20
@@ -298,6 +311,7 @@ function ascii_table(t, raw)
 	return out
 end
 
+-- Lines 292-352
 function memory_report(limit)
 	local seen = {}
 	local count = {}
@@ -311,6 +325,7 @@ function memory_report(limit)
 		end
 	end
 
+	-- Lines 303-308
 	local function simple(item)
 		local t = type(item)
 
@@ -325,6 +340,7 @@ function memory_report(limit)
 		return true
 	end
 
+	-- Lines 310-332
 	local function recurse(item, parent, key)
 		local index = type(item) == "userdata" and item:key() or item
 
@@ -398,6 +414,7 @@ end
 
 __profiled = {}
 
+-- Lines 367-403
 function profile(s)
 	if __profiled[s] then
 		return
@@ -420,6 +437,7 @@ function profile(s)
 
 		t.f = rawget(_G, t.class)[t.name]
 
+		-- Lines 381-381
 		function t.patch(f)
 			_G[t.class][t.name] = f
 		end
@@ -427,6 +445,7 @@ function profile(s)
 		t.name = s
 		t.f = rawget(_G, t.name)
 
+		-- Lines 385-385
 		function t.patch(f)
 			_G[t.name] = f
 		end
@@ -438,6 +457,7 @@ function profile(s)
 		return
 	end
 
+	-- Lines 393-398
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)
 		res = t.f(...)
@@ -454,6 +474,7 @@ function profile(s)
 	Application:console_command("profiler add " .. s)
 end
 
+-- Lines 405-412
 function unprofile(s)
 	local t = __profiled[s]
 
@@ -466,6 +487,7 @@ function unprofile(s)
 	__profiled[s] = nil
 end
 
+-- Lines 414-419
 function reprofile()
 	for k, v in pairs(__old_profiled) do
 		profile(k)

@@ -1,5 +1,6 @@
 ListenerHolder = ListenerHolder or class()
 
+-- Lines 5-11
 function ListenerHolder:add(key, clbk)
 	if self._calling then
 		self:_set_new(key, clbk)
@@ -8,6 +9,7 @@ function ListenerHolder:add(key, clbk)
 	end
 end
 
+-- Lines 16-22
 function ListenerHolder:remove(key)
 	if self._calling then
 		self:_set_trash(key)
@@ -16,6 +18,7 @@ function ListenerHolder:remove(key)
 	end
 end
 
+-- Lines 26-43
 function ListenerHolder:call(...)
 	if self._listeners then
 		self._calling = true
@@ -33,6 +36,7 @@ function ListenerHolder:call(...)
 	end
 end
 
+-- Lines 47-55
 function ListenerHolder:_remove(key)
 	if not self._listeners then
 		return
@@ -45,11 +49,13 @@ function ListenerHolder:_remove(key)
 	end
 end
 
+-- Lines 59-62
 function ListenerHolder:_add(key, clbk)
 	self._listeners = self._listeners or {}
 	self._listeners[key] = clbk
 end
 
+-- Lines 66-72
 function ListenerHolder:_set_trash(key)
 	self._trash = self._trash or {}
 	self._trash[key] = true
@@ -59,6 +65,7 @@ function ListenerHolder:_set_trash(key)
 	end
 end
 
+-- Lines 76-82
 function ListenerHolder:_set_new(key, clbk)
 	self._additions = self._additions or {}
 	self._additions[key] = clbk
@@ -68,6 +75,7 @@ function ListenerHolder:_set_new(key, clbk)
 	end
 end
 
+-- Lines 86-93
 function ListenerHolder:_append_new_additions()
 	if self._additions then
 		for key, clbk in pairs(self._additions) do
@@ -78,6 +86,7 @@ function ListenerHolder:_append_new_additions()
 	end
 end
 
+-- Lines 97-104
 function ListenerHolder:_dispose_trash()
 	if self._trash then
 		for key, _ in pairs(self._trash) do
@@ -88,10 +97,12 @@ function ListenerHolder:_dispose_trash()
 	end
 end
 
+-- Lines 108-110
 function ListenerHolder:_not_trash(key)
 	return not self._trash or not self._trash[key]
 end
 
+-- Lines 114-116
 function ListenerHolder:is_empty()
 	return not self._listeners
 end

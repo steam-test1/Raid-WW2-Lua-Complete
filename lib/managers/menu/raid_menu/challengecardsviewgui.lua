@@ -1,9 +1,11 @@
 ChallengeCardsViewGui = ChallengeCardsViewGui or class(RaidGuiBase)
 
+-- Lines 3-7
 function ChallengeCardsViewGui:init(ws, fullscreen_ws, node, component_name)
 	ChallengeCardsViewGui.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
+-- Lines 9-16
 function ChallengeCardsViewGui:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("challenge_cards_album_view_title")
 
@@ -13,6 +15,7 @@ function ChallengeCardsViewGui:_set_initial_data()
 	self._filter_type = nil
 end
 
+-- Lines 18-109
 function ChallengeCardsViewGui:_layout()
 	self._rarity_filters_tabs = self._root_panel:tabs({
 		tab_align = "center",
@@ -125,18 +128,21 @@ function ChallengeCardsViewGui:_layout()
 	self:bind_controller_inputs()
 end
 
+-- Lines 113-118
 function ChallengeCardsViewGui:on_click_filter_rarity(rarity)
 	self._filter_rarity = rarity
 
 	self:reload_filtered_data()
 end
 
+-- Lines 120-126
 function ChallengeCardsViewGui:on_click_filter_type(type)
 	self._filter_type = type
 
 	self:reload_filtered_data()
 end
 
+-- Lines 128-182
 function ChallengeCardsViewGui:reload_filtered_data()
 	if self._challenge_cards_steam_data_source and (self._filter_rarity == LootDropTweakData.RARITY_ALL or not self._filter_rarity) then
 		self._challenge_cards_data_source = clone(self._challenge_cards_steam_data_source)
@@ -170,12 +176,14 @@ function ChallengeCardsViewGui:reload_filtered_data()
 	self._card_grid:set_selected(true)
 end
 
+-- Lines 184-189
 function ChallengeCardsViewGui:data_source_inventory_cards()
 	self._challenge_cards_data_source = self._challenge_cards_data_source or {}
 
 	return self._challenge_cards_data_source
 end
 
+-- Lines 191-198
 function ChallengeCardsViewGui:_on_click_inventory_cards(item_data)
 	if item_data then
 		self._card_details:set_card(item_data.key_name, item_data.steam_instance_id)
@@ -183,6 +191,7 @@ function ChallengeCardsViewGui:_on_click_inventory_cards(item_data)
 	end
 end
 
+-- Lines 200-207
 function ChallengeCardsViewGui:_on_select_inventory_cards(item_idx, item_data)
 	if item_data then
 		self._card_details:set_card(item_data.key_name, item_data.steam_instance_id)
@@ -190,6 +199,7 @@ function ChallengeCardsViewGui:_on_select_inventory_cards(item_idx, item_data)
 	end
 end
 
+-- Lines 211-238
 function ChallengeCardsViewGui:render_player_inventory(params)
 	if not params or not params.list then
 		return
@@ -210,11 +220,13 @@ function ChallengeCardsViewGui:render_player_inventory(params)
 	self._card_grid:set_selected(true)
 end
 
+-- Lines 240-245
 function ChallengeCardsViewGui:close()
 	managers.system_event_listener:remove_listener("challenge_cards_view_gui_steam_inventory_loaded")
 	ChallengeCardsGui.super.close(self)
 end
 
+-- Lines 249-261
 function ChallengeCardsViewGui:_auto_select_first_card_in_grid()
 	local card_data = nil
 
@@ -228,10 +240,12 @@ function ChallengeCardsViewGui:_auto_select_first_card_in_grid()
 	end
 end
 
+-- Lines 263-265
 function ChallengeCardsViewGui:on_mouse_moved(o, x, y)
 	return false
 end
 
+-- Lines 271-291
 function ChallengeCardsViewGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -271,30 +285,35 @@ function ChallengeCardsViewGui:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 293-297
 function ChallengeCardsViewGui:_on_tabs_rarity_left()
 	self._rarity_filters_tabs:_move_left()
 
 	return true, nil
 end
 
+-- Lines 299-303
 function ChallengeCardsViewGui:_on_tabs_rarity_right()
 	self._rarity_filters_tabs:_move_right()
 
 	return true, nil
 end
 
+-- Lines 305-309
 function ChallengeCardsViewGui:_on_tabs_type_left()
 	self._type_filters_tabs:_move_left()
 
 	return true, nil
 end
 
+-- Lines 311-315
 function ChallengeCardsViewGui:_on_tabs_type_right()
 	self._type_filters_tabs:_move_right()
 
 	return true, nil
 end
 
+-- Lines 322-324
 function ChallengeCardsViewGui:back_pressed()
 	managers.raid_menu:on_escape()
 end

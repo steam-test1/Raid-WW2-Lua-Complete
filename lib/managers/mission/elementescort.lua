@@ -2,6 +2,7 @@ core:import("CoreMissionScriptElement")
 
 ElementEscort = ElementEscort or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-15
 function ElementEscort:_get_next_point(mission, next_points)
 	local valid_next_elements = {}
 
@@ -16,6 +17,7 @@ function ElementEscort:_get_next_point(mission, next_points)
 	return table.random(valid_next_elements)
 end
 
+-- Lines 17-23
 function ElementEscort:increment_usage()
 	if self:value("usage_times") == 0 then
 		return
@@ -24,6 +26,7 @@ function ElementEscort:increment_usage()
 	self._used_times = (self._used_times or 0) + 1
 end
 
+-- Lines 25-31
 function ElementEscort:can_be_used()
 	if self:value("usage_times") == 0 then
 		return true
@@ -32,6 +35,7 @@ function ElementEscort:can_be_used()
 	return not self._used_times or self._used_times < self:value("usage_times")
 end
 
+-- Lines 33-84
 function ElementEscort:start_escort_path(unit)
 	if alive(unit) and unit:brain() then
 		local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
@@ -92,6 +96,7 @@ function ElementEscort:start_escort_path(unit)
 	end
 end
 
+-- Lines 86-104
 function ElementEscort:on_executed(instigator)
 	if not self:enabled() or Network:is_client() then
 		return

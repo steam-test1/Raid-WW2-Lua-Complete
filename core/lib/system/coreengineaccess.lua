@@ -1,5 +1,6 @@
 core:module("CoreEngineAccess")
 
+-- Lines 15-22
 local function get_class_table(engine_class_name)
 	local class_table = rawget(_G, engine_class_name)
 
@@ -10,6 +11,7 @@ local function get_class_table(engine_class_name)
 	end
 end
 
+-- Lines 24-45
 local function get_method_table(engine_class_name)
 	local class_table, problem = get_class_table(engine_class_name)
 
@@ -36,9 +38,11 @@ local function get_method_table(engine_class_name)
 	return method_table, nil
 end
 
+-- Lines 47-74
 local function hide_static_engine_method(engine_class_name, method_name, message)
 	assert(engine_class_name and method_name, "Invalid argument list.")
 
+	-- Lines 50-54
 	local function failure_func(failure_message)
 		return function (...)
 			error(string.format("Failed to call hidden method %s:%s(...). %s", engine_class_name, method_name, failure_message))

@@ -12,6 +12,7 @@ RaidGUIControlStepper.TEXT_COLOR_DISABLED = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlStepper.SIDELINE_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlStepper.SIDELINE_W = 3
 
+-- Lines 17-44
 function RaidGUIControlStepper:init(parent, params)
 	RaidGUIControlStepper.super.init(self, parent, params)
 
@@ -41,10 +42,12 @@ function RaidGUIControlStepper:init(parent, params)
 	self:highlight_off()
 end
 
+-- Lines 46-48
 function RaidGUIControlStepper:refresh_data(sort_descending)
 	self._stepper:refresh_data(sort_descending)
 end
 
+-- Lines 50-58
 function RaidGUIControlStepper:_create_stepper_panel()
 	local stepper_params = clone(self._params)
 	stepper_params.name = stepper_params.name .. "_stepper"
@@ -55,6 +58,7 @@ function RaidGUIControlStepper:_create_stepper_panel()
 	self._object = self._stepper_panel
 end
 
+-- Lines 61-97
 function RaidGUIControlStepper:_create_stepper_controls()
 	local sideline_params = {
 		alpha = 0,
@@ -91,38 +95,47 @@ function RaidGUIControlStepper:_create_stepper_controls()
 	})
 end
 
+-- Lines 99-101
 function RaidGUIControlStepper:set_disabled_items(data)
 	self._stepper:set_disabled_items(data)
 end
 
+-- Lines 103-105
 function RaidGUIControlStepper:selected_item()
 	return self._stepper:selected_item()
 end
 
+-- Lines 107-109
 function RaidGUIControlStepper:label_x()
 	return self._description:x()
 end
 
+-- Lines 111-113
 function RaidGUIControlStepper:_select_item(index)
 	self._stepper:selected_item()
 end
 
+-- Lines 115-117
 function RaidGUIControlStepper:select_item_by_value(value)
 	self._stepper:select_item_by_value(value)
 end
 
+-- Lines 119-121
 function RaidGUIControlStepper:get_value()
 	return self._stepper:get_value()
 end
 
+-- Lines 123-125
 function RaidGUIControlStepper:set_value_and_render(value_to_select, skip_animation)
 	self._stepper:set_value_and_render(value_to_select, skip_animation)
 end
 
+-- Lines 127-129
 function RaidGUIControlStepper:mouse_released(o, button, x, y)
 	return false
 end
 
+-- Lines 131-145
 function RaidGUIControlStepper:highlight_on()
 	self._highlighted = true
 
@@ -140,6 +153,7 @@ function RaidGUIControlStepper:highlight_on()
 	end
 end
 
+-- Lines 148-159
 function RaidGUIControlStepper:highlight_off()
 	self._highlighted = false
 
@@ -153,6 +167,7 @@ function RaidGUIControlStepper:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
+-- Lines 161-167
 function RaidGUIControlStepper:on_mouse_scroll_up()
 	if not self._enabled then
 		return
@@ -161,6 +176,7 @@ function RaidGUIControlStepper:on_mouse_scroll_up()
 	self._stepper:on_right_arrow_clicked()
 end
 
+-- Lines 169-175
 function RaidGUIControlStepper:on_mouse_scroll_down()
 	if not self._enabled then
 		return
@@ -169,39 +185,47 @@ function RaidGUIControlStepper:on_mouse_scroll_down()
 	self._stepper:on_left_arrow_clicked()
 end
 
+-- Lines 177-179
 function RaidGUIControlStepper:x()
 	return self._stepper_panel._engine_panel:x()
 end
 
+-- Lines 181-183
 function RaidGUIControlStepper:w()
 	return self._stepper_panel._engine_panel:w()
 end
 
+-- Lines 185-189
 function RaidGUIControlStepper:confirm_pressed()
 	if self._selected then
 		return true
 	end
 end
 
+-- Lines 191-193
 function RaidGUIControlStepper:is_selected_control()
 	return self._selected_control
 end
 
+-- Lines 195-196
 function RaidGUIControlStepper:_select_control(value)
 end
 
+-- Lines 198-207
 function RaidGUIControlStepper:move_down()
 	if self._selected then
 		return self.super.move_down(self)
 	end
 end
 
+-- Lines 209-218
 function RaidGUIControlStepper:move_up()
 	if self._selected then
 		return self.super.move_up(self)
 	end
 end
 
+-- Lines 220-225
 function RaidGUIControlStepper:scroll_left()
 	if self._selected then
 		self._stepper:on_left_arrow_clicked()
@@ -210,6 +234,7 @@ function RaidGUIControlStepper:scroll_left()
 	end
 end
 
+-- Lines 227-232
 function RaidGUIControlStepper:scroll_right()
 	if self._selected then
 		self._stepper:on_right_arrow_clicked()
@@ -218,6 +243,7 @@ function RaidGUIControlStepper:scroll_right()
 	end
 end
 
+-- Lines 237-258
 function RaidGUIControlStepper:_animate_highlight_on()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2
@@ -240,6 +266,7 @@ function RaidGUIControlStepper:_animate_highlight_on()
 	self._sideline:set_alpha(1)
 end
 
+-- Lines 260-281
 function RaidGUIControlStepper:_animate_highlight_off()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2
@@ -262,6 +289,7 @@ function RaidGUIControlStepper:_animate_highlight_off()
 	self._sideline:set_alpha(0)
 end
 
+-- Lines 283-300
 function RaidGUIControlStepper:set_enabled(enabled)
 	RaidGUIControlStepper.super.set_enabled(self, enabled)
 	self._stepper:set_enabled(enabled)

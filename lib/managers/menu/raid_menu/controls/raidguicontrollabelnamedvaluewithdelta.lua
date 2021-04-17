@@ -1,5 +1,6 @@
 RaidGUIControlLabelNamedValueWithDelta = RaidGUIControlLabelNamedValueWithDelta or class(RaidGUIControlLabelNamedValue)
 
+-- Lines 3-21
 function RaidGUIControlLabelNamedValueWithDelta:init(parent, params)
 	RaidGUIControlLabelNamedValueWithDelta.super.init(self, parent, params)
 
@@ -17,6 +18,7 @@ function RaidGUIControlLabelNamedValueWithDelta:init(parent, params)
 	self._label_value_with_delta = self._object:label(label_value_with_delta_params)
 end
 
+-- Lines 23-46
 function RaidGUIControlLabelNamedValueWithDelta:set_value_delta(number)
 	local full_value = ""
 
@@ -42,15 +44,18 @@ function RaidGUIControlLabelNamedValueWithDelta:set_value_delta(number)
 	self._label_value_with_delta:set_x(self._label_value:right())
 end
 
+-- Lines 48-50
 function RaidGUIControlLabelNamedValueWithDelta:value_delta()
 	return self._label_value_with_delta:text()
 end
 
+-- Lines 52-55
 function RaidGUIControlLabelNamedValueWithDelta:set_label_color(color)
 	RaidGUIControlLabelNamedValueWithDelta.super.set_label_color(self, color)
 	self._label_value_with_delta:set_color(color)
 end
 
+-- Lines 57-60
 function RaidGUIControlLabelNamedValueWithDelta:set_label_default_color()
 	RaidGUIControlLabelNamedValueWithDelta.super.set_label_default_color(self)
 	self._label_value_with_delta:set_color(self._params.value_delta_color or tweak_data.gui.colors.progress_green)

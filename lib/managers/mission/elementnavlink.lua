@@ -63,6 +63,7 @@ ElementNavLink._DEFAULT_VALUES = {
 	path_style = 1
 }
 
+-- Lines 22-28
 function ElementNavLink:init(...)
 	ElementNavLink.super.init(self, ...)
 	self:_finalize_values(self._values)
@@ -70,26 +71,31 @@ function ElementNavLink:init(...)
 	self._values = clone(self._values)
 end
 
+-- Lines 32-106
 function ElementNavLink:_finalize_values(values)
 	values.so_action = self:value("so_action")
 
+	-- Lines 34-37
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])
 		values[name_in] = found_index ~= -1 and found_index or nil
 	end
 
+	-- Lines 39-43
 	local function _nil_if_default(name_in)
 		if values[name_in] == self._DEFAULT_VALUES[name_in] then
 			values[name_in] = nil
 		end
 	end
 
+	-- Lines 45-49
 	local function _nil_if_none(name_in)
 		if values[name_in] == "none" then
 			values[name_in] = nil
 		end
 	end
 
+	-- Lines 51-53
 	local function _save_boolean(name_in)
 		values[name_in] = values[name_in] or nil
 	end
@@ -145,6 +151,7 @@ function ElementNavLink:_finalize_values(values)
 	values.SO_access = managers.navigation:convert_access_filter_to_number(values.SO_access)
 end
 
+-- Lines 110-116
 function ElementNavLink:event(name, unit)
 	if self._events and self._events[name] then
 		for _, callback in ipairs(self._events[name]) do
@@ -153,10 +160,12 @@ function ElementNavLink:event(name, unit)
 	end
 end
 
+-- Lines 120-122
 function ElementNavLink:clbk_objective_action_start(unit)
 	self:event("anim_start", unit)
 end
 
+-- Lines 126-145
 function ElementNavLink:clbk_objective_administered(unit)
 	if self._values.needs_pos_rsrv then
 		self._pos_rsrv = self._pos_rsrv or {}
@@ -183,6 +192,7 @@ function ElementNavLink:clbk_objective_administered(unit)
 	self:event("administered", unit)
 end
 
+-- Lines 149-166
 function ElementNavLink:clbk_objective_complete(unit)
 	if self._pos_rsrv then
 		local unit_rsrv = self._pos_rsrv[unit:key()]
@@ -205,6 +215,7 @@ function ElementNavLink:clbk_objective_complete(unit)
 	self:event("complete", unit)
 end
 
+-- Lines 170-190
 function ElementNavLink:clbk_objective_failed(unit)
 	if self._pos_rsrv then
 		local unit_rsrv = self._pos_rsrv[unit:key()]
@@ -231,6 +242,7 @@ function ElementNavLink:clbk_objective_failed(unit)
 	self:event("fail", unit)
 end
 
+-- Lines 194-207
 function ElementNavLink:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
@@ -250,6 +262,7 @@ function ElementNavLink:clbk_verify_administration(unit)
 	return true
 end
 
+-- Lines 211-215
 function ElementNavLink:add_event_callback(name, callback)
 	self._events = self._events or {}
 	self._events[name] = self._events[name] or {}
@@ -257,6 +270,7 @@ function ElementNavLink:add_event_callback(name, callback)
 	table.insert(self._events[name], callback)
 end
 
+-- Lines 219-244
 function ElementNavLink:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -271,6 +285,7 @@ function ElementNavLink:on_executed(instigator)
 	ElementNavLink.super.on_executed(self, nil)
 end
 
+-- Lines 248-263
 function ElementNavLink:operation_remove()
 	if self._nav_link then
 		managers.navigation:unregister_anim_nav_link(self)
@@ -289,6 +304,7 @@ function ElementNavLink:operation_remove()
 	end
 end
 
+-- Lines 265-277
 function ElementNavLink:destroy()
 	ElementNavLink.super.destroy(self)
 	managers.navigation:unregister_anim_nav_link(self)
@@ -302,6 +318,7 @@ function ElementNavLink:destroy()
 	end
 end
 
+-- Lines 281-346
 function ElementNavLink:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
@@ -369,6 +386,7 @@ function ElementNavLink:get_objective(instigator)
 	return objective
 end
 
+-- Lines 350-367
 function ElementNavLink:_get_misc_SO_params()
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = nil
 	local values = self._values
@@ -386,46 +404,57 @@ function ElementNavLink:_get_misc_SO_params()
 	return pose, stance, attitude, path_style, pos, rot, -1, interrupt_health, haste, trigger_on, interaction_voice
 end
 
+-- Lines 371-373
 function ElementNavLink:nav_link_end_pos()
 	return self._values.search_position
 end
 
+-- Lines 377-379
 function ElementNavLink:nav_link_access()
 	return tonumber(self._values.SO_access)
 end
 
+-- Lines 383-385
 function ElementNavLink:chance()
 	return self:_get_default_value_if_nil("base_chance")
 end
 
+-- Lines 389-391
 function ElementNavLink:nav_link_delay()
 	return self:_get_default_value_if_nil("interval")
 end
 
+-- Lines 395-397
 function ElementNavLink:nav_link()
 	return self._nav_link
 end
 
+-- Lines 401-403
 function ElementNavLink:id()
 	return self._id
 end
 
+-- Lines 407-409
 function ElementNavLink:_is_nav_link()
 	return true
 end
 
+-- Lines 413-415
 function ElementNavLink:set_nav_link(nav_link)
 	self._nav_link = nav_link
 end
 
+-- Lines 419-421
 function ElementNavLink:nav_link_wants_align_pos()
 	return self._values.align_position
 end
 
+-- Lines 425-427
 function ElementNavLink:get_objective_trigger()
 	return self._values.trigger_on
 end
 
+-- Lines 431-465
 function ElementNavLink:_administer_objective(unit, objective)
 	if objective.type == "phalanx" then
 		GroupAIStateBase:register_phalanx_unit(unit)
@@ -463,6 +492,7 @@ function ElementNavLink:_administer_objective(unit, objective)
 	end
 end
 
+-- Lines 470-526
 function ElementNavLink:choose_followup_SO(unit, skip_element_ids)
 	if not self._values.followup_elements then
 		return
@@ -520,6 +550,7 @@ function ElementNavLink:choose_followup_SO(unit, skip_element_ids)
 	end
 end
 
+-- Lines 530-537
 function ElementNavLink:get_as_followup(unit, skip_element_ids)
 	if (not unit or managers.navigation:check_access(self._values.SO_access, unit:brain():SO_access(), 0) and self:clbk_verify_administration(unit)) and not skip_element_ids[self._id] then
 		return self, self:_get_default_value_if_nil("base_chance")
@@ -528,6 +559,7 @@ function ElementNavLink:get_as_followup(unit, skip_element_ids)
 	self:event("admin_fail", unit)
 end
 
+-- Lines 541-543
 function ElementNavLink:_get_default_value_if_nil(name_in)
 	return self._values[name_in] or self._DEFAULT_VALUES[name_in]
 end

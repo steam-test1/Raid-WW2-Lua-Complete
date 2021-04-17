@@ -1,5 +1,6 @@
 WaypointUnitElement = WaypointUnitElement or class(MissionElement)
 
+-- Lines 3-98
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)
 	self:_add_wp_options()
@@ -104,16 +105,19 @@ function WaypointUnitElement:init(unit)
 	table.insert(self._save_values, "only_in_civilian")
 end
 
+-- Lines 100-102
 function WaypointUnitElement:_add_wp_options()
 	self._text_options = {
 		"debug_none"
 	}
 end
 
+-- Lines 104-106
 function WaypointUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
+-- Lines 108-113
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
@@ -122,6 +126,7 @@ function WaypointUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 115-121
 function WaypointUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local shape = self:get_shape()
 	local color = self._hed.color
@@ -131,6 +136,7 @@ function WaypointUnitElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 123-129
 function WaypointUnitElement:get_shape()
 	if not self._square_shape then
 		self:_create_shapes()
@@ -139,11 +145,13 @@ function WaypointUnitElement:get_shape()
 	return self._hed.map_display == "square" and self._square_shape or self._hed.map_display == "circle" and self._circle_shape
 end
 
+-- Lines 131-134
 function WaypointUnitElement:clone_data(...)
 	WaypointUnitElement.super.clone_data(self, ...)
 	self:_recreate_shapes()
 end
 
+-- Lines 136-142
 function WaypointUnitElement:_create_shapes()
 	self._square_shape = CoreShapeManager.ShapeBoxMiddle:new({
 		height = 200,
@@ -161,6 +169,7 @@ function WaypointUnitElement:_create_shapes()
 	self._circle_shape:set_unit(self._unit)
 end
 
+-- Lines 144-149
 function WaypointUnitElement:_recreate_shapes()
 	self._square_shape = nil
 	self._circle_shape = nil
@@ -168,6 +177,7 @@ function WaypointUnitElement:_recreate_shapes()
 	self:_create_shapes()
 end
 
+-- Lines 151-171
 function WaypointUnitElement:_set_shape_type()
 	local display_type = self._hed.map_display
 
@@ -189,11 +199,13 @@ function WaypointUnitElement:_set_shape_type()
 	self._sliders.radius:set_enabled(display_type == "circle")
 end
 
+-- Lines 173-176
 function WaypointUnitElement:set_shape_property(params)
 	self._square_shape:set_property(params.property, self._hed[params.value])
 	self._circle_shape:set_property(params.property, self._hed[params.value])
 end
 
+-- Lines 178-191
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
@@ -214,6 +226,7 @@ function WaypointUnitElement:set_element_data(params, ...)
 	end
 end
 
+-- Lines 193-197
 function WaypointUnitElement:_on_color_changed()
 	local color = self.__color_picker_dialog:color()
 	self._hed.color = {
@@ -225,6 +238,7 @@ function WaypointUnitElement:_on_color_changed()
 	self._color.control:set_background_colour(color.r * 255, color.g * 255, color.b * 255)
 end
 
+-- Lines 199-210
 function WaypointUnitElement:_split_string(inputstr, sep)
 	if sep == nil then
 		sep = "%s"
@@ -241,6 +255,7 @@ function WaypointUnitElement:_split_string(inputstr, sep)
 	return t
 end
 
+-- Lines 212-229
 function WaypointUnitElement:scale_slider(panel, sizer, number_ctrlr_params, value, name)
 	local slider_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -275,6 +290,7 @@ function WaypointUnitElement:scale_slider(panel, sizer, number_ctrlr_params, val
 	self._sliders[value] = slider
 end
 
+-- Lines 231-238
 function WaypointUnitElement:set_size(params)
 	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
 
@@ -287,12 +303,14 @@ function WaypointUnitElement:set_size(params)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
 
+-- Lines 240-243
 function WaypointUnitElement:size_release(params)
 	self._hed[params.value] = params.number_ctrlr_params.value
 
 	params.ctrlr:set_value(100)
 end
 
+-- Lines 245-301
 function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

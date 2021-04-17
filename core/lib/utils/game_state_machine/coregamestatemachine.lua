@@ -3,6 +3,7 @@ core:import("CoreInitState")
 
 GameStateMachine = GameStateMachine or class()
 
+-- Lines 12-24
 function GameStateMachine:init(start_state)
 	self._states = {}
 	self._transitions = {}
@@ -20,6 +21,7 @@ function GameStateMachine:init(start_state)
 	self:_do_state_change()
 end
 
+-- Lines 26-33
 function GameStateMachine:destroy()
 	for _, state in pairs(self._states) do
 		state:destroy()
@@ -29,6 +31,7 @@ function GameStateMachine:destroy()
 	self._transitions = {}
 end
 
+-- Lines 35-40
 function GameStateMachine:add_transition(from, to, trans_func)
 	self._states[from:name()] = from
 	self._states[to:name()] = to
@@ -36,10 +39,12 @@ function GameStateMachine:add_transition(from, to, trans_func)
 	self._transitions[from][to] = trans_func
 end
 
+-- Lines 42-44
 function GameStateMachine:current_state()
 	return self._current_state
 end
 
+-- Lines 46-50
 function GameStateMachine:can_change_state(state)
 	local state_from = self._queued_transitions and self._queued_transitions[#self._queued_transitions][1] or self._current_state
 	local valid_transitions = self._transitions[state_from]
@@ -47,6 +52,7 @@ function GameStateMachine:can_change_state(state)
 	return valid_transitions and valid_transitions[state] ~= nil
 end
 
+-- Lines 52-77
 function GameStateMachine:change_state(state, params)
 	Application:trace("[GameStateMachine][change_state]", tostring(state:name()))
 	Application:debug("[GameStateMachine][change_state]", debug.traceback())
@@ -70,40 +76,47 @@ function GameStateMachine:change_state(state, params)
 	end
 end
 
+-- Lines 79-81
 function GameStateMachine:current_state_name()
 	return self._current_state:name()
 end
 
+-- Lines 83-86
 function GameStateMachine:can_change_state_by_name(state_name)
 	local state = assert(self._states[state_name], "[GameStateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	return self:can_change_state(state)
 end
 
+-- Lines 88-91
 function GameStateMachine:change_state_by_name(state_name, params)
 	local state = assert(self._states[state_name], "[GameStateMachine] Name '" .. tostring(state_name) .. "' does not correspond to a valid state.")
 
 	self:change_state(state, params)
 end
 
+-- Lines 93-97
 function GameStateMachine:update(t, dt)
 	if self._current_state.update then
 		self._current_state:update(t, dt)
 	end
 end
 
+-- Lines 99-103
 function GameStateMachine:paused_update(t, dt)
 	if self._current_state.paused_update then
 		self._current_state:paused_update(t, dt)
 	end
 end
 
+-- Lines 105-109
 function GameStateMachine:end_update(t, dt)
 	if self._queued_transitions then
 		self:_do_state_change()
 	end
 end
 
+-- Lines 112-143
 function GameStateMachine:_do_state_change()
 	if not self._queued_transitions then
 		return
@@ -136,6 +149,7 @@ function GameStateMachine:_do_state_change()
 	end
 end
 
+-- Lines 145-151
 function GameStateMachine:last_queued_state_name()
 	if self._queued_transitions then
 		return self._queued_transitions[#self._queued_transitions][1]:name()

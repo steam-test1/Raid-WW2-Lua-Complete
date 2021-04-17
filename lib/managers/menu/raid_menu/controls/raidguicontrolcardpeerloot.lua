@@ -7,6 +7,7 @@ RaidGUIControlCardPeerLoot.TEXT_H = 40
 RaidGUIControlCardPeerLoot.TEXT_FONT = tweak_data.hud.large_font
 RaidGUIControlCardPeerLoot.FONT_SIZE = 18
 
+-- Lines 14-28
 function RaidGUIControlCardPeerLoot:init(parent, params)
 	RaidGUIControlCardPeerLoot.super.init(self, parent, params)
 
@@ -23,9 +24,11 @@ function RaidGUIControlCardPeerLoot:init(parent, params)
 	self:_create_card_details()
 end
 
+-- Lines 31-32
 function RaidGUIControlCardPeerLoot:close()
 end
 
+-- Lines 35-45
 function RaidGUIControlCardPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -37,6 +40,7 @@ function RaidGUIControlCardPeerLoot:_create_control_panel()
 	self._object = self._control_panel
 end
 
+-- Lines 48-68
 function RaidGUIControlCardPeerLoot:_create_card_details()
 	local params_card_image = {
 		texture = "ui/main_menu/textures/cards_atlas",
@@ -84,10 +88,12 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 	self._card_title_label = self._control_panel:label(params_card_title)
 end
 
+-- Lines 71-73
 function RaidGUIControlCardPeerLoot:set_debug(value)
 	self._control_panel:set_debug(value)
 end
 
+-- Lines 76-92
 function RaidGUIControlCardPeerLoot:set_card(card)
 	self._card = card
 
@@ -102,10 +108,12 @@ function RaidGUIControlCardPeerLoot:set_card(card)
 	self._card_image:set_texture_rect(unpack(card_texture_rect))
 end
 
+-- Lines 94-96
 function RaidGUIControlCardPeerLoot:get_card()
 	return self._card
 end
 
+-- Lines 98-100
 function RaidGUIControlCardPeerLoot:set_player_name(name)
 	self._name_label:set_text(name)
 end

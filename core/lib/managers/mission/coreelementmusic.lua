@@ -3,14 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementMusic = ElementMusic or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 6-8
 function ElementMusic:init(...)
 	ElementMusic.super.init(self, ...)
 end
 
+-- Lines 10-12
 function ElementMusic:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 14-33
 function ElementMusic:on_executed(instigator)
 	if not self._values.enabled then
 		return

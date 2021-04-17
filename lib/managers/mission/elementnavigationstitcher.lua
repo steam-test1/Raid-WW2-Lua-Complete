@@ -3,22 +3,26 @@ core:import("CoreMissionScriptElement")
 
 ElementNavigationStitcher = ElementNavigationStitcher or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 6-10
 function ElementNavigationStitcher:init(...)
 	ElementNavigationStitcher.super.init(self, ...)
 
 	local unit = managers.worldcollection:get_unit_with_id(self._id, nil, self._sync_id)
 end
 
+-- Lines 12-15
 function ElementNavigationStitcher:on_script_activated()
 	self._on_script_activated_done = true
 
 	self._mission_script:add_save_state_cb(self._id)
 end
 
+-- Lines 17-19
 function ElementNavigationStitcher:set_enabled(enabled)
 	ElementNavigationStitcher.super.set_enabled(self, enabled)
 end
 
+-- Lines 21-27
 function ElementNavigationStitcher:on_executed(instigator, ...)
 	if not self._values.enabled then
 		return
@@ -27,10 +31,12 @@ function ElementNavigationStitcher:on_executed(instigator, ...)
 	ElementNavigationStitcher.super.on_executed(self, instigator, ...)
 end
 
+-- Lines 29-31
 function ElementNavigationStitcher:pre_destroy()
 	self:tear()
 end
 
+-- Lines 33-38
 function ElementNavigationStitcher:debug_draw()
 	if not self._debug_shape then
 		self._debug_shape = CoreShapeManager.ShapeBoxMiddle:new({
@@ -45,17 +51,20 @@ function ElementNavigationStitcher:debug_draw()
 	self._debug_shape:draw(0, 0, 0.2, 0.2, 0.8, 0.3)
 end
 
+-- Lines 41-44
 function ElementNavigationStitcher:_snap_to_grid(coord)
 	coord = coord + self._grid_size / 2
 
 	return coord - coord % self._grid_size
 end
 
+-- Lines 47-50
 function ElementNavigationStitcher:_snap_pos_to_grid(pos)
 	mvector3.set_x(pos, self:_snap_to_grid(pos.x))
 	mvector3.set_y(pos, self:_snap_to_grid(pos.y))
 end
 
+-- Lines 54-76
 function ElementNavigationStitcher:_calculate_extents()
 	local x_half_extent = self._values.width / 2 * self._values.rotation:x()
 	local y_half_extent = self._values.depth / 2 * self._values.rotation:y()
@@ -81,6 +90,7 @@ function ElementNavigationStitcher:_calculate_extents()
 	}
 end
 
+-- Lines 79-107
 function ElementNavigationStitcher:_create_nav_data()
 	self._nav_data = {
 		version = 6,
@@ -118,6 +128,7 @@ function ElementNavigationStitcher:_create_nav_data()
 	self._nav_data.parent_world_id = self._sync_id
 end
 
+-- Lines 109-124
 function ElementNavigationStitcher:_create_quad(x, y)
 	table.insert(self._nav_data.quad_borders_x_pos, math.round(self:_snap_to_grid(x + self._grid_size / 2) / self._grid_size))
 	table.insert(self._nav_data.quad_borders_x_neg, math.round(self:_snap_to_grid(x - self._grid_size / 2) / self._grid_size))
@@ -135,6 +146,7 @@ function ElementNavigationStitcher:_create_quad(x, y)
 	return i_quad
 end
 
+-- Lines 127-142
 function ElementNavigationStitcher:_create_top_door(i_x, i_y, z)
 	local i_top_quad = self._quad_grid[i_y - 1][i_x]
 	local i_bottom_quad = self._quad_grid[i_y][i_x]
@@ -148,6 +160,7 @@ function ElementNavigationStitcher:_create_top_door(i_x, i_y, z)
 	table.insert(self._nav_data.door_low_quads, i_bottom_quad)
 end
 
+-- Lines 145-160
 function ElementNavigationStitcher:_create_left_door(i_x, i_y, z)
 	local i_left_quad = self._quad_grid[i_y][i_x - 1]
 	local i_right_quad = self._quad_grid[i_y][i_x]
@@ -161,6 +174,7 @@ function ElementNavigationStitcher:_create_left_door(i_x, i_y, z)
 	table.insert(self._nav_data.door_low_quads, i_right_quad)
 end
 
+-- Lines 163-199
 function ElementNavigationStitcher:_create_quads()
 	local z = self._extents.height
 	local i_x = 1
@@ -205,6 +219,7 @@ function ElementNavigationStitcher:_create_quads()
 	self._ct_y = i_y - 1
 end
 
+-- Lines 202-210
 function ElementNavigationStitcher:_collect_external_top_door(x, y, z, i_quad)
 	local door_high_pos = Vector3(self._nav_data.quad_borders_x_pos[i_quad] * self._grid_size, self._nav_data.quad_borders_y_pos[i_quad] * self._grid_size, z + 0.9)
 	local door_low_pos = Vector3(self._nav_data.quad_borders_x_neg[i_quad] * self._grid_size, self._nav_data.quad_borders_y_pos[i_quad] * self._grid_size, z + 0.9)
@@ -220,6 +235,7 @@ function ElementNavigationStitcher:_collect_external_top_door(x, y, z, i_quad)
 	})
 end
 
+-- Lines 213-221
 function ElementNavigationStitcher:_collect_external_left_door(x, y, z, i_quad)
 	local door_high_pos = Vector3(self._nav_data.quad_borders_x_neg[i_quad] * self._grid_size, self._nav_data.quad_borders_y_pos[i_quad] * self._grid_size, z + 0.9)
 	local door_low_pos = Vector3(self._nav_data.quad_borders_x_neg[i_quad] * self._grid_size, self._nav_data.quad_borders_y_neg[i_quad] * self._grid_size, z + 0.9)
@@ -235,6 +251,7 @@ function ElementNavigationStitcher:_collect_external_left_door(x, y, z, i_quad)
 	})
 end
 
+-- Lines 224-232
 function ElementNavigationStitcher:_collect_external_bottom_door(x, y, z, i_quad)
 	local door_high_pos = Vector3(self._nav_data.quad_borders_x_neg[i_quad] * self._grid_size, self._nav_data.quad_borders_y_neg[i_quad] * self._grid_size, z + 0.9)
 	local door_low_pos = Vector3(self._nav_data.quad_borders_x_pos[i_quad] * self._grid_size, self._nav_data.quad_borders_y_neg[i_quad] * self._grid_size, z + 0.9)
@@ -250,6 +267,7 @@ function ElementNavigationStitcher:_collect_external_bottom_door(x, y, z, i_quad
 	})
 end
 
+-- Lines 235-243
 function ElementNavigationStitcher:_collect_external_right_door(x, y, z, i_quad)
 	local door_high_pos = Vector3(self._nav_data.quad_borders_x_pos[i_quad] * self._grid_size, self._nav_data.quad_borders_y_neg[i_quad] * self._grid_size, z + 0.9)
 	local door_low_pos = Vector3(self._nav_data.quad_borders_x_pos[i_quad] * self._grid_size, self._nav_data.quad_borders_y_pos[i_quad] * self._grid_size, z + 0.9)
@@ -265,6 +283,7 @@ function ElementNavigationStitcher:_collect_external_right_door(x, y, z, i_quad)
 	})
 end
 
+-- Lines 246-276
 function ElementNavigationStitcher:_collect_external_doors()
 	self._external_doors = {}
 	local i_x = 1
@@ -301,12 +320,14 @@ function ElementNavigationStitcher:_collect_external_doors()
 	end
 end
 
+-- Lines 279-284
 function ElementNavigationStitcher:_create_external_doors()
 	for _, door in ipairs(self._external_doors) do
 		managers.navigation._quad_field:add_door(door.stitch_quad_pos, door.external_quad_pos, door.door_high_pos, door.door_low_pos)
 	end
 end
 
+-- Lines 286-291
 function ElementNavigationStitcher:_clear_data()
 	self._extents = {}
 	self._nav_data = {}
@@ -314,6 +335,7 @@ function ElementNavigationStitcher:_clear_data()
 	self._has_created = false
 end
 
+-- Lines 293-323
 function ElementNavigationStitcher:stitch(from_dropin)
 	if self._has_created and not from_dropin then
 		return
@@ -342,6 +364,7 @@ function ElementNavigationStitcher:stitch(from_dropin)
 	managers.groupai._state:merge_world_data(self._world_id)
 end
 
+-- Lines 326-334
 function ElementNavigationStitcher:tear()
 	if not self._has_created then
 		return
@@ -351,12 +374,14 @@ function ElementNavigationStitcher:tear()
 	managers.navigation:unload_world_data(self._world_id)
 end
 
+-- Lines 338-342
 function ElementNavigationStitcher:save(data)
 	data.enabled = self._values.enabled
 	data.has_created = self._has_created
 	data.world_id = self._world_id
 end
 
+-- Lines 345-361
 function ElementNavigationStitcher:load(data)
 	if not self._on_script_activated_done then
 		self:on_script_activated()
@@ -380,6 +405,7 @@ function ElementNavigationStitcher:load(data)
 	self:set_enabled(data.enabled)
 end
 
+-- Lines 363-366
 function ElementNavigationStitcher:_queue_stitch()
 	Application:debug("[ElementNavigationStitcher:load] Stitching from queue!")
 	self:stitch(true)

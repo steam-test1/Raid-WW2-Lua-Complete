@@ -5,9 +5,11 @@ core:import("CoreClass")
 core:import("CoreXml")
 core:import("CoreDebug")
 
+-- Lines 9-11
 function save_unit(world, level, unit, data)
 end
 
+-- Lines 13-39
 function save_data_table(unit)
 	local ud = unit:unit_data()
 	local t = {
@@ -36,6 +38,7 @@ function save_data_table(unit)
 	return t
 end
 
+-- Lines 41-65
 function _light_data_table(unit)
 	local lights = CoreEditorUtils.get_editable_lights(unit)
 
@@ -66,6 +69,7 @@ function _light_data_table(unit)
 	return #t > 0 and t or nil
 end
 
+-- Lines 67-93
 function _triggers_data_table(unit)
 	local triggers = managers.sequence:get_trigger_list(unit:name())
 
@@ -100,6 +104,7 @@ function _triggers_data_table(unit)
 	return #t > 0 and t or nil
 end
 
+-- Lines 95-114
 function _editable_gui_data_table(unit)
 	local t = nil
 
@@ -123,6 +128,7 @@ function _editable_gui_data_table(unit)
 	return t
 end
 
+-- Lines 116-126
 function _editable_ladder_table(unit)
 	local t = nil
 
@@ -136,6 +142,7 @@ function _editable_ladder_table(unit)
 	return t
 end
 
+-- Lines 128-140
 function _editable_zipline_table(unit)
 	local t = nil
 
@@ -152,6 +159,7 @@ function _editable_zipline_table(unit)
 	return t
 end
 
+-- Lines 143-177
 function save_layout(params)
 	local dialogs = {}
 
@@ -190,6 +198,7 @@ function save_layout(params)
 	f:close()
 end
 
+-- Lines 180-197
 function load_layout(params)
 	local data = ScriptSerializer:from_generic_xml(params.file:read())
 

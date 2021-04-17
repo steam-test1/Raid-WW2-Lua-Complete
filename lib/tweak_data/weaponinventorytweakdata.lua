@@ -1,5 +1,6 @@
 WeaponInventoryTweakData = WeaponInventoryTweakData or class()
 
+-- Lines 3-117
 function WeaponInventoryTweakData:init()
 	self.weapon_primaries_index = {
 		{

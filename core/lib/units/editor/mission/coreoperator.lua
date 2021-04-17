@@ -3,10 +3,12 @@ CoreOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreOperatorUnitElement.SAVE_UNIT_ROTATION = false
 OperatorUnitElement = OperatorUnitElement or class(CoreOperatorUnitElement)
 
+-- Lines 7-9
 function OperatorUnitElement:init(...)
 	OperatorUnitElement.super.init(self, ...)
 end
 
+-- Lines 11-19
 function CoreOperatorUnitElement:init(unit)
 	CoreOperatorUnitElement.super.init(self, unit)
 
@@ -17,6 +19,7 @@ function CoreOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
+-- Lines 21-35
 function CoreOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -41,14 +44,17 @@ function CoreOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
+-- Lines 37-40
 function CoreOperatorUnitElement:get_links_to_unit(...)
 	CoreOperatorUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
+-- Lines 42-43
 function CoreOperatorUnitElement:update_editing()
 end
 
+-- Lines 45-55
 function CoreOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -66,6 +72,7 @@ function CoreOperatorUnitElement:add_element()
 	end
 end
 
+-- Lines 57-63
 function CoreOperatorUnitElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -74,10 +81,12 @@ function CoreOperatorUnitElement:remove_links(unit)
 	end
 end
 
+-- Lines 66-68
 function CoreOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
+-- Lines 70-82
 function CoreOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

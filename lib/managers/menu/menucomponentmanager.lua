@@ -34,6 +34,7 @@ require("lib/managers/menu/raid_menu/SpecialHonorsGui")
 
 MenuComponentManager = MenuComponentManager or class()
 
+-- Lines 38-125
 function MenuComponentManager:init()
 	self._ws = Overlay:gui():create_screen_workspace()
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
@@ -182,16 +183,20 @@ function MenuComponentManager:init()
 	self._update_components = {}
 end
 
+-- Lines 127-128
 function MenuComponentManager:save(data)
 end
 
+-- Lines 130-132
 function MenuComponentManager:load(data)
 	self:on_whisper_mode_changed()
 end
 
+-- Lines 134-135
 function MenuComponentManager:on_whisper_mode_changed()
 end
 
+-- Lines 137-146
 function MenuComponentManager:get_controller_input_bool(button)
 	if not managers.menu or not managers.menu:active_menu() then
 		return
@@ -204,6 +209,7 @@ function MenuComponentManager:get_controller_input_bool(button)
 	end
 end
 
+-- Lines 148-159
 function MenuComponentManager:_setup_controller_input()
 	if not self._controller_connected then
 		self._left_axis_vector = Vector3()
@@ -218,6 +224,7 @@ function MenuComponentManager:_setup_controller_input()
 	end
 end
 
+-- Lines 161-175
 function MenuComponentManager:_destroy_controller_input()
 	if self._controller_connected then
 		self._fullscreen_ws:disconnect_all_controllers()
@@ -235,14 +242,17 @@ function MenuComponentManager:_destroy_controller_input()
 	end
 end
 
+-- Lines 177-179
 function MenuComponentManager:saferect_ws()
 	return self._ws
 end
 
+-- Lines 181-183
 function MenuComponentManager:fullscreen_ws()
 	return self._fullscreen_ws
 end
 
+-- Lines 185-192
 function MenuComponentManager:resolution_changed()
 	managers.gui_data:layout_workspace(self._ws)
 	managers.gui_data:layout_fullscreen_16_9_workspace(self._fullscreen_ws)
@@ -252,6 +262,7 @@ function MenuComponentManager:resolution_changed()
 	end
 end
 
+-- Lines 194-200
 function MenuComponentManager:_axis_move(o, axis_name, axis_vector, controller)
 	if axis_name == Idstring("left") then
 		mvector3.set(self._left_axis_vector, axis_vector)
@@ -260,6 +271,7 @@ function MenuComponentManager:_axis_move(o, axis_name, axis_vector, controller)
 	end
 end
 
+-- Lines 202-227
 function MenuComponentManager:set_active_components(components, node)
 	local to_close = {}
 
@@ -290,6 +302,7 @@ function MenuComponentManager:set_active_components(components, node)
 	end
 end
 
+-- Lines 231-273
 function MenuComponentManager:make_color_text(text_object, color)
 	local text = text_object:text()
 	local text_dissected = utf8.characters(text)
@@ -335,9 +348,11 @@ function MenuComponentManager:make_color_text(text_object, color)
 	end
 end
 
+-- Lines 277-278
 function MenuComponentManager:on_job_updated()
 end
 
+-- Lines 287-294
 function MenuComponentManager:update(t, dt)
 	for _, component in pairs(self._update_components) do
 		if component then
@@ -346,6 +361,7 @@ function MenuComponentManager:update(t, dt)
 	end
 end
 
+-- Lines 296-305
 function MenuComponentManager:get_left_controller_axis()
 	if managers.menu:is_pc_controller() or not self._left_axis_vector then
 		return 0, 0
@@ -357,6 +373,7 @@ function MenuComponentManager:get_left_controller_axis()
 	return x, y
 end
 
+-- Lines 307-316
 function MenuComponentManager:get_right_controller_axis()
 	if managers.menu:is_pc_controller() or not self._right_axis_vector then
 		return 0, 0
@@ -368,21 +385,26 @@ function MenuComponentManager:get_right_controller_axis()
 	return x, y
 end
 
+-- Lines 320-321
 function MenuComponentManager:accept_input(accept)
 end
 
+-- Lines 323-327
 function MenuComponentManager:input_focus()
 	if managers.system_menu and managers.system_menu:is_active() and not managers.system_menu:is_closing() then
 		return true
 	end
 end
 
+-- Lines 329-330
 function MenuComponentManager:scroll_up()
 end
 
+-- Lines 332-333
 function MenuComponentManager:scroll_down()
 end
 
+-- Lines 336-348
 function MenuComponentManager:move_up()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -399,6 +421,7 @@ function MenuComponentManager:move_up()
 	end
 end
 
+-- Lines 350-362
 function MenuComponentManager:move_down()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -415,6 +438,7 @@ function MenuComponentManager:move_down()
 	end
 end
 
+-- Lines 364-376
 function MenuComponentManager:move_left()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -431,6 +455,7 @@ function MenuComponentManager:move_left()
 	end
 end
 
+-- Lines 378-385
 function MenuComponentManager:_set_active_control(target_control_name)
 	for _, active_control in pairs(self._active_controls) do
 		if active_control[target_control_name] then
@@ -440,6 +465,7 @@ function MenuComponentManager:_set_active_control(target_control_name)
 	end
 end
 
+-- Lines 387-400
 function MenuComponentManager:move_right()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -456,6 +482,7 @@ function MenuComponentManager:move_right()
 	end
 end
 
+-- Lines 402-411
 function MenuComponentManager:scroll_up()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -468,6 +495,7 @@ function MenuComponentManager:scroll_up()
 	end
 end
 
+-- Lines 413-422
 function MenuComponentManager:scroll_down()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -480,6 +508,7 @@ function MenuComponentManager:scroll_down()
 	end
 end
 
+-- Lines 424-433
 function MenuComponentManager:scroll_left()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -492,6 +521,7 @@ function MenuComponentManager:scroll_left()
 	end
 end
 
+-- Lines 435-444
 function MenuComponentManager:scroll_right()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -504,6 +534,7 @@ function MenuComponentManager:scroll_right()
 	end
 end
 
+-- Lines 447-458
 function MenuComponentManager:next_page()
 	if self._game_chat_gui and self._game_chat_gui:input_focus() == true then
 		return true
@@ -514,6 +545,7 @@ function MenuComponentManager:next_page()
 	end
 end
 
+-- Lines 460-471
 function MenuComponentManager:previous_page()
 	if self._game_chat_gui and self._game_chat_gui:input_focus() == true then
 		return true
@@ -524,6 +556,7 @@ function MenuComponentManager:previous_page()
 	end
 end
 
+-- Lines 474-499
 function MenuComponentManager:confirm_pressed()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -548,6 +581,7 @@ function MenuComponentManager:confirm_pressed()
 	end
 end
 
+-- Lines 501-516
 function MenuComponentManager:back_pressed()
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -564,6 +598,7 @@ function MenuComponentManager:back_pressed()
 	end
 end
 
+-- Lines 518-544
 function MenuComponentManager:special_btn_pressed(...)
 	for _, component in pairs(self._active_components) do
 		if component.component_object and component.component_object.special_btn_pressed then
@@ -592,6 +627,7 @@ function MenuComponentManager:special_btn_pressed(...)
 	end
 end
 
+-- Lines 548-689
 function MenuComponentManager:mouse_pressed(o, button, x, y)
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -713,6 +749,7 @@ function MenuComponentManager:mouse_pressed(o, button, x, y)
 	end
 end
 
+-- Lines 691-704
 function MenuComponentManager:mouse_clicked(o, button, x, y)
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -729,6 +766,7 @@ function MenuComponentManager:mouse_clicked(o, button, x, y)
 	end
 end
 
+-- Lines 706-719
 function MenuComponentManager:mouse_double_click(o, button, x, y)
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -745,6 +783,7 @@ function MenuComponentManager:mouse_double_click(o, button, x, y)
 	end
 end
 
+-- Lines 721-781
 function MenuComponentManager:mouse_released(o, button, x, y)
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
@@ -805,6 +844,7 @@ function MenuComponentManager:mouse_released(o, button, x, y)
 	return false
 end
 
+-- Lines 783-886
 function MenuComponentManager:mouse_moved(o, x, y)
 	local wanted_pointer = "arrow"
 
@@ -935,12 +975,15 @@ function MenuComponentManager:mouse_moved(o, x, y)
 	return false, wanted_pointer
 end
 
+-- Lines 888-889
 function MenuComponentManager:peer_outfit_updated(peer_id)
 end
 
+-- Lines 891-892
 function MenuComponentManager:on_peer_removed(peer, reason)
 end
 
+-- Lines 895-905
 function MenuComponentManager:_create_chat_gui()
 	if SystemInfo:platform() == Idstring("WIN32") and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
 		if self._game_chat_gui then
@@ -955,6 +998,7 @@ function MenuComponentManager:_create_chat_gui()
 	end
 end
 
+-- Lines 907-920
 function MenuComponentManager:create_chat_gui()
 	self:close_chat_gui()
 
@@ -978,6 +1022,7 @@ function MenuComponentManager:create_chat_gui()
 	self._chat_book:set_layer(tweak_data.gui.MENU_COMPONENT_LAYER)
 end
 
+-- Lines 922-945
 function MenuComponentManager:add_game_chat()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		self._game_chat_gui = ChatGui:new(self._ws)
@@ -990,6 +1035,7 @@ function MenuComponentManager:add_game_chat()
 	end
 end
 
+-- Lines 947-954
 function MenuComponentManager:set_max_lines_game_chat(max_lines)
 	if self._game_chat_gui then
 		self._game_chat_gui:set_max_lines(max_lines)
@@ -999,6 +1045,7 @@ function MenuComponentManager:set_max_lines_game_chat(max_lines)
 	end
 end
 
+-- Lines 956-964
 function MenuComponentManager:pre_set_game_chat_leftbottom(from_left, from_bottom)
 	if self._game_chat_gui then
 		self._game_chat_gui:set_leftbottom(from_left, from_bottom)
@@ -1009,6 +1056,7 @@ function MenuComponentManager:pre_set_game_chat_leftbottom(from_left, from_botto
 	end
 end
 
+-- Lines 966-975
 function MenuComponentManager:remove_game_chat()
 	if not self._chat_book then
 		return
@@ -1017,24 +1065,28 @@ function MenuComponentManager:remove_game_chat()
 	self._chat_book:remove_page("Game")
 end
 
+-- Lines 977-981
 function MenuComponentManager:hide_game_chat_gui()
 	if self._game_chat_gui then
 		self._game_chat_gui:hide()
 	end
 end
 
+-- Lines 983-987
 function MenuComponentManager:show_game_chat_gui()
 	if self._game_chat_gui then
 		self._game_chat_gui:show()
 	end
 end
 
+-- Lines 989-993
 function MenuComponentManager:_disable_chat_gui()
 	if self._game_chat_gui then
 		self._game_chat_gui:set_enabled(false)
 	end
 end
 
+-- Lines 995-1007
 function MenuComponentManager:close_chat_gui()
 	if self._game_chat_gui then
 		self._game_chat_gui:close()
@@ -1051,6 +1103,7 @@ function MenuComponentManager:close_chat_gui()
 	self._game_chat_bottom = nil
 end
 
+-- Lines 1010-1016
 function MenuComponentManager:create_lobby_profile_gui(peer_id, x, y)
 	self:close_lobby_profile_gui()
 
@@ -1065,6 +1118,7 @@ function MenuComponentManager:create_lobby_profile_gui(peer_id, x, y)
 	table.insert(self._update_components, self._lobby_profile_gui)
 end
 
+-- Lines 1018-1028
 function MenuComponentManager:close_lobby_profile_gui()
 	if self._lobby_profile_gui then
 		self:removeFromUpdateTable(self._lobby_profile_gui)
@@ -1080,6 +1134,7 @@ function MenuComponentManager:close_lobby_profile_gui()
 	end
 end
 
+-- Lines 1031-1038
 function MenuComponentManager:create_view_character_profile_gui(user, x, y)
 	self:close_view_character_profile_gui()
 
@@ -1095,6 +1150,7 @@ function MenuComponentManager:create_view_character_profile_gui(user, x, y)
 	table.insert(self._update_components, self._view_character_profile_gui)
 end
 
+-- Lines 1040-1050
 function MenuComponentManager:close_view_character_profile_gui()
 	if self._view_character_profile_gui then
 		self:removeFromUpdateTable(self._view_character_profile_gui)
@@ -1110,6 +1166,7 @@ function MenuComponentManager:close_view_character_profile_gui()
 	end
 end
 
+-- Lines 1054-1094
 function MenuComponentManager:get_texture_from_mod_type(type, sub_type, gadget, silencer, is_auto, equipped, mods, types, is_a_path)
 	local texture = nil
 
@@ -1147,16 +1204,19 @@ function MenuComponentManager:get_texture_from_mod_type(type, sub_type, gadget, 
 	return texture
 end
 
+-- Lines 1099-1103
 function MenuComponentManager:set_blackmarket_tradable_loaded(error)
 	if self._blackmarket_gui then
 		self._blackmarket_gui:set_tradable_loaded(error)
 	end
 end
 
+-- Lines 1106-1108
 function MenuComponentManager:_maximize_weapon_box(data)
 	self:remove_minimized(data.id)
 end
 
+-- Lines 1116-1154
 function MenuComponentManager:add_minimized(config)
 	self._minimized_list = self._minimized_list or {}
 	self._minimized_id = (self._minimized_id or 0) + 1
@@ -1243,6 +1303,7 @@ function MenuComponentManager:add_minimized(config)
 	return self._minimized_id
 end
 
+-- Lines 1156-1163
 function MenuComponentManager:_layout_minimized()
 	local x = 0
 
@@ -1254,6 +1315,7 @@ function MenuComponentManager:_layout_minimized()
 	end
 end
 
+-- Lines 1165-1176
 function MenuComponentManager:remove_minimized(id)
 	for i, data in ipairs(self._minimized_list) do
 		if data.id == id then
@@ -1269,6 +1331,7 @@ function MenuComponentManager:remove_minimized(id)
 	self:_layout_minimized()
 end
 
+-- Lines 1179-1196
 function MenuComponentManager:_request_done_callback(texture_ids)
 	local key = texture_ids:key()
 	local entry = self._requested_textures[key]
@@ -1290,6 +1353,7 @@ function MenuComponentManager:_request_done_callback(texture_ids)
 	end
 end
 
+-- Lines 1198-1238
 function MenuComponentManager:request_texture(texture, done_cb)
 	if self._block_texture_requests then
 		debug_pause(string.format("[MenuComponentManager:request_texture] Requesting texture is blocked! %s", texture))
@@ -1342,6 +1406,7 @@ function MenuComponentManager:request_texture(texture, done_cb)
 	return index
 end
 
+-- Lines 1240-1253
 function MenuComponentManager:unretrieve_texture(texture, index)
 	local texture_ids = Idstring(texture)
 	local key = texture_ids:key()
@@ -1358,10 +1423,12 @@ function MenuComponentManager:unretrieve_texture(texture, index)
 	end
 end
 
+-- Lines 1256-1260
 function MenuComponentManager:retrieve_texture(texture)
 	return TextureCache:retrieve(texture, "NORMAL")
 end
 
+-- Lines 1263-1317
 function MenuComponentManager:add_colors_to_text_object(text_object, ...)
 	local text = text_object:text()
 	local unchanged_text = text
@@ -1418,11 +1485,13 @@ end
 
 MenuComponentPostEventInstance = MenuComponentPostEventInstance or class()
 
+-- Lines 1320-1323
 function MenuComponentPostEventInstance:init(sound_source)
 	self._sound_source = sound_source
 	self._post_event = false
 end
 
+-- Lines 1325-1334
 function MenuComponentPostEventInstance:post_event(event)
 	if alive(self._post_event) then
 		self._post_event:stop()
@@ -1435,6 +1504,7 @@ function MenuComponentPostEventInstance:post_event(event)
 	end
 end
 
+-- Lines 1336-1341
 function MenuComponentPostEventInstance:stop_event()
 	if alive(self._post_event) then
 		self._post_event:stop()
@@ -1443,6 +1513,7 @@ function MenuComponentPostEventInstance:stop_event()
 	self._post_event = false
 end
 
+-- Lines 1343-1348
 function MenuComponentManager:new_post_event_instance()
 	local event_instance = MenuComponentPostEventInstance:new(self._sound_source)
 	self._unique_event_instances = self._unique_event_instances or {}
@@ -1452,6 +1523,7 @@ function MenuComponentManager:new_post_event_instance()
 	return event_instance
 end
 
+-- Lines 1350-1361
 function MenuComponentManager:post_event(event, unique)
 	if alive(self._post_event) then
 		self._post_event:stop()
@@ -1468,6 +1540,7 @@ function MenuComponentManager:post_event(event, unique)
 	return post_event
 end
 
+-- Lines 1363-1369
 function MenuComponentManager:stop_event()
 	print("MenuComponentManager:stop_event()")
 
@@ -1478,6 +1551,7 @@ function MenuComponentManager:stop_event()
 	end
 end
 
+-- Lines 1371-1414
 function MenuComponentManager:close()
 	print("[MenuComponentManager:close]")
 	self:close_chat_gui()
@@ -1498,6 +1572,7 @@ function MenuComponentManager:close()
 	self._block_texture_requests = true
 end
 
+-- Lines 1416-1441
 function MenuComponentManager:play_transition(run_in_pause)
 	if self._transition_panel then
 		self._transition_panel:parent():remove(self._transition_panel)
@@ -1515,6 +1590,7 @@ function MenuComponentManager:play_transition(run_in_pause)
 		color = Color.black
 	})
 
+	-- Lines 1423-1439
 	local function animate_transition(o)
 		local fade1 = o:child("fade1")
 		local seconds = 0.5
@@ -1538,6 +1614,7 @@ function MenuComponentManager:play_transition(run_in_pause)
 	self._transition_panel:animate(animate_transition)
 end
 
+-- Lines 1443-1518
 function MenuComponentManager:test_camera_shutter_tech()
 	if not self._tcst then
 		self._tcst = managers.gui_data:create_fullscreen_16_9_workspace()
@@ -1552,6 +1629,7 @@ function MenuComponentManager:test_camera_shutter_tech()
 			color = Color.black
 		})
 
+		-- Lines 1453-1457
 		local function one_frame_hide(o)
 			o:hide()
 			coroutine.yield()
@@ -1563,6 +1641,7 @@ function MenuComponentManager:test_camera_shutter_tech()
 
 	local o = self._tcst:panel():children()[1]
 
+	-- Lines 1498-1514
 	local function animate_fade(o)
 		local black = o:child("black")
 
@@ -1575,6 +1654,7 @@ function MenuComponentManager:test_camera_shutter_tech()
 	o:animate(animate_fade)
 end
 
+-- Lines 1521-1541
 function MenuComponentManager:create_test_gui()
 	if alive(Global.test_gui) then
 		Overlay:gui():destroy_workspace(Global.test_gui)
@@ -1607,6 +1687,7 @@ function MenuComponentManager:create_test_gui()
 	end
 end
 
+-- Lines 1543-1548
 function MenuComponentManager:destroy_test_gui()
 	if alive(Global.test_gui) then
 		Overlay:gui():destroy_workspace(Global.test_gui)
@@ -1615,6 +1696,7 @@ function MenuComponentManager:destroy_test_gui()
 	end
 end
 
+-- Lines 1551-1565
 function MenuComponentManager:close_raid_menu_test_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1632,10 +1714,12 @@ function MenuComponentManager:close_raid_menu_test_gui(node, component)
 	end
 end
 
+-- Lines 1569-1571
 function MenuComponentManager:create_raid_menu_mission_selection_gui(node, component)
 	return self:_create_raid_menu_mission_selection_gui(node, component)
 end
 
+-- Lines 1573-1597
 function MenuComponentManager:_create_raid_menu_mission_selection_gui(node, component)
 	self:close_raid_menu_mission_selection_gui(node, component)
 
@@ -1663,6 +1747,7 @@ function MenuComponentManager:_create_raid_menu_mission_selection_gui(node, comp
 	return self._raid_menu_mission_selection_gui
 end
 
+-- Lines 1599-1614
 function MenuComponentManager:close_raid_menu_mission_selection_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1681,10 +1766,12 @@ function MenuComponentManager:close_raid_menu_mission_selection_gui(node, compon
 	end
 end
 
+-- Lines 1619-1621
 function MenuComponentManager:create_raid_menu_mission_unlock_gui(node, component)
 	return self:_create_raid_menu_mission_unlock_gui(node, component)
 end
 
+-- Lines 1623-1647
 function MenuComponentManager:_create_raid_menu_mission_unlock_gui(node, component)
 	self:close_raid_menu_mission_unlock_gui(node, component)
 
@@ -1712,6 +1799,7 @@ function MenuComponentManager:_create_raid_menu_mission_unlock_gui(node, compone
 	return self._raid_menu_mission_unlock_gui
 end
 
+-- Lines 1649-1664
 function MenuComponentManager:close_raid_menu_mission_unlock_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1730,10 +1818,12 @@ function MenuComponentManager:close_raid_menu_mission_unlock_gui(node, component
 	end
 end
 
+-- Lines 1670-1672
 function MenuComponentManager:create_raid_menu_mission_join_gui(node, component)
 	return self:_create_raid_menu_mission_join_gui(node, component)
 end
 
+-- Lines 1674-1694
 function MenuComponentManager:_create_raid_menu_mission_join_gui(node, component)
 	self:close_raid_menu_mission_join_gui(node, component)
 
@@ -1759,6 +1849,7 @@ function MenuComponentManager:_create_raid_menu_mission_join_gui(node, component
 	return self._raid_menu_mission_join_gui
 end
 
+-- Lines 1696-1711
 function MenuComponentManager:close_raid_menu_mission_join_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1777,10 +1868,12 @@ function MenuComponentManager:close_raid_menu_mission_join_gui(node, component)
 	end
 end
 
+-- Lines 1715-1717
 function MenuComponentManager:create_raid_menu_weapon_select_gui(node, component)
 	return self:_create_raid_menu_weapon_select_gui(node, component)
 end
 
+-- Lines 1719-1741
 function MenuComponentManager:_create_raid_menu_weapon_select_gui(node, component)
 	self:close_raid_menu_weapon_select_gui(node, component)
 
@@ -1806,6 +1899,7 @@ function MenuComponentManager:_create_raid_menu_weapon_select_gui(node, componen
 	return self._raid_menu_weapon_select_gui
 end
 
+-- Lines 1743-1757
 function MenuComponentManager:close_raid_menu_weapon_select_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1823,10 +1917,12 @@ function MenuComponentManager:close_raid_menu_weapon_select_gui(node, component)
 	end
 end
 
+-- Lines 1761-1763
 function MenuComponentManager:create_raid_menu_main_menu_gui(node, component)
 	return self:_create_raid_menu_main_menu_gui(node, component)
 end
 
+-- Lines 1765-1784
 function MenuComponentManager:_create_raid_menu_main_menu_gui(node, component)
 	self:close_raid_menu_main_menu_gui(node, component)
 
@@ -1850,6 +1946,7 @@ function MenuComponentManager:_create_raid_menu_main_menu_gui(node, component)
 	return self._raid_menu_main_menu_gui
 end
 
+-- Lines 1786-1800
 function MenuComponentManager:close_raid_menu_main_menu_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1867,10 +1964,12 @@ function MenuComponentManager:close_raid_menu_main_menu_gui(node, component)
 	end
 end
 
+-- Lines 1804-1806
 function MenuComponentManager:create_raid_menu_select_character_profile_gui(node, component)
 	return self:_create_raid_menu_select_character_profile_gui(node, component)
 end
 
+-- Lines 1808-1829
 function MenuComponentManager:_create_raid_menu_select_character_profile_gui(node, component)
 	self:close_raid_menu_select_character_profile_gui(node, component)
 
@@ -1896,6 +1995,7 @@ function MenuComponentManager:_create_raid_menu_select_character_profile_gui(nod
 	return self._raid_menu_select_character_profile_gui
 end
 
+-- Lines 1831-1846
 function MenuComponentManager:close_raid_menu_select_character_profile_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1914,10 +2014,12 @@ function MenuComponentManager:close_raid_menu_select_character_profile_gui(node,
 	end
 end
 
+-- Lines 1850-1852
 function MenuComponentManager:create_raid_menu_create_character_profile_gui(node, component)
 	return self:_create_raid_menu_create_character_profile_gui(node, component)
 end
 
+-- Lines 1854-1875
 function MenuComponentManager:_create_raid_menu_create_character_profile_gui(node, component)
 	self:close_raid_menu_create_character_profile_gui(node, component)
 
@@ -1943,6 +2045,7 @@ function MenuComponentManager:_create_raid_menu_create_character_profile_gui(nod
 	return self._raid_menu_create_character_profile_gui
 end
 
+-- Lines 1877-1892
 function MenuComponentManager:close_raid_menu_create_character_profile_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -1961,10 +2064,12 @@ function MenuComponentManager:close_raid_menu_create_character_profile_gui(node,
 	end
 end
 
+-- Lines 1896-1898
 function MenuComponentManager:create_raid_menu_character_customization_gui(node, component)
 	return self:_create_raid_menu_character_customization_gui(node, component)
 end
 
+-- Lines 1900-1923
 function MenuComponentManager:_create_raid_menu_character_customization_gui(node, component)
 	self:close_raid_menu_character_customization_gui(node, component)
 
@@ -1990,6 +2095,7 @@ function MenuComponentManager:_create_raid_menu_character_customization_gui(node
 	return self._raid_menu_character_customization_gui
 end
 
+-- Lines 1925-1939
 function MenuComponentManager:close_raid_menu_character_customization_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2007,10 +2113,12 @@ function MenuComponentManager:close_raid_menu_character_customization_gui(node, 
 	end
 end
 
+-- Lines 1943-1945
 function MenuComponentManager:create_raid_menu_gold_asset_store_gui(node, component)
 	return self:_create_raid_menu_gold_asset_store_gui(node, component)
 end
 
+-- Lines 1947-1971
 function MenuComponentManager:_create_raid_menu_gold_asset_store_gui(node, component)
 	self:close_raid_menu_gold_asset_store_gui(node, component)
 
@@ -2038,6 +2146,7 @@ function MenuComponentManager:_create_raid_menu_gold_asset_store_gui(node, compo
 	return self._raid_menu_gold_asset_store_gui
 end
 
+-- Lines 1973-1988
 function MenuComponentManager:close_raid_menu_gold_asset_store_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2056,10 +2165,12 @@ function MenuComponentManager:close_raid_menu_gold_asset_store_gui(node, compone
 	end
 end
 
+-- Lines 1992-1994
 function MenuComponentManager:create_raid_menu_intel_gui(node, component)
 	return self:_create_raid_menu_intel_gui(node, component)
 end
 
+-- Lines 1996-2020
 function MenuComponentManager:_create_raid_menu_intel_gui(node, component)
 	self:close_raid_menu_intel_gui(node, component)
 
@@ -2087,6 +2198,7 @@ function MenuComponentManager:_create_raid_menu_intel_gui(node, component)
 	return self._raid_menu_intel_gui
 end
 
+-- Lines 2022-2037
 function MenuComponentManager:close_raid_menu_intel_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2105,10 +2217,12 @@ function MenuComponentManager:close_raid_menu_intel_gui(node, component)
 	end
 end
 
+-- Lines 2041-2043
 function MenuComponentManager:create_raid_menu_comic_book_gui(node, component)
 	return self:_create_raid_menu_comic_book_gui(node, component)
 end
 
+-- Lines 2045-2066
 function MenuComponentManager:_create_raid_menu_comic_book_gui(node, component)
 	self:close_raid_menu_comic_book_gui(node, component)
 
@@ -2132,6 +2246,7 @@ function MenuComponentManager:_create_raid_menu_comic_book_gui(node, component)
 	return self._raid_menu_comic_book_gui
 end
 
+-- Lines 2068-2082
 function MenuComponentManager:close_raid_menu_comic_book_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2149,10 +2264,12 @@ function MenuComponentManager:close_raid_menu_comic_book_gui(node, component)
 	end
 end
 
+-- Lines 2086-2088
 function MenuComponentManager:create_raid_menu_header_gui(node, component)
 	return self:_create_raid_menu_header_gui(node, component)
 end
 
+-- Lines 2090-2100
 function MenuComponentManager:_create_raid_menu_header_gui(node, component)
 	self:close_raid_menu_header_gui()
 
@@ -2166,6 +2283,7 @@ function MenuComponentManager:_create_raid_menu_header_gui(node, component)
 	return self._raid_menu_header_gui
 end
 
+-- Lines 2102-2112
 function MenuComponentManager:close_raid_menu_header_gui()
 	if self._raid_menu_header_gui then
 		self._raid_menu_header_gui:close()
@@ -2179,10 +2297,12 @@ function MenuComponentManager:close_raid_menu_header_gui()
 	end
 end
 
+-- Lines 2116-2118
 function MenuComponentManager:create_raid_menu_footer_gui(node, component)
 	return self:_create_raid_menu_footer_gui(node, component)
 end
 
+-- Lines 2120-2130
 function MenuComponentManager:_create_raid_menu_footer_gui(node, component)
 	self:close_raid_menu_footer_gui(node, component)
 
@@ -2196,6 +2316,7 @@ function MenuComponentManager:_create_raid_menu_footer_gui(node, component)
 	return self._raid_menu_footer_gui
 end
 
+-- Lines 2132-2142
 function MenuComponentManager:close_raid_menu_footer_gui(node, component)
 	if self._raid_menu_footer_gui then
 		self._raid_menu_footer_gui:close()
@@ -2209,10 +2330,12 @@ function MenuComponentManager:close_raid_menu_footer_gui(node, component)
 	end
 end
 
+-- Lines 2146-2148
 function MenuComponentManager:create_raid_menu_left_options_gui(node, component)
 	return self:_create_raid_menu_left_options_gui(node, component)
 end
 
+-- Lines 2150-2170
 function MenuComponentManager:_create_raid_menu_left_options_gui(node, component)
 	self:close_raid_menu_left_options_gui(node, component)
 
@@ -2236,6 +2359,7 @@ function MenuComponentManager:_create_raid_menu_left_options_gui(node, component
 	return self._raid_menu_left_options_gui
 end
 
+-- Lines 2172-2186
 function MenuComponentManager:close_raid_menu_left_options_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2253,10 +2377,12 @@ function MenuComponentManager:close_raid_menu_left_options_gui(node, component)
 	end
 end
 
+-- Lines 2190-2192
 function MenuComponentManager:create_raid_options_background_gui(node, component)
 	return self:_create_raid_options_background_gui(node, component)
 end
 
+-- Lines 2194-2214
 function MenuComponentManager:_create_raid_options_background_gui(node, component)
 	self:close_raid_options_background_gui(node, component)
 
@@ -2280,6 +2406,7 @@ function MenuComponentManager:_create_raid_options_background_gui(node, componen
 	return self._raid_options_background_gui
 end
 
+-- Lines 2216-2230
 function MenuComponentManager:close_raid_options_background_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2297,10 +2424,12 @@ function MenuComponentManager:close_raid_options_background_gui(node, component)
 	end
 end
 
+-- Lines 2279-2281
 function MenuComponentManager:create_raid_menu_options_controls_gui(node, component)
 	return self:_create_raid_menu_options_controls_gui(node, component)
 end
 
+-- Lines 2283-2303
 function MenuComponentManager:_create_raid_menu_options_controls_gui(node, component)
 	self:close_raid_menu_options_controls_gui(node, component)
 
@@ -2324,6 +2453,7 @@ function MenuComponentManager:_create_raid_menu_options_controls_gui(node, compo
 	return self._raid_options_controls_gui
 end
 
+-- Lines 2305-2320
 function MenuComponentManager:close_raid_menu_options_controls_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2341,10 +2471,12 @@ function MenuComponentManager:close_raid_menu_options_controls_gui(node, compone
 	end
 end
 
+-- Lines 2323-2325
 function MenuComponentManager:create_raid_menu_options_controls_keybinds_gui(node, component)
 	return self:_create_raid_menu_options_controls_keybinds_gui(node, component)
 end
 
+-- Lines 2327-2347
 function MenuComponentManager:_create_raid_menu_options_controls_keybinds_gui(node, component)
 	self:close_raid_menu_options_controls_keybinds_gui(node, component)
 
@@ -2368,6 +2500,7 @@ function MenuComponentManager:_create_raid_menu_options_controls_keybinds_gui(no
 	return self._raid_options_controls_keybinds_gui
 end
 
+-- Lines 2349-2363
 function MenuComponentManager:close_raid_menu_options_controls_keybinds_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2385,10 +2518,12 @@ function MenuComponentManager:close_raid_menu_options_controls_keybinds_gui(node
 	end
 end
 
+-- Lines 2367-2369
 function MenuComponentManager:create_raid_menu_options_controller_mapping_gui(node, component)
 	return self:_create_raid_menu_options_controller_mapping_gui(node, component)
 end
 
+-- Lines 2371-2391
 function MenuComponentManager:_create_raid_menu_options_controller_mapping_gui(node, component)
 	self:close_raid_menu_options_controller_mapping_gui(node, component)
 
@@ -2412,6 +2547,7 @@ function MenuComponentManager:_create_raid_menu_options_controller_mapping_gui(n
 	return self._raid_menu_options_controller_mapping_gui
 end
 
+-- Lines 2393-2407
 function MenuComponentManager:close_raid_menu_options_controller_mapping_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2429,10 +2565,12 @@ function MenuComponentManager:close_raid_menu_options_controller_mapping_gui(nod
 	end
 end
 
+-- Lines 2411-2413
 function MenuComponentManager:create_raid_menu_options_sound_gui(node, component)
 	return self:_create_raid_menu_options_sound_gui(node, component)
 end
 
+-- Lines 2415-2435
 function MenuComponentManager:_create_raid_menu_options_sound_gui(node, component)
 	self:close_raid_menu_options_sound_gui(node, component)
 
@@ -2456,6 +2594,7 @@ function MenuComponentManager:_create_raid_menu_options_sound_gui(node, componen
 	return self._raid_options_sound_gui
 end
 
+-- Lines 2437-2451
 function MenuComponentManager:close_raid_menu_options_sound_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2473,10 +2612,12 @@ function MenuComponentManager:close_raid_menu_options_sound_gui(node, component)
 	end
 end
 
+-- Lines 2454-2456
 function MenuComponentManager:create_raid_menu_options_network_gui(node, component)
 	return self:_create_raid_menu_options_network_gui(node, component)
 end
 
+-- Lines 2458-2478
 function MenuComponentManager:_create_raid_menu_options_network_gui(node, component)
 	self:close_raid_menu_options_network_gui(node, component)
 
@@ -2500,6 +2641,7 @@ function MenuComponentManager:_create_raid_menu_options_network_gui(node, compon
 	return self._raid_options_network_gui
 end
 
+-- Lines 2480-2494
 function MenuComponentManager:close_raid_menu_options_network_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2517,10 +2659,12 @@ function MenuComponentManager:close_raid_menu_options_network_gui(node, componen
 	end
 end
 
+-- Lines 2497-2499
 function MenuComponentManager:create_raid_menu_options_video_gui(node, component)
 	return self:_create_raid_menu_options_video_gui(node, component)
 end
 
+-- Lines 2501-2521
 function MenuComponentManager:_create_raid_menu_options_video_gui(node, component)
 	self:close_raid_menu_options_video_gui(node, component)
 
@@ -2544,6 +2688,7 @@ function MenuComponentManager:_create_raid_menu_options_video_gui(node, componen
 	return self._raid_options_video_gui
 end
 
+-- Lines 2523-2537
 function MenuComponentManager:close_raid_menu_options_video_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2561,10 +2706,12 @@ function MenuComponentManager:close_raid_menu_options_video_gui(node, component)
 	end
 end
 
+-- Lines 2540-2542
 function MenuComponentManager:create_raid_menu_options_video_advanced_gui(node, component)
 	return self:_create_raid_menu_options_video_advanced_gui(node, component)
 end
 
+-- Lines 2544-2564
 function MenuComponentManager:_create_raid_menu_options_video_advanced_gui(node, component)
 	self:close_raid_menu_options_video_advanced_gui(node, component)
 
@@ -2588,6 +2735,7 @@ function MenuComponentManager:_create_raid_menu_options_video_advanced_gui(node,
 	return self._raid_options_video_advanced_gui
 end
 
+-- Lines 2566-2580
 function MenuComponentManager:close_raid_menu_options_video_advanced_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2605,6 +2753,7 @@ function MenuComponentManager:close_raid_menu_options_video_advanced_gui(node, c
 	end
 end
 
+-- Lines 2584-2610
 function MenuComponentManager:create_raid_ready_up_gui(node, component)
 	self:close_raid_ready_up_gui(node, component)
 
@@ -2620,6 +2769,7 @@ function MenuComponentManager:create_raid_ready_up_gui(node, component)
 	return self._raid_ready_up_gui
 end
 
+-- Lines 2612-2622
 function MenuComponentManager:close_raid_ready_up_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2633,10 +2783,12 @@ function MenuComponentManager:close_raid_ready_up_gui(node, component)
 	end
 end
 
+-- Lines 2626-2628
 function MenuComponentManager:create_raid_challenge_cards_gui(node, component)
 	return self:_create_raid_challenge_cards_gui(node, component)
 end
 
+-- Lines 2630-2654
 function MenuComponentManager:_create_raid_challenge_cards_gui(node, component)
 	self:close_raid_challenge_cards_gui(node, component)
 
@@ -2664,6 +2816,7 @@ function MenuComponentManager:_create_raid_challenge_cards_gui(node, component)
 	return self._raid_challenge_cards_gui
 end
 
+-- Lines 2656-2666
 function MenuComponentManager:close_raid_challenge_cards_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2677,10 +2830,12 @@ function MenuComponentManager:close_raid_challenge_cards_gui(node, component)
 	end
 end
 
+-- Lines 2670-2672
 function MenuComponentManager:create_raid_challenge_cards_view_gui(node, component)
 	return self:_create_raid_challenge_cards_view_gui(node, component)
 end
 
+-- Lines 2674-2694
 function MenuComponentManager:_create_raid_challenge_cards_view_gui(node, component)
 	self:close_raid_challenge_cards_view_gui(node, component)
 
@@ -2704,6 +2859,7 @@ function MenuComponentManager:_create_raid_challenge_cards_view_gui(node, compon
 	return self._raid_challenge_cards_view_gui
 end
 
+-- Lines 2696-2710
 function MenuComponentManager:close_raid_challenge_cards_view_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2721,10 +2877,12 @@ function MenuComponentManager:close_raid_challenge_cards_view_gui(node, componen
 	end
 end
 
+-- Lines 2714-2716
 function MenuComponentManager:create_raid_challenge_cards_loot_reward_gui(node, component)
 	return self:_create_raid_challenge_cards_loot_reward_gui(node, component)
 end
 
+-- Lines 2718-2739
 function MenuComponentManager:_create_raid_challenge_cards_loot_reward_gui(node, component)
 	self:close_raid_challenge_cards_loot_reward_gui(node, component)
 
@@ -2750,6 +2908,7 @@ function MenuComponentManager:_create_raid_challenge_cards_loot_reward_gui(node,
 	return self._raid_challenge_cards_loot_reward_gui
 end
 
+-- Lines 2741-2756
 function MenuComponentManager:close_raid_challenge_cards_loot_reward_gui(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2768,10 +2927,12 @@ function MenuComponentManager:close_raid_challenge_cards_loot_reward_gui(node, c
 	end
 end
 
+-- Lines 2760-2762
 function MenuComponentManager:create_raid_menu_xp(node, component)
 	return self:_create_raid_menu_xp(node, component)
 end
 
+-- Lines 2764-2784
 function MenuComponentManager:_create_raid_menu_xp(node, component)
 	self:close_raid_menu_xp(node, component)
 
@@ -2795,6 +2956,7 @@ function MenuComponentManager:_create_raid_menu_xp(node, component)
 	return self._raid_menu_xp_gui
 end
 
+-- Lines 2786-2800
 function MenuComponentManager:close_raid_menu_xp(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2812,10 +2974,12 @@ function MenuComponentManager:close_raid_menu_xp(node, component)
 	end
 end
 
+-- Lines 2805-2807
 function MenuComponentManager:create_raid_menu_post_game_breakdown(node, component)
 	return self:_create_raid_menu_post_game_breakdown(node, component)
 end
 
+-- Lines 2809-2829
 function MenuComponentManager:_create_raid_menu_post_game_breakdown(node, component)
 	self:close_raid_menu_post_game_breakdown(node, component)
 
@@ -2839,6 +3003,7 @@ function MenuComponentManager:_create_raid_menu_post_game_breakdown(node, compon
 	return self._raid_menu_post_game_breakdown_gui
 end
 
+-- Lines 2831-2845
 function MenuComponentManager:close_raid_menu_post_game_breakdown(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2856,10 +3021,12 @@ function MenuComponentManager:close_raid_menu_post_game_breakdown(node, componen
 	end
 end
 
+-- Lines 2851-2853
 function MenuComponentManager:create_raid_menu_special_honors(node, component)
 	return self:_create_raid_menu_special_honors(node, component)
 end
 
+-- Lines 2855-2875
 function MenuComponentManager:_create_raid_menu_special_honors(node, component)
 	self:close_raid_menu_special_honors(node, component)
 
@@ -2883,6 +3050,7 @@ function MenuComponentManager:_create_raid_menu_special_honors(node, component)
 	return self._raid_menu_special_honors_gui
 end
 
+-- Lines 2877-2891
 function MenuComponentManager:close_raid_menu_special_honors(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2900,10 +3068,12 @@ function MenuComponentManager:close_raid_menu_special_honors(node, component)
 	end
 end
 
+-- Lines 2898-2900
 function MenuComponentManager:create_raid_menu_loot(node, component)
 	return self:_create_raid_menu_loot(node, component)
 end
 
+-- Lines 2902-2922
 function MenuComponentManager:_create_raid_menu_loot(node, component)
 	self:close_raid_menu_loot(node, component)
 
@@ -2927,6 +3097,7 @@ function MenuComponentManager:_create_raid_menu_loot(node, component)
 	return self._raid_menu_loot_gui
 end
 
+-- Lines 2924-2938
 function MenuComponentManager:close_raid_menu_loot(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2944,10 +3115,12 @@ function MenuComponentManager:close_raid_menu_loot(node, component)
 	end
 end
 
+-- Lines 2945-2947
 function MenuComponentManager:create_raid_menu_greed_loot(node, component)
 	return self:_create_raid_menu_greed_loot(node, component)
 end
 
+-- Lines 2949-2969
 function MenuComponentManager:_create_raid_menu_greed_loot(node, component)
 	self:close_raid_menu_loot(node, component)
 
@@ -2971,6 +3144,7 @@ function MenuComponentManager:_create_raid_menu_greed_loot(node, component)
 	return self._raid_menu_greed_loot_gui
 end
 
+-- Lines 2971-2985
 function MenuComponentManager:close_raid_menu_greed_loot(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -2988,10 +3162,12 @@ function MenuComponentManager:close_raid_menu_greed_loot(node, component)
 	end
 end
 
+-- Lines 2992-2994
 function MenuComponentManager:create_raid_menu_credits(node, component)
 	return self:_create_raid_menu_credits(node, component)
 end
 
+-- Lines 2996-3012
 function MenuComponentManager:_create_raid_menu_credits(node, component)
 	self:close_raid_menu_credits(node, component)
 
@@ -3008,6 +3184,7 @@ function MenuComponentManager:_create_raid_menu_credits(node, component)
 	return self._raid_menu_credits_gui
 end
 
+-- Lines 3014-3029
 function MenuComponentManager:close_raid_menu_credits(node, component)
 	if component then
 		self._active_controls[component] = {}
@@ -3026,6 +3203,7 @@ function MenuComponentManager:close_raid_menu_credits(node, component)
 	end
 end
 
+-- Lines 3033-3054
 function MenuComponentManager:_collect_controls(controls_list, final_list)
 	if controls_list._controls then
 		for _, control in ipairs(controls_list._controls) do
@@ -3048,6 +3226,7 @@ function MenuComponentManager:_collect_controls(controls_list, final_list)
 	end
 end
 
+-- Lines 3056-3076
 function MenuComponentManager:gather_controls_for_component(component_name)
 	if component_name then
 		self._active_controls[component_name] = {}
@@ -3062,6 +3241,7 @@ function MenuComponentManager:gather_controls_for_component(component_name)
 	end
 end
 
+-- Lines 3078-3091
 function MenuComponentManager:debug_controls()
 	local component_controls = self._active_controls
 
@@ -3078,6 +3258,7 @@ function MenuComponentManager:debug_controls()
 	end
 end
 
+-- Lines 3094-3100
 function MenuComponentManager:removeFromUpdateTable(unit)
 	for i = 1, #self._update_components do
 		if self._update_components[i] == unit then

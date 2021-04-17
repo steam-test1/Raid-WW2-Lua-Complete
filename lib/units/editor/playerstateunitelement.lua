@@ -1,5 +1,6 @@
 PlayerStateUnitElement = PlayerStateUnitElement or class(MissionElement)
 
+-- Lines 3-11
 function PlayerStateUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -10,6 +11,7 @@ function PlayerStateUnitElement:init(unit)
 	table.insert(self._save_values, "use_instigator")
 end
 
+-- Lines 13-25
 function PlayerStateUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

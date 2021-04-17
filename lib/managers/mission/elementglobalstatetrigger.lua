@@ -1,14 +1,17 @@
 ElementGlobalStateTrigger = ElementGlobalStateTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 3-6
 function ElementGlobalStateTrigger:init(...)
 	ElementGlobalStateTrigger.super.init(self, ...)
 	managers.global_state:register_trigger(self, self._values.flag)
 end
 
+-- Lines 8-10
 function ElementGlobalStateTrigger:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 12-32
 function ElementGlobalStateTrigger:execute(flag, state, event)
 	if not self._values.enabled then
 		return
@@ -29,6 +32,7 @@ function ElementGlobalStateTrigger:execute(flag, state, event)
 	end
 end
 
+-- Lines 34-40
 function ElementGlobalStateTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -37,10 +41,12 @@ function ElementGlobalStateTrigger:on_executed(instigator)
 	ElementGlobalStateTrigger.super.on_executed(self, instigator)
 end
 
+-- Lines 42-44
 function ElementGlobalStateTrigger:destroy()
 	managers.global_state:unregister_trigger(self, self._values.flag)
 end
 
+-- Lines 46-48
 function ElementGlobalStateTrigger:unregister()
 	managers.global_state:unregister_trigger(self, self._values.flag)
 end

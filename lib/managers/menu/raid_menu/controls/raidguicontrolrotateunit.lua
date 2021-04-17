@@ -1,5 +1,6 @@
 RaidGUIControlRotateUnit = RaidGUIControlRotateUnit or class(RaidGUIControl)
 
+-- Lines 3-14
 function RaidGUIControlRotateUnit:init(parent, params)
 	RaidGUIControlRotateUnit.super.init(self, parent, params)
 
@@ -11,6 +12,7 @@ function RaidGUIControlRotateUnit:init(parent, params)
 	table.insert(managers.menu_component._update_components, self)
 end
 
+-- Lines 17-31
 function RaidGUIControlRotateUnit:set_unit(unit, position, initial_angle, center_offset, screen_adjust_offset)
 	self._unit = unit
 
@@ -29,10 +31,12 @@ function RaidGUIControlRotateUnit:set_unit(unit, position, initial_angle, center
 	self:_rotate_unit_by(0)
 end
 
+-- Lines 34-36
 function RaidGUIControlRotateUnit:mouse_moved(o, x, y)
 	RaidGUIControlRotateUnit.super.mouse_moved(self, o, x, y)
 end
 
+-- Lines 39-63
 function RaidGUIControlRotateUnit:on_mouse_moved(o, x, y)
 	if not self._dragging or not self._unit or not alive(self._unit) then
 		return
@@ -62,6 +66,7 @@ function RaidGUIControlRotateUnit:on_mouse_moved(o, x, y)
 	end
 end
 
+-- Lines 66-85
 function RaidGUIControlRotateUnit:_rotate_unit_by(yaw_delta)
 	if not self._unit or not alive(self._unit) then
 		return
@@ -78,18 +83,21 @@ function RaidGUIControlRotateUnit:_rotate_unit_by(yaw_delta)
 	self:_place_unit(self._original_position - rotated_offset + self._unit_screen_adjust_offset, rot_out)
 end
 
+-- Lines 87-91
 function RaidGUIControlRotateUnit:current_position()
 	if self._unit then
 		return self._unit:position()
 	end
 end
 
+-- Lines 93-97
 function RaidGUIControlRotateUnit:current_rotation()
 	if self._unit then
 		return self._unit:rotation()
 	end
 end
 
+-- Lines 99-105
 function RaidGUIControlRotateUnit:set_position(position)
 	if not self._unit then
 		return
@@ -98,6 +106,7 @@ function RaidGUIControlRotateUnit:set_position(position)
 	self:_place_unit(position, self._unit:rotation())
 end
 
+-- Lines 107-113
 function RaidGUIControlRotateUnit:set_rotation(rotation)
 	if not self._unit then
 		return
@@ -106,6 +115,7 @@ function RaidGUIControlRotateUnit:set_rotation(rotation)
 	self:_place_unit(self._unit:position(), rotation)
 end
 
+-- Lines 115-121
 function RaidGUIControlRotateUnit:update(t, dt)
 	local menu_controller = managers.menu:get_controller()
 
@@ -114,12 +124,14 @@ function RaidGUIControlRotateUnit:update(t, dt)
 	end
 end
 
+-- Lines 123-128
 function RaidGUIControlRotateUnit:_place_unit(position, rotation)
 	self._unit:set_position(position)
 	self._unit:set_rotation(rotation)
 	self._unit:set_moving(2)
 end
 
+-- Lines 130-136
 function RaidGUIControlRotateUnit:on_mouse_over(x, y)
 	RaidGUIControlRotateUnit.super.on_mouse_over(self, x, y)
 
@@ -128,11 +140,13 @@ function RaidGUIControlRotateUnit:on_mouse_over(x, y)
 	end
 end
 
+-- Lines 138-141
 function RaidGUIControlRotateUnit:on_mouse_out()
 	self._pointer_type = "link"
 	self._dragging = false
 end
 
+-- Lines 144-154
 function RaidGUIControlRotateUnit:on_mouse_pressed()
 	self._old_active_control = managers.raid_menu:get_active_control()
 
@@ -147,6 +161,7 @@ function RaidGUIControlRotateUnit:on_mouse_pressed()
 	end
 end
 
+-- Lines 157-164
 function RaidGUIControlRotateUnit:on_mouse_released()
 	managers.raid_menu:set_active_control(self._old_active_control)
 

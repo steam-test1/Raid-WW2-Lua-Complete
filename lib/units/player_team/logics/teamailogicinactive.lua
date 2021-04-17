@@ -1,5 +1,6 @@
 TeamAILogicInactive = class(TeamAILogicBase)
 
+-- Lines 7-24
 function TeamAILogicInactive.enter(data, new_logic_name, enter_params)
 	local my_data = {}
 
@@ -19,6 +20,7 @@ function TeamAILogicInactive.enter(data, new_logic_name, enter_params)
 	end
 end
 
+-- Lines 28-35
 function TeamAILogicInactive.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
@@ -28,6 +30,7 @@ function TeamAILogicInactive.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.cancel_delayed_clbks(my_data)
 end
 
+-- Lines 39-41
 function TeamAILogicInactive.is_available_for_assignment(data)
 	return false
 end

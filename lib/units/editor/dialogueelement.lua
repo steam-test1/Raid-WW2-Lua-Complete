@@ -2,6 +2,7 @@ DialogueUnitElement = DialogueUnitElement or class(MissionElement)
 DialogueUnitElement.SAVE_UNIT_POSITION = false
 DialogueUnitElement.SAVE_UNIT_ROTATION = false
 
+-- Lines 5-19
 function DialogueUnitElement:init(unit)
 	DialogueUnitElement.super.init(self, unit)
 
@@ -17,6 +18,7 @@ function DialogueUnitElement:init(unit)
 	table.insert(self._save_values, "use_instigator")
 end
 
+-- Lines 21-26
 function DialogueUnitElement:new_save_values(...)
 	local t = DialogueUnitElement.super.new_save_values(self, ...)
 	t.position = self._hed.use_position and self._unit:position() or nil
@@ -24,6 +26,7 @@ function DialogueUnitElement:new_save_values(...)
 	return t
 end
 
+-- Lines 28-36
 function DialogueUnitElement:test_element()
 	if self._hed.dialogue == "none" then
 		return
@@ -38,12 +41,14 @@ function DialogueUnitElement:test_element()
 	managers.editor:set_listener_enabled(true)
 end
 
+-- Lines 38-42
 function DialogueUnitElement:stop_test_element()
 	managers.dialog:quit_dialog()
 	managers.editor:set_wanted_mute(true)
 	managers.editor:set_listener_enabled(false)
 end
 
+-- Lines 44-56
 function DialogueUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

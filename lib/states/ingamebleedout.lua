@@ -2,10 +2,12 @@ require("lib/states/GameState")
 
 IngameBleedOutState = IngameBleedOutState or class(IngamePlayerBaseState)
 
+-- Lines 5-7
 function IngameBleedOutState:init(game_state_machine)
 	IngameBleedOutState.super.init(self, "ingame_bleed_out", game_state_machine)
 end
 
+-- Lines 9-30
 function IngameBleedOutState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -28,6 +30,7 @@ function IngameBleedOutState:update(t, dt)
 	end
 end
 
+-- Lines 32-63
 function IngameBleedOutState:at_enter()
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE) then
 		managers.player:kill()
@@ -66,6 +69,7 @@ function IngameBleedOutState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 65-73
 function IngameBleedOutState:at_exit()
 	local player = managers.player:player_unit()
 

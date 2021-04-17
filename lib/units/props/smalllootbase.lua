@@ -1,5 +1,6 @@
 SmallLootBase = SmallLootBase or class(UnitBase)
 
+-- Lines 5-9
 function SmallLootBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -8,9 +9,11 @@ function SmallLootBase:init(unit)
 	self:_setup()
 end
 
+-- Lines 13-14
 function SmallLootBase:_setup()
 end
 
+-- Lines 18-39
 function SmallLootBase:take(unit)
 	if self._empty then
 		return
@@ -39,6 +42,7 @@ function SmallLootBase:take(unit)
 	})
 end
 
+-- Lines 41-57
 function SmallLootBase:taken(skip_sync)
 	managers.lootdrop:pickup_loot(self._unit:loot_drop():value(), self._unit)
 
@@ -56,6 +60,7 @@ function SmallLootBase:taken(skip_sync)
 	end
 end
 
+-- Lines 59-65
 function SmallLootBase:_set_empty()
 	self._empty = true
 
@@ -64,13 +69,16 @@ function SmallLootBase:_set_empty()
 	end
 end
 
+-- Lines 69-71
 function SmallLootBase:save(data)
 	data.loot_value = self._unit:loot_drop():value()
 end
 
+-- Lines 73-75
 function SmallLootBase:load(data)
 	self._unit:loot_drop():set_value(data.loot_value)
 end
 
+-- Lines 77-79
 function SmallLootBase:destroy()
 end

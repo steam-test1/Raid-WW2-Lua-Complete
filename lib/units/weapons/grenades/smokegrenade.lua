@@ -1,11 +1,13 @@
 SmokeGrenade = SmokeGrenade or class(GrenadeBase)
 
+-- Lines 5-8
 function SmokeGrenade:init(unit)
 	self._init_timer = 1.5
 
 	SmokeGrenade.super.init(self, unit)
 end
 
+-- Lines 10-22
 function SmokeGrenade:update(unit, t, dt)
 	SmokeGrenade.super.update(self, unit, t, dt)
 
@@ -20,6 +22,7 @@ function SmokeGrenade:update(unit, t, dt)
 	end
 end
 
+-- Lines 26-40
 function SmokeGrenade:_detonate()
 	local units = World:find_units("sphere", self._unit:position(), 400, self._slotmask)
 
@@ -33,6 +36,7 @@ function SmokeGrenade:_detonate()
 	end
 end
 
+-- Lines 42-49
 function SmokeGrenade:_play_sound_and_effects()
 	World:effect_manager():spawn({
 		effect = Idstring("effects/vanilla/explosions/exp_smoke_grenade_001"),
@@ -49,9 +53,11 @@ function SmokeGrenade:_play_sound_and_effects()
 	self._smoke_timer = 10
 end
 
+-- Lines 51-53
 function SmokeGrenade:_give_smoke_damage(col_ray, unit, damage)
 end
 
+-- Lines 55-60
 function SmokeGrenade:destroy()
 	if self._smoke_effect then
 		World:effect_manager():kill(self._smoke_effect)

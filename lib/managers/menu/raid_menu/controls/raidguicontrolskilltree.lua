@@ -2,6 +2,7 @@ RaidGUIControlSkilltree = RaidGUIControlSkilltree or class(RaidGUIControlBranchi
 RaidGUIControlSkilltree.DEFAULT_H = 416
 RaidGUIControlSkilltree.DEFAULT_BPB_H = 320
 
+-- Lines 6-35
 function RaidGUIControlSkilltree:init(parent, params)
 	Application:debug("[RaidGUIControlSkilltree:init]")
 
@@ -32,6 +33,7 @@ function RaidGUIControlSkilltree:init(parent, params)
 	self._selected_nodes = {}
 end
 
+-- Lines 37-60
 function RaidGUIControlSkilltree:on_respec()
 	self._selected_nodes = {}
 	self._first_available_level = 2
@@ -62,6 +64,7 @@ function RaidGUIControlSkilltree:on_respec()
 	self:_set_scrollable_panel_x(self._levels[1].nodes[1])
 end
 
+-- Lines 62-68
 function RaidGUIControlSkilltree:give_points(points, animate)
 	RaidGUIControlSkilltree.super.give_points(self, points, animate)
 
@@ -71,6 +74,7 @@ function RaidGUIControlSkilltree:give_points(points, animate)
 	self._progress_bar:unlock_level(self:_get_current_level())
 end
 
+-- Lines 70-81
 function RaidGUIControlSkilltree:get_progress()
 	local current_level = self:_get_current_level()
 	local levels_progress = (current_level - 1) / (#self._levels - 1)
@@ -84,6 +88,7 @@ function RaidGUIControlSkilltree:get_progress()
 	return levels_progress + progress_in_level
 end
 
+-- Lines 83-103
 function RaidGUIControlSkilltree:_node_click_callback(node, node_data)
 	if not self._on_click_callback then
 		return
@@ -104,6 +109,7 @@ function RaidGUIControlSkilltree:_node_click_callback(node, node_data)
 	end
 end
 
+-- Lines 105-122
 function RaidGUIControlSkilltree:_select_node(node_data)
 	local node = self._levels[node_data.level].nodes[node_data.index]
 
@@ -124,6 +130,7 @@ function RaidGUIControlSkilltree:_select_node(node_data)
 	managers.hud._sound_source:post_event("skill_select")
 end
 
+-- Lines 124-135
 function RaidGUIControlSkilltree:_unselect_node(level, index)
 	local node = self._levels[level].nodes[index]
 
@@ -138,10 +145,12 @@ function RaidGUIControlSkilltree:_unselect_node(level, index)
 	managers.hud._sound_source:post_event("skill_remove")
 end
 
+-- Lines 137-139
 function RaidGUIControlSkilltree:get_selected_nodes()
 	return self._selected_nodes
 end
 
+-- Lines 141-165
 function RaidGUIControlSkilltree:is_selection_valid()
 	if not self._selected_nodes[self._first_available_level] then
 		return false
@@ -170,6 +179,7 @@ function RaidGUIControlSkilltree:is_selection_valid()
 	return true
 end
 
+-- Lines 167-183
 function RaidGUIControlSkilltree:apply_selected_skills()
 	local largest_selected_index = 0
 
@@ -189,10 +199,12 @@ function RaidGUIControlSkilltree:apply_selected_skills()
 	self:_refresh_tree()
 end
 
+-- Lines 185-187
 function RaidGUIControlSkilltree:_node_enter_callback(node, node_data)
 	self._on_mouse_enter_callback(node_data)
 end
 
+-- Lines 205-222
 function RaidGUIControlSkilltree:set_selected(value)
 	self._selected = value
 	self._selected_level_idx, self._selected_node_idx = self:_get_active_level_node_index()
@@ -207,6 +219,7 @@ function RaidGUIControlSkilltree:set_selected(value)
 	self:_select_skill_tree_node(skill_node)
 end
 
+-- Lines 224-250
 function RaidGUIControlSkilltree:_get_active_level_node_index()
 	if not self._levels then
 		return 1, 1
@@ -232,21 +245,25 @@ function RaidGUIControlSkilltree:_get_active_level_node_index()
 	return 1, 1
 end
 
+-- Lines 252-257
 function RaidGUIControlSkilltree:_click_skill_tree_node(skill_node)
 	skill_node:mouse_clicked(nil, nil, skill_node:world_x(), skill_node:world_y())
 	skill_node:set_hovered()
 end
 
+-- Lines 259-263
 function RaidGUIControlSkilltree:_select_skill_tree_node(skill_node)
 	skill_node:set_hovered()
 	skill_node:on_mouse_over()
 end
 
+-- Lines 265-268
 function RaidGUIControlSkilltree:_unselect_skill_tree_node(skill_node)
 	skill_node:refresh_current_state()
 	skill_node:on_mouse_out()
 end
 
+-- Lines 270-281
 function RaidGUIControlSkilltree:get_skill_tree_node(level_idx, node_idx)
 	local level = self._levels[level_idx]
 
@@ -261,6 +278,7 @@ function RaidGUIControlSkilltree:get_skill_tree_node(level_idx, node_idx)
 	return nil
 end
 
+-- Lines 283-293
 function RaidGUIControlSkilltree:select_node(level, node)
 	if self._selected_level_idx == level and self._selected_node_idx == node then
 		return
@@ -273,10 +291,12 @@ function RaidGUIControlSkilltree:select_node(level, node)
 	self._selected_node_idx = node
 end
 
+-- Lines 295-297
 function RaidGUIControlSkilltree:get_current_skill_tree_node()
 	return self:get_skill_tree_node(self._selected_level_idx, self._selected_node_idx)
 end
 
+-- Lines 299-319
 function RaidGUIControlSkilltree:move_up()
 	self._new_selected_node_idx = self._selected_node_idx - 1
 
@@ -296,6 +316,7 @@ function RaidGUIControlSkilltree:move_up()
 	return true
 end
 
+-- Lines 321-341
 function RaidGUIControlSkilltree:move_down()
 	self._new_selected_node_idx = self._selected_node_idx + 1
 
@@ -315,22 +336,27 @@ function RaidGUIControlSkilltree:move_down()
 	return true
 end
 
+-- Lines 343-347
 function RaidGUIControlSkilltree:move_left()
 	return self:_move_left(1)
 end
 
+-- Lines 349-353
 function RaidGUIControlSkilltree:move_right()
 	return self:_move_right(1)
 end
 
+-- Lines 356-360
 function RaidGUIControlSkilltree:shoulder_move_left()
 	return self:_move_left(3)
 end
 
+-- Lines 362-366
 function RaidGUIControlSkilltree:shoulder_move_right()
 	return self:_move_right(3)
 end
 
+-- Lines 368-405
 function RaidGUIControlSkilltree:_move_left(value)
 	self._new_selected_level_idx = self._selected_level_idx - value
 
@@ -365,6 +391,7 @@ function RaidGUIControlSkilltree:_move_left(value)
 	return false
 end
 
+-- Lines 407-444
 function RaidGUIControlSkilltree:_move_right(value)
 	self._new_selected_level_idx = self._selected_level_idx + value
 
@@ -399,6 +426,7 @@ function RaidGUIControlSkilltree:_move_right(value)
 	return false
 end
 
+-- Lines 446-461
 function RaidGUIControlSkilltree:_set_scrollable_panel_x(skill_node)
 	self._controller_enabled = true
 	local scrollable_panel_new_x = -skill_node:x() + 800
@@ -412,6 +440,7 @@ function RaidGUIControlSkilltree:_set_scrollable_panel_x(skill_node)
 	self._scrollable_panel:set_x(scrollable_panel_new_x)
 end
 
+-- Lines 463-468
 function RaidGUIControlSkilltree:confirm_pressed()
 	local skill_node = self:get_current_skill_tree_node()
 

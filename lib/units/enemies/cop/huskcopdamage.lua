@@ -1,5 +1,6 @@
 HuskCopDamage = HuskCopDamage or class(CopDamage)
 
+-- Lines 5-35
 function HuskCopDamage:die(variant)
 	self._unit:base():set_slot(self._unit, 17)
 

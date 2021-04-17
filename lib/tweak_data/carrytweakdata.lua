@@ -1,5 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
+-- Lines 3-573
 function CarryTweakData:init(tweak_data)
 	CarryTweakData.default_throw_power = 600
 	CarryTweakData.corpse_throw_power = 350
@@ -549,6 +550,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
+-- Lines 575-584
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -563,6 +565,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
+-- Lines 587-592
 function CarryTweakData:get_zipline_offset(carry_id)
 	return Vector3(15, 0, -8)
 end

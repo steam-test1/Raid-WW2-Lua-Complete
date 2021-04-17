@@ -1,5 +1,6 @@
 RaidGUIControlIntelOppositeForces = RaidGUIControlIntelOppositeForces or class(RaidGUIControl)
 
+-- Lines 3-10
 function RaidGUIControlIntelOppositeForces:init(parent, params)
 	RaidGUIControlIntelOppositeForces.super.init(self, parent, params)
 
@@ -9,6 +10,7 @@ function RaidGUIControlIntelOppositeForces:init(parent, params)
 	self:_layout()
 end
 
+-- Lines 12-43
 function RaidGUIControlIntelOppositeForces:_layout()
 	self._bg_image = self._object:bitmap({
 		y = 0,
@@ -72,6 +74,7 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	self._image_viewer = self._object:create_custom_control(RaidGUIControlImageViewer, image_viewer_params)
 end
 
+-- Lines 45-59
 function RaidGUIControlIntelOppositeForces:set_data(item_value)
 	self._data = tweak_data.intel:get_item_data(self._category_name, item_value)
 
@@ -86,6 +89,7 @@ function RaidGUIControlIntelOppositeForces:set_data(item_value)
 	self._image_viewer:set_data(self._data.images)
 end
 
+-- Lines 61-63
 function RaidGUIControlIntelOppositeForces:get_data()
 	return self._data
 end

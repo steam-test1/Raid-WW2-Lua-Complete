@@ -1,5 +1,6 @@
 GrenadeCrateBase = GrenadeCrateBase or class(UnitBase)
 
+-- Lines 3-9
 function GrenadeCrateBase.spawn(pos, rot)
 	local unit_name = "removed during cleanup"
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
@@ -9,16 +10,19 @@ function GrenadeCrateBase.spawn(pos, rot)
 	return unit
 end
 
+-- Lines 14-17
 function GrenadeCrateBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
 	}
 end
 
+-- Lines 20-22
 function GrenadeCrateBase:server_information()
 	return self._server_information
 end
 
+-- Lines 26-36
 function GrenadeCrateBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -30,6 +34,7 @@ function GrenadeCrateBase:init(unit)
 	self:setup()
 end
 
+-- Lines 40-60
 function GrenadeCrateBase:setup()
 	self._grenade_amount = self._max_grenade_amount or tweak_data.upgrades.grenade_crate_base
 	self._empty = false
@@ -55,10 +60,12 @@ function GrenadeCrateBase:setup()
 	end
 end
 
+-- Lines 62-64
 function GrenadeCrateBase:update(unit, t, dt)
 	self:_check_body()
 end
 
+-- Lines 67-95
 function GrenadeCrateBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -85,6 +92,7 @@ function GrenadeCrateBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
+-- Lines 99-104
 function GrenadeCrateBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -93,6 +101,7 @@ function GrenadeCrateBase:server_set_dynamic()
 	end
 end
 
+-- Lines 106-117
 function GrenadeCrateBase:sync_net_event(event_id, peer)
 	if event_id == 1 then
 		if peer then
@@ -105,12 +114,14 @@ function GrenadeCrateBase:sync_net_event(event_id, peer)
 	end
 end
 
+-- Lines 119-122
 function GrenadeCrateBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
+-- Lines 126-149
 function GrenadeCrateBase:take_grenade(unit)
 	if self._empty then
 		return
@@ -138,6 +149,7 @@ function GrenadeCrateBase:take_grenade(unit)
 	return can_take_grenade
 end
 
+-- Lines 151-158
 function GrenadeCrateBase:_set_visual_stage()
 	if alive(self._unit) and self._unit:damage() then
 		local state = "state_" .. tostring(math.clamp(self._max_grenade_amount - self._grenade_amount, 0, self._max_grenade_amount))
@@ -148,6 +160,7 @@ function GrenadeCrateBase:_set_visual_stage()
 	end
 end
 
+-- Lines 160-166
 function GrenadeCrateBase:sync_grenade_taken(amount)
 	self._grenade_amount = self._grenade_amount - amount
 
@@ -158,6 +171,7 @@ function GrenadeCrateBase:sync_grenade_taken(amount)
 	self:_set_visual_stage()
 end
 
+-- Lines 168-174
 function GrenadeCrateBase:_can_take_grenade(unit)
 	if self._empty or self._grenade_amount < 1 or managers.player:got_max_grenades() then
 		return false
@@ -166,6 +180,7 @@ function GrenadeCrateBase:_can_take_grenade(unit)
 	return true
 end
 
+-- Lines 176-182
 function GrenadeCrateBase:_set_empty()
 	self._empty = true
 
@@ -174,6 +189,7 @@ function GrenadeCrateBase:_set_empty()
 	end
 end
 
+-- Lines 186-191
 function GrenadeCrateBase:save(data)
 	local state = {
 		grenade_amount = self._grenade_amount,
@@ -182,6 +198,7 @@ function GrenadeCrateBase:save(data)
 	data.GrenadeCrateBase = state
 end
 
+-- Lines 193-204
 function GrenadeCrateBase:load(data)
 	local state = data.GrenadeCrateBase
 	self._grenade_amount = state.grenade_amount
@@ -197,11 +214,13 @@ function GrenadeCrateBase:load(data)
 	self:_set_visual_stage()
 end
 
+-- Lines 208-210
 function GrenadeCrateBase:destroy()
 end
 
 CustomGrenadeCrateBase = CustomGrenadeCrateBase or class(GrenadeCrateBase)
 
+-- Lines 217-226
 function CustomGrenadeCrateBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -212,6 +231,7 @@ function CustomGrenadeCrateBase:init(unit)
 	self:setup()
 end
 
+-- Lines 228-236
 function CustomGrenadeCrateBase:_set_empty()
 	self._empty = true
 
@@ -226,6 +246,7 @@ end
 
 GrenadeCrateSync = GrenadeCrateSync or class()
 
+-- Lines 243-248
 function GrenadeCrateSync:init(unit)
 	if Network:is_client() then
 		self._validate_clbk_id = "grenade_crate_validate" .. tostring(unit:key())
@@ -234,6 +255,7 @@ function GrenadeCrateSync:init(unit)
 	end
 end
 
+-- Lines 250-257
 function GrenadeCrateSync:sync_net_event(event_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -244,10 +266,12 @@ function GrenadeCrateSync:sync_net_event(event_id)
 	managers.player:verify_equipment(0, "grenade_crate")
 end
 
+-- Lines 259-261
 function GrenadeCrateSync:load(save_data)
 	self._was_dropin = true
 end
 
+-- Lines 263-268
 function GrenadeCrateSync:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -256,6 +280,7 @@ function GrenadeCrateSync:destroy()
 	end
 end
 
+-- Lines 270-277
 function GrenadeCrateSync:_clbk_validate()
 	self._validate_clbk_id = nil
 

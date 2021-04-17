@@ -1,5 +1,6 @@
 HudIconsTweakData = HudIconsTweakData or class()
 
+-- Lines 33-659
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -1335,6 +1336,7 @@ function HudIconsTweakData:init()
 	}
 end
 
+-- Lines 662-668
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon = tweak_data.hud_icons[icon_id] and tweak_data.hud_icons[icon_id].texture or icon_id
 	local texture_rect = tweak_data.hud_icons[icon_id] and tweak_data.hud_icons[icon_id].texture_rect or default_rect or {

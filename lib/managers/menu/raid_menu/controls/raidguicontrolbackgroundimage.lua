@@ -1,5 +1,6 @@
 RaidGUIControlBackgroundImage = RaidGUIControlBackgroundImage or class()
 
+-- Lines 7-21
 function RaidGUIControlBackgroundImage:init()
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
 	self._panel = self._workspace:panel()
@@ -14,6 +15,7 @@ function RaidGUIControlBackgroundImage:init()
 	managers.video:add_video(self._object)
 end
 
+-- Lines 24-32
 function RaidGUIControlBackgroundImage:_real_aspect_ratio()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return RenderSettings.aspect_ratio
@@ -25,6 +27,7 @@ function RaidGUIControlBackgroundImage:_real_aspect_ratio()
 	end
 end
 
+-- Lines 34-42
 function RaidGUIControlBackgroundImage:set_visible(visible)
 	if visible then
 		self._object:play()
@@ -35,6 +38,7 @@ function RaidGUIControlBackgroundImage:set_visible(visible)
 	self._object:set_visible(visible)
 end
 
+-- Lines 44-55
 function RaidGUIControlBackgroundImage:destroy()
 	Application:debug("[RaidGUIControlBackgroundImage:destroy]")
 
@@ -47,6 +51,7 @@ function RaidGUIControlBackgroundImage:destroy()
 	managers.gui_data:destroy_workspace(self._workspace)
 end
 
+-- Lines 58-66
 function RaidGUIControlBackgroundImage:resolution_changed()
 	managers.gui_data:layout_fullscreen_workspace(self._workspace)
 

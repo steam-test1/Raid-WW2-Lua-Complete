@@ -15,6 +15,7 @@ MenuNodeBaseGui.button_highlighted_color = tweak_data.screen_colors.button_stage
 MenuNodeBaseGui.button_selected_color = tweak_data.screen_colors.button_stage_1
 MenuNodeBaseGui.is_win32 = SystemInfo:platform() == Idstring("WIN32")
 
+-- Lines 22-28
 function MenuNodeBaseGui.make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -24,6 +25,7 @@ function MenuNodeBaseGui.make_fine_text(text)
 	return text:x(), text:y(), w, h
 end
 
+-- Lines 30-38
 function MenuNodeBaseGui.rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -36,11 +38,13 @@ function MenuNodeBaseGui.rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
+-- Lines 42-45
 function MenuNodeBaseGui:init(node, layer, parameters)
 	MenuNodeBaseGui.super.init(self, node, layer, parameters)
 	self:setup()
 end
 
+-- Lines 47-65
 function MenuNodeBaseGui:setup()
 	self._requested_textures = {}
 	self._gui_boxes = {}
@@ -48,6 +52,7 @@ function MenuNodeBaseGui:setup()
 	self.is_pc_controller = managers.menu:is_pc_controller()
 end
 
+-- Lines 69-124
 function MenuNodeBaseGui:create_text_button(params)
 	local left = params.left or params.x
 	local right = params.right
@@ -131,6 +136,7 @@ function MenuNodeBaseGui:create_text_button(params)
 	return button_panel
 end
 
+-- Lines 126-158
 function MenuNodeBaseGui:create_gui_box(panel, params)
 	if not alive(panel) then
 		return
@@ -158,9 +164,11 @@ function MenuNodeBaseGui:create_gui_box(panel, params)
 	end
 end
 
+-- Lines 160-161
 function MenuNodeBaseGui:update_info(button)
 end
 
+-- Lines 165-200
 function MenuNodeBaseGui:mouse_moved(o, x, y)
 	local used = false
 	local icon = "arrow"
@@ -207,6 +215,7 @@ function MenuNodeBaseGui:mouse_moved(o, x, y)
 	return used, icon
 end
 
+-- Lines 202-217
 function MenuNodeBaseGui:mouse_pressed(button, x, y)
 	if button == Idstring("0") or button == Idstring("1") then
 		for _, btn in ipairs(self._text_buttons) do
@@ -225,32 +234,41 @@ function MenuNodeBaseGui:mouse_pressed(button, x, y)
 	return MenuNodeBaseGui.super.mouse_pressed(self, button, x, y)
 end
 
+-- Lines 219-221
 function MenuNodeBaseGui:mouse_released(button, x, y)
 end
 
+-- Lines 223-224
 function MenuNodeBaseGui:confirm_pressed()
 end
 
+-- Lines 226-227
 function MenuNodeBaseGui:previous_page()
 end
 
+-- Lines 229-230
 function MenuNodeBaseGui:next_page()
 end
 
+-- Lines 232-234
 function MenuNodeBaseGui:move_up()
 	print("MenuNodeBaseGui:move_up")
 end
 
+-- Lines 236-238
 function MenuNodeBaseGui:move_down()
 	print("MenuNodeBaseGui:move_down")
 end
 
+-- Lines 240-241
 function MenuNodeBaseGui:move_left()
 end
 
+-- Lines 243-244
 function MenuNodeBaseGui:move_right()
 end
 
+-- Lines 248-255
 function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio, blend_mode)
 	if not managers.menu_component then
 		return
@@ -268,6 +286,7 @@ function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio,
 	})
 end
 
+-- Lines 257-265
 function MenuNodeBaseGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -278,6 +297,7 @@ function MenuNodeBaseGui:unretrieve_textures()
 	self._requested_textures = {}
 end
 
+-- Lines 267-305
 function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 	params = params or {}
 	local panel = params.panel or params[1]
@@ -324,6 +344,7 @@ function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 	end
 end
 
+-- Lines 307-310
 function MenuNodeBaseGui:close()
 	self:unretrieve_textures()
 	MenuNodeBaseGui.super.close(self)

@@ -1,6 +1,7 @@
 TankTrackAnimation = TankTrackAnimation or class()
 local ids_uv_offset = Idstring("uv_offset")
 
+-- Lines 5-41
 function TankTrackAnimation:init(unit)
 	self._unit = unit
 
@@ -57,6 +58,7 @@ function TankTrackAnimation:init(unit)
 	self._left_tesnion = self._unit:get_object(Idstring("wheel_left_tension"))
 end
 
+-- Lines 43-85
 function TankTrackAnimation:update(unit, t, dt)
 	local curr_left_tension_pos = self._left_tesnion:position()
 	local curr_left_pos = self._left_ref_object:position()

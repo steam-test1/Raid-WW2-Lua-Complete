@@ -8,6 +8,7 @@ RaidGUIControlIntelImage.PRESSED_SIZE = 0.95
 RaidGUIControlIntelImage.HOVER_SIZE = 1.05
 RaidGUIControlIntelImage.ACTIVE_SIZE = 0.97
 
+-- Lines 13-24
 function RaidGUIControlIntelImage:init(parent, params)
 	RaidGUIControlIntelImage.super.init(self, parent, params)
 
@@ -20,6 +21,7 @@ function RaidGUIControlIntelImage:init(parent, params)
 	self._center_x, self._center_y = self._object:center()
 end
 
+-- Lines 26-39
 function RaidGUIControlIntelImage:_create_panels()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_panel"
@@ -32,6 +34,7 @@ function RaidGUIControlIntelImage:_create_panels()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 41-98
 function RaidGUIControlIntelImage:_create_image()
 	local default_image = "ui/loading_screens/loading_trainyard"
 	local default_rect = {
@@ -104,6 +107,7 @@ function RaidGUIControlIntelImage:_create_image()
 	self._size_h = self._object:h()
 end
 
+-- Lines 100-107
 function RaidGUIControlIntelImage:on_mouse_pressed(button)
 	if self._static then
 		return
@@ -113,6 +117,7 @@ function RaidGUIControlIntelImage:on_mouse_pressed(button)
 	self._object:animate(callback(self, self, "_animate_press"))
 end
 
+-- Lines 109-127
 function RaidGUIControlIntelImage:on_mouse_released(button)
 	if self._static then
 		return
@@ -129,6 +134,7 @@ function RaidGUIControlIntelImage:on_mouse_released(button)
 	return true
 end
 
+-- Lines 129-136
 function RaidGUIControlIntelImage:highlight_on()
 	if self._active or self._static then
 		return
@@ -138,6 +144,7 @@ function RaidGUIControlIntelImage:highlight_on()
 	self._object:animate(callback(self, self, "_animate_highlight_on"))
 end
 
+-- Lines 138-145
 function RaidGUIControlIntelImage:highlight_off()
 	if self._active or self._static then
 		return
@@ -147,42 +154,49 @@ function RaidGUIControlIntelImage:highlight_off()
 	self._object:animate(callback(self, self, "_animate_highlight_off"))
 end
 
+-- Lines 147-150
 function RaidGUIControlIntelImage:set_left(left)
 	self._object:set_left(left)
 
 	self._center_x, self._center_y = self._object:center()
 end
 
+-- Lines 152-155
 function RaidGUIControlIntelImage:set_right(right)
 	self._object:set_right(right)
 
 	self._center_x, self._center_y = self._object:center()
 end
 
+-- Lines 157-160
 function RaidGUIControlIntelImage:set_top(top)
 	self._object:set_top(top)
 
 	self._center_x, self._center_y = self._object:center()
 end
 
+-- Lines 162-165
 function RaidGUIControlIntelImage:set_bottom(bottom)
 	self._object:set_bottom(bottom)
 
 	self._center_x, self._center_y = self._object:center()
 end
 
+-- Lines 167-170
 function RaidGUIControlIntelImage:set_center_x(center_x)
 	self._object:set_center_x(center_x)
 
 	self._center_x, self._center_y = self._object:center()
 end
 
+-- Lines 172-175
 function RaidGUIControlIntelImage:set_center_y(center_y)
 	self._object:set_center_y(center_y)
 
 	self._center_x, self._center_y = self._object:center()
 end
 
+-- Lines 177-190
 function RaidGUIControlIntelImage:select(skip_animation)
 	if self._static then
 		return
@@ -198,6 +212,7 @@ function RaidGUIControlIntelImage:select(skip_animation)
 	end
 end
 
+-- Lines 192-200
 function RaidGUIControlIntelImage:unselect()
 	if self._static then
 		return
@@ -209,6 +224,7 @@ function RaidGUIControlIntelImage:unselect()
 	self._selector:animate(callback(self, self, "_animate_unselected"))
 end
 
+-- Lines 202-216
 function RaidGUIControlIntelImage:set_selected(value)
 	if self._static then
 		return
@@ -225,6 +241,7 @@ function RaidGUIControlIntelImage:set_selected(value)
 	end
 end
 
+-- Lines 218-229
 function RaidGUIControlIntelImage:confirm_pressed()
 	if self._static then
 		return
@@ -239,9 +256,11 @@ function RaidGUIControlIntelImage:confirm_pressed()
 	return false
 end
 
+-- Lines 232-233
 function RaidGUIControlIntelImage:close()
 end
 
+-- Lines 239-254
 function RaidGUIControlIntelImage:_animate_selected()
 	local starting_alpha = self._selector:alpha()
 	local duration = 0.2
@@ -258,6 +277,7 @@ function RaidGUIControlIntelImage:_animate_selected()
 	self._selector:set_alpha(1)
 end
 
+-- Lines 256-278
 function RaidGUIControlIntelImage:_animate_unselected()
 	local starting_alpha = self._selector:alpha()
 	local duration = 0.2
@@ -281,6 +301,7 @@ function RaidGUIControlIntelImage:_animate_unselected()
 	self._object:set_center(self._center_x, self._center_y)
 end
 
+-- Lines 280-296
 function RaidGUIControlIntelImage:_animate_highlight_on()
 	local t = 0
 	local duration = 0.05
@@ -298,6 +319,7 @@ function RaidGUIControlIntelImage:_animate_highlight_on()
 	self._object:set_center(self._center_x, self._center_y)
 end
 
+-- Lines 298-317
 function RaidGUIControlIntelImage:_animate_highlight_off()
 	local t = 0
 	local duration = 0.25
@@ -318,6 +340,7 @@ function RaidGUIControlIntelImage:_animate_highlight_off()
 	self._object:set_center(self._center_x, self._center_y)
 end
 
+-- Lines 319-337
 function RaidGUIControlIntelImage:_animate_press()
 	local t = 0
 	local duration = 0.05
@@ -336,6 +359,7 @@ function RaidGUIControlIntelImage:_animate_press()
 	self._object:set_center(self._center_x, self._center_y)
 end
 
+-- Lines 339-358
 function RaidGUIControlIntelImage:_animate_release()
 	local t = 0
 	local duration = 0.25

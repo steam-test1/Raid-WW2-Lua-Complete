@@ -3,6 +3,7 @@ local mvec3_dir = mvector3.direction
 local mvec3_dot = mvector3.dot
 local tmp_vec1 = Vector3()
 
+-- Lines 7-13
 function TankTurretBrain:init(unit)
 	TankTurretBrain.super.init(self, unit)
 
@@ -12,6 +13,7 @@ function TankTurretBrain:init(unit)
 	self._locked_phase = false
 end
 
+-- Lines 15-27
 function TankTurretBrain:update(unit, t, dt)
 	if self:is_locked() then
 		self:_update_target_locked(t)
@@ -27,6 +29,7 @@ function TankTurretBrain:update(unit, t, dt)
 	end
 end
 
+-- Lines 29-36
 function TankTurretBrain:_lock_on(attention)
 	self._locked_phase = true
 	local delta_t = self._tweak_data.turret.time_before_taking_shot
@@ -37,16 +40,19 @@ function TankTurretBrain:_lock_on(attention)
 	self._unit:weapon():play_lock_on_sound()
 end
 
+-- Lines 38-40
 function TankTurretBrain:is_locked(t)
 	return not not self._locked_phase
 end
 
+-- Lines 42-46
 function TankTurretBrain:_update_target_locked(t)
 	if self._locked_t <= t then
 		self:_fire_at_locked_position()
 	end
 end
 
+-- Lines 48-55
 function TankTurretBrain:_fire_at_locked_position()
 	self._locked_phase = false
 
@@ -59,6 +65,7 @@ function TankTurretBrain:_fire_at_locked_position()
 	self._unit:weapon():singleshot(false, expend_ammo, true, self._locked_on_pos)
 end
 
+-- Lines 58-119
 function TankTurretBrain:_upd_fire(t)
 	if not alive(self._unit) then
 		return

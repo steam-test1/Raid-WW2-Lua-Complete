@@ -1,5 +1,6 @@
 DoctorBagBase = DoctorBagBase or class(UnitBase)
 
+-- Lines 3-9
 function DoctorBagBase.spawn(pos, rot, amount_upgrade_lvl, peer_id)
 	local unit_name = "removed during cleanup"
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
@@ -10,6 +11,7 @@ function DoctorBagBase.spawn(pos, rot, amount_upgrade_lvl, peer_id)
 	return unit
 end
 
+-- Lines 14-17
 function DoctorBagBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
@@ -18,10 +20,12 @@ function DoctorBagBase:set_server_information(peer_id)
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
+-- Lines 20-22
 function DoctorBagBase:server_information()
 	return self._server_information
 end
 
+-- Lines 26-41
 function DoctorBagBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -39,6 +43,7 @@ function DoctorBagBase:init(unit)
 	end
 end
 
+-- Lines 45-52
 function DoctorBagBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
@@ -49,6 +54,7 @@ function DoctorBagBase:_clbk_validate()
 	end
 end
 
+-- Lines 56-65
 function DoctorBagBase:sync_setup(amount_upgrade_lvl, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -60,6 +66,7 @@ function DoctorBagBase:sync_setup(amount_upgrade_lvl, peer_id)
 	self:setup(amount_upgrade_lvl)
 end
 
+-- Lines 69-89
 function DoctorBagBase:setup(amount_upgrade_lvl)
 	self._amount = tweak_data.upgrades.doctor_bag_base + managers.player:upgrade_value_by_level("doctor_bag", "amount_increase", amount_upgrade_lvl)
 
@@ -84,10 +91,12 @@ function DoctorBagBase:setup(amount_upgrade_lvl)
 	end
 end
 
+-- Lines 91-93
 function DoctorBagBase:update(unit, t, dt)
 	self:_check_body()
 end
 
+-- Lines 96-124
 function DoctorBagBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -114,6 +123,7 @@ function DoctorBagBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
+-- Lines 128-133
 function DoctorBagBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -122,16 +132,19 @@ function DoctorBagBase:server_set_dynamic()
 	end
 end
 
+-- Lines 135-138
 function DoctorBagBase:sync_net_event(event_id)
 	self:_set_dynamic()
 end
 
+-- Lines 140-143
 function DoctorBagBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
+-- Lines 147-167
 function DoctorBagBase:take(unit)
 	if self._empty then
 		return
@@ -153,6 +166,7 @@ function DoctorBagBase:take(unit)
 	return taken > 0
 end
 
+-- Lines 169-177
 function DoctorBagBase:_set_visual_stage()
 	local percentage = self._amount / self._max_amount
 
@@ -165,6 +179,7 @@ function DoctorBagBase:_set_visual_stage()
 	end
 end
 
+-- Lines 180-187
 function DoctorBagBase:sync_taken(amount)
 	self._amount = self._amount - amount
 
@@ -175,6 +190,7 @@ function DoctorBagBase:sync_taken(amount)
 	end
 end
 
+-- Lines 189-201
 function DoctorBagBase:_take(unit)
 	local taken = 1
 	self._amount = self._amount - taken
@@ -190,12 +206,14 @@ function DoctorBagBase:_take(unit)
 	return taken
 end
 
+-- Lines 203-206
 function DoctorBagBase:_set_empty()
 	self._empty = true
 
 	self._unit:set_slot(0)
 end
 
+-- Lines 210-215
 function DoctorBagBase:save(data)
 	local state = {
 		amount = self._amount,
@@ -204,6 +222,7 @@ function DoctorBagBase:save(data)
 	data.DoctorBagBase = state
 end
 
+-- Lines 217-227
 function DoctorBagBase:load(data)
 	local state = data.DoctorBagBase
 	self._amount = state.amount
@@ -217,6 +236,7 @@ function DoctorBagBase:load(data)
 	self._was_dropin = true
 end
 
+-- Lines 231-236
 function DoctorBagBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -227,6 +247,7 @@ end
 
 CustomDoctorBagBase = CustomDoctorBagBase or class(DoctorBagBase)
 
+-- Lines 241-251
 function CustomDoctorBagBase:init(unit)
 	CustomDoctorBagBase.super.init(self, unit)
 
@@ -241,6 +262,7 @@ function CustomDoctorBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
+-- Lines 253-261
 function CustomDoctorBagBase:_set_empty()
 	self._empty = true
 

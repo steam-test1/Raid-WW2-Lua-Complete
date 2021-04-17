@@ -1,5 +1,6 @@
 DistractionRock = DistractionRock or class(GrenadeBase)
 
+-- Lines 5-20
 function DistractionRock:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -17,14 +18,17 @@ function DistractionRock:_setup_from_tweak_data()
 	}
 end
 
+-- Lines 25-27
 function DistractionRock:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	Application:debug("[DistractionRock:clbk_impact]")
 end
 
+-- Lines 29-31
 function DistractionRock:_on_collision(col_ray)
 	Application:debug("[DistractionRock:_on_collision]")
 end
 
+-- Lines 33-85
 function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._hand_held then
 		return
@@ -74,6 +78,7 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	end
 end
 
+-- Lines 87-119
 function DistractionRock:clbk_pathing_results(search_id, path)
 	local search = self._pathing_searches[search_id]
 
@@ -109,6 +114,7 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 	end
 end
 
+-- Lines 122-130
 function DistractionRock:_abort_all_unfinished_pathing()
 	for search_id, search in pairs(self._pathing_searches) do
 		if not search.finished then
@@ -117,13 +123,16 @@ function DistractionRock:_abort_all_unfinished_pathing()
 	end
 end
 
+-- Lines 134-135
 function DistractionRock:_detonate_on_client()
 end
 
+-- Lines 139-141
 function DistractionRock:bullet_hit()
 	Application:debug("[DistractionRock:bullet_hit]")
 end
 
+-- Lines 145-160
 function DistractionRock:set_attention_state(state)
 	if state then
 		if not self._attention_setting then
@@ -145,6 +154,7 @@ function DistractionRock:set_attention_state(state)
 	end
 end
 
+-- Lines 162-168
 function DistractionRock:update_attention_settings(descriptor)
 	local tweak_data = tweak_data.attention.settings[descriptor]
 

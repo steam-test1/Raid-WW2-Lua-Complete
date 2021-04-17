@@ -3,14 +3,17 @@ core:import("CoreGameStatePrepareLoadingGame")
 
 FrontEnd = FrontEnd or class()
 
+-- Lines 6-8
 function FrontEnd:init()
 	self.game_state._is_in_front_end = true
 end
 
+-- Lines 10-12
 function FrontEnd:destroy()
 	self.game_state._is_in_front_end = false
 end
 
+-- Lines 14-22
 function FrontEnd:transition()
 	if not self.game_state._game_requester:is_requested() then
 		return

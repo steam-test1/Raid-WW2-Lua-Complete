@@ -1,9 +1,11 @@
 CoreCutsceneKeyBase = CoreCutsceneKeyBase or class()
 
+-- Lines 3-5
 function CoreCutsceneKeyBase:init(key_collection)
 	self:set_key_collection(key_collection)
 end
 
+-- Lines 7-23
 function CoreCutsceneKeyBase:load(key_node, loading_class)
 	loading_class = loading_class or self
 
@@ -24,56 +26,70 @@ function CoreCutsceneKeyBase:load(key_node, loading_class)
 	end
 end
 
+-- Lines 25-27
 function CoreCutsceneKeyBase:populate_from_editor(cutscene_editor)
 	self:set_frame(cutscene_editor:playhead_position())
 end
 
+-- Lines 29-31
 function CoreCutsceneKeyBase:set_key_collection(key_collection)
 	self.__key_collection = key_collection
 end
 
+-- Lines 33-35
 function CoreCutsceneKeyBase:set_cast(cast)
 	self._cast = cast
 end
 
+-- Lines 37-39
 function CoreCutsceneKeyBase:clone()
 	return clone(self)
 end
 
+-- Lines 41-43
 function CoreCutsceneKeyBase:prime(player)
 end
 
+-- Lines 45-47
 function CoreCutsceneKeyBase:unload(player)
 end
 
+-- Lines 49-51
 function CoreCutsceneKeyBase:type_name()
 	return self.NAME or "Unknown"
 end
 
+-- Lines 53-55
 function CoreCutsceneKeyBase:_key_collection()
 	return self.__key_collection
 end
 
+-- Lines 57-59
 function CoreCutsceneKeyBase:frame()
 	return self._frame or 0
 end
 
+-- Lines 61-63
 function CoreCutsceneKeyBase:set_frame(frame)
 	self._frame = frame
 end
 
+-- Lines 65-68
 function CoreCutsceneKeyBase:time()
 	return self:frame() / 30
 end
 
+-- Lines 70-72
 function CoreCutsceneKeyBase:preceeding_key(properties)
 	return self:_key_collection() and self:_key_collection():last_key_before(self:time(), self.ELEMENT_NAME, properties)
 end
 
+-- Lines 74-76
 function CoreCutsceneKeyBase:can_evaluate_with_player(player)
 	return player ~= nil
 end
 
+-- Lines 78-88
 function CoreCutsceneKeyBase:is_valid(debug_output)
 	for _, attribute_name in ipairs(self:attribute_names()) do
 		if not self:is_valid_attribute_value(attribute_name, self:attribute_value(attribute_name)) then
@@ -88,20 +104,24 @@ function CoreCutsceneKeyBase:is_valid(debug_output)
 	return true
 end
 
+-- Lines 90-93
 function CoreCutsceneKeyBase:is_valid_attribute_value(attribute_name, value)
 	local validator_func = self["is_valid_" .. attribute_name]
 
 	return validator_func == nil or validator_func(self, value)
 end
 
+-- Lines 95-97
 function CoreCutsceneKeyBase:is_valid_object_name(object_name, unit_name)
 	return object_name and table.contains(self:_unit_object_names(unit_name or self:unit_name()), object_name) or false
 end
 
+-- Lines 99-101
 function CoreCutsceneKeyBase:is_valid_unit_name(unit_name)
 	return table.contains(self:_unit_names(), unit_name)
 end
 
+-- Lines 103-111
 function CoreCutsceneKeyBase:_unit_names()
 	local unit_names = self._cast and self._cast:unit_names() or {}
 
@@ -114,36 +134,42 @@ function CoreCutsceneKeyBase:_unit_names()
 	return unit_names
 end
 
+-- Lines 113-116
 function CoreCutsceneKeyBase:_unit_type(unit_name)
 	local unit = self:_unit(unit_name, true)
 
 	return unit and unit:name()
 end
 
+-- Lines 118-121
 function CoreCutsceneKeyBase:_unit_object_names(unit_name)
 	local unit_type_info = managers.cutscene:actor_database():unit_type_info(self:_unit_type(unit_name))
 
 	return unit_type_info and unit_type_info:object_names() or {}
 end
 
+-- Lines 123-126
 function CoreCutsceneKeyBase:_unit_initial_object_visibility(unit_name, object_name)
 	local unit_type_info = managers.cutscene:actor_database():unit_type_info(self:_unit_type(unit_name))
 
 	return unit_type_info and unit_type_info:initial_object_visibility(object_name)
 end
 
+-- Lines 128-131
 function CoreCutsceneKeyBase:_unit_extension_info(unit_name)
 	local unit_type_info = managers.cutscene:actor_database():unit_type_info(self:_unit_type(unit_name))
 
 	return unit_type_info and unit_type_info:extensions() or {}
 end
 
+-- Lines 133-136
 function CoreCutsceneKeyBase:_unit_animation_groups(unit_name)
 	local unit_type_info = managers.cutscene:actor_database():unit_type_info(self:_unit_type(unit_name))
 
 	return unit_type_info and unit_type_info:animation_groups() or {}
 end
 
+-- Lines 138-146
 function CoreCutsceneKeyBase:_unit(unit_name, allow_nil)
 	local unit = self._cast and self._cast:unit(unit_name)
 
@@ -156,6 +182,7 @@ function CoreCutsceneKeyBase:_unit(unit_name, allow_nil)
 	return unit
 end
 
+-- Lines 148-153
 function CoreCutsceneKeyBase:_unit_object(unit_name, object_name, allow_nil)
 	local unit = self:_unit(unit_name, allow_nil)
 	local object = unit and unit:get_object(object_name)
@@ -165,6 +192,7 @@ function CoreCutsceneKeyBase:_unit_object(unit_name, object_name, allow_nil)
 	return object
 end
 
+-- Lines 155-161
 function CoreCutsceneKeyBase:_unit_extension(unit_name, extension_name, allow_nil)
 	local unit = self:_unit(unit_name, allow_nil)
 	local extension_func = unit and unit[extension_name]
@@ -175,10 +203,12 @@ function CoreCutsceneKeyBase:_unit_extension(unit_name, extension_name, allow_ni
 	return extension
 end
 
+-- Lines 163-165
 function CoreCutsceneKeyBase:_unit_is_owned_by_level(unit_name)
 	return managers.cutscene and managers.cutscene:cutscene_actors_in_world()[unit_name] ~= nil
 end
 
+-- Lines 167-182
 function CoreCutsceneKeyBase:play(player, undo, fast_forward)
 	assert(type(self.evaluate) == "function", "Cutscene key must define the \"evaluate\" method to use the default CoreCutsceneKeyBase:play method.")
 
@@ -200,6 +230,7 @@ function CoreCutsceneKeyBase:play(player, undo, fast_forward)
 	end
 end
 
+-- Lines 184-196
 function CoreCutsceneKeyBase:_save_under(parent_node)
 	local element_name = assert(self.ELEMENT_NAME, "Required string member ELEMENT_NAME not declared in cutscene key class.")
 	local key_node = parent_node:make_child(element_name)
@@ -215,6 +246,7 @@ function CoreCutsceneKeyBase:_save_under(parent_node)
 	return key_node
 end
 
+-- Lines 198-213
 function CoreCutsceneKeyBase:attribute_names(exclude_defaults, _class, _destination)
 	_class = _class or getmetatable(self)
 	_destination = _destination or {}
@@ -232,10 +264,12 @@ function CoreCutsceneKeyBase:attribute_names(exclude_defaults, _class, _destinat
 	return _destination
 end
 
+-- Lines 215-217
 function CoreCutsceneKeyBase:attribute_value(attribute_name)
 	return self[attribute_name] and self[attribute_name](self)
 end
 
+-- Lines 219-226
 function CoreCutsceneKeyBase:attribute_value_from_string(attribute_name, string_value)
 	if string_value == "" then
 		return nil
@@ -246,16 +280,19 @@ function CoreCutsceneKeyBase:attribute_value_from_string(attribute_name, string_
 	end
 end
 
+-- Lines 228-231
 function CoreCutsceneKeyBase:set_attribute_value_from_string(attribute_name, string_value)
 	local value = self:attribute_value_from_string(attribute_name, string_value)
 
 	return self["set_" .. attribute_name](self, value)
 end
 
+-- Lines 233-235
 function CoreCutsceneKeyBase:register_control(control_name)
 	self:register_serialized_attribute(control_name, nil, nil)
 end
 
+-- Lines 237-268
 function CoreCutsceneKeyBase:register_serialized_attribute(attribute_name, default, transform_func)
 	local class_table = self
 	class_table.__serialized_attributes = class_table.__serialized_attributes or {}
@@ -293,6 +330,7 @@ function CoreCutsceneKeyBase:register_serialized_attribute(attribute_name, defau
 	end
 end
 
+-- Lines 270-275
 function CoreCutsceneKeyBase:attribute_affects(changed, ...)
 	local class_table = self
 	class_table.__control_dependencies = class_table.__control_dependencies or {}
@@ -302,10 +340,12 @@ function CoreCutsceneKeyBase:attribute_affects(changed, ...)
 	class_table.__control_dependencies[changed] = affected_attribute_names
 end
 
+-- Lines 277-312
 function CoreCutsceneKeyBase:populate_sizer_with_editable_attributes(grid_sizer, parent_frame)
 	for _, attribute_name in ipairs(self:attribute_names()) do
 		local control = nil
 
+		-- Lines 281-290
 		local function on_control_edited()
 			local value_is_valid = self:validate_control_for_attribute(attribute_name)
 
@@ -348,6 +388,7 @@ function CoreCutsceneKeyBase:populate_sizer_with_editable_attributes(grid_sizer,
 	end
 end
 
+-- Lines 314-320
 function CoreCutsceneKeyBase:attribute_label(attribute_name)
 	if self["label_for_" .. attribute_name] then
 		return self["label_for_" .. attribute_name](self)
@@ -356,10 +397,12 @@ function CoreCutsceneKeyBase:attribute_label(attribute_name)
 	end
 end
 
+-- Lines 322-324
 function CoreCutsceneKeyBase:attribute_is_boolean(attribute_name)
 	return self:attribute_value_from_string(attribute_name, "true") == true and self:attribute_value_from_string(attribute_name, "false") == false
 end
 
+-- Lines 326-340
 function CoreCutsceneKeyBase:control_for_attribute(attribute_name, parent_frame, callback_func)
 	if self["control_for_" .. attribute_name] then
 		return self["control_for_" .. attribute_name](self, parent_frame, callback_func)
@@ -380,6 +423,7 @@ function CoreCutsceneKeyBase:control_for_attribute(attribute_name, parent_frame,
 	end
 end
 
+-- Lines 342-360
 function CoreCutsceneKeyBase:refresh_control_for_attribute(attribute_name)
 	local control = self.__controls and self.__controls[attribute_name]
 
@@ -404,6 +448,7 @@ function CoreCutsceneKeyBase:refresh_control_for_attribute(attribute_name)
 	end
 end
 
+-- Lines 362-371
 function CoreCutsceneKeyBase:refresh_controls_dependent_on(attribute_name, refreshed_controls)
 	refreshed_controls = refreshed_controls or {}
 
@@ -418,6 +463,7 @@ function CoreCutsceneKeyBase:refresh_controls_dependent_on(attribute_name, refre
 	end
 end
 
+-- Lines 373-390
 function CoreCutsceneKeyBase:validate_control_for_attribute(attribute_name)
 	local control = self.__controls and self.__controls[attribute_name]
 
@@ -449,6 +495,7 @@ function CoreCutsceneKeyBase:validate_control_for_attribute(attribute_name)
 	return value_is_valid
 end
 
+-- Lines 392-396
 function CoreCutsceneKeyBase:standard_divider_control(parent_frame)
 	local control = EWS:StaticLine(parent_frame)
 
@@ -457,6 +504,7 @@ function CoreCutsceneKeyBase:standard_divider_control(parent_frame)
 	return control
 end
 
+-- Lines 398-403
 function CoreCutsceneKeyBase:standard_combo_box_control(parent_frame, callback_func)
 	local control = EWS:ComboBox(parent_frame, "", "", "CB_DROPDOWN,CB_READONLY,CB_SORT")
 
@@ -466,7 +514,9 @@ function CoreCutsceneKeyBase:standard_combo_box_control(parent_frame, callback_f
 	return control
 end
 
+-- Lines 405-421
 function CoreCutsceneKeyBase:standard_combo_box_control_refresh(attribute_name, values)
+	-- Lines 406-418
 	local function refresh_func(self, control)
 		control:freeze()
 		control:clear()
@@ -489,6 +539,7 @@ function CoreCutsceneKeyBase:standard_combo_box_control_refresh(attribute_name, 
 	return refresh_func
 end
 
+-- Lines 423-429
 function CoreCutsceneKeyBase:standard_percentage_slider_control(parent_frame, callback_func)
 	local control = EWS:Slider(parent_frame, 0, 0, 100, "", "SL_AUTOTICKS")
 
@@ -499,7 +550,9 @@ function CoreCutsceneKeyBase:standard_percentage_slider_control(parent_frame, ca
 	return control
 end
 
+-- Lines 431-438
 function CoreCutsceneKeyBase:standard_percentage_slider_control_refresh(attribute_name)
+	-- Lines 432-435
 	local function refresh_func(self, control)
 		local attribute_value = self:attribute_value(attribute_name)
 
@@ -512,6 +565,7 @@ end
 CoreCutsceneKeyBase.control_for_unit_name = CoreCutsceneKeyBase.standard_combo_box_control
 CoreCutsceneKeyBase.control_for_object_name = CoreCutsceneKeyBase.standard_combo_box_control
 
+-- Lines 443-462
 function CoreCutsceneKeyBase:refresh_control_for_unit_name(control, selected_unit_name)
 	control:freeze()
 	control:clear()
@@ -539,6 +593,7 @@ function CoreCutsceneKeyBase:refresh_control_for_unit_name(control, selected_uni
 	control:thaw()
 end
 
+-- Lines 464-483
 function CoreCutsceneKeyBase:refresh_control_for_object_name(control, unit_name, selected_object_name)
 	control:freeze()
 	control:clear()
@@ -566,18 +621,22 @@ function CoreCutsceneKeyBase:refresh_control_for_object_name(control, unit_name,
 	control:thaw()
 end
 
+-- Lines 485-487
 function CoreCutsceneKeyBase:on_gui_representation_changed(sender, sequencer_clip)
 	self:set_frame(sequencer_clip:start_time())
 end
 
+-- Lines 494-496
 function CoreCutsceneKeyBase:VOID()
 	return nil
 end
 
+-- Lines 498-500
 function CoreCutsceneKeyBase:TRUE()
 	return true
 end
 
+-- Lines 508-512
 function CoreCutsceneKeyBase.string_to_vector(string_value)
 	local xyz_strings = {
 		string.match(string_value, "Vector3%((%-?[%d%.]+), (%-?[%d%.]+), (%-?[%d%.]+)%)")
@@ -587,6 +646,7 @@ function CoreCutsceneKeyBase.string_to_vector(string_value)
 	return #xyz_numbers == 3 and Vector3(unpack(xyz_numbers)) or nil
 end
 
+-- Lines 514-518
 function CoreCutsceneKeyBase.string_to_rotation(string_value)
 	local xyz_strings = {
 		string.match(string_value, "Rotation%((%-?[%d%.]+), (%-?[%d%.]+), (%-?[%d%.]+)%)")
@@ -596,6 +656,7 @@ function CoreCutsceneKeyBase.string_to_rotation(string_value)
 	return #xyz_numbers == 3 and Rotation(unpack(xyz_numbers)) or nil
 end
 
+-- Lines 520-524
 function CoreCutsceneKeyBase.string_to_color(string_value)
 	local argb_strings = {
 		string.match(string_value, "Color%(([%d%.]+) %* %(([%d%.]+), ([%d%.]+), ([%d%.]+)%)%)")

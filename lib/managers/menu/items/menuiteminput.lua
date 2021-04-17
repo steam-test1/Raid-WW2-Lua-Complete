@@ -3,6 +3,7 @@ core:import("CoreMenuItem")
 MenuItemInput = MenuItemInput or class(CoreMenuItem.Item)
 MenuItemInput.TYPE = "input"
 
+-- Lines 6-17
 function MenuItemInput:init(data_node, parameters)
 	MenuItemInput.super.init(self, data_node, parameters)
 
@@ -15,26 +16,32 @@ function MenuItemInput:init(data_node, parameters)
 	self._empty_gui_input_limit = self._parameters.empty_gui_input_limit or self._input_limit / 2
 end
 
+-- Lines 19-21
 function MenuItemInput:input_text()
 	return self._input_text
 end
 
+-- Lines 23-25
 function MenuItemInput:set_input_text(input_text)
 	self._input_text = input_text
 end
 
+-- Lines 27-29
 function MenuItemInput:add_input_text(input_text)
 	self._input_text = self._input_text .. input_text
 end
 
+-- Lines 31-33
 function MenuItemInput:set_value(value)
 	self:set_input_text(value)
 end
 
+-- Lines 35-37
 function MenuItemInput:value()
 	return self:input_text()
 end
 
+-- Lines 41-57
 function MenuItemInput:setup_gui(node, row_item)
 	local right_align = node:_right_align()
 	row_item.gui_panel = node.item_panel:panel({
@@ -74,6 +81,7 @@ function MenuItemInput:setup_gui(node, row_item)
 	return true
 end
 
+-- Lines 59-77
 function MenuItemInput:_layout_gui(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local right_align = node:_right_align()
@@ -96,6 +104,7 @@ function MenuItemInput:_layout_gui(node, row_item)
 	self:_layout(row_item)
 end
 
+-- Lines 79-104
 function MenuItemInput:_layout(row_item)
 	local _, _, w = row_item.gui_text:text_rect()
 
@@ -122,6 +131,7 @@ function MenuItemInput:_layout(row_item)
 	return true
 end
 
+-- Lines 106-112
 function MenuItemInput:_update_input_bg(row_item)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -131,6 +141,7 @@ function MenuItemInput:_update_input_bg(row_item)
 	row_item.empty_gui_text:set_alpha(self._input_text == row_item.gui_text:text() and 0.75 or 0)
 end
 
+-- Lines 114-121
 function MenuItemInput:reload(row_item, node)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -141,6 +152,7 @@ function MenuItemInput:reload(row_item, node)
 	return true
 end
 
+-- Lines 123-129
 function MenuItemInput:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.empty_gui_text:set_color(row_item.color)
@@ -149,6 +161,7 @@ function MenuItemInput:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
+-- Lines 131-137
 function MenuItemInput:fade_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
 	row_item.empty_gui_text:set_color(row_item.color)
@@ -157,6 +170,7 @@ function MenuItemInput:fade_row_item(node, row_item, mouse_over)
 	return true
 end
 
+-- Lines 141-147
 function MenuItemInput:esc_key_callback(row_item)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -165,6 +179,7 @@ function MenuItemInput:esc_key_callback(row_item)
 	self:_loose_focus(row_item)
 end
 
+-- Lines 149-161
 function MenuItemInput:enter_key_callback(row_item)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -177,6 +192,7 @@ function MenuItemInput:enter_key_callback(row_item)
 	self:_layout(row_item)
 end
 
+-- Lines 163-168
 function MenuItemInput:_animate_show_input(input_panel)
 	local TOTAL_T = 0.2
 	local start_alpha = input_panel:alpha()
@@ -187,6 +203,7 @@ function MenuItemInput:_animate_show_input(input_panel)
 	end)
 end
 
+-- Lines 170-175
 function MenuItemInput:_animate_hide_input(input_panel)
 	local TOTAL_T = 0.2
 	local start_alpha = input_panel:alpha()
@@ -197,6 +214,7 @@ function MenuItemInput:_animate_hide_input(input_panel)
 	end)
 end
 
+-- Lines 177-186
 function MenuItemInput:_animate_input_bg(input_bg)
 	local t = 0
 
@@ -209,6 +227,7 @@ function MenuItemInput:_animate_input_bg(input_bg)
 	end
 end
 
+-- Lines 188-196
 function MenuItemInput:trigger()
 	if type(self._enter_callback) ~= "number" then
 		self._enter_callback()
@@ -219,6 +238,7 @@ function MenuItemInput:trigger()
 	end
 end
 
+-- Lines 199-221
 function MenuItemInput:_on_focus(row_item)
 	if self._focus then
 		return
@@ -241,10 +261,12 @@ function MenuItemInput:_on_focus(row_item)
 	self:_layout(row_item)
 end
 
+-- Lines 223-225
 function MenuItemInput:focus()
 	return self._focus
 end
 
+-- Lines 227-260
 function MenuItemInput:_loose_focus(row_item)
 	if not self._focus then
 		return false
@@ -280,12 +302,14 @@ function MenuItemInput:_loose_focus(row_item)
 	return true
 end
 
+-- Lines 262-265
 function MenuItemInput:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
+-- Lines 268-275
 function MenuItemInput.blink(o)
 	while true do
 		o:set_color(Color(0.05, 1, 1, 1))
@@ -295,6 +319,7 @@ function MenuItemInput.blink(o)
 	end
 end
 
+-- Lines 277-284
 function MenuItemInput:set_blinking(b, row_item)
 	local caret = row_item.caret
 
@@ -315,6 +340,7 @@ function MenuItemInput:set_blinking(b, row_item)
 	end
 end
 
+-- Lines 286-312
 function MenuItemInput:_update_caret(row_item)
 	local text = row_item.gui_text
 	local caret = row_item.caret
@@ -353,6 +379,7 @@ function MenuItemInput:_update_caret(row_item)
 	self:set_blinking(s == e and self._focus, row_item)
 end
 
+-- Lines 315-338
 function MenuItemInput:enter_text(row_item, o, s)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -377,6 +404,7 @@ function MenuItemInput:enter_text(row_item, o, s)
 	self:_layout(row_item)
 end
 
+-- Lines 341-390
 function MenuItemInput:update_key_down(row_item, o, k)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -432,6 +460,7 @@ function MenuItemInput:update_key_down(row_item, o, k)
 	end
 end
 
+-- Lines 392-399
 function MenuItemInput:key_release(row_item, o, k)
 	if not row_item or not alive(row_item.gui_text) then
 		return
@@ -442,6 +471,7 @@ function MenuItemInput:key_release(row_item, o, k)
 	end
 end
 
+-- Lines 402-480
 function MenuItemInput:key_press(row_item, o, k)
 	if not row_item or not alive(row_item.gui_text) then
 		return

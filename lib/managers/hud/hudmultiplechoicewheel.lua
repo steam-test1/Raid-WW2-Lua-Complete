@@ -18,6 +18,7 @@ HUDMultipleChoiceWheel.TEXT_DISTANCE_FROM_CIRCLE = 220
 HUDMultipleChoiceWheel.TEXT_UNSELECTED_ALPHA = 0.75
 HUDMultipleChoiceWheel.TEXT_SELECTED_ALPHA = 1
 
+-- Lines 26-44
 function HUDMultipleChoiceWheel:init(ws, hud, params)
 	self._ws = ws
 	self._tweak_data = params
@@ -37,6 +38,7 @@ function HUDMultipleChoiceWheel:init(ws, hud, params)
 	self:_setup_controller()
 end
 
+-- Lines 46-55
 function HUDMultipleChoiceWheel:_create_panel(hud)
 	local panel_params = {
 		layer = 1200,
@@ -49,6 +51,7 @@ function HUDMultipleChoiceWheel:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
+-- Lines 57-91
 function HUDMultipleChoiceWheel:_create_background()
 	local background_params = {
 		name = "background",
@@ -93,6 +96,7 @@ function HUDMultipleChoiceWheel:_create_background()
 	self._selection_arc:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 93-101
 function HUDMultipleChoiceWheel:_create_pointer()
 	local pointer_params = {
 		name = "pointer",
@@ -104,6 +108,7 @@ function HUDMultipleChoiceWheel:_create_pointer()
 	self._pointer:set_center(self._object:w() / 2, self._object:h() / 2)
 end
 
+-- Lines 103-107
 function HUDMultipleChoiceWheel:_setup_controller()
 	self._controller = managers.controller:get_default_controller()
 
@@ -111,14 +116,17 @@ function HUDMultipleChoiceWheel:_setup_controller()
 	self._object:axis_move(callback(self, self, "_axis_moved"))
 end
 
+-- Lines 109-111
 function HUDMultipleChoiceWheel:destroy(unit)
 	managers.queued_tasks:unqueue_all(nil, self)
 end
 
+-- Lines 113-115
 function HUDMultipleChoiceWheel:is_visible()
 	return self._is_active
 end
 
+-- Lines 117-144
 function HUDMultipleChoiceWheel:show()
 	if self._show_clbks then
 		for _, clbk in pairs(self._show_clbks) do
@@ -149,6 +157,7 @@ function HUDMultipleChoiceWheel:show()
 	self._object:set_visible(true)
 end
 
+-- Lines 146-169
 function HUDMultipleChoiceWheel:hide(quiet)
 	self:_deactivate_pointer()
 	self._ws:disconnect_controller(self._controller)
@@ -178,6 +187,7 @@ function HUDMultipleChoiceWheel:hide(quiet)
 	end
 end
 
+-- Lines 171-198
 function HUDMultipleChoiceWheel:trigger_option(id)
 	if not id or self._in_cooldown then
 		return
@@ -210,6 +220,7 @@ function HUDMultipleChoiceWheel:trigger_option(id)
 	end
 end
 
+-- Lines 200-230
 function HUDMultipleChoiceWheel:_call_clbk(function_name, function_data)
 	if self._in_cooldown then
 		return
@@ -237,10 +248,12 @@ function HUDMultipleChoiceWheel:_call_clbk(function_name, function_data)
 	end
 end
 
+-- Lines 232-234
 function HUDMultipleChoiceWheel:stop_cooldown()
 	self._in_cooldown = false
 end
 
+-- Lines 237-251
 function HUDMultipleChoiceWheel:_create_options()
 	local single_option_angle = 360 / #self._option_data
 
@@ -260,6 +273,7 @@ function HUDMultipleChoiceWheel:_create_options()
 	self._selection_arc:set_position_z(1 / #self._option_data)
 end
 
+-- Lines 253-272
 function HUDMultipleChoiceWheel:_create_separator_line(index)
 	local single_option_angle = 360 / #self._option_data
 	local separator_line_params = {
@@ -278,6 +292,7 @@ function HUDMultipleChoiceWheel:_create_separator_line(index)
 	table.insert(self._separators, separator_line)
 end
 
+-- Lines 274-292
 function HUDMultipleChoiceWheel:_create_icon(index)
 	local single_option_angle = 360 / #self._option_data
 	local icon_params = {
@@ -296,6 +311,7 @@ function HUDMultipleChoiceWheel:_create_icon(index)
 	return icon
 end
 
+-- Lines 294-319
 function HUDMultipleChoiceWheel:_create_option_text(index)
 	local single_option_angle = 360 / #self._option_data
 	local option_text_params = {
@@ -324,6 +340,7 @@ function HUDMultipleChoiceWheel:_create_option_text(index)
 	return text
 end
 
+-- Lines 321-327
 function HUDMultipleChoiceWheel:_recreate_options()
 	self:_destroy_options()
 	self:_deactivate_pointer()
@@ -331,10 +348,12 @@ function HUDMultipleChoiceWheel:_recreate_options()
 	self:_activate_pointer(false)
 end
 
+-- Lines 329-331
 function HUDMultipleChoiceWheel:set_options(options)
 	self._option_data = options
 end
 
+-- Lines 333-345
 function HUDMultipleChoiceWheel:add_option(option, index)
 	for i = 1, #self._option_data do
 		if self._option_data[i].id == option.id then
@@ -347,6 +366,7 @@ function HUDMultipleChoiceWheel:add_option(option, index)
 	table.insert(self._option_data, index, option)
 end
 
+-- Lines 347-354
 function HUDMultipleChoiceWheel:remove_option(option_id)
 	for i = 1, #self._option_data do
 		if self._option_data[i].id == option_id then
@@ -357,11 +377,13 @@ function HUDMultipleChoiceWheel:remove_option(option_id)
 	end
 end
 
+-- Lines 356-361
 function HUDMultipleChoiceWheel:_fade_in_options()
 	for i = 1, #self._options do
 	end
 end
 
+-- Lines 363-375
 function HUDMultipleChoiceWheel:_fade_out_options()
 	for i = 1, #self._options do
 		if self._active_panel ~= nil and self._active_panel == i then
@@ -374,6 +396,7 @@ function HUDMultipleChoiceWheel:_fade_out_options()
 	end
 end
 
+-- Lines 377-392
 function HUDMultipleChoiceWheel:_destroy_options()
 	if self._is_active then
 		for _, option in pairs(self._options) do
@@ -392,6 +415,7 @@ function HUDMultipleChoiceWheel:_destroy_options()
 	end
 end
 
+-- Lines 394-415
 function HUDMultipleChoiceWheel:_activate_pointer(controller_activated)
 	self._last_mouse_pos = {
 		x = 0,
@@ -419,6 +443,7 @@ function HUDMultipleChoiceWheel:_activate_pointer(controller_activated)
 	managers.mouse_pointer:set_pointer_image("none")
 end
 
+-- Lines 417-425
 function HUDMultipleChoiceWheel:_deactivate_pointer()
 	if not self._mouse_active then
 		return
@@ -430,6 +455,7 @@ function HUDMultipleChoiceWheel:_deactivate_pointer()
 	managers.mouse_pointer:release_mouse_pointer()
 end
 
+-- Lines 427-437
 function HUDMultipleChoiceWheel:_get_pointer_angle(x, y)
 	local vec1 = {
 		x = x,
@@ -448,6 +474,7 @@ function HUDMultipleChoiceWheel:_get_pointer_angle(x, y)
 	return angle
 end
 
+-- Lines 439-450
 function HUDMultipleChoiceWheel:_enter_panel(id)
 	self._options[id].text:set_alpha(HUDMultipleChoiceWheel.TEXT_SELECTED_ALPHA)
 	self._options[id].icon:set_alpha(HUDMultipleChoiceWheel.ICON_SELECTED_ALPHA)
@@ -461,6 +488,7 @@ function HUDMultipleChoiceWheel:_enter_panel(id)
 	self._selection_arc:set_visible(true)
 end
 
+-- Lines 452-460
 function HUDMultipleChoiceWheel:_exit_panel(id)
 	self._options[id].text:set_alpha(HUDMultipleChoiceWheel.TEXT_UNSELECTED_ALPHA)
 	self._options[id].icon:set_alpha(HUDMultipleChoiceWheel.ICON_UNSELECTED_ALPHA)
@@ -469,6 +497,7 @@ function HUDMultipleChoiceWheel:_exit_panel(id)
 	self._selection_arc:set_visible(false)
 end
 
+-- Lines 462-494
 function HUDMultipleChoiceWheel:_select_panel(x, y, distance_from_center)
 	local angle = self:_get_pointer_angle(x - self._center.x, y - self._center.y)
 	local quadrant = math.floor(angle / (360 / #self._options)) + 1
@@ -501,12 +530,14 @@ function HUDMultipleChoiceWheel:_select_panel(x, y, distance_from_center)
 	end
 end
 
+-- Lines 496-500
 function HUDMultipleChoiceWheel:_axis_moved(o, axis, value, c)
 	if axis == Idstring("right") then
 		self:set_pointer_position(value.x * 100, -value.y * 100)
 	end
 end
 
+-- Lines 502-515
 function HUDMultipleChoiceWheel:set_pointer_position(x, y)
 	self._pointer:set_center_x(self._object:w() / 2 + x)
 	self._pointer:set_center_y(self._object:h() / 2 + y)
@@ -522,6 +553,7 @@ function HUDMultipleChoiceWheel:set_pointer_position(x, y)
 	self:_select_panel(self._center.x + x, self._center.y + y, distance_from_center)
 end
 
+-- Lines 517-551
 function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 	if self._starting_mouse == nil then
 		self._starting_mouse = {
@@ -556,21 +588,26 @@ function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 	end
 end
 
+-- Lines 553-554
 function HUDMultipleChoiceWheel:_mouse_clicked(o, button, x, y)
 end
 
+-- Lines 556-558
 function HUDMultipleChoiceWheel:w()
 	return self._object:w()
 end
 
+-- Lines 560-562
 function HUDMultipleChoiceWheel:h()
 	return self._object:h()
 end
 
+-- Lines 565-567
 function HUDMultipleChoiceWheel:set_x(x)
 	self._object:set_x(x)
 end
 
+-- Lines 569-571
 function HUDMultipleChoiceWheel:set_y(y)
 	self._object:set_y(y)
 end

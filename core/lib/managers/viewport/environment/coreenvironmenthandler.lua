@@ -8,6 +8,7 @@ local dummy_material = {
 EnvironmentHandler = EnvironmentHandler or CoreClass.class()
 EnvironmentHandler.AREAS_PER_FRAME = 3
 
+-- Lines 10-32
 function EnvironmentHandler:init(env_manager, is_first_viewport)
 	self._env_manager = env_manager
 	self._is_first_viewport = is_first_viewport
@@ -21,6 +22,7 @@ function EnvironmentHandler:init(env_manager, is_first_viewport)
 	self:set_environment(self._env_manager:default_environment(), nil, nil, nil, nil)
 end
 
+-- Lines 34-50
 function EnvironmentHandler:destroy()
 	if self._feeder_map then
 		for data_path_key, feeder in pairs(self._feeder_map) do
@@ -39,6 +41,7 @@ function EnvironmentHandler:destroy()
 	self._force_feeder_update = false
 end
 
+-- Lines 52-121
 function EnvironmentHandler:set_environment(path, blend_duration, blend_bezier_curve, filter_list, unfiltered_environment_path)
 	local env_data = self._env_manager:_get_data(path)
 	local filtered_env_data = nil
@@ -110,10 +113,12 @@ function EnvironmentHandler:set_environment(path, blend_duration, blend_bezier_c
 	end
 end
 
+-- Lines 123-125
 function EnvironmentHandler:get_path()
 	return self._path
 end
 
+-- Lines 127-138
 function EnvironmentHandler:create_modifier(data_path_key, is_override, func)
 	local feeder = self._feeder_map[data_path_key]
 
@@ -130,6 +135,7 @@ function EnvironmentHandler:create_modifier(data_path_key, is_override, func)
 	end
 end
 
+-- Lines 140-150
 function EnvironmentHandler:destroy_modifier(data_path_key)
 	local feeder = self._feeder_map[data_path_key]
 
@@ -144,6 +150,7 @@ function EnvironmentHandler:destroy_modifier(data_path_key)
 	end
 end
 
+-- Lines 152-160
 function EnvironmentHandler:update_value(data_path_key)
 	local feeder = self._feeder_map[data_path_key]
 
@@ -154,6 +161,7 @@ function EnvironmentHandler:update_value(data_path_key)
 	end
 end
 
+-- Lines 162-171
 function EnvironmentHandler:get_value(data_path_key)
 	local feeder = self._feeder_map[data_path_key]
 
@@ -166,6 +174,7 @@ function EnvironmentHandler:get_value(data_path_key)
 	end
 end
 
+-- Lines 173-189
 function EnvironmentHandler:editor_set_value(data_path_key, value)
 	local feeder = self._feeder_map[data_path_key]
 
@@ -184,6 +193,7 @@ function EnvironmentHandler:editor_set_value(data_path_key, value)
 	return true
 end
 
+-- Lines 191-239
 function EnvironmentHandler:update(is_first_viewport, viewport, dt)
 	local scale = nil
 
@@ -229,10 +239,12 @@ function EnvironmentHandler:update(is_first_viewport, viewport, dt)
 	end
 end
 
+-- Lines 241-243
 function EnvironmentHandler:set_force_feeder_update()
 	self._force_feeder_update = true
 end
 
+-- Lines 245-270
 function EnvironmentHandler:apply(is_first_viewport, viewport, scene)
 	self:set_first_viewport(is_first_viewport, self._force_feeder_update)
 
@@ -259,6 +271,7 @@ function EnvironmentHandler:apply(is_first_viewport, viewport, scene)
 	end
 end
 
+-- Lines 272-283
 function EnvironmentHandler:update_environment_area(check_pos, area_list)
 	if self._current_area then
 		local is_still_inside = self._current_area:still_inside(check_pos)
@@ -272,6 +285,7 @@ function EnvironmentHandler:update_environment_area(check_pos, area_list)
 	end
 end
 
+-- Lines 285-291
 function EnvironmentHandler:on_environment_area_removed(area)
 	if area == self._current_area then
 		self:_leave_current_area()
@@ -280,12 +294,14 @@ function EnvironmentHandler:on_environment_area_removed(area)
 	self._area_iterator = 1
 end
 
+-- Lines 293-297
 function EnvironmentHandler:on_default_environment_changed(default_environment_path, blend_duration, blend_bezier_curve)
 	if not self._current_area then
 		self:set_environment(default_environment_path, blend_duration, blend_bezier_curve, nil, nil)
 	end
 end
 
+-- Lines 300-315
 function EnvironmentHandler:set_first_viewport(is_first_viewport, force_feeder_update)
 	if force_feeder_update then
 		for data_path_key, feeder in pairs(self._feeder_map) do
@@ -302,6 +318,7 @@ function EnvironmentHandler:set_first_viewport(is_first_viewport, force_feeder_u
 	end
 end
 
+-- Lines 317-367
 function EnvironmentHandler:_check_inside(check_pos, area_list, min_prio)
 	local area_count = #area_list
 
@@ -353,6 +370,7 @@ function EnvironmentHandler:_check_inside(check_pos, area_list, min_prio)
 	return false
 end
 
+-- Lines 369-373
 function EnvironmentHandler:_leave_current_area()
 	self:set_environment(self._env_manager:default_environment(), self._current_area:transition_time(), self._current_area:bezier_curve(), nil, nil)
 
@@ -360,6 +378,7 @@ function EnvironmentHandler:_leave_current_area()
 	self._current_area_id = nil
 end
 
+-- Lines 375-411
 function EnvironmentHandler:_get_post_processor_modifier_material(viewport, scene, id, ids_processor_name, ids_effect_name, ids_modifier)
 	local scene_map = self._post_processor_modifier_material_map[scene]
 	local material = nil
@@ -402,6 +421,7 @@ function EnvironmentHandler:_get_post_processor_modifier_material(viewport, scen
 	return material
 end
 
+-- Lines 413-423
 function EnvironmentHandler:_add_apply_feeder(feeder)
 	if feeder.AFFECTED_LIST then
 		table.insert(self._apply_prio_feeder_map, feeder)

@@ -2,10 +2,12 @@ require("lib/states/GameState")
 
 IngameStandardState = IngameStandardState or class(IngamePlayerBaseState)
 
+-- Lines 5-7
 function IngameStandardState:init(game_state_machine)
 	IngameStandardState.super.init(self, "ingame_standard", game_state_machine)
 end
 
+-- Lines 9-35
 function IngameStandardState:at_enter()
 	local players = managers.player:players()
 
@@ -37,6 +39,7 @@ function IngameStandardState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
+-- Lines 37-47
 function IngameStandardState:at_exit()
 	managers.environment_controller:set_dof_distance()
 

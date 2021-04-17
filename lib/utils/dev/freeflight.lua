@@ -4,6 +4,7 @@ core:import("CoreClass")
 
 FreeFlight = FreeFlight or class(CoreFreeFlight.FreeFlight)
 
+-- Lines 8-14
 function FreeFlight:enable(...)
 	FreeFlight.super.enable(self, ...)
 
@@ -12,6 +13,7 @@ function FreeFlight:enable(...)
 	end
 end
 
+-- Lines 16-22
 function FreeFlight:disable(...)
 	FreeFlight.super.disable(self, ...)
 
@@ -20,10 +22,12 @@ function FreeFlight:disable(...)
 	end
 end
 
+-- Lines 24-28
 function FreeFlight:_pause()
 	Application:set_pause(true)
 end
 
+-- Lines 30-34
 function FreeFlight:_unpause()
 	Application:set_pause(false)
 end

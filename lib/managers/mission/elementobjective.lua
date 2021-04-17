@@ -2,18 +2,22 @@ core:import("CoreMissionScriptElement")
 
 ElementObjective = ElementObjective or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementObjective:init(...)
 	ElementObjective.super.init(self, ...)
 end
 
+-- Lines 9-11
 function ElementObjective:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
+-- Lines 13-18
 function ElementObjective:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 20-74
 function ElementObjective:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -71,6 +75,7 @@ function ElementObjective:on_executed(instigator)
 	ElementObjective.super.on_executed(self, instigator)
 end
 
+-- Lines 76-83
 function ElementObjective:apply_job_value(amount)
 	local type = CoreClass.type_name(amount)
 
@@ -83,11 +88,13 @@ function ElementObjective:apply_job_value(amount)
 	self._values.amount = amount
 end
 
+-- Lines 86-89
 function ElementObjective:save(data)
 	data.enabled = self._values.enabled
 	data.amount = self._values.amount
 end
 
+-- Lines 91-95
 function ElementObjective:load(data)
 	self._values.enabled = data.enabled
 	self._values.amount = data.amount

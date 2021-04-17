@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementCarry = ElementCarry or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementCarry:init(...)
 	ElementCarry.super.init(self, ...)
 end
 
+-- Lines 9-69
 function ElementCarry:on_executed(instigator)
 	if not self._values.enabled or not alive(instigator) then
 		return
@@ -75,6 +77,7 @@ function ElementCarry:on_executed(instigator)
 	ElementCarry.super.on_executed(self, instigator)
 end
 
+-- Lines 71-73
 function ElementCarry:client_on_executed(...)
 	self:on_executed(...)
 end

@@ -4,6 +4,7 @@ RaidGUIControlButtonShortSecondary.HOVER_ICON = "btn_secondary_192_hover"
 RaidGUIControlButtonShortSecondary.W = tweak_data.gui.icons[RaidGUIControlButtonShortSecondary.ICON].texture_rect[3]
 RaidGUIControlButtonShortSecondary.H = tweak_data.gui.icons[RaidGUIControlButtonShortSecondary.ICON].texture_rect[4]
 
+-- Lines 8-33
 function RaidGUIControlButtonShortSecondary:init(parent, params)
 	if not params then
 		Application:error("Trying to create a short secondary button without parameters!", debug.traceback())

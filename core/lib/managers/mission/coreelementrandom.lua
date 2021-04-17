@@ -4,15 +4,18 @@ core:import("CoreTable")
 
 ElementRandom = ElementRandom or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 7-11
 function ElementRandom:init(...)
 	ElementRandom.super.init(self, ...)
 
 	self._original_on_executed = CoreTable.clone(self._values.on_executed)
 end
 
+-- Lines 13-15
 function ElementRandom:client_on_executed(...)
 end
 
+-- Lines 17-40
 function ElementRandom:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -41,6 +44,7 @@ function ElementRandom:on_executed(instigator)
 	ElementRandom.super.on_executed(self, instigator)
 end
 
+-- Lines 42-48
 function ElementRandom:_calc_amount()
 	local amount = self._values.amount or 1
 
@@ -51,6 +55,7 @@ function ElementRandom:_calc_amount()
 	return amount
 end
 
+-- Lines 50-55
 function ElementRandom:_get_random_elements()
 	local t = {}
 	local rand = math.random(#self._unused_randoms)

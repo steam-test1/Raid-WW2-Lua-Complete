@@ -1,5 +1,6 @@
 DLCExt = DLCExt or class()
 
+-- Lines 3-11
 function DLCExt:init(unit)
 	self._unit = unit
 

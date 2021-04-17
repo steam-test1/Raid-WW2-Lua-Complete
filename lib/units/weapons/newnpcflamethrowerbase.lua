@@ -1,18 +1,22 @@
 NewNPCFlamethrowerBase = NewNPCFlamethrowerBase or class(NewNPCRaycastWeaponBase)
 
+-- Lines 5-10
 function NewNPCFlamethrowerBase:init(...)
 	NewNPCFlamethrowerBase.super.init(self, ...)
 	self:setup_default()
 end
 
+-- Lines 13-19
 function NewNPCFlamethrowerBase:setup_default()
 	self._use_shell_ejection_effect = false
 	self._use_trails = false
 end
 
+-- Lines 22-23
 function NewNPCFlamethrowerBase:_spawn_muzzle_effect(from_pos, direction)
 end
 
+-- Lines 26-35
 function NewNPCFlamethrowerBase:update(unit, t, dt)
 	if self._check_shooting_expired and self._check_shooting_expired.check_t < t then
 		self._check_shooting_expired = nil
@@ -23,6 +27,7 @@ function NewNPCFlamethrowerBase:update(unit, t, dt)
 	end
 end
 
+-- Lines 38-47
 function NewNPCFlamethrowerBase:fire_blank(direction, impact)
 	if not self._check_shooting_expired then
 		self:play_tweak_data_sound("fire")

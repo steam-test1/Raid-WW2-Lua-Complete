@@ -28,6 +28,7 @@ _|    _|  _|    _|    _|    _|    _|_|
 	}
 }
 
+-- Lines 23-43
 function NewsReportManager:init()
 	self._news_dates = {}
 	local news_file = self.NEWS_FILE .. ".xml"
@@ -51,7 +52,9 @@ function NewsReportManager:init()
 	end
 end
 
+-- Lines 45-61
 function NewsReportManager:replace(str)
+	-- Lines 46-49
 	local function replace_str(s)
 		local value = NewsReportManager.KEYWORDS[s]
 
@@ -69,6 +72,7 @@ function NewsReportManager:replace(str)
 	return str
 end
 
+-- Lines 63-89
 function NewsReportManager:format_news(news, format, ...)
 	if format == "TEXT" then
 		local output = nil
@@ -100,6 +104,7 @@ function NewsReportManager:format_news(news, format, ...)
 	end
 end
 
+-- Lines 91-101
 function NewsReportManager:write_new_date()
 	local old_news = assert(SystemFS:open(self.OLD_NEWS_FILE .. ".xml", "w"))
 
@@ -113,6 +118,7 @@ function NewsReportManager:write_new_date()
 	old_news:close()
 end
 
+-- Lines 104-127
 function NewsReportManager:check_min_date(min_date, date)
 	local d0 = {}
 	local d1 = {}
@@ -138,6 +144,7 @@ function NewsReportManager:check_min_date(min_date, date)
 	return false
 end
 
+-- Lines 132-166
 function NewsReportManager:check_news(category, include_old_news, format, ...)
 	local news = {}
 	local news_updated = false
@@ -175,10 +182,12 @@ function NewsReportManager:check_news(category, include_old_news, format, ...)
 	return self:format_news(news, format, ...)
 end
 
+-- Lines 169-171
 function NewsReportManager:get_news(category)
 	return self:check_news(category)
 end
 
+-- Lines 174-176
 function NewsReportManager:get_old_news(category)
 	return self:check_news(category, true)
 end

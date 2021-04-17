@@ -37,6 +37,7 @@ HUDTeammateAI.STATES = {
 	}
 }
 
+-- Lines 37-56
 function HUDTeammateAI:init(i, teammates_panel, params)
 	self._id = i
 	self._states = HUDTeammateAI.STATES
@@ -56,6 +57,7 @@ function HUDTeammateAI:init(i, teammates_panel, params)
 	self:_create_player_name()
 end
 
+-- Lines 58-69
 function HUDTeammateAI:_create_panel(teammates_panel)
 	local panel_params = {
 		visible = false,
@@ -69,6 +71,7 @@ function HUDTeammateAI:_create_panel(teammates_panel)
 	self._object = teammates_panel:panel(panel_params)
 end
 
+-- Lines 71-80
 function HUDTeammateAI:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -80,6 +83,7 @@ function HUDTeammateAI:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
+-- Lines 82-91
 function HUDTeammateAI:_create_status_panel()
 	local status_panel_params = {
 		name = "status_panel",
@@ -91,6 +95,7 @@ function HUDTeammateAI:_create_status_panel()
 	self._status_panel = self._left_panel:panel(status_panel_params)
 end
 
+-- Lines 93-106
 function HUDTeammateAI:_create_nationality_icon()
 	local nationality = "german"
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
@@ -107,6 +112,7 @@ function HUDTeammateAI:_create_nationality_icon()
 	self._nationality_icon:set_center_y(self._status_panel:h() / 2)
 end
 
+-- Lines 108-140
 function HUDTeammateAI:_create_interaction_meter()
 	local interaction_meter_panel_params = {
 		layer = 4,
@@ -153,6 +159,7 @@ function HUDTeammateAI:_create_interaction_meter()
 	self._interaction_meter:set_center_y(self._interaction_meter_panel:h() / 2)
 end
 
+-- Lines 142-193
 function HUDTeammateAI:_create_timer()
 	local timer_panel_params = {
 		halign = "left",
@@ -218,6 +225,7 @@ function HUDTeammateAI:_create_timer()
 	self._timer_text:set_center_y(self._timer_panel:h() / 2 - 2)
 end
 
+-- Lines 195-207
 function HUDTeammateAI:_create_dead_icon()
 	local dead_icon_params = {
 		name = "dead_icon",
@@ -233,6 +241,7 @@ function HUDTeammateAI:_create_dead_icon()
 	self._dead_icon:set_center_y(self._status_panel:h() / 2)
 end
 
+-- Lines 209-221
 function HUDTeammateAI:_create_mounted_weapon_icon()
 	local mounted_weapon_icon_params = {
 		name = "mounted_weapon_icon",
@@ -248,6 +257,7 @@ function HUDTeammateAI:_create_mounted_weapon_icon()
 	self._mounted_weapon_icon:set_center_y(self._status_panel:h() / 2)
 end
 
+-- Lines 224-233
 function HUDTeammateAI:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -259,6 +269,7 @@ function HUDTeammateAI:_create_right_panel()
 	self._right_panel = self._object:panel(right_panel_params)
 end
 
+-- Lines 235-252
 function HUDTeammateAI:_create_player_name()
 	local player_name_params = {
 		name = "player_name",
@@ -280,14 +291,17 @@ function HUDTeammateAI:_create_player_name()
 	self._player_name:set_y(math.ceil(self._player_name:y() - 0.5))
 end
 
+-- Lines 254-256
 function HUDTeammateAI:padding_down()
 	return HUDTeammateAI.PADDING_DOWN
 end
 
+-- Lines 258-260
 function HUDTeammateAI:is_ai()
 	return true
 end
 
+-- Lines 262-270
 function HUDTeammateAI:set_name(name)
 	self._player_name:set_text(utf8.to_upper(name))
 
@@ -299,6 +313,7 @@ function HUDTeammateAI:set_name(name)
 	self._player_name:set_y(math.ceil(self._player_name:y() - 0.5))
 end
 
+-- Lines 272-280
 function HUDTeammateAI:set_nationality(nationality)
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
 
@@ -308,22 +323,27 @@ function HUDTeammateAI:set_nationality(nationality)
 	self._nationality_icon:set_center_y(self._left_panel:h() / 2)
 end
 
+-- Lines 282-284
 function HUDTeammateAI:show_turret_icon()
 	self:_add_active_state("mounted_weapon")
 end
 
+-- Lines 286-288
 function HUDTeammateAI:hide_turret_icon()
 	self:_remove_active_state("mounted_weapon")
 end
 
+-- Lines 290-292
 function HUDTeammateAI:start_timer(time, current)
 	HUDTeammateAI.super.start_timer(self, time, current)
 end
 
+-- Lines 294-296
 function HUDTeammateAI:stop_timer()
 	HUDTeammateAI.super.stop_timer(self)
 end
 
+-- Lines 298-312
 function HUDTeammateAI:set_condition(icon_data, text)
 	if icon_data == self._state then
 		return
@@ -340,6 +360,7 @@ function HUDTeammateAI:set_condition(icon_data, text)
 	self._state = icon_data
 end
 
+-- Lines 314-320
 function HUDTeammateAI:reset_state()
 	self._status_panel:child(self._displayed_state.control):set_alpha(0)
 
@@ -350,24 +371,28 @@ function HUDTeammateAI:reset_state()
 	self._status_panel:child(self._displayed_state.control):set_alpha(1)
 end
 
+-- Lines 322-327
 function HUDTeammateAI:start_interact(timer)
 	self:_add_active_state("interaction")
 	self._interaction_meter:stop()
 	self._interaction_meter:animate(callback(self, self, "_animate_interact"), timer)
 end
 
+-- Lines 329-334
 function HUDTeammateAI:cancel_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_meter:stop()
 	self._interaction_meter:animate(callback(self, self, "_animate_cancel_interact"))
 end
 
+-- Lines 336-341
 function HUDTeammateAI:complete_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_meter:stop()
 	self._interaction_meter:animate(callback(self, self, "_animate_complete_interact"))
 end
 
+-- Lines 345-361
 function HUDTeammateAI:_animate_interact(interact_image, duration)
 	local t = 0
 
@@ -387,6 +412,7 @@ function HUDTeammateAI:_animate_interact(interact_image, duration)
 	self._interaction_meter:set_position_z(1)
 end
 
+-- Lines 363-383
 function HUDTeammateAI:_animate_cancel_interact()
 	local duration = 0.2
 	local t = nil
@@ -410,6 +436,7 @@ function HUDTeammateAI:_animate_cancel_interact()
 	self._interaction_meter:set_position_z(0)
 end
 
+-- Lines 385-407
 function HUDTeammateAI:_animate_complete_interact()
 	local size_decrease_duration = 0.18
 	local duration = 0.2

@@ -9,6 +9,7 @@ RaidGUIControlListItemSaveSlots.LOCK_ICON_CENTER_DISTANCE_FROM_RIGHT = 43
 RaidGUIControlListItemSaveSlots.LOCKED_COLOR = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlListItemSaveSlots.UNLOCKED_COLOR = tweak_data.gui.colors.raid_dirty_white
 
+-- Lines 18-61
 function RaidGUIControlListItemSaveSlots:init(parent, params, data)
 	RaidGUIControlListItemSaveSlots.super.init(self, parent, params)
 
@@ -53,6 +54,7 @@ function RaidGUIControlListItemSaveSlots:init(parent, params, data)
 	end
 end
 
+-- Lines 63-72
 function RaidGUIControlListItemSaveSlots:_layout_panel(params)
 	local panel_params = {
 		name = "list_item_" .. self._name,
@@ -64,6 +66,7 @@ function RaidGUIControlListItemSaveSlots:_layout_panel(params)
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 74-83
 function RaidGUIControlListItemSaveSlots:_layout_background(params)
 	local background_params = {
 		y = 1,
@@ -77,6 +80,7 @@ function RaidGUIControlListItemSaveSlots:_layout_background(params)
 	self._item_background = self._object:rect(background_params)
 end
 
+-- Lines 85-93
 function RaidGUIControlListItemSaveSlots:_layout_highlight_marker()
 	local marker_params = {
 		y = 1,
@@ -90,6 +94,7 @@ function RaidGUIControlListItemSaveSlots:_layout_highlight_marker()
 	self._item_highlight_marker = self._object:rect(marker_params)
 end
 
+-- Lines 95-107
 function RaidGUIControlListItemSaveSlots:_layout_icon(params, data)
 	local icon_params = {
 		name = "list_item_icon_" .. self._name,
@@ -105,6 +110,7 @@ function RaidGUIControlListItemSaveSlots:_layout_icon(params, data)
 	self._item_icon:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 109-123
 function RaidGUIControlListItemSaveSlots:_layout_raid_name(params, data)
 	local raid_name_params = {
 		vertical = "center",
@@ -123,6 +129,7 @@ function RaidGUIControlListItemSaveSlots:_layout_raid_name(params, data)
 	self._item_label:set_center_y(RaidGUIControlListItemSaveSlots.NAME_CENTER_Y)
 end
 
+-- Lines 125-140
 function RaidGUIControlListItemSaveSlots:_layout_difficulty_locked()
 	local difficulty_locked_params = {
 		text = "--",
@@ -141,6 +148,7 @@ function RaidGUIControlListItemSaveSlots:_layout_difficulty_locked()
 	self._difficulty_locked_indicator:set_center_y(RaidGUIControlListItemSaveSlots.DIFFICULTY_CENTER_Y)
 end
 
+-- Lines 142-154
 function RaidGUIControlListItemSaveSlots:_layout_difficulty()
 	local difficulty_params = {
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
@@ -157,6 +165,7 @@ function RaidGUIControlListItemSaveSlots:_layout_difficulty()
 	end
 end
 
+-- Lines 156-165
 function RaidGUIControlListItemSaveSlots:_layout_lock_icon()
 	local lock_icon_params = {
 		texture = tweak_data.gui.icons[RaidGUIControlListItemSaveSlots.LOCK_ICON].texture,
@@ -169,6 +178,7 @@ function RaidGUIControlListItemSaveSlots:_layout_lock_icon()
 	self._lock_icon:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 167-175
 function RaidGUIControlListItemSaveSlots:_layout_breadcrumb()
 	local breadcrumb_params = {
 		category = self._data.breadcrumb.category,
@@ -180,6 +190,7 @@ function RaidGUIControlListItemSaveSlots:_layout_breadcrumb()
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
+-- Lines 177-187
 function RaidGUIControlListItemSaveSlots:_apply_locked_layout()
 	self._lock_icon:show()
 
@@ -195,6 +206,7 @@ function RaidGUIControlListItemSaveSlots:_apply_locked_layout()
 	self._item_label:set_color(RaidGUIControlListItemSaveSlots.LOCKED_COLOR)
 end
 
+-- Lines 189-205
 function RaidGUIControlListItemSaveSlots:on_mouse_released(button)
 	if self._data.breadcrumb then
 		managers.breadcrumb:remove_breadcrumb(self._data.breadcrumb.category, self._data.breadcrumb.identifiers)
@@ -217,6 +229,7 @@ function RaidGUIControlListItemSaveSlots:on_mouse_released(button)
 	end
 end
 
+-- Lines 207-216
 function RaidGUIControlListItemSaveSlots:mouse_double_click(o, button, x, y)
 	if self._params.no_click then
 		return
@@ -229,10 +242,12 @@ function RaidGUIControlListItemSaveSlots:mouse_double_click(o, button, x, y)
 	end
 end
 
+-- Lines 218-220
 function RaidGUIControlListItemSaveSlots:selected()
 	return self._selected
 end
 
+-- Lines 222-239
 function RaidGUIControlListItemSaveSlots:select()
 	self._selected = true
 
@@ -257,11 +272,13 @@ function RaidGUIControlListItemSaveSlots:select()
 	end
 end
 
+-- Lines 241-244
 function RaidGUIControlListItemSaveSlots:unfocus()
 	self._item_background:hide()
 	self._item_highlight_marker:hide()
 end
 
+-- Lines 246-254
 function RaidGUIControlListItemSaveSlots:unselect()
 	self._selected = false
 
@@ -274,10 +291,12 @@ function RaidGUIControlListItemSaveSlots:unselect()
 	self._item_highlight_marker:hide()
 end
 
+-- Lines 256-258
 function RaidGUIControlListItemSaveSlots:data()
 	return self._data
 end
 
+-- Lines 260-276
 function RaidGUIControlListItemSaveSlots:highlight_on()
 	self._item_background:show()
 
@@ -296,6 +315,7 @@ function RaidGUIControlListItemSaveSlots:highlight_on()
 	end
 end
 
+-- Lines 278-289
 function RaidGUIControlListItemSaveSlots:highlight_off()
 	if not managers.menu:is_pc_controller() then
 		self._item_highlight_marker:hide()
@@ -307,6 +327,7 @@ function RaidGUIControlListItemSaveSlots:highlight_off()
 	end
 end
 
+-- Lines 291-296
 function RaidGUIControlListItemSaveSlots:confirm_pressed()
 	if self._selected then
 		self:on_mouse_released(self._name)

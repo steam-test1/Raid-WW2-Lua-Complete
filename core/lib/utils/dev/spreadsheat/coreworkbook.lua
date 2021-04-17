@@ -23,14 +23,17 @@ local EMPTY_WORKBOOK_XML1 = [[
 local EMPTY_WORKBOOK_XML2 = "</Workbook> "
 Workbook = Workbook or CoreClass.class()
 
+-- Lines 32-34
 function Workbook:init()
 	self._worksheets = {}
 end
 
+-- Lines 36-38
 function Workbook:add_worksheet(worksheet)
 	table.insert(self._worksheets, worksheet)
 end
 
+-- Lines 40-48
 function Workbook:to_xml(f)
 	f:write(EMPTY_WORKBOOK_XML1)
 

@@ -1,5 +1,6 @@
 ExecLuaOperatorElement = ExecLuaOperatorElement or class(MissionElement)
 
+-- Lines 3-16
 function ExecLuaOperatorElement:init(unit)
 	ExecLuaOperatorElement.super.init(self, unit)
 
@@ -16,6 +17,7 @@ function ExecLuaOperatorElement:init(unit)
 	}
 end
 
+-- Lines 18-54
 function ExecLuaOperatorElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -61,6 +63,7 @@ function ExecLuaOperatorElement:_build_panel(panel, panel_sizer)
 	self:_lua_syntax_check()
 end
 
+-- Lines 56-71
 function ExecLuaOperatorElement:_lua_syntax_check()
 	self._syntax_check_ctrl:set_value("")
 

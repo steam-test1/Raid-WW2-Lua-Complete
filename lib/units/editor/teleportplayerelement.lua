@@ -1,5 +1,6 @@
 TeleportPlayerElement = TeleportPlayerElement or class(MissionElement)
 
+-- Lines 3-9
 function TeleportPlayerElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -8,6 +9,7 @@ function TeleportPlayerElement:init(unit)
 	table.insert(self._save_values, "state")
 end
 
+-- Lines 11-19
 function TeleportPlayerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -18,5 +20,6 @@ function TeleportPlayerElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("The state the player will change to after teleportation")
 end
 
+-- Lines 21-22
 function TeleportPlayerElement:add_to_mission_package()
 end

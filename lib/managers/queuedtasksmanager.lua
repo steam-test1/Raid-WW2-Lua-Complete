@@ -1,14 +1,17 @@
 QueuedTasksManager = QueuedTasksManager or class()
 
+-- Lines 18-22
 function QueuedTasksManager:_set_iterating(val)
 end
 
+-- Lines 25-29
 function QueuedTasksManager:init()
 	setup._t = 0
 	self._t = 0
 	self._queued_tasks = {}
 end
 
+-- Lines 34-53
 function QueuedTasksManager:update(t, dt)
 	self._t = t
 	local tasks = self._queued_tasks
@@ -32,6 +35,7 @@ function QueuedTasksManager:update(t, dt)
 	self:_set_iterating(false)
 end
 
+-- Lines 56-59
 function QueuedTasksManager:queue(id, callback, task_self, data, delay, verification_callback, persistant)
 	local task = {
 		id = id,
@@ -46,6 +50,7 @@ function QueuedTasksManager:queue(id, callback, task_self, data, delay, verifica
 	table.insert(self._queued_tasks, task)
 end
 
+-- Lines 64-89
 function QueuedTasksManager:unqueue(id)
 	local tasks = self._queued_tasks
 	local i_task = #tasks
@@ -61,6 +66,7 @@ function QueuedTasksManager:unqueue(id)
 	end
 end
 
+-- Lines 91-115
 function QueuedTasksManager:unqueue_all(id, task_self, skip_persistant_tasks)
 	local tasks = self._queued_tasks
 	local i_task = #tasks
@@ -83,6 +89,7 @@ function QueuedTasksManager:unqueue_all(id, task_self, skip_persistant_tasks)
 	end
 end
 
+-- Lines 118-126
 function QueuedTasksManager:has_task(id)
 	for _, task in pairs(self._queued_tasks) do
 		if task.id == id then
@@ -93,6 +100,7 @@ function QueuedTasksManager:has_task(id)
 	return false
 end
 
+-- Lines 130-145
 function QueuedTasksManager:when(id)
 	local time_remaining = nil
 	local tasks = self._queued_tasks
@@ -109,6 +117,7 @@ function QueuedTasksManager:when(id)
 	return time_remaining
 end
 
+-- Lines 148-159
 function QueuedTasksManager:_execute_queued_task(task)
 	if task.verification_callback then
 		task.verification_callback(task.id)
@@ -121,6 +130,7 @@ function QueuedTasksManager:_execute_queued_task(task)
 	end
 end
 
+-- Lines 161-163
 function QueuedTasksManager:on_simulation_ended()
 	self._queued_tasks = {}
 end

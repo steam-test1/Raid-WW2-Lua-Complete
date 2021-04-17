@@ -12,6 +12,7 @@ core:import("CoreUnit")
 
 Layer = Layer or CoreClass.class()
 
+-- Lines 16-48
 function Layer:init(owner, save_name)
 	if not owner then
 		Application:error("Layer:init was called without parameters owner and save_name")
@@ -41,6 +42,7 @@ function Layer:init(owner, save_name)
 	self:_init_unit_highlighter()
 end
 
+-- Lines 51-58
 function Layer:_init_unit_highlighter()
 	self._unit_highlighter = World:unit_manager():unit_highlighter()
 
@@ -50,26 +52,32 @@ function Layer:_init_unit_highlighter()
 	self._highlighted_units = {}
 end
 
+-- Lines 61-63
 function Layer:created_units()
 	return self._created_units
 end
 
+-- Lines 65-67
 function Layer:created_units_pairs()
 	return self._created_units_pairs
 end
 
+-- Lines 70-72
 function Layer:selected_units()
 	return self._selected_units
 end
 
+-- Lines 74-76
 function Layer:current_pos()
 	return self._current_pos
 end
 
+-- Lines 78-80
 function Layer:uses_continents()
 	return self._uses_continents
 end
 
+-- Lines 83-91
 function Layer:load(world_holder, offset)
 	local world_units = world_holder:create_world("world", self._save_name, offset)
 
@@ -82,6 +90,7 @@ function Layer:load(world_holder, offset)
 	return world_units
 end
 
+-- Lines 93-108
 function Layer:post_load()
 	if not self._post_register_units then
 		return
@@ -100,6 +109,7 @@ function Layer:post_load()
 	self._post_register_units = nil
 end
 
+-- Lines 110-124
 function Layer:add_unit_to_created_units(unit, skip_register)
 	if not skip_register and not self._owner:register_unit_id(unit) then
 		self._post_register_units = self._post_register_units or {}
@@ -115,6 +125,7 @@ function Layer:add_unit_to_created_units(unit, skip_register)
 	self._created_units_pairs[unit:unit_data().unit_id] = unit
 end
 
+-- Lines 127-133
 function Layer:set_up_name_id(unit)
 	if unit:unit_data().name_id == "none" then
 		unit:unit_data().name_id = self:get_name_id(unit)
@@ -123,6 +134,7 @@ function Layer:set_up_name_id(unit)
 	end
 end
 
+-- Lines 136-142
 function Layer:insert_name_id(unit)
 	local name = unit:name():s()
 	self._name_ids[name] = self._name_ids[name] or {}
@@ -130,6 +142,7 @@ function Layer:insert_name_id(unit)
 	self._name_ids[name][name_id] = (self._name_ids[name][name_id] or 0) + 1
 end
 
+-- Lines 145-186
 function Layer:get_name_id(unit, name)
 	local u_name = unit:name():s()
 	local start_number = 1
@@ -171,6 +184,7 @@ function Layer:get_name_id(unit, name)
 	end
 end
 
+-- Lines 189-198
 function Layer:remove_name_id(unit)
 	local unit_name = unit:name():s()
 
@@ -184,6 +198,7 @@ function Layer:remove_name_id(unit)
 	end
 end
 
+-- Lines 201-213
 function Layer:set_name_id(unit, name_id)
 	local unit_name = unit:name():s()
 
@@ -203,24 +218,29 @@ function Layer:set_name_id(unit, name_id)
 	end
 end
 
+-- Lines 216-218
 function Layer:widget_affect_object()
 	return self._selected_unit
 end
 
+-- Lines 221-223
 function Layer:use_widget_position(pos)
 	self:set_unit_positions(pos)
 end
 
+-- Lines 226-228
 function Layer:use_widget_rotation(rot)
 	self:set_unit_rotations(rot * self:widget_affect_object():rotation():inverse())
 end
 
+-- Lines 230-234
 function Layer:update(t, dt)
 	self:_update_widget_affect_object(t, dt)
 	self:_update_drag_select(t, dt)
 	self:_update_draw_unit_trigger_sequences(t, dt)
 end
 
+-- Lines 237-272
 function Layer:_update_widget_affect_object(t, dt)
 	if alive(self:widget_affect_object()) then
 		local widget_pos = managers.editor:world_to_screen(self:widget_affect_object():position())
@@ -260,6 +280,7 @@ function Layer:_update_widget_affect_object(t, dt)
 	end
 end
 
+-- Lines 275-324
 function Layer:_update_drag_select(t, dt)
 	if not self._drag_select then
 		return
@@ -323,6 +344,7 @@ function Layer:_update_drag_select(t, dt)
 	end
 end
 
+-- Lines 327-347
 function Layer:_update_draw_unit_trigger_sequences(t, dt)
 	if alive(self._selected_unit) and self._selected_unit:damage() and not self._selected_unit:mission_element() then
 		local trigger_name_list = self._selected_unit:damage():get_trigger_name_list()
@@ -345,6 +367,7 @@ function Layer:_update_draw_unit_trigger_sequences(t, dt)
 	end
 end
 
+-- Lines 350-364
 function Layer:authorised_unit_type(unit)
 	local name = unit:name():s()
 
@@ -367,6 +390,7 @@ function Layer:authorised_unit_type(unit)
 	return false
 end
 
+-- Lines 366-386
 function Layer:draw_grid(t, dt)
 	if not managers.editor:layer_draw_grid() then
 		return
@@ -391,6 +415,7 @@ function Layer:draw_grid(t, dt)
 	end
 end
 
+-- Lines 390-396
 function Layer:update_always(t, dt)
 	if not self._layer_enabled then
 		for _, unit in ipairs(self._created_units) do
@@ -399,38 +424,47 @@ function Layer:update_always(t, dt)
 	end
 end
 
+-- Lines 399-401
 function Layer:local_rot()
 	return managers.editor:is_coordinate_system("Local")
 end
 
+-- Lines 404-406
 function Layer:surface_move()
 	return managers.editor:use_surface_move()
 end
 
+-- Lines 409-411
 function Layer:use_snappoints()
 	return managers.editor:use_snappoints()
 end
 
+-- Lines 414-416
 function Layer:grid_size()
 	return managers.editor:grid_size()
 end
 
+-- Lines 419-421
 function Layer:snap_rotation()
 	return managers.editor:snap_rotation()
 end
 
+-- Lines 424-426
 function Layer:snap_rotation_axis()
 	return managers.editor:snap_rotation_axis()
 end
 
+-- Lines 429-431
 function Layer:rotation_speed()
 	return managers.editor:rotation_speed()
 end
 
+-- Lines 434-436
 function Layer:grid_altitude()
 	return managers.editor:grid_altitude()
 end
 
+-- Lines 439-496
 function Layer:build_units(params)
 	params = params or {}
 	local style = params.style or "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING,LC_SINGLE_SEL"
@@ -505,6 +539,7 @@ function Layer:build_units(params)
 	return notebook_sizer
 end
 
+-- Lines 498-503
 function Layer:_stripped_unit_name(name)
 	local reverse = string.reverse(name)
 	local i = string.find(reverse, "/")
@@ -513,6 +548,7 @@ function Layer:_stripped_unit_name(name)
 	return name
 end
 
+-- Lines 506-515
 function Layer:repopulate_units()
 	self:load_unit_map_from_vector()
 
@@ -527,18 +563,22 @@ function Layer:repopulate_units()
 	end
 end
 
+-- Lines 518-520
 function Layer:units_notebook()
 	return self._notebook
 end
 
+-- Lines 523-525
 function Layer:notebook_unit_list(name)
 	return self._notebook_units_lists[name]
 end
 
+-- Lines 528-530
 function Layer:toggle_short_name(data)
 	self:update_filter(data)
 end
 
+-- Lines 533-550
 function Layer:update_filter(data)
 	local filter = data.filter:get_value()
 
@@ -563,6 +603,7 @@ function Layer:update_filter(data)
 	data.units:autosize_column(0)
 end
 
+-- Lines 553-561
 function Layer:build_name_id()
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -575,6 +616,7 @@ function Layer:build_name_id()
 	self._sizer:add(sizer, 0, 4, "EXPAND,TOP")
 end
 
+-- Lines 564-572
 function Layer:update_name_id(name_id)
 	if self._block_name_id_event then
 		self._block_name_id_event = false
@@ -587,20 +629,24 @@ function Layer:update_name_id(name_id)
 	end
 end
 
+-- Lines 576-578
 function Layer:cb_toogle(data)
 	self[data.value] = data.cb:get_value()
 end
 
+-- Lines 582-585
 function Layer:cb_toogle_trg(data)
 	data.cb:set_value(not data.cb:get_value())
 
 	self[data.value] = data.cb:get_value()
 end
 
+-- Lines 589-591
 function Layer:change_combo_box(data)
 	self[data.value] = tonumber(data.combobox:get_value())
 end
 
+-- Lines 595-622
 function Layer:change_combo_box_trg(data)
 	local next_i = nil
 
@@ -631,6 +677,7 @@ function Layer:change_combo_box_trg(data)
 	self[data.value] = tonumber(data.combobox:get_value())
 end
 
+-- Lines 626-632
 function Layer:use_move_widget(value)
 	if self._will_use_widgets then
 		self._move_widget:set_use(value)
@@ -639,6 +686,7 @@ function Layer:use_move_widget(value)
 	end
 end
 
+-- Lines 635-641
 function Layer:use_rotate_widget(value)
 	if self._will_use_widgets then
 		self._rotate_widget:set_use(value)
@@ -647,10 +695,12 @@ function Layer:use_rotate_widget(value)
 	end
 end
 
+-- Lines 643-645
 function Layer:unit_types()
 	return self._unit_types
 end
 
+-- Lines 647-659
 function Layer:load_unit_map_from_vector(which)
 	self._unit_types = which or self._unit_types
 	self._unit_map = {}
@@ -667,22 +717,27 @@ function Layer:load_unit_map_from_vector(which)
 	end
 end
 
+-- Lines 660-662
 function Layer:set_unit_map(map)
 	self._unit_map = map
 end
 
+-- Lines 663-665
 function Layer:get_unit_map()
 	return self._unit_map
 end
 
+-- Lines 667-669
 function Layer:category_map()
 	return self._category_map
 end
 
+-- Lines 671-673
 function Layer:get_layer_name()
 	return nil
 end
 
+-- Lines 675-680
 function Layer:cancel_all(ctrlr, event)
 	event:skip()
 
@@ -691,6 +746,7 @@ function Layer:cancel_all(ctrlr, event)
 	end
 end
 
+-- Lines 682-687
 function Layer:deselect()
 	if not self:condition() then
 		self:set_select_unit(nil)
@@ -698,10 +754,12 @@ function Layer:deselect()
 	end
 end
 
+-- Lines 689-691
 function Layer:force_editor_state()
 	self._owner:force_editor_state()
 end
 
+-- Lines 693-709
 function Layer:update_unit_settings()
 	managers.editor:unit_output(self._selected_unit)
 	managers.editor:has_editables(self._selected_unit, self._selected_units)
@@ -723,6 +781,7 @@ function Layer:update_unit_settings()
 	self:set_reference_unit(self._selected_unit)
 end
 
+-- Lines 712-720
 function Layer:activate()
 	self:update_unit_settings()
 
@@ -735,6 +794,7 @@ function Layer:activate()
 	self:recalc_all_locals()
 end
 
+-- Lines 723-727
 function Layer:deactivate()
 	self._drag_units = nil
 
@@ -742,10 +802,12 @@ function Layer:deactivate()
 	self._move_widget:set_enabled(false)
 end
 
+-- Lines 728-730
 function Layer:build_panel()
 	return nil
 end
 
+-- Lines 732-739
 function Layer:widget_rot()
 	local widget_rot = Rotation()
 
@@ -756,6 +818,7 @@ function Layer:widget_rot()
 	return widget_rot
 end
 
+-- Lines 741-781
 function Layer:click_widget()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -800,6 +863,7 @@ function Layer:click_widget()
 	end
 end
 
+-- Lines 783-792
 function Layer:release_widget()
 	if self._using_widget then
 		self:cloned_group()
@@ -814,6 +878,7 @@ function Layer:release_widget()
 	end
 end
 
+-- Lines 794-799
 function Layer:cloned_group()
 	if self._clone_create_group then
 		self._clone_create_group = false
@@ -822,10 +887,12 @@ function Layer:cloned_group()
 	end
 end
 
+-- Lines 801-803
 function Layer:using_widget()
 	return self._using_widget
 end
 
+-- Lines 805-810
 function Layer:reset_widget_values()
 	self._using_widget = false
 
@@ -834,6 +901,7 @@ function Layer:reset_widget_values()
 	managers.editor:set_value_info_visibility(false)
 end
 
+-- Lines 815-847
 function Layer:prepare_replace(names, rules)
 	rules = rules or {}
 	local data = {}
@@ -875,6 +943,7 @@ function Layer:prepare_replace(names, rules)
 	return data
 end
 
+-- Lines 851-892
 function Layer:recreate_units(name, data)
 	local units_to_select = {}
 	local reference_unit = nil
@@ -919,6 +988,7 @@ function Layer:recreate_units(name, data)
 	self._replacing_units = false
 end
 
+-- Lines 915-935
 function Layer:replace_unit(name, all)
 	local replace_units = {}
 
@@ -940,6 +1010,7 @@ function Layer:replace_unit(name, all)
 	self:_replace_units(name, replace_units)
 end
 
+-- Lines 939-983
 function Layer:_replace_units(name, replace_units)
 	local selected_units = CoreTable.clone(self._selected_units)
 	local reference_unit = self._selected_unit
@@ -987,10 +1058,12 @@ function Layer:_replace_units(name, replace_units)
 	self._replacing_units = false
 end
 
+-- Lines 986-988
 function Layer:use_grab_info()
 	self:reset_widget_values()
 end
 
+-- Lines 992-1002
 function Layer:unit_sampler()
 	if not self._grab and not self:condition() then
 		local data = {
@@ -1009,19 +1082,23 @@ function Layer:unit_sampler()
 	end
 end
 
+-- Lines 1004-1006
 function Layer:ignore_global_select()
 	return self._ignore_global_select
 end
 
+-- Lines 1008-1010
 function Layer:select_unit_authorised(unit)
 	return true
 end
 
+-- Lines 1013-1016
 function Layer:click_select_unit()
 	self:set_drag_select()
 	managers.editor:click_select_unit(self)
 end
 
+-- Lines 1018-1027
 function Layer:set_drag_select()
 	if self:condition() or self._grab then
 		return
@@ -1037,6 +1114,7 @@ function Layer:set_drag_select()
 	self._drag_start_pos = managers.editor:cursor_pos()
 end
 
+-- Lines 1029-1034
 function Layer:remove_polyline()
 	if self._polyline then
 		managers.editor._gui:remove(self._polyline)
@@ -1045,18 +1123,22 @@ function Layer:remove_polyline()
 	end
 end
 
+-- Lines 1036-1038
 function Layer:adding_units()
 	return CoreInput.ctrl()
 end
 
+-- Lines 1040-1042
 function Layer:removing_units()
 	return CoreInput.alt()
 end
 
+-- Lines 1044-1046
 function Layer:adding_or_removing_units()
 	return CoreInput.ctrl() or CoreInput.alt()
 end
 
+-- Lines 1048-1063
 function Layer:select_release()
 	self._drag_select = false
 
@@ -1079,33 +1161,39 @@ function Layer:select_release()
 	self._drag_units = nil
 end
 
+-- Lines 1066-1072
 function Layer:add_highlighted_unit(unit, config)
 	if not unit then
 		return
 	end
 end
 
+-- Lines 1075-1077
 function Layer:remove_highlighted_unit(unit)
 end
 
+-- Lines 1080-1084
 function Layer:clear_highlighted_units()
 	for _, unit in ipairs(self._selected_units) do
 		self:remove_highlighted_unit(unit)
 	end
 end
 
+-- Lines 1087-1090
 function Layer:clear_selected_units_table()
 	self:clear_highlighted_units()
 
 	self._selected_units = {}
 end
 
+-- Lines 1093-1097
 function Layer:clear_selected_units()
 	self:clear_selected_units_table()
 	self:set_reference_unit(nil)
 	self:update_unit_settings()
 end
 
+-- Lines 1099-1111
 function Layer:set_selected_units(units)
 	self:clear_selected_units()
 
@@ -1124,6 +1212,7 @@ function Layer:set_selected_units(units)
 	self._selecting_many_units = false
 end
 
+-- Lines 1113-1123
 function Layer:select_group(group)
 	self:clear_highlighted_units()
 	self:set_reference_unit(group:reference())
@@ -1139,10 +1228,12 @@ function Layer:select_group(group)
 	self:update_unit_settings()
 end
 
+-- Lines 1126-1128
 function Layer:current_group()
 	return self:unit_in_group(self._selected_unit)
 end
 
+-- Lines 1131-1146
 function Layer:unit_in_group(unit)
 	if alive(unit) then
 		local groups = unit:unit_data().editor_groups
@@ -1161,6 +1252,7 @@ function Layer:unit_in_group(unit)
 	return nil
 end
 
+-- Lines 1149-1196
 function Layer:set_select_group(unit)
 	if managers.editor:using_groups() and not self._clone_create_group then
 		local group = self:unit_in_group(unit)
@@ -1208,6 +1300,7 @@ function Layer:set_select_group(unit)
 	return false
 end
 
+-- Lines 1200-1246
 function Layer:set_select_unit(unit)
 	if managers.editor:loading() then
 		return
@@ -1247,6 +1340,7 @@ function Layer:set_select_unit(unit)
 	end
 end
 
+-- Lines 1249-1264
 function Layer:add_select_unit(unit)
 	if unit then
 		if not table.contains(self._selected_units, unit) then
@@ -1263,6 +1357,7 @@ function Layer:add_select_unit(unit)
 	end
 end
 
+-- Lines 1267-1272
 function Layer:remove_select_unit(unit)
 	if table.contains(self._selected_units, unit) then
 		table.delete(self._selected_units, unit)
@@ -1270,6 +1365,7 @@ function Layer:remove_select_unit(unit)
 	end
 end
 
+-- Lines 1275-1284
 function Layer:check_referens_exists()
 	if #self._selected_units > 0 then
 		if not table.contains(self._selected_units, self._selected_unit) then
@@ -1281,6 +1377,7 @@ function Layer:check_referens_exists()
 	end
 end
 
+-- Lines 1287-1295
 function Layer:set_reference_unit(unit)
 	if alive(self._selected_unit) and (not alive(unit) or unit ~= self._selected_unit) then
 		self:_on_reference_unit_unselected(self._selected_unit)
@@ -1291,9 +1388,11 @@ function Layer:set_reference_unit(unit)
 	managers.editor:on_reference_unit(self._selected_unit)
 end
 
+-- Lines 1298-1299
 function Layer:_on_reference_unit_unselected(unit)
 end
 
+-- Lines 1303-1320
 function Layer:recalc_all_locals()
 	if #self._selected_units > 0 and not table.contains(self._selected_units, self._selected_unit) then
 		self:set_reference_unit(self._selected_units[1])
@@ -1312,6 +1411,7 @@ function Layer:recalc_all_locals()
 	end
 end
 
+-- Lines 1323-1328
 function Layer:recalc_locals(unit, reference)
 	local pos = reference:position()
 	local rot = reference:rotation()
@@ -1319,10 +1419,12 @@ function Layer:recalc_locals(unit, reference)
 	unit:unit_data().local_rot = rot:inverse() * unit:rotation()
 end
 
+-- Lines 1330-1332
 function Layer:selected_unit()
 	return self._selected_unit
 end
 
+-- Lines 1336-1350
 function Layer:create_unit(name, pos, rot, to_continent_name)
 	local unit = CoreUnit.safe_spawn_unit(name, pos, rot)
 
@@ -1344,6 +1446,7 @@ function Layer:create_unit(name, pos, rot, to_continent_name)
 	return unit
 end
 
+-- Lines 1353-1369
 function Layer:do_spawn_unit(name, pos, rot, to_continent_name)
 	local continent = to_continent_name and managers.editor:continent(to_continent_name) or managers.editor:current_continent()
 
@@ -1368,6 +1471,7 @@ function Layer:do_spawn_unit(name, pos, rot, to_continent_name)
 	end
 end
 
+-- Lines 1372-1383
 function Layer:remove_unit(unit)
 	table.delete(self._selected_units, unit)
 	self:remove_highlighted_unit(unit)
@@ -1383,6 +1487,7 @@ function Layer:remove_unit(unit)
 	World:delete_unit(unit)
 end
 
+-- Lines 1385-1393
 function Layer:delete_unit(unit)
 	if self._selected_unit == unit then
 		self:set_reference_unit(nil)
@@ -1396,9 +1501,11 @@ function Layer:delete_unit(unit)
 	self:remove_unit(unit)
 end
 
+-- Lines 1396-1397
 function Layer:_on_unit_created(unit)
 end
 
+-- Lines 1400-1407
 function Layer:show_replace_units()
 	if self:ctrl() or self:shift() or self:alt() then
 		return
@@ -1409,6 +1516,7 @@ function Layer:show_replace_units()
 	end
 end
 
+-- Lines 1410-1421
 function Layer:get_created_unit_by_pattern(patterns)
 	local units = {}
 
@@ -1423,6 +1531,7 @@ function Layer:get_created_unit_by_pattern(patterns)
 	return units
 end
 
+-- Lines 1423-1434
 function Layer:add_triggers()
 	local vc = self._editor_data.virtual_controller
 
@@ -1436,29 +1545,36 @@ function Layer:add_triggers()
 	vc:add_trigger(Idstring("center_view_on_selected_unit"), callback(self, self, "on_center_view_on_selected_unit"))
 end
 
+-- Lines 1436-1438
 function Layer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end
 
+-- Lines 1440-1442
 function Layer:get_help(text)
 	return text .. "No help Available"
 end
 
+-- Lines 1444-1446
 function Layer:undo()
 	cat_debug("editor", "No undo implemented in current layer")
 end
 
+-- Lines 1448-1450
 function Layer:clone()
 	cat_debug("editor", "No clone implemented in current layer")
 end
 
+-- Lines 1452-1453
 function Layer:_cloning_done()
 end
 
+-- Lines 1456-1458
 function Layer:on_center_view_on_selected_unit()
 	managers.editor:center_view_on_unit(self:selected_unit())
 end
 
+-- Lines 1460-1476
 function Layer:on_clone_edited_values()
 	if self:ctrl() then
 		return
@@ -1479,6 +1595,7 @@ function Layer:on_clone_edited_values()
 	end
 end
 
+-- Lines 1479-1535
 function Layer:clone_edited_values(unit, source)
 	if unit:name() ~= source:name() then
 		return
@@ -1548,6 +1665,7 @@ function Layer:clone_edited_values(unit, source)
 	end
 end
 
+-- Lines 1538-1544
 function Layer:_continent_locked(unit)
 	local continent = unit:unit_data().continent
 
@@ -1558,6 +1676,7 @@ function Layer:_continent_locked(unit)
 	return unit:unit_data().continent:value("locked")
 end
 
+-- Lines 1547-1555
 function Layer:set_enabled(enabled)
 	self._layer_enabled = enabled
 
@@ -1570,6 +1689,7 @@ function Layer:set_enabled(enabled)
 	return true
 end
 
+-- Lines 1558-1567
 function Layer:hide_all()
 	local units_in_layer = self._created_units
 
@@ -1580,6 +1700,7 @@ function Layer:hide_all()
 	end
 end
 
+-- Lines 1570-1576
 function Layer:unhide_all()
 	for _, unit in ipairs(self._created_units) do
 		if unit:enabled() then
@@ -1588,6 +1709,7 @@ function Layer:unhide_all()
 	end
 end
 
+-- Lines 1578-1594
 function Layer:clear()
 	for _, unit in ipairs(self._created_units) do
 		if alive(unit) then
@@ -1609,6 +1731,7 @@ function Layer:clear()
 	end
 end
 
+-- Lines 1597-1609
 function Layer:set_unit_name(units)
 	local i = units:selected_item()
 
@@ -1628,6 +1751,7 @@ function Layer:set_unit_name(units)
 	end
 end
 
+-- Lines 1612-1619
 function Layer:get_real_name(name)
 	local fs = " %*"
 
@@ -1639,41 +1763,52 @@ function Layer:get_real_name(name)
 	return name
 end
 
+-- Lines 1620-1622
 function Layer:condition()
 	return managers.editor:conditions() or self._using_widget
 end
 
+-- Lines 1623-1625
 function Layer:grab()
 	return self._grab
 end
 
+-- Lines 1626-1627
 function Layer:create_marker()
 end
 
+-- Lines 1628-1629
 function Layer:use_marker()
 end
 
+-- Lines 1632-1633
 function Layer:on_continent_changed()
 end
 
+-- Lines 1636-1637
 function Layer:set_unit_rotations()
 end
 
+-- Lines 1640-1641
 function Layer:set_unit_positions()
 end
 
+-- Lines 1645-1646
 function Layer:_add_project_save_data(data)
 end
 
+-- Lines 1650-1651
 function Layer:_add_project_unit_save_data(unit, data)
 end
 
+-- Lines 1653-1655
 function Layer:selected_amount_string()
 	return "Selected " .. self._save_name .. ": " .. #self._selected_units
 end
 
 local idstring_wpn = Idstring("wpn")
 
+-- Lines 1658-1685
 function Layer:save()
 	for _, unit in ipairs(self._created_units) do
 		local unit_data = unit:unit_data()
@@ -1701,6 +1836,7 @@ function Layer:save()
 	end
 end
 
+-- Lines 1694-1744
 function Layer:test_spawn(type)
 	local pos = Vector3()
 	local rot = Rotation()
@@ -1758,14 +1894,17 @@ function Layer:test_spawn(type)
 	print("DONE")
 end
 
+-- Lines 1864-1866
 function Layer:shift()
 	return CoreInput.shift()
 end
 
+-- Lines 1867-1869
 function Layer:ctrl()
 	return CoreInput.ctrl()
 end
 
+-- Lines 1870-1872
 function Layer:alt()
 	return CoreInput.alt()
 end

@@ -1,5 +1,6 @@
 SineSpline = SineSpline or class()
 
+-- Lines 3-20
 function SineSpline:init(position_table, nr_subseg, curviness, first_control_point, last_control_point)
 	self._segments = position_table
 	self._manual_first_control_point = first_control_point
@@ -21,6 +22,7 @@ function SineSpline:init(position_table, nr_subseg, curviness, first_control_poi
 	end
 end
 
+-- Lines 24-74
 function SineSpline:prepare_walk_data(backward)
 	if #self._segments > 1 then
 		self._mvec3_1 = Vector3()
@@ -74,6 +76,7 @@ function SineSpline:prepare_walk_data(backward)
 	end
 end
 
+-- Lines 78-85
 function SineSpline:delete_walk_data()
 	self._mvec3_1 = nil
 	self._mvec3_2 = nil
@@ -81,6 +84,7 @@ function SineSpline:delete_walk_data()
 	self._playtime_data = nil
 end
 
+-- Lines 89-95
 function SineSpline:_position_at_time_on_segment(seg_t, pos_start, pos_end, p1, p2)
 	mvector3.lerp(self._mvec3_1, pos_start, p2, seg_t)
 	mvector3.lerp(self._mvec3_2, p1, pos_end, seg_t)
@@ -90,6 +94,7 @@ function SineSpline:_position_at_time_on_segment(seg_t, pos_start, pos_end, p1, 
 	return math.lerp(self._mvec3_1, self._mvec3_2, xpo)
 end
 
+-- Lines 100-186
 function SineSpline:walk(delta_dis)
 	local result_pos = nil
 
@@ -172,6 +177,7 @@ function SineSpline:walk(delta_dis)
 	end
 end
 
+-- Lines 190-230
 function SineSpline:_extract_control_points_at_index(index)
 	local segments = self._segments
 	local control_points = self._control_points

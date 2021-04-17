@@ -8,14 +8,17 @@ ElementTeleportPlayer.PEER_OFFSETS = {
 	2
 }
 
+-- Lines 11-13
 function ElementTeleportPlayer:init(...)
 	ElementTeleportPlayer.super.init(self, ...)
 end
 
+-- Lines 16-18
 function ElementTeleportPlayer:value(name)
 	return self._values[name]
 end
 
+-- Lines 20-26
 function ElementTeleportPlayer:get_spawn_position()
 	local peer_id = managers.network:session():local_peer():id()
 	local position = self._values.position
@@ -25,6 +28,7 @@ function ElementTeleportPlayer:get_spawn_position()
 	return position
 end
 
+-- Lines 28-39
 function ElementTeleportPlayer:client_on_executed(...)
 	if not self._values.enabled then
 		return
@@ -41,6 +45,7 @@ function ElementTeleportPlayer:client_on_executed(...)
 	managers.menu:hide_loading_screen()
 end
 
+-- Lines 41-64
 function ElementTeleportPlayer:on_executed(instigator)
 	Application:debug("[ElementTeleportPlayer:on_executed]", self._sync_id)
 
@@ -61,6 +66,7 @@ function ElementTeleportPlayer:on_executed(instigator)
 	ElementTeleportPlayer.super.on_executed(self, self._unit or instigator)
 end
 
+-- Lines 66-69
 function ElementTeleportPlayer:_spawnt_team_ai()
 	managers.worldcollection.team_ai_transition = false
 

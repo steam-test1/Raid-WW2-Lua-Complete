@@ -10,6 +10,7 @@ local mrotation_mul = mrotation.multiply
 local mrotation_slerp = mrotation.slerp
 local mrotation_set_zero = mrotation.set_zero
 
+-- Lines 13-18
 local function safe_divide(a, b)
 	if b == 0 then
 		return 1
@@ -20,11 +21,13 @@ end
 
 CameraMixer = CameraMixer or CoreClass.class()
 
+-- Lines 22-25
 function CameraMixer:init(name)
 	self._name = name
 	self._cameras = {}
 end
 
+-- Lines 27-32
 function CameraMixer:destroy()
 	for index, camera in ipairs(self._cameras) do
 		camera.camera:destroy()
@@ -33,6 +36,7 @@ function CameraMixer:destroy()
 	self._cameras = {}
 end
 
+-- Lines 34-41
 function CameraMixer:add_camera(camera, blend_time)
 	table.insert(self._cameras, {
 		time = 0,
@@ -41,6 +45,7 @@ function CameraMixer:add_camera(camera, blend_time)
 	})
 end
 
+-- Lines 43-48
 function CameraMixer:stop()
 	for index, camera in ipairs(self._cameras) do
 		camera.camera:destroy()
@@ -49,6 +54,7 @@ function CameraMixer:stop()
 	self._cameras = {}
 end
 
+-- Lines 50-93
 function CameraMixer:update(cud, cud_class, time, dt)
 	for index, camera in ipairs(self._cameras) do
 		local _camera = camera.camera
@@ -96,6 +102,7 @@ function CameraMixer:update(cud, cud_class, time, dt)
 	end
 end
 
+-- Lines 95-108
 function CameraMixer:debug_render(t, dt)
 	local pen = Draw:pen(Color(0.05, 0, 0, 1))
 
@@ -115,6 +122,7 @@ function CameraMixer:debug_render(t, dt)
 	end
 end
 
+-- Lines 110-116
 function CameraMixer:active_camera()
 	local camera_count = #self._cameras
 
@@ -125,6 +133,7 @@ function CameraMixer:active_camera()
 	return self._cameras[camera_count].camera
 end
 
+-- Lines 118-124
 function CameraMixer:cameras()
 	local cameras = {}
 

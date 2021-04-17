@@ -6,6 +6,7 @@ RaidGUIControlButtonShortPrimaryGold.DISABLED_HOVER_ICON = "btn_dissabled_192_ho
 RaidGUIControlButtonShortPrimaryGold.W = tweak_data.gui.icons[RaidGUIControlButtonShortPrimaryGold.ICON].texture_rect[3]
 RaidGUIControlButtonShortPrimaryGold.H = tweak_data.gui.icons[RaidGUIControlButtonShortPrimaryGold.ICON].texture_rect[4]
 
+-- Lines 11-41
 function RaidGUIControlButtonShortPrimaryGold:init(parent, params)
 	if not params then
 		Application:error("Trying to create a short primary button without parameters!", debug.traceback())
@@ -36,6 +37,7 @@ function RaidGUIControlButtonShortPrimaryGold:init(parent, params)
 	RaidGUIControlButtonShortPrimaryGold.super.init(self, parent, params)
 end
 
+-- Lines 43-56
 function RaidGUIControlButtonShortPrimaryGold:enable()
 	if self._object_image then
 		self._object_image:set_image(self._params.texture, unpack(self._params.texture_rect))
@@ -51,6 +53,7 @@ function RaidGUIControlButtonShortPrimaryGold:enable()
 	self._enabled = true
 end
 
+-- Lines 58-74
 function RaidGUIControlButtonShortPrimaryGold:disable()
 	self:highlight_off()
 	self:set_param_value("no_highlight", true)

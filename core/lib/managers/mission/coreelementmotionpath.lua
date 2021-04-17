@@ -3,14 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementMotionPathOperator = ElementMotionPathOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 8-10
 function ElementMotionPathOperator:init(...)
 	ElementMotionPathOperator.super.init(self, ...)
 end
 
+-- Lines 12-14
 function ElementMotionPathOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
+-- Lines 16-56
 function ElementMotionPathOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -53,10 +56,12 @@ end
 
 ElementMotionPathTrigger = ElementMotionPathTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 62-64
 function ElementMotionPathTrigger:init(...)
 	ElementMotionPathTrigger.super.init(self, ...)
 end
 
+-- Lines 66-71
 function ElementMotionPathTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -65,9 +70,11 @@ function ElementMotionPathTrigger:on_script_activated()
 	end
 end
 
+-- Lines 73-75
 function ElementMotionPathTrigger:client_on_executed(...)
 end
 
+-- Lines 77-83
 function ElementMotionPathTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

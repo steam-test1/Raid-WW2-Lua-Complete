@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementInvulnerable = ElementInvulnerable or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementInvulnerable:init(...)
 	ElementInvulnerable.super.init(self, ...)
 end
 
+-- Lines 9-25
 function ElementInvulnerable:on_executed(instigator)
 	if not self._values.enabled then
 		return

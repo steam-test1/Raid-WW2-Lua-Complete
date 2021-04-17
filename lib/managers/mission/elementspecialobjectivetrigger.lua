@@ -2,10 +2,12 @@ core:import("CoreMissionScriptElement")
 
 ElementSpecialObjectiveTrigger = ElementSpecialObjectiveTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
+-- Lines 5-7
 function ElementSpecialObjectiveTrigger:init(...)
 	ElementSpecialObjectiveTrigger.super.init(self, ...)
 end
 
+-- Lines 9-14
 function ElementSpecialObjectiveTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -14,6 +16,7 @@ function ElementSpecialObjectiveTrigger:on_script_activated()
 	end
 end
 
+-- Lines 16-22
 function ElementSpecialObjectiveTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

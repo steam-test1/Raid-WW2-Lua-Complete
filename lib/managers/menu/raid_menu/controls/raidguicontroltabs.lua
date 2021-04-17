@@ -3,6 +3,7 @@ RaidGUIControlTabs.DEFAULT_HEIGHT = 64
 RaidGUIControlTabs.BOTTOM_LINE_HEIGHT = 5
 RaidGUIControlTabs.ACTIVE_LINE_COLOR = tweak_data.gui.colors.raid_red
 
+-- Lines 7-50
 function RaidGUIControlTabs:init(parent, params)
 	RaidGUIControlTabs.super.init(self, parent, params)
 
@@ -50,6 +51,7 @@ function RaidGUIControlTabs:init(parent, params)
 	self._abort_selection = false
 end
 
+-- Lines 52-74
 function RaidGUIControlTabs:_create_items()
 	if self._params.tabs_params then
 		for index, tab_params in ipairs(self._params.tabs_params) do
@@ -74,6 +76,7 @@ function RaidGUIControlTabs:_create_items()
 	end
 end
 
+-- Lines 76-88
 function RaidGUIControlTabs:_create_bottom_line()
 	local bottom_line_params = {
 		name = "bottom_line",
@@ -88,6 +91,7 @@ function RaidGUIControlTabs:_create_bottom_line()
 	self._line_movement_t = 0
 end
 
+-- Lines 90-101
 function RaidGUIControlTabs:_initial_tab_selected(tab_idx)
 	for tab_index, tab in ipairs(self._items) do
 		if tab_index == tab_idx then
@@ -100,6 +104,7 @@ function RaidGUIControlTabs:_initial_tab_selected(tab_idx)
 	end
 end
 
+-- Lines 104-119
 function RaidGUIControlTabs:_tab_selected(tab_idx, callback_param)
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlTabs:_tab_selected] ABORT SELECTION")
@@ -119,20 +124,24 @@ function RaidGUIControlTabs:_tab_selected(tab_idx, callback_param)
 	end
 end
 
+-- Lines 121-125
 function RaidGUIControlTabs:_unselect_all()
 	for _, item in ipairs(self._items) do
 		item:unselect()
 	end
 end
 
+-- Lines 127-129
 function RaidGUIControlTabs:set_abort_selection(value)
 	self._abort_selection = value
 end
 
+-- Lines 131-133
 function RaidGUIControlTabs:get_abort_selection()
 	return self._abort_selection
 end
 
+-- Lines 138-147
 function RaidGUIControlTabs:set_selected(value)
 	self._selected = value
 
@@ -146,6 +155,7 @@ function RaidGUIControlTabs:set_selected(value)
 	end
 end
 
+-- Lines 149-154
 function RaidGUIControlTabs:move_up()
 	if self._selected and self._on_menu_move and self._on_menu_move.up then
 		local result, target = self:_menu_move_to(self._on_menu_move.up)
@@ -154,6 +164,7 @@ function RaidGUIControlTabs:move_up()
 	end
 end
 
+-- Lines 156-161
 function RaidGUIControlTabs:move_down()
 	if self._selected and self._on_menu_move and self._on_menu_move.down then
 		local result, target = self:_menu_move_to(self._on_menu_move.down)
@@ -162,6 +173,7 @@ function RaidGUIControlTabs:move_down()
 	end
 end
 
+-- Lines 163-181
 function RaidGUIControlTabs:_move_left()
 	if not self._enabled then
 		return
@@ -182,6 +194,7 @@ function RaidGUIControlTabs:_move_left()
 	return true
 end
 
+-- Lines 183-199
 function RaidGUIControlTabs:_move_right()
 	if not self._enabled then
 		return
@@ -200,6 +213,7 @@ function RaidGUIControlTabs:_move_right()
 	return true
 end
 
+-- Lines 203-221
 function RaidGUIControlTabs:_move_bottom_line()
 	local duration = 0.2
 	local t = duration - (1 - self._line_movement_t) * duration

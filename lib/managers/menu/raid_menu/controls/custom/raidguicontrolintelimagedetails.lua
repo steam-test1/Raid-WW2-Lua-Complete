@@ -6,6 +6,7 @@ RaidGUIControlIntelImageDetails.FOREGROUND_SIZE_PERCENTAGE = 0.92
 RaidGUIControlIntelImageDetails.SELECTOR_ICON = "ico_sel_rect_top_left"
 RaidGUIControlIntelImageDetails.PRESSED_SIZE = 0.97
 
+-- Lines 12-19
 function RaidGUIControlIntelImageDetails:init(parent, params)
 	RaidGUIControlIntelImageDetails.super.init(self, parent, params)
 
@@ -15,6 +16,7 @@ function RaidGUIControlIntelImageDetails:init(parent, params)
 	self:_create_details()
 end
 
+-- Lines 21-31
 function RaidGUIControlIntelImageDetails:_create_panel()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_panel"
@@ -26,6 +28,7 @@ function RaidGUIControlIntelImageDetails:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 33-117
 function RaidGUIControlIntelImageDetails:_create_details()
 	local intel_image_panel_params = {
 		name = "intel_image_panel",
@@ -103,6 +106,7 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_subtitle:set_h(self._object:h() - self._intel_subtitle:y())
 end
 
+-- Lines 119-127
 function RaidGUIControlIntelImageDetails:set_image(photo, title_id, description_id, skip_animation)
 	if skip_animation then
 		self:_set_image(photo, title_id, description_id)
@@ -114,6 +118,7 @@ function RaidGUIControlIntelImageDetails:set_image(photo, title_id, description_
 	self._intel_image:animate(callback(self, self, "_animate_change_photo"), photo, title_id, description_id)
 end
 
+-- Lines 129-141
 function RaidGUIControlIntelImageDetails:_set_image(photo, title_id, description_id)
 	self._intel_image:set_image(tweak_data.gui.mission_photos[photo].texture)
 	self._intel_image:set_texture_rect(unpack(tweak_data.gui.mission_photos[photo].texture_rect))
@@ -128,33 +133,41 @@ function RaidGUIControlIntelImageDetails:_set_image(photo, title_id, description
 	self._intel_subtitle:set_h(self._object:h() - self._intel_subtitle:y())
 end
 
+-- Lines 143-145
 function RaidGUIControlIntelImageDetails:set_left(left)
 	self._object:set_left(left)
 end
 
+-- Lines 147-149
 function RaidGUIControlIntelImageDetails:set_right(right)
 	self._object:set_right(right)
 end
 
+-- Lines 151-153
 function RaidGUIControlIntelImageDetails:set_top(top)
 	self._object:set_top(top)
 end
 
+-- Lines 155-157
 function RaidGUIControlIntelImageDetails:set_bottom(bottom)
 	self._object:set_bottom(bottom)
 end
 
+-- Lines 159-161
 function RaidGUIControlIntelImageDetails:set_center_x(center_x)
 	self._object:set_center_x(center_x)
 end
 
+-- Lines 163-165
 function RaidGUIControlIntelImageDetails:set_center_y(center_y)
 	self._object:set_center_y(center_y)
 end
 
+-- Lines 168-169
 function RaidGUIControlIntelImageDetails:close()
 end
 
+-- Lines 175-203
 function RaidGUIControlIntelImageDetails:_animate_change_photo(control, photo, title_id, description_id)
 	local fade_out_duration = 0.05
 	local fade_in_duration = 0.15

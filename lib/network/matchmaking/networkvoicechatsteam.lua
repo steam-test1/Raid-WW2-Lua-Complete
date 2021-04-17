@@ -1,15 +1,18 @@
 NetworkVoiceChatSTEAM = NetworkVoiceChatSTEAM or class()
 
+-- Lines 29-34
 function NetworkVoiceChatSTEAM:init()
 	self.handler = Steam:voip_handler()
 	self._enabled = false
 	self._users_talking = {}
 end
 
+-- Lines 36-38
 function NetworkVoiceChatSTEAM:set_volume(volume)
 	self.handler:set_out_volume(volume)
 end
 
+-- Lines 40-51
 function NetworkVoiceChatSTEAM:open()
 	self._push_to_talk = managers.user:get_setting("push_to_talk")
 
@@ -24,6 +27,7 @@ function NetworkVoiceChatSTEAM:open()
 	end
 end
 
+-- Lines 53-59
 function NetworkVoiceChatSTEAM:destroy_voice(disconnected)
 	if self._enabled then
 		self.handler:stop_recording()
@@ -33,6 +37,7 @@ function NetworkVoiceChatSTEAM:destroy_voice(disconnected)
 	end
 end
 
+-- Lines 62-69
 function NetworkVoiceChatSTEAM:_load_globals()
 	if Global.steam and Global.steam.voip then
 		self.handler = Global.steam.voip.handler
@@ -40,6 +45,7 @@ function NetworkVoiceChatSTEAM:_load_globals()
 	end
 end
 
+-- Lines 70-78
 function NetworkVoiceChatSTEAM:_save_globals()
 	if not Global.steam then
 		Global.steam = {}
@@ -50,10 +56,12 @@ function NetworkVoiceChatSTEAM:_save_globals()
 	}
 end
 
+-- Lines 81-83
 function NetworkVoiceChatSTEAM:enabled()
 	return managers.user:get_setting("voice_chat")
 end
 
+-- Lines 85-96
 function NetworkVoiceChatSTEAM:update_settings()
 	self._push_to_talk = managers.user:get_setting("push_to_talk")
 	self._enabled = managers.user:get_setting("voice_chat")
@@ -69,6 +77,7 @@ function NetworkVoiceChatSTEAM:update_settings()
 	end
 end
 
+-- Lines 98-119
 function NetworkVoiceChatSTEAM:set_recording(button_pushed_to_talk)
 	self:update_settings()
 
@@ -91,6 +100,7 @@ function NetworkVoiceChatSTEAM:set_recording(button_pushed_to_talk)
 	end
 end
 
+-- Lines 122-156
 function NetworkVoiceChatSTEAM:update()
 	self.handler:update()
 
@@ -132,20 +142,24 @@ function NetworkVoiceChatSTEAM:update()
 	end
 end
 
+-- Lines 158-162
 function NetworkVoiceChatSTEAM:on_member_added(peer, mute)
 	if peer:rpc() then
 		self.handler:add_receiver(peer:id(), peer:rpc(), mute)
 	end
 end
 
+-- Lines 164-166
 function NetworkVoiceChatSTEAM:on_member_removed(peer)
 	self.handler:remove_receiver(peer:id())
 end
 
+-- Lines 169-171
 function NetworkVoiceChatSTEAM:mute_player(peer, mute)
 	self.handler:mute_voice_receiver(peer:id(), mute)
 end
 
+-- Lines 174-176
 function NetworkVoiceChatSTEAM:is_muted(peer)
 	return self.handler:is_voice_receiver_muted(peer:id())
 end

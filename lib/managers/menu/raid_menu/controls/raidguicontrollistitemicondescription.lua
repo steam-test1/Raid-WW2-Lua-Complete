@@ -12,6 +12,7 @@ RaidGUIControlListItemIconDescription.TITLE_PADDING_DOWN = 13
 RaidGUIControlListItemIconDescription.PANEL_PADDING_DOWN = 13
 RaidGUIControlListItemIconDescription.SIDELINE_W = 3
 
+-- Lines 17-42
 function RaidGUIControlListItemIconDescription:init(parent, params, data)
 	RaidGUIControlListItemIconDescription.super.init(self, parent, params)
 
@@ -37,6 +38,7 @@ function RaidGUIControlListItemIconDescription:init(parent, params, data)
 	self:highlight_off()
 end
 
+-- Lines 44-53
 function RaidGUIControlListItemIconDescription:_create_panel()
 	local panel_params = {
 		name = "list_item_" .. self._name,
@@ -48,6 +50,7 @@ function RaidGUIControlListItemIconDescription:_create_panel()
 	self._object = self._panel:panel(panel_params)
 end
 
+-- Lines 55-66
 function RaidGUIControlListItemIconDescription:_create_sideline()
 	local sideline_params = {
 		alpha = 0,
@@ -60,6 +63,7 @@ function RaidGUIControlListItemIconDescription:_create_sideline()
 	self._sideline = self._object:rect(sideline_params)
 end
 
+-- Lines 68-83
 function RaidGUIControlListItemIconDescription:_create_icon()
 	local icon_params = {
 		name = "list_item_icon_" .. self._name,
@@ -77,6 +81,7 @@ function RaidGUIControlListItemIconDescription:_create_icon()
 	end
 end
 
+-- Lines 85-103
 function RaidGUIControlListItemIconDescription:_create_title()
 	local title_params = {
 		vertical = "center",
@@ -100,6 +105,7 @@ function RaidGUIControlListItemIconDescription:_create_title()
 	self._title:set_center_y(self._icon:center_y())
 end
 
+-- Lines 105-125
 function RaidGUIControlListItemIconDescription:_create_description()
 	local description_params = {
 		wrap = true,
@@ -124,6 +130,7 @@ function RaidGUIControlListItemIconDescription:_create_description()
 	self._description:set_h(h)
 end
 
+-- Lines 128-135
 function RaidGUIControlListItemIconDescription:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(button, self, self._data)
@@ -134,6 +141,7 @@ function RaidGUIControlListItemIconDescription:on_mouse_released(button)
 	end
 end
 
+-- Lines 137-146
 function RaidGUIControlListItemIconDescription:mouse_double_click(o, button, x, y)
 	if self._params.no_click then
 		return
@@ -146,10 +154,12 @@ function RaidGUIControlListItemIconDescription:mouse_double_click(o, button, x, 
 	end
 end
 
+-- Lines 148-150
 function RaidGUIControlListItemIconDescription:selected()
 	return self._selected
 end
 
+-- Lines 152-158
 function RaidGUIControlListItemIconDescription:select()
 	self._selected = true
 
@@ -158,6 +168,7 @@ function RaidGUIControlListItemIconDescription:select()
 	self._sideline:set_alpha(1)
 end
 
+-- Lines 160-168
 function RaidGUIControlListItemIconDescription:unselect()
 	self._selected = false
 
@@ -169,14 +180,17 @@ function RaidGUIControlListItemIconDescription:unselect()
 	self._sideline:set_alpha(0)
 end
 
+-- Lines 170-172
 function RaidGUIControlListItemIconDescription:data()
 	return self._data
 end
 
+-- Lines 174-176
 function RaidGUIControlListItemIconDescription:highlight_on()
 	self._title:set_color(RaidGUIControlListItemIconDescription.ACTIVE_COLOR)
 end
 
+-- Lines 178-185
 function RaidGUIControlListItemIconDescription:highlight_off()
 	if not self._active then
 		self._title:set_color(RaidGUIControlListItemIconDescription.COLOR)
@@ -186,22 +200,26 @@ function RaidGUIControlListItemIconDescription:highlight_off()
 	self._sideline:set_alpha(0)
 end
 
+-- Lines 187-189
 function RaidGUIControlListItemIconDescription:confirm_pressed()
 	self:on_mouse_released(Idstring("0"))
 end
 
+-- Lines 191-194
 function RaidGUIControlListItemIconDescription:activate()
 	self._active = true
 
 	self:highlight_on()
 end
 
+-- Lines 196-199
 function RaidGUIControlListItemIconDescription:deactivate()
 	self._active = false
 
 	self:highlight_off()
 end
 
+-- Lines 201-203
 function RaidGUIControlListItemIconDescription:activated()
 	return self._active
 end

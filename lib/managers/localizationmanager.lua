@@ -4,12 +4,14 @@ core:import("CoreClass")
 LocalizationManager = LocalizationManager or class(CoreLocalizationManager.LocalizationManager)
 LocalizationManager.TYPEWRITER_UTF_PREFIX = 55000
 
+-- Lines 8-13
 function LocalizationManager:init()
 	LocalizationManager.super.init(self)
 	self:_setup_macros()
 	Application:set_default_letter(95)
 end
 
+-- Lines 15-19
 function LocalizationManager:_convert_typewriter_font(char)
 	local c = utf8.to_upper(char)
 	local retVal = LocalizationManager.TYPEWRITER_UTF_PREFIX + string.byte(c)
@@ -17,6 +19,7 @@ function LocalizationManager:_convert_typewriter_font(char)
 	return retVal
 end
 
+-- Lines 22-257
 function LocalizationManager:_setup_macros()
 	local btn_a = utf8.char(57344)
 	local btn_b = utf8.char(57345)
@@ -116,6 +119,7 @@ end
 
 local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
+-- Lines 261-280
 function LocalizationManager:btn_macro(button, to_upper)
 	if not managers.menu:is_pc_controller() then
 		return
@@ -128,18 +132,22 @@ function LocalizationManager:btn_macro(button, to_upper)
 	return to_upper and utf8.to_upper(text) or text
 end
 
+-- Lines 282-284
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
+-- Lines 286-288
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
+-- Lines 290-307
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
+-- Lines 309-319
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -155,6 +163,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
+-- Lines 321-366
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -204,6 +213,7 @@ end
 
 CoreClass.override_class(CoreLocalizationManager.LocalizationManager, LocalizationManager)
 
+-- Lines 371-436
 function LocalizationManager:check_translation()
 	local path = "d:/raid_ww2_trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -270,6 +280,7 @@ function LocalizationManager:check_translation()
 	io.close(out_file)
 end
 
+-- Lines 440-466
 function LocalizationManager:check_keybind_translation(binding)
 	self._keybind_translations = {
 		"left ctrl",

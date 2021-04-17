@@ -1,5 +1,6 @@
 TankCopLogicAttack = class(CopLogicAttack)
 
+-- Lines 7-44
 function TankCopLogicAttack.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -43,6 +44,7 @@ function TankCopLogicAttack.enter(data, new_logic_name, enter_params)
 	})
 end
 
+-- Lines 48-60
 function TankCopLogicAttack.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -55,6 +57,7 @@ function TankCopLogicAttack.exit(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
 end
 
+-- Lines 64-152
 function TankCopLogicAttack.update(data)
 	local t = data.t
 	local unit = data.unit
@@ -157,6 +160,7 @@ function TankCopLogicAttack.update(data)
 	end
 end
 
+-- Lines 156-164
 function TankCopLogicAttack.queued_update(data)
 	local my_data = data.internal_data
 	my_data.update_queued = false
@@ -169,6 +173,7 @@ function TankCopLogicAttack.queued_update(data)
 	end
 end
 
+-- Lines 168-184
 function TankCopLogicAttack._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -188,6 +193,7 @@ function TankCopLogicAttack._process_pathing_results(data, my_data)
 	end
 end
 
+-- Lines 188-208
 function TankCopLogicAttack._cancel_chase_attempt(data, my_data)
 	my_data.chase_path = nil
 
@@ -218,6 +224,7 @@ function TankCopLogicAttack._cancel_chase_attempt(data, my_data)
 	end
 end
 
+-- Lines 213-231
 function TankCopLogicAttack.on_action_completed(data, action)
 	local action_type = action:type()
 	local my_data = data.internal_data
@@ -237,16 +244,19 @@ function TankCopLogicAttack.on_action_completed(data, action)
 	end
 end
 
+-- Lines 233-235
 function TankCopLogicAttack.chk_should_turn(data, my_data)
 	return not my_data.turning and not data.unit:movement():chk_action_forbidden("walk") and not my_data.retreating and not my_data.walking_to_chase_pos
 end
 
+-- Lines 239-242
 function TankCopLogicAttack.queue_update(data, my_data)
 	my_data.update_queued = true
 
 	CopLogicBase.queue_task(my_data, my_data.update_queue_id, TankCopLogicAttack.queued_update, data, data.t + 1.5, data.important)
 end
 
+-- Lines 246-263
 function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
@@ -265,18 +275,21 @@ function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data,
 	end
 end
 
+-- Lines 267-271
 function TankCopLogicAttack.is_advancing(data)
 	if data.internal_data.walking_to_chase_pos and data.pos_rsrv.move_dest then
 		return data.pos_rsrv.move_dest.position
 	end
 end
 
+-- Lines 275-279
 function TankCopLogicAttack._get_all_paths(data)
 	return {
 		chase_path = data.internal_data.chase_path
 	}
 end
 
+-- Lines 283-285
 function TankCopLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.chase_path = verified_paths.chase_path
 end

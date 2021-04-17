@@ -5,6 +5,7 @@ HuskPlayerBase.set_anim_lod = CopBase.set_anim_lod
 HuskPlayerBase.set_visibility_state = CopBase.set_visibility_state
 HuskPlayerBase._anim_lods = CopBase._anim_lods
 
+-- Lines 9-25
 function HuskPlayerBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -21,6 +22,7 @@ function HuskPlayerBase:init(unit)
 	end
 end
 
+-- Lines 29-47
 function HuskPlayerBase:post_init()
 	self._ext_anim = self._unit:anim_data()
 
@@ -43,6 +45,7 @@ function HuskPlayerBase:post_init()
 	end
 end
 
+-- Lines 49-57
 function HuskPlayerBase:_do_post_init()
 	self._unit:movement():post_init()
 	managers.groupai:state():register_criminal(self._unit)
@@ -56,6 +59,7 @@ function HuskPlayerBase:_do_post_init()
 	end
 end
 
+-- Lines 61-81
 function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	if category == UpgradesTweakData.CLEAR_UPGRADES_FLAG then
 		self._upgrades = {}
@@ -79,14 +83,17 @@ function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	end
 end
 
+-- Lines 85-87
 function HuskPlayerBase:upgrade_value(category, upgrade)
 	return self._upgrades[category] and self._upgrades[category][upgrade]
 end
 
+-- Lines 89-91
 function HuskPlayerBase:upgrade_level(category, upgrade)
 	return self._upgrade_levels[category] and self._upgrade_levels[category][upgrade]
 end
 
+-- Lines 95-105
 function HuskPlayerBase:pre_destroy(unit)
 	managers.groupai:state():unregister_criminal(self._unit)
 
@@ -101,14 +108,17 @@ function HuskPlayerBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
+-- Lines 109-112
 function HuskPlayerBase:nick_name()
 	local peer = managers.network:session():peer_by_unit(self._unit)
 
 	return peer and peer:name() or ""
 end
 
+-- Lines 116-118
 function HuskPlayerBase:on_death_exit()
 end
 
+-- Lines 122-123
 function HuskPlayerBase:chk_freeze_anims()
 end

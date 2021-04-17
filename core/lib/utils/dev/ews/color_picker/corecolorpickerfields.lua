@@ -7,11 +7,13 @@ core:import("CoreMath")
 
 ColorPickerFields = ColorPickerFields or CoreClass.mixin(CoreClass.class(), CoreEvent.BasicEventHandling)
 
+-- Lines 10-13
 function ColorPickerFields:init(parent_frame, enable_alpha, enable_value)
 	self:_create_panel(parent_frame, enable_alpha, enable_value)
 	self:set_color(Color.white)
 end
 
+-- Lines 15-34
 function ColorPickerFields:update(time, delta_time)
 	if self._is_picking_color_from_screen then
 		local current_mouse_event = EWS:MouseEvent("EVT_MOTION")
@@ -35,10 +37,12 @@ function ColorPickerFields:update(time, delta_time)
 	end
 end
 
+-- Lines 36-38
 function ColorPickerFields:panel()
 	return self._panel
 end
 
+-- Lines 40-46
 function ColorPickerFields:color()
 	local a = self:_field_value("Alpha") or 255
 	local r = self:_field_value("Red") or 0
@@ -48,10 +52,12 @@ function ColorPickerFields:color()
 	return Color(a / 255, r / 255, g / 255, b / 255)
 end
 
+-- Lines 48-50
 function ColorPickerFields:set_color(color)
 	self:_set_field_values_except(nil, color)
 end
 
+-- Lines 52-57
 function ColorPickerFields:_field_value(field_name)
 	local field_group = self._field_groups and assert(self._field_groups[field_name], "Invalid field.") or {}
 
@@ -60,6 +66,7 @@ function ColorPickerFields:_field_value(field_name)
 	end
 end
 
+-- Lines 59-64
 function ColorPickerFields:_change_field_value(field_name, value)
 	local field_group = assert(self._field_groups[field_name], "Invalid field.")
 
@@ -68,6 +75,7 @@ function ColorPickerFields:_change_field_value(field_name, value)
 	end
 end
 
+-- Lines 66-100
 function ColorPickerFields:_create_panel(parent_frame, enable_alpha, enable_value)
 	if enable_alpha == nil then
 		enable_alpha = true
@@ -113,6 +121,7 @@ function ColorPickerFields:_create_panel(parent_frame, enable_alpha, enable_valu
 	panel_sizer:add(self._color_well_column_panel, 0, 3, "RIGHT,EXPAND")
 end
 
+-- Lines 102-108
 function ColorPickerFields:_create_color_well(parent_frame)
 	self._color_well = EWS:ColorWell(parent_frame, "")
 
@@ -123,6 +132,7 @@ function ColorPickerFields:_create_color_well(parent_frame)
 	return self._color_well
 end
 
+-- Lines 110-115
 function ColorPickerFields:_create_color_picker_button(parent_frame)
 	self._color_picker_button = EWS:BitmapButton(parent_frame, CoreEws.image_path("toolbar/eye_dropper_16x16.png"), "", "")
 
@@ -132,6 +142,7 @@ function ColorPickerFields:_create_color_picker_button(parent_frame)
 	return self._color_picker_button
 end
 
+-- Lines 117-125
 function ColorPickerFields:_create_rgb_fields(parent_frame)
 	local fields = {
 		"Red",
@@ -155,6 +166,7 @@ function ColorPickerFields:_create_rgb_fields(parent_frame)
 	return self:_create_panel_with_fields(parent_frame, fields)
 end
 
+-- Lines 127-135
 function ColorPickerFields:_create_hsv_fields(parent_frame)
 	local fields = {
 		"Hue",
@@ -179,6 +191,7 @@ function ColorPickerFields:_create_hsv_fields(parent_frame)
 	return self:_create_panel_with_fields(parent_frame, fields)
 end
 
+-- Lines 137-164
 function ColorPickerFields:_create_panel_with_fields(parent_frame, fields)
 	local panel = EWS:Panel(parent_frame)
 	local panel_sizer = EWS:FlexGridSizer(0, 2, 3, 0)
@@ -207,6 +220,7 @@ function ColorPickerFields:_create_panel_with_fields(parent_frame, fields)
 	return panel
 end
 
+-- Lines 166-189
 function ColorPickerFields:_on_field_edited(edited_field, event)
 	for _, field in ipairs(self:_mirroring_fields(edited_field)) do
 		field:change_value(edited_field:get_value())
@@ -252,10 +266,12 @@ function ColorPickerFields:_on_field_edited(edited_field, event)
 	self:_send_event("EVT_COLOR_CHANGED", self:color())
 end
 
+-- Lines 191-193
 function ColorPickerFields:_on_enter_eyedropper_mode(sender, event)
 	self._is_picking_color_from_screen = true
 end
 
+-- Lines 195-199
 function ColorPickerFields:_on_exit_eyedropper_mode(sender, event)
 	self._is_picking_color_from_screen = nil
 
@@ -263,6 +279,7 @@ function ColorPickerFields:_on_exit_eyedropper_mode(sender, event)
 	self:_send_event("EVT_COLOR_CHANGED", color_under_cursor)
 end
 
+-- Lines 201-214
 function ColorPickerFields:_parse_values(field_names)
 	local values = {}
 
@@ -279,6 +296,7 @@ function ColorPickerFields:_parse_values(field_names)
 	return values
 end
 
+-- Lines 216-236
 function ColorPickerFields:_set_field_values_except(skipped_field_name, color)
 	hue, saturation, value = CoreMath.rgb_to_hsv(color.red, color.green, color.blue)
 	local field_values = {
@@ -300,6 +318,7 @@ function ColorPickerFields:_set_field_values_except(skipped_field_name, color)
 	self._color_well:set_color(color)
 end
 
+-- Lines 238-244
 function ColorPickerFields:_field_label(field)
 	for label, field_list in pairs(self._field_groups) do
 		if table.contains(field_list, field) then
@@ -308,6 +327,7 @@ function ColorPickerFields:_field_label(field)
 	end
 end
 
+-- Lines 246-250
 function ColorPickerFields:_mirroring_fields(field)
 	local field_groups = table.map_values(self._field_groups)
 	local my_group = table.find_value(field_groups, function (group)

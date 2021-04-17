@@ -1,5 +1,6 @@
 DropLootTweakData = DropLootTweakData or class()
 
+-- Lines 3-19
 function DropLootTweakData:init(tweak_data)
 	self:_init_pickups_properties()
 	self:_init_demo_tier()
@@ -17,6 +18,7 @@ function DropLootTweakData:init(tweak_data)
 	self:_init_elite_enemy()
 end
 
+-- Lines 21-50
 function DropLootTweakData:_init_pickups_properties()
 	self.health_big = {
 		health_restored = 100,
@@ -49,6 +51,7 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 end
 
+-- Lines 52-103
 function DropLootTweakData:_init_demo_tier()
 	self.demo_tier = {
 		units = {}
@@ -103,6 +106,7 @@ function DropLootTweakData:_init_demo_tier()
 	}
 end
 
+-- Lines 105-159
 function DropLootTweakData:_init_elite_enemy()
 	self.elite_enemy = {
 		units = {},
@@ -159,6 +163,7 @@ function DropLootTweakData:_init_elite_enemy()
 	}
 end
 
+-- Lines 161-215
 function DropLootTweakData:_init_easy_enemy()
 	self.easy_enemy = {
 		units = {},
@@ -215,6 +220,7 @@ function DropLootTweakData:_init_easy_enemy()
 	}
 end
 
+-- Lines 217-271
 function DropLootTweakData:_init_normal_enemy()
 	self.normal_enemy = {
 		units = {},
@@ -271,6 +277,7 @@ function DropLootTweakData:_init_normal_enemy()
 	}
 end
 
+-- Lines 273-327
 function DropLootTweakData:_init_hard_enemy()
 	self.hard_enemy = {
 		units = {},
@@ -327,6 +334,7 @@ function DropLootTweakData:_init_hard_enemy()
 	}
 end
 
+-- Lines 329-383
 function DropLootTweakData:_init_special_enemy()
 	self.special_enemy = {
 		units = {},
@@ -383,6 +391,7 @@ function DropLootTweakData:_init_special_enemy()
 	}
 end
 
+-- Lines 385-438
 function DropLootTweakData:_init_basic_crate_tier()
 	self.basic_crate_tier = {
 		units = {},
@@ -445,6 +454,7 @@ function DropLootTweakData:_init_basic_crate_tier()
 	}
 end
 
+-- Lines 440-493
 function DropLootTweakData:_init_lockpick_crate_tier()
 	self.lockpick_crate_tier = {
 		units = {},
@@ -507,6 +517,7 @@ function DropLootTweakData:_init_lockpick_crate_tier()
 	}
 end
 
+-- Lines 495-548
 function DropLootTweakData:_init_crowbar_crate_tier()
 	self.crowbar_crate_tier = {
 		units = {},
@@ -569,6 +580,7 @@ function DropLootTweakData:_init_crowbar_crate_tier()
 	}
 end
 
+-- Lines 550-559
 function DropLootTweakData:_init_crate_scrap_tier()
 	self.crate_scrap_tier = {
 		units = {},
@@ -587,6 +599,7 @@ function DropLootTweakData:_init_crate_scrap_tier()
 	}
 end
 
+-- Lines 561-614
 function DropLootTweakData:_init_basic_shelf_tier()
 	self.basic_shelf_tier = {
 		units = {},
@@ -649,6 +662,7 @@ function DropLootTweakData:_init_basic_shelf_tier()
 	}
 end
 
+-- Lines 617-670
 function DropLootTweakData:_init_camp_shelf_tier()
 	self.camp_shelf_tier = {
 		units = {},
@@ -711,6 +725,7 @@ function DropLootTweakData:_init_camp_shelf_tier()
 	}
 end
 
+-- Lines 672-679
 function DropLootTweakData:_init_default_tier()
 	self.default_tier = {
 		units = {}

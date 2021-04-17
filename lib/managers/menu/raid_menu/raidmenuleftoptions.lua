@@ -1,14 +1,17 @@
 RaidMenuLeftOptions = RaidMenuLeftOptions or class(RaidGuiBase)
 
+-- Lines 4-7
 function RaidMenuLeftOptions:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuLeftOptions.super.init(self, ws, fullscreen_ws, node, component_name)
 	managers.menu:mark_main_menu(false)
 end
 
+-- Lines 9-11
 function RaidMenuLeftOptions:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_main_screen_subtitle")
 end
 
+-- Lines 14-24
 function RaidMenuLeftOptions:_layout()
 	RaidMenuLeftOptions.super._layout(self)
 	self:_layout_list_menu()
@@ -20,10 +23,12 @@ function RaidMenuLeftOptions:_layout()
 	end
 end
 
+-- Lines 26-28
 function RaidMenuLeftOptions:close()
 	RaidMenuLeftOptions.super.close(self)
 end
 
+-- Lines 30-64
 function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
 		selection_enabled = true,
@@ -66,6 +71,7 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	self._reset_progress_button:set_visible(RaidMenuCallbackHandler:is_in_main_menu())
 end
 
+-- Lines 66-77
 function RaidMenuLeftOptions:_list_menu_options_data_source()
 	local _list_items = {}
 
@@ -89,6 +95,7 @@ function RaidMenuLeftOptions:_list_menu_options_data_source()
 	return _list_items
 end
 
+-- Lines 79-91
 function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	if not data.callback then
 		return
@@ -102,6 +109,7 @@ function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	end
 end
 
+-- Lines 95-111
 function RaidMenuLeftOptions:bind_controller_inputs()
 	local bindings = {
 		{
@@ -130,6 +138,7 @@ function RaidMenuLeftOptions:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
+-- Lines 113-131
 function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 	local bindings = {
 		{

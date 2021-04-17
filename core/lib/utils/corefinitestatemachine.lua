@@ -3,6 +3,7 @@ core:import("CoreDebug")
 
 FiniteStateMachine = FiniteStateMachine or class()
 
+-- Lines 6-14
 function FiniteStateMachine:init(state_class, object_name, object)
 	self._object = object
 	self._object_name = object_name
@@ -14,24 +15,29 @@ function FiniteStateMachine:init(state_class, object_name, object)
 	self._debug = true
 end
 
+-- Lines 16-19
 function FiniteStateMachine:load(data)
 	local class = _G[data.class_name]
 
 	self._set_state(class)
 end
 
+-- Lines 21-23
 function FiniteStateMachine:save(data)
 	data.class_name = class_name(self._state_class)
 end
 
+-- Lines 25-27
 function FiniteStateMachine:set_debug(debug_enabled)
 	self._debug = debug_enabled
 end
 
+-- Lines 29-31
 function FiniteStateMachine:destroy()
 	self:_destroy_current_state()
 end
 
+-- Lines 33-41
 function FiniteStateMachine:transition()
 	assert(self._state)
 	assert(self._state.transition, "You must at least have a transition method")
@@ -43,16 +49,19 @@ function FiniteStateMachine:transition()
 	end
 end
 
+-- Lines 43-46
 function FiniteStateMachine:state()
 	assert(self._state)
 
 	return self._state
 end
 
+-- Lines 48-50
 function FiniteStateMachine:_class_name(state_class)
 	return CoreDebug.full_class_name(state_class)
 end
 
+-- Lines 52-57
 function FiniteStateMachine:_destroy_current_state()
 	if self._state and self._state.destroy then
 		self._state:destroy()
@@ -61,6 +70,7 @@ function FiniteStateMachine:_destroy_current_state()
 	end
 end
 
+-- Lines 59-81
 function FiniteStateMachine:_set_state(new_state_class, ...)
 	if self._debug then
 		cat_print("debug", "transitions from '" .. self:_class_name(self._state_class) .. "' to '" .. self:_class_name(new_state_class) .. "'")
@@ -70,6 +80,7 @@ function FiniteStateMachine:_set_state(new_state_class, ...)
 
 	local init_function = new_state_class.init
 
+	-- Lines 69-69
 	function new_state_class.init()
 	end
 
