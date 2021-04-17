@@ -12,7 +12,7 @@ function RaidGUIControlIntelControlArchive:init(parent, params)
 	self._play_panel_inside = false
 	self._controller_list = {}
 
-	for index = 1, managers.controller:get_wrapper_count(), 1 do
+	for index = 1, managers.controller:get_wrapper_count() do
 		local con = managers.controller:create_controller("boot_" .. index, index, false)
 
 		con:enable()

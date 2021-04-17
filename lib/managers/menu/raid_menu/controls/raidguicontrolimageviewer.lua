@@ -70,7 +70,7 @@ function RaidGUIControlImageViewer:_reset_animation_state()
 	self._image_frames[2]:set_x(self._params.w)
 
 	if self._bullets_active then
-		for i = 1, #self._bullets_active, 1 do
+		for i = 1, #self._bullets_active do
 			self._bullet_panel:remove(self._bullets_active[i])
 
 			self._bullets_active[i] = nil
@@ -78,7 +78,7 @@ function RaidGUIControlImageViewer:_reset_animation_state()
 	end
 
 	if self._bullets then
-		for i = 1, #self._bullets, 1 do
+		for i = 1, #self._bullets do
 			self._bullet_panel:remove(self._bullets[i])
 
 			self._bullets[i] = nil
@@ -95,7 +95,7 @@ function RaidGUIControlImageViewer:start()
 	self._image_frames[1]:set_texture_rect(unpack(self._data[1].texture_rect))
 
 	if #self._data > 1 then
-		for i = 1, #self._data, 1 do
+		for i = 1, #self._data do
 			table.insert(self._bullets, self._bullet_panel:bitmap({
 				x = (i - 1) * (RaidGUIControlImageViewer.BULLET_WIDTH + RaidGUIControlImageViewer.BULLET_PADDING),
 				y = RaidGUIControlImageViewer.BULLET_HEIGHT / 2,

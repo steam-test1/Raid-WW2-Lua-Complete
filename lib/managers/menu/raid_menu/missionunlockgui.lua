@@ -11,7 +11,7 @@ function MissionUnlockGui:init(ws, fullscreen_ws, node, component_name)
 
 	self._controller_list = {}
 
-	for index = 1, managers.controller:get_wrapper_count(), 1 do
+	for index = 1, managers.controller:get_wrapper_count() do
 		local con = managers.controller:create_controller("boot_" .. index, index, false)
 
 		con:enable()
@@ -74,7 +74,7 @@ function MissionUnlockGui:_layout_offered_missions()
 	self._offered_missions = {}
 	local w = 0
 
-	for i = 1, #pending_missions, 1 do
+	for i = 1, #pending_missions do
 		local left_move, right_move = nil
 
 		if i - 1 > 0 then
@@ -105,7 +105,7 @@ function MissionUnlockGui:_layout_offered_missions()
 	local mission_padding = space_left / (#self._offered_missions - 1)
 	local x = 0
 
-	for i = 1, #self._offered_missions, 1 do
+	for i = 1, #self._offered_missions do
 		self._offered_missions[i]:set_x(x)
 
 		x = x + self._offered_missions[i]:w() + mission_padding

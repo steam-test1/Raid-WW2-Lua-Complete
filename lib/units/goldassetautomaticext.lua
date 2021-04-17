@@ -27,7 +27,7 @@ function GoldAssetAutomaticExt:_apply_upgrade_level(level)
 	end
 
 	if level > 0 then
-		for counter = 1, level, 1 do
+		for counter = 1, level do
 			self._unit:damage():run_sequence_simple("level_" .. string.format("%02d", counter))
 		end
 	end

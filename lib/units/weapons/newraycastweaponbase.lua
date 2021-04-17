@@ -150,7 +150,7 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 			self._bullet_objects = {}
 			local prefix = bullet_objects.prefix
 
-			for i = 1, bullet_objects.amount, 1 do
+			for i = 1, bullet_objects.amount do
 				local object = magazine.unit:get_object(Idstring(prefix .. i))
 
 				if object then
@@ -172,7 +172,7 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 				self._bullet_objects = {}
 				local prefix = bullet_objects.prefix
 
-				for i = 1, bullet_objects.amount, 1 do
+				for i = 1, bullet_objects.amount do
 					local object = ammo.unit:get_object(Idstring(prefix .. i))
 
 					if object then
@@ -1578,7 +1578,7 @@ function NewRaycastWeaponBase:update_debug(t, dt)
 
 	self._brush_up:cylinder(mvec_to, vec_up, 0.001 * ray_distance)
 
-	for ang = 1, 360, 1 do
+	for ang = 1, 360 do
 		local theta = ang
 		local ax = math.sin(theta) * spread
 		local ay = math.cos(theta) * spread

@@ -95,7 +95,7 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 		-- Nothing
 	end
 
-	for i = 1, shoot_through_data and 1 or self._rays, 1 do
+	for i = 1, shoot_through_data and 1 or self._rays do
 		mvector3.set(mvec_spread_direction, mvec_direction)
 
 		if spread then

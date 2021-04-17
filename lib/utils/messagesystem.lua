@@ -56,14 +56,14 @@ function MessageSystem:_notify()
 	local messages = deep_clone(self._messages)
 	local count = #self._messages
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		self._messages[i] = nil
 	end
 
 	self._messages = nil
 	self._messages = {}
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		if self._listeners[messages[i].message] then
 			if messages[i].uid then
 				self._listeners[messages[i].message][messages[i].uid](unpack(messages[i].arg))
@@ -94,7 +94,7 @@ end
 function MessageSystem:_remove()
 	local count = #self._remove_list
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		local data = self._remove_list[i]
 
 		self:_unregister(self._remove_list[i].message, self._remove_list[i].uid)
@@ -110,7 +110,7 @@ end
 function MessageSystem:_add()
 	local count = #self._add_list
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		local data = self._add_list[i]
 
 		self:_register(data.message, data.uid, data.func)

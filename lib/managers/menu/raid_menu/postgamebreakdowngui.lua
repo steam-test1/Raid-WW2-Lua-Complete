@@ -105,7 +105,7 @@ function PostGameBreakdownGui:_layout()
 
 	self._top_stats_small = {}
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local top_stat_small_params = {
 			name = "top_stat_small_" .. tostring(i)
 		}
@@ -349,7 +349,7 @@ function PostGameBreakdownGui:_calculate_xp_needed_for_levels()
 	local level_cap = managers.experience:level_cap()
 	self._levels_by_xp = {}
 
-	for i = 1, level_cap, 1 do
+	for i = 1, level_cap do
 		local points_needed = managers.experience:get_total_xp_for_level(i)
 
 		table.insert(self._levels_by_xp, points_needed)
@@ -688,7 +688,7 @@ function PostGameBreakdownGui:animate_breakdown()
 	if managers.network:session():amount_of_players() > 1 then
 		local top_stats = managers.statistics:get_top_stats()
 
-		for i = 1, 3, 1 do
+		for i = 1, 3 do
 			local data = {
 				player_nickname = top_stats[i].peer_name,
 				stat = top_stats[i].id,
@@ -731,7 +731,7 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 	self._central_display_panel:get_engine_panel():animate(callback(self, self, "_fade_in_label"), 0.2)
 	wait(1.1)
 
-	for i = 1, #xp_breakdown.additive, 1 do
+	for i = 1, #xp_breakdown.additive do
 		local previous_value = 0
 		local current_value = 0
 		t = 0
@@ -791,7 +791,7 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 	current_index = current_index + 1
 	local total_base = current_total
 
-	for i = 1, #xp_breakdown.multiplicative, 1 do
+	for i = 1, #xp_breakdown.multiplicative do
 		local previous_value = 0
 		local current_value = 0
 		t = 0

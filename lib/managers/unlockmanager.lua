@@ -33,7 +33,7 @@ function UnlockManager:unlock(category, identifiers)
 
 	local current_level_data = self._categories[category.slot][category.identifier]
 
-	for counter = 1, #identifiers, 1 do
+	for counter = 1, #identifiers do
 		if counter < #identifiers then
 			current_level_data[identifiers[counter]] = {}
 			current_level_data = current_level_data[identifiers[counter]]
@@ -52,7 +52,7 @@ function UnlockManager:is_unlocked(category, identifiers)
 
 	local current_level_data = self._categories[category.slot][category.identifier]
 
-	for counter = 1, #identifiers, 1 do
+	for counter = 1, #identifiers do
 		if counter < #identifiers then
 			if not current_level_data[identifiers[counter]] then
 				return false

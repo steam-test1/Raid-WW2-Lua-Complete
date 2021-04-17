@@ -13,7 +13,7 @@ function RaidExperienceManager:init()
 end
 
 function RaidExperienceManager:xp_migration_needed(version)
-	for i = 1, #RaidExperienceManager.XP_MIGRATION_VERSION_LIST, 1 do
+	for i = 1, #RaidExperienceManager.XP_MIGRATION_VERSION_LIST do
 		if RaidExperienceManager.XP_MIGRATION_VERSION_LIST[i] == version then
 			return true
 		end
@@ -33,7 +33,7 @@ function RaidExperienceManager:_setup()
 		}
 		local total_xp = 0
 
-		for i_level = 1, Application:digest_value(RaidExperienceManager.LEVEL_CAP, false), 1 do
+		for i_level = 1, Application:digest_value(RaidExperienceManager.LEVEL_CAP, false) do
 			total_xp = total_xp + tweak_data:get_value("experience_manager", "levels", i_level, "points")
 
 			table.insert(Global.experience_manager.total_xp_for_level, Application:digest_value(total_xp, true))
@@ -372,7 +372,7 @@ function RaidExperienceManager:experience_string(xp)
 	local reverse = string.reverse(total)
 	local s = ""
 
-	for i = 1, string.len(reverse), 1 do
+	for i = 1, string.len(reverse) do
 		s = s .. string.sub(reverse, i, i) .. (math.mod(i, 3) == 0 and i ~= string.len(reverse) and RaidExperienceManager.THOUSAND_SEPARATOR or "")
 	end
 
@@ -414,7 +414,7 @@ end
 function RaidExperienceManager:get_total_xp_for_levels(level)
 	local total_xp = 0
 
-	for i_level = 1, level, 1 do
+	for i_level = 1, level do
 		total_xp = total_xp + tweak_data:get_value("experience_manager", "levels", i_level, "points")
 	end
 

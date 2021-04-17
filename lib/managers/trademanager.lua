@@ -311,17 +311,13 @@ function TradeManager:play_custody_voice(criminal_name)
 		if managers.criminals:local_character_name() == criminal_left then
 			managers.achievment:set_script_data("last_man_standing", true)
 
-			if managers.groupai:state():bain_state() then
-				local character_code = managers.criminals:character_static_data_by_name(criminal_left).ssuffix
-			end
+			local character_code = managers.groupai:state():bain_state() and managers.criminals:character_static_data_by_name(criminal_left).ssuffix
 
 			return
 		end
 	end
 
-	if managers.groupai:state():bain_state() then
-		local character_code = managers.criminals:character_static_data_by_name(criminal_name).ssuffix
-	end
+	local character_code = managers.groupai:state():bain_state() and managers.criminals:character_static_data_by_name(criminal_name).ssuffix
 end
 
 function TradeManager:on_AI_criminal_death(criminal_name, respawn_penalty, hostages_killed, skip_netsend)

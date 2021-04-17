@@ -158,7 +158,7 @@ function TurretWeapon:_setup_fire_effects()
 	self._muzzle_effect_table = {}
 	self._muzzle_effect = muzzle_effect_tweak
 
-	for barrel_id = 1, self._number_of_barrels, 1 do
+	for barrel_id = 1, self._number_of_barrels do
 		local fire_locator_property_name = "_locator_fire_" .. barrel_id
 		local fire_locator_object_name = Idstring("fire_" .. barrel_id)
 		self[fire_locator_property_name] = self._unit:get_object(fire_locator_object_name)
@@ -177,7 +177,7 @@ function TurretWeapon:_setup_smoke_effects()
 	self._overheating_smoke_effect_table = {}
 	self._overheating_smoke_effect = Idstring("effects/vanilla/smoke/smoke_turret_heated_001")
 
-	for barrel_id = 1, self._number_of_barrels, 1 do
+	for barrel_id = 1, self._number_of_barrels do
 		local smoke_locator_property_name = "_locator_smoke_" .. barrel_id
 		local smoke_locator_object_name = Idstring("es_smoke_" .. barrel_id)
 		self[smoke_locator_property_name] = self._unit:get_object(smoke_locator_object_name)
@@ -397,14 +397,14 @@ end
 
 function TurretWeapon:_enable_overheating_smoke(enabled)
 	if self._overheating_smoke_effect and enabled then
-		for barrel_id = 1, self._number_of_barrels, 1 do
+		for barrel_id = 1, self._number_of_barrels do
 			if self._overheating_smoke_effect_table[barrel_id] then
 				local smoke_spawn_name = "_overheating_smoke_spawn_" .. barrel_id
 				self[smoke_spawn_name] = World:effect_manager():spawn(self._overheating_smoke_effect_table[barrel_id])
 			end
 		end
 	else
-		for barrel_id = 1, self._number_of_barrels, 1 do
+		for barrel_id = 1, self._number_of_barrels do
 			local smoke_spawn_name = "_overheating_smoke_spawn_" .. barrel_id
 
 			if self[smoke_spawn_name] then

@@ -26,7 +26,7 @@ function UIAnimation.animate_text_glow(text, new_color, duration_per_letter, del
 			local dt = coroutine.yield()
 			t = t + dt
 
-			for i = 1, number_of_letters, 1 do
+			for i = 1, number_of_letters do
 				local blend_amount = Easing.sine_pulse((t - (i - 1) * delay_between_letters) / duration_per_letter)
 				local current_r = original_color.r + blend_amount * change_r
 				local current_g = original_color.g + blend_amount * change_g

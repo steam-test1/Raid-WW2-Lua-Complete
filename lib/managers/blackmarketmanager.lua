@@ -133,11 +133,11 @@ function BlackMarketManager:_setup_unlocked_weapon_slots()
 	unlocked_weapon_slots.primaries = unlocked_weapon_slots.primaries or {}
 	unlocked_weapon_slots.secondaries = unlocked_weapon_slots.secondaries or {}
 
-	for i = 1, #tweak_data.weapon_inventory.weapon_primaries_index, 1 do
+	for i = 1, #tweak_data.weapon_inventory.weapon_primaries_index do
 		unlocked_weapon_slots.primaries[i] = true
 	end
 
-	for i = 1, #tweak_data.weapon_inventory.weapon_secondaries_index, 1 do
+	for i = 1, #tweak_data.weapon_inventory.weapon_secondaries_index do
 		unlocked_weapon_slots.secondaries[i] = true
 	end
 end
@@ -906,7 +906,7 @@ function BlackMarketManager:create_preload_ws()
 	local max_w = 0
 	local max_h = 0
 
-	for i = 1, num_squares, 1 do
+	for i = 1, num_squares do
 		row_index = row_index + 1
 		last_rect = square_panel:rect({
 			blend_mode = "add",
@@ -2170,7 +2170,7 @@ function BlackMarketManager:_get_free_weapon_slot(category)
 
 	local max_items = tweak_data.gui.MAX_WEAPON_SLOTS or 72
 
-	for i = 1, max_items, 1 do
+	for i = 1, max_items do
 		if self:is_weapon_slot_unlocked(category, i) and not self._global.crafted_items[category][i] then
 			return i
 		end
@@ -2212,7 +2212,7 @@ function BlackMarketManager:equip_next_weapon(category)
 	local max_slots = tweak_data.gui.MAX_WEAPON_SLOTS or 72
 	local crafted = nil
 
-	for slot = equipped_slot + 1, max_slots, 1 do
+	for slot = equipped_slot + 1, max_slots do
 		crafted = self._global.crafted_items[category][slot]
 
 		if crafted and self:weapon_unlocked(crafted.weapon_id) then
@@ -2220,7 +2220,7 @@ function BlackMarketManager:equip_next_weapon(category)
 		end
 	end
 
-	for slot = 1, equipped_slot - 1, 1 do
+	for slot = 1, equipped_slot - 1 do
 		crafted = self._global.crafted_items[category][slot]
 
 		if crafted and self:weapon_unlocked(crafted.weapon_id) then
@@ -2307,7 +2307,7 @@ function BlackMarketManager:get_sorted_melee_weapons(hide_locked)
 		table.insert(item_categories[category], item)
 	end
 
-	for i = 1, #item_categories, 1 do
+	for i = 1, #item_categories do
 		table.insert(sorted_categories, i)
 	end
 
@@ -2998,7 +2998,7 @@ function BlackMarketManager:_verify_preferred_characters()
 	local preferred_characters = {}
 	local character, new_name, char_tweak = nil
 
-	for i = 1, CriminalsManager.MAX_NR_CRIMINALS, 1 do
+	for i = 1, CriminalsManager.MAX_NR_CRIMINALS do
 		character = self._global._preferred_characters[i]
 
 		if not character or used_characters[character] then

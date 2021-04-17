@@ -35,7 +35,7 @@ function RaidGuiControlDifficultyStars:_create_stars()
 	self._stars = {}
 	local center_x = RaidGuiControlDifficultyStars.FIRST_STAR_CENTER_X
 
-	for i = 1, self._number_of_stars, 1 do
+	for i = 1, self._number_of_stars do
 		local star_params = {
 			name = "difficulty_star_" .. tostring(i),
 			texture = tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_UNAVAILABLE_ICON].texture,
@@ -52,21 +52,21 @@ function RaidGuiControlDifficultyStars:_create_stars()
 end
 
 function RaidGuiControlDifficultyStars:set_progress(available, completed)
-	for i = 1, #self._stars, 1 do
+	for i = 1, #self._stars do
 		self._stars[i]:set_image(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture)
 		self._stars[i]:set_texture_rect(unpack(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture_rect))
 		self._stars[i]:set_color(self._unavailable_color)
 		self._stars[i]:set_visible(true)
 	end
 
-	for i = 1, completed, 1 do
+	for i = 1, completed do
 		self._stars[i]:set_image(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_FILLED_ICON].texture)
 		self._stars[i]:set_texture_rect(unpack(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_FILLED_ICON].texture_rect))
 		self._stars[i]:set_color(self._filled_color)
 		self._stars[i]:set_visible(true)
 	end
 
-	for i = completed + 1, available, 1 do
+	for i = completed + 1, available do
 		self._stars[i]:set_image(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture)
 		self._stars[i]:set_texture_rect(unpack(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture_rect))
 		self._stars[i]:set_color(self._empty_color)
@@ -75,13 +75,13 @@ function RaidGuiControlDifficultyStars:set_progress(available, completed)
 end
 
 function RaidGuiControlDifficultyStars:set_active_difficulty(difficulty)
-	for i = 1, #self._stars, 1 do
+	for i = 1, #self._stars do
 		self._stars[i]:set_image(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture)
 		self._stars[i]:set_texture_rect(unpack(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_EMPTY_ICON].texture_rect))
 		self._stars[i]:set_color(self._unavailable_color)
 	end
 
-	for i = 1, difficulty, 1 do
+	for i = 1, difficulty do
 		self._stars[i]:set_image(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_FILLED_ICON].texture)
 		self._stars[i]:set_texture_rect(unpack(tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_FILLED_ICON].texture_rect))
 		self._stars[i]:set_color(self._filled_color)

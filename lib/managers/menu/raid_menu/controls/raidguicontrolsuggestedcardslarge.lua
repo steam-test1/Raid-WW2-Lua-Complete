@@ -33,7 +33,7 @@ function RaidGUIControlSuggestedCardsLarge:_create_items()
 	local item_params = {}
 	local item_spacing = math.floor((self._params.w - RaidGUIControlSuggestedCards.PLAYERS_COUNT * self._selected_marker_w) / (RaidGUIControlSuggestedCards.PLAYERS_COUNT - 1))
 
-	for i = 1, RaidGUIControlSuggestedCards.PLAYERS_COUNT, 1 do
+	for i = 1, RaidGUIControlSuggestedCards.PLAYERS_COUNT do
 		item_params.x = (self._selected_marker_w + item_spacing) * (i - 1)
 		item_params.y = 0
 		item_params.item_width = self._item_width
@@ -88,7 +88,7 @@ end
 
 function RaidGUIControlSuggestedCardsLarge:mouse_moved(o, x, y)
 	if self._grid_items then
-		for i = 1, #self._grid_items, 1 do
+		for i = 1, #self._grid_items do
 			local handled = self._grid_items[i]:mouse_moved(o, x, y)
 
 			return handled
@@ -145,7 +145,7 @@ function RaidGUIControlSuggestedCardsLarge:move_selection_left()
 end
 
 function RaidGUIControlSuggestedCardsLarge:select_first_available_item()
-	for i_item_data = 1, #self._grid_items, 1 do
+	for i_item_data = 1, #self._grid_items do
 		local selected_item = self:select_item(i_item_data)
 
 		if selected_item then
@@ -159,7 +159,7 @@ function RaidGUIControlSuggestedCardsLarge:select_item(item_idx)
 		return
 	end
 
-	for i_item_data = 1, #self._grid_items, 1 do
+	for i_item_data = 1, #self._grid_items do
 		if i_item_data == item_idx then
 			self._grid_items[i_item_data]:select(true)
 

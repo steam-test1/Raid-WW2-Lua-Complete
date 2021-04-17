@@ -309,7 +309,7 @@ function SkillTreeManager:create_breadcrumbs_for_level(level)
 end
 
 function SkillTreeManager:apply_automatic_unlocks_for_levels_up_to(level, category_to_apply)
-	for i = 1, level, 1 do
+	for i = 1, level do
 		self:apply_automatic_unlocks_for_level(i, category_to_apply)
 	end
 end
@@ -317,7 +317,7 @@ end
 function SkillTreeManager:apply_automatic_unlocks_for_all_levels(category_to_apply)
 	local level_cap = managers.experience:level_cap()
 
-	for i = 1, level_cap, 1 do
+	for i = 1, level_cap do
 		self:apply_automatic_unlocks_for_level(i, category_to_apply)
 	end
 end

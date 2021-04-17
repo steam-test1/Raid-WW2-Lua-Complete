@@ -775,8 +775,8 @@ function HUDManager:_update_name_labels(t, dt)
 		end
 	end
 
-	for i = 1, #self._hud.name_labels, 1 do
-		for j = i + 1, #self._hud.name_labels, 1 do
+	for i = 1, #self._hud.name_labels do
+		for j = i + 1, #self._hud.name_labels do
 			self:_handle_name_label_overlapping(self._hud.name_labels[i], self._hud.name_labels[j], cam_pos)
 		end
 	end
@@ -1085,7 +1085,7 @@ function HUDManager:add_waypoint(id, data)
 			end
 		end
 
-		for i = 1, 10, 1 do
+		for i = 1, 10 do
 			if not t[i] then
 				self._hud.waypoints[id].slot = i
 
@@ -1350,7 +1350,7 @@ function HUDManager:add_mugshot_by_unit(unit)
 	local characters = managers.criminals:characters()
 	local nationality = nil
 
-	for i = 1, #characters, 1 do
+	for i = 1, #characters do
 		if characters[i].unit == unit then
 			nationality = characters[i].name
 		end

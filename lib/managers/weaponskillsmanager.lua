@@ -54,7 +54,7 @@ end
 
 function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 	for weapon_id, skill_tree in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
-		for tier_index = 1, #skill_tree, 1 do
+		for tier_index = 1, #skill_tree do
 			local tier_skills = skill_tree[tier_index]
 
 			for skill_index, skill in pairs(tier_skills) do
@@ -119,7 +119,7 @@ function WeaponSkillsManager:activate_current_challenges_for_weapon(weapon_id)
 		return
 	end
 
-	for tier_index = 1, #weapon_skill_tree, 1 do
+	for tier_index = 1, #weapon_skill_tree do
 		local tier_skills = weapon_skill_tree[tier_index]
 		local tier_unlocked = managers.weapon_skills:is_weapon_tier_unlocked(weapon_id, tier_index)
 
@@ -140,7 +140,7 @@ function WeaponSkillsManager:deactivate_challenges_for_weapon(weapon_id)
 		return
 	end
 
-	for tier_index = 1, #weapon_skill_tree, 1 do
+	for tier_index = 1, #weapon_skill_tree do
 		local tier_skills = weapon_skill_tree[tier_index]
 
 		for skill_index, skill in pairs(tier_skills) do
@@ -180,7 +180,7 @@ function WeaponSkillsManager:update_weapon_challenges(weapon_id)
 	if Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
 		local skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
-		for tier_index = 1, #skill_tree, 1 do
+		for tier_index = 1, #skill_tree do
 			local tier_skills = skill_tree[tier_index]
 
 			for skill_index, skill in pairs(tier_skills) do
@@ -221,7 +221,7 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 	if Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
 		local skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
-		for tier_index = 1, #skill_tree, 1 do
+		for tier_index = 1, #skill_tree do
 			local tier_skills = skill_tree[tier_index]
 
 			for skill_index, skill in pairs(tier_skills) do
@@ -229,7 +229,7 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 					local tweak_data_challenge_data = tweak_data.weapon_skills.skill_trees[weapon_id][tier_index][skill_index][1].challenge_tasks[1]
 					local challenge_from_manager = managers.challenge._challenges[ChallengeManager.CATEGORY_WEAPON_UPGRADE][skill[1].challenge_id]
 
-					for i = 1, #tweak_data_challenge_data.reminders, 1 do
+					for i = 1, #tweak_data_challenge_data.reminders do
 						if skill[1].challenge_tasks[1].reminders[i] ~= tweak_data_challenge_data.reminders[i] then
 							challenges_changed = true
 
@@ -499,8 +499,8 @@ function WeaponSkillsManager:update_weapon_skills(weapon_category_id, weapon_id,
 		return
 	end
 
-	for tier_counter = 1, #weapon_skills, 1 do
-		for tier_skill_counter = 1, #weapon_skills[tier_counter], 1 do
+	for tier_counter = 1, #weapon_skills do
+		for tier_skill_counter = 1, #weapon_skills[tier_counter] do
 			local skill_data = weapon_skills[tier_counter][tier_skill_counter][1]
 
 			if not self._temp_weapon_skills then
@@ -798,7 +798,7 @@ function WeaponSkillsManager:load(data, version)
 				Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] = deep_clone(weapon_skill_tree_data)
 				local skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
-				for tier_index = 1, #skill_tree, 1 do
+				for tier_index = 1, #skill_tree do
 					local tier_skills = skill_tree[tier_index]
 
 					for skill_index, skill in pairs(tier_skills) do
@@ -903,10 +903,10 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 	if Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
 		local tier_counter = 1
 
-		for tier_counter = 1, #Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id], 1 do
+		for tier_counter = 1, #Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] do
 			local tier_skill_counter = 1
 
-			for tier_skill_counter = 1, #Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id][tier_counter], 1 do
+			for tier_skill_counter = 1, #Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id][tier_counter] do
 				local skill_data = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id][tier_counter][tier_skill_counter][1]
 
 				if not self._temp_weapon_skills then

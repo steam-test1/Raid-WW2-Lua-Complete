@@ -81,7 +81,7 @@ function HUDSaveIcon:_create_bullets()
 	local single_bullet_angle = 360 / HUDSaveIcon.NUMBER_OF_BULLETS
 	self._bullets = {}
 
-	for i = 1, HUDSaveIcon.NUMBER_OF_BULLETS, 1 do
+	for i = 1, HUDSaveIcon.NUMBER_OF_BULLETS do
 		local dx = HUDSaveIcon.RADIUS * math.cos(single_bullet_angle * (i - 1) - 90)
 		local dy = HUDSaveIcon.RADIUS * math.sin(single_bullet_angle * (i - 1) - 90)
 		local bullet_params = {
@@ -164,7 +164,7 @@ function HUDSaveIcon:_animate_bullets()
 		local single_bullet_angle = 360 / #self._bullets
 		local initial_rotations = {}
 
-		for i = 1, #self._bullets, 1 do
+		for i = 1, #self._bullets do
 			table.insert(initial_rotations, self._bullets[i]:rotation())
 		end
 
@@ -173,7 +173,7 @@ function HUDSaveIcon:_animate_bullets()
 			t = t + dt
 			local current_rotation_offset = Easing.quartic_in_out(t, 0, single_bullet_angle, rotation_duration)
 
-			for i = 1, #self._bullets, 1 do
+			for i = 1, #self._bullets do
 				local dx = HUDSaveIcon.RADIUS * math.cos(single_bullet_angle * (i - 1) + current_rotation_offset - 90)
 				local dy = HUDSaveIcon.RADIUS * math.sin(single_bullet_angle * (i - 1) + current_rotation_offset - 90)
 
@@ -200,7 +200,7 @@ function HUDSaveIcon:_animate_bullets()
 			self._bullets[self._active_bullet]:set_alpha(current_alpha)
 		end
 
-		for i = 1, #self._bullets, 1 do
+		for i = 1, #self._bullets do
 			local dx = HUDSaveIcon.RADIUS * math.cos(single_bullet_angle * (i - 1) - 90)
 			local dy = HUDSaveIcon.RADIUS * math.sin(single_bullet_angle * (i - 1) - 90)
 

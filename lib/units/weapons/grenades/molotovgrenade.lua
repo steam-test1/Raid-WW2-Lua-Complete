@@ -243,7 +243,7 @@ function MolotovGrenade:detonate(normal)
 		end
 	end
 
-	for i = 1, 6, 1 do
+	for i = 1, 6 do
 		vector = position + offset
 		raycast = World:raycast("ray", position, vector, "slot_mask", slotmask)
 		local ray_cast, fake_ball_outline = nil

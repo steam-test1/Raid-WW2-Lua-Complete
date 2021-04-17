@@ -1024,7 +1024,7 @@ function RaidGUIPanel:_add_control(control)
 	local control_layer = control:layer()
 	local control_index = #self._controls + 1
 
-	for i = 1, #self._controls, 1 do
+	for i = 1, #self._controls do
 		if self._controls[i]:layer() < control_layer then
 			control_index = i
 

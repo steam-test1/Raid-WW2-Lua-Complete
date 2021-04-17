@@ -3298,7 +3298,7 @@ function PlayerStandard:teammate_aimed_at_by_player()
 		local bots = managers.groupai:state()._ai_criminals
 		local players = managers.player:players()
 
-		for i = 1, #players, 1 do
+		for i = 1, #players do
 			if prime_target.unit == players[i] then
 				return prime_target.unit:base():nick_name(), prime_target.unit:base()._tweak_table, prime_target.unit
 			end
@@ -3996,7 +3996,7 @@ function PlayerStandard:_check_action_ladder(t, input)
 
 	local u_pos = self._unit:movement():m_pos()
 
-	for i = 1, math.min(Ladder.LADDERS_PER_FRAME, #Ladder.active_ladders), 1 do
+	for i = 1, math.min(Ladder.LADDERS_PER_FRAME, #Ladder.active_ladders) do
 		local ladder_unit = Ladder.next_ladder()
 
 		if alive(ladder_unit) then

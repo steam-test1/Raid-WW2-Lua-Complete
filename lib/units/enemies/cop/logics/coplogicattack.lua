@@ -900,7 +900,7 @@ function CopLogicAttack._find_retreat_position(from_pos, threat_pos, threat_head
 	}
 	local fail_position = nil
 
-	for i_ray = 1, ct_rays, 1 do
+	for i_ray = 1, ct_rays do
 		local to_pos = mvector3.copy(from_pos)
 
 		mvector3.add(to_pos, offset_vec)

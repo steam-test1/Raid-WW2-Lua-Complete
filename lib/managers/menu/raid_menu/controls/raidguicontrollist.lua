@@ -456,7 +456,7 @@ function RaidGUIControlList:_next_row_idx()
 
 	if self._new_selected_item_idx > #self._list_items then
 		if self._loop_items then
-			for counter = 1, self._selected_item_idx - 1, 1 do
+			for counter = 1, self._selected_item_idx - 1 do
 				if self._list_items[counter]:enabled() then
 					self._selected_item_idx = counter
 
@@ -465,7 +465,7 @@ function RaidGUIControlList:_next_row_idx()
 			end
 		end
 	else
-		for counter = self._new_selected_item_idx, #self._list_items, 1 do
+		for counter = self._new_selected_item_idx, #self._list_items do
 			if self._list_items[counter]:enabled() then
 				self._selected_item_idx = counter
 
@@ -474,7 +474,7 @@ function RaidGUIControlList:_next_row_idx()
 		end
 
 		if self._loop_items then
-			for counter = 1, self._selected_item_idx - 1, 1 do
+			for counter = 1, self._selected_item_idx - 1 do
 				if self._list_items[counter]:enabled() then
 					self._selected_item_idx = counter
 

@@ -109,7 +109,7 @@ function Challenge:_on_completed()
 		local target = nil
 		local target_parts = string.split(target_string, "[.]")
 
-		for i = 1, #target_parts, 1 do
+		for i = 1, #target_parts do
 			if target == nil then
 				target = _G[target_parts[i]]
 			else

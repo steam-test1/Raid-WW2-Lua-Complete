@@ -35,7 +35,7 @@ function RaidGUIControlWeaponSkillRow:set_weapon_skill(weapon_id, weapon_skills,
 		self._name_label:set_text(text)
 	end
 
-	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS, 1 do
+	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS do
 		local unlocked = managers.weapon_skills:is_weapon_tier_unlocked(self._weapon_id, i_tier)
 		local button = self._buttons[i_tier]
 		local skill = weapon_skills[i_tier] and weapon_skills[i_tier][i_skill] and weapon_skills[i_tier][i_skill][1] or nil
@@ -73,7 +73,7 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 	}
 	self._lines = {}
 
-	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS - 1, 1 do
+	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS - 1 do
 		local line = self._object:rect(lines_params)
 
 		table.insert(self._lines, line)
@@ -101,7 +101,7 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 	local left_button = nil
 	self._buttons = {}
 
-	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS, 1 do
+	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS do
 		local skill_button = self._object:create_custom_control(RaidGUIControlButtonWeaponSkill, skill_params, i_tier, self._lines[i_tier - 1], left_button)
 
 		table.insert(self._buttons, skill_button)

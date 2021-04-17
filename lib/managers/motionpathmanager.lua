@@ -378,7 +378,7 @@ function MotionPathManager:_draw_editor_info()
 
 	for _, path in ipairs(self._paths) do
 		if path.points then
-			for j = 1, #path.points, 1 do
+			for j = 1, #path.points do
 				if path.points[j + 1] and path.points[j + 1].point then
 					local spline_color = path.id == self._selected_path and {
 						0,
@@ -476,7 +476,7 @@ end
 function MotionPathManager:_get_distance(points_in_direction, start_checkpoint, end_checkpoint)
 	local distance = 0
 
-	for i = start_checkpoint, end_checkpoint - 1, 1 do
+	for i = start_checkpoint, end_checkpoint - 1 do
 		local move_vector = points_in_direction[i + 1].point - points_in_direction[i].point
 		distance = distance + move_vector:length()
 	end

@@ -110,7 +110,7 @@ function GoldEconomyManager:gold_string(amount)
 	local reverse = string.reverse(total)
 	local s = ""
 
-	for i = 1, string.len(reverse), 1 do
+	for i = 1, string.len(reverse) do
 		s = s .. string.sub(reverse, i, i) .. (math.mod(i, 3) == 0 and i ~= string.len(reverse) and GoldEconomyManager.THOUSAND_SEPARATOR or "")
 	end
 

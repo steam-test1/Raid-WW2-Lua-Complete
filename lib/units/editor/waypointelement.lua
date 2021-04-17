@@ -202,7 +202,7 @@ function WaypointUnitElement:set_element_data(params, ...)
 	elseif params.value == "color" then
 		local colors = self:_split_string(tostring(self._hed.color), " ")
 
-		for i = 1, 3, 1 do
+		for i = 1, 3 do
 			colors[i] = colors[i] / 255
 		end
 

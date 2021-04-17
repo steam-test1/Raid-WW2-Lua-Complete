@@ -158,7 +158,7 @@ function EventCompleteState:at_enter(old_state, params)
 
 	self._controller_list = {}
 
-	for index = 1, managers.controller:get_wrapper_count(), 1 do
+	for index = 1, managers.controller:get_wrapper_count() do
 		local con = managers.controller:create_controller("boot_" .. index, index, false)
 
 		con:enable()
@@ -753,7 +753,7 @@ function EventCompleteState:get_base_xp_breakdown()
 	self.xp_breakdown = managers.experience:calculate_exp_brakedown(current_event, current_operation, true)
 
 	if not self:is_success() then
-		for i = 1, #self.xp_breakdown.additive, 1 do
+		for i = 1, #self.xp_breakdown.additive do
 			self.xp_breakdown.additive[i].amount = self.xp_breakdown.additive[i].amount * RaidJobManager.XP_MULTIPLIER_ON_FAIL
 		end
 	end
@@ -764,13 +764,13 @@ function EventCompleteState:calculate_xp()
 
 	local additive = 0
 
-	for i = 1, #self.xp_breakdown.additive, 1 do
+	for i = 1, #self.xp_breakdown.additive do
 		additive = additive + self.xp_breakdown.additive[i].amount
 	end
 
 	local multiplicative = 1
 
-	for i = 1, #self.xp_breakdown.multiplicative, 1 do
+	for i = 1, #self.xp_breakdown.multiplicative do
 		multiplicative = multiplicative + self.xp_breakdown.multiplicative[i].amount
 	end
 

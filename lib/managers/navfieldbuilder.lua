@@ -87,7 +87,7 @@ function NavFieldBuilder:load(data)
 	self._helper_blockers = data.helper_blockers
 
 	if data.quad_borders_x_pos then
-		for i_room = 1, #data.quad_borders_x_pos, 1 do
+		for i_room = 1, #data.quad_borders_x_pos do
 			local room = {
 				borders = {
 					x_pos = data.quad_borders_x_pos[i_room] * quad_grid_size,
@@ -112,7 +112,7 @@ function NavFieldBuilder:load(data)
 			table.insert(self._rooms, room)
 		end
 
-		for i_door = 1, #data.door_low_pos, 1 do
+		for i_door = 1, #data.door_low_pos do
 			local door = {
 				pos = mvector3.copy(data.door_low_pos[i_door]),
 				pos1 = mvector3.copy(data.door_high_pos[i_door]),

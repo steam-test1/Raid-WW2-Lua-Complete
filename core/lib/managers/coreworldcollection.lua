@@ -886,8 +886,8 @@ function CoreWorldCollection:_new_random_world(worlds, ordered)
 	local l = 0
 	local s_pos = -800 * s / 2
 
-	for i = 0, s, 1 do
-		for j = 0, s, 1 do
+	for i = 0, s do
+		for j = 0, s do
 			local pos = Vector3(s_pos + i * 800, s_pos + j * 800, 0)
 			local yaw = ordered and math.mod(l, 4) * 90 or math.round(math.rand(360) / 90) * 90
 			local rot = Rotation(yaw, 0, 0)

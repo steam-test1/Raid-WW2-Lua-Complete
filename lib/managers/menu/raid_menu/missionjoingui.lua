@@ -370,7 +370,7 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._player_controls = {}
 
-	for counter = 1, 3, 1 do
+	for counter = 1, 3 do
 		local player_description_params = {
 			h = 96,
 			w = 480,
@@ -941,7 +941,7 @@ function MissionJoinGui:_set_game_description_data(data)
 
 	local control_counter = 1
 
-	for peer_counter = 1, 4, 1 do
+	for peer_counter = 1, 4 do
 		local control_data = data["players_info_" .. peer_counter]
 
 		if control_data ~= NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO then
@@ -959,7 +959,7 @@ function MissionJoinGui:_set_game_description_data(data)
 	end
 
 	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
-		for i = 1, control_counter, 1 do
+		for i = 1, control_counter do
 			local on_menu_move = {
 				left = "servers_table",
 				up = "player_description_" .. tostring(i > 1 and i - 1 or control_counter),
@@ -1313,7 +1313,7 @@ function MissionJoinGui:_filters_set_selected_server_table()
 	self._difficulty_filter_stepper:set_selected(false)
 	self._mission_filter_stepper:set_selected(false)
 
-	for i = 1, #self._player_controls, 1 do
+	for i = 1, #self._player_controls do
 		self._player_controls[i]:set_selected(false)
 	end
 
@@ -1329,7 +1329,7 @@ function MissionJoinGui:_filters_set_selected_filters()
 	self._difficulty_filter_stepper:set_selected(false)
 	self._mission_filter_stepper:set_selected(false)
 
-	for i = 1, #self._player_controls, 1 do
+	for i = 1, #self._player_controls do
 		self._player_controls[i]:set_selected(false)
 	end
 

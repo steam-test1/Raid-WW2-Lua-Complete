@@ -70,7 +70,7 @@ function HUDDriving:_create_slot_panel()
 
 	self._slots = {}
 
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		local empty_slot_params = {
 			name = "empty_slot_" .. tostring(i),
 			texture = tweak_data.gui.icons[HUDDriving.EMPTY_SEAT_ICON].texture,
@@ -210,10 +210,10 @@ function HUDDriving:refresh_button_prompts(force)
 	local have_new_prompts = false
 
 	if self._current_seat_prompts and #seat_prompts == #self._current_seat_prompts then
-		for i = 1, #seat_prompts, 1 do
+		for i = 1, #seat_prompts do
 			local found_match = false
 
-			for j = 1, #self._current_seat_prompts, 1 do
+			for j = 1, #self._current_seat_prompts do
 				if seat_prompts[i].name == self._current_seat_prompts[j].name then
 					found_match = true
 

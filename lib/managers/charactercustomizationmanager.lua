@@ -432,7 +432,7 @@ function CharacterCustomizationManager:add_character_customization_to_inventory(
 	for index, nationality in pairs(tweak_data.character_customization.customizations[part_key].nationalities) do
 		local need_breadcrumb = false
 
-		for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1, 1 do
+		for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 			local slot_data = Global.savefile_manager.meta_data_list[slot_index]
 
 			if slot_data and slot_data.cache and nationality == slot_data.cache.PlayerManager.character_profile_nation then

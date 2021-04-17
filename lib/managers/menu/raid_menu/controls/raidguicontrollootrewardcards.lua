@@ -47,7 +47,7 @@ function RaidGUIControlLootRewardCards:_create_items()
 
 	horizontal_spacing = 0
 
-	for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT, 1 do
+	for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT do
 		local item_params = {
 			x = (self._item_params.item_w + horizontal_spacing) * (i - 1),
 			y = RaidGUIControlLootRewardCards.INITIAL_CARD_Y,
@@ -275,7 +275,7 @@ function RaidGUIControlLootRewardCards:_animate_show(panel)
 	local initial_offset = {}
 	local timings = {}
 
-	for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT, 1 do
+	for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT do
 		local offset = math.random(50, 150)
 
 		table.insert(initial_offset, offset)
@@ -313,7 +313,7 @@ function RaidGUIControlLootRewardCards:_animate_show(panel)
 
 		self._pack_title:set_y(pack_title_y - customization_name_current_offset)
 
-		for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT, 1 do
+		for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT do
 			local current_alpha = Easing.quartic_out(t, 0, 1, duration)
 
 			self._items[i]:set_alpha(current_alpha)
@@ -335,7 +335,7 @@ function RaidGUIControlLootRewardCards:_animate_show(panel)
 	self._pack_title:set_alpha(1)
 	self._pack_title:set_y(pack_title_y)
 
-	for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT, 1 do
+	for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT do
 		self._items[i]:set_alpha(1)
 		self._items[i]:set_y(RaidGUIControlLootRewardCards.INITIAL_CARD_Y)
 	end

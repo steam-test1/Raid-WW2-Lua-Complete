@@ -118,7 +118,7 @@ function BreadcrumbManager:add_breadcrumb(category, identifiers)
 
 	local current_tree_level = self._breadcrumbs[category.slot][category.identifier]
 
-	for i = 1, #identifiers, 1 do
+	for i = 1, #identifiers do
 		if i < #identifiers then
 			if not current_tree_level[identifiers[i]] then
 				current_tree_level[identifiers[i]] = {}
@@ -143,7 +143,7 @@ function BreadcrumbManager:remove_breadcrumb(category, identifiers)
 	local current_tree_level = self._breadcrumbs[category.slot][category.identifier]
 	local depth_to_remove = nil
 
-	for i = 1, #identifiers, 1 do
+	for i = 1, #identifiers do
 		local elements_in_current_level = self:_count_tree_level_elements(current_tree_level)
 
 		if elements_in_current_level < 2 and not depth_to_remove then
@@ -171,7 +171,7 @@ function BreadcrumbManager:remove_breadcrumb(category, identifiers)
 		current_tree_level = self._breadcrumbs[category.slot]
 		local index_to_remove = category.identifier
 
-		for i = 1, depth_to_remove - 1, 1 do
+		for i = 1, depth_to_remove - 1 do
 			if i == 1 then
 				current_tree_level = current_tree_level[category.identifier]
 			else
@@ -222,7 +222,7 @@ function BreadcrumbManager:category_has_breadcrumbs(category, identifiers)
 		if category_has_breadcrumbs and identifiers then
 			local current_tree_level = self._breadcrumbs[category.slot][category.identifier]
 
-			for i = 1, #identifiers, 1 do
+			for i = 1, #identifiers do
 				if not current_tree_level[identifiers[i]] then
 					category_has_breadcrumbs = false
 
@@ -270,10 +270,10 @@ function BreadcrumbManager:_notify_breadcrumb_change_listeners(category, identif
 
 	managers.system_event_listener:call_listeners(event_id)
 
-	for i = 1, #identifiers, 1 do
+	for i = 1, #identifiers do
 		local identifier_list = {}
 
-		for j = 1, i, 1 do
+		for j = 1, i do
 			table.insert(identifier_list, identifiers[j])
 		end
 

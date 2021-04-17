@@ -121,7 +121,7 @@ end
 
 function WeaponSelectionGui:clear_grenade_secondary_breadbrumbs()
 	if managers.breadcrumb._breadcrumbs.character and managers.breadcrumb._breadcrumbs.character.weapon_secondary then
-		for i = 1, #tweak_data.projectiles._projectiles_index, 1 do
+		for i = 1, #tweak_data.projectiles._projectiles_index do
 			if managers.breadcrumb._breadcrumbs.character.weapon_secondary[tweak_data.projectiles._projectiles_index[i]] then
 				managers.breadcrumb._breadcrumbs.character.weapon_secondary[tweak_data.projectiles._projectiles_index[i]] = nil
 			end

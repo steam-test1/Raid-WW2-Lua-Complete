@@ -846,7 +846,7 @@ function NetworkMatchMakingSTEAM:get_all_players_info()
 	local players_data = {}
 	local peer_id = 0
 
-	for peer_id = 2, 4, 1 do
+	for peer_id = 2, 4 do
 		if managers.network and managers.network:session() and managers.network:session():all_peers() then
 			local peer_data = managers.network:session():all_peers()[peer_id]
 

@@ -2326,7 +2326,7 @@ function StatisticsManager:calculate_top_stats()
 	self.top_stats = {}
 	local peer_1_top_stats_count = 0
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local stat_slot = self:_get_free_stat_slot(self.top_stats)
 		self.top_stats[stat_slot] = indexed_stats[i]
 
@@ -2404,7 +2404,7 @@ function StatisticsManager:calculate_bottom_stats()
 
 	self.bottom_stats = {}
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local stat_slot = self:_get_free_stat_slot(self.bottom_stats)
 		self.bottom_stats[stat_slot] = indexed_stats[i]
 	end
@@ -2494,7 +2494,7 @@ function StatisticsManager:get_top_stats_for_player(peer_id)
 	peer_id = peer_id or managers.network:session():local_peer():id()
 	local top_stats_for_player = {}
 
-	for i = 1, #self.top_stats, 1 do
+	for i = 1, #self.top_stats do
 		if self.top_stats[i].peer_id == peer_id then
 			table.insert(top_stats_for_player, self.top_stats[i])
 		end

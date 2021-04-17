@@ -33,20 +33,20 @@ function CoreCutsceneKeyCollection:keys_between(start_time, end_time, element_na
 			end
 		end
 	else
-	local index = table.getn(keys) + 1
+		local index = table.getn(keys) + 1
 
-	return function ()
-		while index > 1 do
-			index = index - 1
-			local key = keys[index]
+		return function ()
+			while index > 1 do
+				index = index - 1
+				local key = keys[index]
 
-			if key and key:time() <= start_time then
-				if end_time < key:time() then
-					if element_name == nil or element_name == key.ELEMENT_NAME then
-						return key
-					end
-				else
-					break
+				if key and key:time() <= start_time then
+					if end_time < key:time() then
+						if element_name == nil or element_name == key.ELEMENT_NAME then
+							return key
+						end
+					else
+						break
 					end
 				end
 			end

@@ -42,7 +42,7 @@ function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_n
 	}
 	self._spawned_units[unit_id] = unit_entry
 
-	for i = 0, spawned_unit:num_bodies() - 1, 1 do
+	for i = 0, spawned_unit:num_bodies() - 1 do
 		child_bodies[i] = spawned_unit:body(i)
 
 		child_bodies[i]:set_enabled(false)
@@ -114,7 +114,7 @@ function CharacterManageSpawnedUnits:enable_debris_bodies(data)
 		return
 	end
 
-	for i = 0, unit:num_bodies() - 1, 1 do
+	for i = 0, unit:num_bodies() - 1 do
 		unit:body(i):set_enabled(true)
 	end
 

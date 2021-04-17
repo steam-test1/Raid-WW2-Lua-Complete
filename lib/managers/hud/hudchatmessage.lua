@@ -160,7 +160,7 @@ function HUDChatMessage:add_message(message)
 
 	local y = 0
 
-	for i = 1, #self._messages, 1 do
+	for i = 1, #self._messages do
 		y = y + self._messages[i]:h() + HUDChatMessage.MESSAGE_PADDING_DOWN
 	end
 

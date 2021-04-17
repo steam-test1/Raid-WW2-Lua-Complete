@@ -219,7 +219,7 @@ function RaidGUIControlTopStat:_animate_text_glow(text, new_color, duration, num
 		local dt = coroutine.yield()
 		t = t + dt
 
-		for i = 1, number_of_letters, 1 do
+		for i = 1, number_of_letters do
 			local blend_amount = Easing.sine_pulse((t - laps_done * lap_time - (i - 1) * delay_between_letters) / duration_per_letter)
 			local current_a = original_color.a + blend_amount * change_a
 			local current_r = original_color.r + blend_amount * change_r

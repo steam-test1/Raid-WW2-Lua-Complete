@@ -220,7 +220,7 @@ function PlayerDamage:update(unit, t, dt)
 	end
 
 	if self._skill_updates then
-		for i = 1, #self._skill_updates, 1 do
+		for i = 1, #self._skill_updates do
 			self._skill_updates[i](self)
 		end
 	end

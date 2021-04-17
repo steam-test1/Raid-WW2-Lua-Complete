@@ -185,7 +185,7 @@ function HUDMultipleChoiceWheel:trigger_option(id)
 
 	local option = nil
 
-	for i = 1, #self._option_data, 1 do
+	for i = 1, #self._option_data do
 		if self._option_data[i].id and self._option_data[i].id == id then
 			option = self._option_data[i]
 
@@ -220,7 +220,7 @@ function HUDMultipleChoiceWheel:_call_clbk(function_name, function_data)
 	local target_parts = string.split(parts[1], "[.]")
 	local target = nil
 
-	for i = 1, #target_parts, 1 do
+	for i = 1, #target_parts do
 		if target == nil then
 			target = _G[target_parts[i]]
 		else
@@ -244,7 +244,7 @@ end
 function HUDMultipleChoiceWheel:_create_options()
 	local single_option_angle = 360 / #self._option_data
 
-	for i = 1, #self._option_data, 1 do
+	for i = 1, #self._option_data do
 		self:_create_separator_line(i)
 
 		local icon = self:_create_icon(i)
@@ -336,7 +336,7 @@ function HUDMultipleChoiceWheel:set_options(options)
 end
 
 function HUDMultipleChoiceWheel:add_option(option, index)
-	for i = 1, #self._option_data, 1 do
+	for i = 1, #self._option_data do
 		if self._option_data[i].id == option.id then
 			return
 		end
@@ -348,7 +348,7 @@ function HUDMultipleChoiceWheel:add_option(option, index)
 end
 
 function HUDMultipleChoiceWheel:remove_option(option_id)
-	for i = 1, #self._option_data, 1 do
+	for i = 1, #self._option_data do
 		if self._option_data[i].id == option_id then
 			table.remove(self._option_data, i)
 
@@ -358,12 +358,12 @@ function HUDMultipleChoiceWheel:remove_option(option_id)
 end
 
 function HUDMultipleChoiceWheel:_fade_in_options()
-	for i = 1, #self._options, 1 do
+	for i = 1, #self._options do
 	end
 end
 
 function HUDMultipleChoiceWheel:_fade_out_options()
-	for i = 1, #self._options, 1 do
+	for i = 1, #self._options do
 		if self._active_panel ~= nil and self._active_panel == i then
 			-- Nothing
 		end
@@ -483,7 +483,7 @@ function HUDMultipleChoiceWheel:_select_panel(x, y, distance_from_center)
 			self:_enter_panel(quadrant)
 		end
 
-		for i = 1, #self._options, 1 do
+		for i = 1, #self._options do
 			if i == quadrant then
 				self._active_panel = i
 			end

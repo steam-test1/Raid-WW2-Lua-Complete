@@ -243,7 +243,7 @@ function RaidMenuSceneManager:close_all_menus()
 	if self._menu_stack and #self._menu_stack > 0 then
 		Application:trace("[RaidMenuSceneManager:close_all_menus] self._menu_stack ", inspect(self._menu_stack))
 
-		for i = 1, #self._menu_stack, 1 do
+		for i = 1, #self._menu_stack do
 			Application:trace("[RaidMenuSceneManager:close_all_menus] self._menu_stack[ i ] ", self._menu_stack[i])
 			self:close_menu(false)
 		end
@@ -317,7 +317,7 @@ function RaidMenuSceneManager:add_menu_name_on_stack(menu_name)
 end
 
 function RaidMenuSceneManager:remove_menu_name_from_stack(menu_name)
-	for i = 1, #self._menu_stack, 1 do
+	for i = 1, #self._menu_stack do
 		if self._menu_stack[i] == menu_name then
 			table.remove(self._menu_stack, i)
 

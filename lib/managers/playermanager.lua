@@ -274,7 +274,7 @@ function PlayerManager:aquire_default_upgrades()
 		end
 	end
 
-	for i = 1, PlayerManager.WEAPON_SLOTS, 1 do
+	for i = 1, PlayerManager.WEAPON_SLOTS do
 		if not managers.player:weapon_in_slot(i) then
 			self._global.kit.weapon_slots[i] = managers.player:availible_weapons(i)[1]
 		end
@@ -488,7 +488,7 @@ function PlayerManager:spawn_dropin_penalty(dead, bleed_out, health, used_deploy
 		end
 	end
 
-	for i = 1, used_cable_ties, 1 do
+	for i = 1, used_cable_ties do
 		self:remove_special("cable_tie")
 	end
 
@@ -632,7 +632,7 @@ function PlayerManager:set_player_state(state, state_data)
 end
 
 function PlayerManager:spawn_players(position, rotation, state)
-	for var = 1, self._nr_players, 1 do
+	for var = 1, self._nr_players do
 		self._last_id = var
 	end
 
@@ -2223,7 +2223,7 @@ function PlayerManager:transfer_special_equipment(peer_id, include_custody)
 				end
 
 				if peer_id == local_peer_id then
-					for i = 1, amount - amount_to_transfer, 1 do
+					for i = 1, amount - amount_to_transfer do
 						self:remove_special(name)
 					end
 				end

@@ -38,7 +38,7 @@ function InventoryGenerator.next_defid(category, defid_list)
 
 	local defids_check = defid_list or InventoryGenerator._defids(InventoryGenerator._root_path() .. InventoryGenerator.path)
 
-	for count = start_index, 1000000, 1 do
+	for count = start_index, 1000000 do
 		if not defids_check[count] then
 			return count
 		end

@@ -53,7 +53,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 		end
 	end
 
-	for i = 1, 6, 1 do
+	for i = 1, 6 do
 		local spread = self:_get_spread(user_unit)
 
 		mvector3.set(mvec_spread_direction, direction)

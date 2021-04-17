@@ -198,7 +198,7 @@ function RaidGUIControlKickMuteWidget:calculate_width()
 	local w = 0
 	local leftmost_button_x = self._object:w()
 
-	for i = 1, #self._buttons, 1 do
+	for i = 1, #self._buttons do
 		if self._buttons[i]:x() < leftmost_button_x then
 			leftmost_button_x = self._buttons[i]:x()
 		end

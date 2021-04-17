@@ -483,7 +483,7 @@ function RaidGUIControlSkilltreeProgressBar:set_progress(progress)
 end
 
 function RaidGUIControlSkilltreeProgressBar:unlock_level(level)
-	for i = self._current_level, level, 1 do
+	for i = self._current_level, level do
 		if self._weapon_unlock_icons[i] then
 			self._weapon_unlock_icons[i].icon:set_alpha(1)
 
@@ -495,7 +495,7 @@ function RaidGUIControlSkilltreeProgressBar:unlock_level(level)
 end
 
 function RaidGUIControlSkilltreeProgressBar:set_level(level)
-	for i = 1, level, 1 do
+	for i = 1, level do
 		if self._weapon_unlock_icons[i] then
 			self._weapon_unlock_icons[i].icon:set_alpha(1)
 

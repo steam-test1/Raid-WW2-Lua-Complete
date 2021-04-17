@@ -44,7 +44,7 @@ end
 function SavefileGenerator._get_indent()
 	local indent = ""
 
-	for i = 1, SavefileGenerator.indent_counter, 1 do
+	for i = 1, SavefileGenerator.indent_counter do
 		indent = indent .. SavefileGenerator.indent
 	end
 

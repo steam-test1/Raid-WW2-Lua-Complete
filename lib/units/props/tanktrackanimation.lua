@@ -15,7 +15,7 @@ function TankTrackAnimation:init(unit)
 	self._wheels_left = {}
 	self._wheels_right = {}
 
-	for i = 1, 20, 1 do
+	for i = 1, 20 do
 		local o = self._unit:get_object(Idstring("wheel_left_" .. i))
 
 		if o then

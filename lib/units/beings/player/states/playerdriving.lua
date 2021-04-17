@@ -129,13 +129,10 @@ function PlayerDriving:exit(state_data, new_state_name)
 	self:_interupt_action_melee()
 
 	local exit = self._vehicle_ext:find_exit_position(self._unit)
-
-	if not exit then
-		exit = {
-			position = self._unit:position() + Vector3(0, 0, 180),
-			rotation = self._unit:rotation()
-		}
-	end
+	exit = exit or {
+		position = self._unit:position() + Vector3(0, 0, 180),
+		rotation = self._unit:rotation()
+	}
 
 	self._unit:set_rotation(exit.rotation)
 	self._unit:camera():set_rotation(exit.rotation)

@@ -849,7 +849,7 @@ function SpecialLootCrateInteractionExt:interact(player)
 	params.number_of_circles = math.max(params.number_of_circles - pm:upgrade_value("interaction", "wheel_amount_decrease", 0), 1)
 	local count = params.number_of_circles
 
-	for i = 1, count, 1 do
+	for i = 1, count do
 		params.circle_difficulty[i] = params.circle_difficulty[i] * pm:upgrade_value("interaction", "wheel_hotspot_increase", 1)
 		params.circle_rotation_speed[i] = params.circle_rotation_speed[i] * pm:upgrade_value("interaction", "wheel_rotation_speed_increase", 1)
 	end
@@ -2121,7 +2121,7 @@ function CarryInteractionExt:register_collision_callbacks()
 	self._has_modified_timer = true
 	self._air_start_time = Application:time()
 
-	for i = 0, self._unit:num_bodies() - 1, 1 do
+	for i = 0, self._unit:num_bodies() - 1 do
 		local body = self._unit:body(i)
 
 		body:set_collision_script_tag(Idstring("throw"))
@@ -2145,7 +2145,7 @@ function CarryInteractionExt:_collision_callback(tag, unit, body, other_unit, ot
 		return
 	end
 
-	for i = 0, self._unit:num_bodies() - 1, 1 do
+	for i = 0, self._unit:num_bodies() - 1 do
 		local body = self._unit:body(i)
 
 		body:set_collision_script_tag(Idstring(""))
@@ -2805,7 +2805,7 @@ function GreedCacheItemInteractionExt:interact(player)
 		params.number_of_circles = math.max(params.number_of_circles - managers.player:upgrade_value("interaction", "wheel_amount_decrease", 0), 1)
 		local count = params.number_of_circles
 
-		for i = 1, count, 1 do
+		for i = 1, count do
 			params.circle_difficulty[i] = params.circle_difficulty[i] * managers.player:upgrade_value("interaction", "wheel_hotspot_increase", 1)
 			params.circle_rotation_speed[i] = params.circle_rotation_speed[i] * managers.player:upgrade_value("interaction", "wheel_rotation_speed_increase", 1)
 		end

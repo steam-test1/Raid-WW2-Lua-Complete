@@ -110,7 +110,7 @@ function ComicBookGui:_layout()
 		w = self._root_panel:w()
 	})
 
-	for i = 1, ComicBookGui.TOTAL_PAGE_COUNT, 1 do
+	for i = 1, ComicBookGui.TOTAL_PAGE_COUNT do
 		table.insert(self._bullets_normal, self._bullet_panel:bitmap({
 			x = (i - 1) * (ComicBookGui.BULLET_WIDTH + ComicBookGui.BULLET_PADDING),
 			y = ComicBookGui.BULLET_HEIGHT / 2,

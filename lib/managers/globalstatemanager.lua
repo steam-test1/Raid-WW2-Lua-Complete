@@ -275,7 +275,7 @@ function GlobalStateManager:get_all_global_states()
 end
 
 function GlobalStateManager:set_global_states(states)
-	for i = 1, #states, 1 do
+	for i = 1, #states do
 		self._states.global_init[states[i].id].value = states[i].value
 	end
 end
@@ -302,7 +302,7 @@ end
 
 function GlobalStateManager:load_game(data)
 	if data.global_state then
-		for i = 1, #data.global_state, 1 do
+		for i = 1, #data.global_state do
 			self._states.global_init[data.global_state[i].id].value = data.global_state[i].value
 		end
 	end

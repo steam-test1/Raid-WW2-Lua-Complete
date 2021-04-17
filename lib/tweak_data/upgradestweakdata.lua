@@ -1804,7 +1804,7 @@ function UpgradesTweakData:_shotgun_definitions()
 end
 
 function UpgradesTweakData:_create_definition_levels(definition_name, definition_category, upgrade_name, upgrade_category, incremental, values, description_data)
-	for index = 1, #values, 1 do
+	for index = 1, #values do
 		local definition_name_level = definition_name .. "_" .. index
 		local name_id = "menu_" .. definition_name
 
@@ -7349,7 +7349,7 @@ function UpgradesTweakData:_rep_definitions()
 	local rep_upgrades = self.values.rep_upgrades
 
 	for index, rep_class in ipairs(rep_upgrades.classes) do
-		for i = 1, 10, 1 do
+		for i = 1, 10 do
 			self.definitions[rep_class .. i] = {
 				category = "rep_upgrade",
 				value = rep_upgrades.values[index]

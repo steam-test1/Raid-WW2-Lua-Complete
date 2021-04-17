@@ -34,7 +34,7 @@ function AirdropManager:_call_drop(unit)
 		local closest_drop_group_distance = mvector3.distance_sq(player_position, self._drop_point_groups[1]._values.position)
 		local closest_drop_group = 1
 
-		for i = 1, #self._drop_point_groups, 1 do
+		for i = 1, #self._drop_point_groups do
 			local current_group_distance = mvector3.distance_sq(player_position, self._drop_point_groups[i]._values.position)
 
 			if current_group_distance < closest_drop_group_distance then

@@ -90,7 +90,7 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 
 	mvector3.set(mvec_direction, direction)
 
-	for i = 1, self._rays, 1 do
+	for i = 1, self._rays do
 		mvector3.set(mvec_spread_direction, mvec_direction)
 
 		if spread then

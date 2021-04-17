@@ -90,15 +90,15 @@ function MenuMainState:at_enter(old_state)
 
 		managers.menu:open_node("trial_info")
 	elseif not has_invite and not managers.network:session() and false then
-			local function yes_func()
-				MenuCallbackHandler:play_safehouse({
-					skip_question = true
-				})
-			end
-
-			managers.menu:show_question_start_tutorial({
-				yes_func = yes_func
+		local function yes_func()
+			MenuCallbackHandler:play_safehouse({
+				skip_question = true
 			})
+		end
+
+		managers.menu:show_question_start_tutorial({
+			yes_func = yes_func
+		})
 	end
 
 	if Global.savefile_manager.backup_save_enabled then

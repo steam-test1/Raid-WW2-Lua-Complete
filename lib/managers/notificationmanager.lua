@@ -51,7 +51,7 @@ function NotificationManager:add_notification(notification_data)
 		return
 	end
 
-	for i = 1, #self._notification_queue, 1 do
+	for i = 1, #self._notification_queue do
 		if self._notification_queue[i] and notification_data.id == self._notification_queue[i].id then
 			table.remove(self._notification_queue, i)
 		end
@@ -59,7 +59,7 @@ function NotificationManager:add_notification(notification_data)
 
 	local table_index = #self._notification_queue + 1
 
-	for i = 1, #self._notification_queue, 1 do
+	for i = 1, #self._notification_queue do
 		if notification_data.priority < self._notification_queue[i].priority then
 			table_index = i
 

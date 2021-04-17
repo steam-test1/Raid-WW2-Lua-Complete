@@ -1766,7 +1766,7 @@ function NavigationManager:draw_path(path, color_link, color_node, duration)
 
 		brush_node:sphere(CopActionWalk._nav_point_pos(path[1]), 15)
 
-		for i = 2, #path, 1 do
+		for i = 2, #path do
 			if path[i].x then
 				brush_node:sphere(path[i], 8)
 

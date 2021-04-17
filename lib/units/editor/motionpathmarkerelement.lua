@@ -492,7 +492,7 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 	local bridges_from_this_path = {}
 	local points_until_marker = 0
 
-	for i = 1, #linked_markers, 1 do
+	for i = 1, #linked_markers do
 		local from_unit = linked_markers[i]
 		local to_unit = linked_markers[i + 1]
 
@@ -562,7 +562,7 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 
 			local accumulated_distance = 0
 
-			for i = points_until_marker + 1, #entire_path_points, 1 do
+			for i = points_until_marker + 1, #entire_path_points do
 				if i - points_until_marker > 1 then
 					local distance_vector = entire_path_points[i].point - entire_path_points[i - 1].point
 					accumulated_distance = accumulated_distance + distance_vector:length()
@@ -576,7 +576,7 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 	end
 
 	if entire_path_points then
-		for j = 1, #entire_path_points, 1 do
+		for j = 1, #entire_path_points do
 			if entire_path_points[j + 1] then
 				Application:draw_line(entire_path_points[j].point, entire_path_points[j + 1].point, 1, 1, 1)
 			end
@@ -614,7 +614,7 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 
 	local entire_path_points_reverse = {}
 
-	for i = 1, #entire_path_points, 1 do
+	for i = 1, #entire_path_points do
 		table.insert(entire_path_points_reverse, 1, {
 			point = entire_path_points[i].point,
 			speed = entire_path_points[#entire_path_points - i + 1].speed

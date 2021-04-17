@@ -115,7 +115,7 @@ function HUDObjectives:complete_objective(data)
 end
 
 function HUDObjectives:complete_sub_objective(data)
-	for i = 1, #self._sub_objectives, 1 do
+	for i = 1, #self._sub_objectives do
 		if self._sub_objectives[i]:id() == data.sub_id then
 			self._sub_objectives[i]:complete()
 		end
@@ -129,7 +129,7 @@ function HUDObjectives:update_amount_objective(data)
 end
 
 function HUDObjectives:update_amount_sub_objective(data)
-	for i = 1, #self._sub_objectives, 1 do
+	for i = 1, #self._sub_objectives do
 		if self._sub_objectives[i]:id() == data.sub_id then
 			self._sub_objectives[i]:set_current_amount(data.current_amount)
 		end

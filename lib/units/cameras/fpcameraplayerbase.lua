@@ -1562,7 +1562,7 @@ function FPCameraPlayerBase:_get_position_and_rotation(unit, part_id)
 	local object_position, object_rotation = nil
 
 	if children then
-		for i = 1, #children, 1 do
+		for i = 1, #children do
 			if children[i]:name() == part_id then
 				return children[i]:position(), children[i]:rotation()
 			else

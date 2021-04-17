@@ -49,7 +49,7 @@ function ControllerManager:_collect_connected_xbox_controllers()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		local nr_controllers = Input:num_controllers()
 
-		for i_controller = 0, nr_controllers - 1, 1 do
+		for i_controller = 0, nr_controllers - 1 do
 			local controller = Input:controller(i_controller)
 
 			if controller:type() == "xbox_controller" then
@@ -98,7 +98,7 @@ function ControllerManager:_poll_reconnected_controller()
 		local active_xuid = XboxLive:current_user()
 		local nr_controllers = Input:num_controllers()
 
-		for i_controller = 0, nr_controllers - 1, 1 do
+		for i_controller = 0, nr_controllers - 1 do
 			local controller = Input:controller(i_controller)
 
 			if controller:type() == "xb1_controller" and (controller:down(12) or controller:pressed(12)) and controller:user_xuid() == active_xuid then

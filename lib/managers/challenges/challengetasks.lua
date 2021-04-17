@@ -165,7 +165,7 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 
 	self._count = self._count + 1
 
-	for i = 1, #self._reminders, 1 do
+	for i = 1, #self._reminders do
 		if self._count == self._reminders[i] then
 			local challenge_data = managers.challenge:get_challenge(self._parent_challenge_category, self._parent_challenge_id):data()
 
@@ -263,7 +263,7 @@ function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 		self._count = self._target
 	end
 
-	for i = 1, #self._reminders, 1 do
+	for i = 1, #self._reminders do
 		if self._count == self._reminders[i] then
 			local challenge_data = managers.challenge:get_challenge(self._parent_challenge_category, self._parent_challenge_id):data()
 

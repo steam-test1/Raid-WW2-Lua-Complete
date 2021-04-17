@@ -273,10 +273,10 @@ function ElementNavigationStitcher:_collect_external_doors()
 	local top_left_y = self._extents.aabb.max_y + self._grid_size / 2
 	local z = self._extents.height
 
-	for i_x = 1, self._ct_x, 1 do
+	for i_x = 1, self._ct_x do
 		local x = top_left_x + i_x * self._grid_size
 
-		for i_y = 1, self._ct_y, 1 do
+		for i_y = 1, self._ct_y do
 			local y = top_left_y - i_y * self._grid_size
 			local i_quad = self._quad_grid[i_y][i_x]
 

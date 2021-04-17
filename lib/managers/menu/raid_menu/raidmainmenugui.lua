@@ -327,7 +327,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	local peers = managers.network:session():peers()
 	self._widgets = {}
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local widget_params = {
 			index = i,
 			name = "kick_mute_widget_" .. tostring(i),
@@ -378,7 +378,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 		widget_index = widget_index - 1
 	end
 
-	for i = 1, #self._widgets, 1 do
+	for i = 1, #self._widgets do
 		local w = self._widgets[i]:calculate_width()
 
 		if largest_w < w then
@@ -396,7 +396,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 		self._widget_panel:set_w(largest_w)
 		self._widget_panel:set_right(self._root_panel:w())
 
-		for i = 1, #self._widgets, 1 do
+		for i = 1, #self._widgets do
 			self._widgets[i]:set_w(largest_w)
 		end
 	end

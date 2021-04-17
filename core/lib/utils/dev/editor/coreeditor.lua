@@ -1748,7 +1748,7 @@ function CoreEditor:select_unit_name(name)
 	for layer_name, layer in pairs(self._layers) do
 		for _, u_type in ipairs(layer:unit_types()) do
 			if ud:type():s() == u_type then
-				for i = 0, self._notebook:get_page_count() - 1, 1 do
+				for i = 0, self._notebook:get_page_count() - 1 do
 					if self._notebook:get_page_text(i) == layer_name then
 						self._notebook:set_page(i)
 
@@ -1757,7 +1757,7 @@ function CoreEditor:select_unit_name(name)
 						if units_notebook then
 							local nb_type = self:category_name(ud:type():s())
 
-							for j = 0, units_notebook:get_page_count() - 1, 1 do
+							for j = 0, units_notebook:get_page_count() - 1 do
 								if units_notebook:get_page_text(j) == nb_type then
 									units_notebook:set_page(j)
 								end
@@ -1769,7 +1769,7 @@ function CoreEditor:select_unit_name(name)
 
 							local units_list = units_page.units
 
-							for k = 0, units_list:item_count() - 1, 1 do
+							for k = 0, units_list:item_count() - 1 do
 								if layer:get_real_name(units_list:get_item_data(k)) == name:s() then
 									units_list:set_item_selected(k, true)
 									units_list:ensure_visible(k)
@@ -1802,7 +1802,7 @@ function CoreEditor:select_unit(unit)
 	for layer_name, layer in pairs(self._layers) do
 		for _, u_type in ipairs(layer:unit_types()) do
 			if ud:type():s() == u_type then
-				for i = 0, self._notebook:get_page_count() - 1, 1 do
+				for i = 0, self._notebook:get_page_count() - 1 do
 					if self._notebook:get_page_text(i) == layer_name then
 						self._notebook:set_page(i)
 						self._current_layer:set_select_unit(unit)
@@ -2461,7 +2461,7 @@ function CoreEditor:_draw_bodies(t, dt)
 			if alive(unit) then
 				local num = unit:num_bodies()
 
-				for i = 0, num - 1, 1 do
+				for i = 0, num - 1 do
 					local body = unit:body(i)
 
 					if self:_should_draw_body(body) then
@@ -2787,7 +2787,7 @@ function CoreEditor:draw_grid(unit)
 		rot = unit:rotation()
 	end
 
-	for i = -5, 5, 1 do
+	for i = -5, 5 do
 		local from_x = self._current_pos + rot:x() * i * self:grid_size() - rot:y() * 6 * self:grid_size()
 		local to_x = self._current_pos + rot:x() * i * self:grid_size() + rot:y() * 6 * self:grid_size()
 
@@ -3006,7 +3006,7 @@ function CoreEditor:change_layer(notebook)
 	local s = notebook:get_page_count()
 	local c_page = notebook:get_current_page()
 
-	for i = 0, s - 1, 1 do
+	for i = 0, s - 1 do
 		if notebook:get_page(i) == c_page then
 			self:change_layer_name(notebook:get_page_text(i))
 
@@ -3033,7 +3033,7 @@ function CoreEditor:change_layer_name(name)
 end
 
 function CoreEditor:change_layer_notebook(name)
-	for i = 0, self._notebook:get_page_count() - 1, 1 do
+	for i = 0, self._notebook:get_page_count() - 1 do
 		if self._notebook:get_page_text(i) == name then
 			self._notebook:set_page(i)
 		end
@@ -3802,7 +3802,7 @@ function CoreEditor:vertices_per_tris(u)
 	local vertices = 0
 	local tris = 0
 
-	for i = 0, u:nr_models() - 1, 1 do
+	for i = 0, u:nr_models() - 1 do
 		vertices = vertices + u:vertex_count(i)
 		tris = tris + u:triangle_count(i)
 	end
@@ -3827,7 +3827,7 @@ function CoreEditor:model_vertices(u, prefix)
 end
 
 function CoreEditor:_is_instanced(u)
-	for i = 0, u:nr_models() - 1, 1 do
+	for i = 0, u:nr_models() - 1 do
 		if u:is_model_instance(i) then
 			return true
 		end
@@ -4023,7 +4023,7 @@ function CoreEditor:category_name(n)
 	local s = ""
 	local toupper = false
 
-	for i = 1, string.len(n), 1 do
+	for i = 1, string.len(n) do
 		if toupper then
 			toupper = false
 			s = s .. string.upper(string.sub(n, i, i))
@@ -4108,7 +4108,7 @@ function CoreEditor:change_layer_based_on_unit(unit)
 	for layer_name, layer in pairs(self._layers) do
 		for _, u_type in ipairs(layer:unit_types()) do
 			if ud:type():s() == u_type then
-				for i = 0, self._notebook:get_page_count() - 1, 1 do
+				for i = 0, self._notebook:get_page_count() - 1 do
 					if self._notebook:get_page_text(i) == layer_name then
 						self._notebook:set_page(i)
 					end

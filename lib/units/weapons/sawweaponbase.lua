@@ -182,7 +182,7 @@ function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	local hit_unit = col_ray.unit
 
 	if hit_unit and false then
-			damage = 50
+		damage = 50
 	end
 
 	local result = InstantBulletBase.on_collision(self, col_ray, weapon_unit, user_unit, damage)

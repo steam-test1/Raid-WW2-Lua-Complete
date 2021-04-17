@@ -25,7 +25,7 @@ function MissionSelectionGui:init(ws, fullscreen_ws, node, component_name)
 
 	self._controller_list = {}
 
-	for index = 1, managers.controller:get_wrapper_count(), 1 do
+	for index = 1, managers.controller:get_wrapper_count() do
 		local con = managers.controller:create_controller("boot_" .. index, index, false)
 
 		con:enable()
@@ -1906,7 +1906,7 @@ function MissionSelectionGui:set_difficulty_stepper_data(difficulty_available, d
 	difficulty_completed = difficulty_completed or 0
 	local difficulties = {}
 
-	for i = 1, tweak_data:number_of_difficulties(), 1 do
+	for i = 1, tweak_data:number_of_difficulties() do
 		local difficulty_available = i <= difficulty_available
 
 		table.insert(difficulties, difficulty_available)
@@ -2216,7 +2216,7 @@ function MissionSelectionGui:_slot_list_data_source()
 	local current_save_slots = managers.raid_job:get_save_slots()
 	local slot_list = {}
 
-	for i = 1, 5, 1 do
+	for i = 1, 5 do
 		local current_slot = {
 			value = i
 		}

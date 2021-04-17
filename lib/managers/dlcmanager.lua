@@ -847,7 +847,7 @@ function XB1DLCManager:chk_content_updated()
 		print("[XB1DLCManager:chk_content_updated] content updated")
 
 		if managers.experience and managers.upgrades then
-			for level = 1, managers.experience:current_level(), 1 do
+			for level = 1, managers.experience:current_level() do
 				managers.upgrades:aquire_from_level_tree(level, true)
 				managers.upgrades:verify_level_tree(level, true)
 			end

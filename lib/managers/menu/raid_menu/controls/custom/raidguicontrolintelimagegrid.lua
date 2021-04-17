@@ -42,7 +42,7 @@ function RaidGUIControlIntelImageGrid:_create_photos(only_first_n_events)
 	local h = 0
 	self._photos = {}
 
-	for i = 1, #self._mission_photos, 1 do
+	for i = 1, #self._mission_photos do
 		local photo_params = {
 			x = 0,
 			layer = 1,

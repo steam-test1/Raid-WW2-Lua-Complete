@@ -3355,7 +3355,7 @@ function GroupAIStateBase:on_criminal_team_AI_enabled_state_changed(transition)
 	if managers.groupai:state():team_ai_enabled() then
 		self:fill_criminal_team_with_AI(transition)
 	else
-		for i = 1, 3, 1 do
+		for i = 1, 3 do
 			self:remove_one_teamAI()
 		end
 	end

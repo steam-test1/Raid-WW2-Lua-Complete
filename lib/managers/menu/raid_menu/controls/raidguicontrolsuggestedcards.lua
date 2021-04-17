@@ -33,7 +33,7 @@ function RaidGUIControlSuggestedCards:_create_items()
 	local item_params = {}
 	local horizontal_spacing = math.floor((self._object:w() - RaidGUIControlSuggestedCards.PLAYERS_COUNT * self._item_width) / (RaidGUIControlSuggestedCards.PLAYERS_COUNT - 1))
 
-	for i = 1, RaidGUIControlSuggestedCards.PLAYERS_COUNT, 1 do
+	for i = 1, RaidGUIControlSuggestedCards.PLAYERS_COUNT do
 		item_params.x = (self._item_width + horizontal_spacing) * (i - 1)
 		item_params.y = 0
 		item_params.item_w = self._item_width
@@ -146,7 +146,7 @@ end
 
 function RaidGUIControlSuggestedCards:mouse_moved(o, x, y)
 	if self._grid_items then
-		for i = 1, #self._grid_items, 1 do
+		for i = 1, #self._grid_items do
 			local handled = self._grid_items[i]:mouse_moved(o, x, y)
 
 			return handled

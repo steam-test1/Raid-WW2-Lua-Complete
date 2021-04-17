@@ -82,7 +82,7 @@ function RaidGUIControlGrid:_create_items()
 	local item_params = clone(self._item_params)
 	local horizontal_spacing = math.floor((self._grid_panel:w() - self._num_horizontal_items * self._selected_marker_w) / (self._num_horizontal_items - 1))
 
-	for i_item_data = 1, #self._grid_data, 1 do
+	for i_item_data = 1, #self._grid_data do
 		local item_data = self._grid_data[i_item_data]
 		item_params.name = self._params.name .. "_grid_item_" .. i_horizontal .. "_" .. i_vertical
 		item_params.x = (self._selected_marker_w + horizontal_spacing) * (i_horizontal - 1)

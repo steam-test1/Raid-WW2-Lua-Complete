@@ -180,7 +180,7 @@ function Warcry:_unacquire_team_buffs()
 				local buff_values = tweak_data.upgrades.values.team[buff.category] and tweak_data.upgrades.values.team[buff.category][buff.id]
 
 				if buff_values then
-					for level = 1, #buff_values, 1 do
+					for level = 1, #buff_values do
 						self:_unacquire_team_buff(buff.upgrade .. "_" .. tostring(level))
 					end
 				end

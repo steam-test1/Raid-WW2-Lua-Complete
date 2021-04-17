@@ -161,7 +161,12 @@ function AmmoClip:sync_net_event(event, peer)
 		end
 	elseif AmmoClip.EVENT_IDS.bonnie_share_ammo < event then
 		local damage_ext = player:character_damage()
-		local restore_value = damage_ext:need_revive() or damage_ext:dead() or damage_ext:is_berserker() or restore_value * (tweak_data.upgrades.loose_ammo_give_team_health_ratio or 0.35)
+
+		if not damage_ext:need_revive() and not damage_ext:dead() and not damage_ext:is_berserker() then
+			local restore_value = event - 2 + (tweak_data.upgrades.loose_ammo_restore_health_values.base or 3)
+			restore_value = restore_value * (tweak_data.upgrades.loose_ammo_restore_health_values.multiplier or 0.1)
+			restore_value = restore_value * (tweak_data.upgrades.loose_ammo_give_team_health_ratio or 0.35)
+		end
 	end
 end
 

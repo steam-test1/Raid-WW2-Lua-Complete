@@ -121,7 +121,7 @@ function WarcryManager:increase_warcry_level(warcry_name, amount)
 		self._active_warcry:set_level(current_level + increase_amount)
 	end
 
-	for i = 1, #self._warcries, 1 do
+	for i = 1, #self._warcries do
 		if self._warcries[i].name == warcry_name then
 			self._warcries[i].level = self._warcries[i].level + increase_amount
 		end
@@ -129,7 +129,7 @@ function WarcryManager:increase_warcry_level(warcry_name, amount)
 end
 
 function WarcryManager:warcry_acquired(warcry_name)
-	for i = 1, #self._warcries, 1 do
+	for i = 1, #self._warcries do
 		if self._warcries[i].name == warcry_name then
 			return true
 		end
@@ -371,7 +371,7 @@ function WarcryManager:reset()
 	self._remaining = nil
 	self._peer_warcries = {}
 
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		self._peer_warcries[i] = nil
 	end
 end
@@ -411,7 +411,7 @@ function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgr
 				if type(upgrade_category) == "table" then
 					upgrade_category_table = tweak_data.upgrades.values
 
-					for j = 1, #upgrade_category, 1 do
+					for j = 1, #upgrade_category do
 						upgrade_category_table = upgrade_category_table[upgrade_category[j]]
 					end
 				else

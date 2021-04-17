@@ -821,7 +821,7 @@ function LootScreenGui:_animate_giving_points(panel, points_acquired, points_tot
 			local points_acquired = loot_item:acquired()
 
 			if index ~= 1 then
-				for i = 1, index - 1, 1 do
+				for i = 1, index - 1 do
 					self._loot_breakdown_items[i]:animate_move_right(loot_item:w())
 				end
 
@@ -1219,7 +1219,7 @@ function LootScreenGui:_check_gamercard_prompts(bindings, legend)
 	if SystemInfo:platform() == Idstring("XB1") and self.peer_loot_shown then
 		local gamercard_prompts_shown = 0
 
-		for i = 1, #self._peer_slots, 1 do
+		for i = 1, #self._peer_slots do
 			local keybind = {
 				key = Idstring(LootScreenGui.GAMERCARD_BUTTONS[i][1]),
 				callback = callback(self, self, "show_gamercard", i)

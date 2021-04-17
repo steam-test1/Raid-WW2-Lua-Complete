@@ -242,7 +242,7 @@ function CarryData:clbk_out_of_world()
 		self._bodies_to_revert = {}
 		local bodies = self._unit:num_bodies()
 
-		for i_body = 0, bodies - 1, 1 do
+		for i_body = 0, bodies - 1 do
 			local body = self._unit:body(i_body)
 
 			if body:enabled() and body:dynamic() then
@@ -613,7 +613,7 @@ function CarryData:link_to(parent_unit)
 	self._disabled_collisions = {}
 	local nr_bodies = self._unit:num_bodies()
 
-	for i_body = 0, nr_bodies - 1, 1 do
+	for i_body = 0, nr_bodies - 1 do
 		local body = self._unit:body(i_body)
 
 		if body:collisions_enabled() then

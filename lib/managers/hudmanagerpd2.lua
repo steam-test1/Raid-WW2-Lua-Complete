@@ -134,7 +134,7 @@ function HUDManager:_set_teammate_weapon_selected(i, id, icon)
 		return
 	end
 
-	for j = 1, #self._weapon_panels, 1 do
+	for j = 1, #self._weapon_panels do
 		if j == id then
 			self._weapon_panels[j]:set_selected(true)
 		else
@@ -144,7 +144,7 @@ function HUDManager:_set_teammate_weapon_selected(i, id, icon)
 end
 
 function HUDManager:unselect_all_weapons()
-	for i = 1, #self._weapon_panels, 1 do
+	for i = 1, #self._weapon_panels do
 		self._weapon_panels[i]:set_selected(false)
 	end
 end
@@ -159,7 +159,7 @@ function HUDManager:set_teammate_weapon_firemode(i, id, firemode)
 end
 
 function HUDManager:set_firemode_for_weapon(weapon_name_id, firemode)
-	for i = 1, #self._weapon_panels, 1 do
+	for i = 1, #self._weapon_panels do
 		local panel_name_id = self._weapon_panels[i]:name_id()
 
 		if panel_name_id and panel_name_id == weapon_name_id then
@@ -219,7 +219,7 @@ function HUDManager:reset_player_state()
 end
 
 function HUDManager:reset_player_panel_states()
-	for i = 1, #self._teammate_panels, 1 do
+	for i = 1, #self._teammate_panels do
 		self:reset_teammate_state(i)
 	end
 end
@@ -811,7 +811,7 @@ function HUDManager:_layout_teammate_panels()
 	local y = 0
 	local human_teammates_exist = false
 
-	for i = 1, #self._teammate_panels, 1 do
+	for i = 1, #self._teammate_panels do
 		if i ~= HUDManager.PLAYER_PANEL and not self._teammate_panels[i]:is_ai() then
 			self._teammate_panels[i]:set_y(y)
 
@@ -820,7 +820,7 @@ function HUDManager:_layout_teammate_panels()
 		end
 	end
 
-	for i = 1, #self._teammate_panels, 1 do
+	for i = 1, #self._teammate_panels do
 		if i ~= HUDManager.PLAYER_PANEL and self._teammate_panels[i]:is_ai() then
 			self._teammate_panels[i]:set_y(y)
 
@@ -836,7 +836,7 @@ function HUDManager:_layout_teammate_panels()
 end
 
 function HUDManager:get_teammate_panel_by_id(peer_id)
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		if peer_id == self._teammate_panels[i]:peer_id() then
 			return self._teammate_panels[i]
 		end
@@ -871,7 +871,7 @@ function HUDManager:_create_teammates_panel(hud)
 	}
 	local teammates_panel = hud.panel:panel(teammates_panel_params)
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		self._hud.teammate_panels_data[i] = {
 			taken = false,
 			special_equipments = {}
@@ -888,7 +888,7 @@ function HUDManager:_create_teammates_panel(hud)
 		table.insert(self._peer_teammate_panels, peer_teammate)
 	end
 
-	for i = 1, #self._ai_teammate_panels, 1 do
+	for i = 1, #self._ai_teammate_panels do
 		self._teammate_panels[i] = self._ai_teammate_panels[i]
 	end
 
@@ -903,13 +903,13 @@ function HUDManager:_create_teammates_panel(hud)
 end
 
 function HUDManager:_fix_peer_warcry_icons()
-	for i = 1, #self._hud.name_labels, 1 do
+	for i = 1, #self._hud.name_labels do
 		local peer_name_label = self._hud.name_labels[i]
 		local peer_id = peer_name_label._peer_id
 		local warcry = peer_name_label.warcry
 
 		if peer_name_label and peer_id then
-			for j = 1, #self._teammate_panels, 1 do
+			for j = 1, #self._teammate_panels do
 				local teammate_panel = self._teammate_panels[j]
 
 				if teammate_panel._peer_id == peer_id then

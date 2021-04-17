@@ -263,7 +263,7 @@ function GuiTweakData:get_font_path(font, font_size)
 		return font_paths.default
 	end
 
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		if font_paths[font_size * i] then
 			font_paths[font_size] = font_paths[font_size * i]
 
@@ -271,7 +271,7 @@ function GuiTweakData:get_font_path(font, font_size)
 		end
 	end
 
-	for i = font_size + 1, font_size * 2, 1 do
+	for i = font_size + 1, font_size * 2 do
 		if font_paths[i] then
 			font_paths[font_size] = font_paths[i]
 

@@ -35,7 +35,7 @@ function GrenadePickup:_pickup(unit)
 		if picked_up then
 			self._picked_up = true
 
-			for i_grenade = 1, gained_grenades, 1 do
+			for i_grenade = 1, gained_grenades do
 				managers.player:register_grenade(managers.network:session():local_peer():id())
 			end
 
@@ -62,7 +62,7 @@ function GrenadePickup:register_grenades(gained_grenades, peer)
 	end
 
 	if peer and not self._grenade_registered then
-		for i_grenade = 1, gained_grenades, 1 do
+		for i_grenade = 1, gained_grenades do
 			managers.player:register_grenade(peer:id())
 		end
 

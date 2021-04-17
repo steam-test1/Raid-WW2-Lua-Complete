@@ -127,7 +127,7 @@ function RaidGUIControlSaveInfo:_create_peer_details()
 	self._peer_info_details = {}
 	local y = 0
 
-	for i = 1, 4, 1 do
+	for i = 1, 4 do
 		local params = {
 			x = 0,
 			y = y,
@@ -194,7 +194,7 @@ function RaidGUIControlSaveInfo:set_save_info(slot_index)
 		return
 	end
 
-	for i = 1, #self._peer_info_details, 1 do
+	for i = 1, #self._peer_info_details do
 		self._peer_info_details[i]:set_alpha(0)
 
 		local peer_data = event_data.peer_data[i]

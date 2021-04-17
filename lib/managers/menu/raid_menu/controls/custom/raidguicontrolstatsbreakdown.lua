@@ -112,10 +112,10 @@ function RaidGUIControlStatsBreakdown:hide()
 
 	local rows = self._breakdown_table:get_rows()
 
-	for i = 1, #rows, 1 do
+	for i = 1, #rows do
 		local cells = rows[i]:get_cells()
 
-		for j = 1, #cells, 1 do
+		for j = 1, #cells do
 			cells[j]:set_alpha(0)
 		end
 	end
@@ -165,7 +165,7 @@ function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 	t = 0
 	local rows = self._breakdown_table:get_rows()
 
-	for i = 1, #rows, 1 do
+	for i = 1, #rows do
 		self._stats_label:animate(callback(self, self, "_animate_table_row_fade_in"), rows[i], (i - 1) * 0.1)
 	end
 
@@ -186,7 +186,7 @@ function RaidGUIControlStatsBreakdown:_animate_table_row_fade_in(label, row, del
 		t = t + dt
 		local current_alpha = Easing.quintic_out(t, 0, 1, duration)
 
-		for i = 1, #cells, 1 do
+		for i = 1, #cells do
 			cells[i]:set_alpha(current_alpha)
 		end
 	end

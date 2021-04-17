@@ -41,7 +41,7 @@ function RaidGUIControlWeaponSkills:_create_items()
 		toggle_select_item_callback = callback(self, self, "toggle_select_item_callback")
 	}
 
-	for i_skill = 1, WeaponSkillsTweakData.MAX_SKILLS_IN_TIER, 1 do
+	for i_skill = 1, WeaponSkillsTweakData.MAX_SKILLS_IN_TIER do
 		local row = self._object:create_custom_control(RaidGUIControlWeaponSkillRow, row_params)
 		row_params.y = row_params.y + RaidGUIControlWeaponSkills.ROW_HEIGHT
 
@@ -57,7 +57,7 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 	self._tier_panel = self._object:panel(tier_panel_params)
 	self._tier_labels = {}
 
-	for i = 1, #RaidGUIControlWeaponSkills.ROMAN_NUMERALS, 1 do
+	for i = 1, #RaidGUIControlWeaponSkills.ROMAN_NUMERALS do
 		local text = self:translate("menu_weapons_stats_tier_abbreviation", true) .. RaidGUIControlWeaponSkills.ROMAN_NUMERALS[i]
 		local tier_label_params = {
 			align = "center",
@@ -116,7 +116,7 @@ function RaidGUIControlWeaponSkills:set_weapon(weapon_category_id, weapon_id)
 	local num_tiers = #weapon_skills
 	local num_skills = #weapon_skills[num_tiers]
 
-	for i = 1, #self._tier_labels, 1 do
+	for i = 1, #self._tier_labels do
 		if i <= num_tiers then
 			local unlocked = managers.weapon_skills:is_weapon_tier_unlocked(weapon_id, i)
 
@@ -343,7 +343,7 @@ function RaidGUIControlWeaponSkills:_select_up_skill_button()
 
 	local skill_button = nil
 
-	for counter = self._selected_button_idx, #self._rows[self._selected_row_idx]:get_skill_buttons(), 1 do
+	for counter = self._selected_button_idx, #self._rows[self._selected_row_idx]:get_skill_buttons() do
 		skill_button = self:get_weapon_skill_button(self._selected_row_idx, counter)
 
 		if skill_button and skill_button:visible() then
@@ -367,7 +367,7 @@ function RaidGUIControlWeaponSkills:_select_down_skill_button()
 
 	local skill_button = nil
 
-	for counter = self._selected_button_idx, #self._rows[self._selected_row_idx]:get_skill_buttons(), 1 do
+	for counter = self._selected_button_idx, #self._rows[self._selected_row_idx]:get_skill_buttons() do
 		skill_button = self:get_weapon_skill_button(self._selected_row_idx, counter)
 
 		if skill_button and skill_button:visible() then

@@ -6,7 +6,7 @@ function CoroutineManager:init()
 	self._buffer = {}
 	local size = CoroutineManager.Size
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		table.insert(self._coroutines, {})
 	end
 end
@@ -16,7 +16,7 @@ function CoroutineManager:update(t, dt)
 
 	local size = #self._coroutines
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		for key, value in pairs(self._coroutines[i]) do
 			if value then
 				local result = coroutine.resume(value.co, unpack(value.arg))
@@ -84,7 +84,7 @@ function CoroutineManager:is_running(name)
 
 	local size = #self._coroutines
 
-	for i = 1, size, 1 do
+	for i = 1, size do
 		if self._coroutines[i][name] then
 			return true
 		end

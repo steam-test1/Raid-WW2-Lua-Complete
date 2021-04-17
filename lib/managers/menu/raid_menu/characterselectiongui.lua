@@ -141,7 +141,7 @@ end
 function CharacterSelectionGui:_data_source_characters_list()
 	local characters = {}
 
-	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1, 1 do
+	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		local slot_data = Global.savefile_manager.meta_data_list[slot_index]
 
 		if slot_data.cache then
@@ -252,7 +252,7 @@ function CharacterSelectionGui:_rebind_controller_buttons(slot_index)
 end
 
 function CharacterSelectionGui:_load_all_slots()
-	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1, 1 do
+	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		if Global.savefile_manager.meta_data_list and Global.savefile_manager.meta_data_list[slot_index] then
 			Global.savefile_manager.meta_data_list[slot_index].is_load_done = false
 			Global.savefile_manager.meta_data_list[slot_index].is_cached_slot = false
@@ -607,7 +607,7 @@ function CharacterSelectionGui:on_item_yes_delete_characters_list()
 	local new_slot = -1
 
 	if slot_to_delete == self._active_character_slot then
-		for slot_counter = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1, 1 do
+		for slot_counter = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 			if Global.savefile_manager.meta_data_list[slot_counter] and Global.savefile_manager.meta_data_list[slot_counter].cache and slot_counter ~= slot_to_delete then
 				self._selected_character_slot = -1
 				self._active_character_slot = -1
@@ -640,7 +640,7 @@ function CharacterSelectionGui:update(t, dt)
 	if not self._is_load_done and not self._is_render_done then
 		self._is_load_done = true
 
-		for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1, 1 do
+		for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 			if self._slots_loaded[slot_index] == false then
 				if Global.savefile_manager.meta_data_list[slot_index].is_deleting and Global.savefile_manager.meta_data_list[slot_index].cache then
 					self._is_load_done = false

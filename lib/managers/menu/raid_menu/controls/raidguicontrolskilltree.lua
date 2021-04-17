@@ -41,7 +41,7 @@ function RaidGUIControlSkilltree:on_respec()
 	while need_to_check_further and current_level_index <= #self._levels do
 		local current_level = self._levels[current_level_index]
 
-		for j = 1, #current_level.nodes, 1 do
+		for j = 1, #current_level.nodes do
 			local node = current_level.nodes[j]
 
 			if node:state() == RaidGUIControlBranchingBarNode.STATE_INACTIVE then
@@ -157,7 +157,7 @@ function RaidGUIControlSkilltree:is_selection_valid()
 
 	local last_selected_index = self._first_available_level
 
-	for i = self._first_available_level, largest_selected_index, 1 do
+	for i = self._first_available_level, largest_selected_index do
 		if self._selected_nodes[i] then
 			if i - last_selected_index > 1 then
 				return false

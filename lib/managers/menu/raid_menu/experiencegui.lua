@@ -325,7 +325,7 @@ function ExperienceGui:_calculate_respec_visibility()
 	local found = false
 	local level_2 = self._skilltrack_progress_bar._levels[2]
 
-	for j = 1, #level_2.nodes, 1 do
+	for j = 1, #level_2.nodes do
 		local node = level_2.nodes[j]
 
 		if node:state() == RaidGUIControlBranchingBarNode.STATE_ACTIVE then
@@ -883,7 +883,7 @@ function ExperienceGui:_get_character_skilltree()
 			node.state = skill_item.active and "active" or "inactive"
 			node.parents = {}
 
-			for i = 1, #last_skill_level.nodes, 1 do
+			for i = 1, #last_skill_level.nodes do
 				table.insert(node.parents, i)
 			end
 

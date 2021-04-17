@@ -157,7 +157,7 @@ end
 function HUDTeammateBase:_check_state_change()
 	local new_state = nil
 
-	for i = 1, #self._states, 1 do
+	for i = 1, #self._states do
 		if self._active_states[self._states[i].id] then
 			if self._states[i].id == self._displayed_state.id then
 				return

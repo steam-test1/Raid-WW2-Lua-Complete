@@ -79,7 +79,7 @@ function SpecialHonorsGui:_layout_first_screen()
 
 	self._top_stats_big = {}
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local top_stat_big_params = {
 			name = "top_stat_big_" .. tostring(i),
 			x = (i - 1) * self._root_panel:w() / 3
@@ -120,7 +120,7 @@ function SpecialHonorsGui:show_honors()
 		stats_used = "bottom_stats"
 	end
 
-	for i = 1, 3, 1 do
+	for i = 1, 3 do
 		local sound_effect = nil
 
 		if honors[i].peer_id == managers.network:session():local_peer():id() then
@@ -209,7 +209,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 		local gamercard_prompts_shown = 0
 		local stats_per_peer = {}
 
-		for i = 1, #self._top_stats_big, 1 do
+		for i = 1, #self._top_stats_big do
 			if self._top_stats_big[i]:shown() then
 				local binding = {
 					key = Idstring(SpecialHonorsGui.GAMERCARD_BUTTONS[i][1]),
@@ -221,7 +221,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 				local peer_name = game_state_machine:current_state().special_honors[i].peer_name
 				local found_peer = false
 
-				for j = 1, #stats_per_peer, 1 do
+				for j = 1, #stats_per_peer do
 					if stats_per_peer[j].name == peer_name then
 						table.insert(stats_per_peer[j].buttons, SpecialHonorsGui.GAMERCARD_BUTTONS[i][3])
 
@@ -245,7 +245,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 		for index, stat in pairs(stats_per_peer) do
 			local translated_text = ""
 
-			for i = 1, #stat.buttons, 1 do
+			for i = 1, #stat.buttons do
 				translated_text = translated_text .. managers.localization:get_default_macros()[stat.buttons[i]] .. " "
 			end
 

@@ -86,7 +86,7 @@ end
 function string:rep(n)
 	local out = ""
 
-	for i = 1, n, 1 do
+	for i = 1, n do
 		out = out .. self
 	end
 
@@ -102,7 +102,7 @@ function string.add_decimal_marks_to_string(str)
 	local reverse = string.reverse(total)
 	local s = ""
 
-	for i = 1, string.len(reverse), 1 do
+	for i = 1, string.len(reverse) do
 		s = s .. string.sub(reverse, i, i) .. (math.mod(i, 3) == 0 and i ~= string.len(reverse) and "." or "")
 	end
 

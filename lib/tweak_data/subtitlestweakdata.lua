@@ -60,7 +60,7 @@ function SubtitlesTweakData:get_subtitle(movie, time)
 end
 
 function SubtitlesTweakData:_init_intro_video()
-	self.01_intro_v014 = {
+	self["01_intro_v014"] = {
 		{
 			id = "01_intro_001",
 			time = 6,
@@ -145,7 +145,7 @@ function SubtitlesTweakData:_init_intro_video()
 end
 
 function SubtitlesTweakData:_init_mission_brief_b2()
-	self.02_mission_brief_b2_assassination_v004 = {
+	self["02_mission_brief_b2_assassination_v004"] = {
 		{
 			id = "b2_assassination_001",
 			time = 1,
@@ -165,7 +165,7 @@ function SubtitlesTweakData:_init_mission_brief_b4()
 end
 
 function SubtitlesTweakData:_init_mission_brief_a1()
-	self.02_mission_brief_a1_demolition_v005 = {
+	self["02_mission_brief_a1_demolition_v005"] = {
 		{
 			id = "a1_demolition_001",
 			time = 1,
@@ -185,7 +185,7 @@ function SubtitlesTweakData:_init_mission_brief_a2()
 end
 
 function SubtitlesTweakData:_init_mission_brief_a3()
-	self.02_mission_brief_a3_ambush_v005 = {
+	self["02_mission_brief_a3_ambush_v005"] = {
 		{
 			id = "a3_ambush_001",
 			time = 1,
@@ -195,7 +195,7 @@ function SubtitlesTweakData:_init_mission_brief_a3()
 end
 
 function SubtitlesTweakData:_init_mission_brief_a4()
-	self.02_mission_brief_a4_infiltration_v004 = {
+	self["02_mission_brief_a4_infiltration_v004"] = {
 		{
 			id = "a4_infiltration_001",
 			time = 1,
@@ -205,7 +205,7 @@ function SubtitlesTweakData:_init_mission_brief_a4()
 end
 
 function SubtitlesTweakData:_init_mission_brief_a5()
-	self.02_mission_brief_a5_rescue_v005 = {
+	self["02_mission_brief_a5_rescue_v005"] = {
 		{
 			id = "a5_rescue_001",
 			time = 1,

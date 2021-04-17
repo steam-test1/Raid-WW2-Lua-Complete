@@ -128,7 +128,7 @@ function HUDSpecialInteraction:show()
 	self._lockpick_texture:set_position(self._hud_panel:w() / 2 - self._lockpick_texture:w() / 2, self._hud_panel:h() / 2 - self._lockpick_texture:h() / 2)
 	self:_remove_circles()
 
-	for i = 1, self._tweak_data.number_of_circles, 1 do
+	for i = 1, self._tweak_data.number_of_circles do
 		local circle_radius = self._tweak_data.circle_radius[i]
 		local circle = CircleBitmapGuiObject:new(self._hud_panel, {
 			use_bg = false,
@@ -269,7 +269,7 @@ function HUDSpecialInteraction:_animate_interaction_complete()
 	local TOTAL_T = 0.5
 	local starting_rotations = {}
 
-	for i = 1, #self._circles, 1 do
+	for i = 1, #self._circles do
 		starting_rotations[i] = (1 - self._tweak_data.circle_difficulty[i]) * 180
 	end
 
@@ -280,7 +280,7 @@ function HUDSpecialInteraction:_animate_interaction_complete()
 		t = t - dt
 		local progress = t / TOTAL_T
 
-		for i = 1, #self._circles, 1 do
+		for i = 1, #self._circles do
 			local color = Color(math.max(0, self._tweak_data.circle_difficulty[i] - (1 - progress)), progress, progress, progress)
 
 			self._circles[i].circle:set_color(color)
@@ -288,7 +288,7 @@ function HUDSpecialInteraction:_animate_interaction_complete()
 		end
 	end
 
-	for i = 1, #self._circles, 1 do
+	for i = 1, #self._circles do
 		self._circles[i].circle:set_visible(false)
 	end
 

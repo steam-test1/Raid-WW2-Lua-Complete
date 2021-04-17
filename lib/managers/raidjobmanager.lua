@@ -541,7 +541,7 @@ end
 function RaidJobManager:get_available_save_slot()
 	local available_save_slot = nil
 
-	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS, 1 do
+	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS do
 		if not self._save_slots[i] then
 			available_save_slot = i
 
@@ -557,7 +557,7 @@ function RaidJobManager:get_first_save_slot()
 end
 
 function RaidJobManager:has_available_save_slot()
-	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS, 1 do
+	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS do
 		if not self._save_slots[i] then
 			return true
 		end
@@ -771,7 +771,7 @@ function RaidJobManager:continue_operation(slot)
 end
 
 function RaidJobManager:clear_operations_save_slots()
-	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS, 1 do
+	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS do
 		self._save_slots[i] = nil
 	end
 

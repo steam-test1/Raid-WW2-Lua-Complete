@@ -75,7 +75,7 @@ function OperationsTweakData:_init_progression_data()
 
 		for mission_name, mission_data in pairs(self.missions) do
 			if mission_data.progression_groups then
-				for j = 1, #mission_data.progression_groups, 1 do
+				for j = 1, #mission_data.progression_groups do
 					if mission_data.progression_groups[j] == group then
 						table.insert(self.progression.mission_groups[group], mission_name)
 

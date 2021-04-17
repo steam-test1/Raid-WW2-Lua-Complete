@@ -868,7 +868,7 @@ function CopMovement:_change_stance(stance_code, instant)
 			stance.code = stance_code
 			stance.name = CopMovement._stance.names[stance_code]
 
-			for i = 1, 3, 1 do
+			for i = 1, 3 do
 				stance.values[i] = 0
 			end
 

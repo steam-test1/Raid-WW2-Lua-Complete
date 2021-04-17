@@ -61,7 +61,7 @@ function ThrowableAmmoBag:update(unit, t, dt)
 		local player_unit = managers.player:player_unit()
 		local num_bodies = self._unit:num_bodies() - 1
 
-		for i = 1, num_bodies, 1 do
+		for i = 1, num_bodies do
 			local body = self._unit:body(i)
 			local overlapping = body:get_overlapping_bodies("slot_mask", self._slotmask_criminals)
 
@@ -95,7 +95,7 @@ end
 function ThrowableAmmoBag:register_collision_callbacks()
 	self._unit:set_body_collision_callback(callback(self, self, "_collision_callback"))
 
-	for i = 0, self._unit:num_bodies() - 1, 1 do
+	for i = 0, self._unit:num_bodies() - 1 do
 		local body = self._unit:body(i)
 
 		body:set_collision_script_tag(Idstring("throw"))

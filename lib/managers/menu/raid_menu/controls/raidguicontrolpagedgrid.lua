@@ -105,7 +105,7 @@ function RaidGUIControlPagedGrid:_create_items()
 	local first_item = (self._current_page - 1) * self._items_per_page + 1
 	local last_item = math.min(self._total_items, self._current_page * self._items_per_page)
 
-	for i_item_data = first_item, last_item, 1 do
+	for i_item_data = first_item, last_item do
 		local item_data = self._grid_data[i_item_data]
 		item_params.name = self._params.name .. "_grid_item_" .. i_horizontal .. "_" .. i_vertical
 		item_params.x = self._border_padding + (i_horizontal - 1) * self._item_width
@@ -257,7 +257,7 @@ end
 function RaidGUIControlPagedGrid:data_source_grid_page_stepper()
 	local pages = {}
 
-	for i_page = 1, self._total_pages, 1 do
+	for i_page = 1, self._total_pages do
 		table.insert(pages, {
 			text = i_page .. "/" .. self._total_pages,
 			value = i_page

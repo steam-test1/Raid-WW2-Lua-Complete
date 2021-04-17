@@ -334,7 +334,7 @@ function ReadyUpGui:_get_character_spawn_locations()
 	if units then
 		for _, unit in pairs(units) do
 			if unit:name() == ids_ready_up_scene_name then
-				for i = 1, 4, 1 do
+				for i = 1, 4 do
 					table.insert(self._character_spawn_locations, unit:get_object(Idstring("loc_player_0" .. i)))
 				end
 			end

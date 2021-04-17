@@ -659,7 +659,7 @@ end
 function HUDTeammatePeer:add_special_equipment(data)
 	local existing_equipment = nil
 
-	for i = 1, #self._equipment, 1 do
+	for i = 1, #self._equipment do
 		if self._equipment[i]:id() == data.id then
 			existing_equipment = self._equipment[i]
 
@@ -693,7 +693,7 @@ function HUDTeammatePeer:remove_special_equipment(id)
 end
 
 function HUDTeammatePeer:set_special_equipment_amount(equipment_id, amount)
-	for i = 1, #self._equipment, 1 do
+	for i = 1, #self._equipment do
 		if self._equipment[i]:id() == equipment_id then
 			self._equipment[i]:set_amount(amount)
 		end
@@ -709,7 +709,7 @@ end
 function HUDTeammatePeer:_layout_special_equipment()
 	local x = 0
 
-	for i = 1, #self._equipment, 1 do
+	for i = 1, #self._equipment do
 		self._equipment[i]:set_x(x)
 
 		x = x + self._equipment[i]:w() + HUDTeammatePeer.EQUIPMENT_PADDING

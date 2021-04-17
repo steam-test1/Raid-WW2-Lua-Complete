@@ -161,7 +161,7 @@ function RaidGUIControlXPProgressBar:_create_level_marks_on_progress_bar()
 	local level_w = self._bar_w / (level_cap - 1)
 
 	while current_level <= level_cap do
-		for i = 2, RaidGUIControlXPProgressBar.MARKS_PER_LEVEL, 1 do
+		for i = 2, RaidGUIControlXPProgressBar.MARKS_PER_LEVEL do
 			local level_mark_params = {
 				name = "level_label_" .. current_level .. "_" .. tostring(i),
 				x = self._params.horizontal_padding + (current_level - 1) * level_w - RaidGUIControlXPProgressBar.LEVEL_MARK_ICON_SIZE / 2 + (i - 1) * level_w / RaidGUIControlXPProgressBar.MARKS_PER_LEVEL,
@@ -369,7 +369,7 @@ function RaidGUIControlXPProgressBar:set_progress(progress, points_added_total)
 end
 
 function RaidGUIControlXPProgressBar:unlock_level(level)
-	for i = self._current_level, level, 1 do
+	for i = self._current_level, level do
 		if self._weapon_unlock_icons[i] then
 			self._weapon_unlock_icons[i].icon:set_alpha(1)
 
@@ -395,7 +395,7 @@ function RaidGUIControlXPProgressBar:unlock_level(level)
 end
 
 function RaidGUIControlXPProgressBar:set_level(level)
-	for i = 1, level, 1 do
+	for i = 1, level do
 		if self._weapon_unlock_icons[i] then
 			self._weapon_unlock_icons[i].icon:set_alpha(1)
 

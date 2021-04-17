@@ -240,7 +240,7 @@ function table.random_key(t)
 	local rand_nr = math.random(table.size(t))
 	local key = nil
 
-	for i = 1, rand_nr, 1 do
+	for i = 1, rand_nr do
 		key = next(t, prev_key)
 	end
 
@@ -401,7 +401,7 @@ end
 function table.range(s, e)
 	local range = {}
 
-	for i = s, e, 1 do
+	for i = s, e do
 		table.insert(range, i)
 	end
 

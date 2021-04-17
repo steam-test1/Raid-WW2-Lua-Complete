@@ -315,7 +315,7 @@ function MenuComponentManager:make_color_text(text_object, color)
 	end
 
 	if #start_ci == #end_ci then
-		for i = 1, #start_ci, 1 do
+		for i = 1, #start_ci do
 			start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
 			end_ci[i] = end_ci[i] - (i * 4 - 1)
 		end
@@ -329,7 +329,7 @@ function MenuComponentManager:make_color_text(text_object, color)
 	if #start_ci ~= #end_ci then
 		Application:error("MenuComponentManager:make_color_text: Not even amount of ##'s in text", #start_ci, #end_ci)
 	else
-		for i = 1, #start_ci, 1 do
+		for i = 1, #start_ci do
 			text_object:set_range_color(start_ci[i], end_ci[i], color or tweak_data.screen_colors.resource)
 		end
 	end
@@ -1393,7 +1393,7 @@ function MenuComponentManager:add_colors_to_text_object(text_object, ...)
 	end
 
 	if #start_ci == #end_ci then
-		for i = 1, #start_ci, 1 do
+		for i = 1, #start_ci do
 			start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
 			end_ci[i] = end_ci[i] - (i * 4 - 1)
 		end
@@ -1409,7 +1409,7 @@ function MenuComponentManager:add_colors_to_text_object(text_object, ...)
 		if #start_ci ~= #end_ci then
 			Application:error("[MenuComponentManager:color_text_object]: Missing '#' in text:", unchanged_text, #start_ci, #end_ci)
 		else
-			for i = 1, #start_ci, 1 do
+			for i = 1, #start_ci do
 				text_object:set_range_color(start_ci[i], end_ci[i], colors[i] or default_color)
 			end
 		end
@@ -1591,7 +1591,7 @@ function MenuComponentManager:create_test_gui()
 	local size = 48
 	local x = 0
 
-	for i = 3, 3, 1 do
+	for i = 3, 3 do
 		local bitmap = panel:bitmap({
 			texture = "guis/dlcs/big_bank/textures/pd2/pre_planning/mezzanine_test",
 			name = "bitmap",
@@ -3079,7 +3079,7 @@ function MenuComponentManager:debug_controls()
 end
 
 function MenuComponentManager:removeFromUpdateTable(unit)
-	for i = 1, #self._update_components, 1 do
+	for i = 1, #self._update_components do
 		if self._update_components[i] == unit then
 			table.remove(self._update_components, i)
 		end

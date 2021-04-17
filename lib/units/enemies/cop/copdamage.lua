@@ -203,9 +203,9 @@ function CopDamage:dismember(dismember_part, variant, allow_network)
 	end
 
 	if allow_network and false then
-			managers.network:session():send_to_peers("sync_part_dismemberment", self._unit, dismember_part, variant)
-		end
+		managers.network:session():send_to_peers("sync_part_dismemberment", self._unit, dismember_part, variant)
 	end
+end
 
 function CopDamage:_random_dismember_part(force_left_right)
 	local head = ({
@@ -1689,7 +1689,7 @@ function CopDamage:_spawn_head_gadget(params)
 
 	if self._head_gear_object then
 		if self._nr_head_gear_objects then
-			for i = 1, self._nr_head_gear_objects, 1 do
+			for i = 1, self._nr_head_gear_objects do
 				local head_gear_obj_name = self._head_gear_object .. tostring(i)
 
 				self._unit:get_object(Idstring(head_gear_obj_name)):set_visibility(false)

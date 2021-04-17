@@ -328,7 +328,7 @@ function SavefileManager:get_save_info_list(include_empty_slot)
 	end
 
 	if include_empty_slot then
-		for empty_slot = 0, self.MAX_SLOT, 1 do
+		for empty_slot = 0, self.MAX_SLOT do
 			local meta_data = Global.savefile_manager.meta_data_list[empty_slot]
 
 			if empty_slot ~= self.SETTING_SLOT and empty_slot ~= self:get_save_progress_slot() and empty_slot ~= self.AUTO_SAVE_SLOT and (not meta_data or not meta_data.is_synched_text) then
@@ -1390,7 +1390,7 @@ function SavefileManager:get_active_characters_count()
 	local result = 0
 
 	if Global and Global.savefile_manager and Global.savefile_manager.meta_data_list then
-		for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1, 1 do
+		for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 			if Global.savefile_manager.meta_data_list[slot_index] and Global.savefile_manager.meta_data_list[slot_index].cache then
 				result = result + 1
 			end
