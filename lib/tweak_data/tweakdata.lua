@@ -809,7 +809,7 @@ You've reached the end of our PAX EAST demo.
 		fadein_delay = 1
 	}
 	self.experience_manager = {
-		level_failed_multiplier = 0.01,
+		level_failed_multiplier = 0.1,
 		human_player_multiplier = {
 			1,
 			1.2,
@@ -819,10 +819,10 @@ You've reached the end of our PAX EAST demo.
 		level_diff_max_multiplier = 2,
 		difficulty_multiplier = {}
 	}
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 1
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 2
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 5
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 10
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 2
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 4
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 8
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 15
 	local multiplier = 1
 	local level_xp_requirements = {
 		0,

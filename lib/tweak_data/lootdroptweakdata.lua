@@ -41,23 +41,23 @@ end
 function LootDropTweakData:_init_xp_packs()
 	self.xp_packs = {
 		tiny = {
-			xp_min = 50,
-			xp_max = 100,
+			xp_min = 500,
+			xp_max = 1000,
 			reward_type = LootDropTweakData.REWARD_XP
 		},
 		small = {
-			xp_min = 120,
-			xp_max = 300,
+			xp_min = 1200,
+			xp_max = 3000,
 			reward_type = LootDropTweakData.REWARD_XP
 		},
 		medium = {
-			xp_min = 350,
-			xp_max = 600,
+			xp_min = 3500,
+			xp_max = 6000,
 			reward_type = LootDropTweakData.REWARD_XP
 		},
 		large = {
-			xp_min = 700,
-			xp_max = 900,
+			xp_min = 7000,
+			xp_max = 9000,
 			reward_type = LootDropTweakData.REWARD_XP
 		}
 	}
