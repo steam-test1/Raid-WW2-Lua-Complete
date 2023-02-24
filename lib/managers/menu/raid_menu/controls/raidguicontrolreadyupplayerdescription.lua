@@ -137,6 +137,10 @@ function RaidGUIControlReadyUpPlayerDescription:params()
 	return self._params
 end
 
+function RaidGUIControlReadyUpPlayerDescription:is_ready()
+	return self._params.ready
+end
+
 function RaidGUIControlReadyUpPlayerDescription:highlight_on()
 	if not self._enabled then
 		return
@@ -191,6 +195,11 @@ function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 		self._status_label:set_color(tweak_data.gui.colors.raid_red)
 
 		self._params.ready = true
+	elseif state == "not_ready" then
+		self._status_label:set_text(self:translate("menu_not_ready", true))
+		self._status_label:set_color(tweak_data.gui.colors.raid_grey_effects)
+
+		self._params.ready = false
 	elseif state == "kicked" then
 		self._status_label:set_text(self:translate("menu_kicked", true))
 		self._class_icon:set_color(tweak_data.gui.colors.raid_grey_effects)

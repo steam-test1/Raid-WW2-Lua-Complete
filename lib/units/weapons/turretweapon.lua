@@ -1185,7 +1185,7 @@ function TurretWeapon:on_turret_SO_failed(unit)
 end
 
 function TurretWeapon:on_turret_SO_completed(unit)
-	if not alive(unit) then
+	if not alive(unit) or not alive(self._unit) then
 		return
 	end
 
@@ -1201,10 +1201,10 @@ function TurretWeapon:on_turret_SO_completed(unit)
 
 	local team = self._puppet_unit:movement() and self._puppet_unit:movement():team() or nil
 
-	if team and alive(self._unit) then
+	if team then
 		self._unit:movement():set_team(team)
 	else
-		Application:warn("[TurretWeapon:on_turret_SO_completed] Puppet unit cant set the turrets team, unit/team", unit, team)
+		Application:warn("[TurretWeapon:on_turret_SO_completed] Puppet unit cant set the turrets team, team", team)
 	end
 
 	self._unit:interaction():set_active(false, true)

@@ -930,6 +930,14 @@ function MenuCallbackHandler:set_motion_dot_raid(value)
 	end
 end
 
+function MenuCallbackHandler:set_motion_dot_size_raid(value)
+	managers.user:set_setting("motion_dot_size", value)
+
+	if managers.hud then
+		managers.hud:set_motiondot_sizes(value)
+	end
+end
+
 function MenuCallbackHandler:toggle_objective_reminder_raid(value)
 	managers.user:set_setting("objective_reminder", value)
 end
@@ -992,10 +1000,11 @@ end
 function MenuCallbackHandler:set_detail_distance_raid(detail_distance)
 	managers.user:set_setting("detail_distance", detail_distance)
 
-	local min_maps = 0.005
-	local max_maps = 0.15
-	local maps = min_maps * detail_distance + max_maps * (1 - detail_distance)
+	local min_maps = 0.0025
+	local max_maps = 0.05
+	local maps = math.lerp(max_maps, min_maps, detail_distance)
 
+	Application:debug("RaidMenuOptionsVideoAdvanced:on_value_change_detail_distance", detail_distance, maps)
 	World:set_min_allowed_projected_size(maps)
 end
 

@@ -1184,7 +1184,11 @@ function UpgradesTweakData:_secondary_weapon_definitions()
 		0.85,
 		0.7,
 		0.6,
-		0.5
+		0.5,
+		1.15,
+		1.3,
+		1.4,
+		1.5
 	}
 
 	self:_create_definition_levels("secondary_weapon_spread_multiplier", "feature", "spread_multiplier", "secondary_weapon", false, self.values.secondary_weapon.spread_multiplier)
@@ -1725,7 +1729,7 @@ function UpgradesTweakData:_shotgun_definitions()
 	self:_create_definition_levels("shotgun_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "shotgun", false, self.values.shotgun.enter_steelsight_speed_multiplier)
 
 	self.values.shotgun.spread_multiplier = {
-		0.9
+		1.1
 	}
 
 	self:_create_definition_levels("shotgun_spread_multiplier", "feature", "spread_multiplier", "shotgun", false, self.values.shotgun.spread_multiplier)

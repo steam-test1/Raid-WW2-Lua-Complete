@@ -512,6 +512,8 @@ end
 
 function StatisticsManager:reset_session()
 	if self._global then
+		Application:debug("[StatisticsManager:reset_session] Stats session reset to default.")
+
 		self._global.session = deep_clone(self._defaults)
 	end
 end
@@ -712,6 +714,8 @@ function StatisticsManager:stop_session(data)
 
 				completion = "fail"
 			end
+		else
+			Application:warn("[StatisticsManager:stop_session] job_current_event is nil", job_current_event)
 		end
 	end
 
@@ -725,7 +729,7 @@ function StatisticsManager:stop_session(data)
 		Global.statistics_manager.playing_from_start = nil
 	end
 
-	if completion and SystemInfo:distribution() == Idstring("STEAM") then
+	if SystemInfo:distribution() == Idstring("STEAM") then
 		self:publish_to_steam(self._global.session, success, completion)
 	end
 end
@@ -931,9 +935,10 @@ function StatisticsManager:write_level_stats(session, stats)
 end
 
 function StatisticsManager:publish_to_steam(session, success, completion)
-	Application:trace("[StatisticsManager:publish_to_steam]")
-	Application:trace("[StatisticsManager:publish_to_steam] session, success, completion ", inspect(session), inspect(success), inspect(completion))
-	Application:trace(debug.traceback())
+	Application:debug("[StatisticsManager:publish_to_steam] ------------------ NEW ------------------ ")
+	Application:debug("[StatisticsManager:publish_to_steam] session", inspect(session))
+	Application:debug("[StatisticsManager:publish_to_steam] success", inspect(success))
+	Application:debug("[StatisticsManager:publish_to_steam] completion", inspect(completion))
 
 	if Application:editor() or not managers.criminals:local_character_name() then
 		return

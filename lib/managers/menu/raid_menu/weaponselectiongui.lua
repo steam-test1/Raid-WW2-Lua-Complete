@@ -1124,13 +1124,17 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 end
 
 function WeaponSelectionGui:_recreate_and_show_weapon_parts(temp_skills)
-	local position = self._rotate_weapon:current_position()
-	local rotation = self._rotate_weapon:current_rotation()
-	local blueprint = managers.weapon_skills:recreate_weapon_blueprint(self._selected_weapon_id, self._weapon_category_id, temp_skills, false)
+	if self._rotate_weapon then
+		local position = self._rotate_weapon:current_position()
+		local rotation = self._rotate_weapon:current_rotation()
+		local blueprint = managers.weapon_skills:recreate_weapon_blueprint(self._selected_weapon_id, self._weapon_category_id, temp_skills, false)
 
-	self:_show_weapon(self._selected_weapon_id, blueprint)
-	self._rotate_weapon:set_position(position)
-	self._rotate_weapon:set_rotation(rotation)
+		self:_show_weapon(self._selected_weapon_id, blueprint)
+		self._rotate_weapon:set_position(position)
+		self._rotate_weapon:set_rotation(rotation)
+	else
+		Application:error("[WeaponSelectionGui:_recreate_and_show_weapon_parts] There was no 'self._rotate_weapon'! Temp skills:", inspect(temp_skills))
+	end
 end
 
 function WeaponSelectionGui:_get_marked_row_skill_button(i_skill)

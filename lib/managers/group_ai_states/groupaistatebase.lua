@@ -4364,7 +4364,7 @@ function GroupAIStateBase:on_nav_segment_state_change(changed_seg_id, state)
 	local changed_seg_neighbours = changed_seg.neighbours
 
 	for area_id, area in pairs(self._area_data) do
-		if area.nav_segs[changed_seg_id] then
+		if area and area.nav_segs[changed_seg_id] then
 			if state then
 				for neighbour_seg_id, door_list in pairs(changed_seg_neighbours) do
 					local neighbour_nav_seg = all_nav_segs[neighbour_seg_id]

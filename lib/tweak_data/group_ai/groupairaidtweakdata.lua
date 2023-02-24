@@ -10,7 +10,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	self.rescue = {}
 	self.cloaker = {}
 	self.max_spawning_distance = 8000
-	self.min_spawning_distance = 1600
+	self.min_spawning_distance = 800
 	self.max_spawning_height_diff = 1000
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then

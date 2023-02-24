@@ -1,6 +1,6 @@
 NetworkMatchMaking = NetworkMatchMaking or class()
 NetworkMatchMaking.OPEN_SLOTS = 4
-NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_1_0_21"
+NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_21_01"
 NetworkMatchMaking.RETRY_CONNECT_COUNT = 15
 
 function NetworkMatchMaking:init()
@@ -343,7 +343,7 @@ function NetworkMatchMaking:search_lobby_done()
 end
 
 function NetworkMatchMaking:game_owner_name()
-	return managers.network.matchmake.lobby_handler:get_lobby_data("owner_name")
+	return managers.network.matchmake.lobby_handler and managers.network.matchmake.lobby_handler:get_lobby_data("owner_name")
 end
 
 function NetworkMatchMaking:is_server_ok(friends_only, room, attributes_numbers, is_invite)

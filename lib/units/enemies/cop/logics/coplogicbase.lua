@@ -2136,7 +2136,9 @@ function CopLogicBase._get_logic_state_from_reaction(data, reaction)
 		reaction = data.attention_obj.reaction
 	end
 
-	local police_is_being_called = managers.groupai:state():chk_enemy_calling_in_area(managers.groupai:state():get_area_from_nav_seg_id(data.unit:movement():nav_tracker():nav_segment()), data.key)
+	local nav_seg = data.unit:movement():nav_tracker():nav_segment()
+	local nav_seg_id = nav_seg and managers.groupai:state():get_area_from_nav_seg_id(nav_seg)
+	local police_is_being_called = nav_seg_id and managers.groupai:state():chk_enemy_calling_in_area(nav_seg_id, data.key)
 
 	if not reaction or reaction <= AIAttentionObject.REACT_SCARED then
 		if data.char_tweak.calls_in and not police_is_being_called and not managers.groupai:state():is_police_called() and not data.unit:movement():cool() and not data.is_converted then

@@ -133,6 +133,9 @@ function ReadyUpGui:_layout_buttons()
 	if Network:is_server() then
 		_leave_lobby_button_params.text = self:translate("menu_leave_ready_up_button", true)
 		_leave_lobby_button_params.on_click_callback = callback(self, self, "_on_leave_ready_up_button")
+
+		managers.network:session():set_state("in_game")
+		managers.network:session():chk_server_joinable_state()
 	else
 		_leave_lobby_button_params.text = self:translate("menu_leave_lobby_button", true)
 		_leave_lobby_button_params.on_click_callback = callback(self, self, "_on_leave_lobby_button")
@@ -637,17 +640,23 @@ function ReadyUpGui:_update_challenge_card_selected_icon()
 end
 
 function ReadyUpGui:_update_status()
+	if self._backed_out then
+		self._backed_out = false
+
+		return
+	end
+
 	local challenge_cards = managers.challenge_cards:get_suggested_cards()
 
 	for peer, control in pairs(self._player_control_list) do
 		local card = challenge_cards[control:params().peer_index]
 
 		if card and card.locked_suggestion then
-			local was_ready = control:params().ready
+			local was_ready = control:is_ready()
 
 			control:set_state("ready")
 
-			if control:params().ready and not was_ready then
+			if control:is_ready() and not was_ready then
 				local outfit = peer:blackmarket_outfit()
 				local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(outfit.primary.factory_id)
 				local anim_state_name = "hos_to_cbt_" .. weapon_id
@@ -661,7 +670,7 @@ function ReadyUpGui:_update_status()
 	local all_ready = true
 
 	for peer, control in pairs(self._player_control_list) do
-		if not control:params().ready then
+		if not control:is_ready() then
 			all_ready = false
 
 			break
@@ -677,9 +686,15 @@ function ReadyUpGui:_update_status()
 	end
 end
 
-function ReadyUpGui:reset_ready_ups()
-	for i, v in ipairs(self._player_control_list) do
-		control:params().ready = false
+function ReadyUpGui:_reset_ready_ups()
+	Application:debug("[ReadyUpGui:_reset_ready_ups] RESET")
+
+	self._ready = false
+
+	if self._player_control_list then
+		for i, control in ipairs(self._player_control_list) do
+			control:set_state("not_ready")
+		end
 	end
 end
 
@@ -784,8 +799,10 @@ function ReadyUpGui:_on_leave_ready_up_button()
 		return
 	end
 
-	print(" self._callback_handler:end_game() ")
+	self._backed_out = true
+
 	self._callback_handler:leave_ready_up()
+	self:_reset_ready_ups()
 end
 
 function ReadyUpGui:close()

@@ -24,13 +24,13 @@ function FlamerTank:detonate(in_pos, range, damage, player_damage)
 		local normal = math.UP
 		local slot_mask = managers.slot:get_mask("explosion_targets")
 		local damage_params = {
-			player_damage = 0,
 			curve_pow = 3,
 			no_raycast_check_characters = true,
 			hit_pos = pos,
 			range = range,
 			collision_slotmask = slot_mask,
 			damage = damage,
+			player_damage = player_damage,
 			ignore_unit = self._unit
 		}
 
@@ -39,7 +39,9 @@ function FlamerTank:detonate(in_pos, range, damage, player_damage)
 		self._already_detonated = true
 
 		if self._unit:parent() then
-			self._unit:parent():character_damage():damage_mission({})
+			self._unit:parent():character_damage():damage_mission({
+				damage = 99999
+			})
 		end
 	end
 end

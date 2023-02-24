@@ -399,10 +399,6 @@ function Setup:init_managers(managers)
 end
 
 function Setup:start_boot_loading_screen()
-	if not PackageManager:loaded("packages/boot_screen") then
-		PackageManager:load("packages/boot_screen")
-	end
-
 	self:_start_loading_screen()
 end
 

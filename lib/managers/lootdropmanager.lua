@@ -4,6 +4,14 @@ LootDropManager.LOOT_VALUE_TYPE_SMALL = "small"
 LootDropManager.LOOT_VALUE_TYPE_MEDIUM = "medium"
 LootDropManager.LOOT_VALUE_TYPE_BIG = "big"
 LootDropManager.LOOT_VALUE_TYPE_DOGTAG = "dogtag"
+LootDropManager.LOOT_VALUE_TYPE_DOGTAG_BIG = "dogtag_big"
+LootDropManager._REGISTER_LOOT_CONVERTER = {
+	[LootDropManager.LOOT_VALUE_TYPE_SMALL] = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT,
+	[LootDropManager.LOOT_VALUE_TYPE_MEDIUM] = LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT,
+	[LootDropManager.LOOT_VALUE_TYPE_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT,
+	[LootDropManager.LOOT_VALUE_TYPE_DOGTAG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_AMOUNT,
+	[LootDropManager.LOOT_VALUE_TYPE_DOGTAG_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_BIG_AMOUNT
+}
 
 function LootDropManager:init()
 	self:_setup()
@@ -199,57 +207,6 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 	self:on_loot_dropped_for_player()
 end
 
-function LootDropManager:debug_drop_card_pack()
-	local loot_list = {
-		{
-			bonus = false,
-			entry = "op_war_weary",
-			instance_id = 1.5012326827715203e+18,
-			category = "challenge_card",
-			def_id = 150002,
-			amount = 1
-		},
-		{
-			bonus = false,
-			entry = "ra_b_walk_it_off",
-			instance_id = 1.5012326827715203e+18,
-			category = "challenge_card",
-			def_id = 100005,
-			amount = 1
-		},
-		{
-			bonus = false,
-			entry = "op_b_recycle_for_victory",
-			instance_id = 1.5012326827715203e+18,
-			category = "challenge_card",
-			def_id = 100011,
-			amount = 1
-		},
-		{
-			bonus = false,
-			entry = "ra_helmet_shortage",
-			instance_id = 1.5012326827715203e+18,
-			category = "challenge_card",
-			def_id = 100003,
-			amount = 1
-		},
-		{
-			bonus = false,
-			entry = "ra_no_second_chances",
-			instance_id = 1.5012326827715203e+18,
-			category = "challenge_card",
-			def_id = 100008,
-			amount = 1
-		}
-	}
-
-	managers.challenge_cards:set_temp_steam_loot(loot_list)
-	self:on_loot_dropped_for_player()
-	managers.network:session():send_to_peers_synched("sync_loot_to_peers", LootDropTweakData.REWARD_CARD_PACK, "", self._card_drop_pack_type, managers.network:session():local_peer():id())
-
-	self._card_drop_pack_type = nil
-end
-
 function LootDropManager:card_drop_callback(error, loot_list)
 	if not loot_list then
 		managers.challenge_cards:set_temp_steam_loot(nil)
@@ -432,18 +389,14 @@ function LootDropManager:clear_dropped_loot()
 	self._card_drop_pack_type = nil
 end
 
-function LootDropManager:register_loot(unit, value_type, world_id)
-	local value = nil
+function LootDropManager:convert_loot_register_value(id)
+	return not not LootDropManager._REGISTER_LOOT_CONVERTER[id] and LootDropManager._REGISTER_LOOT_CONVERTER[id] or false
+end
 
-	if value_type == LootDropManager.LOOT_VALUE_TYPE_SMALL then
-		value = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT
-	elseif value_type == LootDropManager.LOOT_VALUE_TYPE_MEDIUM then
-		value = LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT
-	elseif value_type == LootDropManager.LOOT_VALUE_TYPE_BIG then
-		value = LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT
-	elseif value_type == LootDropManager.LOOT_VALUE_TYPE_DOGTAG then
-		value = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT
-	else
+function LootDropManager:register_loot(unit, value_type, world_id)
+	local value = self:convert_loot_register_value(value_type)
+
+	if not value then
 		debug_pause("[LootDropManager:register_loot] Unknown loot value size!", value_type)
 
 		return
@@ -485,14 +438,14 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 		return
 	end
 
-	print("[LootDropManager:plant_loot_on_level()] Planting loot on level, loot value (value, mission):", total_value, job_id)
+	Application:debug("[LootDropManager:plant_loot_on_level()] Planting loot on level, loot value (value, mission):", total_value, job_id)
 
 	self._loot_spawned_current_leg = 0
 	self._registered_loot_units[world_id] = self._registered_loot_units[world_id] or {}
 	self._active_loot_units = {}
 
 	if #self._registered_loot_units[world_id] == 0 then
-		print("[LootDropManager:plant_loot_on_level()] no loot units registered on the level")
+		Application:debug("[LootDropManager:plant_loot_on_level()] no loot units registered on the level")
 
 		return
 	end

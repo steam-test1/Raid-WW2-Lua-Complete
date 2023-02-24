@@ -565,6 +565,13 @@ function TweakData:init()
 		"quad_diag",
 		"quad_plus"
 	}
+	self.motion_dot_sizes = {
+		"tiny",
+		"small",
+		"medium",
+		"large",
+		"huge"
+	}
 	self.hit_indicator_modes = {
 		"off",
 		"on",

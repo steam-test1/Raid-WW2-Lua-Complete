@@ -10,12 +10,12 @@ HUDMotionDot.ICONS = {
 	"motion_plus_inline"
 }
 HUDMotionDot.SIZES = {
+	4,
 	8,
 	12,
 	16,
 	20,
-	24,
-	32
+	28
 }
 HUDMotionDot.OFFSETS = {
 	32,

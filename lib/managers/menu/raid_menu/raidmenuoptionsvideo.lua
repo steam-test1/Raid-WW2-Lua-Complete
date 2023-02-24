@@ -202,11 +202,26 @@ function RaidMenuOptionsVideo:_layout_video()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_motion_dot"),
 		on_item_selected_callback = callback(self, self, "on_click_motion_dot"),
 		on_menu_move = {
-			down = "hud_special_weapon_panels",
+			down = "motion_dot_size",
 			up = previous_panel.name
 		}
 	}
 	self._stepper_menu_motion_dot = self._root_panel:stepper(previous_panel)
+	previous_panel = {
+		name = "motion_dot_size",
+		stepper_w = 280,
+		description = utf8.to_upper(managers.localization:text("menu_options_video_motion_dot_size")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		data_source_callback = callback(self, self, "data_source_stepper_menu_motion_dot_size"),
+		on_item_selected_callback = callback(self, self, "on_click_motion_dot_size"),
+		on_menu_move = {
+			down = "hud_special_weapon_panels",
+			up = previous_panel.name
+		}
+	}
+	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
 	previous_panel = {
 		name = "use_headbob",
 		description = utf8.to_upper(managers.localization:text("menu_options_video_use_headbob")),
@@ -391,6 +406,20 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot()
 			text_id = "menu_options_video_motion_dot_mode_" .. tostring(i),
 			value = i,
 			info = "menu_options_video_motion_dot_mode_" .. tostring(i)
+		})
+	end
+
+	return tb
+end
+
+function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot_size()
+	local tb = {}
+
+	for i = 1, #tweak_data.motion_dot_modes do
+		table.insert(tb, {
+			text_id = "menu_options_video_motion_dot_size_" .. tostring(i),
+			value = i,
+			info = "menu_options_video_motion_dot_size_" .. tostring(i)
 		})
 	end
 
@@ -598,6 +627,10 @@ function RaidMenuOptionsVideo:_load_video_values()
 
 	self._stepper_menu_motion_dot:set_value_and_render(motion_dot)
 
+	local motion_dot_size = managers.user:get_setting("motion_dot_size")
+
+	self._stepper_menu_motion_dot_size:set_value_and_render(motion_dot_size)
+
 	local hit_indicator = managers.user:get_setting("hit_indicator")
 
 	if hit_indicator == true then
@@ -640,6 +673,12 @@ function RaidMenuOptionsVideo:on_click_motion_dot()
 	local value = self._stepper_menu_motion_dot:get_value()
 
 	managers.menu:active_menu().callback_handler:set_motion_dot_raid(value)
+end
+
+function RaidMenuOptionsVideo:on_click_motion_dot_size()
+	local value = self._stepper_menu_motion_dot_size:get_value()
+
+	managers.menu:active_menu().callback_handler:set_motion_dot_size_raid(value)
 end
 
 function RaidMenuOptionsVideo:on_click_headbob()

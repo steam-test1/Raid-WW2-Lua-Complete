@@ -162,9 +162,14 @@ function GoldEconomyManager:load(data)
 
 	local needs_upgrade = false
 
-	if not state or not state.version or state.version ~= GoldEconomyManager.VERSION then
+	if not state or not state.version then
 		needs_upgrade = true
 
+		managers.savefile:set_resave_required()
+	elseif state and state.version ~= GoldEconomyManager.VERSION then
+		needs_upgrade = true
+
+		self:_refund_upgrades(state.owned_upgrades)
 		managers.savefile:set_resave_required()
 	else
 		self._global.applied_upgrades = state.applied_upgrades
@@ -182,6 +187,19 @@ function GoldEconomyManager:load(data)
 	self._global.gold_awards = state and state.gold_awards or {}
 
 	self:get_gold_awards()
+end
+
+function GoldEconomyManager:_refund_upgrades(upgrades)
+	for _, upgrade in pairs(upgrades) do
+		self:_refund_upgrade(upgrade.upgrade, upgrade.level)
+	end
+end
+
+function GoldEconomyManager:_refund_upgrade(upgrade, level)
+	local amount = tweak_data.camp_customization.camp_upgrades[upgrade].levels[level].gold_price or 0
+
+	Application:debug("[GoldEconomyManager:_refund_upgrade] REFUNDED: ", upgrade, level, amount)
+	self:add_gold(amount)
 end
 
 function GoldEconomyManager:get_gold_awards()

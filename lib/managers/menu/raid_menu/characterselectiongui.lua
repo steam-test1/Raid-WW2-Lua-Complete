@@ -165,6 +165,7 @@ function CharacterSelectionGui:_character_action_callback(slot_index, action)
 	elseif action == RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_NATION then
 		if slot_index then
 			self:_increment_nation(slot_index)
+			managers.raid_menu:on_escape()
 		end
 	elseif action == RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_DELETE then
 		if slot_index then

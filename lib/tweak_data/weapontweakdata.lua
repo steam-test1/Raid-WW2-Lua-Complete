@@ -4293,7 +4293,7 @@ function WeaponTweakData:_init_shotty(weapon_data)
 	self.shotty.damage_profile = {
 		{
 			damage = 135,
-			range = 6500
+			range = 650
 		},
 		{
 			damage = 25,
@@ -5912,15 +5912,15 @@ function WeaponTweakData:_init_m1918_bar(weapon_data)
 		fire_rate = 0.16
 	}
 	self.m1918.spread = {
-		standing = 5
+		standing = 4.5
 	}
-	self.m1918.spread.crouching = self.m1918.spread.standing * 0.7
-	self.m1918.spread.steelsight = self.m1918.spread.standing * 0.5
-	self.m1918.spread.moving_standing = self.m1918.spread.standing * 2.2
-	self.m1918.spread.moving_crouching = self.m1918.spread.crouching * 2.2
-	self.m1918.spread.moving_steelsight = self.m1918.spread.steelsight * 2.2
-	self.m1918.spread.per_shot = 0.35
-	self.m1918.spread.per_shot_steelsight = 0.15
+	self.m1918.spread.crouching = self.m1918.spread.standing * 0.45
+	self.m1918.spread.steelsight = self.m1918.spread.standing * 0.25
+	self.m1918.spread.moving_standing = self.m1918.spread.standing * 1.4
+	self.m1918.spread.moving_crouching = self.m1918.spread.crouching * 1.4
+	self.m1918.spread.moving_steelsight = self.m1918.spread.steelsight * 1.4
+	self.m1918.spread.per_shot = 0.07
+	self.m1918.spread.per_shot_steelsight = 0.008
 	self.m1918.spread.recovery = 2.5
 	self.m1918.spread.recovery_wait_multiplier = 1.5
 	self.m1918.spread.max = 3
@@ -5953,7 +5953,7 @@ function WeaponTweakData:_init_m1918_bar(weapon_data)
 			if x < 1.45 then
 				return 1.45
 			else
-				return math.min(math.pow(x, 1.45), 6)
+				return math.min(math.pow(x, 1.45), 5.5)
 			end
 		end,
 		recovery = 10,
@@ -6028,7 +6028,7 @@ function WeaponTweakData:_init_m1918_bar(weapon_data)
 		total_ammo_mod = 21,
 		spread_moving = 9,
 		alert_size = 8,
-		spread = 8,
+		spread = 7,
 		recoil = 4,
 		value = 9,
 		extra_ammo = 6,

@@ -411,10 +411,6 @@ function BootupState:at_exit()
 	self._play_data = nil
 
 	managers.menu:input_enabled(true)
-
-	if PackageManager:loaded("packages/boot_screen") then
-		PackageManager:unload("packages/boot_screen")
-	end
 end
 
 function BootupState:is_joinable()

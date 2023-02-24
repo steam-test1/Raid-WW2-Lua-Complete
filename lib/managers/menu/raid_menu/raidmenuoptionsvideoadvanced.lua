@@ -32,7 +32,7 @@ end
 
 function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	local dof_setting = managers.user:get_setting("dof_setting") == "standard" and true or false
-	local ssao_setting = managers.user:get_setting("ssao_setting") == "standard" and true or false
+	local ssao_setting = false
 	local use_parallax = managers.user:get_setting("use_parallax")
 	local motion_blur_setting = managers.user:get_setting("motion_blur_setting") == "standard" and true or false
 	local vls_setting = managers.user:get_setting("vls_setting") == "standard" and true or false
@@ -63,6 +63,7 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 
 	self._toggle_menu_toggle_dof:set_value_and_render(dof_setting, true)
 	self._toggle_menu_toggle_ssao:set_value_and_render(ssao_setting, true)
+	self._toggle_menu_toggle_ssao:set_enabled(false)
 	self._toggle_menu_toggle_parallax:set_value_and_render(use_parallax, true)
 	self._toggle_menu_toggle_motion_blur:set_value_and_render(motion_blur_setting, true)
 	self._toggle_menu_toggle_volumetric_light_scattering:set_value_and_render(vls_setting, true)
