@@ -339,10 +339,6 @@ function MissionManager:add_fading_debug_output(debug, color, as_subtitle)
 		return
 	end
 
-	if not self._fading_debug_enabled then
-		return
-	end
-
 	if as_subtitle then
 		self:_show_debug_subtitle(debug, color)
 	else

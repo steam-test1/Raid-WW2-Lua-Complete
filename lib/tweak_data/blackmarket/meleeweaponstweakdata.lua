@@ -9,8 +9,8 @@ function BlackMarketTweakData:_init_melee_weapons()
 	self.melee_weapons.weapon.instant = true
 	self.melee_weapons.weapon.free = true
 	self.melee_weapons.weapon.stats = {
-		min_damage = 50,
-		max_damage = 50,
+		min_damage = 75,
+		max_damage = 75,
 		min_damage_effect = 1,
 		max_damage_effect = 1,
 		charge_time = 0,
@@ -78,7 +78,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.m3_knife.stats.min_damage = 133
-	self.melee_weapons.m3_knife.stats.max_damage = 200
+	self.melee_weapons.m3_knife.stats.max_damage = 250
 	self.melee_weapons.m3_knife.stats.min_damage_effect = 1
 	self.melee_weapons.m3_knife.stats.max_damage_effect = 1
 	self.melee_weapons.m3_knife.stats.charge_time = 2
@@ -144,7 +144,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.min_damage = 133
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.max_damage = 200
+	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.max_damage = 250
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.min_damage_effect = 1
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.max_damage_effect = 1
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.charge_time = 2
@@ -210,7 +210,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.german_brass_knuckles.stats.min_damage = 133
-	self.melee_weapons.german_brass_knuckles.stats.max_damage = 200
+	self.melee_weapons.german_brass_knuckles.stats.max_damage = 250
 	self.melee_weapons.german_brass_knuckles.stats.min_damage_effect = 1
 	self.melee_weapons.german_brass_knuckles.stats.max_damage_effect = 1
 	self.melee_weapons.german_brass_knuckles.stats.charge_time = 2
@@ -276,7 +276,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.min_damage = 133
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.max_damage = 200
+	self.melee_weapons.lockwood_brothers_push_dagger.stats.max_damage = 250
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.min_damage_effect = 1
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.max_damage_effect = 1
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.charge_time = 2
@@ -342,7 +342,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.bc41_knuckle_knife.stats.min_damage = 133
-	self.melee_weapons.bc41_knuckle_knife.stats.max_damage = 200
+	self.melee_weapons.bc41_knuckle_knife.stats.max_damage = 250
 	self.melee_weapons.bc41_knuckle_knife.stats.min_damage_effect = 1
 	self.melee_weapons.bc41_knuckle_knife.stats.max_damage_effect = 1
 	self.melee_weapons.bc41_knuckle_knife.stats.charge_time = 2
@@ -407,7 +407,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.km_dagger.stats.min_damage = 133
-	self.melee_weapons.km_dagger.stats.max_damage = 200
+	self.melee_weapons.km_dagger.stats.max_damage = 250
 	self.melee_weapons.km_dagger.stats.min_damage_effect = 1
 	self.melee_weapons.km_dagger.stats.max_damage_effect = 1
 	self.melee_weapons.km_dagger.stats.charge_time = 2
@@ -473,7 +473,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.marching_mace.stats.min_damage = 133
-	self.melee_weapons.marching_mace.stats.max_damage = 200
+	self.melee_weapons.marching_mace.stats.max_damage = 250
 	self.melee_weapons.marching_mace.stats.min_damage_effect = 1
 	self.melee_weapons.marching_mace.stats.max_damage_effect = 1
 	self.melee_weapons.marching_mace.stats.charge_time = 2
@@ -540,7 +540,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		stats = {}
 	}
 	self.melee_weapons.lc14b.stats.min_damage = 133
-	self.melee_weapons.lc14b.stats.max_damage = 200
+	self.melee_weapons.lc14b.stats.max_damage = 250
 	self.melee_weapons.lc14b.stats.min_damage_effect = 1
 	self.melee_weapons.lc14b.stats.max_damage_effect = 1
 	self.melee_weapons.lc14b.stats.charge_time = 2

@@ -90,7 +90,7 @@ function print_parts_without_texture()
 	Application:debug("---------------------------")
 end
 
-local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
+local is_win_32 = _G.IS_PC
 local is_not_win_32 = not is_win_32
 WeaponFactoryTweakData = WeaponFactoryTweakData or class()
 
@@ -129,6 +129,7 @@ function WeaponFactoryTweakData:init()
 	self:_init_browning()
 	self:_init_welrod()
 	self:_init_shotty()
+	self:_init_weapon_skins()
 	self:create_ammunition()
 	self:_init_content_unfinished()
 	self:_cleanup_unfinished_content()
@@ -253,17 +254,20 @@ function WeaponFactoryTweakData:_init_thompson()
 		}
 	}
 	self.parts.wpn_fps_smg_thompson_m_drum = {
-		a_obj = "a_m",
 		type = "magazine",
 		name_id = "bm_wp_smg_thompson_m_drum",
 		unit = "units/vanilla/weapons/wpn_fps_smg_thompson_pts/wpn_fps_smg_thompson_m_drum",
 		third_unit = "units/vanilla/weapons/wpn_third_smg_thompson_pts/wpn_third_smg_thompson_m_drum",
+		a_obj = "a_m",
 		bullet_objects = {
 			amount = 3,
 			prefix = "g_bullet_"
 		},
 		stats = {
 			value = 0
+		},
+		hud_class_override = {
+			panel_class = "drum_mag"
 		}
 	}
 	self.parts.wpn_fps_smg_thompson_m_short = {
@@ -882,7 +886,20 @@ function WeaponFactoryTweakData:_init_garand()
 			"wpn_fps_ass_garand_s_cheek_rest",
 			"wpn_fps_ass_garand_s_folding",
 			"wpn_fps_ass_garand_m_bar_standard",
-			"wpn_fps_ass_garand_m_bar_extended"
+			"wpn_fps_ass_garand_m_bar_extended",
+			"wpn_fps_ass_garand_golden_body_standard",
+			"wpn_fps_ass_garand_golden_b_standard",
+			"wpn_fps_ass_garand_golden_bolt_standard",
+			"wpn_fps_ass_garand_golden_dh_standard",
+			"wpn_fps_ass_garand_golden_extra_swiwel",
+			"wpn_fps_ass_garand_golden_extra1_swiwel",
+			"wpn_fps_ass_garand_golden_s_standard",
+			"wpn_fps_ass_garand_golden_strip_standard",
+			"wpn_fps_ass_garand_golden_ns_conical",
+			"wpn_fps_ass_garand_golden_b_tanker",
+			"wpn_fps_ass_garand_golden_s_folding",
+			"wpn_fps_ass_garand_golden_m_bar_standard",
+			"wpn_fps_ass_garand_golden_m_bar_extended"
 		}
 	}
 	self.wpn_fps_ass_garand_npc = deep_clone(self.wpn_fps_ass_garand)
@@ -1051,51 +1068,6 @@ function WeaponFactoryTweakData:_init_garand_golden()
 	self.parts.wpn_fps_ass_garand_golden_s_folding.third_unit = "units/vanilla/weapons/wpn_third_ass_garand_pts/wpn_third_ass_garand_golden_s_folding"
 	self.parts.wpn_fps_ass_garand_s_cheek_rest.third_unit = "units/vanilla/weapons/wpn_third_ass_garand_pts/wpn_third_ass_garand_s_cheek_rest"
 	self.parts.wpn_fps_ass_garand_golden_strip_standard.third_unit = "units/vanilla/weapons/wpn_third_ass_garand_pts/wpn_third_ass_garand_golden_strip_standard"
-	self.wpn_fps_ass_garand_golden = {
-		unit = "units/vanilla/weapons/wpn_fps_ass_garand/wpn_fps_ass_garand_golden",
-		animations = {
-			reload = "reload",
-			fire = "recoil",
-			fire_steelsight = "recoil",
-			reload_not_empty = "reload_not_empty"
-		},
-		optional_types = {
-			"barrel_ext",
-			"gadget",
-			"barrel",
-			"lower_receiver"
-		},
-		default_blueprint = {
-			"wpn_fps_ass_garand_golden_body_standard",
-			"wpn_fps_ass_garand_golden_b_standard",
-			"wpn_fps_ass_garand_m_standard",
-			"wpn_fps_ass_garand_golden_bolt_standard",
-			"wpn_fps_ass_garand_golden_dh_standard",
-			"wpn_fps_ass_garand_golden_extra_swiwel",
-			"wpn_fps_ass_garand_golden_extra1_swiwel",
-			"wpn_fps_ass_garand_golden_s_standard",
-			"wpn_fps_ass_garand_golden_strip_standard"
-		},
-		uses_parts = {
-			"wpn_fps_ass_garand_golden_body_standard",
-			"wpn_fps_ass_garand_golden_b_standard",
-			"wpn_fps_ass_garand_m_standard",
-			"wpn_fps_ass_garand_golden_bolt_standard",
-			"wpn_fps_ass_garand_golden_dh_standard",
-			"wpn_fps_ass_garand_golden_extra_swiwel",
-			"wpn_fps_ass_garand_golden_extra1_swiwel",
-			"wpn_fps_ass_garand_golden_s_standard",
-			"wpn_fps_ass_garand_golden_strip_standard",
-			"wpn_fps_ass_garand_golden_ns_conical",
-			"wpn_fps_ass_garand_golden_b_tanker",
-			"wpn_fps_ass_garand_s_cheek_rest",
-			"wpn_fps_ass_garand_golden_s_folding",
-			"wpn_fps_ass_garand_golden_m_bar_standard",
-			"wpn_fps_ass_garand_golden_m_bar_extended"
-		}
-	}
-	self.wpn_fps_ass_garand_golden_npc = deep_clone(self.wpn_fps_ass_garand_golden)
-	self.wpn_fps_ass_garand_golden_npc.unit = "units/vanilla/weapons/wpn_fps_ass_garand/wpn_fps_ass_garand_golden_npc"
 end
 
 function WeaponFactoryTweakData:_init_m1918()
@@ -1380,7 +1352,7 @@ function WeaponFactoryTweakData:_init_m1903()
 		},
 		stance_mod = {
 			wpn_fps_snp_m1903 = {
-				lens_distortion_power = 1.04,
+				lens_distortion_power = 1.02,
 				translation = Vector3(0.015, -30, -1.665)
 			}
 		}
@@ -1628,7 +1600,7 @@ function WeaponFactoryTweakData:_init_kar_98k()
 		},
 		stance_mod = {
 			wpn_fps_snp_kar_98k = {
-				lens_distortion_power = 1.04,
+				lens_distortion_power = 1.02,
 				translation = Vector3(0, -24, -3.8478)
 			}
 		}
@@ -1833,7 +1805,7 @@ function WeaponFactoryTweakData:_init_lee_enfield()
 		},
 		stance_mod = {
 			wpn_fps_snp_lee_enfield = {
-				lens_distortion_power = 1.04,
+				lens_distortion_power = 1.02,
 				translation = Vector3(0, -16, -2.2586)
 			}
 		}
@@ -3507,12 +3479,12 @@ function WeaponFactoryTweakData:_init_mp44()
 		unit = "units/vanilla/weapons/wpn_fps_ass_mp44_pts/wpn_fps_ass_mp44_o_scope",
 		stats = {
 			value = 1,
-			zoom = 5
+			zoom = 4
 		},
 		stance_mod = {
 			wpn_fps_ass_mp44 = {
-				lens_distortion_power = 1.03,
-				translation = Vector3(0, -15, -1.64784)
+				lens_distortion_power = 1.01,
+				translation = Vector3(0, -12.5, -1.64784)
 			}
 		}
 	}
@@ -3868,6 +3840,9 @@ function WeaponFactoryTweakData:_init_mg42()
 		animations = {
 			reload_not_empty = "reload_not_empty",
 			reload = "reload"
+		},
+		hud_class_override = {
+			drums = 2
 		}
 	}
 	self.parts.wpn_fps_lmg_mg42_b_mg42.third_unit = "units/vanilla/weapons/wpn_third_lmg_mg42_pts/wpn_third_lmg_mg42_b_mg42"
@@ -4426,7 +4401,7 @@ function WeaponFactoryTweakData:_init_mosin()
 		},
 		stance_mod = {
 			wpn_fps_snp_mosin = {
-				lens_distortion_power = 1.04,
+				lens_distortion_power = 1.02,
 				translation = Vector3(0, -21, -2.323)
 			}
 		}
@@ -4786,6 +4761,9 @@ function WeaponFactoryTweakData:_init_shotty()
 	}
 	self.wpn_fps_pis_shotty_npc = deep_clone(self.wpn_fps_pis_shotty)
 	self.wpn_fps_pis_shotty_npc.unit = "units/upd_015/weapons/wpn_fps_pis_shotty/wpn_fps_pis_shotty_npc"
+end
+
+function WeaponFactoryTweakData:_init_weapon_skins()
 end
 
 function WeaponFactoryTweakData:is_part_internal(part_id)

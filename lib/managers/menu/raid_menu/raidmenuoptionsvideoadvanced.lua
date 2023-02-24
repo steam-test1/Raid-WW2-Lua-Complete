@@ -81,14 +81,6 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	self._stepper_menu_fps_limit:set_value_and_render(fps_cap, true)
 	self._stepper_menu_colorblind_setting:set_value_and_render(colorblind_setting, true)
 	self._stepper_menu_toggle_vsync:set_value_and_render(vsync_value, true)
-
-	if managers.viewport:is_fullscreen() then
-		self._stepper_menu_toggle_vsync:set_enabled(true)
-	else
-		self._stepper_menu_toggle_vsync:set_enabled(false)
-
-		self._stepper_menu_colorblind_setting._on_menu_move.down = nil
-	end
 end
 
 function RaidMenuOptionsVideoAdvanced:_save_advanced_video_values()

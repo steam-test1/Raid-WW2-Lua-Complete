@@ -45,7 +45,7 @@ function MenuMainState:at_enter(old_state)
 
 	local has_invite = false
 
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS3 or _G.IS_PS4 then
 		local is_boot = not Global.psn_boot_invite_checked and Application:is_booted_from_invitation()
 
 		if not is_boot then
@@ -71,7 +71,7 @@ function MenuMainState:at_enter(old_state)
 		end
 
 		Global.psn_boot_invite_checked = true
-	elseif SystemInfo:platform() == Idstring("WIN32") then
+	elseif _G.IS_PC then
 		if SystemInfo:distribution() == Idstring("STEAM") and Global.boot_invite then
 			has_invite = true
 			local lobby = Global.boot_invite
@@ -79,7 +79,7 @@ function MenuMainState:at_enter(old_state)
 
 			managers.network.matchmake:join_server_with_check(lobby)
 		end
-	elseif (SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1")) and Global.boot_invite and next(Global.boot_invite) then
+	elseif (_G.IS_XB360 or _G.IS_XB1) and Global.boot_invite and next(Global.boot_invite) then
 		has_invite = true
 
 		managers.network.matchmake:join_boot_invite()

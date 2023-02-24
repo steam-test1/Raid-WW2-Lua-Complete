@@ -46,7 +46,7 @@ end
 function ControllerManager:_collect_connected_xbox_controllers()
 	local controllers_list = {}
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		local nr_controllers = Input:num_controllers()
 
 		for i_controller = 0, nr_controllers - 1 do
@@ -237,7 +237,7 @@ function ControllerManager:_change_mode(mode)
 end
 
 function ControllerManager:set_menu_mode_enabled(enabled)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
 		self._menu_mode_enabled = self._menu_mode_enabled + (enabled and 1 or -1)
 
@@ -258,7 +258,7 @@ function ControllerManager:get_menu_mode_enabled()
 end
 
 function ControllerManager:set_ingame_mode(mode)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		if mode then
 			self._ingame_mode = mode
 		end

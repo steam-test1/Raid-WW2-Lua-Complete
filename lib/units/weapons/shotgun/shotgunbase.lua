@@ -37,6 +37,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	end
 
 	local damage = self:_get_current_damage(dmg_mul)
+	local damage_per_pellet = damage / self._rays
 	local autoaim, dodge_enemies = self:check_autoaim(from_pos, direction, self._range)
 	local weight = 0.1
 	local enemy_died = false
@@ -49,7 +50,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				hit_enemies[enemy_key] = col_ray
 			end
 		else
-			InstantBulletBase:on_collision(col_ray, self._unit, user_unit, damage)
+			InstantBulletBase:on_collision(col_ray, self._unit, user_unit, damage_per_pellet)
 		end
 	end
 
@@ -138,7 +139,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 			local scale = math.clamp(1 - col_ray.distance / 500, 0.5, 1)
 			local unit = col_ray.unit
 			local height = mvector3.distance(col_ray.position, col_ray.unit:position()) - 100
-			local twist_dir = math.random(2) == 1 and 1 or -1
+			local twist_dir = math.rand_bool() and 1 or -1
 			local rot_acc = (col_ray.ray:cross(math.UP) + math.UP * 0.5 * twist_dir) * -1000 * math.sign(height)
 			local rot_time = 1 + math.rand(2)
 			local nr_u_bodies = unit:num_bodies()
@@ -160,7 +161,9 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 
 	if dodge_enemies and self._suppression then
 		for enemy_data, dis_error in pairs(dodge_enemies) do
-			enemy_data.unit:character_damage():build_suppression(suppr_mul * dis_error * self._suppression, self._panic_suppression_chance)
+			if not enemy_data.unit:movement():cool() then
+				enemy_data.unit:character_damage():build_suppression(suppr_mul * dis_error * self._suppression, self._panic_suppression_chance)
+			end
 		end
 	end
 

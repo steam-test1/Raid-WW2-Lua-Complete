@@ -6,10 +6,16 @@ end
 
 function TurretInteractionExt:can_select(player)
 	local super_condition = TurretInteractionExt.super.can_select(self, player)
+
+	if not player then
+		return false
+	end
+
+	local sprinting = player:movement() and player:movement():running() or false
 	local taken = self._unit:weapon():player_on()
 	local locked = self._unit:weapon():locked_fire()
 
-	return super_condition and not taken and not locked
+	return super_condition and not taken and not locked and not sprinting
 end
 
 function TurretInteractionExt:check_interupt()

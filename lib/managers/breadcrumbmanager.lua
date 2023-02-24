@@ -1,5 +1,5 @@
 BreadcrumbManager = BreadcrumbManager or class()
-BreadcrumbManager.VERSION = 1
+BreadcrumbManager.VERSION = 2
 BreadcrumbManager.SLOT_CHARACTER = "character"
 BreadcrumbManager.SLOT_PROFILE = "profile"
 BreadcrumbManager.CATEGORY_NEW_RAID = {

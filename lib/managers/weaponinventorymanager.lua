@@ -1,6 +1,6 @@
 WeaponInventoryManager = WeaponInventoryManager or class()
 WeaponInventoryManager.VERSION_CHARACTER_SLOT = 1
-WeaponInventoryManager.VERSION_ACCOUNT_WIDE = 22
+WeaponInventoryManager.VERSION_ACCOUNT_WIDE = 23
 WeaponInventoryManager.SAVE_TYPE_CHARACTER = "save_character"
 WeaponInventoryManager.SAVE_TYPE_ACCOUNT = "save_account"
 WeaponInventoryManager.DEFAULT_MELEE_WEAPON = "m3_knife"
@@ -46,6 +46,7 @@ function WeaponInventoryManager:setup()
 	self._weapons = {}
 
 	self:_setup_initial_weapons()
+	self:_setup_initial_weapon_skins()
 end
 
 function WeaponInventoryManager:_setup_initial_weapons()
@@ -90,6 +91,12 @@ function WeaponInventoryManager:_setup_initial_weapons()
 			end
 		end
 	end
+end
+
+function WeaponInventoryManager:_setup_initial_weapon_skins()
+	self._weapon_skins = {
+		_applied = {}
+	}
 end
 
 function WeaponInventoryManager:get_all_weapons_from_category(category_name)
@@ -201,7 +208,8 @@ end
 function WeaponInventoryManager:save_account_wide_info(data)
 	local state = {
 		version_account_wide = self.version_account_wide,
-		melee_weapons = self._weapons[WeaponInventoryManager.CATEGORY_NAME_MELEE]
+		melee_weapons = self._weapons[WeaponInventoryManager.CATEGORY_NAME_MELEE],
+		weapon_skins = self._weapon_skins
 	}
 	data.WeaponInventoryManager = state
 end
@@ -250,6 +258,8 @@ function WeaponInventoryManager:load_account_wide_info(data, version_account_wid
 			end
 		end
 	end
+
+	self._weapon_skins = state.weapon_skins
 end
 
 function WeaponInventoryManager:get_weapon_category_by_weapon_category_id(weapon_category_id)
@@ -265,16 +275,20 @@ function WeaponInventoryManager:get_weapon_category_by_weapon_category_id(weapon
 end
 
 function WeaponInventoryManager:add_all_weapons_to_player_inventory()
-	for index, weapon_data in pairs(tweak_data.weapon_inventory.weapon_primaries_index) do
+	for _, weapon_data in pairs(tweak_data.weapon_inventory.weapon_primaries_index) do
 		managers.blackmarket:on_buy_weapon_platform(WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME, weapon_data.weapon_id, weapon_data.slot, true)
+		Application:debug("[WeaponInventoryManager:add_all_weapons_to_player_inventory] Primary:", WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME, weapon_data.weapon_id, weapon_data.slot, true)
 	end
 
-	for index, weapon_data in pairs(tweak_data.weapon_inventory.weapon_secondaries_index) do
+	for _, weapon_data in pairs(tweak_data.weapon_inventory.weapon_secondaries_index) do
 		managers.blackmarket:on_buy_weapon_platform(WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME, weapon_data.weapon_id, weapon_data.slot, true)
+		Application:debug("[WeaponInventoryManager:add_all_weapons_to_player_inventory] Secondary:", WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME, weapon_data.weapon_id, weapon_data.slot, true)
 	end
 end
 
 function WeaponInventoryManager:get_weapon_slot_by_weapon_id(weapon_id, bm_weapon_category_id)
+	Application:trace("[WeaponInventoryManager:get_weapon_slot_by_weapon_id] weapon_id, bm_weapon_category_id ", weapon_id, bm_weapon_category_id)
+
 	local weapon_source = {}
 
 	if bm_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
@@ -284,7 +298,7 @@ function WeaponInventoryManager:get_weapon_slot_by_weapon_id(weapon_id, bm_weapo
 	end
 
 	if weapon_source then
-		for index, weapon_data in pairs(weapon_source) do
+		for _, weapon_data in ipairs(weapon_source) do
 			if weapon_data.weapon_id == weapon_id then
 				return weapon_data.slot
 			end
@@ -309,7 +323,7 @@ function WeaponInventoryManager:get_owned_weapons(weapon_category_id)
 	for index, weapon_data in pairs(data_source) do
 		local weapon_tweaks = tweak_data.weapon[weapon_data.weapon_id]
 
-		if not weapon_tweaks.dlc or unlocked_weapons[weapon_data.weapon_id] then
+		if weapon_tweaks and (not weapon_tweaks.dlc or unlocked_weapons[weapon_data.weapon_id]) then
 			weapon_data.unlocked = managers.upgrades:aquired(weapon_data.weapon_id)
 
 			if weapon_tweaks and weapon_tweaks.use_data and weapon_tweaks.use_data.selection_index and weapon_tweaks.use_data.selection_index == weapon_category_id then
@@ -352,6 +366,64 @@ function WeaponInventoryManager:is_melee_weapon_owned(weapon_id)
 	local melee_weapon_data = managers.weapon_inventory._weapons.melee_weapons[weapon_id]
 
 	return melee_weapon_data and melee_weapon_data.unlocked or false
+end
+
+function WeaponInventoryManager:get_owned_weapon_skins()
+	Application:trace("[WeaponInventoryManager:get_owned_weapon_skins]")
+
+	local result = {}
+	local unlocked_items = tweak_data.dlc:get_unlocked_weapon_skins()
+
+	if self._weapon_skins then
+		for skin_id, skin_data in pairs(self._weapon_skins) do
+			local item_tweaks = tweak_data.weapon.weapon_skins[skin_id]
+
+			if not item_tweaks.dlc or unlocked_items[skin_id] then
+				table.insert(result, {
+					skin_id = skin_id,
+					owned = skin_data.owned,
+					unlocked = skin_data.unlocked or unlocked_items[skin_id]
+				})
+			end
+		end
+	end
+
+	return result
+end
+
+function WeaponInventoryManager:is_weapon_skin_owned(skin_id)
+	Application:trace("[WeaponInventoryManager:is_weapon_skin_owned]")
+
+	local item_data = managers.weapon_inventory._weapon_skins[skin_id]
+
+	return item_data and item_data.unlocked or false
+end
+
+function WeaponInventoryManager:set_weapons_skin(weapon_factory_id, skin_id)
+	Application:trace("[WeaponInventoryManager:set_weapons_skin]", weapon_factory_id, skin_id)
+
+	if not managers.weapon_inventory._weapon_skins or not managers.weapon_inventory._weapon_skins._applied then
+		managers.weapon_inventory._weapon_skins = {
+			_applied = {}
+		}
+	end
+
+	managers.weapon_inventory._weapon_skins._applied[weapon_factory_id] = skin_id
+end
+
+function WeaponInventoryManager:get_weapons_skin(factory_id)
+	if not managers.weapon_inventory._weapon_skins or not managers.weapon_inventory._weapon_skins._applied then
+		Application:trace("[WeaponInventoryManager:get_weapons_skin] FAILED")
+
+		return nil
+	end
+
+	local skin = managers.weapon_inventory._weapon_skins._applied[factory_id]
+
+	Application:trace("[WeaponInventoryManager:get_weapons_skin]", factory_id, skin)
+	table.print_data(managers.weapon_inventory._weapon_skins._applied)
+
+	return skin
 end
 
 function WeaponInventoryManager:get_owned_grenades()

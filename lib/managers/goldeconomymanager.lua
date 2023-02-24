@@ -1,6 +1,7 @@
 GoldEconomyManager = GoldEconomyManager or class()
 GoldEconomyManager.THOUSAND_SEPARATOR = "."
-GoldEconomyManager.VERSION = 7
+GoldEconomyManager.VERSION = 8
+GoldEconomyManager.ACHIEVEMENT_CAMP_ROYALTY = 1000
 
 function GoldEconomyManager:init()
 	self:_setup()
@@ -60,6 +61,10 @@ function GoldEconomyManager:current()
 end
 
 function GoldEconomyManager:_set_current(value)
+	if GoldEconomyManager.ACHIEVEMENT_CAMP_ROYALTY <= value then
+		managers.achievment:award("camp_royalty")
+	end
+
 	self._global.current = Application:digest_value(value, true)
 end
 
@@ -94,7 +99,7 @@ function GoldEconomyManager:respec_reset_value()
 end
 
 function GoldEconomyManager:respec_cost()
-	local multiplier = Application:digest_value(self._global.respec_cost_multiplier, false)
+	local multiplier = 1
 	local char_level = managers.experience:current_level()
 	local cost = math.ceil(char_level * (1 + multiplier) * TweakData.RESPEC_COST_CONSTANT)
 
@@ -205,10 +210,13 @@ end
 function GoldEconomyManager:filter_camp_upgrades()
 	for index = #self._global.owned_upgrades, 1, -1 do
 		local upgrade = self._global.owned_upgrades[index]
-		local upgrade_data = tweak_data.camp_customization.camp_upgrades[upgrade.upgrade].levels[upgrade.level]
 
-		if upgrade_data and not tweak_data.camp_customization:is_upgrade_unlocked(upgrade_data) then
-			table.remove(self._global.owned_upgrades, index)
+		if tweak_data.camp_customization.camp_upgrades[upgrade.upgrade] then
+			local upgrade_data = tweak_data.camp_customization.camp_upgrades[upgrade.upgrade].levels[upgrade.level]
+
+			if upgrade_data and not tweak_data.camp_customization:is_upgrade_unlocked(upgrade_data) then
+				table.remove(self._global.owned_upgrades, index)
+			end
 		end
 	end
 

@@ -439,6 +439,8 @@ function CoreEditor:_init_title_messages()
 	self:add_title_message("Those who do not work, should not eat. ")
 	self:add_title_message("Don't waste you time or time will waste you. ")
 	self:add_title_message("Fill your head with rock. ")
+	self:add_title_message("They say it's impossible, I say: Watch me! ")
+	self:add_title_message("Please help me, Im not meant to be here! ")
 end
 
 function CoreEditor:_init_edit_unit_dialog()
@@ -3707,6 +3709,7 @@ function CoreEditor:_save_bundle_info_files(dir)
 	local instances_paths = self:_get_instances_paths()
 
 	file:puts("<bundle_info>")
+	file:puts("\t<!-- !! WARNING: THIS IS AUTOMATICALLY GENERATED, DO NOT EDIT BY HAND !! -->")
 	file:puts("\t<!-- Level Packages -->")
 	file:puts("\t<include_package folder=\"" .. world_path .. "\"/>")
 	file:puts("\n\t<!-- Instances -->")

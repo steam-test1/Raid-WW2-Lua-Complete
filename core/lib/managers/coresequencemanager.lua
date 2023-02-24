@@ -2150,7 +2150,7 @@ function BaseElement:get_xml_origin(node)
 	return "File: \"" .. tostring(file or "N/A") .. "\" (Line: " .. tostring(line or "N/A, remove .xmb file") .. ")\nUnit: \"" .. tostring(self._unit_element and self._unit_element:get_name():t() or "[None]") .. "\"\nElement: " .. self:get_xml_element_string(node)
 end
 
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+local is_win32 = _G.IS_PC
 
 function BaseElement:get_model_xml_file()
 	if self._node_file then

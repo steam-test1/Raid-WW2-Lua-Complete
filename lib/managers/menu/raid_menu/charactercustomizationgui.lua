@@ -111,61 +111,10 @@ function CharacterCustomizationGui:_layout()
 		}
 	}
 	self._character_customizations_grid = self._customization_grid_scrollable_area:get_panel():grid_active(customization_grid_params)
-	self._profile_name_label = self._root_panel:label({
-		name = "profile_name_label",
-		h = 32,
-		w = 356,
-		align = "right",
-		text = "",
-		y = 96,
-		x = 1376,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.large,
-		color = tweak_data.gui.colors.raid_white
-	})
-
-	self._profile_name_label:set_right(self._root_panel:right())
-
-	self._character_name_label = self._root_panel:label({
-		name = "character_name_label",
-		h = 32,
-		w = 356,
-		align = "right",
-		text = "",
-		y = 128,
-		x = 1376,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
-		color = tweak_data.gui.colors.raid_grey
-	})
-
-	self._character_name_label:set_right(self._root_panel:right())
-
-	self._right_side_info = self._root_panel:create_custom_control(RaidGUIControlCharacterDescription, {
-		name = "right_side_info_panel",
-		h = 640,
-		y = 192,
-		w = 356,
-		x = 1376,
-		mode = RaidGUIControlCharacterDescription.MODE_CUSTOMIZATION
-	}, {})
-
-	self._right_side_info:set_right(self._root_panel:right())
-
-	local nationality = PlayerManager:get_character_profile_nation()
-	local class_name = managers.skilltree._global.character_profile_base_class
-	local level = Application:digest_value(managers.experience._global.level, false)
-
-	self._right_side_info:set_data({
-		class_name = class_name,
-		nationality = nationality,
-		level = level
-	})
-
 	local icon_data = self:get_icon_data_for_body_part(self._selected_filter_body_part)
 	self._body_part_icon = self._root_panel:image({
-		x = self._right_side_info:x(),
-		y = self._right_side_info:y() + 176,
+		y = 300,
+		x = self._root_panel:right() - 520,
 		w = icon_data.texture_rect[3],
 		h = icon_data.texture_rect[4],
 		texture = icon_data.texture,
@@ -636,7 +585,7 @@ function CharacterCustomizationGui:spawn_character_unit()
 
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
-		local rotation = Rotation(0, 0, 0)
+		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 end

@@ -617,6 +617,12 @@ end
 
 function PortalUnitGroup:_change_visibility(unit, diff)
 	if alive(unit) then
+		if not unit:unit_data()._visibility_counter then
+			Application:error("[PortalUnitGroup:_change_visibility] unit_data was missing _visibility_counter and cannot add the diff to nil")
+
+			return
+		end
+
 		unit:unit_data()._visibility_counter = unit:unit_data()._visibility_counter + diff
 
 		if unit:unit_data()._visibility_counter > 0 then

@@ -228,7 +228,7 @@ function MenuComponentManager:_destroy_controller_input()
 
 		self._controller_connected = nil
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			self._fullscreen_ws:disconnect_keyboard()
 			self._fullscreen_ws:panel():key_press(nil)
 		end
@@ -942,7 +942,7 @@ function MenuComponentManager:on_peer_removed(peer, reason)
 end
 
 function MenuComponentManager:_create_chat_gui()
-	if SystemInfo:platform() == Idstring("WIN32") and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
+	if _G.IS_PC and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
 		if self._game_chat_gui then
 			self:show_game_chat_gui()
 		else
@@ -979,7 +979,7 @@ function MenuComponentManager:create_chat_gui()
 end
 
 function MenuComponentManager:add_game_chat()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._game_chat_gui = ChatGui:new(self._ws)
 
 		if self._game_chat_params then

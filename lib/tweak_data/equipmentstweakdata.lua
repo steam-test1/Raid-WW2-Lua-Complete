@@ -54,11 +54,6 @@ function EquipmentsTweakData:init()
 			icon = "equipment_panel_dynamite_stick",
 			text_id = "hud_equipment_dynamite"
 		},
-		thermite = {
-			sync_possession = true,
-			icon = "equipment_panel_cvy_thermite",
-			text_id = "hud_equipment_thermite"
-		},
 		dynamite_x5 = {
 			quantity = 5,
 			transfer_quantity = 5,
@@ -81,10 +76,20 @@ function EquipmentsTweakData:init()
 			quantity = 10,
 			text_id = "hud_equipment_dynamite"
 		},
+		dynamite_bag = {
+			sync_possession = true,
+			icon = "equipment_panel_dynamite",
+			text_id = "hud_equipment_dynamite_bag"
+		},
 		tank_grenade = {
 			sync_possession = true,
 			icon = "equipment_dynamite",
 			text_id = "hud_equipment_tank_grenade"
+		},
+		thermite = {
+			sync_possession = true,
+			icon = "equipment_panel_cvy_thermite",
+			text_id = "hud_equipment_thermite"
 		},
 		repair_tools = {
 			sync_possession = true,
@@ -95,6 +100,14 @@ function EquipmentsTweakData:init()
 			sync_possession = true,
 			icon = "equipment_panel_fuel_full",
 			text_id = "hud_equipment_gas_tank"
+		},
+		gas_x4 = {
+			quantity = 1,
+			sync_possession = true,
+			transfer_quantity = 4,
+			text_id = "hud_equipment_fuel_canister",
+			max_quantity = 4,
+			icon = "equipment_panel_fuel_full"
 		},
 		safe_key = {
 			sync_possession = true,
@@ -216,11 +229,6 @@ function EquipmentsTweakData:init()
 			icon = "equipment_panel_parachute",
 			text_id = "hud_equipment_parachute"
 		},
-		dynamite_bag = {
-			sync_possession = true,
-			icon = "equipment_panel_dynamite",
-			text_id = "hud_equipment_dynamite_bag"
-		},
 		landmine = {
 			quantity = 1,
 			sync_possession = true,
@@ -261,14 +269,6 @@ function EquipmentsTweakData:init()
 			sync_possession = true,
 			icon = "equipment_panel_code_device",
 			text_id = "hud_equipment_enigma"
-		},
-		gas_x4 = {
-			quantity = 1,
-			sync_possession = true,
-			transfer_quantity = 4,
-			text_id = "hud_equipment_fuel_canister",
-			max_quantity = 4,
-			icon = "equipment_panel_fuel_full"
 		},
 		empty_bucket = {
 			sync_possession = true,

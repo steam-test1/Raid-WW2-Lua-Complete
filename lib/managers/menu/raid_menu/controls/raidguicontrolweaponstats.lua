@@ -66,6 +66,7 @@ function RaidGUIControlWeaponStats:_set_default_values()
 		},
 		accuracy = {
 			value = "00",
+			accuracy_as_spread = false,
 			delta_value = "00",
 			text = self:translate("menu_weapons_stats_accuracy", true)
 		},
@@ -134,12 +135,15 @@ function RaidGUIControlWeaponStats:set_modified_stats(params)
 		local sign = ""
 		local delta_value = tonumber(item_data.modified_value or 0) - tonumber(item_data.applied_value or 0)
 
-		item:set_value(item_data.applied_value .. "")
-		item:set_value_delta(delta_value)
+		if name == "accuracy" and params.accuracy_as_spread then
+			item:set_value(100 - item_data.applied_value .. "")
+			item:set_value_delta(-delta_value)
+		else
+			item:set_value(item_data.applied_value .. "")
+			item:set_value_delta(delta_value)
+		end
 
-		if delta_value < 0 then
-			item:set_color(tweak_data.gui.colors.progress_green)
-		elseif delta_value > 0 then
+		if delta_value ~= 0 then
 			item:set_color(tweak_data.gui.colors.progress_green)
 		else
 			item:set_label_default_color()
@@ -153,6 +157,22 @@ function RaidGUIControlWeaponStats:set_applied_stats(params)
 	self._values.total_ammo.applied_value = params.total_ammo_applied_value
 	self._values.rate_of_fire.applied_value = params.rate_of_fire_applied_value
 	self._values.accuracy.applied_value = params.accuracy_applied_value
+	self._values.accuracy.accuracy_as_spread = params.accuracy_as_spread
+
+	if params.accuracy_as_spread then
+		self._values.accuracy.text = self:translate("menu_weapons_stats_spread", true)
+	else
+		self._values.accuracy.text = self:translate("menu_weapons_stats_accuracy", true)
+	end
+
+	for _, item in ipairs(self._items) do
+		local name = item:name()
+
+		if name == "accuracy" then
+			item:set_text(self._values.accuracy.text)
+		end
+	end
+
 	self._values.stability.applied_value = params.stability_applied_value
 end
 

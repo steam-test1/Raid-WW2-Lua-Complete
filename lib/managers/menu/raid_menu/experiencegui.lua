@@ -8,9 +8,9 @@ ExperienceGui.CHARACTER_LEVEL_LABEL_FONT_COLOR = tweak_data.gui.colors.raid_grey
 ExperienceGui.SKILLTREE_X = 0
 ExperienceGui.SKILLTREE_Y = 128
 ExperienceGui.SKILL_DETAILS_X = 0
-ExperienceGui.SKILL_DETAILS_Y = 592
-ExperienceGui.RESPEC_X = 1168
-ExperienceGui.RESPEC_Y = 592
+ExperienceGui.SKILL_DETAILS_Y = 300
+ExperienceGui.RESPEC_X = 1368
+ExperienceGui.RESPEC_Y = 675
 ExperienceGui.RESPEC_INSUFFICIENT_X = 1526
 ExperienceGui.RESPEC_UNAVAILABLE_X = 1576
 ExperienceGui.CLASS_INFO_H = 96
@@ -34,7 +34,7 @@ ExperienceGui.STAT_LEVEL_INACTIVE = "stat_level_inactive"
 ExperienceGui.STAT_LEVEL_PENDING = "stat_level_pending"
 ExperienceGui.STATS_W = 560
 ExperienceGui.STATS_H = 160
-ExperienceGui.STATS_CENTER_Y = 750
+ExperienceGui.STATS_CENTER_Y = 878
 ExperienceGui.SINGLE_STAT_W = 256
 
 function ExperienceGui:init(ws, fullscreen_ws, node, component_name)
@@ -56,7 +56,6 @@ function ExperienceGui:_layout()
 	ExperienceGui.super._layout(self)
 	self:_layout_character_base_info()
 	self:_layout_skilltree()
-	self:_layout_skill_details()
 	self:_layout_respec()
 	self:_layout_character_overview()
 	self:_layout_buttons()
@@ -217,15 +216,6 @@ function ExperienceGui:_layout_respec()
 	self._cost_additional_label:set_y(ExperienceGui.RESPEC_BUTTON_CENTER_Y - 13)
 end
 
-function ExperienceGui:_layout_skill_details()
-	local params_skill_details = {
-		name = "skill_details",
-		x = ExperienceGui.SKILL_DETAILS_X,
-		y = ExperienceGui.SKILL_DETAILS_Y
-	}
-	self._skill_details = self._root_panel:create_custom_control(RaidGUIControlSkillDetails, params_skill_details)
-end
-
 function ExperienceGui:_layout_character_overview()
 end
 
@@ -364,29 +354,40 @@ end
 
 function ExperienceGui:on_skill_mouse_over(button_data)
 	if button_data.skill_title then
-		local skill_description, color_changes = self:_prepare_skill_description(button_data)
+		managers.menu_component:post_event("highlight")
 
-		self._skill_details:set_skill(button_data.skill, utf8.to_upper(managers.localization:text(button_data.skill_title)), skill_description, color_changes)
+		local skill_flavor, skill_description, color_changes = self:_prepare_skill_description(button_data)
+
 		self._skilltrack_progress_bar:select_node(button_data.level, button_data.index)
+		self._skilltrack_progress_bar:update_skill_details(button_data, skill_flavor, skill_description, color_changes)
+	end
+end
+
+function ExperienceGui:on_skill_mouse_out(button_data)
+	if button_data.skill_title then
+		self._skilltrack_progress_bar:hide_skill_details()
 	end
 end
 
 function ExperienceGui:_prepare_skill_description(button_data)
 	local skill = tweak_data.skilltree.skills[button_data.skill]
 	local upgrade_tweak_data = tweak_data.upgrades.definitions[skill.upgrades[1]]
+	local description_raw = managers.localization:text(button_data.skill_description)
+	local description = utf8.sub(description_raw, 0, string.len(description_raw))
+	local stat_line = ""
+	local color_changes = {}
 
-	if skill.acquires and skill.acquires[1] and skill.acquires[1].warcry_level then
-		return self:_prepare_warcry_upgrade_description(button_data.level, skill.acquires[1].warcry_level)
-	elseif not upgrade_tweak_data then
-		return managers.localization:text(button_data.skill_description)
+	if not skill.upgrades[1] then
+		Application:error("[ExperienceGui:_prepare_skill_description] NO UPGRADES " .. (skill.stat_desc_id or "stat_desc_id nil"))
+		table.print_data(skill.upgrades)
+
+		return description, stat_line, color_changes
 	end
 
 	local upgrade = tweak_data.upgrades.definitions[skill.upgrades[1]].upgrade
 	local current_upgrade_level = managers.player:upgrade_level(upgrade.category, upgrade.upgrade)
 	local current_selected_level = self:_upgrade_level_from_selected_skills(skill, button_data.level, button_data.index)
 	local total_upgrade_level = current_upgrade_level + current_selected_level
-	local color_changes = {}
-	local stat_line = nil
 
 	if skill.stat_desc_id then
 		local macros = {}
@@ -399,44 +400,29 @@ function ExperienceGui:_prepare_skill_description(button_data)
 			macros.LEVEL = total_upgrade_level
 		end
 
-		local str_raw = managers.localization:text(skill.stat_desc_id, macros)
-		local str_utf8 = utf8.sub(str_raw, 0, string.len(str_raw))
+		local stat_line_raw = managers.localization:text(skill.stat_desc_id, macros)
+		local stat_line_utf8 = utf8.sub(stat_line_raw, 0, string.len(stat_line_raw))
 
 		if upgrade_tweak_data.description_data then
 			if upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER then
-				self:_prepare_upgrade_stats_type_multiplier(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_multiplier(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_REDUCTIVE_MULTIPLIER then
-				self:_prepare_upgrade_stats_type_reductive_multiplier(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_reductive_multiplier(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER_REDUCTIVE_STRING then
-				self:_prepare_upgrade_stats_type_multiplier_reductive_string(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_multiplier_reductive_string(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_REDUCTION then
-				self:_prepare_upgrade_stats_type_raw_value_reduction(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_raw_value_reduction(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_AMOUNT then
-				self:_prepare_upgrade_stats_type_raw_value_amount(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_raw_value_amount(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_TEMPORARY_REDUCTION then
-				self:_prepare_upgrade_stats_type_temporary_reduction(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_temporary_reduction(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			end
 		end
 
 		stat_line = managers.localization:text(skill.stat_desc_id, macros)
 	end
 
-	local description_raw = managers.localization:text(button_data.skill_description)
-	local description = utf8.sub(description_raw, 0, string.len(description_raw))
-
-	if stat_line then
-		description = description .. "\n"
-		local desc_length = string.len(description)
-
-		for index, color_change in pairs(color_changes) do
-			color_change.start_index = color_change.start_index + desc_length
-			color_change.end_index = color_change.end_index + desc_length
-		end
-
-		description = description .. stat_line
-	end
-
-	return description, color_changes
+	return description, stat_line, color_changes
 end
 
 function ExperienceGui:_prepare_warcry_upgrade_description(level, warcry_level_increase)
@@ -854,9 +840,6 @@ function ExperienceGui:on_skill_acquisition_confirmed()
 	managers.player:sync_upgrades()
 	self:_refresh_stats()
 	managers.player:replenish_player_weapons()
-end
-
-function ExperienceGui:on_skill_mouse_out(button_data)
 end
 
 function ExperienceGui:_get_character_skilltree()

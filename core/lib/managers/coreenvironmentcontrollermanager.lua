@@ -83,7 +83,7 @@ function CoreEnvironmentControllerManager:set_dof_distance(distance, in_steelsig
 end
 
 function CoreEnvironmentControllerManager:get_default_lens_distortion_value()
-	return 1.02
+	return 1
 end
 
 function CoreEnvironmentControllerManager:get_lens_distortion_value()
@@ -411,7 +411,7 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 		self._hit_back = math.max(self._hit_back - hit_fade, 0)
 	end
 
-	local downed_value = self._downed_value / 100
+	local downed_value = self._downed_value / 100 * 0.5
 
 	if self._custom_dof_settings then
 		self._material:set_variable(ids_dof_settings, self._custom_dof_settings)

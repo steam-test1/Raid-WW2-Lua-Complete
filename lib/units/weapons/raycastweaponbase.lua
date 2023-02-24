@@ -14,6 +14,8 @@ local tmp_vec2 = Vector3()
 local tmp_rot1 = Rotation()
 RaycastWeaponBase = RaycastWeaponBase or class(UnitBase)
 RaycastWeaponBase.TRAIL_EFFECT = Idstring("effects/vanilla/weapons/weapon_trail")
+RaycastWeaponBase.RICOCHET_DISTANCE = 1600
+RaycastWeaponBase.RICOCHET_FALLOFF = 0.95
 
 function RaycastWeaponBase:init(unit)
 	UnitBase.init(self, unit, false)
@@ -25,10 +27,13 @@ function RaycastWeaponBase:init(unit)
 	self:_create_use_setups()
 
 	self._setup = {}
-	self._digest_values = SystemInfo:platform() == Idstring("WIN32")
+	self._digest_values = _G.IS_PC
 	self._ammo_data = false
+	local dont_replenish = false
 
-	self:replenish()
+	if not dont_replenish then
+		self:replenish()
+	end
 
 	self.can_use_aim_assist = true
 	self._aim_assist_data = tweak_data.weapon[self._name_id].aim_assist
@@ -52,6 +57,15 @@ function RaycastWeaponBase:init(unit)
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
+	self._muzzletrail_effect = self:weapon_tweak_data().muzzletrail and Idstring(self:weapon_tweak_data().muzzletrail) or false
+
+	if self._muzzletrail_effect then
+		self._muzzletrail_effect_table = {
+			force_synch = true,
+			effect = self._muzzletrail_effect,
+			parent = self._obj_fire
+		}
+	end
 
 	if self:ejects_shells() then
 		self._use_shell_ejection_effect = true
@@ -83,6 +97,10 @@ end
 function RaycastWeaponBase:change_fire_object(new_obj)
 	self._obj_fire = new_obj
 	self._muzzle_effect_table.parent = new_obj
+
+	if self._muzzletrail_effect then
+		self._muzzletrail_effect_table.parent = new_obj
+	end
 end
 
 function RaycastWeaponBase:get_name_id()
@@ -90,6 +108,10 @@ function RaycastWeaponBase:get_name_id()
 end
 
 function RaycastWeaponBase:is_melee_weapon()
+	return false
+end
+
+function RaycastWeaponBase:get_weapon_hud_type()
 	return false
 end
 
@@ -427,18 +449,26 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 
 	self:_check_ammo_total(user_unit)
 
-	if alive(self._obj_fire) then
-		self:_spawn_muzzle_effect(from_pos, direction)
-	end
-
 	if self._use_shell_ejection_effect then
 		World:effect_manager():spawn(self._shell_ejection_effect_table)
+	end
+
+	if alive(self._obj_fire) then
+		self:_spawn_muzzle_effect(from_pos, direction)
 	end
 
 	local ray_res = self:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 
 	if self._alert_events and ray_res.rays then
 		self:_check_alert(ray_res.rays, from_pos, direction, user_unit)
+	end
+
+	if alive(self._obj_fire) and self._muzzletrail_effect then
+		for _, ray in ipairs(ray_res.rays) do
+			local trail_direction = Vector3.normalized(ray.position - from_pos)
+
+			self:_spawn_muzzletrail_effect(from_pos, trail_direction)
+		end
 	end
 
 	if ray_res.enemies_in_cone then
@@ -452,8 +482,12 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 	return ray_res
 end
 
-function RaycastWeaponBase:_spawn_muzzle_effect()
+function RaycastWeaponBase:_spawn_muzzle_effect(from_pos, dir)
 	World:effect_manager():spawn(self._muzzle_effect_table)
+end
+
+function RaycastWeaponBase:_spawn_muzzletrail_effect(from_pos, dir)
+	World:effect_manager():spawn(self._muzzletrail_effect_table)
 end
 
 function RaycastWeaponBase:_check_ammo_total(unit)
@@ -612,17 +646,17 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 	end
 
 	if col_ray and col_ray.unit then
-		local warcry_shoot_through_enemies = tweak_data.weapon[self._name_id].category == WeaponTweakData.WEAPON_CATEGORY_SNP and managers.player:upgrade_value("player", "warcry_sniper_shoot_through_enemies", false) == true
+		local warcry_sniper_ricochet = tweak_data.weapon[self._name_id].category == WeaponTweakData.WEAPON_CATEGORY_SNP and managers.player:upgrade_value("player", "warcry_sniper_ricochet", false) == true
 
 		repeat
-			local kills = nil
+			local kills, killed = nil
 
 			if hit_unit then
-				if not self._can_shoot_through_enemy and not warcry_shoot_through_enemies then
+				if not self._can_shoot_through_enemy and not warcry_sniper_ricochet then
 					break
 				end
 
-				local killed = hit_unit.type == "death"
+				killed = hit_unit.type == "death"
 				local unit_type = col_ray.unit:base() and col_ray.unit:base()._tweak_table
 				local is_enemy = not CopDamage.is_civilian(unit_type)
 				kills = (shoot_through_data and shoot_through_data.kills or 0) + (killed and is_enemy and 1 or 0)
@@ -676,15 +710,65 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 			self._shoot_through_data.has_passed_shield = has_passed_shield or is_shield
 			self._shoot_through_data.ray_from_unit = ray_from_unit
 			self._shoot_through_data.ray_distance = ray_distance - col_ray.distance
+			local is_ricocheting = killed and warcry_sniper_ricochet
+			local closest_unit = is_ricocheting and self:_get_closest_target(col_ray.position, RaycastWeaponBase.RICOCHET_DISTANCE) or nil
 
-			mvector3.set(self._shoot_through_data.from, mvec_spread_direction)
-			mvector3.multiply(self._shoot_through_data.from, is_shield and 5 or 40)
-			mvector3.add(self._shoot_through_data.from, col_ray.position)
-			managers.game_play_central:queue_fire_raycast(Application:time() + 0.0125, self._unit, user_unit, self._shoot_through_data.from, mvec_spread_direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, self._shoot_through_data)
+			if is_ricocheting and closest_unit then
+				self._shoot_through_data.ray_distance = math.min(RaycastWeaponBase.RICOCHET_DISTANCE, self._shoot_through_data.ray_distance * RaycastWeaponBase.RICOCHET_FALLOFF)
+				local dir_to = closest_unit:movement():m_head_pos()
+
+				mvector3.set(self._shoot_through_data.from, col_ray.position)
+				mvector3.subtract(dir_to, self._shoot_through_data.from)
+				mvector3.normalize(dir_to)
+				managers.game_play_central:queue_fire_raycast(Application:time() + 0.0125, self._unit, user_unit, self._shoot_through_data.from, dir_to, dmg_mul, shoot_player, 0, autohit_mul, suppr_mul, self._shoot_through_data)
+			else
+				print("Shoot Through : Normal")
+				mvector3.set(self._shoot_through_data.from, mvec_spread_direction)
+				mvector3.multiply(self._shoot_through_data.from, is_shield and 5 or 40)
+				mvector3.add(self._shoot_through_data.from, col_ray.position)
+				managers.game_play_central:queue_fire_raycast(Application:time() + 0.0125, self._unit, user_unit, self._shoot_through_data.from, mvec_spread_direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, self._shoot_through_data)
+			end
 		until true
 	end
 
 	return result
+end
+
+function RaycastWeaponBase:_get_closest_target(position, radius)
+	if not position or not radius then
+		return nil
+	end
+
+	local units = World:find_units_quick("sphere", position, radius or 100, managers.slot:get_mask("trip_mine_targets"))
+
+	if not units then
+		return nil
+	end
+
+	local closest_target = nil
+	local closest_target_distance = math.huge
+	local team_id_player = tweak_data.levels:get_default_team_ID("player")
+
+	for _, unit in ipairs(units) do
+		if unit:movement() and unit:movement():team() then
+			local team_id_ray = unit:movement():team().id
+
+			if managers.groupai:state():team_data(team_id_player).foes[team_id_ray] then
+				if not closest_target then
+					closest_target = unit
+				else
+					local dis = mvector3.distance(closest_target:position(), unit:movement():m_head_pos())
+
+					if closest_target_distance < dis then
+						closest_target = unit
+						closest_target_distance = dis
+					end
+				end
+			end
+		end
+	end
+
+	return closest_target
 end
 
 function RaycastWeaponBase:get_aim_assist(from_pos, direction, max_dist, use_aim_assist)
@@ -771,8 +855,9 @@ function RaycastWeaponBase:check_autoaim(from_pos, direction, max_dist, use_aim_
 
 		if enemy:base():lod_stage() == 1 and not enemy:in_slot(16) then
 			local com = nil
+			local wc_aim_head = managers.player:upgrade_value("player", "warcry_aim_assist_aim_at_head", false)
 
-			if managers.player:upgrade_value("player", "warcry_aim_assist_aim_at_head", false) == true and managers.player:get_current_state():in_steelsight() then
+			if wc_aim_head == true and managers.player:get_current_state():in_steelsight() then
 				com = enemy:movement():m_head_pos()
 			else
 				com = enemy:movement():m_com()

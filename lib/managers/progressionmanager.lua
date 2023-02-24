@@ -105,7 +105,7 @@ end
 function ProgressionManager:have_pending_missions_to_unlock()
 	for mission_type, mission_group in pairs(self._mission_progression) do
 		for mission_id, mission_data in pairs(mission_group) do
-			if mission_data.state == ProgressionManager.MISSION_STATE_OFFERED then
+			if tweak_data.operations.missions[mission_id] and mission_data.state == ProgressionManager.MISSION_STATE_OFFERED then
 				return true
 			end
 		end
@@ -372,11 +372,12 @@ end
 
 function ProgressionManager:update(t, dt)
 	local is_in_mission = BaseNetworkHandler._gamestate_filter.any_ingame_mission[game_state_machine:current_state_name()] and not managers.raid_job:is_camp_loaded()
+	local doneso = is_in_mission and managers.raid_job:played_tutorial() and not self._mission_progression_completed and not self._mission_progression_completion_pending and self._mission_unlock_timer > 0
 
-	if is_in_mission and managers.raid_job:played_tutorial() and not self._mission_progression_completed and not self._mission_progression_completion_pending and self._mission_unlock_timer > 0 then
-		self._mission_unlock_timer = self._mission_unlock_timer - dt
+	if doneso then
+		self._mission_unlock_timer = math.max(0, self._mission_unlock_timer - dt)
 
-		if self._mission_unlock_timer <= 0 then
+		if self._mission_unlock_timer == 0 then
 			self:_on_cycle_completed()
 		end
 	end
@@ -393,7 +394,10 @@ function ProgressionManager:_on_cycle_completed()
 		self:_offer_new_missions()
 	end
 
-	managers.hud:on_progression_cycle_completed()
+	if managers.hud then
+		managers.hud:on_progression_cycle_completed()
+	end
+
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
@@ -409,7 +413,7 @@ function ProgressionManager:layout_camp()
 	for mission_type, missions_of_type in pairs(self._mission_progression) do
 		for mission_id, mission_data in pairs(missions_of_type) do
 			if mission_data.state == ProgressionManager.MISSION_STATE_UNLOCKED and mission_data.difficulty_completed > 0 then
-				local mission_trophy = tweak_data.operations.missions[mission_id].trophy
+				local mission_trophy = tweak_data.operations.missions[mission_id] and tweak_data.operations.missions[mission_id].trophy
 
 				if mission_trophy then
 					local trophy_locator = trophy_case_unit:get_object(Idstring(mission_trophy.position))
@@ -452,8 +456,6 @@ function ProgressionManager:_get_trophy_case_unit()
 			end
 		end
 	end
-
-	Application:error("[ProgressionManager][_get_trophy_case_unit] Did not find the trophy case!")
 end
 
 function ProgressionManager:save_profile_slot(data)
@@ -489,7 +491,7 @@ function ProgressionManager:load_profile_slot(data, version)
 		self._unlock_cycles_completed = state.unlock_cycles_completed
 		self._first_time_missions_unlocked = state.first_time_missions_unlocked
 		self._operations_state = state.operations_state
-		self._mission_unlock_timer = state.mission_unlock_timer
+		self._mission_unlock_timer = math.max(30, state.mission_unlock_timer)
 		self._mission_progression = state.mission_progression or {}
 	end
 

@@ -102,7 +102,11 @@ function SubtitleManager:is_showing_subtitles()
 end
 
 function SubtitleManager:show_subtitle(string_id, duration, macros, color, nationality_icon)
-	self:show_subtitle_localized(managers.localization:text(string_id, macros), duration, color, nationality_icon)
+	local loc_str = managers.localization:text(string_id, macros)
+
+	if string.len(loc_str) > 0 then
+		self:show_subtitle_localized(loc_str, duration, color, nationality_icon)
+	end
 end
 
 function SubtitleManager:show_subtitle_localized(localized_string, duration, color, nationality_icon)

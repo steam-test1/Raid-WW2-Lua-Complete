@@ -39,6 +39,7 @@ require("lib/tweak_data/WeaponInventoryTweakData")
 require("lib/tweak_data/SubtitlesTweakData")
 require("lib/tweak_data/InputTweakData")
 require("lib/tweak_data/IntelTweakData")
+require("lib/tweak_data/NetworkTweakData")
 
 TweakData = TweakData or class()
 TweakData.RELOAD = true
@@ -333,6 +334,7 @@ function TweakData:init()
 	self.input = InputTweakData:new(self)
 	self.intel = IntelTweakData:new(self)
 	self.greed = GreedTweakData:new()
+	self.network = NetworkTweakData:new(self)
 	self.criminals = {
 		character_names = {
 			"russian",
@@ -554,6 +556,19 @@ function TweakData:init()
 		DEFAULT_PRIORITY = 1,
 		MINIMUM_DURATION = 2,
 		DURATION_PER_CHAR = 0.07
+	}
+	self.motion_dot_modes = {
+		"off",
+		"single",
+		"double_hor",
+		"double_ver",
+		"quad_diag",
+		"quad_plus"
+	}
+	self.hit_indicator_modes = {
+		"off",
+		"on",
+		"track"
 	}
 	self.hud = {}
 
@@ -809,21 +824,24 @@ You've reached the end of our PAX EAST demo.
 		fadein_delay = 1
 	}
 	self.experience_manager = {
-		level_failed_multiplier = 0.1,
+		level_failed_multiplier = 0.075,
 		human_player_multiplier = {
 			1,
-			1.2,
-			1.3,
-			1.4
+			1.25,
+			1.35,
+			1.5
 		},
 		level_diff_max_multiplier = 2,
 		difficulty_multiplier = {}
 	}
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 2
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 4
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 8
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 15
-	local multiplier = 1
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 1
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 1.5
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 3
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 4.5
+	self.experience_manager.escort_survived_bonus = 1.25
+	self.experience_manager.side_quest_bonus = 1.5
+	self.experience_manager.extra_objectives_bonus = 1.2
+	self.experience_manager.tiny_objectives_bonus = 1.01
 	local level_xp_requirements = {
 		0,
 		1200,
@@ -866,6 +884,7 @@ You've reached the end of our PAX EAST demo.
 		140006,
 		161007
 	}
+	local multiplier = 1
 	self.experience_manager.levels = {}
 
 	for i = 1, #level_xp_requirements do
@@ -924,15 +943,6 @@ You've reached the end of our PAX EAST demo.
 		ammo_small_beam = {
 			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small_beam")
 		},
-		grenade_big_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_big_beam")
-		},
-		grenade_medium_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_medium_beam")
-		},
-		grenade_small_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_small_beam")
-		},
 		health_big = {
 			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big")
 		},
@@ -952,68 +962,71 @@ You've reached the end of our PAX EAST demo.
 			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small")
 		},
 		grenade_big = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_big")
-		},
-		grenade_medium = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_medium")
-		},
-		grenade_small = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_small")
-		},
-		gold_bar_small = {
-			unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bar")
-		},
-		gold_bar_medium = {
-			unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bars")
-		},
-		scrap = {
-			unit = Idstring("units/vanilla/props/props_wooden_crate_01/props_wooden_crate_scrap_parts")
-		},
-		enigma_part_01 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_01")
-		},
-		enigma_part_02 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_02")
-		},
-		enigma_part_03 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_03")
-		},
-		enigma_part_04 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_04")
-		},
-		enigma_part_05 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_05")
-		},
-		officer_documents_01 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_01")
-		},
-		officer_documents_02 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_02")
-		},
-		officer_documents_03 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_03")
-		},
-		officer_documents_04 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_04")
-		},
-		officer_documents_05 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_05")
-		},
-		car_key_01 = {
-			unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_01")
-		},
-		car_key_02 = {
-			unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_02")
-		},
-		car_key_03 = {
-			unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_03")
-		},
-		bank_door_key = {
-			unit = Idstring("units/vanilla/props/props_bank_door_keys_01/props_bank_door_keys_01")
-		},
-		code_book = {
-			unit = Idstring("units/vanilla/equipment/equip_code_book/equip_code_book_active")
+			unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max5")
 		}
+	}
+	self.pickups.grenade_big_beam = deep_clone(self.pickups.grenade_big)
+	self.pickups.grenade_medium = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max3")
+	}
+	self.pickups.grenade_medium_beam = deep_clone(self.pickups.grenade_medium)
+	self.pickups.grenade_small = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max3")
+	}
+	self.pickups.grenade_small_beam = deep_clone(self.pickups.grenade_small)
+	self.pickups.gold_bar_small = {
+		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bar")
+	}
+	self.pickups.gold_bar_medium = {
+		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bars")
+	}
+	self.pickups.scrap = {
+		unit = Idstring("units/vanilla/props/props_wooden_crate_01/props_wooden_crate_scrap_parts")
+	}
+	self.pickups.enigma_part_01 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_01")
+	}
+	self.pickups.enigma_part_02 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_02")
+	}
+	self.pickups.enigma_part_03 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_03")
+	}
+	self.pickups.enigma_part_04 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_04")
+	}
+	self.pickups.enigma_part_05 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_05")
+	}
+	self.pickups.officer_documents_01 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_01")
+	}
+	self.pickups.officer_documents_02 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_02")
+	}
+	self.pickups.officer_documents_03 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_03")
+	}
+	self.pickups.officer_documents_04 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_04")
+	}
+	self.pickups.officer_documents_05 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_05")
+	}
+	self.pickups.car_key_01 = {
+		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_01")
+	}
+	self.pickups.car_key_02 = {
+		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_02")
+	}
+	self.pickups.car_key_03 = {
+		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_03")
+	}
+	self.pickups.bank_door_key = {
+		unit = Idstring("units/vanilla/props/props_bank_door_keys_01/props_bank_door_keys_01")
+	}
+	self.pickups.code_book = {
+		unit = Idstring("units/vanilla/equipment/equip_code_book/equip_code_book_active")
 	}
 	self.danger_zones = {
 		0.6,
@@ -1106,14 +1119,14 @@ You've reached the end of our PAX EAST demo.
 	self.music.default = deep_clone(self.music.flakturm)
 	self.music.soundbank_list = {}
 	self.voiceover = {
-		idle_delay = 5,
-		idle_rnd_delay = 60,
+		idle_delay = 10,
+		idle_rnd_delay = 50,
 		idle_cooldown = 30
 	}
 	self.voting = {
 		timeout = 30,
 		cooldown = 50,
-		restart_delay = 5
+		restart_delay = 3
 	}
 	self.dot_types = {
 		poison = {
@@ -1569,7 +1582,7 @@ function TweakData:get_controller_help_coords()
 		vehicle = {}
 	}
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		coords.normal.left_thumb = {
 			vertical = "top",
 			y = 255,
@@ -1792,7 +1805,7 @@ function TweakData:get_controller_help_coords()
 			align = "right",
 			x = 0
 		}
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		coords.normal.left_thumb = {
 			vertical = "top",
 			y = 255,
@@ -2015,7 +2028,7 @@ function TweakData:get_controller_help_coords()
 			align = "right",
 			x = 0
 		}
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		coords.normal.left_thumb = {
 			vertical = "bottom",
 			y = 78,
@@ -2351,7 +2364,7 @@ function TweakData:get_controller_help_coords()
 			x = 226
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			coords.normal.d_up = {
 				vertical = "center",
 				y = 174,
@@ -2473,7 +2486,7 @@ function TweakData:get_controller_help_coords()
 			x = 226
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			coords.vehicle.d_up = {
 				vertical = "center",
 				y = 174,

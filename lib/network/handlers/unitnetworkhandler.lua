@@ -819,18 +819,22 @@ function UnitNetworkHandler:sync_teammate_complete_progress(sender)
 	managers.hud:teammate_complete_progress(teammate_panel_id, name_label_id)
 end
 
-function UnitNetworkHandler:action_aim_state(cop)
+function UnitNetworkHandler:action_aim_state(cop, state)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(cop) then
 		return
 	end
 
-	local shoot_action = {
-		block_type = "action",
-		body_part = 3,
-		type = "shoot"
-	}
+	if state then
+		local shoot_action = {
+			block_type = "action",
+			body_part = 3,
+			type = "shoot"
+		}
 
-	cop:movement():action_request(shoot_action)
+		cop:movement():action_request(shoot_action)
+	else
+		self:action_aim_end(cop)
+	end
 end
 
 function UnitNetworkHandler:action_aim_end(cop)
@@ -3477,6 +3481,42 @@ function UnitNetworkHandler:register_grenades_pickup(pickup_unit, number_of_gren
 	end
 
 	pickup_unit:pickup():register_grenades(number_of_grenades, peer)
+end
+
+function UnitNetworkHandler:register_munitions_stack_size(stack_unit, stack_size, sender)
+	if not alive(stack_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	local stack_unit_ext = stack_unit:base()
+	stack_unit_ext = stack_unit_ext or stack_unit:pickup()
+
+	if stack_unit_ext and stack_unit_ext.sync_pickup_munitions_size then
+		stack_unit_ext:sync_pickup_munitions_size(stack_size)
+	end
+end
+
+function UnitNetworkHandler:sync_pickup_munitions_stack(stack_unit, stack_consume, sender)
+	if not alive(stack_unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	local stack_unit_ext = stack_unit:base()
+	stack_unit_ext = stack_unit_ext or stack_unit:pickup()
+
+	if stack_unit_ext and stack_unit_ext.sync_pickup_munitions_stack then
+		stack_unit_ext:sync_pickup_munitions_stack(stack_consume)
+	end
+end
+
+function UnitNetworkHandler:sync_grenade_freeze(unit, pos, rot, sender)
+	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	if unit:base() then
+		unit:base():sync_grenade_freeze(pos, rot)
+	end
 end
 
 function UnitNetworkHandler:sync_character_nationality_switch(unit, character_nationality, sender)

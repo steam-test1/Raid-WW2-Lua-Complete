@@ -208,12 +208,7 @@ function LootScreenGui:_layout_loot_breakdown_items()
 		name = "loot_screen_persistent_panel"
 	}
 	self._persistent_panel = self._root_panel:panel(persistent_panel_params)
-	local v = true
-
-	if managers.challenge_cards.forced_loot_card then
-		v = false
-	end
-
+	local v = not managers.challenge_cards.forced_loot_card
 	local loot_data_panel_params = {
 		name = "loot_screen_loot_data_panel",
 		h = 426,
@@ -1216,7 +1211,7 @@ function LootScreenGui:bind_controller_inputs_card_rewards()
 end
 
 function LootScreenGui:_check_gamercard_prompts(bindings, legend)
-	if SystemInfo:platform() == Idstring("XB1") and self.peer_loot_shown then
+	if _G.IS_XB1 and self.peer_loot_shown then
 		local gamercard_prompts_shown = 0
 
 		for i = 1, #self._peer_slots do

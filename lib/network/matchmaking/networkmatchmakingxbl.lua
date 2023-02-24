@@ -1295,7 +1295,7 @@ function NetworkMatchMakingXBL:on_peer_added(peer)
 
 	XboxLive:set_up_p2p_in_session(self._session)
 
-	if SystemInfo:platform() == Idstring("XB1") and not peer:xnaddr() then
+	if _G.IS_XB1 and not peer:xnaddr() then
 		return
 	end
 

@@ -773,7 +773,7 @@ end
 function CoreCutscenePlayer:_create_camera_controller()
 	assert(self._owned_camera_controller == nil)
 
-	self._owned_camera_controller = self._viewport:director():make_camera(self:_camera(), "cutscene_camera")
+	self._owned_camera_controller = self._viewport:director():make_camera(self:_camera(), Idstring("cutscene_camera"))
 
 	self._owned_camera_controller:set_timer(managers.cutscene:timer())
 	self._viewport:director():set_camera(self._owned_camera_controller)

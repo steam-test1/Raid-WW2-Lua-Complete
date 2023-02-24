@@ -8,6 +8,13 @@ core:register_module("lib/managers/DebugManager")
 core:register_module("lib/utils/game_state_machine/GameState")
 core:register_module("lib/utils/dev/FreeFlight")
 
+_G.IS_WIN32 = _G.IS_PC
+_G.IS_XB360 = SystemInfo:platform() == Idstring("X360")
+_G.IS_XB1 = SystemInfo:platform() == Idstring("XB1")
+_G.IS_PS3 = SystemInfo:platform() == Idstring("PS3")
+_G.IS_PS4 = SystemInfo:platform() == Idstring("PS4")
+_G.IS_CONSOLE = _G.IS_XB360 or _G.IS_XB1 or _G.IS_PS3 or _G.IS_PS4
+_G.IS_PC = not _G.IS_CONSOLE
 Global.DEBUG_MENU_ON = Application:debug_enabled()
 Global.DEFAULT_DIFFICULTY = "difficulty_2"
 Global.DEFAULT_PERMISSION = "public"
@@ -336,7 +343,7 @@ function Setup:init_managers(managers)
 		is_playing = false,
 		reputation_permission = 0,
 		selected_team_ai = true,
-		level_id = managers.dlc:is_trial() and "raid_trial" or "streaming_level",
+		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}
 
@@ -523,7 +530,7 @@ function Setup:_start_loading_screen()
 		res = RenderSettings.resolution,
 		layer = tweak_data.gui.LOADING_SCREEN_LAYER,
 		load_level_data = load_level_data,
-		is_win32 = SystemInfo:platform() == Idstring("WIN32")
+		is_win32 = _G.IS_PC
 	}
 	Global.is_loading = true
 end
@@ -575,7 +582,7 @@ function Setup:init_game()
 
 	self._end_frame_clbks = {}
 	local scene_gui = Overlay:gui()
-	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, SystemInfo:platform() == Idstring("WIN32"))
+	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, _G.IS_PC)
 	self._main_thread_loading_screen_gui_visible = true
 
 	return game_state_machine
@@ -595,7 +602,7 @@ function Setup:init_finalize()
 
 	managers.blackmarket:init_finalize()
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		AnimationManager:set_anim_cache_size(10485760, 0)
 	end
 
@@ -740,7 +747,7 @@ end
 
 function Setup:exec(context)
 	if managers.network then
-		if SystemInfo:platform() == Idstring("PS4") then
+		if _G.IS_PS4 then
 			PSN:set_matchmaking_callback("session_destroyed", function ()
 			end)
 		end
@@ -754,7 +761,7 @@ function Setup:exec(context)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self:set_fps_cap(30)
 	end
 

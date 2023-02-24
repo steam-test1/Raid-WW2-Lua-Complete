@@ -1,5 +1,5 @@
 WeaponSkillsManager = WeaponSkillsManager or class()
-WeaponSkillsManager.VERSION = 85
+WeaponSkillsManager.VERSION = 94
 WeaponSkillsManager.SCOPE_WEAPON_PART_TYPE = "scope"
 WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE = "activate"
 WeaponSkillsManager.UPGRADE_ACTION_DEACTIVATE = "deactivate"
@@ -30,26 +30,62 @@ function WeaponSkillsManager:set_character_default_weapon_skills()
 	Global.weapon_skills_manager.weapon_skills_skill_tree = deep_clone(tweak_data.weapon_skills.skill_trees)
 
 	for weapon_name, skill_tree_data in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
-		if skill_tree_data.use_weapon_parts_cosmetics == nil then
-			skill_tree_data.use_weapon_parts_cosmetics = true
-		end
+		skill_tree_data.use_weapon_parts_cosmetics = true
 	end
 
 	self:_initialize_weapon_skill_challenges()
+	self:_goldm1_convert_weapon_skill_challenges()
 end
 
-function WeaponSkillsManager:set_cosmetics_flag_for_weapon_id(weapon_id, use_cosmetics_flag)
-	Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id].use_weapon_parts_cosmetics = use_cosmetics_flag
-end
+function WeaponSkillsManager:set_hide_cosmetic_parts(weapon_id, weapon_parts, invisible)
+	local hidden_parts = nil
+	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
-function WeaponSkillsManager:get_cosmetics_flag_for_weapon_id(weapon_id)
-	local cosmetics_flag = nil
-
-	if Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
-		cosmetics_flag = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id].use_weapon_parts_cosmetics
+	if weapon_skill_tree and weapon_skill_tree.hidden_parts then
+		hidden_parts = weapon_skill_tree.hidden_parts
+	else
+		weapon_skill_tree.hidden_parts = {}
+		hidden_parts = weapon_skill_tree.hidden_parts
 	end
 
-	return cosmetics_flag
+	if not invisible then
+		for _, weapon_part_id in ipairs(weapon_parts) do
+			for i, v in ipairs(deep_clone(hidden_parts)) do
+				if v == weapon_part_id then
+					if hidden_parts then
+						table.remove(hidden_parts, i)
+					else
+						hidden_parts = {
+							i
+						}
+					end
+				end
+			end
+		end
+	else
+		for _, weapon_part_id in ipairs(weapon_parts) do
+			if not self:get_hide_cosmetic_part(weapon_part_id) then
+				table.insert(hidden_parts, weapon_part_id)
+			end
+		end
+	end
+end
+
+function WeaponSkillsManager:get_hide_cosmetic_part(weapon_id, weapon_part_id)
+	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
+	local hidden_parts = nil
+
+	if weapon_skill_tree and weapon_skill_tree.hidden_parts then
+		hidden_parts = weapon_skill_tree.hidden_parts
+
+		for _, v in ipairs(hidden_parts) do
+			if v == weapon_part_id then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
 function WeaponSkillsManager:_initialize_weapon_skill_challenges()
@@ -109,6 +145,33 @@ function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 				end
 			end
 		end
+	end
+end
+
+function WeaponSkillsManager:_goldm1_convert_weapon_skill_challenges()
+	local changed_any_skills = false
+	local skills = Global.weapon_skills_manager.weapon_skills_skill_tree
+	local norm_garand = skills.garand
+	local gold_garand = skills.garand_golden
+
+	if norm_garand and gold_garand then
+		for tier_index = 1, #gold_garand do
+			local gold_tier_skills = gold_garand[tier_index]
+			local norm_tier_skills = norm_garand[tier_index]
+
+			for skill_index, skill in pairs(gold_tier_skills) do
+				if managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill[1].challenge_id):completed() then
+					Application:debug("[WeaponSkillsManager:_goldm1_convert_weapon_skill_challenges()] Unlocking Garand Skill, Tier", tier_index, ": Skill IDX", skill_index, norm_tier_skills[skill_index][1].skill_name)
+					managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, norm_tier_skills[skill_index][1].challenge_id):force_complete()
+
+					changed_any_skills = true
+				end
+			end
+		end
+	end
+
+	if not changed_any_skills then
+		Application:debug("[WeaponSkillsManager:_goldm1_convert_weapon_skill_challenges()] No skills were affected.")
 	end
 end
 
@@ -306,6 +369,12 @@ function WeaponSkillsManager:remind_weapon_challenge(weapon_id, tier_index, skil
 end
 
 function WeaponSkillsManager:on_weapon_challenge_completed(weapon_id, tier_index, skill_index)
+	if not tweak_data.weapon[weapon_id] then
+		Application:error("[WeaponSkillsManager:on_weapon_challenge_completed] weapon_id doesnt exist, ignoring", weapon_id, tier_index, skill_index)
+
+		return
+	end
+
 	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 	local notification_data = {
 		priority = 1,
@@ -501,19 +570,21 @@ function WeaponSkillsManager:update_weapon_skills(weapon_category_id, weapon_id,
 
 	for tier_counter = 1, #weapon_skills do
 		for tier_skill_counter = 1, #weapon_skills[tier_counter] do
-			local skill_data = weapon_skills[tier_counter][tier_skill_counter][1]
+			if weapon_skills[tier_counter] and weapon_skills[tier_counter][tier_skill_counter] then
+				local skill_data = weapon_skills[tier_counter][tier_skill_counter][1]
 
-			if not self._temp_weapon_skills then
-				self._temp_weapon_skills = {}
-			end
+				if not self._temp_weapon_skills then
+					self._temp_weapon_skills = {}
+				end
 
-			if skill_data.active then
-				if not self._temp_weapon_skills[skill_data.skill_name] then
-					self._temp_weapon_skills[skill_data.skill_name] = {
-						value = skill_data.value
-					}
-				else
-					self._temp_weapon_skills[skill_data.skill_name].value = skill_data.value
+				if skill_data.active then
+					if not self._temp_weapon_skills[skill_data.skill_name] then
+						self._temp_weapon_skills[skill_data.skill_name] = {
+							value = skill_data.value
+						}
+					else
+						self._temp_weapon_skills[skill_data.skill_name].value = skill_data.value
+					end
 				end
 			end
 		end
@@ -571,7 +642,7 @@ end
 function WeaponSkillsManager:update_weapon_skill(raid_stat_name, data, weapon_category_id, action)
 	local upgrade_name = self:get_upgrade_name_from_raid_stat_name(raid_stat_name)
 	local weapon_category_string = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and "primary_weapon" or "secondary_weapon"
-	local upgrade_full_name = weapon_category_string .. "_" .. upgrade_name .. "_" .. data.value
+	local upgrade_full_name = weapon_category_string .. "_" .. upgrade_name .. "_" .. (data.value or "")
 
 	if action == WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE then
 		local upgrade_level = self:get_weapon_skills_current_upgrade_level(raid_stat_name, weapon_category_id)
@@ -615,7 +686,11 @@ function WeaponSkillsManager:get_upgrade_name_from_raid_stat_name(raid_stat_name
 		upgrade_name = "reload_speed_multiplier"
 	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_FASTER_ADS then
 		upgrade_name = "enter_steelsight_speed_multiplier"
+	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_FASTER_ROF then
+		upgrade_name = "firerate_multiplier"
 	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD then
+		upgrade_name = "spread_multiplier"
+	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_WIDER_SPREAD then
 		upgrade_name = "spread_multiplier"
 	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE then
 		upgrade_name = "magazine_upgrade"
@@ -729,11 +804,11 @@ function WeaponSkillsManager:deactivate_all_upgrades_for_bm_weapon_category_id(w
 end
 
 function WeaponSkillsManager:get_player_using_scope(weapon_id)
-	return Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] and Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id].use_scope or false
+	return true
 end
 
 function WeaponSkillsManager:set_player_using_scope(weapon_id, flag)
-	Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id].use_scope = flag
+	Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id].use_scope = true
 end
 
 function WeaponSkillsManager:get_scope_weapon_part_name(weapon_id)
@@ -915,8 +990,12 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 
 				if (skill_data.active or temp_skills and temp_skills[skill_data]) and skill_data.weapon_parts then
 					for index, weapon_part_name in ipairs(skill_data.weapon_parts) do
-						local weapon_mod_type = tweak_data.weapon.factory.parts[weapon_part_name].type
-						self._temp_weapon_skills[weapon_mod_type] = weapon_part_name
+						local weapon_mod_hide = managers.weapon_skills:get_hide_cosmetic_part(weapon_id, weapon_part_name)
+
+						if not weapon_mod_hide then
+							local weapon_mod_type = tweak_data.weapon.factory.parts[weapon_part_name].type
+							self._temp_weapon_skills[weapon_mod_type] = weapon_part_name
+						end
 					end
 				end
 			end
@@ -926,16 +1005,12 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 	new_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
 
-	self:update_scope_in_blueprint(weapon_id, weapon_factory_id, new_blueprint)
-
 	if self._temp_weapon_skills then
-		local use_cosmetics_flag = managers.weapon_skills:get_cosmetics_flag_for_weapon_id(weapon_id)
+		for weapon_part_type, weapon_part_name in pairs(self._temp_weapon_skills) do
+			local hide_part = managers.weapon_skills:get_hide_cosmetic_part(weapon_id, weapon_part_name)
 
-		if use_cosmetics_flag then
-			for weapon_part_type, weapon_part_name in pairs(self._temp_weapon_skills) do
-				if weapon_part_type ~= "scope" then
-					managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, weapon_part_name, new_blueprint, false)
-				end
+			if not hide_part then
+				managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, weapon_part_name, new_blueprint, false)
 			end
 		end
 	end
@@ -949,21 +1024,7 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 	return new_blueprint
 end
 
-function WeaponSkillsManager:update_scope_in_blueprint(weapon_id, weapon_category_id, blueprint)
-	local scope_weapon_part_name = self:get_scope_weapon_part_name(weapon_id)
-	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
-
-	if scope_weapon_part_name and self:get_player_using_scope(weapon_id) then
-		managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, scope_weapon_part_name, blueprint, false)
-		self:apply_weapon_blueprint(weapon_id, weapon_category_id, blueprint)
-	end
-
-	return blueprint
-end
-
 function WeaponSkillsManager:apply_weapon_blueprint(weapon_id, weapon_category_id, new_blueprint)
-	Application:trace("[WeaponSkillsManager:apply_weapon_blueprint] weapon_id, weapon_category_id, new_blueprint ", weapon_id, weapon_category_id, inspect(new_blueprint))
-
 	local weapon_category_name = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME or WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME
 
 	if Global.blackmarket_manager.crafted_items and Global.blackmarket_manager.crafted_items[weapon_category_name] then

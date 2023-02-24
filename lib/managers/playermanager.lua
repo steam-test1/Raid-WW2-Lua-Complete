@@ -450,7 +450,7 @@ function PlayerManager:_add_level_equipment(player)
 		return
 	end
 
-	local equipment = tweak_data.levels[id].equipment
+	local equipment = tweak_data.levels[id] and tweak_data.levels[id].equipment
 
 	if not equipment then
 		return
@@ -1466,14 +1466,18 @@ function PlayerManager:health_skill_multiplier()
 	return multiplier
 end
 
-function PlayerManager:health_regen()
-	local health_regen = nil
+function PlayerManager:health_regen(health_ratio)
+	local health_regen = 0
 
 	if self._unit then
 		health_regen = self._unit:character_damage():get_base_health_regen()
 	else
 		local class_tweak_data = tweak_data.player:get_tweak_data_for_class(managers.skilltree:get_character_profile_class() or "recon")
-		health_regen = class_tweak_data.damage.HEALTH_REGEN
+		health_regen = health_regen + class_tweak_data.damage.HEALTH_REGEN
+
+		if health_ratio and health_ratio > 0 and health_ratio < class_tweak_data.damage.LOW_HEALTH_REGEN_LIMIT then
+			health_regen = health_regen + class_tweak_data.damage.LOW_HEALTH_REGEN
+		end
 	end
 
 	health_regen = health_regen + self:team_upgrade_value("player", "warcry_health_regeneration", 0)
@@ -2797,6 +2801,8 @@ function PlayerManager:_equipped_upgrade_value(equipment)
 end
 
 function PlayerManager:has_special_equipment(name)
+	local equipment = tweak_data.equipments.specials[name]
+
 	return self._equipment.specials[name]
 end
 
@@ -2967,6 +2973,13 @@ end
 
 function PlayerManager:get_grenade_amount(peer_id)
 	return Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
+end
+
+function PlayerManager:get_grenade_amount_missing(peer_id)
+	local gren_has = self:get_grenade_amount(peer_id)
+	local gren_max = self:get_max_grenades_by_peer_id(peer_id)
+
+	return gren_max - gren_has
 end
 
 function PlayerManager:get_synced_grenades(peer_id)
@@ -4036,6 +4049,17 @@ function PlayerManager:kill()
 	World:delete_unit(player)
 end
 
+function PlayerManager:get_death_location_rotation()
+	return self._player_death_position, self._player_death_rotation
+end
+
+function PlayerManager:set_death_location_rotation(p, r)
+	Application:debug("[PlayerManager:set_death_location_rotation]", p, r)
+
+	self._player_death_position = p
+	self._player_death_rotation = r
+end
+
 function PlayerManager:destroy()
 	local player = self:player_unit()
 
@@ -4161,7 +4185,17 @@ function PlayerManager:tutorial_clear_all_ammo()
 	end
 
 	player:inventory():set_ammo(0)
-	self:add_grenade_amount(-3)
+
+	local _grenade, amount = managers.blackmarket:equipped_grenade()
+	local peer_id = managers.network:session():local_peer():id()
+
+	if self:has_grenade(peer_id) then
+		amount = self:get_grenade_amount(peer_id) or amount
+	end
+
+	if amount > 0 then
+		self:add_grenade_amount(-amount)
+	end
 end
 
 function PlayerManager:tutorial_replenish_all_ammo()

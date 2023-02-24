@@ -45,7 +45,7 @@ function NetworkAccount:signin_state()
 end
 
 function NetworkAccount:set_lightfx()
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not _G.IS_PC then
 		return
 	end
 

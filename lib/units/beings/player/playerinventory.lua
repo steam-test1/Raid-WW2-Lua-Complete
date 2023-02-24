@@ -688,6 +688,16 @@ function PlayerInventory:need_ammo()
 	return false
 end
 
+function PlayerInventory:weapon_clip_not_empty(slot)
+	local weapon = self._available_selections[slot]
+
+	if weapon and weapon.unit:base():uses_ammo() and not weapon.unit:base():clip_not_empty() then
+		return true
+	end
+
+	return false
+end
+
 function PlayerInventory:all_out_of_ammo()
 	for _, weapon in pairs(self._available_selections) do
 		if weapon.unit:base():uses_ammo() and not weapon.unit:base():out_of_ammo() then

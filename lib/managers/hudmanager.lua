@@ -20,6 +20,7 @@ HUDManager.OVERHEAD_Y_OFFSET = 18
 HUDManager.SUSPICION_INDICATOR_Y_OFFSET = 40
 HUDManager.DEFAULT_ALPHA = 1
 HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES = true
+HUDManager.WAYPOINT_MAX_FADE = 0.5
 HUDManager.NAME_LABEL_HEIGHT_FROM_HEAD = 50
 HUDManager.NAME_LABEL_Y_DIST_COEFF = 4
 HUDManager.NAME_LABEL_DIST_TO_ALPHA_COEFF = 0.004
@@ -931,7 +932,7 @@ function HUDManager:add_waypoint(id, data)
 		id_string = id,
 		init_data = data,
 		state = data.state or "present",
-		present_timer = data.present_timer or 2,
+		present_timer = data.present_timer or 2.5,
 		position = data.position,
 		rotation = data.rotation,
 		unit = data.unit,
@@ -947,7 +948,8 @@ function HUDManager:add_waypoint(id, data)
 		icon = icon,
 		map_icon = data.map_icon,
 		texture_rect = texture_rect,
-		show_on_screen = data.show_on_screen or data.show_on_screen == nil and true
+		show_on_screen = data.show_on_screen or data.show_on_screen == nil and true,
+		lifetime = data.lifetime or false
 	}
 	self._hud.waypoints[id].init_data.position = data.position or data.unit:position()
 
@@ -1357,13 +1359,14 @@ function HUDManager:add_mugshot_by_unit(unit)
 	end
 
 	local character_name = unit:base():nick_name()
-	local name_label_id = managers.hud:_add_name_label({
+	local is_husk_player = unit:base().is_husk_player
+	local name_label_params = {
 		name = character_name,
 		unit = unit,
 		nationality = nationality
-	})
+	}
+	local name_label_id = managers.hud:_add_name_label(name_label_params)
 	unit:unit_data().name_label_id = name_label_id
-	local is_husk_player = unit:base().is_husk_player
 	local character_name_id = managers.criminals:character_name_by_unit(unit)
 
 	for i, data in ipairs(self._hud.mugshots) do
@@ -1622,7 +1625,7 @@ function HUDManager:check_start_anticipation_music(t)
 end
 
 function HUDManager:sync_start_anticipation_music()
-	managers.music:raid_music_state_change("anticipation")
+	managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ANTICIPATION)
 end
 
 function HUDManager:start_assault(data)
@@ -1925,6 +1928,17 @@ function HUDManager:_update_waypoints(t, dt)
 	for id, data in pairs(self._hud.waypoints) do
 		local show_on_screen = data.show_on_screen
 
+		if data.lifetime then
+			if data.lifetime <= 0 then
+				self:remove_waypoint(id)
+				Application:debug("[HUDManager:_update_waypoints] remove_waypoint with 0 lifetime")
+
+				return
+			else
+				data.lifetime = data.lifetime - dt
+			end
+		end
+
 		self:_upd_suspition_waypoint_state(data, show_on_screen)
 
 		if show_on_screen == true then
@@ -2001,7 +2015,7 @@ function HUDManager:_update_waypoints(t, dt)
 					if dot > 0.99 then
 						alpha = math.clamp((1 - dot) / 0.01, 0.4, alpha)
 					elseif dot < 0 then
-						alpha = 0
+						alpha = HUDManager.WAYPOINT_MAX_FADE
 					end
 
 					if data.bitmap:color().alpha ~= alpha then
@@ -2089,14 +2103,14 @@ function HUDManager:_update_waypoints(t, dt)
 						local current_alpha = math.bezier({
 							data.bitmap:alpha(),
 							data.bitmap:alpha(),
-							0,
-							0
+							HUDManager.WAYPOINT_MAX_FADE,
+							HUDManager.WAYPOINT_MAX_FADE
 						}, data.off_timer)
 
 						data.bitmap:set_alpha(current_alpha)
 					else
 						mvector3.set(data.current_position, target_pos)
-						data.bitmap:set_alpha(0)
+						data.bitmap:set_alpha(HUDManager.WAYPOINT_MAX_FADE)
 					end
 
 					data.bitmap:set_center(mvector3.x(data.current_position), mvector3.y(data.current_position))

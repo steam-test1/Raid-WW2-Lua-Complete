@@ -63,6 +63,7 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 	end
 
 	local damage = self:_get_current_damage(dmg_mul)
+	local damage_per_pellet = damage / self._rays
 	local autoaim, dodge_enemies = self:check_autoaim(from_pos, direction, self._range)
 	local weight = 0.1
 	local enemy_died = false
@@ -82,7 +83,7 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 
 				table.insert(hit_objects[col_ray.unit:key()], col_ray)
 			else
-				self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
+				self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage_per_pellet)
 			end
 		end
 	end

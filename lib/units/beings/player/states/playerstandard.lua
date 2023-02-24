@@ -46,6 +46,7 @@ PlayerStandard.IDS_CASH_INSPECT = Idstring("cash_inspect")
 PlayerStandard.IDS_FALLING = Idstring("falling")
 PlayerStandard.ALT_ENTER_FULLSCREEN_SWITCH_COOLDOWN = 2
 PlayerStandard.THROW_GRENADE_COOLDOWN = 1
+PlayerStandard.THROW_GRENADE_COOLDOWN_INSTANT = 0.5
 PlayerStandard.debug_bipod = nil
 
 function PlayerStandard:init(unit)
@@ -82,6 +83,7 @@ function PlayerStandard:init(unit)
 	self._knockdown = managers.player:has_category_upgrade("player", "knockdown")
 	self.RUN_AND_SHOOT = managers.player:has_category_upgrade("player", "run_and_shoot")
 	self.RUN_AND_RELOAD = managers.player:has_category_upgrade("player", "run_and_reload")
+	self._pickup_area = 120
 end
 
 function PlayerStandard:enter(state_data, enter_data)
@@ -268,6 +270,7 @@ function PlayerStandard:update(t, dt)
 	self:_update_ground_ray()
 	self:_update_fwd_ray()
 	self:_update_check_actions(t, dt)
+	self:_find_pickups(t)
 	self:_update_movement(t, dt)
 	self:_update_aim_speed(t, dt)
 
@@ -426,7 +429,7 @@ function PlayerStandard:_update_fwd_ray()
 
 	managers.environment_controller:set_dof_distance(math.max(0, math.min(self._fwd_ray and self._fwd_ray.distance or 4000, 4000) - 200), self._state_data.in_steelsight)
 
-	if self._equipped_unit and self._equipped_unit:base().set_scope_range_distance then
+	if alive(self._equipped_unit) and self._equipped_unit:base().set_scope_range_distance then
 		self._equipped_unit:base():set_scope_range_distance(self._fwd_ray and self._fwd_ray.distance / 100 or false)
 	end
 end
@@ -444,7 +447,7 @@ function PlayerStandard:_create_on_controller_disabled_input()
 	return input
 end
 
-local win32 = SystemInfo:platform() == Idstring("WIN32")
+local win32 = _G.IS_PC
 
 function PlayerStandard:_get_input(t, dt)
 	if self._state_data.controller_enabled ~= self._controller:enabled() then
@@ -630,6 +633,31 @@ function PlayerStandard:update_check_actions_paused(t, dt)
 	self:_update_check_actions(Application:time(), 0.1)
 end
 
+function PlayerStandard:_find_pickups(t)
+	local need_ammo = self._unit:inventory():need_ammo()
+	local need_heal = not self._unit:character_damage():full_health()
+
+	if not need_ammo and not need_heal then
+		return
+	end
+
+	local pickups = World:find_units_quick("sphere", self._unit:movement():m_pos(), self._pickup_area, self._slotmask_pickups)
+
+	for _, pickup in ipairs(pickups) do
+		if pickup:pickup():get_automatic_pickup() then
+			local pickup_type = pickup:pickup():get_pickup_type()
+
+			if pickup_type then
+				if need_ammo and pickup_type == "ammo" then
+					pickup:pickup():pickup(self._unit)
+				elseif need_heal and pickup_type == "health" then
+					pickup:pickup():pickup(self._unit)
+				end
+			end
+		end
+	end
+end
+
 function PlayerStandard:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -672,6 +700,7 @@ function PlayerStandard:_update_check_actions(t, dt)
 	new_action = new_action or self:_check_change_weapon(t, input)
 	new_action = new_action or self:_check_action_next_weapon(t, input)
 	new_action = new_action or self:_check_action_previous_weapon(t, input)
+	new_action = new_action or self:_check_action_primary_attack(t, input)
 	new_action = new_action or self:_check_action_primary_attack(t, input)
 	new_action = new_action or self:_check_action_equip(t, input)
 	new_action = new_action or self:_check_use_item(t, input)
@@ -787,7 +816,7 @@ function PlayerStandard:_update_movement(t, dt)
 		mvector3.add(pos_new, self._pos)
 
 		self._target_headbob = self:_get_walk_headbob()
-		self._target_headbob = self._target_headbob * self._move_dir:length()
+		self._target_headbob = self._target_headbob * self._move_dir:normalized():length()
 	elseif not mvector3.is_zero(self._last_velocity_xy) then
 		local decceleration = self._state_data.in_air and 250 or math.lerp(2000, 1500, math.min(self._last_velocity_xy:length() / self._tweak_data.movement.speed.RUNNING_SPEED, 1))
 		local achieved_walk_vel = math.step(self._last_velocity_xy, Vector3(), decceleration * dt)
@@ -1035,7 +1064,7 @@ function PlayerStandard:_stance_entered(unequipped)
 	end
 
 	local stances = nil
-	stances = (self:_is_meleeing() or self:_is_throwing_projectile()) and tweak_data.player.stances.default or tweak_data.player.stances[stance_id] or tweak_data.player.stances.default
+	stances = (not self:_is_meleeing() and not self:_is_throwing_projectile() or tweak_data.player.stances.default) and (not self:_is_carrying_corpse() or tweak_data.player.stances.carrying) and (tweak_data.player.stances[stance_id] or tweak_data.player.stances.default)
 	local misc_attribs = stances.standard
 
 	if self:_is_using_bipod() and not self:_is_throwing_projectile() then
@@ -1278,6 +1307,8 @@ function PlayerStandard:_start_action_running(t)
 	self._start_running_t = t
 
 	if not self:_is_reloading() or not self.RUN_AND_RELOAD then
+		self._equipped_unit:base():tweak_data_anim_stop("fire")
+
 		if not self.RUN_AND_SHOOT then
 			self._ext_camera:play_redirect(self.IDS_START_RUNNING)
 		else
@@ -1559,6 +1590,10 @@ function PlayerStandard:_is_throwing_projectile()
 	return self._state_data.throwing_projectile or self._state_data.projectile_expire_t and true
 end
 
+function PlayerStandard:_is_carrying_corpse()
+	return self._carrying_corpse
+end
+
 function PlayerStandard:in_throw_projectile()
 	return self._state_data.throwing_projectile and true
 end
@@ -1686,11 +1721,14 @@ function PlayerStandard:_start_action_throw_grenade(t, input, primary)
 	end
 
 	local equipped_grenade = managers.blackmarket:equipped_grenade()
+	local grenade_insta_throw = tweak_data.projectiles[equipped_grenade].instant_throw
 
-	if press and not self:_is_throwing_grenade() and managers.player:can_throw_grenade() and equipped_grenade == "decoy_coin" then
+	if press and not self:_is_throwing_grenade() and managers.player:can_throw_grenade() then
 		if self._state_data.throw_grenade_cooldown and t < self._state_data.throw_grenade_cooldown then
 			return
 		end
+
+		local throw_high = input.btn_primary_attack_press and 1 or 0
 
 		self:_interupt_action_reload(t)
 		self:_interupt_action_steelsight(t)
@@ -1698,50 +1736,34 @@ function PlayerStandard:_start_action_throw_grenade(t, input, primary)
 		self:_interupt_action_charging_weapon(t)
 		managers.network:session():send_to_peers_synched("play_distance_interact_redirect", self._unit, "throw_grenade_charge")
 
-		local throw_high = input.btn_primary_attack_press and 1 or 0
+		if grenade_insta_throw then
+			self._camera_unit:anim_state_machine():set_global("throw_high", throw_high)
+			self._camera_unit:anim_state_machine():set_global("throw_low", 1 - throw_high)
 
-		self._camera_unit:anim_state_machine():set_global("throw_high", throw_high)
-		self._camera_unit:anim_state_machine():set_global("throw_low", 1 - throw_high)
+			self._state_data.throw_grenade_expire_t = t
+			self._state_data.throw_high = input.btn_primary_attack_press
+			self._state_data.throw_grenade_cooldown = t + PlayerStandard.THROW_GRENADE_COOLDOWN_INSTANT
 
-		self._state_data.throw_grenade_expire_t = t
-		self._state_data.throw_high = input.btn_primary_attack_press
-		self._state_data.throw_grenade_cooldown = t + PlayerStandard.THROW_GRENADE_COOLDOWN
-
-		managers.network:session():send_to_peers_synched("play_distance_interact_redirect", self._unit, "throw_grenade")
-		self._ext_camera:play_redirect(Idstring("throw_grenade_now"))
-	elseif press and not self:_is_throwing_grenade() and managers.player:can_throw_grenade() and equipped_grenade ~= "decoy_coin" then
-		if self._state_data.throw_grenade_cooldown and t < self._state_data.throw_grenade_cooldown then
-			return
-		end
-
-		self:_interupt_action_reload(t)
-		self:_interupt_action_steelsight(t)
-		self:_interupt_action_running(t)
-		self:_interupt_action_charging_weapon(t)
-		managers.network:session():send_to_peers_synched("play_distance_interact_redirect", self._unit, "throw_grenade_charge")
-
-		local throw_high = input.btn_primary_attack_press and 1 or 0
-
-		self._camera_unit:anim_state_machine():set_global("throw_high", throw_high)
-		self._camera_unit:anim_state_machine():set_global("throw_low", 1 - throw_high)
-
-		self._state_data.throw_grenade_expire_t = t
-		self._state_data.throw_high = input.btn_primary_attack_press
-		local equipped_grenade = managers.blackmarket:equipped_grenade()
-		local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
-		local projectile_data = tweak_data.projectiles[equipped_grenade]
-		projectile_data._rot_dir = input.btn_primary_attack_press and math.UP or math.X
-		projectile_data._adjust_z = input.btn_primary_attack_press and 0 or -40
-
-		if grenade_index == 4 or equipped_grenade == "dynamite" then
-			self._ext_camera:play_redirect(Idstring("throw_molotov"))
+			managers.network:session():send_to_peers_synched("play_distance_interact_redirect", self._unit, "throw_grenade")
+			self._ext_camera:play_redirect(Idstring("throw_grenade_now"))
 		else
+			self._camera_unit:anim_state_machine():set_global("throw_high", throw_high)
+			self._camera_unit:anim_state_machine():set_global("throw_low", 1 - throw_high)
+
+			self._state_data.throw_grenade_expire_t = t
+			self._state_data.throw_high = input.btn_primary_attack_press
+			local equipped_grenade = managers.blackmarket:equipped_grenade()
+			local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
+			local projectile_data = tweak_data.projectiles[equipped_grenade]
+			projectile_data._rot_dir = input.btn_primary_attack_press and math.UP or math.X
+			projectile_data._adjust_z = input.btn_primary_attack_press and 0 or -45
+
 			self._ext_camera:play_redirect(Idstring("throw_grenade"))
 
 			self._unit:equipment()._cooking_start = t
-		end
 
-		self:_stance_entered()
+			self:_stance_entered()
+		end
 	elseif release and self._ext_camera:anim_data().throwing then
 		self._state_data.throw_grenade_cooldown = t + PlayerStandard.THROW_GRENADE_COOLDOWN
 
@@ -1754,9 +1776,20 @@ function PlayerStandard:_update_throw_grenade_timers(t, input)
 	if self._state_data.throw_grenade_expire_t and not self._ext_camera:anim_data().throwing and self._state_data.throw_grenade_expire_t <= t then
 		self._state_data.throw_grenade_expire_t = nil
 		self._state_data.throw_high = nil
+		local player_inv = self._unit:inventory()
 
 		if not managers.player:can_throw_grenade() then
-			self._unit:inventory():equip_selection(PlayerInventory.SLOT_2, true)
+			local slot = PlayerInventory.SLOT_4
+
+			if not player_inv:weapon_clip_not_empty(PlayerInventory.SLOT_1) then
+				slot = PlayerInventory.SLOT_1
+			end
+
+			if not player_inv:weapon_clip_not_empty(PlayerInventory.SLOT_2) then
+				slot = PlayerInventory.SLOT_2
+			end
+
+			player_inv:equip_selection(slot, true)
 		end
 
 		self._ext_camera:play_redirect(self.IDS_EQUIP)
@@ -3365,7 +3398,7 @@ function PlayerStandard:_play_distance_interact_redirect(t, variant)
 		return
 	end
 
-	if self._carrying_corpse then
+	if self:_is_carrying_corpse() then
 		return
 	end
 
@@ -4161,7 +4194,7 @@ function PlayerStandard:get_zoom_fov(stance_data)
 end
 
 function PlayerStandard:_is_throwing_coin(t)
-	if self._state_data.throw_grenade_cooldown then
+	if self._equipped_unit and self._state_data.throw_grenade_cooldown then
 		return t - self._state_data.throw_grenade_cooldown <= self._equipped_unit:base():weapon_tweak_data().timers.equip
 	else
 		return false
@@ -4481,6 +4514,8 @@ function PlayerStandard:_start_action_reload_enter(t)
 			self:_interupt_action_running(t)
 		end
 
+		self._equipped_unit:base():tweak_data_anim_stop("fire")
+
 		if self._equipped_unit:base():use_shotgun_reload() then
 			local speed_multiplier = self._equipped_unit:base():reload_speed_multiplier()
 
@@ -4542,6 +4577,7 @@ function PlayerStandard:_interupt_action_reload(t)
 		self._equipped_unit:base():tweak_data_anim_stop("reload_exit")
 	end
 
+	self._queue_reload_interupt = nil
 	self._state_data.reload_enter_expire_t = nil
 	self._state_data.reload_expire_t = nil
 	self._state_data.reload_exit_expire_t = nil

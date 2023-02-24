@@ -677,14 +677,16 @@ function CoreMissionElement:draw_links_selected(t, dt, selected_unit)
 			b = self._iconcolor_c.b
 		end
 
-		self:_draw_link({
-			thick = true,
-			from_unit = self._unit,
-			to_unit = unit,
-			r = r,
-			g = g,
-			b = b
-		})
+		if unit and self._unit and self:_should_draw_link(unit, self._unit) then
+			self:_draw_link({
+				thick = true,
+				from_unit = self._unit,
+				to_unit = unit,
+				r = r,
+				g = g,
+				b = b
+			})
+		end
 	end
 end
 
@@ -888,7 +890,7 @@ function CoreMissionElement:_draw_elements(t, dt, elements, selected_unit, all_u
 	for _, id in ipairs(elements) do
 		local unit = all_units[id]
 
-		if self:_should_draw_link(selected_unit, unit) then
+		if selected_unit and self._unit and self:_should_draw_link(selected_unit, unit) then
 			local r, g, b = unit:mission_element():get_link_color()
 
 			self:_draw_link({
@@ -1121,17 +1123,23 @@ end
 function CoreMissionElement:on_executed_element_delay()
 	local id = self:combobox_id(self._elements_params.value)
 	local params = self:_get_on_executed(id)
-	params.delay = self._element_delay_params.value
 
-	if self._timeline then
-		self._timeline:delay_updated(params)
+	if params then
+		params.delay = self._element_delay_params.value
+
+		if self._timeline then
+			self._timeline:delay_updated(params)
+		end
 	end
 end
 
 function CoreMissionElement:on_executed_element_delay_rand()
 	local id = self:combobox_id(self._elements_params.value)
 	local params = self:_get_on_executed(id)
-	params.delay_rand = self._element_delay_rand_params.value > 0 and self._element_delay_rand_params.value or nil
+
+	if params then
+		params.delay_rand = self._element_delay_rand_params.value > 0 and self._element_delay_rand_params.value or nil
+	end
 end
 
 function CoreMissionElement:on_executed_alternatives_types()

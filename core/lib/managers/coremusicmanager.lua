@@ -55,7 +55,7 @@ function CoreMusicManager:init()
 end
 
 function CoreMusicManager:init_finalize()
-	if SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB360 then
 		self._has_music_control = XboxLive:app_has_playback_control()
 
 		print("[CoreMusicManager:init_finalize]", self._has_music_control)

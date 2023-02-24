@@ -1,8 +1,8 @@
 CarryTweakData = CarryTweakData or class()
+CarryTweakData.default_throw_power = 600
+CarryTweakData.corpse_throw_power = 350
 
 function CarryTweakData:init(tweak_data)
-	CarryTweakData.default_throw_power = 600
-	CarryTweakData.corpse_throw_power = 350
 	self.default_lootbag = "units/vanilla/dev/dev_lootbag/dev_lootbag"
 	self.default_visual_unit = "units/vanilla/dev/dev_player_loot_bag/dev_player_loot_bag"
 	self.default_visual_unit_joint_array = {
@@ -16,45 +16,52 @@ function CarryTweakData:init(tweak_data)
 	self.types = {
 		being = {}
 	}
-	self.types.being.move_speed_modifier = 0.5
+	self.types.being.move_speed_modifier = 0.65
 	self.types.being.jump_modifier = 0.5
 	self.types.being.can_run = false
-	self.types.being.throw_distance_multiplier = 0.5
+	self.types.being.throw_distance_multiplier = 0.65
+	self.types.being.stamina_consume_multi = 2.5
 	self.types.mega_heavy = {
-		move_speed_modifier = 0.25,
+		move_speed_modifier = 0.2,
 		jump_modifier = 0.25,
 		can_run = false,
+		stamina_consume_multi = 2.3,
 		throw_distance_multiplier = 0.125
 	}
 	self.types.very_heavy = {
 		move_speed_modifier = 0.25,
 		jump_modifier = 0.25,
 		can_run = false,
+		stamina_consume_multi = 2.3,
 		throw_distance_multiplier = 0.3
 	}
 	self.types.slightly_very_heavy = deep_clone(self.types.very_heavy)
-	self.types.slightly_very_heavy.throw_distance_multiplier = 0.65
-	self.types.slightly_very_heavy.move_speed_modifier = 0.5
+	self.types.slightly_very_heavy.throw_distance_multiplier = 0.4
+	self.types.slightly_very_heavy.move_speed_modifier = 0.4
+	self.types.slightly_very_heavy.stamina_consume_multi = 1.9
 	self.types.heavy = {
-		move_speed_modifier = 0.5,
+		move_speed_modifier = 0.4,
 		jump_modifier = 0.5,
-		can_run = false,
-		throw_distance_multiplier = 0.5
+		can_run = true,
+		throw_distance_multiplier = 0.5,
+		stamina_consume_multi = 1.8
 	}
 	self.types.medium = {
-		move_speed_modifier = 0.75,
+		move_speed_modifier = 0.65,
 		jump_modifier = 1,
-		can_run = false,
-		throw_distance_multiplier = 1
+		can_run = true,
+		throw_distance_multiplier = 0.8,
+		stamina_consume_multi = 1.75
 	}
 	self.types.slightly_medium = {
-		move_speed_modifier = 0.85,
+		move_speed_modifier = 0.75,
 		jump_modifier = 1,
-		can_run = false,
-		throw_distance_multiplier = 1
+		can_run = true,
+		throw_distance_multiplier = 0.9,
+		stamina_consume_multi = 1.5
 	}
 	self.types.light = {
-		move_speed_modifier = 1,
+		move_speed_modifier = 0.9,
 		jump_modifier = 1,
 		can_run = true,
 		throw_distance_multiplier = 1
@@ -86,12 +93,14 @@ function CarryTweakData:init(tweak_data)
 		name_id = "hud_carry_contraband_jewelry",
 		skip_exit_secure = true
 	}
+	local unit_painting_bag = "units/vanilla/starbreeze_units/sto_units/pickups/pku_painting_bag/pku_painting_bag"
+	local unit_painting_bag_acc = "units/vanilla/starbreeze_units/sto_units/characters/npc_acc_painting_bag/npc_acc_painting_bag"
 	self.painting_sto = {
 		type = "light",
 		name_id = "hud_carry_painting",
 		value_in_gold = 4,
-		unit = "units/vanilla/starbreeze_units/sto_units/pickups/pku_painting_bag/pku_painting_bag",
-		visual_unit_name = "units/vanilla/starbreeze_units/sto_units/characters/npc_acc_painting_bag/npc_acc_painting_bag",
+		unit = unit_painting_bag,
+		visual_unit_name = unit_painting_bag_acc,
 		visual_unit_root_joint = "body_bag_spawn",
 		AI_carry = {
 			SO_category = "enemies"
@@ -102,8 +111,8 @@ function CarryTweakData:init(tweak_data)
 		type = "light",
 		name_id = "hud_carry_painting",
 		value_in_gold = 1,
-		unit = "units/vanilla/starbreeze_units/sto_units/pickups/pku_painting_bag/pku_painting_bag",
-		visual_unit_name = "units/vanilla/starbreeze_units/sto_units/characters/npc_acc_painting_bag/npc_acc_painting_bag",
+		unit = unit_painting_bag,
+		visual_unit_name = unit_painting_bag_acc,
 		visual_unit_root_joint = "body_bag_spawn",
 		AI_carry = {
 			SO_category = "enemies"
@@ -114,6 +123,7 @@ function CarryTweakData:init(tweak_data)
 		type = "slightly_medium",
 		name_id = "hud_carry_wine_crate",
 		loot_value = 4,
+		value_in_gold = 5,
 		unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_crate_wine_bag/pku_crate_wine_bag",
 		skip_exit_secure = true,
 		AI_carry = {
@@ -124,6 +134,7 @@ function CarryTweakData:init(tweak_data)
 		type = "slightly_medium",
 		name_id = "hud_carry_cigar_crate",
 		loot_value = 3,
+		value_in_gold = 4,
 		unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_crate_cigar_bag/pku_crate_cigar_bag",
 		skip_exit_secure = true,
 		AI_carry = {
@@ -134,6 +145,7 @@ function CarryTweakData:init(tweak_data)
 		type = "slightly_medium",
 		name_id = "hud_carry_chocolate_box",
 		loot_value = 2,
+		value_in_gold = 3,
 		unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_chocolate_box_bag/pku_chocolate_box_bag",
 		skip_exit_secure = true,
 		AI_carry = {
@@ -144,6 +156,7 @@ function CarryTweakData:init(tweak_data)
 		type = "slightly_medium",
 		name_id = "hud_carry_crucifix",
 		loot_value = 2,
+		value_in_gold = 3,
 		unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_crucifix_bag/pku_crucifix_bag",
 		skip_exit_secure = true,
 		AI_carry = {
@@ -154,6 +167,7 @@ function CarryTweakData:init(tweak_data)
 		type = "slightly_medium",
 		name_id = "hud_carry_baptismal_font",
 		loot_value = 4,
+		value_in_gold = 5,
 		unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_baptismal_font_bag/pku_baptismal_font_bag",
 		skip_exit_secure = true,
 		AI_carry = {
@@ -164,6 +178,7 @@ function CarryTweakData:init(tweak_data)
 		type = "slightly_medium",
 		name_id = "hud_carry_religious_figurine",
 		loot_value = 2,
+		value_in_gold = 3,
 		unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_religious_figurine_bag/pku_religious_figurine_bag",
 		skip_exit_secure = true,
 		AI_carry = {
@@ -174,6 +189,7 @@ function CarryTweakData:init(tweak_data)
 		type = "slightly_medium",
 		name_id = "hud_carry_candleabrum",
 		loot_value = 3,
+		value_in_gold = 4,
 		unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_candelabrum_bag/pku_candelabrum_bag",
 		skip_exit_secure = true,
 		AI_carry = {
@@ -315,7 +331,7 @@ function CarryTweakData:init(tweak_data)
 		}
 	}
 	self.german_grunt_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_grunt_heavy/body_bag/german_grunt_heavy_body_bag",
@@ -327,7 +343,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_grunt_light_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_grunt_heavy/body_bag/german_grunt_heavy_body_bag",
@@ -339,7 +355,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_grunt_mid_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_grunt_mid/body_bag/german_grunt_mid_body_bag",
@@ -351,7 +367,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.gebirgsjager_light_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/body_bag/german_gebirgsjager_light_body_bag",
@@ -363,7 +379,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.gebirgsjager_heavy_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/body_bag/german_gebirgsjager_heavy_body_bag",
@@ -375,7 +391,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_fallschirmjager_light_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_fallschirmjager_light/body_bag/german_fallschirmjager_light_body_bag",
@@ -387,7 +403,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_fallschirmjager_heavy_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/body_bag/german_fallschirmjager_heavy_body_bag",
@@ -399,7 +415,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_waffen_ss_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_waffen_ss/body_bag/german_waffen_ss_body_bag",
@@ -411,7 +427,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_commander_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_commander/body_bag/german_commander_body_bag",
@@ -423,7 +439,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_og_commander_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_og_commander/body_bag/german_og_commander_body_bag",
@@ -435,7 +451,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_black_waffen_sentry_light_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/body_bag/german_black_waffen_sentry_light_body_bag",
@@ -449,7 +465,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_black_waffen_sentry_gasmask_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/body_bag/german_black_waffen_sentry_gasmask_body_bag",
@@ -463,7 +479,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_black_waffen_sentry_heavy_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/body_bag/german_black_waffen_sentry_heavy_bag",
@@ -477,7 +493,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_black_waffen_sentry_heavy_commander_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/body_bag/german_black_waffen_sentry_light_body_bag",
@@ -491,7 +507,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_corpse"
 	}
 	self.german_black_waffen_sentry_light_commander_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/body_bag/german_black_waffen_sentry_light_body_bag",
@@ -522,7 +538,7 @@ function CarryTweakData:init(tweak_data)
 		}
 	}
 	self.german_spy = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_spy",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/npc/models/raid_npc_spy/body_bag/raid_npc_spy_body_bag",
@@ -536,7 +552,7 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_alive"
 	}
 	self.soviet_nkvd_int_security_captain_body = {
-		type = "heavy",
+		type = "being",
 		name_id = "hud_carry_body",
 		skip_exit_secure = true,
 		visual_unit_name = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain/body_bag/soviet_nkvd_int_security_captain_body_bag",
@@ -564,5 +580,9 @@ function CarryTweakData:get_carry_ids()
 end
 
 function CarryTweakData:get_zipline_offset(carry_id)
+	if self[carry_id] and not not self[carry_id].zipline_offset then
+		return self[carry_id].zipline_offset
+	end
+
 	return Vector3(15, 0, -8)
 end

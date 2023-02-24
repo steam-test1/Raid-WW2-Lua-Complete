@@ -85,7 +85,10 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 				to_unit = self._unit
 			}
 
-			self:_draw_link(params)
+			if unit and self._unit and self:_should_draw_link(unit, self._unit) then
+				self:_draw_link(params)
+			end
+
 			Application:draw(unit, 0, 0, 0.5)
 		end
 	end
@@ -104,8 +107,10 @@ function VehicleOperatorUnitElement:draw_links_selected(...)
 			to_unit = self._unit
 		}
 
-		self:_draw_link(params)
-		Application:draw(unit, 0.25, 1, 0.25)
+		if unit and self._unit and self:_should_draw_link(unit, self._unit) then
+			self:_draw_link(params)
+			Application:draw(unit, 0.25, 1, 0.25)
+		end
 	end
 end
 

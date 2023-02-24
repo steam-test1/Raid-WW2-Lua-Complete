@@ -2,6 +2,7 @@ GrenadeBase = GrenadeBase or class(ProjectileBase)
 GrenadeBase.EVENT_IDS = {
 	detonate = 1
 }
+GrenadeBase.DETONATE_UP_OFFSET = Vector3(0, 0.1, 0)
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 
@@ -22,6 +23,11 @@ function GrenadeBase:update(unit, t, dt)
 	end
 
 	if self._timer then
+		if not self._airbust_primed and self._airburst_near_enemy and self._airburst_near_enemy > 0 and self:_filtered_check_targets() then
+			self._airbust_primed = true
+			self._timer = math.min(self._timer, self._tweak_data.enemy_proximity_delay or 0.4)
+		end
+
 		self._timer = self._timer - dt
 
 		if self._timer <= 0 then

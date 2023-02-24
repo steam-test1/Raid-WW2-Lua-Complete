@@ -243,21 +243,23 @@ function HUDTabWeaponChallenge:set_challenge(index, animate)
 end
 
 function HUDTabWeaponChallenge:_set_challenge(challenge_index)
-	local challenge, count, target, min_range = nil
+	local challenge, count, target, min_range, briefing_id = nil
 	local challenge_data = self._challenges[challenge_index]
 
 	if challenge_data.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_data.challenge_id)
 		local tasks = challenge:tasks()
+		briefing_id = tasks[1]:briefing_id()
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
 		min_range = math.round(tasks[1]:min_range() / 100)
 	end
 
+	briefing_id = briefing_id or challenge_data.challenge_briefing_id
 	local skill_tweak_data = tweak_data.weapon_skills.skills[challenge_data.skill_name]
 
 	self._title:set_text(utf8.to_upper(managers.localization:text(skill_tweak_data.name_id)))
-	self._description:set_text(managers.localization:text(challenge_data.challenge_briefing_id, {
+	self._description:set_text(managers.localization:text(briefing_id, {
 		AMOUNT = target,
 		RANGE = min_range,
 		WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)

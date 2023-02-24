@@ -1,7 +1,13 @@
 MusicManager = MusicManager or class(CoreMusicManager)
+MusicManager.CAMP_MUSIC = "music_camp"
 MusicManager.MENU_MUSIC = "raid_music_menu_test"
 MusicManager.CREDITS_MUSIC = "music_credits"
 MusicManager.STOP_ALL_MUSIC = "stop_all_music"
+MusicManager.RAID_MUSIC_START = "start"
+MusicManager.RAID_MUSIC_STEALTH = "stealth"
+MusicManager.RAID_MUSIC_ANTICIPATION = "anticipation"
+MusicManager.RAID_MUSIC_CONTROL = "control"
+MusicManager.RAID_MUSIC_ASSAULT = "assault"
 
 function MusicManager:init()
 	MusicManager.super.init(self)
@@ -21,8 +27,8 @@ end
 function MusicManager:convert_music_state(state_flag)
 	local res = state_flag
 
-	if state_flag == "start" then
-		res = "stealth"
+	if state_flag == MusicManager.RAID_MUSIC_START then
+		res = MusicManager.RAID_MUSIC_STEALTH
 	end
 
 	return res

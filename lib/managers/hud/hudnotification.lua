@@ -11,6 +11,7 @@ HUDNotification.DOG_TAG = "dog_tag"
 HUDNotification.WEAPON_CHALLENGE = "weapon_challenge"
 HUDNotification.CONSUMABLE_MISSION_PICKED_UP = "consumable_mission_picked_up"
 HUDNotification.ACTIVE_DUTY_BONUS = "active_duty_bonus"
+HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW = "active_duty_bonus_outlaw"
 HUDNotification.ANIMATION_MOVE_X_DISTANCE = 30
 HUDNotification.DEFAULT_DISTANCE_FROM_BOTTOM = 130
 
@@ -31,7 +32,7 @@ function HUDNotification.create(notification_data)
 		return HUDNotificationWeaponChallenge:new(notification_data)
 	elseif notification_data.notification_type == HUDNotification.CONSUMABLE_MISSION_PICKED_UP then
 		return HUDNotificationConsumablePickup:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.ACTIVE_DUTY_BONUS then
+	elseif notification_data.notification_type == HUDNotification.ACTIVE_DUTY_BONUS or notification_data.notification_type == HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW then
 		return HUDNotificationActiveDuty:new(notification_data)
 	end
 end
@@ -711,7 +712,7 @@ end
 
 function HUDNotificationGreedItem:_animate_progress_change(o)
 	self._animating_progress_change = true
-	local points_per_second = 80
+	local points_per_second = 120
 	local t = 0
 
 	while self._updated_progress - self._current_progress > 0 do
@@ -1109,7 +1110,7 @@ function HUDNotificationWeaponChallenge:_create_description()
 	local description_params = {
 		name = "weapon_challenge_description",
 		wrap = true,
-		text = "Bla bla bla bla",
+		text = "You have see too much.",
 		layer = 3,
 		x = HUDNotificationWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDNotificationWeaponChallenge.DESCRIPTION_Y,
@@ -1188,16 +1189,18 @@ function HUDNotificationWeaponChallenge:_create_progress_bar()
 end
 
 function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
-	local challenge, count, target, min_range = nil
+	local challenge, count, target, min_range, briefing_id = nil
 
 	if challenge_data.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_data.challenge_id)
 		local tasks = challenge:tasks()
+		briefing_id = tasks[1]:briefing_id()
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
 		min_range = math.round(tasks[1]:min_range() / 100)
 	end
 
+	briefing_id = briefing_id or challenge_data.challenge_briefing_id
 	local skill_tweak_data = tweak_data.weapon_skills.skills[challenge_data.skill_name]
 
 	self._title:set_text(utf8.to_upper(managers.localization:text(skill_tweak_data.name_id)))
@@ -1216,26 +1219,21 @@ function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
 	self._icon:set_image(icon.texture, unpack(icon.texture_rect))
 	self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * count / target)
 
-	local progress_text = nil
+	local progress_text, description_text = nil
 
 	if count ~= target then
 		progress_text = tostring(count) .. "/" .. tostring(target)
-
-		self._description:set_text(managers.localization:text(challenge_data.challenge_briefing_id, {
-			AMOUNT = target,
-			RANGE = min_range,
-			WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
-		}))
+		description_text = briefing_id
 	else
 		progress_text = utf8.to_upper(managers.localization:text("menu_weapon_challenge_completed"))
-
-		self._description:set_text(managers.localization:text(challenge_data.challenge_done_text_id, {
-			AMOUNT = target,
-			RANGE = min_range,
-			WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
-		}))
+		description_text = briefing_id
 	end
 
+	self._description:set_text(managers.localization:text(description_text, {
+		AMOUNT = target,
+		RANGE = min_range,
+		WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
+	}))
 	self._progress_text:set_text(progress_text)
 	self:_fit_size()
 end
@@ -1273,8 +1271,8 @@ HUDNotificationActiveDuty.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 
 function HUDNotificationActiveDuty:init(notification_data)
 	self:_create_panel()
-	self:_create_image(notification_data.amount)
-	self:_create_description(notification_data.amount, notification_data.consecutive, notification_data.total)
+	self:_create_image(notification_data.icon)
+	self:_create_description(notification_data)
 
 	self._sound_effect = "daily_login_reward"
 	self._sound_delay = 0.4
@@ -1325,13 +1323,7 @@ function HUDNotificationActiveDuty:_create_panel()
 	self._object:bitmap(background_params)
 end
 
-function HUDNotificationActiveDuty:_create_image(amount)
-	local icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE
-
-	if amount > 1 then
-		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
-	end
-
+function HUDNotificationActiveDuty:_create_image(icon)
 	local image_params = {
 		name = "notification_active_duty_gold_image",
 		layer = 3,
@@ -1350,15 +1342,22 @@ function HUDNotificationActiveDuty:_create_image(amount)
 	self._image:set_right(self._object:w())
 end
 
-function HUDNotificationActiveDuty:_create_description(amount, consecutive, total)
+function HUDNotificationActiveDuty:_create_description(notification_data)
+	local notification_type = notification_data.notification_type
 	local text = ""
 	text = utf8.to_upper(managers.localization:text("hud_active_duty_bonus"))
-	text = text .. " (" .. consecutive .. "/" .. total .. "): "
+	text = text .. " (" .. notification_data.consecutive .. "/" .. notification_data.total .. "): "
 
-	if amount == 1 then
-		text = text .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars_single"))
-	else
-		text = text .. (amount or 0) .. " " .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars"))
+	if notification_type == HUDNotification.ACTIVE_DUTY_BONUS then
+		local amount = notification_data.amount
+
+		if amount == 1 then
+			text = text .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars_single"))
+		else
+			text = text .. (amount or 0) .. " " .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars"))
+		end
+	elseif notification_type == HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW then
+		text = text .. utf8.to_upper(managers.localization:text("menu_mission_selected_mission_type_consumable"))
 	end
 
 	local description_params = {

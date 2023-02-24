@@ -290,7 +290,7 @@ function MissionJoinGui:_layout_server_list_table()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB1 or _G.IS_XB360 then
 		self._params_servers_table.on_menu_move = {
 			right = "player_description_1"
 		}
@@ -379,7 +379,7 @@ function MissionJoinGui:_layout_game_description()
 			y = (counter - 1) * 96
 		}
 
-		if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+		if _G.IS_XB1 or _G.IS_XB360 then
 			player_description_params.on_menu_move = {
 				left = "servers_table",
 				up = "player_description_" .. tostring(counter > 1 and counter - 1 or 3),
@@ -958,7 +958,7 @@ function MissionJoinGui:_set_game_description_data(data)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB1 or _G.IS_XB360 then
 		for i = 1, control_counter do
 			local on_menu_move = {
 				left = "servers_table",
@@ -1056,11 +1056,11 @@ function MissionJoinGui:_set_game_description_data(data)
 	end
 end
 
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
-local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-local is_x360 = SystemInfo:platform() == Idstring("X360")
-local is_xb1 = SystemInfo:platform() == Idstring("XB1")
-local is_ps4 = SystemInfo:platform() == Idstring("PS4")
+local is_win32 = _G.IS_PC
+local is_ps3 = _G.IS_PS3
+local is_x360 = _G.IS_XB360
+local is_xb1 = _G.IS_XB1
+local is_ps4 = _G.IS_PS4
 
 function MissionJoinGui:_find_online_games(friends_only)
 	if is_win32 then

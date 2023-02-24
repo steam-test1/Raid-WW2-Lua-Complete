@@ -3,9 +3,12 @@ require("lib/managers/hud/HUDTeammateBase")
 require("lib/managers/hud/HUDTeammatePlayer")
 require("lib/managers/hud/HUDTeammateAI")
 require("lib/managers/hud/HUDTeammatePeer")
-require("lib/managers/hud/HUDWeaponBase")
-require("lib/managers/hud/HUDWeaponGeneric")
-require("lib/managers/hud/HUDWeaponGrenade")
+require("lib/managers/hud/HUDWeapon/HUDWeaponBase")
+require("lib/managers/hud/HUDWeapon/HUDWeaponGeneric")
+require("lib/managers/hud/HUDWeapon/HUDWeaponGrenade")
+require("lib/managers/hud/HUDWeapon/HUDWeaponClipShots")
+require("lib/managers/hud/HUDWeapon/HUDWeaponDrum")
+require("lib/managers/hud/HUDWeapon/HUDWeaponRevolver")
 require("lib/managers/hud/HUDEquipment")
 require("lib/managers/hud/HUDInteraction")
 require("lib/managers/hud/HUDCardDetails")
@@ -35,11 +38,13 @@ require("lib/managers/hud/HUDSuspicion")
 require("lib/managers/hud/HUDSuspicionIndicator")
 require("lib/managers/hud/HUDSuspicionDirection")
 require("lib/managers/hud/HUDPlayerCustody")
+require("lib/managers/hud/HUDMotionDot")
 require("lib/managers/hud/HUDCenterPrompt")
 require("lib/managers/hud/HUDBigPrompt")
 require("lib/managers/hud/HUDSpecialInteraction")
 require("lib/managers/hud/HUDMultipleChoiceWheel")
 require("lib/managers/hud/HUDTurret")
+require("lib/managers/hud/HUDWatermark/HUDWatermarkBase")
 
 HUDManager.disabled = {
 	[Idstring("guis/player_hud"):key()] = true,
@@ -74,8 +79,29 @@ function HUDManager:add_weapon(data)
 
 		self._weapon_panels[data.inventory_index] = nil
 		local weapons_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:child("weapons_panel")
-		local panel_class = tweak_data.hud and tweak_data.hud.panel_class and self._weapon_panel_classes[tweak_data.hud.panel_class] or HUDWeaponGeneric
-		self._weapon_panels[data.inventory_index] = panel_class:new(data.inventory_index, weapons_panel, tweak_data)
+
+		if data.inventory_index == 1 or data.inventory_index == 2 then
+			local weapon_hud_type = data.unit:base():get_weapon_hud_type()
+
+			if weapon_hud_type then
+				tweak_data = deep_clone(tweak_data)
+
+				for k, v in pairs(weapon_hud_type) do
+					tweak_data.hud[k] = v
+				end
+			end
+		end
+
+		local panel_class_id = tweak_data.hud and tweak_data.hud.panel_class
+
+		if panel_class_id then
+			local is_grenade = panel_class_id and panel_class_id == "grenade"
+			local use_custom_ui = managers.user:get_setting("hud_special_weapon_panels") or is_grenade
+			local panel_class = use_custom_ui and self._weapon_panel_classes[panel_class_id] or HUDWeaponGeneric
+			self._weapon_panels[data.inventory_index] = panel_class:new(data.inventory_index, weapons_panel, tweak_data)
+		else
+			self._weapon_panels[data.inventory_index] = HUDWeaponGeneric:new(data.inventory_index, weapons_panel, tweak_data)
+		end
 
 		self:_layout_weapon_panels()
 	end
@@ -135,11 +161,7 @@ function HUDManager:_set_teammate_weapon_selected(i, id, icon)
 	end
 
 	for j = 1, #self._weapon_panels do
-		if j == id then
-			self._weapon_panels[j]:set_selected(true)
-		else
-			self._weapon_panels[j]:set_selected(false)
-		end
+		self._weapon_panels[j]:set_selected(j == id)
 	end
 end
 
@@ -175,7 +197,6 @@ function HUDManager:set_ammo_amount(selection_index, max_clip, current_clip, cur
 		return
 	end
 
-	managers.player:update_synced_ammo_info_to_peers(selection_index, max_clip, current_clip, current_left, max)
 	self:set_teammate_ammo_amount(HUDManager.PLAYER_PANEL, selection_index, max_clip, current_clip, current_left, max)
 end
 
@@ -192,7 +213,10 @@ function HUDManager:set_teammate_ammo_amount(id, selection_index, max_clip, curr
 		total_ammo_without_current_clip = 0
 	end
 
+	local is_empty = current_clip == 0 and total_ammo_without_current_clip == 0
+
 	self._weapon_panels[selection_index]:set_current_left(total_ammo_without_current_clip)
+	self._weapon_panels[selection_index]:set_no_ammo(is_empty)
 end
 
 function HUDManager:set_weapon_ammo_by_unit(unit)
@@ -412,13 +436,13 @@ end
 
 function HUDManager:set_teammate_grenades(i, data)
 	if i == HUDManager.PLAYER_PANEL then
-		self._weapon_panels[3]:set_amount(data.amount)
+		self._weapon_panels[WeaponInventoryManager.BM_CATEGORY_GRENADES_ID]:set_amount(data.amount)
 	end
 end
 
 function HUDManager:set_teammate_grenades_amount(i, data)
 	if i == HUDManager.PLAYER_PANEL then
-		self._weapon_panels[3]:set_amount(data.amount)
+		self._weapon_panels[WeaponInventoryManager.BM_CATEGORY_GRENADES_ID]:set_amount(data.amount)
 	end
 end
 
@@ -599,9 +623,11 @@ function HUDManager:_setup_ingame_hud_saferect()
 	self:_create_carry(hud)
 	self:_setup_driving_hud()
 	self:_create_custody_hud()
+	self:_create_motiondot_hud()
 	self:_create_hud_chat()
 	self:_setup_tab_screen()
 	self:_get_tab_objectives()
+	self:_create_watermark(hud)
 end
 
 function HUDManager:_create_ammo_test()
@@ -936,7 +962,10 @@ function HUDManager:_create_weapons_panel(hud)
 	weapons_panel:set_bottom(hud.panel:h())
 
 	self._weapon_panel_classes = {
-		grenade = HUDWeaponGrenade
+		grenade = HUDWeaponGrenade,
+		clip_shots = HUDWeaponClipShots,
+		drum_mag = HUDWeaponDrum,
+		revolver = HUDWeaponRevolver
 	}
 	self._weapon_panels = {}
 end
@@ -1190,17 +1219,11 @@ end
 
 function HUDManager:sync_start_assault(data)
 	if not managers.groupai:state():get_hunt_mode() then
-		-- Nothing
+		managers.dialog:queue_dialog("gen_ban_b02c", {})
 	end
 end
 
 function HUDManager:sync_end_assault(result)
-	local result_diag = {
-		"gen_ban_b12",
-		"gen_ban_b11",
-		"gen_ban_b10"
-	}
-
 	if result then
 		-- Nothing
 	end
@@ -1228,7 +1251,7 @@ function HUDManager:on_greed_loot_picked_up(old_progress, new_progress)
 
 	managers.notification:add_notification({
 		id = "greed_item_picked_up",
-		shelf_life = 5,
+		shelf_life = 6,
 		notification_type = HUDNotification.GREED_ITEM,
 		initial_progress = old_progress,
 		new_progress = new_progress
@@ -1259,7 +1282,7 @@ function HUDManager:_setup_tab_screen()
 
 	self._tab_screen:hide()
 
-	if SystemInfo:platform() == Idstring("WIN32") and SystemInfo:distribution() == Idstring("STEAM") then
+	if _G.IS_PC and SystemInfo:distribution() == Idstring("STEAM") then
 		managers.network.account:add_overlay_listener("[HUDManager] hide_tab_screen", {
 			"overlay_open"
 		}, callback(self, self, "hide_stats_screen"))
@@ -1439,6 +1462,11 @@ function HUDManager:feed_session_time(time)
 	self._tab_screen:set_time(time)
 end
 
+function HUDManager:reset_session_time()
+	self._tab_screen:reset_time()
+	managers.game_play_central:start_heist_timer()
+end
+
 function HUDManager:set_stamina_value(value)
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_stamina(value)
 end
@@ -1480,6 +1508,12 @@ end
 
 function HUDManager:player_turret_cooldown()
 	self._turret_hud:cooldown()
+end
+
+function HUDManager:_create_watermark(hud)
+	if not self._watermark_hud then
+		self._watermark_hud = HUDWatermarkBase:new(hud)
+	end
 end
 
 function HUDManager:_create_carry(hud)
@@ -1527,28 +1561,22 @@ function HUDManager:_create_hit_confirm(hud)
 	self._hud_hit_confirm = HUDHitConfirm:new(hud)
 end
 
-function HUDManager:on_hit_confirmed()
-	if not managers.user:get_setting("hit_indicator") then
-		return
+function HUDManager:on_hit_confirmed(world_hit_pos, wep_type_shotgun)
+	if managers.user:get_setting("hit_indicator") > 1 then
+		self._hud_hit_confirm:on_hit_confirmed(world_hit_pos, wep_type_shotgun)
 	end
-
-	self._hud_hit_confirm:on_hit_confirmed()
 end
 
-function HUDManager:on_headshot_confirmed()
-	if not managers.user:get_setting("hit_indicator") then
-		return
+function HUDManager:on_headshot_confirmed(world_hit_pos, wep_type_shotgun)
+	if managers.user:get_setting("hit_indicator") > 1 then
+		self._hud_hit_confirm:on_headshot_confirmed(world_hit_pos, wep_type_shotgun)
 	end
-
-	self._hud_hit_confirm:on_headshot_confirmed()
 end
 
-function HUDManager:on_crit_confirmed()
-	if not managers.user:get_setting("hit_indicator") then
-		return
+function HUDManager:on_crit_confirmed(world_hit_pos, wep_type_shotgun)
+	if managers.user:get_setting("hit_indicator") > 1 then
+		self._hud_hit_confirm:on_crit_confirmed(world_hit_pos, wep_type_shotgun)
 	end
-
-	self._hud_hit_confirm:on_crit_confirmed()
 end
 
 function HUDManager:_create_hit_direction(hud)
@@ -1668,6 +1696,63 @@ end
 
 function HUDManager:set_custody_pumpkin_challenge()
 	self._hud_player_custody:set_pumpkin_challenge()
+end
+
+function HUDManager:_create_motiondot_hud(hud)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	self._hud_motion_dot = HUDMotionDot:new(hud)
+end
+
+function HUDManager:set_motiondot_visibility(visible)
+	self._hud_motion_dot:on_setting_counts(visible)
+end
+
+function HUDManager:set_motiondot_counts(index)
+	self._hud_motion_dot:on_setting_counts(index)
+end
+
+function HUDManager:increment_motiondot_counts()
+	self._hud_motion_dot:on_setting_counts_increment()
+end
+
+function HUDManager:set_motiondot_offsets(index)
+	self._hud_motion_dot:on_setting_offsets(index)
+end
+
+function HUDManager:increment_motiondot_offsets()
+	self._hud_motion_dot:on_setting_offsets_increment()
+end
+
+function HUDManager:set_motiondot_icons(index)
+	self._hud_motion_dot:on_setting_icons(index)
+end
+
+function HUDManager:increment_motiondot_icons()
+	self._hud_motion_dot:on_setting_icons_increment()
+end
+
+function HUDManager:set_motiondot_sizes(index)
+	self._hud_motion_dot:on_setting_sizes(index)
+end
+
+function HUDManager:increment_motiondot_sizes()
+	self._hud_motion_dot:on_setting_sizes_increment()
+end
+
+function HUDManager:set_motiondot_color(color)
+	self._hud_motion_dot:on_setting_color(color)
+end
+
+function HUDManager:set_motiondot_color_silly()
+	self._hud_motion_dot:on_setting_color_silly()
+end
+
+function HUDManager:fade_out_motion_dot()
+	self._hud_motion_dot:set_fade_hide_dots()
+end
+
+function HUDManager:fade_in_motion_dot()
+	self._hud_motion_dot:set_fade_show_dots()
 end
 
 function HUDManager:align_teammate_name_label(panel, interact, double_radius)

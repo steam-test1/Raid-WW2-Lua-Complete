@@ -686,28 +686,32 @@ function StatisticsManager:stop_session(data)
 	local job_id = managers.raid_job:current_job_id()
 
 	if managers.raid_job._current_job and job_id and data then
-		local job_stat = tostring(job_id) .. "_part_" .. tostring(managers.raid_job._current_job.current_event)
+		local job_current_event = managers.raid_job._current_job.current_event
 
-		if data.type == "victory" then
-			self._global.sessions.jobs[job_stat .. "_victory"] = (self._global.sessions.jobs[job_stat .. "_victory"] or 0) + 1
+		if job_current_event then
+			local job_stat = tostring(job_id) .. "_part_" .. tostring(job_current_event)
 
-			if Global.statistics_manager.playing_from_start then
-				self._global.sessions.jobs[job_stat .. "_from_beginning"] = (self._global.sessions.jobs[job_stat .. "_from_beginning"] or 0) + 1
-				completion = "win_begin"
-			else
-				self._global.sessions.jobs[job_stat .. "_drop_in"] = (self._global.sessions.jobs[job_stat .. "_drop_in"] or 0) + 1
-				completion = "win_dropin"
+			if data.type == "victory" then
+				self._global.sessions.jobs[job_stat .. "_victory"] = (self._global.sessions.jobs[job_stat .. "_victory"] or 0) + 1
+
+				if Global.statistics_manager.playing_from_start then
+					self._global.sessions.jobs[job_stat .. "_from_beginning"] = (self._global.sessions.jobs[job_stat .. "_from_beginning"] or 0) + 1
+					completion = "win_begin"
+				else
+					self._global.sessions.jobs[job_stat .. "_drop_in"] = (self._global.sessions.jobs[job_stat .. "_drop_in"] or 0) + 1
+					completion = "win_dropin"
+				end
+			elseif data.type == "gameover" then
+				self._global.sessions.jobs[job_stat .. "_failed"] = (self._global.sessions.jobs[job_stat .. "_failed"] or 0) + 1
+
+				if Global.statistics_manager.playing_from_start then
+					self._global.sessions.jobs[job_stat .. "_from_beginning"] = (self._global.sessions.jobs[job_stat .. "_from_beginning"] or 0) + 1
+				else
+					self._global.sessions.jobs[job_stat .. "_drop_in"] = (self._global.sessions.jobs[job_stat .. "_drop_in"] or 0) + 1
+				end
+
+				completion = "fail"
 			end
-		elseif data.type == "gameover" then
-			self._global.sessions.jobs[job_stat .. "_failed"] = (self._global.sessions.jobs[job_stat .. "_failed"] or 0) + 1
-
-			if Global.statistics_manager.playing_from_start then
-				self._global.sessions.jobs[job_stat .. "_from_beginning"] = (self._global.sessions.jobs[job_stat .. "_from_beginning"] or 0) + 1
-			else
-				self._global.sessions.jobs[job_stat .. "_drop_in"] = (self._global.sessions.jobs[job_stat .. "_drop_in"] or 0) + 1
-			end
-
-			completion = "fail"
 		end
 	end
 
@@ -721,7 +725,7 @@ function StatisticsManager:stop_session(data)
 		Global.statistics_manager.playing_from_start = nil
 	end
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if completion and SystemInfo:distribution() == Idstring("STEAM") then
 		self:publish_to_steam(self._global.session, success, completion)
 	end
 end
@@ -851,7 +855,8 @@ function StatisticsManager:open_loot_crate()
 	self:_increment_misc("open_loot_crate", 1)
 end
 
-function StatisticsManager:leveled_character_to_40()
+function StatisticsManager:leveled_character_to_max()
+	Application:debug("[StatisticsManager:leveled_character_to_max()] Just to let you know, incremented max level counter for stats")
 	self:_increment_misc("character_level_40_count", 1)
 end
 
@@ -926,11 +931,14 @@ function StatisticsManager:write_level_stats(session, stats)
 end
 
 function StatisticsManager:publish_to_steam(session, success, completion)
+	Application:trace("[StatisticsManager:publish_to_steam]")
+	Application:trace("[StatisticsManager:publish_to_steam] session, success, completion ", inspect(session), inspect(success), inspect(completion))
+	Application:trace(debug.traceback())
+
 	if Application:editor() or not managers.criminals:local_character_name() then
 		return
 	end
 
-	local max_ranks = 25
 	local session_time_seconds = self:get_session_time_seconds()
 	local session_time_minutes = session_time_seconds / 60
 	local session_time = session_time_minutes / 60
@@ -1045,7 +1053,11 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	}
 	stats.ach_kill_enemies_with_grenades = {
 		type = "int",
-		value = self:session_killed_by_grenade()
+		value = self:session_killed_by_stat_group("grenade")
+	}
+	stats.ach_kill_enemies_with_mines = {
+		type = "int",
+		value = self:session_killed_by_stat_group("mine")
 	}
 	stats.ach_kill_enemies_with_secondary_weap = {
 		type = "int",
@@ -1279,7 +1291,6 @@ function StatisticsManager:publish_level_to_steam()
 		return
 	end
 
-	local max_ranks = 25
 	local stats = {}
 	local current_level = managers.experience:current_level()
 	stats.player_level = {
@@ -2106,11 +2117,14 @@ function StatisticsManager:session_used_weapons()
 	return weapons_used
 end
 
-function StatisticsManager:session_killed_by_grenade()
+function StatisticsManager:session_killed_by_stat_group(target_stat_group)
 	local count = 0
+	local equipments = managers.blackmarket:get_weapon_names_category("equipments")
 
-	for projectile_id, kills in pairs(self._global.session.killed_by_grenade) do
-		count = count + kills
+	for weapon_id, amount in pairs(self._global.session.killed_by_grenade) do
+		if tweak_data.weapon[weapon_id] and tweak_data.weapon[weapon_id].stat_group and tweak_data.weapon[weapon_id].stat_group == target_stat_group then
+			count = count + amount
+		end
 	end
 
 	return count

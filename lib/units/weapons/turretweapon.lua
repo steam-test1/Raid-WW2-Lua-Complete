@@ -123,7 +123,7 @@ function TurretWeapon:can_auto_reload()
 end
 
 function TurretWeapon:set_laser_enabled()
-	Application:error("[TurretWeapon] TurretWeapon:set_laser_enabled(): Implement me.")
+	Application:error("[TurretWeapon] TurretWeapon:set_laser_enabled(): Implement me or ignore me, we are in WW2 afterall.")
 end
 
 function TurretWeapon:setup(setup_data, damage_multiplier)
@@ -417,7 +417,7 @@ function TurretWeapon:_enable_overheating_smoke(enabled)
 end
 
 function TurretWeapon:_update_heading_rotation(dt, target_heading_rot)
-	local anim_lerp = dt * 4
+	local anim_lerp = dt * 8
 	local smooth_heading_rot = self._joint_heading:rotation():slerp(target_heading_rot, anim_lerp)
 
 	self._joint_heading:set_rotation(smooth_heading_rot)
@@ -1140,7 +1140,6 @@ function TurretWeapon:_create_turret_SO()
 			"security",
 			"security_patrol",
 			"cop",
-			"fbi",
 			"swat",
 			"murky"
 		}),
@@ -1200,9 +1199,14 @@ function TurretWeapon:on_turret_SO_completed(unit)
 
 	self._puppet_unit:movement():enter_turret_animation(enter_turret_anim_name, callback(self, self, "activate_turret"))
 
-	local team = self._puppet_unit:movement():team()
+	local team = self._puppet_unit:movement() and self._puppet_unit:movement():team() or nil
 
-	self._unit:movement():set_team(team)
+	if team and alive(self._unit) then
+		self._unit:movement():set_team(team)
+	else
+		Application:warn("[TurretWeapon:on_turret_SO_completed] Puppet unit cant set the turrets team, unit/team", unit, team)
+	end
+
 	self._unit:interaction():set_active(false, true)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_SO_completed", self._unit, unit)
 end
@@ -1280,6 +1284,12 @@ end
 
 function TurretWeapon:enable_automatic_SO(enabled)
 	if not self._automatic_SO then
+		return
+	end
+
+	if managers.groupai:state():whisper_mode() then
+		Application:debug("[TurretWeapon:enable_automatic_SO] Attempted to enable turret SO in stealth")
+
 		return
 	end
 

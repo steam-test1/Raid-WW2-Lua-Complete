@@ -17,6 +17,7 @@ function GamePlayCentralManager:init()
 	self._footsteps = {}
 	self._queue_fire_raycast = {}
 	self._projectile_trails = {}
+	self._spawned_projectiles = {}
 	self._spawned_pickups = {}
 	self._effect_manager = World:effect_manager()
 	self._slotmask_flesh = managers.slot:get_mask("flesh")
@@ -46,8 +47,8 @@ function GamePlayCentralManager:init()
 		running = false,
 		start_time = 0
 	}
-	local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-	local is_x360 = SystemInfo:platform() == Idstring("X360")
+	local is_ps3 = _G.IS_PS3
+	local is_x360 = _G.IS_XB360
 	self._block_bullet_decals = is_ps3 or is_x360
 	self._block_blood_decals = is_x360
 end
@@ -334,13 +335,7 @@ end
 function GamePlayCentralManager:material_name(idstring)
 	local material = tweak_data.materials[idstring:key()]
 
-	if not material then
-		Application:error("Sound for material not found: " .. tostring(idstring))
-
-		material = "no_material"
-	end
-
-	return material
+	return material or "no_material"
 end
 
 function GamePlayCentralManager:spawn_pickup(params)
@@ -357,6 +352,16 @@ function GamePlayCentralManager:spawn_pickup(params)
 		managers.worldcollection:register_spawned_unit(unit, params.position)
 	else
 		table.insert(self._spawned_pickups, unit)
+	end
+
+	return unit
+end
+
+function GamePlayCentralManager:add_spawned_projectiles(unit)
+	if not Application:editor() then
+		managers.worldcollection:register_spawned_unit(unit, unit:position())
+	else
+		table.insert(self._spawned_projectiles, unit)
 	end
 
 	return unit
@@ -620,6 +625,14 @@ function GamePlayCentralManager:on_simulation_ended()
 
 		self._spawned_pickups[i] = nil
 	end
+
+	for i = #self._spawned_projectiles, 1, -1 do
+		if alive(self._spawned_projectiles[i]) then
+			self._spawned_projectiles[i]:set_slot(0)
+		end
+
+		self._spawned_projectiles[i] = nil
+	end
 end
 
 function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_player_on)
@@ -804,7 +817,7 @@ function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 			contour_type = "mark_enemy_damage_bonus"
 		end
 
-		time_multiplier = managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1)
+		time_multiplier = time_multiplier + managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1)
 	end
 
 	unit:contour():add(contour_type, true, time_multiplier)
@@ -823,7 +836,7 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 
 	local scale = math.clamp(1 - distance / 500, 0.5, 1)
 	local height = mvector3.distance(hit_pos, unit:position()) - 100
-	local twist_dir = math.random(2) == 1 and 1 or -1
+	local twist_dir = math.rand_bool() and 1 or -1
 	local rot_acc = (dir:cross(math.UP) + math.UP * 0.5 * twist_dir) * -1000 * math.sign(height)
 	local rot_time = 1 + math.rand(2)
 	local nr_u_bodies = unit:num_bodies()

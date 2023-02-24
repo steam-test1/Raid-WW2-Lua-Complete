@@ -44,6 +44,7 @@ function RaidMenuOptionsControls:_layout_controls()
 	self._btn_keybinding = self._root_panel:long_tertiary_button(btn_keybinding_params)
 	local look_sensitivity_horizontal_params = {
 		name = "slider_look_sensitivity_horizontal",
+		value_step = 1,
 		value_format = "%02d%%",
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_look_sensitivity_horizontal")),
 		x = start_x,
@@ -57,6 +58,7 @@ function RaidMenuOptionsControls:_layout_controls()
 	self._progress_bar_menu_camera_sensitivity_horizontal = self._root_panel:slider(look_sensitivity_horizontal_params)
 	local look_sensitivity_vertical_params = {
 		name = "slider_look_sensitivity_vertical",
+		value_step = 1,
 		value_format = "%02d%%",
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_look_sensitivity_vertical")),
 		x = start_x,
@@ -70,6 +72,7 @@ function RaidMenuOptionsControls:_layout_controls()
 	self._progress_bar_menu_camera_sensitivity_vertical = self._root_panel:slider(look_sensitivity_vertical_params)
 	local aiming_sensitivity_horizontal_params = {
 		name = "slider_aiming_sensitivity_horizontal",
+		value_step = 1,
 		value_format = "%02d%%",
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_aiming_sensitivity_horizontal")),
 		x = start_x,
@@ -83,6 +86,7 @@ function RaidMenuOptionsControls:_layout_controls()
 	self._progress_bar_menu_camera_zoom_sensitivity_horizontal = self._root_panel:slider(aiming_sensitivity_horizontal_params)
 	local aiming_sensitivity_vertical_params = {
 		name = "slider_aiming_sensitivity_vertical",
+		value_step = 1,
 		value_format = "%02d%%",
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_aiming_sensitivity_vertical")),
 		x = start_x,

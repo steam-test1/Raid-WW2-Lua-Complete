@@ -292,6 +292,16 @@ function LevelsTweakData:init()
 		cube = "cube_apply_heist_bank",
 		predefined_world = "kelly"
 	}
+	self.fury_railway = {
+		name_id = "fury_railway",
+		briefing_id = "fury_railway_briefing",
+		world_name = "upg_005/fury_railway",
+		cube = "cube_apply_heist_bank",
+		packages = {
+			"packages/zone_germany"
+		},
+		predefined_world = "fury_railway"
+	}
 	self._level_index = {
 		"streaming_level",
 		"germany_zone",
@@ -312,7 +322,8 @@ function LevelsTweakData:init()
 		"spies_test",
 		"sto",
 		"silo",
-		"kelly"
+		"kelly",
+		"fury_railway"
 	}
 	self.escape_levels = {}
 end

@@ -455,8 +455,7 @@ function RaidGUIControlCharacterCustomizationDetails:_on_click_redeem()
 end
 
 function RaidGUIControlCharacterCustomizationDetails:redeem()
-	managers.lootdrop:redeem_dropped_loot_for_xp()
-	game_state_machine:current_state():recalculate_xp()
+	managers.lootdrop:redeem_dropped_loot_for_goldbars()
 end
 
 function RaidGUIControlCharacterCustomizationDetails:set_duplicate()

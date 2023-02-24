@@ -15,8 +15,8 @@ function BootupState:setup()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
 	local gui = Overlay:gui()
-	local is_win32 = SystemInfo:platform() == Idstring("WIN32")
-	local is_x360 = SystemInfo:platform() == Idstring("X360")
+	local is_win32 = _G.IS_PC
+	local is_x360 = _G.IS_XB360
 	local show_esrb = false
 	self._full_workspace = gui:create_screen_workspace()
 	self._workspace = managers.gui_data:create_saferect_workspace()
@@ -149,7 +149,7 @@ function BootupState:update(t, dt)
 		self.next_message_t = now + 1
 	end
 
-	if not SystemInfo:platform() == Idstring("WIN32") and PackageManager:all_packages_loaded() and self._play_index == 2 and self._press_any_key_text:alpha() == 0 then
+	if not _G.IS_PC and PackageManager:all_packages_loaded() and self._play_index == 2 and self._press_any_key_text:alpha() == 0 then
 		self._full_panel:animate(callback(self, self, "_animate_press_any_key"))
 	end
 
@@ -232,7 +232,7 @@ function BootupState:apply_fade()
 end
 
 function BootupState:is_skipped()
-	if not SystemInfo:platform() == Idstring("WIN32") and not PackageManager:all_packages_loaded() and self._play_index > 1 and Application:time() < self._bootup_t + BootupState.MAX_WAIT_TIME then
+	if not _G.IS_PC and not PackageManager:all_packages_loaded() and self._play_index > 1 and Application:time() < self._bootup_t + BootupState.MAX_WAIT_TIME then
 		return false
 	end
 
@@ -376,6 +376,7 @@ function BootupState:play_next(is_skipped)
 end
 
 function BootupState:at_exit()
+	Application:debug("[BootupState] at_exit")
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
 	if alive(self._workspace) then

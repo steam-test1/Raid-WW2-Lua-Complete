@@ -15,14 +15,17 @@ function ProjectilesTweakData:init(tweak_data)
 		expire_t = 1.1,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
+		can_airburst = true,
 		damage = 950,
 		player_damage = 20,
-		range = 500,
-		killzone_range = 0.75,
-		init_timer = 4.5,
-		animations = {}
+		range = 500
 	}
-	self.m24.animations.equip_id = "equip_welrod"
+	self.m24.enemy_proximity_range = self.m24.range * 0.6
+	self.m24.killzone_range = 0.75
+	self.m24.init_timer = 4.5
+	self.m24.animations = {
+		equip_id = "equip_welrod"
+	}
 	self.m24.sound_event = "grenade_explode"
 	self.m24.launch_speed = 350
 	self.m24.gui = {
@@ -48,14 +51,17 @@ function ProjectilesTweakData:init(tweak_data)
 		expire_t = 1.1,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
+		can_airburst = true,
 		damage = 850,
 		player_damage = 24,
-		range = 750,
-		killzone_range = 0.75,
-		init_timer = 4.5,
-		animations = {}
+		range = 750
 	}
-	self.concrete.animations.equip_id = "equip_welrod"
+	self.concrete.enemy_proximity_range = self.concrete.range * 0.6
+	self.concrete.killzone_range = 0.75
+	self.concrete.init_timer = 4.5
+	self.concrete.animations = {
+		equip_id = "equip_welrod"
+	}
 	self.concrete.sound_event = "new_grenade_explode"
 	self.concrete.launch_speed = 275
 	self.concrete.gui = {
@@ -81,14 +87,17 @@ function ProjectilesTweakData:init(tweak_data)
 		expire_t = 1.1,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
+		can_airburst = true,
 		damage = 950,
 		player_damage = 28,
-		range = 500,
-		killzone_range = 0.75,
-		init_timer = 4.5,
-		animations = {}
+		range = 500
 	}
-	self.d343.animations.equip_id = "equip_welrod"
+	self.d343.enemy_proximity_range = self.d343.range * 0.6
+	self.d343.killzone_range = 0.75
+	self.d343.init_timer = 4.5
+	self.d343.animations = {
+		equip_id = "equip_welrod"
+	}
 	self.d343.sound_event = "d43d_grenade_explode"
 	self.d343.launch_speed = 200
 	self.d343.gui = {
@@ -114,14 +123,17 @@ function ProjectilesTweakData:init(tweak_data)
 		expire_t = 1.1,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
+		can_airburst = true,
 		damage = 850,
 		player_damage = 24,
-		range = 1000,
-		killzone_range = 0.75,
-		init_timer = 4.5,
-		animations = {}
+		range = 1000
 	}
-	self.mills.animations.equip_id = "equip_welrod"
+	self.mills.enemy_proximity_range = self.mills.range * 0.6
+	self.mills.killzone_range = 0.75
+	self.mills.init_timer = 4.5
+	self.mills.animations = {
+		equip_id = "equip_welrod"
+	}
 	self.mills.sound_event = "mills_grenade_explode"
 	self.mills.launch_speed = 200
 	self.mills.gui = {
@@ -134,6 +146,43 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mills.gui.initial_rotation.yaw = -90
 	self.mills.gui.initial_rotation.pitch = 60
 	self.mills.gui.initial_rotation.roll = 0
+	self.betty = {
+		name_id = "bm_grenade_betty",
+		unit = "units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty",
+		unit_hand = "units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty_hand",
+		unit_dummy = "units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty_husk",
+		icon = "frag_grenade",
+		throwable = true,
+		instant_throw = true,
+		max_amount = 2,
+		anim_global_param = "projectile_frag",
+		throw_allowed_expire_t = 0.13333333333333333,
+		expire_t = 0.5,
+		repeat_expire_t = 1,
+		is_a_grenade = true,
+		damage = 950,
+		player_damage = 35,
+		range = 500,
+		killzone_range = 0.75,
+		init_timer = 3,
+		animations = {}
+	}
+	self.betty.animations.equip_id = "equip_welrod"
+	self.betty.sound_event = "mills_grenade_explode"
+	self.betty.launch_speed = 150
+	self.betty.enemy_proximity_range = 200
+	self.betty.enemy_proximity_delay = 0.4
+	self.betty.jumpmine_velocity = 540
+	self.betty.gui = {
+		rotation_offset = 0,
+		distance_offset = -120,
+		height_offset = -8,
+		display_offset = 16,
+		initial_rotation = {}
+	}
+	self.betty.gui.initial_rotation.yaw = -90
+	self.betty.gui.initial_rotation.pitch = 60
+	self.betty.gui.initial_rotation.roll = 0
 	self.cluster = {
 		name_id = "bm_grenade_frag",
 		unit = "units/vanilla/dev/dev_shrapnel/dev_shrapnel",
@@ -214,17 +263,20 @@ function ProjectilesTweakData:init(tweak_data)
 		unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk",
 		unit_dummy = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk",
 		icon = "frag_grenade",
-		max_amount = 15,
-		throwable = true,
-		anim_global_param = "projectile_molotov",
-		throw_allowed_expire_t = 0.1,
-		expire_t = 1.1,
-		repeat_expire_t = 1.5,
-		is_a_grenade = true,
-		range = 3000,
-		animations = {}
+		max_amount = 9
 	}
-	self.decoy_coin.animations.equip_id = "equip_welrod"
+	self.decoy_coin.per_pickup = math.ceil(self.decoy_coin.max_amount / 3)
+	self.decoy_coin.throwable = true
+	self.decoy_coin.instant_throw = true
+	self.decoy_coin.anim_global_param = "projectile_molotov"
+	self.decoy_coin.throw_allowed_expire_t = 0.13333333333333333
+	self.decoy_coin.expire_t = 0.5
+	self.decoy_coin.repeat_expire_t = 1
+	self.decoy_coin.is_a_grenade = true
+	self.decoy_coin.range = 3000
+	self.decoy_coin.animations = {
+		equip_id = "equip_welrod"
+	}
 	self.decoy_coin.launch_speed = 200
 	self.decoy_coin.gui = {
 		rotation_offset = 0,
@@ -247,9 +299,9 @@ function ProjectilesTweakData:init(tweak_data)
 		adjust_z = 0,
 		push_at_body_index = 0,
 		init_timer = 5,
-		damage = 150,
-		player_damage = 10,
-		range = 1000,
+		damage = 80,
+		player_damage = 15,
+		range = 1200,
 		killzone_range = 0,
 		init_timer = 15,
 		effect_name = "effects/vanilla/explosions/exp_artillery_explosion_001",
@@ -271,7 +323,8 @@ function ProjectilesTweakData:init(tweak_data)
 		"concrete",
 		"d343",
 		"mills",
-		"decoy_coin"
+		"decoy_coin",
+		"betty"
 	}
 
 	self:_add_desc_from_name_macro(self)

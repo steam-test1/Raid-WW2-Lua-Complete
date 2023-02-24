@@ -1991,6 +1991,159 @@ function RotateTransformTypeIn:update(t, dt)
 	end
 end
 
+ScaleTransformTypeIn = ScaleTransformTypeIn or class(CoreEditorEwsDialog)
+
+function ScaleTransformTypeIn:init()
+	CoreEditorEwsDialog.init(self, nil, "Scale transform type-in", "", Vector3(761, 67, 0), Vector3(264, 129, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	self:create_panel("HORIZONTAL")
+
+	self._min = -100000000
+	self._max = 100000000
+	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
+	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
+	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
+	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
+
+	self._panel_sizer:add(world_sizer, 1, 0, "EXPAND")
+
+	local offset_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Offset")
+	self._ox = self:_create_ctrl("X:", "x", 0, "offset", offset_sizer)
+	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
+	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
+
+	self._panel_sizer:add(offset_sizer, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel:set_enabled(false)
+end
+
+function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
+	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
+
+	ctrl_sizer:add(EWS:StaticText(self._panel, name, "", "ALIGN_LEFT"), 0, 0, "EXPAND")
+
+	local ctrl = EWS:TextCtrl(self._panel, value, "", "TE_PROCESS_ENTER")
+
+	ctrl:set_tool_tip("Type in " .. type .. " " .. coor .. "-coordinate in meters")
+	ctrl:connect("EVT_CHAR", callback(nil, _G, "verify_number"), ctrl)
+
+	if type == "offset" then
+		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
+			ctrl = ctrl,
+			coor = coor
+		})
+		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
+			ctrl = ctrl,
+			coor = coor
+		})
+	else
+		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
+			ctrl = ctrl,
+			coor = coor
+		})
+		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
+			ctrl = ctrl,
+			coor = coor
+		})
+	end
+
+	ctrl_sizer:add(ctrl, 1, 0, "EXPAND")
+
+	local spin = EWS:SpinButton(self._panel, "", "SP_VERTICAL")
+	local c = ctrl
+
+	if type == "offset" then
+		c = self["_a" .. coor]
+	end
+
+	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
+		step = 0.1,
+		ctrl = c,
+		coor = coor
+	})
+	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
+		step = -0.1,
+		ctrl = c,
+		coor = coor
+	})
+	ctrl_sizer:add(spin, 0, 0, "EXPAND")
+	sizer:add(ctrl_sizer, 1, 10, "EXPAND,LEFT,RIGHT")
+
+	return ctrl
+end
+
+function ScaleTransformTypeIn:update_spin(data)
+	if not tonumber(data.ctrl:get_value()) then
+		data.ctrl:set_value(0)
+	end
+
+	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
+	self:update_absolut(data)
+end
+
+function ScaleTransformTypeIn:update_absolut(data)
+	local value = tonumber(data.ctrl:get_value()) or 0
+
+	if self._min == value then
+		return
+	end
+
+	value = value * 100
+
+	if alive(self._unit) then
+		local pos = self._unit:position()
+		pos = pos["with_" .. data.coor](pos, value)
+
+		data.ctrl:change_value(string.format("%.2f", value / 100))
+		data.ctrl:set_selection(-1, -1)
+		managers.editor:set_selected_units_scale(pos)
+	end
+end
+
+function ScaleTransformTypeIn:update_offset(data, event)
+	local value = tonumber(data.ctrl:get_value()) or 0
+
+	if alive(self._unit) then
+		local local_rot = managers.editor:is_coordinate_system("Local")
+		local pos = self._unit:position()
+		local rot = Rotation()
+
+		if local_rot then
+			rot = self._unit:rotation()
+		end
+
+		value = value * 100
+		pos = pos + rot[data.coor](rot) * value
+
+		managers.editor:set_selected_units_scale(pos)
+		data.ctrl:change_value(0)
+		data.ctrl:set_selection(-1, -1)
+	end
+end
+
+function ScaleTransformTypeIn:set_unit(unit)
+	self._unit = unit
+
+	self._panel:set_enabled(alive(self._unit))
+end
+
+function ScaleTransformTypeIn:update(t, dt)
+	if alive(self._unit) then
+		local scale = self._unit:position()
+
+		if not self._ax:in_focus() then
+			self._ax:change_value(string.format("%.2f", scale.x / 100))
+		end
+
+		if not self._ay:in_focus() then
+			self._ay:change_value(string.format("%.2f", scale.y / 100))
+		end
+
+		if not self._az:in_focus() then
+			self._az:change_value(string.format("%.2f", scale.z / 100))
+		end
+	end
+end
+
 CameraTransformTypeIn = CameraTransformTypeIn or class(CoreEditorEwsDialog)
 
 function CameraTransformTypeIn:init()

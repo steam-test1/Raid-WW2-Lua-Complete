@@ -58,7 +58,7 @@ function HUDObjectiveSub:_create_objective_text()
 	}
 	self._objective_text = self._object:text(objective_text_params)
 
-	self._objective_text:set_center_y(self._object:h() / 2 - 1)
+	self._objective_text:set_center_y(self._object:h() / 2)
 end
 
 function HUDObjectiveSub:_create_amount()

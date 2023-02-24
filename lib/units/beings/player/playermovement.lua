@@ -282,7 +282,15 @@ function PlayerMovement:update_stamina(t, dt, ignore_running)
 	self._last_stamina_regen_t = t
 
 	if not ignore_running and self._is_running then
-		self:subtract_stamina(dt * self._class_tweak_data.movement.stamina.BASE_STAMINA_DRAIN_RATE)
+		local stamina_drain_multi = 1
+
+		if self._current_state_name == "carry" or self._current_state_name == "carry_corpse" then
+			local carry_data = managers.player:get_my_carry_data()
+			local carry_tweak = tweak_data.carry[carry_data.carry_id]
+			stamina_drain_multi = tweak_data.carry.types[carry_tweak.type].stamina_consume_multi or 1
+		end
+
+		self:subtract_stamina(dt * self._class_tweak_data.movement.stamina.BASE_STAMINA_DRAIN_RATE * stamina_drain_multi)
 	elseif self._regenerate_timer then
 		self._regenerate_timer = self._regenerate_timer - dt
 
@@ -798,6 +806,12 @@ function PlayerMovement:has_carry_restriction()
 end
 
 function PlayerMovement:object_interaction_blocked()
+	if not self._current_state then
+		Application:error("[PlayerMovement:object_interaction_blocked()] Somehow you have no current state!")
+
+		return true
+	end
+
 	return self._current_state:interaction_blocked()
 end
 
@@ -918,7 +932,10 @@ end
 
 function PlayerMovement:pre_destroy(unit)
 	self._attention_handler:set_attention(nil)
-	self._current_state:pre_destroy(unit)
+
+	if self._current_state then
+		self._current_state:pre_destroy(unit)
+	end
 
 	if self._nav_tracker then
 		managers.navigation:destroy_nav_tracker(self._nav_tracker)

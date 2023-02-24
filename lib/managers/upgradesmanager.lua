@@ -90,7 +90,6 @@ end
 function UpgradesManager:level_up()
 	local level = managers.experience:current_level()
 
-	print("UpgradesManager:level_up()", level)
 	self:aquire_from_level_tree(level, false)
 end
 

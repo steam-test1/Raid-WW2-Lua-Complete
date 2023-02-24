@@ -43,7 +43,7 @@ function CoreWorldCollection:init(params)
 	self._stitcher_counter = CoreWorldCollection.MAX_STITCHER_ID
 	self._first_pass = true
 
-	World:occlusion_manager():set_max_occluder_tests(25)
+	World:occlusion_manager():set_max_occluder_tests(40)
 end
 
 function CoreWorldCollection:first_pass()
@@ -564,9 +564,7 @@ function CoreWorldCollection:update(t, dt, paused_update)
 							definition.mission_scripts_created = true
 
 							break
-						elseif not texture_loaded then
-							Application:trace("[CoreWorldCollection:update] Waiting for textures...")
-						else
+						elseif texture_loaded then
 							Application:trace("[CoreWorldCollection:update] All peers still not spawned worlds, waiting...")
 							self:sync_loading_status(t)
 						end
@@ -669,10 +667,6 @@ function CoreWorldCollection:check_queued_world_create()
 end
 
 function CoreWorldCollection:check_queued_world_destroy()
-	if not self.level_transition_in_progress then
-		return
-	end
-
 	for i = #self.queued_world_destruction, 1, -1 do
 		local world_id = self.queued_world_destruction[i]
 
@@ -934,6 +928,7 @@ function CoreWorldCollection:on_simulation_ended()
 
 	managers.portal:kill_all_effects()
 	managers.portal:clear()
+	managers.environment_controller:set_downed_value(0)
 
 	if managers.worlddefinition then
 		MassUnitManager:delete_all_units()
@@ -1535,7 +1530,7 @@ end
 function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	local job_data = managers.raid_job:current_job()
 	local job_id = job_data and job_data.job_id
-	local total_value = LootDropTweakData.TOTAL_LOOT_VALUE_DEFAULT
+	local total_value = LootDropTweakData.TOTAL_DOGTAGS_DEFAULT
 
 	if job_data and job_data.dogtags_min and job_data.dogtags_max then
 		total_value = math.random(job_data.dogtags_min, job_data.dogtags_max)

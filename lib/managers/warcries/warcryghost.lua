@@ -51,7 +51,9 @@ function WarcryGhost:update(dt)
 
 	if enemies then
 		for _, enemy in ipairs(enemies) do
-			enemy:contour():add("mark_enemy_ghost")
+			if enemy:contour() then
+				enemy:contour():add("mark_enemy_ghost")
+			end
 		end
 	end
 end

@@ -2,7 +2,8 @@ EscortExt = EscortExt or class()
 
 function EscortExt:init(unit)
 	self._unit = unit
-	self._wp_offset = Vector3(0, 0, 120)
+	self._wp_offset = Vector3(0, 0, 200)
+	self._wp_offset_hp = Vector3(0, 0, 175)
 	self._was_safe = false
 	self._safe_color = Color(1, 1, 1)
 	self._unsafe_color = Color(1, 0, 0)
@@ -206,7 +207,7 @@ function EscortExt:update(t, dt)
 		if dot < 0 then
 			self._health_panel:hide()
 		else
-			mvector3.set(health_pos, self._ws:world_to_screen(cam, self._unit:position() + Vector3(0, 0, 150)))
+			mvector3.set(health_pos, self._ws:world_to_screen(cam, self._unit:position() + self._wp_offset_hp))
 			self._health_panel:set_center(health_pos.x, health_pos.y)
 			self._health_panel:show()
 		end
@@ -214,9 +215,12 @@ function EscortExt:update(t, dt)
 end
 
 function EscortExt:set_waypoint_safe(safe)
-	managers.hud:change_waypoint_distance_color(self._icon_id, safe and self._safe_color or self._unsafe_color)
-	managers.hud:change_waypoint_arrow_color(self._icon_id, safe and self._safe_color or self._unsafe_color)
-	managers.hud:change_waypoint_icon(self._icon_id, safe and "waypoint_escort_stand" or "waypoint_escort_crouch")
+	local final_color = safe and self._safe_color or self._unsafe_color
+	local final_icon = safe and "waypoint_escort_stand" or "waypoint_escort_crouch"
+
+	managers.hud:change_waypoint_distance_color(self._icon_id, final_color)
+	managers.hud:change_waypoint_arrow_color(self._icon_id, final_color)
+	managers.hud:change_waypoint_icon(self._icon_id, final_icon)
 end
 
 function EscortExt:set_active(active)

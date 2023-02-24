@@ -34,10 +34,10 @@ function ElementWaypoint:on_executed(instigator)
 	if not self._values.only_in_civilian or managers.player:current_state() == "civilian" then
 		local text = managers.localization:text(self._values.text_id)
 
+		Application:debug("[ElementWaypoint] self._values.icon", self._values.icon)
 		managers.hud:add_waypoint(self:_get_unique_id(), {
 			distance = true,
 			state = "sneak_present",
-			present_timer = 0,
 			show_on_screen = true,
 			waypoint_type = "objective",
 			text = text,

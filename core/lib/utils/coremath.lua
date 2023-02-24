@@ -206,6 +206,10 @@ function math.rand(a, b)
 	end
 end
 
+function math.rand_bool()
+	return math.random(2) == 1
+end
+
 function math.round(n, precision)
 	precision = precision or 1
 

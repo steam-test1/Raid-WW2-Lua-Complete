@@ -271,6 +271,10 @@ end
 function ProjectileBase:destroy()
 end
 
+function ProjectileBase:on_level_tranistion()
+	print("ProjectileBase:on_level_tranistion()")
+end
+
 local ids_object3d = Idstring("object3d")
 
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id, cooking_t, parent_projectile_id)
@@ -290,6 +294,8 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
 	local rot_dir = tweak_entry._rot_dir or math.UP
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, rot_dir))
+
+	managers.game_play_central:add_spawned_projectiles(unit)
 
 	for _, o in ipairs(unit:get_objects_by_type(ids_object3d)) do
 		if o.set_skip_detail_distance_culling then

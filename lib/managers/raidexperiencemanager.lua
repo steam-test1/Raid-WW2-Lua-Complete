@@ -6,7 +6,13 @@ RaidExperienceManager.XP_MIGRATION_VERSION_LIST = {
 	85,
 	86
 }
-RaidExperienceManager.SCRIPT_XP_EVENT_STEALTH = "stealth_bonus"
+RaidExperienceManager.SCRIPT_XP_EVENTS = {
+	"stealth_bonus",
+	"escort_survived_bonus",
+	"side_quest_bonus",
+	"extra_objectives_bonus",
+	"tiny_objectives_bonus"
+}
 
 function RaidExperienceManager:init()
 	self:_setup()
@@ -52,7 +58,9 @@ end
 function RaidExperienceManager:get_script_xp_events()
 	local events = {}
 
-	table.insert(events, RaidExperienceManager.SCRIPT_XP_EVENT_STEALTH)
+	for i, v in ipairs(RaidExperienceManager.SCRIPT_XP_EVENTS) do
+		table.insert(events, v)
+	end
 
 	return events
 end
@@ -204,13 +212,49 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 		table.insert(exp_table.multiplicative, event_fail_multiplicative)
 	end
 
-	if tweak_data.operations.missions[base_id].stealth_bonus and table.contains(self._global.mission_xp, RaidExperienceManager.SCRIPT_XP_EVENT_STEALTH) then
-		local stealth_multiplicative = {
-			id = "xp_multiplicative_stealth",
-			amount = tweak_data.operations.missions[base_id].stealth_bonus - 1
-		}
+	Application:trace("[RaidExperienceManager:calculate_exp_brakedown] This runs stored mission_xp events:", unpack(self._global.mission_xp))
 
-		table.insert(exp_table.multiplicative, stealth_multiplicative)
+	for _, event_id in ipairs(self._global.mission_xp) do
+		if table.contains(RaidExperienceManager.SCRIPT_XP_EVENTS, event_id) then
+			Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Event ID is a SCRIPT_XP_EVENTS id", event_id)
+
+			local event_id_data = tweak_data:get_value("experience_manager", event_id)
+
+			if event_id_data then
+				local event_loc_id = "xp_multiplicative_" .. event_id
+				local event_amount = tweak_data.operations.missions[base_id][event_id] or event_id_data - 1
+
+				if event_amount then
+					local existing_event = false
+
+					for i, existing_event_multi in ipairs(exp_table.multiplicative) do
+						Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Should modify? ", existing_event_multi.event_id, event_loc_id, existing_event_multi.event_id == event_loc_id)
+
+						if existing_event_multi.id == event_loc_id then
+							existing_event_multi.amount = existing_event_multi.amount + event_amount
+
+							Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Modified event multi", existing_event_multi.id, existing_event_multi.amount)
+
+							existing_event = true
+
+							break
+						end
+					end
+
+					if not existing_event then
+						local event_multi = {
+							id = event_loc_id,
+							amount = event_amount
+						}
+
+						table.insert(exp_table.multiplicative, event_multi)
+						Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Added event multi", event_loc_id, event_amount)
+					end
+				end
+			else
+				Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Experience Manager does not have event id:", event_id)
+			end
+		end
 	end
 
 	local card_multiplicative = {
@@ -333,6 +377,10 @@ function RaidExperienceManager:_level_up()
 end
 
 function RaidExperienceManager:_check_achievements()
+	if not managers.achievment.handler:initialized() then
+		return
+	end
+
 	local achievements = tweak_data.achievement.levels
 	local current_level = self:current_level()
 
@@ -354,8 +402,10 @@ function RaidExperienceManager:_set_current_level(value)
 
 	self:update_progress()
 
-	if current_level < 40 and value == 40 then
-		managers.statistics:leveled_character_to_40()
+	local max_level = self:level_cap()
+
+	if current_level < max_level and value == max_level then
+		managers.statistics:leveled_character_to_max()
 	end
 end
 

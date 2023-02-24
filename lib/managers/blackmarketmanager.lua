@@ -133,12 +133,12 @@ function BlackMarketManager:_setup_unlocked_weapon_slots()
 	unlocked_weapon_slots.primaries = unlocked_weapon_slots.primaries or {}
 	unlocked_weapon_slots.secondaries = unlocked_weapon_slots.secondaries or {}
 
-	for i = 1, #tweak_data.weapon_inventory.weapon_primaries_index do
-		unlocked_weapon_slots.primaries[i] = true
+	for k, v in pairs(tweak_data.weapon_inventory.weapon_primaries_index) do
+		unlocked_weapon_slots.primaries[v.slot] = true
 	end
 
-	for i = 1, #tweak_data.weapon_inventory.weapon_secondaries_index do
-		unlocked_weapon_slots.secondaries[i] = true
+	for k, v in pairs(tweak_data.weapon_inventory.weapon_secondaries_index) do
+		unlocked_weapon_slots.secondaries[v.slot] = true
 	end
 end
 
@@ -170,15 +170,14 @@ BlackMarketManager.weapons_to_buy = {
 }
 
 function BlackMarketManager:weapon_unlocked(weapon_id)
-	return Global.blackmarket_manager.weapons[weapon_id].unlocked
+	return Global.blackmarket_manager.weapons[weapon_id] and Global.blackmarket_manager.weapons[weapon_id].unlocked or false
 end
 
 function BlackMarketManager:weapon_unlocked_by_crafted(category, slot)
 	local crafted = self._global.crafted_items[category][slot]
 	local weapon_id = crafted.weapon_id
-	local unlocked = Global.blackmarket_manager.weapons[weapon_id].unlocked
 
-	return unlocked
+	return self:weapon_unlocked(weapon_id)
 end
 
 function BlackMarketManager:weapon_level(weapon_id)
@@ -997,19 +996,6 @@ function BlackMarketManager:is_weapon_modified(factory_id, blueprint)
 end
 
 function BlackMarketManager:update(t, dt)
-	if not self._force_paused and Global and Global.blackmarket_manager and Global.blackmarket_manager.crafted_items and Global.blackmarket_manager.crafted_items.primaries and #Global.blackmarket_manager.crafted_items.primaries > 1 then
-		for bm_weapon_index, bm_weapon_data in ipairs(managers.blackmarket._global.crafted_items.primaries) do
-			local bm_weapon_name = bm_weapon_data.weapon_id
-			local tw_weapon_name = tweak_data.weapon_inventory.weapon_primaries_index[bm_weapon_index].weapon_id
-
-			if bm_weapon_name ~= tw_weapon_name then
-				debug_pause("[BlackMarketManager:update] CALL PROGRAMMING DEPARTMENT AND REMEMBER WHAT YOU DID BEFORE THIS ERROR !!!! ", bm_weapon_index, bm_weapon_name, tw_weapon_name)
-
-				self._force_paused = true
-			end
-		end
-	end
-
 	if #self._preloading_list > 0 then
 		if not self._preload_ws then
 			self:create_preload_ws()
@@ -1142,7 +1128,9 @@ end
 function BlackMarketManager:get_weapon_category(category)
 	local weapon_index = {
 		primaries = 2,
-		secondaries = 1
+		secondaries = 1,
+		equipments = 3,
+		melees = 4
 	}
 	local selection_index = weapon_index[category] or 1
 	local t = {}
@@ -1161,7 +1149,9 @@ end
 function BlackMarketManager:get_weapon_names_category(category)
 	local weapon_index = {
 		primaries = 2,
-		secondaries = 1
+		secondaries = 1,
+		equipments = 3,
+		melees = 4
 	}
 	local selection_index = weapon_index[category] or 1
 	local t = {}
@@ -2808,6 +2798,13 @@ function BlackMarketManager:on_buy_weapon_platform(category, weapon_id, slot, fr
 	end
 
 	local weapon_data = tweak_data.weapon[weapon_id]
+
+	if not weapon_data then
+		Application:error("[BlackMarketManager:on_buy_weapon_platform] weapon_id does not exists in weapon tweakdata, ignoring:", weapon_id)
+
+		return
+	end
+
 	local unlocked = not weapon_data.dlc or managers.dlc:is_dlc_unlocked(weapon_data.dlc)
 	local existing_slot = self._global and self._global.crafted_items and self._global.crafted_items[category] and self._global.crafted_items[category][slot]
 
@@ -3644,6 +3641,7 @@ function BlackMarketManager:_verify_dlc_items()
 end
 
 function BlackMarketManager:_verfify_equipped()
+	Application:debug("[BlackMarketManager:_verfify_equipped] Verifying...")
 	self:_verfify_equipped_category("secondaries")
 	self:_verfify_equipped_category("primaries")
 	self:_verfify_equipped_category("armors")

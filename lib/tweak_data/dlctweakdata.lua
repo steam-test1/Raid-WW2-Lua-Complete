@@ -50,9 +50,9 @@ function DLCTweakData:_init_descriptions()
 				item = "british_highlander_jacket_lower"
 			}
 		},
-		weapons = {
+		weapon_skins = {
 			{
-				item = "garand_golden"
+				item = "garand_special_edition"
 			}
 		},
 		gold_award = {
@@ -119,9 +119,9 @@ function DLCTweakData:_init_descriptions()
 					item = "special_edition_bomb"
 				}
 			},
-			weapons = {
+			weapon_skins = {
 				{
-					item = "garand_golden"
+					item = "garand_special_edition"
 				}
 			},
 			gold_award = {
@@ -216,6 +216,44 @@ end
 function DLCTweakData:is_weapon_unlocked(weapon_id)
 	local weapons = self:get_unlocked_weapons()
 	local unlocked = weapons[weapon_id] and true or false
+
+	return unlocked
+end
+
+function DLCTweakData:get_unlocked_weapon_skins()
+	local skins = {}
+
+	for dlc_name, dlc_desc in pairs(self.descriptions) do
+		if dlc_desc.content.weapon_skins and managers.dlc:is_dlc_unlocked(dlc_name) then
+			for _, skin in pairs(dlc_desc.content.weapon_skins) do
+				skins[skin.item] = true
+			end
+		end
+	end
+
+	return skins
+end
+
+function DLCTweakData:get_locked_weapon_skins()
+	local unlocked_weapons = self:get_unlocked_weapon_skins()
+	local skins = {}
+
+	for dlc_name, dlc_desc in pairs(self.descriptions) do
+		if dlc_desc.content.weapon_skins and managers.dlc:is_dlc_unlocked(dlc_name) then
+			for _, skin in pairs(dlc_desc.content.weapon_skins) do
+				if not unlocked_weapons[skin.item] then
+					skins[skin.item] = true
+				end
+			end
+		end
+	end
+
+	return skins
+end
+
+function DLCTweakData:is_weapon_skin_unlocked(skin_id)
+	local skins = self:get_unlocked_weapon_skins()
+	local unlocked = skins[skin_id] and true or false
 
 	return unlocked
 end

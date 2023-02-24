@@ -3,6 +3,7 @@ LootDropManager.EVENT_PEER_LOOT_RECEIVED = "peer_loot_received"
 LootDropManager.LOOT_VALUE_TYPE_SMALL = "small"
 LootDropManager.LOOT_VALUE_TYPE_MEDIUM = "medium"
 LootDropManager.LOOT_VALUE_TYPE_BIG = "big"
+LootDropManager.LOOT_VALUE_TYPE_DOGTAG = "dogtag"
 
 function LootDropManager:init()
 	self:_setup()
@@ -62,6 +63,9 @@ function LootDropManager:produce_consumable_mission_drop()
 		loot_secured = managers.loot:get_secured()
 	end
 
+	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+	gold_bars_earned = math.ceil(gold_bars_earned * tweak_data.operations.consumable_missions.difficulty_reward_multiplier[difficulty_index])
 	local drop = {
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 		gold_bars_min = gold_bars_earned,
@@ -74,9 +78,9 @@ end
 function LootDropManager:produce_loot_drop(loot_value, use_reroll_drop_tables, forced_loot_group)
 	local loot_group = self:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
 	local loot_category = self:get_random_item_weighted(loot_group)
-	local loot = self:get_random_item_weighted(loot_category)
+	local drop = self:get_random_item_weighted(loot_category)
 
-	return loot
+	return drop
 end
 
 function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
@@ -286,6 +290,27 @@ function LootDropManager:redeem_dropped_loot_for_xp()
 	end
 end
 
+function LootDropManager:redeem_dropped_loot_for_goldbars()
+	local drop = self._dropped_loot
+	local drop_redeemed_gold = drop.redeemed_gold or 5
+
+	Application:trace("[LootDropManager:redeem_dropped_loot_for_goldbars]        loot: ", inspect(drop))
+
+	if drop.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
+		managers.character_customization:remove_character_customization_from_inventory(drop.character_customization_key)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
+	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
+		managers.weapon_skills:remove_weapon_skill_points_as_drops(1)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
+	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
+		managers.weapon_inventory:remove_melee_weapon_as_drop(drop)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
+	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		managers.weapon_inventory:remove_melee_weapon_as_drop(drop)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
+	end
+end
+
 function LootDropManager:_give_xp_to_player(drop)
 	drop.awarded_xp = math.round(math.rand(drop.xp_min, drop.xp_max))
 
@@ -416,6 +441,8 @@ function LootDropManager:register_loot(unit, value_type, world_id)
 		value = LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT
 	elseif value_type == LootDropManager.LOOT_VALUE_TYPE_BIG then
 		value = LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT
+	elseif value_type == LootDropManager.LOOT_VALUE_TYPE_DOGTAG then
+		value = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT
 	else
 		debug_pause("[LootDropManager:register_loot] Unknown loot value size!", value_type)
 

@@ -287,8 +287,8 @@ function CampCustomizationTweakData:_setup_camp_assets()
 					gold_price = 125,
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_camp_piano/level_1/props_camp_piano_level_01_shop",
 					grid_icon = "units/vanilla/props/props_camp_upgrades/props_camp_piano/piano_l02_hud",
-					name_id = "piano_lvl_1_name_id",
-					description_id = "piano_lvl_1_desc_id",
+					name_id = "piano_lvl_2_name_id",
+					description_id = "piano_lvl_2_desc_id",
 					scene_unit_rotation = Rotation(0, 0, 0)
 				}
 			}
@@ -321,6 +321,25 @@ function CampCustomizationTweakData:_setup_camp_assets()
 					name_id = "control_table_lvl_2_name_id",
 					description_id = "control_tables_lvl_2_desc_id",
 					scene_unit_rotation = Rotation(0, 0, 0)
+				}
+			}
+		},
+		flags = {
+			levels = {
+				{
+					scene_unit = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_badman_shop_prop",
+					grid_icon = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_badman_shop_hud",
+					name_id = "flags_badman_name_id",
+					description_id = "flags_badman_desc_id",
+					scene_unit_rotation = Rotation(180, 0, 0)
+				},
+				{
+					gold_price = 150,
+					scene_unit = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_raider_shop_prop",
+					grid_icon = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_raider_shop_hud",
+					name_id = "flags_raider_name_id",
+					description_id = "flags_raider_desc_id",
+					scene_unit_rotation = Rotation(180, 0, 0)
 				}
 			}
 		}
@@ -383,6 +402,10 @@ function CampCustomizationTweakData:_setup_default_camp_list()
 		{
 			level = 1,
 			upgrade = "control_table"
+		},
+		{
+			level = 1,
+			upgrade = "flags"
 		}
 	}
 end

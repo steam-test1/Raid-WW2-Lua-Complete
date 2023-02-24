@@ -1,12 +1,20 @@
 RaidGUIControlListItemCharacterSelect = RaidGUIControlListItemCharacterSelect or class(RaidGUIControl)
 RaidGUIControlListItemCharacterSelect.SLOTS = {
 	{
-		x = 417,
+		x = 416,
 		y = 0
 	},
 	{
-		x = 534,
-		y = 0
+		y = 0,
+		x = 416 + CharacterSelectionGui.BUTTON_W
+	},
+	{
+		x = 416,
+		y = CharacterSelectionGui.BUTTON_H
+	},
+	{
+		x = 416 + CharacterSelectionGui.BUTTON_W,
+		y = CharacterSelectionGui.BUTTON_H
 	}
 }
 
@@ -101,10 +109,11 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 		character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 		self._customize_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
-			h = 94,
+			name = "customize_button",
 			y = 0,
-			w = 116,
-			x = 534,
+			x = 420,
+			w = CharacterSelectionGui.BUTTON_W,
+			h = CharacterSelectionGui.BUTTON_H,
 			special_action_callback = self.special_action_callback,
 			slot_index = self._character_slot
 		})
@@ -112,12 +121,41 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 		self._customize_button:set_button(RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_CUSTOMIZE)
 		table.insert(self._special_action_buttons, self._customize_button)
 
+		self._rename_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
+			visible = false,
+			name = "rename_button",
+			y = 47,
+			x = 420,
+			w = CharacterSelectionGui.BUTTON_W,
+			h = CharacterSelectionGui.BUTTON_H,
+			special_action_callback = self.special_action_callback,
+			slot_index = self._character_slot
+		})
+
+		self._rename_button:set_button(RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_RENAME)
+		table.insert(self._special_action_buttons, self._rename_button)
+
+		self._nationality_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
+			visible = false,
+			name = "nationality_button",
+			y = 47,
+			x = 420,
+			w = CharacterSelectionGui.BUTTON_W,
+			h = CharacterSelectionGui.BUTTON_H,
+			special_action_callback = self.special_action_callback,
+			slot_index = self._character_slot
+		})
+
+		self._nationality_button:set_button(RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_NATION)
+		table.insert(self._special_action_buttons, self._nationality_button)
+
 		self._delete_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
-			h = 94,
-			y = 0,
-			w = 116,
-			x = 417,
+			name = "delete_button",
+			y = 47,
+			x = 420,
+			w = CharacterSelectionGui.BUTTON_W,
+			h = CharacterSelectionGui.BUTTON_H,
 			special_action_callback = self.special_action_callback,
 			slot_index = self._character_slot
 		})
@@ -127,10 +165,10 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 	else
 		self._create_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
-			h = 94,
 			y = 0,
-			w = 116,
 			x = 417,
+			w = CharacterSelectionGui.BUTTON_W * 2,
+			h = CharacterSelectionGui.BUTTON_H * 2,
 			special_action_callback = self.special_action_callback,
 			slot_index = self._character_slot
 		})
@@ -142,12 +180,8 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 	self._profile_name_label:set_text(utf8.to_upper(profile_name))
 	self._character_name_label:set_text(utf8.to_upper(character_name))
 
-	if character_flag then
-		self._nationality_flag:set_image(tweak_data.gui.icons[character_flag].texture)
-		self._nationality_flag:set_texture_rect(tweak_data.gui.icons[character_flag].texture_rect)
-	end
-
 	if character_nationality then
+		self:update_flag(character_nationality)
 		self:_layout_breadcrumb(character_nationality)
 	end
 end
@@ -170,7 +204,14 @@ function RaidGUIControlListItemCharacterSelect:data()
 end
 
 function RaidGUIControlListItemCharacterSelect:inside(x, y)
-	return self._object and self._object:inside(x, y) and self._object:tree_visible() and self._background:inside(x, y) or self._create_button and self._create_button:inside(x, y) or self._delete_button and self._delete_button:inside(x, y) or self._customize_button and self._customize_button:inside(x, y)
+	local is_object_ready = self._object and self._object:inside(x, y) and self._object:tree_visible() and self._background:inside(x, y)
+	local is_inside_create = self._create_button and self._create_button:inside(x, y)
+	local is_inside_delete = self._delete_button and self._delete_button:inside(x, y)
+	local is_inside_customize = self._customize_button and self._customize_button:inside(x, y)
+	local is_inside_rename = self._rename_button and self._rename_button:inside(x, y)
+	local is_inside_nationality = self._nationality_button and self._nationality_button:inside(x, y)
+
+	return is_object_ready or is_inside_create or is_inside_customize or is_inside_delete or is_inside_rename or is_inside_nationality
 end
 
 function RaidGUIControlListItemCharacterSelect:highlight_on()
@@ -203,6 +244,21 @@ function RaidGUIControlListItemCharacterSelect:activate_off()
 
 	if self._character_name_label and alive(self._character_name_label._object) then
 		self._character_name_label:set_color(tweak_data.gui.colors.raid_grey)
+	end
+end
+
+function RaidGUIControlListItemCharacterSelect:update_flag(character_nationality)
+	local character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
+
+	if character_flag then
+		self._nationality_flag:set_image(tweak_data.gui.icons[character_flag].texture)
+		self._nationality_flag:set_texture_rect(tweak_data.gui.icons[character_flag].texture_rect)
+	end
+
+	if self._character_name_label and alive(self._character_name_label._object) then
+		local character_name = self:translate("menu_" .. character_nationality, true)
+
+		self._character_name_label:set_text(utf8.to_upper(character_name))
 	end
 end
 
@@ -269,14 +325,26 @@ function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_call
 		self._create_button:set_visible(true)
 	end
 
+	if self._nationality_button and self._active then
+		self._nationality_button:set_visible(true)
+	end
+
+	if self._rename_button and self._active then
+		self._rename_button:set_visible(true)
+	end
+
 	if self._active then
 		self:_set_button_slot(self._customize_button, 1)
 		self:_set_button_slot(self._delete_button, 2)
+		self:_set_button_slot(self._nationality_button, 3)
+		self:_set_button_slot(self._rename_button, 4)
 	elseif not self._item_data.cache then
 		self:_set_button_slot(self._create_button, 1)
 	else
-		self:_set_button_slot(self._customize_button, 2)
 		self:_set_button_slot(self._delete_button, 1)
+		self:_set_button_slot(self._customize_button, 2)
+		self:_set_button_slot(self._nationality_button, 3)
+		self:_set_button_slot(self._rename_button, 4)
 	end
 end
 
@@ -295,6 +363,14 @@ function RaidGUIControlListItemCharacterSelect:unselect()
 
 	if self._customize_button and alive(self._customize_button._object._engine_panel) then
 		self._customize_button:set_visible(false)
+	end
+
+	if self._nationality_button and alive(self._nationality_button._object._engine_panel) then
+		self._nationality_button:set_visible(false)
+	end
+
+	if self._rename_button and alive(self._rename_button._object._engine_panel) then
+		self._rename_button:set_visible(false)
 	end
 end
 
@@ -324,6 +400,8 @@ function RaidGUIControlListItemCharacterSelect:empty()
 end
 
 function RaidGUIControlListItemCharacterSelect:_set_button_slot(button_ref, slot_index)
-	button_ref:set_x(RaidGUIControlListItemCharacterSelect.SLOTS[slot_index].x)
-	button_ref:set_y(RaidGUIControlListItemCharacterSelect.SLOTS[slot_index].y)
+	if button_ref and slot_index then
+		button_ref:set_x(RaidGUIControlListItemCharacterSelect.SLOTS[slot_index].x)
+		button_ref:set_y(RaidGUIControlListItemCharacterSelect.SLOTS[slot_index].y)
+	end
 end

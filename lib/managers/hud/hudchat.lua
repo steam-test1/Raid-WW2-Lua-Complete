@@ -20,7 +20,8 @@ HUDChat.CARET_W = 2
 HUDChat.CARET_H = 18
 HUDChat.MESSAGES_KEPT = 10
 HUDChat.MESSAGE_PADDING_DOWN = 15
-HUDChat.MESSAGE_MAX_SIZE = 100
+HUDChat.MESSAGE_MAX_SIZE = 150
+HUDChat.MESSAGE_MAX_SHOWTIME = 8
 HUDChat.line_height = 21
 
 function HUDChat:init(ws, panel, background)
@@ -389,7 +390,7 @@ function HUDChat:_loose_focus()
 	end
 
 	if not managers.queued_tasks:has_task("hide_chat") then
-		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, 4, nil)
+		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, HUDChat.MESSAGE_MAX_SHOWTIME, nil)
 	end
 
 	self._focus = false
@@ -709,7 +710,7 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 	end
 
 	if not self._focus then
-		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, 4, nil)
+		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, HUDChat.MESSAGE_MAX_SHOWTIME, nil)
 	end
 end
 

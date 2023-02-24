@@ -37,7 +37,7 @@ function PlayerBleedOut:enter(state_data, enter_data)
 	local upgrade_primary_weapon_when_downed = managers.player:has_category_upgrade("player", "primary_weapon_when_downed")
 	local not_allowed_in_bleedout = self._unit:inventory():equipped_unit():base():weapon_tweak_data().not_allowed_in_bleedout
 
-	if (not upgrade_primary_weapon_when_downed or not_allowed_in_bleedout) and not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) then
+	if (not upgrade_primary_weapon_when_downed or not_allowed_in_bleedout) and not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) and self._unit:inventory():equipped_selection() ~= 1 then
 		local projectile_entry = managers.blackmarket:equipped_projectile()
 
 		if tweak_data.projectiles[projectile_entry].is_a_grenade then

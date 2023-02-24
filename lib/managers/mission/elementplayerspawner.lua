@@ -1,15 +1,7 @@
 core:import("CoreMissionScriptElement")
 
 ElementPlayerSpawner = ElementPlayerSpawner or class(CoreMissionScriptElement.MissionScriptElement)
-
-if SystemInfo:platform() == Idstring("PS4") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-elseif SystemInfo:platform() == Idstring("XB1") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-else
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-end
-
+ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
 ElementPlayerSpawner.BASE_DELAY = 2
 
 function ElementPlayerSpawner:init(...)
@@ -106,7 +98,7 @@ function ElementPlayerSpawner:_do_hide_loading_screen()
 	end
 
 	managers.menu:hide_loading_screen()
-	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 0.2)
+	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 1)
 end
 
 function ElementPlayerSpawner:_first_login_check()

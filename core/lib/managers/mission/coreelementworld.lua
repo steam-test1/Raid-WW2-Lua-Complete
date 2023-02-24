@@ -159,6 +159,7 @@ function ElementWorldPoint:on_executed(instigator)
 	end
 
 	if self._action == "despawn" then
+		Application:debug("[ElementWorldPoint:on_executed] on_executed queue destroy world...")
 		managers.queued_tasks:queue(nil, self._destroy_world, self, nil, delay_destroy, nil, true)
 	elseif self._action == "enable_plant_loot" then
 		local spawn = managers.worldcollection:world_spawn(self._world_id)
@@ -191,8 +192,10 @@ function ElementWorldPoint:_destroy_world()
 end
 
 function ElementWorldPoint:_create_world(world_id)
+	Application:debug("[ElementWorldPoint:_create()", world_id, self._has_created, inspect(self._values))
+
 	if self._has_created or not self._values.world then
-		Application:debug("[ElementWorldPoint:_create() World is alreaedy created, skipping!]", world_id)
+		Application:debug("[ElementWorldPoint:_create() World is alreaedy created (or if nil doesnt exist), skipping!]", world_id)
 
 		return
 	end

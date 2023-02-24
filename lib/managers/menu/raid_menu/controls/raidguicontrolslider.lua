@@ -28,6 +28,7 @@ function RaidGUIControlSlider:init(parent, params)
 
 	self._value = self._params.value or 0
 	self._value_label_format = self._params.value_format or "%d"
+	self._value_slider_step = self._params.value_step or 4
 	self._on_value_change_callback = params.on_value_change_callback
 	self._min_display_value = params.min_display_value or 0
 	self._max_display_value = params.max_display_value or 100

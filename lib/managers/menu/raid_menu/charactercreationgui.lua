@@ -71,9 +71,6 @@ end
 
 function CharacterCreationGui:_layout()
 	self._loaded_weapons = {}
-
-	self:_disable_dof()
-
 	self._selected_class = tweak_data.skilltree.base_classes[1]
 	self._selected_nation = tweak_data.skilltree.classes[self._selected_class].default_natioanlity
 	self._class_screen_controls = {}
@@ -86,7 +83,7 @@ function CharacterCreationGui:_layout()
 		y = 96,
 		x = 0,
 		text = self:translate("character_creation_subtitle", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_38,
 		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
@@ -98,7 +95,7 @@ function CharacterCreationGui:_layout()
 		y = 144,
 		x = 0,
 		text = self:translate("character_creation_subtitle_class", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_grey
 	})
@@ -112,7 +109,7 @@ function CharacterCreationGui:_layout()
 		y = 144,
 		x = 0,
 		text = self:translate("character_creation_subtitle_nationality", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_grey
 	})
@@ -163,7 +160,7 @@ function CharacterCreationGui:_layout()
 		x = 0,
 		y = list_bottom + 64,
 		text = self:translate("character_creation_your_selection", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_grey
 	})
@@ -184,7 +181,7 @@ function CharacterCreationGui:_layout()
 		x = self._number_1:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate(tweak_data.skilltree.classes[self._selected_class].name_id, true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_32,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
@@ -205,7 +202,7 @@ function CharacterCreationGui:_layout()
 		x = self._number_2:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate("character_profile_creation_" .. self._selected_nation, true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_32,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
@@ -227,25 +224,27 @@ function CharacterCreationGui:_layout()
 	self._right_side_info_class = self._root_panel:create_custom_control(RaidGUIControlClassDescription, {
 		visible = false,
 		name = "right_side_info_panel",
-		h = 830,
-		y = 96,
-		w = 416,
-		x = 1408
+		h = 720,
+		y = 0,
+		w = 516,
+		x = 1308
 	}, {})
 
 	self._right_side_info_class:set_right(self._root_panel:right())
+	self._right_side_info_class:set_center_y(self._root_panel:h() / 2)
 	table.insert(self._class_screen_controls, self._right_side_info_class)
 
 	self._right_side_info_nationality = self._root_panel:create_custom_control(RaidGUIControlNationalityDescription, {
 		visible = false,
 		name = "right_side_info_panel",
-		h = 800,
-		y = 96,
-		w = 416,
-		x = 1408
+		h = 620,
+		y = 0,
+		w = 480,
+		x = 1308
 	}, {})
 
 	self._right_side_info_nationality:set_right(self._root_panel:right())
+	self._right_side_info_nationality:set_center_y(self._root_panel:h() / 2)
 	table.insert(self._nationality_screen_controls, self._right_side_info_nationality)
 
 	self._current_screen = "class"
@@ -460,7 +459,7 @@ function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
 
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
-		local rotation = Rotation(45, 0, 0)
+		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 
@@ -543,10 +542,18 @@ end
 
 function CharacterCreationGui:show_character_create_input_textbox(callback_yes_function, callback_no_function)
 	local slot_index = managers.savefile:get_create_character_slot()
+	local num_append_txt = {
+		"ARNE",
+		"BOMBA",
+		"CENTRAL",
+		"DIENST",
+		"ENIGMA",
+		"FISH"
+	}
 	local params = {
 		callback_yes = callback_yes_function,
 		callback_no = callback_no_function,
-		textbox_value = self:translate("menu_" .. self._selected_nation, true) .. "_" .. slot_index - 10
+		textbox_value = self:translate("menu_" .. self._selected_nation, true) .. " " .. num_append_txt[slot_index - 10]
 	}
 
 	managers.menu:show_character_create_dialog(params)

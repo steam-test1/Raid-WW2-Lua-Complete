@@ -37,5 +37,9 @@ function FlamerTank:detonate(in_pos, range, damage, player_damage)
 		managers.explosion:detect_and_give_dmg(damage_params)
 
 		self._already_detonated = true
+
+		if self._unit:parent() then
+			self._unit:parent():character_damage():damage_mission({})
+		end
 	end
 end

@@ -364,7 +364,7 @@ function CopDamage:damage_bullet(attack_data)
 
 	damage = damage * (self._marked_dmg_mul or 1)
 
-	if self._unit:movement():cool() then
+	if self._unit:movement():cool() and head then
 		damage = self._HEALTH_INIT
 	end
 
@@ -422,17 +422,7 @@ function CopDamage:damage_bullet(attack_data)
 	damage = damage_percent * self._HEALTH_INIT_PRECENT
 	damage, damage_percent = self:_apply_min_health_limit(damage, damage_percent)
 
-	if self._immortal then
-		damage = 0
-		damage_percent = 0
-	end
-
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT) and not head or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE) and head then
-		damage = 0
-		damage_percent = 0
-	end
-
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_EXPLOSION) or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_MELEE) then
+	if self._immortal or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT) and not head or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE) and head or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_EXPLOSION) or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_MELEE) then
 		damage = 0
 		damage_percent = 0
 	end
@@ -444,14 +434,14 @@ function CopDamage:damage_bullet(attack_data)
 
 	if attack_data.attacker_unit == managers.player:player_unit() and damage > 0 then
 		if death_event_params.critical_hit then
-			managers.hud:on_crit_confirmed()
+			managers.hud:on_crit_confirmed(attack_data.col_ray.position)
 		elseif death_event_params.headshot then
-			managers.hud:on_headshot_confirmed()
+			managers.hud:on_headshot_confirmed(attack_data.col_ray.position)
 		else
 			local percent_dmg = damage / self._HEALTH_INIT
 
 			if WeaponTweakData.HIT_INDICATOR_ABSOLUTE <= damage or WeaponTweakData.HIT_INDICATOR_PERCENT <= percent_dmg then
-				managers.hud:on_hit_confirmed()
+				managers.hud:on_hit_confirmed(attack_data.col_ray.position)
 			end
 		end
 
@@ -481,7 +471,7 @@ function CopDamage:damage_bullet(attack_data)
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH) then
 			local health_amount_regen = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH) or 0
 
-			if attack_data.attacker_unit == managers.player:local_player() then
+			if health_amount_regen > 0 and attack_data.attacker_unit == managers.player:local_player() then
 				managers.player:local_player():character_damage():restore_health(health_amount_regen * managers.player:local_player():character_damage():get_max_health(), true)
 			end
 		end
@@ -532,12 +522,15 @@ function CopDamage:damage_bullet(attack_data)
 			death_event_params.player_used_steelsight = managers.player:get_current_state():in_steelsight()
 			death_event_params.weapon_used = attack_data.weapon_unit
 			death_event_params.using_turret = managers.player:current_state() == "turret"
+			local kill_wpn = tweak_data.weapon[death_event_params.weapon_used:base()._name_id]
+			local kill_wpn_cat = kill_wpn and kill_wpn.category
 
-			if managers.player:upgrade_value("player", "warcry_health_regen_on_kill", false) == true and tweak_data.weapon[death_event_params.weapon_used:base()._name_id] and tweak_data.weapon[death_event_params.weapon_used:base()._name_id].category == WeaponTweakData.WEAPON_CATEGORY_SNP then
+			if kill_wpn and kill_wpn_cat and managers.player:upgrade_value("player", "warcry_health_regen_on_kill", false) == true then
 				local unit = managers.player:player_unit()
 				local max_health = unit:character_damage():get_max_health()
 				local current_health = unit:character_damage():get_real_health()
 				local hp_pickup_amount = managers.player:upgrade_value("player", "warcry_health_regen_amount", false)
+				hp_pickup_amount = math.ceil(hp_pickup_amount * tweak_data.weapon:get_weapon_class_regen_multiplier(kill_wpn_cat))
 
 				if max_health < current_health + hp_pickup_amount then
 					unit:character_damage():set_health(max_health)

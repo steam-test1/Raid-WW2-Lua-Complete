@@ -7,6 +7,7 @@ function WaypointUnitElement:init(unit)
 	self._icon_options = {
 		"map_waypoint_pov_in",
 		"map_waypoint_pov_out",
+		"waypoint_special_camp_mission_raid",
 		"waypoint_special_aim",
 		"waypoint_special_air_strike",
 		"waypoint_special_ammo",

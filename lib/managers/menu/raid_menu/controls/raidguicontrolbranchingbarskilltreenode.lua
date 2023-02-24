@@ -1,17 +1,14 @@
 RaidGUIControlBranchingBarSkilltreeNode = RaidGUIControlBranchingBarSkilltreeNode or class(RaidGUIControlBranchingBarNode)
-RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_W = 70
-RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_H = 70
-RaidGUIControlBranchingBarSkilltreeNode.PADDING_HORIZONTAL = 12
+RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_W = 88
+RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_H = 88
+RaidGUIControlBranchingBarSkilltreeNode.PADDING_HORIZONTAL = 8
 RaidGUIControlBranchingBarSkilltreeNode.PADDING_VERTICAL = 8
 RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_W = 16
 RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_H = 16
 
 function RaidGUIControlBranchingBarSkilltreeNode:init(parent, params)
-	params.w = RaidGUIControlBranchingBarSkilltreeNode.W
-	params.h = RaidGUIControlBranchingBarSkilltreeNode.H
-	local icon = tweak_data.skilltree.skills[params.value.skill].icon or "skill_placeholder"
-	params.w = tweak_data.gui:icon_w(icon) + 2 * RaidGUIControlBranchingBarSkilltreeNode.PADDING_HORIZONTAL
-	params.h = tweak_data.gui:icon_h(icon) + 2 * RaidGUIControlBranchingBarSkilltreeNode.PADDING_VERTICAL
+	params.w = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_W + 2 * RaidGUIControlBranchingBarSkilltreeNode.PADDING_HORIZONTAL
+	params.h = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_H + 2 * RaidGUIControlBranchingBarSkilltreeNode.PADDING_VERTICAL
 
 	RaidGUIControlBranchingBarSkilltreeNode.super.init(self, parent, params)
 
@@ -107,8 +104,8 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_icon()
 		halign = "scale",
 		x = 0,
 		valign = "scale",
-		w = tweak_data.gui:icon_w(icon),
-		h = tweak_data.gui:icon_h(icon),
+		w = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_W,
+		h = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_H,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
 		layer = self._selector_panel:layer() + 5
@@ -125,35 +122,48 @@ function RaidGUIControlBranchingBarSkilltreeNode:_init_state_data()
 	self._state_data.STATE_INACTIVE.color = Color("9e9e9e"):with_alpha(0.7)
 	self._state_data.STATE_INACTIVE.selector_opacity = 0
 	self._state_data.STATE_INACTIVE.show_triangles = false
+	self._state_data.STATE_INACTIVE.scale = 0.7
 	self._state_data.STATE_HOVER = {
-		color = Color.white,
+		color = tweak_data.gui.colors.raid_red,
 		selector_opacity = 1,
-		show_triangles = false
+		show_triangles = false,
+		scale = 0.9
 	}
 	self._state_data.STATE_SELECTED = {
-		color = Color.white,
-		selector_opacity = 1,
-		show_triangles = true
+		color = tweak_data.gui.colors.raid_red,
+		selector_opacity = 0.7,
+		show_triangles = true,
+		scale = 1
+	}
+	self._state_data.STATE_RESPEC = {
+		color = tweak_data.gui.colors.raid_gold,
+		selector_opacity = 0.7,
+		show_triangles = true,
+		scale = 0.7
 	}
 	self._state_data.STATE_ACTIVE = {
 		color = tweak_data.gui.colors.raid_red,
 		selector_opacity = 0,
-		show_triangles = false
+		show_triangles = false,
+		scale = 1
 	}
 	self._state_data.STATE_PENDING = {
-		color = Color.white,
+		color = Color.white:with_alpha(0.7),
 		selector_opacity = 0,
-		show_triangles = false
+		show_triangles = false,
+		scale = 0.7
 	}
 	self._state_data.STATE_PENDING_BLOCKED = {
-		color = Color(0.8705882352941177, 0.615686274509804, 0.615686274509804),
+		color = Color.white:with_alpha(0.5),
 		selector_opacity = 0,
-		show_triangles = false
+		show_triangles = false,
+		scale = 0.7
 	}
 	self._state_data.STATE_DISABLED = {
-		color = Color("9e9e9e"):with_alpha(0.7),
+		color = Color("9e9e9e"):with_alpha(0.5),
 		selector_opacity = 0,
-		show_triangles = false
+		show_triangles = false,
+		scale = 0.7
 	}
 end
 
@@ -164,8 +174,10 @@ function RaidGUIControlBranchingBarSkilltreeNode:set_inactive()
 end
 
 function RaidGUIControlBranchingBarSkilltreeNode:set_hovered()
-	self._selector_panel:set_alpha(1)
-	self._selector_rect:set_visible(true)
+	if self._state == self.STATE_PENDING then
+		self._selector_panel:set_alpha(1)
+		self._selector_rect:set_visible(true)
+	end
 end
 
 function RaidGUIControlBranchingBarSkilltreeNode:set_selected()
@@ -202,14 +214,31 @@ function RaidGUIControlBranchingBarSkilltreeNode:set_disabled()
 	self._state = self.STATE_DISABLED
 
 	self:refresh_current_state()
+
+	if self._breadcrumb then
+		managers.breadcrumb:remove_breadcrumb(BreadcrumbManager.CATEGORY_RANK_REWARD, {
+			self._data.skill
+		})
+	end
 end
 
 function RaidGUIControlBranchingBarSkilltreeNode:refresh_current_state()
 	self._icon:set_color(self._state_data[self._state].color)
+
+	local icon = tweak_data.skilltree.skills[self._data.skill].icon or "skill_placeholder"
+
+	if self._state_data[self._state].scale then
+		self._icon:set_w(tweak_data.gui.icons[icon].texture_rect[3] * self._state_data[self._state].scale)
+		self._icon:set_h(tweak_data.gui.icons[icon].texture_rect[4] * self._state_data[self._state].scale)
+	else
+		self._icon:set_w(tweak_data.gui.icons[icon].texture_rect[3])
+		self._icon:set_h(tweak_data.gui.icons[icon].texture_rect[4])
+	end
+
+	self._icon:set_center(self._object:w() / 2, self._object:h() / 2)
 	self._selector_panel:set_alpha(self._state_data[self._state].selector_opacity)
 	self._selector_triangle_up:set_visible(self._state_data[self._state].show_triangles)
 	self._selector_triangle_down:set_visible(self._state_data[self._state].show_triangles)
-	self._selector_rect:set_visible(false)
 
 	self._data.state = self._state
 end
@@ -227,6 +256,13 @@ function RaidGUIControlBranchingBarSkilltreeNode:mouse_clicked(o, button, x, y)
 	end
 
 	return false
+end
+
+function RaidGUIControlBranchingBarSkilltreeNode:get_skill_node_size()
+	local x = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_W + RaidGUIControlBranchingBarSkilltreeNode.PADDING_HORIZONTAL * 2
+	local y = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_H + RaidGUIControlBranchingBarSkilltreeNode.PADDING_VERTICAL * 2
+
+	return x, y
 end
 
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_clicked(button)

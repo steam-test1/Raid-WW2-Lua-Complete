@@ -6,6 +6,7 @@ EnvironmentEffectsManager = EnvironmentEffectsManager or class(CoreEnvironmentEf
 function EnvironmentEffectsManager:init()
 	EnvironmentEffectsManager.super.init(self)
 	self:add_effect("rain", RainEffect:new())
+	self:add_effect("rain_light", RainEffectLight:new())
 	self:add_effect("raindrop_screen", RainDropScreenEffect:new())
 	self:add_effect("lightning", LightningEffect:new())
 
@@ -104,6 +105,14 @@ function RainEffect:stop()
 
 		self._vp = nil
 	end
+end
+
+RainEffectLight = RainEffectLight or class(RainEffect)
+
+function RainEffectLight:init()
+	RainEffect.init(self)
+
+	self._effect_name = Idstring("effects/vanilla/rain/rain_01_a_light")
 end
 
 LightningEffect = LightningEffect or class(EnvironmentEffect)

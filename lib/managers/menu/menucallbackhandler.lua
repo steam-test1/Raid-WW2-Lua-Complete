@@ -41,11 +41,11 @@ function MenuCallbackHandler:has_all_dlcs()
 end
 
 function MenuCallbackHandler:is_overlay_enabled()
-	return SystemInfo:platform() == Idstring("WIN32") and Steam:overlay_enabled() or false
+	return _G.IS_PC and Steam:overlay_enabled() or false
 end
 
 function MenuCallbackHandler:is_installed()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return true
 	end
 
@@ -145,7 +145,7 @@ function MenuCallbackHandler:is_level_50()
 end
 
 function MenuCallbackHandler:is_win32()
-	return SystemInfo:platform() == Idstring("WIN32")
+	return _G.IS_PC
 end
 
 function MenuCallbackHandler:is_fullscreen()
@@ -161,7 +161,7 @@ function MenuCallbackHandler:customize_controller_enabled()
 end
 
 function MenuCallbackHandler:is_win32_not_lan()
-	return SystemInfo:platform() == Idstring("WIN32") and not Global.game_settings.playing_lan
+	return _G.IS_PC and not Global.game_settings.playing_lan
 end
 
 function MenuCallbackHandler:is_console()
@@ -169,19 +169,19 @@ function MenuCallbackHandler:is_console()
 end
 
 function MenuCallbackHandler:is_ps3()
-	return SystemInfo:platform() == Idstring("PS3")
+	return _G.IS_PS3
 end
 
 function MenuCallbackHandler:is_ps4()
-	return SystemInfo:platform() == Idstring("PS4")
+	return _G.IS_PS4
 end
 
 function MenuCallbackHandler:is_x360()
-	return SystemInfo:platform() == Idstring("X360")
+	return _G.IS_XB360
 end
 
 function MenuCallbackHandler:is_xb1()
-	return SystemInfo:platform() == Idstring("XB1")
+	return _G.IS_XB1
 end
 
 function MenuCallbackHandler:is_not_x360()
@@ -283,7 +283,7 @@ function MenuCallbackHandler:hidden()
 end
 
 function MenuCallbackHandler:chat_visible()
-	return SystemInfo:platform() == Idstring("WIN32")
+	return _G.IS_PC
 end
 
 function MenuCallbackHandler:is_pc_controller()
@@ -550,10 +550,16 @@ function MenuCallbackHandler:toggle_subtitle(item)
 	managers.user:set_setting("subtitle", subtitle)
 end
 
-function MenuCallbackHandler:toggle_hit_indicator(item)
+function MenuCallbackHandler:choose_hit_indicator(item)
+	local value = item:value()
+
+	managers.user:set_setting("hit_indicator", value)
+end
+
+function MenuCallbackHandler:toggle_motion_dot(item)
 	local on = item:value() == "on"
 
-	managers.user:set_setting("hit_indicator", on)
+	managers.user:set_setting("motion_dot", on)
 end
 
 function MenuCallbackHandler:toggle_objective_reminder(item)
@@ -1000,8 +1006,8 @@ function MenuCallbackHandler:set_detail_distance(item)
 
 	managers.user:set_setting("detail_distance", detail_distance)
 
-	local min_maps = 0.01
-	local max_maps = 0.04
+	local min_maps = 0.005
+	local max_maps = 0.15
 	local maps = min_maps * detail_distance + max_maps * (1 - detail_distance)
 
 	World:set_min_allowed_projected_size(maps)
@@ -1536,6 +1542,8 @@ function MenuCallbackHandler:is_current_resolution(item)
 end
 
 function MenuCallbackHandler:end_game()
+	print(" MenuCallbackHandler:end_game() ")
+
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
 		text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
@@ -2112,14 +2120,7 @@ function MenuCallbackHandler:start_job(job_data)
 	end
 
 	if job_data.job_id == OperationsTweakData.ENTRY_POINT_LEVEL then
-		local mission = nil
-
-		if managers.raid_job:played_tutorial() then
-			mission = tweak_data.operations:mission_data(RaidJobManager.CAMP_ID)
-		else
-			mission = tweak_data.operations:mission_data(RaidJobManager.TUTORIAL_ID)
-		end
-
+		local mission = tweak_data.operations:mission_data(managers.raid_job:played_tutorial() and RaidJobManager.CAMP_ID or RaidJobManager.TUTORIAL_ID)
 		local data = {
 			background = mission.loading.image,
 			loading_text = mission.loading.text,

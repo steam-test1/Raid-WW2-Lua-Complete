@@ -445,7 +445,26 @@ function WeaponFactoryManager:assemble_default(factory_id, p_unit, third_person,
 end
 
 function WeaponFactoryManager:assemble_from_blueprint(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
+	blueprint = self:modify_skin_blueprint(factory_id, blueprint)
+
 	return self:_assemble(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
+end
+
+function WeaponFactoryManager:modify_skin_blueprint(factory_id, blueprint)
+	local modified_blueprint = {}
+	local skin_id = managers.weapon_inventory:get_weapons_skin(factory_id)
+
+	for i, v in ipairs(blueprint) do
+		local replacement = tweak_data.weapon.weapon_skins[skin_id] and tweak_data.weapon.weapon_skins[skin_id].replaces_parts and tweak_data.weapon.weapon_skins[skin_id].replaces_parts[v]
+
+		if replacement then
+			table.insert(modified_blueprint, replacement)
+		else
+			table.insert(modified_blueprint, v)
+		end
+	end
+
+	return modified_blueprint
 end
 
 function WeaponFactoryManager:assemble_for_visual_only(factory_id, p_unit, blueprint, third_person)
@@ -551,35 +570,37 @@ function WeaponFactoryManager:_get_forbidden_parts(factory_id, blueprint)
 	for _, part_id in ipairs(blueprint) do
 		local part = self:_part_data(part_id, factory_id, override)
 
-		if part.depends_on then
-			local part_forbidden = true
+		if part then
+			if part.depends_on then
+				local part_forbidden = true
 
-			for _, other_part_id in ipairs(blueprint) do
-				local other_part = self:_part_data(other_part_id, factory_id, override)
+				for _, other_part_id in ipairs(blueprint) do
+					local other_part = self:_part_data(other_part_id, factory_id, override)
 
-				if part.depends_on == other_part.type then
-					part_forbidden = false
+					if part.depends_on == other_part.type then
+						part_forbidden = false
 
-					break
+						break
+					end
+				end
+
+				if part_forbidden then
+					forbidden[part_id] = part.depends_on
 				end
 			end
 
-			if part_forbidden then
-				forbidden[part_id] = part.depends_on
+			if part.forbids then
+				for _, forbidden_id in ipairs(part.forbids) do
+					forbidden[forbidden_id] = part_id
+				end
 			end
-		end
 
-		if part.forbids then
-			for _, forbidden_id in ipairs(part.forbids) do
-				forbidden[forbidden_id] = part_id
-			end
-		end
+			if part.adds then
+				local add_forbidden = self:_get_forbidden_parts(factory_id, part.adds)
 
-		if part.adds then
-			local add_forbidden = self:_get_forbidden_parts(factory_id, part.adds)
-
-			for forbidden_id, part_id in pairs(add_forbidden) do
-				forbidden[forbidden_id] = part_id
+				for forbidden_id, part_id in pairs(add_forbidden) do
+					forbidden[forbidden_id] = part_id
+				end
 			end
 		end
 	end
@@ -595,7 +616,7 @@ function WeaponFactoryManager:_get_override_parts(factory_id, blueprint)
 	for _, part_id in ipairs(blueprint) do
 		local part = self:_part_data(part_id, factory_id)
 
-		if part.override then
+		if part and part.override then
 			for override_id, override_data in pairs(part.override) do
 				if override_data.override then
 					override_override[override_id] = override_data
@@ -607,7 +628,7 @@ function WeaponFactoryManager:_get_override_parts(factory_id, blueprint)
 	for _, part_id in ipairs(blueprint) do
 		local part = self:_part_data(part_id, factory_id, override_override)
 
-		if part.override then
+		if part and part.override then
 			for override_id, override_data in pairs(part.override) do
 				overridden[override_id] = override_data
 			end
@@ -736,6 +757,10 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 	local factory = tweak_data.weapon.factory
 	local part = self:_part_data(part_id, factory_id, override)
+
+	if not part then
+		return
+	end
 
 	if factory[factory_id].adds and factory[factory_id].adds[part_id] then
 		for _, add_id in ipairs(factory[factory_id].adds[part_id]) do

@@ -1,4 +1,5 @@
 NpcVehicleStatePursuit = NpcVehicleStatePursuit or class(NpcBaseVehicleState)
+NpcVehicleStatePursuit.STUCK_WAIT_TIME = 5
 
 function NpcVehicleStatePursuit:init(unit)
 	NpcBaseVehicleState.init(self, unit)
@@ -28,7 +29,7 @@ function NpcVehicleStatePursuit:init(unit)
 		}
 	}
 	local cop_position = self._unit:position()
-	local delayed_tick = Application:time() + 5
+	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
 		distance = 0,
 		timeframe = 1,
@@ -38,10 +39,10 @@ function NpcVehicleStatePursuit:init(unit)
 end
 
 function NpcVehicleStatePursuit:on_enter(npc_driving_ext)
-	print("Npc state change: ", self:name())
+	print("NPC State Change: ", self:name())
 
 	local cop_position = self._unit:position()
-	local delayed_tick = Application:time() + 5
+	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
 		distance = 0,
 		timeframe = 1,
@@ -203,6 +204,8 @@ function NpcVehicleStatePursuit:handle_stuck_vehicle(npc_driving_ext, t, dt)
 
 		if self._tachograph.distance <= 1 then
 			self._next_state = self:_choose_recovery_maneuver()
+
+			Application:trace("Veh Unit ID stuck, desired direction, recovery maneuver: ", self._unit:unit_data().unit_id, self._desired_direction, self._next_state)
 		end
 	end
 end

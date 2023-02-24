@@ -40,7 +40,7 @@ function CopActionDodge:init(action_desc, common_data)
 		self._machine:set_parameter(redir_res, action_desc.side, 1)
 
 		if Network:is_server() then
-			local accuracy = math.clamp(math.floor((action_desc.shoot_accuracy or 1) * 10) / 10, 0, 10)
+			local accuracy = math.clamp(math.floor(self:accuracy_multiplier() * 10), 0, 10)
 
 			common_data.ext_network:send("action_dodge_start", self._body_part, CopActionDodge._get_variation_index(action_desc.variation), CopActionDodge._get_side_index(action_desc.side), Rotation(action_desc.direction, math.UP):yaw(), action_desc.speed or 1, accuracy)
 		end

@@ -205,7 +205,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		local gamercard_prompts_shown = 0
 		local stats_per_peer = {}
 

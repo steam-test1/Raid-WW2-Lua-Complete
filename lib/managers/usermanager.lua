@@ -76,23 +76,23 @@ function GenericUserManager:is_global_initialized()
 	return Global.user_manager and not Global.user_manager.initializing
 end
 
-local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-local is_x360 = SystemInfo:platform() == Idstring("X360")
-local is_ps4 = SystemInfo:platform() == Idstring("PS4")
-local is_xb1 = SystemInfo:platform() == Idstring("XB1")
+local is_ps3 = _G.IS_PS3
+local is_x360 = _G.IS_XB360
+local is_ps4 = _G.IS_PS4
+local is_xb1 = _G.IS_XB1
 
 function GenericUserManager:setup_setting_map()
 	self:setup_setting(1, "invert_camera_x", false)
 	self:setup_setting(2, "invert_camera_y", false)
 	self:setup_setting(3, "camera_sensitivity", 1)
 	self:setup_setting(4, "rumble", true)
-	self:setup_setting(5, "music_volume", 50)
-	self:setup_setting(6, "sfx_volume", 50)
+	self:setup_setting(5, "music_volume", 100)
+	self:setup_setting(6, "sfx_volume", 100)
 	self:setup_setting(7, "subtitle", true)
 	self:setup_setting(8, "brightness", 1)
 	self:setup_setting(9, "hold_to_steelsight", true)
 	self:setup_setting(10, "hold_to_run", not is_ps3 and not is_x360 and not is_ps4 and not is_xb1 and true)
-	self:setup_setting(11, "voice_volume", 50)
+	self:setup_setting(11, "voice_volume", 100)
 	self:setup_setting(12, "controller_mod", {})
 	self:setup_setting(13, "alienware_mask", true)
 	self:setup_setting(14, "developer_mask", true)
@@ -105,14 +105,14 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(21, "video_streaks", true)
 	self:setup_setting(22, "mask_set", "clowns")
 	self:setup_setting(23, "use_lightfx", false)
-	self:setup_setting(24, "fov_standard", 75)
-	self:setup_setting(25, "fov_zoom", 75)
+	self:setup_setting(24, "fov_standard", 85)
+	self:setup_setting(25, "fov_zoom", 85)
 	self:setup_setting(26, "camera_zoom_sensitivity", 1)
 	self:setup_setting(27, "enable_camera_zoom_sensitivity", false)
 	self:setup_setting(28, "light_adaption", true)
 	self:setup_setting(29, "menu_theme", "fire")
 	self:setup_setting(30, "newest_theme", "fire")
-	self:setup_setting(31, "hit_indicator", true)
+	self:setup_setting(31, "hit_indicator", 2)
 	self:setup_setting(32, "aim_assist", true)
 	self:setup_setting(33, "controller_mod_type", "pc")
 	self:setup_setting(34, "objective_reminder", true)
@@ -137,8 +137,8 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(53, "detail_distance", 1)
 	self:setup_setting(54, "use_parallax", true)
 	self:setup_setting(55, "colorblind_setting", "off")
-	self:setup_setting(56, "voice_over_volume", 50)
-	self:setup_setting(57, "master_volume", 50)
+	self:setup_setting(56, "voice_over_volume", 100)
+	self:setup_setting(57, "master_volume", 40)
 	self:setup_setting(58, "camera_sensitivity_x", 1)
 	self:setup_setting(59, "camera_sensitivity_y", 1)
 	self:setup_setting(60, "enable_camera_sensitivity_separate", false)
@@ -146,6 +146,14 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(62, "camera_zoom_sensitivity_y", 1)
 	self:setup_setting(63, "sticky_aim", true)
 	self:setup_setting(64, "use_camera_accel", true)
+	self:setup_setting(65, "motion_dot", 0)
+	self:setup_setting(66, "motion_dot_size", 2)
+	self:setup_setting(67, "motion_dot_icon", 1)
+	self:setup_setting(68, "motion_dot_offset", 3)
+	self:setup_setting(69, "motion_dot_color", 1)
+	self:setup_setting(70, "motion_dot_toggle_aim", false)
+	self:setup_setting(71, "tinnitus_sound_enabled", true)
+	self:setup_setting(72, "hud_special_weapon_panels", true)
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)
@@ -179,7 +187,6 @@ function GenericUserManager:reset_controls_setting_map()
 		"camera_sensitivity",
 		"camera_zoom_sensitivity",
 		"enable_camera_zoom_sensitivity",
-		"invert_camera_y",
 		"hold_to_steelsight",
 		"hold_to_run",
 		"hold_to_duck",
@@ -187,6 +194,7 @@ function GenericUserManager:reset_controls_setting_map()
 		"aim_assist",
 		"southpaw",
 		"invert_camera_x",
+		"invert_camera_y",
 		"camera_sensitivity_x",
 		"camera_sensitivity_y",
 		"enable_camera_sensitivity_separate",
@@ -242,7 +250,13 @@ function GenericUserManager:reset_advanced_video_setting_map()
 		"max_streaming_chunk",
 		"colorblind_setting",
 		"dof_setting",
-		"fov_multiplier"
+		"fov_multiplier",
+		"motion_dot",
+		"motion_dot_size",
+		"motion_dot_icon",
+		"motion_dot_offset",
+		"motion_dot_color",
+		"motion_dot_toggle_aim"
 	}
 
 	for _, name in pairs(settings) do
@@ -258,7 +272,8 @@ function GenericUserManager:reset_sound_setting_map()
 		"voice_over_volume",
 		"voice_chat",
 		"push_to_talk",
-		"master_volume"
+		"master_volume",
+		"tinnitus_sound_enabled"
 	}
 
 	for _, name in pairs(settings) do
@@ -733,8 +748,14 @@ end
 function GenericUserManager:set_setting_map(setting_map)
 	for id, value in pairs(setting_map) do
 		local name = Global.user_manager.setting_data_id_to_name_map[id]
+		local default_value = self:get_default_setting(name)
 
-		self:set_setting(name, value)
+		if default_value and type(value) ~= type(default_value) then
+			self:set_setting(name, default_value)
+			Application:warn("[UserManager] type did not line up with the default value, resetting " .. name .. " to default!")
+		else
+			self:set_setting(name, value)
+		end
 	end
 end
 
@@ -759,15 +780,6 @@ function GenericUserManager:load(data, cache_version)
 		self:set_setting_map(data)
 	else
 		self:set_setting_map(data.UserManager)
-	end
-
-	if SystemInfo:platform() ~= Idstring("PS3") then
-		local NEWEST_THEME = "zombie"
-
-		if self:get_setting("newest_theme") ~= NEWEST_THEME then
-			self:set_setting("newest_theme", NEWEST_THEME)
-			self:set_setting("menu_theme", NEWEST_THEME)
-		end
 	end
 
 	if Global.DEBUG_MENU_ON then

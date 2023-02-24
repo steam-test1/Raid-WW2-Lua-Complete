@@ -100,3 +100,24 @@ function UnitDamage:parent_run_sequence(sequence_name)
 		Application:error(sequence_name, "sequence does not exist in:\n", parent_unit:name())
 	end
 end
+
+function UnitDamage:hit_headshot_confirmed(attacker_unit)
+	if attacker_unit == managers.player:player_unit() then
+		Application:debug("[UnitDamage] hit_headshot_confirmed!", attacker_unit)
+		managers.hud:on_headshot_confirmed()
+	end
+end
+
+function UnitDamage:hit_hit_confirmed(attacker_unit)
+	if attacker_unit == managers.player:player_unit() then
+		Application:debug("[UnitDamage] hit_hit_confirmed!", attacker_unit)
+		managers.hud:on_hit_confirmed()
+	end
+end
+
+function UnitDamage:hit_crit_confirmed(attacker_unit)
+	if attacker_unit == managers.player:player_unit() then
+		Application:debug("[UnitDamage] hit_crit_confirmed!", attacker_unit)
+		managers.hud:on_crit_confirmed()
+	end
+end

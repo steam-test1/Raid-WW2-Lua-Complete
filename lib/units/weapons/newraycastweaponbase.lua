@@ -160,6 +160,14 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 				end
 			end
 		end
+
+		if not self._hud_class_override then
+			local hud_class_override = managers.weapon_factory:get_part_data_type_from_weapon_by_type("magazine", "hud_class_override", self._parts)
+
+			if hud_class_override then
+				self._hud_class_override = hud_class_override
+			end
+		end
 	end
 
 	if not self._bullet_objects or #self._bullet_objects == 0 then
@@ -196,6 +204,10 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 	end
 
 	clbk()
+end
+
+function NewRaycastWeaponBase:get_weapon_hud_type()
+	return self._hud_class_override
 end
 
 function NewRaycastWeaponBase:apply_texture_switches()
@@ -490,7 +502,6 @@ function NewRaycastWeaponBase:_update_stats_values()
 	self._total_ammo_mod = self._current_stats.total_ammo_mod or self._total_ammo_mod
 	self._gadgets = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("gadget", self._factory_id, self._blueprint)
 	self._scopes = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("scope", self._factory_id, self._blueprint)
-	self._can_highlight = managers.weapon_factory:has_perk("highlight", self._factory_id, self._blueprint)
 
 	self:_check_second_sight()
 	self:_check_reticle_obj()
@@ -696,10 +707,8 @@ function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 
 	for part_id, part_data in pairs(self._parts) do
 		if not part_data.unit then
-			break
-		end
-
-		if part_data.animations and part_data.animations[anim] then
+			-- Nothing
+		elseif part_data.animations and part_data.animations[anim] then
 			local anim_name = part_data.animations[anim]
 			local length = part_data.unit:anim_length(Idstring(anim_name))
 			speed_multiplier = speed_multiplier or 1
@@ -1062,7 +1071,9 @@ function NewRaycastWeaponBase:_get_fire_recoil()
 	local weapon_tweak = self:weapon_tweak_data()
 
 	if weapon_tweak.kick.formula then
-		return weapon_tweak.kick.formula(self._recoil_firing)
+		local f = weapon_tweak.kick.formula(self._recoil_firing)
+
+		return f
 	end
 
 	return 0
@@ -1267,8 +1278,9 @@ end
 
 function NewRaycastWeaponBase:recoil_addend()
 	local recoil = managers.blackmarket:recoil_addend(self._name_id, self:weapon_tweak_data().category, self._current_stats_indices and self._current_stats_indices.recoil, self._silencer, self._blueprint)
+	local re = recoil + (self._recoil_firing or 0)
 
-	return recoil + (self._recoil_firing or 0)
+	return re
 end
 
 function NewRaycastWeaponBase:recoil_multiplier()

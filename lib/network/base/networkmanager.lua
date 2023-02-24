@@ -43,7 +43,7 @@ end
 
 NetworkManager.DROPIN_ENABLED = true
 
-if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1") then
+if _G.IS_XB360 or _G.IS_PS3 or _G.IS_PS4 or _G.IS_XB1 then
 	NetworkManager.PROTOCOL_TYPE = "TCP_IP"
 else
 	NetworkManager.PROTOCOL_TYPE = "STEAM"
@@ -64,13 +64,13 @@ function NetworkManager:init()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		self._is_ps3 = true
-	elseif SystemInfo:platform() == Idstring("X360") then
+	elseif _G.IS_XB360 then
 		self._is_x360 = true
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		self._is_ps4 = true
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		self._is_xb1 = true
 	else
 		self._is_win32 = true
@@ -511,7 +511,7 @@ function NetworkManager:on_discover_host_received(sender)
 
 	local my_name = nil
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		my_name = "Player 1"
 	else
 		my_name = Network:hostname()
@@ -676,7 +676,7 @@ function NetworkManager:on_peer_added(peer, peer_id)
 		managers.network.matchmake:set_num_players(managers.network:session():amount_of_players())
 	end
 
-	if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB360 or _G.IS_XB1 then
 		managers.network.matchmake:on_peer_added(peer)
 	end
 
@@ -692,7 +692,7 @@ function NetworkManager:update_matchmake_attributes()
 end
 
 function NetworkManager:get_matchmake_attributes()
-	local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+	local is_win32 = _G.IS_PC
 	local difficulty_id = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
 	local permission_id = tweak_data:permission_to_index(Global.game_settings.permission)
 	local min_lvl = Global.game_settings.reputation_permission or 0

@@ -569,6 +569,16 @@ function table.print_data(data, t)
 	end
 end
 
+function table.fill_with_item(item, amount, data)
+	data = data or {}
+
+	for i = 1, amount do
+		table.insert(data, item)
+	end
+
+	return data
+end
+
 if Application:ews_enabled() then
 	local __lua_representation, __write_lua_representation_to_file = nil
 

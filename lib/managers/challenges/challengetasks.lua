@@ -62,6 +62,14 @@ function ChallengeTask:type()
 	return self._type
 end
 
+function ChallengeTask:briefing_id()
+	return self._briefing_id
+end
+
+function ChallengeTask:done_text_id()
+	return self._done_text_id
+end
+
 function ChallengeTask:force_complete()
 	if self:completed() then
 		return
@@ -82,6 +90,8 @@ function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_da
 	self._parent_challenge_id = challenge_id
 	self._id = self._parent_challenge_id .. "_kill_enemies"
 	self._type = ChallengeTweakData.TASK_KILL_ENEMIES
+	self._briefing_id = task_data.challenge_briefing_id
+	self._done_text_id = task_data.challenge_done_text_id
 	self._modifiers = task_data.modifiers or {}
 	self._reminders = task_data.reminders or {}
 end
@@ -210,6 +220,8 @@ function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_da
 	self._parent_challenge_category = challenge_category
 	self._parent_challenge_id = challenge_id
 	self._id = self._parent_challenge_id .. "_collect_ammo"
+	self._briefing_id = task_data.challenge_briefing_id
+	self._done_text_id = task_data.challenge_done_text_id
 	self._type = ChallengeTweakData.TASK_COLLECT_AMMO
 	self._reminders = task_data.reminders or {}
 end

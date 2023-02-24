@@ -15,7 +15,7 @@ function RaidGUIControlBackgroundImage:init()
 end
 
 function RaidGUIControlBackgroundImage:_real_aspect_ratio()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()

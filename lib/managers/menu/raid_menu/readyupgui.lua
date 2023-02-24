@@ -123,14 +123,22 @@ function ReadyUpGui:_layout_buttons()
 		self._kick_button:hide()
 	end
 
-	self._leave_lobby_button = self._root_panel:short_tertiary_button({
-		name = "leave_lobby_button",
+	local _leave_lobby_button_params = {
 		visible = false,
+		name = "leave_lobby_button",
 		x = self._ready_up_button:right() + 64,
-		y = button_y,
-		text = self:translate("menu_leave_lobby_button", true),
-		on_click_callback = callback(self, self, "_on_leave_lobby_button")
-	})
+		y = button_y
+	}
+
+	if Network:is_server() then
+		_leave_lobby_button_params.text = self:translate("menu_leave_ready_up_button", true)
+		_leave_lobby_button_params.on_click_callback = callback(self, self, "_on_leave_ready_up_button")
+	else
+		_leave_lobby_button_params.text = self:translate("menu_leave_lobby_button", true)
+		_leave_lobby_button_params.on_click_callback = callback(self, self, "_on_leave_lobby_button")
+	end
+
+	self._leave_lobby_button = self._root_panel:short_tertiary_button(_leave_lobby_button_params)
 
 	self._leave_lobby_button:disable()
 	self._leave_lobby_button:hide()
@@ -669,6 +677,12 @@ function ReadyUpGui:_update_status()
 	end
 end
 
+function ReadyUpGui:reset_ready_ups()
+	for i, v in ipairs(self._player_control_list) do
+		control:params().ready = false
+	end
+end
+
 function ReadyUpGui:_on_select_card_button()
 	if not self._suggest_card_button:enabled() then
 		return
@@ -765,6 +779,15 @@ function ReadyUpGui:_on_leave_lobby_button()
 	self._callback_handler:end_game()
 end
 
+function ReadyUpGui:_on_leave_ready_up_button()
+	if not self._leave_lobby_button:enabled() then
+		return
+	end
+
+	print(" self._callback_handler:end_game() ")
+	self._callback_handler:leave_ready_up()
+end
+
 function ReadyUpGui:close()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(false)
 	self:_enable_dof()
@@ -774,23 +797,27 @@ function ReadyUpGui:close()
 	self._chat:unregister()
 	managers.hud:hud_chat():register()
 
-	for _, unit in pairs(self._spawned_character_units) do
-		unit:set_slot(0)
+	if self._spawned_character_units then
+		for _, unit in pairs(self._spawned_character_units) do
+			unit:set_slot(0)
 
-		unit = nil
-	end
-
-	self._spawned_character_units = nil
-
-	for _, parts in pairs(self._spawned_weapon_parts) do
-		for _, part in ipairs(parts) do
-			part:set_slot(0)
-
-			part = nil
+			unit = nil
 		end
+
+		self._spawned_character_units = nil
 	end
 
-	self._spawned_weapon_parts = nil
+	if self._spawned_weapon_parts then
+		for _, parts in pairs(self._spawned_weapon_parts) do
+			for _, part in ipairs(parts) do
+				part:set_slot(0)
+
+				part = nil
+			end
+		end
+
+		self._spawned_weapon_parts = nil
+	end
 
 	managers.lootdrop:clear_dropped_loot()
 	ReadyUpGui.super.close(self)
@@ -1047,7 +1074,7 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 		end
 	end
 
-	if not is_current_player and SystemInfo:platform() == Idstring("XB1") then
+	if not is_current_player and _G.IS_XB1 then
 		local gamercard_key = {
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "show_gamercard")

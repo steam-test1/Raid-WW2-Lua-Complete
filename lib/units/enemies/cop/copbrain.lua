@@ -918,7 +918,7 @@ function CopBrain:on_suppressed(state)
 	if self._current_logic.on_suppressed_state then
 		self._current_logic.on_suppressed_state(self._logic_data)
 
-		if self._logic_data.char_tweak.chatter.suppress then
+		if state and self._logic_data.char_tweak.chatter.suppress then
 			self._unit:sound():say("help", true)
 		end
 	end
@@ -926,13 +926,12 @@ end
 
 function CopBrain:attention_objects()
 	if self._logic_data.attention_obj then
-		print("attention_obj")
-		print(inspect(self._logic_data.attention_obj))
+		-- Nothing
 	end
 
 	for u_key, attention_data in pairs(self._logic_data.detected_attention_objects) do
 		if self._logic_data.attention_obj ~= attention_data then
-			print(inspect(attention_data))
+			-- Nothing
 		end
 	end
 end

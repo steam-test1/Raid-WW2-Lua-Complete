@@ -31,6 +31,8 @@ RaidGUIItemAvailabilityFlag.VOICE_ENABLED = "voice_enabled"
 RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU = "is_in_main_menu"
 RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU = "is_not_in_main_menu"
 RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL = "should_show_tutorial"
+RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL = "should_not_show_tutorial"
+RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL_SKIP = "should_show_tutorial_skip"
 RaidGUIItemAvailabilityFlag.HAS_SPECIAL_EDITION = "has_special_edition"
 RaidMenuCallbackHandler = RaidMenuCallbackHandler or class(CoreMenuCallbackHandler.CallbackHandler)
 
@@ -106,6 +108,7 @@ end
 
 function RaidMenuCallbackHandler:_dialog_clear_progress_yes()
 	if game_state_machine:current_state_name() == "menu_main" then
+		Application:debug("[RaidMenuCallbackHandler] PROGRESS CLEAR PRESSED YES")
 		managers.savefile:clear_progress_data()
 	else
 		Global.reset_progress = true
@@ -183,6 +186,8 @@ function RaidMenuCallbackHandler:show_credits()
 end
 
 function RaidMenuCallbackHandler:end_game()
+	print(" RaidMenuCallbackHandler:end_game() ")
+
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
 		text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
@@ -212,6 +217,46 @@ function RaidMenuCallbackHandler:_dialog_end_game_yes()
 end
 
 function RaidMenuCallbackHandler:_dialog_end_game_no()
+end
+
+function RaidMenuCallbackHandler:leave_ready_up()
+	if game_state_machine:current_state_name() == "ingame_lobby_menu" then
+		self:end_game()
+
+		return
+	end
+
+	local dialog_data = {
+		title = managers.localization:text("dialog_warning_title"),
+		text = managers.localization:text("dialog_are_you_sure_you_want_leave_ready_up"),
+		id = "leave_ready_up"
+	}
+	local yes_button = {
+		text = managers.localization:text("dialog_yes"),
+		callback_func = callback(self, self, "_dialog_leave_ready_up_yes")
+	}
+	local no_button = {
+		text = managers.localization:text("dialog_no"),
+		callback_func = callback(self, self, "_dialog_leave_ready_up_no"),
+		class = RaidGUIControlButtonShortSecondary,
+		cancel_button = true
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+
+	return true
+end
+
+function RaidMenuCallbackHandler:_dialog_leave_ready_up_yes()
+	managers.raid_menu:close_all_menus()
+	managers.network:session():send_to_peers_synched("leave_ready_up_menu")
+end
+
+function RaidMenuCallbackHandler:_dialog_leave_ready_up_no()
 end
 
 function RaidMenuCallbackHandler:debug_camp()
@@ -283,15 +328,23 @@ function RaidMenuCallbackHandler:has_special_edition()
 end
 
 function RaidMenuCallbackHandler:should_show_tutorial()
-	return game_state_machine:current_state_name() == "menu_main" and managers.raid_job:played_tutorial()
+	return game_state_machine:current_state_name() == "menu_main" and not managers.raid_job:played_tutorial()
+end
+
+function RaidMenuCallbackHandler:should_not_show_tutorial()
+	return not self:should_show_tutorial()
+end
+
+function RaidMenuCallbackHandler:should_show_tutorial_skip()
+	return managers.raid_job:is_in_tutorial()
 end
 
 function RaidMenuCallbackHandler:is_ps3()
-	return SystemInfo:platform() == Idstring("PS3")
+	return _G.IS_PS3
 end
 
 function RaidMenuCallbackHandler:is_win32()
-	return SystemInfo:platform() == Idstring("WIN32")
+	return _G.IS_PC
 end
 
 function RaidMenuCallbackHandler:restart_vote_visible()
@@ -501,7 +554,7 @@ end
 
 function RaidMenuCallbackHandler:raid_play_online()
 	Global.game_settings.single_player = false
-	Global.exe_argument_level = "streaming_level"
+	Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
 	MenuCallbackHandler:start_job({
@@ -511,16 +564,9 @@ function RaidMenuCallbackHandler:raid_play_online()
 end
 
 function RaidMenuCallbackHandler:raid_play_offline()
-	Global.exe_argument_level = "streaming_level"
+	Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
-	local mission = nil
-
-	if managers.raid_job:played_tutorial() then
-		mission = tweak_data.operations:mission_data(RaidJobManager.CAMP_ID)
-	else
-		mission = tweak_data.operations:mission_data(RaidJobManager.TUTORIAL_ID)
-	end
-
+	local mission = tweak_data.operations:mission_data(managers.raid_job:played_tutorial() and RaidJobManager.CAMP_ID or RaidJobManager.TUTORIAL_ID)
 	local data = {
 		background = mission.loading.image,
 		loading_text = mission.loading.text,
@@ -542,6 +588,14 @@ function RaidMenuCallbackHandler:raid_play_tutorial()
 	Application:debug("[RaidMenuCallbackHandler][raid_play_tutorial] Starting tutorial")
 	managers.raid_job:set_temp_play_flag()
 	self:raid_play_offline()
+end
+
+function RaidMenuCallbackHandler:raid_skip_tutorial()
+	Application:debug("[RaidMenuCallbackHandler][raid_skip_tutorial] Skipping and ending tutorial")
+	managers.raid_job:save_tutorial_played_flag(true)
+	managers.global_state:fire_event("system_end_tutorial")
+	managers.raid_menu:on_escape()
+	managers.queued_tasks:queue(nil, managers.global_state.fire_event, managers.global_state, "system_end_raid", 1, nil)
 end
 
 function MenuCallbackHandler:on_play_clicked()
@@ -609,7 +663,7 @@ end
 function RaidMenuCallbackHandler:view_gamer_card(xuid)
 	Application:trace("[RaidMenuCallbackHandler:view_gamer_card] xuid:", tostring(xuid))
 
-	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB1 or _G.IS_XB360 then
 		XboxLive:show_gamer_card_ui(managers.user:get_platform_id(), xuid)
 	end
 end
@@ -747,6 +801,10 @@ function MenuCallbackHandler:toggle_push_to_talk_raid(value)
 	managers.user:set_setting("push_to_talk", value)
 end
 
+function MenuCallbackHandler:toggle_tinnitus_raid(value)
+	managers.user:set_setting("tinnitus_sound_enabled", value)
+end
+
 function MenuCallbackHandler:change_resolution_raid(resolution, no_dialog)
 	local old_resolution = RenderSettings.resolution
 
@@ -856,8 +914,20 @@ function MenuCallbackHandler:toggle_subtitle_raid(value)
 	managers.user:set_setting("subtitle", value)
 end
 
-function MenuCallbackHandler:toggle_hit_indicator_raid(value)
+function MenuCallbackHandler:set_hit_indicator_raid(value)
 	managers.user:set_setting("hit_indicator", value)
+end
+
+function MenuCallbackHandler:toggle_hud_special_weapon_panels(value)
+	managers.user:set_setting("hud_special_weapon_panels", value)
+end
+
+function MenuCallbackHandler:set_motion_dot_raid(value)
+	managers.user:set_setting("motion_dot", value)
+
+	if managers.hud then
+		managers.hud:set_motiondot_visibility(value)
+	end
 end
 
 function MenuCallbackHandler:toggle_objective_reminder_raid(value)
@@ -922,8 +992,8 @@ end
 function MenuCallbackHandler:set_detail_distance_raid(detail_distance)
 	managers.user:set_setting("detail_distance", detail_distance)
 
-	local min_maps = 0.01
-	local max_maps = 0.04
+	local min_maps = 0.005
+	local max_maps = 0.15
 	local maps = min_maps * detail_distance + max_maps * (1 - detail_distance)
 
 	World:set_min_allowed_projected_size(maps)

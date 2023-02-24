@@ -181,6 +181,7 @@ function VehicleDrivingExt:set_tweak_data(data)
 	self._tweak_data = data
 	self._seats = deep_clone(self._tweak_data.seats)
 	self._loot_points = deep_clone(self._tweak_data.loot_points)
+	self._secure_loot = self._tweak_data.secure_loot
 
 	for _, seat in pairs(self._seats) do
 		seat.occupant = nil
@@ -475,6 +476,14 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	elseif self._unit:damage():has_sequence("action_add_bag") then
 		self._unit:damage():run_sequence_simple("action_add_bag")
 	end
+
+	if self._secure_loot then
+		Application:trace("VehicleDrivingExt:add_loot secure the loot", carry_id, multiplier)
+
+		local silent = self._secure_loot == "secure_silent"
+
+		managers.loot:secure(carry_id, multiplier, silent)
+	end
 end
 
 function VehicleDrivingExt:sync_loot(carry_id, multiplier)
@@ -666,13 +675,14 @@ end
 function VehicleDrivingExt:_loot_filter_func(carry_data)
 	local carry_id = carry_data:carry_id()
 
-	if carry_id == "gold" or carry_id == "money" or carry_id == "diamonds" or carry_id == "coke" or carry_id == "weapon" or carry_id == "painting" or carry_id == "circuit" or carry_id == "diamonds" or carry_id == "engine_01" or carry_id == "engine_02" or carry_id == "engine_03" or carry_id == "engine_04" or carry_id == "engine_05" or carry_id == "engine_06" or carry_id == "engine_07" or carry_id == "engine_08" or carry_id == "engine_09" or carry_id == "engine_10" or carry_id == "engine_11" or carry_id == "engine_12" or carry_id == "meth" or carry_id == "lance_bag" or carry_id == "lance_bag_large" or carry_id == "grenades" or carry_id == "ammo" or carry_id == "cage_bag" or carry_id == "turret" or carry_id == "artifact_statue" or carry_id == "samurai_suit" or carry_id == "equipment_bag" or carry_id == "cro_loot1" or carry_id == "cro_loot2" or carry_id == "ladder_bag" or carry_id == "warhead" or carry_id == "paper_roll" or carry_id == "counterfeit_money" or carry_id == "gold_tile" or carry_id == "flak_shell" or carry_id == "spiked_wine_barrel" or carry_id == "german_spy" or carry_id == "plank" or carry_id == "painting_sto" or carry_id == "gold_bar" then
-		return true
-	elseif tweak_data.carry[carry_data:carry_id()].is_unique_loot then
-		return true
+	if self._tweak_data.loot_filter and not not self._tweak_data.loot_filter[carry_id] then
+		return self._tweak_data.loot_filter[carry_id]
 	end
 
-	return false
+	local carry_data = tweak_data.carry[carry_id]
+	local carry_id_allowed = not self._tweak_data.allow_only_filtered and (carry_data.is_unique_loot or carry_data.loot_value or carry_data.value_in_gold)
+
+	return carry_id_allowed
 end
 
 function VehicleDrivingExt:_catch_loot()
@@ -774,7 +784,7 @@ function VehicleDrivingExt:disable_loot_interaction()
 end
 
 function VehicleDrivingExt:is_loot_interaction_enabled()
-	return self._loot_interaction_enabled
+	return self._loot_interaction_enabled and not self._secure_loot
 end
 
 function VehicleDrivingExt:enable_accepting_loot()
@@ -1341,8 +1351,8 @@ function VehicleDrivingExt:on_vehicle_death()
 end
 
 function VehicleDrivingExt:repair_vehicle()
-	self:set_state(VehicleDrivingExt.STATE_PARKED)
 	self._unit:character_damage():revive()
+	self:set_state(VehicleDrivingExt.STATE_DRIVING)
 end
 
 function VehicleDrivingExt:is_vulnerable()

@@ -8,9 +8,14 @@ RaidGUIControlMissionUnlock.DESCRIPTION_Y_OFFSET = 30
 function RaidGUIControlMissionUnlock:init(parent, params)
 	RaidGUIControlMissionUnlock.super.init(self, parent, params)
 
+	self._mission = params.mission
+
+	if not tweak_data.operations.missions[self._mission] then
+		Application:error("[RaidGUIControlMissionUnlock] Trying to init with an invalid or removed mission ID!", self._mission)
+	end
+
 	self._on_click_callback = params.on_click_callback
 	self._on_double_click_callback = params.on_double_click_callback
-	self._mission = params.mission
 
 	self:_create_panel()
 	self:_create_background()
@@ -113,6 +118,13 @@ end
 
 function RaidGUIControlMissionUnlock:_create_folder()
 	local mission_tweak_data = tweak_data.operations:mission_data(self._mission)
+
+	if not mission_tweak_data then
+		Application:error("[RaidGUIControlMissionUnlock] Mission Data was missing for mission", self._mission)
+
+		return
+	end
+
 	local folder_panel_params = {
 		name = "folder_panel",
 		h = 448,
@@ -133,14 +145,15 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self._folder_image:set_center_x(self._folder_panel:w() / 2)
 	self._folder_image:set_center_y(self._folder_panel:h() / 2)
 
-	local icon_w = tweak_data.gui:icon_w(mission_tweak_data.icon_menu_big)
-	local icon_h = tweak_data.gui:icon_h(mission_tweak_data.icon_menu_big)
+	local icon_id = mission_tweak_data.icon_menu_big or "xp_events_missions_raids_category"
+	local icon_w = tweak_data.gui:icon_w(icon_id)
+	local icon_h = tweak_data.gui:icon_h(icon_id)
 	local mission_image_params = {
 		name = "mission_icon",
 		valign = "center",
 		halign = "center",
-		texture = tweak_data.gui.icons[mission_tweak_data.icon_menu_big].texture,
-		texture_rect = tweak_data.gui.icons[mission_tweak_data.icon_menu_big].texture_rect,
+		texture = tweak_data.gui.icons[icon_id].texture,
+		texture_rect = tweak_data.gui.icons[icon_id].texture_rect,
 		w = self._folder_image:w() * 0.7,
 		layer = self._folder_image:layer() + 1,
 		color = tweak_data.gui.colors.raid_light_red,

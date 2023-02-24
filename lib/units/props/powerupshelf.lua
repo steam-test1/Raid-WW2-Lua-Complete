@@ -12,13 +12,17 @@ function PowerupShelf:spawn_pickups()
 		return
 	end
 
-	local loot_locator = self._unit:get_object(Idstring("item_01"))
-	local index = 2
+	local index = 1
 
-	while loot_locator ~= nil do
+	while index < 100 do
+		local loot_locator = self._unit:get_object(Idstring("item_" .. string.format("%02d", index)))
+
+		if loot_locator == nil then
+			break
+		end
+
 		managers.drop_loot:drop_item(self._tweak_table, loot_locator:position(), loot_locator:rotation())
 
-		loot_locator = self._unit:get_object(Idstring("item_" .. string.format("%02d", index)))
 		index = index + 1
 	end
 

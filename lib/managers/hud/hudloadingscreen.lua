@@ -57,18 +57,6 @@ HUDLoadingScreen.TIP_TEXT_FONT = tweak_data.gui.fonts.lato
 HUDLoadingScreen.TIP_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.medium
 HUDLoadingScreen.TIP_TEXT_COLOR = Color("878787")
 HUDLoadingScreen.LOADING_ICON_PANEL_H = 64
-HUDLoadingScreen.LOADING_SCREEN_TIPS = {
-	"tip_tactical_reload",
-	"tip_weapon_effecienty",
-	"tip_switch_to_sidearm",
-	"tip_head_shot",
-	"tip_help_bleed_out",
-	"tip_steelsight",
-	"tip_melee_attack",
-	"tip_objectives",
-	"tip_select_reward",
-	"tip_shoot_in_bleed_out"
-}
 
 function HUDLoadingScreen:init(hud)
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
@@ -593,10 +581,16 @@ function HUDLoadingScreen:_layout_default()
 end
 
 function HUDLoadingScreen:_get_random_tip()
-	local number_of_tips = #HUDLoadingScreen.LOADING_SCREEN_TIPS
-	local chosen_tip = math.random(1, number_of_tips)
+	local the_tips = tweak_data.tips:get_tips_string_ids()
 
-	return utf8.to_upper(managers.localization:text("tip_tips")) .. " " .. managers.localization:text(HUDLoadingScreen.LOADING_SCREEN_TIPS[chosen_tip])
+	if the_tips then
+		local number_of_tips = #the_tips
+		local chosen_tip = math.random(1, number_of_tips)
+
+		return utf8.to_upper(managers.localization:text("tip_tips")) .. " " .. managers.localization:text(the_tips[chosen_tip])
+	end
+
+	return "MISSING TIPS"
 end
 
 function HUDLoadingScreen:_fit_panel_to_screen()
@@ -707,6 +701,14 @@ function HUDLoadingScreen:_on_faded_to_black()
 	})
 end
 
+function HUDLoadingScreen:_on_loading_percent_changed(value)
+	if self._loading_icon then
+		self._loading_icon:show({
+			text = "generic_loading"
+		})
+	end
+end
+
 function HUDLoadingScreen:clean_up()
 	if self._prompt then
 		self._prompt:parent():remove(self._prompt)
@@ -755,7 +757,7 @@ function HUDLoadingScreen:clean_up()
 end
 
 function HUDLoadingScreen:_real_aspect_ratio()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()

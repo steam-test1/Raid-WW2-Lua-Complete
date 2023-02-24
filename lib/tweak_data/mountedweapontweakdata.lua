@@ -19,15 +19,15 @@ function MountedWeaponTweakData:_init_data_sherman()
 		turret = {
 			gun_locator = "anim_gun",
 			range = 20000,
-			damage = 20,
+			damage = 25,
 			locator = "anim_turret",
 			damage_radius = 1000,
 			traverse_time = 10,
-			player_damage = 10,
+			player_damage = 15,
 			armor_piercing = true
 		},
 		main_cannon_shell_speed = 60000,
-		main_cannon_reload_speed = 5
+		main_cannon_reload_speed = 10
 	}
 end
 
@@ -44,15 +44,15 @@ function MountedWeaponTweakData:_init_data_tiger()
 		turret = {
 			gun_locator = "anim_gun",
 			range = 20000,
-			damage = 50,
+			damage = 75,
 			locator = "anim_turret",
 			damage_radius = 1000,
 			traverse_time = 10,
-			player_damage = 10,
+			player_damage = 15,
 			armor_piercing = true
 		},
 		main_cannon_shell_speed = 60000,
-		main_cannon_reload_speed = 5
+		main_cannon_reload_speed = 10
 	}
 end
 
@@ -69,14 +69,14 @@ function MountedWeaponTweakData:_init_data_luchs()
 		turret = {
 			gun_locator = "anim_turret_pitch",
 			range = 20000,
-			damage = 20,
+			damage = 35,
 			locator = "anim_turret_heading",
 			damage_radius = 1000,
 			traverse_time = 10,
-			player_damage = 10,
+			player_damage = 15,
 			armor_piercing = true
 		},
 		main_cannon_shell_speed = 60000,
-		main_cannon_reload_speed = 5
+		main_cannon_reload_speed = 8
 	}
 end

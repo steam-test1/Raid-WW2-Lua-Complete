@@ -19,8 +19,8 @@ MenuManager = MenuManager or class(CoreMenuManager.Manager)
 
 require("lib/managers/MenuManagerPD2")
 
-MenuManager.IS_NORTH_AMERICA = SystemInfo:platform() == Idstring("WIN32") or Application:is_northamerica()
-MenuManager.ONLINE_AGE = (SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4")) and MenuManager.IS_NORTH_AMERICA and 17 or 18
+MenuManager.IS_NORTH_AMERICA = _G.IS_PC or Application:is_northamerica()
+MenuManager.ONLINE_AGE = (_G.IS_PS3 or _G.IS_PS4) and MenuManager.IS_NORTH_AMERICA and 17 or 18
 MenuManager.MENU_ITEM_WIDTH = 400
 MenuManager.MENU_ITEM_HEIGHT = 32
 MenuManager.MENU_ITEM_LEFT_PADDING = 20
@@ -459,12 +459,13 @@ function MenuManager:init(is_start_menu)
 	end
 
 	self._controller:add_trigger("toggle_menu", callback(self, self, "toggle_menu_state"))
+	self._controller:add_trigger("toggle_hud", callback(self, self, "toggle_hud_state"))
 
 	if MenuCallbackHandler:is_pc_controller() and MenuCallbackHandler:is_not_steam_controller() then
 		self._controller:add_trigger("toggle_chat", callback(self, self, "toggle_chatinput"))
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
 		self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
 	end
@@ -577,7 +578,7 @@ function MenuManager:controller_hotswap_triggered()
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
 		self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
 	end
@@ -831,7 +832,7 @@ function MenuManager:toggle_chatinput()
 		return
 	end
 
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not _G.IS_PC then
 		return
 	end
 
@@ -847,6 +848,16 @@ function MenuManager:toggle_chatinput()
 		managers.hud:toggle_chatinput()
 
 		return true
+	end
+end
+
+function MenuManager:toggle_hud_state()
+	if managers.hud and not managers.hud:chat_focus() then
+		if managers.hud._disabled then
+			managers.hud:set_enabled()
+		else
+			managers.hud:set_disabled()
+		end
 	end
 end
 
@@ -1145,8 +1156,8 @@ end
 
 function MenuManager:detail_distance_setting_changed(name, old_value, new_value)
 	local detail_distance = new_value
-	local min_maps = 0.01
-	local max_maps = 0.04
+	local min_maps = 0.005
+	local max_maps = 0.15
 	local maps = min_maps * detail_distance + max_maps * (1 - detail_distance)
 
 	World:set_min_allowed_projected_size(maps)
@@ -1161,7 +1172,7 @@ function MenuManager:dof_setting_changed(name, old_value, new_value)
 end
 
 function MenuManager:fps_limit_changed(name, old_value, new_value)
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not _G.IS_PC then
 		return
 	end
 
@@ -1339,19 +1350,19 @@ function MenuManager:is_console()
 end
 
 function MenuManager:is_ps3()
-	return SystemInfo:platform() == Idstring("PS3")
+	return _G.IS_PS3
 end
 
 function MenuManager:is_ps4()
-	return SystemInfo:platform() == Idstring("PS4")
+	return _G.IS_PS4
 end
 
 function MenuManager:is_x360()
-	return SystemInfo:platform() == Idstring("X360")
+	return _G.IS_XB360
 end
 
 function MenuManager:is_xb1()
-	return SystemInfo:platform() == Idstring("XB1")
+	return _G.IS_XB1
 end
 
 function MenuManager:is_na()
@@ -1808,7 +1819,7 @@ function MenuManager:do_clear_progress()
 	managers.raid_job:cleanup()
 	managers.user:set_setting("mask_set", "clowns")
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		managers.statistics:publish_level_to_steam()
 	end
 end
@@ -2795,7 +2806,7 @@ MenuResolutionCreator = MenuResolutionCreator or class()
 function MenuResolutionCreator:modify_node(node)
 	local new_node = deep_clone(node)
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		local resolutions = {}
 
 		for _, res in ipairs(RenderSettings.modes) do
@@ -3082,6 +3093,7 @@ MenuCustomizeControllerCreator.CONTROLS = {
 	"activate_warcry",
 	"use_item",
 	"toggle_chat",
+	"toggle_hud",
 	"push_to_talk",
 	"drive",
 	"hand_brake",
@@ -3276,6 +3288,11 @@ MenuCustomizeControllerCreator.CONTROLS_INFO = {
 		category = "normal",
 		type = "usage",
 		text_id = "menu_button_activate_warcry"
+	},
+	toggle_hud = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_toggle_hud"
 	},
 	drive = {
 		hidden = true,
@@ -3478,7 +3495,7 @@ function MenuOptionInitiator:refresh_node(node)
 end
 
 function MenuOptionInitiator:modify_resolution(node)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		local res_name = string.format("%d x %d, %dHz", RenderSettings.resolution.x, RenderSettings.resolution.y, RenderSettings.resolution.z)
 
 		node:set_default_item_name(res_name)
@@ -3620,15 +3637,27 @@ function MenuOptionInitiator:modify_video(node)
 		st_item:set_value(option_value)
 	end
 
-	option_value = "off"
-	local hit_indicator_item = node:item("toggle_hit_indicator")
+	local hit_indicator_item = node:item("stepper_hit_indicator")
 
 	if hit_indicator_item then
-		if managers.user:get_setting("hit_indicator") then
+		hit_indicator_item:set_value(managers.user:get_setting("hit_indicator"))
+	end
+
+	local motion_dot_item = node:item("stepper_motion_dot")
+
+	if motion_dot_item then
+		motion_dot_item:set_value(managers.user:get_setting("motion_dot"))
+	end
+
+	option_value = "off"
+	local hud_special_weapon_panels_item = node:item("toggle_hud_special_weapon_panels")
+
+	if hud_special_weapon_panels_item then
+		if managers.user:get_setting("hud_special_weapon_panels") then
 			option_value = "on"
 		end
 
-		hit_indicator_item:set_value(option_value)
+		hud_special_weapon_panels_item:set_value(option_value)
 	end
 
 	option_value = "off"

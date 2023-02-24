@@ -16,23 +16,6 @@ OperationsTweakData.ENTRY_POINT_LEVEL = "streaming_level"
 
 function OperationsTweakData:init()
 	self.missions = {}
-	self.HEAT_OTHER_JOBS_RATIO = 0.3
-	self.ABSOLUTE_ZERO_JOBS_HEATS_OTHERS = false
-	self.HEATED_MAX_XP_MUL = 1.15
-	self.FREEZING_MAX_XP_MUL = 0.7
-	self.DEFAULT_HEAT = {
-		this_job = -5,
-		other_jobs = 5
-	}
-	self.MAX_JOBS_IN_CONTAINERS = {
-		6,
-		18,
-		24,
-		false,
-		12,
-		4,
-		1
-	}
 
 	self:_init_loading_screens()
 	self:_init_regions()
@@ -54,9 +37,9 @@ function OperationsTweakData:_init_progression_data()
 	self.progression = {
 		initially_unlocked_difficulty = TweakData.DIFFICULTY_2,
 		unlock_cycles = 6,
-		regular_unlock_cycle_duration = 600,
-		final_unlock_cycle_duration = 3600,
-		operations_unlock_level = 5,
+		regular_unlock_cycle_duration = 500,
+		final_unlock_cycle_duration = 2000,
+		operations_unlock_level = 25,
 		initial_mission_unlock_blueprint = {
 			OperationsTweakData.PROGRESSION_GROUP_INITIAL,
 			OperationsTweakData.PROGRESSION_GROUP_SHORT,
@@ -90,12 +73,18 @@ end
 function OperationsTweakData:_init_consumable_missions_data()
 	self.consumable_missions = {
 		base_document_spawn_chance = {
+			0.15,
 			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.25,
+			0.3
 		},
-		spawn_chance_modifier_increase = 0.1
+		spawn_chance_modifier_increase = 0.1,
+		difficulty_reward_multiplier = {
+			1,
+			1.2,
+			1.5,
+			2
+		}
 	}
 end
 
@@ -173,9 +162,10 @@ function OperationsTweakData:_init_loading_screens()
 		image = "loading_screens_07",
 		text = "loading_castle_operation_02"
 	}
-	self._loading_screens.forest_gumpy = {}
-	self._loading_screens.castle_oper_02.image = "loading_screens_07"
-	self._loading_screens.castle_oper_02.text = "loading_castle_operation_02"
+	self._loading_screens.forest_gumpy = {
+		image = "loading_screens_07",
+		text = "loading_castle_operation_02"
+	}
 	self._loading_screens.bunker_test = {
 		image = "loading_screens_07",
 		text = "loading_bridge"
@@ -226,7 +216,8 @@ function OperationsTweakData:_init_raids()
 		"spies_test",
 		"sto",
 		"silo",
-		"kelly"
+		"kelly",
+		"fury_railway"
 	}
 	self.missions.streaming_level = {
 		name_id = "menu_stream",
@@ -251,8 +242,7 @@ function OperationsTweakData:_init_raids()
 		},
 		loading_fail = {
 			image = "fail_loading_screen_01"
-		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_camp_hud"
+		}
 	}
 	self.missions.tutorial = {
 		name_id = "menu_tutorial_hl",
@@ -262,7 +252,7 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "flakturm_brief_short",
 		music_id = "camp",
 		region = "germany",
-		xp = 1000,
+		xp = 2000,
 		debug = true,
 		stealth_bonus = 1.5,
 		start_in_stealth = true,
@@ -274,7 +264,6 @@ function OperationsTweakData:_init_raids()
 		excluded_continents = {
 			"operation"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "loading_tutorial",
 			image = "raid_loading_tutorial"
@@ -310,11 +299,11 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "flakturm_brief_short",
 		music_id = "flakturm",
 		region = "germany",
-		xp = 2500,
+		xp = 6000,
 		stealth_bonus = 1.5,
 		start_in_stealth = true,
-		dogtags_min = 32,
-		dogtags_max = 37,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_01",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_flaktower"
@@ -336,7 +325,6 @@ function OperationsTweakData:_init_raids()
 		excluded_continents = {
 			"operation"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		control_brief_video = {
 			"movies/vanilla/mission_briefings/global/02_mission_brief_b2_assassination_v004"
 		},
@@ -385,7 +373,9 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "bank_brief_short",
 		region = "germany",
 		music_id = "reichsbank",
-		xp = 2500,
+		xp = 5500,
+		dogtags_min = 15,
+		dogtags_max = 20,
 		trophy = {
 			position = "snap_02",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank"
@@ -411,7 +401,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_bank_hud",
 		loading = {
 			text = "menu_ger_miss_03_ld_loading_desc",
 			image = "loading_bank"
@@ -448,7 +437,9 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		music_id = "train_yard",
 		start_in_stealth = true,
-		xp = 2500,
+		xp = 5000,
+		dogtags_min = 15,
+		dogtags_max = 20,
 		trophy = {
 			position = "snap_03",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard"
@@ -472,7 +463,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_railyard_hud",
 		loading = {
 			text = "menu_ger_miss_05_loading_desc",
 			image = "loading_trainyard"
@@ -508,11 +498,11 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "radio_brief_short",
 		region = "germany",
 		music_id = "radio_defense",
-		xp = 2500,
+		xp = 4500,
 		stealth_bonus = 1.5,
 		start_in_stealth = true,
-		dogtags_min = 27,
-		dogtags_max = 31,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_24",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_radio"
@@ -533,7 +523,6 @@ function OperationsTweakData:_init_raids()
 		control_brief_video = {
 			"movies/vanilla/mission_briefings/02_mission_brief_a5_rescue_v005"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_radio_hud",
 		loading = {
 			text = "menu_afr_miss_04_loading_desc",
 			image = "loading_radio"
@@ -581,9 +570,9 @@ function OperationsTweakData:_init_raids()
 			OperationsTweakData.PROGRESSION_GROUP_INITIAL,
 			OperationsTweakData.PROGRESSION_GROUP_STANDARD
 		},
-		xp = 2500,
-		dogtags_min = 28,
-		dogtags_max = 34,
+		xp = 5500,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_23",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bridge"
@@ -598,7 +587,6 @@ function OperationsTweakData:_init_raids()
 		control_brief_video = {
 			"movies/vanilla/mission_briefings/02_mission_brief_a1_demolition_v005"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_bridge_hud",
 		loading = {
 			text = "menu_ger_bridge_00_hl_loading_desc",
 			image = "loading_bridge"
@@ -642,7 +630,9 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "castle_brief_short",
 		region = "germany",
 		music_id = "castle",
-		xp = 2500,
+		xp = 5000,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_22",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle"
@@ -667,7 +657,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_castle_hud",
 		loading = {
 			text = "menu_afr_miss_05_loading_desc",
 			image = "loading_castle"
@@ -708,15 +697,14 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "",
 		region = "germany",
 		music_id = "forest_gumpy",
-		xp = 1500,
+		xp = 3500,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_forest_gumpy",
 		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		consumable = true,
 		icon_menu_big = "xp_events_missions_consumable_forest",
-		icon_menu = "missions_consumable_forest",
-		icon_hud = "missions_consumable_forest",
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_castle_hud",
+		icon_menu = "missions_menu_consumable_forest",
+		icon_hud = "missions_menu_consumable_forest",
 		loading = {
 			text = "menu_forest_gumpy_hl_loading_desc",
 			image = "raid_loading_forest"
@@ -752,10 +740,10 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_bunkers_briefing_short",
 		music_id = "random",
 		region = "germany",
-		xp = 1250,
+		xp = 3000,
 		stealth_bonus = 1.5,
-		dogtags_min = 31,
-		dogtags_max = 35,
+		dogtags_min = 15,
+		dogtags_max = 20,
 		trophy = {
 			position = "snap_08",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bunker"
@@ -779,7 +767,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "loading_bunker_test",
 			image = "raid_loading_bunkers"
@@ -816,10 +803,10 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_tank_depot_briefing_short",
 		music_id = "castle",
 		region = "germany",
-		xp = 1000,
+		xp = 2500,
 		stealth_bonus = 1.5,
-		dogtags_min = 30,
-		dogtags_max = 37,
+		dogtags_min = 15,
+		dogtags_max = 20,
 		trophy = {
 			position = "snap_13",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_tank"
@@ -843,7 +830,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "loading_tnd",
 			image = "raid_loading_tank_depot"
@@ -879,10 +865,10 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_hunters_briefing_short",
 		music_id = "radio_defense",
 		region = "germany",
-		xp = 1000,
+		xp = 2500,
 		stealth_bonus = 1.5,
-		dogtags_min = 30,
-		dogtags_max = 37,
+		dogtags_min = 15,
+		dogtags_max = 20,
 		trophy = {
 			position = "snap_06",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters"
@@ -906,7 +892,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "loading_hunters",
 			image = "raid_loading_hunters"
@@ -924,11 +909,6 @@ function OperationsTweakData:_init_raids()
 				photo = "intel_hunters_02"
 			},
 			{
-				title_id = "hunters_mission_photo_3_title",
-				description_id = "hunters_mission_photo_3_description",
-				photo = "intel_hunters_03"
-			},
-			{
 				title_id = "hunters_mission_photo_4_title",
 				description_id = "hunters_mission_photo_4_description",
 				photo = "intel_hunters_04"
@@ -943,10 +923,10 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_convoys_briefing_short",
 		music_id = "random",
 		region = "germany",
-		xp = 1000,
+		xp = 2500,
 		stealth_bonus = 1.5,
-		dogtags_min = 30,
-		dogtags_max = 37,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_09",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_convoy"
@@ -967,7 +947,6 @@ function OperationsTweakData:_init_raids()
 		control_brief_video = {
 			"movies/vanilla/mission_briefings/02_mission_brief_a3_ambush_v005"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "loading_convoy",
 			image = "raid_loading_convoy"
@@ -1003,10 +982,10 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_spies_briefing_short",
 		music_id = "random",
 		region = "germany",
-		xp = 1250,
+		xp = 3000,
 		stealth_bonus = 1.5,
-		dogtags_min = 30,
-		dogtags_max = 37,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_19",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies"
@@ -1027,7 +1006,6 @@ function OperationsTweakData:_init_raids()
 		control_brief_video = {
 			"movies/vanilla/mission_briefings/02_mission_brief_b3_steal-intel_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "loading_spies_test",
 			image = "raid_loading_spies"
@@ -1064,7 +1042,7 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "",
 		music_id = "random",
 		region = "germany",
-		xp = 1000,
+		xp = 2500,
 		stealth_bonus = 1.5,
 		consumable = true,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -1073,7 +1051,6 @@ function OperationsTweakData:_init_raids()
 		icon_menu_big = "xp_events_missions_art_storage",
 		icon_menu = "missions_art_storage",
 		icon_hud = "missions_raid_flaktower",
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "loading_sto",
 			image = "raid_loading_art_storage"
@@ -1111,13 +1088,13 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_silo_brief_short",
 		music_id = "random",
 		region = "germany",
-		dogtags_min = 30,
-		dogtags_max = 37,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_17",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo"
 		},
-		xp = 2500,
+		xp = 5500,
 		stealth_bonus = 1.5,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_silo",
@@ -1132,7 +1109,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_a2_cause-carnage_v005",
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "menu_silo_loading_desc",
 			image = "loading_silo"
@@ -1173,9 +1149,9 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_kelly_brief_short",
 		music_id = "random",
 		region = "germany",
-		dogtags_min = 30,
-		dogtags_max = 37,
-		xp = 1000,
+		dogtags_min = 20,
+		dogtags_max = 25,
+		xp = 4000,
 		stealth_bonus = 1.5,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_kelly",
@@ -1194,7 +1170,6 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004"
 		},
 		start_in_stealth = true,
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud",
 		loading = {
 			text = "menu_kelly_loading_desc",
 			image = "loading_kelly"
@@ -1222,6 +1197,50 @@ function OperationsTweakData:_init_raids()
 			}
 		}
 	}
+	self.missions.fury_railway = {
+		level_id = "fury_railway",
+		name_id = "menu_fury_railway_name",
+		briefing_id = "menu_fury_railway_desc",
+		audio_briefing_id = "",
+		short_audio_briefing_id = "",
+		music_id = "random",
+		region = "germany",
+		xp = 2500,
+		consumable = true,
+		stealth_bonus = 1.5,
+		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
+		mission_flag = "level_raid_fury_railway",
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
+		icon_menu = "missions_fury_railway",
+		icon_hud = "missions_consumable_fury_railway",
+		loading = {
+			text = "loading_fury_railway_text",
+			image = "loading_fury_railway"
+		},
+		start_in_stealth = true,
+		photos = {
+			{
+				title_id = "fury_railway_mission_photo_1_title",
+				description_id = "fury_railway_mission_photo_1_description",
+				photo = "intel_fury_railway_01"
+			},
+			{
+				title_id = "fury_railway_mission_photo_2_title",
+				description_id = "fury_railway_mission_photo_2_description",
+				photo = "intel_fury_railway_02"
+			},
+			{
+				title_id = "fury_railway_mission_photo_3_title",
+				description_id = "fury_railway_mission_photo_3_description",
+				photo = "intel_fury_railway_03"
+			},
+			{
+				title_id = "fury_railway_mission_photo_4_title",
+				description_id = "fury_railway_mission_photo_4_description",
+				photo = "intel_fury_railway_04"
+			}
+		}
+	}
 end
 
 function OperationsTweakData:_init_operations()
@@ -1235,7 +1254,7 @@ function OperationsTweakData:_init_operations()
 		audio_briefing_id = "mrs_white_cs_op_mr1_brief_long",
 		short_audio_briefing_id = "mrs_white_cs_op_mr1_brief_long",
 		region = "germany",
-		xp = 6500,
+		xp = 11000,
 		trophy = {
 			position = "snap_05",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_clear_sky"
@@ -1283,7 +1302,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_1 = {
 		music_id = "random",
-		xp = 750,
+		xp = 1400,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_01",
 		checkpoint = true,
@@ -1306,7 +1325,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_1_park = {
 		music_id = "random",
-		xp = 750,
+		xp = 1400,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_01",
 		checkpoint = true,
@@ -1329,7 +1348,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_1_destroyed = {
 		music_id = "random",
-		xp = 750,
+		xp = 1400,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_01",
 		checkpoint = true,
@@ -1352,7 +1371,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_1_roundabout = {
 		music_id = "random",
-		xp = 750,
+		xp = 1400,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_01",
 		checkpoint = true,
@@ -1370,12 +1389,13 @@ function OperationsTweakData:_init_operations()
 			"operation1mission2",
 			"operation1mission3",
 			"operation2mission1",
-			"operation2mission2"
+			"operation2mission2",
+			"raid_brnvct"
 		}
 	}
 	self.missions.clear_skies.events.gold_rush = {
 		music_id = "reichsbank",
-		xp = 975,
+		xp = 1800,
 		stealth_bonus = 1.5,
 		start_in_stealth = true,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -1387,7 +1407,6 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_01_event_2_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_2_progress_text",
 		level_id = "gold_rush",
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_op_clear_skies_02_hud",
 		loading = {
 			text = "menu_ger_oper_01_event_2_loading_text",
 			image = "raid_loading_clear_skies_02"
@@ -1395,7 +1414,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_2 = {
 		music_id = "random",
-		xp = 1200,
+		xp = 2600,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_03",
 		checkpoint = true,
@@ -1418,7 +1437,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_2_park = {
 		music_id = "random",
-		xp = 1200,
+		xp = 2600,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_03",
 		checkpoint = true,
@@ -1441,7 +1460,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_2_destroyed = {
 		music_id = "random",
-		xp = 1200,
+		xp = 2600,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_03",
 		checkpoint = true,
@@ -1464,7 +1483,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.radio_defense = {
 		music_id = "radio_defense",
-		xp = 1425,
+		xp = 3200,
 		stealth_bonus = 1.5,
 		start_in_stealth = true,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -1476,7 +1495,6 @@ function OperationsTweakData:_init_operations()
 		name_id = "menu_ger_oper_01_event_4_name",
 		progress_title_id = "menu_ger_oper_01_event_4_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_4_progress_text",
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_op_clear_skies_04_hud",
 		loading = {
 			text = "menu_ger_oper_01_event_4_loading_text",
 			image = "raid_loading_clear_skies_04"
@@ -1484,7 +1502,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_3 = {
 		music_id = "random",
-		xp = 1425,
+		xp = 2800,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_05",
 		checkpoint = true,
@@ -1507,7 +1525,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.railyard = {
 		music_id = "train_yard",
-		xp = 1650,
+		xp = 2000,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_06",
 		checkpoint = true,
@@ -1517,7 +1535,6 @@ function OperationsTweakData:_init_operations()
 		name_id = "menu_ger_oper_01_event_6_name",
 		progress_title_id = "menu_ger_oper_01_event_6_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_6_progress_text",
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_op_clear_skies_05_hud",
 		loading = {
 			text = "menu_ger_oper_01_event_6_loading_text",
 			image = "raid_loading_clear_skies_05"
@@ -1527,7 +1544,7 @@ function OperationsTweakData:_init_operations()
 		level_id = "flakturm",
 		music_id = "flakturm",
 		start_in_stealth = true,
-		xp = 1875,
+		xp = 2400,
 		icon_menu = "missions_raid_flaktower_menu",
 		icon_hud = "miissions_raid_flaktower",
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -1538,7 +1555,6 @@ function OperationsTweakData:_init_operations()
 		excluded_continents = {
 			"world"
 		},
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_op_clear_skies_06_hud",
 		loading = {
 			text = "menu_ger_oper_01_event_7_loading_text",
 			image = "raid_loading_clear_skies_06"
@@ -1573,7 +1589,7 @@ function OperationsTweakData:_init_operations()
 		audio_briefing_id = "mrs_white_or_mr1_brief_long",
 		short_audio_briefing_id = "mrs_white_or_mr1_brief_long",
 		region = "germany",
-		xp = 4500,
+		xp = 10000,
 		trophy = {
 			position = "snap_18",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_rhinegold"
@@ -1616,7 +1632,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.mini_raid_1_park = {
 		music_id = "random",
-		xp = 750,
+		xp = 1400,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		checkpoint = true,
 		icon_menu = "missions_mini_raid_1_menu",
@@ -1639,7 +1655,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.mini_raid_1_destroyed = {
 		music_id = "random",
-		xp = 750,
+		xp = 1400,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		checkpoint = true,
 		icon_menu = "missions_mini_raid_1_menu",
@@ -1662,7 +1678,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.mini_raid_1_roundabout = {
 		music_id = "random",
-		xp = 750,
+		xp = 1400,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		checkpoint = true,
 		icon_menu = "missions_mini_raid_1_menu",
@@ -1680,12 +1696,13 @@ function OperationsTweakData:_init_operations()
 			"operation1mission1",
 			"operation1mission2",
 			"operation1mission3",
-			"operation2mission2"
+			"operation2mission2",
+			"raid_brnvct"
 		}
 	}
 	self.missions.oper_flamable.events.mini_raid_2_destroyed = {
 		music_id = "random",
-		xp = 975,
+		xp = 1900,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		checkpoint = true,
 		icon_menu = "missions_mini_raid_2_menu",
@@ -1708,7 +1725,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.mini_raid_2_roundabout = {
 		music_id = "random",
-		xp = 975,
+		xp = 1900,
 		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		checkpoint = true,
 		icon_menu = "missions_mini_raid_2_menu",
@@ -1731,9 +1748,9 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.bridge = {
 		music_id = "ger_bridge",
-		xp = 1200,
-		dogtags_min = 26,
-		dogtags_max = 33,
+		xp = 2400,
+		dogtags_min = 20,
+		dogtags_max = 25,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		checkpoint = true,
 		icon_menu = "missions_raid_bridge_menu",
@@ -1742,7 +1759,6 @@ function OperationsTweakData:_init_operations()
 		mission_flag = "level_operation_02_mission_03",
 		progress_title_id = "menu_ger_oper_rhinegold_event_3_progress_title",
 		progress_text_id = "menu_ger_oper_rhinegold_event_3_progress_text",
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_op_rhinegold_03_hud",
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_3_loading_text",
 			image = "loading_rhinegold_03"
@@ -1751,7 +1767,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.castle = {
 		music_id = "castle",
-		xp = 1425,
+		xp = 3100,
 		icon_menu = "missions_raid_castle_menu",
 		icon_hud = "missions_raid_castle",
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -1760,7 +1776,6 @@ function OperationsTweakData:_init_operations()
 		mission_flag = "level_operation_02_mission_04",
 		progress_title_id = "menu_ger_oper_rhinegold_event_4_progress_title",
 		progress_text_id = "menu_ger_oper_rhinegold_event_4_progress_text",
-		tab_background_image = "ui/hud/backgrounds/tab_screen_bg_op_rhinegold_04_hud",
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_4_loading_text",
 			image = "loading_rhinegold_04"
@@ -1883,4 +1898,45 @@ end
 
 function OperationsTweakData:set_operation_indexes_delimited(operation_id, delimited_string)
 	self.missions[operation_id].events_index = string.split(delimited_string, "|")
+end
+
+function OperationsTweakData:get_all_consumable_raids()
+	local raids = self:get_raids_index()
+	local consumable_missions = {}
+
+	for i, raid in pairs(raids) do
+		if tweak_data.operations.missions[raid].consumable then
+			table.insert(consumable_missions, raid)
+		end
+	end
+
+	Application:debug("[OperationsTweakData] get_all_consumable_raids, Found:", #consumable_missions)
+
+	return consumable_missions
+end
+
+function OperationsTweakData:get_random_consumable_raid()
+	local consumable_missions = self:get_all_consumable_raids()
+	local chosen_consumable_id = consumable_missions[math.random(1, #consumable_missions)]
+
+	Application:debug("[OperationsTweakData:get_random_consumable_raid]", chosen_consumable_id)
+
+	return chosen_consumable_id
+end
+
+function OperationsTweakData:get_random_unowned_consumable_raid()
+	local consumable_missions = {}
+	local all_consumables = self:get_all_consumable_raids()
+
+	for i, v in ipairs(all_consumables) do
+		if not Global.consumable_missions_manager.inventory[v] then
+			table.insert(consumable_missions, v)
+		end
+	end
+
+	local chosen_consumable_id = consumable_missions[math.random(1, #consumable_missions)]
+
+	Application:debug("[OperationsTweakData:get_random_unowned_consumable_raid]", chosen_consumable_id)
+
+	return chosen_consumable_id
 end

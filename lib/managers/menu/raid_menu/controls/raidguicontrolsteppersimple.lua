@@ -324,23 +324,21 @@ end
 function RaidGUIControlStepperSimple:_select_control(value)
 end
 
-function RaidGUIControlStepperSimple:move_down()
-	if self._selected then
-		self._selected_control = false
+function RaidGUIControlStepperSimple:move_left()
+	if self:is_selected() then
+		Application:trace("[RaidGUIControlStepperSimple:move_left] ", self._name, self._selected)
+		self:on_left_arrow_clicked()
 
-		self:_select_control(false)
-
-		return self.super.move_down(self)
+		return self.super.move_left(self)
 	end
 end
 
-function RaidGUIControlStepperSimple:move_up()
-	if self._selected then
-		self._selected_control = false
+function RaidGUIControlStepperSimple:move_right()
+	if self:is_selected() then
+		Application:trace("[RaidGUIControlStepperSimple:move_right] ", self._name, self._selected)
+		self:on_right_arrow_clicked()
 
-		self:_select_control(false)
-
-		return self.super.move_up(self)
+		return self.super.move_right(self)
 	end
 end
 

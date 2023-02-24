@@ -112,6 +112,7 @@ require("lib/units/pickups/Pickup")
 require("lib/units/pickups/AmmoClip")
 require("lib/units/pickups/HealthPackPickup")
 require("lib/units/pickups/GrenadePickup")
+require("lib/units/pickups/GrenadePickupNew")
 require("lib/units/pickups/SpecialEquipmentPickup")
 require("lib/units/equipment/ammo_bag/AmmoBagBase")
 require("lib/units/equipment/doctor_bag/DoctorBagBase")
@@ -148,6 +149,7 @@ require("lib/units/weapons/NPCFlamethrowerBase")
 require("lib/units/weapons/projectiles/ProjectileBase")
 require("lib/units/weapons/grenades/GrenadeBase")
 require("lib/units/weapons/grenades/FragGrenade")
+require("lib/units/weapons/grenades/MineGrenade")
 require("lib/units/weapons/grenades/GrenadeCluster")
 require("lib/units/weapons/grenades/NpcGrenade")
 require("lib/units/weapons/grenades/DistractionRock")
@@ -195,6 +197,7 @@ require("lib/units/props/MetalDetector")
 require("lib/units/props/ManageSpawnedUnits")
 require("lib/units/characters/CharacterManageSpawnedUnits")
 require("lib/units/RevivePumpkinExt")
+require("lib/units/props/FauxContainer")
 
 GameSetup = GameSetup or class(Setup)
 
@@ -339,7 +342,7 @@ function GameSetup:init_managers(managers)
 	managers.notification = NotificationManager:new()
 	managers.test = TestManager:new()
 
-	if SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB360 then
 		managers.blackmarket:load_equipped_weapons()
 	end
 end
@@ -404,7 +407,7 @@ function GameSetup:init_finalize()
 		game_state_machine:change_state_by_name("ingame_waiting_for_players")
 	end
 
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS3 or _G.IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 

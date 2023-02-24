@@ -144,6 +144,46 @@ function SubtitlesTweakData:_init_intro_video()
 	}
 end
 
+function SubtitlesTweakData:_init_mission_brief_a3()
+	self["05_credits_v003"] = {
+		{
+			id = "01_credits_001",
+			time = 0,
+			length = 2
+		},
+		{
+			id = "01_credits_002",
+			time = 2,
+			length = 4
+		},
+		{
+			id = "01_credits_003",
+			time = 2,
+			length = 6
+		},
+		{
+			id = "01_credits_004",
+			time = 2,
+			length = 8
+		},
+		{
+			id = "01_credits_005",
+			time = 2,
+			length = 10
+		},
+		{
+			id = "01_credits_006",
+			time = 2,
+			length = 12
+		},
+		{
+			id = "01_credits_007",
+			time = 2,
+			length = 14
+		}
+	}
+end
+
 function SubtitlesTweakData:_init_mission_brief_b2()
 	self["02_mission_brief_b2_assassination_v004"] = {
 		{

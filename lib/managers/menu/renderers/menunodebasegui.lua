@@ -13,7 +13,7 @@ MenuNodeBaseGui.text_color = tweak_data.screen_colors.text
 MenuNodeBaseGui.button_default_color = tweak_data.screen_colors.button_stage_3
 MenuNodeBaseGui.button_highlighted_color = tweak_data.screen_colors.button_stage_2
 MenuNodeBaseGui.button_selected_color = tweak_data.screen_colors.button_stage_1
-MenuNodeBaseGui.is_win32 = SystemInfo:platform() == Idstring("WIN32")
+MenuNodeBaseGui.is_win32 = _G.IS_PC
 
 function MenuNodeBaseGui.make_fine_text(text)
 	local x, y, w, h = text:text_rect()

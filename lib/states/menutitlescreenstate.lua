@@ -19,11 +19,11 @@ function MenuTitlescreenState:init(game_state_machine, setup)
 	end
 end
 
-local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-local is_ps4 = SystemInfo:platform() == Idstring("PS4")
-local is_xb1 = SystemInfo:platform() == Idstring("XB1")
-local is_x360 = SystemInfo:platform() == Idstring("X360")
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+local is_ps3 = _G.IS_PS3
+local is_ps4 = _G.IS_PS4
+local is_xb1 = _G.IS_XB1
+local is_x360 = _G.IS_XB360
+local is_win32 = _G.IS_PC
 
 function MenuTitlescreenState:setup()
 	local res = RenderSettings.resolution
@@ -201,7 +201,7 @@ function MenuTitlescreenState:_recalculate_y_for_current_resolution(y)
 end
 
 function MenuTitlescreenState:_real_aspect_ratio()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()

@@ -1,3 +1,16 @@
+function MenuManager:show_custom_popup_dialog(dialog_data, buttons)
+	if buttons then
+		dialog_data.focus_button = dialog_data.focus_button or 1
+		dialog_data.button_list = {}
+
+		for _, button_data in ipairs(buttons) do
+			table.insert(dialog_data.button_list, button_data)
+		end
+	end
+
+	managers.system_menu:show(dialog_data)
+end
+
 function MenuManager:show_retrieving_servers_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_retrieving_servers_title"),
@@ -730,6 +743,31 @@ function MenuManager:show_character_create_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
+function MenuManager:show_mod_overrides_warning_dialog(params)
+	local dialog_data = {
+		title = utf8.to_upper(managers.localization:text("menu_mod_overrides_warning_title")),
+		text = managers.localization:text("menu_mod_overrides_warning_text"),
+		focus_button = 1
+	}
+	local yes_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_go_to_mod_overrides")),
+		class = RaidGUIControlButtonShortPrimary,
+		callback_func = params.callback_yes
+	}
+	local no_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_skip")),
+		class = RaidGUIControlButtonShortSecondary,
+		cancel_button = true,
+		callback_func = params.callback_no
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
 function MenuManager:show_err_character_name_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("dialog_error_title")),
@@ -800,7 +838,7 @@ function MenuManager:show_internet_connection_required()
 end
 
 function MenuManager:show_err_no_chat_parental_control()
-	if SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS4 then
 		PSN:show_chat_parental_control()
 	else
 		local dialog_data = {

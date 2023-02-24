@@ -276,7 +276,11 @@ end
 
 function GlobalStateManager:set_global_states(states)
 	for i = 1, #states do
-		self._states.global_init[states[i].id].value = states[i].value
+		if states[i] and states[i].value then
+			self._states.global_init[states[i].id].value = states[i].value
+		else
+			Application:warn("[GlobalStateManager:set_global_states] no states value for", i)
+		end
 	end
 end
 

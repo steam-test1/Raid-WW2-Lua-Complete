@@ -81,16 +81,21 @@ function WorldOperatorUnitElement:draw_links_selected(...)
 
 	for _, id in ipairs(self._hed.elements) do
 		local unit = managers.editor:unit_with_id(id)
-		local params = {
-			g = 0,
-			b = 0.5,
-			r = 0,
-			from_unit = unit,
-			to_unit = self._unit
-		}
 
-		self:_draw_link(params)
-		Application:draw(unit, 0.25, 1, 0.25)
+		if alive(unit) then
+			local params = {
+				g = 0,
+				b = 0.5,
+				r = 0,
+				from_unit = unit,
+				to_unit = self._unit
+			}
+
+			self:_draw_link(params)
+			Application:draw(unit, 0.25, 1, 0.25)
+		else
+			Application:error("[WorldOperatorUnitElement] draw_links_selected: did get a unit of id:", id)
+		end
 	end
 end
 

@@ -32,6 +32,7 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 	self._name_label:set_text(self:translate(name_id, true) .. " " .. self:translate("menu_inventory_tier", true) .. " " .. RaidGUIControlButtonWeaponSkill.ROMAN_NUMERALS[skill.tier])
 
 	local desc_id = skill_info.desc_id
+	local done_id = ""
 
 	self._desc_label:set_text(self:translate(desc_id, false))
 
@@ -40,6 +41,8 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 	if skill.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id)
 		local tasks = challenge:tasks()
+		desc_id = skill.challenge_briefing_id or tasks[1]:briefing_id() or desc_id
+		done_id = skill.challenge_done_text_id or tasks[1]:done_text_id() or done_id
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
 		min_range = math.round(tasks[1]:min_range() / 100)
@@ -83,7 +86,7 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 		self._progress_bar_panel:set_visible(false)
 	elseif skill.challenge_unlocked and not managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id):completed() then
 		self._status_label:set_text(self:translate(RaidGUIControlWeaponSkillDesc.CHALLENGE_IN_PROGRESS_TEXT, true))
-		self._desc_label:set_text(managers.localization:text(skill.challenge_briefing_id, {
+		self._desc_label:set_text(managers.localization:text(desc_id, {
 			AMOUNT = target,
 			RANGE = min_range,
 			WEAPON = self:translate(tweak_data.weapon[skill.weapon_id].name_id)
@@ -92,7 +95,7 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 		self:set_progress(count, target)
 	elseif managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id):completed() then
 		self._status_label:set_text(self:translate(RaidGUIControlWeaponSkillDesc.CHALLENGE_COMPLETED_TEXT, true))
-		self._desc_label:set_text(managers.localization:text(skill.challenge_done_text_id, {
+		self._desc_label:set_text(managers.localization:text(done_id, {
 			AMOUNT = target,
 			RANGE = min_range,
 			WEAPON = self:translate(tweak_data.weapon[skill.weapon_id].name_id)

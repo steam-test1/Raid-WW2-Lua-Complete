@@ -66,7 +66,7 @@ function LocalizationManager:_setup_macros()
 		btn_cancel = btn_b
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		btn_stick_r = stick_r
 		btn_stick_l = stick_l
 	end

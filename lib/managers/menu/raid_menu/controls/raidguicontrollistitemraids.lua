@@ -99,7 +99,7 @@ function RaidGUIControlListItemRaids:_layout_icon(params, data)
 		y = (RaidGUIControlListItemRaids.HEIGHT - data.icon.texture_rect[4]) / 2,
 		texture = data.icon.texture,
 		texture_rect = data.icon.texture_rect,
-		color = tweak_data.gui.colors.raid_dirty_white
+		color = self._is_consumable and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
 	}
 	self._item_icon = self._object:image(icon_params)
 
