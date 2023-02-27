@@ -154,53 +154,6 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 
 			node:set_x(x + (self._node_width - node:w()) / 2)
 			table.insert(nodes, node)
-
-			local path_class = params.path_class or RaidGUIControlBranchingBarSkilltreePath
-
-			if node_data.parents and #node_data.parents ~= 0 then
-				for _, parent_index in pairs(node_data.parents) do
-					local previous_node = self._levels[level_index - 1].nodes[parent_index]
-					local path_vector = {
-						x = node:x() + node:w() / 2 - (previous_node:x() + previous_node:w() / 2),
-						y = node:y() + node:h() / 2 - (previous_node:y() + previous_node:h() / 2)
-					}
-					local identity_vector = {
-						x = 3,
-						y = 0
-					}
-					local angle = math.atan2(path_vector.y, path_vector.x) - math.atan2(identity_vector.y, identity_vector.x)
-					local dx = (node:w() / 2 - 2) * math.cos(angle)
-					local dy = (node:w() / 2 - 2) * math.sin(angle)
-					local points = {}
-					local starting_point = Vector3(previous_node:x() + previous_node:w() / 2 + dx, previous_node:y() + previous_node:h() / 2 + dy, 0)
-					local ending_point = Vector3(node:x() + node:w() / 2 - dx, node:y() + node:h() / 2 - dy, 0)
-					local path_params = {
-						starting_point = starting_point,
-						starting_point_index = parent_index,
-						ending_point = ending_point,
-						ending_point_index = node_index,
-						layer = self._elements_panel:layer() + 1,
-						line_width = params.path_width or 3
-					}
-					local path = self._elements_panel:create_custom_control(path_class, path_params)
-
-					table.insert(paths, path)
-				end
-			elseif level_index == 1 and level_data.points_needed and level_data.points_needed > 0 then
-				local starting_point = Vector3(node:x() - leading_path_length, node:y() + node:h() / 2, 0)
-				local ending_point = Vector3(node:x() + 2, node:y() + node:h() / 2, 0)
-				local path_params = {
-					starting_point_index = 0,
-					starting_point = starting_point,
-					ending_point = ending_point,
-					ending_point_index = node_index,
-					layer = self._elements_panel:layer() + 1,
-					line_width = params.path_width or 3
-				}
-				local path = self._elements_panel:create_custom_control(path_class, path_params)
-
-				table.insert(paths, path)
-			end
 		end
 
 		local level = {

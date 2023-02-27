@@ -34,7 +34,7 @@ end
 function RaidGUIControlSkillDetails:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_customization_panel"
-	control_params.layer = self._panel:layer() + 10000
+	control_params.layer = self._panel:layer() + 50
 	control_params.w = self._params.w or RaidGUIControlSkillDetails.DEFAULT_W
 	control_params.h = self._params.h or RaidGUIControlSkillDetails.DEFAULT_H
 	self._object = self._panel:panel(control_params)

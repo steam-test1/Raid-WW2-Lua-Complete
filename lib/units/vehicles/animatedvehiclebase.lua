@@ -142,10 +142,14 @@ function AnimatedVehicleBase:spawn_module(module_unit_name, align_obj_name, modu
 
 	if type_name(module_unit_name) == "string" then
 		if Network:is_server() then
-			local spawn_pos = align_obj:position()
-			local spawn_rot = align_obj:rotation()
-			module_unit = safe_spawn_unit(Idstring(module_unit_name), spawn_pos, spawn_rot)
-			module_unit:unit_data().parent_unit = self._unit
+			if not self._modules or not self._modules[module_id] then
+				local spawn_pos = align_obj:position()
+				local spawn_rot = align_obj:rotation()
+				module_unit = safe_spawn_unit(Idstring(module_unit_name), spawn_pos, spawn_rot)
+				module_unit:unit_data().parent_unit = self._unit
+			else
+				Application:error("[AnimatedVehicleBase:spawn_module] Trying to spawn a module that has already been spawned! (This will cause memory leaks and units failing to despawn!)")
+			end
 		end
 	else
 		module_unit = module_unit_name

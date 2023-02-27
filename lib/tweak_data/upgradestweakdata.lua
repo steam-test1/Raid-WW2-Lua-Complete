@@ -300,8 +300,8 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 	self:_create_definition_levels("warcry_turret_overheat_multiplier", "feature", "warcry_overheat_multiplier", "player", false, self.values.player.warcry_ammo_consumption)
 
 	self.values.player.warcry_dismemberment_multiplier_bonus = {
-		1.2,
-		1.7
+		2,
+		3
 	}
 
 	self:_create_definition_levels("warcry_player_dismemberment_multiplier_bonus", "feature", "warcry_dismemberment_multiplier_bonus", "player", true, self.values.player.warcry_dismemberment_multiplier_bonus)
@@ -314,10 +314,10 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 	self:_create_definition_levels("warcry_player_low_health_multiplier_bonus", "feature", "warcry_low_health_multiplier_bonus", "player", true, self.values.player.warcry_low_health_multiplier_bonus)
 
 	self.values.player.warcry_team_heal_bonus = {
+		1.05,
+		1.1,
 		1.2,
-		1.4,
-		1.65,
-		2
+		1.4
 	}
 
 	self:_create_definition_levels("warcry_player_team_heal_bonus", "feature", "warcry_team_heal_bonus", "player", true, self.values.player.warcry_team_heal_bonus)
@@ -484,10 +484,10 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self:_create_definition_levels("player_crouch_speed_increase", "feature", "crouch_speed_increase", "player", true, self.values.player.crouch_speed_increase, self.description_data_types.generic_multiplier)
 
 	self.values.player.carry_penalty_decrease = {
-		1.17,
-		1.29,
-		1.39,
-		1.5
+		1.1,
+		1.2,
+		1.3,
+		1.4
 	}
 
 	self:_create_definition_levels("player_carry_penalty_decrease", "feature", "carry_penalty_decrease", "player", true, self.values.player.carry_penalty_decrease, self.description_data_types.generic_multiplier_reductive_string)
@@ -555,10 +555,10 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self:_create_definition_levels("player_melee_damage_multiplier", "feature", "melee_damage_multiplier", "player", true, self.values.player.melee_damage_multiplier, self.description_data_types.generic_multiplier)
 
 	self.values.player.critical_hit_chance = {
-		1.02,
-		1.04,
-		1.07,
-		1.1
+		1.025,
+		1.05,
+		1.1,
+		1.25
 	}
 
 	self:_create_definition_levels("player_critical_hit_chance", "feature", "critical_hit_chance", "player", true, self.values.player.critical_hit_chance, self.description_data_types.generic_multiplier)
@@ -1116,10 +1116,10 @@ function UpgradesTweakData:_primary_weapon_definitions()
 	self:_create_definition_levels("primary_weapon_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "primary_weapon", false, self.values.primary_weapon.enter_steelsight_speed_multiplier)
 
 	self.values.primary_weapon.spread_multiplier = {
-		0.85,
-		0.7,
-		0.6,
-		0.5,
+		0.75,
+		0.65,
+		0.55,
+		0.45,
 		1.15,
 		1.3,
 		1.4,
@@ -1181,10 +1181,10 @@ function UpgradesTweakData:_secondary_weapon_definitions()
 	self:_create_definition_levels("secondary_weapon_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "secondary_weapon", false, self.values.secondary_weapon.enter_steelsight_speed_multiplier)
 
 	self.values.secondary_weapon.spread_multiplier = {
-		0.85,
-		0.7,
-		0.6,
-		0.5,
+		0.75,
+		0.65,
+		0.55,
+		0.45,
 		1.15,
 		1.3,
 		1.4,
@@ -1232,7 +1232,7 @@ function UpgradesTweakData:_pistol_definitions()
 	self:_create_definition_levels("pistol_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "pistol", false, self.values.pistol.enter_steelsight_speed_multiplier)
 
 	self.values.pistol.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("pistol_spread_multiplier", "feature", "spread_multiplier", "pistol", false, self.values.pistol.spread_multiplier)
@@ -1321,7 +1321,7 @@ function UpgradesTweakData:_assault_rifle_definitions()
 	self:_create_definition_levels("assault_rifle_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "assault_rifle", false, self.values.assault_rifle.enter_steelsight_speed_multiplier)
 
 	self.values.assault_rifle.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("assault_rifle_spread_multiplier", "feature", "spread_multiplier", "assault_rifle", false, self.values.assault_rifle.spread_multiplier)
@@ -1422,7 +1422,7 @@ function UpgradesTweakData:_lmg_definitions()
 	self:_create_definition_levels("lmg_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "lmg", false, self.values.lmg.enter_steelsight_speed_multiplier)
 
 	self.values.lmg.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("lmg_spread_multiplier", "feature", "spread_multiplier", "lmg", false, self.values.lmg.spread_multiplier)
@@ -1525,7 +1525,7 @@ function UpgradesTweakData:_snp_definitions()
 	self:_create_definition_levels("snp_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "snp", false, self.values.snp.enter_steelsight_speed_multiplier)
 
 	self.values.snp.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("snp_spread_multiplier", "feature", "spread_multiplier", "snp", false, self.values.snp.spread_multiplier)

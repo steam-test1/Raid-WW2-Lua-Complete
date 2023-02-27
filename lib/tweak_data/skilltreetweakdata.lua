@@ -281,7 +281,7 @@ function SkillTreeTweakData:_init_skill_list()
 		warcry_sharpshooter_level_increase = {
 			icon_large = "skills_warcry_recon_sharpshooter_large",
 			desc_id = "skill_warcry_level_increase_desc",
-			name_id = "skill_warcry_level_increase_name",
+			name_id = "skill_warcry_sharpshooter_level_increase_name",
 			icon = "skills_warcry_recon_sharpshooter",
 			icon_xy = {
 				1,
@@ -316,7 +316,7 @@ function SkillTreeTweakData:_init_skill_list()
 		warcry_berserk_level_increase = {
 			icon_large = "skills_warcry_assault_berserk_large",
 			desc_id = "skill_warcry_level_increase_desc",
-			name_id = "skill_warcry_level_increase_name",
+			name_id = "skill_warcry_berserk_level_increase_name",
 			icon = "skills_warcry_assault_berserk",
 			icon_xy = {
 				1,
@@ -351,7 +351,7 @@ function SkillTreeTweakData:_init_skill_list()
 		warcry_ghost_level_increase = {
 			icon_large = "skills_warcry_infilitrator_invisibility_large",
 			desc_id = "skill_warcry_level_increase_desc",
-			name_id = "skill_warcry_level_increase_name",
+			name_id = "skill_warcry_ghost_level_increase_name",
 			icon = "skills_warcry_infilitrator_invisibility",
 			icon_xy = {
 				1,
@@ -386,7 +386,7 @@ function SkillTreeTweakData:_init_skill_list()
 		warcry_clustertruck_level_increase = {
 			icon_large = "skills_warcry_demolition_cluster_truck_large",
 			desc_id = "skill_warcry_level_increase_desc",
-			name_id = "skill_warcry_level_increase_name",
+			name_id = "skill_warcry_clustertruck_level_increase_name",
 			icon = "skills_warcry_demolition_cluster_truck",
 			icon_xy = {
 				1,
@@ -409,9 +409,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_duration_1"
@@ -427,9 +425,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_duration_2"
@@ -445,9 +441,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_duration_3"
@@ -463,9 +457,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_duration_4"
@@ -481,9 +473,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_buff_bonus_1"
@@ -499,9 +489,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_buff_bonus_2"
@@ -517,9 +505,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_buff_bonus_3"
@@ -535,9 +521,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_buff_bonus_4"
@@ -553,9 +537,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_headshot_multiplier_bonus_1"
@@ -571,9 +553,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_headshot_multiplier_bonus_2"
@@ -589,9 +569,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_long_range_multiplier_bonus_1"
@@ -607,9 +585,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_long_range_multiplier_bonus_2"
@@ -625,9 +601,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_team_heal_bonus_1"
@@ -643,9 +617,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_team_heal_bonus_2"
@@ -661,9 +633,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_team_heal_bonus_3"
@@ -679,9 +649,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_team_heal_bonus_4"
@@ -697,9 +665,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_dismemberment_multiplier_bonus_1"
@@ -715,9 +681,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_dismemberment_multiplier_bonus_2"
@@ -733,9 +697,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_low_health_multiplier_bonus_1"
@@ -751,9 +713,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_low_health_multiplier_bonus_2"
@@ -769,9 +729,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_movement_speed_bonus_1"
@@ -787,9 +745,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_movement_speed_bonus_2"
@@ -805,9 +761,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_movement_speed_bonus_3"
@@ -823,9 +777,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_movement_speed_bonus_4"
@@ -841,9 +793,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_melee_multiplier_bonus_1"
@@ -859,9 +809,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_melee_multiplier_bonus_2"
@@ -877,9 +825,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_short_range_multiplier_bonus_1"
@@ -895,9 +841,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_short_range_multiplier_bonus_2"
@@ -913,9 +857,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_reduction_bonus_on_activate_1"
@@ -931,9 +873,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_reduction_bonus_on_activate_2"
@@ -949,9 +889,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_reduction_bonus_on_activate_3"
@@ -967,9 +905,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_team_damage_reduction_bonus_on_activate_4"
@@ -985,9 +921,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_explosions_multiplier_bonus_1"
@@ -1003,9 +937,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_explosions_multiplier_bonus_2"
@@ -1021,9 +953,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_killstreak_multiplier_bonus_1"
@@ -1039,9 +969,7 @@ function SkillTreeTweakData:_init_skill_list()
 				1
 			},
 			acquires = {
-				{
-					warcry_level = 1
-				}
+				{}
 			},
 			upgrades = {
 				"warcry_player_killstreak_multiplier_bonus_2"

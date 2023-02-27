@@ -30,13 +30,13 @@ function HUDHitConfirm:_create_icon(name, icon)
 end
 
 function HUDHitConfirm:on_hit_confirmed(world_hit_pos, is_shotgun)
-	local hit_con = self._crit_confirm
+	local hit_con = self._hit_confirm
 
 	self:_pop_hit_confirm(hit_con, world_hit_pos)
 end
 
 function HUDHitConfirm:on_headshot_confirmed(world_hit_pos, is_shotgun)
-	local hit_con = self._crit_confirm
+	local hit_con = self._headshot_confirm
 
 	self:_pop_hit_confirm(hit_con, world_hit_pos)
 end

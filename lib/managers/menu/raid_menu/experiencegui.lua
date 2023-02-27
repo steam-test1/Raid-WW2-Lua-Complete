@@ -377,9 +377,12 @@ function ExperienceGui:_prepare_skill_description(button_data)
 	local stat_line = ""
 	local color_changes = {}
 
+	if skill.acquires and skill.acquires[1] and skill.acquires[1].warcry_level then
+		stat_line = self:_prepare_warcry_upgrade_description(button_data.level, skill.acquires[1].warcry_level)
+	end
+
 	if not skill.upgrades[1] then
 		Application:error("[ExperienceGui:_prepare_skill_description] NO UPGRADES " .. (skill.stat_desc_id or "stat_desc_id nil"))
-		table.print_data(skill.upgrades)
 
 		return description, stat_line, color_changes
 	end

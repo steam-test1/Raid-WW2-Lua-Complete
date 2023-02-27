@@ -1,5 +1,6 @@
 BreadcrumbManager = BreadcrumbManager or class()
-BreadcrumbManager.VERSION = 2
+BreadcrumbManager.VERSION = 3
+BreadcrumbManager.CRUMB_ID_COUNT_MAX = 100000
 BreadcrumbManager.SLOT_CHARACTER = "character"
 BreadcrumbManager.SLOT_PROFILE = "profile"
 BreadcrumbManager.CATEGORY_NEW_RAID = {
@@ -238,10 +239,10 @@ function BreadcrumbManager:category_has_breadcrumbs(category, identifiers)
 end
 
 function BreadcrumbManager:get_unique_breadcrumb_id()
-	local id = math.random(1, 99999)
+	local id = math.random(1, BreadcrumbManager.CRUMB_ID_COUNT_MAX)
 
 	while self._unique_breadcrumb_ids[id] do
-		id = math.random(1, 99999)
+		id = math.random(1, BreadcrumbManager.CRUMB_ID_COUNT_MAX)
 	end
 
 	self._unique_breadcrumb_ids[id] = id

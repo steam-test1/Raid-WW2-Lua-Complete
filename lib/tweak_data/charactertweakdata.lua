@@ -362,7 +362,7 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.dodge = presets.dodge.average
 	self.german_grunt_mid.deathguard = false
 	self.german_grunt_mid.chatter = presets.enemy_chatter.cop
-	self.german_grunt_mid.steal_loot = true
+	self.german_grunt_mid.steal_loot = false
 	self.german_grunt_mid.no_retreat = true
 	self.german_grunt_mid.no_arrest = true
 	self.german_grunt_mid.loot_table = "easy_enemy"
@@ -412,7 +412,7 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.dodge = presets.dodge.heavy
 	self.german_grunt_heavy.deathguard = false
 	self.german_grunt_heavy.chatter = presets.enemy_chatter.cop
-	self.german_grunt_heavy.steal_loot = true
+	self.german_grunt_heavy.steal_loot = false
 	self.german_grunt_heavy.no_retreat = true
 	self.german_grunt_heavy.no_arrest = true
 	self.german_grunt_heavy.loot_table = "normal_enemy"
@@ -456,7 +456,7 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.dodge = presets.dodge.athletic
 	self.german_gebirgsjager_light.deathguard = false
 	self.german_gebirgsjager_light.chatter = presets.enemy_chatter.cop
-	self.german_gebirgsjager_light.steal_loot = true
+	self.german_gebirgsjager_light.steal_loot = false
 	self.german_gebirgsjager_light.no_retreat = true
 	self.german_gebirgsjager_light.no_arrest = true
 	self.german_gebirgsjager_light.loot_table = "normal_enemy"
@@ -506,7 +506,7 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.dodge = presets.dodge.heavy
 	self.german_gebirgsjager_heavy.deathguard = false
 	self.german_gebirgsjager_heavy.chatter = presets.enemy_chatter.cop
-	self.german_gebirgsjager_heavy.steal_loot = true
+	self.german_gebirgsjager_heavy.steal_loot = false
 	self.german_gebirgsjager_heavy.no_retreat = true
 	self.german_gebirgsjager_heavy.no_arrest = true
 	self.german_gebirgsjager_heavy.loot_table = "normal_enemy"
@@ -555,7 +555,7 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.dodge = presets.dodge.athletic
 	self.german_light.deathguard = true
 	self.german_light.chatter = presets.enemy_chatter.cop
-	self.german_light.steal_loot = true
+	self.german_light.steal_loot = false
 	self.german_light.no_retreat = true
 	self.german_light.no_arrest = true
 	self.german_light.loot_table = "hard_enemy"
@@ -603,7 +603,7 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.dodge = presets.dodge.heavy
 	self.german_heavy.deathguard = true
 	self.german_heavy.chatter = presets.enemy_chatter.cop
-	self.german_heavy.steal_loot = true
+	self.german_heavy.steal_loot = false
 	self.german_heavy.no_retreat = true
 	self.german_heavy.no_arrest = true
 	self.german_heavy.loot_table = "elite_enemy"
@@ -652,7 +652,7 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.dodge = presets.dodge.athletic
 	self.german_fallschirmjager_light.deathguard = true
 	self.german_fallschirmjager_light.chatter = presets.enemy_chatter.cop
-	self.german_fallschirmjager_light.steal_loot = true
+	self.german_fallschirmjager_light.steal_loot = false
 	self.german_fallschirmjager_light.no_retreat = true
 	self.german_fallschirmjager_light.no_arrest = true
 	self.german_fallschirmjager_light.loot_table = "hard_enemy"
@@ -702,7 +702,7 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.dodge = presets.dodge.average
 	self.german_gasmask.deathguard = true
 	self.german_gasmask.chatter = presets.enemy_chatter.cop
-	self.german_gasmask.steal_loot = true
+	self.german_gasmask.steal_loot = false
 	self.german_gasmask.no_retreat = true
 	self.german_gasmask.no_arrest = true
 	self.german_gasmask.loot_table = "elite_enemy"
@@ -769,7 +769,7 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.dodge = presets.dodge.heavy
 	self.german_fallschirmjager_heavy.deathguard = false
 	self.german_fallschirmjager_heavy.chatter = presets.enemy_chatter.cop
-	self.german_fallschirmjager_heavy.steal_loot = true
+	self.german_fallschirmjager_heavy.steal_loot = false
 	self.german_fallschirmjager_heavy.no_retreat = true
 	self.german_fallschirmjager_heavy.no_arrest = true
 	self.german_fallschirmjager_heavy.loot_table = "hard_enemy"
@@ -820,7 +820,7 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.dodge = presets.dodge.average
 	self.german_waffen_ss.deathguard = false
 	self.german_waffen_ss.chatter = presets.enemy_chatter.cop
-	self.german_waffen_ss.steal_loot = true
+	self.german_waffen_ss.steal_loot = false
 	self.german_waffen_ss.no_retreat = true
 	self.german_waffen_ss.no_arrest = true
 	self.german_waffen_ss.loot_table = "elite_enemy"
@@ -844,8 +844,8 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.weapon = presets.weapon.expert
 	self.german_commander.detection = presets.detection.normal
 	self.german_commander.vision = presets.vision.commander
-	self.german_commander.HEALTH_INIT = 1000
-	self.german_commander.BASE_HEALTH_INIT = 1000
+	self.german_commander.HEALTH_INIT = 400
+	self.german_commander.BASE_HEALTH_INIT = 400
 	self.german_commander.headshot_dmg_mul = 1
 	self.german_commander.move_speed = presets.move_speed.very_fast
 	self.german_commander.surrender_break_time = {
@@ -891,8 +891,8 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.weapon = presets.weapon.expert
 	self.german_og_commander.detection = presets.detection.normal
 	self.german_og_commander.vision = presets.vision.commander
-	self.german_og_commander.HEALTH_INIT = 1000
-	self.german_og_commander.BASE_HEALTH_INIT = 1000
+	self.german_og_commander.HEALTH_INIT = 400
+	self.german_og_commander.BASE_HEALTH_INIT = 400
 	self.german_og_commander.headshot_dmg_mul = 1
 	self.german_og_commander.move_speed = presets.move_speed.very_fast
 	self.german_og_commander.surrender_break_time = {
@@ -938,8 +938,8 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.weapon = presets.weapon.expert
 	self.german_officer.detection = presets.detection.normal
 	self.german_officer.vision = presets.vision.commander
-	self.german_officer.HEALTH_INIT = 420
-	self.german_officer.BASE_HEALTH_INIT = 420
+	self.german_officer.HEALTH_INIT = 400
+	self.german_officer.BASE_HEALTH_INIT = 400
 	self.german_officer.headshot_dmg_mul = 1
 	self.german_officer.move_speed = presets.move_speed.very_fast
 	self.german_officer.surrender_break_time = {
@@ -965,7 +965,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.dodge = presets.dodge.athletic
 	self.german_officer.deathguard = true
 	self.german_officer.chatter = presets.enemy_chatter.cop
-	self.german_officer.steal_loot = true
+	self.german_officer.steal_loot = false
 	self.german_officer.no_retreat = true
 	self.german_officer.no_arrest = true
 	self.german_officer.loot_table = "elite_enemy"
@@ -1008,7 +1008,7 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.dodge = presets.dodge.athletic
 	self.soviet_nkvd_int_security_captain.deathguard = true
 	self.soviet_nkvd_int_security_captain.chatter = presets.enemy_chatter.cop
-	self.soviet_nkvd_int_security_captain.steal_loot = true
+	self.soviet_nkvd_int_security_captain.steal_loot = false
 	self.soviet_nkvd_int_security_captain.no_retreat = true
 	self.soviet_nkvd_int_security_captain.no_arrest = true
 	self.soviet_nkvd_int_security_captain.loot_table = "special_enemy"
@@ -1034,7 +1034,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.detection = presets.detection.normal
 	self.german_flamer.vision = presets.vision.easy
 	self.german_flamer.HEALTH_INIT = 1900
-	self.german_flamer.headshot_dmg_mul = 0.1
+	self.german_flamer.headshot_dmg_mul = 1
 	self.german_flamer.friendly_fire_dmg_mul = 0.5
 	self.german_flamer.dodge = presets.dodge.poor
 	self.german_flamer.allowed_stances = {
@@ -1081,7 +1081,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.weapon.ak47.focus_delay = 7
 	self.german_flamer.weapon.ak47.focus_dis = 200
 	self.german_flamer.weapon.ak47.spread = 0
-	self.german_flamer.weapon.ak47.miss_dis = 250
+	self.german_flamer.weapon.ak47.miss_dis = 600
 	self.german_flamer.weapon.ak47.RELOAD_SPEED = 1
 	self.german_flamer.weapon.ak47.melee_speed = 1
 	self.german_flamer.weapon.ak47.melee_dmg = 2
@@ -1089,7 +1089,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 		1,
 		2
 	}
-	self.german_flamer.weapon.ak47.max_range = 1100
+	self.german_flamer.weapon.ak47.max_range = 950
 	self.german_flamer.weapon.ak47.additional_weapon_stats = {
 		cooldown_duration = 1.25,
 		shooting_duration = 3.5
@@ -1106,7 +1106,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.weapon.ak47.use_laser = false
 	self.german_flamer.weapon.ak47.FALLOFF = {
 		{
-			dmg_mul = 5,
+			dmg_mul = 4,
 			r = 0,
 			acc = {
 				1,
@@ -1143,7 +1143,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 		},
 		{
 			dmg_mul = 1,
-			r = 1000,
+			r = 1100,
 			acc = {
 				5,
 				1
@@ -1307,7 +1307,7 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.dodge = presets.dodge.poor
 	self.german_spotter.deathguard = true
 	self.german_spotter.chatter = presets.enemy_chatter.cop
-	self.german_spotter.steal_loot = true
+	self.german_spotter.steal_loot = false
 	self.german_spotter.no_retreat = true
 	self.german_spotter.no_arrest = true
 	self.german_spotter.loot_table = "normal_enemy"
@@ -1428,7 +1428,7 @@ function CharacterTweakData:_presets(tweak_data)
 			zones = {
 				{
 					none = 1,
-					health_limit = 0.01
+					health_limit = 0.0001
 				},
 				{
 					explode = 1,

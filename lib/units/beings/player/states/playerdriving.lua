@@ -164,7 +164,7 @@ function PlayerDriving:exit(state_data, new_state_name)
 	local exit_data = {
 		skip_equip = true
 	}
-	local velocity = self._unit:mover():velocity()
+	local velocity = self._unit:mover() and self._unit:mover():velocity() or Vector3(0, 0, 0)
 
 	self:_activate_mover(PlayerStandard.MOVER_STAND, velocity)
 	self._ext_network:send("set_pose", 1)

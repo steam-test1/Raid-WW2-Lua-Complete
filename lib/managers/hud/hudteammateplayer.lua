@@ -30,6 +30,7 @@ HUDTeammatePlayer.PLAYER_LEVEL_FONT_SIZE = 20
 HUDTeammatePlayer.PLAYER_HEALTH_H = 10
 HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON = "backgrounds_health_bg"
 HUDTeammatePlayer.PLAYER_HEALTH_COLORS = tweak_data.gui.colors.player_health_colors
+HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR = tweak_data.gui.colors.progress_dark_red
 HUDTeammatePlayer.EQUIPMENT_H = 37
 HUDTeammatePlayer.EQUIPMENT_PADDING = 6
 HUDTeammatePlayer.HOST_ICON = "player_panel_host_indicator"
@@ -364,6 +365,18 @@ function HUDTeammatePlayer:_create_player_health()
 	health_background:set_center_x(health_panel:w() / 2)
 	health_background:set_center_y(health_panel:h() / 2)
 
+	local health_bar_hurt_params = {
+		name = "health_bar_hurt",
+		w = health_background:w() - 2,
+		h = health_background:h() - 2,
+		color = HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR,
+		layer = health_background:layer() + 1
+	}
+	self._health_bar_hurt = health_panel:rect(health_bar_hurt_params)
+
+	self._health_bar_hurt:set_center_x(health_panel:w() / 2)
+	self._health_bar_hurt:set_center_y(health_panel:h() / 2)
+
 	local health_bar_params = {
 		name = "health_bar",
 		w = health_background:w() - 2,
@@ -441,6 +454,8 @@ function HUDTeammatePlayer:set_health(data)
 
 	self._health_bar:set_w(health_percentage * self._full_health_bar_w)
 	self._health_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.PLAYER_HEALTH_COLORS, health_percentage))
+	self._health_bar_hurt:stop()
+	self._health_bar_hurt:animate(callback(self, self, "_animate_health_change"))
 end
 
 function HUDTeammatePlayer:set_stamina(value)
@@ -488,8 +503,16 @@ end
 
 function HUDTeammatePlayer:set_warcry_meter_fill(data)
 	local warcry_percentage = data.current / data.total
+	self._true_warcry_percentage = warcry_percentage
 
-	self._warcry_bar:set_position_z(warcry_percentage)
+	if self._true_warcry_percentage < 1 then
+		self._warcry_panel:stop()
+		self._warcry_panel:animate(callback(self, self, "_animate_warcry_fill"))
+	else
+		self._warcry_bar:set_position_z(warcry_percentage)
+	end
+
+	self._true_warcry_percentage_prev = warcry_percentage
 end
 
 function HUDTeammatePlayer:activate_warcry(duration)
@@ -633,6 +656,43 @@ function HUDTeammatePlayer:_get_color_for_percentage(color_table, percentage)
 	end
 
 	return color_table[1].color
+end
+
+function HUDTeammatePlayer:_animate_health_change()
+	local from = self._health_bar_hurt:w()
+	local to = self._health_bar:w()
+	local duration = (from - to) / 100
+
+	if duration > 0 then
+		local t = 0
+
+		while duration > t do
+			local dt = coroutine.yield()
+			t = t + dt
+
+			self._health_bar_hurt:set_w(math.lerp(from, to, t / duration))
+		end
+
+		self._health_bar_hurt:set_w(to)
+	else
+		self._health_bar_hurt:set_w(to)
+	end
+end
+
+function HUDTeammatePlayer:_animate_warcry_fill()
+	local from = self._true_warcry_percentage_prev or 0
+	local to = self._true_warcry_percentage or 0
+	local duration = (to - from) * 2
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+
+		self._warcry_bar:set_position_z(math.lerp(from, to, t / duration))
+	end
+
+	self._warcry_bar:set_position_z(to)
 end
 
 function HUDTeammatePlayer:_animate_warcry_ready()

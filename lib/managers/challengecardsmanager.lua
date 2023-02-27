@@ -612,8 +612,9 @@ function ChallengeCardsManager:get_loot_drop_group(card_name)
 	Application:debug("[ChallengeCardsManager:get_loot_drop_group]", card_name)
 
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_name)
+	local has_group = not not card_data.loot_drop_group
 
-	return card_data.loot_drop_group
+	return has_group and LootDropTweakData.LOOT_GROUP_PREFIX .. card_data.loot_drop_group or nil
 end
 
 function ChallengeCardsManager:get_cards_stacking_texture(card_data)

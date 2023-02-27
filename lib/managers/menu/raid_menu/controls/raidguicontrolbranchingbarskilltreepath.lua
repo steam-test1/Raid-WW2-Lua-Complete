@@ -1,8 +1,8 @@
 RaidGUIControlBranchingBarSkilltreePath = RaidGUIControlBranchingBarSkilltreePath or class(RaidGUIControlBranchingBarPath)
-RaidGUIControlBranchingBarSkilltreePath.COLOR_ACTIVE = Color.white:with_alpha(0)
-RaidGUIControlBranchingBarSkilltreePath.COLOR_FILL = tweak_data.gui.colors.raid_red:with_alpha(0)
-RaidGUIControlBranchingBarSkilltreePath.COLOR_LOCKED = tweak_data.gui.colors.raid_red:with_alpha(0)
-RaidGUIControlBranchingBarSkilltreePath.COLOR_DISABLED = Color(0.34509803921568627, 0.34509803921568627, 0.34509803921568627):with_alpha(0)
+RaidGUIControlBranchingBarSkilltreePath.COLOR_ACTIVE = Color.white:with_alpha(1)
+RaidGUIControlBranchingBarSkilltreePath.COLOR_FILL = tweak_data.gui.colors.raid_red:with_alpha(1)
+RaidGUIControlBranchingBarSkilltreePath.COLOR_LOCKED = tweak_data.gui.colors.raid_red:with_alpha(1)
+RaidGUIControlBranchingBarSkilltreePath.COLOR_DISABLED = Color(0.34509803921568627, 0.34509803921568627, 0.34509803921568627):with_alpha(1)
 
 function RaidGUIControlBranchingBarSkilltreePath:init(parent, params)
 	RaidGUIControlBranchingBarSkilltreePath.super.init(self, parent, params)

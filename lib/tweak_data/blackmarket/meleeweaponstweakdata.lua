@@ -1,4 +1,7 @@
 function BlackMarketTweakData:_init_melee_weapons()
+	local MELEE_SLOT = 4
+	local MELEE_SPEED_INSTANT = 0
+	local MELEE_SPEED_NORMAL = 1
 	self.melee_weapons = {
 		weapon = {}
 	}
@@ -13,7 +16,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		max_damage = 75,
 		min_damage_effect = 1,
 		max_damage_effect = 1,
-		charge_time = 0,
+		charge_time = MELEE_SPEED_INSTANT,
 		range = 150,
 		weapon_type = "blunt"
 	}
@@ -35,7 +38,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 	self.melee_weapons.fists.stats.max_damage = 92
 	self.melee_weapons.fists.stats.min_damage_effect = 3
 	self.melee_weapons.fists.stats.max_damage_effect = 2
-	self.melee_weapons.fists.stats.charge_time = 1
+	self.melee_weapons.fists.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.fists.stats.range = 150
 	self.melee_weapons.fists.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.fists.stats.weapon_type = "blunt"
@@ -73,15 +76,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/vanilla/weapons/wpn_fps_mel_m3_knife/wpn_fps_mel_m3_knife",
 		third_unit = "units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.m3_knife.stats.min_damage = 133
 	self.melee_weapons.m3_knife.stats.max_damage = 250
 	self.melee_weapons.m3_knife.stats.min_damage_effect = 1
 	self.melee_weapons.m3_knife.stats.max_damage_effect = 1
-	self.melee_weapons.m3_knife.stats.charge_time = 2
+	self.melee_weapons.m3_knife.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.m3_knife.stats.range = 185
 	self.melee_weapons.m3_knife.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.m3_knife.stats.weapon_type = "sharp"
@@ -99,7 +103,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}
@@ -139,15 +143,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/wpn_fps_mel_robbins_dudley_trench_push_dagger",
 		third_unit = "units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.min_damage = 133
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.max_damage = 250
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.min_damage_effect = 1
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.max_damage_effect = 1
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.charge_time = 2
+	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.range = 185
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.weapon_type = "sharp"
@@ -165,7 +170,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}
@@ -205,15 +210,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/wpn_fps_mel_german_brass_knuckles",
 		third_unit = "units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.german_brass_knuckles.stats.min_damage = 133
 	self.melee_weapons.german_brass_knuckles.stats.max_damage = 250
 	self.melee_weapons.german_brass_knuckles.stats.min_damage_effect = 1
 	self.melee_weapons.german_brass_knuckles.stats.max_damage_effect = 1
-	self.melee_weapons.german_brass_knuckles.stats.charge_time = 2
+	self.melee_weapons.german_brass_knuckles.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.german_brass_knuckles.stats.range = 185
 	self.melee_weapons.german_brass_knuckles.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.german_brass_knuckles.stats.weapon_type = "sharp"
@@ -231,7 +237,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}
@@ -271,15 +277,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/wpn_fps_mel_lockwood_brothers_push_dagger",
 		third_unit = "units/vanilla/weapons/wpn_third_mel_lockwood_brothers_push_dagger/wpn_third_mel_lockwood_brothers_push_dagger",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.min_damage = 133
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.max_damage = 250
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.min_damage_effect = 1
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.max_damage_effect = 1
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.charge_time = 2
+	self.melee_weapons.lockwood_brothers_push_dagger.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.range = 185
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.lockwood_brothers_push_dagger.stats.weapon_type = "sharp"
@@ -297,7 +304,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}
@@ -337,15 +344,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/wpn_fps_mel_bc41_knuckle_knife",
 		third_unit = "units/vanilla/weapons/wpn_third_mel_bc41_knuckle_knife/wpn_third_mel_bc41_knuckle_knife",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.bc41_knuckle_knife.stats.min_damage = 133
 	self.melee_weapons.bc41_knuckle_knife.stats.max_damage = 250
 	self.melee_weapons.bc41_knuckle_knife.stats.min_damage_effect = 1
 	self.melee_weapons.bc41_knuckle_knife.stats.max_damage_effect = 1
-	self.melee_weapons.bc41_knuckle_knife.stats.charge_time = 2
+	self.melee_weapons.bc41_knuckle_knife.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.bc41_knuckle_knife.stats.range = 185
 	self.melee_weapons.bc41_knuckle_knife.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.bc41_knuckle_knife.stats.weapon_type = "sharp"
@@ -363,7 +371,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}
@@ -402,15 +410,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/vanilla/weapons/wpn_fps_km_dagger/wpn_fps_km_dagger",
 		third_unit = "units/vanilla/weapons/wpn_third_mel_km_dagger/wpn_third_mel_km_dagger",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.km_dagger.stats.min_damage = 133
 	self.melee_weapons.km_dagger.stats.max_damage = 250
 	self.melee_weapons.km_dagger.stats.min_damage_effect = 1
 	self.melee_weapons.km_dagger.stats.max_damage_effect = 1
-	self.melee_weapons.km_dagger.stats.charge_time = 2
+	self.melee_weapons.km_dagger.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.km_dagger.stats.range = 185
 	self.melee_weapons.km_dagger.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.km_dagger.stats.weapon_type = "sharp"
@@ -428,7 +437,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}
@@ -468,15 +477,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/vanilla/weapons/wpn_fps_mel_marching_mace/wpn_fps_mel_marching_mace",
 		third_unit = "units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.marching_mace.stats.min_damage = 133
 	self.melee_weapons.marching_mace.stats.max_damage = 250
 	self.melee_weapons.marching_mace.stats.min_damage_effect = 1
 	self.melee_weapons.marching_mace.stats.max_damage_effect = 1
-	self.melee_weapons.marching_mace.stats.charge_time = 2
+	self.melee_weapons.marching_mace.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.marching_mace.stats.range = 185
 	self.melee_weapons.marching_mace.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.marching_mace.stats.weapon_type = "sharp"
@@ -494,7 +504,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}
@@ -535,15 +545,16 @@ function BlackMarketTweakData:_init_melee_weapons()
 		unit = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b",
 		third_unit = "units/event_001_halloween/weapons/wpn_third_mel_lc14b/wpn_third_mel_lc14b",
 		repeat_expire_t = 0.6,
-		expire_t = 1.1,
+		expire_t = 0.75,
 		melee_damage_delay = 0.1,
+		melee_charge_shaker = "player_melee_charge",
 		stats = {}
 	}
 	self.melee_weapons.lc14b.stats.min_damage = 133
 	self.melee_weapons.lc14b.stats.max_damage = 250
 	self.melee_weapons.lc14b.stats.min_damage_effect = 1
 	self.melee_weapons.lc14b.stats.max_damage_effect = 1
-	self.melee_weapons.lc14b.stats.charge_time = 2
+	self.melee_weapons.lc14b.stats.charge_time = MELEE_SPEED_NORMAL
 	self.melee_weapons.lc14b.stats.range = 185
 	self.melee_weapons.lc14b.stats.remove_weapon_movement_penalty = true
 	self.melee_weapons.lc14b.stats.weapon_type = "sharp"
@@ -561,7 +572,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 4,
+		selection_index = MELEE_SLOT,
 		unequip = {
 			align_place = "back"
 		}

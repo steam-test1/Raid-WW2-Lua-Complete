@@ -1580,7 +1580,7 @@ function NewRaycastWeaponBase:update_debug(t, dt)
 
 	mvector3.multiply(mvec_to, ray_distance)
 	mvector3.add(mvec_to, from_pos)
-	self._brush_centre:disc(mvec_to, 0.008 * ray_distance, direction, 16)
+	self._brush_centre:disc(mvec_to, 0.004 * ray_distance, direction, 4)
 
 	local vec_right = mvec_to + right * 25
 
@@ -1607,7 +1607,7 @@ function NewRaycastWeaponBase:update_debug(t, dt)
 		mvector3.set(mvec_to, mvec_spread_direction)
 		mvector3.multiply(mvec_to, ray_distance)
 		mvector3.add(mvec_to, from_pos)
-		self._brush_outer:disc(mvec_to, 0.004 * ray_distance, direction, 16)
+		self._brush_outer:disc(mvec_to, 0.001 * ray_distance, direction, 16)
 	end
 
 	if Global.simulate_weapon_spread then

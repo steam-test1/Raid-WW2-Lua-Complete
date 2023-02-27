@@ -239,7 +239,7 @@ function ProjectilesTweakData:init(tweak_data)
 		is_a_grenade = true,
 		init_timer = 10,
 		damage = 30,
-		player_damage = 2,
+		player_damage = 5,
 		fire_dot_data = {
 			dot_trigger_chance = 35,
 			dot_damage = 10,

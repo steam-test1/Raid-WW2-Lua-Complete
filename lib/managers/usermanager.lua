@@ -80,6 +80,8 @@ local is_ps3 = _G.IS_PS3
 local is_x360 = _G.IS_XB360
 local is_ps4 = _G.IS_PS4
 local is_xb1 = _G.IS_XB1
+local is_console = _G.IS_CONSOLE
+local is_pc = not _G.IS_CONSOLE
 
 function GenericUserManager:setup_setting_map()
 	self:setup_setting(1, "invert_camera_x", false)
@@ -91,7 +93,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(7, "subtitle", true)
 	self:setup_setting(8, "brightness", 1)
 	self:setup_setting(9, "hold_to_steelsight", true)
-	self:setup_setting(10, "hold_to_run", not is_ps3 and not is_x360 and not is_ps4 and not is_xb1 and true)
+	self:setup_setting(10, "hold_to_run", not is_pc and true)
 	self:setup_setting(11, "voice_volume", 100)
 	self:setup_setting(12, "controller_mod", {})
 	self:setup_setting(13, "alienware_mask", true)
@@ -101,7 +103,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(17, "hold_to_duck", false)
 	self:setup_setting(18, "video_color_grading", "color_off")
 	self:setup_setting(19, "video_anti_alias", "AA")
-	self:setup_setting(20, "video_animation_lod", not is_ps3 and not is_x360 and 3 or 2)
+	self:setup_setting(20, "video_animation_lod", not is_pc and 3 or 2)
 	self:setup_setting(21, "video_streaks", true)
 	self:setup_setting(22, "mask_set", "clowns")
 	self:setup_setting(23, "use_lightfx", false)
@@ -144,7 +146,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(60, "enable_camera_sensitivity_separate", false)
 	self:setup_setting(61, "camera_zoom_sensitivity_x", 1)
 	self:setup_setting(62, "camera_zoom_sensitivity_y", 1)
-	self:setup_setting(63, "sticky_aim", true)
+	self:setup_setting(63, "sticky_aim", is_console)
 	self:setup_setting(64, "use_camera_accel", true)
 	self:setup_setting(65, "motion_dot", 0)
 	self:setup_setting(66, "motion_dot_size", 2)

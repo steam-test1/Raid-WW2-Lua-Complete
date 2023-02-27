@@ -870,5 +870,5 @@ function SentryGunBrain:keep_ai_attached()
 end
 
 function SentryGunBrain:allow_turret_abandon()
-	return self._allow_turret_abandon and not self._keep_ai_attached
+	return self._allow_turret_abandon and not self._keep_ai_attached and not self._firing
 end

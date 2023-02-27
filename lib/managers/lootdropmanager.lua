@@ -104,7 +104,7 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 	end
 
 	for _, group in pairs(data_source) do
-		if group.min_loot_value < loot_value and loot_value <= group.max_loot_value then
+		if group.min_loot_value or loot_value > 0 and loot_value <= (group.max_loot_value or 0) then
 			loot_group = group
 
 			break

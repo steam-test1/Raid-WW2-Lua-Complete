@@ -366,7 +366,7 @@ function EventCompleteState:drop_loot_for_player()
 	local forced_loot_group = nil
 
 	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" then
-		forced_loot_group = self._active_challenge_card.loot_drop_group
+		forced_loot_group = managers.challenge_cards:get_loot_drop_group(self._active_challenge_card.key_name)
 	end
 
 	managers.lootdrop:give_loot_to_player(loot_percentage, false, forced_loot_group)

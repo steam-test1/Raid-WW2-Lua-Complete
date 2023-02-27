@@ -223,7 +223,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		positive_description = {
 			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = {
-				EFFECT_VALUE_1 = "+15%"
+				EFFECT_VALUE_1 = "15%"
 			}
 		},
 		negative_description = {
@@ -739,7 +739,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD,
 		card_back = "card_back_halloween_2017",
 		title_in_texture = true,
-		loot_drop_group = "loot_group_halloween_2017",
+		loot_drop_group = LootDropTweakData.REWARD_HALLOWEEN_2017,
 		selected_sound = "halloween_challenge_card_chosen"
 	}
 	self.cards.ra_pumpkin_pie = {
@@ -775,7 +775,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD,
 		card_back = "card_back_halloween_2017",
 		title_in_texture = true,
-		loot_drop_group = "loot_group_halloween_2017",
+		loot_drop_group = LootDropTweakData.REWARD_HALLOWEEN_2017,
 		selected_sound = "halloween_challenge_card_chosen"
 	}
 	self.cards.ra_season_of_resurrection = {
@@ -808,7 +808,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD,
 		card_back = "card_back_halloween_2017",
 		title_in_texture = true,
-		loot_drop_group = "loot_group_halloween_2017",
+		loot_drop_group = LootDropTweakData.REWARD_HALLOWEEN_2017,
 		selected_sound = "halloween_challenge_card_chosen"
 	}
 	self.cards.op_limited_supplies = {

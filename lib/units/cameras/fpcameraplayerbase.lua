@@ -147,19 +147,6 @@ function FPCameraPlayerBase:update(unit, t, dt)
 
 		self._fov.dirty = nil
 	end
-
-	if alive(self._light) then
-		local weapon = self._parent_unit:inventory():equipped_unit()
-
-		if weapon then
-			local object = weapon:get_object(Idstring("fire"))
-			local pos = object:position() + object:rotation():y() * 10 + object:rotation():x() * 0 + object:rotation():z() * -2
-
-			self._light:set_position(pos)
-			self._light:set_rotation(Rotation(object:rotation():z(), object:rotation():x(), object:rotation():y()))
-			World:effect_manager():move_rotate(self._light_effect, pos, Rotation(object:rotation():x(), -object:rotation():y(), -object:rotation():z()))
-		end
-	end
 end
 
 function FPCameraPlayerBase:check_flashlight_enabled()

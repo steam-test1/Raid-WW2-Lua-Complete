@@ -367,6 +367,7 @@ function ReadyUpGui:_spawn_weapon(params)
 end
 
 function ReadyUpGui:_assemble_completed(params, parts, blueprint)
+	self._spawned_weapon_parts = self._spawned_weapon_parts or {}
 	self._spawned_weapon_parts[params.peer] = {}
 
 	for _, part in pairs(parts) do

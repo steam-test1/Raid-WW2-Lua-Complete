@@ -169,7 +169,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.7
 		}
 		self.assault.force_pool_balance_mul = {
-			1.2,
+			1.1,
 			1.7,
 			2.2,
 			2.7
@@ -182,9 +182,9 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			3
 		}
 		self.assault.force_pool_balance_mul = {
-			1.8,
-			2.8,
-			3.1,
+			1.3,
+			1.9,
+			2.7,
 			3.5
 		}
 	end

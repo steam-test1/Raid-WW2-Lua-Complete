@@ -16,45 +16,45 @@ function CarryTweakData:init(tweak_data)
 	self.types = {
 		being = {}
 	}
-	self.types.being.move_speed_modifier = 0.65
+	self.types.being.move_speed_modifier = 0.75
 	self.types.being.jump_modifier = 0.5
 	self.types.being.can_run = false
-	self.types.being.throw_distance_multiplier = 0.65
+	self.types.being.throw_distance_multiplier = 0.75
 	self.types.being.stamina_consume_multi = 2.5
 	self.types.mega_heavy = {
-		move_speed_modifier = 0.2,
-		jump_modifier = 0.25,
+		move_speed_modifier = 0.3,
+		jump_modifier = 0.3,
 		can_run = false,
-		stamina_consume_multi = 2.3,
-		throw_distance_multiplier = 0.125
-	}
-	self.types.very_heavy = {
-		move_speed_modifier = 0.25,
-		jump_modifier = 0.25,
-		can_run = false,
-		stamina_consume_multi = 2.3,
+		stamina_consume_multi = 2,
 		throw_distance_multiplier = 0.3
 	}
-	self.types.slightly_very_heavy = deep_clone(self.types.very_heavy)
-	self.types.slightly_very_heavy.throw_distance_multiplier = 0.4
-	self.types.slightly_very_heavy.move_speed_modifier = 0.4
-	self.types.slightly_very_heavy.stamina_consume_multi = 1.9
-	self.types.heavy = {
+	self.types.very_heavy = {
 		move_speed_modifier = 0.4,
-		jump_modifier = 0.5,
+		jump_modifier = 0.4,
+		can_run = false,
+		stamina_consume_multi = 2,
+		throw_distance_multiplier = 0.4
+	}
+	self.types.slightly_very_heavy = deep_clone(self.types.very_heavy)
+	self.types.slightly_very_heavy.throw_distance_multiplier = 0.5
+	self.types.slightly_very_heavy.move_speed_modifier = 0.5
+	self.types.slightly_very_heavy.stamina_consume_multi = 1.5
+	self.types.heavy = {
+		move_speed_modifier = 0.6,
+		jump_modifier = 0.6,
 		can_run = true,
 		throw_distance_multiplier = 0.5,
-		stamina_consume_multi = 1.8
+		stamina_consume_multi = 1.5
 	}
 	self.types.medium = {
-		move_speed_modifier = 0.65,
+		move_speed_modifier = 0.7,
 		jump_modifier = 1,
 		can_run = true,
 		throw_distance_multiplier = 0.8,
-		stamina_consume_multi = 1.75
+		stamina_consume_multi = 1.25
 	}
 	self.types.slightly_medium = {
-		move_speed_modifier = 0.75,
+		move_speed_modifier = 0.8,
 		jump_modifier = 1,
 		can_run = true,
 		throw_distance_multiplier = 0.9,

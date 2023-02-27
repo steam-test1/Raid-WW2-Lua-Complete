@@ -68,7 +68,7 @@ function PlayerTurret:_init_locators()
 		return
 	end
 
-	self._unit:camera():play_redirect(Idstring("empty"))
+	self._unit:camera():play_redirect(Idstring("unequip"), 5, 60)
 	self._unit:inventory():hide_equipped_unit()
 	self._unit:kill_mover()
 	self:_postion_player()

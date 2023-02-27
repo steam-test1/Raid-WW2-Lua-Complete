@@ -442,7 +442,11 @@ function SentryGunMovement:_abandon_turret_logic(target_dir)
 		return
 	end
 
-	return self:_is_target_close(target_dir)
+	if self:is_target_visible() then
+		return self:_is_target_close(target_dir)
+	else
+		return self:_is_target_close_behind(target_dir)
+	end
 end
 
 function SentryGunMovement:is_unit_behind(target_unit)
@@ -456,7 +460,7 @@ function SentryGunMovement:_is_target_close_behind(target_dir)
 	local player_angle = self._m_head_fwd:angle(target_dir)
 	local player_behind = math.cos(player_angle) < 0
 	local player_distance = (self._m_last_attention_pos - self._m_head_pos):length()
-	local abandon_distance = self._tweak.abandon_proximity or 500
+	local abandon_distance = self._tweak.abandon_proximity or 300
 	local result = player_behind and player_distance < abandon_distance
 
 	return result
@@ -465,7 +469,8 @@ end
 function SentryGunMovement:_is_target_close(target_dir)
 	local player_angle = self._m_head_fwd:angle(target_dir)
 	local player_distance = (self._m_last_attention_pos - self._m_head_pos):length()
-	local abandon_distance = self._tweak.abandon_proximity or 500
+	local abandon_distance = self._tweak.abandon_proximity or 300
+	abandon_distance = abandon_distance * (self._tweak.abandon_proximity_visible_mul or 0.33)
 	local result = player_distance < abandon_distance
 
 	return result

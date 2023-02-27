@@ -302,8 +302,8 @@ function OperationsTweakData:_init_raids()
 		xp = 6000,
 		stealth_bonus = 1.5,
 		start_in_stealth = true,
-		dogtags_min = 20,
-		dogtags_max = 25,
+		dogtags_min = 23,
+		dogtags_max = 26,
 		trophy = {
 			position = "snap_01",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_flaktower"
@@ -374,8 +374,8 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		music_id = "reichsbank",
 		xp = 5500,
-		dogtags_min = 15,
-		dogtags_max = 20,
+		dogtags_min = 20,
+		dogtags_max = 24,
 		trophy = {
 			position = "snap_02",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank"
@@ -438,8 +438,8 @@ function OperationsTweakData:_init_raids()
 		music_id = "train_yard",
 		start_in_stealth = true,
 		xp = 5000,
-		dogtags_min = 15,
-		dogtags_max = 20,
+		dogtags_min = 18,
+		dogtags_max = 25,
 		trophy = {
 			position = "snap_03",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard"
@@ -571,7 +571,7 @@ function OperationsTweakData:_init_raids()
 			OperationsTweakData.PROGRESSION_GROUP_STANDARD
 		},
 		xp = 5500,
-		dogtags_min = 20,
+		dogtags_min = 22,
 		dogtags_max = 25,
 		trophy = {
 			position = "snap_23",
@@ -631,7 +631,7 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		music_id = "castle",
 		xp = 5000,
-		dogtags_min = 20,
+		dogtags_min = 22,
 		dogtags_max = 25,
 		trophy = {
 			position = "snap_22",
@@ -742,8 +742,8 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		xp = 3000,
 		stealth_bonus = 1.5,
-		dogtags_min = 15,
-		dogtags_max = 20,
+		dogtags_min = 18,
+		dogtags_max = 22,
 		trophy = {
 			position = "snap_08",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bunker"
@@ -805,8 +805,8 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		xp = 2500,
 		stealth_bonus = 1.5,
-		dogtags_min = 15,
-		dogtags_max = 20,
+		dogtags_min = 18,
+		dogtags_max = 22,
 		trophy = {
 			position = "snap_13",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_tank"
@@ -867,8 +867,8 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		xp = 2500,
 		stealth_bonus = 1.5,
-		dogtags_min = 15,
-		dogtags_max = 20,
+		dogtags_min = 18,
+		dogtags_max = 22,
 		trophy = {
 			position = "snap_06",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters"
@@ -925,8 +925,8 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		xp = 2500,
 		stealth_bonus = 1.5,
-		dogtags_min = 20,
-		dogtags_max = 25,
+		dogtags_min = 22,
+		dogtags_max = 26,
 		trophy = {
 			position = "snap_09",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_convoy"
@@ -984,8 +984,8 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		xp = 3000,
 		stealth_bonus = 1.5,
-		dogtags_min = 20,
-		dogtags_max = 25,
+		dogtags_min = 22,
+		dogtags_max = 28,
 		trophy = {
 			position = "snap_19",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies"
@@ -1088,8 +1088,8 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_silo_brief_short",
 		music_id = "random",
 		region = "germany",
-		dogtags_min = 20,
-		dogtags_max = 25,
+		dogtags_min = 23,
+		dogtags_max = 28,
 		trophy = {
 			position = "snap_17",
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo"
@@ -1149,8 +1149,8 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "mrs_white_kelly_brief_short",
 		music_id = "random",
 		region = "germany",
-		dogtags_min = 20,
-		dogtags_max = 25,
+		dogtags_min = 24,
+		dogtags_max = 26,
 		xp = 4000,
 		stealth_bonus = 1.5,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,

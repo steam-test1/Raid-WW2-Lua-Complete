@@ -19,11 +19,11 @@ WeaponTweakData.INIT_ROTATION_PITCH_PISTOL = 4
 
 function WeaponTweakData:get_weapon_class_regen_multiplier(weapon_class)
 	if weapon_class == WeaponTweakData.WEAPON_CATEGORY_SMG then
-		return 0.4
+		return 0.5
 	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_ASSAULT_RIFLE then
-		return 0.4
+		return 0.5
 	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_PISTOL then
-		return 0.6
+		return 0.75
 	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_SNP then
 		return 1
 	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_SHOTGUN then
@@ -1887,7 +1887,6 @@ function WeaponTweakData:_init_data_m42_flammenwerfer_npc(difficulty_index)
 	self.m42_flammenwerfer_npc.sounds.autofire_stop = "flamethrower_stop_npc"
 	self.m42_flammenwerfer_npc.no_whizby = true
 	self.m42_flammenwerfer_npc.use_data.selection_index = 2
-	self.m42_flammenwerfer_npc.DAMAGE = 2.5
 	self.m42_flammenwerfer_npc.fire_dot_data = {
 		dot_trigger_chance = 10,
 		dot_damage = 1,
@@ -1905,13 +1904,17 @@ function WeaponTweakData:_init_data_m42_flammenwerfer_npc(difficulty_index)
 	self.m42_flammenwerfer_npc.auto = {}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
-		self.m42_flammenwerfer_npc.auto.fire_rate = 0.5
+		self.m42_flammenwerfer_npc.auto.fire_rate = 0.2
+		self.m42_flammenwerfer_npc.DAMAGE = 2.5
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
-		self.m42_flammenwerfer_npc.auto.fire_rate = 0.25
+		self.m42_flammenwerfer_npc.auto.fire_rate = 0.15
+		self.m42_flammenwerfer_npc.DAMAGE = 2.5
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
-		self.m42_flammenwerfer_npc.auto.fire_rate = 0.12
+		self.m42_flammenwerfer_npc.auto.fire_rate = 0.125
+		self.m42_flammenwerfer_npc.DAMAGE = 3
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.m42_flammenwerfer_npc.auto.fire_rate = 0.1
+		self.m42_flammenwerfer_npc.DAMAGE = 3.5
 	end
 
 	self.m42_flammenwerfer_npc.hud_icon = "rifle"
@@ -2159,7 +2162,8 @@ function WeaponTweakData:_init_data_turrets()
 		anim_enter = "e_so_mg34_enter",
 		anim_exit = "e_so_mg34_exit",
 		puppet_stance = "standing",
-		abandon_proximity = 3500,
+		abandon_proximity = 350,
+		abandon_proximity_visible_mul = 0.33,
 		puppet_damage_multiplier = 1.25,
 		use_dof = true,
 		shell_ejection_effect = "effects/vanilla/weapons/shells/shell_556",
@@ -2972,8 +2976,8 @@ function WeaponTweakData:_init_c96(weapon_data)
 			range = 1500
 		},
 		{
-			damage = 31,
-			range = 3000
+			damage = 15,
+			range = 6000
 		}
 	}
 	self.c96.headshot_multiplier = 3.5
@@ -2990,17 +2994,17 @@ function WeaponTweakData:_init_c96(weapon_data)
 		fire_rate = 0.125
 	}
 	self.c96.spread = {
-		standing = 2.14,
-		crouching = 1.93,
-		steelsight = 1.07,
-		moving_standing = 3.21,
-		moving_crouching = 2.89,
-		moving_steelsight = 1.24,
-		per_shot = 0.25,
-		per_shot_steelsight = 0.2,
-		recovery = 10,
-		recovery_wait_multiplier = 2
+		standing = 2.1
 	}
+	self.c96.spread.crouching = self.c96.spread.standing - 0.25
+	self.c96.spread.steelsight = self.c96.spread.standing - 1.25
+	self.c96.spread.moving_standing = self.c96.spread.standing + 1
+	self.c96.spread.moving_crouching = self.c96.spread.crouching + 0.5
+	self.c96.spread.moving_steelsight = self.c96.spread.steelsight + 0.2
+	self.c96.spread.per_shot = 0.75
+	self.c96.spread.per_shot_steelsight = self.c96.spread.per_shot - 0.15
+	self.c96.spread.recovery = 10
+	self.c96.spread.recovery_wait_multiplier = 2
 	self.c96.kick = {
 		standing = {
 			1.1,
@@ -3145,8 +3149,8 @@ function WeaponTweakData:_init_tt33(weapon_data)
 			range = 1000
 		},
 		{
-			damage = 26,
-			range = 2500
+			damage = 15,
+			range = 6000
 		}
 	}
 	self.tt33.headshot_multiplier = 3.5
@@ -3155,18 +3159,19 @@ function WeaponTweakData:_init_tt33(weapon_data)
 	self.tt33.AMMO_MAX = self.tt33.CLIP_AMMO_MAX * self.tt33.NR_CLIPS_MAX
 	self.tt33.AMMO_PICKUP = self:_pickup_chance(self.tt33.AMMO_MAX, 1)
 	self.tt33.ammo_pickup_base = 10
+	self.tt33.spread = {}
 	self.tt33.spread = {
-		standing = 2.82,
-		crouching = 2.41,
-		steelsight = 1.45,
-		moving_standing = 4,
-		moving_crouching = 3.66,
-		moving_steelsight = 1.87,
-		per_shot = 0.24,
-		per_shot_steelsight = 0.16,
-		recovery = 8,
-		recovery_wait_multiplier = 1
+		standing = 2.5
 	}
+	self.tt33.spread.crouching = self.tt33.spread.standing - 0.25
+	self.tt33.spread.steelsight = self.tt33.spread.standing - 1.25
+	self.tt33.spread.moving_standing = self.tt33.spread.standing + 1
+	self.tt33.spread.moving_crouching = self.tt33.spread.crouching + 0.5
+	self.tt33.spread.moving_steelsight = self.tt33.spread.steelsight + 0.2
+	self.tt33.spread.per_shot = 0.75
+	self.tt33.spread.per_shot_steelsight = self.tt33.spread.per_shot - 0.15
+	self.tt33.spread.recovery = 8
+	self.tt33.spread.recovery_wait_multiplier = 1.5
 	self.tt33.kick = {
 		standing = {
 			1.05,
@@ -3298,11 +3303,11 @@ function WeaponTweakData:_init_webley(weapon_data)
 	self.webley.damage_profile = {
 		{
 			damage = 86,
-			range = 1500
+			range = 1800
 		},
 		{
-			damage = 40,
-			range = 3000
+			damage = 25,
+			range = 6000
 		}
 	}
 	self.webley.headshot_multiplier = 3.5
@@ -3319,17 +3324,17 @@ function WeaponTweakData:_init_webley(weapon_data)
 		fire_rate = 0.3
 	}
 	self.webley.spread = {
-		standing = 2.14,
-		crouching = 1.93,
-		steelsight = 1.07,
-		moving_standing = 3.21,
-		moving_crouching = 2.89,
-		moving_steelsight = 1.34,
-		per_shot = 2.5,
-		per_shot_steelsight = 0.5,
-		recovery = 6,
-		recovery_wait_multiplier = 1.75
+		standing = 1.9
 	}
+	self.webley.spread.crouching = self.webley.spread.standing - 0.35
+	self.webley.spread.steelsight = self.webley.spread.standing - 1.35
+	self.webley.spread.moving_standing = self.webley.spread.standing + 1
+	self.webley.spread.moving_crouching = self.webley.spread.crouching + 0.5
+	self.webley.spread.moving_steelsight = self.webley.spread.steelsight + 0.2
+	self.webley.spread.per_shot = 0.85
+	self.webley.spread.per_shot_steelsight = self.webley.spread.per_shot - 0.08
+	self.webley.spread.recovery = 12
+	self.webley.spread.recovery_wait_multiplier = 2.2
 	self.webley.kick = {
 		standing = {
 			1.3,
@@ -3469,8 +3474,8 @@ function WeaponTweakData:_init_m1911(weapon_data)
 			range = 1000
 		},
 		{
-			damage = 31,
-			range = 2500
+			damage = 15,
+			range = 6000
 		}
 	}
 	self.m1911.headshot_multiplier = 3.5
@@ -3479,18 +3484,19 @@ function WeaponTweakData:_init_m1911(weapon_data)
 	self.m1911.AMMO_MAX = self.m1911.CLIP_AMMO_MAX * self.m1911.NR_CLIPS_MAX
 	self.m1911.AMMO_PICKUP = self:_pickup_chance(self.m1911.AMMO_MAX, 1)
 	self.m1911.ammo_pickup_base = 10
+	self.m1911.spread = {}
 	self.m1911.spread = {
-		standing = 2.5,
-		crouching = 2.25,
-		steelsight = 1.25,
-		moving_standing = 3.75,
-		moving_crouching = 3.38,
-		moving_steelsight = 1.56,
-		per_shot = 0.24,
-		per_shot_steelsight = 0.16,
-		recovery = 8,
-		recovery_wait_multiplier = 1
+		standing = 2.1
 	}
+	self.m1911.spread.crouching = self.m1911.spread.standing - 0.25
+	self.m1911.spread.steelsight = self.m1911.spread.standing - 1.25
+	self.m1911.spread.moving_standing = self.m1911.spread.standing + 1
+	self.m1911.spread.moving_crouching = self.m1911.spread.crouching + 0.5
+	self.m1911.spread.moving_steelsight = self.m1911.spread.steelsight + 0.2
+	self.m1911.spread.per_shot = 0.825
+	self.m1911.spread.per_shot_steelsight = self.m1911.spread.per_shot - 0.125
+	self.m1911.spread.recovery = 10
+	self.m1911.spread.recovery_wait_multiplier = 1.6
 	self.m1911.kick = {
 		standing = {
 			1,
@@ -3965,7 +3971,7 @@ function WeaponTweakData:_init_browning(weapon_data)
 			range = 1000
 		},
 		{
-			damage = 30,
+			damage = 15,
 			range = 2000
 		}
 	}
@@ -4648,18 +4654,18 @@ function WeaponTweakData:_init_sten_mk2(weapon_data)
 		fire_rate = 0.125
 	}
 	self.sten.spread = {
-		standing = 4,
-		crouching = 3.2,
-		steelsight = 2,
-		moving_standing = 5,
-		moving_crouching = 4,
-		moving_steelsight = 2.25,
-		per_shot = 0.065,
-		per_shot_steelsight = 0.05,
-		recovery = 8,
-		recovery_wait_multiplier = 2,
-		max = 2
+		standing = 3,
+		crouching = 2.8,
+		steelsight = 1.8
 	}
+	self.sten.spread.moving_standing = self.sten.spread.standing * 1.1
+	self.sten.spread.moving_crouching = self.sten.spread.standing * 1.1
+	self.sten.spread.moving_steelsight = self.sten.spread.standing * 1.1
+	self.sten.spread.per_shot = 0.2
+	self.sten.spread.per_shot_steelsight = 0.1
+	self.sten.spread.recovery = 6
+	self.sten.spread.recovery_wait_multiplier = 3
+	self.sten.spread.max = 2.5
 	self.sten.kick = {
 		standing = {
 			1.2,
@@ -4836,18 +4842,18 @@ function WeaponTweakData:_init_thompson(weapon_data)
 		fire_rate = 0.1
 	}
 	self.thompson.spread = {
-		standing = 4.5,
-		crouching = 3.6,
-		steelsight = 2.25,
-		moving_standing = 5.63,
-		moving_crouching = 4.5,
-		moving_steelsight = 2.53,
-		per_shot = 0.1,
-		per_shot_steelsight = 0.09,
-		recovery = 10,
-		recovery_wait_multiplier = 3,
-		max = 2
+		standing = 2.75,
+		crouching = 2.5,
+		steelsight = 1.5
 	}
+	self.thompson.spread.moving_standing = self.thompson.spread.standing * 1.1
+	self.thompson.spread.moving_crouching = self.thompson.spread.standing * 1.1
+	self.thompson.spread.moving_steelsight = self.thompson.spread.standing * 1.1
+	self.thompson.spread.per_shot = 0.15
+	self.thompson.spread.per_shot_steelsight = 0.1
+	self.thompson.spread.recovery = 10
+	self.thompson.spread.recovery_wait_multiplier = 3
+	self.thompson.spread.max = 1.75
 	self.thompson.kick = {
 		standing = {
 			1,
@@ -5022,18 +5028,18 @@ function WeaponTweakData:_init_mp38(weapon_data)
 		fire_rate = 0.125
 	}
 	self.mp38.spread = {
-		standing = 2.86,
-		crouching = 2.29,
-		steelsight = 1.43,
-		moving_standing = 3.57,
-		moving_crouching = 2.86,
-		moving_steelsight = 1.61,
-		per_shot = 0.1,
-		per_shot_steelsight = 0.09,
-		recovery = 10,
-		recovery_wait_multiplier = 2,
-		max = 2
+		standing = 2.25,
+		crouching = 2,
+		steelsight = 1.25
 	}
+	self.mp38.spread.moving_standing = self.mp38.spread.standing * 1.1
+	self.mp38.spread.moving_crouching = self.mp38.spread.standing * 1.1
+	self.mp38.spread.moving_steelsight = self.mp38.spread.standing * 1.1
+	self.mp38.spread.per_shot = 0.2
+	self.mp38.spread.per_shot_steelsight = 0.15
+	self.mp38.spread.recovery = 10
+	self.mp38.spread.recovery_wait_multiplier = 3
+	self.mp38.spread.max = 1.5
 	self.mp38.kick = {
 		standing = {
 			2.4,
@@ -5188,17 +5194,18 @@ function WeaponTweakData:_init_sterling(weapon_data)
 		fire_rate = 0.11
 	}
 	self.sterling.spread = {
-		standing = 2.86,
-		crouching = 2.29,
-		steelsight = 1.43,
-		moving_standing = 3.57,
-		moving_crouching = 2.86,
-		moving_steelsight = 1.61,
-		per_shot = 0.085,
-		per_shot_steelsight = 0.075,
-		recovery = 8,
-		recovery_wait_multiplier = 1.25
+		standing = 3,
+		crouching = 2.8,
+		steelsight = 1.8
 	}
+	self.sterling.spread.moving_standing = self.sterling.spread.standing * 1.1
+	self.sterling.spread.moving_crouching = self.sterling.spread.standing * 1.1
+	self.sterling.spread.moving_steelsight = self.sterling.spread.standing * 1.1
+	self.sterling.spread.per_shot = 0.15
+	self.sterling.spread.per_shot_steelsight = 0.1
+	self.sterling.spread.recovery = 8
+	self.sterling.spread.recovery_wait_multiplier = 3
+	self.sterling.spread.max = 2.5
 	self.sterling.kick = {
 		standing = {
 			1.55,
@@ -5726,17 +5733,18 @@ function WeaponTweakData:_init_mp44(weapon_data)
 		fire_rate = 0.11
 	}
 	self.mp44.spread = {
-		standing = 3.57,
-		crouching = 2.5,
-		steelsight = 0.71,
-		moving_standing = 5.36,
-		moving_crouching = 3.75,
-		moving_steelsight = 0.89,
-		per_shot = 0.25,
-		per_shot_steelsight = 0.145,
-		recovery = 10,
-		recovery_wait_multiplier = 2
+		standing = 2.45
 	}
+	self.mp44.spread.crouching = self.mp44.spread.standing * 0.65
+	self.mp44.spread.steelsight = self.mp44.spread.standing * 0.35
+	self.mp44.spread.moving_standing = self.mp44.spread.standing * 1.2
+	self.mp44.spread.moving_crouching = self.mp44.spread.crouching * 1.2
+	self.mp44.spread.moving_steelsight = self.mp44.spread.steelsight * 1.15
+	self.mp44.spread.per_shot = 0.27
+	self.mp44.spread.per_shot_steelsight = 0.15
+	self.mp44.spread.recovery = 8.5
+	self.mp44.spread.recovery_wait_multiplier = 1.3
+	self.mp44.spread.max = 3.5
 	self.mp44.kick = {
 		standing = {
 			1.7,
@@ -5912,18 +5920,18 @@ function WeaponTweakData:_init_m1918_bar(weapon_data)
 		fire_rate = 0.16
 	}
 	self.m1918.spread = {
-		standing = 4.5
+		standing = 1.7
 	}
-	self.m1918.spread.crouching = self.m1918.spread.standing * 0.45
-	self.m1918.spread.steelsight = self.m1918.spread.standing * 0.25
-	self.m1918.spread.moving_standing = self.m1918.spread.standing * 1.4
-	self.m1918.spread.moving_crouching = self.m1918.spread.crouching * 1.4
-	self.m1918.spread.moving_steelsight = self.m1918.spread.steelsight * 1.4
-	self.m1918.spread.per_shot = 0.07
-	self.m1918.spread.per_shot_steelsight = 0.008
-	self.m1918.spread.recovery = 2.5
+	self.m1918.spread.crouching = self.m1918.spread.standing * 0.8
+	self.m1918.spread.steelsight = self.m1918.spread.standing * 0.5
+	self.m1918.spread.moving_standing = self.m1918.spread.standing * 1.2
+	self.m1918.spread.moving_crouching = self.m1918.spread.crouching * 1.2
+	self.m1918.spread.moving_steelsight = self.m1918.spread.steelsight * 1.1
+	self.m1918.spread.per_shot = 0.25
+	self.m1918.spread.per_shot_steelsight = 0.15
+	self.m1918.spread.recovery = 4.5
 	self.m1918.spread.recovery_wait_multiplier = 1.5
-	self.m1918.spread.max = 3
+	self.m1918.spread.max = 3.5
 	self.m1918.kick = {
 		standing = {
 			1.5,
@@ -6092,17 +6100,17 @@ function WeaponTweakData:_init_dp28(weapon_data)
 		fire_rate = 0.1
 	}
 	self.dp28.spread = {
-		standing = 5
+		standing = 1.7
 	}
-	self.dp28.spread.crouching = self.dp28.spread.standing * 0.7
-	self.dp28.spread.steelsight = self.dp28.spread.standing * 0.5
-	self.dp28.spread.moving_standing = self.dp28.spread.standing * 2.2
-	self.dp28.spread.moving_crouching = self.dp28.spread.crouching * 2.2
-	self.dp28.spread.moving_steelsight = self.dp28.spread.steelsight * 2.2
-	self.dp28.spread.per_shot = 0.45
-	self.dp28.spread.per_shot_steelsight = 0.3
-	self.dp28.spread.recovery = 3
-	self.dp28.spread.recovery_wait_multiplier = 0.5
+	self.dp28.spread.crouching = self.dp28.spread.standing * 0.8
+	self.dp28.spread.steelsight = self.dp28.spread.standing * 0.6
+	self.dp28.spread.moving_standing = self.dp28.spread.standing * 1.4
+	self.dp28.spread.moving_crouching = self.dp28.spread.crouching * 1.3
+	self.dp28.spread.moving_steelsight = self.dp28.spread.steelsight * 1.2
+	self.dp28.spread.per_shot = 0.4
+	self.dp28.spread.per_shot_steelsight = 0.25
+	self.dp28.spread.recovery = 2.3
+	self.dp28.spread.recovery_wait_multiplier = 1.5
 	self.dp28.spread.max = 3
 	self.dp28.kick = {
 		standing = {
@@ -6266,19 +6274,19 @@ function WeaponTweakData:_init_bren(weapon_data)
 	}
 	self.bren.CAN_TOGGLE_FIREMODE = true
 	self.bren.auto = {
-		fire_rate = 0.1
+		fire_rate = 0.12
 	}
 	self.bren.spread = {
-		standing = 5
+		standing = 1.7
 	}
-	self.bren.spread.crouching = self.bren.spread.standing * 0.7
-	self.bren.spread.steelsight = self.bren.spread.standing * 0.5
-	self.bren.spread.moving_standing = self.bren.spread.standing * 2.2
-	self.bren.spread.moving_crouching = self.bren.spread.crouching * 2.2
-	self.bren.spread.moving_steelsight = self.bren.spread.steelsight * 2.2
-	self.bren.spread.per_shot = 0.35
+	self.bren.spread.crouching = self.bren.spread.standing * 0.8
+	self.bren.spread.steelsight = self.bren.spread.standing * 0.6
+	self.bren.spread.moving_standing = self.bren.spread.standing * 1.4
+	self.bren.spread.moving_crouching = self.bren.spread.crouching * 1.3
+	self.bren.spread.moving_steelsight = self.bren.spread.steelsight * 1.2
+	self.bren.spread.per_shot = 0.4
 	self.bren.spread.per_shot_steelsight = 0.25
-	self.bren.spread.recovery = 3.5
+	self.bren.spread.recovery = 2.5
 	self.bren.spread.recovery_wait_multiplier = 0.75
 	self.bren.spread.max = 3
 	self.bren.kick = {
@@ -6447,18 +6455,18 @@ function WeaponTweakData:_init_mg42(weapon_data)
 	}
 	self.mg42.CAN_TOGGLE_FIREMODE = false
 	self.mg42.auto = {
-		fire_rate = 0.05
+		fire_rate = self:convert_rpm(1200)
 	}
 	self.mg42.spread = {
-		standing = 5
+		standing = 2
 	}
-	self.mg42.spread.crouching = self.mg42.spread.standing * 0.7
+	self.mg42.spread.crouching = self.mg42.spread.standing * 0.75
 	self.mg42.spread.steelsight = self.mg42.spread.standing * 0.5
-	self.mg42.spread.moving_standing = self.mg42.spread.standing * 2.2
-	self.mg42.spread.moving_crouching = self.mg42.spread.crouching * 2.2
-	self.mg42.spread.moving_steelsight = self.mg42.spread.steelsight * 2.2
-	self.mg42.spread.per_shot = 0.45
-	self.mg42.spread.per_shot_steelsight = 0.3
+	self.mg42.spread.moving_standing = self.mg42.spread.standing * 1.4
+	self.mg42.spread.moving_crouching = self.mg42.spread.crouching * 1.4
+	self.mg42.spread.moving_steelsight = self.mg42.spread.steelsight * 1.4
+	self.mg42.spread.per_shot = 0.3
+	self.mg42.spread.per_shot_steelsight = 0.25
 	self.mg42.spread.recovery = 3
 	self.mg42.spread.recovery_wait_multiplier = 0.5
 	self.mg42.spread.max = 6
@@ -6610,7 +6618,7 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data)
 	self.m1903.ammo_pickup_base = 5
 	self.m1903.FIRE_MODE = "single"
 	self.m1903.fire_mode_data = {
-		fire_rate = 1.2
+		fire_rate = 1.15
 	}
 	self.m1903.CAN_TOGGLE_FIREMODE = false
 	self.m1903.auto = {
@@ -7187,7 +7195,7 @@ function WeaponTweakData:_init_mosin(weapon_data)
 	}
 	self.mosin.CAN_TOGGLE_FIREMODE = false
 	self.mosin.single = {
-		fire_rate = 20
+		fire_rate = 1
 	}
 	self.mosin.spread = {
 		standing = 4.29,

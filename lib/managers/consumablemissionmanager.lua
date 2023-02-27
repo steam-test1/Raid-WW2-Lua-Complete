@@ -1,5 +1,5 @@
 ConsumableMissionManager = ConsumableMissionManager or class()
-ConsumableMissionManager.VERSION = 1
+ConsumableMissionManager.VERSION = 2
 
 function ConsumableMissionManager:init()
 	if not Global.consumable_missions_manager then
@@ -60,9 +60,9 @@ function ConsumableMissionManager:plant_document_on_level(world_id)
 
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
-	local document_spawn_chance = -0.1
+	local document_spawn_chance = -0.01
 
-	if not self:is_any_mission_unlocked() then
+	if not self:is_all_missions_unlocked() then
 		document_spawn_chance = tweak_data.operations.consumable_missions.base_document_spawn_chance[difficulty_index]
 		document_spawn_chance = document_spawn_chance + Global.consumable_missions_manager.intel_spawn_modifier
 	end

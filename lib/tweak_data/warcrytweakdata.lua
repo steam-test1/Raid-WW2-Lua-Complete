@@ -90,7 +90,7 @@ function WarcryTweakData:_init_data_berserk()
 		low_health_multiplier_activation_percentage = 0.4,
 		low_health_multiplier_min = 0.2,
 		low_health_multiplier_max = 0.5,
-		base_team_heal_percentage = 3,
+		base_team_heal_percentage = 2,
 		buffs = {
 			{
 				"warcry_player_ammo_consumption_1",

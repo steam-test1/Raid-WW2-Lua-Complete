@@ -1,4 +1,5 @@
 LootDropTweakData = LootDropTweakData or class()
+LootDropTweakData.LOOT_GROUP_PREFIX = "loot_group_"
 LootDropTweakData.REWARD_XP = "xp"
 LootDropTweakData.REWARD_CARD_PACK = "card_pack"
 LootDropTweakData.REWARD_CUSTOMIZATION = "customization"
@@ -373,6 +374,12 @@ function LootDropTweakData:_init_groups()
 		{
 			chance = 5,
 			value = self.loot_categories.category_melee
+		}
+	}
+	self.loot_groups.loot_group_halloween_2017 = {
+		{
+			chance = 100,
+			value = self.loot_categories.category_halloween_2017
 		}
 	}
 	self.loot_groups_doubles_fallback = {

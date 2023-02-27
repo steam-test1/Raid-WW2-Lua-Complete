@@ -29,10 +29,6 @@ end
 function WeaponSkillsManager:set_character_default_weapon_skills()
 	Global.weapon_skills_manager.weapon_skills_skill_tree = deep_clone(tweak_data.weapon_skills.skill_trees)
 
-	for weapon_name, skill_tree_data in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
-		skill_tree_data.use_weapon_parts_cosmetics = true
-	end
-
 	self:_initialize_weapon_skill_challenges()
 	self:_goldm1_convert_weapon_skill_challenges()
 end
@@ -89,16 +85,22 @@ function WeaponSkillsManager:get_hide_cosmetic_part(weapon_id, weapon_part_id)
 end
 
 function WeaponSkillsManager:_initialize_weapon_skill_challenges()
+	local function get_challenge_id(wep_id, skill_name, tier_idx)
+		return wep_id .. "_" .. skill_name .. "_" .. tostring(tier_idx)
+	end
+
 	for weapon_id, skill_tree in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
 		for tier_index = 1, #skill_tree do
 			local tier_skills = skill_tree[tier_index]
 
-			for skill_index, skill in pairs(tier_skills) do
-				if skill[1].challenge_tasks then
-					local challenge_id = weapon_id .. "_" .. skill[1].skill_name .. "_" .. tostring(tier_index)
+			for skill_index, skills in pairs(tier_skills) do
+				local skill = skills[1]
+
+				if skill.challenge_tasks then
+					local challenge_id = get_challenge_id(weapon_id, skill.skill_name, tostring(tier_index))
 
 					if not managers.challenge:challenge_exists(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_id) then
-						local challenge_tasks = skill[1].challenge_tasks
+						local challenge_tasks = skill.challenge_tasks
 						local challenge_callback = {
 							target = "managers.weapon_skills",
 							method = "on_weapon_challenge_completed",
@@ -119,28 +121,39 @@ function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 						local tasks = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_id):tasks()
 
 						for task_index, task in pairs(tasks) do
-							local reminders = skill[1].challenge_tasks[task_index].reminders or {}
+							local reminders = skill.challenge_tasks[task_index].reminders or {}
 
 							task:set_reminders(reminders)
 
-							local modifiers = skill[1].challenge_tasks[task_index].modifiers or {}
+							local modifiers = skill.challenge_tasks[task_index].modifiers or {}
 
 							task:set_modifiers(modifiers)
 						end
 					end
 
-					skill[1].challenge_id = challenge_id
-					skill[1].weapon_id = weapon_id
-					skill[1].tier = tier_index
-					skill[1].index_in_tier = skill_index
-					local previous_challenge_unlocked = tier_skills[skill_index - 1] and managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, tier_skills[skill_index - 1][1].challenge_id):completed()
+					skill.challenge_id = challenge_id
+					skill.weapon_id = weapon_id
+					skill.tier = tier_index
+					skill.index_in_tier = skill_index
 
-					if tier_index == 1 or previous_challenge_unlocked then
-						skill[1].challenge_unlocked = true
+					local function is_previous_challenge_unlocked(idx)
+						local previous_tier = tier_skills[idx]
+
+						if previous_tier then
+							local previous_challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, tier_skills[idx][1].challenge_id)
+
+							return tier_skills[idx] and previous_challenge:completed()
+						end
+
+						return false
+					end
+
+					if tier_index == 1 or is_previous_challenge_unlocked(skill_index - 1) then
+						skill.challenge_unlocked = true
 					elseif skill_tree[tier_index - 1][skill_index] == nil then
-						skill[1].challenge_unlocked = true
+						skill.challenge_unlocked = true
 					else
-						skill[1].challenge_unlocked = false
+						skill.challenge_unlocked = false
 					end
 				end
 			end
@@ -844,6 +857,7 @@ function WeaponSkillsManager:save(data)
 end
 
 function WeaponSkillsManager:load(data, version)
+	Application:trace("[WeaponSkillsManager:load] data.WeaponSkillsManager ", inspect(data.WeaponSkillsManager.weapon_skills_skill_tree.thompson))
 	self:_setup(true)
 
 	local state = data.WeaponSkillsManager
@@ -923,12 +937,6 @@ function WeaponSkillsManager:load(data, version)
 
 		if new_weapon_added then
 			managers.savefile:set_resave_required()
-		end
-	end
-
-	for weapon_name, skill_tree_data in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
-		if skill_tree_data.use_weapon_parts_cosmetics == nil then
-			skill_tree_data.use_weapon_parts_cosmetics = true
 		end
 	end
 

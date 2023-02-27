@@ -9,7 +9,6 @@ HUDWatermarkBase.TEXT_FONT = tweak_data.gui.fonts.din_compressed_outlined_32
 HUDWatermarkBase.TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_32
 
 function HUDWatermarkBase:init(hud)
-	self.WATERMARK_TYPE = "unset"
 	self.WATERMARK_TYPE = "public"
 
 	self:_create_panel(hud)
@@ -36,7 +35,7 @@ function HUDWatermarkBase:_create_text()
 	local watermark_text = ""
 	watermark_title = watermark_title or "wm_unset_warning"
 	watermark_title = utf8.to_upper(managers.localization:text(watermark_title))
-	self._title = self._object:text({
+	self._wmtitle = self._object:text({
 		vertical = "top",
 		name = "watermark_title",
 		align = "center",
@@ -47,19 +46,6 @@ function HUDWatermarkBase:_create_text()
 		font = HUDWatermarkBase.TITLE_FONT,
 		font_size = HUDWatermarkBase.TITLE_FONT_SIZE,
 		text = watermark_title,
-		alpha = HUDWatermarkBase.A
-	})
-	self._text = self._object:text({
-		vertical = "bottom",
-		name = "watermark_text",
-		align = "center",
-		halign = "scale",
-		valign = "scale",
-		w = self._object:w(),
-		h = self._object:h(),
-		font = HUDWatermarkBase.TEXT_FONT,
-		font_size = HUDWatermarkBase.TEXT_FONT_SIZE,
-		text = watermark_text,
 		alpha = HUDWatermarkBase.A
 	})
 end
