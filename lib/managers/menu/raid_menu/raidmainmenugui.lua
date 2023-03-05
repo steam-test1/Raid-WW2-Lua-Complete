@@ -22,6 +22,13 @@ function RaidMainMenuGui:_mod_overrides_warning()
 	end
 end
 
+function RaidMainMenuGui:_mod_overrides_warning_callback_yes_function()
+	SystemFS:view_mod_overrides_folder()
+end
+
+function RaidMainMenuGui:_mod_overrides_warning_callback_no_function()
+end
+
 function RaidMainMenuGui:_setup_properties()
 	RaidMainMenuGui.super._setup_properties(self)
 
@@ -738,11 +745,4 @@ function RaidMainMenuGui:_on_list_menu_item_selected(data)
 	if on_click_callback then
 		on_click_callback()
 	end
-end
-
-function RaidMainMenuGui:_mod_overrides_warning_callback_yes_function()
-	SystemFS:view_mod_overrides_folder()
-end
-
-function RaidMainMenuGui:_mod_overrides_warning_callback_no_function()
 end

@@ -7,7 +7,7 @@ DLCTweakData.DLC_NAME_PREORDER = "preorder"
 DLCTweakData.DLC_NAME_SPECIAL_EDITION = "special_edition"
 DLCTweakData.DLC_NAME_RAID_COMMUNITY = "raid_community"
 DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK = "official_soundtrack"
-DLCTweakData.DLC_REWARD_CUSTOMIZATION_JACKET_RANDOM = "customization_jacket_random"
+DLCTweakData.DLC_NAME_STARTER_KIT = "starter_kit"
 
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then

@@ -8,13 +8,6 @@ core:register_module("lib/managers/DebugManager")
 core:register_module("lib/utils/game_state_machine/GameState")
 core:register_module("lib/utils/dev/FreeFlight")
 
-_G.IS_WIN32 = _G.IS_PC
-_G.IS_XB360 = SystemInfo:platform() == Idstring("X360")
-_G.IS_XB1 = SystemInfo:platform() == Idstring("XB1")
-_G.IS_PS3 = SystemInfo:platform() == Idstring("PS3")
-_G.IS_PS4 = SystemInfo:platform() == Idstring("PS4")
-_G.IS_CONSOLE = _G.IS_XB360 or _G.IS_XB1 or _G.IS_PS3 or _G.IS_PS4
-_G.IS_PC = not _G.IS_CONSOLE
 Global.DEBUG_MENU_ON = Application:debug_enabled()
 Global.DEFAULT_DIFFICULTY = "difficulty_2"
 Global.DEFAULT_PERMISSION = "public"

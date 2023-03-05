@@ -1,6 +1,13 @@
 AchievmentManager = AchievmentManager or class()
 AchievmentManager.PATH = "gamedata/achievments"
 AchievmentManager.FILE_EXTENSION = "achievment"
+AchievmentManager.NUM_KILLS_FOR_NAZI_HELL_ACHIEVEMENT = 665
+AchievmentManager.NUM_KILLS_FOR_FLAMER_ACHIEVEMENT = 100
+AchievmentManager.NUM_KILLS_FOR_MELEE_ACHIEVEMENT = 200
+AchievmentManager.NUM_KILLS_FOR_DISMEMBER_ACHIEVEMENT = 100
+AchievmentManager.NUM_REVIVES_FOR_ACHIEVEMENT = 50
+AchievmentManager.NUM_BEST_OF_STATS_FOR_ACHIEVEMENT = 150
+AchievmentManager.NUM_CHALLENGE_CARD_MISSIONS_FOR_ACHIEVEMENT = 120
 
 function AchievmentManager:init()
 	self.exp_awards = {
@@ -133,7 +140,7 @@ function AchievmentManager:_load_done()
 	if _G.IS_XB1 then
 		print("[AchievmentManager] _load_done()")
 
-		self._is_fetching_achievments = XboxLive:achievements(0, 1000, true, callback(self, self, "_achievments_loaded"))
+		self._is_fetching_achievments = XboxLive:achievements(managers.user:get_xuid(0), 99, false, callback(self, self, "_achievments_loaded"))
 	end
 end
 
@@ -464,7 +471,9 @@ function AchievmentManager:check_achievement_operation_clear_sky_no_bleedout(ope
 				local event_data = operation_save_data.event_data[events_index_index]
 
 				for peer_index, peer_data in pairs(event_data.peer_data) do
-					total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
+					if peer_data.statistics ~= nil then
+						total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
+					end
 				end
 			end
 

@@ -40,7 +40,7 @@ function FlamerTank:detonate(in_pos, range, damage, player_damage, attacker_unit
 
 		if self._unit:parent() then
 			local attack_data = {
-				damage = self._unit:parent():character_damage():health() * 2
+				damage = self._unit:parent():character_damage():health() * 10
 			}
 
 			if attacker_unit then

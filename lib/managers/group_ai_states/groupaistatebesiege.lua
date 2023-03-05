@@ -3386,7 +3386,8 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 				end
 
 				if push and not group.push_t then
-					group.push_t = self._t + self:_get_balancing_multiplier(self._tweak_data.assault.push_delay)
+					local balm = self:_get_balancing_multiplier(self._tweak_data.assault.push_delay) or 0
+					group.push_t = self._t + balm
 
 					return
 				end
