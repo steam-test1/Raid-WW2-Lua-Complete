@@ -449,10 +449,10 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self:_create_definition_levels("player_secondary_ammo_increase", "feature", "secondary_ammo_increase", "player", true, self.values.player.secondary_ammo_increase, self.description_data_types.generic_multiplier)
 
 	self.values.player.all_movement_speed_increase = {
-		1.02,
-		1.04,
-		1.07,
-		1.1
+		1.05,
+		1.1,
+		1.15,
+		1.2
 	}
 
 	self:_create_definition_levels("player_all_movement_speed_increase", "feature", "all_movement_speed_increase", "player", true, self.values.player.all_movement_speed_increase, self.description_data_types.generic_multiplier)
@@ -460,15 +460,15 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.run_speed_increase = {
 		1.05,
 		1.1,
-		1.16,
-		1.25
+		1.15,
+		1.2
 	}
 
 	self:_create_definition_levels("player_run_speed_increase", "feature", "run_speed_increase", "player", true, self.values.player.run_speed_increase, self.description_data_types.generic_multiplier)
 
 	self.values.player.climb_speed_increase = {
 		1.5,
-		1.7,
+		1.75,
 		1.9
 	}
 
@@ -477,8 +477,8 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.crouch_speed_increase = {
 		1.05,
 		1.1,
-		1.16,
-		1.25
+		1.15,
+		1.2
 	}
 
 	self:_create_definition_levels("player_crouch_speed_increase", "feature", "crouch_speed_increase", "player", true, self.values.player.crouch_speed_increase, self.description_data_types.generic_multiplier)
@@ -513,7 +513,7 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.interacting_damage_reduction = {
 		0.85,
 		0.7,
-		0.51,
+		0.5,
 		0.25
 	}
 
@@ -522,7 +522,7 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.bullet_damage_reduction = {
 		0.95,
 		0.9,
-		0.84,
+		0.85,
 		0.75
 	}
 
@@ -531,7 +531,7 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.melee_damage_reduction = {
 		0.9,
 		0.8,
-		0.68,
+		0.7,
 		0.5
 	}
 

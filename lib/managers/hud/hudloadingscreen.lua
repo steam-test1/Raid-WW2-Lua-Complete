@@ -634,10 +634,17 @@ function HUDLoadingScreen:show(data, clbk)
 			end
 		else
 			self._black:animate(callback(self, self, "_animate_alpha"), 1, 0.5, 0, callback(self, self, "_on_faded_to_black"))
-			self._bg:animate(callback(self, self, "_animate_alpha"), 1, 0.6, 0.45, clbk)
+
+			if self._bg then
+				self._bg:animate(callback(self, self, "_animate_alpha"), 1, 0.6, 0.45, clbk)
+			else
+				Application:error("[HUDLoadingScreen:show] No background to show!")
+			end
 
 			if self._info_panel then
 				self._info_panel:animate(callback(self, self, "_animate_alpha"), 1, 0.45, 0.5)
+			else
+				Application:error("[HUDLoadingScreen:show] No info panel to show!")
 			end
 		end
 	elseif self._state == "black" then
@@ -659,9 +666,16 @@ function HUDLoadingScreen:hide()
 	if self._state == "shown" then
 		if self._info_panel then
 			self._info_panel:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0)
+		else
+			Application:error("[HUDLoadingScreen:hide] No info panel to hide!")
 		end
 
-		self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		if self._bg then
+			self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		else
+			Application:error("[HUDLoadingScreen:hide] No background to hide!")
+		end
+
 		self._black:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0.7, self.clean_up)
 	elseif self._state == "black" then
 		self._black:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0, self.clean_up)
@@ -678,9 +692,15 @@ function HUDLoadingScreen:fade_to_black()
 	elseif self._state == "shown" then
 		if self._info_panel then
 			self._info_panel:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0)
+		else
+			Application:error("[HUDLoadingScreen:fade_to_black] No info panel to fade_to_black!")
 		end
 
-		self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		if self._bg then
+			self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		else
+			Application:error("[HUDLoadingScreen:fade_to_black] No background to fade_to_black!")
+		end
 	end
 
 	self._state = "black"

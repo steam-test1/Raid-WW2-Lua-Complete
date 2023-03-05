@@ -188,4 +188,38 @@ function ChallengeTweakData:init()
 		90,
 		130
 	}
+	self.welrod_kill_enemies_basic_easy = deep_clone(self.kill_enemies_basic_easy)
+	self.welrod_kill_enemies_basic_easy.target = 75
+	self.welrod_kill_enemies_basic_easy.reminders = {
+		25,
+		50,
+		60
+	}
+	self.welrod_kill_enemies_headshot_easy = deep_clone(self.tighter_spread_easy)
+	self.welrod_kill_enemies_headshot_easy.target = 25
+	self.welrod_kill_enemies_headshot_easy.reminders = {
+		10,
+		20
+	}
+	self.welrod_kill_enemies_basic_medium = deep_clone(self.kill_enemies_basic_medium)
+	self.welrod_kill_enemies_basic_medium.target = 150
+	self.welrod_kill_enemies_basic_medium.reminders = {
+		40,
+		60,
+		120
+	}
+	self.welrod_kill_enemies_headshot_medium = deep_clone(self.tighter_spread_medium)
+	self.welrod_kill_enemies_headshot_medium.target = 35
+	self.welrod_kill_enemies_headshot_medium.reminders = {
+		10,
+		20,
+		30
+	}
+	self.welrod_kill_enemies_hipfire_medium = deep_clone(self.kill_enemies_hipfire_medium)
+	self.welrod_kill_enemies_hipfire_medium.target = 75
+	self.welrod_kill_enemies_hipfire_medium.reminders = {
+		25,
+		50,
+		60
+	}
 end

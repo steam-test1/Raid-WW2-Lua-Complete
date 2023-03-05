@@ -706,8 +706,10 @@ function HUDNotificationGreedItem:update_data(data)
 end
 
 function HUDNotificationGreedItem:animate_progress_change()
-	self._gold_icon:stop()
-	self._gold_icon:animate(callback(self, self, "_animate_progress_change"))
+	if self._gold_icon then
+		self._gold_icon:stop()
+		self._gold_icon:animate(callback(self, self, "_animate_progress_change"))
+	end
 end
 
 function HUDNotificationGreedItem:_animate_progress_change(o)

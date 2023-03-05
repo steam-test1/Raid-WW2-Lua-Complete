@@ -340,7 +340,7 @@ function WeaponSkillsTweakData:_init_webley_skill_tree(tweak_data)
 	}
 	self.skill_trees.webley[1][1] = {
 		{
-			value = 1,
+			value = 2,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
@@ -361,7 +361,7 @@ function WeaponSkillsTweakData:_init_webley_skill_tree(tweak_data)
 	self.skill_trees.webley[2] = {
 		{
 			{
-				value = 2,
+				value = 3,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
@@ -5124,116 +5124,52 @@ function WeaponSkillsTweakData:_init_welrod_skill_tree(tweak_data)
 	}
 	self.skill_trees.welrod[1][1] = {
 		{
-			cost = 1,
 			value = 1,
-			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
-				{
-					target = 250,
-					type = ChallengeTweakData.TASK_KILL_ENEMIES,
-					reminders = {
-						60,
-						125,
-						185,
-						225
-					}
-				}
+				tweak_data.challenge.welrod_kill_enemies_basic_easy
 			}
 		}
 	}
 	self.skill_trees.welrod[1][2] = {
 		{
-			cost = 1,
 			value = 1,
-			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
-				{
-					target = 25,
-					type = ChallengeTweakData.TASK_KILL_ENEMIES,
-					reminders = {
-						10,
-						20
-					},
-					modifiers = {
-						headshot = true,
-						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
-					}
-				}
+				tweak_data.challenge.welrod_kill_enemies_headshot_easy
 			}
 		}
 	}
 	self.skill_trees.welrod[2] = {
 		{
 			{
-				cost = 2,
 				value = 2,
-				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
-					{
-						target = 325,
-						type = ChallengeTweakData.TASK_KILL_ENEMIES,
-						reminders = {
-							125,
-							250,
-							375,
-							450
-						}
-					}
+					tweak_data.challenge.welrod_kill_enemies_basic_medium
 				}
 			}
 		},
 		{
 			{
-				cost = 3,
 				value = 2,
-				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
-					{
-						target = 33,
-						type = ChallengeTweakData.TASK_KILL_ENEMIES,
-						reminders = {
-							10,
-							20,
-							30
-						},
-						modifiers = {
-							headshot = true,
-							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
-						}
-					}
+					tweak_data.challenge.welrod_kill_enemies_headshot_medium
 				}
 			}
 		},
 		{
 			{
-				cost = 2,
 				value = 2,
-				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
-					{
-						target = 230,
-						type = ChallengeTweakData.TASK_KILL_ENEMIES,
-						reminders = {
-							50,
-							125,
-							175,
-							200
-						},
-						modifiers = {
-							hip_fire = true,
-							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
-						}
-					}
+					tweak_data.challenge.welrod_kill_enemies_hipfire_medium
 				}
 			}
 		}
@@ -5272,7 +5208,7 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 	self.skill_trees.shotty[1][2] = {
 		{
 			cost = 1,
-			value = 1,
+			value = 5,
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
@@ -5317,7 +5253,7 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 		{
 			{
 				cost = 3,
-				value = 2,
+				value = 6,
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,

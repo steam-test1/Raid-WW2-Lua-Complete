@@ -381,18 +381,24 @@ function ReadyUpGui:_load_character_empty_skeleton()
 	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_character_units"))
 end
 
-function ReadyUpGui:_get_character_spawn_index(control_list_index)
-	if self._is_single_player then
-		return 1
+function ReadyUpGui:_are_peer_visuals_assembled()
+	if not self._spawned_character_units or not self._weapon_assembled then
+		return false
 	end
 
-	if control_list_index == 1 then
-		return 2
-	elseif control_list_index == 2 then
-		return 1
+	for k, v in pairs(self._spawned_character_units) do
+		if not alive(v) then
+			return false
+		end
 	end
 
-	return control_list_index
+	for k, v in pairs(self._weapon_assembled) do
+		if not v then
+			return false
+		end
+	end
+
+	return true
 end
 
 function ReadyUpGui:_spawn_character_units()
@@ -433,6 +439,20 @@ function ReadyUpGui:_spawn_character_units()
 		local at_time = math.random() * 10
 		local state = spawned_unit:play_redirect(Idstring(anim_state_name), at_time)
 	end
+end
+
+function ReadyUpGui:_get_character_spawn_index(control_list_index)
+	if self._is_single_player then
+		return 1
+	end
+
+	if control_list_index == 1 then
+		return 2
+	elseif control_list_index == 2 then
+		return 1
+	end
+
+	return control_list_index
 end
 
 function ReadyUpGui:_set_card_selection_controls()
@@ -661,7 +681,11 @@ function ReadyUpGui:_update_status()
 				local outfit = peer:blackmarket_outfit()
 				local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(outfit.primary.factory_id)
 				local anim_state_name = "hos_to_cbt_" .. weapon_id
-				local state = self._spawned_character_units[peer]:play_redirect(Idstring(anim_state_name))
+				local state = nil
+
+				if self._spawned_character_units and self._spawned_character_units[peer] then
+					state = self._spawned_character_units[peer]:play_redirect(Idstring(anim_state_name))
+				end
 
 				managers.menu_component:post_event("ready_up_" .. peer:character())
 			end
@@ -894,6 +918,12 @@ function ReadyUpGui:_update_peers()
 end
 
 function ReadyUpGui:update(t, dt)
+	if not self:_are_peer_visuals_assembled() then
+		Application:debug("[ReadyUpGui:update] Waiting for peers to finish building visuals!")
+
+		return
+	end
+
 	self:_show_characters()
 	self:_show_player_challenge_card_info()
 	self:_update_challenge_card_selected_icon()

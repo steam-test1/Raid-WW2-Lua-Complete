@@ -32,6 +32,9 @@ function TipsTweakData:init()
 		string_id = "tip_detection_2"
 	})
 	table.insert(self, {
+		string_id = "tip_weapon_spread"
+	})
+	table.insert(self, {
 		unlock_lvl = 8,
 		string_id = "tip_melee_attack"
 	})

@@ -90,7 +90,12 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.25,
 			1.4
 		},
-		fade_duration = 5
+		fade_duration = 5,
+		push_delay = {
+			7.5,
+			3,
+			2
+		}
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
@@ -132,15 +137,15 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	self.assault.force_pool = {
 		40,
 		60,
-		80
+		72
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.force_balance_mul = {
 			0.7,
 			0.9,
-			1.2,
-			1.4
+			1.1,
+			1.2
 		}
 		self.assault.force_pool_balance_mul = {
 			0.5,
@@ -152,8 +157,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		self.assault.force_balance_mul = {
 			0.8,
 			1,
-			1.3,
-			1.5
+			1.1,
+			1.3
 		}
 		self.assault.force_pool_balance_mul = {
 			0.85,
@@ -165,8 +170,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		self.assault.force_balance_mul = {
 			1,
 			1.2,
-			1.5,
-			1.7
+			1.3,
+			1.4
 		}
 		self.assault.force_pool_balance_mul = {
 			1.1,
@@ -178,14 +183,14 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		self.assault.force_balance_mul = {
 			1.1,
 			1.25,
-			2,
-			3
+			1.4,
+			1.6
 		}
 		self.assault.force_pool_balance_mul = {
 			1.3,
-			1.9,
+			1.8,
 			2.7,
-			3.5
+			2.85
 		}
 	end
 
@@ -337,12 +342,12 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			commanders = {
 				0,
 				1,
-				1
+				2
 			},
 			commander_squad = {
 				0,
-				20,
-				20
+				25,
+				35
 			}
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
@@ -413,14 +418,14 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				15
 			},
 			commanders = {
+				1,
 				3,
-				6,
-				9
+				5
 			},
 			commander_squad = {
-				80,
-				80,
-				80
+				30,
+				45,
+				60
 			}
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
@@ -491,13 +496,13 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				20
 			},
 			commanders = {
-				15,
-				18,
-				20
+				2,
+				4,
+				8
 			},
 			commander_squad = {
-				80,
-				80,
+				60,
+				70,
 				80
 			}
 		}

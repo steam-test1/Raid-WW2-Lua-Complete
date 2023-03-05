@@ -3101,11 +3101,15 @@ function PlayerManager:drop_carry(zipline_unit)
 		return
 	end
 
-	self._carry_blocked_cooldown_t = Application:time() + 1.2 + math.rand(0.3)
+	self._carry_blocked_cooldown_t = Application:time() + tweak_data.carry.default_bag_delay
 	local player = self:player_unit()
 
-	if player and carry_data.carry_id == "flak_shell" then
-		player:sound():play("flakshell_throw", nil, false)
+	if player then
+		local carry_tweak = tweak_data.carry[carry_data.carry_id]
+
+		if carry_tweak and carry_tweak.throw_sound then
+			player:sound():play(carry_tweak.throw_sound, nil, false)
+		end
 	end
 
 	local camera_ext = player:camera()

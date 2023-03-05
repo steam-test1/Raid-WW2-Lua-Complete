@@ -3385,7 +3385,13 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 					table.remove(assault_path)
 				end
 
-				if not push then
+				if push and not group.push_t then
+					group.push_t = self._t + self:_get_balancing_multiplier(self._tweak_data.assault.push_delay)
+
+					return
+				end
+
+				if not push or group.push_t <= self._t then
 					local grp_objective = {
 						type = "assault_area",
 						stance = "hos",

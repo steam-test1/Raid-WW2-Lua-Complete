@@ -92,6 +92,8 @@ function LootDropManager:produce_loot_drop(loot_value, use_reroll_drop_tables, f
 end
 
 function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
+	Application:debug("[LootDropManager:_get_loot_group] get loot:", loot_value, use_reroll_drop_tables, forced_loot_group)
+
 	local loot_group = nil
 	local data_source = tweak_data.lootdrop.loot_groups
 
@@ -103,9 +105,34 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 		data_source = tweak_data.lootdrop.loot_groups_doubles_fallback
 	end
 
-	for _, group in pairs(data_source) do
+	for ii, group in pairs(data_source) do
+		Application:debug("[LootDropManager:_get_loot_group] data_source grp:", ii, group)
+
 		if group.min_loot_value or loot_value > 0 and loot_value <= (group.max_loot_value or 0) then
-			loot_group = group
+			loot_group = deep_clone(group)
+
+			for k, v in pairs(loot_group) do
+				Application:debug("[LootDropManager:_get_loot_group] loot group parts:", k)
+
+				if type(v) == "table" and v.conditions then
+					Application:debug("[LootDropManager:_get_loot_group] has conditions", k, v.conditions)
+
+					local conditions_met = true
+
+					for _, condition in ipairs(v.conditions) do
+						if condition == LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL and managers.experience:reached_level_cap() then
+							conditions_met = false
+
+							Application:debug("[LootDropManager:_get_loot_group] DROP_CONDITION_BELOW_MAX_LEVEL failed")
+						end
+					end
+
+					if not conditions_met then
+						Application:debug("[LootDropManager:_get_loot_group] conditions failed removing", k)
+						table.remove(loot_group, k)
+					end
+				end
+			end
 
 			break
 		end

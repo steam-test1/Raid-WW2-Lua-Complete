@@ -314,7 +314,10 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 
 				if vehicle_data then
 					vehicle_unit = vehicle_data.vehicle_unit
-					vehicle_seat = vehicle_unit:vehicle_driving()._seats[vehicle_data.seat]
+
+					if alive(vehicle_unit) then
+						vehicle_seat = vehicle_unit:vehicle_driving()._seats[vehicle_data.seat]
+					end
 				end
 			end
 		end

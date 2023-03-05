@@ -18,7 +18,7 @@ function DistractionRock:_setup_from_tweak_data()
 end
 
 function DistractionRock:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
-	Application:debug("[DistractionRock:clbk_impact]")
+	Application:debug("[DistractionRock:clbk_impact]", tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
 function DistractionRock:_on_collision(col_ray)

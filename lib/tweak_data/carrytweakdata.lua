@@ -9,6 +9,7 @@ function CarryTweakData:init(tweak_data)
 		"Spine1"
 	}
 	self.default_visual_unit_root_joint = "Hips"
+	self.default_bag_delay = 1
 	self.dye = {
 		chance = 0.5,
 		value_multiplier = 60
@@ -16,11 +17,11 @@ function CarryTweakData:init(tweak_data)
 	self.types = {
 		being = {}
 	}
-	self.types.being.move_speed_modifier = 0.75
-	self.types.being.jump_modifier = 0.5
+	self.types.being.move_speed_modifier = 0.45
+	self.types.being.jump_modifier = 0.75
 	self.types.being.can_run = false
-	self.types.being.throw_distance_multiplier = 0.75
-	self.types.being.stamina_consume_multi = 2.5
+	self.types.being.throw_distance_multiplier = 0.8
+	self.types.being.stamina_consume_multi = 2
 	self.types.mega_heavy = {
 		move_speed_modifier = 0.3,
 		jump_modifier = 0.3,
@@ -221,26 +222,31 @@ function CarryTweakData:init(tweak_data)
 		name_id = "hud_carry_flak_shell",
 		skip_exit_secure = true,
 		unit = "units/vanilla/pickups/pku_flak_shell_bag/pku_flak_shell_bag",
-		hud_icon = "carry_flak_shell"
+		hud_icon = "carry_flak_shell",
+		throw_sound = "flakshell_throw"
 	}
 	self.flak_shell_explosive = deep_clone(self.flak_shell)
 	self.flak_shell_explosive.type = "explosives"
 	self.flak_shell_explosive.unit = "units/vanilla/pickups/pku_88_flak_shell_bag/pku_88_flak_shell_bag"
 	self.flak_shell_explosive.hud_icon = "carry_flak_shell"
 	self.flak_shell_explosive.can_explode = true
+	self.flak_shell_explosive.throw_sound = "flakshell_throw"
 	self.flak_shell_shot_explosive = deep_clone(self.flak_shell)
 	self.flak_shell_shot_explosive.type = "explosives"
 	self.flak_shell_shot_explosive.unit = "units/vanilla/pickups/pku_88_flak_shell_explosive_bag/pku_88_flak_shell_explosive_bag"
 	self.flak_shell_shot_explosive.hud_icon = "carry_flak_shell"
+	self.flak_shell_shot_explosive.throw_sound = "flakshell_throw"
 	self.flak_shell_pallete = {
 		type = "medium",
 		name_id = "hud_carry_flak_shell_pallete",
-		skip_exit_secure = true
+		skip_exit_secure = true,
+		throw_sound = "flakshell_throw"
 	}
 	self.tank_shells = {
 		type = "medium",
 		name_id = "hud_carry_tank_shells",
-		skip_exit_secure = true
+		skip_exit_secure = true,
+		throw_sound = "flakshell_throw"
 	}
 	self.tank_shell_explosive = deep_clone(self.flak_shell)
 	self.tank_shell_explosive.name_id = "hud_tank_shell"
@@ -248,6 +254,7 @@ function CarryTweakData:init(tweak_data)
 	self.tank_shell_explosive.unit = "units/vanilla/pickups/pku_tank_shell_bag/pku_tank_shell_bag"
 	self.tank_shell_explosive.hud_icon = "carry_flak_shell"
 	self.tank_shell_explosive.can_explode = true
+	self.tank_shell_explosive.throw_sound = "flakshell_throw"
 	self.plank = {
 		type = "medium",
 		name_id = "hud_carry_plank",

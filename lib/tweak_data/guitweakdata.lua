@@ -5116,6 +5116,42 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 			72
 		}
 	}
+	self.icons.waypoint_special_mark_flamer = {
+		texture = "ui/hud/atlas/waypoint_atlas_02",
+		texture_rect = {
+			1,
+			1,
+			46,
+			46
+		}
+	}
+	self.icons.waypoint_special_mark_spotter = {
+		texture = "ui/hud/atlas/waypoint_atlas_02",
+		texture_rect = {
+			49,
+			1,
+			46,
+			46
+		}
+	}
+	self.icons.waypoint_special_mark_officer = {
+		texture = "ui/hud/atlas/waypoint_atlas_02",
+		texture_rect = {
+			1,
+			49,
+			46,
+			46
+		}
+	}
+	self.icons.waypoint_special_mark_sniper = {
+		texture = "ui/hud/atlas/waypoint_atlas_02",
+		texture_rect = {
+			49,
+			49,
+			46,
+			46
+		}
+	}
 	self.icons.waypoint_special_aim = {
 		texture = "ui/hud/atlas/raid_atlas_waypoints",
 		texture_rect = {

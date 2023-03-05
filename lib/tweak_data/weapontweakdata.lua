@@ -19,17 +19,17 @@ WeaponTweakData.INIT_ROTATION_PITCH_PISTOL = 4
 
 function WeaponTweakData:get_weapon_class_regen_multiplier(weapon_class)
 	if weapon_class == WeaponTweakData.WEAPON_CATEGORY_SMG then
-		return 0.5
-	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_ASSAULT_RIFLE then
-		return 0.5
-	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_PISTOL then
-		return 0.75
-	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_SNP then
 		return 1
+	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_ASSAULT_RIFLE then
+		return 1
+	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_PISTOL then
+		return 1
+	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_SNP then
+		return 1.25
 	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_SHOTGUN then
-		return 0.8
+		return 1.25
 	elseif weapon_class == WeaponTweakData.WEAPON_CATEGORY_FLAMETHROWER then
-		return 0.5
+		return 1
 	else
 		return 0
 	end
@@ -2162,8 +2162,8 @@ function WeaponTweakData:_init_data_turrets()
 		anim_enter = "e_so_mg34_enter",
 		anim_exit = "e_so_mg34_exit",
 		puppet_stance = "standing",
-		abandon_proximity = 350,
-		abandon_proximity_visible_mul = 0.33,
+		abandon_proximity = 2000,
+		abandon_proximity_visible_mul = 0.075,
 		puppet_damage_multiplier = 1.25,
 		use_dof = true,
 		shell_ejection_effect = "effects/vanilla/weapons/shells/shell_556",
@@ -3302,8 +3302,8 @@ function WeaponTweakData:_init_webley(weapon_data)
 	}
 	self.webley.damage_profile = {
 		{
-			damage = 86,
-			range = 1800
+			damage = 100,
+			range = 1000
 		},
 		{
 			damage = 25,
@@ -4298,8 +4298,8 @@ function WeaponTweakData:_init_shotty(weapon_data)
 	}
 	self.shotty.damage_profile = {
 		{
-			damage = 135,
-			range = 650
+			damage = 145,
+			range = 700
 		},
 		{
 			damage = 25,
@@ -6100,48 +6100,48 @@ function WeaponTweakData:_init_dp28(weapon_data)
 		fire_rate = 0.1
 	}
 	self.dp28.spread = {
-		standing = 1.7
+		standing = 1.9
 	}
 	self.dp28.spread.crouching = self.dp28.spread.standing * 0.8
-	self.dp28.spread.steelsight = self.dp28.spread.standing * 0.6
+	self.dp28.spread.steelsight = self.dp28.spread.standing * 0.7
 	self.dp28.spread.moving_standing = self.dp28.spread.standing * 1.4
 	self.dp28.spread.moving_crouching = self.dp28.spread.crouching * 1.3
 	self.dp28.spread.moving_steelsight = self.dp28.spread.steelsight * 1.2
 	self.dp28.spread.per_shot = 0.4
-	self.dp28.spread.per_shot_steelsight = 0.25
-	self.dp28.spread.recovery = 2.3
-	self.dp28.spread.recovery_wait_multiplier = 1.5
-	self.dp28.spread.max = 3
+	self.dp28.spread.per_shot_steelsight = 0.18
+	self.dp28.spread.recovery = 1.8
+	self.dp28.spread.recovery_wait_multiplier = 1
+	self.dp28.spread.max = 2
 	self.dp28.kick = {
 		standing = {
 			1.5,
 			1.8,
-			0.7,
+			-0.55,
 			1.3
 		},
 		crouching = {
 			1.1,
 			1.3,
-			0.55,
+			-0.35,
 			1
 		},
 		steelsight = {
-			0.5,
-			0.6,
-			0.2,
+			0.7,
+			1.2,
+			-0.15,
 			0.45
 		},
 		crouching_steelsight = {
 			0.9,
-			1.07,
-			0.45,
-			0.8
+			1.1,
+			-0.25,
+			0.7
 		},
 		formula = function (x)
 			if x < 1.5 then
 				return 1.5
 			else
-				return math.min(math.pow(x, 1.25), 6)
+				return math.min(math.pow(x, 1.05), 5)
 			end
 		end,
 		recovery = 10,

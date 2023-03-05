@@ -7,7 +7,7 @@ function FlamerTank:init(unit)
 	self._unit = unit
 end
 
-function FlamerTank:detonate(in_pos, range, damage, player_damage, instigator)
+function FlamerTank:detonate(in_pos, range, damage, player_damage, attacker_unit)
 	Application:trace("[FlamerTank:detonate]")
 
 	if not Network:is_server() then
@@ -43,10 +43,11 @@ function FlamerTank:detonate(in_pos, range, damage, player_damage, instigator)
 				damage = self._unit:parent():character_damage():health() * 2
 			}
 
-			if instigator then
-				Application:debug("[FlamerTank:detonate] Instigator detonated flamer tank:", inspect(instigator))
+			if attacker_unit then
+				Application:debug("[FlamerTank:detonate] attacker_unit detonated flamer tank:", inspect(attacker_unit))
 
-				attack_data.attacker_unit = instigator
+				attack_data.attacker_unit = attacker_unit
+				attack_data.weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 			end
 
 			self._unit:parent():character_damage():damage_mission(attack_data)

@@ -12,12 +12,12 @@ function GreedTweakData:init()
 		3.4,
 		4.5
 	}
-	self.cache_base_spawn_chance = 0.25
+	self.cache_base_spawn_chance = 0.2
 	self.difficulty_cache_chance_multipliers = {
-		1.6,
-		1.8,
-		2,
-		3
+		1,
+		1.3,
+		1.5,
+		1.75
 	}
 
 	self:_init_greed_items()
@@ -83,9 +83,9 @@ function GreedTweakData:_init_cache_items()
 	self.cache_items = {
 		regular_cache_box = {}
 	}
-	self.cache_items.regular_cache_box.value = 2500
-	self.cache_items.regular_cache_box.single_interaction_value = 500
-	self.cache_items.regular_cache_box.interaction_timer = 0.75
+	self.cache_items.regular_cache_box.value = 3500
+	self.cache_items.regular_cache_box.single_interaction_value = 450
+	self.cache_items.regular_cache_box.interaction_timer = 0.6
 	self.cache_items.regular_cache_box.lockpick = {
 		number_of_circles = 3,
 		circle_rotation_speed = {

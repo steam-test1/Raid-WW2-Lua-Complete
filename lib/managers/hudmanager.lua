@@ -939,6 +939,7 @@ function HUDManager:add_waypoint(id, data)
 		suspect = data.suspect,
 		no_sync = data.no_sync,
 		radius = data.radius or 160,
+		position_offset_z = data.position_offset_z or nil,
 		waypoint_type = data.waypoint_type,
 		waypoint_display = data.waypoint_display,
 		waypoint_color = data.waypoint_color,
@@ -967,6 +968,7 @@ function HUDManager:add_waypoint(id, data)
 			name = "bitmap" .. id,
 			texture = icon,
 			texture_rect = texture_rect,
+			color = data.color or Color.white,
 			w = texture_rect[3],
 			h = texture_rect[4],
 			blend_mode = data.blend_mode
@@ -1996,6 +1998,10 @@ function HUDManager:_update_waypoints(t, dt)
 			else
 				local pos_has_external_update = data.waypoint_type == "spotter" or data.waypoint_type == "suspicion" or data.waypoint_type == "unit_waypoint"
 				data.position = not pos_has_external_update and data.unit and data.unit.position and data.unit:position() or data.position
+
+				if data.position_offset_z then
+					data.position = data.position:with_z(data.position.z + data.position_offset_z)
+				end
 
 				mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
 				mvector3.set(wp_dir, data.position)

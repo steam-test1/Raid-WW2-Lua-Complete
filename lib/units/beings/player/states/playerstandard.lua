@@ -3159,7 +3159,7 @@ function PlayerStandard:_start_action_intimidate(t)
 			end
 
 			if managers.player:has_category_upgrade("player", "highlight_enemy") then
-				prime_target.unit:contour():add("mark_enemy", true, 1, managers.player:upgrade_value("player", "highlight_enemy_damage_bonus", 1))
+				self:_mark_prime_target(prime_target)
 			end
 		elseif voice_type == "down" then
 			interact_type = "cmd_down"
@@ -3252,6 +3252,11 @@ function PlayerStandard:_start_action_intimidate(t)
 
 		self:_do_action_intimidate(t, interact_type, sound_name, queue_sound_name, skip_alert)
 	end
+end
+
+function PlayerStandard:_mark_prime_target(prime_target)
+	local time_multi = 1
+	local setup = prime_target.unit:contour():add("mark_enemy", true, time_multi, managers.player:upgrade_value("player", "highlight_enemy_damage_bonus", 1))
 end
 
 function PlayerStandard:_is_turret_dangerous(turret_target)
@@ -4879,7 +4884,8 @@ function PlayerStandard:call_teammate(line, t, no_gesture, skip_alert, skip_mark
 		interact_type = "cmd_come"
 		local character_code = managers.criminals:character_static_data_by_unit(prime_target.unit).ssuffix
 	elseif voice_type == "mark_cop" and not skip_mark_cop then
-		local shout_sound = tweak_data.character[prime_target.unit:base()._tweak_table].priority_shout
+		local shout_tweak_data = tweak_data.character[prime_target.unit:base()._tweak_table]
+		local shout_sound = shout_tweak_data.priority_shout
 
 		if managers.groupai:state():whisper_mode() then
 			shout_sound = tweak_data.character[prime_target.unit:base()._tweak_table].silent_priority_shout or shout_sound

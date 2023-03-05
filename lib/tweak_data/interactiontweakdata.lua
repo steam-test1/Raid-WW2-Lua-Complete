@@ -4451,7 +4451,7 @@ function InteractionTweakData:init()
 		wheel_radius_inner = 120,
 		wheel_radius_outer = 150,
 		text_padding = 25,
-		cooldown = 1,
+		cooldown = 1.5,
 		options = {
 			{
 				id = "yes",

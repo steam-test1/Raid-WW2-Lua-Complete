@@ -14,8 +14,8 @@ local tmp_vec2 = Vector3()
 local tmp_rot1 = Rotation()
 RaycastWeaponBase = RaycastWeaponBase or class(UnitBase)
 RaycastWeaponBase.TRAIL_EFFECT = Idstring("effects/vanilla/weapons/weapon_trail")
-RaycastWeaponBase.RICOCHET_DISTANCE = 1600
-RaycastWeaponBase.RICOCHET_FALLOFF = 0.95
+RaycastWeaponBase.RICOCHET_DISTANCE = 2000
+RaycastWeaponBase.RICOCHET_FALLOFF = 0.75
 
 function RaycastWeaponBase:init(unit)
 	UnitBase.init(self, unit, false)

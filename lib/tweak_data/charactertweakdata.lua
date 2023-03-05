@@ -868,6 +868,7 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.access = "fbi"
 	self.german_commander.silent_priority_shout = "shout_loud_officer"
 	self.german_commander.priority_shout = "shout_loud_officer"
+	self.german_commander.priority_waypoint = "waypoint_special_mark_officer"
 	self.german_commander.announce_incomming = "incomming_commander"
 	self.german_commander.dodge = presets.dodge.athletic
 	self.german_commander.deathguard = true
@@ -915,6 +916,7 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.access = "fbi"
 	self.german_og_commander.silent_priority_shout = "shout_loud_officer"
 	self.german_og_commander.priority_shout = "shout_loud_officer"
+	self.german_og_commander.priority_waypoint = "waypoint_special_mark_officer"
 	self.german_og_commander.announce_incomming = "incomming_commander"
 	self.german_og_commander.dodge = presets.dodge.athletic
 	self.german_og_commander.deathguard = true
@@ -938,8 +940,8 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.weapon = presets.weapon.expert
 	self.german_officer.detection = presets.detection.normal
 	self.german_officer.vision = presets.vision.commander
-	self.german_officer.HEALTH_INIT = 400
-	self.german_officer.BASE_HEALTH_INIT = 400
+	self.german_officer.HEALTH_INIT = 650
+	self.german_officer.BASE_HEALTH_INIT = 650
 	self.german_officer.headshot_dmg_mul = 1
 	self.german_officer.move_speed = presets.move_speed.very_fast
 	self.german_officer.surrender_break_time = {
@@ -962,6 +964,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.speech_prefix_count = 4
 	self.german_officer.access = "fbi"
 	self.german_officer.silent_priority_shout = "shout_loud_officer"
+	self.german_officer.priority_waypoint = "waypoint_special_mark_officer"
 	self.german_officer.dodge = presets.dodge.athletic
 	self.german_officer.deathguard = true
 	self.german_officer.chatter = presets.enemy_chatter.cop
@@ -1061,6 +1064,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 		}
 	}
 	self.german_flamer.priority_shout = "shout_loud_flamer"
+	self.german_flamer.priority_waypoint = "waypoint_special_mark_flamer"
 	self.german_flamer.rescue_hostages = false
 	self.german_flamer.deathguard = true
 	self.german_flamer.no_equip_anim = true
@@ -1204,6 +1208,7 @@ function CharacterTweakData:_init_german_sniper(presets)
 		}
 	}
 	self.german_sniper.priority_shout = "shout_loud_sniper"
+	self.german_sniper.priority_waypoint = "waypoint_special_mark_sniper"
 	self.german_sniper.rescue_hostages = false
 	self.german_sniper.deathguard = false
 	self.german_sniper.no_equip_anim = true
@@ -1304,6 +1309,7 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.access = "sniper"
 	self.german_spotter.silent_priority_shout = "f37"
 	self.german_spotter.priority_shout = "shout_loud_spotter"
+	self.german_spotter.priority_waypoint = "waypoint_special_mark_spotter"
 	self.german_spotter.dodge = presets.dodge.poor
 	self.german_spotter.deathguard = true
 	self.german_spotter.chatter = presets.enemy_chatter.cop
@@ -1427,12 +1433,7 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = 1,
 			zones = {
 				{
-					none = 1,
-					health_limit = 0.0001
-				},
-				{
-					explode = 1,
-					health_limit = 1
+					explode = 1
 				}
 			}
 		},
@@ -7497,7 +7498,7 @@ function CharacterTweakData:_set_difficulty_1()
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.2
-	self.presets.gang_member_damage.HEALTH_INIT = 135
+	self.presets.gang_member_damage.HEALTH_INIT = 175
 
 	self:_set_characters_weapon_preset("normal")
 
@@ -7573,10 +7574,10 @@ function CharacterTweakData:_set_difficulty_2()
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.4
+	self.presets.gang_member_damage.HEALTH_INIT = 200
 
 	self:_set_characters_weapon_preset("good")
 
-	self.presets.gang_member_damage.HEALTH_INIT = 170
 	self.escort.HEALTH_INIT = 100
 	self.flashbang_multiplier = 1.25
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
@@ -7649,7 +7650,7 @@ function CharacterTweakData:_set_difficulty_3()
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.5
-	self.presets.gang_member_damage.HEALTH_INIT = 220
+	self.presets.gang_member_damage.HEALTH_INIT = 275
 
 	self:_set_characters_weapon_preset("expert")
 
@@ -7726,7 +7727,7 @@ function CharacterTweakData:_set_difficulty_4()
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.5
-	self.presets.gang_member_damage.HEALTH_INIT = 265
+	self.presets.gang_member_damage.HEALTH_INIT = 325
 
 	self:_set_characters_weapon_preset("insane")
 
