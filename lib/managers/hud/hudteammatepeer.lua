@@ -36,6 +36,7 @@ HUDTeammatePeer.MOUNTED_WEAPON_ICON = "player_panel_status_mounted_weapon"
 HUDTeammatePeer.LOCKPICK_ICON = "player_panel_status_lockpick"
 HUDTeammatePeer.DEAD_ICON = "player_panel_status_dead_ai"
 HUDTeammatePeer.HOST_ICON = "player_panel_host_indicator"
+HUDTeammatePeer.DOWN_ICON = "player_panel_lives_indicator_"
 HUDTeammatePeer.STATES = {
 	{
 		id = "dead",

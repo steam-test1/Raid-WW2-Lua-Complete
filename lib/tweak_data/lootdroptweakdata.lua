@@ -416,6 +416,9 @@ function LootDropTweakData:_init_groups()
 		},
 		{
 			chance = 30,
+			conditions = {
+				LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+			},
 			value = self.loot_categories.category_xp_low
 		}
 	}
@@ -434,6 +437,9 @@ function LootDropTweakData:_init_groups()
 		},
 		{
 			chance = 35,
+			conditions = {
+				LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+			},
 			value = self.loot_categories.category_xp_mid
 		}
 	}
@@ -452,6 +458,9 @@ function LootDropTweakData:_init_groups()
 		},
 		{
 			chance = 35,
+			conditions = {
+				LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+			},
 			value = self.loot_categories.category_xp_high
 		}
 	}

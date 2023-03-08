@@ -1466,7 +1466,7 @@ function WeaponFactoryManager:get_stats(factory_id, blueprint)
 	local stats = {}
 
 	for _, part_id in ipairs(blueprint) do
-		if not forbidden[part_id] and factory.parts[part_id].stats then
+		if not forbidden[part_id] and factory.parts[part_id] and factory.parts[part_id].stats then
 			local part = self:_part_data(part_id, factory_id)
 
 			for stat_type, value in pairs(part.stats) do

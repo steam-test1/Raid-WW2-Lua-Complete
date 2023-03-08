@@ -53,7 +53,7 @@ function NetworkGroupLobbyPSN:update(time)
 end
 
 function NetworkGroupLobbyPSN:create_group_lobby()
-	cat_print("lobby", "NetworkGroupLobbyPSN:create_group_lobby()")
+	Application:debug("[NetworkGroupLobbyPSN:create_group_lobby]")
 
 	self._players = {}
 	local world_list = PSN:get_world_list()

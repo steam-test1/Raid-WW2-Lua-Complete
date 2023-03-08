@@ -5,9 +5,14 @@ function NetworkVoiceChatXBL:init()
 	self.DEFAULT_TEAM = 1
 	self._paused = true
 	self._userid_callback_id = managers.user:add_user_state_changed_callback(callback(self, self, "user_id_update"))
+
+	XboxVoice:set_voice_ui_update_callback(callback(self, self, "voice_ui_update_callback"))
+	managers.menu_component:toggle_voice_chat_listeners(true)
 end
 
 function NetworkVoiceChatXBL:open_session()
+	cat_print("lobby", "NetworkVoiceChatXBL:open_session")
+
 	if self._paused == false then
 		Application:throw_exception("Trying to re-initialize voice chat")
 	end
@@ -20,6 +25,8 @@ function NetworkVoiceChatXBL:open_session()
 		cat_print("lobby", "Voice: Registring Talker", self._current_player_index)
 		XboxVoice:register_talker(self._current_player_index)
 	end
+
+	self:update_settings()
 
 	self._team = self.DEFAULT_TEAM
 	self._peers = {}
@@ -199,6 +206,47 @@ function NetworkVoiceChatXBL:clear_team()
 	self:_update_all()
 end
 
+function NetworkVoiceChatXBL:update_settings()
+	local value = managers.user:get_setting("voice_chat")
+
+	if value then
+		self:soft_enable()
+	else
+		self:soft_disable()
+	end
+end
+
+function NetworkVoiceChatXBL:set_recording(button_pushed_to_talk)
+end
+
+function NetworkVoiceChatXBL:soft_disable()
+	XboxVoice:stop_recording()
+	XboxVoice:set_enabled(false)
+	Application:trace("SOFT DISABLE VOICE CHAT!!")
+end
+
+function NetworkVoiceChatXBL:soft_enable()
+	local enabled = managers.user:get_setting("voice_chat")
+
+	if enabled then
+		XboxVoice:set_enabled(true)
+		XboxVoice:start_recording()
+		Application:trace("SOFT ENABLE VOICE CHAT!!")
+	else
+		self:soft_disable()
+	end
+end
+
+function NetworkVoiceChatXBL:trc_check_mute()
+	self:set_volume(0)
+end
+
+function NetworkVoiceChatXBL:trc_check_unmute()
+	local voice_volume = math.clamp(managers.user:get_setting("voice_volume"), 0, 100)
+
+	self:set_volume(voice_volume)
+end
+
 function NetworkVoiceChatXBL:update(time)
 	if self._paused == true then
 		return
@@ -262,8 +310,6 @@ function NetworkVoiceChatXBL:_save_globals()
 		peers = self._peers,
 		team = self._team
 	}
-
-	self:pause()
 end
 
 function NetworkVoiceChatXBL:_load_globals()
@@ -364,6 +410,7 @@ end
 
 function NetworkVoiceChatXBL:set_volume(new_value)
 	print("new_value", new_value)
+	XboxVoice:set_volume(new_value / 100)
 end
 
 function NetworkVoiceChatXBL:is_muted(xuid)
@@ -376,6 +423,26 @@ function NetworkVoiceChatXBL:set_muted(xuid, state)
 	local player_index = managers.user:get_platform_id()
 
 	XboxVoice:set_muted(xuid, state)
+
+	if managers.network and managers.network:session() then
+		local user_info = {
+			user_xuid = xuid,
+			state = state
+		}
+
+		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
+			status_type = "mute",
+			user_data = user_info
+		})
+	end
+end
+
+function NetworkVoiceChatXBL:mute_player(peer, mute)
+	if peer then
+		self:set_muted(peer:xuid(), mute)
+	else
+		Application:trace("NetworkVoiceChatXBL:mute_player 'peer' is not a valid object!!")
+	end
 end
 
 function NetworkVoiceChatXBL:user_id_update(id, changed_player_map)
@@ -403,6 +470,15 @@ function NetworkVoiceChatXBL:user_update()
 	print("Voice: NetworkVoiceChatXBL:user_update")
 
 	self._user_changed = true
+end
+
+function NetworkVoiceChatXBL:voice_ui_update_callback(user_info)
+	if user_info and managers.network and managers.network:session() then
+		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
+			status_type = "talk",
+			user_data = user_info
+		})
+	end
 end
 
 function NetworkVoiceChatXBL:info()

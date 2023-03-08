@@ -637,7 +637,16 @@ function CharacterCreationGui:create_new_character(character_profile_name)
 	local local_peer = managers.network:session():local_peer()
 
 	managers.network:session():send_to_peers_synched("set_character_customization", local_peer._unit, managers.blackmarket:outfit_string(), local_peer:outfit_version(), local_peer._id)
-	managers.player:local_player():camera():camera_unit():customizationfps():attach_fps_hands(character_profile_nation, managers.player:get_customization_equiped_upper_name())
+
+	local aaa = managers.player:local_player()
+
+	if not aaa then
+		aaa = aaa:camera()
+		aaa = aaa:camera_unit()
+		aaa = aaa:customizationfps()
+
+		aaa:attach_fps_hands(character_profile_nation, managers.player:get_customization_equiped_upper_name())
+	end
 
 	if managers.raid_job._tutorial_spawned then
 		managers.player:tutorial_clear_all_ammo()

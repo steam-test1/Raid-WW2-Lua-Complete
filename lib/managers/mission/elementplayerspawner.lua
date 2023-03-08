@@ -1,8 +1,8 @@
 core:import("CoreMissionScriptElement")
 
 ElementPlayerSpawner = ElementPlayerSpawner or class(CoreMissionScriptElement.MissionScriptElement)
-ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
-ElementPlayerSpawner.BASE_DELAY = 2
+ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = _G.IS_PC and 2 or 5
+ElementPlayerSpawner.BASE_DELAY = _G.IS_PC and 2 or 5
 
 function ElementPlayerSpawner:init(...)
 	ElementPlayerSpawner.super.init(self, ...)

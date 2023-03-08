@@ -968,7 +968,7 @@ function HUDManager:add_waypoint(id, data)
 			name = "bitmap" .. id,
 			texture = icon,
 			texture_rect = texture_rect,
-			color = data.color or Color.white,
+			color = data.waypoint_color or Color.white,
 			w = texture_rect[3],
 			h = texture_rect[4],
 			blend_mode = data.blend_mode
@@ -1202,6 +1202,21 @@ function HUDManager:change_waypoint_icon_alpha(id, alpha)
 
 	if show_on_screen == true then
 		wp_data.bitmap:set_alpha(alpha)
+	end
+end
+
+function HUDManager:change_waypoint_icon_color(id, color)
+	if not self._hud.waypoints[id] then
+		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
+
+		return
+	end
+
+	local wp_data = self._hud.waypoints[id]
+	local show_on_screen = wp_data.show_on_screen
+
+	if show_on_screen == true then
+		wp_data.bitmap:set_color(color:with_alpha(wp_data.bitmap:color().a))
 	end
 end
 

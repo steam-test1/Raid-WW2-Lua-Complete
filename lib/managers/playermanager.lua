@@ -4131,6 +4131,15 @@ function PlayerManager:set_local_player_in_camp(value)
 	self._local_player_in_camp = value
 
 	self:_on_camp_presence_changed()
+
+	if Global.game_settings.single_player then
+		managers.platform:set_rich_presence("SPPlaying")
+	elseif not value then
+		managers.platform:set_rich_presence("MPPlaying")
+	else
+		managers.platform:set_rich_presence("MPLobby")
+	end
+
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CAMP_PRESENCE_CHANGED)
 end
 

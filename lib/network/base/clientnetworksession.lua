@@ -127,11 +127,6 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 
 		self._server_peer:set_in_lobby_soft(state_index == 1)
 		self._server_peer:set_synched_soft(state_index ~= 1)
-
-		if _G.IS_PS3 then
-			-- Nothing
-		end
-
 		self:_chk_send_proactive_outfit_loaded()
 
 		local data = {

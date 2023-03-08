@@ -124,7 +124,8 @@ function EscortExt:add_waypoint()
 		unit = self._unit,
 		position = self._position,
 		rotation = self._rotation,
-		color = self._unsafe_color
+		color = self._unsafe_color,
+		waypoint_color = self._unsafe_color
 	}
 	self._icon_id = tostring(self._unit:key())
 
@@ -220,6 +221,7 @@ function EscortExt:set_waypoint_safe(safe)
 
 	managers.hud:change_waypoint_distance_color(self._icon_id, final_color)
 	managers.hud:change_waypoint_arrow_color(self._icon_id, final_color)
+	managers.hud:change_waypoint_icon_color(self._icon_id, final_color)
 	managers.hud:change_waypoint_icon(self._icon_id, final_icon)
 end
 

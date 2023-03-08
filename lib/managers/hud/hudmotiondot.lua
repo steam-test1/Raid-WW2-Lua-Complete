@@ -105,7 +105,6 @@ HUDMotionDot.MODES = {
 function HUDMotionDot:init(hud)
 	self._hud_panel = hud.panel
 
-	Application:debug("[HUDMotionDot] init", hud, hud.panel)
 	self:cleanup()
 
 	self._size_icon_index = managers.user:get_setting("motion_dot_size")
@@ -117,7 +116,6 @@ function HUDMotionDot:init(hud)
 
 	for i = 1, 4 do
 		table.insert(self._motion_icons, self:_create_icon("motion_icon_" .. tostring(i), HUDMotionDot.ICONS[self._motion_icon_index]))
-		Application:debug("[HUDMotionDot] init -- Made motion_icon_" .. tostring(i))
 	end
 
 	if managers.user:get_setting("motion_dot") ~= 0 then
@@ -151,9 +149,6 @@ function HUDMotionDot:on_setting_icons(index)
 	self._motion_icon_index = index <= #HUDMotionDot.ICONS and index or 1
 	self._motion_icon_index = self._motion_icon_index < 1 and #HUDMotionDot.ICONS or self._motion_icon_index
 	local icon_img = HUDMotionDot.ICONS[self._motion_icon_index]
-
-	print("New icon: " .. icon_img)
-
 	local image = tweak_data.gui.icons[icon_img].texture
 
 	for i, icon in ipairs(self._motion_icons) do

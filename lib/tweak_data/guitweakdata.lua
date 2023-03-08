@@ -31,6 +31,22 @@ function GuiTweakData:init()
 	self:_setup_old_tweak_data()
 end
 
+function GuiTweakData:get_full_gui_data(icon)
+	local texture = self.icons[icon].texture
+	local texture_rect = self.icons[icon].texture_rect
+	local color = self.icons[icon].color or Color(1, 1, 1)
+
+	return texture, texture_rect, color
+end
+
+function GuiTweakData:icon_w(icon)
+	return self.icons[icon].texture_rect[3]
+end
+
+function GuiTweakData:icon_h(icon)
+	return self.icons[icon].texture_rect[4]
+end
+
 function GuiTweakData:_setup_layers()
 	self.PLAYER_PANELS_LAYER = 1300
 	self.SAVEFILE_LAYER = 1500
@@ -4154,6 +4170,52 @@ function GuiTweakData:_setup_hud_icons()
 			32
 		}
 	}
+	self.icons.player_panel_lives_indicator_1 = {
+		texture = "ui/atlas/raid_atlas_hud",
+		texture_rect = {
+			864,
+			2016,
+			32,
+			32
+		},
+		color = self.colors.raid_light_red
+	}
+	self.icons.player_panel_lives_indicator_2 = {
+		texture = "ui/atlas/raid_atlas_hud",
+		texture_rect = {
+			896,
+			2016,
+			32,
+			32
+		}
+	}
+	self.icons.player_panel_lives_indicator_3 = {
+		texture = "ui/atlas/raid_atlas_hud",
+		texture_rect = {
+			928,
+			2016,
+			32,
+			32
+		}
+	}
+	self.icons.player_panel_lives_indicator_4 = {
+		texture = "ui/atlas/raid_atlas_hud",
+		texture_rect = {
+			960,
+			2016,
+			32,
+			32
+		}
+	}
+	self.icons.player_panel_lives_indicator_5 = {
+		texture = "ui/atlas/raid_atlas_hud",
+		texture_rect = {
+			992,
+			2016,
+			32,
+			32
+		}
+	}
 	self.icons.player_panel_interaction_teammate_bg = {
 		texture = "ui/atlas/raid_atlas_hud",
 		texture_rect = {
@@ -5123,7 +5185,8 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 			1,
 			46,
 			46
-		}
+		},
+		color = Color(1, 0.25, 0.1)
 	}
 	self.icons.waypoint_special_mark_spotter = {
 		texture = "ui/hud/atlas/waypoint_atlas_02",
@@ -5132,7 +5195,8 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 			1,
 			46,
 			46
-		}
+		},
+		color = Color(1, 0.25, 0.1)
 	}
 	self.icons.waypoint_special_mark_officer = {
 		texture = "ui/hud/atlas/waypoint_atlas_02",
@@ -5141,7 +5205,8 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 			49,
 			46,
 			46
-		}
+		},
+		color = Color(1, 0.25, 0.1)
 	}
 	self.icons.waypoint_special_mark_sniper = {
 		texture = "ui/hud/atlas/waypoint_atlas_02",
@@ -5150,7 +5215,8 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 			49,
 			46,
 			46
-		}
+		},
+		color = Color(1, 0.25, 0.1)
 	}
 	self.icons.waypoint_special_aim = {
 		texture = "ui/hud/atlas/raid_atlas_waypoints",
@@ -8821,14 +8887,6 @@ function GuiTweakData:_setup_paper_icons()
 			384
 		}
 	}
-end
-
-function GuiTweakData:icon_w(icon)
-	return self.icons[icon].texture_rect[3]
-end
-
-function GuiTweakData:icon_h(icon)
-	return self.icons[icon].texture_rect[4]
 end
 
 function GuiTweakData:_setup_old_tweak_data()

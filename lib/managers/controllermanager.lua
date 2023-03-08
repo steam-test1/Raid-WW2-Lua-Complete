@@ -297,4 +297,27 @@ function ControllerManager:get_mouse_controller()
 	return Input:mouse()
 end
 
+function ControllerManager:on_level_transition_ended()
+	if Global._attemptShowControllerDCAfterLoad then
+		local data = {
+			callback_func = callback(self, self, "connect_controller_dialog_callback"),
+			title = managers.localization:text("dialog_connect_controller_title"),
+			text = managers.localization:text("dialog_connect_controller_text", {
+				NR = Global.controller_manager.default_wrapper_index or 1
+			}),
+			button_list = {
+				{
+					text = managers.localization:text("dialog_ok")
+				}
+			},
+			id = "connectcontroller_dialog",
+			force = true
+		}
+
+		managers.system_menu:show(data)
+
+		Global._attemptShowControllerDCAfterLoad = false
+	end
+end
+
 CoreClass.override_class(CoreControllerManager.ControllerManager, ControllerManager)

@@ -23,9 +23,12 @@ function MenuManager:on_view_character(user)
 end
 
 function MenuManager:on_enter_lobby()
-	print("function MenuManager:on_enter_lobby()")
-	managers.menu:active_menu().logic:select_node("lobby", true, {})
-	managers.platform:set_rich_presence("MPLobby")
+	Application:debug("[MenuManager:on_enter_lobby]")
+
+	if managers and managers.menu and managers.menu:active_menu() and managers.menu:active_menu().logic then
+		managers.menu:active_menu().logic:select_node("lobby", true, {})
+	end
+
 	managers.network:session():on_entered_lobby()
 	self:setup_local_lobby_character()
 

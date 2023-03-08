@@ -34,6 +34,7 @@ HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR = tweak_data.gui.colors.progress_dark
 HUDTeammatePlayer.EQUIPMENT_H = 37
 HUDTeammatePlayer.EQUIPMENT_PADDING = 6
 HUDTeammatePlayer.HOST_ICON = "player_panel_host_indicator"
+HUDTeammatePlayer.DOWN_ICON = "player_panel_lives_indicator_"
 HUDTeammatePlayer.STATES = {
 	{
 		id = "downed",
@@ -70,6 +71,7 @@ function HUDTeammatePlayer:init(i, teammates_panel)
 	self:_create_nationality_icon()
 	self:_create_timer()
 	self:_create_host_indicator()
+	self:_create_down_indicator()
 	self:_create_right_panel()
 	self:_create_player_name()
 	self:_create_player_level()
@@ -292,8 +294,43 @@ function HUDTeammatePlayer:_create_host_indicator()
 	}
 	local host_indicator = self._left_panel:bitmap(host_indicator_params)
 
-	host_indicator:set_right(self._warcry_panel:x() + warcry_background:x() + warcry_background:w() - 4)
-	host_indicator:set_bottom(self._warcry_panel:y() + warcry_background:y() + warcry_background:h() - 4)
+	host_indicator:set_right(self._warcry_panel:x() + warcry_background:x() + warcry_background:w() + 2)
+	host_indicator:set_bottom(self._warcry_panel:y() + warcry_background:y() + warcry_background:h() + 2)
+end
+
+function HUDTeammatePlayer:_create_down_indicator()
+	local warcry_panel = self._left_panel:child("warcry_panel")
+	local warcry_background = warcry_panel:child("warcry_background")
+	local downs = tweak_data.player.class_defaults.default.damage.BASE_LIVES
+	local texture, texture_rect, color = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
+	local down_indicator_params = {
+		name = "down_indicator",
+		layer = 30,
+		alpha = 1,
+		texture = texture,
+		texture_rect = texture_rect,
+		color = color
+	}
+	local down_indicator = self._left_panel:bitmap(down_indicator_params)
+
+	down_indicator:set_left(-2)
+	down_indicator:set_bottom(self._warcry_panel:y() + warcry_background:y() + warcry_background:h() + 2)
+	self:_update_down_indicator()
+end
+
+function HUDTeammatePlayer:_update_down_indicator()
+	local player_damage = managers.player:player_unit() and managers.player:player_unit():character_damage()
+
+	if not player_damage then
+		return
+	end
+
+	local downs_icon = self._left_panel:child("down_indicator")
+	local downs = math.clamp(player_damage:get_revives(), 1, 5)
+	local texture, texture_rect, color = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
+
+	downs_icon:set_image(texture, unpack(texture_rect))
+	downs_icon:set_color(color)
 end
 
 function HUDTeammatePlayer:_create_right_panel()
@@ -456,6 +493,7 @@ function HUDTeammatePlayer:set_health(data)
 	self._health_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.PLAYER_HEALTH_COLORS, health_percentage))
 	self._health_bar_hurt:stop()
 	self._health_bar_hurt:animate(callback(self, self, "_animate_health_change"))
+	self:_update_down_indicator()
 end
 
 function HUDTeammatePlayer:set_stamina(value)
@@ -552,6 +590,15 @@ function HUDTeammatePlayer:set_level(level)
 end
 
 function HUDTeammatePlayer:set_cheater(state)
+end
+
+function HUDTeammatePlayer:go_into_bleedout()
+	self:_update_down_indicator()
+	HUDTeammatePlayer.super.go_into_bleedout(self)
+end
+
+function HUDTeammatePlayer:on_died()
+	HUDTeammatePlayer.super.on_died(self)
 end
 
 function HUDTeammatePlayer:on_revived()

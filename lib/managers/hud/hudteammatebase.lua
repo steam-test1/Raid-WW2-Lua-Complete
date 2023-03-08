@@ -198,7 +198,13 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	end
 
 	for index, state in pairs(self._states) do
-		self._status_panel:child(state.control):set_alpha(0)
+		local c = state.control and self._status_panel:child(state.control)
+
+		if c then
+			c:set_alpha(0)
+		else
+			Application:warn("[HUDTeammateBase:_animate_state_change] no state control (index, state)", index, state)
+		end
 	end
 
 	self._status_panel:child(self._displayed_state.control):set_alpha(1)

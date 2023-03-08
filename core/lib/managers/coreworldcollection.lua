@@ -567,6 +567,8 @@ function CoreWorldCollection:update(t, dt, paused_update)
 						elseif texture_loaded then
 							Application:trace("[CoreWorldCollection:update] All peers still not spawned worlds, waiting...")
 							self:sync_loading_status(t)
+
+							self._time_tex_check = nil
 						end
 					elseif definition.mission_scripts_created and not definition.is_created then
 						self:complete_world_loading_stage(definition._world_id, CoreWorldCollection.STAGE_LOAD_FINISHED)
@@ -1495,6 +1497,10 @@ function CoreWorldCollection:level_transition_ended()
 
 	if managers.network.matchmake and not managers.network.matchmake.lobby_handler then
 		managers.network.matchmake:create_lobby(managers.network:get_matchmake_attributes(), true)
+	end
+
+	if managers.controller then
+		managers.controller:on_level_transition_ended()
 	end
 end
 

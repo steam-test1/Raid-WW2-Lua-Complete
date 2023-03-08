@@ -465,7 +465,7 @@ function MenuManager:init(is_start_menu)
 		self._controller:add_trigger("toggle_chat", callback(self, self, "toggle_chatinput"))
 	end
 
-	if _G.IS_PC then
+	if _G.IS_PC or _G.IS_CONSOLE then
 		self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
 		self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
 	end
@@ -546,6 +546,10 @@ end
 
 function MenuManager:show_loading_screen(data, clbk, instant)
 	self._loading_screen:show(data, clbk, instant)
+
+	if managers and managers.network and managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_mute()
+	end
 end
 
 function MenuManager:fade_to_black()
@@ -556,6 +560,21 @@ function MenuManager:hide_loading_screen()
 	self.loading_screen_visible = false
 
 	self._loading_screen:hide()
+
+	local current_game_state_name = nil
+	local event_complete_state = false
+
+	if game_state_machine then
+		current_game_state_name = game_state_machine:current_state_name()
+
+		if current_game_state_name and current_game_state_name == "event_complete_screen" then
+			event_complete_state = true
+		end
+	end
+
+	if not event_complete_state and managers and managers.network and managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_unmute()
+	end
 end
 
 function MenuManager:controller_hotswap_triggered()
@@ -769,6 +788,18 @@ function MenuManager:is_steam_controller()
 	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and self:active_menu().input._controller.TYPE == "steam" or managers.controller:get_default_wrapper_type() == "steam"
 end
 
+function MenuManager:is_xb1_controller()
+	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and (self:active_menu().input._controller.TYPE == "xb1" or managers.controller:get_default_wrapper_type() == "xb1")
+end
+
+function MenuManager:is_ps4_controller()
+	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and (self:active_menu().input._controller.TYPE == "ps4" or managers.controller:get_default_wrapper_type() == "ps4")
+end
+
+function MenuManager:is_any_controller()
+	return self:is_pc_controller() or self:is_xb1_controller() or self:is_ps4_controller()
+end
+
 function MenuManager:mark_main_menu(is_main_menu)
 	self._is_start_menu = is_main_menu
 end
@@ -935,6 +966,8 @@ function MenuManager:activate()
 		self._active_changed_callback_handler:dispatch(true)
 
 		self._active = true
+
+		managers.menu_component:_voice_panel_align_bottom_right()
 	end
 end
 
@@ -944,6 +977,8 @@ function MenuManager:deactivate()
 		self._active_changed_callback_handler:dispatch(false)
 
 		self._active = false
+
+		managers.menu_component:_voice_panel_align_mid_right()
 	end
 end
 
@@ -1473,6 +1508,7 @@ function MenuManager:open_ps4_sign_in_menu(cb)
 
 	if PSN:needs_update() then
 		Global.boot_invite = nil
+		Global.boot_play_together = nil
 		success = false
 
 		self:show_err_new_patch()
@@ -1481,8 +1517,6 @@ function MenuManager:open_ps4_sign_in_menu(cb)
 
 		success = false
 	elseif managers.network.account:signin_state() == "not signed in" then
-		managers.network.account:show_signin_ui()
-
 		if managers.network.account:signin_state() == "signed in" then
 			print("SIGNED IN")
 
@@ -1494,8 +1528,9 @@ function MenuManager:open_ps4_sign_in_menu(cb)
 		else
 			success = false
 		end
-	elseif PSN:user_age() < MenuManager.ONLINE_AGE and PSN:parental_control_settings_active() then
+	elseif PSN:parental_control_settings_active() then
 		Global.boot_invite = nil
+		Global.boot_play_together = nil
 		success = false
 
 		self:show_err_under_age()
@@ -1518,9 +1553,31 @@ function MenuManager:open_x360_sign_in_menu(cb)
 end
 
 function MenuManager:open_xb1_sign_in_menu(cb)
-	local success = self:_enter_online_menus_xb1()
+	self.xb1_cb = cb
 
-	cb(success)
+	managers.user:check_privilege(nil, "communications", false, false, callback(self, self, "check_voice_chat_sign_in_callback"))
+end
+
+function MenuManager:check_voice_chat_sign_in_callback(is_success)
+	if not is_success then
+		if self:active_menu() and self:active_menu().callback_handler then
+			self:active_menu().callback_handler:toggle_voicechat_raid(false)
+		end
+
+		managers.menu:show_voice_chat_blocked_dialog(callback(self, self, "open_xb1_sign_in_menu_after_voice_check"))
+	elseif self.xb1_cb then
+		local success = self:_enter_online_menus_xb1()
+
+		self.xb1_cb(success)
+	end
+end
+
+function MenuManager:open_xb1_sign_in_menu_after_voice_check()
+	if self.xb1_cb then
+		local success = self:_enter_online_menus_xb1()
+
+		self.xb1_cb(success)
+	end
 end
 
 function MenuManager:external_enter_online_menus()
@@ -1536,8 +1593,9 @@ function MenuManager:external_enter_online_menus()
 end
 
 function MenuManager:_enter_online_menus()
-	if PSN:user_age() < MenuManager.ONLINE_AGE and PSN:parental_control_settings_active() then
+	if PSN:parental_control_settings_active() then
 		Global.boot_invite = nil
+		Global.boot_play_together = nil
 
 		self:show_err_under_age()
 
@@ -1550,6 +1608,11 @@ function MenuManager:_enter_online_menus()
 			print("voice chat from enter_online_menus")
 			managers.network:ps3_determine_voice(false)
 			managers.network.voice_chat:check_status_information()
+
+			if PSN:is_online() and not PSN:online_chat_allowed() then
+				managers.menu:show_err_no_chat_parental_control()
+			end
+
 			PSN:set_online_callback(callback(self, self, "ps3_disconnect"))
 
 			return true
@@ -1631,11 +1694,9 @@ function MenuManager:ps3_disconnect(connected)
 		managers.network.matchmake:psn_disconnected()
 		managers.network.friends:psn_disconnected()
 		managers.network.voice_chat:destroy_voice(true)
+		managers.menu:hide_loading_screen()
+		managers.system_menu:close("fetching_status")
 		self:show_disconnect_message(true)
-	end
-
-	if managers.menu_component then
-		managers.menu_component:refresh_player_profile_gui()
 	end
 end
 
@@ -1714,7 +1775,7 @@ function MenuManager:on_leave_lobby()
 		managers.user:on_exit_online_menus()
 	end
 
-	managers.platform:set_rich_presence("Idle")
+	managers.platform:set_rich_presence("InMenus")
 	managers.menu:close_menu("menu_main")
 	managers.menu:open_menu("menu_main")
 	managers.network.matchmake:leave_game()

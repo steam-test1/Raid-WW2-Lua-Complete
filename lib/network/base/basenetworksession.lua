@@ -11,8 +11,8 @@ else
 	BaseNetworkSession.CONNECTION_TIMEOUT = 10
 end
 
-BaseNetworkSession.LOADING_CONNECTION_TIMEOUT = _G.IS_PC and 75 or 30
-BaseNetworkSession._LOAD_WAIT_TIME = 2
+BaseNetworkSession.LOADING_CONNECTION_TIMEOUT = _G.IS_PC and 75 or 80
+BaseNetworkSession._LOAD_WAIT_TIME = _G.IS_PC and 2 or 5
 BaseNetworkSession._STEAM_P2P_SEND_INTERVAL = 1
 
 function BaseNetworkSession:init()
@@ -37,7 +37,7 @@ end
 
 function BaseNetworkSession:create_local_peer(load_outfit)
 	local my_name = managers.network.account:username_id()
-	local my_user_id = SystemInfo:distribution() == Idstring("STEAM") and Steam:userid() or false
+	local my_user_id = SystemInfo:distribution() == Idstring("STEAM") and Steam:userid() or managers.network.account:username_id()
 	self._local_peer = NetworkPeer:new(my_name, Network:self("TCP_IP"), 0, false, false, false, managers.blackmarket:get_preferred_character(), my_user_id)
 
 	if load_outfit then
@@ -995,6 +995,19 @@ function BaseNetworkSession:psn_disconnected()
 	end
 
 	managers.network.voice_chat:destroy_voice(true)
+	managers.system_menu:close("waiting_for_server_response")
+
+	if managers.menu._loading_screen._state == "shown" then
+		MenuCallbackHandler:_dialog_end_game_yes()
+
+		Global.requestShowDisconnectedMessage = true
+	else
+		managers.menu:show_mp_disconnected_internet_dialog({
+			ok_func = function ()
+				MenuCallbackHandler:_dialog_end_game_yes()
+			end
+		})
+	end
 end
 
 function BaseNetworkSession:steam_disconnected()
@@ -1019,6 +1032,11 @@ function BaseNetworkSession:xbox_disconnected()
 	end
 
 	managers.network.voice_chat:destroy_voice(true)
+	managers.menu:show_mp_disconnected_internet_dialog({
+		ok_func = function ()
+			MenuCallbackHandler:_dialog_end_game_yes()
+		end
+	})
 end
 
 function BaseNetworkSession:ps4_disconnect(connected)
