@@ -1,13 +1,17 @@
 WaypointUnitElement = WaypointUnitElement or class(MissionElement)
 
--- Lines 3-98
+-- Lines 3-103
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)
+
+	WaypointUnitElement.HED_COLOR = Color(1, 1, 1, 1)
+
 	self:_add_wp_options()
 
 	self._icon_options = {
 		"map_waypoint_pov_in",
 		"map_waypoint_pov_out",
+		"waypoint_special_camp_mission_raid",
 		"waypoint_special_aim",
 		"waypoint_special_air_strike",
 		"waypoint_special_ammo",
@@ -83,11 +87,6 @@ function WaypointUnitElement:init(unit)
 		"circle"
 	}
 	self._hed.map_display = "point"
-	self._hed.color = {
-		g = 0.8,
-		b = 0.33,
-		r = 0.38
-	}
 	self._hed.width = 100
 	self._hed.depth = 100
 	self._hed.radius = 150
@@ -97,7 +96,6 @@ function WaypointUnitElement:init(unit)
 
 	table.insert(self._save_values, "icon")
 	table.insert(self._save_values, "map_display")
-	table.insert(self._save_values, "color")
 	table.insert(self._save_values, "width")
 	table.insert(self._save_values, "depth")
 	table.insert(self._save_values, "radius")
@@ -105,19 +103,19 @@ function WaypointUnitElement:init(unit)
 	table.insert(self._save_values, "only_in_civilian")
 end
 
--- Lines 100-102
+-- Lines 105-107
 function WaypointUnitElement:_add_wp_options()
 	self._text_options = {
 		"debug_none"
 	}
 end
 
--- Lines 104-106
+-- Lines 109-111
 function WaypointUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
--- Lines 108-113
+-- Lines 113-118
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
@@ -126,17 +124,17 @@ function WaypointUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines 115-121
+-- Lines 120-126
 function WaypointUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local shape = self:get_shape()
-	local color = self._hed.color
+	local color = WaypointUnitElement.HED_COLOR
 
 	if shape then
 		shape:draw(t, dt, color.r, color.g, color.b)
 	end
 end
 
--- Lines 123-129
+-- Lines 128-134
 function WaypointUnitElement:get_shape()
 	if not self._square_shape then
 		self:_create_shapes()
@@ -145,13 +143,13 @@ function WaypointUnitElement:get_shape()
 	return self._hed.map_display == "square" and self._square_shape or self._hed.map_display == "circle" and self._circle_shape
 end
 
--- Lines 131-134
+-- Lines 136-139
 function WaypointUnitElement:clone_data(...)
 	WaypointUnitElement.super.clone_data(self, ...)
 	self:_recreate_shapes()
 end
 
--- Lines 136-142
+-- Lines 141-147
 function WaypointUnitElement:_create_shapes()
 	self._square_shape = CoreShapeManager.ShapeBoxMiddle:new({
 		height = 200,
@@ -169,7 +167,7 @@ function WaypointUnitElement:_create_shapes()
 	self._circle_shape:set_unit(self._unit)
 end
 
--- Lines 144-149
+-- Lines 149-154
 function WaypointUnitElement:_recreate_shapes()
 	self._square_shape = nil
 	self._circle_shape = nil
@@ -177,18 +175,14 @@ function WaypointUnitElement:_recreate_shapes()
 	self:_create_shapes()
 end
 
--- Lines 151-171
+-- Lines 156-173
 function WaypointUnitElement:_set_shape_type()
 	local display_type = self._hed.map_display
 
-	self._color.control:set_enabled(display_type == "circle" or display_type == "square")
-
 	if display_type == "point" then
 		self._icon_ctrlr:set_enabled(true)
-		self._color.control:set_background_colour(Color(self._hed.color.r * 255, self._hed.color.g * 255, self._hed.color.b * 255))
 	else
 		self._icon_ctrlr:set_enabled(false)
-		self._color.control:set_background_colour(self._hed.color.r * 255, self._hed.color.g * 255, self._hed.color.b * 255)
 	end
 
 	self._width_params.number_ctrlr:set_enabled(display_type == "square")
@@ -199,46 +193,22 @@ function WaypointUnitElement:_set_shape_type()
 	self._sliders.radius:set_enabled(display_type == "circle")
 end
 
--- Lines 173-176
+-- Lines 175-178
 function WaypointUnitElement:set_shape_property(params)
 	self._square_shape:set_property(params.property, self._hed[params.value])
 	self._circle_shape:set_property(params.property, self._hed[params.value])
 end
 
--- Lines 178-191
+-- Lines 180-186
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
 	if params.value == "map_display" then
 		self:_set_shape_type()
-	elseif params.value == "color" then
-		local colors = self:_split_string(tostring(self._hed.color), " ")
-
-		for i = 1, 3 do
-			colors[i] = colors[i] / 255
-		end
-
-		self._hed.color = {
-			r = colors[1],
-			g = colors[2],
-			b = colors[3]
-		}
 	end
 end
 
--- Lines 193-197
-function WaypointUnitElement:_on_color_changed()
-	local color = self.__color_picker_dialog:color()
-	self._hed.color = {
-		r = color.r,
-		g = color.g,
-		b = color.b
-	}
-
-	self._color.control:set_background_colour(color.r * 255, color.g * 255, color.b * 255)
-end
-
--- Lines 199-210
+-- Lines 188-199
 function WaypointUnitElement:_split_string(inputstr, sep)
 	if sep == nil then
 		sep = "%s"
@@ -255,7 +225,7 @@ function WaypointUnitElement:_split_string(inputstr, sep)
 	return t
 end
 
--- Lines 212-229
+-- Lines 201-218
 function WaypointUnitElement:scale_slider(panel, sizer, number_ctrlr_params, value, name)
 	local slider_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -290,7 +260,7 @@ function WaypointUnitElement:scale_slider(panel, sizer, number_ctrlr_params, val
 	self._sliders[value] = slider
 end
 
--- Lines 231-238
+-- Lines 220-227
 function WaypointUnitElement:set_size(params)
 	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
 
@@ -303,14 +273,14 @@ function WaypointUnitElement:set_size(params)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
 
--- Lines 240-243
+-- Lines 229-232
 function WaypointUnitElement:size_release(params)
 	self._hed[params.value] = params.number_ctrlr_params.value
 
 	params.ctrlr:set_value(100)
 end
 
--- Lines 245-301
+-- Lines 234-286
 function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -321,8 +291,6 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "map_display", self._map_display_options, "Select a map display type")
 
 	self._icon_ctrlr = self:_build_value_combobox(panel, panel_sizer, "icon", self._icon_options, "Select an icon")
-	self._color = {}
-	self._color.label, self._color.control = self:_build_value_color(panel, panel_sizer, "color", "Select the color of the waypoint on the map")
 
 	if not self._square_shape then
 		self:_create_shapes()

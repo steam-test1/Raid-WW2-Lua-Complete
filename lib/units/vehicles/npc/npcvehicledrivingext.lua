@@ -24,7 +24,7 @@ NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_STRAIGHT = 0
 NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_FULL_LEFT = 1
 NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_FULL_RIGHT = -1
 
--- Lines 29-63
+-- Lines 39-73
 function NpcVehicleDrivingExt:init(unit)
 	self._unit = unit
 
@@ -72,7 +72,7 @@ function NpcVehicleDrivingExt:init(unit)
 	self._unit:vehicle_driving():set_interaction_allowed(false)
 end
 
--- Lines 65-71
+-- Lines 77-83
 function NpcVehicleDrivingExt:activate()
 	if self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN then
 		self:set_state(NpcVehicleDrivingExt.STATE_PURSUIT)
@@ -80,7 +80,7 @@ function NpcVehicleDrivingExt:activate()
 	end
 end
 
--- Lines 74-78
+-- Lines 87-91
 function NpcVehicleDrivingExt:deactivate()
 	self:set_state(NpcVehicleDrivingExt.STATE_INACTIVE)
 
@@ -89,17 +89,17 @@ function NpcVehicleDrivingExt:deactivate()
 	self:stop()
 end
 
--- Lines 80-82
+-- Lines 95-97
 function NpcVehicleDrivingExt:is_active()
 	return self._vehicle:is_active()
 end
 
--- Lines 84-86
+-- Lines 101-103
 function NpcVehicleDrivingExt:is_chasing()
 	return self._is_chasing
 end
 
--- Lines 88-101
+-- Lines 107-120
 function NpcVehicleDrivingExt:on_vehicle_death()
 	if self._current_state:name() == NpcVehicleDrivingExt.STATE_BROKEN then
 		return
@@ -116,7 +116,7 @@ function NpcVehicleDrivingExt:on_vehicle_death()
 	end
 end
 
--- Lines 105-110
+-- Lines 125-130
 function NpcVehicleDrivingExt:start()
 	self:_start()
 
@@ -125,15 +125,16 @@ function NpcVehicleDrivingExt:start()
 	end
 end
 
--- Lines 113-115
+-- Lines 134-136
 function NpcVehicleDrivingExt:sync_start()
 	self:_start()
 end
 
--- Lines 118-141
+-- Lines 140-163
 function NpcVehicleDrivingExt:_start()
 	if self._vehicle then
 		if not self:is_active() then
+			Application:trace("NpcVehicleDrivingExt:start   activating vehicle.")
 			self._unit:damage():run_sequence_simple("driving")
 			self._vehicle:set_active(true)
 			self:set_input(0, 0, 0, 0, false, true, 2)
@@ -181,7 +182,7 @@ function NpcVehicleDrivingExt:_start()
 	end
 end
 
--- Lines 145-150
+-- Lines 168-173
 function NpcVehicleDrivingExt:stop()
 	self:_stop()
 
@@ -190,12 +191,12 @@ function NpcVehicleDrivingExt:stop()
 	end
 end
 
--- Lines 153-155
+-- Lines 177-179
 function NpcVehicleDrivingExt:sync_stop()
 	self:_stop()
 end
 
--- Lines 158-164
+-- Lines 183-189
 function NpcVehicleDrivingExt:_stop()
 	if self._vehicle and self:is_active() then
 		self._is_chasing = false
@@ -204,7 +205,7 @@ function NpcVehicleDrivingExt:_stop()
 	end
 end
 
--- Lines 167-188
+-- Lines 193-214
 function NpcVehicleDrivingExt:update(unit, t, dt)
 	if managers.motion_path:npc_vehicle_debug_output_enabled() then
 		self:_display_debug_info()
@@ -219,74 +220,27 @@ function NpcVehicleDrivingExt:update(unit, t, dt)
 	end
 end
 
--- Lines 190-229
-function NpcVehicleDrivingExt:_display_debug_info()
-	if self._debug and self._debug.ws and self._debug.info then
-		local nav_paths = {
-			unit_id = "",
-			unit_name = "",
-			current_state = "",
-			cop_path = "",
-			cop_target_path = "",
-			distance_to_player = 0,
-			ai_cost = {
-				cost = 0,
-				fps = 0
-			}
-		}
-
-		if self._debug.nav_paths then
-			nav_paths.unit_id = self._debug.nav_paths.unit_id or ""
-			nav_paths.unit_name = self._debug.nav_paths.unit_name or ""
-			nav_paths.cop_path = self._debug.nav_paths.cop_path or ""
-			nav_paths.cop_target_path = self._debug.nav_paths.cop_target_path or ""
-			nav_paths.distance_to_player = self._debug.nav_paths.distance_to_player or 0
-			nav_paths.ai_cost = self._debug.nav_paths.ai_cost or {
-				cost = 0,
-				fps = 0
-			}
-		end
-
-		if self._current_state then
-			nav_paths.current_state = self._current_state:name() or "n/a"
-		end
-
-		local vehicle_state = self._vehicle:get_state()
-		local cop_vehicle_speed = vehicle_state:get_speed() * 3.6
-		local player_vehicle_speed = self:_get_player_speed()
-		player_vehicle_speed = player_vehicle_speed or 0
-
-		self._debug.info:set_text(string.format([[
-----------------------
-Cop unit:  %s - %s
-Cop state:  %s
-Player_speed:  %.2f km/h
-Cop speed:  %.2f km/h
-Drive controls:  %s
-Cop on path:  %s
-Cop targeting path:  %s
-Distance to player:  %.2f m
-AI cost:  %.2f ms ( %.2f %% of fps)]], nav_paths.unit_id, nav_paths.unit_name, nav_paths.current_state, player_vehicle_speed, cop_vehicle_speed, self._current_drive_controls, nav_paths.cop_path, nav_paths.cop_target_path, nav_paths.distance_to_player, nav_paths.ai_cost.cost, nav_paths.ai_cost.fps))
-	end
-end
-
--- Lines 231-233
+-- Lines 218-220
 function NpcVehicleDrivingExt:set_target_unit(unit)
 	self._target_unit = unit
 end
 
--- Lines 235-238
+-- Lines 224-227
 function NpcVehicleDrivingExt:_get_target_unit()
 	local target_unit = managers.vehicle:find_npc_vehicle_target()
 
 	return target_unit
 end
 
--- Lines 244-296
+-- Lines 234-289
 function NpcVehicleDrivingExt:_choose_target_path_direction(player_path, target_marker)
+	Application:debug("NpcVehicleDrivingExt:_choose_target_path_direction:", player_path, target_marker)
+
 	local player_unit = self:_get_target_unit()
 
 	if not player_unit or not player_path then
+		Application:debug(" ... not 'player_unit' or not 'player_path': ", not player_unit, not player_path)
+
 		return
 	end
 
@@ -300,16 +254,24 @@ function NpcVehicleDrivingExt:_choose_target_path_direction(player_path, target_
 	end
 
 	if not player_point_id then
+		Application:debug("No player point ID -- Go FWD")
+
 		return "fwd"
 	end
+
+	print("choose: ", inspect(cop_path_bridge.player_path))
 
 	local player_point_bck_id = #player_path.points - player_point_id + 1
 	local point_forward = player_path.points[player_point_id + 1]
 	local point_backward = player_path.points_bck[player_point_bck_id + 1]
 
 	if not point_forward then
+		print("choosing: bck")
+
 		return "bck"
 	elseif not point_backward then
+		print("choosing: fwd")
+
 		return "fwd"
 	elseif not point_forward and not point_backward then
 		Application:error("Unable to choose path direction.")
@@ -330,7 +292,7 @@ function NpcVehicleDrivingExt:_choose_target_path_direction(player_path, target_
 	return retval
 end
 
--- Lines 299-394
+-- Lines 296-393
 function NpcVehicleDrivingExt:drive_to_point(cop_path, unit_and_pos, dt)
 	if not self._current_state then
 		Application:error("Npc vehicle has no state: ", self._unit:unit_data().unit_id, self._unit:unit_data().name_id)
@@ -339,6 +301,8 @@ function NpcVehicleDrivingExt:drive_to_point(cop_path, unit_and_pos, dt)
 	end
 
 	if self._current_state:is_maneuvering() then
+		Application:trace("NpcVehicleDrivingExt:drive_to_point( cop_path, unit_and_pos, dt) - maneuvering")
+
 		return false
 	end
 
@@ -356,6 +320,8 @@ function NpcVehicleDrivingExt:drive_to_point(cop_path, unit_and_pos, dt)
 	local player_unit = self:_get_target_unit()
 
 	if not alive(player_unit) or not alive(self._unit) then
+		Application:error("NpcVehicleDrivingExt:drive_to_point( cop_path, unit_and_pos, dt) target unit, self._unit: ", player_unit, self._unit)
+
 		return false
 	end
 
@@ -376,6 +342,7 @@ function NpcVehicleDrivingExt:drive_to_point(cop_path, unit_and_pos, dt)
 			self._debug.nav_paths = {}
 		end
 
+		self._debug.nav_paths.astar_found = not not astar_path
 		self._debug.nav_paths.unit_name = debug_unit_name
 		self._debug.nav_paths.unit_id = unit_and_pos.unit
 		self._debug.nav_paths.cop_path = cop_path.id
@@ -411,7 +378,36 @@ function NpcVehicleDrivingExt:drive_to_point(cop_path, unit_and_pos, dt)
 	return skip_checkpoint
 end
 
--- Lines 397-420
+-- Lines 397-428
+function NpcVehicleDrivingExt:_drive(steering, speed_limit, controls_override)
+	local acceleration = 0
+	local brake = 0
+	local handbrake = 0
+
+	if self._drive_controls and self._drive_controls[self._current_drive_controls] then
+		acceleration = self._drive_controls[self._current_drive_controls].acceleration
+		brake = self._drive_controls[self._current_drive_controls].brake
+		handbrake = self._drive_controls[self._current_drive_controls].handbrake
+	end
+
+	local vehicle_state = self._vehicle:get_state()
+	local current_speed = vehicle_state:get_speed() * 3.6
+
+	if speed_limit < current_speed and speed_limit ~= -1 then
+		acceleration = 0
+	end
+
+	if controls_override then
+		acceleration = controls_override.acceleration
+		steering = controls_override.steering
+		brake = controls_override.brake
+		handbrake = controls_override.handbrake
+	end
+
+	self:set_input(acceleration, steering, brake, handbrake, false, false, -1)
+end
+
+-- Lines 432-455
 function NpcVehicleDrivingExt:calc_cop_position_info(cop_points, unit_and_pos)
 	local target_position = cop_points[unit_and_pos.target_checkpoint].point
 	local unit_position = self._unit:position()
@@ -436,7 +432,7 @@ function NpcVehicleDrivingExt:calc_cop_position_info(cop_points, unit_and_pos)
 	}
 end
 
--- Lines 423-471
+-- Lines 459-509
 function NpcVehicleDrivingExt:_choose_next_checkpoint(cop_path, cop_points, target_path, unit_and_pos, cop_position_info, distance_threshold)
 	local target_position = cop_points[unit_and_pos.target_checkpoint].point
 	local unit_position = self._unit:position()
@@ -480,7 +476,7 @@ function NpcVehicleDrivingExt:_choose_next_checkpoint(cop_path, cop_points, targ
 	return false
 end
 
--- Lines 474-540
+-- Lines 513-579
 function NpcVehicleDrivingExt:_find_bridge(cop_path, target_path, unit_and_pos)
 	if not cop_path or not cop_path.bridges or not target_path then
 		return nil
@@ -541,7 +537,7 @@ function NpcVehicleDrivingExt:_find_bridge(cop_path, target_path, unit_and_pos)
 	return min_distance_marker
 end
 
--- Lines 542-556
+-- Lines 583-596
 function NpcVehicleDrivingExt:_get_marker_position(player_path, marker_to)
 	local point_id = nil
 
@@ -558,62 +554,86 @@ function NpcVehicleDrivingExt:_get_marker_position(player_path, marker_to)
 	end
 end
 
--- Lines 558-565
+-- Lines 600-612
 function NpcVehicleDrivingExt:_get_player_speed()
 	local player_vehicle = self:_get_target_unit()
 
 	if player_vehicle and player_vehicle:vehicle_driving() then
-		return player_vehicle:vehicle_driving()._vehicle:get_state():get_speed() * 3.6
+		local p_speed = player_vehicle:vehicle_driving()._vehicle:get_state():get_speed() * 3.6
+
+		Application:debug("got player speed:", p_speed)
+
+		return p_speed
 	end
 end
 
--- Lines 568-599
-function NpcVehicleDrivingExt:_drive(steering, speed_limit, controls_override)
-	local acceleration = 0
-	local brake = 0
-	local handbrake = 0
-
-	if self._drive_controls and self._drive_controls[self._current_drive_controls] then
-		acceleration = self._drive_controls[self._current_drive_controls].acceleration
-		brake = self._drive_controls[self._current_drive_controls].brake
-		handbrake = self._drive_controls[self._current_drive_controls].handbrake
-	end
-
-	local vehicle_state = self._vehicle:get_state()
-	local current_speed = vehicle_state:get_speed() * 3.6
-
-	if speed_limit < current_speed and speed_limit ~= -1 then
-		acceleration = 0
-	end
-
-	if controls_override then
-		acceleration = controls_override.acceleration
-		steering = controls_override.steering
-		brake = controls_override.brake
-		handbrake = controls_override.handbrake
-	end
-
-	self:set_input(acceleration, steering, brake, handbrake, false, false, -1)
-end
-
--- Lines 601-606
+-- Lines 616-621
 function NpcVehicleDrivingExt:set_input(acceleration, steering, brake, handbrake, geer_up, geer_down, force_gear)
 	if Network:is_server() then
 		self._unit:vehicle_driving():set_input(acceleration, steering, brake, handbrake, geer_up, geer_down, force_gear)
 	end
 end
 
--- Lines 608-613
+-- Lines 625-630
 function NpcVehicleDrivingExt:brake()
 	self:set_input(0, 1, 1, 1, false, false, -1)
 end
 
--- Lines 616-618
+-- Lines 634-636
 function NpcVehicleDrivingExt:_is_last_checkpoint(path, unit_and_pos)
 	return #path.points == unit_and_pos.target_checkpoint
 end
 
--- Lines 621-634
+-- Lines 640-646
+function NpcVehicleDrivingExt:destroy()
+	if self._debug then
+		Overlay:newgui():destroy_workspace(self._debug.ws)
+
+		self._debug.ws = nil
+	end
+
+	self._debug = nil
+end
+
+-- Lines 650-656
+function NpcVehicleDrivingExt:_get_unit(unit_id)
+	if Global.running_simulation then
+		return managers.editor:unit_with_id(unit_id)
+	else
+		return managers.worlddefinition:get_unit(unit_id)
+	end
+end
+
+-- Lines 660-674
+function NpcVehicleDrivingExt:_init_states()
+	local unit = self._unit
+	self._states = {
+		inactive = NpcVehicleStateInactive:new(unit),
+		pursuit = NpcVehicleStatePursuit:new(unit),
+		player_proximity = NpcVehicleStatePlayerProximity:new(unit),
+		broken = NpcVehicleStateBroken:new(unit),
+		maneuver = NpcVehicleStateManeuver:new(unit),
+		maneuver_back_left = NpcVehicleStateManeuverBackLeft:new(unit),
+		maneuver_back_right = NpcVehicleStateManeuverBackRight:new(unit),
+		maneuver_u_turn = NpcVehicleStateManeuverUTurn:new(unit)
+	}
+
+	self:_set_state(NpcVehicleDrivingExt.STATE_INACTIVE)
+end
+
+-- Lines 678-690
+function NpcVehicleDrivingExt:_set_state(new_state)
+	if self._current_state then
+		self._current_state:on_exit(self)
+	end
+
+	self._current_state = self._states[new_state]
+	self._current_state_name = new_state
+
+	self._current_state:on_enter(self)
+end
+
+-- Lines 695-708
 function NpcVehicleDrivingExt:_debug_show()
 	if self._debug and self._debug.ws then
 		return
@@ -631,62 +651,68 @@ function NpcVehicleDrivingExt:_debug_show()
 		x = 14,
 		layer = 2000,
 		y = 100 + debug_output_offset,
-		font = tweak_data.hud.small_font,
+		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, 14),
 		color = Color.yellow
 	})
 	managers.motion_path._debug_output_offset = managers.motion_path._debug_output_offset + 170
 end
 
--- Lines 636-642
-function NpcVehicleDrivingExt:destroy()
-	if self._debug then
-		Overlay:newgui():destroy_workspace(self._debug.ws)
+-- Lines 711-758
+function NpcVehicleDrivingExt:_display_debug_info()
+	if self._debug and self._debug.ws and self._debug.info then
+		local nav_paths = {
+			unit_id = "?",
+			unit_name = "?",
+			current_state = "?",
+			cop_path = "?",
+			cop_target_path = "?",
+			astar_found = false,
+			distance_to_player = 0,
+			ai_cost = {
+				cost = 0,
+				fps = 0
+			}
+		}
 
-		self._debug.ws = nil
+		if self._debug.nav_paths then
+			nav_paths.unit_id = self._debug.nav_paths.unit_id or "?"
+			nav_paths.unit_name = self._debug.nav_paths.unit_name or "?"
+			nav_paths.cop_path = self._debug.nav_paths.cop_path or "?"
+			nav_paths.cop_target_path = self._debug.nav_paths.cop_target_path or "?"
+			nav_paths.astar_found = self._debug.nav_paths.astar_found or false
+			nav_paths.distance_to_player = self._debug.nav_paths.distance_to_player or 0
+			nav_paths.ai_cost = self._debug.nav_paths.ai_cost or {
+				cost = 0,
+				fps = 0
+			}
+		end
+
+		if self._current_state then
+			nav_paths.current_state = self._current_state:name() or "n/a"
+		end
+
+		local vehicle_state = self._vehicle:get_state()
+		local cop_vehicle_speed = vehicle_state:get_speed() * 3.6
+		local player_vehicle_speed = self:_get_player_speed()
+		player_vehicle_speed = player_vehicle_speed or 0
+
+		self._debug.info:set_text(string.format([[
+----------------------
+ t:%s
+Cop unit:  %s - %s
+Cop state:  %s - Maneuver: %s
+Player_speed:  %.2f km/h
+Cop speed:  %.2f km/h
+Drive controls:  %s
+Cop on path:  %s
+Cop targeting path:  %s
+Astar found:  %s
+Distance to player:  %.2f m
+AI cost:  %.2f ms ( %.2f %% of fps)]], Application:time(), nav_paths.unit_id, nav_paths.unit_name, nav_paths.current_state, self._current_state:is_maneuvering(), player_vehicle_speed, cop_vehicle_speed, self._current_drive_controls, nav_paths.cop_path, nav_paths.astar_found, nav_paths.cop_target_path, nav_paths.distance_to_player, nav_paths.ai_cost.cost, nav_paths.ai_cost.fps))
 	end
-
-	self._debug = nil
 end
 
--- Lines 644-650
-function NpcVehicleDrivingExt:_get_unit(unit_id)
-	if Global.running_simulation then
-		return managers.editor:unit_with_id(unit_id)
-	else
-		return managers.worlddefinition:get_unit(unit_id)
-	end
-end
-
--- Lines 652-666
-function NpcVehicleDrivingExt:_init_states()
-	local unit = self._unit
-	self._states = {
-		inactive = NpcVehicleStateInactive:new(unit),
-		pursuit = NpcVehicleStatePursuit:new(unit),
-		player_proximity = NpcVehicleStatePlayerProximity:new(unit),
-		broken = NpcVehicleStateBroken:new(unit),
-		maneuver = NpcVehicleStateManeuver:new(unit),
-		maneuver_back_left = NpcVehicleStateManeuverBackLeft:new(unit),
-		maneuver_back_right = NpcVehicleStateManeuverBackRight:new(unit),
-		maneuver_u_turn = NpcVehicleStateManeuverUTurn:new(unit)
-	}
-
-	self:_set_state(NpcVehicleDrivingExt.STATE_INACTIVE)
-end
-
--- Lines 668-678
-function NpcVehicleDrivingExt:_set_state(new_state)
-	if self._current_state then
-		self._current_state:on_exit(self)
-	end
-
-	self._current_state = self._states[new_state]
-	self._current_state_name = new_state
-
-	self._current_state:on_enter(self)
-end
-
--- Lines 680-685
+-- Lines 763-768
 function NpcVehicleDrivingExt:set_state(new_state)
 	self:_set_state(new_state)
 

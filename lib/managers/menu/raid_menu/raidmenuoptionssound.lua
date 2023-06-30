@@ -29,7 +29,7 @@ function RaidMenuOptionsSound:close()
 	RaidMenuOptionsSound.super.close(self)
 end
 
--- Lines 33-116
+-- Lines 33-142
 function RaidMenuOptionsSound:_layout_sound()
 	local start_x = 0
 	local start_y = 320
@@ -124,32 +124,49 @@ function RaidMenuOptionsSound:_layout_sound()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_push_to_talk"),
 		on_menu_move = {
+			down = "tinnitus",
 			up = "use_voice_chat"
 		}
 	}
 	self._toggle_menu_push_to_talk_toggle = self._root_panel:toggle_button(push_to_talk_params)
+	local tinnitus_params = {
+		name = "tinnitus",
+		description = utf8.to_upper(managers.localization:text("menu_tinnitus_toggle")),
+		x = start_x,
+		y = push_to_talk_params.y + RaidGuiBase.PADDING,
+		w = default_width,
+		on_click_callback = callback(self, self, "on_click_tinnitus"),
+		on_menu_move = {
+			up = "push_to_talk"
+		}
+	}
+	self._toggle_menu_tinnitus_toggle = self._root_panel:toggle_button(tinnitus_params)
 end
 
--- Lines 118-135
+-- Lines 144-177
 function RaidMenuOptionsSound:_load_sound_values()
 	local master_volume = math.clamp(managers.user:get_setting("master_volume"), 0, 100)
 	local music_volume = math.clamp(managers.user:get_setting("music_volume"), 0, 100)
 	local sfx_volume = math.clamp(managers.user:get_setting("sfx_volume"), 0, 100)
 	local voice_volume = math.clamp(managers.user:get_setting("voice_volume"), 0, 1)
 	local voice_over_volume = math.clamp(managers.user:get_setting("voice_over_volume"), 0, 100)
-	local voice_chat = managers.user:get_setting("voice_chat")
 	local push_to_talk = managers.user:get_setting("push_to_talk")
+	local tinnitus_sound_enabled = managers.user:get_setting("tinnitus_sound_enabled")
 
 	self._progress_bar_menu_master_volume:set_value(master_volume)
 	self._progress_bar_menu_voice_over_volume:set_value(voice_over_volume)
 	self._progress_bar_menu_music_volume:set_value(music_volume)
 	self._progress_bar_menu_sfx_volume:set_value(sfx_volume)
 	self._progress_bar_menu_voice_volume:set_value(voice_volume * 100)
+
+	local voice_chat = managers.user:get_setting("voice_chat")
+
 	self._toggle_menu_voicechat_toggle:set_value_and_render(voice_chat)
 	self._toggle_menu_push_to_talk_toggle:set_value_and_render(push_to_talk)
+	self._toggle_menu_tinnitus_toggle:set_value_and_render(tinnitus_sound_enabled)
 end
 
--- Lines 137-148
+-- Lines 179-195
 function RaidMenuOptionsSound:_save_sound_values()
 	self:on_value_change_master_volume()
 	self:on_value_change_music_volume()
@@ -158,48 +175,49 @@ function RaidMenuOptionsSound:_save_sound_values()
 	self:on_value_change_voice_over_volume()
 	self:on_click_voice_chat()
 	self:on_click_push_to_talk()
+	self:on_click_tinnitus()
 
 	Global.savefile_manager.setting_changed = true
 
 	managers.savefile:save_setting(true)
 end
 
--- Lines 150-153
+-- Lines 197-200
 function RaidMenuOptionsSound:on_value_change_master_volume()
 	local master_volume = math.clamp(self._progress_bar_menu_master_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_master_volume_raid(master_volume)
 end
 
--- Lines 155-158
+-- Lines 202-205
 function RaidMenuOptionsSound:on_value_change_music_volume()
 	local music_volume = math.clamp(self._progress_bar_menu_music_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_music_volume_raid(music_volume)
 end
 
--- Lines 160-163
+-- Lines 207-210
 function RaidMenuOptionsSound:on_value_change_sfx_volume()
 	local sfx_volume = math.clamp(self._progress_bar_menu_sfx_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_sfx_volume_raid(sfx_volume)
 end
 
--- Lines 165-168
+-- Lines 212-215
 function RaidMenuOptionsSound:on_value_change_voice_over_volume()
 	local voice_over_volume = math.clamp(self._progress_bar_menu_voice_over_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_voice_over_volume_raid(voice_over_volume)
 end
 
--- Lines 170-173
+-- Lines 217-220
 function RaidMenuOptionsSound:on_value_change_voice_volume()
 	local voice_volume = math.clamp(self._progress_bar_menu_voice_volume:get_value(), 0, 100)
 
 	managers.menu:active_menu().callback_handler:set_voice_volume_raid(voice_volume)
 end
 
--- Lines 175-179
+-- Lines 222-232
 function RaidMenuOptionsSound:on_click_voice_chat()
 	local voice_chat = self._toggle_menu_voicechat_toggle:get_value()
 
@@ -207,7 +225,7 @@ function RaidMenuOptionsSound:on_click_voice_chat()
 	managers.network.voice_chat:update_settings()
 end
 
--- Lines 181-185
+-- Lines 261-267
 function RaidMenuOptionsSound:on_click_push_to_talk()
 	local push_to_talk = self._toggle_menu_push_to_talk_toggle:get_value()
 
@@ -215,14 +233,21 @@ function RaidMenuOptionsSound:on_click_push_to_talk()
 	managers.network.voice_chat:update_settings()
 end
 
--- Lines 187-191
+-- Lines 269-272
+function RaidMenuOptionsSound:on_click_tinnitus()
+	local tinnitus = self._toggle_menu_tinnitus_toggle:get_value()
+
+	managers.menu:active_menu().callback_handler:toggle_tinnitus_raid(tinnitus)
+end
+
+-- Lines 274-278
 function RaidMenuOptionsSound:close()
 	Application:trace("RaidMenuOptionsSound:close()")
 	self:_save_sound_values()
 	RaidMenuOptionsSound.super.close(self)
 end
 
--- Lines 198-209
+-- Lines 285-296
 function RaidMenuOptionsSound:bind_controller_inputs()
 	local legend = {
 		controller = {

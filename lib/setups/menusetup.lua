@@ -179,7 +179,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines 169-270
+-- Lines 169-248
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -248,7 +248,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines 272-290
+-- Lines 250-268
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	Application:debug("[MenuSetup:init_managers]")
@@ -265,7 +265,7 @@ function MenuSetup:init_managers(managers)
 	end
 end
 
--- Lines 292-317
+-- Lines 270-295
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -273,7 +273,7 @@ function MenuSetup:init_finalize()
 		managers.network:init_finalize()
 	end
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		if not Global.hdd_space_checked then
 			managers.savefile:check_space_required()
 
@@ -283,7 +283,7 @@ function MenuSetup:init_finalize()
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 
@@ -294,7 +294,7 @@ function MenuSetup:init_finalize()
 	managers.dyn_resource:post_init()
 end
 
--- Lines 319-338
+-- Lines 297-316
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -302,7 +302,7 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	if managers.savefile:fetch_savegame_hdd_space_required() then
 		Application:check_sufficient_hdd_space_to_launch(managers.savefile:fetch_savegame_hdd_space_required(), managers.dlc:has_full_game())
 
-		if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+		if _G.IS_PS3 or _G.IS_PS4 then
 			Trophies:set_translation_text(managers.localization:text("err_load"), managers.localization:text("err_ins"), managers.localization:text("err_disk"))
 			managers.achievment:chk_install_trophies()
 		end
@@ -312,31 +312,31 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines 340-344
+-- Lines 318-322
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 346-350
+-- Lines 324-328
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 352-380
+-- Lines 330-358
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 382-386
+-- Lines 360-364
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 388-390
+-- Lines 366-368
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 end

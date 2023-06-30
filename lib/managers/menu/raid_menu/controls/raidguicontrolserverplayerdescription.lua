@@ -1,6 +1,6 @@
 RaidGUIControlServerPlayerDescription = RaidGUIControlServerPlayerDescription or class(RaidGUIControl)
 
--- Lines 5-14
+-- Lines 5-17
 function RaidGUIControlServerPlayerDescription:init(parent, params)
 	RaidGUIControlServerPlayerDescription.super.init(self, parent, params)
 
@@ -11,9 +11,10 @@ function RaidGUIControlServerPlayerDescription:init(parent, params)
 	self:_layout()
 
 	self._on_selected_callback = params.on_selected_callback
+	self._xuid = nil
 end
 
--- Lines 16-24
+-- Lines 19-27
 function RaidGUIControlServerPlayerDescription:_create_selector()
 	local selector_params = {
 		name = "selector",
@@ -24,7 +25,7 @@ function RaidGUIControlServerPlayerDescription:_create_selector()
 	self._selector = self._object:rect(selector_params)
 end
 
--- Lines 26-51
+-- Lines 29-54
 function RaidGUIControlServerPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
@@ -101,7 +102,7 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_level:hide()
 end
 
--- Lines 53-99
+-- Lines 56-111
 function RaidGUIControlServerPlayerDescription:set_data(data)
 	if data == NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO or not data then
 		self:hide()
@@ -143,10 +144,20 @@ function RaidGUIControlServerPlayerDescription:set_data(data)
 		self._player_level:set_right(self._object:w() - self._class_icon:x())
 		self._player_level:show()
 		self._host_icon:set_right(self._player_level:x() - 12)
+
+		self._xuid = nil
+
+		if data_list[5] then
+			local xuid = Xuid.from_string(data_list[5])
+
+			if xuid then
+				self._xuid = xuid
+			end
+		end
 	end
 end
 
--- Lines 101-107
+-- Lines 113-119
 function RaidGUIControlServerPlayerDescription:set_host(flag)
 	if flag then
 		self._host_icon:show()
@@ -155,7 +166,7 @@ function RaidGUIControlServerPlayerDescription:set_host(flag)
 	end
 end
 
--- Lines 109-117
+-- Lines 121-129
 function RaidGUIControlServerPlayerDescription:set_selected(value)
 	self._selected = value
 
@@ -166,19 +177,19 @@ function RaidGUIControlServerPlayerDescription:set_selected(value)
 	end
 end
 
--- Lines 119-122
+-- Lines 131-134
 function RaidGUIControlServerPlayerDescription:show()
 	self._object:show()
 end
 
--- Lines 124-127
+-- Lines 136-139
 function RaidGUIControlServerPlayerDescription:hide()
 	self._object:hide()
 end
 
--- Lines 129-133
+-- Lines 141-146
 function RaidGUIControlServerPlayerDescription:confirm_pressed()
-	if self._selected then
+	if self._selected and self._xuid then
 		RaidMenuCallbackHandler.view_gamer_card(self._xuid)
 	end
 end

@@ -73,7 +73,17 @@ function ChallengeTask:type()
 	return self._type
 end
 
--- Lines 65-71
+-- Lines 66-68
+function ChallengeTask:briefing_id()
+	return self._briefing_id
+end
+
+-- Lines 70-72
+function ChallengeTask:done_text_id()
+	return self._done_text_id
+end
+
+-- Lines 74-80
 function ChallengeTask:force_complete()
 	if self:completed() then
 		return
@@ -84,7 +94,7 @@ end
 
 ChallengeTaskKillEnemies = ChallengeTaskKillEnemies or class(ChallengeTask)
 
--- Lines 82-94
+-- Lines 91-105
 function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_data)
 	ChallengeTaskKillEnemies.super.init(self)
 
@@ -95,11 +105,13 @@ function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_da
 	self._parent_challenge_id = challenge_id
 	self._id = self._parent_challenge_id .. "_kill_enemies"
 	self._type = ChallengeTweakData.TASK_KILL_ENEMIES
+	self._briefing_id = task_data.challenge_briefing_id
+	self._done_text_id = task_data.challenge_done_text_id
 	self._modifiers = task_data.modifiers or {}
 	self._reminders = task_data.reminders or {}
 end
 
--- Lines 96-102
+-- Lines 107-113
 function ChallengeTaskKillEnemies:activate()
 	ChallengeTaskKillEnemies.super.activate(self)
 	managers.system_event_listener:add_listener(self._id, {
@@ -107,45 +119,45 @@ function ChallengeTaskKillEnemies:activate()
 	}, callback(self, self, "on_enemy_killed"))
 end
 
--- Lines 104-108
+-- Lines 115-119
 function ChallengeTaskKillEnemies:deactivate()
 	ChallengeTaskKillEnemies.super.deactivate(self)
 	managers.system_event_listener:remove_listener(self._id)
 end
 
--- Lines 110-114
+-- Lines 121-125
 function ChallengeTaskKillEnemies:reset()
 	ChallengeTaskKillEnemies.super.reset(self)
 
 	self._count = 0
 end
 
--- Lines 116-118
+-- Lines 127-129
 function ChallengeTaskKillEnemies:current_count()
 	return self._count
 end
 
--- Lines 120-122
+-- Lines 131-133
 function ChallengeTaskKillEnemies:target()
 	return self._target
 end
 
--- Lines 124-126
+-- Lines 135-137
 function ChallengeTaskKillEnemies:min_range()
 	return self._modifiers.min_range or 0
 end
 
--- Lines 128-130
+-- Lines 139-141
 function ChallengeTaskKillEnemies:set_reminders(reminders)
 	self._reminders = reminders
 end
 
--- Lines 132-134
+-- Lines 143-145
 function ChallengeTaskKillEnemies:set_modifiers(modifiers)
 	self._modifiers = modifiers
 end
 
--- Lines 136-194
+-- Lines 147-208
 function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 	if kill_data.using_turret then
 		return
@@ -198,14 +210,14 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 	self:_check_status()
 end
 
--- Lines 196-200
+-- Lines 210-214
 function ChallengeTaskKillEnemies:_check_status()
 	if self._target <= self._count then
 		self:_on_completed()
 	end
 end
 
--- Lines 202-207
+-- Lines 216-221
 function ChallengeTaskKillEnemies:_on_completed()
 	self._state = ChallengeTask.STATE_COMPLETED
 
@@ -213,7 +225,7 @@ function ChallengeTaskKillEnemies:_on_completed()
 	managers.system_event_listener:remove_listener(self._id)
 end
 
--- Lines 209-218
+-- Lines 223-232
 function ChallengeTaskKillEnemies:force_complete()
 	if self:completed() then
 		return
@@ -227,7 +239,7 @@ end
 
 ChallengeTaskCollectAmmo = ChallengeTaskCollectAmmo or class(ChallengeTask)
 
--- Lines 245-255
+-- Lines 268-280
 function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_data)
 	ChallengeTaskCollectAmmo.super.init(self)
 
@@ -236,11 +248,13 @@ function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_da
 	self._parent_challenge_category = challenge_category
 	self._parent_challenge_id = challenge_id
 	self._id = self._parent_challenge_id .. "_collect_ammo"
+	self._briefing_id = task_data.challenge_briefing_id
+	self._done_text_id = task_data.challenge_done_text_id
 	self._type = ChallengeTweakData.TASK_COLLECT_AMMO
 	self._reminders = task_data.reminders or {}
 end
 
--- Lines 257-263
+-- Lines 282-288
 function ChallengeTaskCollectAmmo:activate()
 	ChallengeTaskCollectAmmo.super.activate(self)
 	managers.system_event_listener:add_listener(self._id, {
@@ -248,45 +262,45 @@ function ChallengeTaskCollectAmmo:activate()
 	}, callback(self, self, "on_ammo_collected"))
 end
 
--- Lines 265-269
+-- Lines 290-294
 function ChallengeTaskCollectAmmo:deactivate()
 	ChallengeTaskCollectAmmo.super.deactivate(self)
 	managers.system_event_listener:remove_listener(self._id)
 end
 
--- Lines 271-275
+-- Lines 296-300
 function ChallengeTaskCollectAmmo:reset()
 	ChallengeTaskKillEnemies.super.reset(self)
 
 	self._count = 0
 end
 
--- Lines 277-279
+-- Lines 302-304
 function ChallengeTaskCollectAmmo:current_count()
 	return self._count
 end
 
--- Lines 281-283
+-- Lines 306-308
 function ChallengeTaskCollectAmmo:target()
 	return self._target
 end
 
--- Lines 285-287
+-- Lines 310-312
 function ChallengeTaskCollectAmmo:min_range()
 	return 0
 end
 
--- Lines 289-291
+-- Lines 314-316
 function ChallengeTaskCollectAmmo:set_reminders(reminders)
 	self._reminders = reminders
 end
 
--- Lines 293-295
+-- Lines 318-320
 function ChallengeTaskCollectAmmo:set_modifiers(modifiers)
 	self._modifiers = modifiers
 end
 
--- Lines 297-316
+-- Lines 322-341
 function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 	if managers.raid_job:is_camp_loaded() then
 		return
@@ -309,14 +323,14 @@ function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 	self:_check_status()
 end
 
--- Lines 318-322
+-- Lines 343-347
 function ChallengeTaskCollectAmmo:_check_status()
 	if self._target <= self._count then
 		self:_on_completed()
 	end
 end
 
--- Lines 324-329
+-- Lines 349-354
 function ChallengeTaskCollectAmmo:_on_completed()
 	self._state = ChallengeTask.STATE_COMPLETED
 
@@ -324,7 +338,7 @@ function ChallengeTaskCollectAmmo:_on_completed()
 	managers.system_event_listener:remove_listener(self._id)
 end
 
--- Lines 331-340
+-- Lines 356-365
 function ChallengeTaskCollectAmmo:force_complete()
 	if self:completed() then
 		return

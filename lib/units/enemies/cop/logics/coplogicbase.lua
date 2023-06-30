@@ -189,7 +189,7 @@ function CopLogicBase.action_timeout_clbk(ignore_this, data)
 	data.objective_complete_clbk(data.unit, data.objective)
 end
 
--- Lines 211-270
+-- Lines 211-281
 function CopLogicBase.damage_clbk(data, damage_info)
 	local enemy = damage_info.attacker_unit
 	local enemy_data = nil
@@ -258,11 +258,11 @@ function CopLogicBase.damage_clbk(data, damage_info)
 	end
 end
 
--- Lines 274-310
+-- Lines 285-321
 function CopLogicBase.death_clbk(data, damage_info)
 end
 
--- Lines 317-394
+-- Lines 328-405
 function CopLogicBase.on_alert(data, alert_data)
 	if not managers.player:local_player() then
 		return
@@ -342,11 +342,11 @@ function CopLogicBase.on_alert(data, alert_data)
 	end
 end
 
--- Lines 398-399
+-- Lines 409-410
 function CopLogicBase.on_area_safety(data, nav_seg, safe)
 end
 
--- Lines 403-437
+-- Lines 414-448
 function CopLogicBase.draw_reserved_positions(data)
 	local my_pos = data.m_pos
 	local my_data = data.internal_data
@@ -388,7 +388,7 @@ function CopLogicBase.draw_reserved_positions(data)
 	end
 end
 
--- Lines 441-459
+-- Lines 452-470
 function CopLogicBase.draw_reserved_covers(data)
 	local my_pos = data.m_pos
 	local my_data = data.internal_data
@@ -415,7 +415,7 @@ function CopLogicBase.draw_reserved_covers(data)
 	end
 end
 
--- Lines 461-479
+-- Lines 472-490
 function CopLogicBase.release_reserved_covers(data)
 	local my_pos = data.m_pos
 	local my_data = data.internal_data
@@ -442,7 +442,7 @@ function CopLogicBase.release_reserved_covers(data)
 	end
 end
 
--- Lines 484-501
+-- Lines 495-512
 function CopLogicBase._exit(unit, state_name, params)
 	if unit:brain().logic_queued_key then
 		managers.queued_tasks:unqueue(unit:brain().logic_queued_key)
@@ -470,16 +470,16 @@ function CopLogicBase._exit(unit, state_name, params)
 	end
 end
 
--- Lines 505-506
+-- Lines 516-517
 function CopLogicBase.on_detected_enemy_destroyed(data, enemy_unit)
 end
 
--- Lines 510-512
+-- Lines 521-523
 function CopLogicBase._can_move(data)
 	return true
 end
 
--- Lines 517-529
+-- Lines 528-540
 function CopLogicBase._report_detections(enemies)
 	local group = managers.groupai:state()
 
@@ -490,11 +490,11 @@ function CopLogicBase._report_detections(enemies)
 	end
 end
 
--- Lines 533-534
+-- Lines 544-545
 function CopLogicBase.on_importance(data)
 end
 
--- Lines 538-554
+-- Lines 549-565
 function CopLogicBase.queue_task(internal_data, id, func, data, exec_t, asap)
 	if internal_data.unit and internal_data ~= internal_data.unit:brain()._logic_data.internal_data then
 		debug_pause("[CopLogicBase.queue_task] Task queued from the wrong logic", internal_data.unit, id, func, data, exec_t, asap)
@@ -517,7 +517,7 @@ function CopLogicBase.queue_task(internal_data, id, func, data, exec_t, asap)
 	managers.enemy:queue_task(id, func, data, exec_t, callback(CopLogicBase, CopLogicBase, "on_queued_task", internal_data), asap)
 end
 
--- Lines 558-569
+-- Lines 569-580
 function CopLogicBase.cancel_queued_tasks(internal_data)
 	local qd_tasks = internal_data.queued_tasks
 
@@ -532,7 +532,7 @@ function CopLogicBase.cancel_queued_tasks(internal_data)
 	end
 end
 
--- Lines 573-580
+-- Lines 584-591
 function CopLogicBase.unqueue_task(internal_data, id)
 	managers.enemy:unqueue_task(id)
 
@@ -543,7 +543,7 @@ function CopLogicBase.unqueue_task(internal_data, id)
 	end
 end
 
--- Lines 584-593
+-- Lines 595-604
 function CopLogicBase.chk_unqueue_task(internal_data, id)
 	if internal_data.queued_tasks and internal_data.queued_tasks[id] then
 		managers.enemy:unqueue_task(id)
@@ -556,7 +556,7 @@ function CopLogicBase.chk_unqueue_task(internal_data, id)
 	end
 end
 
--- Lines 597-606
+-- Lines 608-617
 function CopLogicBase.on_queued_task(ignore_this, internal_data, id)
 	if not internal_data.queued_tasks or not internal_data.queued_tasks[id] then
 		debug_pause("[CopLogicBase.on_queued_task] the task is not queued", internal_data.unit, id)
@@ -571,7 +571,7 @@ function CopLogicBase.on_queued_task(ignore_this, internal_data, id)
 	end
 end
 
--- Lines 610-624
+-- Lines 621-635
 function CopLogicBase.add_delayed_clbk(internal_data, id, clbk, exec_t)
 	if internal_data.unit and internal_data ~= internal_data.unit:brain()._logic_data.internal_data then
 		debug_pause("[CopLogicBase.add_delayed_clbk] Clbk added from the wrong logic", internal_data.unit, id, clbk, exec_t)
@@ -594,7 +594,7 @@ function CopLogicBase.add_delayed_clbk(internal_data, id, clbk, exec_t)
 	managers.enemy:add_delayed_clbk(id, clbk, exec_t)
 end
 
--- Lines 628-637
+-- Lines 639-648
 function CopLogicBase.cancel_delayed_clbks(internal_data)
 	local clbks = internal_data.delayed_clbks
 
@@ -609,7 +609,7 @@ function CopLogicBase.cancel_delayed_clbks(internal_data)
 	end
 end
 
--- Lines 641-651
+-- Lines 652-662
 function CopLogicBase.cancel_delayed_clbk(internal_data, id)
 	if not internal_data.delayed_clbks or not internal_data.delayed_clbks[id] then
 		debug_pause("[CopLogicBase.cancel_delayed_clbk] Tried to cancel inexistent clbk", internal_data.unit, id, internal_data.delayed_clbks and inspect(internal_data.delayed_clbks))
@@ -626,7 +626,7 @@ function CopLogicBase.cancel_delayed_clbk(internal_data, id)
 	end
 end
 
--- Lines 655-663
+-- Lines 666-674
 function CopLogicBase.chk_cancel_delayed_clbk(internal_data, id)
 	if internal_data.delayed_clbks and internal_data.delayed_clbks[id] then
 		managers.enemy:remove_delayed_clbk(id)
@@ -639,7 +639,7 @@ function CopLogicBase.chk_cancel_delayed_clbk(internal_data, id)
 	end
 end
 
--- Lines 667-676
+-- Lines 678-687
 function CopLogicBase.on_delayed_clbk(internal_data, id)
 	if not internal_data.delayed_clbks or not internal_data.delayed_clbks[id] then
 		debug_pause("[CopLogicBase.on_delayed_clbk] Callback not added", internal_data.unit, id, internal_data.delayed_clbks and inspect(internal_data.delayed_clbks))
@@ -654,11 +654,11 @@ function CopLogicBase.on_delayed_clbk(internal_data, id)
 	end
 end
 
--- Lines 680-681
+-- Lines 691-692
 function CopLogicBase.on_objective_unit_damaged(data, unit, attacker_unit)
 end
 
--- Lines 685-693
+-- Lines 696-704
 function CopLogicBase.on_objective_unit_destroyed(data, unit)
 	if not alive(data.unit) then
 		debug_pause("dead unit did not remove destroy listener", data.debug_name, inspect(data.objective), data.name)
@@ -672,7 +672,7 @@ function CopLogicBase.on_objective_unit_destroyed(data, unit)
 	data.objective_failed_clbk(data.unit, data.objective)
 end
 
--- Lines 697-724
+-- Lines 708-735
 function CopLogicBase.update_follow_unit(data, old_objective)
 	if old_objective and old_objective.follow_unit then
 		if old_objective.destroy_clbk_key then
@@ -708,7 +708,7 @@ function CopLogicBase.update_follow_unit(data, old_objective)
 	end
 end
 
--- Lines 728-774
+-- Lines 739-789
 function CopLogicBase.on_new_objective(data, old_objective)
 	local new_objective = data.objective
 
@@ -759,15 +759,15 @@ function CopLogicBase.on_new_objective(data, old_objective)
 	end
 end
 
--- Lines 778-779
+-- Lines 793-794
 function CopLogicBase.is_advancing(data)
 end
 
--- Lines 783-784
+-- Lines 798-799
 function CopLogicBase.anim_clbk(...)
 end
 
--- Lines 788-803
+-- Lines 803-818
 function CopLogicBase._angle_chk(handler, settings, data, my_pos, strictness)
 	local attention_pos = handler:get_detection_m_pos()
 	local dis = mvector3.direction(tmp_vec1, my_pos, attention_pos)
@@ -784,7 +784,7 @@ function CopLogicBase._angle_chk(handler, settings, data, my_pos, strictness)
 	end
 end
 
--- Lines 806-875
+-- Lines 821-890
 function CopLogicBase._angle_and_dis_chk(handler, settings, data, my_pos)
 	local attention_pos = handler:get_detection_m_pos()
 	local dis = mvector3.direction(tmp_vec1, my_pos, attention_pos)
@@ -828,11 +828,7 @@ function CopLogicBase._angle_and_dis_chk(handler, settings, data, my_pos)
 	local dis_multiplier = dis / dis_max
 
 	if my_data.detection.use_uncover_range and settings.uncover_range and dis < settings.uncover_range then
-		retval = {
-			-1,
-			0,
-			0
-		}
+		return -1, 0, 0
 	end
 
 	if dis_multiplier < 1 then
@@ -860,7 +856,7 @@ function CopLogicBase._angle_and_dis_chk(handler, settings, data, my_pos)
 	return unpack(retval)
 end
 
--- Lines 879-908
+-- Lines 894-923
 function CopLogicBase._nearly_visible_chk(data, attention_info, my_pos, detect_pos)
 	local near_pos = tmp_vec1
 
@@ -897,7 +893,7 @@ function CopLogicBase._nearly_visible_chk(data, attention_info, my_pos, detect_p
 	end
 end
 
--- Lines 912-928
+-- Lines 927-943
 function CopLogicBase._chk_record_acquired_attention_importance_wgt(attention_info, player_importance_wgt, my_pos)
 	if not player_importance_wgt or not attention_info.is_human_player then
 		return
@@ -919,7 +915,7 @@ function CopLogicBase._chk_record_acquired_attention_importance_wgt(attention_in
 	table.insert(player_importance_wgt, weight)
 end
 
--- Lines 932-960
+-- Lines 947-975
 function CopLogicBase._chk_record_attention_obj_importance_wgt(u_key, attention_info, player_importance_wgt, my_pos)
 	if not player_importance_wgt then
 		return
@@ -953,7 +949,7 @@ function CopLogicBase._chk_record_attention_obj_importance_wgt(u_key, attention_
 	table.insert(player_importance_wgt, weight)
 end
 
--- Lines 962-1210
+-- Lines 977-1230
 function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_reaction)
 	local t = data.t
 	local detected_obj = data.detected_attention_objects
@@ -969,7 +965,7 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 	local player_importance_wgt = data.unit:in_slot(managers.slot:get_mask("enemies")) and {}
 
 	for u_key, attention_info in pairs(all_attention_objects) do
-		if u_key ~= my_key and not detected_obj[u_key] and (not attention_info.nav_tracker or chk_vis_func(my_tracker, attention_info.nav_tracker)) then
+		if u_key ~= my_key and not detected_obj[u_key] and not Global.blind_enemies and (not attention_info.nav_tracker or chk_vis_func(my_tracker, attention_info.nav_tracker)) then
 			local settings = attention_info.handler:get_attention(my_access, min_reaction, max_reaction, data.team)
 
 			if settings then
@@ -1024,18 +1020,21 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 					else
 						local notice_delay_mul = attention_info.settings.notice_delay_mul or 1
 						delta_prog = dt / speed_mul * notice_delay_mul
-						local peer = managers.network:session():peer_by_unit(attention_info.unit)
 
-						if peer then
-							local slower_detection_multiplier = 0
+						if managers.network:session() ~= nil then
+							local peer = managers.network:session():peer_by_unit(attention_info.unit)
 
-							if peer._id == managers.network:session():local_peer()._id then
-								slower_detection_multiplier = managers.player:upgrade_value("player", "warcry_slower_detection", 0)
-							else
-								slower_detection_multiplier = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_player_slower_detection", 0)
+							if peer then
+								local slower_detection_multiplier = 0
+
+								if peer._id == managers.network:session():local_peer()._id then
+									slower_detection_multiplier = managers.player:upgrade_value("player", "warcry_slower_detection", 0)
+								else
+									slower_detection_multiplier = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_player_slower_detection", 0)
+								end
+
+								delta_prog = delta_prog * (1 - slower_detection_multiplier)
 							end
-
-							delta_prog = delta_prog * (1 - slower_detection_multiplier)
 						end
 					end
 				end
@@ -1107,7 +1106,7 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 				local attention_pos = attention_info.handler:get_detection_m_pos()
 				local dis = mvector3.distance(data.m_pos, attention_info.m_pos)
 
-				if dis < my_data.detection.dis_max * 1.2 and (not attention_info.settings.max_range or dis < attention_info.settings.max_range * (attention_info.settings.range_mul or 1) * 1.2) then
+				if my_data.detection and my_data.detection.dis_max and dis < my_data.detection.dis_max * 1.2 and (not attention_info.settings.max_range or dis < attention_info.settings.max_range * (attention_info.settings.range_mul or 1) * 1.2) then
 					local detect_pos = attention_pos
 					local in_FOV = not attention_info.settings.notice_requires_FOV or data.enemy_slotmask and attention_info.unit:in_slot(data.enemy_slotmask) or CopLogicBase._angle_chk(attention_info.handler, attention_info.settings, data, my_pos, 0.8)
 
@@ -1169,7 +1168,7 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 	return delay
 end
 
--- Lines 1212-1243
+-- Lines 1232-1263
 function CopLogicBase._detection_obj_lost(data, attention_info)
 	CopLogicBase._destroy_detected_attention_object_data(data, attention_info)
 	CopLogicBase._set_attention_obj(data, nil)
@@ -1206,12 +1205,12 @@ function CopLogicBase._detection_obj_lost(data, attention_info)
 	end
 end
 
--- Lines 1245-1247
+-- Lines 1265-1267
 function CopLogicBase.on_search_SO_failed(cop, params)
 	managers.groupai:state():hide_investigate_icon(cop)
 end
 
--- Lines 1249-1258
+-- Lines 1269-1278
 function CopLogicBase.on_search_SO_completed(cop, params)
 	managers.voice_over:guard_back_to_patrol(cop)
 
@@ -1226,13 +1225,17 @@ function CopLogicBase.on_search_SO_completed(cop, params)
 	cop:brain()._SO_id = nil
 end
 
--- Lines 1260-1266
+-- Lines 1280-1290
 function CopLogicBase.on_search_SO_started(cop, params)
 	managers.voice_over:guard_investigate(cop)
 	managers.groupai:state():show_investigate_icon(cop)
+
+	if params.custom_stance then
+		cop:movement():set_stance(params.custom_stance, false, false)
+	end
 end
 
--- Lines 1268-1279
+-- Lines 1292-1303
 function CopLogicBase._upd_look_for_player(data, attention_info)
 	if not data.attention_obj or data.attention_obj.u_key ~= attention_info.u_key then
 		CopLogicBase._set_attention_obj(data, attention_info)
@@ -1249,7 +1252,7 @@ function CopLogicBase._upd_look_for_player(data, attention_info)
 	end
 end
 
--- Lines 1281-1306
+-- Lines 1305-1330
 function CopLogicBase._create_return_from_search_SO(cop, old_objective)
 	local pos = mvector3.copy(cop:movement():m_pos())
 	local nav_seg = managers.navigation:get_nav_seg_from_pos(pos)
@@ -1277,7 +1280,7 @@ function CopLogicBase._create_return_from_search_SO(cop, old_objective)
 	return objective
 end
 
--- Lines 1308-1408
+-- Lines 1332-1432
 function CopLogicBase.register_search_SO(cop, attention_info, position)
 	Application:debug("CopLogicBase.register_search_SO", attention_info, position)
 
@@ -1345,7 +1348,7 @@ function CopLogicBase.register_search_SO(cop, attention_info, position)
 			needs_full_blend = true,
 			type = "act",
 			body_part = 1,
-			variant = CopLogicBase._INVESTIGATE_SO_ANIMS[math.random(#CopLogicBase._INVESTIGATE_SO_ANIMS)],
+			variant = table.random(CopLogicBase._INVESTIGATE_SO_ANIMS),
 			blocks = {
 				light_hurt = -1,
 				hurt = -1,
@@ -1377,7 +1380,7 @@ function CopLogicBase.register_search_SO(cop, attention_info, position)
 	return true
 end
 
--- Lines 1410-1436
+-- Lines 1434-1460
 function CopLogicBase.register_stop_and_look_SO(data, attention_info)
 	local cop = data.unit
 
@@ -1412,7 +1415,7 @@ function CopLogicBase.register_stop_and_look_SO(data, attention_info)
 	managers.groupai:state():show_aiming_icon(cop)
 end
 
--- Lines 1440-1456
+-- Lines 1464-1481
 function CopLogicBase.register_alert_SO(data)
 	if not data.unit:unit_data().mission_element then
 		return
@@ -1435,6 +1438,10 @@ function CopLogicBase.register_alert_SO(data)
 			data = data,
 			alert_point = alert_point
 		}), tostring(data.unit:key()))
+		alert_point:add_event_callback("anim_start", callback(data.unit, CopLogicBase, "on_alert_anim_start", {
+			data = data,
+			alert_point = alert_point
+		}), tostring(data.unit:key()))
 
 		alert_point.executing = true
 		data.internal_data.is_on_alert_SO = true
@@ -1443,7 +1450,7 @@ function CopLogicBase.register_alert_SO(data)
 	end
 end
 
--- Lines 1458-1472
+-- Lines 1483-1497
 function CopLogicBase.on_alert_administered(cop, params)
 	if alive(cop) and Network:is_server() then
 		local is_dead = cop:character_damage():dead()
@@ -1459,7 +1466,18 @@ function CopLogicBase.on_alert_administered(cop, params)
 	end
 end
 
--- Lines 1474-1508
+-- Lines 1499-1512
+function CopLogicBase.on_alert_anim_start(cop, params)
+	if alive(cop) and Network:is_server() then
+		local is_dead = cop:character_damage():dead()
+
+		if not is_dead then
+			cop:sound():say("phone_ringing", true, false)
+		end
+	end
+end
+
+-- Lines 1514-1544
 function CopLogicBase.on_alert_completed(cop, params)
 	params.alert_point.executing = false
 	params.data.internal_data.is_on_alert_SO = false
@@ -1486,13 +1504,7 @@ function CopLogicBase.on_alert_completed(cop, params)
 			local cop_type = tostring(group_state.blame_triggers[cop:movement()._ext_base._tweak_table])
 
 			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "called")
-
-			if cop_type == "civ" then
-				group_state:on_police_called(cop:movement():coolness_giveaway())
-			else
-				group_state:on_police_called(cop:movement():coolness_giveaway())
-			end
-
+			group_state:on_police_called(cop:movement():coolness_giveaway())
 			managers.voice_over:disable()
 		else
 			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "call_interrupted")
@@ -1500,7 +1512,7 @@ function CopLogicBase.on_alert_completed(cop, params)
 	end
 end
 
--- Lines 1511-1520
+-- Lines 1547-1556
 function CopLogicBase.on_alert_failed(cop, params)
 	params.alert_point.executing = false
 	params.data.internal_data.is_on_alert_SO = false
@@ -1512,7 +1524,7 @@ function CopLogicBase.on_alert_failed(cop, params)
 	end
 end
 
--- Lines 1523-1575
+-- Lines 1559-1611
 function CopLogicBase._create_detected_attention_object_data(time, my_unit, u_key, attention_info, settings)
 	local ext_brain = my_unit:brain()
 
@@ -1569,7 +1581,7 @@ function CopLogicBase._create_detected_attention_object_data(time, my_unit, u_ke
 	return new_entry
 end
 
--- Lines 1579-1593
+-- Lines 1615-1629
 function CopLogicBase._destroy_detected_attention_object_data(data, attention_info)
 	attention_info.handler:remove_listener("detect_" .. tostring(data.key))
 
@@ -1588,7 +1600,7 @@ function CopLogicBase._destroy_detected_attention_object_data(data, attention_in
 	data.detected_attention_objects[attention_info.u_key] = nil
 end
 
--- Lines 1597-1613
+-- Lines 1633-1649
 function CopLogicBase._destroy_all_detected_attention_object_data(data)
 	for u_key, attention_info in pairs(data.detected_attention_objects) do
 		attention_info.handler:remove_listener("detect_" .. tostring(data.key))
@@ -1609,7 +1621,7 @@ function CopLogicBase._destroy_all_detected_attention_object_data(data)
 	data.detected_attention_objects = {}
 end
 
--- Lines 1617-1692
+-- Lines 1653-1728
 function CopLogicBase.on_detected_attention_obj_modified(data, modified_u_key)
 	if data.logic.on_detected_attention_obj_modified_internal then
 		data.logic.on_detected_attention_obj_modified_internal(data, modified_u_key)
@@ -1690,7 +1702,7 @@ function CopLogicBase.on_detected_attention_obj_modified(data, modified_u_key)
 	end
 end
 
--- Lines 1696-1766
+-- Lines 1732-1810
 function CopLogicBase._set_attention_obj(data, new_att_obj, new_reaction)
 	local old_att_obj = data.attention_obj
 	data.attention_obj = new_att_obj
@@ -1757,7 +1769,7 @@ function CopLogicBase._set_attention_obj(data, new_att_obj, new_reaction)
 	end
 end
 
--- Lines 1770-1778
+-- Lines 1814-1822
 function CopLogicBase._is_important_to_player(record, my_key)
 	if record.important_enemies then
 		for i, test_e_key in ipairs(record.important_enemies) do
@@ -1768,7 +1780,7 @@ function CopLogicBase._is_important_to_player(record, my_key)
 	end
 end
 
--- Lines 1782-1794
+-- Lines 1826-1838
 function CopLogicBase.should_duck_on_alert(data, alert_data)
 	if not data.important or data.char_tweak.allowed_poses and not data.char_tweak.allowed_poses.crouch or alert_data[1] == "voice" or data.unit:anim_data().crouch or data.unit:movement():chk_action_forbidden("walk") then
 		return
@@ -1781,12 +1793,12 @@ function CopLogicBase.should_duck_on_alert(data, alert_data)
 	end
 end
 
--- Lines 1798-1800
+-- Lines 1842-1844
 function CopLogicBase._chk_nearly_visible_chk_needed(data, attention_info, u_key)
 	return not attention_info.criminal_record or attention_info.is_human_player and CopLogicBase._is_important_to_player(attention_info.criminal_record, data.key)
 end
 
--- Lines 1805-1896
+-- Lines 1849-1940
 function CopLogicBase._chk_relocate(data)
 	if data.objective and data.objective.type == "follow" then
 		if data.is_converted then
@@ -1841,7 +1853,7 @@ function CopLogicBase._chk_relocate(data)
 
 			return true
 		end
-	elseif data.objective and data.objective.type == "defend_area" then
+	elseif data.objective and data.objective.type == "hunt" then
 		local area = data.objective.area
 
 		if area and not next(area.criminal.units) then
@@ -1894,7 +1906,7 @@ function CopLogicBase._chk_relocate(data)
 	return false
 end
 
--- Lines 1901-1953
+-- Lines 1945-1997
 function CopLogicBase.is_obstructed(data, objective, strictness, attention)
 	local my_data = data.internal_data
 	attention = attention or data.attention_obj
@@ -1952,7 +1964,7 @@ function CopLogicBase.is_obstructed(data, objective, strictness, attention)
 	return false, false
 end
 
--- Lines 1957-2130
+-- Lines 2001-2174
 function CopLogicBase._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or CopLogicIdle._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -2108,9 +2120,9 @@ function CopLogicBase._get_priority_attention(data, attention_objects, reaction_
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines 2135-2221
+-- Lines 2179-2265
 function CopLogicBase._upd_suspicion(data, my_data, attention_obj)
-	-- Lines 2144-2169
+	-- Lines 2188-2213
 	local function _exit_func()
 		attention_obj.unit:movement():on_uncovered(data.unit)
 
@@ -2192,7 +2204,7 @@ function CopLogicBase._upd_suspicion(data, my_data, attention_obj)
 	end
 end
 
--- Lines 2225-2249
+-- Lines 2269-2293
 function CopLogicBase.upd_suspicion_decay(data)
 	local my_data = data.internal_data
 
@@ -2215,7 +2227,7 @@ function CopLogicBase.upd_suspicion_decay(data)
 	end
 end
 
--- Lines 2253-2278
+-- Lines 2297-2324
 function CopLogicBase._get_logic_state_from_reaction(data, reaction)
 	local result = nil
 
@@ -2223,7 +2235,9 @@ function CopLogicBase._get_logic_state_from_reaction(data, reaction)
 		reaction = data.attention_obj.reaction
 	end
 
-	local police_is_being_called = managers.groupai:state():chk_enemy_calling_in_area(managers.groupai:state():get_area_from_nav_seg_id(data.unit:movement():nav_tracker():nav_segment()), data.key)
+	local nav_seg = data.unit:movement():nav_tracker():nav_segment()
+	local nav_seg_id = nav_seg and managers.groupai:state():get_area_from_nav_seg_id(nav_seg)
+	local police_is_being_called = nav_seg_id and managers.groupai:state():chk_enemy_calling_in_area(nav_seg_id, data.key)
 
 	if not reaction or reaction <= AIAttentionObject.REACT_SCARED then
 		if data.char_tweak.calls_in and not police_is_being_called and not managers.groupai:state():is_police_called() and not data.unit:movement():cool() and not data.is_converted then
@@ -2242,7 +2256,7 @@ function CopLogicBase._get_logic_state_from_reaction(data, reaction)
 	return result
 end
 
--- Lines 2282-2296
+-- Lines 2328-2342
 function CopLogicBase._chk_call_the_police(data)
 	if not CopLogicBase._can_arrest(data) then
 		return
@@ -2261,7 +2275,7 @@ function CopLogicBase._chk_call_the_police(data)
 	end
 end
 
--- Lines 2300-2347
+-- Lines 2346-2393
 function CopLogicBase.identify_attention_obj_instant(data, att_u_key)
 	local att_obj_data = data.detected_attention_objects[att_u_key]
 	local is_new = not att_obj_data
@@ -2319,17 +2333,17 @@ function CopLogicBase.identify_attention_obj_instant(data, att_u_key)
 	return att_obj_data, is_new
 end
 
--- Lines 2351-2353
+-- Lines 2397-2399
 function CopLogicBase.is_alert_aggressive(alert_type)
 	return CopLogicBase._AGGRESSIVE_ALERT_TYPES[alert_type]
 end
 
--- Lines 2357-2359
+-- Lines 2403-2405
 function CopLogicBase.is_alert_dangerous(alert_type)
 	return CopLogicBase._DANGEROUS_ALERT_TYPES[alert_type]
 end
 
--- Lines 2363-2525
+-- Lines 2409-2571
 function CopLogicBase._evaluate_reason_to_surrender(data, my_data, aggressor_unit)
 	local surrender_tweak = data.char_tweak.surrender
 
@@ -2497,7 +2511,7 @@ function CopLogicBase._evaluate_reason_to_surrender(data, my_data, aggressor_uni
 	return hold_chance < 1 and hold_chance
 end
 
--- Lines 2530-2592
+-- Lines 2576-2638
 function CopLogicBase.on_intimidated(data, amount, aggressor_unit)
 	local surrender = false
 	local my_data = data.internal_data
@@ -2558,7 +2572,7 @@ function CopLogicBase.on_intimidated(data, amount, aggressor_unit)
 	return surrender
 end
 
--- Lines 2596-2599
+-- Lines 2642-2645
 function CopLogicBase._surrender(data, amount, aggressor_unit)
 	local params = {
 		effect = amount,
@@ -2571,12 +2585,12 @@ function CopLogicBase._surrender(data, amount, aggressor_unit)
 	})
 end
 
--- Lines 2603-2605
+-- Lines 2649-2651
 function CopLogicBase._can_arrest(data)
 	return not data.char_tweak.no_arrest and (not data.objective or not data.objective.no_arrest)
 end
 
--- Lines 2609-2643
+-- Lines 2655-2703
 function CopLogicBase.on_attention_obj_identified(data, attention_u_key, attention_info, reason)
 	if not data.unit:unit_data().mugshot_id and not managers.groupai:state():is_police_called() then
 		Application:debug("[CopLogicBase.on_attention_obj_identified] GUARD IDENTIFIED SOMETHING:", attention_info.unit, reason)
@@ -2588,6 +2602,9 @@ function CopLogicBase.on_attention_obj_identified(data, attention_u_key, attenti
 		elseif attention_info.unit:carry_data() then
 			managers.voice_over:guard_saw_bag(data.unit)
 		elseif managers.groupai:state():whisper_mode() and attention_info.unit:character_damage() and attention_info.unit:movement() and attention_info.unit:movement().SO_access then
+			local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+			local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+			local alert_radius = (data.char_tweak.shout_radius or 0) + (data.char_tweak.shout_radius_difficulty and data.char_tweak.shout_radius_difficulty[difficulty_index] or 0)
 			local new_alert = {
 				"vo_cbt",
 				attention_info.unit:movement():m_head_pos(),
@@ -2613,7 +2630,7 @@ function CopLogicBase.on_attention_obj_identified(data, attention_u_key, attenti
 	end
 end
 
--- Lines 2647-2655
+-- Lines 2707-2715
 function CopLogicBase.on_suppressed_state(data)
 	if data.is_suppressed and data.objective then
 		local allow_trans, interrupt = CopLogicBase.is_obstructed(data, data.objective, nil, nil)
@@ -2624,7 +2641,7 @@ function CopLogicBase.on_suppressed_state(data)
 	end
 end
 
--- Lines 2659-2858
+-- Lines 2719-2918
 function CopLogicBase.chk_start_action_dodge(data, reason)
 	if not data.char_tweak.dodge or not data.char_tweak.dodge.occasions[reason] then
 		return
@@ -2816,7 +2833,7 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 	return action
 end
 
--- Lines 2862-2875
+-- Lines 2922-2935
 function CopLogicBase.chk_am_i_aimed_at(data, attention_obj, max_dot)
 	if not attention_obj.is_person then
 		return
@@ -2837,7 +2854,7 @@ function CopLogicBase.chk_am_i_aimed_at(data, attention_obj, max_dot)
 	return max_dot < mvec3_dot(enemy_vec, enemy_look_dir)
 end
 
--- Lines 2879-2902
+-- Lines 2939-2962
 function CopLogicBase._chk_alert_obstructed(my_listen_pos, alert_data)
 	if alert_data[3] then
 		local alert_epicenter = nil
@@ -2869,7 +2886,7 @@ function CopLogicBase._chk_alert_obstructed(my_listen_pos, alert_data)
 	end
 end
 
--- Lines 2906-2917
+-- Lines 2966-2977
 function CopLogicBase._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act
@@ -2882,7 +2899,7 @@ function CopLogicBase._chk_has_old_action(data, my_data)
 	end
 end
 
--- Lines 2921-2934
+-- Lines 2981-2994
 function CopLogicBase._upd_stop_old_action(data, my_data, objective)
 	if not my_data.action_started and objective and objective.action and not data.unit:anim_data().to_idle then
 		if my_data.advancing then
@@ -2907,7 +2924,7 @@ function CopLogicBase._upd_stop_old_action(data, my_data, objective)
 	end
 end
 
--- Lines 2938-2991
+-- Lines 2998-3051
 function CopLogicBase._chk_focus_on_attention_object(data, my_data)
 	local current_attention = data.attention_obj
 
@@ -2966,7 +2983,7 @@ function CopLogicBase._chk_focus_on_attention_object(data, my_data)
 	return true
 end
 
--- Lines 2995-3003
+-- Lines 3055-3063
 function CopLogicBase._chk_request_action_turn_to_look_pos(data, my_data, my_pos, look_pos)
 	local turn_angle = CopLogicBase._chk_turn_needed(data, my_data, my_pos, look_pos)
 
@@ -2977,7 +2994,7 @@ function CopLogicBase._chk_request_action_turn_to_look_pos(data, my_data, my_pos
 	return CopLogicBase._turn_by_spin(data, my_data, turn_angle)
 end
 
--- Lines 3007-3020
+-- Lines 3067-3080
 function CopLogicBase._chk_turn_needed(data, my_data, my_pos, look_pos)
 	local fwd = data.unit:movement():m_rot():y()
 	local target_vec = look_pos - my_pos
@@ -2994,7 +3011,7 @@ function CopLogicBase._chk_turn_needed(data, my_data, my_pos, look_pos)
 	return err_to_correct
 end
 
--- Lines 3024-3034
+-- Lines 3084-3094
 function CopLogicBase._turn_by_spin(data, my_data, spin)
 	local new_action_data = {
 		body_part = 2,
@@ -3008,7 +3025,7 @@ function CopLogicBase._turn_by_spin(data, my_data, spin)
 	end
 end
 
--- Lines 3038-3040
+-- Lines 3098-3100
 function CopLogicBase._start_idle_action_from_act(data)
 	data.unit:brain():action_request({
 		variant = "idle",
@@ -3027,7 +3044,7 @@ function CopLogicBase._start_idle_action_from_act(data)
 	})
 end
 
--- Lines 3045-3054
+-- Lines 3105-3114
 function CopLogicBase._upd_aim_at_player(data, my_data)
 	local focus_enemy = data.attention_obj
 
@@ -3038,7 +3055,7 @@ function CopLogicBase._upd_aim_at_player(data, my_data)
 	end
 end
 
--- Lines 3057-3059
+-- Lines 3117-3119
 function CopLogicBase.chk_should_turn(data, my_data)
 	return not my_data.turning and not my_data.has_old_action
 end

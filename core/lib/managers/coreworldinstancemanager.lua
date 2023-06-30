@@ -679,7 +679,7 @@ function CoreWorldInstanceManager:get_registered_input_elements(mission_id, inst
 	return t[instance_name][instance_input]
 end
 
--- Lines 638-644
+-- Lines 638-651
 function CoreWorldInstanceManager:register_output_event_element(mission_id, instance_name, instance_output, mission_element)
 	self._registered_output_event_elements[mission_id] = self._registered_output_event_elements[mission_id] or {}
 	local t = self._registered_output_event_elements[mission_id]
@@ -689,7 +689,7 @@ function CoreWorldInstanceManager:register_output_event_element(mission_id, inst
 	table.insert(t[instance_name][instance_output], mission_element)
 end
 
--- Lines 646-661
+-- Lines 653-668
 function CoreWorldInstanceManager:get_registered_output_event_elements(mission_id, instance_name, instance_output)
 	local t = self._registered_output_event_elements[mission_id]
 
@@ -708,18 +708,18 @@ function CoreWorldInstanceManager:get_registered_output_event_elements(mission_i
 	return t[instance_name][instance_output]
 end
 
--- Lines 663-666
+-- Lines 670-673
 function CoreWorldInstanceManager:set_instance_params(mission_id, instance_name, params)
 	self._instance_params[mission_id] = self._instance_params[mission_id] or {}
 	self._instance_params[mission_id][instance_name] = params
 end
 
--- Lines 668-670
+-- Lines 675-677
 function CoreWorldInstanceManager:remove_instance_params(mission_id)
 	self._instance_params[mission_id] = {}
 end
 
--- Lines 672-682
+-- Lines 679-689
 function CoreWorldInstanceManager:get_instance_param(mission_id, instance_name, var_name)
 	if not self._instance_params[mission_id] then
 		return nil
@@ -732,7 +732,7 @@ function CoreWorldInstanceManager:get_instance_param(mission_id, instance_name, 
 	return self._instance_params[mission_id][instance_name][var_name]
 end
 
--- Lines 717-723
+-- Lines 724-730
 function CoreWorldInstanceManager:sync_save(data)
 	local state = {
 		instance_params = self._instance_params
@@ -740,7 +740,7 @@ function CoreWorldInstanceManager:sync_save(data)
 	data.CoreWorldInstanceManager = state
 end
 
--- Lines 725-730
+-- Lines 732-737
 function CoreWorldInstanceManager:sync_load(data)
 	local state = data.CoreWorldInstanceManager
 
@@ -749,14 +749,14 @@ function CoreWorldInstanceManager:sync_load(data)
 	end
 end
 
--- Lines 732-736
+-- Lines 739-743
 function CoreWorldInstanceManager:on_simulation_ended()
 	self._registered_input_elements = {}
 	self._registered_output_event_elements = {}
 	self._instance_params = {}
 end
 
--- Lines 738-741
+-- Lines 745-748
 function CoreWorldInstanceManager:clear()
 	self._instance_data = {}
 end

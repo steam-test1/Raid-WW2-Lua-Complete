@@ -355,7 +355,7 @@ function PlayerEquipment:throw_flash_grenade()
 	self._grenade_name = nil
 end
 
--- Lines 324-353
+-- Lines 325-354
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.projectiles[projectile_entry]
@@ -388,18 +388,22 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 355-380
+-- Lines 357-390
 function PlayerEquipment:throw_grenade()
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
 	local dir = self._unit:movement():m_head_rot():y()
+	local equipped_grenade = managers.blackmarket:equipped_grenade()
+	local weapon_data = tweak_data.weapon[equipped_grenade]
+	local say_line = weapon_data.throw_shout_replace or "player_throw_grenade"
 
-	managers.dialog:queue_dialog("player_throw_grenade", {
+	Application:debug("[PlayerEquipment:throw_grenade]", equipped_grenade, say_line)
+	managers.dialog:queue_dialog(say_line, {
 		skip_idle_check = true,
 		instigator = managers.player:local_player()
 	})
 
-	local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(managers.blackmarket:equipped_grenade())
+	local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
 	local cooking_t = nil
 
 	if self._cooking_start then
@@ -418,7 +422,7 @@ function PlayerEquipment:throw_grenade()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 392-396
+-- Lines 402-406
 function PlayerEquipment:use_duck()
 	local soundsource = SoundDevice:create_source("duck")
 
@@ -427,12 +431,12 @@ function PlayerEquipment:use_duck()
 	return true
 end
 
--- Lines 400-402
+-- Lines 410-412
 function PlayerEquipment:from_server_sentry_gun_place_result()
 	self._sentrygun_placement_requested = nil
 end
 
--- Lines 406-411
+-- Lines 416-421
 function PlayerEquipment:destroy()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)

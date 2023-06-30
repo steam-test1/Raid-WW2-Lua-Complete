@@ -341,8 +341,12 @@ function RaidGUIControlButton:enabled()
 	return self._enabled
 end
 
--- Lines 393-403
+-- Lines 393-408
 function RaidGUIControlButton:confirm_pressed()
+	if self._params.no_click then
+		return true
+	end
+
 	if self._selected and self._on_click_callback then
 		self:_on_click_callback()
 
@@ -354,7 +358,7 @@ function RaidGUIControlButton:confirm_pressed()
 	end
 end
 
--- Lines 405-411
+-- Lines 410-416
 function RaidGUIControlButton:set_size(set_w, set_h)
 	self._object:set_size(set_w, set_h)
 
@@ -363,7 +367,7 @@ function RaidGUIControlButton:set_size(set_w, set_h)
 	end
 end
 
--- Lines 413-419
+-- Lines 418-424
 function RaidGUIControlButton:set_center(set_x, set_y)
 	self._object:set_center(set_x, set_y)
 
@@ -372,7 +376,7 @@ function RaidGUIControlButton:set_center(set_x, set_y)
 	end
 end
 
--- Lines 422-449
+-- Lines 427-454
 function RaidGUIControlButton:_animate_press()
 	local t = 0
 	local duration = 0.05
@@ -394,7 +398,7 @@ function RaidGUIControlButton:_animate_press()
 	self._object_text:set_font_size(self._font_size * RaidGUIControlButton.PRESSED_SIZE)
 end
 
--- Lines 451-480
+-- Lines 456-485
 function RaidGUIControlButton:_animate_release()
 	local t = 0
 	local duration = 0.25
@@ -419,7 +423,7 @@ function RaidGUIControlButton:_animate_release()
 	self._object_text:set_font_size(self._font_size)
 end
 
--- Lines 482-499
+-- Lines 487-504
 function RaidGUIControlButton:_animate_show()
 	local duration = 0.25
 	local t = self._object:alpha() * duration
@@ -438,7 +442,7 @@ function RaidGUIControlButton:_animate_show()
 	self:show()
 end
 
--- Lines 501-518
+-- Lines 506-523
 function RaidGUIControlButton:_animate_hide()
 	local duration = 0.25
 	local t = (1 - self._object:alpha()) * duration

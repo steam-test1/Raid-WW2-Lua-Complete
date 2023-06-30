@@ -36,6 +36,7 @@ HUDTeammatePeer.MOUNTED_WEAPON_ICON = "player_panel_status_mounted_weapon"
 HUDTeammatePeer.LOCKPICK_ICON = "player_panel_status_lockpick"
 HUDTeammatePeer.DEAD_ICON = "player_panel_status_dead_ai"
 HUDTeammatePeer.HOST_ICON = "player_panel_host_indicator"
+HUDTeammatePeer.DOWN_ICON = "player_panel_lives_indicator_"
 HUDTeammatePeer.STATES = {
 	{
 		id = "dead",
@@ -79,8 +80,11 @@ HUDTeammatePeer.STATES = {
 		control = "nationality_icon"
 	}
 }
+HUDTeammatePeer.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
+HUDTeammatePeer.CHAT_ICON_MUTED = "voice_chat_muted_icon"
+HUDTeammatePeer.CHAT_PANEL_W = 30
 
--- Lines 66-96
+-- Lines 72-108
 function HUDTeammatePeer:init(i, teammates_panel)
 	self._id = i
 	self._equipment = {}
@@ -106,11 +110,12 @@ function HUDTeammatePeer:init(i, teammates_panel)
 	self:_create_player_level()
 	self:_create_player_health()
 	self:_create_equipment_panel()
+	self:_create_voice_chat_indicator()
 
 	self._status_icon = self._nationality_icon
 end
 
--- Lines 98-108
+-- Lines 110-120
 function HUDTeammatePeer:_create_panel(teammates_panel)
 	local panel_params = {
 		halign = "left",
@@ -124,7 +129,7 @@ function HUDTeammatePeer:_create_panel(teammates_panel)
 	self._object = teammates_panel:panel(panel_params)
 end
 
--- Lines 110-119
+-- Lines 122-131
 function HUDTeammatePeer:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -136,7 +141,7 @@ function HUDTeammatePeer:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
--- Lines 121-130
+-- Lines 133-142
 function HUDTeammatePeer:_create_status_panel()
 	local status_panel_params = {
 		name = "status_panel",
@@ -148,7 +153,7 @@ function HUDTeammatePeer:_create_status_panel()
 	self._status_panel = self._left_panel:panel(status_panel_params)
 end
 
--- Lines 132-168
+-- Lines 144-180
 function HUDTeammatePeer:_create_warcry_bar()
 	local warcry_panel_params = {
 		name = "warcry_panel",
@@ -193,7 +198,7 @@ function HUDTeammatePeer:_create_warcry_bar()
 	self:set_active_warcry("sharpshooter")
 end
 
--- Lines 170-183
+-- Lines 182-195
 function HUDTeammatePeer:_create_nationality_icon()
 	local nationality = "german"
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
@@ -210,7 +215,7 @@ function HUDTeammatePeer:_create_nationality_icon()
 	self._nationality_icon:set_center_y(self._status_panel:h() / 2)
 end
 
--- Lines 185-197
+-- Lines 197-209
 function HUDTeammatePeer:_create_dead_icon()
 	local dead_icon_params = {
 		name = "dead_icon",
@@ -226,7 +231,7 @@ function HUDTeammatePeer:_create_dead_icon()
 	self._dead_icon:set_center_y(self._status_panel:h() / 2)
 end
 
--- Lines 199-211
+-- Lines 211-223
 function HUDTeammatePeer:_create_carry_icon()
 	local temp_carry_icon = "carry_alive"
 	local carry_icon_params = {
@@ -243,7 +248,7 @@ function HUDTeammatePeer:_create_carry_icon()
 	self._carry_icon:set_center_y(self._status_panel:h() / 2)
 end
 
--- Lines 213-225
+-- Lines 225-237
 function HUDTeammatePeer:_create_lockpick_icon()
 	local lockpick_icon_params = {
 		name = "lockpick_icon",
@@ -259,7 +264,7 @@ function HUDTeammatePeer:_create_lockpick_icon()
 	self._lockpick_icon:set_center_y(self._status_panel:h() / 2)
 end
 
--- Lines 227-239
+-- Lines 239-251
 function HUDTeammatePeer:_create_mounted_weapon_icon()
 	local mounted_weapon_icon_params = {
 		name = "mounted_weapon_icon",
@@ -275,7 +280,7 @@ function HUDTeammatePeer:_create_mounted_weapon_icon()
 	self._mounted_weapon_icon:set_center_y(self._status_panel:h() / 2)
 end
 
--- Lines 241-291
+-- Lines 253-303
 function HUDTeammatePeer:_create_timer()
 	local timer_panel_params = {
 		alpha = 0,
@@ -341,7 +346,7 @@ function HUDTeammatePeer:_create_timer()
 	self._timer_text:set_center_y(self._timer_panel:h() / 2 - 3)
 end
 
--- Lines 293-324
+-- Lines 305-336
 function HUDTeammatePeer:_create_interaction_meter()
 	local interaction_meter_panel_params = {
 		layer = 4,
@@ -387,7 +392,7 @@ function HUDTeammatePeer:_create_interaction_meter()
 	self._interaction_meter:set_center_y(self._interaction_meter_panel:h() / 2)
 end
 
--- Lines 326-340
+-- Lines 338-352
 function HUDTeammatePeer:_create_host_indicator()
 	local warcry_panel = self._left_panel:child("warcry_panel")
 	local warcry_background = warcry_panel:child("warcry_background")
@@ -404,7 +409,62 @@ function HUDTeammatePeer:_create_host_indicator()
 	host_indicator:set_bottom(warcry_panel:y() + warcry_background:y() + warcry_background:h() - 4)
 end
 
--- Lines 343-352
+-- Lines 355-380
+function HUDTeammatePeer:_create_voice_chat_indicator()
+	local voice_chat_panel_params = {
+		name = " voice_chat_panel",
+		layer = 30,
+		w = HUDTeammatePeer.CHAT_PANEL_W,
+		h = HUDTeammatePeer.CHAT_PANEL_W
+	}
+	self._voice_chat_panel = self._right_panel:panel(voice_chat_panel_params)
+	local chat_indicator_params_speaking = {
+		name = "chat_indicator_speaking",
+		alpha = 0,
+		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture,
+		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture_rect
+	}
+	self._chat_indicator_speaking = self._voice_chat_panel:bitmap(chat_indicator_params_speaking)
+	local chat_indicator_params_muted = {
+		name = "chat_indicator_muted",
+		alpha = 0,
+		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture,
+		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture_rect
+	}
+	self._chat_indicator_muted = self._voice_chat_panel:bitmap(chat_indicator_params_muted)
+end
+
+-- Lines 382-394
+function HUDTeammatePeer:show_chat_indicator(chat_indicator_name)
+	local chat_indicator = nil
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(1)
+	end
+end
+
+-- Lines 396-408
+function HUDTeammatePeer:hide_chat_indicator(chat_indicator_name)
+	local chat_indicator = nil
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(0)
+	end
+end
+
+-- Lines 411-420
 function HUDTeammatePeer:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -416,7 +476,7 @@ function HUDTeammatePeer:_create_right_panel()
 	self._right_panel = self._object:panel(right_panel_params)
 end
 
--- Lines 354-366
+-- Lines 422-434
 function HUDTeammatePeer:_create_player_name()
 	local player_name_params = {
 		name = "player_name",
@@ -425,7 +485,7 @@ function HUDTeammatePeer:_create_player_name()
 		text = "",
 		y = -2,
 		x = 0,
-		w = self._right_panel:w() - HUDTeammatePeer.PLAYER_LEVEL_W,
+		w = self._right_panel:w() - HUDTeammatePeer.PLAYER_LEVEL_W - HUDTeammatePeer.CHAT_PANEL_W,
 		h = HUDTeammatePeer.PLAYER_NAME_H,
 		font = tweak_data.gui.fonts[HUDTeammatePeer.PLAYER_NAME_FONT],
 		font_size = HUDTeammatePeer.PLAYER_NAME_FONT_SIZE
@@ -433,7 +493,7 @@ function HUDTeammatePeer:_create_player_name()
 	self._player_name = self._right_panel:text(player_name_params)
 end
 
--- Lines 368-386
+-- Lines 436-454
 function HUDTeammatePeer:_create_player_level()
 	local player_level_params = {
 		vertical = "center",
@@ -455,7 +515,7 @@ function HUDTeammatePeer:_create_player_level()
 	end
 end
 
--- Lines 388-420
+-- Lines 456-488
 function HUDTeammatePeer:_create_player_health()
 	local health_panel_params = {
 		name = "health_panel",
@@ -492,7 +552,7 @@ function HUDTeammatePeer:_create_player_health()
 	self._full_health_bar_w = self._health_bar:w()
 end
 
--- Lines 422-429
+-- Lines 490-497
 function HUDTeammatePeer:_create_equipment_panel()
 	local equipment_panel_params = {
 		name = "equipment_panel",
@@ -504,12 +564,12 @@ function HUDTeammatePeer:_create_equipment_panel()
 	self._equipment_panel = self._right_panel:panel(equipment_panel_params)
 end
 
--- Lines 431-433
+-- Lines 499-501
 function HUDTeammatePeer:padding_down()
 	return HUDTeammatePeer.PADDING_DOWN
 end
 
--- Lines 435-450
+-- Lines 503-518
 function HUDTeammatePeer:reset_state()
 	self._equipment_panel:clear()
 
@@ -526,7 +586,7 @@ function HUDTeammatePeer:reset_state()
 	self._left_panel:child("warcry_panel"):set_alpha(1)
 end
 
--- Lines 452-463
+-- Lines 520-531
 function HUDTeammatePeer:set_character_data(data)
 	if data.nationality then
 		local nationality_icon = "player_panel_nationality_" .. tostring(data.nationality)
@@ -540,7 +600,7 @@ function HUDTeammatePeer:set_character_data(data)
 	end
 end
 
--- Lines 465-470
+-- Lines 533-538
 function HUDTeammatePeer:set_health(data)
 	local health_percentage = math.clamp(data.current / data.total, 0, 1)
 
@@ -548,7 +608,7 @@ function HUDTeammatePeer:set_health(data)
 	self._health_bar:set_color(self:_get_color_for_percentage(HUDTeammatePeer.PLAYER_HEALTH_COLORS, health_percentage))
 end
 
--- Lines 472-490
+-- Lines 540-558
 function HUDTeammatePeer:set_active_warcry(warcry)
 	if self._warcry_icon then
 		self._warcry_icon:stop()
@@ -570,7 +630,7 @@ function HUDTeammatePeer:set_active_warcry(warcry)
 	self._warcry_icon:set_center_y(self._status_panel:h() / 2)
 end
 
--- Lines 492-498
+-- Lines 560-566
 function HUDTeammatePeer:set_warcry_meter_fill(data)
 	self._warcry_bar:set_position_z(data.current / data.total)
 
@@ -579,19 +639,19 @@ function HUDTeammatePeer:set_warcry_meter_fill(data)
 	end
 end
 
--- Lines 500-503
+-- Lines 568-571
 function HUDTeammatePeer:go_into_bleedout()
 	HUDTeammatePeer.super.go_into_bleedout(self)
 	self:deactivate_warcry()
 end
 
--- Lines 505-508
+-- Lines 573-576
 function HUDTeammatePeer:activate_warcry(duration)
 	self._warcry_bar:stop()
 	self._warcry_bar:animate(callback(self, self, "_animate_warcry_active"), duration)
 end
 
--- Lines 510-519
+-- Lines 578-587
 function HUDTeammatePeer:deactivate_warcry()
 	if self._warcry_icon then
 		self._warcry_icon:stop()
@@ -603,7 +663,7 @@ function HUDTeammatePeer:deactivate_warcry()
 	self:_remove_active_state("warcry")
 end
 
--- Lines 521-533
+-- Lines 589-601
 function HUDTeammatePeer:set_warcry_ready(value)
 	if self._warcry_icon then
 		self._warcry_icon:stop()
@@ -618,12 +678,18 @@ function HUDTeammatePeer:set_warcry_ready(value)
 	end
 end
 
--- Lines 535-537
+-- Lines 603-611
 function HUDTeammatePeer:set_name(name)
 	self._player_name:set_text(utf8.to_upper(name))
+
+	local name_w = select(3, self._player_name:text_rect())
+	local chat_x = math.min(name_w, self._player_name:w())
+
+	self._voice_chat_panel:set_left(self._player_name:x() + chat_x)
+	self._voice_chat_panel:set_top(self._player_name:y())
 end
 
--- Lines 539-544
+-- Lines 613-618
 function HUDTeammatePeer:set_nationality(nationality)
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
 
@@ -631,16 +697,16 @@ function HUDTeammatePeer:set_nationality(nationality)
 	self._nationality_icon:set_texture_rect(unpack(tweak_data.gui.icons[nationality_icon].texture_rect))
 end
 
--- Lines 546-548
+-- Lines 620-622
 function HUDTeammatePeer:set_level(level)
 	self._player_level:set_text(level)
 end
 
--- Lines 550-551
+-- Lines 624-625
 function HUDTeammatePeer:set_cheater(state)
 end
 
--- Lines 554-566
+-- Lines 628-640
 function HUDTeammatePeer:set_carry_info(carry_id)
 	local carry_tweak_data = tweak_data.carry[carry_id]
 
@@ -655,32 +721,32 @@ function HUDTeammatePeer:set_carry_info(carry_id)
 	end
 end
 
--- Lines 568-570
+-- Lines 642-644
 function HUDTeammatePeer:remove_carry_info()
 	self:_remove_active_state("carry")
 end
 
--- Lines 572-574
+-- Lines 646-648
 function HUDTeammatePeer:show_turret_icon()
 	self:_add_active_state("mounted_weapon")
 end
 
--- Lines 576-578
+-- Lines 650-652
 function HUDTeammatePeer:hide_turret_icon()
 	self:_remove_active_state("mounted_weapon")
 end
 
--- Lines 580-582
+-- Lines 654-656
 function HUDTeammatePeer:show_lockpick_icon()
 	self:_add_active_state("lockpick")
 end
 
--- Lines 584-586
+-- Lines 658-660
 function HUDTeammatePeer:hide_lockpick_icon()
 	self:_remove_active_state("lockpick")
 end
 
--- Lines 588-593
+-- Lines 662-667
 function HUDTeammatePeer:show_host_indicator()
 	local host_indicator = self._left_panel:child("host_indicator")
 
@@ -688,7 +754,7 @@ function HUDTeammatePeer:show_host_indicator()
 	host_indicator:animate(callback(self, self, "_animate_show_host_indicator"))
 end
 
--- Lines 595-600
+-- Lines 669-674
 function HUDTeammatePeer:hide_host_indicator()
 	local host_indicator = self._left_panel:child("host_indicator")
 
@@ -696,7 +762,7 @@ function HUDTeammatePeer:hide_host_indicator()
 	host_indicator:animate(callback(self, self, "_animate_hide_host_indicator"))
 end
 
--- Lines 604-623
+-- Lines 678-697
 function HUDTeammatePeer:add_special_equipment(data)
 	local existing_equipment = nil
 
@@ -720,7 +786,7 @@ function HUDTeammatePeer:add_special_equipment(data)
 	end
 end
 
--- Lines 625-635
+-- Lines 699-709
 function HUDTeammatePeer:remove_special_equipment(id)
 	for i = #self._equipment, 1, -1 do
 		if self._equipment[i]:id() == id then
@@ -734,7 +800,7 @@ function HUDTeammatePeer:remove_special_equipment(id)
 	self:_layout_special_equipment()
 end
 
--- Lines 637-643
+-- Lines 711-717
 function HUDTeammatePeer:set_special_equipment_amount(equipment_id, amount)
 	for i = 1, #self._equipment do
 		if self._equipment[i]:id() == equipment_id then
@@ -743,14 +809,14 @@ function HUDTeammatePeer:set_special_equipment_amount(equipment_id, amount)
 	end
 end
 
--- Lines 645-648
+-- Lines 719-722
 function HUDTeammatePeer:clear_special_equipment()
 	self._equipment_panel:clear()
 
 	self._equipment = {}
 end
 
--- Lines 650-658
+-- Lines 724-732
 function HUDTeammatePeer:_layout_special_equipment()
 	local x = 0
 
@@ -761,7 +827,7 @@ function HUDTeammatePeer:_layout_special_equipment()
 	end
 end
 
--- Lines 662-672
+-- Lines 736-746
 function HUDTeammatePeer:set_condition(icon_data, text)
 	if icon_data == self._state then
 		return
@@ -774,28 +840,28 @@ function HUDTeammatePeer:set_condition(icon_data, text)
 	self._state = icon_data
 end
 
--- Lines 676-681
+-- Lines 750-755
 function HUDTeammatePeer:start_interact(timer)
 	self:_add_active_state("interaction")
 	self._interaction_meter:stop()
 	self._interaction_meter:animate(callback(self, self, "_animate_interact"), timer)
 end
 
--- Lines 683-688
+-- Lines 757-762
 function HUDTeammatePeer:cancel_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_meter:stop()
 	self._interaction_meter:animate(callback(self, self, "_animate_cancel_interact"))
 end
 
--- Lines 690-695
+-- Lines 764-769
 function HUDTeammatePeer:complete_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_meter:stop()
 	self._interaction_meter:animate(callback(self, self, "_animate_complete_interact"))
 end
 
--- Lines 699-714
+-- Lines 773-788
 function HUDTeammatePeer:_animate_interact(interact_image, duration)
 	local t = 0
 
@@ -813,7 +879,7 @@ function HUDTeammatePeer:_animate_interact(interact_image, duration)
 	self._interaction_meter:set_position_z(1)
 end
 
--- Lines 716-729
+-- Lines 790-803
 function HUDTeammatePeer:_animate_cancel_interact()
 	local duration = 0.2
 	local t = (1 - self._interaction_meter:position_z()) * duration
@@ -829,7 +895,7 @@ function HUDTeammatePeer:_animate_cancel_interact()
 	self._interaction_meter:set_position_z(0)
 end
 
--- Lines 731-752
+-- Lines 805-826
 function HUDTeammatePeer:_animate_complete_interact()
 	local size_decrease_duration = 0.18
 	local duration = 0.2
@@ -854,7 +920,7 @@ function HUDTeammatePeer:_animate_complete_interact()
 	self._interaction_meter:set_rotation(0)
 end
 
--- Lines 754-765
+-- Lines 828-839
 function HUDTeammatePeer:_animate_warcry_active(warcry_bar, duration)
 	local t = duration
 
@@ -868,7 +934,7 @@ function HUDTeammatePeer:_animate_warcry_active(warcry_bar, duration)
 	warcry_bar:set_position_z(0)
 end
 
--- Lines 767-784
+-- Lines 841-858
 function HUDTeammatePeer:_animate_warcry_ready()
 	local duration = 0.15
 	local t = 0
@@ -888,7 +954,7 @@ function HUDTeammatePeer:_animate_warcry_ready()
 	self._warcry_bar:set_color(HUDTeammatePlayer.WARCRY_ACTIVE_COLOR)
 end
 
--- Lines 786-803
+-- Lines 860-877
 function HUDTeammatePeer:_animate_warcry_not_ready()
 	local duration = 0.15
 	local t = 0
@@ -908,7 +974,7 @@ function HUDTeammatePeer:_animate_warcry_not_ready()
 	self._warcry_bar:set_color(HUDTeammatePlayer.WARCRY_INACTIVE_COLOR)
 end
 
--- Lines 805-818
+-- Lines 879-892
 function HUDTeammatePeer:_animate_show_host_indicator(host_indicator)
 	local duration = 0.15
 	local t = host_indicator:alpha() * duration
@@ -924,7 +990,7 @@ function HUDTeammatePeer:_animate_show_host_indicator(host_indicator)
 	host_indicator:set_alpha(1)
 end
 
--- Lines 820-833
+-- Lines 894-907
 function HUDTeammatePeer:_animate_hide_host_indicator(host_indicator)
 	local duration = 0.15
 	local t = (1 - host_indicator:alpha()) * duration
@@ -940,7 +1006,7 @@ function HUDTeammatePeer:_animate_hide_host_indicator(host_indicator)
 	host_indicator:set_alpha(0)
 end
 
--- Lines 836-844
+-- Lines 910-918
 function HUDTeammatePeer:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
 		if color_table[i].start_percentage < percentage then

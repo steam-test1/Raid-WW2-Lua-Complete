@@ -59,22 +59,22 @@ function EditUnitEditableGui:init(editor)
 	panel:set_enabled(false)
 end
 
--- Lines 45-56
+-- Lines 45-57
 function EditUnitEditableGui:_create_color_button(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
-	sizer:add(horizontal_sizer, 0, 0, "")
+	sizer:add(horizontal_sizer, 0, 1, "EXPAND")
 	horizontal_sizer:add(EWS:StaticText(panel, "Color:", 0, ""), 0.5, 1, "EXPAND")
 
-	local color_button = EWS:Button(panel, "", "", "BU_EXACTFIT,NO_BORDER")
+	local color_button = EWS:Button(panel, "", "")
 
 	color_button:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
-	horizontal_sizer:add(color_button, 0, 0, "LEFT")
+	horizontal_sizer:add(color_button, 1, 1, "EXPAND")
 
 	self._ctrls.color_button = color_button
 end
 
--- Lines 58-69
+-- Lines 59-70
 function EditUnitEditableGui:_create_text_box(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -89,7 +89,7 @@ function EditUnitEditableGui:_create_text_box(panel, sizer)
 	self._ctrls.gui_text = gui_text
 end
 
--- Lines 71-95
+-- Lines 72-96
 function EditUnitEditableGui:_create_font_size_slider(panel, sizer)
 	local horizontal_sizer = sizer
 	self._font_size_params = {
@@ -113,7 +113,7 @@ function EditUnitEditableGui:_create_font_size_slider(panel, sizer)
 	self._font_size_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_font_size"), nil)
 end
 
--- Lines 97-119
+-- Lines 98-120
 function EditUnitEditableGui:_create_font_combobox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -138,7 +138,7 @@ function EditUnitEditableGui:_create_font_combobox(panel, sizer)
 	self._ctrls.font_list = ctrlr
 end
 
--- Lines 121-159
+-- Lines 122-160
 function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -180,7 +180,7 @@ function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 	self._ctrls.align_vertical = ctrlr
 end
 
--- Lines 161-190
+-- Lines 162-191
 function EditUnitEditableGui:_create_text_wrap_checkbox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -216,7 +216,7 @@ function EditUnitEditableGui:_create_text_wrap_checkbox(panel, sizer)
 	self._ctrls.debug = checkbox
 end
 
--- Lines 192-232
+-- Lines 193-233
 function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -259,7 +259,7 @@ function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, 
 	self._ctrls.blend_list = ctrlr
 end
 
--- Lines 234-258
+-- Lines 235-259
 function EditUnitEditableGui:_create_alpha_slider(panel, sizer)
 	local horizontal_sizer = sizer
 	self._alpha_params = {
@@ -283,7 +283,7 @@ function EditUnitEditableGui:_create_alpha_slider(panel, sizer)
 	self._alpha_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_alpha"), nil)
 end
 
--- Lines 260-290
+-- Lines 261-291
 function EditUnitEditableGui:_create_shape_sliders(panel, sizer)
 	local horizontal_sizer = sizer
 
@@ -319,7 +319,7 @@ function EditUnitEditableGui:_create_shape_sliders(panel, sizer)
 	end
 end
 
--- Lines 293-303
+-- Lines 294-304
 function EditUnitEditableGui:show_color_dialog()
 	local colordlg = EWS:ColourDialog(Global.frame, true, self._ctrls.color_button:background_colour() / 255)
 
@@ -334,7 +334,7 @@ function EditUnitEditableGui:show_color_dialog()
 	end
 end
 
--- Lines 305-316
+-- Lines 306-317
 function EditUnitEditableGui:update_debug()
 	if self._no_event or not Application:production_build() then
 		return
@@ -349,7 +349,7 @@ function EditUnitEditableGui:update_debug()
 	end
 end
 
--- Lines 319-329
+-- Lines 320-330
 function EditUnitEditableGui:update_shape()
 	if self._no_event then
 		return
@@ -369,7 +369,7 @@ function EditUnitEditableGui:update_shape()
 	end
 end
 
--- Lines 331-340
+-- Lines 332-341
 function EditUnitEditableGui:update_alpha()
 	if self._no_event then
 		return
@@ -382,7 +382,7 @@ function EditUnitEditableGui:update_alpha()
 	end
 end
 
--- Lines 342-354
+-- Lines 343-355
 function EditUnitEditableGui:update_render_template()
 	if self._no_event then
 		return
@@ -399,7 +399,7 @@ function EditUnitEditableGui:update_render_template()
 	end
 end
 
--- Lines 356-367
+-- Lines 357-368
 function EditUnitEditableGui:update_blend_mode()
 	if self._no_event then
 		return
@@ -414,7 +414,7 @@ function EditUnitEditableGui:update_blend_mode()
 	end
 end
 
--- Lines 369-382
+-- Lines 370-383
 function EditUnitEditableGui:update_text_wrap()
 	if self._no_event then
 		return
@@ -431,7 +431,7 @@ function EditUnitEditableGui:update_text_wrap()
 	end
 end
 
--- Lines 384-395
+-- Lines 385-396
 function EditUnitEditableGui:update_text_word_wrap()
 	if self._no_event then
 		return
@@ -446,7 +446,7 @@ function EditUnitEditableGui:update_text_word_wrap()
 	end
 end
 
--- Lines 397-408
+-- Lines 398-409
 function EditUnitEditableGui:update_align()
 	if self._no_event then
 		return
@@ -461,7 +461,7 @@ function EditUnitEditableGui:update_align()
 	end
 end
 
--- Lines 410-421
+-- Lines 411-422
 function EditUnitEditableGui:update_vertical()
 	if self._no_event then
 		return
@@ -476,7 +476,7 @@ function EditUnitEditableGui:update_vertical()
 	end
 end
 
--- Lines 423-434
+-- Lines 424-435
 function EditUnitEditableGui:update_font()
 	if self._no_event then
 		return
@@ -491,7 +491,7 @@ function EditUnitEditableGui:update_font()
 	end
 end
 
--- Lines 436-446
+-- Lines 437-447
 function EditUnitEditableGui:update_gui_text(gui_text)
 	if self._no_event then
 		return
@@ -504,7 +504,7 @@ function EditUnitEditableGui:update_gui_text(gui_text)
 	end
 end
 
--- Lines 448-457
+-- Lines 449-458
 function EditUnitEditableGui:update_font_size()
 	if self._no_event then
 		return
@@ -517,7 +517,7 @@ function EditUnitEditableGui:update_font_size()
 	end
 end
 
--- Lines 459-506
+-- Lines 460-507
 function EditUnitEditableGui:is_editable(unit, units)
 	if alive(unit) and unit:editable_gui() then
 		self._ctrls.unit = unit

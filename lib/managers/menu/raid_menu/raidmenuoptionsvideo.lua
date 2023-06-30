@@ -10,7 +10,7 @@ function RaidMenuOptionsVideo:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_video_subtitle")
 end
 
--- Lines 12-24
+-- Lines 12-30
 function RaidMenuOptionsVideo:_layout()
 	RaidMenuOptionsVideo.super._layout(self)
 
@@ -23,7 +23,7 @@ function RaidMenuOptionsVideo:_layout()
 	self:bind_controller_inputs()
 end
 
--- Lines 26-33
+-- Lines 32-39
 function RaidMenuOptionsVideo:close()
 	self:_save_video_values()
 
@@ -33,24 +33,25 @@ function RaidMenuOptionsVideo:close()
 	RaidMenuOptionsVideo.super.close(self)
 end
 
--- Lines 35-189
+-- Lines 41-265
 function RaidMenuOptionsVideo:_layout_video()
 	local start_x = 0
 	local start_y = 320
 	local default_width = 512
-	local btn_advanced_options = {
+	local previous_panel = nil
+	previous_panel = {
 		name = "btn_advanced_options",
 		x = start_x,
 		y = start_y - 128,
-		w = default_width,
 		text = utf8.to_upper(managers.localization:text("menu_options_video_advanced_button")),
 		on_click_callback = callback(self, self, "on_click_options_video_advanced_button"),
 		on_menu_move = {
-			down = "stepper_menu_resolution"
+			down = "stepper_menu_resolution",
+			up = "default_video"
 		}
 	}
-	self._btn_advanced_options = self._root_panel:long_tertiary_button(btn_advanced_options)
-	local stepper_menu_resolution = {
+	self._btn_advanced_options = self._root_panel:long_tertiary_button(previous_panel)
+	previous_panel = {
 		name = "stepper_menu_resolution",
 		x = start_x,
 		y = start_y,
@@ -59,11 +60,11 @@ function RaidMenuOptionsVideo:_layout_video()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_resolution"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_stepper_menu_resolution"),
 		on_menu_move = {
-			down = "stepper_menu_refresh_rate",
-			up = "btn_advanced_options"
+			down = "apply_resolution",
+			up = previous_panel.name
 		}
 	}
-	self._stepper_menu_resolution = self._root_panel:stepper(stepper_menu_resolution)
+	self._stepper_menu_resolution = self._root_panel:stepper(previous_panel)
 
 	self._stepper_menu_resolution:set_value_and_render({
 		x = RenderSettings.resolution.x,
@@ -83,131 +84,187 @@ function RaidMenuOptionsVideo:_layout_video()
 		y = self._stepper_menu_resolution:y(),
 		text = utf8.to_upper(managers.localization:text("menu_button_apply_resolution_refresh_rate")),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
-		on_click_callback = callback(self, self, "on_click_apply_resolution_refresh_rate")
+		on_click_callback = callback(self, self, "on_click_apply_resolution_refresh_rate"),
+		on_menu_move = {
+			down = "stepper_menu_refresh_rate",
+			up = previous_panel.name
+		}
 	}
+	previous_panel.name = apply_resolution.name
 	self._button_apply_video_resolution = self._root_panel:small_button(apply_resolution)
-	local stepper_menu_refresh_rate = {
+	previous_panel = {
 		name = "stepper_menu_refresh_rate",
 		x = start_x,
-		y = stepper_menu_resolution.y + RaidGuiBase.PADDING,
+		y = previous_panel.y + RaidGuiBase.PADDING,
 		w = default_width,
 		description = utf8.to_upper(managers.localization:text("menu_options_video_refresh_rate")),
 		data_source_callback = callback(self, self, "data_source_stepper_menu_refresh_rate"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_refresh_rate"),
 		on_menu_move = {
 			down = "window_mode",
-			up = "stepper_menu_resolution"
+			up = previous_panel.name
 		}
 	}
-	self._stepper_menu_refresh_rate = self._root_panel:stepper(stepper_menu_refresh_rate)
+	self._stepper_menu_refresh_rate = self._root_panel:stepper(previous_panel)
 
 	table.insert(self._fullscreen_only_controls, self._stepper_menu_refresh_rate)
 
-	local stepper_menu_window_mode = {
+	previous_panel = {
 		name = "window_mode",
 		stepper_w = 280,
 		description = utf8.to_upper(managers.localization:text("menu_window_mode")),
 		x = start_x,
-		y = stepper_menu_refresh_rate.y + RaidGuiBase.PADDING,
+		y = previous_panel.y + RaidGuiBase.PADDING,
 		w = default_width,
 		data_source_callback = callback(self, self, "data_source_stepper_menu_window_mode"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_window_mode"),
 		on_menu_move = {
-			down = "subtitle",
-			up = "stepper_menu_refresh_rate"
-		}
-	}
-	self._stepper_menu_window_mode = self._root_panel:stepper(stepper_menu_window_mode)
-	local subtitle = {
-		name = "subtitle",
-		description = utf8.to_upper(managers.localization:text("menu_options_video_subtitle")),
-		x = start_x,
-		y = stepper_menu_window_mode.y + RaidGuiBase.PADDING,
-		w = default_width,
-		on_click_callback = callback(self, self, "on_click_subtitle"),
-		on_menu_move = {
-			down = "hit_confirm_indicator",
-			up = "window_mode"
-		}
-	}
-	self._toggle_menu_subtitle = self._root_panel:toggle_button(subtitle)
-	local hit_confirm_indicator = {
-		name = "hit_confirm_indicator",
-		description = utf8.to_upper(managers.localization:text("menu_options_video_hit_confirm_indicator")),
-		x = start_x,
-		y = subtitle.y + RaidGuiBase.PADDING,
-		w = default_width,
-		on_click_callback = callback(self, self, "on_click_hit_indicator"),
-		on_menu_move = {
-			down = "use_headbob",
-			up = "subtitle"
-		}
-	}
-	self._toggle_menu_hit_indicator = self._root_panel:toggle_button(hit_confirm_indicator)
-	local use_headbob = {
-		name = "use_headbob",
-		description = utf8.to_upper(managers.localization:text("menu_options_video_use_headbob")),
-		x = start_x,
-		y = hit_confirm_indicator.y + RaidGuiBase.PADDING,
-		w = default_width,
-		on_click_callback = callback(self, self, "on_click_headbob"),
-		on_menu_move = {
-			down = "use_camera_accel",
-			up = "hit_confirm_indicator"
-		}
-	}
-	self._toggle_menu_headbob = self._root_panel:toggle_button(use_headbob)
-	local use_camera_accel = {
-		name = "use_camera_accel",
-		description = utf8.to_upper(managers.localization:text("menu_options_video_use_camera_accel")),
-		x = start_x,
-		y = use_headbob.y + RaidGuiBase.PADDING,
-		w = default_width,
-		on_click_callback = callback(self, self, "on_click_camera_accel"),
-		on_menu_move = {
 			down = "effect_quality",
-			up = "use_headbob"
+			up = previous_panel.name
 		}
 	}
-	self._toggle_menu_camera_accel = self._root_panel:toggle_button(use_camera_accel)
-	local effect_quality = {
+	self._stepper_menu_window_mode = self._root_panel:stepper(previous_panel)
+	previous_panel = {
 		name = "effect_quality",
 		value_format = "%02d%%",
 		description = utf8.to_upper(managers.localization:text("menu_options_video_effect_quality")),
 		x = start_x,
-		y = use_camera_accel.y + RaidGuiBase.PADDING,
+		y = previous_panel.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_effect_quality"),
 		on_menu_move = {
 			down = "progress_bar_menu_brightness",
-			up = "use_camera_accel"
+			up = previous_panel.name
 		}
 	}
-	self._progress_bar_menu_effect_quality = self._root_panel:slider(effect_quality)
-	local progress_bar_menu_brightness_params = {
+	self._progress_bar_menu_effect_quality = self._root_panel:slider(previous_panel)
+	previous_panel = {
 		name = "progress_bar_menu_brightness",
 		value = 0,
 		value_format = "%02d%%",
 		description = utf8.to_upper(managers.localization:text("menu_options_video_brightness")),
 		x = start_x,
-		y = effect_quality.y + RaidGuiBase.PADDING,
+		y = previous_panel.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_brightness"),
 		on_menu_move = {
-			up = "effect_quality"
+			down = "subtitle",
+			up = previous_panel.name
 		}
 	}
-	self._progress_bar_menu_brightness = self._root_panel:slider(progress_bar_menu_brightness_params)
+	self._progress_bar_menu_brightness = self._root_panel:slider(previous_panel)
 
 	table.insert(self._fullscreen_only_controls, self._progress_bar_menu_brightness)
 
-	local default_video_params = {
+	start_x = 704
+	start_y = 320
+	previous_panel = {
+		name = "subtitle",
+		description = utf8.to_upper(managers.localization:text("menu_options_video_subtitle")),
+		x = start_x,
+		y = start_y,
+		w = default_width,
+		on_click_callback = callback(self, self, "on_click_subtitle"),
+		on_menu_move = {
+			down = "hit_confirm_indicator",
+			up = previous_panel.name
+		}
+	}
+	self._toggle_menu_subtitle = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
+		name = "hit_confirm_indicator",
+		description = utf8.to_upper(managers.localization:text("menu_options_video_hit_confirm_indicator")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		data_source_callback = callback(self, self, "data_source_stepper_menu_hit_confirm_indicator"),
+		on_click_callback = callback(self, self, "on_click_hit_indicator"),
+		on_menu_move = {
+			down = "hud_special_weapon_panels",
+			up = previous_panel.name
+		}
+	}
+	self._stepper_menu_hit_indicator = self._root_panel:stepper(previous_panel)
+	previous_panel = {
+		name = "hud_special_weapon_panels",
+		description = utf8.to_upper(managers.localization:text("menu_options_video_hud_special_weapon_panels")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		on_click_callback = callback(self, self, "on_click_hud_special_weapon_panels"),
+		on_menu_move = {
+			down = "motion_dot",
+			up = previous_panel.name
+		}
+	}
+	self._toggle_menu_hud_special_weapon_panels = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
+		name = "motion_dot",
+		stepper_w = 280,
+		description = utf8.to_upper(managers.localization:text("menu_options_video_motion_dot")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		data_source_callback = callback(self, self, "data_source_stepper_menu_motion_dot"),
+		on_item_selected_callback = callback(self, self, "on_click_motion_dot"),
+		on_menu_move = {
+			down = "motion_dot_size",
+			up = previous_panel.name
+		}
+	}
+	self._stepper_menu_motion_dot = self._root_panel:stepper(previous_panel)
+	previous_panel = {
+		name = "motion_dot_size",
+		stepper_w = 280,
+		description = utf8.to_upper(managers.localization:text("menu_options_video_motion_dot_size")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		data_source_callback = callback(self, self, "data_source_stepper_menu_motion_dot_size"),
+		on_item_selected_callback = callback(self, self, "on_click_motion_dot_size"),
+		on_menu_move = {
+			down = "hud_special_weapon_panels",
+			up = previous_panel.name
+		}
+	}
+	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
+	previous_panel = {
+		name = "use_headbob",
+		description = utf8.to_upper(managers.localization:text("menu_options_video_use_headbob")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		on_click_callback = callback(self, self, "on_click_headbob"),
+		on_menu_move = {
+			down = "use_camera_accel",
+			up = previous_panel.name
+		}
+	}
+	self._toggle_menu_headbob = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
+		name = "use_camera_accel",
+		description = utf8.to_upper(managers.localization:text("menu_options_video_use_camera_accel")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		on_click_callback = callback(self, self, "on_click_camera_accel"),
+		on_menu_move = {
+			down = "default_video",
+			up = previous_panel.name
+		}
+	}
+	self._toggle_menu_camera_accel = self._root_panel:toggle_button(previous_panel)
+	local default_video_settings_button = {
 		name = "default_video",
 		y = 832,
 		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_video"),
-		layer = RaidGuiBase.FOREGROUND_LAYER
+		layer = RaidGuiBase.FOREGROUND_LAYER,
+		on_menu_move = {
+			down = "btn_advanced_options",
+			up = previous_panel.name
+		}
 	}
-	self._default_video_button = self._root_panel:long_secondary_button(default_video_params)
+	self._default_video_button = self._root_panel:long_secondary_button(default_video_settings_button)
 
 	if managers.raid_menu:is_pc_controller() then
 		self._default_video_button:show()
@@ -216,7 +273,7 @@ function RaidMenuOptionsVideo:_layout_video()
 	end
 end
 
--- Lines 192-198
+-- Lines 268-274
 function gcd(a, b)
 	if b == 0 then
 		return a
@@ -225,7 +282,7 @@ function gcd(a, b)
 	return gcd(b, a % b)
 end
 
--- Lines 200-228
+-- Lines 276-304
 function RaidMenuOptionsVideo:data_source_stepper_menu_resolution()
 	local temp_resolutions = {}
 
@@ -254,7 +311,7 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_resolution()
 	return result
 end
 
--- Lines 230-236
+-- Lines 306-312
 function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 	local result = {}
 
@@ -278,17 +335,17 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 	return result
 end
 
--- Lines 238-239
+-- Lines 314-315
 function RaidMenuOptionsVideo:on_item_selected_options_video_advanced_button()
 end
 
--- Lines 241-244
+-- Lines 317-320
 function RaidMenuOptionsVideo:on_item_selected_stepper_menu_resolution()
 	self._stepper_menu_refresh_rate:refresh_data(true)
 	self:_setup_control_visibility()
 end
 
--- Lines 246-258
+-- Lines 322-334
 function RaidMenuOptionsVideo:_add_distinct_resolution(res, resolutions)
 	if #resolutions == 0 then
 		table.insert(resolutions, {
@@ -307,7 +364,7 @@ function RaidMenuOptionsVideo:_add_distinct_resolution(res, resolutions)
 	end
 end
 
--- Lines 260-277
+-- Lines 336-353
 function RaidMenuOptionsVideo:_get_refresh_rates_for_resolution(resolution)
 	local temp_resolutions = {}
 
@@ -332,18 +389,63 @@ function RaidMenuOptionsVideo:_get_refresh_rates_for_resolution(resolution)
 	return result
 end
 
--- Lines 279-283
+-- Lines 355-359
 function RaidMenuOptionsVideo:data_source_stepper_menu_refresh_rate()
 	local current_resolution = self._stepper_menu_resolution:get_value()
 
 	return self:_get_refresh_rates_for_resolution(current_resolution)
 end
 
--- Lines 285-288
+-- Lines 361-369
+function RaidMenuOptionsVideo:data_source_stepper_menu_hit_confirm_indicator()
+	local tb = {}
+
+	for i = 1, #tweak_data.hit_indicator_modes do
+		table.insert(tb, {
+			text_id = "menu_options_video_hit_indicator_mode_" .. tostring(i),
+			value = i,
+			info = "menu_options_video_hit_indicator_mode_" .. tostring(i)
+		})
+	end
+
+	return tb
+end
+
+-- Lines 371-378
+function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot()
+	local tb = {}
+
+	for i = 1, #tweak_data.motion_dot_modes do
+		table.insert(tb, {
+			text_id = "menu_options_video_motion_dot_mode_" .. tostring(i),
+			value = i,
+			info = "menu_options_video_motion_dot_mode_" .. tostring(i)
+		})
+	end
+
+	return tb
+end
+
+-- Lines 380-386
+function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot_size()
+	local tb = {}
+
+	for i = 1, #tweak_data.motion_dot_modes do
+		table.insert(tb, {
+			text_id = "menu_options_video_motion_dot_size_" .. tostring(i),
+			value = i,
+			info = "menu_options_video_motion_dot_size_" .. tostring(i)
+		})
+	end
+
+	return tb
+end
+
+-- Lines 388-391
 function RaidMenuOptionsVideo:on_item_selected_refresh_rate()
 end
 
--- Lines 290-299
+-- Lines 393-402
 function RaidMenuOptionsVideo:on_click_apply_resolution_refresh_rate()
 	local selected_resolution = self._stepper_menu_resolution:get_value()
 	local selected_refresh_rate = self._stepper_menu_refresh_rate:get_value()
@@ -352,21 +454,21 @@ function RaidMenuOptionsVideo:on_click_apply_resolution_refresh_rate()
 	managers.menu:active_menu().callback_handler:change_resolution_raid(resolution)
 end
 
--- Lines 301-304
+-- Lines 404-407
 function RaidMenuOptionsVideo:on_value_change_effect_quality()
 	local effect_quality = self._progress_bar_menu_effect_quality:get_value() / 100
 
 	managers.menu:active_menu().callback_handler:set_effect_quality_raid(effect_quality)
 end
 
--- Lines 306-309
+-- Lines 409-412
 function RaidMenuOptionsVideo:on_value_change_brightness()
 	local brightness = self._progress_bar_menu_brightness:get_value() / 100 + 0.5
 
 	managers.menu:active_menu().callback_handler:set_brightness_raid(brightness)
 end
 
--- Lines 311-321
+-- Lines 414-424
 function RaidMenuOptionsVideo:on_item_selected_window_mode()
 	local mode = self._stepper_menu_window_mode:get_value()
 
@@ -381,7 +483,7 @@ function RaidMenuOptionsVideo:on_item_selected_window_mode()
 	self:_setup_control_visibility()
 end
 
--- Lines 323-332
+-- Lines 426-435
 function RaidMenuOptionsVideo:set_fullscreen(fullscreen, is_fullscreen, borderless, is_borderless)
 	managers.menu:active_menu().callback_handler:toggle_fullscreen_raid(fullscreen, is_fullscreen, borderless, is_borderless, callback(self, self, "fullscreen_toggled_callback"))
 	self:on_value_change_brightness()
@@ -403,7 +505,7 @@ function RaidMenuOptionsVideo:set_fullscreen(fullscreen, is_fullscreen, borderle
 	end
 end
 
--- Lines 334-346
+-- Lines 437-449
 function RaidMenuOptionsVideo:on_click_default_video()
 	local callback_function = callback(self, self, "callback_default_video")
 	local params = {
@@ -419,7 +521,7 @@ function RaidMenuOptionsVideo:on_click_default_video()
 	managers.menu:show_option_dialog(params)
 end
 
--- Lines 348-361
+-- Lines 451-464
 function RaidMenuOptionsVideo:_get_default_resolution()
 	local default_resolution = Vector3(tweak_data.gui.base_resolution.x, tweak_data.gui.base_resolution.y, tweak_data.gui.base_resolution.z)
 	local supported_resolutions = self:data_source_stepper_menu_resolution()
@@ -438,7 +540,7 @@ function RaidMenuOptionsVideo:_get_default_resolution()
 	return resolution
 end
 
--- Lines 363-379
+-- Lines 466-492
 function RaidMenuOptionsVideo:callback_default_video()
 	managers.menu:active_menu().callback_handler:set_fullscreen_default_raid_no_dialog()
 
@@ -462,13 +564,13 @@ function RaidMenuOptionsVideo:callback_default_video()
 	self:_setup_control_visibility()
 end
 
--- Lines 381-384
+-- Lines 494-497
 function RaidMenuOptionsVideo:fullscreen_toggled_callback()
 	self:_reload_video_and_adv_video_options()
 	self:_setup_control_visibility()
 end
 
--- Lines 386-410
+-- Lines 499-523
 function RaidMenuOptionsVideo:_setup_control_visibility()
 	local is_fullscreen = self._stepper_menu_window_mode:get_value() == "FULLSCREEN"
 	local is_borderless = self._stepper_menu_window_mode:get_value() == "WINDOWED_FULLSCREEN"
@@ -497,23 +599,23 @@ function RaidMenuOptionsVideo:_setup_control_visibility()
 	end
 end
 
--- Lines 412-414
+-- Lines 525-527
 function RaidMenuOptionsVideo:_reload_video_and_adv_video_options()
 	self:_load_video_values()
 end
 
--- Lines 416-452
+-- Lines 529-584
 function RaidMenuOptionsVideo:_load_video_values()
-	local resolution = RenderSettings.resolution
 	local is_fullscreen = managers.viewport:is_fullscreen()
 	local is_borderless = managers.viewport:is_borderless()
 	local subtitle = managers.user:get_setting("subtitle")
-	local hit_indicator = managers.user:get_setting("hit_indicator")
+	local hud_special_weapon_panels = managers.user:get_setting("hud_special_weapon_panels")
 	local objective_reminder = managers.user:get_setting("objective_reminder")
 	local use_headbob = managers.user:get_setting("use_headbob")
 	local use_camera_accel = managers.user:get_setting("use_camera_accel")
 	local effect_quality = managers.user:get_setting("effect_quality")
 	local brightness = managers.user:get_setting("brightness")
+	local resolution = RenderSettings.resolution
 
 	self._stepper_menu_refresh_rate:set_value_and_render(resolution.z, true)
 
@@ -543,56 +645,96 @@ function RaidMenuOptionsVideo:_load_video_values()
 	end
 
 	self._toggle_menu_subtitle:set_value_and_render(subtitle)
-	self._toggle_menu_hit_indicator:set_value_and_render(hit_indicator)
+	self._toggle_menu_hud_special_weapon_panels:set_value_and_render(hud_special_weapon_panels)
 	self._toggle_menu_headbob:set_value_and_render(use_headbob)
 	self._toggle_menu_camera_accel:set_value_and_render(use_camera_accel)
 	self._progress_bar_menu_effect_quality:set_value(effect_quality * 100)
 	self._progress_bar_menu_brightness:set_value((brightness - 0.5) * 100)
+
+	local motion_dot = managers.user:get_setting("motion_dot")
+
+	self._stepper_menu_motion_dot:set_value_and_render(motion_dot)
+
+	local motion_dot_size = managers.user:get_setting("motion_dot_size")
+
+	self._stepper_menu_motion_dot_size:set_value_and_render(motion_dot_size)
+
+	local hit_indicator = managers.user:get_setting("hit_indicator")
+
+	if hit_indicator == true then
+		hit_indicator = 2
+	elseif hit_indicator == false then
+		hit_indicator = 1
+	end
+
+	self._stepper_menu_hit_indicator:set_value_and_render(hit_indicator)
 end
 
--- Lines 454-461
+-- Lines 586-594
 function RaidMenuOptionsVideo:_save_video_values()
 	self:on_click_subtitle()
 	self:on_click_hit_indicator()
+	self:on_click_hud_special_weapon_panels()
 	self:on_click_headbob()
 	self:on_click_camera_accel()
 	self:on_value_change_brightness()
 end
 
--- Lines 463-466
+-- Lines 596-599
 function RaidMenuOptionsVideo:on_click_subtitle()
 	local subtitle = self._toggle_menu_subtitle:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_subtitle_raid(subtitle)
 end
 
--- Lines 468-471
+-- Lines 601-604
 function RaidMenuOptionsVideo:on_click_hit_indicator()
-	local hit_indicator = self._toggle_menu_hit_indicator:get_value()
+	local hit_indicator = self._stepper_menu_hit_indicator:get_value()
 
-	managers.menu:active_menu().callback_handler:toggle_hit_indicator_raid(hit_indicator)
+	managers.menu:active_menu().callback_handler:set_hit_indicator_raid(hit_indicator)
 end
 
--- Lines 473-476
+-- Lines 606-609
+function RaidMenuOptionsVideo:on_click_hud_special_weapon_panels()
+	local value = self._toggle_menu_hud_special_weapon_panels:get_value()
+
+	managers.menu:active_menu().callback_handler:toggle_hud_special_weapon_panels(value)
+end
+
+-- Lines 611-614
+function RaidMenuOptionsVideo:on_click_motion_dot()
+	local value = self._stepper_menu_motion_dot:get_value()
+
+	managers.menu:active_menu().callback_handler:set_motion_dot_raid(value)
+end
+
+-- Lines 616-619
+function RaidMenuOptionsVideo:on_click_motion_dot_size()
+	local value = self._stepper_menu_motion_dot_size:get_value()
+
+	managers.menu:active_menu().callback_handler:set_motion_dot_size_raid(value)
+end
+
+-- Lines 621-624
 function RaidMenuOptionsVideo:on_click_headbob()
 	local use_headbob = self._toggle_menu_headbob:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_headbob_raid(use_headbob)
 end
 
--- Lines 478-481
+-- Lines 626-629
 function RaidMenuOptionsVideo:on_click_camera_accel()
 	local use_camera_accel = self._toggle_menu_camera_accel:get_value()
 
 	managers.user:set_setting("use_camera_accel", use_camera_accel)
 end
 
--- Lines 483-485
+-- Lines 631-633
 function RaidMenuOptionsVideo:on_click_options_video_advanced_button()
 	managers.raid_menu:open_menu("raid_menu_options_video_advanced")
 end
 
--- Lines 490-507
+-- Lines 638-659
 function RaidMenuOptionsVideo:bind_controller_inputs()
 	local bindings = {
 		{
@@ -624,7 +766,7 @@ function RaidMenuOptionsVideo:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 509-513
+-- Lines 661-665
 function RaidMenuOptionsVideo:_apply_video_resolution()
 	Application:trace("RaidMenuOptionsVideo:_apply_vidoe_resolution")
 	self:on_click_apply_resolution_refresh_rate()

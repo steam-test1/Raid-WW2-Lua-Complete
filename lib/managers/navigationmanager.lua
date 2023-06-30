@@ -77,7 +77,7 @@ NavigationManager._sector_grid_size = 500
 function NavigationManager:init()
 	Application:trace("[NavigationManager][init]")
 
-	self._debug = SystemInfo:platform() == Idstring("WIN32") and Application:production_build()
+	self._debug = _G.IS_PC and Application:production_build()
 	self._builder = NavFieldBuilder:new()
 	self._get_room_height_at_pos = self._builder._get_room_height_at_pos
 	self._check_room_overlap_bool = self._builder._check_room_overlap_bool
@@ -754,7 +754,7 @@ function NavigationManager:_draw_nav_blockers()
 		for _, blocker_unit in ipairs(all_blockers) do
 			local id = blocker_unit:unit_data().unit_id
 
-			if registered_blockers[id] then
+			if id <= #registered_blockers and registered_blockers[id] then
 				local draw_pos = blocker_unit:get_object(obj_name):position()
 				local owner_segment_id = registered_blockers[id]
 
@@ -2004,14 +2004,16 @@ function NavigationManager:unreserve_pos(desc)
 	desc.unreserved = true
 end
 
--- Lines 2096-2099
+-- Lines 2096-2101
 function NavigationManager:move_pos_rsrv(desc)
-	self._pos_reservations[desc.id].position = desc.position
+	if self._pos_reservations[desc.id] then
+		self._pos_reservations[desc.id].position = desc.position
 
-	self._quad_field:move_position_reservation(desc.id, desc.position)
+		self._quad_field:move_position_reservation(desc.id, desc.position)
+	end
 end
 
--- Lines 2103-2137
+-- Lines 2105-2139
 function NavigationManager:on_simulation_ended()
 	if self._nav_links then
 		local nav_links = clone(self._nav_links)
@@ -2052,7 +2054,7 @@ function NavigationManager:on_simulation_ended()
 	self._listener_holder = QueuedEventListenerHolder:new()
 end
 
--- Lines 2209-2261
+-- Lines 2211-2263
 function NavigationManager:_send_nav_field_to_engine(load_data, world_id, translation, yaw)
 	if not load_data.segments then
 		return
@@ -2092,7 +2094,7 @@ function NavigationManager:_send_nav_field_to_engine(load_data, world_id, transl
 	self._quad_field:load_nav_data(engine_data, world_id_string, translation, yaw)
 end
 
--- Lines 2265-2274
+-- Lines 2267-2276
 function NavigationManager:get_pos_reservation_id()
 	local i = 1
 	local filters = self._pos_rsrv_filters
@@ -2106,12 +2108,12 @@ function NavigationManager:get_pos_reservation_id()
 	return i
 end
 
--- Lines 2278-2280
+-- Lines 2280-2282
 function NavigationManager:release_pos_reservation_id(id)
 	self._pos_rsrv_filters[id] = nil
 end
 
--- Lines 2284-2318
+-- Lines 2286-2320
 function NavigationManager:convert_nav_link_maneuverability_to_SO_access(maneuverability)
 	local t_ins = table.insert
 	local nav_link_filter = {}
@@ -2156,7 +2158,7 @@ function NavigationManager:convert_nav_link_maneuverability_to_SO_access(maneuve
 	return access_filter
 end
 
--- Lines 2322-2343
+-- Lines 2324-2345
 function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
 	local ai_group_filter = nil
 
@@ -2218,32 +2220,32 @@ function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
 	return access_filter
 end
 
--- Lines 2347-2349
+-- Lines 2349-2351
 function NavigationManager:convert_access_filter_to_number(access_filter)
 	return self._quad_field:convert_access_filter_to_number(access_filter)
 end
 
--- Lines 2353-2355
+-- Lines 2355-2357
 function NavigationManager:convert_access_filter_to_string(access_filter)
 	return self._quad_field:convert_access_filter_to_string(access_filter)
 end
 
--- Lines 2359-2361
+-- Lines 2361-2363
 function NavigationManager:convert_access_filter_to_table(access_filter)
 	return self._quad_field:convert_access_filter_to_table(access_filter)
 end
 
--- Lines 2365-2367
+-- Lines 2367-2369
 function NavigationManager:convert_access_flag(access_flag)
 	return self._quad_field:convert_nav_link_flag_to_bitmask(access_flag)
 end
 
--- Lines 2371-2373
+-- Lines 2373-2375
 function NavigationManager:check_access(access_filter, pos, neg)
 	return self._quad_field:check_access_bitmask(access_filter, pos, neg)
 end
 
--- Lines 2377-2384
+-- Lines 2379-2386
 function NavigationManager:upgrade_access_filter(access_filter_bitmask_old, version)
 	local old_translation = self.ACCESS_FLAGS_OLD[version]
 
@@ -2258,17 +2260,17 @@ function NavigationManager:upgrade_access_filter(access_filter_bitmask_old, vers
 	return access_filter_bitmask_new
 end
 
--- Lines 2388-2390
+-- Lines 2390-2392
 function NavigationManager:get_nav_seg_metadata(nav_seg_id)
 	return self._nav_segments[nav_seg_id]
 end
 
--- Lines 2394-2396
+-- Lines 2396-2398
 function NavigationManager:get_world_for_nav_seg(nav_seg_id)
 	return self._nav_segments[nav_seg_id].world_id
 end
 
--- Lines 2400-2411
+-- Lines 2402-2413
 function NavigationManager:get_nav_seg_for_world(world_id)
 	if not self._worlds[world_id] then
 		return {}
@@ -2288,27 +2290,27 @@ function NavigationManager:get_nav_seg_for_world(world_id)
 	return result
 end
 
--- Lines 2415-2417
+-- Lines 2417-2419
 function NavigationManager:set_location_ID(nav_seg_id, location_id)
 	self:_set_nav_seg_metadata(nav_seg_id, "location_id", location_id)
 end
 
--- Lines 2421-2423
+-- Lines 2423-2425
 function NavigationManager:set_suspicion_multiplier(nav_seg_id, suspicion_mul)
 	self:_set_nav_seg_metadata(nav_seg_id, "suspicion_mul", suspicion_mul)
 end
 
--- Lines 2427-2429
+-- Lines 2429-2431
 function NavigationManager:set_detection_multiplier(nav_seg_id, detection_mul)
 	self:_set_nav_seg_metadata(nav_seg_id, "detection_mul", detection_mul)
 end
 
--- Lines 2433-2435
+-- Lines 2435-2437
 function NavigationManager:set_barrage_allowed(nav_seg_id, barrage_allowed)
 	self:_set_nav_seg_metadata(nav_seg_id, "barrage_allowed", barrage_allowed)
 end
 
--- Lines 2439-2449
+-- Lines 2441-2451
 function NavigationManager:_set_nav_seg_metadata(nav_seg_id, param_name, param_value)
 	local unique_id = self:get_segment_unique_id(0, nav_seg_id)
 
@@ -2323,7 +2325,7 @@ function NavigationManager:_set_nav_seg_metadata(nav_seg_id, param_name, param_v
 	self._builder:set_nav_seg_metadata(nav_seg_id, param_name, param_value)
 end
 
--- Lines 2453-2469
+-- Lines 2455-2471
 function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name, world_id)
 	if self._debug then
 		for i, obs_data in ipairs(self._obstacles) do
@@ -2346,7 +2348,7 @@ function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name, world_
 	})
 end
 
--- Lines 2473-2495
+-- Lines 2475-2497
 function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 
@@ -2374,7 +2376,7 @@ function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	self._obstacles = temp_array
 end
 
--- Lines 2497-2512
+-- Lines 2499-2514
 function NavigationManager:_remove_obstacles_for_world(world_id)
 	local temp_array = {}
 
@@ -2393,7 +2395,7 @@ function NavigationManager:_remove_obstacles_for_world(world_id)
 	self._obstacles = temp_array
 end
 
--- Lines 2516-2652
+-- Lines 2518-2654
 function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 	print("[NavigationManager:clbk_navfield]", event_name, inspect(args[1]), inspect(args2), inspect(args3))
 
@@ -2546,29 +2548,29 @@ function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 	end
 end
 
--- Lines 2654-2657
+-- Lines 2656-2659
 function NavigationManager:advance_nav_stitcher_counter()
 	self._nav_stitcher_counter = self._nav_stitcher_counter + 1
 
 	return self._nav_stitcher_counter
 end
 
--- Lines 2659-2661
+-- Lines 2661-2663
 function NavigationManager:_call_listeners(event, params)
 	self._listener_holder:call(event, params)
 end
 
--- Lines 2665-2667
+-- Lines 2667-2669
 function NavigationManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 2670-2672
+-- Lines 2672-2674
 function NavigationManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 2677-2679
+-- Lines 2679-2681
 function NavigationManager:destroy()
 	self._quad_field:clear_all()
 end

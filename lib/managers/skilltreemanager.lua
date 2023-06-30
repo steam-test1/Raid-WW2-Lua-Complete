@@ -1,12 +1,13 @@
 SkillTreeManager = SkillTreeManager or class()
-SkillTreeManager.VERSION = 21
+SkillTreeManager.VERSION = 22
+SkillTreeManager.VERSION_FORCED = false
 
--- Lines 5-7
+-- Lines 6-8
 function SkillTreeManager:init()
 	self:_setup()
 end
 
--- Lines 9-19
+-- Lines 10-20
 function SkillTreeManager:_setup(reset)
 	if not Global.skilltree_manager or reset then
 		Global.skilltree_manager = {
@@ -19,7 +20,7 @@ function SkillTreeManager:_setup(reset)
 	self._global = Global.skilltree_manager
 end
 
--- Lines 22-27
+-- Lines 23-28
 function SkillTreeManager:get_character_profile_class()
 	if self._global.character_profile_subclass then
 		return self._global.character_profile_subclass
@@ -28,7 +29,7 @@ function SkillTreeManager:get_character_profile_class()
 	return self._global.character_profile_base_class
 end
 
--- Lines 29-34
+-- Lines 30-35
 function SkillTreeManager:get_character_profile_class_data()
 	if self._global.character_profile_subclass then
 		return tweak_data.skilltree.classes[self._global.character_profile_base_class].subclasses[self._global.character_profile_subclass]
@@ -37,7 +38,7 @@ function SkillTreeManager:get_character_profile_class_data()
 	return tweak_data.skilltree.classes[self._global.character_profile_base_class]
 end
 
--- Lines 36-44
+-- Lines 37-45
 function SkillTreeManager:get_character_skilltree()
 	local skill_tree = nil
 
@@ -50,7 +51,7 @@ function SkillTreeManager:get_character_skilltree()
 	return skill_tree
 end
 
--- Lines 46-52
+-- Lines 47-53
 function SkillTreeManager:get_character_automatic_unlock_progression(class)
 	class = class or self:get_character_profile_class()
 	local automatic_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[class]
@@ -58,7 +59,7 @@ function SkillTreeManager:get_character_automatic_unlock_progression(class)
 	return automatic_unlock_progression
 end
 
--- Lines 55-111
+-- Lines 56-112
 function SkillTreeManager:calculate_stats(character_class, applied_skills, pending_skills)
 	local applied_skills_filtered = {}
 
@@ -119,7 +120,7 @@ function SkillTreeManager:calculate_stats(character_class, applied_skills, pendi
 	return stats
 end
 
--- Lines 113-134
+-- Lines 114-135
 function SkillTreeManager:_calculate_health_stat(character_class, applied_skills, pending_skills)
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(character_class)
 	local health_stat_base_rating = class_tweak_data.damage.BASE_HEALTH
@@ -136,7 +137,7 @@ function SkillTreeManager:_calculate_health_stat(character_class, applied_skills
 	return health_stat_base_rating * health_base_rating_multiplier, health_stat_base_rating * health_pending_multiplier
 end
 
--- Lines 136-170
+-- Lines 137-171
 function SkillTreeManager:_calculate_speed_stat(character_class, applied_skills, pending_skills)
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(character_class)
 	local base_speed_total = 0
@@ -172,7 +173,7 @@ function SkillTreeManager:_calculate_speed_stat(character_class, applied_skills,
 	return speed_stat_base_rating * speed_base_rating_multiplier, speed_stat_base_rating * speed_pending_multiplier
 end
 
--- Lines 172-201
+-- Lines 173-202
 function SkillTreeManager:_calculate_stamina_stat(character_class, applied_skills, pending_skills)
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(character_class)
 	local base_stamina_rating = 0
@@ -200,7 +201,7 @@ function SkillTreeManager:_calculate_stamina_stat(character_class, applied_skill
 	return base_stamina_rating * stamina_base_rating_multiplier, base_stamina_rating * stamina_pending_multiplier
 end
 
--- Lines 203-222
+-- Lines 204-232
 function SkillTreeManager:respec()
 	local skill_tree = managers.skilltree:get_character_skilltree()
 	local temp = {}
@@ -215,8 +216,14 @@ function SkillTreeManager:respec()
 					skill_key = skill_key
 				})
 
-				if skill_data.acquires[1] and skill_data.acquires[1].warcry_level then
-					managers.warcry:increase_warcry_level(nil, -skill_data.acquires[1].warcry_level)
+				if skill.acquires then
+					for _, v in ipairs(skill.acquires) do
+						if v.warcry_level then
+							managers.warcry:increase_warcry_level(nil, -v.warcry_level)
+						else
+							managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[2])
+						end
+					end
 				end
 
 				for _, upgrade in ipairs(skill_data.upgrades) do
@@ -230,7 +237,7 @@ function SkillTreeManager:respec()
 	self:on_respec_tree()
 end
 
--- Lines 224-245
+-- Lines 234-255
 function SkillTreeManager:set_character_profile_base_class(character_profile_base_class, skip_aquire)
 	local skill_tree = tweak_data.skilltree.skill_trees[character_profile_base_class]
 
@@ -252,14 +259,14 @@ function SkillTreeManager:set_character_profile_base_class(character_profile_bas
 	end
 end
 
--- Lines 247-251
+-- Lines 257-261
 function SkillTreeManager:_equip_class_default_weapons()
 	managers.blackmarket:equip_class_default_primary()
 	managers.blackmarket:equip_class_default_secondary()
 	managers.blackmarket:equip_generic_default_grenade()
 end
 
--- Lines 253-278
+-- Lines 263-288
 function SkillTreeManager:set_character_profile_subclass(character_profile_subclass)
 	local base_class = tweak_data.skilltree.classes[self._global.character_profile_base_class]
 	local subclass = base_class.subclasses[character_profile_subclass]
@@ -275,7 +282,7 @@ function SkillTreeManager:set_character_profile_subclass(character_profile_subcl
 	self:activate_skill_by_index(1, 1, true)
 end
 
--- Lines 280-286
+-- Lines 290-296
 function SkillTreeManager:reset_skills()
 	Global.skilltree_manager = {
 		VERSION = SkillTreeManager.VERSION,
@@ -284,7 +291,7 @@ function SkillTreeManager:reset_skills()
 	self._global = Global.skilltree_manager
 end
 
--- Lines 290-321
+-- Lines 300-331
 function SkillTreeManager:activate_skill_by_index(level, skill_index, apply_acquires)
 	local skill_tree = self:get_character_skilltree()
 	local level_skills = skill_tree[level]
@@ -294,7 +301,7 @@ function SkillTreeManager:activate_skill_by_index(level, skill_index, apply_acqu
 	self:_activate_skill(skill_entry, skill, apply_acquires)
 end
 
--- Lines 323-334
+-- Lines 333-344
 function SkillTreeManager:unlock_weapons_for_level(level)
 	local weapon_progression = self:get_character_automatic_unlock_progression()
 
@@ -309,7 +316,7 @@ function SkillTreeManager:unlock_weapons_for_level(level)
 	end
 end
 
--- Lines 337-349
+-- Lines 347-359
 function SkillTreeManager:create_breadcrumbs_for_level(level)
 	local character_skilltree = self:get_character_skilltree()
 
@@ -326,14 +333,14 @@ function SkillTreeManager:create_breadcrumbs_for_level(level)
 	end
 end
 
--- Lines 351-355
+-- Lines 361-365
 function SkillTreeManager:apply_automatic_unlocks_for_levels_up_to(level, category_to_apply)
 	for i = 1, level do
 		self:apply_automatic_unlocks_for_level(i, category_to_apply)
 	end
 end
 
--- Lines 357-363
+-- Lines 367-373
 function SkillTreeManager:apply_automatic_unlocks_for_all_levels(category_to_apply)
 	local level_cap = managers.experience:level_cap()
 
@@ -342,7 +349,7 @@ function SkillTreeManager:apply_automatic_unlocks_for_all_levels(category_to_app
 	end
 end
 
--- Lines 365-395
+-- Lines 375-405
 function SkillTreeManager:apply_automatic_unlocks_for_level(level, category_to_apply)
 	local character_unlock_progression = self:get_character_automatic_unlock_progression()
 	local character_skilltree = self:get_character_skilltree()
@@ -375,7 +382,7 @@ function SkillTreeManager:apply_automatic_unlocks_for_level(level, category_to_a
 	end
 end
 
--- Lines 397-402
+-- Lines 407-412
 function SkillTreeManager:_activate_skill(skill_entry, skill, apply_acquires)
 	if skill_entry then
 		skill_entry.active = true
@@ -384,7 +391,7 @@ function SkillTreeManager:_activate_skill(skill_entry, skill, apply_acquires)
 	self:_apply_skill(skill, apply_acquires)
 end
 
--- Lines 404-414
+-- Lines 414-424
 function SkillTreeManager:_apply_skill(skill, apply_acquires)
 	for _, upgrade in ipairs(skill.upgrades) do
 		managers.upgrades:aquire(upgrade, nil, UpgradesManager.AQUIRE_STRINGS[2])
@@ -397,7 +404,7 @@ function SkillTreeManager:_apply_skill(skill, apply_acquires)
 	end
 end
 
--- Lines 416-424
+-- Lines 426-434
 function SkillTreeManager:_acquire(acquire)
 	if acquire.subclass then
 		self:set_character_profile_subclass(acquire.subclass)
@@ -408,18 +415,19 @@ function SkillTreeManager:_acquire(acquire)
 	end
 end
 
--- Lines 426-431
+-- Lines 436-441
 function SkillTreeManager:on_respec_tree()
 	MenuCallbackHandler:_update_outfit_information()
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		managers.statistics:publish_skills_to_steam()
 	end
 end
 
--- Lines 434-442
+-- Lines 444-454
 function SkillTreeManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
+	show_reset_message = true
 
 	if show_reset_message then
 		managers.menu:show_skilltree_reseted()
@@ -430,26 +438,26 @@ function SkillTreeManager:check_reset_message()
 	end
 end
 
--- Lines 446-451
+-- Lines 458-463
 function SkillTreeManager:pack_to_string()
 	local packed_string = managers.skilltree:get_character_profile_class()
 
 	return packed_string
 end
 
--- Lines 453-458
+-- Lines 465-470
 function SkillTreeManager:pack_to_string_from_list(list)
 	local packed_string = managers.skilltree:get_character_profile_class()
 
 	return packed_string
 end
 
--- Lines 462-470
+-- Lines 474-482
 function SkillTreeManager:unpack_from_string(packed_string)
 	return packed_string
 end
 
--- Lines 474-485
+-- Lines 486-497
 function SkillTreeManager:save(data)
 	local state = {
 		version = SkillTreeManager.VERSION,
@@ -463,7 +471,7 @@ function SkillTreeManager:save(data)
 	data.SkillTreeManager = state
 end
 
--- Lines 487-523
+-- Lines 499-533
 function SkillTreeManager:load(data, version)
 	self:reset_skills()
 
@@ -473,7 +481,7 @@ function SkillTreeManager:load(data, version)
 		return
 	end
 
-	if state.version and state.version < SkillTreeManager.VERSION then
+	if state.version and state.version < SkillTreeManager.VERSION or SkillTreeManager.VERSION_FORCED then
 		Application:trace("[SkillTreeManager:load] Saved skilltree version: ", state.version, ", current version: ", SkillTreeManager.VERSION, ". Resetting the skill tree.")
 		self:set_character_profile_base_class(state.character_profile_base_class or SkillTreeTweakData.CLASS_RECON)
 		self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level())
@@ -502,7 +510,7 @@ function SkillTreeManager:load(data, version)
 	managers.blackmarket:_verfify_equipped_category(WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME)
 end
 
--- Lines 526-541
+-- Lines 536-551
 function SkillTreeManager:_activate_skill_tree(skill_tree)
 	for level, skills in ipairs(skill_tree) do
 		for index, skill_entry in ipairs(skills) do
@@ -515,11 +523,11 @@ function SkillTreeManager:_activate_skill_tree(skill_tree)
 	end
 end
 
--- Lines 544-545
+-- Lines 554-555
 function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
 end
 
--- Lines 547-567
+-- Lines 557-577
 function SkillTreeManager:digest_value(value, digest, default)
 	if type(value) == "boolean" then
 		return default or 0
@@ -540,17 +548,17 @@ function SkillTreeManager:digest_value(value, digest, default)
 	return Application:digest_value(value, digest)
 end
 
--- Lines 572-573
+-- Lines 582-583
 function SkillTreeManager:debug()
 end
 
--- Lines 578-585
+-- Lines 588-595
 function SkillTreeManager:reset()
 	Global.skilltree_manager = nil
 
 	self:_setup()
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		managers.statistics:publish_skills_to_steam()
 	end
 end

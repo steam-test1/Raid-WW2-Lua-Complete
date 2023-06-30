@@ -8,9 +8,9 @@ ExperienceGui.CHARACTER_LEVEL_LABEL_FONT_COLOR = tweak_data.gui.colors.raid_grey
 ExperienceGui.SKILLTREE_X = 0
 ExperienceGui.SKILLTREE_Y = 128
 ExperienceGui.SKILL_DETAILS_X = 0
-ExperienceGui.SKILL_DETAILS_Y = 592
-ExperienceGui.RESPEC_X = 1168
-ExperienceGui.RESPEC_Y = 592
+ExperienceGui.SKILL_DETAILS_Y = 300
+ExperienceGui.RESPEC_X = 1368
+ExperienceGui.RESPEC_Y = 675
 ExperienceGui.RESPEC_INSUFFICIENT_X = 1526
 ExperienceGui.RESPEC_UNAVAILABLE_X = 1576
 ExperienceGui.CLASS_INFO_H = 96
@@ -34,10 +34,10 @@ ExperienceGui.STAT_LEVEL_INACTIVE = "stat_level_inactive"
 ExperienceGui.STAT_LEVEL_PENDING = "stat_level_pending"
 ExperienceGui.STATS_W = 560
 ExperienceGui.STATS_H = 160
-ExperienceGui.STATS_CENTER_Y = 750
+ExperienceGui.STATS_CENTER_Y = 878
 ExperienceGui.SINGLE_STAT_W = 256
 
--- Lines 57-66
+-- Lines 56-65
 function ExperienceGui:init(ws, fullscreen_ws, node, component_name)
 	self._closing = false
 
@@ -50,16 +50,15 @@ function ExperienceGui:init(ws, fullscreen_ws, node, component_name)
 	self:_refresh_stats()
 end
 
--- Lines 68-70
+-- Lines 67-69
 function ExperienceGui:_set_initial_data()
 end
 
--- Lines 72-88
+-- Lines 71-90
 function ExperienceGui:_layout()
 	ExperienceGui.super._layout(self)
 	self:_layout_character_base_info()
 	self:_layout_skilltree()
-	self:_layout_skill_details()
 	self:_layout_respec()
 	self:_layout_character_overview()
 	self:_layout_buttons()
@@ -69,7 +68,7 @@ function ExperienceGui:_layout()
 	self:_calculate_respec_visibility()
 end
 
--- Lines 91-160
+-- Lines 93-162
 function ExperienceGui:_layout_character_base_info()
 	local base_info_panel_params = {
 		name = "character_base_info_panel",
@@ -142,7 +141,7 @@ function ExperienceGui:_layout_character_base_info()
 	self._class_icon:set_right(self._nationality_icon:x() - ExperienceGui.INFO_ICONS_PADDING)
 end
 
--- Lines 163-192
+-- Lines 165-194
 function ExperienceGui:_layout_skilltree()
 	if self._skilltrack_panel then
 		self._skilltrack_panel:clear()
@@ -175,7 +174,7 @@ function ExperienceGui:_layout_skilltree()
 	self._skilltrack_progress_bar:give_points(managers.experience:total())
 end
 
--- Lines 195-235
+-- Lines 197-237
 function ExperienceGui:_layout_respec()
 	local params_respecs = {
 		name = "respec",
@@ -223,21 +222,11 @@ function ExperienceGui:_layout_respec()
 	self._cost_additional_label:set_y(ExperienceGui.RESPEC_BUTTON_CENTER_Y - 13)
 end
 
--- Lines 237-244
-function ExperienceGui:_layout_skill_details()
-	local params_skill_details = {
-		name = "skill_details",
-		x = ExperienceGui.SKILL_DETAILS_X,
-		y = ExperienceGui.SKILL_DETAILS_Y
-	}
-	self._skill_details = self._root_panel:create_custom_control(RaidGUIControlSkillDetails, params_skill_details)
-end
-
--- Lines 246-248
+-- Lines 240-242
 function ExperienceGui:_layout_character_overview()
 end
 
--- Lines 251-280
+-- Lines 246-275
 function ExperienceGui:_layout_buttons()
 	local apply_button_params = {
 		name = "apply_button",
@@ -275,7 +264,7 @@ function ExperienceGui:_layout_buttons()
 	self._respec_button:set_y(ExperienceGui.RESPEC_BUTTON_CENTER_Y - self._clear_button:h() / 2)
 end
 
--- Lines 282-333
+-- Lines 278-329
 function ExperienceGui:_layout_stats()
 	local stats_panel_params = {
 		name = "stats_panel",
@@ -329,7 +318,7 @@ function ExperienceGui:_layout_stats()
 	self._stamina_stat:set_right(self._stats_panel:w())
 end
 
--- Lines 335-369
+-- Lines 331-371
 function ExperienceGui:_calculate_respec_visibility()
 	self._cost_label:set_text(managers.gold_economy:respec_cost_string())
 
@@ -369,38 +358,53 @@ function ExperienceGui:_calculate_respec_visibility()
 	end
 end
 
--- Lines 371-373
+-- Lines 373-375
 function ExperienceGui:on_skill_activated(button_data)
 	table.insert(self._activated_skills, button_data)
 end
 
--- Lines 375-382
+-- Lines 379-386
 function ExperienceGui:on_skill_mouse_over(button_data)
 	if button_data.skill_title then
-		local skill_description, color_changes = self:_prepare_skill_description(button_data)
+		managers.menu_component:post_event("highlight")
 
-		self._skill_details:set_skill(button_data.skill, utf8.to_upper(managers.localization:text(button_data.skill_title)), skill_description, color_changes)
+		local skill_flavor, skill_description, color_changes = self:_prepare_skill_description(button_data)
+
 		self._skilltrack_progress_bar:select_node(button_data.level, button_data.index)
+		self._skilltrack_progress_bar:update_skill_details(button_data, skill_flavor, skill_description, color_changes)
 	end
 end
 
--- Lines 384-452
+-- Lines 388-392
+function ExperienceGui:on_skill_mouse_out(button_data)
+	if button_data.skill_title then
+		self._skilltrack_progress_bar:hide_skill_details()
+	end
+end
+
+-- Lines 397-480
 function ExperienceGui:_prepare_skill_description(button_data)
 	local skill = tweak_data.skilltree.skills[button_data.skill]
 	local upgrade_tweak_data = tweak_data.upgrades.definitions[skill.upgrades[1]]
+	local description_raw = managers.localization:text(button_data.skill_description)
+	local description = utf8.sub(description_raw, 0, string.len(description_raw))
+	local stat_line = ""
+	local color_changes = {}
 
 	if skill.acquires and skill.acquires[1] and skill.acquires[1].warcry_level then
-		return self:_prepare_warcry_upgrade_description(button_data.level, skill.acquires[1].warcry_level)
-	elseif not upgrade_tweak_data then
-		return managers.localization:text(button_data.skill_description)
+		stat_line = self:_prepare_warcry_upgrade_description(button_data.level, skill.acquires[1].warcry_level)
+	end
+
+	if not skill.upgrades[1] then
+		Application:error("[ExperienceGui:_prepare_skill_description] NO UPGRADES " .. (skill.stat_desc_id or "stat_desc_id nil"))
+
+		return description, stat_line, color_changes
 	end
 
 	local upgrade = tweak_data.upgrades.definitions[skill.upgrades[1]].upgrade
 	local current_upgrade_level = managers.player:upgrade_level(upgrade.category, upgrade.upgrade)
 	local current_selected_level = self:_upgrade_level_from_selected_skills(skill, button_data.level, button_data.index)
 	local total_upgrade_level = current_upgrade_level + current_selected_level
-	local color_changes = {}
-	local stat_line = nil
 
 	if skill.stat_desc_id then
 		local macros = {}
@@ -413,47 +417,32 @@ function ExperienceGui:_prepare_skill_description(button_data)
 			macros.LEVEL = total_upgrade_level
 		end
 
-		local str_raw = managers.localization:text(skill.stat_desc_id, macros)
-		local str_utf8 = utf8.sub(str_raw, 0, string.len(str_raw))
+		local stat_line_raw = managers.localization:text(skill.stat_desc_id, macros)
+		local stat_line_utf8 = utf8.sub(stat_line_raw, 0, string.len(stat_line_raw))
 
 		if upgrade_tweak_data.description_data then
 			if upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER then
-				self:_prepare_upgrade_stats_type_multiplier(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_multiplier(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_REDUCTIVE_MULTIPLIER then
-				self:_prepare_upgrade_stats_type_reductive_multiplier(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_reductive_multiplier(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER_REDUCTIVE_STRING then
-				self:_prepare_upgrade_stats_type_multiplier_reductive_string(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_multiplier_reductive_string(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_REDUCTION then
-				self:_prepare_upgrade_stats_type_raw_value_reduction(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_raw_value_reduction(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_AMOUNT then
-				self:_prepare_upgrade_stats_type_raw_value_amount(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_raw_value_amount(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_TEMPORARY_REDUCTION then
-				self:_prepare_upgrade_stats_type_temporary_reduction(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_temporary_reduction(stat_line_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			end
 		end
 
 		stat_line = managers.localization:text(skill.stat_desc_id, macros)
 	end
 
-	local description_raw = managers.localization:text(button_data.skill_description)
-	local description = utf8.sub(description_raw, 0, string.len(description_raw))
-
-	if stat_line then
-		description = description .. "\n"
-		local desc_length = string.len(description)
-
-		for index, color_change in pairs(color_changes) do
-			color_change.start_index = color_change.start_index + desc_length
-			color_change.end_index = color_change.end_index + desc_length
-		end
-
-		description = description .. stat_line
-	end
-
-	return description, color_changes
+	return description, stat_line, color_changes
 end
 
--- Lines 454-459
+-- Lines 483-488
 function ExperienceGui:_prepare_warcry_upgrade_description(level, warcry_level_increase)
 	local active_warcry = managers.warcry:get_active_warcry()
 	local target_warcry_level = math.round(level / 10) + 1
@@ -461,7 +450,7 @@ function ExperienceGui:_prepare_warcry_upgrade_description(level, warcry_level_i
 	return active_warcry:get_level_description(target_warcry_level)
 end
 
--- Lines 461-472
+-- Lines 490-501
 function ExperienceGui:_upgrade_level_from_selected_skills(skill, skill_button_level, skill_button_index)
 	local selected_nodes = self._skilltrack_progress_bar:get_selected_nodes()
 	local selected_num = 0
@@ -477,7 +466,7 @@ function ExperienceGui:_upgrade_level_from_selected_skills(skill, skill_button_l
 	return selected_num
 end
 
--- Lines 474-503
+-- Lines 503-532
 function ExperienceGui:_prepare_upgrade_stats_type_raw_value_reduction(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
 	local starting_index = string:find("$REDUCTION;") - 1
@@ -520,7 +509,7 @@ function ExperienceGui:_prepare_upgrade_stats_type_raw_value_reduction(string, c
 	macros.REDUCTION = macro
 end
 
--- Lines 505-534
+-- Lines 534-563
 function ExperienceGui:_prepare_upgrade_stats_type_raw_value_amount(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
 	local starting_index = string:find("$AMOUNT;") - 1
@@ -563,7 +552,7 @@ function ExperienceGui:_prepare_upgrade_stats_type_raw_value_amount(string, curr
 	macros.AMOUNT = macro
 end
 
--- Lines 537-593
+-- Lines 566-622
 function ExperienceGui:_prepare_upgrade_stats_type_temporary_reduction(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
 	local starting_index = string:find("$PERCENTAGE;") - 1
@@ -643,7 +632,7 @@ function ExperienceGui:_prepare_upgrade_stats_type_temporary_reduction(string, c
 	macros.SECONDS = macro
 end
 
--- Lines 595-624
+-- Lines 624-653
 function ExperienceGui:_prepare_upgrade_stats_type_multiplier(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
 	local starting_index = string:find("$PERCENTAGE;") - 1
@@ -686,7 +675,7 @@ function ExperienceGui:_prepare_upgrade_stats_type_multiplier(string, current_le
 	macros.PERCENTAGE = macro
 end
 
--- Lines 626-655
+-- Lines 655-684
 function ExperienceGui:_prepare_upgrade_stats_type_multiplier_reductive_string(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
 	local starting_index = string:find("$PERCENTAGE;") - 1
@@ -729,7 +718,7 @@ function ExperienceGui:_prepare_upgrade_stats_type_multiplier_reductive_string(s
 	macros.PERCENTAGE = macro
 end
 
--- Lines 657-685
+-- Lines 686-714
 function ExperienceGui:_prepare_upgrade_stats_type_reductive_multiplier(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
 	local starting_index = string:find("$PERCENTAGE;") - 1
@@ -772,7 +761,7 @@ function ExperienceGui:_prepare_upgrade_stats_type_reductive_multiplier(string, 
 	macros.PERCENTAGE = macro
 end
 
--- Lines 687-720
+-- Lines 716-749
 function ExperienceGui:_refresh_stats(additional_hover_pending_skill)
 	local character_class = managers.skilltree:get_character_profile_class()
 	local applied_skills = managers.skilltree:get_character_skilltree()
@@ -807,7 +796,7 @@ function ExperienceGui:_refresh_stats(additional_hover_pending_skill)
 	self._stamina_stat:set_value_delta(math.round(stats.stamina.pending))
 end
 
--- Lines 722-745
+-- Lines 751-778
 function ExperienceGui:on_skilltree_selection_changed()
 	local selected_nodes = self._skilltrack_progress_bar:get_selected_nodes()
 	local selected_quantity = 0
@@ -831,7 +820,7 @@ function ExperienceGui:on_skilltree_selection_changed()
 	self:_refresh_stats()
 end
 
--- Lines 760-770
+-- Lines 793-803
 function ExperienceGui:on_click_apply_callback(button_data)
 	local selection_valid = self._skilltrack_progress_bar:is_selection_valid()
 
@@ -848,7 +837,7 @@ function ExperienceGui:on_click_apply_callback(button_data)
 	})
 end
 
--- Lines 772-775
+-- Lines 805-808
 function ExperienceGui:on_click_respec_callback(button_data)
 	local dialog_params = {
 		gold = managers.gold_economy:respec_cost_string(),
@@ -858,13 +847,13 @@ function ExperienceGui:on_click_respec_callback(button_data)
 	managers.menu:show_respec_dialog(dialog_params)
 end
 
--- Lines 777-780
+-- Lines 810-813
 function ExperienceGui:on_click_clear_callback(button_data)
 	self._skilltrack_progress_bar:clear_selection()
 	self:on_skilltree_selection_changed()
 end
 
--- Lines 782-807
+-- Lines 815-840
 function ExperienceGui:on_skill_acquisition_confirmed()
 	local selected_skills = self._skilltrack_progress_bar:get_selected_nodes()
 
@@ -884,11 +873,7 @@ function ExperienceGui:on_skill_acquisition_confirmed()
 	managers.player:replenish_player_weapons()
 end
 
--- Lines 810-811
-function ExperienceGui:on_skill_mouse_out(button_data)
-end
-
--- Lines 813-839
+-- Lines 842-873
 function ExperienceGui:_get_character_skilltree()
 	local skill_tree = managers.skilltree:get_character_skilltree()
 	local tree = {}
@@ -928,12 +913,12 @@ function ExperienceGui:_get_character_skilltree()
 	return tree
 end
 
--- Lines 943-945
+-- Lines 977-979
 function ExperienceGui:data_source_branching_progress_bar()
 	return self:_get_character_skilltree()
 end
 
--- Lines 947-957
+-- Lines 981-991
 function ExperienceGui:close()
 	if self._closing then
 		return
@@ -949,7 +934,7 @@ function ExperienceGui:close()
 	ExperienceGui.super.close(self)
 end
 
--- Lines 964-996
+-- Lines 998-1030
 function ExperienceGui:bind_controller_inputs_initial_state()
 	local have_enough_money = managers.gold_economy:respec_cost() <= managers.gold_economy:current()
 	local respec_binding, respec_legend = nil
@@ -994,72 +979,67 @@ function ExperienceGui:bind_controller_inputs_initial_state()
 	self:set_legend(legend)
 end
 
--- Lines 998-1029
+-- Lines 1032-1093
 function ExperienceGui:bind_controller_inputs_apply_state()
+	local legend = {
+		controller = {},
+		keyboard = {}
+	}
+
+	table.insert(legend.keyboard, {
+		key = "footer_back",
+		callback = callback(self, self, "_on_legend_pc_back", nil)
+	})
+
+	local bindings = {}
+
+	table.insert(legend.controller, "menu_legend_back")
+	table.insert(legend.controller, "menu_legend_player_skill_select")
+	table.insert(bindings, {
+		key = Idstring("menu_controller_shoulder_left"),
+		callback = callback(self, self, "_on_move_panel_left")
+	})
+	table.insert(bindings, {
+		key = Idstring("menu_controller_shoulder_right"),
+		callback = callback(self, self, "_on_move_panel_right")
+	})
+	table.insert(legend.controller, "menu_legend_player_skill_shoulder")
+
 	local have_enough_money = managers.gold_economy:respec_cost() <= managers.gold_economy:current()
-	local respec_binding, respec_legend = nil
 
 	if have_enough_money then
-		respec_binding = {
+		table.insert(bindings, {
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "on_click_respec_callback")
-		}
-		respec_legend = "menu_legend_player_skill_retrain"
+		})
+		table.insert(legend.controller, "menu_legend_player_skill_retrain")
 	end
 
-	local bindings = {
-		{
-			key = Idstring("menu_controller_shoulder_left"),
-			callback = callback(self, self, "_on_move_panel_left")
-		},
-		{
-			key = Idstring("menu_controller_shoulder_right"),
-			callback = callback(self, self, "_on_move_panel_right")
-		},
-		{
-			key = Idstring("menu_controller_face_top"),
-			callback = callback(self, self, "_on_apply_selected_skills")
-		},
-		respec_binding
-	}
-
+	table.insert(bindings, {
+		key = Idstring("menu_controller_face_top"),
+		callback = callback(self, self, "_on_apply_selected_skills")
+	})
+	table.insert(legend.controller, "menu_legend_player_skill_apply")
 	self:set_controller_bindings(bindings, true)
-
-	local legend = {
-		controller = {
-			"menu_legend_back",
-			"menu_legend_player_skill_select",
-			"menu_legend_player_skill_shoulder",
-			"menu_legend_player_skill_apply",
-			respec_legend
-		},
-		keyboard = {
-			{
-				key = "footer_back",
-				callback = callback(self, self, "_on_legend_pc_back", nil)
-			}
-		}
-	}
-
 	self:set_legend(legend)
 end
 
--- Lines 1031-1035
+-- Lines 1095-1099
 function ExperienceGui:_on_move_panel_left()
 	self._skilltrack_progress_bar:shoulder_move_left()
 end
 
--- Lines 1037-1041
+-- Lines 1101-1105
 function ExperienceGui:_on_move_panel_right()
 	self._skilltrack_progress_bar:shoulder_move_right()
 end
 
--- Lines 1043-1047
+-- Lines 1107-1111
 function ExperienceGui:_on_apply_selected_skills()
 	self:on_click_apply_callback()
 end
 
--- Lines 1049-1059
+-- Lines 1113-1123
 function ExperienceGui:do_respec()
 	managers.skilltree:respec()
 	managers.gold_economy:respec()

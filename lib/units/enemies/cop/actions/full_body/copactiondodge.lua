@@ -13,7 +13,7 @@ CopActionDodge._SIDES = {
 	"r"
 }
 
--- Lines 9-58
+-- Lines 9-65
 function CopActionDodge:init(action_desc, common_data)
 	self._common_data = common_data
 	self._ext_base = common_data.ext_base
@@ -41,7 +41,7 @@ function CopActionDodge:init(action_desc, common_data)
 		self._machine:set_parameter(redir_res, action_desc.side, 1)
 
 		if Network:is_server() then
-			local accuracy = math.clamp(math.floor((action_desc.shoot_accuracy or 1) * 10) / 10, 0, 10)
+			local accuracy = math.clamp(math.floor(self:accuracy_multiplier() * 10), 0, 10)
 
 			common_data.ext_network:send("action_dodge_start", self._body_part, CopActionDodge._get_variation_index(action_desc.variation), CopActionDodge._get_side_index(action_desc.side), Rotation(action_desc.direction, math.UP):yaw(), action_desc.speed or 1, accuracy)
 		end
@@ -56,7 +56,7 @@ function CopActionDodge:init(action_desc, common_data)
 	end
 end
 
--- Lines 62-68
+-- Lines 69-75
 function CopActionDodge:on_exit()
 	if Network:is_client() then
 		self._ext_movement:set_m_host_stop_pos(self._ext_movement:m_pos())
@@ -65,7 +65,7 @@ function CopActionDodge:on_exit()
 	end
 end
 
--- Lines 72-103
+-- Lines 79-110
 function CopActionDodge:update(t)
 	if self._ext_anim.dodge then
 		local dt = TimerManager:game():delta_time()
@@ -98,22 +98,22 @@ function CopActionDodge:update(t)
 	end
 end
 
--- Lines 107-109
+-- Lines 114-116
 function CopActionDodge:type()
 	return "dodge"
 end
 
--- Lines 113-115
+-- Lines 120-122
 function CopActionDodge:expired()
 	return self._expired
 end
 
--- Lines 119-121
+-- Lines 126-128
 function CopActionDodge:need_upd()
 	return true
 end
 
--- Lines 125-130
+-- Lines 132-137
 function CopActionDodge:chk_block(action_type, t)
 	if action_type == "death" or action_type == "bleedout" or action_type == "fatal" then
 		return false
@@ -122,12 +122,12 @@ function CopActionDodge:chk_block(action_type, t)
 	return true
 end
 
--- Lines 134-136
+-- Lines 141-143
 function CopActionDodge:timeout()
 	return self._timeout
 end
 
--- Lines 140-146
+-- Lines 147-153
 function CopActionDodge._get_variation_index(var_name)
 	for index, test_var_name in ipairs(CopActionDodge._VARIATIONS) do
 		if var_name == test_var_name then
@@ -136,12 +136,12 @@ function CopActionDodge._get_variation_index(var_name)
 	end
 end
 
--- Lines 150-152
+-- Lines 157-159
 function CopActionDodge.get_variation_name(var_index)
 	return CopActionDodge._VARIATIONS[var_index]
 end
 
--- Lines 156-162
+-- Lines 163-169
 function CopActionDodge._get_side_index(side_name)
 	for index, test_side_name in ipairs(CopActionDodge._SIDES) do
 		if side_name == test_side_name then
@@ -150,12 +150,12 @@ function CopActionDodge._get_side_index(side_name)
 	end
 end
 
--- Lines 166-168
+-- Lines 173-175
 function CopActionDodge.get_side_name(side_index)
 	return CopActionDodge._SIDES[side_index]
 end
 
--- Lines 172-193
+-- Lines 179-200
 function CopActionDodge:_determine_rotation_transition()
 	local wanted_side = self._descriptor.side
 	local end_rot = Rotation(self._descriptor.direction, math.UP)
@@ -175,7 +175,7 @@ function CopActionDodge:_determine_rotation_transition()
 	}
 end
 
--- Lines 197-199
+-- Lines 204-206
 function CopActionDodge:accuracy_multiplier()
 	return self._descriptor.shoot_accuracy or 1
 end

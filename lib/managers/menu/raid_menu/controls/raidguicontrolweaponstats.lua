@@ -69,6 +69,7 @@ function RaidGUIControlWeaponStats:_set_default_values()
 		},
 		accuracy = {
 			value = "00",
+			accuracy_as_spread = false,
 			delta_value = "00",
 			text = self:translate("menu_weapons_stats_accuracy", true)
 		},
@@ -80,7 +81,7 @@ function RaidGUIControlWeaponStats:_set_default_values()
 	}
 end
 
--- Lines 57-67
+-- Lines 57-98
 function RaidGUIControlWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
@@ -124,7 +125,7 @@ function RaidGUIControlWeaponStats:_get_tabs_params()
 	return tabs_params
 end
 
--- Lines 69-97
+-- Lines 100-131
 function RaidGUIControlWeaponStats:set_modified_stats(params)
 	self._values.damage.modified_value = params.damage_modified_value
 	self._values.magazine.modified_value = params.magazine_modified_value
@@ -139,12 +140,15 @@ function RaidGUIControlWeaponStats:set_modified_stats(params)
 		local sign = ""
 		local delta_value = tonumber(item_data.modified_value or 0) - tonumber(item_data.applied_value or 0)
 
-		item:set_value(item_data.applied_value .. "")
-		item:set_value_delta(delta_value)
+		if name == "accuracy" and params.accuracy_as_spread then
+			item:set_value(100 - item_data.applied_value .. "")
+			item:set_value_delta(-delta_value)
+		else
+			item:set_value(item_data.applied_value .. "")
+			item:set_value_delta(delta_value)
+		end
 
-		if delta_value < 0 then
-			item:set_color(tweak_data.gui.colors.progress_green)
-		elseif delta_value > 0 then
+		if delta_value ~= 0 then
 			item:set_color(tweak_data.gui.colors.progress_green)
 		else
 			item:set_label_default_color()
@@ -152,69 +156,85 @@ function RaidGUIControlWeaponStats:set_modified_stats(params)
 	end
 end
 
--- Lines 102-111
+-- Lines 136-160
 function RaidGUIControlWeaponStats:set_applied_stats(params)
 	self._values.damage.applied_value = params.damage_applied_value
 	self._values.magazine.applied_value = params.magazine_applied_value
 	self._values.total_ammo.applied_value = params.total_ammo_applied_value
 	self._values.rate_of_fire.applied_value = params.rate_of_fire_applied_value
 	self._values.accuracy.applied_value = params.accuracy_applied_value
+	self._values.accuracy.accuracy_as_spread = params.accuracy_as_spread
+
+	if params.accuracy_as_spread then
+		self._values.accuracy.text = self:translate("menu_weapons_stats_spread", true)
+	else
+		self._values.accuracy.text = self:translate("menu_weapons_stats_accuracy", true)
+	end
+
+	for _, item in ipairs(self._items) do
+		local name = item:name()
+
+		if name == "accuracy" then
+			item:set_text(self._values.accuracy.text)
+		end
+	end
+
 	self._values.stability.applied_value = params.stability_applied_value
 end
 
--- Lines 113-115
+-- Lines 162-164
 function RaidGUIControlWeaponStats:refresh_data()
 	Application:trace("[RaidGUIControlWeaponStats:refresh_data]")
 end
 
--- Lines 117-118
+-- Lines 166-167
 function RaidGUIControlWeaponStats:_create_bottom_line()
 end
 
--- Lines 120-121
+-- Lines 169-170
 function RaidGUIControlWeaponStats:_initial_tab_selected(tab_idx)
 end
 
--- Lines 123-124
+-- Lines 172-173
 function RaidGUIControlWeaponStats:_tab_selected(tab_idx, callback_param)
 end
 
--- Lines 126-127
+-- Lines 175-176
 function RaidGUIControlWeaponStats:_unselect_all()
 end
 
--- Lines 133-136
+-- Lines 182-185
 function RaidGUIControlWeaponStats:set_selected(value)
 	Application:error("[RaidGUIControlWeaponStats:set_selected] weapon stats control can't be selected")
 
 	self._selected = false
 end
 
--- Lines 138-139
+-- Lines 187-188
 function RaidGUIControlWeaponStats:move_up()
 end
 
--- Lines 141-142
+-- Lines 190-191
 function RaidGUIControlWeaponStats:move_down()
 end
 
--- Lines 144-145
+-- Lines 193-194
 function RaidGUIControlWeaponStats:move_left()
 end
 
--- Lines 147-148
+-- Lines 196-197
 function RaidGUIControlWeaponStats:move_right()
 end
 
--- Lines 151-152
+-- Lines 200-201
 function RaidGUIControlWeaponStats:highlight_on()
 end
 
--- Lines 154-155
+-- Lines 203-204
 function RaidGUIControlWeaponStats:highlight_off()
 end
 
--- Lines 157-159
+-- Lines 206-208
 function RaidGUIControlWeaponStats:mouse_released(o, button, x, y)
 	return false
 end

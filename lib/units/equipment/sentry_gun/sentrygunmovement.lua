@@ -456,7 +456,7 @@ function SentryGunMovement:is_target_visible()
 	return diff_spin < 0 and diff_pitch < 0
 end
 
--- Lines 484-502
+-- Lines 484-507
 function SentryGunMovement:_abandon_turret_logic(target_dir)
 	if not self._attention or not self._attention.unit or not self._attention.unit:movement() then
 		return
@@ -473,10 +473,14 @@ function SentryGunMovement:_abandon_turret_logic(target_dir)
 		return
 	end
 
-	return self:_is_target_close(target_dir)
+	if self:is_target_visible() then
+		return self:_is_target_close(target_dir)
+	else
+		return self:_is_target_close_behind(target_dir)
+	end
 end
 
--- Lines 504-508
+-- Lines 509-513
 function SentryGunMovement:is_unit_behind(target_unit)
 	local direction_to_unit = target_unit:position() - self._m_head_pos
 	local angle_to_unit = self._m_head_fwd:angle(direction_to_unit)
@@ -484,28 +488,29 @@ function SentryGunMovement:is_unit_behind(target_unit)
 	return math.cos(angle_to_unit) < 0
 end
 
--- Lines 510-521
+-- Lines 515-526
 function SentryGunMovement:_is_target_close_behind(target_dir)
 	local player_angle = self._m_head_fwd:angle(target_dir)
 	local player_behind = math.cos(player_angle) < 0
 	local player_distance = (self._m_last_attention_pos - self._m_head_pos):length()
-	local abandon_distance = self._tweak.abandon_proximity or 500
+	local abandon_distance = self._tweak.abandon_proximity or 300
 	local result = player_behind and player_distance < abandon_distance
 
 	return result
 end
 
--- Lines 523-533
+-- Lines 528-540
 function SentryGunMovement:_is_target_close(target_dir)
 	local player_angle = self._m_head_fwd:angle(target_dir)
 	local player_distance = (self._m_last_attention_pos - self._m_head_pos):length()
-	local abandon_distance = self._tweak.abandon_proximity or 500
+	local abandon_distance = self._tweak.abandon_proximity or 300
+	abandon_distance = abandon_distance * (self._tweak.abandon_proximity_visible_mul or 0.33)
 	local result = player_distance < abandon_distance
 
 	return result
 end
 
--- Lines 537-568
+-- Lines 544-575
 function SentryGunMovement:_ramp_value(value, err, vel, slowdown_at, max_vel, min_vel, acc, dt)
 	local sign_err = math.sign(err)
 	local abs_err = math.abs(err)
@@ -537,7 +542,7 @@ function SentryGunMovement:_ramp_value(value, err, vel, slowdown_at, max_vel, mi
 	return at_end, new_vel, new_val
 end
 
--- Lines 572-652
+-- Lines 579-659
 function SentryGunMovement:_upd_movement(dt)
 	local target_dir = self:_get_target_dir(self._attention, dt)
 	local unit_fwd_polar = self._unit_fwd:to_polar()
@@ -601,7 +606,7 @@ function SentryGunMovement:_upd_movement(dt)
 	end
 end
 
--- Lines 656-703
+-- Lines 663-710
 function SentryGunMovement:_upd_hacking(t, dt)
 	if not self._tweak.ECM_HACKABLE then
 		return
@@ -655,7 +660,7 @@ function SentryGunMovement:_upd_hacking(t, dt)
 	end
 end
 
--- Lines 718-741
+-- Lines 725-748
 function SentryGunMovement:give_recoil()
 	local recoil_tweak = self._tweak.recoil
 	local th = recoil_tweak.horizontal
@@ -675,7 +680,7 @@ function SentryGunMovement:give_recoil()
 	self:set_look_vec3(new_fwd_vec3)
 end
 
--- Lines 745-796
+-- Lines 752-803
 function SentryGunMovement:_get_target_dir(attention, dt)
 	if not attention then
 		if self._switched_off and self._switch_off_rot then
@@ -737,48 +742,48 @@ function SentryGunMovement:_get_target_dir(attention, dt)
 	end
 end
 
--- Lines 800-802
+-- Lines 807-809
 function SentryGunMovement:tased()
 	return false
 end
 
--- Lines 806-808
+-- Lines 813-815
 function SentryGunMovement:on_deactivated()
 	self:on_death()
 end
 
--- Lines 812-815
+-- Lines 819-822
 function SentryGunMovement:on_death()
 	self._unit:set_extension_update_enabled(Idstring("movement"), false)
 	self._unit:weapon():set_laser_enabled(nil, nil)
 end
 
--- Lines 819-821
+-- Lines 826-828
 function SentryGunMovement:synch_allow_fire(...)
 	self._unit:brain():synch_allow_fire(..., true)
 end
 
--- Lines 825-827
+-- Lines 832-834
 function SentryGunMovement:warming_up(t)
 	return t < self._warmup_t
 end
 
--- Lines 831-833
+-- Lines 838-840
 function SentryGunMovement:is_activating()
 	return self._activating
 end
 
--- Lines 837-839
+-- Lines 844-846
 function SentryGunMovement:is_inactivating()
 	return self._inactivating
 end
 
--- Lines 843-845
+-- Lines 850-852
 function SentryGunMovement:is_inactivated()
 	return self._inactivated
 end
 
--- Lines 849-855
+-- Lines 856-862
 function SentryGunMovement:switch_off(fixed)
 	self._switched_off = true
 	self._switch_off_rot = nil
@@ -788,14 +793,14 @@ function SentryGunMovement:switch_off(fixed)
 	end
 end
 
--- Lines 859-862
+-- Lines 866-869
 function SentryGunMovement:switch_on()
 	self._switched_off = false
 
 	self:set_active(true)
 end
 
--- Lines 866-896
+-- Lines 873-903
 function SentryGunMovement:save(save_data)
 	local my_save_data = {}
 	save_data.movement = my_save_data
@@ -828,7 +833,7 @@ function SentryGunMovement:save(save_data)
 	my_save_data.pitch_rot = self._pitch_obj:rotation()
 end
 
--- Lines 900-935
+-- Lines 907-942
 function SentryGunMovement:load(save_data)
 	if not save_data or not save_data.movement then
 		return
@@ -866,14 +871,14 @@ function SentryGunMovement:load(save_data)
 	self._spin_obj:set_rotation(my_save_data.pitch_rot)
 end
 
--- Lines 939-942
+-- Lines 946-949
 function SentryGunMovement:clbk_team_def()
 	self._team = managers.groupai:state():team_data(self._team.id)
 
 	managers.groupai:state():remove_listener("SentryGunMovement_team_def_" .. tostring(self._unit:key()))
 end
 
--- Lines 946-978
+-- Lines 953-985
 function SentryGunMovement:set_team(team_data)
 	if self._original_team then
 		self._original_team = team_data
@@ -905,27 +910,27 @@ function SentryGunMovement:set_team(team_data)
 	end
 end
 
--- Lines 982-984
+-- Lines 989-991
 function SentryGunMovement:team()
 	return self._team
 end
 
--- Lines 988-990
+-- Lines 995-997
 function SentryGunMovement:cool()
 	return managers.groupai:state():whisper_mode()
 end
 
--- Lines 993-995
+-- Lines 1000-1002
 function SentryGunMovement:not_cool_t()
 	return not managers.groupai:state():whisper_mode() and managers.groupai:state():whisper_mode_change_t()
 end
 
--- Lines 999-1001
+-- Lines 1006-1008
 function SentryGunMovement:rearming()
 	return self._rearming
 end
 
--- Lines 1005-1021
+-- Lines 1012-1028
 function SentryGunMovement:rearm()
 	self._updator = callback(self, self, "_update_rearming")
 	self._rearming = true
@@ -940,12 +945,12 @@ function SentryGunMovement:rearm()
 	self._unit:weapon():update_laser()
 end
 
--- Lines 1025-1027
+-- Lines 1032-1034
 function SentryGunMovement:repairing()
 	return self._repairing
 end
 
--- Lines 1031-1043
+-- Lines 1038-1050
 function SentryGunMovement:repair()
 	self._updator = callback(self, self, "_update_repairing")
 
@@ -960,7 +965,7 @@ function SentryGunMovement:repair()
 	end
 end
 
--- Lines 1047-1067
+-- Lines 1054-1074
 function SentryGunMovement:pre_destroy()
 	if Network:is_server() then
 		self:set_attention()

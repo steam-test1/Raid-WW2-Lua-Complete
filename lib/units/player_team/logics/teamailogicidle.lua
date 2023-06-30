@@ -520,7 +520,7 @@ function TeamAILogicIdle._upd_enemy_detection(data)
 	if data.logic._upd_sneak_spotting then
 		data.logic._upd_sneak_spotting(data, my_data)
 	else
-		debug_pause("[TeamAILogicIdle._upd_enemy_detection]  data.logic._upd_sneak_spotting is nil. Pissible cause: unit shouldn't be able to search for player")
+		debug_pause("[TeamAILogicIdle._upd_enemy_detection]  data.logic._upd_sneak_spotting is nil. Possible cause: unit shouldn't be able to search for player")
 	end
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicIdle._upd_enemy_detection, data, data.t + delay)

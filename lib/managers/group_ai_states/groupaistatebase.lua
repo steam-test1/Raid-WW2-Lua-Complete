@@ -7,7 +7,7 @@ local mvec3_l_sq = mvector3.length_sq
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
 GroupAIStateBase = GroupAIStateBase or class()
-GroupAIStateBase._nr_important_cops = 3
+GroupAIStateBase._nr_important_cops = 5
 GroupAIStateBase.BLAME_SYNC = {
 	"empty",
 	"gunfire",
@@ -313,7 +313,7 @@ function GroupAIStateBase:remove_alert_listener(id)
 	end
 end
 
--- Lines 324-382
+-- Lines 322-403
 function GroupAIStateBase:propagate_alert(alert_data)
 	if managers.network:session() and Network and not Network:is_server() then
 		managers.network:session():send_to_host("propagate_alert", alert_data[1], alert_data[2], alert_data[3], alert_data[4], alert_data[5], alert_data[6])
@@ -334,12 +334,12 @@ function GroupAIStateBase:propagate_alert(alert_data)
 		if alert_epicenter then
 			local alert_rad_sq = alert_data[3] * alert_data[3]
 
-			-- Lines 347-349
+			-- Lines 361-363
 			function proximity_chk_func(listener_pos)
 				return mvec3_dis_sq(alert_epicenter, listener_pos) < alert_rad_sq
 			end
 		else
-			-- Lines 351-353
+			-- Lines 365-367
 			function proximity_chk_func()
 				return true
 			end
@@ -371,7 +371,7 @@ function GroupAIStateBase:propagate_alert(alert_data)
 	end
 end
 
--- Lines 386-390
+-- Lines 413-417
 function GroupAIStateBase:set_drama_decay_period(period)
 	self:_claculate_drama_value()
 
@@ -379,7 +379,7 @@ function GroupAIStateBase:set_drama_decay_period(period)
 	self._drama_data.last_calculate_t = self._t
 end
 
--- Lines 395-401
+-- Lines 422-428
 function GroupAIStateBase:_claculate_drama_value()
 	local drama_data = self._drama_data
 	local dt = self._t - drama_data.last_calculate_t
@@ -389,7 +389,7 @@ function GroupAIStateBase:_claculate_drama_value()
 	self:_add_drama(adj)
 end
 
--- Lines 405-423
+-- Lines 432-450
 function GroupAIStateBase:_add_drama(amount)
 	local drama_data = self._drama_data
 	local new_val = math.clamp(drama_data.amount + amount, 0, 1)
@@ -414,11 +414,11 @@ function GroupAIStateBase:_add_drama(amount)
 	end
 end
 
--- Lines 427-429
+-- Lines 454-456
 function GroupAIStateBase:_on_drama_zone_change()
 end
 
--- Lines 433-460
+-- Lines 460-487
 function GroupAIStateBase:calm_ai()
 	self._player_weapons_hot = false
 	self._enemy_weapons_hot = false
@@ -454,7 +454,7 @@ function GroupAIStateBase:calm_ai()
 	end
 end
 
--- Lines 464-469
+-- Lines 491-496
 function GroupAIStateBase:on_player_weapons_hot()
 	if not self._player_weapons_hot then
 		self._player_weapons_hot = true
@@ -463,12 +463,12 @@ function GroupAIStateBase:on_player_weapons_hot()
 	end
 end
 
--- Lines 473-475
+-- Lines 500-502
 function GroupAIStateBase:player_weapons_hot()
 	return self._player_weapons_hot
 end
 
--- Lines 479-504
+-- Lines 506-531
 function GroupAIStateBase:on_police_called(called_reason)
 	if not self._ai_enabled then
 		return
@@ -496,7 +496,7 @@ function GroupAIStateBase:on_police_called(called_reason)
 	managers.queued_tasks:queue("set_mountable_turrets", self.set_available_turrets_as_mountable, self, nil, 3)
 end
 
--- Lines 506-542
+-- Lines 533-569
 function GroupAIStateBase:teleport_team_ai()
 	local distance_treshold = tweak_data.criminals.loud_teleport_distance_treshold * tweak_data.criminals.loud_teleport_distance_treshold
 
@@ -544,7 +544,7 @@ function GroupAIStateBase:teleport_team_ai()
 	end
 end
 
--- Lines 544-553
+-- Lines 571-580
 function GroupAIStateBase:_do_teleport_ai(params)
 	local u = params.unit
 
@@ -555,7 +555,7 @@ function GroupAIStateBase:_do_teleport_ai(params)
 	end
 end
 
--- Lines 555-563
+-- Lines 582-590
 function GroupAIStateBase:set_available_turrets_as_mountable()
 	for _, turret in pairs(self._usable_turret_units) do
 		if turret:is_available() then
@@ -564,17 +564,17 @@ function GroupAIStateBase:set_available_turrets_as_mountable()
 	end
 end
 
--- Lines 565-567
+-- Lines 592-594
 function GroupAIStateBase:set_reason_called(called_reason)
 	self._called_reason = self._called_reason or called_reason
 end
 
--- Lines 571-573
+-- Lines 598-600
 function GroupAIStateBase:on_gangsters_called(called_reason)
 	self:on_police_called(called_reason)
 end
 
--- Lines 577-632
+-- Lines 604-659
 function GroupAIStateBase:on_enemy_weapons_hot(is_delayed_callback)
 	Application:debug("[GroupAIStateBase:on_enemy_weapons_hot]", self._police_call_clbk_id, is_delayed_callback)
 
@@ -603,7 +603,7 @@ function GroupAIStateBase:on_enemy_weapons_hot(is_delayed_callback)
 			managers.worldcollection:set_alarm_for_world_id(world_id, true)
 		end
 
-		managers.music:raid_music_state_change("control")
+		managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_CONTROL)
 
 		if managers.network:session() then
 			managers.network:session():send_to_peers_synched("group_ai_event", self:get_sync_event_id("enemy_weapons_hot"), self:get_sync_blame_id(self._called_reason))
@@ -634,28 +634,28 @@ function GroupAIStateBase:on_enemy_weapons_hot(is_delayed_callback)
 	end
 end
 
--- Lines 636-639
+-- Lines 663-666
 function GroupAIStateBase:on_police_weapons_hot(called_reason)
 	self:set_reason_called(called_reason)
 	self:on_enemy_weapons_hot(false)
 end
 
--- Lines 643-645
+-- Lines 670-672
 function GroupAIStateBase:on_gangster_weapons_hot(called_reason)
 	self:on_police_weapons_hot(called_reason)
 end
 
--- Lines 649-651
+-- Lines 676-678
 function GroupAIStateBase:is_police_called()
 	return self._police_called
 end
 
--- Lines 655-657
+-- Lines 682-684
 function GroupAIStateBase:enemy_weapons_hot()
 	return self._enemy_weapons_hot
 end
 
--- Lines 661-688
+-- Lines 688-715
 function GroupAIStateBase:_clbk_switch_enemies_to_not_cool()
 	for u_key, unit_data in pairs(self._police) do
 		local nav_seg = unit_data.tracker:nav_segment()
@@ -690,7 +690,7 @@ function GroupAIStateBase:_clbk_switch_enemies_to_not_cool()
 	self._switch_to_not_cool_clbk_id = nil
 end
 
--- Lines 692-711
+-- Lines 719-738
 function GroupAIStateBase:_clbk_switch_enemies_to_cool()
 	for u_key, unit_data in pairs(self._police) do
 		if not unit_data.unit:movement():cool() then
@@ -717,7 +717,7 @@ function GroupAIStateBase:_clbk_switch_enemies_to_cool()
 	self._switch_to_cool_clbk_id = nil
 end
 
--- Lines 715-732
+-- Lines 742-759
 function GroupAIStateBase:_hostage_hint_clbk()
 	if not self._ai_enabled then
 		return
@@ -738,7 +738,7 @@ function GroupAIStateBase:_hostage_hint_clbk()
 	end
 end
 
--- Lines 736-769
+-- Lines 763-796
 function GroupAIStateBase:_radio_chatter_clbk()
 	if self._ai_enabled and not self:get_assault_mode() then
 		local optimal_dist = 500
@@ -771,17 +771,17 @@ function GroupAIStateBase:_radio_chatter_clbk()
 	managers.enemy:add_delayed_clbk("_radio_chatter_clbk", self._radio_clbk, Application:time() + 30 + math.random(0, 20))
 end
 
--- Lines 773-775
+-- Lines 800-802
 function GroupAIStateBase:police_hostage_count()
 	return self._police_hostage_headcount
 end
 
--- Lines 779-781
+-- Lines 806-808
 function GroupAIStateBase:hostage_count()
 	return self._hostage_headcount
 end
 
--- Lines 785-800
+-- Lines 812-827
 function GroupAIStateBase:has_room_for_police_hostage()
 	local nr_hostages_allowed = 0
 
@@ -802,7 +802,7 @@ GroupAIStateBase.PATH = "gamedata/comments"
 GroupAIStateBase.FILE_EXTENSION = "comment"
 GroupAIStateBase.FULL_PATH = GroupAIStateBase.PATH .. "." .. GroupAIStateBase.FILE_EXTENSION
 
--- Lines 808-820
+-- Lines 835-847
 function GroupAIStateBase:_parse_teammate_comments()
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 	self.teammate_comments = {}
@@ -817,7 +817,7 @@ function GroupAIStateBase:_parse_teammate_comments()
 	end
 end
 
--- Lines 822-828
+-- Lines 849-855
 function GroupAIStateBase:_parse_teammate_comment(data)
 	local event = data.event
 	local allow = data.allow_first_person or false
@@ -829,7 +829,7 @@ function GroupAIStateBase:_parse_teammate_comment(data)
 	table.insert(self.teammate_comment_names, event)
 end
 
--- Lines 832-892
+-- Lines 859-919
 function GroupAIStateBase:teammate_comment(trigger_unit, message, pos, pos_based, radius, sync)
 	if radius == 0 then
 		radius = nil
@@ -885,17 +885,17 @@ function GroupAIStateBase:teammate_comment(trigger_unit, message, pos, pos_based
 	end
 end
 
--- Lines 894-896
+-- Lines 921-923
 function GroupAIStateBase:sync_teammate_comment(message, pos, pos_based, radius)
 	self:teammate_comment(nil, self.teammate_comment_names[message], pos, pos_based, radius, false)
 end
 
--- Lines 898-900
+-- Lines 925-927
 function GroupAIStateBase:sync_teammate_comment_instigator(unit, message)
 	self:teammate_comment(unit, self.teammate_comment_names[message], nil, false, nil, false)
 end
 
--- Lines 905-951
+-- Lines 932-978
 function GroupAIStateBase:on_hostage_state(state, key, police, skip_announcement)
 	local d = state and 1 or -1
 
@@ -950,23 +950,28 @@ function GroupAIStateBase:on_hostage_state(state, key, police, skip_announcement
 	end
 end
 
--- Lines 955-957
+-- Lines 982-984
 function GroupAIStateBase:_police_announce_retreat()
 end
 
--- Lines 961-964
+-- Lines 988-991
 function GroupAIStateBase:set_difficulty(value)
 	self._difficulty_value = math.clamp(value, 0, 1)
 
 	self:_calculate_difficulty_ratio()
 end
 
--- Lines 966-968
+-- Lines 993-995
 function GroupAIStateBase:get_difficulty()
 	return self._difficulty_value
 end
 
--- Lines 972-1011
+-- Lines 999-1001
+function GroupAIStateBase:toggle_debug_draw_state()
+	self:set_debug_draw_state(not self._draw_enabled)
+end
+
+-- Lines 1003-1042
 function GroupAIStateBase:set_debug_draw_state(b)
 	if b and not self._draw_enabled then
 		local ws = Overlay:newgui():create_screen_workspace()
@@ -1007,7 +1012,7 @@ function GroupAIStateBase:set_debug_draw_state(b)
 	self._draw_enabled = b
 end
 
--- Lines 1015-1020
+-- Lines 1046-1051
 function GroupAIStateBase:on_unit_detection_updated(unit)
 	if self._draw_enabled then
 		local draw_pos = unit:movement():m_head_pos()
@@ -1016,7 +1021,7 @@ function GroupAIStateBase:on_unit_detection_updated(unit)
 	end
 end
 
--- Lines 1024-1035
+-- Lines 1055-1067
 function GroupAIStateBase:_calculate_difficulty_ratio()
 	local ramp = tweak_data.group_ai.difficulty_curve_points
 	local diff = math.clamp(self._difficulty_value, self._difficulty_value, 1)
@@ -1028,14 +1033,24 @@ function GroupAIStateBase:_calculate_difficulty_ratio()
 
 	self._difficulty_point_index = i
 	self._difficulty_ramp = (diff - (ramp[i - 1] or 0)) / ((ramp[i] or 1) - (ramp[i - 1] or 0))
+
+	print("self._difficulty_ramp", self._difficulty_ramp)
 end
 
--- Lines 1039-1041
+-- Lines 1071-1085
 function GroupAIStateBase:get_difficulty_dependent_value(tweak_values)
-	return math.lerp(tweak_values[self._difficulty_point_index], tweak_values[self._difficulty_point_index + 1], self._difficulty_ramp)
+	if #tweak_values > 1 then
+		if self._difficulty_point_index <= #tweak_values then
+			return math.lerp(tweak_values[self._difficulty_point_index], tweak_values[math.min(self._difficulty_point_index + 1, #tweak_values)], self._difficulty_ramp)
+		else
+			return tweak_values[#tweak_values]
+		end
+	else
+		return tweak_values[self._difficulty_point_index]
+	end
 end
 
--- Lines 1045-1086
+-- Lines 1089-1130
 function GroupAIStateBase:criminal_spotted(unit)
 	local u_key = unit:key()
 	local u_sighting = self._criminals[u_key]
@@ -1090,7 +1105,7 @@ function GroupAIStateBase:criminal_spotted(unit)
 	end
 end
 
--- Lines 1090-1098
+-- Lines 1134-1142
 function GroupAIStateBase:get_last_world_ids_for_criminals()
 	local worlds = {}
 
@@ -1103,7 +1118,7 @@ function GroupAIStateBase:get_last_world_ids_for_criminals()
 	return worlds
 end
 
--- Lines 1100-1149
+-- Lines 1144-1193
 function GroupAIStateBase:on_criminal_nav_seg_change(unit, nav_seg_id)
 	local u_key = unit:key()
 	local u_sighting = self._criminals[u_key]
@@ -1162,12 +1177,12 @@ function GroupAIStateBase:on_criminal_nav_seg_change(unit, nav_seg_id)
 	end
 end
 
--- Lines 1153-1155
+-- Lines 1197-1199
 function GroupAIStateBase:criminal_record(u_key)
 	return self._criminals[u_key]
 end
 
--- Lines 1159-1170
+-- Lines 1203-1214
 function GroupAIStateBase:on_enemy_engaging(unit, other_u_key)
 	local u_key = unit:key()
 	local e_data = self._police[u_key]
@@ -1184,7 +1199,7 @@ function GroupAIStateBase:on_enemy_engaging(unit, other_u_key)
 	sighting.engaged[u_key] = e_data
 end
 
--- Lines 1174-1184
+-- Lines 1218-1228
 function GroupAIStateBase:on_enemy_disengaging(unit, other_u_key)
 	local u_key = unit:key()
 	local sighting = self._criminals[other_u_key]
@@ -1198,12 +1213,12 @@ function GroupAIStateBase:on_enemy_disengaging(unit, other_u_key)
 	sighting.engaged[u_key] = nil
 end
 
--- Lines 1188-1190
+-- Lines 1232-1234
 function GroupAIStateBase:on_tase_start(cop_key, criminal_key)
 	self._criminals[criminal_key].being_tased = cop_key
 end
 
--- Lines 1194-1199
+-- Lines 1238-1243
 function GroupAIStateBase:on_tase_end(criminal_key)
 	local record = self._criminals[criminal_key]
 
@@ -1212,7 +1227,7 @@ function GroupAIStateBase:on_tase_end(criminal_key)
 	end
 end
 
--- Lines 1203-1211
+-- Lines 1247-1255
 function GroupAIStateBase:on_arrest_start(enemy_key, criminal_key)
 	local sighting = self._criminals[criminal_key]
 	local arrest = sighting.being_arrested
@@ -1226,7 +1241,7 @@ function GroupAIStateBase:on_arrest_start(enemy_key, criminal_key)
 	end
 end
 
--- Lines 1215-1223
+-- Lines 1259-1267
 function GroupAIStateBase:on_arrest_end(enemy_key, criminal_key)
 	local sighting = self._criminals[criminal_key]
 
@@ -1239,7 +1254,7 @@ function GroupAIStateBase:on_arrest_end(enemy_key, criminal_key)
 	end
 end
 
--- Lines 1227-1272
+-- Lines 1271-1316
 function GroupAIStateBase:on_simulation_started()
 	self:set_AI_enabled(true)
 
@@ -1280,7 +1295,7 @@ function GroupAIStateBase:on_simulation_started()
 	self:_init_team_tables()
 end
 
--- Lines 1276-1348
+-- Lines 1320-1392
 function GroupAIStateBase:on_simulation_ended()
 	self:set_AI_enabled(false)
 	self:set_debug_draw_state(false)
@@ -1356,7 +1371,7 @@ function GroupAIStateBase:on_simulation_ended()
 	end
 end
 
--- Lines 1352-1369
+-- Lines 1396-1413
 function GroupAIStateBase:on_enemy_registered(unit)
 	if self._anticipated_police_force > 0 then
 		self._anticipated_police_force = self._anticipated_police_force - 1
@@ -1377,7 +1392,7 @@ function GroupAIStateBase:on_enemy_registered(unit)
 	end
 end
 
--- Lines 1373-1380
+-- Lines 1417-1424
 function GroupAIStateBase:is_enemy_special(unit)
 	local category_name = unit:base()._tweak_table
 	local category = self._special_units[category_name]
@@ -1389,7 +1404,7 @@ function GroupAIStateBase:is_enemy_special(unit)
 	return category[unit:key()]
 end
 
--- Lines 1384-1394
+-- Lines 1428-1438
 function GroupAIStateBase:criminal_hurt_drama(unit, attacker, dmg_percent)
 	local drama_data = self._drama_data
 	local drama_amount = drama_data.actions.criminal_hurt * dmg_percent
@@ -1404,7 +1419,7 @@ function GroupAIStateBase:criminal_hurt_drama(unit, attacker, dmg_percent)
 	self:_add_drama(drama_amount)
 end
 
--- Lines 1398-1486
+-- Lines 1442-1530
 function GroupAIStateBase:on_enemy_unregistered(unit)
 	if self:is_unit_in_phalanx_minion_data(unit:key()) then
 		self:unregister_phalanx_minion(unit:key())
@@ -1506,7 +1521,7 @@ function GroupAIStateBase:on_enemy_unregistered(unit)
 	end
 end
 
--- Lines 1490-1497
+-- Lines 1534-1541
 function GroupAIStateBase:on_civilian_unregistered(unit)
 	local u_key = unit:key()
 
@@ -1519,22 +1534,22 @@ function GroupAIStateBase:on_civilian_unregistered(unit)
 	end
 end
 
--- Lines 1501-1503
+-- Lines 1545-1547
 function GroupAIStateBase:report_aggression(unit)
 	self._criminals[unit:key()].assault_t = self._t
 end
 
--- Lines 1507-1509
+-- Lines 1551-1553
 function GroupAIStateBase:register_fleeing_civilian(u_key, unit)
 	self._fleeing_civilians[u_key] = unit
 end
 
--- Lines 1511-1513
+-- Lines 1555-1557
 function GroupAIStateBase:unregister_fleeing_civilian(u_key)
 	self._fleeing_civilians[u_key] = nil
 end
 
--- Lines 1517-1524
+-- Lines 1561-1568
 function GroupAIStateBase:register_special_unit(u_key, category_name)
 	local category = self._special_units[category_name]
 
@@ -1546,7 +1561,7 @@ function GroupAIStateBase:register_special_unit(u_key, category_name)
 	category[u_key] = true
 end
 
--- Lines 1528-1536
+-- Lines 1572-1580
 function GroupAIStateBase:unregister_special_unit(u_key, category_name)
 	local category = self._special_units[category_name]
 
@@ -1559,7 +1574,7 @@ function GroupAIStateBase:unregister_special_unit(u_key, category_name)
 	end
 end
 
--- Lines 1540-1598
+-- Lines 1584-1642
 function GroupAIStateBase:register_criminal(unit)
 	local u_key = unit:key()
 	local ext_mv = unit:movement()
@@ -1621,7 +1636,7 @@ function GroupAIStateBase:register_criminal(unit)
 	end
 end
 
--- Lines 1602-1654
+-- Lines 1646-1698
 function GroupAIStateBase:unregister_criminal(unit)
 	local u_key = unit:key()
 	local record = self._criminals[u_key]
@@ -1683,7 +1698,7 @@ function GroupAIStateBase:unregister_criminal(unit)
 	self:check_gameover_conditions()
 end
 
--- Lines 1658-1676
+-- Lines 1702-1720
 function GroupAIStateBase:is_ai_trade_possible()
 	if managers.groupai:state():whisper_mode() then
 		return false
@@ -1706,8 +1721,10 @@ function GroupAIStateBase:is_ai_trade_possible()
 	return not ai_disabled and (self._hostage_headcount > 0 or next(self._converted_police) or managers.trade:is_trading())
 end
 
--- Lines 1680-1738
+-- Lines 1724-1796
 function GroupAIStateBase:check_gameover_conditions()
+	Application:debug("[GroupAIStateBase:check_gameover_conditions] Playercount:", #self._player_criminals)
+
 	if not Network:is_server() or managers.platform:presence() ~= "Playing" or setup:has_queued_exec() then
 		return false
 	end
@@ -1771,7 +1788,7 @@ function GroupAIStateBase:check_gameover_conditions()
 	return gameover
 end
 
--- Lines 1740-1748
+-- Lines 1798-1806
 function GroupAIStateBase:_gameover_clbk_func()
 	self._gameover_clbk = nil
 	local govr = self:check_gameover_conditions()
@@ -1782,8 +1799,9 @@ function GroupAIStateBase:_gameover_clbk_func()
 	end
 end
 
--- Lines 1750-1756
+-- Lines 1808-1820
 function GroupAIStateBase:begin_gameover_fadeout()
+	Application:debug("[GroupAIStateBase:begin_gameover_fadeout]")
 	managers.system_menu:force_close_all()
 	managers.menu:close_all_menus()
 
@@ -1792,7 +1810,7 @@ function GroupAIStateBase:begin_gameover_fadeout()
 	end
 end
 
--- Lines 1760-1773
+-- Lines 1824-1837
 function GroupAIStateBase:report_criminal_downed(unit)
 	if not self:bain_state() then
 		return
@@ -1808,7 +1826,7 @@ function GroupAIStateBase:report_criminal_downed(unit)
 	managers.network:session():send_to_peers_synched("bain_comment", bain_line)
 end
 
--- Lines 1777-1794
+-- Lines 1841-1858
 function GroupAIStateBase:on_criminal_disabled(unit, custom_status)
 	print("GroupAIStateBase:on_criminal_disabled", "custom_status", custom_status)
 
@@ -1829,7 +1847,7 @@ function GroupAIStateBase:on_criminal_disabled(unit, custom_status)
 	end
 end
 
--- Lines 1798-1819
+-- Lines 1862-1883
 function GroupAIStateBase:on_criminal_neutralized(unit)
 	local criminal_key = unit:key()
 	local record = self._criminals[criminal_key]
@@ -1853,7 +1871,7 @@ function GroupAIStateBase:on_criminal_neutralized(unit)
 	end
 end
 
--- Lines 1823-1831
+-- Lines 1887-1895
 function GroupAIStateBase:on_criminal_recovered(criminal_unit)
 	local record = self._criminals[criminal_unit:key()]
 
@@ -1866,7 +1884,7 @@ function GroupAIStateBase:on_criminal_recovered(criminal_unit)
 	end
 end
 
--- Lines 1835-1847
+-- Lines 1899-1911
 function GroupAIStateBase:on_civilian_try_freed()
 	if not self._warned_about_deploy_this_control then
 		self._warned_about_deploy_this_control = true
@@ -1883,7 +1901,7 @@ function GroupAIStateBase:on_civilian_try_freed()
 	end
 end
 
--- Lines 1851-1863
+-- Lines 1915-1927
 function GroupAIStateBase:on_civilian_freed()
 	if not self._warned_about_freed_this_control then
 		self._warned_about_freed_this_control = true
@@ -1900,7 +1918,7 @@ function GroupAIStateBase:on_civilian_freed()
 	end
 end
 
--- Lines 1867-1881
+-- Lines 1931-1945
 function GroupAIStateBase:sync_warn_about_civilian_free(i)
 	if not self:bain_state() then
 		return
@@ -1917,19 +1935,19 @@ function GroupAIStateBase:sync_warn_about_civilian_free(i)
 	end
 end
 
--- Lines 1885-1886
+-- Lines 1949-1950
 function GroupAIStateBase:on_enemy_tied(u_key)
 end
 
--- Lines 1890-1891
+-- Lines 1954-1955
 function GroupAIStateBase:on_enemy_untied(u_key)
 end
 
--- Lines 1895-1896
+-- Lines 1959-1960
 function GroupAIStateBase:on_civilian_tied(u_key)
 end
 
--- Lines 1900-2011
+-- Lines 1964-2075
 function GroupAIStateBase:_debug_draw_drama(t)
 	local draw_data = self._draw_drama
 	local drama_data = self._drama_data
@@ -2036,7 +2054,7 @@ function GroupAIStateBase:_debug_draw_drama(t)
 	local top_r = Vector3(0, draw_data.bg_top_l.y, 90)
 	local bottom_r = Vector3(0, draw_data.bg_bottom_l.y, 90)
 
-	-- Lines 1989-2007
+	-- Lines 2053-2071
 	local function _draw_events(event_brush, event_list)
 		while event_list[1] and event_list[1][2] and t_span < t - event_list[1][2] do
 			table.remove(event_list, 1)
@@ -2066,14 +2084,14 @@ function GroupAIStateBase:_debug_draw_drama(t)
 	_draw_events(draw_data.regroup_brush, draw_data.regroup_hist)
 end
 
--- Lines 2015-2018
+-- Lines 2079-2082
 function GroupAIStateBase:toggle_drama_draw_state()
 	Global.drama_draw_state = not Global.drama_draw_state
 
 	self:set_drama_draw_state(Global.drama_draw_state)
 end
 
--- Lines 2022-2092
+-- Lines 2086-2156
 function GroupAIStateBase:set_drama_draw_state(state)
 	if state then
 		local depth = 100
@@ -2163,7 +2181,7 @@ function GroupAIStateBase:set_drama_draw_state(state)
 	end
 end
 
--- Lines 2096-2098
+-- Lines 2160-2162
 function GroupAIStateBase:task_names()
 	return {
 		"any",
@@ -2175,7 +2193,7 @@ function GroupAIStateBase:task_names()
 	}
 end
 
--- Lines 2102-2135
+-- Lines 2166-2199
 function GroupAIStateBase:on_objective_failed(unit, objective)
 	if not unit:brain() then
 		debug_pause_unit(unit, "[GroupAIStateBase:on_objective_failed] error in extension order", unit)
@@ -2226,7 +2244,7 @@ function GroupAIStateBase:on_objective_failed(unit, objective)
 	end
 end
 
--- Lines 2139-2169
+-- Lines 2203-2233
 function GroupAIStateBase:add_special_objective(id, objective_data)
 	if objective_data.objective.type == "phalanx" then
 		self._phalanx_center_pos = objective_data.objective.pos
@@ -2260,7 +2278,7 @@ function GroupAIStateBase:add_special_objective(id, objective_data)
 	end
 end
 
--- Lines 2173-2254
+-- Lines 2237-2318
 function GroupAIStateBase:_execute_so(so_data, so_rooms, so_administered)
 	local max_dis = so_data.search_dis_sq
 	local pos = so_data.search_pos
@@ -2333,7 +2351,7 @@ function GroupAIStateBase:_execute_so(so_data, so_rooms, so_administered)
 	return closest_u_data
 end
 
--- Lines 2258-2268
+-- Lines 2322-2332
 function GroupAIStateBase:remove_special_objective(id)
 	local so = self._special_objectives[id]
 
@@ -2349,19 +2367,19 @@ function GroupAIStateBase:remove_special_objective(id)
 	end
 end
 
--- Lines 2272-2275
+-- Lines 2336-2339
 function GroupAIStateBase:add_SO_group(id, element)
 	self:remove_SO_group(id)
 
 	self._SO_groups[id] = element
 end
 
--- Lines 2279-2281
+-- Lines 2343-2345
 function GroupAIStateBase:remove_SO_group(id)
 	self._SO_groups[id] = nil
 end
 
--- Lines 2285-2305
+-- Lines 2349-2369
 function GroupAIStateBase:_upd_SO_groups()
 	for so_group_id, element in pairs(self._SO_groups) do
 		self:_process_SO_group(so_group_id, element)
@@ -2380,7 +2398,7 @@ function GroupAIStateBase:_upd_SO_groups()
 	end
 end
 
--- Lines 2309-2330
+-- Lines 2373-2394
 function GroupAIStateBase:_process_SO_group(so_group_id, element)
 	local mode = element:value("mode")
 
@@ -2399,7 +2417,7 @@ function GroupAIStateBase:_process_SO_group(so_group_id, element)
 	table.insert(self._recurring_SO_groups[mode].elements, element)
 end
 
--- Lines 2334-2424
+-- Lines 2398-2488
 function GroupAIStateBase:_process_recurring_SO_groups(recurring_id, data)
 	if data.groups then
 		local junk_groups = nil
@@ -2508,7 +2526,7 @@ function GroupAIStateBase:_process_recurring_SO_groups(recurring_id, data)
 	return new_group and true
 end
 
--- Lines 2428-2448
+-- Lines 2492-2512
 function GroupAIStateBase:save(save_data)
 	local my_save_data = {}
 	save_data.group_ai = my_save_data
@@ -2532,7 +2550,7 @@ function GroupAIStateBase:save(save_data)
 	my_save_data.endscreen_variant = self._endscreen_variant
 end
 
--- Lines 2452-2479
+-- Lines 2516-2543
 function GroupAIStateBase:load(load_data)
 	local my_load_data = load_data.group_ai
 	self._control_value = my_load_data.control_value
@@ -2565,7 +2583,7 @@ function GroupAIStateBase:load(load_data)
 	self:set_damage_reduction_buff_hud()
 end
 
--- Lines 2483-2503
+-- Lines 2547-2567
 function GroupAIStateBase:set_point_of_no_return_timer(time, point_of_no_return_mission_id, point_of_no_return_id)
 	if time == nil or setup:has_queued_exec() then
 		return
@@ -2588,12 +2606,12 @@ function GroupAIStateBase:set_point_of_no_return_timer(time, point_of_no_return_
 	managers.hud:add_updator("point_of_no_return", callback(self, self, "_update_point_of_no_return"))
 end
 
--- Lines 2506-2508
+-- Lines 2570-2572
 function GroupAIStateBase:set_is_inside_point_of_no_return(peer_id, is_inside)
 	self._peers_inside_point_of_no_return[peer_id] = is_inside
 end
 
--- Lines 2510-2599
+-- Lines 2574-2663
 function GroupAIStateBase:_update_point_of_no_return(t, dt)
 	if setup:has_queued_exec() then
 		managers.hud:hide_point_of_no_return_timer()
@@ -2696,7 +2714,7 @@ function GroupAIStateBase:_update_point_of_no_return(t, dt)
 	end
 end
 
--- Lines 2603-2671
+-- Lines 2667-2735
 function GroupAIStateBase:spawn_one_teamAI(is_drop_in, char_name, spawn_on_unit, transition)
 	if not managers.groupai:state():team_ai_enabled() or not self._ai_enabled or not managers.criminals:character_taken_by_name(char_name) and managers.criminals.MAX_NR_TEAM_AI <= managers.criminals:nr_AI_criminals() then
 		return
@@ -2778,7 +2796,7 @@ function GroupAIStateBase:spawn_one_teamAI(is_drop_in, char_name, spawn_on_unit,
 	end
 end
 
--- Lines 2674-2681
+-- Lines 2738-2745
 function GroupAIStateBase:get_spawn_position(pos, rot, offset_id)
 	local ai_position = pos
 	local x = rot:x() * 100
@@ -2789,7 +2807,7 @@ function GroupAIStateBase:get_spawn_position(pos, rot, offset_id)
 	return ai_position
 end
 
--- Lines 2684-2742
+-- Lines 2748-2806
 function GroupAIStateBase:remove_one_teamAI(name_to_remove, replace_with_player)
 	local u_key, u_data = nil
 
@@ -2851,7 +2869,7 @@ function GroupAIStateBase:remove_one_teamAI(name_to_remove, replace_with_player)
 	return trade_entry, unit
 end
 
--- Lines 2746-2755
+-- Lines 2810-2819
 function GroupAIStateBase:sync_remove_one_teamAI(name, replace_with_player)
 	managers.criminals:remove_character_by_name(name)
 
@@ -2864,7 +2882,7 @@ function GroupAIStateBase:sync_remove_one_teamAI(name, replace_with_player)
 	end
 end
 
--- Lines 2759-2768
+-- Lines 2823-2832
 function GroupAIStateBase:fill_criminal_team_with_AI(transition)
 	if managers.navigation:is_data_ready() and self._ai_enabled and managers.groupai:state():team_ai_enabled() then
 		while managers.criminals:nr_taken_criminals() < CriminalsManager.MAX_NR_CRIMINALS and managers.criminals:nr_AI_criminals() < managers.criminals.MAX_NR_TEAM_AI do
@@ -2875,7 +2893,7 @@ function GroupAIStateBase:fill_criminal_team_with_AI(transition)
 	end
 end
 
--- Lines 2772-2780
+-- Lines 2836-2844
 function GroupAIStateBase:team_ai_enabled()
 	local res = nil
 
@@ -2888,7 +2906,7 @@ function GroupAIStateBase:team_ai_enabled()
 	return not managers.worldcollection.team_ai_transition and res
 end
 
--- Lines 2784-2834
+-- Lines 2848-2898
 function GroupAIStateBase:on_civilian_objective_complete(unit, objective)
 	if objective.type == "escort" then
 		if objective.break_so then
@@ -2951,7 +2969,7 @@ function GroupAIStateBase:on_civilian_objective_complete(unit, objective)
 	end
 end
 
--- Lines 2838-2853
+-- Lines 2902-2917
 function GroupAIStateBase:on_civilian_objective_failed(unit, objective)
 	if alive(unit) and objective == unit:brain():objective() then
 		if unit:brain():is_tied() then
@@ -2972,7 +2990,7 @@ function GroupAIStateBase:on_civilian_objective_failed(unit, objective)
 	end
 end
 
--- Lines 2857-2885
+-- Lines 2921-2949
 function GroupAIStateBase:on_criminal_objective_complete(unit, objective)
 	local new_objective, so_element = nil
 
@@ -3007,7 +3025,7 @@ function GroupAIStateBase:on_criminal_objective_complete(unit, objective)
 	end
 end
 
--- Lines 2889-2900
+-- Lines 2953-2964
 function GroupAIStateBase:on_criminal_objective_failed(unit, objective, no_new_objective)
 	local fail_clbk = objective.fail_clbk
 	objective.fail_clbk = nil
@@ -3021,7 +3039,7 @@ function GroupAIStateBase:on_criminal_objective_failed(unit, objective, no_new_o
 	end
 end
 
--- Lines 2904-2910
+-- Lines 2968-2974
 function GroupAIStateBase:on_criminal_jobless(unit)
 	local new_objective = self:_determine_objective_for_criminal_AI(unit)
 
@@ -3030,7 +3048,7 @@ function GroupAIStateBase:on_criminal_jobless(unit)
 	end
 end
 
--- Lines 2914-2934
+-- Lines 2978-2998
 function GroupAIStateBase:_determine_spawn_objective_for_criminal_AI()
 	local new_objective = nil
 	local valid_criminals = {}
@@ -3054,7 +3072,7 @@ function GroupAIStateBase:_determine_spawn_objective_for_criminal_AI()
 	return new_objective
 end
 
--- Lines 2938-3007
+-- Lines 3002-3071
 function GroupAIStateBase:_determine_objective_for_criminal_AI(unit)
 	local objective, closest_dis, closest_record = nil
 	local ai_pos = (self._ai_criminals[unit:key()] or self._police[unit:key()]).m_pos
@@ -3122,7 +3140,7 @@ function GroupAIStateBase:_determine_objective_for_criminal_AI(unit)
 	return objective
 end
 
--- Lines 3009-3016
+-- Lines 3073-3080
 function GroupAIStateBase:_verifiy_nav_exists_and_teleport_team_ai(ai_unit, player_pos, player_rot)
 	if not self._nav_seg_to_area_map[ai_unit.seg] then
 		Application:debug("[GroupAIStateBase:_verifiy_nav_exists_and_teleport_team_ai] Teleporting AI to player", inspect(ai_unit))
@@ -3130,7 +3148,7 @@ function GroupAIStateBase:_verifiy_nav_exists_and_teleport_team_ai(ai_unit, play
 	end
 end
 
--- Lines 3021-3035
+-- Lines 3085-3099
 function GroupAIStateBase:_coach_last_man_clbk()
 	if table.size(self:all_char_criminals()) == 1 and self:bain_state() then
 		local _, crim = next(self:all_char_criminals())
@@ -3148,7 +3166,7 @@ function GroupAIStateBase:_coach_last_man_clbk()
 	end
 end
 
--- Lines 3039-3065
+-- Lines 3103-3123
 function GroupAIStateBase:set_assault_mode(enabled)
 	if self._assault_mode ~= enabled then
 		self._assault_mode = enabled
@@ -3169,16 +3187,10 @@ function GroupAIStateBase:set_assault_mode(enabled)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") and managers.network.account:has_alienware() then
-		if self._assault_mode then
-			LightFX:set_lamps(255, 0, 0, 255)
-		else
-			LightFX:set_lamps(0, 255, 0, 255)
-		end
-	end
+	self:_lightfx_assault_update()
 end
 
--- Lines 3067-3081
+-- Lines 3125-3133
 function GroupAIStateBase:sync_assault_mode(enabled)
 	if self._assault_mode ~= enabled then
 		self._assault_mode = enabled
@@ -3187,7 +3199,12 @@ function GroupAIStateBase:sync_assault_mode(enabled)
 		managers.music:raid_music_state_change(state_event)
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") and managers.network and managers.network.account:has_alienware() then
+	self:_lightfx_assault_update()
+end
+
+-- Lines 3135-3146
+function GroupAIStateBase:_lightfx_assault_update()
+	if _G.IS_PC and managers.network and managers.network.account:has_alienware() then
 		if self._assault_mode then
 			LightFX:set_lamps(255, 0, 0, 255)
 		else
@@ -3196,7 +3213,7 @@ function GroupAIStateBase:sync_assault_mode(enabled)
 	end
 end
 
--- Lines 3083-3092
+-- Lines 3148-3157
 function GroupAIStateBase:set_fake_assault_mode(enabled)
 	if self._fake_assault_mode ~= enabled then
 		self._fake_assault_mode = enabled
@@ -3209,17 +3226,17 @@ function GroupAIStateBase:set_fake_assault_mode(enabled)
 	end
 end
 
--- Lines 3094-3096
+-- Lines 3159-3161
 function GroupAIStateBase:whisper_mode()
 	return self._whisper_mode
 end
 
--- Lines 3098-3100
+-- Lines 3163-3165
 function GroupAIStateBase:whisper_mode_change_t()
 	return self._whisper_mode_change_t
 end
 
--- Lines 3102-3112
+-- Lines 3167-3177
 function GroupAIStateBase:get_ambience_flag()
 	local res = nil
 
@@ -3234,7 +3251,7 @@ function GroupAIStateBase:get_ambience_flag()
 	return res
 end
 
--- Lines 3114-3146
+-- Lines 3179-3211
 function GroupAIStateBase:set_whisper_mode(enabled)
 	enabled = enabled and true or false
 
@@ -3268,37 +3285,37 @@ function GroupAIStateBase:set_whisper_mode(enabled)
 	end
 end
 
--- Lines 3148-3150
+-- Lines 3213-3215
 function GroupAIStateBase:set_blackscreen_variant(variant)
 	self._blackscreen_variant = variant
 end
 
--- Lines 3152-3154
+-- Lines 3217-3219
 function GroupAIStateBase:blackscreen_variant(variant)
 	return self._blackscreen_variant
 end
 
--- Lines 3156-3158
+-- Lines 3221-3223
 function GroupAIStateBase:set_endscreen_variant(variant)
 	self._endscreen_variant = variant
 end
 
--- Lines 3160-3162
+-- Lines 3225-3227
 function GroupAIStateBase:endscreen_variant(variant)
 	return self._endscreen_variant
 end
 
--- Lines 3164-3166
+-- Lines 3229-3231
 function GroupAIStateBase:bain_state()
 	return self._bain_state
 end
 
--- Lines 3168-3170
+-- Lines 3233-3235
 function GroupAIStateBase:set_bain_state(enabled)
 	self._bain_state = enabled
 end
 
--- Lines 3172-3177
+-- Lines 3237-3242
 function GroupAIStateBase:set_allow_dropin(enabled)
 	self._allow_dropin = enabled
 
@@ -3307,7 +3324,7 @@ function GroupAIStateBase:set_allow_dropin(enabled)
 	end
 end
 
--- Lines 3180-3192
+-- Lines 3245-3257
 function GroupAIStateBase:sync_hostage_killed_warning(warning)
 	if not self:bain_state() then
 		return
@@ -3322,7 +3339,7 @@ function GroupAIStateBase:sync_hostage_killed_warning(warning)
 	end
 end
 
--- Lines 3195-3248
+-- Lines 3260-3313
 function GroupAIStateBase:hostage_killed(killer_unit)
 	if not alive(killer_unit) then
 		return
@@ -3380,7 +3397,7 @@ function GroupAIStateBase:hostage_killed(killer_unit)
 	end
 end
 
--- Lines 3252-3268
+-- Lines 3317-3333
 function GroupAIStateBase:set_dropin_hostages_killed(criminal_unit, hostages_killed, respawn_penalty)
 	if not alive(criminal_unit) then
 		return
@@ -3399,7 +3416,7 @@ function GroupAIStateBase:set_dropin_hostages_killed(criminal_unit, hostages_kil
 	end
 end
 
--- Lines 3272-3289
+-- Lines 3337-3354
 function GroupAIStateBase:on_AI_criminal_death(criminal_name, unit)
 	if not Network:is_server() then
 		return
@@ -3410,7 +3427,7 @@ function GroupAIStateBase:on_AI_criminal_death(criminal_name, unit)
 	managers.trade:on_AI_criminal_death(criminal_name, respawn_penalty, self._criminals[unit:key()].hostages_killed or 0)
 end
 
--- Lines 3292-3332
+-- Lines 3357-3385
 function GroupAIStateBase:on_player_criminal_death(peer_id)
 	managers.player:transfer_special_equipment(peer_id)
 
@@ -3445,32 +3462,32 @@ function GroupAIStateBase:on_player_criminal_death(peer_id)
 	managers.criminals:on_last_valid_player_spawn_point_updated(unit)
 end
 
--- Lines 3336-3338
+-- Lines 3389-3391
 function GroupAIStateBase:all_AI_criminals()
 	return self._ai_criminals
 end
 
--- Lines 3342-3344
+-- Lines 3395-3397
 function GroupAIStateBase:all_player_criminals()
 	return self._player_criminals
 end
 
--- Lines 3348-3350
+-- Lines 3401-3403
 function GroupAIStateBase:all_criminals()
 	return self._criminals
 end
 
--- Lines 3354-3356
+-- Lines 3407-3409
 function GroupAIStateBase:all_char_criminals()
 	return self._char_criminals
 end
 
--- Lines 3360-3362
+-- Lines 3413-3415
 function GroupAIStateBase:amount_of_ai_criminals()
 	return table.size(self._ai_criminals)
 end
 
--- Lines 3366-3380
+-- Lines 3419-3433
 function GroupAIStateBase:amount_of_winning_ai_criminals()
 	local amount = 0
 
@@ -3483,24 +3500,24 @@ function GroupAIStateBase:amount_of_winning_ai_criminals()
 	return amount
 end
 
--- Lines 3384-3386
+-- Lines 3437-3439
 function GroupAIStateBase:fleeing_civilians()
 	return self._fleeing_civilians
 end
 
--- Lines 3390-3392
+-- Lines 3443-3445
 function GroupAIStateBase:all_hostages()
 	return self._hostage_keys
 end
 
--- Lines 3397-3400
+-- Lines 3450-3453
 function GroupAIStateBase:is_a_hostage_within(mvec_pos, radius)
 	local units = World:find_units_quick("sphere", mvec_pos, radius, 22)
 
 	return units and #units > 0
 end
 
--- Lines 3404-3415
+-- Lines 3457-3468
 function GroupAIStateBase:on_criminal_team_AI_enabled_state_changed(transition)
 	if Network:is_client() then
 		return
@@ -3515,7 +3532,7 @@ function GroupAIStateBase:on_criminal_team_AI_enabled_state_changed(transition)
 	end
 end
 
--- Lines 3419-3437
+-- Lines 3472-3490
 function GroupAIStateBase:_draw_enemy_importancies()
 	for e_key, e_data in pairs(self._police) do
 		local imp = e_data.importance
@@ -3542,7 +3559,7 @@ function GroupAIStateBase:_draw_enemy_importancies()
 	end
 end
 
--- Lines 3442-3499
+-- Lines 3495-3552
 function GroupAIStateBase:set_importance_weight(u_key, wgt_report)
 	if #wgt_report == 0 then
 		return
@@ -3611,7 +3628,7 @@ function GroupAIStateBase:set_importance_weight(u_key, wgt_report)
 	end
 end
 
--- Lines 3503-3510
+-- Lines 3556-3563
 function GroupAIStateBase:_adjust_cop_importance(e_key, imp_adj)
 	local e_data = self._police[e_key]
 	local old_imp = e_data.importance
@@ -3622,7 +3639,7 @@ function GroupAIStateBase:_adjust_cop_importance(e_key, imp_adj)
 	end
 end
 
--- Lines 3514-3528
+-- Lines 3567-3581
 function GroupAIStateBase:sync_smoke_grenade(detonate_pos, shooter_pos, duration, flashbang)
 	local smoke_duration = duration == 0 and 15 or duration
 
@@ -3641,7 +3658,7 @@ function GroupAIStateBase:sync_smoke_grenade(detonate_pos, shooter_pos, duration
 	self._smoke_grenade_ignore_control = nil
 end
 
--- Lines 3530-3537
+-- Lines 3583-3590
 function GroupAIStateBase:sync_smoke_grenade_kill()
 	if alive(self._smoke_grenade) then
 		self._smoke_grenade:base():preemptive_kill()
@@ -3652,7 +3669,7 @@ function GroupAIStateBase:sync_smoke_grenade_kill()
 	self._smoke_end_t = nil
 end
 
--- Lines 3541-3549
+-- Lines 3594-3602
 function GroupAIStateBase:sync_cs_grenade(detonate_pos, shooter_pos, duration)
 	local cs_duration = duration == 0 and 15 or duration
 	self._cs_grenade = World:spawn_unit(Idstring("units/dev_tools/deleted_unit/deleted_unit"), detonate_pos, Rotation())
@@ -3663,7 +3680,7 @@ function GroupAIStateBase:sync_cs_grenade(detonate_pos, shooter_pos, duration)
 	self._cs_grenade_ignore_control = nil
 end
 
--- Lines 3551-3558
+-- Lines 3604-3611
 function GroupAIStateBase:sync_cs_grenade_kill()
 	if alive(self._cs_grenade) then
 		self._cs_grenade:base():preemptive_kill()
@@ -3674,22 +3691,22 @@ function GroupAIStateBase:sync_cs_grenade_kill()
 	self._cs_end_t = nil
 end
 
--- Lines 3562-3564
+-- Lines 3615-3617
 function GroupAIStateBase:_call_listeners(event, params)
 	self._listener_holder:call(event, params)
 end
 
--- Lines 3568-3570
+-- Lines 3621-3623
 function GroupAIStateBase:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 3574-3576
+-- Lines 3627-3629
 function GroupAIStateBase:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 3580-3590
+-- Lines 3633-3643
 function GroupAIStateBase:sync_hostage_headcount(nr_hostages)
 	if nr_hostages then
 		self._hostage_headcount = nr_hostages
@@ -3704,7 +3721,7 @@ function GroupAIStateBase:sync_hostage_headcount(nr_hostages)
 	self:check_gameover_conditions()
 end
 
--- Lines 3594-3604
+-- Lines 3647-3657
 function GroupAIStateBase:_set_rescue_state(state)
 	self._rescue_allowed = state
 	local all_civilians = managers.enemy:all_civilians()
@@ -3718,12 +3735,12 @@ function GroupAIStateBase:_set_rescue_state(state)
 	end
 end
 
--- Lines 3608-3611
+-- Lines 3661-3664
 function GroupAIStateBase:rescue_state()
 	return true
 end
 
--- Lines 3615-3646
+-- Lines 3668-3699
 function GroupAIStateBase:chk_area_leads_to_enemy(start_nav_seg_id, test_nav_seg_id, enemy_is_criminal)
 	local enemy_areas = {}
 
@@ -3760,12 +3777,12 @@ function GroupAIStateBase:chk_area_leads_to_enemy(start_nav_seg_id, test_nav_seg
 	until #to_search_nav_segs == 0
 end
 
--- Lines 3650-3652
+-- Lines 3703-3705
 function GroupAIStateBase:occasional_event_info(event_type)
 	return self._occasional_events[event_type]
 end
 
--- Lines 3656-3664
+-- Lines 3709-3717
 function GroupAIStateBase:on_occasional_event(event_type)
 	local event_data = self._occasional_events[event_type]
 
@@ -3778,12 +3795,12 @@ function GroupAIStateBase:on_occasional_event(event_type)
 	event_data.last_occurence_t = TimerManager:game():time()
 end
 
--- Lines 3668-3670
+-- Lines 3721-3723
 function GroupAIStateBase:on_player_spawn_state_set(state_name)
 	self:on_player_weapons_hot()
 end
 
--- Lines 3674-3740
+-- Lines 3727-3793
 function GroupAIStateBase:chk_say_enemy_chatter(unit, unit_pos, chatter_type)
 	if unit:sound():speaking(self._t) then
 		return
@@ -3847,7 +3864,7 @@ function GroupAIStateBase:chk_say_enemy_chatter(unit, unit_pos, chatter_type)
 	return true
 end
 
--- Lines 3744-3774
+-- Lines 3797-3827
 function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	if not self:is_detection_persistent() then
 		return
@@ -3874,7 +3891,7 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	})
 end
 
--- Lines 3778-3786
+-- Lines 3831-3839
 function GroupAIStateBase:_mark_hostage_areas_as_unsafe()
 	local all_areas = self._area_data
 
@@ -3886,7 +3903,7 @@ function GroupAIStateBase:_mark_hostage_areas_as_unsafe()
 	end
 end
 
--- Lines 3790-3798
+-- Lines 3843-3851
 function GroupAIStateBase:on_nav_link_unregistered(element_id)
 	local all_ai = {
 		self._police,
@@ -3902,7 +3919,7 @@ function GroupAIStateBase:on_nav_link_unregistered(element_id)
 	end
 end
 
--- Lines 3802-3807
+-- Lines 3855-3860
 function GroupAIStateBase:chk_allow_drop_in()
 	if self._forbid_drop_in or not self._allow_dropin then
 		return false
@@ -3911,7 +3928,7 @@ function GroupAIStateBase:chk_allow_drop_in()
 	return true
 end
 
--- Lines 3811-3825
+-- Lines 3864-3878
 function GroupAIStateBase:_get_anticipation_duration(anticipation_duration_table, is_first)
 	local anticipation_duration = anticipation_duration_table[1][1]
 
@@ -3933,21 +3950,21 @@ function GroupAIStateBase:_get_anticipation_duration(anticipation_duration_table
 	return anticipation_duration
 end
 
--- Lines 3829-3832
+-- Lines 3882-3885
 function GroupAIStateBase:add_preferred_spawn_points(id, spawn_points)
 	self:_map_spawn_points_to_respective_areas(id, spawn_points)
 
 	self._spawn_points[id] = spawn_points
 end
 
--- Lines 3836-3839
+-- Lines 3889-3892
 function GroupAIStateBase:add_preferred_spawn_groups(id, spawn_groups)
 	self:_map_spawn_groups_to_respective_areas(id, spawn_groups)
 
 	self._spawn_groups[id] = spawn_groups
 end
 
--- Lines 3843-3871
+-- Lines 3896-3924
 function GroupAIStateBase:_map_spawn_points_to_respective_areas(id, spawn_points)
 	local nav_manager = managers.navigation
 
@@ -3982,7 +3999,7 @@ function GroupAIStateBase:_map_spawn_points_to_respective_areas(id, spawn_points
 	end
 end
 
--- Lines 3875-3891
+-- Lines 3928-3944
 function GroupAIStateBase:_map_spawn_groups_to_respective_areas(id, spawn_groups)
 	for _, spawn_grp_element in ipairs(spawn_groups) do
 		local spawn_points = spawn_grp_element:spawn_points()
@@ -4004,7 +4021,7 @@ function GroupAIStateBase:_map_spawn_groups_to_respective_areas(id, spawn_groups
 	end
 end
 
--- Lines 3893-3942
+-- Lines 3946-3995
 function GroupAIStateBase:create_spawn_group(id, spawn_group, spawn_points)
 	local pos = spawn_points[1]:value("position")
 	local nav_seg = managers.navigation:get_nav_seg_from_pos(spawn_points[1]:value("position"), true)
@@ -4059,7 +4076,7 @@ function GroupAIStateBase:create_spawn_group(id, spawn_group, spawn_points)
 	return new_spawn_group_data, area
 end
 
--- Lines 3946-3961
+-- Lines 3999-4014
 function GroupAIStateBase:_remove_preferred_spawn_point_from_area(area, sp_data)
 	if not area.spawn_points then
 		return
@@ -4080,7 +4097,7 @@ function GroupAIStateBase:_remove_preferred_spawn_point_from_area(area, sp_data)
 	end
 end
 
--- Lines 3965-3980
+-- Lines 4018-4033
 function GroupAIStateBase:_remove_preferred_spawn_group_from_area(area, sp_data)
 	if not area.spawn_groups then
 		return
@@ -4101,7 +4118,7 @@ function GroupAIStateBase:_remove_preferred_spawn_group_from_area(area, sp_data)
 	end
 end
 
--- Lines 3984-4024
+-- Lines 4037-4077
 function GroupAIStateBase:remove_preferred_spawn_points(id)
 	if self._spawn_points[id] then
 		for nav_seg, area_data in pairs(self._area_data) do
@@ -4158,7 +4175,7 @@ function GroupAIStateBase:remove_preferred_spawn_points(id)
 	end
 end
 
--- Lines 4028-4038
+-- Lines 4081-4091
 function GroupAIStateBase:register_AI_attention_object(unit, handler, nav_tracker, team, SO_access)
 	self._attention_objects.all[unit:key()] = {
 		unit = unit,
@@ -4171,7 +4188,7 @@ function GroupAIStateBase:register_AI_attention_object(unit, handler, nav_tracke
 	self:on_AI_attention_changed(unit:key())
 end
 
--- Lines 4042-4054
+-- Lines 4095-4107
 function GroupAIStateBase:on_AI_attention_changed(unit_key)
 	local att_info = self._attention_objects.all[unit_key]
 
@@ -4190,19 +4207,19 @@ function GroupAIStateBase:on_AI_attention_changed(unit_key)
 	end
 end
 
--- Lines 4058-4062
+-- Lines 4111-4115
 function GroupAIStateBase:unregister_AI_attention_object(unit_key)
 	for cat_filter, list in pairs(self._attention_objects) do
 		list[unit_key] = nil
 	end
 end
 
--- Lines 4066-4068
+-- Lines 4119-4121
 function GroupAIStateBase:get_all_AI_attention_objects()
 	return self._attention_objects.all
 end
 
--- Lines 4072-4085
+-- Lines 4125-4138
 function GroupAIStateBase:get_AI_attention_objects_by_filter(filter)
 	if not self._attention_objects[filter] then
 		local filter_num = managers.navigation:convert_access_filter_to_number({
@@ -4222,7 +4239,7 @@ function GroupAIStateBase:get_AI_attention_objects_by_filter(filter)
 	return self._attention_objects[filter]
 end
 
--- Lines 4089-4098
+-- Lines 4142-4151
 function GroupAIStateBase:_get_new_group_id(group_type)
 	local all_groups = self._groups
 	local i = 1
@@ -4236,7 +4253,7 @@ function GroupAIStateBase:_get_new_group_id(group_type)
 	return id
 end
 
--- Lines 4102-4119
+-- Lines 4155-4172
 function GroupAIStateBase:_create_group(group_desc)
 	local id = self:_get_new_group_id(group_desc.type)
 	local all_groups = self._groups
@@ -4254,7 +4271,7 @@ function GroupAIStateBase:_create_group(group_desc)
 	return group
 end
 
--- Lines 4123-4139
+-- Lines 4176-4192
 function GroupAIStateBase:_remove_group_member(group, u_key, is_casualty)
 	if group.size <= 1 and group.has_spawned then
 		self._groups[group.id] = nil
@@ -4275,7 +4292,7 @@ function GroupAIStateBase:_remove_group_member(group, u_key, is_casualty)
 	group.units[u_key] = nil
 end
 
--- Lines 4143-4150
+-- Lines 4196-4203
 function GroupAIStateBase:unit_leave_group(unit, is_casualty)
 	if alive(unit) then
 		local brain = unit:brain()
@@ -4286,7 +4303,7 @@ function GroupAIStateBase:unit_leave_group(unit, is_casualty)
 	end
 end
 
--- Lines 4155-4167
+-- Lines 4208-4220
 function GroupAIStateBase:_add_group_member(group, u_key)
 	group.size = group.size + 1
 	local u_data = self._police[u_key]
@@ -4301,7 +4318,7 @@ function GroupAIStateBase:_add_group_member(group, u_key)
 	u_data.unit:brain():set_group(group)
 end
 
--- Lines 4171-4227
+-- Lines 4224-4280
 function GroupAIStateBase:add_area(area_id, nav_segs, area_pos)
 	local all_areas = self._area_data
 
@@ -4364,7 +4381,7 @@ function GroupAIStateBase:add_area(area_id, nav_segs, area_pos)
 	all_areas[area_id] = new_area
 end
 
--- Lines 4231-4243
+-- Lines 4284-4296
 function GroupAIStateBase:_empty_area_data()
 	return {
 		police = {
@@ -4379,7 +4396,7 @@ function GroupAIStateBase:_empty_area_data()
 	}
 end
 
--- Lines 4246-4269
+-- Lines 4299-4322
 function GroupAIStateBase:unload_world_nav_data(world_id, all_nav_segs)
 	local all_area_ids = {}
 
@@ -4406,12 +4423,12 @@ function GroupAIStateBase:unload_world_nav_data(world_id, all_nav_segs)
 	self._loaded_world_navs[world_id] = false
 end
 
--- Lines 4271-4273
+-- Lines 4324-4326
 function GroupAIStateBase:merge_world_data(world_id)
 	self:_create_area_data(world_id)
 end
 
--- Lines 4276-4337
+-- Lines 4329-4390
 function GroupAIStateBase:_create_area_data(world_id)
 	local all_areas, nav_seg_to_area_map = nil
 	local all_nav_segs = managers.navigation._nav_segments
@@ -4469,7 +4486,7 @@ function GroupAIStateBase:_create_area_data(world_id)
 	end
 end
 
--- Lines 4341-4347
+-- Lines 4394-4400
 function GroupAIStateBase:get_area_from_nav_seg_id(nav_seg_id)
 	if self._nav_seg_to_area_map[nav_seg_id] then
 		return self._nav_seg_to_area_map[nav_seg_id]
@@ -4478,7 +4495,7 @@ function GroupAIStateBase:get_area_from_nav_seg_id(nav_seg_id)
 	end
 end
 
--- Lines 4351-4360
+-- Lines 4404-4413
 function GroupAIStateBase:get_areas_from_nav_seg_id(nav_seg_id)
 	local areas = {}
 
@@ -4491,7 +4508,7 @@ function GroupAIStateBase:get_areas_from_nav_seg_id(nav_seg_id)
 	return areas
 end
 
--- Lines 4364-4373
+-- Lines 4417-4426
 function GroupAIStateBase.get_nav_seg_id_from_area(area)
 	for nav_seg_id, _ in pairs(area.nav_segs) do
 		if not managers.navigation._nav_segments[nav_seg_id].disabled then
@@ -4504,7 +4521,7 @@ function GroupAIStateBase.get_nav_seg_id_from_area(area)
 	return table.random_key(area.nav_segs)
 end
 
--- Lines 4377-4384
+-- Lines 4430-4437
 function GroupAIStateBase:is_area_safe(area)
 	for u_key, u_data in pairs(self._criminals) do
 		if area.nav_segs[u_data.tracker:nav_segment()] then
@@ -4515,7 +4532,7 @@ function GroupAIStateBase:is_area_safe(area)
 	return true
 end
 
--- Lines 4388-4395
+-- Lines 4441-4448
 function GroupAIStateBase:is_area_safe_assault(area)
 	for u_key, u_data in pairs(self._criminals) do
 		if not u_data.is_deployable and area.nav_segs[u_data.tracker:nav_segment()] then
@@ -4526,14 +4543,14 @@ function GroupAIStateBase:is_area_safe_assault(area)
 	return true
 end
 
--- Lines 4399-4402
+-- Lines 4452-4455
 function GroupAIStateBase:is_nav_seg_safe(nav_seg)
 	local area = self:get_area_from_nav_seg_id(nav_seg)
 
 	return self:is_area_safe(area)
 end
 
--- Lines 4406-4419
+-- Lines 4459-4472
 function GroupAIStateBase:_on_area_safety_status(area, event)
 	local safe = area.is_safe
 	local unit_data = self._police
@@ -4553,14 +4570,14 @@ function GroupAIStateBase:_on_area_safety_status(area, event)
 	end
 end
 
--- Lines 4423-4475
+-- Lines 4476-4528
 function GroupAIStateBase:on_nav_segment_state_change(changed_seg_id, state)
 	local all_nav_segs = managers.navigation._nav_segments
 	local changed_seg = all_nav_segs[changed_seg_id]
 	local changed_seg_neighbours = changed_seg.neighbours
 
 	for area_id, area in pairs(self._area_data) do
-		if area.nav_segs[changed_seg_id] then
+		if area and area.nav_segs[changed_seg_id] then
 			if state then
 				for neighbour_seg_id, door_list in pairs(changed_seg_neighbours) do
 					local neighbour_nav_seg = all_nav_segs[neighbour_seg_id]
@@ -4610,7 +4627,7 @@ function GroupAIStateBase:on_nav_segment_state_change(changed_seg_id, state)
 	end
 end
 
--- Lines 4479-4515
+-- Lines 4532-4568
 function GroupAIStateBase:on_nav_seg_neighbour_state(start_seg_id, end_seg_id, state)
 	local all_nav_segs = managers.navigation._nav_segments
 
@@ -4651,7 +4668,7 @@ function GroupAIStateBase:on_nav_seg_neighbour_state(start_seg_id, end_seg_id, s
 	end
 end
 
--- Lines 4520-4536
+-- Lines 4573-4589
 function GroupAIStateBase:set_enemy_assigned(area, unit_key)
 	local u_data = self._police[unit_key]
 
@@ -4671,7 +4688,7 @@ function GroupAIStateBase:set_enemy_assigned(area, unit_key)
 	end
 end
 
--- Lines 4540-4584
+-- Lines 4593-4637
 function GroupAIStateBase.clone_objective(objective)
 	local cmpl_clbk = objective.complete_clbk
 	local fail_clbk = objective.fail_clbk
@@ -4714,7 +4731,7 @@ function GroupAIStateBase.clone_objective(objective)
 	return new_objective
 end
 
--- Lines 4588-4670
+-- Lines 4641-4723
 function GroupAIStateBase:convert_hostage_to_criminal(unit, peer_unit)
 	local player_unit = peer_unit or managers.player:player_unit()
 
@@ -4805,7 +4822,7 @@ function GroupAIStateBase:convert_hostage_to_criminal(unit, peer_unit)
 	end
 end
 
--- Lines 4674-4684
+-- Lines 4727-4737
 function GroupAIStateBase:clbk_minion_destroyed(player_key, minion_unit)
 	local minion_key = minion_unit:key()
 	local owner_data = self._player_criminals[player_key]
@@ -4820,7 +4837,7 @@ function GroupAIStateBase:clbk_minion_destroyed(player_key, minion_unit)
 	self:remove_minion(minion_key, player_key)
 end
 
--- Lines 4688-4708
+-- Lines 4741-4761
 function GroupAIStateBase:clbk_minion_dies(player_key, minion_unit, damage_info)
 	if not self._criminals[player_key] then
 		Application:error("GroupAIStateBase:clbk_minion_dies", "Minion dies, but master do not exist", player_key, minion_unit:key(), inspect(damage_info))
@@ -4848,7 +4865,7 @@ function GroupAIStateBase:clbk_minion_dies(player_key, minion_unit, damage_info)
 	self:remove_minion(minion_key, player_key)
 end
 
--- Lines 4712-4760
+-- Lines 4765-4813
 function GroupAIStateBase:remove_minion(minion_key, player_key)
 	local minion_unit = self._converted_police[minion_key]
 
@@ -4904,7 +4921,7 @@ function GroupAIStateBase:remove_minion(minion_key, player_key)
 	end
 end
 
--- Lines 4763-4769
+-- Lines 4816-4822
 function GroupAIStateBase:_set_converted_police(u_key, unit)
 	self._converted_police[u_key] = unit
 
@@ -4913,7 +4930,7 @@ function GroupAIStateBase:_set_converted_police(u_key, unit)
 	end
 end
 
--- Lines 4771-4781
+-- Lines 4824-4834
 function GroupAIStateBase:sync_converted_enemy(converted_enemy)
 	local u_data = self._police[converted_enemy:key()]
 
@@ -4926,7 +4943,7 @@ function GroupAIStateBase:sync_converted_enemy(converted_enemy)
 	u_data.is_converted = true
 end
 
--- Lines 4785-4792
+-- Lines 4838-4845
 function GroupAIStateBase:chk_enemy_calling_in_area(area, except_key)
 	local area_nav_segs = area.nav_segs
 
@@ -4937,12 +4954,12 @@ function GroupAIStateBase:chk_enemy_calling_in_area(area, except_key)
 	end
 end
 
--- Lines 4796-4798
+-- Lines 4849-4851
 function GroupAIStateBase:register_security_camera(unit, state)
 	self._security_cameras[unit:key()] = state and unit or nil
 end
 
--- Lines 4802-4815
+-- Lines 4855-4868
 function GroupAIStateBase:register_ecm_jammer(unit, jam_settings)
 	local was_jammer_active = next(self._ecm_jammers) and true or false
 	self._ecm_jammers[unit:key()] = jam_settings and {
@@ -4960,7 +4977,7 @@ function GroupAIStateBase:register_ecm_jammer(unit, jam_settings)
 	end
 end
 
--- Lines 4819-4825
+-- Lines 4872-4878
 function GroupAIStateBase:is_ecm_jammer_active(medium)
 	for u_key, data in pairs(self._ecm_jammers) do
 		if data.settings[medium] then
@@ -4969,7 +4986,7 @@ function GroupAIStateBase:is_ecm_jammer_active(medium)
 	end
 end
 
--- Lines 4829-4882
+-- Lines 4882-4935
 function GroupAIStateBase:_init_unit_type_filters()
 	local nav_manager = managers.navigation
 
@@ -5120,14 +5137,14 @@ function GroupAIStateBase:_init_unit_type_filters()
 	}
 end
 
--- Lines 4886-4890
+-- Lines 4939-4943
 function GroupAIStateBase:get_unit_type_filter(filter_name)
 	if self._unit_type_filter then
 		return self._unit_type_filter[filter_name]
 	end
 end
 
--- Lines 4894-4909
+-- Lines 4947-4962
 function GroupAIStateBase:sync_event(event_id, blame_id)
 	local event_name = self.EVENT_SYNC[event_id]
 	local blame_name = self.BLAME_SYNC[blame_id]
@@ -5140,7 +5157,7 @@ function GroupAIStateBase:sync_event(event_id, blame_id)
 		self._police_called = true
 		self._enemy_weapons_hot = true
 
-		managers.music:raid_music_state_change("control")
+		managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_CONTROL)
 		self:_call_listeners("enemy_weapons_hot")
 		managers.enemy:set_corpse_disposal_enabled(true)
 	elseif event_name == "phalanx_spawned" then
@@ -5172,7 +5189,7 @@ GroupAIStateBase.blame_triggers = {
 	german_og_commander = "cop"
 }
 
--- Lines 4938-4955
+-- Lines 4991-5008
 function GroupAIStateBase:fetch_highest_giveaway(...)
 	local giveaways = {
 		...
@@ -5194,7 +5211,7 @@ function GroupAIStateBase:fetch_highest_giveaway(...)
 	return highest_giveaway
 end
 
--- Lines 4957-4990
+-- Lines 5010-5043
 function GroupAIStateBase.analyse_giveaway(trigger_string, giveaway_unit, additional_info)
 	if managers.groupai:state():enemy_weapons_hot() then
 		return nil
@@ -5229,14 +5246,14 @@ function GroupAIStateBase.analyse_giveaway(trigger_string, giveaway_unit, additi
 	return false
 end
 
--- Lines 4992-4995
+-- Lines 5045-5048
 function GroupAIStateBase.investigate_trigger(trigger_string)
 	local trigger_prefix = GroupAIStateBase.blame_triggers[trigger_string]
 
 	return trigger_prefix
 end
 
--- Lines 4997-5115
+-- Lines 5050-5168
 function GroupAIStateBase.investigate_unit(giveaway_unit, additional_info)
 	local investigate_coolness = false
 	local investigate_criminals = true
@@ -5340,7 +5357,7 @@ function GroupAIStateBase.investigate_unit(giveaway_unit, additional_info)
 	return "distress"
 end
 
--- Lines 5119-5125
+-- Lines 5172-5178
 function GroupAIStateBase:get_sync_event_id(event_name)
 	for i, test_event_name in ipairs(self.EVENT_SYNC) do
 		if event_name == test_event_name then
@@ -5349,7 +5366,7 @@ function GroupAIStateBase:get_sync_event_id(event_name)
 	end
 end
 
--- Lines 5129-5136
+-- Lines 5182-5189
 function GroupAIStateBase:get_sync_blame_id(blame_name)
 	for i, test_blame_name in ipairs(self.BLAME_SYNC) do
 		if blame_name == test_blame_name then
@@ -5360,7 +5377,7 @@ function GroupAIStateBase:get_sync_blame_id(blame_name)
 	return #self.BLAME_SYNC
 end
 
--- Lines 5141-5158
+-- Lines 5194-5211
 function GroupAIStateBase:_count_police_force(task_name)
 	local amount = 0
 
@@ -5381,7 +5398,7 @@ function GroupAIStateBase:_count_police_force(task_name)
 	return amount
 end
 
--- Lines 5162-5173
+-- Lines 5215-5226
 function GroupAIStateBase:_merge_coarse_path_by_area(coarse_path)
 	local i_nav_seg = #coarse_path
 	local last_area = nil
@@ -5398,7 +5415,7 @@ function GroupAIStateBase:_merge_coarse_path_by_area(coarse_path)
 	end
 end
 
--- Lines 5177-5229
+-- Lines 5230-5282
 function GroupAIStateBase:on_nav_seg_neighbours_state(changed_seg_id, neighbours, state)
 	local all_nav_segs = managers.navigation._nav_segments
 	local changed_seg = all_nav_segs[changed_seg_id]
@@ -5455,7 +5472,7 @@ function GroupAIStateBase:on_nav_seg_neighbours_state(changed_seg_id, neighbours
 	end
 end
 
--- Lines 5233-5245
+-- Lines 5286-5298
 function GroupAIStateBase:register_loot(loot_unit, pickup_area)
 	local loot_u_key = loot_unit:key()
 
@@ -5472,7 +5489,7 @@ function GroupAIStateBase:register_loot(loot_unit, pickup_area)
 	pickup_area.loot[loot_u_key] = loot_unit
 end
 
--- Lines 5249-5259
+-- Lines 5302-5312
 function GroupAIStateBase:unregister_loot(loot_u_key)
 	for area_id, area in pairs(self._area_data) do
 		if area.loot and area.loot[loot_u_key] then
@@ -5487,7 +5504,7 @@ function GroupAIStateBase:unregister_loot(loot_u_key)
 	end
 end
 
--- Lines 5263-5277
+-- Lines 5316-5330
 function GroupAIStateBase:register_rescueable_hostage(unit, rescue_area)
 	local u_key = unit:key()
 	local rescue_area = rescue_area or self:get_area_from_nav_seg_id(unit:movement():nav_tracker():nav_segment())
@@ -5505,7 +5522,7 @@ function GroupAIStateBase:register_rescueable_hostage(unit, rescue_area)
 	rescue_area.hostages[u_key] = unit
 end
 
--- Lines 5281-5291
+-- Lines 5334-5344
 function GroupAIStateBase:unregister_rescueable_hostage(u_key)
 	for area_id, area in pairs(self._area_data) do
 		if area.hostages and area.hostages[u_key] then
@@ -5520,7 +5537,7 @@ function GroupAIStateBase:unregister_rescueable_hostage(u_key)
 	end
 end
 
--- Lines 5295-5320
+-- Lines 5348-5373
 function GroupAIStateBase._create_hud_suspicion_icon(obs_key, u_observer, u_suspect, icon_name, color, icon_id, initial_state)
 	local icon_pos = mvector3.copy(math.UP)
 
@@ -5551,7 +5568,7 @@ function GroupAIStateBase._create_hud_suspicion_icon(obs_key, u_observer, u_susp
 	return icon_pos
 end
 
--- Lines 5324-5340
+-- Lines 5377-5406
 function GroupAIStateBase._create_hud_spotter_icon(obs_key, u_observer, u_suspect, icon_name, color, icon_id)
 	local icon_pos = mvector3.copy(math.UP)
 
@@ -5586,21 +5603,21 @@ function GroupAIStateBase._create_hud_spotter_icon(obs_key, u_observer, u_suspec
 	return icon_pos
 end
 
--- Lines 5342-5347
+-- Lines 5408-5413
 function GroupAIStateBase:_sync_status(sync_status_code, u_suspect, u_observer)
 	if Network:is_server() and managers.network:session() then
 		managers.network:session():send_to_peers_synched("suspicion_hud", u_suspect, u_observer, sync_status_code, alive(u_suspect) and u_suspect:id() or 0)
 	end
 end
 
--- Lines 5349-5354
+-- Lines 5415-5420
 function GroupAIStateBase:_sync_spotter_detection(sync_status_code, u_suspect, u_observer)
 	if Network:is_server() and managers.network:session() then
 		managers.network:session():send_to_peers_synched("spotter_hud", u_suspect, u_observer, sync_status_code)
 	end
 end
 
--- Lines 5359-5549
+-- Lines 5425-5615
 function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, status)
 	local id = alive(u_suspect) and u_suspect:id()
 
@@ -5791,7 +5808,7 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 	end
 end
 
--- Lines 5555-5672
+-- Lines 5621-5739
 function GroupAIStateBase:on_spotter_detection_progress(u_suspect, u_observer, status)
 	return
 
@@ -5909,7 +5926,7 @@ function GroupAIStateBase:on_spotter_detection_progress(u_suspect, u_observer, s
 	end
 end
 
--- Lines 5676-5707
+-- Lines 5743-5774
 function GroupAIStateBase:_upd_criminal_suspicion_progress()
 	local susp_data = self._suspicion_hud_data
 
@@ -5940,7 +5957,7 @@ function GroupAIStateBase:_upd_criminal_suspicion_progress()
 	end
 end
 
--- Lines 5711-5723
+-- Lines 5778-5790
 function GroupAIStateBase:_clear_criminal_suspicion_data()
 	for obs_key, obs_susp_data in pairs(self._suspicion_hud_data) do
 		if not obs_susp_data.persistent then
@@ -5951,7 +5968,7 @@ function GroupAIStateBase:_clear_criminal_suspicion_data()
 	end
 end
 
--- Lines 5727-5747
+-- Lines 5794-5814
 function GroupAIStateBase:_clear_character_criminal_suspicion_data(obs_key)
 	local obs_susp_data = self._suspicion_hud_data[obs_key]
 
@@ -5972,17 +5989,17 @@ function GroupAIStateBase:_clear_character_criminal_suspicion_data(obs_key)
 	end
 end
 
--- Lines 5751-5753
+-- Lines 5818-5820
 function GroupAIStateBase:get_nr_successful_alarm_pager_bluffs()
 	return self._nr_successful_alarm_pager_bluffs
 end
 
--- Lines 5757-5759
+-- Lines 5824-5826
 function GroupAIStateBase:on_successful_alarm_pager_bluff()
 	self._nr_successful_alarm_pager_bluffs = self._nr_successful_alarm_pager_bluffs + 1
 end
 
--- Lines 5763-5782
+-- Lines 5830-5849
 function GroupAIStateBase:trim_coarse_path_to_areas(coarse_path)
 	local all_areas = self._area_data
 	local i = 1
@@ -6004,13 +6021,13 @@ function GroupAIStateBase:trim_coarse_path_to_areas(coarse_path)
 	end
 end
 
--- Lines 5786-5789
+-- Lines 5853-5856
 function GroupAIStateBase:on_editor_sim_unit_spawned(unit)
 	self._editor_sim_rem_units = self._editor_sim_rem_units or {}
 	self._editor_sim_rem_units[unit:key()] = unit
 end
 
--- Lines 5793-5803
+-- Lines 5860-5870
 function GroupAIStateBase:_get_balancing_multiplier(balance_multipliers)
 	local nr_players = 0
 
@@ -6025,7 +6042,7 @@ function GroupAIStateBase:_get_balancing_multiplier(balance_multipliers)
 	return balance_multipliers[nr_players]
 end
 
--- Lines 5807-5816
+-- Lines 5874-5883
 function GroupAIStateBase:draw_attention_objects_by_preset_name(wanted_preset_name)
 	if wanted_preset_name then
 		self._attention_debug_draw_data = {
@@ -6037,7 +6054,7 @@ function GroupAIStateBase:draw_attention_objects_by_preset_name(wanted_preset_na
 	end
 end
 
--- Lines 5820-5833
+-- Lines 5887-5900
 function GroupAIStateBase:_upd_debug_draw_attentions()
 	if not self._attention_debug_draw_data then
 		return
@@ -6055,7 +6072,7 @@ function GroupAIStateBase:_upd_debug_draw_attentions()
 	self:_draw_enemy_importancies()
 end
 
--- Lines 5837-5848
+-- Lines 5904-5915
 function GroupAIStateBase:show_aiming_icon(unit)
 	return
 
@@ -6069,7 +6086,7 @@ function GroupAIStateBase:show_aiming_icon(unit)
 	end
 end
 
--- Lines 5851-5864
+-- Lines 5918-5931
 function GroupAIStateBase:hide_aiming_icon(unit)
 	return
 
@@ -6087,7 +6104,7 @@ function GroupAIStateBase:hide_aiming_icon(unit)
 	end
 end
 
--- Lines 5867-5886
+-- Lines 5934-5955
 function GroupAIStateBase:show_investigate_icon(u_observer)
 	return
 
@@ -6116,7 +6133,7 @@ function GroupAIStateBase:show_investigate_icon(u_observer)
 	managers.hud:set_investigate_icon(obs_susp_data.icon_id, true)
 end
 
--- Lines 5889-5902
+-- Lines 5958-5971
 function GroupAIStateBase:hide_investigate_icon(unit)
 	return
 
@@ -6133,22 +6150,22 @@ function GroupAIStateBase:hide_investigate_icon(unit)
 	end
 end
 
--- Lines 5905-5907
+-- Lines 5974-5976
 function GroupAIStateBase:is_enemy_converted_to_criminal(unit)
 	return self._converted_police[unit:key()]
 end
 
--- Lines 5911-5913
+-- Lines 5980-5982
 function GroupAIStateBase:get_amount_enemies_converted_to_criminals()
 	return self._converted_police and table.size(self._converted_police)
 end
 
--- Lines 5917-5919
+-- Lines 5986-5988
 function GroupAIStateBase:all_converted_enemies()
 	return self._converted_police
 end
 
--- Lines 5923-5934
+-- Lines 5992-6003
 function GroupAIStateBase._get_group_acces_mask(group)
 	local quadfield = managers.navigation._quad_field
 	local union_mask = quadfield:convert_access_filter_to_number("0")
@@ -6161,7 +6178,7 @@ function GroupAIStateBase._get_group_acces_mask(group)
 	return union_mask
 end
 
--- Lines 5938-5983
+-- Lines 6007-6052
 function GroupAIStateBase:on_hostage_follow(owner, follower, state)
 	if state then
 		local owner_data = self:criminal_record(owner:key())
@@ -6207,7 +6224,7 @@ function GroupAIStateBase:on_hostage_follow(owner, follower, state)
 	end
 end
 
--- Lines 5987-5994
+-- Lines 6056-6063
 function GroupAIStateBase:get_following_hostages(owner)
 	local owner_data = self:criminal_record(owner:key())
 
@@ -6218,26 +6235,26 @@ function GroupAIStateBase:get_following_hostages(owner)
 	return owner_data.following_hostages
 end
 
--- Lines 5998-6001
+-- Lines 6067-6070
 function GroupAIStateBase:register_usable_turret(unit)
 	self._usable_turret_units = self._usable_turret_units or {}
 
 	table.insert(self._usable_turret_units, unit)
 end
 
--- Lines 6003-6005
+-- Lines 6072-6074
 function GroupAIStateBase:get_usable_turrets()
 	return self._usable_turret_units
 end
 
--- Lines 6007-6010
+-- Lines 6076-6079
 function GroupAIStateBase:register_turret(unit)
 	self._turret_units = self._turret_units or {}
 
 	table.insert(self._turret_units, unit)
 end
 
--- Lines 6012-6023
+-- Lines 6081-6092
 function GroupAIStateBase:unregister_turret(unit)
 	if not self._turret_units then
 		return
@@ -6252,47 +6269,47 @@ function GroupAIStateBase:unregister_turret(unit)
 	end
 end
 
--- Lines 6025-6027
+-- Lines 6094-6096
 function GroupAIStateBase:turrets()
 	return self._turret_units
 end
 
--- Lines 6031-6033
+-- Lines 6100-6102
 function GroupAIStateBase:phalanx_minions()
 	return self._phalanx_data.minions
 end
 
--- Lines 6037-6039
+-- Lines 6106-6108
 function GroupAIStateBase:phalanx_vip()
 	return self._phalanx_data.vip
 end
 
--- Lines 6043-6045
+-- Lines 6112-6114
 function GroupAIStateBase:get_phalanx_minion_count()
 	return table.size(self._phalanx_data.minions or {})
 end
 
--- Lines 6049-6051
+-- Lines 6118-6120
 function GroupAIStateBase:register_phalanx_minion(unit)
 	self._phalanx_data.minions[unit:key()] = unit
 end
 
--- Lines 6055-6057
+-- Lines 6124-6126
 function GroupAIStateBase:register_phalanx_vip(unit)
 	self._phalanx_data.vip = unit
 end
 
--- Lines 6061-6064
+-- Lines 6130-6133
 function GroupAIStateBase:unregister_phalanx_minion(unit_key)
 	self._phalanx_data.minions[unit_key] = nil
 end
 
--- Lines 6068-6070
+-- Lines 6137-6139
 function GroupAIStateBase:unregister_phalanx_vip()
 	self._phalanx_data.vip = nil
 end
 
--- Lines 6074-6076
+-- Lines 6143-6145
 function GroupAIStateBase:is_unit_in_phalanx_minion_data(unit_key)
 	return self._phalanx_data and self._phalanx_data.minions and self._phalanx_data.minions[unit_key] and true
 end

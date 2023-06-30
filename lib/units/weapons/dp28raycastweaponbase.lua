@@ -193,14 +193,16 @@ function DP28RaycastWeaponBase:start_reload(...)
 	DP28RaycastWeaponBase.super.start_reload(self, ...)
 end
 
--- Lines 215-219
+-- Lines 215-221
 function DP28RaycastWeaponBase:set_magazine_time_stamp(time)
 	local data = self:get_magazine_object()
 
-	data.unit:anim_set_time(Idstring(data.animations.fire), time)
+	if data.unit then
+		data.unit:anim_set_time(Idstring(data.animations.fire), time)
+	end
 end
 
--- Lines 221-229
+-- Lines 223-231
 function DP28RaycastWeaponBase:tweak_data_anim_stop(anim, force_fire)
 	if anim == "fire" and not force_fire then
 		return
@@ -209,7 +211,7 @@ function DP28RaycastWeaponBase:tweak_data_anim_stop(anim, force_fire)
 	DP28RaycastWeaponBase.super.tweak_data_anim_stop(self, anim)
 end
 
--- Lines 231-235
+-- Lines 233-237
 function DP28RaycastWeaponBase:reset_magazine_anim_pos()
 	self:set_magazine_pos_based_on_ammo(true)
 	print("--Realoaded dp28")

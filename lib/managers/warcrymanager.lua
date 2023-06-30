@@ -162,7 +162,7 @@ function WarcryManager:deactivate_peer_warcry(peer_id)
 	self._peer_warcries[peer_id] = nil
 end
 
--- Lines 151-186
+-- Lines 151-193
 function WarcryManager:activate_warcry()
 	if not self._active_warcry then
 		return
@@ -199,7 +199,7 @@ function WarcryManager:activate_warcry()
 	end
 end
 
--- Lines 188-201
+-- Lines 195-208
 function WarcryManager:deactivate_warcry()
 	self:_fill_meter_by_value(-self._meter_value, true)
 
@@ -216,7 +216,7 @@ function WarcryManager:deactivate_warcry()
 	self:_deactivate_warcry()
 end
 
--- Lines 203-212
+-- Lines 210-219
 function WarcryManager:fill_meter_by_value(value, sync)
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_WARCRIES_DISABLED) then
 		return
@@ -229,7 +229,7 @@ function WarcryManager:fill_meter_by_value(value, sync)
 	self:_fill_meter_by_value(value, sync)
 end
 
--- Lines 215-237
+-- Lines 222-244
 function WarcryManager:_fill_meter_by_value(value, sync)
 	self._meter_value = self._meter_value + value
 
@@ -257,7 +257,7 @@ function WarcryManager:_fill_meter_by_value(value, sync)
 	end
 end
 
--- Lines 239-249
+-- Lines 246-256
 function WarcryManager:add_warcry_comm_wheel_option(index)
 	local warcry_comm_wheel_option = {
 		id = "warcry",
@@ -270,19 +270,18 @@ function WarcryManager:add_warcry_comm_wheel_option(index)
 	managers.hud:add_comm_wheel_option(warcry_comm_wheel_option, index)
 end
 
--- Lines 252-254
+-- Lines 259-261
 function WarcryManager:current_meter_percentage()
 	return self._meter_value / self._meter_max_value * 100
 end
 
--- Lines 256-284
+-- Lines 263-291
 function WarcryManager:_on_meter_full()
 	self._meter_full = true
 
 	managers.hud:set_player_warcry_meter_glow(true)
 	managers.network:session():send_to_peers_synched("sync_warcry_meter_glow", true)
 	managers.hud._sound_source:post_event("warcry_available")
-	self:add_warcry_comm_wheel_option(1)
 
 	local prompt_text = nil
 
@@ -311,7 +310,7 @@ function WarcryManager:_on_meter_full()
 	})
 end
 
--- Lines 286-310
+-- Lines 293-317
 function WarcryManager:_deactivate_warcry()
 	if self._active_warcry then
 		self._active_warcry:deactivate()
@@ -336,7 +335,7 @@ function WarcryManager:_deactivate_warcry()
 	end
 end
 
--- Lines 312-331
+-- Lines 319-338
 function WarcryManager:update(t, dt)
 	if not self._active then
 		return
@@ -360,32 +359,32 @@ function WarcryManager:update(t, dt)
 	end
 end
 
--- Lines 333-335
+-- Lines 340-342
 function WarcryManager:remaining()
 	return self._remaining
 end
 
--- Lines 337-339
+-- Lines 344-346
 function WarcryManager:duration()
 	return self._duration
 end
 
--- Lines 341-343
+-- Lines 348-350
 function WarcryManager:active()
 	return self._active
 end
 
--- Lines 345-347
+-- Lines 352-354
 function WarcryManager:current_meter_value()
 	return self._meter_value
 end
 
--- Lines 349-351
+-- Lines 356-358
 function WarcryManager:meter_full()
 	return self._meter_full
 end
 
--- Lines 353-371
+-- Lines 360-378
 function WarcryManager:reset()
 	if self._active_warcry then
 		self:_fill_meter_by_value(-self._meter_value, true)
@@ -404,7 +403,7 @@ function WarcryManager:reset()
 	end
 end
 
--- Lines 373-384
+-- Lines 380-391
 function WarcryManager:clear_active_warcry()
 	if self._active_warcry then
 		self:_fill_meter_by_value(-self._meter_value, true)
@@ -417,7 +416,7 @@ function WarcryManager:clear_active_warcry()
 	self._active_warcry = nil
 end
 
--- Lines 386-421
+-- Lines 393-435
 function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgrade_definition_name, default_value)
 	local peer_warcry = self._peer_warcries[peer_id]
 
@@ -432,6 +431,12 @@ function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgr
 
 		for index, buff in pairs(buffs) do
 			local upgrade_definition = tweak_data.upgrades.definitions[buff]
+
+			if not upgrade_definition then
+				Application:error("[WarcryManager:peer_warcry_upgrade_value] upgrade_definition is not valid", buff)
+
+				return default_value
+			end
 
 			if upgrade_definition.upgrade.upgrade == upgrade_definition_name then
 				local upgrade_name = upgrade_definition.upgrade.upgrade
@@ -456,7 +461,7 @@ function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgr
 	return default_value
 end
 
--- Lines 423-432
+-- Lines 437-446
 function WarcryManager:save(data)
 	if self._warcries then
 		local manager_data = {
@@ -467,7 +472,7 @@ function WarcryManager:save(data)
 	end
 end
 
--- Lines 434-453
+-- Lines 448-467
 function WarcryManager:load(data, version)
 	if data.warcry_manager and data.warcry_manager.warcries then
 		self:reset()
@@ -490,12 +495,12 @@ function WarcryManager:load(data, version)
 	end
 end
 
--- Lines 456-458
+-- Lines 470-472
 function WarcryManager:on_simulation_ended()
 	self._meter_value = 0
 end
 
--- Lines 460-463
+-- Lines 474-477
 function WarcryManager:on_mission_end_callback()
 	self:_deactivate_warcry()
 	self:_fill_meter_by_value(-self._meter_value, true)

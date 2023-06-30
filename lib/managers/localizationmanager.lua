@@ -19,7 +19,7 @@ function LocalizationManager:_convert_typewriter_font(char)
 	return retVal
 end
 
--- Lines 22-257
+-- Lines 22-167
 function LocalizationManager:_setup_macros()
 	local btn_a = utf8.char(57344)
 	local btn_b = utf8.char(57345)
@@ -69,7 +69,7 @@ function LocalizationManager:_setup_macros()
 		btn_cancel = btn_b
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		btn_stick_r = stick_r
 		btn_stick_l = stick_l
 	end
@@ -117,9 +117,7 @@ function LocalizationManager:_setup_macros()
 	self:set_default_macro("BTN_RESET_ALL_SKILLS", btn_start)
 end
 
-local is_PS3 = SystemInfo:platform() == Idstring("PS3")
-
--- Lines 261-280
+-- Lines 170-181
 function LocalizationManager:btn_macro(button, to_upper)
 	if not managers.menu:is_pc_controller() then
 		return
@@ -132,22 +130,22 @@ function LocalizationManager:btn_macro(button, to_upper)
 	return to_upper and utf8.to_upper(text) or text
 end
 
--- Lines 282-284
+-- Lines 183-185
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
--- Lines 286-288
+-- Lines 187-189
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
--- Lines 290-307
+-- Lines 191-193
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
--- Lines 309-319
+-- Lines 195-205
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -163,7 +161,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
--- Lines 321-366
+-- Lines 207-252
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -213,7 +211,7 @@ end
 
 CoreClass.override_class(CoreLocalizationManager.LocalizationManager, LocalizationManager)
 
--- Lines 371-436
+-- Lines 257-322
 function LocalizationManager:check_translation()
 	local path = "d:/raid_ww2_trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -280,7 +278,7 @@ function LocalizationManager:check_translation()
 	io.close(out_file)
 end
 
--- Lines 440-466
+-- Lines 326-361
 function LocalizationManager:check_keybind_translation(binding)
 	self._keybind_translations = {
 		"left ctrl",

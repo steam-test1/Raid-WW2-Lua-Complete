@@ -74,7 +74,7 @@ function VehicleOperatorUnitElement:update_editing()
 	end
 end
 
--- Lines 57-73
+-- Lines 57-75
 function VehicleOperatorUnitElement:draw_links_unselected(...)
 	VehicleOperatorUnitElement.super.draw_links_unselected(self, ...)
 
@@ -90,13 +90,16 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 				to_unit = self._unit
 			}
 
-			self:_draw_link(params)
+			if unit and self._unit and self:_should_draw_link(unit, self._unit) then
+				self:_draw_link(params)
+			end
+
 			Application:draw(unit, 0, 0, 0.5)
 		end
 	end
 end
 
--- Lines 76-90
+-- Lines 78-94
 function VehicleOperatorUnitElement:draw_links_selected(...)
 	VehicleOperatorUnitElement.super.draw_links_selected(self, ...)
 
@@ -110,16 +113,18 @@ function VehicleOperatorUnitElement:draw_links_selected(...)
 			to_unit = self._unit
 		}
 
-		self:_draw_link(params)
-		Application:draw(unit, 0.25, 1, 0.25)
+		if unit and self._unit and self:_should_draw_link(unit, self._unit) then
+			self:_draw_link(params)
+			Application:draw(unit, 0.25, 1, 0.25)
+		end
 	end
 end
 
--- Lines 93-111
+-- Lines 97-115
 function VehicleOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 95-104
+	-- Lines 99-108
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -143,9 +148,9 @@ function VehicleOperatorUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines 113-120
+-- Lines 117-124
 function VehicleOperatorUnitElement:remove_unit_list_btn()
-	-- Lines 114-114
+	-- Lines 118-118
 	local function f(unit)
 		return table.contains(self._hed.elements, unit:unit_data().unit_id)
 	end
@@ -159,7 +164,7 @@ function VehicleOperatorUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 122-146
+-- Lines 126-150
 function VehicleOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

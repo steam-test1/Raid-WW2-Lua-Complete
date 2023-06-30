@@ -1575,7 +1575,7 @@ function MenuNodeMainGui:_setup_item_rows(node)
 		self._version_string = nil
 	end
 
-	if Application:debug_enabled() or SystemInfo:platform() == Idstring("WIN32") then
+	if Application:debug_enabled() or _G.IS_PC then
 		self._version_string = self.ws:panel():text({
 			name = "version_string",
 			vertical = "bottom",
@@ -1583,7 +1583,7 @@ function MenuNodeMainGui:_setup_item_rows(node)
 			text = Application:version(),
 			font = tweak_data.gui.font_paths.din_compressed[20],
 			font_size = tweak_data.gui.font_sizes.size_20,
-			align = SystemInfo:platform() == Idstring("WIN32") and "right" or "left"
+			align = _G.IS_PC and "right" or "left"
 		})
 	end
 end

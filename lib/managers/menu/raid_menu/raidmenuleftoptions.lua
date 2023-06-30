@@ -71,7 +71,7 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	self._reset_progress_button:set_visible(RaidMenuCallbackHandler:is_in_main_menu())
 end
 
--- Lines 66-77
+-- Lines 66-80
 function RaidMenuLeftOptions:_list_menu_options_data_source()
 	local _list_items = {}
 
@@ -95,7 +95,7 @@ function RaidMenuLeftOptions:_list_menu_options_data_source()
 	return _list_items
 end
 
--- Lines 79-91
+-- Lines 82-94
 function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	if not data.callback then
 		return
@@ -109,7 +109,7 @@ function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	end
 end
 
--- Lines 95-111
+-- Lines 98-114
 function RaidMenuLeftOptions:bind_controller_inputs()
 	local bindings = {
 		{
@@ -138,7 +138,7 @@ function RaidMenuLeftOptions:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 113-131
+-- Lines 143-161
 function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 	local bindings = {
 		{

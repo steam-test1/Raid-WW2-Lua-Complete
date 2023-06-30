@@ -1,9 +1,10 @@
 EscortExt = EscortExt or class()
 
--- Lines 3-25
+-- Lines 3-26
 function EscortExt:init(unit)
 	self._unit = unit
-	self._wp_offset = Vector3(0, 0, 120)
+	self._wp_offset = Vector3(0, 0, 200)
+	self._wp_offset_hp = Vector3(0, 0, 175)
 	self._was_safe = false
 	self._safe_color = Color(1, 1, 1)
 	self._unsafe_color = Color(1, 0, 0)
@@ -20,7 +21,7 @@ function EscortExt:init(unit)
 	end
 end
 
--- Lines 27-35
+-- Lines 28-36
 function EscortExt:set_logic()
 	if Network:is_client() then
 		return
@@ -34,13 +35,13 @@ function EscortExt:set_logic()
 	end
 end
 
--- Lines 37-40
+-- Lines 38-41
 function EscortExt:destroy()
 	self:remove_health_bar()
 	self:remove_waypoint()
 end
 
--- Lines 42-65
+-- Lines 45-68
 function EscortExt:_setup_health_bar()
 	self._health_panel = self._ws:panel():panel({})
 	self._health_bar_bg = self._health_panel:bitmap({
@@ -70,7 +71,7 @@ function EscortExt:_setup_health_bar()
 	self:update_health_bar()
 end
 
--- Lines 67-75
+-- Lines 70-78
 function EscortExt:update_health_bar()
 	if not alive(self._health_panel) then
 		return
@@ -82,7 +83,7 @@ function EscortExt:update_health_bar()
 	self._health_bar:set_w(new_size)
 end
 
--- Lines 77-86
+-- Lines 80-89
 function EscortExt:remove_health_bar()
 	if not alive(self._health_panel) then
 		return
@@ -95,7 +96,7 @@ function EscortExt:remove_health_bar()
 	self._health_bar_bg = nil
 end
 
--- Lines 88-95
+-- Lines 91-98
 function EscortExt:set_health_bar_visible(visible)
 	if not alive(self._health_panel) then
 		return
@@ -106,12 +107,12 @@ function EscortExt:set_health_bar_visible(visible)
 	self._health_visible = visible
 end
 
--- Lines 97-99
+-- Lines 102-104
 function EscortExt:has_waypoint()
 	return self._has_waypoint
 end
 
--- Lines 101-131
+-- Lines 106-137
 function EscortExt:add_waypoint()
 	if self._has_waypoint then
 		self:remove_waypoint()
@@ -132,7 +133,8 @@ function EscortExt:add_waypoint()
 		unit = self._unit,
 		position = self._position,
 		rotation = self._rotation,
-		color = self._unsafe_color
+		color = self._unsafe_color,
+		waypoint_color = self._unsafe_color
 	}
 	self._icon_id = tostring(self._unit:key())
 
@@ -142,7 +144,7 @@ function EscortExt:add_waypoint()
 	self._has_waypoint = true
 end
 
--- Lines 133-141
+-- Lines 139-147
 function EscortExt:remove_waypoint()
 	if not self._has_waypoint then
 		return
@@ -154,7 +156,7 @@ function EscortExt:remove_waypoint()
 	self._has_waypoint = false
 end
 
--- Lines 143-156
+-- Lines 149-162
 function EscortExt:is_safe()
 	local someone_close = false
 	local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
@@ -176,7 +178,7 @@ local health_pos = Vector3()
 local health_dir = Vector3()
 local cam_dir = Vector3()
 
--- Lines 161-202
+-- Lines 167-208
 function EscortExt:update(t, dt)
 	if self._has_waypoint then
 		mvector3.set(self._position, self._unit:position() + self._wp_offset)
@@ -218,21 +220,25 @@ function EscortExt:update(t, dt)
 		if dot < 0 then
 			self._health_panel:hide()
 		else
-			mvector3.set(health_pos, self._ws:world_to_screen(cam, self._unit:position() + Vector3(0, 0, 150)))
+			mvector3.set(health_pos, self._ws:world_to_screen(cam, self._unit:position() + self._wp_offset_hp))
 			self._health_panel:set_center(health_pos.x, health_pos.y)
 			self._health_panel:show()
 		end
 	end
 end
 
--- Lines 204-208
+-- Lines 210-218
 function EscortExt:set_waypoint_safe(safe)
-	managers.hud:change_waypoint_distance_color(self._icon_id, safe and self._safe_color or self._unsafe_color)
-	managers.hud:change_waypoint_arrow_color(self._icon_id, safe and self._safe_color or self._unsafe_color)
-	managers.hud:change_waypoint_icon(self._icon_id, safe and "waypoint_escort_stand" or "waypoint_escort_crouch")
+	local final_color = safe and self._safe_color or self._unsafe_color
+	local final_icon = safe and "waypoint_escort_stand" or "waypoint_escort_crouch"
+
+	managers.hud:change_waypoint_distance_color(self._icon_id, final_color)
+	managers.hud:change_waypoint_arrow_color(self._icon_id, final_color)
+	managers.hud:change_waypoint_icon_color(self._icon_id, final_color)
+	managers.hud:change_waypoint_icon(self._icon_id, final_icon)
 end
 
--- Lines 210-227
+-- Lines 220-237
 function EscortExt:set_active(active)
 	self._active = active
 
@@ -252,12 +258,12 @@ function EscortExt:set_active(active)
 	end
 end
 
--- Lines 229-231
+-- Lines 239-241
 function EscortExt:active()
 	return self._active
 end
 
--- Lines 233-240
+-- Lines 243-250
 function EscortExt:save(data)
 	data.escort = {}
 
@@ -269,7 +275,7 @@ function EscortExt:save(data)
 	data.escort.health_visible = self._health_visible
 end
 
--- Lines 242-248
+-- Lines 252-258
 function EscortExt:load(data)
 	if data.escort.has_waypoint then
 		self:add_waypoint()

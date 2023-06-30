@@ -217,7 +217,7 @@ function HUDTeammateBase:_check_state_change()
 	end
 end
 
--- Lines 184-231
+-- Lines 184-236
 function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	local old_state = self._displayed_state
 	local fade_out_duration = 0.15
@@ -241,7 +241,13 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	end
 
 	for index, state in pairs(self._states) do
-		self._status_panel:child(state.control):set_alpha(0)
+		local c = state.control and self._status_panel:child(state.control)
+
+		if c then
+			c:set_alpha(0)
+		else
+			Application:warn("[HUDTeammateBase:_animate_state_change] no state control (index, state)", index, state)
+		end
 	end
 
 	self._status_panel:child(self._displayed_state.control):set_alpha(1)
@@ -268,7 +274,7 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	self._status_panel:set_alpha(1)
 end
 
--- Lines 235-241
+-- Lines 240-246
 function HUDTeammateBase:start_timer(time, current)
 	self._timer_total = time
 	self._timer_current = current or time
@@ -277,17 +283,17 @@ function HUDTeammateBase:start_timer(time, current)
 	self._timer_text:animate(callback(self, self, "_animate_timer_countdown"))
 end
 
--- Lines 243-245
+-- Lines 248-250
 function HUDTeammateBase:set_pause_timer(pause)
 	self._is_timer_running = not pause
 end
 
--- Lines 247-249
+-- Lines 252-254
 function HUDTeammateBase:is_timer_running()
 	return self._is_timer_running
 end
 
--- Lines 251-256
+-- Lines 256-261
 function HUDTeammateBase:stop_timer()
 	self._timer_total = nil
 	self._is_timer_running = false
@@ -295,7 +301,7 @@ function HUDTeammateBase:stop_timer()
 	self._timer_text:stop()
 end
 
--- Lines 258-271
+-- Lines 263-276
 function HUDTeammateBase:_animate_timer_countdown()
 	while self._timer_current > 0 and self._timer_total and self._timer_total > 0 do
 		local dt = coroutine.yield()
@@ -312,6 +318,6 @@ function HUDTeammateBase:_animate_timer_countdown()
 	end
 end
 
--- Lines 275-276
+-- Lines 280-281
 function HUDTeammateBase:_set_status_icon(new_status_icon)
 end

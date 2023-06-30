@@ -15,7 +15,7 @@ end
 local ids_layer1_animate_factor = Idstring("layer1_animate_factor")
 local ids_blend_factor = Idstring("blend_factor")
 
--- Lines 17-39
+-- Lines 18-50
 function WarcryBerserk:update(dt)
 	local lerp = WarcryBerserk.super.update(self, dt)
 	local distortion_a = managers.environment_controller:get_default_lens_distortion_value()
@@ -36,21 +36,37 @@ function WarcryBerserk:update(dt)
 
 		material:set_variable(ids_layer1_animate_factor, animation_factor)
 	end
+
+	if self._active then
+		if self._heals_delay > 0 then
+			self._heals_delay = self._heals_delay - dt
+		else
+			self:_heal_step()
+		end
+	end
 end
 
--- Lines 41-51
+-- Lines 52-58
 function WarcryBerserk:activate()
 	WarcryBerserk.super.activate(self)
 
 	self._ammo_consumption_counter = managers.player:upgrade_value("player", "warcry_ammo_consumption", 1)
+	self._heals_delay = 0.5
+end
+
+-- Lines 60-71
+function WarcryBerserk:_heal_step()
+	self._heals_delay = 0.5
 	local health_restoration_percentage = self._tweak_data.base_team_heal_percentage
 	health_restoration_percentage = health_restoration_percentage * managers.player:upgrade_value("player", "warcry_team_heal_bonus", 1)
 
-	managers.player:player_unit():character_damage():restore_health(health_restoration_percentage / 100)
-	managers.network:session():send_to_peers_synched("restore_health_by_percentage", health_restoration_percentage)
+	if managers.player:player_unit() then
+		managers.player:player_unit():character_damage():restore_health(health_restoration_percentage / 100)
+		managers.network:session():send_to_peers_synched("restore_health_by_percentage", health_restoration_percentage)
+	end
 end
 
--- Lines 53-57
+-- Lines 73-77
 function WarcryBerserk:deactivate()
 	WarcryBerserk.super.deactivate(self)
 	managers.environment_controller:reset_lens_distortion_value()
@@ -58,12 +74,12 @@ function WarcryBerserk:deactivate()
 	self._ammo_consumption_counter = nil
 end
 
--- Lines 59-61
+-- Lines 79-81
 function WarcryBerserk:duration()
 	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
 end
 
--- Lines 63-70
+-- Lines 83-90
 function WarcryBerserk:get_level_description(level)
 	level = math.clamp(level, 1, #self._tweak_data.buffs)
 
@@ -74,7 +90,7 @@ function WarcryBerserk:get_level_description(level)
 	return "warcry_berserk_desc"
 end
 
--- Lines 72-81
+-- Lines 92-101
 function WarcryBerserk:check_ammo_consumption()
 	self._ammo_consumption_counter = self._ammo_consumption_counter - 1
 
@@ -87,7 +103,7 @@ function WarcryBerserk:check_ammo_consumption()
 	return false
 end
 
--- Lines 83-108
+-- Lines 103-128
 function WarcryBerserk:_on_enemy_killed(params)
 	local unit = managers.player:player_unit()
 
@@ -112,7 +128,7 @@ function WarcryBerserk:_on_enemy_killed(params)
 	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)
 end
 
--- Lines 110-112
+-- Lines 130-132
 function WarcryBerserk:cleanup()
 	managers.system_event_listener:remove_listener("warcry_berserk_enemy_killed")
 end

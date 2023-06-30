@@ -1,4 +1,18 @@
--- Lines 1-8
+-- Lines 22-32
+function MenuManager:show_custom_popup_dialog(dialog_data, buttons)
+	if buttons then
+		dialog_data.focus_button = dialog_data.focus_button or 1
+		dialog_data.button_list = {}
+
+		for _, button_data in ipairs(buttons) do
+			table.insert(dialog_data.button_list, button_data)
+		end
+	end
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 37-44
 function MenuManager:show_retrieving_servers_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_retrieving_servers_title"),
@@ -10,7 +24,7 @@ function MenuManager:show_retrieving_servers_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 10-22
+-- Lines 46-58
 function MenuManager:show_get_world_list_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_logging_in"),
@@ -29,7 +43,7 @@ function MenuManager:show_get_world_list_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 24-32
+-- Lines 60-68
 function MenuManager:show_game_permission_changed_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -45,7 +59,7 @@ function MenuManager:show_game_permission_changed_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 34-42
+-- Lines 70-78
 function MenuManager:show_too_low_level()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -61,7 +75,7 @@ function MenuManager:show_too_low_level()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 44-52
+-- Lines 80-88
 function MenuManager:show_too_low_level_ovk145()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -77,7 +91,7 @@ function MenuManager:show_too_low_level_ovk145()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 54-62
+-- Lines 90-98
 function MenuManager:show_does_not_own_heist()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -93,7 +107,7 @@ function MenuManager:show_does_not_own_heist()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 64-72
+-- Lines 100-108
 function MenuManager:show_does_not_own_heist_info(heist, player)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -112,7 +126,7 @@ function MenuManager:show_does_not_own_heist_info(heist, player)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 74-82
+-- Lines 110-118
 function MenuManager:show_failed_joining_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -128,7 +142,7 @@ function MenuManager:show_failed_joining_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 84-92
+-- Lines 120-128
 function MenuManager:show_ok_only_dialog(title, text)
 	local dialog_data = {
 		title = managers.localization:text(title),
@@ -144,7 +158,7 @@ function MenuManager:show_ok_only_dialog(title, text)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 94-130
+-- Lines 130-166
 function MenuManager:show_smartmatch_inexact_match_dialog(params)
 	local dialog_data = {
 		id = "confirm_inexact_match",
@@ -195,7 +209,7 @@ function MenuManager:show_smartmatch_inexact_match_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 132-140
+-- Lines 168-176
 function MenuManager:show_cant_join_from_game_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -211,7 +225,7 @@ function MenuManager:show_cant_join_from_game_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 142-150
+-- Lines 178-186
 function MenuManager:show_game_started_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -227,7 +241,7 @@ function MenuManager:show_game_started_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 152-164
+-- Lines 188-200
 function _stop_autofire_sound()
 	if not managers.player:player_unit() then
 		return
@@ -244,7 +258,7 @@ function _stop_autofire_sound()
 	end
 end
 
--- Lines 166-174
+-- Lines 202-210
 function MenuManager:show_joining_lobby_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_joining_lobby_title"),
@@ -257,7 +271,7 @@ function MenuManager:show_joining_lobby_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 176-191
+-- Lines 212-227
 function MenuManager:show_searching_match_dialog(params)
 	local cancel_button = {
 		cancel_button = true,
@@ -277,7 +291,7 @@ function MenuManager:show_searching_match_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 193-201
+-- Lines 229-237
 function MenuManager:show_fetching_status_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_fetching_status_title"),
@@ -290,7 +304,7 @@ function MenuManager:show_fetching_status_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 203-211
+-- Lines 239-247
 function MenuManager:show_no_connection_to_game_servers_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -306,7 +320,7 @@ function MenuManager:show_no_connection_to_game_servers_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 213-221
+-- Lines 249-269
 function MenuManager:show_person_joining(id, nick)
 	local dialog_data = {
 		title = managers.localization:text("dialog_dropin_title", {
@@ -319,9 +333,13 @@ function MenuManager:show_person_joining(id, nick)
 
 	managers.system_menu:show(dialog_data)
 	_stop_autofire_sound()
+
+	if managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_mute()
+	end
 end
 
--- Lines 223-231
+-- Lines 271-279
 function MenuManager:show_corrupt_dlc()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -337,12 +355,16 @@ function MenuManager:show_corrupt_dlc()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 233-235
+-- Lines 281-294
 function MenuManager:close_person_joining(id)
 	managers.system_menu:close("user_dropin" .. id)
+
+	if managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_unmute()
+	end
 end
 
--- Lines 237-246
+-- Lines 296-305
 function MenuManager:update_person_joining(id, progress_percentage)
 	local dlg = managers.system_menu:get_dialog("user_dropin" .. id)
 
@@ -355,7 +377,7 @@ function MenuManager:update_person_joining(id, progress_percentage)
 	end
 end
 
--- Lines 248-260
+-- Lines 307-319
 function MenuManager:show_host_left_dialog(message, clbk)
 	message = Global.on_remove_peer_message or message
 	local dialog_data = {
@@ -375,7 +397,7 @@ function MenuManager:show_host_left_dialog(message, clbk)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 263-271
+-- Lines 322-330
 function MenuManager:show_lost_connection_to_host_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_returning_to_main_menu"),
@@ -391,7 +413,7 @@ function MenuManager:show_lost_connection_to_host_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 273-281
+-- Lines 332-340
 function MenuManager:show_deleting_current_operation_save_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_deleting_current_job_title"),
@@ -407,12 +429,12 @@ function MenuManager:show_deleting_current_operation_save_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 284-287
+-- Lines 343-346
 function MenuManager:show_peer_kicked_dialog(params)
 	Global.on_remove_peer_message = Global.on_remove_peer_message or "dialog_mp_kicked_out_message"
 end
 
--- Lines 290-301
+-- Lines 349-360
 function MenuManager:show_peer_already_kicked_from_game_dialog(params)
 	local title = Global.on_remove_peer_message and "dialog_information_title" or "dialog_mp_kicked_out_title"
 	local dialog_data = {
@@ -432,7 +454,7 @@ function MenuManager:show_peer_already_kicked_from_game_dialog(params)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 303-316
+-- Lines 362-375
 function MenuManager:show_default_option_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_default_options_title"),
@@ -455,7 +477,7 @@ function MenuManager:show_default_option_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 318-331
+-- Lines 377-390
 function MenuManager:show_option_dialog(params)
 	local dialog_data = {
 		title = params.title,
@@ -478,7 +500,7 @@ function MenuManager:show_option_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 333-346
+-- Lines 392-405
 function MenuManager:show_character_delete_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_character_delete_title"),
@@ -501,7 +523,7 @@ function MenuManager:show_character_delete_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 348-357
+-- Lines 407-416
 function MenuManager:show_last_character_delete_forbiden_in_multiplayer(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -517,7 +539,7 @@ function MenuManager:show_last_character_delete_forbiden_in_multiplayer(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 359-373
+-- Lines 418-432
 function MenuManager:show_respec_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("menu_character_skills_retrain_dialog_title"),
@@ -543,7 +565,7 @@ function MenuManager:show_respec_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 375-389
+-- Lines 434-448
 function MenuManager:show_character_customization_purchase_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("character_customization_purchase_confirm_title"),
@@ -570,7 +592,7 @@ function MenuManager:show_character_customization_purchase_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 391-405
+-- Lines 450-464
 function MenuManager:show_gold_asset_store_purchase_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("gold_asset_store_dialog_buy_title"),
@@ -597,7 +619,7 @@ function MenuManager:show_gold_asset_store_purchase_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 407-417
+-- Lines 466-476
 function MenuManager:show_skill_selection_invalid_dialog()
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_character_skills_selection_invalid_title")),
@@ -615,7 +637,7 @@ function MenuManager:show_skill_selection_invalid_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 419-433
+-- Lines 478-492
 function MenuManager:show_skill_selection_confirm_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_character_skills_selection_confirmation_title")),
@@ -639,7 +661,7 @@ function MenuManager:show_skill_selection_confirm_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 436-450
+-- Lines 495-509
 function MenuManager:show_kick_peer_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_kick_confirm_title")),
@@ -665,7 +687,7 @@ function MenuManager:show_kick_peer_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 452-466
+-- Lines 511-525
 function MenuManager:show_save_slot_delete_confirm_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_mission_save_slot_delete_confirmation_title")),
@@ -689,7 +711,7 @@ function MenuManager:show_save_slot_delete_confirm_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 468-486
+-- Lines 527-545
 function MenuManager:show_redeem_character_customization_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_loot_screen_redeem_character_customization_dialog_title", {
@@ -716,7 +738,7 @@ function MenuManager:show_redeem_character_customization_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 488-506
+-- Lines 547-565
 function MenuManager:show_redeem_weapon_point_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_loot_screen_redeem_weapon_point_dialog_title", {
@@ -743,7 +765,7 @@ function MenuManager:show_redeem_weapon_point_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 508-527
+-- Lines 567-586
 function MenuManager:show_character_create_dialog(params)
 	local dialog_data = {
 		textbox = true,
@@ -770,7 +792,33 @@ function MenuManager:show_character_create_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 529-539
+-- Lines 589-607
+function MenuManager:show_mod_overrides_warning_dialog(params)
+	local dialog_data = {
+		title = utf8.to_upper(managers.localization:text("menu_mod_overrides_warning_title")),
+		text = managers.localization:text("menu_mod_overrides_warning_text"),
+		focus_button = 1
+	}
+	local yes_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_go_to_mod_overrides")),
+		class = RaidGUIControlButtonShortPrimary,
+		callback_func = params.callback_yes
+	}
+	local no_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_skip")),
+		class = RaidGUIControlButtonShortSecondary,
+		cancel_button = true,
+		callback_func = params.callback_no
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 627-637
 function MenuManager:show_err_character_name_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("dialog_error_title")),
@@ -788,7 +836,25 @@ function MenuManager:show_err_character_name_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 541-551
+-- Lines 640-650
+function MenuManager:show_voice_chat_blocked_dialog(clbk)
+	local dialog_data = {
+		title = utf8.to_upper(managers.localization:text("dialog_warning_title")),
+		text = managers.localization:text("dialog_err_online_insufficient_privileges_voicechat"),
+		no_upper = true
+	}
+	local ok_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_ok")),
+		callback_func = clbk and clbk or nil
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 653-663
 function MenuManager:show_err_not_signed_in_dialog()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_error_title")),
@@ -808,13 +874,15 @@ function MenuManager:show_err_not_signed_in_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 553-563
+-- Lines 665-686
 function MenuManager:show_mp_disconnected_internet_dialog(params)
 	local dialog_data = {
-		title = string.upper(managers.localization:text("dialog_warning_title")),
-		text = managers.localization:text("dialog_mp_disconnected_internet"),
-		no_upper = true
+		title = string.upper(managers.localization:text("dialog_warning_title"))
 	}
+	local text_string = "dialog_mp_disconnected_internet"
+	dialog_data.text = managers.localization:text(text_string)
+	dialog_data.no_upper = true
+	dialog_data.id = "show_mp_disconnected_internet_dialog"
 	local ok_button = {
 		text = managers.localization:text("dialog_ok"),
 		callback_func = params.ok_func
@@ -826,7 +894,7 @@ function MenuManager:show_mp_disconnected_internet_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 565-574
+-- Lines 688-697
 function MenuManager:show_internet_connection_required()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_error_title")),
@@ -843,9 +911,9 @@ function MenuManager:show_internet_connection_required()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 576-591
+-- Lines 699-714
 function MenuManager:show_err_no_chat_parental_control()
-	if SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS4 then
 		PSN:show_chat_parental_control()
 	else
 		local dialog_data = {
@@ -864,7 +932,7 @@ function MenuManager:show_err_no_chat_parental_control()
 	end
 end
 
--- Lines 593-602
+-- Lines 716-725
 function MenuManager:show_err_under_age()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_information_title")),
@@ -881,11 +949,11 @@ function MenuManager:show_err_under_age()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 604-613
+-- Lines 727-736
 function MenuManager:show_err_new_patch()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_information_title")),
-		text = managers.localization:text("dialog_new_patch"),
+		text = managers.localization:text("dialog_err_game_patch_pkg_exists_02"),
 		no_upper = true
 	}
 	local ok_button = {
@@ -898,7 +966,7 @@ function MenuManager:show_err_new_patch()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 615-626
+-- Lines 738-749
 function MenuManager:show_waiting_for_server_response(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_waiting_for_server_response_title"),
@@ -917,7 +985,7 @@ function MenuManager:show_waiting_for_server_response(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 628-636
+-- Lines 751-759
 function MenuManager:show_request_timed_out_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_request_timed_out_title"),
@@ -933,7 +1001,7 @@ function MenuManager:show_request_timed_out_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 638-651
+-- Lines 761-774
 function MenuManager:show_restart_game_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -956,7 +1024,7 @@ function MenuManager:show_restart_game_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 653-666
+-- Lines 776-789
 function MenuManager:show_return_to_camp_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_restart_level_title"),
@@ -979,7 +1047,7 @@ function MenuManager:show_return_to_camp_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 668-681
+-- Lines 791-804
 function MenuManager:show_restart_mission_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_restart_mission_title"),
@@ -1002,7 +1070,7 @@ function MenuManager:show_restart_mission_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 683-691
+-- Lines 806-814
 function MenuManager:show_no_invites_message()
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -1018,7 +1086,7 @@ function MenuManager:show_no_invites_message()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 693-701
+-- Lines 816-824
 function MenuManager:show_invite_wrong_version_message()
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -1034,7 +1102,7 @@ function MenuManager:show_invite_wrong_version_message()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 703-711
+-- Lines 826-834
 function MenuManager:show_invite_wrong_room_message()
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -1050,7 +1118,7 @@ function MenuManager:show_invite_wrong_room_message()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 713-723
+-- Lines 836-846
 function MenuManager:show_invite_join_message(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -1068,7 +1136,7 @@ function MenuManager:show_invite_join_message(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 725-735
+-- Lines 848-858
 function MenuManager:show_pending_invite_message(params)
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_information_title")),
@@ -1086,7 +1154,7 @@ function MenuManager:show_pending_invite_message(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 737-747
+-- Lines 860-870
 function MenuManager:show_game_is_installing()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_information_title")),
@@ -1103,7 +1171,7 @@ function MenuManager:show_game_is_installing()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 749-759
+-- Lines 872-882
 function MenuManager:show_game_is_installing_menu()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_information_title")),
@@ -1120,7 +1188,7 @@ function MenuManager:show_game_is_installing_menu()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 761-770
+-- Lines 884-893
 function MenuManager:show_NPCommerce_open_fail(params)
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_error_title")),
@@ -1137,7 +1205,7 @@ function MenuManager:show_NPCommerce_open_fail(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 772-780
+-- Lines 895-903
 function MenuManager:show_NPCommerce_checkout_fail(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -1153,7 +1221,7 @@ function MenuManager:show_NPCommerce_checkout_fail(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 782-791
+-- Lines 905-914
 function MenuManager:show_waiting_NPCommerce_open(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_wait"),
@@ -1167,7 +1235,7 @@ function MenuManager:show_waiting_NPCommerce_open(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 793-802
+-- Lines 916-925
 function MenuManager:show_NPCommerce_browse_fail()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -1184,7 +1252,7 @@ function MenuManager:show_NPCommerce_browse_fail()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 804-812
+-- Lines 927-935
 function MenuManager:show_NPCommerce_browse_success()
 	local dialog_data = {
 		title = managers.localization:text("dialog_transaction_successful"),
@@ -1200,7 +1268,7 @@ function MenuManager:show_NPCommerce_browse_success()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 815-827
+-- Lines 938-950
 function MenuManager:show_dlc_require_restart()
 	if not managers.system_menu:is_active() and not self._shown_dlc_require_restart then
 		self._shown_dlc_require_restart = true
@@ -1219,7 +1287,7 @@ function MenuManager:show_dlc_require_restart()
 	end
 end
 
--- Lines 829-867
+-- Lines 952-990
 function MenuManager:show_video_message_dialog(params)
 	local text_params = params.text_params or {}
 	text_params.player = text_params.player or tostring(managers.network.account:username() or managers.blackmarket:get_preferred_character_real_name())
@@ -1262,7 +1330,7 @@ function MenuManager:show_video_message_dialog(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines 869-906
+-- Lines 992-1029
 function MenuManager:show_new_message_dialog(params)
 	local text_params = params.text_params or {}
 	text_params.player = text_params.player or tostring(managers.network.account:username() or managers.blackmarket:get_preferred_character_real_name())
@@ -1304,7 +1372,7 @@ function MenuManager:show_new_message_dialog(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines 908-942
+-- Lines 1031-1065
 function MenuManager:show_accept_gfx_settings_dialog(func)
 	local count = 10
 	local dialog_data = {
@@ -1350,7 +1418,7 @@ function MenuManager:show_accept_gfx_settings_dialog(func)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 944-952
+-- Lines 1067-1075
 function MenuManager:show_key_binding_collision(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -1366,7 +1434,7 @@ function MenuManager:show_key_binding_collision(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 954-962
+-- Lines 1077-1085
 function MenuManager:show_key_binding_forbidden(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -1382,7 +1450,7 @@ function MenuManager:show_key_binding_forbidden(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 964-972
+-- Lines 1087-1095
 function MenuManager:show_no_active_characters()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -1398,7 +1466,7 @@ function MenuManager:show_no_active_characters()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 974-982
+-- Lines 1097-1105
 function MenuManager:show_no_safe_for_this_drill(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_no_safe_for_this_drill_title"),
@@ -1414,7 +1482,7 @@ function MenuManager:show_no_safe_for_this_drill(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 984-992
+-- Lines 1107-1115
 function MenuManager:show_and_more_tradable_item_received(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_and_more_tradable_item_title"),
@@ -1432,7 +1500,7 @@ function MenuManager:show_and_more_tradable_item_received(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 994-1010
+-- Lines 1117-1133
 function MenuManager:show_mask_mods_available(params)
 	local dialog_data = {
 		title = "",
@@ -1452,7 +1520,7 @@ function MenuManager:show_mask_mods_available(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines 1012-1030
+-- Lines 1135-1153
 function MenuManager:show_confirm_skillpoints(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_place_title"),
@@ -1482,7 +1550,7 @@ function MenuManager:show_confirm_skillpoints(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1032-1053
+-- Lines 1155-1176
 function MenuManager:show_confirm_respec_skilltree(params)
 	local tree_name = managers.localization:text(tweak_data.skilltree.skilltree[params.tree].name_id)
 	local dialog_data = {
@@ -1511,7 +1579,7 @@ function MenuManager:show_confirm_respec_skilltree(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1055-1074
+-- Lines 1178-1197
 function MenuManager:show_confirm_respec_skilltree_all(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_respec_title"),
@@ -1537,7 +1605,7 @@ function MenuManager:show_confirm_respec_skilltree_all(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1076-1084
+-- Lines 1199-1207
 function MenuManager:show_skilltree_reseted()
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_reseted_title"),
@@ -1553,7 +1621,7 @@ function MenuManager:show_skilltree_reseted()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1086-1104
+-- Lines 1209-1227
 function MenuManager:show_confirm_infamypoints(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_place_title"),
@@ -1582,7 +1650,7 @@ function MenuManager:show_confirm_infamypoints(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1106-1114
+-- Lines 1229-1237
 function MenuManager:show_infamytree_reseted()
 	local dialog_data = {
 		title = managers.localization:text("dialog_infamy_reseted_title"),
@@ -1598,7 +1666,7 @@ function MenuManager:show_infamytree_reseted()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1116-1124
+-- Lines 1239-1247
 function MenuManager:show_enable_steam_overlay()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -1614,7 +1682,7 @@ function MenuManager:show_enable_steam_overlay()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1126-1134
+-- Lines 1249-1257
 function MenuManager:show_requires_big_picture()
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -1630,7 +1698,7 @@ function MenuManager:show_requires_big_picture()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1136-1148
+-- Lines 1259-1271
 function MenuManager:show_buying_tradable_item_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_tradable_item_store_title"),
@@ -1651,7 +1719,7 @@ function MenuManager:show_buying_tradable_item_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1150-1159
+-- Lines 1273-1282
 function MenuManager:show_canceled_tradable_item_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_tradable_item_store_title"),
@@ -1667,7 +1735,7 @@ function MenuManager:show_canceled_tradable_item_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1161-1170
+-- Lines 1284-1293
 function MenuManager:show_success_tradable_item_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_tradable_item_store_title"),
@@ -1683,7 +1751,7 @@ function MenuManager:show_success_tradable_item_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1172-1180
+-- Lines 1295-1303
 function MenuManager:show_enable_steam_overlay_tradable_item()
 	local dialog_data = {
 		title = managers.localization:text("dialog_tradable_item_store_title"),
@@ -1699,7 +1767,7 @@ function MenuManager:show_enable_steam_overlay_tradable_item()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1182-1191
+-- Lines 1305-1314
 function MenuManager:show_error_tradable_item_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_tradable_item_store_title"),
@@ -1715,7 +1783,7 @@ function MenuManager:show_error_tradable_item_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1193-1202
+-- Lines 1316-1325
 function MenuManager:show_failed_tradable_item_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_tradable_item_store_title"),
@@ -1731,7 +1799,7 @@ function MenuManager:show_failed_tradable_item_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1204-1224
+-- Lines 1327-1347
 function MenuManager:show_confirm_blackmarket_sell_no_slot(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_sell_title"),
@@ -1760,7 +1828,7 @@ function MenuManager:show_confirm_blackmarket_sell_no_slot(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1226-1253
+-- Lines 1349-1376
 function MenuManager:show_confirm_blackmarket_mask_remove(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
@@ -1803,7 +1871,7 @@ function MenuManager:show_confirm_blackmarket_mask_remove(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1255-1282
+-- Lines 1378-1405
 function MenuManager:show_confirm_blackmarket_mask_sell(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
@@ -1844,7 +1912,7 @@ function MenuManager:show_confirm_blackmarket_mask_sell(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1284-1304
+-- Lines 1407-1427
 function MenuManager:show_confirm_blackmarket_sell(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
@@ -1874,7 +1942,7 @@ function MenuManager:show_confirm_blackmarket_sell(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1306-1325
+-- Lines 1429-1448
 function MenuManager:show_confirm_blackmarket_buy_weapon_slot(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_weapon_buy_title"),
@@ -1901,7 +1969,7 @@ function MenuManager:show_confirm_blackmarket_buy_weapon_slot(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1327-1346
+-- Lines 1450-1469
 function MenuManager:show_confirm_blackmarket_buy_mask_slot(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_weapon_buy_title"),
@@ -1928,7 +1996,7 @@ function MenuManager:show_confirm_blackmarket_buy_mask_slot(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1348-1375
+-- Lines 1471-1498
 function MenuManager:show_confirm_blackmarket_buy(params)
 	local num_in_inventory = ""
 	local num_of_same = managers.blackmarket:get_crafted_item_amount(params.category, params.weapon)
@@ -1967,7 +2035,7 @@ function MenuManager:show_confirm_blackmarket_buy(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1377-1429
+-- Lines 1500-1552
 function MenuManager:show_confirm_blackmarket_mod(params)
 	local l_local = managers.localization
 	local dialog_data = {
@@ -2034,7 +2102,7 @@ function MenuManager:show_confirm_blackmarket_mod(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1431-1467
+-- Lines 1554-1590
 function MenuManager:show_confirm_weapon_cosmetics(params)
 	local l_local = managers.localization
 	local dialog_data = {
@@ -2083,7 +2151,7 @@ function MenuManager:show_confirm_weapon_cosmetics(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1469-1497
+-- Lines 1592-1620
 function MenuManager:show_confirm_blackmarket_assemble(params)
 	local num_in_inventory = ""
 	local num_of_same = managers.blackmarket:get_crafted_item_amount(params.category, params.weapon)
@@ -2121,7 +2189,7 @@ function MenuManager:show_confirm_blackmarket_assemble(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1499-1517
+-- Lines 1622-1640
 function MenuManager:show_confirm_blackmarket_abort(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_custom_abort"),
@@ -2146,7 +2214,7 @@ function MenuManager:show_confirm_blackmarket_abort(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1519-1538
+-- Lines 1642-1661
 function MenuManager:show_confirm_blackmarket_finalize(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_custom_final_title"),
@@ -2177,7 +2245,7 @@ function MenuManager:show_confirm_blackmarket_finalize(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1540-1557
+-- Lines 1663-1680
 function MenuManager:show_storage_removed_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -2194,7 +2262,7 @@ function MenuManager:show_storage_removed_dialog(params)
 	managers.system_menu:show_platform(dialog_data)
 end
 
--- Lines 1559-1567
+-- Lines 1682-1690
 function MenuManager:show_game_no_longer_exists(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -2210,7 +2278,7 @@ function MenuManager:show_game_no_longer_exists(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1569-1577
+-- Lines 1692-1700
 function MenuManager:show_game_is_full(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -2226,7 +2294,7 @@ function MenuManager:show_game_is_full(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1579-1587
+-- Lines 1702-1710
 function MenuManager:show_wrong_version_message()
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -2242,7 +2310,7 @@ function MenuManager:show_wrong_version_message()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1589-1600
+-- Lines 1712-1723
 function MenuManager:show_inactive_user_accepted_invite(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -2260,7 +2328,7 @@ function MenuManager:show_inactive_user_accepted_invite(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1602-1615
+-- Lines 1725-1738
 function MenuManager:show_question_start_tutorial(params)
 	local dialog_data = {
 		focus_button = 1,
@@ -2283,7 +2351,7 @@ function MenuManager:show_question_start_tutorial(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1617-1629
+-- Lines 1740-1752
 function MenuManager:show_leave_safehouse_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_safehouse_title"),
@@ -2305,7 +2373,7 @@ function MenuManager:show_leave_safehouse_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1631-1639
+-- Lines 1754-1762
 function MenuManager:show_save_settings_failed(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -2321,7 +2389,7 @@ function MenuManager:show_save_settings_failed(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1641-1655
+-- Lines 1764-1778
 function MenuManager:show_play_safehouse_question(params)
 	local dialog_data = {
 		focus_button = 1,
@@ -2345,7 +2413,7 @@ function MenuManager:show_play_safehouse_question(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1657-1669
+-- Lines 1780-1792
 function MenuManager:show_savefile_wrong_version(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -2362,7 +2430,7 @@ function MenuManager:show_savefile_wrong_version(params)
 	managers.system_menu:add_init_show(dialog_data)
 end
 
--- Lines 1671-1683
+-- Lines 1794-1806
 function MenuManager:show_savefile_wrong_user(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_information_title"),
@@ -2379,7 +2447,7 @@ function MenuManager:show_savefile_wrong_user(params)
 	managers.system_menu:add_init_show(dialog_data)
 end
 
--- Lines 1685-1698
+-- Lines 1808-1821
 function MenuManager:show_account_picker_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -2402,7 +2470,7 @@ function MenuManager:show_account_picker_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1700-1713
+-- Lines 1823-1836
 function MenuManager:show_abort_mission_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -2425,7 +2493,7 @@ function MenuManager:show_abort_mission_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1715-1724
+-- Lines 1838-1847
 function MenuManager:show_safe_error_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
@@ -2442,7 +2510,7 @@ function MenuManager:show_safe_error_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1726-1740
+-- Lines 1849-1863
 function MenuManager:show_specialization_xp_convert(xp_present, points_present)
 	local dialog_data = {
 		title = managers.localization:text("dialog_xp_to_specialization"),
@@ -2461,7 +2529,7 @@ function MenuManager:show_specialization_xp_convert(xp_present, points_present)
 	managers.system_menu:show_specialization_convert(dialog_data)
 end
 
--- Lines 1742-1754
+-- Lines 1865-1877
 function MenuManager:show_infamous_message(can_become_infamous)
 	local dialog_data = {
 		title = managers.localization:text("dialog_infamous_info_title")
@@ -2478,7 +2546,7 @@ function MenuManager:show_infamous_message(can_become_infamous)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1756-1778
+-- Lines 1879-1901
 function MenuManager:show_challenge_warn_choose_reward(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_challenge_warn_choose_reward_title"),
@@ -2507,7 +2575,7 @@ function MenuManager:show_challenge_warn_choose_reward(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
--- Lines 1780-1868
+-- Lines 1903-1991
 function MenuManager:show_challenge_reward(reward)
 	local category = reward.type_items
 	local id = reward.item_entry
@@ -2597,7 +2665,7 @@ function MenuManager:show_challenge_reward(reward)
 	managers.menu_component:post_event("sidejob_stinger_short")
 end
 
--- Lines 1870-1878
+-- Lines 1993-2001
 function MenuManager:show_inventory_load_fail_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_inventory_load_fail_title"),
@@ -2613,7 +2681,7 @@ function MenuManager:show_inventory_load_fail_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1880-1895
+-- Lines 2003-2018
 function MenuManager:show_really_quit_the_game_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -2634,7 +2702,7 @@ function MenuManager:show_really_quit_the_game_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1897-1912
+-- Lines 2020-2035
 function MenuManager:show_unlock_mission_confirm_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("mission_unlock_screen_confirm_unlock_title", {
@@ -2652,6 +2720,38 @@ function MenuManager:show_unlock_mission_confirm_dialog(params)
 	dialog_data.button_list = {
 		yes_button,
 		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2040-2048
+function MenuManager:show_play_together_rejected_message()
+	local dialog_data = {
+		title = managers.localization:text("dialog_warning_title"),
+		text = managers.localization:text("dialog_play_together_reject_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2050-2058
+function MenuManager:show_invite_rejected_message()
+	local dialog_data = {
+		title = managers.localization:text("dialog_warning_title"),
+		text = managers.localization:text("dialog_invite_reject_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
 	}
 
 	managers.system_menu:show(dialog_data)

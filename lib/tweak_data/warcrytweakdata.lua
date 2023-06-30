@@ -8,7 +8,7 @@ function WarcryTweakData:init(tweak_data)
 	self:_init_data_clustertruck()
 end
 
--- Lines 10-41
+-- Lines 10-44
 function WarcryTweakData:_init_data_sharpshooter()
 	self.sharpshooter = {
 		name_id = "warcry_sharpshooter_name",
@@ -25,45 +25,47 @@ function WarcryTweakData:_init_data_sharpshooter()
 		buffs = {
 			{
 				"warcry_player_aim_assist",
+				"warcry_player_aim_assist_aim_at_head",
 				"warcry_player_aim_assist_radius_1",
 				"warcry_player_nullify_spread",
 				"warcry_team_damage_multiplier_1"
 			},
 			{
-				"warcry_player_health_regen_on_kill",
-				"warcry_player_health_regen_amount_1",
 				"warcry_player_aim_assist",
+				"warcry_player_aim_assist_aim_at_head",
 				"warcry_player_aim_assist_radius_1",
 				"warcry_player_nullify_spread",
-				"warcry_team_damage_multiplier_1"
-			},
-			{
+				"warcry_team_damage_multiplier_1",
 				"warcry_player_health_regen_on_kill",
-				"warcry_player_health_regen_amount_2",
-				"warcry_player_aim_assist",
-				"warcry_player_aim_assist_radius_2",
-				"warcry_player_nullify_spread",
-				"warcry_player_sniper_shoot_through_enemies",
-				"warcry_team_damage_multiplier_1"
+				"warcry_player_health_regen_amount_1"
 			},
 			{
+				"warcry_player_aim_assist",
+				"warcry_player_aim_assist_aim_at_head",
+				"warcry_player_aim_assist_radius_1",
+				"warcry_player_nullify_spread",
+				"warcry_team_damage_multiplier_1",
 				"warcry_player_health_regen_on_kill",
-				"warcry_player_health_regen_amount_3",
-				"warcry_player_aim_assist",
-				"warcry_player_aim_assist_radius_3",
-				"warcry_player_nullify_spread",
-				"warcry_player_sniper_shoot_through_enemies",
-				"warcry_team_damage_multiplier_1"
+				"warcry_player_health_regen_amount_2"
 			},
 			{
+				"warcry_player_aim_assist",
+				"warcry_player_aim_assist_aim_at_head",
+				"warcry_player_aim_assist_radius_1",
+				"warcry_player_nullify_spread",
+				"warcry_team_damage_multiplier_1",
+				"warcry_player_health_regen_on_kill",
+				"warcry_player_health_regen_amount_3"
+			},
+			{
+				"warcry_player_aim_assist",
+				"warcry_player_aim_assist_aim_at_head",
+				"warcry_player_aim_assist_radius_1",
+				"warcry_player_nullify_spread",
+				"warcry_team_damage_multiplier_1",
 				"warcry_player_health_regen_on_kill",
 				"warcry_player_health_regen_amount_4",
-				"warcry_player_aim_assist",
-				"warcry_player_aim_assist_radius_3",
-				"warcry_player_nullify_spread",
-				"warcry_player_sniper_shoot_through_enemies",
-				"warcry_player_aim_assist_aim_at_head",
-				"warcry_team_damage_multiplier_1"
+				"warcry_player_sniper_ricochet"
 			}
 		},
 		hud_icon = "player_panel_warcry_sharpshooter",
@@ -76,7 +78,7 @@ function WarcryTweakData:_init_data_sharpshooter()
 	}
 end
 
--- Lines 43-78
+-- Lines 46-81
 function WarcryTweakData:_init_data_berserk()
 	self.berserk = {
 		name_id = "warcry_berserk_name",
@@ -91,7 +93,7 @@ function WarcryTweakData:_init_data_berserk()
 		low_health_multiplier_activation_percentage = 0.4,
 		low_health_multiplier_min = 0.2,
 		low_health_multiplier_max = 0.5,
-		base_team_heal_percentage = 20,
+		base_team_heal_percentage = 2,
 		buffs = {
 			{
 				"warcry_player_ammo_consumption_1",
@@ -125,7 +127,7 @@ function WarcryTweakData:_init_data_berserk()
 	}
 end
 
--- Lines 80-111
+-- Lines 83-114
 function WarcryTweakData:_init_data_ghost()
 	self.ghost = {
 		name_id = "warcry_ghost_name",
@@ -171,7 +173,7 @@ function WarcryTweakData:_init_data_ghost()
 	}
 end
 
--- Lines 113-144
+-- Lines 116-147
 function WarcryTweakData:_init_data_clustertruck()
 	self.clustertruck = {
 		name_id = "warcry_clustertruck_name",
@@ -183,7 +185,7 @@ function WarcryTweakData:_init_data_clustertruck()
 		base_duration = 10,
 		killstreak_duration = 10,
 		base_kill_fill_amount = 0.1,
-		explosion_multiplier = 0.3,
+		explosion_multiplier = 0.15,
 		killstreak_multiplier_bonus_per_enemy = 0.1,
 		grenade_refill_amounts = {
 			1,
@@ -221,7 +223,8 @@ function WarcryTweakData:_init_data_clustertruck()
 				"warcry_player_grenade_clusters_3",
 				"warcry_player_grenade_cluster_range_3",
 				"warcry_player_grenade_cluster_damage_3",
-				"warcry_team_damage_reduction_multiplier_1"
+				"warcry_team_damage_reduction_multiplier_1",
+				"warcry_player_grenade_airburst_1"
 			}
 		},
 		hud_icon = "player_panel_warcry_cluster_truck",

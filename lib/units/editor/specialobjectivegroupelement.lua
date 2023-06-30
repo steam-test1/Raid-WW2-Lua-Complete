@@ -317,11 +317,11 @@ function SpecialObjectiveGroupElement:selected()
 	SpecialObjectiveUnitElement.super.selected(self)
 end
 
--- Lines 270-316
+-- Lines 270-319
 function SpecialObjectiveGroupElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 272-293
+	-- Lines 272-296
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -361,9 +361,9 @@ function SpecialObjectiveGroupElement:add_unit_list_btn()
 	end
 end
 
--- Lines 318-331
+-- Lines 321-334
 function SpecialObjectiveGroupElement:remove_unit_list_btn()
-	-- Lines 319-320
+	-- Lines 322-323
 	local function f(unit)
 		return self._hed.spawn_instigator_ids and table.contains(self._hed.spawn_instigator_ids, unit:unit_data().unit_id) or self._hed.followup_elements and table.contains(self._hed.followup_elements, unit:unit_data().unit_id)
 	end
@@ -383,28 +383,33 @@ function SpecialObjectiveGroupElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 333-392
+-- Lines 336-399
 function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+	local tooltip = ""
+	tooltip = tooltip .. "RANDOMIZER: Assigns SOs to instigators.\n"
+	tooltip = tooltip .. "PATROL GROUP: Assigns random SO in a way that will repeat the same path from this group.\n"
+	tooltip = tooltip .. "FORCED SPAWN: Will spawn a new group of choice.\n"
+	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
 	local mode_params = {
 		name = "Mode:",
 		name_proportions = 1,
-		tooltip = "Randomizer: assigns SOs to instigators. Forced Spawn: Will spawn a new group of choice. Recurring: Spawns new group. After failure, a new group will be spawned with a delay.",
 		sorted = false,
 		ctrlr_proportions = 2,
 		panel = panel,
 		sizer = panel_sizer,
 		options = {
 			"randomizer",
+			"patrol_group",
 			"forced_spawn",
 			"recurring_cloaker_spawn",
-			"recurring_spawn_1",
-			"patrol_group"
+			"recurring_spawn_1"
 		},
-		value = self._hed.mode
+		value = self._hed.mode,
+		tooltip = tooltip
 	}
 	local mode = CoreEws.combobox(mode_params)
 
@@ -426,7 +431,7 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 		name_proportions = 1,
 		name = "Base chance:",
 		ctrlr_proportions = 2,
-		tooltip = "Used to specify chance to happen (1==absolutely!)",
+		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		min = 0,
 		floats = 2,
 		max = 1,
@@ -455,6 +460,6 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
 
--- Lines 394-397
+-- Lines 401-404
 function SpecialObjectiveGroupElement:add_to_mission_package()
 end

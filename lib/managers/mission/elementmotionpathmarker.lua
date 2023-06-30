@@ -71,8 +71,10 @@ function ElementMotionpathMarker:motion_operation_set_motion_state(state)
 	self._values.motion_state = state
 end
 
--- Lines 66-69
+-- Lines 66-70
 function ElementMotionpathMarker:motion_operation_set_rotation(operator_id)
+	Application:trace("[ElementMotionpathMarker] motion_operation_set_rotation", operator_id)
+
 	local motion_path = self._sync_id ~= 0 and managers.worldcollection:motion_path_by_id(self._sync_id) or managers.motion_path
 
 	motion_path:operation_set_unit_target_rotation(self._id, operator_id)

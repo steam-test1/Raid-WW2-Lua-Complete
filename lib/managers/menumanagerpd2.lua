@@ -24,11 +24,14 @@ function MenuManager:on_view_character(user)
 	end
 end
 
--- Lines 37-53
+-- Lines 37-54
 function MenuManager:on_enter_lobby()
-	print("function MenuManager:on_enter_lobby()")
-	managers.menu:active_menu().logic:select_node("lobby", true, {})
-	managers.platform:set_rich_presence("MPLobby")
+	Application:debug("[MenuManager:on_enter_lobby]")
+
+	if managers and managers.menu and managers.menu:active_menu() and managers.menu:active_menu().logic then
+		managers.menu:active_menu().logic:select_node("lobby", true, {})
+	end
+
 	managers.network:session():on_entered_lobby()
 	self:setup_local_lobby_character()
 
@@ -37,7 +40,7 @@ function MenuManager:on_enter_lobby()
 	end
 end
 
--- Lines 55-67
+-- Lines 56-68
 function MenuManager:on_leave_active_job()
 	managers.statistics:stop_session({
 		quit = true
@@ -54,7 +57,7 @@ function MenuManager:on_leave_active_job()
 	managers.menu:close_menu("menu_pause")
 end
 
--- Lines 69-83
+-- Lines 70-84
 function MenuManager:setup_local_lobby_character()
 	local local_peer = managers.network:session():local_peer()
 	local level = managers.experience:current_level()
@@ -67,7 +70,7 @@ function MenuManager:setup_local_lobby_character()
 	managers.network:session():check_send_outfit()
 end
 
--- Lines 85-94
+-- Lines 86-95
 function MenuManager:set_cash_safe_scene_done(done, silent)
 	self._cash_safe_scene_done = done
 
@@ -80,17 +83,17 @@ function MenuManager:set_cash_safe_scene_done(done, silent)
 	end
 end
 
--- Lines 96-98
+-- Lines 97-99
 function MenuManager:cash_safe_scene_done()
 	return self._cash_safe_scene_done
 end
 
--- Lines 100-103
+-- Lines 101-104
 function MenuManager:http_test()
 	Steam:http_request("http://www.overkillsoftware.com/?feed=rss", callback(self, self, "http_test_result"))
 end
 
--- Lines 105-111
+-- Lines 106-112
 function MenuManager:http_test_result(success, body)
 	print("success", success)
 	print("body", body)
@@ -100,7 +103,7 @@ end
 
 MenuMarketItemInitiator = MenuMarketItemInitiator or class()
 
--- Lines 123-160
+-- Lines 124-161
 function MenuMarketItemInitiator:modify_node(node)
 	local node_name = node:parameters().name
 	local armor_item = node:item("armor")
@@ -144,48 +147,48 @@ function MenuMarketItemInitiator:modify_node(node)
 	return node
 end
 
--- Lines 162-164
+-- Lines 163-165
 function MenuMarketItemInitiator:_add_weapon(bm_data)
 	return true
 end
 
--- Lines 170-172
+-- Lines 171-173
 function MenuMarketItemInitiator:_add_character(bm_data)
 	return true
 end
 
--- Lines 174-176
+-- Lines 175-177
 function MenuMarketItemInitiator:_add_mask(bm_data)
 	return true
 end
 
--- Lines 178-180
+-- Lines 179-181
 function MenuMarketItemInitiator:_add_armor(bm_data)
 	return true
 end
 
--- Lines 182-184
+-- Lines 183-185
 function MenuMarketItemInitiator:_uses_owned_stats()
 	return true
 end
 
--- Lines 186-187
+-- Lines 187-188
 function MenuMarketItemInitiator:_add_weapon_params()
 end
 
--- Lines 192-193
+-- Lines 193-194
 function MenuMarketItemInitiator:_add_mask_params(params)
 end
 
--- Lines 195-196
+-- Lines 196-197
 function MenuMarketItemInitiator:_add_character_params(params)
 end
 
--- Lines 198-199
+-- Lines 199-200
 function MenuMarketItemInitiator:_add_armor_params(params)
 end
 
--- Lines 201-253
+-- Lines 202-254
 function MenuMarketItemInitiator:_add_expand_weapon(item, selection_index)
 	if not item then
 		return
@@ -248,7 +251,7 @@ function MenuMarketItemInitiator:_add_expand_weapon(item, selection_index)
 	return i
 end
 
--- Lines 299-341
+-- Lines 300-342
 function MenuMarketItemInitiator:_add_expand_mask(item)
 	local i = 0
 	local j = 0
@@ -299,7 +302,7 @@ function MenuMarketItemInitiator:_add_expand_mask(item)
 	return i
 end
 
--- Lines 343-385
+-- Lines 344-386
 function MenuMarketItemInitiator:_add_expand_character(item)
 	local i = 0
 	local j = 0
@@ -350,7 +353,7 @@ function MenuMarketItemInitiator:_add_expand_character(item)
 	return i
 end
 
--- Lines 387-434
+-- Lines 388-435
 function MenuMarketItemInitiator:_add_expand_armor(item)
 	if not item then
 		return
@@ -411,7 +414,7 @@ end
 MenuBlackMarketInitiator = MenuBlackMarketInitiator or class(MenuMarketItemInitiator)
 MenuBuyUpgradesInitiator = MenuBuyUpgradesInitiator or class()
 
--- Lines 441-461
+-- Lines 442-462
 function MenuBuyUpgradesInitiator:modify_node(original_node, weapon_id, p2, p3)
 	local node = deep_clone(original_node)
 	local node_name = node:parameters().name
@@ -431,14 +434,14 @@ function MenuBuyUpgradesInitiator:modify_node(original_node, weapon_id, p2, p3)
 	return node
 end
 
--- Lines 464-466
+-- Lines 465-467
 function MenuBuyUpgradesInitiator:_add_expand_upgrade(item, weapon_id, upgrade)
 	return
 end
 
 MenuComponentInitiator = MenuComponentInitiator or class()
 
--- Lines 471-481
+-- Lines 472-482
 function MenuComponentInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -453,7 +456,7 @@ end
 
 MenuLoadoutInitiator = MenuLoadoutInitiator or class()
 
--- Lines 486-493
+-- Lines 487-494
 function MenuLoadoutInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 	node:parameters().menu_component_data = data
@@ -464,52 +467,52 @@ end
 
 MenuCharacterCustomizationInitiator = MenuCharacterCustomizationInitiator or class(MenuMarketItemInitiator)
 
--- Lines 499-501
+-- Lines 500-502
 function MenuCharacterCustomizationInitiator:_add_weapon(bm_data)
 	return bm_data.owned and bm_data.unlocked
 end
 
--- Lines 507-509
+-- Lines 508-510
 function MenuCharacterCustomizationInitiator:_add_character(bm_data)
 	return bm_data.owned and bm_data.unlocked
 end
 
--- Lines 511-513
+-- Lines 512-514
 function MenuCharacterCustomizationInitiator:_add_mask(bm_data)
 	return bm_data.owned and bm_data.unlocked
 end
 
--- Lines 515-517
+-- Lines 516-518
 function MenuCharacterCustomizationInitiator:_add_armor(bm_data)
 	return bm_data.owned and bm_data.unlocked
 end
 
--- Lines 519-521
+-- Lines 520-522
 function MenuCharacterCustomizationInitiator:_uses_owned_stats()
 	return false
 end
 
--- Lines 523-525
+-- Lines 524-526
 function MenuCharacterCustomizationInitiator:_add_weapon_params(params)
 	params.customize = true
 end
 
--- Lines 531-533
+-- Lines 532-534
 function MenuCharacterCustomizationInitiator:_add_mask_params(params)
 	params.customize = true
 end
 
--- Lines 535-537
+-- Lines 536-538
 function MenuCharacterCustomizationInitiator:_add_character_params(params)
 	params.customize = true
 end
 
--- Lines 539-541
+-- Lines 540-542
 function MenuCharacterCustomizationInitiator:_add_armor_params(params)
 	params.customize = true
 end
 
--- Lines 545-557
+-- Lines 546-558
 function MenuManager:show_repair_weapon(params, weapon, cost)
 	local dialog_data = {
 		title = managers.localization:text("dialog_repair_weapon_title"),
@@ -534,7 +537,7 @@ function MenuManager:show_repair_weapon(params, weapon, cost)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 559-571
+-- Lines 560-572
 function MenuManager:show_buy_weapon(params, weapon, cost)
 	local dialog_data = {
 		title = managers.localization:text("dialog_buy_weapon_title"),
@@ -561,7 +564,7 @@ end
 
 FbiFilesInitiator = FbiFilesInitiator or class()
 
--- Lines 578-628
+-- Lines 579-629
 function FbiFilesInitiator:modify_node(node, up)
 	node:clean_items()
 
@@ -613,19 +616,19 @@ function FbiFilesInitiator:modify_node(node, up)
 	return node
 end
 
--- Lines 630-632
+-- Lines 631-633
 function FbiFilesInitiator:refresh_node(node)
 	return self:modify_node(node)
 end
 
 MenuInitiatorBase = MenuInitiatorBase or class()
 
--- Lines 640-642
+-- Lines 641-643
 function MenuInitiatorBase:modify_node(original_node, data)
 	return original_node
 end
 
--- Lines 651-666
+-- Lines 652-667
 function MenuInitiatorBase:create_divider(node, id, text_id, size, color)
 	local params = {
 		name = "divider_" .. id,
@@ -644,7 +647,7 @@ function MenuInitiatorBase:create_divider(node, id, text_id, size, color)
 	return new_item
 end
 
--- Lines 668-678
+-- Lines 669-679
 function MenuInitiatorBase:create_toggle(node, params)
 	local data_node = {
 		{
@@ -685,7 +688,7 @@ function MenuInitiatorBase:create_toggle(node, params)
 	return new_item
 end
 
--- Lines 679-686
+-- Lines 680-687
 function MenuInitiatorBase:create_item(node, params)
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -696,7 +699,7 @@ function MenuInitiatorBase:create_item(node, params)
 	return new_item
 end
 
--- Lines 689-704
+-- Lines 690-705
 function MenuInitiatorBase:create_multichoice(node, choices, params)
 	if #choices == 0 then
 		return
@@ -718,7 +721,7 @@ function MenuInitiatorBase:create_multichoice(node, choices, params)
 	return new_item
 end
 
--- Lines 706-712
+-- Lines 707-713
 function MenuInitiatorBase:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
@@ -735,7 +738,7 @@ function MenuInitiatorBase:create_slider(node, params)
 	return new_item
 end
 
--- Lines 714-721
+-- Lines 715-722
 function MenuInitiatorBase:create_input(node, params)
 	local data_node = {
 		type = "MenuItemInput"
@@ -748,7 +751,7 @@ function MenuInitiatorBase:create_input(node, params)
 	return new_item
 end
 
--- Lines 723-737
+-- Lines 724-738
 function MenuInitiatorBase:add_back_button(node)
 	node:delete_item("back")
 
@@ -769,7 +772,7 @@ end
 
 MenuChooseWeaponCosmeticInitiator = MenuChooseWeaponCosmeticInitiator or class(MenuInitiatorBase)
 
--- Lines 743-771
+-- Lines 744-772
 function MenuChooseWeaponCosmeticInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 
@@ -806,7 +809,7 @@ function MenuChooseWeaponCosmeticInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 773-791
+-- Lines 774-792
 function MenuChooseWeaponCosmeticInitiator:add_back_button(node)
 	node:delete_item("back")
 
@@ -829,7 +832,7 @@ end
 
 MenuOpenContainerInitiator = MenuOpenContainerInitiator or class(MenuInitiatorBase)
 
--- Lines 798-806
+-- Lines 799-807
 function MenuOpenContainerInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 	node:parameters().container_data = data.container or {}
@@ -840,14 +843,14 @@ function MenuOpenContainerInitiator:modify_node(original_node, data)
 	return node
 end
 
--- Lines 808-811
+-- Lines 809-812
 function MenuOpenContainerInitiator:refresh_node(node)
 	self:update_node(node)
 
 	return node
 end
 
--- Lines 813-818
+-- Lines 814-819
 function MenuOpenContainerInitiator:update_node(node)
 	local item = node:item("open_container")
 
@@ -858,7 +861,7 @@ end
 
 MenuEconomySafeInitiator = MenuEconomySafeInitiator or class()
 
--- Lines 823-827
+-- Lines 824-828
 function MenuEconomySafeInitiator:modify_node(node, safe_entry)
 	node:parameters().safe_entry = safe_entry
 

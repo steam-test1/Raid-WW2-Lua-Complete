@@ -341,13 +341,12 @@ function RaidGUIControlMeleeWeaponRewardDetails:_on_click_redeem()
 	managers.menu:show_redeem_weapon_point_dialog(params)
 end
 
--- Lines 343-354
+-- Lines 343-359
 function RaidGUIControlMeleeWeaponRewardDetails:redeem()
-	managers.lootdrop:redeem_dropped_loot_for_xp()
-	game_state_machine:current_state():recalculate_xp()
+	managers.lootdrop:redeem_dropped_loot_for_goldbars()
 end
 
--- Lines 356-366
+-- Lines 361-371
 function RaidGUIControlMeleeWeaponRewardDetails:set_melee_weapon(weapon_id)
 	local melee_weapon = managers.weapon_inventory:get_weapon_data(WeaponInventoryManager.CATEGORY_NAME_MELEE, weapon_id)
 	local bm_tweak_data = tweak_data.blackmarket.melee_weapons[weapon_id]
@@ -359,7 +358,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:set_melee_weapon(weapon_id)
 	self._reward_image:set_image(bm_tweak_data.reward_image)
 end
 
--- Lines 368-372
+-- Lines 373-377
 function RaidGUIControlMeleeWeaponRewardDetails:close()
 	RaidGUIControlMeleeWeaponRewardDetails.super.close(self)
 end

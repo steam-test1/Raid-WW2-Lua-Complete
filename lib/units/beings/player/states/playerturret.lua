@@ -73,7 +73,7 @@ function PlayerTurret:_init_locators()
 		return
 	end
 
-	self._unit:camera():play_redirect(Idstring("empty"))
+	self._unit:camera():play_redirect(Idstring("unequip"), 5, 60)
 	self._unit:inventory():hide_equipped_unit()
 	self._unit:kill_mover()
 	self:_postion_player()
@@ -135,7 +135,7 @@ function PlayerTurret:exit(state_data, new_state_name)
 	self._unit:camera():play_redirect(self.IDS_EQUIP)
 
 	if self._player_original_position then
-		self._unit:warp_to(self._unit:rotation(), self._player_original_position)
+		self._unit:warp_to(self._unit:rotation(), self._unit:position() - self._player_original_position)
 	end
 
 	self:_activate_mover(Idstring("stand"))
@@ -476,12 +476,12 @@ end
 
 -- Lines 539-555
 function PlayerTurret:_postion_player()
-	self._player_original_position = self._unit:position()
 	local rot = self._turret_unit:rotation()
 
 	self._unit:set_rotation(rot)
 
 	local pos = self._turret_unit:get_object(Idstring("first_person_view")):position()
+	self._player_original_position = pos - self._unit:position()
 
 	self._unit:set_position(pos)
 	self._unit:camera():set_rotation(rot)

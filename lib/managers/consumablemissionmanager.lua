@@ -1,5 +1,5 @@
 ConsumableMissionManager = ConsumableMissionManager or class()
-ConsumableMissionManager.VERSION = 1
+ConsumableMissionManager.VERSION = 2
 
 -- Lines 16-29
 function ConsumableMissionManager:init()
@@ -25,7 +25,7 @@ function ConsumableMissionManager:reset()
 end
 
 -- Lines 47-66
-function ConsumableMissionManager:system_start_raid()
+function ConsumableMissionManager:system_end_raid()
 	local current_job = managers.raid_job:current_job()
 
 	if not current_job or not current_job.consumable then
@@ -33,7 +33,7 @@ function ConsumableMissionManager:system_start_raid()
 	end
 
 	if not self:is_mission_unlocked(current_job.job_id) then
-		Application:error("[ConsumableMissionManager][system_start_raid] Attempting to start a consumable a mission that is not unlocked: ", current_job.job_id)
+		Application:error("[ConsumableMissionManager][system_end_raid] Attempting to finish a consumable a mission that was not unlocked: ", current_job.job_id)
 
 		return
 	end
@@ -65,9 +65,9 @@ function ConsumableMissionManager:plant_document_on_level(world_id)
 
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
-	local document_spawn_chance = -0.1
+	local document_spawn_chance = -0.01
 
-	if not self:is_any_mission_unlocked() then
+	if not self:is_all_missions_unlocked() then
 		document_spawn_chance = tweak_data.operations.consumable_missions.base_document_spawn_chance[difficulty_index]
 		document_spawn_chance = document_spawn_chance + Global.consumable_missions_manager.intel_spawn_modifier
 	end
@@ -133,25 +133,35 @@ function ConsumableMissionManager:is_any_mission_unlocked()
 	return any_mission_unlocked
 end
 
--- Lines 166-168
+-- Lines 166-171
+function ConsumableMissionManager:is_all_missions_unlocked()
+	local inv = table.size(Global.consumable_missions_manager.inventory)
+	local crd = #tweak_data.operations:get_all_consumable_raids()
+
+	Application:debug("[ConsumableMissionManager] all_unlocked", inv, crd)
+
+	return crd <= inv
+end
+
+-- Lines 174-176
 function ConsumableMissionManager:is_mission_unlocked(mission_name)
 	return Global.consumable_missions_manager.inventory[mission_name] ~= nil
 end
 
--- Lines 171-174
+-- Lines 179-183
 function ConsumableMissionManager:pickup_mission(mission_name)
 	self._picked_up_missions = self._picked_up_missions or {}
 
 	table.insert(self._picked_up_missions, mission_name)
 end
 
--- Lines 176-179
+-- Lines 185-188
 function ConsumableMissionManager:reset_document_spawn_modifier()
 	Global.consumable_missions_manager.intel_spawn_modifier = 0
 	self._reset_spawn_modifier = true
 end
 
--- Lines 183-213
+-- Lines 192-225
 function ConsumableMissionManager:on_level_exited(success)
 	if self._level_exit_handled then
 		return
@@ -166,6 +176,8 @@ function ConsumableMissionManager:on_level_exited(success)
 			end
 		else
 			Global.consumable_missions_manager.intel_spawn_modifier = math.clamp(Global.consumable_missions_manager.intel_spawn_modifier + tweak_data.operations.consumable_missions.spawn_chance_modifier_increase, 0, 1)
+
+			Application:debug("[ConsumableMissionManager][on_level_exited] No found missions, increasing spawn chance ", Global.consumable_missions_manager.intel_spawn_modifier)
 		end
 	end
 
@@ -180,19 +192,19 @@ function ConsumableMissionManager:on_level_exited(success)
 	self._level_exit_handled = true
 end
 
--- Lines 216-219
+-- Lines 228-230
 function ConsumableMissionManager:on_mission_started()
 	self._level_exit_handled = false
-
-	self:system_start_raid()
 end
 
--- Lines 222-224
+-- Lines 233-236
 function ConsumableMissionManager:on_mission_completed(success)
 	self._level_exit_handled = false
+
+	self:system_end_raid()
 end
 
--- Lines 227-248
+-- Lines 239-260
 function ConsumableMissionManager:_unlock_mission(mission_name)
 	Application:trace("[ConsumableMissionManager][_unlock_mission] Unlocking the mission: ", mission_name)
 
@@ -217,14 +229,20 @@ function ConsumableMissionManager:_unlock_mission(mission_name)
 	})
 end
 
--- Lines 252-256
+-- Lines 263-267
+function ConsumableMissionManager:instant_unlock_mission(mission_name)
+	Application:debug("[ConsumableMissionManager:instant_unlock_mission()] Instant mission!", mission_name)
+	self:_unlock_mission(mission_name)
+end
+
+-- Lines 279-283
 function ConsumableMissionManager:consume_mission(mission_name)
 	Application:trace("[ConsumableMissionManager:consume_mission] Consuming the mission: ", mission_name)
 
 	Global.consumable_missions_manager.inventory[mission_name] = nil
 end
 
--- Lines 260-274
+-- Lines 287-301
 function ConsumableMissionManager:save(data)
 	local state = {
 		version = ConsumableMissionManager.VERSION,
@@ -239,7 +257,7 @@ function ConsumableMissionManager:save(data)
 	data.ConsumableMissionManager = state
 end
 
--- Lines 278-312
+-- Lines 305-339
 function ConsumableMissionManager:load(data, version)
 	Global.consumable_missions_manager.inventory = {}
 	Global.consumable_missions_manager.intel_spawn_modifier = 0

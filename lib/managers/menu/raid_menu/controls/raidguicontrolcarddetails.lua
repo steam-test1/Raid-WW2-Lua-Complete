@@ -314,17 +314,17 @@ function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
 	end
 end
 
--- Lines 221-265
+-- Lines 221-223
 function RaidGUIControlCardDetails:set_mode_layout()
 	self._type_icon:set_center_x(self._type_label:center_x())
 end
 
--- Lines 267-270
+-- Lines 225-228
 function RaidGUIControlCardDetails:get_card()
 	return self._card, self._card.steam_instance_id
 end
 
--- Lines 272-276
+-- Lines 230-234
 function RaidGUIControlCardDetails:set_control_mode(mode)
 	self._mode = mode
 

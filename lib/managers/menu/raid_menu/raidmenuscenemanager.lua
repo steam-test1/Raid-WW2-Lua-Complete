@@ -207,7 +207,7 @@ function RaidMenuSceneManager:ct_open_menus()
 	return #self._menu_stack
 end
 
--- Lines 209-246
+-- Lines 209-248
 function RaidMenuSceneManager:open_menu(name, dont_add_on_stack)
 	if name == "raid_main_menu" and not self._pause_menu_enabled then
 		return
@@ -248,7 +248,7 @@ function RaidMenuSceneManager:open_menu(name, dont_add_on_stack)
 	return true
 end
 
--- Lines 248-258
+-- Lines 250-263
 function RaidMenuSceneManager:close_all_menus()
 	managers.mouse_pointer:acquire_input()
 
@@ -264,7 +264,7 @@ function RaidMenuSceneManager:close_all_menus()
 	MenuRenderer._remove_blackborders()
 end
 
--- Lines 260-315
+-- Lines 265-322
 function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
 	if not is_editor and #self._menu_stack == 1 and not dont_remove_from_stack then
 		managers.mouse_pointer:acquire_input()
@@ -312,7 +312,7 @@ function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
 	end
 end
 
--- Lines 317-346
+-- Lines 324-353
 function RaidMenuSceneManager:add_menu_name_on_stack(menu_name)
 	table.insert(self._menu_stack, menu_name)
 
@@ -330,7 +330,7 @@ function RaidMenuSceneManager:add_menu_name_on_stack(menu_name)
 	end
 end
 
--- Lines 348-355
+-- Lines 355-362
 function RaidMenuSceneManager:remove_menu_name_from_stack(menu_name)
 	for i = 1, #self._menu_stack do
 		if self._menu_stack[i] == menu_name then
@@ -341,7 +341,7 @@ function RaidMenuSceneManager:remove_menu_name_from_stack(menu_name)
 	end
 end
 
--- Lines 357-424
+-- Lines 364-434
 function RaidMenuSceneManager:on_escape(flag_close_all_menus)
 	if self._component_on_escape_callback then
 		local handles = self._component_on_escape_callback()
@@ -402,17 +402,17 @@ function RaidMenuSceneManager:on_escape(flag_close_all_menus)
 	end
 end
 
--- Lines 426-428
+-- Lines 436-438
 function RaidMenuSceneManager:get_close_menu_allowed()
 	return self._close_menu_allowed
 end
 
--- Lines 430-432
+-- Lines 440-442
 function RaidMenuSceneManager:set_close_menu_allowed(flag)
 	self._close_menu_allowed = flag
 end
 
--- Lines 448-455
+-- Lines 458-465
 function RaidMenuSceneManager:_set_menu_state(menu)
 	local camera_name = menu.camera
 
@@ -423,7 +423,7 @@ function RaidMenuSceneManager:_set_menu_state(menu)
 	end
 end
 
--- Lines 457-473
+-- Lines 467-483
 function RaidMenuSceneManager:_reinitialize_viewports()
 	local players = managers.player:players()
 
@@ -442,7 +442,7 @@ function RaidMenuSceneManager:_reinitialize_viewports()
 	end
 end
 
--- Lines 475-482
+-- Lines 485-492
 function RaidMenuSceneManager:_start_menu_camera(menu)
 	local camera_name = menu.camera
 
@@ -453,22 +453,22 @@ function RaidMenuSceneManager:_start_menu_camera(menu)
 	end
 end
 
--- Lines 485-487
+-- Lines 495-497
 function RaidMenuSceneManager:get_active_control(control)
 	return self._active_control
 end
 
--- Lines 490-493
+-- Lines 500-503
 function RaidMenuSceneManager:set_active_control(control)
 	self._active_control = control
 end
 
--- Lines 496-499
+-- Lines 506-509
 function RaidMenuSceneManager:clear_active_control()
 	self._active_control = nil
 end
 
--- Lines 501-515
+-- Lines 511-525
 function RaidMenuSceneManager:save_sync_player_data()
 	managers.raid_menu._character_sync_player_data.synced_ammo_info = clone(managers.player._global.synced_ammo_info)
 	managers.raid_menu._character_sync_player_data.synced_bipod = clone(managers.player._global.synced_bipod)
@@ -484,7 +484,7 @@ function RaidMenuSceneManager:save_sync_player_data()
 	managers.raid_menu._character_sync_player_data.synced_vehicle_data = clone(managers.player._global.synced_vehicle_data)
 end
 
--- Lines 517-531
+-- Lines 527-541
 function RaidMenuSceneManager:load_sync_player_data()
 	managers.player._global.synced_ammo_info = clone(managers.raid_menu._character_sync_player_data.synced_ammo_info)
 	managers.player._global.synced_bipod = clone(managers.raid_menu._character_sync_player_data.synced_bipod)
@@ -500,16 +500,12 @@ function RaidMenuSceneManager:load_sync_player_data()
 	managers.player._global.synced_vehicle_data = clone(managers.raid_menu._character_sync_player_data.synced_vehicle_data)
 end
 
--- Lines 533-550
+-- Lines 543-562
 function RaidMenuSceneManager:first_login_check()
 	Application:trace("[RaidMenuSceneManager:first_login_check]")
 
 	if managers.savefile:get_active_characters_count() == 0 then
 		local success = managers.raid_menu:open_menu("profile_creation_menu")
-
-		if success then
-			-- Nothing
-		end
 	elseif managers.raid_job._tutorial_spawned then
 		Application:debug("[RaidMenuSceneManager:first_login_check()] managers.global_state:fire_event(GlobalStateManager.EVENT_CHARACTER_CREATED)")
 
@@ -521,7 +517,7 @@ function RaidMenuSceneManager:first_login_check()
 	managers.statistics:publish_custom_stat_to_steam("game_played")
 end
 
--- Lines 554-568
+-- Lines 566-580
 function RaidMenuSceneManager:system_start_raid()
 	Application:trace("[RaidMenuSceneManager:system_start_raid]")
 	managers.challenge_cards:activate_challenge_card()
@@ -529,17 +525,17 @@ function RaidMenuSceneManager:system_start_raid()
 	managers.player:replenish_player_weapons()
 end
 
--- Lines 570-572
+-- Lines 582-584
 function RaidMenuSceneManager:set_current_legend_control(control)
 	self._current_legend_control = control
 end
 
--- Lines 574-576
+-- Lines 586-588
 function RaidMenuSceneManager:current_legend_control()
 	return self._current_legend_control
 end
 
--- Lines 578-585
+-- Lines 590-597
 function RaidMenuSceneManager:set_legend_labels(legend)
 	if not self._current_legend_control then
 		Application:error("[RaidMenuSceneManager:set_legend_labels] Trying to set controller legend while no legend control is present")
@@ -550,14 +546,14 @@ function RaidMenuSceneManager:set_legend_labels(legend)
 	self._current_legend_control:set_labels(legend)
 end
 
--- Lines 587-590
+-- Lines 599-602
 function RaidMenuSceneManager:toggle_fullscreen_raid()
 	local is_fullscreen = managers.viewport:is_fullscreen()
 
 	managers.viewport:set_fullscreen(not is_fullscreen)
 end
 
--- Lines 592-598
+-- Lines 604-610
 function RaidMenuSceneManager:is_pc_controller()
 	if not managers.controller:is_xbox_controller_present() or managers.menu:is_pc_controller() then
 		return true
@@ -566,7 +562,7 @@ function RaidMenuSceneManager:is_pc_controller()
 	end
 end
 
--- Lines 600-606
+-- Lines 612-618
 function RaidMenuSceneManager:refresh_footer_gold_amount()
 	if not managers.menu_component._active_components.raid_menu_footer.component_object then
 		return
@@ -575,7 +571,7 @@ function RaidMenuSceneManager:refresh_footer_gold_amount()
 	managers.menu_component._active_components.raid_menu_footer.component_object:refresh_gold_amount()
 end
 
--- Lines 608-622
+-- Lines 620-634
 function RaidMenuSceneManager:show_dialog_join_others_forbidden()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -593,7 +589,7 @@ function RaidMenuSceneManager:show_dialog_join_others_forbidden()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 624-638
+-- Lines 636-650
 function RaidMenuSceneManager:show_dialog_disconnected_from_steam()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -611,7 +607,7 @@ function RaidMenuSceneManager:show_dialog_disconnected_from_steam()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 640-654
+-- Lines 652-666
 function RaidMenuSceneManager:show_dialog_already_in_game()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -629,7 +625,7 @@ function RaidMenuSceneManager:show_dialog_already_in_game()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 657-669
+-- Lines 669-681
 function RaidMenuSceneManager:show_release_dialog_helper(message)
 	local dialog_data = {
 		title = "release dialog helper",

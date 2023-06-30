@@ -254,7 +254,7 @@ function FFCEditorController:creating_cube_map()
 	return self._creating_cube_map
 end
 
--- Lines 253-298
+-- Lines 253-305
 function FFCEditorController:create_cube_map()
 	if self._wait_frames > 0 then
 		self._wait_frames = self._wait_frames - 1
@@ -268,7 +268,9 @@ function FFCEditorController:create_cube_map()
 		if self._cube_counter == 1 then
 			self:_create_spot_projection()
 		elseif self._cube_counter == 2 then
-			self:_generate_spot_projection()
+			local output_file = (self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds"
+
+			CubemapGenerator:generate_spot(output_file, self._name_ordered[1])
 		else
 			self:_cubemap_done()
 		end
@@ -291,20 +293,25 @@ function FFCEditorController:create_cube_map()
 	elseif self._cube_counter == 6 then
 		self._camera:set_rotation(Rotation(Vector3(0, 0, -1), Vector3(0, -1, 0)))
 	elseif self._cube_counter == 7 then
-		self:_generate_cubemap(self._params.light and "cubemap_light" or "cubemap_reflection")
+		local output_file = (self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds"
+
+		if self._params.light then
+			CubemapGenerator:generate_light(output_file, self._name_ordered)
+		else
+			CubemapGenerator:generate_reflection(output_file, self._name_ordered)
+		end
+
 		self:_cubemap_done()
 
 		return true
 	end
 
-	local path = self._params.source_path or managers.database:root_path()
-
-	Application:screenshot(path .. self._names[self._cube_counter], x1, y1, x2, y2)
+	Application:screenshot(self._names[self._cube_counter], x1, y1, x2, y2)
 
 	return false
 end
 
--- Lines 300-309
+-- Lines 307-316
 function FFCEditorController:_cubemap_done()
 	if alive(self._light) then
 		World:delete_light(self._light)
@@ -317,7 +324,7 @@ function FFCEditorController:_cubemap_done()
 	end
 end
 
--- Lines 311-322
+-- Lines 318-329
 function FFCEditorController:_get_screen_size()
 	local res = Application:screen_resolution()
 	local diff = res.x - res.y
@@ -329,54 +336,15 @@ function FFCEditorController:_get_screen_size()
 	return x1, y1, x2, y2
 end
 
--- Lines 325-332
+-- Lines 332-338
 function FFCEditorController:_create_spot_projection()
 	local x1, y1, x2, y2 = self:_get_screen_size()
 
 	self._camera:set_rotation(Rotation(-self._params.light:rotation():z(), Vector3(0, 0, 1)))
-
-	local path = self._params.source_path or managers.database:root_path()
-
-	Application:screenshot(path .. self._name_ordered[1], x1, y1, x2, y2)
+	Application:screenshot(self._name_ordered[1], x1, y1, x2, y2)
 end
 
--- Lines 335-353
-function FFCEditorController:_generate_spot_projection()
-	local execute = managers.database:root_path() .. "aux_assets/engine/tools/spotmapgen.bat "
-	local path = self._params.source_path or managers.database:root_path()
-	execute = execute .. path .. self._name_ordered[1] .. " "
-	local output_path = (self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds "
-	execute = execute .. output_path .. " "
-
-	os.execute(execute)
-	self:_add_meta_data((self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds", "diffuse_colormap_gradient_alpha_manual_mips")
-end
-
--- Lines 355-372
-function FFCEditorController:_generate_cubemap(file)
-	local execute = managers.database:root_path() .. "aux_assets/engine/tools/" .. file .. ".bat "
-
-	for i, _ in ipairs(self._names) do
-		local path = self._params.source_path or managers.database:root_path()
-		execute = execute .. path .. self._name_ordered[i] .. " "
-	end
-
-	local output_path = (self._params.output_path or managers.database:root_path()) .. self._output_name .. " "
-	execute = execute .. output_path .. " "
-
-	os.execute(execute)
-	self:_add_meta_data((self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds", "diffuse_colormap_gradient_alpha_manual_mips")
-end
-
--- Lines 375-379
-function FFCEditorController:_add_meta_data(file, meta)
-	local execute = managers.database:root_path() .. "aux_assets/engine/tools/diesel_dds_tagger.exe "
-	execute = execute .. file .. " " .. meta
-
-	os.execute(execute)
-end
-
--- Lines 381-390
+-- Lines 391-400
 function FFCEditorController:update_orthographic(time, rel_time)
 	local speed = self._move_speed * rel_time
 	local mov_x = (self._controller:button(Idstring("go_right")) - self._controller:button(Idstring("go_left"))) * speed
@@ -390,14 +358,14 @@ function FFCEditorController:update_orthographic(time, rel_time)
 	self:set_orthographic_screen()
 end
 
--- Lines 392-395
+-- Lines 402-405
 function FFCEditorController:set_orthographic_screen()
 	local res = Application:screen_resolution()
 
 	self._camera:set_orthographic_screen(-(res.x / 2) * self._mul, res.x / 2 * self._mul, -(res.y / 2) * self._mul, res.y / 2 * self._mul)
 end
 
--- Lines 397-417
+-- Lines 407-427
 function FFCEditorController:toggle_orthographic(use)
 	local camera = self._camera
 

@@ -5,7 +5,7 @@ function PlayerCarryCorpse:init(unit)
 	PlayerCarryCorpse.super.init(self, unit)
 end
 
--- Lines 9-31
+-- Lines 9-32
 function PlayerCarryCorpse:enter(state_data, enter_data)
 	if enter_data then
 		enter_data.skip_equip = true
@@ -34,9 +34,10 @@ function PlayerCarryCorpse:enter(state_data, enter_data)
 	self:_interupt_action_charging_weapon(t)
 	self:_interupt_action_melee(t)
 	self:_interupt_action_use_item(t)
+	self:_stance_entered(true)
 end
 
--- Lines 35-39
+-- Lines 36-40
 function PlayerCarryCorpse:_enter(enter_data)
 	PlayerCarryCorpse.super._enter(self, enter_data)
 	self._unit:camera():play_redirect(Idstring("carry_corpse_equip"))
@@ -44,7 +45,7 @@ function PlayerCarryCorpse:_enter(enter_data)
 	self._carrying_corpse = true
 end
 
--- Lines 43-48
+-- Lines 44-49
 function PlayerCarryCorpse:exit(state_data, new_state_name)
 	self._unit:camera():play_redirect(Idstring("carry_corpse_unequip"))
 
@@ -54,29 +55,29 @@ function PlayerCarryCorpse:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines 52-54
+-- Lines 53-55
 function PlayerCarryCorpse:update(t, dt)
 	PlayerCarryCorpse.super.update(self, t, dt)
 end
 
--- Lines 56-59
+-- Lines 57-60
 function PlayerCarryCorpse:set_tweak_data(name)
 	self._tweak_data_name = name
 
 	self:_check_dye_pack()
 end
 
--- Lines 64-66
+-- Lines 65-67
 function PlayerCarryCorpse:_check_change_weapon(...)
 	return false
 end
 
--- Lines 68-70
+-- Lines 69-71
 function PlayerCarryCorpse:_check_action_equip(...)
 	return false
 end
 
--- Lines 72-89
+-- Lines 73-90
 function PlayerCarryCorpse:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 
@@ -98,17 +99,17 @@ function PlayerCarryCorpse:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines 92-94
+-- Lines 93-95
 function PlayerCarryCorpse:_update_movement(t, dt)
 	PlayerCarryCorpse.super._update_movement(self, t, dt)
 end
 
--- Lines 98-101
+-- Lines 99-102
 function PlayerCarryCorpse:_start_action_jump(...)
 	PlayerCarryCorpse.super._start_action_jump(self, ...)
 end
 
--- Lines 103-109
+-- Lines 104-110
 function PlayerCarryCorpse:_perform_jump(jump_vec)
 	if not managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
 		if not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
@@ -119,7 +120,7 @@ function PlayerCarryCorpse:_perform_jump(jump_vec)
 	PlayerCarryCorpse.super._perform_jump(self, jump_vec)
 end
 
--- Lines 114-176
+-- Lines 115-177
 function PlayerCarryCorpse:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 

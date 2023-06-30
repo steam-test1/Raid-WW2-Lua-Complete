@@ -1,0 +1,1 @@
+FauxContainerBase = FauxContainerBase or class()

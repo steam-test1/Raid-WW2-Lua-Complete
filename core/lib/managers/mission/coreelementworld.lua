@@ -162,7 +162,7 @@ ElementWorldPoint.DELAY_CREATE_SINGLE = 2
 ElementWorldPoint.DELAY_DESTROY_MULTI = 3
 ElementWorldPoint.DELAY_CREATE_MULTI = 5
 
--- Lines 168-201
+-- Lines 168-203
 function ElementWorldPoint:on_executed(instigator)
 	Application:debug("[ElementWorldPoint:on_executed] on_executed", self._values.world, self._values.enabled, self._world_id, self._action)
 
@@ -181,6 +181,7 @@ function ElementWorldPoint:on_executed(instigator)
 	end
 
 	if self._action == "despawn" then
+		Application:debug("[ElementWorldPoint:on_executed] on_executed queue destroy world...")
 		managers.queued_tasks:queue(nil, self._destroy_world, self, nil, delay_destroy, nil, true)
 	elseif self._action == "enable_plant_loot" then
 		local spawn = managers.worldcollection:world_spawn(self._world_id)
@@ -197,7 +198,7 @@ function ElementWorldPoint:on_executed(instigator)
 	ElementWorldPoint.super.on_executed(self, instigator)
 end
 
--- Lines 203-214
+-- Lines 205-216
 function ElementWorldPoint:_destroy_world()
 	Application:debug("[ElementWorldPoint:_destroy_world()]", self._world_id, self._has_created)
 
@@ -213,10 +214,12 @@ function ElementWorldPoint:_destroy_world()
 	self._world_id = nil
 end
 
--- Lines 216-269
+-- Lines 218-271
 function ElementWorldPoint:_create_world(world_id)
+	Application:debug("[ElementWorldPoint:_create()", world_id, self._has_created, inspect(self._values))
+
 	if self._has_created or not self._values.world then
-		Application:debug("[ElementWorldPoint:_create() World is alreaedy created, skipping!]", world_id)
+		Application:debug("[ElementWorldPoint:_create() World is alreaedy created (or if nil doesnt exist), skipping!]", world_id)
 
 		return
 	end
@@ -260,7 +263,7 @@ function ElementWorldPoint:_create_world(world_id)
 	Application:debug("[ElementWorldPoint:_create] world created")
 end
 
--- Lines 272-278
+-- Lines 274-280
 function ElementWorldPoint:save(data)
 	data.has_created = self._has_created
 	data.world_id = self._world_id
@@ -269,7 +272,7 @@ function ElementWorldPoint:save(data)
 	data.world = self._values.world
 end
 
--- Lines 280-287
+-- Lines 282-289
 function ElementWorldPoint:load(data)
 	self._values.world = data.world
 	self._excluded_continents = data.excluded_continents
@@ -281,11 +284,11 @@ function ElementWorldPoint:load(data)
 	self:set_enabled(data.enabled)
 end
 
--- Lines 289-291
+-- Lines 291-293
 function ElementWorldPoint:stop_simulation(...)
 end
 
--- Lines 293-297
+-- Lines 295-299
 function ElementWorldPoint:execute_action(action)
 	Application:debug("[ElementWorldPoint:execute_action]", action)
 
@@ -294,7 +297,7 @@ function ElementWorldPoint:execute_action(action)
 	self:on_executed(nil)
 end
 
--- Lines 299-301
+-- Lines 301-303
 function ElementWorldPoint:destroy()
 	self:_destroy_world()
 end

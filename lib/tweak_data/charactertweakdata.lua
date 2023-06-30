@@ -58,14 +58,14 @@ function CharacterTweakData:_init_russian(presets)
 	}
 	self.russian.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.russian.weapon = deep_clone(presets.weapon.gang_member)
-	self.russian.HEALTH_INIT = 200
+	self.russian.HEALTH_INIT = 400
 	self.russian.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand")
 	}
 	self.russian.detection = presets.detection.gang_member
 	self.russian.dodge = presets.dodge.average
-	self.russian.move_speed = presets.move_speed.fast
+	self.russian.move_speed = presets.move_speed.teamai
 	self.russian.crouch_move = false
 	self.russian.speech_prefix = "russ"
 	self.russian.weapon_voice = "1"
@@ -86,14 +86,14 @@ function CharacterTweakData:_init_german(presets)
 	}
 	self.german.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.german.weapon = deep_clone(presets.weapon.gang_member)
-	self.german.HEALTH_INIT = 200
+	self.german.HEALTH_INIT = 400
 	self.german.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson")
 	}
 	self.german.detection = presets.detection.gang_member
 	self.german.dodge = presets.dodge.average
-	self.german.move_speed = presets.move_speed.fast
+	self.german.move_speed = presets.move_speed.teamai
 	self.german.crouch_move = false
 	self.german.speech_prefix = "germ"
 	self.german.weapon_voice = "2"
@@ -106,21 +106,21 @@ function CharacterTweakData:_init_german(presets)
 	self.german.vision = presets.vision.easy
 end
 
--- Lines 126-150
+-- Lines 126-149
 function CharacterTweakData:_init_british(presets)
 	self.british = {
 		damage = presets.gang_member_damage
 	}
 	self.british.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.british.weapon = deep_clone(presets.weapon.gang_member)
-	self.british.HEALTH_INIT = 200
+	self.british.HEALTH_INIT = 400
 	self.british.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand")
 	}
 	self.british.detection = presets.detection.gang_member
 	self.british.dodge = presets.dodge.average
-	self.british.move_speed = presets.move_speed.fast
+	self.british.move_speed = presets.move_speed.teamai
 	self.british.crouch_move = false
 	self.british.speech_prefix = "brit"
 	self.british.weapon_voice = "3"
@@ -133,21 +133,21 @@ function CharacterTweakData:_init_british(presets)
 	self.british.vision = presets.vision.easy
 end
 
--- Lines 157-182
+-- Lines 156-181
 function CharacterTweakData:_init_american(presets)
 	self.american = {
 		damage = presets.gang_member_damage
 	}
 	self.american.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.american.weapon = deep_clone(presets.weapon.gang_member)
-	self.american.HEALTH_INIT = 200
+	self.american.HEALTH_INIT = 400
 	self.american.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson")
 	}
 	self.american.detection = presets.detection.gang_member
 	self.american.dodge = presets.dodge.average
-	self.american.move_speed = presets.move_speed.fast
+	self.american.move_speed = presets.move_speed.teamai
 	self.american.crouch_move = false
 	self.american.speech_prefix = "amer"
 	self.american.weapon_voice = "3"
@@ -160,7 +160,7 @@ function CharacterTweakData:_init_american(presets)
 	self.american.vision = presets.vision.easy
 end
 
--- Lines 188-223
+-- Lines 187-222
 function CharacterTweakData:_init_civilian(presets)
 	self.civilian = {
 		experience = {},
@@ -205,7 +205,7 @@ function CharacterTweakData:_init_civilian(presets)
 	self.civilian_female.vision = presets.vision.civilian
 end
 
--- Lines 230-273
+-- Lines 229-272
 function CharacterTweakData:_init_dismemberment_data(presets)
 	self.dismemberment_data = {}
 	local dismembers = {
@@ -287,7 +287,7 @@ function CharacterTweakData:_init_dismemberment_data(presets)
 	self.dismemberment_data.blood_decal_data = blood_decal_data
 end
 
--- Lines 276-322
+-- Lines 275-321
 function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light = deep_clone(presets.base)
 	self.german_grunt_light.experience = {}
@@ -337,7 +337,7 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	table.insert(self._enemies_list, "german_grunt_light_shotgun")
 end
 
--- Lines 324-369
+-- Lines 323-368
 function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid = deep_clone(presets.base)
 	self.german_grunt_mid.experience = {}
@@ -371,7 +371,7 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.dodge = presets.dodge.average
 	self.german_grunt_mid.deathguard = false
 	self.german_grunt_mid.chatter = presets.enemy_chatter.cop
-	self.german_grunt_mid.steal_loot = true
+	self.german_grunt_mid.steal_loot = false
 	self.german_grunt_mid.no_retreat = true
 	self.german_grunt_mid.no_arrest = true
 	self.german_grunt_mid.loot_table = "easy_enemy"
@@ -387,7 +387,7 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	table.insert(self._enemies_list, "german_grunt_mid_shotgun")
 end
 
--- Lines 371-412
+-- Lines 370-411
 function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy = deep_clone(presets.base)
 	self.german_grunt_heavy.experience = {}
@@ -422,7 +422,7 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.dodge = presets.dodge.heavy
 	self.german_grunt_heavy.deathguard = false
 	self.german_grunt_heavy.chatter = presets.enemy_chatter.cop
-	self.german_grunt_heavy.steal_loot = true
+	self.german_grunt_heavy.steal_loot = false
 	self.german_grunt_heavy.no_retreat = true
 	self.german_grunt_heavy.no_arrest = true
 	self.german_grunt_heavy.loot_table = "normal_enemy"
@@ -433,7 +433,7 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy_shotgun = clone(self.german_grunt_heavy)
 end
 
--- Lines 414-459
+-- Lines 413-458
 function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light = deep_clone(presets.base)
 	self.german_gebirgsjager_light.experience = {}
@@ -467,7 +467,7 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.dodge = presets.dodge.athletic
 	self.german_gebirgsjager_light.deathguard = false
 	self.german_gebirgsjager_light.chatter = presets.enemy_chatter.cop
-	self.german_gebirgsjager_light.steal_loot = true
+	self.german_gebirgsjager_light.steal_loot = false
 	self.german_gebirgsjager_light.no_retreat = true
 	self.german_gebirgsjager_light.no_arrest = true
 	self.german_gebirgsjager_light.loot_table = "normal_enemy"
@@ -483,7 +483,7 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	table.insert(self._enemies_list, "german_gebirgsjager_light_shotgun")
 end
 
--- Lines 461-507
+-- Lines 460-506
 function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy = deep_clone(presets.base)
 	self.german_gebirgsjager_heavy.experience = {}
@@ -518,7 +518,7 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.dodge = presets.dodge.heavy
 	self.german_gebirgsjager_heavy.deathguard = false
 	self.german_gebirgsjager_heavy.chatter = presets.enemy_chatter.cop
-	self.german_gebirgsjager_heavy.steal_loot = true
+	self.german_gebirgsjager_heavy.steal_loot = false
 	self.german_gebirgsjager_heavy.no_retreat = true
 	self.german_gebirgsjager_heavy.no_arrest = true
 	self.german_gebirgsjager_heavy.loot_table = "normal_enemy"
@@ -534,7 +534,7 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	table.insert(self._enemies_list, "german_gebirgsjager_heavy_shotgun")
 end
 
--- Lines 509-554
+-- Lines 508-553
 function CharacterTweakData:_init_german_light(presets)
 	self.german_light = deep_clone(presets.base)
 	self.german_light.experience = {}
@@ -568,7 +568,7 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.dodge = presets.dodge.athletic
 	self.german_light.deathguard = true
 	self.german_light.chatter = presets.enemy_chatter.cop
-	self.german_light.steal_loot = true
+	self.german_light.steal_loot = false
 	self.german_light.no_retreat = true
 	self.german_light.no_arrest = true
 	self.german_light.loot_table = "hard_enemy"
@@ -582,7 +582,7 @@ function CharacterTweakData:_init_german_light(presets)
 	table.insert(self._enemies_list, "german_light_shotgun")
 end
 
--- Lines 556-603
+-- Lines 555-602
 function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy = deep_clone(presets.base)
 	self.german_heavy.experience = {}
@@ -617,7 +617,7 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.dodge = presets.dodge.heavy
 	self.german_heavy.deathguard = true
 	self.german_heavy.chatter = presets.enemy_chatter.cop
-	self.german_heavy.steal_loot = true
+	self.german_heavy.steal_loot = false
 	self.german_heavy.no_retreat = true
 	self.german_heavy.no_arrest = true
 	self.german_heavy.loot_table = "elite_enemy"
@@ -633,7 +633,7 @@ function CharacterTweakData:_init_german_heavy(presets)
 	table.insert(self._enemies_list, "german_heavy_shotgun")
 end
 
--- Lines 605-650
+-- Lines 604-649
 function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light = deep_clone(presets.base)
 	self.german_fallschirmjager_light.experience = {}
@@ -667,7 +667,7 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.dodge = presets.dodge.athletic
 	self.german_fallschirmjager_light.deathguard = true
 	self.german_fallschirmjager_light.chatter = presets.enemy_chatter.cop
-	self.german_fallschirmjager_light.steal_loot = true
+	self.german_fallschirmjager_light.steal_loot = false
 	self.german_fallschirmjager_light.no_retreat = true
 	self.german_fallschirmjager_light.no_arrest = true
 	self.german_fallschirmjager_light.loot_table = "hard_enemy"
@@ -683,7 +683,7 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	table.insert(self._enemies_list, "german_fallschirmjager_light_shotgun")
 end
 
--- Lines 652-696
+-- Lines 651-695
 function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask = deep_clone(presets.base)
 	self.german_gasmask.experience = {}
@@ -718,7 +718,7 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.dodge = presets.dodge.average
 	self.german_gasmask.deathguard = true
 	self.german_gasmask.chatter = presets.enemy_chatter.cop
-	self.german_gasmask.steal_loot = true
+	self.german_gasmask.steal_loot = false
 	self.german_gasmask.no_retreat = true
 	self.german_gasmask.no_arrest = true
 	self.german_gasmask.loot_table = "elite_enemy"
@@ -731,7 +731,7 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	table.insert(self._enemies_list, "german_gasmask")
 end
 
--- Lines 698-714
+-- Lines 697-713
 function CharacterTweakData:_init_german_commander_backup(presets)
 	self.german_light_commander_backup = deep_clone(self.german_light)
 	self.german_light_commander_backup.carry_tweak_corpse = "german_black_waffen_sentry_light_commander_body"
@@ -752,7 +752,7 @@ function CharacterTweakData:_init_german_commander_backup(presets)
 	table.insert(self._enemies_list, "german_gasmask_commander_backup_shotgun")
 end
 
--- Lines 716-762
+-- Lines 715-761
 function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy = deep_clone(presets.base)
 	self.german_fallschirmjager_heavy.experience = {}
@@ -787,7 +787,7 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.dodge = presets.dodge.heavy
 	self.german_fallschirmjager_heavy.deathguard = false
 	self.german_fallschirmjager_heavy.chatter = presets.enemy_chatter.cop
-	self.german_fallschirmjager_heavy.steal_loot = true
+	self.german_fallschirmjager_heavy.steal_loot = false
 	self.german_fallschirmjager_heavy.no_retreat = true
 	self.german_fallschirmjager_heavy.no_arrest = true
 	self.german_fallschirmjager_heavy.loot_table = "hard_enemy"
@@ -804,15 +804,15 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	table.insert(self._enemies_list, "german_fallschirmjager_heavy_shotgun")
 end
 
--- Lines 764-812
+-- Lines 763-811
 function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss = deep_clone(presets.base)
 	self.german_waffen_ss.experience = {}
 	self.german_waffen_ss.weapon = presets.weapon.insane
 	self.german_waffen_ss.detection = presets.detection.normal
 	self.german_waffen_ss.vision = presets.vision.hard
-	self.german_waffen_ss.HEALTH_INIT = 700
-	self.german_waffen_ss.BASE_HEALTH_INIT = 700
+	self.german_waffen_ss.HEALTH_INIT = 600
+	self.german_waffen_ss.BASE_HEALTH_INIT = 600
 	self.german_waffen_ss.headshot_dmg_mul = 1
 	self.german_waffen_ss.move_speed = presets.move_speed.fast
 	self.german_waffen_ss.crouch_move = false
@@ -839,7 +839,7 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.dodge = presets.dodge.average
 	self.german_waffen_ss.deathguard = false
 	self.german_waffen_ss.chatter = presets.enemy_chatter.cop
-	self.german_waffen_ss.steal_loot = true
+	self.german_waffen_ss.steal_loot = false
 	self.german_waffen_ss.no_retreat = true
 	self.german_waffen_ss.no_arrest = true
 	self.german_waffen_ss.loot_table = "elite_enemy"
@@ -857,17 +857,17 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	table.insert(self._enemies_list, "german_waffen_ss_shotgun")
 end
 
--- Lines 815-856
+-- Lines 814-856
 function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander = deep_clone(presets.base)
 	self.german_commander.experience = {}
 	self.german_commander.weapon = presets.weapon.expert
 	self.german_commander.detection = presets.detection.normal
 	self.german_commander.vision = presets.vision.commander
-	self.german_commander.HEALTH_INIT = 1000
-	self.german_commander.BASE_HEALTH_INIT = 1000
+	self.german_commander.HEALTH_INIT = 400
+	self.german_commander.BASE_HEALTH_INIT = 400
 	self.german_commander.headshot_dmg_mul = 1
-	self.german_commander.move_speed = presets.move_speed.fast
+	self.german_commander.move_speed = presets.move_speed.very_fast
 	self.german_commander.surrender_break_time = {
 		10,
 		15
@@ -885,14 +885,15 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.speech_prefix_p1 = "ger"
 	self.german_commander.speech_prefix_p2 = "officer"
 	self.german_commander.speech_prefix_count = 4
-	self.german_commander.access = "swat"
+	self.german_commander.access = "fbi"
 	self.german_commander.silent_priority_shout = "shout_loud_officer"
 	self.german_commander.priority_shout = "shout_loud_officer"
+	self.german_commander.priority_waypoint = "waypoint_special_mark_officer"
 	self.german_commander.announce_incomming = "incomming_commander"
 	self.german_commander.dodge = presets.dodge.athletic
 	self.german_commander.deathguard = true
 	self.german_commander.chatter = presets.enemy_chatter.cop
-	self.german_commander.steal_loot = true
+	self.german_commander.steal_loot = false
 	self.german_commander.no_retreat = true
 	self.german_commander.no_arrest = true
 	self.german_commander.surrender = nil
@@ -905,17 +906,17 @@ function CharacterTweakData:_init_german_commander(presets)
 	table.insert(self._enemies_list, "german_commander")
 end
 
--- Lines 860-902
+-- Lines 860-903
 function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander = deep_clone(presets.base)
 	self.german_og_commander.experience = {}
 	self.german_og_commander.weapon = presets.weapon.expert
 	self.german_og_commander.detection = presets.detection.normal
 	self.german_og_commander.vision = presets.vision.commander
-	self.german_og_commander.HEALTH_INIT = 1000
-	self.german_og_commander.BASE_HEALTH_INIT = 1000
+	self.german_og_commander.HEALTH_INIT = 400
+	self.german_og_commander.BASE_HEALTH_INIT = 400
 	self.german_og_commander.headshot_dmg_mul = 1
-	self.german_og_commander.move_speed = presets.move_speed.fast
+	self.german_og_commander.move_speed = presets.move_speed.very_fast
 	self.german_og_commander.surrender_break_time = {
 		10,
 		15
@@ -933,14 +934,15 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.speech_prefix_p1 = "ger"
 	self.german_og_commander.speech_prefix_p2 = "officer"
 	self.german_og_commander.speech_prefix_count = 4
-	self.german_og_commander.access = "swat"
+	self.german_og_commander.access = "fbi"
 	self.german_og_commander.silent_priority_shout = "shout_loud_officer"
 	self.german_og_commander.priority_shout = "shout_loud_officer"
+	self.german_og_commander.priority_waypoint = "waypoint_special_mark_officer"
 	self.german_og_commander.announce_incomming = "incomming_commander"
 	self.german_og_commander.dodge = presets.dodge.athletic
 	self.german_og_commander.deathguard = true
 	self.german_og_commander.chatter = presets.enemy_chatter.cop
-	self.german_og_commander.steal_loot = true
+	self.german_og_commander.steal_loot = false
 	self.german_og_commander.no_retreat = true
 	self.german_og_commander.no_arrest = true
 	self.german_og_commander.surrender = nil
@@ -953,17 +955,17 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	table.insert(self._enemies_list, "german_og_commander")
 end
 
--- Lines 905-943
+-- Lines 906-945
 function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer = deep_clone(presets.base)
 	self.german_officer.experience = {}
 	self.german_officer.weapon = presets.weapon.expert
 	self.german_officer.detection = presets.detection.normal
 	self.german_officer.vision = presets.vision.commander
-	self.german_officer.HEALTH_INIT = 420
-	self.german_officer.BASE_HEALTH_INIT = 420
+	self.german_officer.HEALTH_INIT = 650
+	self.german_officer.BASE_HEALTH_INIT = 650
 	self.german_officer.headshot_dmg_mul = 1
-	self.german_officer.move_speed = presets.move_speed.fast
+	self.german_officer.move_speed = presets.move_speed.very_fast
 	self.german_officer.surrender_break_time = {
 		10,
 		15
@@ -982,12 +984,13 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.speech_prefix_p1 = "ger"
 	self.german_officer.speech_prefix_p2 = "officer"
 	self.german_officer.speech_prefix_count = 4
-	self.german_officer.access = "swat"
+	self.german_officer.access = "fbi"
 	self.german_officer.silent_priority_shout = "shout_loud_officer"
+	self.german_officer.priority_waypoint = "waypoint_special_mark_officer"
 	self.german_officer.dodge = presets.dodge.athletic
 	self.german_officer.deathguard = true
 	self.german_officer.chatter = presets.enemy_chatter.cop
-	self.german_officer.steal_loot = true
+	self.german_officer.steal_loot = false
 	self.german_officer.no_retreat = true
 	self.german_officer.no_arrest = true
 	self.german_officer.loot_table = "elite_enemy"
@@ -997,7 +1000,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	table.insert(self._enemies_list, "german_officer")
 end
 
--- Lines 946-984
+-- Lines 948-986
 function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain = deep_clone(presets.base)
 	self.soviet_nkvd_int_security_captain.experience = {}
@@ -1031,7 +1034,7 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.dodge = presets.dodge.athletic
 	self.soviet_nkvd_int_security_captain.deathguard = true
 	self.soviet_nkvd_int_security_captain.chatter = presets.enemy_chatter.cop
-	self.soviet_nkvd_int_security_captain.steal_loot = true
+	self.soviet_nkvd_int_security_captain.steal_loot = false
 	self.soviet_nkvd_int_security_captain.no_retreat = true
 	self.soviet_nkvd_int_security_captain.no_arrest = true
 	self.soviet_nkvd_int_security_captain.loot_table = "special_enemy"
@@ -1041,7 +1044,7 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	table.insert(self._enemies_list, "soviet_nkvd_int_security_captain")
 end
 
--- Lines 987-995
+-- Lines 989-997
 function CharacterTweakData:_init_soviet_nkvd_int_security_captain_b(presets)
 	self.soviet_nkvd_int_security_captain_b = deep_clone(self.soviet_nkvd_int_security_captain)
 	self.soviet_nkvd_int_security_captain_b.weapon_voice = "1"
@@ -1052,15 +1055,15 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain_b(presets)
 	table.insert(self._enemies_list, "soviet_nkvd_int_security_captain_b")
 end
 
--- Lines 998-1083
+-- Lines 1000-1087
 function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer = deep_clone(presets.base)
 	self.german_flamer.experience = {}
 	self.german_flamer.detection = presets.detection.normal
 	self.german_flamer.vision = presets.vision.easy
-	self.german_flamer.HEALTH_INIT = 2250
+	self.german_flamer.HEALTH_INIT = 1900
 	self.german_flamer.headshot_dmg_mul = 1
-	self.german_flamer.friendly_fire_dmg_mul = 0.7
+	self.german_flamer.friendly_fire_dmg_mul = 0.5
 	self.german_flamer.dodge = presets.dodge.poor
 	self.german_flamer.allowed_stances = {
 		cbt = true
@@ -1086,6 +1089,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 		}
 	}
 	self.german_flamer.priority_shout = "shout_loud_flamer"
+	self.german_flamer.priority_waypoint = "waypoint_special_mark_flamer"
 	self.german_flamer.rescue_hostages = false
 	self.german_flamer.deathguard = true
 	self.german_flamer.no_equip_anim = true
@@ -1106,7 +1110,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.weapon.ak47.focus_delay = 7
 	self.german_flamer.weapon.ak47.focus_dis = 200
 	self.german_flamer.weapon.ak47.spread = 0
-	self.german_flamer.weapon.ak47.miss_dis = 250
+	self.german_flamer.weapon.ak47.miss_dis = 600
 	self.german_flamer.weapon.ak47.RELOAD_SPEED = 1
 	self.german_flamer.weapon.ak47.melee_speed = 1
 	self.german_flamer.weapon.ak47.melee_dmg = 2
@@ -1114,7 +1118,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 		1,
 		2
 	}
-	self.german_flamer.weapon.ak47.max_range = 1100
+	self.german_flamer.weapon.ak47.max_range = 950
 	self.german_flamer.weapon.ak47.additional_weapon_stats = {
 		cooldown_duration = 1.25,
 		shooting_duration = 3.5
@@ -1131,7 +1135,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.weapon.ak47.use_laser = false
 	self.german_flamer.weapon.ak47.FALLOFF = {
 		{
-			dmg_mul = 5,
+			dmg_mul = 4,
 			r = 0,
 			acc = {
 				1,
@@ -1168,7 +1172,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 		},
 		{
 			dmg_mul = 1,
-			r = 1000,
+			r = 1100,
 			acc = {
 				5,
 				1
@@ -1204,7 +1208,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 end
 
--- Lines 1089-1156
+-- Lines 1093-1162
 function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper = deep_clone(presets.base)
 	self.german_sniper.experience = {}
@@ -1212,7 +1216,7 @@ function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper.vision = presets.vision.easy
 	self.german_sniper.HEALTH_INIT = 160
 	self.german_sniper.BASE_HEALTH_INIT = 160
-	self.german_sniper.headshot_dmg_mul = 1
+	self.german_sniper.headshot_dmg_mul = nil
 	self.german_sniper.allowed_stances = {
 		cbt = true
 	}
@@ -1230,6 +1234,7 @@ function CharacterTweakData:_init_german_sniper(presets)
 		}
 	}
 	self.german_sniper.priority_shout = "shout_loud_sniper"
+	self.german_sniper.priority_waypoint = "waypoint_special_mark_sniper"
 	self.german_sniper.rescue_hostages = false
 	self.german_sniper.deathguard = false
 	self.german_sniper.no_equip_anim = true
@@ -1298,7 +1303,7 @@ function CharacterTweakData:_init_german_sniper(presets)
 	table.insert(self._enemies_list, "german_sniper")
 end
 
--- Lines 1163-1219
+-- Lines 1169-1226
 function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter = deep_clone(presets.base)
 	self.german_spotter.experience = {}
@@ -1331,10 +1336,11 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.access = "sniper"
 	self.german_spotter.silent_priority_shout = "f37"
 	self.german_spotter.priority_shout = "shout_loud_spotter"
+	self.german_spotter.priority_waypoint = "waypoint_special_mark_spotter"
 	self.german_spotter.dodge = presets.dodge.poor
 	self.german_spotter.deathguard = true
 	self.german_spotter.chatter = presets.enemy_chatter.cop
-	self.german_spotter.steal_loot = true
+	self.german_spotter.steal_loot = false
 	self.german_spotter.no_retreat = true
 	self.german_spotter.no_arrest = true
 	self.german_spotter.loot_table = "normal_enemy"
@@ -1383,7 +1389,7 @@ function CharacterTweakData:_init_german_spotter(presets)
 	table.insert(self._enemies_list, "german_spotter")
 end
 
--- Lines 1226-1237
+-- Lines 1233-1244
 function CharacterTweakData:_init_escort(presets)
 	self.escort = deep_clone(self.civilian)
 	self.escort.HEALTH_INIT = 80
@@ -1396,7 +1402,7 @@ function CharacterTweakData:_init_escort(presets)
 	self.escort.damage = presets.base.damage
 end
 
--- Lines 1248-3128
+-- Lines 1255-3161
 function CharacterTweakData:_presets(tweak_data)
 	local presets = {
 		hurt_severities = {}
@@ -1456,12 +1462,7 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = 1,
 			zones = {
 				{
-					none = 1,
-					health_limit = 0.01
-				},
-				{
-					explode = 1,
-					health_limit = 1
+					explode = 1
 				}
 			}
 		},
@@ -1638,14 +1639,20 @@ function CharacterTweakData:_presets(tweak_data)
 		},
 		calls_in = true,
 		dead_body_drop_sound = "body_fall",
-		shout_radius = 2000,
-		kill_shout_chance = 0.5,
+		shout_radius = 500,
+		shout_radius_difficulty = {
+			200,
+			500,
+			1000,
+			1200
+		},
+		kill_shout_chance = 0,
 		experience = {}
 	}
 	presets.base.experience.cable_tie = "tie_swat"
 	presets.base.damage = {
 		hurt_severity = presets.hurt_severities.base,
-		death_severity = 0.5,
+		death_severity = 0.75,
 		explosion_damage_mul = 1
 	}
 	presets.base.dismemberment_enabled = true
@@ -2064,7 +2071,7 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 1,
+			dmg_mul = 2,
 			r = 1600,
 			acc = {
 				0.3,
@@ -2082,8 +2089,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
-			r = 2300,
+			dmg_mul = 1.5,
+			r = 3500,
 			acc = {
 				0.1,
 				0.7
@@ -2101,7 +2108,7 @@ function CharacterTweakData:_presets(tweak_data)
 		},
 		{
 			dmg_mul = 0.25,
-			r = 3000,
+			r = 4000,
 			acc = {
 				0.035,
 				0.55
@@ -2118,8 +2125,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
-			r = 4000,
+			dmg_mul = 0.1,
+			r = 5000,
 			acc = {
 				0.035,
 				0.25
@@ -2158,11 +2165,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 1,
+			dmg_mul = 1.5,
 			r = 800,
 			acc = {
-				0.4,
-				0.7
+				0.7,
+				0.8
 			},
 			recoil = {
 				0.15,
@@ -2434,7 +2441,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.normal.ger_geco_npc.focus_dis = 200
 	presets.weapon.normal.ger_geco_npc.spread = 15
 	presets.weapon.normal.ger_geco_npc.miss_dis = 20
-	presets.weapon.normal.ger_geco_npc.RELOAD_SPEED = 0.8
+	presets.weapon.normal.ger_geco_npc.RELOAD_SPEED = 2
 	presets.weapon.normal.ger_geco_npc.melee_speed = 1
 	presets.weapon.normal.ger_geco_npc.melee_dmg = 5
 	presets.weapon.normal.ger_geco_npc.melee_retry_delay = {
@@ -2451,7 +2458,7 @@ function CharacterTweakData:_presets(tweak_data)
 			dmg_mul = 1,
 			r = 600,
 			acc = {
-				0.4,
+				0.6,
 				0.7
 			},
 			recoil = {
@@ -2466,7 +2473,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
+			dmg_mul = 0.3,
 			r = 1000,
 			acc = {
 				0.2,
@@ -2870,7 +2877,7 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.good.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
+			dmg_mul = 2.5,
 			r = 1600,
 			acc = {
 				0.5,
@@ -2888,7 +2895,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
+			dmg_mul = 2,
 			r = 2300,
 			acc = {
 				0.35,
@@ -2964,7 +2971,7 @@ function CharacterTweakData:_presets(tweak_data)
 			dmg_mul = 2,
 			r = 800,
 			acc = {
-				0.6,
+				0.8,
 				0.9
 			},
 			recoil = {
@@ -3225,7 +3232,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_geco_npc.focus_dis = 200
 	presets.weapon.good.ger_geco_npc.spread = 15
 	presets.weapon.good.ger_geco_npc.miss_dis = 20
-	presets.weapon.good.ger_geco_npc.RELOAD_SPEED = 0.75
+	presets.weapon.good.ger_geco_npc.RELOAD_SPEED = 1.75
 	presets.weapon.good.ger_geco_npc.melee_speed = 1
 	presets.weapon.good.ger_geco_npc.melee_dmg = 5
 	presets.weapon.good.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
@@ -3239,7 +3246,7 @@ function CharacterTweakData:_presets(tweak_data)
 			dmg_mul = 2,
 			r = 600,
 			acc = {
-				0.6,
+				0.7,
 				0.9
 			},
 			recoil = {
@@ -3254,7 +3261,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
+			dmg_mul = 0.7,
 			r = 1000,
 			acc = {
 				0.4,
@@ -3658,7 +3665,7 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
+			dmg_mul = 4,
 			r = 1600,
 			acc = {
 				0.5,
@@ -3749,10 +3756,10 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
+			dmg_mul = 3.5,
 			r = 800,
 			acc = {
-				0.6,
+				0.8,
 				0.9
 			},
 			recoil = {
@@ -3767,10 +3774,10 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4,
+			dmg_mul = 3,
 			r = 1500,
 			acc = {
-				0.5,
+				0.6,
 				0.9
 			},
 			recoil = {
@@ -4013,7 +4020,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_geco_npc.focus_dis = 200
 	presets.weapon.expert.ger_geco_npc.spread = 15
 	presets.weapon.expert.ger_geco_npc.miss_dis = 20
-	presets.weapon.expert.ger_geco_npc.RELOAD_SPEED = 1.4
+	presets.weapon.expert.ger_geco_npc.RELOAD_SPEED = 1.5
 	presets.weapon.expert.ger_geco_npc.melee_speed = 1
 	presets.weapon.expert.ger_geco_npc.melee_dmg = 10
 	presets.weapon.expert.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
@@ -4027,7 +4034,7 @@ function CharacterTweakData:_presets(tweak_data)
 			dmg_mul = 5,
 			r = 600,
 			acc = {
-				0.6,
+				0.8,
 				0.9
 			},
 			recoil = {
@@ -4042,7 +4049,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3.5,
+			dmg_mul = 2.5,
 			r = 1000,
 			acc = {
 				0.5,
@@ -4651,7 +4658,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.insane.usa_garand_npc.FALLOFF = {
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 100,
 			acc = {
 				0.7,
@@ -4669,7 +4676,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 500,
 			acc = {
 				0.7,
@@ -4687,7 +4694,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 1000,
 			acc = {
 				0.5,
@@ -4705,7 +4712,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 2000,
 			acc = {
 				0.5,
@@ -4723,7 +4730,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 3000,
 			acc = {
 				0.3,
@@ -4756,7 +4763,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.insane.usa_m1911_npc.FALLOFF = {
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 100,
 			acc = {
 				0.7,
@@ -4774,7 +4781,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 500,
 			acc = {
 				0.7,
@@ -4792,7 +4799,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 1000,
 			acc = {
 				0.5,
@@ -4810,7 +4817,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 2000,
 			acc = {
 				0.5,
@@ -4828,7 +4835,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 3000,
 			acc = {
 				0.3,
@@ -4862,7 +4869,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_thomspon_npc.autofire_rounds = presets.weapon.normal.usa_thomspon_npc.autofire_rounds
 	presets.weapon.insane.usa_thomspon_npc.FALLOFF = {
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 100,
 			acc = {
 				0.7,
@@ -4880,7 +4887,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 500,
 			acc = {
 				0.7,
@@ -4898,7 +4905,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 1000,
 			acc = {
 				0.5,
@@ -4916,7 +4923,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 2000,
 			acc = {
 				0.5,
@@ -4934,7 +4941,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 3000,
 			acc = {
 				0.3,
@@ -4971,7 +4978,7 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 5.5,
+			dmg_mul = 4.5,
 			r = 1600,
 			acc = {
 				0.7,
@@ -5062,7 +5069,7 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 6,
+			dmg_mul = 4,
 			r = 800,
 			acc = {
 				0.7,
@@ -5080,7 +5087,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4,
+			dmg_mul = 3,
 			r = 1500,
 			acc = {
 				0.5,
@@ -5098,7 +5105,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 2.5,
 			r = 2000,
 			acc = {
 				0.25,
@@ -5154,7 +5161,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.insane.ger_mp38_npc.FALLOFF = {
 		{
-			dmg_mul = 6,
+			dmg_mul = 4.5,
 			r = 1400,
 			acc = {
 				0.7,
@@ -5246,7 +5253,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.insane.ger_stg44_npc.FALLOFF = {
 		{
-			dmg_mul = 6,
+			dmg_mul = 4,
 			r = 1800,
 			acc = {
 				0.7,
@@ -5264,7 +5271,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4,
+			dmg_mul = 3.5,
 			r = 2500,
 			acc = {
 				0.5,
@@ -5326,7 +5333,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_geco_npc.focus_dis = 200
 	presets.weapon.insane.ger_geco_npc.spread = 15
 	presets.weapon.insane.ger_geco_npc.miss_dis = 20
-	presets.weapon.insane.ger_geco_npc.RELOAD_SPEED = 1.4
+	presets.weapon.insane.ger_geco_npc.RELOAD_SPEED = 1.3
 	presets.weapon.insane.ger_geco_npc.melee_speed = 1
 	presets.weapon.insane.ger_geco_npc.melee_dmg = 10
 	presets.weapon.insane.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
@@ -5337,11 +5344,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_geco_npc.FALLOFF = {
 		{
-			dmg_mul = 6,
+			dmg_mul = 5,
 			r = 600,
 			acc = {
-				0.7,
-				0.9
+				0.9,
+				1
 			},
 			recoil = {
 				1.5,
@@ -5355,7 +5362,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4,
+			dmg_mul = 2.5,
 			r = 1000,
 			acc = {
 				0.5,
@@ -5373,7 +5380,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
+			dmg_mul = 2,
 			r = 1500,
 			acc = {
 				0.25,
@@ -5391,7 +5398,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
+			dmg_mul = 1,
 			r = 2000,
 			acc = {
 				0.15,
@@ -5420,7 +5427,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.sniper.ger_kar98_npc.focus_dis = 1000
 	presets.weapon.sniper.ger_kar98_npc.spread = 30
 	presets.weapon.sniper.ger_kar98_npc.miss_dis = 250
-	presets.weapon.sniper.ger_kar98_npc.RELOAD_SPEED = 0.75
+	presets.weapon.sniper.ger_kar98_npc.RELOAD_SPEED = 1.3
 	presets.weapon.sniper.ger_kar98_npc.melee_speed = presets.weapon.normal.ger_kar98_npc.melee_speed
 	presets.weapon.sniper.ger_kar98_npc.melee_dmg = presets.weapon.normal.ger_kar98_npc.melee_dmg
 	presets.weapon.sniper.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
@@ -5432,7 +5439,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.sniper.ger_kar98_npc.use_laser = true
 	presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 5,
+			dmg_mul = 4.5,
 			r = 700,
 			acc = {
 				0.4,
@@ -5450,7 +5457,7 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 5,
+			dmg_mul = 3.5,
 			r = 3500,
 			acc = {
 				0.1,
@@ -5513,7 +5520,7 @@ function CharacterTweakData:_presets(tweak_data)
 			r = 300,
 			acc = {
 				0.7,
-				1
+				0.8
 			},
 			recoil = {
 				0.25,
@@ -5981,13 +5988,13 @@ function CharacterTweakData:_presets(tweak_data)
 			cone_3 = {}
 		}
 	}
-	presets.vision.normal.idle.cone_1.angle = 160
+	presets.vision.normal.idle.cone_1.angle = 170
 	presets.vision.normal.idle.cone_1.distance = 500
 	presets.vision.normal.idle.cone_1.speed_mul = 1.75
-	presets.vision.normal.idle.cone_2.angle = 50
+	presets.vision.normal.idle.cone_2.angle = 60
 	presets.vision.normal.idle.cone_2.distance = 1550
 	presets.vision.normal.idle.cone_2.speed_mul = 2.5
-	presets.vision.normal.idle.cone_3.angle = 110
+	presets.vision.normal.idle.cone_3.angle = 120
 	presets.vision.normal.idle.cone_3.distance = 3000
 	presets.vision.normal.idle.cone_3.speed_mul = 7
 	presets.vision.normal.combat = {
@@ -6016,13 +6023,13 @@ function CharacterTweakData:_presets(tweak_data)
 			cone_3 = {}
 		}
 	}
-	presets.vision.hard.idle.cone_1.angle = 160
+	presets.vision.hard.idle.cone_1.angle = 180
 	presets.vision.hard.idle.cone_1.distance = 500
 	presets.vision.hard.idle.cone_1.speed_mul = 1.75
-	presets.vision.hard.idle.cone_2.angle = 50
+	presets.vision.hard.idle.cone_2.angle = 70
 	presets.vision.hard.idle.cone_2.distance = 1550
 	presets.vision.hard.idle.cone_2.speed_mul = 2.5
-	presets.vision.hard.idle.cone_3.angle = 110
+	presets.vision.hard.idle.cone_3.angle = 130
 	presets.vision.hard.idle.cone_3.distance = 3000
 	presets.vision.hard.idle.cone_3.speed_mul = 7
 	presets.vision.hard.combat = {
@@ -6051,14 +6058,14 @@ function CharacterTweakData:_presets(tweak_data)
 			cone_3 = {}
 		}
 	}
-	presets.vision.commander.idle.cone_1.angle = 160
-	presets.vision.commander.idle.cone_1.distance = 500
+	presets.vision.commander.idle.cone_1.angle = 180
+	presets.vision.commander.idle.cone_1.distance = 600
 	presets.vision.commander.idle.cone_1.speed_mul = 1
-	presets.vision.commander.idle.cone_2.angle = 50
-	presets.vision.commander.idle.cone_2.distance = 1550
+	presets.vision.commander.idle.cone_2.angle = 80
+	presets.vision.commander.idle.cone_2.distance = 1650
 	presets.vision.commander.idle.cone_2.speed_mul = 1.5
-	presets.vision.commander.idle.cone_3.angle = 110
-	presets.vision.commander.idle.cone_3.distance = 3000
+	presets.vision.commander.idle.cone_3.angle = 130
+	presets.vision.commander.idle.cone_3.distance = 3400
 	presets.vision.commander.idle.cone_3.speed_mul = 5
 	presets.vision.commander.combat = {
 		name = "commander-cbt",
@@ -7165,6 +7172,65 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				}
 			}
+		},
+		teamai = {
+			stand = {
+				walk = {
+					ntl = {
+						strafe = 120,
+						fwd = 145,
+						bwd = 120
+					},
+					hos = {
+						strafe = 225,
+						fwd = 285,
+						bwd = 215
+					},
+					cbt = {
+						strafe = 225,
+						fwd = 285,
+						bwd = 215
+					}
+				},
+				run = {
+					hos = {
+						strafe = 300,
+						fwd = 500,
+						bwd = 300
+					},
+					cbt = {
+						strafe = 325,
+						fwd = 475,
+						bwd = 300
+					}
+				}
+			},
+			crouch = {
+				walk = {
+					hos = {
+						strafe = 210,
+						fwd = 245,
+						bwd = 190
+					},
+					cbt = {
+						strafe = 190,
+						fwd = 255,
+						bwd = 190
+					}
+				},
+				run = {
+					hos = {
+						strafe = 282,
+						fwd = 350,
+						bwd = 268
+					},
+					cbt = {
+						strafe = 282,
+						fwd = 312,
+						bwd = 268
+					}
+				}
+			}
 		}
 	}
 
@@ -7367,7 +7433,7 @@ function CharacterTweakData:_presets(tweak_data)
 	return presets
 end
 
--- Lines 3134-3193
+-- Lines 3167-3231
 function CharacterTweakData:_create_table_structure()
 	self.weap_ids = {
 		"m42_flammenwerfer",
@@ -7405,6 +7471,7 @@ function CharacterTweakData:_create_table_structure()
 		Idstring("units/vanilla/weapons/wpn_fps_gre_mills/wpn_fps_gre_mills_husk"),
 		Idstring("units/vanilla/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343_husk"),
 		Idstring("units/upd_001/weapons/wpn_fps_gre_concrete/wpn_fps_gre_concrete_husk"),
+		Idstring("units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty_husk"),
 		Idstring("units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife"),
 		Idstring("units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger"),
 		Idstring("units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles"),
@@ -7427,7 +7494,7 @@ function CharacterTweakData:_create_table_structure()
 	}
 end
 
--- Lines 3197-3217
+-- Lines 3235-3255
 function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -7452,18 +7519,18 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	end
 end
 
--- Lines 3221-3253
+-- Lines 3259-3292
 function CharacterTweakData:_set_difficulty_1()
-	self:_multiply_all_hp(0.75)
+	self:_multiply_all_hp(1)
 	self:_multiply_weapon_delay(self.presets.weapon.normal, 1)
 	self:_multiply_weapon_delay(self.presets.weapon.good, 1)
 	self:_multiply_weapon_delay(self.presets.weapon.expert, 1)
 	self:_multiply_weapon_delay(self.presets.weapon.sniper, 3)
-	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 11)
+	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 1)
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.2
-	self.presets.gang_member_damage.HEALTH_INIT = 125
+	self.presets.gang_member_damage.HEALTH_INIT = 175
 
 	self:_set_characters_weapon_preset("normal")
 
@@ -7525,12 +7592,13 @@ function CharacterTweakData:_set_difficulty_1()
 			}
 		}
 	}
-	self.german_flamer.HEALTH_INIT = 2000
+	self.german_flamer.HEALTH_INIT = 2200
+	self.german_flamer.headshot_dmg_mul = 0.6
 end
 
--- Lines 3257-3292
+-- Lines 3296-3331
 function CharacterTweakData:_set_difficulty_2()
-	self:_multiply_all_hp(1)
+	self:_multiply_all_hp(1.2)
 	self:_multiply_weapon_delay(self.presets.weapon.normal, 1)
 	self:_multiply_weapon_delay(self.presets.weapon.good, 1)
 	self:_multiply_weapon_delay(self.presets.weapon.expert, 1)
@@ -7539,10 +7607,10 @@ function CharacterTweakData:_set_difficulty_2()
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.4
+	self.presets.gang_member_damage.HEALTH_INIT = 200
 
 	self:_set_characters_weapon_preset("good")
 
-	self.presets.gang_member_damage.HEALTH_INIT = 160
 	self.escort.HEALTH_INIT = 100
 	self.flashbang_multiplier = 1.25
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
@@ -7601,21 +7669,22 @@ function CharacterTweakData:_set_difficulty_2()
 			}
 		}
 	}
-	self.german_flamer.HEALTH_INIT = 3000
+	self.german_flamer.HEALTH_INIT = 3200
+	self.german_flamer.headshot_dmg_mul = 0.45
 end
 
--- Lines 3296-3331
+-- Lines 3335-3371
 function CharacterTweakData:_set_difficulty_3()
-	self:_multiply_all_hp(1)
-	self:_multiply_weapon_delay(self.presets.weapon.normal, 1)
-	self:_multiply_weapon_delay(self.presets.weapon.good, 1)
-	self:_multiply_weapon_delay(self.presets.weapon.expert, 1)
+	self:_multiply_all_hp(1.35)
+	self:_multiply_weapon_delay(self.presets.weapon.normal, 0.9)
+	self:_multiply_weapon_delay(self.presets.weapon.good, 0.9)
+	self:_multiply_weapon_delay(self.presets.weapon.expert, 0.9)
 	self:_multiply_weapon_delay(self.presets.weapon.sniper, 3)
-	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 1)
+	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 0.9)
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.5
-	self.presets.gang_member_damage.HEALTH_INIT = 200
+	self.presets.gang_member_damage.HEALTH_INIT = 275
 
 	self:_set_characters_weapon_preset("expert")
 
@@ -7677,27 +7746,23 @@ function CharacterTweakData:_set_difficulty_3()
 			}
 		}
 	}
-	self.german_flamer.HEALTH_INIT = 4000
+	self.german_flamer.HEALTH_INIT = 4400
+	self.german_flamer.headshot_dmg_mul = 0.35
 end
 
--- Lines 3335-3375
+-- Lines 3375-3411
 function CharacterTweakData:_set_difficulty_4()
-	if SystemInfo:platform() == Idstring("PS3") then
-		self:_multiply_all_hp(1.2)
-	else
-		self:_multiply_all_hp(1.2)
-	end
-
+	self:_multiply_all_hp(1.45)
 	self:_multiply_all_speeds(2, 2.1)
-	self:_multiply_weapon_delay(self.presets.weapon.normal, 1)
-	self:_multiply_weapon_delay(self.presets.weapon.good, 1)
-	self:_multiply_weapon_delay(self.presets.weapon.expert, 1)
+	self:_multiply_weapon_delay(self.presets.weapon.normal, 0.8)
+	self:_multiply_weapon_delay(self.presets.weapon.good, 0.8)
+	self:_multiply_weapon_delay(self.presets.weapon.expert, 0.8)
 	self:_multiply_weapon_delay(self.presets.weapon.sniper, 3)
-	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 1)
+	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 0.8)
 
 	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
 	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.5
-	self.presets.gang_member_damage.HEALTH_INIT = 250
+	self.presets.gang_member_damage.HEALTH_INIT = 325
 
 	self:_set_characters_weapon_preset("insane")
 
@@ -7759,10 +7824,11 @@ function CharacterTweakData:_set_difficulty_4()
 			}
 		}
 	}
-	self.german_flamer.HEALTH_INIT = 5000
+	self.german_flamer.HEALTH_INIT = 5400
+	self.german_flamer.headshot_dmg_mul = 0.25
 end
 
--- Lines 3379-3386
+-- Lines 3415-3422
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -7773,23 +7839,25 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines 3390-3394
+-- Lines 3426-3430
 function CharacterTweakData:_multiply_all_hp(hp_mul)
 	for _, name in ipairs(self._enemies_list) do
 		self[name].HEALTH_INIT = self[name].BASE_HEALTH_INIT * hp_mul
 	end
 end
 
--- Lines 3398-3404
+-- Lines 3434-3443
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	for _, name in ipairs(self._enemies_list) do
 		local speed_table = self[name].SPEED_WALK
 		speed_table.hos = speed_table.hos * walk_mul
 		speed_table.cbt = speed_table.cbt * walk_mul
+		local sprint_speed = self[name].SPEED_RUN
+		sprint_speed = sprint_speed * run_mul
 	end
 end
 
--- Lines 3407-3416
+-- Lines 3446-3455
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	return
 
@@ -7798,7 +7866,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines 3420-3452
+-- Lines 3460-3492
 function CharacterTweakData:character_map()
 	local char_map = {
 		raidww2 = {
@@ -7833,7 +7901,7 @@ function CharacterTweakData:character_map()
 	return char_map
 end
 
--- Lines 3454-3459
+-- Lines 3494-3499
 function CharacterTweakData:get_special_enemies()
 	local special_enemies = {}
 

@@ -9,7 +9,7 @@ RaidGUIControlSlider.SIDELINE_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlSlider.SIDELINE_W = 3
 RaidGUIControlSlider.VALUE_LABEL_W = 64
 
--- Lines 13-43
+-- Lines 13-44
 function RaidGUIControlSlider:init(parent, params)
 	RaidGUIControlSlider.super.init(self, parent, params)
 
@@ -29,6 +29,7 @@ function RaidGUIControlSlider:init(parent, params)
 
 	self._value = self._params.value or 0
 	self._value_label_format = self._params.value_format or "%d"
+	self._value_slider_step = self._params.value_step or 4
 	self._on_value_change_callback = params.on_value_change_callback
 	self._min_display_value = params.min_display_value or 0
 	self._max_display_value = params.max_display_value or 100
@@ -40,13 +41,13 @@ function RaidGUIControlSlider:init(parent, params)
 	self:highlight_off()
 end
 
--- Lines 45-48
+-- Lines 46-49
 function RaidGUIControlSlider:set_selected(value)
 	RaidGUIControlSlider.super.set_selected(self, value)
 	self._slider:set_selected(value)
 end
 
--- Lines 50-71
+-- Lines 51-72
 function RaidGUIControlSlider:set_enabled(enabled)
 	RaidGUIControlSlider.super.set_enabled(self, enabled)
 	self._slider:set_enabled(enabled)
@@ -69,7 +70,7 @@ function RaidGUIControlSlider:set_enabled(enabled)
 	end
 end
 
--- Lines 73-81
+-- Lines 74-82
 function RaidGUIControlSlider:_create_slider_panel()
 	local slider_params = clone(self._params)
 	slider_params.name = slider_params.name .. "_slider"
@@ -80,7 +81,7 @@ function RaidGUIControlSlider:_create_slider_panel()
 	self._object = self._slider_panel
 end
 
--- Lines 83-127
+-- Lines 84-128
 function RaidGUIControlSlider:_create_slider_controls()
 	local sideline_params = {
 		alpha = 0,
@@ -130,18 +131,18 @@ function RaidGUIControlSlider:_create_slider_controls()
 	self._description = self._object:text(description_params)
 end
 
--- Lines 129-132
+-- Lines 130-133
 function RaidGUIControlSlider:on_mouse_out(x, y)
 	RaidGUIControlSlider.super.on_mouse_out(self, x, y)
 	self:on_mouse_released()
 end
 
--- Lines 134-136
+-- Lines 135-137
 function RaidGUIControlSlider:get_value()
 	return self._value
 end
 
--- Lines 138-148
+-- Lines 139-149
 function RaidGUIControlSlider:set_value(value)
 	self._value = math.clamp(value, 0, 100)
 	local display_value = math.lerp(self._min_display_value, self._max_display_value, self._value / 100)
@@ -151,7 +152,7 @@ function RaidGUIControlSlider:set_value(value)
 	self._slider:render_value()
 end
 
--- Lines 150-157
+-- Lines 151-158
 function RaidGUIControlSlider:_on_value_changed()
 	local current_value = self._slider:get_value()
 
@@ -162,7 +163,7 @@ function RaidGUIControlSlider:_on_value_changed()
 	end
 end
 
--- Lines 159-168
+-- Lines 160-169
 function RaidGUIControlSlider:highlight_on()
 	if not self._enabled then
 		return
@@ -174,7 +175,7 @@ function RaidGUIControlSlider:highlight_on()
 	self._object:animate(callback(self, self, "_animate_highlight_on"))
 end
 
--- Lines 170-179
+-- Lines 171-180
 function RaidGUIControlSlider:highlight_off()
 	if not self._enabled then
 		return
@@ -186,7 +187,7 @@ function RaidGUIControlSlider:highlight_off()
 	self._object:animate(callback(self, self, "_animate_highlight_off"))
 end
 
--- Lines 188-213
+-- Lines 189-214
 function RaidGUIControlSlider:_animate_highlight_on()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2
@@ -212,7 +213,7 @@ function RaidGUIControlSlider:_animate_highlight_on()
 	self._value_label:set_color(RaidGUIControlSlider.TEXT_HIGHLIGHT_COLOR)
 end
 
--- Lines 215-240
+-- Lines 216-241
 function RaidGUIControlSlider:_animate_highlight_off()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2

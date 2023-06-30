@@ -141,13 +141,13 @@ function IngameWaitingForPlayersState:_briefing_callback(event_type, label, cook
 	print("[IngameWaitingForPlayersState]", "event_type", event_type, "label", label, "cookie", cookie)
 end
 
--- Lines 177-262
+-- Lines 177-268
 function IngameWaitingForPlayersState:update(t, dt)
 	if not managers.network:session() then
 		return
 	end
 
-	if self:intro_video_playing() and self:is_skipped() or self:intro_video_playing() and self:intro_video_done() then
+	if self:intro_video_playing() and (self:is_skipped() or self:intro_video_playing() and self:intro_video_done()) then
 		self._intro_video:destroy()
 		self._panel:remove(self._intro_video)
 		self._panel:remove_background()
@@ -158,7 +158,11 @@ function IngameWaitingForPlayersState:update(t, dt)
 
 		self._safe_panel:child("press_any_key_prompt"):stop()
 		self._safe_panel:remove(self._safe_panel:child("press_any_key_prompt"))
-		managers.raid_job:do_external_end_mission()
+
+		if not managers.system_menu:is_active_by_id("show_mp_disconnected_internet_dialog") then
+			Application:debug("[IngameWaitingForPlayersState:update] do_external_end_mission")
+			managers.raid_job:do_external_end_mission()
+		end
 	end
 
 	if self._briefing_start_t and self._briefing_start_t < t then
@@ -221,17 +225,17 @@ function IngameWaitingForPlayersState:update(t, dt)
 	end
 end
 
--- Lines 264-266
+-- Lines 270-272
 function IngameWaitingForPlayersState:intro_video_playing()
 	return alive(self._intro_video)
 end
 
--- Lines 268-270
+-- Lines 274-276
 function IngameWaitingForPlayersState:intro_video_done()
 	return self._intro_video:loop_count() >= 1
 end
 
--- Lines 272-280
+-- Lines 278-286
 function IngameWaitingForPlayersState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -242,7 +246,7 @@ function IngameWaitingForPlayersState:is_skipped()
 	return false
 end
 
--- Lines 282-352
+-- Lines 288-366
 function IngameWaitingForPlayersState:at_enter()
 	self._started_from_beginning = true
 
@@ -260,6 +264,12 @@ function IngameWaitingForPlayersState:at_enter()
 	managers.gui_data:layout_workspace(self._safe_rect_workspace)
 
 	self._safe_panel = self._safe_rect_workspace:panel()
+
+	if managers.network:session():is_host() and managers.network.matchmake:is_server_joinable() then
+		self._server_was_joinable = true
+
+		managers.network.matchmake:set_server_joinable(false)
+	end
 
 	self:setup_controller()
 
@@ -308,7 +318,7 @@ function IngameWaitingForPlayersState:at_enter()
 	end
 end
 
--- Lines 354-398
+-- Lines 368-412
 function IngameWaitingForPlayersState:show_intro_video()
 	local params_root_panel = {
 		is_root_panel = true,
@@ -351,7 +361,7 @@ function IngameWaitingForPlayersState:show_intro_video()
 	press_any_key_prompt:animate(callback(self, self, "_animate_show_press_any_key_prompt"))
 end
 
--- Lines 400-415
+-- Lines 414-429
 function IngameWaitingForPlayersState:_animate_show_press_any_key_prompt(prompt)
 	local duration = 0.7
 	local t = 0
@@ -369,7 +379,7 @@ function IngameWaitingForPlayersState:_animate_show_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.75)
 end
 
--- Lines 419-443
+-- Lines 433-457
 function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	if not managers.network:session() then
 		self._file_streamer_max_workload = nil
@@ -400,14 +410,14 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 end
 
--- Lines 447-453
+-- Lines 461-467
 function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	if not self._skip_promt_shown and not self._file_streamer_max_workload and not managers.menu:active_menu() and managers.network:session() and managers.network:session():are_peers_done_streaming() then
 		self._skip_promt_shown = true
 	end
 end
 
--- Lines 455-462
+-- Lines 469-476
 function IngameWaitingForPlayersState:start_game_intro()
 	if self._starting_game_intro then
 		return
@@ -418,7 +428,7 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines 465-471
+-- Lines 479-485
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 	Global.statistics_manager.playing_from_start = nil
@@ -426,12 +436,12 @@ function IngameWaitingForPlayersState:set_dropin(char_name)
 	print("Joining as " .. char_name)
 end
 
--- Lines 473-475
+-- Lines 487-489
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines 477-521
+-- Lines 491-540
 function IngameWaitingForPlayersState:at_exit()
 	Application:debug("[IngameWaitingForPlayersState:at_exit()]")
 
@@ -452,14 +462,7 @@ function IngameWaitingForPlayersState:at_exit()
 
 	local rich_presence = nil
 
-	if Global.game_settings.single_player then
-		rich_presence = "SPPlaying"
-	else
-		rich_presence = "MPPlaying"
-	end
-
 	managers.platform:set_presence("Playing")
-	managers.platform:set_rich_presence(rich_presence)
 	managers.platform:set_playing(true)
 	managers.game_play_central:start_heist_timer()
 
@@ -479,7 +482,7 @@ function IngameWaitingForPlayersState:at_exit()
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
 end
 
--- Lines 523-525
+-- Lines 542-544
 function IngameWaitingForPlayersState:is_joinable()
 	return false
 end

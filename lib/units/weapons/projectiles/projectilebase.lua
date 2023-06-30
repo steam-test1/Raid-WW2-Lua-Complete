@@ -297,9 +297,14 @@ end
 function ProjectileBase:destroy()
 end
 
+-- Lines 315-317
+function ProjectileBase:on_level_tranistion()
+	print("ProjectileBase:on_level_tranistion()")
+end
+
 local ids_object3d = Idstring("object3d")
 
--- Lines 318-379
+-- Lines 324-388
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id, cooking_t, parent_projectile_id)
 	if not projectile_type then
 		Application:error("[ProjectileBase.throw_projectile] Trying to spawn an unknown projectile type: ", self._values.grenade_type, debug.traceback())
@@ -317,6 +322,8 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
 	local rot_dir = tweak_entry._rot_dir or math.UP
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, rot_dir))
+
+	managers.game_play_central:add_spawned_projectiles(unit)
 
 	for _, o in ipairs(unit:get_objects_by_type(ids_object3d)) do
 		if o.set_skip_detail_distance_culling then
@@ -369,11 +376,11 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines 383-384
+-- Lines 392-393
 function ProjectileBase:add_trail_effect()
 end
 
--- Lines 388-405
+-- Lines 397-414
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -394,18 +401,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines 409-420
+-- Lines 418-429
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines 424-425
+-- Lines 433-434
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines 430-446
+-- Lines 439-455
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -425,13 +432,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines 483-486
+-- Lines 492-495
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 514-516
+-- Lines 523-525
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end

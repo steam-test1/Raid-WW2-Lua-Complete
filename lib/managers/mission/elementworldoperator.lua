@@ -37,7 +37,7 @@ function ElementWorldOperator:_apply_operator(mission_script_element)
 	end
 end
 
--- Lines 38-49
+-- Lines 38-51
 function ElementWorldOperator:on_executed(instigator)
 	Application:debug("ElementWorldOperator:on_executed", self._editor_name)
 

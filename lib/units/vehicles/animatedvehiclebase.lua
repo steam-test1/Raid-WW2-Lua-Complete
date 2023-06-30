@@ -1,10 +1,11 @@
 AnimatedVehicleBase = AnimatedVehicleBase or class(UnitBase)
 
--- Lines 3-20
+-- Lines 3-22
 function AnimatedVehicleBase:init(unit)
 	AnimatedVehicleBase.super.init(self, unit, false)
 
 	self._unit = unit
+	self._animation_lod_range = self._animation_lod_range or 6400
 
 	if unit:anim_state_machine() then
 		self:_set_anim_lod(0)
@@ -21,7 +22,7 @@ function AnimatedVehicleBase:init(unit)
 	self._stored_rot = nil
 end
 
--- Lines 24-43
+-- Lines 26-45
 function AnimatedVehicleBase:update(unit, t, dt)
 	local new_pos = self._obj_com:position()
 
@@ -45,18 +46,18 @@ function AnimatedVehicleBase:update(unit, t, dt)
 	end
 end
 
--- Lines 47-57
+-- Lines 49-59
 function AnimatedVehicleBase:_set_anim_lod(dis)
-	if dis > 9000 then
+	if self._animation_lod_range < dis then
 		if self._lod_high then
 			self._lod_high = false
 		end
-	elseif dis < 8000 and not self._lod_high then
+	elseif dis < self._animation_lod_range - 1000 and not self._lod_high then
 		self._lod_high = true
 	end
 end
 
--- Lines 61-67
+-- Lines 63-69
 function AnimatedVehicleBase:start_doppler()
 	self:set_enabled(true)
 
@@ -66,7 +67,7 @@ function AnimatedVehicleBase:start_doppler()
 	self._sound_source = self._unit:sound_source()
 end
 
--- Lines 71-75
+-- Lines 73-77
 function AnimatedVehicleBase:stop_doppler()
 	self:set_enabled(false)
 
@@ -74,7 +75,7 @@ function AnimatedVehicleBase:stop_doppler()
 	self._sound_source = nil
 end
 
--- Lines 79-93
+-- Lines 81-95
 function AnimatedVehicleBase:set_enabled(state)
 	if state then
 		if self._ext_enabled_count then
@@ -93,7 +94,7 @@ function AnimatedVehicleBase:set_enabled(state)
 	end
 end
 
--- Lines 97-102
+-- Lines 99-104
 function AnimatedVehicleBase:anim_clbk_empty_full_blend(unit)
 	self:stop_doppler()
 
@@ -102,13 +103,13 @@ function AnimatedVehicleBase:anim_clbk_empty_full_blend(unit)
 	end
 end
 
--- Lines 106-109
+-- Lines 108-111
 function AnimatedVehicleBase:anim_clbk_empty_exit(unit)
 	self:start_doppler()
 	unit:set_animations_enabled(true)
 end
 
--- Lines 113-121
+-- Lines 115-123
 function AnimatedVehicleBase:anim_clbk_animated_driving(unit, state)
 	if state and self._driving ~= "animation" then
 		self._unit:set_driving("animation")
@@ -121,7 +122,7 @@ function AnimatedVehicleBase:anim_clbk_animated_driving(unit, state)
 	end
 end
 
--- Lines 125-128
+-- Lines 127-130
 function AnimatedVehicleBase:anim_clbk_save_pose(unit, pose_id)
 	self._saved_poses = self._saved_poses or {}
 	self._saved_poses[pose_id] = {
@@ -130,7 +131,7 @@ function AnimatedVehicleBase:anim_clbk_save_pose(unit, pose_id)
 	}
 end
 
--- Lines 132-144
+-- Lines 134-146
 function AnimatedVehicleBase:anim_clbk_recall_pose(unit, pose_id, delete)
 	local pose_info = self._saved_poses[pose_id]
 
@@ -146,17 +147,21 @@ function AnimatedVehicleBase:anim_clbk_recall_pose(unit, pose_id, delete)
 	end
 end
 
--- Lines 148-189
+-- Lines 150-197
 function AnimatedVehicleBase:spawn_module(module_unit_name, align_obj_name, module_id)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local module_unit = nil
 
 	if type_name(module_unit_name) == "string" then
 		if Network:is_server() then
-			local spawn_pos = align_obj:position()
-			local spawn_rot = align_obj:rotation()
-			module_unit = safe_spawn_unit(Idstring(module_unit_name), spawn_pos, spawn_rot)
-			module_unit:unit_data().parent_unit = self._unit
+			if not self._modules or not self._modules[module_id] then
+				local spawn_pos = align_obj:position()
+				local spawn_rot = align_obj:rotation()
+				module_unit = safe_spawn_unit(Idstring(module_unit_name), spawn_pos, spawn_rot)
+				module_unit:unit_data().parent_unit = self._unit
+			else
+				Application:error("[AnimatedVehicleBase:spawn_module] Trying to spawn a module that has already been spawned! (This will cause memory leaks and units failing to despawn!)")
+			end
 		end
 	else
 		module_unit = module_unit_name
@@ -189,7 +194,7 @@ function AnimatedVehicleBase:spawn_module(module_unit_name, align_obj_name, modu
 	end
 end
 
--- Lines 192-207
+-- Lines 200-215
 function AnimatedVehicleBase:run_module_sequence(module_id, sequence_name)
 	if not self._modules then
 		return
@@ -208,7 +213,7 @@ function AnimatedVehicleBase:run_module_sequence(module_id, sequence_name)
 	end
 end
 
--- Lines 210-222
+-- Lines 218-230
 function AnimatedVehicleBase:clbk_module_unit_destroyed(module_id, module_unit)
 	if not self._modules then
 		return
@@ -222,7 +227,7 @@ function AnimatedVehicleBase:clbk_module_unit_destroyed(module_id, module_unit)
 	end
 end
 
--- Lines 226-244
+-- Lines 234-252
 function AnimatedVehicleBase:run_module_function(module_id, extension_name, func_name, param1, param2)
 	if not self._modules then
 		return
@@ -243,7 +248,7 @@ function AnimatedVehicleBase:run_module_function(module_id, extension_name, func
 	self:run_module_function_unsafe(module_id, extension_name, func_name, param1, param2)
 end
 
--- Lines 248-262
+-- Lines 256-270
 function AnimatedVehicleBase:run_module_function_unsafe(module_id, extension_name, func_name, param1, param2)
 	if not self._modules then
 		return
@@ -260,7 +265,7 @@ function AnimatedVehicleBase:run_module_function_unsafe(module_id, extension_nam
 	extension[func_name](extension, param1, param2)
 end
 
--- Lines 266-282
+-- Lines 274-290
 function AnimatedVehicleBase:clbk_send_modules(module_units_to_sync)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -279,7 +284,7 @@ function AnimatedVehicleBase:clbk_send_modules(module_units_to_sync)
 	end
 end
 
--- Lines 286-293
+-- Lines 294-301
 function AnimatedVehicleBase:anim_clbk_blackhawk_1_at_loop_end(unit)
 	if self._wants_anim_redirect then
 		self._unit:play_redirect(Idstring(self._wants_anim_redirect))
@@ -288,7 +293,7 @@ function AnimatedVehicleBase:anim_clbk_blackhawk_1_at_loop_end(unit)
 	end
 end
 
--- Lines 297-305
+-- Lines 305-313
 function AnimatedVehicleBase:clbk_request_anim_redirect(redirect_name)
 	self._wants_anim_redirect = redirect_name
 
@@ -297,7 +302,7 @@ function AnimatedVehicleBase:clbk_request_anim_redirect(redirect_name)
 	end
 end
 
--- Lines 309-341
+-- Lines 317-349
 function AnimatedVehicleBase:save(save_data)
 	if self._modules then
 		local module_units_to_sync = {}
@@ -335,7 +340,7 @@ function AnimatedVehicleBase:save(save_data)
 	end
 end
 
--- Lines 345-358
+-- Lines 353-366
 function AnimatedVehicleBase:load(save_data)
 	if not save_data.anim_vehicle_base then
 		return
@@ -351,7 +356,7 @@ function AnimatedVehicleBase:load(save_data)
 	end
 end
 
--- Lines 361-371
+-- Lines 369-379
 function AnimatedVehicleBase:destroy(unit)
 	if self._modules then
 		local modules = self._modules
@@ -364,12 +369,12 @@ function AnimatedVehicleBase:destroy(unit)
 	end
 end
 
--- Lines 375-377
+-- Lines 383-385
 function AnimatedVehicleBase:allow_sync_stored_pos(sync)
 	self._allow_sync = sync
 end
 
--- Lines 379-392
+-- Lines 387-400
 function AnimatedVehicleBase:store_current_pos()
 	local pos = Vector3(self._unit:position().x / 10, self._unit:position().y / 10, self._unit:position().z / 10)
 	local rot = Vector3(self._unit:rotation():yaw() / 10, self._unit:rotation():pitch() / 10, self._unit:rotation():roll() / 10)
@@ -377,7 +382,7 @@ function AnimatedVehicleBase:store_current_pos()
 	self._stored_rot = rot
 end
 
--- Lines 394-411
+-- Lines 402-419
 function AnimatedVehicleBase:move_to_stored_pos()
 	if self._stored_pos ~= nil and self._stored_rot ~= nil then
 		self._unit:play_state(Idstring("std/empty"))
@@ -390,24 +395,24 @@ function AnimatedVehicleBase:move_to_stored_pos()
 	end
 end
 
--- Lines 413-417
+-- Lines 421-425
 function AnimatedVehicleBase:sync_stored_pos(sync, pos, rot)
 	self._allow_sync = sync
 	self._stored_pos = pos
 	self._stored_rot = rot
 end
 
--- Lines 422-425
+-- Lines 430-433
 function AnimatedVehicleBase:set_local_anim_position_start(x, y, z)
 	self._local_anim_position_start = Vector3(tonumber(y), tonumber(x), tonumber(z)) * 100
 end
 
--- Lines 428-431
+-- Lines 436-439
 function AnimatedVehicleBase:set_local_anim_position_end(x, y, z)
 	self._local_anim_position_end = Vector3(tonumber(y), tonumber(x), tonumber(z)) * 100
 end
 
--- Lines 434-437
+-- Lines 442-445
 function AnimatedVehicleBase:set_local_anim_rotation_start(h, p, b)
 	self._local_anim_rotation_start = {
 		tonumber(b),
@@ -416,7 +421,7 @@ function AnimatedVehicleBase:set_local_anim_rotation_start(h, p, b)
 	}
 end
 
--- Lines 440-443
+-- Lines 448-451
 function AnimatedVehicleBase:set_local_anim_rotation_end(h, p, b)
 	self._local_anim_rotation_end = {
 		tonumber(b),
@@ -425,7 +430,7 @@ function AnimatedVehicleBase:set_local_anim_rotation_end(h, p, b)
 	}
 end
 
--- Lines 446-458
+-- Lines 454-466
 function AnimatedVehicleBase:offset_position_rotation_forward()
 	local current_rot = self._unit:rotation()
 	local rot = Rotation(current_rot:yaw(), current_rot:pitch(), current_rot:roll())
@@ -444,7 +449,7 @@ function AnimatedVehicleBase:offset_position_rotation_forward()
 	self._unit:set_rotation(Rotation(current_rot:yaw() + dyaw, current_rot:pitch() + dpitch, current_rot:roll() + droll))
 end
 
--- Lines 461-474
+-- Lines 469-482
 function AnimatedVehicleBase:offset_position_rotation_backward()
 	local dyaw = 180 - (self._local_anim_rotation_end[1] - self._local_anim_rotation_start[1])
 	local dpitch = self._local_anim_rotation_end[2] - self._local_anim_rotation_start[2]

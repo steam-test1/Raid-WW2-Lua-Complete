@@ -16,7 +16,7 @@ ChallengeCardsManager.CARD_PASS_KEY_NAME = "empty"
 ChallengeCardsManager.CARD_PASS_TEXTURE = "ui/main_menu/textures/cards_atlas"
 ChallengeCardsManager.READYUP_INVENTORY_LOAD_FREQUENCY = 10
 
--- Lines 25-48
+-- Lines 25-63
 function ChallengeCardsManager:init()
 	if not Global.challenge_cards_manager then
 		Global.challenge_cards_manager = {
@@ -42,7 +42,7 @@ function ChallengeCardsManager:init()
 	self._readyup_inventory_load_frequency_counter = 0
 end
 
--- Lines 50-67
+-- Lines 83-100
 function ChallengeCardsManager:update(t, dt)
 	if self._delay_start == true then
 		self:system_pre_start_raid()
@@ -59,22 +59,22 @@ function ChallengeCardsManager:update(t, dt)
 	end
 end
 
--- Lines 71-73
+-- Lines 104-106
 function ChallengeCardsManager:set_automatic_steam_inventory_refresh(flag)
 	self._automatic_steam_inventory_refresh = flag
 end
 
--- Lines 75-77
+-- Lines 108-110
 function ChallengeCardsManager:get_readyup_card_cache()
 	return self._readyup_card_cache
 end
 
--- Lines 79-81
+-- Lines 112-114
 function ChallengeCardsManager:set_readyup_card_cache(card_list)
 	self._readyup_card_cache = card_list
 end
 
--- Lines 83-130
+-- Lines 117-162
 function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 	if params.list then
 		if #params.list ~= #self:get_readyup_card_cache() then
@@ -99,7 +99,7 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 			local steam_card_data = params.list[card_index]
 
 			if cached_card_data.key_name ~= steam_card_data.key_name then
-				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch in cached and fresh list index ", card_index)
+				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Keyname) in cached and fresh list index ", card_index)
 				self:set_readyup_card_cache(params.list)
 				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
 
@@ -107,7 +107,7 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 			end
 
 			if cached_card_data.key_name == steam_card_data.key_name and #cached_card_data.steam_instance_ids ~= #steam_card_data.steam_instance_ids then
-				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch in cached and fresh list index ", card_index)
+				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Amount) in cached and fresh list index ", card_index)
 				self:set_readyup_card_cache(params.list)
 				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
 
@@ -117,7 +117,7 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 	end
 end
 
--- Lines 132-149
+-- Lines 164-181
 function ChallengeCardsManager:get_cards_count_per_type(card_list)
 	local raid_count = 0
 	local operation_count = 0
@@ -135,17 +135,17 @@ function ChallengeCardsManager:get_cards_count_per_type(card_list)
 	return raid_count, operation_count
 end
 
--- Lines 153-155
+-- Lines 185-187
 function ChallengeCardsManager:set_temp_steam_loot(loot_list)
 	self._temp_steam_loot = loot_list
 end
 
--- Lines 157-159
+-- Lines 189-191
 function ChallengeCardsManager:get_temp_steam_loot()
 	return self._temp_steam_loot
 end
 
--- Lines 161-187
+-- Lines 193-219
 function ChallengeCardsManager:get_card_description(card_key_name)
 	local positive_description = ""
 	local negative_description = ""
@@ -172,12 +172,12 @@ function ChallengeCardsManager:get_card_description(card_key_name)
 	return positive_description, negative_description
 end
 
--- Lines 192-210
+-- Lines 224-227
 function ChallengeCardsManager:_steam_challenge_cards_inventory_loaded(params)
 	self:_process_fresh_steam_inventory(params)
 end
 
--- Lines 214-238
+-- Lines 231-255
 function ChallengeCardsManager:system_pre_start_raid(params)
 	local _peer_still_connecting = false
 
@@ -201,11 +201,11 @@ function ChallengeCardsManager:system_pre_start_raid(params)
 	end
 end
 
--- Lines 243-246
+-- Lines 260-263
 function ChallengeCardsManager:player_droped_in(params)
 end
 
--- Lines 248-261
+-- Lines 265-278
 function ChallengeCardsManager:player_droped_out(params)
 	if self._suggested_cards and self._suggested_cards[params._id] then
 		self._suggested_cards[params._id] = nil
@@ -218,22 +218,22 @@ function ChallengeCardsManager:player_droped_out(params)
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED)
 end
 
--- Lines 265-267
+-- Lines 282-284
 function ChallengeCardsManager:get_all_challenge_cards_indexed()
 	return tweak_data.challenge_cards:get_all_cards_indexed()
 end
 
--- Lines 269-271
+-- Lines 286-288
 function ChallengeCardsManager:get_challenge_card_data(challenge_card_key)
 	return tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
 end
 
--- Lines 273-275
+-- Lines 290-292
 function ChallengeCardsManager:get_active_card()
 	return self._active_card
 end
 
--- Lines 277-297
+-- Lines 294-314
 function ChallengeCardsManager:set_active_card(card)
 	self._active_card = card
 
@@ -254,7 +254,7 @@ function ChallengeCardsManager:set_active_card(card)
 	end
 end
 
--- Lines 299-306
+-- Lines 316-323
 function ChallengeCardsManager:sync_active_challenge_card(card_key, locked, card_status)
 	local card = deep_clone(tweak_data.challenge_cards:get_card_by_key_name(card_key))
 	card.locked_suggestion = locked
@@ -263,7 +263,7 @@ function ChallengeCardsManager:sync_active_challenge_card(card_key, locked, card
 	self:set_active_card(card)
 end
 
--- Lines 308-313
+-- Lines 325-330
 function ChallengeCardsManager:get_suggested_cards()
 	if not self._suggested_cards then
 		self._suggested_cards = {}
@@ -272,7 +272,7 @@ function ChallengeCardsManager:get_suggested_cards()
 	return self._suggested_cards
 end
 
--- Lines 315-333
+-- Lines 332-350
 function ChallengeCardsManager:did_everyone_locked_sugested_card()
 	local result = true
 	local suggested_cards = self:get_suggested_cards()
@@ -294,7 +294,7 @@ function ChallengeCardsManager:did_everyone_locked_sugested_card()
 	return result
 end
 
--- Lines 335-340
+-- Lines 352-357
 function ChallengeCardsManager:get_active_card_status()
 	if not self._active_card then
 		return nil
@@ -303,14 +303,14 @@ function ChallengeCardsManager:get_active_card_status()
 	return self._active_card.status
 end
 
--- Lines 343-348
+-- Lines 360-365
 function ChallengeCardsManager:mark_active_card_as_spent()
 	if self._active_card then
 		self._active_card.spent = true
 	end
 end
 
--- Lines 353-377
+-- Lines 370-394
 function ChallengeCardsManager:select_challenge_card(peer_id)
 	if not peer_id then
 		self._active_card = nil
@@ -327,7 +327,7 @@ function ChallengeCardsManager:select_challenge_card(peer_id)
 	end
 end
 
--- Lines 380-387
+-- Lines 397-404
 function ChallengeCardsManager:activate_challenge_card()
 	if Network:is_server() then
 		self:_activate_challenge_card()
@@ -335,12 +335,12 @@ function ChallengeCardsManager:activate_challenge_card()
 	end
 end
 
--- Lines 389-392
+-- Lines 406-409
 function ChallengeCardsManager:sync_activate_challenge_card()
 	managers.network:session():send_to_peers_synched("sync_activate_challenge_card")
 end
 
--- Lines 394-427
+-- Lines 411-444
 function ChallengeCardsManager:_activate_challenge_card()
 	managers.challenge_cards._suggested_cards = nil
 	managers.challenge_cards._temp_steam_loot = nil
@@ -370,7 +370,7 @@ function ChallengeCardsManager:_activate_challenge_card()
 	end
 end
 
--- Lines 429-442
+-- Lines 446-459
 function ChallengeCardsManager:consume_steam_challenge_card(steam_instance_id)
 	if not steam_instance_id or steam_instance_id == 0 then
 		return
@@ -379,7 +379,7 @@ function ChallengeCardsManager:consume_steam_challenge_card(steam_instance_id)
 	local consume_status = managers.network.account:inventory_remove(steam_instance_id)
 end
 
--- Lines 447-464
+-- Lines 464-481
 function ChallengeCardsManager:set_successfull_raid_end()
 	if not self._active_card then
 		return
@@ -398,7 +398,7 @@ function ChallengeCardsManager:set_successfull_raid_end()
 	end
 end
 
--- Lines 467-485
+-- Lines 484-502
 function ChallengeCardsManager:deactivate_active_challenge_card()
 	if self._active_card then
 		if self._active_card.effects then
@@ -415,7 +415,7 @@ function ChallengeCardsManager:deactivate_active_challenge_card()
 	end
 end
 
--- Lines 487-497
+-- Lines 504-514
 function ChallengeCardsManager:remove_active_challenge_card()
 	if not self._active_card then
 		return
@@ -426,7 +426,7 @@ function ChallengeCardsManager:remove_active_challenge_card()
 	self._active_card = nil
 end
 
--- Lines 504-512
+-- Lines 521-529
 function ChallengeCardsManager:deactivate_active_effects()
 	if self._active_card and self._active_card.effects then
 		for _, effect in pairs(self._active_card.effects) do
@@ -435,7 +435,7 @@ function ChallengeCardsManager:deactivate_active_effects()
 	end
 end
 
--- Lines 514-526
+-- Lines 531-543
 function ChallengeCardsManager:suggest_challenge_card(challenge_card_key, steam_instance_id)
 	local local_peer = managers.network:session():local_peer()
 	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
@@ -446,7 +446,7 @@ function ChallengeCardsManager:suggest_challenge_card(challenge_card_key, steam_
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 
--- Lines 528-536
+-- Lines 545-553
 function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key, peer_id, steam_instance_id)
 	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
 	card.steam_instance_id = steam_instance_id
@@ -455,7 +455,7 @@ function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key,
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 
--- Lines 538-557
+-- Lines 555-574
 function ChallengeCardsManager:remove_suggested_challenge_card()
 	local local_peer = managers.network:session():local_peer()
 	local remove_suggested_card = self._suggested_cards[local_peer._id]
@@ -476,7 +476,7 @@ function ChallengeCardsManager:remove_suggested_challenge_card()
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 
--- Lines 559-572
+-- Lines 576-589
 function ChallengeCardsManager:sync_remove_suggested_card_from_peer(peer_id)
 	local remove_suggested_card = self._suggested_cards[peer_id]
 	local active_card = self:get_active_card()
@@ -490,7 +490,7 @@ function ChallengeCardsManager:sync_remove_suggested_card_from_peer(peer_id)
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 
--- Lines 574-580
+-- Lines 591-597
 function ChallengeCardsManager:clear_suggested_cards()
 	self._suggested_cards = {}
 
@@ -499,7 +499,7 @@ function ChallengeCardsManager:clear_suggested_cards()
 	end
 end
 
--- Lines 582-596
+-- Lines 599-613
 function ChallengeCardsManager:toggle_lock_suggested_challenge_card()
 	local local_peer = managers.network:session():local_peer()
 	local suggested_card = self._suggested_cards[local_peer._id]
@@ -514,7 +514,7 @@ function ChallengeCardsManager:toggle_lock_suggested_challenge_card()
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 
--- Lines 598-605
+-- Lines 615-622
 function ChallengeCardsManager:sync_toggle_lock_suggested_challenge_card(peer_id)
 	local suggested_card = self._suggested_cards[peer_id]
 	suggested_card.locked_suggestion = not suggested_card.locked_suggestion
@@ -522,7 +522,7 @@ function ChallengeCardsManager:sync_toggle_lock_suggested_challenge_card(peer_id
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 
--- Lines 612-618
+-- Lines 629-635
 function ChallengeCardsManager:on_restart_to_camp()
 	self:_on_restart_to_camp()
 
@@ -531,12 +531,12 @@ function ChallengeCardsManager:on_restart_to_camp()
 	end
 end
 
--- Lines 620-622
+-- Lines 637-639
 function ChallengeCardsManager:sync_challenge_cards_on_restart_to_camp()
 	self:_on_restart_to_camp()
 end
 
--- Lines 624-631
+-- Lines 641-648
 function ChallengeCardsManager:_on_restart_to_camp()
 	self:remove_active_challenge_card()
 
@@ -545,7 +545,7 @@ function ChallengeCardsManager:_on_restart_to_camp()
 	end
 end
 
--- Lines 635-651
+-- Lines 652-668
 function ChallengeCardsManager:card_failed_warning(challenge_card_key, effect_id, peer_id)
 	local notification_data = {
 		priority = 1,
@@ -566,7 +566,7 @@ function ChallengeCardsManager:card_failed_warning(challenge_card_key, effect_id
 	end
 end
 
--- Lines 654-663
+-- Lines 671-680
 function ChallengeCardsManager:save_dropin(data)
 	local state = {
 		active_card = self._active_card,
@@ -575,7 +575,7 @@ function ChallengeCardsManager:save_dropin(data)
 	data.ChallengeCardsManager = state
 end
 
--- Lines 666-674
+-- Lines 683-691
 function ChallengeCardsManager:load_dropin(data)
 	local state = data.ChallengeCardsManager
 
@@ -585,7 +585,7 @@ function ChallengeCardsManager:load_dropin(data)
 	end
 end
 
--- Lines 679-688
+-- Lines 696-705
 function ChallengeCardsManager:get_victory_xp_amount()
 	local result = 0
 
@@ -597,7 +597,7 @@ function ChallengeCardsManager:get_victory_xp_amount()
 	return result
 end
 
--- Lines 690-698
+-- Lines 707-715
 function ChallengeCardsManager:get_victory_xp_multiplier()
 	local result = 1
 
@@ -608,7 +608,7 @@ function ChallengeCardsManager:get_victory_xp_multiplier()
 	return result
 end
 
--- Lines 702-712
+-- Lines 719-729
 function ChallengeCardsManager:get_card_xp_amount(card_key_name)
 	local result = 0
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
@@ -620,7 +620,7 @@ function ChallengeCardsManager:get_card_xp_amount(card_key_name)
 	return result
 end
 
--- Lines 714-724
+-- Lines 731-741
 function ChallengeCardsManager:get_card_xp_multiplier(card_key_name)
 	local result = 0
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
@@ -632,7 +632,7 @@ function ChallengeCardsManager:get_card_xp_multiplier(card_key_name)
 	return result
 end
 
--- Lines 726-745
+-- Lines 743-762
 function ChallengeCardsManager:get_card_xp_label(card_key_name, hide_xp_suffix)
 	local result = ""
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
@@ -654,7 +654,7 @@ function ChallengeCardsManager:get_card_xp_label(card_key_name, hide_xp_suffix)
 	return result
 end
 
--- Lines 747-754
+-- Lines 766-776
 function ChallengeCardsManager:get_loot_drop_group(card_name)
 	if not card_name then
 		return
@@ -663,11 +663,12 @@ function ChallengeCardsManager:get_loot_drop_group(card_name)
 	Application:debug("[ChallengeCardsManager:get_loot_drop_group]", card_name)
 
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_name)
+	local has_group = not not card_data.loot_drop_group
 
-	return card_data.loot_drop_group
+	return has_group and LootDropTweakData.LOOT_GROUP_PREFIX .. card_data.loot_drop_group or nil
 end
 
--- Lines 757-771
+-- Lines 779-793
 function ChallengeCardsManager:get_cards_stacking_texture(card_data)
 	if card_data and card_data.steam_instance_ids and #card_data.steam_instance_ids > 1 and not card_data.card_back then
 		if card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER and #card_data.steam_instance_ids == 2 then
@@ -684,7 +685,7 @@ function ChallengeCardsManager:get_cards_stacking_texture(card_data)
 	return nil, nil
 end
 
--- Lines 773-785
+-- Lines 795-807
 function ChallengeCardsManager:get_cards_back_texture(card_data)
 	if card_data then
 		if card_data.card_back then
@@ -699,38 +700,38 @@ function ChallengeCardsManager:get_cards_back_texture(card_data)
 	return nil, nil
 end
 
--- Lines 790-797
+-- Lines 812-819
 function ChallengeCardsManager:debug_inventory_insert(item_def_id)
 end
 
--- Lines 799-808
+-- Lines 821-830
 function ChallengeCardsManager:debug_inventory_insert_all()
 end
 
--- Lines 810-814
+-- Lines 832-836
 function ChallengeCardsManager:debug_clear_inventory()
 end
 
--- Lines 816-826
+-- Lines 838-848
 function ChallengeCardsManager:debug_clear_inventory_callback(error, list)
 end
 
--- Lines 830-837
+-- Lines 852-859
 function ChallengeCardsManager:inventory_alter_stacks(source_steam_instance_id, destination_steam_instance_id, amount)
 end
 
--- Lines 839-842
+-- Lines 861-864
 function ChallengeCardsManager:start_inventory_fix_all_stacks()
 end
 
--- Lines 844-876
+-- Lines 866-898
 function ChallengeCardsManager:inventory_fix_all_stacks(error, list)
 end
 
--- Lines 878-882
+-- Lines 900-904
 function ChallengeCardsManager:inventory_reward_unlock(instance_id_1, instance_id_2, reward_item_def_id)
 end
 
--- Lines 884-898
+-- Lines 906-920
 function ChallengeCardsManager:_clbk_inventory_reward_unlock(error, items_new, items_removed)
 end

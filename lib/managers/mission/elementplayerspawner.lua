@@ -1,24 +1,17 @@
 core:import("CoreMissionScriptElement")
 
 ElementPlayerSpawner = ElementPlayerSpawner or class(CoreMissionScriptElement.MissionScriptElement)
+ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
+ElementPlayerSpawner.BASE_DELAY = 3.5
 
-if SystemInfo:platform() == Idstring("PS4") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-elseif SystemInfo:platform() == Idstring("XB1") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-else
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-end
-
-ElementPlayerSpawner.BASE_DELAY = 2
-
--- Lines 18-22
+-- Lines 15-21
 function ElementPlayerSpawner:init(...)
 	ElementPlayerSpawner.super.init(self, ...)
+	Application:debug("[ElementPlayerSpawner:init]")
 	managers.player:preload()
 end
 
--- Lines 24-30
+-- Lines 23-29
 function ElementPlayerSpawner:get_spawn_position()
 	local peer_id = managers.network:session():local_peer():id()
 	local position = self._values.position
@@ -28,13 +21,15 @@ function ElementPlayerSpawner:get_spawn_position()
 	return position
 end
 
--- Lines 33-35
+-- Lines 32-34
 function ElementPlayerSpawner:value(name)
 	return self._values[name]
 end
 
--- Lines 37-56
+-- Lines 36-59
 function ElementPlayerSpawner:client_on_executed(...)
+	Application:debug("[ElementPlayerSpawner:client_on_executed] enabled", self._values.enabled)
+
 	if not self._values.enabled then
 		return
 	end
@@ -50,8 +45,10 @@ function ElementPlayerSpawner:client_on_executed(...)
 	self:_end_transition(true)
 end
 
--- Lines 58-83
+-- Lines 61-88
 function ElementPlayerSpawner:on_executed(instigator)
+	Application:debug("[ElementPlayerSpawner:on_executed] enabled, syncID", self._values.enabled, self._sync_id)
+
 	if not self._values.enabled then
 		return
 	end
@@ -76,7 +73,7 @@ function ElementPlayerSpawner:on_executed(instigator)
 	self:_end_transition()
 end
 
--- Lines 85-102
+-- Lines 90-107
 function ElementPlayerSpawner:_end_transition(client)
 	local cnt = managers.worldcollection.world_counter or 0
 	local player_spawned = true
@@ -100,7 +97,7 @@ function ElementPlayerSpawner:_end_transition(client)
 	end
 end
 
--- Lines 104-118
+-- Lines 109-126
 function ElementPlayerSpawner:_do_hide_loading_screen()
 	if not managers.raid_job:is_camp_loaded() and managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
 		managers.player:get_current_state():_start_action_unequip_weapon(managers.player:player_timer():time(), {
@@ -113,10 +110,10 @@ function ElementPlayerSpawner:_do_hide_loading_screen()
 	end
 
 	managers.menu:hide_loading_screen()
-	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 0.2)
+	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 1)
 end
 
--- Lines 120-128
+-- Lines 128-138
 function ElementPlayerSpawner:_first_login_check()
 	if managers.worldcollection.first_login_check then
 		managers.worldcollection.first_login_check = false
@@ -129,7 +126,7 @@ function ElementPlayerSpawner:_first_login_check()
 	end
 end
 
--- Lines 130-133
+-- Lines 140-143
 function ElementPlayerSpawner:destroy()
 	ElementPlayerSpawner.super.destroy(self)
 	managers.queued_tasks:unqueue_all(nil, self)

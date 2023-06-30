@@ -3,17 +3,17 @@ core:import("CoreMissionScriptElement")
 
 ElementMotionPathOperator = ElementMotionPathOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 8-10
+-- Lines 13-15
 function ElementMotionPathOperator:init(...)
 	ElementMotionPathOperator.super.init(self, ...)
 end
 
--- Lines 12-14
+-- Lines 17-19
 function ElementMotionPathOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 16-56
+-- Lines 21-68
 function ElementMotionPathOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -21,7 +21,13 @@ function ElementMotionPathOperator:on_executed(instigator)
 
 	local motion_path = self._sync_id ~= 0 and managers.worldcollection:motion_path_by_id(self._sync_id) or managers.motion_path
 
-	Application:debug("[ElementMotionPathOperator:on_executed]", motion_path)
+	Application:debug("[ElementMotionPathOperator:on_executed] ---------------------")
+	Application:debug("[ElementMotionPathOperator:on_executed] ELEMENTS", self._id, self._values.elements[1], self._values.elements[2])
+	Application:debug("[ElementMotionPathOperator:on_executed] MARKER ", self._id, self._values.marker)
+
+	for k, v in pairs(self._values.marker_ids) do
+		Application:debug("[ElementMotionPathOperator:on_executed] MARKERIDS Key/Value ", k, v)
+	end
 
 	if self._values.operation == "activate_bridge" then
 		motion_path:motion_operation_activate_bridge(self._values.elements)
@@ -56,12 +62,12 @@ end
 
 ElementMotionPathTrigger = ElementMotionPathTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 62-64
+-- Lines 74-76
 function ElementMotionPathTrigger:init(...)
 	ElementMotionPathTrigger.super.init(self, ...)
 end
 
--- Lines 66-71
+-- Lines 78-83
 function ElementMotionPathTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -70,11 +76,11 @@ function ElementMotionPathTrigger:on_script_activated()
 	end
 end
 
--- Lines 73-75
+-- Lines 85-87
 function ElementMotionPathTrigger:client_on_executed(...)
 end
 
--- Lines 77-83
+-- Lines 89-95
 function ElementMotionPathTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

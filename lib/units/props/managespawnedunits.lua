@@ -1,13 +1,14 @@
 ManageSpawnedUnits = ManageSpawnedUnits or class()
 
--- Lines 4-8
+-- Lines 11-16
 function ManageSpawnedUnits:init(unit)
 	self._unit = unit
+	self._spawned_prefabs = {}
 	self._spawned_units = {}
 	self._temp_link_units = {}
 end
 
--- Lines 24-56
+-- Lines 32-64
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local spawn_unit = nil
@@ -40,14 +41,14 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	end
 end
 
--- Lines 58-63
+-- Lines 67-72
 function ManageSpawnedUnits:sync_link_unit(align_obj_name, spawn_unit)
 	if align_obj_name and spawn_unit then
 		self._unit:link(Idstring(align_obj_name), spawn_unit, spawn_unit:orientation_object():name(), true)
 	end
 end
 
--- Lines 83-108
+-- Lines 92-117
 function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	if not self[joint_table] then
 		Application:error("No table named:", joint_table, "in unit file:", self._unit:name())
@@ -83,7 +84,7 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	end
 end
 
--- Lines 121-135
+-- Lines 130-144
 function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -102,7 +103,7 @@ function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	self:_spawn_run_sequence(unit_id, sequence_name)
 end
 
--- Lines 157-206
+-- Lines 166-215
 function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, vec3_b)
 	if not unit_id then
 		Application:error("param1", "nil:\n", self._spawned_units[unit_id].unit:name())
@@ -164,18 +165,101 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 	end
 end
 
--- Lines 216-233
+-- Lines 225-235
 function ManageSpawnedUnits:remove_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
-	if Network:is_server() and alive(entry.unit) then
+	if entry and Network:is_server() and entry.unit and alive(entry.unit) then
 		entry.unit:set_slot(0)
 	end
 
 	self._spawned_units[unit_id] = nil
 end
 
--- Lines 241-249
+-- Lines 253-318
+function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
+	local tweakdata = tweak_data.link_prefabs[prefab_id]
+
+	if not tweakdata then
+		debug_pause_unit(self._unit, "[ManageSpawnedUnits:spawn_prefab] No prefab tweakdata/props for " .. prefab_id .. "!")
+	end
+
+	align_obj_name = align_obj_name or tweakdata.align_obj or tweak_data.link_prefabs.default_align_obj
+	local align_obj = self._unit:get_object(Idstring(align_obj_name))
+
+	if not align_obj then
+		debug_pause_unit(self._unit, "[ManageSpawnedUnits:spawn_prefab] No alignment object for " .. align_obj_name .. "!")
+	end
+
+	local spawn_units = {}
+
+	for i, data in pairs(tweakdata.props) do
+		local spawn_unit = nil
+
+		if type_name(data.unit) == "string" and Network:is_server() then
+			local spawn_pos = align_obj:position()
+			local spawn_rot = align_obj:rotation()
+			spawn_unit = safe_spawn_unit(Idstring(data.unit), spawn_pos, spawn_rot)
+			spawn_unit:unit_data().parent_unit = self._unit
+
+			self._unit:link(Idstring(align_obj_name), spawn_unit, spawn_unit:orientation_object():name(), true)
+			spawn_unit:set_local_position(data.pos)
+			spawn_unit:set_local_rotation(data.rot)
+
+			if data.sequences and data.sequences._init and spawn_unit:damage() and spawn_unit:damage():has_sequence(data.sequences._init) then
+				spawn_unit:damage():run_sequence_simple(data.sequences._init)
+			end
+
+			table.insert(spawn_units, spawn_unit)
+		end
+	end
+
+	if table.empty(spawn_units) then
+		Application:debug("[ManageSpawnedUnits:link_unit] spawn_units empty")
+
+		return
+	end
+
+	for i, spawn_unit in ipairs(spawn_units) do
+		local unit_entry = {
+			align_obj_name = align_obj_name,
+			unit = spawn_unit
+		}
+		local unit_id = prefab_nick .. "#" .. i
+		self._spawned_units[unit_id] = unit_entry
+
+		if Network:is_server() then
+			managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, spawn_unit, align_obj_name, unit_id, "spawn_manager")
+		end
+	end
+
+	self._spawned_prefabs[prefab_nick] = true
+end
+
+-- Lines 327-344
+function ManageSpawnedUnits:remove_prefab(prefab_nick)
+	local exists = self._spawned_prefabs[prefab_nick]
+
+	if exists and Network:is_server() then
+		local i = 1
+
+		while i < 999999 do
+			local unit = self._spawned_units[prefab_nick .. "#" .. i]
+
+			if unit and alive(unit) then
+				unit:set_slot(0)
+			else
+				break
+			end
+
+			i = i + 1
+		end
+	end
+
+	self._spawned_prefabs[prefab_nick] = nil
+end
+
+-- Lines 352-360
 function ManageSpawnedUnits:destroy(unit)
 	for i, entry in pairs(self._spawned_units) do
 		if alive(entry.unit) then
@@ -186,7 +270,7 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
--- Lines 253-266
+-- Lines 364-387
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -196,14 +280,22 @@ function ManageSpawnedUnits:save(data)
 		linked_joints = self._sync_spawn_and_link
 	}
 
-	for sync_id, unit_entry in pairs(self._spawned_units) do
-		if alive(unit_entry.unit) and sync_id ~= -1 then
-			managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, unit_entry.unit, unit_entry.align_obj_name, sync_id, "spawn_manager")
+	for nick_id, unit_entry in pairs(self._spawned_units) do
+		if alive(unit_entry.unit) and nick_id ~= -1 then
+			managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, unit_entry.unit, unit_entry.align_obj_name, nick_id, "spawn_manager")
+		end
+	end
+
+	for nick_id, prefab_entry in pairs(self._spawned_prefabs) do
+		for _, unit in ipairs(prefab_entry) do
+			if alive(unit) and nick_id ~= -1 then
+				managers.network:session():send_to_peers_synched("sync_prefab_unit_spawn", self._unit, unit_entry.unit, unit_entry.align_obj_name, nick_id, "spawn_manager")
+			end
 		end
 	end
 end
 
--- Lines 270-275
+-- Lines 391-396
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -212,7 +304,7 @@ function ManageSpawnedUnits:load(data)
 	self._sync_spawn_and_link = data.managed_spawned_units.linked_joints or {}
 end
 
--- Lines 279-299
+-- Lines 400-420
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -237,7 +329,21 @@ function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	end
 end
 
--- Lines 303-314
+-- Lines 426-435
+function ManageSpawnedUnits:sync_unit_spawn(unit_id)
+	Application:debug("[ManageSpawnedUnits:sync_unit_spawn]", unit_id, inspect(self._sync_spawn_and_link))
+
+	if self._sync_spawn_and_link and self._sync_spawn_and_link[unit_id] then
+		self:_link_joints(unit_id, self._sync_spawn_and_link[unit_id].joint_table)
+
+		self._sync_spawn_and_link[unit_id] = nil
+	else
+		self._temp_link_units = self._temp_link_units or {}
+		self._temp_link_units[unit_id] = true
+	end
+end
+
+-- Lines 439-450
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	for index, value in ipairs(self[joint_table]) do
 		if index > 1 then
@@ -251,16 +357,4 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	end
 
 	self._unit:set_moving()
-end
-
--- Lines 318-327
-function ManageSpawnedUnits:sync_unit_spawn(unit_id)
-	if self._sync_spawn_and_link and self._sync_spawn_and_link[unit_id] then
-		self:_link_joints(unit_id, self._sync_spawn_and_link[unit_id].joint_table)
-
-		self._sync_spawn_and_link[unit_id] = nil
-	else
-		self._temp_link_units = self._temp_link_units or {}
-		self._temp_link_units[unit_id] = true
-	end
 end

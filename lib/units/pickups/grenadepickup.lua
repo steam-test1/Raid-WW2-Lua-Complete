@@ -1,12 +1,12 @@
 GrenadePickup = GrenadePickup or class(Pickup)
 
--- Lines 3-6
+-- Lines 12-15
 function GrenadePickup:init(unit)
 	GrenadePickup.super.init(self, unit)
 	self:_randomize_glow_effect()
 end
 
--- Lines 8-58
+-- Lines 17-83
 function GrenadePickup:_pickup(unit)
 	if self._picked_up then
 		return
@@ -16,6 +16,7 @@ function GrenadePickup:_pickup(unit)
 
 	if not unit:character_damage():dead() and inventory then
 		local picked_up = false
+		local excess_grenades_remaining = 0
 		local gained_grenades = 0
 		local effect_ammo_pickup_multiplier = 1
 		local grenades_to_add = 0
@@ -29,8 +30,11 @@ function GrenadePickup:_pickup(unit)
 				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1
 			end
 
-			grenades_to_add = (tweak_data.drop_loot[self.tweak_data].grenades_amount or 1) * effect_ammo_pickup_multiplier
+			local grenades_amount = tweak_data.drop_loot[self.tweak_data].grenades_amount or 1
+			local grenades_pku_add = tweak_data.projectiles[inventory.equipped_grenade].per_pickup or 1
+			grenades_to_add = grenades_amount * grenades_pku_add * effect_ammo_pickup_multiplier
 			gained_grenades = managers.player:add_grenade_amount(math.floor(grenades_to_add))
+			excess_grenades_remaining = grenades_amount - math.ceil(gained_grenades / grenades_pku_add)
 			picked_up = true
 		end
 
@@ -45,6 +49,15 @@ function GrenadePickup:_pickup(unit)
 
 			if Network:is_client() then
 				managers.network:session():send_to_host("sync_pickup", self._unit)
+			elseif excess_grenades_remaining > 0 then
+				local size = excess_grenades_remaining == 1 and "small" or "medium"
+				local replacement_id = Pickup.PATH .. "pku_granade_" .. size
+
+				if self._beaming then
+					replacement_id = replacement_id .. "_beam"
+				end
+
+				self._unit_replacement = World:spawn_unit(Idstring(replacement_id), self._unit:position(), self._unit:rotation())
 			end
 
 			self:consume()
@@ -56,7 +69,7 @@ function GrenadePickup:_pickup(unit)
 	return false
 end
 
--- Lines 60-72
+-- Lines 85-97
 function GrenadePickup:register_grenades(gained_grenades, peer)
 	local player = managers.player:local_player()
 
@@ -73,7 +86,7 @@ function GrenadePickup:register_grenades(gained_grenades, peer)
 	end
 end
 
--- Lines 75-77
+-- Lines 100-102
 function GrenadePickup:get_pickup_type()
 	return "grenade"
 end

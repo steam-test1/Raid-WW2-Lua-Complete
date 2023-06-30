@@ -5,34 +5,62 @@ RaidMainMenuGui.WIDGET_PANEL_H = 256
 RaidMainMenuGui.STEAM_GROUP_BUTTON_W = 544
 RaidMainMenuGui.STEAM_GROUP_BUTTON_H = 306
 
--- Lines 10-20
+-- Lines 10-27
 function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 	RaidMainMenuGui.super.init(self, ws, fullscreen_ws, node, component_name)
 	managers.menu:mark_main_menu(true)
 	managers.raid_menu:show_background()
+	self:_mod_overrides_warning()
 	managers.gold_economy:get_gold_awards()
 end
 
--- Lines 23-26
+-- Lines 44-53
+function RaidMainMenuGui:_mod_overrides_warning()
+	if RaidMenuCallbackHandler:is_in_main_menu() and SystemFS:exists(Application:base_path() .. "assets/mod_overrides") then
+		managers.menu:show_mod_overrides_warning_dialog({
+			callback_yes = callback(self, self, "_mod_overrides_warning_callback_yes_function"),
+			callback_no = callback(self, self, "_mod_overrides_warning_callback_no_function")
+		})
+	end
+end
+
+-- Lines 55-57
+function RaidMainMenuGui:_mod_overrides_warning_callback_yes_function()
+	SystemFS:view_mod_overrides_folder()
+end
+
+-- Lines 59-61
+function RaidMainMenuGui:_mod_overrides_warning_callback_no_function()
+end
+
+-- Lines 65-68
 function RaidMainMenuGui:_setup_properties()
 	RaidMainMenuGui.super._setup_properties(self)
 
 	self._background = "ui/backgrounds/raid_main_bg_hud"
 end
 
--- Lines 28-44
+-- Lines 70-103
 function RaidMainMenuGui:_layout()
-	self._display_invite_widget = SystemInfo:platform() ~= Idstring("WIN32")
+	self._display_invite_widget = not _G.IS_PC
 
 	RaidMainMenuGui.super._layout(self)
 	self:_layout_title_logo()
 	self:_layout_list_menu()
+	self:_layout_version_id()
 
-	if game_state_machine:current_state_name() == "menu_main" then
+	if game_state_machine:current_state_name() == "menu_main" and not managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_RAID_COMMUNITY) then
 		self:_layout_steam_group_button()
 	end
 
-	if managers.platform:presence() == "Playing" then
+	local playing_tutorial = false
+
+	if managers.raid_job and managers.raid_job:is_in_tutorial() then
+		playing_tutorial = true
+	end
+
+	if not playing_tutorial and (managers.platform:rich_presence() == "MPPlaying" or managers.platform:rich_presence() == "MPLobby") then
+		Application:trace("MPPlaying MPPlaying MPPlaying MPPlaying MPPlaying!!")
 		self:_layout_kick_mute_widget()
 		managers.system_event_listener:add_listener("main_menu_drop_in", {
 			CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_DROP_IN
@@ -43,7 +71,7 @@ function RaidMainMenuGui:_layout()
 	end
 end
 
--- Lines 46-51
+-- Lines 105-110
 function RaidMainMenuGui:close()
 	managers.system_event_listener:remove_listener("main_menu_drop_in")
 	managers.system_event_listener:remove_listener("main_menu_drop_out")
@@ -51,7 +79,7 @@ function RaidMainMenuGui:close()
 	RaidMainMenuGui.super.close(self)
 end
 
--- Lines 53-124
+-- Lines 112-201
 function RaidMainMenuGui:_layout_title_logo()
 	self._title_label = self._root_panel:text({
 		text = "",
@@ -70,12 +98,18 @@ function RaidMainMenuGui:_layout_title_logo()
 		texture = tweak_data.gui.icons.missions_camp.texture,
 		texture_rect = tweak_data.gui.icons.missions_camp.texture_rect
 	})
-	local logo_texture = tweak_data.gui.icons.raid_logo_small.texture
-	local logo_texture_rect = tweak_data.gui.icons.raid_logo_small.texture_rect
+	local logo_texture, logo_texture_rect = nil
+	local is_halloween = tweak_data.lootdrop:get_month_event() == LootDropTweakData.EVENT_MONTH_HALLOWEEN
 
-	if managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION) then
+	if is_halloween then
+		logo_texture = tweak_data.gui.icons.raid_hw_logo_small.texture
+		logo_texture_rect = tweak_data.gui.icons.raid_hw_logo_small.texture_rect
+	elseif managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION) then
 		logo_texture = tweak_data.gui.icons.raid_se_logo_small.texture
 		logo_texture_rect = tweak_data.gui.icons.raid_se_logo_small.texture_rect
+	else
+		logo_texture = tweak_data.gui.icons.raid_logo_small.texture
+		logo_texture_rect = tweak_data.gui.icons.raid_logo_small.texture_rect
 	end
 
 	self._raid_logo_small = self._root_panel:image({
@@ -130,30 +164,83 @@ function RaidMainMenuGui:_layout_title_logo()
 	end
 end
 
--- Lines 126-128
+-- Lines 203-205
 function RaidMainMenuGui:_layout_logo()
 end
 
--- Lines 130-145
+-- Lines 207-265
 function RaidMainMenuGui:_layout_list_menu()
-	local list_menu_params = {
-		selection_enabled = true,
-		name = "list_menu",
-		h = 972,
-		w = 480,
-		loop_items = true,
-		y = 112,
-		x = 0,
-		on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
-		data_source_callback = callback(self, self, "_list_menu_data_source"),
-		on_menu_move = {}
-	}
-	self._list_menu = self._root_panel:list(list_menu_params)
+	if Network:multiplayer() then
+		local list_menu_params_multiplayer = {
+			selection_enabled = true,
+			name = "list_menu",
+			h = 972,
+			w = 480,
+			loop_items = true,
+			y = 120,
+			x = 15,
+			on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
+			data_source_callback = callback(self, self, "_list_menu_data_source"),
+			on_menu_move = {}
+		}
+
+		if SystemInfo:platform() == Idstring("XB1") then
+			list_menu_params_multiplayer.on_menu_move.right = "gamercard_button_1"
+		else
+			list_menu_params_multiplayer.on_menu_move.right = "mute_button_1"
+		end
+
+		self._list_menu = self._root_panel:list(list_menu_params_multiplayer)
+	else
+		local list_menu_params = {
+			selection_enabled = true,
+			name = "list_menu",
+			h = 972,
+			w = 480,
+			loop_items = true,
+			y = 120,
+			x = 15,
+			on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
+			data_source_callback = callback(self, self, "_list_menu_data_source"),
+			on_menu_move = {}
+		}
+		self._list_menu = self._root_panel:list(list_menu_params)
+	end
 
 	self._list_menu:set_selected(true)
 end
 
--- Lines 147-187
+-- Lines 269-317
+function RaidMainMenuGui:_layout_version_id()
+	local text = ""
+	local debug_show_all = false
+	local GAP = " | "
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		text = NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY or "Network Key Missing!"
+	elseif _G.IS_PC then
+		text = NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY or "Network Key Missing!"
+	end
+
+	text = text .. GAP .. (Application:branch() or "unknown")
+
+	if Application:is_modded() or debug_show_all then
+		text = text .. GAP .. "modified"
+	end
+
+	local item_params = {
+		name = "version_id",
+		h = 100,
+		w = 400,
+		alpha = 0.33,
+		x = 0,
+		y = self._root_panel:h() - 50,
+		text = text
+	}
+	self._version_id = self._root_panel:label(item_params)
+end
+
+-- Lines 320-360
 function RaidMainMenuGui:_layout_steam_group_button()
 	local steam_group_panel_params = {
 		layer = 50,
@@ -197,32 +284,32 @@ function RaidMainMenuGui:_layout_steam_group_button()
 	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
 end
 
--- Lines 189-191
+-- Lines 363-365
 function RaidMainMenuGui:mouse_over_steam_group_button()
 	self._steam_group_button_frame:set_color(Color("ff8880"))
 end
 
--- Lines 193-197
+-- Lines 368-372
 function RaidMainMenuGui:mouse_exit_steam_group_button()
 	self._steam_group_button_frame:set_color(Color.white)
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
 end
 
--- Lines 199-202
+-- Lines 375-378
 function RaidMainMenuGui:mouse_pressed_steam_group_button()
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_press"))
 end
 
--- Lines 204-209
+-- Lines 381-386
 function RaidMainMenuGui:mouse_released_steam_group_button()
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
 	Steam:overlay_activate("url", "http://steamcommunity.com/games/414740")
 end
 
--- Lines 211-237
+-- Lines 389-415
 function RaidMainMenuGui:_animate_steam_group_button_press(o)
 	local duration = 0.15
 	local t = self._steam_button_t * duration
@@ -250,7 +337,7 @@ function RaidMainMenuGui:_animate_steam_group_button_press(o)
 	self._steam_button_t = 1
 end
 
--- Lines 239-265
+-- Lines 418-444
 function RaidMainMenuGui:_animate_steam_group_button_release(o)
 	local duration = 0.15
 	local t = (1 - self._steam_button_t) * duration
@@ -278,7 +365,7 @@ function RaidMainMenuGui:_animate_steam_group_button_release(o)
 	self._steam_button_t = 0
 end
 
--- Lines 268-429
+-- Lines 448-606
 function RaidMainMenuGui:_layout_kick_mute_widget()
 	if self._widget_panel then
 		self._widget_panel:clear()
@@ -339,107 +426,111 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	self._widget_action_title:set_right(self._widget_label_panel:w())
 	self._widget_action_title:set_center_y(widget_title:center_y())
 
-	local peers = managers.network:session():peers()
-	self._widgets = {}
+	if managers.network:session() then
+		local peers = managers.network:session():peers()
+		self._widgets = {}
 
-	for i = 1, 3 do
-		local widget_params = {
-			index = i,
-			name = "kick_mute_widget_" .. tostring(i),
-			y = i * 64,
-			menu_move = {
-				left = "list_menu"
-			},
-			on_button_selected_callback = callback(self, self, "on_widget_button_selected"),
-			on_button_unselected_callback = callback(self, self, "on_widget_button_unselected")
-		}
-		local widget = self._widget_panel:create_custom_control(RaidGUIControlKickMuteWidget, widget_params)
+		for i = 1, 3 do
+			local widget_params = {
+				index = i,
+				name = "kick_mute_widget_" .. tostring(i),
+				y = i * 64,
+				menu_move = {
+					left = "list_menu"
+				},
+				on_button_selected_callback = callback(self, self, "on_widget_button_selected"),
+				on_button_unselected_callback = callback(self, self, "on_widget_button_unselected")
+			}
+			local widget = self._widget_panel:create_custom_control(RaidGUIControlKickMuteWidget, widget_params)
 
-		table.insert(self._widgets, widget)
-	end
-
-	managers.menu_component:gather_controls_for_component(self._name)
-
-	local widget_index = 1
-	local invite_widget_shown = false
-	local largest_w = 0
-
-	for index, peer in pairs(peers) do
-		self._widgets[widget_index]:set_peer(peer, true, Network:is_server())
-		self._widgets[widget_index]:set_visible(true)
-		self._widget_label_panel:set_visible(true)
-
-		local w = self._widgets[widget_index]:calculate_width()
-
-		if largest_w < w then
-			largest_w = w
+			widget:hide()
+			table.insert(self._widgets, widget)
 		end
 
-		widget_index = widget_index + 1
-	end
+		managers.menu_component:gather_controls_for_component(self._name)
 
-	if widget_index < 4 and self._display_invite_widget then
-		self._widgets[widget_index]:set_invite_widget()
-		self._widgets[widget_index]:set_visible(true)
-		self._widget_label_panel:set_visible(true)
+		local widget_index = 1
+		local invite_widget_shown = false
+		local largest_w = 0
 
-		invite_widget_shown = true
-		local w = self._widgets[widget_index]:calculate_width()
+		for index, peer in pairs(peers) do
+			self._widgets[widget_index]:set_peer(peer, true, Network:is_server())
+			self._widgets[widget_index]:set_visible(true)
+			self._widgets[widget_index]:_refresh_vote_kick_button()
+			self._widget_label_panel:set_visible(true)
 
-		if largest_w < w then
-			largest_w = w
-		end
-	else
-		widget_index = widget_index - 1
-	end
+			local w = self._widgets[widget_index]:calculate_width()
 
-	for i = 1, #self._widgets do
-		local w = self._widgets[i]:calculate_width()
+			if largest_w < w then
+				largest_w = w
+			end
 
-		if largest_w < w then
-			largest_w = w
+			widget_index = widget_index + 1
 		end
 
-		if self._widgets[i]:visible() then
-			self._widgets[i]:set_move_controls(widget_index, invite_widget_shown)
-		end
-	end
+		if widget_index < 4 and self._display_invite_widget then
+			self._widgets[widget_index]:set_invite_widget()
+			self._widgets[widget_index]:set_visible(true)
+			self._widget_label_panel:set_visible(true)
 
-	if not self._widget_label_panel:visible() then
-		self._list_menu:set_selected(true)
-	else
-		self._widget_panel:set_w(largest_w)
-		self._widget_panel:set_right(self._root_panel:w())
+			invite_widget_shown = true
+			local w = self._widgets[widget_index]:calculate_width()
+
+			if largest_w < w then
+				largest_w = w
+			end
+		else
+			widget_index = widget_index - 1
+		end
 
 		for i = 1, #self._widgets do
-			self._widgets[i]:set_w(largest_w)
-		end
-	end
+			local w = self._widgets[i]:calculate_width()
 
-	for id, widget_data in pairs(self._widgets) do
-		widget_data:set_selected(false)
-	end
-
-	self._list_menu:set_selected(true)
-
-	local menu_move = {}
-
-	if self._widget_label_panel:visible() then
-		if widget_index > 0 then
-			if SystemInfo:platform() == Idstring("XB1") then
-				menu_move.right = "gamercard_button_1"
-			else
-				menu_move.right = "mute_button_1"
+			if largest_w < w then
+				largest_w = w
 			end
-		elseif self._display_invite_widget then
-			menu_move.right = "invite_button_1"
-		end
-	end
 
-	self._list_menu:set_menu_move_controls(menu_move)
+			if self._widgets[i]:visible() then
+				self._widgets[i]:set_move_controls(widget_index, invite_widget_shown)
+			end
+		end
+
+		if not self._widget_label_panel:visible() then
+			self._list_menu:set_selected(true)
+		else
+			self._widget_panel:set_w(largest_w)
+			self._widget_panel:set_right(self._root_panel:w())
+
+			for i = 1, #self._widgets do
+				self._widgets[i]:set_w(largest_w)
+			end
+		end
+
+		for id, widget_data in pairs(self._widgets) do
+			widget_data:set_selected(false)
+		end
+
+		self._list_menu:set_selected(true)
+
+		local menu_move = {}
+
+		if self._widget_label_panel:visible() then
+			if widget_index > 1 then
+				if _G.IS_XB1 then
+					menu_move.right = "gamercard_button_1"
+				else
+					menu_move.right = "mute_button_1"
+				end
+			elseif self._display_invite_widget then
+				menu_move.right = "invite_button_1"
+			end
+		end
+
+		self._list_menu:set_menu_move_controls(menu_move)
+	end
 end
 
--- Lines 431-446
+-- Lines 608-623
 function RaidMainMenuGui:on_widget_button_selected(button)
 	local widget_action = nil
 
@@ -458,42 +549,56 @@ function RaidMainMenuGui:on_widget_button_selected(button)
 	self._widget_action_title:set_text(self:translate(widget_action, true))
 end
 
--- Lines 448-450
+-- Lines 625-627
 function RaidMainMenuGui:on_widget_button_unselected(button)
 	self._widget_action_title:set_text("")
 end
 
--- Lines 452-537
+-- Lines 629-784
 function RaidMainMenuGui:_list_menu_data_source()
 	local _list_items = {}
 
-	table.insert(_list_items, {
-		callback = "raid_play_online",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_play"))
-	})
-	table.insert(_list_items, {
-		callback = "raid_play_offline",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_play_offline"))
-	})
-	table.insert(_list_items, {
-		callback = "raid_play_tutorial",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL
-		},
-		text = utf8.to_upper(managers.localization:text("menu_tutorial_hl"))
-	})
 	table.insert(_list_items, {
 		callback = "resume_game_raid",
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
 		},
 		text = utf8.to_upper(managers.localization:text("menu_resume_game"))
+	})
+	table.insert(_list_items, {
+		callback = "raid_play_tutorial",
+		item_h = 72,
+		item_font_size = 48,
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL
+		},
+		text = utf8.to_upper(managers.localization:text("menu_tutorial_hl"))
+	})
+	table.insert(_list_items, {
+		callback = "raid_skip_tutorial",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
+			RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL_SKIP
+		},
+		text = utf8.to_upper(managers.localization:text("menu_tutorial_skip_hl"))
+	})
+	table.insert(_list_items, {
+		callback = "raid_play_online",
+		item_h = 72,
+		item_font_size = 60,
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+		},
+		text = utf8.to_upper(managers.localization:text("menu_play"))
+	})
+	table.insert(_list_items, {
+		callback = "raid_play_offline",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+		},
+		text = utf8.to_upper(managers.localization:text("menu_play_offline"))
 	})
 	table.insert(_list_items, {
 		callback = "singleplayer_restart_mission",
@@ -513,8 +618,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		callback = "restart_mission",
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
-			RaidGUIItemAvailabilityFlag.IS_NOT_CONSUMABLE
+			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
 		},
 		text = utf8.to_upper(managers.localization:text("menu_restart_mission"))
 	})
@@ -634,6 +738,14 @@ function RaidMainMenuGui:_list_menu_data_source()
 		callback = "quit_game",
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
+			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
+		},
+		text = utf8.to_upper(managers.localization:text("menu_quit"))
+	})
+	table.insert(_list_items, {
+		callback = "quit_game",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
 		},
@@ -648,45 +760,11 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		text = utf8.to_upper(managers.localization:text("menu_quit"))
 	})
-	table.insert(_list_items, {
-		callback = "quit_game",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_quit"))
-	})
-	table.insert(_list_items, {
-		callback = "debug_main",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.DEBUG_MENU_ENABLED,
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_debug"))
-	})
-	table.insert(_list_items, {
-		callback = "debug_camp",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.DEBUG_MENU_ENABLED,
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_debug"))
-	})
-	table.insert(_list_items, {
-		callback = "debug_ingame",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.DEBUG_MENU_ENABLED,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_debug"))
-	})
 
 	return _list_items
 end
 
--- Lines 539-551
+-- Lines 786-798
 function RaidMainMenuGui:_on_list_menu_item_selected(data)
 	if not data.callback then
 		return
@@ -697,5 +775,16 @@ function RaidMainMenuGui:_on_list_menu_item_selected(data)
 
 	if on_click_callback then
 		on_click_callback()
+	end
+end
+
+-- Lines 801-810
+function RaidMainMenuGui:refresh_kick_mute_widgets()
+	if self._widgets then
+		for index, widget in pairs(self._widgets) do
+			if widget and widget:visible() then
+				widget:_refresh_vote_kick_button()
+			end
+		end
 	end
 end

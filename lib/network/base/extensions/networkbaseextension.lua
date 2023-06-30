@@ -5,20 +5,22 @@ function NetworkBaseExtension:init(unit)
 	self._unit = unit
 end
 
--- Lines 9-18
+-- Lines 9-19
 function NetworkBaseExtension:send(func, ...)
-	if managers.network:session() then
+	if managers.network:session() ~= nil then
 		local peer = managers.network:session():local_peer()
 
-		if not peer:loading() then
+		if managers.network:session() and not peer:loading() then
 			managers.network:session():send_to_peers_synched(func, self._unit, ...)
-		else
+		end
+
+		if peer:loading() then
 			Application:debug("[NetworkBaseExtension:send_to_unit] SKIPPED!", self._unit)
 		end
 	end
 end
 
--- Lines 22-31
+-- Lines 23-32
 function NetworkBaseExtension:send_to_host(func, ...)
 	if managers.network:session() then
 		local peer = managers.network:session():local_peer()
@@ -31,7 +33,7 @@ function NetworkBaseExtension:send_to_host(func, ...)
 	end
 end
 
--- Lines 35-47
+-- Lines 36-48
 function NetworkBaseExtension:send_to_unit(params)
 	if managers.network:session() then
 		local peer = managers.network:session():local_peer()
@@ -48,7 +50,7 @@ function NetworkBaseExtension:send_to_unit(params)
 	end
 end
 
--- Lines 51-55
+-- Lines 52-56
 function NetworkBaseExtension:peer()
 	if managers.network:session() then
 		return managers.network:session():peer_by_unit(self._unit)

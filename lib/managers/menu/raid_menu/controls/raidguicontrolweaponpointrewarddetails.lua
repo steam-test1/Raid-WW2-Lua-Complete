@@ -248,9 +248,8 @@ function RaidGUIControlWeaponPointRewardDetails:_on_click_redeem()
 	managers.menu:show_redeem_weapon_point_dialog(params)
 end
 
--- Lines 245-256
+-- Lines 245-261
 function RaidGUIControlWeaponPointRewardDetails:redeem()
-	managers.lootdrop:redeem_dropped_loot_for_xp()
-	game_state_machine:current_state():recalculate_xp()
+	managers.lootdrop:redeem_dropped_loot_for_goldbars()
 	self._redeem_button:hide()
 end

@@ -22,7 +22,7 @@ function MissionJoinGui:_set_initial_data()
 	self._gui_jobs = {}
 end
 
--- Lines 52-89
+-- Lines 52-90
 function MissionJoinGui:_layout()
 	MissionJoinGui.super._layout(self)
 
@@ -65,11 +65,11 @@ function MissionJoinGui:_layout()
 	self:_update_active_controls()
 	self._table_servers:set_selected(true)
 	self:_render_filters()
-	self:_refresh_server_list()
+	self:on_click_apply_filters_button()
 	self:bind_controller_inputs()
 end
 
--- Lines 91-159
+-- Lines 92-160
 function MissionJoinGui:_layout_filters()
 	local filter_label_width = 256
 	local filter_control_width = 192
@@ -182,7 +182,7 @@ function MissionJoinGui:_layout_filters()
 	})
 end
 
--- Lines 161-233
+-- Lines 162-234
 function MissionJoinGui:_layout_server_list_table()
 	self._servers_title_label = self._list_panel:label({
 		name = "servers_title_label",
@@ -295,7 +295,7 @@ function MissionJoinGui:_layout_server_list_table()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB1 or _G.IS_XB360 then
 		self._params_servers_table.on_menu_move = {
 			right = "player_description_1"
 		}
@@ -306,7 +306,7 @@ function MissionJoinGui:_layout_server_list_table()
 	self._server_list_scrollable_area:setup_scroll_area()
 end
 
--- Lines 235-347
+-- Lines 236-348
 function MissionJoinGui:_layout_game_description()
 	local desc_mission_icon_name = tweak_data.operations.missions.flakturm.icon_menu
 	local desc_mission_icon = {
@@ -385,7 +385,7 @@ function MissionJoinGui:_layout_game_description()
 			y = (counter - 1) * 96
 		}
 
-		if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+		if _G.IS_XB1 or _G.IS_XB360 then
 			player_description_params.on_menu_move = {
 				left = "servers_table",
 				up = "player_description_" .. tostring(counter > 1 and counter - 1 or 3),
@@ -528,7 +528,7 @@ function MissionJoinGui:_layout_game_description()
 	})
 end
 
--- Lines 349-396
+-- Lines 350-400
 function MissionJoinGui:_layout_footer_buttons()
 	self._join_button = self._footer_buttons_panel:short_primary_button({
 		name = "join_button",
@@ -589,7 +589,7 @@ function MissionJoinGui:_layout_footer_buttons()
 	})
 end
 
--- Lines 398-407
+-- Lines 402-413
 function MissionJoinGui:_set_additional_layout()
 	self._join_button:set_center_y(self._footer_buttons_panel:h() / 2)
 	self._apply_filters_button:set_center_y(self._footer_buttons_panel:h() / 2)
@@ -600,53 +600,54 @@ function MissionJoinGui:_set_additional_layout()
 	self._desc_xp_amount:set_center_y(self._server_difficulty_indicator:center_y())
 end
 
--- Lines 409-412
+-- Lines 415-423
 function MissionJoinGui:close()
 	MissionJoinGui.super.close(self)
+	managers.network.matchmake:register_callback("search_lobby", nil)
 	self:_remove_active_controls()
 end
 
--- Lines 414-423
+-- Lines 425-427
 function MissionJoinGui:update(t, dt)
 end
 
--- Lines 427-432
+-- Lines 431-436
 function MissionJoinGui:friends_only_button_on_click()
 	local friends_only = self._friends_only_button:get_value()
 
 	managers.network.matchmake:set_search_friends_only(friends_only)
 end
 
--- Lines 434-439
+-- Lines 438-443
 function MissionJoinGui:in_camp_servers_only_button_on_click()
 	local state = self._in_camp_servers_only:get_value() and 1 or -1
 
 	managers.network.matchmake:add_lobby_filter("state", state, "equal")
 end
 
--- Lines 441-445
+-- Lines 445-449
 function MissionJoinGui:on_row_clicked_servers_table(row_data, row_index)
 	self:_select_server_list_item(row_data[5].value)
 end
 
--- Lines 447-452
+-- Lines 451-456
 function MissionJoinGui:on_row_double_clicked_servers_table(row_data, row_index)
 	Application:trace("[MissionJoinGui:on_row_double_clicked_servers_table]", inspect(row_data), row_index)
 	self:_select_server_list_item(row_data[5].value)
 	self:_join_game()
 end
 
--- Lines 454-458
+-- Lines 458-462
 function MissionJoinGui:on_row_selected_servers_table(row_data, row_index)
 	self:_select_server_list_item(row_data[5].value)
 end
 
--- Lines 460-464
+-- Lines 464-468
 function MissionJoinGui:on_cell_click_servers_table(data)
 	self:_select_server_list_item(self._selected_row_data[5].value)
 end
 
--- Lines 466-507
+-- Lines 470-538
 function MissionJoinGui:data_source_servers_table()
 	local missions = {}
 
@@ -657,7 +658,7 @@ function MissionJoinGui:data_source_servers_table()
 	local mission_data = nil
 
 	for key, value in pairs(self._gui_jobs) do
-		if utf8.to_lower(value.level_id) == OperationsTweakData.IN_LOBBY then
+		if utf8.to_lower(value.level_id) == OperationsTweakData.IN_LOBBY or utf8.to_lower(value.level_id) == OperationsTweakData.ENTRY_POINT_LEVEL then
 			mission_data = {
 				text = self:translate(tweak_data.operations.missions.camp.name_id, true),
 				value = value.room_id,
@@ -669,9 +670,15 @@ function MissionJoinGui:data_source_servers_table()
 				value = value.room_id,
 				info = value.level_name
 			}
-		else
+		elseif value.progress ~= nil then
 			mission_data = {
 				text = utf8.to_upper(value.job_name .. " " .. value.progress .. ": " .. value.level_name),
+				value = value.room_id,
+				info = value.level_name
+			}
+		else
+			mission_data = {
+				text = utf8.to_upper(value.job_name .. " " .. "WRONG PROGRESS" .. ": " .. value.level_name),
 				value = value.room_id,
 				info = value.level_name
 			}
@@ -703,7 +710,7 @@ function MissionJoinGui:data_source_servers_table()
 	return missions
 end
 
--- Lines 509-515
+-- Lines 540-546
 function MissionJoinGui:_update_active_controls()
 	local active_controls = managers.menu_component._active_controls
 
@@ -714,7 +721,7 @@ function MissionJoinGui:_update_active_controls()
 	end
 end
 
--- Lines 517-522
+-- Lines 548-553
 function MissionJoinGui:_remove_active_controls()
 	local active_controls = managers.menu_component._active_controls
 
@@ -723,7 +730,7 @@ function MissionJoinGui:_remove_active_controls()
 	end
 end
 
--- Lines 524-538
+-- Lines 555-569
 function MissionJoinGui:data_source_distance_filter_stepper()
 	local result = {}
 
@@ -746,7 +753,7 @@ function MissionJoinGui:data_source_distance_filter_stepper()
 	return result
 end
 
--- Lines 540-551
+-- Lines 571-582
 function MissionJoinGui:data_source_difficulty_filter_stepper()
 	local result = {}
 
@@ -769,7 +776,7 @@ function MissionJoinGui:data_source_difficulty_filter_stepper()
 	return result
 end
 
--- Lines 553-573
+-- Lines 584-604
 function MissionJoinGui:data_source_mission_filter_stepper()
 	local result = {}
 
@@ -802,12 +809,12 @@ function MissionJoinGui:data_source_mission_filter_stepper()
 	return result
 end
 
--- Lines 576-578
+-- Lines 607-609
 function MissionJoinGui:on_click_apply_filters_button()
 	self:_refresh_server_list()
 end
 
--- Lines 580-586
+-- Lines 611-617
 function MissionJoinGui:on_click_show_filters_button()
 	self._filters_panel:set_visible(not self._filters_panel:visible())
 
@@ -816,13 +823,13 @@ function MissionJoinGui:on_click_show_filters_button()
 	end
 end
 
--- Lines 588-592
+-- Lines 619-623
 function MissionJoinGui:on_click_join_button()
 	Application:trace("[MissionJoinGui:on_click_join_button]")
 	self:_join_game()
 end
 
--- Lines 596-622
+-- Lines 627-655
 function MissionJoinGui:_refresh_server_list()
 	self._apply_filters_button:hide()
 
@@ -843,13 +850,13 @@ function MissionJoinGui:_refresh_server_list()
 	self:_find_online_games(managers.network.matchmake:search_friends_only())
 end
 
--- Lines 624-627
+-- Lines 657-660
 function MissionJoinGui:_select_server_list_item(data_value)
 	self:_select_game_from_list()
 	self:_set_game_description_data(data_value)
 end
 
--- Lines 629-637
+-- Lines 662-670
 function MissionJoinGui:_render_filters()
 	self._friends_only_button:set_value_and_render(managers.network.matchmake:search_friends_only())
 	self._in_camp_servers_only:set_value_and_render(managers.network.matchmake:get_lobby_filter("state") == 1)
@@ -858,7 +865,7 @@ function MissionJoinGui:_render_filters()
 	self._mission_filter_stepper:select_item_by_value(managers.network.matchmake:get_lobby_filter("job_id"))
 end
 
--- Lines 639-651
+-- Lines 672-697
 function MissionJoinGui:_join_game()
 	local selected_row = self._table_servers:get_selected_row()
 
@@ -872,7 +879,7 @@ function MissionJoinGui:_join_game()
 	managers.network.matchmake:join_server_with_check(steam_player_id)
 end
 
--- Lines 653-661
+-- Lines 699-707
 function MissionJoinGui:_select_game_from_list()
 	local selected_row = self._table_servers:get_selected_row()
 
@@ -883,7 +890,7 @@ function MissionJoinGui:_select_game_from_list()
 	self._selected_row_data = selected_row:get_data()
 end
 
--- Lines 663-885
+-- Lines 709-939
 function MissionJoinGui:_set_game_description_data(data)
 	local in_camp = data.level_id == "camp"
 
@@ -952,7 +959,9 @@ function MissionJoinGui:_set_game_description_data(data)
 			level_xp_amount = 0
 		end
 	elseif tostring(data.mission_type) == tostring(OperationsTweakData.JOB_TYPE_OPERATION) then
-		level_xp_amount = tweak_data.operations.missions[data.job_id].xp
+		if data.job_id ~= nil and data.job_id ~= 0 and tweak_data.operations.missions[data.job_id] ~= nil then
+			level_xp_amount = tweak_data.operations.missions[data.job_id].xp
+		end
 	elseif tostring(data.mission_type) == OperationsTweakData.IN_LOBBY then
 		-- Nothing
 	end
@@ -989,8 +998,12 @@ function MissionJoinGui:_set_game_description_data(data)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB1 or _G.IS_XB360 then
 		for i = 1, control_counter do
+			if not self._player_controls[i] then
+				break
+			end
+
 			local on_menu_move = {
 				left = "servers_table",
 				up = "player_description_" .. tostring(i > 1 and i - 1 or control_counter),
@@ -1087,22 +1100,16 @@ function MissionJoinGui:_set_game_description_data(data)
 	end
 end
 
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
-local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-local is_x360 = SystemInfo:platform() == Idstring("X360")
-local is_xb1 = SystemInfo:platform() == Idstring("XB1")
-local is_ps4 = SystemInfo:platform() == Idstring("PS4")
+local is_win32 = _G.IS_PC
+local is_xb1 = _G.IS_XB1
+local is_ps4 = _G.IS_PS4
 
--- Lines 894-908
+-- Lines 946-956
 function MissionJoinGui:_find_online_games(friends_only)
 	if is_win32 then
 		self:_find_online_games_win32(friends_only)
-	elseif is_ps3 then
-		self:_find_online_games_ps3(friends_only)
 	elseif is_ps4 then
 		self:_find_online_games_ps4(friends_only)
-	elseif is_x360 then
-		self:_find_online_games_xbox360(friends_only)
 	elseif is_xb1 then
 		self:_find_online_games_xb1(friends_only)
 	else
@@ -1110,9 +1117,9 @@ function MissionJoinGui:_find_online_games(friends_only)
 	end
 end
 
--- Lines 911-1107
+-- Lines 959-1183
 function MissionJoinGui:_find_online_games_win32(friends_only)
-	-- Lines 913-1092
+	-- Lines 961-1166
 	local function f(info)
 		managers.network.matchmake:search_lobby_done()
 
@@ -1199,7 +1206,7 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 
 				local is_friend = false
 
-				if Steam:logged_on() and Steam:friends() then
+				if is_win32 then
 					for _, friend in ipairs(Steam:friends()) do
 						if friend:id() == room.owner_id then
 							is_friend = true
@@ -1243,7 +1250,8 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 								players_info_1 = players_info_1,
 								players_info_2 = players_info_2,
 								players_info_3 = players_info_3,
-								players_info_4 = players_info_4
+								players_info_4 = players_info_4,
+								xuid = room.xuid
 							})
 						end
 					else
@@ -1271,7 +1279,8 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 							players_info_1 = players_info_1,
 							players_info_2 = players_info_2,
 							players_info_3 = players_info_3,
-							players_info_4 = players_info_4
+							players_info_4 = players_info_4,
+							xuid = room.xuid
 						})
 					end
 				end
@@ -1308,7 +1317,7 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 	managers.network.matchmake:register_callback("search_lobby", f)
 	managers.network.matchmake:search_lobby(friends_only)
 
-	-- Lines 1097-1103
+	-- Lines 1171-1177
 	local function usrs_f(success, amount)
 		print("usrs_f", success, amount)
 
@@ -1317,33 +1326,526 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 		end
 	end
 
-	Steam:sa_handler():concurrent_users_callback(usrs_f)
-	Steam:sa_handler():get_concurrent_users()
+	if is_win32 then
+		Steam:sa_handler():concurrent_users_callback(usrs_f)
+		Steam:sa_handler():get_concurrent_users()
+	end
 end
 
--- Lines 1109-1112
+-- Lines 1186-1407
+function MissionJoinGui:_find_online_games_xb1(friends_only)
+	if managers.network.matchmake:searching_lobbys() then
+		self._refresh_server_t = Application:time() + 5
+
+		return
+	end
+
+	Application:trace("[MissionJoinGui:_find_online_games_win32]")
+
+	-- Lines 1194-1389
+	local function f(info)
+		managers.network.matchmake:search_lobby_done()
+
+		local room_list = info.room_list
+		local attribute_list = info.attribute_list
+		local dead_list = {}
+
+		for id, _ in pairs(self._active_server_jobs) do
+			dead_list[id] = true
+		end
+
+		for i, room in ipairs(room_list) do
+			local name_str = tostring(room.owner_name)
+			local attributes_numbers = attribute_list[i].numbers
+
+			Application:trace("attributes_numbers ", inspect(attributes_numbers))
+
+			if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
+				dead_list[room.room_id] = nil
+				local host_name = name_str
+				local mission_type = attributes_numbers[16]
+				local job_id = tweak_data.operations:get_operation_name_from_index(attributes_numbers[14])
+				local level_id = OperationsTweakData.IN_LOBBY
+
+				if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+					level_id = tweak_data.operations:get_raid_id_from_raid_index(job_id, attributes_numbers[1])
+				elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+					level_id = tweak_data.operations:get_raid_name_from_index(attributes_numbers[1])
+				end
+
+				local name_id = ""
+				local level_name = ""
+				local difficulty_id = attributes_numbers[2]
+				local difficulty = self:translate(tweak_data:get_difficulty_string_name_from_index(difficulty_id), true)
+				local job_name = ""
+				local kick_option = attributes_numbers[8]
+				local job_plan = attributes_numbers[10]
+				local state_string_id = tweak_data:index_to_server_state(attributes_numbers[4])
+				local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
+				local state = attributes_numbers[4]
+				local num_plrs = attributes_numbers[5]
+				local permission = attributes_numbers[3]
+				local challenge_card = attributes_numbers[12]
+				local game_version = attributes_numbers[13]
+				local progress = attributes_numbers[15]
+				local players_info_1 = attributes_numbers[17]
+				local players_info_2 = attributes_numbers[18]
+				local players_info_3 = attributes_numbers[19]
+				local players_info_4 = attributes_numbers[20]
+
+				if challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending" then
+					challenge_card = ""
+				end
+
+				local players_info = 0
+
+				if players_info == "value_pending" then
+					players_info = ""
+				end
+
+				if progress == "value_pending" then
+					progress = ""
+				end
+
+				if mission_type == "value_pending" then
+					mission_type = ""
+				end
+
+				if level_id == OperationsTweakData.IN_LOBBY then
+					level_name = self:translate("menu_mission_select_in_lobby")
+					job_name = self:translate("menu_mission_select_in_lobby")
+				elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_OPERATION then
+					level_name = ""
+					job_name = ""
+					local operation_data = tweak_data.operations.missions[job_id]
+
+					if operation_data and operation_data.events and operation_data.events[level_id] then
+						level_name = self:translate(tweak_data.operations.missions[job_id].events[level_id].name_id)
+						job_name = self:translate(tweak_data.operations.missions[job_id].name_id)
+					else
+						level_name = "N/A"
+						job_name = "N/A"
+
+						if level_id ~= nil and job_id ~= nil then
+							Application:error("Level '" .. level_id .. "' can't be found in operation '" .. job_id .. "'.")
+						end
+					end
+				elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_RAID then
+					local mission_data = tweak_data.operations.missions[level_id]
+					level_name = ""
+
+					if mission_data and mission_data.name_id then
+						level_name = self:translate(tweak_data.operations.missions[level_id].name_id)
+					end
+
+					job_name = self:translate("menu_mission_selected_mission_type_raid")
+				end
+
+				local is_friend = false
+
+				if is_win32 and Steam:logged_on() and Steam:friends() then
+					for _, friend in ipairs(Steam:friends()) do
+						if friend:id() == room.owner_id then
+							is_friend = true
+
+							break
+						end
+					end
+				end
+
+				name_id = name_id or "unknown"
+
+				if name_id then
+					if not self._active_server_jobs[room.room_id] then
+						if table.size(self._active_jobs) + table.size(self._active_server_jobs) < self._tweak_data.total_active_jobs and table.size(self._active_server_jobs) < self._max_active_server_jobs then
+							self._active_server_jobs[room.room_id] = {
+								added = false,
+								alive_time = 0
+							}
+
+							self:add_gui_job({
+								room_id = room.room_id,
+								id = room.room_id,
+								level_id = level_id,
+								difficulty = difficulty,
+								difficulty_id = difficulty_id,
+								num_plrs = num_plrs,
+								host_name = host_name,
+								state_name = state_name,
+								state = state,
+								level_name = level_name,
+								job_id = job_id,
+								is_friend = is_friend,
+								kick_option = kick_option,
+								job_plan = job_plan,
+								custom_text = room.custom_text,
+								challenge_card = challenge_card,
+								players_info = players_info,
+								progress = progress,
+								mission_type = mission_type,
+								job_name = job_name,
+								info = room.info,
+								xuid = room.xuid,
+								players_info_1 = players_info_1,
+								players_info_2 = players_info_2,
+								players_info_3 = players_info_3,
+								players_info_4 = players_info_4
+							})
+						end
+					else
+						self:update_gui_job({
+							room_id = room.room_id,
+							id = room.room_id,
+							level_id = level_id,
+							difficulty = difficulty,
+							difficulty_id = difficulty_id,
+							num_plrs = num_plrs,
+							host_name = host_name,
+							state_name = state_name,
+							state = state,
+							level_name = level_name,
+							job_id = job_id,
+							is_friend = is_friend,
+							kick_option = kick_option,
+							job_plan = job_plan,
+							custom_text = room.custom_text,
+							challenge_card = challenge_card,
+							players_info = players_info,
+							progress = progress,
+							mission_type = mission_type,
+							job_name = job_name,
+							info = room.info,
+							xuid = room.xuid,
+							players_info_1 = players_info_1,
+							players_info_2 = players_info_2,
+							players_info_3 = players_info_3,
+							players_info_4 = players_info_4
+						})
+					end
+				end
+			end
+		end
+
+		for id, _ in pairs(dead_list) do
+			self._active_server_jobs[id] = nil
+
+			self:remove_gui_job(id)
+		end
+
+		if self._table_servers then
+			self._table_servers:refresh_data()
+			self._server_list_scrollable_area:setup_scroll_area()
+			self._table_servers:select_table_row_by_row_idx(1)
+			self:_select_game_from_list()
+
+			if self._selected_row_data then
+				self:_set_game_description_data(self._selected_row_data[5].value)
+				self._game_description_panel:show()
+				self._filters_panel:hide()
+				self:_filters_set_selected_server_table()
+			else
+				self._game_description_panel:hide()
+				self._filters_panel:show()
+				self:_filters_set_selected_filters()
+			end
+		end
+	end
+
+	managers.network.matchmake:register_callback("search_lobby", f)
+	managers.network.matchmake:search_lobby(friends_only)
+
+	-- Lines 1394-1400
+	local function usrs_f(success, amount)
+		print("usrs_f", success, amount)
+
+		if success then
+			self:set_players_online(amount)
+		end
+	end
+
+	if is_win32 then
+		Steam:sa_handler():concurrent_users_callback(usrs_f)
+		Steam:sa_handler():get_concurrent_users()
+	end
+end
+
+-- Lines 1410-1656
+function MissionJoinGui:_find_online_games_ps4(friends_only)
+	if managers.network.matchmake:searching_lobbys() then
+		self._refresh_server_t = Application:time() + 5
+
+		return
+	end
+
+	-- Lines 1418-1641
+	local function f(info)
+		managers.network.matchmake:search_lobby_done()
+
+		local room_list = info.room_list
+		local attribute_list = info.attribute_list
+		local dead_list = {}
+
+		for id, _ in pairs(self._active_server_jobs) do
+			dead_list[id] = true
+		end
+
+		Application:trace("room_list ", inspect(info))
+
+		if room_list then
+			for i, room in ipairs(room_list) do
+				Application:trace("room ", inspect(room))
+
+				local name_str = tostring(room.owner_id)
+				local attributes_numbers = attribute_list[i].numbers
+				local attributes_strings = attribute_list[i].strings
+
+				Application:trace("attributes_numbers ", inspect(attributes_numbers))
+				Application:trace("attributes_strings ", inspect(attributes_strings))
+
+				if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
+					local lroom_Id = tostring(room.room_id)
+					dead_list[lroom_Id] = nil
+					local host_name = name_str
+					local mission_type = attributes_numbers[NetworkMatchMakingPSN.MISSION_TYPE]
+					local job_id = tweak_data.operations:get_operation_name_from_index(attributes_numbers[NetworkMatchMakingPSN.JOB_INDEX])
+					local level_id = OperationsTweakData.IN_LOBBY
+
+					if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+						level_id = tweak_data.operations:get_raid_id_from_raid_index(job_id, attributes_numbers[NetworkMatchMakingPSN.LEVEL_INDEX])
+					elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+						level_id = tweak_data.operations:get_raid_name_from_index(attributes_numbers[NetworkMatchMakingPSN.LEVEL_INDEX])
+					end
+
+					local name_id = ""
+					local level_name = ""
+					local difficulty_id = attributes_numbers[NetworkMatchMakingPSN.DIFFICULTY_ID]
+					local difficulty = self:translate(tweak_data:get_difficulty_string_name_from_index(difficulty_id), true)
+					local job_name = ""
+					local kick_option = attributes_numbers[8]
+					local job_plan = attributes_numbers[10]
+					local state_string_id = tweak_data:index_to_server_state(attributes_numbers[NetworkMatchMakingPSN.STATE_ID])
+					local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
+					local state = attributes_numbers[NetworkMatchMakingPSN.STATE_ID]
+					local num_plrs = attributes_numbers[NetworkMatchMakingPSN.NUMBER_OF_PLAYERS]
+					local challenge_card = ""
+					local players_info = ""
+					local progress = ""
+					local players_info_1 = "-,-,-,-"
+					local players_info_2 = "-,-,-,-"
+					local players_info_3 = "-,-,-,-"
+					local players_info_4 = "-,-,-,-"
+
+					if attributes_strings then
+						local S1 = attributes_strings[1] ~= "Empty" and string.split(attributes_strings[1], ";") or {
+							"",
+							""
+						}
+						challenge_card = S1[1] or ""
+						progress = S1[2] or ""
+						local S2 = attributes_strings[2] ~= "Empty" and string.split(attributes_strings[2], ";") or {
+							"-,-,-,-",
+							"-,-,-,-",
+							"-,-,-,-",
+							"-,-,-,-"
+						}
+						players_info_1 = S2[1] or "-,-,-,-"
+						players_info_2 = S2[2] or "-,-,-,-"
+						players_info_3 = S2[3] or "-,-,-,-"
+						players_info_4 = S2[4] or "-,-,-,-"
+					end
+
+					if challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending" then
+						challenge_card = ""
+					end
+
+					if players_info == "value_pending" then
+						players_info = ""
+					end
+
+					if progress == "value_pending" then
+						progress = ""
+					end
+
+					if mission_type == "value_pending" then
+						mission_type = ""
+					end
+
+					if level_id == OperationsTweakData.IN_LOBBY then
+						level_name = self:translate("menu_mission_select_in_lobby")
+						job_name = self:translate("menu_mission_select_in_lobby")
+					elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_OPERATION then
+						level_name = ""
+						job_name = ""
+						local operation_data = tweak_data.operations.missions[job_id]
+
+						if operation_data and operation_data.events and operation_data.events[level_id] then
+							level_name = self:translate(tweak_data.operations.missions[job_id].events[level_id].name_id)
+							job_name = self:translate(tweak_data.operations.missions[job_id].name_id)
+						else
+							level_name = "N/A"
+							job_name = "N/A"
+
+							if level_id ~= nil and job_id ~= nil then
+								Application:error("Level '" .. level_id .. "' can't be found in operation '" .. job_id .. "'.")
+							end
+						end
+					elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_RAID then
+						local mission_data = tweak_data.operations.missions[level_id]
+						level_name = ""
+
+						if mission_data and mission_data.name_id then
+							level_name = self:translate(tweak_data.operations.missions[level_id].name_id)
+						end
+
+						job_name = self:translate("menu_mission_selected_mission_type_raid")
+					end
+
+					local is_friend = false
+
+					if is_win32 and Steam:logged_on() and Steam:friends() then
+						for _, friend in ipairs(Steam:friends()) do
+							if friend:id() == room.owner_id then
+								is_friend = true
+
+								break
+							end
+						end
+					end
+
+					name_id = name_id or "unknown"
+
+					if name_id then
+						if not self._active_server_jobs[lroom_Id] then
+							if table.size(self._active_jobs) + table.size(self._active_server_jobs) < self._tweak_data.total_active_jobs and table.size(self._active_server_jobs) < self._max_active_server_jobs then
+								self._active_server_jobs[lroom_Id] = {
+									added = false,
+									alive_time = 0
+								}
+
+								self:add_gui_job({
+									room_id = room.room_id,
+									id = lroom_Id,
+									level_id = level_id,
+									difficulty = difficulty,
+									difficulty_id = difficulty_id,
+									num_plrs = num_plrs,
+									host_name = host_name,
+									state_name = state_name,
+									state = state,
+									level_name = level_name,
+									job_id = job_id,
+									is_friend = is_friend,
+									kick_option = kick_option,
+									job_plan = job_plan,
+									custom_text = room.custom_text,
+									challenge_card = challenge_card,
+									players_info = players_info,
+									progress = progress,
+									mission_type = mission_type,
+									job_name = job_name,
+									info = room.info,
+									xuid = room.xuid,
+									players_info_1 = players_info_1,
+									players_info_2 = players_info_2,
+									players_info_3 = players_info_3,
+									players_info_4 = players_info_4
+								})
+							end
+						else
+							self:update_gui_job({
+								room_id = room.room_id,
+								id = lroom_Id,
+								level_id = level_id,
+								difficulty = difficulty,
+								difficulty_id = difficulty_id,
+								num_plrs = num_plrs,
+								host_name = host_name,
+								state_name = state_name,
+								state = state,
+								level_name = level_name,
+								job_id = job_id,
+								is_friend = is_friend,
+								kick_option = kick_option,
+								job_plan = job_plan,
+								custom_text = room.custom_text,
+								challenge_card = challenge_card,
+								players_info = players_info,
+								progress = progress,
+								mission_type = mission_type,
+								job_name = job_name,
+								info = room.info,
+								xuid = room.xuid,
+								players_info_1 = players_info_1,
+								players_info_2 = players_info_2,
+								players_info_3 = players_info_3,
+								players_info_4 = players_info_4
+							})
+						end
+					end
+				end
+			end
+		end
+
+		for id, _ in pairs(dead_list) do
+			self._active_server_jobs[id] = nil
+
+			self:remove_gui_job(id)
+		end
+
+		if self._table_servers then
+			self._table_servers:refresh_data()
+			self._server_list_scrollable_area:setup_scroll_area()
+			self._table_servers:select_table_row_by_row_idx(1)
+			self:_select_game_from_list()
+
+			if self._selected_row_data then
+				self:_set_game_description_data(self._selected_row_data[5].value)
+				self._game_description_panel:show()
+				self._filters_panel:hide()
+				self:_filters_set_selected_server_table()
+			else
+				self._game_description_panel:hide()
+				self._filters_panel:show()
+			end
+		end
+	end
+
+	managers.network.matchmake:register_callback("search_lobby", f)
+	managers.network.matchmake:start_search_lobbys(friends_only)
+
+	-- Lines 1649-1655
+	local function usrs_f(success, amount)
+		print("usrs_f", success, amount)
+
+		if success then
+			self:set_players_online(amount)
+		end
+	end
+end
+
+-- Lines 1659-1662
 function MissionJoinGui:add_gui_job(data)
 	self._gui_jobs[data.id] = data
 end
 
--- Lines 1114-1116
+-- Lines 1664-1666
 function MissionJoinGui:update_gui_job(data)
 	self._gui_jobs[data.id] = data
 end
 
--- Lines 1118-1120
+-- Lines 1668-1670
 function MissionJoinGui:remove_gui_job(id)
 	self._gui_jobs[id] = nil
 end
 
--- Lines 1122-1126
+-- Lines 1672-1676
 function MissionJoinGui:set_players_online(amount)
 	if self._online_users_count and self._online_users_count:is_alive() then
 		self._online_users_count:set_text(self:translate("menu_mission_join_users_online_count", true) .. " " .. amount)
 	end
 end
 
--- Lines 1130-1145
+-- Lines 1680-1695
 function MissionJoinGui:_filters_set_selected_server_table()
 	self._filters_active = false
 
@@ -1360,7 +1862,7 @@ function MissionJoinGui:_filters_set_selected_server_table()
 	self._table_servers:set_selected(true)
 end
 
--- Lines 1147-1161
+-- Lines 1697-1711
 function MissionJoinGui:_filters_set_selected_filters()
 	self._filters_active = true
 
@@ -1377,7 +1879,7 @@ function MissionJoinGui:_filters_set_selected_filters()
 	self._table_servers:set_selected(false)
 end
 
--- Lines 1165-1183
+-- Lines 1715-1733
 function MissionJoinGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -1410,7 +1912,7 @@ function MissionJoinGui:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 1185-1202
+-- Lines 1735-1752
 function MissionJoinGui:bind_controller_inputs_no_join()
 	local bindings = {
 		{
@@ -1442,7 +1944,7 @@ function MissionJoinGui:bind_controller_inputs_no_join()
 	self:set_legend(legend)
 end
 
--- Lines 1204-1226
+-- Lines 1754-1776
 function MissionJoinGui:bind_controller_inputs_player_description()
 	local bindings = {
 		{
@@ -1477,7 +1979,7 @@ function MissionJoinGui:bind_controller_inputs_player_description()
 	self:set_legend(legend)
 end
 
--- Lines 1228-1237
+-- Lines 1778-1787
 function MissionJoinGui:_on_refresh()
 	self:on_click_apply_filters_button()
 	self:bind_controller_inputs()
@@ -1485,7 +1987,7 @@ function MissionJoinGui:_on_refresh()
 	return true, nil
 end
 
--- Lines 1239-1264
+-- Lines 1789-1814
 function MissionJoinGui:_on_filter()
 	local server_table_selected = self._table_servers:is_selected()
 	local have_any_servers = false
@@ -1509,7 +2011,7 @@ function MissionJoinGui:_on_filter()
 	return true, nil
 end
 
--- Lines 1267-1279
+-- Lines 1817-1829
 function MissionJoinGui:confirm_pressed()
 	Application:trace("[MissionJoinGui:confirm_pressed]")
 
@@ -1522,7 +2024,7 @@ function MissionJoinGui:confirm_pressed()
 	end
 end
 
--- Lines 1282-1285
+-- Lines 1832-1835
 function MissionJoinGui:back_pressed()
 	Application:trace("[MissionJoinGui:back_pressed]")
 	managers.raid_menu:on_escape()

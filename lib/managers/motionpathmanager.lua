@@ -2,8 +2,10 @@ require("lib/managers/MotionPathPathFinder")
 
 MotionPathManager = MotionPathManager or class()
 MotionPathManager._VERSION = 0.1
+MotionPathManager.BASE_PLR_PROXIMITY_DIST = 15
+MotionPathManager.BASE_PLR_PROXIMITY_STEP = 5
 
--- Lines 8-29
+-- Lines 12-33
 function MotionPathManager:init(sync_id)
 	self._paths = {}
 	self._selected_path = ""
@@ -16,9 +18,9 @@ function MotionPathManager:init(sync_id)
 		"ground"
 	}
 	self._debug_output_offset = 0
-	self._player_proximity_distance = 30
+	self._player_proximity_distance = MotionPathManager.BASE_PLR_PROXIMITY_DIST
 	self._units_in_player_proximity = {}
-	self._player_proximity_distance_step = 15
+	self._player_proximity_distance_step = MotionPathManager.BASE_PLR_PROXIMITY_STEP
 	self._path_finder = MotionPathPathFinder.new()
 
 	self._path_finder:set_mp_manager(self)
@@ -27,17 +29,17 @@ function MotionPathManager:init(sync_id)
 	self._sync_id = sync_id or 0
 end
 
--- Lines 31-33
+-- Lines 35-37
 function MotionPathManager:set_offset(offset)
 	self._offset = offset
 end
 
--- Lines 36-38
+-- Lines 40-42
 function MotionPathManager:get_path_types()
 	return self._path_types
 end
 
--- Lines 40-54
+-- Lines 44-58
 function MotionPathManager:set_path_type(path_type)
 	local path = self:get_path_by_id(self._selected_path)
 
@@ -50,15 +52,17 @@ function MotionPathManager:set_path_type(path_type)
 	for _, marker in ipairs(path.markers) do
 		local marker_unit = self:_get_unit(marker)
 		marker_unit:mission_element_data().path_type = path.path_type
+
+		print("MotionPathManager:set_path_type - set marker type: ", marker, marker_unit:mission_element_data().path_type)
 	end
 end
 
--- Lines 56-58
+-- Lines 60-62
 function MotionPathManager:get_save_data()
 	return ScriptSerializer:to_generic_xml(self._paths)
 end
 
--- Lines 61-78
+-- Lines 65-82
 function MotionPathManager:set_load_data(values, translation)
 	if not translation then
 		self._translation = {
@@ -80,7 +84,7 @@ function MotionPathManager:set_load_data(values, translation)
 	end
 end
 
--- Lines 81-103
+-- Lines 85-107
 function MotionPathManager:save(data)
 	data.motion_path_manager = {
 		unit_info = {}
@@ -109,8 +113,10 @@ function MotionPathManager:save(data)
 	end
 end
 
--- Lines 106-138
+-- Lines 110-143
 function MotionPathManager:load(data)
+	Application:trace("MotionPathManager:load", data)
+
 	if data.motion_path_manager.unit_info then
 		self:_assign_units_to_paths(data.motion_path_manager.unit_info)
 	end
@@ -144,7 +150,7 @@ function MotionPathManager:load(data)
 	self._path_finder:recreate_graph()
 end
 
--- Lines 141-153
+-- Lines 146-159
 function MotionPathManager:_assign_units_to_paths(units_info)
 	for _, path in ipairs(self._paths) do
 		path.units = {}
@@ -158,10 +164,11 @@ function MotionPathManager:_assign_units_to_paths(units_info)
 			target_checkpoint = unit_info.target_checkpoint,
 			initial_checkpoint = unit_info.initial_checkpoint
 		})
+		Application:trace("MotionPathManager:_assign_units_to_paths --- Adding unit ", unit_info.unit_id, " to path ", path)
 	end
 end
 
--- Lines 156-180
+-- Lines 162-186
 function MotionPathManager:remove_unit_from_paths(unit_id)
 	local was_removed = false
 
@@ -173,6 +180,8 @@ function MotionPathManager:remove_unit_from_paths(unit_id)
 				table.remove(path.units, i)
 
 				was_removed = true
+
+				Application:trace("Removing unit ", unit_id, " from path ", path.id)
 			end
 		end
 	end
@@ -189,8 +198,9 @@ function MotionPathManager:remove_unit_from_paths(unit_id)
 	end
 end
 
--- Lines 185-187
+-- Lines 191-194
 function MotionPathManager:operation_goto_marker(checkpoint_marker_id, goto_marker_id)
+	Application:debug("MotionPathManager:operation_goto_marker(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, goto_marker_id)
 	table.insert(self._operations, {
 		operation = "goto_marker",
 		checkpoint_marker = checkpoint_marker_id,
@@ -198,8 +208,9 @@ function MotionPathManager:operation_goto_marker(checkpoint_marker_id, goto_mark
 	})
 end
 
--- Lines 189-191
+-- Lines 196-199
 function MotionPathManager:operation_teleport_to_marker(checkpoint_marker_id, teleport_to_marker_id)
+	Application:debug("MotionPathManager:operation_teleport_to_marker(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, teleport_to_marker_id)
 	table.insert(self._operations, {
 		operation = "teleport",
 		checkpoint_marker = checkpoint_marker_id,
@@ -207,8 +218,9 @@ function MotionPathManager:operation_teleport_to_marker(checkpoint_marker_id, te
 	})
 end
 
--- Lines 193-195
+-- Lines 201-204
 function MotionPathManager:operation_set_unit_target_rotation(checkpoint_marker_id, operator_id)
+	Application:debug("MotionPathManager:operation_set_unit_target_rotation(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, operator_id)
 	table.insert(self._operations, {
 		operation = "rotate",
 		checkpoint_marker = checkpoint_marker_id,
@@ -216,7 +228,7 @@ function MotionPathManager:operation_set_unit_target_rotation(checkpoint_marker_
 	})
 end
 
--- Lines 197-214
+-- Lines 208-225
 function MotionPathManager:_operation_execute_goto_marker(path, goto_marker, unit_and_pos)
 	local target_path = self:get_path_of_marker(goto_marker)
 
@@ -232,7 +244,7 @@ function MotionPathManager:_operation_execute_goto_marker(path, goto_marker, uni
 	self:_remove_unit_from_path(unit_and_pos.unit, path)
 end
 
--- Lines 216-236
+-- Lines 229-251
 function MotionPathManager:_operation_execute_teleport_to_marker(path, teleport_to_marker, unit_and_pos)
 	local target_path = self:get_path_of_marker(teleport_to_marker)
 
@@ -250,9 +262,10 @@ function MotionPathManager:_operation_execute_teleport_to_marker(path, teleport_
 	local unit = self:_get_unit(unit_and_pos.unit)
 
 	unit:set_position(target_path.points[target_checkpoint].point)
+	Application:debug("Motion path manager set units path", unit_and_pos)
 end
 
--- Lines 238-245
+-- Lines 255-262
 function MotionPathManager:_operation_execute_set_unit_target_rotation(operator_id, unit_id)
 	local operator_rotation = self:_get_mop_marker_data(operator_id)
 
@@ -263,8 +276,9 @@ function MotionPathManager:_operation_execute_set_unit_target_rotation(operator_
 	end
 end
 
--- Lines 248-251
+-- Lines 266-269
 function MotionPathManager:_assign_unit_to_path(path, unit_and_pos, checkpoint)
+	Application:debug("MotionPathManager:_assign_unit_to_path(path, unit_and_pos, checkpoint)", path, unit_and_pos, checkpoint)
 	table.insert(path.units, {
 		unit = unit_and_pos.unit,
 		target_checkpoint = checkpoint,
@@ -273,7 +287,7 @@ function MotionPathManager:_assign_unit_to_path(path, unit_and_pos, checkpoint)
 	})
 end
 
--- Lines 254-260
+-- Lines 273-279
 function MotionPathManager:put_unit_on_path(path_info)
 	local checkpoint = self:_get_marker_point_id(path_info.path, path_info.marker)
 
@@ -289,7 +303,7 @@ function MotionPathManager:put_unit_on_path(path_info)
 	})
 end
 
--- Lines 262-269
+-- Lines 283-290
 function MotionPathManager:_get_checkpoint_from_marker(path, marker)
 	for checkpoint, marker_id in pairs(path.marker_checkpoints) do
 		if marker == marker_id then
@@ -300,7 +314,7 @@ function MotionPathManager:_get_checkpoint_from_marker(path, marker)
 	return nil
 end
 
--- Lines 272-301
+-- Lines 294-323
 function MotionPathManager:change_unit_path(from_path, target_path, target_marker, unit_and_pos)
 	local point_on_path, target_point_id = nil
 
@@ -324,7 +338,7 @@ function MotionPathManager:change_unit_path(from_path, target_path, target_marke
 	self:_remove_unit_from_path(unit_and_pos.unit, from_path)
 end
 
--- Lines 304-315
+-- Lines 327-338
 function MotionPathManager:add_trigger(marker_id, path_id, trigger_id, outcome, callback)
 	if path_id then
 		if not self._triggers[path_id] then
@@ -340,7 +354,7 @@ function MotionPathManager:add_trigger(marker_id, path_id, trigger_id, outcome, 
 	end
 end
 
--- Lines 318-326
+-- Lines 342-350
 function MotionPathManager:_is_same_path(markers, linked_markers)
 	for _, marker in ipairs(markers) do
 		local marker_found = table.contains(linked_markers, marker)
@@ -353,7 +367,7 @@ function MotionPathManager:_is_same_path(markers, linked_markers)
 	return true
 end
 
--- Lines 329-361
+-- Lines 353-385
 function MotionPathManager:update_path(motion_path, skip_recreate)
 	local path_id = motion_path.id
 	local path_found = false
@@ -380,12 +394,12 @@ function MotionPathManager:update_path(motion_path, skip_recreate)
 	end
 end
 
--- Lines 365-367
+-- Lines 389-391
 function MotionPathManager:select_path(path_id)
 	self._selected_path = path_id
 end
 
--- Lines 370-376
+-- Lines 394-400
 function MotionPathManager:set_default_speed_limit(speed_limit)
 	local path = self:get_path_by_id(self._selected_path)
 
@@ -396,7 +410,7 @@ function MotionPathManager:set_default_speed_limit(speed_limit)
 	path.default_speed_limit = speed_limit
 end
 
--- Lines 379-398
+-- Lines 403-423
 function MotionPathManager:_draw_editor_info()
 	if not Application:editor() then
 		return
@@ -421,9 +435,11 @@ function MotionPathManager:_draw_editor_info()
 			end
 		end
 	end
+
+	self:show_bridges()
 end
 
--- Lines 401-445
+-- Lines 426-471
 function MotionPathManager:update(t, dt)
 	self:_draw_editor_info()
 
@@ -456,7 +472,7 @@ function MotionPathManager:update(t, dt)
 	end
 end
 
--- Lines 448-484
+-- Lines 475-511
 function MotionPathManager:_move_unit(t, dt, path, unit, unit_and_pos, default_distance_threshold)
 	local find_next_checkpoint = true
 
@@ -493,36 +509,7 @@ function MotionPathManager:_move_unit(t, dt, path, unit, unit_and_pos, default_d
 	until not find_next_checkpoint
 end
 
--- Lines 486-492
-function MotionPathManager:_find_next_checkpoint_marker(checkpoints, current_id)
-	for key, value in pairs(checkpoints) do
-		if current_id < key then
-			return key
-		end
-	end
-end
-
--- Lines 495-504
-function MotionPathManager:_get_distance(points_in_direction, start_checkpoint, end_checkpoint)
-	local distance = 0
-
-	for i = start_checkpoint, end_checkpoint - 1 do
-		local move_vector = points_in_direction[i + 1].point - points_in_direction[i].point
-		distance = distance + move_vector:length()
-	end
-
-	return distance
-end
-
--- Lines 506-511
-function MotionPathManager:_get_current_speed(current_pos, end_pos, segment_distance, default_distance_threshold, start_speed, end_speed)
-	local distance_vector = end_pos - current_pos
-	local distance_from_target = distance_vector:length()
-
-	return start_speed + (end_speed - start_speed) * (1 - (distance_from_target - default_distance_threshold) / segment_distance)
-end
-
--- Lines 513-770
+-- Lines 517-782
 function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_pos, default_distance_threshold, points_in_direction)
 	local target_checkpoint_vector, distance_to_checkpoint, move_direction, move_vector, movement_distance = nil
 	local npc_vehicle = unit:npc_vehicle_driving()
@@ -547,7 +534,16 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 		if current_marker and unit_and_pos.is_initialized == nil then
 			current_marker = mission:get_element_by_id(path.marker_checkpoints[1])
 			unit_and_pos.start_rotation = unit:rotation()
-			local next_move_vector = points_in_direction[unit_and_pos.target_checkpoint + 2].point - points_in_direction[unit_and_pos.target_checkpoint + 1].point
+			local tgt_cp1 = points_in_direction[unit_and_pos.target_checkpoint + 1]
+			local tgt_cp2 = points_in_direction[unit_and_pos.target_checkpoint + 2]
+
+			if not tgt_cp1 or not tgt_cp2 then
+				Application:error("MotionPathManager:_move_unit_to_checkpoint Target checkpoints where nil! Checkpoint1:", tgt_cp1, ", Checkpoint2:", tgt_cp2)
+
+				return false
+			end
+
+			local next_move_vector = tgt_cp2.point - tgt_cp1.point
 			unit_and_pos.end_rotation = Rotation:look_at(next_move_vector:normalized(), math.UP)
 			unit_and_pos.roll_y = current_marker._values.rotation:y()
 			local next_marker_key = self:_find_next_checkpoint_marker(path.marker_checkpoints, unit_and_pos.target_checkpoint + 1)
@@ -689,7 +685,36 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 	return find_next_checkpoint
 end
 
--- Lines 772-798
+-- Lines 786-792
+function MotionPathManager:_find_next_checkpoint_marker(checkpoints, current_id)
+	for key, value in pairs(checkpoints) do
+		if current_id < key then
+			return key
+		end
+	end
+end
+
+-- Lines 797-806
+function MotionPathManager:_get_distance(points_in_direction, start_checkpoint, end_checkpoint)
+	local distance = 0
+
+	for i = start_checkpoint, end_checkpoint - 1 do
+		local move_vector = points_in_direction[i + 1].point - points_in_direction[i].point
+		distance = distance + move_vector:length()
+	end
+
+	return distance
+end
+
+-- Lines 810-815
+function MotionPathManager:_get_current_speed(current_pos, end_pos, segment_distance, default_distance_threshold, start_speed, end_speed)
+	local distance_vector = end_pos - current_pos
+	local distance_from_target = distance_vector:length()
+
+	return start_speed + (end_speed - start_speed) * (1 - (distance_from_target - default_distance_threshold) / segment_distance)
+end
+
+-- Lines 819-845
 function MotionPathManager:_get_current_roll(unit, unit_and_pos, points_in_direction)
 	local angle_epsilon = 0.25
 	local rotation_t = nil
@@ -714,7 +739,7 @@ function MotionPathManager:_get_current_roll(unit, unit_and_pos, points_in_direc
 	return target_rotation
 end
 
--- Lines 801-807
+-- Lines 849-855
 function MotionPathManager:_remove_unit_from_path(unit, path)
 	for idx, u in ipairs(path.units) do
 		if u.unit == unit then
@@ -723,7 +748,7 @@ function MotionPathManager:_remove_unit_from_path(unit, path)
 	end
 end
 
--- Lines 810-876
+-- Lines 859-925
 function MotionPathManager:_proceed_to_next_checkpoint(path, unit_and_pos, unit, default_distance_threshold)
 	self:_check_for_triggers(path, unit_and_pos)
 
@@ -780,7 +805,7 @@ function MotionPathManager:_proceed_to_next_checkpoint(path, unit_and_pos, unit,
 	return true
 end
 
--- Lines 878-899
+-- Lines 929-950
 function MotionPathManager:_check_for_triggers(path, unit_and_pos)
 	if not self._triggers[path.id] then
 		return
@@ -796,14 +821,14 @@ function MotionPathManager:_check_for_triggers(path, unit_and_pos)
 	self:_check_for_operations(path, unit_and_pos)
 end
 
--- Lines 902-905
+-- Lines 955-958
 function MotionPathManager:_trigger_consumed_for_unit(unit_and_pos, trig_id)
 	self._consumed_triggers[unit_and_pos.unit] = {}
 
 	table.insert(self._consumed_triggers[unit_and_pos.unit], trig_id)
 end
 
--- Lines 908-922
+-- Lines 963-977
 function MotionPathManager:_is_trigger_allowed_to_fire_for_unit(unit_and_pos, trig_id)
 	if not self._consumed_triggers then
 		return true
@@ -822,14 +847,14 @@ function MotionPathManager:_is_trigger_allowed_to_fire_for_unit(unit_and_pos, tr
 	return true
 end
 
--- Lines 925-929
+-- Lines 982-986
 function MotionPathManager:_allow_triggers_for_unit(unit_id)
 	if self._consumed_triggers[unit_id] then
 		self._consumed_triggers[unit_id] = nil
 	end
 end
 
--- Lines 931-961
+-- Lines 990-1020
 function MotionPathManager:_check_for_operations(path, unit_and_pos)
 	if not self._operations or self._operations and #self._operations == 0 then
 		return
@@ -854,7 +879,7 @@ function MotionPathManager:_check_for_operations(path, unit_and_pos)
 	end
 end
 
--- Lines 964-983
+-- Lines 1024-1044
 function MotionPathManager:on_simulation_started()
 	self._brush = Draw:brush(Color(1, 1, 1))
 
@@ -870,18 +895,19 @@ function MotionPathManager:on_simulation_started()
 		end
 	end
 
+	Application:trace("MotionPathManager:on_simulation_started recreate_graph *******************")
 	self._path_finder:recreate_graph()
 end
 
--- Lines 985-1011
+-- Lines 1048-1074
 function MotionPathManager:on_simulation_ended()
 	self._triggers = {}
 	self._operations = {}
 	self._rotations = {}
 	self._debug_output_offset = 0
-	self._player_proximity_distance = 30
+	self._player_proximity_distance = MotionPathManager.BASE_PLR_PROXIMITY_DIST
 	self._units_in_player_proximity = {}
-	self._player_proximity_distance_step = 15
+	self._player_proximity_distance_step = MotionPathManager.BASE_PLR_PROXIMITY_STEP
 
 	for _, path in ipairs(self._paths) do
 		for _, unit_and_pos in ipairs(path.units) do
@@ -894,12 +920,12 @@ function MotionPathManager:on_simulation_ended()
 	end
 end
 
--- Lines 1013-1015
+-- Lines 1078-1080
 function MotionPathManager:_get_unit(unit_id)
 	return managers.worldcollection:get_unit_with_id(unit_id, nil, self._sync_id)
 end
 
--- Lines 1018-1025
+-- Lines 1085-1092
 function MotionPathManager:_get_mop_marker_data(unit_id)
 	local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
 	local unit = mission:get_element_by_id(unit_id)
@@ -911,7 +937,7 @@ function MotionPathManager:_get_mop_marker_data(unit_id)
 	return unit
 end
 
--- Lines 1027-1033
+-- Lines 1096-1102
 function MotionPathManager:paths_exist()
 	if #self._paths > 0 then
 		return true
@@ -920,7 +946,7 @@ function MotionPathManager:paths_exist()
 	return false
 end
 
--- Lines 1035-1049
+-- Lines 1106-1120
 function MotionPathManager:sanitize_paths()
 	local paths = {}
 
@@ -933,7 +959,7 @@ function MotionPathManager:sanitize_paths()
 	end
 end
 
--- Lines 1052-1059
+-- Lines 1124-1131
 function MotionPathManager:get_path_of_marker(marker)
 	for _, path in ipairs(self._paths) do
 		if table.contains(path.markers, marker) then
@@ -944,7 +970,7 @@ function MotionPathManager:get_path_of_marker(marker)
 	return nil
 end
 
--- Lines 1061-1068
+-- Lines 1135-1142
 function MotionPathManager:get_path_by_id(path_id)
 	for _, path in ipairs(self._paths) do
 		if path.id == path_id then
@@ -955,7 +981,7 @@ function MotionPathManager:get_path_by_id(path_id)
 	return nil
 end
 
--- Lines 1070-1078
+-- Lines 1146-1154
 function MotionPathManager:get_path_id(linked_markers)
 	for _, path in ipairs(self._paths) do
 		if self:_is_same_path(path.markers, linked_markers) then
@@ -966,12 +992,12 @@ function MotionPathManager:get_path_id(linked_markers)
 	return "motion_path_" .. #self._paths + 1
 end
 
--- Lines 1081-1087
+-- Lines 1159-1165
 function MotionPathManager:get_all_paths()
 	return self._paths
 end
 
--- Lines 1089-1121
+-- Lines 1169-1201
 function MotionPathManager:recreate_paths()
 	self._paths = {}
 	local definition = self._sync_id ~= 0 and managers.worldcollection:worlddefinition_by_id(self._sync_id) or managers.worlddefinition
@@ -998,21 +1024,21 @@ function MotionPathManager:recreate_paths()
 	self._path_finder:recreate_graph()
 end
 
--- Lines 1123-1126
+-- Lines 1205-1208
 function MotionPathManager:find_next_path(start_pos, end_pos)
 	local next_path = self._path_finder:find_path(start_pos, end_pos)
 
 	return next_path
 end
 
--- Lines 1128-1132
+-- Lines 1212-1216
 function MotionPathManager:delete_paths()
 	self._paths = {}
 	self._operations = {}
 	self._rotations = {}
 end
 
--- Lines 1135-1147
+-- Lines 1221-1233
 function MotionPathManager:get_units_info()
 	local units_info = {}
 
@@ -1030,7 +1056,7 @@ function MotionPathManager:get_units_info()
 	return units_info
 end
 
--- Lines 1150-1159
+-- Lines 1237-1246
 function MotionPathManager:motion_operation_activate_bridge(marker_ids)
 	for _, path in ipairs(self._paths) do
 		for _, bridge in ipairs(path.bridges) do
@@ -1043,7 +1069,7 @@ function MotionPathManager:motion_operation_activate_bridge(marker_ids)
 	self._path_finder:recreate_graph()
 end
 
--- Lines 1162-1171
+-- Lines 1249-1258
 function MotionPathManager:motion_operation_deactivate_bridge(marker_ids)
 	for _, path in ipairs(self._paths) do
 		for _, bridge in ipairs(path.bridges) do
@@ -1056,7 +1082,7 @@ function MotionPathManager:motion_operation_deactivate_bridge(marker_ids)
 	self._path_finder:recreate_graph()
 end
 
--- Lines 1173-1179
+-- Lines 1260-1266
 function MotionPathManager:motion_operation_path_activate(path_active, marker_ids)
 	for _, marker in ipairs(marker_ids) do
 		local path = self:get_path_of_marker(marker)
@@ -1064,12 +1090,12 @@ function MotionPathManager:motion_operation_path_activate(path_active, marker_id
 	end
 end
 
--- Lines 1181-1183
+-- Lines 1268-1270
 function MotionPathManager:set_path_active(path_id, path_active)
 	self._paths[path_id].active = path_active
 end
 
--- Lines 1185-1195
+-- Lines 1272-1282
 function MotionPathManager:remove_ground_unit_from_path(unit_id)
 	for _, path in ipairs(self._paths) do
 		if path.path_type == "ground" then
@@ -1082,7 +1108,7 @@ function MotionPathManager:remove_ground_unit_from_path(unit_id)
 	end
 end
 
--- Lines 1198-1232
+-- Lines 1285-1319
 function MotionPathManager:find_nearest_ground_path(ground_unit_id)
 	local ground_unit = self:_get_unit(ground_unit_id)
 
@@ -1120,7 +1146,7 @@ function MotionPathManager:find_nearest_ground_path(ground_unit_id)
 	return min_distance_marker
 end
 
--- Lines 1237-1268
+-- Lines 1324-1355
 function MotionPathManager:_choose_target_path_direction(ground_unit_position, target_path_info)
 	local point_id = self:_get_marker_point_id(target_path_info.path, target_path_info.marker)
 	local target_point_bck_id = #target_path_info.path.points - point_id + 1
@@ -1150,7 +1176,7 @@ function MotionPathManager:_choose_target_path_direction(ground_unit_position, t
 	return retval
 end
 
--- Lines 1271-1284
+-- Lines 1358-1371
 function MotionPathManager:_is_marker_in_front(marker_position, unit)
 	local target_direction = marker_position - unit:position()
 	local unit_fwd_vector = unit:rotation():y():normalized()
@@ -1164,14 +1190,14 @@ function MotionPathManager:_is_marker_in_front(marker_position, unit)
 	return retval
 end
 
--- Lines 1287-1290
+-- Lines 1374-1377
 function MotionPathManager:_get_marker_position(path, marker)
 	local marker_unit = self:_get_mop_marker_data(marker)
 
 	return marker_unit.position
 end
 
--- Lines 1293-1301
+-- Lines 1380-1388
 function MotionPathManager:_get_marker_point_id(path, marker)
 	local point_id = 1
 
@@ -1184,36 +1210,36 @@ function MotionPathManager:_get_marker_point_id(path, marker)
 	return point_id
 end
 
--- Lines 1306-1308
+-- Lines 1393-1395
 function MotionPathManager:set_player_proximity_distance(meters)
 	self._player_proximity_distance = meters
 end
 
--- Lines 1310-1312
+-- Lines 1397-1399
 function MotionPathManager:set_player_proximity_distance_step(meters)
 	self._player_proximity_distance_step = meters
 end
 
--- Lines 1314-1316
+-- Lines 1401-1403
 function MotionPathManager:get_player_proximity_distance()
 	return self._player_proximity_distance
 end
 
--- Lines 1318-1320
+-- Lines 1405-1407
 function MotionPathManager:increase_player_proximity_distance()
 	self._player_proximity_distance = self._player_proximity_distance + self._player_proximity_distance_step
 end
 
--- Lines 1322-1327
+-- Lines 1409-1414
 function MotionPathManager:reset_player_proximity_distance()
-	self._player_proximity_distance = 30
+	self._player_proximity_distance = MotionPathManager.BASE_PLR_PROXIMITY_DIST
 
 	for unit_id, meters in pairs(self._units_in_player_proximity) do
 		self._units_in_player_proximity[unit_id] = self._player_proximity_distance
 	end
 end
 
--- Lines 1329-1335
+-- Lines 1416-1422
 function MotionPathManager:get_player_proximity_distance_for_unit(unit_id)
 	local retval = self._units_in_player_proximity[unit_id]
 	retval = retval or 0
@@ -1221,22 +1247,22 @@ function MotionPathManager:get_player_proximity_distance_for_unit(unit_id)
 	return retval
 end
 
--- Lines 1337-1339
+-- Lines 1424-1426
 function MotionPathManager:set_player_proximity_distance_for_unit(unit_id, meters)
 	self._units_in_player_proximity[unit_id] = meters
 end
 
--- Lines 1347-1349
+-- Lines 1434-1436
 function MotionPathManager:show_npc_vehicle_stats(enabled)
 	self._npc_vehicle_debug_show = enabled
 end
 
--- Lines 1352-1354
+-- Lines 1439-1441
 function MotionPathManager:npc_vehicle_debug_output_enabled()
 	return self._npc_vehicle_debug_show
 end
 
--- Lines 1357-1373
+-- Lines 1444-1460
 function MotionPathManager:show_bridges()
 	for _, path in ipairs(self._paths) do
 		for _, bridge in ipairs(path.bridges) do
@@ -1250,7 +1276,7 @@ function MotionPathManager:show_bridges()
 	end
 end
 
--- Lines 1376-1384
+-- Lines 1463-1471
 function MotionPathManager:dump_units_on_path(path_type)
 	for _, path in ipairs(self._paths) do
 		if path.path_type == path_type then
@@ -1261,7 +1287,7 @@ function MotionPathManager:dump_units_on_path(path_type)
 	end
 end
 
--- Lines 1388-1392
+-- Lines 1475-1479
 function MotionPathManager:dump_player_proximity_distance()
 	for unit_id, meters in pairs(self._units_in_player_proximity) do
 		Application:debug("MotionPathManager:dump_player_proximity_distance() unit, meters: ", unit_id, meters)

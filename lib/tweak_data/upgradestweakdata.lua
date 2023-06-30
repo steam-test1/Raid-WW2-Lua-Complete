@@ -202,7 +202,7 @@ function UpgradesTweakData:_create_raid_team_definitions()
 	self:_create_definition_levels("warcry_team_damage_reduction_bonus_on_activate", "team", "warcry_team_damage_reduction_bonus_on_activate", "player", true, self.values.team.player.warcry_team_damage_reduction_bonus_on_activate)
 end
 
--- Lines 150-236
+-- Lines 150-240
 function UpgradesTweakData:_create_raid_warcry_definitions()
 	self.values.player.warcry_duration = {
 		1.1,
@@ -240,11 +240,11 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 
 	self:_create_definition("warcry_player_nullify_spread", "feature", "warcry_nullify_spread", "player", false, 1)
 
-	self.values.player.warcry_sniper_shoot_through_enemies = {
+	self.values.player.warcry_sniper_ricochet = {
 		true
 	}
 
-	self:_create_definition("warcry_player_sniper_shoot_through_enemies", "feature", "warcry_sniper_shoot_through_enemies", "player", false, 1)
+	self:_create_definition("warcry_player_sniper_ricochet", "feature", "warcry_sniper_ricochet", "player", false, 1)
 
 	self.values.player.warcry_aim_assist_aim_at_head = {
 		true
@@ -305,8 +305,8 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 	self:_create_definition_levels("warcry_turret_overheat_multiplier", "feature", "warcry_overheat_multiplier", "player", false, self.values.player.warcry_ammo_consumption)
 
 	self.values.player.warcry_dismemberment_multiplier_bonus = {
-		1.2,
-		1.7
+		2,
+		3
 	}
 
 	self:_create_definition_levels("warcry_player_dismemberment_multiplier_bonus", "feature", "warcry_dismemberment_multiplier_bonus", "player", true, self.values.player.warcry_dismemberment_multiplier_bonus)
@@ -319,10 +319,10 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 	self:_create_definition_levels("warcry_player_low_health_multiplier_bonus", "feature", "warcry_low_health_multiplier_bonus", "player", true, self.values.player.warcry_low_health_multiplier_bonus)
 
 	self.values.player.warcry_team_heal_bonus = {
+		1.05,
+		1.1,
 		1.2,
-		1.4,
-		1.65,
-		2
+		1.4
 	}
 
 	self:_create_definition_levels("warcry_player_team_heal_bonus", "feature", "warcry_team_heal_bonus", "player", true, self.values.player.warcry_team_heal_bonus)
@@ -386,9 +386,15 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 
 	self:_create_definition_levels("warcry_player_grenade_cluster_damage", "feature", "warcry_grenade_cluster_damage", "player", false, self.values.player.warcry_grenade_cluster_damage)
 
+	self.values.player.warcry_grenade_airburst = {
+		true
+	}
+
+	self:_create_definition("warcry_player_grenade_airburst", "feature", "warcry_grenade_airburst", "player", false, 1)
+
 	self.values.player.warcry_explosions_multiplier_bonus = {
-		1.2,
-		1.7
+		1.3,
+		1.5
 	}
 
 	self:_create_definition_levels("warcry_player_explosions_multiplier_bonus", "feature", "warcry_explosions_multiplier_bonus", "player", true, self.values.player.warcry_explosions_multiplier_bonus)
@@ -401,7 +407,7 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 	self:_create_definition_levels("warcry_player_killstreak_multiplier_bonus", "feature", "warcry_killstreak_multiplier_bonus", "player", true, self.values.player.warcry_killstreak_multiplier_bonus)
 end
 
--- Lines 238-328
+-- Lines 242-332
 function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.max_health_multiplier = {
 		1.1,
@@ -449,10 +455,10 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self:_create_definition_levels("player_secondary_ammo_increase", "feature", "secondary_ammo_increase", "player", true, self.values.player.secondary_ammo_increase, self.description_data_types.generic_multiplier)
 
 	self.values.player.all_movement_speed_increase = {
-		1.02,
-		1.04,
-		1.07,
-		1.1
+		1.05,
+		1.1,
+		1.15,
+		1.2
 	}
 
 	self:_create_definition_levels("player_all_movement_speed_increase", "feature", "all_movement_speed_increase", "player", true, self.values.player.all_movement_speed_increase, self.description_data_types.generic_multiplier)
@@ -460,15 +466,15 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.run_speed_increase = {
 		1.05,
 		1.1,
-		1.16,
-		1.25
+		1.15,
+		1.2
 	}
 
 	self:_create_definition_levels("player_run_speed_increase", "feature", "run_speed_increase", "player", true, self.values.player.run_speed_increase, self.description_data_types.generic_multiplier)
 
 	self.values.player.climb_speed_increase = {
 		1.5,
-		1.7,
+		1.75,
 		1.9
 	}
 
@@ -477,17 +483,17 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.crouch_speed_increase = {
 		1.05,
 		1.1,
-		1.16,
-		1.25
+		1.15,
+		1.2
 	}
 
 	self:_create_definition_levels("player_crouch_speed_increase", "feature", "crouch_speed_increase", "player", true, self.values.player.crouch_speed_increase, self.description_data_types.generic_multiplier)
 
 	self.values.player.carry_penalty_decrease = {
-		1.17,
-		1.29,
-		1.39,
-		1.5
+		1.1,
+		1.2,
+		1.3,
+		1.4
 	}
 
 	self:_create_definition_levels("player_carry_penalty_decrease", "feature", "carry_penalty_decrease", "player", true, self.values.player.carry_penalty_decrease, self.description_data_types.generic_multiplier_reductive_string)
@@ -513,7 +519,7 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.interacting_damage_reduction = {
 		0.85,
 		0.7,
-		0.51,
+		0.5,
 		0.25
 	}
 
@@ -522,7 +528,7 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.bullet_damage_reduction = {
 		0.95,
 		0.9,
-		0.84,
+		0.85,
 		0.75
 	}
 
@@ -531,7 +537,7 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self.values.player.melee_damage_reduction = {
 		0.9,
 		0.8,
-		0.68,
+		0.7,
 		0.5
 	}
 
@@ -555,10 +561,10 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self:_create_definition_levels("player_melee_damage_multiplier", "feature", "melee_damage_multiplier", "player", true, self.values.player.melee_damage_multiplier, self.description_data_types.generic_multiplier)
 
 	self.values.player.critical_hit_chance = {
-		1.02,
-		1.04,
-		1.07,
-		1.1
+		1.025,
+		1.05,
+		1.1,
+		1.25
 	}
 
 	self:_create_definition_levels("player_critical_hit_chance", "feature", "critical_hit_chance", "player", true, self.values.player.critical_hit_chance, self.description_data_types.generic_multiplier)
@@ -727,7 +733,7 @@ function UpgradesTweakData:_create_raid_definitions_modifiers()
 	self:_create_definition_levels("player_long_dis_revive", "feature", "long_dis_revive", "player", true, self.values.player.long_dis_revive)
 end
 
--- Lines 331-356
+-- Lines 335-360
 function UpgradesTweakData:_create_raid_definitions_abilities()
 	self.values.player.highlight_enemy = {
 		true
@@ -782,7 +788,7 @@ function UpgradesTweakData:_create_raid_definitions_abilities()
 	self:_create_definition("player_warcry_dmg", "feature", "warcry_dmg", "player", true, 1)
 end
 
--- Lines 359-368
+-- Lines 363-372
 function UpgradesTweakData:_raid_temporary_definitions()
 	self.values.temporary.revived_damage_bonus = {
 		{
@@ -824,7 +830,7 @@ function UpgradesTweakData:_raid_temporary_definitions()
 	self:_create_definition_levels("temporary_on_revived_damage_reduction", "temporary", "on_revived_damage_reduction", "temporary", true, self.values.temporary.on_revived_damage_reduction, self.description_data_types.temporary_reduction)
 end
 
--- Lines 371-587
+-- Lines 375-591
 function UpgradesTweakData:_create_weapon_definitions()
 	self.values.player.recon_tier_4_unlocked = {
 		true
@@ -957,11 +963,6 @@ function UpgradesTweakData:_create_weapon_definitions()
 		weapon_id = "garand",
 		category = "weapon"
 	}
-	self.definitions.garand_golden = {
-		factory_id = "wpn_fps_ass_garand_golden",
-		weapon_id = "garand_golden",
-		category = "weapon"
-	}
 	self.definitions.m1918 = {
 		factory_id = "wpn_fps_lmg_m1918",
 		weapon_id = "m1918",
@@ -1028,7 +1029,7 @@ function UpgradesTweakData:_create_weapon_definitions()
 	}
 end
 
--- Lines 590-623
+-- Lines 594-627
 function UpgradesTweakData:_create_melee_weapon_definitions()
 	self.definitions.weapon = {
 		category = "melee_weapon"
@@ -1062,7 +1063,7 @@ function UpgradesTweakData:_create_melee_weapon_definitions()
 	}
 end
 
--- Lines 625-655
+-- Lines 629-649
 function UpgradesTweakData:_create_grenades_definitions()
 	self.definitions.m24 = {
 		category = "grenade"
@@ -1079,17 +1080,20 @@ function UpgradesTweakData:_create_grenades_definitions()
 	self.definitions.decoy_coin = {
 		category = "grenade"
 	}
+	self.definitions.betty = {
+		category = "grenade"
+	}
 end
 
--- Lines 658-680
+-- Lines 652-674
 function UpgradesTweakData:_primary_weapon_definitions()
 	self.values.primary_weapon = self.values.primary_weapon or {}
 	self.values.primary_weapon.damage_multiplier = {
-		1.25,
-		1.45,
-		1.6,
-		1.7,
-		1.75
+		1.1,
+		1.2,
+		1.3,
+		1.4,
+		1.5
 	}
 
 	self:_create_definition_levels("primary_weapon_damage_multiplier", "feature", "damage_multiplier", "primary_weapon", false, self.values.primary_weapon.damage_multiplier)
@@ -1124,10 +1128,10 @@ function UpgradesTweakData:_primary_weapon_definitions()
 	self:_create_definition_levels("primary_weapon_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "primary_weapon", false, self.values.primary_weapon.enter_steelsight_speed_multiplier)
 
 	self.values.primary_weapon.spread_multiplier = {
-		0.85,
-		0.7,
-		0.6,
-		0.5,
+		0.75,
+		0.65,
+		0.55,
+		0.45,
 		1.15,
 		1.3,
 		1.4,
@@ -1147,17 +1151,15 @@ function UpgradesTweakData:_primary_weapon_definitions()
 	self:_create_definition_levels("primary_weapon_magazine_upgrade", "feature", "magazine_upgrade", "primary_weapon", false, self.values.primary_weapon.magazine_upgrade)
 end
 
--- Lines 682-704
+-- Lines 676-698
 function UpgradesTweakData:_secondary_weapon_definitions()
 	self.values.secondary_weapon = self.values.secondary_weapon or {}
 	self.values.secondary_weapon.damage_multiplier = {
-		1.25,
-		1.45,
-		1.6,
-		1.7,
-		1.75,
-		2,
-		3
+		1.1,
+		1.2,
+		1.3,
+		1.4,
+		1.5
 	}
 
 	self:_create_definition_levels("secondary_weapon_damage_multiplier", "feature", "damage_multiplier", "secondary_weapon", false, self.values.secondary_weapon.damage_multiplier)
@@ -1192,10 +1194,14 @@ function UpgradesTweakData:_secondary_weapon_definitions()
 	self:_create_definition_levels("secondary_weapon_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "secondary_weapon", false, self.values.secondary_weapon.enter_steelsight_speed_multiplier)
 
 	self.values.secondary_weapon.spread_multiplier = {
-		0.85,
-		0.7,
-		0.6,
-		0.5
+		0.75,
+		0.65,
+		0.55,
+		0.45,
+		1.15,
+		1.3,
+		1.4,
+		1.5
 	}
 
 	self:_create_definition_levels("secondary_weapon_spread_multiplier", "feature", "spread_multiplier", "secondary_weapon", false, self.values.secondary_weapon.spread_multiplier)
@@ -1211,7 +1217,7 @@ function UpgradesTweakData:_secondary_weapon_definitions()
 	self:_create_definition_levels("secondary_weapon_magazine_upgrade", "feature", "magazine_upgrade", "secondary_weapon", false, self.values.secondary_weapon.magazine_upgrade)
 end
 
--- Lines 708-749
+-- Lines 702-748
 function UpgradesTweakData:_pistol_definitions()
 	self.values.pistol = self.values.pistol or {}
 	self.values.pistol.recoil_reduction = {
@@ -1240,7 +1246,7 @@ function UpgradesTweakData:_pistol_definitions()
 	self:_create_definition_levels("pistol_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "pistol", false, self.values.pistol.enter_steelsight_speed_multiplier)
 
 	self.values.pistol.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("pistol_spread_multiplier", "feature", "spread_multiplier", "pistol", false, self.values.pistol.spread_multiplier)
@@ -1295,7 +1301,7 @@ function UpgradesTweakData:_pistol_definitions()
 	self:_create_definition_levels("pistol_damage_addend", "feature", "damage_addend", "pistol", false, self.values.pistol.damage_addend)
 end
 
--- Lines 752-800
+-- Lines 751-804
 function UpgradesTweakData:_assault_rifle_definitions()
 	self.values.assault_rifle.recoil_reduction = {
 		0.75
@@ -1330,7 +1336,7 @@ function UpgradesTweakData:_assault_rifle_definitions()
 	self:_create_definition_levels("assault_rifle_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "assault_rifle", false, self.values.assault_rifle.enter_steelsight_speed_multiplier)
 
 	self.values.assault_rifle.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("assault_rifle_spread_multiplier", "feature", "spread_multiplier", "assault_rifle", false, self.values.assault_rifle.spread_multiplier)
@@ -1397,7 +1403,7 @@ function UpgradesTweakData:_assault_rifle_definitions()
 	self:_create_definition_levels("assault_rifle_zoom_increase", "feature", "zoom_increase", "assault_rifle", false, self.values.assault_rifle.zoom_increase)
 end
 
--- Lines 803-851
+-- Lines 807-860
 function UpgradesTweakData:_lmg_definitions()
 	self.values.lmg.recoil_reduction = {
 		0.75
@@ -1432,7 +1438,7 @@ function UpgradesTweakData:_lmg_definitions()
 	self:_create_definition_levels("lmg_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "lmg", false, self.values.lmg.enter_steelsight_speed_multiplier)
 
 	self.values.lmg.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("lmg_spread_multiplier", "feature", "spread_multiplier", "lmg", false, self.values.lmg.spread_multiplier)
@@ -1499,7 +1505,7 @@ function UpgradesTweakData:_lmg_definitions()
 	self:_create_definition_levels("lmg_zoom_increase", "feature", "zoom_increase", "lmg", false, self.values.lmg.zoom_increase)
 end
 
--- Lines 854-902
+-- Lines 863-916
 function UpgradesTweakData:_snp_definitions()
 	self.values.snp.recoil_reduction = {
 		0.9,
@@ -1536,7 +1542,7 @@ function UpgradesTweakData:_snp_definitions()
 	self:_create_definition_levels("snp_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "snp", false, self.values.snp.enter_steelsight_speed_multiplier)
 
 	self.values.snp.spread_multiplier = {
-		0.9
+		0.8
 	}
 
 	self:_create_definition_levels("snp_spread_multiplier", "feature", "spread_multiplier", "snp", false, self.values.snp.spread_multiplier)
@@ -1603,7 +1609,7 @@ function UpgradesTweakData:_snp_definitions()
 	self:_create_definition_levels("snp_zoom_increase", "feature", "zoom_increase", "snp", false, self.values.snp.zoom_increase)
 end
 
--- Lines 906-954
+-- Lines 920-973
 function UpgradesTweakData:_smg_definitions()
 	self.values.smg.recoil_reduction = {
 		0.75
@@ -1706,7 +1712,7 @@ function UpgradesTweakData:_smg_definitions()
 	self:_create_definition_levels("smg_zoom_increase", "feature", "zoom_increase", "smg", false, self.values.smg.zoom_increase)
 end
 
--- Lines 957-1011
+-- Lines 976-1033
 function UpgradesTweakData:_shotgun_definitions()
 	self.values.shotgun.recoil_reduction = {
 		0.85,
@@ -1742,7 +1748,7 @@ function UpgradesTweakData:_shotgun_definitions()
 	self:_create_definition_levels("shotgun_enter_steelsight_speed_multiplier", "feature", "enter_steelsight_speed_multiplier", "shotgun", false, self.values.shotgun.enter_steelsight_speed_multiplier)
 
 	self.values.shotgun.spread_multiplier = {
-		0.9
+		1.1
 	}
 
 	self:_create_definition_levels("shotgun_spread_multiplier", "feature", "spread_multiplier", "shotgun", false, self.values.shotgun.spread_multiplier)
@@ -1820,9 +1826,19 @@ function UpgradesTweakData:_shotgun_definitions()
 	}
 
 	self:_create_definition_levels("shotgun_melee_knockdown_mul", "feature", "melee_knockdown_mul", "shotgun", false, self.values.shotgun.melee_knockdown_mul)
+
+	self.values.shotgun.magazine_upgrade = {
+		2,
+		4,
+		6,
+		8,
+		10
+	}
+
+	self:_create_definition_levels("shotgun_magazine_upgrade", "feature", "magazine_upgrade", "shotgun", false, self.values.shotgun.magazine_upgrade)
 end
 
--- Lines 1014-1030
+-- Lines 1036-1052
 function UpgradesTweakData:_create_definition_levels(definition_name, definition_category, upgrade_name, upgrade_category, incremental, values, description_data)
 	for index = 1, #values do
 		local definition_name_level = definition_name .. "_" .. index
@@ -1832,7 +1848,7 @@ function UpgradesTweakData:_create_definition_levels(definition_name, definition
 	end
 end
 
--- Lines 1033-1059
+-- Lines 1055-1081
 function UpgradesTweakData:_create_definition(definition_name, definition_category, upgrade_name, upgrade_category, incremental, value, has_levels, description_data)
 	local name_id = "menu_" .. upgrade_category .. "_" .. upgrade_name
 	local definition = {
@@ -1850,7 +1866,7 @@ function UpgradesTweakData:_create_definition(definition_name, definition_catego
 	self.definitions[definition_name] = definition
 end
 
--- Lines 1061-1068
+-- Lines 1083-1090
 function UpgradesTweakData:upgrade_has_levels(definition_name)
 	local definition = self.definitions[definition_name] or self.definitions[definition_name .. "_1"]
 
@@ -1861,7 +1877,7 @@ function UpgradesTweakData:upgrade_has_levels(definition_name)
 	return false
 end
 
--- Lines 1083-1926
+-- Lines 1105-1948
 function UpgradesTweakData:_init_pd2_values()
 	self.values.player.marked_enemy_damage_mul = 1.15
 	self.values.player.immune_to_gas = {
@@ -2571,7 +2587,7 @@ function UpgradesTweakData:_init_pd2_values()
 		1.2
 	}
 	self.values.player.mark_enemy_time_multiplier = {
-		2
+		1
 	}
 	self.values.player.melee_kill_snatch_pager_chance = {
 		0.25
@@ -3914,7 +3930,7 @@ function UpgradesTweakData:_init_pd2_values()
 	end
 end
 
--- Lines 1929-2147
+-- Lines 1951-2169
 function UpgradesTweakData:_old_init()
 	self.level_tree = {
 		{
@@ -4154,7 +4170,7 @@ function UpgradesTweakData:_old_init()
 	self.progress[4][49] = "mr_nice_guy"
 end
 
--- Lines 2150-2199
+-- Lines 2172-2221
 function UpgradesTweakData:_init_values()
 	self.values.weapon = self.values.weapon or {}
 	self.values.weapon.reload_speed_multiplier = {
@@ -4226,7 +4242,7 @@ function UpgradesTweakData:_init_values()
 	}
 end
 
--- Lines 2205-4654
+-- Lines 2227-4676
 function UpgradesTweakData:_player_definitions()
 	self.definitions.body_armor1 = {
 		name_id = "bm_armor_level_2",
@@ -6771,7 +6787,7 @@ function UpgradesTweakData:_player_definitions()
 	end
 end
 
--- Lines 4657-4764
+-- Lines 4679-4786
 function UpgradesTweakData:_trip_mine_definitions()
 	self.definitions.trip_mine = {
 		description_text_id = "trip_mine",
@@ -6884,7 +6900,7 @@ function UpgradesTweakData:_trip_mine_definitions()
 	}
 end
 
--- Lines 4767-4876
+-- Lines 4789-4898
 function UpgradesTweakData:_ecm_jammer_definitions()
 	self.definitions.ecm_jammer = {
 		name_id = "menu_equipment_ecm_jammer",
@@ -7002,7 +7018,7 @@ function UpgradesTweakData:_ecm_jammer_definitions()
 	}
 end
 
--- Lines 4879-4932
+-- Lines 4901-4954
 function UpgradesTweakData:_ammo_bag_definitions()
 	self.definitions.ammo_bag = {
 		description_text_id = "ammo_bag",
@@ -7058,7 +7074,7 @@ function UpgradesTweakData:_ammo_bag_definitions()
 	}
 end
 
--- Lines 4935-4996
+-- Lines 4957-5018
 function UpgradesTweakData:_doctor_bag_definitions()
 	self.definitions.doctor_bag = {
 		description_text_id = "doctor_bag",
@@ -7123,7 +7139,7 @@ function UpgradesTweakData:_doctor_bag_definitions()
 	}
 end
 
--- Lines 4999-5100
+-- Lines 5021-5122
 function UpgradesTweakData:_cable_tie_definitions()
 	self.definitions.cable_tie = {
 		equipment_id = "cable_tie",
@@ -7229,7 +7245,7 @@ function UpgradesTweakData:_cable_tie_definitions()
 	}
 end
 
--- Lines 5105-5112
+-- Lines 5127-5134
 function UpgradesTweakData:_armor_kit_definitions()
 	self.definitions.armor_kit = {
 		name_id = "menu_equipment_armor_kit",
@@ -7239,7 +7255,7 @@ function UpgradesTweakData:_armor_kit_definitions()
 	}
 end
 
--- Lines 5115-5244
+-- Lines 5137-5266
 function UpgradesTweakData:_sentry_gun_definitions()
 	self.definitions.sentry_gun = {
 		description_text_id = "sentry_gun",
@@ -7378,7 +7394,7 @@ function UpgradesTweakData:_sentry_gun_definitions()
 	}
 end
 
--- Lines 5246-5257
+-- Lines 5268-5279
 function UpgradesTweakData:_rep_definitions()
 	local rep_upgrades = self.values.rep_upgrades
 
@@ -7392,7 +7408,7 @@ function UpgradesTweakData:_rep_definitions()
 	end
 end
 
--- Lines 5261-5551
+-- Lines 5283-5573
 function UpgradesTweakData:_weapon_upgrades_definitions()
 	self.definitions.assault_rifle_move_spread_index_addend = {
 		name_id = "menu_assault_rifle_move_spread_index_addend",
@@ -7711,7 +7727,7 @@ function UpgradesTweakData:_weapon_upgrades_definitions()
 	}
 end
 
--- Lines 5554-5597
+-- Lines 5576-5619
 function UpgradesTweakData:_carry_definitions()
 	self.definitions.carry_throw_distance_multiplier = {
 		name_id = "menu_carry_throw_distance_multiplier",
@@ -7760,7 +7776,7 @@ function UpgradesTweakData:_carry_definitions()
 	}
 end
 
--- Lines 5599-5838
+-- Lines 5621-5860
 function UpgradesTweakData:_team_definitions()
 	self.definitions.team_pistol_recoil_index_addend = {
 		name_id = "menu_team_pistol_recoil_index_addend",
@@ -8016,7 +8032,7 @@ function UpgradesTweakData:_team_definitions()
 	}
 end
 
--- Lines 5840-5971
+-- Lines 5862-5993
 function UpgradesTweakData:_temporary_definitions()
 	self.definitions.temporary_combat_medic_damage_multiplier1 = {
 		incremental = true,
@@ -8157,7 +8173,7 @@ function UpgradesTweakData:_temporary_definitions()
 	}
 end
 
--- Lines 5973-5979
+-- Lines 5995-6001
 function UpgradesTweakData:_shape_charge_definitions()
 	self.definitions.shape_charge = {
 		name_id = "menu_shape_charge",
@@ -8166,7 +8182,7 @@ function UpgradesTweakData:_shape_charge_definitions()
 	}
 end
 
--- Lines 5981-6035
+-- Lines 6003-6057
 function UpgradesTweakData:_first_aid_kit_definitions()
 	self.definitions.first_aid_kit = {
 		name_id = "menu_equipment_first_aid_kit",
@@ -8226,7 +8242,7 @@ function UpgradesTweakData:_first_aid_kit_definitions()
 	}
 end
 
--- Lines 6037-6053
+-- Lines 6059-6075
 function UpgradesTweakData:_bodybags_bag_definitions()
 	self.definitions.bodybags_bag = {
 		name_id = "menu_equipment_bodybags_bag",
@@ -8245,7 +8261,7 @@ function UpgradesTweakData:_bodybags_bag_definitions()
 	}
 end
 
--- Lines 6056-6066
+-- Lines 6078-6088
 function UpgradesTweakData:_flamethrower_mk2_definitions()
 	self.definitions.flamethrower_mk2 = {
 		factory_id = "wpn_fps_fla_mk2",

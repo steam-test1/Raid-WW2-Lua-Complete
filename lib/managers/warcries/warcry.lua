@@ -71,7 +71,7 @@ end
 function Warcry:get_level_description(level)
 end
 
--- Lines 70-89
+-- Lines 70-90
 function Warcry:activate()
 	local current_buffs = nil
 
@@ -93,19 +93,19 @@ function Warcry:activate()
 	managers.warcry:set_warcry_post_effect(self._tweak_data.ids_effect_name)
 end
 
--- Lines 91-93
+-- Lines 92-94
 function Warcry:_buff_identifier(buff)
 	return "warcry_" .. tostring(self._type) .. "_buff_" .. tostring(buff)
 end
 
--- Lines 95-97
+-- Lines 96-98
 function Warcry:_acquire_buff(buff)
 	managers.upgrades:aquire(buff, nil, self:_buff_identifier(buff))
 end
 
 local ids_empty = Idstring("empty")
 
--- Lines 100-126
+-- Lines 101-129
 function Warcry:deactivate()
 	if not self._active then
 		return
@@ -134,12 +134,12 @@ function Warcry:deactivate()
 	end
 end
 
--- Lines 128-130
+-- Lines 131-133
 function Warcry:_unacquire_buff(buff)
 	managers.upgrades:unaquire(buff, self:_buff_identifier(buff))
 end
 
--- Lines 132-143
+-- Lines 135-146
 function Warcry:_get_upgrade_definition_name(upgrade_definition_name)
 	if tweak_data.upgrades:upgrade_has_levels(upgrade_definition_name) then
 		local upgrade_level = self._level
@@ -154,16 +154,16 @@ function Warcry:_get_upgrade_definition_name(upgrade_definition_name)
 	return upgrade_definition_name
 end
 
--- Lines 145-146
+-- Lines 148-150
 function Warcry:duration()
 end
 
--- Lines 148-150
+-- Lines 152-154
 function Warcry:cleanup()
 	self:_unacquire_team_buffs()
 end
 
--- Lines 154-171
+-- Lines 158-173
 function Warcry:_acquire_team_buffs()
 	if self.team_buffs then
 		for _, buff in ipairs(self.team_buffs) do
@@ -182,7 +182,7 @@ function Warcry:_acquire_team_buffs()
 	end
 end
 
--- Lines 173-178
+-- Lines 175-180
 function Warcry:_acquire_team_buff(id)
 	self:_acquire_buff(id)
 
@@ -191,7 +191,7 @@ function Warcry:_acquire_team_buff(id)
 	end
 end
 
--- Lines 180-199
+-- Lines 182-199
 function Warcry:_unacquire_team_buffs()
 	if self.team_buffs then
 		for _, buff in ipairs(self.team_buffs) do

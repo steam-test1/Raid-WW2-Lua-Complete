@@ -597,7 +597,7 @@ function CoreParticleEditor:effect_gizmo()
 	return self._effect_gizmo
 end
 
--- Lines 522-551
+-- Lines 523-560
 function CoreParticleEditor:update(t, dt)
 	local cur_effect = self:current_effect()
 
@@ -612,7 +612,12 @@ function CoreParticleEditor:update(t, dt)
 		local r = 500
 
 		gizmo:set_position(self._gizmo_anchor + Vector3(r, 0, 0) * math.cos(a) + Vector3(0, r, 0) * math.sin(a) + Vector3(0, 0, r / 5) * math.cos(5 * a))
-		gizmo:set_rotation(Rotation(Vector3(0, 0, 1), a) * Rotation(Vector3(1, 0, 0), 45 * math.cos(5 * a)) + Rotation(Vector3(1, 0, 0), -90))
+
+		local rot1 = Rotation(Vector3(0, 0, 1), a)
+		local rot2 = Rotation(Vector3(1, 0, 0), 45 * math.cos(5 * a))
+		local rot3 = Rotation(Vector3(1, 0, 0), -90)
+
+		gizmo:set_rotation(rot1 * rot2 + rot3)
 	elseif self._gizmo_movement == "JUMP" then
 		local gizmo = self:effect_gizmo()
 		self._gizmo_accum = self._gizmo_accum + dt
@@ -631,11 +636,11 @@ function CoreParticleEditor:update(t, dt)
 	end
 end
 
--- Lines 553-554
+-- Lines 562-563
 function CoreParticleEditor:set_position(pos)
 end
 
--- Lines 556-561
+-- Lines 565-570
 function CoreParticleEditor:destroy()
 	if alive(self._main_frame) then
 		self._main_frame:destroy()
@@ -644,12 +649,12 @@ function CoreParticleEditor:destroy()
 	end
 end
 
--- Lines 563-565
+-- Lines 572-574
 function CoreParticleEditor:close()
 	self._main_frame:destroy()
 end
 
--- Lines 567-574
+-- Lines 576-583
 function CoreParticleEditor:on_close_effect()
 	local curi = self:current_effect_index()
 
@@ -663,7 +668,7 @@ function CoreParticleEditor:on_close_effect()
 	end
 end
 
--- Lines 577-588
+-- Lines 586-597
 function CoreParticleEditor:on_close()
 	for _, e in ipairs(self._effects) do
 		if not e:close() then
@@ -678,7 +683,7 @@ function CoreParticleEditor:on_close()
 	end
 end
 
--- Lines 591-606
+-- Lines 600-615
 function CoreParticleEditor:add_effect(effect)
 	self._main_frame:freeze()
 
@@ -699,7 +704,7 @@ function CoreParticleEditor:add_effect(effect)
 	self._main_frame:thaw()
 end
 
--- Lines 608-613
+-- Lines 617-622
 function CoreParticleEditor:current_effect()
 	local i = self:current_effect_index()
 
@@ -710,7 +715,7 @@ function CoreParticleEditor:current_effect()
 	return self._effects[i]
 end
 
--- Lines 615-623
+-- Lines 624-632
 function CoreParticleEditor:current_effect_index()
 	local page = self._effects_notebook:get_current_page()
 
@@ -723,7 +728,7 @@ function CoreParticleEditor:current_effect_index()
 	return -1
 end
 
--- Lines 625-633
+-- Lines 634-642
 function CoreParticleEditor:effect_for_page(page)
 	for _, e in ipairs(self._effects) do
 		if e:panel() == page then
@@ -734,7 +739,7 @@ function CoreParticleEditor:effect_for_page(page)
 	return nil
 end
 
--- Lines 635-643
+-- Lines 644-652
 function CoreParticleEditor:set_page_name(page, name)
 	local i = 0
 
@@ -747,12 +752,12 @@ function CoreParticleEditor:set_page_name(page, name)
 	end
 end
 
--- Lines 645-647
+-- Lines 654-656
 function CoreParticleEditor:on_new()
 	self:new_dialog()
 end
 
--- Lines 649-663
+-- Lines 658-672
 function CoreParticleEditor:on_open()
 	local f = managers.database:open_file_dialog(self._main_frame, "*.effect", self._last_used_dir)
 
@@ -769,7 +774,7 @@ function CoreParticleEditor:on_open()
 	self:add_effect(effect)
 end
 
--- Lines 665-668
+-- Lines 674-677
 function CoreParticleEditor:on_save()
 	local cur = self:current_effect()
 
@@ -778,7 +783,7 @@ function CoreParticleEditor:on_save()
 	end
 end
 
--- Lines 670-673
+-- Lines 679-682
 function CoreParticleEditor:on_save_as()
 	local cur = self:current_effect()
 

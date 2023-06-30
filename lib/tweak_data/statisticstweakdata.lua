@@ -172,7 +172,7 @@ function StatisticsTweakData:statistics_specializations()
 	return 12
 end
 
--- Lines 167-312
+-- Lines 167-323
 function StatisticsTweakData:statistics_table()
 	local level_list = {
 		"flakturm",
@@ -205,7 +205,6 @@ function StatisticsTweakData:statistics_table()
 		"thompson",
 		"sten",
 		"garand",
-		"garand_golden",
 		"m1918",
 		"m1903",
 		"m1912",
@@ -242,7 +241,8 @@ function StatisticsTweakData:statistics_table()
 		"m24",
 		"concrete",
 		"d343",
-		"mills"
+		"mills",
+		"betty"
 	}
 	local enemy_list = {
 		"german_black_waffen_sentry_gasmask",
@@ -272,7 +272,7 @@ function StatisticsTweakData:statistics_table()
 	return level_list, job_list, weapon_list, melee_list, grenade_list, enemy_list, character_list
 end
 
--- Lines 314-316
+-- Lines 325-327
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"3840x2160",

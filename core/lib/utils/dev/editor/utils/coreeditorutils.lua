@@ -224,7 +224,7 @@ function get_layer_types()
 	return layer_types
 end
 
--- Lines 214-221
+-- Lines 274-281
 function toolbar_toggle(data, event)
 	local c = data.class
 	local toolbar = _G.type_name(data.toolbar) == "string" and c[data.toolbar] or data.toolbar
@@ -235,7 +235,7 @@ function toolbar_toggle(data, event)
 	end
 end
 
--- Lines 232-240
+-- Lines 292-300
 function toolbar_toggle_trg(data)
 	local c = data.class
 	local toolbar = c[data.toolbar]
@@ -249,7 +249,7 @@ function toolbar_toggle_trg(data)
 	end
 end
 
--- Lines 246-300
+-- Lines 306-360
 function dump_mesh(units, name, get_objects_string)
 	name = name or "dump_mesh"
 	get_objects_string = get_objects_string or "g_*"
@@ -302,7 +302,7 @@ function dump_mesh(units, name, get_objects_string)
 	MeshDumper:dump_meshes(managers.database:root_path() .. name, objects, Rotation(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0)))
 end
 
--- Lines 303-350
+-- Lines 363-410
 function dump_all(units, name, get_objects_string)
 	name = name or "all_dumped"
 	get_objects_string = get_objects_string or "g_*"
@@ -356,7 +356,7 @@ function dump_all(units, name, get_objects_string)
 	cat_print("editor", "  .. dumping done.")
 end
 
--- Lines 352-374
+-- Lines 412-434
 function find_unit_references(start, prefix)
 	if not start then
 		Application:error("No start point for search provided")
@@ -389,7 +389,7 @@ function find_unit_references(start, prefix)
 	return results
 end
 
--- Lines 376-393
+-- Lines 436-453
 function find_unit_references_recursive(table_name, t, visited, prefix, results)
 	if table.contains(visited, t) then
 		return
@@ -415,7 +415,7 @@ function find_unit_references_recursive(table_name, t, visited, prefix, results)
 	end
 end
 
--- Lines 395-401
+-- Lines 455-461
 function print_null_refs(references)
 	for i, ref in ipairs(references) do
 		if not alive(ref.userdata) then

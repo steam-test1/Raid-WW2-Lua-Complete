@@ -1,6 +1,6 @@
 RaidGUIControlListItemMenu = RaidGUIControlListItemMenu or class(RaidGUIControl)
 
--- Lines 4-50
+-- Lines 4-78
 function RaidGUIControlListItemMenu:init(parent, params, data)
 	RaidGUIControlListItemMenu.super.init(self, parent, params)
 
@@ -30,7 +30,7 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		text = data.text,
 		font = font,
 		font_size = font_size,
-		color = tweak_data.gui.colors.raid_white
+		color = self._data.value.unlocked and tweak_data.gui.colors.raid_white or tweak_data.gui.colors.raid_dark_grey
 	})
 	self._item_background = self._object:rect({
 		y = 1,
@@ -85,7 +85,7 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 	self:highlight_off()
 end
 
--- Lines 52-56
+-- Lines 80-84
 function RaidGUIControlListItemMenu:_layout_breadcrumb()
 	self._breadcrumb = self._object:breadcrumb(self._data.breadcrumb)
 
@@ -93,12 +93,12 @@ function RaidGUIControlListItemMenu:_layout_breadcrumb()
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
--- Lines 58-60
+-- Lines 86-88
 function RaidGUIControlListItemMenu:_get_font_desc()
 	return tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.menu_list
 end
 
--- Lines 62-81
+-- Lines 90-109
 function RaidGUIControlListItemMenu:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(button, self, self._data)
@@ -115,7 +115,7 @@ function RaidGUIControlListItemMenu:on_mouse_released(button)
 	return true
 end
 
--- Lines 83-94
+-- Lines 111-122
 function RaidGUIControlListItemMenu:mouse_double_click(o, button, x, y)
 	if self._params.no_click then
 		return
@@ -128,12 +128,12 @@ function RaidGUIControlListItemMenu:mouse_double_click(o, button, x, y)
 	end
 end
 
--- Lines 96-98
+-- Lines 124-126
 function RaidGUIControlListItemMenu:selected()
 	return self._selected
 end
 
--- Lines 100-117
+-- Lines 128-145
 function RaidGUIControlListItemMenu:select(dont_trigger_selected_callback)
 	if self._params.no_click then
 		return
@@ -152,19 +152,19 @@ function RaidGUIControlListItemMenu:select(dont_trigger_selected_callback)
 	end
 end
 
--- Lines 119-124
+-- Lines 147-152
 function RaidGUIControlListItemMenu:unselect()
 	self._selected = false
 
 	self:highlight_off()
 end
 
--- Lines 126-128
+-- Lines 154-156
 function RaidGUIControlListItemMenu:data()
 	return self._data
 end
 
--- Lines 130-142
+-- Lines 158-170
 function RaidGUIControlListItemMenu:highlight_on()
 	if self._params.no_highlight then
 		return
@@ -177,14 +177,14 @@ function RaidGUIControlListItemMenu:highlight_on()
 	self._item_background:show()
 end
 
--- Lines 144-150
+-- Lines 172-178
 function RaidGUIControlListItemMenu:highlight_off()
 	if not self._selected and not self._active and self._item_background and alive(self._item_background) and self._item_highlight_marker then
 		self._item_background:hide()
 	end
 end
 
--- Lines 152-157
+-- Lines 180-185
 function RaidGUIControlListItemMenu:enable(active_texture_color)
 	self._enabled = true
 
@@ -193,7 +193,7 @@ function RaidGUIControlListItemMenu:enable(active_texture_color)
 	self:set_param_value("no_click", false)
 end
 
--- Lines 159-164
+-- Lines 187-192
 function RaidGUIControlListItemMenu:disable(inactive_texture_color)
 	self._enabled = false
 
@@ -202,19 +202,19 @@ function RaidGUIControlListItemMenu:disable(inactive_texture_color)
 	self:set_param_value("no_click", true)
 end
 
--- Lines 166-168
+-- Lines 194-196
 function RaidGUIControlListItemMenu:enabled()
 	return self._enabled
 end
 
--- Lines 173-178
+-- Lines 201-206
 function RaidGUIControlListItemMenu:activate_on()
 	self._item_background:show()
 	self._item_highlight_marker:show()
 	self._item_label:set_color(tweak_data.gui.colors.raid_red)
 end
 
--- Lines 180-189
+-- Lines 208-217
 function RaidGUIControlListItemMenu:activate_off()
 	self:highlight_off()
 
@@ -227,7 +227,7 @@ function RaidGUIControlListItemMenu:activate_off()
 	end
 end
 
--- Lines 191-196
+-- Lines 219-224
 function RaidGUIControlListItemMenu:activate()
 	self._active = true
 
@@ -235,14 +235,14 @@ function RaidGUIControlListItemMenu:activate()
 	self:highlight_on()
 end
 
--- Lines 198-202
+-- Lines 226-230
 function RaidGUIControlListItemMenu:deactivate()
 	self._active = false
 
 	self:activate_off()
 end
 
--- Lines 204-206
+-- Lines 232-234
 function RaidGUIControlListItemMenu:activated()
 	return self._active
 end

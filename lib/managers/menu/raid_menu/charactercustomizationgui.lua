@@ -40,7 +40,7 @@ function CharacterCustomizationGui:_set_initial_data()
 	self:render_all_parts()
 end
 
--- Lines 48-210
+-- Lines 48-253
 function CharacterCustomizationGui:_layout()
 	local character_nationality = managers.player:get_character_profile_nation()
 
@@ -115,61 +115,10 @@ function CharacterCustomizationGui:_layout()
 		}
 	}
 	self._character_customizations_grid = self._customization_grid_scrollable_area:get_panel():grid_active(customization_grid_params)
-	self._profile_name_label = self._root_panel:label({
-		name = "profile_name_label",
-		h = 32,
-		w = 356,
-		align = "right",
-		text = "",
-		y = 96,
-		x = 1376,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.large,
-		color = tweak_data.gui.colors.raid_white
-	})
-
-	self._profile_name_label:set_right(self._root_panel:right())
-
-	self._character_name_label = self._root_panel:label({
-		name = "character_name_label",
-		h = 32,
-		w = 356,
-		align = "right",
-		text = "",
-		y = 128,
-		x = 1376,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
-		color = tweak_data.gui.colors.raid_grey
-	})
-
-	self._character_name_label:set_right(self._root_panel:right())
-
-	self._right_side_info = self._root_panel:create_custom_control(RaidGUIControlCharacterDescription, {
-		name = "right_side_info_panel",
-		h = 640,
-		y = 192,
-		w = 356,
-		x = 1376,
-		mode = RaidGUIControlCharacterDescription.MODE_CUSTOMIZATION
-	}, {})
-
-	self._right_side_info:set_right(self._root_panel:right())
-
-	local nationality = PlayerManager:get_character_profile_nation()
-	local class_name = managers.skilltree._global.character_profile_base_class
-	local level = Application:digest_value(managers.experience._global.level, false)
-
-	self._right_side_info:set_data({
-		class_name = class_name,
-		nationality = nationality,
-		level = level
-	})
-
 	local icon_data = self:get_icon_data_for_body_part(self._selected_filter_body_part)
 	self._body_part_icon = self._root_panel:image({
-		x = self._right_side_info:x(),
-		y = self._right_side_info:y() + 176,
+		y = 300,
+		x = self._root_panel:right() - 520,
 		w = icon_data.texture_rect[3],
 		h = icon_data.texture_rect[4],
 		texture = icon_data.texture,
@@ -308,7 +257,7 @@ function CharacterCustomizationGui:_layout()
 	self:_process_controls_states()
 end
 
--- Lines 212-221
+-- Lines 255-264
 function CharacterCustomizationGui:close()
 	self:_enable_dof()
 	self:save_equipped_customizations()
@@ -316,12 +265,12 @@ function CharacterCustomizationGui:close()
 	CharacterCustomizationGui.super.close(self)
 end
 
--- Lines 226-230
+-- Lines 269-273
 function CharacterCustomizationGui:_on_click_button_equip()
 	self:_equip_selected_customization()
 end
 
--- Lines 233-241
+-- Lines 276-284
 function CharacterCustomizationGui:_on_click_button_buy()
 	Application:trace("[CharacterCustomizationGui:_on_click_button_buy]")
 
@@ -336,12 +285,12 @@ function CharacterCustomizationGui:_on_click_button_buy()
 	managers.menu:show_character_customization_purchase_dialog(dialog_params)
 end
 
--- Lines 246-250
+-- Lines 289-293
 function CharacterCustomizationGui:_on_click_filter_body_part(data)
 	self:_process_body_part_filter(data)
 end
 
--- Lines 253-259
+-- Lines 296-302
 function CharacterCustomizationGui:_data_source_character_customizations()
 	local character_nationality = managers.player:get_character_profile_nation()
 	local grid_data = managers.character_customization:get_all_parts_indexed_filtered(self._selected_filter_body_part, character_nationality, false)
@@ -349,22 +298,22 @@ function CharacterCustomizationGui:_data_source_character_customizations()
 	return grid_data
 end
 
--- Lines 262-266
+-- Lines 305-309
 function CharacterCustomizationGui:_on_click_character_customizations(item_data)
 	self:_select_grid_item(item_data)
 end
 
--- Lines 269-273
+-- Lines 312-316
 function CharacterCustomizationGui:_on_double_click_character_customizations(item_data)
 	self:_equip_selected_customization()
 end
 
--- Lines 276-280
+-- Lines 319-323
 function CharacterCustomizationGui:_on_selected_character_customizations(item_idx, item_data)
 	self:_select_grid_item(item_data)
 end
 
--- Lines 284-325
+-- Lines 327-368
 function CharacterCustomizationGui:_equip_selected_customization()
 	local selected_item_data, character_customizations = nil
 
@@ -398,7 +347,7 @@ function CharacterCustomizationGui:_equip_selected_customization()
 	self:_process_controls_states()
 end
 
--- Lines 327-378
+-- Lines 370-421
 function CharacterCustomizationGui:_buy_customization_yes_callback()
 	local selected_item_data, character_customizations = nil
 	local owned_gold = managers.gold_economy:current()
@@ -439,7 +388,7 @@ function CharacterCustomizationGui:_buy_customization_yes_callback()
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT, false)
 end
 
--- Lines 380-515
+-- Lines 423-574
 function CharacterCustomizationGui:_process_controls_states()
 	local equipped_item_data = self._character_customizations_grid:get_active_item():get_data()
 	local selected_item_data = self._character_customizations_grid:selected_grid_item():get_data()
@@ -540,7 +489,7 @@ function CharacterCustomizationGui:_process_controls_states()
 	end
 end
 
--- Lines 517-559
+-- Lines 576-618
 function CharacterCustomizationGui:_process_body_part_filter(data)
 	local active_item_data = self._character_customizations_grid:get_active_item():get_data()
 
@@ -578,7 +527,7 @@ function CharacterCustomizationGui:_process_body_part_filter(data)
 	self:_process_controls_states()
 end
 
--- Lines 561-604
+-- Lines 620-663
 function CharacterCustomizationGui:_select_grid_item(item_data)
 	if self._selected_filter_body_part == CharacterCustomizationTweakData.PART_TYPE_HEAD then
 		if self._selected_head_name == item_data.key_name then
@@ -621,7 +570,7 @@ function CharacterCustomizationGui:_select_grid_item(item_data)
 	managers.menu_component:post_event("clothes_selection_change")
 end
 
--- Lines 606-619
+-- Lines 665-678
 function CharacterCustomizationGui:show_character_description(item_data)
 	local icon_data = self:get_icon_data_for_body_part(self._selected_filter_body_part)
 
@@ -636,7 +585,7 @@ function CharacterCustomizationGui:show_character_description(item_data)
 	self._body_part_description:set_text(self:translate(item_data.description, false))
 end
 
--- Lines 621-631
+-- Lines 680-690
 function CharacterCustomizationGui:get_character_spawn_location()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 
@@ -649,19 +598,19 @@ function CharacterCustomizationGui:get_character_spawn_location()
 	end
 end
 
--- Lines 633-643
+-- Lines 692-702
 function CharacterCustomizationGui:spawn_character_unit()
 	if not self._spawned_character_unit then
 		self:destroy_character_unit()
 
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
-		local rotation = Rotation(0, 0, 0)
+		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 end
 
--- Lines 645-651
+-- Lines 704-710
 function CharacterCustomizationGui:destroy_character_unit()
 	if self._spawned_character_unit then
 		self._spawned_character_unit:customization():destroy_all_parts_on_character()
@@ -671,7 +620,7 @@ function CharacterCustomizationGui:destroy_character_unit()
 	end
 end
 
--- Lines 653-663
+-- Lines 712-722
 function CharacterCustomizationGui:render_all_parts()
 	local character_nationality = managers.player:get_character_profile_nation()
 
@@ -683,7 +632,7 @@ function CharacterCustomizationGui:render_all_parts()
 	self._spawned_character_unit:anim_state_machine():set_parameter(state)
 end
 
--- Lines 666-693
+-- Lines 725-752
 function CharacterCustomizationGui:_set_selected_piece(part_type, part_data)
 	if part_type == CharacterCustomizationTweakData.PART_TYPE_UPPER then
 		self._spawned_character_unit:customization():set_unit(part_type, part_data.path)
@@ -702,7 +651,7 @@ function CharacterCustomizationGui:_set_selected_piece(part_type, part_data)
 	end
 end
 
--- Lines 695-723
+-- Lines 754-782
 function CharacterCustomizationGui:save_equipped_customizations()
 	Application:trace("self._equipped_upper_name ", inspect(self._equipped_upper_name))
 	managers.player:set_customization_equiped_head_name(self._equipped_head_name)
@@ -725,7 +674,7 @@ function CharacterCustomizationGui:save_equipped_customizations()
 	managers.player:local_player():camera():camera_unit():customizationfps():attach_fps_hands(managers.player:get_character_profile_nation(), self._equipped_upper_name)
 end
 
--- Lines 725-736
+-- Lines 784-795
 function CharacterCustomizationGui:get_icon_data_for_body_part(body_part)
 	local icon_data = nil
 
@@ -738,7 +687,7 @@ function CharacterCustomizationGui:get_icon_data_for_body_part(body_part)
 	return icon_data
 end
 
--- Lines 743-761
+-- Lines 802-820
 function CharacterCustomizationGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -771,7 +720,7 @@ function CharacterCustomizationGui:bind_controller_inputs()
 	self._confirm_pressed_state = nil
 end
 
--- Lines 763-782
+-- Lines 822-850
 function CharacterCustomizationGui:bind_controller_inputs_equip()
 	local bindings = {
 		{
@@ -786,12 +735,19 @@ function CharacterCustomizationGui:bind_controller_inputs_equip()
 
 	self:set_controller_bindings(bindings, true)
 
+	local equipped_item_data = self._character_customizations_grid:get_active_item():get_data()
+	local selected_item_data = self._character_customizations_grid:selected_grid_item():get_data()
+	local controller_legend = {
+		"menu_legend_back",
+		"menu_legend_character_customization_shoulder"
+	}
+
+	if selected_item_data.key_name ~= equipped_item_data.key_name then
+		table.insert(controller_legend, "menu_legend_character_customization_equip")
+	end
+
 	local legend = {
-		controller = {
-			"menu_legend_back",
-			"menu_legend_character_customization_shoulder",
-			"menu_legend_character_customization_equip"
-		},
+		controller = controller_legend,
 		keyboard = {
 			{
 				key = "footer_back",
@@ -805,7 +761,7 @@ function CharacterCustomizationGui:bind_controller_inputs_equip()
 	self._confirm_pressed_state = CharacterCustomizationGui.CONFIRM_PRESSED_STATE_EQUIP
 end
 
--- Lines 784-803
+-- Lines 852-871
 function CharacterCustomizationGui:bind_controller_inputs_buy()
 	local bindings = {
 		{
@@ -839,21 +795,21 @@ function CharacterCustomizationGui:bind_controller_inputs_buy()
 	self._confirm_pressed_state = CharacterCustomizationGui.CONFIRM_PRESSED_STATE_BUY
 end
 
--- Lines 805-808
+-- Lines 873-876
 function CharacterCustomizationGui:_on_filter_body_part_left()
 	self._filter_body_part:_move_left()
 
 	return true, nil
 end
 
--- Lines 810-813
+-- Lines 878-881
 function CharacterCustomizationGui:_on_filter_body_part_right()
 	self._filter_body_part:_move_right()
 
 	return true, nil
 end
 
--- Lines 815-826
+-- Lines 883-894
 function CharacterCustomizationGui:confirm_pressed()
 	local selected_item = self._character_customizations_grid:selected_grid_item()
 

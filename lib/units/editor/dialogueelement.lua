@@ -26,29 +26,43 @@ function DialogueUnitElement:new_save_values(...)
 	return t
 end
 
--- Lines 28-36
+-- Lines 28-58
 function DialogueUnitElement:test_element()
-	if self._hed.dialogue == "none" then
+	if self._hed.dialogue == "none" and self._hed.random == "none" then
 		return
 	end
 
 	managers.dialog:quit_dialog()
-	managers.dialog:queue_dialog(self._hed.dialogue, {
+
+	local queue_dialog_unit = {
 		skip_idle_check = true,
 		on_unit = managers.dialog._ventrilo_unit
-	}, true)
+	}
+
+	managers.dialog._ventrilo_unit:set_position(managers.viewport:get_current_camera_position())
+
+	if self._hed.dialogue and self._hed.dialogue ~= "none" then
+		managers.dialog:queue_dialog(self._hed.dialogue, queue_dialog_unit, true)
+	end
+
+	if self._hed.random and self._hed.random ~= "none" then
+		local line = managers.dialog:get_random_queue_dialogue(self._hed.random)
+
+		managers.dialog:queue_dialog(line, queue_dialog_unit, true)
+	end
+
 	managers.editor:set_wanted_mute(false)
 	managers.editor:set_listener_enabled(true)
 end
 
--- Lines 38-42
+-- Lines 60-64
 function DialogueUnitElement:stop_test_element()
 	managers.dialog:quit_dialog()
 	managers.editor:set_wanted_mute(true)
 	managers.editor:set_listener_enabled(false)
 end
 
--- Lines 44-56
+-- Lines 66-78
 function DialogueUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

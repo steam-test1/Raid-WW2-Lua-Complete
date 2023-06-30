@@ -52,7 +52,7 @@ function VehicleStateBroken:adjust_interactions()
 	end
 end
 
--- Lines 65-84
+-- Lines 65-90
 function VehicleStateBroken:get_action_for_interaction(pos, locator, tweak_data)
 	local action = VehicleDrivingExt.INTERACT_INVALID
 	local seat, seat_distance = self._unit:vehicle_driving():get_available_seat(pos)
@@ -71,12 +71,12 @@ function VehicleStateBroken:get_action_for_interaction(pos, locator, tweak_data)
 	return action
 end
 
--- Lines 88-90
+-- Lines 94-96
 function VehicleStateBroken:stop_vehicle()
 	return true
 end
 
--- Lines 92-94
+-- Lines 98-100
 function VehicleStateBroken:exit(state_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 end

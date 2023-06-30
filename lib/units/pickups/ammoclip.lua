@@ -4,7 +4,7 @@ AmmoClip.EVENT_IDS = {
 	register_grenade = 16
 }
 
--- Lines 10-16
+-- Lines 10-14
 function AmmoClip:init(unit)
 	AmmoClip.super.init(self, unit)
 
@@ -13,7 +13,7 @@ function AmmoClip:init(unit)
 	self:_randomize_glow_effect()
 end
 
--- Lines 18-133
+-- Lines 16-131
 function AmmoClip:_pickup(unit)
 	if self._picked_up then
 		return
@@ -132,7 +132,7 @@ function AmmoClip:_pickup(unit)
 	return false
 end
 
--- Lines 135-172
+-- Lines 133-170
 function AmmoClip:sync_net_event(event, peer)
 	local player = managers.player:local_player()
 
@@ -173,7 +173,7 @@ function AmmoClip:sync_net_event(event, peer)
 	end
 end
 
--- Lines 174-176
+-- Lines 172-174
 function AmmoClip:get_pickup_type()
 	return "ammo"
 end

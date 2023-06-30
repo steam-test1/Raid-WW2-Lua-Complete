@@ -250,8 +250,6 @@ function EditUnitLight:init(editor)
 		sizer = sizer,
 		value = EditUnitLight.DEFAULT_SHADOW_RESOLUTION,
 		options = {
-			16,
-			32,
 			64,
 			128,
 			256,

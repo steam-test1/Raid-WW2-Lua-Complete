@@ -54,7 +54,7 @@ function ElementShape:get_shapes()
 	return self._shapes
 end
 
--- Lines 41-66
+-- Lines 41-68
 function ElementShape:is_inside(pos)
 	for _, shape in ipairs(self._shapes) do
 		if shape:is_inside(pos) then
@@ -64,22 +64,24 @@ function ElementShape:is_inside(pos)
 
 	if self._shape_units then
 		for _, unit in ipairs(self._shape_units) do
-			local data = unit:unit_data()
-			local oobb = nil
+			if alive(unit) then
+				local data = unit:unit_data()
+				local oobb = nil
 
-			if data and data._object_oobb then
-				local object = unit:get_object(Idstring(data._object_oobb))
-				oobb = object:oobb()
-			else
-				oobb = unit:oobb()
-			end
+				if data and data._object_oobb then
+					local object = unit:get_object(Idstring(data._object_oobb))
+					oobb = object:oobb()
+				else
+					oobb = unit:oobb()
+				end
 
-			local grow = self._values.grow or 0
+				local grow = self._values.grow or 0
 
-			oobb:grow(grow)
+				oobb:grow(grow)
 
-			if oobb:point_inside(pos) then
-				return true
+				if oobb:point_inside(pos) then
+					return true
+				end
 			end
 		end
 	end
@@ -87,11 +89,11 @@ function ElementShape:is_inside(pos)
 	return false
 end
 
--- Lines 68-70
+-- Lines 70-72
 function ElementShape:client_on_executed(...)
 end
 
--- Lines 72-78
+-- Lines 74-80
 function ElementShape:on_executed(instigator)
 	if not self._values.enabled then
 		return

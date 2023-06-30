@@ -139,7 +139,7 @@ function CopBase:set_visibility_state(stage)
 			self._headwear_unit:set_visible(state)
 		end
 
-		if state or self._ext_anim.can_freeze and self._ext_anim.upper_body_empty then
+		if state or self._ext_anim.can_freeze and (not self._ext_anim.upper_body_active or self._ext_anim.upper_body_empty) then
 			unit:set_animatable_enabled(ids_lod, state)
 			unit:set_animatable_enabled(ids_ik_aim, state)
 		end
@@ -175,7 +175,7 @@ end
 
 -- Lines 177-189
 function CopBase:chk_freeze_anims()
-	if (not self._lod_stage or self._lod_stage > 1) and self._ext_anim.can_freeze and self._ext_anim.upper_body_empty then
+	if (not self._lod_stage or self._lod_stage > 1) and self._ext_anim.can_freeze and (not self._ext_anim.upper_body_active or self._ext_anim.upper_body_empty) then
 		if not self._anims_frozen then
 			self._anims_frozen = true
 

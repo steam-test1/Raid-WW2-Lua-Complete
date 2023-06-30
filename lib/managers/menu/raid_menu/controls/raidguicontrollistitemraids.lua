@@ -8,8 +8,10 @@ RaidGUIControlListItemRaids.LOCK_ICON = "ico_locker"
 RaidGUIControlListItemRaids.LOCK_ICON_CENTER_DISTANCE_FROM_RIGHT = 43
 RaidGUIControlListItemRaids.LOCKED_COLOR = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlListItemRaids.UNLOCKED_COLOR = tweak_data.gui.colors.raid_dirty_white
+RaidGUIControlListItemRaids.DEBUG_LOCKED_COLOR = Color(0.2, 0.5, 0.2)
+RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR = Color(0.4, 1, 0.4)
 
--- Lines 18-65
+-- Lines 20-84
 function RaidGUIControlListItemRaids:init(parent, params, data)
 	RaidGUIControlListItemRaids.super.init(self, parent, params)
 
@@ -22,11 +24,26 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 	self._on_double_click_callback = params.on_double_click_callback
 	self._data = data
 	self._is_consumable = tweak_data.operations.missions[data.value].consumable ~= nil
-	self._color = params.color or tweak_data.gui.colors.raid_white
-	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
+	self._is_debug = tweak_data.operations.missions[data.value].debug ~= nil
 	self._unlocked = data.unlocked or managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_RAID, data.value)
 	self._mouse_over_sound = params.on_mouse_over_sound_event
 	self._mouse_click_sound = params.on_mouse_click_sound_event
+	self._color = params.color or tweak_data.gui.colors.raid_white
+	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
+
+	if self._is_debug then
+		self._color = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
+
+		if self._unlocked then
+			self._color_type = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
+		else
+			self._color_type = RaidGUIControlListItemRaids.DEBUG_LOCKED_COLOR
+		end
+	elseif self._unlocked then
+		self._color_type = RaidGUIControlListItemRaids.UNLOCKED_COLOR
+	else
+		self._color_type = RaidGUIControlListItemRaids.LOCKED_COLOR
+	end
 
 	self:_layout_panel(params)
 	self:_layout_background(params)
@@ -34,12 +51,12 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 	self:_layout_icon(params, data)
 	self:_layout_raid_name(params, data)
 
-	if not self._is_consumable then
+	if self._is_consumable then
+		self:_layout_consumable_mission_label()
+	else
 		self:_layout_difficulty_locked()
 		self:_layout_difficulty()
 		self:_layout_lock_icon()
-	else
-		self:_layout_consumable_mission_label()
 	end
 
 	self._selectable = self._data.selectable
@@ -56,7 +73,7 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 	end
 end
 
--- Lines 67-76
+-- Lines 86-95
 function RaidGUIControlListItemRaids:_layout_panel(params)
 	local panel_params = {
 		name = "list_item_" .. self._name,
@@ -68,7 +85,7 @@ function RaidGUIControlListItemRaids:_layout_panel(params)
 	self._object = self._panel:panel(panel_params)
 end
 
--- Lines 78-87
+-- Lines 97-106
 function RaidGUIControlListItemRaids:_layout_background(params)
 	local background_params = {
 		y = 1,
@@ -82,7 +99,7 @@ function RaidGUIControlListItemRaids:_layout_background(params)
 	self._item_background = self._object:rect(background_params)
 end
 
--- Lines 89-97
+-- Lines 108-116
 function RaidGUIControlListItemRaids:_layout_highlight_marker()
 	local marker_params = {
 		y = 1,
@@ -96,7 +113,7 @@ function RaidGUIControlListItemRaids:_layout_highlight_marker()
 	self._item_highlight_marker = self._object:rect(marker_params)
 end
 
--- Lines 99-111
+-- Lines 118-130
 function RaidGUIControlListItemRaids:_layout_icon(params, data)
 	local icon_params = {
 		name = "list_item_icon_" .. self._name,
@@ -104,7 +121,7 @@ function RaidGUIControlListItemRaids:_layout_icon(params, data)
 		y = (RaidGUIControlListItemRaids.HEIGHT - data.icon.texture_rect[4]) / 2,
 		texture = data.icon.texture,
 		texture_rect = data.icon.texture_rect,
-		color = tweak_data.gui.colors.raid_dirty_white
+		color = self._is_consumable and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
 	}
 	self._item_icon = self._object:image(icon_params)
 
@@ -112,7 +129,7 @@ function RaidGUIControlListItemRaids:_layout_icon(params, data)
 	self._item_icon:set_center_y(self._object:h() / 2)
 end
 
--- Lines 113-127
+-- Lines 132-146
 function RaidGUIControlListItemRaids:_layout_raid_name(params, data)
 	local raid_name_params = {
 		vertical = "center",
@@ -131,7 +148,7 @@ function RaidGUIControlListItemRaids:_layout_raid_name(params, data)
 	self._item_label:set_center_y(RaidGUIControlListItemRaids.NAME_CENTER_Y)
 end
 
--- Lines 129-147
+-- Lines 148-166
 function RaidGUIControlListItemRaids:_layout_consumable_mission_label()
 	local consumable_mission_label_params = {
 		vertical = "center",
@@ -152,7 +169,7 @@ function RaidGUIControlListItemRaids:_layout_consumable_mission_label()
 	self._consumable_mission_label:animate(UIAnimation.animate_text_glow, Color("e4a13d"), 0.55, 0.04, 1.4)
 end
 
--- Lines 149-164
+-- Lines 168-183
 function RaidGUIControlListItemRaids:_layout_difficulty_locked()
 	local difficulty_locked_params = {
 		text = "--",
@@ -171,7 +188,7 @@ function RaidGUIControlListItemRaids:_layout_difficulty_locked()
 	self._difficulty_locked_indicator:set_center_y(RaidGUIControlListItemRaids.DIFFICULTY_CENTER_Y)
 end
 
--- Lines 166-173
+-- Lines 185-192
 function RaidGUIControlListItemRaids:_layout_difficulty()
 	local difficulty_params = {
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
@@ -182,7 +199,7 @@ function RaidGUIControlListItemRaids:_layout_difficulty()
 	self._difficulty_indicator:set_center_y(RaidGUIControlListItemRaids.DIFFICULTY_CENTER_Y)
 end
 
--- Lines 175-184
+-- Lines 194-203
 function RaidGUIControlListItemRaids:_layout_lock_icon()
 	local lock_icon_params = {
 		texture = tweak_data.gui.icons[RaidGUIControlListItemRaids.LOCK_ICON].texture,
@@ -195,7 +212,7 @@ function RaidGUIControlListItemRaids:_layout_lock_icon()
 	self._lock_icon:set_center_y(self._object:h() / 2)
 end
 
--- Lines 186-194
+-- Lines 205-213
 function RaidGUIControlListItemRaids:_layout_breadcrumb()
 	local breadcrumb_params = {
 		category = self._data.breadcrumb.category,
@@ -207,14 +224,12 @@ function RaidGUIControlListItemRaids:_layout_breadcrumb()
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
--- Lines 196-217
+-- Lines 215-233
 function RaidGUIControlListItemRaids:_apply_progression_layout()
 	if self._unlocked then
 		self._lock_icon:hide()
 		self._difficulty_locked_indicator:hide()
 		self._difficulty_indicator:show()
-		self._item_icon:set_color(RaidGUIControlListItemRaids.UNLOCKED_COLOR)
-		self._item_label:set_color(RaidGUIControlListItemRaids.UNLOCKED_COLOR)
 
 		local difficulty_available, difficulty_completed = managers.progression:get_mission_progression(OperationsTweakData.JOB_TYPE_RAID, self._data.value)
 
@@ -225,12 +240,13 @@ function RaidGUIControlListItemRaids:_apply_progression_layout()
 		self._lock_icon:show()
 		self._difficulty_locked_indicator:show()
 		self._difficulty_indicator:hide()
-		self._item_icon:set_color(RaidGUIControlListItemRaids.LOCKED_COLOR)
-		self._item_label:set_color(RaidGUIControlListItemRaids.LOCKED_COLOR)
 	end
+
+	self._item_icon:set_color(self._color)
+	self._item_label:set_color(self._color_type)
 end
 
--- Lines 219-234
+-- Lines 235-250
 function RaidGUIControlListItemRaids:on_mouse_released(button)
 	if self._data.breadcrumb then
 		managers.breadcrumb:remove_breadcrumb(self._data.breadcrumb.category, self._data.breadcrumb.identifiers)
@@ -249,7 +265,7 @@ function RaidGUIControlListItemRaids:on_mouse_released(button)
 	end
 end
 
--- Lines 236-245
+-- Lines 252-261
 function RaidGUIControlListItemRaids:mouse_double_click(o, button, x, y)
 	if self._params.no_click then
 		return
@@ -262,12 +278,12 @@ function RaidGUIControlListItemRaids:mouse_double_click(o, button, x, y)
 	end
 end
 
--- Lines 247-249
+-- Lines 263-265
 function RaidGUIControlListItemRaids:selected()
 	return self._selected
 end
 
--- Lines 251-267
+-- Lines 267-283
 function RaidGUIControlListItemRaids:select()
 	self._selected = true
 
@@ -288,31 +304,31 @@ function RaidGUIControlListItemRaids:select()
 	end
 end
 
--- Lines 269-272
+-- Lines 285-288
 function RaidGUIControlListItemRaids:unfocus()
 	self._item_background:hide()
 	self._item_highlight_marker:hide()
 end
 
--- Lines 274-282
+-- Lines 290-298
 function RaidGUIControlListItemRaids:unselect()
 	self._selected = false
 
 	self._item_background:hide()
 
 	if self._unlocked then
-		self._item_label:set_color(self._color)
+		self._item_label:set_color(self._color_type)
 	end
 
 	self._item_highlight_marker:hide()
 end
 
--- Lines 284-286
+-- Lines 300-302
 function RaidGUIControlListItemRaids:data()
 	return self._data
 end
 
--- Lines 288-304
+-- Lines 304-320
 function RaidGUIControlListItemRaids:highlight_on()
 	self._item_background:show()
 
@@ -327,11 +343,11 @@ function RaidGUIControlListItemRaids:highlight_on()
 	if self._selected then
 		self._item_label:set_color(self._selected_color)
 	else
-		self._item_label:set_color(self._color)
+		self._item_label:set_color(self._color_type)
 	end
 end
 
--- Lines 306-317
+-- Lines 322-332
 function RaidGUIControlListItemRaids:highlight_off()
 	if not managers.menu:is_pc_controller() then
 		self._item_highlight_marker:hide()
@@ -343,7 +359,7 @@ function RaidGUIControlListItemRaids:highlight_off()
 	end
 end
 
--- Lines 319-324
+-- Lines 334-339
 function RaidGUIControlListItemRaids:confirm_pressed()
 	if self._selected then
 		self:on_mouse_released(self._name)

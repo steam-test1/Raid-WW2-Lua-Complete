@@ -3,13 +3,13 @@ core:import("CoreEvent")
 SavefileManager = SavefileManager or class()
 SavefileManager.SETTING_SLOT = 0
 SavefileManager.AUTO_SAVE_SLOT = 1
-SavefileManager.PROGRESS_SLOT = SystemInfo:platform() == Idstring("WIN32") and 11 or 11
-SavefileManager.BACKUP_SLOT = SystemInfo:platform() == Idstring("WIN32") and 31 or 31
+SavefileManager.PROGRESS_SLOT = 11
+SavefileManager.BACKUP_SLOT = 31
 SavefileManager.MIN_SLOT = 0
-SavefileManager.MAX_SLOT = SystemInfo:platform() == Idstring("WIN32") and 15 or 15
+SavefileManager.MAX_SLOT = 15
 SavefileManager.MAX_PROFILE_SAVE_INTERVAL = 300
 
-if SystemInfo:platform() == Idstring("X360") then
+if _G.IS_XB360 then
 	SavefileManager.TASK_MIN_DURATION = 3
 end
 
@@ -29,13 +29,10 @@ SavefileManager.DEBUG_TASK_TYPE_NAME_LIST = {
 SavefileManager.RESERVED_BYTES = 204800
 SavefileManager.VERSION = 5
 
-if SystemInfo:platform() == Idstring("PS3") then
-	SavefileManager.VERSION_NAME = "1.03"
-	SavefileManager.LOWEST_COMPATIBLE_VERSION = "1.02"
-elseif SystemInfo:platform() == Idstring("PS4") then
+if _G.IS_PS4 then
 	SavefileManager.VERSION_NAME = "01.00"
 	SavefileManager.LOWEST_COMPATIBLE_VERSION = "01.00"
-elseif SystemInfo:platform() == Idstring("XB1") then
+elseif _G.IS_XB1 then
 	SavefileManager.VERSION_NAME = "1.0.0.0"
 	SavefileManager.LOWEST_COMPATIBLE_VERSION = "1.0.0.0"
 else
@@ -45,10 +42,11 @@ end
 
 SavefileManager.SAVE_SYSTEM = "steam_cloud"
 SavefileManager._USER_ID_OVERRRIDE = nil
+SavefileManager.OPERATION_SAFE_SLOTS = 5
 SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT = 5
 SavefileManager.CHARACTER_PROFILE_STARTING_SLOT = 11
 
--- Lines 48-87
+-- Lines 54-97
 function SavefileManager:init()
 	self._active_changed_callback_handler = CoreEvent.CallbackEventHandler:new()
 	self._save_begin_callback_handler = CoreEvent.CallbackEventHandler:new()
@@ -73,36 +71,38 @@ function SavefileManager:init()
 	self._queued_tasks = {}
 	self._savegame_hdd_space_required = false
 	self._save_slots_to_load = {}
+	self._slot_was_corrupt = {}
+	self._force_load_slot = {}
 
 	SaveGameManager:set_max_nr_slots(self.MAX_SLOT - self.MIN_SLOT + 1)
 end
 
--- Lines 89-91
+-- Lines 99-101
 function SavefileManager:set_save_progress_slot(slot_index)
 	Global.savefile_manager.save_progress_slot = slot_index
 end
 
--- Lines 93-95
+-- Lines 103-105
 function SavefileManager:get_save_progress_slot()
 	return Global.savefile_manager.save_progress_slot or SavefileManager.PROGRESS_SLOT
 end
 
--- Lines 97-99
+-- Lines 107-109
 function SavefileManager:set_create_character_slot(slot_index)
 	Global.savefile_manager.create_character_slot = slot_index
 end
 
--- Lines 101-103
+-- Lines 111-113
 function SavefileManager:get_create_character_slot()
 	return Global.savefile_manager.create_character_slot or SavefileManager.PROGRESS_SLOT
 end
 
--- Lines 105-107
+-- Lines 115-117
 function SavefileManager:resolution_changed()
 	managers.gui_data:layout_workspace(self._workspace)
 end
 
--- Lines 109-114
+-- Lines 119-124
 function SavefileManager:destroy()
 	if self._workspace then
 		Overlay:gui():destroy_workspace(self._workspace)
@@ -111,7 +111,7 @@ function SavefileManager:destroy()
 	end
 end
 
--- Lines 116-126
+-- Lines 126-136
 function SavefileManager:active_user_changed()
 	if managers.user.STORE_SETTINGS_ON_PROFILE then
 		self:_clean_meta_data_list(true)
@@ -124,7 +124,7 @@ function SavefileManager:active_user_changed()
 	end
 end
 
--- Lines 129-167
+-- Lines 139-177
 function SavefileManager:storage_changed()
 	local storage_device_selected = managers.user:is_storage_selected(nil)
 
@@ -147,7 +147,7 @@ function SavefileManager:storage_changed()
 			last_slot = self.MAX_SLOT
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			task_data.save_system = self.SAVE_SYSTEM
 		end
 
@@ -158,7 +158,7 @@ function SavefileManager:storage_changed()
 	end
 end
 
--- Lines 171-182
+-- Lines 181-192
 function SavefileManager:check_space_required()
 	local task_data = {
 		queued_in_save_manager = true,
@@ -172,13 +172,15 @@ function SavefileManager:check_space_required()
 	SaveGameManager:iterate_savegame_slots(task_data, callback(self, self, "clbk_result_space_required"))
 end
 
--- Lines 186-215
+-- Lines 196-227
 function SavefileManager:clear_progress_data()
-	self:_remove(11)
-	self:_remove(12)
-	self:_remove(13)
-	self:_remove(14)
-	self:_remove(15)
+	Application:debug("[SavefileManager] clear_progress_data: ALL UR SAVE DATA IS GONNA GO NOW")
+
+	for i = 0, SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
+		Application:debug("[SavefileManager] clear_progress_data: Clearing save", i, ", Sav Slot", i + SavefileManager.CHARACTER_PROFILE_STARTING_SLOT)
+		self:_remove(i + SavefileManager.CHARACTER_PROFILE_STARTING_SLOT)
+	end
+
 	managers.weapon_inventory:setup()
 	managers.blackmarket:reset_equipped()
 	managers.character_customization:reset()
@@ -198,57 +200,57 @@ function SavefileManager:clear_progress_data()
 	self:save_game(SavefileManager.SETTING_SLOT, false)
 end
 
--- Lines 218-220
+-- Lines 230-232
 function SavefileManager:setting_changed()
 	self:_set_setting_changed(true)
 end
 
--- Lines 222-224
+-- Lines 234-236
 function SavefileManager:save_game(slot, cache_only)
 	self:_save(slot, cache_only)
 end
 
--- Lines 226-231
+-- Lines 238-243
 function SavefileManager:save_setting(is_user_initiated_action)
 	if self:_is_saving_setting_allowed(is_user_initiated_action) then
 		self:_save(self.SETTING_SLOT, false)
 	end
 end
 
--- Lines 233-240
+-- Lines 245-252
 function SavefileManager:save_progress(save_system)
 	if self:_is_saving_progress_allowed() then
 		local progress_slot = self:get_save_progress_slot()
 
 		self:_save(progress_slot, nil, save_system)
 
-		Global.savefile_manager.backup_save_enabled = SystemInfo:platform() == Idstring("WIN32")
+		Global.savefile_manager.backup_save_enabled = _G.IS_PC
 	end
 end
 
--- Lines 242-246
+-- Lines 254-258
 function SavefileManager:load_progress(save_system)
 	local progress_slot = self:get_save_progress_slot()
 
 	self:_load(progress_slot, nil, save_system)
 end
 
--- Lines 248-250
+-- Lines 260-262
 function SavefileManager:load_game(slot, cache_only)
 	self:_load(slot, cache_only)
 end
 
--- Lines 252-255
+-- Lines 264-267
 function SavefileManager:load_settings()
 	self:_load(self.SETTING_SLOT)
 end
 
--- Lines 257-259
+-- Lines 269-271
 function SavefileManager:current_game_cache_slot()
 	return Global.savefile_manager.current_game_cache_slot
 end
 
--- Lines 261-271
+-- Lines 273-283
 function SavefileManager:update(t, dt)
 	self:update_gui_visibility()
 
@@ -260,7 +262,7 @@ function SavefileManager:update(t, dt)
 	end
 end
 
--- Lines 273-279
+-- Lines 285-291
 function SavefileManager:_is_loading()
 	for i, task_data in ipairs(self._queued_tasks) do
 		if task_data.task_type == self.LOAD_TASK_TYPE or task_data.task_type == self.ENUMERATE_SLOTS_TASK_TYPE then
@@ -269,7 +271,7 @@ function SavefileManager:_is_loading()
 	end
 end
 
--- Lines 281-285
+-- Lines 293-297
 function SavefileManager:_on_load_sequence_complete()
 	cat_print("savefile_manager", "[SavefileManager:_on_load_sequence_complete]", Application:time())
 
@@ -278,16 +280,17 @@ function SavefileManager:_on_load_sequence_complete()
 	self._load_sequence_done_callback_handler:dispatch()
 end
 
--- Lines 287-289
+-- Lines 299-301
 function SavefileManager:is_in_loading_sequence()
 	return self._loading_sequence
 end
 
--- Lines 291-302
+-- Lines 303-315
 function SavefileManager:break_loading_sequence()
 	cat_print("savefile_manager", "SavefileManager:break_loading_sequence()")
 
 	self._try_again = nil
+	self._try_again_saving = nil
 	self._loading_sequence = nil
 	self._save_slots_to_load = {}
 
@@ -301,19 +304,19 @@ function SavefileManager:break_loading_sequence()
 	managers.system_menu:close("savefile_new_safefile")
 end
 
--- Lines 304-306
+-- Lines 317-319
 function SavefileManager:paused_update(t, dt)
 	self:update_gui_visibility()
 end
 
--- Lines 308-311
+-- Lines 321-324
 function SavefileManager:update_current_task_type()
 	local current_task_data = self._queued_tasks[1]
 
 	self:_set_current_task_type(current_task_data and current_task_data.task_type or self.IDLE_TASK_TYPE)
 end
 
--- Lines 313-319
+-- Lines 326-332
 function SavefileManager:update_gui_visibility()
 	if self._hide_gui_time and self._hide_gui_time <= TimerManager:wall():time() then
 		self._hide_gui_time = nil
@@ -322,17 +325,17 @@ function SavefileManager:update_gui_visibility()
 	end
 end
 
--- Lines 321-323
+-- Lines 334-336
 function SavefileManager:debug_get_task_name(task_type)
 	return self.DEBUG_TASK_TYPE_NAME_LIST[task_type] or "Invalid"
 end
 
--- Lines 325-327
+-- Lines 338-340
 function SavefileManager:is_active()
 	return next(self._queued_tasks) and true or false
 end
 
--- Lines 329-361
+-- Lines 342-374
 function SavefileManager:get_save_info_list(include_empty_slot)
 	local data_list = {}
 	local save_info_list = {}
@@ -347,7 +350,7 @@ function SavefileManager:get_save_info_list(include_empty_slot)
 		end
 	end
 
-	-- Lines 339-341
+	-- Lines 352-354
 	local function sort_func(data1, data2)
 		return self:_compare_sort_list(data1.sort_list, data2.sort_list) < 0
 	end
@@ -375,67 +378,67 @@ function SavefileManager:get_save_info_list(include_empty_slot)
 	return save_info_list
 end
 
--- Lines 364-366
+-- Lines 377-379
 function SavefileManager:add_active_changed_callback(callback_func)
 	self._active_changed_callback_handler:add(callback_func)
 end
 
--- Lines 367-369
+-- Lines 380-382
 function SavefileManager:remove_active_changed_callback(callback_func)
 	self._active_changed_callback_handler:remove(callback_func)
 end
 
--- Lines 371-373
+-- Lines 384-386
 function SavefileManager:add_save_begin_callback(callback_func)
 	self._save_begin_callback_handler:add(callback_func)
 end
 
--- Lines 374-376
+-- Lines 387-389
 function SavefileManager:remove_save_begin_callback(callback_func)
 	self._save_begin_callback_handler:remove(callback_func)
 end
 
--- Lines 378-380
+-- Lines 391-393
 function SavefileManager:add_save_done_callback(callback_func)
 	self._save_done_callback_handler:add(callback_func)
 end
 
--- Lines 381-383
+-- Lines 394-396
 function SavefileManager:remove_save_done_callback(callback_func)
 	self._save_done_callback_handler:remove(callback_func)
 end
 
--- Lines 385-387
+-- Lines 398-400
 function SavefileManager:add_load_begin_callback(callback_func)
 	self._load_begin_callback_handler:add(callback_func)
 end
 
--- Lines 388-390
+-- Lines 401-403
 function SavefileManager:remove_load_begin_callback(callback_func)
 	self._load_begin_callback_handler:remove(callback_func)
 end
 
--- Lines 392-394
+-- Lines 405-407
 function SavefileManager:add_load_done_callback(callback_func)
 	self._load_done_callback_handler:add(callback_func)
 end
 
--- Lines 395-397
+-- Lines 408-410
 function SavefileManager:remove_load_done_callback(callback_func)
 	self._load_done_callback_handler:remove(callback_func)
 end
 
--- Lines 399-401
+-- Lines 412-414
 function SavefileManager:add_load_sequence_done_callback_handler(callback_func)
 	self._load_sequence_done_callback_handler:add(callback_func)
 end
 
--- Lines 402-404
+-- Lines 415-417
 function SavefileManager:remove_load_sequence_done_callback_handler(callback_func)
 	self._load_sequence_done_callback_handler:remove(callback_func)
 end
 
--- Lines 408-427
+-- Lines 421-440
 function SavefileManager:_clean_meta_data_list(is_setting_slot)
 	if is_setting_slot then
 		Global.savefile_manager.meta_data_list[self.SETTING_SLOT] = nil
@@ -459,7 +462,7 @@ function SavefileManager:_clean_meta_data_list(is_setting_slot)
 	end
 end
 
--- Lines 429-494
+-- Lines 442-505
 function SavefileManager:_save(slot, cache_only, save_system)
 	local is_setting_slot = slot == self.SETTING_SLOT
 	local is_progress_slot = slot == self:get_save_progress_slot()
@@ -498,14 +501,8 @@ function SavefileManager:_save(slot, cache_only, save_system)
 			user_index = managers.user:get_platform_id()
 		}
 
-		if SystemInfo:platform() == Idstring("PS3") then
+		if _G.IS_PS4 then
 			task_data.title = managers.localization:text("savefile_game_title")
-
-			if is_setting_slot then
-				task_data.disable_ownership_check = true
-			end
-
-			task_data.small_icon_path = "ICON0.PNG"
 		end
 
 		task_data.subtitle = managers.localization:text(is_setting_slot and "savefile_setting" or "savefile_progress", {
@@ -521,11 +518,12 @@ function SavefileManager:_save(slot, cache_only, save_system)
 		end
 
 		self:_on_task_queued(task_data)
+		Application:debug("[SavefileManager:AAAAAAAAAAAAAAAAAAAAAA] we even savig?", task_data)
 		SaveGameManager:save(task_data, callback(self, self, "clbk_result_save"))
 	end
 end
 
--- Lines 496-553
+-- Lines 507-567
 function SavefileManager:_save_cache(slot)
 	cat_print("savefile_manager", "[SavefileManager] Saves slot \"" .. tostring(slot) .. "\" to cache.")
 
@@ -588,7 +586,7 @@ function SavefileManager:_save_cache(slot)
 	self:_set_synched_cache(slot, false)
 end
 
--- Lines 555-591
+-- Lines 569-605
 function SavefileManager:_save_done(slot, cache_only, task_data, slot_data, success)
 	if not success then
 		self:_set_cache(slot, nil)
@@ -620,11 +618,12 @@ function SavefileManager:_save_done(slot, cache_only, task_data, slot_data, succ
 		}
 		dialog_data.text = managers.localization:text("dialog_fail_save_game_corrupt")
 
+		Application:warn("[SavefileManager:_save_done] SAVING FILE DID NOT SUCCEED!")
 		managers.system_menu:show(dialog_data)
 	end
 end
 
--- Lines 593-651
+-- Lines 607-665
 function SavefileManager:_load(slot, cache_only, save_system)
 	local is_setting_slot = slot == self.SETTING_SLOT
 
@@ -680,7 +679,7 @@ function SavefileManager:_load(slot, cache_only, save_system)
 	end
 end
 
--- Lines 653-678
+-- Lines 667-692
 function SavefileManager:_on_task_queued(task_data)
 	cat_print("savefile_manager", "[SavefileManager:_on_task_queued]", inspect(task_data))
 
@@ -710,7 +709,7 @@ function SavefileManager:_on_task_queued(task_data)
 	self:update_current_task_type()
 end
 
--- Lines 681-692
+-- Lines 695-706
 function SavefileManager:_on_task_completed(task_data)
 	for i, test_task_data in ipairs(self._queued_tasks) do
 		if task_data == test_task_data then
@@ -723,7 +722,7 @@ function SavefileManager:_on_task_completed(task_data)
 	end
 end
 
--- Lines 694-849
+-- Lines 708-863
 function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 	local is_setting_slot = slot == self.SETTING_SLOT
 	local is_progress_slot = slot == self:get_save_progress_slot()
@@ -799,18 +798,18 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 				})
 
 				if is_setting_slot then
-					-- Lines 761-761
+					-- Lines 775-775
 					function yes_button.callback_func()
 						self:load_settings()
 					end
 				elseif is_progress_slot then
-					-- Lines 763-763
+					-- Lines 777-777
 					function yes_button.callback_func()
 						self:load_progress()
 					end
 				end
 
-				-- Lines 766-780
+				-- Lines 780-794
 				function no_button.callback_func()
 					if is_progress_slot and self._backup_data then
 						self:_ask_load_backup("progress_" .. (req_version == nil and "corrupt" or "wrong_version"), false)
@@ -851,7 +850,7 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 					})
 					dialog_data.id = "savefile_new_safefile"
 
-					-- Lines 793-793
+					-- Lines 807-807
 					function ok_button.callback_func()
 						self:_remove(slot)
 					end
@@ -920,7 +919,7 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 	end
 end
 
--- Lines 851-870
+-- Lines 865-884
 function SavefileManager:_remove(slot, save_system)
 	local task_data = {
 		queued_in_save_manager = true,
@@ -939,12 +938,12 @@ function SavefileManager:_remove(slot, save_system)
 	SaveGameManager:remove(task_data, callback(self, self, "clbk_result_remove"))
 end
 
--- Lines 873-875
+-- Lines 887-889
 function SavefileManager:set_resave_required()
 	self._resave_required = true
 end
 
--- Lines 877-937
+-- Lines 891-953
 function SavefileManager:_load_cache(slot)
 	cat_print("savefile_manager", "[SavefileManager] Loads cached slot \"" .. tostring(slot) .. "\".")
 
@@ -997,7 +996,7 @@ function SavefileManager:_load_cache(slot)
 	end
 end
 
--- Lines 939-959
+-- Lines 955-975
 function SavefileManager:_meta_data(slot)
 	local meta_data = Global.savefile_manager.meta_data_list[slot]
 
@@ -1018,7 +1017,7 @@ function SavefileManager:_meta_data(slot)
 	return meta_data
 end
 
--- Lines 961-1009
+-- Lines 977-1025
 function SavefileManager:_set_current_task_type(task_type)
 	local old_task_type = self._current_task_type
 
@@ -1037,7 +1036,7 @@ function SavefileManager:_set_current_task_type(task_type)
 
 		local wall_time = TimerManager:wall():time()
 		local ps3_ps4_load_enabled = true
-		local is_ps3_ps4 = SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4")
+		local is_ps3_ps4 = _G.IS_PS3 or _G.IS_PS4
 		local use_load_task_type = ps3_ps4_load_enabled and is_ps3_ps4 and task_type == self.LOAD_TASK_TYPE
 		local check_t = ps3_ps4_load_enabled and is_ps3_ps4 and old_task_type == self.LOAD_TASK_TYPE and 0 or 3
 
@@ -1068,7 +1067,7 @@ function SavefileManager:_set_current_task_type(task_type)
 	end
 end
 
--- Lines 1011-1028
+-- Lines 1027-1044
 function SavefileManager:_set_current_game_cache_slot(current_game_cache_slot, dont_clear_old_cache)
 	if not dont_clear_old_cache then
 		local old_slot = Global.savefile_manager.current_game_cache_slot
@@ -1087,7 +1086,7 @@ function SavefileManager:_set_current_game_cache_slot(current_game_cache_slot, d
 	end
 end
 
--- Lines 1030-1037
+-- Lines 1046-1053
 function SavefileManager:_set_corrupt(slot, is_corrupt)
 	local meta_data = self:_meta_data(slot)
 
@@ -1098,7 +1097,7 @@ function SavefileManager:_set_corrupt(slot, is_corrupt)
 	end
 end
 
--- Lines 1039-1046
+-- Lines 1055-1062
 function SavefileManager:_set_synched_cache(slot, is_synched_cache)
 	local meta_data = self:_meta_data(slot)
 
@@ -1109,7 +1108,7 @@ function SavefileManager:_set_synched_cache(slot, is_synched_cache)
 	end
 end
 
--- Lines 1048-1055
+-- Lines 1064-1071
 function SavefileManager:_set_cache(slot, cache)
 	local meta_data = self:_meta_data(slot)
 
@@ -1120,7 +1119,7 @@ function SavefileManager:_set_cache(slot, cache)
 	end
 end
 
--- Lines 1057-1062
+-- Lines 1073-1078
 function SavefileManager:_set_setting_changed(setting_changed)
 	if not Global.savefile_manager.setting_changed ~= not setting_changed then
 		cat_print("savefile_manager", "[SavefileManager] Setting changed: \"" .. tostring(setting_changed) .. "\".")
@@ -1129,7 +1128,7 @@ function SavefileManager:_set_setting_changed(setting_changed)
 	end
 end
 
--- Lines 1064-1084
+-- Lines 1080-1100
 function SavefileManager:_is_saving_progress_allowed()
 	if not managers.user:is_signed_in(nil) then
 		Application:debug("[SavefileManager:_is_saving_progress_allowed()] NOT SIGNED IN")
@@ -1152,7 +1151,7 @@ function SavefileManager:_is_saving_progress_allowed()
 	return true
 end
 
--- Lines 1086-1112
+-- Lines 1102-1128
 function SavefileManager:_is_saving_setting_allowed(is_user_initiated_action)
 	if not managers.user:is_signed_in(nil) then
 		cat_print("savefile_manager", "[SavefileManager] Skips saving setting. User not signed in.")
@@ -1185,12 +1184,12 @@ function SavefileManager:_is_saving_setting_allowed(is_user_initiated_action)
 	return true
 end
 
--- Lines 1114-1116
+-- Lines 1130-1132
 function SavefileManager:fetch_savegame_hdd_space_required()
 	return self._savegame_hdd_space_required
 end
 
--- Lines 1118-1164
+-- Lines 1134-1180
 function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 	dialog_at_init = false
 	local dialog_data = {
@@ -1207,7 +1206,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 		no_button
 	}
 
-	-- Lines 1129-1134
+	-- Lines 1145-1150
 	function yes_button.callback_func()
 		self._save_slots_to_load[self:get_save_progress_slot()] = nil
 
@@ -1218,7 +1217,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 		self:_load_cache(self:get_save_progress_slot())
 	end
 
-	-- Lines 1136-1139
+	-- Lines 1152-1155
 	function no_button.callback_func()
 		self._backup_data = nil
 		self._save_slots_to_load[self:get_save_progress_slot()] = nil
@@ -1228,7 +1227,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 		dialog_data.text = managers.localization:text("dialog_ask_load_progress_backup_low_lvl")
 
 		if reason == "low_progress" then
-			-- Lines 1144-1147
+			-- Lines 1160-1163
 			function no_button.callback_func()
 				self._backup_data = nil
 
@@ -1238,7 +1237,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 	elseif reason == "progress_corrupt" or reason == "progress_wrong_version" then
 		dialog_data.text = managers.localization:text("dialog_ask_load_progress_backup_" .. (reason == "progress_corrupt" and "corrupt" or "wrong_version"))
 
-		-- Lines 1151-1154
+		-- Lines 1167-1170
 		function no_button.callback_func()
 			self._backup_data = nil
 
@@ -1253,7 +1252,7 @@ function SavefileManager:_ask_load_backup(reason, dialog_at_init, load_params)
 	end
 end
 
--- Lines 1168-1183
+-- Lines 1184-1199
 function SavefileManager:clbk_result_load_platform_setting_map(task_data, platform_setting_map)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_load_platform_setting_map]")
 
@@ -1271,7 +1270,7 @@ function SavefileManager:clbk_result_load_platform_setting_map(task_data, platfo
 	self:_load_done(self.SETTING_SLOT, false)
 end
 
--- Lines 1188-1204
+-- Lines 1204-1220
 function SavefileManager:reset_progress_managers()
 	managers.blackmarket:_setup()
 	managers.upgrades:reset()
@@ -1284,7 +1283,7 @@ function SavefileManager:reset_progress_managers()
 	managers.weapon_skills:_setup(true)
 end
 
--- Lines 1206-1215
+-- Lines 1222-1231
 function SavefileManager:save_last_selected_character_profile_slot()
 	local progress_slot = managers.savefile:get_save_progress_slot()
 
@@ -1293,7 +1292,7 @@ function SavefileManager:save_last_selected_character_profile_slot()
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT, false)
 end
 
--- Lines 1219-1267
+-- Lines 1235-1283
 function SavefileManager:clbk_result_load(task_data, result_data)
 	if not self:_on_task_completed(task_data) then
 		return
@@ -1313,7 +1312,7 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 				cache = slot_data.data
 			end
 
-			if cache and SystemInfo:platform() == Idstring("WIN32") and cache.version ~= SavefileManager.VERSION then
+			if cache and _G.IS_PC and cache.version ~= SavefileManager.VERSION then
 				cache = nil
 				wrong_version = true
 			end
@@ -1338,7 +1337,7 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 	end
 end
 
--- Lines 1271-1307
+-- Lines 1287-1323
 function SavefileManager:clbk_result_load_backup(task_data, result_data)
 	if not self:_on_task_completed(task_data) then
 		return
@@ -1373,7 +1372,7 @@ function SavefileManager:clbk_result_load_backup(task_data, result_data)
 	end
 end
 
--- Lines 1311-1320
+-- Lines 1327-1336
 function SavefileManager:clbk_result_remove(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_remove]", inspect(task_data), inspect(result_data))
 
@@ -1382,7 +1381,7 @@ function SavefileManager:clbk_result_remove(task_data, result_data)
 	end
 end
 
--- Lines 1324-1351
+-- Lines 1340-1367
 function SavefileManager:clbk_result_iterate_savegame_slots(task_data, result_data)
 	if not self:_on_task_completed(task_data) then
 		return
@@ -1412,8 +1411,10 @@ function SavefileManager:clbk_result_iterate_savegame_slots(task_data, result_da
 	end
 end
 
--- Lines 1355-1377
+-- Lines 1371-1401
 function SavefileManager:clbk_result_save(task_data, result_data)
+	Application:trace("savefile_manager", "[SavefileManager:clbk_result_save] task_data, result_data ", inspect(task_data), inspect(result_data))
+
 	if not self:_on_task_completed(task_data) then
 		Application:error("[SavefileManager:clbk_result_save] SAVE TASK HAS BEEN ABORTED ")
 		Application:error("[SavefileManager:clbk_result_save] task_data: ", inspect(task_data))
@@ -1429,6 +1430,10 @@ function SavefileManager:clbk_result_save(task_data, result_data)
 
 			local success = slot_data.status == "OK"
 
+			if not success then
+				Application:warn("[SavefileManager:clbk_result_save] Save result status is not OK?, so what is it?", slot_data.status)
+			end
+
 			self:_save_done(slot, false, task_data, slot_data, success)
 		end
 	else
@@ -1436,7 +1441,7 @@ function SavefileManager:clbk_result_save(task_data, result_data)
 	end
 end
 
--- Lines 1380-1392
+-- Lines 1404-1416
 function SavefileManager:clbk_result_save_platform_setting(task_data, success)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_save_platform_setting]", inspect(task_data), success)
 
@@ -1452,7 +1457,7 @@ function SavefileManager:clbk_result_save_platform_setting(task_data, success)
 	end
 end
 
--- Lines 1396-1411
+-- Lines 1420-1435
 function SavefileManager:clbk_result_space_required(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_space_required] table.size(result_data)", table.size(result_data))
 
@@ -1469,7 +1474,7 @@ function SavefileManager:clbk_result_space_required(task_data, result_data)
 	end
 end
 
--- Lines 1416-1428
+-- Lines 1440-1452
 function SavefileManager:get_active_characters_count()
 	local result = 0
 
@@ -1486,18 +1491,18 @@ end
 
 SavefileInfo = SavefileInfo or class()
 
--- Lines 1437-1440
+-- Lines 1461-1464
 function SavefileInfo:init(slot, text)
 	self._slot = slot
 	self._text = text
 end
 
--- Lines 1442-1444
+-- Lines 1466-1468
 function SavefileInfo:slot()
 	return self._slot
 end
 
--- Lines 1446-1448
+-- Lines 1470-1472
 function SavefileInfo:text()
 	return self._text
 end

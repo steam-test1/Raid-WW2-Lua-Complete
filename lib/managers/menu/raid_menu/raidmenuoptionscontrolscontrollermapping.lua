@@ -13,7 +13,7 @@ function RaidMenuOptionsControlsControllerMapping:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_controls_controller_mapping_on_foot")
 end
 
--- Lines 15-33
+-- Lines 15-39
 function RaidMenuOptionsControlsControllerMapping:_layout()
 	RaidMenuOptionsControlsControllerMapping.super._layout(self)
 
@@ -42,17 +42,465 @@ function RaidMenuOptionsControlsControllerMapping:_layout()
 		visible = false
 	})
 
+	if _G.IS_PS4 then
+		self:_layout_on_foot_ps4()
+		self:_layout_in_vehicle_ps4()
+	else
+		self:_layout_on_foot()
+		self:_layout_in_vehicle()
+	end
+
 	self:_layout_on_foot()
 	self:_layout_in_vehicle()
 	self:bind_controller_inputs_on_foot()
 end
 
--- Lines 35-37
+-- Lines 41-43
 function RaidMenuOptionsControlsControllerMapping:close()
 	RaidMenuOptionsControlsControllerMapping.super.close(self)
 end
 
--- Lines 39-113
+-- Lines 46-110
+function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
+	local southpaw = managers.user:get_setting("southpaw")
+	local controller_bind_move_text = self:translate("menu_controller_keybind_move", true)
+	local controller_bind_malee_text = self:translate("menu_controller_keybind_melee_attack", true)
+
+	if southpaw then
+		controller_bind_move_text = self:translate("menu_controller_keybind_melee_attack", true)
+		controller_bind_malee_text = self:translate("menu_controller_keybind_move", true)
+	end
+
+	self._controller_keybind_lean = self._panel_on_foot:label({
+		name = "lean",
+		text = self:translate("menu_controller_keybind_lean", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.25,
+		align = "left",
+		control = self._controller_keybind_lean
+	})
+
+	self._controller_keybind_comm_wheel = self._panel_on_foot:label({
+		name = "communication_wheel",
+		text = self:translate("menu_controller_keybind_comm_wheel", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.402,
+		align = "left",
+		control = self._controller_keybind_comm_wheel
+	})
+
+	self._controller_keybind_grenade = self._panel_on_foot:label({
+		name = "grenade",
+		text = self:translate("menu_controller_keybind_grenade", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.482,
+		align = "left",
+		control = self._controller_keybind_grenade
+	})
+
+	self._controller_keybind_knife = self._panel_on_foot:label({
+		name = "knife",
+		text = self:translate("menu_controller_keybind_knife", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.647,
+		align = "left",
+		control = self._controller_keybind_knife
+	})
+
+	self._controller_keybind_fire_mode = self._panel_on_foot:label({
+		name = "fire_mode",
+		text = self:translate("menu_controller_keybind_weap_fire_mode", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.547,
+		align = "left",
+		control = self._controller_keybind_fire_mode
+	})
+
+	self._controller_keybind_move = self._panel_on_foot:label({
+		name = "move",
+		text = controller_bind_move_text,
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.85,
+		align = "left",
+		control = self._controller_keybind_move
+	})
+
+	self._controller_keybind_melee_attack = self._panel_on_foot:label({
+		name = "melee_attack",
+		text = controller_bind_malee_text,
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "bottom",
+		coord_x = 0.6,
+		control = self._controller_keybind_melee_attack
+	})
+
+	self._controller_keybind_interact = self._panel_on_foot:label({
+		name = "interact",
+		text = self:translate("menu_controller_keybind_interact", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.25,
+		align = "right",
+		control = self._controller_keybind_interact
+	})
+
+	self._controller_keybind_switch_weapons = self._panel_on_foot:label({
+		name = "switch_weapons",
+		text = self:translate("menu_controller_keybind_switch_weapons", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.402,
+		align = "right",
+		control = self._controller_keybind_switch_weapons
+	})
+
+	self._controller_keybind_crouch = self._panel_on_foot:label({
+		name = "crouch",
+		text = self:translate("menu_controller_keybind_crouch", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.482,
+		align = "right",
+		control = self._controller_keybind_crouch
+	})
+
+	self._controller_keybind_jump = self._panel_on_foot:label({
+		name = "jump",
+		text = self:translate("menu_controller_keybind_jump", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.568,
+		align = "right",
+		control = self._controller_keybind_jump
+	})
+
+	self._controller_keybind_reload = self._panel_on_foot:label({
+		name = "reload",
+		text = self:translate("menu_controller_keybind_reload", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.647,
+		align = "right",
+		control = self._controller_keybind_reload
+	})
+
+	self._controller_keybind_aim = self._panel_on_foot:label({
+		name = "aim_down_sight",
+		text = self:translate("menu_controller_keybind_aim_down_sight", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.182,
+		control = self._controller_keybind_aim
+	})
+
+	self._controller_keybind_mission_info = self._panel_on_foot:label({
+		name = "mission_info",
+		text = self:translate("menu_controller_keybind_mission_info", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.63,
+		control = self._controller_keybind_mission_info
+	})
+
+	self._controller_keybind_ingame_menu = self._panel_on_foot:label({
+		name = "ingame_menu",
+		text = self:translate("menu_controller_keybind_ingame_menu", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.445,
+		control = self._controller_keybind_ingame_menu
+	})
+
+	self._controller_keybind_fire_weapon = self._panel_on_foot:label({
+		name = "fire_weapon",
+		text = self:translate("menu_controller_keybind_fire_weapon", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.792,
+		control = self._controller_keybind_fire_weapon
+	})
+end
+
+-- Lines 112-177
+function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
+	local southpaw = managers.user:get_setting("southpaw")
+	local controller_bind_steering_text = self:translate("menu_controller_keybind_steering", true)
+	local controller_bind_look_back_text = self:translate("menu_controller_keybind_look_back", true)
+
+	if southpaw then
+		controller_bind_steering_text = self:translate("menu_controller_keybind_not_available", true)
+		controller_bind_look_back_text = self:translate("menu_controller_keybind_steering_southpaw", true)
+	end
+
+	self._controller_keybind_change_seat = self._panel_in_vehicle:label({
+		name = "change_seat",
+		text = self:translate("menu_controller_keybind_change_seat", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.25,
+		align = "left",
+		control = self._controller_keybind_change_seat
+	})
+
+	self._controller_keybind_na2 = self._panel_in_vehicle:label({
+		name = "na2",
+		text = self:translate("menu_controller_keybind_not_available", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.402,
+		align = "left",
+		control = self._controller_keybind_na2
+	})
+
+	self._controller_keybind_na3 = self._panel_in_vehicle:label({
+		name = "na3",
+		text = self:translate("menu_controller_keybind_not_available", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.482,
+		align = "left",
+		control = self._controller_keybind_na3
+	})
+
+	self._controller_keybind_na5 = self._panel_in_vehicle:label({
+		name = "na5",
+		text = self:translate("menu_controller_keybind_not_available", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.647,
+		align = "left",
+		control = self._controller_keybind_na5
+	})
+
+	self._controller_keybind_na4 = self._panel_in_vehicle:label({
+		name = "na4",
+		text = self:translate("menu_controller_keybind_not_available", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.547,
+		align = "left",
+		control = self._controller_keybind_na4
+	})
+
+	self._controller_keybind_steering = self._panel_in_vehicle:label({
+		name = "move",
+		text = controller_bind_steering_text,
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.85,
+		align = "left",
+		control = self._controller_keybind_steering
+	})
+
+	self._controller_keybind_look_back = self._panel_in_vehicle:label({
+		name = "look_back",
+		text = controller_bind_look_back_text,
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "bottom",
+		coord_x = 0.6,
+		control = self._controller_keybind_look_back
+	})
+
+	self._controller_keybind_exit_vehicle = self._panel_in_vehicle:label({
+		name = "exit_vehicle",
+		text = self:translate("menu_controller_keybind_exit_vehicle", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.25,
+		align = "right",
+		control = self._controller_keybind_exit_vehicle
+	})
+
+	self._controller_keybind_na8 = self._panel_in_vehicle:label({
+		name = "na8",
+		text = self:translate("menu_controller_keybind_not_available", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.402,
+		align = "right",
+		control = self._controller_keybind_na8
+	})
+
+	self._controller_keybind_switch_pose = self._panel_in_vehicle:label({
+		name = "switch_pose",
+		text = self:translate("menu_controller_keybind_switch_pose", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.482,
+		align = "right",
+		control = self._controller_keybind_switch_pose
+	})
+
+	self._controller_keybind_handbrake = self._panel_in_vehicle:label({
+		name = "handbrake",
+		text = self:translate("menu_controller_keybind_handbrake", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.568,
+		align = "right",
+		control = self._controller_keybind_handbrake
+	})
+
+	self._controller_keybind_na10 = self._panel_in_vehicle:label({
+		name = "na10",
+		text = self:translate("menu_controller_keybind_not_available", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		coord_y = 0.647,
+		align = "right",
+		control = self._controller_keybind_na10
+	})
+
+	self._controller_keybind_reverse = self._panel_in_vehicle:label({
+		name = "reverse",
+		text = self:translate("menu_controller_keybind_reverse", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.215,
+		control = self._controller_keybind_reverse
+	})
+
+	self._controller_keybind_mission_info_vehicle = self._panel_in_vehicle:label({
+		name = "mission_info_vehicle",
+		text = self:translate("menu_controller_keybind_mission_info", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.63,
+		control = self._controller_keybind_mission_info_vehicle
+	})
+
+	self._controller_keybind_ingame_menu_vehicle = self._panel_in_vehicle:label({
+		name = "ingame_menu_vehicle",
+		text = self:translate("menu_controller_keybind_ingame_menu", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.445,
+		control = self._controller_keybind_ingame_menu_vehicle
+	})
+
+	self._controller_keybind_accelerate = self._panel_in_vehicle:label({
+		name = "accelerate",
+		text = self:translate("menu_controller_keybind_accelerate", true),
+		font = self._label_font,
+		font_size = self._label_font_size
+	})
+
+	self:_set_position_size_controller_keybind_label({
+		align = "top",
+		coord_x = 0.786,
+		control = self._controller_keybind_accelerate
+	})
+end
+
+-- Lines 180-254
 function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	local southpaw = managers.user:get_setting("southpaw")
 	local controller_bind_move_text = self:translate("menu_controller_keybind_move", true)
@@ -286,7 +734,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self._controller_keybind_warcry:set_y(self._controller_image:y() - 20)
 end
 
--- Lines 115-180
+-- Lines 256-327
 function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	local southpaw = managers.user:get_setting("southpaw")
 	local controller_bind_steering_text = self:translate("menu_controller_keybind_steering", true)
@@ -506,7 +954,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 end
 
--- Lines 182-212
+-- Lines 329-359
 function RaidMenuOptionsControlsControllerMapping:_set_position_size_controller_keybind_label(params)
 	local x, y, w, h = params.control:text_rect()
 
@@ -529,7 +977,7 @@ function RaidMenuOptionsControlsControllerMapping:_set_position_size_controller_
 	end
 end
 
--- Lines 218-233
+-- Lines 365-380
 function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_on_foot()
 	local bindings = {
 		{
@@ -556,7 +1004,7 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_on_foot
 	self:set_legend(legend)
 end
 
--- Lines 235-250
+-- Lines 382-397
 function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_in_vehicle()
 	local bindings = {
 		{
@@ -583,7 +1031,7 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_in_vehi
 	self:set_legend(legend)
 end
 
--- Lines 252-257
+-- Lines 399-404
 function RaidMenuOptionsControlsControllerMapping:_show_vehicle_mapping()
 	self._panel_on_foot:hide()
 	self._panel_in_vehicle:show()
@@ -591,7 +1039,7 @@ function RaidMenuOptionsControlsControllerMapping:_show_vehicle_mapping()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_controls_controller_mapping_in_vehicle")
 end
 
--- Lines 259-264
+-- Lines 406-411
 function RaidMenuOptionsControlsControllerMapping:_show_on_foot_mapping()
 	self._panel_on_foot:show()
 	self._panel_in_vehicle:hide()

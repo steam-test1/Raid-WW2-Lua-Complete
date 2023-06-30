@@ -127,18 +127,25 @@ function RaidMenuFooter:hide_name_and_gold_panel()
 	self._name_and_gold_panel:hide()
 end
 
--- Lines 96-99
+-- Lines 97-101
+function RaidMenuFooter:refresh_player_profile()
+	local username = utf8.to_upper(managers.network.account:username())
+
+	self._profile_gold_label:set_text(username)
+end
+
+-- Lines 103-106
 function RaidMenuFooter:refresh_gold_amount()
 	local gold_amount = managers.gold_economy:gold_string(managers.gold_economy:current())
 
 	self._profile_name_label:set_text(gold_amount)
 end
 
--- Lines 126-127
+-- Lines 133-134
 function RaidMenuFooter:back_pressed()
 end
 
--- Lines 129-131
+-- Lines 136-138
 function RaidMenuFooter:confirm_pressed()
 	return false
 end

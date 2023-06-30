@@ -611,7 +611,7 @@ function CriminalsManager:remove_character_by_name(name)
 	end
 end
 
--- Lines 623-633
+-- Lines 623-634
 function CriminalsManager:character_name_by_unit(unit)
 	if type_name(unit) ~= "Unit" then
 		return nil
@@ -626,7 +626,7 @@ function CriminalsManager:character_name_by_unit(unit)
 	end
 end
 
--- Lines 637-643
+-- Lines 638-644
 function CriminalsManager:character_name_by_panel_id(panel_id)
 	for id, data in pairs(self._characters) do
 		if data.taken and data.data.panel_id == panel_id then
@@ -635,7 +635,7 @@ function CriminalsManager:character_name_by_panel_id(panel_id)
 	end
 end
 
--- Lines 647-657
+-- Lines 648-658
 function CriminalsManager:character_static_data_by_unit(unit)
 	if type_name(unit) ~= "Unit" then
 		return nil
@@ -650,7 +650,7 @@ function CriminalsManager:character_static_data_by_unit(unit)
 	end
 end
 
--- Lines 661-669
+-- Lines 662-670
 function CriminalsManager:nr_AI_criminals()
 	local nr_AI_criminals = 0
 
@@ -663,7 +663,7 @@ function CriminalsManager:nr_AI_criminals()
 	return nr_AI_criminals
 end
 
--- Lines 671-679
+-- Lines 672-680
 function CriminalsManager:ai_criminals()
 	local ai_criminals = {}
 
@@ -676,7 +676,7 @@ function CriminalsManager:ai_criminals()
 	return ai_criminals
 end
 
--- Lines 681-689
+-- Lines 682-690
 function CriminalsManager:nr_taken_criminals()
 	local nr_taken_criminals = 0
 
@@ -689,7 +689,7 @@ function CriminalsManager:nr_taken_criminals()
 	return nr_taken_criminals
 end
 
--- Lines 691-699
+-- Lines 692-700
 function CriminalsManager:taken_criminal_names()
 	local result = {}
 
@@ -702,7 +702,7 @@ function CriminalsManager:taken_criminal_names()
 	return result
 end
 
--- Lines 703-711
+-- Lines 704-712
 function CriminalsManager:is_character_as_AI_level_blocked(name)
 	if not Global.game_settings.level_id then
 		return false
@@ -713,12 +713,12 @@ function CriminalsManager:is_character_as_AI_level_blocked(name)
 	return block_AIs and block_AIs[name] or false
 end
 
--- Lines 717-719
+-- Lines 718-720
 function CriminalsManager:on_mission_end_callback()
 	Global.game_settings.team_ai = true
 end
 
--- Lines 721-734
+-- Lines 722-735
 function CriminalsManager:on_mission_start_callback()
 	local current_save_slot = managers.raid_job:get_current_save_slot()
 	local operation_save_data = managers.raid_job:get_save_slots()[current_save_slot]

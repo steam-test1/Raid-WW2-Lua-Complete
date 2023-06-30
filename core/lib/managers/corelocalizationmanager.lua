@@ -4,7 +4,7 @@ core:import("CoreEvent")
 
 LocalizationManager = LocalizationManager or CoreClass.class()
 
--- Lines 66-86
+-- Lines 66-98
 function LocalizationManager:init()
 	Localizer:set_post_processor(CoreEvent.callback(self, self, "_localizer_post_process"))
 
@@ -25,15 +25,29 @@ function LocalizationManager:init()
 		self._platform = "PS3"
 	else
 		self._platform = "WIN32"
+
+		for k, v in pairs(Application:argv()) do
+			if v == "-loc_help" then
+				Application:debug("[LocalizationManager:init] loc_help enabled")
+
+				self._loc_help = true
+			elseif v == "-loc_error" then
+				Application:debug("[LocalizationManager:init] loc_error enabled")
+
+				self._loc_error = true
+			end
+		end
 	end
+
+	Application:debug("[LocalizationManager] Platform: " .. self._platform)
 end
 
--- Lines 94-96
+-- Lines 106-108
 function LocalizationManager:add_default_macro(macro, value)
 	self:set_default_macro(macro, value)
 end
 
--- Lines 110-116
+-- Lines 122-128
 function LocalizationManager:set_default_macro(macro, value)
 	if not self._default_macros then
 		self._default_macros = {}
@@ -42,22 +56,22 @@ function LocalizationManager:set_default_macro(macro, value)
 	self._default_macros[macro] = tostring(value)
 end
 
--- Lines 118-120
+-- Lines 130-132
 function LocalizationManager:get_default_macro(macro)
 	return self._default_macros[macro]
 end
 
--- Lines 122-124
+-- Lines 134-136
 function LocalizationManager:get_default_macros()
 	return self._default_macros
 end
 
--- Lines 138-140
+-- Lines 150-152
 function LocalizationManager:exists(string_id)
 	return Localizer:exists(Idstring(string_id))
 end
 
--- Lines 164-187
+-- Lines 176-225
 function LocalizationManager:text(string_id_in, macros)
 	local string_id = string_id_in or "STRING_ID IS NULL!"
 
@@ -65,7 +79,7 @@ function LocalizationManager:text(string_id_in, macros)
 		Application:error("[LocalizationManager:text] Localization called with NULL value.", debug.traceback())
 	end
 
-	local return_string = "ERROR: " .. string_id
+	local return_string = self._loc_error and "ERROR:" .. string_id or " "
 	local str_id = nil
 
 	if not string_id or string_id == "" then
@@ -82,15 +96,20 @@ function LocalizationManager:text(string_id_in, macros)
 		self._macro_context = nil
 	end
 
+	if self._loc_help then
+		local err = return_string == ""
+		return_string = string_id .. ":" .. (err and "LOCALIZE ME" or return_string)
+	end
+
 	return return_string
 end
 
--- Lines 189-192
+-- Lines 227-230
 function LocalizationManager:format_text(text_string)
 	return self:_localizer_post_process(self:_text_localize(text_string, "@", ";"))
 end
 
--- Lines 204-231
+-- Lines 242-269
 function LocalizationManager:_localizer_post_process(string)
 	local localized_string = string
 	local macros = {}
@@ -114,19 +133,21 @@ function LocalizationManager:_localizer_post_process(string)
 	return self:_text_macroize(localized_string, macros)
 end
 
--- Lines 233-236
+-- Lines 271-278
 function LocalizationManager:_text_localize(text)
-	-- Lines 234-234
+	-- Lines 272-275
 	local function func(id)
-		return self:exists(id) and self:text(id) or false
+		local exists = self:exists(id)
+
+		return exists and self:text(id) or false
 	end
 
 	return self:_text_format(text, "@", ";", func)
 end
 
--- Lines 238-241
+-- Lines 280-283
 function LocalizationManager:_text_macroize(text, macros)
-	-- Lines 239-239
+	-- Lines 281-281
 	local function func(word)
 		return macros[word] or false
 	end
@@ -134,7 +155,7 @@ function LocalizationManager:_text_macroize(text, macros)
 	return self:_text_format(text, "$", ";", func)
 end
 
--- Lines 243-254
+-- Lines 285-296
 function LocalizationManager:_text_format(text, X, Y, func)
 	local match_string = "%b" .. X .. Y
 

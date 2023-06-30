@@ -2,7 +2,7 @@ AchievmentManager = AchievmentManager or class()
 AchievmentManager.PATH = "gamedata/achievments"
 AchievmentManager.FILE_EXTENSION = "achievment"
 
--- Lines 7-70
+-- Lines 17-72
 function AchievmentManager:init()
 	self.exp_awards = {
 		b = 1500,
@@ -12,7 +12,7 @@ function AchievmentManager:init()
 	}
 	self.script_data = {}
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			AchievmentManager.do_award = AchievmentManager.award_steam
 
@@ -45,17 +45,7 @@ function AchievmentManager:init()
 
 			self.achievments = Global.achievment_manager.achievments
 		end
-	elseif SystemInfo:platform() == Idstring("PS3") then
-		if not Global.achievment_manager then
-			Global.achievment_manager = {
-				trophy_requests = {}
-			}
-		end
-
-		self:_parse_achievments("PSN")
-
-		AchievmentManager.do_award = AchievmentManager.award_psn
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		if not Global.achievment_manager then
 			self:_parse_achievments("PS4")
 
@@ -68,11 +58,7 @@ function AchievmentManager:init()
 		end
 
 		AchievmentManager.do_award = AchievmentManager.award_psn
-	elseif SystemInfo:platform() == Idstring("X360") then
-		self:_parse_achievments("X360")
-
-		AchievmentManager.do_award = AchievmentManager.award_x360
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		if not Global.achievment_manager then
 			self:_parse_achievments("XB1")
 
@@ -89,19 +75,19 @@ function AchievmentManager:init()
 	end
 end
 
--- Lines 72-74
+-- Lines 74-76
 function AchievmentManager:init_finalize()
 	managers.savefile:add_load_sequence_done_callback_handler(callback(self, self, "_load_done"))
 end
 
--- Lines 76-80
+-- Lines 78-82
 function AchievmentManager:fetch_trophies()
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS4 then
 		Trophies:get_unlockstate(AchievmentManager.unlockstate_result)
 	end
 end
 
--- Lines 83-100
+-- Lines 85-102
 function AchievmentManager.unlockstate_result(error_str, table)
 	if table then
 		for i, data in ipairs(table) do
@@ -121,7 +107,7 @@ function AchievmentManager.unlockstate_result(error_str, table)
 	managers.network.account:achievements_fetched()
 end
 
--- Lines 103-113
+-- Lines 105-115
 function AchievmentManager.fetch_achievments(error_str)
 	if error_str == "success" then
 		for id, ach in pairs(managers.achievment.achievments) do
@@ -134,16 +120,16 @@ function AchievmentManager.fetch_achievments(error_str)
 	managers.network.account:achievements_fetched()
 end
 
--- Lines 115-120
+-- Lines 117-125
 function AchievmentManager:_load_done()
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		print("[AchievmentManager] _load_done()")
 
-		self._is_fetching_achievments = XboxLive:achievements(0, 1000, true, callback(self, self, "_achievments_loaded"))
+		self._is_fetching_achievments = XboxLive:achievements(managers.user:get_xuid(0), 99, false, callback(self, self, "_achievments_loaded"))
 	end
 end
 
--- Lines 122-141
+-- Lines 127-146
 function AchievmentManager:_achievments_loaded(achievment_list)
 	print("[AchievmentManager] Achievment loaded: " .. tostring(achievment_list and #achievment_list))
 
@@ -168,9 +154,9 @@ function AchievmentManager:_achievments_loaded(achievment_list)
 	end
 end
 
--- Lines 143-152
+-- Lines 148-157
 function AchievmentManager:on_user_signout()
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		print("[AchievmentManager] on_user_signout()")
 
 		self._is_fetching_achievments = nil
@@ -181,7 +167,7 @@ function AchievmentManager:on_user_signout()
 	end
 end
 
--- Lines 156-169
+-- Lines 161-174
 function AchievmentManager:_parse_achievments(platform)
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 	self.achievments = {}
@@ -203,32 +189,32 @@ function AchievmentManager:_parse_achievments(platform)
 	end
 end
 
--- Lines 173-175
+-- Lines 178-180
 function AchievmentManager:get_script_data(id)
 	return self.script_data[id]
 end
 
--- Lines 177-179
+-- Lines 182-184
 function AchievmentManager:set_script_data(id, data)
 	self.script_data[id] = data
 end
 
--- Lines 183-185
+-- Lines 188-190
 function AchievmentManager:exists(id)
 	return self.achievments[id] ~= nil
 end
 
--- Lines 187-189
+-- Lines 192-194
 function AchievmentManager:get_info(id)
 	return self.achievments[id]
 end
 
--- Lines 191-193
+-- Lines 196-198
 function AchievmentManager:total_amount()
 	return table.size(self.achievments)
 end
 
--- Lines 195-203
+-- Lines 200-208
 function AchievmentManager:total_unlocked()
 	local i = 0
 
@@ -241,7 +227,7 @@ function AchievmentManager:total_unlocked()
 	return i
 end
 
--- Lines 207-228
+-- Lines 212-225
 function AchievmentManager:award(id)
 	Application:debug("[AchievmentManager:award] Awarding achievement", "id", id)
 
@@ -255,16 +241,10 @@ function AchievmentManager:award(id)
 		return
 	end
 
-	if id == "christmas_present" then
-		managers.network.account._masks.santa = true
-	elseif id == "golden_boy" then
-		managers.network.account._masks.gold = true
-	end
-
 	self:do_award(id)
 end
 
--- Lines 231-239
+-- Lines 228-236
 function AchievmentManager:_give_reward(id)
 	local data = self:get_info(id)
 	data.awarded = true
@@ -274,13 +254,13 @@ function AchievmentManager:_give_reward(id)
 	end
 end
 
--- Lines 242-255
+-- Lines 239-252
 function AchievmentManager:award_progress(stat, value)
 	if Application:editor() then
 		return
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
 	end
 
@@ -294,21 +274,21 @@ function AchievmentManager:award_progress(stat, value)
 	managers.network.account:publish_statistics(stats, true)
 end
 
--- Lines 259-264
+-- Lines 256-261
 function AchievmentManager:get_stat(stat)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return managers.network.account:get_stat(stat)
 	end
 
 	return false
 end
 
--- Lines 268-270
+-- Lines 265-267
 function AchievmentManager:award_none(id)
 	Application:debug("[AchievmentManager:award_none] Awarded achievment", id)
 end
 
--- Lines 274-283
+-- Lines 271-280
 function AchievmentManager:award_steam(id)
 	if not self.handler:initialized() then
 		Application:error("[AchievmentManager:award_steam] Achievements are not initialized. Cannot award achievment:", id)
@@ -321,7 +301,7 @@ function AchievmentManager:award_steam(id)
 	self.handler:store_data()
 end
 
--- Lines 287-295
+-- Lines 284-292
 function AchievmentManager:clear_steam(id)
 	if not self.handler:initialized() then
 		Application:error("[AchievmentManager:clear_steam] Achievements are not initialized. Cannot clear achievment:", id)
@@ -333,7 +313,7 @@ function AchievmentManager:clear_steam(id)
 	self.handler:store_data()
 end
 
--- Lines 299-306
+-- Lines 296-303
 function AchievmentManager:reset_achievements()
 	managers.achievment:clear_all_steam()
 
@@ -343,7 +323,7 @@ function AchievmentManager:reset_achievements()
 	managers.savefile:save_setting()
 end
 
--- Lines 308-318
+-- Lines 305-315
 function AchievmentManager:clear_all_steam()
 	print("[AchievmentManager:clear_all_steam]")
 
@@ -358,7 +338,7 @@ function AchievmentManager:clear_all_steam()
 	self.handler:store_data()
 end
 
--- Lines 322-329
+-- Lines 319-326
 function AchievmentManager.steam_unlock_result(achievment)
 	for id, ach in pairs(managers.achievment.achievments) do
 		if ach.id == achievment then
@@ -369,11 +349,11 @@ function AchievmentManager.steam_unlock_result(achievment)
 	end
 end
 
--- Lines 332-348
+-- Lines 329-345
 function AchievmentManager:award_x360(id)
 	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
 
-	-- Lines 340-345
+	-- Lines 337-342
 	local function x360_unlock_result(result)
 		print("result", result)
 
@@ -385,7 +365,7 @@ function AchievmentManager:award_x360(id)
 	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, x360_unlock_result)
 end
 
--- Lines 352-363
+-- Lines 349-360
 function AchievmentManager:award_psn(id)
 	print("[AchievmentManager:award] Awarded PSN achievment", id, self:get_info(id).id)
 
@@ -399,7 +379,7 @@ function AchievmentManager:award_psn(id)
 	Global.achievment_manager.trophy_requests[request] = id
 end
 
--- Lines 365-373
+-- Lines 362-370
 function AchievmentManager.psn_unlock_result(request, error_str)
 	print("[AchievmentManager:psn_unlock_result] Awarded PSN achievment", request, error_str)
 
@@ -412,7 +392,7 @@ function AchievmentManager.psn_unlock_result(request, error_str)
 	end
 end
 
--- Lines 377-387
+-- Lines 374-384
 function AchievmentManager:chk_install_trophies()
 	if Trophies:is_installed() then
 		print("[AchievmentManager:chk_install_trophies] Already installed")
@@ -427,7 +407,7 @@ function AchievmentManager:chk_install_trophies()
 	end
 end
 
--- Lines 391-397
+-- Lines 388-394
 function AchievmentManager:clbk_install_trophies(result)
 	print("[AchievmentManager:clbk_install_trophies]", result)
 
@@ -438,7 +418,7 @@ function AchievmentManager:clbk_install_trophies(result)
 	end
 end
 
--- Lines 402-430
+-- Lines 399-427
 function AchievmentManager:check_achievement_complete_raid_with_4_different_classes()
 	local peers = managers.network:session():all_peers()
 
@@ -463,14 +443,14 @@ function AchievmentManager:check_achievement_complete_raid_with_4_different_clas
 	end
 end
 
--- Lines 433-437
+-- Lines 430-434
 function AchievmentManager:check_achievement_complete_raid_with_no_kills()
 	if managers.statistics._global.session.killed.total.count == 0 then
 		managers.achievment:award("ach_complete_raid_with_no_kills")
 	end
 end
 
--- Lines 439-455
+-- Lines 436-452
 function AchievmentManager:check_achievement_kill_30_enemies_with_vehicle_on_bank_level()
 	local is_bank_level = false
 	local current_job = managers.raid_job:current_job()
@@ -488,7 +468,7 @@ function AchievmentManager:check_achievement_kill_30_enemies_with_vehicle_on_ban
 	end
 end
 
--- Lines 459-466
+-- Lines 456-463
 function AchievmentManager:check_achievement_operation_clear_sky_hardest(operation_save_data)
 	if Network:is_server() and operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id and operation_save_data.current_job.job_id == "clear_skies" then
 		managers.achievment:award("ach_clear_skies_hardest")
@@ -496,9 +476,9 @@ function AchievmentManager:check_achievement_operation_clear_sky_hardest(operati
 	end
 end
 
--- Lines 468-492
+-- Lines 465-491
 function AchievmentManager:check_achievement_operation_clear_sky_no_bleedout(operation_save_data)
-	if Network:is_server() and managers.network:session():count_all_peers() == 4 then
+	if Network:is_server() and managers.network:session():count_all_peers() >= 2 then
 		local total_downed_count = 0
 
 		if operation_save_data.current_job.job_id == "clear_skies" then
@@ -506,7 +486,9 @@ function AchievmentManager:check_achievement_operation_clear_sky_no_bleedout(ope
 				local event_data = operation_save_data.event_data[events_index_index]
 
 				for peer_index, peer_data in pairs(event_data.peer_data) do
-					total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
+					if peer_data.statistics ~= nil then
+						total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
+					end
 				end
 			end
 
@@ -523,7 +505,7 @@ function AchievmentManager:check_achievement_operation_clear_sky_no_bleedout(ope
 	end
 end
 
--- Lines 494-501
+-- Lines 493-500
 function AchievmentManager:check_achievement_operation_burn_hardest(operation_save_data)
 	if Network:is_server() and operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id and operation_save_data.current_job.job_id == "oper_flamable" then
 		managers.achievment:award("ach_burn_hardest")
@@ -531,9 +513,9 @@ function AchievmentManager:check_achievement_operation_burn_hardest(operation_sa
 	end
 end
 
--- Lines 503-527
+-- Lines 502-526
 function AchievmentManager:check_achievement_operation_burn_no_bleedout(operation_save_data)
-	if Network:is_server() and managers.network:session():count_all_peers() == 4 then
+	if Network:is_server() and managers.network:session():count_all_peers() >= 2 then
 		local total_downed_count = 0
 
 		if operation_save_data.current_job.job_id == "oper_flamable" then
@@ -558,7 +540,7 @@ function AchievmentManager:check_achievement_operation_burn_no_bleedout(operatio
 	end
 end
 
--- Lines 531-548
+-- Lines 530-547
 function AchievmentManager:check_achievement_group_bring_them_home(current_job_data)
 	if current_job_data and current_job_data.job_type and current_job_data.job_type == OperationsTweakData.JOB_TYPE_RAID then
 		if current_job_data.job_id == "flakturm" then

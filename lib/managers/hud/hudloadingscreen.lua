@@ -57,20 +57,8 @@ HUDLoadingScreen.TIP_TEXT_FONT = tweak_data.gui.fonts.lato
 HUDLoadingScreen.TIP_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.medium
 HUDLoadingScreen.TIP_TEXT_COLOR = Color("878787")
 HUDLoadingScreen.LOADING_ICON_PANEL_H = 64
-HUDLoadingScreen.LOADING_SCREEN_TIPS = {
-	"tip_tactical_reload",
-	"tip_weapon_effecienty",
-	"tip_switch_to_sidearm",
-	"tip_head_shot",
-	"tip_help_bleed_out",
-	"tip_steelsight",
-	"tip_melee_attack",
-	"tip_objectives",
-	"tip_select_reward",
-	"tip_shoot_in_bleed_out"
-}
 
--- Lines 84-97
+-- Lines 80-92
 function HUDLoadingScreen:init(hud)
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
 	self._hud_panel = self._workspace:panel()
@@ -102,7 +90,7 @@ function HUDLoadingScreen:init(hud)
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "on_resolution_changed"))
 end
 
--- Lines 140-150
+-- Lines 136-146
 function HUDLoadingScreen:_create_loading_icon()
 	local saferect_data = managers.gui_data:safe_scaled_size()
 	local saferect_y = (self._panel:h() - saferect_data.h) / 2
@@ -117,7 +105,7 @@ function HUDLoadingScreen:_create_loading_icon()
 	self._loading_icon = HUDSaveIcon:new(self._loading_icon_panel)
 end
 
--- Lines 152-198
+-- Lines 148-201
 function HUDLoadingScreen:setup(data)
 	self._data = data
 
@@ -173,7 +161,7 @@ function HUDLoadingScreen:setup(data)
 	end
 end
 
--- Lines 200-268
+-- Lines 203-271
 function HUDLoadingScreen:_layout_raid(current_job)
 	local info_panel_params = {
 		alpha = 0,
@@ -250,7 +238,7 @@ function HUDLoadingScreen:_layout_raid(current_job)
 	local description = self._info_panel:text(raid_description_params)
 end
 
--- Lines 270-343
+-- Lines 273-346
 function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	local info_panel_params = {
 		alpha = 0,
@@ -332,7 +320,7 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	local mission_status = mission_status_panel:text(mission_status_params)
 end
 
--- Lines 345-457
+-- Lines 348-460
 function HUDLoadingScreen:_layout_operation(current_job)
 	local info_panel_params = {
 		alpha = 0,
@@ -424,7 +412,7 @@ function HUDLoadingScreen:_layout_operation(current_job)
 	local description = self._info_panel:text(event_description_params)
 end
 
--- Lines 459-550
+-- Lines 462-553
 function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 	local info_panel_params = {
 		alpha = 0,
@@ -526,7 +514,7 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 	local mission_status = mission_status_panel:text(mission_status_params)
 end
 
--- Lines 552-618
+-- Lines 555-621
 function HUDLoadingScreen:_layout_camp()
 	local current_job = tweak_data.operations.missions.camp
 	local info_panel_params = {
@@ -597,19 +585,25 @@ function HUDLoadingScreen:_layout_camp()
 	local tip = tip_panel:text(tip_params)
 end
 
--- Lines 620-621
+-- Lines 623-624
 function HUDLoadingScreen:_layout_default()
 end
 
--- Lines 623-628
+-- Lines 626-636
 function HUDLoadingScreen:_get_random_tip()
-	local number_of_tips = #HUDLoadingScreen.LOADING_SCREEN_TIPS
-	local chosen_tip = math.random(1, number_of_tips)
+	local the_tips = tweak_data.tips:get_tips_string_ids()
 
-	return utf8.to_upper(managers.localization:text("tip_tips")) .. " " .. managers.localization:text(HUDLoadingScreen.LOADING_SCREEN_TIPS[chosen_tip])
+	if the_tips then
+		local number_of_tips = #the_tips
+		local chosen_tip = math.random(1, number_of_tips)
+
+		return utf8.to_upper(managers.localization:text("tip_tips")) .. " " .. managers.localization:text(the_tips[chosen_tip])
+	end
+
+	return "MISSING TIPS"
 end
 
--- Lines 630-636
+-- Lines 638-644
 function HUDLoadingScreen:_fit_panel_to_screen()
 	self._hud_panel:set_x(0)
 	self._hud_panel:set_y(0)
@@ -618,12 +612,12 @@ function HUDLoadingScreen:_fit_panel_to_screen()
 	self._black:set_w(self._workspace:width())
 end
 
--- Lines 638-640
+-- Lines 646-648
 function HUDLoadingScreen:on_resolution_changed()
 	managers.gui_data:layout_fullscreen_16_9_workspace(self._workspace)
 end
 
--- Lines 642-690
+-- Lines 650-707
 function HUDLoadingScreen:show(data, clbk)
 	if self._state == "shown" then
 		if clbk then
@@ -651,12 +645,23 @@ function HUDLoadingScreen:show(data, clbk)
 			if self._info_panel then
 				self._info_panel:set_alpha(1)
 			end
+
+			if clbk then
+				clbk(self)
+			end
 		else
 			self._black:animate(callback(self, self, "_animate_alpha"), 1, 0.5, 0, callback(self, self, "_on_faded_to_black"))
-			self._bg:animate(callback(self, self, "_animate_alpha"), 1, 0.6, 0.45, clbk)
+
+			if self._bg then
+				self._bg:animate(callback(self, self, "_animate_alpha"), 1, 0.6, 0.45, clbk)
+			else
+				Application:error("[HUDLoadingScreen:show] No background to show!")
+			end
 
 			if self._info_panel then
 				self._info_panel:animate(callback(self, self, "_animate_alpha"), 1, 0.45, 0.5)
+			else
+				Application:error("[HUDLoadingScreen:show] No info panel to show!")
 			end
 		end
 	elseif self._state == "black" then
@@ -674,14 +679,21 @@ function HUDLoadingScreen:show(data, clbk)
 	self._state = "shown"
 end
 
--- Lines 692-710
+-- Lines 709-732
 function HUDLoadingScreen:hide()
 	if self._state == "shown" then
 		if self._info_panel then
 			self._info_panel:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0)
+		else
+			Application:error("[HUDLoadingScreen:hide] No info panel to hide!")
 		end
 
-		self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		if self._bg then
+			self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		else
+			Application:error("[HUDLoadingScreen:hide] No background to hide!")
+		end
+
 		self._black:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0.7, self.clean_up)
 	elseif self._state == "black" then
 		self._black:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0, self.clean_up)
@@ -692,22 +704,28 @@ function HUDLoadingScreen:hide()
 	self._state = "hidden"
 end
 
--- Lines 712-726
+-- Lines 734-753
 function HUDLoadingScreen:fade_to_black()
 	if self._state == "hidden" then
 		self._black:animate(callback(self, self, "_animate_alpha"), 1, 0.5, 0, self.black_alpha_full, callback(self, self, "_on_faded_to_black"))
 	elseif self._state == "shown" then
 		if self._info_panel then
 			self._info_panel:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0)
+		else
+			Application:error("[HUDLoadingScreen:fade_to_black] No info panel to fade_to_black!")
 		end
 
-		self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		if self._bg then
+			self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		else
+			Application:error("[HUDLoadingScreen:fade_to_black] No background to fade_to_black!")
+		end
 	end
 
 	self._state = "black"
 end
 
--- Lines 728-739
+-- Lines 755-766
 function HUDLoadingScreen:_on_faded_to_black()
 	if managers.hud then
 		managers.hud:on_loading_screen_faded_to_black()
@@ -723,7 +741,16 @@ function HUDLoadingScreen:_on_faded_to_black()
 	})
 end
 
--- Lines 741-780
+-- Lines 770-774
+function HUDLoadingScreen:_on_loading_percent_changed(value)
+	if self._loading_icon then
+		self._loading_icon:show({
+			text = "generic_loading"
+		})
+	end
+end
+
+-- Lines 776-815
 function HUDLoadingScreen:clean_up()
 	if self._prompt then
 		self._prompt:parent():remove(self._prompt)
@@ -771,9 +798,9 @@ function HUDLoadingScreen:clean_up()
 	end
 end
 
--- Lines 782-790
+-- Lines 817-825
 function HUDLoadingScreen:_real_aspect_ratio()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()
@@ -783,7 +810,7 @@ function HUDLoadingScreen:_real_aspect_ratio()
 	end
 end
 
--- Lines 792-851
+-- Lines 827-886
 function HUDLoadingScreen:_animate_show_summary(summary_panel, delay)
 	summary_panel:set_visible(true)
 	summary_panel:set_alpha(1)
@@ -845,7 +872,7 @@ function HUDLoadingScreen:_animate_show_summary(summary_panel, delay)
 	self._summary_background:set_alpha(0.7)
 end
 
--- Lines 853-897
+-- Lines 888-932
 function HUDLoadingScreen:_animate_hide_summary(summary_panel, delay)
 	summary_panel:set_visible(true)
 	summary_panel:set_alpha(1)
@@ -893,7 +920,7 @@ function HUDLoadingScreen:_animate_hide_summary(summary_panel, delay)
 	self._summary_background:set_alpha(0)
 end
 
--- Lines 899-922
+-- Lines 934-957
 function HUDLoadingScreen:_animate_alpha(o, new_alpha, duration, delay, callback)
 	local t = 0
 	local starting_alpha = o:alpha()
@@ -918,7 +945,7 @@ function HUDLoadingScreen:_animate_alpha(o, new_alpha, duration, delay, callback
 	end
 end
 
--- Lines 924-939
+-- Lines 959-974
 function HUDLoadingScreen:_animate_move_background_horizontal(background)
 	local t = 0
 	local starting_x = 0
@@ -934,12 +961,12 @@ function HUDLoadingScreen:_animate_move_background_horizontal(background)
 	end
 end
 
--- Lines 941-943
+-- Lines 976-978
 function HUDLoadingScreen:_linear(t, starting_value, change, duration)
 	return change * t / duration + starting_value
 end
 
--- Lines 945-953
+-- Lines 980-988
 function HUDLoadingScreen:_ease_in_out_quart(t, starting_value, change, duration)
 	t = t / (duration / 2)
 
@@ -952,7 +979,7 @@ function HUDLoadingScreen:_ease_in_out_quart(t, starting_value, change, duration
 	return -change / 2 * (t * t * t * t - 2) + starting_value
 end
 
--- Lines 955-963
+-- Lines 990-998
 function HUDLoadingScreen:_ease_in_out_quadratic(t, starting_value, change, duration)
 	t = t / (duration / 2)
 
@@ -965,7 +992,7 @@ function HUDLoadingScreen:_ease_in_out_quadratic(t, starting_value, change, dura
 	return -change / 2 * (t * (t - 2) - 1) + starting_value
 end
 
--- Lines 965-969
+-- Lines 1000-1004
 function HUDLoadingScreen:_ease_out_quint(t, starting_value, change, duration)
 	t = t / duration
 	t = t - 1
@@ -973,7 +1000,7 @@ function HUDLoadingScreen:_ease_out_quint(t, starting_value, change, duration)
 	return change * (t * t * t * t * t + 1) + starting_value
 end
 
--- Lines 972-976
+-- Lines 1007-1011
 function HUDLoadingScreen:set_mid_text(text)
 	local mid_text = self._blackscreen_panel:child("mid_text")
 
@@ -981,17 +1008,17 @@ function HUDLoadingScreen:set_mid_text(text)
 	mid_text:set_text(utf8.to_upper(text))
 end
 
--- Lines 978-980
+-- Lines 1013-1015
 function HUDLoadingScreen:fade_in_mid_text()
 	self._blackscreen_panel:child("mid_text"):animate(callback(self, self, "_animate_fade_in"))
 end
 
--- Lines 982-984
+-- Lines 1017-1019
 function HUDLoadingScreen:fade_out_mid_text()
 	self._blackscreen_panel:child("mid_text"):animate(callback(self, self, "_animate_fade_out"))
 end
 
--- Lines 986-1006
+-- Lines 1021-1041
 function HUDLoadingScreen:_animate_fade_in(mid_text)
 	local job_panel = self._blackscreen_panel:child("job_panel")
 	local t = 1
@@ -1021,7 +1048,7 @@ function HUDLoadingScreen:_animate_fade_in(mid_text)
 	self:_on_faded_to_black()
 end
 
--- Lines 1008-1027
+-- Lines 1043-1062
 function HUDLoadingScreen:_animate_fade_out(mid_text)
 	local job_panel = self._blackscreen_panel:child("job_panel")
 	local t = 1
@@ -1048,4 +1075,17 @@ function HUDLoadingScreen:_animate_fade_out(mid_text)
 	end
 
 	self._blackscreen_panel:set_alpha(0)
+end
+
+-- Lines 1066-1076
+function HUDLoadingScreen:visible()
+	if self._state == "shown" then
+		return true
+	elseif self._bg and self._bg:alpha() > 0 then
+		return true
+	elseif Global.was_showing_loading_screen then
+		return true
+	end
+
+	return false
 end

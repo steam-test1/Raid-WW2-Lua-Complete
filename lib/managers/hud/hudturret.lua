@@ -188,7 +188,7 @@ function HUDTurret:set_reticle(reticle)
 	self._reticle:set_center_x(self._object:w() / 2)
 	self._reticle:set_center_y(self._object:h() / 2)
 	self._reticle:stop()
-	self._reticle:animate(callback(self, self, "_animate_show"), 0.15)
+	self._reticle:animate(callback(self, self, "_animate_show"), 0.15, 0.75)
 end
 
 -- Lines 180-201
@@ -312,23 +312,24 @@ function HUDTurret:_get_color_for_percentage(color_table, percentage)
 	return color_table[1].color
 end
 
--- Lines 291-304
-function HUDTurret:_animate_show(object, animation_duration)
+-- Lines 291-305
+function HUDTurret:_animate_show(object, animation_duration, final_alpha)
+	final_alpha = final_alpha or 1
 	local duration = animation_duration or 0.4
 	local t = object:alpha() * duration
 
 	while duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
-		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
+		local current_alpha = Easing.quartic_in_out(t, 0, final_alpha, duration)
 
 		object:set_alpha(current_alpha)
 	end
 
-	object:set_alpha(1)
+	object:set_alpha(final_alpha)
 end
 
--- Lines 307-329
+-- Lines 308-330
 function HUDTurret:_animate_normal_show(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = 0
@@ -351,7 +352,7 @@ function HUDTurret:_animate_normal_show(object, animation_duration)
 	self._heat_indicator_background:set_alpha(1)
 end
 
--- Lines 331-365
+-- Lines 332-366
 function HUDTurret:_animate_flak_show(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = 0
@@ -391,7 +392,7 @@ function HUDTurret:_animate_flak_show(object, animation_duration)
 	end
 end
 
--- Lines 367-380
+-- Lines 368-381
 function HUDTurret:_animate_hide(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = (1 - object:alpha()) * duration
@@ -407,19 +408,19 @@ function HUDTurret:_animate_hide(object, animation_duration)
 	object:set_alpha(0)
 end
 
--- Lines 383-385
+-- Lines 384-386
 function HUDTurret:flak_fire()
 	self._shell:animate(callback(self, self, "_animate_shell_fire"))
 end
 
--- Lines 387-391
+-- Lines 388-392
 function HUDTurret:flak_insert()
 	if self._is_flak then
 		self._shell:animate(callback(self, self, "_animate_shell_insert"))
 	end
 end
 
--- Lines 394-406
+-- Lines 395-407
 function HUDTurret:_animate_shell_insert()
 	local duration = 0.7
 	local t = 0
@@ -438,7 +439,7 @@ function HUDTurret:_animate_shell_insert()
 	self._shell:set_alpha(1)
 end
 
--- Lines 409-432
+-- Lines 410-433
 function HUDTurret:_animate_shell_fire()
 	local duration = 0.2
 	local t = 0

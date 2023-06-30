@@ -1,6 +1,6 @@
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 33-659
+-- Lines 33-658
 function HudIconsTweakData:init()
 	self.scroll_up = {
 		texture = "guis/textures/scroll_items",
@@ -598,12 +598,6 @@ function HudIconsTweakData:init()
 	}
 	self.wp_server = {
 		texture = "guis/textures/hud_icons",
-		texture_rect = {
-			206,
-			344,
-			32,
-			32
-		},
 		texture_rect = {
 			206,
 			344,
@@ -1336,7 +1330,7 @@ function HudIconsTweakData:init()
 	}
 end
 
--- Lines 662-668
+-- Lines 661-667
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon = tweak_data.hud_icons[icon_id] and tweak_data.hud_icons[icon_id].texture or icon_id
 	local texture_rect = tweak_data.hud_icons[icon_id] and tweak_data.hud_icons[icon_id].texture_rect or default_rect or {

@@ -81,30 +81,35 @@ function WorldOperatorUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines 75-89
+-- Lines 75-93
 function WorldOperatorUnitElement:draw_links_selected(...)
 	WorldOperatorUnitElement.super.draw_links_selected(self, ...)
 
 	for _, id in ipairs(self._hed.elements) do
 		local unit = managers.editor:unit_with_id(id)
-		local params = {
-			g = 0,
-			b = 0.5,
-			r = 0,
-			from_unit = unit,
-			to_unit = self._unit
-		}
 
-		self:_draw_link(params)
-		Application:draw(unit, 0.25, 1, 0.25)
+		if alive(unit) then
+			local params = {
+				g = 0,
+				b = 0.5,
+				r = 0,
+				from_unit = unit,
+				to_unit = self._unit
+			}
+
+			self:_draw_link(params)
+			Application:draw(unit, 0.25, 1, 0.25)
+		else
+			Application:error("[WorldOperatorUnitElement] draw_links_selected: did get a unit of id:", id)
+		end
 	end
 end
 
--- Lines 92-110
+-- Lines 96-114
 function WorldOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 94-103
+	-- Lines 98-107
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -128,9 +133,9 @@ function WorldOperatorUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines 112-119
+-- Lines 116-123
 function WorldOperatorUnitElement:remove_unit_list_btn()
-	-- Lines 113-113
+	-- Lines 117-117
 	local function f(unit)
 		return table.contains(self._hed.elements, unit:unit_data().unit_id)
 	end
@@ -144,7 +149,7 @@ function WorldOperatorUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 121-142
+-- Lines 125-146
 function WorldOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

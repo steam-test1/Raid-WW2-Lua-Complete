@@ -1,7 +1,9 @@
 VehicleTweakData = VehicleTweakData or class()
 VehicleTweakData.AI_TELEPORT_DISTANCE = 20
+VehicleTweakData.FADE_DISTANCE = 2400
+VehicleTweakData.FADE_DISTANCE_START = 2400
 
--- Lines 5-18
+-- Lines 9-22
 function VehicleTweakData:init(tweak_data)
 	self:_init_data_jeep_willy()
 	self:_init_data_kubelwagen()
@@ -9,7 +11,7 @@ function VehicleTweakData:init(tweak_data)
 	self:_init_data_foxhole()
 end
 
--- Lines 21-111
+-- Lines 25-115
 function VehicleTweakData:_init_data_jeep_willy()
 	self.jeep_willy = {
 		unit = "units/vehicles/willy_jeep/fps_vehicle_jeep_willy",
@@ -93,7 +95,7 @@ function VehicleTweakData:_init_data_jeep_willy()
 	}
 end
 
--- Lines 114-220
+-- Lines 118-229
 function VehicleTweakData:_init_data_kubelwagen()
 	self.kubelwagen = {
 		unit = "units/vanilla/vehicles/fps_vehicle_kubelwagen/fps_vehicle_kubelwagen",
@@ -185,6 +187,12 @@ function VehicleTweakData:_init_data_kubelwagen()
 				name = "loot"
 			}
 		},
+		secure_loot = false,
+		loot_filter = {
+			gold = true,
+			german_spy = true
+		},
+		allow_only_filtered = true,
 		repair_point = "v_repair_engine",
 		trunk_point = "interact_trunk",
 		damage = {
@@ -195,7 +203,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 		loot_drop_point = "v_repair_engine",
 		max_loot_bags = 8,
 		interact_distance = 350,
-		driver_camera_offset = Vector3(0, 0.2, 15.5),
+		driver_camera_offset = Vector3(0, 0.5, 15.5),
 		skins = {}
 	}
 	self.kubelwagen.skins.special_edition = {
@@ -204,7 +212,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 	}
 end
 
--- Lines 223-325
+-- Lines 232-333
 function VehicleTweakData:_init_data_truck()
 	self.truck = {
 		unit = "units/vanilla/vehicles/fps_vehicle_truck_02/fps_vehicle_truck_02",
@@ -302,7 +310,7 @@ function VehicleTweakData:_init_data_truck()
 		damage = {
 			max_health = 250
 		},
-		max_speed = 80,
+		max_speed = 85,
 		max_rpm = 5000,
 		loot_drop_point = "v_loot_drop",
 		max_loot_bags = 200,
@@ -311,7 +319,7 @@ function VehicleTweakData:_init_data_truck()
 	}
 end
 
--- Lines 650-744
+-- Lines 664-758
 function VehicleTweakData:_init_data_foxhole()
 	self.foxhole = {
 		unit = "units/vanilla/vehicles/fps_foxhole/fps_foxhole",

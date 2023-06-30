@@ -107,10 +107,15 @@ function PlayerDriving:_setup()
 	end
 end
 
--- Lines 125-210
+-- Lines 125-233
 function PlayerDriving:exit(state_data, new_state_name)
 	print("[DRIVING] PlayerDriving: Exiting vehicle")
 	self._vehicle_ext:stop_horn_sound()
+
+	if managers.network:session() then
+		managers.network:session():send_to_peers_synched("sync_honk_horn", self._vehicle_unit, false)
+	end
+
 	managers.viewport:skip_update_env_on_first_viewport(false)
 	PlayerDriving.super.exit(self, state_data, new_state_name)
 
@@ -169,7 +174,7 @@ function PlayerDriving:exit(state_data, new_state_name)
 	local exit_data = {
 		skip_equip = true
 	}
-	local velocity = self._unit:mover():velocity()
+	local velocity = self._unit:mover() and self._unit:mover():velocity() or Vector3(0, 0, 0)
 
 	self:_activate_mover(PlayerStandard.MOVER_STAND, velocity)
 	self._ext_network:send("set_pose", 1)
@@ -189,7 +194,7 @@ function PlayerDriving:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines 215-226
+-- Lines 238-249
 function PlayerDriving:_hide_hud_prompts()
 	local player_equipped_unit_base = managers.player:local_player():inventory():equipped_unit():base()
 
@@ -203,7 +208,7 @@ function PlayerDriving:_hide_hud_prompts()
 	managers.hud:hide_prompt("hud_no_ammo_prompt")
 end
 
--- Lines 229-237
+-- Lines 252-260
 function PlayerDriving:_show_hud_prompts()
 	if self._out_of_ammo_prompt_hidden then
 		managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
@@ -218,7 +223,7 @@ function PlayerDriving:_show_hud_prompts()
 	end
 end
 
--- Lines 241-293
+-- Lines 264-316
 function PlayerDriving:update(t, dt)
 	self._controller = self._unit:base():controller()
 
@@ -265,11 +270,11 @@ function PlayerDriving:update(t, dt)
 	self:_upd_nav_data()
 end
 
--- Lines 295-296
+-- Lines 318-319
 function PlayerDriving:set_tweak_data(name)
 end
 
--- Lines 300-317
+-- Lines 323-340
 function PlayerDriving:_update_hud(t, dt)
 	if self._vehicle_ext.respawn_available then
 		if not self._respawn_hint_shown and self._seat.driving then
@@ -291,61 +296,69 @@ function PlayerDriving:_update_hud(t, dt)
 	end
 end
 
--- Lines 320-332
+-- Lines 343-364
 function PlayerDriving:_update_check_actions_driver(t, dt, input)
-	if managers.menu:is_pc_controller() then
+	if managers.menu:is_pc_controller() and self._vehicle_unit and self._vehicle_ext then
 		if input.btn_primary_attack_press then
 			self._vehicle_ext:play_horn_sound()
+
+			if managers.network:session() then
+				managers.network:session():send_to_peers_synched("sync_honk_horn", self._vehicle_unit, true)
+			end
 		elseif input.btn_primary_attack_release then
 			self._vehicle_ext:stop_horn_sound()
+
+			if managers.network:session() then
+				managers.network:session():send_to_peers_synched("sync_honk_horn", self._vehicle_unit, false)
+			end
 		end
 	end
 
 	self:_check_stats_screen(t, dt, input)
 end
 
--- Lines 335-338
+-- Lines 367-370
 function PlayerDriving:_update_check_actions_passenger(t, dt, input)
 	self:_update_check_actions(t, dt)
 	self:_check_action_shooting_stance(t, input)
 end
 
--- Lines 340-349
+-- Lines 372-381
 function PlayerDriving:_update_check_actions_passenger_no_shoot(t, dt, input)
 	self:_check_stats_screen(t, dt, input)
 	self:_check_action_shooting_stance(t, input)
 end
 
--- Lines 352-354
+-- Lines 384-386
 function PlayerDriving:_check_warcry(t, input)
 end
 
--- Lines 357-360
+-- Lines 389-392
 function PlayerDriving:on_action_reload_success()
 	self._can_reload_prompt_hidden = false
 end
 
--- Lines 362-365
+-- Lines 394-397
 function PlayerDriving:_check_action_jump(t, input)
 	return false
 end
 
--- Lines 367-369
+-- Lines 399-401
 function PlayerDriving:_check_action_interact(t, input)
 	return false
 end
 
--- Lines 371-373
+-- Lines 403-405
 function PlayerDriving:_check_action_duck()
 	return false
 end
 
--- Lines 375-377
+-- Lines 407-409
 function PlayerDriving:interaction_blocked()
 	return true
 end
 
--- Lines 379-402
+-- Lines 411-434
 function PlayerDriving:_check_action_shooting_stance(t, input)
 	if self._vehicle_ext:shooting_stance_allowed() and not self._vehicle_ext:shooting_stance_mandatory() then
 		if input.btn_vehicle_shooting_stance_press then
@@ -368,7 +381,7 @@ function PlayerDriving:_check_action_shooting_stance(t, input)
 	end
 end
 
--- Lines 404-412
+-- Lines 436-444
 function PlayerDriving:enter_shooting_stance()
 	self._stance = PlayerDriving.STANCE_SHOOTING
 
@@ -379,7 +392,7 @@ function PlayerDriving:enter_shooting_stance()
 	self._ext_network:send("sync_vehicle_change_stance", self._stance)
 end
 
--- Lines 414-421
+-- Lines 446-453
 function PlayerDriving:exit_shooting_stance()
 	self._stance = PlayerDriving.STANCE_NORMAL
 
@@ -389,7 +402,7 @@ function PlayerDriving:exit_shooting_stance()
 	self._ext_network:send("sync_vehicle_change_stance", self._stance)
 end
 
--- Lines 423-445
+-- Lines 455-477
 function PlayerDriving:_apply_allowed_shooting()
 	if not self._seat.allow_shooting then
 		local t = managers.player:player_timer():time()
@@ -418,7 +431,7 @@ function PlayerDriving:_apply_allowed_shooting()
 	managers.controller:set_ingame_mode("driving")
 end
 
--- Lines 447-473
+-- Lines 479-505
 function PlayerDriving:_check_action_exit_vehicle(t, input)
 	if input.btn_vehicle_exit_press then
 		if self._vehicle_ext.respawn_available then
@@ -437,7 +450,7 @@ function PlayerDriving:_check_action_exit_vehicle(t, input)
 	end
 end
 
--- Lines 475-491
+-- Lines 507-523
 function PlayerDriving:_start_action_exit_vehicle(t)
 	if not self._vehicle_ext:allow_exit() then
 		return
@@ -454,12 +467,12 @@ function PlayerDriving:_start_action_exit_vehicle(t)
 	managers.hud:show_progress_timer_bar(0, deploy_timer, text)
 end
 
--- Lines 493-495
+-- Lines 525-527
 function PlayerDriving:_interacting()
 	return PlayerDriving.super._interacting(self) or self._exit_vehicle_expire_t
 end
 
--- Lines 498-504
+-- Lines 530-536
 function PlayerDriving:_interupt_action_exit_vehicle(t, input, complete)
 	if self._exit_vehicle_expire_t then
 		self._exit_vehicle_expire_t = nil
@@ -468,7 +481,7 @@ function PlayerDriving:_interupt_action_exit_vehicle(t, input, complete)
 	end
 end
 
--- Lines 506-515
+-- Lines 538-547
 function PlayerDriving:_update_action_timers(t, input)
 	if self._exit_vehicle_expire_t then
 		local deploy_timer = PlayerDriving.EXIT_VEHICLE_TIMER
@@ -483,17 +496,17 @@ function PlayerDriving:_update_action_timers(t, input)
 	end
 end
 
--- Lines 517-521
+-- Lines 549-553
 function PlayerDriving:_end_action_exit_vehicle()
 	managers.hud:hide_progress_timer_bar(true)
 	self:cb_leave()
 end
 
--- Lines 523-541
+-- Lines 555-573
 function PlayerDriving:_check_action_change_camera(t, input)
 end
 
--- Lines 543-557
+-- Lines 575-589
 function PlayerDriving:_check_action_rear_cam(t, input)
 	if not self._seat.driving then
 		return
@@ -510,20 +523,20 @@ function PlayerDriving:_check_action_rear_cam(t, input)
 	end
 end
 
--- Lines 559-560
+-- Lines 591-592
 function PlayerDriving:_check_action_run(...)
 end
 
--- Lines 562-564
+-- Lines 594-596
 function PlayerDriving:pre_destroy(unit)
 end
 
--- Lines 566-568
+-- Lines 598-600
 function PlayerDriving:stance()
 	return self._stance
 end
 
--- Lines 570-580
+-- Lines 602-612
 function PlayerDriving:_set_camera_limits(mode)
 	if mode == "seat" then
 		if self._seat.camera_limits then
@@ -536,12 +549,12 @@ function PlayerDriving:_set_camera_limits(mode)
 	end
 end
 
--- Lines 582-584
+-- Lines 614-616
 function PlayerDriving:_remove_camera_limits()
 	self._unit:camera():camera_unit():base():remove_limits()
 end
 
--- Lines 586-598
+-- Lines 618-630
 function PlayerDriving:_position_player_on_seat(seat)
 	local rot = self._seat.object:rotation()
 
@@ -556,7 +569,7 @@ function PlayerDriving:_position_player_on_seat(seat)
 	self._unit:camera():camera_unit():base():set_pitch(0)
 end
 
--- Lines 600-606
+-- Lines 632-638
 function PlayerDriving:_move_to_next_seat()
 	managers.player:move_to_next_seat(self._vehicle_unit)
 	self._vehicle_ext:stop_horn_sound()
@@ -566,7 +579,7 @@ function PlayerDriving:_move_to_next_seat()
 	end
 end
 
--- Lines 608-614
+-- Lines 640-646
 function PlayerDriving:sync_move_to_next_seat()
 	self._seat = self._vehicle_ext:find_seat_for_player(self._unit)
 
@@ -576,11 +589,11 @@ function PlayerDriving:sync_move_to_next_seat()
 	self:_apply_allowed_shooting()
 end
 
--- Lines 619-621
+-- Lines 651-653
 function PlayerDriving:destroy()
 end
 
--- Lines 624-635
+-- Lines 656-667
 function PlayerDriving:_get_vehicle()
 	self._vehicle_unit = managers.player:get_vehicle().vehicle_unit
 
@@ -594,7 +607,7 @@ function PlayerDriving:_get_vehicle()
 	self._vehicle = self._vehicle_unit:vehicle()
 end
 
--- Lines 639-664
+-- Lines 671-696
 function PlayerDriving:cb_leave()
 	local exit_position = self._vehicle_ext:find_exit_position(self._unit)
 
@@ -618,7 +631,7 @@ function PlayerDriving:cb_leave()
 	managers.player:set_player_state("standard")
 end
 
--- Lines 716-889
+-- Lines 748-921
 function PlayerDriving:_update_input(dt)
 	local pressed = self._controller:get_any_input()
 	local btn_vehicle_change_seat = pressed and self._controller:get_input_pressed("vehicle_change_seat")
@@ -779,7 +792,7 @@ function PlayerDriving:_update_input(dt)
 	self._vehicle_ext:set_input(accelerate, steer, brake, handbrake, false, false, forced_gear, dt, move_d.y)
 end
 
--- Lines 891-901
+-- Lines 923-933
 function PlayerDriving:on_inventory_event(unit, event)
 	local weapon = self._unit:inventory():equipped_unit()
 
@@ -794,7 +807,7 @@ function PlayerDriving:on_inventory_event(unit, event)
 	self._current_weapon = weapon
 end
 
--- Lines 904-914
+-- Lines 936-946
 function PlayerDriving:smoothstep(a, b, step, n)
 	local v = step / n
 	v = 1 - (1 - v) * (1 - v)

@@ -95,51 +95,11 @@ function HUDTabScreen:_create_background(fullscreen_hud)
 	self._background = fullscreen_hud.panel:rect(background_params)
 end
 
--- Lines 123-161
+-- Lines 123-125
 function HUDTabScreen:_create_background_image()
-	if self._background_image then
-		self._background_image:parent():remove(self._background_image)
-
-		self._background_image = nil
-	end
-
-	local background_image = nil
-
-	if managers.raid_job:is_camp_loaded() then
-		background_image = tweak_data.operations.missions.camp.tab_background_image
-	else
-		local current_job = managers.raid_job:current_job()
-
-		if current_job then
-			if current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
-				background_image = tweak_data.operations.missions[current_job.job_id].tab_background_image
-			else
-				local current_event = current_job.events_index[current_job.current_event]
-				local event_data = tweak_data.operations.missions[current_job.job_id].events[current_event]
-				background_image = event_data.tab_background_image
-			end
-		end
-	end
-
-	if not background_image then
-		return
-	end
-
-	local fullscreen_panel = self._background:parent()
-	local background_image_params = {
-		name = "tab_screen_background_image",
-		halign = "scale",
-		valign = "scale",
-		texture = background_image,
-		layer = self._background:layer() + 1
-	}
-	self._background_image = fullscreen_panel:bitmap(background_image_params)
-
-	self._background_image:set_center_x(fullscreen_panel:w() / 2)
-	self._background_image:set_center_y(fullscreen_panel:h() / 2)
 end
 
--- Lines 204-210
+-- Lines 168-174
 function HUDTabScreen:_create_map(fullscreen_hud)
 	local map_params = {
 		name = "tab_map",
@@ -148,7 +108,7 @@ function HUDTabScreen:_create_map(fullscreen_hud)
 	self._map = HUDMapTab:new(fullscreen_hud.panel, map_params)
 end
 
--- Lines 212-222
+-- Lines 176-186
 function HUDTabScreen:_create_panel(hud)
 	local panel_params = {
 		y = 0,
@@ -164,7 +124,7 @@ function HUDTabScreen:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
--- Lines 224-316
+-- Lines 188-280
 function HUDTabScreen:_create_card_info()
 	local card_info_panel_params = {
 		halign = "left",
@@ -266,7 +226,7 @@ function HUDTabScreen:_create_card_info()
 	self._active_card = HUDCardDetails:new(self._active_card_panel, active_card_params)
 end
 
--- Lines 318-433
+-- Lines 282-397
 function HUDTabScreen:_create_profile_info()
 	local profile_info_panel_params = {
 		halign = "left",
@@ -383,14 +343,14 @@ function HUDTabScreen:_create_profile_info()
 	level_text:set_center_x(self._profile_info_panel:w() - HUDTabScreen.PROFILE_LEVEL_RIGHT_OFFSET)
 end
 
--- Lines 435-438
+-- Lines 399-402
 function HUDTabScreen:_create_weapon_challenge_info()
 	self._weapon_challenge_info = HUDTabWeaponChallenge:new(self._object)
 
 	self._weapon_challenge_info:set_bottom(926)
 end
 
--- Lines 441-475
+-- Lines 405-439
 function HUDTabScreen:_create_timer()
 	local timer_panel_params = {
 		halign = "right",
@@ -434,7 +394,7 @@ function HUDTabScreen:_create_timer()
 	self:set_time(0)
 end
 
--- Lines 477-550
+-- Lines 441-514
 function HUDTabScreen:_create_progression_timer()
 	local progression_timer_panel_params = {
 		halign = "right",
@@ -519,7 +479,7 @@ function HUDTabScreen:_create_progression_timer()
 	local timer = self._progression_timer_content_panel:text(timer_params)
 end
 
--- Lines 552-612
+-- Lines 516-576
 function HUDTabScreen:_create_mission_info()
 	local mission_info_panel_params = {
 		name = "mission_info_panel",
@@ -585,7 +545,7 @@ function HUDTabScreen:_create_mission_info()
 	self._difficulty_indicator:set_active_difficulty(current_difficulty)
 end
 
--- Lines 614-754
+-- Lines 578-718
 function HUDTabScreen:_create_loot_info()
 	local loot_panel_params = {
 		valing = "bottom",
@@ -658,29 +618,29 @@ function HUDTabScreen:_create_loot_info()
 	self:_refresh_loot_info()
 end
 
--- Lines 756-759
+-- Lines 720-723
 function HUDTabScreen:_create_greed_bar()
 	self._greed_bar = HUDTabGreedBar:new(self._loot_info_panel, {})
 
 	self._greed_bar:set_right(self._loot_info_panel:w())
 end
 
--- Lines 761-763
+-- Lines 725-727
 function HUDTabScreen:on_greed_loot_picked_up(old_progress, new_progress)
 	self._greed_bar:change_progress(old_progress, new_progress)
 end
 
--- Lines 765-767
+-- Lines 729-731
 function HUDTabScreen:set_current_greed_amount(amount)
 	self._greed_bar:set_current_greed_amount(amount)
 end
 
--- Lines 769-771
+-- Lines 733-735
 function HUDTabScreen:reset_greed_indicator()
 	self._greed_bar:reset_state()
 end
 
--- Lines 773-777
+-- Lines 737-741
 function HUDTabScreen:_create_objectives_info(hud)
 	self._objectives = HUDObjectivesTab:new(self._object)
 
@@ -688,12 +648,12 @@ function HUDTabScreen:_create_objectives_info(hud)
 	self._objectives:set_y(HUDTabScreen.OBJECTIVES_INFO_Y)
 end
 
--- Lines 779-781
+-- Lines 743-745
 function HUDTabScreen:get_objectives_control()
 	return self._objectives
 end
 
--- Lines 783-840
+-- Lines 747-804
 function HUDTabScreen:_refresh_mission_info()
 	local mission_icon, mission_name = nil
 	local control_mission_name = self._mission_info_panel:child("mission_name")
@@ -753,7 +713,7 @@ function HUDTabScreen:_refresh_mission_info()
 	self._mission_info_panel:child("mission_icon"):set_texture_rect(unpack(tweak_data.gui.icons[mission_icon].texture_rect))
 end
 
--- Lines 842-858
+-- Lines 806-822
 function HUDTabScreen:_refresh_profile_info()
 	local profile_name = managers.network:session():local_peer():name()
 
@@ -762,7 +722,7 @@ function HUDTabScreen:_refresh_profile_info()
 	local class = managers.skilltree:get_character_profile_class()
 
 	self._class_icon:set_icon("player_panel_class_" .. tostring(class))
-	self._class_icon:set_text("skill_class_" .. class .. "_name", {
+	self._class_icon:set_text("skill_class_" .. tostring(class) .. "_name", {
 		color = tweak_data.gui.colors.raid_grey
 	})
 
@@ -783,7 +743,7 @@ function HUDTabScreen:_refresh_profile_info()
 	})
 end
 
--- Lines 860-883
+-- Lines 824-847
 function HUDTabScreen:_refresh_loot_info()
 	local current_job = managers.raid_job:current_job()
 
@@ -805,21 +765,21 @@ function HUDTabScreen:_refresh_loot_info()
 	end
 end
 
--- Lines 939-942
+-- Lines 903-906
 function HUDTabScreen:set_loot_picked_up(amount)
 	self._loot_picked_up = amount
 
 	self:_refresh_loot_info()
 end
 
--- Lines 944-947
+-- Lines 908-911
 function HUDTabScreen:set_loot_total(amount)
 	self._loot_total = amount
 
 	self:_refresh_loot_info()
 end
 
--- Lines 949-972
+-- Lines 913-938
 function HUDTabScreen:set_time(time)
 	if math.floor(time) < self._last_set_time then
 		return
@@ -845,7 +805,14 @@ function HUDTabScreen:set_time(time)
 	self._timer:set_right(self._timer_panel:w())
 end
 
--- Lines 974-994
+-- Lines 940-944
+function HUDTabScreen:reset_time()
+	self._last_set_time = 0
+
+	self:set_time(0)
+end
+
+-- Lines 946-966
 function HUDTabScreen:_refresh_card_info()
 	local active_card = managers.challenge_cards:get_active_card()
 
@@ -869,7 +836,7 @@ function HUDTabScreen:_refresh_card_info()
 	end
 end
 
--- Lines 996-1023
+-- Lines 968-995
 function HUDTabScreen:_refresh_weapon_challenge_info()
 	if not managers.player:player_unit() then
 		self._weapon_challenge_info:hide()
@@ -902,7 +869,7 @@ function HUDTabScreen:_refresh_weapon_challenge_info()
 	self._profile_info_panel:set_visible(true)
 end
 
--- Lines 1025-1033
+-- Lines 997-1005
 function HUDTabScreen:show_next_weapon_challenge(dont_animate, next_delay)
 	self._currently_displayed_weapon_challenge = self._currently_displayed_weapon_challenge % #self._active_weapon_challenges + 1
 
@@ -913,7 +880,7 @@ function HUDTabScreen:show_next_weapon_challenge(dont_animate, next_delay)
 	end
 end
 
--- Lines 1035-1065
+-- Lines 1007-1037
 function HUDTabScreen:show()
 	self._progression_timer_shown = not managers.progression:mission_progression_completed() and managers.raid_job:played_tutorial()
 
@@ -947,7 +914,7 @@ function HUDTabScreen:show()
 	end
 end
 
--- Lines 1067-1120
+-- Lines 1039-1092
 function HUDTabScreen:_layout_progression()
 	local is_final_unlock_cycle = managers.progression:at_final_unlock_cycle()
 	local cycle_completed = managers.progression:have_pending_missions_to_unlock()
@@ -1005,17 +972,23 @@ function HUDTabScreen:_layout_progression()
 	end
 end
 
--- Lines 1122-1142
+-- Lines 1094-1119
 function HUDTabScreen:_set_progress_timer_value()
 	local timer_control = self._progression_timer_content_panel:child("progression_timer_timer")
 	local remaining_time = math.floor(managers.progression:time_until_next_unlock())
-	local hours = math.floor(remaining_time / 3600)
-	remaining_time = remaining_time - hours * 3600
-	local minutes = math.floor(remaining_time / 60)
-	remaining_time = remaining_time - minutes * 60
-	local seconds = math.round(remaining_time)
-	local text = hours > 0 and string.format("%02d", hours) .. ":" or ""
-	local text = text .. string.format("%02d", minutes) .. ":" .. string.format("%02d", seconds)
+	local text = nil
+
+	if remaining_time <= 0 then
+		text = "...NOW!"
+	else
+		local hours = math.floor(remaining_time / 3600)
+		remaining_time = remaining_time - hours * 3600
+		local minutes = math.floor(remaining_time / 60)
+		remaining_time = remaining_time - minutes * 60
+		local seconds = math.round(remaining_time)
+		text = hours > 0 and string.format("%02d", hours) .. ":" or ""
+		text = text .. string.format("%02d", minutes) .. ":" .. string.format("%02d", seconds)
+	end
 
 	timer_control:set_text(text)
 
@@ -1026,7 +999,7 @@ function HUDTabScreen:_set_progress_timer_value()
 	self._progression_timer_panel:set_right(self._timer_panel:x())
 end
 
--- Lines 1144-1150
+-- Lines 1121-1127
 function HUDTabScreen:update()
 	self._loot_info_panel:set_bottom(self._background:parent():h() - HUDTabScreen.LOOT_INFO_BOTTOM_OFFSET)
 
@@ -1035,7 +1008,7 @@ function HUDTabScreen:update()
 	end
 end
 
--- Lines 1152-1170
+-- Lines 1129-1147
 function HUDTabScreen:hide()
 	managers.hud:remove_updator("tab")
 
@@ -1052,37 +1025,37 @@ function HUDTabScreen:hide()
 	end
 end
 
--- Lines 1172-1174
+-- Lines 1149-1151
 function HUDTabScreen:refresh_peers()
 	self._map:refresh_peers()
 end
 
--- Lines 1176-1178
+-- Lines 1153-1155
 function HUDTabScreen:add_waypoint(waypoint_data)
 	self._map:add_waypoint(waypoint_data)
 end
 
--- Lines 1180-1182
+-- Lines 1157-1159
 function HUDTabScreen:remove_waypoint(id)
 	self._map:remove_waypoint(id)
 end
 
--- Lines 1184-1186
+-- Lines 1161-1163
 function HUDTabScreen:peer_enter_vehicle(peer_id)
 	self._map:peer_enter_vehicle(peer_id)
 end
 
--- Lines 1188-1190
+-- Lines 1165-1167
 function HUDTabScreen:peer_exit_vehicle(peer_id)
 	self._map:peer_exit_vehicle(peer_id)
 end
 
--- Lines 1193-1195
+-- Lines 1170-1172
 function HUDTabScreen:is_shown()
 	return self._object:visible()
 end
 
--- Lines 1197-1205
+-- Lines 1174-1182
 function HUDTabScreen:_current_level_has_map()
 	local player_world = self:_get_current_player_level()
 
@@ -1093,7 +1066,7 @@ function HUDTabScreen:_current_level_has_map()
 	return false
 end
 
--- Lines 1207-1230
+-- Lines 1184-1207
 function HUDTabScreen:_get_current_player_level()
 	local current_job = managers.raid_job:current_job()
 
@@ -1113,13 +1086,13 @@ function HUDTabScreen:_get_current_player_level()
 	return nil
 end
 
--- Lines 1233-1236
+-- Lines 1210-1213
 function HUDTabScreen:on_progression_cycle_completed()
 	self._progression_timer_content_panel:stop()
 	self._progression_timer_content_panel:animate(callback(self, self, "animate_progression_cycle_completed"))
 end
 
--- Lines 1238-1275
+-- Lines 1215-1252
 function HUDTabScreen:animate_progression_cycle_completed()
 	self._animating_cycle_completed = true
 	local fade_out_duration = 0.35

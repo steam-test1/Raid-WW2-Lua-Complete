@@ -11,7 +11,7 @@ RaidGUIControlInputField.INACTIVE_ALPHA = 0.3
 RaidGUIControlInputField.ACTIVE_ALPHA = 0.5
 RaidGUIControlInputField.CARET_Y = 11
 
--- Lines 17-122
+-- Lines 17-128
 function RaidGUIControlInputField:init(parent, params)
 	RaidGUIControlInputField.super.init(self, parent, params)
 
@@ -99,36 +99,40 @@ function RaidGUIControlInputField:init(parent, params)
 	})
 
 	self._input_text:set_selection(0, utf8.len(self._input_text:text()))
+
+	self._osk_title = params.osk_title or ""
+	self._osk_text = params.osk_text or ""
+	self._displaying_console_osk = false
 end
 
--- Lines 124-126
+-- Lines 130-132
 function RaidGUIControlInputField:get_text()
 	return self._input_text:text()
 end
 
--- Lines 128-131
+-- Lines 134-137
 function RaidGUIControlInputField:mouse_released(o, button, x, y)
 	self:on_mouse_released(button)
 end
 
--- Lines 133-136
+-- Lines 139-142
 function RaidGUIControlInputField:on_mouse_released(button)
 	self:on_click_rect()
 end
 
--- Lines 138-141
+-- Lines 144-147
 function RaidGUIControlInputField:highlight_on()
 	self:_set_background_state("active")
 end
 
--- Lines 143-148
+-- Lines 149-154
 function RaidGUIControlInputField:highlight_off()
 	if not self._focus then
 		self:_set_background_state("normal")
 	end
 end
 
--- Lines 150-178
+-- Lines 156-184
 function RaidGUIControlInputField:_set_background_state(bg_state)
 	if bg_state == "active" then
 		self._background:set_color(Color.white:with_alpha(RaidGUIControlInputField.ACTIVE_ALPHA))
@@ -139,13 +143,13 @@ function RaidGUIControlInputField:_set_background_state(bg_state)
 	end
 end
 
--- Lines 182-186
+-- Lines 188-192
 function RaidGUIControlInputField:on_click_rect()
 	self:input_focus()
 	self:_on_focus()
 end
 
--- Lines 188-194
+-- Lines 194-200
 function RaidGUIControlInputField:set_chat_focus(focus)
 	if focus then
 		self:_on_focus()
@@ -154,21 +158,21 @@ function RaidGUIControlInputField:set_chat_focus(focus)
 	end
 end
 
--- Lines 196-198
+-- Lines 202-204
 function RaidGUIControlInputField:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines 200-204
+-- Lines 206-210
 function RaidGUIControlInputField:set_channel_id(channel_id)
 end
 
--- Lines 206-211
+-- Lines 212-217
 function RaidGUIControlInputField:esc_key_callback()
 	self:set_chat_focus(false)
 end
 
--- Lines 214-230
+-- Lines 220-236
 function RaidGUIControlInputField:enter_key_callback()
 	local text = self._input_panel:child("input_text")
 	local message = text:text()
@@ -176,19 +180,19 @@ function RaidGUIControlInputField:enter_key_callback()
 	return true
 end
 
--- Lines 256-262
+-- Lines 262-268
 function RaidGUIControlInputField:input_focus()
 	return self._focus
 end
 
--- Lines 264-266
+-- Lines 270-272
 function RaidGUIControlInputField:set_skip_first(skip_first)
 	self._skip_first = skip_first
 end
 
--- Lines 268-308
-function RaidGUIControlInputField:_on_focus()
-	if self._focus then
+-- Lines 274-291
+function RaidGUIControlInputField:_on_focus(force)
+	if self._focus and not force then
 		return
 	end
 
@@ -206,7 +210,49 @@ function RaidGUIControlInputField:_on_focus()
 	self:update_caret()
 end
 
--- Lines 310-340
+-- Lines 294-300
+function RaidGUIControlInputField:show_onscreen_keyboard()
+	if not self._displaying_console_osk then
+		self._displaying_console_osk = true
+		local input_text = self._input_panel:child("input_text"):text()
+
+		managers.system_menu:show_keyboard_input({
+			title = self._osk_title,
+			text = self._osk_text,
+			input_text = input_text,
+			callback_func = callback(self, self, "_console_keyboard_dimissed")
+		})
+	end
+end
+
+-- Lines 302-322
+function RaidGUIControlInputField:_console_keyboard_dimissed(success, text)
+	self._displaying_console_osk = false
+
+	if self._input_panel:child("input_text") then
+		local current_text = self._input_panel:child("input_text")
+
+		current_text:set_text("")
+		current_text:set_selection(0, 0)
+	end
+
+	if text and success then
+		local trimmed_text = trim(text)
+
+		self:enter_text(nil, trimmed_text)
+	else
+		self:enter_text(nil, "")
+	end
+
+	self:_enter_callback()
+end
+
+-- Lines 324-326
+function trim(s)
+	return s:gsub("^%s*(.-)%s*$", "%1")
+end
+
+-- Lines 329-359
 function RaidGUIControlInputField:_loose_focus()
 	if not self._focus then
 		return
@@ -227,7 +273,7 @@ function RaidGUIControlInputField:_loose_focus()
 	self:update_caret()
 end
 
--- Lines 342-349
+-- Lines 361-368
 function RaidGUIControlInputField:clear()
 	local text = self._input_panel:child("input_text")
 
@@ -237,14 +283,14 @@ function RaidGUIControlInputField:clear()
 	self:set_chat_focus(false)
 end
 
--- Lines 351-354
+-- Lines 370-373
 function RaidGUIControlInputField:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines 357-364
+-- Lines 376-383
 function RaidGUIControlInputField.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -254,7 +300,7 @@ function RaidGUIControlInputField.blink(o)
 	end
 end
 
--- Lines 366-373
+-- Lines 385-392
 function RaidGUIControlInputField:set_blinking(b)
 	local caret = self._input_panel:child("caret")
 
@@ -275,7 +321,7 @@ function RaidGUIControlInputField:set_blinking(b)
 	end
 end
 
--- Lines 375-416
+-- Lines 394-435
 function RaidGUIControlInputField:update_caret()
 	local text = self._input_panel:child("input_text")
 	local caret = self._input_panel:child("caret")
@@ -314,7 +360,7 @@ function RaidGUIControlInputField:update_caret()
 	end
 end
 
--- Lines 419-454
+-- Lines 438-473
 function RaidGUIControlInputField:enter_text(o, s)
 	s = utf8.to_upper(s)
 
@@ -345,7 +391,7 @@ function RaidGUIControlInputField:enter_text(o, s)
 	self:update_caret()
 end
 
--- Lines 457-503
+-- Lines 476-522
 function RaidGUIControlInputField:update_key_down(o, k)
 	wait(0.6)
 
@@ -397,14 +443,14 @@ function RaidGUIControlInputField:update_key_down(o, k)
 	end
 end
 
--- Lines 505-509
+-- Lines 524-528
 function RaidGUIControlInputField:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
 end
 
--- Lines 512-588
+-- Lines 531-607
 function RaidGUIControlInputField:key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -478,7 +524,7 @@ function RaidGUIControlInputField:key_press(o, k)
 	return true
 end
 
--- Lines 590-605
+-- Lines 609-624
 function RaidGUIControlInputField:_animate_fade_output()
 	local wait_t = 10
 	local fade_t = 1
@@ -501,7 +547,7 @@ function RaidGUIControlInputField:_animate_fade_output()
 	self:set_output_alpha(0)
 end
 
--- Lines 607-618
+-- Lines 626-637
 function RaidGUIControlInputField:_animate_show_component(input_panel, start_alpha)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -517,7 +563,7 @@ function RaidGUIControlInputField:_animate_show_component(input_panel, start_alp
 	input_panel:set_alpha(1)
 end
 
--- Lines 620-630
+-- Lines 639-649
 function RaidGUIControlInputField:_animate_hide_input(input_panel)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -532,18 +578,18 @@ function RaidGUIControlInputField:_animate_hide_input(input_panel)
 	input_panel:set_alpha(0)
 end
 
--- Lines 643-645
+-- Lines 662-664
 function RaidGUIControlInputField:set_output_alpha(alpha)
 end
 
--- Lines 647-652
+-- Lines 666-671
 function RaidGUIControlInputField:remove()
 	self._input_panel:stop()
 	self._hud_panel:remove(self._panel)
 	managers.chat:unregister_receiver(self._channel_id, self)
 end
 
--- Lines 654-656
+-- Lines 673-675
 function RaidGUIControlInputField:confirm_pressed()
 	return true
 end

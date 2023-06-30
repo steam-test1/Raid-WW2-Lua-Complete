@@ -144,7 +144,7 @@ function DoctorBagBase:_set_dynamic()
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
--- Lines 147-167
+-- Lines 147-165
 function DoctorBagBase:take(unit)
 	if self._empty then
 		return
@@ -166,7 +166,7 @@ function DoctorBagBase:take(unit)
 	return taken > 0
 end
 
--- Lines 169-177
+-- Lines 167-175
 function DoctorBagBase:_set_visual_stage()
 	local percentage = self._amount / self._max_amount
 
@@ -179,7 +179,7 @@ function DoctorBagBase:_set_visual_stage()
 	end
 end
 
--- Lines 180-187
+-- Lines 178-185
 function DoctorBagBase:sync_taken(amount)
 	self._amount = self._amount - amount
 
@@ -190,7 +190,7 @@ function DoctorBagBase:sync_taken(amount)
 	end
 end
 
--- Lines 189-201
+-- Lines 187-199
 function DoctorBagBase:_take(unit)
 	local taken = 1
 	self._amount = self._amount - taken
@@ -206,14 +206,14 @@ function DoctorBagBase:_take(unit)
 	return taken
 end
 
--- Lines 203-206
+-- Lines 201-204
 function DoctorBagBase:_set_empty()
 	self._empty = true
 
 	self._unit:set_slot(0)
 end
 
--- Lines 210-215
+-- Lines 208-213
 function DoctorBagBase:save(data)
 	local state = {
 		amount = self._amount,
@@ -222,7 +222,7 @@ function DoctorBagBase:save(data)
 	data.DoctorBagBase = state
 end
 
--- Lines 217-227
+-- Lines 215-225
 function DoctorBagBase:load(data)
 	local state = data.DoctorBagBase
 	self._amount = state.amount
@@ -236,7 +236,7 @@ function DoctorBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 231-236
+-- Lines 229-234
 function DoctorBagBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -247,7 +247,7 @@ end
 
 CustomDoctorBagBase = CustomDoctorBagBase or class(DoctorBagBase)
 
--- Lines 241-251
+-- Lines 239-249
 function CustomDoctorBagBase:init(unit)
 	CustomDoctorBagBase.super.init(self, unit)
 
@@ -262,7 +262,7 @@ function CustomDoctorBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 253-261
+-- Lines 251-259
 function CustomDoctorBagBase:_set_empty()
 	self._empty = true
 

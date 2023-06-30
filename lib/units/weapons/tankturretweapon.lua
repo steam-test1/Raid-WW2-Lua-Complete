@@ -1,6 +1,6 @@
 TankTurretWeapon = TankTurretWeapon or class(SentryGunWeapon)
 
--- Lines 4-13
+-- Lines 6-15
 function TankTurretWeapon:init(unit)
 	TankTurretWeapon.super.init(self, unit)
 
@@ -10,7 +10,7 @@ function TankTurretWeapon:init(unit)
 	self._test_delete_after = {}
 end
 
--- Lines 17-20
+-- Lines 19-22
 function TankTurretWeapon:setup(setup_data, damage_multiplier)
 	TankTurretWeapon.super.setup(self, setup_data, damage_multiplier)
 
@@ -22,32 +22,35 @@ function TankTurretWeapon:setup(setup_data, damage_multiplier)
 	}
 end
 
--- Lines 24-30
+-- Lines 26-34
 function TankTurretWeapon:play_lock_on_sound()
 	local sound_source = self._unit:sound_source()
-	local weapon_tweak_data = self._tweak_data
 
-	if sound_source and weapon_tweak_data.sound.main_cannon_lock_on then
-		sound_source:post_event(weapon_tweak_data.sound.main_cannon_lock_on)
+	if sound_source then
+		local weapon_tweak_data = self._tweak_data
+
+		if weapon_tweak_data.sound and weapon_tweak_data.sound.main_cannon_lock_on then
+			sound_source:post_event(weapon_tweak_data.sound.main_cannon_lock_on)
+		end
 	end
 end
 
--- Lines 34-36
+-- Lines 38-40
 function TankTurretWeapon:start_autofire()
 	debug_pause("[TankTurretWeapon:start_autofire] start_autofire() not supported by the tank turret, unit: ", inspect(self._unit))
 end
 
--- Lines 40-42
+-- Lines 44-46
 function TankTurretWeapon:stop_autofire()
 	debug_pause("[TankTurretWeapon:start_autofire] stop_autofire() not supported by the tank turret, unit: ", inspect(self._unit))
 end
 
--- Lines 46-48
+-- Lines 50-52
 function TankTurretWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_unit)
 	debug_pause("[TankTurretWeapon:start_autofire] autofire() not supported by the tank turret, unit: ", inspect(self._unit))
 end
 
--- Lines 52-80
+-- Lines 56-84
 function TankTurretWeapon:singleshot(blanks, expend_ammo, shoot_player, target_pos)
 	if not Network:is_server() then
 		return
@@ -79,7 +82,7 @@ function TankTurretWeapon:singleshot(blanks, expend_ammo, shoot_player, target_p
 	managers.network:session():send_to_peers_synched("sync_ai_tank_singleshot_blank", self._unit, from_pos, direction)
 end
 
--- Lines 83-103
+-- Lines 87-107
 function TankTurretWeapon:play_singleshot_sound_and_effect(position, normal)
 	local weapon_tweak_data = self._tweak_data
 	local effect_range = weapon_tweak_data.sound.main_cannon_fire_tinnitus_range
@@ -111,7 +114,7 @@ function TankTurretWeapon:play_singleshot_sound_and_effect(position, normal)
 	end
 end
 
--- Lines 107-152
+-- Lines 111-157
 function TankTurretWeapon:update(unit, t, dt)
 	if self._test_delete_after then
 		for _, object in ipairs(self._test_delete_after) do
@@ -167,7 +170,7 @@ function TankTurretWeapon:update(unit, t, dt)
 	end
 end
 
--- Lines 156-188
+-- Lines 161-193
 function TankTurretWeapon:_hit_explosion(raycast, hit_position)
 	if not Network:is_server() then
 		return
@@ -202,7 +205,7 @@ function TankTurretWeapon:_hit_explosion(raycast, hit_position)
 	managers.network:session():send_to_peers_synched("sync_ai_tank_grenade_explosion", self._unit, pos, damage_radius, damage, player_damage, curve_pow)
 end
 
--- Lines 192-200
+-- Lines 197-205
 function TankTurretWeapon:_hit_explosion_on_client(position, radius, damage, player_damage, curve_pow)
 	local sound_event = "grenade_explode"
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000
@@ -218,7 +221,7 @@ function TankTurretWeapon:_hit_explosion_on_client(position, radius, damage, pla
 	managers.explosion:explode_on_client(position, math.UP, nil, damage, damage_radius, curve_pow, custom_params)
 end
 
--- Lines 204-206
+-- Lines 209-212
 function TankTurretWeapon:adjust_target_pos(target_pos)
 	return target_pos - Vector3(0, 0, 150)
 end

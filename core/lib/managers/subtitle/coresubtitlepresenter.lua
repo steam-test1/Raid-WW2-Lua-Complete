@@ -326,7 +326,7 @@ function OverlayPresenter:_on_resolution_changed()
 	managers.gui_data:layout_corner_saferect_workspace(self.__ws)
 	self.__subtitle_panel:set_width(768)
 	self.__subtitle_panel:set_height(64)
-	self.__subtitle_panel:set_x(480)
+	self.__subtitle_panel:set_center_x(safe_rect.width / 2)
 	self.__subtitle_panel:set_y(760)
 
 	local label = self.__subtitle_panel:child("label")

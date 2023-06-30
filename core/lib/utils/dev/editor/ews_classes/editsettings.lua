@@ -3,7 +3,7 @@ core:import("CoreEws")
 
 EditUnitSettings = EditUnitSettings or class(EditUnitBase)
 
--- Lines 6-60
+-- Lines 6-69
 function EditUnitSettings:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Settings",
@@ -60,7 +60,7 @@ function EditUnitSettings:init(editor)
 	self._panel = panel
 end
 
--- Lines 62-74
+-- Lines 71-83
 function EditUnitSettings:add_cutscene_actor()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for cutscene actor:", "Add cutscene actor", "", Vector3(-1, -1, 0), true)
 
@@ -78,7 +78,7 @@ function EditUnitSettings:add_cutscene_actor()
 	end
 end
 
--- Lines 76-80
+-- Lines 85-89
 function EditUnitSettings:remove_cutscene_actor()
 	managers.cutscene:unregister_cutscene_actor(self._ctrls.unit)
 
@@ -87,7 +87,7 @@ function EditUnitSettings:remove_cutscene_actor()
 	self._ctrls.cutscene_actor_name:set_value("")
 end
 
--- Lines 82-89
+-- Lines 91-98
 function EditUnitSettings:set_disable_shadows()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -98,7 +98,7 @@ function EditUnitSettings:set_disable_shadows()
 	end
 end
 
--- Lines 91-97
+-- Lines 100-106
 function EditUnitSettings:set_hide_on_projection_light()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -107,7 +107,7 @@ function EditUnitSettings:set_hide_on_projection_light()
 	end
 end
 
--- Lines 99-105
+-- Lines 118-124
 function EditUnitSettings:set_disable_on_ai_graph()
 	for _, unit in ipairs(self._ctrls.units) do
 		if alive(unit) then
@@ -116,7 +116,7 @@ function EditUnitSettings:set_disable_on_ai_graph()
 	end
 end
 
--- Lines 107-122
+-- Lines 126-144
 function EditUnitSettings:is_editable(unit, units)
 	if alive(unit) then
 		self._ctrls.unit = unit

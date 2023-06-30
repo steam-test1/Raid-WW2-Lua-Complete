@@ -16,9 +16,7 @@ function FlamerBrain:init(unit)
 	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, FlamerBrain.UPDATE_INTERVAL)
 
 	self._old_t = Application:time()
-
-	self._unit:sound_source():post_event("flamer_breathing_start")
-
+	self._breathing_event = self._unit:sound_source():post_event("flamer_breathing_start")
 	self.is_flamer = true
 end
 
@@ -157,13 +155,19 @@ function FlamerBrain:_hunt(assalut_target)
 	end
 end
 
--- Lines 137-142
+-- Lines 137-148
 function FlamerBrain:clbk_death(my_unit, damage_info)
 	FlamerBrain.super.clbk_death(self, my_unit, damage_info)
 	self._unit:sound_source():post_event("flamer_breathing_break")
+
+	if alive(self._breathing_event) then
+		self._breathing_event:stop()
+
+		self._breathing_event = nil
+	end
 end
 
--- Lines 145-148
+-- Lines 151-154
 function FlamerBrain:pre_destroy(unit)
 	managers.queued_tasks:unqueue_all(self._ukey, self)
 	FlamerBrain.super.pre_destroy(self, unit)

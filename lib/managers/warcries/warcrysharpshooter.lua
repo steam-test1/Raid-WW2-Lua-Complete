@@ -93,7 +93,7 @@ function WarcrySharpshooter:get_level_description(level)
 	return managers.localization:text("skill_warcry_sharpshooter_level_" .. tostring(level) .. "_desc")
 end
 
--- Lines 88-108
+-- Lines 88-115
 function WarcrySharpshooter:_on_enemy_killed(params)
 	local unit = managers.player:player_unit()
 
@@ -107,8 +107,11 @@ function WarcrySharpshooter:_on_enemy_killed(params)
 		multiplier = multiplier + self._tweak_data.headshot_multiplier * managers.player:upgrade_value("player", "warcry_headshot_multiplier_bonus", 1)
 	end
 
-	if params.enemy_distance and self._tweak_data.distance_multiplier_activation_distance < params.enemy_distance then
-		multiplier = multiplier + self._tweak_data.distance_multiplier_addition_per_meter * (params.enemy_distance - self._tweak_data.distance_multiplier_activation_distance) / 100 * managers.player:upgrade_value("player", "warcry_long_range_multiplier_bonus", 1)
+	local activation_distance = self._tweak_data.distance_multiplier_activation_distance
+
+	if params.enemy_distance and activation_distance < params.enemy_distance then
+		local wc_long_range_multi_bonus = managers.player:upgrade_value("player", "warcry_long_range_multiplier_bonus", 1)
+		multiplier = multiplier + self._tweak_data.distance_multiplier_addition_per_meter * (params.enemy_distance - activation_distance) / 100 * wc_long_range_multi_bonus
 	end
 
 	local base_fill_value = self._tweak_data.base_kill_fill_amount
@@ -116,7 +119,7 @@ function WarcrySharpshooter:_on_enemy_killed(params)
 	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)
 end
 
--- Lines 110-112
+-- Lines 117-119
 function WarcrySharpshooter:cleanup()
 	managers.system_event_listener:remove_listener("warcry_sharpshooter_enemy_killed")
 end

@@ -43,13 +43,13 @@ end
 
 NetworkManager.DROPIN_ENABLED = true
 
-if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1") then
+if _G.IS_XB360 or _G.IS_PS3 or _G.IS_PS4 or _G.IS_XB1 then
 	NetworkManager.PROTOCOL_TYPE = "TCP_IP"
 else
 	NetworkManager.PROTOCOL_TYPE = "STEAM"
 end
 
--- Lines 56-114
+-- Lines 60-109
 function NetworkManager:init()
 	self.OVERWRITEABLE_MSGS = {
 		set_look_dir = {
@@ -65,13 +65,13 @@ function NetworkManager:init()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		self._is_ps3 = true
-	elseif SystemInfo:platform() == Idstring("X360") then
+	elseif _G.IS_XB360 then
 		self._is_x360 = true
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		self._is_ps4 = true
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		self._is_xb1 = true
 	else
 		self._is_win32 = true
@@ -79,15 +79,7 @@ function NetworkManager:init()
 
 	self._spawn_points = {}
 
-	if self._is_ps3 then
-		Network:set_use_psn_network(true)
-
-		if #PSN:get_world_list() == 0 then
-			PSN:init_matchmaking()
-		end
-
-		self:_register_PSN_matchmaking_callbacks()
-	elseif self._is_ps4 then
+	if self._is_ps4 then
 		Network:set_use_psn_network(true)
 
 		if #PSN:get_world_list() == 0 then
@@ -106,9 +98,6 @@ function NetworkManager:init()
 			self.account = NetworkAccount:new()
 			self.voice_chat = NetworkVoiceChatDisabled:new()
 		end
-	elseif self._is_x360 then
-		self.account = NetworkAccountXBL:new()
-		self.voice_chat = NetworkVoiceChatXBL:new()
 	end
 
 	self._started = false
@@ -118,7 +107,7 @@ function NetworkManager:init()
 	self:load()
 end
 
--- Lines 118-127
+-- Lines 113-122
 function NetworkManager:init_finalize()
 	print("NetworkManager:init_finalize()")
 
@@ -131,7 +120,7 @@ function NetworkManager:init_finalize()
 	end
 end
 
--- Lines 129-180
+-- Lines 124-175
 function NetworkManager:_create_lobby()
 	if self._is_win32 then
 		cat_print("lobby", "Online Lobby is PC")
@@ -185,7 +174,7 @@ function NetworkManager:_create_lobby()
 	end
 end
 
--- Lines 184-216
+-- Lines 179-211
 function NetworkManager:ps3_determine_voice(lan)
 	local voice = "voice_quiet"
 
@@ -218,17 +207,17 @@ function NetworkManager:ps3_determine_voice(lan)
 	end
 end
 
--- Lines 220-220
+-- Lines 215-215
 function NetworkManager:session()
 	return self._session
 end
 
--- Lines 224-224
+-- Lines 219-219
 function NetworkManager:shared_handler_data()
 	return self._shared_handler_data
 end
 
--- Lines 228-261
+-- Lines 223-256
 function NetworkManager:load()
 	if Global.network then
 		self._network_bound = Global.network.network_bound
@@ -269,7 +258,7 @@ function NetworkManager:load()
 	end
 end
 
--- Lines 265-286
+-- Lines 260-279
 function NetworkManager:save()
 	if self._started then
 		Global.network = {
@@ -293,9 +282,10 @@ function NetworkManager:save()
 	end
 end
 
--- Lines 290-311
+-- Lines 283-305
 function NetworkManager:update(t, dt)
 	if self._stop_next_frame then
+		Application:trace("[NetworkManager:update()] _stop_next_frame now")
 		self:stop_network(true)
 
 		self._stop_next_frame = nil
@@ -320,7 +310,7 @@ function NetworkManager:update(t, dt)
 	end
 end
 
--- Lines 315-324
+-- Lines 309-317
 function NetworkManager:end_update()
 	if self._stop_network then
 		self._stop_next_frame = true
@@ -332,7 +322,7 @@ function NetworkManager:end_update()
 	end
 end
 
--- Lines 328-344
+-- Lines 321-337
 function NetworkManager:start_network()
 	if not self._started then
 		Global.category_print.multiplayer_base = true
@@ -349,7 +339,7 @@ function NetworkManager:start_network()
 	end
 end
 
--- Lines 348-357
+-- Lines 341-350
 function NetworkManager:register_handler(name, handler_class)
 	if not self._handlers then
 		self._handlers = {}
@@ -362,7 +352,7 @@ function NetworkManager:register_handler(name, handler_class)
 	Network:set_receiver(Idstring(name), new_handler)
 end
 
--- Lines 361-368
+-- Lines 354-361
 function NetworkManager:prepare_stop_network(...)
 	if self._session then
 		self._session:prepare_to_close(...)
@@ -373,8 +363,9 @@ function NetworkManager:prepare_stop_network(...)
 	end
 end
 
--- Lines 372-422
+-- Lines 365-416
 function NetworkManager:stop_network(clean)
+	Application:trace("[NetworkManager:stop_network()] clean", clean, debug.traceback())
 	managers.queued_tasks:unqueue("NetworkRetryJoinAttempt")
 
 	if self._started then
@@ -417,7 +408,7 @@ function NetworkManager:stop_network(clean)
 	end
 
 	if self._restart_in_camp then
-		Application:debug("[NetworkManager:stop_network] self._restart_in_camp", self._restart_in_camp)
+		Application:trace("[NetworkManager:stop_network] self._restart_in_camp", self._restart_in_camp)
 
 		self._restart_in_camp = nil
 
@@ -434,7 +425,7 @@ function NetworkManager:stop_network(clean)
 	end
 end
 
--- Lines 425-432
+-- Lines 419-426
 function NetworkManager:on_camp_restarted()
 	local last_world_id = managers.worldcollection._world_id_counter
 	self._synced_worlds_temp = {
@@ -445,12 +436,12 @@ function NetworkManager:on_camp_restarted()
 	self._synced_worlds_temp[last_world_id][CoreWorldCollection.STAGE_PREPARE] = true
 end
 
--- Lines 436-438
+-- Lines 430-432
 function NetworkManager:queue_stop_network()
 	self._stop_network = true
 end
 
--- Lines 442-456
+-- Lines 436-450
 function NetworkManager:is_ready_to_load()
 	if self._stop_next_frame or self._stop_network then
 		return false
@@ -467,7 +458,7 @@ function NetworkManager:is_ready_to_load()
 	return true
 end
 
--- Lines 460-470
+-- Lines 454-464
 function NetworkManager:stopping()
 	if not self._started then
 		return true
@@ -480,7 +471,7 @@ function NetworkManager:stopping()
 	return false
 end
 
--- Lines 475-485
+-- Lines 469-480
 function NetworkManager:start_client()
 	self:stop_network(true)
 	self:start_network()
@@ -494,7 +485,7 @@ function NetworkManager:start_client()
 	self._session:create_local_peer(true)
 end
 
--- Lines 490-498
+-- Lines 485-494
 function NetworkManager:discover_hosts(result_cb)
 	self:stop_network(true)
 	self:start_network()
@@ -508,7 +499,7 @@ function NetworkManager:discover_hosts(result_cb)
 	self._session:discover_hosts()
 end
 
--- Lines 503-528
+-- Lines 499-519
 function NetworkManager:on_discover_host_received(sender)
 	if Global.game_settings.single_player then
 		return
@@ -530,18 +521,12 @@ function NetworkManager:on_discover_host_received(sender)
 
 	print("on_discover_host_received", level_id)
 
-	local my_name = nil
-
-	if SystemInfo:platform() == Idstring("PS3") then
-		my_name = "Player 1"
-	else
-		my_name = Network:hostname()
-	end
+	local my_name = Network:hostname()
 
 	sender:discover_host_reply(my_name, level_id, level_name, sender:ip_at_index(0), state, difficulty)
 end
 
--- Lines 533-540
+-- Lines 524-531
 function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_ip, state, difficulty)
 	print("on_discover_host_reply", host, host_name, level_name, my_ip, state)
 
@@ -553,8 +538,9 @@ function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_i
 	end
 end
 
--- Lines 544-564
+-- Lines 535-547
 function NetworkManager:host_game()
+	Application:debug("[NetworkManager:host_game] Stop any networking and start hosting new game")
 	self:stop_network(true)
 	self:start_network()
 
@@ -565,13 +551,9 @@ function NetworkManager:host_game()
 	self._session = HostNetworkSession:new()
 
 	self._session:create_local_peer(true)
-
-	if self.is_ps3 then
-		self._session:broadcast_server_up()
-	end
 end
 
--- Lines 568-575
+-- Lines 551-558
 function NetworkManager:join_game_at_host_rpc(host_rpc, result_cb)
 	self._discover_hosts_cb = nil
 
@@ -582,7 +564,7 @@ function NetworkManager:join_game_at_host_rpc(host_rpc, result_cb)
 	end
 end
 
--- Lines 579-583
+-- Lines 562-566
 function NetworkManager:register_spawn_point(id, data, spawner)
 	Application:debug("[NetworkManager:register_spawn_point]")
 
@@ -597,28 +579,28 @@ function NetworkManager:register_spawn_point(id, data, spawner)
 	self._spawn_points[id] = runtime_data
 end
 
--- Lines 587-589
+-- Lines 570-572
 function NetworkManager:unregister_spawn_point(id)
 	self._spawn_points[id] = nil
 end
 
--- Lines 593-596
+-- Lines 576-579
 function NetworkManager:unregister_all_spawn_points()
 	self._spawn_points = {}
 	self._session._spawn_point_beanbag = nil
 end
 
--- Lines 600-602
+-- Lines 583-585
 function NetworkManager:has_spawn_points()
 	return next(self._spawn_points)
 end
 
--- Lines 606-608
+-- Lines 589-591
 function NetworkManager:spawn_point(sp_id)
 	return self._spawn_points[sp_id]
 end
 
--- Lines 612-636
+-- Lines 595-619
 function NetworkManager:_register_PSN_matchmaking_callbacks()
 	local gen_clbk = callback(self, self, "clbk_PSN_event")
 
@@ -646,12 +628,12 @@ function NetworkManager:_register_PSN_matchmaking_callbacks()
 	PSN:set_matchmaking_callback("error", gen_clbk)
 end
 
--- Lines 640-642
+-- Lines 623-625
 function NetworkManager:clbk_PSN_event(...)
 	print("[NetworkManager:clbk_PSN_event]", inspect(...))
 end
 
--- Lines 646-654
+-- Lines 629-637
 function NetworkManager:search_ses()
 	PSN:set_matchmaking_callback("session_search", callback(self, self, "clbk_search_session"))
 
@@ -665,7 +647,7 @@ function NetworkManager:search_ses()
 	PSN:search_session(search_params, {}, PSN:get_world_list()[1].world_id)
 end
 
--- Lines 658-663
+-- Lines 641-646
 function NetworkManager:clbk_search_session(search_results)
 	print("[NetworkManager:clbk_search_session]", search_results)
 
@@ -674,7 +656,7 @@ function NetworkManager:clbk_search_session(search_results)
 	end
 end
 
--- Lines 667-678
+-- Lines 650-661
 function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	if msg_queue then
 		if overwrite_data.index then
@@ -693,19 +675,19 @@ function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	end
 end
 
--- Lines 682-684
+-- Lines 665-667
 function NetworkManager:protocol_type()
 	return self.PROTOCOL_TYPE
 end
 
--- Lines 688-692
+-- Lines 671-675
 function NetworkManager:set_packet_throttling_enabled(state)
 	if self._session and self._is_win32 then
 		self._session:set_packet_throttling_enabled(state)
 	end
 end
 
--- Lines 696-708
+-- Lines 679-691
 function NetworkManager:on_peer_added(peer, peer_id)
 	cat_print("multiplayer_base", "NetworkManager:on_peer_added", peer, peer_id)
 
@@ -713,7 +695,7 @@ function NetworkManager:on_peer_added(peer, peer_id)
 		managers.network.matchmake:set_num_players(managers.network:session():amount_of_players())
 	end
 
-	if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB360 or _G.IS_XB1 then
 		managers.network.matchmake:on_peer_added(peer)
 	end
 
@@ -724,19 +706,33 @@ function NetworkManager:on_peer_added(peer, peer_id)
 	end
 end
 
--- Lines 710-712
+-- Lines 693-695
 function NetworkManager:update_matchmake_attributes()
 	self.matchmake:set_server_attributes(self:get_matchmake_attributes())
 end
 
--- Lines 714-785
+-- Lines 697-786
 function NetworkManager:get_matchmake_attributes()
-	local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+	local is_win32 = _G.IS_PC
 	local difficulty_id = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
 	local permission_id = tweak_data:permission_to_index(Global.game_settings.permission)
 	local min_lvl = Global.game_settings.reputation_permission or 0
 	local drop_in = Global.game_settings.drop_in_allowed and 1 or 0
 	local level_id, job_id, progress, mission_type, server_state_id = managers.network.matchmake:get_job_info_by_current_job()
+	local level_id_index = 0
+
+	if not is_win32 then
+		level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
+
+		if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			level_id_index = tweak_data.operations:get_raid_index_from_raid_id(job_id, level_id)
+		elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+			level_id_index = tweak_data.operations:get_index_from_raid_id(level_id)
+		end
+	else
+		level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
+	end
+
 	local region = 1
 
 	if Global.game_settings.level_id and tweak_data.operations and tweak_data.operations.missions and tweak_data.operations.missions[Global.game_settings.level_id] and tweak_data.operations.missions[Global.game_settings.level_id].region then
@@ -782,7 +778,7 @@ function NetworkManager:get_matchmake_attributes()
 	return attributes
 end
 
--- Lines 790-799
+-- Lines 791-800
 function NetworkManager:start_matchmake_attributes_update()
 	if Network:is_server() then
 		managers.network:update_matchmake_attributes()

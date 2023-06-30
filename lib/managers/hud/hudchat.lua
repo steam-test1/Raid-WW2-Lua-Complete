@@ -4,6 +4,7 @@ HUDChat.H = 432
 HUDChat.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 HUDChat.BORDER_H = 2
 HUDChat.BORDER_COLOR = tweak_data.gui.colors.chat_border
+HUDChat.ANIMATION_MOVE_X_DISTANCE = 50
 HUDChat.NAME_FONT = tweak_data.gui.fonts.din_compressed
 HUDChat.NAME_FONT_SIZE = tweak_data.gui.font_sizes.size_20
 HUDChat.MESSAGE_FONT = tweak_data.gui.fonts.lato_outlined_18
@@ -20,10 +21,11 @@ HUDChat.CARET_W = 2
 HUDChat.CARET_H = 18
 HUDChat.MESSAGES_KEPT = 10
 HUDChat.MESSAGE_PADDING_DOWN = 15
-HUDChat.MESSAGE_MAX_SIZE = 100
+HUDChat.MESSAGE_MAX_SIZE = 150
+HUDChat.MESSAGE_MAX_SHOWTIME = 8
 HUDChat.line_height = 21
 
--- Lines 39-57
+-- Lines 42-60
 function HUDChat:init(ws, panel, background)
 	self._messages = {}
 	self._recieved_messages = {}
@@ -46,14 +48,14 @@ function HUDChat:init(ws, panel, background)
 	self:set_channel_id()
 end
 
--- Lines 59-63
+-- Lines 62-66
 function HUDChat:_setup_callbacks()
 	self._esc_callback = callback(self, self, "esc_key_callback")
 	self._enter_callback = callback(self, self, "enter_key_callback")
 	self._typing_callback = 0
 end
 
--- Lines 66-75
+-- Lines 69-78
 function HUDChat:_create_panel(panel)
 	local panel_params = {
 		visible = false,
@@ -66,7 +68,7 @@ function HUDChat:_create_panel(panel)
 	self._object = panel:panel(panel_params)
 end
 
--- Lines 77-105
+-- Lines 80-108
 function HUDChat:_create_background()
 	local background_params = {
 		name = "background",
@@ -76,9 +78,10 @@ function HUDChat:_create_background()
 	local background = self._object:bitmap(background_params)
 end
 
--- Lines 107-165
+-- Lines 110-175
 function HUDChat:_create_input()
 	local input_panel_params = {
+		alpha = 0.3,
 		name = "input_panel",
 		halign = "scale",
 		valign = "bottom",
@@ -105,6 +108,7 @@ function HUDChat:_create_input()
 		name = "input_text_background",
 		valign = "center",
 		halign = "center",
+		layer = 2,
 		texture = tweak_data.gui.icons[HUDChat.INPUT_TEXT_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDChat.INPUT_TEXT_BACKGROUND].texture_rect
 	}
@@ -141,7 +145,7 @@ function HUDChat:_create_input()
 	self._caret:set_center_y(self._input_text_panel:h() / 2)
 end
 
--- Lines 167-178
+-- Lines 177-193
 function HUDChat:_create_message_panel()
 	local message_panel_layer = self._object:child("background") and self._object:child("background"):layer() + 1 or 20
 	local message_panel_params = {
@@ -157,37 +161,37 @@ function HUDChat:_create_message_panel()
 	self._message_panel = self._object:panel(message_panel_params)
 end
 
--- Lines 182-184
+-- Lines 197-199
 function HUDChat:set_layer(layer)
 	self._object:set_layer(layer)
 end
 
--- Lines 186-188
+-- Lines 201-203
 function HUDChat:layer()
 	return self._object:layer()
 end
 
--- Lines 190-192
+-- Lines 205-207
 function HUDChat:set_bottom(y)
 	self._object:set_bottom(y)
 end
 
--- Lines 194-196
+-- Lines 209-211
 function HUDChat:channel_id()
 	return self._channel_id
 end
 
--- Lines 198-200
+-- Lines 213-215
 function HUDChat:register()
 	managers.chat:register_receiver(self._channel_id, self)
 end
 
--- Lines 202-204
+-- Lines 217-219
 function HUDChat:unregister()
 	managers.chat:unregister_receiver(self._channel_id, self)
 end
 
--- Lines 206-210
+-- Lines 221-225
 function HUDChat:set_channel_id()
 	self:unregister()
 
@@ -196,12 +200,12 @@ function HUDChat:set_channel_id()
 	self:register()
 end
 
--- Lines 212-214
+-- Lines 227-229
 function HUDChat:esc_key_callback()
 	managers.hud:set_chat_focus(false)
 end
 
--- Lines 217-230
+-- Lines 232-245
 function HUDChat:enter_key_callback()
 	local message = self._input_text:text()
 
@@ -216,7 +220,7 @@ function HUDChat:enter_key_callback()
 	managers.hud:set_chat_focus(false)
 end
 
--- Lines 232-248
+-- Lines 247-263
 function HUDChat:_create_input_panel()
 	self._input_panel = self._panel:panel({
 		name = "input_panel",
@@ -297,7 +301,7 @@ function HUDChat:_create_input_panel()
 	})
 end
 
--- Lines 250-284
+-- Lines 265-299
 function HUDChat:_layout_output_panel()
 	local output_panel = self._panel:child("output_panel")
 
@@ -340,7 +344,7 @@ function HUDChat:_layout_output_panel()
 	output_panel:set_bottom(self._input_panel:top())
 end
 
--- Lines 286-298
+-- Lines 301-313
 function HUDChat:_layout_input_panel()
 	self._input_panel:set_w(self._panel_width)
 
@@ -356,37 +360,39 @@ function HUDChat:_layout_input_panel()
 	self._input_panel:set_y(self._input_panel:parent():h() - self._input_panel:h())
 end
 
--- Lines 300-302
+-- Lines 315-317
 function HUDChat:input_focus()
 	return self._focus
 end
 
--- Lines 304-306
+-- Lines 319-321
 function HUDChat:set_skip_first(skip_first)
 	self._skip_first = skip_first
 end
 
--- Lines 308-312
+-- Lines 323-328
 function HUDChat:show()
 	self._shown = true
 
-	self._object:set_visible(true)
+	self._object:stop()
+	self._object:animate(callback(self, self, "_animate_show"))
 	managers.queued_tasks:unqueue("hide_chat")
 end
 
--- Lines 314-317
+-- Lines 331-335
 function HUDChat:hide()
 	self._shown = false
 
-	self._object:set_visible(false)
+	self._object:stop()
+	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 319-321
+-- Lines 337-339
 function HUDChat:shown()
 	return self._shown
 end
 
--- Lines 323-339
+-- Lines 341-359
 function HUDChat:_on_focus()
 	if self._focus then
 		return
@@ -402,19 +408,20 @@ function HUDChat:_on_focus()
 
 	self._enter_text_set = false
 
+	self._input_panel:set_alpha(1)
 	self:set_layer(1100)
 	self:_layout_message_panel()
 	self:update_caret()
 end
 
--- Lines 341-358
+-- Lines 361-379
 function HUDChat:_loose_focus()
 	if not self._focus then
 		return
 	end
 
 	if not managers.queued_tasks:has_task("hide_chat") then
-		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, 4, nil)
+		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, HUDChat.MESSAGE_MAX_SHOWTIME, nil)
 	end
 
 	self._focus = false
@@ -423,10 +430,11 @@ function HUDChat:_loose_focus()
 	self._input_panel:key_press(nil)
 	self._input_panel:enter_text(nil)
 	self._input_panel:key_release(nil)
+	self._input_panel:set_alpha(0.3)
 	self:update_caret()
 end
 
--- Lines 360-366
+-- Lines 381-387
 function HUDChat:clear()
 	self._input_text:set_text("")
 	self._input_text:set_selection(0, 0)
@@ -434,14 +442,14 @@ function HUDChat:clear()
 	managers.hud:set_chat_focus(false)
 end
 
--- Lines 368-371
+-- Lines 389-392
 function HUDChat:_shift()
 	local k = Input:keyboard()
 
 	return k:down("left shift") or k:down("right shift") or k:has_button("shift") and k:down("shift")
 end
 
--- Lines 374-381
+-- Lines 395-402
 function HUDChat.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -451,7 +459,7 @@ function HUDChat.blink(o)
 	end
 end
 
--- Lines 383-388
+-- Lines 404-409
 function HUDChat:set_blinking(b)
 	if b == self._blinking then
 		return
@@ -470,7 +478,7 @@ function HUDChat:set_blinking(b)
 	end
 end
 
--- Lines 390-412
+-- Lines 411-434
 function HUDChat:update_caret()
 	local s, e = self._input_text:selection()
 	local x, y, w, h = self._input_text:selection_rect()
@@ -502,9 +510,10 @@ function HUDChat:update_caret()
 
 	self._caret:set_world_shape(x + 2, self._caret:world_y(), HUDChat.CARET_W, HUDChat.CARET_H)
 	self:set_blinking(s == e and self._focus)
+	self._caret:set_visible(self._focus)
 end
 
--- Lines 415-450
+-- Lines 437-472
 function HUDChat:enter_text(o, s)
 	if managers.hud and managers.hud:showing_stats_screen() then
 		return
@@ -540,7 +549,7 @@ function HUDChat:enter_text(o, s)
 	self:update_caret()
 end
 
--- Lines 453-499
+-- Lines 475-521
 function HUDChat:update_key_down(o, k)
 	wait(0.6)
 
@@ -591,14 +600,14 @@ function HUDChat:update_key_down(o, k)
 	end
 end
 
--- Lines 501-505
+-- Lines 523-527
 function HUDChat:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
 end
 
--- Lines 508-584
+-- Lines 530-606
 function HUDChat:key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -670,7 +679,52 @@ function HUDChat:key_press(o, k)
 	self:update_caret()
 end
 
--- Lines 586-597
+-- Lines 609-628
+function HUDChat:_animate_show(panel)
+	local duration = 0.2
+	local t = panel:alpha() * duration
+
+	panel:set_visible(true)
+
+	while t < duration do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_alpha = Easing.quintic_in_out(t, 0, 1, duration)
+
+		panel:set_alpha(curr_alpha)
+
+		local current_x_offset = (1 - curr_alpha) * HUDChat.ANIMATION_MOVE_X_DISTANCE
+
+		panel:set_left(current_x_offset)
+	end
+
+	panel:set_alpha(1)
+	panel:set_left(0)
+end
+
+-- Lines 630-648
+function HUDChat:_animate_hide(panel)
+	local duration = 0.2
+	local t = (1 - panel:alpha()) * duration
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_alpha = Easing.quintic_in_out(t, 1, -1, duration)
+
+		panel:set_alpha(curr_alpha)
+
+		local current_x_offset = (1 - curr_alpha) * HUDChat.ANIMATION_MOVE_X_DISTANCE
+
+		panel:set_left(current_x_offset)
+	end
+
+	panel:set_alpha(0)
+	panel:set_left(HUDChat.ANIMATION_MOVE_X_DISTANCE)
+	panel:set_visible(false)
+end
+
+-- Lines 650-661
 function HUDChat:_layout_input_text()
 	local _, _, w, _ = self._input_text:text_rect()
 	local default_w = self._input_text_panel:w() - HUDChat.INPUT_TEXT_X - HUDChat.INPUT_TEXT_PADDING_RIGHT
@@ -684,11 +738,11 @@ function HUDChat:_layout_input_text()
 	end
 end
 
--- Lines 600-602
+-- Lines 664-666
 function HUDChat:send_message(name, message)
 end
 
--- Lines 604-614
+-- Lines 668-678
 function HUDChat:_message_in_same_thread(peer_id, system_message)
 	if #self._messages == 0 then
 		return false
@@ -701,13 +755,30 @@ function HUDChat:_message_in_same_thread(peer_id, system_message)
 	return false
 end
 
--- Lines 616-665
+-- Lines 680-747
 function HUDChat:receive_message(name, peer_id, message, color, icon, system_message)
 	if peer_id then
 		local peer = managers.network:session():peer(peer_id)
 
 		if not peer or peer:is_muted() then
 			return
+		end
+	end
+
+	local localized_message = message
+	local message_data = string.split(message, "~")
+
+	if message_data[1] then
+		if message_data[2] then
+			localized_message = managers.localization:text(message_data[1], {
+				TARGET = message_data[2]
+			})
+		else
+			local com_data = string.split(message_data[1], "_")
+
+			if com_data[1] == "com" then
+				localized_message = managers.localization:text(message_data[1])
+			end
 		end
 	end
 
@@ -726,9 +797,9 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 	end
 
 	if self:_message_in_same_thread(peer_id, system_message) then
-		self._messages[#self._messages]:add_message(message)
+		self._messages[#self._messages]:add_message(localized_message)
 	else
-		local message = message_type:new(self._message_panel, name, message, peer_id)
+		local message = message_type:new(self._message_panel, name, localized_message, peer_id)
 
 		if #self._messages == HUDChat.MESSAGES_KEPT then
 			self._messages[1]:destroy()
@@ -747,16 +818,16 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 	end
 
 	if not self._focus then
-		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, 4, nil)
+		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, HUDChat.MESSAGE_MAX_SHOWTIME, nil)
 	end
 end
 
--- Lines 667-669
+-- Lines 749-751
 function HUDChat:ct_cached_messages()
 	return #self._recieved_messages
 end
 
--- Lines 671-684
+-- Lines 753-766
 function HUDChat:_layout_message_panel()
 	local h = 0
 	local bottom = self._message_panel:h()
@@ -772,12 +843,12 @@ function HUDChat:_layout_message_panel()
 	self._message_panel:set_bottom(self._object:h() - self._input_panel:h())
 end
 
--- Lines 686-688
+-- Lines 768-770
 function HUDChat:set_output_alpha(alpha)
 	self._panel:child("output_panel"):set_alpha(alpha)
 end
 
--- Lines 690-696
+-- Lines 772-778
 function HUDChat:remove()
 	self._panel:child("output_panel"):stop()
 	self._input_panel:stop()

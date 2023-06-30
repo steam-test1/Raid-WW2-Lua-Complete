@@ -70,7 +70,7 @@ function RaidGUIControlStatsBreakdown:_create_stats_label()
 	self._stats_label = self._object:text(stats_label_params)
 end
 
--- Lines 78-99
+-- Lines 78-111
 function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 	local breakdown_table_params = {
 		name = "breakdown_table",
@@ -107,12 +107,12 @@ function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 	self._breakdown_table = self._control_panel:table(breakdown_table_params)
 end
 
--- Lines 102-104
+-- Lines 114-116
 function RaidGUIControlStatsBreakdown:_fit_panel()
 	self._object:set_h(self._breakdown_table:y() + self._breakdown_table:h())
 end
 
--- Lines 106-119
+-- Lines 118-131
 function RaidGUIControlStatsBreakdown:hide()
 	self._stats_label:set_alpha(0)
 	self._breakdown_table._table_panel:set_alpha(0)
@@ -128,12 +128,12 @@ function RaidGUIControlStatsBreakdown:hide()
 	end
 end
 
--- Lines 121-123
+-- Lines 133-135
 function RaidGUIControlStatsBreakdown:fade_in()
 	self._stats_label:animate(callback(self, self, "_animate_table_fade_in"))
 end
 
--- Lines 125-186
+-- Lines 137-198
 function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 	local t = 0
 	local label_duration = 0.4
@@ -181,7 +181,7 @@ function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 	wait(#rows * 0.1 + 0.1)
 end
 
--- Lines 188-207
+-- Lines 200-219
 function RaidGUIControlStatsBreakdown:_animate_table_row_fade_in(label, row, delay)
 	local t = 0
 	local duration = 0.2

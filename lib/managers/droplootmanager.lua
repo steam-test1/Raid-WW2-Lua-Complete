@@ -44,8 +44,8 @@ function DropLootManager:_choose_item(current_level_table, level, multiplier)
 	end
 end
 
--- Lines 42-80
-function DropLootManager:drop_item(tweak_table, position, rotation)
+-- Lines 42-84
+function DropLootManager:drop_item(tweak_table, position, rotation, world_id)
 	if not self._enabled then
 		return nil
 	end
@@ -81,7 +81,8 @@ function DropLootManager:drop_item(tweak_table, position, rotation)
 		local spawned_unit = managers.game_play_central:spawn_pickup({
 			name = item,
 			position = position,
-			rotation = rotation
+			rotation = rotation,
+			world_id = world_id
 		})
 
 		table.insert(self._spawned_units, spawned_unit)
@@ -92,24 +93,30 @@ function DropLootManager:drop_item(tweak_table, position, rotation)
 	return nil
 end
 
--- Lines 82-84
+-- Lines 86-94
 function DropLootManager:clear()
+	for _, spawned_unit in pairs(self._spawned_units or {}) do
+		if alive(spawned_unit) then
+			spawned_unit:set_slot(0)
+		end
+	end
+
 	self._spawned_units = {}
 end
 
--- Lines 86-88
+-- Lines 96-98
 function DropLootManager:set_enabled(enabled)
 	self._enabled = enabled
 end
 
--- Lines 90-92
+-- Lines 100-102
 function DropLootManager:on_simulation_ended()
 	self._difficulty_index = nil
 end
 
--- Lines 94-101
+-- Lines 104-111
 function DropLootManager:despawn_item(unit)
-	for index, spawned_unit in pairs(self._spawned_units) do
+	for index, spawned_unit in pairs(self._spawned_units or {}) do
 		if alive(spawned_unit) and unit == spawned_unit then
 			spawned_unit:set_slot(0)
 			table.remove(self._spawned_units, index)

@@ -1,18 +1,18 @@
 RaidGUIControlRespec = RaidGUIControlRespec or class(RaidGUIControl)
-RaidGUIControlRespec.DEFAULT_W = 520
-RaidGUIControlRespec.DEFAULT_H = 240
+RaidGUIControlRespec.DEFAULT_W = 320
+RaidGUIControlRespec.DEFAULT_H = 150
 RaidGUIControlRespec.TITLE_H = 64
 RaidGUIControlRespec.TITLE_FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlRespec.TITLE_FONT_SIZE = tweak_data.gui.font_sizes.size_38
 RaidGUIControlRespec.TITLE_COLOR = Color.white
-RaidGUIControlRespec.DESCRIPTION_W = 520
+RaidGUIControlRespec.DESCRIPTION_W = 320
 RaidGUIControlRespec.DESCRIPTION_Y = 80
 RaidGUIControlRespec.DESCRIPTION_FONT = tweak_data.gui.fonts.lato
 RaidGUIControlRespec.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_sizes.size_20
 RaidGUIControlRespec.DESCRIPTION_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlRespec.COST_PADDING_DOWN = 32
 
--- Lines 20-31
+-- Lines 19-30
 function RaidGUIControlRespec:init(parent, params)
 	RaidGUIControlRespec.super.init(self, parent, params)
 
@@ -23,11 +23,10 @@ function RaidGUIControlRespec:init(parent, params)
 	end
 
 	self:_create_control_panel()
-	self:_create_respec_title()
 	self:_create_respec_description()
 end
 
--- Lines 34-42
+-- Lines 33-41
 function RaidGUIControlRespec:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.name = control_params.name .. "_customization_panel"
@@ -38,7 +37,7 @@ function RaidGUIControlRespec:_create_control_panel()
 	self._object = self._control_panel
 end
 
--- Lines 44-58
+-- Lines 43-57
 function RaidGUIControlRespec:_create_respec_title()
 	local skill_title_params = {
 		vertical = "center",
@@ -57,7 +56,7 @@ function RaidGUIControlRespec:_create_respec_title()
 	self._title = self._object:label(skill_title_params)
 end
 
--- Lines 60-73
+-- Lines 59-73
 function RaidGUIControlRespec:_create_respec_description()
 	local description_text_params = {
 		name = "respec_description",
@@ -67,7 +66,7 @@ function RaidGUIControlRespec:_create_respec_description()
 		text = managers.localization:text("menu_character_skills_retrain_desc"),
 		y = RaidGUIControlRespec.DESCRIPTION_Y,
 		w = RaidGUIControlRespec.DESCRIPTION_W,
-		h = self._object:h() - self._title:h(),
+		h = self._object:h(),
 		font = RaidGUIControlRespec.DESCRIPTION_FONT,
 		font_size = RaidGUIControlRespec.DESCRIPTION_FONT_SIZE,
 		color = RaidGUIControlRespec.DESCRIPTION_COLOR

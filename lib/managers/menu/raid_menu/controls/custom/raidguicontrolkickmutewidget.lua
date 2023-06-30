@@ -26,7 +26,7 @@ function RaidGUIControlKickMuteWidget:init(parent, params)
 	self:_create_kick_button()
 	self:_create_mute_button()
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		self:_create_gamercard_button()
 	end
 
@@ -122,7 +122,7 @@ function RaidGUIControlKickMuteWidget:_create_mute_button()
 		on_unselected_callback = callback(self, self, "on_button_unselected", "mute")
 	}
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		mute_button_params.on_menu_move.left = "gamercard_button_" .. tostring(self._index)
 	else
 		mute_button_params.on_menu_move.left = "list_menu"
@@ -189,7 +189,36 @@ function RaidGUIControlKickMuteWidget:_refresh_mute_button()
 	self._mute_button:set_value(self._peer:is_muted())
 end
 
--- Lines 166-176
+-- Lines 167-205
+function RaidGUIControlKickMuteWidget:_refresh_vote_kick_button()
+	Application:debug("[RaidGUIControlKickMuteWidget:_refresh_vote_kick_button] entered 1 ")
+
+	if Network:is_client() then
+		if not self._kick_button then
+			return
+		end
+
+		if not managers.vote:option_vote_kick() then
+			self._kick_button:hide()
+			self._kick_button:set_visible(false)
+
+			return
+		elseif not self._kick_button:get_visible() and (not self._peer or self._peer:name() ~= managers.network:session():server_peer():name()) then
+			self._kick_button:show()
+			self._kick_button:set_visible(true)
+		end
+
+		if self._kick_button:alpha() > 0 then
+			if managers.vote:option_vote_kick() and managers.vote:available() then
+				self._kick_button:set_alpha(1)
+			else
+				self._kick_button:set_alpha(0.3)
+			end
+		end
+	end
+end
+
+-- Lines 208-241
 function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._peer = peer
 
@@ -200,11 +229,29 @@ function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._name:set_w(w)
 	self:_refresh_mute_button()
 	self._mute_button:set_visible(mute_button)
-	self._kick_button:set_visible(kick_button)
+
+	if mute_button then
+		self._mute_button:show()
+	end
+
+	if SystemInfo:platform() == Idstring("XB1") then
+		self._gamercard_button:show()
+	end
+
+	if kick_button or managers.vote:option_vote_kick() then
+		self._kick_button:show()
+		self._kick_button:set_visible(true)
+	end
+
+	if Network:is_client() and managers.vote:option_vote_kick() and peer:name() == managers.network:session():server_peer():name() then
+		self._kick_button:hide()
+		self._kick_button:set_visible(false)
+	end
+
 	self._object:set_visible(true)
 end
 
--- Lines 178-196
+-- Lines 243-261
 function RaidGUIControlKickMuteWidget:calculate_width()
 	local w = 0
 	local leftmost_button_x = self._object:w()
@@ -223,13 +270,13 @@ function RaidGUIControlKickMuteWidget:calculate_width()
 	return w
 end
 
--- Lines 198-201
+-- Lines 263-266
 function RaidGUIControlKickMuteWidget:set_w(w)
 	RaidGUIControlKickMuteWidget.super.set_w(self, w)
 	self:_fit_size()
 end
 
--- Lines 203-231
+-- Lines 268-296
 function RaidGUIControlKickMuteWidget:_fit_size()
 	local _, _, w, _ = self._name:text_rect()
 
@@ -249,7 +296,7 @@ function RaidGUIControlKickMuteWidget:_fit_size()
 
 	local button_panel_left = nil
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		self._gamercard_button:set_center_x(self._mute_button:center_x() - RaidGUIControlKickMuteWidget.BUTTON_PADDING)
 
 		button_panel_left = self._gamercard_button:x()
@@ -262,14 +309,14 @@ function RaidGUIControlKickMuteWidget:_fit_size()
 	self._name:set_x(RaidGUIControlKickMuteWidget.NAME_X)
 end
 
--- Lines 233-237
+-- Lines 298-302
 function RaidGUIControlKickMuteWidget:on_mute_selected()
 	if self._params.on_button_selected_callback then
 		self._params.on_button_selected_callback(self._mute_button:get_value() and "unmute" or "mute")
 	end
 end
 
--- Lines 239-248
+-- Lines 304-313
 function RaidGUIControlKickMuteWidget:on_mute_pressed()
 	if not self._peer then
 		return
@@ -280,7 +327,7 @@ function RaidGUIControlKickMuteWidget:on_mute_pressed()
 	self:_refresh_mute_button()
 end
 
--- Lines 250-260
+-- Lines 315-332
 function RaidGUIControlKickMuteWidget:on_kick_pressed()
 	if not self._peer then
 		return
@@ -291,15 +338,21 @@ function RaidGUIControlKickMuteWidget:on_kick_pressed()
 		player_name = self._peer:name()
 	}
 
-	managers.menu:show_kick_peer_dialog(params)
+	if Network:is_client() then
+		if managers.vote:option_vote_kick() and managers.vote:available() then
+			managers.menu:show_kick_peer_dialog(params)
+		end
+	else
+		managers.menu:show_kick_peer_dialog(params)
+	end
 end
 
--- Lines 262-264
+-- Lines 334-336
 function RaidGUIControlKickMuteWidget:on_invite_pressed()
 	RaidMenuCallbackHandler.invite_friend()
 end
 
--- Lines 266-275
+-- Lines 338-347
 function RaidGUIControlKickMuteWidget:set_invite_widget()
 	for index, button in pairs(self._buttons) do
 		button:set_visible(false)
@@ -310,7 +363,7 @@ function RaidGUIControlKickMuteWidget:set_invite_widget()
 	self._name:set_text(self:translate("menu_widget_label_invite_player", true))
 end
 
--- Lines 277-329
+-- Lines 349-401
 function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown, invite_widget_shown)
 	if number_of_widgets_shown < 2 then
 		local invite_button_move = {
@@ -328,7 +381,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	local is_invite_down = invite_widget_shown and self._index == number_of_widgets_shown - 1
 	local on_menu_move = nil
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		on_menu_move = {
 			left = "list_menu",
 			right = "mute_button_" .. tostring(self._index),
@@ -340,7 +393,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	end
 
 	on_menu_move = {
-		left = SystemInfo:platform() == Idstring("XB1") and "gamercard_button_" .. tostring(self._index) or "list_menu",
+		left = _G.IS_XB1 and "gamercard_button_" .. tostring(self._index) or "list_menu",
 		right = Network:is_server() and "kick_button_" .. tostring(self._index),
 		up = is_invite_up and "invite_button_" .. tostring(move_up_index) or "mute_button_" .. tostring(move_up_index),
 		down = is_invite_down and "invite_button_" .. tostring(move_down_index) or "mute_button_" .. tostring(move_down_index)
@@ -365,32 +418,36 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	self._invite_button:set_menu_move_controls(on_menu_move)
 end
 
--- Lines 331-336
+-- Lines 403-408
 function RaidGUIControlKickMuteWidget:show_gamercard()
 	Application:trace("[RaidGUIControlKickMuteWidget:show_gamercard] showing gamercard for peer " .. tostring(self._peer:name()))
 	Application:debug("[RaidGUIControlKickMuteWidget:show_gamercard]", inspect(self._peer))
 	self._callback_handler:view_gamer_card(self._peer:xuid())
 end
 
--- Lines 338-341
+-- Lines 410-417
 function RaidGUIControlKickMuteWidget:on_kick_confirmed()
-	managers.vote:host_kick(self._peer)
-	managers.menu_component:post_event("kick_player")
+	if Network:is_client() then
+		managers.vote:kick(self._peer:id())
+	else
+		managers.vote:host_kick(self._peer)
+		managers.menu_component:post_event("kick_player")
+	end
 end
 
--- Lines 343-346
+-- Lines 419-422
 function RaidGUIControlKickMuteWidget:highlight_on()
 	self._highlight_line:stop()
 	self._highlight_line:animate(callback(self, self, "_animate_highlight_on"))
 end
 
--- Lines 348-351
+-- Lines 424-427
 function RaidGUIControlKickMuteWidget:highlight_off()
 	self._highlight_line:stop()
 	self._highlight_line:animate(callback(self, self, "_animate_highlight_off"))
 end
 
--- Lines 353-363
+-- Lines 429-439
 function RaidGUIControlKickMuteWidget:set_selected(selected)
 	self._selected = selected
 
@@ -403,21 +460,21 @@ function RaidGUIControlKickMuteWidget:set_selected(selected)
 	end
 end
 
--- Lines 365-369
+-- Lines 441-445
 function RaidGUIControlKickMuteWidget:on_button_selected(button)
 	if self._params.on_button_selected_callback then
 		self._params.on_button_selected_callback(button)
 	end
 end
 
--- Lines 371-375
+-- Lines 447-451
 function RaidGUIControlKickMuteWidget:on_button_unselected(button)
 	if self._params.on_button_unselected_callback then
 		self._params.on_button_unselected_callback(button)
 	end
 end
 
--- Lines 377-390
+-- Lines 453-466
 function RaidGUIControlKickMuteWidget:_animate_highlight_on()
 	local duration = 0.2
 	local t = self._highlight_line:alpha() * duration
@@ -433,7 +490,7 @@ function RaidGUIControlKickMuteWidget:_animate_highlight_on()
 	self._highlight_line:set_alpha(1)
 end
 
--- Lines 392-405
+-- Lines 468-481
 function RaidGUIControlKickMuteWidget:_animate_highlight_off()
 	local duration = 0.2
 	local t = (1 - self._highlight_line:alpha()) * duration

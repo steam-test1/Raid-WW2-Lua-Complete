@@ -80,7 +80,7 @@ LootScreenGui.LOOT_BOXES_IMAGES = {
 	"loot_crate_gold"
 }
 
--- Lines 92-108
+-- Lines 92-119
 function LootScreenGui:init(ws, fullscreen_ws, node, component_name)
 	print("[LootScreenGui:init()]")
 
@@ -90,6 +90,14 @@ function LootScreenGui:init(ws, fullscreen_ws, node, component_name)
 	self.showing_loot = false
 	self.local_loot_shown = false
 	self.current_state = game_state_machine:current_state()
+
+	self.current_state:drop_loot_for_player()
+
+	self.loot_data = self.current_state.loot_data
+	self.loot_acquired = self.current_state.loot_acquired
+	self.loot_spawned = self.current_state.loot_spawned
+	self.local_player_loot_drop = self.current_state.local_player_loot_drop
+	self.peers_loot_drops = self.current_state.peers_loot_drops
 	self._callback_handler = RaidMenuCallbackHandler:new()
 
 	LootScreenGui.super.init(self, ws, fullscreen_ws, node, component_name)
@@ -99,7 +107,7 @@ function LootScreenGui:init(ws, fullscreen_ws, node, component_name)
 	self._local_peer_id = managers.network:session():local_peer():id()
 end
 
--- Lines 111-134
+-- Lines 122-145
 function LootScreenGui:_layout()
 	LootScreenGui.super._layout(self)
 	self:_create_fullscreen_panel()
@@ -110,20 +118,20 @@ function LootScreenGui:_layout()
 	self:_layout_second_screen()
 	self:refresh_peers_loot_display()
 
-	local loot_acquired = self.current_state.loot_acquired
-	local loot_spawned = self.current_state.loot_spawned
+	local loot_acquired = self.loot_acquired
+	local loot_spawned = self.loot_spawned
 
 	self:bind_controller_inputs()
 	self:give_points(loot_acquired, loot_spawned)
 end
 
--- Lines 136-139
+-- Lines 147-150
 function LootScreenGui:_create_fullscreen_panel()
 	self._full_workspace = Overlay:gui():create_screen_workspace()
 	self._fullscreen_panel = self._full_workspace:panel()
 end
 
--- Lines 141-197
+-- Lines 152-208
 function LootScreenGui:_create_flares()
 	local flare_panel_params = {
 		layer = 1,
@@ -186,7 +194,7 @@ function LootScreenGui:_create_flares()
 	self._lens_spike_ball:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
 end
 
--- Lines 199-216
+-- Lines 210-227
 function LootScreenGui:_layout_profile_name()
 	local x, y, w, h = self._node.components.raid_menu_header:get_screen_name_rect()
 	local profile_name_label_params = {
@@ -207,19 +215,14 @@ function LootScreenGui:_layout_profile_name()
 	self._profile_name:set_bottom(y + h + LootScreenGui.PROFILE_NAME_OFFSET_DOWN)
 end
 
--- Lines 218-267
+-- Lines 229-276
 function LootScreenGui:_layout_loot_breakdown_items()
 	local persistent_panel_params = {
 		layer = 10,
 		name = "loot_screen_persistent_panel"
 	}
 	self._persistent_panel = self._root_panel:panel(persistent_panel_params)
-	local v = true
-
-	if managers.challenge_cards.forced_loot_card then
-		v = false
-	end
-
+	local v = not managers.challenge_cards.forced_loot_card
 	local loot_data_panel_params = {
 		name = "loot_screen_loot_data_panel",
 		h = 426,
@@ -259,7 +262,7 @@ function LootScreenGui:_layout_loot_breakdown_items()
 	end
 end
 
--- Lines 269-311
+-- Lines 278-320
 function LootScreenGui:_layout_loot_crates()
 	local loot_crate_panel_params = {
 		alpha = 1,
@@ -306,7 +309,7 @@ function LootScreenGui:_layout_loot_crates()
 	self._crate_image_shown = 1
 end
 
--- Lines 313-410
+-- Lines 322-419
 function LootScreenGui:_layout_first_screen()
 	local first_screen_panel_params = {
 		alpha = 0,
@@ -418,7 +421,7 @@ function LootScreenGui:_layout_first_screen()
 	self._bracket_unlocked_label = self._first_screen_panel:text(bracket_unlocked_label_params)
 end
 
--- Lines 412-462
+-- Lines 421-471
 function LootScreenGui:_layout_second_screen()
 	local second_screen_panel_params = {
 		name = "second_screen_panel",
@@ -508,7 +511,7 @@ function LootScreenGui:_layout_second_screen()
 	self._gold_bar_reward = self._local_loot_panel:create_custom_control(RaidGUIControlGoldBarRewardDetails, gold_bar_reward_params)
 end
 
--- Lines 464-487
+-- Lines 473-496
 function LootScreenGui:_get_loot_point_data()
 	local tree = {
 		{
@@ -531,14 +534,14 @@ function LootScreenGui:_get_loot_point_data()
 	return tree
 end
 
--- Lines 489-491
+-- Lines 498-500
 function LootScreenGui:data_source_branching_progress_bar()
 	return self:_get_loot_point_data()
 end
 
--- Lines 494-528
+-- Lines 503-537
 function LootScreenGui:_show_local_loot_display()
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	Application:trace("[LootScreenGui:_show_local_loot_display] drop ", inspect(drop))
 
@@ -574,16 +577,16 @@ function LootScreenGui:_show_local_loot_display()
 	end
 end
 
--- Lines 531-559
+-- Lines 540-568
 function LootScreenGui:refresh_peers_loot_display()
-	local peer_drops = self.current_state.peers_loot_drops
+	local peer_drops = self.peers_loot_drops
 
 	for _, drop in ipairs(peer_drops) do
 		self:on_loot_dropped_for_peer(drop)
 	end
 end
 
--- Lines 562-572
+-- Lines 571-581
 function LootScreenGui:_continue_button_on_click()
 	if not self.showing_loot then
 		self._root_panel:get_engine_panel():stop()
@@ -595,17 +598,17 @@ function LootScreenGui:_continue_button_on_click()
 	end
 end
 
--- Lines 575-577
+-- Lines 584-586
 function LootScreenGui:redeem_card_xp()
 	managers.menu:close_menu("raid_menu_loot_screen")
 end
 
--- Lines 580-582
+-- Lines 589-591
 function LootScreenGui:redeem_customization_xp()
 	managers.menu:close_menu("raid_menu_loot_screen")
 end
 
--- Lines 584-592
+-- Lines 593-601
 function LootScreenGui:show_gamercard(i)
 	local peer_id = self._peer_slots[i].peer_id
 	local peer = managers.network:session():peer(peer_id)
@@ -615,7 +618,7 @@ function LootScreenGui:show_gamercard(i)
 	self._callback_handler:view_gamer_card(peer:xuid())
 end
 
--- Lines 595-620
+-- Lines 604-629
 function LootScreenGui:close()
 	self._root_panel:get_engine_panel():stop()
 
@@ -644,7 +647,7 @@ function LootScreenGui:close()
 	end
 end
 
--- Lines 623-691
+-- Lines 632-700
 function LootScreenGui:on_loot_dropped_for_peer(drop)
 	local slot = nil
 
@@ -714,7 +717,7 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 	slot.control:set_player_name(utf8.to_upper(player_name))
 
 	if self.peer_loot_shown then
-		local drop = self.current_state.local_player_loot_drop
+		local drop = self.local_player_loot_drop
 
 		if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
 			self:bind_controller_inputs_card_rewards()
@@ -724,12 +727,12 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 	end
 end
 
--- Lines 693-695
+-- Lines 702-704
 function LootScreenGui:give_points(points_acquired, points_total)
 	self._root_panel:get_engine_panel():animate(callback(self, self, "_animate_giving_points"), points_acquired, points_total)
 end
 
--- Lines 697-711
+-- Lines 706-720
 function LootScreenGui:set_points(points_acquired, points_total)
 	self._acquired_loot_label:set_text(string.format("%04.0f", math.ceil(points_acquired)))
 
@@ -740,7 +743,7 @@ function LootScreenGui:set_points(points_acquired, points_total)
 	end
 end
 
--- Lines 714-719
+-- Lines 723-728
 function LootScreenGui:_loot_counter_timer_value(percentage)
 	local longest_timer = 0.07
 	local shortest_timer = 0.055
@@ -748,7 +751,7 @@ function LootScreenGui:_loot_counter_timer_value(percentage)
 	return longest_timer * math.sin(2 * math.deg(math.pi) * (percentage + 1) + 90) + longest_timer + shortest_timer
 end
 
--- Lines 721-734
+-- Lines 730-743
 function LootScreenGui:_crate_shown_for_points_given(points)
 	local loot_total = math.max(1, self._loot_total or 0)
 	local points_percentage = math.clamp(points / loot_total, 0, 1)
@@ -763,7 +766,7 @@ function LootScreenGui:_crate_shown_for_points_given(points)
 	return crate_index
 end
 
--- Lines 736-774
+-- Lines 745-783
 function LootScreenGui:_animate_change_crate(panel, new_crate_index)
 	local duration = 0.25
 	local fade_out_duration_percentage = 0.6
@@ -806,7 +809,7 @@ function LootScreenGui:_animate_change_crate(panel, new_crate_index)
 	self._crate_images[new_crate_index]:set_alpha(1)
 end
 
--- Lines 776-797
+-- Lines 785-806
 function LootScreenGui:_animate_crate_hide(panel)
 	local duration = 0.2
 	local t = 0
@@ -831,7 +834,7 @@ function LootScreenGui:_animate_crate_hide(panel)
 	self._crate_image_shown = nil
 end
 
--- Lines 799-874
+-- Lines 808-883
 function LootScreenGui:_animate_giving_points(panel, points_acquired, points_total)
 	local t = 0
 	self._given_points = false
@@ -912,7 +915,7 @@ function LootScreenGui:_animate_giving_points(panel, points_acquired, points_tot
 	self:_animate_show_loot(panel)
 end
 
--- Lines 876-911
+-- Lines 885-920
 function LootScreenGui:_finalize_giving_points()
 	local shown_crate_index = self:_crate_shown_for_points_given(self._loot_acquired)
 	self._crate_image_shown = shown_crate_index
@@ -953,7 +956,7 @@ function LootScreenGui:_finalize_giving_points()
 	end
 end
 
--- Lines 913-958
+-- Lines 922-967
 function LootScreenGui:_animate_lens_flares()
 	local fade_in_duration = 1.1
 	local t = 0
@@ -995,7 +998,7 @@ function LootScreenGui:_animate_lens_flares()
 	end
 end
 
--- Lines 960-991
+-- Lines 969-1000
 function LootScreenGui:_animate_hide_lens_flares()
 	local fade_out_duration = 0.2
 	local t = 0
@@ -1027,7 +1030,7 @@ function LootScreenGui:_animate_hide_lens_flares()
 	self._flare_panel:set_alpha(0)
 end
 
--- Lines 993-1081
+-- Lines 1002-1088
 function LootScreenGui:_animate_show_loot(panel)
 	self.showing_loot = true
 
@@ -1044,15 +1047,13 @@ function LootScreenGui:_animate_show_loot(panel)
 		wait(1)
 	end
 
-	self.current_state:drop_loot_for_player()
-
 	for index, loot_item in pairs(self._loot_breakdown_items) do
 		loot_item:hide((index - 1) * 0.08)
 	end
 
 	wait(1)
 
-	while not self.current_state.local_player_loot_drop do
+	while not self.local_player_loot_drop do
 		coroutine.yield()
 	end
 
@@ -1089,7 +1090,7 @@ function LootScreenGui:_animate_show_loot(panel)
 
 	self._peer_loot_panel:set_alpha(1)
 
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
 		self:bind_controller_inputs_card_rewards()
@@ -1098,7 +1099,7 @@ function LootScreenGui:_animate_show_loot(panel)
 	end
 end
 
--- Lines 1084-1125
+-- Lines 1091-1132
 function LootScreenGui:_animate_bracket_unlocked_label(label, new_bracket)
 	local fade_out_duration = 0.15
 	local t = (1 - self._bracket_unlocked_label:alpha()) * fade_out_duration
@@ -1144,15 +1145,15 @@ function LootScreenGui:_animate_bracket_unlocked_label(label, new_bracket)
 	self._bracket_unlocked_label:set_alpha(1)
 end
 
--- Lines 1127-1133
+-- Lines 1134-1140
 function LootScreenGui:_reveal_challenge_card()
 	self._card_pack_reward:confirm_pressed()
 	self:bind_controller_inputs_card_rewards()
 end
 
--- Lines 1135-1148
+-- Lines 1142-1155
 function LootScreenGui:move_left()
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	if not drop then
 		return false
@@ -1166,9 +1167,9 @@ function LootScreenGui:move_left()
 	return true
 end
 
--- Lines 1150-1163
+-- Lines 1157-1170
 function LootScreenGui:move_right()
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	if not drop then
 		return false
@@ -1182,7 +1183,7 @@ function LootScreenGui:move_right()
 	return true
 end
 
--- Lines 1165-1186
+-- Lines 1172-1193
 function LootScreenGui:confirm_pressed()
 	local selected_card_idx = self._card_pack_reward:selected_item_idx()
 
@@ -1195,12 +1196,12 @@ function LootScreenGui:confirm_pressed()
 	end
 end
 
--- Lines 1188-1190
+-- Lines 1195-1197
 function LootScreenGui:on_escape()
 	return true
 end
 
--- Lines 1192-1210
+-- Lines 1199-1217
 function LootScreenGui:bind_controller_inputs()
 	local bindings = {}
 	local legend = {
@@ -1220,7 +1221,7 @@ function LootScreenGui:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 1212-1239
+-- Lines 1219-1246
 function LootScreenGui:bind_controller_inputs_card_rewards()
 	local bindings = {}
 	local legend = {
@@ -1253,9 +1254,9 @@ function LootScreenGui:bind_controller_inputs_card_rewards()
 	self:set_legend(legend)
 end
 
--- Lines 1241-1264
+-- Lines 1248-1271
 function LootScreenGui:_check_gamercard_prompts(bindings, legend)
-	if SystemInfo:platform() == Idstring("XB1") and self.peer_loot_shown then
+	if _G.IS_XB1 and self.peer_loot_shown then
 		local gamercard_prompts_shown = 0
 
 		for i = 1, #self._peer_slots do

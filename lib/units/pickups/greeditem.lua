@@ -16,7 +16,22 @@ function GreedItem:value()
 	return self._value
 end
 
--- Lines 16-24
+-- Lines 16-25
+function GreedItem:value_line_id()
+	local v = self:value()
+
+	if GreedTweakData.HIGH_END_ITEM_VALUE <= v then
+		return "large"
+	elseif GreedTweakData.MID_END_ITEM_VALUE <= v then
+		return "medium"
+	elseif GreedTweakData.LOW_END_ITEM_VALUE <= v then
+		return "small"
+	end
+
+	return "none"
+end
+
+-- Lines 27-35
 function GreedItem:on_load_complete()
 	if not self._dont_register then
 		local world_id = managers.worldcollection:get_worlddefinition_by_unit_id(self._unit:unit_data().unit_id):world_id()

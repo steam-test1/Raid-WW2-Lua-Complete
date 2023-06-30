@@ -11,7 +11,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 
 	local my_user_id = data.local_peer:user_id() or ""
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		peer_name = managers.network.account:username_by_id(sender:ip_at_index(0))
 	end
 
@@ -91,7 +91,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	local character = managers.network:session():check_peer_preferred_character(client_preferred_character)
 	local xnaddr = ""
 
-	if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB360 or _G.IS_XB1 then
 		xnaddr = managers.network.matchmake:external_address(sender)
 	end
 
@@ -146,14 +146,14 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 		end
 	end
 
-	local server_xuid = (SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1")) and managers.network.account:player_id() or ""
+	local server_xuid = (_G.IS_XB360 or _G.IS_XB1) and managers.network.account:player_id() or ""
 
 	new_peer:send("join_request_reply", 1, new_peer_id, character, level_index, difficulty_index, 2, data.local_peer:character(), my_user_id, Global.game_settings.mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, server_xuid, ticket)
 	Application:debug("[HostStateInGame:on_join_request_received]", data.session:load_counter())
 	new_peer:send("set_loading_state", false, data.session:load_counter())
 	managers.worldcollection:send_loaded_packages(new_peer)
 
-	if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB360 or _G.IS_XB1 then
 		new_peer:send("request_player_name_reply", managers.network:session():local_peer():name())
 	end
 

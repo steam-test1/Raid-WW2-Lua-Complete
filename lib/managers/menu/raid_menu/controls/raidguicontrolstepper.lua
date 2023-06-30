@@ -95,47 +95,53 @@ function RaidGUIControlStepper:_create_stepper_controls()
 	})
 end
 
--- Lines 99-101
+-- Lines 99-102
+function RaidGUIControlStepper:set_selected(value)
+	RaidGUIControlStepper.super.set_selected(self, value)
+	self._stepper:set_selected(value)
+end
+
+-- Lines 104-106
 function RaidGUIControlStepper:set_disabled_items(data)
 	self._stepper:set_disabled_items(data)
 end
 
--- Lines 103-105
+-- Lines 108-110
 function RaidGUIControlStepper:selected_item()
 	return self._stepper:selected_item()
 end
 
--- Lines 107-109
+-- Lines 112-114
 function RaidGUIControlStepper:label_x()
 	return self._description:x()
 end
 
--- Lines 111-113
+-- Lines 116-118
 function RaidGUIControlStepper:_select_item(index)
 	self._stepper:selected_item()
 end
 
--- Lines 115-117
+-- Lines 120-122
 function RaidGUIControlStepper:select_item_by_value(value)
 	self._stepper:select_item_by_value(value)
 end
 
--- Lines 119-121
+-- Lines 124-126
 function RaidGUIControlStepper:get_value()
 	return self._stepper:get_value()
 end
 
--- Lines 123-125
+-- Lines 128-130
 function RaidGUIControlStepper:set_value_and_render(value_to_select, skip_animation)
 	self._stepper:set_value_and_render(value_to_select, skip_animation)
 end
 
--- Lines 127-129
+-- Lines 132-134
 function RaidGUIControlStepper:mouse_released(o, button, x, y)
 	return false
 end
 
--- Lines 131-145
+-- Lines 136-150
 function RaidGUIControlStepper:highlight_on()
 	self._highlighted = true
 
@@ -153,7 +159,7 @@ function RaidGUIControlStepper:highlight_on()
 	end
 end
 
--- Lines 148-159
+-- Lines 153-164
 function RaidGUIControlStepper:highlight_off()
 	self._highlighted = false
 
@@ -167,7 +173,7 @@ function RaidGUIControlStepper:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
--- Lines 161-167
+-- Lines 166-172
 function RaidGUIControlStepper:on_mouse_scroll_up()
 	if not self._enabled then
 		return
@@ -176,7 +182,7 @@ function RaidGUIControlStepper:on_mouse_scroll_up()
 	self._stepper:on_right_arrow_clicked()
 end
 
--- Lines 169-175
+-- Lines 174-180
 function RaidGUIControlStepper:on_mouse_scroll_down()
 	if not self._enabled then
 		return
@@ -185,65 +191,33 @@ function RaidGUIControlStepper:on_mouse_scroll_down()
 	self._stepper:on_left_arrow_clicked()
 end
 
--- Lines 177-179
+-- Lines 182-184
 function RaidGUIControlStepper:x()
 	return self._stepper_panel._engine_panel:x()
 end
 
--- Lines 181-183
+-- Lines 186-188
 function RaidGUIControlStepper:w()
 	return self._stepper_panel._engine_panel:w()
 end
 
--- Lines 185-189
+-- Lines 190-194
 function RaidGUIControlStepper:confirm_pressed()
 	if self._selected then
 		return true
 	end
 end
 
--- Lines 191-193
+-- Lines 196-198
 function RaidGUIControlStepper:is_selected_control()
 	return self._selected_control
 end
 
--- Lines 195-196
+-- Lines 200-201
 function RaidGUIControlStepper:_select_control(value)
 end
 
--- Lines 198-207
-function RaidGUIControlStepper:move_down()
-	if self._selected then
-		return self.super.move_down(self)
-	end
-end
-
--- Lines 209-218
-function RaidGUIControlStepper:move_up()
-	if self._selected then
-		return self.super.move_up(self)
-	end
-end
-
--- Lines 220-225
-function RaidGUIControlStepper:scroll_left()
-	if self._selected then
-		self._stepper:on_left_arrow_clicked()
-
-		return true
-	end
-end
-
--- Lines 227-232
-function RaidGUIControlStepper:scroll_right()
-	if self._selected then
-		self._stepper:on_right_arrow_clicked()
-
-		return true
-	end
-end
-
--- Lines 237-258
+-- Lines 204-225
 function RaidGUIControlStepper:_animate_highlight_on()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2
@@ -266,7 +240,7 @@ function RaidGUIControlStepper:_animate_highlight_on()
 	self._sideline:set_alpha(1)
 end
 
--- Lines 260-281
+-- Lines 227-248
 function RaidGUIControlStepper:_animate_highlight_off()
 	local starting_alpha = self._sideline:alpha()
 	local duration = 0.2
@@ -289,7 +263,7 @@ function RaidGUIControlStepper:_animate_highlight_off()
 	self._sideline:set_alpha(0)
 end
 
--- Lines 283-300
+-- Lines 250-267
 function RaidGUIControlStepper:set_enabled(enabled)
 	RaidGUIControlStepper.super.set_enabled(self, enabled)
 	self._stepper:set_enabled(enabled)

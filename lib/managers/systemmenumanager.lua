@@ -359,7 +359,7 @@ end
 
 -- Lines 392-394
 function GenericSystemMenuManager:show_keyboard_input(data)
-	self:_show_class(data, self.GENERIC_KEYBOARD_INPUT_DIALOG, self.KEYBOARD_INPUT_DIALOG, false)
+	self:_show_class(data, self.GENERIC_KEYBOARD_INPUT_DIALOG, self.KEYBOARD_INPUT_DIALOG, true)
 end
 
 -- Lines 396-398
@@ -456,9 +456,14 @@ function GenericSystemMenuManager:hide_active_dialog()
 	end
 end
 
--- Lines 476-487
+-- Lines 477-479
+function GenericSystemMenuManager:get_active_dialog()
+	return self._active_dialog
+end
+
+-- Lines 482-494
 function GenericSystemMenuManager:_is_dialog_queued_or_active(dialog)
-	if self._active_dialog and self._active_dialog:is_identical(dialog) then
+	if self._active_dialog and self._active_dialog.is_identical and self._active_dialog:is_identical(dialog) then
 		return true
 	end
 
@@ -469,13 +474,23 @@ function GenericSystemMenuManager:_is_dialog_queued_or_active(dialog)
 	end
 end
 
--- Lines 489-503
-function GenericSystemMenuManager:queue_dialog(dialog, index)
+-- Lines 497-522
+function GenericSystemMenuManager:queue_dialog(dialog, index, hiding)
 	if Global.category_print.dialog_manager then
 		cat_print("dialog_manager", "[SystemMenuManager] [Queue dialog (index: " .. tostring(index) .. "/" .. tostring(self._dialog_queue and #self._dialog_queue) .. ")] " .. tostring(dialog:to_string()))
 	end
 
 	self._dialog_queue = self._dialog_queue or {}
+
+	if hiding then
+		if index then
+			table.insert(self._dialog_queue, index, dialog)
+		else
+			table.insert(self._dialog_queue, dialog)
+		end
+
+		return
+	end
 
 	if not self:_is_dialog_queued_or_active(dialog) then
 		if index then
@@ -486,7 +501,7 @@ function GenericSystemMenuManager:queue_dialog(dialog, index)
 	end
 end
 
--- Lines 505-523
+-- Lines 524-542
 function GenericSystemMenuManager:set_active_dialog(dialog)
 	self._active_dialog = dialog
 	local is_ws_visible = dialog and dialog._get_ws and dialog:_get_ws() == self._ws
@@ -508,7 +523,7 @@ function GenericSystemMenuManager:set_active_dialog(dialog)
 	end
 end
 
--- Lines 526-539
+-- Lines 545-558
 function GenericSystemMenuManager:_is_engine_delaying_signin_change()
 	if self._is_engine_delaying_signin_change_delay then
 		self._is_engine_delaying_signin_change_delay = self._is_engine_delaying_signin_change_delay - TimerManager:main():delta_time()
@@ -525,57 +540,57 @@ function GenericSystemMenuManager:_is_engine_delaying_signin_change()
 	return true
 end
 
--- Lines 541-543
+-- Lines 560-562
 function GenericSystemMenuManager:_get_ws()
 	return self._ws
 end
 
--- Lines 545-547
+-- Lines 564-566
 function GenericSystemMenuManager:_get_controller()
 	return self._controller
 end
 
--- Lines 550-552
+-- Lines 569-571
 function GenericSystemMenuManager:add_dialog_shown_callback(func)
 	self._dialog_shown_callback_handler:add(func)
 end
 
--- Lines 553-555
+-- Lines 572-574
 function GenericSystemMenuManager:remove_dialog_shown_callback(func)
 	self._dialog_shown_callback_handler:remove(func)
 end
 
--- Lines 557-559
+-- Lines 576-578
 function GenericSystemMenuManager:add_dialog_hidden_callback(func)
 	self._dialog_hidden_callback_handler:add(func)
 end
 
--- Lines 560-562
+-- Lines 579-581
 function GenericSystemMenuManager:remove_dialog_hidden_callback(func)
 	self._dialog_hidden_callback_handler:remove(func)
 end
 
--- Lines 564-566
+-- Lines 583-585
 function GenericSystemMenuManager:add_dialog_closed_callback(func)
 	self._dialog_closed_callback_handler:add(func)
 end
 
--- Lines 567-569
+-- Lines 586-588
 function GenericSystemMenuManager:remove_dialog_closed_callback(func)
 	self._dialog_closed_callback_handler:remove(func)
 end
 
--- Lines 571-573
+-- Lines 590-592
 function GenericSystemMenuManager:add_active_changed_callback(func)
 	self._active_changed_callback_handler:add(func)
 end
 
--- Lines 574-576
+-- Lines 593-595
 function GenericSystemMenuManager:remove_active_changed_callback(func)
 	self._active_changed_callback_handler:remove(func)
 end
 
--- Lines 579-589
+-- Lines 598-608
 function GenericSystemMenuManager:event_dialog_shown(dialog)
 	if Global.category_print.dialog_manager then
 		cat_print("dialog_manager", "[SystemMenuManager] [Show dialog] " .. tostring(dialog:to_string()))
@@ -589,7 +604,7 @@ function GenericSystemMenuManager:event_dialog_shown(dialog)
 	self._dialog_shown_callback_handler:dispatch(dialog)
 end
 
--- Lines 591-598
+-- Lines 610-617
 function GenericSystemMenuManager:event_dialog_hidden(dialog)
 	if Global.category_print.dialog_manager then
 		cat_print("dialog_manager", "[SystemMenuManager] [Hide dialog] " .. tostring(dialog:to_string()))
@@ -599,7 +614,7 @@ function GenericSystemMenuManager:event_dialog_hidden(dialog)
 	self._dialog_hidden_callback_handler:dispatch(dialog)
 end
 
--- Lines 600-607
+-- Lines 619-626
 function GenericSystemMenuManager:event_dialog_closed(dialog)
 	if Global.category_print.dialog_manager then
 		cat_print("dialog_manager", "[SystemMenuManager] [Close dialog] " .. tostring(dialog:to_string()))
@@ -609,7 +624,7 @@ function GenericSystemMenuManager:event_dialog_closed(dialog)
 	self._dialog_closed_callback_handler:dispatch(dialog)
 end
 
--- Lines 609-618
+-- Lines 628-637
 function GenericSystemMenuManager:event_active_changed(active)
 	if Global.category_print.dialog_manager then
 		cat_print("dialog_manager", "[SystemMenuManager] [Active changed] Active: " .. tostring(not not active))
@@ -638,7 +653,7 @@ Xbox360SystemMenuManager.GENERIC_MARKETPLACE_DIALOG = Xbox360MarketplaceDialog
 Xbox360SystemMenuManager.MARKETPLACE_DIALOG = Xbox360MarketplaceDialog
 SystemMenuManager.PLATFORM_CLASS_MAP[Idstring("X360"):key()] = Xbox360SystemMenuManager
 
--- Lines 648-651
+-- Lines 667-670
 function Xbox360SystemMenuManager:is_active(skip_block_exec)
 	local dialog_block = self._active_dialog and (skip_block_exec or self._active_dialog:blocks_exec())
 
@@ -662,7 +677,7 @@ XB1SystemMenuManager.GENERIC_MARKETPLACE_DIALOG = Xbox360MarketplaceDialog
 XB1SystemMenuManager.MARKETPLACE_DIALOG = Xbox360MarketplaceDialog
 SystemMenuManager.PLATFORM_CLASS_MAP[Idstring("XB1"):key()] = XB1SystemMenuManager
 
--- Lines 674-677
+-- Lines 693-696
 function XB1SystemMenuManager:is_active(skip_block_exec)
 	local dialog_block = self._active_dialog and (skip_block_exec or self._active_dialog:blocks_exec())
 
@@ -676,7 +691,7 @@ PS3SystemMenuManager.KEYBOARD_INPUT_DIALOG = PS3KeyboardInputDialog
 PS3SystemMenuManager.GENERIC_KEYBOARD_INPUT_DIALOG = PS3KeyboardInputDialog
 SystemMenuManager.PLATFORM_CLASS_MAP[Idstring("PS3"):key()] = PS3SystemMenuManager
 
--- Lines 687-692
+-- Lines 706-711
 function PS3SystemMenuManager:init()
 	GenericSystemMenuManager.init(self)
 
@@ -685,17 +700,17 @@ function PS3SystemMenuManager:init()
 	PS3:set_ps_button_callback(callback(self, self, "ps_button_menu_callback"))
 end
 
--- Lines 694-696
+-- Lines 713-715
 function PS3SystemMenuManager:ps_button_menu_callback(is_ps_button_menu_visible)
 	self._is_ps_button_menu_visible = is_ps_button_menu_visible
 end
 
--- Lines 698-700
+-- Lines 717-719
 function PS3SystemMenuManager:block_exec()
 	return GenericSystemMenuManager.is_active(self) or PS3:is_displaying_box()
 end
 
--- Lines 702-704
+-- Lines 721-723
 function PS3SystemMenuManager:is_active()
 	return GenericSystemMenuManager.is_active(self) or PS3:is_displaying_box() or self._is_ps_button_menu_visible
 end
@@ -707,7 +722,7 @@ PS4SystemMenuManager.KEYBOARD_INPUT_DIALOG = PS3KeyboardInputDialog
 PS4SystemMenuManager.GENERIC_KEYBOARD_INPUT_DIALOG = PS3KeyboardInputDialog
 SystemMenuManager.PLATFORM_CLASS_MAP[Idstring("PS4"):key()] = PS4SystemMenuManager
 
--- Lines 714-719
+-- Lines 733-738
 function PS4SystemMenuManager:init()
 	GenericSystemMenuManager.init(self)
 
@@ -716,17 +731,17 @@ function PS4SystemMenuManager:init()
 	PS3:set_ps_button_callback(callback(self, self, "ps_button_menu_callback"))
 end
 
--- Lines 721-723
+-- Lines 740-742
 function PS4SystemMenuManager:ps_button_menu_callback(is_ps_button_menu_visible)
 	self._is_ps_button_menu_visible = is_ps_button_menu_visible
 end
 
--- Lines 725-727
+-- Lines 744-746
 function PS4SystemMenuManager:block_exec()
 	return GenericSystemMenuManager.is_active(self) or PS3:is_displaying_box()
 end
 
--- Lines 729-731
+-- Lines 748-750
 function PS4SystemMenuManager:is_active()
 	return GenericSystemMenuManager.is_active(self) or PS3:is_displaying_box() or self._is_ps_button_menu_visible
 end

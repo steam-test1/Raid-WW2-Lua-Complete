@@ -34,10 +34,10 @@ function RaidMenuOptionsVideoAdvanced:close()
 	RaidMenuOptionsVideoAdvanced.super.close(self)
 end
 
--- Lines 38-102
+-- Lines 38-107
 function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	local dof_setting = managers.user:get_setting("dof_setting") == "standard" and true or false
-	local ssao_setting = managers.user:get_setting("ssao_setting") == "standard" and true or false
+	local ssao_setting = false
 	local use_parallax = managers.user:get_setting("use_parallax")
 	local motion_blur_setting = managers.user:get_setting("motion_blur_setting") == "standard" and true or false
 	local vls_setting = managers.user:get_setting("vls_setting") == "standard" and true or false
@@ -68,6 +68,7 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 
 	self._toggle_menu_toggle_dof:set_value_and_render(dof_setting, true)
 	self._toggle_menu_toggle_ssao:set_value_and_render(ssao_setting, true)
+	self._toggle_menu_toggle_ssao:set_enabled(false)
 	self._toggle_menu_toggle_parallax:set_value_and_render(use_parallax, true)
 	self._toggle_menu_toggle_motion_blur:set_value_and_render(motion_blur_setting, true)
 	self._toggle_menu_toggle_volumetric_light_scattering:set_value_and_render(vls_setting, true)
@@ -86,17 +87,9 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	self._stepper_menu_fps_limit:set_value_and_render(fps_cap, true)
 	self._stepper_menu_colorblind_setting:set_value_and_render(colorblind_setting, true)
 	self._stepper_menu_toggle_vsync:set_value_and_render(vsync_value, true)
-
-	if managers.viewport:is_fullscreen() then
-		self._stepper_menu_toggle_vsync:set_enabled(true)
-	else
-		self._stepper_menu_toggle_vsync:set_enabled(false)
-
-		self._stepper_menu_colorblind_setting._on_menu_move.down = nil
-	end
 end
 
--- Lines 104-113
+-- Lines 109-118
 function RaidMenuOptionsVideoAdvanced:_save_advanced_video_values()
 	self:on_click_toggle_ssao()
 	self:on_click_toggle_motion_blur()
@@ -107,7 +100,7 @@ function RaidMenuOptionsVideoAdvanced:_save_advanced_video_values()
 	self:on_item_selected_max_streaming_chunk()
 end
 
--- Lines 115-350
+-- Lines 120-355
 function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	local start_x = 0
 	local start_y = 320
@@ -358,56 +351,56 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	end
 end
 
--- Lines 352-356
+-- Lines 357-361
 function RaidMenuOptionsVideoAdvanced:on_click_toggle_ssao()
 	local ssao_setting = self._toggle_menu_toggle_ssao:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_ssao_setting_raid(ssao_setting)
 end
 
--- Lines 358-362
+-- Lines 363-367
 function RaidMenuOptionsVideoAdvanced:on_click_toggle_parallax()
 	local use_parallax = self._toggle_menu_toggle_parallax:get_value()
 
 	managers.menu:active_menu().callback_handler:set_use_parallax_raid(use_parallax)
 end
 
--- Lines 364-368
+-- Lines 369-373
 function RaidMenuOptionsVideoAdvanced:on_click_toggle_motion_blur()
 	local motion_blur_setting = self._toggle_menu_toggle_motion_blur:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_motion_blur_setting_raid(motion_blur_setting)
 end
 
--- Lines 370-374
+-- Lines 375-379
 function RaidMenuOptionsVideoAdvanced:on_click_toggle_dof()
 	local dof_setting = self._toggle_menu_toggle_dof:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_dof_setting_raid(dof_setting)
 end
 
--- Lines 376-380
+-- Lines 381-385
 function RaidMenuOptionsVideoAdvanced:on_click_toggle_volumetric_light_scattering()
 	local vls_setting = self._toggle_menu_toggle_volumetric_light_scattering:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_volumetric_light_scattering_setting_raid(vls_setting)
 end
 
--- Lines 382-385
+-- Lines 387-390
 function RaidMenuOptionsVideoAdvanced:on_click_toggle_gpu_flush()
 	local flush_gpu_command_queue = self._toggle_menu_toggle_gpu_flush:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_gpu_flush_setting_raid(flush_gpu_command_queue)
 end
 
--- Lines 387-390
+-- Lines 392-395
 function RaidMenuOptionsVideoAdvanced:on_click_toggle_lightfx()
 	local use_lightfx = self._toggle_menu_toggle_lightfx:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_lightfx_raid(use_lightfx)
 end
 
--- Lines 392-396
+-- Lines 397-401
 function RaidMenuOptionsVideoAdvanced:on_value_change_fov_adjustment()
 	local fov_multiplier = self._progress_bar_menu_fov_adjustment:get_value() / 100
 	fov_multiplier = fov_multiplier * (tweak_data.player.fov_multiplier.MAX - 1) + 1
@@ -415,14 +408,14 @@ function RaidMenuOptionsVideoAdvanced:on_value_change_fov_adjustment()
 	managers.menu:active_menu().callback_handler:set_fov_multiplier_raid(fov_multiplier)
 end
 
--- Lines 398-402
+-- Lines 403-407
 function RaidMenuOptionsVideoAdvanced:on_value_change_detail_distance()
 	local detail_distance = self._progress_bar_menu_detail_distance:get_value() / 100
 
 	managers.menu:active_menu().callback_handler:set_detail_distance_raid(detail_distance)
 end
 
--- Lines 404-414
+-- Lines 409-419
 function RaidMenuOptionsVideoAdvanced:on_item_selected_vsync()
 	local vsync_value = self._stepper_menu_toggle_vsync:get_value()
 
@@ -435,7 +428,7 @@ function RaidMenuOptionsVideoAdvanced:on_item_selected_vsync()
 	end
 end
 
--- Lines 416-422
+-- Lines 421-427
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_vsync()
 	local result = {}
 
@@ -459,14 +452,14 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_vsync()
 	return result
 end
 
--- Lines 424-428
+-- Lines 429-433
 function RaidMenuOptionsVideoAdvanced:on_item_selected_antialias()
 	local AA_setting = self._stepper_menu_antialias:get_value()
 
 	managers.menu:active_menu().callback_handler:choice_choose_anti_alias_raid(AA_setting)
 end
 
--- Lines 430-436
+-- Lines 435-441
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_antialias()
 	local result = {}
 
@@ -490,14 +483,14 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_antialias()
 	return result
 end
 
--- Lines 438-442
+-- Lines 443-447
 function RaidMenuOptionsVideoAdvanced:on_item_selected_texture_quality()
 	local texture_quality_default = self._stepper_menu_texture_quality:get_value()
 
 	managers.menu:active_menu().callback_handler:choice_choose_texture_quality_raid(texture_quality_default)
 end
 
--- Lines 444-451
+-- Lines 449-456
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_texture_quality()
 	local result = {}
 
@@ -526,14 +519,14 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_texture_quality()
 	return result
 end
 
--- Lines 453-456
+-- Lines 458-461
 function RaidMenuOptionsVideoAdvanced:on_item_selected_shadow_quality()
 	local shadow_quality_default = self._stepper_menu_shadow_quality:get_value()
 
 	managers.menu:active_menu().callback_handler:choice_choose_shadow_quality_raid(shadow_quality_default)
 end
 
--- Lines 458-466
+-- Lines 463-471
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_shadow_quality()
 	local result = {}
 
@@ -567,14 +560,14 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_shadow_quality()
 	return result
 end
 
--- Lines 468-471
+-- Lines 473-476
 function RaidMenuOptionsVideoAdvanced:on_item_selected_anisotropic()
 	local max_anisotropy = self._stepper_menu_anisotropic:get_value()
 
 	managers.menu:active_menu().callback_handler:choice_choose_anisotropic_raid(max_anisotropy)
 end
 
--- Lines 473-481
+-- Lines 478-486
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anisotropic()
 	local result = {}
 
@@ -608,14 +601,14 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anisotropic()
 	return result
 end
 
--- Lines 483-486
+-- Lines 488-491
 function RaidMenuOptionsVideoAdvanced:on_item_selected_anim_lod()
 	local video_animation_lod = self._stepper_menu_anim_lod:get_value()
 
 	managers.menu:active_menu().callback_handler:choice_choose_anim_lod_raid(video_animation_lod)
 end
 
--- Lines 488-494
+-- Lines 493-499
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anim_lod()
 	local result = {}
 
@@ -639,14 +632,14 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anim_lod()
 	return result
 end
 
--- Lines 496-499
+-- Lines 501-504
 function RaidMenuOptionsVideoAdvanced:on_item_selected_fps_limit()
 	local fps_cap = self._stepper_menu_fps_limit:get_value()
 
 	managers.menu:active_menu().callback_handler:choice_fps_cap_raid(fps_cap)
 end
 
--- Lines 501-514
+-- Lines 506-519
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 	local result = {}
 
@@ -705,14 +698,14 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 	return result
 end
 
--- Lines 516-520
+-- Lines 521-525
 function RaidMenuOptionsVideoAdvanced:on_item_selected_max_streaming_chunk()
 	local max_streaming_chunk = 4096
 
 	managers.menu:active_menu().callback_handler:choice_max_streaming_chunk_raid(max_streaming_chunk)
 end
 
--- Lines 522-533
+-- Lines 527-538
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_max_streaming_chunk()
 	local result = {}
 
@@ -761,7 +754,7 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_max_streaming_chu
 	return result
 end
 
--- Lines 535-542
+-- Lines 540-547
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_colorblind_setting()
 	local result = {}
 
@@ -789,7 +782,7 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_colorblind_settin
 	return result
 end
 
--- Lines 544-562
+-- Lines 549-569
 function RaidMenuOptionsVideoAdvanced:on_click_default_advanced_video()
 	local params = {
 		title = managers.localization:text("dialog_reset_advanced_video_title"),
@@ -803,22 +796,25 @@ function RaidMenuOptionsVideoAdvanced:on_click_default_advanced_video()
 			RenderSettings.v_sync = false
 
 			self:_load_advanced_video_values()
-			managers.menu:active_menu().callback_handler:apply_and_save_render_settings()
-			managers.menu:active_menu().callback_handler:_refresh_brightness()
+
+			if _G.IS_PC then
+				managers.menu:active_menu().callback_handler:apply_and_save_render_settings()
+				managers.menu:active_menu().callback_handler:_refresh_brightness()
+			end
 		end
 	}
 
 	managers.menu:show_option_dialog(params)
 end
 
--- Lines 564-567
+-- Lines 571-574
 function RaidMenuOptionsVideoAdvanced:on_item_selected_colorblind_setting()
 	local colorblind_setting = self._stepper_menu_colorblind_setting:get_value()
 
 	managers.menu:active_menu().callback_handler:choice_choose_cb_mode_raid(colorblind_setting)
 end
 
--- Lines 573-589
+-- Lines 580-596
 function RaidMenuOptionsVideoAdvanced:bind_controller_inputs()
 	local bindings = {
 		{

@@ -39,6 +39,8 @@ require("lib/tweak_data/WeaponInventoryTweakData")
 require("lib/tweak_data/SubtitlesTweakData")
 require("lib/tweak_data/InputTweakData")
 require("lib/tweak_data/IntelTweakData")
+require("lib/tweak_data/NetworkTweakData")
+require("lib/tweak_data/LinkPrefabsTweakData")
 
 TweakData = TweakData or class()
 TweakData.RELOAD = true
@@ -49,7 +51,7 @@ TweakData.DIFFICULTY_2 = 2
 TweakData.DIFFICULTY_3 = 3
 TweakData.DIFFICULTY_4 = 4
 
--- Lines 57-65
+-- Lines 59-67
 function TweakData:digest_tweak_data()
 	self.digested_tables = {
 		"experience_manager"
@@ -60,7 +62,7 @@ function TweakData:digest_tweak_data()
 	end
 end
 
--- Lines 67-76
+-- Lines 69-78
 function TweakData:digest_recursive(key, parent)
 	local value = parent and parent[key] or key
 
@@ -73,7 +75,7 @@ function TweakData:digest_recursive(key, parent)
 	end
 end
 
--- Lines 78-97
+-- Lines 80-99
 function TweakData:get_value(...)
 	local arg = {
 		...
@@ -99,7 +101,7 @@ function TweakData:get_value(...)
 	return value
 end
 
--- Lines 99-112
+-- Lines 101-114
 function TweakData:get_raw_value(...)
 	local arg = {
 		...
@@ -120,7 +122,7 @@ function TweakData:get_raw_value(...)
 	return value
 end
 
--- Lines 114-124
+-- Lines 116-126
 function TweakData:set_mode()
 	if not Global.game_settings then
 		return
@@ -133,17 +135,17 @@ function TweakData:set_mode()
 	end
 end
 
--- Lines 126-128
+-- Lines 128-130
 function TweakData:_set_singleplayer()
 	self.player:_set_singleplayer()
 end
 
--- Lines 130-132
+-- Lines 132-134
 function TweakData:_set_multiplayer()
 	self.player:_set_multiplayer()
 end
 
--- Lines 134-152
+-- Lines 136-151
 function TweakData:set_difficulty(value)
 	if not value then
 		debug_pause("[TweakData:set_difficulty] is nil")
@@ -166,7 +168,7 @@ function TweakData:set_difficulty(value)
 	end
 end
 
--- Lines 154-161
+-- Lines 153-160
 function TweakData:_set_difficulty_1()
 	self.player:_set_difficulty_1()
 	self.character:_set_difficulty_1()
@@ -177,7 +179,7 @@ function TweakData:_set_difficulty_1()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_1
 end
 
--- Lines 163-170
+-- Lines 162-169
 function TweakData:_set_difficulty_2()
 	self.player:_set_difficulty_2()
 	self.character:_set_difficulty_2()
@@ -188,7 +190,7 @@ function TweakData:_set_difficulty_2()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_2
 end
 
--- Lines 172-179
+-- Lines 171-178
 function TweakData:_set_difficulty_3()
 	self.player:_set_difficulty_3()
 	self.character:_set_difficulty_3()
@@ -199,7 +201,7 @@ function TweakData:_set_difficulty_3()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_3
 end
 
--- Lines 181-188
+-- Lines 180-187
 function TweakData:_set_difficulty_4()
 	self.player:_set_difficulty_4()
 	self.character:_set_difficulty_4()
@@ -210,49 +212,49 @@ function TweakData:_set_difficulty_4()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_4
 end
 
--- Lines 190-192
+-- Lines 189-191
 function TweakData:number_of_difficulties()
 	return #self.difficulties
 end
 
--- Lines 194-196
+-- Lines 193-195
 function TweakData:difficulty_to_index(difficulty)
 	return table.index_of(self.difficulties, difficulty)
 end
 
--- Lines 198-200
+-- Lines 197-199
 function TweakData:index_to_difficulty(index)
 	return self.difficulties[index]
 end
 
--- Lines 202-205
+-- Lines 201-204
 function TweakData:get_difficulty_string_name_from_index(index)
 	local difficulty_index_name = self:index_to_difficulty(index)
 
 	return self.difficulty_name_ids[difficulty_index_name]
 end
 
--- Lines 207-209
+-- Lines 206-208
 function TweakData:permission_to_index(permission)
 	return table.index_of(self.permissions, permission)
 end
 
--- Lines 211-213
+-- Lines 210-212
 function TweakData:index_to_permission(index)
 	return self.permissions[index]
 end
 
--- Lines 215-217
+-- Lines 214-216
 function TweakData:server_state_to_index(state)
 	return table.index_of(self.server_states, state)
 end
 
--- Lines 219-221
+-- Lines 218-220
 function TweakData:index_to_server_state(index)
 	return self.server_states[index]
 end
 
--- Lines 224-233
+-- Lines 223-232
 function TweakData:menu_sync_state_to_index(state)
 	if not state then
 		return false
@@ -265,12 +267,12 @@ function TweakData:menu_sync_state_to_index(state)
 	end
 end
 
--- Lines 234-236
+-- Lines 233-235
 function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 238-1156
+-- Lines 237-1184
 function TweakData:init()
 	self.difficulties = {
 		"difficulty_1",
@@ -356,6 +358,8 @@ function TweakData:init()
 	self.input = InputTweakData:new(self)
 	self.intel = IntelTweakData:new(self)
 	self.greed = GreedTweakData:new()
+	self.network = NetworkTweakData:new(self)
+	self.link_prefabs = LinkPrefabsTweakData:new()
 	self.criminals = {
 		character_names = {
 			"russian",
@@ -578,6 +582,26 @@ function TweakData:init()
 		MINIMUM_DURATION = 2,
 		DURATION_PER_CHAR = 0.07
 	}
+	self.motion_dot_modes = {
+		"off",
+		"single",
+		"double_hor",
+		"double_ver",
+		"quad_diag",
+		"quad_plus"
+	}
+	self.motion_dot_sizes = {
+		"tiny",
+		"small",
+		"medium",
+		"large",
+		"huge"
+	}
+	self.hit_indicator_modes = {
+		"off",
+		"on",
+		"track"
+	}
 	self.hud = {}
 
 	self:set_hud_values()
@@ -588,10 +612,10 @@ function TweakData:init()
 	self.gui.MENU_LAYER = 200
 	self.gui.MENU_COMPONENT_LAYER = 300
 	self.gui.ATTRACT_SCREEN_LAYER = 400
-	self.gui.LOADING_SCREEN_LAYER = 1000
-	self.gui.CRIMENET_CHAT_LAYER = 1000
-	self.gui.DIALOG_LAYER = 1100
-	self.gui.MOUSE_LAYER = 1200
+	self.gui.LOADING_SCREEN_LAYER = 3000
+	self.gui.CRIMENET_CHAT_LAYER = 3000
+	self.gui.DIALOG_LAYER = 3100
+	self.gui.MOUSE_LAYER = 3200
 	self.overlay_effects = {
 		spectator = {
 			blend_mode = "normal",
@@ -832,21 +856,24 @@ You've reached the end of our PAX EAST demo.
 		fadein_delay = 1
 	}
 	self.experience_manager = {
-		level_failed_multiplier = 0.01,
+		level_failed_multiplier = 0.075,
 		human_player_multiplier = {
 			1,
-			1.2,
-			1.3,
-			1.4
+			1.25,
+			1.35,
+			1.5
 		},
 		level_diff_max_multiplier = 2,
 		difficulty_multiplier = {}
 	}
 	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 1
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 2
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 5
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 10
-	local multiplier = 1
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 1.5
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 3
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 4.5
+	self.experience_manager.escort_survived_bonus = 1.25
+	self.experience_manager.side_quest_bonus = 1.5
+	self.experience_manager.extra_objectives_bonus = 1.2
+	self.experience_manager.tiny_objectives_bonus = 1.01
 	local level_xp_requirements = {
 		0,
 		1200,
@@ -889,6 +916,7 @@ You've reached the end of our PAX EAST demo.
 		140006,
 		161007
 	}
+	local multiplier = 1
 	self.experience_manager.levels = {}
 
 	for i = 1, #level_xp_requirements do
@@ -947,15 +975,6 @@ You've reached the end of our PAX EAST demo.
 		ammo_small_beam = {
 			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small_beam")
 		},
-		grenade_big_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_big_beam")
-		},
-		grenade_medium_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_medium_beam")
-		},
-		grenade_small_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_small_beam")
-		},
 		health_big = {
 			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big")
 		},
@@ -975,68 +994,72 @@ You've reached the end of our PAX EAST demo.
 			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small")
 		},
 		grenade_big = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_big")
-		},
-		grenade_medium = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_medium")
-		},
-		grenade_small = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_small")
-		},
-		gold_bar_small = {
-			unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bar")
-		},
-		gold_bar_medium = {
-			unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bars")
-		},
-		scrap = {
-			unit = Idstring("units/vanilla/props/props_wooden_crate_01/props_wooden_crate_scrap_parts")
-		},
-		enigma_part_01 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_01")
-		},
-		enigma_part_02 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_02")
-		},
-		enigma_part_03 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_03")
-		},
-		enigma_part_04 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_04")
-		},
-		enigma_part_05 = {
-			unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_05")
-		},
-		officer_documents_01 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_01")
-		},
-		officer_documents_02 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_02")
-		},
-		officer_documents_03 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_03")
-		},
-		officer_documents_04 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_04")
-		},
-		officer_documents_05 = {
-			unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_05")
-		},
-		car_key_01 = {
-			unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_01")
-		},
-		car_key_02 = {
-			unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_02")
-		},
-		car_key_03 = {
-			unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_03")
-		},
-		bank_door_key = {
-			unit = Idstring("units/vanilla/props/props_bank_door_keys_01/props_bank_door_keys_01")
-		},
-		code_book = {
-			unit = Idstring("units/vanilla/equipment/equip_code_book/equip_code_book_active")
+			unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max5")
 		}
+	}
+	self.pickups.grenade_big_beam = deep_clone(self.pickups.grenade_big)
+	self.pickups.grenade_medium = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max3")
+	}
+	self.pickups.grenade_medium_beam = deep_clone(self.pickups.grenade_medium)
+	self.pickups.grenade_small = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max3"),
+		position_offset = Vector3(0, 2.5, 0)
+	}
+	self.pickups.grenade_small_beam = deep_clone(self.pickups.grenade_small)
+	self.pickups.gold_bar_small = {
+		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bar")
+	}
+	self.pickups.gold_bar_medium = {
+		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bars")
+	}
+	self.pickups.scrap = {
+		unit = Idstring("units/vanilla/props/props_wooden_crate_01/props_wooden_crate_scrap_parts")
+	}
+	self.pickups.enigma_part_01 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_01")
+	}
+	self.pickups.enigma_part_02 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_02")
+	}
+	self.pickups.enigma_part_03 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_03")
+	}
+	self.pickups.enigma_part_04 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_04")
+	}
+	self.pickups.enigma_part_05 = {
+		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_05")
+	}
+	self.pickups.officer_documents_01 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_01")
+	}
+	self.pickups.officer_documents_02 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_02")
+	}
+	self.pickups.officer_documents_03 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_03")
+	}
+	self.pickups.officer_documents_04 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_04")
+	}
+	self.pickups.officer_documents_05 = {
+		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_05")
+	}
+	self.pickups.car_key_01 = {
+		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_01")
+	}
+	self.pickups.car_key_02 = {
+		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_02")
+	}
+	self.pickups.car_key_03 = {
+		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_03")
+	}
+	self.pickups.bank_door_key = {
+		unit = Idstring("units/vanilla/props/props_bank_door_keys_01/props_bank_door_keys_01")
+	}
+	self.pickups.code_book = {
+		unit = Idstring("units/vanilla/equipment/equip_code_book/equip_code_book_active")
 	}
 	self.danger_zones = {
 		0.6,
@@ -1129,14 +1152,14 @@ You've reached the end of our PAX EAST demo.
 	self.music.default = deep_clone(self.music.flakturm)
 	self.music.soundbank_list = {}
 	self.voiceover = {
-		idle_delay = 5,
-		idle_rnd_delay = 60,
+		idle_delay = 10,
+		idle_rnd_delay = 50,
 		idle_cooldown = 30
 	}
 	self.voting = {
 		timeout = 30,
 		cooldown = 50,
-		restart_delay = 5
+		restart_delay = 3
 	}
 	self.dot_types = {
 		poison = {
@@ -1156,12 +1179,12 @@ You've reached the end of our PAX EAST demo.
 	self:digest_tweak_data()
 end
 
--- Lines 1160-1162
+-- Lines 1188-1190
 function TweakData:get_dot_type_data(type)
 	return self.dot_types[type]
 end
 
--- Lines 1166-1174
+-- Lines 1194-1202
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -1172,7 +1195,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 1178-1181
+-- Lines 1206-1209
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -1182,7 +1205,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 1185-1194
+-- Lines 1213-1222
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -1195,7 +1218,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 1198-1370
+-- Lines 1226-1399
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -1380,7 +1403,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 1372-1539
+-- Lines 1401-1546
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -1488,7 +1511,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 1541-1626
+-- Lines 1548-1633
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -1572,7 +1595,7 @@ function TweakData:set_hud_values()
 	self.menu.default_changeable_text_color = self.hud.accent_orange
 end
 
--- Lines 1629-1633
+-- Lines 1636-1640
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -1590,7 +1613,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 1650-1855
+-- Lines 1657-1862
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false
@@ -1601,7 +1624,7 @@ function TweakData:get_controller_help_coords()
 		vehicle = {}
 	}
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		coords.normal.left_thumb = {
 			vertical = "top",
 			y = 255,
@@ -1824,7 +1847,7 @@ function TweakData:get_controller_help_coords()
 			align = "right",
 			x = 0
 		}
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		coords.normal.left_thumb = {
 			vertical = "top",
 			y = 255,
@@ -2047,7 +2070,7 @@ function TweakData:get_controller_help_coords()
 			align = "right",
 			x = 0
 		}
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		coords.normal.left_thumb = {
 			vertical = "bottom",
 			y = 78,
@@ -2383,7 +2406,7 @@ function TweakData:get_controller_help_coords()
 			x = 226
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			coords.normal.d_up = {
 				vertical = "center",
 				y = 174,
@@ -2505,7 +2528,7 @@ function TweakData:get_controller_help_coords()
 			x = 226
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			coords.vehicle.d_up = {
 				vertical = "center",
 				y = 174,

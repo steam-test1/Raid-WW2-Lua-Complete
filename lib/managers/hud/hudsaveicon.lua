@@ -13,8 +13,8 @@ HUDSaveIcon.RADIUS = 13
 HUDSaveIcon.ONE_CIRCLE_DURATION = 1
 HUDSaveIcon.DEFAULT_TEXT = "savefile_saving"
 
--- Lines 20-32
-function HUDSaveIcon:init(workspace)
+-- Lines 21-33
+function HUDSaveIcon:init(workspace, params)
 	self._ws = workspace
 	self._workspace_panel = self._ws:panel()
 
@@ -22,19 +22,24 @@ function HUDSaveIcon:init(workspace)
 		self._workspace_panel:remove(self._workspace_panel:child("save_icon_panel"))
 	end
 
-	self:_create_panel()
+	self:_create_panel(params)
 	self:_create_text()
 	self:_create_bullets()
 end
 
--- Lines 34-45
-function HUDSaveIcon:_create_panel()
-	local panel_params = {
-		name = "save_icon_panel",
-		alpha = 0,
+-- Lines 35-54
+function HUDSaveIcon:_create_panel(params)
+	params = params or {
 		w = HUDSaveIcon.DEFAULT_W,
 		h = HUDSaveIcon.DEFAULT_H,
 		layer = tweak_data.gui.SAVEFILE_LAYER
+	}
+	local panel_params = {
+		name = "save_icon_panel",
+		alpha = 0,
+		w = params.w,
+		h = params.h,
+		layer = params.layer
 	}
 	self._panel = self._workspace_panel:panel(panel_params)
 
@@ -42,7 +47,13 @@ function HUDSaveIcon:_create_panel()
 	self._panel:set_center_x(self._workspace_panel:w() / 2)
 end
 
--- Lines 47-57
+-- Lines 57-60
+function HUDSaveIcon:offset_position(dx, dy)
+	self._panel:set_bottom(self._workspace_panel:h() + dy)
+	self._panel:set_center_x(self._workspace_panel:w() / 2 + dx)
+end
+
+-- Lines 62-72
 function HUDSaveIcon:_create_background()
 	local background_params = {
 		name = "background",
@@ -55,7 +66,7 @@ function HUDSaveIcon:_create_background()
 	self._background:set_center_y(self._panel:h() / 2)
 end
 
--- Lines 59-71
+-- Lines 74-86
 function HUDSaveIcon:_create_text()
 	local text_params = {
 		name = "save_icon_text",
@@ -71,7 +82,7 @@ function HUDSaveIcon:_create_text()
 	self._text = self._panel:text(text_params)
 end
 
--- Lines 73-102
+-- Lines 88-117
 function HUDSaveIcon:_create_bullets()
 	local bullet_panel_params = {
 		halign = "left",
@@ -103,7 +114,7 @@ function HUDSaveIcon:_create_bullets()
 	end
 end
 
--- Lines 104-132
+-- Lines 119-147
 function HUDSaveIcon:show(params)
 	local text = params.text or HUDSaveIcon.DEFAULT_TEXT
 
@@ -134,7 +145,7 @@ function HUDSaveIcon:show(params)
 	end
 end
 
--- Lines 134-138
+-- Lines 149-153
 function HUDSaveIcon:hide()
 	self._panel:stop()
 	self._panel:animate(callback(self, self, "_animate_hide"))
@@ -142,7 +153,16 @@ function HUDSaveIcon:hide()
 	self._shown = false
 end
 
--- Lines 140-222
+-- Lines 156-161
+function HUDSaveIcon:set_color(color)
+	self._text:set_color(color)
+
+	for _, bullet in pairs(self._bullets) do
+		bullet:set_color(color)
+	end
+end
+
+-- Lines 163-245
 function HUDSaveIcon:_animate_bullets()
 	while true do
 		local shoot_duration = 0.1
@@ -220,7 +240,7 @@ function HUDSaveIcon:_animate_bullets()
 	end
 end
 
--- Lines 225-239
+-- Lines 248-262
 function HUDSaveIcon:_animate_show()
 	local duration = 0.2
 	local t = self._panel:alpha() * duration
@@ -236,7 +256,7 @@ function HUDSaveIcon:_animate_show()
 	self._panel:set_alpha(1)
 end
 
--- Lines 241-256
+-- Lines 264-279
 function HUDSaveIcon:_animate_hide()
 	local duration = 0.4
 	local t = (1 - self._panel:alpha()) * duration

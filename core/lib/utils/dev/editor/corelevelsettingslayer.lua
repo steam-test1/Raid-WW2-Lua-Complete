@@ -64,7 +64,7 @@ end
 function LevelSettingsLayer:update(t, dt)
 end
 
--- Lines 62-78
+-- Lines 62-79
 function LevelSettingsLayer:build_panel(notebook)
 	cat_print("editor", "LevelSettingsLayer:build_panel")
 
@@ -83,7 +83,7 @@ function LevelSettingsLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines 80-99
+-- Lines 82-100
 function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	local id = "simulation_level_id"
 	local params = {
@@ -113,7 +113,7 @@ function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	}
 end
 
--- Lines 101-120
+-- Lines 102-112
 function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 	for i = 1, 5 do
 		local id = "mission_filter_" .. i
@@ -134,7 +134,7 @@ function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 	end
 end
 
--- Lines 122-149
+-- Lines 131-158
 function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	local id = "chunk_name"
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -172,30 +172,30 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	}
 end
 
--- Lines 151-154
+-- Lines 160-163
 function LevelSettingsLayer:_set_data(data)
 	self._settings[data.value] = data.ctrlr:get_value()
 	self._settings[data.value] = tonumber(self._settings[data.value]) or self._settings[data.value]
 end
 
--- Lines 156-161
+-- Lines 165-170
 function LevelSettingsLayer:add_triggers()
 	LevelSettingsLayer.super.add_triggers(self)
 
 	local vc = self._editor_data.virtual_controller
 end
 
--- Lines 163-165
+-- Lines 172-174
 function LevelSettingsLayer:activate()
 	LevelSettingsLayer.super.activate(self)
 end
 
--- Lines 167-169
+-- Lines 176-178
 function LevelSettingsLayer:deactivate()
 	LevelSettingsLayer.super.deactivate(self)
 end
 
--- Lines 171-182
+-- Lines 180-191
 function LevelSettingsLayer:clear()
 	LevelSettingsLayer.super.clear(self)
 

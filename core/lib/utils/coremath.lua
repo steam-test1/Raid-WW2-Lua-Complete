@@ -217,14 +217,19 @@ function math.rand(a, b)
 	end
 end
 
--- Lines 198-201
+-- Lines 199-201
+function math.rand_bool()
+	return math.random(2) == 1
+end
+
+-- Lines 204-207
 function math.round(n, precision)
 	precision = precision or 1
 
 	return math.floor((n + precision / 2) / precision) * precision
 end
 
--- Lines 203-209
+-- Lines 209-215
 function math.min_max(a, b)
 	if a < b then
 		return a, b
@@ -233,7 +238,7 @@ function math.min_max(a, b)
 	end
 end
 
--- Lines 211-218
+-- Lines 217-224
 function math.vector_min_max(a, b)
 	local min_x, max_x = math.min_max(a.x, b.x)
 	local min_y, max_y = math.min_max(a.y, b.y)
@@ -244,7 +249,7 @@ function math.vector_min_max(a, b)
 	return min_vector, max_vector
 end
 
--- Lines 220-229
+-- Lines 226-235
 function math.vector_clamp(vector, min, max)
 	if CoreClass.type_name(min) ~= "Vector3" then
 		min = Vector3(min, min, min)
@@ -257,24 +262,24 @@ function math.vector_clamp(vector, min, max)
 	return Vector3(math.clamp(vector.x, min.x, max.x), math.clamp(vector.y, min.y, max.y), math.clamp(vector.z, min.z, max.z))
 end
 
--- Lines 231-233
+-- Lines 237-239
 function math.lerp(a, b, t)
 	return a * (1 - t) + b * t
 end
 
--- Lines 235-238
+-- Lines 241-244
 function math.string_to_rotation(v)
 	local r = math.string_to_vector(v)
 
 	return Rotation(r.x, r.y, r.z)
 end
 
--- Lines 240-243
+-- Lines 246-249
 function math.vector_to_string(v)
 	return tostring(v.x) .. " " .. tostring(v.y) .. " " .. tostring(v.z)
 end
 
--- Lines 245-254
+-- Lines 251-260
 function math.spline(points, t)
 	local mu = t * t
 	local a0 = points[4] - points[3] - points[1] + points[2]
@@ -285,7 +290,7 @@ function math.spline(points, t)
 	return a0 * t * mu + a1 * mu + a2 * t + a3
 end
 
--- Lines 256-265
+-- Lines 262-271
 function math.spline_len(points, n)
 	local len = 0
 	local old_p = points[1]
@@ -299,7 +304,7 @@ function math.spline_len(points, n)
 	return len
 end
 
--- Lines 267-283
+-- Lines 273-289
 function math.bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -315,7 +320,7 @@ function math.bezier(points, t)
 	return a1 + a2 + a3 + a4
 end
 
--- Lines 285-290
+-- Lines 291-296
 function math.linear_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -323,7 +328,7 @@ function math.linear_bezier(points, t)
 	return p1 * (1 - t) + p2 * t
 end
 
--- Lines 292-298
+-- Lines 298-304
 function math.quadratic_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -332,7 +337,7 @@ function math.quadratic_bezier(points, t)
 	return p1 * (1 - t) * (1 - t) + p2 * 2 * t * (1 - t) + p3 * t * t
 end
 
--- Lines 301-310
+-- Lines 307-316
 function math.bezier_len(points, n)
 	local len = 0
 	local old_p = points[1]
@@ -346,7 +351,7 @@ function math.bezier_len(points, n)
 	return len
 end
 
--- Lines 314-323
+-- Lines 320-329
 function math.point_on_line(l1, l2, p)
 	local u = (p.x - l1.x) * (l2.x - l1.x) + (p.y - l1.y) * (l2.y - l1.y) + (p.z - l1.z) * (l2.z - l1.z)
 	local u = math.clamp(u / math.pow((l2 - l1):length(), 2), 0, 1)
@@ -357,14 +362,14 @@ function math.point_on_line(l1, l2, p)
 	return Vector3(x, y, z)
 end
 
--- Lines 327-330
+-- Lines 333-336
 function math.distance_to_line(l1, l2, p)
 	local closest_point = math.point_on_line(l1, l2, p)
 
 	return (closest_point - p):length(), closest_point
 end
 
--- Lines 333-340
+-- Lines 339-346
 function math.limitangle(angle)
 	local newangle = math.fmod(angle, 360)
 
@@ -375,7 +380,7 @@ function math.limitangle(angle)
 	return newangle
 end
 
--- Lines 342-350
+-- Lines 348-356
 function math.world_to_obj(obj, point)
 	if obj == nil then
 		return point
@@ -386,7 +391,7 @@ function math.world_to_obj(obj, point)
 	return vec:rotate_with(obj:rotation():inverse())
 end
 
--- Lines 352-361
+-- Lines 358-367
 function math.obj_to_world(obj, point)
 	if obj == nil then
 		return point
@@ -397,12 +402,12 @@ function math.obj_to_world(obj, point)
 	return vec + obj:position()
 end
 
--- Lines 363-365
+-- Lines 369-371
 function math.within(x, min, max)
 	return min <= x and x <= max
 end
 
--- Lines 369-376
+-- Lines 375-382
 function math.shuffle(array)
 	for i = #array, 2, -1 do
 		local j = math.random(i)
@@ -410,4 +415,38 @@ function math.shuffle(array)
 		array[i] = array[j]
 		array[j] = temp
 	end
+end
+
+-- Lines 386-402
+function math.rotation_to_quaternion(r)
+	local cr = math.cos(r:roll() * 0.5)
+	local sr = math.sin(r:roll() * 0.5)
+	local cp = math.cos(r:pitch() * 0.5)
+	local sp = math.sin(r:pitch() * 0.5)
+	local cy = math.cos(r:yaw() * 0.5)
+	local sy = math.sin(r:yaw() * 0.5)
+	local q = {
+		w = cr * cp * cy + sr * sp * sy,
+		x = sr * cp * cy - cr * sp * sy,
+		y = cr * sp * cy + sr * cp * sy,
+		z = cr * cp * sy - sr * sp * cy
+	}
+
+	return q
+end
+
+-- Lines 405-416
+function math.uniform_sample_circle(radius)
+	local t = math.lerp(0, 360, math.random())
+	local r = math.lerp(0, 1, math.random()) + math.lerp(0, 1, math.random())
+
+	if r > 1 then
+		r = 2 - r
+	end
+
+	r = radius * r
+	local x = r * math.cos(t)
+	local y = r * math.sin(t)
+
+	return x, y
 end

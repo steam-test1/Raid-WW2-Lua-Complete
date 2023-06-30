@@ -112,6 +112,7 @@ require("lib/units/pickups/Pickup")
 require("lib/units/pickups/AmmoClip")
 require("lib/units/pickups/HealthPackPickup")
 require("lib/units/pickups/GrenadePickup")
+require("lib/units/pickups/GrenadePickupNew")
 require("lib/units/pickups/SpecialEquipmentPickup")
 require("lib/units/equipment/ammo_bag/AmmoBagBase")
 require("lib/units/equipment/doctor_bag/DoctorBagBase")
@@ -148,6 +149,7 @@ require("lib/units/weapons/NPCFlamethrowerBase")
 require("lib/units/weapons/projectiles/ProjectileBase")
 require("lib/units/weapons/grenades/GrenadeBase")
 require("lib/units/weapons/grenades/FragGrenade")
+require("lib/units/weapons/grenades/MineGrenade")
 require("lib/units/weapons/grenades/GrenadeCluster")
 require("lib/units/weapons/grenades/NpcGrenade")
 require("lib/units/weapons/grenades/DistractionRock")
@@ -195,10 +197,11 @@ require("lib/units/props/MetalDetector")
 require("lib/units/props/ManageSpawnedUnits")
 require("lib/units/characters/CharacterManageSpawnedUnits")
 require("lib/units/RevivePumpkinExt")
+require("lib/units/props/FauxContainer")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines 268-333
+-- Lines 275-340
 function GameSetup:load_packages()
 	Application:debug("[GameSetup:load_packages()]")
 	Setup.load_packages(self)
@@ -272,7 +275,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines 335-367
+-- Lines 342-374
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -308,12 +311,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 369-371
+-- Lines 376-378
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines 373-413
+-- Lines 380-420
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -343,12 +346,12 @@ function GameSetup:init_managers(managers)
 	managers.notification = NotificationManager:new()
 	managers.test = TestManager:new()
 
-	if SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB360 then
 		managers.blackmarket:load_equipped_weapons()
 	end
 end
 
--- Lines 415-458
+-- Lines 422-465
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -386,7 +389,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines 460-494
+-- Lines 467-501
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -410,7 +413,7 @@ function GameSetup:init_finalize()
 		game_state_machine:change_state_by_name("ingame_waiting_for_players")
 	end
 
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS3 or _G.IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 
@@ -425,7 +428,7 @@ function GameSetup:init_finalize()
 	managers.network.account:set_playing(true)
 end
 
--- Lines 496-536
+-- Lines 503-543
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 
@@ -463,7 +466,7 @@ function GameSetup:update(t, dt)
 	managers.buff_effect:update(t, dt)
 end
 
--- Lines 538-551
+-- Lines 545-558
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -479,7 +482,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines 553-568
+-- Lines 560-575
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -492,13 +495,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 570-575
+-- Lines 577-582
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 578-604
+-- Lines 585-611
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -526,7 +529,7 @@ function GameSetup:save(data)
 	managers.statistics:sync_save(data)
 end
 
--- Lines 607-633
+-- Lines 614-640
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.hud:load(data)
@@ -554,7 +557,7 @@ function GameSetup:load(data)
 	managers.statistics:sync_load(data)
 end
 
--- Lines 636-661
+-- Lines 643-668
 function GameSetup:_update_debug_input()
 end
 

@@ -1,6 +1,9 @@
 RaidGUIControlReadyUpPlayerDescription = RaidGUIControlReadyUpPlayerDescription or class(RaidGUIControl)
+RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
+RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED = "voice_chat_muted_icon"
+RaidGUIControlReadyUpPlayerDescription.CHAT_PANEL_SIZE = 60
 
--- Lines 4-13
+-- Lines 7-18
 function RaidGUIControlReadyUpPlayerDescription:init(parent, params)
 	RaidGUIControlReadyUpPlayerDescription.super.init(self, parent, params)
 
@@ -9,9 +12,10 @@ function RaidGUIControlReadyUpPlayerDescription:init(parent, params)
 	self._on_click_callback = params.on_click_callback
 
 	self:_layout()
+	self:_create_voice_chat_indicator()
 end
 
--- Lines 15-46
+-- Lines 20-51
 function RaidGUIControlReadyUpPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
@@ -101,7 +105,67 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 	self._bottom_select_triangle:hide()
 end
 
--- Lines 48-75
+-- Lines 54-82
+function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
+	local chat_indicator_params_speaking = {
+		name = "chat_indicator_speaking",
+		layer = 30,
+		alpha = 0,
+		texture = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING].texture,
+		texture_rect = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING].texture_rect
+	}
+	self._chat_indicator_speaking = self._object:bitmap(chat_indicator_params_speaking)
+	local _, _, w, _ = self._status_label:text_rect()
+	local x = self._status_label:left() + w + RaidGUIControlReadyUpPlayerDescription.CHAT_PANEL_SIZE / 2
+	local y = self._player_name:bottom() + 19
+
+	self._chat_indicator_speaking:set_center_x(x)
+	self._chat_indicator_speaking:set_center_y(y)
+
+	local chat_indicator_params_muted = {
+		name = "chat_indicator_muted",
+		layer = 30,
+		alpha = 0,
+		texture = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED].texture,
+		texture_rect = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED].texture_rect
+	}
+	self._chat_indicator_muted = self._object:bitmap(chat_indicator_params_muted)
+
+	self._chat_indicator_muted:set_center_x(x)
+	self._chat_indicator_muted:set_center_y(y)
+end
+
+-- Lines 84-96
+function RaidGUIControlReadyUpPlayerDescription:show_chat_indicator(chat_indicator_name)
+	local chat_indicator = nil
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(1)
+	end
+end
+
+-- Lines 98-110
+function RaidGUIControlReadyUpPlayerDescription:hide_chat_indicator(chat_indicator_name)
+	local chat_indicator = nil
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(0)
+	end
+end
+
+-- Lines 113-140
 function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 	if not data then
 		return
@@ -136,12 +200,17 @@ function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 	end
 end
 
--- Lines 77-79
+-- Lines 142-144
 function RaidGUIControlReadyUpPlayerDescription:params()
 	return self._params
 end
 
--- Lines 81-92
+-- Lines 146-148
+function RaidGUIControlReadyUpPlayerDescription:is_ready()
+	return self._params.ready
+end
+
+-- Lines 150-161
 function RaidGUIControlReadyUpPlayerDescription:highlight_on()
 	if not self._enabled then
 		return
@@ -156,7 +225,7 @@ function RaidGUIControlReadyUpPlayerDescription:highlight_on()
 	end
 end
 
--- Lines 94-101
+-- Lines 163-170
 function RaidGUIControlReadyUpPlayerDescription:highlight_off()
 	if self._selected then
 		return
@@ -167,7 +236,7 @@ function RaidGUIControlReadyUpPlayerDescription:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
--- Lines 103-113
+-- Lines 172-182
 function RaidGUIControlReadyUpPlayerDescription:on_mouse_clicked()
 	if not self._enabled then
 		return
@@ -180,27 +249,32 @@ function RaidGUIControlReadyUpPlayerDescription:on_mouse_clicked()
 	self:select_on()
 end
 
--- Lines 115-119
+-- Lines 184-188
 function RaidGUIControlReadyUpPlayerDescription:select_on()
 	self:set_selected(true)
 	self._top_select_triangle:show()
 	self._bottom_select_triangle:show()
 end
 
--- Lines 121-125
+-- Lines 190-194
 function RaidGUIControlReadyUpPlayerDescription:select_off()
 	self:set_selected(false)
 	self._top_select_triangle:hide()
 	self._bottom_select_triangle:hide()
 end
 
--- Lines 127-156
+-- Lines 196-229
 function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 	if state == "ready" then
 		self._status_label:set_text(self:translate("menu_ready", true))
 		self._status_label:set_color(tweak_data.gui.colors.raid_red)
 
 		self._params.ready = true
+	elseif state == "not_ready" then
+		self._status_label:set_text(self:translate("menu_not_ready", true))
+		self._status_label:set_color(tweak_data.gui.colors.raid_grey_effects)
+
+		self._params.ready = false
 	elseif state == "kicked" then
 		self._status_label:set_text(self:translate("menu_kicked", true))
 		self._class_icon:set_color(tweak_data.gui.colors.raid_grey_effects)
@@ -224,7 +298,7 @@ function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 	end
 end
 
--- Lines 159-165
+-- Lines 232-238
 function RaidGUIControlReadyUpPlayerDescription:set_challenge_card_selected(selected)
 	if selected then
 		self._selected_card_icon:set_image(tweak_data.gui.icons.ready_up_card_selected_active.texture, unpack(tweak_data.gui.icons.ready_up_card_selected_active.texture_rect))

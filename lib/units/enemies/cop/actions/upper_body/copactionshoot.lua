@@ -928,7 +928,7 @@ function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, tar
 	return state and true
 end
 
--- Lines 878-942
+-- Lines 878-948
 function CopActionShoot:anim_clbk_melee_strike()
 	if not self._attention then
 		return
@@ -962,6 +962,11 @@ function CopActionShoot:anim_clbk_melee_strike()
 	local is_weapon = melee_weapon == "weapon"
 	local damage = is_weapon and self._w_usage_tweak.melee_dmg or tweak_data.weapon.npc_melee[melee_weapon].damage
 	damage = damage * (is_weapon and 1 or self._common_data.char_tweak.melee_weapon_dmg_multiplier or 1)
+
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE) then
+		damage = damage * managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE)
+	end
+
 	local action_data = {
 		variant = "melee",
 		damage = damage,

@@ -1,8 +1,7 @@
 GroupAIRaidTweakData = GroupAIRaidTweakData or class()
 
--- Lines 3-370
+-- Lines 3-339
 function GroupAIRaidTweakData:init(difficulty_index)
-	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.regroup = {}
 	self.assault = {
 		force = {}
@@ -11,9 +10,9 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	self.recon = {}
 	self.rescue = {}
 	self.cloaker = {}
-	self.max_spawning_distance = 8000
-	self.min_spawning_distance = 1500
-	self.max_spawning_height_diff = 700
+	self.max_spawning_distance = 11000
+	self.min_spawning_distance = 800
+	self.max_spawning_height_diff = 1000
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.recurring_group_SO = {
@@ -75,7 +74,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				1
 			}
 		},
-		build_duration = 15,
+		build_duration = 20,
 		sustain_duration_min = {
 			60,
 			100,
@@ -89,10 +88,16 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		sustain_duration_balance_mul = {
 			1,
 			1.1,
-			1.2,
-			1.3
+			1.25,
+			1.4
 		},
-		fade_duration = 5
+		fade_duration = 10,
+		push_delay = {
+			4.5,
+			2,
+			1,
+			0.5
+		}
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
@@ -105,19 +110,19 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		self.assault.delay = {
 			40,
 			30,
-			20
+			25
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.delay = {
 			35,
 			25,
-			25
+			20
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.delay = {
-			30,
-			20,
-			10
+			32,
+			22,
+			17
 		}
 	end
 
@@ -126,104 +131,23 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		0,
 		0
 	}
+	self.assault.force = {
+		20,
+		24,
+		28
+	}
+	self.assault.force_pool = {
+		40,
+		60,
+		72
+	}
 
-	if is_console then
-		self.assault.force = {
-			0,
-			4,
-			7
-		}
-		self.assault.force_pool = {
-			0,
-			60,
-			100
-		}
-	else
-		self.assault.force = {
-			12,
-			13,
-			15
-		}
-		self.assault.force_pool = {
-			100,
-			125,
-			175
-		}
-	end
-
-	if is_console then
-		if difficulty_index <= TweakData.DIFFICULTY_1 then
-			self.assault.force_balance_mul = {
-				1,
-				1.1,
-				1.2,
-				1.3
-			}
-			self.assault.force_pool_balance_mul = {
-				1,
-				1.1,
-				1.2,
-				1.3
-			}
-		elseif difficulty_index == TweakData.DIFFICULTY_2 then
-			self.assault.force_balance_mul = {
-				1.2,
-				1.4,
-				1.6,
-				1.8
-			}
-			self.assault.force_pool_balance_mul = {
-				1.2,
-				1.4,
-				1.6,
-				1.8
-			}
-		elseif difficulty_index == TweakData.DIFFICULTY_3 then
-			self.assault.force_balance_mul = {
-				1.6,
-				1.8,
-				2,
-				2.2
-			}
-			self.assault.force_pool_balance_mul = {
-				1.7,
-				2,
-				2.2,
-				2.4
-			}
-		elseif difficulty_index == TweakData.DIFFICULTY_4 then
-			self.assault.force_balance_mul = {
-				1.8,
-				2.1,
-				2.4,
-				2.8
-			}
-			self.assault.force_pool_balance_mul = {
-				2.2,
-				2.4,
-				2.6,
-				2.8
-			}
-		else
-			self.assault.force_balance_mul = {
-				1,
-				4.2,
-				4.5,
-				4.9
-			}
-			self.assault.force_pool_balance_mul = {
-				3,
-				5,
-				7,
-				9
-			}
-		end
-	elseif difficulty_index <= TweakData.DIFFICULTY_1 then
+	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.force_balance_mul = {
 			0.7,
-			1,
-			1.3,
-			1.7
+			0.9,
+			1.1,
+			1.2
 		}
 		self.assault.force_pool_balance_mul = {
 			0.5,
@@ -234,55 +158,55 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.assault.force_balance_mul = {
 			0.8,
+			1,
 			1.1,
-			1.4,
-			1.8
+			1.3
 		}
 		self.assault.force_pool_balance_mul = {
-			0.6,
-			1,
-			1.4,
-			1.8
+			0.85,
+			1.15,
+			1.45,
+			1.85
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.force_balance_mul = {
-			1.1,
-			1.7,
-			2.2,
-			2.7
+			1,
+			1.2,
+			1.3,
+			1.4
 		}
 		self.assault.force_pool_balance_mul = {
-			1.2,
+			1.1,
 			1.7,
 			2.2,
 			2.7
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.force_balance_mul = {
-			2,
-			2.25,
-			3,
-			4
+			1.1,
+			1.25,
+			1.4,
+			1.6
 		}
 		self.assault.force_pool_balance_mul = {
+			1.3,
 			1.8,
-			2.8,
-			3.3,
-			3.8
+			2.7,
+			2.85
 		}
 	end
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.groups = {
 			grunt_flankers = {
-				50,
-				50,
-				50
+				75,
+				75,
+				75
 			},
 			grunt_chargers = {
-				50,
-				50,
-				50
+				75,
+				75,
+				75
 			},
 			grunt_support_range = {
 				40,
@@ -291,8 +215,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			gerbish_chargers = {
 				0,
-				50,
-				50
+				75,
+				75
 			},
 			gerbish_rifle_range = {
 				0,
@@ -302,7 +226,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			gerbish_flankers = {
 				0,
 				0,
-				50
+				75
 			},
 			fallschirm_charge = {
 				0,
@@ -353,13 +277,13 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.assault.groups = {
 			grunt_flankers = {
-				50,
-				50,
-				50
+				75,
+				75,
+				75
 			},
 			grunt_chargers = {
-				50,
-				60,
+				75,
+				80,
 				0
 			},
 			grunt_support_range = {
@@ -369,8 +293,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			gerbish_chargers = {
 				40,
-				50,
-				50
+				75,
+				75
 			},
 			gerbish_rifle_range = {
 				30,
@@ -379,8 +303,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			gerbish_flankers = {
 				30,
-				50,
-				50
+				75,
+				75
 			},
 			fallschirm_charge = {
 				0,
@@ -419,13 +343,13 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			commanders = {
 				0,
-				0,
-				0
+				1,
+				2
 			},
 			commander_squad = {
 				0,
-				0,
-				0
+				25,
+				35
 			}
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
@@ -446,8 +370,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				0
 			},
 			gerbish_chargers = {
-				50,
-				50,
+				75,
+				75,
 				30
 			},
 			gerbish_rifle_range = {
@@ -456,14 +380,14 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				20
 			},
 			gerbish_flankers = {
-				50,
-				50,
+				75,
+				75,
 				30
 			},
 			fallschirm_charge = {
 				30,
-				50,
-				50
+				75,
+				75
 			},
 			fallschirm_support = {
 				0,
@@ -472,8 +396,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			fallschirm_flankers = {
 				0,
-				50,
-				50
+				75,
+				75
 			},
 			ss_flankers = {
 				0,
@@ -496,13 +420,13 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				15
 			},
 			commanders = {
-				3,
-				6,
-				9
+				0,
+				2,
+				4
 			},
 			commander_squad = {
-				60,
-				60,
+				30,
+				45,
 				60
 			}
 		}
@@ -539,8 +463,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				0
 			},
 			fallschirm_charge = {
-				50,
-				50,
+				75,
+				75,
 				40
 			},
 			fallschirm_support = {
@@ -549,24 +473,24 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				30
 			},
 			fallschirm_flankers = {
-				50,
-				50,
+				75,
+				75,
 				40
 			},
 			ss_flankers = {
 				30,
-				50,
-				50
+				75,
+				75
 			},
 			ss_rifle_range = {
 				0,
 				40,
-				50
+				75
 			},
 			ss_chargers = {
 				30,
-				50,
-				50
+				75,
+				75
 			},
 			flamethrower = {
 				15,
@@ -574,14 +498,14 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				20
 			},
 			commanders = {
-				15,
-				18,
-				20
+				1,
+				4,
+				8
 			},
 			commander_squad = {
 				60,
-				60,
-				60
+				70,
+				80
 			}
 		}
 	end
@@ -852,20 +776,11 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		5
 	}
 	self.recon.interval_variation = 40
-
-	if difficulty_index < 6 then
-		self.recon.force = {
-			2,
-			4,
-			6
-		}
-	else
-		self.recon.force = {
-			3,
-			4,
-			6
-		}
-	end
+	self.recon.force = {
+		2,
+		4,
+		6
+	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.recon.groups = {

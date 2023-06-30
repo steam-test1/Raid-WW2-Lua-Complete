@@ -238,7 +238,7 @@ end
 
 local mvec1 = Vector3()
 
--- Lines 264-295
+-- Lines 264-305
 function PlayerCamera:set_rotation(rot)
 	mrotation.y(rot, mvec1)
 	mvector3.multiply(mvec1, 100000)
@@ -263,26 +263,30 @@ function PlayerCamera:set_rotation(rot)
 	sync_pitch = math.floor(127 * sync_pitch / 170)
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
 
-	if sync_dt > 1 and angle_delta > 0 or angle_delta > 5 then
-		self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
+	if tweak_data.network then
+		local update_network = tweak_data.network.camera.network_sync_delta_t < sync_dt and angle_delta > 0 or tweak_data.network.camera.network_angle_delta < angle_delta
 
-		self._sync_dir.yaw = sync_yaw
-		self._sync_dir.pitch = sync_pitch
-		self._last_sync_t = t
+		if update_network then
+			self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
+
+			self._sync_dir.yaw = sync_yaw
+			self._sync_dir.pitch = sync_pitch
+			self._last_sync_t = t
+		end
 	end
 end
 
--- Lines 299-304
+-- Lines 309-314
 function PlayerCamera:set_FOV(fov_value)
 	self._camera_object:set_fov(fov_value)
 end
 
--- Lines 308-310
+-- Lines 318-320
 function PlayerCamera:viewport()
 	return self._vp
 end
 
--- Lines 314-324
+-- Lines 324-334
 function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	if not self._shakers then
 		return
@@ -293,17 +297,17 @@ function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	end
 end
 
--- Lines 328-330
+-- Lines 338-340
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	return self._shaker:play(effect, amplitude or 1, frequency or 1, offset or 0)
 end
 
--- Lines 332-334
+-- Lines 342-344
 function PlayerCamera:stop_shaker(id)
 	self._shaker:stop_immediately(id)
 end
 
--- Lines 336-338
+-- Lines 346-348
 function PlayerCamera:shaker()
 	return self._shaker
 end

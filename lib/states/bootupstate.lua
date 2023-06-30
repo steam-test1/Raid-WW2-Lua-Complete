@@ -2,23 +2,26 @@ require("lib/states/GameState")
 
 BootupState = BootupState or class(GameState)
 BootupState.MAX_WAIT_TIME = 25
+BootupState.NUM_SPLASH_SCREENS = 2
 
--- Lines 6-21
+-- Lines 12-30
 function BootupState:init(game_state_machine, setup)
 	GameState.init(self, "bootup", game_state_machine)
 
 	if setup then
 		self:setup()
 	end
+
+	Global.controller_index = 1
 end
 
--- Lines 23-117
+-- Lines 32-96
 function BootupState:setup()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
 	local gui = Overlay:gui()
-	local is_win32 = SystemInfo:platform() == Idstring("WIN32")
-	local is_x360 = SystemInfo:platform() == Idstring("X360")
+	local is_win32 = _G.IS_PC
+	local is_x360 = _G.IS_XB360
 	local show_esrb = false
 	self._full_workspace = gui:create_screen_workspace()
 	self._workspace = managers.gui_data:create_saferect_workspace()
@@ -62,10 +65,6 @@ function BootupState:setup()
 		duration = show_esrb and 6.5 or 0
 	})
 
-	if not Application:production_build() then
-		-- Nothing
-	end
-
 	local lato_path = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, tweak_data.gui.font_sizes.size_16)
 	self._full_panel = self._full_workspace:panel()
 	self._panel = self._workspace:panel()
@@ -89,7 +88,7 @@ function BootupState:setup()
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
 		font_size = press_any_key_font_size,
 		color = MenuTitlescreenState.TEXT_COLOR,
-		text = utf8.to_upper(managers.localization:text("press_any_key"))
+		text = utf8.to_upper(managers.localization:text(_G.IS_PC and "press_any_key" or "press_any_key_to_skip_controller"))
 	}
 	self._press_any_key_text = self._full_panel:text(press_any_key_prompt_params)
 	local _, _, _, h = self._press_any_key_text:text_rect()
@@ -111,7 +110,7 @@ function BootupState:setup()
 	self._bootup_t = Application:time()
 end
 
--- Lines 119-143
+-- Lines 98-122
 function BootupState:at_enter()
 	managers.menu:input_enabled(false)
 
@@ -136,14 +135,14 @@ function BootupState:at_enter()
 	end
 end
 
--- Lines 145-149
+-- Lines 124-128
 function BootupState:clbk_game_has_music_control(status)
 	if self._play_data and self._play_data.video then
 		self._gui_obj:set_volume_gain(status and 1 or 0)
 	end
 end
 
--- Lines 151-172
+-- Lines 130-152
 function BootupState:update(t, dt)
 	local now = Application:time()
 	self.next_message_t = self.next_message_t or Application:time() + 1
@@ -154,20 +153,22 @@ function BootupState:update(t, dt)
 		self.next_message_t = now + 1
 	end
 
-	if not SystemInfo:platform() == Idstring("WIN32") and PackageManager:all_packages_loaded() and self._play_index == 2 and self._press_any_key_text:alpha() == 0 then
+	if not _G.IS_PC and PackageManager:all_packages_loaded() and self._play_index == 2 and self._press_any_key_text:alpha() == 0 then
 		self._full_panel:animate(callback(self, self, "_animate_press_any_key"))
 	end
 
 	self:check_confirm_pressed()
 
-	if not self:is_playing() or (self._play_data.can_skip or Global.override_bootup_can_skip) and self:is_skipped() then
-		self:play_next(self:is_skipped())
+	local is_skipped = self:is_skipped()
+
+	if not self:is_playing() or (self._play_data.can_skip or Global.override_bootup_can_skip) and is_skipped then
+		self:play_next(is_skipped)
 	else
 		self:update_fades()
 	end
 end
 
--- Lines 174-186
+-- Lines 154-166
 function BootupState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -183,7 +184,7 @@ function BootupState:check_confirm_pressed()
 	end
 end
 
--- Lines 188-226
+-- Lines 168-206
 function BootupState:update_fades()
 	local time, duration = nil
 
@@ -224,7 +225,7 @@ function BootupState:update_fades()
 	end
 end
 
--- Lines 228-240
+-- Lines 208-220
 function BootupState:apply_fade()
 	if self._play_data.gui then
 		local script = self._gui_obj.script and self._gui_obj:script()
@@ -239,14 +240,16 @@ function BootupState:apply_fade()
 	end
 end
 
--- Lines 242-256
+-- Lines 222-245
 function BootupState:is_skipped()
-	if not SystemInfo:platform() == Idstring("WIN32") and not PackageManager:all_packages_loaded() and self._play_index > 1 and Application:time() < self._bootup_t + BootupState.MAX_WAIT_TIME then
+	if not _G.IS_PC and not PackageManager:all_packages_loaded() and self._play_index > 1 and Application:time() < self._bootup_t + BootupState.MAX_WAIT_TIME then
 		return false
 	end
 
-	for _, controller in ipairs(self._controller_list) do
+	for index, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
+			Global.controller_index = index
+
 			return true
 		end
 	end
@@ -254,7 +257,7 @@ function BootupState:is_skipped()
 	return false
 end
 
--- Lines 258-268
+-- Lines 247-257
 function BootupState:is_playing()
 	if alive(self._gui_obj) then
 		if self._gui_obj.loop_count then
@@ -267,7 +270,7 @@ function BootupState:is_playing()
 	end
 end
 
--- Lines 270-283
+-- Lines 259-272
 function BootupState:_animate_press_any_key()
 	local press_any_key_fade_in_duration = 0.3
 	local t = 0
@@ -283,7 +286,7 @@ function BootupState:_animate_press_any_key()
 	self._press_any_key_text:set_alpha(0.8)
 end
 
--- Lines 285-382
+-- Lines 274-374
 function BootupState:play_next(is_skipped)
 	self._play_time = TimerManager:game():time()
 	self._play_index = (self._play_index or 0) + 1
@@ -345,10 +348,10 @@ function BootupState:play_next(is_skipped)
 			gui_config.layer = self._play_data.layer or gui_config.layer
 			self._gui_obj = self._full_panel:video(gui_config)
 
-			if not managers.music:has_music_control() then
-				self._gui_obj:set_volume_gain(0)
-			else
+			if managers.music:has_music_control() then
 				self._gui_obj:set_volume_gain(0.75)
+			else
+				self._gui_obj:set_volume_gain(0)
 			end
 
 			local w = self._gui_obj:video_width()
@@ -360,6 +363,7 @@ function BootupState:play_next(is_skipped)
 			self._gui_obj:play()
 		elseif self._play_data.texture then
 			gui_config.texture = self._play_data.texture
+			gui_config.layer = self._play_data.layer or gui_config.layer
 			self._gui_obj = self._panel:bitmap(gui_config)
 		elseif self._play_data.text then
 			gui_config.text = self._play_data.text
@@ -377,7 +381,7 @@ function BootupState:play_next(is_skipped)
 			local script = self._gui_obj:script()
 
 			if script.setup then
-				script:setup()
+				script:setup(self._workspace)
 			end
 		end
 
@@ -387,8 +391,9 @@ function BootupState:play_next(is_skipped)
 	end
 end
 
--- Lines 384-421
+-- Lines 376-415
 function BootupState:at_exit()
+	Application:debug("[BootupState] at_exit")
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
 	if alive(self._workspace) then
@@ -423,13 +428,9 @@ function BootupState:at_exit()
 	self._play_data = nil
 
 	managers.menu:input_enabled(true)
-
-	if PackageManager:loaded("packages/boot_screen") then
-		PackageManager:unload("packages/boot_screen")
-	end
 end
 
--- Lines 423-425
+-- Lines 417-419
 function BootupState:is_joinable()
 	return false
 end

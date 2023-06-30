@@ -1,6 +1,9 @@
 CharacterSelectionGui = CharacterSelectionGui or class(RaidGuiBase)
+CharacterSelectionGui.CLOSE_SCREEN_TIMER = 0.5
+CharacterSelectionGui.BUTTON_H = 47
+CharacterSelectionGui.BUTTON_W = 96
 
--- Lines 5-27
+-- Lines 11-37
 function CharacterSelectionGui:init(ws, fullscreen_ws, node, component_name)
 	self._loading_units = {}
 
@@ -17,11 +20,13 @@ function CharacterSelectionGui:init(ws, fullscreen_ws, node, component_name)
 
 	self._initial_character_slot = managers.savefile:get_save_progress_slot()
 	self._slot_to_select = managers.savefile:get_save_progress_slot()
+	self._waiting_to_close = false
+	self._close_the_screen_please = false
 
 	managers.raid_menu:hide_background()
 end
 
--- Lines 29-33
+-- Lines 39-43
 function CharacterSelectionGui:_setup_properties()
 	CharacterSelectionGui.super._setup_properties(self)
 
@@ -29,16 +34,17 @@ function CharacterSelectionGui:_setup_properties()
 	self._background_rect = nil
 end
 
--- Lines 35-42
+-- Lines 45-54
 function CharacterSelectionGui:_set_initial_data()
 	managers.character_customization:reset_current_version_to_attach()
 
 	self._slots_loaded = {}
+	self._slot_normal = {}
 
 	self:_load_all_slots()
 end
 
--- Lines 44-97
+-- Lines 56-134
 function CharacterSelectionGui:_layout()
 	self:_disable_dof()
 	self._root_panel:label({
@@ -91,58 +97,34 @@ function CharacterSelectionGui:_layout()
 	})
 	self._select_character_button_disabled = self._root_panel:long_primary_button_disabled({
 		name = "select_character_button_disabled",
-		visible = true,
 		y = 736,
 		x = 0,
 		text = self:translate("character_selection_selected_character_button", true),
-		layer = RaidGuiBase.FOREGROUND_LAYER
+		layer = RaidGuiBase.FOREGROUND_LAYER,
+		visible = not managers.controller:is_xbox_controller_present()
 	})
 
 	self._select_character_button:set_x((416 - self._select_character_button:w()) / 2)
 	self._select_character_button_disabled:set_x((416 - self._select_character_button_disabled:w()) / 2)
 
-	self._profile_name_label = self._root_panel:label({
-		name = "profile_name_label",
-		h = 41,
-		w = 356,
-		align = "right",
-		text = "PROFILE NAME 01",
-		y = 96,
-		x = 1376,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_38,
-		color = tweak_data.gui.colors.raid_white
-	})
-
-	self._profile_name_label:set_right(self._root_panel:right())
-
-	self._character_name_label = self._root_panel:label({
-		name = "character_name_label",
-		h = 32,
-		w = 356,
-		align = "right",
-		text = "KURGAN",
-		y = 136,
-		x = 1376,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_24,
-		color = tweak_data.gui.colors.raid_grey
-	})
-
-	self._character_name_label:set_right(self._root_panel:right())
-
 	self._right_side_info = self._root_panel:create_custom_control(RaidGUIControlCharacterDescription, {
 		name = "right_side_info_panel",
-		h = 680,
-		y = 192,
-		w = 356,
-		x = 1376
+		h = 720,
+		y = 0,
+		w = 516,
+		x = 1308
 	}, {})
 
 	self._right_side_info:set_right(self._root_panel:right())
+	self._right_side_info:set_center_y(self._root_panel:h() / 2)
+
+	if managers.controller:is_xbox_controller_present() and self._select_character_button then
+		self._select_character_button:hide()
+		self._select_character_button_disabled:hide()
+	end
 end
 
--- Lines 102-118
+-- Lines 139-155
 function CharacterSelectionGui:_data_source_characters_list()
 	local characters = {}
 
@@ -169,13 +151,13 @@ function CharacterSelectionGui:_data_source_characters_list()
 	return characters
 end
 
--- Lines 121-124
+-- Lines 158-161
 function CharacterSelectionGui:on_select_character_button()
 	self:activate_selected_character()
 	self._characters_list:selected_item():select()
 end
 
--- Lines 127-144
+-- Lines 165-199
 function CharacterSelectionGui:_character_action_callback(slot_index, action)
 	Application:trace("[CharacterSelectionGui:_character_action_callback] slot_index, action ", slot_index, action)
 
@@ -187,6 +169,20 @@ function CharacterSelectionGui:_character_action_callback(slot_index, action)
 		end
 
 		self:_customize_character()
+	elseif action == RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_RENAME then
+		local cache = Global.savefile_manager.meta_data_list[slot_index].cache
+		local profile_name = cache.PlayerManager.character_profile_name
+		local params = {
+			callback_yes = callback(self, self, "_callback_yes_function"),
+			textbox_value = profile_name
+		}
+
+		managers.menu:show_character_create_dialog(params)
+	elseif action == RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_NATION then
+		if slot_index then
+			self:_increment_nation(slot_index)
+			managers.raid_menu:on_escape()
+		end
 	elseif action == RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_DELETE then
 		if slot_index then
 			self:_delete_character(slot_index)
@@ -196,7 +192,77 @@ function CharacterSelectionGui:_character_action_callback(slot_index, action)
 	end
 end
 
--- Lines 147-152
+-- Lines 201-222
+function CharacterSelectionGui:_increment_nation(slot_index)
+	local character_nationality = managers.player:get_character_profile_nation()
+	local td_chars = tweak_data.criminals.character_names
+	local pick_idx = 1
+
+	for i, v in ipairs(td_chars) do
+		if v == character_nationality then
+			pick_idx = i + 1
+		end
+	end
+
+	if pick_idx > #td_chars then
+		pick_idx = 1
+	end
+
+	self:_change_nationality(td_chars[pick_idx])
+
+	character_nationality = td_chars[pick_idx]
+
+	self._characters_list:selected_item():update_flag(character_nationality)
+end
+
+-- Lines 224-244
+function CharacterSelectionGui:_callback_yes_function(button, button_data, data)
+	local new_profile_name = trim(data.input_field_text)
+
+	if new_profile_name == "" then
+		local params = {
+			textbox_id = "dialog_err_empty_character_name"
+		}
+
+		managers.menu:show_err_character_name_dialog(params)
+
+		return
+	elseif character_name_exists(new_profile_name) then
+		local params = {
+			textbox_id = "dialog_err_duplicate_character_name"
+		}
+
+		managers.menu:show_err_character_name_dialog(params)
+
+		return
+	end
+
+	self._new_profile_name = new_profile_name
+
+	managers.raid_menu:on_escape()
+end
+
+-- Lines 247-271
+function CharacterSelectionGui:_change_nationality(nationality)
+	if managers.network:session():has_other_peers() and managers.savefile:get_active_characters_count() <= 1 then
+		managers.menu:show_last_character_delete_forbiden_in_multiplayer({
+			text = managers.localization:text("character_profile_nationality_change_forbiden_in_multiplayer")
+		})
+
+		return
+	end
+
+	local slot_index = self._active_character_slot
+
+	managers.savefile:load_game(slot_index, true)
+	managers.player:set_character_profile_nation(nationality)
+	managers.blackmarket:set_preferred_character(nationality, 1)
+	managers.savefile:save_game(slot_index)
+	self:show_selected_character_details(slot_index)
+	self:show_selected_character(slot_index)
+end
+
+-- Lines 275-280
 function CharacterSelectionGui:_customize_character()
 	self._open_customization_screen_flag = true
 	self._open_creation_screen_flag = false
@@ -204,7 +270,7 @@ function CharacterSelectionGui:_customize_character()
 	self:_pre_close_screen()
 end
 
--- Lines 155-169
+-- Lines 284-298
 function CharacterSelectionGui:_delete_character(slot_index)
 	if managers.network:session():has_other_peers() and managers.savefile:get_active_characters_count() <= 1 then
 		local params = {
@@ -223,7 +289,7 @@ function CharacterSelectionGui:_delete_character(slot_index)
 	self:show_character_delete_confirmation(callback(self, self, "on_item_yes_delete_characters_list"))
 end
 
--- Lines 172-180
+-- Lines 301-309
 function CharacterSelectionGui:_create_character()
 	managers.savefile:set_create_character_slot(self._selected_character_slot)
 
@@ -233,26 +299,26 @@ function CharacterSelectionGui:_create_character()
 	self:_pre_close_screen()
 end
 
--- Lines 183-188
+-- Lines 312-317
 function CharacterSelectionGui:_on_item_click(slot_index)
-	Application:trace("[CharacterSelectionGui:_on_item_click]")
+	Application:trace("[CharacterSelectionGui:_on_item_click] slot_index", slot_index)
 	self:_select_character_slot(slot_index)
 end
 
--- Lines 191-197
+-- Lines 320-326
 function CharacterSelectionGui:_on_item_selected(slot_index)
 	Application:trace("[CharacterSelectionGui:_on_item_selected] slot_index ", slot_index)
 	self:_select_character_slot(slot_index)
 end
 
--- Lines 200-207
+-- Lines 329-336
 function CharacterSelectionGui:_on_item_double_click(slot_index)
 	self:_select_character_slot(slot_index)
 	self:activate_selected_character()
 	self._characters_list:selected_item():select()
 end
 
--- Lines 209-220
+-- Lines 338-349
 function CharacterSelectionGui:_rebind_controller_buttons(slot_index)
 	local cache = Global.savefile_manager.meta_data_list[slot_index].cache
 
@@ -265,7 +331,7 @@ function CharacterSelectionGui:_rebind_controller_buttons(slot_index)
 	end
 end
 
--- Lines 225-245
+-- Lines 354-374
 function CharacterSelectionGui:_load_all_slots()
 	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		if Global.savefile_manager.meta_data_list and Global.savefile_manager.meta_data_list[slot_index] then
@@ -285,19 +351,20 @@ function CharacterSelectionGui:_load_all_slots()
 	self._active_character_slot = last_selected_slot
 end
 
--- Lines 248-272
+-- Lines 377-402
 function CharacterSelectionGui:_load_slot_data(slot_index, save_as_last_selected_slot)
 	managers.warcry:reset()
 
 	self._slots_loaded[slot_index] = false
 	self._is_load_done = false
 	self._is_render_done = false
+	self._close_timer = CharacterSelectionGui.CLOSE_SCREEN_TIMER
 
 	managers.savefile:_set_cache(slot_index, nil)
 	managers.savefile:_load(slot_index, false, nil)
 end
 
--- Lines 277-311
+-- Lines 407-442
 function CharacterSelectionGui:_select_character_slot(slot_index)
 	Application:trace("[CharacterSelectionGui:_select_character_slot] slot_index, self._selected_character_slot, self._active_character_slot ", slot_index, self._selected_character_slot, self._active_character_slot)
 	self:_rebind_controller_buttons(slot_index)
@@ -326,7 +393,7 @@ function CharacterSelectionGui:_select_character_slot(slot_index)
 	end
 end
 
--- Lines 314-341
+-- Lines 445-472
 function CharacterSelectionGui:activate_selected_character()
 	Application:trace("[CharacterSelectionGui:activate_selected_character] selected_slot, active_slot ", self._selected_character_slot, self._active_character_slot)
 	managers.menu_component:post_event("character_selection_doubleclick")
@@ -348,10 +415,10 @@ function CharacterSelectionGui:activate_selected_character()
 		return
 	end
 
-	self:_activate_character_profile(self._selected_character_slot)
+	self:_activate_character_profile(new_progress_slot_index)
 end
 
--- Lines 344-398
+-- Lines 475-489
 function CharacterSelectionGui:_activate_character_profile(slot_index)
 	Application:trace("[CharacterSelectionGui:_activate_character_profile] slot_index ", slot_index)
 
@@ -367,7 +434,7 @@ function CharacterSelectionGui:_activate_character_profile(slot_index)
 	self._characters_list:activate_item_by_value(self._active_character_slot)
 end
 
--- Lines 401-449
+-- Lines 492-534
 function CharacterSelectionGui:show_selected_character_details(slot_index)
 	local cache = nil
 	local profile_name = ""
@@ -387,8 +454,6 @@ function CharacterSelectionGui:show_selected_character_details(slot_index)
 
 	if not cache then
 		self._right_side_info:set_visible(false)
-		self._profile_name_label:set_visible(false)
-		self._character_name_label:set_visible(false)
 	else
 		local skills_applied = {}
 
@@ -410,23 +475,20 @@ function CharacterSelectionGui:show_selected_character_details(slot_index)
 			nationality = nationality,
 			level = level,
 			class_stats = class_stats,
-			character_stats = character_stats
+			character_stats = character_stats,
+			profile_name = profile_name
 		})
-		self._profile_name_label:set_visible(true)
-		self._profile_name_label:set_text(profile_name)
-		self._character_name_label:set_visible(true)
-		self._character_name_label:set_text(self:translate("menu_" .. nationality, true))
 	end
 end
 
--- Lines 452-458
+-- Lines 537-543
 function CharacterSelectionGui:show_selected_character(slot_index)
 	self._loading_units[CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT] = true
 
 	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_show_selected_character_loaded", slot_index))
 end
 
--- Lines 460-496
+-- Lines 545-581
 function CharacterSelectionGui:_show_selected_character_loaded(slot_index)
 	if self._closing_screen then
 		if self._spawned_character_unit then
@@ -448,7 +510,7 @@ function CharacterSelectionGui:_show_selected_character_loaded(slot_index)
 
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
-		local rotation = Rotation(0, 0, 0)
+		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 
@@ -461,7 +523,7 @@ function CharacterSelectionGui:_show_selected_character_loaded(slot_index)
 	self._spawned_character_unit:customization():attach_all_parts_to_character(slot_index, managers.character_customization:get_current_version_to_attach())
 end
 
--- Lines 498-505
+-- Lines 583-590
 function CharacterSelectionGui:destroy_character_unit()
 	if self._spawned_character_unit then
 		self._spawned_character_unit:customization():destroy_all_parts_on_character()
@@ -471,7 +533,7 @@ function CharacterSelectionGui:destroy_character_unit()
 	end
 end
 
--- Lines 507-517
+-- Lines 592-602
 function CharacterSelectionGui:get_character_spawn_location()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 
@@ -484,7 +546,7 @@ function CharacterSelectionGui:get_character_spawn_location()
 	end
 end
 
--- Lines 519-529
+-- Lines 604-614
 function CharacterSelectionGui:back_pressed()
 	Application:trace("[CharacterSelectionGui:back_pressed] ")
 
@@ -495,7 +557,7 @@ function CharacterSelectionGui:back_pressed()
 	CharacterSelectionGui.super.back_pressed(self)
 end
 
--- Lines 531-566
+-- Lines 616-651
 function CharacterSelectionGui:_pre_close_screen()
 	Application:trace("[CharacterSelectionGui][_pre_close_screen]")
 	self:destroy_character_unit()
@@ -523,9 +585,9 @@ function CharacterSelectionGui:_pre_close_screen()
 	self:reset_weapon_challenges()
 end
 
--- Lines 568-603
+-- Lines 653-708
 function CharacterSelectionGui:_extra_character_setup()
-	Application:trace("[CharacterSelectionGui:_extra_character_setup]")
+	Application:trace("[CharacterSelectionGui][_extra_character_setup]")
 	managers.hud:refresh_player_panel()
 
 	local selection_category_index = managers.player:local_player():inventory():equipped_selection()
@@ -548,12 +610,30 @@ function CharacterSelectionGui:_extra_character_setup()
 		managers.raid_menu:open_menu("character_customization_menu")
 	elseif self._open_creation_screen_flag then
 		managers.raid_menu:open_menu("profile_creation_menu")
+	else
+		self._waiting_to_close = false
+		self._close_the_screen_please = true
+
+		managers.raid_menu:on_escape()
 	end
 
 	managers.weapon_skills:update_weapon_part_animation_weights()
+
+	local bern_to_save_data = false
+
+	if self._new_profile_name then
+		managers.player:set_character_profile_name(self._new_profile_name)
+
+		self._new_profile_name = nil
+		bern_to_save_data = true
+	end
+
+	if bern_to_save_data then
+		managers.savefile:save_game(managers.savefile:get_save_progress_slot())
+	end
 end
 
--- Lines 605-640
+-- Lines 710-749
 function CharacterSelectionGui:_pre_close_screen_loading_done()
 	Application:trace("[CharacterSelectionGui:_pre_close_screen_loading_done]")
 	managers.savefile:remove_load_done_callback(self._pre_close_screen_loading_done_callback)
@@ -581,13 +661,13 @@ function CharacterSelectionGui:_pre_close_screen_loading_done()
 	self:reset_weapon_challenges()
 end
 
--- Lines 642-646
+-- Lines 751-755
 function CharacterSelectionGui:reset_weapon_challenges()
 	managers.challenge:deactivate_all_challenges()
 	managers.weapon_skills:activate_current_challenges_for_weapon(managers.player:get_current_state()._equipped_unit:base()._name_id)
 end
 
--- Lines 648-667
+-- Lines 757-776
 function CharacterSelectionGui:close()
 	Application:trace("[CharacterSelectionGui][close] ")
 
@@ -604,13 +684,48 @@ function CharacterSelectionGui:close()
 	self._closing_screen = true
 end
 
--- Lines 669-672
+-- Lines 778-807
 function CharacterSelectionGui:on_escape()
 	Application:trace("[CharacterSelectionGui:on_escape]")
-	self:_pre_close_screen()
+
+	if self._close_the_screen_please then
+		return false
+	end
+
+	if not self._waiting_to_close and self._is_load_done and self._is_render_done and self._close_timer < 0 then
+		self._waiting_to_close = true
+
+		self:_disable_user_interactions()
+		self:_pre_close_screen()
+	end
+
+	return true
 end
 
--- Lines 674-682
+-- Lines 810-828
+function CharacterSelectionGui:_disable_user_interactions()
+	self._characters_list:set_selected(false)
+
+	local bindings = {}
+
+	self:set_controller_bindings(bindings, true)
+
+	local legend = {
+		controller = {
+			"menu_legend_back"
+		},
+		keyboard = {
+			{
+				key = "footer_back",
+				callback = callback(self, self, "_on_legend_pc_back", nil)
+			}
+		}
+	}
+
+	self:set_legend(legend)
+end
+
+-- Lines 831-839
 function CharacterSelectionGui:show_character_delete_confirmation(callback_yes_function)
 	local params = {
 		text = managers.localization:text("dialog_character_delete_message"),
@@ -621,7 +736,7 @@ function CharacterSelectionGui:show_character_delete_confirmation(callback_yes_f
 	managers.menu_component:post_event("delete_character_prompt")
 end
 
--- Lines 685-737
+-- Lines 842-903
 function CharacterSelectionGui:on_item_yes_delete_characters_list()
 	Application:trace("[CharacterSelectionGui:on_item_yes_delete_characters_list] self._character_slot_to_delete ", self._character_slot_to_delete)
 
@@ -637,6 +752,7 @@ function CharacterSelectionGui:on_item_yes_delete_characters_list()
 	self._is_load_done = false
 	self._is_render_done = false
 	self._slots_loaded[slot_to_delete] = false
+	self._slot_normal[slot_to_delete] = false
 	local new_slot = -1
 
 	if slot_to_delete == self._active_character_slot then
@@ -664,14 +780,19 @@ function CharacterSelectionGui:on_item_yes_delete_characters_list()
 		self._slots_loaded[13] = false
 		self._slots_loaded[14] = false
 		self._slots_loaded[15] = false
+		self._slot_normal[11] = false
+		self._slot_normal[12] = false
+		self._slot_normal[13] = false
+		self._slot_normal[14] = false
+		self._slot_normal[15] = false
 	end
 
 	self._character_slot_to_delete = nil
 end
 
--- Lines 739-832
+-- Lines 905-995
 function CharacterSelectionGui:update(t, dt)
-	if not self._is_load_done and not self._is_render_done then
+	if not self._waiting_to_close and not self._is_load_done and not self._is_render_done then
 		self._is_load_done = true
 
 		for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
@@ -713,6 +834,20 @@ function CharacterSelectionGui:update(t, dt)
 		local last_selected_slot = self._slot_to_select
 
 		if last_selected_slot ~= nil and last_selected_slot ~= -1 then
+			if not self._slot_normal[last_selected_slot] then
+				for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
+					if self._slot_normal[slot_index] then
+						last_selected_slot = slot_index
+
+						Application:trace("Found a normal slot: " .. tostring(slot_index))
+					end
+				end
+			end
+
+			if not self._slot_normal[last_selected_slot] then
+				last_selected_slot = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT
+			end
+
 			self:_activate_character_profile(last_selected_slot)
 		end
 
@@ -722,14 +857,21 @@ function CharacterSelectionGui:update(t, dt)
 
 		if managers.savefile:get_active_characters_count() > 0 then
 			managers.raid_menu:set_close_menu_allowed(true)
-			self._characters_list:activate_item_by_value(last_selected_slot)
+
+			if self._slot_normal[last_selected_slot] then
+				self._characters_list:activate_item_by_value(last_selected_slot)
+			end
 		else
 			managers.raid_menu:set_close_menu_allowed(false)
 		end
 	end
+
+	if self._is_load_done and self._is_render_done and self._close_timer >= 0 then
+		self._close_timer = self._close_timer - dt
+	end
 end
 
--- Lines 837-854
+-- Lines 1000-1017
 function CharacterSelectionGui:_bind_active_slot_controller_inputs()
 	local bindings = {
 		{
@@ -761,7 +903,7 @@ function CharacterSelectionGui:_bind_active_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 856-873
+-- Lines 1019-1036
 function CharacterSelectionGui:_bind_inactive_slot_controller_inputs()
 	local bindings = {
 		{
@@ -793,7 +935,7 @@ function CharacterSelectionGui:_bind_inactive_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 875-890
+-- Lines 1038-1053
 function CharacterSelectionGui:_bind_empty_slot_controller_inputs()
 	local bindings = {
 		{
@@ -820,26 +962,35 @@ function CharacterSelectionGui:_bind_empty_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 893-896
+-- Lines 1056-1062
 function CharacterSelectionGui:_on_character_customize()
 	Application:trace("[CharacterSelectionGui:_on_character_customize]")
-	self:_customize_character()
+
+	if self._close_timer < 0 then
+		self:_customize_character()
+	end
 end
 
--- Lines 898-901
+-- Lines 1064-1070
 function CharacterSelectionGui:_on_character_delete()
 	Application:trace("[CharacterSelectionGui:_on_character_delete]")
-	self:_delete_character(self._selected_character_slot)
+
+	if self._close_timer < 0 then
+		self:_delete_character(self._selected_character_slot)
+	end
 end
 
--- Lines 903-906
+-- Lines 1072-1075
 function CharacterSelectionGui:_on_character_select()
 	Application:trace("[CharacterSelectionGui:_on_character_select]")
 	self:activate_selected_character()
 end
 
--- Lines 908-911
+-- Lines 1077-1083
 function CharacterSelectionGui:_on_character_create()
 	Application:trace("[CharacterSelectionGui:_on_character_create]")
-	self:_create_character()
+
+	if self._close_timer < 0 then
+		self:_create_character()
+	end
 end

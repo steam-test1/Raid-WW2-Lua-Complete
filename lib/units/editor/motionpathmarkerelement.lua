@@ -413,7 +413,7 @@ function MotionpathMarkerUnitElement:update_selected(t, dt, selected_unit, all_u
 	end
 end
 
--- Lines 403-451
+-- Lines 403-452
 function MotionpathMarkerUnitElement:_add_marker_to_path()
 	local target_marker_id = self._hed.markers.child or self._hed.markers.parent
 
@@ -451,26 +451,40 @@ function MotionpathMarkerUnitElement:_add_marker_to_path()
 	self:_recreate_motion_path(self._unit, true, false)
 end
 
--- Lines 453-470
+-- Lines 454-478
 function MotionpathMarkerUnitElement:_get_middle_point(path, selected_marker_id, target_marker_id)
 	local selected_point_offset, target_point_offset = nil
 
-	for idx, checkpoint in pairs(path.marker_checkpoints) do
-		if checkpoint == selected_marker_id then
-			selected_point_offset = idx
+	if #path.marker_checkpoints > 2 then
+		Application:trace("inspecting: ", selected_marker_id, target_marker_id, "checkpoints:", #path.marker_checkpoints)
+
+		for idx, checkpoint in pairs(path.marker_checkpoints) do
+			Application:trace("chkpt: ", idx, checkpoint)
+
+			if checkpoint == selected_marker_id then
+				selected_point_offset = idx
+
+				Application:trace("found selected: ", idx, selected_point_offset, target_point_offset)
+			end
+
+			if checkpoint == target_marker_id then
+				target_point_offset = idx
+
+				Application:trace("found target: ", idx, selected_point_offset, target_point_offset)
+			end
 		end
 
-		if checkpoint == target_marker_id then
-			target_point_offset = idx
-		end
+		local offset = math.min(selected_point_offset, target_point_offset) + math.round(math.abs(selected_point_offset - target_point_offset) / 2) + 1
+
+		Application:trace("returning: ", offset, path.points[offset])
+
+		return path.points[offset]
+	else
+		return path.points[2]
 	end
-
-	local offset = math.min(selected_point_offset, target_point_offset) + math.round(math.abs(selected_point_offset - target_point_offset) / 2) + 1
-
-	return path.points[offset]
 end
 
--- Lines 473-699
+-- Lines 481-707
 function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_update, skip_recreate)
 	if not force_update and (self._last_marker_pos == selected_unit:position() or self._last_marker_pos == selected_unit:position()) and self._last_marker_rot == selected_unit:rotation() then
 		return
@@ -668,7 +682,7 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 	managers.motion_path:update_path(path, skip_recreate)
 end
 
--- Lines 701-707
+-- Lines 709-715
 function MotionpathMarkerUnitElement:_get_unit(unit_id)
 	if Application:editor() then
 		return managers.editor:unit_with_id(unit_id)
@@ -677,7 +691,7 @@ function MotionpathMarkerUnitElement:_get_unit(unit_id)
 	end
 end
 
--- Lines 710-740
+-- Lines 718-748
 function MotionpathMarkerUnitElement:_build_points(from_unit, to_unit)
 	local cp1 = from_unit:position() + from_unit:rotation():y() * from_unit:mission_element_data().cp_length * -1
 	local x1 = from_unit:position().x
@@ -716,7 +730,7 @@ function MotionpathMarkerUnitElement:_build_points(from_unit, to_unit)
 	}
 end
 
--- Lines 743-758
+-- Lines 751-766
 function MotionpathMarkerUnitElement:bez_interpolate(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, ...)
 	local n = 0
 	self._bezier_points = {}
@@ -730,7 +744,7 @@ function MotionpathMarkerUnitElement:bez_interpolate(x1, y1, z1, x2, y2, z2, x3,
 	return n
 end
 
--- Lines 760-782
+-- Lines 768-790
 function MotionpathMarkerUnitElement:bez_draw(id, b, t)
 	local x, y, z, w, h, d = bezier3.bounding_box(unpack(b))
 	local ax1, ay1, az1, ax2, ay2, az2, ax3, ay3, az3, ax4, ay4, az4, bx1, by1, bz1, bx2, by2, bz2, bx3, by3, bz3, bx4, by4, bz4 = nil

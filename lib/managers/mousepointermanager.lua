@@ -9,7 +9,7 @@ end
 
 local is_editor = Application:editor()
 
--- Lines 9-38
+-- Lines 9-41
 function MousePointerManager:_setup()
 	self._mouse_callbacks = {}
 	self._id = 0
@@ -57,7 +57,7 @@ function MousePointerManager:_setup()
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
 end
 
--- Lines 40-54
+-- Lines 43-59
 function MousePointerManager:unacquire_input()
 	Input:mouse():unacquire()
 	Input:mouse():set_deviceless(true)
@@ -74,14 +74,14 @@ function MousePointerManager:unacquire_input()
 	self._ws:set_absolute_mouse(xscale, yscale, 0, 0)
 end
 
--- Lines 56-61
+-- Lines 61-68
 function MousePointerManager:acquire_input()
 	Input:mouse():acquire()
 	Input:mouse():set_deviceless(false)
 	self._ws:set_relative_mouse(1, 0)
 end
 
--- Lines 63-68
+-- Lines 70-78
 function MousePointerManager:resolution_changed()
 	if not is_editor and not managers.viewport:is_fullscreen() then
 		self:unacquire_input()
@@ -90,7 +90,7 @@ function MousePointerManager:resolution_changed()
 	managers.gui_data:layout_fullscreen_workspace(self._ws)
 end
 
--- Lines 70-83
+-- Lines 80-93
 function MousePointerManager:set_pointer_image(type)
 	local types = {
 		arrow = {
@@ -133,12 +133,12 @@ function MousePointerManager:set_pointer_image(type)
 	end
 end
 
--- Lines 85-90
+-- Lines 95-100
 function MousePointerManager:_scaled_size()
 	return managers.gui_data:scaled_size()
 end
 
--- Lines 92-107
+-- Lines 102-117
 function MousePointerManager:_set_size()
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local scaled_size = self:_scaled_size()
@@ -153,7 +153,7 @@ function MousePointerManager:_set_size()
 	self._ws:set_screen(w, h, 0, 0, 1919)
 end
 
--- Lines 109-113
+-- Lines 119-123
 function MousePointerManager:get_id()
 	local id = "mouse_pointer_id" .. tostring(self._id)
 	self._id = self._id + 1
@@ -161,7 +161,7 @@ function MousePointerManager:get_id()
 	return id
 end
 
--- Lines 115-189
+-- Lines 125-199
 function MousePointerManager:change_mouse_to_controller(controller)
 	if not self._controller_updater then
 		self._ws:disconnect_mouse()
@@ -173,7 +173,7 @@ function MousePointerManager:change_mouse_to_controller(controller)
 		self._controller_acc_y = 0
 		self._test_controller_acc = nil
 
-		-- Lines 126-182
+		-- Lines 136-192
 		local function update_controller_pointer(o, self)
 			local ws = self._ws
 			local mouse = self._mouse
@@ -231,7 +231,7 @@ function MousePointerManager:change_mouse_to_controller(controller)
 	end
 end
 
--- Lines 191-205
+-- Lines 201-215
 function MousePointerManager:change_controller_to_mouse()
 	if self._controller_updater then
 		self._mouse:stop(self._controller_updater)
@@ -247,7 +247,7 @@ function MousePointerManager:change_controller_to_mouse()
 	end
 end
 
--- Lines 207-226
+-- Lines 217-236
 function MousePointerManager:use_mouse(params, position)
 	for _, active_params in ipairs(self._mouse_callbacks) do
 		if params.id == active_params.id then
@@ -266,7 +266,7 @@ function MousePointerManager:use_mouse(params, position)
 	self:_activate()
 end
 
--- Lines 228-251
+-- Lines 238-261
 function MousePointerManager:remove_mouse(id)
 	local removed = false
 
@@ -291,7 +291,7 @@ function MousePointerManager:remove_mouse(id)
 	end
 end
 
--- Lines 253-275
+-- Lines 263-285
 function MousePointerManager:_activate()
 	if self._active then
 		return
@@ -318,7 +318,7 @@ function MousePointerManager:_activate()
 	end
 end
 
--- Lines 277-291
+-- Lines 287-301
 function MousePointerManager:_deactivate()
 	self._active = false
 	self._enabled = nil
@@ -335,7 +335,7 @@ function MousePointerManager:_deactivate()
 	self._mouse:button_click(nil)
 end
 
--- Lines 293-298
+-- Lines 303-308
 function MousePointerManager:enable()
 	if self._active then
 		self._ws:show()
@@ -344,7 +344,7 @@ function MousePointerManager:enable()
 	self._enabled = true
 end
 
--- Lines 300-305
+-- Lines 310-315
 function MousePointerManager:disable()
 	if self._active then
 		self._ws:hide()
@@ -353,27 +353,27 @@ function MousePointerManager:disable()
 	self._enabled = false
 end
 
--- Lines 307-309
+-- Lines 317-319
 function MousePointerManager:confine_mouse_pointer(panel)
 	self._confine_panel = panel
 end
 
--- Lines 311-313
+-- Lines 321-323
 function MousePointerManager:release_mouse_pointer()
 	self._confine_panel = nil
 end
 
--- Lines 315-317
+-- Lines 325-327
 function MousePointerManager:mouse_move_x()
 	return self._controller_acc_x
 end
 
--- Lines 318-320
+-- Lines 328-330
 function MousePointerManager:mouse_move_y()
 	return self._controller_acc_y
 end
 
--- Lines 322-329
+-- Lines 332-339
 function MousePointerManager:_mouse_move(o, x, y)
 	o:set_position(x, y)
 
@@ -382,7 +382,7 @@ function MousePointerManager:_mouse_move(o, x, y)
 	end
 end
 
--- Lines 331-341
+-- Lines 341-351
 function MousePointerManager:_modify_mouse_button(button)
 	if MenuCallbackHandler:is_steam_controller() then
 		if button == Idstring("grip_l") then
@@ -397,7 +397,7 @@ function MousePointerManager:_modify_mouse_button(button)
 	return button
 end
 
--- Lines 343-353
+-- Lines 353-363
 function MousePointerManager:_mouse_press(o, button, x, y)
 	button = self:_modify_mouse_button(button)
 
@@ -410,7 +410,7 @@ function MousePointerManager:_mouse_press(o, button, x, y)
 	end
 end
 
--- Lines 355-365
+-- Lines 365-375
 function MousePointerManager:_mouse_release(o, button, x, y)
 	button = self:_modify_mouse_button(button)
 
@@ -423,7 +423,7 @@ function MousePointerManager:_mouse_release(o, button, x, y)
 	end
 end
 
--- Lines 367-377
+-- Lines 377-387
 function MousePointerManager:_mouse_click(o, button, x, y)
 	button = self:_modify_mouse_button(button)
 
@@ -436,7 +436,7 @@ function MousePointerManager:_mouse_click(o, button, x, y)
 	end
 end
 
--- Lines 379-389
+-- Lines 389-399
 function MousePointerManager:_mouse_double_click(o, button, x, y)
 	button = self:_modify_mouse_button(button)
 
@@ -449,7 +449,7 @@ function MousePointerManager:_mouse_double_click(o, button, x, y)
 	end
 end
 
--- Lines 392-405
+-- Lines 402-415
 function MousePointerManager:_axis_move(o, axis_name, axis_vector, controller)
 	if not self._test_controller_acc then
 		self._test_controller_acc = {}
@@ -465,86 +465,86 @@ function MousePointerManager:_axis_move(o, axis_name, axis_vector, controller)
 	end
 end
 
--- Lines 407-413
+-- Lines 417-423
 function MousePointerManager:_button_press(o, button, controller)
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_press then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_press(o, button, o:x(), o:y())
 	end
 end
 
--- Lines 415-422
+-- Lines 425-432
 function MousePointerManager:_button_release(o, button, controller)
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_release then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_release(o, button, o:x(), o:y())
 	end
 end
 
--- Lines 424-431
+-- Lines 434-441
 function MousePointerManager:_button_click(o, button, controller)
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_click then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_click(o, button, o:x(), o:y())
 	end
 end
 
--- Lines 433-436
+-- Lines 443-446
 function MousePointerManager:set_mouse_world_position(x, y)
 	self._mouse:set_world_position(x, y)
 	self._ws:feed_mouse_position(self._mouse:world_position())
 end
 
--- Lines 438-441
+-- Lines 448-451
 function MousePointerManager:force_move_mouse_pointer(x, y)
 	self._mouse:move(x, y)
 	self._ws:feed_mouse_position(self._mouse:world_position())
 end
 
--- Lines 443-445
+-- Lines 453-455
 function MousePointerManager:mouse()
 	return self._mouse
 end
 
--- Lines 447-449
+-- Lines 457-459
 function MousePointerManager:world_position()
 	return self._mouse:world_position()
 end
 
--- Lines 451-469
+-- Lines 461-479
 function MousePointerManager:convert_mouse_pos(x, y)
 	return managers.gui_data:full_to_safe(x, y)
 end
 
--- Lines 471-474
+-- Lines 481-484
 function MousePointerManager:modified_mouse_pos()
 	local x, y = self._mouse:world_position()
 
 	return self:convert_mouse_pos(x, y)
 end
 
--- Lines 476-480
+-- Lines 486-490
 function MousePointerManager:convert_1280_mouse_pos(x, y)
 	local full_1280_size = managers.gui_data:full_1280_size()
 
 	return x - full_1280_size.convert_x, y - full_1280_size.convert_y
 end
 
--- Lines 482-490
+-- Lines 492-500
 function MousePointerManager:convert_fullscreen_mouse_pos(x, y)
 	return x, y
 end
 
--- Lines 492-494
+-- Lines 502-504
 function MousePointerManager:convert_fullscreen_16_9_mouse_pos(x, y)
 	return managers.gui_data:full_to_full_16_9(x, y)
 end
 
--- Lines 496-499
+-- Lines 506-509
 function MousePointerManager:modified_fullscreen_mouse_pos(x, y)
 	local x, y = self._mouse:world_position()
 
 	return self:convert_fullscreen_mouse_pos(x, y)
 end
 
--- Lines 501-504
+-- Lines 511-514
 function MousePointerManager:modified_fullscreen_16_9_mouse_pos(x, y)
 	local x, y = self._mouse:world_position()
 

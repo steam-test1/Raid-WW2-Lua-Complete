@@ -1,6 +1,7 @@
 RaidGUIControlBranchingProgressBar = RaidGUIControlBranchingProgressBar or class(RaidGUIControl)
+RaidGUIControlBranchingProgressBar.SCROLL_RATE = 1200
 
--- Lines 3-53
+-- Lines 8-60
 function RaidGUIControlBranchingProgressBar:init(parent, params)
 	RaidGUIControlBranchingProgressBar.super.init(self, parent, params)
 
@@ -59,9 +60,39 @@ function RaidGUIControlBranchingProgressBar:init(parent, params)
 	if params.horizontal == "center" and self._scrollable_panel:w() < self._object:w() then
 		self._scrollable_panel:set_x(self._object:w() / 2 - self._scrollable_panel:w() / 2)
 	end
+
+	self:_layout_skill_details()
 end
 
--- Lines 55-60
+-- Lines 65-73
+function RaidGUIControlBranchingProgressBar:_layout_skill_details()
+	local params_skill_details = {
+		layer = 1000,
+		name = "skill_details",
+		x = ExperienceGui.SKILL_DETAILS_X,
+		y = ExperienceGui.SKILL_DETAILS_Y
+	}
+	self._skill_details = self._scrollable_panel:create_custom_control(RaidGUIControlSkillDetails, params_skill_details)
+end
+
+-- Lines 76-86
+function RaidGUIControlBranchingProgressBar:update_skill_details(button_data, skill_flavor, skill_description, color_changes)
+	local current_button = self:get_current_skill_tree_node()
+	local new_shape = {
+		x = current_button:x() + current_button:w(),
+		y = current_button:y(),
+		h = current_button:h()
+	}
+
+	self._skill_details:set_skill(button_data.skill, utf8.to_upper(managers.localization:text(button_data.skill_title)), skill_flavor, skill_description, color_changes, new_shape)
+end
+
+-- Lines 88-90
+function RaidGUIControlBranchingProgressBar:hide_skill_details()
+	self._skill_details:fade_away()
+end
+
+-- Lines 94-99
 function RaidGUIControlBranchingProgressBar:close()
 	RaidGUIControlScrollbar.super.close()
 	managers.hud:remove_updator("branching_progress_bar")
@@ -70,7 +101,7 @@ function RaidGUIControlBranchingProgressBar:close()
 	self._draggable = false
 end
 
--- Lines 62-189
+-- Lines 101-235
 function RaidGUIControlBranchingProgressBar:_create_elements(params)
 	local node_tree = self._data_source_callback()
 	local panel_padding = params.padding or 0
@@ -104,8 +135,6 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 			node_value_data.index = node_index
 			local node_params = {
 				name = "node_" .. tostring(level_index) .. "_" .. tostring(node_index),
-				x = x,
-				value = node_data.value,
 				on_click_callback = callback(self, self, "_node_click_callback"),
 				on_mouse_enter_callback = callback(self, self, "_node_enter_callback"),
 				on_mouse_exit_callback = callback(self, self, "_node_exit_callback"),
@@ -113,7 +142,9 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 				on_node_mouse_pressed_callback = callback(self, self, "on_mouse_pressed"),
 				on_node_mouse_moved_callback = callback(self, self, "on_mouse_moved"),
 				layer = self._elements_panel:layer() + 3,
+				x = x,
 				parents = node_data.parents,
+				value = node_data.value,
 				level = level_index,
 				state = node_state
 			}
@@ -129,53 +160,6 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 
 			node:set_x(x + (self._node_width - node:w()) / 2)
 			table.insert(nodes, node)
-
-			local path_class = params.path_class or RaidGUIControlBranchingBarSkilltreePath
-
-			if node_data.parents and #node_data.parents ~= 0 then
-				for _, parent_index in pairs(node_data.parents) do
-					local previous_node = self._levels[level_index - 1].nodes[parent_index]
-					local path_vector = {
-						x = node:x() + node:w() / 2 - (previous_node:x() + previous_node:w() / 2),
-						y = node:y() + node:h() / 2 - (previous_node:y() + previous_node:h() / 2)
-					}
-					local identity_vector = {
-						x = 3,
-						y = 0
-					}
-					local angle = math.atan2(path_vector.y, path_vector.x) - math.atan2(identity_vector.y, identity_vector.x)
-					local dx = (node:w() / 2 - 2) * math.cos(angle)
-					local dy = (node:w() / 2 - 2) * math.sin(angle)
-					local points = {}
-					local starting_point = Vector3(previous_node:x() + previous_node:w() / 2 + dx, previous_node:y() + previous_node:h() / 2 + dy, 0)
-					local ending_point = Vector3(node:x() + node:w() / 2 - dx, node:y() + node:h() / 2 - dy, 0)
-					local path_params = {
-						starting_point = starting_point,
-						starting_point_index = parent_index,
-						ending_point = ending_point,
-						ending_point_index = node_index,
-						layer = self._elements_panel:layer() + 1,
-						line_width = params.path_width or 3
-					}
-					local path = self._elements_panel:create_custom_control(path_class, path_params)
-
-					table.insert(paths, path)
-				end
-			elseif level_index == 1 and level_data.points_needed and level_data.points_needed > 0 then
-				local starting_point = Vector3(node:x() - leading_path_length, node:y() + node:h() / 2, 0)
-				local ending_point = Vector3(node:x() + 2, node:y() + node:h() / 2, 0)
-				local path_params = {
-					starting_point_index = 0,
-					starting_point = starting_point,
-					ending_point = ending_point,
-					ending_point_index = node_index,
-					layer = self._elements_panel:layer() + 1,
-					line_width = params.path_width or 3
-				}
-				local path = self._elements_panel:create_custom_control(path_class, path_params)
-
-				table.insert(paths, path)
-			end
 		end
 
 		local level = {
@@ -204,7 +188,7 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 	self._scrollable_panel:set_x(panel_position_x)
 end
 
--- Lines 191-205
+-- Lines 237-251
 function RaidGUIControlBranchingProgressBar:_check_if_node_reachable(node)
 	if node:level() == 1 then
 		return true
@@ -221,7 +205,7 @@ function RaidGUIControlBranchingProgressBar:_check_if_node_reachable(node)
 	return false
 end
 
--- Lines 207-223
+-- Lines 253-269
 function RaidGUIControlBranchingProgressBar:_check_if_node_blocked(node)
 	if node:level() == 1 then
 		return false
@@ -240,14 +224,14 @@ function RaidGUIControlBranchingProgressBar:_check_if_node_blocked(node)
 	return false
 end
 
--- Lines 227-231
+-- Lines 273-277
 function RaidGUIControlBranchingProgressBar:_set_initial_state(initial_points)
 	self._current_points = initial_points
 
 	self:_refresh_tree(true)
 end
 
--- Lines 233-256
+-- Lines 279-302
 function RaidGUIControlBranchingProgressBar:_node_click_callback(node, node_data)
 	if not self._on_click_callback then
 		return
@@ -262,21 +246,21 @@ function RaidGUIControlBranchingProgressBar:_node_click_callback(node, node_data
 	end
 end
 
--- Lines 276-280
+-- Lines 322-326
 function RaidGUIControlBranchingProgressBar:_node_enter_callback(node, node_data)
 	if self._on_mouse_enter_callback then
 		self._on_mouse_enter_callback(node_data)
 	end
 end
 
--- Lines 282-286
+-- Lines 328-332
 function RaidGUIControlBranchingProgressBar:_node_exit_callback(node, node_data)
 	if self._on_mouse_exit_callback then
 		self._on_mouse_exit_callback(node_data)
 	end
 end
 
--- Lines 288-319
+-- Lines 334-365
 function RaidGUIControlBranchingProgressBar:_get_level_progress(level)
 	if self._levels[level].points_needed == 0 then
 		return 1
@@ -311,7 +295,7 @@ function RaidGUIControlBranchingProgressBar:_get_level_progress(level)
 	return level_progress
 end
 
--- Lines 321-333
+-- Lines 367-379
 function RaidGUIControlBranchingProgressBar:_get_current_level()
 	local current_level = 1
 
@@ -326,7 +310,7 @@ function RaidGUIControlBranchingProgressBar:_get_current_level()
 	return current_level
 end
 
--- Lines 335-347
+-- Lines 381-393
 function RaidGUIControlBranchingProgressBar:_get_level_by_points(points)
 	local current_level = 0
 
@@ -341,7 +325,7 @@ function RaidGUIControlBranchingProgressBar:_get_level_by_points(points)
 	return current_level
 end
 
--- Lines 349-408
+-- Lines 395-454
 function RaidGUIControlBranchingProgressBar:_refresh_tree(full_refresh)
 	local current_level_index = 1
 	local need_to_check_further = true
@@ -398,7 +382,7 @@ function RaidGUIControlBranchingProgressBar:_refresh_tree(full_refresh)
 	end
 end
 
--- Lines 410-451
+-- Lines 456-497
 function RaidGUIControlBranchingProgressBar:_refresh_level_paths(level_index)
 	if level_index < 1 or level_index > #self._levels then
 		return
@@ -441,7 +425,7 @@ function RaidGUIControlBranchingProgressBar:_refresh_level_paths(level_index)
 	end
 end
 
--- Lines 454-465
+-- Lines 500-511
 function RaidGUIControlBranchingProgressBar:set_points(points)
 	local old_points = self._current_points
 	self._current_points = points
@@ -454,12 +438,12 @@ function RaidGUIControlBranchingProgressBar:set_points(points)
 	end
 end
 
--- Lines 467-469
+-- Lines 513-515
 function RaidGUIControlBranchingProgressBar:get_points()
 	return self._current_points
 end
 
--- Lines 473-479
+-- Lines 519-525
 function RaidGUIControlBranchingProgressBar:give_points(points, animate)
 	if animate == true then
 		self._scrollable_panel:get_engine_panel():animate(callback(self, self, "_animate_giving_points"), points, self._path_animation_duration)
@@ -468,14 +452,14 @@ function RaidGUIControlBranchingProgressBar:give_points(points, animate)
 	end
 end
 
--- Lines 481-484
+-- Lines 527-530
 function RaidGUIControlBranchingProgressBar:reset_points()
 	self._current_points = 0
 
 	self:give_points(0)
 end
 
--- Lines 486-500
+-- Lines 532-546
 function RaidGUIControlBranchingProgressBar:_animate_giving_points(panel, new_points, duration)
 	local t = 0
 	local starting_points = self._current_points
@@ -491,7 +475,7 @@ function RaidGUIControlBranchingProgressBar:_animate_giving_points(panel, new_po
 	self:set_points(starting_points + new_points)
 end
 
--- Lines 503-538
+-- Lines 549-584
 function RaidGUIControlBranchingProgressBar:on_mouse_moved(o, x, y)
 	if not self._draggable then
 		return
@@ -531,12 +515,12 @@ function RaidGUIControlBranchingProgressBar:on_mouse_moved(o, x, y)
 	return true, "grab"
 end
 
--- Lines 541-549
+-- Lines 586-594
 function RaidGUIControlBranchingProgressBar:on_mouse_over(x, y)
 	RaidGUIControlBranchingProgressBar.super.on_mouse_over(self, x, y)
 end
 
--- Lines 552-567
+-- Lines 597-612
 function RaidGUIControlBranchingProgressBar:on_mouse_out(x, y)
 	if not self._draggable then
 		return
@@ -548,7 +532,7 @@ function RaidGUIControlBranchingProgressBar:on_mouse_out(x, y)
 	self._dragging = false
 end
 
--- Lines 570-586
+-- Lines 615-631
 function RaidGUIControlBranchingProgressBar:on_mouse_pressed()
 	if not self._draggable then
 		return
@@ -560,12 +544,12 @@ function RaidGUIControlBranchingProgressBar:on_mouse_pressed()
 	self._dragging = true
 	self._mouse_start_x = nil
 	self._panel_start_x = self._scrollable_panel:x()
-	self._panel_velocity = nil
-	self._panel_acceleration = nil
+	self._panel_velocity = 0
+	self._panel_acceleration = 0
 	self._controller_enabled = false
 end
 
--- Lines 589-605
+-- Lines 634-650
 function RaidGUIControlBranchingProgressBar:on_mouse_released()
 	if not self._draggable then
 		return
@@ -582,19 +566,41 @@ function RaidGUIControlBranchingProgressBar:on_mouse_released()
 	end
 end
 
--- Lines 607-610
+-- Lines 652-658
+function RaidGUIControlBranchingProgressBar:mouse_scroll_up(o, button, x, y)
+	if self:inside(x, y) and self._panel_velocity then
+		self._panel_velocity = self._panel_velocity + RaidGUIControlBranchingProgressBar.SCROLL_RATE
+
+		return self:on_mouse_scroll_up(button)
+	end
+
+	return false
+end
+
+-- Lines 660-666
+function RaidGUIControlBranchingProgressBar:mouse_scroll_down(o, button, x, y)
+	if self:inside(x, y) and self._panel_velocity then
+		self._panel_velocity = self._panel_velocity - RaidGUIControlBranchingProgressBar.SCROLL_RATE
+
+		return self:on_mouse_scroll_down(button)
+	end
+
+	return false
+end
+
+-- Lines 668-671
 function RaidGUIControlBranchingProgressBar:show()
 	self._object:show()
 	self._bar:show()
 end
 
--- Lines 612-615
+-- Lines 673-676
 function RaidGUIControlBranchingProgressBar:hide()
 	self._object:hide()
 	self._bar:hide()
 end
 
--- Lines 617-629
+-- Lines 678-690
 function RaidGUIControlBranchingProgressBar:_ease_in_out_quint(t, starting_value, change, duration)
 	if duration <= t then
 		return starting_value + change
@@ -611,13 +617,13 @@ function RaidGUIControlBranchingProgressBar:_ease_in_out_quint(t, starting_value
 	return change / 2 * (t * t * t * t * t + 2) + starting_value
 end
 
--- Lines 631-678
+-- Lines 692-733
 function RaidGUIControlBranchingProgressBar:update(t, dt)
 	if self._dragging or managers.controller:is_using_controller() or self._controller_enabled then
 		return
 	end
 
-	if not self._panel_velocity then
+	if self._panel_velocity and self._panel_velocity == 0 then
 		self._panel_velocity = self._mouse_travel / dt
 		self._scrollable_panel_x = self._scrollable_panel:x()
 	end
@@ -628,18 +634,22 @@ function RaidGUIControlBranchingProgressBar:update(t, dt)
 		self._draggable = true
 	end
 
-	if self._scrollable_panel_x > 0.01 then
-		self._spring = true
-		self._panel_acceleration = -25 * self._scrollable_panel_x - 10 * self._panel_velocity
-	elseif self._scrollable_panel_x < -(self._scrollable_panel:w() - self._object:w()) then
-		self._spring = true
-		self._panel_acceleration = 25 * (-(self._scrollable_panel:w() - self._object:w()) - self._scrollable_panel_x) - 10 * self._panel_velocity
-	elseif self._scrollable_panel_x <= 0.01 and self._scrollable_panel_x >= -(self._scrollable_panel:w() - self._object:w()) and self._spring then
-		self._spring = false
-		self._panel_acceleration = 0
+	if self._scrollable_panel_x then
+		if self._scrollable_panel_x > 0.01 then
+			self._spring = true
+			self._panel_acceleration = -25 * self._scrollable_panel_x - 10 * self._panel_velocity
+		elseif self._scrollable_panel_x < -(self._scrollable_panel:w() - self._object:w()) then
+			self._spring = true
+			self._panel_acceleration = 25 * (-(self._scrollable_panel:w() - self._object:w()) - self._scrollable_panel_x) - 10 * self._panel_velocity
+		elseif self._scrollable_panel_x <= 0.01 and self._scrollable_panel_x >= -(self._scrollable_panel:w() - self._object:w()) and self._spring then
+			self._spring = false
+			self._panel_acceleration = 0
+		end
+	else
+		self._scrollable_panel_x = 0
 	end
 
-	self._panel_velocity = self._panel_velocity * 0.9
+	self._panel_velocity = (self._panel_velocity or 0) * 0.9
 	self._panel_velocity = self._panel_velocity + self._panel_acceleration * dt
 	local previous_x = self._scrollable_panel:x()
 	self._scrollable_panel_x = self._scrollable_panel_x + self._panel_velocity * dt
@@ -647,7 +657,7 @@ function RaidGUIControlBranchingProgressBar:update(t, dt)
 	self._scrollable_panel:set_x(math.floor(self._scrollable_panel_x))
 end
 
--- Lines 680-702
+-- Lines 735-757
 function RaidGUIControlBranchingProgressBar:clear_selection()
 	self._selected_nodes = {}
 	self._first_available_level = 2

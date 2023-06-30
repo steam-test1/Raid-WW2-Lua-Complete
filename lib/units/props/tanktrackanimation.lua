@@ -1,7 +1,7 @@
 TankTrackAnimation = TankTrackAnimation or class()
 local ids_uv_offset = Idstring("uv_offset")
 
--- Lines 5-41
+-- Lines 5-51
 function TankTrackAnimation:init(unit)
 	self._unit = unit
 
@@ -13,11 +13,15 @@ function TankTrackAnimation:init(unit)
 	self._right_track_mat = self._unit:material(Idstring("mat_track_right"))
 	self._right_ref_object = self._unit:get_object(Idstring("wheel_right_drive"))
 	self._prev_right_pos = self._right_ref_object:position()
+	local wheel_prefix = self.custom_wheel_prefix or "wheel"
+	local wheel_count = self.custom_wheel_count or 20
+	local is_faulty = false
 	self._wheels_left = {}
 	self._wheels_right = {}
 
-	for i = 1, 20 do
-		local o = self._unit:get_object(Idstring("wheel_left_" .. i))
+	for i = 1, wheel_count do
+		local o = nil
+		o = self._unit:get_object(Idstring(wheel_prefix .. "_left_" .. i))
 
 		if o then
 			table.insert(self._wheels_left, {
@@ -25,17 +29,23 @@ function TankTrackAnimation:init(unit)
 				self._wheel_diameter
 			})
 		else
-			break
+			is_faulty = true
 		end
 
-		o = self._unit:get_object(Idstring("wheel_right_" .. i))
+		o = self._unit:get_object(Idstring(wheel_prefix .. "_right_" .. i))
 
 		if o then
 			table.insert(self._wheels_right, {
 				o,
 				self._wheel_diameter
 			})
+		else
+			is_faulty = true
 		end
+	end
+
+	if is_faulty then
+		Application:warn("[TankTrackAnimation:init] Please check Tank Track objects, wheel object couldnt be found!")
 	end
 
 	table.insert(self._wheels_left, {
@@ -58,7 +68,7 @@ function TankTrackAnimation:init(unit)
 	self._left_tesnion = self._unit:get_object(Idstring("wheel_left_tension"))
 end
 
--- Lines 43-85
+-- Lines 53-95
 function TankTrackAnimation:update(unit, t, dt)
 	local curr_left_tension_pos = self._left_tesnion:position()
 	local curr_left_pos = self._left_ref_object:position()

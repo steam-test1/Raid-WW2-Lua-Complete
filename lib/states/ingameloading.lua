@@ -65,25 +65,25 @@ function IngameLoading:at_enter(old_state, params)
 	self:_setup_controller()
 end
 
--- Lines 64-72
+-- Lines 64-76
 function IngameLoading:at_exit()
 	managers.worldcollection.team_ai_transition = false
 
 	managers.groupai:state():on_criminal_team_AI_enabled_state_changed(true)
 
-	if managers.player:local_player() then
+	if managers.player:local_player() and managers.player:local_player():movement() and managers.player:local_player():movement():current_state() then
 		managers.player:local_player():movement():current_state()._state_data.in_air = false
 	end
 
 	self:_clear_controller()
 end
 
--- Lines 75-77
+-- Lines 79-81
 function IngameLoading:game_ended()
 	return true
 end
 
--- Lines 80-82
+-- Lines 84-86
 function IngameLoading:is_joinable()
 	return false
 end

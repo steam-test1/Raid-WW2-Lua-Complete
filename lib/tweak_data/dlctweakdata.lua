@@ -7,7 +7,7 @@ DLCTweakData.DLC_NAME_PREORDER = "preorder"
 DLCTweakData.DLC_NAME_SPECIAL_EDITION = "special_edition"
 DLCTweakData.DLC_NAME_RAID_COMMUNITY = "raid_community"
 DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK = "official_soundtrack"
-DLCTweakData.DLC_REWARD_CUSTOMIZATION_JACKET_RANDOM = "customization_jacket_random"
+DLCTweakData.DLC_NAME_STARTER_KIT = "starter_kit"
 
 -- Lines 20-34
 function DLCTweakData:init(tweak_data)
@@ -20,7 +20,7 @@ function DLCTweakData:init(tweak_data)
 	self:_init_descriptions()
 end
 
--- Lines 37-169
+-- Lines 36-179
 function DLCTweakData:_init_descriptions()
 	self.descriptions = {
 		[DLCTweakData.DLC_NAME_PREORDER] = {}
@@ -52,9 +52,9 @@ function DLCTweakData:_init_descriptions()
 				item = "british_highlander_jacket_lower"
 			}
 		},
-		weapons = {
+		weapon_skins = {
 			{
-				item = "garand_golden"
+				item = "garand_special_edition"
 			}
 		},
 		gold_award = {
@@ -121,9 +121,9 @@ function DLCTweakData:_init_descriptions()
 					item = "special_edition_bomb"
 				}
 			},
-			weapons = {
+			weapon_skins = {
 				{
-					item = "garand_golden"
+					item = "garand_special_edition"
 				}
 			},
 			gold_award = {
@@ -154,7 +154,7 @@ function DLCTweakData:_init_descriptions()
 	}
 end
 
--- Lines 171-179
+-- Lines 181-189
 function DLCTweakData:get_eligible_gold_awards()
 	local eligible_awards = {}
 
@@ -171,7 +171,7 @@ function DLCTweakData:get_eligible_gold_awards()
 	return eligible_awards
 end
 
--- Lines 181-189
+-- Lines 191-199
 function DLCTweakData:get_eligible_random_customizations()
 	local eligible_awards = {}
 
@@ -186,7 +186,7 @@ function DLCTweakData:get_eligible_random_customizations()
 	return eligible_awards
 end
 
--- Lines 191-201
+-- Lines 203-213
 function DLCTweakData:get_unlocked_weapons()
 	local weapons = {}
 
@@ -201,7 +201,7 @@ function DLCTweakData:get_unlocked_weapons()
 	return weapons
 end
 
--- Lines 203-216
+-- Lines 215-228
 function DLCTweakData:get_locked_weapons()
 	local unlocked_weapons = self:get_unlocked_weapons()
 	local weapons = {}
@@ -219,7 +219,7 @@ function DLCTweakData:get_locked_weapons()
 	return weapons
 end
 
--- Lines 218-222
+-- Lines 230-234
 function DLCTweakData:is_weapon_unlocked(weapon_id)
 	local weapons = self:get_unlocked_weapons()
 	local unlocked = weapons[weapon_id] and true or false
@@ -227,7 +227,48 @@ function DLCTweakData:is_weapon_unlocked(weapon_id)
 	return unlocked
 end
 
--- Lines 224-234
+-- Lines 238-250
+function DLCTweakData:get_unlocked_weapon_skins()
+	local skins = {}
+
+	for dlc_name, dlc_desc in pairs(self.descriptions) do
+		if dlc_desc.content.weapon_skins and managers.dlc:is_dlc_unlocked(dlc_name) then
+			for _, skin in pairs(dlc_desc.content.weapon_skins) do
+				skins[skin.item] = true
+			end
+		end
+	end
+
+	return skins
+end
+
+-- Lines 252-265
+function DLCTweakData:get_locked_weapon_skins()
+	local unlocked_weapons = self:get_unlocked_weapon_skins()
+	local skins = {}
+
+	for dlc_name, dlc_desc in pairs(self.descriptions) do
+		if dlc_desc.content.weapon_skins and managers.dlc:is_dlc_unlocked(dlc_name) then
+			for _, skin in pairs(dlc_desc.content.weapon_skins) do
+				if not unlocked_weapons[skin.item] then
+					skins[skin.item] = true
+				end
+			end
+		end
+	end
+
+	return skins
+end
+
+-- Lines 267-271
+function DLCTweakData:is_weapon_skin_unlocked(skin_id)
+	local skins = self:get_unlocked_weapon_skins()
+	local unlocked = skins[skin_id] and true or false
+
+	return unlocked
+end
+
+-- Lines 275-285
 function DLCTweakData:get_unlocked_melee_weapons()
 	local weapons = {}
 
@@ -242,7 +283,7 @@ function DLCTweakData:get_unlocked_melee_weapons()
 	return weapons
 end
 
--- Lines 236-249
+-- Lines 287-300
 function DLCTweakData:get_locked_melee_weapons()
 	local unlocked_weapons = self:get_unlocked_melee_weapons()
 	local weapons = {}
@@ -260,7 +301,7 @@ function DLCTweakData:get_locked_melee_weapons()
 	return weapons
 end
 
--- Lines 251-255
+-- Lines 302-306
 function DLCTweakData:is_melee_weapon_unlocked(weapon_id)
 	local melee_weapons = self:get_unlocked_melee_weapons()
 	local unlocked = melee_weapons[weapon_id] and true or false
@@ -268,7 +309,7 @@ function DLCTweakData:is_melee_weapon_unlocked(weapon_id)
 	return unlocked
 end
 
--- Lines 257-267
+-- Lines 308-318
 function DLCTweakData:get_unlocked_customizations()
 	local customizations = {}
 
@@ -283,7 +324,7 @@ function DLCTweakData:get_unlocked_customizations()
 	return customizations
 end
 
--- Lines 269-285
+-- Lines 320-336
 function DLCTweakData:get_locked_customizations()
 	local unlocked_customizations = self:get_unlocked_customizations()
 	local customizations = {}
@@ -301,7 +342,7 @@ function DLCTweakData:get_locked_customizations()
 	return customizations
 end
 
--- Lines 287-291
+-- Lines 338-342
 function DLCTweakData:is_customization_unlocked(customization_name)
 	local customizations = self:get_unlocked_customizations()
 	local unlocked = customizations[customization_id] and true or false

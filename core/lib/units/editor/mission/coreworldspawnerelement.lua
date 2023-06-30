@@ -368,7 +368,7 @@ function CoreWorldSpawnerElement:post_init()
 	self:_change_world()
 end
 
--- Lines 331-355
+-- Lines 331-356
 function CoreWorldSpawnerElement:_change_world()
 	if self._low_poly_unit then
 		World:delete_unit(self._low_poly_unit)
@@ -399,7 +399,7 @@ function CoreWorldSpawnerElement:_change_world()
 	end
 end
 
--- Lines 357-363
+-- Lines 358-364
 function CoreWorldSpawnerElement:destroy()
 	if alive(self._low_poly_unit) then
 		World:delete_unit(self._low_poly_unit)
@@ -410,7 +410,7 @@ function CoreWorldSpawnerElement:destroy()
 	CoreWorldSpawnerElement.super.destroy(self)
 end
 
--- Lines 365-370
+-- Lines 366-371
 function CoreWorldSpawnerElement:set_disabled()
 	if self._low_poly_unit then
 		self._low_poly_unit:set_visible(false)
@@ -419,7 +419,7 @@ function CoreWorldSpawnerElement:set_disabled()
 	CoreWorldSpawnerElement.super.set_disabled(self)
 end
 
--- Lines 372-377
+-- Lines 373-378
 function CoreWorldSpawnerElement:set_enabled()
 	if self._low_poly_unit then
 		self._low_poly_unit:set_visible(true)
@@ -428,7 +428,7 @@ function CoreWorldSpawnerElement:set_enabled()
 	CoreWorldSpawnerElement.super.set_enabled(self)
 end
 
--- Lines 379-390
+-- Lines 380-391
 function CoreWorldSpawnerElement:on_name_changed(old_name, new_name)
 	Application:debug("[CoreWorldSpawnerElement:on_name_changed]", old_name, new_name)
 
@@ -450,7 +450,7 @@ function CoreWorldSpawnerElement:on_name_changed(old_name, new_name)
 	managers.worldcollection:on_editor_changed_name(old_name, new_name)
 end
 
--- Lines 392-402
+-- Lines 393-403
 function CoreWorldSpawnerElement:on_world_deleted()
 	Application:debug("[CoreWorldSpawnerElement:on_world_deleted()]")
 

@@ -1,15 +1,15 @@
 VehicleManager = VehicleManager or class()
 
--- Lines 3-11
+-- Lines 5-13
 function VehicleManager:init()
 	self._vehicles = {}
 	self._queue_state_change = {}
 	self._listener_holder = EventListenerHolder:new()
-	self._debug = SystemInfo:platform() == Idstring("WIN32") and Application:production_build()
+	self._debug = _G.IS_PC and Application:production_build()
 	self._draw_enabled = false
 end
 
--- Lines 14-21
+-- Lines 17-24
 function VehicleManager:on_simulation_started()
 	for i, v in pairs(self._vehicles) do
 		if not alive(v) then
@@ -18,7 +18,7 @@ function VehicleManager:on_simulation_started()
 	end
 end
 
--- Lines 23-38
+-- Lines 28-43
 function VehicleManager:on_simulation_ended()
 	for i, v in pairs(self._vehicles) do
 		if alive(v) then
@@ -37,27 +37,27 @@ function VehicleManager:on_simulation_ended()
 	self._listener_holder = EventListenerHolder:new()
 end
 
--- Lines 41-43
+-- Lines 47-49
 function VehicleManager:_call_listeners(event, params)
 	self._listener_holder:call(event, params)
 end
 
--- Lines 46-48
+-- Lines 54-56
 function VehicleManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 50-52
+-- Lines 60-62
 function VehicleManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 55-57
+-- Lines 67-69
 function VehicleManager:add_vehicle(vehicle)
 	self._vehicles[vehicle:key()] = vehicle
 end
 
--- Lines 59-67
+-- Lines 73-81
 function VehicleManager:remove_vehicle(vehicle)
 	Application:debug("[VehicleManager:remove_vehicle]", vehicle)
 
@@ -68,12 +68,12 @@ function VehicleManager:remove_vehicle(vehicle)
 	vehicle:set_slot(0)
 end
 
--- Lines 69-71
+-- Lines 85-87
 function VehicleManager:get_all_vehicles()
 	return self._vehicles
 end
 
--- Lines 73-80
+-- Lines 91-98
 function VehicleManager:get_vehicle(animation_id)
 	for i, v in pairs(self._vehicles) do
 		if v:vehicle_driving()._tweak_data.animations.vehicle_id == animation_id then
@@ -84,7 +84,7 @@ function VehicleManager:get_vehicle(animation_id)
 	return nil
 end
 
--- Lines 82-87
+-- Lines 102-107
 function VehicleManager:on_player_entered_vehicle(vehicle_unit, player)
 	self._listener_holder:call("on_enter", player)
 
@@ -93,7 +93,7 @@ function VehicleManager:on_player_entered_vehicle(vehicle_unit, player)
 	end
 end
 
--- Lines 89-97
+-- Lines 111-119
 function VehicleManager:all_players_in_vehicles()
 	local total_players = managers.network:session():amount_of_alive_players()
 	local players_in_vehicles = 0
@@ -107,12 +107,12 @@ function VehicleManager:all_players_in_vehicles()
 	return all_in
 end
 
--- Lines 99-101
+-- Lines 123-125
 function VehicleManager:on_player_exited_vehicle(vehicle_unit, player)
 	self._listener_holder:call("on_exit", player)
 end
 
--- Lines 105-111
+-- Lines 130-136
 function VehicleManager:remove_player_from_all_vehicles(player)
 	for i, v in pairs(self._vehicles) do
 		if alive(v) then
@@ -121,7 +121,7 @@ function VehicleManager:remove_player_from_all_vehicles(player)
 	end
 end
 
--- Lines 114-124
+-- Lines 141-151
 function VehicleManager:remove_teamai_from_all_vehicles(unit)
 	for i, v in pairs(self._vehicles) do
 		if alive(v) then
@@ -134,7 +134,7 @@ function VehicleManager:remove_teamai_from_all_vehicles(unit)
 	end
 end
 
--- Lines 127-189
+-- Lines 156-218
 function VehicleManager:update_vehicles_data_to_peer(peer)
 	if peer:ip_verified() then
 		for i, v in pairs(self._vehicles) do
@@ -208,12 +208,12 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 	end
 end
 
--- Lines 192-194
+-- Lines 223-225
 function VehicleManager:sync_npc_vehicle_data(vehicle_unit, state_name, target_unit)
 	self:queue_vehicle_state_change(vehicle_unit, state, true)
 end
 
--- Lines 197-266
+-- Lines 230-299
 function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, occupant_left, occupant_back_left, occupant_back_right, is_trunk_open, vehicle_health)
 	local v_ext = vehicle_unit:vehicle_driving()
 	local vehicle_damage_ext = vehicle_unit:character_damage()
@@ -313,7 +313,7 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 	end
 end
 
--- Lines 269-277
+-- Lines 303-311
 function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, carry_id2, multiplier2, carry_id3, multiplier3)
 	if not alive(vehicle_unit) then
 		return
@@ -326,7 +326,7 @@ function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, 
 	v_ext:sync_loot(carry_id3, multiplier3)
 end
 
--- Lines 280-308
+-- Lines 315-343
 function VehicleManager:find_active_vehicle_with_player()
 	for i, v in pairs(self._vehicles) do
 		if alive(v) and v:vehicle_driving()._vehicle:is_active() then
@@ -355,7 +355,7 @@ function VehicleManager:find_active_vehicle_with_player()
 	return nil
 end
 
--- Lines 310-329
+-- Lines 349-372
 function VehicleManager:find_npc_vehicle_target()
 	local target_unit = nil
 
@@ -372,11 +372,11 @@ function VehicleManager:find_npc_vehicle_target()
 	return target_unit
 end
 
--- Lines 331-343
+-- Lines 376-388
 function VehicleManager:update(t, dt)
 	if self._debug and self._draw_enabled then
 		for i, v in pairs(self._vehicles) do
-			if v:interaction() and v:interaction()._interact_object then
+			if alive(v) and v:interaction() and v:interaction()._interact_object then
 				local obj = v:get_object(Idstring(v:interaction()._interact_object))
 				local interact_radius = v:vehicle_driving()._tweak_data.interact_distance
 
@@ -386,7 +386,7 @@ function VehicleManager:update(t, dt)
 	end
 end
 
--- Lines 345-356
+-- Lines 392-403
 function VehicleManager:freeze_vehicles_on_world(world_id)
 	Application:debug("[VehicleManager:freeze_vehicles_on_world]", world_id, inspect(self._vehicles))
 
@@ -404,7 +404,7 @@ function VehicleManager:freeze_vehicles_on_world(world_id)
 	self:clean_up_dead_vehicles()
 end
 
--- Lines 358-365
+-- Lines 407-414
 function VehicleManager:delete_all_vehicles()
 	Application:debug("[VehicleManager:delete_all_vehicles]")
 
@@ -415,7 +415,7 @@ function VehicleManager:delete_all_vehicles()
 	end
 end
 
--- Lines 367-374
+-- Lines 418-425
 function VehicleManager:clean_up_dead_vehicles()
 	for i, v in pairs(self._vehicles) do
 		if not alive(v) then
@@ -426,7 +426,7 @@ function VehicleManager:clean_up_dead_vehicles()
 	end
 end
 
--- Lines 377-395
+-- Lines 430-448
 function VehicleManager:process_state_change_queue()
 	for _, data in ipairs(self._queue_state_change) do
 		Application:debug("[VehicleManager:process_state_change_queue()]", inspect(data))
@@ -450,7 +450,7 @@ function VehicleManager:process_state_change_queue()
 	self._queue_state_change = {}
 end
 
--- Lines 397-400
+-- Lines 452-455
 function VehicleManager:queue_vehicle_state_change(vehicle_unit, state, npc)
 	Application:debug("[VehicleManager:queue_vehicle_state_change]", vehicle_unit, state, npc)
 	table.insert(self._queue_state_change, {
@@ -460,7 +460,7 @@ function VehicleManager:queue_vehicle_state_change(vehicle_unit, state, npc)
 	})
 end
 
--- Lines 402-404
+-- Lines 459-461
 function VehicleManager:on_restart_to_camp()
 	managers.hud:hide_vehicle_hud()
 end

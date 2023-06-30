@@ -1,7 +1,7 @@
 RaidGUIControlCardWithSelector = RaidGUIControlCardWithSelector or class(RaidGUIControlCardBase)
 RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE = 30
 
--- Lines 5-31
+-- Lines 5-33
 function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_params)
 	RaidGUIControlCardWithSelector.super.init(self, parent, params, item_data, grid_params)
 
@@ -9,6 +9,7 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	self._params.selected_marker_h = params.selected_marker_h or params.item_h or self._panel:h()
 	self._params.item_w = params.item_w or self._panel:w()
 	self._params.item_h = params.item_h or self._panel:h()
+	self._params.hover_selects = params.hover_selects or false
 	self._select_background_panel = self._object:panel({
 		visible = false,
 		y = 0,
@@ -49,7 +50,7 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	self._sound_source = SoundDevice:create_source("challenge_card")
 end
 
--- Lines 33-76
+-- Lines 35-78
 function RaidGUIControlCardWithSelector:set_card(card_data)
 	RaidGUIControlCardWithSelector.super.set_card(self, card_data)
 
@@ -84,7 +85,7 @@ function RaidGUIControlCardWithSelector:set_card(card_data)
 	end
 end
 
--- Lines 78-87
+-- Lines 80-89
 function RaidGUIControlCardWithSelector:select(dont_fire_selected_callback)
 	RaidGUIControlCardWithSelector.super.select(self)
 	self._select_background_panel:show()
@@ -94,21 +95,26 @@ function RaidGUIControlCardWithSelector:select(dont_fire_selected_callback)
 	end
 end
 
--- Lines 89-94
+-- Lines 91-96
 function RaidGUIControlCardWithSelector:unselect()
 	RaidGUIControlCardWithSelector.super.unselect(self)
 	self._select_background_panel:hide()
 end
 
--- Lines 96-101
+-- Lines 98-104
 function RaidGUIControlCardWithSelector:on_mouse_over(x, y)
 	RaidGUIControlCardWithSelector.super.on_mouse_over(self, x, y)
-	self._sound_source:post_event("card_mouse_over")
+
+	if self._params.hover_selects and self._on_click_callback then
+		self._sound_source:post_event("card_mouse_over")
+		self._on_click_callback(self._item_data, self._params.key_value_field)
+	end
 end
 
--- Lines 103-110
+-- Lines 106-111
 function RaidGUIControlCardWithSelector:on_mouse_released(button, x, y)
-	if self._on_click_callback then
+	if not self._params.hover_selects and self._on_click_callback then
+		self._sound_source:post_event("card_mouse_over")
 		self._on_click_callback(self._item_data, self._params.key_value_field)
 	end
 end

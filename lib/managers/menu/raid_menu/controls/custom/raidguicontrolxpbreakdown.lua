@@ -1,5 +1,5 @@
 RaidGUIControlXPBreakdown = RaidGUIControlXPBreakdown or class(RaidGUIControl)
-RaidGUIControlXPBreakdown.DEFAULT_W = 320
+RaidGUIControlXPBreakdown.DEFAULT_W = 350
 RaidGUIControlXPBreakdown.DEFAULT_H = 448
 RaidGUIControlXPBreakdown.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlXPBreakdown.EXPERIENCE_LABEL_X = 0

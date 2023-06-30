@@ -196,7 +196,12 @@ function RaidGUIControlButtonToggleSmall:set_visible(flag)
 	self:_render_images()
 end
 
--- Lines 178-193
+-- Lines 178-180
+function RaidGUIControlButtonToggleSmall:get_visible()
+	return self._visible
+end
+
+-- Lines 182-197
 function RaidGUIControlButtonToggleSmall:confirm_pressed()
 	if self._selected then
 		if self._value then
@@ -217,7 +222,7 @@ function RaidGUIControlButtonToggleSmall:confirm_pressed()
 	return false
 end
 
--- Lines 201-219
+-- Lines 205-223
 function RaidGUIControlButtonToggleSmall:_animate_highlight_on()
 	local duration = 0.2
 	local t = duration - (1 - self._highlight_animation_t) * duration
@@ -238,7 +243,7 @@ function RaidGUIControlButtonToggleSmall:_animate_highlight_on()
 	self._border:set_color(RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR)
 end
 
--- Lines 221-239
+-- Lines 225-243
 function RaidGUIControlButtonToggleSmall:_animate_highlight_off()
 	local duration = 0.2
 	local t = duration - self._highlight_animation_t * duration
@@ -259,7 +264,7 @@ function RaidGUIControlButtonToggleSmall:_animate_highlight_off()
 	self._border:set_color(RaidGUIControlButtonToggleSmall.BORDER_COLOR)
 end
 
--- Lines 241-263
+-- Lines 245-267
 function RaidGUIControlButtonToggleSmall:_animate_press()
 	local t = 0
 	local original_w = tweak_data.gui:icon_w(RaidGUIControlButtonToggleSmall.BORDER_ICON)
@@ -283,7 +288,7 @@ function RaidGUIControlButtonToggleSmall:_animate_press()
 	self._image_panel:set_center(center_x, center_y)
 end
 
--- Lines 265-290
+-- Lines 269-294
 function RaidGUIControlButtonToggleSmall:_animate_release()
 	local t = 0
 	local duration = 0.25

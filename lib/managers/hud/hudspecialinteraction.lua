@@ -1,6 +1,6 @@
 HUDSpecialInteraction = HUDSpecialInteraction or class()
 
--- Lines 3-71
+-- Lines 3-87
 function HUDSpecialInteraction:init(hud, params)
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
 
@@ -65,6 +65,9 @@ function HUDSpecialInteraction:init(hud, params)
 		w = res_x * 1.2,
 		h = res_y
 	})
+
+	self._background_texture:set_center_x(self._bg_panel:w() / 2)
+
 	self._lockpick_texture = self._hud_panel:bitmap({
 		name = "_lockpick_texture",
 		layer = 2,
@@ -113,7 +116,7 @@ function HUDSpecialInteraction:init(hud, params)
 	self._legend_interact_text:set_center_y(self._hud_panel:center_y() - 13)
 end
 
--- Lines 73-119
+-- Lines 89-135
 function HUDSpecialInteraction:show()
 	self._lockpick_texture:stop()
 	self._background_texture:set_visible(true)
@@ -165,7 +168,7 @@ function HUDSpecialInteraction:show()
 	self._active_stage = 1
 end
 
--- Lines 122-132
+-- Lines 138-148
 function HUDSpecialInteraction:complete_stage(index)
 	local circle_data = self._circles[index]
 
@@ -181,7 +184,7 @@ function HUDSpecialInteraction:complete_stage(index)
 	end
 end
 
--- Lines 134-155
+-- Lines 150-171
 function HUDSpecialInteraction:hide(complete)
 	if complete then
 		self._lockpick_texture:animate(callback(self, self, "_animate_interaction_complete"))
@@ -197,7 +200,7 @@ function HUDSpecialInteraction:hide(complete)
 	self._is_active = false
 end
 
--- Lines 157-172
+-- Lines 173-188
 function HUDSpecialInteraction:set_bar_valid(circle_id, valid)
 	if circle_id < 1 then
 		return
@@ -216,7 +219,7 @@ function HUDSpecialInteraction:set_bar_valid(circle_id, valid)
 	circle_data.circle:set_color(color)
 end
 
--- Lines 174-192
+-- Lines 190-208
 function HUDSpecialInteraction:rotate_circles(dt)
 	for i, circle_data in pairs(self._circles) do
 		if not circle_data.completed and i == self._active_stage then
@@ -236,7 +239,7 @@ function HUDSpecialInteraction:rotate_circles(dt)
 	end
 end
 
--- Lines 194-201
+-- Lines 210-217
 function HUDSpecialInteraction:_remove_circles()
 	if self ~= nil then
 		for _, circle_data in pairs(self._circles) do
@@ -247,13 +250,13 @@ function HUDSpecialInteraction:_remove_circles()
 	end
 end
 
--- Lines 203-206
+-- Lines 219-222
 function HUDSpecialInteraction:destroy()
 	self._hud_panel:clear()
 	self:_remove_circles()
 end
 
--- Lines 209-214
+-- Lines 225-230
 function HUDSpecialInteraction:set_circle_value(index, value)
 	local circle_data = self._circles[index]
 
@@ -262,22 +265,22 @@ function HUDSpecialInteraction:set_circle_value(index, value)
 	end
 end
 
--- Lines 219-221
+-- Lines 235-237
 function HUDSpecialInteraction:is_visible()
 	return self._is_active
 end
 
--- Lines 223-225
+-- Lines 239-241
 function HUDSpecialInteraction:circles()
 	return self._circles
 end
 
--- Lines 227-229
+-- Lines 243-245
 function HUDSpecialInteraction:set_tweak_data(data)
 	self._tweak_data = data
 end
 
--- Lines 234-257
+-- Lines 250-273
 function HUDSpecialInteraction:_animate_interaction_complete()
 	local TOTAL_T = 0.5
 	local starting_rotations = {}
@@ -308,7 +311,7 @@ function HUDSpecialInteraction:_animate_interaction_complete()
 	self._remove_circles()
 end
 
--- Lines 261-274
+-- Lines 277-290
 function HUDSpecialInteraction:_animate_stage_complete()
 	local TOTAL_T = 0.7
 	local DELTA_Y = 24
@@ -327,7 +330,7 @@ function HUDSpecialInteraction:_animate_stage_complete()
 	self._lockpick_texture:set_y(end_y)
 end
 
--- Lines 276-279
+-- Lines 292-295
 function HUDSpecialInteraction:_ease_in_quint(time, begin, change, duration)
 	local alpha = time / duration
 

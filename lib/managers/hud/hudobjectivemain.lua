@@ -15,7 +15,7 @@ HUDObjectiveMain.TIMER_SECONDS_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 -- Lines 19-28
 function HUDObjectiveMain:init(objectives_panel, active_objective)
 	HUDObjectiveMain.super.init(self, objectives_panel, active_objective)
-	self._objective_text:set_center_y(self._object:h() / 2 - 4)
+	self._objective_text:set_center_y(self._object:h() / 2)
 	self:_create_timer()
 	self:hide_timer()
 	self:set_hidden()
@@ -105,8 +105,8 @@ function HUDObjectiveMain:_create_timer()
 
 	self._timer_text_minutes:set_w(w + 10)
 	self._timer_text_minutes:set_h(h)
-	self._timer_text_minutes:set_center_x(self._timer_panel:w() / 2 - 1)
-	self._timer_text_minutes:set_center_y(self._timer_panel:h() / 2 - 2)
+	self._timer_text_minutes:set_center_x(self._timer_panel:w() / 2)
+	self._timer_text_minutes:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_seconds_text_params = {
 		vertical = "center",
@@ -125,8 +125,8 @@ function HUDObjectiveMain:_create_timer()
 
 	self._timer_text_seconds:set_w(w + 10)
 	self._timer_text_seconds:set_h(h)
-	self._timer_text_seconds:set_center_x(self._timer_panel:w() / 2 - 1)
-	self._timer_text_seconds:set_center_y(self._timer_panel:h() / 2 - 3)
+	self._timer_text_seconds:set_center_x(self._timer_panel:w() / 2)
+	self._timer_text_seconds:set_center_y(self._timer_panel:h() / 2)
 end
 
 -- Lines 120-121

@@ -62,7 +62,7 @@ end
 
 -- Lines 58-104
 function GenericDLCManager:_modify_locked_content()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return
 	end
 
@@ -313,7 +313,7 @@ end
 
 -- Lines 328-336
 function GenericDLCManager:is_installing()
-	if not DB:is_bundled() or SystemInfo:platform() == Idstring("WIN32") then
+	if not DB:is_bundled() or _G.IS_PC then
 		return false, 1
 	end
 

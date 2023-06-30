@@ -45,7 +45,7 @@ function SpecialHonorsGui:_set_initial_data()
 	self._node.components.raid_menu_header._screen_name_label:set_alpha(0)
 end
 
--- Lines 41-52
+-- Lines 41-55
 function SpecialHonorsGui:_layout()
 	SpecialHonorsGui.super._layout(self)
 	self:_layout_first_screen()
@@ -55,9 +55,10 @@ function SpecialHonorsGui:_layout()
 	end
 
 	self:bind_controller_inputs()
+	managers.menu_component:_voice_panel_align_top_right()
 end
 
--- Lines 54-89
+-- Lines 57-92
 function SpecialHonorsGui:_layout_first_screen()
 	local top_stats_big_panel_params = {
 		halign = "scale",
@@ -94,12 +95,12 @@ function SpecialHonorsGui:_layout_first_screen()
 	end
 end
 
--- Lines 92-94
+-- Lines 95-97
 function SpecialHonorsGui:_continue_button_on_click()
 	managers.raid_menu:close_menu()
 end
 
--- Lines 96-105
+-- Lines 99-112
 function SpecialHonorsGui:close()
 	if self._closing then
 		return
@@ -111,10 +112,11 @@ function SpecialHonorsGui:close()
 		game_state_machine:current_state():continue()
 	end
 
+	managers.menu_component:_voice_panel_align_mid_right()
 	SpecialHonorsGui.super.close(self)
 end
 
--- Lines 107-142
+-- Lines 114-149
 function SpecialHonorsGui:show_honors()
 	local top_stats_title = self._top_stats_big_panel:child("top_stats_title")
 
@@ -154,17 +156,28 @@ function SpecialHonorsGui:show_honors()
 	end
 end
 
--- Lines 144-152
+-- Lines 151-170
 function SpecialHonorsGui:show_gamercard(i)
 	local peer_id = game_state_machine:current_state().special_honors[i].peer_id
 	local peer = managers.network:session():peer(peer_id)
 
 	Application:trace("[SpecialHonorsGui:show_gamercard] showing gamercard for peer " .. tostring(peer:name()))
 	Application:debug("[SpecialHonorsGui:show_gamercard]", inspect(peer))
-	self._callback_handler:view_gamer_card(peer:xuid())
+
+	local xuid_as_string = tostring(peer:xuid())
+
+	if xuid_as_string ~= nil and xuid_as_string ~= "" then
+		Application:trace("[SpecialHonorsGui:show_gamercard] valid xuid, local xuid = " .. tostring(peer:xuid()))
+		self._callback_handler:view_gamer_card(peer:xuid())
+	else
+		local xuid = managers.network.account:player_id()
+
+		Application:trace("[SpecialHonorsGui:show_gamercard] invalid xuid, local xuid = " .. tostring(xuid))
+		self._callback_handler:view_gamer_card(xuid)
+	end
 end
 
--- Lines 154-172
+-- Lines 172-190
 function SpecialHonorsGui:_fade_in_label(text, duration, delay)
 	local anim_duration = duration or 0.15
 	local t = text:alpha() * anim_duration
@@ -184,17 +197,17 @@ function SpecialHonorsGui:_fade_in_label(text, duration, delay)
 	text:set_alpha(1)
 end
 
--- Lines 175-177
+-- Lines 193-195
 function SpecialHonorsGui:confirm_pressed()
 	self:_continue_button_on_click()
 end
 
--- Lines 179-181
+-- Lines 197-199
 function SpecialHonorsGui:on_escape()
 	return true
 end
 
--- Lines 183-240
+-- Lines 201-259
 function SpecialHonorsGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -217,37 +230,33 @@ function SpecialHonorsGui:bind_controller_inputs()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		local gamercard_prompts_shown = 0
 		local stats_per_peer = {}
 
 		for i = 1, #self._top_stats_big do
 			if self._top_stats_big[i]:shown() then
-				local binding = {
-					key = Idstring(SpecialHonorsGui.GAMERCARD_BUTTONS[i][1]),
-					callback = callback(self, self, "show_gamercard", i)
-				}
-
-				table.insert(bindings, binding)
-
 				local peer_name = game_state_machine:current_state().special_honors[i].peer_name
 				local found_peer = false
 
 				for j = 1, #stats_per_peer do
 					if stats_per_peer[j].name == peer_name then
-						table.insert(stats_per_peer[j].buttons, SpecialHonorsGui.GAMERCARD_BUTTONS[i][3])
-
 						found_peer = true
 					end
 				end
 
 				if not found_peer then
 					gamercard_prompts_shown = gamercard_prompts_shown + 1
+					local binding = {
+						key = Idstring(SpecialHonorsGui.GAMERCARD_BUTTONS[gamercard_prompts_shown][1]),
+						callback = callback(self, self, "show_gamercard", gamercard_prompts_shown)
+					}
 
+					table.insert(bindings, binding)
 					table.insert(stats_per_peer, {
 						name = peer_name,
 						buttons = {
-							SpecialHonorsGui.GAMERCARD_BUTTONS[i][3]
+							SpecialHonorsGui.GAMERCARD_BUTTONS[gamercard_prompts_shown][3]
 						}
 					})
 				end

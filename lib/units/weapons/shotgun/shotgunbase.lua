@@ -29,7 +29,7 @@ end
 local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 32-181
+-- Lines 32-179
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	local result = {}
 	local hit_enemies = {}
@@ -40,11 +40,12 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	end
 
 	local damage = self:_get_current_damage(dmg_mul)
+	local damage_per_pellet = damage / self._rays
 	local autoaim, dodge_enemies = self:check_autoaim(from_pos, direction, self._range)
 	local weight = 0.1
 	local enemy_died = false
 
-	-- Lines 45-60
+	-- Lines 46-55
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() and col_ray.unit:character_damage().is_head then
 			local enemy_key = col_ray.unit:key()
@@ -53,7 +54,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				hit_enemies[enemy_key] = col_ray
 			end
 		else
-			InstantBulletBase:on_collision(col_ray, self._unit, user_unit, damage)
+			InstantBulletBase:on_collision(col_ray, self._unit, user_unit, damage_per_pellet)
 		end
 	end
 
@@ -142,7 +143,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 			local scale = math.clamp(1 - col_ray.distance / 500, 0.5, 1)
 			local unit = col_ray.unit
 			local height = mvector3.distance(col_ray.position, col_ray.unit:position()) - 100
-			local twist_dir = math.random(2) == 1 and 1 or -1
+			local twist_dir = math.rand_bool() and 1 or -1
 			local rot_acc = (col_ray.ray:cross(math.UP) + math.UP * 0.5 * twist_dir) * -1000 * math.sign(height)
 			local rot_time = 1 + math.rand(2)
 			local nr_u_bodies = unit:num_bodies()
@@ -164,7 +165,9 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 
 	if dodge_enemies and self._suppression then
 		for enemy_data, dis_error in pairs(dodge_enemies) do
-			enemy_data.unit:character_damage():build_suppression(suppr_mul * dis_error * self._suppression, self._panic_suppression_chance)
+			if not enemy_data.unit:movement():cool() then
+				enemy_data.unit:character_damage():build_suppression(suppr_mul * dis_error * self._suppression, self._panic_suppression_chance)
+			end
 		end
 	end
 
@@ -182,29 +185,29 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	return result
 end
 
--- Lines 184-187
+-- Lines 183-186
 function ShotgunBase:reload_expire_t()
 	local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()
 
 	return math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * 20 / 30
 end
 
--- Lines 189-191
+-- Lines 188-190
 function ShotgunBase:reload_enter_expire_t()
 	return 0.3
 end
 
--- Lines 193-195
+-- Lines 192-194
 function ShotgunBase:reload_exit_expire_t()
 	return 1.3
 end
 
--- Lines 197-199
+-- Lines 196-198
 function ShotgunBase:reload_not_empty_exit_expire_t()
 	return 1
 end
 
--- Lines 202-208
+-- Lines 201-207
 function ShotgunBase:start_reload(...)
 	ShotgunBase.super.start_reload(self, ...)
 
@@ -213,25 +216,25 @@ function ShotgunBase:start_reload(...)
 	self._next_shell_reloded_t = Application:time() + 0.3366666666666666 / speed_multiplier
 end
 
--- Lines 210-212
+-- Lines 209-211
 function ShotgunBase:started_reload_empty()
 	return self._started_reload_empty
 end
 
--- Lines 215-223
+-- Lines 214-229
 function ShotgunBase:update_reloading(t, dt, time_left)
 	if self._next_shell_reloded_t < t then
 		local speed_multiplier = self:reload_speed_multiplier()
 		self._next_shell_reloded_t = self._next_shell_reloded_t + 0.6666666666666666 / speed_multiplier
 
-		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip() + 1))
+		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip() + self:get_ammo_reload_clip_single()))
 		managers.raid_job:set_memory("kill_count_no_reload_" .. tostring(self._name_id), nil, true)
 
 		return true
 	end
 end
 
--- Lines 226-228
+-- Lines 232-234
 function ShotgunBase:reload_interuptable()
 	return true
 end

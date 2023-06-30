@@ -47,14 +47,15 @@ function CubeMapCreator:start_cube_map(pos)
 	self._creating_cube_map = true
 end
 
--- Lines 41-68
+-- Lines 41-69
 function CubeMapCreator:create_cube_map()
-	local ypos = Application:create_texture("render_target", 512, 512)
-	local xneg = Application:create_texture("render_target", 512, 512)
-	local yneg = Application:create_texture("render_target", 512, 512)
-	local xpos = Application:create_texture("render_target", 512, 512)
-	local zpos = Application:create_texture("render_target", 512, 512)
-	local zneg = Application:create_texture("render_target", 512, 512)
+	local hardcoded_numer = 512
+	local ypos = Application:create_texture("render_target", hardcoded_numer, hardcoded_numer)
+	local xneg = Application:create_texture("render_target", hardcoded_numer, hardcoded_numer)
+	local yneg = Application:create_texture("render_target", hardcoded_numer, hardcoded_numer)
+	local xpos = Application:create_texture("render_target", hardcoded_numer, hardcoded_numer)
+	local zpos = Application:create_texture("render_target", hardcoded_numer, hardcoded_numer)
+	local zneg = Application:create_texture("render_target", hardcoded_numer, hardcoded_numer)
 
 	self:set_camera_rot(Rotation(Vector3(0, 1, 0), Vector3(0, 0, 1)))
 	Application:render("World", self._vp, ypos)

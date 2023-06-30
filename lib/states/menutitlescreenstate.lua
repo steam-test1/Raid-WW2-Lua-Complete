@@ -20,11 +20,11 @@ function MenuTitlescreenState:init(game_state_machine, setup)
 	end
 end
 
-local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-local is_ps4 = SystemInfo:platform() == Idstring("PS4")
-local is_xb1 = SystemInfo:platform() == Idstring("XB1")
-local is_x360 = SystemInfo:platform() == Idstring("X360")
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+local is_ps3 = _G.IS_PS3
+local is_ps4 = _G.IS_PS4
+local is_xb1 = _G.IS_XB1
+local is_x360 = _G.IS_XB360
+local is_win32 = _G.IS_PC
 
 -- Lines 35-189
 function MenuTitlescreenState:setup()
@@ -137,7 +137,7 @@ function MenuTitlescreenState:setup()
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
 		font_size = press_any_key_font_size,
 		color = MenuTitlescreenState.TEXT_COLOR,
-		text = utf8.to_upper(managers.localization:text("press_any_key")),
+		text = utf8.to_upper(managers.localization:text(_G.IS_PC and "press_any_key" or "press_any_key_controller")),
 		layer = self._legal_text:layer()
 	}
 	self._press_any_key_text = self._workspace:panel():text(press_any_key_prompt_params)
@@ -206,7 +206,7 @@ end
 
 -- Lines 207-215
 function MenuTitlescreenState:_real_aspect_ratio()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()
@@ -265,7 +265,7 @@ function MenuTitlescreenState:clbk_game_has_music_control(status)
 	end
 end
 
--- Lines 269-304
+-- Lines 269-326
 function MenuTitlescreenState:update(t, dt)
 	if self._waiting_for_loaded_savegames then
 		if not managers.savefile:is_in_loading_sequence() and not self._user_has_changed and not self._any_key_pressed then
@@ -287,9 +287,25 @@ function MenuTitlescreenState:update(t, dt)
 		end
 
 		if self._controller_index then
-			managers.controller:set_default_wrapper_index(self._controller_index)
-			managers.user:set_index(self._controller_index)
-			managers.user:check_user(callback(self, self, "check_user_callback"), true)
+			if is_xb1 then
+				local controller_wrapper = self._controller_list[self._controller_index]
+				local xb1_ctrl = controller_wrapper:get_controller_map().xb1pad
+				local xuid = xb1_ctrl:user_xuid()
+
+				managers.controller:set_default_wrapper_index(self._controller_index)
+			else
+				managers.controller:set_default_wrapper_index(self._controller_index)
+				managers.user:set_index(self._controller_index)
+			end
+
+			self._press_any_key_text:set_alpha(0)
+			self:reset_attract_video()
+
+			if is_xb1 then
+				managers.user:confirm_select_user_callback(callback(self, self, "check_user_callback"), true)
+			else
+				managers.user:check_user(callback(self, self, "check_user_callback"), true)
+			end
 
 			if managers.dlc:has_corrupt_data() and not Global.corrupt_dlc_msg_shown then
 				Global.corrupt_dlc_msg_shown = true
@@ -303,32 +319,22 @@ function MenuTitlescreenState:update(t, dt)
 	end
 end
 
--- Lines 306-331
+-- Lines 328-358
 function MenuTitlescreenState:get_start_pressed_controller_index()
 	for index, controller in ipairs(self._controller_list) do
-		if is_ps4 or is_xb1 then
-			if controller:get_input_pressed("confirm") then
-				return index
-			end
-		elseif is_ps3 or is_x360 then
-			if controller:get_input_pressed("start") then
-				return index
-			end
-		else
-			if controller:get_any_input_pressed() then
-				return index
-			end
+		if controller:get_any_input_pressed() then
+			return index
+		end
 
-			if controller._default_controller_id == "keyboard" and (#Input:keyboard():pressed_list() > 0 or #Input:mouse():pressed_list() > 0) then
-				return index
-			end
+		if controller._default_controller_id == "keyboard" and (#Input:keyboard():pressed_list() > 0 or #Input:mouse():pressed_list() > 0) then
+			return index
 		end
 	end
 
 	return nil
 end
 
--- Lines 333-357
+-- Lines 360-384
 function MenuTitlescreenState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -358,11 +364,13 @@ function MenuTitlescreenState:check_confirm_pressed()
 	end
 end
 
--- Lines 359-382
+-- Lines 386-413
 function MenuTitlescreenState:check_user_callback(success)
 	managers.dlc:on_signin_complete()
 
-	if success then
+	if success == "dismissed" then
+		self._press_any_key_text:set_alpha(1)
+	elseif success then
 		managers.user:check_storage(callback(self, self, "check_storage_callback"), true)
 	else
 		local dialog_data = {
@@ -387,7 +395,7 @@ function MenuTitlescreenState:check_user_callback(success)
 	end
 end
 
--- Lines 384-409
+-- Lines 415-440
 function MenuTitlescreenState:check_storage_callback(success)
 	if success then
 		self._waiting_for_loaded_savegames = true
@@ -414,25 +422,25 @@ function MenuTitlescreenState:check_storage_callback(success)
 	end
 end
 
--- Lines 411-418
+-- Lines 442-449
 function MenuTitlescreenState:_load_savegames_done()
 	self._background:stop()
 	self._background:animate(callback(self, self, "_animate_any_key_pressed"))
 end
 
--- Lines 420-426
+-- Lines 451-457
 function MenuTitlescreenState:continue_without_saving_yes_callback()
 	self._background:stop()
 	self._background:animate(callback(self, self, "_animate_any_key_pressed"))
 end
 
--- Lines 428-431
+-- Lines 459-462
 function MenuTitlescreenState:continue_without_saving_no_callback()
 	managers.user:set_index(nil)
 	managers.controller:set_default_wrapper_index(nil)
 end
 
--- Lines 433-445
+-- Lines 464-476
 function MenuTitlescreenState:check_attract_video()
 	if alive(self._attract_video_gui) then
 		if self._attract_video_gui:loop_count() > 0 or self:is_any_input_pressed() then
@@ -447,7 +455,7 @@ function MenuTitlescreenState:check_attract_video()
 	return false
 end
 
--- Lines 447-455
+-- Lines 478-486
 function MenuTitlescreenState:is_any_input_pressed()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -458,7 +466,7 @@ function MenuTitlescreenState:is_any_input_pressed()
 	return false
 end
 
--- Lines 457-467
+-- Lines 488-498
 function MenuTitlescreenState:reset_attract_video()
 	self._attract_video_time = TimerManager:main():time()
 
@@ -472,50 +480,45 @@ function MenuTitlescreenState:reset_attract_video()
 	end
 end
 
--- Lines 469-471
+-- Lines 500-502
 function MenuTitlescreenState:is_attract_video_delay_done()
 	return TimerManager:main():time() > self._attract_video_time + _G.tweak_data.states.title.ATTRACT_VIDEO_DELAY
 end
 
--- Lines 473-502
+-- Lines 504-540
 function MenuTitlescreenState:play_attract_video()
 	self:reset_attract_video()
 
 	local res = RenderSettings.resolution
-	local src_width = 1920
-	local src_height = 1080
-	local dest_width, dest_height = nil
-
-	if src_width / src_height > res.x / res.y then
-		dest_width = res.x
-		dest_height = src_height * dest_width / src_width
-	else
-		dest_height = res.y
-		dest_width = src_width * dest_height / src_height
-	end
-
-	local x = (res.x - dest_width) / 2
-	local y = (res.y - dest_height) / 2
+	local width = res.x
+	local height = res.y
+	local x = (res.x - width) / 2
+	local y = (res.y - height) / 2
 	self._attract_video_background = self._full_workspace:panel():rect({
 		color = Color.black,
 		layer = tweak_data.gui.ATTRACT_SCREEN_LAYER - 1
 	})
 	self._attract_video_gui = self._full_workspace:panel():video({
-		video = "movies/vanilla/attract_video",
+		video = "movies/vanilla/raid_trailer_1080p_final",
 		x = x,
 		y = y,
-		width = dest_width,
-		height = dest_height,
+		width = width,
+		height = height,
 		layer = tweak_data.gui.ATTRACT_SCREEN_LAYER
 	})
+	local w = self._attract_video_gui:video_width()
+	local h = self._attract_video_gui:video_height()
+	local m = h / w
 
+	self._attract_video_gui:set_size(res.x, res.x * m)
+	self._attract_video_gui:set_center(res.x / 2, res.y / 2)
+	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and 0.5 or 0)
 	self._attract_video_gui:set_h(self._full_workspace:panel():w() * self._attract_video_gui:video_height() / self._attract_video_gui:video_width())
 	self._attract_video_gui:set_center_y(self._full_workspace:panel():h() / 2)
 	self._attract_video_gui:play()
-	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and 1 or 0)
 end
 
--- Lines 504-534
+-- Lines 542-572
 function MenuTitlescreenState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 
@@ -544,7 +547,7 @@ function MenuTitlescreenState:at_exit()
 	managers.system_menu:init_finalize()
 end
 
--- Lines 536-543
+-- Lines 574-581
 function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_user_changed")
 
@@ -553,7 +556,7 @@ function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	end
 end
 
--- Lines 545-550
+-- Lines 583-588
 function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_storage_changed")
 
@@ -562,7 +565,7 @@ function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	end
 end
 
--- Lines 552-605
+-- Lines 590-660
 function MenuTitlescreenState:_animate_screen_display(background)
 	local t = 0
 	local fade_in_duration = 1
@@ -609,13 +612,25 @@ function MenuTitlescreenState:_animate_screen_display(background)
 		t = t + dt
 		local current_alpha = Easing.quintic_in_out(t, 0, 1, press_any_key_fade_in_duration)
 
-		self._press_any_key_text:set_alpha(current_alpha)
+		if is_ps4 then
+			if not Application:has_boot_invite_received() then
+				self._press_any_key_text:set_alpha(current_alpha)
+			end
+		else
+			self._press_any_key_text:set_alpha(current_alpha)
+		end
 	end
 
-	self._press_any_key_text:set_alpha(1)
+	if is_ps4 then
+		if not Application:has_boot_invite_received() then
+			self._press_any_key_text:set_alpha(1)
+		end
+	else
+		self._press_any_key_text:set_alpha(1)
+	end
 end
 
--- Lines 607-628
+-- Lines 662-683
 function MenuTitlescreenState:_animate_any_key_pressed(background)
 	local t = 0
 	local fade_out_duration = 0.4

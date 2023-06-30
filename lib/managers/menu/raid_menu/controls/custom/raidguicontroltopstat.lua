@@ -45,7 +45,7 @@ function RaidGUIControlTopStat:_create_control_panel()
 	self._object = self._control_panel
 end
 
--- Lines 55-79
+-- Lines 55-90
 function RaidGUIControlTopStat:_create_stat_info()
 	local params_player_name = {
 		vertical = "center",
@@ -69,7 +69,7 @@ function RaidGUIControlTopStat:_create_stat_info()
 		wrap = true,
 		align = "center",
 		word_wrap = true,
-		text = "Most specials killed",
+		text = "Most things done well",
 		alpha = 0,
 		x = 0,
 		layer = 3,
@@ -83,7 +83,7 @@ function RaidGUIControlTopStat:_create_stat_info()
 	self._stat_name_label = self._control_panel:label(params_stat_name)
 end
 
--- Lines 81-89
+-- Lines 92-100
 function RaidGUIControlTopStat:_create_icon_panel()
 	local icon_panel_params = {
 		name = "icon_panel",
@@ -96,7 +96,7 @@ function RaidGUIControlTopStat:_create_icon_panel()
 	self._icon_panel = self._object:panel(icon_panel_params)
 end
 
--- Lines 91-103
+-- Lines 102-114
 function RaidGUIControlTopStat:set_data(data)
 	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
 	self._stat_name_label:set_text(self:translate(data.stat, true))
@@ -117,7 +117,7 @@ function RaidGUIControlTopStat:set_data(data)
 	self._stat_icon:set_center_y(self._icon_panel:h() / 2)
 end
 
--- Lines 105-110
+-- Lines 116-121
 function RaidGUIControlTopStat:animate_show(delay)
 	delay = delay or 0
 
@@ -125,7 +125,7 @@ function RaidGUIControlTopStat:animate_show(delay)
 	self._player_name_label._object:animate(callback(self, self, "_animate_show_player_name"), delay + 0.6)
 end
 
--- Lines 112-145
+-- Lines 123-156
 function RaidGUIControlTopStat:_animate_show_stat(panel, delay, icon, label)
 	if delay then
 		wait(delay)
@@ -160,7 +160,7 @@ function RaidGUIControlTopStat:_animate_show_stat(panel, delay, icon, label)
 	label:set_alpha(1)
 end
 
--- Lines 147-188
+-- Lines 158-199
 function RaidGUIControlTopStat:_animate_show_player_name(label, delay)
 	if delay then
 		wait(delay)
@@ -206,7 +206,7 @@ function RaidGUIControlTopStat:_animate_show_player_name(label, delay)
 	self._player_name_label._object:set_center(center_x, center_y)
 end
 
--- Lines 190-228
+-- Lines 201-239
 function RaidGUIControlTopStat:_animate_text_glow(text, new_color, duration, number_of_laps, delay)
 	local number_of_letters = string.len(text:text())
 	local original_color = text:color()

@@ -1,6 +1,6 @@
 DistractionRock = DistractionRock or class(GrenadeBase)
 
--- Lines 5-20
+-- Lines 8-23
 function DistractionRock:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -18,17 +18,17 @@ function DistractionRock:_setup_from_tweak_data()
 	}
 end
 
--- Lines 25-27
+-- Lines 28-30
 function DistractionRock:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
-	Application:debug("[DistractionRock:clbk_impact]")
+	Application:debug("[DistractionRock:clbk_impact]", tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines 29-31
+-- Lines 32-34
 function DistractionRock:_on_collision(col_ray)
 	Application:debug("[DistractionRock:_on_collision]")
 end
 
--- Lines 33-85
+-- Lines 36-162
 function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._hand_held then
 		return
@@ -37,39 +37,72 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	local pos = self._unit:position()
 	local range = self._range
 	local slotmask = managers.slot:get_mask("enemies")
-	local units = World:find_units_quick("sphere", pos, self._range, slotmask)
-	local end_position = Vector3(pos.x, pos.y, pos.z - 50)
-	local collision = World:raycast("ray", pos, end_position, "slot_mask", managers.slot:get_mask("AI_graph_obstacle_check"))
+	local units = World:find_units_quick("sphere", pos, range, slotmask)
 
-	if collision then
-		if managers.navigation:is_point_inside(pos, false) then
-			Application:debug("[DistractionRock:_detonate] Hit the ground! coin pos: " .. pos .. " true")
-		else
-			Application:debug("[DistractionRock:_detonate] Hit the ground! coin pos: " .. pos .. " false")
+	if #units == 0 then
+		Application:debug("[DistractionRock:_detonate] There were no enemies nearby")
+
+		return
+	else
+		Application:debug("[DistractionRock:_detonate] There were " .. tostring(#units) .. " enemies nearby")
+	end
+
+	local end_position = Vector3(pos.x, pos.y, pos.z - 400)
+	local collision = World:raycast("ray", pos, end_position, "slot_mask", managers.slot:get_mask("AI_graph_obstacle_check"))
+	local is_point_inside_nav = managers.navigation:is_point_inside(not not collision and collision.position or pos, false)
+	local final_lure_position = nil
+
+	if is_point_inside_nav then
+		final_lure_position = pos
+
+		Application:debug("[DistractionRock:_detonate] Usable lure position:", final_lure_position)
+	else
+		local tracker = managers.navigation:create_nav_tracker(end_position, false)
+		final_lure_position = tracker:field_position()
+
+		managers.navigation:destroy_nav_tracker(tracker)
+
+		local dist = mvector3.distance(final_lure_position, end_position)
+
+		if range < dist then
+			Application:debug("[DistractionRock:_detonate] The Nav tracker backup position was too far to be considered usable. dist:", dist)
 
 			return
+		else
+			Application:debug("[DistractionRock:_detonate] Fell out of navigation, use nav field tracker pos:", final_lure_position)
 		end
-	elseif managers.navigation:is_point_inside(pos, false) then
-		Application:debug("[DistractionRock:_detonate] Missed the ground! coin pos: " .. pos .. " true")
-	else
-		Application:debug("[DistractionRock:_detonate] Missed the ground! coin pos: " .. pos .. " false")
+	end
+
+	if not managers.navigation:is_point_inside(final_lure_position, false) then
+		Application:debug("[DistractionRock:_detonate] There was no hope for this final lure position. Cancelled lure.")
 
 		return
 	end
 
-	if units and managers.navigation:is_point_inside(pos, false) then
-		local closest_cop = nil
+	if units then
+		local closest_cop_dist, closest_cop = nil
 
 		for _, cop in ipairs(units) do
-			local search_id = "DistractionRock._detonate" .. tostring(cop:key())
+			local dist = mvector3.distance(final_lure_position, cop:position())
+
+			if not closest_cop_dist or dist < closest_cop_dist then
+				closest_cop_dist = dist
+				closest_cop = cop
+			end
+		end
+
+		if closest_cop then
+			Application:debug("[DistractionRock:_detonate] Closest boso is lured.", closest_cop)
+
+			local search_id = "DistractionRock._detonate" .. tostring(closest_cop:key())
 			local search_params = {
 				finished = false,
-				pos_from = cop:movement():m_pos(),
-				pos_to = pos,
+				pos_from = closest_cop:movement():m_pos(),
+				pos_to = final_lure_position,
 				id = search_id,
 				result_clbk = callback(self, self, "clbk_pathing_results", search_id),
-				access_pos = cop:brain()._SO_access,
-				cop = cop
+				access_pos = closest_cop:brain()._SO_access,
+				cop = closest_cop
 			}
 			self._pathing_searches[search_id] = search_params
 
@@ -78,8 +111,10 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	end
 end
 
--- Lines 87-119
+-- Lines 164-202
 function DistractionRock:clbk_pathing_results(search_id, path)
+	Application:debug("[DistractionRock:clbk_pathing_results] Whoop", search_id, path)
+
 	local search = self._pathing_searches[search_id]
 
 	if path and search then
@@ -100,7 +135,8 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 			end
 		end
 
-		if not search.invalid and search.total_length < self._range and not self._found_cop then
+		if not search.invalid and search.total_length < self._range * 2 and not self._found_cop then
+			Application:debug("[DistractionRock:clbk_pathing_results] Valid path, route is short enough", search.total_length, self._range * 4)
 			self:_abort_all_unfinished_pathing()
 
 			local attention_info = managers.groupai:state():get_AI_attention_objects_by_filter(search.cop:base()._char_tweak.access)[search.cop:key()]
@@ -114,7 +150,7 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 	end
 end
 
--- Lines 122-130
+-- Lines 218-226
 function DistractionRock:_abort_all_unfinished_pathing()
 	for search_id, search in pairs(self._pathing_searches) do
 		if not search.finished then
@@ -123,16 +159,16 @@ function DistractionRock:_abort_all_unfinished_pathing()
 	end
 end
 
--- Lines 134-135
+-- Lines 230-231
 function DistractionRock:_detonate_on_client()
 end
 
--- Lines 139-141
+-- Lines 235-237
 function DistractionRock:bullet_hit()
 	Application:debug("[DistractionRock:bullet_hit]")
 end
 
--- Lines 145-160
+-- Lines 241-256
 function DistractionRock:set_attention_state(state)
 	if state then
 		if not self._attention_setting then
@@ -154,7 +190,7 @@ function DistractionRock:set_attention_state(state)
 	end
 end
 
--- Lines 162-168
+-- Lines 258-264
 function DistractionRock:update_attention_settings(descriptor)
 	local tweak_data = tweak_data.attention.settings[descriptor]
 

@@ -307,7 +307,7 @@ function CoreCutsceneEditor:_create_viewport()
 	self._camera:set_width_multiplier(1)
 	self._viewport:set_camera(self._camera)
 
-	self._camera_controller = self._viewport:director():make_camera(self._camera, "cutscene_camera")
+	self._camera_controller = self._viewport:director():make_camera(self._camera, Idstring("cutscene_camera"))
 
 	self._camera_controller:set_timer(TimerManager:game_animation())
 	self._viewport:director():set_camera(self._camera_controller)
@@ -1763,18 +1763,25 @@ function CoreCutsceneEditor:_on_go_to_next_frame()
 	self:set_playhead_position(self:playhead_position() + 1)
 end
 
--- Lines 1370-1377
+-- Lines 1370-1385
 function CoreCutsceneEditor:_on_sequencer_selection_changed(sequencer)
 	self:_refresh_selected_footage_track()
 	self:_refresh_attribute_panel()
+	print("###################################################################################")
 
-	local all_selected_clips_are_on_the_active_film_track = #sequencer:selected_items() == #sequencer:active_film_track():selected_clips()
+	if sequencer then
+		local a = #sequencer:selected_items()
+		local b = #sequencer:active_film_track():selected_clips()
+		local all_selected_clips_are_on_the_active_film_track = a == b
 
-	self._edit_menu:set_enabled("CUT", all_selected_clips_are_on_the_active_film_track)
-	self._edit_menu:set_enabled("COPY", all_selected_clips_are_on_the_active_film_track)
+		self._edit_menu:set_enabled("CUT", all_selected_clips_are_on_the_active_film_track)
+		self._edit_menu:set_enabled("COPY", all_selected_clips_are_on_the_active_film_track)
+	else
+		print("NOTHING HERE")
+	end
 end
 
--- Lines 1379-1384
+-- Lines 1387-1392
 function CoreCutsceneEditor:_on_sequencer_remove_item(sender, removed_item)
 	local metadata = removed_item.metadata and removed_item:metadata()
 
@@ -1783,7 +1790,7 @@ function CoreCutsceneEditor:_on_sequencer_remove_item(sender, removed_item)
 	end
 end
 
--- Lines 1386-1393
+-- Lines 1394-1401
 function CoreCutsceneEditor:_on_sequencer_drag_item(sender, dragged_item, drag_mode)
 	self:_refresh_selected_footage_track()
 
@@ -1794,12 +1801,12 @@ function CoreCutsceneEditor:_on_sequencer_drag_item(sender, dragged_item, drag_m
 	end
 end
 
--- Lines 1395-1397
+-- Lines 1403-1405
 function CoreCutsceneEditor:_on_sequencer_evaluate_frame_at_playhead(sender, event)
 	self:_evaluate_current_frame()
 end
 
--- Lines 1399-1408
+-- Lines 1407-1416
 function CoreCutsceneEditor:_on_selected_footage_track_mouse_left_up(sender, event)
 	if not event:control_down() then
 		sender:deselect_all_clips()
@@ -1812,17 +1819,17 @@ function CoreCutsceneEditor:_on_selected_footage_track_mouse_left_up(sender, eve
 	end
 end
 
--- Lines 1410-1412
+-- Lines 1418-1420
 function CoreCutsceneEditor:_on_sequencer_track_mousewheel(sender, event, track)
 	self:_on_track_mousewheel(track, event)
 end
 
--- Lines 1414-1416
+-- Lines 1422-1424
 function CoreCutsceneEditor:_on_track_mousewheel(sender, event)
 	self:zoom_around_playhead(event:get_wheel_rotation() < 0 and -1 or 1)
 end
 
--- Lines 1418-1433
+-- Lines 1426-1441
 function CoreCutsceneEditor:_on_footage_selection_changed(sender, event)
 	self._selected_footage_track:remove_all_clips()
 
@@ -1840,7 +1847,7 @@ function CoreCutsceneEditor:_on_footage_selection_changed(sender, event)
 	self._insert_menu:set_enabled(commands:id("INSERT_CLIPS_FROM_SELECTED_FOOTAGE"), footage ~= nil)
 end
 
--- Lines 1435-1452
+-- Lines 1443-1460
 function CoreCutsceneEditor:_on_cutscene_camera_toggle()
 	self:_evaluate_current_frame()
 
@@ -1862,19 +1869,19 @@ function CoreCutsceneEditor:_on_cutscene_camera_toggle()
 	end
 end
 
--- Lines 1454-1458
+-- Lines 1462-1466
 function CoreCutsceneEditor:_on_widescreen_toggle()
 	if self._player then
 		self._player:set_widescreen(self._view_menu:is_checked(commands:id("WIDESCREEN_TOGGLE")))
 	end
 end
 
--- Lines 1460-1462
+-- Lines 1468-1470
 function CoreCutsceneEditor:_on_play_every_frame_toggle()
 	self._play_every_frame = self._transport_menu:is_checked(commands:id("PLAY_EVERY_FRAME_TOGGLE"))
 end
 
--- Lines 1464-1527
+-- Lines 1472-1535
 function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event)
 	local clips_to_add = self._selected_footage_track:selected_clips()
 
@@ -1945,7 +1952,7 @@ function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event
 	end
 end
 
--- Lines 1529-1535
+-- Lines 1537-1543
 function CoreCutsceneEditor:_on_insert_cutscene_key(element_name)
 	local cutscene_key = CoreCutsceneKey:create(element_name, self)
 
@@ -1955,7 +1962,7 @@ function CoreCutsceneEditor:_on_insert_cutscene_key(element_name)
 	self._sequencer:set_item_selected(self._sequencer:add_cutscene_key(cutscene_key), true)
 end
 
--- Lines 1537-1541
+-- Lines 1545-1549
 function CoreCutsceneEditor:_monkey_patch_cutscene_key(cutscene_key)
 	cutscene_key:set_key_collection(self)
 	cutscene_key:set_cast(self._cast)
@@ -1963,14 +1970,14 @@ function CoreCutsceneEditor:_monkey_patch_cutscene_key(cutscene_key)
 	cutscene_key.is_in_cutscene_editor = true
 end
 
--- Lines 1543-1572
+-- Lines 1551-1580
 function CoreCutsceneEditor:_draw_focus_planes()
 	if self._player and managers.DOF then
 		self._player._viewport:update()
 
 		local camera = self._player:_camera()
 
-		-- Lines 1547-1553
+		-- Lines 1555-1561
 		local function draw_focus_plane(value, color)
 			local point = camera:screen_to_world(Vector3(0, 0, value))
 			local brush = Draw:brush()
@@ -2002,7 +2009,7 @@ function CoreCutsceneEditor:_draw_focus_planes()
 	end
 end
 
--- Lines 1574-1597
+-- Lines 1582-1605
 function CoreCutsceneEditor:_draw_cast_finder()
 	if self._player == nil then
 		return
@@ -2034,7 +2041,7 @@ function CoreCutsceneEditor:_draw_cast_finder()
 	end
 end
 
--- Lines 1599-1629
+-- Lines 1607-1637
 function CoreCutsceneEditor:_draw_compass()
 	local vp = managers.viewport and managers.viewport:first_active_viewport()
 	local camera = vp and vp:camera()
@@ -2065,7 +2072,7 @@ function CoreCutsceneEditor:_draw_compass()
 	end
 end
 
--- Lines 1631-1637
+-- Lines 1639-1645
 function CoreCutsceneEditor:_draw_locator_object(object)
 	local position = object:position()
 	local rotation = object:rotation()
@@ -2075,7 +2082,7 @@ function CoreCutsceneEditor:_draw_locator_object(object)
 	self:_pen():sphere(position, 1, 10, 1)
 end
 
--- Lines 1639-1654
+-- Lines 1647-1662
 function CoreCutsceneEditor:_draw_tracking_line(object, label)
 	local vp = managers.viewport and managers.viewport:first_active_viewport()
 	local camera = managers.viewport and vp:camera()
@@ -2096,7 +2103,7 @@ function CoreCutsceneEditor:_draw_tracking_line(object, label)
 	end
 end
 
--- Lines 1656-1678
+-- Lines 1664-1686
 function CoreCutsceneEditor:_draw_cameras()
 	if self._player == nil then
 		return
@@ -2125,7 +2132,7 @@ function CoreCutsceneEditor:_draw_cameras()
 	end
 end
 
--- Lines 1680-1694
+-- Lines 1688-1702
 function CoreCutsceneEditor:_draw_camera_object(object, color)
 	local position = object:position()
 	local rotation = object:rotation()
@@ -2142,7 +2149,7 @@ function CoreCutsceneEditor:_draw_camera_object(object, color)
 	self:_pen():rotation(position, rotation, 10)
 end
 
--- Lines 1696-1705
+-- Lines 1704-1713
 function CoreCutsceneEditor:_draw_hierarchies()
 	if self._player == nil then
 		return
@@ -2157,7 +2164,7 @@ function CoreCutsceneEditor:_draw_hierarchies()
 	end
 end
 
--- Lines 1707-1720
+-- Lines 1715-1728
 function CoreCutsceneEditor:_draw_unit_hierarchy(unit, unit_name, draw_root_point)
 	unit_name = unit_name or unit:name()
 	local root_point = unit:orientation_object()
@@ -2175,7 +2182,7 @@ function CoreCutsceneEditor:_draw_unit_hierarchy(unit, unit_name, draw_root_poin
 	end
 end
 
--- Lines 1722-1735
+-- Lines 1730-1743
 function CoreCutsceneEditor:_draw_object_hierarchy(object, parent, max_z)
 	self:_draw_joint(parent, object)
 
@@ -2192,12 +2199,12 @@ function CoreCutsceneEditor:_draw_object_hierarchy(object, parent, max_z)
 	return max_z
 end
 
--- Lines 1737-1739
+-- Lines 1745-1747
 function CoreCutsceneEditor:_draw_label(text, position)
 	self:_text_brush():center_text(position, utf8.from_latin1(text))
 end
 
--- Lines 1741-1767
+-- Lines 1749-1775
 function CoreCutsceneEditor:_draw_joint(start_object, end_object, radius)
 	radius = radius or 1
 	local end_position = end_object and end_object.position and end_object:position()
@@ -2229,7 +2236,7 @@ function CoreCutsceneEditor:_draw_joint(start_object, end_object, radius)
 	end
 end
 
--- Lines 1769-1777
+-- Lines 1777-1785
 function CoreCutsceneEditor:_pen()
 	if self._debug_pen == nil then
 		self._debug_pen = Draw:pen()
@@ -2241,7 +2248,7 @@ function CoreCutsceneEditor:_pen()
 	return self._debug_pen
 end
 
--- Lines 1779-1787
+-- Lines 1787-1795
 function CoreCutsceneEditor:_text_brush()
 	if self._debug_text_brush == nil then
 		self._debug_text_brush = Draw:brush()
@@ -2253,7 +2260,7 @@ function CoreCutsceneEditor:_text_brush()
 	return self._debug_text_brush
 end
 
--- Lines 1789-1797
+-- Lines 1797-1805
 function CoreCutsceneEditor:_tiny_text_brush()
 	if self._debug_tiny_text_brush == nil then
 		self._debug_tiny_text_brush = Draw:brush()
@@ -2265,37 +2272,37 @@ function CoreCutsceneEditor:_tiny_text_brush()
 	return self._debug_tiny_text_brush
 end
 
--- Lines 1803-1805
+-- Lines 1811-1813
 function CoreCutsceneEditor:prime_cutscene_key(player, key, cast)
 end
 
--- Lines 1807-1809
+-- Lines 1815-1817
 function CoreCutsceneEditor:evaluate_cutscene_key(player, key, time, last_evaluated_time)
 end
 
--- Lines 1811-1813
+-- Lines 1819-1821
 function CoreCutsceneEditor:revert_cutscene_key(player, key, time, last_evaluated_time)
 end
 
--- Lines 1815-1817
+-- Lines 1823-1825
 function CoreCutsceneEditor:update_cutscene_key(player, key, time, last_evaluated_time)
 end
 
--- Lines 1819-1821
+-- Lines 1827-1829
 function CoreCutsceneEditor:skip_cutscene_key(player)
 end
 
--- Lines 1823-1825
+-- Lines 1831-1833
 function CoreCutsceneEditor:time_in_relation_to_cutscene_key(key)
 	return self:playhead_position() / self:frames_per_second() - key:time()
 end
 
--- Lines 1832-1834
+-- Lines 1840-1842
 function CoreCutsceneEditor:_debug_get_cast_member(unit_name)
 	return self._cast:unit(unit_name)
 end
 
--- Lines 1836-1842
+-- Lines 1844-1850
 function CoreCutsceneEditor:_debug_dump_cast()
 	cat_print("debug", "Cast:")
 
@@ -2306,7 +2313,7 @@ function CoreCutsceneEditor:_debug_dump_cast()
 	end
 end
 
--- Lines 1844-1852
+-- Lines 1852-1860
 function CoreCutsceneEditor:_debug_dump_cast_member(unit_name)
 	local unit = self:_debug_get_cast_member(unit_name)
 
@@ -2318,7 +2325,7 @@ function CoreCutsceneEditor:_debug_dump_cast_member(unit_name)
 	end
 end
 
--- Lines 1854-1861
+-- Lines 1862-1869
 function CoreCutsceneEditor:_debug_dump_hierarchy(object, indent)
 	indent = indent or 0
 	local object_type = type_name(object)

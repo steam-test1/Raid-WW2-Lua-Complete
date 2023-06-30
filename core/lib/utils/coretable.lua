@@ -616,10 +616,36 @@ function table.print_data(data, t)
 	end
 end
 
+-- Lines 567-573
+function table.fill_with_item(item, amount, data)
+	data = data or {}
+
+	for i = 1, amount do
+		table.insert(data, item)
+	end
+
+	return data
+end
+
+-- Lines 577-589
+function table.trail_exists(table, list)
+	local item = table
+
+	for _, key in ipairs(list) do
+		if item[key] then
+			item = item[key]
+		else
+			return false
+		end
+	end
+
+	return true
+end
+
 if Application:ews_enabled() then
 	local __lua_representation, __write_lua_representation_to_file = nil
 
-	-- Lines 576-585
+	-- Lines 600-609
 	function __lua_representation(value)
 		local t = type(value)
 
@@ -632,7 +658,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-	-- Lines 587-606
+	-- Lines 611-630
 	function __write_lua_representation_to_file(value, file, indentation)
 		indentation = indentation or 1
 		local t = type(value)
@@ -657,7 +683,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-	-- Lines 614-620
+	-- Lines 638-644
 	function write_lua_representation_to_path(value, path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
@@ -668,7 +694,7 @@ if Application:ews_enabled() then
 		file:close()
 	end
 
-	-- Lines 622-630
+	-- Lines 646-654
 	function read_lua_representation_from_path(path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
