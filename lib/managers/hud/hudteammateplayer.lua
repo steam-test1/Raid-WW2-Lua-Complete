@@ -30,9 +30,11 @@ HUDTeammatePlayer.PLAYER_LEVEL_FONT_SIZE = 20
 HUDTeammatePlayer.PLAYER_HEALTH_H = 10
 HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON = "backgrounds_health_bg"
 HUDTeammatePlayer.PLAYER_HEALTH_COLORS = tweak_data.gui.colors.player_health_colors
+HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR = tweak_data.gui.colors.progress_dark_red
 HUDTeammatePlayer.EQUIPMENT_H = 37
 HUDTeammatePlayer.EQUIPMENT_PADDING = 6
 HUDTeammatePlayer.HOST_ICON = "player_panel_host_indicator"
+HUDTeammatePlayer.DOWN_ICON = "player_panel_lives_indicator_"
 HUDTeammatePlayer.STATES = {
 	{
 		id = "downed",
@@ -51,6 +53,9 @@ HUDTeammatePlayer.STATES = {
 		control = "nationality_icon"
 	}
 }
+HUDTeammatePlayer.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
+HUDTeammatePlayer.CHAT_ICON_MUTED = "voice_chat_muted_icon"
+HUDTeammatePlayer.CHAT_PANEL_W = 30
 
 function HUDTeammatePlayer:init(i, teammates_panel)
 	self._id = i
@@ -69,11 +74,13 @@ function HUDTeammatePlayer:init(i, teammates_panel)
 	self:_create_nationality_icon()
 	self:_create_timer()
 	self:_create_host_indicator()
+	self:_create_down_indicator()
 	self:_create_right_panel()
 	self:_create_player_name()
 	self:_create_player_level()
 	self:_create_player_health()
 	self:_create_equipment_panel()
+	self:_create_voice_chat_indicator()
 end
 
 function HUDTeammatePlayer:_create_panel(teammates_panel)
@@ -82,7 +89,7 @@ function HUDTeammatePlayer:_create_panel(teammates_panel)
 		valign = "bottom",
 		x = HUDTeammatePlayer.DEFAULT_X,
 		y = teammates_panel:h() - HUDTeammatePlayer.DEFAULT_H,
-		w = HUDTeammatePlayer.DEFAULT_W,
+		w = HUDTeammatePeer.DEFAULT_W,
 		h = HUDTeammatePlayer.DEFAULT_H,
 		layer = tweak_data.gui.PLAYER_PANELS_LAYER
 	}
@@ -291,8 +298,95 @@ function HUDTeammatePlayer:_create_host_indicator()
 	}
 	local host_indicator = self._left_panel:bitmap(host_indicator_params)
 
-	host_indicator:set_right(self._warcry_panel:x() + warcry_background:x() + warcry_background:w() - 4)
-	host_indicator:set_bottom(self._warcry_panel:y() + warcry_background:y() + warcry_background:h() - 4)
+	host_indicator:set_right(self._warcry_panel:x() + warcry_background:x() + warcry_background:w() + 2)
+	host_indicator:set_bottom(self._warcry_panel:y() + warcry_background:y() + warcry_background:h() + 2)
+end
+
+function HUDTeammatePlayer:_create_voice_chat_indicator()
+	local voice_chat_panel_params = {
+		name = " voice_chat_panel",
+		layer = 30,
+		w = HUDTeammatePlayer.CHAT_PANEL_W,
+		h = HUDTeammatePlayer.CHAT_PANEL_W
+	}
+	self._voice_chat_panel = self._right_panel:panel(voice_chat_panel_params)
+	local chat_indicator_params_speaking = {
+		name = "chat_indicator_speaking",
+		alpha = 0,
+		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture,
+		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture_rect
+	}
+	self._chat_indicator_speaking = self._voice_chat_panel:bitmap(chat_indicator_params_speaking)
+	local chat_indicator_params_muted = {
+		name = "chat_indicator_muted",
+		alpha = 0,
+		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture,
+		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture_rect
+	}
+	self._chat_indicator_muted = self._voice_chat_panel:bitmap(chat_indicator_params_muted)
+end
+
+function HUDTeammatePlayer:show_chat_indicator(chat_indicator_name)
+	local chat_indicator = nil
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(1)
+	end
+end
+
+function HUDTeammatePlayer:hide_chat_indicator(chat_indicator_name)
+	local chat_indicator = nil
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(0)
+	end
+end
+
+function HUDTeammatePlayer:_create_down_indicator()
+	local warcry_panel = self._left_panel:child("warcry_panel")
+	local warcry_background = warcry_panel:child("warcry_background")
+	local downs = tweak_data.player.class_defaults.default.damage.BASE_LIVES
+	local texture, texture_rect, color = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
+	local down_indicator_params = {
+		name = "down_indicator",
+		layer = 30,
+		alpha = 1,
+		texture = texture,
+		texture_rect = texture_rect,
+		color = color
+	}
+	local down_indicator = self._left_panel:bitmap(down_indicator_params)
+
+	down_indicator:set_left(-2)
+	down_indicator:set_bottom(self._warcry_panel:y() + warcry_background:y() + warcry_background:h() + 2)
+	self:_update_down_indicator()
+end
+
+function HUDTeammatePlayer:_update_down_indicator()
+	local player_damage = managers.player:player_unit() and managers.player:player_unit():character_damage()
+
+	if not player_damage then
+		return
+	end
+
+	local downs_icon = self._left_panel:child("down_indicator")
+	local downs = math.clamp(player_damage:get_revives(), 1, 5)
+	local texture, texture_rect, color = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
+
+	downs_icon:set_image(texture, unpack(texture_rect))
+	downs_icon:set_color(color)
 end
 
 function HUDTeammatePlayer:_create_right_panel()
@@ -314,7 +408,7 @@ function HUDTeammatePlayer:_create_player_name()
 		text = "",
 		y = 1,
 		x = 0,
-		w = self._right_panel:w() - HUDTeammatePlayer.PLAYER_LEVEL_W,
+		w = self._right_panel:w() - HUDTeammatePlayer.PLAYER_LEVEL_W - HUDTeammatePeer.CHAT_PANEL_W,
 		h = HUDTeammatePlayer.PLAYER_NAME_H,
 		font = tweak_data.gui.fonts[HUDTeammatePlayer.PLAYER_NAME_FONT],
 		font_size = HUDTeammatePlayer.PLAYER_NAME_FONT_SIZE
@@ -364,6 +458,18 @@ function HUDTeammatePlayer:_create_player_health()
 	health_background:set_center_x(health_panel:w() / 2)
 	health_background:set_center_y(health_panel:h() / 2)
 
+	local health_bar_hurt_params = {
+		name = "health_bar_hurt",
+		w = health_background:w() - 2,
+		h = health_background:h() - 2,
+		color = HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR,
+		layer = health_background:layer() + 1
+	}
+	self._health_bar_hurt = health_panel:rect(health_bar_hurt_params)
+
+	self._health_bar_hurt:set_center_x(health_panel:w() / 2)
+	self._health_bar_hurt:set_center_y(health_panel:h() / 2)
+
 	local health_bar_params = {
 		name = "health_bar",
 		w = health_background:w() - 2,
@@ -406,6 +512,7 @@ function HUDTeammatePlayer:refresh()
 
 	self:set_level(current_level)
 	self._player_level:set_text(current_level)
+	self:_update_down_indicator()
 end
 
 function HUDTeammatePlayer:reset_state()
@@ -421,6 +528,7 @@ function HUDTeammatePlayer:reset_state()
 
 	self:_add_active_state(self._displayed_state.id)
 	self._status_panel:child(self._displayed_state.control):set_alpha(1)
+	self:_update_down_indicator()
 end
 
 function HUDTeammatePlayer:set_character_data(data)
@@ -441,6 +549,9 @@ function HUDTeammatePlayer:set_health(data)
 
 	self._health_bar:set_w(health_percentage * self._full_health_bar_w)
 	self._health_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.PLAYER_HEALTH_COLORS, health_percentage))
+	self._health_bar_hurt:stop()
+	self._health_bar_hurt:animate(callback(self, self, "_animate_health_change"))
+	self:_update_down_indicator()
 end
 
 function HUDTeammatePlayer:set_stamina(value)
@@ -488,8 +599,16 @@ end
 
 function HUDTeammatePlayer:set_warcry_meter_fill(data)
 	local warcry_percentage = data.current / data.total
+	self._true_warcry_percentage = warcry_percentage
 
-	self._warcry_bar:set_position_z(warcry_percentage)
+	if self._true_warcry_percentage < 1 then
+		self._warcry_panel:stop()
+		self._warcry_panel:animate(callback(self, self, "_animate_warcry_fill"))
+	else
+		self._warcry_bar:set_position_z(warcry_percentage)
+	end
+
+	self._true_warcry_percentage_prev = warcry_percentage
 end
 
 function HUDTeammatePlayer:activate_warcry(duration)
@@ -515,6 +634,12 @@ end
 
 function HUDTeammatePlayer:set_name(name)
 	self._player_name:set_text(utf8.to_upper(name))
+
+	local name_w = select(3, self._player_name:text_rect())
+	local chat_x = math.min(name_w, self._player_name:w())
+
+	self._voice_chat_panel:set_left(self._player_name:x() + chat_x)
+	self._voice_chat_panel:set_top(self._player_name:y())
 end
 
 function HUDTeammatePlayer:set_nationality(nationality)
@@ -529,6 +654,15 @@ function HUDTeammatePlayer:set_level(level)
 end
 
 function HUDTeammatePlayer:set_cheater(state)
+end
+
+function HUDTeammatePlayer:go_into_bleedout()
+	self:_update_down_indicator()
+	HUDTeammatePlayer.super.go_into_bleedout(self)
+end
+
+function HUDTeammatePlayer:on_died()
+	HUDTeammatePlayer.super.on_died(self)
 end
 
 function HUDTeammatePlayer:on_revived()
@@ -633,6 +767,43 @@ function HUDTeammatePlayer:_get_color_for_percentage(color_table, percentage)
 	end
 
 	return color_table[1].color
+end
+
+function HUDTeammatePlayer:_animate_health_change()
+	local from = self._health_bar_hurt:w()
+	local to = self._health_bar:w()
+	local duration = (from - to) / 100
+
+	if duration > 0 then
+		local t = 0
+
+		while duration > t do
+			local dt = coroutine.yield()
+			t = t + dt
+
+			self._health_bar_hurt:set_w(math.lerp(from, to, t / duration))
+		end
+
+		self._health_bar_hurt:set_w(to)
+	else
+		self._health_bar_hurt:set_w(to)
+	end
+end
+
+function HUDTeammatePlayer:_animate_warcry_fill()
+	local from = self._true_warcry_percentage_prev or 0
+	local to = self._true_warcry_percentage or 0
+	local duration = (to - from) * 2
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+
+		self._warcry_bar:set_position_z(math.lerp(from, to, t / duration))
+	end
+
+	self._warcry_bar:set_position_z(to)
 end
 
 function HUDTeammatePlayer:_animate_warcry_ready()

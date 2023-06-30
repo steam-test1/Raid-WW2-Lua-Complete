@@ -230,7 +230,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if data and data.delay_presentation then
 		self._delayed_presentation = {
-			t = 1.6,
+			t = 0.6,
 			activate_params = activate_params
 		}
 	else

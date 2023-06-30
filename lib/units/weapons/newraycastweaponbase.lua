@@ -101,14 +101,6 @@ function NewRaycastWeaponBase:assemble(factory_id)
 
 	self:_check_thq_align_anim()
 	self:_update_stats_values()
-
-	return
-
-	local third_person = self:is_npc()
-	self._parts, self._blueprint = managers.weapon_factory:assemble_default(factory_id, self._unit, third_person)
-
-	self:_update_fire_object()
-	self:_update_stats_values()
 end
 
 function NewRaycastWeaponBase:assemble_from_blueprint(factory_id, blueprint, clbk)
@@ -118,14 +110,6 @@ function NewRaycastWeaponBase:assemble_from_blueprint(factory_id, blueprint, clb
 	end), skip_queue)
 
 	self:_check_thq_align_anim()
-	self:_update_stats_values()
-
-	return
-
-	local third_person = self:is_npc()
-	self._parts, self._blueprint = managers.weapon_factory:assemble_from_blueprint(factory_id, self._unit, blueprint, third_person)
-
-	self:_update_fire_object()
 	self:_update_stats_values()
 end
 
@@ -158,6 +142,14 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 
 					table.insert(self._bullet_objects[i], object)
 				end
+			end
+		end
+
+		if not self._hud_class_override then
+			local hud_class_override = managers.weapon_factory:get_part_data_type_from_weapon_by_type("magazine", "hud_class_override", self._parts)
+
+			if hud_class_override then
+				self._hud_class_override = hud_class_override
 			end
 		end
 	end
@@ -196,6 +188,10 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 	end
 
 	clbk()
+end
+
+function NewRaycastWeaponBase:get_weapon_hud_type()
+	return self._hud_class_override
 end
 
 function NewRaycastWeaponBase:apply_texture_switches()
@@ -490,7 +486,6 @@ function NewRaycastWeaponBase:_update_stats_values()
 	self._total_ammo_mod = self._current_stats.total_ammo_mod or self._total_ammo_mod
 	self._gadgets = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("gadget", self._factory_id, self._blueprint)
 	self._scopes = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("scope", self._factory_id, self._blueprint)
-	self._can_highlight = managers.weapon_factory:has_perk("highlight", self._factory_id, self._blueprint)
 
 	self:_check_second_sight()
 	self:_check_reticle_obj()
@@ -643,7 +638,14 @@ function NewRaycastWeaponBase:calculate_ammo_max_per_clip()
 		ammo = math.floor(ammo * ammo_multiplier)
 	end
 
-	if tweak_data.weapon[self._name_id].use_data.selection_index == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
+	local upg_category = self:weapon_tweak_data().category
+	local guess_upg_category = managers.player:upgrade_value(upg_category, "magazine_upgrade", 0)
+
+	if guess_upg_category ~= 0 then
+		Application:debug("[NewRaycastWeaponBase:calculate_ammo_max_per_clip] Using class type", upg_category, guess_upg_category)
+
+		ammo = ammo + guess_upg_category
+	elseif tweak_data.weapon[self._name_id].use_data.selection_index == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		ammo = ammo + managers.player:upgrade_value("primary_weapon", "magazine_upgrade", 0)
 	elseif tweak_data.weapon[self._name_id].use_data.selection_index == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 		ammo = ammo + managers.player:upgrade_value("secondary_weapon", "magazine_upgrade", 0)
@@ -696,10 +698,8 @@ function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 
 	for part_id, part_data in pairs(self._parts) do
 		if not part_data.unit then
-			break
-		end
-
-		if part_data.animations and part_data.animations[anim] then
+			-- Nothing
+		elseif part_data.animations and part_data.animations[anim] then
 			local anim_name = part_data.animations[anim]
 			local length = part_data.unit:anim_length(Idstring(anim_name))
 			speed_multiplier = speed_multiplier or 1
@@ -1062,7 +1062,9 @@ function NewRaycastWeaponBase:_get_fire_recoil()
 	local weapon_tweak = self:weapon_tweak_data()
 
 	if weapon_tweak.kick.formula then
-		return weapon_tweak.kick.formula(self._recoil_firing)
+		local f = weapon_tweak.kick.formula(self._recoil_firing)
+
+		return f
 	end
 
 	return 0
@@ -1267,8 +1269,9 @@ end
 
 function NewRaycastWeaponBase:recoil_addend()
 	local recoil = managers.blackmarket:recoil_addend(self._name_id, self:weapon_tweak_data().category, self._current_stats_indices and self._current_stats_indices.recoil, self._silencer, self._blueprint)
+	local re = recoil + (self._recoil_firing or 0)
 
-	return recoil + (self._recoil_firing or 0)
+	return re
 end
 
 function NewRaycastWeaponBase:recoil_multiplier()
@@ -1371,8 +1374,11 @@ end
 function NewRaycastWeaponBase:reload_expire_t()
 	if self._use_shotgun_reload then
 		local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()
+		local shells_needed = self:get_ammo_max_per_clip() - ammo_remaining_in_clip
+		local total_loads = math.ceil(shells_needed / self:get_ammo_reload_clip_single())
+		local max_loads = math.ceil(self:get_ammo_max_per_clip() / self:get_ammo_reload_clip_single())
 
-		return math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * self:reload_shell_expire_t()
+		return math.min(total_loads, max_loads) * self:reload_shell_expire_t()
 	end
 
 	return nil
@@ -1441,7 +1447,7 @@ function NewRaycastWeaponBase:update_reloading(t, dt, time_left)
 		local speed_multiplier = self:reload_speed_multiplier()
 		self._next_shell_reloded_t = self._next_shell_reloded_t + self:reload_shell_expire_t() / speed_multiplier
 
-		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip() + 1))
+		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip() + self:get_ammo_reload_clip_single()))
 		managers.raid_job:set_memory("kill_count_no_reload_" .. tostring(self._name_id), nil, true)
 
 		return true
@@ -1568,7 +1574,7 @@ function NewRaycastWeaponBase:update_debug(t, dt)
 
 	mvector3.multiply(mvec_to, ray_distance)
 	mvector3.add(mvec_to, from_pos)
-	self._brush_centre:disc(mvec_to, 0.008 * ray_distance, direction, 16)
+	self._brush_centre:disc(mvec_to, 0.004 * ray_distance, direction, 4)
 
 	local vec_right = mvec_to + right * 25
 
@@ -1595,7 +1601,7 @@ function NewRaycastWeaponBase:update_debug(t, dt)
 		mvector3.set(mvec_to, mvec_spread_direction)
 		mvector3.multiply(mvec_to, ray_distance)
 		mvector3.add(mvec_to, from_pos)
-		self._brush_outer:disc(mvec_to, 0.004 * ray_distance, direction, 16)
+		self._brush_outer:disc(mvec_to, 0.001 * ray_distance, direction, 16)
 	end
 
 	if Global.simulate_weapon_spread then

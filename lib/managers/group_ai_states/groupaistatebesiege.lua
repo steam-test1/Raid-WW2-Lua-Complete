@@ -519,7 +519,7 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 			task_data.is_hesitating = nil
 
 			self:set_assault_mode(true)
-			managers.music:raid_music_state_change("assault")
+			managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ASSAULT)
 			managers.trade:set_trade_countdown(false)
 		else
 			managers.hud:check_start_anticipation_music(task_data.phase_end_t - t)
@@ -556,11 +556,11 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 		if task_spawn_allowance <= 0 then
 			task_data.phase = "fade"
 
-			managers.music:raid_music_state_change("assault")
+			managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ASSAULT)
 
 			task_data.phase_end_t = t + self._tweak_data.assault.fade_duration
 		elseif task_data.phase_end_t < t and not self._hunt_mode then
-			managers.music:raid_music_state_change("control")
+			managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_CONTROL)
 
 			task_data.phase = "fade"
 			task_data.phase_end_t = t + self._tweak_data.assault.fade_duration
@@ -597,7 +597,7 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 					self._draw_drama.assault_hist[#self._draw_drama.assault_hist][2] = t
 				end
 
-				managers.music:raid_music_state_change("control")
+				managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_CONTROL)
 				managers.mission:call_global_event("end_assault")
 				self:_begin_regroup_task()
 
@@ -2752,7 +2752,7 @@ function GroupAIStateBesiege:set_wave_mode(flag)
 			self._task_data.use_smoke = true
 			self._task_data.use_smoke_timer = 0
 
-			managers.music:raid_music_state_change("assault")
+			managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ASSAULT)
 		else
 			self._task_data.assault.next_dispatch_t = self._t
 		end
@@ -2855,13 +2855,11 @@ function GroupAIStateBesiege:_assign_enemy_groups_to_assault(phase)
 				for u_key, u_data in pairs(group.units) do
 					local objective = u_data.unit:brain():objective()
 
-					if objective then
-						if objective.grp_objective ~= group.objective then
-							-- Nothing
-						elseif not objective.in_place then
-							done_moving = false
-						elseif done_moving == nil then
+					if objective and objective.grp_objective == group.objective then
+						if objective.in_place and objective.area and objective.area.nav_segs[u_data.unit:movement():nav_tracker():nav_segment()] then
 							done_moving = true
+						else
+							done_moving = false
 						end
 					end
 				end
@@ -3125,26 +3123,20 @@ function GroupAIStateBesiege:_upd_groups()
 		self:_verify_group_objective(group)
 
 		for u_key, u_data in pairs(group.units) do
-			local nav_seg = u_data.tracker:nav_segment()
-			local world_id = managers.navigation:get_world_for_nav_seg(nav_seg)
-			local alarm = managers.worldcollection:get_alarm_for_world(world_id)
+			local brain = u_data.unit:brain()
+			local current_objective = brain:objective()
 
-			if alarm then
-				local brain = u_data.unit:brain()
-				local current_objective = brain:objective()
+			if (not current_objective or current_objective.is_default or current_objective.grp_objective and current_objective.grp_objective ~= group.objective and not current_objective.grp_objective.no_retry) and (not group.objective.follow_unit or alive(group.objective.follow_unit)) then
+				local objective = self._create_objective_from_group_objective(group.objective, u_data.unit)
 
-				if (not current_objective or current_objective.is_default or current_objective.grp_objective and current_objective.grp_objective ~= group.objective and not current_objective.grp_objective.no_retry) and (not group.objective.follow_unit or alive(group.objective.follow_unit)) then
-					local objective = self._create_objective_from_group_objective(group.objective, u_data.unit)
+				if objective and brain:is_available_for_assignment(objective) then
+					self:set_enemy_assigned(objective.area or group.objective.area, u_key)
 
-					if objective and brain:is_available_for_assignment(objective) then
-						self:set_enemy_assigned(objective.area or group.objective.area, u_key)
-
-						if objective.element then
-							objective.element:clbk_objective_administered(u_data.unit)
-						end
-
-						u_data.unit:brain():set_objective(objective)
+					if objective.element then
+						objective.element:clbk_objective_administered(u_data.unit)
 					end
+
+					u_data.unit:brain():set_objective(objective)
 				end
 			end
 		end
@@ -3249,8 +3241,6 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 		local obstructed_path_index = self:_chk_coarse_path_obstructed(group)
 
 		if obstructed_path_index then
-			print("obstructed_path_index", obstructed_path_index)
-
 			objective_area = self:get_area_from_nav_seg_id(group.coarse_path[math.max(obstructed_path_index - 1, 1)][1])
 			pull_back = true
 		elseif not current_objective.moving_out then
@@ -3324,19 +3314,19 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 
 						for u_key, u_data in pairs(cop_units) do
 							if u_data.group and u_data.group ~= group and u_data.group.objective.type == "assault_area" then
-								assault_from_here = false
-
 								if not alternate_assault_area or math.random() < 0.5 then
 									local search_params = {
 										id = "GroupAI_assault",
 										from_seg = current_objective.area.pos_nav_seg,
-										to_seg = search_area.pos_nav_seg,
+										to_seg = assault_from_area.pos_nav_seg,
 										access_pos = self._get_group_acces_mask(group),
 										verify_clbk = callback(self, self, "is_nav_seg_safe")
 									}
 									alternate_assault_path = managers.navigation:search_coarse(search_params)
 
 									if alternate_assault_path then
+										assault_from_here = false
+
 										self:_merge_coarse_path_by_area(alternate_assault_path)
 
 										alternate_assault_area = search_area
@@ -3390,48 +3380,36 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 		if assault_area and assault_path then
 			local assault_area = push and assault_area or found_areas[assault_area] == "init" and objective_area or found_areas[assault_area]
 
-			if #assault_path > 2 and assault_area.nav_segs[assault_path[#assault_path - 1][1]] then
-				table.remove(assault_path)
-			end
-
-			local used_grenade = nil
-
-			if push then
-				local detonate_pos = nil
-
-				if charge then
-					for c_key, c_data in pairs(assault_area.criminal.units) do
-						detonate_pos = c_data.unit:movement():m_pos()
-
-						break
-					end
+			if assault_area then
+				if #assault_path > 2 and assault_area.nav_segs[assault_path[#assault_path - 1][1]] then
+					table.remove(assault_path)
 				end
 
-				local first_chk = math.random() < 0.5 and self._chk_group_use_flash_grenade or self._chk_group_use_smoke_grenade
-				local second_chk = first_chk == self._chk_group_use_flash_grenade and self._chk_group_use_smoke_grenade or self._chk_group_use_flash_grenade
-				used_grenade = first_chk(self, group, self._task_data.assault, detonate_pos)
-				used_grenade = used_grenade or second_chk(self, group, self._task_data.assault, detonate_pos)
+				if push and not group.push_t then
+					local balm = self:_get_balancing_multiplier(self._tweak_data.assault.push_delay) or 0
+					group.push_t = self._t + balm
 
-				self:_voice_move_in_start(group)
-			end
+					return
+				end
 
-			if not push or used_grenade then
-				local grp_objective = {
-					type = "assault_area",
-					stance = "hos",
-					area = assault_area,
-					coarse_path = assault_path,
-					pose = push and "crouch" or "stand",
-					attitude = push and "engage" or "avoid",
-					moving_in = push and true or nil,
-					open_fire = push or nil,
-					pushed = push or nil,
-					charge = charge,
-					interrupt_dis = charge and 0 or nil
-				}
-				group.is_chasing = group.is_chasing or push
+				if not push or group.push_t <= self._t then
+					local grp_objective = {
+						type = "assault_area",
+						stance = "hos",
+						area = assault_area,
+						coarse_path = assault_path,
+						pose = push and "crouch" or "stand",
+						attitude = push and "engage" or "avoid",
+						moving_in = push and true or nil,
+						open_fire = push or nil,
+						pushed = push or nil,
+						charge = charge,
+						interrupt_dis = charge and 0 or nil
+					}
+					group.is_chasing = group.is_chasing or push
 
-				self:_set_objective_to_enemy_group(group, grp_objective)
+					self:_set_objective_to_enemy_group(group, grp_objective)
+				end
 			end
 		end
 	elseif pull_back then
@@ -3861,7 +3839,7 @@ function GroupAIStateBesiege:_assign_enemy_groups_to_reenforce()
 						else
 							locked_up_in_area = self:get_area_from_nav_seg_id(u_data.tracker:nav_segment())
 						end
-					elseif not objective.in_place then
+					elseif not objective.in_place and objective.area and not objective.area.nav_segs[u_data.unit:movement():nav_tracker():nav_segment()] then
 						done_moving = false
 					end
 				end

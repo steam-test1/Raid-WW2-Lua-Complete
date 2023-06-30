@@ -7,99 +7,19 @@ end
 
 function CampCustomizationTweakData:_setup_camp_assets()
 	self.camp_upgrades_automatic = {
-		gold_pile = {
-			gold = {
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				8,
-				9,
-				10,
-				15,
-				20,
-				25,
-				30,
-				35,
-				40,
-				45,
-				50,
-				60,
-				70,
-				80,
-				90,
-				100,
-				120,
-				140,
-				160,
-				180,
-				200,
-				250,
-				300,
-				350,
-				400,
-				450,
-				500,
-				550,
-				600,
-				650,
-				700,
-				750,
-				800,
-				850,
-				900,
-				950,
-				1000,
-				1100,
-				1200,
-				1300,
-				1400,
-				1500,
-				1600,
-				1700,
-				1800,
-				1900,
-				2000,
-				2100,
-				2200,
-				2300,
-				2400,
-				2500,
-				3000,
-				3500,
-				4000,
-				5000,
-				6000,
-				7000,
-				8000,
-				9000,
-				10000,
-				11000,
-				12000,
-				13000,
-				14000,
-				15000,
-				1700,
-				20000,
-				22000,
-				24000,
-				26000,
-				28000,
-				30000,
-				35000,
-				40000,
-				45000,
-				50000,
-				70000,
-				100000,
-				150000,
-				250000
-			}
-		}
+		gold_pile = {}
 	}
+	self.camp_upgrades_automatic.gold_pile.gold = {}
+	local total_tiers = 88
+	local max_pile = 4000
+
+	for i = 1, total_tiers do
+		local v = i / total_tiers
+		local gold = math.ceil(max_pile * v * v)
+
+		table.insert(self.camp_upgrades_automatic.gold_pile.gold, gold)
+	end
+
 	self.camp_upgrades = {
 		bomb = {
 			levels = {
@@ -287,8 +207,8 @@ function CampCustomizationTweakData:_setup_camp_assets()
 					gold_price = 125,
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_camp_piano/level_1/props_camp_piano_level_01_shop",
 					grid_icon = "units/vanilla/props/props_camp_upgrades/props_camp_piano/piano_l02_hud",
-					name_id = "piano_lvl_1_name_id",
-					description_id = "piano_lvl_1_desc_id",
+					name_id = "piano_lvl_2_name_id",
+					description_id = "piano_lvl_2_desc_id",
 					scene_unit_rotation = Rotation(0, 0, 0)
 				}
 			}
@@ -321,6 +241,25 @@ function CampCustomizationTweakData:_setup_camp_assets()
 					name_id = "control_table_lvl_2_name_id",
 					description_id = "control_tables_lvl_2_desc_id",
 					scene_unit_rotation = Rotation(0, 0, 0)
+				}
+			}
+		},
+		flags = {
+			levels = {
+				{
+					scene_unit = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_badman_shop_prop",
+					grid_icon = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_badman_shop_hud",
+					name_id = "flags_badman_name_id",
+					description_id = "flags_badman_desc_id",
+					scene_unit_rotation = Rotation(180, 0, 0)
+				},
+				{
+					gold_price = 150,
+					scene_unit = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_raider_shop_prop",
+					grid_icon = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_raider_shop_hud",
+					name_id = "flags_raider_name_id",
+					description_id = "flags_raider_desc_id",
+					scene_unit_rotation = Rotation(180, 0, 0)
 				}
 			}
 		}
@@ -383,6 +322,10 @@ function CampCustomizationTweakData:_setup_default_camp_list()
 		{
 			level = 1,
 			upgrade = "control_table"
+		},
+		{
+			level = 1,
+			upgrade = "flags"
 		}
 	}
 end

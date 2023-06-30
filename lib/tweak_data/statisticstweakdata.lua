@@ -200,7 +200,6 @@ function StatisticsTweakData:statistics_table()
 		"thompson",
 		"sten",
 		"garand",
-		"garand_golden",
 		"m1918",
 		"m1903",
 		"m1912",
@@ -237,7 +236,8 @@ function StatisticsTweakData:statistics_table()
 		"m24",
 		"concrete",
 		"d343",
-		"mills"
+		"mills",
+		"betty"
 	}
 	local enemy_list = {
 		"german_black_waffen_sentry_gasmask",

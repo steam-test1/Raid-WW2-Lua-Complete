@@ -87,7 +87,7 @@ end
 
 function HUDObjectiveBase:_animate_hide(panel, delay)
 	local duration = 0.15
-	local t = self._object:alpha() * duration
+	local t = (1 - self._object:alpha()) * duration
 
 	self._object:set_right(self._object:parent():w())
 

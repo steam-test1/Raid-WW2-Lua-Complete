@@ -89,6 +89,14 @@ function LootScreenGui:init(ws, fullscreen_ws, node, component_name)
 	self.showing_loot = false
 	self.local_loot_shown = false
 	self.current_state = game_state_machine:current_state()
+
+	self.current_state:drop_loot_for_player()
+
+	self.loot_data = self.current_state.loot_data
+	self.loot_acquired = self.current_state.loot_acquired
+	self.loot_spawned = self.current_state.loot_spawned
+	self.local_player_loot_drop = self.current_state.local_player_loot_drop
+	self.peers_loot_drops = self.current_state.peers_loot_drops
 	self._callback_handler = RaidMenuCallbackHandler:new()
 
 	LootScreenGui.super.init(self, ws, fullscreen_ws, node, component_name)
@@ -108,8 +116,8 @@ function LootScreenGui:_layout()
 	self:_layout_second_screen()
 	self:refresh_peers_loot_display()
 
-	local loot_acquired = self.current_state.loot_acquired
-	local loot_spawned = self.current_state.loot_spawned
+	local loot_acquired = self.loot_acquired
+	local loot_spawned = self.loot_spawned
 
 	self:bind_controller_inputs()
 	self:give_points(loot_acquired, loot_spawned)
@@ -208,12 +216,7 @@ function LootScreenGui:_layout_loot_breakdown_items()
 		name = "loot_screen_persistent_panel"
 	}
 	self._persistent_panel = self._root_panel:panel(persistent_panel_params)
-	local v = true
-
-	if managers.challenge_cards.forced_loot_card then
-		v = false
-	end
-
+	local v = not managers.challenge_cards.forced_loot_card
 	local loot_data_panel_params = {
 		name = "loot_screen_loot_data_panel",
 		h = 426,
@@ -526,7 +529,7 @@ function LootScreenGui:data_source_branching_progress_bar()
 end
 
 function LootScreenGui:_show_local_loot_display()
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	Application:trace("[LootScreenGui:_show_local_loot_display] drop ", inspect(drop))
 
@@ -563,7 +566,7 @@ function LootScreenGui:_show_local_loot_display()
 end
 
 function LootScreenGui:refresh_peers_loot_display()
-	local peer_drops = self.current_state.peers_loot_drops
+	local peer_drops = self.peers_loot_drops
 
 	for _, drop in ipairs(peer_drops) do
 		self:on_loot_dropped_for_peer(drop)
@@ -695,7 +698,7 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 	slot.control:set_player_name(utf8.to_upper(player_name))
 
 	if self.peer_loot_shown then
-		local drop = self.current_state.local_player_loot_drop
+		local drop = self.local_player_loot_drop
 
 		if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
 			self:bind_controller_inputs_card_rewards()
@@ -1014,15 +1017,13 @@ function LootScreenGui:_animate_show_loot(panel)
 		wait(1)
 	end
 
-	self.current_state:drop_loot_for_player()
-
 	for index, loot_item in pairs(self._loot_breakdown_items) do
 		loot_item:hide((index - 1) * 0.08)
 	end
 
 	wait(1)
 
-	while not self.current_state.local_player_loot_drop do
+	while not self.local_player_loot_drop do
 		coroutine.yield()
 	end
 
@@ -1059,7 +1060,7 @@ function LootScreenGui:_animate_show_loot(panel)
 
 	self._peer_loot_panel:set_alpha(1)
 
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
 		self:bind_controller_inputs_card_rewards()
@@ -1119,7 +1120,7 @@ function LootScreenGui:_reveal_challenge_card()
 end
 
 function LootScreenGui:move_left()
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	if not drop then
 		return false
@@ -1134,7 +1135,7 @@ function LootScreenGui:move_left()
 end
 
 function LootScreenGui:move_right()
-	local drop = self.current_state.local_player_loot_drop
+	local drop = self.local_player_loot_drop
 
 	if not drop then
 		return false
@@ -1216,7 +1217,7 @@ function LootScreenGui:bind_controller_inputs_card_rewards()
 end
 
 function LootScreenGui:_check_gamercard_prompts(bindings, legend)
-	if SystemInfo:platform() == Idstring("XB1") and self.peer_loot_shown then
+	if _G.IS_XB1 and self.peer_loot_shown then
 		local gamercard_prompts_shown = 0
 
 		for i = 1, #self._peer_slots do

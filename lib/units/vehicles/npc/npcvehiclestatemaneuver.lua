@@ -18,6 +18,7 @@ function NpcVehicleStateManeuver:on_exit(npc_driving_ext)
 		path_info.unit_id = unit_id
 
 		managers.motion_path:put_unit_on_path(path_info)
+		print("NpcVehicleStateManeuver exit: ", inspect(path_info))
 	end
 end
 

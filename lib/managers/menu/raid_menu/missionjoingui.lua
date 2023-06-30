@@ -62,7 +62,7 @@ function MissionJoinGui:_layout()
 	self:_update_active_controls()
 	self._table_servers:set_selected(true)
 	self:_render_filters()
-	self:_refresh_server_list()
+	self:on_click_apply_filters_button()
 	self:bind_controller_inputs()
 end
 
@@ -290,7 +290,7 @@ function MissionJoinGui:_layout_server_list_table()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB1 or _G.IS_XB360 then
 		self._params_servers_table.on_menu_move = {
 			right = "player_description_1"
 		}
@@ -379,7 +379,7 @@ function MissionJoinGui:_layout_game_description()
 			y = (counter - 1) * 96
 		}
 
-		if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+		if _G.IS_XB1 or _G.IS_XB360 then
 			player_description_params.on_menu_move = {
 				left = "servers_table",
 				up = "player_description_" .. tostring(counter > 1 and counter - 1 or 3),
@@ -594,6 +594,7 @@ end
 
 function MissionJoinGui:close()
 	MissionJoinGui.super.close(self)
+	managers.network.matchmake:register_callback("search_lobby", nil)
 	self:_remove_active_controls()
 end
 
@@ -640,7 +641,7 @@ function MissionJoinGui:data_source_servers_table()
 	local mission_data = nil
 
 	for key, value in pairs(self._gui_jobs) do
-		if utf8.to_lower(value.level_id) == OperationsTweakData.IN_LOBBY then
+		if utf8.to_lower(value.level_id) == OperationsTweakData.IN_LOBBY or utf8.to_lower(value.level_id) == OperationsTweakData.ENTRY_POINT_LEVEL then
 			mission_data = {
 				text = self:translate(tweak_data.operations.missions.camp.name_id, true),
 				value = value.room_id,
@@ -652,9 +653,15 @@ function MissionJoinGui:data_source_servers_table()
 				value = value.room_id,
 				info = value.level_name
 			}
-		else
+		elseif value.progress ~= nil then
 			mission_data = {
 				text = utf8.to_upper(value.job_name .. " " .. value.progress .. ": " .. value.level_name),
+				value = value.room_id,
+				info = value.level_name
+			}
+		else
+			mission_data = {
+				text = utf8.to_upper(value.job_name .. " " .. "WRONG PROGRESS" .. ": " .. value.level_name),
 				value = value.room_id,
 				info = value.level_name
 			}
@@ -921,7 +928,9 @@ function MissionJoinGui:_set_game_description_data(data)
 			level_xp_amount = 0
 		end
 	elseif tostring(data.mission_type) == tostring(OperationsTweakData.JOB_TYPE_OPERATION) then
-		level_xp_amount = tweak_data.operations.missions[data.job_id].xp
+		if data.job_id ~= nil and data.job_id ~= 0 and tweak_data.operations.missions[data.job_id] ~= nil then
+			level_xp_amount = tweak_data.operations.missions[data.job_id].xp
+		end
 	elseif tostring(data.mission_type) == OperationsTweakData.IN_LOBBY then
 		-- Nothing
 	end
@@ -958,8 +967,12 @@ function MissionJoinGui:_set_game_description_data(data)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("X360") then
+	if _G.IS_XB1 or _G.IS_XB360 then
 		for i = 1, control_counter do
+			if not self._player_controls[i] then
+				break
+			end
+
 			local on_menu_move = {
 				left = "servers_table",
 				up = "player_description_" .. tostring(i > 1 and i - 1 or control_counter),
@@ -1056,21 +1069,15 @@ function MissionJoinGui:_set_game_description_data(data)
 	end
 end
 
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
-local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-local is_x360 = SystemInfo:platform() == Idstring("X360")
-local is_xb1 = SystemInfo:platform() == Idstring("XB1")
-local is_ps4 = SystemInfo:platform() == Idstring("PS4")
+local is_win32 = _G.IS_PC
+local is_xb1 = _G.IS_XB1
+local is_ps4 = _G.IS_PS4
 
 function MissionJoinGui:_find_online_games(friends_only)
 	if is_win32 then
 		self:_find_online_games_win32(friends_only)
-	elseif is_ps3 then
-		self:_find_online_games_ps3(friends_only)
 	elseif is_ps4 then
 		self:_find_online_games_ps4(friends_only)
-	elseif is_x360 then
-		self:_find_online_games_xbox360(friends_only)
 	elseif is_xb1 then
 		self:_find_online_games_xb1(friends_only)
 	else
@@ -1165,7 +1172,7 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 
 				local is_friend = false
 
-				if Steam:logged_on() and Steam:friends() then
+				if is_win32 then
 					for _, friend in ipairs(Steam:friends()) do
 						if friend:id() == room.owner_id then
 							is_friend = true
@@ -1209,7 +1216,8 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 								players_info_1 = players_info_1,
 								players_info_2 = players_info_2,
 								players_info_3 = players_info_3,
-								players_info_4 = players_info_4
+								players_info_4 = players_info_4,
+								xuid = room.xuid
 							})
 						end
 					else
@@ -1237,7 +1245,8 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 							players_info_1 = players_info_1,
 							players_info_2 = players_info_2,
 							players_info_3 = players_info_3,
-							players_info_4 = players_info_4
+							players_info_4 = players_info_4,
+							xuid = room.xuid
 						})
 					end
 				end
@@ -1282,8 +1291,495 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 		end
 	end
 
-	Steam:sa_handler():concurrent_users_callback(usrs_f)
-	Steam:sa_handler():get_concurrent_users()
+	if is_win32 then
+		Steam:sa_handler():concurrent_users_callback(usrs_f)
+		Steam:sa_handler():get_concurrent_users()
+	end
+end
+
+function MissionJoinGui:_find_online_games_xb1(friends_only)
+	if managers.network.matchmake:searching_lobbys() then
+		self._refresh_server_t = Application:time() + 5
+
+		return
+	end
+
+	Application:trace("[MissionJoinGui:_find_online_games_win32]")
+
+	local function f(info)
+		managers.network.matchmake:search_lobby_done()
+
+		local room_list = info.room_list
+		local attribute_list = info.attribute_list
+		local dead_list = {}
+
+		for id, _ in pairs(self._active_server_jobs) do
+			dead_list[id] = true
+		end
+
+		for i, room in ipairs(room_list) do
+			local name_str = tostring(room.owner_name)
+			local attributes_numbers = attribute_list[i].numbers
+
+			Application:trace("attributes_numbers ", inspect(attributes_numbers))
+
+			if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
+				dead_list[room.room_id] = nil
+				local host_name = name_str
+				local mission_type = attributes_numbers[16]
+				local job_id = tweak_data.operations:get_operation_name_from_index(attributes_numbers[14])
+				local level_id = OperationsTweakData.IN_LOBBY
+
+				if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+					level_id = tweak_data.operations:get_raid_id_from_raid_index(job_id, attributes_numbers[1])
+				elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+					level_id = tweak_data.operations:get_raid_name_from_index(attributes_numbers[1])
+				end
+
+				local name_id = ""
+				local level_name = ""
+				local difficulty_id = attributes_numbers[2]
+				local difficulty = self:translate(tweak_data:get_difficulty_string_name_from_index(difficulty_id), true)
+				local job_name = ""
+				local kick_option = attributes_numbers[8]
+				local job_plan = attributes_numbers[10]
+				local state_string_id = tweak_data:index_to_server_state(attributes_numbers[4])
+				local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
+				local state = attributes_numbers[4]
+				local num_plrs = attributes_numbers[5]
+				local permission = attributes_numbers[3]
+				local challenge_card = attributes_numbers[12]
+				local game_version = attributes_numbers[13]
+				local progress = attributes_numbers[15]
+				local players_info_1 = attributes_numbers[17]
+				local players_info_2 = attributes_numbers[18]
+				local players_info_3 = attributes_numbers[19]
+				local players_info_4 = attributes_numbers[20]
+
+				if challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending" then
+					challenge_card = ""
+				end
+
+				local players_info = 0
+
+				if players_info == "value_pending" then
+					players_info = ""
+				end
+
+				if progress == "value_pending" then
+					progress = ""
+				end
+
+				if mission_type == "value_pending" then
+					mission_type = ""
+				end
+
+				if level_id == OperationsTweakData.IN_LOBBY then
+					level_name = self:translate("menu_mission_select_in_lobby")
+					job_name = self:translate("menu_mission_select_in_lobby")
+				elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_OPERATION then
+					level_name = ""
+					job_name = ""
+					local operation_data = tweak_data.operations.missions[job_id]
+
+					if operation_data and operation_data.events and operation_data.events[level_id] then
+						level_name = self:translate(tweak_data.operations.missions[job_id].events[level_id].name_id)
+						job_name = self:translate(tweak_data.operations.missions[job_id].name_id)
+					else
+						level_name = "N/A"
+						job_name = "N/A"
+
+						if level_id ~= nil and job_id ~= nil then
+							Application:error("Level '" .. level_id .. "' can't be found in operation '" .. job_id .. "'.")
+						end
+					end
+				elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_RAID then
+					local mission_data = tweak_data.operations.missions[level_id]
+					level_name = ""
+
+					if mission_data and mission_data.name_id then
+						level_name = self:translate(tweak_data.operations.missions[level_id].name_id)
+					end
+
+					job_name = self:translate("menu_mission_selected_mission_type_raid")
+				end
+
+				local is_friend = false
+
+				if is_win32 and Steam:logged_on() and Steam:friends() then
+					for _, friend in ipairs(Steam:friends()) do
+						if friend:id() == room.owner_id then
+							is_friend = true
+
+							break
+						end
+					end
+				end
+
+				name_id = name_id or "unknown"
+
+				if name_id then
+					if not self._active_server_jobs[room.room_id] then
+						if table.size(self._active_jobs) + table.size(self._active_server_jobs) < self._tweak_data.total_active_jobs and table.size(self._active_server_jobs) < self._max_active_server_jobs then
+							self._active_server_jobs[room.room_id] = {
+								added = false,
+								alive_time = 0
+							}
+
+							self:add_gui_job({
+								room_id = room.room_id,
+								id = room.room_id,
+								level_id = level_id,
+								difficulty = difficulty,
+								difficulty_id = difficulty_id,
+								num_plrs = num_plrs,
+								host_name = host_name,
+								state_name = state_name,
+								state = state,
+								level_name = level_name,
+								job_id = job_id,
+								is_friend = is_friend,
+								kick_option = kick_option,
+								job_plan = job_plan,
+								custom_text = room.custom_text,
+								challenge_card = challenge_card,
+								players_info = players_info,
+								progress = progress,
+								mission_type = mission_type,
+								job_name = job_name,
+								info = room.info,
+								xuid = room.xuid,
+								players_info_1 = players_info_1,
+								players_info_2 = players_info_2,
+								players_info_3 = players_info_3,
+								players_info_4 = players_info_4
+							})
+						end
+					else
+						self:update_gui_job({
+							room_id = room.room_id,
+							id = room.room_id,
+							level_id = level_id,
+							difficulty = difficulty,
+							difficulty_id = difficulty_id,
+							num_plrs = num_plrs,
+							host_name = host_name,
+							state_name = state_name,
+							state = state,
+							level_name = level_name,
+							job_id = job_id,
+							is_friend = is_friend,
+							kick_option = kick_option,
+							job_plan = job_plan,
+							custom_text = room.custom_text,
+							challenge_card = challenge_card,
+							players_info = players_info,
+							progress = progress,
+							mission_type = mission_type,
+							job_name = job_name,
+							info = room.info,
+							xuid = room.xuid,
+							players_info_1 = players_info_1,
+							players_info_2 = players_info_2,
+							players_info_3 = players_info_3,
+							players_info_4 = players_info_4
+						})
+					end
+				end
+			end
+		end
+
+		for id, _ in pairs(dead_list) do
+			self._active_server_jobs[id] = nil
+
+			self:remove_gui_job(id)
+		end
+
+		if self._table_servers then
+			self._table_servers:refresh_data()
+			self._server_list_scrollable_area:setup_scroll_area()
+			self._table_servers:select_table_row_by_row_idx(1)
+			self:_select_game_from_list()
+
+			if self._selected_row_data then
+				self:_set_game_description_data(self._selected_row_data[5].value)
+				self._game_description_panel:show()
+				self._filters_panel:hide()
+				self:_filters_set_selected_server_table()
+			else
+				self._game_description_panel:hide()
+				self._filters_panel:show()
+				self:_filters_set_selected_filters()
+			end
+		end
+	end
+
+	managers.network.matchmake:register_callback("search_lobby", f)
+	managers.network.matchmake:search_lobby(friends_only)
+
+	local function usrs_f(success, amount)
+		print("usrs_f", success, amount)
+
+		if success then
+			self:set_players_online(amount)
+		end
+	end
+
+	if is_win32 then
+		Steam:sa_handler():concurrent_users_callback(usrs_f)
+		Steam:sa_handler():get_concurrent_users()
+	end
+end
+
+function MissionJoinGui:_find_online_games_ps4(friends_only)
+	if managers.network.matchmake:searching_lobbys() then
+		self._refresh_server_t = Application:time() + 5
+
+		return
+	end
+
+	local function f(info)
+		managers.network.matchmake:search_lobby_done()
+
+		local room_list = info.room_list
+		local attribute_list = info.attribute_list
+		local dead_list = {}
+
+		for id, _ in pairs(self._active_server_jobs) do
+			dead_list[id] = true
+		end
+
+		Application:trace("room_list ", inspect(info))
+
+		if room_list then
+			for i, room in ipairs(room_list) do
+				Application:trace("room ", inspect(room))
+
+				local name_str = tostring(room.owner_id)
+				local attributes_numbers = attribute_list[i].numbers
+				local attributes_strings = attribute_list[i].strings
+
+				Application:trace("attributes_numbers ", inspect(attributes_numbers))
+				Application:trace("attributes_strings ", inspect(attributes_strings))
+
+				if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
+					local lroom_Id = tostring(room.room_id)
+					dead_list[lroom_Id] = nil
+					local host_name = name_str
+					local mission_type = attributes_numbers[NetworkMatchMakingPSN.MISSION_TYPE]
+					local job_id = tweak_data.operations:get_operation_name_from_index(attributes_numbers[NetworkMatchMakingPSN.JOB_INDEX])
+					local level_id = OperationsTweakData.IN_LOBBY
+
+					if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+						level_id = tweak_data.operations:get_raid_id_from_raid_index(job_id, attributes_numbers[NetworkMatchMakingPSN.LEVEL_INDEX])
+					elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+						level_id = tweak_data.operations:get_raid_name_from_index(attributes_numbers[NetworkMatchMakingPSN.LEVEL_INDEX])
+					end
+
+					local name_id = ""
+					local level_name = ""
+					local difficulty_id = attributes_numbers[NetworkMatchMakingPSN.DIFFICULTY_ID]
+					local difficulty = self:translate(tweak_data:get_difficulty_string_name_from_index(difficulty_id), true)
+					local job_name = ""
+					local kick_option = attributes_numbers[8]
+					local job_plan = attributes_numbers[10]
+					local state_string_id = tweak_data:index_to_server_state(attributes_numbers[NetworkMatchMakingPSN.STATE_ID])
+					local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
+					local state = attributes_numbers[NetworkMatchMakingPSN.STATE_ID]
+					local num_plrs = attributes_numbers[NetworkMatchMakingPSN.NUMBER_OF_PLAYERS]
+					local challenge_card = ""
+					local players_info = ""
+					local progress = ""
+					local players_info_1 = "-,-,-,-"
+					local players_info_2 = "-,-,-,-"
+					local players_info_3 = "-,-,-,-"
+					local players_info_4 = "-,-,-,-"
+
+					if attributes_strings then
+						local S1 = attributes_strings[1] ~= "Empty" and string.split(attributes_strings[1], ";") or {
+							"",
+							""
+						}
+						challenge_card = S1[1] or ""
+						progress = S1[2] or ""
+						local S2 = attributes_strings[2] ~= "Empty" and string.split(attributes_strings[2], ";") or {
+							"-,-,-,-",
+							"-,-,-,-",
+							"-,-,-,-",
+							"-,-,-,-"
+						}
+						players_info_1 = S2[1] or "-,-,-,-"
+						players_info_2 = S2[2] or "-,-,-,-"
+						players_info_3 = S2[3] or "-,-,-,-"
+						players_info_4 = S2[4] or "-,-,-,-"
+					end
+
+					if challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending" then
+						challenge_card = ""
+					end
+
+					if players_info == "value_pending" then
+						players_info = ""
+					end
+
+					if progress == "value_pending" then
+						progress = ""
+					end
+
+					if mission_type == "value_pending" then
+						mission_type = ""
+					end
+
+					if level_id == OperationsTweakData.IN_LOBBY then
+						level_name = self:translate("menu_mission_select_in_lobby")
+						job_name = self:translate("menu_mission_select_in_lobby")
+					elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_OPERATION then
+						level_name = ""
+						job_name = ""
+						local operation_data = tweak_data.operations.missions[job_id]
+
+						if operation_data and operation_data.events and operation_data.events[level_id] then
+							level_name = self:translate(tweak_data.operations.missions[job_id].events[level_id].name_id)
+							job_name = self:translate(tweak_data.operations.missions[job_id].name_id)
+						else
+							level_name = "N/A"
+							job_name = "N/A"
+
+							if level_id ~= nil and job_id ~= nil then
+								Application:error("Level '" .. level_id .. "' can't be found in operation '" .. job_id .. "'.")
+							end
+						end
+					elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_RAID then
+						local mission_data = tweak_data.operations.missions[level_id]
+						level_name = ""
+
+						if mission_data and mission_data.name_id then
+							level_name = self:translate(tweak_data.operations.missions[level_id].name_id)
+						end
+
+						job_name = self:translate("menu_mission_selected_mission_type_raid")
+					end
+
+					local is_friend = false
+
+					if is_win32 and Steam:logged_on() and Steam:friends() then
+						for _, friend in ipairs(Steam:friends()) do
+							if friend:id() == room.owner_id then
+								is_friend = true
+
+								break
+							end
+						end
+					end
+
+					name_id = name_id or "unknown"
+
+					if name_id then
+						if not self._active_server_jobs[lroom_Id] then
+							if table.size(self._active_jobs) + table.size(self._active_server_jobs) < self._tweak_data.total_active_jobs and table.size(self._active_server_jobs) < self._max_active_server_jobs then
+								self._active_server_jobs[lroom_Id] = {
+									added = false,
+									alive_time = 0
+								}
+
+								self:add_gui_job({
+									room_id = room.room_id,
+									id = lroom_Id,
+									level_id = level_id,
+									difficulty = difficulty,
+									difficulty_id = difficulty_id,
+									num_plrs = num_plrs,
+									host_name = host_name,
+									state_name = state_name,
+									state = state,
+									level_name = level_name,
+									job_id = job_id,
+									is_friend = is_friend,
+									kick_option = kick_option,
+									job_plan = job_plan,
+									custom_text = room.custom_text,
+									challenge_card = challenge_card,
+									players_info = players_info,
+									progress = progress,
+									mission_type = mission_type,
+									job_name = job_name,
+									info = room.info,
+									xuid = room.xuid,
+									players_info_1 = players_info_1,
+									players_info_2 = players_info_2,
+									players_info_3 = players_info_3,
+									players_info_4 = players_info_4
+								})
+							end
+						else
+							self:update_gui_job({
+								room_id = room.room_id,
+								id = lroom_Id,
+								level_id = level_id,
+								difficulty = difficulty,
+								difficulty_id = difficulty_id,
+								num_plrs = num_plrs,
+								host_name = host_name,
+								state_name = state_name,
+								state = state,
+								level_name = level_name,
+								job_id = job_id,
+								is_friend = is_friend,
+								kick_option = kick_option,
+								job_plan = job_plan,
+								custom_text = room.custom_text,
+								challenge_card = challenge_card,
+								players_info = players_info,
+								progress = progress,
+								mission_type = mission_type,
+								job_name = job_name,
+								info = room.info,
+								xuid = room.xuid,
+								players_info_1 = players_info_1,
+								players_info_2 = players_info_2,
+								players_info_3 = players_info_3,
+								players_info_4 = players_info_4
+							})
+						end
+					end
+				end
+			end
+		end
+
+		for id, _ in pairs(dead_list) do
+			self._active_server_jobs[id] = nil
+
+			self:remove_gui_job(id)
+		end
+
+		if self._table_servers then
+			self._table_servers:refresh_data()
+			self._server_list_scrollable_area:setup_scroll_area()
+			self._table_servers:select_table_row_by_row_idx(1)
+			self:_select_game_from_list()
+
+			if self._selected_row_data then
+				self:_set_game_description_data(self._selected_row_data[5].value)
+				self._game_description_panel:show()
+				self._filters_panel:hide()
+				self:_filters_set_selected_server_table()
+			else
+				self._game_description_panel:hide()
+				self._filters_panel:show()
+			end
+		end
+	end
+
+	managers.network.matchmake:register_callback("search_lobby", f)
+	managers.network.matchmake:start_search_lobbys(friends_only)
+
+	local function usrs_f(success, amount)
+		print("usrs_f", success, amount)
+
+		if success then
+			self:set_players_online(amount)
+		end
+	end
 end
 
 function MissionJoinGui:add_gui_job(data)

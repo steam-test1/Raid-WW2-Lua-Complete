@@ -93,7 +93,7 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 			local steam_card_data = params.list[card_index]
 
 			if cached_card_data.key_name ~= steam_card_data.key_name then
-				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch in cached and fresh list index ", card_index)
+				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Keyname) in cached and fresh list index ", card_index)
 				self:set_readyup_card_cache(params.list)
 				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
 
@@ -101,7 +101,7 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 			end
 
 			if cached_card_data.key_name == steam_card_data.key_name and #cached_card_data.steam_instance_ids ~= #steam_card_data.steam_instance_ids then
-				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch in cached and fresh list index ", card_index)
+				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Amount) in cached and fresh list index ", card_index)
 				self:set_readyup_card_cache(params.list)
 				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
 
@@ -612,8 +612,9 @@ function ChallengeCardsManager:get_loot_drop_group(card_name)
 	Application:debug("[ChallengeCardsManager:get_loot_drop_group]", card_name)
 
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_name)
+	local has_group = not not card_data.loot_drop_group
 
-	return card_data.loot_drop_group
+	return has_group and LootDropTweakData.LOOT_GROUP_PREFIX .. card_data.loot_drop_group or nil
 end
 
 function ChallengeCardsManager:get_cards_stacking_texture(card_data)

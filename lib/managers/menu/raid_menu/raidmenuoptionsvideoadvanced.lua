@@ -32,7 +32,7 @@ end
 
 function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	local dof_setting = managers.user:get_setting("dof_setting") == "standard" and true or false
-	local ssao_setting = managers.user:get_setting("ssao_setting") == "standard" and true or false
+	local ssao_setting = false
 	local use_parallax = managers.user:get_setting("use_parallax")
 	local motion_blur_setting = managers.user:get_setting("motion_blur_setting") == "standard" and true or false
 	local vls_setting = managers.user:get_setting("vls_setting") == "standard" and true or false
@@ -63,6 +63,7 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 
 	self._toggle_menu_toggle_dof:set_value_and_render(dof_setting, true)
 	self._toggle_menu_toggle_ssao:set_value_and_render(ssao_setting, true)
+	self._toggle_menu_toggle_ssao:set_enabled(false)
 	self._toggle_menu_toggle_parallax:set_value_and_render(use_parallax, true)
 	self._toggle_menu_toggle_motion_blur:set_value_and_render(motion_blur_setting, true)
 	self._toggle_menu_toggle_volumetric_light_scattering:set_value_and_render(vls_setting, true)
@@ -81,14 +82,6 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	self._stepper_menu_fps_limit:set_value_and_render(fps_cap, true)
 	self._stepper_menu_colorblind_setting:set_value_and_render(colorblind_setting, true)
 	self._stepper_menu_toggle_vsync:set_value_and_render(vsync_value, true)
-
-	if managers.viewport:is_fullscreen() then
-		self._stepper_menu_toggle_vsync:set_enabled(true)
-	else
-		self._stepper_menu_toggle_vsync:set_enabled(false)
-
-		self._stepper_menu_colorblind_setting._on_menu_move.down = nil
-	end
 end
 
 function RaidMenuOptionsVideoAdvanced:_save_advanced_video_values()
@@ -769,8 +762,11 @@ function RaidMenuOptionsVideoAdvanced:on_click_default_advanced_video()
 			RenderSettings.v_sync = false
 
 			self:_load_advanced_video_values()
-			managers.menu:active_menu().callback_handler:apply_and_save_render_settings()
-			managers.menu:active_menu().callback_handler:_refresh_brightness()
+
+			if _G.IS_PC then
+				managers.menu:active_menu().callback_handler:apply_and_save_render_settings()
+				managers.menu:active_menu().callback_handler:_refresh_brightness()
+			end
 		end
 	}
 

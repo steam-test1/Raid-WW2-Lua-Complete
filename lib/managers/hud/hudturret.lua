@@ -181,7 +181,7 @@ function HUDTurret:set_reticle(reticle)
 	self._reticle:set_center_x(self._object:w() / 2)
 	self._reticle:set_center_y(self._object:h() / 2)
 	self._reticle:stop()
-	self._reticle:animate(callback(self, self, "_animate_show"), 0.15)
+	self._reticle:animate(callback(self, self, "_animate_show"), 0.15, 0.75)
 end
 
 function HUDTurret:show(turret_unit, bullet_type)
@@ -292,19 +292,20 @@ function HUDTurret:_get_color_for_percentage(color_table, percentage)
 	return color_table[1].color
 end
 
-function HUDTurret:_animate_show(object, animation_duration)
+function HUDTurret:_animate_show(object, animation_duration, final_alpha)
+	final_alpha = final_alpha or 1
 	local duration = animation_duration or 0.4
 	local t = object:alpha() * duration
 
 	while duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
-		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
+		local current_alpha = Easing.quartic_in_out(t, 0, final_alpha, duration)
 
 		object:set_alpha(current_alpha)
 	end
 
-	object:set_alpha(1)
+	object:set_alpha(final_alpha)
 end
 
 function HUDTurret:_animate_normal_show(object, animation_duration)

@@ -577,7 +577,12 @@ function CoreParticleEditor:update(t, dt)
 		local r = 500
 
 		gizmo:set_position(self._gizmo_anchor + Vector3(r, 0, 0) * math.cos(a) + Vector3(0, r, 0) * math.sin(a) + Vector3(0, 0, r / 5) * math.cos(5 * a))
-		gizmo:set_rotation(Rotation(Vector3(0, 0, 1), a) * Rotation(Vector3(1, 0, 0), 45 * math.cos(5 * a)) + Rotation(Vector3(1, 0, 0), -90))
+
+		local rot1 = Rotation(Vector3(0, 0, 1), a)
+		local rot2 = Rotation(Vector3(1, 0, 0), 45 * math.cos(5 * a))
+		local rot3 = Rotation(Vector3(1, 0, 0), -90)
+
+		gizmo:set_rotation(rot1 * rot2 + rot3)
 	elseif self._gizmo_movement == "JUMP" then
 		local gizmo = self:effect_gizmo()
 		self._gizmo_accum = self._gizmo_accum + dt

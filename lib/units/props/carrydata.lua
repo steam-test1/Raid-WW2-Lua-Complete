@@ -106,6 +106,14 @@ function CarryData:explode_sequence_started()
 	return self._explode_t and true or false
 end
 
+function CarryData:can_secure()
+	if self._disarmed then
+		return false
+	end
+
+	return true
+end
+
 function CarryData:can_explode()
 	if self._disarmed then
 		return false
@@ -343,6 +351,7 @@ end
 
 function CarryData:sequence_clbk_secured()
 	self:_disable_dye_pack()
+	self:disarm()
 end
 
 function CarryData:_unregister_steal_SO()
@@ -575,6 +584,10 @@ function CarryData:on_secure_SO_completed(thief)
 end
 
 function CarryData:on_secure_SO_failed(thief)
+	if not self._steal_SO_data then
+		return
+	end
+
 	if not self._steal_SO_data.thief then
 		return
 	end

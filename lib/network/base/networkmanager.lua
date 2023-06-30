@@ -43,7 +43,7 @@ end
 
 NetworkManager.DROPIN_ENABLED = true
 
-if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1") then
+if _G.IS_XB360 or _G.IS_PS3 or _G.IS_PS4 or _G.IS_XB1 then
 	NetworkManager.PROTOCOL_TYPE = "TCP_IP"
 else
 	NetworkManager.PROTOCOL_TYPE = "STEAM"
@@ -64,13 +64,13 @@ function NetworkManager:init()
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		self._is_ps3 = true
-	elseif SystemInfo:platform() == Idstring("X360") then
+	elseif _G.IS_XB360 then
 		self._is_x360 = true
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		self._is_ps4 = true
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		self._is_xb1 = true
 	else
 		self._is_win32 = true
@@ -78,15 +78,7 @@ function NetworkManager:init()
 
 	self._spawn_points = {}
 
-	if self._is_ps3 then
-		Network:set_use_psn_network(true)
-
-		if #PSN:get_world_list() == 0 then
-			PSN:init_matchmaking()
-		end
-
-		self:_register_PSN_matchmaking_callbacks()
-	elseif self._is_ps4 then
+	if self._is_ps4 then
 		Network:set_use_psn_network(true)
 
 		if #PSN:get_world_list() == 0 then
@@ -105,9 +97,6 @@ function NetworkManager:init()
 			self.account = NetworkAccount:new()
 			self.voice_chat = NetworkVoiceChatDisabled:new()
 		end
-	elseif self._is_x360 then
-		self.account = NetworkAccountXBL:new()
-		self.voice_chat = NetworkVoiceChatXBL:new()
 	end
 
 	self._started = false
@@ -287,6 +276,7 @@ end
 
 function NetworkManager:update(t, dt)
 	if self._stop_next_frame then
+		Application:trace("[NetworkManager:update()] _stop_next_frame now")
 		self:stop_network(true)
 
 		self._stop_next_frame = nil
@@ -361,6 +351,7 @@ function NetworkManager:prepare_stop_network(...)
 end
 
 function NetworkManager:stop_network(clean)
+	Application:trace("[NetworkManager:stop_network()] clean", clean, debug.traceback())
 	managers.queued_tasks:unqueue("NetworkRetryJoinAttempt")
 
 	if self._started then
@@ -403,7 +394,7 @@ function NetworkManager:stop_network(clean)
 	end
 
 	if self._restart_in_camp then
-		Application:debug("[NetworkManager:stop_network] self._restart_in_camp", self._restart_in_camp)
+		Application:trace("[NetworkManager:stop_network] self._restart_in_camp", self._restart_in_camp)
 
 		self._restart_in_camp = nil
 
@@ -509,13 +500,7 @@ function NetworkManager:on_discover_host_received(sender)
 
 	print("on_discover_host_received", level_id)
 
-	local my_name = nil
-
-	if SystemInfo:platform() == Idstring("PS3") then
-		my_name = "Player 1"
-	else
-		my_name = Network:hostname()
-	end
+	local my_name = Network:hostname()
 
 	sender:discover_host_reply(my_name, level_id, level_name, sender:ip_at_index(0), state, difficulty)
 end
@@ -532,6 +517,7 @@ function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_i
 end
 
 function NetworkManager:host_game()
+	Application:debug("[NetworkManager:host_game] Stop any networking and start hosting new game")
 	self:stop_network(true)
 	self:start_network()
 
@@ -542,10 +528,6 @@ function NetworkManager:host_game()
 	self._session = HostNetworkSession:new()
 
 	self._session:create_local_peer(true)
-
-	if self.is_ps3 then
-		self._session:broadcast_server_up()
-	end
 end
 
 function NetworkManager:join_game_at_host_rpc(host_rpc, result_cb)
@@ -676,7 +658,7 @@ function NetworkManager:on_peer_added(peer, peer_id)
 		managers.network.matchmake:set_num_players(managers.network:session():amount_of_players())
 	end
 
-	if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB360 or _G.IS_XB1 then
 		managers.network.matchmake:on_peer_added(peer)
 	end
 
@@ -692,12 +674,26 @@ function NetworkManager:update_matchmake_attributes()
 end
 
 function NetworkManager:get_matchmake_attributes()
-	local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+	local is_win32 = _G.IS_PC
 	local difficulty_id = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
 	local permission_id = tweak_data:permission_to_index(Global.game_settings.permission)
 	local min_lvl = Global.game_settings.reputation_permission or 0
 	local drop_in = Global.game_settings.drop_in_allowed and 1 or 0
 	local level_id, job_id, progress, mission_type, server_state_id = managers.network.matchmake:get_job_info_by_current_job()
+	local level_id_index = 0
+
+	if not is_win32 then
+		level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
+
+		if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			level_id_index = tweak_data.operations:get_raid_index_from_raid_id(job_id, level_id)
+		elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+			level_id_index = tweak_data.operations:get_index_from_raid_id(level_id)
+		end
+	else
+		level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
+	end
+
 	local region = 1
 
 	if Global.game_settings.level_id and tweak_data.operations and tweak_data.operations.missions and tweak_data.operations.missions[Global.game_settings.level_id] and tweak_data.operations.missions[Global.game_settings.level_id].region then

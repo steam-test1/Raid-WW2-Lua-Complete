@@ -106,6 +106,11 @@ end
 function PlayerDriving:exit(state_data, new_state_name)
 	print("[DRIVING] PlayerDriving: Exiting vehicle")
 	self._vehicle_ext:stop_horn_sound()
+
+	if managers.network:session() then
+		managers.network:session():send_to_peers_synched("sync_honk_horn", self._vehicle_unit, false)
+	end
+
 	managers.viewport:skip_update_env_on_first_viewport(false)
 	PlayerDriving.super.exit(self, state_data, new_state_name)
 
@@ -164,7 +169,7 @@ function PlayerDriving:exit(state_data, new_state_name)
 	local exit_data = {
 		skip_equip = true
 	}
-	local velocity = self._unit:mover():velocity()
+	local velocity = self._unit:mover() and self._unit:mover():velocity() or Vector3(0, 0, 0)
 
 	self:_activate_mover(PlayerStandard.MOVER_STAND, velocity)
 	self._ext_network:send("set_pose", 1)
@@ -282,11 +287,19 @@ function PlayerDriving:_update_hud(t, dt)
 end
 
 function PlayerDriving:_update_check_actions_driver(t, dt, input)
-	if managers.menu:is_pc_controller() then
+	if managers.menu:is_pc_controller() and self._vehicle_unit and self._vehicle_ext then
 		if input.btn_primary_attack_press then
 			self._vehicle_ext:play_horn_sound()
+
+			if managers.network:session() then
+				managers.network:session():send_to_peers_synched("sync_honk_horn", self._vehicle_unit, true)
+			end
 		elseif input.btn_primary_attack_release then
 			self._vehicle_ext:stop_horn_sound()
+
+			if managers.network:session() then
+				managers.network:session():send_to_peers_synched("sync_honk_horn", self._vehicle_unit, false)
+			end
 		end
 	end
 

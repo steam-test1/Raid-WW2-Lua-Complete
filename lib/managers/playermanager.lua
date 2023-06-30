@@ -450,7 +450,7 @@ function PlayerManager:_add_level_equipment(player)
 		return
 	end
 
-	local equipment = tweak_data.levels[id].equipment
+	local equipment = tweak_data.levels[id] and tweak_data.levels[id].equipment
 
 	if not equipment then
 		return
@@ -1047,12 +1047,16 @@ end
 function PlayerManager:sync_upgrades()
 	local player = self:local_player()
 
-	player:send("sync_upgrade", UpgradesTweakData.CLEAR_UPGRADES_FLAG, "", 1, player:id())
+	if player then
+		player:send("sync_upgrade", UpgradesTweakData.CLEAR_UPGRADES_FLAG, "", 1, player:id())
 
-	for category, upgrades in pairs(self._global.upgrades) do
-		for upgrade, level in pairs(upgrades) do
-			player:send("sync_upgrade", category, upgrade, level, player:id())
+		for category, upgrades in pairs(self._global.upgrades) do
+			for upgrade, level in pairs(upgrades) do
+				player:send("sync_upgrade", category, upgrade, level, player:id())
+			end
 		end
+	else
+		Application:warn("[PlayerManager:sync_upgrades] If you are seeing this the player doesnt exist yet... That might be bad.")
 	end
 end
 
@@ -1466,14 +1470,18 @@ function PlayerManager:health_skill_multiplier()
 	return multiplier
 end
 
-function PlayerManager:health_regen()
-	local health_regen = nil
+function PlayerManager:health_regen(health_ratio)
+	local health_regen = 0
 
 	if self._unit then
 		health_regen = self._unit:character_damage():get_base_health_regen()
 	else
 		local class_tweak_data = tweak_data.player:get_tweak_data_for_class(managers.skilltree:get_character_profile_class() or "recon")
-		health_regen = class_tweak_data.damage.HEALTH_REGEN
+		health_regen = health_regen + class_tweak_data.damage.HEALTH_REGEN
+
+		if health_ratio and health_ratio > 0 and health_ratio < class_tweak_data.damage.LOW_HEALTH_REGEN_LIMIT then
+			health_regen = health_regen + class_tweak_data.damage.LOW_HEALTH_REGEN
+		end
 	end
 
 	health_regen = health_regen + self:team_upgrade_value("player", "warcry_health_regeneration", 0)
@@ -1947,9 +1955,13 @@ function PlayerManager:remove_synced_carry(peer)
 end
 
 function PlayerManager:get_my_carry_data()
-	local peer_id = managers.network:session():local_peer():id()
+	if managers.network:session() and managers.network:session():local_peer() then
+		local peer_id = managers.network:session():local_peer():id()
 
-	return self._global.synced_carry[peer_id]
+		return self._global.synced_carry[peer_id]
+	end
+
+	return nil
 end
 
 function PlayerManager:get_synced_carry(peer_id)
@@ -2797,6 +2809,8 @@ function PlayerManager:_equipped_upgrade_value(equipment)
 end
 
 function PlayerManager:has_special_equipment(name)
+	local equipment = tweak_data.equipments.specials[name]
+
 	return self._equipment.specials[name]
 end
 
@@ -2969,6 +2983,13 @@ function PlayerManager:get_grenade_amount(peer_id)
 	return Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
 end
 
+function PlayerManager:get_grenade_amount_missing(peer_id)
+	local gren_has = self:get_grenade_amount(peer_id)
+	local gren_max = self:get_max_grenades_by_peer_id(peer_id)
+
+	return gren_max - gren_has
+end
+
 function PlayerManager:get_synced_grenades(peer_id)
 	return self._global.synced_grenades[peer_id]
 end
@@ -3055,14 +3076,21 @@ function PlayerManager:set_carry(carry_id, carry_multiplier, dye_initiated, has_
 	player:movement():current_state():set_tweak_data(carry_type)
 end
 
+function PlayerManager:remove_carry()
+	managers.hud:remove_teammate_carry_info(HUDManager.PLAYER_PANEL)
+	managers.hud:hide_carry_item()
+	self:update_removed_synced_carry_to_peers()
+
+	if self._current_state == "carry" or self._current_state == "carry_corpse" then
+		managers.player:set_player_state("standard")
+	end
+end
+
 function PlayerManager:bank_carry()
 	local carry_data = self:get_my_carry_data()
 
 	managers.loot:secure(carry_data.carry_id, carry_data.multiplier)
-	managers.hud:remove_teammate_carry_info(HUDManager.PLAYER_PANEL)
-	managers.hud:hide_carry_item()
-	self:update_removed_synced_carry_to_peers()
-	managers.player:set_player_state("standard")
+	self:remove_carry()
 end
 
 function PlayerManager:drop_carry(zipline_unit)
@@ -3088,11 +3116,15 @@ function PlayerManager:drop_carry(zipline_unit)
 		return
 	end
 
-	self._carry_blocked_cooldown_t = Application:time() + 1.2 + math.rand(0.3)
+	self._carry_blocked_cooldown_t = Application:time() + tweak_data.carry.default_bag_delay
 	local player = self:player_unit()
 
-	if player and carry_data.carry_id == "flak_shell" then
-		player:sound():play("flakshell_throw", nil, false)
+	if player then
+		local carry_tweak = tweak_data.carry[carry_data.carry_id]
+
+		if carry_tweak and carry_tweak.throw_sound then
+			player:sound():play(carry_tweak.throw_sound, nil, false)
+		end
 	end
 
 	local camera_ext = player:camera()
@@ -3103,7 +3135,7 @@ function PlayerManager:drop_carry(zipline_unit)
 	local rotation = camera_ext:rotation()
 
 	if carry_needs_headroom then
-		position = position - Vector3(0, 0, 75)
+		position = position - Vector3(0, 0, 67)
 		rotation = Rotation(math.mod(camera_ext:rotation():yaw() + 180, 360), 0, 0)
 	end
 
@@ -3115,13 +3147,7 @@ function PlayerManager:drop_carry(zipline_unit)
 		self:server_drop_carry(carry_data.carry_id, carry_data.multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, rotation, player:camera():forward(), throw_distance_multiplier_upgrade_level, zipline_unit, managers.network:session():local_peer())
 	end
 
-	managers.hud:remove_teammate_carry_info(HUDManager.PLAYER_PANEL)
-	managers.hud:hide_carry_item()
-	self:update_removed_synced_carry_to_peers()
-
-	if self._current_state == "carry" or self._current_state == "carry_corpse" then
-		managers.player:set_player_state("standard")
-	end
+	self:remove_carry()
 end
 
 function PlayerManager:switch_carry_to_ragdoll(unit)
@@ -3136,10 +3162,11 @@ function PlayerManager:switch_carry_to_ragdoll(unit)
 	unit:damage():run_sequence_simple("switch_to_ragdoll")
 
 	self._root_act_tags = {}
+	local blank = Idstring("")
 	local hips_body = unit:body("rag_Hips")
 	local tag = hips_body:activate_tag()
 
-	if tag == Idstring("") then
+	if tag == blank then
 		tag = Idstring("root_follow")
 
 		hips_body:set_activate_tag(tag)
@@ -3148,7 +3175,7 @@ function PlayerManager:switch_carry_to_ragdoll(unit)
 	self._root_act_tags[tag:key()] = true
 	tag = hips_body:deactivate_tag()
 
-	if tag == Idstring("") then
+	if tag == blank then
 		tag = Idstring("root_follow")
 
 		hips_body:set_deactivate_tag(tag)
@@ -4036,6 +4063,17 @@ function PlayerManager:kill()
 	World:delete_unit(player)
 end
 
+function PlayerManager:get_death_location_rotation()
+	return self._player_death_position, self._player_death_rotation
+end
+
+function PlayerManager:set_death_location_rotation(p, r)
+	Application:debug("[PlayerManager:set_death_location_rotation]", p, r)
+
+	self._player_death_position = p
+	self._player_death_rotation = r
+end
+
 function PlayerManager:destroy()
 	local player = self:player_unit()
 
@@ -4103,6 +4141,15 @@ function PlayerManager:set_local_player_in_camp(value)
 	self._local_player_in_camp = value
 
 	self:_on_camp_presence_changed()
+
+	if Global.game_settings.single_player then
+		managers.platform:set_rich_presence("SPPlaying")
+	elseif not value then
+		managers.platform:set_rich_presence("MPPlaying")
+	else
+		managers.platform:set_rich_presence("MPLobby")
+	end
+
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CAMP_PRESENCE_CHANGED)
 end
 
@@ -4161,7 +4208,17 @@ function PlayerManager:tutorial_clear_all_ammo()
 	end
 
 	player:inventory():set_ammo(0)
-	self:add_grenade_amount(-3)
+
+	local _grenade, amount = managers.blackmarket:equipped_grenade()
+	local peer_id = managers.network:session():local_peer():id()
+
+	if self:has_grenade(peer_id) then
+		amount = self:get_grenade_amount(peer_id) or amount
+	end
+
+	if amount > 0 then
+		self:add_grenade_amount(-amount)
+	end
 end
 
 function PlayerManager:tutorial_replenish_all_ammo()

@@ -265,6 +265,10 @@ function PlayerDamage:recover_health()
 	})
 end
 
+function PlayerDamage:recover_down()
+	self:_regenerated(true, 1)
+end
+
 function PlayerDamage:replenish()
 	if managers.platform:presence() == "Playing" and (self:arrested() or self:need_revive()) then
 		self:revive(true)
@@ -420,14 +424,35 @@ function PlayerDamage:consume_armor_stored_health(amount)
 	self:clear_armor_stored_health()
 end
 
-function PlayerDamage:_regenerated(no_messiah)
+function PlayerDamage:_regenerated(no_messiah, downs_regen)
 	self:set_health(self:_max_health())
 	self:_send_set_health()
 	self:_set_health_effect()
 
 	self._said_hurt = false
 	self._said_hurt_half = false
-	self._revives = Application:digest_value(self._class_tweak_data.damage.BASE_LIVES + managers.player:upgrade_value("player", "additional_lives", 0) + (managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_FIRST_BLEEDOUT_IS_DISREGARDED) and 1 or 0), true)
+	local add_lives = managers.player:upgrade_value("player", "additional_lives", 0)
+	local max_lives = self._class_tweak_data.damage.BASE_LIVES + add_lives
+	local buff_effect = managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_FIRST_BLEEDOUT_IS_DISREGARDED) and 1 or 0
+
+	if downs_regen and downs_regen > 0 then
+		local ref = Application:digest_value(self._revives, false)
+		self._revives = Application:digest_value(math.min(ref + downs_regen, max_lives), true)
+
+		managers.hud:set_big_prompt({
+			duration = 3,
+			id = "hint_downs_remaining",
+			text = utf8.to_upper(managers.localization:text("hud_hint_downs_remaining", {
+				DOWNS = Application:digest_value(self._revives, false) - 1,
+				DOWNSMAX = max_lives - 1
+			}))
+		})
+	else
+		self._revives = Application:digest_value(self._class_tweak_data.damage.BASE_LIVES + add_lives + buff_effect, true)
+	end
+
+	Application:debug("[PlayerDamage:_regenerated] Updated revives", self._revives)
+
 	self._revive_health_i = 1
 
 	managers.environment_controller:set_last_life(false)
@@ -663,6 +688,7 @@ function PlayerDamage:damage_melee(attack_data)
 
 	local dmg_mul = managers.player:damage_reduction_skill_multiplier("melee", self._unit:movement()._current_state)
 	attack_data.damage = attack_data.damage * dmg_mul
+	attack_data.armor_piercing = true
 
 	self._unit:sound():play("melee_hit_body", nil, nil)
 
@@ -865,10 +891,6 @@ function PlayerDamage:_calc_armor_damage(attack_data)
 		})
 		SoundDevice:set_rtpc("shield_status", self:get_real_armor() / self:_total_armor() * 100)
 		self:_send_set_armor()
-
-		if self:get_real_armor() <= 0 and attack_data.armor_piercing then
-			-- Nothing
-		end
 	end
 
 	return health_subtracted
@@ -1222,6 +1244,18 @@ function PlayerDamage:_check_bleed_out(can_activate_berserker, ignore_movement_s
 
 			if Application:digest_value(self._revives, false) == 0 then
 				self._down_time = 0
+			else
+				local add_lives = managers.player:upgrade_value("player", "additional_lives", 0)
+				local max_lives = self._class_tweak_data.damage.BASE_LIVES + add_lives
+
+				managers.hud:set_big_prompt({
+					duration = 3,
+					id = "hint_downs_remaining",
+					text = utf8.to_upper(managers.localization:text("hud_hint_downs_remaining", {
+						DOWNS = Application:digest_value(self._revives, false) - 1,
+						DOWNSMAX = max_lives - 1
+					}))
+				})
 			end
 
 			self._bleed_out = true
@@ -1308,6 +1342,8 @@ function PlayerDamage:on_downed()
 			})
 		})
 	end
+
+	managers.player:set_death_location_rotation(self._unit:position(), self._unit:rotation())
 
 	self._downed_timer = self:down_time()
 	self._downed_start_time = self._downed_timer
@@ -1836,7 +1872,8 @@ function PlayerDamage:_upd_health_regen(t, dt)
 	end
 
 	if not self._health_regen_update_timer then
-		local regen_rate = managers.player:health_regen()
+		local health_ratio = self:health_ratio()
+		local regen_rate = managers.player:health_regen(health_ratio)
 		local max_health = self:_max_health()
 
 		if regen_rate < 0 then
@@ -1907,6 +1944,12 @@ function PlayerDamage:on_flashbanged(sound_eff_mul)
 end
 
 function PlayerDamage:_start_tinnitus(sound_eff_mul)
+	local tinnitus_sound_enabled = managers.user:get_setting("tinnitus_sound_enabled")
+
+	if not tinnitus_sound_enabled then
+		return
+	end
+
 	if self._tinnitus_data then
 		if sound_eff_mul < self._tinnitus_data.intensity then
 			return

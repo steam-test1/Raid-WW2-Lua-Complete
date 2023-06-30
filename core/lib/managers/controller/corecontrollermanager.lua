@@ -44,16 +44,16 @@ function ControllerManager:init(path, default_settings_path)
 	self._next_controller_wrapper_id = 1
 	self._supported_wrapper_types = {}
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._supported_wrapper_types[CoreControllerWrapperPC.ControllerWrapperPC.TYPE] = CoreControllerWrapperPC.ControllerWrapperPC
 		self._supported_wrapper_types[CoreControllerWrapperXbox360.ControllerWrapperXbox360.TYPE] = CoreControllerWrapperXbox360.ControllerWrapperXbox360
-	elseif SystemInfo:platform() == Idstring("PS3") then
+	elseif _G.IS_PS3 then
 		self._supported_wrapper_types[CoreControllerWrapperPS3.ControllerWrapperPS3.TYPE] = CoreControllerWrapperPS3.ControllerWrapperPS3
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		self._supported_wrapper_types[CoreControllerWrapperPS4.ControllerWrapperPS4.TYPE] = CoreControllerWrapperPS4.ControllerWrapperPS4
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		self._supported_wrapper_types[CoreControllerWrapperXB1.ControllerWrapperXB1.TYPE] = CoreControllerWrapperXB1.ControllerWrapperXB1
-	elseif SystemInfo:platform() == Idstring("X360") then
+	elseif _G.IS_XB360 then
 		self._supported_wrapper_types[CoreControllerWrapperXbox360.ControllerWrapperXbox360.TYPE] = CoreControllerWrapperXbox360.ControllerWrapperXbox360
 	end
 
@@ -189,9 +189,9 @@ function ControllerManager:replace_active_controller(replacement_ctrl_index, rep
 end
 
 function ControllerManager:check_connect_change()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return
-	elseif (SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")) and self._default_controller_list then
+	elseif (_G.IS_PS4 or SystemInfo:platform() == Idstring("XB1")) and self._default_controller_list then
 		local connected = true
 
 		for _, controller in ipairs(self._default_controller_list) do

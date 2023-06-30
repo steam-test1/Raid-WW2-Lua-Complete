@@ -13,8 +13,10 @@ function GenericDialog:init(manager, data, is_title_outside)
 	if not self._data.focus_button then
 		if #self._button_text_list > 0 then
 			self._data.focus_button = #self._button_text_list
+			self._default_button = #self._button_text_list
 		else
 			self._data.focus_button = 1
+			self._default_button = 1
 		end
 	else
 		self._default_button = self._data.focus_button
@@ -322,7 +324,7 @@ function GenericDialog:force_close()
 end
 
 function GenericDialog:dialog_cancel_callback()
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not _G.IS_PC then
 		return
 	end
 

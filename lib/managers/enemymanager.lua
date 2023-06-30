@@ -1151,8 +1151,16 @@ end
 function EnemyManager:is_spawn_group_allowed(group_type)
 	local allowed = true
 
-	if not managers.enemy:is_commander_active() and (group_type == "commander_squad" or group_type == "ss_flankers" or group_type == "ss_rifle_range" or group_type == "ss_chargers") then
-		allowed = false
+	if not managers.enemy:is_commander_active() then
+		for i, v in ipairs(tweak_data.group_ai.normally_forbidden_groups) do
+			if group_type == v then
+				allowed = false
+
+				Application:trace("[EnemyManager:is_spawn_group_allowed]   DISALLOWING", allowed, group_type, managers.enemy:is_commander_active())
+
+				break
+			end
+		end
 	end
 
 	return allowed

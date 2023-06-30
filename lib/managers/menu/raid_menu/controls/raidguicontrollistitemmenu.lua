@@ -29,7 +29,7 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		text = data.text,
 		font = font,
 		font_size = font_size,
-		color = tweak_data.gui.colors.raid_white
+		color = self._data.value.unlocked and tweak_data.gui.colors.raid_white or tweak_data.gui.colors.raid_dark_grey
 	})
 	self._item_background = self._object:rect({
 		y = 1,

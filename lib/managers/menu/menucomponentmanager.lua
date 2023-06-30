@@ -31,6 +31,8 @@ require("lib/managers/menu/raid_menu/GoldAssetStoreGui")
 require("lib/managers/menu/raid_menu/IntelGui")
 require("lib/managers/menu/raid_menu/ComicBookGui")
 require("lib/managers/menu/raid_menu/SpecialHonorsGui")
+require("lib/managers/menu/raid_menu/RaidMenuProfileSwitcher")
+require("lib/managers/hud/HUDPlayerVoiceChatStatus")
 
 MenuComponentManager = MenuComponentManager or class()
 
@@ -228,7 +230,7 @@ function MenuComponentManager:_destroy_controller_input()
 
 		self._controller_connected = nil
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			self._fullscreen_ws:disconnect_keyboard()
 			self._fullscreen_ws:panel():key_press(nil)
 		end
@@ -942,7 +944,7 @@ function MenuComponentManager:on_peer_removed(peer, reason)
 end
 
 function MenuComponentManager:_create_chat_gui()
-	if SystemInfo:platform() == Idstring("WIN32") and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
+	if _G.IS_PC and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
 		if self._game_chat_gui then
 			self:show_game_chat_gui()
 		else
@@ -979,7 +981,7 @@ function MenuComponentManager:create_chat_gui()
 end
 
 function MenuComponentManager:add_game_chat()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._game_chat_gui = ChatGui:new(self._ws)
 
 		if self._game_chat_params then
@@ -2209,6 +2211,42 @@ function MenuComponentManager:close_raid_menu_footer_gui(node, component)
 	end
 end
 
+function MenuComponentManager:refresh_player_profile_gui()
+	if self._raid_menu_footer_gui then
+		self._raid_menu_footer_gui:refresh_player_profile()
+	end
+end
+
+function MenuComponentManager:create_raid_menu_profile_switcher_gui(node, component)
+	return self:_create_raid_menu_profile_switcher_gui(node, component)
+end
+
+function MenuComponentManager:_create_raid_menu_profile_switcher_gui(node, component)
+	self:close_raid_menu_profile_switcher_gui(node, component)
+
+	self._raid_menu_profile_switcher_gui = RaidMenuProfileSwitcher:new(self._ws, self._fullscreen_ws, node, component)
+	local active_menu = managers.menu:active_menu()
+
+	if active_menu then
+		active_menu.input:set_force_input(true)
+	end
+
+	return self._raid_menu_profile_switcher_gui
+end
+
+function MenuComponentManager:close_raid_menu_profile_switcher_gui(node, component)
+	if self._raid_menu_profile_switcher_gui then
+		self._raid_menu_profile_switcher_gui:close()
+
+		self._raid_menu_profile_switcher_gui = nil
+		local active_menu = managers.menu:active_menu()
+
+		if active_menu then
+			active_menu.input:set_force_input(false)
+		end
+	end
+end
+
 function MenuComponentManager:create_raid_menu_left_options_gui(node, component)
 	return self:_create_raid_menu_left_options_gui(node, component)
 end
@@ -3082,6 +3120,135 @@ function MenuComponentManager:removeFromUpdateTable(unit)
 	for i = 1, #self._update_components do
 		if self._update_components[i] == unit then
 			table.remove(self._update_components, i)
+		end
+	end
+end
+
+function MenuComponentManager:_create_voice_chat_status_info()
+	local widget_panel_params = {
+		name = "voice_chat_panel",
+		x = 0,
+		w = HUDPlayerVoiceChatStatus.DEFAULT_W,
+		h = HUDPlayerVoiceChatStatus.DEFAULT_H * 4
+	}
+	self._voice_chat_panel = self._voicechat_ws:panel():panel(widget_panel_params)
+
+	self._voice_chat_panel:set_top(self._voicechat_ws:panel():h() / 2 - HUDPlayerVoiceChatStatus.DEFAULT_H * 2)
+	self._voice_chat_panel:set_right(self._voicechat_ws:panel():w() - HUDPlayerVoiceChatStatus.DEFAULT_W / 4)
+
+	self._voice_chat_widgets = {
+		HUDPlayerVoiceChatStatus:new(0, self._voice_chat_panel),
+		HUDPlayerVoiceChatStatus:new(1, self._voice_chat_panel),
+		HUDPlayerVoiceChatStatus:new(2, self._voice_chat_panel),
+		HUDPlayerVoiceChatStatus:new(3, self._voice_chat_panel)
+	}
+end
+
+function MenuComponentManager:_voice_panel_align_bottom_right()
+	if self._voice_chat_panel then
+		Application:trace("MenuComponentManager:_create_voice_chat_status_info")
+		self._voice_chat_panel:set_bottom(self._voicechat_ws:panel():h() / 2 + HUDPlayerVoiceChatStatus.DEFAULT_H * 6)
+		self._voice_chat_panel:set_right(self._voicechat_ws:panel():w() - HUDPlayerVoiceChatStatus.DEFAULT_W / 4)
+	end
+end
+
+function MenuComponentManager:_voice_panel_align_mid_right(offset_y)
+	if self._voice_chat_panel then
+		local offset = offset_y and offset_y or 0
+
+		Application:trace("MenuComponentManager:_create_voice_chat_status_info")
+		self._voice_chat_panel:set_top(self._voicechat_ws:panel():h() / 2 - HUDPlayerVoiceChatStatus.DEFAULT_H * 2 + offset)
+		self._voice_chat_panel:set_right(self._voicechat_ws:panel():w() - HUDPlayerVoiceChatStatus.DEFAULT_W / 4)
+	end
+end
+
+function MenuComponentManager:_voice_panel_align_top_right()
+	if self._voice_chat_panel then
+		Application:trace("MenuComponentManager:_create_voice_chat_status_info")
+		self._voice_chat_panel:set_top(self._voicechat_ws:panel():h() / 2 - HUDPlayerVoiceChatStatus.DEFAULT_H * 4)
+		self._voice_chat_panel:set_right(self._voicechat_ws:panel():w() - HUDPlayerVoiceChatStatus.DEFAULT_W / 4)
+	end
+end
+
+function MenuComponentManager:_voice_panel_align_bottom_left()
+	if self._voice_chat_panel then
+		Application:trace("MenuComponentManager:_create_voice_chat_status_info")
+		self._voice_chat_panel:set_bottom(self._voicechat_ws:panel():h() / 2 + HUDPlayerVoiceChatStatus.DEFAULT_H * 6)
+		self._voice_chat_panel:set_right(HUDPlayerVoiceChatStatus.DEFAULT_W)
+	end
+end
+
+function MenuComponentManager:_voice_panel_align_mid_left()
+	if self._voice_chat_panel then
+		Application:trace("MenuComponentManager:_create_voice_chat_status_info")
+		self._voice_chat_panel:set_top(self._voicechat_ws:panel():h() / 2 - HUDPlayerVoiceChatStatus.DEFAULT_H * 2)
+		self._voice_chat_panel:set_right(HUDPlayerVoiceChatStatus.DEFAULT_W)
+	end
+end
+
+function MenuComponentManager:toggle_voice_chat_listeners(enable)
+	if enable then
+		managers.system_event_listener:add_listener("voice_chat_ui_update_menumanager", {
+			CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI
+		}, callback(self, self, "_update_voice_chat_ui"))
+		managers.system_event_listener:add_listener("menucomponent_drop_out", {
+			CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_DROP_OUT
+		}, callback(self, self, "_peer_dropped_out"))
+	else
+		managers.system_event_listener:remove_listener("voice_chat_ui_update_menumanager")
+	end
+end
+
+function MenuComponentManager:_peer_dropped_out(params)
+	if params then
+		local peer_id = params._id
+
+		Application:trace("MenuComponentManager:_peer_dropped_out [peer id] " .. tostring(peer_id))
+
+		if self._voice_chat_widgets[peer_id] then
+			self._voice_chat_widgets[peer_id]:hide_chat_indicator()
+		end
+	end
+end
+
+function MenuComponentManager:_update_voice_chat_ui(params)
+	Application:trace("MenuComponentManager:_update_voice_chat_ui")
+
+	if params.status_type ~= "talk" then
+		return
+	end
+
+	local user_data = params.user_data
+	local is_local_user = false
+
+	if SystemInfo:platform() == Idstring("XB1") then
+		is_local_user = managers.network.account:player_id() == user_data.user_xuid
+	elseif SystemInfo:platform() == Idstring("PS4") then
+		is_local_user = managers.network.account:username_id() == user_data.user_name
+	end
+
+	local peer_to_update = nil
+
+	if is_local_user then
+		peer_to_update = managers.network:session():local_peer()
+	elseif SystemInfo:platform() == Idstring("XB1") then
+		peer_to_update = managers.network:session():peer_by_xuid(user_data.user_xuid)
+	elseif SystemInfo:platform() == Idstring("PS4") then
+		peer_to_update = managers.network:session():peer_by_name(user_data.user_name)
+	end
+
+	if peer_to_update then
+		local peer_id = peer_to_update:id()
+		local peer_name = peer_to_update:name()
+
+		Application:trace("MenuComponentManager:_update_voice_chat_ui peer is present " .. peer_name .. " peer id " .. tostring(peer_id))
+
+		if self._voice_chat_widgets[peer_id] then
+			if user_data.user_talking then
+				self._voice_chat_widgets[peer_id]:show_chat_indicator(peer_name)
+			else
+				self._voice_chat_widgets[peer_id]:hide_chat_indicator()
+			end
 		end
 	end
 end

@@ -34,17 +34,32 @@ function WarcryBerserk:update(dt)
 
 		material:set_variable(ids_layer1_animate_factor, animation_factor)
 	end
+
+	if self._active then
+		if self._heals_delay > 0 then
+			self._heals_delay = self._heals_delay - dt
+		else
+			self:_heal_step()
+		end
+	end
 end
 
 function WarcryBerserk:activate()
 	WarcryBerserk.super.activate(self)
 
 	self._ammo_consumption_counter = managers.player:upgrade_value("player", "warcry_ammo_consumption", 1)
+	self._heals_delay = 0.5
+end
+
+function WarcryBerserk:_heal_step()
+	self._heals_delay = 0.5
 	local health_restoration_percentage = self._tweak_data.base_team_heal_percentage
 	health_restoration_percentage = health_restoration_percentage * managers.player:upgrade_value("player", "warcry_team_heal_bonus", 1)
 
-	managers.player:player_unit():character_damage():restore_health(health_restoration_percentage / 100)
-	managers.network:session():send_to_peers_synched("restore_health_by_percentage", health_restoration_percentage)
+	if managers.player:player_unit() then
+		managers.player:player_unit():character_damage():restore_health(health_restoration_percentage / 100)
+		managers.network:session():send_to_peers_synched("restore_health_by_percentage", health_restoration_percentage)
+	end
 end
 
 function WarcryBerserk:deactivate()

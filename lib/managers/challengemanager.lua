@@ -1,5 +1,5 @@
 ChallengeManager = ChallengeManager or class()
-ChallengeManager.VERSION = 2
+ChallengeManager.VERSION = 3
 ChallengeManager.CATEGORY_GENERIC = "generic"
 ChallengeManager.CATEGORY_WEAPON_UPGRADE = "weapon_upgrade"
 

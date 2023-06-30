@@ -262,7 +262,6 @@ function WarcryManager:_on_meter_full()
 	managers.hud:set_player_warcry_meter_glow(true)
 	managers.network:session():send_to_peers_synched("sync_warcry_meter_glow", true)
 	managers.hud._sound_source:post_event("warcry_available")
-	self:add_warcry_comm_wheel_option(1)
 
 	local prompt_text = nil
 
@@ -402,6 +401,12 @@ function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgr
 
 		for index, buff in pairs(buffs) do
 			local upgrade_definition = tweak_data.upgrades.definitions[buff]
+
+			if not upgrade_definition then
+				Application:error("[WarcryManager:peer_warcry_upgrade_value] upgrade_definition is not valid", buff)
+
+				return default_value
+			end
 
 			if upgrade_definition.upgrade.upgrade == upgrade_definition_name then
 				local upgrade_name = upgrade_definition.upgrade.upgrade

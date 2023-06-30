@@ -25,7 +25,8 @@ function HealthPackPickup:_pickup(unit)
 				effect_health_pickup_multiplier = effect_health_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_HEALTH_EFFECT_INCREASE) or 1) - 1
 			end
 
-			local base_health_recovery = tweak_data.drop_loot[self.tweak_data].health_restored
+			local health_pku_tweakdata = tweak_data.drop_loot[self.tweak_data]
+			local base_health_recovery = health_pku_tweakdata.health_restored
 			local upgrade_health_pickup_multiplier = managers.player:upgrade_value("player", "pick_up_health_multiplier", 1)
 			local recovery_percentage = base_health_recovery * (upgrade_health_pickup_multiplier + effect_health_pickup_multiplier - 1) / 100
 			local max_health = unit:character_damage():get_max_health()
@@ -34,8 +35,12 @@ function HealthPackPickup:_pickup(unit)
 
 			picked_up = true
 
-			if current_health < 30 then
-				unit:sound_source():post_event(tweak_data.drop_loot[self.tweak_data].player_voice_over)
+			if current_health < max_health / 4 then
+				unit:sound_source():post_event(health_pku_tweakdata.player_voice_over)
+			end
+
+			if health_pku_tweakdata.restore_down then
+				managers.player:player_unit():character_damage():recover_down()
 			end
 		end
 

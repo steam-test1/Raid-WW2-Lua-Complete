@@ -24,7 +24,21 @@ function LocalizationManager:init()
 		self._platform = "PS3"
 	else
 		self._platform = "WIN32"
+
+		for k, v in pairs(Application:argv()) do
+			if v == "-loc_help" then
+				Application:debug("[LocalizationManager:init] loc_help enabled")
+
+				self._loc_help = true
+			elseif v == "-loc_error" then
+				Application:debug("[LocalizationManager:init] loc_error enabled")
+
+				self._loc_error = true
+			end
+		end
 	end
+
+	Application:debug("[LocalizationManager] Platform: " .. self._platform)
 end
 
 function LocalizationManager:add_default_macro(macro, value)
@@ -58,7 +72,7 @@ function LocalizationManager:text(string_id_in, macros)
 		Application:error("[LocalizationManager:text] Localization called with NULL value.", debug.traceback())
 	end
 
-	local return_string = "ERROR: " .. string_id
+	local return_string = self._loc_error and "ERROR:" .. string_id or " "
 	local str_id = nil
 
 	if not string_id or string_id == "" then
@@ -73,6 +87,11 @@ function LocalizationManager:text(string_id_in, macros)
 		self._macro_context = macros
 		return_string = Localizer:lookup(Idstring(str_id))
 		self._macro_context = nil
+	end
+
+	if self._loc_help then
+		local err = return_string == ""
+		return_string = string_id .. ":" .. (err and "LOCALIZE ME" or return_string)
 	end
 
 	return return_string
@@ -107,7 +126,9 @@ end
 
 function LocalizationManager:_text_localize(text)
 	local function func(id)
-		return self:exists(id) and self:text(id) or false
+		local exists = self:exists(id)
+
+		return exists and self:text(id) or false
 	end
 
 	return self:_text_format(text, "@", ";", func)

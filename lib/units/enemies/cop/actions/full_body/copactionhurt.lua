@@ -726,7 +726,7 @@ function CopActionHurt:init(action_desc, common_data)
 
 	if not self._unit:base().nick_name then
 		if action_desc.variant == "fire" then
-			if tweak_table ~= "tank" and tweak_table ~= "tank_hw" and tweak_table ~= "shield" then
+			if tweak_table ~= "tank" and tweak_table ~= "tank_hw" and tweak_table ~= "shield" and not self._unit:sound():speaking() then
 				if action_desc.hurt_type == "fire_hurt" then
 					self._unit:sound():say("burnhurt", true, true)
 				elseif action_desc.hurt_type == "death" then

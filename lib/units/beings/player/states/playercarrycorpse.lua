@@ -32,6 +32,7 @@ function PlayerCarryCorpse:enter(state_data, enter_data)
 	self:_interupt_action_charging_weapon(t)
 	self:_interupt_action_melee(t)
 	self:_interupt_action_use_item(t)
+	self:_stance_entered(true)
 end
 
 function PlayerCarryCorpse:_enter(enter_data)

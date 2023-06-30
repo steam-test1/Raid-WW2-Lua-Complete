@@ -43,7 +43,7 @@ function CoreWorldCollection:init(params)
 	self._stitcher_counter = CoreWorldCollection.MAX_STITCHER_ID
 	self._first_pass = true
 
-	World:occlusion_manager():set_max_occluder_tests(25)
+	World:occlusion_manager():set_max_occluder_tests(40)
 end
 
 function CoreWorldCollection:first_pass()
@@ -564,11 +564,11 @@ function CoreWorldCollection:update(t, dt, paused_update)
 							definition.mission_scripts_created = true
 
 							break
-						elseif not texture_loaded then
-							Application:trace("[CoreWorldCollection:update] Waiting for textures...")
-						else
+						elseif texture_loaded then
 							Application:trace("[CoreWorldCollection:update] All peers still not spawned worlds, waiting...")
 							self:sync_loading_status(t)
+
+							self._time_tex_check = nil
 						end
 					elseif definition.mission_scripts_created and not definition.is_created then
 						self:complete_world_loading_stage(definition._world_id, CoreWorldCollection.STAGE_LOAD_FINISHED)
@@ -669,10 +669,6 @@ function CoreWorldCollection:check_queued_world_create()
 end
 
 function CoreWorldCollection:check_queued_world_destroy()
-	if not self.level_transition_in_progress then
-		return
-	end
-
 	for i = #self.queued_world_destruction, 1, -1 do
 		local world_id = self.queued_world_destruction[i]
 
@@ -934,6 +930,7 @@ function CoreWorldCollection:on_simulation_ended()
 
 	managers.portal:kill_all_effects()
 	managers.portal:clear()
+	managers.environment_controller:set_downed_value(0)
 
 	if managers.worlddefinition then
 		MassUnitManager:delete_all_units()
@@ -1214,10 +1211,13 @@ function CoreWorldCollection:has_queued_unloads()
 	end
 end
 
-function CoreWorldCollection:register_spawned_unit(unit, pos)
-	local nav_seg_id = managers.navigation:get_nav_seg_from_pos(pos, true)
-	local def_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
-	local definition = self:worlddefinition_by_id(def_id)
+function CoreWorldCollection:register_spawned_unit(unit, pos, world_id)
+	if not world_id then
+		local nav_seg_id = managers.navigation:get_nav_seg_from_pos(pos, true)
+		world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
+	end
+
+	local definition = self:worlddefinition_by_id(world_id)
 
 	if definition then
 		definition:register_spawned_unit(unit)
@@ -1418,6 +1418,10 @@ end
 function CoreWorldCollection:level_transition_started()
 	Application:trace("[CoreWorldCollection:world_transition_started()]", self._first_pass, self.world_counter)
 
+	if managers.network.voice_chat then
+		managers.network.voice_chat:soft_disable()
+	end
+
 	self.level_transition_in_progress = true
 	managers.network:session():local_peer().loading_worlds = true
 	managers.player._players_spawned = false
@@ -1501,6 +1505,10 @@ function CoreWorldCollection:level_transition_ended()
 	if managers.network.matchmake and not managers.network.matchmake.lobby_handler then
 		managers.network.matchmake:create_lobby(managers.network:get_matchmake_attributes(), true)
 	end
+
+	if managers.controller then
+		managers.controller:on_level_transition_ended()
+	end
 end
 
 function CoreWorldCollection:_do_spawn_players()
@@ -1535,7 +1543,7 @@ end
 function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	local job_data = managers.raid_job:current_job()
 	local job_id = job_data and job_data.job_id
-	local total_value = LootDropTweakData.TOTAL_LOOT_VALUE_DEFAULT
+	local total_value = LootDropTweakData.TOTAL_DOGTAGS_DEFAULT
 
 	if job_data and job_data.dogtags_min and job_data.dogtags_max then
 		total_value = math.random(job_data.dogtags_min, job_data.dogtags_max)

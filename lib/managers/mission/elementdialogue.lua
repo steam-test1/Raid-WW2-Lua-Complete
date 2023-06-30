@@ -21,23 +21,19 @@ function ElementDialogue:on_executed(instigator)
 	end
 
 	local done_cbk = self._values.execute_on_executed_when_done and callback(self, self, "_done_callback", instigator) or nil
+	local queue_dialog_unit = {
+		skip_idle_check = true,
+		instigator = char,
+		done_cbk = done_cbk,
+		position = self._values.position
+	}
 
 	if self._values.dialogue ~= "none" then
-		managers.dialog:queue_dialog(self._values.dialogue, {
-			skip_idle_check = true,
-			instigator = char,
-			done_cbk = done_cbk,
-			position = self._values.position
-		})
+		managers.dialog:queue_dialog(self._values.dialogue, queue_dialog_unit)
 	end
 
 	if self._values.random and self._values.random ~= "none" then
-		managers.dialog:queue_random(self._values.random, {
-			skip_idle_check = true,
-			instigator = char,
-			done_cbk = done_cbk,
-			position = self._values.position
-		})
+		managers.dialog:queue_random(self._values.random, queue_dialog_unit)
 	end
 
 	ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)

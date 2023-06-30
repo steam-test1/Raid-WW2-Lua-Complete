@@ -71,9 +71,6 @@ end
 
 function CharacterCreationGui:_layout()
 	self._loaded_weapons = {}
-
-	self:_disable_dof()
-
 	self._selected_class = tweak_data.skilltree.base_classes[1]
 	self._selected_nation = tweak_data.skilltree.classes[self._selected_class].default_natioanlity
 	self._class_screen_controls = {}
@@ -86,7 +83,7 @@ function CharacterCreationGui:_layout()
 		y = 96,
 		x = 0,
 		text = self:translate("character_creation_subtitle", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_38,
 		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
@@ -98,7 +95,7 @@ function CharacterCreationGui:_layout()
 		y = 144,
 		x = 0,
 		text = self:translate("character_creation_subtitle_class", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_grey
 	})
@@ -112,7 +109,7 @@ function CharacterCreationGui:_layout()
 		y = 144,
 		x = 0,
 		text = self:translate("character_creation_subtitle_nationality", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_grey
 	})
@@ -163,7 +160,7 @@ function CharacterCreationGui:_layout()
 		x = 0,
 		y = list_bottom + 64,
 		text = self:translate("character_creation_your_selection", true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_grey
 	})
@@ -184,7 +181,7 @@ function CharacterCreationGui:_layout()
 		x = self._number_1:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate(tweak_data.skilltree.classes[self._selected_class].name_id, true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_32,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
@@ -205,7 +202,7 @@ function CharacterCreationGui:_layout()
 		x = self._number_2:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate("character_profile_creation_" .. self._selected_nation, true),
-		font = tweak_data.gui.fonts.din_compressed,
+		font = tweak_data.gui.fonts.din_compressed_outlined_32,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
@@ -227,25 +224,27 @@ function CharacterCreationGui:_layout()
 	self._right_side_info_class = self._root_panel:create_custom_control(RaidGUIControlClassDescription, {
 		visible = false,
 		name = "right_side_info_panel",
-		h = 830,
-		y = 96,
-		w = 416,
-		x = 1408
+		h = 720,
+		y = 0,
+		w = 516,
+		x = 1308
 	}, {})
 
 	self._right_side_info_class:set_right(self._root_panel:right())
+	self._right_side_info_class:set_center_y(self._root_panel:h() / 2)
 	table.insert(self._class_screen_controls, self._right_side_info_class)
 
 	self._right_side_info_nationality = self._root_panel:create_custom_control(RaidGUIControlNationalityDescription, {
 		visible = false,
 		name = "right_side_info_panel",
-		h = 800,
-		y = 96,
-		w = 416,
-		x = 1408
+		h = 620,
+		y = 0,
+		w = 480,
+		x = 1308
 	}, {})
 
 	self._right_side_info_nationality:set_right(self._root_panel:right())
+	self._right_side_info_nationality:set_center_y(self._root_panel:h() / 2)
 	table.insert(self._nationality_screen_controls, self._right_side_info_nationality)
 
 	self._current_screen = "class"
@@ -256,6 +255,7 @@ function CharacterCreationGui:_layout()
 	self._class_list:activate_item_by_value(self._selected_class)
 	self:_set_class_default_nationality()
 	self:_spawn_empty_character_skeleton()
+	managers.raid_menu:register_on_escape_callback(callback(self, self, "back_pressed"))
 end
 
 function CharacterCreationGui:set_character_select_allowed(value)
@@ -373,6 +373,10 @@ function CharacterCreationGui:_data_source_class_list()
 end
 
 function CharacterCreationGui:_on_click_button_next()
+	if not self._weapons_assembled then
+		return
+	end
+
 	if self._current_screen == "class" then
 		self._current_screen = "nationality"
 
@@ -395,6 +399,12 @@ function CharacterCreationGui:_on_click_button_next()
 end
 
 function CharacterCreationGui:back_pressed()
+	if not self._weapons_assembled then
+		Application:debug("[CharacterCreationGui:back_pressed] weapons are not assembled yet, can't go back!")
+
+		return true
+	end
+
 	if self._current_screen == "nationality" then
 		self._current_screen = "class"
 
@@ -460,7 +470,7 @@ function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
 
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
-		local rotation = Rotation(45, 0, 0)
+		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 
@@ -543,10 +553,18 @@ end
 
 function CharacterCreationGui:show_character_create_input_textbox(callback_yes_function, callback_no_function)
 	local slot_index = managers.savefile:get_create_character_slot()
+	local num_append_txt = {
+		"ARNE",
+		"BOMBA",
+		"CENTRAL",
+		"DIENST",
+		"ENIGMA",
+		"FISH"
+	}
 	local params = {
 		callback_yes = callback_yes_function,
 		callback_no = callback_no_function,
-		textbox_value = self:translate("menu_" .. self._selected_nation, true) .. "_" .. slot_index - 10
+		textbox_value = self:translate("menu_" .. self._selected_nation, true) .. " " .. num_append_txt[slot_index - 10]
 	}
 
 	managers.menu:show_character_create_dialog(params)
@@ -582,7 +600,7 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	if new_profile_name == "" then
 		local params = {
 			textbox_id = "dialog_err_empty_character_name",
-			callback_func = callback(self, self, "_callback_error_ok_function")
+			callback_func = callback(self, self, "_empty_char_name_dismissed_clbk")
 		}
 
 		managers.menu:show_err_character_name_dialog(params)
@@ -591,7 +609,7 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	elseif character_name_exists(new_profile_name) then
 		local params = {
 			textbox_id = "dialog_err_duplicate_character_name",
-			callback_func = callback(self, self, "_callback_error_ok_function")
+			callback_func = callback(self, self, "_empty_char_name_dismissed_clbk")
 		}
 
 		managers.menu:show_err_character_name_dialog(params)
@@ -600,6 +618,10 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	end
 
 	self:create_new_character(new_profile_name)
+end
+
+function CharacterCreationGui:_empty_char_name_dismissed_clbk()
+	self:show_character_create_input_textbox(callback(self, self, "_callback_yes_function"), callback(self, self, "_callback_no_function"))
 end
 
 function CharacterCreationGui:_callback_no_function()
@@ -630,7 +652,16 @@ function CharacterCreationGui:create_new_character(character_profile_name)
 	local local_peer = managers.network:session():local_peer()
 
 	managers.network:session():send_to_peers_synched("set_character_customization", local_peer._unit, managers.blackmarket:outfit_string(), local_peer:outfit_version(), local_peer._id)
-	managers.player:local_player():camera():camera_unit():customizationfps():attach_fps_hands(character_profile_nation, managers.player:get_customization_equiped_upper_name())
+
+	local aaa = managers.player:local_player()
+
+	if aaa then
+		aaa = aaa:camera()
+		aaa = aaa:camera_unit()
+		aaa = aaa:customizationfps()
+
+		aaa:attach_fps_hands(character_profile_nation, managers.player:get_customization_equiped_upper_name())
+	end
 
 	if managers.raid_job._tutorial_spawned then
 		managers.player:tutorial_clear_all_ammo()
@@ -677,6 +708,11 @@ end
 
 function CharacterCreationGui:_load_class_default_weapons()
 	self._parts_being_loaded = {}
+	self._weapons_loaded = {}
+
+	for _, data in pairs(tweak_data.skilltree.default_weapons) do
+		self._weapons_loaded[data.primary] = false
+	end
 
 	for _, data in pairs(tweak_data.skilltree.default_weapons) do
 		local weapon_id = data.primary
@@ -694,20 +730,23 @@ end
 
 function CharacterCreationGui:_weapon_unit_load_complete_callback(params)
 	self._loading_units[params.unit_path] = nil
-	local right_hand_locator = self._spawned_character_unit:get_object(Idstring("a_weapon_right_front"))
-	local weapon_unit = safe_spawn_unit(Idstring(params.unit_path), right_hand_locator:position(), Rotation(0, 0, 0))
 
-	self._spawned_character_unit:link(Idstring("a_weapon_right_front"), weapon_unit, weapon_unit:orientation_object():name())
+	if self._spawned_character_unit then
+		local right_hand_locator = self._spawned_character_unit:get_object(Idstring("a_weapon_right_front"))
+		local weapon_unit = safe_spawn_unit(Idstring(params.unit_path), right_hand_locator:position(), Rotation(0, 0, 0))
 
-	local weapon_blueprint = managers.weapon_inventory:get_weapon_default_blueprint(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, params.weapon_id)
-	self._loaded_weapons[params.weapon_id] = {}
-	local parts, blueprint = managers.weapon_factory:assemble_from_blueprint(params.weapon_factory_id, weapon_unit, weapon_blueprint, true, callback(self, self, "_assemble_completed", {
-		weapon_id = params.weapon_id
-	}), true)
-	self._parts_being_loaded[params.weapon_id] = parts
+		self._spawned_character_unit:link(Idstring("a_weapon_right_front"), weapon_unit, weapon_unit:orientation_object():name())
 
-	table.insert(self._loaded_weapons[params.weapon_id], weapon_unit)
-	weapon_unit:set_visible(false)
+		local weapon_blueprint = managers.weapon_inventory:get_weapon_default_blueprint(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, params.weapon_id)
+		self._loaded_weapons[params.weapon_id] = {}
+		local parts, blueprint = managers.weapon_factory:assemble_from_blueprint(params.weapon_factory_id, weapon_unit, weapon_blueprint, true, callback(self, self, "_assemble_completed", {
+			weapon_id = params.weapon_id
+		}), true)
+		self._parts_being_loaded[params.weapon_id] = parts
+
+		table.insert(self._loaded_weapons[params.weapon_id], weapon_unit)
+		weapon_unit:set_visible(false)
+	end
 end
 
 function CharacterCreationGui:_assemble_completed(params, parts, blueprint)
@@ -718,6 +757,19 @@ function CharacterCreationGui:_assemble_completed(params, parts, blueprint)
 			table.insert(self._loaded_weapons[params.weapon_id], part.unit)
 			part.unit:set_visible(false)
 		end
+	end
+
+	self._weapons_loaded[params.weapon_id] = true
+	local all_weapons_loaded = true
+
+	for index, data in pairs(self._weapons_loaded) do
+		all_weapons_loaded = all_weapons_loaded and self._weapons_loaded[index]
+	end
+
+	if all_weapons_loaded then
+		self._weapons_assembled = true
+
+		Application:trace("CharacterCreationGui:_assemble_completed: ALL WEAPONS ASSEMBLED")
 	end
 end
 
@@ -737,11 +789,13 @@ end
 
 function CharacterCreationGui:_destroy_weapon_parts_and_weapon_units()
 	for wpn_id, wpn_units in pairs(self._loaded_weapons) do
-		for _, unit in ipairs(wpn_units) do
-			if alive(unit) then
-				unit:set_slot(0)
+		if self._weapons_loaded[wpn_id] then
+			for _, unit in ipairs(wpn_units) do
+				if alive(unit) then
+					unit:set_slot(0)
 
-				unit = nil
+					unit = nil
+				end
 			end
 		end
 	end
@@ -777,4 +831,16 @@ function CharacterCreationGui:_bind_controller_inputs()
 	}
 
 	self:set_legend(legend)
+end
+
+function CharacterCreationGui:_on_controller_down()
+	if self._nation_list:is_selected() and not self._nation_list:_next_row_idx() then
+		self._nation_list:set_selected(false)
+		self._create_character_button:set_selected(true)
+	end
+
+	if self._class_list:is_selected() and not self._class_list:_next_row_idx() then
+		self._class_list:set_selected(false)
+		self._create_character_button:set_selected(true)
+	end
 end

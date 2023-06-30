@@ -29,19 +29,44 @@ function HUDHitConfirm:_create_icon(name, icon)
 	return icon
 end
 
-function HUDHitConfirm:on_hit_confirmed()
-	self._hit_confirm:stop()
-	self._hit_confirm:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), 0.25)
+function HUDHitConfirm:on_hit_confirmed(world_hit_pos, is_shotgun)
+	local hit_con = self._hit_confirm
+
+	self:_pop_hit_confirm(hit_con, world_hit_pos)
 end
 
-function HUDHitConfirm:on_headshot_confirmed()
-	self._headshot_confirm:stop()
-	self._headshot_confirm:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), 0.25)
+function HUDHitConfirm:on_headshot_confirmed(world_hit_pos, is_shotgun)
+	local hit_con = self._headshot_confirm
+
+	self:_pop_hit_confirm(hit_con, world_hit_pos)
 end
 
-function HUDHitConfirm:on_crit_confirmed()
-	self._crit_confirm:stop()
-	self._crit_confirm:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), 0.25)
+function HUDHitConfirm:on_crit_confirmed(world_hit_pos, is_shotgun)
+	local hit_con = self._crit_confirm
+
+	self:_pop_hit_confirm(hit_con, world_hit_pos)
+end
+
+function HUDHitConfirm:hud_pos_from_world(v3)
+	if v3.z < 0 then
+		return self._hud_panel:w() / 2, self._hud_panel:h() / 2
+	end
+
+	local camera = managers.viewport:get_current_camera()
+
+	if not camera then
+		return self._hud_panel:w() / 2, self._hud_panel:h() / 2
+	end
+
+	local x = v3.x
+	local y = v3.y
+	local hud_pos = camera:world_to_screen(v3)
+	local screen_x = self._hud_panel:w() / 2
+	local screen_y = self._hud_panel:h() / 2
+	screen_x = screen_x + hud_pos.x * self._hud_panel:w()
+	screen_y = screen_y + hud_pos.y * self._hud_panel:h()
+
+	return screen_x, screen_y
 end
 
 function HUDHitConfirm:cleanup()
@@ -55,6 +80,17 @@ function HUDHitConfirm:cleanup()
 
 	if self._hud_panel:child("crit_confirm") then
 		self._hud_panel:remove(self._hud_panel:child("crit_confirm"))
+	end
+end
+
+function HUDHitConfirm:_pop_hit_confirm(hit_con, pos)
+	hit_con:stop()
+	hit_con:animate(callback(self, self, "_animate_show"), callback(self, self, "show_done"), 0.25)
+
+	if pos and managers.user:get_setting("hit_indicator") == 3 then
+		hit_con:set_center(self:hud_pos_from_world(pos))
+	else
+		hit_con:set_center(self._hud_panel:w() / 2, self._hud_panel:h() / 2)
 	end
 end
 

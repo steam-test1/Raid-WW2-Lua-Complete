@@ -11,24 +11,24 @@ function BarrageTweakData:init(tweak_data)
 	self.default = {
 		type = BarrageType.ARTILLERY,
 		direction = Vector3(-1, 0, -1),
-		distance = 8500,
+		distance = 1000,
 		projectile_id = "mortar_shell",
-		lauch_power = 20,
+		lauch_power = 25,
 		cooldown = {
 			120,
 			90,
 			60
 		},
-		initial_delay = 3,
-		barrage_launch_sound_delay = 7.5,
+		initial_delay = 4,
+		barrage_launch_sound_delay = 5,
 		barrage_launch_sound_event = "grenade_launcher"
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.default.projectiles_per_minute = {
-			40,
-			45,
-			50
+			10,
+			20,
+			30
 		}
 		self.flare_timer = 15
 		self.default.area_radius = {
@@ -37,15 +37,15 @@ function BarrageTweakData:init(tweak_data)
 			1100
 		}
 		self.default.duration = {
-			20,
-			25,
-			35
+			10,
+			15,
+			20
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.default.projectiles_per_minute = {
-			45,
-			50,
-			80
+			25,
+			30,
+			40
 		}
 		self.flare_timer = 12
 		self.default.area_radius = {
@@ -54,15 +54,15 @@ function BarrageTweakData:init(tweak_data)
 			1250
 		}
 		self.default.duration = {
-			20,
-			25,
-			35
+			10,
+			15,
+			20
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.default.projectiles_per_minute = {
-			70,
-			90,
-			120
+			25,
+			35,
+			45
 		}
 		self.flare_timer = 10
 		self.default.area_radius = {
@@ -71,26 +71,26 @@ function BarrageTweakData:init(tweak_data)
 			1500
 		}
 		self.default.duration = {
-			20,
-			25,
-			35
+			10,
+			15,
+			20
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.default.projectiles_per_minute = {
-			90,
-			140,
-			200
+			35,
+			40,
+			50
 		}
-		self.flare_timer = 7
+		self.flare_timer = 8
 		self.default.area_radius = {
 			1100,
 			1500,
 			2500
 		}
 		self.default.duration = {
-			20,
-			25,
-			35
+			10,
+			15,
+			20
 		}
 	end
 

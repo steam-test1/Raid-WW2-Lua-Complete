@@ -66,7 +66,7 @@ function LocalizationManager:_setup_macros()
 		btn_cancel = btn_b
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		btn_stick_r = stick_r
 		btn_stick_l = stick_l
 	end
@@ -113,8 +113,6 @@ function LocalizationManager:_setup_macros()
 	self:set_default_macro("BTN_RESET_SKILLS", btn_back)
 	self:set_default_macro("BTN_RESET_ALL_SKILLS", btn_start)
 end
-
-local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
 function LocalizationManager:btn_macro(button, to_upper)
 	if not managers.menu:is_pc_controller() then

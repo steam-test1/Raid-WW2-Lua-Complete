@@ -49,37 +49,43 @@ function ChallengeCardsGui:_layout()
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title
 	})
+	local tabs_params = {
+		{
+			name = "tab_common",
+			text = self:translate("loot_rarity_common", true),
+			callback_param = LootDropTweakData.RARITY_COMMON
+		},
+		{
+			name = "tab_uncommon",
+			text = self:translate("loot_rarity_uncommon", true),
+			callback_param = LootDropTweakData.RARITY_UNCOMMON
+		},
+		{
+			name = "tab_rare",
+			text = self:translate("loot_rarity_rare", true),
+			callback_param = LootDropTweakData.RARITY_RARE
+		},
+		{
+			name = "tab_other",
+			text = self:translate("menu_filter_other", true),
+			callback_param = LootDropTweakData.RARITY_OTHER
+		},
+		{
+			name = "tab_all",
+			text = self:translate("menu_filter_all", true)
+		}
+	}
 	self._rarity_filters_tabs = self._phase_one_panel:tabs({
 		tab_align = "center",
 		name = "rarity_filters_tabs",
-		tab_width = 160,
-		initial_tab_idx = 4,
 		tab_height = 64,
 		y = 96,
 		dont_trigger_special_buttons = true,
 		x = 0,
+		tab_width = 640 / #tabs_params,
+		initial_tab_idx = #tabs_params,
 		on_click_callback = callback(self, self, "on_click_filter_rarity"),
-		tabs_params = {
-			{
-				name = "tab_common",
-				text = self:translate("loot_rarity_common", true),
-				callback_param = LootDropTweakData.RARITY_COMMON
-			},
-			{
-				name = "tab_uncommon",
-				text = self:translate("loot_rarity_uncommon", true),
-				callback_param = LootDropTweakData.RARITY_UNCOMMON
-			},
-			{
-				name = "tab_rare",
-				text = self:translate("loot_rarity_rare", true),
-				callback_param = LootDropTweakData.RARITY_RARE
-			},
-			{
-				name = "tab_all",
-				text = self:translate("menu_filter_all", true)
-			}
-		}
+		tabs_params = tabs_params
 	})
 	local challenge_cards_grid_scrollable_area_params = {
 		name = "challenge_cards_grid_scrollable_area",
@@ -352,7 +358,13 @@ function ChallengeCardsGui:reload_filtered_data()
 		local result = {}
 
 		for _, card_data in ipairs(self._challenge_cards_steam_data_source) do
-			if self._filter_rarity == card_data.rarity then
+			if self._filter_rarity == LootDropTweakData.RARITY_OTHER then
+				if card_data.rarity ~= LootDropTweakData.RARITY_COMMON and card_data.rarity ~= LootDropTweakData.RARITY_UNCOMMON then
+					if card_data.rarity ~= LootDropTweakData.RARITY_RARE then
+						table.insert(result, clone(card_data))
+					end
+				end
+			elseif self._filter_rarity == card_data.rarity then
 				table.insert(result, clone(card_data))
 			end
 		end
@@ -720,10 +732,8 @@ function ChallengeCardsGui:back_pressed()
 		return true
 	end
 
-	if managers.controller:is_xbox_controller_present() and not managers.menu:is_pc_controller() then
-		managers.raid_menu:register_on_escape_callback(nil)
-		managers.raid_menu:on_escape()
-	end
+	managers.raid_menu:register_on_escape_callback(nil)
+	managers.raid_menu:on_escape()
 end
 
 function ChallengeCardsGui:confirm_pressed()

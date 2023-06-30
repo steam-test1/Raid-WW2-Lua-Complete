@@ -76,7 +76,7 @@ NavigationManager._sector_grid_size = 500
 function NavigationManager:init()
 	Application:trace("[NavigationManager][init]")
 
-	self._debug = SystemInfo:platform() == Idstring("WIN32") and Application:production_build()
+	self._debug = _G.IS_PC and Application:production_build()
 	self._builder = NavFieldBuilder:new()
 	self._get_room_height_at_pos = self._builder._get_room_height_at_pos
 	self._check_room_overlap_bool = self._builder._check_room_overlap_bool
@@ -724,7 +724,7 @@ function NavigationManager:_draw_nav_blockers()
 		for _, blocker_unit in ipairs(all_blockers) do
 			local id = blocker_unit:unit_data().unit_id
 
-			if registered_blockers[id] then
+			if id <= #registered_blockers and registered_blockers[id] then
 				local draw_pos = blocker_unit:get_object(obj_name):position()
 				local owner_segment_id = registered_blockers[id]
 
@@ -1919,9 +1919,11 @@ function NavigationManager:unreserve_pos(desc)
 end
 
 function NavigationManager:move_pos_rsrv(desc)
-	self._pos_reservations[desc.id].position = desc.position
+	if self._pos_reservations[desc.id] then
+		self._pos_reservations[desc.id].position = desc.position
 
-	self._quad_field:move_position_reservation(desc.id, desc.position)
+		self._quad_field:move_position_reservation(desc.id, desc.position)
+	end
 end
 
 function NavigationManager:on_simulation_ended()

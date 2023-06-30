@@ -46,7 +46,7 @@ end
 function ControllerManager:_collect_connected_xbox_controllers()
 	local controllers_list = {}
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		local nr_controllers = Input:num_controllers()
 
 		for i_controller = 0, nr_controllers - 1 do
@@ -208,28 +208,29 @@ function ControllerManager:_show_controller_changed_dialog()
 	print(debug.traceback())
 
 	Global.controller_manager.connect_controller_dialog_visible = true
-	local data = {
-		callback_func = callback(self, self, "connect_controller_dialog_callback"),
-		title = managers.localization:text("dialog_connect_controller_title"),
-		text = managers.localization:text("dialog_connect_controller_text", {
-			NR = Global.controller_manager.default_wrapper_index or 1
-		})
-	}
 
-	if SystemInfo:platform() == Idstring("XB1") then
-		data.no_buttons = true
-	else
-		data.button_list = {
-			{
-				text = managers.localization:text("dialog_ok")
-			}
-		}
+	if SystemInfo:platform() == Idstring("PS4") and not Global._attemptShowControllerDCAfterLoad then
+		Global._attemptShowControllerDCAfterLoad = managers.menu._loading_screen:visible()
 	end
 
-	data.id = "connect_controller_dialog"
-	data.force = true
+	if not Global._attemptShowControllerDCAfterLoad then
+		local data = {
+			callback_func = callback(self, self, "connect_controller_dialog_callback"),
+			title = managers.localization:text("dialog_connect_controller_title"),
+			text = managers.localization:text("dialog_connect_controller_text", {
+				NR = Global.controller_manager.default_wrapper_index or 1
+			}),
+			button_list = {
+				{
+					text = managers.localization:text("dialog_ok")
+				}
+			},
+			id = "connect_controller_dialog",
+			force = true
+		}
 
-	managers.system_menu:show(data)
+		managers.system_menu:show(data)
+	end
 end
 
 function ControllerManager:_change_mode(mode)
@@ -237,7 +238,7 @@ function ControllerManager:_change_mode(mode)
 end
 
 function ControllerManager:set_menu_mode_enabled(enabled)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
 		self._menu_mode_enabled = self._menu_mode_enabled + (enabled and 1 or -1)
 
@@ -258,7 +259,7 @@ function ControllerManager:get_menu_mode_enabled()
 end
 
 function ControllerManager:set_ingame_mode(mode)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		if mode then
 			self._ingame_mode = mode
 		end
@@ -295,6 +296,29 @@ function ControllerManager:get_mouse_controller()
 	end
 
 	return Input:mouse()
+end
+
+function ControllerManager:on_level_transition_ended()
+	if Global._attemptShowControllerDCAfterLoad then
+		local data = {
+			callback_func = callback(self, self, "connect_controller_dialog_callback"),
+			title = managers.localization:text("dialog_connect_controller_title"),
+			text = managers.localization:text("dialog_connect_controller_text", {
+				NR = Global.controller_manager.default_wrapper_index or 1
+			}),
+			button_list = {
+				{
+					text = managers.localization:text("dialog_ok")
+				}
+			},
+			id = "connectcontroller_dialog",
+			force = true
+		}
+
+		managers.system_menu:show(data)
+
+		Global._attemptShowControllerDCAfterLoad = false
+	end
 end
 
 CoreClass.override_class(CoreControllerManager.ControllerManager, ControllerManager)

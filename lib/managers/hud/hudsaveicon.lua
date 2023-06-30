@@ -13,7 +13,7 @@ HUDSaveIcon.RADIUS = 13
 HUDSaveIcon.ONE_CIRCLE_DURATION = 1
 HUDSaveIcon.DEFAULT_TEXT = "savefile_saving"
 
-function HUDSaveIcon:init(workspace)
+function HUDSaveIcon:init(workspace, params)
 	self._ws = workspace
 	self._workspace_panel = self._ws:panel()
 
@@ -21,23 +21,33 @@ function HUDSaveIcon:init(workspace)
 		self._workspace_panel:remove(self._workspace_panel:child("save_icon_panel"))
 	end
 
-	self:_create_panel()
+	self:_create_panel(params)
 	self:_create_text()
 	self:_create_bullets()
 end
 
-function HUDSaveIcon:_create_panel()
-	local panel_params = {
-		name = "save_icon_panel",
-		alpha = 0,
+function HUDSaveIcon:_create_panel(params)
+	params = params or {
 		w = HUDSaveIcon.DEFAULT_W,
 		h = HUDSaveIcon.DEFAULT_H,
 		layer = tweak_data.gui.SAVEFILE_LAYER
+	}
+	local panel_params = {
+		name = "save_icon_panel",
+		alpha = 0,
+		w = params.w,
+		h = params.h,
+		layer = params.layer
 	}
 	self._panel = self._workspace_panel:panel(panel_params)
 
 	self._panel:set_bottom(self._workspace_panel:h())
 	self._panel:set_center_x(self._workspace_panel:w() / 2)
+end
+
+function HUDSaveIcon:offset_position(dx, dy)
+	self._panel:set_bottom(self._workspace_panel:h() + dy)
+	self._panel:set_center_x(self._workspace_panel:w() / 2 + dx)
 end
 
 function HUDSaveIcon:_create_background()
@@ -133,6 +143,14 @@ function HUDSaveIcon:hide()
 	self._panel:animate(callback(self, self, "_animate_hide"))
 
 	self._shown = false
+end
+
+function HUDSaveIcon:set_color(color)
+	self._text:set_color(color)
+
+	for _, bullet in pairs(self._bullets) do
+		bullet:set_color(color)
+	end
 end
 
 function HUDSaveIcon:_animate_bullets()

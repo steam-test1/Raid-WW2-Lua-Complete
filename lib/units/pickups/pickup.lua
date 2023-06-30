@@ -1,4 +1,5 @@
 Pickup = Pickup or class()
+Pickup.PATH = "units/vanilla/pickups/pku_health_ammo_granade/"
 
 function Pickup:init(unit)
 	if not Network:is_server() and unit:slot() == 23 then
@@ -6,6 +7,8 @@ function Pickup:init(unit)
 	end
 
 	self._unit = unit
+	self._beaming = self.beaming or false
+	self._automatic_pickup = self.automatic_pickup or false
 	self._active = true
 end
 
@@ -67,6 +70,10 @@ function Pickup:sync_net_event(event, peer)
 end
 
 function Pickup:destroy(unit)
+end
+
+function Pickup:get_automatic_pickup()
+	return self._automatic_pickup
 end
 
 function Pickup:get_pickup_type()

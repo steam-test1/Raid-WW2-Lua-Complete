@@ -7,7 +7,7 @@ local mvec3_l_sq = mvector3.length_sq
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
 GroupAIStateBase = GroupAIStateBase or class()
-GroupAIStateBase._nr_important_cops = 3
+GroupAIStateBase._nr_important_cops = 5
 GroupAIStateBase.BLAME_SYNC = {
 	"empty",
 	"gunfire",
@@ -574,7 +574,7 @@ function GroupAIStateBase:on_enemy_weapons_hot(is_delayed_callback)
 			managers.worldcollection:set_alarm_for_world_id(world_id, true)
 		end
 
-		managers.music:raid_music_state_change("control")
+		managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_CONTROL)
 
 		if managers.network:session() then
 			managers.network:session():send_to_peers_synched("group_ai_event", self:get_sync_event_id("enemy_weapons_hot"), self:get_sync_blame_id(self._called_reason))
@@ -917,6 +917,10 @@ function GroupAIStateBase:get_difficulty()
 	return self._difficulty_value
 end
 
+function GroupAIStateBase:toggle_debug_draw_state()
+	self:set_debug_draw_state(not self._draw_enabled)
+end
+
 function GroupAIStateBase:set_debug_draw_state(b)
 	if b and not self._draw_enabled then
 		local ws = Overlay:newgui():create_screen_workspace()
@@ -976,10 +980,20 @@ function GroupAIStateBase:_calculate_difficulty_ratio()
 
 	self._difficulty_point_index = i
 	self._difficulty_ramp = (diff - (ramp[i - 1] or 0)) / ((ramp[i] or 1) - (ramp[i - 1] or 0))
+
+	print("self._difficulty_ramp", self._difficulty_ramp)
 end
 
 function GroupAIStateBase:get_difficulty_dependent_value(tweak_values)
-	return math.lerp(tweak_values[self._difficulty_point_index], tweak_values[self._difficulty_point_index + 1], self._difficulty_ramp)
+	if #tweak_values > 1 then
+		if self._difficulty_point_index <= #tweak_values then
+			return math.lerp(tweak_values[self._difficulty_point_index], tweak_values[math.min(self._difficulty_point_index + 1, #tweak_values)], self._difficulty_ramp)
+		else
+			return tweak_values[#tweak_values]
+		end
+	else
+		return tweak_values[self._difficulty_point_index]
+	end
 end
 
 function GroupAIStateBase:criminal_spotted(unit)
@@ -1629,6 +1643,8 @@ function GroupAIStateBase:is_ai_trade_possible()
 end
 
 function GroupAIStateBase:check_gameover_conditions()
+	Application:debug("[GroupAIStateBase:check_gameover_conditions] Playercount:", #self._player_criminals)
+
 	if not Network:is_server() or managers.platform:presence() ~= "Playing" or setup:has_queued_exec() then
 		return false
 	end
@@ -1703,6 +1719,7 @@ function GroupAIStateBase:_gameover_clbk_func()
 end
 
 function GroupAIStateBase:begin_gameover_fadeout()
+	Application:debug("[GroupAIStateBase:begin_gameover_fadeout]")
 	managers.system_menu:force_close_all()
 	managers.menu:close_all_menus()
 
@@ -3043,13 +3060,7 @@ function GroupAIStateBase:set_assault_mode(enabled)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") and managers.network.account:has_alienware() then
-		if self._assault_mode then
-			LightFX:set_lamps(255, 0, 0, 255)
-		else
-			LightFX:set_lamps(0, 255, 0, 255)
-		end
-	end
+	self:_lightfx_assault_update()
 end
 
 function GroupAIStateBase:sync_assault_mode(enabled)
@@ -3060,7 +3071,11 @@ function GroupAIStateBase:sync_assault_mode(enabled)
 		managers.music:raid_music_state_change(state_event)
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") and managers.network and managers.network.account:has_alienware() then
+	self:_lightfx_assault_update()
+end
+
+function GroupAIStateBase:_lightfx_assault_update()
+	if _G.IS_PC and managers.network and managers.network.account:has_alienware() then
 		if self._assault_mode then
 			LightFX:set_lamps(255, 0, 0, 255)
 		else
@@ -4352,7 +4367,7 @@ function GroupAIStateBase:on_nav_segment_state_change(changed_seg_id, state)
 	local changed_seg_neighbours = changed_seg.neighbours
 
 	for area_id, area in pairs(self._area_data) do
-		if area.nav_segs[changed_seg_id] then
+		if area and area.nav_segs[changed_seg_id] then
 			if state then
 				for neighbour_seg_id, door_list in pairs(changed_seg_neighbours) do
 					local neighbour_nav_seg = all_nav_segs[neighbour_seg_id]
@@ -4916,7 +4931,7 @@ function GroupAIStateBase:sync_event(event_id, blame_id)
 		self._police_called = true
 		self._enemy_weapons_hot = true
 
-		managers.music:raid_music_state_change("control")
+		managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_CONTROL)
 		self:_call_listeners("enemy_weapons_hot")
 		managers.enemy:set_corpse_disposal_enabled(true)
 	elseif event_name == "phalanx_spawned" then

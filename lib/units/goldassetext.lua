@@ -3,6 +3,7 @@ local idstr_gold_asset = Idstring("gold_asset")
 
 function GoldAssetExt:init(unit)
 	self._unit = unit
+	self._dont_hide_level_0 = unit.dont_hide_level_0
 	self._tweak_data = tweak_data.camp_customization.camp_upgrades[self.tweak_data_name]
 
 	self._unit:set_extension_update_enabled(idstr_gold_asset, false)

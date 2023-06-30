@@ -57,18 +57,6 @@ HUDLoadingScreen.TIP_TEXT_FONT = tweak_data.gui.fonts.lato
 HUDLoadingScreen.TIP_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.medium
 HUDLoadingScreen.TIP_TEXT_COLOR = Color("878787")
 HUDLoadingScreen.LOADING_ICON_PANEL_H = 64
-HUDLoadingScreen.LOADING_SCREEN_TIPS = {
-	"tip_tactical_reload",
-	"tip_weapon_effecienty",
-	"tip_switch_to_sidearm",
-	"tip_head_shot",
-	"tip_help_bleed_out",
-	"tip_steelsight",
-	"tip_melee_attack",
-	"tip_objectives",
-	"tip_select_reward",
-	"tip_shoot_in_bleed_out"
-}
 
 function HUDLoadingScreen:init(hud)
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
@@ -593,10 +581,16 @@ function HUDLoadingScreen:_layout_default()
 end
 
 function HUDLoadingScreen:_get_random_tip()
-	local number_of_tips = #HUDLoadingScreen.LOADING_SCREEN_TIPS
-	local chosen_tip = math.random(1, number_of_tips)
+	local the_tips = tweak_data.tips:get_tips_string_ids()
 
-	return utf8.to_upper(managers.localization:text("tip_tips")) .. " " .. managers.localization:text(HUDLoadingScreen.LOADING_SCREEN_TIPS[chosen_tip])
+	if the_tips then
+		local number_of_tips = #the_tips
+		local chosen_tip = math.random(1, number_of_tips)
+
+		return utf8.to_upper(managers.localization:text("tip_tips")) .. " " .. managers.localization:text(the_tips[chosen_tip])
+	end
+
+	return "MISSING TIPS"
 end
 
 function HUDLoadingScreen:_fit_panel_to_screen()
@@ -638,12 +632,23 @@ function HUDLoadingScreen:show(data, clbk)
 			if self._info_panel then
 				self._info_panel:set_alpha(1)
 			end
+
+			if clbk then
+				clbk(self)
+			end
 		else
 			self._black:animate(callback(self, self, "_animate_alpha"), 1, 0.5, 0, callback(self, self, "_on_faded_to_black"))
-			self._bg:animate(callback(self, self, "_animate_alpha"), 1, 0.6, 0.45, clbk)
+
+			if self._bg then
+				self._bg:animate(callback(self, self, "_animate_alpha"), 1, 0.6, 0.45, clbk)
+			else
+				Application:error("[HUDLoadingScreen:show] No background to show!")
+			end
 
 			if self._info_panel then
 				self._info_panel:animate(callback(self, self, "_animate_alpha"), 1, 0.45, 0.5)
+			else
+				Application:error("[HUDLoadingScreen:show] No info panel to show!")
 			end
 		end
 	elseif self._state == "black" then
@@ -665,9 +670,16 @@ function HUDLoadingScreen:hide()
 	if self._state == "shown" then
 		if self._info_panel then
 			self._info_panel:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0)
+		else
+			Application:error("[HUDLoadingScreen:hide] No info panel to hide!")
 		end
 
-		self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		if self._bg then
+			self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		else
+			Application:error("[HUDLoadingScreen:hide] No background to hide!")
+		end
+
 		self._black:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0.7, self.clean_up)
 	elseif self._state == "black" then
 		self._black:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0, self.clean_up)
@@ -684,9 +696,15 @@ function HUDLoadingScreen:fade_to_black()
 	elseif self._state == "shown" then
 		if self._info_panel then
 			self._info_panel:animate(callback(self, self, "_animate_alpha"), 0, 0.6, 0)
+		else
+			Application:error("[HUDLoadingScreen:fade_to_black] No info panel to fade_to_black!")
 		end
 
-		self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		if self._bg then
+			self._bg:animate(callback(self, self, "_animate_alpha"), 0, 0.8, 0.2)
+		else
+			Application:error("[HUDLoadingScreen:fade_to_black] No background to fade_to_black!")
+		end
 	end
 
 	self._state = "black"
@@ -705,6 +723,14 @@ function HUDLoadingScreen:_on_faded_to_black()
 	self._loading_icon:show({
 		text = "generic_loading"
 	})
+end
+
+function HUDLoadingScreen:_on_loading_percent_changed(value)
+	if self._loading_icon then
+		self._loading_icon:show({
+			text = "generic_loading"
+		})
+	end
 end
 
 function HUDLoadingScreen:clean_up()
@@ -755,7 +781,7 @@ function HUDLoadingScreen:clean_up()
 end
 
 function HUDLoadingScreen:_real_aspect_ratio()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()
@@ -1017,4 +1043,16 @@ function HUDLoadingScreen:_animate_fade_out(mid_text)
 	end
 
 	self._blackscreen_panel:set_alpha(0)
+end
+
+function HUDLoadingScreen:visible()
+	if self._state == "shown" then
+		return true
+	elseif self._bg and self._bg:alpha() > 0 then
+		return true
+	elseif Global.was_showing_loading_screen then
+		return true
+	end
+
+	return false
 end

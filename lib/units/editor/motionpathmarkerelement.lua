@@ -436,19 +436,33 @@ end
 function MotionpathMarkerUnitElement:_get_middle_point(path, selected_marker_id, target_marker_id)
 	local selected_point_offset, target_point_offset = nil
 
-	for idx, checkpoint in pairs(path.marker_checkpoints) do
-		if checkpoint == selected_marker_id then
-			selected_point_offset = idx
+	if #path.marker_checkpoints > 2 then
+		Application:trace("inspecting: ", selected_marker_id, target_marker_id, "checkpoints:", #path.marker_checkpoints)
+
+		for idx, checkpoint in pairs(path.marker_checkpoints) do
+			Application:trace("chkpt: ", idx, checkpoint)
+
+			if checkpoint == selected_marker_id then
+				selected_point_offset = idx
+
+				Application:trace("found selected: ", idx, selected_point_offset, target_point_offset)
+			end
+
+			if checkpoint == target_marker_id then
+				target_point_offset = idx
+
+				Application:trace("found target: ", idx, selected_point_offset, target_point_offset)
+			end
 		end
 
-		if checkpoint == target_marker_id then
-			target_point_offset = idx
-		end
+		local offset = math.min(selected_point_offset, target_point_offset) + math.round(math.abs(selected_point_offset - target_point_offset) / 2) + 1
+
+		Application:trace("returning: ", offset, path.points[offset])
+
+		return path.points[offset]
+	else
+		return path.points[2]
 	end
-
-	local offset = math.min(selected_point_offset, target_point_offset) + math.round(math.abs(selected_point_offset - target_point_offset) / 2) + 1
-
-	return path.points[offset]
 end
 
 function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_update, skip_recreate)

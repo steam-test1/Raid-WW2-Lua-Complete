@@ -2,11 +2,15 @@ WaypointUnitElement = WaypointUnitElement or class(MissionElement)
 
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)
+
+	WaypointUnitElement.HED_COLOR = Color(1, 1, 1, 1)
+
 	self:_add_wp_options()
 
 	self._icon_options = {
 		"map_waypoint_pov_in",
 		"map_waypoint_pov_out",
+		"waypoint_special_camp_mission_raid",
 		"waypoint_special_aim",
 		"waypoint_special_air_strike",
 		"waypoint_special_ammo",
@@ -82,11 +86,6 @@ function WaypointUnitElement:init(unit)
 		"circle"
 	}
 	self._hed.map_display = "point"
-	self._hed.color = {
-		g = 0.8,
-		b = 0.33,
-		r = 0.38
-	}
 	self._hed.width = 100
 	self._hed.depth = 100
 	self._hed.radius = 150
@@ -96,7 +95,6 @@ function WaypointUnitElement:init(unit)
 
 	table.insert(self._save_values, "icon")
 	table.insert(self._save_values, "map_display")
-	table.insert(self._save_values, "color")
 	table.insert(self._save_values, "width")
 	table.insert(self._save_values, "depth")
 	table.insert(self._save_values, "radius")
@@ -124,7 +122,7 @@ end
 
 function WaypointUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local shape = self:get_shape()
-	local color = self._hed.color
+	local color = WaypointUnitElement.HED_COLOR
 
 	if shape then
 		shape:draw(t, dt, color.r, color.g, color.b)
@@ -171,14 +169,10 @@ end
 function WaypointUnitElement:_set_shape_type()
 	local display_type = self._hed.map_display
 
-	self._color.control:set_enabled(display_type == "circle" or display_type == "square")
-
 	if display_type == "point" then
 		self._icon_ctrlr:set_enabled(true)
-		self._color.control:set_background_colour(Color(self._hed.color.r * 255, self._hed.color.g * 255, self._hed.color.b * 255))
 	else
 		self._icon_ctrlr:set_enabled(false)
-		self._color.control:set_background_colour(self._hed.color.r * 255, self._hed.color.g * 255, self._hed.color.b * 255)
 	end
 
 	self._width_params.number_ctrlr:set_enabled(display_type == "square")
@@ -199,30 +193,7 @@ function WaypointUnitElement:set_element_data(params, ...)
 
 	if params.value == "map_display" then
 		self:_set_shape_type()
-	elseif params.value == "color" then
-		local colors = self:_split_string(tostring(self._hed.color), " ")
-
-		for i = 1, 3 do
-			colors[i] = colors[i] / 255
-		end
-
-		self._hed.color = {
-			r = colors[1],
-			g = colors[2],
-			b = colors[3]
-		}
 	end
-end
-
-function WaypointUnitElement:_on_color_changed()
-	local color = self.__color_picker_dialog:color()
-	self._hed.color = {
-		r = color.r,
-		g = color.g,
-		b = color.b
-	}
-
-	self._color.control:set_background_colour(color.r * 255, color.g * 255, color.b * 255)
 end
 
 function WaypointUnitElement:_split_string(inputstr, sep)
@@ -303,8 +274,6 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "map_display", self._map_display_options, "Select a map display type")
 
 	self._icon_ctrlr = self:_build_value_combobox(panel, panel_sizer, "icon", self._icon_options, "Select an icon")
-	self._color = {}
-	self._color.label, self._color.control = self:_build_value_color(panel, panel_sizer, "color", "Select the color of the waypoint on the map")
 
 	if not self._square_shape then
 		self:_create_shapes()

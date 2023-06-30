@@ -7,6 +7,7 @@ MissionSelectionGui.FOREGROUND_PAPER_COLOR = Color("ffffff")
 MissionSelectionGui.SECONDARY_PAPER_PADDING_LEFT = -4
 MissionSelectionGui.PAPER_STAMP_ICON = "icon_paper_stamp"
 MissionSelectionGui.PAPER_STAMP_ICON_CONSUMABLE = "icon_paper_stamp_consumable"
+MissionSelectionGui.PAPER_STAMP_ICON_OPERATION = "icon_paper_stamp_consumable_ver002"
 MissionSelectionGui.SETTINGS_PADDING = 32
 MissionSelectionGui.DISPLAY_FIRST = "first"
 MissionSelectionGui.DISPLAY_SECOND = "second"
@@ -103,6 +104,7 @@ function MissionSelectionGui:_layout()
 	end
 
 	self:_check_difficulty_warning()
+	self:_check_consumables_achievement()
 end
 
 function MissionSelectionGui:_layout_lists()
@@ -290,9 +292,8 @@ function MissionSelectionGui:_layout_settings()
 		on_item_selected_callback = callback(self, self, "_on_difficulty_selected"),
 		data_source_callback = callback(self, self, "data_source_difficulty_stepper"),
 		on_menu_move = {
-			up = "auto_kick_checkbox",
-			down = "permission_stepper",
-			left = "audio_button"
+			left = "audio_button",
+			down = "permission_stepper"
 		}
 	}
 	self._difficulty_stepper = self._settings_panel:stepper(difficulty_stepper_params)
@@ -344,33 +345,14 @@ function MissionSelectionGui:_layout_settings()
 		description = self:translate("menu_play_with_team_ai_title", true),
 		on_click_callback = callback(self, self, "_on_toggle_team_ai"),
 		on_menu_move = {
-			up = "drop_in_checkbox",
-			down = "auto_kick_checkbox",
-			left = "audio_button"
+			left = "audio_button",
+			up = "drop_in_checkbox"
 		}
 	}
 	self._team_ai_checkbox = self._settings_panel:toggle_button(team_ai_checkbox_params)
 
 	self._team_ai_checkbox:set_value_and_render(Global.game_settings.selected_team_ai, true)
 	table.insert(self._settings_controls, self._team_ai_checkbox)
-
-	local auto_kick_checkbox_params = {
-		name = "auto_kick_checkbox",
-		value = true,
-		x = 0,
-		y = self._team_ai_checkbox:y() + self._team_ai_checkbox:h() + MissionSelectionGui.SETTINGS_PADDING,
-		description = self:translate("menu_auto_kick_cheaters_title", true),
-		on_click_callback = callback(self, self, "_on_toggle_auto_kick"),
-		on_menu_move = {
-			up = "team_ai_checkbox",
-			down = "difficulty_stepper",
-			left = "audio_button"
-		}
-	}
-	self._auto_kick_checkbox = self._settings_panel:toggle_button(auto_kick_checkbox_params)
-
-	self._auto_kick_checkbox:set_value_and_render(Global.game_settings.auto_kick, true)
-	table.insert(self._settings_controls, self._auto_kick_checkbox)
 end
 
 function MissionSelectionGui:_layout_operation_tutorialization()
@@ -980,13 +962,19 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 	}
 	local timer = self._progression_timer_panel:text(timer_params)
 	local remaining_time = math.floor(managers.progression:time_until_next_unlock())
-	local hours = math.floor(remaining_time / 3600)
-	remaining_time = remaining_time - hours * 3600
-	local minutes = math.floor(remaining_time / 60)
-	remaining_time = remaining_time - minutes * 60
-	local seconds = math.round(remaining_time)
-	local text = hours > 0 and string.format("%02d", hours) .. ":" or ""
-	local text = text .. string.format("%02d", minutes) .. ":" .. string.format("%02d", seconds)
+	local text = nil
+
+	if remaining_time <= 0 then
+		text = "...NOW!"
+	else
+		local hours = math.floor(remaining_time / 3600)
+		remaining_time = remaining_time - hours * 3600
+		local minutes = math.floor(remaining_time / 60)
+		remaining_time = remaining_time - minutes * 60
+		local seconds = math.round(remaining_time)
+		text = hours > 0 and string.format("%02d", hours) .. ":" or ""
+		text = text .. string.format("%02d", minutes) .. ":" .. string.format("%02d", seconds)
+	end
 
 	timer:set_text(text)
 
@@ -1199,7 +1187,7 @@ end
 function MissionSelectionGui:_finish_video()
 	managers.menu_component:post_event("menu_volume_reset")
 	managers.music:stop()
-	managers.music:post_event("music_camp", true)
+	managers.music:post_event(MusicManager.CAMP_MUSIC, true)
 	self._root_panel:set_x(0)
 	self._root_panel:set_y(0)
 	self._root_panel:show()
@@ -1311,6 +1299,9 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 	self._operation_tutorialization_panel:get_engine_panel():animate(callback(self, self, "_animate_hide_operation_tutorialization"))
 
 	self._selected_job_id = raid_data.value
+
+	self:_update_soe_stamp(self._selected_job_id)
+
 	self._selected_new_operation_index = nil
 	local job_tweak_data = tweak_data.operations.missions[self._selected_job_id]
 
@@ -1350,14 +1341,6 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 			self._primary_paper_difficulty_indicator:set_progress(difficulty_available, difficulty_completed)
 		end
 
-		local stamp_texture = tweak_data.gui.icons[MissionSelectionGui.PAPER_STAMP_ICON]
-
-		if raid_tweak_data.consumable then
-			stamp_texture = tweak_data.gui.icons[MissionSelectionGui.PAPER_STAMP_ICON_CONSUMABLE]
-		end
-
-		self._soe_emblem:set_image(stamp_texture.texture)
-		self._soe_emblem:set_texture_rect(unpack(stamp_texture.texture_rect))
 		self._info_button:set_active(true)
 		self._intel_button:set_active(false)
 		self._audio_button:set_active(false)
@@ -1384,7 +1367,9 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 end
 
 function MissionSelectionGui:play_short_audio_briefing(briefing_id)
-	self._briefing_audio = managers.menu_component:post_event(briefing_id)
+	if briefing_id and briefing_id ~= "" then
+		self._briefing_audio = managers.menu_component:post_event(briefing_id)
+	end
 end
 
 function MissionSelectionGui:_on_raid_selected(raid_data)
@@ -1465,6 +1450,8 @@ function MissionSelectionGui:_display_first_screen()
 end
 
 function MissionSelectionGui:_on_operation_selected(operation_data)
+	print("_on_operation_selected_on_operation_selected_on_operation_selected")
+
 	self._selected_new_operation_index = operation_data.index
 
 	if self._selected_job_id ~= operation_data.value then
@@ -1509,12 +1496,44 @@ function MissionSelectionGui:_on_operation_selected(operation_data)
 	end
 
 	self._selected_job_id = operation_data.value
+
+	self:_update_soe_stamp(self._selected_job_id)
+
 	local difficulty_available, difficulty_completed = managers.progression:get_mission_progression(OperationsTweakData.JOB_TYPE_OPERATION, operation_data.value)
 
 	self:set_difficulty_stepper_data(difficulty_available, difficulty_completed)
 	self._primary_paper_subtitle:set_visible(false)
 	self._primary_paper_difficulty_indicator:set_visible(true)
 	self._primary_paper_difficulty_indicator:set_progress(difficulty_available, difficulty_completed)
+end
+
+function MissionSelectionGui:_update_soe_stamp(job_id)
+	if not self._soe_emblem then
+		Application:error("[MissionSelectionGui:_update_soe_stamp] self._soe_emblem does not exist")
+
+		return
+	end
+
+	local mis_tweak_data = tweak_data.operations.missions[job_id]
+
+	if not mis_tweak_data then
+		Application:error("[MissionSelectionGui:_update_soe_stamp] Mission id does not exist in operation tweakdata", job_id)
+
+		return
+	end
+
+	local stamp_texture = nil
+
+	if mis_tweak_data.consumable then
+		stamp_texture = tweak_data.gui.icons[MissionSelectionGui.PAPER_STAMP_ICON_CONSUMABLE]
+	elseif mis_tweak_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		stamp_texture = tweak_data.gui.icons[MissionSelectionGui.PAPER_STAMP_ICON_OPERATION]
+	else
+		stamp_texture = tweak_data.gui.icons[MissionSelectionGui.PAPER_STAMP_ICON]
+	end
+
+	self._soe_emblem:set_image(stamp_texture.texture)
+	self._soe_emblem:set_texture_rect(unpack(stamp_texture.texture_rect))
 end
 
 function MissionSelectionGui:_on_operation_list_selected()
@@ -1616,12 +1635,19 @@ function MissionSelectionGui:_on_save_selected()
 
 	self._primary_paper_title:set_text(title_text)
 
+	if managers.raid_menu:is_pc_controller() then
+		self._save_delete_button:animate_show()
+	elseif not Network:is_server() then
+		self._save_delete_button:hide()
+	end
+
 	local operation_tweak_data = tweak_data.operations:mission_data(current_job.job_id)
 
 	self._primary_paper_mission_icon:set_image(tweak_data.gui.icons[operation_tweak_data.icon_menu].texture)
 	self._primary_paper_mission_icon:set_texture_rect(unpack(tweak_data.gui.icons[operation_tweak_data.icon_menu].texture_rect))
 	self._primary_paper_mission_icon:set_w(tweak_data.gui:icon_w(operation_tweak_data.icon_menu))
 	self._primary_paper_mission_icon:set_h(tweak_data.gui:icon_h(operation_tweak_data.icon_menu))
+	self:_update_soe_stamp(current_job.job_id)
 
 	local difficulty = tweak_data:difficulty_to_index(current_slot_data.difficulty)
 
@@ -1763,21 +1789,23 @@ function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 			first_n_missions = 1
 		end
 
-		self._intel_image_grid:set_data({
-			image_selected = 1,
-			mission = self._selected_job_id,
-			only_first_n_events = first_n_missions
-		})
-	elseif self._continue_slot_selected then
-		local save_slots = managers.raid_job:get_save_slots()
-		local save_data = save_slots[self._continue_slot_selected].current_job
+		if first_n_missions ~= nil then
+			self._intel_image_grid:set_data({
+				image_selected = 1,
+				mission = self._selected_job_id,
+				only_first_n_events = first_n_missions
+			})
+		elseif self._continue_slot_selected then
+			local save_slots = managers.raid_job:get_save_slots()
+			local save_data = save_slots[self._continue_slot_selected].current_job
 
-		self._intel_image_grid:set_data({
-			save_data.current_event,
-			image_selected = 1,
-			mission = save_data.job_id,
-			save_data = save_data
-		})
+			self._intel_image_grid:set_data({
+				save_data.current_event,
+				image_selected = 1,
+				mission = save_data.job_id,
+				save_data = save_data
+			})
+		end
 	end
 end
 
@@ -1844,7 +1872,10 @@ function MissionSelectionGui:_on_audio_clicked()
 	self:_stop_mission_briefing_audio()
 
 	self._briefing_button_sfx = managers.menu_component:post_event("mrs_white_mission_briefing_button")
-	self._briefing_audio = managers.menu_component:post_event(audio_briefing_id)
+
+	if audio_briefing_id and audio_briefing_id ~= "" then
+		self._briefing_audio = managers.menu_component:post_event(audio_briefing_id)
+	end
 end
 
 function MissionSelectionGui:_stop_mission_briefing_audio()
@@ -2115,9 +2146,24 @@ end
 function MissionSelectionGui:_on_toggle_auto_kick(button, control, value)
 end
 
+function MissionSelectionGui:_on_toggle_vote_kick(button, control, value)
+	if Network:is_client() then
+		return
+	end
+
+	if value then
+		Global.game_settings.kick_option = 2
+	else
+		Global.game_settings.kick_option = 1
+	end
+
+	managers.vote:sync_server_kick_option_with_peers()
+end
+
 function MissionSelectionGui:_raid_list_data_source()
 	local non_consumable_list = {}
 	local consumable_list = {}
+	local debug_list = {}
 
 	for raid_index, mission_name in pairs(tweak_data.operations:get_raids_index()) do
 		local mission_data = tweak_data.operations:mission_data(mission_name)
@@ -2145,7 +2191,7 @@ function MissionSelectionGui:_raid_list_data_source()
 				})
 			end
 		else
-			table.insert(non_consumable_list, {
+			table.insert(mission_data.debug and debug_list or non_consumable_list, {
 				index = raid_index,
 				text = item_text,
 				value = mission_name,
@@ -2177,6 +2223,10 @@ function MissionSelectionGui:_raid_list_data_source()
 	local raid_list = consumable_list
 
 	for _, mission in pairs(non_consumable_list) do
+		table.insert(raid_list, mission)
+	end
+
+	for _, mission in pairs(debug_list) do
 		table.insert(raid_list, mission)
 	end
 
@@ -2282,7 +2332,6 @@ function MissionSelectionGui:_start_job(job_id)
 	if not Global.game_settings.single_player then
 		permission = self._permission_stepper:get_value()
 		drop_in_allowed = self._drop_in_checkbox:get_value()
-		auto_kick = self._auto_kick_checkbox:get_value()
 		Global.game_settings.permission = permission
 		Global.game_settings.drop_in_allowed = drop_in_allowed
 		Global.game_settings.auto_kick = auto_kick
@@ -2775,7 +2824,6 @@ function MissionSelectionGui:_unselect_right_column()
 	if not Global.game_settings.single_player then
 		self._permission_stepper:set_selected(false)
 		self._drop_in_checkbox:set_selected(false)
-		self._auto_kick_checkbox:set_selected(false)
 	end
 end
 
@@ -3101,4 +3149,13 @@ function MissionSelectionGui:_on_select_confirm()
 	self:_on_start_button_click()
 
 	return true, nil
+end
+
+function MissionSelectionGui:_check_consumables_achievement()
+	if managers.consumable_missions:is_all_missions_unlocked() then
+		Application:debug("[MissionSelectionGui:_check_consumables_achievement] award outlaw_librarian")
+		managers.achievment:award("outlaw_librarian")
+	else
+		Application:debug("[MissionSelectionGui:_check_consumables_achievement] dont award outlaw_librarian")
+	end
 end

@@ -9,9 +9,9 @@ function DramaTweakData:init()
 		criminal_disabled = 0.1
 	}
 	self.decay_period = 30
-	self.max_dis = 6000
+	self.max_dis = 7000
 	self.max_dis_mul = 0.5
-	self.low = 0.1
+	self.low = 0.15
 	self.peak = 0.95
 	self.assault_fade_end = 0.25
 end

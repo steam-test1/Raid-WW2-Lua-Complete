@@ -231,7 +231,7 @@ function PS4PlatformManager:update(t, dt)
 		self._psn_set_presence_time = t + 10
 		self._current_psn_presence = self:presence()
 
-		print("SET PRESENCE", self._current_psn_presence)
+		Application:debug("SET PRESENCE PS4", self._current_psn_presence)
 	end
 end
 

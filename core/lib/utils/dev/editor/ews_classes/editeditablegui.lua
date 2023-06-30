@@ -61,13 +61,13 @@ end
 function EditUnitEditableGui:_create_color_button(panel, sizer)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
-	sizer:add(horizontal_sizer, 0, 0, "")
+	sizer:add(horizontal_sizer, 0, 1, "EXPAND")
 	horizontal_sizer:add(EWS:StaticText(panel, "Color:", 0, ""), 0.5, 1, "EXPAND")
 
-	local color_button = EWS:Button(panel, "", "", "BU_EXACTFIT,NO_BORDER")
+	local color_button = EWS:Button(panel, "", "")
 
 	color_button:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
-	horizontal_sizer:add(color_button, 0, 0, "LEFT")
+	horizontal_sizer:add(color_button, 1, 1, "EXPAND")
 
 	self._ctrls.color_button = color_button
 end

@@ -25,7 +25,7 @@ function RaidGUIControlKickMuteWidget:init(parent, params)
 	self:_create_kick_button()
 	self:_create_mute_button()
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		self:_create_gamercard_button()
 	end
 
@@ -116,7 +116,7 @@ function RaidGUIControlKickMuteWidget:_create_mute_button()
 		on_unselected_callback = callback(self, self, "on_button_unselected", "mute")
 	}
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		mute_button_params.on_menu_move.left = "gamercard_button_" .. tostring(self._index)
 	else
 		mute_button_params.on_menu_move.left = "list_menu"
@@ -180,6 +180,34 @@ function RaidGUIControlKickMuteWidget:_refresh_mute_button()
 	self._mute_button:set_value(self._peer:is_muted())
 end
 
+function RaidGUIControlKickMuteWidget:_refresh_vote_kick_button()
+	Application:debug("[RaidGUIControlKickMuteWidget:_refresh_vote_kick_button] entered 1 ")
+
+	if Network:is_client() then
+		if not self._kick_button then
+			return
+		end
+
+		if not managers.vote:option_vote_kick() then
+			self._kick_button:hide()
+			self._kick_button:set_visible(false)
+
+			return
+		elseif not self._kick_button:get_visible() and (not self._peer or self._peer:name() ~= managers.network:session():server_peer():name()) then
+			self._kick_button:show()
+			self._kick_button:set_visible(true)
+		end
+
+		if self._kick_button:alpha() > 0 then
+			if managers.vote:option_vote_kick() and managers.vote:available() then
+				self._kick_button:set_alpha(1)
+			else
+				self._kick_button:set_alpha(0.3)
+			end
+		end
+	end
+end
+
 function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._peer = peer
 
@@ -190,7 +218,25 @@ function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._name:set_w(w)
 	self:_refresh_mute_button()
 	self._mute_button:set_visible(mute_button)
-	self._kick_button:set_visible(kick_button)
+
+	if mute_button then
+		self._mute_button:show()
+	end
+
+	if SystemInfo:platform() == Idstring("XB1") then
+		self._gamercard_button:show()
+	end
+
+	if kick_button or managers.vote:option_vote_kick() then
+		self._kick_button:show()
+		self._kick_button:set_visible(true)
+	end
+
+	if Network:is_client() and managers.vote:option_vote_kick() and peer:name() == managers.network:session():server_peer():name() then
+		self._kick_button:hide()
+		self._kick_button:set_visible(false)
+	end
+
 	self._object:set_visible(true)
 end
 
@@ -236,7 +282,7 @@ function RaidGUIControlKickMuteWidget:_fit_size()
 
 	local button_panel_left = nil
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		self._gamercard_button:set_center_x(self._mute_button:center_x() - RaidGUIControlKickMuteWidget.BUTTON_PADDING)
 
 		button_panel_left = self._gamercard_button:x()
@@ -275,7 +321,13 @@ function RaidGUIControlKickMuteWidget:on_kick_pressed()
 		player_name = self._peer:name()
 	}
 
-	managers.menu:show_kick_peer_dialog(params)
+	if Network:is_client() then
+		if managers.vote:option_vote_kick() and managers.vote:available() then
+			managers.menu:show_kick_peer_dialog(params)
+		end
+	else
+		managers.menu:show_kick_peer_dialog(params)
+	end
 end
 
 function RaidGUIControlKickMuteWidget:on_invite_pressed()
@@ -309,7 +361,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	local is_invite_down = invite_widget_shown and self._index == number_of_widgets_shown - 1
 	local on_menu_move = nil
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		on_menu_move = {
 			left = "list_menu",
 			right = "mute_button_" .. tostring(self._index),
@@ -321,7 +373,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	end
 
 	on_menu_move = {
-		left = SystemInfo:platform() == Idstring("XB1") and "gamercard_button_" .. tostring(self._index) or "list_menu",
+		left = _G.IS_XB1 and "gamercard_button_" .. tostring(self._index) or "list_menu",
 		right = Network:is_server() and "kick_button_" .. tostring(self._index),
 		up = is_invite_up and "invite_button_" .. tostring(move_up_index) or "mute_button_" .. tostring(move_up_index),
 		down = is_invite_down and "invite_button_" .. tostring(move_down_index) or "mute_button_" .. tostring(move_down_index)
@@ -353,8 +405,12 @@ function RaidGUIControlKickMuteWidget:show_gamercard()
 end
 
 function RaidGUIControlKickMuteWidget:on_kick_confirmed()
-	managers.vote:host_kick(self._peer)
-	managers.menu_component:post_event("kick_player")
+	if Network:is_client() then
+		managers.vote:kick(self._peer:id())
+	else
+		managers.vote:host_kick(self._peer)
+		managers.menu_component:post_event("kick_player")
+	end
 end
 
 function RaidGUIControlKickMuteWidget:highlight_on()

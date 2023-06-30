@@ -64,6 +64,7 @@ function ReadyUpGui:_layout()
 	self:_load_character_empty_skeleton()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(true)
 	managers.network.account:inventory_load()
+	managers.menu_component:_voice_panel_align_bottom_left()
 end
 
 function ReadyUpGui:_layout_buttons()
@@ -123,14 +124,25 @@ function ReadyUpGui:_layout_buttons()
 		self._kick_button:hide()
 	end
 
-	self._leave_lobby_button = self._root_panel:short_tertiary_button({
-		name = "leave_lobby_button",
+	local _leave_lobby_button_params = {
 		visible = false,
+		name = "leave_lobby_button",
 		x = self._ready_up_button:right() + 64,
-		y = button_y,
-		text = self:translate("menu_leave_lobby_button", true),
-		on_click_callback = callback(self, self, "_on_leave_lobby_button")
-	})
+		y = button_y
+	}
+
+	if Network:is_server() then
+		_leave_lobby_button_params.text = self:translate("menu_leave_ready_up_button", true)
+		_leave_lobby_button_params.on_click_callback = callback(self, self, "_on_leave_ready_up_button")
+
+		managers.network:session():set_state("in_game")
+		managers.network:session():chk_server_joinable_state()
+	else
+		_leave_lobby_button_params.text = self:translate("menu_leave_lobby_button", true)
+		_leave_lobby_button_params.on_click_callback = callback(self, self, "_on_leave_lobby_button")
+	end
+
+	self._leave_lobby_button = self._root_panel:short_tertiary_button(_leave_lobby_button_params)
 
 	self._leave_lobby_button:disable()
 	self._leave_lobby_button:hide()
@@ -349,6 +361,13 @@ function ReadyUpGui:_spawn_weapon(params)
 	params.character_unit:link(Idstring("a_weapon_right_front"), weapon_unit, weapon_unit:orientation_object():name())
 
 	local weapon_blueprint = params.peer:blackmarket_outfit().primary.blueprint
+	local peer_id = managers.network:session():local_peer():id()
+
+	Application:debug("[WEPTEST], params.peer:id() == peer_id", params.peer:id(), peer_id, params.peer:id() == peer_id)
+
+	if params.peer:id() == peer_id then
+		weapon_blueprint = managers.weapon_factory:modify_skin_blueprint(params.weapon_factory_id, weapon_blueprint)
+	end
 
 	managers.weapon_factory:assemble_from_blueprint(params.weapon_factory_id, weapon_unit, weapon_blueprint, true, callback(self, self, "_assemble_completed", {
 		peer = params.peer
@@ -356,6 +375,7 @@ function ReadyUpGui:_spawn_weapon(params)
 end
 
 function ReadyUpGui:_assemble_completed(params, parts, blueprint)
+	self._spawned_weapon_parts = self._spawned_weapon_parts or {}
 	self._spawned_weapon_parts[params.peer] = {}
 
 	for _, part in pairs(parts) do
@@ -369,18 +389,24 @@ function ReadyUpGui:_load_character_empty_skeleton()
 	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_character_units"))
 end
 
-function ReadyUpGui:_get_character_spawn_index(control_list_index)
-	if self._is_single_player then
-		return 1
+function ReadyUpGui:_are_peer_visuals_assembled()
+	if not self._spawned_character_units or not self._weapon_assembled then
+		return false
 	end
 
-	if control_list_index == 1 then
-		return 2
-	elseif control_list_index == 2 then
-		return 1
+	for k, v in pairs(self._spawned_character_units) do
+		if not alive(v) then
+			return false
+		end
 	end
 
-	return control_list_index
+	for k, v in pairs(self._weapon_assembled) do
+		if not v then
+			return false
+		end
+	end
+
+	return true
 end
 
 function ReadyUpGui:_spawn_character_units()
@@ -421,6 +447,20 @@ function ReadyUpGui:_spawn_character_units()
 		local at_time = math.random() * 10
 		local state = spawned_unit:play_redirect(Idstring(anim_state_name), at_time)
 	end
+end
+
+function ReadyUpGui:_get_character_spawn_index(control_list_index)
+	if self._is_single_player then
+		return 1
+	end
+
+	if control_list_index == 1 then
+		return 2
+	elseif control_list_index == 2 then
+		return 1
+	end
+
+	return control_list_index
 end
 
 function ReadyUpGui:_set_card_selection_controls()
@@ -629,21 +669,31 @@ function ReadyUpGui:_update_challenge_card_selected_icon()
 end
 
 function ReadyUpGui:_update_status()
+	if self._backed_out then
+		self._backed_out = false
+
+		return
+	end
+
 	local challenge_cards = managers.challenge_cards:get_suggested_cards()
 
 	for peer, control in pairs(self._player_control_list) do
 		local card = challenge_cards[control:params().peer_index]
 
 		if card and card.locked_suggestion then
-			local was_ready = control:params().ready
+			local was_ready = control:is_ready()
 
 			control:set_state("ready")
 
-			if control:params().ready and not was_ready then
+			if control:is_ready() and not was_ready then
 				local outfit = peer:blackmarket_outfit()
 				local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(outfit.primary.factory_id)
 				local anim_state_name = "hos_to_cbt_" .. weapon_id
-				local state = self._spawned_character_units[peer]:play_redirect(Idstring(anim_state_name))
+				local state = nil
+
+				if self._spawned_character_units and self._spawned_character_units[peer] then
+					state = self._spawned_character_units[peer]:play_redirect(Idstring(anim_state_name))
+				end
 
 				managers.menu_component:post_event("ready_up_" .. peer:character())
 			end
@@ -653,7 +703,7 @@ function ReadyUpGui:_update_status()
 	local all_ready = true
 
 	for peer, control in pairs(self._player_control_list) do
-		if not control:params().ready then
+		if not control:is_ready() then
 			all_ready = false
 
 			break
@@ -665,6 +715,18 @@ function ReadyUpGui:_update_status()
 			self:bind_controller_inputs(true, false)
 		else
 			self._leave_lobby_button:hide()
+		end
+	end
+end
+
+function ReadyUpGui:_reset_ready_ups()
+	Application:debug("[ReadyUpGui:_reset_ready_ups] RESET")
+
+	self._ready = false
+
+	if self._player_control_list then
+		for i, control in ipairs(self._player_control_list) do
+			control:set_state("not_ready")
 		end
 	end
 end
@@ -765,32 +827,53 @@ function ReadyUpGui:_on_leave_lobby_button()
 	self._callback_handler:end_game()
 end
 
+function ReadyUpGui:_on_leave_ready_up_button()
+	if not self._leave_lobby_button:enabled() then
+		return
+	end
+
+	self._backed_out = true
+
+	self._callback_handler:leave_ready_up()
+	self:_reset_ready_ups()
+end
+
 function ReadyUpGui:close()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(false)
+	managers.menu_component:_voice_panel_align_bottom_right()
+
+	if self._chat ~= nil then
+		self._chat:unregister()
+		managers.hud:hud_chat():register()
+		managers.hud:set_chat_focus(false)
+	end
+
 	self:_enable_dof()
 	managers.system_event_listener:remove_listener("ready_up_gui_player_kicked")
 	managers.system_event_listener:remove_listener("ready_up_gui_player_left")
 	managers.system_event_listener:remove_listener("ready_up_gui_inventory_processed")
-	self._chat:unregister()
-	managers.hud:hud_chat():register()
 
-	for _, unit in pairs(self._spawned_character_units) do
-		unit:set_slot(0)
+	if self._spawned_character_units then
+		for _, unit in pairs(self._spawned_character_units) do
+			unit:set_slot(0)
 
-		unit = nil
-	end
-
-	self._spawned_character_units = nil
-
-	for _, parts in pairs(self._spawned_weapon_parts) do
-		for _, part in ipairs(parts) do
-			part:set_slot(0)
-
-			part = nil
+			unit = nil
 		end
+
+		self._spawned_character_units = nil
 	end
 
-	self._spawned_weapon_parts = nil
+	if self._spawned_weapon_parts then
+		for _, parts in pairs(self._spawned_weapon_parts) do
+			for _, part in ipairs(parts) do
+				part:set_slot(0)
+
+				part = nil
+			end
+		end
+
+		self._spawned_weapon_parts = nil
+	end
 
 	managers.lootdrop:clear_dropped_loot()
 	ReadyUpGui.super.close(self)
@@ -849,6 +932,12 @@ function ReadyUpGui:_update_peers()
 end
 
 function ReadyUpGui:update(t, dt)
+	if not self:_are_peer_visuals_assembled() then
+		Application:debug("[ReadyUpGui:update] Waiting for peers to finish building visuals!")
+
+		return
+	end
+
 	self:_show_characters()
 	self:_show_player_challenge_card_info()
 	self:_update_challenge_card_selected_icon()
@@ -959,7 +1048,7 @@ function ReadyUpGui:show_gamercard()
 end
 
 function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
-	if managers.menu:is_pc_controller() then
+	if not managers.controller:is_xbox_controller_present() or managers.menu:is_pc_controller() then
 		if is_current_player and not self._ready then
 			local bindings = {
 				{
@@ -1047,7 +1136,7 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 		end
 	end
 
-	if not is_current_player and SystemInfo:platform() == Idstring("XB1") then
+	if not is_current_player and _G.IS_XB1 then
 		local gamercard_key = {
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "show_gamercard")

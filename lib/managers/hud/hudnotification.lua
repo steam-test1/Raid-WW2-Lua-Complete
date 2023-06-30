@@ -11,29 +11,20 @@ HUDNotification.DOG_TAG = "dog_tag"
 HUDNotification.WEAPON_CHALLENGE = "weapon_challenge"
 HUDNotification.CONSUMABLE_MISSION_PICKED_UP = "consumable_mission_picked_up"
 HUDNotification.ACTIVE_DUTY_BONUS = "active_duty_bonus"
+HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW = "active_duty_bonus_outlaw"
+HUDNotification.TYPES = {
+	[HUDNotification.GENERIC] = HUDNotification,
+	[HUDNotification.ICON] = HUDNotificationIcon,
+	[HUDNotification.CARD_FAIL] = HUDNotificationCardFail
+}
 HUDNotification.ANIMATION_MOVE_X_DISTANCE = 30
 HUDNotification.DEFAULT_DISTANCE_FROM_BOTTOM = 130
 
 function HUDNotification.create(notification_data)
-	if not notification_data.notification_type or notification_data.notification_type == HUDNotification.GENERIC then
-		return HUDNotification:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.ICON then
-		return HUDNotificationIcon:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.CARD_FAIL then
-		return HUDNotificationCardFail:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.RAID_UNLOCKED then
-		return HUDNotificationRaidUnlocked:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.GREED_ITEM then
-		return HUDNotificationGreedItem:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.DOG_TAG then
-		return HUDNotificationDogTag:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.WEAPON_CHALLENGE then
-		return HUDNotificationWeaponChallenge:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.CONSUMABLE_MISSION_PICKED_UP then
-		return HUDNotificationConsumablePickup:new(notification_data)
-	elseif notification_data.notification_type == HUDNotification.ACTIVE_DUTY_BONUS then
-		return HUDNotificationActiveDuty:new(notification_data)
-	end
+	local notification_type = notification_data.notification_type or HUDNotification.GENERIC
+	local notification_class = HUDNotification.TYPES[notification_type]
+
+	return notification_class:new(notification_data)
 end
 
 function HUDNotification:init(notification_data)
@@ -260,6 +251,7 @@ function HUDNotificationIcon:init()
 end
 
 HUDNotificationRaidUnlocked = HUDNotificationRaidUnlocked or class(HUDNotification)
+HUDNotification.TYPES[HUDNotification.RAID_UNLOCKED] = HUDNotificationRaidUnlocked
 HUDNotificationRaidUnlocked.BOTTOM = 800
 HUDNotificationRaidUnlocked.WIDTH = 352
 HUDNotificationRaidUnlocked.FONT = tweak_data.gui.fonts.din_compressed_outlined_24
@@ -369,6 +361,7 @@ function HUDNotificationRaidUnlocked:_fit_size()
 end
 
 HUDNotificationConsumablePickup = HUDNotificationConsumablePickup or class(HUDNotification)
+HUDNotification.TYPES[HUDNotification.CONSUMABLE_MISSION_PICKED_UP] = HUDNotificationConsumablePickup
 HUDNotificationConsumablePickup.BOTTOM = 800
 HUDNotificationConsumablePickup.WIDTH = 352
 HUDNotificationConsumablePickup.FONT = tweak_data.gui.fonts.din_compressed_outlined_24
@@ -476,11 +469,13 @@ function HUDNotificationConsumablePickup:_fit_size()
 end
 
 HUDNotificationGreedItem = HUDNotificationGreedItem or class(HUDNotification)
+HUDNotification.TYPES[HUDNotification.GREED_ITEM] = HUDNotificationGreedItem
 HUDNotificationGreedItem.BOTTOM = 800
 HUDNotificationGreedItem.WIDTH = 352
 HUDNotificationGreedItem.HEIGHT = 160
 HUDNotificationGreedItem.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 HUDNotificationGreedItem.FRAME_ICON = "rewards_extra_loot_frame"
+HUDNotificationGreedItem.FILL_ICON = "rewards_extra_loot_fill"
 HUDNotificationGreedItem.LOOT_ICON = "rewards_extra_loot_middle_loot"
 HUDNotificationGreedItem.GOLD_ICON = "rewards_extra_loot_middle_gold"
 HUDNotificationGreedItem.TITLE_STRING = "menu_save_info_loot_title"
@@ -497,7 +492,6 @@ function HUDNotificationGreedItem:init(notification_data)
 	self:_create_icons()
 	self:_create_right_panel()
 	self:_create_title()
-	self:_create_progress_bar()
 
 	self._initial_progress = notification_data.initial_progress
 	self._current_progress = notification_data.initial_progress
@@ -543,10 +537,11 @@ function HUDNotificationGreedItem:_create_panel()
 	self._object:set_bottom(HUDNotificationGreedItem.BOTTOM)
 
 	local background_params = {
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
 		w = self._object:w(),
-		h = self._object:h(),
+		h = self._object:h() / 2,
+		y = self._object:h() / 4,
 		texture = tweak_data.gui.icons[HUDNotificationGreedItem.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationGreedItem.BACKGROUND_IMAGE].texture_rect
 	}
@@ -575,6 +570,22 @@ function HUDNotificationGreedItem:_create_icons()
 
 	self._frame_icon:set_center_x(self._icons_panel:w() / 2)
 	self._frame_icon:set_center_y(self._icons_panel:h() / 2)
+
+	local frame_fill_params = {
+		name = "frame_fill",
+		valign = "center",
+		layer = 5,
+		position_z = 0.76,
+		halign = "center",
+		render_template = "VertexColorTexturedRadial",
+		texture = tweak_data.gui.icons[HUDNotificationGreedItem.FILL_ICON].texture,
+		texture_rect = tweak_data.gui.icons[HUDNotificationGreedItem.FILL_ICON].texture_rect,
+		color = tweak_data.gui.colors.raid_gold
+	}
+	self._frame_fill = self._icons_panel:bitmap(frame_fill_params)
+
+	self._frame_fill:set_center_x(self._icons_panel:w() / 2)
+	self._frame_fill:set_center_y(self._icons_panel:h() / 2)
 
 	local loot_icon_params = {
 		name = "loot_icon",
@@ -610,7 +621,7 @@ function HUDNotificationGreedItem:_create_right_panel()
 		h = 96,
 		name = "right_panel",
 		is_root_panel = true,
-		x = self._icons_panel:x() + self._icons_panel:w()
+		x = self._icons_panel:x() + self._icons_panel:w() - 10
 	}
 	self._right_panel = RaidGUIPanel:new(self._object, right_panel_params)
 
@@ -623,7 +634,7 @@ function HUDNotificationGreedItem:_create_title()
 		name = "greed_item_notification_title",
 		vertical = "center",
 		h = 64,
-		align = "center",
+		align = "left",
 		halign = "left",
 		valign = "center",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
@@ -633,67 +644,49 @@ function HUDNotificationGreedItem:_create_title()
 	}
 	self._title = self._right_panel:text(title_params)
 
-	self._title:set_center_y(32)
+	self._title:set_center_y(self._right_panel:h() / 2)
 
-	local title_params = {
-		name = "greed_item_notification_gold_acquired",
+	local progress_amount_text_params = {
+		name = "greed_item_notification_amount_progress",
 		vertical = "center",
 		h = 64,
-		wrap = true,
-		align = "center",
-		alpha = 0,
+		align = "right",
 		halign = "left",
 		valign = "center",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
-		font_size = tweak_data.gui.font_sizes.size_24,
+		font_size = tweak_data.gui.font_sizes.size_46,
+		color = tweak_data.gui.colors.raid_gold,
+		text = utf8.to_upper(managers.localization:text(HUDNotificationGreedItem.GOLD_ACQUIRED_STRING))
+	}
+	self._gold_progress = self._right_panel:text(progress_amount_text_params)
+
+	self._gold_progress:set_center_y(self._right_panel:h() / 2)
+
+	local title_params = {
+		name = "greed_item_notification_gold_acquired",
+		wrap = true,
+		align = "center",
+		halign = "left",
+		vertical = "center",
+		alpha = 0,
+		y = 0,
+		x = 0,
+		valign = "center",
+		h = self._right_panel:h(),
+		w = self._right_panel:w(),
+		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
+		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_gold,
 		text = utf8.to_upper(managers.localization:text(HUDNotificationGreedItem.GOLD_ACQUIRED_STRING))
 	}
 	self._gold_acquired = self._right_panel:text(title_params)
-
-	self._gold_acquired:set_center_y(32)
-end
-
-function HUDNotificationGreedItem:_create_progress_bar()
-	local progress_bar_background_params = {
-		name = "greed_item_notification_progress_bar_background",
-		layer = 1,
-		w = self._right_panel:w(),
-		left = HUDNotificationGreedItem.LOOT_BAR_ICON_L,
-		center = HUDNotificationGreedItem.LOOT_BAR_ICON_M,
-		right = HUDNotificationGreedItem.LOOT_BAR_ICON_R,
-		color = HUDNotificationGreedItem.LOOT_BAR_COLOR
-	}
-	self._progress_bar_background = self._right_panel:three_cut_bitmap(progress_bar_background_params)
-
-	self._progress_bar_background:set_center_y(80)
-
-	local progress_bar_progress_panel_params = {
-		name = "progress_bar_progress_panel",
-		w = self._progress_bar_background:w(),
-		h = self._progress_bar_background:h(),
-		layer = self._progress_bar_background:layer() + 1
-	}
-	self._progress_bar_progress_panel = self._right_panel:panel(progress_bar_progress_panel_params)
-
-	self._progress_bar_progress_panel:set_x(self._progress_bar_background:x())
-	self._progress_bar_progress_panel:set_center_y(self._progress_bar_background:center_y())
-
-	local progress_bar_foreground_params = {
-		name = "loot_bar_foreground",
-		alpha = 0,
-		w = self._progress_bar_background:w(),
-		left = HUDNotificationGreedItem.LOOT_BAR_ICON_L,
-		center = HUDNotificationGreedItem.LOOT_BAR_ICON_M,
-		right = HUDNotificationGreedItem.LOOT_BAR_ICON_R,
-		color = HUDNotificationGreedItem.LOOT_BAR_FOREGROUND_COLOR
-	}
-	self._loot_bar_foreground = self._progress_bar_progress_panel:three_cut_bitmap(progress_bar_foreground_params)
 end
 
 function HUDNotificationGreedItem:_set_progress(progress)
-	self._progress_bar_progress_panel:set_w(self._progress_bar_background:w() * progress)
-	self._loot_bar_foreground:set_alpha(1)
+	local grams = math.ceil(progress * tweak_data.greed.points_needed_for_gold_bar)
+
+	self._gold_progress:set_text(tostring(grams) .. "g")
+	self._frame_fill:set_position_z(progress)
 end
 
 function HUDNotificationGreedItem:update_data(data)
@@ -705,13 +698,15 @@ function HUDNotificationGreedItem:update_data(data)
 end
 
 function HUDNotificationGreedItem:animate_progress_change()
-	self._gold_icon:stop()
-	self._gold_icon:animate(callback(self, self, "_animate_progress_change"))
+	if self._gold_icon then
+		self._gold_icon:stop()
+		self._gold_icon:animate(callback(self, self, "_animate_progress_change"))
+	end
 end
 
 function HUDNotificationGreedItem:_animate_progress_change(o)
 	self._animating_progress_change = true
-	local points_per_second = 80
+	local points_per_second = 100
 	local t = 0
 
 	while self._updated_progress - self._current_progress > 0 do
@@ -737,7 +732,7 @@ function HUDNotificationGreedItem:_animate_progress_change(o)
 
 	self._animating_progress_change = false
 
-	wait(0.7)
+	wait(1)
 	self:_check_hide()
 end
 
@@ -757,6 +752,10 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 		self._frame_icon:set_h(frame_default_h * current_frame_scale)
 		self._frame_icon:set_center_x(self._icons_panel:w() / 2)
 		self._frame_icon:set_center_y(self._icons_panel:h() / 2)
+		self._frame_fill:set_w(frame_default_w * current_frame_scale)
+		self._frame_fill:set_h(frame_default_h * current_frame_scale)
+		self._frame_fill:set_center_x(self._icons_panel:w() / 2)
+		self._frame_fill:set_center_y(self._icons_panel:h() / 2)
 
 		local current_r = Easing.quartic_out(t, tweak_data.gui.colors.raid_light_gold.r, tweak_data.gui.colors.raid_gold.r - tweak_data.gui.colors.raid_light_gold.r, duration_in)
 		local current_g = Easing.quartic_out(t, tweak_data.gui.colors.raid_light_gold.g, tweak_data.gui.colors.raid_gold.g - tweak_data.gui.colors.raid_light_gold.g, duration_in)
@@ -770,7 +769,10 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 		self._loot_icon:set_alpha(current_loot_icon_alpha)
 		self._loot_icon:set_center_y(self._icons_panel:h() / 2 - current_offset)
 		self._title:set_alpha(current_loot_icon_alpha)
-		self._title:set_center_y(32 - current_offset)
+		self._title:set_center_y(self._right_panel:h() / 2 - current_offset)
+		self._gold_progress:set_alpha(current_loot_icon_alpha)
+		self._gold_progress:set_center_y(self._title:center_y())
+		self._frame_fill:set_alpha(current_loot_icon_alpha)
 
 		if t >= duration_in / 2 then
 			local current_gold_icon_alpha = Easing.quartic_in_out(t - duration_in / 2, 0, 1, duration_in / 2)
@@ -780,18 +782,22 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 		end
 
 		self._gold_icon:set_center_y(self._icons_panel:h() / 2 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
-		self._gold_acquired:set_center_y(32 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
+		self._gold_acquired:set_y(HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
 	end
 
 	self._frame_icon:set_color(tweak_data.gui.colors.raid_gold)
 	self._frame_icon:set_w(frame_default_w)
 	self._frame_icon:set_h(frame_default_h)
+	self._frame_fill:set_w(frame_default_w)
+	self._frame_fill:set_h(frame_default_h)
 	self._loot_icon:set_alpha(0)
 	self._gold_icon:set_alpha(1)
 	self._loot_icon:set_center_y(self._icons_panel:h() / 2)
 	self._gold_icon:set_center_y(self._icons_panel:h() / 2)
 	self._frame_icon:set_center_x(self._icons_panel:w() / 2)
 	self._frame_icon:set_center_y(self._icons_panel:h() / 2)
+	self._frame_fill:set_center_x(self._icons_panel:w() / 2)
+	self._frame_fill:set_center_y(self._icons_panel:h() / 2)
 	wait(1.5)
 
 	local duration_out = 0.7
@@ -803,6 +809,8 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 
 		self._frame_icon:set_center_x(self._icons_panel:w() / 2)
 		self._frame_icon:set_center_y(self._icons_panel:h() / 2)
+		self._frame_fill:set_center_x(self._icons_panel:w() / 2)
+		self._frame_fill:set_center_y(self._icons_panel:h() / 2)
 
 		local current_r = Easing.quartic_out(t, tweak_data.gui.colors.raid_gold.r, 1 - tweak_data.gui.colors.raid_gold.r, duration_in)
 		local current_g = Easing.quartic_out(t, tweak_data.gui.colors.raid_gold.g, 1 - tweak_data.gui.colors.raid_gold.g, duration_in)
@@ -816,22 +824,27 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 		self._gold_icon:set_alpha(current_gold_icon_alpha)
 		self._gold_icon:set_center_y(self._icons_panel:h() / 2 - current_offset)
 		self._gold_acquired:set_alpha(current_gold_icon_alpha)
-		self._gold_acquired:set_center_y(32 - current_offset)
+		self._gold_acquired:set_y(current_offset)
 
 		if t >= duration_in / 2 then
 			local current_loot_icon_alpha = Easing.quartic_in_out(t - duration_in / 2, 0, 1, duration_in / 2)
 
 			self._loot_icon:set_alpha(current_loot_icon_alpha)
 			self._title:set_alpha(current_loot_icon_alpha)
+			self._gold_progress:set_alpha(current_loot_icon_alpha)
+			self._frame_fill:set_alpha(current_loot_icon_alpha)
 		end
 
 		self._loot_icon:set_center_y(self._icons_panel:h() / 2 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
-		self._title:set_center_y(32 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
+		self._title:set_center_y(self._right_panel:h() / 2 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
+		self._gold_progress:set_center_y(self._title:center_y())
 	end
 
 	self._frame_icon:set_color(Color.white)
 	self._frame_icon:set_center_x(self._icons_panel:w() / 2)
 	self._frame_icon:set_center_y(self._icons_panel:h() / 2)
+	self._frame_fill:set_center_x(self._icons_panel:w() / 2)
+	self._frame_fill:set_center_y(self._icons_panel:h() / 2)
 	self._loot_icon:set_alpha(1)
 	self._gold_icon:set_alpha(0)
 	self._loot_icon:set_center_y(self._icons_panel:h() / 2)
@@ -852,6 +865,7 @@ function HUDNotificationGreedItem:_check_hide()
 end
 
 HUDNotificationDogTag = HUDNotificationDogTag or class(HUDNotification)
+HUDNotification.TYPES[HUDNotification.DOG_TAG] = HUDNotificationDogTag
 HUDNotificationDogTag.BOTTOM = 800
 HUDNotificationDogTag.WIDTH = 550
 HUDNotificationDogTag.HEIGHT = 160
@@ -993,9 +1007,12 @@ end
 
 function HUDNotificationDogTag:update_data(data)
 	self:_set_progress(data.acquired, data.total)
+	self._object:stop()
+	self._object:animate(callback(self, self, "_animate_reshow"))
 end
 
 HUDNotificationWeaponChallenge = HUDNotificationWeaponChallenge or class(HUDNotification)
+HUDNotification.TYPES[HUDNotification.WEAPON_CHALLENGE] = HUDNotificationWeaponChallenge
 HUDNotificationWeaponChallenge.Y = 544
 HUDNotificationWeaponChallenge.WIDTH = 384
 HUDNotificationWeaponChallenge.HEIGHT = 224
@@ -1109,7 +1126,7 @@ function HUDNotificationWeaponChallenge:_create_description()
 	local description_params = {
 		name = "weapon_challenge_description",
 		wrap = true,
-		text = "Bla bla bla bla",
+		text = "You have see too much.",
 		layer = 3,
 		x = HUDNotificationWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDNotificationWeaponChallenge.DESCRIPTION_Y,
@@ -1188,16 +1205,18 @@ function HUDNotificationWeaponChallenge:_create_progress_bar()
 end
 
 function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
-	local challenge, count, target, min_range = nil
+	local challenge, count, target, min_range, briefing_id = nil
 
 	if challenge_data.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_data.challenge_id)
 		local tasks = challenge:tasks()
+		briefing_id = tasks[1]:briefing_id()
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
 		min_range = math.round(tasks[1]:min_range() / 100)
 	end
 
+	briefing_id = briefing_id or challenge_data.challenge_briefing_id
 	local skill_tweak_data = tweak_data.weapon_skills.skills[challenge_data.skill_name]
 
 	self._title:set_text(utf8.to_upper(managers.localization:text(skill_tweak_data.name_id)))
@@ -1216,26 +1235,21 @@ function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
 	self._icon:set_image(icon.texture, unpack(icon.texture_rect))
 	self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * count / target)
 
-	local progress_text = nil
+	local progress_text, description_text = nil
 
 	if count ~= target then
 		progress_text = tostring(count) .. "/" .. tostring(target)
-
-		self._description:set_text(managers.localization:text(challenge_data.challenge_briefing_id, {
-			AMOUNT = target,
-			RANGE = min_range,
-			WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
-		}))
+		description_text = briefing_id
 	else
 		progress_text = utf8.to_upper(managers.localization:text("menu_weapon_challenge_completed"))
-
-		self._description:set_text(managers.localization:text(challenge_data.challenge_done_text_id, {
-			AMOUNT = target,
-			RANGE = min_range,
-			WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
-		}))
+		description_text = briefing_id
 	end
 
+	self._description:set_text(managers.localization:text(description_text, {
+		AMOUNT = target,
+		RANGE = min_range,
+		WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
+	}))
 	self._progress_text:set_text(progress_text)
 	self:_fit_size()
 end
@@ -1261,6 +1275,8 @@ function HUDNotificationWeaponChallenge:_fit_size()
 end
 
 HUDNotificationActiveDuty = HUDNotificationActiveDuty or class(HUDNotification)
+HUDNotification.TYPES[HUDNotification.ACTIVE_DUTY_BONUS] = HUDNotificationActiveDuty
+HUDNotification.TYPES[HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW] = HUDNotificationActiveDuty
 HUDNotificationActiveDuty.BOTTOM = 800
 HUDNotificationActiveDuty.WIDTH = 500
 HUDNotificationActiveDuty.FONT = tweak_data.gui.fonts.din_compressed_outlined_24
@@ -1273,8 +1289,8 @@ HUDNotificationActiveDuty.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 
 function HUDNotificationActiveDuty:init(notification_data)
 	self:_create_panel()
-	self:_create_image(notification_data.amount)
-	self:_create_description(notification_data.amount, notification_data.consecutive, notification_data.total)
+	self:_create_image(notification_data.icon)
+	self:_create_description(notification_data)
 
 	self._sound_effect = "daily_login_reward"
 	self._sound_delay = 0.4
@@ -1325,13 +1341,7 @@ function HUDNotificationActiveDuty:_create_panel()
 	self._object:bitmap(background_params)
 end
 
-function HUDNotificationActiveDuty:_create_image(amount)
-	local icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE
-
-	if amount > 1 then
-		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
-	end
-
+function HUDNotificationActiveDuty:_create_image(icon)
 	local image_params = {
 		name = "notification_active_duty_gold_image",
 		layer = 3,
@@ -1350,15 +1360,22 @@ function HUDNotificationActiveDuty:_create_image(amount)
 	self._image:set_right(self._object:w())
 end
 
-function HUDNotificationActiveDuty:_create_description(amount, consecutive, total)
+function HUDNotificationActiveDuty:_create_description(notification_data)
+	local notification_type = notification_data.notification_type
 	local text = ""
 	text = utf8.to_upper(managers.localization:text("hud_active_duty_bonus"))
-	text = text .. " (" .. consecutive .. "/" .. total .. "): "
+	text = text .. " (" .. notification_data.consecutive .. "/" .. notification_data.total .. "): "
 
-	if amount == 1 then
-		text = text .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars_single"))
-	else
-		text = text .. (amount or 0) .. " " .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars"))
+	if notification_type == HUDNotification.ACTIVE_DUTY_BONUS then
+		local amount = notification_data.amount
+
+		if amount == 1 then
+			text = text .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars_single"))
+		else
+			text = text .. (amount or 0) .. " " .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars"))
+		end
+	elseif notification_type == HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW then
+		text = text .. utf8.to_upper(managers.localization:text("menu_mission_selected_mission_type_consumable"))
 	end
 
 	local description_params = {
@@ -1395,31 +1412,50 @@ end
 function HUDNotification:_animate_show(panel)
 	panel:set_alpha(0)
 
+	local duration = 0.4
 	local t = 0
 
 	if self._sound_effect then
 		self._sound_delay = self._sound_delay or 0
 	end
 
-	while t < 0.75 do
+	while t < duration do
 		local dt = coroutine.yield()
 		t = t + dt
 
-		if t >= 0.3 and t < 0.7 then
-			if self._sound_effect and not self._played_sound_effect and self._sound_delay < t then
-				managers.hud:post_event(self._sound_effect)
+		if self._sound_effect and not self._played_sound_effect and self._sound_delay < t then
+			managers.hud:post_event(self._sound_effect)
 
-				self._played_sound_effect = true
-			end
-
-			local curr_alpha = Easing.quintic_in_out(t - 0.3, 0, 1, 0.4)
-
-			panel:set_alpha(curr_alpha)
-
-			local current_x_offset = -(1 - curr_alpha) * HUDNotification.ANIMATION_MOVE_X_DISTANCE
-
-			self._object:set_right(self._initial_right_x + current_x_offset)
+			self._played_sound_effect = true
 		end
+
+		local curr_alpha = Easing.quintic_in_out(t, 0, 1, duration)
+
+		panel:set_alpha(curr_alpha)
+
+		local current_x_offset = -(1 - curr_alpha) * HUDNotification.ANIMATION_MOVE_X_DISTANCE
+
+		self._object:set_right(self._initial_right_x + current_x_offset)
+	end
+
+	panel:set_alpha(1)
+	self._object:set_right(self._initial_right_x)
+end
+
+function HUDNotification:_animate_reshow(panel)
+	local duration = 0.4
+	local t = self._object:alpha() * duration
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_alpha = Easing.quintic_in_out(t, 0, 1, duration)
+
+		panel:set_alpha(curr_alpha)
+
+		local current_x_offset = -(1 - curr_alpha) * HUDNotification.ANIMATION_MOVE_X_DISTANCE
+
+		self._object:set_right(self._initial_right_x + current_x_offset)
 	end
 
 	panel:set_alpha(1)
@@ -1433,7 +1469,7 @@ function HUDNotification:_animate_full_progress()
 	while t < 0.1 do
 		local dt = coroutine.yield()
 		t = t + dt
-		local scale = self:_ease_out_quint(t, starting_scale, 0.75 - starting_scale, 0.1)
+		local scale = Easing.quintic_out(t, starting_scale, 0.75 - starting_scale, 0.1)
 
 		self._object:set_size(self._panel_shape_w * scale, self._panel_shape_h * scale)
 		self._object:set_x(self._panel_shape_x + self._panel_shape_w * (1 - scale) * 0.5)
@@ -1449,7 +1485,7 @@ function HUDNotification:_animate_execute()
 		while t < 0.025 do
 			local dt = coroutine.yield()
 			t = t + dt
-			local scale = self:_linear(t, 1, -0.1, 0.025)
+			local scale = Easing.linear(t, 1, -0.1, 0.025)
 
 			self._object:set_size(self._panel_shape_w * scale, self._panel_shape_h * scale)
 			self._object:set_x(self._panel_shape_x + self._panel_shape_w * (1 - scale) * 0.5)
@@ -1469,7 +1505,7 @@ function HUDNotification:_animate_execute()
 	while t < 0.5 do
 		local dt = coroutine.yield()
 		t = t + dt
-		local scale = self:_ease_out_quint(t, 0.6, 0.6, 0.5)
+		local scale = Easing.quintic_out(t, 0.6, 0.6, 0.5)
 
 		self._object:set_size(self._panel_shape_w * scale, self._panel_shape_h * scale)
 		self._object:set_x(self._panel_shape_x + self._panel_shape_w * (1 - scale) * 0.5)
@@ -1477,7 +1513,7 @@ function HUDNotification:_animate_execute()
 		self._text:set_font_size(self._font_size * scale)
 
 		if t >= 0.1 then
-			local alpha = self:_ease_out_quint(t - 0.1, 1, -1, 0.3)
+			local alpha = Easing.quintic_out(t - 0.1, 1, -1, 0.3)
 
 			self._object:set_alpha(alpha)
 		end
@@ -1495,7 +1531,7 @@ function HUDNotification:_animate_cancel()
 	while t < 0.1 do
 		local dt = coroutine.yield()
 		t = t + dt
-		local progress = self:_ease_out_quint(t, starting_progress, -starting_progress, 0.1)
+		local progress = Easing.quintic_out(t, starting_progress, -starting_progress, 0.1)
 		local scale = 1 - 0.2 * progress
 
 		self._object:set_size(self._panel_shape_w * scale, self._panel_shape_h * scale)
@@ -1536,49 +1572,4 @@ function HUDNotification:_animate_hide(panel)
 	panel:set_alpha(0)
 	self:destroy()
 	managers.queued_tasks:queue("notification_done", managers.notification.notification_done, managers.notification, nil, 0.1, nil, true)
-end
-
-function HUDNotification:_ease_in_quint(t, starting_value, change, duration)
-	if duration <= t then
-		return starting_value + change
-	end
-
-	t = t / duration
-
-	return change * t * t * t * t * t + starting_value
-end
-
-function HUDNotification:_ease_out_quint(t, starting_value, change, duration)
-	if duration <= t then
-		return starting_value + change
-	end
-
-	t = t / duration
-	t = t - 1
-
-	return change * (t * t * t * t * t + 1) + starting_value
-end
-
-function HUDNotification:_ease_in_out_quint(t, starting_value, change, duration)
-	if duration <= t then
-		return starting_value + change
-	end
-
-	t = t / (duration / 2)
-
-	if t < 1 then
-		return change / 2 * t * t * t * t * t + starting_value
-	end
-
-	t = t - 2
-
-	return change / 2 * (t * t * t * t * t + 2) + starting_value
-end
-
-function HUDNotification:_linear(t, starting_value, change, duration)
-	if duration <= t then
-		return starting_value + change
-	end
-
-	return change * t / duration + starting_value
 end

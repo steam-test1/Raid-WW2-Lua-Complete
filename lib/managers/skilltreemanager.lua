@@ -1,5 +1,6 @@
 SkillTreeManager = SkillTreeManager or class()
-SkillTreeManager.VERSION = 21
+SkillTreeManager.VERSION = 22
+SkillTreeManager.VERSION_FORCED = false
 
 function SkillTreeManager:init()
 	self:_setup()
@@ -204,8 +205,14 @@ function SkillTreeManager:respec()
 					skill_key = skill_key
 				})
 
-				if skill_data.acquires[1] and skill_data.acquires[1].warcry_level then
-					managers.warcry:increase_warcry_level(nil, -skill_data.acquires[1].warcry_level)
+				if skill.acquires then
+					for _, v in ipairs(skill.acquires) do
+						if v.warcry_level then
+							managers.warcry:increase_warcry_level(nil, -v.warcry_level)
+						else
+							managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[2])
+						end
+					end
 				end
 
 				for _, upgrade in ipairs(skill_data.upgrades) do
@@ -387,13 +394,14 @@ end
 function SkillTreeManager:on_respec_tree()
 	MenuCallbackHandler:_update_outfit_information()
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		managers.statistics:publish_skills_to_steam()
 	end
 end
 
 function SkillTreeManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
+	show_reset_message = true
 
 	if show_reset_message then
 		managers.menu:show_skilltree_reseted()
@@ -442,7 +450,7 @@ function SkillTreeManager:load(data, version)
 		return
 	end
 
-	if state.version and state.version < SkillTreeManager.VERSION then
+	if state.version and state.version < SkillTreeManager.VERSION or SkillTreeManager.VERSION_FORCED then
 		Application:trace("[SkillTreeManager:load] Saved skilltree version: ", state.version, ", current version: ", SkillTreeManager.VERSION, ". Resetting the skill tree.")
 		self:set_character_profile_base_class(state.character_profile_base_class or SkillTreeTweakData.CLASS_RECON)
 		self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level())
@@ -514,7 +522,7 @@ function SkillTreeManager:reset()
 
 	self:_setup()
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		managers.statistics:publish_skills_to_steam()
 	end
 end

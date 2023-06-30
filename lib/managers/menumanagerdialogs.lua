@@ -1,3 +1,16 @@
+function MenuManager:show_custom_popup_dialog(dialog_data, buttons)
+	if buttons then
+		dialog_data.focus_button = dialog_data.focus_button or 1
+		dialog_data.button_list = {}
+
+		for _, button_data in ipairs(buttons) do
+			table.insert(dialog_data.button_list, button_data)
+		end
+	end
+
+	managers.system_menu:show(dialog_data)
+end
+
 function MenuManager:show_retrieving_servers_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_retrieving_servers_title"),
@@ -301,6 +314,10 @@ function MenuManager:show_person_joining(id, nick)
 
 	managers.system_menu:show(dialog_data)
 	_stop_autofire_sound()
+
+	if managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_mute()
+	end
 end
 
 function MenuManager:show_corrupt_dlc()
@@ -320,6 +337,10 @@ end
 
 function MenuManager:close_person_joining(id)
 	managers.system_menu:close("user_dropin" .. id)
+
+	if managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_unmute()
+	end
 end
 
 function MenuManager:update_person_joining(id, progress_percentage)
@@ -730,6 +751,31 @@ function MenuManager:show_character_create_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
+function MenuManager:show_mod_overrides_warning_dialog(params)
+	local dialog_data = {
+		title = utf8.to_upper(managers.localization:text("menu_mod_overrides_warning_title")),
+		text = managers.localization:text("menu_mod_overrides_warning_text"),
+		focus_button = 1
+	}
+	local yes_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_go_to_mod_overrides")),
+		class = RaidGUIControlButtonShortPrimary,
+		callback_func = params.callback_yes
+	}
+	local no_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_skip")),
+		class = RaidGUIControlButtonShortSecondary,
+		cancel_button = true,
+		callback_func = params.callback_no
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
 function MenuManager:show_err_character_name_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("dialog_error_title")),
@@ -739,6 +785,23 @@ function MenuManager:show_err_character_name_dialog(params)
 	local ok_button = {
 		text = utf8.to_upper(managers.localization:text("dialog_ok")),
 		callback_func = params.callback_func
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function MenuManager:show_voice_chat_blocked_dialog(clbk)
+	local dialog_data = {
+		title = utf8.to_upper(managers.localization:text("dialog_warning_title")),
+		text = managers.localization:text("dialog_err_online_insufficient_privileges_voicechat"),
+		no_upper = true
+	}
+	local ok_button = {
+		text = utf8.to_upper(managers.localization:text("dialog_ok")),
+		callback_func = clbk and clbk or nil
 	}
 	dialog_data.button_list = {
 		ok_button
@@ -768,10 +831,12 @@ end
 
 function MenuManager:show_mp_disconnected_internet_dialog(params)
 	local dialog_data = {
-		title = string.upper(managers.localization:text("dialog_warning_title")),
-		text = managers.localization:text("dialog_mp_disconnected_internet"),
-		no_upper = true
+		title = string.upper(managers.localization:text("dialog_warning_title"))
 	}
+	local text_string = "dialog_mp_disconnected_internet"
+	dialog_data.text = managers.localization:text(text_string)
+	dialog_data.no_upper = true
+	dialog_data.id = "show_mp_disconnected_internet_dialog"
 	local ok_button = {
 		text = managers.localization:text("dialog_ok"),
 		callback_func = params.ok_func
@@ -800,7 +865,7 @@ function MenuManager:show_internet_connection_required()
 end
 
 function MenuManager:show_err_no_chat_parental_control()
-	if SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS4 then
 		PSN:show_chat_parental_control()
 	else
 		local dialog_data = {
@@ -838,7 +903,7 @@ end
 function MenuManager:show_err_new_patch()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_information_title")),
-		text = managers.localization:text("dialog_new_patch"),
+		text = managers.localization:text("dialog_err_game_patch_pkg_exists_02"),
 		no_upper = true
 	}
 	local ok_button = {
@@ -2531,6 +2596,36 @@ function MenuManager:show_unlock_mission_confirm_dialog(params)
 	dialog_data.button_list = {
 		yes_button,
 		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function MenuManager:show_play_together_rejected_message()
+	local dialog_data = {
+		title = managers.localization:text("dialog_warning_title"),
+		text = managers.localization:text("dialog_play_together_reject_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function MenuManager:show_invite_rejected_message()
+	local dialog_data = {
+		title = managers.localization:text("dialog_warning_title"),
+		text = managers.localization:text("dialog_invite_reject_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
 	}
 
 	managers.system_menu:show(dialog_data)

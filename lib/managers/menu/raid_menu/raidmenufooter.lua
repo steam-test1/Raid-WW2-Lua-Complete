@@ -121,6 +121,12 @@ function RaidMenuFooter:hide_name_and_gold_panel()
 	self._name_and_gold_panel:hide()
 end
 
+function RaidMenuFooter:refresh_player_profile()
+	local username = utf8.to_upper(managers.network.account:username())
+
+	self._profile_gold_label:set_text(username)
+end
+
 function RaidMenuFooter:refresh_gold_amount()
 	local gold_amount = managers.gold_economy:gold_string(managers.gold_economy:current())
 

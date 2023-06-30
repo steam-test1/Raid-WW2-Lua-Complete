@@ -517,6 +517,8 @@ function CopMovement:_upd_stance(t)
 			for i, v in ipairs(values) do
 				self._machine:set_global(names[i], v)
 			end
+
+			self._force_head_upd = true
 		end
 	end
 
@@ -541,6 +543,8 @@ function CopMovement:_upd_stance(t)
 				suppression.value = transition.end_val
 				suppression.transition = nil
 			end
+
+			self._force_head_upd = true
 		end
 	end
 end
@@ -962,7 +966,7 @@ function CopMovement:_change_stance(stance_code, instant)
 		self:_chk_play_equip_weapon()
 	end
 
-	self:enable_update()
+	self:enable_update(true)
 end
 
 function CopMovement:sync_stance(i_stance, instant, execute_queued)
@@ -1340,7 +1344,7 @@ function CopMovement:on_suppressed(state)
 		end
 	end
 
-	self:enable_update()
+	self:enable_update(true)
 
 	if Network:is_server() then
 		managers.network:session():send_to_peers_synched("suppressed_state", self._unit, state and true or false)
@@ -2181,7 +2185,7 @@ function CopMovement:sync_action_walk_stop()
 end
 
 function CopMovement:sync_action_tase_end()
-	self:_cancel_latest_action("tase", true)
+	self:_cancel_latest_action("tase")
 end
 
 function CopMovement:sync_pose(pose_code)
@@ -2260,7 +2264,7 @@ function CopMovement:sync_action_dodge_start(body_part, var, side, rot, speed, s
 		direction = Rotation(rot):y(),
 		side = CopActionDodge.get_side_name(side),
 		speed = speed,
-		shoot_accuracy = shoot_acc
+		shoot_accuracy = shoot_acc / 10
 	}
 
 	self:action_request(action_data)
@@ -2271,7 +2275,7 @@ function CopMovement:sync_action_dodge_end()
 end
 
 function CopMovement:sync_action_aim_end()
-	self:_cancel_latest_action("shoot", true)
+	self:_cancel_latest_action("shoot")
 end
 
 function CopMovement:sync_action_hurt_end()

@@ -322,7 +322,7 @@ end
 function MissionUnlockGui:_finish_video()
 	managers.menu_component:post_event("menu_volume_reset")
 	managers.music:stop()
-	managers.music:post_event("music_camp", true)
+	managers.music:post_event(MusicManager.CAMP_MUSIC, true)
 	self:_complete_mission_unlock_process()
 	managers.raid_menu:register_on_escape_callback(nil)
 end

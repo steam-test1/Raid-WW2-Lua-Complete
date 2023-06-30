@@ -490,7 +490,7 @@ end
 function CharacterCustomizationManager:change_criminal_character(peer_id, new_character_name, peer_unit, remove_unit_in_source_slot)
 	local unit_to_remove = managers.criminals:character_unit_by_name(new_character_name)
 
-	managers.hud:_remove_name_label(peer_unit:unit_data().name_label_id)
+	managers.hud:_remove_name_label(peer_unit and peer_unit:unit_data() and peer_unit:unit_data().name_label_id)
 
 	if unit_to_remove and remove_unit_in_source_slot then
 		unit_to_remove:set_slot(0)
@@ -502,7 +502,7 @@ function CharacterCustomizationManager:change_criminal_character(peer_id, new_ch
 
 	local head_data = self:get_default_head_data(new_character_name)
 
-	if peer_unit:customization() then
+	if peer_unit and peer_unit:customization() then
 		self:increase_current_version_to_attach()
 		peer_unit:customization():attach_head_for_husk(head_data.path)
 	end

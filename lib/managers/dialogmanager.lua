@@ -191,6 +191,15 @@ function DialogManager:_random_criminal(nr_criminals)
 end
 
 function DialogManager:queue_random(id, params)
+	local queue_item = self:get_random_queue_dialogue(id)
+
+	self:queue_dialog(queue_item, params)
+
+	local r = self._random_list[id]
+	r.last = queue_item
+end
+
+function DialogManager:get_random_queue_dialogue(id)
 	local r = self._random_list[id]
 
 	if not r then
@@ -206,7 +215,7 @@ function DialogManager:queue_random(id, params)
 
 		return
 	elseif n == 1 then
-		self:queue_dialog(r.dialogs[1].id, params)
+		return r.dialogs[1].id
 	else
 		local rand = math.random(n)
 
@@ -216,10 +225,10 @@ function DialogManager:queue_random(id, params)
 			end
 		end
 
-		self:queue_dialog(r.dialogs[rand].id, params)
-
-		r.last = rand
+		return r.dialogs[rand].id
 	end
+
+	return nil
 end
 
 function DialogManager:sync_queue_dialog(id, instigator)
@@ -295,6 +304,8 @@ function DialogManager:paused()
 end
 
 function DialogManager:do_queue_dialog(id, params, test)
+	Application:debug("[DialogManager:do_queue_dialog]", id, inspect(params))
+
 	local instigator = self:_calc_instigator_string(params)
 
 	if Network:is_server() then
@@ -325,7 +336,6 @@ function DialogManager:do_queue_dialog(id, params, test)
 		dialog.params = params
 
 		if self._current_dialog.priority == dialog.priority and dialog.priority < 4 or dialog.priority < self._current_dialog.priority then
-			Application:debug("[DialogManager:queue_dialog] Terminate current dialogue:", self._current_dialog.id, "Higher priority dialogue queued:", dialog.id)
 			self:_stop_dialog()
 
 			self._current_dialog = dialog
@@ -335,7 +345,6 @@ function DialogManager:do_queue_dialog(id, params, test)
 				dialog = self._current_dialog
 			})
 		else
-			Application:debug("[DialogManager:queue_dialog] Skip playing dialoge:", id, "Higher priority is already playing:", self._current_dialog.id)
 			self:_call_done_callback(params and params.done_cbk, "skipped")
 
 			return false
@@ -432,8 +441,6 @@ function DialogManager:on_simulation_ended()
 end
 
 function DialogManager:_setup_position(dialog, char_data)
-	Application:debug("[DialogManager:_setup_position]", inspect(char_data))
-
 	local unit = managers.dialog._ventrilo_unit
 
 	if not alive(unit) then
@@ -466,17 +473,11 @@ function DialogManager:_play_dialog(data)
 	end
 
 	local char = dialog.character or dialog.lines and dialog.lines[dialog.line].character
-	char = char or managers.criminals:character_name_by_unit(managers.player:player_unit())
+	char = char or managers.criminals:character_name_by_unit(managers.player:player_unit()) or ""
 	local nationality_icon = nil
 
-	if char == "british" then
-		nationality_icon = tweak_data.gui.icons.nationality_small_british
-	elseif char == "german" then
-		nationality_icon = tweak_data.gui.icons.nationality_small_german
-	elseif char == "russian" then
-		nationality_icon = tweak_data.gui.icons.nationality_small_russian
-	elseif char == "american" then
-		nationality_icon = tweak_data.gui.icons.nationality_small_american
+	if tweak_data.gui.icons["nationality_small_" .. char] then
+		nationality_icon = tweak_data.gui.icons["nationality_small_" .. char]
 	end
 
 	if not alive(unit) then
@@ -505,7 +506,7 @@ function DialogManager:_play_dialog(data)
 	end
 
 	if not nationality_icon then
-		Application:debug("[DialogManager:_play_dialog] and nationality_icon is nil!!!!!!", data.dialog, data.line)
+		Application:debug("[DialogManager:_play_dialog] nationality_icon was NIL for dialogue.", data.dialog, data.line)
 	end
 
 	dialog.unit = unit
@@ -553,7 +554,6 @@ function DialogManager:_play_dialog(data)
 			end
 
 			unit:drama():play_sound(dialog.sound, dialog.sound_source)
-			Application:debug("[DialogManager:_play_dialog] Playing dialogue on unit:", char, unit, dialog.string_id)
 		end
 	end
 end
@@ -567,7 +567,6 @@ end
 function DialogManager:_call_done_callback(done_cbk, reason)
 	if done_cbk then
 		done_cbk(reason)
-		Application:debug("DialogManager:_call_done_callback")
 	end
 end
 

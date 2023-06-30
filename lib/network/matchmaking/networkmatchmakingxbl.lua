@@ -17,14 +17,36 @@ function NetworkMatchMakingXBL:init()
 	self._players = {}
 	self._next_cancel_callback_id = 0
 	self._cancel_callback_map = {}
+	self._server_joinable = false
+	self._lobby_filters = {}
+	self._session_handle_properties = {
+		"MINLEVEL",
+		"LEVELINDEX",
+		"SERVERSTATE",
+		"DIFFICULTY",
+		"KICKOPTION",
+		"GAMEVERSION"
+	}
 
-	self:set_server_joinable(true)
+	XboxLive:set_session_handle_attribs(self._session_handle_properties)
 	print("[NetworkMatchMakingXBL:init]")
 	managers.platform:add_event_callback("invite_accepted", callback(self, self, "invite_accepted_callback"))
 end
 
 function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 	print("[NetworkMatchMakingXBL:invite_accepted_callback]", invitee_xuid)
+
+	if managers.savefile:get_active_characters_count() < 1 then
+		managers.raid_menu:show_dialog_join_others_forbidden()
+
+		return
+	end
+
+	if managers.raid_job._play_tutorial ~= nil and managers.raid_job._play_tutorial == true then
+		managers.menu:show_invite_rejected_message()
+
+		return
+	end
 
 	local invitation = XboxLive:accepted_invite()
 
@@ -212,48 +234,6 @@ function NetworkMatchMakingXBL:add_cancelable_callback()
 	return self._next_cancel_callback_id
 end
 
-function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
-	self._searching_lobbys = nil
-
-	if self:check_callback_canceled(cancel_id) then
-		return
-	end
-
-	self._last_mode = mode
-
-	print("find_server_callback", mode, inspect(servers))
-
-	if not servers then
-		print("SEaRCH FAILED")
-
-		return
-	end
-
-	local info = {
-		room_list = {},
-		attribute_list = {}
-	}
-
-	for _, server in ipairs(servers) do
-		self._test_server = server
-
-		print(inspect(server))
-		table.insert(info.room_list, {
-			owner_name = server.properties.GAMERHOSTNAME,
-			xuid = server.properties.GAMERHOSTXUID,
-			room_id = server.info:id(),
-			info = server.info
-		})
-		table.insert(info.attribute_list, {
-			numbers = self:_server_to_numbers(server)
-		})
-	end
-
-	self:_call_callback("search_lobby", info)
-
-	local player_index = managers.user:get_platform_id()
-end
-
 function NetworkMatchMakingXBL:check_callback_canceled(id)
 	local is_canceled = self._cancel_callback_map[id]
 	self._cancel_callback_map[id] = nil
@@ -294,8 +274,8 @@ function NetworkMatchMakingXBL:leave_game()
 		end
 
 		self._session = nil
+		self._server_joinable = false
 
-		self:set_server_joinable(true)
 		print("NetworkMatchMakingXBL:leave_game() done")
 		Application:stack_dump()
 	else
@@ -389,6 +369,10 @@ end
 function NetworkMatchMakingXBL:get_friends_lobbies()
 end
 
+function NetworkMatchMakingXBL:set_search_friends_only(flag)
+	self._search_friends_only = flag
+end
+
 function NetworkMatchMakingXBL:search_friends_only()
 	return self._search_friends_only
 end
@@ -416,12 +400,23 @@ function NetworkMatchMakingXBL:set_lobby_return_count(lobby_return_count)
 end
 
 function NetworkMatchMakingXBL:lobby_filters()
+	return self._lobby_filters
 end
 
 function NetworkMatchMakingXBL:set_lobby_filters(filters)
+	self._lobby_filters = filters or {}
+end
+
+function NetworkMatchMakingXBL:get_lobby_filter(key)
+	return self._lobby_filters[key] and self._lobby_filters[key].value or false
 end
 
 function NetworkMatchMakingXBL:add_lobby_filter(key, value, comparision_type)
+	self._lobby_filters[key] = {
+		key = key,
+		value = value,
+		comparision_type = comparision_type
+	}
 end
 
 function NetworkMatchMakingXBL:search_lobby(friends_only)
@@ -437,15 +432,61 @@ function NetworkMatchMakingXBL:search_lobby(friends_only)
 		return
 	end
 
-	local prop = {
-		MINLEVEL = managers.experience:current_level(),
-		GAMEVERSION = self.GAMEVERSION
-	}
+	if friends_only then
+		self._searching_lobbys = true
+
+		XboxLive:search_session_for_friends(callback(self, self, "_find_server_callback", self:add_cancelable_callback()))
+
+		return
+	end
+
+	local player_index = managers.user:get_platform_id()
+	local filter_string = "numbers/minlevel ge " .. 0
+	filter_string = filter_string .. " and numbers/gameversion eq " .. self.GAMEVERSION
+
+	if self._lobby_filters.state and self._lobby_filters.state.value > 0 then
+		filter_string = filter_string .. " and numbers/serverstate eq " .. self._lobby_filters.state.value
+
+		if self._lobby_filters.state.value ~= 1 and self._lobby_filters.job_id and self._lobby_filters.job_id.value ~= -1 then
+			local level_id = tweak_data.levels:get_index_from_name_id(self._lobby_filters.job_id.value)
+
+			if level_id and level_id ~= -1 then
+				Application:trace("Session Filter JobId = " .. inspect(level_id))
+
+				filter_string = filter_string .. " and numbers/levelindex eq " .. level_id
+			end
+		end
+	elseif self._lobby_filters.job_id and self._lobby_filters.job_id.value ~= -1 then
+		local level_id = tweak_data.levels:get_index_from_name_id(self._lobby_filters.job_id.value)
+
+		if level_id and level_id ~= -1 then
+			Application:trace("Session Filter JobId = " .. inspect(level_id))
+
+			filter_string = filter_string .. " and numbers/levelindex eq " .. level_id
+		end
+	end
+
+	if self._difficulty_filter and self._difficulty_filter > 0 then
+		filter_string = filter_string .. " and numbers/difficulty eq " .. self._difficulty_filter
+	end
+
+	if self._lobby_filters.kick_option and self._lobby_filters.kick_option.value > 0 then
+		filter_string = filter_string .. " and numbers/kickoption eq " .. self._lobby_filters.kick_option.value
+	end
+
+	if self._lobby_filters.num_players and self._lobby_filters.num_players.value > 0 then
+		filter_string = filter_string .. " and session/membersCount eq " .. self._lobby_filters.num_players.value
+	end
+
+	Application:trace("Filter Query: " .. filter_string)
+
 	local con = {
 		GAME_TYPE = "STANDARD",
 		game_mode = "ONLINE"
 	}
 	self._searching_lobbys = true
+
+	XboxLive:search_session("Find Matches", player_index, 50, filter_string, con, callback(self, self, "_find_server_callback", self:add_cancelable_callback()))
 end
 
 function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
@@ -474,15 +515,18 @@ function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 		self._test_server = server
 
 		print(inspect(server))
-		table.insert(info.room_list, {
-			owner_name = server.properties.GAMERHOSTNAME,
-			xuid = server.properties.GAMERHOSTXUID,
-			room_id = server.info:id(),
-			info = server.info
-		})
-		table.insert(info.attribute_list, {
-			numbers = self:_server_to_numbers(server)
-		})
+
+		if self._session:id() ~= server.info:id() and server.properties.LEVELINDEX ~= 0 then
+			table.insert(info.room_list, {
+				owner_name = server.properties.GAMERHOSTNAME,
+				xuid = server.properties.GAMERHOSTXUID,
+				room_id = server.info:id(),
+				info = server.info
+			})
+			table.insert(info.attribute_list, {
+				numbers = self:_server_to_numbers(server)
+			})
+		end
 	end
 
 	self:_call_callback("search_lobby", info)
@@ -504,13 +548,6 @@ end
 
 function NetworkMatchMakingXBL:is_server_ok(friends_only, session_id, attributes_numbers)
 	local permission = tweak_data:index_to_permission(attributes_numbers[3])
-	local level_index, job_index = self:_split_attribute_number(attributes_numbers[1], 1000)
-
-	if not tweak_data.levels:get_level_name_from_index(level_index) then
-		Application:error("No level data for index " .. level_index .. ". Payday1 data not compatible with Payday2.")
-
-		return false
-	end
 
 	if (not NetworkManager.DROPIN_ENABLED or attributes_numbers[6] == 0) and attributes_numbers[4] ~= 1 then
 		return false, 1
@@ -534,8 +571,8 @@ end
 function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permission_check, data)
 	print("NetworkMatchMakingXBL:join_server_with_check", session_id)
 
-	if managers.network:session():has_other_peers() then
-		managers.menu:show_ok_only_dialog("dialog_error_title", "dialog_err_already_hoasting")
+	if managers.network:session() and managers.network:session():has_other_peers() > 0 then
+		managers.menu:show_ok_only_dialog("dialog_error_title", "dialog_err_cant_join_from_game")
 
 		return
 	end
@@ -673,9 +710,6 @@ function NetworkMatchMakingXBL:_join_by_smartmatch(job_id_filter, difficulty_fil
 		self._session = nil
 	end
 
-	XboxLive:set_context("GAME_TYPE", "STANDARD")
-	XboxLive:set_context("game_mode", "ONLINE")
-
 	self._hopper_variables = {
 		NrHosts = 0,
 		NrClients = 1,
@@ -785,16 +819,15 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 		managers.menu:show_failed_joining_dialog()
 
 		return
-	elseif not status then
-		local is_full = self.OPEN_SLOTS <= self._session:nr_members()
-
+	elseif status == "game_full" then
 		self:leave_game()
+		managers.menu:show_game_is_full()
 
-		if is_full then
-			managers.menu:show_game_is_full()
-		else
-			managers.menu:show_failed_joining_dialog()
-		end
+		return
+	elseif not status then
+		print("self._session:nr_members() = ", self._session:nr_members())
+		self:search_lobby(self:search_friends_only())
+		managers.menu:show_failed_joining_dialog()
 
 		return
 	end
@@ -814,11 +847,21 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 
 	self:_is_server(false)
 	self:_is_client(true)
+	managers.network.voice_chat:destroy_voice()
 	managers.network.voice_chat:open_session()
 	managers.network:start_client()
+
+	managers.network._restart_in_camp = true
+
 	managers.menu:show_waiting_for_server_response({
 		cancel_func = function ()
-			managers.network:session():on_join_request_cancelled()
+			managers.network.matchmake._retry_join_time = nil
+			managers.network.matchmake._retry_join_flag = false
+
+			if managers.network:session() then
+				managers.network:session():on_join_request_cancelled()
+			end
+
 			managers.network:queue_stop_network()
 			World:set_extensions_update_enabled(true)
 		end
@@ -827,6 +870,8 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 	local function joined_game(res, level_index, difficulty_index, state_index)
 		managers.system_menu:close("waiting_for_server_response")
 		print("[NetworkMatchMakingXBL:clbk_join_session_result:joined_game] res", res, "level_index", level_index, "difficulty_index", difficulty_index, "state_index", state_index)
+
+		local matchmake = managers.network.matchmake
 
 		if res == "JOINED_LOBBY" then
 			if managers.groupai then
@@ -841,53 +886,49 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 
 			local level_id = tweak_data.levels:get_level_name_from_index(level_index)
 			Global.game_settings.level_id = level_id
+
+			if self._session then
+				print("[NetworkMatchMakingXBL:new session]", self._session:id())
+			end
+
+			if self._session_to_delete then
+				print("[NetworkMatchMakingXBL:self._session_to_delete]", self._session_to_delete)
+				XboxLive:leave_local_session(self._session_to_delete)
+				XboxLive:delete_session(self._session_to_delete)
+
+				self._session_to_delete = nil
+			end
 		elseif res == "KICKED" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
-			managers.menu:show_peer_kicked_dialog()
+			matchmake:_restart_network()
+			managers.menu:show_peer_already_kicked_from_game_dialog()
 		elseif res == "TIMED_OUT" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 			managers.menu:show_request_timed_out_dialog()
 		elseif res == "GAME_STARTED" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 			managers.menu:show_game_started_dialog()
 		elseif res == "DO_NOT_OWN_HEIST" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 			managers.menu:show_does_not_own_heist()
 		elseif res == "CANCELLED" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 		elseif res == "FAILED_CONNECT" or res == "AUTH_FAILED" or res == "AUTH_HOST_FAILED" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 			managers.menu:show_failed_joining_dialog()
 		elseif res == "GAME_FULL" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 			managers.menu:show_game_is_full()
 		elseif res == "LOW_LEVEL" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 			managers.menu:show_too_low_level()
 		elseif res == "WRONG_VERSION" then
-			managers.network.matchmake:leave_game()
-			managers.network.voice_chat:destroy_voice()
-			managers.network:queue_stop_network()
+			matchmake:_restart_network()
 			managers.menu:show_wrong_version_message()
 		else
 			Application:error("[NetworkMatchMakingXBL:join_server] FAILED TO START MULTIPLAYER!", res)
 		end
+
+		World:set_extensions_update_enabled(true)
 	end
 
 	managers.network:join_game_at_host_rpc(self._server_rpc, joined_game)
@@ -905,13 +946,10 @@ function NetworkMatchMakingXBL:join_server(session_id, server, skip_showing_dial
 	print("[NetworkMatchMakingXBL:join_server]", xs_info, xs_info:id())
 
 	if self._session then
-		XboxLive:leave_local(self._session, player_index)
-		XboxLive:delete_session(self._session)
+		print("[NetworkMatchMakingXBL:join_server]", self._session:id())
 	end
 
-	XboxLive:set_context("GAME_TYPE", "STANDARD")
-	XboxLive:set_context("game_mode", "ONLINE")
-
+	self._session_to_delete = self._session
 	local permission = server.open_private_slots > 0 and "private" or "public"
 	local pub_slots = self.OPEN_SLOTS
 	local priv_slots = 0
@@ -932,10 +970,33 @@ function NetworkMatchMakingXBL:join_server(session_id, server, skip_showing_dial
 		result = "failed"
 	end
 
+	if self._session then
+		print("[NetworkMatchMakingXBL:new session]", self._session:id())
+	end
+
+	if self._session_to_delete then
+		print("[NetworkMatchMakingXBL:self._session_to_delete]", self._session_to_delete)
+	end
+
 	if not XboxLive:join_local(self._session, player_index, self._private, callback(self, self, "clbk_join_session_result")) then
-		self:leave_game()
+		managers.system_menu:close("join_server")
 		managers.menu:show_failed_joining_dialog()
 		self:search_lobby(self:search_friends_only())
+	end
+end
+
+function NetworkMatchMakingXBL:_restart_network()
+	Application:debug("[NetworkMatchMakingXBL:_restart_network()]", debug.traceback())
+	managers.menu:hide_loading_screen()
+
+	Global.dropin_loading_screen = nil
+
+	managers.network.matchmake:leave_game()
+	managers.network.voice_chat:destroy_voice()
+	managers.network:queue_stop_network()
+
+	if managers.game_play_central then
+		managers.game_play_central:restart_the_game()
 	end
 end
 
@@ -954,7 +1015,6 @@ function NetworkMatchMakingXBL:create_lobby(settings)
 	local attributes_numbers = settings.numbers
 	self._num_players = nil
 
-	self:set_server_joinable(true)
 	print("[NetworkMatchMakingXBL:create_lobby]", inspect(settings))
 
 	settings.numbers[4] = 1
@@ -964,9 +1024,6 @@ function NetworkMatchMakingXBL:create_lobby(settings)
 	local player_index = managers.user:get_platform_id()
 	local gt = "STANDARD"
 	local gm = "ONLINE"
-
-	XboxLive:set_context("GAME_TYPE", gt)
-	XboxLive:set_context("game_mode", gm)
 
 	if self._session and self._session:state() == "started" then
 		XboxLive:leave_local(self._session, player_index)
@@ -1083,9 +1140,21 @@ function NetworkMatchMakingXBL:_create_lobby_callback(params, session)
 
 	self:_is_server(true)
 	self:_is_client(false)
+
+	self._server_joinable = true
+
 	managers.network.voice_chat:open_session()
 	self:_create_lobby_done()
 	managers.menu:created_lobby()
+
+	if self._restart_in_camp then
+		self._restart_in_camp = nil
+
+		managers.platform:set_presence("Playing")
+		managers.network:session():local_peer():set_synched(true)
+		managers.network:session():local_peer():set_loaded(true)
+		managers.network:session():spawn_players()
+	end
 end
 
 function NetworkMatchMakingXBL:clbk_smartmatch_client_inexact_join_yes()
@@ -1251,26 +1320,165 @@ function NetworkMatchMakingXBL:set_num_players(num)
 	XboxLive:set_property("NUMPLAYERS", self._num_players)
 end
 
+function NetworkMatchMakingXBL:set_job_info_by_current_job()
+	local level_id, job_id, progress, mission_type, server_state_id = managers.network.matchmake:get_job_info_by_current_job()
+
+	if self._lobby_attributes then
+		self._lobby_attributes.level = level_id
+		self._lobby_attributes.job_id = job_id
+		self._lobby_attributes.progress = progress
+		self._lobby_attributes.mission_type = mission_type
+		self._lobby_attributes.state = server_state_id
+
+		self.lobby_handler:set_lobby_data(self._lobby_attributes)
+	end
+end
+
+function NetworkMatchMakingXBL:set_challenge_card_info()
+	local active_card = managers.challenge_cards:get_active_card()
+
+	if self._lobby_attributes then
+		if active_card then
+			self._lobby_attributes.challenge_card_id = active_card.key_name
+		else
+			self._lobby_attributes.challenge_card_id = "nocards"
+		end
+
+		self.lobby_handler:set_lobby_data(self._lobby_attributes)
+	end
+end
+
+function NetworkMatchMakingXBL:get_job_info_by_current_job()
+	local level_id = OperationsTweakData.IN_LOBBY
+	local job_id = OperationsTweakData.IN_LOBBY
+	local progress = "-"
+	local server_state_id = 1
+	local mission_type = managers.raid_job:current_job() and managers.raid_job:current_job().job_type or OperationsTweakData.IN_LOBBY
+
+	if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		progress = managers.raid_job:current_job().current_event .. "/" .. #managers.raid_job:current_job().events_index
+		level_id = managers.raid_job:current_job().events_index[managers.raid_job:current_job().current_event]
+		job_id = managers.raid_job:current_job().job_id
+		server_state_id = 3
+	elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+		progress = "1/1"
+		level_id = managers.raid_job:current_job().level_id
+		job_id = level_id
+		server_state_id = 3
+	end
+
+	return level_id, job_id, progress, mission_type, server_state_id
+end
+
+function NetworkMatchMakingXBL:get_all_players_info()
+	local host_level = managers.experience:current_level() or "-"
+	local host_class = managers.skilltree:get_character_profile_class() or "-"
+	local host_name = managers.network.account:username()
+	local host_nationality = Global.player_manager.character_profile_nation
+	local host_xuid = managers.network.account:player_id()
+	local players_data = host_level .. "," .. host_class .. "," .. host_name .. "," .. host_nationality .. "," .. tostring(host_xuid) .. ";"
+	local peer_id = 0
+
+	for peer_id = 2, 4 do
+		if managers.network and managers.network:session() and managers.network:session():all_peers() then
+			local peer_data = managers.network:session():all_peers()[peer_id]
+
+			if peer_data then
+				local peer_level = peer_data:level() or "-"
+				local peer_class = managers.network:session():all_peers()[peer_id]:blackmarket_outfit().skills or "-"
+				local peer_name = peer_data:name() or ""
+				local peer_nationality = peer_data:nationality() or ""
+				local peer_xuid = peer_data:xuid()
+				players_data = players_data .. peer_level .. "," .. peer_class .. "," .. peer_name .. "," .. peer_nationality .. "," .. tostring(peer_xuid) .. ";"
+			else
+				players_data = players_data .. "-,-,-,-;"
+			end
+		else
+			players_data = players_data .. "-,-,-,-;"
+		end
+	end
+
+	return string.split(players_data, ";")
+end
+
+function NetworkMatchMakingXBL:remove_player_info(peer_id)
+	if self._lobby_attributes and self._lobby_attributes.players_info then
+		local players_info = ""
+		local player_data = string.split(self._lobby_attributes.players_info, ";")
+
+		for index, data in pairs(player_data) do
+			if index == peer_id then
+				players_info = players_info .. "-,-;"
+			else
+				local peer_data = string.split(data, ",")
+
+				if peer_data[1] and peer_data[2] then
+					players_info = players_info .. peer_data[1] .. "," .. peer_data[2] .. ";"
+				else
+					players_info = players_info .. "-,-;"
+				end
+			end
+		end
+
+		self._lobby_attributes.players_info = players_info
+
+		self.lobby_handler:set_lobby_data(self._lobby_attributes)
+	end
+end
+
+function NetworkMatchMakingXBL:add_player_info(peer_id)
+	if self._lobby_attributes and self._lobby_attributes.players_info then
+		local players_info = ""
+		local player_data = string.split(self._lobby_attributes.players_info, ";")
+
+		for index, data in pairs(player_data) do
+			if index == peer_id then
+				if managers.network and managers.network:session() and managers.network:session():all_peers() then
+					local peer_data = managers.network:session():all_peers()[peer_id]
+					local peer_level = managers.network:session():all_peers()[peer_id]:level()
+					local peer_class = "-"
+					players_info = players_info .. peer_class .. "," .. peer_level .. ";"
+				else
+					players_info = players_info .. "-,-;"
+				end
+			else
+				local peer_data = string.split(data, ",")
+
+				if peer_data[1] and peer_data[2] then
+					players_info = players_info .. peer_data[1] .. "," .. peer_data[2] .. ";"
+				else
+					players_info = players_info .. "-,-;"
+				end
+			end
+		end
+
+		self._lobby_attributes.players_info = players_info
+
+		self.lobby_handler:set_lobby_data(self._lobby_attributes)
+	end
+end
+
 function NetworkMatchMakingXBL:set_server_state(state)
 	local player_index = managers.user:get_platform_id()
 	local state_id = tweak_data:server_state_to_index(state)
 
 	XboxLive:set_property("SERVERSTATE", state_id)
+	managers.network:session():chk_server_joinable_state()
 end
 
 function NetworkMatchMakingXBL:set_server_joinable(state)
 	print("[NetworkMatchMakingXBL:set_server_joinable]", state)
 	Application:stack_dump()
 
-	self._server_joinable_state = state
+	if self._session and self._server_joinable_state ~= state then
+		self._server_joinable_state = state
 
-	if self._session then
 		XboxLive:set_joinable(self._session, state and true)
 	end
 end
 
 function NetworkMatchMakingXBL:is_server_joinable()
-	return self._server_joinable_state and XboxLive:is_joinable(self._session)
+	return self._session and self._server_joinable_state and XboxLive:is_joinable(self._session)
 end
 
 function NetworkMatchMakingXBL:server_state_name()
@@ -1350,8 +1558,27 @@ function NetworkMatchMakingXBL:set_attributes(settings)
 	XboxLive:set_property("SERVERSTATE", settings.numbers[4] or XboxLive:get_property("SERVERSTATE"))
 	XboxLive:set_property("NUMPLAYERS", self._num_players or 1)
 	XboxLive:set_property("ALLOWDROPIN", settings.numbers[6])
-	XboxLive:set_property("MINLEVEL", settings.numbers[7])
+	XboxLive:set_property("MINLEVEL", settings.numbers[7] or 0)
+	XboxLive:set_property("KICKOPTION", settings.numbers[8] or 0)
+	XboxLive:set_property("JOBCLASS", settings.numbers[9] or 10)
+	XboxLive:set_property("JOBPLAN", settings.numbers[10])
+	XboxLive:set_property("REGION", settings.numbers[11])
+	XboxLive:set_property("CHALLENGECARDID", settings.numbers[12])
 	XboxLive:set_property("GAMEVERSION", self.GAMEVERSION)
+	XboxLive:set_property("JOBID", settings.numbers[14] or 0)
+	XboxLive:set_property("PROGRESS", settings.numbers[15])
+
+	local mission_type = settings.numbers[16]
+
+	if mission_type == OperationsTweakData.IN_LOBBY then
+		mission_type = 0
+	end
+
+	XboxLive:set_property("MISSIONTYPE", mission_type)
+	XboxLive:set_property("PLAYERINFO1", settings.numbers[17])
+	XboxLive:set_property("PLAYERINFO2", settings.numbers[18])
+	XboxLive:set_property("PLAYERINFO3", settings.numbers[19])
+	XboxLive:set_property("PLAYERINFO4", settings.numbers[20])
 
 	self._host_session_attributes = settings
 end
@@ -1360,13 +1587,26 @@ function NetworkMatchMakingXBL:_server_to_numbers(server)
 	local properties = server.properties
 
 	return {
-		tonumber(properties.LEVELINDEX),
-		tonumber(properties.DIFFICULTY),
-		tonumber(properties.PERMISSION),
-		tonumber(properties.SERVERSTATE),
-		tonumber(properties.NUMPLAYERS),
-		tonumber(properties.ALLOWDROPIN),
-		tonumber(properties.MINLEVEL)
+		properties.LEVELINDEX,
+		properties.DIFFICULTY,
+		properties.PERMISSION,
+		properties.SERVERSTATE,
+		properties.NUMPLAYERS,
+		properties.ALLOWDROPIN,
+		properties.MINLEVEL,
+		properties.KICKOPTION,
+		properties.JOBCLASS,
+		properties.JOBPLAN,
+		properties.REGION,
+		properties.CHALLENGECARDID,
+		properties.GAMEVERSION,
+		properties.JOBID,
+		properties.PROGRESS,
+		properties.MISSIONTYPE,
+		properties.PLAYERINFO1,
+		properties.PLAYERINFO2,
+		properties.PLAYERINFO3,
+		properties.PLAYERINFO4
 	}
 end
 
@@ -1450,116 +1690,6 @@ function NetworkMatchMakingXBL:_find_test_server_callback(cancel_id, servers, mo
 	local player_index = managers.user:get_platform_id()
 end
 
-function NetworkMatchMakingXBL:_test_join(xs_info, skip_showing_dialog)
-	xs_info = xs_info or self._test_server.info
-	local player_index = managers.user:get_platform_id()
-
-	print("_test_join", xs_info)
-
-	if self._session then
-		XboxLive:leave_local(self._session, player_index)
-		XboxLive:delete_session(self._session)
-	end
-
-	self._session = XboxLive:create_session_object_from_info("live_multiplayer_standard", player_index, 4, 0, xs_info)
-
-	if not self._session then
-		print("FAILED CREATE CLIENT SESSION")
-
-		return
-	end
-
-	if not XboxLive:join_local(self._session, player_index, true) then
-		return
-	end
-
-	print("self._session", self._session)
-
-	local result = "failed"
-
-	print("[NetworkMatchMakingXBL:join_server:f]")
-	managers.system_menu:close("join_server")
-
-	if result == "success" then
-		print("Success!")
-		print("[NetworkMatchMakingXBL:join_server] server details", self._session:ip(), self._session:id())
-		print("Gonna handshake now!")
-
-		self._server_rpc = Network:handshake(self._session:ip(), nil, "TCP_IP")
-
-		print("Handshook!")
-		print("Server RPC:", self._server_rpc and self._server_rpc:ip_at_index(0))
-
-		if not self._server_rpc then
-			return
-		end
-
-		managers.network:start_client()
-		managers.menu:show_waiting_for_server_response({
-			cancel_func = function ()
-				managers.network:session():on_join_request_cancelled()
-			end
-		})
-
-		local function joined_game(res, level_index, difficulty_index, state_index)
-			managers.system_menu:close("waiting_for_server_response")
-			print("[NetworkMatchMakingXBL:join_server:joined_game]", res, level_index, difficulty_index, state_index)
-
-			if res == "JOINED_LOBBY" then
-				if managers.groupai then
-					managers.groupai:kill_all_AI()
-				end
-
-				managers.network.voice_chat:open_session()
-				managers.menu:on_enter_lobby()
-			elseif res == "JOINED_GAME" then
-				if managers.groupai then
-					managers.groupai:kill_all_AI()
-				end
-
-				local level_id = tweak_data.levels:get_level_name_from_index(level_index)
-				Global.game_settings.level_id = level_id
-			elseif res == "KICKED" then
-				managers.network.matchmake:leave_game()
-				managers.network.voice_chat:destroy_voice()
-				managers.network:queue_stop_network()
-				managers.menu:show_peer_kicked_dialog()
-			elseif res == "TIMED_OUT" then
-				managers.network.matchmake:leave_game()
-				managers.network.voice_chat:destroy_voice()
-				managers.network:queue_stop_network()
-				managers.menu:show_request_timed_out_dialog()
-			elseif res == "GAME_STARTED" then
-				managers.network.matchmake:leave_game()
-				managers.network.voice_chat:destroy_voice()
-				managers.network:queue_stop_network()
-				managers.menu:show_game_started_dialog()
-			elseif res == "DO_NOT_OWN_HEIST" then
-				managers.network.matchmake:leave_game()
-				managers.network.voice_chat:destroy_voice()
-				managers.network:queue_stop_network()
-				managers.menu:show_does_not_own_heist()
-			elseif res == "CANCELLED" then
-				managers.network.matchmake:leave_game()
-				managers.network.voice_chat:destroy_voice()
-				managers.network:queue_stop_network()
-			elseif res == "FAILED_CONNECT" or res == "AUTH_FAILED" or res == "AUTH_HOST_FAILED" then
-				managers.network.matchmake:leave_game()
-				managers.network.voice_chat:destroy_voice()
-				managers.network:queue_stop_network()
-				managers.menu:show_failed_joining_dialog()
-			else
-				Application:error("[NetworkMatchMakingXBL:join_server] FAILED TO START MULTIPLAYER!", res)
-			end
-		end
-
-		managers.network:join_game_at_host_rpc(self._server_rpc, joined_game)
-	else
-		managers.menu:show_failed_joining_dialog()
-		self:search_lobby(self:search_friends_only())
-	end
-end
-
 function NetworkMatchMakingXBL:_join_server_callback()
 end
 
@@ -1578,9 +1708,6 @@ function NetworkMatchMakingXBL:_test_create(settings)
 	local gm = settings.game_mode
 	local skl = settings.skill
 	local player_index = managers.user:get_platform_id()
-
-	XboxLive:set_context("GAME_TYPE", gt)
-	XboxLive:set_context("game_mode", gm)
 
 	if self._session and self._session:state() == "started" then
 		XboxLive:leave_local(self._session, player_index)

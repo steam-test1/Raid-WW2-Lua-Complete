@@ -1,7 +1,7 @@
 TextBoxGui = TextBoxGui or class()
 TextBoxGui.PRESETS = {
 	system_menu = {
-		w = 600,
+		w = 800,
 		h = 270
 	},
 	weapon_stats = {
@@ -79,6 +79,14 @@ function TextBoxGui:recreate_text_box(...)
 	self._thread = self._panel:animate(self._update, self)
 end
 
+function TextBoxGui:get_osk_title()
+	return self._osk_title or ""
+end
+
+function TextBoxGui:get_osk_text()
+	return self._osk_text or ""
+end
+
 function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._ws = ws
 	self._init_layer = self._ws:panel():layer()
@@ -90,6 +98,8 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	end
 
 	self._text_box_focus_button = nil
+	self._osk_title = title or ""
+	self._osk_text = text or ""
 	local scaled_size = managers.gui_data:scaled_size()
 	local type = config and config.type
 	local preset = type and self.PRESETS[type]
@@ -661,7 +671,9 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 		ws = self._ws,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		text_changed_callback = callback(self, self, "_input_field_text_changed"),
-		text = texbox_value
+		text = texbox_value,
+		osk_title = self._osk_title,
+		osk_text = self._osk_text
 	}
 	self._input_field = RaidGUIControlInputField:new(textbox_panel, input_field_params)
 
@@ -742,6 +754,36 @@ function TextBoxGui:change_focus_button(change)
 	end
 
 	self:set_focus_button(focus_button)
+end
+
+function TextBoxGui:scroll_down()
+	if self._input_field then
+		self._input_field:_loose_focus()
+	else
+		return
+	end
+
+	self:set_focus_button(self._default_button)
+end
+
+function TextBoxGui:scroll_up()
+	if self._input_field then
+		self._input_field:on_click_rect()
+	else
+		return
+	end
+
+	local button_count = #self._buttons
+
+	for button = 1, button_count do
+		self:unfocus_button(button)
+	end
+end
+
+function TextBoxGui:focus_textbox()
+	if self._input_field then
+		self._input_field:show_onscreen_keyboard()
+	end
 end
 
 function TextBoxGui:get_focus_button()

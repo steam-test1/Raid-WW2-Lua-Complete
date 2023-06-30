@@ -62,7 +62,7 @@ function IngameLoading:at_exit()
 
 	managers.groupai:state():on_criminal_team_AI_enabled_state_changed(true)
 
-	if managers.player:local_player() then
+	if managers.player:local_player() and managers.player:local_player():movement() and managers.player:local_player():movement():current_state() then
 		managers.player:local_player():movement():current_state()._state_data.in_air = false
 	end
 

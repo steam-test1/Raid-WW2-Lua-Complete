@@ -329,8 +329,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_on_click_redeem()
 end
 
 function RaidGUIControlMeleeWeaponRewardDetails:redeem()
-	managers.lootdrop:redeem_dropped_loot_for_xp()
-	game_state_machine:current_state():recalculate_xp()
+	managers.lootdrop:redeem_dropped_loot_for_goldbars()
 end
 
 function RaidGUIControlMeleeWeaponRewardDetails:set_melee_weapon(weapon_id)

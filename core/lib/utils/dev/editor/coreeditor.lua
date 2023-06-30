@@ -434,11 +434,13 @@ end
 function CoreEditor:_init_title_messages()
 	self._title_messages = {}
 
-	self:add_title_message("Ask yourself, is this good for the company? ")
-	self:add_title_message("Hatarakazaru mono, kuu bekarazu. ")
-	self:add_title_message("Those who do not work, should not eat. ")
-	self:add_title_message("Don't waste you time or time will waste you. ")
-	self:add_title_message("Fill your head with rock. ")
+	self:add_title_message("Wonderful! You did it! ")
+	self:add_title_message("Why am I doing this? - Because I want to! ")
+	self:add_title_message("Keep it up! You're almost there! ")
+	self:add_title_message("Don't blame the tool, Blame the tool wielding the tool. ")
+	self:add_title_message("Anyone of you guys into Dota? ")
+	self:add_title_message("They say it's impossible, I say: Watch me! ")
+	self:add_title_message("Please help me, Im not meant to be here! ")
 end
 
 function CoreEditor:_init_edit_unit_dialog()
@@ -1531,6 +1533,10 @@ end
 function CoreEditor:_reset_dialogs()
 	for name, dialog in pairs(self._dialogs) do
 		dialog:reset()
+	end
+
+	if self._replace_dialog then
+		self._replace_dialog:reset()
 	end
 end
 
@@ -3111,7 +3117,7 @@ function CoreEditor:do_save(path, dir, save_continents)
 	local errors = managers.editor:check_duplicate_names_exist()
 
 	if errors then
-		Application:error("Duplicate names exist in the script, something is fucked up!")
+		Application:error("Duplicate names exist in the script, something is incorrect!")
 		managers.editor:show_text_box("ERROR!", errors)
 
 		return
@@ -3707,6 +3713,7 @@ function CoreEditor:_save_bundle_info_files(dir)
 	local instances_paths = self:_get_instances_paths()
 
 	file:puts("<bundle_info>")
+	file:puts("\t<!-- !! WARNING: THIS IS AUTOMATICALLY GENERATED, DO NOT EDIT BY HAND !! -->")
 	file:puts("\t<!-- Level Packages -->")
 	file:puts("\t<include_package folder=\"" .. world_path .. "\"/>")
 	file:puts("\n\t<!-- Instances -->")

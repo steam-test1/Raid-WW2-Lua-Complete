@@ -58,7 +58,7 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 		align = "right",
 		name = "stat_name_label",
 		word_wrap = true,
-		text = "Most specials killed",
+		text = "Most things done well",
 		layer = 3,
 		w = self._object:w(),
 		h = RaidGUIControlTopStatSmall.STAT_NAME_H,

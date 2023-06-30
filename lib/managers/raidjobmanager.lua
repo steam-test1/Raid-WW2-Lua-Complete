@@ -1,5 +1,4 @@
 RaidJobManager = RaidJobManager or class()
-RaidJobManager.NUMBER_OF_SAVE_SLOTS = 5
 RaidJobManager.WORLD_POINT_MISSION = "system_world_point_mission"
 RaidJobManager.WORLD_POINT_CAMP = "system_world_point_camp"
 RaidJobManager.WORLD_POINT_TUTORIAL = "system_world_point_tutorial"
@@ -119,6 +118,11 @@ function RaidJobManager:on_mission_started()
 	self:stop_sounds()
 
 	self.start_time = TimerManager:wall_running():time()
+
+	if managers.hud then
+		managers.hud:reset_session_time()
+	end
+
 	self.memory = {}
 	self.shortterm_memory = {}
 
@@ -150,6 +154,7 @@ function RaidJobManager:_on_restart_to_camp()
 		quit = true
 	})
 	managers.lootdrop:reset_loot_value_counters()
+	managers.hud:reset_session_time()
 	managers.global_state:reset_all_flags()
 
 	if managers.player:current_state() == "turret" then
@@ -341,6 +346,8 @@ function RaidJobManager:external_start_mission_clbk()
 end
 
 function RaidJobManager:external_end_mission(restart_camp, is_failed)
+	Application:debug("[RaidJobManager:external_end_mission] SERVER?, restart_camp, is_failed", Network:is_server(), restart_camp, is_failed)
+
 	managers.worldcollection.level_transition_in_progress = true
 
 	managers.game_play_central:set_restarting(true)
@@ -503,6 +510,10 @@ function RaidJobManager:external_end_mission_clbk()
 
 		tutorial_wp:on_executed()
 
+		if self:is_in_tutorial() then
+			self:restart_camp()
+		end
+
 		self._tutorial_spawned = false
 	end
 
@@ -541,7 +552,7 @@ end
 function RaidJobManager:get_available_save_slot()
 	local available_save_slot = nil
 
-	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS do
+	for i = 1, SavefileManager.OPERATION_SAFE_SLOTS do
 		if not self._save_slots[i] then
 			available_save_slot = i
 
@@ -557,7 +568,7 @@ function RaidJobManager:get_first_save_slot()
 end
 
 function RaidJobManager:has_available_save_slot()
-	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS do
+	for i = 1, SavefileManager.OPERATION_SAFE_SLOTS do
 		if not self._save_slots[i] then
 			return true
 		end
@@ -672,7 +683,7 @@ function RaidJobManager:current_operation_event()
 end
 
 function RaidJobManager:start_next_event()
-	if self._current_job.current_event then
+	if self._current_job and self._current_job.current_event then
 		if self._stage_success then
 			self:start_event(self._current_job.current_event + 1)
 		else
@@ -771,7 +782,7 @@ function RaidJobManager:continue_operation(slot)
 end
 
 function RaidJobManager:clear_operations_save_slots()
-	for i = 1, RaidJobManager.NUMBER_OF_SAVE_SLOTS do
+	for i = 1, SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT do
 		self._save_slots[i] = nil
 	end
 

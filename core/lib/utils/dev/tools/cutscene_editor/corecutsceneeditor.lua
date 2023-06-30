@@ -304,7 +304,7 @@ function CoreCutsceneEditor:_create_viewport()
 	self._camera:set_width_multiplier(1)
 	self._viewport:set_camera(self._camera)
 
-	self._camera_controller = self._viewport:director():make_camera(self._camera, "cutscene_camera")
+	self._camera_controller = self._viewport:director():make_camera(self._camera, Idstring("cutscene_camera"))
 
 	self._camera_controller:set_timer(TimerManager:game_animation())
 	self._viewport:director():set_camera(self._camera_controller)
@@ -1671,11 +1671,18 @@ end
 function CoreCutsceneEditor:_on_sequencer_selection_changed(sequencer)
 	self:_refresh_selected_footage_track()
 	self:_refresh_attribute_panel()
+	print("###################################################################################")
 
-	local all_selected_clips_are_on_the_active_film_track = #sequencer:selected_items() == #sequencer:active_film_track():selected_clips()
+	if sequencer then
+		local a = #sequencer:selected_items()
+		local b = #sequencer:active_film_track():selected_clips()
+		local all_selected_clips_are_on_the_active_film_track = a == b
 
-	self._edit_menu:set_enabled("CUT", all_selected_clips_are_on_the_active_film_track)
-	self._edit_menu:set_enabled("COPY", all_selected_clips_are_on_the_active_film_track)
+		self._edit_menu:set_enabled("CUT", all_selected_clips_are_on_the_active_film_track)
+		self._edit_menu:set_enabled("COPY", all_selected_clips_are_on_the_active_film_track)
+	else
+		print("NOTHING HERE")
+	end
 end
 
 function CoreCutsceneEditor:_on_sequencer_remove_item(sender, removed_item)

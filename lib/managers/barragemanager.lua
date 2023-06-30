@@ -95,9 +95,10 @@ function BarrageManager:sync_spotter_spawn_flare(flare, pos, rot, forward, v, sp
 	flare:damage():run_sequence_simple("effect_start_red")
 
 	local velocity = forward * v
-	local rand1 = 4 - math.random(0, 8)
-	local rand2 = 4 - math.random(0, 8)
-	local rand3 = 4 - math.random(0, 8)
+	local push_str = 10
+	local rand1 = push_str - math.random(0, push_str * 2)
+	local rand2 = push_str - math.random(0, push_str * 2)
+	local rand3 = push_str - math.random(0, push_str * 2)
 
 	flare:push_at(BarrageManager.FLARE_MASS, velocity, flare:position() + Vector3(rand1, rand2, rand3))
 
@@ -313,7 +314,7 @@ function BarrageManager:play_barrage_launch_sound(event_name)
 end
 
 function BarrageManager:_spawn_projectile(barrage_params)
-	local x, y = self:_uniform_sample_circle(barrage_params.radius)
+	local x, y = math.uniform_sample_circle(barrage_params.radius)
 	local delta_x = x * barrage_params.ortho_x
 	local delta_y = y * barrage_params.ortho_y
 	local pos = barrage_params.center + delta_x + delta_y
@@ -334,21 +335,6 @@ function BarrageManager:_spawn_projectile(barrage_params)
 	end
 
 	ProjectileBase.throw_projectile(barrage_params.projectile_index, pos, barrage_params.direction * barrage_params.lauch_power)
-end
-
-function BarrageManager:_uniform_sample_circle(radius)
-	local t = math.lerp(0, 360, math.random())
-	local r = math.lerp(0, 1, math.random()) + math.lerp(0, 1, math.random())
-
-	if r > 1 then
-		r = 2 - r
-	end
-
-	r = radius * r
-	local x = r * math.cos(t)
-	local y = r * math.sin(t)
-
-	return x, y
 end
 
 function BarrageManager:_prepare_barrage_params(barrage_params)

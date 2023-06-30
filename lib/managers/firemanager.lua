@@ -1,6 +1,7 @@
 FireManager = FireManager or class()
 FireManager.MAX_FLAMETHROWER_FIRES = 3
-FireManager.FLAMETHROWER_FIRE_CHANCE = 0.2
+FireManager.FLAMETHROWER_FIRE_CHANCE = 0.1
+FireManager.FLAMETHROWER_FIRE_CHANCE_INC = 0.33
 local idstr_explosion_std = Idstring("explosion_std")
 local empty_idstr = Idstring("")
 local molotov_effect = "effects/vanilla/fire/fire_molotov_grenade_001"
@@ -10,6 +11,7 @@ function FireManager:init()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}
 	self._flamethrower_fire_patches = {}
+	self._flamethrower_chance = FireManager.FLAMETHROWER_FIRE_CHANCE
 	self._doted_enemies = {}
 	self._fire_dot_grace_period = 1
 	self._fire_dot_tick_period = 1
@@ -63,10 +65,13 @@ function FireManager:leave_flamethrower_patch(player)
 			end
 		end
 
-		if FireManager.FLAMETHROWER_FIRE_CHANCE < math.random() then
+		if self._flamethrower_chance < math.random() then
+			self._flamethrower_chance = self._flamethrower_chance + FireManager.FLAMETHROWER_FIRE_CHANCE_INC
+
 			return
 		end
 
+		self._flamethrower_chance = FireManager.FLAMETHROWER_FIRE_CHANCE
 		local rot = player:rotation()
 		local pos = player:position() + rot:y() * -30
 		local td = tweak_data.projectiles[NPCFlamethrowerBase.EXPLOSION_TYPE]

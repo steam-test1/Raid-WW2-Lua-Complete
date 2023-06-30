@@ -100,8 +100,11 @@ function WarcrySharpshooter:_on_enemy_killed(params)
 		multiplier = multiplier + self._tweak_data.headshot_multiplier * managers.player:upgrade_value("player", "warcry_headshot_multiplier_bonus", 1)
 	end
 
-	if params.enemy_distance and self._tweak_data.distance_multiplier_activation_distance < params.enemy_distance then
-		multiplier = multiplier + self._tweak_data.distance_multiplier_addition_per_meter * (params.enemy_distance - self._tweak_data.distance_multiplier_activation_distance) / 100 * managers.player:upgrade_value("player", "warcry_long_range_multiplier_bonus", 1)
+	local activation_distance = self._tweak_data.distance_multiplier_activation_distance
+
+	if params.enemy_distance and activation_distance < params.enemy_distance then
+		local wc_long_range_multi_bonus = managers.player:upgrade_value("player", "warcry_long_range_multiplier_bonus", 1)
+		multiplier = multiplier + self._tweak_data.distance_multiplier_addition_per_meter * (params.enemy_distance - activation_distance) / 100 * wc_long_range_multi_bonus
 	end
 
 	local base_fill_value = self._tweak_data.base_kill_fill_amount

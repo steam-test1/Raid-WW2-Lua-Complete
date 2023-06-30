@@ -134,7 +134,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 		return
 	end
 
-	if self:intro_video_playing() and self:is_skipped() or self:intro_video_playing() and self:intro_video_done() then
+	if self:intro_video_playing() and (self:is_skipped() or self:intro_video_playing() and self:intro_video_done()) then
 		self._intro_video:destroy()
 		self._panel:remove(self._intro_video)
 		self._panel:remove_background()
@@ -145,7 +145,11 @@ function IngameWaitingForPlayersState:update(t, dt)
 
 		self._safe_panel:child("press_any_key_prompt"):stop()
 		self._safe_panel:remove(self._safe_panel:child("press_any_key_prompt"))
-		managers.raid_job:do_external_end_mission()
+
+		if not managers.system_menu:is_active_by_id("show_mp_disconnected_internet_dialog") then
+			Application:debug("[IngameWaitingForPlayersState:update] do_external_end_mission")
+			managers.raid_job:do_external_end_mission()
+		end
 	end
 
 	if self._briefing_start_t and self._briefing_start_t < t then
@@ -243,6 +247,12 @@ function IngameWaitingForPlayersState:at_enter()
 	managers.gui_data:layout_workspace(self._safe_rect_workspace)
 
 	self._safe_panel = self._safe_rect_workspace:panel()
+
+	if managers.network:session():is_host() and managers.network.matchmake:is_server_joinable() then
+		self._server_was_joinable = true
+
+		managers.network.matchmake:set_server_joinable(false)
+	end
 
 	self:setup_controller()
 
@@ -427,14 +437,7 @@ function IngameWaitingForPlayersState:at_exit()
 
 	local rich_presence = nil
 
-	if Global.game_settings.single_player then
-		rich_presence = "SPPlaying"
-	else
-		rich_presence = "MPPlaying"
-	end
-
 	managers.platform:set_presence("Playing")
-	managers.platform:set_rich_presence(rich_presence)
 	managers.platform:set_playing(true)
 	managers.game_play_central:start_heist_timer()
 

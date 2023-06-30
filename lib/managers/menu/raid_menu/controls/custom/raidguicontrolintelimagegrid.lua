@@ -146,7 +146,9 @@ function RaidGUIControlIntelImageGrid:set_selected(value, dont_trigger_selected_
 			photo_to_select = #self._photos
 		end
 
-		self._photos[photo_to_select]:set_selected(true)
+		if self._photos[photo_to_select] ~= nil then
+			self._photos[photo_to_select]:set_selected(true)
+		end
 	end
 end
 
@@ -160,7 +162,7 @@ function RaidGUIControlIntelImageGrid:move_up()
 
 	local screen_move = RaidGUIControlIntelImageGrid.super.move_up(self)
 
-	if screen_move then
+	if screen_move and self._photos[self._selected_index] ~= nil then
 		self._photos[self._selected_index]:highlight_off()
 
 		return true
@@ -217,7 +219,7 @@ function RaidGUIControlIntelImageGrid:move_left()
 
 	local screen_move = RaidGUIControlIntelImageGrid.super.move_left(self)
 
-	if screen_move then
+	if screen_move and self._photos[self._selected_index] ~= nil then
 		self._photos[self._selected_index]:highlight_off()
 
 		return true

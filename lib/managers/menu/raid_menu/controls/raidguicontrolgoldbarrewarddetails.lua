@@ -17,6 +17,7 @@ RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY = 10
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE = "gold_bar_single"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW = "gold_bar_3"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY = "gold_bar_box"
+RaidGUIControlGoldBarRewardDetails.REWARD_ICON_OUTLAW = "missions_consumable_mission"
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_Y = 304
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_W = 416
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_FONT = tweak_data.gui.fonts.lato

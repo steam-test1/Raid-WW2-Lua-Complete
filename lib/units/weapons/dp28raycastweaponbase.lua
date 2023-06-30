@@ -186,7 +186,9 @@ end
 function DP28RaycastWeaponBase:set_magazine_time_stamp(time)
 	local data = self:get_magazine_object()
 
-	data.unit:anim_set_time(Idstring(data.animations.fire), time)
+	if data.unit then
+		data.unit:anim_set_time(Idstring(data.animations.fire), time)
+	end
 end
 
 function DP28RaycastWeaponBase:tweak_data_anim_stop(anim, force_fire)

@@ -782,11 +782,7 @@ function CopLogicBase._angle_and_dis_chk(handler, settings, data, my_pos)
 	local dis_multiplier = dis / dis_max
 
 	if my_data.detection.use_uncover_range and settings.uncover_range and dis < settings.uncover_range then
-		retval = {
-			-1,
-			0,
-			0
-		}
+		return -1, 0, 0
 	end
 
 	if dis_multiplier < 1 then
@@ -919,7 +915,7 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 	local player_importance_wgt = data.unit:in_slot(managers.slot:get_mask("enemies")) and {}
 
 	for u_key, attention_info in pairs(all_attention_objects) do
-		if u_key ~= my_key and not detected_obj[u_key] and (not attention_info.nav_tracker or chk_vis_func(my_tracker, attention_info.nav_tracker)) then
+		if u_key ~= my_key and not detected_obj[u_key] and not Global.blind_enemies and (not attention_info.nav_tracker or chk_vis_func(my_tracker, attention_info.nav_tracker)) then
 			local settings = attention_info.handler:get_attention(my_access, min_reaction, max_reaction, data.team)
 
 			if settings then
@@ -974,18 +970,21 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 					else
 						local notice_delay_mul = attention_info.settings.notice_delay_mul or 1
 						delta_prog = dt / speed_mul * notice_delay_mul
-						local peer = managers.network:session():peer_by_unit(attention_info.unit)
 
-						if peer then
-							local slower_detection_multiplier = 0
+						if managers.network:session() ~= nil then
+							local peer = managers.network:session():peer_by_unit(attention_info.unit)
 
-							if peer._id == managers.network:session():local_peer()._id then
-								slower_detection_multiplier = managers.player:upgrade_value("player", "warcry_slower_detection", 0)
-							else
-								slower_detection_multiplier = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_player_slower_detection", 0)
+							if peer then
+								local slower_detection_multiplier = 0
+
+								if peer._id == managers.network:session():local_peer()._id then
+									slower_detection_multiplier = managers.player:upgrade_value("player", "warcry_slower_detection", 0)
+								else
+									slower_detection_multiplier = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_player_slower_detection", 0)
+								end
+
+								delta_prog = delta_prog * (1 - slower_detection_multiplier)
 							end
-
-							delta_prog = delta_prog * (1 - slower_detection_multiplier)
 						end
 					end
 				end
@@ -1057,7 +1056,7 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 				local attention_pos = attention_info.handler:get_detection_m_pos()
 				local dis = mvector3.distance(data.m_pos, attention_info.m_pos)
 
-				if dis < my_data.detection.dis_max * 1.2 and (not attention_info.settings.max_range or dis < attention_info.settings.max_range * (attention_info.settings.range_mul or 1) * 1.2) then
+				if my_data.detection and my_data.detection.dis_max and dis < my_data.detection.dis_max * 1.2 and (not attention_info.settings.max_range or dis < attention_info.settings.max_range * (attention_info.settings.range_mul or 1) * 1.2) then
 					local detect_pos = attention_pos
 					local in_FOV = not attention_info.settings.notice_requires_FOV or data.enemy_slotmask and attention_info.unit:in_slot(data.enemy_slotmask) or CopLogicBase._angle_chk(attention_info.handler, attention_info.settings, data, my_pos, 0.8)
 
@@ -1176,6 +1175,10 @@ end
 function CopLogicBase.on_search_SO_started(cop, params)
 	managers.voice_over:guard_investigate(cop)
 	managers.groupai:state():show_investigate_icon(cop)
+
+	if params.custom_stance then
+		cop:movement():set_stance(params.custom_stance, false, false)
+	end
 end
 
 function CopLogicBase._upd_look_for_player(data, attention_info)
@@ -1288,7 +1291,7 @@ function CopLogicBase.register_search_SO(cop, attention_info, position)
 			needs_full_blend = true,
 			type = "act",
 			body_part = 1,
-			variant = CopLogicBase._INVESTIGATE_SO_ANIMS[math.random(#CopLogicBase._INVESTIGATE_SO_ANIMS)],
+			variant = table.random(CopLogicBase._INVESTIGATE_SO_ANIMS),
 			blocks = {
 				light_hurt = -1,
 				hurt = -1,
@@ -1376,6 +1379,10 @@ function CopLogicBase.register_alert_SO(data)
 			data = data,
 			alert_point = alert_point
 		}), tostring(data.unit:key()))
+		alert_point:add_event_callback("anim_start", callback(data.unit, CopLogicBase, "on_alert_anim_start", {
+			data = data,
+			alert_point = alert_point
+		}), tostring(data.unit:key()))
 
 		alert_point.executing = true
 		data.internal_data.is_on_alert_SO = true
@@ -1395,6 +1402,16 @@ function CopLogicBase.on_alert_administered(cop, params)
 
 			params.alert_point.executing = false
 			params.data.internal_data.is_on_alert_SO = false
+		end
+	end
+end
+
+function CopLogicBase.on_alert_anim_start(cop, params)
+	if alive(cop) and Network:is_server() then
+		local is_dead = cop:character_damage():dead()
+
+		if not is_dead then
+			cop:sound():say("phone_ringing", true, false)
 		end
 	end
 end
@@ -1425,13 +1442,7 @@ function CopLogicBase.on_alert_completed(cop, params)
 			local cop_type = tostring(group_state.blame_triggers[cop:movement()._ext_base._tweak_table])
 
 			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "called")
-
-			if cop_type == "civ" then
-				group_state:on_police_called(cop:movement():coolness_giveaway())
-			else
-				group_state:on_police_called(cop:movement():coolness_giveaway())
-			end
-
+			group_state:on_police_called(cop:movement():coolness_giveaway())
 			managers.voice_over:disable()
 		else
 			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "call_interrupted")
@@ -1770,7 +1781,7 @@ function CopLogicBase._chk_relocate(data)
 
 			return true
 		end
-	elseif data.objective and data.objective.type == "defend_area" then
+	elseif data.objective and data.objective.type == "hunt" then
 		local area = data.objective.area
 
 		if area and not next(area.criminal.units) then
@@ -2146,7 +2157,9 @@ function CopLogicBase._get_logic_state_from_reaction(data, reaction)
 		reaction = data.attention_obj.reaction
 	end
 
-	local police_is_being_called = managers.groupai:state():chk_enemy_calling_in_area(managers.groupai:state():get_area_from_nav_seg_id(data.unit:movement():nav_tracker():nav_segment()), data.key)
+	local nav_seg = data.unit:movement():nav_tracker():nav_segment()
+	local nav_seg_id = nav_seg and managers.groupai:state():get_area_from_nav_seg_id(nav_seg)
+	local police_is_being_called = nav_seg_id and managers.groupai:state():chk_enemy_calling_in_area(nav_seg_id, data.key)
 
 	if not reaction or reaction <= AIAttentionObject.REACT_SCARED then
 		if data.char_tweak.calls_in and not police_is_being_called and not managers.groupai:state():is_police_called() and not data.unit:movement():cool() and not data.is_converted then
@@ -2502,6 +2515,9 @@ function CopLogicBase.on_attention_obj_identified(data, attention_u_key, attenti
 		elseif attention_info.unit:carry_data() then
 			managers.voice_over:guard_saw_bag(data.unit)
 		elseif managers.groupai:state():whisper_mode() and attention_info.unit:character_damage() and attention_info.unit:movement() and attention_info.unit:movement().SO_access then
+			local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+			local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+			local alert_radius = (data.char_tweak.shout_radius or 0) + (data.char_tweak.shout_radius_difficulty and data.char_tweak.shout_radius_difficulty[difficulty_index] or 0)
 			local new_alert = {
 				"vo_cbt",
 				attention_info.unit:movement():m_head_pos(),

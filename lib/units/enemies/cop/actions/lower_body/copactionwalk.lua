@@ -1409,7 +1409,13 @@ function CopActionWalk:_get_current_max_walk_speed(move_dir)
 		move_dir = "strafe"
 	end
 
-	return self._common_data.char_tweak.move_speed[self._ext_anim.pose][self._haste][self._stance.name][move_dir]
+	local speed = self._common_data.char_tweak.move_speed[self._ext_anim.pose][self._haste][self._stance.name][move_dir]
+
+	if (not Network:is_server() or Global.game_settings.single_player) and not managers.groupai:state():enemy_weapons_hot() then
+		speed = speed * tweak_data.network.stealth_speed_boost
+	end
+
+	return speed
 end
 
 function CopActionWalk:save(save_data)
@@ -1859,7 +1865,7 @@ function CopActionWalk:_adjust_move_anim(side, speed)
 		enter_t = seg_rel_t * walk_anim_length
 	end
 
-	local could_freeze = anim_data.can_freeze and anim_data.upper_body_empty
+	local could_freeze = anim_data.can_freeze and (not anim_data.upper_body_active or anim_data.upper_body_empty)
 	local redir_res = self._ext_movement:play_redirect(redirect_name, enter_t)
 
 	if could_freeze then
@@ -2160,8 +2166,6 @@ function CopActionWalk:append_nav_point(nav_point)
 		end
 
 		nav_point.element.nav_link_wants_align_pos = nav_point.element.nav_link_wants_align_pos or function (element)
-			Application:debug("[CopActionWalk:append_nav_point] Appending something that is not nav_link", inspect(self))
-
 			return true
 		end
 	end
@@ -2193,8 +2197,8 @@ function CopActionWalk:chk_block(action_type, t)
 end
 
 function CopActionWalk:chk_block_client(action_desc, action_type, t)
-	if CopActionAct.chk_block(self, action_type, t) and (not action_desc or action_desc.body_part ~= 3) then
-		return true
+	if self._nav_link or not action_desc or action_desc.body_part ~= 3 then
+		return self:chk_block(action_type, t)
 	end
 end
 
@@ -2360,9 +2364,9 @@ function CopActionWalk:_upd_nav_link(t)
 				table.insert(self._simplified_path, 2, end_pos)
 
 				self._next_is_nav_link = nil
-
-				self:_send_nav_point(self._simplified_path[2])
 			end
+
+			self:_send_nav_point(self._simplified_path[2])
 		end
 
 		if mvec3_dis(self._simplified_path[1], self._nav_point_pos(self._simplified_path[2])) > 400 and self._ext_base:lod_stage() == 1 then

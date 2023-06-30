@@ -174,7 +174,7 @@ function VoteManager:_host_start(vote_type, voter_peer_id, kicked_peer_id)
 	}
 
 	for id, peer in pairs(managers.network:session():peers()) do
-		if not peer:loading() and id ~= kicked_peer_id then
+		if not peer:loading() and id ~= kicked_peer_id and id ~= voter_peer_id then
 			self._vote_response[id] = self.VOTES.none
 		end
 	end
@@ -376,6 +376,10 @@ function VoteManager:_refresh_menu()
 			managers.menu:active_menu().logic:refresh_node()
 		end
 	end
+
+	if managers.menu_component._raid_menu_main_menu_gui then
+		managers.menu_component._raid_menu_main_menu_gui:refresh_kick_mute_widgets()
+	end
 end
 
 function VoteManager:help_text()
@@ -444,6 +448,8 @@ function VoteManager:network_package(type, value, result, peer_id)
 		self:_restart_counter("restart_mission")
 	elseif type == self.VOTE_EVENT.server_kick_option then
 		Global.game_settings.kick_option_synced = value
+
+		self:_refresh_menu()
 	end
 end
 
@@ -577,12 +583,12 @@ function VoteManager:message_vote()
 		if not managers.menu:active_menu() or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().name ~= "lobby" then
 			return
 		end
-	elseif game_state_machine:current_state_name() == "ingame_waiting_for_players" then
-		if not managers.menu:active_menu() or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().name ~= "kit" then
-			return
-		end
-	elseif not managers.menu:active_menu() or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().name ~= "pause" then
+	elseif game_state_machine:current_state_name() == "ingame_waiting_for_players" and (not managers.menu:active_menu() or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().name ~= "kit") then
 		return
+	end
+
+	if self._timeout == nil then
+		self._timeout = TimerManager:wall():time() + tweak_data.voting.timeout
 	end
 
 	local count = math.ceil(self._timeout - TimerManager:wall():time())
@@ -708,6 +714,10 @@ end
 
 function VoteManager:sync_server_kick_option(peer)
 	peer:send("voting_data", self.VOTE_EVENT.server_kick_option, Global.game_settings.kick_option, 0)
+end
+
+function VoteManager:sync_server_kick_option_with_peers()
+	managers.network:session():send_to_peers("voting_data", self.VOTE_EVENT.server_kick_option, Global.game_settings.kick_option, 0)
 end
 
 function VoteManager:option_vote_kick()

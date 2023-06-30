@@ -18,6 +18,7 @@ function RaidGUIControlSliderSimple:init(parent, params)
 		return
 	end
 
+	self._value_slider_step = self._value_slider_step or RaidGUIControlSliderSimple.CONTROLLER_STEP
 	self._value = self._params.value or 0
 	self._on_value_change_callback = params.on_value_change_callback
 
@@ -209,24 +210,24 @@ function RaidGUIControlSliderSimple:set_left(value)
 end
 
 function RaidGUIControlSliderSimple:move_left()
-	Application:trace("[RaidGUIControlSliderSimple:move_left] ", self._name, self._selected)
-
 	if self._selected then
+		Application:trace("[RaidGUIControlSliderSimple:move_left] ", self._name, self._selected)
+
 		local current_value = self:get_value()
 
-		self:set_value_and_render(current_value - RaidGUIControlSliderSimple.CONTROLLER_STEP)
+		self:set_value_and_render(current_value - self._value_slider_step)
 
 		return true
 	end
 end
 
 function RaidGUIControlSliderSimple:move_right()
-	Application:trace("[RaidGUIControlSliderSimple:move_right] ", self._name, self._selected)
-
 	if self._selected then
+		Application:trace("[RaidGUIControlSliderSimple:move_right] ", self._name, self._selected)
+
 		local current_value = self:get_value()
 
-		self:set_value_and_render(current_value + RaidGUIControlSliderSimple.CONTROLLER_STEP)
+		self:set_value_and_render(current_value + self._value_slider_step)
 
 		return true
 	end

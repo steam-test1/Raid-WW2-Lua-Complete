@@ -315,6 +315,10 @@ function RaidGUIControlButton:enabled()
 end
 
 function RaidGUIControlButton:confirm_pressed()
+	if self._params.no_click then
+		return true
+	end
+
 	if self._selected and self._on_click_callback then
 		self:_on_click_callback()
 

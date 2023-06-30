@@ -98,6 +98,10 @@ function RaidGUIControlInputField:init(parent, params)
 	})
 
 	self._input_text:set_selection(0, utf8.len(self._input_text:text()))
+
+	self._osk_title = params.osk_title or ""
+	self._osk_text = params.osk_text or ""
+	self._displaying_console_osk = false
 end
 
 function RaidGUIControlInputField:get_text()
@@ -171,8 +175,8 @@ function RaidGUIControlInputField:set_skip_first(skip_first)
 	self._skip_first = skip_first
 end
 
-function RaidGUIControlInputField:_on_focus()
-	if self._focus then
+function RaidGUIControlInputField:_on_focus(force)
+	if self._focus and not force then
 		return
 	end
 
@@ -188,6 +192,45 @@ function RaidGUIControlInputField:_on_focus()
 	self._enter_text_set = false
 
 	self:update_caret()
+end
+
+function RaidGUIControlInputField:show_onscreen_keyboard()
+	if not self._displaying_console_osk then
+		self._displaying_console_osk = true
+		local input_text = self._input_panel:child("input_text"):text()
+
+		managers.system_menu:show_keyboard_input({
+			title = self._osk_title,
+			text = self._osk_text,
+			input_text = input_text,
+			callback_func = callback(self, self, "_console_keyboard_dimissed")
+		})
+	end
+end
+
+function RaidGUIControlInputField:_console_keyboard_dimissed(success, text)
+	self._displaying_console_osk = false
+
+	if self._input_panel:child("input_text") then
+		local current_text = self._input_panel:child("input_text")
+
+		current_text:set_text("")
+		current_text:set_selection(0, 0)
+	end
+
+	if text and success then
+		local trimmed_text = trim(text)
+
+		self:enter_text(nil, trimmed_text)
+	else
+		self:enter_text(nil, "")
+	end
+
+	self:_enter_callback()
+end
+
+function trim(s)
+	return s:gsub("^%s*(.-)%s*$", "%1")
 end
 
 function RaidGUIControlInputField:_loose_focus()

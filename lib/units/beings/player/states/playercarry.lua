@@ -15,9 +15,6 @@ function PlayerCarry:_enter(enter_data)
 
 	if my_carry_data then
 		local carry_data = tweak_data.carry[my_carry_data.carry_id]
-
-		print("SET CARRY TYPE ON ENTER", carry_data.type)
-
 		self._tweak_data_name = carry_data.type
 	else
 		self._tweak_data_name = "light"
@@ -78,7 +75,7 @@ end
 function PlayerCarry:_check_dye_pack()
 	local my_carry_data = managers.player:get_my_carry_data()
 
-	if my_carry_data.has_dye_pack then
+	if my_carry_data and my_carry_data.has_dye_pack then
 		self._dye_risk = {
 			next_t = managers.player:player_timer():time() + 2 + math.random(3)
 		}
@@ -129,6 +126,8 @@ function PlayerCarry:_update_check_actions(t, dt)
 	new_action = new_action or self:_check_action_melee(t, input)
 	new_action = new_action or self:_check_action_reload(t, input)
 	new_action = new_action or self:_check_change_weapon(t, input)
+	new_action = new_action or self:_check_action_next_weapon(t, input)
+	new_action = new_action or self:_check_action_previous_weapon(t, input)
 	new_action = new_action or self:_check_action_equip(t, input)
 
 	if not new_action then
@@ -189,7 +188,7 @@ function PlayerCarry:_check_use_item(t, input)
 		local action_forbidden = not_expired or self:_interacting() or self._ext_movement:has_carry_restriction() or self:_is_throwing_projectile() or self:_on_zipline()
 
 		if not action_forbidden then
-			print("[PlayerCarry:_check_use_item] drop carry")
+			Application:debug("[PlayerCarry:_check_use_item] drop carry")
 			managers.player:drop_carry()
 
 			new_action = true
@@ -197,22 +196,6 @@ function PlayerCarry:_check_use_item(t, input)
 	end
 
 	return new_action
-end
-
-function PlayerCarry:_check_change_weapon(...)
-	return PlayerCarry.super._check_change_weapon(self, ...)
-end
-
-function PlayerCarry:_check_action_equip(...)
-	return PlayerCarry.super._check_action_equip(self, ...)
-end
-
-function PlayerCarry:_update_movement(t, dt)
-	PlayerCarry.super._update_movement(self, t, dt)
-end
-
-function PlayerCarry:_start_action_jump(...)
-	PlayerCarry.super._start_action_jump(self, ...)
 end
 
 function PlayerCarry:_perform_jump(jump_vec)
@@ -234,6 +217,8 @@ function PlayerCarry:_get_max_walk_speed(...)
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
 		multiplier = 1
+	elseif managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED) then
+		multiplier = 2 - multiplier
 	else
 		multiplier = math.clamp(multiplier * managers.player:upgrade_value("player", "carry_penalty_decrease", 1), 0, 1)
 	end

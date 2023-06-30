@@ -67,6 +67,14 @@ function HostNetworkSession:is_client()
 	return false
 end
 
+function HostNetworkSession:on_PSN_connection_established(name, ip)
+	if not _G.IS_PS4 then
+		return
+	end
+
+	self:chk_send_connection_established(name, nil, false)
+end
+
 function HostNetworkSession:load_level(...)
 	Application:debug("[HostNetworkSession:load_level()]", ...)
 	self:_inc_load_counter()

@@ -10,6 +10,9 @@ function NetworkVoiceChatPSN:init()
 	self:_load_globals()
 
 	self._muted_players = {}
+
+	PSNVoice:set_voice_ui_update_callback(callback(self, self, "voice_ui_update_callback"))
+	managers.menu_component:toggle_voice_chat_listeners(true)
 end
 
 function NetworkVoiceChatPSN:check_status_information()
@@ -29,7 +32,7 @@ function NetworkVoiceChatPSN:resume()
 end
 
 function NetworkVoiceChatPSN:set_volume(volume)
-	PSNVoice:set_volume(volume)
+	PSNVoice:set_volume(volume / 100)
 end
 
 function NetworkVoiceChatPSN:init_voice()
@@ -111,10 +114,6 @@ function NetworkVoiceChatPSN:open_session(roomid)
 	if self._room_id then
 		print("Voice: restart room")
 
-		self._restart_session = roomid
-
-		self:close_session()
-
 		return
 	end
 
@@ -122,6 +121,7 @@ function NetworkVoiceChatPSN:open_session(roomid)
 	self._joining = true
 
 	PSNVoice:start_session(roomid)
+	self:update_settings()
 end
 
 function NetworkVoiceChatPSN:close_session()
@@ -146,11 +146,11 @@ function NetworkVoiceChatPSN:close_session()
 end
 
 function NetworkVoiceChatPSN:open_channel_to(player_info, context)
-	print("NetworkVoiceChatPSN:open_channel_to")
+	print("[ VOICECHAT ] NetworkVoiceChatPSN:open_channel_to")
 end
 
 function NetworkVoiceChatPSN:close_channel_to(player_info)
-	print("NetworkVoiceChatPSN:close_channel_to")
+	print("[ VOICECHAT ] NetworkVoiceChatPSN:close_channel_to")
 	PSNVoice:stop_sending_to(player_info._name)
 end
 
@@ -255,6 +255,53 @@ function NetworkVoiceChatPSN:_save_globals(disable_voice)
 	end
 end
 
+function NetworkVoiceChatPSN:enabled()
+	return managers.user:get_setting("voice_chat")
+end
+
+function NetworkVoiceChatPSN:update_settings()
+	local value = managers.user:get_setting("voice_chat")
+
+	if value then
+		self:soft_enable()
+	else
+		self:soft_disable()
+	end
+end
+
+function NetworkVoiceChatPSN:set_recording(button_pushed_to_talk)
+end
+
+function NetworkVoiceChatPSN:soft_disable()
+	PSNVoice:stop_recording()
+	PSNVoice:set_enable(false)
+	Application:trace("SOFT DISABLE VOICE CHAT!!")
+end
+
+function NetworkVoiceChatPSN:soft_enable()
+	local enabled = managers.user:get_setting("voice_chat")
+
+	if enabled then
+		PSNVoice:set_enable(true)
+		PSNVoice:start_recording()
+		Application:trace("SOFT ENABLE VOICE CHAT!!")
+	else
+		self:soft_disable()
+	end
+end
+
+function NetworkVoiceChatPSN:trc_check_mute()
+	self:set_volume(0)
+	PSNVoice:mute(true)
+end
+
+function NetworkVoiceChatPSN:trc_check_unmute()
+	local voice_volume = math.clamp(managers.user:get_setting("voice_volume"), 0, 100)
+
+	self:set_volume(voice_volume)
+	PSNVoice:mute(false)
+end
+
 function NetworkVoiceChatPSN:_callback(info)
 	if info and PSN:get_local_userid() then
 		if info.load_succeeded ~= nil then
@@ -323,6 +370,15 @@ function NetworkVoiceChatPSN:update()
 	end
 end
 
+function NetworkVoiceChatPSN:voice_ui_update_callback(user_info)
+	if user_info and managers.network and managers.network:session() then
+		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
+			status_type = "talk",
+			user_data = user_info
+		})
+	end
+end
+
 function NetworkVoiceChatPSN:psn_session_destroyed(roomid)
 	if self._room_id and self._room_id == roomid then
 		self._room_id = nil
@@ -345,10 +401,30 @@ function NetworkVoiceChatPSN:_get_peer_user_id(peer)
 	end
 end
 
-function NetworkVoiceChatPSN:mute_player(mute, peer)
+function NetworkVoiceChatPSN:on_member_added(peer, mute)
+	if peer:rpc() then
+		PSNVoice:on_member_added(peer:name(), peer:rpc(), mute)
+	end
+end
+
+function NetworkVoiceChatPSN:on_member_removed(peer)
+	PSNVoice:on_member_removed(peer:name())
+end
+
+function NetworkVoiceChatPSN:mute_player(peer, mute)
 	self._muted_players[peer:name()] = mute
 
 	PSNVoice:mute_player(mute, peer:name())
+
+	local user_info = {
+		user_name = peer:name(),
+		state = mute
+	}
+
+	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
+		status_type = "mute",
+		user_data = user_info
+	})
 end
 
 function NetworkVoiceChatPSN:is_muted(peer)

@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_1_0_20"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_21_04"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -93,6 +93,10 @@ end
 function NetworkMatchMakingSTEAM:update()
 	Steam:update()
 
+	if not self._server_rpc then
+		return
+	end
+
 	if self._try_re_enter_lobby then
 		if self._try_re_enter_lobby == "lost" then
 			Application:error("REQUESTING RE-OPEN LOBBY")
@@ -101,7 +105,7 @@ function NetworkMatchMakingSTEAM:update()
 			self._try_re_enter_lobby = "asked"
 		elseif self._try_re_enter_lobby == "asked" then
 			-- Nothing
-		elseif self._try_re_enter_lobby == "open" then
+		elseif self._try_re_enter_lobby == "open" and self.lobby_handler then
 			self._try_re_enter_lobby = "joining"
 
 			Application:error("RE-ENTERING LOBBY", self.lobby_handler:id())

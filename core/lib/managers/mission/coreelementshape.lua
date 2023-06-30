@@ -59,22 +59,24 @@ function ElementShape:is_inside(pos)
 
 	if self._shape_units then
 		for _, unit in ipairs(self._shape_units) do
-			local data = unit:unit_data()
-			local oobb = nil
+			if alive(unit) then
+				local data = unit:unit_data()
+				local oobb = nil
 
-			if data and data._object_oobb then
-				local object = unit:get_object(Idstring(data._object_oobb))
-				oobb = object:oobb()
-			else
-				oobb = unit:oobb()
-			end
+				if data and data._object_oobb then
+					local object = unit:get_object(Idstring(data._object_oobb))
+					oobb = object:oobb()
+				else
+					oobb = unit:oobb()
+				end
 
-			local grow = self._values.grow or 0
+				local grow = self._values.grow or 0
 
-			oobb:grow(grow)
+				oobb:grow(grow)
 
-			if oobb:point_inside(pos) then
-				return true
+				if oobb:point_inside(pos) then
+					return true
+				end
 			end
 		end
 	end

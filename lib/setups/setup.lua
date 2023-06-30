@@ -305,7 +305,7 @@ function Setup:load_packages()
 	Application:debug("[Setup:load_packages()]")
 	setup:set_resource_loaded_clbk(Idstring("unit"), nil)
 	TextureCache:set_streaming_enabled(true)
-	TextureCache:set_LOD_streaming_enabled(SystemInfo:platform() ~= Idstring("XB1") and SystemInfo:platform() ~= Idstring("PS4"))
+	TextureCache:set_LOD_streaming_enabled(true)
 
 	if not Application:editor() then
 		PackageManager:set_streaming_enabled(true)
@@ -336,7 +336,7 @@ function Setup:init_managers(managers)
 		is_playing = false,
 		reputation_permission = 0,
 		selected_team_ai = true,
-		level_id = managers.dlc:is_trial() and "raid_trial" or "streaming_level",
+		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}
 
@@ -392,10 +392,6 @@ function Setup:init_managers(managers)
 end
 
 function Setup:start_boot_loading_screen()
-	if not PackageManager:loaded("packages/boot_screen") then
-		PackageManager:load("packages/boot_screen")
-	end
-
 	self:_start_loading_screen()
 end
 
@@ -523,7 +519,7 @@ function Setup:_start_loading_screen()
 		res = RenderSettings.resolution,
 		layer = tweak_data.gui.LOADING_SCREEN_LAYER,
 		load_level_data = load_level_data,
-		is_win32 = SystemInfo:platform() == Idstring("WIN32")
+		is_win32 = _G.IS_PC
 	}
 	Global.is_loading = true
 end
@@ -575,7 +571,7 @@ function Setup:init_game()
 
 	self._end_frame_clbks = {}
 	local scene_gui = Overlay:gui()
-	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, SystemInfo:platform() == Idstring("WIN32"))
+	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, _G.IS_PC)
 	self._main_thread_loading_screen_gui_visible = true
 
 	return game_state_machine
@@ -595,7 +591,7 @@ function Setup:init_finalize()
 
 	managers.blackmarket:init_finalize()
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		AnimationManager:set_anim_cache_size(10485760, 0)
 	end
 
@@ -740,7 +736,7 @@ end
 
 function Setup:exec(context)
 	if managers.network then
-		if SystemInfo:platform() == Idstring("PS4") then
+		if _G.IS_PS4 then
 			PSN:set_matchmaking_callback("session_destroyed", function ()
 			end)
 		end
@@ -754,7 +750,7 @@ function Setup:exec(context)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self:set_fps_cap(30)
 	end
 

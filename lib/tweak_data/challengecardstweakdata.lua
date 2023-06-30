@@ -23,6 +23,24 @@ ChallengeCardsTweakData.STACKABLE_AREA = {
 }
 
 function ChallengeCardsTweakData:init(tweak_data)
+	local function setup_card(id)
+		local card = {
+			name = "card_" .. id .. "_name_id",
+			description = "card_" .. id .. "_desc_id"
+		}
+		local gui_id = "cc_" .. id .. "_hud"
+
+		if tweak_data.gui[gui_id] then
+			card.texture = gui_id
+		else
+			Application:error("[ChallengeCardsTweakData] card " .. id .. " was generated without a valid texture, using temporary texture.")
+
+			card.texture = "cc_debug_card_hud"
+		end
+
+		return card
+	end
+
 	self.challenge_card_texture_path = "ui/challenge_cards/"
 	self.challenge_card_texture_rect = {
 		0,
@@ -116,6 +134,18 @@ function ChallengeCardsTweakData:init(tweak_data)
 		texture_rect_icon = tweak_data.gui.icons.loot_rarity_rare.texture_rect,
 		color = Color("718c9e")
 	}
+	self.rarity_definition.loot_rarity_halloween = {
+		texture_path = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
+		texture_rect = {
+			501,
+			674,
+			497,
+			670
+		},
+		texture_path_icon = tweak_data.gui.icons.loot_rarity_halloween.texture,
+		texture_rect_icon = tweak_data.gui.icons.loot_rarity_halloween.texture_rect,
+		color = Color("d88023")
+	}
 	self.rarity_definition.loot_rarity_none = {
 		texture_path = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 		texture_rect = {
@@ -166,8 +196,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards = {
 		empty = {}
 	}
-	self.cards.empty.name = "PASS"
-	self.cards.empty.description = "PASS"
+	self.cards.empty.name = "NAME"
+	self.cards.empty.description = "DESC"
 	self.cards.empty.effects = {}
 	self.cards.empty.rarity = LootDropTweakData.RARITY_NONE
 	self.cards.empty.card_type = ChallengeCardsTweakData.CARD_TYPE_NONE
@@ -193,7 +223,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		positive_description = {
 			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = {
-				EFFECT_VALUE_1 = "+15%"
+				EFFECT_VALUE_1 = "15%"
 			}
 		},
 		negative_description = {
@@ -700,7 +730,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		negative_description = {
 			desc_id = "effect_melee_avail_warcries_disabled"
 		},
-		rarity = LootDropTweakData.RARITY_RARE,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		card_type = ChallengeCardsTweakData.CARD_TYPE_RAID,
 		texture = "cc_special_raid_slasher_movie_hud",
 		achievement_id = "",
@@ -709,7 +739,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD,
 		card_back = "card_back_halloween_2017",
 		title_in_texture = true,
-		loot_drop_group = "loot_group_halooween_2017",
+		loot_drop_group = LootDropTweakData.REWARD_HALLOWEEN_2017,
 		selected_sound = "halloween_challenge_card_chosen"
 	}
 	self.cards.ra_pumpkin_pie = {
@@ -736,7 +766,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		negative_description = {
 			desc_id = "effect_only_attack_in_air"
 		},
-		rarity = LootDropTweakData.RARITY_RARE,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		card_type = ChallengeCardsTweakData.CARD_TYPE_RAID,
 		texture = "cc_special_raid_pumpkin_pie_hud",
 		achievement_id = "",
@@ -745,6 +775,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD,
 		card_back = "card_back_halloween_2017",
 		title_in_texture = true,
+		loot_drop_group = LootDropTweakData.REWARD_HALLOWEEN_2017,
 		selected_sound = "halloween_challenge_card_chosen"
 	}
 	self.cards.ra_season_of_resurrection = {
@@ -768,7 +799,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		negative_description = {
 			desc_id = "effect_no_bleedout_pumpkin_revive"
 		},
-		rarity = LootDropTweakData.RARITY_RARE,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		card_type = ChallengeCardsTweakData.CARD_TYPE_RAID,
 		texture = "cc_special_raid_season_of_resurrection_hud",
 		achievement_id = "",
@@ -777,6 +808,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD,
 		card_back = "card_back_halloween_2017",
 		title_in_texture = true,
+		loot_drop_group = LootDropTweakData.REWARD_HALLOWEEN_2017,
 		selected_sound = "halloween_challenge_card_chosen"
 	}
 	self.cards.op_limited_supplies = {
@@ -1438,6 +1470,17 @@ function ChallengeCardsTweakData:init(tweak_data)
 		def_id = 50006,
 		card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	}
+	local card_bonus_xp_multi = 1.5
+	local card_bonus_xp_multiplier_multi = 1.2
+
+	for _, card_data in pairs(self.cards) do
+		if card_data.bonus_xp then
+			card_data.bonus_xp = math.round(card_data.bonus_xp * card_bonus_xp_multi)
+		elseif card_data.bonus_xp_multiplier then
+			card_data.bonus_xp_multiplier = math.round(card_data.bonus_xp_multiplier * card_bonus_xp_multiplier_multi)
+		end
+	end
+
 	self.cards_index = {
 		"ra_on_the_scrounge",
 		"ra_no_backups",
@@ -1479,6 +1522,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 		"ra_pumpkin_pie",
 		"ra_season_of_resurrection"
 	}
+	self.playtimegenerator = {}
+	self.bundledefinitions = {}
+	self.generators = {}
 end
 
 function ChallengeCardsTweakData:get_all_cards_indexed()
@@ -1508,6 +1554,16 @@ function ChallengeCardsTweakData:get_card_by_key_name(card_key_name)
 	return result
 end
 
+function ChallengeCardsTweakData:get_card_by_def_id(def_id)
+	def_id = tonumber(def_id)
+
+	for k, v in pairs(self.cards) do
+		if v ~= nil and tonumber(v.def_id) == def_id then
+			return v
+		end
+	end
+end
+
 function ChallengeCardsTweakData:get_cards_by_rarity(rarity)
 	local cards = {}
 
@@ -1518,4 +1574,94 @@ function ChallengeCardsTweakData:get_cards_by_rarity(rarity)
 	end
 
 	return cards
+end
+
+function ChallengeCardsTweakData:update_card_data_from_json(jsonData)
+	Application:trace("[ChallengeCardsTweakData.update_card_data_from_json]")
+
+	local jsonDataItems = jsonData
+
+	if jsonData.items ~= nil then
+		jsonDataItems = jsonData.items
+	end
+
+	Application:trace(inspect(jsonDataItems))
+
+	if jsonDataItems ~= nil then
+		for i, val in pairs(jsonDataItems) do
+			if val.type ~= nil and val.item_name ~= nil then
+				if val.type == "item" then
+					local key = val.item_name
+
+					if self.cards[key] == nil then
+						self.cards[key] = {}
+
+						table.insert(self.cards_index, key)
+					end
+
+					for k, v in pairs(val) do
+						if self.cards[key][k] ~= v then
+							Application:trace(tostring(key) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
+
+							self.cards[key][k] = v
+						end
+					end
+
+					self.cards[key][ChallengeCardsTweakData.KEY_NAME_FIELD] = key
+
+					if self.cards[key].card_type == nil then
+						self.cards[key].card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+					end
+
+					if self.cards[key].rarity == nil then
+						self.cards[key].rarity = LootDropTweakData.RARITY_COMMON
+					end
+
+					if self.cards[key].bonus_xp == nil then
+						self.cards[key].bonus_xp = 0
+					end
+
+					if self.cards[key].entry == nil then
+						self.cards[key].entry = key
+					end
+				elseif val.type == "playtimegenerator" then
+					for k, v in pairs(val) do
+						if self.playtimegenerator[k] ~= v then
+							Application:trace("playtimegenerator, " .. tostring(val.item_name) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
+
+							self.playtimegenerator[k] = v
+						end
+					end
+				elseif val.type == "bundle" then
+					local key = val.itemdefid
+
+					if self.bundledefinitions[key] == nil then
+						self.bundledefinitions[key] = {}
+					end
+
+					for k, v in pairs(val) do
+						if self.bundledefinitions[key][k] ~= v then
+							Application:trace("bundledefinitions, " .. tostring(key) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
+
+							self.bundledefinitions[key][k] = v
+						end
+					end
+				elseif val.type == "generator" then
+					local key = val.itemdefid
+
+					if self.generators[key] == nil then
+						self.generators[key] = {}
+					end
+
+					for k, v in pairs(val) do
+						if self.generators[key][k] ~= v then
+							Application:trace("generators, " .. tostring(key) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
+
+							self.generators[key][k] = v
+						end
+					end
+				end
+			end
+		end
+	end
 end

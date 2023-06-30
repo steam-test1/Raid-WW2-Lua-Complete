@@ -3,13 +3,13 @@ core:import("CoreEvent")
 SavefileManager = SavefileManager or class()
 SavefileManager.SETTING_SLOT = 0
 SavefileManager.AUTO_SAVE_SLOT = 1
-SavefileManager.PROGRESS_SLOT = SystemInfo:platform() == Idstring("WIN32") and 11 or 11
-SavefileManager.BACKUP_SLOT = SystemInfo:platform() == Idstring("WIN32") and 31 or 31
+SavefileManager.PROGRESS_SLOT = 11
+SavefileManager.BACKUP_SLOT = 31
 SavefileManager.MIN_SLOT = 0
-SavefileManager.MAX_SLOT = SystemInfo:platform() == Idstring("WIN32") and 15 or 15
+SavefileManager.MAX_SLOT = 15
 SavefileManager.MAX_PROFILE_SAVE_INTERVAL = 300
 
-if SystemInfo:platform() == Idstring("X360") then
+if _G.IS_XB360 then
 	SavefileManager.TASK_MIN_DURATION = 3
 end
 
@@ -29,13 +29,10 @@ SavefileManager.DEBUG_TASK_TYPE_NAME_LIST = {
 SavefileManager.RESERVED_BYTES = 204800
 SavefileManager.VERSION = 5
 
-if SystemInfo:platform() == Idstring("PS3") then
-	SavefileManager.VERSION_NAME = "1.03"
-	SavefileManager.LOWEST_COMPATIBLE_VERSION = "1.02"
-elseif SystemInfo:platform() == Idstring("PS4") then
+if _G.IS_PS4 then
 	SavefileManager.VERSION_NAME = "01.00"
 	SavefileManager.LOWEST_COMPATIBLE_VERSION = "01.00"
-elseif SystemInfo:platform() == Idstring("XB1") then
+elseif _G.IS_XB1 then
 	SavefileManager.VERSION_NAME = "1.0.0.0"
 	SavefileManager.LOWEST_COMPATIBLE_VERSION = "1.0.0.0"
 else
@@ -45,6 +42,7 @@ end
 
 SavefileManager.SAVE_SYSTEM = "steam_cloud"
 SavefileManager._USER_ID_OVERRRIDE = nil
+SavefileManager.OPERATION_SAFE_SLOTS = 5
 SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT = 5
 SavefileManager.CHARACTER_PROFILE_STARTING_SLOT = 11
 
@@ -72,6 +70,8 @@ function SavefileManager:init()
 	self._queued_tasks = {}
 	self._savegame_hdd_space_required = false
 	self._save_slots_to_load = {}
+	self._slot_was_corrupt = {}
+	self._force_load_slot = {}
 
 	SaveGameManager:set_max_nr_slots(self.MAX_SLOT - self.MIN_SLOT + 1)
 end
@@ -138,7 +138,7 @@ function SavefileManager:storage_changed()
 			last_slot = self.MAX_SLOT
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			task_data.save_system = self.SAVE_SYSTEM
 		end
 
@@ -163,11 +163,13 @@ function SavefileManager:check_space_required()
 end
 
 function SavefileManager:clear_progress_data()
-	self:_remove(11)
-	self:_remove(12)
-	self:_remove(13)
-	self:_remove(14)
-	self:_remove(15)
+	Application:debug("[SavefileManager] clear_progress_data: ALL UR SAVE DATA IS GONNA GO NOW")
+
+	for i = 0, SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
+		Application:debug("[SavefileManager] clear_progress_data: Clearing save", i, ", Sav Slot", i + SavefileManager.CHARACTER_PROFILE_STARTING_SLOT)
+		self:_remove(i + SavefileManager.CHARACTER_PROFILE_STARTING_SLOT)
+	end
+
 	managers.weapon_inventory:setup()
 	managers.blackmarket:reset_equipped()
 	managers.character_customization:reset()
@@ -207,7 +209,7 @@ function SavefileManager:save_progress(save_system)
 
 		self:_save(progress_slot, nil, save_system)
 
-		Global.savefile_manager.backup_save_enabled = SystemInfo:platform() == Idstring("WIN32")
+		Global.savefile_manager.backup_save_enabled = _G.IS_PC
 	end
 end
 
@@ -264,6 +266,7 @@ function SavefileManager:break_loading_sequence()
 	cat_print("savefile_manager", "SavefileManager:break_loading_sequence()")
 
 	self._try_again = nil
+	self._try_again_saving = nil
 	self._loading_sequence = nil
 	self._save_slots_to_load = {}
 
@@ -453,14 +456,8 @@ function SavefileManager:_save(slot, cache_only, save_system)
 			user_index = managers.user:get_platform_id()
 		}
 
-		if SystemInfo:platform() == Idstring("PS3") then
+		if _G.IS_PS4 then
 			task_data.title = managers.localization:text("savefile_game_title")
-
-			if is_setting_slot then
-				task_data.disable_ownership_check = true
-			end
-
-			task_data.small_icon_path = "ICON0.PNG"
 		end
 
 		task_data.subtitle = managers.localization:text(is_setting_slot and "savefile_setting" or "savefile_progress", {
@@ -476,6 +473,7 @@ function SavefileManager:_save(slot, cache_only, save_system)
 		end
 
 		self:_on_task_queued(task_data)
+		Application:debug("[SavefileManager:AAAAAAAAAAAAAAAAAAAAAA] we even savig?", task_data)
 		SaveGameManager:save(task_data, callback(self, self, "clbk_result_save"))
 	end
 end
@@ -573,6 +571,7 @@ function SavefileManager:_save_done(slot, cache_only, task_data, slot_data, succ
 		}
 		dialog_data.text = managers.localization:text("dialog_fail_save_game_corrupt")
 
+		Application:warn("[SavefileManager:_save_done] SAVING FILE DID NOT SUCCEED!")
 		managers.system_menu:show(dialog_data)
 	end
 end
@@ -977,7 +976,7 @@ function SavefileManager:_set_current_task_type(task_type)
 
 		local wall_time = TimerManager:wall():time()
 		local ps3_ps4_load_enabled = true
-		local is_ps3_ps4 = SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4")
+		local is_ps3_ps4 = _G.IS_PS3 or _G.IS_PS4
 		local use_load_task_type = ps3_ps4_load_enabled and is_ps3_ps4 and task_type == self.LOAD_TASK_TYPE
 		local check_t = ps3_ps4_load_enabled and is_ps3_ps4 and old_task_type == self.LOAD_TASK_TYPE and 0 or 3
 
@@ -1236,7 +1235,7 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 				cache = slot_data.data
 			end
 
-			if cache and SystemInfo:platform() == Idstring("WIN32") and cache.version ~= SavefileManager.VERSION then
+			if cache and _G.IS_PC and cache.version ~= SavefileManager.VERSION then
 				cache = nil
 				wrong_version = true
 			end
@@ -1333,6 +1332,8 @@ function SavefileManager:clbk_result_iterate_savegame_slots(task_data, result_da
 end
 
 function SavefileManager:clbk_result_save(task_data, result_data)
+	Application:trace("savefile_manager", "[SavefileManager:clbk_result_save] task_data, result_data ", inspect(task_data), inspect(result_data))
+
 	if not self:_on_task_completed(task_data) then
 		Application:error("[SavefileManager:clbk_result_save] SAVE TASK HAS BEEN ABORTED ")
 		Application:error("[SavefileManager:clbk_result_save] task_data: ", inspect(task_data))
@@ -1347,6 +1348,10 @@ function SavefileManager:clbk_result_save(task_data, result_data)
 			cat_print("savefile_manager", "slot:", slot, "\n", inspect(slot_data))
 
 			local success = slot_data.status == "OK"
+
+			if not success then
+				Application:warn("[SavefileManager:clbk_result_save] Save result status is not OK?, so what is it?", slot_data.status)
+			end
 
 			self:_save_done(slot, false, task_data, slot_data, success)
 		end

@@ -56,6 +56,11 @@ function IngameWaitingForRespawnState:_setup_camera()
 	self._camera_object:set_far_range(managers.viewport.CAMERA_FAR_RANGE * 5)
 	self._camera_object:set_fov(75)
 
+	local p, r = managers.player:get_death_location_rotation()
+
+	self._camera_object:set_position(p and p + Vector3(0, 0, 100) or Vector3(0, 0, 1000))
+	self._camera_object:set_rotation(r or Rotation(0, 0, 0))
+
 	self._viewport = managers.viewport:new_vp(0, 0, 1, 1, "spectator", CoreManagerBase.PRIO_WORLDCAMERA)
 
 	self._viewport:set_camera(self._camera_object)
@@ -309,7 +314,10 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 
 				if vehicle_data then
 					vehicle_unit = vehicle_data.vehicle_unit
-					vehicle_seat = vehicle_unit:vehicle_driving()._seats[vehicle_data.seat]
+
+					if alive(vehicle_unit) then
+						vehicle_seat = vehicle_unit:vehicle_driving()._seats[vehicle_data.seat]
+					end
 				end
 			end
 		end

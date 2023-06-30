@@ -1,18 +1,18 @@
 BaseNetworkSession = BaseNetworkSession or class()
 BaseNetworkSession.TIMEOUT_CHK_INTERVAL = 5
 
-if SystemInfo:platform() == Idstring("X360") then
+if _G.IS_XB360 then
 	BaseNetworkSession.CONNECTION_TIMEOUT = 10
-elseif SystemInfo:platform() == Idstring("PS4") then
+elseif _G.IS_PS4 then
 	BaseNetworkSession.CONNECTION_TIMEOUT = 10
-elseif SystemInfo:platform() == Idstring("XB1") then
+elseif _G.IS_XB1 then
 	BaseNetworkSession.CONNECTION_TIMEOUT = 10
 else
 	BaseNetworkSession.CONNECTION_TIMEOUT = 10
 end
 
-BaseNetworkSession.LOADING_CONNECTION_TIMEOUT = SystemInfo:platform() == Idstring("WIN32") and 75 or 30
-BaseNetworkSession._LOAD_WAIT_TIME = 2
+BaseNetworkSession.LOADING_CONNECTION_TIMEOUT = _G.IS_PC and 75 or 80
+BaseNetworkSession._LOAD_WAIT_TIME = _G.IS_PC and 2 or 5
 BaseNetworkSession._STEAM_P2P_SEND_INTERVAL = 1
 
 function BaseNetworkSession:init()
@@ -36,15 +36,25 @@ function BaseNetworkSession:init()
 end
 
 function BaseNetworkSession:create_local_peer(load_outfit)
+	Application:debug("[BaseNetworkSession:create_local_peer] 1 load_outfit", load_outfit)
+
 	local my_name = managers.network.account:username_id()
-	local my_user_id = SystemInfo:distribution() == Idstring("STEAM") and Steam:userid() or false
+	local my_user_id = SystemInfo:distribution() == Idstring("STEAM") and Steam:userid() or managers.network.account:username_id()
+
+	Application:debug("[BaseNetworkSession:create_local_peer] 2 my_name, my_user_id", my_name, my_user_id)
+
 	self._local_peer = NetworkPeer:new(my_name, Network:self("TCP_IP"), 0, false, false, false, managers.blackmarket:get_preferred_character(), my_user_id)
+
+	Application:debug("[BaseNetworkSession:create_local_peer] 3 self._local_peer", self._local_peer)
 
 	if load_outfit then
 		self._local_peer:set_outfit_string(managers.blackmarket:outfit_string(), nil)
 	end
 
-	self._local_peer:set_class(managers.skilltree:get_character_profile_class())
+	local char_class = managers.skilltree:get_character_profile_class()
+
+	Application:debug("[BaseNetworkSession:create_local_peer] 4 char_class", char_class)
+	self._local_peer:set_class(char_class)
 end
 
 function BaseNetworkSession:has_other_peers()
@@ -264,7 +274,7 @@ function BaseNetworkSession:add_peer(name, rpc, in_lobby, loading, synched, id, 
 
 	peer:set_xuid(xuid)
 
-	if SystemInfo:platform() == Idstring("X360") or self:is_host() then
+	if _G.IS_XB360 or self:is_host() then
 		peer:set_xnaddr(xnaddr)
 	end
 
@@ -413,14 +423,14 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 
 	peer:unit_delete()
 
-	local peer_ident = SystemInfo:platform() == Idstring("WIN32") and peer:user_id() or peer:name()
+	local peer_ident = _G.IS_PC and peer:user_id() or peer:name()
 
 	if Network:is_server() then
 		self:check_start_game_intro()
 	end
 
 	if Network:multiplayer() then
-		if SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") or SystemInfo:platform() == Idstring("PS4") then
+		if _G.IS_XB360 or _G.IS_XB1 or _G.IS_PS4 then
 			managers.network.matchmake:on_peer_removed(peer)
 		end
 
@@ -968,9 +978,9 @@ function BaseNetworkSession:on_load_complete(simulation)
 	end
 
 	if not setup.IS_START_MENU then
-		if SystemInfo:platform() == Idstring("PS3") then
+		if _G.IS_PS3 then
 			PSN:set_online_callback(callback(self, self, "ps3_disconnect"))
-		elseif SystemInfo:platform() == Idstring("PS4") then
+		elseif _G.IS_PS4 then
 			PSN:set_online_callback(callback(self, self, "ps4_disconnect"))
 		end
 	end
@@ -995,6 +1005,19 @@ function BaseNetworkSession:psn_disconnected()
 	end
 
 	managers.network.voice_chat:destroy_voice(true)
+	managers.system_menu:close("waiting_for_server_response")
+
+	if managers.menu._loading_screen._state == "shown" then
+		MenuCallbackHandler:_dialog_end_game_yes()
+
+		Global.requestShowDisconnectedMessage = true
+	else
+		managers.menu:show_mp_disconnected_internet_dialog({
+			ok_func = function ()
+				MenuCallbackHandler:_dialog_end_game_yes()
+			end
+		})
+	end
 end
 
 function BaseNetworkSession:steam_disconnected()
@@ -1019,6 +1042,11 @@ function BaseNetworkSession:xbox_disconnected()
 	end
 
 	managers.network.voice_chat:destroy_voice(true)
+	managers.menu:show_mp_disconnected_internet_dialog({
+		ok_func = function ()
+			MenuCallbackHandler:_dialog_end_game_yes()
+		end
+	})
 end
 
 function BaseNetworkSession:ps4_disconnect(connected)
@@ -1083,7 +1111,7 @@ function BaseNetworkSession:on_steam_p2p_ping(sender_rpc)
 end
 
 function BaseNetworkSession:chk_send_connection_established(name, user_id, peer)
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS3 or _G.IS_PS4 then
 		peer = self:peer_by_name(name)
 
 		if not peer then
@@ -1118,7 +1146,7 @@ function BaseNetworkSession:chk_send_connection_established(name, user_id, peer)
 		Network:add_co_client(rpc)
 		self:remove_connection_from_trash(rpc)
 		self:remove_connection_from_soft_remove_peers(rpc)
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		local xnaddr = managers.network.matchmake:internal_address(peer:xuid())
 
 		if not xnaddr then

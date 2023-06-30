@@ -3,9 +3,11 @@ RaidGUIControlSkilltreeProgressBar.DEFAULT_H = 96
 RaidGUIControlSkilltreeProgressBar.PROGRESS_BAR_H = 32
 RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_PANEL_H = 64
 RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT = tweak_data.gui.fonts.din_compressed
-RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE = tweak_data.gui.font_sizes.size_46
-RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR = tweak_data.gui.colors.raid_red
+RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE = tweak_data.gui.font_sizes.size_38
 RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_W = 100
+RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR = tweak_data.gui.colors.raid_red
+RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR_GREY = tweak_data.gui.colors.progress_bar_dot
+RaidGUIControlSkilltreeProgressBar.SHOW_WEAPON_UNLOCK = false
 RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICONS_PANEL_H = 32
 RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON = "icon_weapon_unlocked"
 RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON_COLOR = tweak_data.gui.colors.raid_red
@@ -38,7 +40,7 @@ function RaidGUIControlSkilltreeProgressBar:init(parent, params)
 	self:_create_background()
 	self:_create_slider_pimples()
 	self:_create_level_marks_on_progress_bar()
-	self:_create_level_and_weapons_info()
+	self:_create_level_and_bonus_info()
 
 	self._progress = params.initial_progress or 0
 
@@ -119,6 +121,8 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 		texture_rect = tweak_data.gui.icons[line_texture].texture_rect
 	}
 	self._progress_line = self._background_panel:image(progress_line_params)
+
+	self._background_panel:set_y(128)
 end
 
 function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
@@ -137,12 +141,14 @@ function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 	local current_level = 1
 	local level_cap = managers.experience:level_cap()
 	local character_class = managers.skilltree:get_character_profile_class()
-	local weapon_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[character_class]
+	local weapon_unlock_progression = RaidGUIControlSkilltreeProgressBar.SHOW_WEAPON_UNLOCK and tweak_data.skilltree.automatic_unlock_progressions[character_class] or {}
 
 	while current_level <= level_cap do
+		local level_mark_params = nil
+
 		if current_level == 1 or current_level % 5 == 0 or weapon_unlock_progression[current_level] then
-			local level_mark_params = {
-				y = 0,
+			level_mark_params = {
+				y = 1,
 				name = "slider_pimple_" .. current_level,
 				x = self._params.horizontal_padding + (current_level - 1) * self._bar_w / (level_cap - 1) - icon_w / 2,
 				w = icon_w,
@@ -151,6 +157,20 @@ function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 				texture = tweak_data.gui.icons[icon].texture,
 				texture_rect = tweak_data.gui.icons[icon].texture_rect
 			}
+		else
+			level_mark_params = {
+				name = "slider_pimple_" .. current_level,
+				x = self._params.horizontal_padding + (current_level - 1) * self._bar_w / (level_cap - 1) - icon_w / 4,
+				y = icon_w / 4 + 1,
+				w = icon_w / 2,
+				h = icon_h / 2,
+				color = RaidGUIControlSkilltreeProgressBar.SLIDER_PIMPLE_COLOR,
+				texture = tweak_data.gui.icons[icon].texture,
+				texture_rect = tweak_data.gui.icons[icon].texture_rect
+			}
+		end
+
+		if level_mark_params then
 			local level_mark = self._slider_pimples_panel:image(level_mark_params)
 		end
 
@@ -182,7 +202,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar(
 			y = self._level_marks_panel:h() / 2 - RaidGUIControlSkilltreeProgressBar.LEVEL_MARK_ICON_SIZE / 2,
 			w = RaidGUIControlSkilltreeProgressBar.LEVEL_MARK_ICON_SIZE,
 			h = RaidGUIControlSkilltreeProgressBar.LEVEL_MARK_ICON_SIZE,
-			color = tweak_data.gui.colors.progress_bar_dot,
+			color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR_GREY,
 			texture = tweak_data.gui.icons[icon].texture,
 			texture_rect = tweak_data.gui.icons[icon].texture_rect
 		}
@@ -194,7 +214,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar(
 	end
 end
 
-function RaidGUIControlSkilltreeProgressBar:_create_level_and_weapons_info()
+function RaidGUIControlSkilltreeProgressBar:_create_level_and_bonus_info()
 	local level_labels_panel_params = {
 		name = "level_labels_panel",
 		y = 0,
@@ -209,7 +229,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_and_weapons_info()
 	self._level_labels = {}
 	self._weapon_unlock_icons = {}
 	local character_class = managers.skilltree:get_character_profile_class()
-	local weapon_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[character_class]
+	local weapon_unlock_progression = RaidGUIControlSkilltreeProgressBar.SHOW_WEAPON_UNLOCK and tweak_data.skilltree.automatic_unlock_progressions[character_class] or {}
 	local level_cap = managers.experience:level_cap()
 	local current_level = 1
 
@@ -240,6 +260,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_
 	local level_label = nil
 
 	if draw_level_label then
+		local player_level = managers.experience:current_level()
 		local level_label_text_params = {
 			vertical = "center",
 			name = "level_label_text",
@@ -251,7 +272,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_
 			font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 			font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
 			text = tostring(level),
-			color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR
+			color = level <= player_level and RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR or RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR_GREY
 		}
 		level_label = level_label_panel:text(level_label_text_params)
 		local _, _, w, _ = level_label:text_rect()

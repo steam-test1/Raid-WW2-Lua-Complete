@@ -64,6 +64,9 @@ function HUDSpecialInteraction:init(hud, params)
 		w = res_x * 1.2,
 		h = res_y
 	})
+
+	self._background_texture:set_center_x(self._bg_panel:w() / 2)
+
 	self._lockpick_texture = self._hud_panel:bitmap({
 		name = "_lockpick_texture",
 		layer = 2,

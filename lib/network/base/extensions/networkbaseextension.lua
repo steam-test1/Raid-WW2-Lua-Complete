@@ -5,12 +5,14 @@ function NetworkBaseExtension:init(unit)
 end
 
 function NetworkBaseExtension:send(func, ...)
-	if managers.network:session() then
+	if managers.network:session() ~= nil then
 		local peer = managers.network:session():local_peer()
 
-		if not peer:loading() then
+		if managers.network:session() and not peer:loading() then
 			managers.network:session():send_to_peers_synched(func, self._unit, ...)
-		else
+		end
+
+		if peer:loading() then
 			Application:debug("[NetworkBaseExtension:send_to_unit] SKIPPED!", self._unit)
 		end
 	end

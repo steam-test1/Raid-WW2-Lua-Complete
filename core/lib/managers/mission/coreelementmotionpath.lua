@@ -18,7 +18,13 @@ function ElementMotionPathOperator:on_executed(instigator)
 
 	local motion_path = self._sync_id ~= 0 and managers.worldcollection:motion_path_by_id(self._sync_id) or managers.motion_path
 
-	Application:debug("[ElementMotionPathOperator:on_executed]", motion_path)
+	Application:debug("[ElementMotionPathOperator:on_executed] ---------------------")
+	Application:debug("[ElementMotionPathOperator:on_executed] ELEMENTS", self._id, self._values.elements[1], self._values.elements[2])
+	Application:debug("[ElementMotionPathOperator:on_executed] MARKER ", self._id, self._values.marker)
+
+	for k, v in pairs(self._values.marker_ids) do
+		Application:debug("[ElementMotionPathOperator:on_executed] MARKERIDS Key/Value ", k, v)
+	end
 
 	if self._values.operation == "activate_bridge" then
 		motion_path:motion_operation_activate_bridge(self._values.elements)

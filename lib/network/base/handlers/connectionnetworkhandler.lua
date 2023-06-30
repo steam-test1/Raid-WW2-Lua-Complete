@@ -429,6 +429,16 @@ function ConnectionNetworkHandler:drop_in_pause_confirmation(dropin_peer_id, sen
 	managers.network:session():on_drop_in_pause_confirmation_received(dropin_peer_id, sender_peer)
 end
 
+function ConnectionNetworkHandler:leave_ready_up_menu(sender)
+	local sender_peer = self._verify_sender(sender)
+
+	if not sender_peer then
+		return
+	end
+
+	managers.raid_menu:close_all_menus()
+end
+
 function ConnectionNetworkHandler:report_dead_connection(other_peer_id, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1030,6 +1040,8 @@ function ConnectionNetworkHandler:sync_external_start_mission(mission_id, event_
 end
 
 function ConnectionNetworkHandler:sync_external_end_mission(restart_camp, failed, sender)
+	Application:debug("[ConnectionNetworkHandler:sync_external_end_mission] restart_camp, failed, sender", restart_camp, failed, sender)
+
 	if not self._verify_sender(sender) then
 		return
 	end

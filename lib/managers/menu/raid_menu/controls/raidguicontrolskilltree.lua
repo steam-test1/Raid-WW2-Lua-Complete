@@ -1,13 +1,13 @@
 RaidGUIControlSkilltree = RaidGUIControlSkilltree or class(RaidGUIControlBranchingProgressBar)
-RaidGUIControlSkilltree.DEFAULT_H = 416
-RaidGUIControlSkilltree.DEFAULT_BPB_H = 320
+RaidGUIControlSkilltree.DEFAULT_H = 600
+RaidGUIControlSkilltree.DEFAULT_BPB_H = 500
 
 function RaidGUIControlSkilltree:init(parent, params)
 	Application:debug("[RaidGUIControlSkilltree:init]")
 
 	params.h = params.h or RaidGUIControlSkilltree.DEFAULT_H
 	params.elements_panel_h = params.elements_panel_h or RaidGUIControlSkilltree.DEFAULT_BPB_H
-	params.x_step = 100
+	params.x_step = 35
 
 	RaidGUIControlSkilltree.super.init(self, parent, params)
 

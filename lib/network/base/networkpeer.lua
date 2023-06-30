@@ -15,7 +15,7 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	if self._rpc then
 		if self._rpc:ip_at_index(0) == Network:self("TCP_IP"):ip_at_index(0) then
 			is_local_peer = true
-		elseif SystemInfo:platform() == Idstring("PS4") then
+		elseif _G.IS_PS4 then
 			PSNVoice:send_to(self._name, self._rpc)
 		end
 	elseif self._steam_rpc and self._steam_rpc:ip_at_index(0) == Network:self("STEAM"):ip_at_index(0) then
@@ -161,7 +161,7 @@ function NetworkPeer:set_rpc(rpc)
 		Network:set_connection_id(self._rpc, self._id)
 		self:_chk_flush_msg_queues()
 
-		if SystemInfo:platform() == Idstring("PS4") then
+		if _G.IS_PS4 then
 			PSNVoice:send_to(self._name, self._rpc)
 		end
 
@@ -236,7 +236,7 @@ function NetworkPeer:change_ticket_callback()
 end
 
 function NetworkPeer:verify_job(job)
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not _G.IS_PC then
 		return
 	end
 
@@ -258,7 +258,7 @@ function NetworkPeer:verify_job(job)
 end
 
 function NetworkPeer:verify_character()
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not _G.IS_PC then
 		return
 	end
 
@@ -350,7 +350,7 @@ function NetworkPeer:_verify_cheated_outfit(item_type, item_id, result)
 end
 
 function NetworkPeer:_verify_content(item_type, item_id)
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not _G.IS_PC then
 		return true
 	end
 
@@ -455,7 +455,7 @@ function NetworkPeer:is_cheater()
 end
 
 function NetworkPeer:mark_cheater(reason, auto_kick)
-	if Application:editor() or SystemInfo:platform() ~= Idstring("WIN32") or NetworkPeer.CHEAT_CHECKS_DISABLED then
+	if Application:editor() or not _G.IS_PC or NetworkPeer.CHEAT_CHECKS_DISABLED then
 		return
 	end
 
@@ -499,7 +499,7 @@ function NetworkPeer:load(data)
 
 	self._name = data.name
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self._name = managers.network.account:username_by_id(data.user_id)
 	end
 
@@ -1100,7 +1100,7 @@ function NetworkPeer:set_name(name)
 end
 
 function NetworkPeer:destroy()
-	print("[NetworkPeer:destroy]", self:id())
+	Application:debug("[NetworkPeer:destroy]", self:id())
 
 	if self._rpc then
 		Network:reset_connection(self._rpc)
@@ -1613,7 +1613,9 @@ function NetworkPeer:_chk_outfit_loading_complete()
 	self._all_outfit_load_requests_sent = nil
 	self._loading_outfit_assets = nil
 
-	managers.network:session():on_peer_outfit_loaded(self)
+	if managers.network:session() then
+		managers.network:session():on_peer_outfit_loaded(self)
+	end
 end
 
 function NetworkPeer:set_other_peer_outfit_loaded_status(status)
@@ -1704,17 +1706,27 @@ function NetworkPeer:unit()
 end
 
 function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, state_transition)
+	Application:debug("[NetworkPeer:spawn_unit]", spawn_point_id, is_drop_in, state_transition)
+
 	if self._unit then
+		Application:debug("[NetworkPeer:spawn_unit] unit exists already")
+
 		return
 	end
 
 	if not self:synched() then
+		Application:debug("[NetworkPeer:spawn_unit] not synched")
+
 		return
 	end
 
 	if is_drop_in then
+		Application:debug("[NetworkPeer:spawn_unit] _spawn_unit_on_dropin")
+
 		return self:_spawn_unit_on_dropin()
 	end
+
+	Application:debug("[NetworkPeer:spawn_unit] _spawn_unit_on_respawn")
 
 	return self:_spawn_unit_on_respawn(spawn_point_id, state_transition)
 end
@@ -1851,7 +1863,7 @@ function NetworkPeer:_spawn_unit_on_respawn(spawn_point_id, state_transition)
 end
 
 function NetworkPeer:_get_old_entry(null_old_entry_elements)
-	local peer_ident = SystemInfo:platform() == Idstring("WIN32") and self:user_id() or self:name()
+	local peer_ident = _G.IS_PC and self:user_id() or self:name()
 	local old_plr_entry = managers.network:session()._old_players[peer_ident]
 	local member_downed = nil
 	local health = 1
@@ -1879,10 +1891,21 @@ function NetworkPeer:spawn_unit_called()
 end
 
 function NetworkPeer:set_unit(unit, character_name, team_id)
+	Application:debug("[NetworkPeer:set_unit]", unit, character_name, team_id)
+
 	local is_new_unit = unit and (not self._unit or self._unit:key() ~= unit:key())
+
+	Application:debug("[NetworkPeer:set_unit] is_new_unit", is_new_unit)
+
 	self._unit = unit
 
-	if is_new_unit and self._id == managers.network:session():local_peer():id() then
+	Application:debug("[NetworkPeer:set_unit] self._unit", self._unit)
+
+	local is_right_net_local_peer_id = self._id == managers.network:session():local_peer():id()
+
+	Application:debug("[NetworkPeer:set_unit] is_right_net_local_peer_id", is_right_net_local_peer_id)
+
+	if is_new_unit and is_right_net_local_peer_id then
 		Application:debug("[NetworkPeer:set_unit] Spawned local player")
 		managers.player:spawned_player(1, unit)
 
@@ -1892,6 +1915,8 @@ function NetworkPeer:set_unit(unit, character_name, team_id)
 			Global.dropin_loading_screen = nil
 		end
 	end
+
+	Application:debug("[NetworkPeer:set_unit] Were passed the loading screen here")
 
 	if is_new_unit then
 		unit:inventory():set_melee_weapon_by_peer(self)

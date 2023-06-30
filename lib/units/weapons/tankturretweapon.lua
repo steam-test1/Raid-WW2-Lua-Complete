@@ -22,10 +22,13 @@ end
 
 function TankTurretWeapon:play_lock_on_sound()
 	local sound_source = self._unit:sound_source()
-	local weapon_tweak_data = self._tweak_data
 
-	if sound_source and weapon_tweak_data.sound.main_cannon_lock_on then
-		sound_source:post_event(weapon_tweak_data.sound.main_cannon_lock_on)
+	if sound_source then
+		local weapon_tweak_data = self._tweak_data
+
+		if weapon_tweak_data.sound and weapon_tweak_data.sound.main_cannon_lock_on then
+			sound_source:post_event(weapon_tweak_data.sound.main_cannon_lock_on)
+		end
 	end
 end
 

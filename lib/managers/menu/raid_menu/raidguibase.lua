@@ -81,7 +81,7 @@ function RaidGuiBase:_disable_dof()
 	self._odof_near, self._odof_near_pad, self._odof_far, self._odof_far_pad = managers.environment_controller:get_dof_override_ranges()
 
 	managers.environment_controller:set_dof_override(true)
-	managers.environment_controller:set_dof_override_ranges(0, 0, 100000, 0)
+	managers.environment_controller:set_dof_override_ranges(0, 0, 100000, 0, 0)
 end
 
 function RaidGuiBase:_enable_dof()
@@ -199,7 +199,7 @@ function RaidGuiBase:close()
 	end
 
 	self._root_panel:close()
-	self._ws_panel:clear()
+	self._ws:panel():remove(self._ws_panel)
 	self._fullscreen_ws_panel:clear()
 	managers.menu_component:post_event("menu_exit")
 end

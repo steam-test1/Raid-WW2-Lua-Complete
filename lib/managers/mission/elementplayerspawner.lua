@@ -1,19 +1,12 @@
 core:import("CoreMissionScriptElement")
 
 ElementPlayerSpawner = ElementPlayerSpawner or class(CoreMissionScriptElement.MissionScriptElement)
-
-if SystemInfo:platform() == Idstring("PS4") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-elseif SystemInfo:platform() == Idstring("XB1") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-else
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
-end
-
-ElementPlayerSpawner.BASE_DELAY = 2
+ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
+ElementPlayerSpawner.BASE_DELAY = 3.5
 
 function ElementPlayerSpawner:init(...)
 	ElementPlayerSpawner.super.init(self, ...)
+	Application:debug("[ElementPlayerSpawner:init]")
 	managers.player:preload()
 end
 
@@ -31,6 +24,8 @@ function ElementPlayerSpawner:value(name)
 end
 
 function ElementPlayerSpawner:client_on_executed(...)
+	Application:debug("[ElementPlayerSpawner:client_on_executed] enabled", self._values.enabled)
+
 	if not self._values.enabled then
 		return
 	end
@@ -47,6 +42,8 @@ function ElementPlayerSpawner:client_on_executed(...)
 end
 
 function ElementPlayerSpawner:on_executed(instigator)
+	Application:debug("[ElementPlayerSpawner:on_executed] enabled, syncID", self._values.enabled, self._sync_id)
+
 	if not self._values.enabled then
 		return
 	end
@@ -106,7 +103,7 @@ function ElementPlayerSpawner:_do_hide_loading_screen()
 	end
 
 	managers.menu:hide_loading_screen()
-	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 0.2)
+	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 1)
 end
 
 function ElementPlayerSpawner:_first_login_check()

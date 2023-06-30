@@ -166,8 +166,6 @@ end
 function BaseInteractionExt:update(distance_to_player)
 end
 
-local is_PS3 = SystemInfo:platform() == Idstring("PS3")
-
 function BaseInteractionExt:_btn_interact()
 	if not managers.menu:is_pc_controller() then
 		return nil
@@ -242,6 +240,20 @@ function BaseInteractionExt:_show_interaction_text(custom_text_id)
 
 		if not has_special_equipment then
 			text = managers.localization:text(self._tweak_data.equipment_text_id, string_macros)
+			icon = self.no_equipment_icon or self._tweak_data.no_equipment_icon or icon
+		end
+	end
+
+	if not not self._tweak_data.required_carry then
+		local has_carry_item = false
+		local plr_carry = managers.player:current_carry_id()
+
+		if plr_carry then
+			has_carry_item = (type(self._tweak_data.required_carry) ~= "table" or table.contains(self._tweak_data.required_carry, plr_carry)) and self._tweak_data.required_carry == plr_carry
+		end
+
+		if not has_carry_item then
+			text = managers.localization:text(self._tweak_data.carry_text_id, string_macros)
 			icon = self.no_equipment_icon or self._tweak_data.no_equipment_icon or icon
 		end
 	end
@@ -394,6 +406,12 @@ function BaseInteractionExt:interact_start(player, locator)
 		return false
 	end
 
+	if self._unit:damage() and self._unit:damage():has_sequence("interact_start_local") then
+		self._unit:damage():run_sequence_simple("interact_start_local", {
+			unit = player
+		})
+	end
+
 	if self:_timer_value() then
 		local timer = self:_get_timer()
 
@@ -461,6 +479,12 @@ function BaseInteractionExt:interact_interupt(player, complete)
 		managers.enemy:remove_delayed_clbk(self._interact_say_clbk)
 
 		self._interact_say_clbk = nil
+	end
+
+	if not complete and self._unit:damage() and self._unit:damage():has_sequence("interact_interupt_local") then
+		self._unit:damage():run_sequence_simple("interact_interupt_local", {
+			unit = player
+		})
 	end
 
 	self:_at_interact_interupt(player, complete)
@@ -726,8 +750,14 @@ function UseInteractionExt:interact(player)
 
 	self:remove_interact()
 
-	if self._unit:damage() then
+	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
 		self._unit:damage():run_sequence_simple("interact", {
+			unit = player
+		})
+	end
+
+	if self._unit:damage() and self._unit:damage():has_sequence("load") then
+		self._unit:damage():run_sequence_simple("load", {
 			unit = player
 		})
 	end
@@ -738,7 +768,7 @@ function UseInteractionExt:interact(player)
 		managers.mission:call_global_event(self._global_event, player)
 	end
 
-	self:set_active(false)
+	self:set_active(self._tweak_data.keep_active == true)
 end
 
 function UseInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
@@ -755,8 +785,14 @@ function UseInteractionExt:sync_interacted(peer, player, status, skip_alive_chec
 	self:remove_interact()
 	self:set_active(false)
 
-	if self._unit:damage() then
+	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
 		self._unit:damage():run_sequence_simple("interact", {
+			unit = player
+		})
+	end
+
+	if self._unit:damage() and self._unit:damage():has_sequence("load") then
+		self._unit:damage():run_sequence_simple("load", {
 			unit = player
 		})
 	end
@@ -824,7 +860,7 @@ function LootDropInteractionExt:_spawn_loot()
 	local loot_locator = self._unit:get_object(Idstring("snap_1"))
 	local unit = managers.game_play_central:spawn_pickup({
 		name = "gold_bar_medium",
-		position = loot_locator:position(),
+		position = loot_locator:position() + Vector3(0, 0, 5),
 		rotation = loot_locator:rotation()
 	})
 
@@ -1248,7 +1284,7 @@ function ReviveInteractionExt:get_waypoint_time()
 	return nil
 end
 
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+local is_win32 = _G.IS_PC
 
 function ReviveInteractionExt:set_active(active, sync, down_time)
 	ReviveInteractionExt.super.set_active(self, active)
@@ -1289,7 +1325,6 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 			local timer = self.tweak_data == "revive" and (self._unit:base().is_husk_player and down_time or tweak_data.character[self._unit:base()._tweak_table].damage.DOWNED_TIME) or self._unit:base().is_husk_player and tweak_data.player.damage.ARRESTED_TIME or tweak_data.character[self._unit:base()._tweak_table].damage.ARRESTED_TIME
 
 			managers.hud:add_waypoint(self._wp_id, {
-				present_timer = 1,
 				waypoint_type = "revive",
 				text = text,
 				icon = icon,
@@ -1350,8 +1385,18 @@ function ReviveInteractionExt:interact(reviving_unit)
 
 	self:remove_interact()
 
-	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
-		self._unit:damage():run_sequence_simple("interact")
+	if self._unit:damage() then
+		if self._unit:damage() and self._unit:damage():has_sequence("interact") then
+			self._unit:damage():run_sequence_simple("interact", {
+				unit = player
+			})
+		end
+
+		if self._unit:damage() and self._unit:damage():has_sequence("load") then
+			self._unit:damage():run_sequence_simple("load", {
+				unit = player
+			})
+		end
 	end
 
 	if self._unit:base().is_husk_player then
@@ -1538,8 +1583,16 @@ function MultipleEquipmentBagInteractionExt:sync_interacted(peer, player, amount
 	local instigator = player or peer:unit()
 
 	if Network:is_server() then
-		if self._unit:damage():has_sequence("load") then
-			self._unit:damage():run_sequence_simple("load")
+		if self._unit:damage() and self._unit:damage():has_sequence("interact") then
+			self._unit:damage():run_sequence_simple("interact", {
+				unit = player
+			})
+		end
+
+		if self._unit:damage() and self._unit:damage():has_sequence("load") then
+			self._unit:damage():run_sequence_simple("load", {
+				unit = player
+			})
 		end
 
 		if self._global_event then
@@ -1571,48 +1624,6 @@ function MultipleEquipmentBagInteractionExt:sync_interacted(peer, player, amount
 	end
 end
 
-VeilInteractionExt = VeilInteractionExt or class(UseInteractionExt)
-
-function VeilInteractionExt:_interact_blocked(player)
-	return not managers.player:can_pickup_equipment("blood_sample")
-end
-
-function VeilInteractionExt:interact(player)
-	VeilInteractionExt.super.super.interact(self, player)
-	managers.player:add_special({
-		name = "blood_sample"
-	})
-
-	return true
-end
-
-VeilTakeInteractionExt = VeilTakeInteractionExt or class(UseInteractionExt)
-
-function VeilTakeInteractionExt:_interact_blocked(player)
-	return not managers.player:can_pickup_equipment("blood_sample_verified")
-end
-
-function VeilTakeInteractionExt:interact(player)
-	VeilTakeInteractionExt.super.interact(self, player)
-	managers.player:add_special({
-		name = "blood_sample_verified"
-	})
-
-	if self._unit:damage():has_sequence("got_blood_sample") then
-		self._unit:damage():run_sequence_simple("got_blood_sample")
-	end
-
-	return true
-end
-
-function VeilTakeInteractionExt:sync_interacted()
-	if self._unit:damage():has_sequence("got_blood_sample") then
-		self._unit:damage():run_sequence_simple("got_blood_sample")
-	end
-
-	VeilTakeInteractionExt.super.sync_interacted(self)
-end
-
 SmallLootInteractionExt = SmallLootInteractionExt or class(UseInteractionExt)
 
 function SmallLootInteractionExt:interact(player)
@@ -1623,20 +1634,6 @@ function SmallLootInteractionExt:interact(player)
 	end
 
 	self._unit:base():take(player)
-end
-
-MoneyWrapInteractionExt = MoneyWrapInteractionExt or class(UseInteractionExt)
-
-function MoneyWrapInteractionExt:interact(player)
-	MoneyWrapInteractionExt.super.super.interact(self, player)
-	self._unit:base():take_money(player)
-end
-
-DiamondInteractionExt = DiamondInteractionExt or class(UseInteractionExt)
-
-function DiamondInteractionExt:interact(player)
-	DiamondInteractionExt.super.interact(self, player)
-	self._unit:base():take_money(player)
 end
 
 ZipLineInteractionExt = ZipLineInteractionExt or class(UseInteractionExt)
@@ -1703,8 +1700,18 @@ function IntimitateInteractionExt:interact(player)
 		player:sound():play(self._tweak_data.sound_event)
 	end
 
-	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
-		self._unit:damage():run_sequence_simple("interact")
+	if self._unit:damage() then
+		if self._unit:damage():has_sequence("interact") then
+			self._unit:damage():run_sequence_simple("interact", {
+				unit = player
+			})
+		end
+
+		if self._unit:damage():has_sequence("load") then
+			self._unit:damage():run_sequence_simple("load", {
+				unit = player
+			})
+		end
 	end
 
 	if self.tweak_data == "corpse_alarm_pager" then
@@ -2067,13 +2074,13 @@ end
 function CarryInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
 	player = player or peer:unit()
 
-	if self._unit:damage():has_sequence("interact") then
+	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
 		self._unit:damage():run_sequence_simple("interact", {
 			unit = player
 		})
 	end
 
-	if self._unit:damage():has_sequence("load") then
+	if self._unit:damage() and self._unit:damage():has_sequence("load") then
 		self._unit:damage():run_sequence_simple("load", {
 			unit = player
 		})
@@ -2102,6 +2109,8 @@ function CarryInteractionExt:sync_interacted(peer, player, status, skip_alive_ch
 		if peer then
 			managers.player:set_carry_approved(peer)
 		end
+	elseif self._remove_on_interact then
+		self._unit:set_enabled(false)
 	end
 end
 
@@ -2175,9 +2184,53 @@ end
 function LootBankInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
 	local player = player or peer:unit()
 
-	self._unit:damage():run_sequence_simple("unload", {
-		unit = player
-	})
+	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
+		self._unit:damage():run_sequence_simple("interact", {
+			unit = player
+		})
+	end
+end
+
+UseCarryInteractionExt = UseCarryInteractionExt or class(UseInteractionExt)
+
+function UseCarryInteractionExt:_interact_blocked(player)
+	local plr_carry = managers.player:current_carry_id()
+
+	if plr_carry then
+		local correct_carry = false
+		correct_carry = (type(self._tweak_data.required_carry) ~= "table" or table.has(self._tweak_data.required_carry, plr_carry)) and self._tweak_data.required_carry == plr_carry
+		local carry_warning = not correct_carry and (self._tweak_data.required_carry_text or "wrong_carry_item") or nil
+
+		return correct_carry, nil, carry_warning
+	end
+
+	return true, nil, self._tweak_data.required_carry_text
+end
+
+function UseCarryInteractionExt:interact(player)
+	UseCarryInteractionExt.super.super.interact(self, player)
+
+	if Network:is_client() then
+		managers.network:session():send_to_host("sync_interacted", self._unit, -2, self.tweak_data, 1)
+	else
+		self:sync_interacted(nil, player)
+	end
+
+	if self._tweak_data.carry_consume then
+		managers.player:remove_carry()
+	end
+
+	return true
+end
+
+function UseCarryInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
+	local player = player or peer:unit()
+
+	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
+		self._unit:damage():run_sequence_simple("interact", {
+			unit = player
+		})
+	end
 end
 
 EventIDInteractionExt = EventIDInteractionExt or class(UseInteractionExt)
@@ -2338,8 +2391,16 @@ end
 function SpecialEquipmentInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
 	player = player or peer:unit()
 
-	if self._unit:damage():has_sequence("load") then
-		self._unit:damage():run_sequence_simple("load")
+	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
+		self._unit:damage():run_sequence_simple("interact", {
+			unit = player
+		})
+	end
+
+	if self._unit:damage() and self._unit:damage():has_sequence("load") then
+		self._unit:damage():run_sequence_simple("load", {
+			unit = player
+		})
 	end
 
 	if self._global_event then
@@ -2775,7 +2836,12 @@ function GreedItemInteractionExt:interact(player)
 	GreedItemInteractionExt.super.interact(self, player)
 
 	local value = self._unit:greed():value()
+	local value_line = self._unit:greed():value_line_id()
 
+	managers.dialog:queue_dialog("player_gen_loot_" .. value_line, {
+		skip_idle_check = true,
+		instigator = managers.player:local_player()
+	})
 	managers.greed:pickup_greed_item(value, self._unit)
 	managers.network:session():send_to_peers("greed_item_picked_up", self._unit, value)
 end
@@ -2870,18 +2936,9 @@ function ConsumableMissionInteractionExt:interact(player)
 	Application:debug("[ConsumableMissionInteractionExt:interact] called : called consumable mission interaction!")
 	ConsumableMissionInteractionExt.super.interact(self, player)
 
-	local raids = tweak_data.operations:get_raids_index()
-	local consumable_missions = {}
+	local chosen_consumable = tweak_data.operations:get_random_unowned_consumable_raid()
 
-	for i, raid in pairs(raids) do
-		if tweak_data.operations.missions[raid].consumable then
-			table.insert(consumable_missions, raid)
-		end
-	end
-
-	local chosen_consumable = math.random(1, #consumable_missions)
-
-	managers.consumable_missions:pickup_mission(consumable_missions[chosen_consumable])
+	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
 		id = "hud_hint_consumable_mission",
@@ -2894,7 +2951,7 @@ function ConsumableMissionInteractionExt:interact(player)
 end
 
 function ConsumableMissionInteractionExt:can_interact(player)
-	if managers.consumable_missions:is_any_mission_unlocked() then
+	if managers.consumable_missions:is_all_missions_unlocked() then
 		return false
 	end
 
@@ -2927,6 +2984,21 @@ function FoxholeInteractionExt:interact(player)
 	self._unit:foxhole():register_player(player)
 	player:movement():set_foxhole_unit(self._unit)
 	managers.player:set_player_state("foxhole")
+end
+
+ResupplyFullInteractionExt = ResupplyFullInteractionExt or class(UseInteractionExt)
+
+function ResupplyFullInteractionExt:_interact_blocked(player)
+	if not player:inventory():need_ammo() and managers.player:got_max_grenades() and player:character_damage():full_health() then
+		return true
+	end
+
+	return false
+end
+
+function ResupplyFullInteractionExt:interact(player)
+	ResupplyFullInteractionExt.super.super.interact(self, player)
+	managers.player:replenish_player_weapons()
 end
 
 DummyInteractionExt = DummyInteractionExt or class(BaseInteractionExt)

@@ -196,6 +196,8 @@ function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, 
 	new_unit:base():set_texture_switches(texture_switches)
 
 	if blueprint then
+		blueprint = managers.weapon_factory:modify_skin_blueprint(factory_name, blueprint)
+
 		new_unit:base():assemble_from_blueprint(factory_name, blueprint)
 	else
 		new_unit:base():assemble(factory_name)
@@ -683,6 +685,16 @@ function PlayerInventory:need_ammo()
 		if weapon.unit:base():uses_ammo() and not weapon.unit:base():ammo_full() then
 			return true
 		end
+	end
+
+	return false
+end
+
+function PlayerInventory:weapon_clip_not_empty(slot)
+	local weapon = self._available_selections[slot]
+
+	if weapon and weapon.unit:base():uses_ammo() and not weapon.unit:base():clip_not_empty() then
+		return true
 	end
 
 	return false

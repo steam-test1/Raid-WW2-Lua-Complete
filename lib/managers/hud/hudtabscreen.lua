@@ -94,46 +94,6 @@ function HUDTabScreen:_create_background(fullscreen_hud)
 end
 
 function HUDTabScreen:_create_background_image()
-	if self._background_image then
-		self._background_image:parent():remove(self._background_image)
-
-		self._background_image = nil
-	end
-
-	local background_image = nil
-
-	if managers.raid_job:is_camp_loaded() then
-		background_image = tweak_data.operations.missions.camp.tab_background_image
-	else
-		local current_job = managers.raid_job:current_job()
-
-		if current_job then
-			if current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
-				background_image = tweak_data.operations.missions[current_job.job_id].tab_background_image
-			else
-				local current_event = current_job.events_index[current_job.current_event]
-				local event_data = tweak_data.operations.missions[current_job.job_id].events[current_event]
-				background_image = event_data.tab_background_image
-			end
-		end
-	end
-
-	if not background_image then
-		return
-	end
-
-	local fullscreen_panel = self._background:parent()
-	local background_image_params = {
-		name = "tab_screen_background_image",
-		halign = "scale",
-		valign = "scale",
-		texture = background_image,
-		layer = self._background:layer() + 1
-	}
-	self._background_image = fullscreen_panel:bitmap(background_image_params)
-
-	self._background_image:set_center_x(fullscreen_panel:w() / 2)
-	self._background_image:set_center_y(fullscreen_panel:h() / 2)
 end
 
 function HUDTabScreen:_create_map(fullscreen_hud)
@@ -742,7 +702,7 @@ function HUDTabScreen:_refresh_profile_info()
 	local class = managers.skilltree:get_character_profile_class()
 
 	self._class_icon:set_icon("player_panel_class_" .. tostring(class))
-	self._class_icon:set_text("skill_class_" .. class .. "_name", {
+	self._class_icon:set_text("skill_class_" .. tostring(class) .. "_name", {
 		color = tweak_data.gui.colors.raid_grey
 	})
 
@@ -819,6 +779,12 @@ function HUDTabScreen:set_time(time)
 	self._timer_panel:set_right(self._object:w())
 	self._timer:set_w(w)
 	self._timer:set_right(self._timer_panel:w())
+end
+
+function HUDTabScreen:reset_time()
+	self._last_set_time = 0
+
+	self:set_time(0)
 end
 
 function HUDTabScreen:_refresh_card_info()
@@ -979,13 +945,19 @@ end
 function HUDTabScreen:_set_progress_timer_value()
 	local timer_control = self._progression_timer_content_panel:child("progression_timer_timer")
 	local remaining_time = math.floor(managers.progression:time_until_next_unlock())
-	local hours = math.floor(remaining_time / 3600)
-	remaining_time = remaining_time - hours * 3600
-	local minutes = math.floor(remaining_time / 60)
-	remaining_time = remaining_time - minutes * 60
-	local seconds = math.round(remaining_time)
-	local text = hours > 0 and string.format("%02d", hours) .. ":" or ""
-	local text = text .. string.format("%02d", minutes) .. ":" .. string.format("%02d", seconds)
+	local text = nil
+
+	if remaining_time <= 0 then
+		text = "...NOW!"
+	else
+		local hours = math.floor(remaining_time / 3600)
+		remaining_time = remaining_time - hours * 3600
+		local minutes = math.floor(remaining_time / 60)
+		remaining_time = remaining_time - minutes * 60
+		local seconds = math.round(remaining_time)
+		text = hours > 0 and string.format("%02d", hours) .. ":" or ""
+		text = text .. string.format("%02d", minutes) .. ":" .. string.format("%02d", seconds)
+	end
 
 	timer_control:set_text(text)
 

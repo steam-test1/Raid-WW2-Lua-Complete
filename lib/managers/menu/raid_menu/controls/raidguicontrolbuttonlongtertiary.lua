@@ -23,8 +23,8 @@ function RaidGUIControlButtonLongTertiary:init(parent, params)
 	params.highlight_texture = tweak_data.gui.icons[RaidGUIControlButtonLongTertiary.HOVER_ICON].texture
 	params.highlight_texture_rect = tweak_data.gui.icons[RaidGUIControlButtonLongTertiary.HOVER_ICON].texture_rect
 	params.texture_highlight_color = Color.white
-	params.w = RaidGUIControlButtonLongTertiary.W
-	params.h = RaidGUIControlButtonLongTertiary.H
+	params.w = params.w or RaidGUIControlButtonLongTertiary.W
+	params.h = params.h or RaidGUIControlButtonLongTertiary.H
 
 	RaidGUIControlButtonLongTertiary.super.init(self, parent, params)
 end

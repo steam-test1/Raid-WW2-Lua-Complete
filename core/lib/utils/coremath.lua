@@ -206,6 +206,10 @@ function math.rand(a, b)
 	end
 end
 
+function math.rand_bool()
+	return math.random(2) == 1
+end
+
 function math.round(n, precision)
 	precision = precision or 1
 
@@ -379,4 +383,36 @@ function math.shuffle(array)
 		array[i] = array[j]
 		array[j] = temp
 	end
+end
+
+function math.rotation_to_quaternion(r)
+	local cr = math.cos(r:roll() * 0.5)
+	local sr = math.sin(r:roll() * 0.5)
+	local cp = math.cos(r:pitch() * 0.5)
+	local sp = math.sin(r:pitch() * 0.5)
+	local cy = math.cos(r:yaw() * 0.5)
+	local sy = math.sin(r:yaw() * 0.5)
+	local q = {
+		w = cr * cp * cy + sr * sp * sy,
+		x = sr * cp * cy - cr * sp * sy,
+		y = cr * sp * cy + sr * cp * sy,
+		z = cr * cp * sy - sr * sp * cy
+	}
+
+	return q
+end
+
+function math.uniform_sample_circle(radius)
+	local t = math.lerp(0, 360, math.random())
+	local r = math.lerp(0, 1, math.random()) + math.lerp(0, 1, math.random())
+
+	if r > 1 then
+		r = 2 - r
+	end
+
+	r = radius * r
+	local x = r * math.cos(t)
+	local y = r * math.sin(t)
+
+	return x, y
 end

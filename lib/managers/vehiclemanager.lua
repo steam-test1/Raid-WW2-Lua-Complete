@@ -4,7 +4,7 @@ function VehicleManager:init()
 	self._vehicles = {}
 	self._queue_state_change = {}
 	self._listener_holder = EventListenerHolder:new()
-	self._debug = SystemInfo:platform() == Idstring("WIN32") and Application:production_build()
+	self._debug = _G.IS_PC and Application:production_build()
 	self._draw_enabled = false
 end
 
@@ -354,7 +354,7 @@ end
 function VehicleManager:update(t, dt)
 	if self._debug and self._draw_enabled then
 		for i, v in pairs(self._vehicles) do
-			if v:interaction() and v:interaction()._interact_object then
+			if alive(v) and v:interaction() and v:interaction()._interact_object then
 				local obj = v:get_object(Idstring(v:interaction()._interact_object))
 				local interact_radius = v:vehicle_driving()._tweak_data.interact_distance
 

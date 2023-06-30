@@ -11,7 +11,7 @@ function AchievmentManager:init()
 	}
 	self.script_data = {}
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			AchievmentManager.do_award = AchievmentManager.award_steam
 
@@ -44,17 +44,7 @@ function AchievmentManager:init()
 
 			self.achievments = Global.achievment_manager.achievments
 		end
-	elseif SystemInfo:platform() == Idstring("PS3") then
-		if not Global.achievment_manager then
-			Global.achievment_manager = {
-				trophy_requests = {}
-			}
-		end
-
-		self:_parse_achievments("PSN")
-
-		AchievmentManager.do_award = AchievmentManager.award_psn
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		if not Global.achievment_manager then
 			self:_parse_achievments("PS4")
 
@@ -67,11 +57,7 @@ function AchievmentManager:init()
 		end
 
 		AchievmentManager.do_award = AchievmentManager.award_psn
-	elseif SystemInfo:platform() == Idstring("X360") then
-		self:_parse_achievments("X360")
-
-		AchievmentManager.do_award = AchievmentManager.award_x360
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		if not Global.achievment_manager then
 			self:_parse_achievments("XB1")
 
@@ -93,7 +79,7 @@ function AchievmentManager:init_finalize()
 end
 
 function AchievmentManager:fetch_trophies()
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS4 then
 		Trophies:get_unlockstate(AchievmentManager.unlockstate_result)
 	end
 end
@@ -130,10 +116,10 @@ function AchievmentManager.fetch_achievments(error_str)
 end
 
 function AchievmentManager:_load_done()
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		print("[AchievmentManager] _load_done()")
 
-		self._is_fetching_achievments = XboxLive:achievements(0, 1000, true, callback(self, self, "_achievments_loaded"))
+		self._is_fetching_achievments = XboxLive:achievements(managers.user:get_xuid(0), 99, false, callback(self, self, "_achievments_loaded"))
 	end
 end
 
@@ -162,7 +148,7 @@ function AchievmentManager:_achievments_loaded(achievment_list)
 end
 
 function AchievmentManager:on_user_signout()
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		print("[AchievmentManager] on_user_signout()")
 
 		self._is_fetching_achievments = nil
@@ -239,12 +225,6 @@ function AchievmentManager:award(id)
 		return
 	end
 
-	if id == "christmas_present" then
-		managers.network.account._masks.santa = true
-	elseif id == "golden_boy" then
-		managers.network.account._masks.gold = true
-	end
-
 	self:do_award(id)
 end
 
@@ -262,7 +242,7 @@ function AchievmentManager:award_progress(stat, value)
 		return
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
 	end
 
@@ -277,7 +257,7 @@ function AchievmentManager:award_progress(stat, value)
 end
 
 function AchievmentManager:get_stat(stat)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return managers.network.account:get_stat(stat)
 	end
 
@@ -462,7 +442,7 @@ function AchievmentManager:check_achievement_operation_clear_sky_hardest(operati
 end
 
 function AchievmentManager:check_achievement_operation_clear_sky_no_bleedout(operation_save_data)
-	if Network:is_server() and managers.network:session():count_all_peers() == 4 then
+	if Network:is_server() and managers.network:session():count_all_peers() >= 2 then
 		local total_downed_count = 0
 
 		if operation_save_data.current_job.job_id == "clear_skies" then
@@ -470,7 +450,9 @@ function AchievmentManager:check_achievement_operation_clear_sky_no_bleedout(ope
 				local event_data = operation_save_data.event_data[events_index_index]
 
 				for peer_index, peer_data in pairs(event_data.peer_data) do
-					total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
+					if peer_data.statistics ~= nil then
+						total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
+					end
 				end
 			end
 
@@ -495,7 +477,7 @@ function AchievmentManager:check_achievement_operation_burn_hardest(operation_sa
 end
 
 function AchievmentManager:check_achievement_operation_burn_no_bleedout(operation_save_data)
-	if Network:is_server() and managers.network:session():count_all_peers() == 4 then
+	if Network:is_server() and managers.network:session():count_all_peers() >= 2 then
 		local total_downed_count = 0
 
 		if operation_save_data.current_job.job_id == "oper_flamable" then

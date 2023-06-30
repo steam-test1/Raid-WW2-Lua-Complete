@@ -310,7 +310,7 @@ function CopLogicTravel._upd_enemy_detection(data)
 				data.objective_failed_clbk(data.unit, data.objective)
 			end
 
-			if my_data == data.internal_data and not objective.is_default then
+			if my_data == data.internal_data and objective and not objective.is_default then
 				debug_pause_unit(data.unit, "[CopLogicTravel._upd_enemy_detection] exiting without discarding objective", data.unit, inspect(objective))
 				CopLogicBase._exit(data.unit, wanted_state)
 			end
@@ -372,8 +372,6 @@ function CopLogicTravel._upd_pathing(data, my_data)
 						debug_pause_unit(data.unit, txt, data.unit, my_data.coarse_path_index, inspect(my_data.coarse_path))
 						Application:draw_line(data.m_pos, my_data.pathing_debug.from_pos, 1, 0, 0)
 						Application:draw_cone(my_data.pathing_debug.to_pos, my_data.pathing_debug.from_pos, 20, 1, 0, 0)
-					else
-						print(txt, data.unit, my_data.coarse_path_index, inspect(my_data.coarse_path))
 					end
 				end
 
@@ -398,8 +396,6 @@ function CopLogicTravel._upd_pathing(data, my_data)
 			elseif my_data.path_safely then
 				my_data.path_safely = nil
 			else
-				print("[CopLogicTravel:_upd_pathing] coarse_path failed unsafe", data.unit, my_data.coarse_path_index, inspect(my_data.coarse_path))
-
 				data.path_fail_t = data.t
 				data.unit:brain().path_failed = true
 

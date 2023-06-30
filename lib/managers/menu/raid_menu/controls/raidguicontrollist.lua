@@ -68,28 +68,21 @@ function RaidGUIControlList:_create_items()
 			item_params.use_unlocked = self._list_params.use_unlocked
 			item_params.x = 0
 			item_params.y = y
-			item_params.w = self._params.w
-			item_params.h = self._params.item_h or 64
+			item_params.w = item_data.item_w or self._params.w
+			item_params.h = item_data.item_h or self._params.item_h or 64
 			item_params.text = item_data.text
 			item_params.text_id = item_data.text_id
 			item_params.panel = self._object
 			item_params.selectable = self._selection_enabled
 			item_params.color = item_data.color
 			item_params.selected_color = item_data.selected_color
-			item_params.item_font = self._params.item_font
-			item_params.item_font_size = self._params.item_font_size
+			item_params.item_font = item_data.item_font or self._params.item_font
+			item_params.item_font_size = item_data.item_font_size or self._params.item_font_size
 			item_params.on_click_callback = callback(self, self, "on_item_clicked")
 			item_params.on_double_click_callback = callback(self, self, "on_item_double_clicked")
 			item_params.on_item_selected_callback = callback(self, self, "on_item_selected")
 			item_params.on_mouse_over_sound_event = self._params.on_mouse_over_sound_event
 			item_params.on_mouse_click_sound_event = self._params.on_mouse_click_sound_event
-
-			for _, flag in pairs(item_data.availability_flags) do
-				if flag == RaidGUIItemAvailabilityFlag.DEBUG_MENU_ENABLED then
-					item_params.color = tweak_data.gui.colors.raid_debug
-				end
-			end
-
 			local item = self:_create_item(self._params.item_class or RaidGUIControlListItem, item_params, item_data)
 
 			table.insert(self._list_items, item)
@@ -342,11 +335,11 @@ function RaidGUIControlList:set_selected(value, dont_trigger_selected_callback)
 	end
 
 	if not self._selected and self._list_items then
-		for _, item in pairs(self._list_items) do
-			if _ ~= self._selected_item_idx then
-				item:unfocus()
-			else
-				item:highlight_off()
+		for idx, item in pairs(self._list_items) do
+			item:unselect()
+
+			if idx == self._selected_item_idx then
+				item:highlight_on()
 			end
 		end
 	end

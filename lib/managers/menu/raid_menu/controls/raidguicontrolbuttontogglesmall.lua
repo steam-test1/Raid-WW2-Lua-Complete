@@ -179,6 +179,10 @@ function RaidGUIControlButtonToggleSmall:set_visible(flag)
 	self:_render_images()
 end
 
+function RaidGUIControlButtonToggleSmall:get_visible()
+	return self._visible
+end
+
 function RaidGUIControlButtonToggleSmall:confirm_pressed()
 	if self._selected then
 		if self._value then

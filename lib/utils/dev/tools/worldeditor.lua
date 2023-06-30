@@ -126,19 +126,19 @@ function WorldEditor:_init_mission_difficulties()
 	self._mission_difficulties = {
 		{
 			"difficulty_1",
-			"Normal"
+			"Easy"
 		},
 		{
 			"difficulty_2",
-			"Hard"
+			"Normal"
 		},
 		{
 			"difficulty_3",
-			"Very Hard"
+			"Hard"
 		},
 		{
 			"difficulty_4",
-			"Overkill"
+			"Very Hard"
 		}
 	}
 	self._mission_difficulty = Global.DEFAULT_DIFFICULTY

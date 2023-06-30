@@ -4,6 +4,7 @@ HUDChat.H = 432
 HUDChat.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 HUDChat.BORDER_H = 2
 HUDChat.BORDER_COLOR = tweak_data.gui.colors.chat_border
+HUDChat.ANIMATION_MOVE_X_DISTANCE = 50
 HUDChat.NAME_FONT = tweak_data.gui.fonts.din_compressed
 HUDChat.NAME_FONT_SIZE = tweak_data.gui.font_sizes.size_20
 HUDChat.MESSAGE_FONT = tweak_data.gui.fonts.lato_outlined_18
@@ -20,7 +21,8 @@ HUDChat.CARET_W = 2
 HUDChat.CARET_H = 18
 HUDChat.MESSAGES_KEPT = 10
 HUDChat.MESSAGE_PADDING_DOWN = 15
-HUDChat.MESSAGE_MAX_SIZE = 100
+HUDChat.MESSAGE_MAX_SIZE = 150
+HUDChat.MESSAGE_MAX_SHOWTIME = 8
 HUDChat.line_height = 21
 
 function HUDChat:init(ws, panel, background)
@@ -74,6 +76,7 @@ end
 
 function HUDChat:_create_input()
 	local input_panel_params = {
+		alpha = 0.3,
 		name = "input_panel",
 		halign = "scale",
 		valign = "bottom",
@@ -100,6 +103,7 @@ function HUDChat:_create_input()
 		name = "input_text_background",
 		valign = "center",
 		halign = "center",
+		layer = 2,
 		texture = tweak_data.gui.icons[HUDChat.INPUT_TEXT_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDChat.INPUT_TEXT_BACKGROUND].texture_rect
 	}
@@ -349,14 +353,16 @@ end
 function HUDChat:show()
 	self._shown = true
 
-	self._object:set_visible(true)
+	self._object:stop()
+	self._object:animate(callback(self, self, "_animate_show"))
 	managers.queued_tasks:unqueue("hide_chat")
 end
 
 function HUDChat:hide()
 	self._shown = false
 
-	self._object:set_visible(false)
+	self._object:stop()
+	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
 function HUDChat:shown()
@@ -378,6 +384,7 @@ function HUDChat:_on_focus()
 
 	self._enter_text_set = false
 
+	self._input_panel:set_alpha(1)
 	self:set_layer(1100)
 	self:_layout_message_panel()
 	self:update_caret()
@@ -389,7 +396,7 @@ function HUDChat:_loose_focus()
 	end
 
 	if not managers.queued_tasks:has_task("hide_chat") then
-		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, 4, nil)
+		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, HUDChat.MESSAGE_MAX_SHOWTIME, nil)
 	end
 
 	self._focus = false
@@ -398,6 +405,7 @@ function HUDChat:_loose_focus()
 	self._input_panel:key_press(nil)
 	self._input_panel:enter_text(nil)
 	self._input_panel:key_release(nil)
+	self._input_panel:set_alpha(0.3)
 	self:update_caret()
 end
 
@@ -472,6 +480,7 @@ function HUDChat:update_caret()
 
 	self._caret:set_world_shape(x + 2, self._caret:world_y(), HUDChat.CARET_W, HUDChat.CARET_H)
 	self:set_blinking(s == e and self._focus)
+	self._caret:set_visible(self._focus)
 end
 
 function HUDChat:enter_text(o, s)
@@ -636,6 +645,49 @@ function HUDChat:key_press(o, k)
 	self:update_caret()
 end
 
+function HUDChat:_animate_show(panel)
+	local duration = 0.2
+	local t = panel:alpha() * duration
+
+	panel:set_visible(true)
+
+	while t < duration do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_alpha = Easing.quintic_in_out(t, 0, 1, duration)
+
+		panel:set_alpha(curr_alpha)
+
+		local current_x_offset = (1 - curr_alpha) * HUDChat.ANIMATION_MOVE_X_DISTANCE
+
+		panel:set_left(current_x_offset)
+	end
+
+	panel:set_alpha(1)
+	panel:set_left(0)
+end
+
+function HUDChat:_animate_hide(panel)
+	local duration = 0.2
+	local t = (1 - panel:alpha()) * duration
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_alpha = Easing.quintic_in_out(t, 1, -1, duration)
+
+		panel:set_alpha(curr_alpha)
+
+		local current_x_offset = (1 - curr_alpha) * HUDChat.ANIMATION_MOVE_X_DISTANCE
+
+		panel:set_left(current_x_offset)
+	end
+
+	panel:set_alpha(0)
+	panel:set_left(HUDChat.ANIMATION_MOVE_X_DISTANCE)
+	panel:set_visible(false)
+end
+
 function HUDChat:_layout_input_text()
 	local _, _, w, _ = self._input_text:text_rect()
 	local default_w = self._input_text_panel:w() - HUDChat.INPUT_TEXT_X - HUDChat.INPUT_TEXT_PADDING_RIGHT
@@ -673,6 +725,23 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 		end
 	end
 
+	local localized_message = message
+	local message_data = string.split(message, "~")
+
+	if message_data[1] then
+		if message_data[2] then
+			localized_message = managers.localization:text(message_data[1], {
+				TARGET = message_data[2]
+			})
+		else
+			local com_data = string.split(message_data[1], "_")
+
+			if com_data[1] == "com" then
+				localized_message = managers.localization:text(message_data[1])
+			end
+		end
+	end
+
 	table.insert(self._recieved_messages, message)
 
 	if ChatManager.MESSAGE_BUFFER_SIZE < #self._recieved_messages then
@@ -688,9 +757,9 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 	end
 
 	if self:_message_in_same_thread(peer_id, system_message) then
-		self._messages[#self._messages]:add_message(message)
+		self._messages[#self._messages]:add_message(localized_message)
 	else
-		local message = message_type:new(self._message_panel, name, message, peer_id)
+		local message = message_type:new(self._message_panel, name, localized_message, peer_id)
 
 		if #self._messages == HUDChat.MESSAGES_KEPT then
 			self._messages[1]:destroy()
@@ -709,7 +778,7 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 	end
 
 	if not self._focus then
-		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, 4, nil)
+		managers.queued_tasks:queue("hide_chat", self.hide, self, nil, HUDChat.MESSAGE_MAX_SHOWTIME, nil)
 	end
 end
 

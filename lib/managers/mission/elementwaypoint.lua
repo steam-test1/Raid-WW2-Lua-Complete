@@ -32,18 +32,20 @@ function ElementWaypoint:on_executed(instigator)
 	end
 
 	if not self._values.only_in_civilian or managers.player:current_state() == "civilian" then
+		Application:debug("[ElementWaypoint] self._values.icon", self._values.icon)
+
 		local text = managers.localization:text(self._values.text_id)
+		local wp_color = tweak_data.gui.icons[self._values.icon].color or Color(1, 1, 1)
 
 		managers.hud:add_waypoint(self:_get_unique_id(), {
 			distance = true,
 			state = "sneak_present",
-			present_timer = 0,
 			show_on_screen = true,
 			waypoint_type = "objective",
 			text = text,
 			icon = self._values.icon,
 			waypoint_display = self._values.map_display,
-			waypoint_color = self._values.color and Color(self._values.color.r, self._values.color.g, self._values.color.b) or Color(1, 0, 0.64),
+			waypoint_color = wp_color,
 			waypoint_width = self._values.width,
 			waypoint_depth = self._values.depth,
 			waypoint_radius = self._values.radius,

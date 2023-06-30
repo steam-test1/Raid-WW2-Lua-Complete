@@ -334,7 +334,7 @@ function GenericSystemMenuManager:show_delete_file(data)
 end
 
 function GenericSystemMenuManager:show_keyboard_input(data)
-	self:_show_class(data, self.GENERIC_KEYBOARD_INPUT_DIALOG, self.KEYBOARD_INPUT_DIALOG, false)
+	self:_show_class(data, self.GENERIC_KEYBOARD_INPUT_DIALOG, self.KEYBOARD_INPUT_DIALOG, true)
 end
 
 function GenericSystemMenuManager:show_select_user(data)
@@ -420,8 +420,12 @@ function GenericSystemMenuManager:hide_active_dialog()
 	end
 end
 
+function GenericSystemMenuManager:get_active_dialog()
+	return self._active_dialog
+end
+
 function GenericSystemMenuManager:_is_dialog_queued_or_active(dialog)
-	if self._active_dialog and self._active_dialog:is_identical(dialog) then
+	if self._active_dialog and self._active_dialog.is_identical and self._active_dialog:is_identical(dialog) then
 		return true
 	end
 
@@ -432,12 +436,22 @@ function GenericSystemMenuManager:_is_dialog_queued_or_active(dialog)
 	end
 end
 
-function GenericSystemMenuManager:queue_dialog(dialog, index)
+function GenericSystemMenuManager:queue_dialog(dialog, index, hiding)
 	if Global.category_print.dialog_manager then
 		cat_print("dialog_manager", "[SystemMenuManager] [Queue dialog (index: " .. tostring(index) .. "/" .. tostring(self._dialog_queue and #self._dialog_queue) .. ")] " .. tostring(dialog:to_string()))
 	end
 
 	self._dialog_queue = self._dialog_queue or {}
+
+	if hiding then
+		if index then
+			table.insert(self._dialog_queue, index, dialog)
+		else
+			table.insert(self._dialog_queue, dialog)
+		end
+
+		return
+	end
 
 	if not self:_is_dialog_queued_or_active(dialog) then
 		if index then
