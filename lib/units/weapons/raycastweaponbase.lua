@@ -29,9 +29,9 @@ function RaycastWeaponBase:init(unit)
 	self._setup = {}
 	self._digest_values = _G.IS_PC
 	self._ammo_data = false
-	local dont_replenish = false
+	local replenish_wpn = false
 
-	if not dont_replenish then
+	if replenish_wpn then
 		self:replenish()
 	end
 
@@ -673,7 +673,7 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 			local is_shoot_through, is_shield, is_wall = nil
 
 			if hit_unit then
-				-- Nothing
+				is_shoot_through = col_ray.unit:character_damage() and col_ray.unit:character_damage():dead()
 			else
 				local is_world_geometry = col_ray.unit:in_slot(managers.slot:get_mask("world_geometry"))
 
