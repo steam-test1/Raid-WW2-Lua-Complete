@@ -67,12 +67,10 @@ function LootDropManager:produce_consumable_mission_drop()
 	while loot_secured do
 		local loot_tweak_data = tweak_data.carry[loot_secured.carry_id]
 
-		table.print_data(loot_tweak_data)
+		if loot_tweak_data and loot_tweak_data.loot_outlaw_value then
+			local value_by_diff = math.round(loot_tweak_data.loot_outlaw_value * difficulty_multi)
 
-		if loot_tweak_data and loot_tweak_data.value_in_gold then
-			local value_by_diff = math.round(loot_tweak_data.value_in_gold * difficulty_multi)
-
-			Application:debug("[LootDropManager:produce_consumable_mission_drop()] Loot '" .. loot_secured.carry_id .. "' value by diff: " .. tostring(loot_tweak_data.value_in_gold) .. " -> " .. tostring(value_by_diff))
+			Application:debug("[LootDropManager:produce_consumable_mission_drop()] Loot '" .. loot_secured.carry_id .. "' value by diff: " .. tostring(loot_tweak_data.loot_outlaw_value) .. " -> " .. tostring(value_by_diff))
 
 			gold_bars_earned = gold_bars_earned + value_by_diff
 		end
@@ -85,8 +83,6 @@ function LootDropManager:produce_consumable_mission_drop()
 		gold_bars_min = gold_bars_earned,
 		gold_bars_max = gold_bars_earned
 	}
-
-	Application:debug("[LootDropManager:produce_consumable_mission_drop()] Loot total", gold_bars_earned)
 
 	return drop
 end
@@ -116,8 +112,37 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 	for ii, group in pairs(data_source) do
 		Application:debug("[LootDropManager:_get_loot_group] data_source grp:", ii, group)
 
-		if group.min_loot_value or loot_value > 0 and loot_value <= (group.max_loot_value or 0) then
+		if loot_value > (group.min_loot_value or 0) and loot_value <= (group.max_loot_value or 999999) then
+			Application:debug("[LootDropManager:_get_loot_group] loot_value/min/max", loot_value, group.min_loot_value, group.max_loot_value)
+
 			loot_group = deep_clone(group)
+
+			for k, v in pairs(loot_group) do
+				Application:debug("[LootDropManager:_get_loot_group] loot group parts:", k, inspect(v))
+
+				if type(v) == "table" and v.conditions then
+					Application:debug("[LootDropManager:_get_loot_group] has conditions", k, inspect(v.conditions))
+
+					local conditions_allow = true
+
+					for _, condition in ipairs(v.conditions) do
+						if condition == LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL and managers.experience:reached_level_cap() then
+							Application:debug("[LootDropManager:_get_loot_group] DROP_CONDITION_BELOW_MAX_LEVEL failed")
+
+							conditions_allow = false
+
+							break
+						end
+					end
+
+					if not conditions_allow then
+						Application:debug("[LootDropManager:_get_loot_group] conditions failed removing", k)
+						table.remove(loot_group, k)
+					end
+				end
+			end
+
+			break
 		end
 	end
 
@@ -160,6 +185,8 @@ function LootDropManager:get_dropped_loot()
 end
 
 function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables, forced_loot_group)
+	Application:trace("[LootDropManager:give_loot_to_player]  Awarding loot value to player: ", loot_value, use_reroll_drop_tables)
+
 	self._loot_value = loot_value
 	local need_reroll = false
 	local drop = nil
@@ -172,36 +199,46 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 
 	self._dropped_loot = drop
 
-	Application:trace("[LootDropManager:give_loot_to_player]        loot drop 1: ", inspect(self._dropped_loot))
+	Application:trace("[LootDropManager:give_loot_to_player] --- loot drop 1/2: ", inspect(self._dropped_loot))
 
 	if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
 		if not self._cards_already_rejected and not managers.raid_menu:is_offline_mode() then
+			Application:debug("[LootDropManager:give_loot_to_player] loot drop card_drop_callback...", drop.pack_type, inspect(drop))
 			managers.network.account:inventory_reward(drop.pack_type, callback(self, self, "card_drop_callback"))
+			Application:debug("[LootDropManager:give_loot_to_player] loot drop card_drop_callback... done?")
 
 			self._card_drop_pack_type = drop.pack_type
 
+			Application:debug("[LootDropManager:give_loot_to_player] load inv")
 			managers.network.account:inventory_load()
-
-			return
+		else
+			Application:trace(" **** REROLLING CARDS **** ")
+			self:give_loot_to_player(self._loot_value, false)
 		end
-
-		Application:trace(" **** REROLLING CARDS **** ")
-		self:give_loot_to_player(self._loot_value, false)
 
 		return
 	elseif drop.reward_type == LootDropTweakData.REWARD_XP then
+		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_XP ---")
 		self:_give_xp_to_player(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
+		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_GOLD_BARS ---")
 		self:_give_gold_bars_to_player(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
+		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_WEAPON_POINT ---")
 		self:_give_weapon_point_to_player(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
+		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_CUSTOMIZATION ---")
+
 		local result = self:_give_character_customization_to_player(drop)
 		need_reroll = not result
 	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
+		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_MELEE_WEAPON ---")
+
 		local result = self:_give_melee_weapon_to_player(drop)
 		need_reroll = not result
 	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_HALLOWEEN_2017 ---")
+
 		local result = self:_give_halloween_2017_weapon_to_player(drop)
 		need_reroll = not result
 	end
@@ -213,11 +250,19 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 		return
 	end
 
-	Application:trace("[LootDropManager:give_loot_to_player]        loot drop 2: ", inspect(self._dropped_loot))
+	Application:trace("[LootDropManager:give_loot_to_player] --- loot drop 2/2: ", inspect(self._dropped_loot))
 	self:on_loot_dropped_for_player()
 end
 
 function LootDropManager:card_drop_callback(error, loot_list)
+	if error then
+		Application:debug("[LootDropManager:card_drop_callback] error", error)
+	end
+
+	Application:debug("[LootDropManager:card_drop_callback] loot_list", inspect(loot_list or {
+		"empty :("
+	}))
+
 	if not loot_list then
 		managers.challenge_cards:set_temp_steam_loot(nil)
 
@@ -235,6 +280,7 @@ function LootDropManager:card_drop_callback(error, loot_list)
 end
 
 function LootDropManager:on_loot_dropped_for_player()
+	Application:debug("[LootDropManager:on_loot_dropped_for_player] ---- DONE, WERE FREE FROM THE GRASP OF THE LOOT CUBE! ----")
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 	game_state_machine:current_state():on_loot_dropped_for_player()
 end

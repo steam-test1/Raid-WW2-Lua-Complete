@@ -534,11 +534,17 @@ function NetworkAccountSTEAM:inventory_is_loading()
 end
 
 function NetworkAccountSTEAM:inventory_reward(item_def_id, callback_ref)
-	item_def_id = item_def_id or 1
+	if not item_def_id or item_def_id < 1 then
+		Application:error("[NetworkAccountSTEAM:inventory_reward] item_def_id nil")
+
+		item_def_id = 1
+	end
 
 	if callback_ref then
+		Application:debug("[NetworkAccountSTEAM:inventory_reward] callback_ref exists:", callback_ref, item_def_id)
 		Steam:inventory_reward(callback_ref, item_def_id)
 	else
+		Application:debug("[NetworkAccountSTEAM:inventory_reward] callback_ref nil:", item_def_id)
 		Steam:inventory_reward(callback(self, self, "_clbk_inventory_reward"), item_def_id)
 	end
 
@@ -549,6 +555,7 @@ function NetworkAccountSTEAM:_clbk_inventory_reward(error, tradable_list)
 	Application:trace("[NetworkAccountSTEAM:_clbk_inventory_reward]")
 	Application:trace("error ", inspect(error))
 	Application:trace("tradable_list ", inspect(tradable_list))
+	Application:error("*This is empty callback, you need to pass callback that you want to process loot drop. If you are seeing this there was no valid callback set!")
 end
 
 function NetworkAccountSTEAM:inventory_remove(instance_id)

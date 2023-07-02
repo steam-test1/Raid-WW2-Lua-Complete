@@ -269,7 +269,7 @@ function LootDropTweakData:_init_groups_basic()
 		value = self.loot_categories.category_xp_min
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
-		chance = 60,
+		chance = 15,
 		value = self.loot_categories.category_gold_tiny
 	})
 
@@ -288,6 +288,9 @@ function LootDropTweakData:_init_groups_bronze()
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
 		chance = 20,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+		},
 		value = self.loot_categories.category_xp_low
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
@@ -311,6 +314,9 @@ function LootDropTweakData:_init_groups_silver()
 
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
 		chance = 40,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+		},
 		value = self.loot_categories.category_xp_mid
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
@@ -343,6 +349,9 @@ function LootDropTweakData:_init_groups_gold()
 
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
 		chance = 40,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+		},
 		value = self.loot_categories.category_xp_high
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {

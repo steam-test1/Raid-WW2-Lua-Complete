@@ -442,7 +442,7 @@ function PlayerDamage:_regenerated(no_messiah, downs_regen)
 		managers.hud:set_big_prompt({
 			duration = 3,
 			id = "hint_downs_remaining",
-			text = utf8.to_upper(managers.localization:text("hud_hint_downs_remaining", {
+			text = utf8.to_upper(managers.localization:text("hud_hint_downs_desc", {
 				DOWNS = Application:digest_value(self._revives, false) - 1,
 				DOWNSMAX = max_lives - 1
 			}))
@@ -1251,7 +1251,7 @@ function PlayerDamage:_check_bleed_out(can_activate_berserker, ignore_movement_s
 				managers.hud:set_big_prompt({
 					duration = 3,
 					id = "hint_downs_remaining",
-					text = utf8.to_upper(managers.localization:text("hud_hint_downs_remaining", {
+					text = utf8.to_upper(managers.localization:text("hud_hint_downs_desc", {
 						DOWNS = Application:digest_value(self._revives, false) - 1,
 						DOWNSMAX = max_lives - 1
 					}))
