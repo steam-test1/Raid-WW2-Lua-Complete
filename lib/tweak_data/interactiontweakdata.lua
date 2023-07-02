@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-6001
+-- Lines 3-6003
 function InteractionTweakData:init()
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -3904,7 +3904,8 @@ function InteractionTweakData:init()
 		equipment_text_id = "hud_int_need_tank_shell",
 		equipment_consume = true,
 		start_active = false,
-		timer = 2
+		timer = 2,
+		interact_dont_interupt_on_distance = true
 	}
 	self.graveyard_check_tank = {
 		text_id = "hud_graveyard_check_tank",
@@ -4413,7 +4414,7 @@ function InteractionTweakData:init()
 	}
 	local com_wheel_color = Color(1, 0.8, 0)
 
-	-- Lines 4358-4444
+	-- Lines 4359-4445
 	local function com_wheel_clbk(say_target_id, default_say_id, post_prefix, past_prefix, waypoint_tech)
 		local character = managers.network:session():local_peer()._character
 		local nationality = CriminalsManager.comm_wheel_callout_from_nationality(character)
@@ -6135,7 +6136,8 @@ function InteractionTweakData:init()
 		text_id = "hud_load_shell",
 		action_text_id = "hud_action_loading_shell",
 		timer = 2,
-		start_active = false
+		start_active = false,
+		interact_dont_interupt_on_distance = true
 	}
 	self.load_shell_use_carry = deep_clone(self.load_shell)
 	self.load_shell_use_carry.required_carry = {

@@ -1054,6 +1054,8 @@ function LootScreenGui:_animate_show_loot(panel)
 	wait(1)
 
 	while not self.local_player_loot_drop do
+		self.local_player_loot_drop = self.current_state.local_player_loot_drop
+
 		coroutine.yield()
 	end
 

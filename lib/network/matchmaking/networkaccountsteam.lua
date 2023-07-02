@@ -583,47 +583,54 @@ function NetworkAccountSTEAM:inventory_is_loading()
 	return self._inventory_is_loading
 end
 
--- Lines 676-696
+-- Lines 676-698
 function NetworkAccountSTEAM:inventory_reward(item_def_id, callback_ref)
-	item_def_id = item_def_id or 1
+	if not item_def_id or item_def_id < 1 then
+		Application:error("[NetworkAccountSTEAM:inventory_reward] item_def_id nil")
+
+		item_def_id = 1
+	end
 
 	if callback_ref then
+		Application:debug("[NetworkAccountSTEAM:inventory_reward] callback_ref exists:", callback_ref, item_def_id)
 		Steam:inventory_reward(callback_ref, item_def_id)
 	else
+		Application:debug("[NetworkAccountSTEAM:inventory_reward] callback_ref nil:", item_def_id)
 		Steam:inventory_reward(callback(self, self, "_clbk_inventory_reward"), item_def_id)
 	end
 
 	return true
 end
 
--- Lines 698-705
+-- Lines 700-708
 function NetworkAccountSTEAM:_clbk_inventory_reward(error, tradable_list)
 	Application:trace("[NetworkAccountSTEAM:_clbk_inventory_reward]")
 	Application:trace("error ", inspect(error))
 	Application:trace("tradable_list ", inspect(tradable_list))
+	Application:error("*This is empty callback, you need to pass callback that you want to process loot drop. If you are seeing this there was no valid callback set!")
 end
 
--- Lines 707-720
+-- Lines 710-723
 function NetworkAccountSTEAM:inventory_remove(instance_id)
 	Application:trace("[ChallengeCardsManager:inventory_remove] instance_id ", instance_id)
 
 	local return_status = Steam:inventory_remove(instance_id)
 end
 
--- Lines 722-723
+-- Lines 725-726
 function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
 end
 
--- Lines 725-733
+-- Lines 728-736
 function NetworkAccountSTEAM:inventory_reward_dlc(def_id, reward_promo_callback)
 end
 
--- Lines 735-744
+-- Lines 738-747
 function NetworkAccountSTEAM:inventory_outfit_refresh()
 	self._inventory_outfit_refresh_requested = true
 end
 
--- Lines 746-758
+-- Lines 749-761
 function NetworkAccountSTEAM:_inventory_outfit_refresh()
 	local outfit = managers.blackmarket:tradable_outfit()
 
@@ -641,7 +648,7 @@ function NetworkAccountSTEAM:_inventory_outfit_refresh()
 	end
 end
 
--- Lines 760-772
+-- Lines 763-775
 function NetworkAccountSTEAM:_chk_inventory_outfit_refresh()
 	if not self._inventory_outfit_refresh_requested then
 		return
@@ -656,7 +663,7 @@ function NetworkAccountSTEAM:_chk_inventory_outfit_refresh()
 	self:_inventory_outfit_refresh()
 end
 
--- Lines 774-780
+-- Lines 777-783
 function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outfit_callback)
 	if outfit_data == "" then
 		return outfit_callback and outfit_callback(nil, false, {})
@@ -665,16 +672,16 @@ function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outf
 	Steam:inventory_signature_verify(steam_id, outfit_data, outfit_callback)
 end
 
--- Lines 782-784
+-- Lines 785-787
 function NetworkAccountSTEAM:inventory_outfit_signature()
 	return self._outfit_signature
 end
 
--- Lines 786-787
+-- Lines 789-790
 function NetworkAccountSTEAM:inventory_repair_list(list)
 end
 
--- Lines 789-806
+-- Lines 792-809
 function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 	print("[NetworkAccountSTEAM:_clbk_tradable_outfit_data] error: ", error, ", self._outfit_signature: ", self._outfit_signature, "\n outfit_signature: ", outfit_signature, "\n")
 
@@ -695,7 +702,7 @@ function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 	end
 end
 
--- Lines 814-933
+-- Lines 817-936
 function NetworkAccountSTEAM.output_global_stats(file)
 	local num_days = 100
 	local sa = Steam:sa_handler()
@@ -709,7 +716,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 	invalid[51] = 1
 	invalid[57] = 1
 
-	-- Lines 830-852
+	-- Lines 833-855
 	local function get_lvl_stat(diff, heist, stat, i)
 		if i == 0 then
 			local st = NetworkAccountSTEAM.lb_levels[heist] .. ", " .. NetworkAccountSTEAM.lb_diffs[diff] .. " - "
@@ -734,7 +741,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 		return num
 	end
 
-	-- Lines 855-877
+	-- Lines 858-880
 	local function get_weapon_stat(weapon, stat, i)
 		if i == 0 then
 			local st = weapon .. " - "
