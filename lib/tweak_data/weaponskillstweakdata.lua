@@ -5115,7 +5115,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				cost = 4,
-				value = 3,
+				value = 2,
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,

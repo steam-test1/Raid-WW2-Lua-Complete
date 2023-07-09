@@ -624,34 +624,45 @@ end
 function RaidMenuCallbackHandler:_dialog_quit_no()
 end
 
--- Lines 602-632
+-- Lines 602-634
 function RaidMenuCallbackHandler:raid_play_online()
-	if _G.IS_PS4 and Global.boot_invite and Global.boot_invite.pending then
-		managers.menu:show_fetching_status_dialog()
-
-		return
-	end
-
-	managers.menu:open_sign_in_menu(function (success)
-		if not success then
-			if managers.network.account:signin_state() == "not signed in" and PSN:cable_connected() then
-				managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_err_not_signed_in")
-			end
-
-			return
-		end
-
-		Global.exe_argument_level = "streaming_level"
-		Global.exe_argument_difficulty = Global.exe_argument_difficulty or "difficulty_1"
+	if _G.IS_PC then
+		Global.game_settings.single_player = false
+		Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
+		Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
 		MenuCallbackHandler:start_job({
 			job_id = Global.exe_argument_level,
 			difficulty = Global.exe_argument_difficulty
 		})
-	end)
+	elseif _G.IS_PS4 then
+		if Global.boot_invite and Global.boot_invite.pending then
+			managers.menu:show_fetching_status_dialog()
+
+			return
+		end
+
+		managers.menu:open_sign_in_menu(function (success)
+			if not success then
+				if managers.network.account:signin_state() == "not signed in" and PSN:cable_connected() then
+					managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_err_not_signed_in")
+				end
+
+				return
+			end
+
+			Global.exe_argument_level = "streaming_level"
+			Global.exe_argument_difficulty = Global.exe_argument_difficulty or "difficulty_1"
+
+			MenuCallbackHandler:start_job({
+				job_id = Global.exe_argument_level,
+				difficulty = Global.exe_argument_difficulty
+			})
+		end)
+	end
 end
 
--- Lines 634-653
+-- Lines 636-655
 function RaidMenuCallbackHandler:raid_play_offline()
 	Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
@@ -665,7 +676,7 @@ function RaidMenuCallbackHandler:raid_play_offline()
 	managers.menu:show_loading_screen(data, callback(self, self, "_do_play_offline"))
 end
 
--- Lines 655-659
+-- Lines 657-661
 function RaidMenuCallbackHandler:_do_play_offline()
 	MenuCallbackHandler:play_single_player()
 	MenuCallbackHandler:start_single_player_job({
@@ -674,14 +685,14 @@ function RaidMenuCallbackHandler:_do_play_offline()
 	})
 end
 
--- Lines 661-665
+-- Lines 663-667
 function RaidMenuCallbackHandler:raid_play_tutorial()
 	Application:debug("[RaidMenuCallbackHandler][raid_play_tutorial] Starting tutorial")
 	managers.raid_job:set_temp_play_flag()
 	self:raid_play_offline()
 end
 
--- Lines 667-673
+-- Lines 669-675
 function RaidMenuCallbackHandler:raid_skip_tutorial()
 	Application:debug("[RaidMenuCallbackHandler][raid_skip_tutorial] Skipping and ending tutorial")
 	managers.raid_job:save_tutorial_played_flag(true)
@@ -690,17 +701,17 @@ function RaidMenuCallbackHandler:raid_skip_tutorial()
 	managers.queued_tasks:queue(nil, managers.global_state.fire_event, managers.global_state, "system_end_raid", 1, nil)
 end
 
--- Lines 677-680
+-- Lines 679-682
 function MenuCallbackHandler:on_play_clicked()
 	managers.raid_menu:open_menu("mission_selection_menu")
 end
 
--- Lines 682-694
+-- Lines 684-696
 function MenuCallbackHandler:on_multiplayer_clicked()
 	managers.raid_menu:open_menu("mission_join_menu")
 end
 
--- Lines 711-718
+-- Lines 713-720
 function MenuCallbackHandler:on_mission_selection_clicked()
 	if managers.progression:have_pending_missions_to_unlock() then
 		managers.raid_menu:open_menu("mission_unlock_menu")
@@ -709,38 +720,38 @@ function MenuCallbackHandler:on_mission_selection_clicked()
 	end
 end
 
--- Lines 720-723
+-- Lines 722-725
 function MenuCallbackHandler:on_select_character_profile_clicked()
 	managers.raid_menu:open_menu("profile_selection_menu")
 end
 
--- Lines 725-728
+-- Lines 727-730
 function MenuCallbackHandler:on_select_character_customization_clicked()
 	managers.raid_menu:open_menu("character_customization_menu")
 end
 
--- Lines 730-733
+-- Lines 732-735
 function MenuCallbackHandler:on_select_challenge_cards_clicked()
 	managers.raid_menu:open_menu("challenge_cards_menu")
 end
 
--- Lines 735-738
+-- Lines 737-740
 function MenuCallbackHandler:on_select_challenge_cards_view_clicked()
 	managers.raid_menu:open_menu("challenge_cards_view_menu")
 end
 
--- Lines 740-743
+-- Lines 742-745
 function MenuCallbackHandler:on_select_character_skills_clicked()
 	managers.raid_menu:open_menu("raid_menu_xp")
 end
 
--- Lines 745-748
+-- Lines 747-750
 function MenuCallbackHandler:choice_choose_raid_permission(item)
 	local value = item:value()
 	Global.game_settings.permission = value
 end
 
--- Lines 750-757
+-- Lines 752-759
 function MenuCallbackHandler:choice_choose_raid_mission_zone(item)
 	local value = item:value()
 	Global.game_settings.raid_zone = value
@@ -750,17 +761,17 @@ function MenuCallbackHandler:choice_choose_raid_mission_zone(item)
 	end
 end
 
--- Lines 759-763
+-- Lines 761-765
 function MenuCallbackHandler:is_in_camp()
 	return managers.raid_job:is_camp_loaded()
 end
 
--- Lines 765-769
+-- Lines 767-771
 function MenuCallbackHandler:is_not_in_camp()
 	return not managers.raid_job:is_camp_loaded()
 end
 
--- Lines 773-784
+-- Lines 775-786
 function RaidMenuCallbackHandler.invite_friend()
 	if Network:multiplayer() then
 		if _G.IS_PS4 then
@@ -771,87 +782,87 @@ function RaidMenuCallbackHandler.invite_friend()
 	end
 end
 
--- Lines 805-807
+-- Lines 807-809
 function MenuCallbackHandler:set_camera_sensitivity_x_raid(value)
 	managers.user:set_setting("camera_sensitivity_x", value)
 end
 
--- Lines 809-811
+-- Lines 811-813
 function MenuCallbackHandler:set_camera_sensitivity_y_raid(value)
 	managers.user:set_setting("camera_sensitivity_y", value)
 end
 
--- Lines 813-815
+-- Lines 815-817
 function MenuCallbackHandler:set_camera_zoom_sensitivity_x_raid(value)
 	managers.user:set_setting("camera_zoom_sensitivity_x", value)
 end
 
--- Lines 817-819
+-- Lines 819-821
 function MenuCallbackHandler:set_camera_zoom_sensitivity_y_raid(value)
 	managers.user:set_setting("camera_zoom_sensitivity_y", value)
 end
 
--- Lines 821-823
+-- Lines 823-825
 function MenuCallbackHandler:toggle_zoom_sensitivity_raid(value)
 	managers.user:set_setting("enable_camera_zoom_sensitivity", value)
 end
 
--- Lines 825-827
+-- Lines 827-829
 function MenuCallbackHandler:invert_camera_vertically_raid(value)
 	managers.user:set_setting("invert_camera_y", value)
 end
 
--- Lines 829-831
+-- Lines 831-833
 function MenuCallbackHandler:hold_to_steelsight_raid(value)
 	managers.user:set_setting("hold_to_steelsight", value)
 end
 
--- Lines 833-835
+-- Lines 835-837
 function MenuCallbackHandler:hold_to_run_raid(value)
 	managers.user:set_setting("hold_to_run", value)
 end
 
--- Lines 837-839
+-- Lines 839-841
 function MenuCallbackHandler:hold_to_duck_raid(value)
 	managers.user:set_setting("hold_to_duck", value)
 end
 
--- Lines 843-845
+-- Lines 845-847
 function MenuCallbackHandler:toggle_rumble(value)
 	managers.user:set_setting("rumble", value)
 end
 
--- Lines 847-849
+-- Lines 849-851
 function MenuCallbackHandler:toggle_aim_assist(value)
 	managers.user:set_setting("aim_assist", value)
 end
 
--- Lines 851-853
+-- Lines 853-855
 function MenuCallbackHandler:toggle_sticky_aim(value)
 	managers.user:set_setting("sticky_aim", value)
 end
 
--- Lines 855-857
+-- Lines 857-859
 function MenuCallbackHandler:toggle_southpaw(value)
 	managers.user:set_setting("southpaw", value)
 end
 
--- Lines 861-863
+-- Lines 863-865
 function MenuCallbackHandler:toggle_net_throttling_raid(value)
 	managers.user:set_setting("net_packet_throttling", value)
 end
 
--- Lines 865-867
+-- Lines 867-869
 function MenuCallbackHandler:toggle_net_forwarding_raid(value)
 	managers.user:set_setting("net_forwarding", value)
 end
 
--- Lines 869-871
+-- Lines 871-873
 function MenuCallbackHandler:toggle_net_use_compression_raid(value)
 	managers.user:set_setting("net_use_compression", value)
 end
 
--- Lines 875-886
+-- Lines 877-888
 function MenuCallbackHandler:set_master_volume_raid(volume)
 	local old_volume = managers.user:get_setting("master_volume")
 
@@ -865,7 +876,7 @@ function MenuCallbackHandler:set_master_volume_raid(volume)
 	end
 end
 
--- Lines 888-898
+-- Lines 890-900
 function MenuCallbackHandler:set_music_volume_raid(volume)
 	local old_volume = managers.user:get_setting("music_volume")
 
@@ -878,7 +889,7 @@ function MenuCallbackHandler:set_music_volume_raid(volume)
 	end
 end
 
--- Lines 900-910
+-- Lines 902-912
 function MenuCallbackHandler:set_sfx_volume_raid(volume)
 	local old_volume = managers.user:get_setting("sfx_volume")
 
@@ -891,7 +902,7 @@ function MenuCallbackHandler:set_sfx_volume_raid(volume)
 	end
 end
 
--- Lines 912-922
+-- Lines 914-924
 function MenuCallbackHandler:set_voice_volume_raid(volume)
 	local old_volume = managers.user:get_setting("voice_volume")
 
@@ -904,7 +915,7 @@ function MenuCallbackHandler:set_voice_volume_raid(volume)
 	end
 end
 
--- Lines 924-934
+-- Lines 926-936
 function MenuCallbackHandler:set_voice_over_volume_raid(volume)
 	local old_volume = managers.user:get_setting("voice_over_volume")
 
@@ -917,7 +928,7 @@ function MenuCallbackHandler:set_voice_over_volume_raid(volume)
 	end
 end
 
--- Lines 936-948
+-- Lines 938-950
 function MenuCallbackHandler:toggle_voicechat_raid(value)
 	managers.user:set_setting("voice_chat", value)
 
@@ -930,17 +941,17 @@ function MenuCallbackHandler:toggle_voicechat_raid(value)
 	end
 end
 
--- Lines 950-952
+-- Lines 952-954
 function MenuCallbackHandler:toggle_push_to_talk_raid(value)
 	managers.user:set_setting("push_to_talk", value)
 end
 
--- Lines 954-956
+-- Lines 956-958
 function MenuCallbackHandler:toggle_tinnitus_raid(value)
 	managers.user:set_setting("tinnitus_sound_enabled", value)
 end
 
--- Lines 960-993
+-- Lines 962-995
 function MenuCallbackHandler:change_resolution_raid(resolution, no_dialog)
 	local old_resolution = RenderSettings.resolution
 
@@ -975,7 +986,7 @@ function MenuCallbackHandler:change_resolution_raid(resolution, no_dialog)
 	self:_refresh_brightness()
 end
 
--- Lines 995-1006
+-- Lines 997-1008
 function MenuCallbackHandler:set_resolution_default_raid_no_dialog(resolution)
 	local old_resolution = RenderSettings.resolution
 
@@ -992,7 +1003,7 @@ function MenuCallbackHandler:set_resolution_default_raid_no_dialog(resolution)
 	blackborder_workspace:set_screen(resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, resolution.x, resolution.y)
 end
 
--- Lines 1008-1052
+-- Lines 1010-1054
 function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, current_fullscreen, borderless, current_borderless, callback)
 	if fullscreen and managers.viewport:is_fullscreen() then
 		return
@@ -1030,7 +1041,7 @@ function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, current_fullscre
 	self:_refresh_brightness()
 end
 
--- Lines 1054-1073
+-- Lines 1056-1075
 function MenuCallbackHandler:set_fullscreen_default_raid_no_dialog()
 	local fullscreen = true
 
@@ -1049,22 +1060,22 @@ function MenuCallbackHandler:set_fullscreen_default_raid_no_dialog()
 	self:_refresh_brightness()
 end
 
--- Lines 1075-1077
+-- Lines 1077-1079
 function MenuCallbackHandler:toggle_subtitle_raid(value)
 	managers.user:set_setting("subtitle", value)
 end
 
--- Lines 1079-1081
+-- Lines 1081-1083
 function MenuCallbackHandler:set_hit_indicator_raid(value)
 	managers.user:set_setting("hit_indicator", value)
 end
 
--- Lines 1083-1086
+-- Lines 1085-1088
 function MenuCallbackHandler:toggle_hud_special_weapon_panels(value)
 	managers.user:set_setting("hud_special_weapon_panels", value)
 end
 
--- Lines 1088-1093
+-- Lines 1090-1095
 function MenuCallbackHandler:set_motion_dot_raid(value)
 	managers.user:set_setting("motion_dot", value)
 
@@ -1073,7 +1084,7 @@ function MenuCallbackHandler:set_motion_dot_raid(value)
 	end
 end
 
--- Lines 1095-1100
+-- Lines 1097-1102
 function MenuCallbackHandler:set_motion_dot_size_raid(value)
 	managers.user:set_setting("motion_dot_size", value)
 
@@ -1082,62 +1093,62 @@ function MenuCallbackHandler:set_motion_dot_size_raid(value)
 	end
 end
 
--- Lines 1102-1104
+-- Lines 1104-1106
 function MenuCallbackHandler:toggle_objective_reminder_raid(value)
 	managers.user:set_setting("objective_reminder", value)
 end
 
--- Lines 1106-1108
+-- Lines 1108-1110
 function MenuCallbackHandler:toggle_headbob_raid(value)
 	managers.user:set_setting("use_headbob", value)
 end
 
--- Lines 1110-1112
+-- Lines 1112-1114
 function MenuCallbackHandler:set_effect_quality_raid(value)
 	managers.user:set_setting("effect_quality", value)
 end
 
--- Lines 1114-1117
+-- Lines 1116-1119
 function MenuCallbackHandler:set_brightness_raid(value)
 	managers.user:set_setting("brightness", value)
 end
 
--- Lines 1121-1123
+-- Lines 1123-1125
 function MenuCallbackHandler:toggle_dof_setting_raid(value)
 	managers.user:set_setting("dof_setting", value and "standard" or "none")
 end
 
--- Lines 1125-1127
+-- Lines 1127-1129
 function MenuCallbackHandler:toggle_ssao_setting_raid(value)
 	managers.user:set_setting("ssao_setting", value and "standard" or "none")
 end
 
--- Lines 1129-1131
+-- Lines 1131-1133
 function MenuCallbackHandler:set_use_parallax_raid(value)
 	managers.user:set_setting("use_parallax", value)
 end
 
--- Lines 1133-1135
+-- Lines 1135-1137
 function MenuCallbackHandler:toggle_motion_blur_setting_raid(value)
 	managers.user:set_setting("motion_blur_setting", value and "standard" or "none")
 end
 
--- Lines 1137-1139
+-- Lines 1139-1141
 function MenuCallbackHandler:toggle_volumetric_light_scattering_setting_raid(value)
 	managers.user:set_setting("vls_setting", value and "standard" or "none")
 end
 
--- Lines 1141-1143
+-- Lines 1143-1145
 function MenuCallbackHandler:toggle_gpu_flush_setting_raid(value)
 	managers.user:set_setting("flush_gpu_command_queue", value)
 end
 
--- Lines 1145-1147
+-- Lines 1147-1149
 function MenuCallbackHandler:toggle_lightfx_raid(value)
 	managers.user:set_setting("use_lightfx", value)
 end
 
--- Lines 1149-1154
+-- Lines 1151-1156
 function MenuCallbackHandler:toggle_vsync_raid(vsync_value, buffer_count)
 	managers.viewport:set_vsync(vsync_value)
 	managers.viewport:set_buffer_count(buffer_count)
@@ -1145,7 +1156,7 @@ function MenuCallbackHandler:toggle_vsync_raid(vsync_value, buffer_count)
 	self:_refresh_brightness()
 end
 
--- Lines 1156-1162
+-- Lines 1158-1164
 function MenuCallbackHandler:set_fov_multiplier_raid(value)
 	managers.user:set_setting("fov_multiplier", value)
 
@@ -1154,7 +1165,7 @@ function MenuCallbackHandler:set_fov_multiplier_raid(value)
 	end
 end
 
--- Lines 1164-1175
+-- Lines 1166-1177
 function MenuCallbackHandler:set_detail_distance_raid(detail_distance)
 	managers.user:set_setting("detail_distance", detail_distance)
 
@@ -1166,12 +1177,12 @@ function MenuCallbackHandler:set_detail_distance_raid(detail_distance)
 	World:set_min_allowed_projected_size(maps)
 end
 
--- Lines 1177-1179
+-- Lines 1179-1181
 function MenuCallbackHandler:choice_choose_anti_alias_raid(value)
 	managers.user:set_setting("AA_setting", value)
 end
 
--- Lines 1181-1187
+-- Lines 1183-1189
 function MenuCallbackHandler:choice_choose_texture_quality_raid(value)
 	RenderSettings.texture_quality_default = value
 
@@ -1179,7 +1190,7 @@ function MenuCallbackHandler:choice_choose_texture_quality_raid(value)
 	self:_refresh_brightness()
 end
 
--- Lines 1189-1195
+-- Lines 1191-1197
 function MenuCallbackHandler:choice_choose_shadow_quality_raid(value)
 	RenderSettings.shadow_quality_default = value
 
@@ -1187,7 +1198,7 @@ function MenuCallbackHandler:choice_choose_shadow_quality_raid(value)
 	self:_refresh_brightness()
 end
 
--- Lines 1197-1203
+-- Lines 1199-1205
 function MenuCallbackHandler:choice_choose_anisotropic_raid(value)
 	RenderSettings.max_anisotropy = value
 
@@ -1195,28 +1206,28 @@ function MenuCallbackHandler:choice_choose_anisotropic_raid(value)
 	self:_refresh_brightness()
 end
 
--- Lines 1205-1207
+-- Lines 1207-1209
 function MenuCallbackHandler:choice_choose_anim_lod_raid(value)
 	managers.user:set_setting("video_animation_lod", value)
 end
 
--- Lines 1209-1212
+-- Lines 1211-1214
 function MenuCallbackHandler:choice_fps_cap_raid(value)
 	setup:set_fps_cap(value)
 	managers.user:set_setting("fps_cap", value)
 end
 
--- Lines 1214-1216
+-- Lines 1216-1218
 function MenuCallbackHandler:choice_max_streaming_chunk_raid(value)
 	managers.user:set_setting("max_streaming_chunk", value)
 end
 
--- Lines 1218-1220
+-- Lines 1220-1222
 function MenuCallbackHandler:choice_choose_cb_mode_raid(value)
 	managers.user:set_setting("colorblind_setting", value)
 end
 
--- Lines 1224-1239
+-- Lines 1226-1241
 function MenuCallbackHandler:set_default_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_options_message"),
@@ -1234,7 +1245,7 @@ function MenuCallbackHandler:set_default_options_raid(node_component)
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1241-1248
+-- Lines 1243-1250
 function MenuCallbackHandler:set_default_control_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_controls_options_message"),
@@ -1247,7 +1258,7 @@ function MenuCallbackHandler:set_default_control_options_raid(node_component)
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1250-1261
+-- Lines 1252-1263
 function MenuCallbackHandler:set_default_keybinds_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_use_default_keys_message"),
@@ -1261,7 +1272,7 @@ function MenuCallbackHandler:set_default_keybinds_raid(node_component)
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1263-1275
+-- Lines 1265-1277
 function MenuCallbackHandler:set_default_video_options_raid(node_component, callback_function)
 	local params = {
 		text = managers.localization:text("dialog_default_video_options_message"),
@@ -1276,7 +1287,7 @@ function MenuCallbackHandler:set_default_video_options_raid(node_component, call
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1277-1288
+-- Lines 1279-1290
 function MenuCallbackHandler:set_default_sound_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_sound_options_message"),
@@ -1290,7 +1301,7 @@ function MenuCallbackHandler:set_default_sound_options_raid(node_component)
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1290-1297
+-- Lines 1292-1299
 function MenuCallbackHandler:set_default_network_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_network_options_message"),

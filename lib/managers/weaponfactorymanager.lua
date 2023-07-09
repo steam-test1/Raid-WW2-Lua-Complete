@@ -471,8 +471,6 @@ end
 
 -- Lines 427-432
 function WeaponFactoryManager:assemble_from_blueprint(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
-	Application:trace("[WEPTEST] assemble_from_blueprint", debug.traceback())
-
 	return self:_assemble(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
 end
 

@@ -1107,7 +1107,7 @@ function ConnectionNetworkHandler:sync_barrage_launch_sound(event_name, sender)
 	managers.barrage:play_barrage_launch_sound(event_name)
 end
 
--- Lines 1094-1113
+-- Lines 1094-1114
 function ConnectionNetworkHandler:sync_external_start_mission(mission_id, event_id, reload_mission_flag, sender)
 	if not self._verify_sender(sender) then
 		return
@@ -1128,12 +1128,13 @@ function ConnectionNetworkHandler:sync_external_start_mission(mission_id, event_
 
 		managers.raid_job:on_mission_restart()
 		managers.raid_job:stop_sounds()
+		managers.loot:reset()
 	end
 
 	managers.raid_job:do_external_start_mission(mission, event_id)
 end
 
--- Lines 1115-1123
+-- Lines 1116-1124
 function ConnectionNetworkHandler:sync_external_end_mission(restart_camp, failed, sender)
 	Application:debug("[ConnectionNetworkHandler:sync_external_end_mission] restart_camp, failed, sender", restart_camp, failed, sender)
 
@@ -1145,7 +1146,7 @@ function ConnectionNetworkHandler:sync_external_end_mission(restart_camp, failed
 	managers.raid_job:do_external_end_mission(restart_camp)
 end
 
--- Lines 1125-1131
+-- Lines 1126-1132
 function ConnectionNetworkHandler:restart(sender)
 	if not self._verify_sender(sender) then
 		return
@@ -1154,7 +1155,7 @@ function ConnectionNetworkHandler:restart(sender)
 	managers.raid_job:do_external_end_mission()
 end
 
--- Lines 1133-1141
+-- Lines 1134-1142
 function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percentage, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1170,7 +1171,7 @@ function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percent
 	})
 end
 
--- Lines 1143-1151
+-- Lines 1144-1152
 function ConnectionNetworkHandler:sync_warcry_meter_glow(value, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1183,7 +1184,7 @@ function ConnectionNetworkHandler:sync_warcry_meter_glow(value, sender)
 	managers.hud:set_warcry_meter_glow(character_data.panel_id, value)
 end
 
--- Lines 1153-1164
+-- Lines 1154-1165
 function ConnectionNetworkHandler:sync_activate_warcry(warcry_type, warcry_level, duration, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1198,7 +1199,7 @@ function ConnectionNetworkHandler:sync_activate_warcry(warcry_type, warcry_level
 	managers.warcry:activate_peer_warcry(sender_peer:id(), warcry_type, warcry_level)
 end
 
--- Lines 1166-1177
+-- Lines 1167-1178
 function ConnectionNetworkHandler:sync_deactivate_warcry(sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1213,7 +1214,7 @@ function ConnectionNetworkHandler:sync_deactivate_warcry(sender)
 	managers.warcry:deactivate_peer_warcry(sender_peer:id())
 end
 
--- Lines 1179-1186
+-- Lines 1180-1187
 function ConnectionNetworkHandler:refill_grenades(amount, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1224,7 +1225,7 @@ function ConnectionNetworkHandler:refill_grenades(amount, sender)
 	managers.player:refill_grenades(amount)
 end
 
--- Lines 1188-1199
+-- Lines 1189-1200
 function ConnectionNetworkHandler:sync_queue_dialog(id, instigator, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1242,7 +1243,7 @@ function ConnectionNetworkHandler:sync_queue_dialog(id, instigator, sender)
 	end
 end
 
--- Lines 1201-1208
+-- Lines 1202-1209
 function ConnectionNetworkHandler:sync_camp_presence(value, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1253,7 +1254,7 @@ function ConnectionNetworkHandler:sync_camp_presence(value, sender)
 	managers.player:set_local_player_in_camp(value)
 end
 
--- Lines 1210-1217
+-- Lines 1211-1218
 function ConnectionNetworkHandler:sync_objectives_manager_mission_start(sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1264,7 +1265,7 @@ function ConnectionNetworkHandler:sync_objectives_manager_mission_start(sender)
 	managers.objectives:on_mission_start_callback()
 end
 
--- Lines 1219-1226
+-- Lines 1220-1227
 function ConnectionNetworkHandler:sync_active_challenge_card(card_key, locked, status, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1275,7 +1276,7 @@ function ConnectionNetworkHandler:sync_active_challenge_card(card_key, locked, s
 	managers.challenge_cards:sync_active_challenge_card(card_key, locked, status)
 end
 
--- Lines 1228-1235
+-- Lines 1229-1236
 function ConnectionNetworkHandler:sync_active_challenge_card(card_key, locked, status, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1286,7 +1287,7 @@ function ConnectionNetworkHandler:sync_active_challenge_card(card_key, locked, s
 	managers.challenge_cards:sync_active_challenge_card(card_key, locked, status)
 end
 
--- Lines 1237-1244
+-- Lines 1238-1245
 function ConnectionNetworkHandler:sync_spotter_spawn_flare(flare, pos, rot, forward, v, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1297,7 +1298,7 @@ function ConnectionNetworkHandler:sync_spotter_spawn_flare(flare, pos, rot, forw
 	managers.barrage:sync_spotter_spawn_flare(flare, pos, rot, forward, v)
 end
 
--- Lines 1246-1252
+-- Lines 1247-1253
 function ConnectionNetworkHandler:sync_spotter_flare_disabled(unit, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1308,7 +1309,7 @@ function ConnectionNetworkHandler:sync_spotter_flare_disabled(unit, sender)
 	unit:damage():run_sequence_simple("state_interaction_disabled")
 end
 
--- Lines 1254-1260
+-- Lines 1255-1261
 function ConnectionNetworkHandler:sync_randomize_operation(operation_id, string_delimited, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1319,7 +1320,7 @@ function ConnectionNetworkHandler:sync_randomize_operation(operation_id, string_
 	tweak_data.operations:set_operation_indexes_delimited(operation_id, string_delimited)
 end
 
--- Lines 1262-1269
+-- Lines 1263-1270
 function ConnectionNetworkHandler:set_hud_suspicion_state(indicator_id, state, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1330,7 +1331,7 @@ function ConnectionNetworkHandler:set_hud_suspicion_state(indicator_id, state, s
 	managers.hud:set_suspicion_indicator_state(indicator_id, state)
 end
 
--- Lines 1271-1280
+-- Lines 1272-1281
 function ConnectionNetworkHandler:restore_health_by_percentage(health_percentage, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1343,7 +1344,7 @@ function ConnectionNetworkHandler:restore_health_by_percentage(health_percentage
 	end
 end
 
--- Lines 1282-1292
+-- Lines 1283-1293
 function ConnectionNetworkHandler:enter_lockpicking_state(sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1357,7 +1358,7 @@ function ConnectionNetworkHandler:enter_lockpicking_state(sender)
 	managers.hud:on_teammate_start_lockpicking(teammate_panel_id, name_label_id)
 end
 
--- Lines 1294-1304
+-- Lines 1295-1305
 function ConnectionNetworkHandler:exit_lockpicking_state(sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1371,7 +1372,7 @@ function ConnectionNetworkHandler:exit_lockpicking_state(sender)
 	managers.hud:on_teammate_stop_lockpicking(teammate_panel_id, name_label_id)
 end
 
--- Lines 1306-1313
+-- Lines 1307-1314
 function ConnectionNetworkHandler:sync_document_spawn_chance(document_spawn_chance, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1382,7 +1383,7 @@ function ConnectionNetworkHandler:sync_document_spawn_chance(document_spawn_chan
 	managers.consumable_missions:on_document_spawn_chance_received(document_spawn_chance, sender_peer:id())
 end
 
--- Lines 1315-1322
+-- Lines 1316-1323
 function ConnectionNetworkHandler:reset_document_spawn_chance_modifier(sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1393,7 +1394,7 @@ function ConnectionNetworkHandler:reset_document_spawn_chance_modifier(sender)
 	managers.consumable_missions:reset_document_spawn_modifier()
 end
 
--- Lines 1326-1341
+-- Lines 1327-1342
 function ConnectionNetworkHandler:sync_warcry_team_buff(upgrade_id, identifier, acquired, sender)
 	if not self._verify_sender(sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return

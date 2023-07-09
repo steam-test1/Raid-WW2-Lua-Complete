@@ -338,13 +338,13 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			flamethrower = {
 				1,
-				1,
-				2
+				2,
+				3
 			},
 			commanders = {
 				0,
-				1,
-				2
+				2,
+				3
 			},
 			commander_squad = {
 				0,
@@ -415,14 +415,14 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				0
 			},
 			flamethrower = {
-				9,
+				5,
 				12,
 				15
 			},
 			commanders = {
 				0,
-				2,
-				4
+				4,
+				8
 			},
 			commander_squad = {
 				30,
@@ -493,14 +493,14 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				75
 			},
 			flamethrower = {
-				15,
+				10,
 				18,
 				20
 			},
 			commanders = {
-				1,
-				4,
-				8
+				2,
+				7,
+				12
 			},
 			commander_squad = {
 				60,

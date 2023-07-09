@@ -760,7 +760,7 @@ function GamePlayCentralManager:restart_the_game()
 	managers.raid_job:external_end_mission(restart_camp, true)
 end
 
--- Lines 720-728
+-- Lines 720-729
 function GamePlayCentralManager:restart_the_mission()
 	managers.raid_job.reload_mission_flag = true
 
@@ -770,25 +770,27 @@ function GamePlayCentralManager:restart_the_mission()
 
 	managers.raid_job:on_mission_restart()
 	managers.raid_job:stop_sounds()
+	managers.loot:reset()
 	managers.enemy:remove_delayed_clbk("_gameover_clbk")
 	managers.global_state:fire_event("system_start_raid")
 end
 
--- Lines 731-733
+-- Lines 732-734
 function GamePlayCentralManager:set_restarting(value)
 	self._restarting = value
 end
 
--- Lines 735-737
+-- Lines 736-738
 function GamePlayCentralManager:is_restarting(value)
 	return self._restarting
 end
 
--- Lines 740-759
+-- Lines 741-761
 function GamePlayCentralManager:stop_the_game()
 	Application:trace("[GamePlayCentralManager:stop_the_game()]")
 	World:set_extensions_update_enabled(false)
 	game_state_machine:change_state_by_name("ingame_standard")
+	managers.loot:reset()
 	managers.raid_job:stop_sounds()
 	managers.statistics:stop_session()
 	managers.savefile:save_setting(true)
@@ -807,7 +809,7 @@ function GamePlayCentralManager:stop_the_game()
 	end
 end
 
--- Lines 763-769
+-- Lines 765-771
 function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	self._queue_fire_raycast = self._queue_fire_raycast or {}
 	local data = {
@@ -821,7 +823,7 @@ function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	table.insert(self._queue_fire_raycast, data)
 end
 
--- Lines 771-789
+-- Lines 773-791
 function GamePlayCentralManager:_flush_queue_fire_raycast()
 	local i = 1
 
@@ -843,7 +845,7 @@ function GamePlayCentralManager:_flush_queue_fire_raycast()
 	end
 end
 
--- Lines 795-819
+-- Lines 797-821
 function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	self._auto_highlighted_enemies = self._auto_highlighted_enemies or {}
 
@@ -873,7 +875,7 @@ function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	return true
 end
 
--- Lines 823-860
+-- Lines 825-862
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 	local HARDCODED_DISTANCE = 450
 	local HARDCODED_STRENGTH = 550
@@ -907,7 +909,7 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 	end
 end
 
--- Lines 864-870
+-- Lines 866-872
 function GamePlayCentralManager:announcer_say(event)
 	if not self._announcer_sound_source then
 		self._announcer_sound_source = SoundDevice:create_source("announcer")
@@ -916,7 +918,7 @@ function GamePlayCentralManager:announcer_say(event)
 	self._announcer_sound_source:post_event(event)
 end
 
--- Lines 874-883
+-- Lines 876-885
 function GamePlayCentralManager:save(data)
 	local state = {
 		flashlights_on = self._flashlights_on,
@@ -928,7 +930,7 @@ function GamePlayCentralManager:save(data)
 	data.GamePlayCentralManager = state
 end
 
--- Lines 885-898
+-- Lines 887-900
 function GamePlayCentralManager:load(data)
 	local state = data.GamePlayCentralManager
 
@@ -948,7 +950,7 @@ function GamePlayCentralManager:load(data)
 	end
 end
 
--- Lines 900-908
+-- Lines 902-910
 function GamePlayCentralManager:on_world_loaded()
 	Application:debug("[GamePlayCentralManager:on_world_loaded()]")
 
@@ -960,7 +962,7 @@ function GamePlayCentralManager:on_world_loaded()
 	end
 end
 
--- Lines 910-916
+-- Lines 912-918
 function GamePlayCentralManager:on_level_tranistion()
 	self._mission_disabled_units = {}
 	self._bullet_hits = {}
@@ -969,7 +971,7 @@ function GamePlayCentralManager:on_level_tranistion()
 	self._spawned_pickups = {}
 end
 
--- Lines 923-979
+-- Lines 925-981
 function GamePlayCentralManager:debug_weapon()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {
@@ -981,7 +983,7 @@ function GamePlayCentralManager:debug_weapon()
 
 	gui:clear()
 
-	-- Lines 930-975
+	-- Lines 932-977
 	local function add_func()
 		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
 			return ""
@@ -992,7 +994,7 @@ function GamePlayCentralManager:debug_weapon()
 		local blueprint = weapon:base()._blueprint
 		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
 
-		-- Lines 940-942
+		-- Lines 942-944
 		local function add_line(text, s)
 			return text .. s .. "\n"
 		end

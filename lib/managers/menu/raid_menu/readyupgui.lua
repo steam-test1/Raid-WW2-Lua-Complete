@@ -374,8 +374,6 @@ function ReadyUpGui:_spawn_weapon(params)
 	local weapon_blueprint = params.peer:blackmarket_outfit().primary.blueprint
 	local peer_id = managers.network:session():local_peer():id()
 
-	Application:debug("[WEPTEST], params.peer:id() == peer_id", params.peer:id(), peer_id, params.peer:id() == peer_id)
-
 	if params.peer:id() == peer_id then
 		weapon_blueprint = managers.weapon_factory:modify_skin_blueprint(params.weapon_factory_id, weapon_blueprint)
 	end
