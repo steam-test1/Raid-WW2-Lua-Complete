@@ -67,10 +67,10 @@ function LootDropManager:produce_consumable_mission_drop()
 	while loot_secured do
 		local loot_tweak_data = tweak_data.carry[loot_secured.carry_id]
 
-		if loot_tweak_data and loot_tweak_data.loot_outlaw_value then
-			local value_by_diff = math.round(loot_tweak_data.loot_outlaw_value * difficulty_multi)
+		if loot_tweak_data and loot_tweak_data.value_in_gold then
+			local value_by_diff = math.round(loot_tweak_data.value_in_gold * difficulty_multi)
 
-			Application:debug("[LootDropManager:produce_consumable_mission_drop()] Loot '" .. loot_secured.carry_id .. "' value by diff: " .. tostring(loot_tweak_data.loot_outlaw_value) .. " -> " .. tostring(value_by_diff))
+			Application:debug("[LootDropManager:produce_consumable_mission_drop()] Loot '" .. loot_secured.carry_id .. "' value by diff: " .. tostring(loot_tweak_data.value_in_gold) .. " -> " .. tostring(value_by_diff))
 
 			gold_bars_earned = gold_bars_earned + value_by_diff
 		end
@@ -83,6 +83,8 @@ function LootDropManager:produce_consumable_mission_drop()
 		gold_bars_min = gold_bars_earned,
 		gold_bars_max = gold_bars_earned
 	}
+
+	Application:debug("[LootDropManager:produce_consumable_mission_drop()] Loot total", gold_bars_earned)
 
 	return drop
 end

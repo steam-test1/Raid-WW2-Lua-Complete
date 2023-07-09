@@ -1034,6 +1034,7 @@ function ConnectionNetworkHandler:sync_external_start_mission(mission_id, event_
 
 		managers.raid_job:on_mission_restart()
 		managers.raid_job:stop_sounds()
+		managers.loot:reset()
 	end
 
 	managers.raid_job:do_external_start_mission(mission, event_id)

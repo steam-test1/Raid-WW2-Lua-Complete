@@ -645,8 +645,8 @@ end
 
 function WeaponSkillsManager:update_weapon_skill(raid_stat_name, data, weapon_category_id, action)
 	local upgrade_name = self:get_upgrade_name_from_raid_stat_name(raid_stat_name)
-	local weapon_category_string = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and "primary_weapon" or "secondary_weapon"
-	local upgrade_full_name = weapon_category_string .. "_" .. upgrade_name .. "_" .. (data.value or "")
+	local prefex_category = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and "primary_weapon" or "secondary_weapon"
+	local upgrade_full_name = prefex_category .. "_" .. upgrade_name .. "_" .. (data.value or "")
 
 	if action == WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE then
 		local upgrade_level = self:get_weapon_skills_current_upgrade_level(raid_stat_name, weapon_category_id)

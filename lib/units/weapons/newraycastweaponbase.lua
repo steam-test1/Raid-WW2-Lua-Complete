@@ -1374,11 +1374,8 @@ end
 function NewRaycastWeaponBase:reload_expire_t()
 	if self._use_shotgun_reload then
 		local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()
-		local shells_needed = self:get_ammo_max_per_clip() - ammo_remaining_in_clip
-		local total_loads = math.ceil(shells_needed / self:get_ammo_reload_clip_single())
-		local max_loads = math.ceil(self:get_ammo_max_per_clip() / self:get_ammo_reload_clip_single())
 
-		return math.min(total_loads, max_loads) * self:reload_shell_expire_t()
+		return math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * self:reload_shell_expire_t()
 	end
 
 	return nil

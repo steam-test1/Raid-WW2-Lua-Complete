@@ -556,29 +556,40 @@ function RaidMenuCallbackHandler:_dialog_quit_no()
 end
 
 function RaidMenuCallbackHandler:raid_play_online()
-	if _G.IS_PS4 and Global.boot_invite and Global.boot_invite.pending then
-		managers.menu:show_fetching_status_dialog()
-
-		return
-	end
-
-	managers.menu:open_sign_in_menu(function (success)
-		if not success then
-			if managers.network.account:signin_state() == "not signed in" and PSN:cable_connected() then
-				managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_err_not_signed_in")
-			end
-
-			return
-		end
-
-		Global.exe_argument_level = "streaming_level"
-		Global.exe_argument_difficulty = Global.exe_argument_difficulty or "difficulty_1"
+	if _G.IS_PC then
+		Global.game_settings.single_player = false
+		Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
+		Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
 		MenuCallbackHandler:start_job({
 			job_id = Global.exe_argument_level,
 			difficulty = Global.exe_argument_difficulty
 		})
-	end)
+	elseif _G.IS_PS4 then
+		if Global.boot_invite and Global.boot_invite.pending then
+			managers.menu:show_fetching_status_dialog()
+
+			return
+		end
+
+		managers.menu:open_sign_in_menu(function (success)
+			if not success then
+				if managers.network.account:signin_state() == "not signed in" and PSN:cable_connected() then
+					managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_err_not_signed_in")
+				end
+
+				return
+			end
+
+			Global.exe_argument_level = "streaming_level"
+			Global.exe_argument_difficulty = Global.exe_argument_difficulty or "difficulty_1"
+
+			MenuCallbackHandler:start_job({
+				job_id = Global.exe_argument_level,
+				difficulty = Global.exe_argument_difficulty
+			})
+		end)
+	end
 end
 
 function RaidMenuCallbackHandler:raid_play_offline()
