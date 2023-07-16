@@ -33,7 +33,7 @@ function RaidMenuOptionsVideo:close()
 	RaidMenuOptionsVideo.super.close(self)
 end
 
--- Lines 41-265
+-- Lines 41-278
 function RaidMenuOptionsVideo:_layout_video()
 	local start_x = 0
 	local start_y = 320
@@ -247,11 +247,24 @@ function RaidMenuOptionsVideo:_layout_video()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_camera_accel"),
 		on_menu_move = {
-			down = "default_video",
+			down = "camera_shake",
 			up = previous_panel.name
 		}
 	}
 	self._toggle_menu_camera_accel = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
+		name = "camera_shake",
+		value_format = "%02d%%",
+		description = utf8.to_upper(managers.localization:text("menu_options_video_camera_shake")),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		on_value_change_callback = callback(self, self, "on_value_change_camera_shake"),
+		on_menu_move = {
+			down = "default_video",
+			up = previous_panel.name
+		}
+	}
+	self._progress_bar_menu_camera_shake = self._root_panel:slider(previous_panel)
 	local default_video_settings_button = {
 		name = "default_video",
 		y = 832,
@@ -273,7 +286,7 @@ function RaidMenuOptionsVideo:_layout_video()
 	end
 end
 
--- Lines 268-274
+-- Lines 281-287
 function gcd(a, b)
 	if b == 0 then
 		return a
@@ -282,7 +295,7 @@ function gcd(a, b)
 	return gcd(b, a % b)
 end
 
--- Lines 276-304
+-- Lines 289-317
 function RaidMenuOptionsVideo:data_source_stepper_menu_resolution()
 	local temp_resolutions = {}
 
@@ -311,7 +324,7 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_resolution()
 	return result
 end
 
--- Lines 306-312
+-- Lines 319-325
 function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 	local result = {}
 
@@ -335,17 +348,17 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 	return result
 end
 
--- Lines 314-315
+-- Lines 327-328
 function RaidMenuOptionsVideo:on_item_selected_options_video_advanced_button()
 end
 
--- Lines 317-320
+-- Lines 330-333
 function RaidMenuOptionsVideo:on_item_selected_stepper_menu_resolution()
 	self._stepper_menu_refresh_rate:refresh_data(true)
 	self:_setup_control_visibility()
 end
 
--- Lines 322-334
+-- Lines 335-347
 function RaidMenuOptionsVideo:_add_distinct_resolution(res, resolutions)
 	if #resolutions == 0 then
 		table.insert(resolutions, {
@@ -364,7 +377,7 @@ function RaidMenuOptionsVideo:_add_distinct_resolution(res, resolutions)
 	end
 end
 
--- Lines 336-353
+-- Lines 349-366
 function RaidMenuOptionsVideo:_get_refresh_rates_for_resolution(resolution)
 	local temp_resolutions = {}
 
@@ -389,14 +402,14 @@ function RaidMenuOptionsVideo:_get_refresh_rates_for_resolution(resolution)
 	return result
 end
 
--- Lines 355-359
+-- Lines 368-372
 function RaidMenuOptionsVideo:data_source_stepper_menu_refresh_rate()
 	local current_resolution = self._stepper_menu_resolution:get_value()
 
 	return self:_get_refresh_rates_for_resolution(current_resolution)
 end
 
--- Lines 361-369
+-- Lines 374-382
 function RaidMenuOptionsVideo:data_source_stepper_menu_hit_confirm_indicator()
 	local tb = {}
 
@@ -411,7 +424,7 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_hit_confirm_indicator()
 	return tb
 end
 
--- Lines 371-378
+-- Lines 384-391
 function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot()
 	local tb = {}
 
@@ -426,7 +439,7 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot()
 	return tb
 end
 
--- Lines 380-386
+-- Lines 393-399
 function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot_size()
 	local tb = {}
 
@@ -441,11 +454,11 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot_size()
 	return tb
 end
 
--- Lines 388-391
+-- Lines 401-404
 function RaidMenuOptionsVideo:on_item_selected_refresh_rate()
 end
 
--- Lines 393-402
+-- Lines 406-415
 function RaidMenuOptionsVideo:on_click_apply_resolution_refresh_rate()
 	local selected_resolution = self._stepper_menu_resolution:get_value()
 	local selected_refresh_rate = self._stepper_menu_refresh_rate:get_value()
@@ -454,21 +467,28 @@ function RaidMenuOptionsVideo:on_click_apply_resolution_refresh_rate()
 	managers.menu:active_menu().callback_handler:change_resolution_raid(resolution)
 end
 
--- Lines 404-407
+-- Lines 417-420
 function RaidMenuOptionsVideo:on_value_change_effect_quality()
 	local effect_quality = self._progress_bar_menu_effect_quality:get_value() / 100
 
 	managers.menu:active_menu().callback_handler:set_effect_quality_raid(effect_quality)
 end
 
--- Lines 409-412
+-- Lines 422-425
+function RaidMenuOptionsVideo:on_value_change_camera_shake()
+	local value = self._progress_bar_menu_camera_shake:get_value() / 100
+
+	managers.user:set_setting("camera_shake", value)
+end
+
+-- Lines 427-430
 function RaidMenuOptionsVideo:on_value_change_brightness()
 	local brightness = self._progress_bar_menu_brightness:get_value() / 100 + 0.5
 
 	managers.menu:active_menu().callback_handler:set_brightness_raid(brightness)
 end
 
--- Lines 414-424
+-- Lines 432-442
 function RaidMenuOptionsVideo:on_item_selected_window_mode()
 	local mode = self._stepper_menu_window_mode:get_value()
 
@@ -483,7 +503,7 @@ function RaidMenuOptionsVideo:on_item_selected_window_mode()
 	self:_setup_control_visibility()
 end
 
--- Lines 426-435
+-- Lines 444-453
 function RaidMenuOptionsVideo:set_fullscreen(fullscreen, is_fullscreen, borderless, is_borderless)
 	managers.menu:active_menu().callback_handler:toggle_fullscreen_raid(fullscreen, is_fullscreen, borderless, is_borderless, callback(self, self, "fullscreen_toggled_callback"))
 	self:on_value_change_brightness()
@@ -505,7 +525,7 @@ function RaidMenuOptionsVideo:set_fullscreen(fullscreen, is_fullscreen, borderle
 	end
 end
 
--- Lines 437-449
+-- Lines 455-467
 function RaidMenuOptionsVideo:on_click_default_video()
 	local callback_function = callback(self, self, "callback_default_video")
 	local params = {
@@ -521,7 +541,7 @@ function RaidMenuOptionsVideo:on_click_default_video()
 	managers.menu:show_option_dialog(params)
 end
 
--- Lines 451-464
+-- Lines 469-482
 function RaidMenuOptionsVideo:_get_default_resolution()
 	local default_resolution = Vector3(tweak_data.gui.base_resolution.x, tweak_data.gui.base_resolution.y, tweak_data.gui.base_resolution.z)
 	local supported_resolutions = self:data_source_stepper_menu_resolution()
@@ -540,7 +560,7 @@ function RaidMenuOptionsVideo:_get_default_resolution()
 	return resolution
 end
 
--- Lines 466-492
+-- Lines 484-510
 function RaidMenuOptionsVideo:callback_default_video()
 	managers.menu:active_menu().callback_handler:set_fullscreen_default_raid_no_dialog()
 
@@ -564,13 +584,13 @@ function RaidMenuOptionsVideo:callback_default_video()
 	self:_setup_control_visibility()
 end
 
--- Lines 494-497
+-- Lines 512-515
 function RaidMenuOptionsVideo:fullscreen_toggled_callback()
 	self:_reload_video_and_adv_video_options()
 	self:_setup_control_visibility()
 end
 
--- Lines 499-523
+-- Lines 517-541
 function RaidMenuOptionsVideo:_setup_control_visibility()
 	local is_fullscreen = self._stepper_menu_window_mode:get_value() == "FULLSCREEN"
 	local is_borderless = self._stepper_menu_window_mode:get_value() == "WINDOWED_FULLSCREEN"
@@ -599,12 +619,12 @@ function RaidMenuOptionsVideo:_setup_control_visibility()
 	end
 end
 
--- Lines 525-527
+-- Lines 543-545
 function RaidMenuOptionsVideo:_reload_video_and_adv_video_options()
 	self:_load_video_values()
 end
 
--- Lines 529-584
+-- Lines 547-604
 function RaidMenuOptionsVideo:_load_video_values()
 	local is_fullscreen = managers.viewport:is_fullscreen()
 	local is_borderless = managers.viewport:is_borderless()
@@ -615,6 +635,7 @@ function RaidMenuOptionsVideo:_load_video_values()
 	local use_camera_accel = managers.user:get_setting("use_camera_accel")
 	local effect_quality = managers.user:get_setting("effect_quality")
 	local brightness = managers.user:get_setting("brightness")
+	local camera_shake = managers.user:get_setting("camera_shake")
 	local resolution = RenderSettings.resolution
 
 	self._stepper_menu_refresh_rate:set_value_and_render(resolution.z, true)
@@ -650,6 +671,7 @@ function RaidMenuOptionsVideo:_load_video_values()
 	self._toggle_menu_camera_accel:set_value_and_render(use_camera_accel)
 	self._progress_bar_menu_effect_quality:set_value(effect_quality * 100)
 	self._progress_bar_menu_brightness:set_value((brightness - 0.5) * 100)
+	self._progress_bar_menu_camera_shake:set_value(camera_shake * 100)
 
 	local motion_dot = managers.user:get_setting("motion_dot")
 
@@ -670,71 +692,72 @@ function RaidMenuOptionsVideo:_load_video_values()
 	self._stepper_menu_hit_indicator:set_value_and_render(hit_indicator)
 end
 
--- Lines 586-594
+-- Lines 606-615
 function RaidMenuOptionsVideo:_save_video_values()
 	self:on_click_subtitle()
 	self:on_click_hit_indicator()
 	self:on_click_hud_special_weapon_panels()
 	self:on_click_headbob()
 	self:on_click_camera_accel()
+	self:on_value_change_camera_shake()
 	self:on_value_change_brightness()
 end
 
--- Lines 596-599
+-- Lines 617-620
 function RaidMenuOptionsVideo:on_click_subtitle()
 	local subtitle = self._toggle_menu_subtitle:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_subtitle_raid(subtitle)
 end
 
--- Lines 601-604
+-- Lines 622-625
 function RaidMenuOptionsVideo:on_click_hit_indicator()
 	local hit_indicator = self._stepper_menu_hit_indicator:get_value()
 
 	managers.menu:active_menu().callback_handler:set_hit_indicator_raid(hit_indicator)
 end
 
--- Lines 606-609
+-- Lines 627-630
 function RaidMenuOptionsVideo:on_click_hud_special_weapon_panels()
 	local value = self._toggle_menu_hud_special_weapon_panels:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_hud_special_weapon_panels(value)
 end
 
--- Lines 611-614
+-- Lines 632-635
 function RaidMenuOptionsVideo:on_click_motion_dot()
 	local value = self._stepper_menu_motion_dot:get_value()
 
 	managers.menu:active_menu().callback_handler:set_motion_dot_raid(value)
 end
 
--- Lines 616-619
+-- Lines 637-640
 function RaidMenuOptionsVideo:on_click_motion_dot_size()
 	local value = self._stepper_menu_motion_dot_size:get_value()
 
 	managers.menu:active_menu().callback_handler:set_motion_dot_size_raid(value)
 end
 
--- Lines 621-624
+-- Lines 642-645
 function RaidMenuOptionsVideo:on_click_headbob()
 	local use_headbob = self._toggle_menu_headbob:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_headbob_raid(use_headbob)
 end
 
--- Lines 626-629
+-- Lines 647-650
 function RaidMenuOptionsVideo:on_click_camera_accel()
 	local use_camera_accel = self._toggle_menu_camera_accel:get_value()
 
 	managers.user:set_setting("use_camera_accel", use_camera_accel)
 end
 
--- Lines 631-633
+-- Lines 652-654
 function RaidMenuOptionsVideo:on_click_options_video_advanced_button()
 	managers.raid_menu:open_menu("raid_menu_options_video_advanced")
 end
 
--- Lines 638-659
+-- Lines 659-680
 function RaidMenuOptionsVideo:bind_controller_inputs()
 	local bindings = {
 		{
@@ -766,7 +789,7 @@ function RaidMenuOptionsVideo:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 661-665
+-- Lines 682-686
 function RaidMenuOptionsVideo:_apply_video_resolution()
 	Application:trace("RaidMenuOptionsVideo:_apply_vidoe_resolution")
 	self:on_click_apply_resolution_refresh_rate()

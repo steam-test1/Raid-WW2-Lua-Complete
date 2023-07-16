@@ -386,17 +386,19 @@ function LootDropTweakData:_init_groups_gold()
 	})
 end
 
--- Lines 598-604
+-- Lines 598-606
 function LootDropTweakData:_init_groups_challenges()
 	self.loot_groups.loot_group_halloween_2017 = {
 		{
 			chance = 100,
 			value = self.loot_categories.category_halloween_2017
-		}
+		},
+		min_loot_value = 9999998,
+		max_loot_value = 9999999
 	}
 end
 
--- Lines 607-634
+-- Lines 609-636
 function LootDropTweakData:_init_loot_values()
 	self.loot_groups.loot_group_basic.min_loot_value = -1000000
 	self.loot_groups.loot_group_basic.max_loot_value = LootDropTweakData.BRONZE_POINT_REQUIREMENT
@@ -416,14 +418,14 @@ function LootDropTweakData:_init_loot_values()
 	self.loot_groups_doubles_fallback.loot_group_gold.max_loot_value = self.loot_groups.loot_group_gold.max_loot_value
 end
 
--- Lines 636-639
+-- Lines 638-641
 function LootDropTweakData:_init_dog_tag_stats()
 	self.dog_tag = {
 		loot_value = 125
 	}
 end
 
--- Lines 642-830
+-- Lines 644-832
 function LootDropTweakData:_payday_init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -719,7 +721,7 @@ function LootDropTweakData:_payday_init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 833-838
+-- Lines 835-840
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 
@@ -728,7 +730,7 @@ function LootDropTweakData:_create_global_value_list_map()
 	end
 end
 
--- Lines 842-858
+-- Lines 844-860
 function LootDropTweakData:get_gold_from_rarity(rarity)
 	if LootDropTweakData.RARITY_ALL == rarity then
 		return 100
@@ -747,7 +749,7 @@ function LootDropTweakData:get_gold_from_rarity(rarity)
 	end
 end
 
--- Lines 861-864
+-- Lines 863-866
 function LootDropTweakData:get_month_event()
 	local tdate = os.date("*t")
 

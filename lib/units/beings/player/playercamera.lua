@@ -297,17 +297,22 @@ function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	end
 end
 
--- Lines 338-340
+-- Lines 338-345
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
-	return self._shaker:play(effect, amplitude or 1, frequency or 1, offset or 0)
+	local mul = managers.user:get_setting("camera_shake")
+	amplitude = (amplitude or 1) * mul
+	frequency = frequency or 1
+	offset = offset or 0
+
+	return self._shaker:play(effect, amplitude, frequency, offset)
 end
 
--- Lines 342-344
+-- Lines 347-349
 function PlayerCamera:stop_shaker(id)
 	self._shaker:stop_immediately(id)
 end
 
--- Lines 346-348
+-- Lines 351-353
 function PlayerCamera:shaker()
 	return self._shaker
 end
