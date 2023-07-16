@@ -281,12 +281,12 @@ function ProjectilesTweakData:init(tweak_data)
 	self.decoy_coin.gui = {
 		rotation_offset = 0,
 		distance_offset = -160,
-		height_offset = -12,
-		display_offset = 16,
+		height_offset = -14,
+		display_offset = 19.5,
 		initial_rotation = {}
 	}
-	self.decoy_coin.gui.initial_rotation.yaw = 180
-	self.decoy_coin.gui.initial_rotation.pitch = 10
+	self.decoy_coin.gui.initial_rotation.yaw = 150
+	self.decoy_coin.gui.initial_rotation.pitch = 8
 	self.decoy_coin.gui.initial_rotation.roll = 0
 	self.mortar_shell = {
 		name_id = "bm_mortar_shell",

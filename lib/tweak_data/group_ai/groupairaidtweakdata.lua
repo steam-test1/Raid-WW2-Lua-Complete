@@ -11,7 +11,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	self.cloaker = {}
 	self.max_spawning_distance = 11000
 	self.min_spawning_distance = 800
-	self.max_spawning_height_diff = 1000
+	self.max_spawning_height_diff = 1300
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.recurring_group_SO = {
@@ -87,8 +87,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		sustain_duration_balance_mul = {
 			1,
 			1.1,
-			1.25,
-			1.4
+			1.2,
+			1.3
 		},
 		fade_duration = 10,
 		push_delay = {
@@ -132,40 +132,40 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	}
 	self.assault.force = {
 		20,
-		24,
-		28
+		20,
+		24
 	}
 	self.assault.force_pool = {
-		40,
-		60,
-		72
+		36,
+		44,
+		48
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.force_balance_mul = {
-			0.7,
-			0.9,
+			1,
 			1.1,
+			1.15,
 			1.2
 		}
 		self.assault.force_pool_balance_mul = {
-			0.5,
-			0.65,
-			0.7,
-			0.9
+			0.6,
+			0.8,
+			0.9,
+			1.1
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.assault.force_balance_mul = {
-			0.8,
 			1,
 			1.1,
+			1.2,
 			1.3
 		}
 		self.assault.force_pool_balance_mul = {
-			0.85,
-			1.15,
-			1.45,
-			1.85
+			1.1,
+			1.25,
+			1.4,
+			1.5
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.force_balance_mul = {
@@ -175,10 +175,10 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.4
 		}
 		self.assault.force_pool_balance_mul = {
-			1.1,
-			1.7,
-			2.2,
-			2.7
+			1.3,
+			1.4,
+			1.5,
+			1.6
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.force_balance_mul = {
@@ -188,10 +188,10 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.6
 		}
 		self.assault.force_pool_balance_mul = {
-			1.3,
+			1.7,
 			1.8,
-			2.7,
-			2.85
+			1.9,
+			2
 		}
 	end
 

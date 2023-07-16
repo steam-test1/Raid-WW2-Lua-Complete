@@ -269,7 +269,12 @@ function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 end
 
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
-	return self._shaker:play(effect, amplitude or 1, frequency or 1, offset or 0)
+	local mul = managers.user:get_setting("camera_shake")
+	amplitude = (amplitude or 1) * mul
+	frequency = frequency or 1
+	offset = offset or 0
+
+	return self._shaker:play(effect, amplitude, frequency, offset)
 end
 
 function PlayerCamera:stop_shaker(id)

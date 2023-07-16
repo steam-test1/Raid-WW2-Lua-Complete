@@ -156,6 +156,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(70, "motion_dot_toggle_aim", false)
 	self:setup_setting(71, "tinnitus_sound_enabled", true)
 	self:setup_setting(72, "hud_special_weapon_panels", true)
+	self:setup_setting(73, "camera_shake", 1)
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)
@@ -228,7 +229,8 @@ function GenericUserManager:reset_video_setting_map()
 		"brightness",
 		"effect_quality",
 		"use_headbob",
-		"use_camera_accel"
+		"use_camera_accel",
+		"camera_shake"
 	}
 
 	for _, name in pairs(settings) do
