@@ -56,31 +56,16 @@ function NetworkAccount:signin_state()
 	return "not signed in"
 end
 
--- Lines 46-60
+-- Lines 46-48
 function NetworkAccount:set_lightfx()
-	if not _G.IS_PC then
-		return
-	end
-
-	if managers.user:get_setting("use_lightfx") then
-		print("[NetworkAccount:init] Initializing LightFX...")
-
-		self._has_alienware = LightFX:initialize() and LightFX:has_lamps()
-
-		if self._has_alienware then
-			LightFX:set_lamps(0, 255, 0, 255)
-		end
-	else
-		self._has_alienware = nil
-	end
 end
 
--- Lines 62-64
+-- Lines 50-52
 function NetworkAccount:has_alienware()
 	return self._has_alienware
 end
 
--- Lines 66-71
+-- Lines 54-59
 function NetworkAccount:clan_tag()
 	if managers.save.get_profile_setting and managers.save:get_profile_setting("clan_tag") and string.len(managers.save:get_profile_setting("clan_tag")) > 0 then
 		return "[" .. managers.save:get_profile_setting("clan_tag") .. "]"
@@ -89,66 +74,66 @@ function NetworkAccount:clan_tag()
 	return ""
 end
 
--- Lines 73-75
+-- Lines 61-63
 function NetworkAccount:_standard_username(name)
 	return name
 end
 
--- Lines 77-78
+-- Lines 65-66
 function NetworkAccount:set_playing(state)
 end
 
--- Lines 80-81
+-- Lines 68-69
 function NetworkAccount:_load_globals()
 end
 
--- Lines 83-84
+-- Lines 71-72
 function NetworkAccount:_save_globals()
 end
 
--- Lines 86-87
+-- Lines 74-75
 function NetworkAccount:inventory_load()
 end
 
--- Lines 89-90
+-- Lines 77-78
 function NetworkAccount:inventory_is_loading()
 end
 
--- Lines 92-94
+-- Lines 80-82
 function NetworkAccount:inventory_reward(item)
 	return false
 end
 
--- Lines 96-97
+-- Lines 84-85
 function NetworkAccount:inventory_reward_dlc()
 end
 
--- Lines 99-100
+-- Lines 87-88
 function NetworkAccount:inventory_reward_unlock(box, key)
 end
 
--- Lines 102-103
+-- Lines 90-91
 function NetworkAccount:inventory_reward_open(item)
 end
 
--- Lines 105-106
+-- Lines 93-94
 function NetworkAccount:inventory_outfit_refresh()
 end
 
--- Lines 108-109
+-- Lines 96-97
 function NetworkAccount:inventory_outfit_verify(id, outfit_data, outfit_callback)
 end
 
--- Lines 111-113
+-- Lines 99-101
 function NetworkAccount:inventory_outfit_signature()
 	return ""
 end
 
--- Lines 115-116
+-- Lines 103-104
 function NetworkAccount:inventory_repair_list(list)
 end
 
--- Lines 118-120
+-- Lines 106-108
 function NetworkAccount:is_ready_to_close()
 	return true
 end
