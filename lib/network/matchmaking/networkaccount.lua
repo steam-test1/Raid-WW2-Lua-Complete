@@ -45,21 +45,6 @@ function NetworkAccount:signin_state()
 end
 
 function NetworkAccount:set_lightfx()
-	if not _G.IS_PC then
-		return
-	end
-
-	if managers.user:get_setting("use_lightfx") then
-		print("[NetworkAccount:init] Initializing LightFX...")
-
-		self._has_alienware = LightFX:initialize() and LightFX:has_lamps()
-
-		if self._has_alienware then
-			LightFX:set_lamps(0, 255, 0, 255)
-		end
-	else
-		self._has_alienware = nil
-	end
 end
 
 function NetworkAccount:has_alienware()
