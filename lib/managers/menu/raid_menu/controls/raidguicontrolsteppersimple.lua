@@ -353,7 +353,7 @@ function RaidGUIControlStepperSimple:move_left()
 		Application:trace("[RaidGUIControlStepperSimple:move_left] ", self._name, self._selected)
 		self:on_left_arrow_clicked()
 
-		return self.super.move_left(self)
+		return true
 	end
 end
 
@@ -363,7 +363,7 @@ function RaidGUIControlStepperSimple:move_right()
 		Application:trace("[RaidGUIControlStepperSimple:move_right] ", self._name, self._selected)
 		self:on_right_arrow_clicked()
 
-		return self.super.move_right(self)
+		return true
 	end
 end
 
@@ -384,7 +384,7 @@ function RaidGUIControlStepperSimple:set_enabled(enabled)
 	end
 end
 
--- Lines 398-435
+-- Lines 365-402
 function RaidGUIControlStepperSimple:_animate_value_change(o, text, disabled)
 	local starting_alpha = self._value_label:alpha()
 	local duration = 0.13
