@@ -131,7 +131,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(45, "net_forwarding", true)
 	self:setup_setting(46, "flush_gpu_command_queue", false)
 	self:setup_setting(47, "use_thq_weapon_parts", false)
-	self:setup_setting(48, "ssao_setting", false)
+	self:setup_setting(48, "ssao_setting", "standard")
 	self:setup_setting(49, "AA_setting", "FXAA")
 	self:setup_setting(50, "last_selected_character_profile_slot", 11)
 	self:setup_setting(51, "motion_blur_setting", "standard")
@@ -245,7 +245,6 @@ function GenericUserManager:reset_advanced_video_setting_map()
 		"motion_blur_setting",
 		"vls_setting",
 		"flush_gpu_command_queue",
-		"use_lightfx",
 		"fov_multiplier",
 		"detail_distance",
 		"AA_setting",
