@@ -34,8 +34,9 @@ function RaidMenuOptionsVideo:_layout_video()
 	local start_y = 320
 	local default_width = 512
 	local previous_panel = nil
+	local first_panel = "btn_advanced_options"
 	previous_panel = {
-		name = "btn_advanced_options",
+		name = first_panel,
 		x = start_x,
 		y = start_y - 128,
 		text = utf8.to_upper(managers.localization:text("menu_options_video_advanced_button")),
@@ -216,7 +217,7 @@ function RaidMenuOptionsVideo:_layout_video()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_motion_dot_size"),
 		on_item_selected_callback = callback(self, self, "on_click_motion_dot_size"),
 		on_menu_move = {
-			down = "hud_special_weapon_panels",
+			down = "use_headbob",
 			up = previous_panel.name
 		}
 	}
@@ -268,8 +269,8 @@ function RaidMenuOptionsVideo:_layout_video()
 		on_click_callback = callback(self, self, "on_click_default_video"),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_menu_move = {
-			down = "btn_advanced_options",
-			up = previous_panel.name
+			up = previous_panel.name,
+			down = first_panel
 		}
 	}
 	self._default_video_button = self._root_panel:long_secondary_button(default_video_settings_button)
@@ -455,12 +456,6 @@ function RaidMenuOptionsVideo:on_value_change_effect_quality()
 	managers.menu:active_menu().callback_handler:set_effect_quality_raid(effect_quality)
 end
 
-function RaidMenuOptionsVideo:on_value_change_camera_shake()
-	local value = self._progress_bar_menu_camera_shake:get_value() / 100
-
-	managers.user:set_setting("camera_shake", value)
-end
-
 function RaidMenuOptionsVideo:on_value_change_brightness()
 	local brightness = self._progress_bar_menu_brightness:get_value() / 100 + 0.5
 
@@ -578,16 +573,19 @@ function RaidMenuOptionsVideo:_setup_control_visibility()
 		self._btn_advanced_options._on_menu_move.down = "stepper_menu_resolution"
 		self._stepper_menu_resolution._on_menu_move.down = "window_mode"
 		self._stepper_menu_window_mode._on_menu_move.up = "stepper_menu_resolution"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = nil
+		self._progress_bar_menu_effect_quality._on_menu_move.down = "subtitle"
+		self._toggle_menu_subtitle._on_menu_move.up = "effect_quality"
 	elseif is_borderless then
 		self._btn_advanced_options._on_menu_move.down = "window_mode"
 		self._stepper_menu_window_mode._on_menu_move.up = "btn_advanced_options"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = nil
+		self._progress_bar_menu_effect_quality._on_menu_move.down = "subtitle"
+		self._toggle_menu_subtitle._on_menu_move.up = "effect_quality"
 	else
 		self._btn_advanced_options._on_menu_move.down = "stepper_menu_resolution"
 		self._stepper_menu_resolution._on_menu_move.down = "stepper_menu_refresh_rate"
 		self._stepper_menu_window_mode._on_menu_move.up = "stepper_menu_refresh_rate"
 		self._progress_bar_menu_effect_quality._on_menu_move.down = "progress_bar_menu_brightness"
+		self._toggle_menu_subtitle._on_menu_move.up = "progress_bar_menu_brightness"
 	end
 end
 
@@ -603,9 +601,9 @@ function RaidMenuOptionsVideo:_load_video_values()
 	local objective_reminder = managers.user:get_setting("objective_reminder")
 	local use_headbob = managers.user:get_setting("use_headbob")
 	local use_camera_accel = managers.user:get_setting("use_camera_accel")
+	local camera_shake = managers.user:get_setting("camera_shake")
 	local effect_quality = managers.user:get_setting("effect_quality")
 	local brightness = managers.user:get_setting("brightness")
-	local camera_shake = managers.user:get_setting("camera_shake")
 	local resolution = RenderSettings.resolution
 
 	self._stepper_menu_refresh_rate:set_value_and_render(resolution.z, true)
@@ -639,9 +637,9 @@ function RaidMenuOptionsVideo:_load_video_values()
 	self._toggle_menu_hud_special_weapon_panels:set_value_and_render(hud_special_weapon_panels)
 	self._toggle_menu_headbob:set_value_and_render(use_headbob)
 	self._toggle_menu_camera_accel:set_value_and_render(use_camera_accel)
+	self._progress_bar_menu_camera_shake:set_value(camera_shake * 100)
 	self._progress_bar_menu_effect_quality:set_value(effect_quality * 100)
 	self._progress_bar_menu_brightness:set_value((brightness - 0.5) * 100)
-	self._progress_bar_menu_camera_shake:set_value(camera_shake * 100)
 
 	local motion_dot = managers.user:get_setting("motion_dot")
 
@@ -709,9 +707,15 @@ function RaidMenuOptionsVideo:on_click_headbob()
 end
 
 function RaidMenuOptionsVideo:on_click_camera_accel()
-	local use_camera_accel = self._toggle_menu_camera_accel:get_value()
+	local value = self._toggle_menu_camera_accel:get_value()
 
-	managers.user:set_setting("use_camera_accel", use_camera_accel)
+	managers.user:set_setting("use_camera_accel", value)
+end
+
+function RaidMenuOptionsVideo:on_value_change_camera_shake()
+	local value = self._progress_bar_menu_camera_shake:get_value() / 100
+
+	managers.user:set_setting("camera_shake", value)
 end
 
 function RaidMenuOptionsVideo:on_click_options_video_advanced_button()

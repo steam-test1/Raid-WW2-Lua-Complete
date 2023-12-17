@@ -329,7 +329,7 @@ function RaidGUIControlStepperSimple:move_left()
 		Application:trace("[RaidGUIControlStepperSimple:move_left] ", self._name, self._selected)
 		self:on_left_arrow_clicked()
 
-		return self.super.move_left(self)
+		return true
 	end
 end
 
@@ -338,7 +338,7 @@ function RaidGUIControlStepperSimple:move_right()
 		Application:trace("[RaidGUIControlStepperSimple:move_right] ", self._name, self._selected)
 		self:on_right_arrow_clicked()
 
-		return self.super.move_right(self)
+		return true
 	end
 end
 
