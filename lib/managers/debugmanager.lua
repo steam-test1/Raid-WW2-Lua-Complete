@@ -14,6 +14,7 @@ end
 
 function DebugManager:set_qa_debug_enabled(username, enabled)
 	enabled = not not enabled
+
 	local cat_print_list = {
 		"qa"
 	}

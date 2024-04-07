@@ -5,13 +5,12 @@ LootDropManager.LOOT_VALUE_TYPE_MEDIUM = "medium"
 LootDropManager.LOOT_VALUE_TYPE_BIG = "big"
 LootDropManager.LOOT_VALUE_TYPE_DOGTAG = "dogtag"
 LootDropManager.LOOT_VALUE_TYPE_DOGTAG_BIG = "dogtag_big"
-LootDropManager._REGISTER_LOOT_CONVERTER = {
-	[LootDropManager.LOOT_VALUE_TYPE_SMALL] = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT,
-	[LootDropManager.LOOT_VALUE_TYPE_MEDIUM] = LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT,
-	[LootDropManager.LOOT_VALUE_TYPE_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT,
-	[LootDropManager.LOOT_VALUE_TYPE_DOGTAG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_AMOUNT,
-	[LootDropManager.LOOT_VALUE_TYPE_DOGTAG_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_BIG_AMOUNT
-}
+LootDropManager._REGISTER_LOOT_CONVERTER = {}
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_SMALL] = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_MEDIUM] = LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_DOGTAG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_DOGTAG_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_BIG_AMOUNT
 
 function LootDropManager:init()
 	self:_setup()
@@ -100,7 +99,7 @@ end
 function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
 	Application:debug("[LootDropManager:_get_loot_group] get loot:", loot_value, use_reroll_drop_tables, forced_loot_group)
 
-	local loot_group = nil
+	local loot_group
 	local data_source = tweak_data.lootdrop.loot_groups
 
 	if forced_loot_group then
@@ -158,7 +157,7 @@ function LootDropManager:get_random_item_weighted(collection)
 		total = total + item_entry.chance
 	end
 
-	local item = nil
+	local item
 	local value = math.rand(total)
 
 	for _, item_entry in ipairs(collection) do
@@ -190,8 +189,9 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 	Application:trace("[LootDropManager:give_loot_to_player]  Awarding loot value to player: ", loot_value, use_reroll_drop_tables)
 
 	self._loot_value = loot_value
+
 	local need_reroll = false
-	local drop = nil
+	local drop
 
 	if game_state_machine._current_state._current_job_data and game_state_machine._current_state._current_job_data.consumable then
 		drop = self:produce_consumable_mission_drop()
@@ -232,16 +232,19 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_CUSTOMIZATION ---")
 
 		local result = self:_give_character_customization_to_player(drop)
+
 		need_reroll = not result
 	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
 		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_MELEE_WEAPON ---")
 
 		local result = self:_give_melee_weapon_to_player(drop)
+
 		need_reroll = not result
 	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
 		Application:debug("[LootDropManager:give_loot_to_player] --- REWARD_HALLOWEEN_2017 ---")
 
 		local result = self:_give_halloween_2017_weapon_to_player(drop)
+
 		need_reroll = not result
 	end
 
@@ -335,6 +338,7 @@ end
 
 function LootDropManager:_give_character_customization_to_player(drop)
 	local candidate_customizations = tweak_data.character_customization:get_reward_loot_by_rarity(drop.rarity)
+
 	drop.character_customization_key = self:_get_random_item(candidate_customizations)
 	drop.character_customization = tweak_data.character_customization.customizations[drop.character_customization_key]
 
@@ -465,6 +469,7 @@ function LootDropManager:register_loot(unit, value_type, world_id)
 	unit:loot_drop():set_value(value)
 
 	self._registered_loot_units[world_id] = self._registered_loot_units[world_id] or {}
+
 	local loot_data = {
 		unit = unit,
 		value = value,
@@ -532,7 +537,7 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 		end
 	end
 
-	if self._loot_spawned_current_leg < total_value then
+	if total_value > self._loot_spawned_current_leg then
 		print("[LootDropManager:plant_loot_on_level()] All loot units on level used, level loot cap still not reached (curr_value, total_value):", self._loot_spawned_current_leg, total_value)
 	else
 		print("[LootDropManager:plant_loot_on_level()] Loot value placed on level:", self._loot_spawned_current_leg)
@@ -572,7 +577,7 @@ function LootDropManager:reset_loot_value_counters()
 end
 
 function LootDropManager:current_loot_pickup_ratio()
-	local result = nil
+	local result
 
 	if self._loot_spawned_current_leg == 0 then
 		result = 0
@@ -639,6 +644,7 @@ end
 
 function LootDropManager:sync_load(data)
 	local state = data.LootDropManager
+
 	self._picked_up_total = state.picked_up_total
 	self._picked_up_current_leg = state.picked_up_current_leg
 	self._loot_spawned_total = state.loot_spawned_total
@@ -646,12 +652,12 @@ function LootDropManager:sync_load(data)
 end
 
 function LootDropManager:sync_save(data)
-	local state = {
-		picked_up_total = self._picked_up_total,
-		picked_up_current_leg = self._picked_up_current_leg,
-		loot_spawned_total = self._loot_spawned_total,
-		loot_spawned_current_leg = self._loot_spawned_current_leg
-	}
+	local state = {}
+
+	state.picked_up_total = self._picked_up_total
+	state.picked_up_current_leg = self._picked_up_current_leg
+	state.loot_spawned_total = self._loot_spawned_total
+	state.loot_spawned_current_leg = self._loot_spawned_current_leg
 	data.LootDropManager = state
 end
 

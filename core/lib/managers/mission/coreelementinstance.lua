@@ -12,6 +12,7 @@ function ElementInstanceInput:init(...)
 end
 
 function ElementInstanceInput:client_on_executed(...)
+	return
 end
 
 function ElementInstanceInput:on_executed(instigator)
@@ -33,6 +34,7 @@ function ElementInstanceOutput:on_created()
 end
 
 function ElementInstanceOutput:client_on_executed(...)
+	return
 end
 
 function ElementInstanceOutput:on_executed(instigator)
@@ -56,9 +58,11 @@ function ElementInstanceInputEvent:init(...)
 end
 
 function ElementInstanceInputEvent:on_created()
+	return
 end
 
 function ElementInstanceInputEvent:client_on_executed(...)
+	return
 end
 
 function ElementInstanceInputEvent:on_executed(instigator)
@@ -106,6 +110,7 @@ function ElementInstanceOutputEvent:init(...)
 end
 
 function ElementInstanceOutputEvent:client_on_executed(...)
+	return
 end
 
 function ElementInstanceOutputEvent:on_executed(instigator)

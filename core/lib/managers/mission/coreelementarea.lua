@@ -266,6 +266,7 @@ end
 function ElementAreaTrigger:_check_amount(unit)
 	if self._values.trigger_on == "on_enter" then
 		local amount = self._values.amount == "all" and self:project_amount_all()
+
 		amount = amount or tonumber(self._values.amount)
 
 		self:_clean_destroyed_units()
@@ -277,6 +278,7 @@ function ElementAreaTrigger:_check_amount(unit)
 		end
 	elseif self._values.trigger_on == "while_inside" then
 		local amount = self._values.amount == "all" and self:project_amount_all()
+
 		amount = amount or tonumber(self._values.amount)
 
 		self:_clean_destroyed_units()
@@ -294,7 +296,7 @@ end
 function ElementAreaTrigger:_should_trigger(unit)
 	if alive(unit) then
 		local rule_ok = self:_check_instigator_rules(unit)
-		local inside = nil
+		local inside
 
 		if unit:movement() then
 			inside = self:_is_inside(unit:movement():m_pos())
@@ -479,7 +481,7 @@ function ElementAreaReportTrigger:_check_state(unit)
 
 	if alive(unit) then
 		local rule_ok = self:_check_instigator_rules(unit)
-		local inside = nil
+		local inside
 
 		if unit:movement() then
 			inside = self:_is_inside(unit:movement():m_pos())
@@ -531,6 +533,7 @@ end
 
 function ElementAreaReportTrigger:_check_on_executed_reached_amount(unit)
 	local amount = self._values.amount == "all" and self:project_amount_all()
+
 	amount = amount or tonumber(self._values.amount)
 
 	if amount == #self._inside and self:_has_on_executed_alternative("reached_amount") then

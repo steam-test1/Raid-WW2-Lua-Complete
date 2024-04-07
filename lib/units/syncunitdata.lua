@@ -43,7 +43,9 @@ function SyncUnitData:on_world_loaded()
 	end
 
 	self._unit:unit_data().unit_id = self._unit:editor_id()
+
 	local worlddefinition = managers.worldcollection and managers.worldcollection:get_worlddefinition_by_unit_id(self._unit:unit_data().unit_id) or managers.worlddefinition
+
 	self._sync_state.original_unit_id = worlddefinition:get_original_unit_id(self._unit:unit_data().unit_id)
 
 	worlddefinition:setup_lights(self._unit, self._sync_state)

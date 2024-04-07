@@ -2,6 +2,7 @@ local mvec3_dir = mvector3.direction
 local tmp_rot1 = Rotation()
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
+
 SentryGunMovement = SentryGunMovement or class()
 SentryGunMovement.set_friendly_fire = PlayerMovement.set_friendly_fire
 SentryGunMovement.friendly_fire = PlayerMovement.friendly_fire
@@ -52,6 +53,7 @@ function SentryGunMovement:post_init()
 	end
 
 	local name = self._unit:base():get_name_id()
+
 	self._spin_max = tweak_data.weapon[name].MAX_TARGETING_SPIN
 	self._pitch_max = tweak_data.weapon[name].MAX_TARGETING_PITCH
 
@@ -65,13 +67,14 @@ function SentryGunMovement:update(unit, t, dt)
 end
 
 function SentryGunMovement:_update_inactive(t, dt)
+	return
 end
 
 function SentryGunMovement:_update_active(t, dt)
 	self:_upd_hacking(t, dt)
 	self:_upd_mutables()
 
-	if self._warmup_t < t then
+	if t > self._warmup_t then
 		self:_upd_movement(dt)
 	end
 end
@@ -115,7 +118,7 @@ function SentryGunMovement:_update_inactivating(t, dt)
 end
 
 function SentryGunMovement:_update_rearming(t, dt)
-	if self._rearm_complete_t and self._rearm_complete_t < t then
+	if self._rearm_complete_t and t > self._rearm_complete_t then
 		self:complete_rearming()
 	end
 end
@@ -138,7 +141,7 @@ function SentryGunMovement:_update_repairing(t, dt)
 
 	self._unit:character_damage():update_shield_smoke_level(repair_complete_ratio, true)
 
-	if self._repair_complete_t and self._repair_complete_t < t then
+	if self._repair_complete_t and t > self._repair_complete_t then
 		self:complete_repairing()
 	end
 end
@@ -240,7 +243,7 @@ function SentryGunMovement:set_attention(attention)
 	end
 
 	if attention and self._attention then
-		local different = nil
+		local different
 
 		for i, k in pairs(self._attention) do
 			if attention[i] ~= k then
@@ -470,7 +473,9 @@ function SentryGunMovement:_is_target_close(target_dir)
 	local player_angle = self._m_head_fwd:angle(target_dir)
 	local player_distance = (self._m_last_attention_pos - self._m_head_pos):length()
 	local abandon_distance = self._tweak.abandon_proximity or 300
+
 	abandon_distance = abandon_distance * (self._tweak.abandon_proximity_visible_mul or 0.33)
+
 	local result = player_distance < abandon_distance
 
 	return result
@@ -479,7 +484,7 @@ end
 function SentryGunMovement:_ramp_value(value, err, vel, slowdown_at, max_vel, min_vel, acc, dt)
 	local sign_err = math.sign(err)
 	local abs_err = math.abs(err)
-	local wanted_vel = nil
+	local wanted_vel
 
 	if abs_err < slowdown_at then
 		wanted_vel = math.lerp(min_vel, max_vel, abs_err / slowdown_at) * sign_err
@@ -493,10 +498,10 @@ function SentryGunMovement:_ramp_value(value, err, vel, slowdown_at, max_vel, mi
 	local abs_delta_vel = math.min(acc * dt, abs_err_vel)
 	local delta_vel = abs_delta_vel * sign_err_vel
 	local new_vel = vel + delta_vel
-	local at_end = nil
+	local at_end
 	local correction = new_vel * dt
 
-	if math.abs(err) <= math.abs(correction) and math.sign(correction) == math.sign(err) then
+	if math.abs(correction) >= math.abs(err) and math.sign(correction) == math.sign(err) then
 		new_vel = 0
 		correction = err
 		at_end = true
@@ -512,8 +517,10 @@ function SentryGunMovement:_upd_movement(dt)
 	local unit_fwd_polar = self._unit_fwd:to_polar()
 	local fwd_polar = self._m_head_fwd:to_polar_with_reference(self._unit_fwd, self._unit_up)
 	local error_polar = target_dir:to_polar_with_reference(self._unit_fwd, self._unit_up)
+
 	self._current_orientation = error_polar
-	local clamped_pitch = nil
+
+	local clamped_pitch
 
 	if self._pitch_max then
 		clamped_pitch = math.clamp(error_polar.pitch, -self._pitch_max, self._pitch_max)
@@ -521,7 +528,7 @@ function SentryGunMovement:_upd_movement(dt)
 		clamped_pitch = error_polar.pitch
 	end
 
-	local clamped_spin = nil
+	local clamped_spin
 
 	if self._spin_max then
 		clamped_spin = math.clamp(error_polar.spin, -self._spin_max, self._spin_max)
@@ -531,9 +538,12 @@ function SentryGunMovement:_upd_movement(dt)
 
 	error_polar = Polar(1, clamped_pitch, clamped_spin)
 	error_polar = error_polar - fwd_polar
-	local pitch_end, spin_end, new_vel, new_spin, new_pitch = nil
+
+	local pitch_end, spin_end, new_vel, new_spin, new_pitch
+
 	spin_end, new_vel, new_spin = self:_ramp_value(fwd_polar.spin, error_polar.spin, self._vel.spin, self._tweak.SLOWDOWN_ANGLE_SPIN, self._tweak.MAX_VEL_SPIN * self._rot_speed_mul, self._tweak.MIN_VEL_SPIN, self._tweak.ACC_SPIN * self._rot_speed_mul, dt)
 	self._vel.spin = new_vel
+
 	local new_vel_abs = math.abs(new_vel)
 	local vel_ratio = math.clamp(1.5 * (new_vel_abs - self._tweak.MIN_VEL_SPIN) / (self._tweak.MAX_VEL_SPIN - self._tweak.MIN_VEL_SPIN), 0, 1)
 
@@ -550,6 +560,7 @@ function SentryGunMovement:_upd_movement(dt)
 
 	pitch_end, new_vel, new_pitch = self:_ramp_value(fwd_polar.pitch, error_polar.pitch, self._vel.pitch, self._tweak.SLOWDOWN_ANGLE_PITCH, self._tweak.MAX_VEL_PITCH * self._rot_speed_mul, self._tweak.MIN_VEL_PITCH, self._tweak.ACC_PITCH * self._rot_speed_mul, dt)
 	self._vel.pitch = new_vel
+
 	local new_fwd_polar = Polar(1, new_pitch, new_spin)
 	local new_fwd_vec3 = new_fwd_polar:to_vector()
 
@@ -575,7 +586,7 @@ function SentryGunMovement:_upd_hacking(t, dt)
 		return
 	end
 
-	local is_hacking_active = nil
+	local is_hacking_active
 
 	if Network:is_server() then
 		is_hacking_active = managers.groupai:state():is_ecm_jammer_active("camera")
@@ -589,6 +600,7 @@ function SentryGunMovement:_upd_hacking(t, dt)
 
 			if Network:is_server() then
 				local original_team = self._original_team
+
 				self._original_team = nil
 
 				self:set_team(original_team)
@@ -753,6 +765,7 @@ end
 
 function SentryGunMovement:save(save_data)
 	local my_save_data = {}
+
 	save_data.movement = my_save_data
 
 	if self._attention then
@@ -789,6 +802,7 @@ function SentryGunMovement:load(save_data)
 	end
 
 	local my_save_data = save_data.movement
+
 	self._rot_speed_mul = my_save_data.rot_speed_mul or 1
 	self._tweak = tweak_data.weapon[self._unit:base():get_name_id()]
 

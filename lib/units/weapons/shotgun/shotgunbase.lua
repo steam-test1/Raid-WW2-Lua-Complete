@@ -11,14 +11,14 @@ end
 
 function ShotgunBase:_create_use_setups()
 	local use_data = {}
-	local player_setup = {
-		selection_index = tweak_data.weapon[self._name_id].use_data.selection_index,
-		equip = {
-			align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
-		},
-		unequip = {
-			align_place = "back"
-		}
+	local player_setup = {}
+
+	player_setup.selection_index = tweak_data.weapon[self._name_id].use_data.selection_index
+	player_setup.equip = {
+		align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
+	}
+	player_setup.unequip = {
+		align_place = "back"
 	}
 	use_data.player = player_setup
 	self._use_data = use_data
@@ -30,7 +30,7 @@ local mvec_spread_direction = Vector3()
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	local result = {}
 	local hit_enemies = {}
-	local hit_something, col_rays = nil
+	local hit_something, col_rays
 
 	if self._alert_events then
 		col_rays = {}
@@ -92,12 +92,13 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				autoaim = false
 			else
 				autoaim = false
+
 				local autohit = self:check_autoaim(from_pos, direction, self._range)
 
 				if autohit then
 					local autohit_chance = 1 - math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
 
-					if math.random() < autohit_chance then
+					if autohit_chance > math.random() then
 						self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 						hit_something = true
 
@@ -121,11 +122,12 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	for _, col_ray in pairs(hit_enemies) do
 		local dist = mvector3.distance(col_ray.unit:position(), user_unit:position())
 
-		if self._damage_falloff_near < dist and dist < self._damage_falloff_far then
+		if dist > self._damage_falloff_near and dist < self._damage_falloff_far then
 			local falloff_distance_percentage = 1 - (dist - self._damage_falloff_near) / (self._damage_falloff_far - self._damage_falloff_near)
 			local damage_range = damage - self._DAMAGE_AT_FAR
+
 			damage = falloff_distance_percentage * damage_range + self._DAMAGE_AT_FAR
-		elseif self._damage_falloff_far <= dist then
+		elseif dist >= self._damage_falloff_far then
 			damage = self._DAMAGE_AT_FAR
 		end
 
@@ -140,12 +142,12 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 			local unit = col_ray.unit
 			local height = mvector3.distance(col_ray.position, col_ray.unit:position()) - 100
 			local twist_dir = math.rand_bool() and 1 or -1
-			local rot_acc = (col_ray.ray:cross(math.UP) + math.UP * 0.5 * twist_dir) * -1000 * math.sign(height)
+			local rot_acc = (col_ray.ray:cross(math.UP) + math.UP * (0.5 * twist_dir)) * (-1000 * math.sign(height))
 			local rot_time = 1 + math.rand(2)
 			local nr_u_bodies = unit:num_bodies()
 			local i_u_body = 0
 
-			while nr_u_bodies > i_u_body do
+			while i_u_body < nr_u_bodies do
 				local u_body = unit:body(i_u_body)
 
 				if u_body:enabled() and u_body:dynamic() then
@@ -203,7 +205,9 @@ function ShotgunBase:start_reload(...)
 	ShotgunBase.super.start_reload(self, ...)
 
 	self._started_reload_empty = self:clip_empty()
+
 	local speed_multiplier = self:reload_speed_multiplier()
+
 	self._next_shell_reloded_t = Application:time() + 0.3366666666666666 / speed_multiplier
 end
 
@@ -212,8 +216,9 @@ function ShotgunBase:started_reload_empty()
 end
 
 function ShotgunBase:update_reloading(t, dt, time_left)
-	if self._next_shell_reloded_t < t then
+	if t > self._next_shell_reloded_t then
 		local speed_multiplier = self:reload_speed_multiplier()
+
 		self._next_shell_reloded_t = self._next_shell_reloded_t + 0.6666666666666666 / speed_multiplier
 
 		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip() + self:get_ammo_reload_clip_single()))

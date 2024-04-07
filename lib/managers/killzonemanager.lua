@@ -10,10 +10,13 @@ function KillzoneManager:update(t, dt)
 			if data.type == "sniper" then
 				data.timer = data.timer + dt
 
-				if data.next_shot < data.timer then
+				if data.timer > data.next_shot then
 					local warning_time = 4
+
 					data.next_shot = data.timer + math.rand(warning_time < data.timer and 0.5 or 1)
+
 					local warning_shot = math.max(warning_time - data.timer, 1)
+
 					warning_shot = math.rand(warning_shot) > 0.75
 
 					if warning_shot then
@@ -25,7 +28,7 @@ function KillzoneManager:update(t, dt)
 			elseif data.type == "gas" then
 				data.timer = data.timer + dt
 
-				if data.next_gas < data.timer then
+				if data.timer > data.next_gas then
 					data.next_gas = data.timer + 0.25
 
 					if not managers.player:has_category_upgrade("player", "immune_to_gas") then
@@ -35,7 +38,7 @@ function KillzoneManager:update(t, dt)
 			elseif data.type == "fire" then
 				data.timer = data.timer + dt
 
-				if data.next_fire < data.timer then
+				if data.timer > data.next_fire then
 					data.next_fire = data.timer + 0.25
 
 					self:_deal_fire_damage(data.unit)
@@ -55,10 +58,14 @@ end
 
 function KillzoneManager:_warning_shot(unit)
 	local rot = unit:camera():rotation()
+
 	rot = Rotation(rot:yaw(), 0, 0)
+
 	local pos = unit:position() + rot:y() * (100 + math.random(200))
 	local dir = Rotation(math.rand(360), 0, 0):y()
+
 	dir = dir:with_z(-0.4):normalized()
+
 	local from_pos = pos + dir * -100
 	local to_pos = pos + dir * 100
 	local col_ray = World:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("bullet_impact_targets"), "ignore_unit", unit)
@@ -77,8 +84,10 @@ function KillzoneManager:_deal_damage(unit)
 
 	local col_ray = {}
 	local ray = Rotation(math.rand(360), 0, 0):y()
+
 	ray = ray:with_z(-0.4):normalized()
 	col_ray.ray = ray
+
 	local attack_data = {
 		damage = 1,
 		col_ray = col_ray
@@ -112,6 +121,7 @@ end
 function KillzoneManager:_add_unit(unit, type)
 	if type == "sniper" then
 		local next_shot = math.rand(1)
+
 		self._units[unit:key()] = {
 			timer = 0,
 			type = type,
@@ -120,6 +130,7 @@ function KillzoneManager:_add_unit(unit, type)
 		}
 	elseif type == "gas" then
 		local next_gas = math.rand(1)
+
 		self._units[unit:key()] = {
 			timer = 0,
 			type = type,
@@ -128,6 +139,7 @@ function KillzoneManager:_add_unit(unit, type)
 		}
 	elseif type == "fire" then
 		local next_fire = math.rand(1)
+
 		self._units[unit:key()] = {
 			timer = 0,
 			type = type,

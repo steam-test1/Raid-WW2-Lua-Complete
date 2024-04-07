@@ -158,15 +158,19 @@ function MenuMarketItemInitiator:_uses_owned_stats()
 end
 
 function MenuMarketItemInitiator:_add_weapon_params()
+	return
 end
 
 function MenuMarketItemInitiator:_add_mask_params(params)
+	return
 end
 
 function MenuMarketItemInitiator:_add_character_params(params)
+	return
 end
 
 function MenuMarketItemInitiator:_add_armor_params(params)
+	return
 end
 
 function MenuMarketItemInitiator:_add_expand_weapon(item, selection_index)
@@ -180,6 +184,7 @@ function MenuMarketItemInitiator:_add_expand_weapon(item, selection_index)
 	for weapon, data in pairs(tweak_data.weapon) do
 		if data.autohit and data.use_data.selection_index == selection_index then
 			i = i + 1
+
 			local bm_data = Global.blackmarket_manager.weapons[weapon]
 			local unlocked = bm_data.unlocked
 			local owned = bm_data.owned
@@ -237,6 +242,7 @@ function MenuMarketItemInitiator:_add_expand_mask(item)
 
 	for mask_id, data in pairs(tweak_data.blackmarket.masks) do
 		i = i + 1
+
 		local bm_data = Global.blackmarket_manager.masks[mask_id]
 		local unlocked = bm_data.unlocked
 		local owned = bm_data.owned
@@ -287,6 +293,7 @@ function MenuMarketItemInitiator:_add_expand_character(item)
 
 	for character_id, data in pairs(tweak_data.blackmarket.characters) do
 		i = i + 1
+
 		local bm_data = Global.blackmarket_manager.characters[character_id]
 		local unlocked = bm_data.unlocked
 		local owned = bm_data.owned
@@ -341,6 +348,7 @@ function MenuMarketItemInitiator:_add_expand_armor(item)
 
 	for armor_id, data in pairs(tweak_data.blackmarket.armors) do
 		i = i + 1
+
 		local bm_data = Global.blackmarket_manager.armors[armor_id]
 		local unlocked = bm_data.unlocked
 		local owned = bm_data.owned
@@ -394,7 +402,9 @@ MenuBuyUpgradesInitiator = MenuBuyUpgradesInitiator or class()
 function MenuBuyUpgradesInitiator:modify_node(original_node, weapon_id, p2, p3)
 	local node = deep_clone(original_node)
 	local node_name = node:parameters().name
+
 	node:parameters().topic_id = tweak_data.weapon[weapon_id].name_id
+
 	local scopes_item = node:item("scopes")
 
 	self:_add_expand_upgrade(scopes_item, weapon_id, "scopes")
@@ -432,6 +442,7 @@ MenuLoadoutInitiator = MenuLoadoutInitiator or class()
 
 function MenuLoadoutInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
+
 	node:parameters().menu_component_data = data
 	node:parameters().menu_component_next_node_name = "loadout"
 
@@ -477,21 +488,23 @@ function MenuCharacterCustomizationInitiator:_add_armor_params(params)
 end
 
 function MenuManager:show_repair_weapon(params, weapon, cost)
-	local dialog_data = {
-		title = managers.localization:text("dialog_repair_weapon_title"),
-		text = managers.localization:text("dialog_repair_weapon_message", {
-			WEAPON = weapon,
-			COST = cost
-		})
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = params.yes_func
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_repair_weapon_title")
+	dialog_data.text = managers.localization:text("dialog_repair_weapon_message", {
+		WEAPON = weapon,
+		COST = cost
+	})
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = params.yes_func
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -501,21 +514,23 @@ function MenuManager:show_repair_weapon(params, weapon, cost)
 end
 
 function MenuManager:show_buy_weapon(params, weapon, cost)
-	local dialog_data = {
-		title = managers.localization:text("dialog_buy_weapon_title"),
-		text = managers.localization:text("dialog_buy_weapon_message", {
-			WEAPON = weapon,
-			COST = cost
-		})
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = params.yes_func
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_buy_weapon_title")
+	dialog_data.text = managers.localization:text("dialog_buy_weapon_message", {
+		WEAPON = weapon,
+		COST = cost
+	})
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = params.yes_func
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -784,6 +799,7 @@ MenuOpenContainerInitiator = MenuOpenContainerInitiator or class(MenuInitiatorBa
 
 function MenuOpenContainerInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
+
 	node:parameters().container_data = data.container or {}
 
 	managers.menu_component:set_blackmarket_enabled(false)

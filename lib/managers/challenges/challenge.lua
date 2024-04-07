@@ -5,6 +5,7 @@ Challenge.STATE_COMPLETED = "completed"
 Challenge.STATE_FAILED = "failed"
 
 function Challenge.create()
+	return
 end
 
 function Challenge:init(challenge_category, challenge_id, tasks, completion_callback, challenge_data)
@@ -106,7 +107,7 @@ function Challenge:_on_completed()
 		local target_string = self._completion_callback.target
 		local method = self._completion_callback.method
 		local params = self._completion_callback.params
-		local target = nil
+		local target
 		local target_parts = string.split(target_string, "[.]")
 
 		for i = 1, #target_parts do

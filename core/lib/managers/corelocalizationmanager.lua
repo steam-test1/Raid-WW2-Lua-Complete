@@ -73,7 +73,7 @@ function LocalizationManager:text(string_id_in, macros)
 	end
 
 	local return_string = self._loc_error and "ERROR:" .. string_id or " "
-	local str_id = nil
+	local str_id
 
 	if not string_id or string_id == "" then
 		return_string = ""
@@ -91,6 +91,7 @@ function LocalizationManager:text(string_id_in, macros)
 
 	if self._loc_help then
 		local err = return_string == ""
+
 		return_string = string_id .. ":" .. (err and "LOCALIZE ME" or return_string)
 	end
 
@@ -145,7 +146,7 @@ end
 function LocalizationManager:_text_format(text, X, Y, func)
 	local match_string = "%b" .. X .. Y
 
-	return string.gsub(text, match_string, function (word)
+	return string.gsub(text, match_string, function(word)
 		local id = string.sub(word, 2, -2)
 		local value = func(id)
 

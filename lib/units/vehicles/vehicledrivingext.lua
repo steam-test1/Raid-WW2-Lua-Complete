@@ -138,6 +138,7 @@ function VehicleDrivingExt:_setup_sound()
 	self._door_soundsource:link(self._unit:get_object(Idstring("v_driver")))
 
 	self._engine_soundsource = nil
+
 	local snd_engine = self._unit:get_object(Idstring("snd_engine"))
 
 	if snd_engine then
@@ -160,6 +161,7 @@ end
 
 function VehicleDrivingExt:_setup_states()
 	local unit = self._unit
+
 	self._states = {
 		broken = VehicleStateBroken:new(unit),
 		driving = VehicleStateDriving:new(unit),
@@ -289,6 +291,7 @@ function VehicleDrivingExt:_create_position_reservation()
 		managers.navigation:add_pos_reservation(self._pos_reservation)
 
 		local nav_seg_id = managers.navigation:get_nav_seg_from_pos(self._unit:position(), true)
+
 		self.current_world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 	end
 end
@@ -310,6 +313,7 @@ function VehicleDrivingExt:_manage_position_reservation()
 			managers.navigation:move_pos_rsrv(self._pos_reservation)
 
 			local nav_seg_id = managers.navigation:get_nav_seg_from_pos(pos, true)
+
 			self.current_world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 		end
 	end
@@ -366,7 +370,7 @@ function VehicleDrivingExt:set_state(name, do_not_sync)
 		return
 	end
 
-	local exit_data = nil
+	local exit_data
 
 	if self._current_state then
 		exit_data = self._current_state:exit(self._state_data, name)
@@ -454,7 +458,7 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 		return false
 	end
 
-	if self._tweak_data.max_loot_bags <= #self._loot then
+	if #self._loot >= self._tweak_data.max_loot_bags then
 		return false
 	end
 
@@ -465,6 +469,7 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	managers.hud:set_vehicle_label_carry_info(self._unit:unit_data().name_label_id, true, #self._loot)
 
 	local carry_tweak_data = tweak_data.carry[carry_id]
+
 	self._max_loot = carry_tweak_data.is_corpse and 1 or self._tweak_data.max_loot_bags
 
 	managers.hud:set_vehicle_loot_info(self._unit, self._loot, #self._loot, self._max_loot)
@@ -498,6 +503,7 @@ function VehicleDrivingExt:sync_loot(carry_id, multiplier)
 	managers.hud:set_vehicle_label_carry_info(self._unit:unit_data().name_label_id, true, #self._loot)
 
 	local carry_tweak_data = tweak_data.carry[carry_id]
+
 	self._max_loot = carry_tweak_data.is_corpse and 1 or self._tweak_data.max_loot_bags
 
 	managers.hud:set_vehicle_loot_info(self._unit, self._loot, #self._loot, self._max_loot)
@@ -541,6 +547,7 @@ function VehicleDrivingExt:remove_loot(carry_id, multiplier)
 			managers.hud:set_vehicle_label_carry_info(self._unit:unit_data().name_label_id, display_bag, #self._loot)
 
 			local carry_tweak_data = tweak_data.carry[carry_id]
+
 			self._max_loot = carry_tweak_data.is_corpse and 1 or self._tweak_data.max_loot_bags
 
 			managers.hud:set_vehicle_loot_info(self._unit, self._loot, #self._loot, self._max_loot)
@@ -639,7 +646,7 @@ function VehicleDrivingExt:_should_drop_loot()
 end
 
 function VehicleDrivingExt:_store_loot(unit)
-	if self._tweak_data and self._tweak_data.max_loot_bags <= #self._loot then
+	if self._tweak_data and #self._loot >= self._tweak_data.max_loot_bags then
 		return
 	end
 
@@ -690,7 +697,7 @@ function VehicleDrivingExt:_catch_loot()
 		return
 	end
 
-	if self._tweak_data and self._tweak_data.max_loot_bags <= #self._loot or not self._interaction_loot then
+	if self._tweak_data and #self._loot >= self._tweak_data.max_loot_bags or not self._interaction_loot then
 		return false
 	end
 
@@ -713,7 +720,7 @@ function VehicleDrivingExt:_catch_loot()
 end
 
 function VehicleDrivingExt:get_nearest_loot_point(pos)
-	local nearest_loot_point = nil
+	local nearest_loot_point
 	local min_distance = 1e+20
 
 	for name, loot_point in pairs(self._loot_points) do
@@ -828,7 +835,7 @@ function VehicleDrivingExt:is_player_in_vehicle()
 end
 
 function VehicleDrivingExt:reserve_seat(player, position, seat_name)
-	local seat = nil
+	local seat
 
 	if position then
 		seat = self:get_available_seat(position)
@@ -856,6 +863,7 @@ function VehicleDrivingExt:reserve_seat(player, position, seat_name)
 
 	if seat.drive_SO_data then
 		local SO_data = seat.drive_SO_data
+
 		seat.drive_SO_data = nil
 
 		if SO_data.SO_registered then
@@ -995,7 +1003,9 @@ function VehicleDrivingExt:_move_ai_to_seat(from_seat, to_seat, previous_occupan
 	ai_unit:unlink()
 
 	from_seat.occupant = nil
+
 	local ai_movement = ai_unit:movement()
+
 	ai_unit:movement().vehicle_seat = to_seat
 
 	if to_seat then
@@ -1108,6 +1118,7 @@ function VehicleDrivingExt:find_exit_position(player)
 
 		for _, seat in pairs(self._tweak_data.seats) do
 			local seat_exit_position = self._unit:get_object(Idstring(VehicleDrivingExt.EXIT_PREFIX .. seat.name))
+
 			ray = World:raycast("ray_type", "body bag mover", "ray", player:position() + offset, seat_exit_position:position() + offset, "sphere_cast_radius", 35, "slot_mask", slot_mask, "ignore_unit", self._unit)
 
 			if not ray or not ray.unit then
@@ -1170,7 +1181,7 @@ function VehicleDrivingExt:get_object_placement(player)
 end
 
 function VehicleDrivingExt:get_available_seat(position)
-	local nearest_seat = nil
+	local nearest_seat
 	local min_distance = 1e+20
 	local min_seat_distance = 1e+20
 
@@ -1537,7 +1548,7 @@ function VehicleDrivingExt:_detect_npc_collisions()
 			local nr_u_bodies = unit:num_bodies()
 			local i_u_body = 0
 
-			while nr_u_bodies > i_u_body do
+			while i_u_body < nr_u_bodies do
 				local u_body = unit:body(i_u_body)
 
 				if u_body:enabled() and u_body:dynamic() then
@@ -1676,6 +1687,7 @@ function VehicleDrivingExt:respawn_vehicle(auto_respawn)
 	self._last_input_bwd_dt = 0
 	self._last_input_fwd_dt = 0
 	self._could_not_move = false
+
 	local counter = self._position_counter - 4
 
 	if counter < 0 then
@@ -1743,15 +1755,15 @@ function VehicleDrivingExt:_play_sound_events(t, dt)
 		local dj = current_jounce - last_frame_jounce
 		local jerk = dj / dt
 
-		if self._tweak_data.sound.bump_treshold < jerk then
+		if jerk > self._tweak_data.sound.bump_treshold then
 			bump = true
 		end
 
 		self._wheel_jounce[id] = current_jounce
 
-		if self._tweak_data.sound.lateral_slip_treshold < math.abs(wheel_state:lat_slip()) then
+		if math.abs(wheel_state:lat_slip()) > self._tweak_data.sound.lateral_slip_treshold then
 			slip = true
-		elseif self._tweak_data.sound.longitudal_slip_treshold < math.abs(wheel_state:long_slip()) and state:get_rpm() > 500 then
+		elseif math.abs(wheel_state:long_slip()) > self._tweak_data.sound.longitudal_slip_treshold and state:get_rpm() > 500 then
 			slip = true
 		end
 	end
@@ -1923,6 +1935,7 @@ end
 function VehicleDrivingExt:_unregister_drive_SO_seat(seat)
 	if seat.drive_SO_data then
 		local SO_data = seat.drive_SO_data
+
 		seat.drive_SO_data = nil
 
 		if SO_data.SO_registered then
@@ -2012,6 +2025,7 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		admin_clbk = callback(self, self, "on_drive_SO_administered", seat)
 	}
 	local SO_id = "ride_" .. tostring(self._unit:key()) .. seat.name
+
 	seat.drive_SO_data = {
 		SO_registered = true,
 		SO_id = SO_id,
@@ -2044,6 +2058,7 @@ function VehicleDrivingExt:on_drive_SO_administered(seat, unit)
 end
 
 function VehicleDrivingExt:on_drive_SO_started(seat, unit)
+	return
 end
 
 function VehicleDrivingExt:on_drive_SO_completed(seat, unit)
@@ -2098,6 +2113,7 @@ function VehicleDrivingExt:sync_ai_vehicle_action(action, seat_name, unit)
 			if seat.name == seat_name then
 				local rot = seat.third_object:rotation()
 				local pos = seat.third_object:position()
+
 				unit:movement().vehicle_unit = self._unit
 				unit:movement().vehicle_seat = seat
 

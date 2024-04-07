@@ -30,10 +30,12 @@ function RaidGUIControlTopStat:init(parent, params)
 end
 
 function RaidGUIControlTopStat:close()
+	return
 end
 
 function RaidGUIControlTopStat:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.w = RaidGUIControlTopStat.WIDTH
 	control_params.h = RaidGUIControlTopStat.HEIGHT
 	control_params.name = control_params.name .. "_customization_panel"
@@ -58,7 +60,9 @@ function RaidGUIControlTopStat:_create_stat_info()
 		font = RaidGUIControlTopStat.FONT,
 		font_size = RaidGUIControlTopStat.FONT_SIZE
 	}
+
 	self._player_name_label = self._control_panel:label(params_player_name)
+
 	local params_stat_name = {
 		vertical = "top",
 		name = "stat_name_label",
@@ -76,6 +80,7 @@ function RaidGUIControlTopStat:_create_stat_info()
 		font = RaidGUIControlTopStat.FONT,
 		font_size = RaidGUIControlTopStat.FONT_SIZE
 	}
+
 	self._stat_name_label = self._control_panel:label(params_stat_name)
 end
 
@@ -88,6 +93,7 @@ function RaidGUIControlTopStat:_create_icon_panel()
 		h = RaidGUIControlTopStat.STAT_ICON_SIZE,
 		layer = self._object:layer() + 1
 	}
+
 	self._icon_panel = self._object:panel(icon_panel_params)
 end
 
@@ -105,6 +111,7 @@ function RaidGUIControlTopStat:set_data(data)
 		texture = data.icon_texture,
 		texture_rect = data.icon_texture_rect
 	}
+
 	self._stat_icon = self._icon_panel:bitmap(params_stat_icon)
 
 	self._stat_icon:set_center_x(self._icon_panel:w() / 2)
@@ -134,7 +141,9 @@ function RaidGUIControlTopStat:_animate_show_stat(panel, delay, icon, label)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quintic_out(t, initial_offset, -initial_offset, duration)
 
 		icon:set_y(stat_icon_y + current_offset)
@@ -167,7 +176,9 @@ function RaidGUIControlTopStat:_animate_show_player_name(label, delay)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.linear(t, -initial_offset, initial_offset + mid_offset, duration)
 
 		self._player_name_label:set_font_size(font_size + current_offset)
@@ -186,7 +197,9 @@ function RaidGUIControlTopStat:_animate_show_player_name(label, delay)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_out(t, mid_offset, -mid_offset, duration)
 
 		self._player_name_label:set_font_size(font_size + current_offset)
@@ -217,6 +230,7 @@ function RaidGUIControlTopStat:_animate_text_glow(text, new_color, duration, num
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		for i = 1, number_of_letters do

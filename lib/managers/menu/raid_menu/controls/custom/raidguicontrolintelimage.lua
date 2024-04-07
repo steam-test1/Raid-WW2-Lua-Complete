@@ -22,6 +22,7 @@ end
 
 function RaidGUIControlIntelImage:_create_panels()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_panel"
 	panel_params.layer = panel_params.layer or self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -48,6 +49,7 @@ function RaidGUIControlIntelImage:_create_image()
 		h = self._object:h() * RaidGUIControlIntelImage.BACKGROUND_SIZE_PERCENTAGE,
 		layer = self._object:layer() + 1
 	}
+
 	self._image_panel = self._object:panel(image_panel_params)
 
 	self._image_panel:set_center_x(self._object:w() / 2)
@@ -70,7 +72,9 @@ function RaidGUIControlIntelImage:_create_image()
 		},
 		layer = self._object:layer() + 1
 	}
+
 	self._background = self._image_panel:bitmap(background_params)
+
 	local foreground_params = {
 		name = "foreground",
 		halign = "scale",
@@ -81,6 +85,7 @@ function RaidGUIControlIntelImage:_create_image()
 		texture_rect = self._params.photo and tweak_data.gui.mission_photos[self._params.photo].texture_rect or default_rect,
 		layer = self._object:layer() + 2
 	}
+
 	self._foreground = self._image_panel:bitmap(foreground_params)
 
 	self._foreground:set_center_x(self._image_panel:w() / 2)
@@ -99,6 +104,7 @@ function RaidGUIControlIntelImage:_create_image()
 		texture_rect = tweak_data.gui.icons[RaidGUIControlIntelImage.SELECTOR_ICON].texture_rect,
 		layer = self._object:layer() + 3
 	}
+
 	self._selector = self._image_panel:bitmap(selector_params)
 	self._size_w = self._object:w()
 	self._size_h = self._object:h()
@@ -240,6 +246,7 @@ function RaidGUIControlIntelImage:confirm_pressed()
 end
 
 function RaidGUIControlIntelImage:close()
+	return
 end
 
 function RaidGUIControlIntelImage:_animate_selected()
@@ -247,9 +254,11 @@ function RaidGUIControlIntelImage:_animate_selected()
 	local duration = 0.2
 	local t = duration - (1 - starting_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._selector:set_alpha(alpha)
@@ -263,9 +272,11 @@ function RaidGUIControlIntelImage:_animate_unselected()
 	local duration = 0.2
 	local t = duration - starting_alpha * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 1, -1, duration)
 
 		self._selector:set_alpha(alpha)
@@ -287,7 +298,9 @@ function RaidGUIControlIntelImage:_animate_highlight_on()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_in(t, 1, RaidGUIControlIntelImage.HOVER_SIZE - 1, duration)
 
 		self._object:set_size(self._size_w * scale, self._size_h * scale)
@@ -307,7 +320,9 @@ function RaidGUIControlIntelImage:_animate_highlight_off()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, RaidGUIControlIntelImage.HOVER_SIZE, 1 - RaidGUIControlIntelImage.HOVER_SIZE, duration)
 
 		self._object:set_size(self._size_w * scale, self._size_h * scale)
@@ -325,7 +340,9 @@ function RaidGUIControlIntelImage:_animate_press()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_in(t, initial_size, -(initial_size - RaidGUIControlIntelImage.PRESSED_SIZE), duration)
 
 		self._object:set_size(self._size_w * scale, self._size_h * scale)
@@ -345,7 +362,9 @@ function RaidGUIControlIntelImage:_animate_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, RaidGUIControlIntelImage.PRESSED_SIZE, RaidGUIControlIntelImage.ACTIVE_SIZE - RaidGUIControlIntelImage.PRESSED_SIZE, duration)
 
 		self._object:set_size(self._size_w * scale, self._size_h * scale)

@@ -1,9 +1,11 @@
 AlphaRefControl = AlphaRefControl or class()
+
 local ids_alpha_ref = Idstring("alpha_ref")
 
 function AlphaRefControl:init(unit)
 	self._unit = unit
 	self._materials = {}
+
 	local materials = self._unit:get_objects_by_type(Idstring("material"))
 
 	for _, material in ipairs(materials) do
@@ -28,6 +30,7 @@ function AlphaRefControl:update(unit, t, dt)
 		if not data[3] then
 			local material = data[1]
 			local alpha_ref = material:get_variable(ids_alpha_ref)
+
 			alpha_ref = alpha_ref + dt * data[2]
 
 			material:set_variable(ids_alpha_ref, alpha_ref)

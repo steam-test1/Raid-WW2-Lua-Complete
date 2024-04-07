@@ -1,6 +1,7 @@
 local ids_lod = Idstring("lod")
 local ids_lod1 = Idstring("lod1")
 local ids_ik_aim = Idstring("ik_aim")
+
 CopBase = CopBase or class(UnitBase)
 CopBase._anim_lods = {
 	{
@@ -23,14 +24,17 @@ CopBase._anim_lods = {
 	}
 }
 CopBase._material_translation_map = {}
-local character_path = ""
-local char_map = tweak_data.character.character_map()
 
-for _, data in pairs(char_map) do
-	for _, character in ipairs(data.list) do
-		character_path = data.path .. character .. "/" .. character
-		CopBase._material_translation_map[tostring(Idstring(character_path):key())] = Idstring(character_path .. "_contour")
-		CopBase._material_translation_map[tostring(Idstring(character_path .. "_contour"):key())] = Idstring(character_path)
+do
+	local character_path = ""
+	local char_map = tweak_data.character.character_map()
+
+	for _, data in pairs(char_map) do
+		for _, character in ipairs(data.list) do
+			character_path = data.path .. character .. "/" .. character
+			CopBase._material_translation_map[tostring(Idstring(character_path):key())] = Idstring(character_path .. "_contour")
+			CopBase._material_translation_map[tostring(Idstring(character_path .. "_contour"):key())] = Idstring(character_path)
+		end
 	end
 end
 
@@ -40,10 +44,9 @@ function CopBase:init(unit)
 	self._char_tweak = tweak_data.character[self._tweak_table]
 	self._unit = unit
 	self._visibility_state = true
-	self._foot_obj_map = {
-		right = self._unit:get_object(Idstring("RightToeBase")),
-		left = self._unit:get_object(Idstring("LeftToeBase"))
-	}
+	self._foot_obj_map = {}
+	self._foot_obj_map.right = self._unit:get_object(Idstring("RightToeBase"))
+	self._foot_obj_map.left = self._unit:get_object(Idstring("LeftToeBase"))
 	self._is_in_original_material = true
 end
 
@@ -65,6 +68,7 @@ function CopBase:post_init()
 end
 
 function CopBase:_chk_spawn_gear()
+	return
 end
 
 function CopBase:default_weapon_name()

@@ -10,6 +10,7 @@ end
 
 function HuskCopBrain:post_init()
 	self._alert_listen_key = "HuskCopBrain" .. tostring(self._unit:key())
+
 	local alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, {
@@ -94,9 +95,11 @@ function HuskCopBrain:on_trade(trading_unit)
 end
 
 function HuskCopBrain:on_cool_state_changed(state)
+	return
 end
 
 function HuskCopBrain:on_action_completed(action)
+	return
 end
 
 function HuskCopBrain:on_alert(alert_data)
@@ -124,6 +127,7 @@ function HuskCopBrain:on_long_dis_interacted(amount, aggressor_unit)
 end
 
 function HuskCopBrain:on_team_set(team_data)
+	return
 end
 
 function HuskCopBrain:sync_net_event(event_id)
@@ -174,4 +178,5 @@ function HuskCopBrain:set_distance_to_target(distance)
 end
 
 function HuskCopBrain:anim_clbk_throw_flare(unit)
+	return
 end

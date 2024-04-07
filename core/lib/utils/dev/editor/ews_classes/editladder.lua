@@ -8,6 +8,7 @@ function EditLadder:init(editor)
 		name = "Ladder",
 		class = self
 	})
+
 	self._panel = panel
 	self._width_params = {
 		value = 0,

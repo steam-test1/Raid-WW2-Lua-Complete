@@ -1,5 +1,6 @@
 CoreCutsceneMayaExporterCurve = CoreCutsceneMayaExporterCurve or class()
 CoreCutsceneMayaExporterCurveSet = CoreCutsceneMayaExporterCurveSet or class()
+
 local SAMPLED_COMPONENTS = {
 	"x",
 	"y",

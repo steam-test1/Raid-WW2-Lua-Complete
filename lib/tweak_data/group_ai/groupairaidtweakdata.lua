@@ -58,45 +58,44 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		15,
 		15
 	}
-	self.assault = {
-		anticipation_duration = {
-			{
-				15,
-				1
-			},
-			{
-				15,
-				1
-			},
-			{
-				15,
-				1
-			}
+	self.assault = {}
+	self.assault.anticipation_duration = {
+		{
+			15,
+			1
 		},
-		build_duration = 20,
-		sustain_duration_min = {
-			60,
-			100,
-			140
+		{
+			15,
+			1
 		},
-		sustain_duration_max = {
-			90,
-			120,
-			160
-		},
-		sustain_duration_balance_mul = {
-			1,
-			1.1,
-			1.2,
-			1.3
-		},
-		fade_duration = 10,
-		push_delay = {
-			4.5,
-			2,
-			1,
-			0.5
+		{
+			15,
+			1
 		}
+	}
+	self.assault.build_duration = 20
+	self.assault.sustain_duration_min = {
+		60,
+		100,
+		140
+	}
+	self.assault.sustain_duration_max = {
+		90,
+		120,
+		160
+	}
+	self.assault.sustain_duration_balance_mul = {
+		1,
+		1.1,
+		1.2,
+		1.3
+	}
+	self.assault.fade_duration = 10
+	self.assault.push_delay = {
+		4.5,
+		2,
+		1,
+		0.5
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then

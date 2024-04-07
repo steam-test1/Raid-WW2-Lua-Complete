@@ -4,7 +4,9 @@ function BookBoxGui:init(ws, title, config)
 	config = config or {}
 	config.h = config.h or 310
 	config.w = config.w or 360
+
 	local x, y = ws:size()
+
 	config.x = config.x or x - config.w
 	config.y = config.y or y - config.h - CoreMenuRenderer.Renderer.border_height
 	self._header_type = config.header_type or "event"
@@ -71,6 +73,7 @@ function BookBoxGui:_layout_page_panels()
 	for _, p in ipairs(self._page_panels) do
 		local name_text = p:child("name_text")
 		local _, _, wt, ht = name_text:text_rect()
+
 		total_w = total_w + wt + 1
 	end
 
@@ -114,6 +117,7 @@ function BookBoxGui:remove_page(name)
 
 	if self._active_page_name == name then
 		self._active_page_name = nil
+
 		local n, _ = next(self._pages)
 
 		print("change to", n)
@@ -324,7 +328,7 @@ function BookBoxGui:moved_scroll_bar(x, y)
 end
 
 function BookBoxGui:mouse_moved(x, y)
-	local pointer = nil
+	local pointer
 
 	if not self:can_take_input() then
 		return false, pointer
@@ -335,6 +339,7 @@ function BookBoxGui:mouse_moved(x, y)
 	end
 
 	local used, wpointer = self._pages[self._active_page_name].box_gui:mouse_moved(x, y)
+
 	pointer = wpointer or pointer
 
 	if used then

@@ -43,7 +43,7 @@ function dpairs(vector_table)
 	local i = 0
 	local last_size = #t
 
-	return function ()
+	return function()
 		if last_size == #t then
 			i = i + 1
 		end
@@ -62,7 +62,7 @@ function table.tuple_iterator(v, n)
 	local index = 1 - n
 	local count = #v
 
-	return function ()
+	return function()
 		index = index + n
 
 		if index <= count then
@@ -78,7 +78,7 @@ function table.sorted_map_iterator(map, key_comparator_func)
 
 	table.sort(sorted_keys, key_comparator_func)
 
-	return function ()
+	return function()
 		index = index + 1
 
 		if index <= count then
@@ -152,9 +152,10 @@ function table.exclude(t, e)
 end
 
 function table.equals(a, b, value_compare_func)
-	value_compare_func = value_compare_func or function (va, vb)
+	value_compare_func = value_compare_func or function(va, vb)
 		return va == vb
 	end
+
 	local size_a = 0
 
 	for k, v in pairs(a) do
@@ -238,7 +239,7 @@ function table.random_key(t)
 	end
 
 	local rand_nr = math.random(table.size(t))
-	local key = nil
+	local key
 
 	for i = 1, rand_nr do
 		key = next(t, prev_key)
@@ -260,7 +261,7 @@ function table.concat_map(map, concat_values, none_string, wrap, sep, last_sep)
 
 	for key, value in pairs(map) do
 		local last_func = func
-		local append_string = nil
+		local append_string
 
 		if concat_values then
 			append_string = tostring(value)
@@ -285,7 +286,7 @@ function table.concat_map(map, concat_values, none_string, wrap, sep, last_sep)
 end
 
 function table.ordering(prioritized_order_list)
-	return function (a, b)
+	return function(a, b)
 		local a_index = table.get_vector_index(prioritized_order_list, a)
 		local b_index = table.get_vector_index(prioritized_order_list, b)
 
@@ -366,9 +367,10 @@ function table.insert_sorted(t, item, comparator_func)
 		return
 	end
 
-	comparator_func = comparator_func or function (a, b)
+	comparator_func = comparator_func or function(a, b)
 		return a < b
 	end
+
 	local index = 1
 	local examined_item = t[index]
 
@@ -410,6 +412,7 @@ end
 
 function table.unpack_sparse(sparse_list)
 	table.__unpack_sparse_implementations = table.__unpack_sparse_implementations or {}
+
 	local count = 0
 
 	for index, _ in pairs(sparse_list) do
@@ -419,11 +422,12 @@ function table.unpack_sparse(sparse_list)
 	local func = table.__unpack_sparse_implementations[count]
 
 	if func == nil then
-		local return_values = table.collect(table.range(1, count), function (i)
+		local return_values = table.collect(table.range(1, count), function(i)
 			return "__list__[" .. i .. "]"
 		end)
 		local return_value_string = table.concat(return_values, ", ")
 		local code = "return function( __list__ ) return " .. return_value_string .. " end"
+
 		func = assert(loadstring(code))()
 		table.__unpack_sparse_implementations[count] = func
 	end
@@ -594,7 +598,7 @@ function table.trail_exists(table, list)
 end
 
 if Application:ews_enabled() then
-	local __lua_representation, __write_lua_representation_to_file = nil
+	local __lua_representation, __write_lua_representation_to_file
 
 	function __lua_representation(value)
 		local t = type(value)
@@ -610,6 +614,7 @@ if Application:ews_enabled() then
 
 	function __write_lua_representation_to_file(value, file, indentation)
 		indentation = indentation or 1
+
 		local t = type(value)
 
 		if t == "table" then

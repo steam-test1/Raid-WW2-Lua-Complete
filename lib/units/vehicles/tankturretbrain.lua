@@ -1,4 +1,5 @@
 TankTurretBrain = TankTurretBrain or class(SentryGunBrain)
+
 local mvec3_dir = mvector3.direction
 local mvec3_dot = mvector3.dot
 local tmp_vec1 = Vector3()
@@ -29,7 +30,9 @@ end
 
 function TankTurretBrain:_lock_on(attention)
 	self._locked_phase = true
+
 	local delta_t = self._tweak_data.turret.time_before_taking_shot
+
 	self._locked_t = TimerManager:game():time() + delta_t
 	self._locked_on_attention = attention
 	self._locked_on_pos = attention.unit:position()
@@ -42,7 +45,7 @@ function TankTurretBrain:is_locked(t)
 end
 
 function TankTurretBrain:_update_target_locked(t)
-	if self._locked_t <= t then
+	if t >= self._locked_t then
 		self:_fire_at_locked_position()
 	end
 end
@@ -100,7 +103,7 @@ function TankTurretBrain:_upd_fire(t)
 		end
 	elseif self._ext_movement:rearming() then
 		self._ext_movement:complete_rearming()
-	elseif attention and attention.reaction and AIAttentionObject.REACT_SHOOT <= attention.reaction and not self._ext_movement:warming_up(t) then
+	elseif attention and attention.reaction and attention.reaction >= AIAttentionObject.REACT_SHOOT and not self._ext_movement:warming_up(t) then
 		if attention.pos then
 			mvec3_dir(tmp_vec1, self._ext_movement:m_head_pos(), attention.pos)
 		elseif attention.unit:movement() then
@@ -110,6 +113,7 @@ function TankTurretBrain:_upd_fire(t)
 		end
 
 		local max_dot = self._tweak_data.KEEP_FIRE_ANGLE
+
 		max_dot = math.min(0.998, 1 - (1 - max_dot) * (self._shaprness_mul or 1))
 
 		if target_is_visible and max_dot < mvec3_dot(tmp_vec1, self._ext_movement:m_head_fwd()) then

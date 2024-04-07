@@ -33,14 +33,17 @@ function IngameLoading:continue()
 end
 
 function IngameLoading:on_destroyed()
+	return
 end
 
 function IngameLoading:update(t, dt)
+	return
 end
 
 function IngameLoading:at_enter(old_state, params)
 	self._old_state = old_state:name()
 	self._old_state = "ingame_standard"
+
 	local player = managers.player:player_unit()
 
 	if player then

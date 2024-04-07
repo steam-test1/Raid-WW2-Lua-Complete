@@ -58,7 +58,7 @@ function AkimboWeaponBase:fire(...)
 
 		return result
 	else
-		local result = nil
+		local result
 
 		if self._fire_second_gun_next then
 			if alive(self._second_gun) then

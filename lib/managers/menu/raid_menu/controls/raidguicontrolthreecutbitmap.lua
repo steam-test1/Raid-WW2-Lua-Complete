@@ -16,6 +16,7 @@ end
 
 function RaidGUIControlThreeCutBitmap:_create_panel()
 	local three_cut_params = clone(self._params)
+
 	three_cut_params.name = three_cut_params.name .. "_three_cut_bitmap"
 	three_cut_params.layer = self._panel:layer()
 	three_cut_params.h = self._params.h or self:h()
@@ -25,6 +26,7 @@ end
 
 function RaidGUIControlThreeCutBitmap:_layout_parts()
 	self._h = self:h()
+
 	local left_texture_rect = {
 		tweak_data.gui.icons[self._params.left].texture_rect[1],
 		tweak_data.gui.icons[self._params.left].texture_rect[2],
@@ -42,7 +44,9 @@ function RaidGUIControlThreeCutBitmap:_layout_parts()
 		color = self._params.color or Color.white,
 		layer = self._object:layer() + 2
 	}
+
 	self._left = self._object:bitmap(left_params)
+
 	local right_texture_rect = {
 		tweak_data.gui.icons[self._params.right].texture_rect[1] + 1,
 		tweak_data.gui.icons[self._params.right].texture_rect[2],
@@ -60,6 +64,7 @@ function RaidGUIControlThreeCutBitmap:_layout_parts()
 		color = self._params.color or Color.white,
 		layer = self._object:layer() + 2
 	}
+
 	self._right = self._object:bitmap(right_params)
 
 	self._right:set_right(self._object:right())
@@ -80,6 +85,7 @@ function RaidGUIControlThreeCutBitmap:_layout_parts()
 		texture_rect = center_texture_rect,
 		color = self._params.color or Color.white
 	}
+
 	self._center = self._object:bitmap(center_params)
 end
 

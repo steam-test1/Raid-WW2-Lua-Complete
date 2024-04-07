@@ -18,6 +18,7 @@ CoreLuaPreprocessor._CLOSING_BRACKET = "}"
 
 function CoreLuaPreprocessor:preprocess(path, constants_table, code)
 	self._source_path = path
+
 	local c = self:_apply_preprocessor_1(constants_table, code)
 
 	return c
@@ -49,9 +50,7 @@ function CoreLuaPreprocessor:_parse_next_block(constants_table, current_pos, sou
 			return
 		end
 
-		if next(statements_list) then
-			current_pos = statements_list[#statements_list].bracket_close_pos + 1 or current_pos
-		end
+		current_pos = next(statements_list) and statements_list[#statements_list].bracket_close_pos + 1 or current_pos
 	until finished
 
 	if not next(statements_list) then
@@ -60,15 +59,17 @@ function CoreLuaPreprocessor:_parse_next_block(constants_table, current_pos, sou
 		return source_len + 1
 	end
 
-	local true_statement_found = nil
+	local true_statement_found
 
 	for i_statement, statement_info in ipairs(statements_list) do
 		params.output_str = params.output_str .. statement_info.whitespace
 
 		if not true_statement_found and statement_info.truth then
 			true_statement_found = true
+
 			local unprocessed_block = string.sub(source_str, statement_info.bracket_open_pos + 1, statement_info.bracket_close_pos - 1)
 			local processed_block = self:_apply_preprocessor_1(constants_table, unprocessed_block)
+
 			params.output_str = params.output_str .. processed_block
 		else
 			params.output_str = params.output_str .. self:_get_only_newlines(source_str, statement_info.bracket_open_pos + 1, statement_info.bracket_close_pos - 1)
@@ -79,10 +80,10 @@ function CoreLuaPreprocessor:_parse_next_block(constants_table, current_pos, sou
 end
 
 function CoreLuaPreprocessor:_parse_next_conditional_statement(source_str, source_len, start_pos, constants_table, statements_list)
-	local statement_info, is_last_statement = nil
+	local statement_info, is_last_statement
 
 	if not next(statements_list) then
-		local if_start_pos, if_end_pos = nil
+		local if_start_pos, if_end_pos
 		local search_pos = start_pos
 
 		repeat
@@ -93,7 +94,7 @@ function CoreLuaPreprocessor:_parse_next_conditional_statement(source_str, sourc
 			end
 
 			search_pos = if_end_pos and if_end_pos + 1
-		until if_start_pos ~= 1 and self:_is_whitespace_or_singleline_comment(source_str, if_start_pos - 1) and self:_is_whitespace(source_str, if_end_pos + 1)
+		until (if_start_pos == 1 or self:_is_whitespace_or_singleline_comment(source_str, if_start_pos - 1)) and self:_is_whitespace(source_str, if_end_pos + 1)
 
 		statement_info = self:_parse_statement(source_str, source_len, if_end_pos + 1, constants_table, statements_list)
 
@@ -101,7 +102,7 @@ function CoreLuaPreprocessor:_parse_next_conditional_statement(source_str, sourc
 			statement_info.whitespace = string.sub(source_str, start_pos, if_start_pos - 1)
 		end
 	else
-		local elseif_start_pos, elseif_end_pos, else_start_pos, else_end_pos = nil
+		local elseif_start_pos, elseif_end_pos, else_start_pos, else_end_pos
 		local search_pos = start_pos
 
 		repeat
@@ -146,10 +147,11 @@ end
 
 function CoreLuaPreprocessor:_parse_statement(source_str, source_len, start_pos, constants_table)
 	local statement_info = {}
-	local constants_end_pos = nil
+	local constants_end_pos
 
 	if constants_table then
 		local constants_statement_table, constants_end_pos_out = self:_extract_constants(source_str, start_pos)
+
 		constants_end_pos = constants_end_pos_out
 		statement_info.truth = self:_test_constants_truth(constants_statement_table, constants_table)
 	else
@@ -281,6 +283,7 @@ end
 
 function CoreLuaPreprocessor:_is_whitespace(source_str, start_pos, end_pos)
 	end_pos = end_pos or start_pos
+
 	local search_pos = start_pos
 
 	repeat

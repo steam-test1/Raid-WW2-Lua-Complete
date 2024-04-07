@@ -134,6 +134,7 @@ function PlayerDriving:exit(state_data, new_state_name)
 	self:_interupt_action_melee()
 
 	local exit = self._vehicle_ext:find_exit_position(self._unit)
+
 	exit = exit or {
 		position = self._unit:position() + Vector3(0, 0, 180),
 		rotation = self._unit:rotation()
@@ -166,9 +167,11 @@ function PlayerDriving:exit(state_data, new_state_name)
 	self._dye_risk = nil
 	self._state_data.in_air = false
 	self._stance = PlayerDriving.STANCE_NORMAL
-	local exit_data = {
-		skip_equip = true
-	}
+
+	local exit_data = {}
+
+	exit_data.skip_equip = true
+
 	local velocity = self._unit:mover() and self._unit:mover():velocity() or Vector3(0, 0, 0)
 
 	self:_activate_mover(PlayerStandard.MOVER_STAND, velocity)
@@ -263,6 +266,7 @@ function PlayerDriving:update(t, dt)
 end
 
 function PlayerDriving:set_tweak_data(name)
+	return
 end
 
 function PlayerDriving:_update_hud(t, dt)
@@ -273,6 +277,7 @@ function PlayerDriving:_update_hud(t, dt)
 			BaseInteractionExt:_add_string_macros(string_macros)
 
 			local text = managers.localization:text("hud_int_press_respawn", string_macros)
+
 			self._respawn_hint_shown = true
 
 			managers.hud:show_interact({
@@ -317,6 +322,7 @@ function PlayerDriving:_update_check_actions_passenger_no_shoot(t, dt, input)
 end
 
 function PlayerDriving:_check_warcry(t, input)
+	return
 end
 
 function PlayerDriving:on_action_reload_success()
@@ -436,7 +442,9 @@ function PlayerDriving:_start_action_exit_vehicle(t)
 	end
 
 	local deploy_timer = PlayerDriving.EXIT_VEHICLE_TIMER
+
 	self._exit_vehicle_expire_t = t + deploy_timer
+
 	local text = utf8.to_upper(managers.localization:text("hud_action_exit_vehicle"))
 
 	managers.hud:show_progress_timer_bar(0, deploy_timer, text)
@@ -460,7 +468,7 @@ function PlayerDriving:_update_action_timers(t, input)
 
 		managers.hud:set_progress_timer_bar_width(deploy_timer - (self._exit_vehicle_expire_t - t), deploy_timer)
 
-		if self._exit_vehicle_expire_t <= t then
+		if t >= self._exit_vehicle_expire_t then
 			self:_end_action_exit_vehicle()
 
 			self._exit_vehicle_expire_t = nil
@@ -474,6 +482,7 @@ function PlayerDriving:_end_action_exit_vehicle()
 end
 
 function PlayerDriving:_check_action_change_camera(t, input)
+	return
 end
 
 function PlayerDriving:_check_action_rear_cam(t, input)
@@ -493,9 +502,11 @@ function PlayerDriving:_check_action_rear_cam(t, input)
 end
 
 function PlayerDriving:_check_action_run(...)
+	return
 end
 
 function PlayerDriving:pre_destroy(unit)
+	return
 end
 
 function PlayerDriving:stance()
@@ -551,6 +562,7 @@ function PlayerDriving:sync_move_to_next_seat()
 end
 
 function PlayerDriving:destroy()
+	return
 end
 
 function PlayerDriving:_get_vehicle()
@@ -643,7 +655,9 @@ function PlayerDriving:_update_input(dt)
 	if speed_anim_length then
 		local rpm_anim_length = self._vehicle_unit:anim_length(Idstring("ag_rpm_meter"))
 		local speed = vehicle_state:get_speed() * 3.6
+
 		speed = speed * 1.25
+
 		local rpm = vehicle_state:get_rpm()
 		local max_speed = self._vehicle_ext._tweak_data.max_speed
 		local max_rpm = self._vehicle:get_max_rpm()
@@ -654,6 +668,7 @@ function PlayerDriving:_update_input(dt)
 		end
 
 		relative_speed = relative_speed * speed_anim_length
+
 		local relative_rpm = rpm / max_rpm
 
 		if relative_rpm > 1 then
@@ -714,7 +729,7 @@ function PlayerDriving:_update_input(dt)
 		self._max_steer = 0
 	end
 
-	if math.abs(self._move_x) < math.abs(move_d.x) then
+	if math.abs(move_d.x) > math.abs(self._move_x) then
 		-- Nothing
 	end
 
@@ -765,7 +780,9 @@ end
 
 function PlayerDriving:smoothstep(a, b, step, n)
 	local v = step / n
+
 	v = 1 - (1 - v) * (1 - v)
+
 	local x = a * v + b * (1 - v)
 
 	return x

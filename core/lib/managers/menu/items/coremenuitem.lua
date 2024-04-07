@@ -5,7 +5,9 @@ Item.TYPE = "item"
 
 function Item:init(data_node, parameters)
 	self._type = ""
+
 	local params = parameters or {}
+
 	params.info_panel = ""
 
 	if data_node then
@@ -153,7 +155,7 @@ end
 
 function Item:dirty()
 	if self.dirty_callback then
-		self:dirty_callback()
+		self.dirty_callback(self)
 	end
 end
 
@@ -170,6 +172,7 @@ function Item:visible()
 end
 
 function Item:on_delete_row_item()
+	return
 end
 
 function Item:on_delete_item()
@@ -180,9 +183,11 @@ function Item:on_delete_item()
 end
 
 function Item:on_item_position(row_item, node)
+	return
 end
 
 function Item:on_item_positions_done(row_item, node)
+	return
 end
 
 function Item:get_h(row_item)

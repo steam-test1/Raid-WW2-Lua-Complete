@@ -135,7 +135,7 @@ function TipsTweakData:get_tips_string_ids()
 	local ids = {}
 
 	for _, tip in ipairs(self) do
-		if not tip.unlock_lvl or tip.unlock_lvl < lvl then
+		if not tip.unlock_lvl or lvl > tip.unlock_lvl then
 			table.insert(ids, tip.string_id)
 		end
 	end

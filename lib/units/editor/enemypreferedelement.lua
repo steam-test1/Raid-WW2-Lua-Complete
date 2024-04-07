@@ -40,6 +40,7 @@ function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, a
 end
 
 function EnemyPreferedAddUnitElement:update_editing()
+	return
 end
 
 function EnemyPreferedAddUnitElement:add_element()
@@ -49,7 +50,7 @@ function EnemyPreferedAddUnitElement:add_element()
 	})
 
 	if ray and ray.unit then
-		local is_group, id = nil
+		local is_group, id
 
 		if string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) then
 			id = ray.unit:unit_data().unit_id
@@ -187,6 +188,7 @@ function EnemyPreferedAddUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
 	toolbar:add_tool("ADD_UNIT_LIST", "Add unit from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
@@ -210,6 +212,7 @@ function EnemyPreferedRemoveUnitElement:init(unit)
 end
 
 function EnemyPreferedRemoveUnitElement:update_editing()
+	return
 end
 
 function EnemyPreferedRemoveUnitElement:draw_links(t, dt, selected_unit, all_units)
@@ -273,6 +276,7 @@ function EnemyPreferedRemoveUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_enemy_prefered_add"
 	}

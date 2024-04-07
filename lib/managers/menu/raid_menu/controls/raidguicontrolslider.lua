@@ -69,6 +69,7 @@ end
 
 function RaidGUIControlSlider:_create_slider_panel()
 	local slider_params = clone(self._params)
+
 	slider_params.name = slider_params.name .. "_slider"
 	slider_params.layer = self._panel:layer() + 1
 	slider_params.w = self._params.w or RaidGUIControlSlider.DEFAULT_WIDTH
@@ -86,7 +87,9 @@ function RaidGUIControlSlider:_create_slider_controls()
 		h = self._object:h(),
 		color = RaidGUIControlSlider.SIDELINE_COLOR
 	}
+
 	self._sideline = self._object:rect(sideline_params)
+
 	local value_label_params = {
 		vertical = "center",
 		align = "left",
@@ -99,6 +102,7 @@ function RaidGUIControlSlider:_create_slider_controls()
 		font_size = tweak_data.gui.font_sizes.small,
 		layer = self._object:layer() + 1
 	}
+
 	self._value_label = self._object:text(value_label_params)
 	self._slider = self._object:slider_simple({
 		x = 0,
@@ -123,6 +127,7 @@ function RaidGUIControlSlider:_create_slider_controls()
 		text = self._params.description,
 		layer = self._object:layer() + 1
 	}
+
 	self._description = self._object:text(description_params)
 end
 
@@ -137,6 +142,7 @@ end
 
 function RaidGUIControlSlider:set_value(value)
 	self._value = math.clamp(value, 0, 100)
+
 	local display_value = math.lerp(self._min_display_value, self._max_display_value, self._value / 100)
 
 	self._value_label:set_text(string.format(self._value_label_format, display_value))
@@ -181,9 +187,11 @@ function RaidGUIControlSlider:_animate_highlight_on()
 	local duration = 0.2
 	local t = duration - (1 - starting_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._sideline:set_alpha(alpha)
@@ -206,9 +214,11 @@ function RaidGUIControlSlider:_animate_highlight_off()
 	local duration = 0.2
 	local t = duration - starting_alpha * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 1, -1, duration)
 
 		self._sideline:set_alpha(alpha)

@@ -69,6 +69,7 @@ function ElementRopeTrigger:on_script_activated()
 end
 
 function ElementRopeTrigger:client_on_executed(...)
+	return
 end
 
 function ElementRopeTrigger:on_executed(instigator)

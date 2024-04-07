@@ -46,6 +46,7 @@ function PlayerCarryCorpse:exit(state_data, new_state_name)
 	self._unit:camera():play_redirect(Idstring("carry_corpse_unequip"))
 
 	self._carrying_corpse = false
+
 	local exit_data = PlayerCarryCorpse.super.exit(self, state_data, new_state_name)
 
 	return exit_data
@@ -70,7 +71,7 @@ function PlayerCarryCorpse:_check_action_equip(...)
 end
 
 function PlayerCarryCorpse:_check_action_interact(t, input)
-	local new_action, timer, interact_object = nil
+	local new_action, timer, interact_object
 
 	if input.btn_interact_press then
 		if managers.interaction:active_unit() then
@@ -99,10 +100,10 @@ function PlayerCarryCorpse:_start_action_jump(...)
 end
 
 function PlayerCarryCorpse:_perform_jump(jump_vec)
-	if not managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
-		if not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
-			mvector3.multiply(jump_vec, tweak_data.carry.types[self._tweak_data_name].jump_modifier)
-		end
+	if managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
+		-- Nothing
+	else
+		mvector3.multiply(jump_vec, tweak_data.carry.types[self._tweak_data_name].jump_modifier)
 	end
 
 	PlayerCarryCorpse.super._perform_jump(self, jump_vec)

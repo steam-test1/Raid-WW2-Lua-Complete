@@ -21,6 +21,7 @@ function AIRemoveUnitElement:draw_links(t, dt, selected_unit, all_units)
 end
 
 function AIRemoveUnitElement:update_editing()
+	return
 end
 
 function AIRemoveUnitElement:update_selected(t, dt, selected_unit, all_units)
@@ -74,6 +75,7 @@ function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_spawn_enemy",
 		"ai_spawn_civilian"

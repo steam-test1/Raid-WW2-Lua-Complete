@@ -28,11 +28,13 @@ function RaidGuiControlDifficultyStars:_create_panel()
 		w = (self._number_of_stars - 1) * RaidGuiControlDifficultyStars.STARS_DISTANCE + RaidGuiControlDifficultyStars.FIRST_STAR_CENTER_X * 2,
 		h = tweak_data.gui:icon_h(RaidGuiControlDifficultyStars.STAR_FILLED_ICON)
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
 function RaidGuiControlDifficultyStars:_create_stars()
 	self._stars = {}
+
 	local center_x = RaidGuiControlDifficultyStars.FIRST_STAR_CENTER_X
 
 	for i = 1, self._number_of_stars do

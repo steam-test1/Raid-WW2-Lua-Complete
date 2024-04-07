@@ -13,6 +13,7 @@ function AreaMinPoliceForceUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local amount_params = {
 		name = "Amount:",
 		ctrlr_proportions = 2,

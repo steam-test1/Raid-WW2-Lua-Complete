@@ -47,6 +47,7 @@ end
 
 function RaidGUIControlTable:_create_table_panel()
 	local table_params = clone(self._params)
+
 	table_params.name = table_params.name .. "_table"
 	table_params.layer = self._panel:layer() + 1
 	self._table_panel = self._panel:panel(table_params)
@@ -83,6 +84,7 @@ function RaidGUIControlTable:_create_items(use_row_dividers)
 	end
 
 	self._table_data = table_data
+
 	local y = 0
 
 	if self._table_params.header_params then
@@ -93,6 +95,7 @@ function RaidGUIControlTable:_create_items(use_row_dividers)
 
 	local row_height = self._table_params.row_params.height
 	local row_params = {}
+
 	row_params = clone(self._table_params.row_params)
 	row_params.x = row_params.x or 0
 	row_params.layer = row_params.layer or self._table_panel:layer() + 1
@@ -134,6 +137,7 @@ function RaidGUIControlTable:_create_items(use_row_dividers)
 		end
 
 		row_params.w = self._table_params.w
+
 		local row = self:_create_row(row_params, row_data, self._table_params)
 
 		table.insert(self._table_rows, row)
@@ -169,6 +173,7 @@ function RaidGUIControlTable:_create_header()
 
 	local header_column_params = header_params
 	local x = 0
+
 	self._header_column_items = {}
 	header_params.layer = self._table_panel:layer() + 2
 
@@ -184,6 +189,7 @@ function RaidGUIControlTable:_create_header()
 		header_column_params.layer = self._table_panel:layer() + 10 + column_index
 		header_column_params.font = self._params.table_params.header_params.font
 		header_column_params.font_size = self._params.table_params.header_params.font_size
+
 		local item = RaidGUIControlLabel:new(self._parent, header_column_params)
 
 		table.insert(self._header_column_items, item)
@@ -197,6 +203,7 @@ function RaidGUIControlTable:_create_row(row_params, row_data, table_params)
 	row_params.w = table_params.w
 	row_params.on_row_click_callback = callback(self, self, "on_row_clicked")
 	row_params.on_row_double_click_callback = callback(self, self, "on_row_double_clicked")
+
 	local row_class = row_params.row_class or RaidGUIControlTableRow
 	local row = self._table_panel:create_custom_control(row_class, row_params, row_data, table_params)
 
@@ -261,9 +268,11 @@ function RaidGUIControlTable:mouse_released(o, button, x, y)
 end
 
 function RaidGUIControlTable:highlight_on()
+	return
 end
 
 function RaidGUIControlTable:highlight_off()
+	return
 end
 
 function RaidGUIControlTable:refresh_data()
@@ -427,6 +436,7 @@ function RaidGUIControlTable:_calculate_selected_item_position()
 	self._inner_panel = self._params.scrollable_area_ref._inner_panel
 	self._outer_panel = self._params.scrollable_area_ref._object
 	self._scrollbar = self._params.scrollable_area_ref._scrollbar
+
 	local inner_panel_y = self._inner_panel:y()
 	local selected_item_bottom = self._selected_item:bottom()
 	local selected_item_y = self._selected_item:y()
@@ -448,7 +458,7 @@ function RaidGUIControlTable:_calculate_selected_item_position()
 
 	self._inner_panel:set_y(new_y)
 
-	local scroll_y = self._outer_panel:h() * -new_y / ep_h
+	local scroll_y = self._outer_panel:h() * (-new_y / ep_h)
 
 	self._scrollbar:set_y(scroll_y)
 end

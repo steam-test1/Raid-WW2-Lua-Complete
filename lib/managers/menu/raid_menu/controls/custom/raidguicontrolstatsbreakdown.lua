@@ -38,10 +38,12 @@ function RaidGUIControlStatsBreakdown:init(parent, params)
 end
 
 function RaidGUIControlStatsBreakdown:close()
+	return
 end
 
 function RaidGUIControlStatsBreakdown:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.name = control_params.name .. "_customization_panel"
 	control_params.layer = self._panel:layer() + 1
 	control_params.w = self._params.w or RaidGUIControlStatsBreakdown.DEFAULT_W
@@ -63,6 +65,7 @@ function RaidGUIControlStatsBreakdown:_create_stats_label()
 		color = RaidGUIControlStatsBreakdown.LABEL_COLOR,
 		text = self:translate("stats_label", true)
 	}
+
 	self._stats_label = self._object:text(stats_label_params)
 end
 
@@ -99,6 +102,7 @@ function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 			}
 		}
 	}
+
 	self._breakdown_table = self._control_panel:table(breakdown_table_params)
 end
 
@@ -137,7 +141,9 @@ function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 
 	while t < label_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quintic_out(t, initial_offset, -initial_offset, label_duration)
 
 		self._stats_label:set_y(label_y + current_offset)
@@ -152,9 +158,11 @@ function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 
 	t = 0
 
-	while table_duration > t do
+	while t < table_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_out(t, 0, 1, table_duration)
 
 		self._breakdown_table._table_panel:set_alpha(current_alpha)
@@ -163,6 +171,7 @@ function RaidGUIControlStatsBreakdown:_animate_table_fade_in()
 	self._breakdown_table._table_panel:set_alpha(1)
 
 	t = 0
+
 	local rows = self._breakdown_table:get_rows()
 
 	for i = 1, #rows do
@@ -183,7 +192,9 @@ function RaidGUIControlStatsBreakdown:_animate_table_row_fade_in(label, row, del
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_out(t, 0, 1, duration)
 
 		for i = 1, #cells do

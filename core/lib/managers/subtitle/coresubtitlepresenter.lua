@@ -10,18 +10,23 @@ DebugPresenter = DebugPresenter or CoreClass.class(SubtitlePresenter)
 OverlayPresenter = OverlayPresenter or CoreClass.class(SubtitlePresenter)
 
 function SubtitlePresenter:destroy()
+	return
 end
 
 function SubtitlePresenter:update(time, delta_time)
+	return
 end
 
 function SubtitlePresenter:show()
+	return
 end
 
 function SubtitlePresenter:hide()
+	return
 end
 
 function SubtitlePresenter:show_text(text, duration)
+	return
 end
 
 function SubtitlePresenter:preprocess_sequence(sequence)
@@ -116,6 +121,7 @@ end
 
 function OverlayPresenter:set_width(pixels)
 	local safe_width = self:_gui_width()
+
 	self.__width = math.min(pixels, safe_width)
 
 	if CoreCode.alive(self.__subtitle_panel) then
@@ -243,7 +249,7 @@ function OverlayPresenter:_auto_word_wrap_string(subtitle_string)
 
 	layout_text_field:set_text(subtitle_string)
 
-	local line_breaks = table.collect(layout_text_field:line_breaks(), function (index)
+	local line_breaks = table.collect(layout_text_field:line_breaks(), function(index)
 		return index + 1
 	end)
 	local wrapped_lines = {}

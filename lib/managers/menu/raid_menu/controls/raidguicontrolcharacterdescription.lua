@@ -20,6 +20,7 @@ function RaidGUIControlCharacterDescription:_layout()
 		w = self._params.w,
 		h = self._params.h
 	})
+
 	local padding = 16
 	local padded_width = self._object:w() - padding * 2
 	local object_bg_params = {
@@ -32,7 +33,9 @@ function RaidGUIControlCharacterDescription:_layout()
 		texture = tweak_data.gui.icons.paper_mission_book.texture,
 		texture_rect = tweak_data.gui.icons.paper_mission_book.texture_rect
 	}
+
 	self._object_bg = self._object:image(object_bg_params)
+
 	local object_bg_params2 = {
 		name = "object_bg",
 		layer = -2,
@@ -45,9 +48,12 @@ function RaidGUIControlCharacterDescription:_layout()
 		rotation = 2 + math.random(4),
 		color = Color(0.7, 0.7, 0.7)
 	}
+
 	self._object_bg2 = self._object:image(object_bg_params2)
+
 	local step_quad = self._object:w() / 4
 	local text_rect = tweak_data.gui.icons.ico_class_recon.texture_rect
+
 	self._class_icon = self._object:image({
 		name = "class_icon",
 		y = 32,
@@ -193,9 +199,11 @@ function RaidGUIControlCharacterDescription:_layout()
 			font_size = tweak_data.gui.font_sizes.size_20,
 			color = tweak_data.gui.colors.raid_black
 		})
+
 		local y_stats = 360
 		local y_stats_label = y_stats + 48
 		local x_stats_step = self._object:w() / 4
+
 		self._health_amount_label = self._object:label({
 			w = 100,
 			name = "health_amount_label",
@@ -289,6 +297,7 @@ function RaidGUIControlCharacterDescription:_layout()
 		self._stamina_amount_label:set_center_x(x_stats_step * 3)
 
 		local y_warcry = self._stamina_amount_label:bottom() + 64
+
 		self._warcry_icon = self._object:image({
 			name = "warcry_icon",
 			x = 0,
@@ -302,6 +311,7 @@ function RaidGUIControlCharacterDescription:_layout()
 		self._warcry_icon:set_center_x(self._object:w() / 2)
 
 		local _, c_y = self._warcry_icon:center()
+
 		self._warcry_name_label = self._object:label({
 			w = 242,
 			name = "warcry_name_label",

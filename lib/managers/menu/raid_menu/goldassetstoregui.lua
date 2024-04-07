@@ -35,7 +35,9 @@ function GoldAssetStoreGui:_layout()
 		x = 0,
 		scroll_step = 30
 	}
+
 	self._gold_asset_store_grid_scrollable_area = self._root_panel:scrollable_area(gold_asset_store_grid_scrollable_area_params)
+
 	local gold_asset_store_grid_params = {
 		name = "gold_asset_store_grid",
 		y = 0,
@@ -60,7 +62,9 @@ function GoldAssetStoreGui:_layout()
 			row_class = RaidGUIControlGridItem
 		}
 	}
+
 	self._gold_asset_store_grid = self._gold_asset_store_grid_scrollable_area:get_panel():grid(gold_asset_store_grid_params)
+
 	local params_rotate_gold_item = {
 		name = "rotate_gold_item",
 		h = 750,
@@ -68,6 +72,7 @@ function GoldAssetStoreGui:_layout()
 		w = 800,
 		x = 500
 	}
+
 	self._rotate_gold_item = self._root_panel:rotate_unit(params_rotate_gold_item)
 	self._item_title = self._root_panel:label({
 		w = 352,
@@ -128,6 +133,7 @@ function GoldAssetStoreGui:_layout()
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small
 	})
+
 	local x1, y1, w1, h1 = self._info_label:text_rect()
 
 	self._info_label:set_h(h1)
@@ -143,6 +149,7 @@ function GoldAssetStoreGui:_layout()
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38
 	})
+
 	local x2, y2, w2, h2 = self._gold_currency_label:text_rect()
 
 	self._gold_currency_label:set_h(h2)
@@ -196,6 +203,7 @@ function GoldAssetStoreGui:_layout_greed_info()
 		name = "greed_info_panel",
 		h = greed_panel_default_h
 	}
+
 	self._greed_info_panel = self._root_panel:panel(greed_info_panel_params)
 
 	self._greed_info_panel:set_right(self._root_panel:w())
@@ -327,7 +335,7 @@ end
 
 function GoldAssetStoreGui:get_character_spawn_location()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
-	local result = nil
+	local result
 
 	if units then
 		for _, unit in pairs(units) do

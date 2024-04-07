@@ -124,6 +124,7 @@ function HUDTeammatePeer:_create_panel(teammates_panel)
 		h = HUDTeammatePeer.DEFAULT_H,
 		layer = tweak_data.gui.PLAYER_PANELS_LAYER
 	}
+
 	self._object = teammates_panel:panel(panel_params)
 end
 
@@ -135,6 +136,7 @@ function HUDTeammatePeer:_create_left_panel()
 		w = HUDTeammatePeer.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -146,6 +148,7 @@ function HUDTeammatePeer:_create_status_panel()
 		w = self._left_panel:w(),
 		h = self._left_panel:h()
 	}
+
 	self._status_panel = self._left_panel:panel(status_panel_params)
 end
 
@@ -185,6 +188,7 @@ function HUDTeammatePeer:_create_warcry_bar()
 		color = HUDTeammatePeer.WARCRY_INACTIVE_COLOR,
 		layer = warcry_background:layer() + 1
 	}
+
 	self._warcry_bar = warcry_panel:bitmap(warcry_bar_params)
 
 	self._warcry_bar:set_center_x(warcry_panel:w() / 2)
@@ -203,6 +207,7 @@ function HUDTeammatePeer:_create_nationality_icon()
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}
+
 	self._nationality_icon = self._status_panel:bitmap(nationality_icon_params)
 
 	self._nationality_icon:set_center_x(self._status_panel:w() / 2)
@@ -218,6 +223,7 @@ function HUDTeammatePeer:_create_dead_icon()
 		texture = tweak_data.gui.icons[HUDTeammatePeer.DEAD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.DEAD_ICON].texture_rect
 	}
+
 	self._dead_icon = self._status_panel:bitmap(dead_icon_params)
 
 	self._dead_icon:set_center_x(self._status_panel:w() / 2)
@@ -234,6 +240,7 @@ function HUDTeammatePeer:_create_carry_icon()
 		texture = tweak_data.gui.icons[temp_carry_icon].texture,
 		texture_rect = tweak_data.gui.icons[temp_carry_icon].texture_rect
 	}
+
 	self._carry_icon = self._status_panel:bitmap(carry_icon_params)
 
 	self._carry_icon:set_center_x(self._status_panel:w() / 2)
@@ -249,6 +256,7 @@ function HUDTeammatePeer:_create_lockpick_icon()
 		texture = tweak_data.gui.icons[HUDTeammatePeer.LOCKPICK_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.LOCKPICK_ICON].texture_rect
 	}
+
 	self._lockpick_icon = self._status_panel:bitmap(lockpick_icon_params)
 
 	self._lockpick_icon:set_center_x(self._status_panel:w() / 2)
@@ -264,6 +272,7 @@ function HUDTeammatePeer:_create_mounted_weapon_icon()
 		texture = tweak_data.gui.icons[HUDTeammatePeer.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.MOUNTED_WEAPON_ICON].texture_rect
 	}
+
 	self._mounted_weapon_icon = self._status_panel:bitmap(mounted_weapon_icon_params)
 
 	self._mounted_weapon_icon:set_center_x(self._status_panel:w() / 2)
@@ -280,7 +289,9 @@ function HUDTeammatePeer:_create_timer()
 		w = self._left_panel:w(),
 		h = self._left_panel:h()
 	}
+
 	self._timer_panel = self._status_panel:panel(timer_panel_params)
+
 	local timer_background_params = {
 		name = "timer_background",
 		halign = "center",
@@ -310,6 +321,7 @@ function HUDTeammatePeer:_create_timer()
 		w = tweak_data.gui:icon_w(HUDTeammatePeer.TIMER_BAR_ICON),
 		h = tweak_data.gui:icon_h(HUDTeammatePeer.TIMER_BAR_ICON)
 	}
+
 	self._timer_bar = self._timer_panel:bitmap(timer_bar_params)
 
 	self._timer_bar:set_center_x(self._timer_panel:w() / 2)
@@ -328,7 +340,9 @@ function HUDTeammatePeer:_create_timer()
 		font = tweak_data.gui.fonts[HUDTeammatePeer.TIMER_FONT],
 		font_size = HUDTeammatePeer.TIMER_FONT_SIZE
 	}
+
 	self._timer_text = self._timer_panel:text(timer_text_params)
+
 	local _, _, _, h = self._timer_text:text_rect()
 
 	self._timer_text:set_h(h)
@@ -343,7 +357,9 @@ function HUDTeammatePeer:_create_interaction_meter()
 		alpha = 0,
 		valign = "center"
 	}
+
 	self._interaction_meter_panel = self._status_panel:panel(interaction_meter_panel_params)
+
 	local interaction_meter_background_params = {
 		name = "interaction_meter_background",
 		halign = "scale",
@@ -374,6 +390,7 @@ function HUDTeammatePeer:_create_interaction_meter()
 		h = tweak_data.gui:icon_h(HUDTeammatePeer.INTERACTION_METER_FILL),
 		color = tweak_data.gui.colors.teammate_interaction_bar
 	}
+
 	self._interaction_meter = self._interaction_meter_panel:bitmap(interaction_meter_params)
 
 	self._interaction_meter:set_center_x(self._interaction_meter_panel:w() / 2)
@@ -403,25 +420,30 @@ function HUDTeammatePeer:_create_voice_chat_indicator()
 		w = HUDTeammatePeer.CHAT_PANEL_W,
 		h = HUDTeammatePeer.CHAT_PANEL_W
 	}
+
 	self._voice_chat_panel = self._right_panel:panel(voice_chat_panel_params)
+
 	local chat_indicator_params_speaking = {
 		name = "chat_indicator_speaking",
 		alpha = 0,
 		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture_rect
 	}
+
 	self._chat_indicator_speaking = self._voice_chat_panel:bitmap(chat_indicator_params_speaking)
+
 	local chat_indicator_params_muted = {
 		name = "chat_indicator_muted",
 		alpha = 0,
 		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture_rect
 	}
+
 	self._chat_indicator_muted = self._voice_chat_panel:bitmap(chat_indicator_params_muted)
 end
 
 function HUDTeammatePeer:show_chat_indicator(chat_indicator_name)
-	local chat_indicator = nil
+	local chat_indicator
 
 	if chat_indicator_name == "chat_indicator_speaking" then
 		chat_indicator = self._chat_indicator_speaking
@@ -435,7 +457,7 @@ function HUDTeammatePeer:show_chat_indicator(chat_indicator_name)
 end
 
 function HUDTeammatePeer:hide_chat_indicator(chat_indicator_name)
-	local chat_indicator = nil
+	local chat_indicator
 
 	if chat_indicator_name == "chat_indicator_speaking" then
 		chat_indicator = self._chat_indicator_speaking
@@ -456,6 +478,7 @@ function HUDTeammatePeer:_create_right_panel()
 		w = self._object:w() - HUDTeammatePeer.RIGHT_PANEL_X,
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 end
 
@@ -472,6 +495,7 @@ function HUDTeammatePeer:_create_player_name()
 		font = tweak_data.gui.fonts[HUDTeammatePeer.PLAYER_NAME_FONT],
 		font_size = HUDTeammatePeer.PLAYER_NAME_FONT_SIZE
 	}
+
 	self._player_name = self._right_panel:text(player_name_params)
 end
 
@@ -488,7 +512,9 @@ function HUDTeammatePeer:_create_player_level()
 		font = tweak_data.gui.fonts[HUDTeammatePeer.PLAYER_LEVEL_FONT],
 		font_size = HUDTeammatePeer.PLAYER_LEVEL_FONT_SIZE
 	}
+
 	self._player_level = self._right_panel:text(player_level_params)
+
 	local current_level = managers.experience:current_level()
 
 	if current_level then
@@ -524,6 +550,7 @@ function HUDTeammatePeer:_create_player_health()
 		color = tweak_data.gui.colors.progress_75,
 		layer = health_background:layer() + 1
 	}
+
 	self._health_bar = health_panel:rect(health_bar_params)
 
 	self._health_bar:set_center_x(health_panel:w() / 2)
@@ -540,6 +567,7 @@ function HUDTeammatePeer:_create_equipment_panel()
 		w = self._right_panel:w(),
 		h = HUDTeammatePeer.EQUIPMENT_H
 	}
+
 	self._equipment_panel = self._right_panel:panel(equipment_panel_params)
 end
 
@@ -598,6 +626,7 @@ function HUDTeammatePeer:set_active_warcry(warcry)
 		texture_rect = tweak_data.gui.icons[warcry_icon_name].texture_rect,
 		alpha = self._active_states.warcry and 1 or 0
 	}
+
 	self._warcry_icon = self._status_panel:bitmap(warcry_icon_params)
 
 	self._warcry_icon:set_center_x(self._status_panel:w() / 2)
@@ -669,6 +698,7 @@ function HUDTeammatePeer:set_level(level)
 end
 
 function HUDTeammatePeer:set_cheater(state)
+	return
 end
 
 function HUDTeammatePeer:set_carry_info(carry_id)
@@ -720,7 +750,7 @@ function HUDTeammatePeer:hide_host_indicator()
 end
 
 function HUDTeammatePeer:add_special_equipment(data)
-	local existing_equipment = nil
+	local existing_equipment
 
 	for i = 1, #self._equipment do
 		if self._equipment[i]:id() == data.id then
@@ -817,7 +847,9 @@ function HUDTeammatePeer:_animate_interact(interact_image, duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 0, 1, duration)
 
 		self._interaction_meter:set_position_z(current_progress)
@@ -830,9 +862,11 @@ function HUDTeammatePeer:_animate_cancel_interact()
 	local duration = 0.2
 	local t = (1 - self._interaction_meter:position_z()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 1, -1, duration)
 
 		self._interaction_meter:set_position_z(current_progress)
@@ -851,7 +885,9 @@ function HUDTeammatePeer:_animate_complete_interact()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 1, -1, duration)
 
 		self._interaction_meter:set_position_z(current_progress)
@@ -870,6 +906,7 @@ function HUDTeammatePeer:_animate_warcry_active(warcry_bar, duration)
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
 
 		warcry_bar:set_position_z(t / duration)
@@ -882,9 +919,11 @@ function HUDTeammatePeer:_animate_warcry_ready()
 	local duration = 0.15
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quartic_out(t, HUDTeammatePeer.WARCRY_INACTIVE_COLOR.r, HUDTeammatePeer.WARCRY_ACTIVE_COLOR.r - HUDTeammatePeer.WARCRY_INACTIVE_COLOR.r, duration)
 		local current_g = Easing.quartic_out(t, HUDTeammatePeer.WARCRY_INACTIVE_COLOR.g, HUDTeammatePeer.WARCRY_ACTIVE_COLOR.g - HUDTeammatePeer.WARCRY_INACTIVE_COLOR.g, duration)
 		local current_b = Easing.quartic_out(t, HUDTeammatePeer.WARCRY_INACTIVE_COLOR.b, HUDTeammatePeer.WARCRY_ACTIVE_COLOR.b - HUDTeammatePeer.WARCRY_INACTIVE_COLOR.b, duration)
@@ -901,9 +940,11 @@ function HUDTeammatePeer:_animate_warcry_not_ready()
 	local duration = 0.15
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quartic_out(t, HUDTeammatePeer.WARCRY_ACTIVE_COLOR.r, HUDTeammatePeer.WARCRY_INACTIVE_COLOR.r - HUDTeammatePeer.WARCRY_ACTIVE_COLOR.r, duration)
 		local current_g = Easing.quartic_out(t, HUDTeammatePeer.WARCRY_ACTIVE_COLOR.g, HUDTeammatePeer.WARCRY_INACTIVE_COLOR.g - HUDTeammatePeer.WARCRY_ACTIVE_COLOR.g, duration)
 		local current_b = Easing.quartic_out(t, HUDTeammatePeer.WARCRY_ACTIVE_COLOR.b, HUDTeammatePeer.WARCRY_INACTIVE_COLOR.b - HUDTeammatePeer.WARCRY_ACTIVE_COLOR.b, duration)
@@ -920,9 +961,11 @@ function HUDTeammatePeer:_animate_show_host_indicator(host_indicator)
 	local duration = 0.15
 	local t = host_indicator:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
 
 		host_indicator:set_alpha(current_alpha)
@@ -935,9 +978,11 @@ function HUDTeammatePeer:_animate_hide_host_indicator(host_indicator)
 	local duration = 0.15
 	local t = (1 - host_indicator:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, duration)
 
 		host_indicator:set_alpha(current_alpha)
@@ -948,7 +993,7 @@ end
 
 function HUDTeammatePeer:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
+		if percentage > color_table[i].start_percentage then
 			return color_table[i].color
 		end
 	end

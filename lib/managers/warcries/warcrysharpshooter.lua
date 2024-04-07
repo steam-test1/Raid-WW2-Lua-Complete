@@ -104,6 +104,7 @@ function WarcrySharpshooter:_on_enemy_killed(params)
 
 	if params.enemy_distance and activation_distance < params.enemy_distance then
 		local wc_long_range_multi_bonus = managers.player:upgrade_value("player", "warcry_long_range_multiplier_bonus", 1)
+
 		multiplier = multiplier + self._tweak_data.distance_multiplier_addition_per_meter * (params.enemy_distance - activation_distance) / 100 * wc_long_range_multi_bonus
 	end
 

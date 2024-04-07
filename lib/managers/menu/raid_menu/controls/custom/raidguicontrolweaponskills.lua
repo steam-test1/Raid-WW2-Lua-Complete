@@ -27,6 +27,7 @@ end
 
 function RaidGUIControlWeaponSkills:_create_items()
 	self._rows = {}
+
 	local row_params = {
 		x = 0,
 		y = RaidGUIControlWeaponSkills.FIRST_ROW_Y,
@@ -43,6 +44,7 @@ function RaidGUIControlWeaponSkills:_create_items()
 
 	for i_skill = 1, WeaponSkillsTweakData.MAX_SKILLS_IN_TIER do
 		local row = self._object:create_custom_control(RaidGUIControlWeaponSkillRow, row_params)
+
 		row_params.y = row_params.y + RaidGUIControlWeaponSkills.ROW_HEIGHT
 
 		table.insert(self._rows, row)
@@ -54,6 +56,7 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 		h = 30,
 		name = "tier_label_panel"
 	}
+
 	self._tier_panel = self._object:panel(tier_panel_params)
 	self._tier_labels = {}
 
@@ -113,6 +116,7 @@ function RaidGUIControlWeaponSkills:set_weapon(weapon_category_id, weapon_id)
 	self._weapon_category_id = weapon_category_id
 	self._temp_weapon_points = 0
 	self._temp_skills = {}
+
 	local num_tiers = #weapon_skills
 	local num_skills = #weapon_skills[num_tiers]
 
@@ -155,12 +159,15 @@ function RaidGUIControlWeaponSkills:apply_selected_skills()
 end
 
 function RaidGUIControlWeaponSkills:mouse_moved(o, x, y)
+	return
 end
 
 function RaidGUIControlWeaponSkills:highlight_on()
+	return
 end
 
 function RaidGUIControlWeaponSkills:highlight_off()
+	return
 end
 
 function RaidGUIControlWeaponSkills:on_selected_weapon_skill_callback(button, data, skip_update_points)
@@ -225,6 +232,7 @@ function RaidGUIControlWeaponSkills:set_selected(value, dont_trigger_selected_ca
 	self._selected = value
 	self._selected_row_idx = 1
 	self._selected_button_idx = 1
+
 	local current_skill_button = self:get_current_weapon_skill_button()
 
 	current_skill_button:select_skill(dont_trigger_selected_callback)
@@ -341,7 +349,7 @@ function RaidGUIControlWeaponSkills:_select_up_skill_button()
 		self._selected_row_idx = self._new_selected_row_idx
 	end
 
-	local skill_button = nil
+	local skill_button
 
 	for counter = self._selected_button_idx, #self._rows[self._selected_row_idx]:get_skill_buttons() do
 		skill_button = self:get_weapon_skill_button(self._selected_row_idx, counter)
@@ -365,7 +373,7 @@ function RaidGUIControlWeaponSkills:_select_down_skill_button()
 		self._selected_row_idx = self._new_selected_row_idx
 	end
 
-	local skill_button = nil
+	local skill_button
 
 	for counter = self._selected_button_idx, #self._rows[self._selected_row_idx]:get_skill_buttons() do
 		skill_button = self:get_weapon_skill_button(self._selected_row_idx, counter)
@@ -386,6 +394,7 @@ end
 
 function RaidGUIControlWeaponSkills:_select_left_skill_button()
 	self._new_selected_button_idx = self._selected_button_idx - 1
+
 	local skill_point = self:get_weapon_skill_button(self._selected_row_idx, self._new_selected_button_idx)
 
 	if skill_point then

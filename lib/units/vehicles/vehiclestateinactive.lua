@@ -5,6 +5,7 @@ function VehicleStateInactive:init(unit)
 end
 
 function VehicleStateInactive:update(t, dt)
+	return
 end
 
 function VehicleStateInactive:enter(state_data, enter_data)
@@ -50,6 +51,7 @@ function VehicleStateInactive:exit()
 			name = self._unit:vehicle_driving()._tweak_data.name,
 			unit = self._unit
 		})
+
 		self._unit:unit_data().name_label_id = id
 	end
 end

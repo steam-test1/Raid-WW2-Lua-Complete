@@ -245,6 +245,7 @@ function CoreCounterOperatorUnitElement:get_links_to_unit(...)
 end
 
 function CoreCounterOperatorUnitElement:update_editing()
+	return
 end
 
 function CoreCounterOperatorUnitElement:add_element()
@@ -281,6 +282,7 @@ function CoreCounterOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_counter/logic_counter"
 	}
@@ -346,6 +348,7 @@ function CoreCounterTriggerUnitElement:get_links_to_unit(...)
 end
 
 function CoreCounterTriggerUnitElement:update_editing()
+	return
 end
 
 function CoreCounterTriggerUnitElement:add_element()
@@ -382,6 +385,7 @@ function CoreCounterTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_counter/logic_counter"
 	}
@@ -449,6 +453,7 @@ function CoreCounterFilterUnitElement:get_links_to_unit(...)
 end
 
 function CoreCounterFilterUnitElement:update_editing()
+	return
 end
 
 function CoreCounterFilterUnitElement:add_element()
@@ -485,6 +490,7 @@ function CoreCounterFilterUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_counter/logic_counter"
 	}

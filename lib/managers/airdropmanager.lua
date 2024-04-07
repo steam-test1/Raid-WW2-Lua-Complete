@@ -27,7 +27,7 @@ function AirdropManager:_call_drop(unit)
 		return
 	end
 
-	local drop_position = nil
+	local drop_position
 	local player_position = managers.player:player_unit():movement():m_pos()
 
 	if #self._drop_point_groups > 0 then

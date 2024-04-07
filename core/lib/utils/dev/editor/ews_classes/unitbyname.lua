@@ -50,6 +50,7 @@ function UnitByName:init(name, unit_filter_function, ...)
 	panel:connect("filter_type", "EVT_COMMAND_RADIOBUTTON_SELECTED", callback(self, self, "_on_set_filter"), nil)
 
 	self._layer_cbs = {}
+
 	local layers_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "List Layers")
 	local layers = managers.editor:layers()
 	local names_layers = {}
@@ -180,12 +181,15 @@ function UnitByName:on_cancel()
 end
 
 function UnitByName:_on_delete()
+	return
 end
 
 function UnitByName:_on_mark_unit()
+	return
 end
 
 function UnitByName:_on_select_unit()
+	return
 end
 
 function UnitByName:_selected_item_units()
@@ -227,6 +231,7 @@ end
 function UnitByName:spawned_unit(unit)
 	local i = self._list:append_item(unit:unit_data().name_id)
 	local j = #self._units + 1
+
 	self._units[j] = unit
 
 	self._list:set_item_data(i, j)
@@ -290,11 +295,13 @@ function UnitByName:unit_name_changed(unit)
 
 			if i - 1 >= 0 then
 				local over = self._units[self._list:get_item_data(i - 1)]:unit_data().name_id
-				sort = sort or unit:unit_data().name_id < over
+
+				sort = sort or over > unit:unit_data().name_id
 			end
 
 			if i + 1 < self._list:item_count() then
 				local under = self._units[self._list:get_item_data(i + 1)]:unit_data().name_id
+
 				sort = sort or under < unit:unit_data().name_id
 			end
 
@@ -327,6 +334,7 @@ function UnitByName:fill_unit_list()
 	local layers = managers.editor:layers()
 	local j = 1
 	local filter = self._filter:get_value()
+
 	filter = utf8.to_lower(utf8.from_latin1(filter))
 	self._units = {}
 
@@ -335,6 +343,7 @@ function UnitByName:fill_unit_list()
 			for _, unit in ipairs(layer:created_units()) do
 				if string.find(utf8.to_lower(utf8.from_latin1(self:_get_filter_string(unit))), filter, 1, true) and self:_unit_condition(unit) then
 					local i = self._list:append_item(unit:unit_data().name_id)
+
 					self._units[j] = unit
 
 					self._list:set_item_data(i, j)

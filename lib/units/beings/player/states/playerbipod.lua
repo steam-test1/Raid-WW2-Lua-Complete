@@ -24,6 +24,7 @@ function PlayerBipod:_enter(enter_data)
 		local speed_multiplier = self._equipped_unit:base():reload_speed_multiplier()
 		local reload_name_id = tweak_data.animations.reload_name_id or self._equipped_unit:base().name_id
 		local equipped_unit_id = self._equipped_unit:base().name_id
+
 		self._unit_deploy_position = player:position()
 
 		self._unit:camera():camera_unit():base():set_limits(tweak_data.bipod_camera_spin_limit, tweak_data.bipod_camera_pitch_limit)
@@ -32,6 +33,7 @@ function PlayerBipod:_enter(enter_data)
 
 		local result = self._ext_camera:play_redirect(Idstring(tweak_data.animations.bipod_enter .. "_" .. equipped_unit_id), speed_multiplier)
 		local result_deploy = self._equipped_unit:base():tweak_data_anim_play("deploy", speed_multiplier)
+
 		self._headbob = 0
 		self._target_headbob = 0
 
@@ -64,9 +66,10 @@ function PlayerBipod:exit(state_data, new_state_name)
 	self._unit:camera():camera_unit():base():remove_limits()
 
 	self._unit:camera():camera_unit():base().bipod_location = nil
-	local exit_data = {
-		skip_equip = true
-	}
+
+	local exit_data = {}
+
+	exit_data.skip_equip = true
 	self._dye_risk = nil
 	PlayerStandard.IDS_RECOIL = Idstring("recoil")
 	PlayerStandard.IDS_RECOIL_ENTER = Idstring("recoil_enter")
@@ -88,7 +91,7 @@ function PlayerBipod:_husk_bipod_data()
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local weapon = self._unit:inventory():equipped_unit()
 	local bipod_obj = weapon:get_object(Idstring("a_bp"))
-	local bipod_pos = nil
+	local bipod_pos
 
 	if bipod_obj then
 		bipod_pos = bipod_obj:position()
@@ -121,6 +124,7 @@ function PlayerBipod:update(t, dt)
 end
 
 function PlayerBipod:set_tweak_data(name)
+	return
 end
 
 function PlayerBipod:_update_check_actions(t, dt)
@@ -146,6 +150,7 @@ function PlayerBipod:_update_check_actions(t, dt)
 	self:_update_foley(t, input)
 
 	local new_action = false
+
 	new_action = self:_check_action_reload(t, input)
 
 	if not new_action then
@@ -177,10 +182,11 @@ function PlayerBipod:interaction_blocked()
 end
 
 function PlayerBipod:_check_step(t)
+	return
 end
 
 function PlayerBipod:_check_action_reload(t, input)
-	local new_action = nil
+	local new_action
 	local action_wanted = input.btn_reload_press
 
 	if action_wanted and self._equipped_unit and not self._equipped_unit:base():clip_full() then
@@ -321,11 +327,12 @@ function PlayerBipod:_check_action_throw_projectile(t, input)
 end
 
 function PlayerBipod:_check_action_equip(t, input)
-	local new_action = nil
+	local new_action
 	local selection_wanted = input.btn_primary_choice
 
 	if selection_wanted then
 		local action_forbidden = self:chk_action_forbidden("equip")
+
 		action_forbidden = action_forbidden or not self._ext_inventory:is_selection_available(selection_wanted) or self._use_item_expire_t or self:_changing_weapon()
 
 		if not action_forbidden then
@@ -341,18 +348,23 @@ function PlayerBipod:_check_action_equip(t, input)
 end
 
 function PlayerBipod:_check_action_steelsight(t, input)
+	return
 end
 
 function PlayerBipod:_update_movement(t, dt)
+	return
 end
 
 function PlayerBipod:_start_action_jump(...)
+	return
 end
 
 function PlayerBipod:_perform_jump(jump_vec)
+	return
 end
 
 function PlayerBipod:_get_max_walk_speed(...)
+	return
 end
 
 function PlayerBipod:_get_walk_headbob(...)
@@ -360,7 +372,9 @@ function PlayerBipod:_get_walk_headbob(...)
 end
 
 function PlayerBipod:pre_destroy(unit)
+	return
 end
 
 function PlayerBipod:destroy()
+	return
 end

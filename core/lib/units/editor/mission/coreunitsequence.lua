@@ -89,6 +89,7 @@ end
 
 function CoreUnitSequenceUnitElement:_set_trigger_list()
 	self._hed.trigger_list = {}
+
 	local triggers = managers.sequence:get_trigger_list(self._unit:name())
 
 	if #triggers > 0 then
@@ -119,11 +120,12 @@ function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local help = {
-		text = "Use the \"Edit Triggable\" interface, which you enable in the down left toolbar, to select and edit which units and sequences you want to run.",
-		panel = panel,
-		sizer = panel_sizer
-	}
+
+	local help = {}
+
+	help.text = "Use the \"Edit Triggable\" interface, which you enable in the down left toolbar, to select and edit which units and sequences you want to run."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end

@@ -46,6 +46,7 @@ function HUDMultipleChoiceWheel:_create_panel(hud)
 		w = HUDMultipleChoiceWheel.W,
 		h = HUDMultipleChoiceWheel.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -87,6 +88,7 @@ function HUDMultipleChoiceWheel:_create_background()
 		h = tweak_data.gui:icon_h(HUDMultipleChoiceWheel.CIRCLE_IMAGE),
 		layer = background_circle:layer() + 1
 	}
+
 	self._selection_arc = self._object:bitmap(selection_arc_params)
 
 	self._selection_arc:set_center_x(self._object:w() / 2)
@@ -99,6 +101,7 @@ function HUDMultipleChoiceWheel:_create_pointer()
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.POINTER_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.POINTER_IMAGE].texture_rect
 	}
+
 	self._pointer = self._object:bitmap(pointer_params)
 
 	self._pointer:set_center(self._object:w() / 2, self._object:h() / 2)
@@ -183,7 +186,7 @@ function HUDMultipleChoiceWheel:trigger_option(id)
 		return
 	end
 
-	local option = nil
+	local option
 
 	for i = 1, #self._option_data do
 		if self._option_data[i].id and self._option_data[i].id == id then
@@ -218,7 +221,7 @@ function HUDMultipleChoiceWheel:_call_clbk(function_name, function_data)
 	local parts = string.split(function_name, ":")
 	local method = parts[2]
 	local target_parts = string.split(parts[1], "[.]")
-	local target = nil
+	local target
 
 	for i = 1, #target_parts do
 		if target == nil then
@@ -359,6 +362,7 @@ end
 
 function HUDMultipleChoiceWheel:_fade_in_options()
 	for i = 1, #self._options do
+		-- Nothing
 	end
 end
 
@@ -405,11 +409,12 @@ function HUDMultipleChoiceWheel:_activate_pointer(controller_activated)
 
 	self._mouse_active = true
 	self._mouse_id = managers.mouse_pointer:get_id()
-	local data = {
-		mouse_move = callback(self, self, "_mouse_moved"),
-		mouse_click = callback(self, self, "_mouse_clicked"),
-		id = self._mouse_id
-	}
+
+	local data = {}
+
+	data.mouse_move = callback(self, self, "_mouse_moved")
+	data.mouse_click = callback(self, self, "_mouse_clicked")
+	data.id = self._mouse_id
 
 	managers.mouse_pointer:use_mouse(data)
 
@@ -524,10 +529,9 @@ end
 
 function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 	if self._starting_mouse == nil then
-		self._starting_mouse = {
-			x = x,
-			y = y
-		}
+		self._starting_mouse = {}
+		self._starting_mouse.x = x
+		self._starting_mouse.y = y
 	end
 
 	local distance_from_center = math.sqrt(math.pow(x - self._starting_mouse.x, 2) + math.pow(y - self._starting_mouse.y, 2))
@@ -539,6 +543,7 @@ function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 		self:set_pointer_position(x - self._starting_mouse.x, y - self._starting_mouse.y)
 
 		local mx, my = managers.mouse_pointer:world_position()
+
 		self._last_mouse_pos.x = mx
 		self._last_mouse_pos.y = my
 	else
@@ -546,7 +551,7 @@ function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 
 		local curr_mouse_dist = Vector3(x - self._object:center_x(), y - self._object:center_y(), 0)
 
-		if self._last_mouse_dist < curr_mouse_dist:length() then
+		if curr_mouse_dist:length() > self._last_mouse_dist then
 			self._last_mouse_dist = curr_mouse_dist:length()
 		else
 			managers.mouse_pointer:set_mouse_world_position(self._starting_mouse.x + dx, self._starting_mouse.y + dy)
@@ -557,6 +562,7 @@ function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 end
 
 function HUDMultipleChoiceWheel:_mouse_clicked(o, button, x, y)
+	return
 end
 
 function HUDMultipleChoiceWheel:w()

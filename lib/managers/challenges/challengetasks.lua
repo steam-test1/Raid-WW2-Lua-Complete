@@ -187,7 +187,7 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 end
 
 function ChallengeTaskKillEnemies:_check_status()
-	if self._target <= self._count then
+	if self._count >= self._target then
 		self:_on_completed()
 	end
 end
@@ -271,7 +271,7 @@ function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 
 	self._count = self._count + ammo_info.amount
 
-	if self._target < self._count then
+	if self._count > self._target then
 		self._count = self._target
 	end
 
@@ -287,7 +287,7 @@ function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 end
 
 function ChallengeTaskCollectAmmo:_check_status()
-	if self._target <= self._count then
+	if self._count >= self._target then
 		self:_on_completed()
 	end
 end

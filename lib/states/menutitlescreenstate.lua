@@ -28,6 +28,7 @@ local is_win32 = _G.IS_PC
 function MenuTitlescreenState:setup()
 	local res = RenderSettings.resolution
 	local gui = Overlay:gui()
+
 	self._workspace = managers.gui_data:create_saferect_workspace()
 
 	self._workspace:hide()
@@ -50,7 +51,9 @@ function MenuTitlescreenState:setup()
 		layer = 1,
 		texture = MenuTitlescreenState.BACKGROUND_IMAGE
 	}
+
 	self._background = self._full_workspace:panel():bitmap(background_params)
+
 	local panel = self._full_workspace:panel()
 	local screen_ratio = self:_real_aspect_ratio()
 	local image_ratio = self._background:texture_width() / self._background:texture_height()
@@ -84,6 +87,7 @@ function MenuTitlescreenState:setup()
 		},
 		layer = self._background:layer() + 10
 	}
+
 	self._text_gradient = self._full_workspace:panel():gradient(gradient_params)
 
 	self._text_gradient:set_bottom(self._full_workspace:panel():h())
@@ -97,6 +101,7 @@ function MenuTitlescreenState:setup()
 		h = tweak_data.gui:icon_h(MenuTitlescreenState.GAME_LOGO_IMAGE) * y_scale,
 		layer = self._text_gradient:layer() + 1
 	}
+
 	self._game_logo = self._full_workspace:panel():bitmap(logo_params)
 
 	self._game_logo:set_center_x(self._game_logo:parent():w() / 2)
@@ -117,7 +122,9 @@ function MenuTitlescreenState:setup()
 		color = MenuTitlescreenState.TEXT_COLOR,
 		text = managers.localization:text("legal_text")
 	}
+
 	self._legal_text = self._workspace:panel():text(legal_text_params)
+
 	local _, _, _, h = self._legal_text:text_rect()
 
 	self._legal_text:set_h(h)
@@ -138,7 +145,9 @@ function MenuTitlescreenState:setup()
 		text = utf8.to_upper(managers.localization:text(_G.IS_PC and "press_any_key" or "press_any_key_controller")),
 		layer = self._legal_text:layer()
 	}
+
 	self._press_any_key_text = self._workspace:panel():text(press_any_key_prompt_params)
+
 	local _, _, _, h = self._press_any_key_text:text_rect()
 
 	self._press_any_key_text:set_h(h)
@@ -213,7 +222,7 @@ end
 
 function MenuTitlescreenState:_update_pc_xbox_controller_connection(params)
 	local text_string = managers.localization:to_upper_text(params.text_id)
-	local added_text = nil
+	local added_text
 
 	for _, controller in pairs(self._controller_list) do
 		if controller:get_type() == "xbox360" and controller:connected() then
@@ -361,19 +370,21 @@ function MenuTitlescreenState:check_user_callback(success)
 	elseif success then
 		managers.user:check_storage(callback(self, self, "check_storage_callback"), true)
 	else
-		local dialog_data = {
-			title = managers.localization:text("dialog_warning_title"),
-			text = managers.localization:text("dialog_skip_signin_warning")
-		}
-		local yes_button = {
-			text = managers.localization:text("dialog_yes"),
-			callback_func = callback(self, self, "continue_without_saving_yes_callback")
-		}
-		local no_button = {
-			text = managers.localization:text("dialog_no"),
-			callback_func = callback(self, self, "continue_without_saving_no_callback"),
-			class = RaidGUIControlButtonShortSecondary
-		}
+		local dialog_data = {}
+
+		dialog_data.title = managers.localization:text("dialog_warning_title")
+		dialog_data.text = managers.localization:text("dialog_skip_signin_warning")
+
+		local yes_button = {}
+
+		yes_button.text = managers.localization:text("dialog_yes")
+		yes_button.callback_func = callback(self, self, "continue_without_saving_yes_callback")
+
+		local no_button = {}
+
+		no_button.text = managers.localization:text("dialog_no")
+		no_button.callback_func = callback(self, self, "continue_without_saving_no_callback")
+		no_button.class = RaidGUIControlButtonShortSecondary
 		dialog_data.button_list = {
 			yes_button,
 			no_button
@@ -387,19 +398,21 @@ function MenuTitlescreenState:check_storage_callback(success)
 	if success then
 		self._waiting_for_loaded_savegames = true
 	else
-		local dialog_data = {
-			title = managers.localization:text("dialog_warning_title"),
-			text = managers.localization:text("dialog_skip_storage_warning")
-		}
-		local yes_button = {
-			text = managers.localization:text("dialog_yes"),
-			callback_func = callback(self, self, "continue_without_saving_yes_callback")
-		}
-		local no_button = {
-			text = managers.localization:text("dialog_no"),
-			callback_func = callback(self, self, "continue_without_saving_no_callback"),
-			class = RaidGUIControlButtonShortSecondary
-		}
+		local dialog_data = {}
+
+		dialog_data.title = managers.localization:text("dialog_warning_title")
+		dialog_data.text = managers.localization:text("dialog_skip_storage_warning")
+
+		local yes_button = {}
+
+		yes_button.text = managers.localization:text("dialog_yes")
+		yes_button.callback_func = callback(self, self, "continue_without_saving_yes_callback")
+
+		local no_button = {}
+
+		no_button.text = managers.localization:text("dialog_no")
+		no_button.callback_func = callback(self, self, "continue_without_saving_no_callback")
+		no_button.class = RaidGUIControlButtonShortSecondary
 		dialog_data.button_list = {
 			yes_button,
 			no_button
@@ -473,6 +486,7 @@ function MenuTitlescreenState:play_attract_video()
 	local height = res.y
 	local x = (res.x - width) / 2
 	local y = (res.y - height) / 2
+
 	self._attract_video_background = self._full_workspace:panel():rect({
 		color = Color.black,
 		layer = tweak_data.gui.ATTRACT_SCREEN_LAYER - 1
@@ -485,6 +499,7 @@ function MenuTitlescreenState:play_attract_video()
 		height = height,
 		layer = tweak_data.gui.ATTRACT_SCREEN_LAYER
 	})
+
 	local w = self._attract_video_gui:video_width()
 	local h = self._attract_video_gui:video_height()
 	local m = h / w
@@ -492,7 +507,7 @@ function MenuTitlescreenState:play_attract_video()
 	self._attract_video_gui:set_size(res.x, res.x * m)
 	self._attract_video_gui:set_center(res.x / 2, res.y / 2)
 	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and 0.5 or 0)
-	self._attract_video_gui:set_h(self._full_workspace:panel():w() * self._attract_video_gui:video_height() / self._attract_video_gui:video_width())
+	self._attract_video_gui:set_h(self._full_workspace:panel():w() * (self._attract_video_gui:video_height() / self._attract_video_gui:video_width()))
 	self._attract_video_gui:set_center_y(self._full_workspace:panel():h() / 2)
 	self._attract_video_gui:play()
 end
@@ -552,7 +567,9 @@ function MenuTitlescreenState:_animate_screen_display(background)
 
 	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_in_out(t, 0, 1, fade_in_duration)
 
 		self._background:set_alpha(current_alpha)
@@ -566,11 +583,14 @@ function MenuTitlescreenState:_animate_screen_display(background)
 	wait(4)
 
 	local legal_text_fade_out_duration = 0.3
+
 	t = 0
 
-	while legal_text_fade_out_duration > t do
+	while t < legal_text_fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_in_out(t, 1, -1, legal_text_fade_out_duration)
 
 		self._legal_text:set_alpha(current_alpha)
@@ -580,11 +600,14 @@ function MenuTitlescreenState:_animate_screen_display(background)
 	wait(0.1)
 
 	local press_any_key_fade_in_duration = 0.3
+
 	t = 0
 
-	while press_any_key_fade_in_duration > t do
+	while t < press_any_key_fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_in_out(t, 0, 1, press_any_key_fade_in_duration)
 
 		if is_ps4 then
@@ -608,11 +631,14 @@ end
 function MenuTitlescreenState:_animate_any_key_pressed(background)
 	local t = 0
 	local fade_out_duration = 0.4
+
 	self._any_key_pressed = true
 
 	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_in_out(t, 1, -1, fade_out_duration)
 
 		self._workspace:panel():set_alpha(current_alpha)

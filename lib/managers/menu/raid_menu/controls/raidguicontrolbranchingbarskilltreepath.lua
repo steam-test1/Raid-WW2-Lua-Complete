@@ -9,9 +9,10 @@ function RaidGUIControlBranchingBarSkilltreePath:init(parent, params)
 
 	local line_width = params.line_width or 3
 	local layer = params.layer or self._panel:layer() + 1
+
 	self._line = self._panel:polyline({
-		self.COLOR_ACTIVE,
 		line_width = line_width,
+		self.COLOR_ACTIVE,
 		layer = layer
 	})
 	self._active_line = self._panel:polyline({
@@ -19,6 +20,7 @@ function RaidGUIControlBranchingBarSkilltreePath:init(parent, params)
 		color = self.COLOR_FILL,
 		layer = layer + 1
 	})
+
 	local points = {}
 
 	table.insert(points, self._starting_point)
@@ -35,43 +37,39 @@ function RaidGUIControlBranchingBarSkilltreePath:init(parent, params)
 end
 
 function RaidGUIControlBranchingBarSkilltreePath:_init_state_data()
-	self._state_data = {
-		STATE_ACTIVE = {}
-	}
+	self._state_data = {}
+	self._state_data.STATE_ACTIVE = {}
 	self._state_data.STATE_ACTIVE.line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_ACTIVE
 	self._state_data.STATE_ACTIVE.active_line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_ACTIVE
-	self._state_data.STATE_FULL = {
-		line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_FILL,
-		line_points = {
-			self._starting_point,
-			self._ending_point
-		},
-		active_line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_FILL,
-		active_line_points = {
-			self._starting_point
-		}
+	self._state_data.STATE_FULL = {}
+	self._state_data.STATE_FULL.line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_FILL
+	self._state_data.STATE_FULL.line_points = {
+		self._starting_point,
+		self._ending_point
 	}
-	self._state_data.STATE_LOCKED = {
-		line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_LOCKED,
-		line_points = {
-			self._starting_point,
-			self._ending_point
-		},
-		active_line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_LOCKED,
-		active_line_points = {
-			self._starting_point
-		}
+	self._state_data.STATE_FULL.active_line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_FILL
+	self._state_data.STATE_FULL.active_line_points = {
+		self._starting_point
 	}
-	self._state_data.STATE_DISABLED = {
-		line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_DISABLED,
-		line_points = {
-			self._starting_point,
-			self._ending_point
-		},
-		active_line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_DISABLED,
-		active_line_points = {
-			self._starting_point
-		}
+	self._state_data.STATE_LOCKED = {}
+	self._state_data.STATE_LOCKED.line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_LOCKED
+	self._state_data.STATE_LOCKED.line_points = {
+		self._starting_point,
+		self._ending_point
+	}
+	self._state_data.STATE_LOCKED.active_line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_LOCKED
+	self._state_data.STATE_LOCKED.active_line_points = {
+		self._starting_point
+	}
+	self._state_data.STATE_DISABLED = {}
+	self._state_data.STATE_DISABLED.line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_DISABLED
+	self._state_data.STATE_DISABLED.line_points = {
+		self._starting_point,
+		self._ending_point
+	}
+	self._state_data.STATE_DISABLED.active_line_color = RaidGUIControlBranchingBarSkilltreePath.COLOR_DISABLED
+	self._state_data.STATE_DISABLED.active_line_points = {
+		self._starting_point
 	}
 end
 

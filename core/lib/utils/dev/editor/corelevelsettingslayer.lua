@@ -55,6 +55,7 @@ function LevelSettingsLayer:save(save_params)
 end
 
 function LevelSettingsLayer:update(t, dt)
+	return
 end
 
 function LevelSettingsLayer:build_panel(notebook)

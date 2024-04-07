@@ -8,10 +8,9 @@ end
 
 function SkillTreeManager:_setup(reset)
 	if not Global.skilltree_manager or reset then
-		Global.skilltree_manager = {
-			VERSION = SkillTreeManager.VERSION,
-			reset_message = false
-		}
+		Global.skilltree_manager = {}
+		Global.skilltree_manager.VERSION = SkillTreeManager.VERSION
+		Global.skilltree_manager.reset_message = false
 		self._global = Global.skilltree_manager
 	end
 
@@ -35,7 +34,7 @@ function SkillTreeManager:get_character_profile_class_data()
 end
 
 function SkillTreeManager:get_character_skilltree()
-	local skill_tree = nil
+	local skill_tree
 
 	if self._global.character_profile_subclass then
 		skill_tree = self._global.subclass_skill_tree
@@ -48,6 +47,7 @@ end
 
 function SkillTreeManager:get_character_automatic_unlock_progression(class)
 	class = class or self:get_character_profile_class()
+
 	local automatic_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[class]
 
 	return automatic_unlock_progression
@@ -173,6 +173,7 @@ function SkillTreeManager:_calculate_stamina_stat(character_class, applied_skill
 	end
 
 	base_stamina_rating = base_stamina_rating * 2
+
 	local stamina_reserve_multiplier = 0
 
 	if applied_skills.stamina_multiplier then
@@ -257,6 +258,7 @@ function SkillTreeManager:set_character_profile_subclass(character_profile_subcl
 	local base_class = tweak_data.skilltree.classes[self._global.character_profile_base_class]
 	local subclass = base_class.subclasses[character_profile_subclass]
 	local skill_tree = tweak_data.skilltree.skill_trees[character_profile_subclass]
+
 	self._global.character_profile_subclass = character_profile_subclass
 	self._global.subclass_skill_tree = deep_clone(tweak_data.skilltree.skill_trees[character_profile_subclass])
 	self._global.subclass_automatic_unlock_progression = deep_clone(tweak_data.skilltree.automatic_unlock_progressions[character_profile_subclass])
@@ -269,10 +271,9 @@ function SkillTreeManager:set_character_profile_subclass(character_profile_subcl
 end
 
 function SkillTreeManager:reset_skills()
-	Global.skilltree_manager = {
-		VERSION = SkillTreeManager.VERSION,
-		reset_message = false
-	}
+	Global.skilltree_manager = {}
+	Global.skilltree_manager.VERSION = SkillTreeManager.VERSION
+	Global.skilltree_manager.reset_message = false
 	self._global = Global.skilltree_manager
 end
 
@@ -401,6 +402,7 @@ end
 
 function SkillTreeManager:check_reset_message()
 	local show_reset_message = self._global.reset_message and true or false
+
 	show_reset_message = true
 
 	if show_reset_message then
@@ -438,6 +440,7 @@ function SkillTreeManager:save(data)
 		subclass_skill_tree = self._global.subclass_skill_tree,
 		subclass_automatic_unlock_progression = self._global.subclass_automatic_unlock_progression
 	}
+
 	data.SkillTreeManager = state
 end
 
@@ -492,6 +495,7 @@ function SkillTreeManager:_activate_skill_tree(skill_tree)
 end
 
 function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
+	return
 end
 
 function SkillTreeManager:digest_value(value, digest, default)
@@ -515,6 +519,7 @@ function SkillTreeManager:digest_value(value, digest, default)
 end
 
 function SkillTreeManager:debug()
+	return
 end
 
 function SkillTreeManager:reset()

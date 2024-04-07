@@ -30,8 +30,11 @@ function RaidMenuOptionsControls:_layout_controls()
 	local start_y = 320
 	local default_width = 512
 	local second_x = 704
+
 	RaidMenuOptionsControls.SLIDER_PADDING = RaidGuiBase.PADDING + 24
-	local previous_params = nil
+
+	local previous_params
+
 	previous_params = {
 		name = "btn_keybinding",
 		x = start_x,
@@ -215,6 +218,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		}
 	}
 	self._toggle_menu_controller_southpaw = self._root_panel:toggle_button(previous_params)
+
 	local default_controls_params = {
 		name = "default_controls",
 		y = 832,
@@ -223,6 +227,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		on_click_callback = callback(self, self, "on_click_default_controls"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
 	}
+
 	self._default_controls_button = self._root_panel:long_secondary_button(default_controls_params)
 
 	self:_modify_controller_layout()
@@ -367,7 +372,7 @@ function RaidMenuOptionsControls:on_click_default_controls()
 	local params = {
 		title = managers.localization:text("dialog_reset_controls_title"),
 		message = managers.localization:text("dialog_reset_controls_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_controls_setting_map()
 			self:_load_controls_values()
 		end

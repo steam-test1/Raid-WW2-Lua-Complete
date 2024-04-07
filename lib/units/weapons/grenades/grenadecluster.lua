@@ -6,6 +6,7 @@ end
 
 function GrenadeCluster:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
+
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
 	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
 	self._range = self._tweak_data.range
@@ -15,7 +16,9 @@ function GrenadeCluster:_setup_from_tweak_data()
 	self._killzone_range = self._tweak_data.killzone_range or 0.1
 	self._player_damage = self._tweak_data.player_damage
 	self._alert_radius = self._tweak_data.alert_radius
+
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
+
 	self._custom_params = {
 		camera_shake_max_mul = 4,
 		sound_muffle_effect = true,

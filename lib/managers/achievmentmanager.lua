@@ -161,6 +161,7 @@ end
 
 function AchievmentManager:_parse_achievments(platform)
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
+
 	self.achievments = {}
 
 	for _, ach in ipairs(list) do
@@ -230,6 +231,7 @@ end
 
 function AchievmentManager:_give_reward(id)
 	local data = self:get_info(id)
+
 	data.awarded = true
 
 	if data.dlc_loot then
@@ -246,11 +248,11 @@ function AchievmentManager:award_progress(stat, value)
 		self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
 	end
 
-	local stats = {
-		[stat] = {
-			type = "int",
-			value = value or 1
-		}
+	local stats = {}
+
+	stats[stat] = {
+		type = "int",
+		value = value or 1
 	}
 
 	managers.network.account:publish_statistics(stats, true)
@@ -348,6 +350,7 @@ function AchievmentManager:award_psn(id)
 	end
 
 	local request = Trophies:unlock_id(self:get_info(id).id, AchievmentManager.psn_unlock_result)
+
 	Global.achievment_manager.trophy_requests[request] = id
 end
 
@@ -426,6 +429,7 @@ function AchievmentManager:check_achievement_kill_30_enemies_with_vehicle_on_ban
 		is_bank_level = current_job.job_id == bank_level_name
 	elseif current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		local current_job_event_index = current_job.current_event
+
 		is_bank_level = current_job.events_index[current_job_event_index] == bank_level_name
 	end
 

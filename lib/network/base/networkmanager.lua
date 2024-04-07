@@ -177,11 +177,7 @@ function NetworkManager:ps3_determine_voice(lan)
 	if lan == true then
 		voice = "voice_quiet"
 	elseif PSN:is_online() then
-		if PSN:online_chat_allowed() then
-			voice = "voice_psn"
-		else
-			voice = "voice_disabled"
-		end
+		voice = PSN:online_chat_allowed() and "voice_psn" or "voice_disabled"
 	end
 
 	if self.voice_chat and self.voice_chat:voice_type() == voice then
@@ -253,9 +249,8 @@ end
 
 function NetworkManager:save()
 	if self._started then
-		Global.network = {
-			network_bound = self._network_bound
-		}
+		Global.network = {}
+		Global.network.network_bound = self._network_bound
 
 		if self._session then
 			Global.network.session_host = self._session:is_host()
@@ -335,6 +330,7 @@ function NetworkManager:register_handler(name, handler_class)
 	end
 
 	local new_handler = handler_class:new()
+
 	self._handlers[name] = new_handler
 
 	Network:set_receiver(Idstring(name), new_handler)
@@ -413,9 +409,9 @@ end
 
 function NetworkManager:on_camp_restarted()
 	local last_world_id = managers.worldcollection._world_id_counter
-	self._synced_worlds_temp = {
-		[last_world_id] = {}
-	}
+
+	self._synced_worlds_temp = {}
+	self._synced_worlds_temp[last_world_id] = {}
 	self._synced_worlds_temp[last_world_id][CoreWorldCollection.STAGE_LOAD] = true
 	self._synced_worlds_temp[last_world_id][CoreWorldCollection.STAGE_LOAD_FINISHED] = true
 	self._synced_worlds_temp[last_world_id][CoreWorldCollection.STAGE_PREPARE] = true
@@ -496,6 +492,7 @@ function NetworkManager:on_discover_host_received(sender)
 	local peer = managers.network:session():local_peer()
 	local state = peer:in_lobby() and 1 or 2
 	local difficulty = Global.game_settings.difficulty
+
 	level_id = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
 
 	print("on_discover_host_received", level_id)
@@ -551,6 +548,7 @@ function NetworkManager:register_spawn_point(id, data, spawner)
 		id = id,
 		spawner = spawner
 	}
+
 	self._spawn_points[id] = runtime_data
 end
 
@@ -718,6 +716,7 @@ function NetworkManager:get_matchmake_attributes()
 	end
 
 	attributes.numbers[11] = region
+
 	local active_card = managers.challenge_cards:get_active_card()
 	local card_key = "nocards"
 
@@ -726,7 +725,9 @@ function NetworkManager:get_matchmake_attributes()
 	end
 
 	attributes.numbers[12] = card_key
+
 	local players_info = managers.network.matchmake:get_all_players_info()
+
 	attributes.numbers[13] = "-"
 	attributes.numbers[14] = job_id
 	attributes.numbers[15] = progress

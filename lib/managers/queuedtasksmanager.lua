@@ -1,6 +1,7 @@
 QueuedTasksManager = QueuedTasksManager or class()
 
 function QueuedTasksManager:_set_iterating(val)
+	return
 end
 
 function QueuedTasksManager:init()
@@ -11,6 +12,7 @@ end
 
 function QueuedTasksManager:update(t, dt)
 	self._t = t
+
 	local tasks = self._queued_tasks
 	local i_task = #tasks
 
@@ -21,7 +23,7 @@ function QueuedTasksManager:update(t, dt)
 
 		if task.marked_for_removal then
 			table.remove(tasks, i_task)
-		elseif not task.execute_time or task.execute_time < t then
+		elseif not task.execute_time or t > task.execute_time then
 			table.remove(tasks, i_task)
 			self:_execute_queued_task(task)
 		end
@@ -68,6 +70,7 @@ function QueuedTasksManager:unqueue_all(id, task_self, skip_persistant_tasks)
 	while i_task > 0 do
 		local task = tasks[i_task]
 		local matching = true
+
 		matching = matching and (not id or id and task.id == id)
 		matching = matching and (not task_self or task_self and task.task_self == task_self)
 
@@ -94,7 +97,7 @@ function QueuedTasksManager:has_task(id)
 end
 
 function QueuedTasksManager:when(id)
-	local time_remaining = nil
+	local time_remaining
 	local tasks = self._queued_tasks
 	local i_task = #tasks
 

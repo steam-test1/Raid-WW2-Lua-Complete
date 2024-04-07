@@ -65,7 +65,9 @@ function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 
 	self._upgrades[category] = self._upgrades[category] or {}
 	self._upgrade_levels[category] = self._upgrade_levels[category] or {}
+
 	local value = managers.player:upgrade_value_by_level(category, upgrade, level)
+
 	self._upgrades[category][upgrade] = value
 	self._upgrade_levels[category][upgrade] = level
 
@@ -108,7 +110,9 @@ function HuskPlayerBase:nick_name()
 end
 
 function HuskPlayerBase:on_death_exit()
+	return
 end
 
 function HuskPlayerBase:chk_freeze_anims()
+	return
 end

@@ -58,6 +58,7 @@ function LevelDependencyNode:_walkxml2dependencies(xmlnode, deps)
 
 		if unit_name ~= nil and not LEVEL_SKIP[unit_name] then
 			unit_name = LEVEL_CONVERT[unit_name] or unit_name
+
 			local dn = self._get_dn({
 				name = unit_name,
 				type_ = UNIT

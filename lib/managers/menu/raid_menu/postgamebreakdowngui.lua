@@ -82,6 +82,7 @@ function PostGameBreakdownGui:_layout()
 		y = PostGameBreakdownGui.XP_BREAKDOWN_Y,
 		data_source_callback = callback(self, self, "data_source_xp_breakdown")
 	}
+
 	self._xp_breakdown = self._root_panel:create_custom_control(RaidGUIControlXPBreakdown, params_xp_breakdown)
 
 	self._xp_breakdown:hide()
@@ -93,6 +94,7 @@ function PostGameBreakdownGui:_layout()
 		y = PostGameBreakdownGui.STATS_BREAKDOWN_Y,
 		data_source_callback = callback(self, self, "data_source_stats_breakdown")
 	}
+
 	self._stats_breakdown = self._root_panel:create_custom_control(RaidGUIControlStatsBreakdown, params_stats_breakdown)
 
 	self._stats_breakdown:set_x(self._root_panel:w() - self._stats_breakdown:w())
@@ -107,6 +109,7 @@ function PostGameBreakdownGui:_layout()
 		w = PostGameBreakdownGui.TOP_STATS_SMALL_W,
 		h = PostGameBreakdownGui.TOP_STATS_SMALL_H
 	}
+
 	self._top_stats_small_panel = self._root_panel:panel(top_stats_small_panel_params)
 
 	self._top_stats_small_panel:set_right(self._root_panel:w())
@@ -134,6 +137,7 @@ function PostGameBreakdownGui:_layout()
 		initial_progress = self:_get_progress(self.initial_xp),
 		initial_level = self:_get_level_by_xp(self.initial_xp)
 	}
+
 	self._progress_bar = self._root_panel:create_custom_control(RaidGUIControlXPProgressBar, progress_bar_params)
 
 	self._progress_bar:hide()
@@ -161,6 +165,7 @@ function PostGameBreakdownGui:_layout()
 		value_font_size = PostGameBreakdownGui.TOTAL_XP_VALUE_FONT_SIZE,
 		value_padding = PostGameBreakdownGui.TOTAL_XP_VALUE_PADDING
 	}
+
 	self._total_xp_label = self._root_panel:label_named_value(total_xp_params)
 
 	self._total_xp_label:set_alpha(0)
@@ -196,6 +201,7 @@ function PostGameBreakdownGui:_layout_central_display()
 		w = PostGameBreakdownGui.CENTRAL_DISPLAY_W,
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_H
 	}
+
 	self._central_display_panel = self._root_panel:panel(central_display_panel_params)
 
 	self._central_display_panel:set_center_x(self._root_panel:w() / 2)
@@ -210,6 +216,7 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 		w = self._central_display_panel:w(),
 		h = self._central_display_panel:h()
 	}
+
 	self._generic_win_panel = self._central_display_panel:panel(generic_win_panel_params)
 
 	if not self.state_success then
@@ -274,6 +281,7 @@ function PostGameBreakdownGui:_layout_fail_display()
 		w = self._central_display_panel:w(),
 		h = self._central_display_panel:h()
 	}
+
 	self._fail_panel = self._central_display_panel:panel(fail_panel_params)
 
 	if not self.state_success then
@@ -348,7 +356,7 @@ function PostGameBreakdownGui:_get_progress(current_xp)
 	local progress_in_level = 0
 
 	if xp_for_next_level ~= xp_for_current_level then
-		progress_in_level = 1 / (level_cap - 1) * (current_xp - xp_for_current_level) / (xp_for_next_level - xp_for_current_level)
+		progress_in_level = 1 / (level_cap - 1) * ((current_xp - xp_for_current_level) / (xp_for_next_level - xp_for_current_level))
 	end
 
 	return math.clamp(progress_to_level + progress_in_level, 0, 1)
@@ -356,6 +364,7 @@ end
 
 function PostGameBreakdownGui:_calculate_xp_needed_for_levels()
 	local level_cap = managers.experience:level_cap()
+
 	self._levels_by_xp = {}
 
 	for i = 1, level_cap do
@@ -370,7 +379,7 @@ function PostGameBreakdownGui:_get_level_by_xp(xp)
 	local points_needed = self._levels_by_xp[1]
 	local level = 0
 
-	while level_cap > level and points_needed < xp do
+	while level < level_cap and points_needed < xp do
 		level = level + 1
 		points_needed = self._levels_by_xp[level + 1]
 	end
@@ -662,9 +671,11 @@ function PostGameBreakdownGui:_animate_active_display_panel(central_display_pane
 	local fade_in_duration = 0.3
 	local t = (1 - self._central_display_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._central_display_panel:set_alpha(current_alpha)
@@ -683,9 +694,11 @@ function PostGameBreakdownGui:_animate_active_display_panel(central_display_pane
 
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._central_display_panel:set_alpha(current_alpha)
@@ -744,7 +757,9 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 	for i = 1, #xp_breakdown.additive do
 		local previous_value = 0
 		local current_value = 0
+
 		t = 0
+
 		local row_cells = table_rows[current_index]:get_cells()
 
 		row_cells[1]:set_visible(false)
@@ -765,6 +780,7 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 
 		while t < 0.5 do
 			local dt = coroutine.yield()
+
 			t = t + dt
 			current_value = Easing.quartic_in_out(t, 0, xp_breakdown.additive[i].amount, 0.5)
 
@@ -799,12 +815,15 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 	wait(0.25)
 
 	current_index = current_index + 1
+
 	local total_base = current_total
 
 	for i = 1, #xp_breakdown.multiplicative do
 		local previous_value = 0
 		local current_value = 0
+
 		t = 0
+
 		local row_cells = table_rows[current_index]:get_cells()
 
 		row_cells[1]:set_visible(false)
@@ -817,6 +836,7 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 
 		while t < 0.5 do
 			local dt = coroutine.yield()
+
 			t = t + dt
 			current_value = Easing.quartic_in_out(t, 0, xp_breakdown.multiplicative[i].amount, 0.5)
 
@@ -868,7 +888,9 @@ function PostGameBreakdownGui:_fade_in_label(text, duration, delay)
 
 	while t < anim_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, anim_duration)
 
 		text:set_alpha(current_alpha)
@@ -884,9 +906,11 @@ function PostGameBreakdownGui:_animate_giving_xp(panel, xp_earned)
 	local out_duration = 2
 	local t = 0
 
-	while in_duration > t do
+	while t < in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_speed = Easing.quadratic_in(t, 1, mid_speed - 1, in_duration)
 
 		if xp_earned < points_given + current_speed then
@@ -898,6 +922,7 @@ function PostGameBreakdownGui:_animate_giving_xp(panel, xp_earned)
 
 	while xp_earned > points_given + mid_speed do
 		local dt = coroutine.yield()
+
 		points_given = points_given + mid_speed
 	end
 end

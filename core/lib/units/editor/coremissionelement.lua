@@ -90,7 +90,9 @@ function CoreMissionElement:_createicon()
 
 	self._iconcolor_c = Color(self._iconcolor)
 	self._icon_gui = World:newgui()
+
 	local pos = self._unit:position() - Vector3(iconsize / 2, iconsize / 2, 0)
+
 	self._icon_ws = self._icon_gui:create_linked_workspace(64, 64, root, pos, Vector3(iconsize, 0, 0), Vector3(0, iconsize, 0))
 
 	self._icon_ws:set_billboard(self._icon_ws.BILLBOARD_BOTH)
@@ -202,6 +204,7 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		sizer = element_sizer,
 		options = {}
 	}
+
 	local elements = CoreEWS.combobox(self._elements_params)
 
 	elements:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "on_executed_element_selected"), nil)
@@ -259,6 +262,7 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		panel = panel,
 		sizer = delay_sizer
 	}
+
 	local element_delay = CoreEws.number_controller(self._element_delay_params)
 
 	element_delay:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "on_executed_element_delay"), nil)
@@ -276,6 +280,7 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		panel = panel,
 		sizer = delay_sizer
 	}
+
 	local element_delay_rand = CoreEws.number_controller(self._element_delay_rand_params)
 
 	element_delay_rand:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "on_executed_element_delay_rand"), nil)
@@ -431,6 +436,7 @@ end
 
 function CoreMissionElement:_set_instance_var_name(params)
 	local value = params.ctrlr:get_value()
+
 	value = value ~= "not_used" and value or nil
 	self._hed.instance_var_names = self._hed.instance_var_names or {}
 	self._hed.instance_var_names[params.data.value] = value
@@ -566,9 +572,11 @@ function CoreMissionElement:selected()
 end
 
 function CoreMissionElement:update_selected()
+	return
 end
 
 function CoreMissionElement:update_unselected()
+	return
 end
 
 function CoreMissionElement:can_edit()
@@ -576,9 +584,11 @@ function CoreMissionElement:can_edit()
 end
 
 function CoreMissionElement:begin_editing()
+	return
 end
 
 function CoreMissionElement:end_editing()
+	return
 end
 
 function CoreMissionElement:clone_data(all_units)
@@ -649,6 +659,7 @@ function CoreMissionElement:name()
 end
 
 function CoreMissionElement:add_to_mission_package()
+	return
 end
 
 function CoreMissionElement:get_color(type)
@@ -667,9 +678,7 @@ function CoreMissionElement:draw_links_selected(t, dt, selected_unit)
 	local unit = self:_current_element_unit()
 
 	if alive(unit) then
-		local r = 1
-		local g = 1
-		local b = 1
+		local r, g, b = 1, 1, 1
 
 		if self._iconcolor and managers.editor:layer("Mission"):use_colored_links() then
 			r = self._iconcolor_c.r
@@ -697,9 +706,11 @@ function CoreMissionElement:_draw_link(params)
 end
 
 function CoreMissionElement:draw_links_unselected()
+	return
 end
 
 function CoreMissionElement:clear()
+	return
 end
 
 function CoreMissionElement:action_types()
@@ -711,6 +722,7 @@ function CoreMissionElement:timeline_color()
 end
 
 function CoreMissionElement:add_triggers(vc)
+	return
 end
 
 function CoreMissionElement:base_add_triggers(vc)
@@ -782,9 +794,11 @@ function CoreMissionElement:_remove_instigator_rule_unit_id(id)
 end
 
 function CoreMissionElement:__update_editing(_, t, dt, current_pos)
+	return
 end
 
 function CoreMissionElement:clear_triggers()
+	return
 end
 
 function CoreMissionElement:widget_affect_object()
@@ -909,9 +923,7 @@ function CoreMissionElement:_should_draw_link(selected_unit, unit)
 end
 
 function CoreMissionElement:get_link_color(unit)
-	local r = 1
-	local g = 1
-	local b = 1
+	local r, g, b = 1, 1, 1
 
 	if self._iconcolor and managers.editor:layer("Mission"):use_colored_links() then
 		r = self._iconcolor_c.r
@@ -968,6 +980,7 @@ function CoreMissionElement:_get_delay_string(unit_id)
 
 	if self._hed.base_delay_rand or self:_get_on_executed(unit_id).delay_rand then
 		local delay_max = delay + (self:_get_on_executed(unit_id).delay_rand or 0)
+
 		delay_max = delay_max + (self._hed.base_delay_rand and self._hed.base_delay_rand or 0)
 		text = text .. "-" .. string.format("%.2f", delay_max) .. ""
 	end
@@ -982,9 +995,10 @@ function CoreMissionElement:add_on_executed(unit)
 
 	local params = {
 		delay = 0,
-		id = unit:unit_data().unit_id,
-		alternative = self.ON_EXECUTED_ALTERNATIVES and self.ON_EXECUTED_ALTERNATIVES[1] or nil
+		id = unit:unit_data().unit_id
 	}
+
+	params.alternative = self.ON_EXECUTED_ALTERNATIVES and self.ON_EXECUTED_ALTERNATIVES[1] or nil
 
 	table.insert(self._on_executed_units, unit)
 	table.insert(self._hed.on_executed, params)
@@ -998,6 +1012,7 @@ function CoreMissionElement:add_on_executed(unit)
 end
 
 function CoreMissionElement:remove_links(unit)
+	return
 end
 
 function CoreMissionElement:remove_on_execute(unit)
@@ -1167,7 +1182,7 @@ function CoreMissionElement:combobox_name(unit)
 end
 
 function CoreMissionElement:combobox_id(name)
-	local s = nil
+	local s
 	local e = string.len(name) - 1
 
 	for i = string.len(name), 0, -1 do
@@ -1312,7 +1327,7 @@ function CoreMissionElement:_open_color_picker(panel, color_ctrlr)
 	self.__color_picker_dialog = self.__color_picker_dialog or CoreColorPickerDialog.ColorPickerDialog:new(panel, true, "HORIZONTAL", true)
 
 	self.__color_picker_dialog._window:set_focus()
-	self.__color_picker_dialog:connect("EVT_CLOSE_WINDOW", function ()
+	self.__color_picker_dialog:connect("EVT_CLOSE_WINDOW", function()
 		self.__color_picker_dialog = nil
 	end)
 	self.__color_picker_dialog:connect("EVT_COLOR_UPDATED", callback(self, self, "_on_color_changed"), "")
@@ -1411,6 +1426,7 @@ function CoreMissionElement:_set_random_number_element_data(data)
 	print("_set_random_number_element_data", inspect(data))
 
 	local value = data.ctrlr:get_value()
+
 	value = tonumber(value)
 
 	print("data.ctrlr:get_value()", value, type(value))

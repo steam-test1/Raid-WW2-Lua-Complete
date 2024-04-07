@@ -16,10 +16,10 @@ function RaidGUIControlProgressBar:init(parent, params)
 	self._object = self._panel:panel(self._params)
 	self._bg_color = params.bar_background_color
 	self._bg = self._object:rect({
-		params.layer,
-		y = 0,
 		name = self._name .. "_bg",
 		color = self._bg_color,
+		params.layer,
+		y = 0,
 		x = self._object:w() - self._bar_width,
 		w = self._bar_width,
 		h = params.h,
@@ -63,6 +63,7 @@ end
 
 function RaidGUIControlProgressBar:set_progress(progress)
 	self._progress = math.clamp(progress, 0, 1)
+
 	local width = self._progress * self._width
 
 	self._bar:set_width(width)
@@ -117,7 +118,7 @@ function RaidGUIControlProgressBar:on_mouse_out(x, y)
 	if self._dragging then
 		if x - self._bg:world_x() < 0 then
 			self:set_progress(0)
-		elseif self._bg:w() < x - self._bg:world_x() then
+		elseif x - self._bg:world_x() > self._bg:w() then
 			self:set_progress(1)
 		end
 	end

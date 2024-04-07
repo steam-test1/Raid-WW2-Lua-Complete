@@ -48,143 +48,145 @@ function MenuComponentManager:init()
 	self._sound_source = SoundDevice:create_source("MenuComponentManager")
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
 	self._request_done_clbk_func = callback(self, self, "_request_done_callback")
+
 	local is_installing, install_progress = managers.dlc:is_installing()
+
 	self._is_game_installing = is_installing
-	self._active_components = {
-		raid_menu_mission_selection = {
-			create = callback(self, self, "create_raid_menu_mission_selection_gui"),
-			close = callback(self, self, "close_raid_menu_mission_selection_gui")
-		},
-		raid_menu_mission_unlock = {
-			create = callback(self, self, "create_raid_menu_mission_unlock_gui"),
-			close = callback(self, self, "close_raid_menu_mission_unlock_gui")
-		},
-		raid_menu_mission_join = {
-			create = callback(self, self, "create_raid_menu_mission_join_gui"),
-			close = callback(self, self, "close_raid_menu_mission_join_gui")
-		},
-		raid_menu_weapon_select = {
-			create = callback(self, self, "create_raid_menu_weapon_select_gui"),
-			close = callback(self, self, "close_raid_menu_weapon_select_gui")
-		},
-		raid_menu_profile_selection = {
-			create = callback(self, self, "create_raid_menu_select_character_profile_gui"),
-			close = callback(self, self, "close_raid_menu_select_character_profile_gui")
-		},
-		raid_menu_profile_creation = {
-			create = callback(self, self, "create_raid_menu_create_character_profile_gui"),
-			close = callback(self, self, "close_raid_menu_create_character_profile_gui")
-		},
-		raid_menu_character_customization = {
-			create = callback(self, self, "create_raid_menu_character_customization_gui"),
-			close = callback(self, self, "close_raid_menu_character_customization_gui")
-		},
-		raid_menu_main = {
-			create = callback(self, self, "create_raid_menu_main_menu_gui"),
-			close = callback(self, self, "close_raid_menu_main_menu_gui")
-		},
-		raid_menu_header = {
-			create = callback(self, self, "create_raid_menu_header_gui"),
-			close = callback(self, self, "close_raid_menu_header_gui")
-		},
-		raid_menu_footer = {
-			create = callback(self, self, "create_raid_menu_footer_gui"),
-			close = callback(self, self, "close_raid_menu_footer_gui")
-		},
-		raid_menu_left_options = {
-			create = callback(self, self, "create_raid_menu_left_options_gui"),
-			close = callback(self, self, "close_raid_menu_left_options_gui")
-		},
-		raid_menu_options_controls = {
-			create = callback(self, self, "create_raid_menu_options_controls_gui"),
-			close = callback(self, self, "close_raid_menu_options_controls_gui")
-		},
-		raid_menu_options_controls_keybinds = {
-			create = callback(self, self, "create_raid_menu_options_controls_keybinds_gui"),
-			close = callback(self, self, "close_raid_menu_options_controls_keybinds_gui")
-		},
-		raid_menu_options_controller_mapping = {
-			create = callback(self, self, "create_raid_menu_options_controller_mapping_gui"),
-			close = callback(self, self, "close_raid_menu_options_controller_mapping_gui")
-		},
-		raid_menu_options_sound = {
-			create = callback(self, self, "create_raid_menu_options_sound_gui"),
-			close = callback(self, self, "close_raid_menu_options_sound_gui")
-		},
-		raid_menu_options_network = {
-			create = callback(self, self, "create_raid_menu_options_network_gui"),
-			close = callback(self, self, "close_raid_menu_options_network_gui")
-		},
-		raid_menu_options_video = {
-			create = callback(self, self, "create_raid_menu_options_video_gui"),
-			close = callback(self, self, "close_raid_menu_options_video_gui")
-		},
-		raid_menu_options_video_advanced = {
-			create = callback(self, self, "create_raid_menu_options_video_advanced_gui"),
-			close = callback(self, self, "close_raid_menu_options_video_advanced_gui")
-		},
-		raid_options_background = {
-			create = callback(self, self, "create_raid_options_background_gui"),
-			close = callback(self, self, "close_raid_options_background_gui")
-		},
-		raid_menu_ready_up = {
-			create = callback(self, self, "create_raid_ready_up_gui"),
-			close = callback(self, self, "close_raid_ready_up_gui")
-		},
-		raid_menu_challenge_cards = {
-			create = callback(self, self, "create_raid_challenge_cards_gui"),
-			close = callback(self, self, "close_raid_challenge_cards_gui")
-		},
-		raid_menu_challenge_cards_view = {
-			create = callback(self, self, "create_raid_challenge_cards_view_gui"),
-			close = callback(self, self, "close_raid_challenge_cards_view_gui")
-		},
-		raid_menu_challenge_cards_loot_reward = {
-			create = callback(self, self, "create_raid_challenge_cards_loot_reward_gui"),
-			close = callback(self, self, "close_raid_challenge_cards_loot_reward_gui")
-		},
-		raid_menu_xp = {
-			create = callback(self, self, "create_raid_menu_xp"),
-			close = callback(self, self, "close_raid_menu_xp")
-		},
-		raid_menu_post_game_breakdown = {
-			create = callback(self, self, "create_raid_menu_post_game_breakdown"),
-			close = callback(self, self, "close_raid_menu_post_game_breakdown")
-		},
-		raid_menu_special_honors = {
-			create = callback(self, self, "create_raid_menu_special_honors"),
-			close = callback(self, self, "close_raid_menu_special_honors")
-		},
-		raid_menu_loot = {
-			create = callback(self, self, "create_raid_menu_loot"),
-			close = callback(self, self, "close_raid_menu_loot")
-		},
-		raid_menu_greed_loot = {
-			create = callback(self, self, "create_raid_menu_greed_loot"),
-			close = callback(self, self, "close_raid_menu_greed_loot")
-		},
-		raid_menu_gold_asset_store = {
-			create = callback(self, self, "create_raid_menu_gold_asset_store_gui"),
-			close = callback(self, self, "close_raid_menu_gold_asset_store_gui")
-		},
-		raid_menu_intel = {
-			create = callback(self, self, "create_raid_menu_intel_gui"),
-			close = callback(self, self, "close_raid_menu_intel_gui")
-		},
-		raid_menu_comic_book = {
-			create = callback(self, self, "create_raid_menu_comic_book_gui"),
-			close = callback(self, self, "close_raid_menu_comic_book_gui")
-		},
-		raid_menu_credits = {
-			create = callback(self, self, "create_raid_menu_credits"),
-			close = callback(self, self, "close_raid_menu_credits")
-		}
+	self._active_components = {}
+	self._active_components.raid_menu_mission_selection = {
+		create = callback(self, self, "create_raid_menu_mission_selection_gui"),
+		close = callback(self, self, "close_raid_menu_mission_selection_gui")
+	}
+	self._active_components.raid_menu_mission_unlock = {
+		create = callback(self, self, "create_raid_menu_mission_unlock_gui"),
+		close = callback(self, self, "close_raid_menu_mission_unlock_gui")
+	}
+	self._active_components.raid_menu_mission_join = {
+		create = callback(self, self, "create_raid_menu_mission_join_gui"),
+		close = callback(self, self, "close_raid_menu_mission_join_gui")
+	}
+	self._active_components.raid_menu_weapon_select = {
+		create = callback(self, self, "create_raid_menu_weapon_select_gui"),
+		close = callback(self, self, "close_raid_menu_weapon_select_gui")
+	}
+	self._active_components.raid_menu_profile_selection = {
+		create = callback(self, self, "create_raid_menu_select_character_profile_gui"),
+		close = callback(self, self, "close_raid_menu_select_character_profile_gui")
+	}
+	self._active_components.raid_menu_profile_creation = {
+		create = callback(self, self, "create_raid_menu_create_character_profile_gui"),
+		close = callback(self, self, "close_raid_menu_create_character_profile_gui")
+	}
+	self._active_components.raid_menu_character_customization = {
+		create = callback(self, self, "create_raid_menu_character_customization_gui"),
+		close = callback(self, self, "close_raid_menu_character_customization_gui")
+	}
+	self._active_components.raid_menu_main = {
+		create = callback(self, self, "create_raid_menu_main_menu_gui"),
+		close = callback(self, self, "close_raid_menu_main_menu_gui")
+	}
+	self._active_components.raid_menu_header = {
+		create = callback(self, self, "create_raid_menu_header_gui"),
+		close = callback(self, self, "close_raid_menu_header_gui")
+	}
+	self._active_components.raid_menu_footer = {
+		create = callback(self, self, "create_raid_menu_footer_gui"),
+		close = callback(self, self, "close_raid_menu_footer_gui")
+	}
+	self._active_components.raid_menu_left_options = {
+		create = callback(self, self, "create_raid_menu_left_options_gui"),
+		close = callback(self, self, "close_raid_menu_left_options_gui")
+	}
+	self._active_components.raid_menu_options_controls = {
+		create = callback(self, self, "create_raid_menu_options_controls_gui"),
+		close = callback(self, self, "close_raid_menu_options_controls_gui")
+	}
+	self._active_components.raid_menu_options_controls_keybinds = {
+		create = callback(self, self, "create_raid_menu_options_controls_keybinds_gui"),
+		close = callback(self, self, "close_raid_menu_options_controls_keybinds_gui")
+	}
+	self._active_components.raid_menu_options_controller_mapping = {
+		create = callback(self, self, "create_raid_menu_options_controller_mapping_gui"),
+		close = callback(self, self, "close_raid_menu_options_controller_mapping_gui")
+	}
+	self._active_components.raid_menu_options_sound = {
+		create = callback(self, self, "create_raid_menu_options_sound_gui"),
+		close = callback(self, self, "close_raid_menu_options_sound_gui")
+	}
+	self._active_components.raid_menu_options_network = {
+		create = callback(self, self, "create_raid_menu_options_network_gui"),
+		close = callback(self, self, "close_raid_menu_options_network_gui")
+	}
+	self._active_components.raid_menu_options_video = {
+		create = callback(self, self, "create_raid_menu_options_video_gui"),
+		close = callback(self, self, "close_raid_menu_options_video_gui")
+	}
+	self._active_components.raid_menu_options_video_advanced = {
+		create = callback(self, self, "create_raid_menu_options_video_advanced_gui"),
+		close = callback(self, self, "close_raid_menu_options_video_advanced_gui")
+	}
+	self._active_components.raid_options_background = {
+		create = callback(self, self, "create_raid_options_background_gui"),
+		close = callback(self, self, "close_raid_options_background_gui")
+	}
+	self._active_components.raid_menu_ready_up = {
+		create = callback(self, self, "create_raid_ready_up_gui"),
+		close = callback(self, self, "close_raid_ready_up_gui")
+	}
+	self._active_components.raid_menu_challenge_cards = {
+		create = callback(self, self, "create_raid_challenge_cards_gui"),
+		close = callback(self, self, "close_raid_challenge_cards_gui")
+	}
+	self._active_components.raid_menu_challenge_cards_view = {
+		create = callback(self, self, "create_raid_challenge_cards_view_gui"),
+		close = callback(self, self, "close_raid_challenge_cards_view_gui")
+	}
+	self._active_components.raid_menu_challenge_cards_loot_reward = {
+		create = callback(self, self, "create_raid_challenge_cards_loot_reward_gui"),
+		close = callback(self, self, "close_raid_challenge_cards_loot_reward_gui")
+	}
+	self._active_components.raid_menu_xp = {
+		create = callback(self, self, "create_raid_menu_xp"),
+		close = callback(self, self, "close_raid_menu_xp")
+	}
+	self._active_components.raid_menu_post_game_breakdown = {
+		create = callback(self, self, "create_raid_menu_post_game_breakdown"),
+		close = callback(self, self, "close_raid_menu_post_game_breakdown")
+	}
+	self._active_components.raid_menu_special_honors = {
+		create = callback(self, self, "create_raid_menu_special_honors"),
+		close = callback(self, self, "close_raid_menu_special_honors")
+	}
+	self._active_components.raid_menu_loot = {
+		create = callback(self, self, "create_raid_menu_loot"),
+		close = callback(self, self, "close_raid_menu_loot")
+	}
+	self._active_components.raid_menu_greed_loot = {
+		create = callback(self, self, "create_raid_menu_greed_loot"),
+		close = callback(self, self, "close_raid_menu_greed_loot")
+	}
+	self._active_components.raid_menu_gold_asset_store = {
+		create = callback(self, self, "create_raid_menu_gold_asset_store_gui"),
+		close = callback(self, self, "close_raid_menu_gold_asset_store_gui")
+	}
+	self._active_components.raid_menu_intel = {
+		create = callback(self, self, "create_raid_menu_intel_gui"),
+		close = callback(self, self, "close_raid_menu_intel_gui")
+	}
+	self._active_components.raid_menu_comic_book = {
+		create = callback(self, self, "create_raid_menu_comic_book_gui"),
+		close = callback(self, self, "close_raid_menu_comic_book_gui")
+	}
+	self._active_components.raid_menu_credits = {
+		create = callback(self, self, "create_raid_menu_credits"),
+		close = callback(self, self, "close_raid_menu_credits")
 	}
 	self._active_controls = {}
 	self._update_components = {}
 end
 
 function MenuComponentManager:save(data)
+	return
 end
 
 function MenuComponentManager:load(data)
@@ -192,6 +194,7 @@ function MenuComponentManager:load(data)
 end
 
 function MenuComponentManager:on_whisper_mode_changed()
+	return
 end
 
 function MenuComponentManager:get_controller_input_bool(button)
@@ -274,7 +277,9 @@ function MenuComponentManager:set_active_components(components, node)
 
 		if component_data then
 			to_close[component] = nil
+
 			local component_object = component_data.create(node, component)
+
 			component_data.component_object = component_object
 		end
 	end
@@ -316,7 +321,9 @@ function MenuComponentManager:make_color_text(text_object, color)
 		end
 	end
 
-	if #start_ci == #end_ci then
+	if #start_ci ~= #end_ci then
+		-- Nothing
+	else
 		for i = 1, #start_ci do
 			start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
 			end_ci[i] = end_ci[i] - (i * 4 - 1)
@@ -338,6 +345,7 @@ function MenuComponentManager:make_color_text(text_object, color)
 end
 
 function MenuComponentManager:on_job_updated()
+	return
 end
 
 function MenuComponentManager:update(t, dt)
@@ -371,6 +379,7 @@ function MenuComponentManager:get_right_controller_axis()
 end
 
 function MenuComponentManager:accept_input(accept)
+	return
 end
 
 function MenuComponentManager:input_focus()
@@ -380,9 +389,11 @@ function MenuComponentManager:input_focus()
 end
 
 function MenuComponentManager:scroll_up()
+	return
 end
 
 function MenuComponentManager:scroll_down()
+	return
 end
 
 function MenuComponentManager:move_up()
@@ -707,7 +718,7 @@ function MenuComponentManager:mouse_pressed(o, button, x, y)
 	if self._minimized_list and button == Idstring("0") then
 		for i, data in ipairs(self._minimized_list) do
 			if data.panel:inside(x, y) then
-				data:callback()
+				data.callback(data)
 
 				break
 			end
@@ -813,6 +824,7 @@ function MenuComponentManager:mouse_moved(o, x, y)
 	for _, component in pairs(self._active_components) do
 		if component.component_object then
 			local used, pointer = component.component_object:mouse_moved(o, x, y)
+
 			wanted_pointer = pointer or wanted_pointer
 
 			if used then
@@ -823,6 +835,7 @@ function MenuComponentManager:mouse_moved(o, x, y)
 
 	if self._game_chat_gui then
 		local used, pointer = self._game_chat_gui:mouse_moved(x, y)
+
 		wanted_pointer = pointer or wanted_pointer
 
 		if used then
@@ -832,6 +845,7 @@ function MenuComponentManager:mouse_moved(o, x, y)
 
 	if self._blackmarket_gui then
 		local used, pointer = self._blackmarket_gui:mouse_moved(o, x, y)
+
 		wanted_pointer = pointer or wanted_pointer
 
 		if used then
@@ -847,6 +861,7 @@ function MenuComponentManager:mouse_moved(o, x, y)
 		end
 
 		local used, pointer = self._server_info_gui:mouse_moved(x, y)
+
 		wanted_pointer = pointer or wanted_pointer
 
 		if used then
@@ -856,6 +871,7 @@ function MenuComponentManager:mouse_moved(o, x, y)
 
 	if self._backdrop_gui then
 		local used, pointer = self._backdrop_gui:mouse_moved(x, y)
+
 		wanted_pointer = pointer or wanted_pointer
 
 		if used then
@@ -871,6 +887,7 @@ function MenuComponentManager:mouse_moved(o, x, y)
 		end
 
 		local used, pointer = self._lobby_profile_gui:mouse_moved(x, y)
+
 		wanted_pointer = pointer or wanted_pointer
 
 		if used then
@@ -886,6 +903,7 @@ function MenuComponentManager:mouse_moved(o, x, y)
 		end
 
 		local used, pointer = self._view_character_profile_gui:mouse_moved(x, y)
+
 		wanted_pointer = pointer or wanted_pointer
 
 		if used then
@@ -938,9 +956,11 @@ function MenuComponentManager:mouse_moved(o, x, y)
 end
 
 function MenuComponentManager:peer_outfit_updated(peer_id)
+	return
 end
 
 function MenuComponentManager:on_peer_removed(peer, reason)
+	return
 end
 
 function MenuComponentManager:_create_chat_gui()
@@ -968,6 +988,7 @@ function MenuComponentManager:create_chat_gui()
 		no_close_legend = true,
 		x = 290
 	}
+
 	self._chat_book = BookBoxGui:new(self._ws, nil, config)
 
 	self._chat_book:set_layer(8)
@@ -1113,7 +1134,7 @@ function MenuComponentManager:close_view_character_profile_gui()
 end
 
 function MenuComponentManager:get_texture_from_mod_type(type, sub_type, gadget, silencer, is_auto, equipped, mods, types, is_a_path)
-	local texture = nil
+	local texture
 
 	if is_a_path then
 		texture = type
@@ -1133,6 +1154,7 @@ function MenuComponentManager:get_texture_from_mod_type(type, sub_type, gadget, 
 		elseif mods and #mods > 0 then
 			local weapon_factory_tweak_data = tweak_data.weapon.factory.parts
 			local part_id = mods[1][1]
+
 			type = weapon_factory_tweak_data[part_id].type
 			sub_type = weapon_factory_tweak_data[part_id].sub_type
 			texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
@@ -1140,7 +1162,12 @@ function MenuComponentManager:get_texture_from_mod_type(type, sub_type, gadget, 
 
 		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
 	elseif type == "bonus" then
-		texture = equipped and "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type) or "guis/textures/pd2/blackmarket/inv_mod_bonus"
+		if equipped then
+			texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
+		else
+			texture = "guis/textures/pd2/blackmarket/inv_mod_bonus"
+		end
+
 		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
 	else
 		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. type
@@ -1162,12 +1189,13 @@ end
 function MenuComponentManager:add_minimized(config)
 	self._minimized_list = self._minimized_list or {}
 	self._minimized_id = (self._minimized_id or 0) + 1
+
 	local panel = self._main_panel:panel({
 		w = 100,
 		h = 20,
 		layer = tweak_data.gui.MENU_COMPONENT_LAYER
 	})
-	local text = nil
+	local text
 
 	if config.text then
 		text = panel:text({
@@ -1320,9 +1348,11 @@ function MenuComponentManager:request_texture(texture, done_cb)
 	end
 
 	local index = entry.next_index
+
 	entry.owners[index] = {
 		clbk = done_cb
 	}
+
 	local next_index = index + 1
 
 	while entry.owners[next_index] do
@@ -1371,9 +1401,10 @@ function MenuComponentManager:add_colors_to_text_object(text_object, ...)
 		...
 	}
 	local default_color = #colors == 1 and colors[1] or tweak_data.screen_colors.text
-	local start_ci, end_ci, first_ci = nil
+	local start_ci, end_ci, first_ci
 	local text_dissected = utf8.characters(text)
 	local idsp = Idstring("#")
+
 	start_ci = {}
 	end_ci = {}
 	first_ci = true
@@ -1394,7 +1425,9 @@ function MenuComponentManager:add_colors_to_text_object(text_object, ...)
 		end
 	end
 
-	if #start_ci == #end_ci then
+	if #start_ci ~= #end_ci then
+		-- Nothing
+	else
 		for i = 1, #start_ci do
 			start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
 			end_ci[i] = end_ci[i] - (i * 4 - 1)
@@ -1447,6 +1480,7 @@ end
 
 function MenuComponentManager:new_post_event_instance()
 	local event_instance = MenuComponentPostEventInstance:new(self._sound_source)
+
 	self._unique_event_instances = self._unique_event_instances or {}
 
 	table.insert(self._unique_event_instances, event_instance)
@@ -1521,7 +1555,7 @@ function MenuComponentManager:play_transition(run_in_pause)
 		local fade1 = o:child("fade1")
 		local seconds = 0.5
 		local t = 0
-		local dt, p = nil
+		local dt, p
 
 		while t < seconds do
 			dt = coroutine.yield()
@@ -1543,6 +1577,7 @@ end
 function MenuComponentManager:test_camera_shutter_tech()
 	if not self._tcst then
 		self._tcst = managers.gui_data:create_fullscreen_16_9_workspace()
+
 		local o = self._tcst:panel():panel({
 			layer = 10000
 		})
@@ -1568,7 +1603,7 @@ function MenuComponentManager:test_camera_shutter_tech()
 	local function animate_fade(o)
 		local black = o:child("black")
 
-		over(0.5, function (p)
+		over(0.5, function(p)
 			black:set_alpha(1 - p)
 		end)
 	end
@@ -1585,6 +1620,7 @@ function MenuComponentManager:create_test_gui()
 	end
 
 	Global.test_gui = managers.gui_data:create_fullscreen_16_9_workspace()
+
 	local panel = Global.test_gui:panel()
 	local bg = panel:rect({
 		layer = 1000,
@@ -1626,6 +1662,7 @@ function MenuComponentManager:close_raid_menu_test_gui(node, component)
 		self._raid_menu_test_gui:close()
 
 		self._raid_menu_test_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1647,6 +1684,7 @@ function MenuComponentManager:_create_raid_menu_mission_selection_gui(node, comp
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_mission_selection_gui._root_panel._controls) do
@@ -1675,6 +1713,7 @@ function MenuComponentManager:close_raid_menu_mission_selection_gui(node, compon
 		self._raid_menu_mission_selection_gui:close()
 
 		self._raid_menu_mission_selection_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1694,6 +1733,7 @@ function MenuComponentManager:_create_raid_menu_mission_unlock_gui(node, compone
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_mission_unlock_gui._root_panel._controls) do
@@ -1724,6 +1764,7 @@ function MenuComponentManager:close_raid_menu_mission_unlock_gui(node, component
 		self._raid_menu_mission_unlock_gui:close()
 
 		self._raid_menu_mission_unlock_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1743,6 +1784,7 @@ function MenuComponentManager:_create_raid_menu_mission_join_gui(node, component
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_mission_join_gui._root_panel._controls) do
@@ -1771,6 +1813,7 @@ function MenuComponentManager:close_raid_menu_mission_join_gui(node, component)
 		self._raid_menu_mission_join_gui:close()
 
 		self._raid_menu_mission_join_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1790,6 +1833,7 @@ function MenuComponentManager:_create_raid_menu_weapon_select_gui(node, componen
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_weapon_select_gui._root_panel._controls) do
@@ -1817,6 +1861,7 @@ function MenuComponentManager:close_raid_menu_weapon_select_gui(node, component)
 		self._raid_menu_weapon_select_gui:close()
 
 		self._raid_menu_weapon_select_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1836,6 +1881,7 @@ function MenuComponentManager:_create_raid_menu_main_menu_gui(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_main_menu_gui._root_panel._controls) do
@@ -1861,6 +1907,7 @@ function MenuComponentManager:close_raid_menu_main_menu_gui(node, component)
 		self._raid_menu_main_menu_gui:close()
 
 		self._raid_menu_main_menu_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1880,6 +1927,7 @@ function MenuComponentManager:_create_raid_menu_select_character_profile_gui(nod
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_select_character_profile_gui._root_panel._controls) do
@@ -1908,6 +1956,7 @@ function MenuComponentManager:close_raid_menu_select_character_profile_gui(node,
 		self._raid_menu_select_character_profile_gui:close()
 
 		self._raid_menu_select_character_profile_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1927,6 +1976,7 @@ function MenuComponentManager:_create_raid_menu_create_character_profile_gui(nod
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_create_character_profile_gui._root_panel._controls) do
@@ -1955,6 +2005,7 @@ function MenuComponentManager:close_raid_menu_create_character_profile_gui(node,
 		self._raid_menu_create_character_profile_gui:close()
 
 		self._raid_menu_create_character_profile_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1974,6 +2025,7 @@ function MenuComponentManager:_create_raid_menu_character_customization_gui(node
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_character_customization_gui._root_panel._controls) do
@@ -2001,6 +2053,7 @@ function MenuComponentManager:close_raid_menu_character_customization_gui(node, 
 		self._raid_menu_character_customization_gui:close()
 
 		self._raid_menu_character_customization_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2020,6 +2073,7 @@ function MenuComponentManager:_create_raid_menu_gold_asset_store_gui(node, compo
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_gold_asset_store_gui._root_panel._controls) do
@@ -2050,6 +2104,7 @@ function MenuComponentManager:close_raid_menu_gold_asset_store_gui(node, compone
 		self._raid_menu_gold_asset_store_gui:close()
 
 		self._raid_menu_gold_asset_store_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2069,6 +2124,7 @@ function MenuComponentManager:_create_raid_menu_intel_gui(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_intel_gui._root_panel._controls) do
@@ -2099,6 +2155,7 @@ function MenuComponentManager:close_raid_menu_intel_gui(node, component)
 		self._raid_menu_intel_gui:close()
 
 		self._raid_menu_intel_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2118,6 +2175,7 @@ function MenuComponentManager:_create_raid_menu_comic_book_gui(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_comic_book_gui._root_panel._controls) do
@@ -2143,6 +2201,7 @@ function MenuComponentManager:close_raid_menu_comic_book_gui(node, component)
 		self._raid_menu_comic_book_gui:close()
 
 		self._raid_menu_comic_book_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2159,6 +2218,7 @@ function MenuComponentManager:_create_raid_menu_header_gui(node, component)
 	self:close_raid_menu_header_gui()
 
 	self._raid_menu_header_gui = RaidMenuHeader:new(self._ws, self._fullscreen_ws, node, component)
+
 	local active_menu = managers.menu:active_menu()
 
 	if active_menu then
@@ -2173,6 +2233,7 @@ function MenuComponentManager:close_raid_menu_header_gui()
 		self._raid_menu_header_gui:close()
 
 		self._raid_menu_header_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2189,6 +2250,7 @@ function MenuComponentManager:_create_raid_menu_footer_gui(node, component)
 	self:close_raid_menu_footer_gui(node, component)
 
 	self._raid_menu_footer_gui = RaidMenuFooter:new(self._ws, self._fullscreen_ws, node, component)
+
 	local active_menu = managers.menu:active_menu()
 
 	if active_menu then
@@ -2203,6 +2265,7 @@ function MenuComponentManager:close_raid_menu_footer_gui(node, component)
 		self._raid_menu_footer_gui:close()
 
 		self._raid_menu_footer_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2225,6 +2288,7 @@ function MenuComponentManager:_create_raid_menu_profile_switcher_gui(node, compo
 	self:close_raid_menu_profile_switcher_gui(node, component)
 
 	self._raid_menu_profile_switcher_gui = RaidMenuProfileSwitcher:new(self._ws, self._fullscreen_ws, node, component)
+
 	local active_menu = managers.menu:active_menu()
 
 	if active_menu then
@@ -2239,6 +2303,7 @@ function MenuComponentManager:close_raid_menu_profile_switcher_gui(node, compone
 		self._raid_menu_profile_switcher_gui:close()
 
 		self._raid_menu_profile_switcher_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2258,6 +2323,7 @@ function MenuComponentManager:_create_raid_menu_left_options_gui(node, component
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_left_options_gui._root_panel._controls) do
@@ -2283,6 +2349,7 @@ function MenuComponentManager:close_raid_menu_left_options_gui(node, component)
 		self._raid_menu_left_options_gui:close()
 
 		self._raid_menu_left_options_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2302,6 +2369,7 @@ function MenuComponentManager:_create_raid_options_background_gui(node, componen
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_options_background_gui._root_panel._controls) do
@@ -2327,6 +2395,7 @@ function MenuComponentManager:close_raid_options_background_gui(node, component)
 		self._raid_options_background_gui:close()
 
 		self._raid_options_background_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2346,6 +2415,7 @@ function MenuComponentManager:_create_raid_menu_options_controls_gui(node, compo
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_options_controls_gui._root_panel._controls) do
@@ -2371,6 +2441,7 @@ function MenuComponentManager:close_raid_menu_options_controls_gui(node, compone
 		self._raid_options_controls_gui:close()
 
 		self._raid_options_controls_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2390,6 +2461,7 @@ function MenuComponentManager:_create_raid_menu_options_controls_keybinds_gui(no
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_options_controls_keybinds_gui._root_panel._controls) do
@@ -2415,6 +2487,7 @@ function MenuComponentManager:close_raid_menu_options_controls_keybinds_gui(node
 		self._raid_options_controls_keybinds_gui:close()
 
 		self._raid_options_controls_keybinds_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2434,6 +2507,7 @@ function MenuComponentManager:_create_raid_menu_options_controller_mapping_gui(n
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_options_controller_mapping_gui._root_panel._controls) do
@@ -2459,6 +2533,7 @@ function MenuComponentManager:close_raid_menu_options_controller_mapping_gui(nod
 		self._raid_menu_options_controller_mapping_gui:close()
 
 		self._raid_menu_options_controller_mapping_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2478,6 +2553,7 @@ function MenuComponentManager:_create_raid_menu_options_sound_gui(node, componen
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_options_sound_gui._root_panel._controls) do
@@ -2503,6 +2579,7 @@ function MenuComponentManager:close_raid_menu_options_sound_gui(node, component)
 		self._raid_options_sound_gui:close()
 
 		self._raid_options_sound_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2522,6 +2599,7 @@ function MenuComponentManager:_create_raid_menu_options_network_gui(node, compon
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_options_network_gui._root_panel._controls) do
@@ -2547,6 +2625,7 @@ function MenuComponentManager:close_raid_menu_options_network_gui(node, componen
 		self._raid_options_network_gui:close()
 
 		self._raid_options_network_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2566,6 +2645,7 @@ function MenuComponentManager:_create_raid_menu_options_video_gui(node, componen
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_options_video_gui._root_panel._controls) do
@@ -2591,6 +2671,7 @@ function MenuComponentManager:close_raid_menu_options_video_gui(node, component)
 		self._raid_options_video_gui:close()
 
 		self._raid_options_video_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2610,6 +2691,7 @@ function MenuComponentManager:_create_raid_menu_options_video_advanced_gui(node,
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_options_video_advanced_gui._root_panel._controls) do
@@ -2635,6 +2717,7 @@ function MenuComponentManager:close_raid_menu_options_video_advanced_gui(node, c
 		self._raid_options_video_advanced_gui:close()
 
 		self._raid_options_video_advanced_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2647,6 +2730,7 @@ function MenuComponentManager:create_raid_ready_up_gui(node, component)
 	self:close_raid_ready_up_gui(node, component)
 
 	self._raid_ready_up_gui = ReadyUpGui:new(self._ws, self._fullscreen_ws, node, component)
+
 	local active_menu = managers.menu:active_menu()
 
 	if active_menu then
@@ -2682,6 +2766,7 @@ function MenuComponentManager:_create_raid_challenge_cards_gui(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_challenge_cards_gui._root_panel._controls) do
@@ -2726,6 +2811,7 @@ function MenuComponentManager:_create_raid_challenge_cards_view_gui(node, compon
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_challenge_cards_view_gui._root_panel._controls) do
@@ -2751,6 +2837,7 @@ function MenuComponentManager:close_raid_challenge_cards_view_gui(node, componen
 		self._raid_challenge_cards_view_gui:close()
 
 		self._raid_challenge_cards_view_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2770,6 +2857,7 @@ function MenuComponentManager:_create_raid_challenge_cards_loot_reward_gui(node,
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_challenge_cards_loot_reward_gui._root_panel._controls) do
@@ -2798,6 +2886,7 @@ function MenuComponentManager:close_raid_challenge_cards_loot_reward_gui(node, c
 		self._raid_challenge_cards_loot_reward_gui:close()
 
 		self._raid_challenge_cards_loot_reward_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2817,6 +2906,7 @@ function MenuComponentManager:_create_raid_menu_xp(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_xp_gui._root_panel._controls) do
@@ -2842,6 +2932,7 @@ function MenuComponentManager:close_raid_menu_xp(node, component)
 		self._raid_menu_xp_gui:close()
 
 		self._raid_menu_xp_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2861,6 +2952,7 @@ function MenuComponentManager:_create_raid_menu_post_game_breakdown(node, compon
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_post_game_breakdown_gui._root_panel._controls) do
@@ -2886,6 +2978,7 @@ function MenuComponentManager:close_raid_menu_post_game_breakdown(node, componen
 		self._raid_menu_post_game_breakdown_gui:close()
 
 		self._raid_menu_post_game_breakdown_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2905,6 +2998,7 @@ function MenuComponentManager:_create_raid_menu_special_honors(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_special_honors_gui._root_panel._controls) do
@@ -2930,6 +3024,7 @@ function MenuComponentManager:close_raid_menu_special_honors(node, component)
 		self._raid_menu_special_honors_gui:close()
 
 		self._raid_menu_special_honors_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2949,6 +3044,7 @@ function MenuComponentManager:_create_raid_menu_loot(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_loot_gui._root_panel._controls) do
@@ -2974,6 +3070,7 @@ function MenuComponentManager:close_raid_menu_loot(node, component)
 		self._raid_menu_loot_gui:close()
 
 		self._raid_menu_loot_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -2993,6 +3090,7 @@ function MenuComponentManager:_create_raid_menu_greed_loot(node, component)
 
 	if component then
 		self._active_controls[component] = {}
+
 		local final_list = self._active_controls[component]
 
 		for _, control in ipairs(self._raid_menu_greed_loot_gui._root_panel._controls) do
@@ -3018,6 +3116,7 @@ function MenuComponentManager:close_raid_menu_greed_loot(node, component)
 		self._raid_menu_greed_loot_gui:close()
 
 		self._raid_menu_greed_loot_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -3056,6 +3155,7 @@ function MenuComponentManager:close_raid_menu_credits(node, component)
 		self._raid_menu_credits_gui:close()
 
 		self._raid_menu_credits_gui = nil
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -3089,6 +3189,7 @@ end
 function MenuComponentManager:gather_controls_for_component(component_name)
 	if component_name then
 		self._active_controls[component_name] = {}
+
 		local final_list = self._active_controls[component_name]
 		local component_object = self._active_components[component_name].component_object
 
@@ -3131,17 +3232,17 @@ function MenuComponentManager:_create_voice_chat_status_info()
 		w = HUDPlayerVoiceChatStatus.DEFAULT_W,
 		h = HUDPlayerVoiceChatStatus.DEFAULT_H * 4
 	}
+
 	self._voice_chat_panel = self._voicechat_ws:panel():panel(widget_panel_params)
 
 	self._voice_chat_panel:set_top(self._voicechat_ws:panel():h() / 2 - HUDPlayerVoiceChatStatus.DEFAULT_H * 2)
 	self._voice_chat_panel:set_right(self._voicechat_ws:panel():w() - HUDPlayerVoiceChatStatus.DEFAULT_W / 4)
 
-	self._voice_chat_widgets = {
-		HUDPlayerVoiceChatStatus:new(0, self._voice_chat_panel),
-		HUDPlayerVoiceChatStatus:new(1, self._voice_chat_panel),
-		HUDPlayerVoiceChatStatus:new(2, self._voice_chat_panel),
-		HUDPlayerVoiceChatStatus:new(3, self._voice_chat_panel)
-	}
+	self._voice_chat_widgets = {}
+	self._voice_chat_widgets[1] = HUDPlayerVoiceChatStatus:new(0, self._voice_chat_panel)
+	self._voice_chat_widgets[2] = HUDPlayerVoiceChatStatus:new(1, self._voice_chat_panel)
+	self._voice_chat_widgets[3] = HUDPlayerVoiceChatStatus:new(2, self._voice_chat_panel)
+	self._voice_chat_widgets[4] = HUDPlayerVoiceChatStatus:new(3, self._voice_chat_panel)
 end
 
 function MenuComponentManager:_voice_panel_align_bottom_right()
@@ -3227,7 +3328,7 @@ function MenuComponentManager:_update_voice_chat_ui(params)
 		is_local_user = managers.network.account:username_id() == user_data.user_name
 	end
 
-	local peer_to_update = nil
+	local peer_to_update
 
 	if is_local_user then
 		peer_to_update = managers.network:session():local_peer()

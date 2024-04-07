@@ -10,6 +10,7 @@ function WeaponLionGadget1:init(unit)
 end
 
 function WeaponLionGadget1:update(unit, t, dt)
+	return
 end
 
 function WeaponLionGadget1:set_npc()
@@ -98,11 +99,11 @@ function WeaponLionGadget1:_is_deployable()
 		return false
 	end
 
-	if bipod_rays.left and bipod_rays.left.distance < bipod_min_length then
+	if bipod_rays.left and bipod_min_length > bipod_rays.left.distance then
 		return false
 	end
 
-	if bipod_rays.right and bipod_rays.right.distance < bipod_min_length then
+	if bipod_rays.right and bipod_min_length > bipod_rays.right.distance then
 		return false
 	end
 
@@ -245,6 +246,7 @@ function WeaponLionGadget1:check_state()
 	end
 
 	local bipod_deployable = self:_is_deployable()
+
 	self._deployed = false
 
 	if not self._is_npc then
@@ -263,4 +265,5 @@ function WeaponLionGadget1:check_state()
 end
 
 function WeaponLionGadget1:destroy(unit)
+	return
 end

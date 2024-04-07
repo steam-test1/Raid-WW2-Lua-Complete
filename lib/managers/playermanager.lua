@@ -12,9 +12,8 @@ function PlayerManager:init()
 	self._players = {}
 	self._nr_players = Global.nr_players or 1
 	self._last_id = 1
-	self._viewport_configs = {
-		{}
-	}
+	self._viewport_configs = {}
+	self._viewport_configs[1] = {}
 	self._viewport_configs[1][1] = {
 		dimensions = {
 			w = 1,
@@ -23,22 +22,21 @@ function PlayerManager:init()
 			y = 0
 		}
 	}
-	self._viewport_configs[2] = {
-		{
-			dimensions = {
-				w = 1,
-				h = 0.5,
-				x = 0,
-				y = 0
-			}
-		},
-		{
-			dimensions = {
-				w = 1,
-				h = 0.5,
-				x = 0,
-				y = 0.5
-			}
+	self._viewport_configs[2] = {}
+	self._viewport_configs[2][1] = {
+		dimensions = {
+			w = 1,
+			h = 0.5,
+			x = 0,
+			y = 0
+		}
+	}
+	self._viewport_configs[2][2] = {
+		dimensions = {
+			w = 1,
+			h = 0.5,
+			x = 0,
+			y = 0.5
 		}
 	}
 	self._view_disabled = false
@@ -68,7 +66,9 @@ function PlayerManager:init()
 		"standard"
 	}
 	self._current_sync_state = self._DEFAULT_STATE
+
 	local ids_player = Idstring("player")
+
 	self._player_timer = TimerManager:timer(ids_player) or TimerManager:make_timer(ids_player, TimerManager:pausable())
 	self._hostage_close_to_local_t = 0
 
@@ -121,32 +121,31 @@ function PlayerManager:_setup()
 	self._temporary_upgrades = {}
 
 	if not Global.player_manager then
-		Global.player_manager = {
-			upgrades = {},
-			team_upgrades = {},
-			weapons = {},
-			equipment = {},
-			grenades = {},
-			kit = {
-				weapon_slots = {
-					BlackMarketManager.DEFAULT_SECONDARY_WEAPON_ID
-				},
-				equipment_slots = {},
-				special_equipment_slots = {}
+		Global.player_manager = {}
+		Global.player_manager.upgrades = {}
+		Global.player_manager.team_upgrades = {}
+		Global.player_manager.weapons = {}
+		Global.player_manager.equipment = {}
+		Global.player_manager.grenades = {}
+		Global.player_manager.kit = {
+			weapon_slots = {
+				BlackMarketManager.DEFAULT_SECONDARY_WEAPON_ID
 			},
-			viewed_content_updates = {},
-			character_profile_name = "",
-			is_character_profile_hardcore = false,
-			character_profile_nation = "",
-			customization_equiped_head_name = "",
-			customization_equiped_upper_name = "",
-			customization_equiped_lower_name = "",
-			game_settings_difficulty = Global.DEFAULT_DIFFICULTY,
-			game_settings_permission = Global.DEFAULT_PERMISSION,
-			game_settings_drop_in_allowed = true,
-			game_settings_team_ai = true,
-			game_settings_auto_kick = true
+			equipment_slots = {},
+			special_equipment_slots = {}
 		}
+		Global.player_manager.viewed_content_updates = {}
+		Global.player_manager.character_profile_name = ""
+		Global.player_manager.is_character_profile_hardcore = false
+		Global.player_manager.character_profile_nation = ""
+		Global.player_manager.customization_equiped_head_name = ""
+		Global.player_manager.customization_equiped_upper_name = ""
+		Global.player_manager.customization_equiped_lower_name = ""
+		Global.player_manager.game_settings_difficulty = Global.DEFAULT_DIFFICULTY
+		Global.player_manager.game_settings_permission = Global.DEFAULT_PERMISSION
+		Global.player_manager.game_settings_drop_in_allowed = true
+		Global.player_manager.game_settings_team_ai = true
+		Global.player_manager.game_settings_auto_kick = true
 	end
 
 	Global.player_manager.default_kit = {
@@ -187,6 +186,7 @@ end
 
 function PlayerManager:set_customization_equiped_head_name(head_name)
 	local owned_head_name = managers.character_customization:verify_customization_ownership(self:get_character_profile_nation(), CharacterCustomizationTweakData.PART_TYPE_UPPER, head_name)
+
 	Global.player_manager.customization_equiped_head_name = owned_head_name
 end
 
@@ -204,6 +204,7 @@ end
 
 function PlayerManager:set_customization_equiped_upper_name(upper_name)
 	local owned_upper_name = managers.character_customization:verify_customization_ownership(self:get_character_profile_nation(), CharacterCustomizationTweakData.PART_TYPE_UPPER, upper_name)
+
 	Global.player_manager.customization_equiped_upper_name = owned_upper_name
 end
 
@@ -221,6 +222,7 @@ end
 
 function PlayerManager:set_customization_equiped_lower_name(lower_name)
 	local owned_lower_name = managers.character_customization:verify_customization_ownership(self:get_character_profile_nation(), CharacterCustomizationTweakData.PART_TYPE_LOWER, lower_name)
+
 	Global.player_manager.customization_equiped_lower_name = owned_lower_name
 end
 
@@ -293,10 +295,12 @@ function PlayerManager:update(t, dt)
 	end
 
 	self._sent_player_status_this_frame = nil
+
 	local local_player = self:local_player()
 
-	if self:has_category_upgrade("player", "close_to_hostage_boost") and (not self._hostage_close_to_local_t or self._hostage_close_to_local_t <= t) then
+	if self:has_category_upgrade("player", "close_to_hostage_boost") and (not self._hostage_close_to_local_t or t >= self._hostage_close_to_local_t) then
 		local local_player = self:local_player()
+
 		self._is_local_close_to_hostage = alive(local_player) and managers.groupai and managers.groupai:state():is_a_hostage_within(local_player:movement():m_pos(), tweak_data.upgrades.hostage_near_player_radius)
 		self._hostage_close_to_local_t = t + tweak_data.upgrades.hostage_near_player_check_t
 	end
@@ -314,6 +318,7 @@ function PlayerManager:remove_listener(key)
 end
 
 function PlayerManager:preload()
+	return
 end
 
 function PlayerManager:need_send_player_status()
@@ -389,9 +394,7 @@ function PlayerManager:_internal_load()
 	local peer_id = managers.network:session():local_peer():id()
 	local grenade, amount = managers.blackmarket:equipped_grenade()
 
-	if self:has_grenade(peer_id) then
-		amount = self:get_grenade_amount(peer_id) or amount
-	end
+	amount = self:has_grenade(peer_id) and self:get_grenade_amount(peer_id) or amount
 
 	self:_set_grenade({
 		grenade = grenade,
@@ -400,7 +403,9 @@ function PlayerManager:_internal_load()
 	self:refill_grenades()
 	self:_set_body_bags_amount(self._local_player_body_bags or self:total_body_bags())
 
-	if not self._respawn then
+	if self._respawn then
+		-- Nothing
+	else
 		self:_add_level_equipment(player)
 
 		for i, name in ipairs(self._global.default_kit.special_equipment_slots) do
@@ -424,25 +429,30 @@ function PlayerManager:_internal_load()
 			if ok_name then
 				local upgrade = tweak_data.upgrades.definitions[ok_name]
 
-				if upgrade and (upgrade.slot and upgrade.slot < 2 or not upgrade.slot) then
-					self:add_equipment({
-						silent = true,
-						equipment = upgrade.equipment_id
-					})
+				if upgrade then
+					if upgrade.slot and upgrade.slot < 2 or not upgrade.slot then
+						self:add_equipment({
+							silent = true,
+							equipment = upgrade.equipment_id
+						})
 
-					break
+						break
+					end
+
+					if upgrade.slot and upgrade.slot == 2 then
+						-- Nothing
+					end
 				end
 			end
 
-			if not upgrade.slot or upgrade.slot ~= 2 then
-				break
-			end
+			break
 		end
 	end
 end
 
 function PlayerManager:_add_level_equipment(player)
 	local id = Global.running_simulation and managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
+
 	id = id ~= "none" and id or nil
 	id = id or Global.level_data.level_id
 
@@ -494,13 +504,9 @@ function PlayerManager:spawn_dropin_penalty(dead, bleed_out, health, used_deploy
 
 	self:_set_body_bags_amount(math.max(self:total_body_bags() - used_body_bags, 0))
 
-	local min_health = nil
+	local min_health
 
-	if dead or bleed_out then
-		min_health = 0
-	else
-		min_health = 0.25
-	end
+	min_health = (dead or bleed_out) and 0 or 0.25
 
 	player:character_damage():set_health(math.max(min_health, health) * player:character_damage():_max_health())
 
@@ -585,10 +591,12 @@ end
 
 function PlayerManager:set_player_state(state, state_data)
 	state = state or self._current_state
+
 	local carry_data = self:get_my_carry_data()
 
 	if state == "standard" and carry_data then
 		local carry_tweak = tweak_data.carry[carry_data.carry_id]
+
 		state = carry_tweak.is_corpse and "carry_corpse" or "carry"
 	end
 
@@ -709,7 +717,7 @@ function PlayerManager:on_out_of_world()
 	end
 
 	local player_pos = player_unit:position()
-	local closest_pos, closest_distance = nil
+	local closest_pos, closest_distance
 
 	for _, data in pairs(managers.groupai:state():all_player_criminals()) do
 		if data.unit ~= player_unit then
@@ -747,15 +755,19 @@ function PlayerManager:unaquire_weapon(upgrade, id)
 end
 
 function PlayerManager:aquire_melee_weapon(upgrade, id)
+	return
 end
 
 function PlayerManager:unaquire_melee_weapon(upgrade, id)
+	return
 end
 
 function PlayerManager:aquire_grenade(upgrade, id)
+	return
 end
 
 function PlayerManager:unaquire_grenade(upgrade, id)
+	return
 end
 
 function PlayerManager:_verify_equipment_kit(loading)
@@ -813,6 +825,7 @@ function PlayerManager:on_killshot(killed_unit, variant)
 
 	if dist_sq <= close_combat_sq then
 		regen_armor_bonus = regen_armor_bonus + managers.player:upgrade_value("player", "killshot_close_regen_armor_bonus", 0)
+
 		local panic_chance = managers.player:upgrade_value("player", "killshot_close_panic_chance", 0)
 
 		if panic_chance > 0 or panic_chance == -1 then
@@ -861,7 +874,7 @@ function PlayerManager:chk_store_armor_health_kill_counter(killed_unit, variant)
 		self._armor_health_store_kill_counter = self._armor_health_store_kill_counter or 0
 		self._armor_health_store_kill_counter = self._armor_health_store_kill_counter + 1
 
-		if tweak_data.upgrades.armor_health_store_kill_amount <= self._armor_health_store_kill_counter then
+		if self._armor_health_store_kill_counter >= tweak_data.upgrades.armor_health_store_kill_amount then
 			self._armor_health_store_kill_counter = 0
 
 			damage_ext:add_armor_stored_health(managers.player:upgrade_value("player", "armor_health_store_amount", 0))
@@ -901,6 +914,7 @@ function PlayerManager:on_headshot_dealt(is_kill)
 	end
 
 	self._on_headshot_dealt_t = t + (tweak_data.upgrades.on_headshot_dealt_cooldown or 0)
+
 	local damage_ext = player_unit:character_damage()
 	local regen_armor_bonus = managers.player:upgrade_value("player", "headshot_regen_armor_bonus", 0)
 
@@ -968,6 +982,7 @@ function PlayerManager:unaquire_equipment(upgrade, id)
 	end
 
 	local is_equipped = managers.player:equipment_in_slot(upgrade.slot) == id
+
 	self._global.equipment[id] = nil
 
 	if is_equipped then
@@ -984,6 +999,7 @@ end
 function PlayerManager:aquire_upgrade(upgrade)
 	self._global.upgrades[upgrade.category] = self._global.upgrades[upgrade.category] or {}
 	self._global.upgrades[upgrade.category][upgrade.upgrade] = math.max(upgrade.value, self._global.upgrades[upgrade.category][upgrade.upgrade] or 0)
+
 	local value = tweak_data.upgrades.values[upgrade.category][upgrade.upgrade][upgrade.value]
 
 	if self[upgrade.upgrade] then
@@ -1009,8 +1025,11 @@ end
 
 function PlayerManager:aquire_incremental_upgrade(upgrade)
 	self._global.upgrades[upgrade.category] = self._global.upgrades[upgrade.category] or {}
+
 	local val = self._global.upgrades[upgrade.category][upgrade.upgrade]
+
 	self._global.upgrades[upgrade.category][upgrade.upgrade] = (val or 0) + 1
+
 	local value = tweak_data.upgrades.values[upgrade.category][upgrade.upgrade][self._global.upgrades[upgrade.category][upgrade.upgrade]]
 
 	if self[upgrade.upgrade] then
@@ -1032,6 +1051,7 @@ function PlayerManager:unaquire_incremental_upgrade(upgrade)
 	end
 
 	local val = self._global.upgrades[upgrade.category][upgrade.upgrade]
+
 	val = val - 1
 	self._global.upgrades[upgrade.category][upgrade.upgrade] = val > 0 and val or nil
 
@@ -1087,16 +1107,16 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 	end
 
 	local time = upgrade_value[2]
+
 	self._temporary_upgrades[category] = self._temporary_upgrades[category] or {}
-	self._temporary_upgrades[category][upgrade] = {
-		expire_time = Application:time() + time
-	}
+	self._temporary_upgrades[category][upgrade] = {}
+	self._temporary_upgrades[category][upgrade].expire_time = Application:time() + time
 end
 
 function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, level)
 	local upgrade_level = self:upgrade_level(category, upgrade, 0) or 0
 
-	if level > upgrade_level then
+	if upgrade_level < level then
 		return
 	end
 
@@ -1107,11 +1127,11 @@ function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, le
 	end
 
 	local time = upgrade_value[2]
+
 	self._temporary_upgrades[category] = self._temporary_upgrades[category] or {}
-	self._temporary_upgrades[category][upgrade] = {
-		upgrade_value = upgrade_value[1],
-		expire_time = Application:time() + time
-	}
+	self._temporary_upgrades[category][upgrade] = {}
+	self._temporary_upgrades[category][upgrade].upgrade_value = upgrade_value[1]
+	self._temporary_upgrades[category][upgrade].expire_time = Application:time() + time
 end
 
 function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
@@ -1143,7 +1163,7 @@ function PlayerManager:has_activate_temporary_upgrade(category, upgrade)
 		return false
 	end
 
-	return Application:time() < self._temporary_upgrades[category][upgrade].expire_time
+	return self._temporary_upgrades[category][upgrade].expire_time > Application:time()
 end
 
 function PlayerManager:get_activate_temporary_expire_time(category, upgrade)
@@ -1278,7 +1298,9 @@ function PlayerManager:get_hostage_bonus_multiplier(category)
 	local hostages = managers.groupai and managers.groupai:state():hostage_count() or 0
 	local minions = self:num_local_minions() or 0
 	local multiplier = 0
+
 	hostages = hostages + minions
+
 	local hostage_max_num = tweak_data:get_raw_value("upgrades", "hostage_max_num", category)
 
 	if hostage_max_num then
@@ -1289,6 +1311,7 @@ function PlayerManager:get_hostage_bonus_multiplier(category)
 	multiplier = multiplier + self:team_upgrade_value(category, "passive_hostage_multiplier", 1) - 1
 	multiplier = multiplier + self:upgrade_value("player", "hostage_" .. category .. "_multiplier", 1) - 1
 	multiplier = multiplier + self:upgrade_value("player", "passive_hostage_" .. category .. "_multiplier", 1) - 1
+
 	local local_player = self:local_player()
 
 	if self:has_category_upgrade("player", "close_to_hostage_boost") and self._is_local_close_to_hostage then
@@ -1302,7 +1325,9 @@ function PlayerManager:get_hostage_bonus_addend(category)
 	local hostages = managers.groupai and managers.groupai:state():hostage_count() or 0
 	local minions = self:num_local_minions() or 0
 	local addend = 0
+
 	hostages = hostages + minions
+
 	local hostage_max_num = tweak_data:get_raw_value("upgrades", "hostage_max_num", category)
 
 	if hostage_max_num then
@@ -1313,6 +1338,7 @@ function PlayerManager:get_hostage_bonus_addend(category)
 	addend = addend + self:team_upgrade_value(category, "passive_hostage_addend", 0)
 	addend = addend + self:upgrade_value("player", "hostage_" .. category .. "_addend", 0)
 	addend = addend + self:upgrade_value("player", "passive_hostage_" .. category .. "_addend", 0)
+
 	local local_player = self:local_player()
 
 	if self:has_category_upgrade("player", "close_to_hostage_boost") and self._is_local_close_to_hostage then
@@ -1342,6 +1368,7 @@ function PlayerManager:movement_speed_multiplier(is_running, is_climbing, is_cro
 	end
 
 	multiplier = multiplier + self:upgrade_value("player", "all_movement_speed_increase", 1) - 1
+
 	local warcry_multiplier = self:team_upgrade_value("player", "warcry_movement_speed_multiplier", 0) * self:team_upgrade_value("player", "warcry_team_movement_speed_bonus", 1)
 
 	if warcry_multiplier > 0 then
@@ -1358,6 +1385,7 @@ function PlayerManager:mod_movement_penalty(movement_penalty)
 
 	if skill_mods < 1 and movement_penalty < 1 then
 		local penalty = 1 - movement_penalty
+
 		penalty = penalty * skill_mods
 		movement_penalty = 1 - penalty
 	end
@@ -1367,6 +1395,7 @@ end
 
 function PlayerManager:body_armor_skill_multiplier(override_armor)
 	local multiplier = 1
+
 	multiplier = multiplier + self:upgrade_value("player", "tier_armor_multiplier", 1) - 1
 	multiplier = multiplier + self:upgrade_value("player", "passive_armor_multiplier", 1) - 1
 	multiplier = multiplier + self:upgrade_value("player", "armor_multiplier", 1) - 1
@@ -1380,6 +1409,7 @@ end
 
 function PlayerManager:body_armor_regen_multiplier(moving, health_ratio)
 	local multiplier = 1
+
 	multiplier = multiplier * self:upgrade_value("player", "armor_regen_timer_multiplier_tier", 1)
 	multiplier = multiplier * self:upgrade_value("player", "armor_regen_timer_multiplier", 1)
 	multiplier = multiplier * self:upgrade_value("player", "armor_regen_timer_multiplier_passive", 1)
@@ -1393,6 +1423,7 @@ function PlayerManager:body_armor_regen_multiplier(moving, health_ratio)
 
 	if health_ratio then
 		local damage_health_ratio = self:get_damage_health_ratio(health_ratio, "armor_regen")
+
 		multiplier = multiplier * (1 - managers.player:upgrade_value("player", "armor_regen_damage_health_ratio_multiplier", 0) * damage_health_ratio)
 	end
 
@@ -1401,6 +1432,7 @@ end
 
 function PlayerManager:body_armor_skill_addend(override_armor)
 	local addend = 0
+
 	addend = addend + self:upgrade_value("player", tostring(override_armor or managers.blackmarket:equipped_armor(true, true)) .. "_armor_addend", 0)
 
 	return addend
@@ -1414,6 +1446,7 @@ end
 
 function PlayerManager:stamina_multiplier()
 	local multiplier = 1
+
 	multiplier = multiplier + self:upgrade_value("player", "stamina_multiplier", 1) - 1
 	multiplier = multiplier + self:team_upgrade_value("player", "warcry_stamina_multiplier", 1) - 1
 
@@ -1422,7 +1455,8 @@ end
 
 function PlayerManager:critical_hit_chance()
 	local multiplier = 0
-	multiplier = multiplier + self:upgrade_value("player", "critical_hit_chance", 1) - 1
+
+	multiplier = multiplier + (self:upgrade_value("player", "critical_hit_chance", 1) - 1)
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE) then
 		multiplier = multiplier * (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE) or 1)
@@ -1454,10 +1488,7 @@ function PlayerManager:get_value_from_risk_upgrade(risk_upgrade, detection_risk)
 		end
 
 		risk_value = num_steps * value
-
-		if cap then
-			risk_value = math.min(cap, risk_value) or risk_value
-		end
+		risk_value = cap and math.min(cap, risk_value) or risk_value
 	end
 
 	return risk_value
@@ -1465,6 +1496,7 @@ end
 
 function PlayerManager:health_skill_multiplier()
 	local multiplier = 1
+
 	multiplier = multiplier + self:upgrade_value("player", "max_health_multiplier", 1) - 1
 
 	return multiplier
@@ -1477,6 +1509,7 @@ function PlayerManager:health_regen(health_ratio)
 		health_regen = self._unit:character_damage():get_base_health_regen()
 	else
 		local class_tweak_data = tweak_data.player:get_tweak_data_for_class(managers.skilltree:get_character_profile_class() or "recon")
+
 		health_regen = health_regen + class_tweak_data.damage.HEALTH_REGEN
 
 		if health_ratio and health_ratio > 0 and health_ratio < class_tweak_data.damage.LOW_HEALTH_REGEN_LIMIT then
@@ -1744,6 +1777,7 @@ function PlayerManager:set_synced_deployable_equipment(peer, deployable, amount)
 		deployable = deployable,
 		amount = amount
 	}
+
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
 
 	if character_data and character_data.panel_id then
@@ -1837,6 +1871,7 @@ function PlayerManager:set_synced_ammo_info(peer_id, selection_index, max_clip, 
 		current_left,
 		max
 	}
+
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
 
 	if character_data and character_data.panel_id then
@@ -1871,6 +1906,7 @@ end
 
 function PlayerManager:set_synced_carry(peer, carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
 	local peer_id = peer:id()
+
 	self._global.synced_carry[peer_id] = {
 		carry_id = carry_id,
 		multiplier = multiplier,
@@ -1878,15 +1914,16 @@ function PlayerManager:set_synced_carry(peer, carry_id, multiplier, dye_initiate
 		has_dye_pack = has_dye_pack,
 		dye_value_multiplier = dye_value_multiplier
 	}
+
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
-	local teammate_panel_id = nil
+	local teammate_panel_id
 
 	if character_data and character_data.panel_id then
 		teammate_panel_id = character_data.panel_id
 	end
 
 	local unit_data = managers.network:session():peer(peer_id):unit():unit_data()
-	local name_label_id = nil
+	local name_label_id
 
 	if unit_data and unit_data.name_label_id then
 		name_label_id = unit_data.name_label_id
@@ -1924,14 +1961,15 @@ function PlayerManager:remove_synced_carry(peer)
 	end
 
 	self._global.synced_carry[peer_id] = nil
+
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
-	local teammate_panel_id = nil
+	local teammate_panel_id
 
 	if character_data and character_data.panel_id then
 		teammate_panel_id = character_data.panel_id
 	end
 
-	local name_label_id = nil
+	local name_label_id
 
 	if peer:unit() and peer:unit():unit_data() then
 		local unit_data = peer:unit():unit_data()
@@ -2010,7 +2048,7 @@ function PlayerManager:unaquire_team_upgrade(upgrade_definition)
 		return
 	end
 
-	local val = nil
+	local val
 
 	if not upgrade_definition.incremental then
 		val = 0
@@ -2109,6 +2147,7 @@ function PlayerManager:remove_equipment_possession(peer_id, equipment)
 	end
 
 	self._global.synced_equipment_possession[peer_id][equipment] = nil
+
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
 
 	if character_data and character_data.panel_id then
@@ -2139,8 +2178,10 @@ end
 
 function PlayerManager:set_synced_equipment_possession(peer_id, equipment, amount)
 	local only_update_amount = self._global.synced_equipment_possession[peer_id] and self._global.synced_equipment_possession[peer_id][equipment]
+
 	self._global.synced_equipment_possession[peer_id] = self._global.synced_equipment_possession[peer_id] or {}
 	self._global.synced_equipment_possession[peer_id][equipment] = amount or 1
+
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
 
 	if character_data and character_data.panel_id then
@@ -2210,8 +2251,9 @@ function PlayerManager:transfer_special_equipment(peer_id, include_custody)
 					local id = p:id()
 					local peer_amount = self._global.synced_equipment_possession[id] and self._global.synced_equipment_possession[id][name] or 0
 
-					if max_amount > peer_amount then
+					if peer_amount < max_amount then
 						local transfer_amount = math.min(amount_to_transfer, max_amount - peer_amount)
+
 						amount_to_transfer = amount_to_transfer - transfer_amount
 
 						if Network:is_server() then
@@ -2289,6 +2331,7 @@ function PlayerManager:peer_dropped_out(peer)
 	self._global.synced_bipod[peer_id] = nil
 	self._global.synced_turret[peer_id] = nil
 	self._global.synced_drag_body[peer_id] = nil
+
 	local peer_unit = peer:unit()
 
 	managers.vehicle:remove_player_from_all_vehicles(peer_unit)
@@ -2364,6 +2407,7 @@ function PlayerManager:add_equipment_amount(equipment, amount)
 
 	if data then
 		local new_amount = Application:digest_value(data.amount, false) + amount
+
 		data.amount = Application:digest_value(new_amount, true)
 
 		managers.hud:set_item_amount(index, new_amount)
@@ -2375,6 +2419,7 @@ function PlayerManager:set_equipment_amount(equipment, amount)
 
 	if data then
 		local new_amount = amount
+
 		data.amount = Application:digest_value(new_amount, true)
 
 		managers.hud:set_item_amount(index, new_amount)
@@ -2452,7 +2497,9 @@ function PlayerManager:from_server_equipment_place_result(selected_index, unit)
 	end
 
 	local new_amount = Application:digest_value(equipment.amount, false) - 1
+
 	equipment.amount = Application:digest_value(new_amount, true)
+
 	local equipments_available = self._global.equipment or {}
 
 	if managers.player:has_category_upgrade("player", "carry_sentry_and_trip") and equipments_available.sentry_gun and equipments_available.trip_mine and new_amount == 0 then
@@ -2575,7 +2622,7 @@ function PlayerManager:use_selected_equipment(unit)
 	end
 
 	local used_one = false
-	local redirect = nil
+	local redirect
 
 	if equipment.use_function then
 		used_one, redirect = unit:equipment()[equipment.use_function](unit:equipment(), self._equipment.selected_index)
@@ -2635,7 +2682,9 @@ end
 function PlayerManager:remove_equipment(equipment_id)
 	local equipment, index = self:equipment_data_by_name(equipment_id)
 	local new_amount = Application:digest_value(equipment.amount, false) - 1
+
 	equipment.amount = Application:digest_value(new_amount, true)
+
 	local equipments_available = self._global.equipment or {}
 
 	if managers.player:has_category_upgrade("player", "carry_sentry_and_trip") and equipments_available.sentry_gun and equipments_available.trip_mine and new_amount == 0 then
@@ -2663,9 +2712,10 @@ end
 function PlayerManager:verify_equipment(peer_id, equipment_id)
 	if peer_id == 0 then
 		local id = "asset_" .. tostring(equipment_id)
+
 		self._asset_equipment = self._asset_equipment or {}
 
-		if not tweak_data.equipments.max_amount[id] or self._asset_equipment[id] and tweak_data.equipments.max_amount[id] < self._asset_equipment[id] + 1 then
+		if not tweak_data.equipments.max_amount[id] or self._asset_equipment[id] and self._asset_equipment[id] + 1 > tweak_data.equipments.max_amount[id] then
 			local peer = managers.network:session():server_peer()
 
 			peer:mark_cheater(VoteManager.REASON.many_assets)
@@ -2739,6 +2789,7 @@ function PlayerManager:add_special(params)
 		if equipment.max_quantity or equipment.quantity or params.transfer and equipment.transfer_quantity then
 			local dedigested_amount = special_equipment.amount and Application:digest_value(special_equipment.amount, false) or 1
 			local new_amount = self:has_category_upgrade(name, "quantity_unlimited") and -1 or math.min(dedigested_amount + amount, (params.transfer and equipment.transfer_quantity or equipment.max_quantity or equipment.quantity) + extra)
+
 			special_equipment.amount = Application:digest_value(new_amount, true)
 
 			managers.hud:set_special_equipment_amount(name, new_amount)
@@ -2768,7 +2819,7 @@ function PlayerManager:add_special(params)
 		end
 	end
 
-	local quantity = nil
+	local quantity
 
 	if not params.transfer then
 		quantity = self:has_category_upgrade(name, "quantity_unlimited") and -1 or equipment.quantity and (respawn and math.min(params.amount, (equipment.max_quantity or equipment.quantity or 1) + extra) or equipment.quantity and math.min(amount + extra, (equipment.max_quantity or equipment.quantity or 1) + extra))
@@ -2865,11 +2916,7 @@ function PlayerManager:remove_special(name, all)
 	local special_amount = special_equipment.amount and Application:digest_value(special_equipment.amount, false)
 
 	if special_amount and special_amount ~= -1 then
-		if all then
-			special_amount = 0
-		else
-			special_amount = math.max(0, special_amount - 1)
-		end
+		special_amount = all and 0 or math.max(0, special_amount - 1)
 
 		managers.hud:set_special_equipment_amount(name, special_amount)
 		self:update_equipment_possession_to_peers(name, special_amount)
@@ -2883,6 +2930,7 @@ function PlayerManager:remove_special(name, all)
 		self:remove_equipment_possession(managers.network:session():local_peer():id(), name)
 
 		self._equipment.specials[name] = nil
+
 		local equipment = tweak_data.equipments.specials[name]
 
 		if equipment.player_rule then
@@ -2918,6 +2966,7 @@ function PlayerManager:add_grenade_amount(amount)
 
 	if self._global.synced_grenades[peer_id] then
 		local icon = tweak_data.projectiles[grenade].icon
+
 		gained_grenades = Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
 		amount = math.clamp(Application:digest_value(self._global.synced_grenades[peer_id].amount, false) + amount, 0, self:get_max_grenades_by_peer_id(peer_id))
 		gained_grenades = amount - gained_grenades
@@ -2962,10 +3011,12 @@ function PlayerManager:set_synced_grenades(peer_id, grenade, amount)
 
 	local only_update_amount = self._global.synced_grenades[peer_id] and self._global.synced_grenades[peer_id].grenade == grenade
 	local digested_amount = Application:digest_value(amount, true)
+
 	self._global.synced_grenades[peer_id] = {
 		grenade = grenade,
 		amount = digested_amount
 	}
+
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
 
 	if character_data and character_data.panel_id then
@@ -3008,6 +3059,7 @@ end
 
 function PlayerManager:get_max_grenades(grenade_id)
 	grenade_id = grenade_id or managers.blackmarket:equipped_grenade()
+
 	local upgrade_amount = self:upgrade_value("player", "grenade_quantity", 0)
 
 	return tweak_data.projectiles[grenade_id] and (tweak_data.projectiles[grenade_id].max_amount or 0) + upgrade_amount
@@ -3016,11 +3068,12 @@ end
 function PlayerManager:got_max_grenades()
 	local peer_id = managers.network:session():local_peer():id()
 
-	return self:get_max_grenades_by_peer_id(peer_id) <= self:get_grenade_amount(peer_id)
+	return self:get_grenade_amount(peer_id) >= self:get_max_grenades_by_peer_id(peer_id)
 end
 
 function PlayerManager:has_grenade(peer_id)
 	peer_id = peer_id or managers.network:session():local_peer():id()
+
 	local synced_grenade = self:get_synced_grenades(peer_id)
 
 	return synced_grenade and synced_grenade.grenade and true or false
@@ -3031,6 +3084,7 @@ function PlayerManager:on_throw_grenade()
 end
 
 function PlayerManager:set_drag_body_data(dragged_unit, dragged_body)
+	return
 end
 
 function PlayerManager:set_carry(carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
@@ -3048,7 +3102,7 @@ function PlayerManager:set_carry(carry_id, carry_multiplier, dye_initiated, has_
 	local text = managers.localization:text("hud_carrying_announcement", {
 		CARRY_TYPE = type_text
 	})
-	local icon = nil
+	local icon
 
 	if not dye_initiated then
 		dye_initiated = true
@@ -3117,6 +3171,7 @@ function PlayerManager:drop_carry(zipline_unit)
 	end
 
 	self._carry_blocked_cooldown_t = Application:time() + tweak_data.carry.default_bag_delay
+
 	local player = self:player_unit()
 
 	if player then
@@ -3162,6 +3217,7 @@ function PlayerManager:switch_carry_to_ragdoll(unit)
 	unit:damage():run_sequence_simple("switch_to_ragdoll")
 
 	self._root_act_tags = {}
+
 	local blank = Idstring("")
 	local hips_body = unit:body("rag_Hips")
 	local tag = hips_body:activate_tag()
@@ -3183,7 +3239,9 @@ function PlayerManager:switch_carry_to_ragdoll(unit)
 
 	self._root_act_tags[tag:key()] = true
 	self._hips_obj = unit:get_object(Idstring("Hips"))
+
 	local hips_pos = self._hips_obj:position()
+
 	self._rag_pos = hips_pos
 	self._ragdoll_freeze_clbk_id = "freeze_rag" .. tostring(unit:key())
 end
@@ -3206,6 +3264,7 @@ end
 function PlayerManager:sync_carry_data(unit, carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id)
 	local throw_distance_multiplier = self:upgrade_value_by_level("carry", "throw_distance_multiplier", throw_distance_multiplier_upgrade_level, 1)
 	local carry_type = tweak_data.carry[carry_id].type
+
 	throw_distance_multiplier = throw_distance_multiplier * tweak_data.carry.types[carry_type].throw_distance_multiplier
 
 	unit:carry_data():set_carry_id(carry_id)
@@ -3350,7 +3409,7 @@ function PlayerManager:current_carry_id()
 end
 
 function PlayerManager:carry_blocked_by_cooldown()
-	return self._carry_blocked_cooldown_t and Application:time() < self._carry_blocked_cooldown_t or false
+	return self._carry_blocked_cooldown_t and self._carry_blocked_cooldown_t > Application:time() or false
 end
 
 function PlayerManager:can_carry(carry_id)
@@ -3393,6 +3452,7 @@ function PlayerManager:dye_pack_exploded()
 	local has_dye_pack = carry_data.has_dye_pack
 	local dye_value_multiplier = carry_data.dye_value_multiplier
 	local value = carry_data.value * (1 - dye_value_multiplier / 100)
+
 	value = math.round(value)
 	has_dye_pack = false
 
@@ -3421,7 +3481,7 @@ function PlayerManager:num_local_minions()
 end
 
 function PlayerManager:chk_minion_limit_reached()
-	return self:upgrade_value("player", "convert_enemies_max_minions", 0) <= self._local_player_minions
+	return self._local_player_minions >= self:upgrade_value("player", "convert_enemies_max_minions", 0)
 end
 
 function PlayerManager:on_used_body_bag()
@@ -3514,6 +3574,7 @@ function PlayerManager:save(data)
 		game_settings_team_ai = Global.game_settings.team_ai,
 		game_settings_auto_kick = Global.game_settings.auto_kick
 	}
+
 	data.PlayerManager = state
 end
 
@@ -3575,6 +3636,7 @@ function PlayerManager:sync_save(data)
 		husk_turret_data = self._global.synced_turret,
 		local_player_in_camp = self._local_player_in_camp
 	}
+
 	data.PlayerManager = state
 end
 
@@ -3658,6 +3720,7 @@ end
 
 function PlayerManager:set_synced_bipod(peer, bipod_pos, body_pos)
 	local peer_id = peer:id()
+
 	self._global.synced_bipod[peer_id] = {
 		bipod_pos = bipod_pos,
 		body_pos = body_pos
@@ -3702,6 +3765,7 @@ end
 
 function PlayerManager:set_synced_turret(peer, husk_pos, turret_rot, enter_animation, exit_animation, turret_unit)
 	local peer_id = peer:id()
+
 	self._global.synced_turret[peer_id] = {
 		husk_pos = husk_pos,
 		turret_rot = turret_rot,
@@ -3731,10 +3795,11 @@ end
 
 function PlayerManager:server_enter_vehicle(vehicle, peer_id, player, seat_name)
 	local vehicle_ext = vehicle:vehicle_driving()
-	local seat = nil
+	local seat
 
 	if seat_name == nil then
 		local pos = player:position()
+
 		seat = vehicle_ext:reserve_seat(player, pos, nil)
 	else
 		seat = vehicle_ext:reserve_seat(player, nil, seat_name)
@@ -3755,6 +3820,7 @@ function PlayerManager:_enter_vehicle(vehicle, peer_id, player, seat_name)
 		vehicle_unit = vehicle,
 		seat = seat_name
 	}
+
 	local vehicle_ext = vehicle:vehicle_driving()
 
 	vehicle_ext:place_player_on_seat(player, seat_name)
@@ -3866,7 +3932,7 @@ end
 
 function PlayerManager:server_move_to_next_seat(vehicle, peer_id, player, seat_name)
 	local vehicle_ext = vehicle:vehicle_driving()
-	local seat = nil
+	local seat
 
 	if seat_name == nil then
 		Application:error("[PlayerManager:move_to_next_seat] unable to move to next seat, seat name is nil")
@@ -3875,6 +3941,7 @@ function PlayerManager:server_move_to_next_seat(vehicle, peer_id, player, seat_n
 	end
 
 	local previous_seat = vehicle:vehicle_driving():find_seat_for_player(player)
+
 	seat = vehicle_ext:reserve_seat(player, nil, seat_name, true)
 
 	if seat ~= nil then
@@ -3901,6 +3968,7 @@ function PlayerManager:_move_to_next_seat(vehicle, peer_id, player, seat, previo
 		vehicle_unit = vehicle,
 		seat = seat.name
 	}
+
 	local vehicle_ext = vehicle:vehicle_driving()
 
 	vehicle_ext:move_player_to_seat(player, seat, previous_seat, previous_occupant)
@@ -4212,9 +4280,7 @@ function PlayerManager:tutorial_clear_all_ammo()
 	local _grenade, amount = managers.blackmarket:equipped_grenade()
 	local peer_id = managers.network:session():local_peer():id()
 
-	if self:has_grenade(peer_id) then
-		amount = self:get_grenade_amount(peer_id) or amount
-	end
+	amount = self:has_grenade(peer_id) and self:get_grenade_amount(peer_id) or amount
 
 	if amount > 0 then
 		self:add_grenade_amount(-amount)

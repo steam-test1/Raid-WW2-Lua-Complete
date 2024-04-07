@@ -175,7 +175,9 @@ function RaidGUIControlIntelControlArchive:_animate_play_button()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_size_modifier = Easing.quartic_in_out(t, 1, 0.1, duration)
 
 		self._play_panel:set_w(original_width * current_size_modifier)
@@ -194,9 +196,11 @@ function RaidGUIControlIntelControlArchive:_animate_play_button()
 
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_size_modifier = Easing.quartic_in_out(t, 1.1, -0.1, duration)
 
 		self._play_panel:set_w(original_width * current_size_modifier)
@@ -237,8 +241,10 @@ end
 
 function RaidGUIControlIntelControlArchive:_play_video()
 	local gui = Overlay:gui()
+
 	self._full_workspace = gui:create_screen_workspace()
 	self._safe_rect_workspace = gui:create_screen_workspace()
+
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
 		name = "control_video_root_panel",
@@ -250,7 +256,9 @@ function RaidGUIControlIntelControlArchive:_play_video()
 		layer = tweak_data.gui.DEBRIEF_VIDEO_LAYER + 10,
 		background_color = Color.black
 	}
+
 	self._panel = RaidGUIPanel:new(full_panel, params_root_panel)
+
 	local video = self._data.video_path
 	local control_video_params = {
 		name = "control_video",
@@ -258,13 +266,15 @@ function RaidGUIControlIntelControlArchive:_play_video()
 		video = video,
 		width = self._panel:w()
 	}
+
 	self._control_video = self._panel:video(control_video_params)
 
-	self._control_video:set_h(self._panel:w() * self._control_video:video_height() / self._control_video:video_width())
+	self._control_video:set_h(self._panel:w() * (self._control_video:video_height() / self._control_video:video_width()))
 	self._control_video:set_center_y(self._panel:h() / 2)
 	managers.gui_data:layout_workspace(self._safe_rect_workspace)
 
 	self._safe_panel = self._safe_rect_workspace:panel()
+
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		name = "press_any_key_prompt",
@@ -311,7 +321,9 @@ function RaidGUIControlIntelControlArchive:_animate_show_press_any_key_prompt(pr
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.75, duration)
 
 		prompt:set_alpha(current_alpha)
@@ -324,9 +336,11 @@ function RaidGUIControlIntelControlArchive:_animate_change_press_any_key_prompt(
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0.75, -0.75, fade_out_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -345,11 +359,14 @@ function RaidGUIControlIntelControlArchive:_animate_change_press_any_key_prompt(
 	prompt:set_right(self._safe_panel:w() - 50)
 
 	local fade_in_duration = 0.25
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.75, fade_in_duration)
 
 		prompt:set_alpha(current_alpha)

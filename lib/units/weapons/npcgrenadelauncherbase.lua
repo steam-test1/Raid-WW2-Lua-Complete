@@ -48,7 +48,7 @@ local mvec1 = Vector3()
 
 function NPCGrenadeLauncherBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	local result = {}
-	local hit_unit = nil
+	local hit_unit
 	local spread = self:_get_spread(user_unit)
 
 	mvector3.set(mvec_spread_direction, direction)

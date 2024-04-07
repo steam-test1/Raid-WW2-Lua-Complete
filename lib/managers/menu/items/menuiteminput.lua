@@ -36,13 +36,14 @@ function MenuItemInput:value()
 end
 
 function MenuItemInput:setup_gui(node, row_item)
-	local right_align = node:_right_align()
+	local right_align = node._right_align(node)
+
 	row_item.gui_panel = node.item_panel:panel({
 		alpha = 0.9,
 		w = node.item_panel:w()
 	})
-	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
-	row_item.empty_gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
+	row_item.gui_text = node._text_item_part(node, row_item, row_item.gui_panel, right_align, row_item.align)
+	row_item.empty_gui_text = node._text_item_part(node, row_item, row_item.gui_panel, right_align, row_item.align)
 	row_item.input_bg = row_item.gui_panel:rect({
 		alpha = 0,
 		vertical = "scale",
@@ -76,8 +77,8 @@ end
 
 function MenuItemInput:_layout_gui(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
-	local right_align = node:_right_align()
-	local left_align = node:_left_align()
+	local right_align = node._right_align(node)
+	local left_align = node._left_align(node)
 
 	row_item.gui_text:set_text(self._input_text or "")
 
@@ -88,10 +89,10 @@ function MenuItemInput:_layout_gui(node, row_item)
 	local _, _, w, h = row_item.empty_gui_text:text_rect()
 
 	row_item.gui_panel:set_height(h)
-	row_item.gui_panel:set_width(safe_rect.width - node:_mid_align())
-	row_item.gui_panel:set_x(node:_mid_align())
+	row_item.gui_panel:set_width(safe_rect.width - node._mid_align(node))
+	row_item.gui_panel:set_x(node._mid_align(node))
 
-	self._align_x = row_item.align == "right" and row_item.gui_panel:w() or node:_right_align() - row_item.gui_panel:x()
+	self._align_x = row_item.align == "right" and row_item.gui_panel:w() or node._right_align(node) - row_item.gui_panel:x()
 
 	self:_layout(row_item)
 end
@@ -182,7 +183,7 @@ function MenuItemInput:_animate_show_input(input_panel)
 	local start_alpha = input_panel:alpha()
 	local end_alpha = 1
 
-	over(TOTAL_T, function (p)
+	over(TOTAL_T, function(p)
 		input_panel:set_alpha(math.lerp(start_alpha, end_alpha, p))
 	end)
 end
@@ -192,7 +193,7 @@ function MenuItemInput:_animate_hide_input(input_panel)
 	local start_alpha = input_panel:alpha()
 	local end_alpha = 0.95
 
-	over(TOTAL_T, function (p)
+	over(TOTAL_T, function(p)
 		input_panel:set_alpha(math.lerp(start_alpha, end_alpha, p))
 	end)
 end
@@ -202,7 +203,9 @@ function MenuItemInput:_animate_input_bg(input_bg)
 
 	while true do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local a = 0.75 + (1 + math.sin(t * 200)) / 8
 
 		input_bg:set_alpha(a)
@@ -253,6 +256,7 @@ function MenuItemInput:_loose_focus(row_item)
 	self._focus = false
 	self._one_scroll_up_delay = nil
 	self._one_scroll_dn_delay = nil
+
 	local text = row_item.gui_text
 
 	text:set_text(self._input_text or "")
@@ -367,6 +371,7 @@ function MenuItemInput:enter_text(row_item, o, s)
 	local text = row_item.gui_text
 	local m = self._input_limit
 	local n = utf8.len(text:text())
+
 	s = utf8.sub(s, 1, m - n)
 
 	if type(self._typing_callback) ~= "number" then
@@ -459,6 +464,7 @@ function MenuItemInput:key_press(row_item, o, k)
 	local s, e = text:selection()
 	local n = utf8.len(text:text())
 	local d = math.abs(e - s)
+
 	self._key_pressed = k
 
 	text:stop()
@@ -500,10 +506,8 @@ function MenuItemInput:key_press(row_item, o, k)
 		text:set_selection(n, n)
 	elseif self._key_pressed == Idstring("home") then
 		text:set_selection(0, 0)
-	elseif k == Idstring("enter") then
-		if type(self._enter_callback) ~= "number" then
-			-- Nothing
-		end
+	elseif k == Idstring("enter") and (type(self._enter_callback) == "number" or true) then
+		-- Nothing
 	elseif k == Idstring("esc") and type(self._esc_callback) ~= "number" then
 		self._esc_callback()
 	end

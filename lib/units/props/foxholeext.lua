@@ -31,10 +31,9 @@ function FoxholeExt:taken()
 end
 
 function FoxholeExt:save(data)
-	data.foxhole = {
-		player = self._player,
-		locked = self._locked
-	}
+	data.foxhole = {}
+	data.foxhole.player = self._player
+	data.foxhole.locked = self._locked
 end
 
 function FoxholeExt:load(data)

@@ -24,10 +24,12 @@ function RaidGUIControlLootProgressBar:init(parent, params)
 end
 
 function RaidGUIControlLootProgressBar:close()
+	return
 end
 
 function RaidGUIControlLootProgressBar:_create_panel()
 	local control_params = clone(self._params)
+
 	control_params.name = control_params.name .. "_panel"
 	control_params.layer = self._panel:layer() + 1
 	control_params.w = self._params.w or RaidGUIControlLootProgressBar.DEFAULT_W
@@ -45,6 +47,7 @@ function RaidGUIControlLootProgressBar:_create_progress_bar()
 		h = RaidGUIControlLootProgressBar.PROGRESS_BAR_H,
 		layer = self._object:layer() + 1
 	}
+
 	self._progress_bar = self._object:progress_bar_simple(progress_bar_params)
 
 	self._progress_bar:set_y(self._object:h() - self._progress_bar:h())
@@ -52,6 +55,7 @@ end
 
 function RaidGUIControlLootProgressBar:_create_brackets()
 	self._brackets = {}
+
 	local brackets = self._params.brackets
 
 	for index, bracket in pairs(brackets) do
@@ -81,7 +85,7 @@ function RaidGUIControlLootProgressBar:set_progress(progress)
 	self._progress_bar:set_progress(progress)
 
 	for index, bracket in pairs(self._brackets) do
-		if bracket.progress <= progress and not bracket.active then
+		if progress >= bracket.progress and not bracket.active then
 			bracket.control:activate()
 
 			bracket.active = true
@@ -105,9 +109,11 @@ function RaidGUIControlLootProgressBar:_animate_fade_in()
 	local duration = 0.3
 	local t = self._object:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
 
 		self._object:set_alpha(current_alpha)

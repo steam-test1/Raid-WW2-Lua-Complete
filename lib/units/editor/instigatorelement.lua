@@ -56,6 +56,7 @@ function InstigatorOperatorUnitElement:get_links_to_unit(...)
 end
 
 function InstigatorOperatorUnitElement:update_editing()
+	return
 end
 
 function InstigatorOperatorUnitElement:add_element()
@@ -92,6 +93,7 @@ function InstigatorOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local exact_names = {
 		"units/dev_tools/mission_elements/logic_instigator/logic_instigator"
 	}
@@ -151,6 +153,7 @@ function InstigatorTriggerUnitElement:get_links_to_unit(...)
 end
 
 function InstigatorTriggerUnitElement:update_editing()
+	return
 end
 
 function InstigatorTriggerUnitElement:add_element()
@@ -187,6 +190,7 @@ function InstigatorTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local exact_names = {
 		"units/dev_tools/mission_elements/logic_instigator/logic_instigator"
 	}

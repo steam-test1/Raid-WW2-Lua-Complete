@@ -49,11 +49,13 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 	if row_item.type == "column" then
 		local columns = row_item.node:columns()
 		local total_proportions = row_item.node:parameters().total_proportions
+
 		row_item.gui_panel = self.item_panel:panel({
 			x = self:_right_align(),
 			w = self.item_panel:w()
 		})
 		row_item.gui_columns = {}
+
 		local x = 0
 
 		for i, data in ipairs(columns) do
@@ -69,7 +71,9 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 				layer = self.layers.items,
 				text = row_item.item:parameters().columns[i]
 			})
+
 			row_item.gui_columns[i] = text
+
 			local _, _, w, h = text:text_rect()
 
 			text:set_h(h)
@@ -90,11 +94,13 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		local total_proportions = row_item.node:parameters().total_proportions
 		local safe_rect = self:_scaled_size()
 		local xl_pad = 54
+
 		row_item.gui_panel = self.item_panel:panel({
 			x = safe_rect.width / 2 - xl_pad,
 			w = safe_rect.width / 2 + xl_pad
 		})
 		row_item.gui_columns = {}
+
 		local x = 0
 
 		for i, data in ipairs(columns) do
@@ -110,7 +116,9 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 				layer = self.layers.items,
 				text = row_item.item:parameters().columns[i]
 			})
+
 			row_item.gui_columns[i] = text
+
 			local _, _, w, h = text:text_rect()
 
 			text:set_h(h)
@@ -128,6 +136,7 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		row_item.gui_panel:set_height(h)
 
 		local level_id = row_item.item:parameters().level_id
+
 		row_item.gui_info_panel = self.safe_rect_panel:panel({
 			y = 0,
 			visible = false,
@@ -146,7 +155,9 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			font_size = tweak_data.menu.challenges_font_size,
 			color = row_item.color
 		})
+
 		local briefing_text = level_id and managers.localization:text(tweak_data.levels[level_id].briefing_id) or ""
+
 		row_item.heist_briefing = row_item.gui_info_panel:text({
 			halign = "top",
 			vertical = "top",
@@ -162,7 +173,9 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			layer = self.layers.items,
 			text = briefing_text
 		})
+
 		local font_size = tweak_data.menu.pd2_small_font_size
+
 		row_item.server_title = row_item.gui_info_panel:text({
 			name = "server_title",
 			vertical = "center",

@@ -21,6 +21,7 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	self._params.w = self._params.w or self._panel:w()
 	self._params.h = RaidGUIControlButtonToggle.H
 	self._object = self._panel:panel(self._params)
+
 	local sideline_params = {
 		alpha = 0,
 		y = 0,
@@ -29,6 +30,7 @@ function RaidGUIControlButtonToggle:init(parent, params)
 		h = self._object:h(),
 		color = RaidGUIControlButtonToggle.SIDELINE_COLOR
 	}
+
 	self._sideline = self._object:rect(sideline_params)
 	self._description = self._object:text({
 		vertical = "center",
@@ -43,13 +45,16 @@ function RaidGUIControlButtonToggle:init(parent, params)
 		text = params.description,
 		layer = self._object:layer() + 1
 	})
+
 	local checkbox_panel_params = {
 		x = self._object:w() - RaidGUIControlButtonToggle.W,
 		y = self._object:h() / 2 - RaidGUIControlButtonToggle.H / 2,
 		w = RaidGUIControlButtonToggle.W,
 		h = RaidGUIControlButtonToggle.H
 	}
+
 	self._checkbox_panel = self._object:panel(checkbox_panel_params)
+
 	local checkbox_border_params = {
 		halign = "scale",
 		valign = "scale",
@@ -62,7 +67,9 @@ function RaidGUIControlButtonToggle:init(parent, params)
 		layer = self._object:layer(),
 		color = RaidGUIControlButtonToggle.BORDER_COLOR
 	}
+
 	self._border = self._checkbox_panel:bitmap(checkbox_border_params)
+
 	local checkbox_params = {
 		halign = "scale",
 		valign = "scale",
@@ -74,6 +81,7 @@ function RaidGUIControlButtonToggle:init(parent, params)
 		h = RaidGUIControlButtonToggle.CHECK_H,
 		layer = self._object:layer() + 1
 	}
+
 	self._check = self._checkbox_panel:bitmap(checkbox_params)
 	self._value = self._params.value or false
 	self._play_mouse_over_sound = true
@@ -204,7 +212,7 @@ function RaidGUIControlButtonToggle:confirm_pressed()
 		self:_render_images()
 
 		if self._on_click_callback then
-			self:_on_click_callback(self, self._value)
+			self._on_click_callback(self, self, self._value)
 		end
 
 		return true
@@ -241,9 +249,11 @@ function RaidGUIControlButtonToggle:_animate_highlight_on()
 	local duration = 0.2
 	local t = duration - (1 - starting_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._sideline:set_alpha(alpha)
@@ -271,9 +281,11 @@ function RaidGUIControlButtonToggle:_animate_highlight_off()
 	local duration = 0.2
 	local t = duration - starting_alpha * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 1, -1, duration)
 
 		self._sideline:set_alpha(alpha)
@@ -301,12 +313,14 @@ function RaidGUIControlButtonToggle:_animate_checkbox_press()
 	local original_w = RaidGUIControlButtonToggle.W
 	local original_h = RaidGUIControlButtonToggle.H
 	local starting_scale = self._checkbox_panel:w() / original_w
-	local duration = 0.25 * (starting_scale - 0.9) / 0.1
+	local duration = 0.25 * ((starting_scale - 0.9) / 0.1)
 	local center_x, center_y = self._checkbox_panel:center()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, starting_scale, 0.9 - starting_scale, duration)
 
 		self._checkbox_panel:set_w(original_w * scale)
@@ -332,7 +346,9 @@ function RaidGUIControlButtonToggle:_animate_checkbox_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, 0.9, 0.1, duration)
 
 		self._checkbox_panel:set_w(target_w * scale)

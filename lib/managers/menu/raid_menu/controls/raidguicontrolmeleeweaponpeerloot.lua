@@ -27,6 +27,7 @@ end
 
 function RaidGUIControlMeleeWeaponPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlMeleeWeaponPeerLoot.WIDTH
 	control_params.h = control_params.h or RaidGUIControlMeleeWeaponPeerLoot.HEIGHT
@@ -44,7 +45,9 @@ function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 		texture = tweak_data.gui.icons[RaidGUIControlMeleeWeaponPeerLoot.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlMeleeWeaponPeerLoot.ICON].texture_rect
 	}
+
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
+
 	local params_player_name = {
 		name = "peer_melee_weapon_name_label",
 		align = "left",
@@ -57,7 +60,9 @@ function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 		font = RaidGUIControlMeleeWeaponPeerLoot.FONT,
 		font_size = RaidGUIControlMeleeWeaponPeerLoot.NAME_FONT_SIZE
 	}
+
 	self._name_label = self._object:text(params_player_name)
+
 	local _, _, _, h = self._name_label:text_rect()
 
 	self._name_label:set_h(h)
@@ -74,7 +79,9 @@ function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 		font = RaidGUIControlMeleeWeaponPeerLoot.FONT,
 		font_size = RaidGUIControlMeleeWeaponPeerLoot.DESCRIPTION_FONT_SIZE
 	}
+
 	self._xp_value_label = self._object:text(params_weapon_point_description)
+
 	local _, _, _, h = self._xp_value_label:text_rect()
 
 	self._xp_value_label:set_h(h)

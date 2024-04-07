@@ -1,4 +1,5 @@
 ScriptUnitData = ScriptUnitData or class(CoreScriptUnitData)
+
 local ids_lod = Idstring("lod")
 local ids_object3d = Idstring("object3d")
 local ids_wpn = Idstring("wpn")

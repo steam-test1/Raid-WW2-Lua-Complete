@@ -17,6 +17,7 @@ end
 
 function RaidGUIControlIntelImageDetails:_create_panel()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_panel"
 	panel_params.layer = panel_params.layer or self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -35,7 +36,9 @@ function RaidGUIControlIntelImageDetails:_create_details()
 		w = self._object:w(),
 		layer = self._object:layer() + 1
 	}
+
 	self._image_panel = self._object:panel(intel_image_panel_params)
+
 	local intel_image_background_params = {
 		texture = "ui/main_menu/textures/mission_paper_background",
 		name = "intel_image_background",
@@ -49,6 +52,7 @@ function RaidGUIControlIntelImageDetails:_create_details()
 		h = self._image_panel:h(),
 		layer = self._image_panel:layer() + 1
 	}
+
 	self._intel_image_background = self._image_panel:bitmap(intel_image_background_params)
 
 	self._intel_image_background:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
@@ -65,6 +69,7 @@ function RaidGUIControlIntelImageDetails:_create_details()
 		w = self._intel_image_background:w() * RaidGUIControlIntelImageDetails.FOREGROUND_SIZE_PERCENTAGE,
 		layer = self._image_panel:layer() + 2
 	}
+
 	self._intel_image = self._image_panel:bitmap(intel_image_params)
 
 	self._intel_image:set_h(self._intel_image:w() * 2 / 3)
@@ -80,7 +85,9 @@ function RaidGUIControlIntelImageDetails:_create_details()
 		font_size = tweak_data.gui.font_sizes.large,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._intel_title = self._object:text(intel_title_params)
+
 	local _, _, w, h = self._intel_title:text_rect()
 
 	self._intel_title:set_w(self._object:w() - self._intel_title:x() * 2)
@@ -96,7 +103,9 @@ function RaidGUIControlIntelImageDetails:_create_details()
 		font_size = tweak_data.gui.font_sizes.paragraph,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._intel_subtitle = self._object:text(intel_subtitle_params)
+
 	local _, _, w, h = self._intel_subtitle:text_rect()
 
 	self._intel_subtitle:set_w(self._object:w() - self._intel_subtitle:x() * 2)
@@ -153,6 +162,7 @@ function RaidGUIControlIntelImageDetails:set_center_y(center_y)
 end
 
 function RaidGUIControlIntelImageDetails:close()
+	return
 end
 
 function RaidGUIControlIntelImageDetails:_animate_change_photo(control, photo, title_id, description_id)
@@ -160,9 +170,11 @@ function RaidGUIControlIntelImageDetails:_animate_change_photo(control, photo, t
 	local fade_in_duration = 0.15
 	local t = (1 - self._object:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_in(t, 1, -1, fade_out_duration)
 
 		self._object:set_alpha(alpha)
@@ -173,9 +185,11 @@ function RaidGUIControlIntelImageDetails:_animate_change_photo(control, photo, t
 
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 0, 1, fade_in_duration)
 
 		self._object:set_alpha(alpha)

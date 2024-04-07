@@ -1,4 +1,5 @@
 ContourModifier = ContourModifier or class()
+
 local ids_contour_opacity = Idstring("contour_opacity")
 
 function ContourModifier:init(unit)

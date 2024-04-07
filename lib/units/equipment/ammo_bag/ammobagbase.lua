@@ -1,4 +1,5 @@
 AmmoBagBase = AmmoBagBase or class(UnitBase)
+
 local dec_mul = 10000
 
 function AmmoBagBase.spawn(pos, rot, ammo_upgrade_lvl, peer_id)
@@ -71,13 +72,12 @@ function AmmoBagBase:setup(ammo_upgrade_lvl)
 		local ray = self._unit:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("world_geometry"))
 
 		if ray then
-			self._attached_data = {
-				body = ray.body,
-				position = ray.body:position(),
-				rotation = ray.body:rotation(),
-				index = 1,
-				max_index = 3
-			}
+			self._attached_data = {}
+			self._attached_data.body = ray.body
+			self._attached_data.position = ray.body:position()
+			self._attached_data.rotation = ray.body:rotation()
+			self._attached_data.index = 1
+			self._attached_data.max_index = 3
 
 			self._unit:set_extension_update_enabled(Idstring("base"), true)
 		end
@@ -188,6 +188,7 @@ function AmmoBagBase:_take_ammo(unit)
 	if inventory then
 		for _, weapon in pairs(inventory:available_selections()) do
 			local took = self:round_value(weapon.unit:base():add_ammo_from_bag(self._ammo_amount))
+
 			taken = taken + took
 			self._ammo_amount = self:round_value(self._ammo_amount - took)
 
@@ -210,15 +211,16 @@ function AmmoBagBase:_set_empty()
 end
 
 function AmmoBagBase:save(data)
-	local state = {
-		ammo_amount = self._ammo_amount,
-		is_dynamic = self._is_dynamic
-	}
+	local state = {}
+
+	state.ammo_amount = self._ammo_amount
+	state.is_dynamic = self._is_dynamic
 	data.AmmoBagBase = state
 end
 
 function AmmoBagBase:load(data)
 	local state = data.AmmoBagBase
+
 	self._ammo_amount = state.ammo_amount
 
 	if state.is_dynamic then
@@ -284,6 +286,7 @@ function CustomAmmoBag:_take_ammo(unit)
 	if inventory then
 		for _, weapon in pairs(inventory:available_selections()) do
 			local picked_up, took = weapon.unit:base():add_ammo(1, nil)
+
 			took = self:round_value(took)
 			taken = taken + took
 		end

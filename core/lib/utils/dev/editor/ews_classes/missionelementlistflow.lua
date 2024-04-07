@@ -5,6 +5,7 @@ function MissionElementListFlow:init(...)
 	self:create_panel("VERTICAL")
 
 	self._use_look_at = false
+
 	local toolbar_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._panel_sizer:add(toolbar_sizer, 0, 0, "EXPAND")
@@ -44,6 +45,7 @@ function MissionElementListFlow:init(...)
 	self._selected_list:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	local lists_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._executers_list = EWS:ListCtrl(self._panel, "", "LC_REPORT,LC_SORT_ASCENDING")
 
 	self._executers_list:clear_all()
@@ -91,6 +93,7 @@ end
 
 function MissionElementListFlow:_on_gui_help()
 	local text = "Mission flow show connections between different mission components.\n\nAt the top is the current selected mission element. The left list shows what is affecting it and the right what it affects."
+
 	text = text .. "\n\nThe 'Type' column displays what type of connection it is. It can be on_executed, operator, trigger etc."
 	text = text .. "\n\nDouble click left mouse button (in any list) will select that unit."
 	text = text .. "\nSingle click right mouse button (in any list) will find that unit."
@@ -103,7 +106,7 @@ function MissionElementListFlow:on_unit_selected(unit)
 	self._selected_list:delete_all_items()
 	self._executers_list:delete_all_items()
 	self._on_executed_list:delete_all_items()
-	table.remove_condition(self._unit_history, function (unit)
+	table.remove_condition(self._unit_history, function(unit)
 		return not alive(unit)
 	end)
 
@@ -121,6 +124,7 @@ function MissionElementListFlow:on_unit_selected(unit)
 		end
 
 		self._skip_history = nil
+
 		local unit_id = unit:unit_data().unit_id
 		local i = self._selected_list:append_item(unit:unit_data().name_id)
 
@@ -295,9 +299,11 @@ function MissionElementListFlow:_selected_executer_data()
 end
 
 function MissionElementListFlow:on_goto()
+	return
 end
 
 function MissionElementListFlow:reset()
+	return
 end
 
 function MissionElementListFlow:freeze()

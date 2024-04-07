@@ -11,6 +11,7 @@ local math_clamp = math.clamp
 local math_lerp = math.lerp
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
+
 SawWeaponBase = SawWeaponBase or class(NewRaycastWeaponBase)
 
 function SawWeaponBase:init(unit)
@@ -85,11 +86,7 @@ function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_m
 		local ammo_usage = 5
 
 		if ray_res.hit_enemy then
-			if managers.player:has_category_upgrade("saw", "enemy_slicer") then
-				ammo_usage = 10
-			else
-				ammo_usage = 15
-			end
+			ammo_usage = managers.player:has_category_upgrade("saw", "enemy_slicer") and 10 or 15
 		end
 
 		ammo_usage = ammo_usage + math.ceil(math.random() * 10)
@@ -132,8 +129,9 @@ local mvec_spread_direction = Vector3()
 
 function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	local result = {}
-	local hit_unit = nil
+	local hit_unit
 	local spread = self:_get_spread(user_unit)
+
 	from_pos = self._obj_fire:position()
 	direction = self._obj_fire:rotation():y()
 

@@ -27,4 +27,5 @@ function MoveObjectInteractionExt:sync_interacted(peer, player, status, skip_ali
 end
 
 function MoveObjectInteractionExt:set_contour(color, opacity)
+	return
 end

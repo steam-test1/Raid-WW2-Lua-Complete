@@ -45,6 +45,7 @@ function CoreActivateScriptUnitElement:_build_panel(panel, panel_sizer)
 		options = self:_scripts(),
 		value = self._hed.activate_script
 	}
+
 	local scripts = CoreEWS.combobox(self._script_params)
 
 	scripts:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {

@@ -23,6 +23,7 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local exact_names = {
 		"core/units/mission_elements/trigger_area/trigger_area"
 	}
@@ -167,6 +168,7 @@ function PointOfNoReturnElement:draw_links(t, dt, selected_unit, all_units)
 end
 
 function PointOfNoReturnElement:update_editing()
+	return
 end
 
 function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)

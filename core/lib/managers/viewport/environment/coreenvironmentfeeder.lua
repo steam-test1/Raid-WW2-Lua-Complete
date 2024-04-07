@@ -81,6 +81,7 @@ local zero_rotation = Rotation(0, 0, 0)
 local zero_vector3 = Vector3(0, 0, 0)
 local temp_rotation = Rotation(0, 0, 0)
 local temp_vector3 = Vector3(0, 0, 0)
+
 Feeder = Feeder or CoreClass.class()
 Feeder.APPLY_GROUP_ID = 0
 Feeder.DATA_PATH_KEY = nil
@@ -133,7 +134,7 @@ end
 
 function Feeder:update(handler, scale)
 	if self._modifier_func then
-		local is_done, is_not_changed = nil
+		local is_done, is_not_changed
 
 		if not self._is_modifier_override then
 			is_done, is_not_changed = self:update_current(handler, scale)
@@ -168,6 +169,7 @@ function Feeder:_set_variable(viewport, scene, pp, effect, modifier_id, variable
 end
 
 function Feeder:apply(handler, viewport, scene)
+	return
 end
 
 Vector3Feeder = Vector3Feeder or CoreClass.class(Feeder)
@@ -753,6 +755,7 @@ function PostLFDownsampleBiasFeeder:apply(handler, viewport, scene)
 	lens_flare_apply_post:set_visibility(self._current < 1)
 
 	local save_current = self._current
+
 	self._current = Vector3(self._current, self._current, self._current)
 
 	self:_set_variable(viewport, scene, ids_post_lens_flare, ids_lens_flare_effect, ids_lens_flare_modifier, ids_downsample_bias)

@@ -2,6 +2,7 @@ CopLogicInactive = class(CopLogicBase)
 
 function CopLogicInactive.enter(data, new_logic_name, enter_params)
 	data.internal_data = {}
+
 	local my_data = data.internal_data
 
 	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
@@ -141,4 +142,5 @@ function CopLogicInactive.on_new_objective(data, old_objective)
 end
 
 function CopLogicInactive.on_intimidated(data, amount, aggressor_unit)
+	return
 end

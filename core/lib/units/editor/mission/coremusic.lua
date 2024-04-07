@@ -30,6 +30,7 @@ function CoreMusicUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local events = deep_clone(managers.music:music_events_list())
 
 	table.insert(events, "_LEVEL_DEFAULT")

@@ -71,6 +71,7 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.chat_border
 	})
+
 	local scrollable_area_notes_params = {
 		scrollbar_width = 3,
 		name = "scrollable_area_notes",
@@ -81,13 +82,16 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 		scroll_step = 19,
 		layer = self._object:layer() + 2
 	}
+
 	self._scrollable_area_notes = self._object:scrollable_area(scrollable_area_notes_params)
+
 	local content_panel_params = {
 		w = 380,
 		x = 0,
 		y = 0,
 		layer = self._object:layer() + 2
 	}
+
 	self._content_panel = self._scrollable_area_notes:get_panel():panel(content_panel_params)
 
 	self._scrollable_area_notes:setup_scroll_area()

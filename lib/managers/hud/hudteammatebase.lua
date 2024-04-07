@@ -1,6 +1,7 @@
 HUDTeammateBase = HUDTeammateBase or class()
 
 function HUDTeammateBase:init(i, teammates_panel)
+	return
 end
 
 function HUDTeammateBase:panel()
@@ -51,66 +52,87 @@ function HUDTeammateBase:is_ai()
 end
 
 function HUDTeammateBase:set_health(data)
+	return
 end
 
 function HUDTeammateBase:set_stamina(value)
+	return
 end
 
 function HUDTeammateBase:set_max_stamina(value)
+	return
 end
 
 function HUDTeammateBase:set_warcry_meter_fill(data)
+	return
 end
 
 function HUDTeammateBase:activate_warcry(duration)
+	return
 end
 
 function HUDTeammateBase:deactivate_warcry()
+	return
 end
 
 function HUDTeammateBase:set_warcry_ready(value)
+	return
 end
 
 function HUDTeammateBase:set_name(name)
+	return
 end
 
 function HUDTeammateBase:set_nationality(nationality)
+	return
 end
 
 function HUDTeammateBase:set_cheater(state)
+	return
 end
 
 function HUDTeammateBase:start_interact(timer)
+	return
 end
 
 function HUDTeammateBase:set_carry_info(carry_id)
+	return
 end
 
 function HUDTeammateBase:remove_carry_info()
+	return
 end
 
 function HUDTeammateBase:show_turret_icon()
+	return
 end
 
 function HUDTeammateBase:hide_turret_icon()
+	return
 end
 
 function HUDTeammateBase:show_lockpick_icon()
+	return
 end
 
 function HUDTeammateBase:hide_lockpick_icon()
+	return
 end
 
 function HUDTeammateBase:add_special_equipment(data)
+	return
 end
 
 function HUDTeammateBase:remove_special_equipment(equipment)
+	return
 end
 
 function HUDTeammateBase:set_special_equipment_amount(equipment_id, amount)
+	return
 end
 
 function HUDTeammateBase:clear_special_equipment()
+	return
 end
 
 function HUDTeammateBase:go_into_bleedout()
@@ -137,9 +159,11 @@ function HUDTeammateBase:_clear_states()
 end
 
 function HUDTeammateBase:set_condition(icon_data, text)
+	return
 end
 
 function HUDTeammateBase:reset_state()
+	return
 end
 
 function HUDTeammateBase:_add_active_state(state_id)
@@ -155,7 +179,7 @@ function HUDTeammateBase:_remove_active_state(state_id)
 end
 
 function HUDTeammateBase:_check_state_change()
-	local new_state = nil
+	local new_state
 
 	for i = 1, #self._states do
 		if self._active_states[self._states[i].id] then
@@ -179,11 +203,14 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	local old_state = self._displayed_state
 	local fade_out_duration = 0.15
 	local t = (1 - self._status_panel:alpha()) * fade_out_duration
+
 	self._displayed_state = new_state
 
 	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._status_panel:set_alpha(current_alpha)
@@ -210,11 +237,14 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	self._status_panel:child(self._displayed_state.control):set_alpha(1)
 
 	local fade_in_duration = 0.15
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._status_panel:set_alpha(current_alpha)
@@ -271,4 +301,5 @@ function HUDTeammateBase:_animate_timer_countdown()
 end
 
 function HUDTeammateBase:_set_status_icon(new_status_icon)
+	return
 end

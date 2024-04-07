@@ -2,6 +2,7 @@ RevivePumpkinExt = RevivePumpkinExt or class()
 
 function RevivePumpkinExt:init(unit)
 	local idstr_pumpkin_asset = Idstring("revive_pumpkin")
+
 	self._unit = unit
 	self._should_sync = true
 
@@ -24,6 +25,7 @@ function RevivePumpkinExt:init(unit)
 	}, callback(self, self, "local_player_exit_resapwn"))
 
 	self._materials = {}
+
 	local all_materials = self._unit:get_objects_by_type(Idstring("material"))
 
 	for _, m in ipairs(all_materials) do

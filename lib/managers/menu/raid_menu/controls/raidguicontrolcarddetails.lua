@@ -35,10 +35,12 @@ function RaidGUIControlCardDetails:init(parent, params)
 end
 
 function RaidGUIControlCardDetails:close()
+	return
 end
 
 function RaidGUIControlCardDetails:_create_object()
 	local control_params = clone(self._params)
+
 	control_params.w = control_params.w or RaidGUIControlCardDetails.DEFAULT_WIDTH
 	control_params.h = control_params.h or RaidGUIControlCardDetails.DEFAULT_HEIGHT
 	control_params.x = control_params.x or 0
@@ -56,7 +58,9 @@ function RaidGUIControlCardDetails:_create_card_details()
 		item_w = self._params.card_w or 496,
 		item_h = self._params.card_h or 671
 	}
+
 	self._card_control = self._object:create_custom_control(RaidGUIControlCardBase, card_params)
+
 	local x_spacing = self._card_control:w() + 48
 	local params_card_name_right = {
 		name = "card_name_label_right",
@@ -73,7 +77,9 @@ function RaidGUIControlCardDetails:_create_card_details()
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38
 	}
+
 	self._card_name_label_right = self._object:label(params_card_name_right)
+
 	local params_card_description_right = {
 		name = "card_description_label_right",
 		h = 0,
@@ -88,9 +94,12 @@ function RaidGUIControlCardDetails:_create_card_details()
 		font = tweak_data.gui.fonts.lato,
 		font_size = RaidGUIControlLootCardDetails.DESCRIPTION_RIGHT_TEXT_SIZE
 	}
+
 	self._card_description_label_right = self._object:label(params_card_description_right)
+
 	local label_y = 160
 	local icon_y = 96
+
 	self._experience_bonus_count = self._object:label({
 		w = 160,
 		name = "experience_bonus_count",

@@ -189,7 +189,7 @@ function ProgressionManager:complete_mission_on_difficulty(job_type, mission_id,
 		return
 	end
 
-	if self._mission_progression[job_type][mission_id].difficulty_completed < difficulty then
+	if difficulty > self._mission_progression[job_type][mission_id].difficulty_completed then
 		self._mission_progression[job_type][mission_id].difficulty_completed = math.clamp(difficulty, 1, self._mission_progression[job_type][mission_id].difficulty_available)
 	end
 
@@ -238,7 +238,7 @@ function ProgressionManager:choose_offered_mission(mission_id)
 end
 
 function ProgressionManager:clear_last_unlocked_raid()
-	local last_unlocked = nil
+	local last_unlocked
 
 	if self._last_unlocked_raid then
 		last_unlocked = self._last_unlocked_raid
@@ -471,6 +471,7 @@ function ProgressionManager:save_profile_slot(data)
 		mission_unlock_timer = self._mission_unlock_timer,
 		mission_progression = self._mission_progression
 	}
+
 	data.ProgressionManager = state
 end
 

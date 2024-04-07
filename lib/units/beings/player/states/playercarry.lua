@@ -15,6 +15,7 @@ function PlayerCarry:_enter(enter_data)
 
 	if my_carry_data then
 		local carry_data = tweak_data.carry[my_carry_data.carry_id]
+
 		self._tweak_data_name = carry_data.type
 	else
 		self._tweak_data_name = "light"
@@ -47,9 +48,9 @@ function PlayerCarry:exit(state_data, new_state_name)
 	PlayerCarry.super.exit(self, state_data, new_state_name)
 	self._unit:camera():camera_unit():base():set_target_tilt(0)
 
-	local exit_data = {
-		skip_equip = true
-	}
+	local exit_data = {}
+
+	exit_data.skip_equip = true
 	self._dye_risk = nil
 
 	managers.raid_job:set_memory("kill_count_carry", nil, true)
@@ -61,7 +62,7 @@ end
 function PlayerCarry:update(t, dt)
 	PlayerCarry.super.update(self, t, dt)
 
-	if self._dye_risk and self._dye_risk.next_t < t then
+	if self._dye_risk and t > self._dye_risk.next_t then
 		self:_check_dye_explode()
 	end
 end
@@ -76,9 +77,8 @@ function PlayerCarry:_check_dye_pack()
 	local my_carry_data = managers.player:get_my_carry_data()
 
 	if my_carry_data and my_carry_data.has_dye_pack then
-		self._dye_risk = {
-			next_t = managers.player:player_timer():time() + 2 + math.random(3)
-		}
+		self._dye_risk = {}
+		self._dye_risk.next_t = managers.player:player_timer():time() + 2 + math.random(3)
 	end
 end
 
@@ -120,7 +120,8 @@ function PlayerCarry:_update_check_actions(t, dt)
 	self:_update_steelsight_timers(t, dt)
 	self:_update_foley(t, input)
 
-	local new_action = nil
+	local new_action
+
 	new_action = new_action or self:_check_action_weapon_gadget(t, input)
 	new_action = new_action or self:_check_action_weapon_firemode(t, input)
 	new_action = new_action or self:_check_action_melee(t, input)
@@ -179,7 +180,7 @@ function PlayerCarry:_check_action_run(t, input)
 end
 
 function PlayerCarry:_check_use_item(t, input)
-	local new_action = nil
+	local new_action
 	local action_wanted = input.btn_use_item_press
 
 	if action_wanted then
@@ -199,10 +200,10 @@ function PlayerCarry:_check_use_item(t, input)
 end
 
 function PlayerCarry:_perform_jump(jump_vec)
-	if not managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
-		if not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
-			mvector3.multiply(jump_vec, tweak_data.carry.types[self._tweak_data_name].jump_modifier)
-		end
+	if managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
+		-- Nothing
+	else
+		mvector3.multiply(jump_vec, tweak_data.carry.types[self._tweak_data_name].jump_modifier)
 	end
 
 	PlayerCarry.super._perform_jump(self, jump_vec)
@@ -231,7 +232,9 @@ function PlayerCarry:_get_walk_headbob(...)
 end
 
 function PlayerCarry:pre_destroy(unit)
+	return
 end
 
 function PlayerCarry:destroy()
+	return
 end

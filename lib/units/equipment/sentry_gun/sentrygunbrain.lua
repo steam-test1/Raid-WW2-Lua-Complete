@@ -3,6 +3,7 @@ local mvec3_dot = mvector3.dot
 local math_max = math.max
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
+
 SentryGunBrain = SentryGunBrain or class()
 SentryGunBrain._create_attention_setting_from_descriptor = PlayerMovement._create_attention_setting_from_descriptor
 SentryGunBrain.TURRET_TYPE_TANK = "tank"
@@ -136,6 +137,7 @@ function SentryGunBrain:_upd_detection(t)
 
 				if self:_distance_chk(my_pos, attention_info.handler, settings, attention_pos, max_detection_range) then
 					ignore_units[2] = attention_info.unit or nil
+
 					local vis_ray = World:raycast("ray", my_pos, attention_pos, "ignore_unit", ignore_units, "slot_mask", self._visibility_slotmask, "ray_type", "ai_vision")
 
 					if not vis_ray or vis_ray.unit:key() == u_key then
@@ -170,7 +172,7 @@ function SentryGunBrain:_upd_detection(t)
 end
 
 function SentryGunBrain:_update_noticing(t, my_pos, attention_info, ignore_units, max_detection_range)
-	local noticable = nil
+	local noticable
 	local distance = self:_distance_chk(my_pos, attention_info.handler, attention_info.settings, nil, max_detection_range)
 
 	if distance then
@@ -182,7 +184,7 @@ function SentryGunBrain:_update_noticing(t, my_pos, attention_info, ignore_units
 		end
 	end
 
-	local delta_prog = nil
+	local delta_prog
 	local dt = t - attention_info.prev_notice_chk_t
 
 	if noticable then
@@ -197,6 +199,7 @@ function SentryGunBrain:_update_noticing(t, my_pos, attention_info, ignore_units
 		end
 
 		local notice_delay_modified = math.lerp(min_delay * notice_delay_mul, max_delay, dis_mul_mod)
+
 		delta_prog = notice_delay_modified > 0 and dt / notice_delay_modified or 1
 	else
 		delta_prog = dt * -0.125
@@ -237,12 +240,13 @@ end
 function SentryGunBrain:_update_verify(t, my_pos, attention_info, ignore_units, update_delay, max_detection_range, my_team)
 	update_delay = math.min(update_delay, attention_info.settings.verification_interval)
 	attention_info.nearly_visible = nil
-	local verified, vis_ray = nil
+
+	local verified, vis_ray
 	local attention_pos = attention_info.handler:get_detection_m_pos()
 	local dis = mvector3.distance(my_pos, attention_info.m_head_pos)
 
 	if dis < max_detection_range * 1.2 and (not attention_info.settings.max_range or dis < attention_info.settings.max_range * (attention_info.settings.detection and attention_info.settings.detection.range_mul or 1) * 1.2) then
-		local detect_pos = nil
+		local detect_pos
 
 		if attention_info.is_husk_player and attention_info.unit:anim_data().crouch then
 			detect_pos = tmp_vec1
@@ -274,7 +278,7 @@ function SentryGunBrain:_update_verify(t, my_pos, attention_info, ignore_units, 
 		attention_info.last_verified_pos = mvector3.copy(attention_pos)
 		attention_info.verified_dis = dis
 	elseif attention_info.has_team and my_team.foes[attention_info.unit:movement():team().id] then
-		if attention_info.criminal_record and AIAttentionObject.REACT_COMBAT <= attention_info.settings.reaction then
+		if attention_info.criminal_record and attention_info.settings.reaction >= AIAttentionObject.REACT_COMBAT then
 			if dis > 1000 and mvector3.distance(attention_pos, attention_info.criminal_record.pos) > 700 then
 				self:_destroy_detected_attention_object_data(attention_info)
 			else
@@ -286,12 +290,12 @@ function SentryGunBrain:_update_verify(t, my_pos, attention_info, ignore_units, 
 					self:_nearly_visible_chk(attention_info, attention_pos, my_pos, ignore_units)
 				end
 			end
-		elseif attention_info.release_t and attention_info.release_t < t then
+		elseif attention_info.release_t and t > attention_info.release_t then
 			self:_destroy_detected_attention_object_data(attention_info)
 		else
 			attention_info.release_t = attention_info.release_t or t + attention_info.settings.release_delay
 		end
-	elseif attention_info.release_t and attention_info.release_t < t then
+	elseif attention_info.release_t and t > attention_info.release_t then
 		self:_destroy_detected_attention_object_data(attention_info)
 	else
 		attention_info.release_t = attention_info.release_t or t + attention_info.settings.release_delay
@@ -302,6 +306,7 @@ end
 
 function SentryGunBrain:_distance_chk(my_pos, handler, settings, attention_pos, max_detection_range)
 	attention_pos = attention_pos or handler:get_detection_m_pos()
+
 	local dis_sq = mvector3.distance_sq(my_pos, attention_pos)
 	local max_dis = math.min(max_detection_range, settings.max_range or max_detection_range)
 
@@ -353,7 +358,7 @@ end
 function SentryGunBrain:_select_focus_attention(t)
 	local current_focus = self._attention_obj
 	local current_pos = self._ext_movement:m_head_pos()
-	local current_fwd = nil
+	local current_fwd
 
 	if current_focus then
 		current_fwd = tmp_vec2
@@ -377,6 +382,7 @@ function SentryGunBrain:_select_focus_attention(t)
 		elseif attention_info.verified_t and t - attention_info.verified_t < 3 then
 			local max_duration = 3
 			local elapsed_t = t - attention_info.verified_t
+
 			total_weight = total_weight * math.lerp(1, 0.6, elapsed_t / max_duration)
 		else
 			return
@@ -388,15 +394,18 @@ function SentryGunBrain:_select_focus_attention(t)
 
 		local dis = mvec3_dir(tmp_vec1, current_pos, attention_info.m_head_pos)
 		local dis_weight = math_max(0, (max_dis - dis) / max_dis)
+
 		total_weight = total_weight * dis_weight
+
 		local dot_weight = 1 + mvec3_dot(tmp_vec1, current_fwd)
+
 		dot_weight = dot_weight * dot_weight * dot_weight
 		total_weight = total_weight * dot_weight
 
 		return total_weight
 	end
 
-	local best_focus_attention, best_focus_weight = nil
+	local best_focus_attention, best_focus_weight
 	local best_focus_reaction = 0
 
 	for u_key, attention_info in pairs(self._detected_attention_objects) do
@@ -438,7 +447,7 @@ function SentryGunBrain:_destroy_detected_attention_object_data(attention_info)
 		attention_info.settings.notice_clbk(self._unit, false)
 	end
 
-	if AIAttentionObject.REACT_SUSPICIOUS <= attention_info.settings.reaction then
+	if attention_info.settings.reaction >= AIAttentionObject.REACT_SUSPICIOUS then
 		managers.groupai:state():on_criminal_suspicion_progress(attention_info.unit, self._unit, nil)
 	end
 
@@ -529,7 +538,7 @@ function SentryGunBrain:_upd_fire(t)
 		end
 	elseif self._ext_movement:rearming() then
 		self._ext_movement:complete_rearming()
-	elseif attention and attention.reaction and AIAttentionObject.REACT_SHOOT <= attention.reaction and not self._ext_movement:warming_up(t) then
+	elseif attention and attention.reaction and attention.reaction >= AIAttentionObject.REACT_SHOOT and not self._ext_movement:warming_up(t) then
 		local expend_ammo = Network:is_server()
 		local damage_player = attention.unit:base() and attention.unit:base().is_local_player
 
@@ -545,6 +554,7 @@ function SentryGunBrain:_upd_fire(t)
 			end
 
 			local max_dot = self._tweak_data.KEEP_FIRE_ANGLE
+
 			max_dot = math.min(0.99, 1 - (1 - max_dot) * (self._shaprness_mul or 1))
 
 			if target_is_visible and max_dot < mvec3_dot(tmp_vec1, self._ext_movement:m_head_fwd()) then
@@ -581,9 +591,10 @@ function SentryGunBrain:_upd_flash_grenade(t)
 
 	local grenade_tweak = self._tweak_data.FLASH_GRENADE
 	local check_t = self._next_flash_grenade_chk_t or t
+
 	self._next_flash_grenade_chk_t = check_t + math.lerp(grenade_tweak.check_interval[1], grenade_tweak.check_interval[2], math.random())
 
-	if grenade_tweak.chance < math.random() then
+	if math.random() > grenade_tweak.chance then
 		return
 	end
 
@@ -642,7 +653,7 @@ function SentryGunBrain:_upd_go_idle(t)
 	end
 
 	if not self._ext_movement:is_inactivating() and not self._ext_movement:repairing() then
-		if attention_obj and AIAttentionObject.REACT_AIM < attention_obj.reaction and not self._ext_movement:repairing() then
+		if attention_obj and attention_obj.reaction > AIAttentionObject.REACT_AIM and not self._ext_movement:repairing() then
 			self._decide_go_idle_t = nil
 
 			if self._idle then
@@ -651,7 +662,7 @@ function SentryGunBrain:_upd_go_idle(t)
 		elseif not self._idle and not self._ext_movement:rearming() and (not self._has_seen_assault_mode or self._has_seen_assault_mode and not managers.groupai:state():is_detection_persistent()) then
 			if not self._decide_go_idle_t then
 				self._decide_go_idle_t = t + self._tweak_data.IDLE_WAIT_TIME
-			elseif self._decide_go_idle_t < t then
+			elseif t > self._decide_go_idle_t then
 				self:set_idle(true)
 			end
 		end
@@ -678,7 +689,7 @@ function SentryGunBrain:on_detected_attention_obj_modified(modified_u_key)
 
 	local old_notice_clbk = not attention_info.identified and old_settings.notice_clbk
 
-	if new_settings and AIAttentionObject.REACT_SUSPICIOUS <= new_settings.reaction then
+	if new_settings and new_settings.reaction >= AIAttentionObject.REACT_SUSPICIOUS then
 		attention_info.settings = new_settings
 		attention_info.stare_expire_t = nil
 		attention_info.pause_expire_t = nil
@@ -830,6 +841,7 @@ end
 
 function SentryGunBrain:save(save_data)
 	local my_save_data = {}
+
 	save_data.brain = my_save_data
 	my_save_data.shaprness_mul = self._shaprness_mul
 	my_save_data.SO_access_str = self._SO_access_str
@@ -843,6 +855,7 @@ function SentryGunBrain:load(save_data)
 	end
 
 	local my_save_data = save_data.brain
+
 	self._shaprness_mul = save_data.brain.shaprness_mul or 1
 	self._SO_access_str = my_save_data.SO_access_str
 	self._SO_access = managers.navigation:convert_access_flag(self._SO_access_str)
@@ -863,6 +876,7 @@ function SentryGunBrain:pre_destroy()
 end
 
 function SentryGunBrain:on_intimidated(amount, aggressor_unit)
+	return
 end
 
 function SentryGunBrain:keep_ai_attached()

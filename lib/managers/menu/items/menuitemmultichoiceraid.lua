@@ -8,16 +8,18 @@ function MenuItemMultiChoiceRaid:init(data_node, parameters)
 end
 
 function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
-	local right_align = node:_right_align()
+	local right_align = node._right_align(node)
+
 	row_item.gui_panel = node.item_panel:panel({
 		w = node.item_panel:w()
 	})
-	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
+	row_item.gui_text = node._text_item_part(node, row_item, row_item.gui_panel, right_align, row_item.align)
 
 	row_item.gui_text:set_wrap(true)
 	row_item.gui_text:set_word_wrap(true)
 
 	local choice_text_align = row_item.align == "left" and "right" or row_item.align == "right" and "left" or row_item.align
+
 	row_item.choice_panel = row_item.gui_panel:panel({
 		w = node.item_panel:w()
 	})
@@ -34,10 +36,12 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 		text = utf8.to_upper(""),
 		render_template = Idstring("VertexColorTextured")
 	})
+
 	local w = 20
 	local h = 20
 	local base = 20
 	local height = 15
+
 	row_item.arrow_left = row_item.gui_panel:bitmap({
 		texture = "guis/textures/menu_arrows",
 		y = 0,
@@ -70,9 +74,9 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 	})
 
 	if self:info_panel() == "lobby_campaign" then
-		node:_create_lobby_campaign(row_item)
+		node._create_lobby_campaign(node, row_item)
 	elseif self:info_panel() == "lobby_difficulty" then
-		node:_create_lobby_difficulty(row_item)
+		node._create_lobby_difficulty(node, row_item)
 	elseif row_item.help_text then
 		-- Nothing
 	end
@@ -84,15 +88,15 @@ end
 
 function MenuItemMultiChoiceRaid:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
-	local right_align = node:_right_align()
-	local left_align = node:_left_align()
+	local right_align = node._right_align(node)
+	local left_align = node._left_align(node)
 
 	if self:parameters().filter then
 		-- Nothing
 	end
 
-	row_item.gui_panel:set_width(safe_rect.width - node:_mid_align())
-	row_item.gui_panel:set_x(node:_mid_align())
+	row_item.gui_panel:set_width(safe_rect.width - node._mid_align(node))
+	row_item.gui_panel:set_x(node._mid_align(node))
 
 	local arrow_size = 24 * tweak_data.scale.multichoice_arrow_multiplier
 
@@ -139,25 +143,25 @@ function MenuItemMultiChoiceRaid:_layout(node, row_item)
 	if row_item.align == "right" then
 		row_item.gui_text:set_right(row_item.gui_panel:w())
 	else
-		row_item.gui_text:set_left(node:_right_align() - row_item.gui_panel:x() + (self:parameters().expand_value or 0))
+		row_item.gui_text:set_left(node._right_align(node) - row_item.gui_panel:x() + (self:parameters().expand_value or 0))
 	end
 
 	row_item.gui_text:set_height(h)
 	row_item.gui_panel:set_height(h)
 
 	if row_item.gui_info_panel then
-		node:_align_item_gui_info_panel(row_item.gui_info_panel)
+		node._align_item_gui_info_panel(node, row_item.gui_info_panel)
 
 		if self:info_panel() == "lobby_campaign" then
-			node:_align_lobby_campaign(row_item)
+			node._align_lobby_campaign(node, row_item)
 		elseif self:info_panel() == "lobby_difficulty" then
-			node:_align_lobby_difficulty(row_item)
+			node._align_lobby_difficulty(node, row_item)
 		else
-			node:_align_info_panel(row_item)
+			node._align_info_panel(node, row_item)
 		end
 	end
 
-	local node_padding = node:_mid_align()
+	local node_padding = node._mid_align(node)
 
 	if node:_get_node_padding() > 0 then
 		node_padding = node:_get_node_padding()

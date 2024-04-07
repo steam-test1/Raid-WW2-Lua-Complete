@@ -3,10 +3,9 @@ ConsumableMissionManager.VERSION = 2
 
 function ConsumableMissionManager:init()
 	if not Global.consumable_missions_manager then
-		Global.consumable_missions_manager = {
-			inventory = {},
-			intel_spawn_modifier = 0
-		}
+		Global.consumable_missions_manager = {}
+		Global.consumable_missions_manager.inventory = {}
+		Global.consumable_missions_manager.intel_spawn_modifier = 0
 	end
 
 	self._registered_intel_documents = {}
@@ -14,10 +13,9 @@ function ConsumableMissionManager:init()
 end
 
 function ConsumableMissionManager:reset()
-	Global.consumable_missions_manager = {
-		inventory = {},
-		intel_spawn_modifier = 0
-	}
+	Global.consumable_missions_manager = {}
+	Global.consumable_missions_manager.inventory = {}
+	Global.consumable_missions_manager.intel_spawn_modifier = 0
 	self._registered_intel_documents = {}
 	self._peer_document_spawn_chances = {}
 end
@@ -43,6 +41,7 @@ end
 
 function ConsumableMissionManager:register_document(unit, world_id)
 	self._registered_intel_documents[world_id] = self._registered_intel_documents[world_id] or {}
+
 	local loot_data = {
 		unit = unit,
 		world_id = world_id
@@ -73,7 +72,7 @@ function ConsumableMissionManager:plant_document_on_level(world_id)
 		end
 	end
 
-	local chosen_document_unit = nil
+	local chosen_document_unit
 
 	if math.random() <= math.clamp(document_spawn_chance, -1, 1) then
 		math.shuffle(self._registered_intel_documents[world_id])
@@ -99,6 +98,7 @@ function ConsumableMissionManager:sync_document_spawn_chance()
 	if not self:is_any_mission_unlocked() then
 		local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 		local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+
 		document_spawn_chance = tweak_data.operations.consumable_missions.base_document_spawn_chance[difficulty_index]
 		document_spawn_chance = document_spawn_chance + Global.consumable_missions_manager.intel_spawn_modifier
 	end
@@ -241,6 +241,7 @@ end
 function ConsumableMissionManager:load(data, version)
 	Global.consumable_missions_manager.inventory = {}
 	Global.consumable_missions_manager.intel_spawn_modifier = 0
+
 	local state = data.ConsumableMissionManager
 
 	if not state then

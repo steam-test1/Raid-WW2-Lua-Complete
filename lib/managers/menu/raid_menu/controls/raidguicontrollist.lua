@@ -41,6 +41,7 @@ end
 
 function RaidGUIControlList:_create_list_panel()
 	local list_params = clone(self._params)
+
 	list_params.name = list_params.name .. "_list"
 	self._object = self._panel:panel(list_params)
 end
@@ -54,16 +55,18 @@ function RaidGUIControlList:_create_items()
 		return
 	end
 
-	local selected_item = nil
+	local selected_item
 	local y = self._params.padding_top or 0
 	local counter = 1
 
 	for i, item_data in ipairs(self._list_data) do
 		item_data.availability_flags = item_data.availability_flags or {}
+
 		local item_is_available = RaidGUIControl:check_item_availability(self, item_data.availability_flags)
 
 		if item_is_available then
 			local item_params = self._params.item_params or {}
+
 			item_params.name = self._params.name .. "_list_item_" .. i
 			item_params.use_unlocked = self._list_params.use_unlocked
 			item_params.x = 0
@@ -83,6 +86,7 @@ function RaidGUIControlList:_create_items()
 			item_params.on_item_selected_callback = callback(self, self, "on_item_selected")
 			item_params.on_mouse_over_sound_event = self._params.on_mouse_over_sound_event
 			item_params.on_mouse_click_sound_event = self._params.on_mouse_click_sound_event
+
 			local item = self:_create_item(self._params.item_class or RaidGUIControlListItem, item_params, item_data)
 
 			table.insert(self._list_items, item)
@@ -141,8 +145,9 @@ function RaidGUIControlList:mouse_moved(o, x, y)
 	end
 
 	self._mouse_inside = true
+
 	local used = false
-	local pointer = nil
+	local pointer
 
 	for _, item in ipairs(self._list_items) do
 		local u, p = item:mouse_moved(o, x, y)
@@ -157,9 +162,11 @@ function RaidGUIControlList:mouse_moved(o, x, y)
 end
 
 function RaidGUIControlList:highlight_on()
+	return
 end
 
 function RaidGUIControlList:highlight_off()
+	return
 end
 
 function RaidGUIControlList:selected_item()
@@ -195,6 +202,7 @@ function RaidGUIControlList:_reposition_selected_item()
 		self._inner_panel = self._params.scrollable_area_ref._inner_panel
 		self._outer_panel = self._params.scrollable_area_ref._object
 		self._scrollbar = self._params.scrollable_area_ref._scrollbar
+
 		local inner_panel_top = self._inner_panel:top()
 		local outer_panel_height = self._outer_panel:h()
 		local inner_panel_y = self._inner_panel:y()
@@ -406,6 +414,7 @@ function RaidGUIControlList:confirm_pressed()
 end
 
 function RaidGUIControlList:special_btn_pressed(...)
+	return
 end
 
 function RaidGUIControlList:_previous_row_idx()

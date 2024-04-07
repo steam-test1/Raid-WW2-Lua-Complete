@@ -127,6 +127,7 @@ end
 
 function PlayerMovement:_setup_states()
 	local unit = self._unit
+
 	self._states = {
 		empty = PlayerEmpty:new(unit),
 		standard = PlayerStandard:new(unit),
@@ -147,7 +148,7 @@ end
 
 function PlayerMovement:set_character_anim_variables()
 	local char_name = managers.criminals:character_name_by_unit(self._unit)
-	local mesh_names = nil
+	local mesh_names
 	local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local unit_suit = lvl_tweak_data and lvl_tweak_data.unit_suit or "suit"
 
@@ -214,13 +215,14 @@ function PlayerMovement:set_driving(mode)
 end
 
 function PlayerMovement:change_state(name)
-	local exit_data = nil
+	local exit_data
 
 	if self._current_state then
 		exit_data = self._current_state:exit(self._state_data, name)
 	end
 
 	local new_state = self._states[name]
+
 	self._current_state = new_state
 	self._current_state_name = name
 	self._state_enter_t = managers.player:player_timer():time()
@@ -268,7 +270,7 @@ function PlayerMovement:update(unit, t, dt)
 		self._current_state:update(t, dt)
 	end
 
-	if self._kill_overlay_t and self._kill_overlay_t < t then
+	if self._kill_overlay_t and t > self._kill_overlay_t then
 		self._kill_overlay_t = nil
 
 		managers.overlay_effect:stop_effect()
@@ -279,6 +281,7 @@ end
 
 function PlayerMovement:update_stamina(t, dt, ignore_running)
 	local dt = self._last_stamina_regen_t and t - self._last_stamina_regen_t or dt
+
 	self._last_stamina_regen_t = t
 
 	if not ignore_running and self._is_running then
@@ -287,6 +290,7 @@ function PlayerMovement:update_stamina(t, dt, ignore_running)
 		if self._current_state_name == "carry" or self._current_state_name == "carry_corpse" then
 			local carry_data = managers.player:get_my_carry_data()
 			local carry_tweak = tweak_data.carry[carry_data.carry_id]
+
 			stamina_drain_multi = tweak_data.carry.types[carry_tweak.type].stamina_consume_multi or 1
 		end
 
@@ -297,7 +301,7 @@ function PlayerMovement:update_stamina(t, dt, ignore_running)
 		if self._regenerate_timer < 0 then
 			self:add_stamina(dt * self._class_tweak_data.movement.stamina.BASE_STAMINA_REGENERATION_RATE)
 
-			if self:_max_stamina() <= self._stamina then
+			if self._stamina >= self:_max_stamina() then
 				self._regenerate_timer = nil
 			end
 		end
@@ -367,7 +371,7 @@ function PlayerMovement:_calculate_m_pose()
 end
 
 function PlayerMovement:_check_out_of_world(t)
-	if self._next_check_out_of_world_t < t then
+	if t > self._next_check_out_of_world_t then
 		self._next_check_out_of_world_t = t + 1
 
 		if mvector3.z(self._m_pos) < PlayerMovement.OUT_OF_WORLD_Z then
@@ -472,6 +476,7 @@ end
 
 function PlayerMovement:_create_attention_setting_from_descriptor(setting_desc, setting_name)
 	local setting = clone(setting_desc)
+
 	setting.id = setting_name
 	setting.filter = managers.groupai:state():get_unit_type_filter(setting.filter)
 	setting.reaction = AIAttentionObject[setting.reaction]
@@ -519,7 +524,7 @@ function PlayerMovement:set_attention_settings(settings_list)
 		return
 	end
 
-	local all_attentions = nil
+	local all_attentions
 
 	local function _add_attentions_to_all(names)
 		for _, setting_name in ipairs(names) do
@@ -527,7 +532,9 @@ function PlayerMovement:set_attention_settings(settings_list)
 
 			if setting_desc then
 				all_attentions = all_attentions or {}
+
 				local setting = self:_create_attention_setting_from_descriptor(setting_desc, setting_name)
+
 				all_attentions[setting_name] = setting
 			else
 				debug_pause_unit(self._unit, "[PlayerMovement:set_attention_settings] invalid setting", setting_name, self._unit)
@@ -582,7 +589,8 @@ function PlayerMovement:on_suspicion(observer_unit, status)
 			name = observer_unit:name(),
 			status = status
 		}
-		local visible_status = nil
+
+		local visible_status
 
 		if managers.groupai:state():whisper_mode() then
 			visible_status = status
@@ -621,6 +629,7 @@ function PlayerMovement:_feed_suspicion_to_hud()
 
 	if type(susp_ratio) == "number" then
 		local offset = self._unit:base():suspicion_settings().hud_offset
+
 		susp_ratio = susp_ratio * (1 - offset) + offset
 	end
 
@@ -628,10 +637,10 @@ function PlayerMovement:_feed_suspicion_to_hud()
 end
 
 function PlayerMovement:_calc_suspicion_ratio_and_sync(observer_unit, status)
-	local suspicion_sync = nil
+	local suspicion_sync
 
 	if self._suspicion and status ~= true then
-		local max_suspicion = nil
+		local max_suspicion
 
 		for u_key, val in pairs(self._suspicion) do
 			if not max_suspicion or max_suspicion < val then
@@ -660,6 +669,7 @@ function PlayerMovement:_calc_suspicion_ratio_and_sync(observer_unit, status)
 
 	if suspicion_sync ~= self._synced_suspicion then
 		self._synced_suspicion = suspicion_sync
+
 		local peer = managers.network:session():peer_by_unit(self._unit)
 
 		if peer then
@@ -673,6 +683,7 @@ function PlayerMovement.clbk_msg_overwrite_suspicion(overwrite_data, msg_queue, 
 		if overwrite_data.indexes[suspect_peer_id] then
 			local index = overwrite_data.indexes[suspect_peer_id]
 			local old_msg = msg_queue[index]
+
 			old_msg[3] = suspicion
 		else
 			table.insert(msg_queue, {
@@ -694,6 +705,7 @@ function PlayerMovement:clbk_enemy_weapons_hot()
 
 	if Network:is_server() and self._synced_suspicion ~= 0 then
 		self._synced_suspicion = 0
+
 		local peer = managers.network:session():peer_by_unit(self._unit)
 
 		if peer then
@@ -745,7 +757,7 @@ function PlayerMovement:_upd_underdog_skill(t)
 
 	local my_pos = self._m_pos
 	local nr_guys = 0
-	local activated = nil
+	local activated
 
 	for u_key, attacker_unit in pairs(self._attackers) do
 		if not alive(attacker_unit) then
@@ -760,7 +772,7 @@ function PlayerMovement:_upd_underdog_skill(t)
 		if dis_sq < data.max_dis_sq and math.abs(attacker_pos.z - my_pos.z) < 250 then
 			nr_guys = nr_guys + 1
 
-			if data.nr_enemies <= nr_guys then
+			if nr_guys >= data.nr_enemies then
 				activated = true
 
 				if data.has_dmg_mul then
@@ -895,6 +907,7 @@ end
 
 function PlayerMovement:save(data)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
+
 	data.movement = {
 		state_name = self._current_state_name,
 		look_fwd = self._m_head_rot:y(),
@@ -983,11 +996,12 @@ end
 function PlayerMovement:_change_stamina(value)
 	local max_stamina = self:_max_stamina()
 	local stamina_maxed = self._stamina == max_stamina
+
 	self._stamina = math.clamp(self._stamina + value, 0, max_stamina)
 
 	managers.hud:set_stamina_value(self._stamina)
 
-	if stamina_maxed and self._stamina < max_stamina then
+	if stamina_maxed and max_stamina > self._stamina then
 		self._unit:sound():play("fatigue_breath")
 	elseif not stamina_maxed and max_stamina <= self._stamina then
 		self._unit:sound():play("fatigue_breath_stop")
@@ -1020,7 +1034,7 @@ function PlayerMovement:add_stamina(value)
 end
 
 function PlayerMovement:is_above_stamina_threshold()
-	return self._class_tweak_data.movement.stamina.MIN_STAMINA_THRESHOLD < self._stamina
+	return self._stamina > self._class_tweak_data.movement.stamina.MIN_STAMINA_THRESHOLD
 end
 
 function PlayerMovement:is_stamina_drained()

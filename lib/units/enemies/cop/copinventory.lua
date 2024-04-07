@@ -9,15 +9,14 @@ function CopInventory:init(unit)
 	self._latest_addition = nil
 	self._selected_primary = nil
 	self._use_data_alias = "npc"
-	self._align_places = {
-		right_hand = {
-			on_body = true,
-			obj3d_name = Idstring("a_weapon_right_front")
-		},
-		back = {
-			on_body = true,
-			obj3d_name = Idstring("Hips")
-		}
+	self._align_places = {}
+	self._align_places.right_hand = {
+		on_body = true,
+		obj3d_name = Idstring("a_weapon_right_front")
+	}
+	self._align_places.back = {
+		on_body = true,
+		obj3d_name = Idstring("Hips")
 	}
 	self._listener_id = "CopInventory" .. tostring(unit:key())
 end
@@ -31,20 +30,20 @@ function CopInventory:add_unit_by_name(new_unit_name, equip)
 
 	self:_chk_spawn_shield(new_unit)
 
-	local setup_data = {
-		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit,
-			self._shield_unit
-		},
-		expend_ammo = false,
-		hit_slotmask = managers.slot:get_mask("bullet_impact_targets"),
-		hit_player = true,
-		user_sound_variant = tweak_data.character[self._unit:base()._tweak_table].weapon_voice,
-		alert_AI = true,
-		alert_filter = self._unit:brain():SO_access()
+	local setup_data = {}
+
+	setup_data.user_unit = self._unit
+	setup_data.ignore_units = {
+		self._unit,
+		new_unit,
+		self._shield_unit
 	}
+	setup_data.expend_ammo = false
+	setup_data.hit_slotmask = managers.slot:get_mask("bullet_impact_targets")
+	setup_data.hit_player = true
+	setup_data.user_sound_variant = tweak_data.character[self._unit:base()._tweak_table].weapon_voice
+	setup_data.alert_AI = true
+	setup_data.alert_filter = self._unit:brain():SO_access()
 
 	new_unit:base():setup(setup_data)
 	self:add_unit(new_unit, equip)
@@ -54,6 +53,7 @@ function CopInventory:_chk_spawn_shield(weapon_unit)
 	if self._shield_unit_name and not alive(self._shield_unit) then
 		local align_name = Idstring("a_weapon_left_front")
 		local align_obj = self._unit:get_object(align_name)
+
 		self._shield_unit = World:spawn_unit(Idstring(self._shield_unit_name), align_obj:position(), align_obj:rotation())
 
 		self._unit:link(align_name, self._shield_unit, self._shield_unit:orientation_object():name())

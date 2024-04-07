@@ -20,7 +20,7 @@ function NPCSawWeaponBase:_play_sound_idle()
 end
 
 function NPCSawWeaponBase:update(unit, t, dt)
-	if self._check_shooting_expired and self._check_shooting_expired.check_t < t then
+	if self._check_shooting_expired and t > self._check_shooting_expired.check_t then
 		self._check_shooting_expired = nil
 
 		self._unit:set_extension_update_enabled(Idstring("base"), false)

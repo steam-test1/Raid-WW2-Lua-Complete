@@ -22,6 +22,7 @@ function CoreRandomUnitElement:init(unit)
 end
 
 function CoreRandomUnitElement:update_editing()
+	return
 end
 
 function CoreRandomUnitElement:draw_links(t, dt, selected_unit, all_units)

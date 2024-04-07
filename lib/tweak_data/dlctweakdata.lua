@@ -20,9 +20,8 @@ function DLCTweakData:init(tweak_data)
 end
 
 function DLCTweakData:_init_descriptions()
-	self.descriptions = {
-		[DLCTweakData.DLC_NAME_PREORDER] = {}
-	}
+	self.descriptions = {}
+	self.descriptions[DLCTweakData.DLC_NAME_PREORDER] = {}
 	self.descriptions[DLCTweakData.DLC_NAME_PREORDER].content = {
 		customizations = {
 			{
@@ -60,93 +59,90 @@ function DLCTweakData:_init_descriptions()
 			amount = 50
 		}
 	}
-	self.descriptions[DLCTweakData.DLC_NAME_SPECIAL_EDITION] = {
-		content = {
-			customizations = {
-				{
-					item = "american_highlander_jacket_upper"
-				},
-				{
-					item = "american_highlander_jacket_lower"
-				},
-				{
-					item = "russian_highlander_jacket_upper"
-				},
-				{
-					item = "russian_highlander_jacket_lower"
-				},
-				{
-					item = "german_highlander_jacket_upper"
-				},
-				{
-					item = "german_highlander_jacket_lower"
-				},
-				{
-					item = "british_highlander_jacket_upper"
-				},
-				{
-					item = "british_highlander_jacket_lower"
-				},
-				{
-					item = "american_special_edition_001_upper"
-				},
-				{
-					item = "british_special_edition_001_upper"
-				},
-				{
-					item = "german_special_edition_001_upper"
-				},
-				{
-					item = "russian_special_edition_001_upper"
-				}
+	self.descriptions[DLCTweakData.DLC_NAME_SPECIAL_EDITION] = {}
+	self.descriptions[DLCTweakData.DLC_NAME_SPECIAL_EDITION].content = {
+		customizations = {
+			{
+				item = "american_highlander_jacket_upper"
 			},
-			melee_weapons = {
-				{
-					item = "km_dagger"
-				},
-				{
-					item = "marching_mace"
-				}
+			{
+				item = "american_highlander_jacket_lower"
 			},
-			vehicle_skins = {
-				{
-					item = "kubelwagen_special_edition",
-					vehicle = "kubelwagen"
-				}
+			{
+				item = "russian_highlander_jacket_upper"
 			},
-			camp_customizations = {
-				{
-					item = "special_edition_bomb"
-				}
+			{
+				item = "russian_highlander_jacket_lower"
 			},
-			weapon_skins = {
-				{
-					item = "garand_special_edition"
-				}
+			{
+				item = "german_highlander_jacket_upper"
 			},
-			gold_award = {
-				item = "preorder_army_crate",
-				amount = 50
+			{
+				item = "german_highlander_jacket_lower"
+			},
+			{
+				item = "british_highlander_jacket_upper"
+			},
+			{
+				item = "british_highlander_jacket_lower"
+			},
+			{
+				item = "american_special_edition_001_upper"
+			},
+			{
+				item = "british_special_edition_001_upper"
+			},
+			{
+				item = "german_special_edition_001_upper"
+			},
+			{
+				item = "russian_special_edition_001_upper"
 			}
+		},
+		melee_weapons = {
+			{
+				item = "km_dagger"
+			},
+			{
+				item = "marching_mace"
+			}
+		},
+		vehicle_skins = {
+			{
+				item = "kubelwagen_special_edition",
+				vehicle = "kubelwagen"
+			}
+		},
+		camp_customizations = {
+			{
+				item = "special_edition_bomb"
+			}
+		},
+		weapon_skins = {
+			{
+				item = "garand_special_edition"
+			}
+		},
+		gold_award = {
+			item = "preorder_army_crate",
+			amount = 50
 		}
 	}
-	self.descriptions[DLCTweakData.DLC_NAME_RAID_COMMUNITY] = {
-		content = {
-			gold_award = {
-				item = "raid_community_group",
-				amount = 100
-			},
-			random_customization = {
-				item = "raid_community_group"
-			}
+	self.descriptions[DLCTweakData.DLC_NAME_RAID_COMMUNITY] = {}
+	self.descriptions[DLCTweakData.DLC_NAME_RAID_COMMUNITY].content = {
+		gold_award = {
+			item = "raid_community_group",
+			amount = 100
+		},
+		random_customization = {
+			item = "raid_community_group"
 		}
 	}
-	self.descriptions[DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK] = {
-		content = {
-			melee_weapons = {
-				{
-					item = "marching_mace"
-				}
+	self.descriptions[DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK] = {}
+	self.descriptions[DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK].content = {
+		melee_weapons = {
+			{
+				item = "marching_mace"
 			}
 		}
 	}

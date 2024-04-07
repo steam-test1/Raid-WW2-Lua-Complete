@@ -10,13 +10,12 @@ end
 
 function WeaponSkillsManager:_setup(reset)
 	if not Global.weapon_skills_manager or reset then
-		Global.weapon_skills_manager = {
-			version = WeaponSkillsManager.VERSION,
-			reset_message = false,
-			available_weapon_skill_points = 0,
-			gained_weapon_skill_points = 0,
-			weapon_skills_skill_tree = {}
-		}
+		Global.weapon_skills_manager = {}
+		Global.weapon_skills_manager.version = WeaponSkillsManager.VERSION
+		Global.weapon_skills_manager.reset_message = false
+		Global.weapon_skills_manager.available_weapon_skill_points = 0
+		Global.weapon_skills_manager.gained_weapon_skill_points = 0
+		Global.weapon_skills_manager.weapon_skills_skill_tree = {}
 
 		self:set_character_default_weapon_skills()
 
@@ -34,7 +33,7 @@ function WeaponSkillsManager:set_character_default_weapon_skills()
 end
 
 function WeaponSkillsManager:set_hide_cosmetic_parts(weapon_id, weapon_parts, invisible)
-	local hidden_parts = nil
+	local hidden_parts
 	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
 	if weapon_skill_tree and weapon_skill_tree.hidden_parts then
@@ -69,7 +68,7 @@ end
 
 function WeaponSkillsManager:get_hide_cosmetic_part(weapon_id, weapon_part_id)
 	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
-	local hidden_parts = nil
+	local hidden_parts
 
 	if weapon_skill_tree and weapon_skill_tree.hidden_parts then
 		hidden_parts = weapon_skill_tree.hidden_parts
@@ -265,6 +264,7 @@ function WeaponSkillsManager:update_weapon_challenges(weapon_id)
 
 					if challenge_from_manager._state and challenge_from_manager._state ~= "completed" then
 						local tweak_data_challenge_data = tweak_data.weapon_skills.skill_trees[weapon_id][tier_index][skill_index][1].challenge_tasks[1]
+
 						skill[1].challenge_tasks[1].target = tweak_data_challenge_data.target
 						skill[1].challenge_tasks[1].reminders = tweak_data_challenge_data.reminders
 						challenge_from_manager._tasks[1]._target = tweak_data_challenge_data.target
@@ -275,7 +275,7 @@ function WeaponSkillsManager:update_weapon_challenges(weapon_id)
 							skill[1].challenge_tasks[1].modifiers = tweak_data_challenge_data.modifiers
 						end
 
-						if challenge_from_manager._tasks[1]._target <= challenge_from_manager._tasks[1]._count then
+						if challenge_from_manager._tasks[1]._count >= challenge_from_manager._tasks[1]._target then
 							Application:trace("[WeaponSkillsManager:update_weapon_challenges] Target for new Weapon challenge already met! Challenge_id: " .. skill[1].challenge_id .. ", Count is: " .. challenge_from_manager._tasks[1]._count .. " ,  New target is: " .. challenge_from_manager._tasks[1]._target .. ", Forcing a challenge completetion")
 
 							challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
@@ -328,7 +328,9 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 									print(inspect(challenge_from_manager._tasks[1]._modifiers[modifier]) .. ", " .. inspect(tweak_data_challenge_data.modifiers[modifier]))
 								end
 
-								if not tweak_data_challenge_data.modifiers[modifier] or not skill[1].challenge_tasks[1].modifiers or not skill[1].challenge_tasks[1].modifiers[modifier] or skill[1].challenge_tasks[1].modifiers[modifier] ~= tweak_data_challenge_data.modifiers[modifier] then
+								if tweak_data_challenge_data.modifiers[modifier] and skill[1].challenge_tasks[1].modifiers and skill[1].challenge_tasks[1].modifiers[modifier] and skill[1].challenge_tasks[1].modifiers[modifier] == tweak_data_challenge_data.modifiers[modifier] then
+									-- Nothing
+								else
 									challenges_changed = true
 								end
 							else
@@ -498,6 +500,7 @@ end
 
 function WeaponSkillsManager:apply_skill(weapon_id, tier_number, tier_skill_number)
 	local weapon_skills = self._global.weapon_skills_skill_tree[weapon_id][tier_number][tier_skill_number]
+
 	weapon_skills[1].active = true
 
 	if self._global.weapon_skills_skill_tree[weapon_id][tier_number + 1] and self._global.weapon_skills_skill_tree[weapon_id][tier_number + 1][tier_skill_number] then
@@ -507,6 +510,7 @@ end
 
 function WeaponSkillsManager:activate_skill(weapon_skill, bm_weapon_category_id)
 	weapon_skill.active = true
+
 	local weapon_id = weapon_skill.weapon_id
 	local tier = weapon_skill.tier
 	local index_in_tier = weapon_skill.index_in_tier
@@ -763,6 +767,7 @@ function WeaponSkillsManager:is_weapon_tier_unlocked(weapon_id, tier)
 		end
 	elseif upgrade_name == "recon_tier_4_unlocked" or upgrade_name == "assault_tier_4_unlocked" or upgrade_name == "infiltrator_tier_4_unlocked" or upgrade_name == "demolitions_tier_4_unlocked" then
 		local tier_4_result = managers.player:upgrade_value("player", upgrade_name, false)
+
 		result = tier_4_result ~= 0
 	end
 
@@ -778,7 +783,7 @@ function WeaponSkillsManager:get_weapon_skills_current_upgrade_level(raid_stat_n
 end
 
 function WeaponSkillsManager:deactivate_all_upgrades_for_bm_weapon_category_id(weapon_category_id)
-	local upgrades_table = nil
+	local upgrades_table
 	local weapon_category_name = ""
 
 	if weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
@@ -814,7 +819,7 @@ function WeaponSkillsManager:set_player_using_scope(weapon_id, flag)
 end
 
 function WeaponSkillsManager:get_scope_weapon_part_name(weapon_id)
-	local result = nil
+	local result
 
 	if weapon_id == "mp44" and managers.weapon_skills:get_weapon_skills("mp44")[2][4][1].active ~= true then
 		return result
@@ -842,6 +847,7 @@ function WeaponSkillsManager:save(data)
 		weapon_skills_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree,
 		gained_weapon_skill_points = Global.weapon_skills_manager.gained_weapon_skill_points
 	}
+
 	data.WeaponSkillsManager = state
 end
 
@@ -869,11 +875,13 @@ function WeaponSkillsManager:load(data, version)
 		Global.weapon_skills_manager.available_weapon_skill_points = state.available_weapon_skill_points or 0
 		Global.weapon_skills_manager.gained_weapon_skill_points = state.gained_weapon_skill_points or 0
 		Global.weapon_skills_manager.weapon_skills_skill_tree = state.weapon_skills_skill_tree or deep_clone(tweak_data.weapon_skills.skill_trees)
+
 		local new_weapon_added = false
 
 		for weapon_id, weapon_skill_tree_data in pairs(tweak_data.weapon_skills.skill_trees) do
 			if not Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
 				Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] = deep_clone(weapon_skill_tree_data)
+
 				local skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
 				for tier_index = 1, #skill_tree do
@@ -904,6 +912,7 @@ function WeaponSkillsManager:load(data, version)
 							skill[1].weapon_id = weapon_id
 							skill[1].tier = tier_index
 							skill[1].index_in_tier = skill_index
+
 							local previous_challenge_unlocked = tier_skills[skill_index - 1] and managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, tier_skills[skill_index - 1][1].challenge_id):completed()
 
 							if tier_index == 1 or previous_challenge_unlocked then
@@ -970,7 +979,7 @@ function WeaponSkillsManager:recreate_all_weapons_blueprints(weapon_category_id)
 end
 
 function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_category_id, temp_skills, apply_blueprint)
-	local new_blueprint = nil
+	local new_blueprint
 
 	if Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
 		local tier_counter = 1
@@ -991,6 +1000,7 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 
 						if not weapon_mod_hide then
 							local weapon_mod_type = tweak_data.weapon.factory.parts[weapon_part_name].type
+
 							self._temp_weapon_skills[weapon_mod_type] = weapon_part_name
 						end
 					end
@@ -1000,6 +1010,7 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 	end
 
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
+
 	new_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
 
 	if self._temp_weapon_skills then
@@ -1028,6 +1039,7 @@ function WeaponSkillsManager:apply_weapon_blueprint(weapon_id, weapon_category_i
 		for weapon_index, weapon_data in pairs(Global.blackmarket_manager.crafted_items[weapon_category_name]) do
 			if weapon_data.weapon_id == weapon_id then
 				Global.blackmarket_manager.crafted_items[weapon_category_name][weapon_index].blueprint = new_blueprint
+
 				local local_peer = managers.network:session():local_peer()
 				local outfit_version = local_peer:outfit_version()
 

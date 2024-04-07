@@ -21,6 +21,7 @@ function EditUnitLight:init(editor)
 	sizer:add(debug_sizer, 0, 5, "EXPAND,BOTTOM,TOP")
 
 	local lights_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._lights_params = {
 		name = "Lights:",
 		name_proportions = 3,
@@ -323,7 +324,7 @@ function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_slider_and_number_value(self._spot_start_angle_params, light:spot_angle_start())
 	CoreEws.change_slider_and_number_value(self._spot_end_angle_params, light:spot_angle_end())
 
-	local is_spot = (not string.match(light:properties(), "omni") or false) and true
+	local is_spot = (not string.match(light:properties(), "omni") or false) and true or false and true
 
 	self._spot_start_angle_params.number_ctrlr:set_enabled(is_spot)
 	self._spot_start_angle_params.slider_ctrlr:set_enabled(is_spot)
@@ -335,6 +336,7 @@ function EditUnitLight:update_light_ctrls_from_light(light)
 	self._shadow_resolution_params.ctrlr:set_enabled(is_shadow_projection)
 
 	local resolution = self._reference_unit:unit_data().projection_lights
+
 	resolution = resolution and resolution[light:name():s()] and resolution[light:name():s()].x or EditUnitLight.DEFAULT_SHADOW_RESOLUTION
 
 	CoreEws.change_combobox_value(self._shadow_resolution_params, resolution)
@@ -344,6 +346,7 @@ function EditUnitLight:update_light_ctrls_from_light(light)
 	self._spot_projection_texture_params.ctrlr:set_enabled(is_projection and is_spot)
 
 	local projection_texture = self._reference_unit:unit_data().projection_textures
+
 	projection_texture = projection_texture and projection_texture[light:name():s()] or EditUnitLight.DEFAULT_SPOT_PROJECTION_TEXTURE
 
 	CoreEws.change_combobox_value(self._spot_projection_texture_params, projection_texture)

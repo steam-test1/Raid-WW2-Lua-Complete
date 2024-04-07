@@ -13,8 +13,10 @@ function SpecialInteractionExt:interact(player)
 
 	local params = deep_clone(self._tweak_data)
 	local pm = managers.player
+
 	params.target_unit = self._unit
 	params.number_of_circles = math.max(params.number_of_circles - pm:upgrade_value("interaction", "wheel_amount_decrease", 0), 1)
+
 	local count = params.number_of_circles
 
 	for i = 1, count do

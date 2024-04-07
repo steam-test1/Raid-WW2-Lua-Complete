@@ -35,6 +35,7 @@ function HUDTabWeaponChallenge:_create_panel(panel)
 		w = HUDTabWeaponChallenge.WIDTH + HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE,
 		h = HUDTabWeaponChallenge.HEIGHT
 	}
+
 	self._object = panel:panel(panel_params)
 	self._initial_x_position = self._object:x()
 end
@@ -46,6 +47,7 @@ function HUDTabWeaponChallenge:_create_inner_panel()
 		valign = "grow",
 		w = self._object:w() - HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE
 	}
+
 	self._inner_panel = self._object:panel(inner_panel_params)
 end
 
@@ -57,6 +59,7 @@ function HUDTabWeaponChallenge:_create_index_bullet_panel()
 		valign = "top",
 		w = HUDTabWeaponChallenge.INDEX_BULLET_PANEL_W
 	}
+
 	self._index_bullet_panel = self._object:panel(index_bullet_panel_params)
 
 	self._index_bullet_panel:set_right(self._object:w() - HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE)
@@ -76,6 +79,7 @@ function HUDTabWeaponChallenge:_create_title()
 		font_size = HUDTabWeaponChallenge.TITLE_FONT_SIZE,
 		color = HUDTabWeaponChallenge.TITLE_COLOR
 	}
+
 	self._title = self._inner_panel:text(title_params)
 end
 
@@ -91,6 +95,7 @@ function HUDTabWeaponChallenge:_create_tier_label()
 		font_size = HUDTabWeaponChallenge.TITLE_FONT_SIZE,
 		color = HUDTabWeaponChallenge.TITLE_COLOR
 	}
+
 	self._tier = self._inner_panel:text(tier_label_params)
 end
 
@@ -102,6 +107,7 @@ function HUDTabWeaponChallenge:_create_icon()
 		texture = tweak_data.gui.icons[default_icon].texture,
 		texture_rect = tweak_data.gui.icons[default_icon].texture_rect
 	}
+
 	self._icon = self._inner_panel:bitmap(icon_params)
 end
 
@@ -117,6 +123,7 @@ function HUDTabWeaponChallenge:_create_description()
 		font_size = HUDTabWeaponChallenge.DESCRIPTION_FONT_SIZE,
 		color = HUDTabWeaponChallenge.DESCRIPTION_COLOR
 	}
+
 	self._description = self._inner_panel:text(description_params)
 end
 
@@ -132,6 +139,7 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 		w = self._inner_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center)
 	}
+
 	self._progress_bar_panel = RaidGUIPanel:new(self._inner_panel, progress_bar_panel_params)
 
 	self._progress_bar_panel:set_center_y(self._inner_panel:h() - 32)
@@ -157,7 +165,9 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h()
 	}
+
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel(progress_bar_foreground_panel_params)
+
 	local progress_bar_background_params = {
 		name = "weapon_challenge_progress_bar_background",
 		w = self._progress_bar_panel:w(),
@@ -182,6 +192,7 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_dirty_white
 	}
+
 	self._progress_text = self._progress_bar_panel:label(progress_bar_text_params)
 end
 
@@ -243,12 +254,14 @@ function HUDTabWeaponChallenge:set_challenge(index, animate)
 end
 
 function HUDTabWeaponChallenge:_set_challenge(challenge_index)
-	local challenge, count, target, min_range, briefing_id = nil
+	local challenge, count, target, min_range, briefing_id
 	local challenge_data = self._challenges[challenge_index]
 
 	if challenge_data.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_data.challenge_id)
+
 		local tasks = challenge:tasks()
+
 		briefing_id = tasks[1]:briefing_id()
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
@@ -256,6 +269,7 @@ function HUDTabWeaponChallenge:_set_challenge(challenge_index)
 	end
 
 	briefing_id = briefing_id or challenge_data.challenge_briefing_id
+
 	local skill_tweak_data = tweak_data.weapon_skills.skills[challenge_data.skill_name]
 
 	self._title:set_text(utf8.to_upper(managers.localization:text(skill_tweak_data.name_id)))
@@ -277,9 +291,9 @@ function HUDTabWeaponChallenge:_set_challenge(challenge_index)
 	local icon = tweak_data.gui.icons[skill_tweak_data.icon]
 
 	self._icon:set_image(icon.texture, unpack(icon.texture_rect))
-	self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * count / target)
+	self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * (count / target))
 
-	local progress_text = nil
+	local progress_text
 
 	if count ~= target then
 		progress_text = tostring(count) .. "/" .. tostring(target)
@@ -345,9 +359,11 @@ function HUDTabWeaponChallenge:_animate_data_change(panel, challenge_data)
 	local fade_in_duration = 0.3
 	local t = (1 - self._inner_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in(t, 1, -1, fade_out_duration)
 
 		self._inner_panel:set_alpha(current_alpha)
@@ -356,6 +372,7 @@ function HUDTabWeaponChallenge:_animate_data_change(panel, challenge_data)
 		self._active_bullets[self._currently_shown_challenge]:set_center(self._inactive_bullets[self._currently_shown_challenge]:center())
 
 		local current_position = Easing.quartic_in(t, 0, HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE, fade_out_duration)
+
 		current_position = math.round(current_position)
 
 		self._inner_panel:set_x(current_position)
@@ -376,9 +393,11 @@ function HUDTabWeaponChallenge:_animate_data_change(panel, challenge_data)
 
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, fade_in_duration)
 
 		self._inner_panel:set_alpha(current_alpha)
@@ -387,6 +406,7 @@ function HUDTabWeaponChallenge:_animate_data_change(panel, challenge_data)
 		self._active_bullets[self._currently_shown_challenge]:set_center(self._inactive_bullets[self._currently_shown_challenge]:center())
 
 		local current_position = Easing.quartic_out(t, HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE, -HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE, fade_in_duration)
+
 		current_position = math.round(current_position)
 
 		self._inner_panel:set_x(current_position)

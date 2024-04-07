@@ -47,7 +47,9 @@ function RaidGUIControlXPCell:animate_fade_in(panel, duration)
 
 	while t < anim_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, anim_duration)
 
 		self._object:set_alpha(current_alpha)
@@ -65,7 +67,9 @@ function RaidGUIControlXPCell:animate_change_text(panel)
 
 	while t < 0.5 do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_position = Easing.quartic_in(t, self._starting_x - offset, offset, 0.5)
 
 		self._object:set_x(current_position)
@@ -82,16 +86,21 @@ function RaidGUIControlXPCell:animate_change_text(panel)
 end
 
 function RaidGUIControlXPCell:highlight_on()
+	return
 end
 
 function RaidGUIControlXPCell:highlight_off()
+	return
 end
 
 function RaidGUIControlXPCell:select_on()
+	return
 end
 
 function RaidGUIControlXPCell:select_off()
+	return
 end
 
 function RaidGUIControlXPCell:on_double_click(button)
+	return
 end

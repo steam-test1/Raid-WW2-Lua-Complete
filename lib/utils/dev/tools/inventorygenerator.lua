@@ -151,7 +151,7 @@ function InventoryGenerator._items_content(safe_items, contains)
 			if category == "contents" then
 				InventoryGenerator._items_content(safe_items, tweak_data.economy.contents[entry].contains)
 			else
-				local id = nil
+				local id
 				local item_data = tweak_data.blackmarket[category][entry]
 
 				if not item_data then
@@ -195,6 +195,7 @@ end
 
 function InventoryGenerator._items_add(category, entry, def_id, content_data, safe_items, unique_def_ids)
 	local id = InventoryGenerator._create_id(category, entry)
+
 	safe_items[id] = {
 		entry = entry,
 		category = category,
@@ -255,7 +256,7 @@ function InventoryGenerator._items()
 end
 
 function InventoryGenerator._probability_list(content, item_list)
-	local id = nil
+	local id
 	local probability_list = {}
 
 	for category, items in pairs(item_list) do
@@ -324,6 +325,7 @@ function InventoryGenerator._create_steam_itemdef_gameplay(json, tweak, defid_da
 			end
 
 			local id = InventoryGenerator._create_id(category, entry)
+
 			bundle_string = bundle_string .. defid_data[id].def_id .. "x" .. drop_rate .. ";"
 		end
 	end
@@ -339,6 +341,7 @@ function InventoryGenerator._create_steam_itemdef_bundle(json, tweak, defid_data
 	for category, items in pairs(tweak.contains) do
 		for _, entry in pairs(items) do
 			local id = InventoryGenerator._create_id(category, entry, tweak.quality, tweak.bonus)
+
 			bundle_string = bundle_string .. defid_data[id].def_id .. "x1;"
 		end
 	end
@@ -355,8 +358,8 @@ function InventoryGenerator._create_steam_itemdef_content(json, tweak, entry, de
 		data.def_id = defid_data[data.id].def_id
 	end
 
-	table.sort(proability_list, function (a, b)
-		return a.weight == b.weight and a.def_id < b.def_id or b.weight < a.weight
+	table.sort(proability_list, function(a, b)
+		return a.weight == b.weight and a.def_id < b.def_id or a.weight > b.weight
 	end)
 
 	local bundle_string = ""
@@ -381,10 +384,12 @@ function InventoryGenerator._create_steam_itemdef_content(json, tweak, entry, de
 		if safe_data.content == entry then
 			if safe_data.free then
 				local safe_id = InventoryGenerator._create_id("safes", safe_entry)
+
 				exchange_string = exchange_string .. defid_data[safe_id].def_id .. "x1;"
 			elseif tweak_data.economy.drills[safe_data.drill] then
 				local safe_id = InventoryGenerator._create_id("safes", safe_entry)
 				local drill_id = InventoryGenerator._create_id("drills", safe_data.drill)
+
 				exchange_string = exchange_string .. defid_data[safe_id].def_id .. "x1," .. defid_data[drill_id].def_id .. "x1;"
 			end
 		end
@@ -426,7 +431,7 @@ function InventoryGenerator.create_description_safe(safe_entry)
 		end
 	end
 
-	local x_td, y_td, xr_td, yr_td = nil
+	local x_td, y_td, xr_td, yr_td
 
 	local function sort_func(x, y)
 		x_td = (tweak_data.economy[x.category] or tweak_data.blackmarket[x.category])[x.entry]
@@ -443,7 +448,7 @@ function InventoryGenerator.create_description_safe(safe_entry)
 
 	table.sort(items_list, sort_func)
 
-	local td = nil
+	local td
 
 	for _, item in ipairs(items_list) do
 		td = (tweak_data.economy[item.category] or tweak_data.blackmarket[item.category])[item.entry]
@@ -697,7 +702,7 @@ function InventoryGenerator.json_load(path)
 end
 
 function InventoryGenerator._json_entry(data_string)
-	local key, temp = nil
+	local key, temp
 	local i1 = 1
 	local i2 = 1
 	local data = {}
@@ -718,6 +723,7 @@ function InventoryGenerator._json_entry(data_string)
 		end
 
 		i2 = i1 + 1
+
 		local first_char = data_string:match("^%s*(.+)", i2):sub(1, 1)
 
 		if first_char == "[" then
@@ -727,6 +733,7 @@ function InventoryGenerator._json_entry(data_string)
 		end
 
 		local pos = i2
+
 		i2 = data_string:find(",", pos)
 
 		if i2 then
@@ -734,7 +741,9 @@ function InventoryGenerator._json_entry(data_string)
 
 			if str_pos and str_pos < i2 then
 				str_pos = data_string:find("\"", str_pos + 1)
+
 				local t = i2
+
 				i2 = data_string:find(",", str_pos)
 			end
 		end
@@ -807,16 +816,19 @@ function InventoryGenerator._json_find_section(data_string, start_char, stop_cha
 
 	while current do
 		local i = data_string:find(start_char, current + 1)
+
 		stop = data_string:find(stop_char, current + 1)
 
 		if i and stop and i < stop then
 			current = i + 1
 		else
 			current = nil
+
 			local find_string = pos or 1
 
 			while find_string do
 				local string_start = data_string:find("\"", find_string)
+
 				find_string = nil
 
 				if string_start and stop and string_start < stop then
@@ -839,8 +851,10 @@ end
 
 function InventoryGenerator._root_path()
 	local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "..\\..\\")
+
 	path = Application:nice_path(path, true)
-	local f = nil
+
+	local f
 
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")

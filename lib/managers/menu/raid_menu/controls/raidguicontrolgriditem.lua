@@ -42,6 +42,7 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	self._params.item_w = params.item_w or self._panel:w()
 	self._params.item_h = params.item_h or self._panel:h()
 	self._name = "grid_item"
+
 	local background_panel_params = {
 		visible = false,
 		y = 0,
@@ -58,6 +59,7 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 		h = self._params.selected_marker_h,
 		color = tweak_data.gui.colors.raid_grey:with_alpha(0.3)
 	}
+
 	self._select_background_panel = self._object:panel(background_panel_params)
 	self._select_background = self._select_background_panel:rect(background_rect_params)
 	self._triangle_markers_panel = self._object:panel(background_panel_params)
@@ -81,8 +83,10 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 		texture = tweak_data.gui.icons.ico_sel_rect_bottom_right_white.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_bottom_right_white.texture_rect
 	})
+
 	local image_coord_x = (params.selected_marker_w - params.item_w) / 2
 	local image_coord_y = (params.selected_marker_h - params.item_h) / 2
+
 	self._grid_item_icon = self._object:image({
 		name = "grid_item_icon",
 		layer = 100,
@@ -142,6 +146,7 @@ function RaidGUIControlGridItem:_layout_breadcrumb()
 		identifiers = self._item_data.breadcrumb.identifiers,
 		layer = self._grid_item_icon:layer() + 1
 	}
+
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
 	self._breadcrumb:set_right(self._object:w())

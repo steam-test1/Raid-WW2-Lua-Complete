@@ -27,6 +27,7 @@ local temp_vec2 = Vector3()
 local nav_seg_keys = {}
 local cone_height = Vector3(0, 0, 80)
 local arrow_height = Vector3(0, 0, 1)
+
 NavigationManager = NavigationManager or class()
 NavigationManager.nav_states = {
 	"allow_access",
@@ -120,25 +121,29 @@ end
 function NavigationManager:_init_draw_data()
 	local data = {}
 	local duration = 5
+
 	data.duration = duration
-	local brush = {
-		door = Draw:brush(Color(0.1, 0, 1, 1), duration),
-		room_diag = Draw:brush(Color(1, 0.5, 0.5, 0), duration),
-		room_diag_disabled = Draw:brush(Color(0.5, 0.7, 0, 0), duration),
-		room_diag_obstructed = Draw:brush(Color(0.5, 0.5, 0, 0.5), duration),
-		room_border = Draw:brush(Color(0.5, 0.3, 0.3, 0.8), duration),
-		coarse_graph = Draw:brush(Color(0.2, 0.05, 0.2, 0.9)),
-		vis_graph_rooms = Draw:brush(Color(0.6, 0.5, 0.2, 0.9), duration),
-		vis_graph_node = Draw:brush(Color(1, 0.6, 0, 0.9), duration),
-		vis_graph_links = Draw:brush(Color(0.2, 0.8, 0.1, 0.6), duration)
-	}
+
+	local brush = {}
+
+	brush.door = Draw:brush(Color(0.1, 0, 1, 1), duration)
+	brush.room_diag = Draw:brush(Color(1, 0.5, 0.5, 0), duration)
+	brush.room_diag_disabled = Draw:brush(Color(0.5, 0.7, 0, 0), duration)
+	brush.room_diag_obstructed = Draw:brush(Color(0.5, 0.5, 0, 0.5), duration)
+	brush.room_border = Draw:brush(Color(0.5, 0.3, 0.3, 0.8), duration)
+	brush.coarse_graph = Draw:brush(Color(0.2, 0.05, 0.2, 0.9))
+	brush.vis_graph_rooms = Draw:brush(Color(0.6, 0.5, 0.2, 0.9), duration)
+	brush.vis_graph_node = Draw:brush(Color(1, 0.6, 0, 0.9), duration)
+	brush.vis_graph_links = Draw:brush(Color(0.2, 0.8, 0.1, 0.6), duration)
 	data.brush = brush
+
 	local offsets = {
 		Vector3(-1, -1),
 		Vector3(-1, 1),
 		Vector3(1, -1),
 		Vector3(1, 1)
 	}
+
 	data.offsets = offsets
 	data.next_draw_i_room = 1
 	data.next_draw_i_door = 1
@@ -181,7 +186,7 @@ function NavigationManager:_draw_pos_reservations(t)
 	for key, res in pairs(self._pos_reservations) do
 		local entry = res[1]
 
-		if entry.expire_t and entry.expire_t < t then
+		if entry.expire_t and t > entry.expire_t then
 			table.insert(to_remove, key)
 		end
 
@@ -295,6 +300,7 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 		id = world_id,
 		segments = segments
 	}
+
 	self._worlds[world_id] = world
 
 	if not data.segments then
@@ -302,6 +308,7 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 	end
 
 	local translate = translation or Vector3(0, 0, 0)
+
 	yaw = yaw or 0
 
 	for _, nav_seg in pairs(data.segments) do
@@ -316,6 +323,7 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 			barrage_allowed = nav_seg.barrage_allowed,
 			parent_world_id = data.parent_world_id
 		}
+
 		world.segments[Idstring(unique_id):key()] = segment
 		self._nav_segments[unique_id] = segment
 	end
@@ -546,6 +554,7 @@ function NavigationManager:_create_load_data_from_builder(world_id)
 		door_high_quads = door_high_quads,
 		helper_blockers = self._builder._helper_blockers
 	}
+
 	self._load_data = load_data
 
 	for i_quad, quad in pairs(builder_quads) do
@@ -612,7 +621,7 @@ function NavigationManager:set_nav_segment_state(id, state)
 
 	local wanted_state = state == "allow_access" and true or false
 	local cur_state = self._quad_field:is_nav_segment_enabled(id)
-	local seg_disabled_state = nil
+	local seg_disabled_state
 
 	if not wanted_state then
 		seg_disabled_state = true
@@ -743,7 +752,7 @@ end
 
 function NavigationManager:_draw_doors(progress)
 	local selected_seg = self._selected_segment
-	local room_mask = nil
+	local room_mask
 
 	if selected_seg and self._nav_segments[selected_seg] and next(self._nav_segments[selected_seg].vis_groups) then
 		room_mask = {}
@@ -797,7 +806,7 @@ function NavigationManager:_draw_anim_nav_links()
 	for element, _ in pairs(self._nav_links) do
 		local start_pos = element:value("position")
 
-		(element:nav_link():is_obstructed() and brush_obstructed or brush):cone(element:nav_link_end_pos(), start_pos, 20)
+		;(element:nav_link():is_obstructed() and brush_obstructed or brush):cone(element:nav_link_end_pos(), start_pos, 20)
 	end
 end
 
@@ -846,15 +855,17 @@ function NavigationManager:get_nav_segments_in_direction(start_nav_seg_id, fwd)
 	local start_pos = start_nav_seg.pos
 	local quad_field = self._quad_field
 	local to_search = {}
-	local discovered = {
-		[start_nav_seg_id] = true
-	}
+	local discovered = {}
+
+	discovered[start_nav_seg_id] = true
+
 	local found = {}
 	local search_vec = temp_vec1
 	local immediate_neighbours = start_nav_seg.neighbours
 
 	for neighbour_id, _ in pairs(immediate_neighbours) do
 		discovered[neighbour_id] = true
+
 		local neighbour_seg = all_nav_segs[neighbour_id]
 
 		if not neighbour_seg.disabled then
@@ -913,7 +924,9 @@ function NavigationManager:register_cover_units(world_id)
 	end
 
 	local rooms = self._rooms
+
 	self._covers = self._covers or {}
+
 	local world_definition = managers.worldcollection:worlddefinition_by_id(world_id or 0)
 	local cover_data = world_definition:get_cover_data()
 	local t_ins = table.insert
@@ -1008,6 +1021,7 @@ function NavigationManager:_unregister_cover_units()
 end
 
 function NavigationManager:_unreserve_all_pos()
+	return
 end
 
 function NavigationManager:_safe_remove_unit(unit)
@@ -1053,13 +1067,14 @@ function NavigationManager:register_anim_nav_link(element)
 
 	if start_nav_seg_id ~= end_nav_seg_id then
 		local start_nav_seg = self._nav_segments[start_nav_seg_id]
-		local new_neighbour = nil
+		local new_neighbour
 
 		if not is_obstructed and (not start_nav_seg.neighbours[end_nav_seg_id] or not next(start_nav_seg.neighbours[end_nav_seg_id])) then
 			new_neighbour = true
 		end
 
 		local neighbours_list_name = is_obstructed and "disabled_neighbours" or "neighbours"
+
 		start_nav_seg[neighbours_list_name] = start_nav_seg[neighbours_list_name] or {}
 		start_nav_seg[neighbours_list_name][end_nav_seg_id] = start_nav_seg[neighbours_list_name][end_nav_seg_id] or {}
 
@@ -1110,7 +1125,7 @@ function NavigationManager:unregister_anim_nav_link(element)
 		end
 	end
 
-	local was_in_group_ai = nil
+	local was_in_group_ai
 	local start_nav_seg_neighbours = start_nav_seg.neighbours
 
 	if start_nav_seg_neighbours and start_nav_seg_neighbours[end_nav_seg_id] then
@@ -1148,11 +1163,13 @@ function NavigationManager:reserve_cover(cover, filter)
 		cover[self.COVER_RESERVED] = reserved + 1
 	else
 		cover[self.COVER_RESERVED] = 1
+
 		local reservation = {
 			radius = 60,
 			position = cover[NavigationManager.COVER_POSITION],
 			filter = filter
 		}
+
 		cover[self.COVER_RESERVATION] = reservation
 
 		self:add_pos_reservation(reservation)
@@ -1298,7 +1315,7 @@ function NavigationManager:find_cover_in_cone_from_threat_pos(threat_pos, cone_b
 		rsrv_filter = rsrv_filter
 	}
 	local t = TimerManager:now()
-	local ret = nil
+	local ret
 
 	if nav_seg then
 		self._quad_field:find_cover(search_params)
@@ -1319,8 +1336,11 @@ end
 
 function NavigationManager:find_walls_accross_tracker(from_tracker, accross_vec, angle, nr_rays)
 	angle = angle or 180
+
 	local center_pos = from_tracker:field_position()
+
 	nr_rays = math.max(2, nr_rays or 4)
+
 	local rot_step = angle / (nr_rays - 1)
 	local rot_offset = (math.random() * 2 - 1) * angle * 0.5
 	local ray_rot = Rotation(-angle * 0.5 + rot_offset - rot_step)
@@ -1332,7 +1352,7 @@ function NavigationManager:find_walls_accross_tracker(from_tracker, accross_vec,
 
 	mrotation.set_yaw_pitch_roll(ray_rot, rot_step, 0, 0)
 
-	local tracker_from, pos_from = nil
+	local tracker_from, pos_from
 
 	if from_tracker:lost() then
 		pos_from = center_pos
@@ -1349,7 +1369,7 @@ function NavigationManager:find_walls_accross_tracker(from_tracker, accross_vec,
 	local ray_results = {}
 	local i_ray = 1
 
-	while nr_rays >= i_ray do
+	while i_ray <= nr_rays do
 		mvec3_rot(vec_to, ray_rot)
 		mvec3_set(pos_to, vec_to)
 		mvec3_add(pos_to, center_pos)
@@ -1427,14 +1447,14 @@ function NavigationManager:_execute_coarce_search(search_data)
 		local neighbours = all_nav_segments[next_search_i_seg].neighbours
 
 		if neighbours[search_data.end_i_seg] then
-			local entry_found = nil
+			local entry_found
 
 			for _, door in ipairs(neighbours[search_data.end_i_seg]) do
 				if door.x then
 					entry_found = true
 
 					break
-				elseif door:delay_time() < TimerManager:game():time() and door:check_access(search_data.access_pos, search_data.access_neg) then
+				elseif TimerManager:game():time() > door:delay_time() and door:check_access(search_data.access_pos, search_data.access_neg) then
 					entry_found = true
 
 					break
@@ -1483,7 +1503,7 @@ function NavigationManager:_execute_coarce_search(search_data)
 				local new_seg_weight = seg_data.weight
 				local search_index = #to_search
 
-				while search_index > 0 and to_search[search_index].weight < new_seg_weight do
+				while search_index > 0 and new_seg_weight > to_search[search_index].weight do
 					search_index = search_index - 1
 				end
 
@@ -1506,7 +1526,7 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 	local all_rooms = self._rooms
 	local seg = all_segs[i_seg]
 	local neighbours = seg.neighbours
-	local found_segs = nil
+	local found_segs
 
 	for neighbour_seg_id, door_list in pairs(neighbours) do
 		if not ignore_seg[neighbour_seg_id] and not all_segs[neighbour_seg_id].disabled and (not verify_clbk or verify_clbk(neighbour_seg_id)) then
@@ -1547,7 +1567,7 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 					end
 				elseif not alive(door) then
 					debug_pause("[NavigationManager:_sort_nav_segs_after_pos] dead nav_link! between NavSegments", i_seg, "-", neighbour_seg_id)
-				elseif not door:is_obstructed() and door:delay_time() < TimerManager:game():time() and door:check_access(access_pos, access_neg) then
+				elseif not door:is_obstructed() and TimerManager:game():time() > door:delay_time() and door:check_access(access_pos, access_neg) then
 					local end_pos = door:script_data().element:nav_link_end_pos()
 					local my_weight = mvec3_dis(end_pos, to_pos)
 
@@ -1596,7 +1616,7 @@ function NavigationManager:raycast(params)
 end
 
 function NavigationManager._is_pos_in_room(pos, borders, height)
-	if borders.x_neg <= pos.x and pos.x <= borders.x_pos and borders.y_neg <= pos.y and pos.y <= borders.y_pos then
+	if pos.x >= borders.x_neg and pos.x <= borders.x_pos and pos.y >= borders.y_neg and pos.y <= borders.y_pos then
 		local z = NavFieldBuilder._get_room_height_at_pos(height, borders, pos)
 
 		if math.abs(z - pos.z) < 100 then
@@ -1606,7 +1626,7 @@ function NavigationManager._is_pos_in_room(pos, borders, height)
 end
 
 function NavigationManager._is_pos_in_room_xy(pos, borders)
-	if borders.x_neg <= pos.x and pos.x <= borders.x_pos and borders.y_neg <= pos.y and pos.y <= borders.y_pos then
+	if pos.x >= borders.x_neg and pos.x <= borders.x_pos and pos.y >= borders.y_neg and pos.y <= borders.y_pos then
 		return true
 	end
 end
@@ -1616,7 +1636,7 @@ function NavigationManager:search_pos_to_pos(params)
 end
 
 function NavigationManager:search_coarse(params)
-	local pos_to, start_i_seg, end_i_seg, access_pos, access_neg = nil
+	local pos_to, start_i_seg, end_i_seg, access_pos, access_neg
 
 	if params.from_seg then
 		start_i_seg = params.from_seg
@@ -1761,6 +1781,7 @@ function NavigationManager:draw_path(path, color_link, color_node, duration)
 	if path then
 		color_node = color_node and Color(unpack(color_node)) or Color(0.2, math.random(), math.random(), math.random())
 		color_link = color_link and Color(unpack(color_link)) or Color(0.1, math.random(), math.random(), math.random())
+
 		local brush_node = Draw:brush(color_node, duration)
 		local brush_link = Draw:brush(color_link, duration)
 
@@ -1852,7 +1873,7 @@ function NavigationManager:reserve_pos(start_t, duration, pos, step_clbk, radius
 	local quad_field = self._quad_field
 	local free_chk_func = quad_field.is_position_unreserved
 	local search_pos = entry.position
-	local found_pos = nil
+	local found_pos
 
 	repeat
 		if free_chk_func(quad_field, entry) then
@@ -2067,7 +2088,7 @@ function NavigationManager:convert_nav_link_maneuverability_to_SO_access(maneuve
 end
 
 function NavigationManager:convert_SO_AI_group_to_access(ai_group_name)
-	local ai_group_filter = nil
+	local ai_group_filter
 
 	if ai_group_name == "friendlies" then
 		ai_group_filter = {
@@ -2182,6 +2203,7 @@ function NavigationManager:get_nav_seg_for_world(world_id)
 			segment.unique_id,
 			segment
 		}
+
 		result[segment.unique_id] = segment
 	end
 
@@ -2246,7 +2268,7 @@ function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	self._quad_field:remove_obstacle(obstacle_obj)
 
 	local temp_array = {}
-	local removed = nil
+	local removed
 
 	for i, obs_data in ipairs(self._obstacles) do
 		removed = false
@@ -2272,7 +2294,9 @@ function NavigationManager:_remove_obstacles_for_world(world_id)
 
 	for i, obs_data in ipairs(self._obstacles) do
 		if obs_data.world_id == world_id then
-			if alive(obs_data.unit) then
+			if not alive(obs_data.unit) then
+				-- Nothing
+			else
 				local obstacle_obj = obs_data.unit:get_object(obs_data.obstacle_obj_name)
 
 				self._quad_field:remove_obstacle(obstacle_obj)
@@ -2299,6 +2323,7 @@ function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 			for _, other_nav_seg_id in ipairs(add_neighbours) do
 				if nav_seg.disabled_neighbours[other_nav_seg_id] then
 					nav_seg.neighbours[other_nav_seg_id] = nav_seg.neighbours[other_nav_seg_id] or {}
+
 					local i_door = 1
 
 					while i_door <= #nav_seg.disabled_neighbours[other_nav_seg_id] do
@@ -2335,8 +2360,10 @@ function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 
 			for _, other_nav_seg_id in ipairs(rem_neighbours) do
 				local other_nav_seg = self._nav_segments[other_nav_seg_id]
+
 				nav_seg.disabled_neighbours = nav_seg.disabled_neighbours or {}
 				nav_seg.disabled_neighbours[other_nav_seg_id] = nav_seg.disabled_neighbours[other_nav_seg_id] or {}
+
 				local i_door = 1
 
 				while i_door <= #nav_seg.neighbours[other_nav_seg_id] do
@@ -2386,6 +2413,7 @@ function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 			for i_door, door in pairs(nav_seg_from.disabled_neighbours[nav_seg_to_id]) do
 				if not door.x and door:script_data().element:id() == nav_link_id then
 					local is_first_door = not nav_seg_from.neighbours[nav_seg_to_id]
+
 					nav_seg_from.neighbours[nav_seg_to_id] = nav_seg_from.neighbours[nav_seg_to_id] or {}
 
 					table.insert(nav_seg_from.neighbours[nav_seg_to_id], table.remove(nav_seg_from.disabled_neighbours[nav_seg_to_id], i_door))

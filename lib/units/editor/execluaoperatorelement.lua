@@ -9,11 +9,10 @@ function ExecLuaOperatorElement:init(unit)
 	table.insert(self._save_values, "lua_string")
 	table.insert(self._save_values, "local_only")
 
-	self._syntax_colors = {
-		NONE = Vector3(0, 0, 0),
-		OK = Vector3(50, 210, 50),
-		ERROR = Vector3(220, 50, 50)
-	}
+	self._syntax_colors = {}
+	self._syntax_colors.NONE = Vector3(0, 0, 0)
+	self._syntax_colors.OK = Vector3(50, 210, 50)
+	self._syntax_colors.ERROR = Vector3(220, 50, 50)
 end
 
 function ExecLuaOperatorElement:_build_panel(panel, panel_sizer)
@@ -21,6 +20,7 @@ function ExecLuaOperatorElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local additional_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Adittional options")
 	local additional_element_sizer = EWS:BoxSizer("HORIZONTAL")
 

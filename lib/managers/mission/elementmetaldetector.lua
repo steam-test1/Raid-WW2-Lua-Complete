@@ -7,6 +7,7 @@ function ElementMetalDetector:init(...)
 end
 
 function ElementMetalDetector:client_on_executed(...)
+	return
 end
 
 function ElementMetalDetector:on_executed(instigator)

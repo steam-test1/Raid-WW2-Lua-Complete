@@ -28,8 +28,7 @@ function HUDWeaponDrum:_create_clip_left_info(weapons_panel)
 		local chunk_w = self._ammo_panel:w() - self._ammo_left_text:w()
 		local chunk_w_space = chunk_w / bullets_each_drum
 		local chunk_w_c = chunk_w_space * i - chunk_w_space / 2
-		local ring_w = self._ammo_panel:h()
-		local ring_h = self._ammo_panel:h()
+		local ring_w, ring_h = self._ammo_panel:h(), self._ammo_panel:h()
 
 		if self._feed_flip_x then
 			ring_w = -ring_w
@@ -70,6 +69,7 @@ function HUDWeaponDrum:_create_clip_left_info(weapons_panel)
 		clip_left_fill:set_center_y(self._ammo_panel:h() / 2)
 
 		layer = layer + 1
+
 		local clip_left_ooa = self._ammo_panel:bitmap({
 			visible = false,
 			name = "clip_left_ooa" .. i,
@@ -107,9 +107,11 @@ function HUDWeaponDrum:_animate_alpha(root_panel, new_alpha)
 	local duration = 0.2
 	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, start_alpha, new_alpha - start_alpha, duration)
 
 		self._icon:set_alpha(current_alpha)

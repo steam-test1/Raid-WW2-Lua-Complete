@@ -40,6 +40,7 @@ function HUDTurret:_create_panel(hud)
 		halign = "center",
 		valign = "center"
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -51,6 +52,7 @@ function HUDTurret:_create_heat_indicator()
 		w = HUDTurret.HEAT_INDICATOR_W,
 		h = HUDTurret.HEAT_INDICATOR_H
 	}
+
 	self._heat_indicator_panel = self._object:panel(heat_indicator_panel_params)
 
 	self._heat_indicator_panel:set_center_x(self._object:w() / 2)
@@ -61,7 +63,9 @@ function HUDTurret:_create_heat_indicator()
 		texture = tweak_data.gui.icons[HUDTurret.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.BACKGROUND_IMAGE].texture_rect
 	}
+
 	self._heat_indicator_background = self._heat_indicator_panel:bitmap(heat_indicator_background_params)
+
 	local heat_indicator_foreground_panel_params = {
 		halign = "scale",
 		name = "heat_indicator_foreground_panel",
@@ -72,12 +76,15 @@ function HUDTurret:_create_heat_indicator()
 		h = self._heat_indicator_panel:h(),
 		layer = self._heat_indicator_background:layer() + 1
 	}
+
 	self._heat_indicator_foreground_panel = self._heat_indicator_panel:panel(heat_indicator_foreground_panel_params)
+
 	local heat_indicator_foreground_params = {
 		name = "heat_indicator_foreground",
 		texture = tweak_data.gui.icons[HUDTurret.FOREGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.FOREGROUND_IMAGE].texture_rect
 	}
+
 	self._heat_indicator_foreground = self._heat_indicator_foreground_panel:bitmap(heat_indicator_foreground_params)
 end
 
@@ -90,6 +97,7 @@ function HUDTurret:_create_dismount_prompt()
 		w = self._object:w(),
 		h = HUDTurret.DISMOUNT_PROMPT_H
 	}
+
 	self._dismount_prompt_panel = self._object:panel(dismount_prompt_panel_params)
 
 	self._dismount_prompt_panel:set_y(self._heat_indicator_panel:y() - 200)
@@ -107,7 +115,9 @@ function HUDTurret:_create_dismount_prompt()
 			BTN_INTERACT = managers.localization:btn_macro("interact")
 		}))
 	}
+
 	self._dismount_prompt_text = self._dismount_prompt_panel:text(dismount_prompt_text_params)
+
 	local _, _, w, h = self._dismount_prompt_text:text_rect()
 
 	self._dismount_prompt_text:set_w(w)
@@ -125,6 +135,7 @@ function HUDTurret:_create_reticle()
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture_rect
 	}
+
 	self._reticle = self._object:bitmap(reticle_params)
 
 	self._reticle:set_center_x(self._object:w() / 2)
@@ -141,6 +152,7 @@ function HUDTurret:_create_shell()
 		texture = tweak_data.gui.icons.aa_gun_bg.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_bg.texture_rect
 	}
+
 	self._shell_bg = self._object:bitmap(params_bg)
 
 	self._shell_bg:set_center_x(self._object:w() / 2)
@@ -155,6 +167,7 @@ function HUDTurret:_create_shell()
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect
 	}
+
 	self._shell_fade = self._object:bitmap(params_fade)
 
 	self._shell_fade:set_center_y(self._shell_bg:center_y())
@@ -169,6 +182,7 @@ function HUDTurret:_create_shell()
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect
 	}
+
 	self._shell = self._object:bitmap(params_shell)
 
 	self._shell:set_x(self._shell_bg:x() + 2)
@@ -284,7 +298,7 @@ end
 
 function HUDTurret:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
+		if percentage > color_table[i].start_percentage then
 			return color_table[i].color
 		end
 	end
@@ -294,12 +308,15 @@ end
 
 function HUDTurret:_animate_show(object, animation_duration, final_alpha)
 	final_alpha = final_alpha or 1
+
 	local duration = animation_duration or 0.4
 	local t = object:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, final_alpha, duration)
 
 		object:set_alpha(current_alpha)
@@ -321,7 +338,9 @@ function HUDTurret:_animate_normal_show(object, animation_duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = t / duration
 
 		self._heat_indicator_background:set_alpha(current_alpha)
@@ -350,7 +369,9 @@ function HUDTurret:_animate_flak_show(object, animation_duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = t / duration
 
 		self._shell_bg:set_alpha(current_alpha)
@@ -373,9 +394,11 @@ function HUDTurret:_animate_hide(object, animation_duration)
 	local duration = animation_duration or 0.4
 	local t = (1 - object:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, duration)
 
 		object:set_alpha(current_alpha)
@@ -403,7 +426,9 @@ function HUDTurret:_animate_shell_insert()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quadratic_in(t, 0, 1, duration)
 
 		self._shell:set_alpha(alpha)
@@ -420,7 +445,9 @@ function HUDTurret:_animate_shell_fire()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local pos_alpha = t / duration
 		local pos_delta = pos_alpha * tweak_data.gui.icons.aa_gun_bg.texture_rect[3]
 		local new_pos = self._shell_bg:x() + pos_delta

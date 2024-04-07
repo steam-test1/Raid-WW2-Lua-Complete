@@ -34,6 +34,7 @@ end
 
 function MissionLayer:load(world_holder, offset)
 	local data = world_holder:create_world("world", "mission_scripts", offset)
+
 	self._scripts = data.scripts or self._scripts
 
 	for name, values in pairs(self._scripts) do
@@ -66,6 +67,7 @@ function MissionLayer:save()
 				script_data = unit:mission_element():new_save_values()
 			}
 		}
+
 		t.data.script_data.position = nil
 		t.data.script_data.rotation = nil
 
@@ -105,6 +107,7 @@ function MissionLayer:save_mission(params)
 			scripts[script] = {
 				activate_on_parsed = self._scripts[script].activate_on_parsed
 			}
+
 			local elements = {}
 
 			for _, unit in ipairs(script_units) do
@@ -290,9 +293,7 @@ end
 function MissionLayer:widget_affect_object()
 	local object = MissionLayer.super.widget_affect_object(self)
 
-	if self._editing_mission_element and alive(self._selected_unit) then
-		object = self._selected_unit:mission_element():widget_affect_object() or object
-	end
+	object = self._editing_mission_element and alive(self._selected_unit) and self._selected_unit:mission_element():widget_affect_object() or object
 
 	return object
 end
@@ -339,6 +340,7 @@ function MissionLayer:update(time, rel_time)
 	local cam_up = managers.editor:camera_rotation():z()
 	local cam_right = managers.editor:camera_rotation():x()
 	local lod_draw_distance = 100000
+
 	lod_draw_distance = lod_draw_distance * lod_draw_distance
 
 	if not self._selected_unit and self._only_draw_selected_connections then
@@ -348,7 +350,9 @@ function MissionLayer:update(time, rel_time)
 	for _, unit in ipairs(self._created_units) do
 		if unit:mission_element_data().script == current_script and not current_continent_locked or self._show_all_scripts then
 			local distance = mvector3.distance_sq(unit:position(), cam_pos)
+
 			unit:mission_element()._distance_to_camera = distance
+
 			local update_selected_on = unit:mission_element():update_selected_on()
 
 			if update_selected_on then
@@ -394,7 +398,7 @@ function MissionLayer:update(time, rel_time)
 
 				self._name_brush:set_color(color)
 
-				local offset = nil
+				local offset
 
 				if unit:mission_element()._icon_ws then
 					offset = cam_up * unit:bounding_sphere_radius()
@@ -542,6 +546,7 @@ function MissionLayer:build_panel(notebook)
 	self:_build_scripts()
 
 	local btn_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._element_toolbar = EWS:ToolBar(self._ews_panel, "", "TB_FLAT,TB_NODIVIDER")
 
 	self._element_toolbar:add_check_tool("EDIT_ELEMENT", "Edit Element [insert]", CoreEws.image_path("world_editor\\he_edit_element_16x16.png"), "Edit Element [insert]")
@@ -585,6 +590,7 @@ end
 
 function MissionLayer:_build_scripts()
 	local sizer = EWS:StaticBoxSizer(self._ews_panel, "HORIZONTAL", "Scripts")
+
 	self._scripts_toolbar = EWS:ToolBar(self._ews_panel, "", "TB_FLAT,TB_NODIVIDER")
 
 	self._scripts_toolbar:add_tool("CREATE_SCRIPT", "Create a new script", CoreEws.image_path("toolbar\\new_16x16.png"), "Create a new script")
@@ -858,6 +864,7 @@ function MissionLayer:_rename_script(name, new_name)
 	end
 
 	local values = self._scripts[name]
+
 	self._scripts[name] = nil
 	self._scripts[new_name] = values
 

@@ -42,6 +42,7 @@ function PlayerEquipment:valid_placement(equipment_data)
 	local valid = not self._unit:movement():current_state():in_air()
 	local pos = self._unit:movement():m_pos()
 	local rot = self._unit:movement():m_head_rot()
+
 	rot = Rotation(rot:yaw(), 0, 0)
 
 	if equipment_data and equipment_data.dummy_unit then
@@ -80,6 +81,7 @@ function PlayerEquipment:use_ammo_bag()
 	if ray then
 		local pos = ray.position
 		local rot = self._unit:movement():m_head_rot()
+
 		rot = Rotation(rot:yaw(), 0, 0)
 
 		PlayerStandard.say_line(self, "s01x_plu")
@@ -109,6 +111,7 @@ function PlayerEquipment:use_doctor_bag()
 	if ray then
 		local pos = ray.position
 		local rot = self._unit:movement():m_head_rot()
+
 		rot = Rotation(rot:yaw(), 0, 0)
 
 		PlayerStandard.say_line(self, "s02x_plu")
@@ -134,6 +137,7 @@ function PlayerEquipment:use_first_aid_kit()
 	if ray then
 		local pos = ray.position
 		local rot = self._unit:movement():m_head_rot()
+
 		rot = Rotation(rot:yaw(), 0, 0)
 
 		PlayerStandard.say_line(self, "s12")
@@ -214,6 +218,7 @@ function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	if ray then
 		local pos = ray.position
 		local rot = self._unit:movement():m_head_rot()
+
 		rot = Rotation(rot:yaw(), 0, 0)
 
 		if not alive(self._dummy_unit) then
@@ -226,7 +231,8 @@ function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 		self._dummy_unit:set_rotation(rot)
 
 		valid = valid and math.dot(ray.normal, math.UP) > 0.25
-		local find_start_pos, find_end_pos, find_radius = nil
+
+		local find_start_pos, find_end_pos, find_radius
 
 		if equipment_id == "ammo_bag" then
 			find_start_pos = pos + math.UP * 20
@@ -270,12 +276,13 @@ function PlayerEquipment:use_sentry_gun(selected_index)
 	if ray then
 		local pos = ray.position
 		local rot = self._unit:movement():m_head_rot()
+
 		rot = Rotation(rot:yaw(), 0, 0)
 
 		managers.statistics:use_sentry_gun()
 
 		local ammo_multiplier = managers.player:upgrade_value("sentry_gun", "extra_ammo_multiplier", 1)
-		local armor_multiplier = 1 + managers.player:upgrade_value("sentry_gun", "armor_multiplier", 1) - 1 + managers.player:upgrade_value("sentry_gun", "armor_multiplier2", 1) - 1
+		local armor_multiplier = 1 + (managers.player:upgrade_value("sentry_gun", "armor_multiplier", 1) - 1) + (managers.player:upgrade_value("sentry_gun", "armor_multiplier2", 1) - 1)
 		local damage_multiplier = managers.player:upgrade_value("sentry_gun", "damage_multiplier", 1)
 
 		if Network:is_client() then
@@ -383,7 +390,7 @@ function PlayerEquipment:throw_grenade()
 	})
 
 	local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
-	local cooking_t = nil
+	local cooking_t
 
 	if self._cooking_start then
 		cooking_t = Application:time() - self._cooking_start

@@ -50,6 +50,7 @@ function ProgressBarGuiObject:_create_description(description)
 		color = tweak_data.gui.colors.raid_white,
 		text = description
 	}
+
 	self._description = self._panel:text(description_params)
 
 	self._description:set_center_x(self._progress_bar_bg:center_x())
@@ -225,7 +226,9 @@ function ProgressBarGuiObject:_animate_interaction_start(progress_bar, duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_height = self:_ease_out_quint(t, 0, self._height, duration)
 
 		progress_bar:set_height(current_height)
@@ -243,7 +246,9 @@ function ProgressBarGuiObject:_animate_interaction_cancel(progress_bar, duration
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_height = self:_ease_in_quint(t, start_height, -start_height, duration)
 
 		progress_bar:set_height(current_height)
@@ -258,9 +263,11 @@ function ProgressBarGuiObject:_animate_interaction_complete(progress_bar)
 	local duration = 0.3
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_width = self:_ease_out_quint(t, self._width, -self._width, duration)
 
 		progress_bar:set_width(current_width)
@@ -273,11 +280,14 @@ end
 
 function ProgressBarGuiObject:_animate_interaction_duration(progress_bar, duration)
 	local t = 0
+
 	self._is_being_animated = true
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local progress = t / duration
 
 		progress_bar:set_width(progress * self._width)

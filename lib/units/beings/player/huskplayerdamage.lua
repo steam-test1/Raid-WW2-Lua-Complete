@@ -75,4 +75,5 @@ function HuskPlayerDamage:get_mission_blocker(type)
 end
 
 function HuskPlayerDamage:dead()
+	return
 end

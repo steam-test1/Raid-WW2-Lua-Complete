@@ -15,6 +15,7 @@ end
 
 function RaidGUIControlSaveInfo:_create_panel()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_panel"
 	panel_params.layer = panel_params.layer or self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -32,6 +33,7 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 		x = 0,
 		w = self._object:w() * 0.78
 	}
+
 	self._info_icons_panel = self._object:panel(info_icons_panel_params)
 
 	self._info_icons_panel:set_center_x(self._object:w() / 2)
@@ -44,7 +46,9 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 		w = 180,
 		x = 0
 	}
+
 	self._dog_tag_panel = self._info_icons_panel:panel(dog_tag_panel_params)
+
 	local dog_tag_icon_params = {
 		name = "dog_tag_icon",
 		texture = tweak_data.gui.icons.rewards_dog_tags_small.texture,
@@ -67,7 +71,9 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._dog_tag_count = self._dog_tag_panel:text(dog_tag_count_params)
+
 	local dog_tag_label_params = {
 		name = "dog_tag_label",
 		vertical = "center",
@@ -79,7 +85,9 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 		color = tweak_data.gui.colors.raid_black,
 		text = self:translate("menu_loot_screen_dog_tags", true)
 	}
+
 	self._dog_tag_label = self._dog_tag_panel:text(dog_tag_label_params)
+
 	local _, _, w, _ = self._dog_tag_label:text_rect()
 
 	self._dog_tag_label:set_w(w)
@@ -95,6 +103,7 @@ function RaidGUIControlSaveInfo:_create_separator()
 		x = 34,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._separator = self._object:rect(separator_params)
 end
 
@@ -112,6 +121,7 @@ function RaidGUIControlSaveInfo:_create_peer_details_title()
 		color = tweak_data.gui.colors.raid_light_red,
 		text = self:translate("operation_save_details_teammates_title", true)
 	}
+
 	self._peer_details_title = self._object:text(peer_details_title_params)
 end
 
@@ -123,8 +133,10 @@ function RaidGUIControlSaveInfo:_create_peer_details()
 		x = self._info_icons_panel:x(),
 		w = self._info_icons_panel:w()
 	}
+
 	self._peer_info_panel = self._object:panel(peer_info_panel_params)
 	self._peer_info_details = {}
+
 	local y = 0
 
 	for i = 1, 4 do
@@ -200,7 +212,7 @@ function RaidGUIControlSaveInfo:set_save_info(slot_index)
 		local peer_data = event_data.peer_data[i]
 
 		if peer_data then
-			local name = nil
+			local name
 
 			if peer_data.is_local_player then
 				name = self:translate("menu_save_info_you", true) .. " (" .. peer_data.name .. ")"
@@ -244,4 +256,5 @@ function RaidGUIControlSaveInfo:set_center_y(center_y)
 end
 
 function RaidGUIControlSaveInfo:close()
+	return
 end

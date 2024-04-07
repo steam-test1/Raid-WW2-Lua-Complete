@@ -29,6 +29,7 @@ function FFCEditorController:update(time, rel_time)
 		local mov_x = (self._controller:button(Idstring("go_right")) - self._controller:button(Idstring("go_left"))) * speed
 		local mov_y = (self._controller:button(Idstring("forward")) - self._controller:button(Idstring("backward"))) * speed
 		local move = self._camera:rotation():x() * mov_x + self._camera:rotation():y() * mov_y
+
 		self._pitch = math.clamp(self._pitch + turn_speed * -self._controller:axis(Idstring("look")).y, -90, 90)
 		self._yaw = self._yaw + turn_speed * -self._controller:axis(Idstring("look")).x
 
@@ -68,9 +69,7 @@ function FFCEditorController:_draw_frustum_freeze(time, rel_time)
 
 	local near = self._frozen_camera:near_range()
 	local far = self._frozen_camera:far_range()
-	local R = 1
-	local G = 0
-	local B = 1
+	local R, G, B = 1, 0, 1
 	local n1 = self._frozen_camera:screen_to_world(Vector3(-1, -1, near))
 	local n2 = self._frozen_camera:screen_to_world(Vector3(1, -1, near))
 	local n3 = self._frozen_camera:screen_to_world(Vector3(1, 1, near))
@@ -149,6 +148,7 @@ end
 
 function FFCEditorController:frustum_freeze(camera)
 	self._frustum_frozen = true
+
 	local old_cam = camera
 	local new_cam = World:create_camera()
 
@@ -167,6 +167,7 @@ end
 
 function FFCEditorController:frustum_unfreeze(camera)
 	self._frustum_frozen = false
+
 	local old_cam = camera
 
 	old_cam:set_position(self._camera:position())
@@ -198,6 +199,7 @@ function FFCEditorController:start_cube_map(params)
 
 		if self._params.spot then
 			local rot = Rotation(self._params.unit:rotation():z(), Vector3(0, 0, 1))
+
 			rot = Rotation(-rot:z(), rot:y())
 
 			self._params.unit:set_rotation(rot)
@@ -342,12 +344,11 @@ function FFCEditorController:toggle_orthographic(use)
 	local camera = self._camera
 
 	if use then
-		self._camera_settings = {
-			far_range = camera:far_range(),
-			near_range = camera:near_range(),
-			position = camera:position(),
-			rotation = camera:rotation()
-		}
+		self._camera_settings = {}
+		self._camera_settings.far_range = camera:far_range()
+		self._camera_settings.near_range = camera:near_range()
+		self._camera_settings.position = camera:position()
+		self._camera_settings.rotation = camera:rotation()
 
 		camera:set_projection_type(Idstring("orthographic"))
 		self:set_orthographic_screen()

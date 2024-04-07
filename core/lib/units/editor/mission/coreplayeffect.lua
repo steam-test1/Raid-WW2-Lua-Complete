@@ -31,6 +31,7 @@ function CorePlayEffectUnitElement:test_element()
 
 		local position = self._hed.screen_space and Vector3() or self._unit:position()
 		local rotation = self._hed.screen_space and Rotation() or self._unit:rotation()
+
 		self._effect = World:effect_manager():spawn({
 			effect = self._hed.effect:id(),
 			position = position,
@@ -80,16 +81,11 @@ function CorePlayEffectUnitElement:_build_panel(panel, panel_sizer)
 		min = 0
 	}, "Maximum amount of spawns when repeating effects (0 = unlimited)")
 
-	local help = {
-		text = [[
-Choose an effect from the combobox. Use "Play in Screen Space" if the effect is set up to be played like that. 
+	local help = {}
 
-Use base time and random time if you want to repeat playing the effect, keep them at 0 to only play it once. "Base Time" is the minimum time between effects. "Random Time" is added to base time to set the total time until next effect. "Max Amount" can be used to set how many times the effect should be repeated (when base time and random time are used). 
-
-Be sure not to use a looping effect when using repeat or the effects will add to each other and wont be stoppable after run simulation or by calling kill or fade kill.]],
-		panel = panel,
-		sizer = panel_sizer
-	}
+	help.text = "Choose an effect from the combobox. Use \"Play in Screen Space\" if the effect is set up to be played like that. \n\nUse base time and random time if you want to repeat playing the effect, keep them at 0 to only play it once. \"Base Time\" is the minimum time between effects. \"Random Time\" is added to base time to set the total time until next effect. \"Max Amount\" can be used to set how many times the effect should be repeated (when base time and random time are used). \n\nBe sure not to use a looping effect when using repeat or the effects will add to each other and wont be stoppable after run simulation or by calling kill or fade kill."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end
@@ -146,6 +142,7 @@ function CoreStopEffectUnitElement:get_links_to_unit(...)
 end
 
 function CoreStopEffectUnitElement:update_editing()
+	return
 end
 
 function CoreStopEffectUnitElement:add_element()
@@ -184,6 +181,7 @@ function CoreStopEffectUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"env_effect_play"
 	}

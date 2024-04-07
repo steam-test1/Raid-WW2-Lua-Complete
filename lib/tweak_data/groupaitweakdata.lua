@@ -38,146 +38,145 @@ function GroupAITweakData:init(tweak_data)
 end
 
 function GroupAITweakData:_init_chatter_data()
-	self.enemy_chatter = {
-		spotted_player = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "spotted_player",
-			group_min = 1,
-			duration = {
-				1,
-				2
-			},
-			interval = {
-				7,
-				10
-			}
+	self.enemy_chatter = {}
+	self.enemy_chatter.spotted_player = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "spotted_player",
+		group_min = 1,
+		duration = {
+			1,
+			2
 		},
-		aggressive = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "aggressive",
-			group_min = 1,
-			duration = {
-				1,
-				2
-			},
-			interval = {
-				0.75,
-				1.5
-			}
+		interval = {
+			7,
+			10
+		}
+	}
+	self.enemy_chatter.aggressive = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "aggressive",
+		group_min = 1,
+		duration = {
+			1,
+			2
 		},
-		retreat = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "retreat",
-			group_min = 1,
-			duration = {
-				1,
-				2
-			},
-			interval = {
-				0.75,
-				1.5
-			}
+		interval = {
+			0.75,
+			1.5
+		}
+	}
+	self.enemy_chatter.retreat = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "retreat",
+		group_min = 1,
+		duration = {
+			1,
+			2
 		},
-		follow_me = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "follow_me",
-			group_min = 1,
-			duration = {
-				1,
-				2
-			},
-			interval = {
-				0.75,
-				1.5
-			}
+		interval = {
+			0.75,
+			1.5
+		}
+	}
+	self.enemy_chatter.follow_me = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "follow_me",
+		group_min = 1,
+		duration = {
+			1,
+			2
 		},
-		clear = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "clear",
-			group_min = 1,
-			duration = {
-				1,
-				2
-			},
-			interval = {
-				0.75,
-				1.5
-			}
+		interval = {
+			0.75,
+			1.5
+		}
+	}
+	self.enemy_chatter.clear = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "clear",
+		group_min = 1,
+		duration = {
+			1,
+			2
 		},
-		go_go = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "go_go",
-			group_min = 1,
-			duration = {
-				1,
-				2
-			},
-			interval = {
-				0.75,
-				1.5
-			}
+		interval = {
+			0.75,
+			1.5
+		}
+	}
+	self.enemy_chatter.go_go = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "go_go",
+		group_min = 1,
+		duration = {
+			1,
+			2
 		},
-		ready = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "ready",
-			group_min = 1,
-			duration = {
-				1,
-				2
-			},
-			interval = {
-				0.75,
-				1.5
-			}
+		interval = {
+			0.75,
+			1.5
+		}
+	}
+	self.enemy_chatter.ready = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "ready",
+		group_min = 1,
+		duration = {
+			1,
+			2
 		},
-		smoke = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "smoke",
-			group_min = 2,
-			duration = {
-				0,
-				0
-			},
-			interval = {
-				0,
-				0
-			}
+		interval = {
+			0.75,
+			1.5
+		}
+	}
+	self.enemy_chatter.smoke = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "smoke",
+		group_min = 2,
+		duration = {
+			0,
+			0
 		},
-		incomming_flamer = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "incomming_flamer",
-			group_min = 1,
-			duration = {
-				60,
-				60
-			},
-			interval = {
-				0.5,
-				1
-			}
+		interval = {
+			0,
+			0
+		}
+	}
+	self.enemy_chatter.incomming_flamer = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "incomming_flamer",
+		group_min = 1,
+		duration = {
+			60,
+			60
 		},
-		incomming_commander = {
-			radius = 3500,
-			max_nr = 1,
-			queue = "incomming_commander",
-			group_min = 1,
-			duration = {
-				60,
-				60
-			},
-			interval = {
-				0.5,
-				1
-			}
+		interval = {
+			0.5,
+			1
+		}
+	}
+	self.enemy_chatter.incomming_commander = {
+		radius = 3500,
+		max_nr = 1,
+		queue = "incomming_commander",
+		group_min = 1,
+		duration = {
+			60,
+			60
+		},
+		interval = {
+			0.5,
+			1
 		}
 	}
 end
@@ -219,299 +218,298 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 end
 
 function GroupAITweakData:_init_unit_categories_german(difficulty_index)
-	self.unit_categories.german = {
-		german_grunt_light = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light")
-			},
-			access = access_type_walk_only
+	self.unit_categories.german = {}
+	self.unit_categories.german.german_grunt_light = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light")
 		},
-		german_grunt_light_mp38 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_mp38")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_light_mp38 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_mp38")
 		},
-		german_grunt_light_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_kar98")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_light_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_kar98")
 		},
-		german_grunt_light_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_shotgun")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_light_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_shotgun")
 		},
-		german_grunt_mid = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_mid = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid")
 		},
-		german_grunt_mid_mp38 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_mp38")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_mid_mp38 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_mp38")
 		},
-		german_grunt_mid_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_kar98")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_mid_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_kar98")
 		},
-		german_grunt_mid_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_shotgun")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_mid_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_shotgun")
 		},
-		german_grunt_heavy = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_heavy = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy")
 		},
-		german_grunt_heavy_mp38 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_mp38")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_heavy_mp38 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_mp38")
 		},
-		german_grunt_heavy_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_kar98")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_heavy_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_kar98")
 		},
-		german_grunt_heavy_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_shotgun")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_grunt_heavy_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_shotgun")
 		},
-		german_light = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light")
-			},
-			access = access_type_all
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_light = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light")
 		},
-		german_light_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_light_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_kar98")
 		},
-		german_light_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_light_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_shotgun")
 		},
-		german_heavy = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_heavy = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy")
 		},
-		german_heavy_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_heavy_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_kar98")
 		},
-		german_heavy_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_heavy_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_shotgun")
 		},
-		german_gasmask = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gasmask = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask")
 		},
-		german_gasmask_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gasmask_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask_shotgun")
 		},
-		german_gebirgsjager_light = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_light = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light")
 		},
-		german_gebirgsjager_light_mp38 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_mp38")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_light_mp38 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_mp38")
 		},
-		german_gebirgsjager_light_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_light_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_kar98")
 		},
-		german_gebirgsjager_light_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_light_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_shotgun")
 		},
-		german_gebirgsjager_heavy = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_heavy = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy")
 		},
-		german_gebirgsjager_heavy_mp38 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_mp38")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_heavy_mp38 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_mp38")
 		},
-		german_gebirgsjager_heavy_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_heavy_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_kar98")
 		},
-		german_gebirgsjager_heavy_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gebirgsjager_heavy_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_shotgun")
 		},
-		german_fallschirmjager_heavy = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_heavy = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy")
 		},
-		german_fallschirmjager_heavy_mp38 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_mp38")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_heavy_mp38 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_mp38")
 		},
-		german_fallschirmjager_heavy_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_heavy_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_kar98")
 		},
-		german_fallschirmjager_heavy_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_heavy_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_shotgun")
 		},
-		german_fallschirmjager_light = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_light = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light")
 		},
-		german_fallschirmjager_light_mp38 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_mp38")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_light_mp38 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_mp38")
 		},
-		german_fallschirmjager_light_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_light_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_kar98")
 		},
-		german_fallschirmjager_light_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_fallschirmjager_light_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_shotgun")
 		},
-		german_flamethrower = {
-			special_type = "flamer",
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_flamer/german_flamer")
-			},
-			access = access_type_walk_only
+		access = access_type_all
+	}
+	self.unit_categories.german.german_flamethrower = {
+		special_type = "flamer",
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_flamer/german_flamer")
 		},
-		german_commander = {
-			special_type = "commander",
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_commander/german_commander")
-			},
-			access = access_type_walk_only
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_commander = {
+		special_type = "commander",
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_commander/german_commander")
 		},
-		german_gasmask_commander_backup = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask_commander/german_black_waffen_sentry_gasmask_commander")
-			},
-			access = access_type_all
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_gasmask_commander_backup = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask_commander/german_black_waffen_sentry_gasmask_commander")
 		},
-		german_gasmask_commander_backup_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask_commander/german_black_waffen_sentry_gasmask_commander_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_gasmask_commander_backup_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask_commander/german_black_waffen_sentry_gasmask_commander_shotgun")
 		},
-		german_heavy_commander_backup = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_heavy_commander_backup = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander")
 		},
-		german_heavy_commander_backup_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_heavy_commander_backup_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander_kar98")
 		},
-		german_heavy_commander_backup_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_heavy_commander_backup_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander_shotgun")
 		},
-		german_light_commander_backup = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_light_commander_backup = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander")
 		},
-		german_light_commander_backup_kar98 = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander_kar98")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_light_commander_backup_kar98 = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander_kar98")
 		},
-		german_light_commander_backup_shotgun = {
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander_shotgun")
-			},
-			access = access_type_all
+		access = access_type_all
+	}
+	self.unit_categories.german.german_light_commander_backup_shotgun = {
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander_shotgun")
 		},
-		german_og_commander = {
-			special_type = "commander",
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_og_commander/german_og_commander")
-			},
-			access = access_type_walk_only
+		access = access_type_all
+	}
+	self.unit_categories.german.german_og_commander = {
+		special_type = "commander",
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_og_commander/german_og_commander")
 		},
-		german_officer = {
-			special_type = "officer",
-			units = {
-				Idstring("units/vanilla/characters/enemies/models/german_commander/german_commander")
-			},
-			access = access_type_walk_only
-		}
+		access = access_type_walk_only
+	}
+	self.unit_categories.german.german_officer = {
+		special_type = "officer",
+		units = {
+			Idstring("units/vanilla/characters/enemies/models/german_commander/german_commander")
+		},
+		access = access_type_walk_only
 	}
 end
 
@@ -624,6 +622,7 @@ end
 
 function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	self.enemy_spawn_groups.german = {}
+
 	local amount_easy = {
 		2,
 		2
@@ -2183,6 +2182,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	end
 
 	local lvl_tweak_data = tweak_data.levels[Global.game_settings.level_id]
+
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 

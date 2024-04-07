@@ -74,7 +74,7 @@ function RaidGUIControlAnimatedBitmap:_get_frame_row(frame_index)
 	local row = 0
 	local row_index = frame_index
 
-	if self._frames_in_first_row < frame_index + 1 then
+	if frame_index + 1 > self._frames_in_first_row then
 		row = 1
 		row_index = row_index - self._frames_in_first_row
 
@@ -98,7 +98,8 @@ function RaidGUIControlAnimatedBitmap:unpause()
 	end
 
 	local current_time = TimerManager:game():time()
-	self._current_frame_t = self._current_frame_t + current_time - self._pause_time
+
+	self._current_frame_t = self._current_frame_t + (current_time - self._pause_time)
 	self._paused = false
 	self._pause_time = nil
 end

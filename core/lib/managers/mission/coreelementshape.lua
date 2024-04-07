@@ -61,10 +61,11 @@ function ElementShape:is_inside(pos)
 		for _, unit in ipairs(self._shape_units) do
 			if alive(unit) then
 				local data = unit:unit_data()
-				local oobb = nil
+				local oobb
 
 				if data and data._object_oobb then
 					local object = unit:get_object(Idstring(data._object_oobb))
+
 					oobb = object:oobb()
 				else
 					oobb = unit:oobb()
@@ -85,6 +86,7 @@ function ElementShape:is_inside(pos)
 end
 
 function ElementShape:client_on_executed(...)
+	return
 end
 
 function ElementShape:on_executed(instigator)

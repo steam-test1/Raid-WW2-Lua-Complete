@@ -66,6 +66,7 @@ function IngameSpecialInteraction:cb_interact()
 end
 
 function IngameSpecialInteraction:on_destroyed()
+	return
 end
 
 function IngameSpecialInteraction:update(t, dt)
@@ -122,6 +123,7 @@ function IngameSpecialInteraction:update_player_stamina(t, dt)
 end
 
 function IngameSpecialInteraction:_player_damage(info)
+	return
 end
 
 function IngameSpecialInteraction:at_enter(old_state, params)
@@ -209,7 +211,7 @@ function IngameSpecialInteraction:at_exit()
 end
 
 function IngameSpecialInteraction:_check_stage_complete()
-	local current_stage_data, current_stage = nil
+	local current_stage_data, current_stage
 
 	for stage, stage_data in pairs(self._hud:circles()) do
 		if not stage_data.completed then
@@ -225,6 +227,7 @@ function IngameSpecialInteraction:_check_stage_complete()
 	end
 
 	self._current_stage = current_stage
+
 	local circle_difficulty = self._tweak_data.circle_difficulty[current_stage]
 	local diff_degrees = 360 * (1 - circle_difficulty) - 3
 	local circle = current_stage_data.circle._circle

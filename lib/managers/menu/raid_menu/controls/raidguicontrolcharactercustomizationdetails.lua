@@ -59,10 +59,12 @@ function RaidGUIControlCharacterCustomizationDetails:init(parent, params)
 end
 
 function RaidGUIControlCharacterCustomizationDetails:close()
+	return
 end
 
 function RaidGUIControlCharacterCustomizationDetails:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlCharacterCustomizationDetails.DEFAULT_WIDTH
 	control_params.h = control_params.h or RaidGUIControlCharacterCustomizationDetails.HEIGHT
@@ -78,6 +80,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_left_panel()
 		w = RaidGUIControlCharacterCustomizationDetails.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -94,7 +97,9 @@ function RaidGUIControlCharacterCustomizationDetails:_create_title()
 		color = RaidGUIControlCharacterCustomizationDetails.TITLE_DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true)
 	}
+
 	self._title_description = self._left_panel:text(title_description_params)
+
 	local _, _, w, _ = self._title_description:text_rect()
 
 	self._title_description:set_w(w)
@@ -112,6 +117,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_title()
 		color = RaidGUIControlCharacterCustomizationDetails.TITLE_COLOR,
 		w = self._left_panel:w() * 0.8
 	}
+
 	self._customization_name = self._left_panel:text(title_params)
 end
 
@@ -150,6 +156,7 @@ function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(te
 		texture = texture,
 		texture_rect = texture_rect
 	}
+
 	self._customization_image = customization_image_panel:bitmap(customization_image_params)
 
 	self._customization_image:set_center_x(customization_image_panel:w() / 2)
@@ -174,6 +181,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_redeem_info()
 		font_size = RaidGUIControlCharacterCustomizationDetails.REDEEM_VALUE_FONT_SIZE,
 		color = RaidGUIControlCharacterCustomizationDetails.REDEEM_VALUE_COLOR
 	}
+
 	self._xp_redeem_value_text = self._left_panel:text(redeem_value_params)
 
 	self:_layout_redeem_info()
@@ -187,6 +195,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_redeem_info()
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_redeem")
 	}
+
 	self.redeem_xp_button = self._left_panel:short_tertiary_button(redeem_xp_button_params)
 
 	self.redeem_xp_button:set_center_x(self._left_panel:w() / 2)
@@ -215,6 +224,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_right_panel()
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 
 	self._right_panel:set_right(self._object:w())
@@ -234,6 +244,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_description()
 		font_size = RaidGUIControlCharacterCustomizationDetails.DESCRIPTION_FONT_SIZE,
 		color = RaidGUIControlCharacterCustomizationDetails.DESCRIPTION_COLOR
 	}
+
 	self._description = self._right_panel:text(description_params)
 
 	self._description:set_right(self._right_panel:w())
@@ -255,6 +266,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_item_description_na
 		color = RaidGUIControlCharacterCustomizationDetails.ITEM_TYPE_COLOR,
 		text = self:translate("menu_loot_screen_character_customization", true)
 	}
+
 	self._item_description_name = self._right_panel:text(item_type_params)
 end
 
@@ -271,6 +283,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_info(
 		text_size = tweak_data.gui.font_sizes.size_24,
 		text_color = tweak_data.gui.colors.raid_grey_effects
 	}
+
 	self._rarity_info = self._right_panel:info_icon(rarity_info_params)
 
 	self._rarity_info:set_x(self._description:x())
@@ -288,6 +301,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_info(
 		text_size = tweak_data.gui.font_sizes.size_24,
 		text_color = tweak_data.gui.colors.raid_grey_effects
 	}
+
 	self._nationality_info = self._right_panel:info_icon(nationality_info_params)
 
 	self._nationality_info:set_x(self._rarity_info:x() + self._rarity_info:w() + RaidGUIControlCharacterCustomizationDetails.NATIONALITY_PADDING_RIGHT)
@@ -323,7 +337,9 @@ function RaidGUIControlCharacterCustomizationDetails:show()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, image_duration)
 
 		self._customization_image:set_alpha(current_alpha)
@@ -411,7 +427,7 @@ function RaidGUIControlCharacterCustomizationDetails:set_customization(customiza
 			self._customization_image:set_center_y(self._customization_image:parent():h() / 2)
 		end
 	else
-		local icon = nil
+		local icon
 
 		if customization.part_type == CharacterCustomizationTweakData.PART_TYPE_UPPER then
 			icon = RaidGUIControlCharacterCustomizationDetails.DEFAULT_ICON_UPPER
@@ -459,4 +475,5 @@ function RaidGUIControlCharacterCustomizationDetails:redeem()
 end
 
 function RaidGUIControlCharacterCustomizationDetails:set_duplicate()
+	return
 end

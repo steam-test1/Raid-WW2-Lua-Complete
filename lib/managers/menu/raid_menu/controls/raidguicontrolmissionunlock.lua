@@ -31,6 +31,7 @@ function RaidGUIControlMissionUnlock:_create_panel()
 		w = RaidGUIControlMissionUnlock.WIDTH,
 		h = RaidGUIControlMissionUnlock.HEIGHT
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -41,6 +42,7 @@ function RaidGUIControlMissionUnlock:_create_background()
 		visible = false,
 		color = tweak_data.gui.colors.raid_unlock_select_background
 	}
+
 	self._background = self._object:rect(background_params)
 end
 
@@ -52,6 +54,7 @@ function RaidGUIControlMissionUnlock:_create_selector_triangles()
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect
 	}
+
 	self._top_triangle = self._object:bitmap(top_select_triangle_params)
 
 	self._top_triangle:set_right(self._object:w())
@@ -63,6 +66,7 @@ function RaidGUIControlMissionUnlock:_create_selector_triangles()
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect
 	}
+
 	self._bottom_triangle = self._object:bitmap(top_select_triangle_params)
 
 	self._bottom_triangle:set_bottom(self._object:h())
@@ -76,7 +80,9 @@ function RaidGUIControlMissionUnlock:_create_active_border()
 		visible = false,
 		name = "border_panel"
 	}
+
 	self._border_panel = self._object:panel(border_panel_params)
+
 	local top_border_params = {
 		name = "top_border",
 		layer = 2,
@@ -130,6 +136,7 @@ function RaidGUIControlMissionUnlock:_create_folder()
 		h = 448,
 		layer = 5
 	}
+
 	self._folder_panel = self._object:panel(folder_panel_params)
 
 	self._folder_panel:set_center_y(self._object:h() / 2)
@@ -140,6 +147,7 @@ function RaidGUIControlMissionUnlock:_create_folder()
 		texture = tweak_data.gui.icons.folder_mission_selection.texture,
 		texture_rect = tweak_data.gui.icons.folder_mission_selection.texture_rect
 	}
+
 	self._folder_image = self._folder_panel:bitmap(folder_image_params)
 
 	self._folder_image:set_center_x(self._folder_panel:w() / 2)
@@ -159,9 +167,10 @@ function RaidGUIControlMissionUnlock:_create_folder()
 		color = tweak_data.gui.colors.raid_light_red,
 		layer = self._folder_image:layer() + 1
 	}
+
 	self._mission_image = self._folder_panel:bitmap(mission_image_params)
 
-	self._mission_image:set_h(self._mission_image:w() * icon_h / icon_w)
+	self._mission_image:set_h(self._mission_image:w() * (icon_h / icon_w))
 	self._mission_image:set_center_x(self._folder_image:center_x())
 	self._mission_image:set_center_y(self._folder_image:center_y() - 20)
 
@@ -178,6 +187,7 @@ function RaidGUIControlMissionUnlock:_create_folder()
 		text = self:translate(mission_tweak_data.name_id, true),
 		layer = self._folder_image:layer() + 1
 	}
+
 	self._folder_mission_title = self._folder_panel:text(mission_title_params)
 
 	self._folder_mission_title:set_center_x(self._mission_image:center_x())
@@ -185,6 +195,7 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self:_fit_mission_title()
 
 	self._mission_photos = {}
+
 	local mission_photos = deep_clone(mission_tweak_data.photos)
 
 	math.shuffle(mission_photos)
@@ -306,6 +317,7 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 		w = 384,
 		y = RaidGUIControlMissionUnlock.DESCRIPTION_Y
 	}
+
 	self._description_panel = self._object:panel(mission_description_panel_params)
 
 	self._description_panel:set_center_x(self._object:w() / 2)
@@ -320,7 +332,9 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 		color = tweak_data.gui.colors.raid_dirty_white,
 		text = self:translate(mission_tweak_data.name_id, true)
 	}
+
 	self._mission_title = self._description_panel:text(mission_title_params)
+
 	local mission_description_params = {
 		name = "mission_description",
 		vertical = "top",
@@ -333,12 +347,14 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 		color = tweak_data.gui.colors.raid_grey,
 		text = self:translate(mission_tweak_data.loading.text)
 	}
+
 	self._mission_description = self._description_panel:text(mission_description_params)
 
 	self._mission_description:set_center_x(self._description_panel:w() / 2)
 end
 
 function RaidGUIControlMissionUnlock:close()
+	return
 end
 
 function RaidGUIControlMissionUnlock:mission()
@@ -353,7 +369,7 @@ function RaidGUIControlMissionUnlock:on_mouse_released()
 	managers.menu_component:post_event("highlight")
 
 	if self._on_click_callback then
-		self:_on_click_callback(self._mission, self._active)
+		self._on_click_callback(self, self._mission, self._active)
 	end
 end
 
@@ -443,14 +459,18 @@ end
 
 function RaidGUIControlMissionUnlock:_animate_open_folder(o)
 	local duration = 0.4
+
 	self._show_details_animation_t = self._show_details_animation_t or 0
+
 	local t = self._show_details_animation_t * duration
 
 	managers.menu_component:post_event("paper_shuffle_menu")
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_in_out(t, 0, RaidGUIControlMissionUnlock.ACTIVE_Y_OFFSET, duration)
 
 		self._folder_panel:set_center_y(self._object:h() / 2 - current_offset)
@@ -497,12 +517,16 @@ end
 
 function RaidGUIControlMissionUnlock:_animate_close_folder(o)
 	local duration = 0.4
+
 	self._show_details_animation_t = self._show_details_animation_t or 0
+
 	local t = (1 - self._show_details_animation_t) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_in_out(t, RaidGUIControlMissionUnlock.ACTIVE_Y_OFFSET, -RaidGUIControlMissionUnlock.ACTIVE_Y_OFFSET, duration)
 
 		self._folder_panel:set_center_y(self._object:h() / 2 - current_offset)

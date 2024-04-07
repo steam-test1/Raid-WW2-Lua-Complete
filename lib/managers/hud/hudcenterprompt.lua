@@ -17,6 +17,7 @@ function HUDCenterPrompt:_create_panel(hud)
 		w = HUDCenterPrompt.W,
 		h = HUDCenterPrompt.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -34,6 +35,7 @@ function HUDCenterPrompt:_create_text()
 		font = HUDCenterPrompt.TEXT_FONT,
 		font_size = HUDCenterPrompt.TEXT_FONT_SIZE
 	}
+
 	self._text = self._object:text(text_params)
 end
 
@@ -87,9 +89,11 @@ function HUDCenterPrompt:_animate_change_prompt(text_control, text, id)
 	local fade_in_duration = 0.3
 	local t = (1 - self._text:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._text:set_alpha(current_alpha)
@@ -109,9 +113,11 @@ function HUDCenterPrompt:_animate_change_prompt(text_control, text, id)
 	self._hidden_id = nil
 	t = 0
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_out_duration)
 
 		self._text:set_alpha(current_alpha)
@@ -124,9 +130,11 @@ function HUDCenterPrompt:_animate_hide()
 	local fade_out_duration = 0.2
 	local t = (1 - self._text:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._text:set_alpha(current_alpha)

@@ -3,6 +3,7 @@ GrenadeBase.EVENT_IDS = {
 	detonate = 1
 }
 GrenadeBase.DETONATE_UP_OFFSET = Vector3(0, 0.1, 0)
+
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 
@@ -15,6 +16,7 @@ function GrenadeBase:_setup_server_data()
 end
 
 function GrenadeBase:setup(unit, t, dt)
+	return
 end
 
 function GrenadeBase:update(unit, t, dt)
@@ -114,14 +116,14 @@ function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 end
 
 function GrenadeBase:get_use_data(character_setup)
-	local use_data = {
-		equip = {
-			align_place = "right_hand"
-		},
-		selection_index = 3,
-		unequip = {
-			align_place = "back"
-		}
+	local use_data = {}
+
+	use_data.equip = {
+		align_place = "right_hand"
+	}
+	use_data.selection_index = 3
+	use_data.unequip = {
+		align_place = "back"
 	}
 
 	return use_data
@@ -142,6 +144,7 @@ end
 function GrenadeBase:anim_play(anim, speed_multiplier)
 	if anim then
 		local length = self._unit:anim_length(Idstring(anim))
+
 		speed_multiplier = speed_multiplier or 1
 
 		self._unit:anim_stop(Idstring(anim))
@@ -172,6 +175,7 @@ function GrenadeBase:melee_damage_info()
 end
 
 function GrenadeBase:ammo_info()
+	return
 end
 
 function GrenadeBase:add_ammo(ratio, add_amount_override, add_amount_multiplier)
@@ -187,9 +191,11 @@ function GrenadeBase:set_hand_held(value)
 end
 
 function GrenadeBase:on_equip()
+	return
 end
 
 function GrenadeBase:on_unequip()
+	return
 end
 
 function GrenadeBase:on_enabled()
@@ -253,14 +259,15 @@ function GrenadeBase:start_shooting_allowed()
 end
 
 function GrenadeBase:save(data)
-	local state = {
-		timer = self._timer
-	}
+	local state = {}
+
+	state.timer = self._timer
 	data.GrenadeBase = state
 end
 
 function GrenadeBase:load(data)
 	local state = data.GrenadeBase
+
 	self._timer = state.timer
 end
 

@@ -9,6 +9,7 @@ function HintUnitElement:init(unit)
 end
 
 function HintUnitElement:_set_text()
+	return
 end
 
 function HintUnitElement:set_element_data(params, ...)
@@ -24,6 +25,7 @@ function HintUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local text_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	text_sizer:add(EWS:StaticText(panel, "Text: ", "", ""), 1, 2, "ALIGN_CENTER_VERTICAL,RIGHT,EXPAND")

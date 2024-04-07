@@ -5,10 +5,12 @@ function RaidGUIControlBackgroundImage:init()
 	self._panel = self._workspace:panel()
 	self._base_resolution = tweak_data.gui.base_resolution
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
+
 	local video_params = {
 		loop = true,
 		video = "movies/vanilla/raid_anim_bg"
 	}
+
 	self._object = self._panel:video(video_params)
 
 	managers.video:add_video(self._object)

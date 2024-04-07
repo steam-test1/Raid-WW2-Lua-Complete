@@ -18,19 +18,19 @@ function InputTweakData:init(tweak_data)
 		uses_keyboard = true,
 		look_speed_transition_zone = 0.95,
 		aim_assist_use_sticky_aim = true,
-		look_speed_standard = 110,
-		deprecated = {
-			look_speed_fast = 360,
-			look_speed_transition_to_fast = 0.5,
-			aim_assist_snap_speed = 200,
-			uses_keyboard = true,
-			look_speed_dead_zone = 0.1,
-			look_speed_transition_zone = 0.8,
-			look_speed_transition_occluder = 0.95,
-			aim_assist_use_sticky_aim = false,
-			look_speed_steel_sight = 60,
-			look_speed_standard = 120
-		}
+		look_speed_standard = 110
+	}
+	self.gamepad.deprecated = {
+		look_speed_fast = 360,
+		look_speed_transition_to_fast = 0.5,
+		aim_assist_snap_speed = 200,
+		uses_keyboard = true,
+		look_speed_dead_zone = 0.1,
+		look_speed_transition_zone = 0.8,
+		look_speed_transition_occluder = 0.95,
+		aim_assist_use_sticky_aim = false,
+		look_speed_steel_sight = 60,
+		look_speed_standard = 120
 	}
 
 	local function valid_range(data, var, b, c, ex_b, ex_c)

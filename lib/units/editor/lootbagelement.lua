@@ -27,7 +27,9 @@ function LootBagUnitElement:test_element()
 
 	if self._hed.carry_id ~= "none" then
 		unit_name = tweak_data.carry[self._hed.carry_id].unit or unit_name
+
 		local carry_type = tweak_data.carry[self._hed.carry_id].type
+
 		throw_distance_multiplier = tweak_data.carry.types[carry_type].throw_distance_multiplier or throw_distance_multiplier
 	end
 
@@ -137,6 +139,7 @@ function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 end
 
 function LootBagTriggerUnitElement:update_editing()
+	return
 end
 
 function LootBagTriggerUnitElement:add_element()
@@ -173,6 +176,7 @@ function LootBagTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"point_loot_bag/point_loot_bag"
 	}

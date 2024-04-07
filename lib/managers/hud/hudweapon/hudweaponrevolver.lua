@@ -23,8 +23,7 @@ function HUDWeaponRevolver:_create_clip_left_info(weapons_panel)
 	self._ammo_panel:set_w(self._ammo_left_text:w() + padding + gui_cylinder.texture_rect[3])
 	self._ammo_panel:set_center_x(self._object:w() / 2)
 
-	local ring_w = self._ammo_panel:h()
-	local ring_h = self._ammo_panel:h()
+	local ring_w, ring_h = self._ammo_panel:h(), self._ammo_panel:h()
 
 	self:_create_rotation_panel(ring_w, ring_h)
 
@@ -36,7 +35,9 @@ function HUDWeaponRevolver:_create_clip_left_info(weapons_panel)
 		h = ring_h,
 		rotation = self._initial_rotation
 	})
+
 	local layer = self._cylinder:layer() + 1
+
 	self._bullet_list = {}
 	self._cocked_bullet_index = 1
 
@@ -80,7 +81,7 @@ function HUDWeaponRevolver:set_current_clip(current_clip)
 	end
 
 	local adding_bullet = difference > 0
-	local is_clockwise = nil
+	local is_clockwise
 
 	if adding_bullet then
 		is_clockwise = self._load_clockwise
@@ -108,8 +109,7 @@ function HUDWeaponRevolver:set_current_clip(current_clip)
 
 		if reset then
 			local single_bullet_angle = 360 / self._max_clip
-			local ring_w = self._rotation_panel:h()
-			local ring_h = self._rotation_panel:h()
+			local ring_w, ring_h = self._rotation_panel:h(), self._rotation_panel:h()
 			local dx, dy = self:_orbit_math(self._offset_from_center, single_bullet_angle * (i + 1) + self._initial_rotation + single_bullet_angle / 2 + 180)
 
 			bullet:set_center_x(ring_w / 2 + dx)
@@ -132,13 +132,14 @@ function HUDWeaponRevolver:_animate_rotation_panel_items(clockwise)
 	local to = from + degrees
 	local duration = self._feed_speed
 	local i_offs = clockwise and 1.5 or 0.5
-	local ring_w = self._rotation_panel:h()
-	local ring_h = self._rotation_panel:h()
+	local ring_w, ring_h = self._rotation_panel:h(), self._rotation_panel:h()
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local ratio = t / duration
 
 		self._cylinder:set_rotation(math.lerp(from, to, ratio))
@@ -167,13 +168,15 @@ function HUDWeaponRevolver:_animate_alpha(root_panel, new_alpha)
 	local start_ammo_left_alpha = start_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED and HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_SELECTED or HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_UNSELECTED
 	local new_ammo_left_alpha = start_ammo_left_alpha == HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_SELECTED and HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_UNSELECTED or HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_SELECTED
 	local duration = 0.8
-	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * duration / 4
+	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * (duration / 4)
 	local cowboy = math.random(360) <= 1 and new_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED
 	local cx, cy = self._icon:center()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, start_alpha, new_alpha - start_alpha, duration)
 
 		self._icon:set_alpha(current_alpha)

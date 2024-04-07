@@ -82,6 +82,7 @@ function CoreSpawnUnitUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local unit_options = {
 		"none"
 	}
@@ -99,14 +100,7 @@ function CoreSpawnUnitUnitElement:_build_panel(panel, panel_sizer)
 		floats = 0,
 		min = 0
 	}, "Use this to add a mass to a physic push on the spawned unit(will need velocity as well)", "Mass")
-	self:_add_help_text([[
-Select a unit to be spawned in the unit combobox.
-
-Add velocity and mass if you want to give the spawned unit a push as if it was hit by an object of mass mass, traveling at a velocity of velocity relative to the unit (both values are required to give the push)
-
-Body slam (80 kg, 10 m/s)
-Fist punch (8 kg, 10 m/s)
-Bullet hit (10 g, 900 m/s)]])
+	self:_add_help_text("Select a unit to be spawned in the unit combobox.\n\nAdd velocity and mass if you want to give the spawned unit a push as if it was hit by an object of mass mass, traveling at a velocity of velocity relative to the unit (both values are required to give the push)\n\nBody slam (80 kg, 10 m/s)\nFist punch (8 kg, 10 m/s)\nBullet hit (10 g, 900 m/s)")
 end
 
 function CoreSpawnUnitUnitElement:add_to_mission_package()

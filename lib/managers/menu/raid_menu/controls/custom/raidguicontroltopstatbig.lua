@@ -36,10 +36,12 @@ function RaidGUIControlTopStatBig:init(parent, params)
 end
 
 function RaidGUIControlTopStatBig:close()
+	return
 end
 
 function RaidGUIControlTopStatBig:_create_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x or 0
 	control_params.w = RaidGUIControlTopStatBig.WIDTH
 	control_params.h = RaidGUIControlTopStatBig.HEIGHT
@@ -63,6 +65,7 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 		font_size = RaidGUIControlTopStatBig.PLAYER_NAME_FONT_SIZE,
 		color = RaidGUIControlTopStatBig.PLAYER_NAME_COLOR
 	}
+
 	self._player_name_label = self._object:label(player_name_params)
 
 	self._player_name_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.PLAYER_NAME_CENTER_Y_FROM_BOTTOM)
@@ -82,6 +85,7 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 		font_size = RaidGUIControlTopStatBig.STAT_NAME_FONT_SIZE,
 		color = RaidGUIControlTopStatBig.STAT_NAME_COLOR
 	}
+
 	self._stat_name_label = self._object:label(stat_name_params)
 
 	self._stat_name_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.STAT_NAME_CENTER_Y_FROM_BOTTOM)
@@ -101,6 +105,7 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 		font_size = RaidGUIControlTopStatBig.STAT_VALUE_FONT_SIZE,
 		color = RaidGUIControlTopStatBig.STAT_VALUE_COLOR
 	}
+
 	self._stat_value_label = self._object:label(stat_value_params)
 
 	self._stat_value_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.STAT_VALUE_CENTER_Y_FROM_BOTTOM)
@@ -137,11 +142,13 @@ function RaidGUIControlTopStatBig:set_data(data)
 		texture = tweak_data.gui.icons[data.icon].texture,
 		texture_rect = tweak_data.gui.icons[data.icon].texture_rect
 	}
+
 	self._stat_icon = self._object:bitmap(icon_params)
 
 	self._stat_icon:set_center_x(self._object:w() / 2)
 
 	self._sound_effect = data.sound_effect
+
 	local icon_background = self._object:child("icon_background")
 
 	self._stat_icon:set_center_y(icon_background:y() + icon_background:h() / 2)
@@ -184,7 +191,9 @@ function RaidGUIControlTopStatBig:_animate_show_stat(panel, delay, icon, label)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quintic_out(t, initial_offset, -initial_offset, duration)
 
 		icon_background:set_y(icon_background_y + current_offset)
@@ -226,7 +235,9 @@ function RaidGUIControlTopStatBig:_animate_show_result(label, delay, clbk)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quintic_out(t, initial_offset, -initial_offset, duration)
 
 		self._player_name_label:set_y(player_name_y + current_offset)

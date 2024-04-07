@@ -71,15 +71,19 @@ function RaidGUIControlMeleeWeaponStats:refresh_data()
 end
 
 function RaidGUIControlMeleeWeaponStats:_create_bottom_line()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:_initial_tab_selected(tab_idx)
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:_tab_selected(tab_idx, callback_param)
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:_unselect_all()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:set_selected(value)
@@ -89,21 +93,27 @@ function RaidGUIControlMeleeWeaponStats:set_selected(value)
 end
 
 function RaidGUIControlMeleeWeaponStats:move_up()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:move_down()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:move_left()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:move_right()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:highlight_on()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:highlight_off()
+	return
 end
 
 function RaidGUIControlMeleeWeaponStats:mouse_released(o, button, x, y)

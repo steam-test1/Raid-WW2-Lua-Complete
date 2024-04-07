@@ -54,9 +54,10 @@ function FleePointElement:test_element()
 
 	local t = {
 		id = self._unit:unit_data().unit_id,
-		editor_name = self._unit:unit_data().name_id,
-		values = self:new_save_values()
+		editor_name = self._unit:unit_data().name_id
 	}
+
+	t.values = self:new_save_values()
 	t.values.use_instigator = true
 	t.values.is_navigation_link = false
 	t.values.is_alert_point = false

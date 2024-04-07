@@ -6,16 +6,15 @@ local function set_enum()
 	return enum
 end
 
-Message = {
-	OnHeadShot = set_enum(),
-	OnAmmoPickup = set_enum(),
-	OnSwitchWeapon = set_enum(),
-	OnEnemyKilled = set_enum(),
-	OnPlayerDamage = set_enum(),
-	SetWeaponStagger = set_enum(),
-	OnEnemyShot = set_enum(),
-	OnDoctorBagUsed = set_enum(),
-	OnPlayerReload = set_enum(),
-	RevivePlayer = set_enum(),
-	ResetStagger = set_enum()
-}
+Message = {}
+Message.OnHeadShot = set_enum()
+Message.OnAmmoPickup = set_enum()
+Message.OnSwitchWeapon = set_enum()
+Message.OnEnemyKilled = set_enum()
+Message.OnPlayerDamage = set_enum()
+Message.SetWeaponStagger = set_enum()
+Message.OnEnemyShot = set_enum()
+Message.OnDoctorBagUsed = set_enum()
+Message.OnPlayerReload = set_enum()
+Message.RevivePlayer = set_enum()
+Message.ResetStagger = set_enum()

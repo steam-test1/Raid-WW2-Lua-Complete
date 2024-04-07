@@ -19,10 +19,11 @@ function PlayerSound:init(unit)
 end
 
 function PlayerSound:destroy(unit)
+	return
 end
 
 function PlayerSound:_play(sound_name, source_name)
-	local source = nil
+	local source
 
 	if source_name then
 		source = Idstring(source_name)
@@ -62,7 +63,7 @@ function PlayerSound:clear_queue()
 end
 
 function PlayerSound:play(sound_name, source_name, sync)
-	local event_id = nil
+	local event_id
 
 	if type(sound_name) == "number" then
 		event_id = sound_name
@@ -82,7 +83,7 @@ function PlayerSound:play(sound_name, source_name, sync)
 end
 
 function PlayerSound:stop(source_name)
-	local source = nil
+	local source
 
 	if source_name then
 		source = Idstring(source_name)
@@ -94,6 +95,7 @@ end
 function PlayerSound:play_footstep(foot, material_name)
 	if self._last_material ~= material_name then
 		self._last_material = material_name
+
 		local material_name = tweak_data.materials[material_name:key()]
 
 		self._unit:sound_source(Idstring("root")):set_switch("materials", material_name or "no_material")
@@ -107,6 +109,7 @@ end
 function PlayerSound:play_land(material_name)
 	if self._last_material ~= material_name then
 		self._last_material = material_name
+
 		local material_name = tweak_data.materials[material_name:key()]
 
 		self._unit:sound_source(Idstring("root")):set_switch("materials", material_name or "concrete")
@@ -126,7 +129,7 @@ function PlayerSound:say(sound_name, important_say, sync)
 		self._speaking = nil
 	end
 
-	local event_id = nil
+	local event_id
 
 	if type(sound_name) == "number" then
 		event_id = sound_name

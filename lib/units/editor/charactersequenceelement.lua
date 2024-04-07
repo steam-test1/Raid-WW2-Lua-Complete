@@ -18,6 +18,7 @@ function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_spawn_enemy",
 		"ai_spawn_civilian"
@@ -88,4 +89,5 @@ function CharacterSequenceElement:add_triggers(vc)
 end
 
 function CharacterSequenceElement:update_editing()
+	return
 end

@@ -9,6 +9,7 @@ function PlayerMoveObject:enter(state_data, enter_data)
 	PlayerMoveObject.super.enter(self, state_data, enter_data)
 
 	local move_object_data = managers.player:get_move_object_data()
+
 	self._moving_unit = move_object_data.moving_unit
 	self._moving_body = self._moving_unit:body(0)
 	self._player_align_points = self._moving_unit:get_objects("player_align_0*")
@@ -21,6 +22,7 @@ function PlayerMoveObject:enter(state_data, enter_data)
 end
 
 function PlayerMoveObject:_enter(enter_data)
+	return
 end
 
 function PlayerMoveObject:exit(state_data, new_state_name)
@@ -67,7 +69,8 @@ function PlayerMoveObject:_update_check_actions(t, dt)
 	self:_update_steelsight_timers(t, dt)
 	self:_update_foley(t, input)
 
-	local new_action = nil
+	local new_action
+
 	new_action = new_action or self:_check_action_weapon_gadget(t, input)
 	new_action = new_action or self:_check_action_weapon_firemode(t, input)
 	new_action = new_action or self:_check_action_melee(t, input)
@@ -105,10 +108,11 @@ function PlayerMoveObject:_update_check_actions(t, dt)
 end
 
 function PlayerMoveObject:_check_action_run(...)
+	return
 end
 
 function PlayerMoveObject:_check_action_interact(t, input)
-	local new_action, timer, interact_object = nil
+	local new_action, timer, interact_object
 	local interaction_wanted = input.btn_interact_press
 
 	if interaction_wanted then
@@ -151,7 +155,9 @@ function PlayerMoveObject:_get_walk_headbob(...)
 end
 
 function PlayerMoveObject:pre_destroy(unit)
+	return
 end
 
 function PlayerMoveObject:destroy()
+	return
 end

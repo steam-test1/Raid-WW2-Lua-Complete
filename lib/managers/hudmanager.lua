@@ -29,9 +29,11 @@ core:import("CoreEvent")
 
 function HUDManager:init()
 	self._component_map = {}
+
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 	local safe_rect = managers.viewport:get_safe_rect()
 	local res = RenderSettings.resolution
+
 	self._workspace_size = {
 		x = 0,
 		y = 0,
@@ -73,11 +75,10 @@ function HUDManager:init()
 	self:_init_player_hud_values()
 
 	self._chatinput_changed_callback_handler = CoreEvent.CallbackEventHandler:new()
-	HUDManager.HIDEABLE_HUDS = {
-		[PlayerBase.INGAME_HUD_SAFERECT:key()] = true,
-		[PlayerBase.INGAME_HUD_FULLSCREEN:key()] = true,
-		[IngameWaitingForRespawnState.GUI_SPECTATOR:key()] = true
-	}
+	HUDManager.HIDEABLE_HUDS = {}
+	HUDManager.HIDEABLE_HUDS[PlayerBase.INGAME_HUD_SAFERECT:key()] = true
+	HUDManager.HIDEABLE_HUDS[PlayerBase.INGAME_HUD_FULLSCREEN:key()] = true
+	HUDManager.HIDEABLE_HUDS[IngameWaitingForRespawnState.GUI_SPECTATOR:key()] = true
 
 	if Global.debug_show_coords then
 		self:debug_show_coordinates()
@@ -145,7 +146,7 @@ function HUDManager:load_hud(name, visible, using_collision, using_saferect, mut
 	end
 
 	local bounding_box = {}
-	local panel = nil
+	local panel
 
 	if using_16_9_fullscreen then
 		panel = self._fullscreen_workspace:panel():gui(name, {})
@@ -452,6 +453,7 @@ end
 
 function HUDManager:hide(name)
 	self._visible_huds_states[name:key()] = nil
+
 	local panel = self:script(name).panel
 
 	if panel:has_script() then
@@ -482,7 +484,7 @@ function HUDManager:visible(name)
 end
 
 function HUDManager:_collision(rect1_map, rect2_map)
-	if rect2_map.x2 <= rect1_map.x1 then
+	if rect1_map.x1 >= rect2_map.x2 then
 		return false
 	end
 
@@ -490,7 +492,7 @@ function HUDManager:_collision(rect1_map, rect2_map)
 		return false
 	end
 
-	if rect2_map.y2 <= rect1_map.y1 then
+	if rect1_map.y1 >= rect2_map.y2 then
 		return false
 	end
 
@@ -502,19 +504,19 @@ function HUDManager:_collision(rect1_map, rect2_map)
 end
 
 function HUDManager:_inside(rect1_map, rect2_map)
-	if rect1_map.x1 < rect2_map.x1 or rect2_map.x2 < rect1_map.x1 then
+	if rect1_map.x1 < rect2_map.x1 or rect1_map.x1 > rect2_map.x2 then
 		return false
 	end
 
-	if rect1_map.y1 < rect2_map.y1 or rect2_map.y2 < rect1_map.y1 then
+	if rect1_map.y1 < rect2_map.y1 or rect1_map.y1 > rect2_map.y2 then
 		return false
 	end
 
-	if rect1_map.x2 < rect2_map.x1 or rect2_map.x2 < rect1_map.x2 then
+	if rect1_map.x2 < rect2_map.x1 or rect1_map.x2 > rect2_map.x2 then
 		return false
 	end
 
-	if rect1_map.y2 < rect2_map.x1 or rect2_map.y2 < rect1_map.y2 then
+	if rect1_map.y2 < rect2_map.x1 or rect1_map.y2 > rect2_map.y2 then
 		return false
 	end
 
@@ -778,7 +780,9 @@ function HUDManager:_handle_name_label_overlapping(name_label1, name_label2, cam
 	end
 
 	local label_dist = HUDManager.NAME_LABEL_Y_DIST_COEFF * math.abs(name_label1:panel():center_y() - name_label2:panel():center_y())
+
 	label_dist = label_dist + math.abs(name_label1:panel():center_x() - name_label2:panel():center_x())
+
 	local alpha = math.min(math.clamp(label_dist * HUDManager.NAME_LABEL_DIST_TO_ALPHA_COEFF, 0, 1), further_label:panel():alpha())
 
 	further_label:panel():set_alpha(alpha)
@@ -803,7 +807,7 @@ function HUDManager:_update_name_labels(t, dt)
 
 	mrotation.y(cam_rot, nl_cam_forward)
 
-	local panel = nil
+	local panel
 
 	for index, name_label in ipairs(self._hud.name_labels) do
 		local panel = panel or name_label:panel():parent()
@@ -855,7 +859,7 @@ function HUDManager:_update_vehicle_name_labels(t, dt)
 
 	mrotation.y(cam_rot, nl_cam_forward)
 
-	local panel = nil
+	local panel
 
 	for index, name_label in ipairs(self._hud.vehicle_name_labels) do
 		local panel = panel or name_label:panel():parent()
@@ -924,6 +928,7 @@ function HUDManager:add_suspicion_indicator(id, data)
 	self:create_suspicion_indicator(id, data.position, data.state, data.suspect)
 
 	local suspicion = HUDSuspicionIndicator:new(hud, data)
+
 	self._hud.suspicion_indicators[id] = suspicion
 end
 
@@ -990,6 +995,7 @@ function HUDManager:add_waypoint(id, data)
 
 	local icon = data.icon or "wp_standard"
 	local icon, texture_rect, rect_over = self:_get_raid_icon(icon)
+
 	self._hud.waypoints[id] = {
 		move_speed = 1,
 		id_string = id,
@@ -1036,7 +1042,7 @@ function HUDManager:add_waypoint(id, data)
 			h = texture_rect[4],
 			blend_mode = data.blend_mode
 		})
-		local bitmap_over, searching, aiming = nil
+		local bitmap_over, searching, aiming
 
 		if rect_over then
 			bitmap_over = waypoint_panel:bitmap({
@@ -1049,8 +1055,10 @@ function HUDManager:add_waypoint(id, data)
 				texture = icon,
 				texture_rect = rect_over
 			})
+
 			local aiming_icon, aiming_rect = tweak_data.hud_icons:get_icon_data("wp_aiming")
 			local searching_icon, searching_rect = tweak_data.hud_icons:get_icon_data("wp_investigating")
+
 			searching = waypoint_panel:bitmap({
 				h = 16,
 				blend_mode = "normal",
@@ -1087,7 +1095,7 @@ function HUDManager:add_waypoint(id, data)
 			h = arrow_texture_rect[4],
 			blend_mode = data.blend_mode
 		})
-		local distance = nil
+		local distance
 
 		if data.distance then
 			distance = waypoint_panel:text({
@@ -1121,7 +1129,7 @@ function HUDManager:add_waypoint(id, data)
 			font = tweak_data.gui.fonts.din_compressed_outlined_32
 		})
 		local w, h = bitmap:size()
-		local stealth_over_rect = nil
+		local stealth_over_rect
 
 		if rect_over then
 			stealth_over_rect = {
@@ -1143,6 +1151,7 @@ function HUDManager:add_waypoint(id, data)
 		self._hud.waypoints[id].timer_gui = timer
 		self._hud.waypoints[id].timer = data.timer
 		self._hud.waypoints[id].pause_timer = data.pause_timer or data.timer and 0
+
 		local slot = 1
 		local t = {}
 
@@ -1190,8 +1199,10 @@ function HUDManager:change_waypoint_icon(id, icon)
 		32,
 		32
 	})
+
 	wp_data.icon = texture
 	wp_data.texture_rect = rect
+
 	local show_on_screen = wp_data.show_on_screen
 
 	if show_on_screen == true then
@@ -1227,8 +1238,10 @@ function HUDManager:change_waypoint_icon(id, icon)
 				texture = texture,
 				texture_rect = rect_over
 			})
+
 			local aiming_icon, aiming_rect = tweak_data.hud_icons:get_icon_data("wp_aiming")
 			local searching_icon, searching_rect = tweak_data.hud_icons:get_icon_data("wp_investigating")
+
 			wp_data.searching = waypoint_panel:bitmap({
 				h = 16,
 				blend_mode = "normal",
@@ -1430,7 +1443,7 @@ function HUDManager:add_mugshot_by_unit(unit)
 	end
 
 	local characters = managers.criminals:characters()
-	local nationality = nil
+	local nationality
 
 	for i = 1, #characters do
 		if characters[i].unit == unit then
@@ -1446,7 +1459,9 @@ function HUDManager:add_mugshot_by_unit(unit)
 		nationality = nationality
 	}
 	local name_label_id = managers.hud:_add_name_label(name_label_params)
+
 	unit:unit_data().name_label_id = name_label_id
+
 	local character_name_id = managers.criminals:character_name_by_unit(unit)
 
 	for i, data in ipairs(self._hud.mugshots) do
@@ -1467,7 +1482,7 @@ function HUDManager:add_mugshot_by_unit(unit)
 		end
 	end
 
-	local peer, peer_id = nil
+	local peer, peer_id
 
 	if is_husk_player then
 		peer = unit:network():peer()
@@ -1481,6 +1496,7 @@ function HUDManager:add_mugshot_by_unit(unit)
 		peer_id = peer_id,
 		character_name_id = character_name_id
 	})
+
 	unit:unit_data().mugshot_id = mugshot_id
 
 	if peer and peer:is_cheater() then
@@ -1526,7 +1542,9 @@ end
 
 function HUDManager:add_mugshot(data)
 	local panel_id = self:add_teammate_panel(data.character_name_id, data.name, not data.use_lifebar, data.peer_id)
+
 	managers.criminals:character_data_by_name(data.character_name_id).panel_id = panel_id
+
 	local last_id = self._hud.mugshots[#self._hud.mugshots] and self._hud.mugshots[#self._hud.mugshots].id or 0
 	local id = last_id + 1
 
@@ -1687,12 +1705,15 @@ function HUDManager:_set_mugshot_state(id, icon_data, text)
 end
 
 function HUDManager:update_vehicle_label_by_id(label_id, num_players)
+	return
 end
 
 function HUDManager:start_anticipation(data)
+	return
 end
 
 function HUDManager:sync_start_anticipation()
+	return
 end
 
 function HUDManager:check_start_anticipation_music(t)
@@ -1725,6 +1746,7 @@ end
 
 function HUDManager:setup_anticipation(total_t)
 	local exists = self._anticipation_dialogs and true or false
+
 	self._anticipation_dialogs = {}
 
 	if not exists and total_t == 45 then
@@ -1774,9 +1796,11 @@ function HUDManager:setup_anticipation(total_t)
 end
 
 function HUDManager:set_crosshair_offset(offset)
+	return
 end
 
 function HUDManager:set_crosshair_visible(visible)
+	return
 end
 
 function HUDManager:present_mid_text(params)
@@ -1786,6 +1810,7 @@ function HUDManager:present_mid_text(params)
 end
 
 function HUDManager:_update_crosshair_offset(t, dt)
+	return
 end
 
 function HUDManager:_upd_suspition_waypoint_pos(data)
@@ -2075,6 +2100,7 @@ function HUDManager:_update_waypoints(t, dt)
 				end
 			else
 				local pos_has_external_update = data.waypoint_type == "spotter" or data.waypoint_type == "suspicion" or data.waypoint_type == "unit_waypoint"
+
 				data.position = not pos_has_external_update and data.unit and data.unit.position and data.unit:position() or data.position
 
 				if data.position_offset_z then
@@ -2323,6 +2349,7 @@ function HUDManager:_update_waypoints(t, dt)
 
 				if data.pause_timer == 0 then
 					data.timer = data.timer - dt
+
 					local text = data.timer < 0 and "00" or (math.round(data.timer) < 10 and "0" or "") .. math.round(data.timer)
 
 					data.timer_gui:set_text(text)
@@ -2333,14 +2360,16 @@ function HUDManager:_update_waypoints(t, dt)
 end
 
 function HUDManager:show_waypoint(icon, data, new_alpha, duration)
+	return
 end
 
 function HUDManager:hide_waypoint(icon, data, new_alpha, duration)
+	return
 end
 
 function HUDManager:_animate_alpha(icon, data, new_alpha, duration, delay)
 	local t = 0
-	local dt = nil
+	local dt
 	local starting_alpha = icon:color().a
 	local change = new_alpha - starting_alpha
 
@@ -2411,6 +2440,7 @@ end
 function HUDManager:_set_progress_for_target(id, target_id, progress)
 	self._progress_target[id] = self._progress_target[id] or {}
 	self._progress_target[id][target_id] = math.clamp(progress, 0, 1)
+
 	local max = 0
 
 	for _, p in pairs(self._progress_target[id]) do
@@ -2431,6 +2461,7 @@ function HUDManager:_upd_suspition_progress(data, dt)
 		if distance > 0.1 then
 			local lerp_speed = distance / 2
 			local h = math.lerp(old_h, data.stealth_target_h, lerp_speed * dt)
+
 			data.stealth_over_rect[2] = 32 - h
 			data.stealth_over_rect[4] = h
 		end
@@ -2504,9 +2535,8 @@ function HUDManager:debug_show_coordinates()
 		return
 	end
 
-	self._debug = {
-		ws = Overlay:newgui():create_screen_workspace()
-	}
+	self._debug = {}
+	self._debug.ws = Overlay:newgui():create_screen_workspace()
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.coord = self._debug.panel:text({
 		text = "",
@@ -2560,7 +2590,7 @@ function HUDManager:save(d)
 
 	for id, data in pairs(self._teammate_panels) do
 		if data._timer_current and data._timer_current > 0 then
-			local name = nil
+			local name
 
 			for _, char in pairs(managers.criminals:characters()) do
 				if char.data.panel_id and char.data.panel_id == data._id or data._peer_id and char.peer_id and data._peer_id == char.peer_id or data._id == HUDManager.PLAYER_PANEL and char.peer_id == 1 then
@@ -2569,10 +2599,9 @@ function HUDManager:save(d)
 			end
 
 			if name then
-				state.teammate_timers[name] = {
-					timer_current = data._timer_current,
-					timer_total = data._timer_total
-				}
+				state.teammate_timers[name] = {}
+				state.teammate_timers[name].timer_current = data._timer_current
+				state.teammate_timers[name].timer_total = data._timer_total
 			end
 		end
 	end

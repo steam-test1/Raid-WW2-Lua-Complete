@@ -11,7 +11,9 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 	self._on_item_selected_callback = params.on_item_selected_callback
 	self._on_double_click_callback = params.on_double_click_callback
 	self._data = data
+
 	local font, font_size = self:_get_font_desc()
+
 	self._object = self._panel:panel({
 		name = "list_item_object_" .. self._name,
 		x = params.x,
@@ -137,7 +139,7 @@ function RaidGUIControlListItemMenu:select(dont_trigger_selected_callback)
 	self:highlight_on()
 
 	if self._on_item_selected_callback and not dont_trigger_selected_callback then
-		self:_on_item_selected_callback(self._data)
+		self._on_item_selected_callback(self, self._data)
 	end
 
 	if self._data.breadcrumb then

@@ -1,135 +1,106 @@
 RaidMenuSceneManager = RaidMenuSceneManager or class()
 RaidMenuSceneManager.default_camp_world = "levels/tests/menu_test"
 RaidMenuSceneManager.CAMERA_TRANSITION_DURATION = 2.5
-RaidMenuSceneManager.menus = {
-	menu_main = {}
-}
+RaidMenuSceneManager.menus = {}
+RaidMenuSceneManager.menus.menu_main = {}
 RaidMenuSceneManager.menus.menu_main.name = "menu_main"
 RaidMenuSceneManager.menus.menu_main.camera = nil
 RaidMenuSceneManager.menus.menu_main.keep_state = true
-RaidMenuSceneManager.menus.raid_main_menu = {
-	name = "raid_main_menu",
-	camera = nil
-}
-RaidMenuSceneManager.menus.mission_selection_menu = {
-	name = "mission_selection_menu",
-	camera = nil
-}
-RaidMenuSceneManager.menus.mission_unlock_menu = {
-	name = "mission_unlock_menu",
-	camera = nil
-}
-RaidMenuSceneManager.menus.mission_join_menu = {
-	name = "mission_join_menu",
-	camera = nil
-}
-RaidMenuSceneManager.menus.profile_selection_menu = {
-	name = "profile_selection_menu",
-	camera = "character_menu_camera"
-}
-RaidMenuSceneManager.menus.profile_creation_menu = {
-	name = "profile_creation_menu",
-	camera = "character_menu_camera"
-}
-RaidMenuSceneManager.menus.character_customization_menu = {
-	name = "character_customization_menu",
-	camera = "character_menu_camera"
-}
-RaidMenuSceneManager.menus.challenge_cards_menu = {
-	name = "challenge_cards_menu",
-	camera = nil
-}
-RaidMenuSceneManager.menus.challenge_cards_view_menu = {
-	name = "challenge_cards_view_menu",
-	camera = nil
-}
-RaidMenuSceneManager.menus.ready_up_menu = {
-	name = "ready_up_menu",
-	camera = "ready_up_camera",
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_options_menu = {
-	name = "raid_options_menu",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_options_controls = {
-	name = "raid_menu_options_controls",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_options_controls_keybinds = {
-	name = "raid_menu_options_controls_keybinds",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_options_controller_mapping = {
-	name = "raid_menu_options_controller_mapping",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_options_video = {
-	name = "raid_menu_options_video",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_options_video_advanced = {
-	name = "raid_menu_options_video_advanced",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_options_sound = {
-	name = "raid_menu_options_sound",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_options_network = {
-	name = "raid_menu_options_network",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_loot_screen = {
-	name = "raid_menu_loot_screen",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_greed_loot_screen = {
-	name = "raid_menu_greed_loot_screen",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_xp = {
-	name = "raid_menu_xp",
-	camera = nil
-}
-RaidMenuSceneManager.menus.raid_menu_post_game_breakdown = {
-	name = "raid_menu_post_game_breakdown",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_special_honors = {
-	name = "raid_menu_special_honors",
-	camera = nil,
-	keep_state = true
-}
-RaidMenuSceneManager.menus.raid_menu_weapon_select = {
-	name = "raid_menu_weapon_select",
-	camera = "weapons_menu_camera"
-}
-RaidMenuSceneManager.menus.raid_credits_menu = {
-	name = "raid_credits_menu",
-	camera = nil
-}
-RaidMenuSceneManager.menus.gold_asset_store_menu = {
-	name = "gold_asset_store_menu",
-	camera = "gold_test"
-}
-RaidMenuSceneManager.menus.intel_menu = {
-	name = "intel_menu"
-}
-RaidMenuSceneManager.menus.comic_book_menu = {
-	name = "comic_book_menu"
-}
+RaidMenuSceneManager.menus.raid_main_menu = {}
+RaidMenuSceneManager.menus.raid_main_menu.name = "raid_main_menu"
+RaidMenuSceneManager.menus.raid_main_menu.camera = nil
+RaidMenuSceneManager.menus.mission_selection_menu = {}
+RaidMenuSceneManager.menus.mission_selection_menu.name = "mission_selection_menu"
+RaidMenuSceneManager.menus.mission_selection_menu.camera = nil
+RaidMenuSceneManager.menus.mission_unlock_menu = {}
+RaidMenuSceneManager.menus.mission_unlock_menu.name = "mission_unlock_menu"
+RaidMenuSceneManager.menus.mission_unlock_menu.camera = nil
+RaidMenuSceneManager.menus.mission_join_menu = {}
+RaidMenuSceneManager.menus.mission_join_menu.name = "mission_join_menu"
+RaidMenuSceneManager.menus.mission_join_menu.camera = nil
+RaidMenuSceneManager.menus.profile_selection_menu = {}
+RaidMenuSceneManager.menus.profile_selection_menu.name = "profile_selection_menu"
+RaidMenuSceneManager.menus.profile_selection_menu.camera = "character_menu_camera"
+RaidMenuSceneManager.menus.profile_creation_menu = {}
+RaidMenuSceneManager.menus.profile_creation_menu.name = "profile_creation_menu"
+RaidMenuSceneManager.menus.profile_creation_menu.camera = "character_menu_camera"
+RaidMenuSceneManager.menus.character_customization_menu = {}
+RaidMenuSceneManager.menus.character_customization_menu.name = "character_customization_menu"
+RaidMenuSceneManager.menus.character_customization_menu.camera = "character_menu_camera"
+RaidMenuSceneManager.menus.challenge_cards_menu = {}
+RaidMenuSceneManager.menus.challenge_cards_menu.name = "challenge_cards_menu"
+RaidMenuSceneManager.menus.challenge_cards_menu.camera = nil
+RaidMenuSceneManager.menus.challenge_cards_view_menu = {}
+RaidMenuSceneManager.menus.challenge_cards_view_menu.name = "challenge_cards_view_menu"
+RaidMenuSceneManager.menus.challenge_cards_view_menu.camera = nil
+RaidMenuSceneManager.menus.ready_up_menu = {}
+RaidMenuSceneManager.menus.ready_up_menu.name = "ready_up_menu"
+RaidMenuSceneManager.menus.ready_up_menu.camera = "ready_up_camera"
+RaidMenuSceneManager.menus.ready_up_menu.keep_state = true
+RaidMenuSceneManager.menus.raid_options_menu = {}
+RaidMenuSceneManager.menus.raid_options_menu.name = "raid_options_menu"
+RaidMenuSceneManager.menus.raid_options_menu.camera = nil
+RaidMenuSceneManager.menus.raid_options_menu.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_options_controls = {}
+RaidMenuSceneManager.menus.raid_menu_options_controls.name = "raid_menu_options_controls"
+RaidMenuSceneManager.menus.raid_menu_options_controls.camera = nil
+RaidMenuSceneManager.menus.raid_menu_options_controls.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_options_controls_keybinds = {}
+RaidMenuSceneManager.menus.raid_menu_options_controls_keybinds.name = "raid_menu_options_controls_keybinds"
+RaidMenuSceneManager.menus.raid_menu_options_controls_keybinds.camera = nil
+RaidMenuSceneManager.menus.raid_menu_options_controls_keybinds.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_options_controller_mapping = {}
+RaidMenuSceneManager.menus.raid_menu_options_controller_mapping.name = "raid_menu_options_controller_mapping"
+RaidMenuSceneManager.menus.raid_menu_options_controller_mapping.camera = nil
+RaidMenuSceneManager.menus.raid_menu_options_controller_mapping.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_options_video = {}
+RaidMenuSceneManager.menus.raid_menu_options_video.name = "raid_menu_options_video"
+RaidMenuSceneManager.menus.raid_menu_options_video.camera = nil
+RaidMenuSceneManager.menus.raid_menu_options_video.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_options_video_advanced = {}
+RaidMenuSceneManager.menus.raid_menu_options_video_advanced.name = "raid_menu_options_video_advanced"
+RaidMenuSceneManager.menus.raid_menu_options_video_advanced.camera = nil
+RaidMenuSceneManager.menus.raid_menu_options_video_advanced.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_options_sound = {}
+RaidMenuSceneManager.menus.raid_menu_options_sound.name = "raid_menu_options_sound"
+RaidMenuSceneManager.menus.raid_menu_options_sound.camera = nil
+RaidMenuSceneManager.menus.raid_menu_options_sound.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_options_network = {}
+RaidMenuSceneManager.menus.raid_menu_options_network.name = "raid_menu_options_network"
+RaidMenuSceneManager.menus.raid_menu_options_network.camera = nil
+RaidMenuSceneManager.menus.raid_menu_options_network.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_loot_screen = {}
+RaidMenuSceneManager.menus.raid_menu_loot_screen.name = "raid_menu_loot_screen"
+RaidMenuSceneManager.menus.raid_menu_loot_screen.camera = nil
+RaidMenuSceneManager.menus.raid_menu_loot_screen.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen = {}
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen.name = "raid_menu_greed_loot_screen"
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen.camera = nil
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_xp = {}
+RaidMenuSceneManager.menus.raid_menu_xp.name = "raid_menu_xp"
+RaidMenuSceneManager.menus.raid_menu_xp.camera = nil
+RaidMenuSceneManager.menus.raid_menu_post_game_breakdown = {}
+RaidMenuSceneManager.menus.raid_menu_post_game_breakdown.name = "raid_menu_post_game_breakdown"
+RaidMenuSceneManager.menus.raid_menu_post_game_breakdown.camera = nil
+RaidMenuSceneManager.menus.raid_menu_post_game_breakdown.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_special_honors = {}
+RaidMenuSceneManager.menus.raid_menu_special_honors.name = "raid_menu_special_honors"
+RaidMenuSceneManager.menus.raid_menu_special_honors.camera = nil
+RaidMenuSceneManager.menus.raid_menu_special_honors.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_weapon_select = {}
+RaidMenuSceneManager.menus.raid_menu_weapon_select.name = "raid_menu_weapon_select"
+RaidMenuSceneManager.menus.raid_menu_weapon_select.camera = "weapons_menu_camera"
+RaidMenuSceneManager.menus.raid_credits_menu = {}
+RaidMenuSceneManager.menus.raid_credits_menu.name = "raid_credits_menu"
+RaidMenuSceneManager.menus.raid_credits_menu.camera = nil
+RaidMenuSceneManager.menus.gold_asset_store_menu = {}
+RaidMenuSceneManager.menus.gold_asset_store_menu.name = "gold_asset_store_menu"
+RaidMenuSceneManager.menus.gold_asset_store_menu.camera = "gold_test"
+RaidMenuSceneManager.menus.intel_menu = {}
+RaidMenuSceneManager.menus.intel_menu.name = "intel_menu"
+RaidMenuSceneManager.menus.comic_book_menu = {}
+RaidMenuSceneManager.menus.comic_book_menu.name = "comic_book_menu"
 
 function _get_background_image_instance()
 	if not Global.background_image then
@@ -261,6 +232,7 @@ function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
 
 	if not dont_remove_from_stack then
 		local menu_stack_index = #self._menu_stack
+
 		self._menu_stack[menu_stack_index] = nil
 	end
 
@@ -538,15 +510,16 @@ function RaidMenuSceneManager:refresh_footer_gold_amount()
 end
 
 function RaidMenuSceneManager:show_dialog_join_others_forbidden()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_join_others_forbidden_message")
-	}
-	local ok_button = {
-		text = managers.localization:text("dialog_ok"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_join_others_forbidden_message")
+
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
+	ok_button.class = RaidGUIControlButtonShortSecondary
+	ok_button.cancel_button = true
 	dialog_data.button_list = {
 		ok_button
 	}
@@ -555,15 +528,16 @@ function RaidMenuSceneManager:show_dialog_join_others_forbidden()
 end
 
 function RaidMenuSceneManager:show_dialog_disconnected_from_steam()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_disconnected_from_steam")
-	}
-	local ok_button = {
-		text = managers.localization:text("dialog_ok"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_disconnected_from_steam")
+
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
+	ok_button.class = RaidGUIControlButtonShortSecondary
+	ok_button.cancel_button = true
 	dialog_data.button_list = {
 		ok_button
 	}
@@ -572,15 +546,16 @@ function RaidMenuSceneManager:show_dialog_disconnected_from_steam()
 end
 
 function RaidMenuSceneManager:show_dialog_already_in_game()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_cant_join_in_mp")
-	}
-	local ok_button = {
-		text = managers.localization:text("dialog_ok"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_cant_join_in_mp")
+
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
+	ok_button.class = RaidGUIControlButtonShortSecondary
+	ok_button.cancel_button = true
 	dialog_data.button_list = {
 		ok_button
 	}
@@ -589,13 +564,14 @@ function RaidMenuSceneManager:show_dialog_already_in_game()
 end
 
 function RaidMenuSceneManager:show_release_dialog_helper(message)
-	local dialog_data = {
-		title = "release dialog helper",
-		text = message
-	}
-	local no_button = {
-		text = "ok"
-	}
+	local dialog_data = {}
+
+	dialog_data.title = "release dialog helper"
+	dialog_data.text = message
+
+	local no_button = {}
+
+	no_button.text = "ok"
 	dialog_data.button_list = {
 		no_button
 	}

@@ -1,4 +1,5 @@
 local tmp_vec1 = Vector3()
+
 CopLogicIdle = class(CopLogicBase)
 CopLogicIdle.allowed_transitional_actions = {
 	{
@@ -40,6 +41,7 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 
 	my_data.vision_cool = data.char_tweak.vision.idle
 	my_data.vision_not_cool = data.char_tweak.vision.combat
+
 	local old_internal_data = data.internal_data
 
 	if old_internal_data then
@@ -66,7 +68,9 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 	end
 
 	data.internal_data = my_data
+
 	local key_str = tostring(data.unit:key())
+
 	my_data.detection_task_key = "CopLogicIdle.update" .. key_str
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicIdle.queued_update, data, data.t)
@@ -117,12 +121,12 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 		local base = inventory:equipped_unit():base()
 		local weapon_tweak_data = base:weapon_tweak_data()
 		local usage = weapon_tweak_data.usage
+
 		my_data.weapon_range = data.char_tweak.weapon[usage].range
 	else
-		my_data.weapon_range = {
-			optimal = 2000,
-			close = 1000
-		}
+		my_data.weapon_range = {}
+		my_data.weapon_range.optimal = 2000
+		my_data.weapon_range.close = 1000
 	end
 
 	data.unit:brain():set_update_enabled_state(false)
@@ -201,15 +205,16 @@ function CopLogicIdle._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
 	data.t = TimerManager:game():time()
+
 	local my_data = data.internal_data
 	local delay = CopLogicBase._upd_attention_obj_detection(data, nil, nil)
 	local new_attention, new_prio_slot, new_reaction = CopLogicBase._get_priority_attention(data, data.detected_attention_objects)
 
 	CopLogicBase._set_attention_obj(data, new_attention, new_reaction)
 
-	if new_reaction and AIAttentionObject.REACT_SUSPICIOUS < new_reaction then
+	if new_reaction and new_reaction > AIAttentionObject.REACT_SUSPICIOUS then
 		local objective = data.objective
-		local wanted_logic = nil
+		local wanted_logic
 		local allow_trans, obj_failed = CopLogicBase.is_obstructed(data, objective, nil, new_attention)
 
 		if allow_trans then
@@ -222,7 +227,7 @@ function CopLogicIdle._upd_enemy_detection(data)
 			end
 
 			if my_data == data.internal_data and not data.unit:brain().logic_queued_key then
-				local params = nil
+				local params
 
 				if managers.groupai:state():whisper_mode() and my_data.vision.detection_delay then
 					params = {
@@ -380,7 +385,7 @@ function CopLogicIdle._chk_reaction_to_attention_object(data, attention_data, st
 		end
 	elseif record.being_arrested then
 		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_AIM)
-	elseif can_arrest and (not record.assault_t or att_unit:base():arrest_settings().aggression_timeout < data.t - record.assault_t) and record.arrest_timeout < data.t and not record.status then
+	elseif can_arrest and (not record.assault_t or data.t - record.assault_t > att_unit:base():arrest_settings().aggression_timeout) and data.t > record.arrest_timeout and not record.status then
 		local under_threat = false
 
 		if attention_data.dis < CopLogicArrest.ARREST_RANGE then
@@ -487,7 +492,9 @@ function CopLogicIdle._scan_for_dangerous_areas(data)
 
 		if not nav_seg.disabled then
 			local seg_pos = nav_manager:find_random_position_in_segment(nav_seg_id)
+
 			walk_params.pos_to = seg_pos
+
 			local ray_hit = nav_manager:raycast(walk_params)
 
 			if ray_hit then
@@ -568,6 +575,7 @@ function CopLogicIdle._smooth_stare_path(data)
 
 	repeat
 		current_step_distance = current_step_distance + distance_step
+
 		local segment_distance = segment_distances[i_node - 1]
 
 		while segment_distance < current_step_distance do
@@ -596,6 +604,7 @@ function CopLogicIdle._smooth_stare_path(data)
 	until i_step == path_steps
 
 	my_data.stare_path = nil
+
 	local path_jobs = my_data.stare_path_pos
 
 	table.remove(path_jobs)
@@ -791,11 +800,12 @@ function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 		return
 	end
 
-	local applied_objective_stance, applied_objective_pose = nil
+	local applied_objective_stance, applied_objective_pose
 
 	if objective then
 		if objective.stance and (not data.char_tweak.allowed_stances or data.char_tweak.allowed_stances[objective.stance]) then
 			applied_objective_stance = true
+
 			local upper_body_action = data.unit:movement()._active_actions[3]
 
 			if not upper_body_action or upper_body_action:type() ~= "shoot" then

@@ -26,6 +26,7 @@ function RaidGUIControlXPSkillSet:_create_panel(parent)
 		visible = false,
 		valign = "scale"
 	}
+
 	self._object = parent:panel(panel_params)
 end
 
@@ -36,6 +37,7 @@ function RaidGUIControlXPSkillSet:_create_content_panel()
 		halign = "scale",
 		valign = "scale"
 	}
+
 	self._content_panel = self._object:panel(panel_params)
 end
 
@@ -45,6 +47,7 @@ function RaidGUIControlXPSkillSet:_create_icon_panel()
 		name = "icon_panel",
 		valign = "scale"
 	}
+
 	self._icon_panel = self._content_panel:panel(icon_panel_params)
 end
 
@@ -162,9 +165,11 @@ function RaidGUIControlXPSkillSet:_animate_skill_change(panel, skills)
 	local fade_in_duration = 0.3
 	local t = (1 - self._content_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._content_panel:set_alpha(current_alpha)
@@ -176,9 +181,11 @@ function RaidGUIControlXPSkillSet:_animate_skill_change(panel, skills)
 
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._content_panel:set_alpha(current_alpha)
@@ -220,6 +227,7 @@ function RaidGUIControlXPDoubleUnlock:_create_panel(parent)
 		visible = false,
 		valign = "scale"
 	}
+
 	self._object = parent:panel(panel_params)
 end
 
@@ -233,13 +241,17 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		w = self._object:w() / 2
 	}
+
 	self._weapon_panel = self._object:panel(weapon_panel_params)
+
 	local weapon_icon_panel_params = {
 		halign = "scale",
 		name = "weapon_icon_panel",
 		valign = "scale"
 	}
+
 	self._weapon_icon_panel = self._weapon_panel:panel(weapon_icon_panel_params)
+
 	local weapon_name_params = {
 		text = "",
 		align = "center",
@@ -250,6 +262,7 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
 		color = RaidGUIControlXPDoubleUnlock.SUBTITLE_COLOR
 	}
+
 	self._weapon_name = self._weapon_panel:text(weapon_name_params)
 
 	self._weapon_name:set_center_x(self._weapon_panel:w() / 2)
@@ -267,13 +280,17 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 		x = self._object:w() / 2,
 		w = self._object:w() / 2
 	}
+
 	self._skill_panel = self._object:panel(skill_panel_params)
+
 	local skill_icon_panel_params = {
 		halign = "scale",
 		name = "skill_icon_panel",
 		valign = "scale"
 	}
+
 	self._skill_icon_panel = self._skill_panel:panel(skill_icon_panel_params)
+
 	local skill_set_title_params = {
 		text = "",
 		align = "center",
@@ -284,6 +301,7 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
 		color = RaidGUIControlXPDoubleUnlock.SUBTITLE_COLOR
 	}
+
 	self._skill_set_title = self._skill_panel:text(skill_set_title_params)
 
 	self._skill_set_title:set_center_x(self._skill_panel:w() / 2)
@@ -406,7 +424,7 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_icons(weapon_unlocks)
 
 	local _, _, w, _ = self._weapon_name:text_rect()
 
-	if self._weapon_name:w() < w then
+	if w > self._weapon_name:w() then
 		self:_refit_title_text(self._weapon_name, self._weapon_name:font_size())
 	end
 end
@@ -416,9 +434,11 @@ function RaidGUIControlXPDoubleUnlock:_animate_skill_change(skill_panel, skills)
 	local fade_in_duration = 0.3
 	local t = (1 - self._skill_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._skill_panel:set_alpha(current_alpha)
@@ -430,9 +450,11 @@ function RaidGUIControlXPDoubleUnlock:_animate_skill_change(skill_panel, skills)
 
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._skill_panel:set_alpha(current_alpha)
@@ -446,9 +468,11 @@ function RaidGUIControlXPDoubleUnlock:_animate_weapon_change(weapon_panel, weapo
 	local fade_in_duration = 0.3
 	local t = (1 - self._weapon_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._weapon_panel:set_alpha(current_alpha)
@@ -460,9 +484,11 @@ function RaidGUIControlXPDoubleUnlock:_animate_weapon_change(weapon_panel, weapo
 
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._weapon_panel:set_alpha(current_alpha)

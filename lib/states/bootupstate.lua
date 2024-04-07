@@ -21,6 +21,7 @@ function BootupState:setup()
 	local is_win32 = _G.IS_PC
 	local is_x360 = _G.IS_XB360
 	local show_esrb = false
+
 	self._full_workspace = gui:create_screen_workspace()
 	self._workspace = managers.gui_data:create_saferect_workspace()
 
@@ -33,6 +34,7 @@ function BootupState:setup()
 	local has_full_game = managers.dlc:has_full_game()
 	local legal_text = managers.localization:text("legal_text")
 	local item_layer = 10
+
 	self._play_data_list = {}
 
 	table.insert(self._play_data_list, {
@@ -64,6 +66,7 @@ function BootupState:setup()
 	})
 
 	local lato_path = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, tweak_data.gui.font_sizes.size_16)
+
 	self._full_panel = self._full_workspace:panel()
 	self._panel = self._workspace:panel()
 
@@ -88,7 +91,9 @@ function BootupState:setup()
 		color = MenuTitlescreenState.TEXT_COLOR,
 		text = utf8.to_upper(managers.localization:text(_G.IS_PC and "press_any_key" or "press_any_key_to_skip_controller"))
 	}
+
 	self._press_any_key_text = self._full_panel:text(press_any_key_prompt_params)
+
 	local _, _, _, h = self._press_any_key_text:text_rect()
 
 	self._press_any_key_text:set_h(h)
@@ -140,9 +145,10 @@ end
 
 function BootupState:update(t, dt)
 	local now = Application:time()
+
 	self.next_message_t = self.next_message_t or Application:time() + 1
 
-	if self.next_message_t < now and not PackageManager:all_packages_loaded() then
+	if now > self.next_message_t and not PackageManager:all_packages_loaded() then
 		Application:debug("[BootupState:update] Waiting for packages to load...")
 
 		self.next_message_t = now + 1
@@ -179,10 +185,11 @@ function BootupState:check_confirm_pressed()
 end
 
 function BootupState:update_fades()
-	local time, duration = nil
+	local time, duration
 
 	if self._play_data.video then
 		duration = self._gui_obj:length()
+
 		local frames = self._gui_obj:frames()
 
 		if frames > 0 then
@@ -233,7 +240,7 @@ function BootupState:apply_fade()
 end
 
 function BootupState:is_skipped()
-	if not _G.IS_PC and not PackageManager:all_packages_loaded() and self._play_index > 1 and Application:time() < self._bootup_t + BootupState.MAX_WAIT_TIME then
+	if not _G.IS_PC and not PackageManager:all_packages_loaded() and self._play_index > 1 and self._bootup_t + BootupState.MAX_WAIT_TIME > Application:time() then
 		return false
 	end
 
@@ -264,9 +271,11 @@ function BootupState:_animate_press_any_key()
 	local press_any_key_fade_in_duration = 0.3
 	local t = 0
 
-	while press_any_key_fade_in_duration > t do
+	while t < press_any_key_fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_in_out(t, 0, 0.8, press_any_key_fade_in_duration)
 
 		self._press_any_key_text:set_alpha(current_alpha)
@@ -305,7 +314,7 @@ function BootupState:play_next(is_skipped)
 		end
 
 		local res = RenderSettings.resolution
-		local width, height = nil
+		local width, height
 		local padding = self._play_data.padding or 0
 
 		if self._play_data.gui then

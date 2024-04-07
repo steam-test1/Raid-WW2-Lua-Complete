@@ -31,6 +31,7 @@ function EventSystemManager:save_profile_slot(data)
 		last_login_year = self._last_login_year,
 		last_login_utc = self._last_login_utc
 	}
+
 	data.EventSystemManager = state
 end
 
@@ -122,6 +123,7 @@ function EventSystemManager:_fire_daily_event()
 			notification_params.notification_type = "active_duty_bonus_outlaw"
 		else
 			local amount = EventsTweakData.REWARD_TRADE_OUTLAW
+
 			notification_params.amount = amount
 
 			managers.gold_economy:add_gold(amount)

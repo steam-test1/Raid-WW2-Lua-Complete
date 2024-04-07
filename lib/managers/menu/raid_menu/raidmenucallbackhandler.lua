@@ -55,7 +55,7 @@ function RaidMenuCallbackHandler:menu_options_on_click_default()
 	local params = {
 		title = managers.localization:text("dialog_reset_all_options_title"),
 		message = managers.localization:text("dialog_reset_all_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_controls_setting_map()
 			managers.controller:load_settings("settings/controller_settings")
 			managers.controller:clear_user_mod("normal", MenuCustomizeControllerCreator.CONTROLS_INFO)
@@ -89,18 +89,20 @@ function RaidMenuCallbackHandler:menu_options_on_click_default()
 end
 
 function RaidMenuCallbackHandler:menu_options_on_click_reset_progress()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_clear_progress")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_clear_progress_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_to_clear_progress")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_clear_progress_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -191,20 +193,22 @@ end
 function RaidMenuCallbackHandler:end_game()
 	print(" RaidMenuCallbackHandler:end_game() ")
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_end_game_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_end_game_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_end_game_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_end_game_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -220,6 +224,7 @@ function RaidMenuCallbackHandler:_dialog_end_game_yes()
 end
 
 function RaidMenuCallbackHandler:_dialog_end_game_no()
+	return
 end
 
 function RaidMenuCallbackHandler:leave_ready_up()
@@ -229,21 +234,23 @@ function RaidMenuCallbackHandler:leave_ready_up()
 		return
 	end
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_leave_ready_up"),
-		id = "leave_ready_up"
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_leave_ready_up_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_leave_ready_up_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_leave_ready_up")
+	dialog_data.id = "leave_ready_up"
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_leave_ready_up_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_leave_ready_up_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -260,6 +267,7 @@ function RaidMenuCallbackHandler:_dialog_leave_ready_up_yes()
 end
 
 function RaidMenuCallbackHandler:_dialog_leave_ready_up_no()
+	return
 end
 
 function RaidMenuCallbackHandler:debug_camp()
@@ -277,6 +285,7 @@ end
 function RaidMenuCallbackHandler:singleplayer_restart()
 	local visible = true
 	local state = game_state_machine:current_state_name()
+
 	visible = visible and state ~= "menu_main"
 	visible = visible and not managers.raid_job:is_camp_loaded()
 	visible = visible and not managers.raid_job:is_in_tutorial()
@@ -403,27 +412,30 @@ function RaidMenuCallbackHandler:restart_mission(item)
 		return
 	end
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_mp_restart_mission_title"),
-		text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_mission_host_message")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			if managers.vote:option_vote_restart() then
-				managers.vote:restart_mission()
-			else
-				managers.vote:restart_mission_auto()
-			end
+	local dialog_data = {}
 
-			managers.raid_menu:on_escape()
+	dialog_data.title = managers.localization:text("dialog_mp_restart_mission_title")
+	dialog_data.text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_mission_host_message")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	function yes_button.callback_func()
+		if managers.vote:option_vote_restart() then
+			managers.vote:restart_mission()
+		else
+			managers.vote:restart_mission_auto()
 		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+
+		managers.raid_menu:on_escape()
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -433,22 +445,25 @@ function RaidMenuCallbackHandler:restart_mission(item)
 end
 
 function RaidMenuCallbackHandler:restart_to_camp_client(item)
-	local dialog_data = {
-		title = managers.localization:text("dialog_mp_restart_level_title"),
-		text = managers.localization:text("dialog_mp_restart_level_client_message")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			managers.raid_menu:on_escape()
-			setup:return_to_camp_client()
-		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_mp_restart_level_title")
+	dialog_data.text = managers.localization:text("dialog_mp_restart_level_client_message")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	function yes_button.callback_func()
+		managers.raid_menu:on_escape()
+		setup:return_to_camp_client()
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -462,27 +477,30 @@ function RaidMenuCallbackHandler:restart_to_camp(item)
 		return
 	end
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_mp_restart_level_title"),
-		text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			if managers.vote:option_vote_restart() then
-				managers.vote:restart()
-			else
-				managers.vote:restart_auto()
-			end
+	local dialog_data = {}
 
-			managers.raid_menu:on_escape()
+	dialog_data.title = managers.localization:text("dialog_mp_restart_level_title")
+	dialog_data.text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	function yes_button.callback_func()
+		if managers.vote:option_vote_restart() then
+			managers.vote:restart()
+		else
+			managers.vote:restart_auto()
 		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+
+		managers.raid_menu:on_escape()
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -522,20 +540,22 @@ function RaidMenuCallbackHandler:quit_game_pause_menu()
 end
 
 function RaidMenuCallbackHandler:_quit_game(dialog_text)
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = dialog_text
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_quit_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_quit_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = dialog_text
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_quit_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_quit_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -553,6 +573,7 @@ function RaidMenuCallbackHandler:_dialog_save_progress_backup_no()
 end
 
 function RaidMenuCallbackHandler:_dialog_quit_no()
+	return
 end
 
 function RaidMenuCallbackHandler:raid_play_online()
@@ -572,7 +593,7 @@ function RaidMenuCallbackHandler:raid_play_online()
 			return
 		end
 
-		managers.menu:open_sign_in_menu(function (success)
+		managers.menu:open_sign_in_menu(function(success)
 			if not success then
 				if managers.network.account:signin_state() == "not signed in" and PSN:cable_connected() then
 					managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_err_not_signed_in")
@@ -595,12 +616,13 @@ end
 function RaidMenuCallbackHandler:raid_play_offline()
 	Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
+
 	local mission = tweak_data.operations:mission_data(managers.raid_job:played_tutorial() and RaidJobManager.CAMP_ID or RaidJobManager.TUTORIAL_ID)
-	local data = {
-		background = mission.loading.image,
-		loading_text = mission.loading.text,
-		mission = mission
-	}
+	local data = {}
+
+	data.background = mission.loading.image
+	data.loading_text = mission.loading.text
+	data.mission = mission
 
 	managers.menu:show_loading_screen(data, callback(self, self, "_do_play_offline"))
 end
@@ -665,11 +687,13 @@ end
 
 function MenuCallbackHandler:choice_choose_raid_permission(item)
 	local value = item:value()
+
 	Global.game_settings.permission = value
 end
 
 function MenuCallbackHandler:choice_choose_raid_mission_zone(item)
 	local value = item:value()
+
 	Global.game_settings.raid_zone = value
 
 	if managers.menu_component._raid_menu_mission_selection_gui then
@@ -860,7 +884,7 @@ function MenuCallbackHandler:change_resolution_raid(resolution, no_dialog)
 	blackborder_workspace:set_screen(resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, resolution.x, resolution.y)
 
 	if not no_dialog then
-		managers.menu:show_accept_gfx_settings_dialog(function ()
+		managers.menu:show_accept_gfx_settings_dialog(function()
 			managers.viewport:set_resolution(old_resolution)
 			managers.viewport:set_aspect_ratio(old_resolution.x / old_resolution.y)
 			managers.worldcamera:scale_worldcamera_fov(old_resolution.x / old_resolution.y)
@@ -910,7 +934,7 @@ function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, current_fullscre
 		self:change_resolution_raid(Vector3(monitor_res.x, monitor_res.y, RenderSettings.resolution.z), true)
 	end
 
-	managers.menu:show_accept_gfx_settings_dialog(function ()
+	managers.menu:show_accept_gfx_settings_dialog(function()
 		managers.viewport:set_fullscreen(current_fullscreen)
 		managers.viewport:set_borderless(current_borderless)
 
@@ -1088,7 +1112,7 @@ end
 function MenuCallbackHandler:set_default_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_setting_map()
 			self:_reset_mainmusic()
 			node_component:_load_controls_values()
@@ -1105,7 +1129,7 @@ end
 function MenuCallbackHandler:set_default_control_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_controls_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_controls_setting_map()
 			node_component:_load_controls_values()
 		end
@@ -1117,7 +1141,7 @@ end
 function MenuCallbackHandler:set_default_keybinds_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_use_default_keys_message"),
-		callback = function ()
+		callback = function()
 			managers.controller:load_settings("settings/controller_settings")
 			managers.controller:clear_user_mod("normal", MenuCustomizeControllerCreator.CONTROLS_INFO)
 			node_component:refresh_keybinds()
@@ -1130,7 +1154,7 @@ end
 function MenuCallbackHandler:set_default_video_options_raid(node_component, callback_function)
 	local params = {
 		text = managers.localization:text("dialog_default_video_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_video_setting_map()
 			node_component:_load_video_values()
 			node_component:_load_advanced_video_values()
@@ -1144,7 +1168,7 @@ end
 function MenuCallbackHandler:set_default_sound_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_sound_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_sound_setting_map()
 			self:_reset_mainmusic()
 			node_component:_load_sound_values()
@@ -1157,7 +1181,7 @@ end
 function MenuCallbackHandler:set_default_network_options_raid(node_component)
 	local params = {
 		text = managers.localization:text("dialog_default_network_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_network_setting_map()
 			node_component:_load_network_values()
 		end

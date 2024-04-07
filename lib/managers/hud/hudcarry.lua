@@ -22,6 +22,7 @@ function HUDCarry:_create_panel(hud)
 		valign = "bottom",
 		h = HUDCarry.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -34,6 +35,7 @@ function HUDCarry:_create_icon()
 		texture = tweak_data.gui.icons[placeholder_icon].texture,
 		texture_rect = tweak_data.gui.icons[placeholder_icon].texture_rect
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 end
 
@@ -51,6 +53,7 @@ function HUDCarry:_create_prompt()
 		font = HUDCarry.PROMPT_FONT,
 		font_size = HUDCarry.PROMPT_FONT_SIZE
 	}
+
 	self._prompt = self._object:text(prompt_params)
 end
 
@@ -115,9 +118,11 @@ function HUDCarry:_animate_show_carry()
 	local duration = 0.5
 	local t = self._object:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -135,9 +140,11 @@ function HUDCarry:_animate_hide_carry()
 	local duration = 0.25
 	local t = (1 - self._object:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 1, -1, duration)
 
 		self._object:set_alpha(current_alpha)

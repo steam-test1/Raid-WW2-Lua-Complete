@@ -5,9 +5,7 @@ core:import("CoreFreeFlightAction")
 core:import("CoreFreeFlightModifier")
 core:from_module_import("CoreManagerBase", "PRIO_FREEFLIGHT")
 
-local FF_ON = 0
-local FF_OFF = 1
-local FF_ON_NOCON = 2
+local FF_ON, FF_OFF, FF_ON_NOCON = 0, 1, 2
 local MOVEMENT_SPEED_BASE = 1000
 local TURN_SPEED_BASE = 1
 local FAR_RANGE_MAX = 250000
@@ -18,6 +16,7 @@ local TEXT_ON_SCREEN_TIME = 2
 local FREEFLIGHT_HEADER_TEXT = "FREEFLIGHT, PRESS 'F' OR 'C'"
 local DESELECTED = Color(0.5, 0.5, 0.5)
 local SELECTED = Color(1, 1, 1)
+
 FreeFlight = FreeFlight or class()
 
 function FreeFlight:init(gsm, viewport_manager, controller_manager)
@@ -42,6 +41,7 @@ function FreeFlight:init(gsm, viewport_manager, controller_manager)
 end
 
 function FreeFlight:_setup_F9_key()
+	return
 end
 
 function FreeFlight:_setup_modifiers()
@@ -132,6 +132,7 @@ function FreeFlight:_setup_modifiers()
 		70,
 		75
 	}, 13, callback(self, self, "_set_fov"))
+
 	self._modifiers = {
 		ms,
 		ts,
@@ -154,6 +155,7 @@ function FreeFlight:_setup_actions()
 	local ef = FFA:new("EXIT FREEFLIGHT", callback(self, self, "_exit_freeflight"))
 	local ps = FFAT:new("PAUSE", "UNPAUSE", callback(self, self, "_pause"), callback(self, self, "_unpause"))
 	local ff = FFAT:new("FRUSTUM FREEZE", "FRUSTUM UNFREEZE", callback(self, self, "_frustum_freeze"), callback(self, self, "_frustum_unfreeze"))
+
 	self._actions = {
 		ps,
 		dp,
@@ -194,30 +196,32 @@ end
 function FreeFlight:_setup_gui()
 	local gui_scene = Overlay:gui()
 	local res = RenderSettings.resolution
+
 	self._workspace = gui_scene:create_screen_workspace()
 
 	self._workspace:set_timer(TimerManager:main())
 
 	self._panel = self._workspace:panel()
+
 	local SCREEN_RIGHT_OFFSET = 420
 	local TEXT_HEIGHT_OFFSET = 27
-	local config = {
-		font = "core/fonts/system_font",
-		font_scale = 0.9,
-		color = DESELECTED,
-		x = 45,
-		y = 25,
-		layer = 1000000
-	}
+	local config = {}
+
+	config.font = "core/fonts/system_font"
+	config.font_scale = 0.9
+	config.color = DESELECTED
+	config.x = 45
+	config.y = 25
+	config.layer = 1000000
 
 	local function anim_fade_out_func(o)
-		CoreEvent.over(TEXT_FADE_TIME, function (t)
+		CoreEvent.over(TEXT_FADE_TIME, function(t)
 			o:set_color(o:color():with_alpha(1 - t))
 		end)
 	end
 
 	local function anim_fade_in_func(o)
-		CoreEvent.over(TEXT_FADE_TIME, function (t)
+		CoreEvent.over(TEXT_FADE_TIME, function(t)
 			o:set_color(o:color():with_alpha(t))
 		end)
 	end
@@ -226,6 +230,7 @@ function FreeFlight:_setup_gui()
 		fade_out = anim_fade_out_func,
 		fade_in = anim_fade_in_func
 	}
+
 	self._action_gui = {}
 	self._action_vis_time = nil
 
@@ -524,10 +529,11 @@ function FreeFlight:update(t, dt)
 end
 
 function FreeFlight:_update_controller(t, dt)
+	return
 end
 
 function FreeFlight:_update_gui(t, dt)
-	if self._action_vis_time and self._action_vis_time < t then
+	if self._action_vis_time and t > self._action_vis_time then
 		for _, text in ipairs(self._action_gui) do
 			text:stop()
 			text:animate(text:script().fade_out)
@@ -536,7 +542,7 @@ function FreeFlight:_update_gui(t, dt)
 		self._action_vis_time = nil
 	end
 
-	if self._modifier_vis_time and self._modifier_vis_time < t then
+	if self._modifier_vis_time and t > self._modifier_vis_time then
 		for _, text in ipairs(self._modifier_gui) do
 			text:stop()
 			text:animate(text:script().fade_out)
@@ -552,7 +558,9 @@ function FreeFlight:_update_camera(t, dt)
 	local btn_move_up = self._con:get_input_float("freeflight_move_up")
 	local btn_move_down = self._con:get_input_float("freeflight_move_down")
 	local move_dir = self._camera_rot:x() * axis_move.x + self._camera_rot:y() * axis_move.y
+
 	move_dir = move_dir + btn_move_up * Vector3(0, 0, 1) + btn_move_down * Vector3(0, 0, -1)
+
 	local move_delta = move_dir * self._move_speed:value() * MOVEMENT_SPEED_BASE * dt
 	local pos_new = self._camera_pos + move_delta
 	local yaw_new = self._camera_rot:yaw() + axis_look.x * -1 * self._turn_speed:value() * TURN_SPEED_BASE
@@ -590,6 +598,7 @@ function FreeFlight:attach_to_unit(unit)
 
 	if alive(unit) and unit ~= self._attached_to_unit then
 		self._attached_to_unit_pos = unit:position()
+
 		local pos = self._camera_pos - self._attached_to_unit_pos
 
 		self:_set_camera(pos, self._camera_rot)
@@ -602,9 +611,7 @@ function FreeFlight:_update_frustum_debug_box(t, dt)
 	if self._frozen_camera then
 		local near = self._frozen_camera:near_range()
 		local far = self._frozen_camera:far_range()
-		local R = 1
-		local G = 0
-		local B = 1
+		local R, G, B = 1, 0, 1
 		local n1 = self._frozen_camera:screen_to_world(Vector3(-1, -1, near))
 		local n2 = self._frozen_camera:screen_to_world(Vector3(1, -1, near))
 		local n3 = self._frozen_camera:screen_to_world(Vector3(1, 1, near))

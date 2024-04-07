@@ -99,7 +99,7 @@ function DialogManager:_create_dialogue_instance(id, instigator, test)
 	local dialogue = deep_clone(self._dialog_list[id])
 	local nr_criminals = managers.criminals:nr_taken_criminals()
 	local char_names = managers.criminals:taken_criminal_names()
-	local default_char = nil
+	local default_char
 
 	if test then
 		nr_criminals = 4
@@ -117,7 +117,7 @@ function DialogManager:_create_dialogue_instance(id, instigator, test)
 		end
 	end
 
-	local charA = nil
+	local charA
 
 	if instigator then
 		charA = instigator
@@ -157,7 +157,7 @@ function DialogManager:_create_dialogue_instance(id, instigator, test)
 end
 
 function DialogManager:_parse_dialog_character(char, charA, charB, charC, dialogue, line, instigator, default_char)
-	local result = nil
+	local result
 
 	for _, v in ipairs(DialogManager.CHARS) do
 		if v.char == char then
@@ -196,6 +196,7 @@ function DialogManager:queue_random(id, params)
 	self:queue_dialog(queue_item, params)
 
 	local r = self._random_list[id]
+
 	r.last = queue_item
 end
 
@@ -276,7 +277,7 @@ function DialogManager:queue_dialog(id, params, test)
 end
 
 function DialogManager:_calc_instigator_string(params)
-	local instigator = nil
+	local instigator
 
 	if params.instigator then
 		if type(params.instigator) == "string" then
@@ -333,9 +334,10 @@ function DialogManager:do_queue_dialog(id, params, test)
 		})
 	else
 		local dialog = self:_create_dialogue_instance(id, instigator, test)
+
 		dialog.params = params
 
-		if self._current_dialog.priority == dialog.priority and dialog.priority < 4 or dialog.priority < self._current_dialog.priority then
+		if self._current_dialog.priority == dialog.priority and dialog.priority < 4 or self._current_dialog.priority > dialog.priority then
 			self:_stop_dialog()
 
 			self._current_dialog = dialog
@@ -473,8 +475,10 @@ function DialogManager:_play_dialog(data)
 	end
 
 	local char = dialog.character or dialog.lines and dialog.lines[dialog.line].character
+
 	char = char or managers.criminals:character_name_by_unit(managers.player:player_unit()) or ""
-	local nationality_icon = nil
+
+	local nationality_icon
 
 	if tweak_data.gui.icons["nationality_small_" .. char] then
 		nationality_icon = tweak_data.gui.icons["nationality_small_" .. char]
@@ -495,7 +499,7 @@ function DialogManager:_play_dialog(data)
 		return
 	end
 
-	local char_voice = nil
+	local char_voice
 
 	if third_person_data then
 		unit:drama():set_voice(char)
@@ -510,6 +514,7 @@ function DialogManager:_play_dialog(data)
 	end
 
 	dialog.unit = unit
+
 	local color_id = managers.criminals:character_color_id_by_unit(unit)
 	local crim_color = tweak_data.chat_colors[color_id]
 
@@ -607,6 +612,7 @@ function DialogManager:_load_dialog_data(name)
 				if child_node._meta == "line" then
 					self._dialog_list[node.id].multiline = true
 					self._dialog_list[node.id].lines = self._dialog_list[node.id].lines or {}
+
 					local line = self:_parse_line_node(child_node)
 
 					table.insert(self._dialog_list[node.id].lines, line)
@@ -634,9 +640,9 @@ function DialogManager:_load_dialog_data(name)
 
 			for _, child_node in ipairs(node) do
 				if child_node._meta == "dialog" then
-					local d = {
-						id = child_node.id
-					}
+					local d = {}
+
+					d.id = child_node.id
 
 					table.insert(self._random_list[node.id].dialogs, d)
 				end
@@ -663,6 +669,7 @@ end
 
 function DialogManager:_parse_case_node(parent_id, node)
 	self._dialog_list[parent_id].cases = self._dialog_list[parent_id].cases or {}
+
 	local case_node = {
 		lines = {},
 		id = node.id,
@@ -672,7 +679,9 @@ function DialogManager:_parse_case_node(parent_id, node)
 	for _, child_node in ipairs(node) do
 		if child_node._meta == "line" then
 			case_node.lines = case_node.lines or {}
+
 			local line = self:_parse_line_node(child_node)
+
 			case_node.lines[#case_node.lines + 1] = line
 		end
 	end
@@ -685,7 +694,7 @@ function DialogManager:is_dialogue_playing_for_local_player()
 
 	if self._current_dialog then
 		local local_crim = managers.criminals:local_character_name()
-		local current_sound = nil
+		local current_sound
 
 		if self._current_dialog.character then
 			current_sound = self._current_dialog.character
@@ -704,7 +713,7 @@ function DialogManager:is_dialogue_playing_for_local_player()
 end
 
 function DialogManager:register_character(char, unit)
-	local found = nil
+	local found
 
 	for _, v in ipairs(DialogManager.CHARS) do
 		if v.char == char then
@@ -719,6 +728,7 @@ function DialogManager:register_character(char, unit)
 end
 
 function DialogManager:update(t, dt)
+	return
 end
 
 function DialogManager:debug_print_missiong_strings()

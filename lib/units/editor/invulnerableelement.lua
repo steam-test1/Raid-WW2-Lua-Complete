@@ -40,6 +40,7 @@ function InvulnerableUnitElement:get_links_to_unit(...)
 end
 
 function InvulnerableUnitElement:update_editing()
+	return
 end
 
 function InvulnerableUnitElement:add_element()
@@ -86,6 +87,7 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local invulnerable = EWS:CheckBox(panel, "Invulnerable", "")
 
 	invulnerable:set_value(self._hed.invulnerable)
@@ -104,11 +106,11 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 	})
 	panel_sizer:add(immortal, 0, 0, "EXPAND")
 
-	local help = {
-		text = "Makes a unit invulnerable or immortal.",
-		panel = panel,
-		sizer = panel_sizer
-	}
+	local help = {}
+
+	help.text = "Makes a unit invulnerable or immortal."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end

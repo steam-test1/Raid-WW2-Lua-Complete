@@ -13,6 +13,7 @@ local math_lerp = math.lerp
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
 local tmp_vec3 = Vector3()
+
 DP28RaycastWeaponBase = DP28RaycastWeaponBase or class(NewRaycastWeaponBase)
 
 function DP28RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
@@ -38,6 +39,7 @@ function DP28RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, 
 	end
 
 	local ray_res = DP28RaycastWeaponBase.super.super.fire(self, from_pos, mvec_direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
+
 	self._spread_firing = (self._spread_firing or 0) + self:_get_fire_spread_add(shoot_player)
 	self._spread_last_shot_t = (weapon_tweak.fire_mode_data and weapon_tweak.fire_mode_data.fire_rate or 0) / self:fire_rate_multiplier() * (weapon_tweak.spread.recovery_wait_multiplier or 1)
 	self._recoil_firing = self:_get_fire_recoil()
@@ -50,6 +52,7 @@ function DP28RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, 
 			local recoil_multiplier = self:recoil_multiplier()
 			local kick_x = math.lerp(gun_kick_values[3], gun_kick_values[4], math.random()) * recoil_multiplier
 			local kick_y = math.lerp(gun_kick_values[1], gun_kick_values[2], math.random()) * recoil_multiplier
+
 			self._gun_kick.x.velocity = self._gun_kick.x.velocity + kick_x
 			self._gun_kick.y.velocity = self._gun_kick.y.velocity + kick_y * -1
 		end
@@ -84,10 +87,8 @@ function DP28RaycastWeaponBase:set_magazine_pos_based_on_ammo(count_max)
 	if self.length then
 		if not count_max then
 			percent_of_anim = self:get_magazine_true_pos()
-		elseif self:get_ammo_max_per_clip() < self:get_ammo_total() then
-			percent_of_anim = 0
 		else
-			percent_of_anim = 1 - (0 + self:get_ammo_total()) / (0 + self:get_ammo_max_per_clip())
+			percent_of_anim = self:get_ammo_total() > self:get_ammo_max_per_clip() and 0 or 1 - (0 + self:get_ammo_total()) / (0 + self:get_ammo_max_per_clip())
 		end
 
 		self._magazine_time_stamp = percent_of_anim * self.length
@@ -112,6 +113,7 @@ function DP28RaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	if data.animations and data.animations[anim] then
 		local anim_name = data.animations[anim]
 		local length = self._unit:anim_length(Idstring(anim_name))
+
 		speed_multiplier = speed_multiplier or 1
 
 		self._unit:anim_stop(Idstring(anim_name))
@@ -129,6 +131,7 @@ function DP28RaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 
 		if anim_name then
 			local length = strap_data.unit:anim_length(Idstring(anim_name))
+
 			speed_multiplier = speed_multiplier or 1
 
 			strap_data.unit:anim_stop(Idstring(anim_name))
@@ -144,6 +147,7 @@ end
 function DP28RaycastWeaponBase:play_magazine_anim(speed_multiplier)
 	local data = self:get_magazine_object()
 	local anim_name = data.animations.fire
+
 	self.length = data.unit:anim_length(Idstring(anim_name))
 	speed_multiplier = self.length / (self:get_ammo_max_per_clip() * tweak_data.weapon[self._name_id].auto.fire_rate)
 
@@ -173,6 +177,7 @@ function DP28RaycastWeaponBase:get_anim_length()
 	else
 		local data = self:get_magazine_object()
 		local anim_name = data.animations.fire
+
 		self.length = data.unit:anim_length(Idstring(anim_name))
 
 		return self.length

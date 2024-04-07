@@ -266,6 +266,7 @@ function ConnectionNetworkHandler:sync_game_settings(job_index, level_id_index, 
 	local job_id = tweak_data.operations:get_raid_name_from_index(job_index)
 	local level_id = tweak_data.levels:get_level_name_from_index(level_id_index)
 	local difficulty = tweak_data:index_to_difficulty(difficulty_index)
+
 	Global.game_settings.level_id = level_id
 	Global.game_settings.mission = managers.raid_job:current_job()
 	Global.game_settings.world_setting = nil
@@ -289,6 +290,7 @@ function ConnectionNetworkHandler:sync_stage_settings(level_id_index, stage_num,
 	end
 
 	local level_id = tweak_data.levels:get_level_name_from_index(level_id_index)
+
 	Global.game_settings.level_id = level_id
 	Global.game_settings.mission = managers.raid_job:current_job()
 	Global.game_settings.world_setting = nil
@@ -515,11 +517,7 @@ function ConnectionNetworkHandler:set_member_ready(peer_id, ready, mode, outfit_
 	end
 
 	if mode == 1 then
-		if ready ~= 0 then
-			ready = true
-		else
-			ready = false
-		end
+		ready = ready ~= 0 and true or false
 
 		local ready_state = peer:waiting_for_player_ready()
 
@@ -750,7 +748,7 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 			})
 		end
 
-		local weapon_pass, weapon_type_pass, count_pass, all_pass = nil
+		local weapon_pass, weapon_type_pass, count_pass, all_pass
 	end
 end
 
@@ -830,6 +828,7 @@ function ConnectionNetworkHandler:spawn_loot(tweak_table, position, yaw, pitch, 
 end
 
 function ConnectionNetworkHandler:connection_keep_alive(sender)
+	return
 end
 
 function ConnectionNetworkHandler:request_change_criminal_character(peer_id, new_character_name, peer_unit)

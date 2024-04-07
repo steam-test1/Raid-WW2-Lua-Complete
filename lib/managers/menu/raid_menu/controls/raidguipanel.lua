@@ -175,7 +175,7 @@ end
 
 function RaidGUIPanel:mouse_moved(o, x, y)
 	local used = false
-	local pointer = nil
+	local pointer
 
 	for _, control in ipairs(self._controls) do
 		local u, p = control:mouse_moved(o, x, y)
@@ -522,9 +522,11 @@ function RaidGUIPanel:set_background_color(color)
 end
 
 function RaidGUIPanel:highlight_on()
+	return
 end
 
 function RaidGUIPanel:highlight_off()
+	return
 end
 
 function RaidGUIPanel:show()
@@ -605,6 +607,7 @@ end
 
 function RaidGUIPanel:label(params)
 	params.font = tweak_data.gui:get_font_path(params.font, params.font_size)
+
 	local control = RaidGUIControlLabel:new(self, params)
 
 	self:_add_control(control)
@@ -1025,7 +1028,7 @@ function RaidGUIPanel:_add_control(control)
 	local control_index = #self._controls + 1
 
 	for i = 1, #self._controls do
-		if self._controls[i]:layer() < control_layer then
+		if control_layer > self._controls[i]:layer() then
 			control_index = i
 
 			break
@@ -1193,4 +1196,5 @@ function RaidGUIPanel:engine_panel_alive()
 end
 
 function RaidGUIPanel:scrollable_area_post_setup(params)
+	return
 end

@@ -1,4 +1,5 @@
 BoxGuiObject = BoxGuiObject or class()
+
 local mvector_tl = Vector3()
 local mvector_tr = Vector3()
 local mvector_bl = Vector3()
@@ -29,6 +30,7 @@ function BoxGuiObject:create_sides(panel, config)
 		name = config.name
 	})
 	self._color = config.color or self._color or Color.white
+
 	local left_side = config.sides and config.sides[1] or config.left or 0
 	local right_side = config.sides and config.sides[2] or config.right or 0
 	local top_side = config.sides and config.sides[3] or config.top or 0
@@ -47,7 +49,7 @@ function BoxGuiObject:_create_side(panel, side, type)
 	local ids_top = Idstring("top")
 	local ids_bottom = Idstring("bottom")
 	local left_or_right = false
-	local w, h = nil
+	local w, h
 
 	if ids_side == ids_left or ids_side == ids_right then
 		left_or_right = true
@@ -70,7 +72,9 @@ function BoxGuiObject:_create_side(panel, side, type)
 		return
 	elseif type == 1 then
 		-- Nothing
-	elseif type ~= 2 then
+	elseif type == 2 then
+		-- Nothing
+	else
 		Application:error("[BoxGuiObject] Type", type, "is not supported")
 		Application:stack_dump()
 

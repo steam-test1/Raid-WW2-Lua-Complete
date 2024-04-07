@@ -1,15 +1,14 @@
 TextBoxGui = TextBoxGui or class()
-TextBoxGui.PRESETS = {
-	system_menu = {
-		w = 800,
-		h = 270
-	},
-	weapon_stats = {
-		w = 700,
-		x = 60,
-		h = 270,
-		bottom = 620
-	}
+TextBoxGui.PRESETS = {}
+TextBoxGui.PRESETS.system_menu = {
+	w = 800,
+	h = 270
+}
+TextBoxGui.PRESETS.weapon_stats = {
+	w = 700,
+	x = 60,
+	h = 270,
+	bottom = 620
 }
 
 function TextBoxGui:init(...)
@@ -100,6 +99,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._text_box_focus_button = nil
 	self._osk_title = title or ""
 	self._osk_text = text or ""
+
 	local scaled_size = managers.gui_data:scaled_size()
 	local type = config and config.type
 	local preset = type and self.PRESETS[type]
@@ -109,7 +109,9 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local focus_button = content_data and content_data.focus_button
 	local no_close_legend = config and config.no_close_legend
 	local no_scroll_legend = config and config.no_scroll_legend
+
 	self._no_scroll_legend = true
+
 	local only_buttons = config and config.only_buttons
 	local use_minimize_legend = config and config.use_minimize_legend or false
 	local w = preset and preset.w or config and config.w or scaled_size.width / 2.25
@@ -127,8 +129,11 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local text_formating_color_table = preset and preset.text_formating_color_table or config and config.text_formating_color_table or nil
 	local is_title_outside = preset and preset.is_title_outside or config and config.is_title_outside or false
 	local text_blend_mode = preset and preset.text_blend_mode or config and config.text_blend_mode or "normal"
+
 	self._allow_moving = config and config.allow_moving or false
+
 	local preset_or_config_y = y ~= 0
+
 	title = title and utf8.to_upper(title)
 
 	if text then
@@ -137,6 +142,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 
 	self.controls = {}
 	self._default_button = content_data.focus_button or 1
+
 	local main = ws:panel():panel({
 		name = "text_box_gui_panel_main",
 		valign = "center",
@@ -147,9 +153,11 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 		h = h,
 		layer = self._init_layer
 	})
+
 	self._panel = main
 	self._panel_h = self._panel:h()
 	self._panel_w = self._panel:w()
+
 	local title_params = {
 		name = "title",
 		vertical = "top",
@@ -277,7 +285,9 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 			end
 		end
 
-		if #start_ci == #end_ci then
+		if #start_ci ~= #end_ci then
+			-- Nothing
+		else
 			for i = 1, #start_ci do
 				start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
 				end_ci[i] = end_ci[i] - (i * 4 - 1)
@@ -394,7 +404,7 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 					layer = -1,
 					color = Color.black:with_alpha(0.5)
 				})
-				local w = (bg:w() - 4) * stats.current / stats.total
+				local w = (bg:w() - 4) * (stats.current / stats.total)
 				local progress_bar = panel:rect({
 					y = 1,
 					x = 1,
@@ -420,6 +430,7 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 					font = tweak_data.gui.font_paths.din_compressed[32],
 					font_size = tweak_data.gui.font_sizes.size_32
 				})
+
 				total_h = total_h + panel:h()
 			elseif stats.type == "condition" then
 				local panel = stats_panel:panel({
@@ -465,6 +476,7 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 					h = stats.h,
 					y = total_h
 				})
+
 				total_h = total_h + panel:h()
 			elseif stats.type == "mods" then
 				local panel = stats_panel:panel({
@@ -565,6 +577,7 @@ end
 
 function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local has_buttons = button_list and #button_list > 0
+
 	self._text_box_buttons_panel = info_area:panel({
 		name = "buttons_panel",
 		h = 48,
@@ -613,6 +626,7 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 				}
 				local button_class = button.class or RaidGUIControlButtonShortPrimary
 				local new_button = button_class:new(self._text_box_buttons_panel, button_params)
+
 				max_w = max_w + new_button:w()
 
 				self._text_box_buttons_panel:set_h(new_button:h())
@@ -644,7 +658,9 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 	local text = scroll_panel:child("text_box_gui_text")
 	local padding_up = 20
 	local y = math.max(0, title:y() + title:h() + padding_up)
+
 	y = math.max(y, scroll_panel:y() + scroll_panel:h() + padding_up)
+
 	local textbox_panel_params = {
 		name = "textbox_panel",
 		h = 0,
@@ -675,6 +691,7 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 		osk_title = self._osk_title,
 		osk_text = self._osk_text
 	}
+
 	self._input_field = RaidGUIControlInputField:new(textbox_panel, input_field_params)
 
 	table.insert(self.controls, self._input_field)
@@ -692,6 +709,7 @@ function TextBoxGui:_input_field_text_changed()
 end
 
 function TextBoxGui:_create_lower_static_panel()
+	return
 end
 
 function TextBoxGui:get_callback_data()
@@ -847,7 +865,7 @@ function TextBoxGui:mouse_moved(x, y)
 		local _x = x + self._grabbed_offset_x
 		local _y = y + self._grabbed_offset_y
 
-		if self._ws:panel():w() < _x + self:w() then
+		if _x + self:w() > self._ws:panel():w() then
 			self._grabbed_offset_x = self:x() - x
 			_x = self._ws:panel():w() - self:w()
 		elseif _x < self._ws:panel():x() then
@@ -855,7 +873,7 @@ function TextBoxGui:mouse_moved(x, y)
 			_x = self._ws:panel():x()
 		end
 
-		if self._ws:panel():h() < _y + self:h() then
+		if _y + self:h() > self._ws:panel():h() then
 			self._grabbed_offset_y = self:y() - y
 			_y = self._ws:panel():h() - self:h()
 		elseif _y < self._ws:panel():y() then
@@ -886,6 +904,7 @@ function TextBoxGui:moved_scroll_bar()
 end
 
 function TextBoxGui:release_scroll_bar()
+	return
 end
 
 function TextBoxGui:set_fade(fade)
@@ -1074,9 +1093,11 @@ function TextBoxGui:size()
 end
 
 function TextBoxGui:open_page()
+	return
 end
 
 function TextBoxGui:close_page()
+	return
 end
 
 function TextBoxGui:x()

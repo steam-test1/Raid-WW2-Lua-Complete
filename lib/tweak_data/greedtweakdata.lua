@@ -25,64 +25,46 @@ function GreedTweakData:init()
 end
 
 function GreedTweakData:_init_greed_items()
-	self.greed_items = {
-		eagle_statue = {}
-	}
+	self.greed_items = {}
+	self.greed_items.eagle_statue = {}
 	self.greed_items.eagle_statue.value = GreedTweakData.HIGH_END_ITEM_VALUE
-	self.greed_items.jewelry_box = {
-		value = GreedTweakData.HIGH_END_ITEM_VALUE
-	}
-	self.greed_items.coin_collection = {
-		value = GreedTweakData.HIGH_END_ITEM_VALUE
-	}
-	self.greed_items.chocolate_box = {
-		value = GreedTweakData.HIGH_END_ITEM_VALUE
-	}
-	self.greed_items.cigar_box = {
-		value = GreedTweakData.HIGH_END_ITEM_VALUE
-	}
-	self.greed_items.wine_box = {
-		value = GreedTweakData.HIGH_END_ITEM_VALUE
-	}
-	self.greed_items.egg_decoration = {
-		value = GreedTweakData.MID_END_ITEM_VALUE
-	}
-	self.greed_items.golden_inkwell = {
-		value = GreedTweakData.MID_END_ITEM_VALUE
-	}
-	self.greed_items.golden_medal = {
-		value = GreedTweakData.MID_END_ITEM_VALUE
-	}
-	self.greed_items.book = {
-		value = GreedTweakData.MID_END_ITEM_VALUE
-	}
-	self.greed_items.vase = {
-		value = GreedTweakData.MID_END_ITEM_VALUE
-	}
-	self.greed_items.globe = {
-		value = GreedTweakData.MID_END_ITEM_VALUE
-	}
-	self.greed_items.lighter = {
-		value = GreedTweakData.LOW_END_ITEM_VALUE
-	}
-	self.greed_items.letter_opener = {
-		value = GreedTweakData.LOW_END_ITEM_VALUE
-	}
-	self.greed_items.kaleidoscope = {
-		value = GreedTweakData.LOW_END_ITEM_VALUE
-	}
-	self.greed_items.golden_compass = {
-		value = GreedTweakData.LOW_END_ITEM_VALUE
-	}
-	self.greed_items.watch = {
-		value = GreedTweakData.LOW_END_ITEM_VALUE
-	}
+	self.greed_items.jewelry_box = {}
+	self.greed_items.jewelry_box.value = GreedTweakData.HIGH_END_ITEM_VALUE
+	self.greed_items.coin_collection = {}
+	self.greed_items.coin_collection.value = GreedTweakData.HIGH_END_ITEM_VALUE
+	self.greed_items.chocolate_box = {}
+	self.greed_items.chocolate_box.value = GreedTweakData.HIGH_END_ITEM_VALUE
+	self.greed_items.cigar_box = {}
+	self.greed_items.cigar_box.value = GreedTweakData.HIGH_END_ITEM_VALUE
+	self.greed_items.wine_box = {}
+	self.greed_items.wine_box.value = GreedTweakData.HIGH_END_ITEM_VALUE
+	self.greed_items.egg_decoration = {}
+	self.greed_items.egg_decoration.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.golden_inkwell = {}
+	self.greed_items.golden_inkwell.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.golden_medal = {}
+	self.greed_items.golden_medal.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.book = {}
+	self.greed_items.book.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.vase = {}
+	self.greed_items.vase.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.globe = {}
+	self.greed_items.globe.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.lighter = {}
+	self.greed_items.lighter.value = GreedTweakData.LOW_END_ITEM_VALUE
+	self.greed_items.letter_opener = {}
+	self.greed_items.letter_opener.value = GreedTweakData.LOW_END_ITEM_VALUE
+	self.greed_items.kaleidoscope = {}
+	self.greed_items.kaleidoscope.value = GreedTweakData.LOW_END_ITEM_VALUE
+	self.greed_items.golden_compass = {}
+	self.greed_items.golden_compass.value = GreedTweakData.LOW_END_ITEM_VALUE
+	self.greed_items.watch = {}
+	self.greed_items.watch.value = GreedTweakData.LOW_END_ITEM_VALUE
 end
 
 function GreedTweakData:_init_cache_items()
-	self.cache_items = {
-		regular_cache_box = {}
-	}
+	self.cache_items = {}
+	self.cache_items.regular_cache_box = {}
 	self.cache_items.regular_cache_box.value = 3500
 	self.cache_items.regular_cache_box.single_interaction_value = 450
 	self.cache_items.regular_cache_box.interaction_timer = 0.6

@@ -31,5 +31,6 @@ if Application:editor() then
 	end
 else
 	function CoreScriptUnitData:init()
+		return
 	end
 end

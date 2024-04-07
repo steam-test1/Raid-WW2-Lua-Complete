@@ -192,6 +192,7 @@ end
 
 function CharacterCustomization:_attach_unit_parts(equiped_head_object, equiped_upper_object, equiped_lower_object, current_version)
 	local lower_path = equiped_upper_object.length == CharacterCustomizationTweakData.PART_LENGTH_SHORT and equiped_lower_object.path_long or equiped_lower_object.path_short
+
 	self._attached_units = {}
 
 	self:_attach_unit(CharacterCustomizationTweakData.PART_TYPE_HEAD, equiped_head_object.path, current_version, true)

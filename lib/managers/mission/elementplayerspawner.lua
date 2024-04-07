@@ -14,6 +14,7 @@ function ElementPlayerSpawner:get_spawn_position()
 	local peer_id = managers.network:session():local_peer():id()
 	local position = self._values.position
 	local x = self._values.rotation:x()
+
 	position = position + ElementTeleportPlayer.PEER_OFFSETS[peer_id] * x * 100
 
 	return position
@@ -30,12 +31,16 @@ function ElementPlayerSpawner:client_on_executed(...)
 		return
 	end
 
-	if managers.player:set_player_state(self._values.state or managers.player:default_player_state()) and false and managers.player:local_player() then
-		local position = self:get_spawn_position()
+	managers.player:set_player_state(self._values.state or managers.player:default_player_state())
 
-		Application:debug("[ElementPlayerSpawner:client_on_executed()] Using spawner as teleporter!", position, self._values.rotation)
-		managers.player:warp_to(position, self._values.rotation)
-		managers.player:set_player_state(self._values.state or managers.player:current_state())
+	if false then
+		if false and managers.player:local_player() then
+			local position = self:get_spawn_position()
+
+			Application:debug("[ElementPlayerSpawner:client_on_executed()] Using spawner as teleporter!", position, self._values.rotation)
+			managers.player:warp_to(position, self._values.rotation)
+			managers.player:set_player_state(self._values.state or managers.player:current_state())
+		end
 	end
 
 	self:_end_transition(true)
@@ -54,15 +59,18 @@ function ElementPlayerSpawner:on_executed(instigator)
 		position = self._values.position,
 		rotation = self._values.rotation
 	})
+	ElementPlayerSpawner.super.on_executed(self, self._unit or instigator)
 
-	if ElementPlayerSpawner.super.on_executed(self, self._unit or instigator) and false and managers.player:local_player() then
-		local position = self:get_spawn_position()
+	if false then
+		if false and managers.player:local_player() then
+			local position = self:get_spawn_position()
 
-		Application:debug("[ElementPlayerSpawner:on_executed()] Using spawner as teleporter!", instigator, position, self._values.rotation)
-		managers.player:warp_to(position, self._values.rotation)
-		managers.player:set_player_state(self._values.state or managers.player:current_state())
-		managers.groupai:state():on_player_spawn_state_set(self._values.state or managers.player:default_player_state())
-		ElementPlayerSpawner.super.on_executed(self, self._unit or instigator)
+			Application:debug("[ElementPlayerSpawner:on_executed()] Using spawner as teleporter!", instigator, position, self._values.rotation)
+			managers.player:warp_to(position, self._values.rotation)
+			managers.player:set_player_state(self._values.state or managers.player:current_state())
+			managers.groupai:state():on_player_spawn_state_set(self._values.state or managers.player:default_player_state())
+			ElementPlayerSpawner.super.on_executed(self, self._unit or instigator)
+		end
 	end
 
 	self:_end_transition()

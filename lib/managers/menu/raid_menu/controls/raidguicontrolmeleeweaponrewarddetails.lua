@@ -52,6 +52,7 @@ end
 
 function RaidGUIControlMeleeWeaponRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlMeleeWeaponRewardDetails.DEFAULT_WIDTH
 	control_params.h = control_params.h or RaidGUIControlMeleeWeaponRewardDetails.HEIGHT
@@ -67,6 +68,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_left_panel()
 		w = RaidGUIControlMeleeWeaponRewardDetails.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -84,7 +86,9 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 		color = RaidGUIControlMeleeWeaponRewardDetails.TITLE_DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true)
 	}
+
 	self._title_description = self._left_panel:text(title_description_params)
+
 	local _, _, w, _ = self._title_description:text_rect()
 
 	self._title_description:set_w(w)
@@ -103,6 +107,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 		text = self:translate("menu_loot_screen_melee_weapon", true),
 		w = self._left_panel:w() * 0.8
 	}
+
 	self._melee_weapon_name = self._left_panel:text(title_params)
 
 	self:_layout_title()
@@ -122,13 +127,16 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_reward_image()
 		layer = 10,
 		w = self._left_panel:w()
 	}
+
 	self._reward_image_panel = self._left_panel:panel(reward_image_panel_params)
+
 	local reward_image_params = {
 		name = "reward_image",
 		alpha = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlMeleeWeaponRewardDetails.REWARD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlMeleeWeaponRewardDetails.REWARD_ICON].texture_rect
 	}
+
 	self._reward_image = self._reward_image_panel:bitmap(reward_image_params)
 
 	self._reward_image:set_center_x(self._reward_image_panel:w() / 2)
@@ -153,6 +161,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_redeem_info()
 		color = RaidGUIControlMeleeWeaponRewardDetails.REDEEM_VALUE_COLOR,
 		text = self._xp_redeem_value .. " " .. self:translate("menu_label_xp", true)
 	}
+
 	self._xp_redeem_value_text = self._left_panel:text(redeem_value_params)
 
 	self:_layout_redeem_info()
@@ -165,6 +174,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_redeem_info()
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_redeem")
 	}
+
 	self._redeem_button = self._left_panel:short_tertiary_button(redeem_xp_button_params)
 
 	self._redeem_button:set_center_x(self._left_panel:w() / 2)
@@ -193,6 +203,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_right_panel()
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 
 	self._right_panel:set_right(self._object:w())
@@ -213,6 +224,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_description()
 		font_size = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_FONT_SIZE,
 		color = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_COLOR
 	}
+
 	self._description = self._right_panel:text(description_params)
 
 	self._description:set_right(self._right_panel:w())
@@ -235,6 +247,7 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_item_title()
 		font_size = RaidGUIControlMeleeWeaponRewardDetails.ITEM_TYPE_FONT_SIZE,
 		color = RaidGUIControlMeleeWeaponRewardDetails.ITEM_TYPE_COLOR
 	}
+
 	self._item_title = self._right_panel:text(item_type_params)
 end
 
@@ -259,7 +272,9 @@ function RaidGUIControlMeleeWeaponRewardDetails:show()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, image_duration)
 
 		self._reward_image:set_alpha(current_alpha)

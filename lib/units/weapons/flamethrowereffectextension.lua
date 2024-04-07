@@ -11,15 +11,12 @@ function FlamethrowerEffectExtension:init(unit, ...)
 end
 
 function FlamethrowerEffectExtension:setup_default()
-	self._flame_effect = {
-		effect = Idstring("effects/vanilla/fire/fire_flame_burst_001")
-	}
-	self._nozzle_effect = {
-		effect = Idstring("effects/vanilla/explosions/exp_flamer_nosel_001")
-	}
-	self._pilot_light = {
-		effect = Idstring("effects/vanilla/fire/fire_flame_burst_pilot_001")
-	}
+	self._flame_effect = {}
+	self._flame_effect.effect = Idstring("effects/vanilla/fire/fire_flame_burst_001")
+	self._nozzle_effect = {}
+	self._nozzle_effect.effect = Idstring("effects/vanilla/explosions/exp_flamer_nosel_001")
+	self._pilot_light = {}
+	self._pilot_light.effect = Idstring("effects/vanilla/fire/fire_flame_burst_pilot_001")
 	self._flame_max_range = tweak_data.weapon[self._name_id].flame_max_range
 	self._single_flame_effect_duration = tweak_data.weapon[self._name_id].single_flame_effect_duration
 	self._distance_to_gun_tip = 50
@@ -61,7 +58,7 @@ function FlamethrowerEffectExtension:update(unit, t, dt)
 
 				local effect_distance = mvector3.distance(effect_entry.position, unit:position())
 
-				if self._flame_max_range < effect_distance then
+				if effect_distance > self._flame_max_range then
 					World:effect_manager():kill(effect_entry.id)
 				end
 			end
@@ -70,7 +67,7 @@ function FlamethrowerEffectExtension:update(unit, t, dt)
 end
 
 function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
-	if self._next_fire_time and managers.player:player_timer():time() < self._next_fire_time then
+	if self._next_fire_time and self._next_fire_time > managers.player:player_timer():time() then
 		return
 	end
 
@@ -83,6 +80,7 @@ function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 		position = nozzle_pos,
 		normal = math.UP
 	})
+
 	self._next_fire_time = managers.player:player_timer():time() + FlamethrowerEffectExtension.MIN_EFFECT_INTERVAL
 
 	table.insert(self._flamethrower_effect_collection, {

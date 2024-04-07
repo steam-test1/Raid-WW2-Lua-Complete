@@ -37,6 +37,7 @@ function CharacterDamageTriggerUnitElement:get_links_to_unit(...)
 end
 
 function CharacterDamageTriggerUnitElement:update_editing()
+	return
 end
 
 function CharacterDamageTriggerUnitElement:add_element()
@@ -83,6 +84,7 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local dmg_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	dmg_sizer:add(EWS:StaticText(panel, "Damage Types Filter:", 0, ""), 1, 0, "ALIGN_CENTER_VERTICAL")

@@ -130,7 +130,7 @@ function MenuBackdropGUI:create_black_borders()
 end
 
 function MenuBackdropGUI:_set_black_borders(manager)
-	return
+	do return end
 
 	local manager = self._gui_data_manager or managers.gui_data
 
@@ -187,7 +187,7 @@ function MenuBackdropGUI:_update_layers()
 		"item_foreground_layer"
 	}
 	local num_layers = 0
-	local layer = nil
+	local layer
 
 	for i, layer_name in ipairs(layers_name_table) do
 		layer = self._panel:child(layer_name)
@@ -245,7 +245,7 @@ function MenuBackdropGUI:enable_light(enabled)
 
 		while true do
 			wait(math.rand(0.1), self._fixed_dt)
-			over(math.rand(0.3), function (p)
+			over(math.rand(0.3), function(p)
 				o:set_alpha(math.lerp(alpha, wanted_alpha, p))
 			end, self._fixed_dt)
 
@@ -397,15 +397,19 @@ function MenuBackdropGUI:_create_particle()
 	local function particle_animation(o, self)
 		local start_x = o:center_x()
 		local start_y = o:center_y()
+
 		otherside_start = not otherside_start
+
 		local end_x = from_longside and math.random(MenuBackdropGUI.BASE_RES.w) or otherside_start and -32 or MenuBackdropGUI.BASE_RES.w + 32
 		local end_y = not from_longside and math.random(MenuBackdropGUI.BASE_RES.h) or otherside_start and -32 or MenuBackdropGUI.BASE_RES.h + 32
 		local diff_x = end_x - start_x
 		local diff_y = end_y - start_y
 		local distance = diff_x * diff_x + diff_y * diff_y
+
 		distance = math.sqrt(distance)
-		local dir_x = diff_x * 1 / distance
-		local dir_y = diff_y * 1 / distance
+
+		local dir_x = diff_x * (1 / distance)
+		local dir_y = diff_y * (1 / distance)
 		local dt = 0
 		local t = 0
 		local seconds = distance / math.random(20, 26)
@@ -416,7 +420,7 @@ function MenuBackdropGUI:_create_particle()
 		local next_alpha = start_alpha
 
 		wait(math.rand(2), self._fixed_dt)
-		over(0.2, function (p)
+		over(0.2, function(p)
 			o:set_alpha(math.lerp(0, start_alpha, p))
 		end, self._fixed_dt)
 
@@ -591,11 +595,7 @@ function MenuBackdropGUI:animate_bg_text(text)
 
 		while true do
 			dt = coroutine.yield()
-
-			if self._fixed_dt then
-				dt = 0.03333333333333333
-			end
-
+			dt = self._fixed_dt and 0.03333333333333333 or dt
 			speed = speed + (target_speed - speed) * dt * 20
 
 			o:move(speed * dt * (left and -1 or 1), 0)
@@ -609,6 +609,7 @@ function MenuBackdropGUI:animate_bg_text(text)
 end
 
 function MenuBackdropGUI:update(t, dt)
+	return
 end
 
 function MenuBackdropGUI:mouse_moved(x, y)
@@ -622,7 +623,7 @@ function MenuBackdropGUI:mouse_moved(x, y)
 			local function fade_anim(o, self)
 				local alpha = o:alpha()
 
-				over(0.2, function (p)
+				over(0.2, function(p)
 					o:set_alpha(math.lerp(alpha, 0, p))
 				end)
 				self:_remove_particle(o)

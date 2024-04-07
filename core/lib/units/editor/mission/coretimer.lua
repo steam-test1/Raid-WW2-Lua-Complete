@@ -237,6 +237,7 @@ function CoreTimerOperatorUnitElement:get_links_to_unit(...)
 end
 
 function CoreTimerOperatorUnitElement:update_editing()
+	return
 end
 
 function CoreTimerOperatorUnitElement:add_element()
@@ -273,6 +274,7 @@ function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_timer/logic_timer"
 	}
@@ -338,6 +340,7 @@ function CoreTimerTriggerUnitElement:get_links_to_unit(...)
 end
 
 function CoreTimerTriggerUnitElement:update_editing()
+	return
 end
 
 function CoreTimerTriggerUnitElement:add_element()
@@ -374,6 +377,7 @@ function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_timer/logic_timer"
 	}

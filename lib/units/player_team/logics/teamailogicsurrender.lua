@@ -12,6 +12,7 @@ function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
+
 	my_data.enemy_detect_slotmask = managers.slot:get_mask("enemies")
 	my_data.vision = data.char_tweak.vision.idle
 
@@ -49,6 +50,7 @@ function TeamAILogicSurrender.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
 	local my_data = data.internal_data
+
 	my_data.exiting = true
 
 	TeamAILogicDisabled._unregister_revive_SO(my_data)
@@ -64,9 +66,11 @@ function TeamAILogicSurrender.exit(data, new_logic_name, enter_params)
 end
 
 function TeamAILogicSurrender.on_action_completed(data, action)
+	return
 end
 
 function TeamAILogicSurrender.can_activate()
+	return
 end
 
 function TeamAILogicSurrender.on_detected_enemy_destroyed(data, enemy_unit)
@@ -74,4 +78,5 @@ function TeamAILogicSurrender.on_detected_enemy_destroyed(data, enemy_unit)
 end
 
 function TeamAILogicSurrender.is_available_for_assignment(data)
+	return
 end

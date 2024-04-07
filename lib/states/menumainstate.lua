@@ -60,7 +60,7 @@ function MenuMainState:at_enter(old_state)
 			Global.boot_invite.used = false
 			Global.boot_invite.pending = true
 
-			managers.menu:open_sign_in_menu(function (success)
+			managers.menu:open_sign_in_menu(function(success)
 				if success then
 					Global.boot_invite = is_boot and PSN:get_boot_invitation() or Global.boot_invite
 					Global.boot_invite.used = false
@@ -72,6 +72,7 @@ function MenuMainState:at_enter(old_state)
 		end
 
 		Global.psn_boot_invite_checked = true
+
 		local is_boot_play_together = not Global.psn_boot_playtogether_checked and Application:is_booted_from_play_together()
 
 		if not is_boot_play_together then
@@ -86,7 +87,7 @@ function MenuMainState:at_enter(old_state)
 			Global.boot_play_together.pending = true
 			Global.boot_play_together.invite_send = false
 
-			managers.menu:open_sign_in_menu(function (success)
+			managers.menu:open_sign_in_menu(function(success)
 				if success then
 					Global.boot_play_together = is_boot_play_together and PSN:get_boot_playtogether() or Global.boot_play_together
 					Global.boot_play_together.used = false
@@ -102,7 +103,9 @@ function MenuMainState:at_enter(old_state)
 	elseif _G.IS_PC then
 		if SystemInfo:distribution() == Idstring("STEAM") and Global.boot_invite then
 			has_invite = true
+
 			local lobby = Global.boot_invite
+
 			Global.boot_invite = nil
 
 			managers.network.matchmake:join_server_with_check(lobby)
@@ -142,7 +145,7 @@ function MenuMainState:at_enter(old_state)
 
 	if Global.requestShowDisconnectedMessage then
 		managers.menu:show_mp_disconnected_internet_dialog({
-			ok_func = function ()
+			ok_func = function()
 				Global.requestShowDisconnectedMessage = nil
 			end
 		})
@@ -170,6 +173,7 @@ function MenuMainState:server_left()
 end
 
 function MenuMainState:on_disconnected()
+	return
 end
 
 function MenuMainState:is_joinable()

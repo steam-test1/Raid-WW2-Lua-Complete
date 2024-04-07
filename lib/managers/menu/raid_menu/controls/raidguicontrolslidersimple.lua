@@ -30,6 +30,7 @@ end
 
 function RaidGUIControlSliderSimple:_create_slider_panel()
 	local slider_params = clone(self._params)
+
 	slider_params.name = slider_params.name .. "_simple_slider"
 	slider_params.layer = self._panel:layer() + 1
 	slider_params.w = self._params.w or RaidGUIControlSliderSimple.DEFAULT_WIDTH
@@ -40,6 +41,7 @@ end
 
 function RaidGUIControlSliderSimple:_create_slider_controls()
 	local w = self._params.w or RaidGUIControlSliderSimple.DEFAULT_WIDTH
+
 	self._slider_line_panel = self._object:panel({
 		name = self._name .. "_slider_line_panel",
 		x = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect[3] / 2,
@@ -173,6 +175,7 @@ end
 
 function RaidGUIControlSliderSimple:render_value()
 	self._value = math.clamp(self._value, 0, 100)
+
 	local width = self._value / 100 * self._slider_line_panel:w()
 
 	self._slider_line_active:set_w(width)
@@ -236,11 +239,13 @@ end
 function RaidGUIControlSliderSimple:_animate_highlight_on()
 	local t = 0
 	local starting_color = self._slider_line_active:color()
-	local duration = 0.2 * (RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.r - starting_color.r) / (RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.r - RaidGUIControlSliderSimple.SLIDER_COLOR.r)
+	local duration = 0.2 * ((RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.r - starting_color.r) / (RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.r - RaidGUIControlSliderSimple.SLIDER_COLOR.r))
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quartic_out(t, starting_color.r, RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.r - starting_color.r, duration)
 		local current_g = Easing.quartic_out(t, starting_color.g, RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.g - starting_color.g, duration)
 		local current_b = Easing.quartic_out(t, starting_color.b, RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.b - starting_color.b, duration)
@@ -256,11 +261,13 @@ end
 function RaidGUIControlSliderSimple:_animate_highlight_off()
 	local t = 0
 	local starting_color = self._slider_line_active:color()
-	local duration = 0.2 * (RaidGUIControlSliderSimple.SLIDER_COLOR.r - starting_color.r) / (RaidGUIControlSliderSimple.SLIDER_COLOR.r - RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.r)
+	local duration = 0.2 * ((RaidGUIControlSliderSimple.SLIDER_COLOR.r - starting_color.r) / (RaidGUIControlSliderSimple.SLIDER_COLOR.r - RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR.r))
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quartic_out(t, starting_color.r, RaidGUIControlSliderSimple.SLIDER_COLOR.r - starting_color.r, duration)
 		local current_g = Easing.quartic_out(t, starting_color.g, RaidGUIControlSliderSimple.SLIDER_COLOR.g - starting_color.g, duration)
 		local current_b = Easing.quartic_out(t, starting_color.b, RaidGUIControlSliderSimple.SLIDER_COLOR.b - starting_color.b, duration)
@@ -278,12 +285,14 @@ function RaidGUIControlSliderSimple:_animate_thumb_press()
 	local original_w = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect[3]
 	local original_h = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect[4]
 	local starting_scale = self._slider_thumb:w() / original_w
-	local duration = 0.25 * (starting_scale - 0.9) / 0.1
+	local duration = 0.25 * ((starting_scale - 0.9) / 0.1)
 	local center_x, center_y = self._slider_thumb:center()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, starting_scale, 0.9 - starting_scale, duration)
 
 		self._slider_thumb:set_w(original_w * scale)
@@ -309,7 +318,9 @@ function RaidGUIControlSliderSimple:_animate_thumb_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, 0.9, 0.1, duration)
 
 		self._slider_thumb:set_w(target_w * scale)

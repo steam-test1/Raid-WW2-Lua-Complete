@@ -40,6 +40,7 @@ function ChallengeCardsViewGui:_layout()
 			text = self:translate("menu_filter_all", true)
 		}
 	}
+
 	self._rarity_filters_tabs = self._root_panel:tabs({
 		tab_align = "center",
 		name = "rarity_filters_tabs",
@@ -81,6 +82,7 @@ function ChallengeCardsViewGui:_layout()
 			}
 		}
 	})
+
 	local challenge_cards_grid_scrollable_area_params = {
 		name = "challenge_cards_grid_scrollable_area",
 		h = 580,
@@ -89,7 +91,9 @@ function ChallengeCardsViewGui:_layout()
 		x = 0,
 		scroll_step = 30
 	}
+
 	self._challenge_cards_grid_scrollable_area = self._root_panel:scrollable_area(challenge_cards_grid_scrollable_area_params)
+
 	local challenge_cards_grid_params = {
 		name = "challenge_cards_grid",
 		y = 0,
@@ -113,7 +117,9 @@ function ChallengeCardsViewGui:_layout()
 			row_class = RaidGUIControlCardWithSelector
 		}
 	}
+
 	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid(challenge_cards_grid_params)
+
 	local card_details_params = {
 		y = 96,
 		name = "card_deatils",
@@ -122,6 +128,7 @@ function ChallengeCardsViewGui:_layout()
 		w = 992,
 		x = 736
 	}
+
 	self._card_details = self._root_panel:create_custom_control(RaidGUIControlCardDetails, card_details_params)
 
 	self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_VIEW_ONLY)
@@ -152,10 +159,10 @@ function ChallengeCardsViewGui:reload_filtered_data()
 
 		for _, card_data in ipairs(self._challenge_cards_steam_data_source) do
 			if self._filter_rarity == LootDropTweakData.RARITY_OTHER then
-				if card_data.rarity ~= LootDropTweakData.RARITY_COMMON and card_data.rarity ~= LootDropTweakData.RARITY_UNCOMMON then
-					if card_data.rarity ~= LootDropTweakData.RARITY_RARE then
-						table.insert(result, clone(card_data))
-					end
+				if card_data.rarity == LootDropTweakData.RARITY_COMMON or card_data.rarity == LootDropTweakData.RARITY_UNCOMMON or card_data.rarity == LootDropTweakData.RARITY_RARE then
+					-- Nothing
+				else
+					table.insert(result, clone(card_data))
 				end
 			elseif self._filter_rarity == card_data.rarity then
 				table.insert(result, clone(card_data))
@@ -229,7 +236,7 @@ function ChallengeCardsViewGui:close()
 end
 
 function ChallengeCardsViewGui:_auto_select_first_card_in_grid()
-	local card_data = nil
+	local card_data
 
 	if self._challenge_cards_data_source and #self._challenge_cards_data_source >= 1 then
 		card_data = self._challenge_cards_data_source[1]

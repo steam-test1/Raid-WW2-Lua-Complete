@@ -52,6 +52,7 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlWeaponPointRewardDetails.DEFAULT_WIDTH
 	control_params.h = control_params.h or RaidGUIControlWeaponPointRewardDetails.HEIGHT
@@ -67,6 +68,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_left_panel()
 		w = RaidGUIControlWeaponPointRewardDetails.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -96,6 +98,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_title()
 		color = RaidGUIControlWeaponPointRewardDetails.TITLE_COLOR,
 		text = self:translate("menu_loot_screen_weapon_point", true)
 	}
+
 	self._customization_name = self._left_panel:text(title_params)
 
 	self:_layout_title()
@@ -126,6 +129,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_reward_image()
 		texture = tweak_data.gui.icons[RaidGUIControlWeaponPointRewardDetails.REWARD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlWeaponPointRewardDetails.REWARD_ICON].texture_rect
 	}
+
 	self._reward_image = reward_image_panel:bitmap(reward_image_params)
 
 	self._reward_image:set_center_x(reward_image_panel:w() / 2)
@@ -148,6 +152,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 		color = RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_COLOR,
 		text = self._xp_redeem_value .. " " .. self:translate("menu_label_xp", true)
 	}
+
 	self._xp_redeem_value_text = self._left_panel:text(redeem_value_params)
 
 	self:_layout_redeem_info()
@@ -160,6 +165,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_redeem")
 	}
+
 	self._redeem_button = self._left_panel:short_tertiary_button(redeem_xp_button_params)
 
 	self._redeem_button:set_center_x(self._left_panel:w() / 2)
@@ -188,6 +194,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_right_panel()
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 
 	self._right_panel:set_right(self._object:w())
@@ -206,6 +213,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_item_type()
 		color = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_COLOR,
 		text = self:translate("menu_loot_screen_weapon_point_title_text", true)
 	}
+
 	self._item_type = self._right_panel:text(item_type_params)
 end
 
@@ -222,6 +230,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_description()
 		color = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_weapon_point_description")
 	}
+
 	self._description = self._right_panel:text(description_params)
 
 	self._description:set_right(self._right_panel:w())

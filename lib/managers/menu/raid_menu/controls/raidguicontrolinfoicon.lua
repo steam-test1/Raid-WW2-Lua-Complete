@@ -36,9 +36,10 @@ function RaidGUIControlInfoIcon:init(parent, params)
 			h = params.icon_h or RaidGUIControlInfoIcon.TOP_H,
 			color = params.icon_color or RaidGUIControlInfoIcon.COLOR
 		}
+
 		self._top = self._object:bitmap(icon_params)
 
-		self._top:set_w(self._top:h() * tweak_data.gui:icon_w(self._params.icon) / tweak_data.gui:icon_h(self._params.icon))
+		self._top:set_w(self._top:h() * (tweak_data.gui:icon_w(self._params.icon) / tweak_data.gui:icon_h(self._params.icon)))
 
 		self._top_w = self._top:w()
 		self._top_h = self._top:h()
@@ -56,7 +57,9 @@ function RaidGUIControlInfoIcon:init(parent, params)
 			color = params.title_color or RaidGUIControlInfoIcon.COLOR,
 			text = params.title
 		}
+
 		self._top = self._object:text(title_params)
+
 		local _, _, w, h = self._top:text_rect()
 
 		self._top:set_w(w)
@@ -79,7 +82,9 @@ function RaidGUIControlInfoIcon:init(parent, params)
 		color = params.text_color or RaidGUIControlInfoIcon.COLOR,
 		layer = self._object:layer() + 1
 	}
+
 	self._text = self._object:text(text_params)
+
 	local _, _, w, h = self._text:text_rect()
 
 	self._text:set_w(w)
@@ -95,6 +100,7 @@ end
 
 function RaidGUIControlInfoIcon:_init_panel()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_info_icon"
 	panel_params.layer = self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -106,7 +112,7 @@ end
 
 function RaidGUIControlInfoIcon:_fit_size()
 	if not self._params.w then
-		if self._text:w() <= self._top:w() then
+		if self._top:w() >= self._text:w() then
 			self._object:set_w(self._top:w())
 		else
 			self._object:set_w(self._text:w())
@@ -146,9 +152,10 @@ function RaidGUIControlInfoIcon:set_icon(icon, params)
 		h = params and params.icon_h or RaidGUIControlInfoIcon.TOP_H,
 		color = params and params.color or Color.white
 	}
+
 	self._top = self._object:bitmap(icon_params)
 
-	self._top:set_w(self._top:h() * tweak_data.gui:icon_w(icon) / tweak_data.gui:icon_h(icon))
+	self._top:set_w(self._top:h() * (tweak_data.gui:icon_w(icon) / tweak_data.gui:icon_h(icon)))
 
 	self._top_w = self._top:w()
 	self._top_h = self._top:h()
@@ -157,7 +164,7 @@ function RaidGUIControlInfoIcon:set_icon(icon, params)
 end
 
 function RaidGUIControlInfoIcon:set_title(title, params)
-	local h = nil
+	local h
 
 	if self._top then
 		h = self._top:h()
@@ -188,7 +195,9 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 		color = params and params.color or RaidGUIControlInfoIcon.COLOR,
 		text = title
 	}
+
 	self._top = self._object:text(title_params)
+
 	local _, _, w, h = self._top:text_rect()
 
 	self._top:set_w(w)
@@ -235,7 +244,9 @@ function RaidGUIControlInfoIcon:set_text(text, params)
 		color = params and params.color or RaidGUIControlInfoIcon.COLOR,
 		layer = self._object:layer() + 1
 	}
+
 	self._text = self._object:text(text_params)
+
 	local _, _, w, h = self._text:text_rect()
 
 	self._text:set_w(w)

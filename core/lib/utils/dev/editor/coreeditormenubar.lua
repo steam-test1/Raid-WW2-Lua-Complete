@@ -2,7 +2,9 @@ core:import("CoreEngineAccess")
 
 function CoreEditor:build_menubar()
 	local menu_bar = EWS:MenuBar()
+
 	self._menu_bar = menu_bar
+
 	local file_menu = EWS:Menu("")
 
 	file_menu:append_item("NEW", "New\t" .. self:ctrl_menu_binding("new"), "Create new file")
@@ -37,6 +39,7 @@ function CoreEditor:build_menubar()
 	Global.frame:connect("EXIT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_close"), "")
 
 	local layers_menu = EWS:Menu("")
+
 	self._disable_layer_menu = EWS:Menu("")
 	self._hide_layer_menu = EWS:Menu("")
 	self._unhide_layer_menu = EWS:Menu("")
@@ -883,18 +886,22 @@ end
 
 function CoreEditor:on_check_duality()
 	local units = {}
-	local collisions = {
-		only_positions = {},
-		complete = {}
-	}
+	local collisions = {}
+
+	collisions.only_positions = {}
+	collisions.complete = {}
 
 	for _, unit in ipairs(World:find_units_quick("all")) do
 		local pos = unit:position()
+
 		pos = pos:with_x(math.floor(pos.x))
 		pos = pos:with_y(math.floor(pos.y))
 		pos = pos:with_z(math.floor(pos.z))
+
 		local rot = unit:rotation()
+
 		rot = Vector3(math.floor(rot:yaw()), math.floor(rot:pitch()), math.floor(rot:roll()))
+
 		local unit_name = units[unit:name():s()]
 
 		if unit_name then
@@ -932,7 +939,7 @@ function CoreEditor:on_check_duality()
 		end
 	end
 
-	local pos = nil
+	local pos
 
 	if self._unit_duality then
 		pos = self._unit_duality:position()
@@ -968,7 +975,7 @@ function CoreEditor:on_hide_helper_units(data)
 					self:set_unit_visible(unit, cache[u_key].vis_state)
 				end
 			else
-				local vis_state, affected = nil
+				local vis_state, affected
 
 				if unit:unit_data().only_visible_in_editor or unit:unit_data().only_exists_in_editor or unit:has_material_assigned(leveltools_ids) then
 					vis_state = data.vis or data.skip_lights and CoreEditorUtils.has_editable_lights(unit)
@@ -1006,12 +1013,5 @@ function CoreEditor:on_help()
 end
 
 function CoreEditor:on_about()
-	EWS:MessageDialog(Global.frame_panel, self._editor_name .. [[
-
-
-"And the Earth Was Without Form and Void.."
-
-Copyright 2007-~ GRiN, Inc.
-
-http://ganon/ or http://www.grin.se]], "About...", "OK,ICON_INFORMATION"):show_modal()
+	EWS:MessageDialog(Global.frame_panel, self._editor_name .. "\n\n\"And the Earth Was Without Form and Void..\"\n\nCopyright 2007-~ GRiN, Inc.\n\nhttp://ganon/ or http://www.grin.se", "About...", "OK,ICON_INFORMATION"):show_modal()
 end

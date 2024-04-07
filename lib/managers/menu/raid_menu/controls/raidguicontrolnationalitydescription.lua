@@ -17,6 +17,7 @@ function RaidGUIControlNationalityDescription:_layout()
 		w = self._params.w,
 		h = self._params.h
 	})
+
 	local padding = 16
 	local padded_width = self._object:w() - padding * 2
 	local object_bg_params = {
@@ -29,7 +30,9 @@ function RaidGUIControlNationalityDescription:_layout()
 		texture = tweak_data.gui.icons.paper_reward_large.texture,
 		texture_rect = tweak_data.gui.icons.paper_reward_large.texture_rect
 	}
+
 	self._object_bg = self._object:image(object_bg_params)
+
 	local object_bg_params2 = {
 		name = "object_bg",
 		layer = -2,
@@ -42,8 +45,11 @@ function RaidGUIControlNationalityDescription:_layout()
 		rotation = -2 - math.random(4),
 		color = Color(0.6, 0.6, 0.6)
 	}
+
 	self._object_bg2 = self._object:image(object_bg_params2)
+
 	local tex_rect = tweak_data.gui.icons.character_creation_nationality_british.texture_rect
+
 	self._nation_icon = self._object:image({
 		name = "nation_icon",
 		align = "center",

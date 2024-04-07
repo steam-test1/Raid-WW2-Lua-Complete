@@ -56,6 +56,7 @@ function MissionUnlockGui:_layout_contents_panel()
 		name = "contents_panel",
 		valign = "scale"
 	}
+
 	self._contents_panel = self._root_panel:panel(contents_panel_params)
 end
 
@@ -66,16 +67,19 @@ function MissionUnlockGui:_layout_offered_missions()
 		w = MissionUnlockGui.CONTENT_WIDTH,
 		h = MissionUnlockGui.CONTENT_HEIGHT
 	}
+
 	self._offered_missions_panel = self._contents_panel:panel(offered_missions_panel_params)
 
 	self._offered_missions_panel:set_center_x(self._contents_panel:w() / 2)
 
 	local pending_missions = managers.progression:pending_missions_to_unlock()
+
 	self._offered_missions = {}
+
 	local w = 0
 
 	for i = 1, #pending_missions do
-		local left_move, right_move = nil
+		local left_move, right_move
 
 		if i - 1 > 0 then
 			left_move = "offered_mission_" .. tostring(i - 1)
@@ -119,6 +123,7 @@ function MissionUnlockGui:_layout_unlock_button()
 		text = self:translate("mission_unlock_button_text", true),
 		on_click_callback = callback(self, self, "show_unlock_confirmation_prompt")
 	}
+
 	self._unlock_button = self._contents_panel:short_primary_button(unlock_button_params)
 
 	self._unlock_button:set_center_y(MissionUnlockGui.UNLOCK_BUTTON_CENTER_Y)
@@ -154,7 +159,9 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 		is_root_panel = true,
 		layer = 100
 	}
+
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
+
 	local video_panel_background_params = {
 		layer = 1,
 		name = "video_background",
@@ -169,9 +176,10 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 		video = chosen_video,
 		width = self._video_panel:w()
 	}
+
 	self._control_briefing_video = self._video_panel:video(video_params)
 
-	self._control_briefing_video:set_h(self._video_panel:w() * self._control_briefing_video:video_height() / self._control_briefing_video:video_width())
+	self._control_briefing_video:set_h(self._video_panel:w() * (self._control_briefing_video:video_height() / self._control_briefing_video:video_width()))
 	self._control_briefing_video:set_center_y(self._video_panel:h() / 2)
 
 	self._playing_briefing_video = true
@@ -209,7 +217,9 @@ function MissionUnlockGui:_animate_show_press_any_key_prompt(prompt)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.85, duration)
 
 		prompt:set_alpha(current_alpha)
@@ -222,9 +232,11 @@ function MissionUnlockGui:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0.85, -0.85, fade_out_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -243,11 +255,14 @@ function MissionUnlockGui:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_right(self._safe_panel:w() - 50)
 
 	local fade_in_duration = 0.25
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.85, fade_in_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -410,6 +425,7 @@ function MissionUnlockGui:_bind_controller_inputs()
 		}
 	}
 	local translated_text = managers.localization:get_default_macros().BTN_A
+
 	translated_text = translated_text .. " " .. utf8.to_upper(self:translate("mission_unlock_button_text", true))
 
 	table.insert(legend.controller, {

@@ -24,7 +24,9 @@ function HUDObjectiveDescription:_create_text(objectives_panel)
 		font_size = HUDObjectiveDescription.DESCRIPTION_TEXT_FONT_SIZE,
 		text = self._objective.description
 	}
+
 	self._object = objectives_panel:text(panel_params)
+
 	local _, _, _, h = self._object:text_rect()
 
 	self._object:set_h(h)

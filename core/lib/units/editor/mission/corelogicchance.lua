@@ -80,6 +80,7 @@ function CoreLogicChanceOperatorUnitElement:get_links_to_unit(...)
 end
 
 function CoreLogicChanceOperatorUnitElement:update_editing()
+	return
 end
 
 function CoreLogicChanceOperatorUnitElement:add_element()
@@ -116,6 +117,7 @@ function CoreLogicChanceOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_chance/logic_chance"
 	}
@@ -178,6 +180,7 @@ function CoreLogicChanceTriggerUnitElement:get_links_to_unit(...)
 end
 
 function CoreLogicChanceTriggerUnitElement:update_editing()
+	return
 end
 
 function CoreLogicChanceTriggerUnitElement:add_element()
@@ -214,6 +217,7 @@ function CoreLogicChanceTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_chance/logic_chance"
 	}

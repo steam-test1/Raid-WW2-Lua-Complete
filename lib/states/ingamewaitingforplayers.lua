@@ -92,6 +92,7 @@ end
 function IngameWaitingForPlayersState:_start_audio()
 	self._intro_cue_index = 1
 	self._audio_started = true
+
 	local event_started = managers.briefing:post_event(self._intro_event, {
 		show_subtitle = true,
 		listener = {
@@ -152,11 +153,11 @@ function IngameWaitingForPlayersState:update(t, dt)
 		end
 	end
 
-	if self._briefing_start_t and self._briefing_start_t < t then
+	if self._briefing_start_t and t > self._briefing_start_t then
 		self._briefing_start_t = nil
 	end
 
-	if self._delay_audio_t and self._delay_audio_t < t then
+	if self._delay_audio_t and t > self._delay_audio_t then
 		self._delay_audio_t = nil
 
 		self:_start_audio()
@@ -165,7 +166,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 	if self._delay_start_t then
 		if self._file_streamer_max_workload or Network:is_server() and not managers.network:session():are_peers_done_streaming() or not managers.network:session():are_all_peer_assets_loaded() then
 			self._delay_start_t = Application:time() + 1
-		elseif self._delay_start_t < t then
+		elseif t > self._delay_start_t then
 			self._delay_start_t = nil
 
 			if Network:is_server() then
@@ -174,7 +175,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 		end
 	end
 
-	if self._delay_spawn_t and self._delay_spawn_t < t then
+	if self._delay_spawn_t and t > self._delay_spawn_t then
 		self._delay_spawn_t = nil
 
 		managers.network:session():spawn_players()
@@ -202,7 +203,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 			if self._skip_data then
 				self._skip_data.current = self._skip_data.current + dt
 
-				if self._skip_data.total < self._skip_data.current then
+				if self._skip_data.current > self._skip_data.total then
 					self:_skip()
 				end
 			end
@@ -266,9 +267,8 @@ function IngameWaitingForPlayersState:at_enter()
 	managers.network:session():on_set_member_ready(managers.network:session():local_peer():id(), true, true, false)
 
 	Global.exe_argument_level = false
-	self._camera_data = {
-		index = 0
-	}
+	self._camera_data = {}
+	self._camera_data.index = 0
 	self._briefing_start_t = Application:time() + 2
 
 	if managers.network:session():is_client() and managers.network:session():server_peer() then
@@ -311,16 +311,19 @@ function IngameWaitingForPlayersState:show_intro_video()
 		layer = tweak_data.gui.DEBRIEF_VIDEO_LAYER,
 		background_color = Color.black
 	}
+
 	self._panel = RaidGUIPanel:new(self._full_panel, params_root_panel)
+
 	local video = "movies/vanilla/intro/global/01_intro_v014"
 	local intro_video_params = {
 		layer = self._panel:layer() + 1,
 		video = video,
 		width = self._panel:w()
 	}
+
 	self._intro_video = self._panel:video(intro_video_params)
 
-	self._intro_video:set_h(self._panel:w() * self._intro_video:video_height() / self._intro_video:video_width())
+	self._intro_video:set_h(self._panel:w() * (self._intro_video:video_height() / self._intro_video:video_width()))
 	self._intro_video:set_center_y(self._panel:h() / 2)
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
@@ -351,7 +354,9 @@ function IngameWaitingForPlayersState:_animate_show_press_any_key_prompt(prompt)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.75, duration)
 
 		prompt:set_alpha(current_alpha)
@@ -370,8 +375,11 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 
 	self._file_streamer_max_workload = math.max(self._file_streamer_max_workload, workload)
+
 	local progress = self._file_streamer_max_workload > 0 and 1 - workload / self._file_streamer_max_workload or 1
+
 	progress = math.ceil(progress * 100)
+
 	local local_peer = managers.network:session():local_peer()
 
 	local_peer:set_streaming_status(progress)
@@ -435,7 +443,7 @@ function IngameWaitingForPlayersState:at_exit()
 		self._sound_listener = nil
 	end
 
-	local rich_presence = nil
+	local rich_presence
 
 	managers.platform:set_presence("Playing")
 	managers.platform:set_playing(true)

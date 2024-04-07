@@ -26,6 +26,7 @@ end
 
 function GreedManager:register_greed_item(unit, tweak_table, world_id)
 	self._registered_greed_items[world_id] = self._registered_greed_items[world_id] or {}
+
 	local item_tweak_data = tweak_data.greed.greed_items[tweak_table]
 	local greed_item_data = {
 		unit = unit,
@@ -38,6 +39,7 @@ end
 
 function GreedManager:register_greed_cache_item(unit, world_id)
 	self._registered_greed_cache_items[world_id] = self._registered_greed_cache_items[world_id] or {}
+
 	local greed_cache_item_data = {
 		unit = unit,
 		world_id = world_id
@@ -61,6 +63,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local current_difficulty = tweak_data:difficulty_to_index(difficulty)
+
 	total_value = total_value * tweak_data.greed.difficulty_level_point_multipliers[current_difficulty]
 	self._greed_items_spawned_value = 0
 	self._registered_greed_items[world_id] = self._registered_greed_items[world_id] or {}
@@ -93,9 +96,12 @@ function GreedManager:plant_greed_items_on_level(world_id)
 	end
 
 	self._registered_greed_cache_items[world_id] = self._registered_greed_cache_items[world_id] or {}
+
 	local cache_spawn_chance = tweak_data.greed.cache_base_spawn_chance
+
 	cache_spawn_chance = cache_spawn_chance * tweak_data.greed.difficulty_cache_chance_multipliers[current_difficulty]
-	local chosen_cache_unit = nil
+
+	local chosen_cache_unit
 
 	if #self._registered_greed_cache_items[world_id] > 0 and math.random() <= math.clamp(cache_spawn_chance, -1, 1) then
 		math.shuffle(self._registered_greed_cache_items[world_id])
@@ -113,7 +119,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 		end
 	end
 
-	if self._greed_items_spawned_value < total_value then
+	if total_value > self._greed_items_spawned_value then
 		print("[GreedManager][plant_loot_on_level] All greed units on level used, level greed cap still not reached (curr_value, total_value):", self._greed_items_spawned_value, total_value)
 	else
 		print("[GreedManager][plant_loot_on_level] Greed value placed on level:", self._greed_items_spawned_value)
@@ -164,7 +170,8 @@ end
 
 function GreedManager:on_loot_picked_up(value)
 	self._mission_loot_counter = self._mission_loot_counter + value
-	local acquired_new_goldbar = tweak_data.greed.points_needed_for_gold_bar <= self._current_loot_counter + self._mission_loot_counter - self._gold_awarded_in_mission * tweak_data.greed.points_needed_for_gold_bar
+
+	local acquired_new_goldbar = self._current_loot_counter + self._mission_loot_counter - self._gold_awarded_in_mission * tweak_data.greed.points_needed_for_gold_bar >= tweak_data.greed.points_needed_for_gold_bar
 
 	if acquired_new_goldbar then
 		self._gold_awarded_in_mission = self._gold_awarded_in_mission + 1
@@ -225,6 +232,7 @@ function GreedManager:save_profile_slot(data)
 		version = GreedManager.VERSION,
 		current_loot_counter = self._current_loot_counter
 	}
+
 	data.GreedManager = state
 end
 

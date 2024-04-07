@@ -61,7 +61,9 @@ function SpecialHonorsGui:_layout_first_screen()
 		name = "top_stats_big_panel",
 		valign = "scale"
 	}
+
 	self._top_stats_big_panel = self._root_panel:panel(top_stats_big_panel_params)
+
 	local title_text = game_state_machine:current_state():is_success() and SpecialHonorsGui.TOP_STATS_TITLE_TEXT or SpecialHonorsGui.TOP_STATS_TITLE_TEXT_FAILURE
 	local top_stats_title_params = {
 		vertical = "center",
@@ -83,7 +85,7 @@ function SpecialHonorsGui:_layout_first_screen()
 	for i = 1, 3 do
 		local top_stat_big_params = {
 			name = "top_stat_big_" .. tostring(i),
-			x = (i - 1) * self._root_panel:w() / 3
+			x = (i - 1) * (self._root_panel:w() / 3)
 		}
 		local top_stat_big = self._top_stats_big_panel:create_custom_control(RaidGUIControlTopStatBig, top_stat_big_params)
 
@@ -123,13 +125,9 @@ function SpecialHonorsGui:show_honors()
 	end
 
 	for i = 1, 3 do
-		local sound_effect = nil
+		local sound_effect
 
-		if honors[i].peer_id == managers.network:session():local_peer():id() then
-			sound_effect = "mvp_1p"
-		else
-			sound_effect = "mvp_team"
-		end
+		sound_effect = honors[i].peer_id == managers.network:session():local_peer():id() and "mvp_1p" or "mvp_team"
 
 		local data = {
 			player_nickname = honors[i].peer_name,
@@ -179,7 +177,9 @@ function SpecialHonorsGui:_fade_in_label(text, duration, delay)
 
 	while t < anim_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, anim_duration)
 
 		text:set_alpha(current_alpha)
@@ -235,6 +235,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 
 				if not found_peer then
 					gamercard_prompts_shown = gamercard_prompts_shown + 1
+
 					local binding = {
 						key = Idstring(SpecialHonorsGui.GAMERCARD_BUTTONS[gamercard_prompts_shown][1]),
 						callback = callback(self, self, "show_gamercard", gamercard_prompts_shown)

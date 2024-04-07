@@ -18,6 +18,7 @@ function ElementBlackscreen:on_executed(instigator)
 	if self._values.action == "fade_in" then
 		local data = {}
 		local loading_screen = tweak_data.operations:get_loading_screen(self._values.level)
+
 		data.background = loading_screen.image
 		data.loading_text = loading_screen.text
 		data.skip_delete_brushes = self._values.skip_delete_brushes

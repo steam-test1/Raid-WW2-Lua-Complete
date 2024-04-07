@@ -7,6 +7,7 @@ function ElementDialogue:init(...)
 end
 
 function ElementDialogue:client_on_executed(...)
+	return
 end
 
 function ElementDialogue:on_executed(instigator)
@@ -14,7 +15,7 @@ function ElementDialogue:on_executed(instigator)
 		return
 	end
 
-	local char = nil
+	local char
 
 	if self._values.use_instigator then
 		char = managers.criminals:character_name_by_unit(instigator)

@@ -51,7 +51,7 @@ function SubtitlesTweakData:get_subtitle(movie, time)
 	end
 
 	for _, subtitle in ipairs(subtitle_data) do
-		if subtitle.time < time and time < subtitle.time + subtitle.length then
+		if time > subtitle.time and time < subtitle.time + subtitle.length then
 			return managers.localization:text(subtitle.id)
 		end
 	end

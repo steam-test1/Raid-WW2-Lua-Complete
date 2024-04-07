@@ -32,6 +32,7 @@ function HUDSaveIcon:_create_panel(params)
 		h = HUDSaveIcon.DEFAULT_H,
 		layer = tweak_data.gui.SAVEFILE_LAYER
 	}
+
 	local panel_params = {
 		name = "save_icon_panel",
 		alpha = 0,
@@ -39,6 +40,7 @@ function HUDSaveIcon:_create_panel(params)
 		h = params.h,
 		layer = params.layer
 	}
+
 	self._panel = self._workspace_panel:panel(panel_params)
 
 	self._panel:set_bottom(self._workspace_panel:h())
@@ -56,6 +58,7 @@ function HUDSaveIcon:_create_background()
 		texture = tweak_data.gui.icons[HUDSaveIcon.BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDSaveIcon.BACKGROUND].texture_rect
 	}
+
 	self._background = self._panel:bitmap(background_params)
 
 	self._background:set_center_x(self._panel:w() / 2)
@@ -74,6 +77,7 @@ function HUDSaveIcon:_create_text()
 		font_size = HUDSaveIcon.FONT_SIZE,
 		color = HUDSaveIcon.COLOR
 	}
+
 	self._text = self._panel:text(text_params)
 end
 
@@ -87,8 +91,11 @@ function HUDSaveIcon:_create_bullets()
 		valign = "center",
 		h = self._panel:h()
 	}
+
 	self._bullet_panel = self._panel:panel(bullet_panel_params)
+
 	local single_bullet_angle = 360 / HUDSaveIcon.NUMBER_OF_BULLETS
+
 	self._bullets = {}
 
 	for i = 1, HUDSaveIcon.NUMBER_OF_BULLETS do
@@ -162,7 +169,9 @@ function HUDSaveIcon:_animate_bullets()
 
 		while t < shoot_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_size = Easing.linear(t, 1, -1, shoot_duration)
 
 			self._bullets[self._active_bullet]:set_w(current_size * tweak_data.gui:icon_w(HUDSaveIcon.BULLET_ICON))
@@ -178,7 +187,9 @@ function HUDSaveIcon:_animate_bullets()
 		self._bullets[self._active_bullet]:set_center_y(center_y)
 
 		local rotation_duration = 0.5
+
 		t = 0
+
 		local single_bullet_angle = 360 / #self._bullets
 		local initial_rotations = {}
 
@@ -188,7 +199,9 @@ function HUDSaveIcon:_animate_bullets()
 
 		while t < rotation_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_rotation_offset = Easing.quartic_in_out(t, 0, single_bullet_angle, rotation_duration)
 
 			for i = 1, #self._bullets do
@@ -203,12 +216,15 @@ function HUDSaveIcon:_animate_bullets()
 		wait(0.15)
 
 		local reload_duration = 0.2
+
 		t = 0
 		center_y = self._bullets[self._active_bullet]:center_y()
 
 		while t < reload_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_position_offset = Easing.linear(t, 10, -10, reload_duration)
 
 			self._bullets[self._active_bullet]:set_center_y(center_y - current_position_offset)
@@ -234,9 +250,11 @@ function HUDSaveIcon:_animate_show()
 	local duration = 0.2
 	local t = self._panel:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._panel:set_alpha(current_alpha)
@@ -249,9 +267,11 @@ function HUDSaveIcon:_animate_hide()
 	local duration = 0.4
 	local t = (1 - self._panel:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in(t, 1, -1, duration)
 
 		self._panel:set_alpha(current_alpha)

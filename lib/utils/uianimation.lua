@@ -24,6 +24,7 @@ function UIAnimation.animate_text_glow(text, new_color, duration_per_letter, del
 
 		while t < duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
 
 			for i = 1, number_of_letters do

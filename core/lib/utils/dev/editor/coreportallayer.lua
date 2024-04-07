@@ -37,6 +37,7 @@ function PortalLayer:load(world_holder, offset)
 			local g = 0.25 + math.rand(0.75)
 			local b = 0.25 + math.rand(0.75)
 			local draw_base = portal.draw_base or 0
+
 			self._portal_shapes[name] = {
 				portal = {},
 				top = portal.top,
@@ -57,6 +58,7 @@ function PortalLayer:load(world_holder, offset)
 		for _, group in pairs(managers.portal:unit_groups()) do
 			for _, shape in ipairs(group:shapes()) do
 				local unit = PortalLayer.super.do_spawn_unit(self, self._portal_shape_unit, shape:position(), shape:rotation())
+
 				unit:unit_data().portal_group_shape = shape
 
 				unit:unit_data().portal_group_shape:set_unit(unit)
@@ -81,6 +83,7 @@ function PortalLayer:_old_load(portal)
 			local g = 0.25 + math.rand(0.75)
 			local b = 0.25 + math.rand(0.75)
 			local draw_base = portal.draw_base or 0
+
 			self._portal_shapes[name] = {
 				portal = {},
 				top = portal.top,
@@ -102,6 +105,7 @@ function PortalLayer:_old_load(portal)
 	for _, group in pairs(managers.portal:unit_groups()) do
 		for _, shape in ipairs(group:shapes()) do
 			local unit = PortalLayer.super.do_spawn_unit(self, self._portal_shape_unit, shape:position(), shape:rotation())
+
 			unit:unit_data().portal_group_shape = shape
 
 			unit:unit_data().portal_group_shape:set_unit(unit)
@@ -120,9 +124,10 @@ function PortalLayer:save(save_params)
 			name = name,
 			top = data.top,
 			draw_base = data.draw_base,
-			bottom = data.bottom,
-			points = {}
+			bottom = data.bottom
 		}
+
+		portal_data.points = {}
 
 		for _, unit in ipairs(data.portal) do
 			table.insert(portal_data.points, {
@@ -228,7 +233,9 @@ function PortalLayer:draw_portal(data)
 		local e_pos = e_point:position()
 		local dir = Vector3(e_pos.x, e_pos.y, 0) - Vector3(s_pos.x, s_pos.y, 0)
 		local length = dir:length()
+
 		dir = dir:normalized()
+
 		local c1 = Vector3(s_pos.x, s_pos.y, min)
 		local c2 = Vector3(s_pos.x, s_pos.y, max)
 		local c3 = Vector3(e_pos.x, e_pos.y, max)
@@ -359,6 +366,7 @@ function PortalLayer:build_panel(notebook)
 	draw_not_current:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_portal_system"))
 
 	self._portal_panel = EWS:Panel(self._ews_panel, "", "TAB_TRAVERSAL")
+
 	local portal_sizer = EWS:StaticBoxSizer(self._portal_panel, "VERTICAL", "Portals")
 
 	self._portal_panel:set_sizer(portal_sizer)
@@ -374,6 +382,7 @@ function PortalLayer:build_panel(notebook)
 	portal_sizer:add(btn_sizer, 0, 0, "EXPAND")
 
 	local portals = EWS:ListBox(self._portal_panel, "portal_layer_portals", "LB_SINGLE,LB_HSCROLL,LB_NEEDED_SB,LB_SORT")
+
 	self._shapes_listbox = portals
 
 	self:update_shapes_listbox(portals)
@@ -429,18 +438,17 @@ function PortalLayer:build_panel(notebook)
 	spin_sizer:add(bottom_spin, 1, 0, "EXPAND")
 	portal_sizer:add(spin_sizer, 0, 0, "EXPAND")
 
-	self._ctrlrs = {
-		draw_base = draw_base,
-		top_spin = {
-			value = "top",
-			spin = top_spin
-		},
-		bottom_spin = {
-			value = "bottom",
-			spin = bottom_spin
-		},
-		portals = portals
+	self._ctrlrs = {}
+	self._ctrlrs.draw_base = draw_base
+	self._ctrlrs.top_spin = {
+		value = "top",
+		spin = top_spin
 	}
+	self._ctrlrs.bottom_spin = {
+		value = "bottom",
+		spin = bottom_spin
+	}
+	self._ctrlrs.portals = portals
 
 	self._sizer:add(self._portal_panel, 2, 0, "EXPAND")
 
@@ -463,6 +471,7 @@ function PortalLayer:build_panel(notebook)
 	self._portal_groups:add(self._unit_group_toolbar, 0, 1, "EXPAND,BOTTOM")
 
 	local groups = EWS:ListBox(self._ews_panel, "portal_layer_groups", "LB_SINGLE,LB_HSCROLL,LB_NEEDED_SB,LB_SORT")
+
 	self._groups_listbox = groups
 
 	self._portal_groups:add(groups, 1, 0, "EXPAND")
@@ -590,6 +599,7 @@ function PortalLayer:do_spawn_unit(name, pos, rot)
 			self:create_portal_point(unit, pos)
 		elseif unit:name() == Idstring(self._portal_shape_unit) then
 			local shape = self._current_group:add_shape({})
+
 			unit:unit_data().portal_group_shape = shape
 
 			unit:unit_data().portal_group_shape:set_unit(unit)
@@ -637,6 +647,7 @@ function PortalLayer:new_portal(portals)
 	local r = 0.25 + math.rand(0.75)
 	local g = 0.25 + math.rand(0.75)
 	local b = 0.25 + math.rand(0.75)
+
 	self._portal_shapes[name] = {
 		draw_base = 0,
 		top = 0,
@@ -735,6 +746,7 @@ end
 
 function PortalLayer:new_group()
 	local name = managers.portal:group_name()
+
 	name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the new portal group:", "New portal group", name, Vector3(-1, -1, 0), true)
 
 	if name and name ~= "" then
@@ -911,6 +923,7 @@ function PortalLayer:insert()
 	end
 
 	local i = table.get_vector_index(self._current_portal, self._selected_unit)
+
 	self._selected_unit = self:do_spawn_unit(self._portal_point_unit, self._mid_pos)
 
 	table.remove(self._current_portal)

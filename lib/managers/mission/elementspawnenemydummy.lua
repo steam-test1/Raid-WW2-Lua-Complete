@@ -21,6 +21,7 @@ end
 
 function ElementSpawnEnemyDummy:_finalize_values()
 	local values = self._values
+
 	values.spawn_action = self:value("spawn_action")
 
 	local function _save_boolean(name_in)
@@ -35,6 +36,7 @@ function ElementSpawnEnemyDummy:_finalize_values()
 
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])
+
 		values[name_in] = found_index ~= -1 and found_index or nil
 	end
 
@@ -59,6 +61,7 @@ end
 
 function ElementSpawnEnemyDummy:_get_enemy()
 	local enemy_name = self:value("enemy") or self._enemy_name
+
 	enemy_name = enemy_name or "german_flamer"
 
 	if EnemyManager.ENEMIES[enemy_name] then
@@ -83,6 +86,7 @@ function ElementSpawnEnemyDummy:produce(params)
 		unit:base():add_destroy_listener(self._unit_destroy_clbk_key, callback(self, self, "clbk_unit_destroyed"))
 
 		unit:unit_data().mission_element = self
+
 		local spawn_ai = self:_create_spawn_AI_parametric(params.stance, params.objective, self._values)
 
 		unit:brain():set_spawn_ai(spawn_ai)
@@ -99,7 +103,8 @@ function ElementSpawnEnemyDummy:produce(params)
 		unit:base():add_destroy_listener(self._unit_destroy_clbk_key, callback(self, self, "clbk_unit_destroyed"))
 
 		unit:unit_data().mission_element = self
-		local objective = nil
+
+		local objective
 		local action = self._create_action_data(CopActionAct._act_redirects.enemy_spawn[self._values.spawn_action])
 		local stance = managers.groupai:state():enemy_weapons_hot() and "cbt" or "ntl"
 
@@ -184,6 +189,7 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 
 	if entry_action.type == "act" then
 		local followup_objective = objective
+
 		objective = {
 			type = "act",
 			action = entry_action,

@@ -33,6 +33,7 @@ function EnableSoundEnvironmentElement:_build_panel(panel, panel_sizer)
 end
 
 function EnableSoundEnvironmentElement:update_editing()
+	return
 end
 
 function EnableSoundEnvironmentElement:update_selected(t, dt)

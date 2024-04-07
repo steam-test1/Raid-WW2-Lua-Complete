@@ -22,6 +22,7 @@ function HUDToastNotification:_create_panel(hud)
 		w = tweak_data.gui:icon_w(HUDToastNotification.BACKGROUND_IMAGE),
 		h = tweak_data.gui:icon_h(HUDToastNotification.BACKGROUND_IMAGE)
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -33,6 +34,7 @@ function HUDToastNotification:_create_background()
 		texture = tweak_data.gui.icons[HUDToastNotification.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDToastNotification.BACKGROUND_IMAGE].texture_rect
 	}
+
 	self._background = self._object:bitmap(background_params)
 end
 
@@ -48,7 +50,9 @@ function HUDToastNotification:_create_text()
 		font = HUDToastNotification.TEXT_FONT,
 		font_size = HUDToastNotification.TEXT_FONT_SIZE
 	}
+
 	self._text = self._object:text(text_params)
+
 	local _, _, w, h = self._text:text_rect()
 
 	self._text:set_w(w)
@@ -108,6 +112,7 @@ function HUDToastNotification:_present_done()
 	managers.hud:show_objectives()
 
 	self._presenting = false
+
 	local queued = table.remove(self._present_queue, 1)
 
 	if queued and queued.present_mid_text then
@@ -149,7 +154,9 @@ function HUDToastNotification:_animate_present(panel, duration)
 
 	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quadratic_in_out(math.clamp(t - 0.2, 0, fade_in_duration * 0.8), 0, 1, fade_in_duration * 0.8)
 
 		self._background:set_alpha(current_alpha)
@@ -166,9 +173,11 @@ function HUDToastNotification:_animate_present(panel, duration)
 
 	t = 0
 
-	while sustain_duration > t do
+	while t < sustain_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.linear(t, x_travel / 2 - fade_in_distance, -sustain_distance, sustain_duration)
 
 		self._object:set_center_x(self._object:parent():w() / 2 + current_offset)
@@ -179,9 +188,11 @@ function HUDToastNotification:_animate_present(panel, duration)
 
 	t = 0
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quadratic_in_out(t, 1, -1, fade_out_duration * 0.8)
 
 		self._background:set_alpha(current_alpha)

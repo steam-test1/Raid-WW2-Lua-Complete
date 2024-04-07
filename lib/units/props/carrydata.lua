@@ -34,7 +34,7 @@ function CarryData:update(unit, t, dt)
 		return
 	end
 
-	if self._explode_t and self._explode_t < t then
+	if self._explode_t and t > self._explode_t then
 		self._explode_t = nil
 
 		self:_explode()
@@ -42,7 +42,7 @@ function CarryData:update(unit, t, dt)
 end
 
 function CarryData:_check_dye_explode()
-	return
+	do return end
 
 	local chance = math.rand(1)
 
@@ -62,7 +62,7 @@ function CarryData:sync_dye_exploded()
 end
 
 function CarryData:_dye_exploded()
-	return
+	do return end
 
 	print("CarryData DYE BOOM")
 
@@ -94,7 +94,7 @@ function CarryData:check_explodes_on_impact(velocity, air_time)
 
 		local chance = math.lerp(0, 0.9, math.min((vel - vel_limit) / (1200 - vel_limit), 1))
 
-		if math.rand(1) <= chance then
+		if chance >= math.rand(1) then
 			self:start_explosion()
 
 			return true
@@ -166,6 +166,7 @@ CarryData.EXPLOSION_CUSTOM_PARAMS = {
 	camera_shake_mul = 4,
 	effect = CarryData.EXPLOSION_SETTINGS.effect
 }
+
 local mvec1 = Vector3()
 
 function CarryData:_explode()
@@ -197,7 +198,7 @@ function CarryData:_explode()
 			local distance = mvector3.distance(pos, mvec1)
 			local chance = math.lerp(1, 0, math.max(distance - range / 2, 0) / range)
 
-			if math.rand(1) < chance then
+			if chance > math.rand(1) then
 				for i_splinter, s_pos in ipairs(splinters) do
 					local ray_hit = not World:raycast("ray", s_pos, mvec1, "slot_mask", slot_mask, "ignore_unit", {
 						self._unit,
@@ -248,6 +249,7 @@ function CarryData:clbk_out_of_world()
 		return
 	elseif self._unit:position().z < PlayerMovement.OUT_OF_WORLD_Z then
 		self._bodies_to_revert = {}
+
 		local bodies = self._unit:num_bodies()
 
 		for i_body = 0, bodies - 1 do
@@ -319,9 +321,8 @@ function CarryData:set_dye_pack_data(dye_initiated, has_dye_pack, dye_value_mult
 	end
 
 	if self._has_dye_pack then
-		self._dye_risk = {
-			next_t = Application:time() + 2 + math.random(3)
-		}
+		self._dye_risk = {}
+		self._dye_risk.next_t = Application:time() + 2 + math.random(3)
 	end
 end
 
@@ -364,6 +365,7 @@ function CarryData:_unregister_steal_SO()
 		managers.groupai:state():unregister_loot(self._unit:key())
 	elseif self._steal_SO_data.thief then
 		local thief = self._steal_SO_data.thief
+
 		self._steal_SO_data.thief = nil
 
 		if self._steal_SO_data.picked_up then
@@ -425,7 +427,7 @@ function CarryData:_chk_register_steal_SO()
 		return
 	end
 
-	local drop_pos, drop_nav_seg, drop_area = nil
+	local drop_pos, drop_nav_seg, drop_area
 	local drop_point = managers.groupai:state():get_safe_enemy_loot_drop_point(pickup_nav_seg)
 
 	if drop_point then
@@ -492,6 +494,7 @@ function CarryData:_chk_register_steal_SO()
 		admin_clbk = callback(self, self, "on_pickup_SO_administered")
 	}
 	local so_id = "carrysteal" .. tostring(self._unit:key())
+
 	self._steal_SO_data = {
 		SO_registered = true,
 		picked_up = false,
@@ -624,6 +627,7 @@ function CarryData:link_to(parent_unit)
 	self._unit:set_rotation(world_rot)
 
 	self._disabled_collisions = {}
+
 	local nr_bodies = self._unit:num_bodies()
 
 	for i_body = 0, nr_bodies - 1 do
@@ -727,19 +731,21 @@ function CarryData:_on_load_attach_to_zipline(zipline_unit)
 end
 
 function CarryData:on_thrown()
+	return
 end
 
 function CarryData:on_pickup()
+	return
 end
 
 function CarryData:save(data)
-	local state = {
-		carry_id = self._carry_id,
-		value = self._value,
-		dye_initiated = self._dye_initiated,
-		has_dye_pack = self._has_dye_pack,
-		dye_value_multiplier = self._dye_value_multiplier
-	}
+	local state = {}
+
+	state.carry_id = self._carry_id
+	state.value = self._value
+	state.dye_initiated = self._dye_initiated
+	state.has_dye_pack = self._has_dye_pack
+	state.dye_value_multiplier = self._dye_value_multiplier
 
 	if self._steal_SO_data and self._steal_SO_data.picked_up then
 		managers.enemy:add_delayed_clbk("send_loot_link" .. tostring(self._unit:key()), callback(self, self, "clbk_send_link"), TimerManager:game():time() + 0.1)
@@ -751,6 +757,7 @@ end
 
 function CarryData:load(data)
 	local state = data.CarryData
+
 	self._carry_id = state.carry_id
 	self._value = state.value
 	self._dye_initiated = state.dye_initiated

@@ -4,6 +4,7 @@ CoroutineManager.Size = 16
 function CoroutineManager:init()
 	self._coroutines = {}
 	self._buffer = {}
+
 	local size = CoroutineManager.Size
 
 	for i = 1, size do
@@ -66,6 +67,7 @@ end
 function CoroutineManager:_add()
 	for key, value in pairs(self._buffer) do
 		local co = coroutine.create(value.func.Function)
+
 		self._coroutines[value.func.Priority][value.name] = {
 			co = co,
 			arg = value.arg

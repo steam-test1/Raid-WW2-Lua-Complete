@@ -18,6 +18,7 @@ function PlayerBleedOut:enter(state_data, enter_data)
 	PlayerBleedOut.super.enter(self, state_data, enter_data)
 
 	local vp = managers.viewport:first_active_viewport():vp()
+
 	self._dof_post_processor = vp:get_post_processor_effect_name("World", Idstring("bloom_combine_post_processor"))
 
 	vp:set_post_processor_effect("World", Idstring("bloom_combine_post_processor"), _get_fp_dof_effect_name(self._dof_post_processor))
@@ -34,6 +35,7 @@ function PlayerBleedOut:enter(state_data, enter_data)
 
 	self._tilt_wait_t = managers.player:player_timer():time() + 1
 	self._old_selection = nil
+
 	local upgrade_primary_weapon_when_downed = managers.player:has_category_upgrade("player", "primary_weapon_when_downed")
 	local not_allowed_in_bleedout = self._unit:inventory():equipped_unit():base():weapon_tweak_data().not_allowed_in_bleedout
 
@@ -97,7 +99,7 @@ function PlayerBleedOut:_enter(enter_data)
 		managers.groupai:state():on_player_weapons_hot()
 	end
 
-	local preset = nil
+	local preset
 
 	if managers.groupai:state():whisper_mode() then
 		preset = {
@@ -131,6 +133,7 @@ function PlayerBleedOut:exit(state_data, new_state_name)
 	self._unit:camera():camera_unit():base():set_target_tilt(0)
 
 	self._tilt_wait_t = nil
+
 	local exit_data = {
 		equip_weapon = self._old_selection
 	}
@@ -167,7 +170,7 @@ function PlayerBleedOut:update(t, dt)
 
 		self._unit:camera():camera_unit():base():set_target_tilt(tilt)
 
-		if self._tilt_wait_t < t then
+		if t > self._tilt_wait_t then
 			self._tilt_wait_t = nil
 
 			self._unit:camera():camera_unit():base():set_target_tilt(35)
@@ -192,7 +195,8 @@ function PlayerBleedOut:_update_check_actions(t, dt)
 	self:_update_equip_weapon_timers(t, input)
 	self:_update_foley(t, input)
 
-	local new_action = nil
+	local new_action
+
 	new_action = new_action or self:_check_action_weapon_gadget(t, input)
 	new_action = new_action or self:_check_action_weapon_firemode(t, input)
 	new_action = new_action or self:_check_action_reload(t, input)
@@ -223,7 +227,7 @@ function PlayerBleedOut:_update_check_actions(t, dt)
 end
 
 function PlayerBleedOut:_check_action_interact(t, input)
-	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) then
+	if input.btn_interact_press and (not self._intimidate_t or t - self._intimidate_t > tweak_data.player.movement_state.interaction_delay) then
 		self._intimidate_t = t
 
 		if not self:call_teammate("f11", t, false, true) then
@@ -332,8 +336,11 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_administered", revive_SO_data),
 		verification_clbk = callback(PlayerBleedOut, PlayerBleedOut, "rescue_SO_verification", revive_SO_data.unit)
 	}
+
 	revive_SO_data.variant = variant
+
 	local so_id = "Playerrevive"
+
 	revive_SO_data.SO_id = so_id
 
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
@@ -404,6 +411,7 @@ function PlayerBleedOut:call_civilian(line, t, no_gesture, skip_alert, revive_SO
 					action_duration = tweak_data.interaction.revive.timer,
 					followup_objective = followup_objective
 				}
+
 				revive_SO_data.sympathy_civ = prime_target.unit
 
 				prime_target.unit:brain():set_objective(objective)
@@ -429,6 +437,7 @@ function PlayerBleedOut:_unregister_revive_SO()
 		self._revive_SO_data.SO_id = nil
 	elseif self._revive_SO_data.rescuer then
 		local rescuer = self._revive_SO_data.rescuer
+
 		self._revive_SO_data.rescuer = nil
 
 		if alive(rescuer) then
@@ -438,6 +447,7 @@ function PlayerBleedOut:_unregister_revive_SO()
 
 	if self._revive_SO_data.sympathy_civ then
 		local sympathy_civ = self._revive_SO_data.sympathy_civ
+
 		self._revive_SO_data.sympathy_civ = nil
 
 		sympathy_civ:brain():set_objective(nil)
@@ -445,6 +455,7 @@ function PlayerBleedOut:_unregister_revive_SO()
 end
 
 function PlayerBleedOut._register_deathguard_SO(my_unit)
+	return
 end
 
 function PlayerBleedOut._unregister_deathguard_SO(so_id)
@@ -576,6 +587,7 @@ function PlayerBleedOut:on_civ_revive_started(revive_SO_data, sympathy_civ)
 		revive_SO_data.SO_id = nil
 	elseif revive_SO_data.rescuer then
 		local rescuer = revive_SO_data.rescuer
+
 		revive_SO_data.rescuer = nil
 
 		if alive(rescuer) then

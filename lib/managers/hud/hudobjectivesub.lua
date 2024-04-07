@@ -40,6 +40,7 @@ function HUDObjectiveSub:_create_panel(objectives_panel)
 		w = objectives_panel:w(),
 		h = HUDObjectiveSub.H
 	}
+
 	self._object = objectives_panel:panel(panel_params)
 end
 
@@ -56,6 +57,7 @@ function HUDObjectiveSub:_create_objective_text()
 		font_size = HUDObjectiveSub.OBJECTIVE_TEXT_FONT_SIZE,
 		text = utf8.to_upper(self._objective.text)
 	}
+
 	self._objective_text = self._object:text(objective_text_params)
 
 	self._objective_text:set_center_y(self._object:h() / 2)
@@ -69,6 +71,7 @@ function HUDObjectiveSub:_create_amount()
 		w = self._object:h(),
 		h = self._object:h()
 	}
+
 	self._amount_panel = self._object:panel(amount_panel_params)
 
 	self._amount_panel:set_right(self._object:w())
@@ -98,6 +101,7 @@ function HUDObjectiveSub:_create_amount()
 		h = tweak_data.gui:icon_h(HUDObjectiveSub.AMOUNT_FILL_ICON),
 		layer = amount_progress_background:layer() + 1
 	}
+
 	self._amount_progress_fill = self._amount_panel:bitmap(amount_progress_fill_params)
 
 	self._amount_progress_fill:set_center_x(self._amount_panel:w() / 2)
@@ -111,7 +115,9 @@ function HUDObjectiveSub:_create_amount()
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE
 	}
+
 	self._current_amount_text = self._amount_panel:text(current_amount_text_params)
+
 	local _, _, w, h = self._current_amount_text:text_rect()
 
 	self._current_amount_text:set_w(w)
@@ -143,7 +149,9 @@ function HUDObjectiveSub:_create_amount()
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE
 	}
+
 	self._total_amount_text = self._amount_panel:text(total_amount_text_params)
+
 	local _, _, w, h = self._total_amount_text:text_rect()
 
 	self._total_amount_text:set_w(w)
@@ -161,6 +169,7 @@ function HUDObjectiveSub:_create_amount()
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE
 	}
+
 	self._percentage_amount_text = self._amount_panel:text(percentage_amount_text_params)
 end
 
@@ -172,6 +181,7 @@ function HUDObjectiveSub:_create_checkbox()
 		w = self._object:h(),
 		h = self._object:h()
 	}
+
 	self._checkbox_panel = self._object:panel(checkbox_panel_params)
 
 	self._checkbox_panel:set_right(self._object:w())
@@ -202,6 +212,7 @@ end
 
 function HUDObjectiveSub:set_current_amount(current_amount)
 	self._current_amount = current_amount
+
 	local amount_string = tostring(current_amount)
 
 	if self._total_amount >= 10 then
@@ -222,7 +233,7 @@ end
 function HUDObjectiveSub:set_total_amount(total_amount)
 	self._total_amount = total_amount
 
-	if HUDObjectiveSub.PERCENTAGE_AMOUNT_THRESHOLD <= self._total_amount then
+	if self._total_amount >= HUDObjectiveSub.PERCENTAGE_AMOUNT_THRESHOLD then
 		self._current_amount_text:set_visible(false)
 		self._amount_panel:child("slash"):set_visible(false)
 		self._total_amount_text:set_visible(false)

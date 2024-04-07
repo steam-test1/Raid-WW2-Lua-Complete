@@ -4,7 +4,8 @@ local mvec3 = Vector3()
 
 function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	self:set_cosmetics_data(cosmetics)
-	self:_apply_cosmetics(async_clbk or function ()
+	self:_apply_cosmetics(async_clbk or function()
+		return
 	end)
 end
 
@@ -159,7 +160,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 
 	local texture_load_result_clbk = async_clbk and callback(self, self, "clbk_texture_loaded", async_clbk)
 	local textures = {}
-	local base_variable, base_texture, mat_variable, mat_texture, custom_variable, texture_key = nil
+	local base_variable, base_texture, mat_variable, mat_texture, custom_variable, texture_key
 	local wear_tear_value = 1
 
 	for part_id, materials in pairs(self._materials) do
@@ -258,7 +259,7 @@ function NewRaycastWeaponBase:_set_material_textures()
 		return
 	end
 
-	local base_texture, mat_texture, new_texture = nil
+	local base_texture, mat_texture, new_texture
 
 	for part_id, materials in pairs(self._materials) do
 		for _, material in pairs(materials) do

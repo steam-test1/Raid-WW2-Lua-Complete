@@ -8,431 +8,430 @@ function StatisticsManager:init()
 end
 
 function StatisticsManager:_setup(reset)
-	self._defaults = {
-		killed = {
-			german_grunt_light = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_light_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_mid = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_mid_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_mid_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_mid_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_heavy = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_heavy_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_grunt_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_light = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_light_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_heavy = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_heavy_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gebirgsjager_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_light = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_heavy = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_heavy_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gasmask = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_gasmask_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_heavy = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_heavy_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_waffen_ss = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_waffen_ss_mp38 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_waffen_ss_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_waffen_ss_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_commander = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_og_commander = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_officer = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			soviet_nkvd_int_security_captain = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			soviet_nkvd_int_security_captain_b = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_flamer = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_sniper = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_spotter = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			other = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			total = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			}
-		},
-		killed_by_melee = {},
-		killed_by_weapon = {},
-		killed_by_grenade = {},
-		killed_by_turret = {
-			count = 0
-		},
-		killed_by_vehicle = {
-			count = 0
-		},
-		shots_by_weapon = {},
-		sessions = {
+	self._defaults = {}
+	self._defaults.killed = {
+		german_grunt_light = {
+			melee = 0,
+			dismembered = 0,
 			count = 0,
-			time = 0
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_light_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_light_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_light_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_mid = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_mid_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_mid_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_mid_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_heavy = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_heavy_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_heavy_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_grunt_heavy_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_light = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_light_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_light_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_light_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_heavy = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_heavy_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_heavy_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gebirgsjager_heavy_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_light = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_light_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_light_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_heavy = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_heavy_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_heavy_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_heavy_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_light = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_light_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_light_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_light_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gasmask = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_gasmask_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_heavy = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_heavy_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_heavy_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_fallschirmjager_heavy_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_waffen_ss = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_waffen_ss_mp38 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_waffen_ss_kar98 = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_waffen_ss_shotgun = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_commander = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_og_commander = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_officer = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		soviet_nkvd_int_security_captain = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		soviet_nkvd_int_security_captain_b = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_flamer = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_sniper = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		german_spotter = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		other = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
+		},
+		total = {
+			melee = 0,
+			dismembered = 0,
+			count = 0,
+			head_shots = 0,
+			explosion = 0,
+			tied = 0
 		}
+	}
+	self._defaults.killed_by_melee = {}
+	self._defaults.killed_by_weapon = {}
+	self._defaults.killed_by_grenade = {}
+	self._defaults.killed_by_turret = {
+		count = 0
+	}
+	self._defaults.killed_by_vehicle = {
+		count = 0
+	}
+	self._defaults.shots_by_weapon = {}
+	self._defaults.sessions = {
+		count = 0,
+		time = 0
 	}
 	self._defaults.sessions.levels = {}
 
@@ -627,6 +626,7 @@ function StatisticsManager:start_session(data)
 
 	if managers.raid_job._current_job and job_id then
 		local job_stat = tostring(job_id) .. "_part_" .. tostring(managers.raid_job._current_job.current_event)
+
 		self._global.sessions.jobs[job_stat .. "_started"] = (self._global.sessions.jobs[job_stat .. "_started"] or 0) + 1
 	end
 
@@ -671,6 +671,7 @@ function StatisticsManager:stop_session(data)
 
 	self._data_log = nil
 	self._session_started = nil
+
 	local success = data and data.success
 	local session_time = self:get_session_time_seconds()
 
@@ -684,7 +685,7 @@ function StatisticsManager:stop_session(data)
 		end
 	end
 
-	local completion = nil
+	local completion
 	local job_id = managers.raid_job:current_job_id()
 
 	if managers.raid_job._current_job and job_id and data then
@@ -800,17 +801,17 @@ function StatisticsManager:publish_top_stats_to_steam()
 		return
 	end
 
-	local stats = {
-		ach_top_stats_award = {
-			method = "set",
-			type = "int",
-			value = self._global.misc.best_of_stats or 0
-		},
-		ach_all_3_top_stats_award = {
-			method = "set",
-			type = "int",
-			value = self._global.misc.best_of_stats_all_3 or 0
-		}
+	local stats = {}
+
+	stats.ach_top_stats_award = {
+		method = "set",
+		type = "int",
+		value = self._global.misc.best_of_stats or 0
+	}
+	stats.ach_all_3_top_stats_award = {
+		method = "set",
+		type = "int",
+		value = self._global.misc.best_of_stats_all_3 or 0
 	}
 
 	managers.network.account:publish_statistics(stats)
@@ -842,6 +843,7 @@ function StatisticsManager:_increment_challenge_card_stat(start_complete_flag, j
 	end
 
 	local stat_name = start_complete_flag .. "_" .. job_type_name .. "_" .. card_rarity_name .. "_count"
+
 	self._global.challenge_cards[stat_name] = (self._global.challenge_cards[stat_name] or 0) + 1
 end
 
@@ -870,6 +872,7 @@ function StatisticsManager:tier_4_weapon_skill_bought(weapon_id)
 	end
 
 	self._global.tier_4_weapon_skill_bought[weapon_id] = true
+
 	local count = 0
 
 	for weapon_id, _ in pairs(self._global.tier_4_weapon_skill_bought) do
@@ -965,7 +968,9 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 
 	local level_list, job_list, weapon_list, melee_list, grenade_list, enemy_list, character_list = tweak_data.statistics:statistics_table()
 	local stats = self:check_version()
+
 	self._global.play_time.minutes = math.ceil(self._global.play_time.minutes + session_time_minutes)
+
 	local current_time = math.floor(self._global.play_time.minutes / 60)
 	local time_found = false
 	local play_times = {
@@ -1186,7 +1191,9 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		type = "int",
 		value = self._global.misc.character_level_40_count or 0
 	}
+
 	local count_revives = session.revives.player_count + session.revives.npc_count
+
 	stats.ach_revive_teammates = {
 		type = "int",
 		value = count_revives
@@ -1309,11 +1316,13 @@ function StatisticsManager:publish_level_to_steam()
 
 	local stats = {}
 	local current_level = managers.experience:current_level()
+
 	stats.player_level = {
 		method = "set",
 		type = "int",
 		value = current_level
 	}
+
 	local max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false)
 
 	for i = 0, max_level, 10 do
@@ -1325,6 +1334,7 @@ function StatisticsManager:publish_level_to_steam()
 	end
 
 	local level_range = max_level <= current_level and max_level or math.floor(current_level / 10) * 10
+
 	stats["player_level_" .. level_range] = {
 		value = 1,
 		method = "set",
@@ -1339,10 +1349,10 @@ function StatisticsManager:publish_custom_stat_to_steam(name, value)
 		return
 	end
 
-	local stats = {
-		[name] = {
-			type = "int"
-		}
+	local stats = {}
+
+	stats[name] = {
+		type = "int"
 	}
 
 	if value then
@@ -1425,7 +1435,7 @@ function StatisticsManager:publish_equipped_to_steam()
 end
 
 function StatisticsManager:publish_skills_to_steam(skip_version_check)
-	return
+	do return end
 
 	if Application:editor() then
 		return
@@ -1461,7 +1471,7 @@ function StatisticsManager:check_version()
 		type = "int"
 	}
 
-	if managers.network.account:get_stat("stat_version") < CURRENT_VERSION then
+	if CURRENT_VERSION > managers.network.account:get_stat("stat_version") then
 		self:publish_skills_to_steam(true)
 
 		stats.stat_version = {
@@ -1475,7 +1485,7 @@ function StatisticsManager:check_version()
 end
 
 function StatisticsManager:debug_estimate_steam_players()
-	local key = nil
+	local key
 	local stats = {}
 	local account = managers.network.account
 	local days = 60
@@ -1503,11 +1513,11 @@ end
 
 function StatisticsManager:_calculate_average()
 	local t = self._global.sessions.count ~= 0 and self._global.sessions.count or 1
-	self._global.average = {
-		killed = deep_clone(self._global.killed),
-		sessions = deep_clone(self._global.sessions),
-		revives = deep_clone(self._global.revives)
-	}
+
+	self._global.average = {}
+	self._global.average.killed = deep_clone(self._global.killed)
+	self._global.average.sessions = deep_clone(self._global.sessions)
+	self._global.average.revives = deep_clone(self._global.revives)
 
 	for _, data in pairs(self._global.average.killed) do
 		data.count = math.round(data.count / t)
@@ -1546,10 +1556,12 @@ function StatisticsManager:_calculate_average()
 end
 
 function StatisticsManager:killed_by_anyone(data)
+	return
 end
 
 function StatisticsManager:killed(data)
 	local stats_name = data.stats_name or data.name
+
 	data.type = tweak_data.character[data.name] and tweak_data.character[data.name].challenges.type
 
 	if not self._global.killed[stats_name] or not self._global.session.killed[stats_name] then
@@ -1564,6 +1576,7 @@ function StatisticsManager:killed(data)
 	local by_other_variant = not by_bullet and not by_melee and not by_explosion
 	local dismembered = data.dismembered
 	local type = self._global.killed[stats_name]
+
 	type.count = type.count + 1
 	type.head_shots = type.head_shots + (data.head_shot and 1 or 0)
 	type.melee = type.melee + (by_melee and 1 or 0)
@@ -1581,6 +1594,7 @@ function StatisticsManager:killed(data)
 
 	if self._session_started then
 		local type = self._global.session.killed[stats_name]
+
 		type.count = type.count + 1
 		type.head_shots = type.head_shots + (data.head_shot and 1 or 0)
 		type.melee = type.melee + (by_melee and 1 or 0)
@@ -1751,6 +1765,7 @@ function StatisticsManager:revived(data)
 	end
 
 	local counter = data.npc and "npc_count" or "player_count"
+
 	self._global.revives[counter] = self._global.revives[counter] + 1
 
 	if self._session_started then
@@ -1840,6 +1855,7 @@ function StatisticsManager:downed(data)
 	managers.achievment:set_script_data("stand_together_fail", true)
 
 	local counter = data.bleed_out and "bleed_out" or data.fatal and "fatal" or data.incapacitated and "incapacitated" or "death"
+
 	self._global.downed[counter] = self._global.downed[counter] + 1
 
 	if self._session_started then
@@ -1970,6 +1986,7 @@ function StatisticsManager:_print_experience_stats()
 		local exp = tweak_data.experience_manager.values[size]
 		local average_count = average[size] and self:_amount_format(average[size].count, true) or "-"
 		local average_exp = average[size] and self:_amount_format(exp * average[size].count, true) or "-"
+
 		total = total + exp * data.count
 
 		print("\nSize: " .. size .. " " .. self:_amount_format(exp, true) .. "" .. self:_amount_format(data.count) .. "/" .. average_count .. " " .. self:_amount_format(exp * data.count) .. "/" .. average_exp)
@@ -1988,6 +2005,7 @@ end
 
 function StatisticsManager:_amount_format(amount, left)
 	amount = math.round(amount)
+
 	local s = ""
 
 	for i = 6 - string.len(amount), 0, -1 do
@@ -2000,11 +2018,17 @@ end
 function StatisticsManager:_time_text(time, params)
 	local no_days = params and params.no_days
 	local days = no_days and 0 or math.floor(time / 86400)
+
 	time = time - days * 86400
+
 	local hours = math.floor(time / 3600)
+
 	time = time - hours * 3600
+
 	local minutes = math.floor(time / 60)
+
 	time = time - minutes * 60
+
 	local seconds = math.round(time)
 
 	return (no_days and "" or (days < 10 and "0" .. days or days) .. ":") .. (hours < 10 and "0" .. hours or hours) .. ":" .. (minutes < 10 and "0" .. minutes or minutes) .. ":" .. (seconds < 10 and "0" .. seconds or seconds)
@@ -2046,16 +2070,11 @@ end
 
 function StatisticsManager:favourite_level()
 	local started = 0
-	local c_name = nil
+	local c_name
 
 	for name, data in pairs(self._global.sessions.levels) do
-		if started < data.started then
-			c_name = name or c_name
-		end
-
-		if started < data.started then
-			started = data.started or started
-		end
+		c_name = started < data.started and name or c_name
+		started = started < data.started and data.started or started
 	end
 
 	return c_name and tweak_data.levels:get_localized_level_name_from_level_id(c_name) or managers.localization:text("debug_undecided")
@@ -2072,7 +2091,7 @@ function StatisticsManager:total_completed_campaigns()
 end
 
 function StatisticsManager:favourite_weapon()
-	local weapon_id = nil
+	local weapon_id
 	local count = 0
 
 	for id, data in pairs(self._global.killed_by_weapon) do
@@ -2123,7 +2142,7 @@ function StatisticsManager:completed_objectives()
 end
 
 function StatisticsManager:session_favourite_weapon()
-	local weapon_id = nil
+	local weapon_id
 	local count = 0
 
 	for id, data in pairs(self._global.session.killed_by_weapon) do
@@ -2336,7 +2355,7 @@ function StatisticsManager:calculate_top_stats()
 			for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
 				local stat_tweak_data = tweak_data.statistics.top_stats[stat_id]
 
-				if stats[stat_id].score < peer_stats[stat_tweak_data.stat] or stats[stat_id].score == 0 then
+				if peer_stats[stat_tweak_data.stat] > stats[stat_id].score or stats[stat_id].score == 0 then
 					stats[stat_id].score_difference = math.abs(peer_stats[stat_tweak_data.stat] - stats[stat_id].score)
 					stats[stat_id].score = peer_stats[stat_tweak_data.stat]
 					stats[stat_id].weight = stats[stat_id].score_difference * stat_tweak_data.weight_multiplier
@@ -2360,19 +2379,21 @@ function StatisticsManager:calculate_top_stats()
 		table.insert(indexed_stats, stat)
 	end
 
-	table.sort(indexed_stats, function (a, b)
+	table.sort(indexed_stats, function(a, b)
 		if a.weight == b.weight then
 			return a.weight + tweak_data.statistics.top_stats[a.id].tie_breaker_multiplier > b.weight + tweak_data.statistics.top_stats[b.id].tie_breaker_multiplier
 		end
 
-		return b.weight < a.weight
+		return a.weight > b.weight
 	end)
 
 	self.top_stats = {}
+
 	local peer_1_top_stats_count = 0
 
 	for i = 1, 3 do
 		local stat_slot = self:_get_free_stat_slot(self.top_stats)
+
 		self.top_stats[stat_slot] = indexed_stats[i]
 
 		if self.top_stats[stat_slot].peer_id == 1 then
@@ -2413,7 +2434,7 @@ function StatisticsManager:calculate_bottom_stats()
 
 				if stats[stat_id].score == nil or peer_stats[stat_tweak_data.stat] < stats[stat_id].score then
 					if stats[stat_id].score == nil then
-						stats[stat_id].score = 100000000000.0
+						stats[stat_id].score = 100000000000
 					end
 
 					stats[stat_id].score_difference = math.abs(peer_stats[stat_tweak_data.stat] - stats[stat_id].score)
@@ -2439,18 +2460,19 @@ function StatisticsManager:calculate_bottom_stats()
 		table.insert(indexed_stats, stat)
 	end
 
-	table.sort(indexed_stats, function (a, b)
+	table.sort(indexed_stats, function(a, b)
 		if a.weight == b.weight then
 			return a.weight + tweak_data.statistics.bottom_stats[a.id].tie_breaker_multiplier > b.weight + tweak_data.statistics.bottom_stats[b.id].tie_breaker_multiplier
 		end
 
-		return b.weight < a.weight
+		return a.weight > b.weight
 	end)
 
 	self.bottom_stats = {}
 
 	for i = 1, 3 do
 		local stat_slot = self:_get_free_stat_slot(self.bottom_stats)
+
 		self.bottom_stats[stat_slot] = indexed_stats[i]
 	end
 end
@@ -2537,6 +2559,7 @@ end
 
 function StatisticsManager:get_top_stats_for_player(peer_id)
 	peer_id = peer_id or managers.network:session():local_peer():id()
+
 	local top_stats_for_player = {}
 
 	for i = 1, #self.top_stats do
@@ -2549,27 +2572,34 @@ function StatisticsManager:get_top_stats_for_player(peer_id)
 end
 
 function StatisticsManager:get_kills_top_stat()
+	return
 end
 
 function StatisticsManager:get_special_kills_top_stat()
+	return
 end
 
 function StatisticsManager:get_head_shots_top_stat()
+	return
 end
 
 function StatisticsManager:get_accuracy_top_stat()
+	return
 end
 
 function StatisticsManager:get_downs_top_stat()
+	return
 end
 
 function StatisticsManager:get_revives_top_stat()
+	return
 end
 
 function StatisticsManager:sync_save(data)
 	local state = {
 		session_started = self._session_started
 	}
+
 	data.StatisticsManager = state
 end
 
@@ -2607,6 +2637,7 @@ function StatisticsManager:save(data)
 		tier_4_weapon_skill_bought = self._global.tier_4_weapon_skill_bought,
 		play_time = self._global.play_time
 	}
+
 	data.StatisticsManager = state
 end
 

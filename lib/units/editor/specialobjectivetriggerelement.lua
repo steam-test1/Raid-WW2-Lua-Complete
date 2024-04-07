@@ -47,6 +47,7 @@ function SpecialObjectiveTriggerUnitElement:draw_links(t, dt, selected_unit, all
 end
 
 function SpecialObjectiveTriggerUnitElement:update_editing()
+	return
 end
 
 function SpecialObjectiveTriggerUnitElement:add_element()
@@ -99,6 +100,7 @@ function SpecialObjectiveTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"point_special_objective",
 		"ai_so_group"

@@ -31,6 +31,7 @@ function PlayerCamera:setup_viewport(data)
 	local dimensions = data.dimensions
 	local name = "player" .. tostring(self._id)
 	local vp = managers.viewport:new_vp(dimensions.x, dimensions.y, dimensions.w, dimensions.h, name)
+
 	self._director = vp:director()
 	self._shaker = self._director:shaker()
 
@@ -43,10 +44,9 @@ function PlayerCamera:setup_viewport(data)
 	self._camera_controller:set_both(self._camera_unit)
 	self._camera_controller:set_timer(managers.player:player_timer())
 
-	self._shakers = {
-		breathing = self._shaker:play("breathing", 0.3),
-		headbob = self._shaker:play("headbob", 0)
-	}
+	self._shakers = {}
+	self._shakers.breathing = self._shaker:play("breathing", 0.3)
+	self._shakers.headbob = self._shaker:play("headbob", 0)
 
 	vp:set_camera(self._camera_object)
 
@@ -65,6 +65,7 @@ end
 
 function PlayerCamera:spawn_camera_unit()
 	local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
+
 	self._camera_unit = World:spawn_unit(Idstring("units/vanilla/characters/players/players_default_fps/players_default_fps"), self._m_cam_pos, self._m_cam_rot)
 	self._machine = self._camera_unit:anim_state_machine()
 
@@ -226,6 +227,7 @@ function PlayerCamera:set_rotation(rot)
 	local t = TimerManager:game():time()
 	local sync_dt = t - self._last_sync_t
 	local sync_yaw = rot:yaw()
+
 	sync_yaw = sync_yaw % 360
 
 	if sync_yaw < 0 then
@@ -233,12 +235,15 @@ function PlayerCamera:set_rotation(rot)
 	end
 
 	sync_yaw = math.floor(255 * sync_yaw / 360)
+
 	local sync_pitch = math.clamp(rot:pitch(), -85, 85) + 85
+
 	sync_pitch = math.floor(127 * sync_pitch / 170)
+
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
 
 	if tweak_data.network then
-		local update_network = tweak_data.network.camera.network_sync_delta_t < sync_dt and angle_delta > 0 or tweak_data.network.camera.network_angle_delta < angle_delta
+		local update_network = sync_dt > tweak_data.network.camera.network_sync_delta_t and angle_delta > 0 or angle_delta > tweak_data.network.camera.network_angle_delta
 
 		if update_network then
 			self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
@@ -270,6 +275,7 @@ end
 
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	local mul = managers.user:get_setting("camera_shake")
+
 	amplitude = (amplitude or 1) * mul
 	frequency = frequency or 1
 	offset = offset or 0

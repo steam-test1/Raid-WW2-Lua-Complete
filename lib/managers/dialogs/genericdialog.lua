@@ -169,10 +169,10 @@ function GenericDialog:update_input(t, dt)
 		return
 	end
 
-	local dir, move_time = nil
+	local dir, move_time
 	local move = self._controller:get_input_axis("menu_move")
 
-	if self._controller:get_input_bool("menu_right") or self.MOVE_AXIS_LIMIT < move.x then
+	if self._controller:get_input_bool("menu_right") or move.x > self.MOVE_AXIS_LIMIT then
 		dir = 1
 	elseif self._controller:get_input_bool("menu_left") or move.x < -self.MOVE_AXIS_LIMIT then
 		dir = -1
@@ -206,12 +206,13 @@ function GenericDialog:controller_hotswap_triggered()
 
 		self._mouse_id = managers.mouse_pointer:get_id()
 		self._removed_mouse = nil
-		local data = {
-			mouse_move = callback(self, self, "mouse_moved"),
-			mouse_press = callback(self, self, "mouse_pressed"),
-			mouse_release = callback(self, self, "mouse_released"),
-			id = self._mouse_id
-		}
+
+		local data = {}
+
+		data.mouse_move = callback(self, self, "mouse_moved")
+		data.mouse_press = callback(self, self, "mouse_pressed")
+		data.mouse_release = callback(self, self, "mouse_released")
+		data.id = self._mouse_id
 
 		managers.mouse_pointer:use_mouse(data)
 	else
@@ -235,12 +236,13 @@ function GenericDialog:set_input_enabled(enabled)
 
 				self._mouse_id = managers.mouse_pointer:get_id()
 				self._removed_mouse = nil
-				local data = {
-					mouse_move = callback(self, self, "mouse_moved"),
-					mouse_press = callback(self, self, "mouse_pressed"),
-					mouse_release = callback(self, self, "mouse_released"),
-					id = self._mouse_id
-				}
+
+				local data = {}
+
+				data.mouse_move = callback(self, self, "mouse_moved")
+				data.mouse_press = callback(self, self, "mouse_pressed")
+				data.mouse_release = callback(self, self, "mouse_released")
+				data.id = self._mouse_id
 
 				managers.mouse_pointer:use_mouse(data)
 			else
@@ -395,4 +397,5 @@ function GenericDialog:remove_mouse()
 end
 
 function GenericDialog:resolution_changed_callback()
+	return
 end

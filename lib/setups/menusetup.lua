@@ -61,7 +61,7 @@ function MenuSetup:load_packages()
 		local function _load_wip_func()
 			if PackageManager:package_exists("packages/wip/game_base") then
 				if not PackageManager:loaded("packages/wip/game_base") then
-					PackageManager:load("packages/wip/game_base", function ()
+					PackageManager:load("packages/wip/game_base", function()
 						Global._game_base_package_loaded = true
 					end)
 				end
@@ -87,13 +87,13 @@ function MenuSetup:_load_pkg_with_init(pkg)
 
 	if not PackageManager:loaded(init_pkg) then
 		Application:debug("[MenuSetup:_load_camp_pkg_with_init] Loading...", init_pkg)
-		PackageManager:load(init_pkg, function ()
+		PackageManager:load(init_pkg, function()
 			Application:debug("[MenuSetup:_load_camp_pkg_with_init] Loading...", pkg)
 		end)
 	end
 
 	if not PackageManager:loaded(pkg) then
-		PackageManager:load(pkg, function ()
+		PackageManager:load(pkg, function()
 			Application:debug("[MenuSetup:_load_camp_pkg_with_init] DONE", pkg)
 		end)
 	end
@@ -103,6 +103,7 @@ function MenuSetup:load_stream_level_packages()
 	Application:debug("[MenuSetup:load_stream_level_packages]")
 
 	local function _empty_func()
+		return
 	end
 
 	setup:set_resource_loaded_clbk(Idstring("unit"), nil)
@@ -119,6 +120,7 @@ function MenuSetup:load_camp_packages()
 	Application:debug("[MenuSetup:load_camp_packages]")
 
 	local function _empty_func()
+		return
 	end
 
 	if not PackageManager:loaded("levels/wip/camp/world_sounds") then
@@ -138,11 +140,7 @@ function MenuSetup:gather_packages_to_unload()
 	self._started_unloading_packages = true
 	self._packages_to_unload = self._packages_to_unload or {}
 
-	if not Global.load_start_menu then
-		if PackageManager:loaded("packages/start_menu") then
-			-- Nothing
-		end
-
+	if not Global.load_start_menu and (not PackageManager:loaded("packages/start_menu") or true) then
 		local prefix = "packages/dlcs/"
 		local sufix = "/start_menu"
 		local package = ""
@@ -173,7 +171,7 @@ function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
 	if not Application:editor() then
-		local event_id, checkpoint_index, level, level_class_name, mission, world_setting, difficulty, intro_skipped = nil
+		local event_id, checkpoint_index, level, level_class_name, mission, world_setting, difficulty, intro_skipped
 
 		if not Global.exe_arguments_parsed then
 			local arg_list = Application:argv()

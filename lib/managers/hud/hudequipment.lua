@@ -23,6 +23,7 @@ function HUDEquipment:_create_panel(equipment_panel, equipment_id)
 		w = HUDEquipment.DEFAULT_W,
 		h = HUDEquipment.DEFAULT_H
 	}
+
 	self._object = equipment_panel:panel(panel_params)
 end
 
@@ -33,6 +34,7 @@ function HUDEquipment:_create_icon(icon)
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 
 	self._icon:set_bottom(self._object:h())
@@ -50,6 +52,7 @@ function HUDEquipment:_create_amount_text()
 		font = HUDEquipment.FONT,
 		font_size = HUDEquipment.FONT_SIZE
 	}
+
 	self._amount_text = self._object:text(amount_text_params)
 
 	self:_fit_amount_text()

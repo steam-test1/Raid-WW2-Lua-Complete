@@ -15,6 +15,7 @@ function RaidGUIControlInputField:init(parent, params)
 	RaidGUIControlInputField.super.init(self, parent, params)
 
 	self._ws = params.ws
+
 	local panel_params = {
 		is_root_panel = true,
 		name = "input_field_panel_" .. self._name,
@@ -23,8 +24,10 @@ function RaidGUIControlInputField:init(parent, params)
 		w = params.w,
 		h = params.h
 	}
+
 	self._panel = RaidGUIPanel:new(parent, panel_params)
 	self._object = self._panel
+
 	local background_params = {
 		name = "background_bar",
 		y = 0,
@@ -36,6 +39,7 @@ function RaidGUIControlInputField:init(parent, params)
 		right = RaidGUIControlInputField.ICON_RIGHT,
 		color = Color.white:with_alpha(RaidGUIControlInputField.INACTIVE_ALPHA)
 	}
+
 	self._background = self._object:three_cut_bitmap(background_params)
 	self._output_width = 256
 	self._panel_width = 256
@@ -62,6 +66,7 @@ function RaidGUIControlInputField:init(parent, params)
 		w = self._params.w,
 		h = self._params.h
 	})
+
 	local text_value = ""
 
 	if params and params.text then
@@ -86,6 +91,7 @@ function RaidGUIControlInputField:init(parent, params)
 		selection_color = Color.white,
 		layer = self._character_name_frame:layer() + 10
 	})
+
 	local caret = self._input_panel:rect({
 		vertical = "center",
 		name = "caret",
@@ -154,6 +160,7 @@ function RaidGUIControlInputField:set_layer(layer)
 end
 
 function RaidGUIControlInputField:set_channel_id(channel_id)
+	return
 end
 
 function RaidGUIControlInputField:esc_key_callback()
@@ -197,6 +204,7 @@ end
 function RaidGUIControlInputField:show_onscreen_keyboard()
 	if not self._displaying_console_osk then
 		self._displaying_console_osk = true
+
 		local input_text = self._input_panel:child("input_text"):text()
 
 		managers.system_menu:show_keyboard_input({
@@ -230,7 +238,7 @@ function RaidGUIControlInputField:_console_keyboard_dimissed(success, text)
 end
 
 function trim(s)
-	return s:gsub("^%s*(.-)%s*$", "%1")
+	return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 function RaidGUIControlInputField:_loose_focus()
@@ -439,6 +447,7 @@ function RaidGUIControlInputField:key_press(o, k)
 	local s, e = text:selection()
 	local n = utf8.len(text:text())
 	local d = math.abs(e - s)
+
 	self._key_pressed = k
 
 	text:stop()
@@ -500,15 +509,17 @@ function RaidGUIControlInputField:_animate_fade_output()
 	local fade_t = 1
 	local t = 0
 
-	while wait_t > t do
+	while t < wait_t do
 		local dt = coroutine.yield()
+
 		t = t + dt
 	end
 
 	local t = 0
 
-	while fade_t > t do
+	while t < fade_t do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		self:set_output_alpha(1 - t / fade_t)
@@ -520,10 +531,12 @@ end
 function RaidGUIControlInputField:_animate_show_component(input_panel, start_alpha)
 	local TOTAL_T = 0.25
 	local t = 0
+
 	start_alpha = start_alpha or 0
 
 	while t < TOTAL_T do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		input_panel:set_alpha(start_alpha + t / TOTAL_T * (1 - start_alpha))
@@ -536,8 +549,9 @@ function RaidGUIControlInputField:_animate_hide_input(input_panel)
 	local TOTAL_T = 0.25
 	local t = 0
 
-	while TOTAL_T > t do
+	while t < TOTAL_T do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		input_panel:set_alpha(1 - t / TOTAL_T)
@@ -547,6 +561,7 @@ function RaidGUIControlInputField:_animate_hide_input(input_panel)
 end
 
 function RaidGUIControlInputField:set_output_alpha(alpha)
+	return
 end
 
 function RaidGUIControlInputField:remove()

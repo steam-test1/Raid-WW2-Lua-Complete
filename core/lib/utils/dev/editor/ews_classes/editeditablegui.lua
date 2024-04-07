@@ -8,6 +8,7 @@ function EditUnitEditableGui:init(editor)
 		name = "Gui Text",
 		class = self
 	})
+
 	self._panel = panel
 	self._ctrls = {}
 	self._element_guis = {}
@@ -42,6 +43,7 @@ function EditUnitEditableGui:init(editor)
 		"TextDistanceField",
 		"diffuse_vc_decal_distance_field"
 	}
+
 	local ctrlrs_sizer = EWS:BoxSizer("VERTICAL")
 
 	self:_create_color_button(panel, ctrlrs_sizer)
@@ -88,6 +90,7 @@ end
 
 function EditUnitEditableGui:_create_font_size_slider(panel, sizer)
 	local horizontal_sizer = sizer
+
 	self._font_size_params = {
 		name_proportions = 1,
 		name = "Font size:",
@@ -126,6 +129,7 @@ function EditUnitEditableGui:_create_font_combobox(panel, sizer)
 		options = self._fonts,
 		value = self._fonts[1]
 	}
+
 	local ctrlr = CoreEws.combobox(self._font_params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_font"), nil)
@@ -150,6 +154,7 @@ function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 		options = self._aligns.horizontal,
 		value = self._aligns.horizontal[1]
 	}
+
 	local ctrlr = CoreEws.combobox(self._aligns_horizontal_params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_align"), nil)
@@ -167,6 +172,7 @@ function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 		options = self._aligns.vertical,
 		value = self._aligns.vertical[1]
 	}
+
 	local ctrlr = CoreEws.combobox(self._aligns_vertical_params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_vertical"), nil)
@@ -187,6 +193,7 @@ function EditUnitEditableGui:_create_text_wrap_checkbox(panel, sizer)
 	horizontal_sizer:add(checkbox, 0, 1, "EXPAND,LEFT")
 
 	self._ctrls.text_wrap = checkbox
+
 	local checkbox = EWS:CheckBox(panel, "Text Word Wrap", "")
 
 	checkbox:set_value(false)
@@ -226,6 +233,7 @@ function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, 
 		options = self._render_templates,
 		value = self._render_templates[1]
 	}
+
 	local ctrlr = CoreEws.combobox(self._render_template_params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_render_template"), nil)
@@ -244,6 +252,7 @@ function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, 
 		options = self._blend_modes,
 		value = self._blend_modes[1]
 	}
+
 	local ctrlr = CoreEws.combobox(self._blend_mode_params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_blend_mode"), nil)
@@ -253,6 +262,7 @@ end
 
 function EditUnitEditableGui:_create_alpha_slider(panel, sizer)
 	local horizontal_sizer = sizer
+
 	self._alpha_params = {
 		name_proportions = 1,
 		name = "Alpha:",
@@ -498,6 +508,7 @@ function EditUnitEditableGui:is_editable(unit, units)
 	if alive(unit) and unit:editable_gui() then
 		self._ctrls.unit = unit
 		self._ctrls.units = units
+
 		local font_options = clone(self._fonts)
 		local default_font = self._ctrls.unit:editable_gui():default_font()
 

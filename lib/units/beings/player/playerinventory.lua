@@ -19,15 +19,14 @@ function PlayerInventory:init(unit)
 	self._latest_addition = nil
 	self._selected_primary = nil
 	self._use_data_alias = "player"
-	self._align_places = {
-		right_hand = {
-			on_body = false,
-			obj3d_name = Idstring("a_weapon_right")
-		},
-		left_hand = {
-			on_body = false,
-			obj3d_name = Idstring("a_weapon_left")
-		}
+	self._align_places = {}
+	self._align_places.right_hand = {
+		on_body = false,
+		obj3d_name = Idstring("a_weapon_right")
+	}
+	self._align_places.left_hand = {
+		on_body = false,
+		obj3d_name = Idstring("a_weapon_left")
 	}
 	self._listener_id = "PlayerInventory" .. tostring(unit:key())
 	self._listener_holder = EventListenerHolder:new()
@@ -96,6 +95,7 @@ end
 function PlayerInventory:add_unit(new_unit, is_equip, equip_is_instant)
 	local new_selection = {}
 	local use_data = new_unit:base():get_use_data(self._use_data_alias)
+
 	new_selection.use_data = use_data
 	new_selection.unit = new_unit
 
@@ -105,6 +105,7 @@ function PlayerInventory:add_unit(new_unit, is_equip, equip_is_instant)
 
 	if self._available_selections[selection_index] then
 		local old_weapon_unit = self._available_selections[selection_index].unit
+
 		is_equip = is_equip or old_weapon_unit == self:equipped_unit()
 
 		old_weapon_unit:base():remove_destroy_listener(self._listener_id)
@@ -165,17 +166,17 @@ function PlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	end
 
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
-	local setup_data = {
-		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit
-		},
-		expend_ammo = true,
-		autoaim = true,
-		alert_AI = true,
-		alert_filter = self._unit:movement():SO_access()
+	local setup_data = {}
+
+	setup_data.user_unit = self._unit
+	setup_data.ignore_units = {
+		self._unit,
+		new_unit
 	}
+	setup_data.expend_ammo = true
+	setup_data.autoaim = true
+	setup_data.alert_AI = true
+	setup_data.alert_filter = self._unit:movement():SO_access()
 
 	new_unit:base():setup(setup_data)
 	self:add_unit(new_unit, equip, instant)
@@ -203,18 +204,18 @@ function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, 
 		new_unit:base():assemble(factory_name)
 	end
 
-	local setup_data = {
-		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit
-		},
-		expend_ammo = true,
-		autoaim = true,
-		alert_AI = true,
-		alert_filter = self._unit:movement():SO_access(),
-		timer = managers.player:player_timer()
+	local setup_data = {}
+
+	setup_data.user_unit = self._unit
+	setup_data.ignore_units = {
+		self._unit,
+		new_unit
 	}
+	setup_data.expend_ammo = true
+	setup_data.autoaim = true
+	setup_data.alert_AI = true
+	setup_data.alert_filter = self._unit:movement():SO_access()
+	setup_data.timer = managers.player:player_timer()
 
 	if blueprint then
 		setup_data.panic_suppression_skill = not managers.weapon_factory:has_perk("silencer", factory_name, blueprint) and managers.player:has_category_upgrade("player", "panic_suppression") or false
@@ -230,6 +231,7 @@ end
 
 function PlayerInventory:remove_selection(selection_index, instant)
 	selection_index = selection_index or self._equipped_selection
+
 	local weap_unit = self._available_selections[selection_index].unit
 
 	if alive(weap_unit) then
@@ -342,6 +344,7 @@ end
 
 function PlayerInventory:_send_equipped_weapon(send_equipped_weapon_type)
 	send_equipped_weapon_type = send_equipped_weapon_type or PlayerInventory.SEND_WEAPON_TYPE_PLAYER_PRIMARY_SECONDARY
+
 	local equipped_weapon_category_id = self:equipped_selection()
 	local equipped_weapon_identifier = self:equipped_unit():base():get_name_id()
 
@@ -367,6 +370,7 @@ function PlayerInventory:_send_equipped_weapon(send_equipped_weapon_type)
 		local entry = tostring(cosmetics_id)
 		local quality = "1"
 		local bonus = cosmetics_bonus and "1" or "0"
+
 		cosmetics_string = entry .. "-" .. quality .. "-" .. bonus
 	else
 		cosmetics_string = "nil-1-0"
@@ -466,6 +470,7 @@ function PlayerInventory._chk_create_w_factory_indexes()
 	end
 
 	local weapon_factory_indexed = {}
+
 	PlayerInventory._weapon_factory_indexed = weapon_factory_indexed
 
 	for id, data in pairs(tweak_data.weapon.factory) do
@@ -474,7 +479,7 @@ function PlayerInventory._chk_create_w_factory_indexes()
 		end
 	end
 
-	table.sort(weapon_factory_indexed, function (a, b)
+	table.sort(weapon_factory_indexed, function(a, b)
 		return a < b
 	end)
 end
@@ -545,10 +550,12 @@ function PlayerInventory:save(data)
 	if self._equipped_selection then
 		local eq_weap_name = self:equipped_unit():base()._factory_id or self:equipped_unit():name()
 		local index = self._get_weapon_sync_index(eq_weap_name)
+
 		data.equipped_weapon_index = index
 		data.mask_visibility = self._mask_visibility
 		data.blueprint_string = self:equipped_unit():base().blueprint_to_string and self:equipped_unit():base():blueprint_to_string() or nil
 		data.gadget_on = self:equipped_unit():base().gadget_on and self:equipped_unit():base()._gadget_on
+
 		local cosmetics_string = ""
 		local cosmetics_id = self:equipped_unit():base().get_cosmetics_id and self:equipped_unit():base():get_cosmetics_id() or nil
 
@@ -558,6 +565,7 @@ function PlayerInventory:save(data)
 			local entry = tostring(cosmetics_id)
 			local quality = "1"
 			local bonus = cosmetics_bonus and "1" or "0"
+
 			cosmetics_string = entry .. "-" .. quality .. "-" .. bonus
 		else
 			cosmetics_string = "nil-1-0"
@@ -585,12 +593,13 @@ end
 function PlayerInventory:load(data)
 	if data.equipped_weapon_index then
 		self._weapon_add_clbk = "playerinventory_load"
-		local delayed_data = {
-			equipped_weapon_index = data.equipped_weapon_index,
-			blueprint_string = data.blueprint_string,
-			cosmetics_string = data.cosmetics_string,
-			gadget_on = data.gadget_on
-		}
+
+		local delayed_data = {}
+
+		delayed_data.equipped_weapon_index = data.equipped_weapon_index
+		delayed_data.blueprint_string = data.blueprint_string
+		delayed_data.cosmetics_string = data.cosmetics_string
+		delayed_data.gadget_on = data.gadget_on
 
 		self:_clbk_weapon_add(delayed_data)
 	end
@@ -660,6 +669,7 @@ function PlayerInventory:set_grenade(grenade)
 end
 
 function PlayerInventory:set_melee_weapon_by_peer(peer)
+	return
 end
 
 function PlayerInventory:set_ammo(ammo)
@@ -711,6 +721,7 @@ function PlayerInventory:all_out_of_ammo()
 end
 
 function PlayerInventory:anim_clbk_equip_exit(unit)
+	return
 end
 
 function PlayerInventory:set_visibility_state(state)

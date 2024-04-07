@@ -1,4 +1,5 @@
 DOTManager = DOTManager or class()
+
 local tmp_vec3 = Vector3()
 
 function DOTManager:init()

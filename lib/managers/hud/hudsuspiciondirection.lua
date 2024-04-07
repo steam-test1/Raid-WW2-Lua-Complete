@@ -37,6 +37,7 @@ function HUDSuspicionDirection:_create_panel(hud)
 		w = HUDSuspicionDirection.W,
 		h = HUDSuspicionDirection.H
 	}
+
 	self._suspicion_direction_panel = self._hud_panel:panel(panel_params)
 
 	self._suspicion_direction_panel:set_center(self._suspicion_direction_panel:parent():w() / 2, self._suspicion_direction_panel:parent():h() / 2)
@@ -49,6 +50,7 @@ function HUDSuspicionDirection:create_suspicion_indicator(observer_key, observer
 
 	local indicator = self:_create_suspicion_indicator(observer_key)
 	local indicator_active_alpha = HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES == true and suspect == "teammate" and HUDSuspicionDirection.TEAMMATE_ACTIVE_ALPHA or HUDSuspicionDirection.PLAYER_ACTIVE_ALPHA
+
 	self._indicators[observer_key] = {
 		state = "heard_something",
 		need_to_init = true,
@@ -116,6 +118,7 @@ function HUDSuspicionDirection:set_state(observer_key, state)
 end
 
 function HUDSuspicionDirection:set_suspicion_indicator_progress(observer_key, progress)
+	return
 end
 
 function HUDSuspicionDirection:show_suspicion_indicator(observer_key)
@@ -192,7 +195,7 @@ end
 
 function HUDSuspicionDirection:_animate_alpha(indicator, new_alpha, duration, clbk, clbk_data)
 	local t = 0
-	local dt = nil
+	local dt
 	local starting_alpha = indicator:alpha()
 	local change = new_alpha - starting_alpha
 
@@ -223,7 +226,9 @@ function HUDSuspicionDirection:_animate_color(indicator, new_color)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.cubic_in_out(t, initial_color.r, new_color.r - initial_color.r, duration)
 		local current_g = Easing.cubic_in_out(t, initial_color.g, new_color.g - initial_color.g, duration)
 		local current_b = Easing.cubic_in_out(t, initial_color.b, new_color.b - initial_color.b, duration)
@@ -251,6 +256,7 @@ function HUDSuspicionDirection:_animate_suspicion(id)
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
 		fade_in_t = math.clamp(fade_in_t - dt, 0, 1)
 

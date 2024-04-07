@@ -22,6 +22,7 @@ function RaidGUIControlClassDescription:_layout()
 		w = self._params.w,
 		h = self._params.h
 	})
+
 	local padding = 16
 	local padded_width = self._object:w() - padding * 2
 	local object_bg_params = {
@@ -34,7 +35,9 @@ function RaidGUIControlClassDescription:_layout()
 		texture = tweak_data.gui.icons.paper_mission_book.texture,
 		texture_rect = tweak_data.gui.icons.paper_mission_book.texture_rect
 	}
+
 	self._object_bg = self._object:image(object_bg_params)
+
 	local object_bg_params2 = {
 		name = "object_bg",
 		layer = -2,
@@ -47,9 +50,12 @@ function RaidGUIControlClassDescription:_layout()
 		rotation = 2 + math.random(4),
 		color = Color(0.7, 0.7, 0.7)
 	}
+
 	self._object_bg2 = self._object:image(object_bg_params2)
+
 	local class_icon_data = tweak_data.gui.icons.ico_class_recon or tweak_data.gui.icons.ico_flag_empty
 	local text_rect = class_icon_data.texture_rect
+
 	self._class_icon = self._object:image({
 		name = "class_icon",
 		align = "center",
@@ -93,9 +99,11 @@ function RaidGUIControlClassDescription:_layout()
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		color = tweak_data.gui.colors.raid_black
 	})
+
 	local y_stats = RaidGUIControlClassDescription.CLASS_STATS_DEFAULT_Y
 	local y_stats_label = y_stats + 64
 	local x_stats_step = self._object:w() / 4
+
 	self._health_amount_label = self._object:label({
 		name = "health_amount_label",
 		vertical = "center",
@@ -189,6 +197,7 @@ function RaidGUIControlClassDescription:_layout()
 	self._stamina_amount_label:set_center_x(x_stats_step * 3)
 
 	local y_warcry = RaidGUIControlClassDescription.WARCRY_DEFAULT_Y
+
 	self._warcry_icon = self._object:image({
 		name = "warcry_icon",
 		x = 0,
@@ -202,6 +211,7 @@ function RaidGUIControlClassDescription:_layout()
 	self._warcry_icon:set_center_x(self._object:w() / 2)
 
 	local _, c_y = self._warcry_icon:center()
+
 	self._warcry_name_label = self._object:label({
 		name = "warcry_name_label",
 		h = 32,
@@ -322,7 +332,7 @@ function RaidGUIControlClassDescription:set_data(data)
 
 	local description_extra_h = 0
 
-	if RaidGUIControlClassDescription.CLASS_DESCRIPTION_DEFAULT_H < h then
+	if h > RaidGUIControlClassDescription.CLASS_DESCRIPTION_DEFAULT_H then
 		description_extra_h = h - RaidGUIControlClassDescription.CLASS_DESCRIPTION_DEFAULT_H
 	end
 
@@ -354,7 +364,7 @@ function RaidGUIControlClassDescription:set_data(data)
 
 	self._stamina_label:set_text(self:translate("select_character_stamina_label", true))
 
-	if self._stamina_amount_label:w() < self._stamina_label:w() then
+	if self._stamina_label:w() > self._stamina_amount_label:w() then
 		self._stamina_amount_label:set_center_x(self._stamina_label:center_x())
 	else
 		self._stamina_label:set_center_x(self._stamina_amount_label:center_x())

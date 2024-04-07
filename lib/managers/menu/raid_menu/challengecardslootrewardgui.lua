@@ -34,10 +34,12 @@ function ChallengeCardsLootRewardGui:_show_loot_list(loot_list)
 		},
 		loot_list = loot_list
 	}
+
 	self._loot_cards = self._root_panel:create_custom_control(RaidGUIControlLootRewardCards, loot_reward_card_params)
 end
 
 function ChallengeCardsLootRewardGui:update(t, dt)
+	return
 end
 
 function ChallengeCardsLootRewardGui:_continue_button_on_click()

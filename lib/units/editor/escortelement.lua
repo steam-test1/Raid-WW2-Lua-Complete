@@ -25,7 +25,7 @@ function EscortUnitElement:post_init()
 end
 
 function EscortUnitElement:_raycast_get_type()
-	local unit_type, unit, id = nil
+	local unit_type, unit, id
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
 		mask = 10
@@ -79,6 +79,7 @@ function EscortUnitElement:test_element()
 	test_unit:movement():set_root_blend(false)
 
 	test_unit:anim_data().panic = true
+
 	local action = {
 		clamp_to_graph = true,
 		body_part = 1,
@@ -114,6 +115,7 @@ function EscortUnitElement:_build_panel(panel, panel_sizer)
 		"none",
 		"panic"
 	}, clone(CopActionAct._act_redirects.SO))
+
 	self._so_combobox = self:_build_value_combobox(panel, panel_sizer, "break_so", so_options, "Select an SO that will play at this point")
 
 	self._so_combobox:set_enabled(self._hed.break_point or #self._hed.next_points == 0)
@@ -124,6 +126,7 @@ function EscortUnitElement:_build_panel(panel, panel_sizer)
 end
 
 function EscortUnitElement:update_editing()
+	return
 end
 
 function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)

@@ -1,6 +1,7 @@
 core:import("CoreEnvironmentEffectsManager")
 
 local is_editor = Application:editor()
+
 EnvironmentEffectsManager = EnvironmentEffectsManager or class(CoreEnvironmentEffectsManager.EnvironmentEffectsManager)
 
 function EnvironmentEffectsManager:init()
@@ -36,15 +37,19 @@ function EnvironmentEffect:init(default)
 end
 
 function EnvironmentEffect:load_effects()
+	return
 end
 
 function EnvironmentEffect:update(t, dt)
+	return
 end
 
 function EnvironmentEffect:start()
+	return
 end
 
 function EnvironmentEffect:stop()
+	return
 end
 
 function EnvironmentEffect:default()
@@ -122,6 +127,7 @@ function LightningEffect:init()
 end
 
 function LightningEffect:load_effects()
+	return
 end
 
 function LightningEffect:_update_wait_start()
@@ -235,10 +241,12 @@ function LightningEffect:_set_lightning_values()
 	self._flash_anim_time = math.rand(0, 1)
 	self._distance = math.rand(1)
 	self._intensity_value = math.lerp(Vector3(2, 2, 2), Vector3(5, 5, 5), self._distance)
+
 	local c_pos = managers.environment_effects:camera_position()
 
 	if c_pos then
 		local sound_speed = 30000
+
 		self._sound_delay = self._distance * 2
 
 		self._sound_source:set_rtpc("lightning_distance", self._distance * 4000)
@@ -271,11 +279,12 @@ function RainDropScreenEffect:update(t, dt)
 			end
 
 			local camera_y = math.rad(player:camera():rotation():pitch()) / math.rad(FPCameraPlayerBase.MAX_PITCH)
+
 			camera_y = math.max(math.min(camera_y, 1), -1)
 			camera_y = camera_y * 0.5 + 0.5
 			camera_y = math.pow(camera_y, 5)
 
-			if math.random() < camera_y then
+			if camera_y > math.random() then
 				mvector3.set(value, Vector3(math.random(), math.random(), 0))
 
 				local offset_x = math.random() * math.random()

@@ -78,30 +78,39 @@ function HUDPlayerCustody:set_respawn_time(time)
 	end
 
 	self._last_time = time
+
 	local time_text = self:_get_time_text(time)
 
 	self._timer:set_text(utf8.to_upper(tostring(time_text)))
 end
 
 function HUDPlayerCustody:set_civilians_killed(amount)
+	return
 end
 
 function HUDPlayerCustody:set_trade_delay(time)
+	return
 end
 
 function HUDPlayerCustody:set_trade_delay_visible(visible)
+	return
 end
 
 function HUDPlayerCustody:set_negotiating_visible(visible)
+	return
 end
 
 function HUDPlayerCustody:set_can_be_trade_visible(visible)
+	return
 end
 
 function HUDPlayerCustody:_get_time_text(time)
 	time = math.max(math.floor(time), 0)
+
 	local minutes = math.floor(time / 60)
+
 	time = time - minutes * 60
+
 	local seconds = math.round(time)
 	local text = ""
 
@@ -113,8 +122,10 @@ function HUDPlayerCustody:_animate_text_pulse(text)
 
 	while true do
 		local dt = coroutine.yield()
+
 		t = t + dt
-		local alpha = 0.5 + math.abs(math.sin(t * 360 * 0.5)) / 2
+
+		local alpha = 0.5 + math.abs((math.sin(t * 360 * 0.5))) / 2
 
 		text:set_alpha(alpha)
 	end

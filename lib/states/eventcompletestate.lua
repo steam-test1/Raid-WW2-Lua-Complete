@@ -120,11 +120,10 @@ function EventCompleteState:init(game_state_machine, setup)
 	self._continue_cb = callback(self, self, "_continue")
 	self._controller = nil
 	self._continue_block_timer = 0
-	self._awarded_rewards = {
-		loot = false,
-		xp = false,
-		greed_gold = false
-	}
+	self._awarded_rewards = {}
+	self._awarded_rewards.loot = false
+	self._awarded_rewards.xp = false
+	self._awarded_rewards.greed_gold = false
 end
 
 function EventCompleteState:setup_controller()
@@ -137,6 +136,7 @@ function EventCompleteState:setup_controller()
 end
 
 function EventCompleteState:set_controller_enabled(enabled)
+	return
 end
 
 function EventCompleteState:at_enter(old_state, params)
@@ -229,6 +229,7 @@ function EventCompleteState:at_enter(old_state, params)
 	self:setup_controller()
 
 	self._old_state = old_state
+
 	local total_killed = managers.statistics:session_total_killed()
 
 	if self.is_at_last_event then
@@ -250,6 +251,7 @@ function EventCompleteState:at_enter(old_state, params)
 	managers.dialog:set_paused(true)
 
 	local gui = Overlay:gui()
+
 	self._full_workspace = gui:create_screen_workspace()
 	self._safe_rect_workspace = gui:create_screen_workspace()
 	self._safe_panel = self._safe_rect_workspace:panel()
@@ -269,6 +271,7 @@ function EventCompleteState:_calculate_card_xp_bonuses()
 
 	if self._active_challenge_card and self._active_challenge_card.status == ChallengeCardsManager.CARD_STATUS_SUCCESS then
 		local card = tweak_data.challenge_cards.cards[self._active_challenge_card[ChallengeCardsTweakData.KEY_NAME_FIELD]]
+
 		card_bonus_xp = card.bonus_xp or 0
 	end
 
@@ -314,6 +317,7 @@ function EventCompleteState:_calculate_extra_loot_secured()
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
 		}
+
 		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = extra_loot_loot_data
 	end
 end
@@ -331,6 +335,7 @@ function EventCompleteState:on_loot_data_ready()
 	end
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
+
 	local dog_tag_loot_data = {
 		title = "menu_loot_screen_dog_tags",
 		icon = "rewards_dog_tags",
@@ -339,6 +344,7 @@ function EventCompleteState:on_loot_data_ready()
 		acquired_value = self.loot_acquired * tweak_data.lootdrop.dog_tag.loot_value,
 		total_value = self.loot_spawned * tweak_data.lootdrop.dog_tag.loot_value
 	}
+
 	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = dog_tag_loot_data
 
 	if self.loot_spawned == self.loot_acquired and self._success then
@@ -364,7 +370,7 @@ function EventCompleteState:drop_loot_for_player()
 	end
 
 	local loot_percentage = math.clamp(loot_percentage, 0, 1)
-	local forced_loot_group = nil
+	local forced_loot_group
 
 	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" then
 		forced_loot_group = managers.challenge_cards:get_loot_drop_group(self._active_challenge_card.key_name)
@@ -392,7 +398,7 @@ function EventCompleteState:on_loot_dropped_for_peer()
 end
 
 function EventCompleteState:_get_debrief_video(success)
-	local video_list = nil
+	local video_list
 
 	if success then
 		video_list = EventCompleteState.SUCCESS_VIDEOS
@@ -406,7 +412,7 @@ function EventCompleteState:_get_debrief_video(success)
 		total = total + video.chance
 	end
 
-	local chosen_video = nil
+	local chosen_video
 	local value = math.rand(total)
 
 	for _, video in ipairs(video_list) do
@@ -440,7 +446,9 @@ function EventCompleteState:_play_debrief_video()
 		layer = tweak_data.gui.DEBRIEF_VIDEO_LAYER,
 		background_color = Color.black
 	}
+
 	self._panel = RaidGUIPanel:new(full_panel, params_root_panel)
+
 	local video = self:_get_debrief_video(self:is_success())
 	local debrief_video_params = {
 		name = "event_complete_debrief_video",
@@ -448,9 +456,10 @@ function EventCompleteState:_play_debrief_video()
 		video = video,
 		width = self._panel:w()
 	}
+
 	self._debrief_video = self._panel:video(debrief_video_params)
 
-	self._debrief_video:set_h(self._panel:w() * self._debrief_video:video_height() / self._debrief_video:video_width())
+	self._debrief_video:set_h(self._panel:w() * (self._debrief_video:video_height() / self._debrief_video:video_width()))
 	self._debrief_video:set_center_y(self._panel:h() / 2)
 
 	local disclaimer_label_params = {
@@ -499,7 +508,9 @@ function EventCompleteState:_animate_show_press_any_key_prompt(prompt)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.75, duration)
 
 		prompt:set_alpha(current_alpha)
@@ -512,9 +523,11 @@ function EventCompleteState:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0.75, -0.75, fade_out_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -533,11 +546,14 @@ function EventCompleteState:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_right(self._safe_panel:w() - 50)
 
 	local fade_in_duration = 0.25
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.75, fade_in_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -560,10 +576,10 @@ function EventCompleteState:job_data()
 end
 
 function EventCompleteState:on_server_left(message)
-	local dialog_data = {
-		title = managers.localization:text("dialog_returning_to_main_menu"),
-		text = managers.localization:text("dialog_server_left")
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_returning_to_main_menu")
+	dialog_data.text = managers.localization:text("dialog_server_left")
 
 	if not self._awarded_rewards.loot and managers.raid_job:is_at_last_event() and self:is_success() then
 		managers.lootdrop._cards_already_rejected = true
@@ -615,10 +631,10 @@ function EventCompleteState:on_server_left(message)
 		managers.game_play_central:stop_the_game()
 	end
 
-	local ok_button = {
-		text = managers.localization:text("dialog_ok"),
-		callback_func = MenuCallbackHandler._dialog_end_game_yes
-	}
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
+	ok_button.callback_func = MenuCallbackHandler._dialog_end_game_yes
 	dialog_data.button_list = {
 		ok_button
 	}
@@ -636,6 +652,7 @@ function EventCompleteState:on_top_stats_ready()
 	end
 
 	self.player_top_stats = managers.statistics:get_top_stats_for_player()
+
 	local acquired_value = 0
 	local total_value = 0
 
@@ -659,6 +676,7 @@ function EventCompleteState:on_top_stats_ready()
 				acquired_value = acquired_value,
 				total_value = total_value
 			}
+
 			self.loot_data[LootScreenGui.LOOT_ITEM_TOP_STATS] = top_stats_loot_data
 		end
 	else
@@ -670,6 +688,7 @@ function EventCompleteState:on_top_stats_ready()
 	end
 
 	local is_in_operation = managers.raid_job:current_job().job_type == OperationsTweakData.JOB_TYPE_OPERATION
+
 	self.stats_ready = true
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS and managers.menu_component._raid_menu_special_honors_gui then
@@ -721,12 +740,12 @@ function EventCompleteState:is_skipped()
 end
 
 function EventCompleteState:get_personal_stats()
-	local personal_stats = {
-		session_killed = managers.statistics:session_killed().total.count or 0,
-		session_accuracy = managers.statistics:session_hit_accuracy() or 0,
-		session_headshots = managers.statistics:session_total_head_shots() or 0,
-		session_headshot_percentage = 0
-	}
+	local personal_stats = {}
+
+	personal_stats.session_killed = managers.statistics:session_killed().total.count or 0
+	personal_stats.session_accuracy = managers.statistics:session_hit_accuracy() or 0
+	personal_stats.session_headshots = managers.statistics:session_total_head_shots() or 0
+	personal_stats.session_headshot_percentage = 0
 
 	if personal_stats.session_killed > 0 then
 		personal_stats.session_headshot_percentage = personal_stats.session_headshots / personal_stats.session_killed * 100
@@ -747,7 +766,7 @@ end
 function EventCompleteState:get_base_xp_breakdown()
 	local is_in_operation = self._current_job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION
 	local current_operation = is_in_operation and self._current_job_data.job_id or nil
-	local current_event = nil
+	local current_event
 
 	if is_in_operation then
 		current_event = self._current_job_data.events_index[self._current_job_data.current_event]
@@ -885,7 +904,7 @@ function EventCompleteState:_continue_blocked()
 		return true
 	end
 
-	if self._continue_block_timer and Application:time() < self._continue_block_timer then
+	if self._continue_block_timer and self._continue_block_timer > Application:time() then
 		return true
 	end
 

@@ -97,10 +97,9 @@ function BreadcrumbManager:init()
 end
 
 function BreadcrumbManager:reset()
-	self._breadcrumbs = {
-		[BreadcrumbManager.SLOT_CHARACTER] = {},
-		[BreadcrumbManager.SLOT_PROFILE] = {}
-	}
+	self._breadcrumbs = {}
+	self._breadcrumbs[BreadcrumbManager.SLOT_CHARACTER] = {}
+	self._breadcrumbs[BreadcrumbManager.SLOT_PROFILE] = {}
 	self._unique_breadcrumb_ids = {}
 end
 
@@ -142,7 +141,7 @@ function BreadcrumbManager:remove_breadcrumb(category, identifiers)
 	end
 
 	local current_tree_level = self._breadcrumbs[category.slot][category.identifier]
-	local depth_to_remove = nil
+	local depth_to_remove
 
 	for i = 1, #identifiers do
 		local elements_in_current_level = self:_count_tree_level_elements(current_tree_level)
@@ -170,6 +169,7 @@ function BreadcrumbManager:remove_breadcrumb(category, identifiers)
 
 	if depth_to_remove then
 		current_tree_level = self._breadcrumbs[category.slot]
+
 		local index_to_remove = category.identifier
 
 		for i = 1, depth_to_remove - 1 do
@@ -286,6 +286,7 @@ end
 
 function BreadcrumbManager:_get_event_listener_id(category, identifiers)
 	local listener_id = "breadcrumb_"
+
 	listener_id = listener_id .. tostring(category.identifier)
 
 	if identifiers then
@@ -302,6 +303,7 @@ function BreadcrumbManager:save_character_slot(data)
 		version = self.version,
 		slot_breadcrumbs = self._breadcrumbs[BreadcrumbManager.SLOT_CHARACTER]
 	}
+
 	data.BreadcrumbManager = state
 end
 
@@ -328,6 +330,7 @@ function BreadcrumbManager:save_profile_slot(data)
 		version = self.version,
 		profile_breadcrumbs = self._breadcrumbs[BreadcrumbManager.SLOT_PROFILE]
 	}
+
 	data.BreadcrumbManager = state
 end
 

@@ -71,6 +71,7 @@ function RaidMenuHeader:set_header_icon(icon_data)
 		texture_rect = icon_data.tex_rect,
 		color = icon_data.color
 	})
+
 	local x = self._screen_name_label:left()
 
 	self._screen_name_label:set_x(x + icon_data.tex_rect[3] + 16)
@@ -85,13 +86,16 @@ end
 function RaidMenuHeader:set_character_name(character_name)
 	local full_name = ""
 	local steam_name = managers.network:session():local_peer():name()
+
 	full_name = character_name .. " (" .. steam_name .. ")"
 end
 
 function RaidMenuHeader:back_pressed()
+	return
 end
 
 function RaidMenuHeader:on_escape()
+	return
 end
 
 function RaidMenuHeader:confirm_pressed()

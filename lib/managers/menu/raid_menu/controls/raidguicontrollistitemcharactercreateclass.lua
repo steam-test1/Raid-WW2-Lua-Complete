@@ -20,6 +20,7 @@ end
 
 function RaidGUIControlListItemCharacterCreateClass:_layout()
 	local class_icon_data = tweak_data.gui.icons["ico_class_" .. self._class_name] or tweak_data.gui.icons.ico_flag_empty
+
 	self._background = self._object:rect({
 		visible = false,
 		y = 0,
@@ -126,7 +127,7 @@ function RaidGUIControlListItemCharacterCreateClass:select()
 	self._class_icon:set_color(tweak_data.gui.colors.raid_red)
 
 	if self._on_item_selected_callback then
-		self:_on_item_selected_callback(self._data)
+		self._on_item_selected_callback(self, self._data)
 	end
 end
 

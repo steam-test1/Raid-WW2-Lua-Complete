@@ -79,4 +79,5 @@ function TeamAIBase:remove_from_vehicle()
 end
 
 function TeamAIBase:chk_freeze_anims()
+	return
 end

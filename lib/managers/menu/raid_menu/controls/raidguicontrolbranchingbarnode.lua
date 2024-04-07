@@ -20,6 +20,7 @@ end
 
 function RaidGUIControlBranchingBarNode:_create_panel()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_node"
 	panel_params.layer = self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -30,21 +31,27 @@ function RaidGUIControlBranchingBarNode:_create_panel()
 end
 
 function RaidGUIControlBranchingBarNode:set_inactive()
+	return
 end
 
 function RaidGUIControlBranchingBarNode:set_selected()
+	return
 end
 
 function RaidGUIControlBranchingBarNode:set_active()
+	return
 end
 
 function RaidGUIControlBranchingBarNode:set_pending()
+	return
 end
 
 function RaidGUIControlBranchingBarNode:set_pending_blocked()
+	return
 end
 
 function RaidGUIControlBranchingBarNode:set_disabled()
+	return
 end
 
 function RaidGUIControlBranchingBarNode:state()
@@ -60,4 +67,5 @@ function RaidGUIControlBranchingBarNode:level()
 end
 
 function RaidGUIControlBranchingBarNode:init_to_state(state)
+	return
 end

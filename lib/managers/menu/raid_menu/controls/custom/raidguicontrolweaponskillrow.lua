@@ -23,10 +23,13 @@ function RaidGUIControlWeaponSkillRow:set_weapon_skill(weapon_id, weapon_skills,
 	self._weapon_id = weapon_id
 	self._weapon_skills = weapon_skills
 	self._i_skill = i_skill
+
 	local num_tiers = #weapon_skills
+
 	self._skill_id = weapon_skills[num_tiers][i_skill][1].skill_name
 	self._skill_data = tweak_data.weapon_skills.skills[self._skill_id]
 	self._skill_name_id = self._skill_data.name_id
+
 	local text = "UNKNOWN2"
 
 	if self._skill_name_id then
@@ -60,6 +63,7 @@ function RaidGUIControlWeaponSkillRow:_create_skill_label()
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.raid_grey
 	}
+
 	self._name_label = self._object:label(name_label_params)
 end
 
@@ -71,6 +75,7 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 		h = RaidGUIControlWeaponSkillRow.LINE_THICKNESS,
 		color = tweak_data.color
 	}
+
 	self._lines = {}
 
 	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS - 1 do
@@ -98,7 +103,8 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 		toggle_select_item_callback = self._params.toggle_select_item_callback,
 		layer = self._object:layer() + 3
 	}
-	local left_button = nil
+	local left_button
+
 	self._buttons = {}
 
 	for i_tier = 1, WeaponSkillsTweakData.MAX_TIERS do
@@ -116,13 +122,17 @@ function RaidGUIControlWeaponSkillRow:get_skill_buttons()
 end
 
 function RaidGUIControlWeaponSkillRow:on_click_weapon_skill_button()
+	return
 end
 
 function RaidGUIControlWeaponSkillRow:on_mouse_enter_weapon_skill_button()
+	return
 end
 
 function RaidGUIControlWeaponSkillRow:on_mouse_exit_weapon_skill_button()
+	return
 end
 
 function RaidGUIControlWeaponSkillRow:mouse_moved(o, x, y)
+	return
 end

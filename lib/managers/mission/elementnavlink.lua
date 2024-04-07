@@ -75,6 +75,7 @@ function ElementNavLink:_finalize_values(values)
 
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])
+
 		values[name_in] = found_index ~= -1 and found_index or nil
 	end
 
@@ -160,6 +161,7 @@ end
 function ElementNavLink:clbk_objective_administered(unit)
 	if self._values.needs_pos_rsrv then
 		self._pos_rsrv = self._pos_rsrv or {}
+
 		local unit_rsrv = self._pos_rsrv[unit:key()]
 
 		if unit_rsrv then
@@ -237,7 +239,9 @@ function ElementNavLink:clbk_verify_administration(unit)
 			radius = 30,
 			position = self._values.position
 		}
+
 		local pos_rsrv = self._tmp_pos_rsrv
+
 		pos_rsrv.filter = unit:movement():pos_rsrv_id()
 
 		if managers.navigation:is_pos_free(pos_rsrv) then
@@ -329,7 +333,7 @@ function ElementNavLink:get_objective(instigator)
 		forced = self._values.forced,
 		no_arrest = self._values.no_arrest
 	}
-	local action = nil
+	local action
 
 	if self._values.so_action then
 		action = {
@@ -358,10 +362,12 @@ function ElementNavLink:get_objective(instigator)
 
 		if path_style == "destination" then
 			local path_data = managers.ai_data:destination_path(self._values.position, Rotation(self._values.rotation or 0, 0, 0))
+
 			objective.path_data = path_data
 		else
 			local path_name = self._values.patrol_path
 			local path_data = managers.ai_data:patrol_path(path_name)
+
 			objective.path_data = path_data
 		end
 	end
@@ -370,8 +376,9 @@ function ElementNavLink:get_objective(instigator)
 end
 
 function ElementNavLink:_get_misc_SO_params()
-	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = nil
+	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice
 	local values = self._values
+
 	pos = values.align_position and values.position or nil
 	rot = values.align_position and values.align_rotation and Rotation(values.rotation, 0, 0) or nil
 	path_style = values.align_position and self._PATHING_STYLES[self:_get_default_value_if_nil("path_style")] or nil
@@ -487,7 +494,7 @@ function ElementNavLink:choose_followup_SO(unit, skip_element_ids)
 	local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
 
 	for _, followup_element_id in ipairs(self._values.followup_elements) do
-		local weight = nil
+		local weight
 		local followup_element = mission:get_element_by_id(followup_element_id)
 
 		if followup_element:enabled() then

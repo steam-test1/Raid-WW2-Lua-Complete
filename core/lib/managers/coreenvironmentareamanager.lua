@@ -70,6 +70,7 @@ end
 
 function EnvironmentAreaManager:add_area(area_params, world_id)
 	local area = EnvironmentArea:new(area_params)
+
 	area._world_id = world_id
 
 	table.insert(self._areas, area)
@@ -79,7 +80,7 @@ function EnvironmentAreaManager:add_area(area_params, world_id)
 end
 
 function EnvironmentAreaManager:prio_order_areas()
-	table.sort(self._areas, function (a, b)
+	table.sort(self._areas, function(a, b)
 		return a:is_higher_prio(b:prio())
 	end)
 end
@@ -255,7 +256,7 @@ end
 
 function EnvironmentArea:is_higher_prio(min_prio)
 	if min_prio then
-		return self._properties.prio < min_prio
+		return min_prio > self._properties.prio
 	else
 		return true
 	end

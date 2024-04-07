@@ -1,4 +1,5 @@
 TankTrackAnimation = TankTrackAnimation or class()
+
 local ids_uv_offset = Idstring("uv_offset")
 
 function TankTrackAnimation:init(unit)
@@ -12,14 +13,17 @@ function TankTrackAnimation:init(unit)
 	self._right_track_mat = self._unit:material(Idstring("mat_track_right"))
 	self._right_ref_object = self._unit:get_object(Idstring("wheel_right_drive"))
 	self._prev_right_pos = self._right_ref_object:position()
+
 	local wheel_prefix = self.custom_wheel_prefix or "wheel"
 	local wheel_count = self.custom_wheel_count or 20
 	local is_faulty = false
+
 	self._wheels_left = {}
 	self._wheels_right = {}
 
 	for i = 1, wheel_count do
-		local o = nil
+		local o
+
 		o = self._unit:get_object(Idstring(wheel_prefix .. "_left_" .. i))
 
 		if o then
@@ -81,7 +85,7 @@ function TankTrackAnimation:update(unit, t, dt)
 
 	for _, wheel in ipairs(self._wheels_left) do
 		local c = wheel[2] * math.pi
-		local angle = -diff_left_sign * len_diff_left / c * 360
+		local angle = -diff_left_sign * (len_diff_left / c) * 360
 		local rot = wheel[1]:local_rotation() * Rotation(0, angle, 0)
 
 		wheel[1]:set_local_rotation(rot)
@@ -98,7 +102,7 @@ function TankTrackAnimation:update(unit, t, dt)
 
 	for _, wheel in ipairs(self._wheels_right) do
 		local c = wheel[2] * math.pi
-		local angle = -diff_right_sign * len_diff_left / c * 360
+		local angle = -diff_right_sign * (len_diff_left / c) * 360
 		local rot = wheel[1]:local_rotation() * Rotation(0, angle, 0)
 
 		wheel[1]:set_local_rotation(rot)

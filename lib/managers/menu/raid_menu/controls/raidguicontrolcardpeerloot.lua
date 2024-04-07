@@ -24,10 +24,12 @@ function RaidGUIControlCardPeerLoot:init(parent, params)
 end
 
 function RaidGUIControlCardPeerLoot:close()
+	return
 end
 
 function RaidGUIControlCardPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlCardPeerLoot.WIDTH
 	control_params.h = control_params.h or RaidGUIControlCardPeerLoot.HEIGHT
@@ -52,7 +54,9 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 			209
 		}
 	}
+
 	self._card_image = self._control_panel:bitmap(params_card_image)
+
 	local params_player_name = {
 		name = "peer_player_name_label",
 		align = "center",
@@ -66,7 +70,9 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 		font = RaidGUIControlCardPeerLoot.TEXT_FONT,
 		font_size = RaidGUIControlCardPeerLoot.FONT_SIZE
 	}
+
 	self._name_label = self._control_panel:label(params_player_name)
+
 	local params_card_title = {
 		name = "card_title_label",
 		wrap = true,
@@ -81,6 +87,7 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size
 	}
+
 	self._card_title_label = self._control_panel:label(params_card_title)
 end
 

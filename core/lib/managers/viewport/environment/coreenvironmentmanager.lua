@@ -4,6 +4,7 @@ core:import("CoreEnvironmentHandler")
 core:import("CoreEnvironmentFeeder")
 
 EnvironmentManager = EnvironmentManager or CoreClass.class()
+
 local extension = "environment"
 local ids_extension = Idstring(extension)
 
@@ -15,6 +16,7 @@ function EnvironmentManager:init()
 	self._global_environment_modifier_map = {}
 	self._game_default_environment_path = "core/environments/default"
 	self._default_environment_path = self._game_default_environment_path
+
 	local feeder_class_list = {
 		CoreEnvironmentFeeder.ColorgradeFeeder,
 		CoreEnvironmentFeeder.UnderlayPathFeeder,
@@ -124,7 +126,7 @@ function EnvironmentManager:get_value(path, data_path_key)
 end
 
 function EnvironmentManager:set_global_environment_modifier(data_path_key, is_override, modifier_func)
-	local global_modifier_data = nil
+	local global_modifier_data
 
 	if modifier_func then
 		global_modifier_data = {
@@ -150,6 +152,7 @@ end
 
 function EnvironmentManager:_set_global_feeder(feeder)
 	local old_feeder = self._global_feeder_map[feeder.DATA_PATH_KEY]
+
 	self._global_feeder_map[feeder.DATA_PATH_KEY] = feeder
 
 	return old_feeder
@@ -226,7 +229,7 @@ function EnvironmentManager:_create_feeder(data_path_key, value)
 end
 
 function EnvironmentManager:_load(path)
-	local raw_data = nil
+	local raw_data
 
 	if Application:editor() then
 		raw_data = PackageManager:editor_load_script_data(ids_extension, path:id())

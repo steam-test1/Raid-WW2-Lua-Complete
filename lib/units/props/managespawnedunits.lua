@@ -9,12 +9,13 @@ end
 
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
-	local spawn_unit = nil
+	local spawn_unit
 
 	if type_name(unit) == "string" then
 		if Network:is_server() then
 			local spawn_pos = align_obj:position()
 			local spawn_rot = align_obj:rotation()
+
 			spawn_unit = safe_spawn_unit(Idstring(unit), spawn_pos, spawn_rot)
 			spawn_unit:unit_data().parent_unit = self._unit
 		end
@@ -32,6 +33,7 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 		align_obj_name = align_obj_name,
 		unit = spawn_unit
 	}
+
 	self._spawned_units[unit_id] = unit_entry
 
 	if Network:is_server() then
@@ -177,6 +179,7 @@ function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
 	end
 
 	align_obj_name = align_obj_name or tweakdata.align_obj or tweak_data.link_prefabs.default_align_obj
+
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 
 	if not align_obj then
@@ -186,11 +189,12 @@ function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
 	local spawn_units = {}
 
 	for i, data in pairs(tweakdata.props) do
-		local spawn_unit = nil
+		local spawn_unit
 
 		if type_name(data.unit) == "string" and Network:is_server() then
 			local spawn_pos = align_obj:position()
 			local spawn_rot = align_obj:rotation()
+
 			spawn_unit = safe_spawn_unit(Idstring(data.unit), spawn_pos, spawn_rot)
 			spawn_unit:unit_data().parent_unit = self._unit
 
@@ -218,6 +222,7 @@ function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
 			unit = spawn_unit
 		}
 		local unit_id = prefab_nick .. "#" .. i
+
 		self._spawned_units[unit_id] = unit_entry
 
 		if Network:is_server() then
@@ -265,9 +270,8 @@ function ManageSpawnedUnits:save(data)
 		return
 	end
 
-	data.managed_spawned_units = {
-		linked_joints = self._sync_spawn_and_link
-	}
+	data.managed_spawned_units = {}
+	data.managed_spawned_units.linked_joints = self._sync_spawn_and_link
 
 	for nick_id, unit_entry in pairs(self._spawned_units) do
 		if alive(unit_entry.unit) and nick_id ~= -1 then

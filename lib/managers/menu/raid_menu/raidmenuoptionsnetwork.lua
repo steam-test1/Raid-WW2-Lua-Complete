@@ -40,7 +40,9 @@ function RaidMenuOptionsNetwork:_layout_network()
 			down = "push_to_talk"
 		}
 	}
+
 	self._toggle_menu_packet_throttling = self._root_panel:toggle_button(packet_throttling_params)
+
 	local forwarding_params = {
 		name = "push_to_talk",
 		description = utf8.to_upper(managers.localization:text("menu_net_forwarding")),
@@ -53,7 +55,9 @@ function RaidMenuOptionsNetwork:_layout_network()
 			up = "packet_throttling_params"
 		}
 	}
+
 	self._toggle_menu_net_forwarding = self._root_panel:toggle_button(forwarding_params)
+
 	local use_compression_params = {
 		name = "use_compression",
 		description = utf8.to_upper(managers.localization:text("menu_net_use_compression")),
@@ -65,6 +69,7 @@ function RaidMenuOptionsNetwork:_layout_network()
 			up = "push_to_talk"
 		}
 	}
+
 	self._toggle_menu_net_use_compression = self._root_panel:toggle_button(use_compression_params)
 end
 

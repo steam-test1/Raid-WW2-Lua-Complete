@@ -26,6 +26,7 @@ end
 
 function RaidGUIControlOperationProgress:_create_panels()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_panel"
 	panel_params.layer = self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -41,8 +42,11 @@ function RaidGUIControlOperationProgress:_create_progress_report(current_operati
 	self._inner_panel:set_h(self._object:h())
 
 	self._scrollable = false
+
 	local y = 0
+
 	self._progress_parts = {}
+
 	local i = 1
 
 	for _, event_id in pairs(self._event_index) do
@@ -158,4 +162,5 @@ function RaidGUIControlOperationProgress:on_mouse_scroll_down()
 end
 
 function RaidGUIControlOperationProgress:close()
+	return
 end

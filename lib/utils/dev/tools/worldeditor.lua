@@ -198,6 +198,7 @@ function WorldEditor:project_run_simulation(with_mission)
 end
 
 function WorldEditor:_project_check_unit(unit)
+	return
 end
 
 function WorldEditor:project_stop_simulation()
@@ -249,9 +250,11 @@ function WorldEditor:project_clear_units()
 end
 
 function WorldEditor:project_clear_layers()
+	return
 end
 
 function WorldEditor:project_recreate_layers()
+	return
 end
 
 function WorldEditor:_project_add_left_upper_toolbar_tool()

@@ -1,12 +1,12 @@
 RaidGUIControlCardSuggested = RaidGUIControlCardSuggested or class(RaidGUIControlCardBase)
 
 function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params)
-	local card_image_params = {
-		x = 16,
-		y = 16,
-		w = params.item_w - 32,
-		h = params.item_h - 16
-	}
+	local card_image_params = {}
+
+	card_image_params.x = 16
+	card_image_params.y = 16
+	card_image_params.w = params.item_w - 32
+	card_image_params.h = params.item_h - 16
 	params.card_image_params = card_image_params
 
 	RaidGUIControlCardSuggested.super.init(self, parent, params, item_data, grid_params)

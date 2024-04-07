@@ -24,6 +24,7 @@ function RaidGUIControlSkilltree:init(parent, params)
 		horizontal_padding = progress_bar_x,
 		bar_w = progress_bar_w
 	}
+
 	self._progress_bar = self._scrollable_panel:create_custom_control(RaidGUIControlSkilltreeProgressBar, progress_bar_params)
 
 	self._progress_bar:set_bottom(self._scrollable_panel:h())
@@ -35,6 +36,7 @@ end
 function RaidGUIControlSkilltree:on_respec()
 	self._selected_nodes = {}
 	self._first_available_level = 2
+
 	local current_level_index = 2
 	local need_to_check_further = true
 
@@ -196,6 +198,7 @@ end
 function RaidGUIControlSkilltree:set_selected(value)
 	self._selected = value
 	self._selected_level_idx, self._selected_node_idx = self:_get_active_level_node_index()
+
 	local skill_node = self:get_skill_tree_node(self._selected_level_idx + 1, self._selected_node_idx)
 
 	if skill_node then
@@ -212,7 +215,7 @@ function RaidGUIControlSkilltree:_get_active_level_node_index()
 		return 1, 1
 	end
 
-	local last_active_level = nil
+	local last_active_level
 
 	for level_index, level_data in ipairs(self._levels) do
 		if level_data.active then
@@ -288,6 +291,7 @@ function RaidGUIControlSkilltree:move_up()
 		self:_unselect_skill_tree_node(old_skill_node)
 
 		self._selected_node_idx = self._new_selected_node_idx
+
 		local skill_node = self:get_skill_tree_node(self._selected_level_idx, self._selected_node_idx)
 
 		self:_select_skill_tree_node(skill_node)
@@ -307,6 +311,7 @@ function RaidGUIControlSkilltree:move_down()
 		self:_unselect_skill_tree_node(old_skill_node)
 
 		self._selected_node_idx = self._new_selected_node_idx
+
 		local skill_node = self:get_skill_tree_node(self._selected_level_idx, self._selected_node_idx)
 
 		self:_select_skill_tree_node(skill_node)
@@ -352,6 +357,7 @@ function RaidGUIControlSkilltree:_move_left(value)
 
 	for count = self._selected_node_idx, 1, -1 do
 		self._selected_node_idx = count
+
 		local skill_node = self:get_skill_tree_node(self._selected_level_idx, self._selected_node_idx)
 
 		if skill_node then
@@ -386,6 +392,7 @@ function RaidGUIControlSkilltree:_move_right(value)
 
 	for count = self._selected_node_idx, 1, -1 do
 		self._selected_node_idx = count
+
 		local skill_node = self:get_skill_tree_node(self._selected_level_idx, self._selected_node_idx)
 
 		if skill_node then
@@ -401,6 +408,7 @@ end
 
 function RaidGUIControlSkilltree:_set_scrollable_panel_x(skill_node)
 	self._controller_enabled = true
+
 	local scrollable_panel_new_x = -skill_node:x() + 800
 
 	if scrollable_panel_new_x > 0 then

@@ -76,7 +76,9 @@ function GreedLootScreenGui:_create_flares()
 		layer = 1,
 		name = "loot_screen_flare_panel"
 	}
+
 	self._flare_panel = self._fullscreen_panel:panel(flare_panel_params)
+
 	local flare_center_x = self._flare_panel:w() / 2 + 200
 	local flare_center_y = self._flare_panel:h() / 2
 	local lens_glint_params = {
@@ -86,6 +88,7 @@ function GreedLootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_glint.texture,
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
 	}
+
 	self._lens_glint = self._flare_panel:bitmap(lens_glint_params)
 
 	self._lens_glint:set_center(flare_center_x, flare_center_y)
@@ -97,6 +100,7 @@ function GreedLootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_iris.texture,
 		texture_rect = tweak_data.gui.icons.lens_iris.texture_rect
 	}
+
 	self._lens_iris = self._flare_panel:bitmap(lens_iris_params)
 
 	self._lens_iris:set_center(flare_center_x, flare_center_y)
@@ -108,6 +112,7 @@ function GreedLootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_orbs.texture,
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
 	}
+
 	self._lens_orbs = self._flare_panel:bitmap(lens_orbs_params)
 
 	self._lens_orbs:set_center(flare_center_x, flare_center_y)
@@ -119,6 +124,7 @@ function GreedLootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_shimmer.texture,
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
 	}
+
 	self._lens_shimmer = self._flare_panel:bitmap(lens_shimmer_params)
 
 	self._lens_shimmer:set_center(flare_center_x, flare_center_y)
@@ -130,6 +136,7 @@ function GreedLootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_spike_ball.texture,
 		texture_rect = tweak_data.gui.icons.lens_spike_ball.texture_rect
 	}
+
 	self._lens_spike_ball = self._flare_panel:bitmap(lens_spike_ball_params)
 
 	self._lens_spike_ball:set_center(flare_center_x, flare_center_y)
@@ -142,6 +149,7 @@ function GreedLootScreenGui:_create_loot_image()
 		texture = tweak_data.gui.icons[GreedLootScreenGui.CENTRAL_LOOT_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.CENTRAL_LOOT_IMAGE].texture_rect
 	}
+
 	self._loot_image = self._root_panel:bitmap(loot_image_params)
 
 	self._loot_image:set_center_x(self._root_panel:w() / 2 + 26)
@@ -157,6 +165,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		w = 642,
 		valign = "top"
 	}
+
 	self._greed_bar_panel = self._root_panel:panel(greed_bar_panel_params)
 
 	self._greed_bar_panel:set_center_x(self._root_panel:w() / 2)
@@ -166,6 +175,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		texture = tweak_data.gui.icons[GreedLootScreenGui.FRAME_ICON].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.FRAME_ICON].texture_rect
 	}
+
 	self._frame = self._greed_bar_panel:bitmap(frame_params)
 
 	self._frame:set_center_x(self._greed_bar_panel:w() / 2)
@@ -176,6 +186,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		texture = tweak_data.gui.icons[GreedLootScreenGui.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.LOOT_ICON].texture_rect
 	}
+
 	self._loot_icon = self._greed_bar_panel:bitmap(loot_icon_params)
 
 	self._loot_icon:set_center_x(self._greed_bar_panel:w() / 2)
@@ -188,6 +199,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON].texture_rect,
 		color = tweak_data.gui.colors.raid_gold
 	}
+
 	self._gold_icon = self._greed_bar_panel:bitmap(gold_icon_params)
 
 	self._gold_icon:set_center_x(self._greed_bar_panel:w() / 2)
@@ -205,6 +217,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		color = tweak_data.gui.colors.raid_dirty_white,
 		text = utf8.to_upper(managers.localization:text(GreedLootScreenGui.TITLE_STRING))
 	}
+
 	self._title = self._greed_bar_panel:text(loot_title_params)
 
 	self._title:set_center_x(self._greed_bar_panel:w() * 3 / 4)
@@ -219,6 +232,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		right = GreedLootScreenGui.LOOT_BAR_ICON_R,
 		color = GreedLootScreenGui.LOOT_BAR_COLOR
 	}
+
 	self._progress_bar_background = self._greed_bar_panel:three_cut_bitmap(progress_bar_background_params)
 
 	self._progress_bar_background:set_center_x(self._greed_bar_panel:w() * 3 / 4)
@@ -230,6 +244,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		h = self._progress_bar_background:h(),
 		layer = self._progress_bar_background:layer() + 1
 	}
+
 	self._progress_bar_progress_panel = self._greed_bar_panel:panel(progress_bar_progress_panel_params)
 
 	self._progress_bar_progress_panel:set_x(self._progress_bar_background:x())
@@ -244,7 +259,9 @@ function GreedLootScreenGui:_create_greed_bar()
 		right = GreedLootScreenGui.LOOT_BAR_ICON_R,
 		color = GreedLootScreenGui.LOOT_BAR_FOREGROUND_COLOR
 	}
+
 	self._loot_bar_foreground = self._progress_bar_progress_panel:three_cut_bitmap(progress_bar_foreground_params)
+
 	local counter_params = {
 		name = "greed_bar_counter",
 		vertical = "center",
@@ -256,6 +273,7 @@ function GreedLootScreenGui:_create_greed_bar()
 		font_size = GreedLootScreenGui.COUNTER_FONT_SIZE,
 		color = GreedLootScreenGui.COUNTER_COLOR
 	}
+
 	self._counter = self._greed_bar_panel:text(counter_params)
 
 	self._counter:set_center_y(self._progress_bar_background:center_y())
@@ -265,6 +283,7 @@ function GreedLootScreenGui:_create_second_panel()
 	local second_panel_params = {
 		name = "second_panel"
 	}
+
 	self._second_panel = self._root_panel:panel(second_panel_params)
 end
 
@@ -275,6 +294,7 @@ function GreedLootScreenGui:_create_gold_bar_image()
 		texture = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON_SINGLE].texture_rect
 	}
+
 	self._central_gold_bar_image = self._second_panel:bitmap(gold_bar_image_params)
 
 	self._central_gold_bar_image:set_center_x(self._second_panel:w() / 2)
@@ -292,7 +312,9 @@ function GreedLootScreenGui:_create_gold_bar_image()
 		color = GreedLootScreenGui.TITLE_DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true)
 	}
+
 	self._title_description = self._second_panel:text(title_description_params)
+
 	local _, _, w, _ = self._title_description:text_rect()
 
 	self._title_description:set_w(w)
@@ -308,6 +330,7 @@ function GreedLootScreenGui:_create_gold_bar_image()
 		font_size = GreedLootScreenGui.TITLE_FONT_SIZE,
 		color = GreedLootScreenGui.TITLE_COLOR
 	}
+
 	self._gold_bar_value = self._second_panel:text(title_params)
 
 	self:_layout_gold_bar_value_text()
@@ -322,6 +345,7 @@ function GreedLootScreenGui:_create_description_panel()
 		valign = "scale",
 		h = self._second_panel:h()
 	}
+
 	self._description_panel = self._second_panel:panel(description_panel_params)
 
 	self._description_panel:set_right(self._second_panel:w())
@@ -361,7 +385,9 @@ function GreedLootScreenGui:_create_description_panel()
 	local greed_bar_params = {
 		y = 464
 	}
+
 	self._second_panel_greed_bar = HUDTabGreedBar:new(self._description_panel, greed_bar_params)
+
 	local greed_description_params = {
 		name = "greed_description_params",
 		vertical = "top",
@@ -383,6 +409,7 @@ end
 
 function GreedLootScreenGui:_set_progress(points)
 	self._current_points = points
+
 	local current_percentage = self._current_points % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar()
 
 	self._progress_bar_progress_panel:set_w(self._progress_bar_background:w() * current_percentage)
@@ -403,12 +430,16 @@ end
 function GreedLootScreenGui:_animate_giving_points()
 	local t = 0
 	local duration = 2
+
 	self._gold_bars_added = 0
+
 	local sound_on_point_value = {}
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.quintic_in_out(t, self._greed_counter_before_mission, self._greed_counter_in_mission, duration)
 
 		if math.floor(current_progress - self._greed_counter_before_mission) % 4 == 0 and not sound_on_point_value[math.floor(current_progress - self._greed_counter_before_mission)] then
@@ -475,7 +506,9 @@ function GreedLootScreenGui:_animate_lens_flares()
 
 	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.65, fade_in_duration)
 
 		self._lens_glint:set_alpha(current_alpha)
@@ -500,6 +533,7 @@ function GreedLootScreenGui:_animate_lens_flares()
 
 	while true do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		self._lens_glint:rotate(math.random() * 0.06 + 0.1)
@@ -519,7 +553,9 @@ function GreedLootScreenGui:_animate_hide_lens_flares()
 
 	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0.65, -0.65, fade_out_duration)
 
 		self._flare_panel:set_alpha(current_alpha)
@@ -547,7 +583,9 @@ function GreedLootScreenGui:_animate_central_image_hide()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local crate_alpha = Easing.quartic_in(t, 1, -1, duration)
 
 		self._loot_image:set_alpha(crate_alpha)
@@ -573,7 +611,9 @@ function GreedLootScreenGui:_animate_counter_add_gold_bar()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_in(t, GreedLootScreenGui.COUNTER_OFFSET, -GreedLootScreenGui.COUNTER_OFFSET, duration)
 
 		self._counter:set_center_y(self._progress_bar_background:center_y() - current_offset)
@@ -586,9 +626,11 @@ function GreedLootScreenGui:_animate_change_icon()
 	local duration = 0.5
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_in_out(t, 0, GreedLootScreenGui.ICON_HIDDEN_OFFSET, duration)
 		local current_loot_icon_alpha = Easing.quartic_in_out(t, 1, -1, duration / 2)
 
@@ -616,9 +658,11 @@ function GreedLootScreenGui:_animate_pulse()
 	local duration_in = 0.5
 	local t = 0
 
-	while duration_in > t do
+	while t < duration_in do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_frame_scale = Easing.quartic_out(t, 1.4, -0.4, duration_in)
 
 		self._frame:set_w(frame_default_w * current_frame_scale)
@@ -653,7 +697,9 @@ function GreedLootScreenGui:_animate_second_panel()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, image_duration)
 
 		self._central_gold_bar_image:set_alpha(current_alpha)

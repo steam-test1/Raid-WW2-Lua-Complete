@@ -7,21 +7,27 @@ function NetworkAccount:init()
 end
 
 function NetworkAccount:update()
+	return
 end
 
 function NetworkAccount:create_account(name, password, email)
+	return
 end
 
 function NetworkAccount:reset_password(name, email)
+	return
 end
 
 function NetworkAccount:login(name, password, cdkey)
+	return
 end
 
 function NetworkAccount:logout()
+	return
 end
 
 function NetworkAccount:register_callback(event, callback)
+	return
 end
 
 function NetworkAccount:register_post_username(cb)
@@ -45,6 +51,7 @@ function NetworkAccount:signin_state()
 end
 
 function NetworkAccount:set_lightfx()
+	return
 end
 
 function NetworkAccount:has_alienware()
@@ -64,18 +71,23 @@ function NetworkAccount:_standard_username(name)
 end
 
 function NetworkAccount:set_playing(state)
+	return
 end
 
 function NetworkAccount:_load_globals()
+	return
 end
 
 function NetworkAccount:_save_globals()
+	return
 end
 
 function NetworkAccount:inventory_load()
+	return
 end
 
 function NetworkAccount:inventory_is_loading()
+	return
 end
 
 function NetworkAccount:inventory_reward(item)
@@ -83,18 +95,23 @@ function NetworkAccount:inventory_reward(item)
 end
 
 function NetworkAccount:inventory_reward_dlc()
+	return
 end
 
 function NetworkAccount:inventory_reward_unlock(box, key)
+	return
 end
 
 function NetworkAccount:inventory_reward_open(item)
+	return
 end
 
 function NetworkAccount:inventory_outfit_refresh()
+	return
 end
 
 function NetworkAccount:inventory_outfit_verify(id, outfit_data, outfit_callback)
+	return
 end
 
 function NetworkAccount:inventory_outfit_signature()
@@ -102,6 +119,7 @@ function NetworkAccount:inventory_outfit_signature()
 end
 
 function NetworkAccount:inventory_repair_list(list)
+	return
 end
 
 function NetworkAccount:is_ready_to_close()

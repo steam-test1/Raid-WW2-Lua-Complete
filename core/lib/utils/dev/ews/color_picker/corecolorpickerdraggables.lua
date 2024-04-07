@@ -11,6 +11,7 @@ function ColorPickerDraggables:init(parent_frame, enable_alpha, enable_value)
 end
 
 function ColorPickerDraggables:update(time, delta_time)
+	return
 end
 
 function ColorPickerDraggables:panel()
@@ -40,14 +41,8 @@ function ColorPickerDraggables:set_color(color)
 end
 
 function ColorPickerDraggables:_create_panel(parent_frame, enable_alpha, enable_value)
-	if enable_alpha == nil then
-		enable_alpha = true
-	end
-
-	if enable_value == nil then
-		enable_value = true
-	end
-
+	enable_alpha = enable_alpha == nil and true or enable_alpha
+	enable_value = enable_value == nil and true or enable_value
 	self._panel = EWS:Panel(parent_frame)
 
 	self._panel:set_min_size(Vector3(180, 134, 0))
@@ -58,6 +53,7 @@ function ColorPickerDraggables:_create_panel(parent_frame, enable_alpha, enable_
 
 	local slider_width = 20
 	local slider_margin = 3
+
 	self._spectrum = EWS:ColorSpectrum(self._panel, "")
 
 	panel_sizer:add(self._spectrum, 0, slider_margin, "ALL")

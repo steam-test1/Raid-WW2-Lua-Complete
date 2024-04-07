@@ -11,6 +11,7 @@ function ElementLogicChance:init(...)
 end
 
 function ElementLogicChance:client_on_executed(...)
+	return
 end
 
 function ElementLogicChance:on_executed(instigator)
@@ -20,12 +21,13 @@ function ElementLogicChance:on_executed(instigator)
 
 	if not self.monitor_element and self._values.output_monitor_id then
 		local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
+
 		self.monitor_element = mission:get_element_by_id(self._values.output_monitor_id)
 	end
 
 	local roll = math.random(100)
 
-	if self._chance < roll then
+	if roll > self._chance then
 		self:monitor_output_change(" roll: " .. roll .. " - fail")
 		self:_trigger_outcome("fail")
 
@@ -95,6 +97,7 @@ function ElementLogicChanceOperator:init(...)
 end
 
 function ElementLogicChanceOperator:client_on_executed(...)
+	return
 end
 
 function ElementLogicChanceOperator:on_executed(instigator)
@@ -138,6 +141,7 @@ function ElementLogicChanceTrigger:on_script_activated()
 end
 
 function ElementLogicChanceTrigger:client_on_executed(...)
+	return
 end
 
 function ElementLogicChanceTrigger:on_executed(instigator)

@@ -140,6 +140,7 @@ function GenericDLCManager:init_finalize()
 end
 
 function GenericDLCManager:chk_content_updated()
+	return
 end
 
 function GenericDLCManager:give_dlc_and_verify_blackmarket()
@@ -186,7 +187,9 @@ function GenericDLCManager:list_dlc_package(dlcs)
 			for _, loot_drop in ipairs(data.content.loot_drops or {}) do
 				t.items = t.items or {}
 
-				if #loot_drop <= 0 then
+				if #loot_drop > 0 then
+					-- Nothing
+				else
 					local global_value = loot_drop.global_value or data.content.loot_global_value or package_id
 					local category = loot_drop.type_items
 					local entry = loot_drop.item_entry
@@ -235,6 +238,7 @@ function GenericDLCManager:on_achievement_award_loot()
 end
 
 function GenericDLCManager:on_signin_complete()
+	return
 end
 
 function GenericDLCManager:is_dlcs_unlocked(list_of_dlcs)
@@ -295,6 +299,7 @@ end
 
 function GenericDLCManager:dlcs_string()
 	local s = ""
+
 	s = s .. (self:is_dlc_unlocked("preorder") and "preorder " or "")
 
 	return s
@@ -326,16 +331,15 @@ function PS3DLCManager:init()
 	PS3DLCManager.super.init(self)
 
 	if not Global.dlc_manager then
-		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					filename = "full_game_key.edat",
-					product_id = self.SERVICE_ID .. "-PAYDAY2NPEU00000"
-				},
-				preorder = {
-					filename = "preorder_dlc_key.edat",
-					product_id = self.SERVICE_ID .. "-PPAYDAY2XX000006"
-				}
+		Global.dlc_manager = {}
+		Global.dlc_manager.all_dlc_data = {
+			full_game = {
+				filename = "full_game_key.edat",
+				product_id = self.SERVICE_ID .. "-PAYDAY2NPEU00000"
+			},
+			preorder = {
+				filename = "preorder_dlc_key.edat",
+				product_id = self.SERVICE_ID .. "-PPAYDAY2XX000006"
 			}
 		}
 
@@ -353,6 +357,7 @@ function PS3DLCManager:_verify_dlcs()
 	end
 
 	local verified_dlcs = PS3:check_dlc_availability(all_dlc)
+
 	Global.dlc_manager.verified_dlcs = verified_dlcs
 
 	for _, verified_filename in pairs(verified_dlcs) do
@@ -541,17 +546,16 @@ function X360DLCManager:init()
 	X360DLCManager.super.init(self)
 
 	if not Global.dlc_manager then
-		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					is_default = true,
-					verified = true,
-					index = 0
-				},
-				preorder = {
-					is_default = false,
-					index = 1
-				}
+		Global.dlc_manager = {}
+		Global.dlc_manager.all_dlc_data = {
+			full_game = {
+				is_default = true,
+				verified = true,
+				index = 0
+			},
+			preorder = {
+				is_default = false,
+				index = 1
 			}
 		}
 
@@ -606,14 +610,13 @@ function PS4DLCManager:init()
 	PS4DLCManager.super.init(self)
 
 	if not Global.dlc_manager then
-		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					verified = true
-				},
-				preorder = {
-					verified = false
-				}
+		Global.dlc_manager = {}
+		Global.dlc_manager.all_dlc_data = {
+			full_game = {
+				verified = true
+			},
+			preorder = {
+				verified = false
 			}
 		}
 
@@ -802,18 +805,17 @@ function XB1DLCManager:init()
 	XB1DLCManager.super.init(self)
 
 	if not Global.dlc_manager then
-		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					is_default = true,
-					verified = true,
-					index = 0
-				},
-				preorder = {
-					is_default = false,
-					product_id = "123456",
-					index = 1
-				}
+		Global.dlc_manager = {}
+		Global.dlc_manager.all_dlc_data = {
+			full_game = {
+				is_default = true,
+				verified = true,
+				index = 0
+			},
+			preorder = {
+				is_default = false,
+				product_id = "123456",
+				index = 1
 			}
 		}
 
@@ -823,7 +825,7 @@ end
 
 function XB1DLCManager:_verify_dlcs()
 	local dlc_content_updated = false
-	local old_verified = nil
+	local old_verified
 
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		old_verified = dlc_data.verified or false
@@ -868,30 +870,29 @@ function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
 	if not Global.dlc_manager then
-		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					verified = true,
-					no_install = true,
-					external = true,
-					app_id = tostring(self:get_app_id())
-				},
-				preorder = {
-					app_id = "707070",
-					no_install = true
-				},
-				special_edition = {
-					app_id = "707080",
-					no_install = true
-				},
-				raid_community = {
-					no_install = true,
-					source_id = "103582791460014708"
-				},
-				official_soundtrack = {
-					app_id = "720860",
-					no_install = true
-				}
+		Global.dlc_manager = {}
+		Global.dlc_manager.all_dlc_data = {
+			full_game = {
+				verified = true,
+				no_install = true,
+				external = true,
+				app_id = tostring(self:get_app_id())
+			},
+			preorder = {
+				app_id = "707070",
+				no_install = true
+			},
+			special_edition = {
+				app_id = "707080",
+				no_install = true
+			},
+			raid_community = {
+				no_install = true,
+				source_id = "103582791460014708"
+			},
+			official_soundtrack = {
+				app_id = "720860",
+				no_install = true
 			}
 		}
 

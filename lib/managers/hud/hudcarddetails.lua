@@ -28,6 +28,7 @@ function HUDCardDetails:_create_panel(panel, params)
 		w = params.w or panel:w(),
 		h = params.h or panel:h()
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -41,7 +42,9 @@ function HUDCardDetails:_create_card()
 		w = self._object:w(),
 		h = HUDCardDetails.CARD_H
 	}
+
 	self._card_panel = RaidGUIPanel:new(self._object, card_panel_params)
+
 	local card_params = {
 		name = "card",
 		panel = self._card_panel,
@@ -50,6 +53,7 @@ function HUDCardDetails:_create_card()
 			h = self._params.card_image_params.h
 		}
 	}
+
 	self._card = self._card_panel:create_custom_control(RaidGUIControlCardBase, card_params)
 end
 
@@ -61,14 +65,18 @@ function HUDCardDetails:_create_bonus()
 		w = self._object:w(),
 		h = HUDCardDetails.BONUS_H
 	}
+
 	self._bonus_panel = self._object:panel(bonus_panel_params)
+
 	local bonus_icon_params = {
 		name = "bonus_icon",
 		valign = "top",
 		texture = tweak_data.gui.icons[HUDCardDetails.BONUS_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCardDetails.BONUS_ICON].texture_rect
 	}
+
 	self._bonus_icon = self._bonus_panel:bitmap(bonus_icon_params)
+
 	local bonus_text_params = {
 		name = "bonus_text",
 		wrap = true,
@@ -83,6 +91,7 @@ function HUDCardDetails:_create_bonus()
 		font = tweak_data.gui:get_font_path(HUDCardDetails.TEXT_FONT, HUDCardDetails.TEXT_FONT_SIZE),
 		font_size = HUDCardDetails.TEXT_FONT_SIZE
 	}
+
 	self._bonus_text = self._bonus_panel:text(bonus_text_params)
 end
 
@@ -94,14 +103,18 @@ function HUDCardDetails:_create_malus()
 		w = self._object:w(),
 		h = HUDCardDetails.MALUS_H
 	}
+
 	self._malus_panel = self._object:panel(malus_panel_params)
+
 	local malus_icon_params = {
 		name = "malus_icon",
 		valign = "top",
 		texture = tweak_data.gui.icons[HUDCardDetails.MALUS_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCardDetails.MALUS_ICON].texture_rect
 	}
+
 	self._malus_icon = self._malus_panel:bitmap(malus_icon_params)
+
 	local malus_text_params = {
 		name = "malus_text",
 		wrap = true,
@@ -116,6 +129,7 @@ function HUDCardDetails:_create_malus()
 		font = tweak_data.gui:get_font_path(HUDCardDetails.TEXT_FONT, HUDCardDetails.TEXT_FONT_SIZE),
 		font_size = HUDCardDetails.TEXT_FONT_SIZE
 	}
+
 	self._malus_text = self._malus_panel:text(malus_text_params)
 end
 

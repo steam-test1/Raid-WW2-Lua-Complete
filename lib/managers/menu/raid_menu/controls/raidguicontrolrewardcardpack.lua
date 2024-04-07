@@ -42,11 +42,13 @@ function RaidGUIControlRewardCardPack:_create_panel()
 		h = self._params.h,
 		layer = self._panel:layer() + 1
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
 function RaidGUIControlRewardCardPack:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlRewardCardPack.DEFAULT_WIDTH
 	control_params.h = control_params.h or RaidGUIControlRewardCardPack.HEIGHT
@@ -62,6 +64,7 @@ function RaidGUIControlRewardCardPack:_create_left_panel()
 		w = RaidGUIControlRewardCardPack.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -78,6 +81,7 @@ function RaidGUIControlRewardCardPack:_create_title()
 		color = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true)
 	}
+
 	self._title_description = self._left_panel:text(title_description_params)
 
 	self._title_description:set_debug(true)
@@ -97,7 +101,9 @@ function RaidGUIControlRewardCardPack:_create_title()
 		color = RaidGUIControlRewardCardPack.TITLE_COLOR,
 		text = self:translate("menu_loot_screen_card_pack", true)
 	}
+
 	self._pack_title = self._left_panel:text(title_params)
+
 	local _, _, w, h = self._pack_title:text_rect()
 
 	self._pack_title:set_w(w)
@@ -120,6 +126,7 @@ function RaidGUIControlRewardCardPack:_create_cards_control()
 			wrapper_h = 600
 		}
 	}
+
 	self._cards_control = self._left_panel:create_custom_control(RaidGUIControlLootRewardCards, cards_control_params)
 
 	self._cards_control:set_center_x(self._left_panel:w() / 2 + 38)
@@ -132,6 +139,7 @@ function RaidGUIControlRewardCardPack:_create_right_panel()
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 
 	self._right_panel:set_right(self._object:w())
@@ -151,6 +159,7 @@ function RaidGUIControlRewardCardPack:_create_description()
 		color = RaidGUIControlRewardCardPack.DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_card_pack_description")
 	}
+
 	self._description = self._right_panel:text(description_params)
 
 	self._description:set_right(self._right_panel:w())
@@ -171,6 +180,7 @@ function RaidGUIControlRewardCardPack:_create_item_description_name()
 		color = RaidGUIControlRewardCardPack.ITEM_TYPE_COLOR,
 		text = self:translate("menu_loot_screen_card_pack", true)
 	}
+
 	self._item_description_name = self._right_panel:text(item_type_params)
 end
 
@@ -192,7 +202,9 @@ function RaidGUIControlRewardCardPack:show()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, image_duration)
 
 		if title_delay < t then
@@ -268,7 +280,7 @@ function RaidGUIControlRewardCardPack:move_right()
 	if self._selected then
 		local new_item_idx = self._selected_item_idx + 1
 
-		if RaidGUIControlLootRewardCards.CARD_COUNT < new_item_idx then
+		if new_item_idx > RaidGUIControlLootRewardCards.CARD_COUNT then
 			self._selected_item_idx = RaidGUIControlLootRewardCards.CARD_COUNT
 		else
 			self._cards_control:get_items()[self._selected_item_idx]:unselect()

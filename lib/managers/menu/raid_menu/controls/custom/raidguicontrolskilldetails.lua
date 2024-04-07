@@ -49,6 +49,7 @@ end
 
 function RaidGUIControlSkillDetails:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.name = control_params.name .. "_customization_panel"
 	control_params.layer = self._panel:layer() + 50
 	control_params.w = self._params.w or RaidGUIControlSkillDetails.DEFAULT_W
@@ -69,6 +70,7 @@ function RaidGUIControlSkillDetails:_create_control_panel_bg()
 		texture_rect = bggui.texture_rect,
 		layer = self._object:layer() - 1
 	}
+
 	self._background = self._object:bitmap(background_params)
 end
 
@@ -92,6 +94,7 @@ function RaidGUIControlSkillDetails:_create_skill_title()
 		color = RaidGUIControlSkillDetails.TITLE_COLOR,
 		layer = self._object:layer() + 1
 	}
+
 	self._title = self._object:label(skill_title_params)
 end
 
@@ -110,7 +113,9 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 		color = RaidGUIControlSkillDetails.DESCRIPTION_COLOR,
 		layer = self._object:layer() + 2
 	}
+
 	self._flavortext = self._object:label(flavortext_text_params)
+
 	local description_text_params = {
 		name = "skill_description",
 		h = 1,
@@ -126,11 +131,13 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 		color = RaidGUIControlSkillDetails.INFORMATION_COLOR,
 		layer = self._object:layer() + 2
 	}
+
 	self._description = self._object:text(description_text_params)
 end
 
 function RaidGUIControlSkillDetails:set_flipped(flipped)
 	self._is_flipped = flipped
+
 	local bggui = self:_rand_bg()
 
 	self._background:set_x(flipped and self._object:w() or 0)
@@ -215,13 +222,16 @@ end
 function RaidGUIControlSkillDetails:_animate_skill_hide()
 	if not self._panel_invisible then
 		self._panel_invisible = true
+
 		local t = 0
 		local starting_alpha = self._title._object:alpha()
 		local fade_out_duration = starting_alpha * 0.35
 
 		while t < fade_out_duration and self._panel_invisible == true do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_alpha = Easing.quintic_in(t, starting_alpha, -starting_alpha, fade_out_duration)
 
 			self._title._object:set_alpha(current_alpha)

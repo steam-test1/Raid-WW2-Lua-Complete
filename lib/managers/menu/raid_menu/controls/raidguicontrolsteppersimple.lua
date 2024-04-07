@@ -65,6 +65,7 @@ end
 
 function RaidGUIControlStepperSimple:_create_stepper_panel()
 	local stepper_params = clone(self._params)
+
 	stepper_params.name = stepper_params.name .. "_stepper"
 	stepper_params.layer = self._panel:layer() + 1
 	stepper_params.w = self._params.w or RaidGUIControlStepperSimple.DEFAULT_WIDTH
@@ -87,7 +88,9 @@ function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 		layer = self._object:layer() + 1,
 		on_click_callback = callback(self, self, "on_left_arrow_clicked")
 	}
+
 	self._arrow_left = self._object:image_button(left_arrow_params)
+
 	local right_arrow_params = {
 		name = "stepper_simple_right_arrow",
 		x = self._object:w() - tweak_data.gui:icon_w(RaidGUIControlStepperSimple.BUTTON_RIGHT_TEXTURE),
@@ -101,7 +104,9 @@ function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 		layer = self._object:layer() + 1,
 		on_click_callback = callback(self, self, "on_right_arrow_clicked")
 	}
+
 	self._arrow_right = self._object:image_button(right_arrow_params)
+
 	local label_params = {
 		name = "stepper_simple_value",
 		vertical = "center",
@@ -116,8 +121,11 @@ function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 		font = RaidGUIControlStepperSimple.FONT,
 		font_size = RaidGUIControlStepperSimple.FONT_SIZE
 	}
+
 	self._value_label = self._object:text(label_params)
+
 	local stepper_data = self._data_source_callback()
+
 	self._stepper_data = clone(stepper_data)
 	self._selected_item_index = 1
 
@@ -146,6 +154,7 @@ function RaidGUIControlStepperSimple:_select_item(index, skip_animation)
 	local item = self._stepper_data[index]
 	local text = item.text or managers.localization:text(item.text_id)
 	local disabled = item.disabled
+
 	self._selected_item_index = index
 
 	if index == 1 then
@@ -262,8 +271,10 @@ function RaidGUIControlStepperSimple:mouse_moved(o, x, y)
 	end
 
 	self._mouse_inside = true
+
 	local used = false
-	local pointer = nil
+	local pointer
+
 	used, pointer = self._arrow_left:mouse_moved(o, x, y)
 
 	if used then
@@ -322,6 +333,7 @@ function RaidGUIControlStepperSimple:is_selected_control()
 end
 
 function RaidGUIControlStepperSimple:_select_control(value)
+	return
 end
 
 function RaidGUIControlStepperSimple:move_left()
@@ -363,9 +375,11 @@ function RaidGUIControlStepperSimple:_animate_value_change(o, text, disabled)
 	local duration = 0.13
 	local t = duration - starting_alpha * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.linear(t, 1, -1, duration)
 
 		self._value_label:set_alpha(alpha)
@@ -383,9 +397,11 @@ function RaidGUIControlStepperSimple:_animate_value_change(o, text, disabled)
 	duration = 0.18
 	t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._value_label:set_alpha(alpha)

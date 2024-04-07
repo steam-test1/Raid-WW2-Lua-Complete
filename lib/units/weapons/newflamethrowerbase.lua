@@ -17,18 +17,19 @@ function NewFlamethrowerBase:setup_default()
 end
 
 function NewFlamethrowerBase:update(unit, t, dt)
+	return
 end
 
 function NewFlamethrowerBase:_create_use_setups()
 	local use_data = {}
-	local player_setup = {
-		selection_index = tweak_data.weapon[self._name_id].use_data.selection_index,
-		equip = {
-			align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
-		},
-		unequip = {
-			align_place = "back"
-		}
+	local player_setup = {}
+
+	player_setup.selection_index = tweak_data.weapon[self._name_id].use_data.selection_index
+	player_setup.equip = {
+		align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
+	}
+	player_setup.unequip = {
+		align_place = "back"
 	}
 	use_data.player = player_setup
 	self._use_data = use_data
@@ -44,6 +45,7 @@ function NewFlamethrowerBase:_update_stats_values()
 end
 
 function NewFlamethrowerBase:get_damage_falloff(damage, col_ray, user_unit)
+	return
 end
 
 function NewFlamethrowerBase:_spawn_muzzle_effect(from_pos, direction)
@@ -63,7 +65,7 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 
 	local result = {}
 	local hit_enemies = {}
-	local hit_something, col_rays = nil
+	local hit_something, col_rays
 
 	if self._alert_events then
 		col_rays = {}
@@ -106,7 +108,7 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 		local raycast_to = mvec_to
 		local raycast_ignore_units = clone(self._setup.ignore_units)
 		local test_color = 1
-		local col_ray, test_last_raycast_hit_position = nil
+		local col_ray, test_last_raycast_hit_position
 
 		while search_for_targets do
 			col_ray = World:raycast("ray", raycast_from, raycast_to, "slot_mask", self._bullet_slotmask, "ignore_unit", raycast_ignore_units)
@@ -121,7 +123,7 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 						test_last_raycast_hit_position = col_ray.hit_position
 					end
 
-					if self._flame_max_range < col_ray.distance then
+					if col_ray.distance > self._flame_max_range then
 						search_for_targets = false
 
 						break
@@ -154,12 +156,13 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 					autoaim = false
 				else
 					autoaim = false
+
 					local autohit = self:check_autoaim(from_pos, direction, self._range)
 
 					if autohit then
 						local autohit_chance = 1 - math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
 
-						if math.random() < autohit_chance then
+						if autohit_chance > math.random() then
 							self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 							hit_something = true
 
@@ -208,14 +211,12 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 		weapon_unit = self._unit
 	})
 
-	if next(hit_enemies) then
-		if true or false then
-			managers.statistics:shot_fired({
-				skip_bullet_count = true,
-				hit = true,
-				weapon_unit = self._unit
-			})
-		end
+	if next(hit_enemies) and true or false then
+		managers.statistics:shot_fired({
+			skip_bullet_count = true,
+			hit = true,
+			weapon_unit = self._unit
+		})
 	end
 
 	return result

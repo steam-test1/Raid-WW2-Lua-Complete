@@ -22,6 +22,7 @@ function HUDMapTab:_create_panel(panel, params)
 		valign = "scale",
 		layer = params.layer or panel:layer()
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -32,6 +33,7 @@ function HUDMapTab:_create_inner_panel()
 		valign = "center",
 		layer = HUDMapTab.INNER_PANEL_LAYER
 	}
+
 	self._inner_panel = self._object:panel(inner_panel_params)
 end
 

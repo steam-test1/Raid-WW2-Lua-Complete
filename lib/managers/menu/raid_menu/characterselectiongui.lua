@@ -413,12 +413,12 @@ function CharacterSelectionGui:_activate_character_profile(slot_index)
 end
 
 function CharacterSelectionGui:show_selected_character_details(slot_index)
-	local cache = nil
+	local cache
 	local profile_name = ""
 	local nationality = ""
 	local class_name = ""
 	local level = ""
-	local class_stats = nil
+	local class_stats
 
 	if Global.savefile_manager.meta_data_list[slot_index] and Global.savefile_manager.meta_data_list[slot_index].cache then
 		cache = Global.savefile_manager.meta_data_list[slot_index].cache
@@ -486,6 +486,7 @@ function CharacterSelectionGui:_show_selected_character_loaded(slot_index)
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
 		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
+
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 
@@ -716,6 +717,7 @@ function CharacterSelectionGui:on_item_yes_delete_characters_list()
 	self._is_render_done = false
 	self._slots_loaded[slot_to_delete] = false
 	self._slot_normal[slot_to_delete] = false
+
 	local new_slot = -1
 
 	if slot_to_delete == self._active_character_slot then

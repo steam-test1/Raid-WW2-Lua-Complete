@@ -32,7 +32,9 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 
 				if alive(unit) then
 					local unit_data = unit:mission_element_data()
+
 					unit_data._patrol_group = true
+
 					local draw = not selected_unit or unit == selected_unit or self._unit == selected_unit
 
 					if draw then
@@ -160,7 +162,7 @@ function SpecialObjectiveGroupElement:_spawn_raycast()
 		return
 	end
 
-	local id = nil
+	local id
 
 	if string.find(ray.unit:name():s(), "ai_enemy_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_civilian_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true) then
 		id = ray.unit:unit_data().unit_id
@@ -194,6 +196,7 @@ end
 function SpecialObjectiveGroupElement:_clear_followups(element_id)
 	local pso = managers.editor:unit_with_id(element_id)
 	local pso_med = pso:mission_element_data()
+
 	pso_med.followup_elements = {}
 	pso_med._patrol_group = true
 end
@@ -367,11 +370,14 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local tooltip = ""
+
 	tooltip = tooltip .. "RANDOMIZER: Assigns SOs to instigators.\n"
 	tooltip = tooltip .. "PATROL GROUP: Assigns random SO in a way that will repeat the same path from this group.\n"
 	tooltip = tooltip .. "FORCED SPAWN: Will spawn a new group of choice.\n"
 	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
+
 	local mode_params = {
 		name = "Mode:",
 		name_proportions = 1,
@@ -439,4 +445,5 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 end
 
 function SpecialObjectiveGroupElement:add_to_mission_package()
+	return
 end

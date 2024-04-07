@@ -1,13 +1,11 @@
 BaseInteractionExt = BaseInteractionExt or class()
-BaseInteractionExt.EVENT_IDS = {
-	at_interact_start = 1,
-	at_interact_interupt = 2
-}
-BaseInteractionExt.SKILL_IDS = {
-	none = 1,
-	basic = 2,
-	aced = 3
-}
+BaseInteractionExt.EVENT_IDS = {}
+BaseInteractionExt.EVENT_IDS.at_interact_start = 1
+BaseInteractionExt.EVENT_IDS.at_interact_interupt = 2
+BaseInteractionExt.SKILL_IDS = {}
+BaseInteractionExt.SKILL_IDS.none = 1
+BaseInteractionExt.SKILL_IDS.basic = 2
+BaseInteractionExt.SKILL_IDS.aced = 3
 BaseInteractionExt.INFO_IDS = {
 	1,
 	2,
@@ -18,9 +16,8 @@ BaseInteractionExt.INFO_IDS = {
 	64,
 	128
 }
-BaseInteractionExt.INTERACTION_TYPE = {
-	locator_based = "locator_based"
-}
+BaseInteractionExt.INTERACTION_TYPE = {}
+BaseInteractionExt.INTERACTION_TYPE.locator_based = "locator_based"
 
 function BaseInteractionExt:init(unit)
 	self._unit = unit
@@ -36,6 +33,7 @@ local ids_material = Idstring("material")
 
 function BaseInteractionExt:refresh_material()
 	self._materials = {}
+
 	local all_materials = self._unit:get_objects_by_type(ids_material)
 
 	for _, m in ipairs(all_materials) do
@@ -57,7 +55,9 @@ function BaseInteractionExt:_upd_interaction_topology()
 	end
 
 	self._interact_position = self._interact_obj and self._interact_obj:position() or self._unit:position()
+
 	local rotation = self._interact_obj and self._interact_obj:rotation() or self._unit:rotation()
+
 	self._interact_axis = self._tweak_data.axis and rotation[self._tweak_data.axis](rotation) or nil
 
 	self:_update_interact_position()
@@ -151,6 +151,7 @@ end
 function BaseInteractionExt:_update_interact_axis()
 	if self._tweak_data.axis and self._unit:moving() then
 		local rotation = self._interact_obj and self._interact_obj:rotation() or self._unit:rotation()
+
 		self._interact_axis = self._tweak_data.axis and rotation[self._tweak_data.axis](rotation) or nil
 	end
 end
@@ -164,6 +165,7 @@ function BaseInteractionExt:interact_dont_interupt_on_distance()
 end
 
 function BaseInteractionExt:update(distance_to_player)
+	return
 end
 
 function BaseInteractionExt:_btn_interact()
@@ -249,7 +251,11 @@ function BaseInteractionExt:_show_interaction_text(custom_text_id)
 		local plr_carry = managers.player:current_carry_id()
 
 		if plr_carry then
-			has_carry_item = (type(self._tweak_data.required_carry) ~= "table" or table.contains(self._tweak_data.required_carry, plr_carry)) and self._tweak_data.required_carry == plr_carry
+			if type(self._tweak_data.required_carry) == "table" then
+				has_carry_item = table.contains(self._tweak_data.required_carry, plr_carry)
+			else
+				has_carry_item = self._tweak_data.required_carry == plr_carry
+			end
 		end
 
 		if not has_carry_item then
@@ -346,6 +352,7 @@ end
 function BaseInteractionExt:_interact_say(data)
 	local player = data[1]
 	local say_line = data[2]
+
 	self._interact_say_clbk = nil
 
 	player:sound():say(say_line, true)
@@ -388,8 +395,11 @@ function BaseInteractionExt:interact_start(player, locator)
 
 	if sound and sound ~= "" then
 		local delay = (self:_timer_value() or 0) * managers.player:toolset_value()
+
 		delay = delay / 3 + math.random() * delay / 3
+
 		local say_t = Application:time() + delay
+
 		self._interact_say_clbk = "interact_say_waiting"
 
 		managers.enemy:add_delayed_clbk(self._interact_say_clbk, callback(self, self, "_interact_say", {
@@ -452,6 +462,7 @@ function BaseInteractionExt:_get_timer()
 	if managers.player:has_category_upgrade("player", "level_interaction_timer_multiplier") then
 		local data = managers.player:upgrade_value("player", "level_interaction_timer_multiplier") or {}
 		local player_level = managers.experience:current_level() or 0
+
 		multiplier = multiplier * (1 - (data[1] or 0) * math.ceil(player_level / (data[2] or 1)))
 	end
 
@@ -656,9 +667,9 @@ function BaseInteractionExt:set_contour_override(state)
 end
 
 function BaseInteractionExt:save(data)
-	local state = {
-		active = self._active
-	}
+	local state = {}
+
+	state.active = self._active
 
 	if self.tweak_data then
 		state.tweak_data = self.tweak_data
@@ -880,9 +891,13 @@ function SpecialLootCrateInteractionExt:interact(player)
 	end
 
 	local params = deep_clone(self._tweak_data)
+
 	params.target_unit = self._unit
+
 	local pm = managers.player
+
 	params.number_of_circles = math.max(params.number_of_circles - pm:upgrade_value("interaction", "wheel_amount_decrease", 0), 1)
+
 	local count = params.number_of_circles
 
 	for i = 1, count do
@@ -940,6 +955,7 @@ function HealthPickupInteractionExt:selected(player)
 	end
 
 	local return_val = HealthPickupInteractionExt.super.selected(self, player)
+
 	self._hide_interaction_prompt = nil
 
 	return return_val
@@ -972,6 +988,7 @@ function AmmoPickupInteractionExt:selected(player)
 	end
 
 	local return_val = AmmoPickupInteractionExt.super.selected(self, player)
+
 	self._hide_interaction_prompt = nil
 
 	return return_val
@@ -1008,6 +1025,7 @@ function GrenadePickupInteractionExt:selected(player)
 	end
 
 	local return_val = GrenadePickupInteractionExt.super.selected(self, player)
+
 	self._hide_interaction_prompt = nil
 
 	return return_val
@@ -1046,6 +1064,7 @@ function DropInteractionExt:interact(player)
 	DropInteractionExt.super.super.interact(self, player)
 
 	local params = deep_clone(self._tweak_data)
+
 	params.target_unit = self._unit
 
 	game_state_machine:change_state_by_name("ingame_multiple_choice_interaction", params)
@@ -1289,13 +1308,14 @@ local is_win32 = _G.IS_PC
 function ReviveInteractionExt:set_active(active, sync, down_time)
 	ReviveInteractionExt.super.set_active(self, active)
 
-	local panel_id = nil
+	local panel_id
 
 	if managers.criminals:character_data_by_unit(self._unit) then
 		panel_id = managers.criminals:character_data_by_unit(self._unit).panel_id
 	end
 
 	panel_id = panel_id or self._unit:unit_data() and self._unit:unit_data().teammate_panel_id
+
 	local name_label_id = self._unit:unit_data() and self._unit:unit_data().name_label_id
 
 	if self._active then
@@ -1320,6 +1340,7 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 
 		if not self._active_wp then
 			down_time = down_time or 999
+
 			local text = managers.localization:text(self.tweak_data == "revive" and "debug_team_mate_need_revive" or "debug_team_mate_need_free")
 			local icon = self.tweak_data == "revive" and "waypoint_special_downed" or "wp_rescue"
 			local timer = self.tweak_data == "revive" and (self._unit:base().is_husk_player and down_time or tweak_data.character[self._unit:base()._tweak_table].damage.DOWNED_TIME) or self._unit:base().is_husk_player and tweak_data.player.damage.ARRESTED_TIME or tweak_data.character[self._unit:base()._tweak_table].damage.ARRESTED_TIME
@@ -1339,6 +1360,7 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 
 		if self._from_dropin then
 			down_time = down_time or 999
+
 			local name = managers.criminals:character_name_by_unit(self._unit)
 			local current = managers.hud._teammate_timers[name] and managers.hud._teammate_timers[name].timer_current
 			local total = managers.hud._teammate_timers[name] and managers.hud._teammate_timers[name].timer_total
@@ -1430,10 +1452,10 @@ end
 function ReviveInteractionExt:save(data)
 	ReviveInteractionExt.super.save(self, data)
 
-	local state = {
-		active_wp = self._active_wp,
-		wp_id = self._wp_id
-	}
+	local state = {}
+
+	state.active_wp = self._active_wp
+	state.wp_id = self._wp_id
 	data.ReviveInteractionExt = state
 end
 
@@ -1564,7 +1586,7 @@ function MultipleEquipmentBagInteractionExt:interact(player)
 	local equipment_name = self._special_equipment or "c4"
 	local max_player_can_carry = tweak_data.equipments.specials[equipment_name].quantity or 1
 	local player_equipment = managers.player:has_special_equipment(equipment_name)
-	local amount_wanted = nil
+	local amount_wanted
 
 	if player_equipment then
 		amount_wanted = max_player_can_carry - Application:digest_value(player_equipment.amount, false)
@@ -1602,7 +1624,9 @@ function MultipleEquipmentBagInteractionExt:sync_interacted(peer, player, amount
 
 	local equipment_name = self._special_equipment or "c4"
 	local starting_quantity = tweak_data.equipments.specials[equipment_name] and tweak_data.equipments.specials[equipment_name].quantity or 1
+
 	self._current_quantity = self._current_quantity or starting_quantity
+
 	local amount_to_give = math.min(self._current_quantity, amount_wanted)
 
 	if peer then
@@ -1996,7 +2020,7 @@ function IntimitateInteractionExt:_interact_blocked(player)
 
 		return not managers.player:can_carry("person")
 	elseif self.tweak_data == "hostage_convert" then
-		return not managers.player:has_category_upgrade("player", "convert_enemies") or managers.player:chk_minion_limit_reached() or managers.groupai:state():whisper_mode()
+		return not managers.player:has_category_upgrade("player", "convert_enemies") or not not managers.player:chk_minion_limit_reached() or managers.groupai:state():whisper_mode()
 	elseif self.tweak_data == "hostage_move" then
 		if not self._unit:anim_data().tied then
 			return true
@@ -2004,7 +2028,7 @@ function IntimitateInteractionExt:_interact_blocked(player)
 
 		local following_hostages = managers.groupai:state():get_following_hostages(player)
 
-		if following_hostages and tweak_data.player.max_nr_following_hostages <= table.size(following_hostages) then
+		if following_hostages and table.size(following_hostages) >= tweak_data.player.max_nr_following_hostages then
 			return true, nil, "hint_hostage_follow_limit"
 		end
 	elseif self.tweak_data == "hostage_stay" then
@@ -2198,7 +2222,13 @@ function UseCarryInteractionExt:_interact_blocked(player)
 
 	if plr_carry then
 		local correct_carry = false
-		correct_carry = (type(self._tweak_data.required_carry) ~= "table" or table.has(self._tweak_data.required_carry, plr_carry)) and self._tweak_data.required_carry == plr_carry
+
+		if type(self._tweak_data.required_carry) == "table" then
+			correct_carry = table.has(self._tweak_data.required_carry, plr_carry)
+		else
+			correct_carry = self._tweak_data.required_carry == plr_carry
+		end
+
 		local carry_warning = not correct_carry and (self._tweak_data.required_carry_text or "wrong_carry_item") or nil
 
 		return correct_carry, nil, carry_warning
@@ -2267,8 +2297,11 @@ function EventIDInteractionExt:interact_start(player)
 
 	if sound and sound ~= "" then
 		local delay = (self._tweak_data.timer or 0) * managers.player:toolset_value()
+
 		delay = delay / 3 + math.random() * delay / 3
+
 		local say_t = Application:time() + delay
+
 		self._interact_say_clbk = "interact_say_waiting"
 
 		managers.enemy:add_delayed_clbk(self._interact_say_clbk, callback(self, self, "_interact_say", {
@@ -2498,15 +2531,16 @@ end
 function MissionElementInteractionExt:save(data)
 	MissionElementInteractionExt.super.save(self, data)
 
-	local state = {
-		tweak_data = self.tweak_data,
-		override_timer_value = self._override_timer_value
-	}
+	local state = {}
+
+	state.tweak_data = self.tweak_data
+	state.override_timer_value = self._override_timer_value
 	data.MissionElementInteractionExt = state
 end
 
 function MissionElementInteractionExt:load(data)
 	local state = data.MissionElementInteractionExt
+
 	self._override_timer_value = state.override_timer_value
 
 	MissionElementInteractionExt.super.load(self, data)
@@ -2586,6 +2620,7 @@ function DrivingInteractionExt:selected(player, locator)
 		self._tweak_data.text_id = "hud_int_vehicle_drive"
 	elseif action == VehicleDrivingExt.INTERACT_LOOT and vehicle_ext:has_loot_stored() then
 		self._tweak_data.text_id = "hud_int_vehicle_loot"
+
 		local loot_data = vehicle_ext:get_loot() and vehicle_ext:get_loot()[vehicle_ext:get_current_loot_amount()]
 
 		if loot_data then
@@ -2611,6 +2646,7 @@ function DrivingInteractionExt:selected(player, locator)
 	end
 
 	self._action = action
+
 	local res = DrivingInteractionExt.super.selected(self, player)
 
 	return res
@@ -2626,6 +2662,7 @@ function DrivingInteractionExt:can_select(player, locator)
 	if can_select then
 		local vehicle_ext = self._unit:vehicle_driving()
 		local action = vehicle_ext:get_action_for_interaction(player:position(), locator)
+
 		can_select = vehicle_ext:is_interaction_enabled(action)
 
 		if managers.player:is_carrying() and action == VehicleDrivingExt.INTERACT_LOOT then
@@ -2867,8 +2904,10 @@ function GreedCacheItemInteractionExt:interact(player)
 
 	if self._unit:greed():locked() then
 		local params = self._unit:greed():get_lockpick_parameters()
+
 		params.target_unit = self._unit
 		params.number_of_circles = math.max(params.number_of_circles - managers.player:upgrade_value("interaction", "wheel_amount_decrease", 0), 1)
+
 		local count = params.number_of_circles
 
 		for i = 1, count do

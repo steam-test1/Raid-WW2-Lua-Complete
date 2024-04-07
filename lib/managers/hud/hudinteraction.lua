@@ -220,11 +220,14 @@ end
 
 function HUDInteraction:_animate_interaction_start(progress_bar, duration)
 	local t = 0
+
 	self._panels_being_animated[tostring(progress_bar)] = true
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_height = self:_ease_out_quint(t, 0, self._progress_bar_height, duration)
 
 		progress_bar:set_height(current_height)
@@ -243,6 +246,7 @@ function HUDInteraction:_animate_interaction_duration(progress_bar, duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		self:set_interaction_bar_width(t, duration)
@@ -257,7 +261,9 @@ function HUDInteraction:_animate_interaction_cancel(progress_bar, duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_height = self:_ease_in_quint(t, start_height, -start_height, duration)
 
 		progress_bar:set_height(current_height)
@@ -276,7 +282,9 @@ function HUDInteraction:_animate_interaction_complete(progress_bar)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_width = self:_ease_out_quint(t, self._progress_bar_width, -self._progress_bar_width, duration)
 
 		progress_bar:set_width(current_width)

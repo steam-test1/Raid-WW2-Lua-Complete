@@ -151,9 +151,7 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 
 	local key_name = "" .. (input_id == "mouse" and Input:mouse():button_name_str(key) or Input:keyboard():button_name_str(key))
 
-	if not no_add and input_id == "mouse" then
-		key_name = "mouse " .. key_name or key_name
-	end
+	key_name = not no_add and input_id == "mouse" and "mouse " .. key_name or key_name
 
 	local forbidden_btns = {
 		"esc",
@@ -260,7 +258,7 @@ function RaidGuiControlKeyBind:_end_customize_controller(o, skip_next_key_press)
 	o:mouse_release(nil)
 	Input:mouse():remove_trigger(self._mouse_wheel_up_trigger)
 	Input:mouse():remove_trigger(self._mouse_wheel_down_trigger)
-	setup:add_end_frame_clbk(function ()
+	setup:add_end_frame_clbk(function()
 		self._listening_to_input = false
 
 		self:highlight_off()
@@ -289,6 +287,7 @@ end
 
 function RaidGuiControlKeyBind:_create_keybind_layout()
 	local translated_keybind = managers.localization:check_keybind_translation(self._keybind_params.binding)
+
 	self._keybind = self._object:text({
 		vertical = "center",
 		align = "center",
@@ -314,6 +313,7 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small
 	})
+
 	local x1, y1, keybind_width, h1 = self._keybind:text_rect()
 
 	if keybind_width < RaidGuiControlKeyBind.WIDTH_SHORT then
@@ -333,12 +333,14 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 		texture = tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_LEFT].texture,
 		texture_rect = tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_LEFT].texture_rect
 	})
+
 	local center_texture_rect = {
 		tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_CENTER].texture_rect[1] + 1,
 		tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_CENTER].texture_rect[2],
 		tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_CENTER].texture_rect[3] - 2,
 		tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_CENTER].texture_rect[4]
 	}
+
 	self._background_mid = self._object:bitmap({
 		y = 0,
 		x = self._background_left:x() + RaidGuiControlKeyBind.CORNER_WIDTH,

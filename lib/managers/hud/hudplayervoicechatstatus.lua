@@ -27,6 +27,7 @@ function HUDPlayerVoiceChatStatus:_create_panel(index, parent_panel)
 		h = HUDPlayerVoiceChatStatus.DEFAULT_H,
 		layer = tweak_data.gui.PLAYER_PANELS_LAYER
 	}
+
 	self._object = parent_panel:panel(panel_params)
 end
 
@@ -38,6 +39,7 @@ function HUDPlayerVoiceChatStatus:_create_background()
 		texture = tweak_data.gui.icons[HUDPlayerVoiceChatStatus.CHAT_ICON_BG_BLACK].texture,
 		texture_rect = tweak_data.gui.icons[HUDPlayerVoiceChatStatus.CHAT_ICON_BG_BLACK].texture_rect
 	}
+
 	self._chat_background = self._object:bitmap(background_params)
 
 	self._chat_background:set_left(0)
@@ -56,6 +58,7 @@ function HUDPlayerVoiceChatStatus:_create_player_name()
 		font_size = HUDPlayerVoiceChatStatus.PLAYER_NAME_FONT_SIZE,
 		color = tweak_data.gui.colors.raid_red
 	}
+
 	self._player_name = self._object:text(player_name_params)
 
 	self._player_name:set_center_y(HUDPlayerVoiceChatStatus.DEFAULT_H / 2 + 1)
@@ -70,6 +73,7 @@ function HUDPlayerVoiceChatStatus:_create_voice_chat_indicator()
 		texture_rect = tweak_data.gui.icons[HUDPlayerVoiceChatStatus.CHAT_ICON_SPEAKING].texture_rect,
 		color = tweak_data.gui.colors.raid_red
 	}
+
 	self._chat_indicator_speaking = self._object:bitmap(chat_indicator_params_speaking)
 
 	self._chat_indicator_speaking:set_right(self._object:w())

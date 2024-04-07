@@ -35,6 +35,7 @@ function RaidGUIControlBreadcrumb:_create_panel()
 		h = tweak_data.gui:icon_h(RaidGUIControlBreadcrumb.IMAGE) + 2 * self._padding,
 		layer = self._params and self._params.layer or 1
 	}
+
 	self._object = self._panel:panel(panel_params, true)
 end
 
@@ -47,6 +48,7 @@ function RaidGUIControlBreadcrumb:_create_breadcrumb_icon()
 		texture = tweak_data.gui.icons[RaidGUIControlBreadcrumb.IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlBreadcrumb.IMAGE].texture_rect
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 
 	self._icon:set_center_x(self._object:w() / 2)
@@ -72,6 +74,7 @@ function RaidGUIControlBreadcrumb:check_presence()
 
 	if self._params.check_callback then
 		local callback_result = self._params.check_callback()
+
 		should_be_visible = should_be_visible or callback_result
 	end
 
@@ -119,7 +122,9 @@ function RaidGUIControlBreadcrumb:_animate_show(icon, delay)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
 
 		self._icon:set_alpha(current_alpha)
@@ -144,7 +149,9 @@ function RaidGUIControlBreadcrumb:_animate_attract(icon, delay)
 
 		while t < duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_y_offset = Easing.sine_pulse(t, duration) * RaidGUIControlBreadcrumb.ATTRACT_Y_OFFSET
 
 			self._icon:set_center_y(self._object:h() / 2 - current_y_offset)
@@ -174,7 +181,9 @@ function RaidGUIControlBreadcrumb:_animate_hide(icon)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_rotation = Easing.quartic_in(t, 0, RaidGUIControlBreadcrumb.HIDE_ANIMATION_ROTATION, duration)
 
 		self._icon:set_rotation(current_rotation)

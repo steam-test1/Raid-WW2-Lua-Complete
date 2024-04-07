@@ -45,13 +45,12 @@ function EditUnitSettings:init(editor)
 	horizontal_sizer:add(settings_sizer, 0, 0, "ALIGN_LEFT")
 	sizer:add(horizontal_sizer, 1, 0, "ALIGN_LEFT,EXPAND")
 
-	self._ctrls = {
-		cutscene_actor_name = cutscene_actor_name,
-		cutscene_actor_toolbar = cutscene_toolbar,
-		disable_shadows = disable_shadows,
-		hide_on_projection_light = hide_on_projection_light,
-		disable_on_ai_graph = disable_on_ai_graph
-	}
+	self._ctrls = {}
+	self._ctrls.cutscene_actor_name = cutscene_actor_name
+	self._ctrls.cutscene_actor_toolbar = cutscene_toolbar
+	self._ctrls.disable_shadows = disable_shadows
+	self._ctrls.hide_on_projection_light = hide_on_projection_light
+	self._ctrls.disable_on_ai_graph = disable_on_ai_graph
 
 	panel:layout()
 	panel:set_enabled(false)

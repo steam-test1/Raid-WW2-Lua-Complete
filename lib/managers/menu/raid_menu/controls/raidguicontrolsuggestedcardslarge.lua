@@ -45,6 +45,7 @@ function RaidGUIControlSuggestedCardsLarge:_create_items()
 		item_params.item_selected_callback = callback(self, self, "_item_selected_callback")
 		item_params.item_idx = i
 		item_data = managers.challenge_cards:get_suggested_cards()[i]
+
 		local item = self._suggested_cards_panel:create_custom_control(RaidGUIControlCardSuggestedLarge, item_params, item_data, self._grid_params)
 
 		if item_data then

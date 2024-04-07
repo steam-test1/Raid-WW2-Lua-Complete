@@ -5,6 +5,7 @@ OverlayEffectManager = OverlayEffectManager or class()
 
 function OverlayEffectManager:init()
 	local gui = Overlay:newgui()
+
 	self._vp_overlay = Application:create_scene_viewport(0, 0, 1, 1)
 	self._overlay_camera = Overlay:create_camera()
 
@@ -86,7 +87,7 @@ function OverlayEffectManager:progress_effects(t, dt, paused)
 			local fade_in_end_t = effect.start_t + data.fade_in
 			local sustain_end_t = data.sustain and fade_in_end_t + data.sustain
 			local effect_end_t = sustain_end_t and sustain_end_t + data.fade_out
-			local new_alpha = nil
+			local new_alpha
 
 			if eff_t < fade_in_end_t then
 				new_alpha = (eff_t - effect.start_t) / data.fade_in
@@ -151,7 +152,7 @@ end
 function OverlayEffectManager:play_effect(data)
 	if data then
 		local spawn_alpha = data.color.alpha * (data.fade_in > 0 and 0 or 1)
-		local rectangle = nil
+		local rectangle
 
 		if data.gradient_points then
 			rectangle = self._ws:panel():gradient({

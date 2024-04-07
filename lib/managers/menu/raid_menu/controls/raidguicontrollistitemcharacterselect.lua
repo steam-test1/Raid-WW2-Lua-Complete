@@ -30,6 +30,7 @@ function RaidGUIControlListItemCharacterSelect:init(parent, params, item_data)
 
 	if item_data and item_data.value then
 		self._character_slot = item_data.value
+
 		local slot_data = Global.savefile_manager.meta_data_list[item_data.value]
 
 		if slot_data and slot_data.cache then
@@ -98,9 +99,9 @@ end
 
 function RaidGUIControlListItemCharacterSelect:_load_data()
 	local profile_name = self:translate("character_selection_empty_slot", true)
-	local character_nationality = nil
+	local character_nationality
 	local character_name = "---"
-	local character_flag = nil
+	local character_flag
 
 	if self._item_data.cache then
 		profile_name = self._item_data.cache.PlayerManager.character_profile_name
@@ -193,6 +194,7 @@ function RaidGUIControlListItemCharacterSelect:_layout_breadcrumb(character_nati
 			character_nationality
 		}
 	}
+
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
 	self._breadcrumb:set_right(self._background:x() + self._background:w())
@@ -310,7 +312,7 @@ function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_call
 	self:highlight_on()
 
 	if self._on_item_selected_callback and not dont_trigger_selected_callback then
-		self:_on_item_selected_callback(self._character_slot)
+		self._on_item_selected_callback(self, self._character_slot)
 	end
 
 	if self._customize_button and self._active then

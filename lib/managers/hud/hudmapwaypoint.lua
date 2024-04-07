@@ -30,6 +30,7 @@ function HUDMapWaypointBase:set_position(x, y)
 end
 
 function HUDMapWaypointBase:set_data(waypoint_data)
+	return
 end
 
 function HUDMapWaypointBase:id()
@@ -69,6 +70,7 @@ function HUDMapWaypointCircle:_create_panel(panel, waypoint_data)
 		w = radius * 2,
 		h = radius * 2
 	}
+
 	self._object = RaidGUIPanel:new(panel, panel_params)
 end
 
@@ -82,6 +84,7 @@ function HUDMapWaypointCircle:_create_radar_icon(waypoint_data)
 		texture = tweak_data.gui.icons[HUDMapWaypointCircle.RADAR_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDMapWaypointCircle.RADAR_ICON].texture_rect
 	}
+
 	self._radar_icon = self._object:bitmap(radar_icon_params)
 
 	self._object:set_rotation(math.random(0, 359))
@@ -104,9 +107,11 @@ function HUDMapWaypointCircle:_animate_rotate_radar()
 		local low_speed_sustain_duration = 0.4
 		local t = 0
 
-		while speedup_duration > t do
+		while t < speedup_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_speed = Easing.quartic_in_out(t, low_speed, high_speed - low_speed, speedup_duration)
 
 			self._object:set_rotation(self._object:rotation() + current_speed)
@@ -114,8 +119,9 @@ function HUDMapWaypointCircle:_animate_rotate_radar()
 
 		t = 0
 
-		while high_speed_sustain_duration > t do
+		while t < high_speed_sustain_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
 
 			self._object:set_rotation(self._object:rotation() + high_speed)
@@ -123,9 +129,11 @@ function HUDMapWaypointCircle:_animate_rotate_radar()
 
 		t = 0
 
-		while slowdown_duration > t do
+		while t < slowdown_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_speed = Easing.quintic_in_out(t, high_speed, low_speed - high_speed, slowdown_duration)
 
 			self._object:set_rotation(self._object:rotation() + current_speed)
@@ -133,8 +141,9 @@ function HUDMapWaypointCircle:_animate_rotate_radar()
 
 		t = 0
 
-		while low_speed_sustain_duration > t do
+		while t < low_speed_sustain_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
 
 			self._object:set_rotation(self._object:rotation() + low_speed)
@@ -176,6 +185,7 @@ function HUDMapWaypointPoint:_create_panel(panel)
 		w = HUDMapWaypointPoint.W,
 		h = HUDMapWaypointPoint.H
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -185,6 +195,7 @@ function HUDMapWaypointPoint:_create_icon()
 		texture = tweak_data.gui.icons[HUDMapWaypointPoint.ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDMapWaypointPoint.ICON].texture_rect
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 
 	self._icon:set_center_x(self._object:w() / 2)
@@ -197,6 +208,7 @@ function HUDMapWaypointPoint:_create_background_icon()
 		texture = tweak_data.gui.icons[HUDMapWaypointPoint.ICON_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDMapWaypointPoint.ICON_BACKGROUND].texture_rect
 	}
+
 	self._background_icon = self._object:bitmap(background_icon_params)
 
 	self._background_icon:set_center_x(self._object:w() / 2)
@@ -216,6 +228,7 @@ function HUDMapWaypointPoint:_create_distance()
 		font_size = HUDMapWaypointPoint.DISTANCE_FONT_SIZE,
 		layer = HUDMapWaypointPoint.DISTANCE_LAYER
 	}
+
 	self._distance = self._object:text(distance_text_params)
 
 	self._distance:set_bottom(self._object:h())
@@ -242,9 +255,11 @@ function HUDMapWaypointPoint:_animate_background_icon()
 		local blink_duration = 2
 		local t = 0
 
-		while blink_duration > t do
+		while t < blink_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_size = Easing.quartic_out(t, 1, 1, blink_duration)
 
 			self._background_icon:set_w(self._icon:w() * current_size)
@@ -288,6 +303,7 @@ function HUDMapWaypointIcon:_create_panel(panel, waypoint_data)
 		w = tweak_data.gui:icon_w(icon),
 		h = tweak_data.gui:icon_h(icon)
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -298,6 +314,7 @@ function HUDMapWaypointIcon:_create_icon(waypoint_data)
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 end
 

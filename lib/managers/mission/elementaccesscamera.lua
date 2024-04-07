@@ -12,7 +12,7 @@ end
 function ElementAccessCamera:on_script_activated()
 	if self._values.camera_u_id then
 		local id = self._values.camera_u_id
-		local unit = nil
+		local unit
 
 		if false then
 			unit = managers.editor:unit_with_id(id)
@@ -39,6 +39,7 @@ function ElementAccessCamera:_load_unit(unit)
 end
 
 function ElementAccessCamera:client_on_executed(...)
+	return
 end
 
 function ElementAccessCamera:on_executed(instigator)
@@ -170,6 +171,7 @@ function ElementAccessCameraTrigger:on_script_activated()
 end
 
 function ElementAccessCameraTrigger:client_on_executed(...)
+	return
 end
 
 function ElementAccessCameraTrigger:on_executed(instigator)

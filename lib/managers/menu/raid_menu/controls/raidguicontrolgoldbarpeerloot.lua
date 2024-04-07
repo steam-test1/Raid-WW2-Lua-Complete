@@ -29,6 +29,7 @@ end
 
 function RaidGUIControlGoldBarPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlGoldBarPeerLoot.WIDTH
 	control_params.h = control_params.h or RaidGUIControlGoldBarPeerLoot.HEIGHT
@@ -46,7 +47,9 @@ function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 		texture = tweak_data.gui.icons[RaidGUIControlGoldBarPeerLoot.REWARD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGoldBarPeerLoot.REWARD_ICON_SINGLE].texture_rect
 	}
+
 	self._gold_bar_image = self._object:bitmap(params_gold_bar_image)
+
 	local params_player_name = {
 		name = "peer_name_label",
 		align = "left",
@@ -59,7 +62,9 @@ function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 		font = RaidGUIControlGoldBarPeerLoot.FONT,
 		font_size = RaidGUIControlGoldBarPeerLoot.NAME_FONT_SIZE
 	}
+
 	self._name_label = self._object:text(params_player_name)
+
 	local _, _, _, h = self._name_label:text_rect()
 
 	self._name_label:set_h(h)
@@ -76,7 +81,9 @@ function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 		font = RaidGUIControlGoldBarPeerLoot.FONT,
 		font_size = RaidGUIControlGoldBarPeerLoot.DESCRIPTION_FONT_SIZE
 	}
+
 	self._gold_bars_value_label = self._object:text(params_gold_bar_description)
+
 	local _, _, _, h = self._gold_bars_value_label:text_rect()
 
 	self._gold_bars_value_label:set_h(h)
@@ -112,9 +119,9 @@ function RaidGUIControlGoldBarPeerLoot:set_gold_bar_reward(amount)
 
 	local icon = RaidGUIControlGoldBarPeerLoot.REWARD_ICON_SINGLE
 
-	if amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY <= amount then
+	if amount and amount >= RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY then
 		icon = RaidGUIControlGoldBarPeerLoot.REWARD_ICON_MANY
-	elseif amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW <= amount then
+	elseif amount and amount >= RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW then
 		icon = RaidGUIControlGoldBarPeerLoot.REWARD_ICON_FEW
 	end
 

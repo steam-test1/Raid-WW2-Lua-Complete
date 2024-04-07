@@ -61,10 +61,11 @@ function Warcry:get_level()
 end
 
 function Warcry:get_level_description(level)
+	return
 end
 
 function Warcry:activate()
-	local current_buffs = nil
+	local current_buffs
 
 	if self._level > #self._tweak_data.buffs then
 		current_buffs = self._tweak_data.buffs[#self._tweak_data.buffs]
@@ -99,7 +100,7 @@ function Warcry:deactivate()
 		return
 	end
 
-	local current_buffs = nil
+	local current_buffs
 
 	if self._level > #self._tweak_data.buffs then
 		current_buffs = self._tweak_data.buffs[#self._tweak_data.buffs]
@@ -141,6 +142,7 @@ function Warcry:_get_upgrade_definition_name(upgrade_definition_name)
 end
 
 function Warcry:duration()
+	return
 end
 
 function Warcry:cleanup()

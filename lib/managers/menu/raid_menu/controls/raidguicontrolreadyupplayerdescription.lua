@@ -16,6 +16,7 @@ end
 
 function RaidGUIControlReadyUpPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
+
 	self._class_icon = self._object:bitmap({
 		name = "class_icon",
 		y = 32,
@@ -111,7 +112,9 @@ function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
 		texture = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING].texture_rect
 	}
+
 	self._chat_indicator_speaking = self._object:bitmap(chat_indicator_params_speaking)
+
 	local _, _, w, _ = self._status_label:text_rect()
 	local x = self._status_label:left() + w + RaidGUIControlReadyUpPlayerDescription.CHAT_PANEL_SIZE / 2
 	local y = self._player_name:bottom() + 19
@@ -126,6 +129,7 @@ function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
 		texture = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED].texture_rect
 	}
+
 	self._chat_indicator_muted = self._object:bitmap(chat_indicator_params_muted)
 
 	self._chat_indicator_muted:set_center_x(x)
@@ -133,7 +137,7 @@ function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
 end
 
 function RaidGUIControlReadyUpPlayerDescription:show_chat_indicator(chat_indicator_name)
-	local chat_indicator = nil
+	local chat_indicator
 
 	if chat_indicator_name == "chat_indicator_speaking" then
 		chat_indicator = self._chat_indicator_speaking
@@ -147,7 +151,7 @@ function RaidGUIControlReadyUpPlayerDescription:show_chat_indicator(chat_indicat
 end
 
 function RaidGUIControlReadyUpPlayerDescription:hide_chat_indicator(chat_indicator_name)
-	local chat_indicator = nil
+	local chat_indicator
 
 	if chat_indicator_name == "chat_indicator_speaking" then
 		chat_indicator = self._chat_indicator_speaking

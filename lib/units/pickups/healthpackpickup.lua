@@ -18,17 +18,17 @@ function HealthPackPickup:_pickup(unit)
 			local effect_health_pickup_multiplier = 1
 
 			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) then
-				effect_health_pickup_multiplier = effect_health_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1
+				effect_health_pickup_multiplier = effect_health_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1)
 			end
 
 			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_HEALTH_EFFECT_INCREASE) then
-				effect_health_pickup_multiplier = effect_health_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_HEALTH_EFFECT_INCREASE) or 1) - 1
+				effect_health_pickup_multiplier = effect_health_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_HEALTH_EFFECT_INCREASE) or 1) - 1)
 			end
 
 			local health_pku_tweakdata = tweak_data.drop_loot[self.tweak_data]
 			local base_health_recovery = health_pku_tweakdata.health_restored
 			local upgrade_health_pickup_multiplier = managers.player:upgrade_value("player", "pick_up_health_multiplier", 1)
-			local recovery_percentage = base_health_recovery * (upgrade_health_pickup_multiplier + effect_health_pickup_multiplier - 1) / 100
+			local recovery_percentage = base_health_recovery * (upgrade_health_pickup_multiplier + (effect_health_pickup_multiplier - 1)) / 100
 			local max_health = unit:character_damage():get_max_health()
 
 			unit:character_damage():set_health(current_health + recovery_percentage * max_health)
@@ -61,6 +61,7 @@ function HealthPackPickup:_pickup(unit)
 end
 
 function HealthPackPickup:sync_net_event(event, peer)
+	return
 end
 
 function HealthPackPickup:get_pickup_type()

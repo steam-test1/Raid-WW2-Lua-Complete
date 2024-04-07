@@ -63,6 +63,7 @@ function MenuCallbackHandler:bang_active()
 end
 
 function MenuCallbackHandler:_on_host_setting_updated()
+	return
 end
 
 function MenuCallbackHandler:choice_region_filter(item)
@@ -121,7 +122,7 @@ function MenuCallbackHandler:not_has_all_dlcs()
 end
 
 function MenuCallbackHandler:reputation_check(data)
-	return data:value() <= managers.experience:current_level()
+	return managers.experience:current_level() >= data:value()
 end
 
 function MenuCallbackHandler:non_overkill_145(data)
@@ -395,20 +396,22 @@ function MenuCallbackHandler:on_menu_option_help()
 end
 
 function MenuCallbackHandler:quit_game()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_quit")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_quit_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_quit_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_to_quit")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_quit_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_quit_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -422,6 +425,7 @@ function MenuCallbackHandler:_dialog_quit_yes()
 end
 
 function MenuCallbackHandler:_dialog_quit_no()
+	return
 end
 
 function MenuCallbackHandler:_dialog_save_progress_backup_yes()
@@ -457,6 +461,7 @@ end
 
 function MenuCallbackHandler:change_nr_players(item)
 	local nr_players = item:value()
+
 	Global.nr_players = nr_players
 
 	managers.player:set_nr_players(nr_players)
@@ -536,7 +541,7 @@ function MenuCallbackHandler:toggle_fullscreen(item)
 	end
 
 	managers.viewport:set_fullscreen(fullscreen)
-	managers.menu:show_accept_gfx_settings_dialog(function ()
+	managers.menu:show_accept_gfx_settings_dialog(function()
 		managers.viewport:set_fullscreen(not fullscreen)
 		item:set_value(not fullscreen and "on" or "off")
 		self:refresh_node()
@@ -624,7 +629,7 @@ function MenuCallbackHandler:change_resolution(item)
 
 	managers.viewport:set_resolution(item:parameters().resolution)
 	managers.viewport:set_aspect_ratio(item:parameters().resolution.x / item:parameters().resolution.y)
-	managers.menu:show_accept_gfx_settings_dialog(function ()
+	managers.menu:show_accept_gfx_settings_dialog(function()
 		managers.viewport:set_resolution(old_resolution)
 		managers.viewport:set_aspect_ratio(old_resolution.x / old_resolution.y)
 	end)
@@ -651,6 +656,7 @@ function MenuCallbackHandler:choice_premium_contact(item)
 	end
 
 	managers.menu:active_menu().logic:selected_node():parameters().listed_contact = string.gsub(item:value(), "#", "")
+
 	local logic = managers.menu:active_menu().logic
 
 	if logic then
@@ -672,6 +678,7 @@ function MenuCallbackHandler:choice_controller_type(item)
 	end
 
 	managers.menu:active_menu().logic:selected_node():parameters().controller_category = item:value()
+
 	local logic = managers.menu:active_menu().logic
 
 	if logic then
@@ -745,6 +752,7 @@ end
 
 function MenuCallbackHandler:choice_job_appropriate_filter(item)
 	local diff_appropriate = item:value()
+
 	Global.game_settings.search_appropriate_jobs = diff_appropriate == "on" and true or false
 
 	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
@@ -909,19 +917,17 @@ function MenuCallbackHandler:apply_and_save_render_settings()
 		black_overlay:rect({
 			color = Color.black
 		})
-		black_overlay:animate(function (o)
+		black_overlay:animate(function(o)
 			coroutine.yield()
 			func()
-			over(0.05, function (p)
+			over(0.05, function(p)
 				black_overlay:set_alpha(1 - p)
 			end)
 			fullscreen_ws:panel():remove(black_overlay)
 		end)
-
-		return
+	else
+		func()
 	end
-
-	func()
 end
 
 function MenuCallbackHandler:choice_choose_texture_quality(item)
@@ -1024,7 +1030,7 @@ function MenuCallbackHandler:set_use_parallax(item)
 end
 
 function MenuCallbackHandler:set_fov_standard(item)
-	return
+	do return end
 
 	local fov = item:value()
 
@@ -1046,7 +1052,7 @@ function MenuCallbackHandler:set_fov_standard(item)
 end
 
 function MenuCallbackHandler:set_fov_zoom(item)
-	return
+	do return end
 
 	local fov = item:value()
 
@@ -1054,7 +1060,7 @@ function MenuCallbackHandler:set_fov_zoom(item)
 
 	local item_fov_standard = managers.menu:active_menu().logic:selected_node():item("fov_standard")
 
-	if item_fov_standard:value() < fov then
+	if fov > item_fov_standard:value() then
 		item_fov_standard:set_value(fov)
 		item_fov_standard:trigger()
 	end
@@ -1086,21 +1092,23 @@ function MenuCallbackHandler:leave_lobby()
 		return
 	end
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_leave"),
-		id = "leave_lobby"
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_leave_lobby_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_leave_lobby_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_leave")
+	dialog_data.id = "leave_lobby"
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_leave_lobby_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_leave_lobby_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -1121,6 +1129,7 @@ function MenuCallbackHandler:_dialog_leave_lobby_yes()
 end
 
 function MenuCallbackHandler:_dialog_leave_lobby_no()
+	return
 end
 
 function MenuCallbackHandler:connect_to_host_rpc(item)
@@ -1146,6 +1155,7 @@ function MenuCallbackHandler:host_multiplayer(item)
 
 	local level_id = item:parameters().level_id
 	local level_name = level_id and tweak_data.levels[level_id].world_name
+
 	level_id = level_id or tweak_data.levels:get_level_name_from_world_name(item:parameters().level)
 	level_name = level_name or item:parameters().level or "bank"
 	Global.game_settings.level_id = level_id
@@ -1246,6 +1256,7 @@ function MenuCallbackHandler:stop_multiplayer()
 end
 
 function MenuCallbackHandler:find_friends()
+	return
 end
 
 function MenuCallbackHandler:invite_friends()
@@ -1340,25 +1351,28 @@ function MenuCallbackHandler:restart_mission(item)
 		return
 	end
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_mp_restart_mission_title"),
-		text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			if managers.vote:option_vote_restart() then
-				managers.vote:restart()
-			else
-				managers.vote:restart_auto()
-			end
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_mp_restart_mission_title")
+	dialog_data.text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	function yes_button.callback_func()
+		if managers.vote:option_vote_restart() then
+			managers.vote:restart()
+		else
+			managers.vote:restart_auto()
 		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -1410,6 +1424,7 @@ end
 
 function MenuCallbackHandler:start_the_game()
 	managers.worldcollection.level_transition_in_progress = true
+
 	local level_id = Global.game_settings.level_id
 	local level_name = level_id and tweak_data.levels[level_id].world_name
 
@@ -1431,7 +1446,7 @@ end
 
 function MenuCallbackHandler:singleplayer_restart_game_to_camp(item)
 	managers.menu:show_restart_game_dialog({
-		yes_func = function ()
+		yes_func = function()
 			managers.game_play_central:restart_the_game()
 		end
 	})
@@ -1439,7 +1454,7 @@ end
 
 function MenuCallbackHandler:singleplayer_restart_mission(item)
 	managers.menu:show_restart_game_dialog({
-		yes_func = function ()
+		yes_func = function()
 			managers.game_play_central:restart_the_game()
 		end
 	})
@@ -1555,20 +1570,22 @@ end
 function MenuCallbackHandler:end_game()
 	print(" MenuCallbackHandler:end_game() ")
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_end_game_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_end_game_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_end_game_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_end_game_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -1639,6 +1656,7 @@ function MenuCallbackHandler:load_start_menu_lobby()
 end
 
 function MenuCallbackHandler:_dialog_end_game_no()
+	return
 end
 
 function MenuCallbackHandler:_reset_mainmusic()
@@ -1653,21 +1671,19 @@ function MenuCallbackHandler:show_steam_controller_binding_panel()
 
 	local controller = managers.controller:get_default_controller()
 
-	if controller then
-		if controller:show_binding_panel() then
-			-- Nothing
-		elseif MenuCallbackHandler:is_overlay_enabled() then
-			managers.menu:show_requires_big_picture()
-		else
-			managers.menu:show_enable_steam_overlay()
-		end
+	if not controller or controller:show_binding_panel() then
+		-- Nothing
+	elseif MenuCallbackHandler:is_overlay_enabled() then
+		managers.menu:show_requires_big_picture()
+	else
+		managers.menu:show_enable_steam_overlay()
 	end
 end
 
 function MenuCallbackHandler:set_default_options()
 	local params = {
 		text = managers.localization:text("dialog_default_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_setting_map()
 			self:_reset_mainmusic()
 		end
@@ -1679,7 +1695,7 @@ end
 function MenuCallbackHandler:set_default_control_options()
 	local params = {
 		text = managers.localization:text("dialog_default_controls_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_controls_setting_map()
 			self:refresh_node()
 		end
@@ -1691,7 +1707,7 @@ end
 function MenuCallbackHandler:set_default_video_options()
 	local params = {
 		text = managers.localization:text("dialog_default_video_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_video_setting_map()
 			self:refresh_node()
 		end
@@ -1703,7 +1719,7 @@ end
 function MenuCallbackHandler:set_default_sound_options()
 	local params = {
 		text = managers.localization:text("dialog_default_sound_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_sound_setting_map()
 			self:refresh_node()
 			self:_reset_mainmusic()
@@ -1716,7 +1732,7 @@ end
 function MenuCallbackHandler:set_default_network_options()
 	local params = {
 		text = managers.localization:text("dialog_default_network_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_network_setting_map()
 			self:refresh_node()
 		end
@@ -1730,6 +1746,7 @@ function MenuCallbackHandler:resume_game()
 end
 
 function MenuCallbackHandler:change_upgrade(menu_item)
+	return
 end
 
 function MenuCallbackHandler:delayed_open_savefile_menu(item)
@@ -1775,7 +1792,7 @@ end
 function MenuCallbackHandler:set_default_controller(item)
 	local params = {
 		text = managers.localization:text("dialog_use_default_keys_message"),
-		callback = function ()
+		callback = function()
 			managers.controller:load_settings("settings/controller_settings")
 			managers.controller:clear_user_mod(item:parameters().category, MenuCustomizeControllerCreator.CONTROLS_INFO)
 
@@ -1923,9 +1940,10 @@ end
 function MenuCallbackHandler:unlock_skill_switch(item)
 	local spending_cost = managers.money:get_unlock_skill_switch_spending_cost(item:parameters().name)
 	local offshore_cost = managers.money:get_unlock_skill_switch_offshore_cost(item:parameters().name)
-	local dialog_data = {
-		title = managers.localization:text("dialog_unlock_skill_switch_title")
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_unlock_skill_switch_title")
+
 	local cost_text = ""
 
 	if spending_cost ~= 0 and offshore_cost ~= 0 then
@@ -1948,21 +1966,26 @@ function MenuCallbackHandler:unlock_skill_switch(item)
 	dialog_data.text = managers.localization:text("dialog_unlock_skill_switch", {
 		cost_text = cost_text
 	})
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			managers.skilltree:on_skill_switch_unlocked(item:parameters().name)
-			self:refresh_node()
-		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		callback_func = function ()
-			self:refresh_node()
-		end,
-		cancel_button = true
-	}
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	function yes_button.callback_func()
+		managers.skilltree:on_skill_switch_unlocked(item:parameters().name)
+		self:refresh_node()
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+
+	function no_button.callback_func()
+		self:refresh_node()
+	end
+
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -1981,6 +2004,7 @@ function MenuCallbackHandler:has_installed_mods()
 end
 
 function MenuCallbackHandler:save_mod_changes(node)
+	return
 end
 
 function MenuCallbackHandler:mod_option_toggle_enabled(item)
@@ -2029,6 +2053,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	end
 
 	local node = managers.menu:active_menu().logic:selected_node()
+
 	node:parameters().listed_category = string.gsub(item:value(), "#", "")
 
 	if string.find(item:value(), "#") then
@@ -2094,10 +2119,13 @@ function MenuCallbackHandler:choice_challenge_choose_global_value(item)
 end
 
 function MenuCallbackHandler:continue_to_lobby()
+	return
 end
 
 function MenuCallbackHandler:on_view_character_focus(node, in_focus, data)
-	if not in_focus or not data then
+	if in_focus and data then
+		-- Nothing
+	else
 		managers.menu_component:close_view_character_profile_gui()
 	end
 end
@@ -2108,6 +2136,7 @@ end
 
 function MenuCallbackHandler:start_job(job_data)
 	local raid_data = tweak_data.operations:mission_data(job_data.job_id)
+
 	Global.game_settings.level_id = raid_data.level_id or job_data.job_id
 	Global.game_settings.mission = "none"
 	Global.game_settings.world_setting = nil
@@ -2137,11 +2166,11 @@ function MenuCallbackHandler:start_job(job_data)
 
 	if job_data.job_id == OperationsTweakData.ENTRY_POINT_LEVEL then
 		local mission = tweak_data.operations:mission_data(managers.raid_job:played_tutorial() and RaidJobManager.CAMP_ID or RaidJobManager.TUTORIAL_ID)
-		local data = {
-			background = mission.loading.image,
-			loading_text = mission.loading.text,
-			mission = mission
-		}
+		local data = {}
+
+		data.background = mission.loading.image
+		data.loading_text = mission.loading.text
+		data.mission = mission
 
 		managers.menu:show_loading_screen(data)
 	end
@@ -2166,6 +2195,7 @@ end
 
 function MenuCallbackHandler:start_single_player_job(job_data)
 	local raid_data = tweak_data.operations:mission_data(job_data.job_id)
+
 	Global.game_settings.level_id = raid_data.level_id
 	Global.game_settings.mission = "none"
 	Global.game_settings.world_setting = nil
@@ -2193,6 +2223,7 @@ function MenuCallbackHandler:leave_blackmarket(...)
 end
 
 function MenuCallbackHandler:_left_blackmarket()
+	return
 end
 
 function MenuCallbackHandler:blackmarket_abort_customize_mask()
@@ -2216,6 +2247,7 @@ function MenuCallbackHandler:not_got_new_content_update()
 end
 
 function MenuCallbackHandler:do_content_lootdrop(node)
+	return
 end
 
 function MenuCallbackHandler:buy_weapon(item)
@@ -2274,9 +2306,11 @@ function MenuCallbackHandler:on_repair_yes(params)
 end
 
 function MenuCallbackHandler:clicked_weapon_upgrade_type(item)
+	return
 end
 
 function MenuCallbackHandler:clicked_weapon_upgrade(item)
+	return
 end
 
 function MenuCallbackHandler:can_buy_weapon_upgrade(item)
@@ -2288,6 +2322,7 @@ function MenuCallbackHandler:owns_weapon_upgrade(item)
 end
 
 function MenuCallbackHandler:buy_weapon_upgrades(item)
+	return
 end
 
 function MenuCallbackHandler:buy_weapon_upgrade(item)
@@ -2303,6 +2338,7 @@ function MenuCallbackHandler:attach_weapon_upgrade(item)
 end
 
 function MenuCallbackHandler:clicked_customize_character_category(item)
+	return
 end
 
 function MenuCallbackHandler:test_clicked_mask(item)
@@ -2379,6 +2415,7 @@ end
 
 function MenuCallbackHandler:equip_character(item)
 	local character_id = item:parameter("character_id")
+
 	Global.blackmarket_manager.characters[character_id].equipped = true
 
 	for id, character in pairs(Global.blackmarket_manager.characters) do
@@ -2440,12 +2477,15 @@ function MenuCallbackHandler:got_no_job()
 end
 
 function MenuCallbackHandler:start_safe_test_overkill()
+	return
 end
 
 function MenuCallbackHandler:start_safe_test_event_01()
+	return
 end
 
 function MenuCallbackHandler:start_safe_test_weapon_01()
+	return
 end
 
 function MenuCallbackHandler:reset_safe_scene()
@@ -2465,6 +2505,7 @@ function MenuCallbackHandler:on_visit_crimefest_challenges()
 end
 
 function MenuCallbackHandler:leave_steam_inventory(item)
+	return
 end
 
 function MenuCallbackHandler:can_toggle_chat()

@@ -9,7 +9,9 @@ function RaidGUIControlTableRow:init(parent, params, row_data, table_params)
 	self.row_data = row_data
 	self._selected = false
 	self._type = "raid_gui_control_table_row"
+
 	local cell_params = clone(params)
+
 	cell_params.layer = self:layer() + 150
 	cell_params.y = 0
 	self._selector_mark = self:rect({
@@ -20,10 +22,12 @@ function RaidGUIControlTableRow:init(parent, params, row_data, table_params)
 		h = params.height,
 		color = tweak_data.gui.colors.raid_red
 	})
+
 	local x = 0
 
 	for column_index, column_data in ipairs(table_params.columns) do
 		local cell_class = column_data.cell_class or RaidGUIControlTableCell
+
 		cell_params.name = self._params.name .. "_column_" .. column_index
 		cell_params.x = x + (column_data.padding or 0)
 		cell_params.w = column_data.w - 2 * (column_data.padding or 0)

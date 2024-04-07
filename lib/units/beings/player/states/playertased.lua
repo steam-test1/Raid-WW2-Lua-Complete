@@ -16,7 +16,9 @@ function PlayerTased:enter(state_data, enter_data)
 
 	if state_data.non_lethal_electrocution then
 		state_data.non_lethal_electrocution = nil
+
 		local recover_time = Application:time() + tweak_data.player.damage.TASED_TIME * managers.player:upgrade_value("player", "electrocution_resistance_multiplier", 1)
+
 		self._recover_delayed_clbk = "PlayerTased_recover_delayed_clbk"
 
 		managers.enemy:add_delayed_clbk(self._recover_delayed_clbk, callback(self, self, "clbk_exit_to_std"), recover_time)
@@ -111,7 +113,7 @@ end
 function PlayerTased:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
-	if self._next_shock < t then
+	if t > self._next_shock then
 		self._num_shocks = self._num_shocks + 1
 		self._next_shock = t + 0.25 + math.rand(1)
 
@@ -141,7 +143,7 @@ function PlayerTased:_update_check_actions(t, dt)
 			input.btn_primary_attack_state = true
 		end
 
-		if self._recoil_t < t then
+		if t > self._recoil_t then
 			self._recoil_t = nil
 
 			self._camera_unit:base():stop_shooting()
@@ -158,30 +160,32 @@ function PlayerTased:_update_check_actions(t, dt)
 		self._camera_unit:base():recoil_kick(-5, 5, -5, 5)
 	end
 
-	if self._unequip_weapon_expire_t and self._unequip_weapon_expire_t <= t then
+	if self._unequip_weapon_expire_t and t >= self._unequip_weapon_expire_t then
 		self._unequip_weapon_expire_t = nil
 
 		self:_start_action_equip_weapon(t)
 	end
 
-	if self._equip_weapon_expire_t and self._equip_weapon_expire_t <= t then
+	if self._equip_weapon_expire_t and t >= self._equip_weapon_expire_t then
 		self._equip_weapon_expire_t = nil
 	end
 
 	self:_check_stats_screen(t, dt, input)
 	self:_update_foley(t, input)
 
-	local new_action = nil
+	local new_action
 
 	self:_check_action_interact(t, input)
 
-	local new_action = nil
+	local new_action
 end
 
 function PlayerTased:_check_action_primary_attack(t, input)
-	local new_action = nil
+	local new_action
 	local action_forbidden = self:chk_action_forbidden("primary_attack")
+
 	action_forbidden = action_forbidden or self:_is_reloading() or self:_changing_weapon() or self._melee_expire_t or self._use_item_expire_t or self:_interacting() or alive(self._counter_taser_unit)
+
 	local action_wanted = input.btn_primary_attack_state
 
 	if action_wanted then
@@ -209,6 +213,7 @@ function PlayerTased:_check_action_primary_attack(t, input)
 				else
 					if not self._shooting and weap_base:start_shooting_allowed() then
 						local start = fire_mode == "single" and input.btn_primary_attack_press
+
 						start = start or fire_mode ~= "single" and input.btn_primary_attack_state
 
 						if start then
@@ -238,12 +243,14 @@ function PlayerTased:_check_action_primary_attack(t, input)
 					if damage_health_ratio > 0 then
 						local upgrade_name = weapon_category == "saw" and "melee_damage_health_ratio_multiplier" or "damage_health_ratio_multiplier"
 						local damage_ratio = damage_health_ratio
+
 						dmg_mul = dmg_mul * (1 + managers.player:upgrade_value("player", upgrade_name, 0) * damage_ratio)
 					end
 
 					dmg_mul = dmg_mul * managers.player:temporary_upgrade_value("temporary", "berserker_damage_multiplier", 1)
 					dmg_mul = dmg_mul * managers.player:get_property("trigger_happy", 1)
-					local fired = nil
+
+					local fired
 
 					if fire_mode == "single" then
 						if input.btn_primary_attack_press then
@@ -285,6 +292,7 @@ function PlayerTased:_check_action_primary_attack(t, input)
 								nil,
 								0
 							}
+
 							local stack = self._state_data.stacking_dmg_mul[weapon_category]
 
 							if fired.hit_enemy then
@@ -322,7 +330,7 @@ function PlayerTased:_check_action_primary_attack(t, input)
 end
 
 function PlayerTased:_check_action_interact(t, input)
-	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) and not alive(self._counter_taser_unit) then
+	if input.btn_interact_press and (not self._intimidate_t or t - self._intimidate_t > tweak_data.player.movement_state.interaction_delay) and not alive(self._counter_taser_unit) then
 		self._intimidate_t = t
 
 		self:call_teammate(nil, t, true, true)
@@ -331,15 +339,13 @@ end
 
 function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, false, true, false)
-	local interact_type, queue_name = nil
+	local interact_type, queue_name
 
 	if voice_type == "stop_cop" or voice_type == "mark_cop" then
 		local prime_target_tweak = tweak_data.character[prime_target.unit:base()._tweak_table]
 		local shout_sound = prime_target_tweak.priority_shout
 
-		if managers.groupai:state():whisper_mode() then
-			shout_sound = prime_target_tweak.silent_priority_shout or shout_sound
-		end
+		shout_sound = managers.groupai:state():whisper_mode() and prime_target_tweak.silent_priority_shout or shout_sound
 
 		if shout_sound then
 			interact_type = "cmd_point"
@@ -394,6 +400,7 @@ function PlayerTased:_register_revive_SO()
 		search_pos = self._unit:position()
 	}
 	local so_id = "PlayerTased_assistance"
+
 	self._SO_id = so_id
 
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
@@ -444,13 +451,13 @@ function PlayerTased:give_shock_to_taser()
 		return
 	end
 
-	return
+	do return end
 
 	self:_give_shock_to_taser(self._counter_taser_unit)
 end
 
 function PlayerTased:_give_shock_to_taser(taser_unit)
-	return
+	do return end
 
 	local action_data = {
 		variant = "counter_tased",

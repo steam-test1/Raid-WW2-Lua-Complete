@@ -16,14 +16,14 @@ end
 
 function NewShotgunBase:_create_use_setups()
 	local use_data = {}
-	local player_setup = {
-		selection_index = tweak_data.weapon[self._name_id].use_data.selection_index,
-		equip = {
-			align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
-		},
-		unequip = {
-			align_place = "back"
-		}
+	local player_setup = {}
+
+	player_setup.selection_index = tweak_data.weapon[self._name_id].use_data.selection_index
+	player_setup.equip = {
+		align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
+	}
+	player_setup.unequip = {
+		align_place = "back"
 	}
 	use_data.player = player_setup
 	self._use_data = use_data
@@ -42,6 +42,7 @@ function NewShotgunBase:_update_stats_values()
 
 		if self:weapon_tweak_data().damage_profile then
 			local damage_profile = self:weapon_tweak_data().damage_profile
+
 			self._range = damage_profile[#damage_profile].range or self._range
 		end
 	end
@@ -53,10 +54,10 @@ local mvec_direction = Vector3()
 local mvec_spread_direction = Vector3()
 
 function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
-	local result = nil
+	local result
 	local hit_enemies = {}
 	local hit_objects = {}
-	local hit_something, col_rays = nil
+	local hit_something, col_rays
 
 	if self._alert_events then
 		col_rays = {}
@@ -133,12 +134,13 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 				autoaim = false
 			else
 				autoaim = false
+
 				local autohit = self:check_autoaim(from_pos, direction, self._range)
 
 				if autohit then
 					local autohit_chance = 1 - math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
 
-					if math.random() < autohit_chance then
+					if autohit_chance > math.random() then
 						self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 						hit_something = true
 
@@ -172,7 +174,7 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 			mvector3.divide(mvec_temp, #col_rays)
 
 			local closest_dist_sq = mvector3.distance_sq(mvec_temp, center_ray.position)
-			local dist_sq = nil
+			local dist_sq
 
 			for _, col_ray in ipairs(col_rays) do
 				dist_sq = mvector3.distance_sq(mvec_temp, col_ray.position)
@@ -191,7 +193,7 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 		local damage = self:get_damage_falloff(col_ray, user_unit)
 
 		if damage > 0 then
-			local my_result = nil
+			local my_result
 			local add_shoot_through_bullet = self._can_shoot_through_shield or self._can_shoot_through_enemy or self._can_shoot_through_wall
 
 			if add_shoot_through_bullet then
@@ -229,14 +231,12 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 		})
 	end
 
-	if next(hit_enemies) then
-		if true or false then
-			managers.statistics:shot_fired({
-				skip_bullet_count = true,
-				hit = true,
-				weapon_unit = self._unit
-			})
-		end
+	if next(hit_enemies) and true or false then
+		managers.statistics:shot_fired({
+			skip_bullet_count = true,
+			hit = true,
+			weapon_unit = self._unit
+		})
 	end
 
 	return result
@@ -254,16 +254,17 @@ InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase
 
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
-	local action_data = {
-		damage = 0,
-		weapon_unit = weapon_unit,
-		attacker_unit = user_unit,
-		col_ray = col_ray,
-		armor_piercing = armor_piercing,
-		attacker_unit = user_unit,
-		attack_dir = col_ray.ray,
-		variant = weapon_unit:base() and weapon_unit:base().get_tase_strength and weapon_unit:base():get_tase_strength() or "light"
-	}
+	local action_data = {}
+
+	action_data.damage = 0
+	action_data.weapon_unit = weapon_unit
+	action_data.attacker_unit = user_unit
+	action_data.col_ray = col_ray
+	action_data.armor_piercing = armor_piercing
+	action_data.attacker_unit = user_unit
+	action_data.attack_dir = col_ray.ray
+	action_data.variant = weapon_unit:base() and weapon_unit:base().get_tase_strength and weapon_unit:base():get_tase_strength() or "light"
+
 	local defense_data = hit_unit and hit_unit:character_damage().damage_tase and hit_unit:character_damage():damage_tase(action_data)
 
 	return defense_data

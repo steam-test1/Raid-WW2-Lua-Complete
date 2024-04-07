@@ -7,6 +7,7 @@ function ElementAIGraph:init(...)
 end
 
 function ElementAIGraph:on_script_activated()
+	return
 end
 
 function ElementAIGraph:client_on_executed(...)

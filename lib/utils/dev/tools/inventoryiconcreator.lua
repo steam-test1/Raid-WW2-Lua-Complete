@@ -6,27 +6,26 @@ function InventoryIconCreator:init()
 end
 
 function InventoryIconCreator:_set_job_settings()
-	self._job_settings = {
-		weapon = {
-			pos = Vector3(4500, 0, 0),
-			rot = Rotation(90, 0, 0),
-			res = Vector3(3000, 1000, 0)
-		},
-		mask = {
-			pos = Vector3(4500, 0, 0),
-			rot = Rotation(90, 0, 0),
-			res = Vector3(1000, 1000, 0)
-		},
-		melee = {
-			pos = Vector3(5500, 0, 0),
-			rot = Rotation(90, 0, 0),
-			res = Vector3(2500, 1000, 0)
-		},
-		throwable = {
-			pos = Vector3(4500, 0, 0),
-			rot = Rotation(90, 0, 0),
-			res = Vector3(2500, 1000, 0)
-		}
+	self._job_settings = {}
+	self._job_settings.weapon = {
+		pos = Vector3(4500, 0, 0),
+		rot = Rotation(90, 0, 0),
+		res = Vector3(3000, 1000, 0)
+	}
+	self._job_settings.mask = {
+		pos = Vector3(4500, 0, 0),
+		rot = Rotation(90, 0, 0),
+		res = Vector3(1000, 1000, 0)
+	}
+	self._job_settings.melee = {
+		pos = Vector3(5500, 0, 0),
+		rot = Rotation(90, 0, 0),
+		res = Vector3(2500, 1000, 0)
+	}
+	self._job_settings.throwable = {
+		pos = Vector3(4500, 0, 0),
+		rot = Rotation(90, 0, 0),
+		res = Vector3(2500, 1000, 0)
 	}
 end
 
@@ -34,6 +33,7 @@ function InventoryIconCreator:_create_weapon(factory_id, blueprint, weapon_skin)
 	self:destroy_items()
 
 	self._current_texture_name = factory_id .. (weapon_skin and " " .. weapon_skin or "")
+
 	local cosmetics = weapon_skin and {
 		id = weapon_skin
 	} or nil
@@ -42,6 +42,7 @@ function InventoryIconCreator:_create_weapon(factory_id, blueprint, weapon_skin)
 	managers.dyn_resource:load(Idstring("unit"), Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 
 	local rot = Rotation(180, 0, 0)
+
 	self._weapon_unit = World:spawn_unit(Idstring(unit_name), Vector3(), rot)
 
 	self._weapon_unit:base():set_factory_data(factory_id)
@@ -55,6 +56,7 @@ function InventoryIconCreator:_create_mask(mask_id, blueprint)
 	self:destroy_items()
 
 	self._current_texture_name = mask_id
+
 	local rot = Rotation(90, 90, 0)
 	local mask_unit_name = managers.blackmarket:mask_unit_name_by_mask_id(mask_id)
 
@@ -73,6 +75,7 @@ function InventoryIconCreator:_create_melee(melee_id)
 	self:destroy_items()
 
 	self._current_texture_name = melee_id
+
 	local rot = Rotation()
 	local melee_unit_name = tweak_data.blackmarket.melee_weapons[melee_id].unit
 
@@ -87,6 +90,7 @@ function InventoryIconCreator:_create_throwable(throwable_id)
 	self:destroy_items()
 
 	self._current_texture_name = throwable_id
+
 	local rot = Rotation()
 	local throwable_unit_name = tweak_data.projectiles[throwable_id].unit_dummy
 
@@ -152,10 +156,7 @@ function InventoryIconCreator:start_all_weapon_skins()
 
 	for _, weapon_skin in ipairs(self:_get_weapon_skins()) do
 		weapon_skin = weapon_skin ~= "none" and weapon_skin
-
-		if weapon_skin then
-			blueprint = tweak_data.blackmarket.weapon_skins[weapon_skin].default_blueprint or blueprint
-		end
+		blueprint = weapon_skin and tweak_data.blackmarket.weapon_skins[weapon_skin].default_blueprint or blueprint
 
 		table.insert(jobs, {
 			factory_id = factory_id,
@@ -170,8 +171,11 @@ end
 function InventoryIconCreator:start_one_weapon()
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local weapon_skin = self._ctrlrs.weapon.weapon_skin:get_value()
+
 	weapon_skin = weapon_skin ~= "none" and weapon_skin
+
 	local blueprint = weapon_skin and tweak_data.blackmarket.weapon_skins[weapon_skin].default_blueprint
+
 	blueprint = blueprint or self:_get_blueprint_from_ui()
 
 	self:start_jobs({
@@ -186,8 +190,11 @@ end
 function InventoryIconCreator:preview_one_weapon()
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local weapon_skin = self._ctrlrs.weapon.weapon_skin:get_value()
+
 	weapon_skin = weapon_skin ~= "none" and weapon_skin
+
 	local blueprint = weapon_skin and tweak_data.blackmarket.weapon_skins[weapon_skin].default_blueprint
+
 	blueprint = blueprint or self:_get_blueprint_from_ui()
 
 	self:_create_weapon(factory_id, blueprint, weapon_skin)
@@ -301,6 +308,7 @@ function InventoryIconCreator:_get_mask_blueprint_from_ui()
 	for type, ctrlr in pairs(self._ctrlrs.mask) do
 		if type ~= "mask_id" then
 			local id = ctrlr:get_value()
+
 			blueprint[type] = {
 				id = id
 			}
@@ -424,6 +432,7 @@ end
 
 function InventoryIconCreator:_start_job()
 	self._has_job = true
+
 	local job = self._jobs[self._current_job]
 
 	if job.factory_id then
@@ -464,14 +473,13 @@ function InventoryIconCreator:_update()
 end
 
 function InventoryIconCreator:start_create()
-	self._old_data = {
-		camera_position = managers.editor:camera_position(),
-		camera_rotation = managers.editor:camera_rotation(),
-		camera_fov = managers.editor:camera_fov(),
-		layer_draw_grid = managers.editor._layer_draw_grid,
-		layer_draw_marker = managers.editor._layer_draw_marker,
-		base_contrast = managers.environment_controller:base_contrast()
-	}
+	self._old_data = {}
+	self._old_data.camera_position = managers.editor:camera_position()
+	self._old_data.camera_rotation = managers.editor:camera_rotation()
+	self._old_data.camera_fov = managers.editor:camera_fov()
+	self._old_data.layer_draw_grid = managers.editor._layer_draw_grid
+	self._old_data.layer_draw_marker = managers.editor._layer_draw_marker
+	self._old_data.base_contrast = managers.environment_controller:base_contrast()
 
 	managers.editor:set_show_camera_info(false)
 
@@ -527,7 +535,7 @@ function InventoryIconCreator:_destroy_backdrop()
 end
 
 function InventoryIconCreator:_setup_camera()
-	local job_setting = nil
+	local job_setting
 
 	if self._jobs[1].factory_id then
 		job_setting = self._job_settings.weapon
@@ -651,7 +659,9 @@ function InventoryIconCreator:create_ews()
 	self._main_frame:set_icon(CoreEws.image_path("world_editor/icon_creator_16x16.png"))
 
 	local main_box = EWS:BoxSizer("HORIZONTAL")
+
 	self._main_panel = EWS:Panel(self._main_frame, "", "FULL_REPAINT_ON_RESIZE")
+
 	local main_panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._main_panel:set_sizer(main_panel_sizer)
@@ -695,12 +705,14 @@ function InventoryIconCreator:_create_custom_job(panel, sizer)
 	self._custom_ctrlrs = {
 		resolution = {}
 	}
+
 	local checkbox = EWS:CheckBox(panel, "Use current camera setting", "")
 
 	checkbox:set_value(false)
 	sizer:add(checkbox, 0, 0, "EXPAND,RIGHT")
 
 	self._custom_ctrlrs.use_camera_setting = checkbox
+
 	local h_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	sizer:add(h_sizer, 0, 0, "EXPAND")
@@ -711,6 +723,7 @@ function InventoryIconCreator:_create_custom_job(panel, sizer)
 	h_sizer:add(checkbox, 0, 4, "EXPAND,RIGHT")
 
 	self._custom_ctrlrs.resolution.use = checkbox
+
 	local number_params = {
 		value = 64,
 		name = "Width:",
@@ -724,7 +737,9 @@ function InventoryIconCreator:_create_custom_job(panel, sizer)
 		sizer = h_sizer
 	}
 	local ctrlr = CoreEws.number_controller(number_params)
+
 	self._custom_ctrlrs.resolution.width = ctrlr
+
 	local number_params = {
 		value = 64,
 		name = "Height:",
@@ -738,6 +753,7 @@ function InventoryIconCreator:_create_custom_job(panel, sizer)
 		sizer = h_sizer
 	}
 	local ctrlr = CoreEws.number_controller(number_params)
+
 	self._custom_ctrlrs.resolution.height = ctrlr
 
 	h_sizer:add(EWS:BoxSizer("HORIZONTAL"), 1, 0, "EXPAND")
@@ -807,6 +823,7 @@ function InventoryIconCreator:_add_weapon_mods(params)
 	end
 
 	self._weapon_mods_panel = EWS:Panel(panel, "", "FULL_REPAINT_ON_RESIZE")
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._weapon_mods_panel:set_sizer(panel_sizer)
@@ -814,10 +831,12 @@ function InventoryIconCreator:_add_weapon_mods(params)
 
 	local factory_id = self._ctrlrs.weapon.factory_id:get_value()
 	local blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
+
 	self._ctrlrs.weapon = {
 		factory_id = self._ctrlrs.weapon.factory_id,
 		weapon_skin = self._ctrlrs.weapon.weapon_skin
 	}
+
 	local parts = managers.weapon_factory:get_parts_from_factory_id(factory_id)
 	local optional_types = tweak_data.weapon.factory[factory_id].optional_types or {}
 
@@ -861,7 +880,9 @@ function InventoryIconCreator:_add_weapon_ctrlr(panel, sizer, name, options, val
 		value = value or options[1]
 	}
 	local ctrlr = CoreEws.combobox(combobox_params)
+
 	self._ctrlrs.weapon[name] = ctrlr
+
 	local text_ctrlr = EWS:StaticText(panel, "", 0, "ALIGN_RIGHT")
 
 	sizer:add(text_ctrlr, 0, 0, "ALIGN_RIGHT")
@@ -883,12 +904,13 @@ end
 function InventoryIconCreator:_update_weapon_combobox_text(param)
 	local name = param.name
 	local value = param.ctrlr:get_value()
-	local text = nil
+	local text
 
 	if name == "factory_id" then
 		text = managers.weapon_factory:get_weapon_name_by_factory_id(value)
 	elseif name == "weapon_skin" then
 		local name_id = tweak_data.blackmarket.weapon_skins[value] and tweak_data.blackmarket.weapon_skins[value].name_id or "none"
+
 		text = managers.localization:text(name_id)
 	else
 		text = value == self.OPTIONAL and self.OPTIONAL or managers.weapon_factory:get_part_name_by_part_id(value)
@@ -993,7 +1015,9 @@ function InventoryIconCreator:_add_mask_ctrlr(panel, sizer, name, options, value
 		value = value or options[1]
 	}
 	local ctrlr = CoreEws.combobox(combobox_params)
+
 	self._ctrlrs.mask[name] = ctrlr
+
 	local text_ctrlr = EWS:StaticText(panel, "", 0, "ALIGN_RIGHT")
 
 	sizer:add(text_ctrlr, 0, 0, "ALIGN_RIGHT")
@@ -1015,7 +1039,7 @@ end
 function InventoryIconCreator:_update_mask_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
-	local text = nil
+	local text
 
 	if name == "mask_id" then
 		text = managers.localization:text(tweak_data.blackmarket.masks[value].name_id)
@@ -1082,7 +1106,9 @@ function InventoryIconCreator:_add_melee_ctrlr(panel, sizer, name, options, valu
 		value = value or options[1]
 	}
 	local ctrlr = CoreEws.combobox(combobox_params)
+
 	self._ctrlrs.melee[name] = ctrlr
+
 	local text_ctrlr = EWS:StaticText(panel, "", 0, "ALIGN_RIGHT")
 
 	sizer:add(text_ctrlr, 0, 0, "ALIGN_RIGHT")
@@ -1104,7 +1130,7 @@ end
 function InventoryIconCreator:_update_melee_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
-	local text = nil
+	local text
 
 	if name == "melee_id" then
 		text = managers.localization:text(tweak_data.blackmarket.melee_weapons[value].name_id)
@@ -1165,7 +1191,9 @@ function InventoryIconCreator:_add_throwable_ctrlr(panel, sizer, name, options, 
 		value = value or options[1]
 	}
 	local ctrlr = CoreEws.combobox(combobox_params)
+
 	self._ctrlrs.throwable[name] = ctrlr
+
 	local text_ctrlr = EWS:StaticText(panel, "", 0, "ALIGN_RIGHT")
 
 	sizer:add(text_ctrlr, 0, 0, "ALIGN_RIGHT")
@@ -1187,7 +1215,7 @@ end
 function InventoryIconCreator:_update_throwable_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
-	local text = nil
+	local text
 
 	if name == "throwable_id" then
 		print(value, tweak_data.projectiles[value].name_id)

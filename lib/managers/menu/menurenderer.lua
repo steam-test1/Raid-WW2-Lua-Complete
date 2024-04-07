@@ -120,8 +120,10 @@ function MenuRenderer._create_blackborders()
 	local height = blackborder_workspace:panel():h()
 	local base_resolution = clone(tweak_data.gui.base_resolution)
 	local base_aspect_ratio = base_resolution.x / base_resolution.y
+
 	base_resolution.y = width / base_aspect_ratio
 	base_resolution.x = height * base_aspect_ratio
+
 	local border_w = (width - base_resolution.x) / 2
 	local border_h = (height - base_resolution.y) / 2
 
@@ -300,6 +302,7 @@ function MenuRenderer:mouse_moved(o, x, y)
 
 	if self:active_node_gui() and self:active_node_gui().mouse_moved and managers.menu_component:input_focus() ~= true then
 		local used, pointer = self:active_node_gui():mouse_moved(o, x, y)
+
 		wanted_pointer = pointer or wanted_pointer
 
 		if used then
@@ -308,6 +311,7 @@ function MenuRenderer:mouse_moved(o, x, y)
 	end
 
 	local used, pointer = managers.menu_component:mouse_moved(o, x, y)
+
 	wanted_pointer = pointer or wanted_pointer
 
 	if used then

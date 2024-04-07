@@ -15,6 +15,7 @@ function AIGraphUnitElement:draw_links(t, dt, selected_unit, all_units)
 end
 
 function AIGraphUnitElement:update_editing()
+	return
 end
 
 function AIGraphUnitElement:_get_unit(id)
@@ -126,11 +127,11 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = operations
 	})
 
-	local help = {
-		text = "The operation defines what to do with the selected graphs",
-		panel = panel,
-		sizer = panel_sizer
-	}
+	local help = {}
+
+	help.text = "The operation defines what to do with the selected graphs"
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end

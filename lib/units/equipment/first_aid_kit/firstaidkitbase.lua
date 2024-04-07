@@ -66,13 +66,12 @@ function FirstAidKitBase:setup(upgrade_lvl)
 		local ray = self._unit:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("world_geometry"))
 
 		if ray then
-			self._attached_data = {
-				body = ray.body,
-				position = ray.body:position(),
-				rotation = ray.body:rotation(),
-				index = 1,
-				max_index = 3
-			}
+			self._attached_data = {}
+			self._attached_data.body = ray.body
+			self._attached_data.position = ray.body:position()
+			self._attached_data.rotation = ray.body:rotation()
+			self._attached_data.index = 1
+			self._attached_data.max_index = 3
 
 			self._unit:set_extension_update_enabled(Idstring("base"), true)
 		end
@@ -156,9 +155,9 @@ function FirstAidKitBase:_set_empty()
 end
 
 function FirstAidKitBase:save(data)
-	local state = {
-		is_dynamic = self._is_dynamic
-	}
+	local state = {}
+
+	state.is_dynamic = self._is_dynamic
 	data.FirstAidKitBase = state
 end
 

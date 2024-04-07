@@ -2,12 +2,15 @@ DistractionRock = DistractionRock or class(GrenadeBase)
 
 function DistractionRock:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
+
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
 	self._init_timer = self._tweak_data.init_timer or 2.5
 	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
 	self._range = self._tweak_data.range
 	self._pathing_searches = {}
+
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
+
 	self._custom_params = {
 		camera_shake_max_mul = 4,
 		sound_muffle_effect = true,
@@ -46,7 +49,7 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	local end_position = Vector3(pos.x, pos.y, pos.z - 400)
 	local collision = World:raycast("ray", pos, end_position, "slot_mask", managers.slot:get_mask("AI_graph_obstacle_check"))
 	local is_point_inside_nav = managers.navigation:is_point_inside(not not collision and collision.position or pos, false)
-	local final_lure_position = nil
+	local final_lure_position
 
 	if is_point_inside_nav then
 		final_lure_position = pos
@@ -54,6 +57,7 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 		Application:debug("[DistractionRock:_detonate] Usable lure position:", final_lure_position)
 	else
 		local tracker = managers.navigation:create_nav_tracker(end_position, false)
+
 		final_lure_position = tracker:field_position()
 
 		managers.navigation:destroy_nav_tracker(tracker)
@@ -76,7 +80,7 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	end
 
 	if units then
-		local closest_cop_dist, closest_cop = nil
+		local closest_cop_dist, closest_cop
 
 		for _, cop in ipairs(units) do
 			local dist = mvector3.distance(final_lure_position, cop:position())
@@ -100,6 +104,7 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 				access_pos = closest_cop:brain()._SO_access,
 				cop = closest_cop
 			}
+
 			self._pathing_searches[search_id] = search_params
 
 			managers.navigation:search_pos_to_pos(search_params)
@@ -115,12 +120,14 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 	if path and search then
 		search.finished = true
 		search.total_length = 0
-		local last_leg = nil
+
+		local last_leg
 
 		for _, leg in ipairs(path) do
 			if leg.x then
 				if last_leg then
 					local length = leg - last_leg
+
 					search.total_length = search.total_length + length:length()
 				else
 					last_leg = leg
@@ -135,6 +142,7 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 			self:_abort_all_unfinished_pathing()
 
 			local attention_info = managers.groupai:state():get_AI_attention_objects_by_filter(search.cop:base()._char_tweak.access)[search.cop:key()]
+
 			attention_info.m_pos = search.pos_to
 			attention_info.settings = {
 				reaction = AIAttentionObject.REACT_SUSPICIOUS
@@ -154,6 +162,7 @@ function DistractionRock:_abort_all_unfinished_pathing()
 end
 
 function DistractionRock:_detonate_on_client()
+	return
 end
 
 function DistractionRock:bullet_hit()

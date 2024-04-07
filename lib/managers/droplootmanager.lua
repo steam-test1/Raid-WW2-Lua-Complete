@@ -30,7 +30,7 @@ function DropLootManager:_choose_item(current_level_table, level, multiplier)
 
 		chance_interval.upper = chance_interval.upper + drop_rate
 
-		if chance_interval.lower < chance and chance <= chance_interval.upper then
+		if chance > chance_interval.lower and chance <= chance_interval.upper then
 			if u_data.subtypes == nil then
 				return u_data.unit
 			else

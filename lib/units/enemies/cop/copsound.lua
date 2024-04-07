@@ -7,11 +7,13 @@ function CopSound:init(unit)
 	self._unit = unit
 	self._speak_expire_t = 0
 	self._footstep_expire_t = 0
+
 	local char_tweak = tweak_data.character[unit:base()._tweak_table]
 
 	self:set_voice_prefix(nil)
 
 	local nr_variations = char_tweak.speech_prefix_count
+
 	self._prefix = (char_tweak.speech_prefix_p1 or "") .. "_" .. (nr_variations and tostring(math.random(nr_variations)) or "") .. "_" .. (char_tweak.speech_prefix_p2 or "") .. "_"
 
 	if self._unit:base():char_tweak().spawn_sound_event then
@@ -22,6 +24,7 @@ function CopSound:init(unit)
 end
 
 function CopSound:destroy(unit)
+	return
 end
 
 function CopSound:set_voice_prefix(index)
@@ -36,7 +39,7 @@ function CopSound:set_voice_prefix(index)
 end
 
 function CopSound:_out_of_hearing_range()
-	local player_unit = nil
+	local player_unit
 
 	if game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
 		player_unit = game_state_machine:current_state():currently_spectated_unit()
@@ -52,7 +55,7 @@ function CopSound:_out_of_hearing_range()
 
 	local distance_vector = self._unit:position() - player_unit:position()
 
-	return CopSound.MAX_DISTANCE_FROM_PLAYER < distance_vector:length()
+	return distance_vector:length() > CopSound.MAX_DISTANCE_FROM_PLAYER
 end
 
 function CopSound:_play(sound_name, source_name)
@@ -60,7 +63,7 @@ function CopSound:_play(sound_name, source_name)
 		return
 	end
 
-	local source = nil
+	local source
 
 	if source_name then
 		source = Idstring(source_name)
@@ -72,7 +75,7 @@ function CopSound:_play(sound_name, source_name)
 end
 
 function CopSound:play(sound_name, source_name, sync)
-	local event_id = nil
+	local event_id
 
 	if type(sound_name) == "number" then
 		event_id = sound_name
@@ -81,6 +84,7 @@ function CopSound:play(sound_name, source_name, sync)
 
 	if sync then
 		event_id = event_id or SoundDevice:string_to_id(sound_name)
+
 		local sync_source_name = source_name or ""
 
 		self._unit:network():send("unit_sound_play", event_id, sync_source_name)
@@ -92,7 +96,7 @@ function CopSound:play(sound_name, source_name, sync)
 end
 
 function CopSound:corpse_play(sound_name, source_name, sync)
-	local event_id = nil
+	local event_id
 
 	if type(sound_name) == "number" then
 		event_id = sound_name
@@ -101,6 +105,7 @@ function CopSound:corpse_play(sound_name, source_name, sync)
 
 	if sync then
 		event_id = event_id or SoundDevice:string_to_id(sound_name)
+
 		local sync_source_name = source_name or ""
 		local u_id = self._unit:id()
 
@@ -120,7 +125,7 @@ function CopSound:corpse_play(sound_name, source_name, sync)
 end
 
 function CopSound:stop(source_name)
-	local source = nil
+	local source
 
 	if source_name then
 		source = Idstring(source_name)
@@ -134,7 +139,7 @@ function CopSound:say(sound_name, sync, skip_prefix)
 		self._last_speech:stop()
 	end
 
-	local full_sound = nil
+	local full_sound
 
 	if skip_prefix then
 		full_sound = sound_name
@@ -142,7 +147,7 @@ function CopSound:say(sound_name, sync, skip_prefix)
 		full_sound = self._prefix .. sound_name
 	end
 
-	local event_id = nil
+	local event_id
 
 	if type(full_sound) == "number" then
 		event_id = full_sound

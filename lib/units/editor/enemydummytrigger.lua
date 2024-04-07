@@ -35,6 +35,7 @@ function EnemyDummyTriggerUnitElement:get_links_to_unit(...)
 end
 
 function EnemyDummyTriggerUnitElement:update_editing()
+	return
 end
 
 function EnemyDummyTriggerUnitElement:add_element()
@@ -88,6 +89,7 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_spawn_enemy",
 		"ai_enemy_group",

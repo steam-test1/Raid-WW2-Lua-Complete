@@ -52,6 +52,7 @@ function RaidGUIControlListItemOperations:_layout_panel(params)
 		w = params.w,
 		h = RaidGUIControlListItemOperations.HEIGHT
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -65,6 +66,7 @@ function RaidGUIControlListItemOperations:_layout_background(params)
 		h = self._object:h() - 2,
 		color = tweak_data.gui.colors.raid_list_background
 	}
+
 	self._item_background = self._object:rect(background_params)
 end
 
@@ -78,6 +80,7 @@ function RaidGUIControlListItemOperations:_layout_highlight_marker()
 		h = self._object:h() - 2,
 		color = self._selected_color
 	}
+
 	self._item_highlight_marker = self._object:rect(marker_params)
 end
 
@@ -90,6 +93,7 @@ function RaidGUIControlListItemOperations:_layout_icon(params, data)
 		texture_rect = data.icon.texture_rect,
 		color = tweak_data.gui.colors.raid_dirty_white
 	}
+
 	self._item_icon = self._object:image(icon_params)
 
 	self._item_icon:set_center_x(RaidGUIControlListItemOperations.ICON_CENTER_X)
@@ -109,6 +113,7 @@ function RaidGUIControlListItemOperations:_layout_operation_name(params, data)
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white
 	}
+
 	self._item_label = self._object:label(raid_name_params)
 
 	self._item_label:set_center_y(RaidGUIControlListItemOperations.NAME_CENTER_Y)
@@ -119,6 +124,7 @@ function RaidGUIControlListItemOperations:_layout_difficulty()
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemOperations.ICON_PADDING,
 		amount = tweak_data:number_of_difficulties()
 	}
+
 	self._difficulty_indicator = self._object:create_custom_control(RaidGuiControlDifficultyStars, difficulty_params)
 
 	self._difficulty_indicator:set_center_y(RaidGUIControlListItemOperations.DIFFICULTY_CENTER_Y)
@@ -129,6 +135,7 @@ function RaidGUIControlListItemOperations:_layout_breadcrumb()
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}
+
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
 	self._breadcrumb:set_right(self._object:w())
@@ -203,7 +210,7 @@ function RaidGUIControlListItemOperations:select()
 	end
 
 	if self._on_item_selected_callback then
-		self:_on_item_selected_callback(self._data)
+		self._on_item_selected_callback(self, self._data)
 	end
 end
 

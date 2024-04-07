@@ -20,6 +20,7 @@ function HUDMapPlayerPin:_create_panel(panel)
 		w = HUDMapPlayerPin.W,
 		h = HUDMapPlayerPin.H
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -33,6 +34,7 @@ function HUDMapPlayerPin:_create_nationality_icon(params)
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}
+
 	self._nationality_icon = self._object:bitmap(nationality_icon_params)
 
 	self._nationality_icon:set_center_x(self._object:w() / 2)

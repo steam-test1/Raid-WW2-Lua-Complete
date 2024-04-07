@@ -33,6 +33,7 @@ function RaidGUIControlCardSuggestedLarge:get_data()
 end
 
 function RaidGUIControlCardSuggestedLarge:update()
+	return
 end
 
 function RaidGUIControlCardSuggestedLarge:set_card(card_data)
@@ -41,6 +42,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 
 	if self._item_data.peer_id and managers.network:session():all_peers()[self._item_data.peer_id] then
 		local peer_name = managers.network:session():all_peers()[self._item_data.peer_id]:name()
+
 		self._item_data.peer_name = peer_name
 	end
 
@@ -54,6 +56,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 	local card_texture_rect = tweak_data.challenge_cards.challenge_card_texture_rect
 	local card_x = math.floor((self._params.selected_marker_w - self._params.item_width) / 2)
 	local card_y = 32
+
 	self._challenge_card_panel = self._object:panel({
 		name = "suggested_card_panel_card_" .. self._name,
 		x = card_x,
@@ -132,6 +135,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 	if not self._item_data.title_in_texture then
 		local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
 		local title_font_size = tweak_data.gui.font_sizes.medium
+
 		self._card_title = self._challenge_card_panel:label({
 			wrap = true,
 			align = "center",
@@ -146,6 +150,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = title_font_size
 		})
+
 		local _, _, w, h = self._card_title:text_rect()
 
 		if title_h < h then
@@ -167,7 +172,9 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 		color = tweak_data.gui.colors.raid_white,
 		layer = self._card_image:layer() + 1
 	}
+
 	self._xp_bonus = self._challenge_card_panel:label(params_xp_bonus)
+
 	local bonus_xp_reward = managers.challenge_cards:get_card_xp_label(self._item_data.key_name)
 
 	self._xp_bonus:set_text(bonus_xp_reward)
@@ -390,4 +397,5 @@ function RaidGUIControlCardSuggestedLarge:on_mouse_over(x, y)
 end
 
 function RaidGUIControlCardSuggestedLarge:close()
+	return
 end

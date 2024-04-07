@@ -50,7 +50,7 @@ function RaidGUIControlBranchingProgressBar:init(parent, params)
 
 	self:_set_initial_state(self._current_points)
 
-	if self._object:w() < self._scrollable_panel:w() then
+	if self._scrollable_panel:w() > self._object:w() then
 		self._draggable = true
 
 		managers.hud:add_updator("branching_progress_bar", callback(self, self, "update"))
@@ -70,6 +70,7 @@ function RaidGUIControlBranchingProgressBar:_layout_skill_details()
 		x = ExperienceGui.SKILL_DETAILS_X,
 		y = ExperienceGui.SKILL_DETAILS_Y
 	}
+
 	self._skill_details = self._scrollable_panel:create_custom_control(RaidGUIControlSkillDetails, params_skill_details)
 end
 
@@ -101,7 +102,7 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 	local panel_padding = params.padding or 0
 	local x_step = params.x_step or 200
 	local y_step = params.y_step or 20
-	local leading_path_length = nil
+	local leading_path_length
 
 	if node_tree[1].points_needed and node_tree[1].points_needed > 0 then
 		leading_path_length = params.leading_path_length or x_step / 2
@@ -125,8 +126,10 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 			end
 
 			local node_value_data = node_data.value or {}
+
 			node_value_data.level = level_index
 			node_value_data.index = node_index
+
 			local node_params = {
 				name = "node_" .. tostring(level_index) .. "_" .. tostring(node_index),
 				on_click_callback = callback(self, self, "_node_click_callback"),
@@ -253,7 +256,7 @@ function RaidGUIControlBranchingProgressBar:_get_level_progress(level)
 		return 1
 	end
 
-	local level_progress = nil
+	local level_progress
 
 	if level == 1 then
 		if self._levels[level].points_needed and self._levels[level].points_needed > 0 then
@@ -262,7 +265,7 @@ function RaidGUIControlBranchingProgressBar:_get_level_progress(level)
 			level_progress = 1
 		end
 	else
-		local previous_level_points_needed = nil
+		local previous_level_points_needed
 
 		if self._levels[level - 1].points_needed then
 			previous_level_points_needed = self._levels[level - 1].points_needed
@@ -286,7 +289,7 @@ function RaidGUIControlBranchingProgressBar:_get_current_level()
 	local current_level = 1
 
 	for i = 1, #self._levels do
-		if self._levels[i].points_needed and self._levels[i].points_needed <= self._current_points then
+		if self._levels[i].points_needed and self._current_points >= self._levels[i].points_needed then
 			current_level = i
 		else
 			break
@@ -300,7 +303,7 @@ function RaidGUIControlBranchingProgressBar:_get_level_by_points(points)
 	local current_level = 0
 
 	for i = 1, #self._levels do
-		if self._levels[i].points_needed <= points then
+		if points >= self._levels[i].points_needed then
 			current_level = i
 		else
 			break
@@ -313,10 +316,11 @@ end
 function RaidGUIControlBranchingProgressBar:_refresh_tree(full_refresh)
 	local current_level_index = 1
 	local need_to_check_further = true
-	local level_progress = nil
+	local level_progress
 
 	while (need_to_check_further or full_refresh) and current_level_index <= #self._levels do
 		local current_level = self._levels[current_level_index]
+
 		need_to_check_further = false
 		level_progress = self:_get_level_progress(current_level_index)
 
@@ -378,7 +382,7 @@ function RaidGUIControlBranchingProgressBar:_refresh_level_paths(level_index)
 		local path = level.paths[j]
 		local endpoints = path:endpoints()
 		local node_state = level.nodes[endpoints[2]]:state()
-		local previous_node_state = nil
+		local previous_node_state
 
 		if level_index == 1 then
 			previous_node_state = RaidGUIControlBranchingBarNode.STATE_ACTIVE
@@ -410,7 +414,9 @@ end
 
 function RaidGUIControlBranchingProgressBar:set_points(points)
 	local old_points = self._current_points
+
 	self._current_points = points
+
 	local new_level = self:_get_level_by_points(self._current_points)
 
 	if new_level ~= self:_get_level_by_points(old_points) or new_level > #self._levels then
@@ -444,7 +450,9 @@ function RaidGUIControlBranchingProgressBar:_animate_giving_points(panel, new_po
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_points = self:_ease_in_out_quint(t, starting_points, new_points, duration)
 
 		self:set_points(current_points)
@@ -472,7 +480,7 @@ function RaidGUIControlBranchingProgressBar:on_mouse_moved(o, x, y)
 	if self._scrollable_panel:x() > 35 then
 		self._move_damping = 1 - math.abs(self._scrollable_panel:x() - 35) / 100
 	elseif self._scrollable_panel:x() < -(self._scrollable_panel:w() - self._object:w() + 35) then
-		self._move_damping = 1 - math.abs(self._scrollable_panel:x() + self._scrollable_panel:w() - self._object:w() + 35) / 100
+		self._move_damping = 1 - math.abs(self._scrollable_panel:x() + (self._scrollable_panel:w() - self._object:w()) + 35) / 100
 	else
 		self._move_damping = 1
 	end
@@ -482,7 +490,9 @@ function RaidGUIControlBranchingProgressBar:on_mouse_moved(o, x, y)
 	end
 
 	self._mouse_travel = (x - self._mouse_last_x) * self._move_damping
+
 	local scrollable_panel_new_x = self._scrollable_panel:x() + (x - self._mouse_last_x) * self._move_damping
+
 	scrollable_panel_new_x = math.round(scrollable_panel_new_x)
 
 	self._scrollable_panel:set_x(scrollable_panel_new_x)
@@ -597,7 +607,7 @@ function RaidGUIControlBranchingProgressBar:update(t, dt)
 
 	if self._scrollable_panel:x() > 90 or self._scrollable_panel:x() < -(self._scrollable_panel:w() - self._object:w() + 90) then
 		self._draggable = false
-	elseif self._object:w() < self._scrollable_panel:w() then
+	elseif self._scrollable_panel:w() > self._object:w() then
 		self._draggable = true
 	end
 
@@ -618,7 +628,9 @@ function RaidGUIControlBranchingProgressBar:update(t, dt)
 
 	self._panel_velocity = (self._panel_velocity or 0) * 0.9
 	self._panel_velocity = self._panel_velocity + self._panel_acceleration * dt
+
 	local previous_x = self._scrollable_panel:x()
+
 	self._scrollable_panel_x = self._scrollable_panel_x + self._panel_velocity * dt
 
 	self._scrollable_panel:set_x(math.floor(self._scrollable_panel_x))
@@ -627,6 +639,7 @@ end
 function RaidGUIControlBranchingProgressBar:clear_selection()
 	self._selected_nodes = {}
 	self._first_available_level = 2
+
 	local current_level_index = 2
 	local need_to_check_further = true
 

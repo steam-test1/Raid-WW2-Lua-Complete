@@ -30,13 +30,17 @@ function RaidGUIControlButtonWeaponSkill:init(parent, params, tier_number, line_
 
 	self._state = params.state or RaidGUIControlButtonWeaponSkill.STATE_NORMAL
 	self._line_object = line_object
+
 	local tier_marker_params = clone(params)
+
 	tier_marker_params.x = params.x + RaidGUIControlButtonWeaponSkill.TIER_MARKER_X
 	tier_marker_params.y = params.y + RaidGUIControlButtonWeaponSkill.TIER_MARKER_Y
 	tier_marker_params.font = tweak_data.gui.fonts.din_compressed
 	tier_marker_params.font_size = tweak_data.gui.font_sizes.size_16
 	tier_marker_params.text = self:translate("menu_weapons_stats_tier_abbreviation", true) .. RaidGUIControlButtonWeaponSkill.ROMAN_NUMERALS[tier_number]
+
 	local icon = RaidGUIControlButtonWeaponSkill.ICON_LOCKED
+
 	params.texture = tweak_data.gui.icons[icon].texture
 	params.texture_rect = tweak_data.gui.icons[icon].texture_rect
 	self._on_selected_weapon_skill_callback = params.on_selected_weapon_skill_callback
@@ -44,7 +48,9 @@ function RaidGUIControlButtonWeaponSkill:init(parent, params, tier_number, line_
 	self._get_available_points_callback = params.get_available_points_callback
 	self._on_click_weapon_skill_callback = params.on_click_weapon_skill_callback
 	self._toggle_select_item_callback = params.toggle_select_item_callback
+
 	local new_params = clone(params)
+
 	new_params.w = new_params.w + 2 * RaidGUIControlButtonWeaponSkill.SELECTOR_SIZE_EXTENSION
 	new_params.h = new_params.h + 2 * RaidGUIControlButtonWeaponSkill.SELECTOR_SIZE_EXTENSION
 
@@ -72,7 +78,9 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 		w = self._object:w(),
 		h = self._object:h()
 	}
+
 	self._selector_panel = self._object:panel(selector_panel_params)
+
 	local selector_background_params = {
 		name = "selector_background",
 		halign = "scale",
@@ -84,6 +92,7 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 		texture = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture_rect
 	}
+
 	self._selector_rect = self._selector_panel:image(selector_background_params)
 
 	self._selector_rect:set_center_x(self._object:w() / 2)
@@ -101,7 +110,9 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect
 	}
+
 	self._selector_triangle_up = self._selector_panel:image(selector_triangle_up_params)
+
 	local selector_triangle_down_params = {
 		name = "selector_triangle_down",
 		alpha = 0,
@@ -114,6 +125,7 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 		texture = tweak_data.gui.icons.ico_sel_rect_bottom_right.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_bottom_right.texture_rect
 	}
+
 	self._selector_triangle_down = self._selector_panel:image(selector_triangle_down_params)
 end
 
@@ -230,6 +242,7 @@ function RaidGUIControlButtonWeaponSkill:_layout_breadcrumb(weapon_id, i_tier, i
 		},
 		layer = self._object_image:layer() + 1
 	}
+
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
 	self._breadcrumb:set_right(self._object:w())
@@ -242,7 +255,7 @@ function RaidGUIControlButtonWeaponSkill:select_skill(dont_trigger_selected_call
 	self:highlight_on()
 
 	if not dont_trigger_selected_callback then
-		self:_on_selected_weapon_skill_callback(self._data)
+		self._on_selected_weapon_skill_callback(self, self._data)
 	end
 end
 
@@ -250,7 +263,7 @@ function RaidGUIControlButtonWeaponSkill:unselect_skill()
 	self._mouse_inside = false
 
 	self:highlight_off()
-	self:_on_unselected_weapon_skill_callback(self._data)
+	self._on_unselected_weapon_skill_callback(self, self._data)
 end
 
 function RaidGUIControlButtonWeaponSkill:set_state(state)
@@ -261,6 +274,7 @@ function RaidGUIControlButtonWeaponSkill:set_state(state)
 	end
 
 	self._state = state
+
 	local color = self._state_data[self._state].highlight_off
 
 	self:set_param_value("color", color)
@@ -278,49 +292,48 @@ function RaidGUIControlButtonWeaponSkill:set_state(state)
 end
 
 function RaidGUIControlButtonWeaponSkill:_init_state_data()
-	self._state_data = {
-		[RaidGUIControlButtonWeaponSkill.STATE_NORMAL] = {
-			show_selector_triangles_alpha = 0,
-			show_selector_panel_alpha = 1,
-			highlight_off = tweak_data.gui.colors.raid_light_gold,
-			highlight_on = tweak_data.gui.colors.raid_light_gold
-		},
-		[RaidGUIControlButtonWeaponSkill.STATE_CHALLENGE_ACTIVE] = {
-			show_selector_triangles_alpha = 0,
-			show_selector_panel_alpha = 1,
-			highlight_off = tweak_data.gui.colors.raid_white,
-			highlight_on = tweak_data.gui.colors.raid_white
-		},
-		[RaidGUIControlButtonWeaponSkill.STATE_BLOCKED] = {
-			show_selector_triangles_alpha = 0,
-			show_selector_panel_alpha = 1,
-			highlight_off = tweak_data.gui.colors.raid_dark_grey,
-			highlight_on = tweak_data.gui.colors.raid_dark_grey
-		},
-		[RaidGUIControlButtonWeaponSkill.STATE_SELECTED] = {
-			show_selector_triangles_alpha = 1,
-			show_selector_panel_alpha = 1,
-			highlight_off = tweak_data.gui.colors.raid_red,
-			highlight_on = tweak_data.gui.colors.raid_red
-		},
-		[RaidGUIControlButtonWeaponSkill.STATE_ACTIVE] = {
-			show_selector_triangles_alpha = 0,
-			show_selector_panel_alpha = 1,
-			highlight_off = tweak_data.gui.colors.raid_red,
-			highlight_on = tweak_data.gui.colors.raid_red
-		},
-		[RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE] = {
-			show_selector_triangles_alpha = 0,
-			show_selector_panel_alpha = 1,
-			highlight_off = tweak_data.gui.colors.raid_brown_red,
-			highlight_on = tweak_data.gui.colors.raid_brown_red
-		},
-		[RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE] = {
-			show_selector_triangles_alpha = 0,
-			show_selector_panel_alpha = 0,
-			highlight_off = tweak_data.gui.colors.raid_dark_grey,
-			highlight_on = tweak_data.gui.colors.raid_dark_grey
-		}
+	self._state_data = {}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_NORMAL] = {
+		show_selector_triangles_alpha = 0,
+		show_selector_panel_alpha = 1,
+		highlight_off = tweak_data.gui.colors.raid_light_gold,
+		highlight_on = tweak_data.gui.colors.raid_light_gold
+	}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_CHALLENGE_ACTIVE] = {
+		show_selector_triangles_alpha = 0,
+		show_selector_panel_alpha = 1,
+		highlight_off = tweak_data.gui.colors.raid_white,
+		highlight_on = tweak_data.gui.colors.raid_white
+	}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_BLOCKED] = {
+		show_selector_triangles_alpha = 0,
+		show_selector_panel_alpha = 1,
+		highlight_off = tweak_data.gui.colors.raid_dark_grey,
+		highlight_on = tweak_data.gui.colors.raid_dark_grey
+	}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_SELECTED] = {
+		show_selector_triangles_alpha = 1,
+		show_selector_panel_alpha = 1,
+		highlight_off = tweak_data.gui.colors.raid_red,
+		highlight_on = tweak_data.gui.colors.raid_red
+	}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_ACTIVE] = {
+		show_selector_triangles_alpha = 0,
+		show_selector_panel_alpha = 1,
+		highlight_off = tweak_data.gui.colors.raid_red,
+		highlight_on = tweak_data.gui.colors.raid_red
+	}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE] = {
+		show_selector_triangles_alpha = 0,
+		show_selector_panel_alpha = 1,
+		highlight_off = tweak_data.gui.colors.raid_brown_red,
+		highlight_on = tweak_data.gui.colors.raid_brown_red
+	}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE] = {
+		show_selector_triangles_alpha = 0,
+		show_selector_panel_alpha = 0,
+		highlight_off = tweak_data.gui.colors.raid_dark_grey,
+		highlight_on = tweak_data.gui.colors.raid_dark_grey
 	}
 end
 
@@ -395,7 +408,7 @@ function RaidGUIControlButtonWeaponSkill:on_mouse_released(button)
 		end
 
 		managers.menu_component:post_event("weapon_increase")
-		self:_on_selected_weapon_skill_callback(self._data)
+		self._on_selected_weapon_skill_callback(self, self._data)
 	elseif self._state == RaidGUIControlButtonWeaponSkill.STATE_SELECTED then
 		self:set_state(RaidGUIControlButtonWeaponSkill.STATE_NORMAL)
 		managers.menu_component:post_event("weapon_upgrade_deselect")
@@ -407,13 +420,14 @@ function RaidGUIControlButtonWeaponSkill:on_mouse_released(button)
 	end
 
 	if self._on_click_weapon_skill_callback then
-		self:_on_click_weapon_skill_callback(self._data)
+		self._on_click_weapon_skill_callback(self, self._data)
 	end
 
 	self:show_hover_selector()
 end
 
 function RaidGUIControlButtonWeaponSkill:on_mouse_pressed(button)
+	return
 end
 
 function RaidGUIControlButtonWeaponSkill:mouse_moved(o, x, y)
@@ -437,7 +451,7 @@ end
 function RaidGUIControlButtonWeaponSkill:propagating_skill_deallocating()
 	if self._state == RaidGUIControlButtonWeaponSkill.STATE_SELECTED then
 		self:set_state(RaidGUIControlButtonWeaponSkill.STATE_NORMAL)
-		self:_on_click_weapon_skill_callback(self._data)
+		self._on_click_weapon_skill_callback(self, self._data)
 	end
 
 	self:set_state(RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE)

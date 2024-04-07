@@ -22,9 +22,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		files[Idstring("english"):key()] = "_uk"
 	end
 
-	if (file == "eula" or file == "trial") and files[lang_key] then
-		file = file .. files[lang_key] or file
-	end
+	file = (file == "eula" or file == "trial") and files[lang_key] and file .. files[lang_key] or file
 
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), (self.PATH .. file):id())
 	local ypos = 0
@@ -32,10 +30,12 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	local res = RenderSettings.resolution
 	local global_scale = 1
 	local side_padding = 200
+
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
 	self._clipping_panel = self._fullscreen_ws:panel():panel({
 		layer = self.layers.background
 	})
+
 	local bg = self._clipping_panel:rect({
 		visible = true,
 		color = Color.black / 2,
@@ -48,6 +48,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	bg:set_width(self._clipping_panel:width())
 
 	local text_offset = self._clipping_panel:height() - 50
+
 	self._credits_panel = self._clipping_panel:panel({
 		x = safe_rect_pixels.x + side_padding,
 		y = text_offset,
@@ -93,7 +94,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	})
 
 	local function animate_fade_in(o)
-		over(1, function (p)
+		over(1, function(p)
 			o:set_alpha(p)
 		end)
 	end
@@ -111,7 +112,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	local function func(o)
 		local start_blur = 0
 
-		over(0.6, function (p)
+		over(0.6, function(p)
 			o:set_alpha(math.lerp(start_blur, 1, p))
 		end)
 	end
@@ -149,6 +150,7 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 			end
 
 			height = height * global_scale
+
 			local text_field = self._credits_panel:text({
 				vertical = "bottom",
 				h = 0,

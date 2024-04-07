@@ -1,4 +1,5 @@
 CopActionIdle = CopActionIdle or class()
+
 local mvec3_dir = mvector3.direction
 local mvec3_rot = mvector3.rotate_with
 local mvec3_dot = mvector3.dot
@@ -27,7 +28,7 @@ function CopActionIdle:init(action_desc, common_data)
 		self._start_fwd = common_data.rot:y()
 	end
 
-	local res = nil
+	local res
 
 	if self._body_part == 3 then
 		if self._ext_anim.upper_body_active and not self._ext_anim.upper_body_empty then
@@ -149,6 +150,7 @@ function CopActionIdle:update(t)
 
 					if math.abs(spin) > 70 then
 						self._rot_offset = -spin
+
 						local new_action_data = {
 							body_part = 2,
 							type = "turn",
@@ -206,7 +208,7 @@ function CopActionIdle:on_attention(attention)
 			end
 		end
 
-		local start_vec = nil
+		local start_vec
 
 		if self._modifier:blend() > 0 then
 			start_vec = self._look_vec or self._common_data.look_vec
@@ -252,8 +254,10 @@ function CopActionIdle:save(save_data)
 		save_data.is_save = true
 		save_data.type = "idle"
 		save_data.body_part = 1
+
 		local state_name = self._machine:segment_state(Idstring("base"))
 		local state_index = self._machine:state_name_to_index(state_name)
+
 		save_data.anim = state_index
 	end
 end

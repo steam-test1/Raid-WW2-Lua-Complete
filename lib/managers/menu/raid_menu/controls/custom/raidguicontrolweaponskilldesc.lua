@@ -36,11 +36,13 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 
 	self._desc_label:set_text(self:translate(desc_id, false))
 
-	local challenge, count, target, min_range = nil
+	local challenge, count, target, min_range
 
 	if skill.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id)
+
 		local tasks = challenge:tasks()
+
 		desc_id = skill.challenge_briefing_id or tasks[1]:briefing_id() or desc_id
 		done_id = skill.challenge_done_text_id or tasks[1]:done_text_id() or done_id
 		count = tasks[1]:current_count()
@@ -55,7 +57,7 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 		self._status_label:set_text(self:translate(RaidGUIControlWeaponSkillDesc.CHALLENGE_LOCKED_TEXT, true))
 
 		local level_needed, class = managers.weapon_skills:get_character_level_needed_for_tier(skill.weapon_id, skill.tier)
-		local challenge_locked_text = nil
+		local challenge_locked_text
 
 		if class then
 			challenge_locked_text = managers.localization:text("weapon_skill_challenge_unlocked_level_different_class", {
@@ -116,7 +118,9 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_dirty_white
 	}
+
 	self._name_label = self._object:label(params_name_label)
+
 	local params_status_label = {
 		h = 32,
 		vertical = "bottom",
@@ -130,7 +134,9 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = RaidGUIControlWeaponSkillDesc.STATUS_COLOR
 	}
+
 	self._status_label = self._object:label(params_status_label)
+
 	local params_desc_label = {
 		h = 100,
 		wrap = true,
@@ -144,7 +150,9 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.raid_grey
 	}
+
 	self._desc_label = self._object:label(params_desc_label)
+
 	local tier_unlocks_at_level_label_params = {
 		name = "cant_equip_explenation_label",
 		h = 58,
@@ -160,6 +168,7 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_red
 	}
+
 	self._challenge_locked_label = self._object:label(tier_unlocks_at_level_label_params)
 end
 
@@ -171,6 +180,7 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 		name = self._params.name .. "_progress_bar_panel",
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W
 	}
+
 	self._progress_bar_panel = self._object:panel(progress_bar_panel_params)
 
 	self._progress_bar_panel:set_bottom(self._object:h())
@@ -199,7 +209,9 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h()
 	}
+
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel(progress_bar_foreground_panel_params)
+
 	local progress_bar_background_params = {
 		name = self._params.name .. "_progress_bar_background",
 		w = self._progress_bar_panel:w(),
@@ -224,11 +236,12 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_dirty_white
 	}
+
 	self._progress_text = self._progress_bar_panel:label(progress_bar_text_params)
 end
 
 function RaidGUIControlWeaponSkillDesc:set_progress(count, target)
-	self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * count / target)
+	self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * (count / target))
 
 	if count ~= target then
 		self._progress_text:set_text(tostring(count) .. "/" .. tostring(target))
@@ -238,10 +251,13 @@ function RaidGUIControlWeaponSkillDesc:set_progress(count, target)
 end
 
 function RaidGUIControlWeaponSkillDesc:on_click_weapon_skill_button()
+	return
 end
 
 function RaidGUIControlWeaponSkillDesc:on_mouse_enter_weapon_skill_button()
+	return
 end
 
 function RaidGUIControlWeaponSkillDesc:on_mouse_exit_weapon_skill_button()
+	return
 end

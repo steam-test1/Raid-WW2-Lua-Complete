@@ -45,9 +45,8 @@ function NetworkVoiceChatSTEAM:_save_globals()
 		Global.steam = {}
 	end
 
-	Global.steam.voip = {
-		handler = self.handler
-	}
+	Global.steam.voip = {}
+	Global.steam.voip.handler = self.handler
 end
 
 function NetworkVoiceChatSTEAM:enabled()
@@ -151,13 +150,17 @@ function NetworkVoiceChatSTEAM:is_muted(peer)
 end
 
 function NetworkVoiceChatSTEAM:soft_disable()
+	return
 end
 
 function NetworkVoiceChatSTEAM:soft_enable()
+	return
 end
 
 function NetworkVoiceChatSTEAM:trc_check_mute()
+	return
 end
 
 function NetworkVoiceChatSTEAM:trc_check_unmute()
+	return
 end

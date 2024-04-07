@@ -4,6 +4,7 @@ ThrowableAmmoBag.LEVEL = {
 	1.4,
 	1.6
 }
+
 local ammo_bag_ids = Idstring("units/vanilla/equipment/equip_throwable_ammo_bag/equip_throwable_ammo_bag")
 
 function ThrowableAmmoBag.spawn(pos, dir, level_idx, user_unit)

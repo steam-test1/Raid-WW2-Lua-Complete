@@ -87,7 +87,7 @@ function CoreWorldCollection:register_world_despawn(world_id, editor_name)
 end
 
 function CoreWorldCollection:get_input_elements_for_world(world_editor_name, event)
-	local res, world_id = nil
+	local res, world_id
 
 	for key, world in pairs(self._world_spawns) do
 		if world_editor_name == world.editor_name and world.active then
@@ -103,7 +103,7 @@ function CoreWorldCollection:get_input_elements_for_world(world_editor_name, eve
 end
 
 function CoreWorldCollection:get_output_elements_for_world(world_id, event)
-	local res = nil
+	local res
 	local world_spawn = self._world_spawns[world_id]
 
 	if world_spawn and self._output_elements[world_spawn.editor_name] then
@@ -150,7 +150,7 @@ function CoreWorldCollection:get_world_position(editor_name)
 end
 
 function CoreWorldCollection:get_world_from_pos(position)
-	local result = nil
+	local result
 	local nav_seg_id = managers.navigation:get_nav_seg_from_pos(position, true)
 	local world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 
@@ -171,6 +171,7 @@ end
 function CoreWorldCollection:_load_predefined_worlds()
 	if DB:has("xml", self._predefined_worlds_file) then
 		local file = DB:open("xml", self._predefined_worlds_file)
+
 		self._all_worlds = ScriptSerializer:from_generic_xml(file:read())
 
 		table.sort(self._all_worlds)
@@ -179,6 +180,7 @@ end
 
 function CoreWorldCollection:get_next_world_id()
 	self._world_id_counter = self._world_id_counter + 1
+
 	local world_id_modulo = self._world_id_counter % WorldDefinition.MAX_WORLD_UNIT_ID
 
 	if world_id_modulo == 0 then
@@ -226,13 +228,16 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 
 	local params = {
 		file_type = "world",
-		file_path = file_path,
-		world_dir = world_dir,
-		translation = world.translation,
-		world_id = world_id,
-		excluded_continents = excluded_continents
+		file_path = file_path
 	}
+
+	params.world_dir = world_dir
+	params.translation = world.translation
+	params.world_id = world_id
+	params.excluded_continents = excluded_continents
+
 	local definition = CoreWorldDefinition.WorldDefinition:new(params)
+
 	definition.is_created = false
 	definition.editor_name = editor_name
 	definition.creation_in_progress = true
@@ -315,6 +320,7 @@ function CoreWorldCollection:on_world_loaded(index)
 		end
 
 		local definition = self._world_definitions[index]
+
 		self._mission_params[definition._world_id] = nil
 
 		definition:init_done()
@@ -424,7 +430,9 @@ end
 function CoreWorldCollection:_send_to_peers_world_prepared(world_definition)
 	if not world_definition.prepare_synced then
 		world_definition.prepare_synced = true
+
 		local peer = managers.network:session():local_peer()
+
 		peer._synced_worlds[world_definition._world_id] = peer._synced_worlds[world_definition._world_id] or {}
 		peer._synced_worlds[world_definition._world_id][CoreWorldCollection.STAGE_PREPARE] = true
 
@@ -480,6 +488,7 @@ function CoreWorldCollection:_do_complete_world_loading_stage(params)
 	end
 
 	local peer = managers.network:session():local_peer()
+
 	peer._synced_worlds[world_id] = peer._synced_worlds[world_id] or {}
 	peer._synced_worlds[world_id][stage] = true
 
@@ -512,7 +521,7 @@ function CoreWorldCollection:sync_loading_status(t)
 		return
 	end
 
-	if not self._next_loading_sync or self._next_loading_sync < t then
+	if not self._next_loading_sync or t > self._next_loading_sync then
 		self._next_loading_sync = t + 2
 
 		self:update_synced_worlds_to_all_peers()
@@ -564,7 +573,9 @@ function CoreWorldCollection:update(t, dt, paused_update)
 							definition.mission_scripts_created = true
 
 							break
-						elseif texture_loaded then
+						elseif not texture_loaded then
+							-- Nothing
+						else
 							Application:trace("[CoreWorldCollection:update] All peers still not spawned worlds, waiting...")
 							self:sync_loading_status(t)
 
@@ -594,7 +605,7 @@ function CoreWorldCollection:update(t, dt, paused_update)
 
 			local now = Application:time()
 
-			if definition._next_cleanup_t < now then
+			if now > definition._next_cleanup_t then
 				definition:cleanup_spawned_units()
 			end
 		end
@@ -838,29 +849,27 @@ function CoreWorldCollection:_create_test(params)
 
 	local worlds = {}
 
-	if true or false then
-		table.insert(worlds, {
-			level_path = "levels/tests/stealth_test_garden",
-			translation = {
-				position = Vector3(0, 0, 5000),
-				rotation = Rotation(0, 0, 0)
-			}
-		})
-		table.insert(worlds, {
-			level_path = "levels/tests/stealth_test_garden",
-			translation = {
-				position = Vector3(0, 5000, 2500),
-				rotation = Rotation(0, 0, 0)
-			}
-		})
-		table.insert(worlds, {
-			level_path = "levels/tests/stealth_test_garden",
-			translation = {
-				position = Vector3(5000, 0, 2500),
-				rotation = Rotation(0, 0, 0)
-			}
-		})
-	end
+	table.insert(worlds, {
+		level_path = "levels/tests/stealth_test_garden",
+		translation = {
+			position = Vector3(0, 0, 5000),
+			rotation = Rotation(0, 0, 0)
+		}
+	})
+	table.insert(worlds, {
+		level_path = "levels/tests/stealth_test_garden",
+		translation = {
+			position = Vector3(0, 5000, 2500),
+			rotation = Rotation(0, 0, 0)
+		}
+	})
+	table.insert(worlds, {
+		level_path = "levels/tests/stealth_test_garden",
+		translation = {
+			position = Vector3(5000, 0, 2500),
+			rotation = Rotation(0, 0, 0)
+		}
+	})
 
 	return worlds
 end
@@ -880,14 +889,14 @@ function CoreWorldCollection:_new_random_world(worlds, ordered)
 	local s = 4
 	local k = 0
 	local l = 0
-	local s_pos = -800 * s / 2
+	local s_pos = -800 * (s / 2)
 
 	for i = 0, s do
 		for j = 0, s do
 			local pos = Vector3(s_pos + i * 800, s_pos + j * 800, 0)
 			local yaw = ordered and math.mod(l, 4) * 90 or math.round(math.rand(360) / 90) * 90
 			local rot = Rotation(yaw, 0, 0)
-			local file = nil
+			local file
 
 			if ordered then
 				file = files[k + 1]
@@ -1000,15 +1009,15 @@ end
 
 function CoreWorldCollection:sync_load(data)
 	local state = data.CoreWorldCollection
+
 	self._drop_in_sync = {}
 
 	for i, mission in pairs(state.missions) do
 		if self._missions[i] then
 			self._missions[i]:load(mission)
 		else
-			self._drop_in_sync[i] = {
-				missions = state.missions[i]
-			}
+			self._drop_in_sync[i] = {}
+			self._drop_in_sync[i].missions = state.missions[i]
 		end
 	end
 
@@ -1064,7 +1073,7 @@ function CoreWorldCollection:get_all_worlds()
 end
 
 function CoreWorldCollection:get_unit_with_id(id, cb, world_id)
-	local unit = nil
+	local unit
 
 	if world_id > 0 then
 		local world_def = self._world_definitions[world_id]
@@ -1118,7 +1127,7 @@ end
 
 function CoreWorldCollection:get_unit_with_real_id(id)
 	local all_units = World:unit_manager():get_units()
-	local unit = nil
+	local unit
 
 	for key, u in pairs(all_units) do
 		if u:id() == id then
@@ -1214,6 +1223,7 @@ end
 function CoreWorldCollection:register_spawned_unit(unit, pos, world_id)
 	if not world_id then
 		local nav_seg_id = managers.navigation:get_nav_seg_from_pos(pos, true)
+
 		world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 	end
 
@@ -1225,7 +1235,7 @@ function CoreWorldCollection:register_spawned_unit(unit, pos, world_id)
 end
 
 function CoreWorldCollection:register_spawned_unit_on_last_world(unit)
-	local definition = nil
+	local definition
 
 	if Application:editor() then
 		definition = managers.worlddefinition
@@ -1286,9 +1296,12 @@ function CoreWorldCollection:sync_world_prepared(world_id, peer, stage)
 	Application:trace("[CoreWorldCollection:sync_world_prepared]", world_id, peer, stage)
 
 	local p = managers.network:session():peer(peer)
+
 	p._synced_worlds = p._synced_worlds or {}
 	p._synced_worlds[world_id] = p._synced_worlds[world_id] or {}
+
 	local old_stage_value = p._synced_worlds[world_id][stage]
+
 	p._synced_worlds[world_id][stage] = true
 
 	if Network:is_server() and stage == CoreWorldCollection.STAGE_LOAD and not old_stage_value then
@@ -1347,7 +1360,7 @@ function CoreWorldCollection:sync_loaded_packages(packages_packed)
 				if Global.STREAM_ALL_PACKAGES then
 					self._sync_loading_packages = self._sync_loading_packages + 1
 
-					PackageManager:load(pkg.package, function ()
+					PackageManager:load(pkg.package, function()
 						Application:trace("[CoreWorldCollection:sync_loaded_packages] DONE", pkg.package)
 
 						self._sync_loading_packages = self._sync_loading_packages - 1

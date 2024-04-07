@@ -28,6 +28,7 @@ end
 
 function RaidGUIControlPeerRewardCardPack:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlPeerRewardCardPack.WIDTH
 	control_params.h = control_params.h or RaidGUIControlPeerRewardCardPack.HEIGHT
@@ -45,7 +46,9 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 		texture = tweak_data.gui.icons[RaidGUIControlPeerRewardCardPack.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlPeerRewardCardPack.ICON].texture_rect
 	}
+
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
+
 	local params_player_name = {
 		name = "peer_card_pack_name_label",
 		align = "left",
@@ -58,7 +61,9 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 		font = RaidGUIControlPeerRewardCardPack.FONT,
 		font_size = RaidGUIControlPeerRewardCardPack.NAME_FONT_SIZE
 	}
+
 	self._name_label = self._object:text(params_player_name)
+
 	local _, _, _, h = self._name_label:text_rect()
 
 	self._name_label:set_h(h)
@@ -75,7 +80,9 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 		font = RaidGUIControlPeerRewardCardPack.FONT,
 		font_size = RaidGUIControlPeerRewardCardPack.DESCRIPTION_FONT_SIZE
 	}
+
 	self._card_pack_description_label = self._object:text(params_card_pack_description)
+
 	local _, _, _, h = self._card_pack_description_label:text_rect()
 
 	self._card_pack_description_label:set_h(h)

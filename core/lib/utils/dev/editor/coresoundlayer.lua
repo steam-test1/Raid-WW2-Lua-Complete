@@ -85,6 +85,7 @@ function SoundLayer:save(save_params)
 		if unit:name() == Idstring(self._environment_unit) then
 			local area = unit:sound_data().environment_area
 			local shape_table = area:save_level_data()
+
 			shape_table.environment = area:environment()
 			shape_table.ambience_event = area:ambience_event()
 			shape_table.occasional_event = area:occasional_event()
@@ -118,6 +119,7 @@ function SoundLayer:save(save_params)
 		if unit:name() == Idstring(self._area_emitter_unit) then
 			local area_emitter = unit:sound_data().emitter
 			local shape_table = area_emitter:save_level_data()
+
 			shape_table.name = area_emitter:name()
 
 			table.insert(sound_area_emitters, shape_table)
@@ -162,9 +164,11 @@ function SoundLayer:save(save_params)
 end
 
 function SoundLayer:hide()
+	return
 end
 
 function SoundLayer:disable()
+	return
 end
 
 function SoundLayer:update(t, dt)
@@ -172,14 +176,10 @@ function SoundLayer:update(t, dt)
 
 	for _, unit in ipairs(self._created_units) do
 		if unit:name() == Idstring(self._emitter_unit) then
-			local r = 0.6
-			local g = 0.6
-			local b = 0
+			local r, g, b = 0.6, 0.6, 0
 
 			if table.contains(self._selected_units, unit) then
-				b = 0.4
-				g = 1
-				r = 1
+				r, g, b = 1, 1, 0.4
 			end
 
 			unit:sound_data().emitter:draw(t, dt, r, g, b)
@@ -188,14 +188,10 @@ function SoundLayer:update(t, dt)
 		if unit:name() == Idstring(self._environment_unit) then
 			Application:draw(unit, 1, 1, 1)
 
-			local r = 0
-			local g = 0
-			local b = 0.8
+			local r, g, b = 0, 0, 0.8
 
 			if table.contains(self._selected_units, unit) then
-				b = 1
-				g = 0.4
-				r = 0.4
+				r, g, b = 0.4, 0.4, 1
 			end
 
 			unit:sound_data().environment_area:draw(t, dt, r, g, b)
@@ -204,14 +200,10 @@ function SoundLayer:update(t, dt)
 		if unit:name() == Idstring(self._area_emitter_unit) then
 			Application:draw(unit, 1, 1, 1)
 
-			local r = 0
-			local g = 0
-			local b = 0.8
+			local r, g, b = 0, 0, 0.8
 
 			if table.contains(self._selected_units, unit) then
-				b = 1
-				g = 0.4
-				r = 0.4
+				r, g, b = 0.4, 0.4, 1
 			end
 
 			unit:sound_data().emitter:draw(t, dt, r, g, b)
@@ -247,7 +239,9 @@ function SoundLayer:build_panel(notebook)
 	self._sound_sizer:add(soundbank_sizer, 0, 0, "EXPAND")
 
 	local h_sound_emitter_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._sound_emitter_sizer = EWS:StaticBoxSizer(self._sound_panel, "VERTICAL", "Sound Emitter")
+
 	local default_emitter_path = managers.sound_environment:game_default_emitter_path()
 	local emitter_paths = managers.sound_environment:emitter_paths()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
@@ -258,11 +252,13 @@ function SoundLayer:build_panel(notebook)
 			"- No emitter paths in project -"
 		},
 		value = #emitter_paths > 0 and default_emitter_path or "- No emitter paths in project -",
-		value_changed_cb = function (params)
+		value_changed_cb = function(params)
 			self:select_emitter_path(params.value)
 		end
 	})
+
 	self._emitter_path_combobox = combobox_params
+
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
 		sorted = true,
 		name = "Events",
@@ -272,10 +268,11 @@ function SoundLayer:build_panel(notebook)
 			"- Talk to your sound designer -"
 		},
 		value = default_emitter_path and managers.sound_environment:emitter_events(default_emitter_path)[1] or "- Talk to your sound designer -",
-		value_changed_cb = function (params)
+		value_changed_cb = function(params)
 			self:select_emitter_event(params.value)
 		end
 	})
+
 	self._emitter_events_combobox = combobox_params
 
 	h_sound_emitter_sizer:add(self._sound_emitter_sizer, 1, 0, "EXPAND")
@@ -305,12 +302,14 @@ function SoundLayer:_build_defaults(sizer)
 		options = managers.sound_environment:environments(),
 		value = managers.sound_environment:game_default_environment()
 	}
+
 	local environments = CoreEws.combobox(self._default_environment)
 
 	environments:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "select_default_sound_environment"), nil)
 
 	local no_ambiences_availible = #managers.sound_environment:ambience_events() == 0
 	local error_text = "- No ambience soundbanks in project -"
+
 	self._default_ambience = {
 		sizer_proportions = 1,
 		name = "Ambience:",
@@ -325,6 +324,7 @@ function SoundLayer:_build_defaults(sizer)
 		} or managers.sound_environment:ambience_events(),
 		value = no_ambiences_availible and error_text or managers.sound_environment:game_default_ambience()
 	}
+
 	local ambiences = CoreEws.combobox(self._default_ambience)
 
 	ambiences:set_enabled(not no_ambiences_availible)
@@ -332,6 +332,7 @@ function SoundLayer:_build_defaults(sizer)
 
 	local no_occasionals_availible = #managers.sound_environment:occasional_events() == 0
 	local error_text = "- No occasional soundbanks in project -"
+
 	self._default_occasional = {
 		sizer_proportions = 1,
 		name = "Occasional:",
@@ -346,6 +347,7 @@ function SoundLayer:_build_defaults(sizer)
 		} or managers.sound_environment:occasional_events(),
 		value = no_occasionals_availible and error_text or managers.sound_environment:game_default_occasional()
 	}
+
 	local occasionals = CoreEws.combobox(self._default_occasional)
 
 	occasionals:set_enabled(not no_occasionals_availible)
@@ -361,6 +363,7 @@ end
 
 function SoundLayer:_build_environment()
 	local sound_environment_sizer = EWS:StaticBoxSizer(self._sound_panel, "VERTICAL", "Sound Environment")
+
 	self._priority_params = {
 		name_proportions = 1,
 		name = "Priority:",
@@ -373,12 +376,14 @@ function SoundLayer:_build_environment()
 		panel = self._sound_panel,
 		sizer = sound_environment_sizer
 	}
+
 	local priority = CoreEws.number_controller(self._priority_params)
 
 	priority:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_environment_priority"), nil)
 	priority:connect("EVT_KILL_FOCUS", callback(self, self, "set_environment_priority"), nil)
 
 	local environment_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._effect_params = {
 		sizer_proportions = 1,
 		name = "Effect:",
@@ -391,6 +396,7 @@ function SoundLayer:_build_environment()
 		options = managers.sound_environment:environments(),
 		value = managers.sound_environment:game_default_environment()
 	}
+
 	local effects = CoreEws.combobox(self._effect_params)
 
 	effects:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "select_sound_environment"), nil)
@@ -403,6 +409,7 @@ function SoundLayer:_build_environment()
 	sound_environment_sizer:add(environment_sizer, 1, 0, "EXPAND")
 
 	local ambience_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._ambience_params = {
 		sizer_proportions = 1,
 		name = "Ambience:",
@@ -415,6 +422,7 @@ function SoundLayer:_build_environment()
 		options = managers.sound_environment:ambience_events(),
 		value = managers.sound_environment:game_default_ambience()
 	}
+
 	local ambiences = CoreEws.combobox(self._ambience_params)
 
 	ambiences:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "select_environment_ambience"), nil)
@@ -427,6 +435,7 @@ function SoundLayer:_build_environment()
 	sound_environment_sizer:add(ambience_sizer, 1, 0, "EXPAND")
 
 	local occasional_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._occasional_params = {
 		sizer_proportions = 1,
 		name = "Occasional:",
@@ -439,6 +448,7 @@ function SoundLayer:_build_environment()
 		options = managers.sound_environment:occasional_events(),
 		value = managers.sound_environment:game_default_occasional()
 	}
+
 	local occasionals = CoreEws.combobox(self._occasional_params)
 
 	occasionals:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "select_environment_occasional"), nil)

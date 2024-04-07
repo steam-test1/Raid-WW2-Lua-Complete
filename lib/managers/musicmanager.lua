@@ -36,6 +36,7 @@ end
 
 function MusicManager:save_settings(data)
 	local state = {}
+
 	data.MusicManager = state
 end
 
@@ -49,6 +50,7 @@ end
 
 function MusicManager:save_profile(data)
 	local state = {}
+
 	data.MusicManager = state
 end
 
@@ -93,8 +95,13 @@ function MusicManager:get_default_event()
 		end
 	end
 
-	local event_name = nil
-	event_name = (tweak_id ~= "random" or self:get_random_event()) and tweak_data.music[tweak_id] and tweak_data.music[tweak_id].start
+	local event_name
+
+	if tweak_id == "random" then
+		event_name = self:get_random_event()
+	else
+		event_name = tweak_data.music[tweak_id] and tweak_data.music[tweak_id].start
+	end
 
 	Application:debug("[MusicManager:get_default_event()]", event_name)
 

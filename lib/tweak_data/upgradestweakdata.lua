@@ -47,69 +47,66 @@ function UpgradesTweakData:init()
 end
 
 function UpgradesTweakData:_init_value_tables()
-	self.values = {
-		player = {},
-		carry = {},
-		interaction = {},
-		trip_mine = {},
-		ammo_bag = {},
-		ecm_jammer = {},
-		sentry_gun = {},
-		doctor_bag = {},
-		cable_tie = {},
-		bodybags_bag = {},
-		first_aid_kit = {},
-		weapon = {},
-		pistol = {},
-		assault_rifle = {},
-		smg = {},
-		shotgun = {},
-		saw = {},
-		lmg = {},
-		snp = {},
-		akimbo = {},
-		minigun = {},
-		melee = {}
-	}
+	self.values = {}
+	self.values.player = {}
+	self.values.carry = {}
+	self.values.interaction = {}
+	self.values.trip_mine = {}
+	self.values.ammo_bag = {}
+	self.values.ecm_jammer = {}
+	self.values.sentry_gun = {}
+	self.values.doctor_bag = {}
+	self.values.cable_tie = {}
+	self.values.bodybags_bag = {}
+	self.values.first_aid_kit = {}
+	self.values.weapon = {}
+	self.values.pistol = {}
+	self.values.assault_rifle = {}
+	self.values.smg = {}
+	self.values.shotgun = {}
+	self.values.saw = {}
+	self.values.lmg = {}
+	self.values.snp = {}
+	self.values.akimbo = {}
+	self.values.minigun = {}
+	self.values.melee = {}
 
 	self:_primary_weapon_definitions()
 	self:_secondary_weapon_definitions()
 
 	self.values.temporary = {}
-	self.values.team = {
-		player = {},
-		weapon = {},
-		pistol = {},
-		akimbo = {},
-		xp = {},
-		armor = {},
-		stamina = {},
-		health = {},
-		cash = {},
-		damage_dampener = {}
-	}
+	self.values.team = {}
+	self.values.team.player = {}
+	self.values.team.weapon = {}
+	self.values.team.pistol = {}
+	self.values.team.akimbo = {}
+	self.values.team.xp = {}
+	self.values.team.armor = {}
+	self.values.team.stamina = {}
+	self.values.team.health = {}
+	self.values.team.cash = {}
+	self.values.team.damage_dampener = {}
 end
 
 function UpgradesTweakData:_create_generic_description_data_types()
-	self.description_data_types = {
-		generic_multiplier = {
-			upgrade_type = UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER
-		},
-		generic_multiplier_reductive_string = {
-			upgrade_type = UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER_REDUCTIVE_STRING
-		},
-		reductive_multiplier = {
-			upgrade_type = UpgradesTweakData.UPGRADE_TYPE_REDUCTIVE_MULTIPLIER
-		},
-		raw_value_reduction = {
-			upgrade_type = UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_REDUCTION
-		},
-		raw_value_amount = {
-			upgrade_type = UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_AMOUNT
-		},
-		temporary_reduction = {
-			upgrade_type = UpgradesTweakData.UPGRADE_TYPE_TEMPORARY_REDUCTION
-		}
+	self.description_data_types = {}
+	self.description_data_types.generic_multiplier = {
+		upgrade_type = UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER
+	}
+	self.description_data_types.generic_multiplier_reductive_string = {
+		upgrade_type = UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER_REDUCTIVE_STRING
+	}
+	self.description_data_types.reductive_multiplier = {
+		upgrade_type = UpgradesTweakData.UPGRADE_TYPE_REDUCTIVE_MULTIPLIER
+	}
+	self.description_data_types.raw_value_reduction = {
+		upgrade_type = UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_REDUCTION
+	}
+	self.description_data_types.raw_value_amount = {
+		upgrade_type = UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_AMOUNT
+	}
+	self.description_data_types.temporary_reduction = {
+		upgrade_type = UpgradesTweakData.UPGRADE_TYPE_TEMPORARY_REDUCTION
 	}
 end
 
@@ -1842,6 +1839,7 @@ function UpgradesTweakData:_create_definition(definition_name, definition_catego
 			value = value
 		}
 	}
+
 	self.definitions[definition_name] = definition
 end
 
@@ -1881,78 +1879,76 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.player.special_enemy_highlight_mask_off = {
 		true
 	}
-	self.values.rep_upgrades = {
-		classes = {
-			"rep_upgrade"
-		},
-		values = {
-			2
-		}
+	self.values.rep_upgrades = {}
+	self.values.rep_upgrades.classes = {
+		"rep_upgrade"
 	}
-	self.values.player.body_armor = {
-		armor = {
-			0,
-			1,
-			2,
-			3,
-			5,
-			7,
-			15
-		},
-		movement = {
-			1.05,
-			1.025,
-			1,
-			0.95,
-			0.75,
-			0.65,
-			0.575
-		},
-		concealment = {
-			30,
-			26,
-			23,
-			21,
-			18,
-			12,
-			1
-		},
-		dodge = {
-			0.1,
-			-0.2,
-			-0.25,
-			-0.3,
-			-0.35,
-			-0.4,
-			-0.5
-		},
-		damage_shake = {
-			1,
-			0.96,
-			0.92,
-			0.85,
-			0.8,
-			0.7,
-			0.5
-		},
-		stamina = {
-			1.025,
-			1,
-			0.95,
-			0.9,
-			0.85,
-			0.8,
-			0.7
-		},
-		skill_ammo_mul = {
-			1,
-			1.02,
-			1.04,
-			1.06,
-			1.8,
-			1.1,
-			1.12
-		}
+	self.values.rep_upgrades.values = {
+		2
+	}
+	self.values.player.body_armor = {}
+	self.values.player.body_armor.armor = {
+		0,
+		1,
+		2,
+		3,
+		5,
+		7,
+		15
+	}
+	self.values.player.body_armor.movement = {
+		1.05,
+		1.025,
+		1,
+		0.95,
+		0.75,
+		0.65,
+		0.575
+	}
+	self.values.player.body_armor.concealment = {
+		30,
+		26,
+		23,
+		21,
+		18,
+		12,
+		1
+	}
+	self.values.player.body_armor.dodge = {
+		0.1,
+		-0.2,
+		-0.25,
+		-0.3,
+		-0.35,
+		-0.4,
+		-0.5
+	}
+	self.values.player.body_armor.damage_shake = {
+		1,
+		0.96,
+		0.92,
+		0.85,
+		0.8,
+		0.7,
+		0.5
+	}
+	self.values.player.body_armor.stamina = {
+		1.025,
+		1,
+		0.95,
+		0.9,
+		0.85,
+		0.8,
+		0.7
+	}
+	self.values.player.body_armor.skill_ammo_mul = {
+		1,
+		1.02,
+		1.04,
+		1.06,
+		1.8,
+		1.1,
+		1.12
 	}
 	self.ammo_bag_base = 3
 	self.ecm_jammer_base_battery_life = 20
@@ -1995,18 +1991,15 @@ function UpgradesTweakData:_init_pd2_values()
 	self.close_combat_distance = 1800
 	self.killshot_close_panic_range = 900
 	self.berserker_movement_speed_multiplier = 0.4
-	self.weapon_cost_multiplier = {
-		akimbo = 1.4
-	}
-	self.weapon_movement_penalty = {
-		lmg = 1,
-		minigun = 1
-	}
-	self.explosive_bullet = {
-		curve_pow = 0.5,
-		player_dmg_mul = 0.1,
-		range = 200
-	}
+	self.weapon_cost_multiplier = {}
+	self.weapon_cost_multiplier.akimbo = 1.4
+	self.weapon_movement_penalty = {}
+	self.weapon_movement_penalty.lmg = 1
+	self.weapon_movement_penalty.minigun = 1
+	self.explosive_bullet = {}
+	self.explosive_bullet.curve_pow = 0.5
+	self.explosive_bullet.player_dmg_mul = 0.1
+	self.explosive_bullet.range = 200
 	self.explosive_bullet.feedback_range = self.explosive_bullet.range
 	self.explosive_bullet.camera_shake_max_mul = 2
 	self.values.player.crime_net_deal = {
@@ -3135,6 +3128,7 @@ function UpgradesTweakData:_init_pd2_values()
 		-4,
 		-2
 	}
+
 	local editable_skill_descs = {
 		ammo_2x = {
 			{
@@ -3891,6 +3885,7 @@ function UpgradesTweakData:_init_pd2_values()
 			}
 		}
 	}
+
 	self.skill_descs = {}
 
 	for skill_id, skill_desc in pairs(editable_skill_descs) do
@@ -3898,6 +3893,7 @@ function UpgradesTweakData:_init_pd2_values()
 
 		for index, skill_version in ipairs(skill_desc) do
 			local version = index == 1 and "multibasic" or "multipro"
+
 			self.skill_descs[skill_id][index] = #skill_version
 
 			for i, desc in ipairs(skill_version) do
@@ -3908,38 +3904,37 @@ function UpgradesTweakData:_init_pd2_values()
 end
 
 function UpgradesTweakData:_old_init()
-	self.level_tree = {
-		{
-			name_id = "body_armor",
-			upgrades = {
-				"body_armor2",
-				"m1911",
-				"thompson",
-				"sten",
-				"garand",
-				"garand_gold",
-				"m1918",
-				"m1903",
-				"m1912",
-				"mp38",
-				"mp44",
-				"carbine",
-				"mg42",
-				"c96",
-				"webley",
-				"mosin",
-				"sterling",
-				"geco",
-				"dp28",
-				"tt33",
-				"ithaca",
-				"kar_98k",
-				"bren",
-				"lee_enfield",
-				"browning",
-				"welrod",
-				"shotty"
-			}
+	self.level_tree = {}
+	self.level_tree[1] = {
+		name_id = "body_armor",
+		upgrades = {
+			"body_armor2",
+			"m1911",
+			"thompson",
+			"sten",
+			"garand",
+			"garand_gold",
+			"m1918",
+			"m1903",
+			"m1912",
+			"mp38",
+			"mp44",
+			"carbine",
+			"mg42",
+			"c96",
+			"webley",
+			"mosin",
+			"sterling",
+			"geco",
+			"dp28",
+			"tt33",
+			"ithaca",
+			"kar_98k",
+			"bren",
+			"lee_enfield",
+			"browning",
+			"welrod",
+			"shotty"
 		}
 	}
 
@@ -3988,27 +3983,26 @@ function UpgradesTweakData:_old_init()
 	self.values.player.intimidation_multiplier = {
 		1.25
 	}
-	self.steps.player = {
-		thick_skin = {
-			nil,
-			8,
-			18,
-			27,
-			39
-		},
-		extra_ammo_multiplier = {
-			nil,
-			7,
-			16,
-			24,
-			38
-		},
-		toolset = {
-			nil,
-			7,
-			16,
-			38
-		}
+	self.steps.player = {}
+	self.steps.player.thick_skin = {
+		nil,
+		8,
+		18,
+		27,
+		39
+	}
+	self.steps.player.extra_ammo_multiplier = {
+		nil,
+		7,
+		16,
+		24,
+		38
+	}
+	self.steps.player.toolset = {
+		nil,
+		7,
+		16,
+		38
 	}
 	self.values.trip_mine = self.values.trip_mine or {}
 	self.values.trip_mine.quantity = {
@@ -4028,60 +4022,54 @@ function UpgradesTweakData:_old_init()
 	self.values.trip_mine.explode_timer_delay = {
 		2
 	}
-	self.steps.trip_mine = {
-		quantity = {
-			14,
-			22,
-			29,
-			36,
-			42,
-			47
-		},
-		damage_multiplier = {
-			6,
-			32
-		}
+	self.steps.trip_mine = {}
+	self.steps.trip_mine.quantity = {
+		14,
+		22,
+		29,
+		36,
+		42,
+		47
+	}
+	self.steps.trip_mine.damage_multiplier = {
+		6,
+		32
 	}
 	self.values.ammo_bag = self.values.ammo_bag or {}
-	self.steps.ammo_bag = {
-		ammo_increase = {
-			10,
-			19,
-			30
-		}
+	self.steps.ammo_bag = {}
+	self.steps.ammo_bag.ammo_increase = {
+		10,
+		19,
+		30
 	}
 	self.values.ecm_jammer = self.values.ecm_jammer or {}
 	self.values.first_aid_kit = self.values.first_aid_kit or {}
 	self.values.sentry_gun = self.values.sentry_gun or {}
 	self.steps.sentry_gun = {}
 	self.values.doctor_bag = self.values.doctor_bag or {}
-	self.steps.doctor_bag = {
-		amount_increase = {
-			11,
-			19,
-			33
-		}
+	self.steps.doctor_bag = {}
+	self.steps.doctor_bag.amount_increase = {
+		11,
+		19,
+		33
 	}
-	self.values.extra_cable_tie = {
-		quantity = {
-			1,
-			2,
-			3,
-			4
-		}
+	self.values.extra_cable_tie = {}
+	self.values.extra_cable_tie.quantity = {
+		1,
+		2,
+		3,
+		4
 	}
-	self.steps.extra_cable_tie = {
-		quantity = {
-			nil,
-			12,
-			23,
-			33
-		}
+	self.steps.extra_cable_tie = {}
+	self.steps.extra_cable_tie.quantity = {
+		nil,
+		12,
+		23,
+		33
 	}
-	self.values.striker = {
-		reload_speed_multiplier = {
-			1.15
-		}
+	self.values.striker = {}
+	self.values.striker.reload_speed_multiplier = {
+		1.15
 	}
 
 	self:_player_definitions()
@@ -4110,6 +4098,7 @@ function UpgradesTweakData:_old_init()
 
 	for name, upgrade in pairs(self.definitions) do
 		local unlock_lvl = upgrade.unlock_lvl or 1
+
 		self.levels[unlock_lvl] = self.levels[unlock_lvl] or {}
 
 		if upgrade.prio and upgrade.prio == "high" then
@@ -4271,6 +4260,7 @@ function UpgradesTweakData:_player_definitions()
 		local depends_on = i - 1 > 0 and "thick_skin" .. i - 1
 		local unlock_lvl = 3
 		local prio = i == 1 and "high"
+
 		self.definitions["thick_skin" .. i] = {
 			description_text_id = "thick_skin",
 			tree = 2,
@@ -4317,6 +4307,7 @@ function UpgradesTweakData:_player_definitions()
 		local depends_on = i - 1 > 0 and "extra_ammo_multiplier" .. i - 1
 		local unlock_lvl = 14
 		local prio = i == 1 and "high"
+
 		self.definitions["extra_ammo_multiplier" .. i] = {
 			description_text_id = "extra_ammo_multiplier",
 			tree = 3,
@@ -6738,6 +6729,7 @@ function UpgradesTweakData:_player_definitions()
 		local depends_on = i - 1 > 0 and "toolset" .. i - 1
 		local unlock_lvl = 3
 		local prio = i == 1 and "high"
+
 		self.definitions["toolset" .. i] = {
 			description_text_id = "toolset",
 			tree = 4,
@@ -7012,6 +7004,7 @@ function UpgradesTweakData:_ammo_bag_definitions()
 		local depends_on = i - 1 > 0 and "ammo_bag_ammo_increase" .. i - 1 or "ammo_bag"
 		local unlock_lvl = 11
 		local prio = i == 1 and "high"
+
 		self.definitions["ammo_bag_ammo_increase" .. i] = {
 			description_text_id = "ammo_bag_increase",
 			tree = 1,
@@ -7067,6 +7060,7 @@ function UpgradesTweakData:_doctor_bag_definitions()
 		local depends_on = i - 1 > 0 and "doctor_bag_amount_increase" .. i - 1 or "doctor_bag"
 		local unlock_lvl = 3
 		local prio = i == 1 and "high"
+
 		self.definitions["doctor_bag_amount_increase" .. i] = {
 			description_text_id = "doctor_bag_increase",
 			tree = 3,
@@ -7145,6 +7139,7 @@ function UpgradesTweakData:_cable_tie_definitions()
 		local depends_on = i - 1 > 0 and "extra_cable_tie_quantity" .. i - 1 or "extra_cable_tie"
 		local unlock_lvl = 4
 		local prio = i == 1 and "high"
+
 		self.definitions["extra_cable_tie_quantity" .. i] = {
 			description_text_id = "extra_cable_tie",
 			tree = 1,
@@ -8226,7 +8221,6 @@ function UpgradesTweakData:_flamethrower_mk2_definitions()
 		weapon_id = "flamethrower_mk2",
 		category = "weapon"
 	}
-	self.flame_bullet = {
-		show_blood_hits = false
-	}
+	self.flame_bullet = {}
+	self.flame_bullet.show_blood_hits = false
 end

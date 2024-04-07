@@ -44,9 +44,8 @@ function StatisticsTweakData:init()
 end
 
 function StatisticsTweakData:_init_top_stats()
-	self.top_stats = {
-		top_stat_most_kills = {}
-	}
+	self.top_stats = {}
+	self.top_stats.top_stat_most_kills = {}
 	self.top_stats.top_stat_most_kills.text_id = "top_stat_most_kills"
 	self.top_stats.top_stat_most_kills.xp_bonus = 50
 	self.top_stats.top_stat_most_kills.loot_value = 20
@@ -54,52 +53,47 @@ function StatisticsTweakData:_init_top_stats()
 	self.top_stats.top_stat_most_kills.tie_breaker_multiplier = 6
 	self.top_stats.top_stat_most_kills.stat = "kills"
 	self.top_stats.top_stat_most_kills.icon = "bonus_most_kills"
-	self.top_stats.top_stat_most_specials = {
-		text_id = "top_stat_most_specials",
-		xp_bonus = 100,
-		loot_value = 20,
-		weight_multiplier = 4,
-		tie_breaker_multiplier = 3,
-		stat = "specials_kills",
-		icon = "bonus_most_specials_killed"
-	}
-	self.top_stats.top_stat_most_accurate = {
-		text_id = "top_stat_most_accurate",
-		xp_bonus = 75,
-		loot_value = 20,
-		weight_multiplier = 0.5,
-		tie_breaker_multiplier = 5,
-		score_format = "%d%%",
-		stat = "accuracy",
-		icon = "bonus_highest_accu"
-	}
-	self.top_stats.top_stat_most_head_shots = {
-		text_id = "top_stat_most_head_shots",
-		xp_bonus = 100,
-		loot_value = 20,
-		weight_multiplier = 3,
-		tie_breaker_multiplier = 4,
-		stat = "head_shots",
-		icon = "bonus_most_headshots"
-	}
-	self.top_stats.top_stat_most_downs = {
-		text_id = "top_stat_most_downs",
-		xp_bonus = -50,
-		loot_value = -20,
-		weight_multiplier = 1,
-		tie_breaker_multiplier = 1,
-		stat = "downs",
-		icon = "bonus_most_bleedouts"
-	}
-	self.top_stats.top_stat_most_revives = {
-		text_id = "top_stat_most_revives",
-		xp_bonus = 100,
-		loot_value = 20,
-		weight_multiplier = 3,
-		tie_breaker_multiplier = 2,
-		stat = "revives",
-		icon = "bonus_most_revives"
-	}
+	self.top_stats.top_stat_most_specials = {}
+	self.top_stats.top_stat_most_specials.text_id = "top_stat_most_specials"
+	self.top_stats.top_stat_most_specials.xp_bonus = 100
+	self.top_stats.top_stat_most_specials.loot_value = 20
+	self.top_stats.top_stat_most_specials.weight_multiplier = 4
+	self.top_stats.top_stat_most_specials.tie_breaker_multiplier = 3
+	self.top_stats.top_stat_most_specials.stat = "specials_kills"
+	self.top_stats.top_stat_most_specials.icon = "bonus_most_specials_killed"
+	self.top_stats.top_stat_most_accurate = {}
+	self.top_stats.top_stat_most_accurate.text_id = "top_stat_most_accurate"
+	self.top_stats.top_stat_most_accurate.xp_bonus = 75
+	self.top_stats.top_stat_most_accurate.loot_value = 20
+	self.top_stats.top_stat_most_accurate.weight_multiplier = 0.5
+	self.top_stats.top_stat_most_accurate.tie_breaker_multiplier = 5
+	self.top_stats.top_stat_most_accurate.score_format = "%d%%"
+	self.top_stats.top_stat_most_accurate.stat = "accuracy"
+	self.top_stats.top_stat_most_accurate.icon = "bonus_highest_accu"
+	self.top_stats.top_stat_most_head_shots = {}
+	self.top_stats.top_stat_most_head_shots.text_id = "top_stat_most_head_shots"
+	self.top_stats.top_stat_most_head_shots.xp_bonus = 100
+	self.top_stats.top_stat_most_head_shots.loot_value = 20
+	self.top_stats.top_stat_most_head_shots.weight_multiplier = 3
+	self.top_stats.top_stat_most_head_shots.tie_breaker_multiplier = 4
+	self.top_stats.top_stat_most_head_shots.stat = "head_shots"
+	self.top_stats.top_stat_most_head_shots.icon = "bonus_most_headshots"
+	self.top_stats.top_stat_most_downs = {}
+	self.top_stats.top_stat_most_downs.text_id = "top_stat_most_downs"
+	self.top_stats.top_stat_most_downs.xp_bonus = -50
+	self.top_stats.top_stat_most_downs.loot_value = -20
+	self.top_stats.top_stat_most_downs.weight_multiplier = 1
+	self.top_stats.top_stat_most_downs.tie_breaker_multiplier = 1
+	self.top_stats.top_stat_most_downs.stat = "downs"
+	self.top_stats.top_stat_most_downs.icon = "bonus_most_bleedouts"
+	self.top_stats.top_stat_most_revives = {}
+	self.top_stats.top_stat_most_revives.text_id = "top_stat_most_revives"
+	self.top_stats.top_stat_most_revives.xp_bonus = 100
+	self.top_stats.top_stat_most_revives.loot_value = 20
+	self.top_stats.top_stat_most_revives.weight_multiplier = 3
+	self.top_stats.top_stat_most_revives.tie_breaker_multiplier = 2
+	self.top_stats.top_stat_most_revives.stat = "revives"
+	self.top_stats.top_stat_most_revives.icon = "bonus_most_revives"
 	self.top_stats_calculated = {
 		"top_stat_most_kills",
 		"top_stat_most_specials",
@@ -110,50 +104,44 @@ function StatisticsTweakData:_init_top_stats()
 end
 
 function StatisticsTweakData:_init_bottom_stats()
-	self.bottom_stats = {
-		bottom_stat_least_kills = {}
-	}
+	self.bottom_stats = {}
+	self.bottom_stats.bottom_stat_least_kills = {}
 	self.bottom_stats.bottom_stat_least_kills.text_id = "bottom_stat_least_kills"
 	self.bottom_stats.bottom_stat_least_kills.weight_multiplier = 2
 	self.bottom_stats.bottom_stat_least_kills.tie_breaker_multiplier = 6
 	self.bottom_stats.bottom_stat_least_kills.stat = "kills"
 	self.bottom_stats.bottom_stat_least_kills.icon = "bonus_most_kills"
-	self.bottom_stats.bottom_stat_least_specials = {
-		text_id = "bottom_stat_least_specials",
-		weight_multiplier = 4,
-		tie_breaker_multiplier = 3,
-		stat = "specials_kills",
-		icon = "bonus_most_specials_killed"
-	}
-	self.bottom_stats.bottom_stat_least_accurate = {
-		text_id = "bottom_stat_least_accurate",
-		weight_multiplier = 0.5,
-		tie_breaker_multiplier = 5,
-		score_format = "%d%%",
-		stat = "accuracy",
-		icon = "bonus_highest_accu"
-	}
-	self.bottom_stats.bottom_stat_least_head_shots = {
-		text_id = "bottom_stat_least_head_shots",
-		weight_multiplier = 3,
-		tie_breaker_multiplier = 4,
-		stat = "head_shots",
-		icon = "bonus_most_headshots"
-	}
-	self.bottom_stats.bottom_stat_most_downs = {
-		text_id = "bottom_stat_most_downs",
-		weight_multiplier = 1,
-		tie_breaker_multiplier = 1,
-		stat = "downs",
-		icon = "bonus_most_bleedouts"
-	}
-	self.bottom_stats.bottom_stat_least_revives = {
-		text_id = "bottom_stat_least_revives",
-		weight_multiplier = 3,
-		tie_breaker_multiplier = 2,
-		stat = "revives",
-		icon = "bonus_most_revives"
-	}
+	self.bottom_stats.bottom_stat_least_specials = {}
+	self.bottom_stats.bottom_stat_least_specials.text_id = "bottom_stat_least_specials"
+	self.bottom_stats.bottom_stat_least_specials.weight_multiplier = 4
+	self.bottom_stats.bottom_stat_least_specials.tie_breaker_multiplier = 3
+	self.bottom_stats.bottom_stat_least_specials.stat = "specials_kills"
+	self.bottom_stats.bottom_stat_least_specials.icon = "bonus_most_specials_killed"
+	self.bottom_stats.bottom_stat_least_accurate = {}
+	self.bottom_stats.bottom_stat_least_accurate.text_id = "bottom_stat_least_accurate"
+	self.bottom_stats.bottom_stat_least_accurate.weight_multiplier = 0.5
+	self.bottom_stats.bottom_stat_least_accurate.tie_breaker_multiplier = 5
+	self.bottom_stats.bottom_stat_least_accurate.score_format = "%d%%"
+	self.bottom_stats.bottom_stat_least_accurate.stat = "accuracy"
+	self.bottom_stats.bottom_stat_least_accurate.icon = "bonus_highest_accu"
+	self.bottom_stats.bottom_stat_least_head_shots = {}
+	self.bottom_stats.bottom_stat_least_head_shots.text_id = "bottom_stat_least_head_shots"
+	self.bottom_stats.bottom_stat_least_head_shots.weight_multiplier = 3
+	self.bottom_stats.bottom_stat_least_head_shots.tie_breaker_multiplier = 4
+	self.bottom_stats.bottom_stat_least_head_shots.stat = "head_shots"
+	self.bottom_stats.bottom_stat_least_head_shots.icon = "bonus_most_headshots"
+	self.bottom_stats.bottom_stat_most_downs = {}
+	self.bottom_stats.bottom_stat_most_downs.text_id = "bottom_stat_most_downs"
+	self.bottom_stats.bottom_stat_most_downs.weight_multiplier = 1
+	self.bottom_stats.bottom_stat_most_downs.tie_breaker_multiplier = 1
+	self.bottom_stats.bottom_stat_most_downs.stat = "downs"
+	self.bottom_stats.bottom_stat_most_downs.icon = "bonus_most_bleedouts"
+	self.bottom_stats.bottom_stat_least_revives = {}
+	self.bottom_stats.bottom_stat_least_revives.text_id = "bottom_stat_least_revives"
+	self.bottom_stats.bottom_stat_least_revives.weight_multiplier = 3
+	self.bottom_stats.bottom_stat_least_revives.tie_breaker_multiplier = 2
+	self.bottom_stats.bottom_stat_least_revives.stat = "revives"
+	self.bottom_stats.bottom_stat_least_revives.icon = "bonus_most_revives"
 	self.bottom_stats_calculated = {
 		"bottom_stat_least_kills",
 		"bottom_stat_least_specials",

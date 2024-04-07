@@ -26,7 +26,9 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	RaidGUIControlCardBase.super.init(self, parent, params)
 
 	self._card_panel = nil
+
 	local card = "ra_on_the_scrounge"
+
 	self._grid_params = grid_params
 	self._item_data = item_data
 
@@ -42,12 +44,14 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 			x = params.x or 0,
 			y = params.y or 0,
 			h = params.item_h or self._panel:h(),
-			w = params.item_w or self._panel:h() * card_rect[3] / card_rect[4]
+			w = params.item_w or self._panel:h() * (card_rect[3] / card_rect[4])
 		}
+
 		self._card_panel = self._panel:panel(params_card_panel)
 	end
 
 	self._object = self._card_panel
+
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card)
 	local card_rarity = card_data.rarity
 	local card_texture = tweak_data.challenge_cards.challenge_card_texture_path .. "cc_raid_common_on_the_scrounge_hud"
@@ -80,9 +84,11 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		texture = card_texture,
 		texture_rect = card_texture_rect
 	}
+
 	self._card_image = self._card_panel:bitmap(params_card_image)
+
 	local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
-	local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * self._card_image:h() / 255)
+	local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * (self._card_image:h() / 255))
 	local params_card_title = {
 		name = "card_title",
 		wrap = true,
@@ -98,6 +104,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		layer = self._card_image:layer() + 10,
 		color = Color.white
 	}
+
 	self._card_title = self._card_panel:label(params_card_title)
 
 	self._card_title:set_center_y(self._card_image:y() + self._card_image:h() * RaidGUIControlCardBase.TITLE_CENTER_Y)
@@ -118,12 +125,14 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		y = 0,
 		x = 0,
 		font = RaidGUIControlCardBase.TITLE_FONT,
-		font_size = math.ceil(RaidGUIControlCardBase.DESCRIPTION_TEXT_SIZE * self._card_image:h() / 255),
+		font_size = math.ceil(RaidGUIControlCardBase.DESCRIPTION_TEXT_SIZE * (self._card_image:h() / 255)),
 		layer = self._card_image:layer() + 1,
 		color = Color.black,
 		text = tweak_data.challenge_cards:get_card_by_key_name(card).description
 	}
+
 	self._card_description = self._card_panel:label(params_card_description)
+
 	local params_xp_bonus = {
 		name = "xp_bonus",
 		vertical = "center",
@@ -138,11 +147,13 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		color = tweak_data.gui.colors.raid_white,
 		layer = self._card_image:layer() + 1
 	}
+
 	self._xp_bonus = self._card_panel:label(params_xp_bonus)
+
 	local card_rarity_icon_texture = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_path_icon
 	local card_rarity_icon_texture_rect = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_rect_icon
 	local card_rarity_h = self._card_image:h() * RaidGUIControlCardBase.ICON_H
-	local card_rarity_w = card_rarity_h * card_rarity_icon_texture_rect[3] / card_rarity_icon_texture_rect[4]
+	local card_rarity_w = card_rarity_h * (card_rarity_icon_texture_rect[3] / card_rarity_icon_texture_rect[4])
 	local params_card_rarity = {
 		name = "card_rarity_icon",
 		w = card_rarity_w,
@@ -153,12 +164,14 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		texture_rect = card_rarity_icon_texture_rect,
 		layer = self._card_image:layer() + 1
 	}
+
 	self._card_rarity_icon = self._card_panel:image(params_card_rarity)
+
 	local card_type = tweak_data.challenge_cards:get_card_by_key_name(card).card_type
 	local card_type_icon_texture = tweak_data.challenge_cards.type_definition[card_type].texture_path
 	local card_type_icon_texture_rect = tweak_data.challenge_cards.type_definition[card_type].texture_rect
 	local card_type_h = card_rarity_h
-	local card_type_w = card_type_h * card_type_icon_texture_rect[3] / card_type_icon_texture_rect[4]
+	local card_type_w = card_type_h * (card_type_icon_texture_rect[3] / card_type_icon_texture_rect[4])
 	local params_card_type = {
 		name = "card_type_icon",
 		w = card_type_w,
@@ -169,6 +182,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		texture_rect = card_type_icon_texture_rect,
 		layer = self._card_image:layer() + 1
 	}
+
 	self._card_type_icon = self._card_panel:image(params_card_type)
 
 	if self._params and self._params.item_clicked_callback then
@@ -180,6 +194,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	end
 
 	local image_size_multiplier = self._card_image:w() / tweak_data.challenge_cards.challenge_card_texture_rect[3]
+
 	self._card_stackable_image = self._object:bitmap({
 		visible = false,
 		x = self._card_image:x(),
@@ -263,13 +278,13 @@ function RaidGUIControlCardBase:set_card(card_data)
 		if not self._item_data.title_in_texture then
 			self._card_title:set_text(self:translate(self._item_data.name, true))
 
-			local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * self._card_image:h() / 255)
+			local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * (self._card_image:h() / 255))
 
 			self._card_title:set_font_size(title_font_size)
 
 			local _, _, w, h = self._card_title:text_rect()
 
-			if self._card_title:h() < h then
+			if h > self._card_title:h() then
 				self:_refit_card_title_text(title_font_size)
 			end
 

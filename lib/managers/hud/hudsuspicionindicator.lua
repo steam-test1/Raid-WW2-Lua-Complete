@@ -50,6 +50,7 @@ function HUDSuspicionIndicator:_create_panel(hud)
 		w = HUDSuspicionIndicator.W,
 		h = HUDSuspicionIndicator.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -59,13 +60,16 @@ function HUDSuspicionIndicator:_create_eye_background()
 		name = "eye_panel",
 		valign = "scale"
 	}
+
 	self._eye_panel = self._object:panel(eye_panel_params)
+
 	local eye_background_params = {
 		name = "eye_background",
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_BG_ICON].texture_rect,
 		layer = self._object:layer() + 1
 	}
+
 	self._eye_background = self._eye_panel:bitmap(eye_background_params)
 
 	self._eye_background:set_center(self._eye_panel:w() / 2, self._eye_panel:h() / 2)
@@ -78,6 +82,7 @@ function HUDSuspicionIndicator:_create_eye_outside_ring()
 		texture_rect = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_OUTER_RING_ICON].texture_rect,
 		layer = self._eye_background:layer() + 1
 	}
+
 	self._eye_outside_ring = self._eye_panel:bitmap(eye_outside_ring_params)
 
 	self._eye_outside_ring:set_center(self._eye_background:center())
@@ -99,6 +104,7 @@ function HUDSuspicionIndicator:_create_eye_fill()
 		h = tweak_data.gui:icon_h(HUDSuspicionIndicator.EYE_FILL_ICON),
 		layer = self._eye_background:layer() + 1
 	}
+
 	self._eye_fill = self._eye_panel:bitmap(eye_fill_params)
 
 	self._eye_fill:set_center(self._eye_background:center())
@@ -110,8 +116,10 @@ function HUDSuspicionIndicator:_create_calling_indicator()
 		name = "calling_indicator_panel",
 		valign = "scale"
 	}
+
 	self._calling_indicator_panel = self._object:panel(calling_indicator_panel_params)
 	self._calling_indicators = {}
+
 	local phone_icon_params = {
 		name = "calling_indicator_phone",
 		alpha = 0,
@@ -162,12 +170,8 @@ function HUDSuspicionIndicator:set_progress(progress)
 		return
 	end
 
-	if self._old_progress and progress < self._old_progress then
-		if self._current_progress then
-			if self._current_progress >= progress then
-				-- Nothing
-			end
-		end
+	if self._old_progress and progress < self._old_progress and (not self._current_progress or not (progress > self._current_progress)) then
+		-- Nothing
 	else
 		self._old_progress = self._progress
 		self._cdt = 0
@@ -255,12 +259,15 @@ function HUDSuspicionIndicator:_change_color(new_color)
 end
 
 function HUDSuspicionIndicator:set_state_saw_something()
+	return
 end
 
 function HUDSuspicionIndicator:set_state_investigating()
+	return
 end
 
 function HUDSuspicionIndicator:set_state_alarmed()
+	return
 end
 
 function HUDSuspicionIndicator:set_state_calling()
@@ -324,7 +331,7 @@ end
 
 function HUDSuspicionIndicator:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
+		if percentage > color_table[i].start_percentage then
 			return color_table[i].color
 		end
 	end
@@ -335,13 +342,17 @@ end
 function HUDSuspicionIndicator:_animate_ring_rotate(background)
 	local t = 0
 	local rotation_duration = 0.8
+
 	self._rotating_ring = true
+
 	local starting_rotation = self._eye_background:rotation()
 	local wanted_rotation = (math.ceil(starting_rotation / 180) - 1) * 180
 
 	while t < rotation_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_rotation = Easing.quartic_in_out(t, starting_rotation, wanted_rotation - starting_rotation, rotation_duration)
 
 		self._eye_background:set_rotation(current_rotation)
@@ -361,7 +372,9 @@ function HUDSuspicionIndicator:_animate_color_change(eye_fill, new_color)
 
 	while t < color_change_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quadratic_in_out(t, starting_color.r, new_color.r - starting_color.r, color_change_duration)
 		local current_g = Easing.quadratic_in_out(t, starting_color.g, new_color.g - starting_color.g, color_change_duration)
 		local current_b = Easing.quadratic_in_out(t, starting_color.b, new_color.b - starting_color.b, color_change_duration)
@@ -378,9 +391,11 @@ function HUDSuspicionIndicator:_animate_hide_suspicion()
 	local duration = 0.25
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, self._active_alpha, -self._active_alpha, duration)
 
 		self._eye_panel:set_alpha(current_alpha)
@@ -414,8 +429,10 @@ function HUDSuspicionIndicator:_animate_indicator_calling(indicator, delay)
 
 		while t < fade_in_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
 			total_t = total_t + dt
+
 			local current_alpha = Easing.quadratic_in_out(t, 0, 1, fade_in_duration)
 
 			indicator:set_alpha(current_alpha)
@@ -432,10 +449,12 @@ function HUDSuspicionIndicator:_animate_indicator_calling(indicator, delay)
 
 		t = 0
 
-		while visible_sustain > t do
+		while t < visible_sustain do
 			local dt = coroutine.yield()
+
 			t = t + dt
 			total_t = total_t + dt
+
 			local current_size = Easing.quadratic_in(total_t, 1, final_size_multiplier - 1, total_duration)
 
 			indicator:set_w(tweak_data.gui:icon_w(HUDSuspicionIndicator.CALLING_INDICATOR_ICON_IN) * current_size)
@@ -446,10 +465,12 @@ function HUDSuspicionIndicator:_animate_indicator_calling(indicator, delay)
 
 		t = 0
 
-		while fade_out_duration > t do
+		while t < fade_out_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
 			total_t = total_t + dt
+
 			local current_alpha = Easing.quadratic_in_out(t, 1, -1, fade_out_duration)
 
 			indicator:set_alpha(current_alpha)
@@ -471,9 +492,11 @@ function HUDSuspicionIndicator:_animate_destroy()
 	local duration = 0.3
 	local t = (1 - self._object:alpha() / self._active_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, self._active_alpha, -self._active_alpha, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -493,7 +516,9 @@ function HUDSuspicionIndicator:_animate_create(object, fade_in_duration, delay, 
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, new_alpha or self._active_alpha, duration)
 
 		object:set_alpha(current_alpha)

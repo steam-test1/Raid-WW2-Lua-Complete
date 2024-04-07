@@ -18,7 +18,9 @@ function CharacterTweakData:init(tweak_data)
 
 	self._enemies_list = {}
 	self.flashbang_multiplier = 1
+
 	local presets = self:_presets(tweak_data)
+
 	self.presets = presets
 
 	self:_init_dismemberment_data()
@@ -51,9 +53,8 @@ function CharacterTweakData:init(tweak_data)
 end
 
 function CharacterTweakData:_init_russian(presets)
-	self.russian = {
-		damage = presets.gang_member_damage
-	}
+	self.russian = {}
+	self.russian.damage = presets.gang_member_damage
 	self.russian.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.russian.weapon = deep_clone(presets.weapon.gang_member)
 	self.russian.HEALTH_INIT = 400
@@ -78,9 +79,8 @@ function CharacterTweakData:_init_russian(presets)
 end
 
 function CharacterTweakData:_init_german(presets)
-	self.german = {
-		damage = presets.gang_member_damage
-	}
+	self.german = {}
+	self.german.damage = presets.gang_member_damage
 	self.german.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.german.weapon = deep_clone(presets.weapon.gang_member)
 	self.german.HEALTH_INIT = 400
@@ -104,9 +104,8 @@ function CharacterTweakData:_init_german(presets)
 end
 
 function CharacterTweakData:_init_british(presets)
-	self.british = {
-		damage = presets.gang_member_damage
-	}
+	self.british = {}
+	self.british.damage = presets.gang_member_damage
 	self.british.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.british.weapon = deep_clone(presets.weapon.gang_member)
 	self.british.HEALTH_INIT = 400
@@ -130,9 +129,8 @@ function CharacterTweakData:_init_british(presets)
 end
 
 function CharacterTweakData:_init_american(presets)
-	self.american = {
-		damage = presets.gang_member_damage
-	}
+	self.american = {}
+	self.american.damage = presets.gang_member_damage
 	self.american.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.american.weapon = deep_clone(presets.weapon.gang_member)
 	self.american.HEALTH_INIT = 400
@@ -157,30 +155,30 @@ end
 
 function CharacterTweakData:_init_civilian(presets)
 	self.civilian = {
-		experience = {},
-		detection = presets.detection.civilian,
-		HEALTH_INIT = 0.9,
-		headshot_dmg_mul = 1,
-		move_speed = presets.move_speed.civ_fast,
-		flee_type = "escape",
-		scare_max = {
-			10,
-			20
-		},
-		scare_shot = 1,
-		scare_intimidate = -5,
-		submission_max = {
-			60,
-			120
-		},
-		submission_intimidate = 120,
-		run_away_delay = {
-			5,
-			20
-		},
-		damage = presets.hurt_severities.no_hurts,
-		ecm_hurts = {}
+		experience = {}
 	}
+	self.civilian.detection = presets.detection.civilian
+	self.civilian.HEALTH_INIT = 0.9
+	self.civilian.headshot_dmg_mul = 1
+	self.civilian.move_speed = presets.move_speed.civ_fast
+	self.civilian.flee_type = "escape"
+	self.civilian.scare_max = {
+		10,
+		20
+	}
+	self.civilian.scare_shot = 1
+	self.civilian.scare_intimidate = -5
+	self.civilian.submission_max = {
+		60,
+		120
+	}
+	self.civilian.submission_intimidate = 120
+	self.civilian.run_away_delay = {
+		5,
+		20
+	}
+	self.civilian.damage = presets.hurt_severities.no_hurts
+	self.civilian.ecm_hurts = {}
 	self.civilian.experience.cable_tie = "tie_civ"
 	self.civilian.speech_prefix_p1 = "cm"
 	self.civilian.speech_prefix_count = 2
@@ -201,81 +199,83 @@ end
 
 function CharacterTweakData:_init_dismemberment_data(presets)
 	self.dismemberment_data = {}
-	local dismembers = {
-		[Idstring("head"):key()] = "dismember_head",
-		[Idstring("body"):key()] = "dismember_body_top",
-		[Idstring("hit_Head"):key()] = "dismember_head",
-		[Idstring("hit_Body"):key()] = "dismember_body_top",
-		[Idstring("hit_RightUpLeg"):key()] = "dismember_r_upper_leg",
-		[Idstring("hit_LeftUpLeg"):key()] = "dismember_l_upper_leg",
-		[Idstring("hit_RightArm"):key()] = "dismember_r_upper_arm",
-		[Idstring("hit_LeftArm"):key()] = "dismember_l_upper_arm",
-		[Idstring("hit_RightForeArm"):key()] = "dismember_r_lower_arm",
-		[Idstring("hit_LeftForeArm"):key()] = "dismember_l_lower_arm",
-		[Idstring("hit_RightLeg"):key()] = "dismember_r_lower_leg",
-		[Idstring("hit_LeftLeg"):key()] = "dismember_l_lower_leg",
-		[Idstring("rag_Head"):key()] = "dismember_head",
-		[Idstring("rag_RightUpLeg"):key()] = "dismember_r_upper_leg",
-		[Idstring("rag_LeftUpLeg"):key()] = "dismember_l_upper_leg",
-		[Idstring("rag_RightArm"):key()] = "dismember_r_upper_arm",
-		[Idstring("rag_LeftArm"):key()] = "dismember_l_upper_arm",
-		[Idstring("rag_RightForeArm"):key()] = "dismember_r_lower_arm",
-		[Idstring("rag_LeftForeArm"):key()] = "dismember_l_lower_arm",
-		[Idstring("rag_RightLeg"):key()] = "dismember_r_lower_leg",
-		[Idstring("rag_LeftLeg"):key()] = "dismember_l_lower_leg"
-	}
+
+	local dismembers = {}
+
+	dismembers[Idstring("head"):key()] = "dismember_head"
+	dismembers[Idstring("body"):key()] = "dismember_body_top"
+	dismembers[Idstring("hit_Head"):key()] = "dismember_head"
+	dismembers[Idstring("hit_Body"):key()] = "dismember_body_top"
+	dismembers[Idstring("hit_RightUpLeg"):key()] = "dismember_r_upper_leg"
+	dismembers[Idstring("hit_LeftUpLeg"):key()] = "dismember_l_upper_leg"
+	dismembers[Idstring("hit_RightArm"):key()] = "dismember_r_upper_arm"
+	dismembers[Idstring("hit_LeftArm"):key()] = "dismember_l_upper_arm"
+	dismembers[Idstring("hit_RightForeArm"):key()] = "dismember_r_lower_arm"
+	dismembers[Idstring("hit_LeftForeArm"):key()] = "dismember_l_lower_arm"
+	dismembers[Idstring("hit_RightLeg"):key()] = "dismember_r_lower_leg"
+	dismembers[Idstring("hit_LeftLeg"):key()] = "dismember_l_lower_leg"
+	dismembers[Idstring("rag_Head"):key()] = "dismember_head"
+	dismembers[Idstring("rag_RightUpLeg"):key()] = "dismember_r_upper_leg"
+	dismembers[Idstring("rag_LeftUpLeg"):key()] = "dismember_l_upper_leg"
+	dismembers[Idstring("rag_RightArm"):key()] = "dismember_r_upper_arm"
+	dismembers[Idstring("rag_LeftArm"):key()] = "dismember_l_upper_arm"
+	dismembers[Idstring("rag_RightForeArm"):key()] = "dismember_r_lower_arm"
+	dismembers[Idstring("rag_LeftForeArm"):key()] = "dismember_l_lower_arm"
+	dismembers[Idstring("rag_RightLeg"):key()] = "dismember_r_lower_leg"
+	dismembers[Idstring("rag_LeftLeg"):key()] = "dismember_l_lower_leg"
 	self.dismemberment_data.dismembers = dismembers
-	local blood_decal_data = {
-		dismember_head = {
-			0,
-			0.357,
-			14
-		},
-		dismember_body_top = {
-			2,
-			2,
-			30
-		},
-		dismember_r_upper_leg = {
-			-0.098,
-			-0.069,
-			13.688
-		},
-		dismember_l_upper_leg = {
-			0.098,
-			-0.069,
-			13.688
-		},
-		dismember_r_lower_leg = {
-			-0.114,
-			-0.358,
-			25.55
-		},
-		dismember_l_lower_leg = {
-			0.114,
-			-0.358,
-			25.55
-		},
-		dismember_r_upper_arm = {
-			-0.19,
-			0.311,
-			14
-		},
-		dismember_l_upper_arm = {
-			0.19,
-			0.311,
-			14
-		},
-		dismember_r_lower_arm = {
-			-0.327,
-			0.22,
-			13.69
-		},
-		dismember_l_lower_arm = {
-			0.327,
-			0.22,
-			13.69
-		}
+
+	local blood_decal_data = {}
+
+	blood_decal_data.dismember_head = {
+		0,
+		0.357,
+		14
+	}
+	blood_decal_data.dismember_body_top = {
+		2,
+		2,
+		30
+	}
+	blood_decal_data.dismember_r_upper_leg = {
+		-0.098,
+		-0.069,
+		13.688
+	}
+	blood_decal_data.dismember_l_upper_leg = {
+		0.098,
+		-0.069,
+		13.688
+	}
+	blood_decal_data.dismember_r_lower_leg = {
+		-0.114,
+		-0.358,
+		25.55
+	}
+	blood_decal_data.dismember_l_lower_leg = {
+		0.114,
+		-0.358,
+		25.55
+	}
+	blood_decal_data.dismember_r_upper_arm = {
+		-0.19,
+		0.311,
+		14
+	}
+	blood_decal_data.dismember_l_upper_arm = {
+		0.19,
+		0.311,
+		14
+	}
+	blood_decal_data.dismember_r_lower_arm = {
+		-0.327,
+		0.22,
+		13.69
+	}
+	blood_decal_data.dismember_l_lower_arm = {
+		0.327,
+		0.22,
+		13.69
 	}
 	self.dismemberment_data.blood_decal_data = blood_decal_data
 end
@@ -1075,9 +1075,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.damage.flamer_knocked = true
 	self.german_flamer.use_animation_on_fire_damage = false
 	self.german_flamer.flammable = true
-	self.german_flamer.weapon = {
-		ak47 = {}
-	}
+	self.german_flamer.weapon = {}
+	self.german_flamer.weapon.ak47 = {}
 	self.german_flamer.weapon.ak47.aim_delay = {
 		0,
 		0.1
@@ -1375,9 +1374,9 @@ function CharacterTweakData:_init_escort(presets)
 end
 
 function CharacterTweakData:_presets(tweak_data)
-	local presets = {
-		hurt_severities = {}
-	}
+	local presets = {}
+
+	presets.hurt_severities = {}
 	presets.hurt_severities.no_hurts = {
 		bullet = {
 			health_reference = 1,
@@ -1578,66 +1577,63 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		}
 	}
-	presets.base = {
-		HEALTH_INIT = 2.5,
-		headshot_dmg_mul = 1,
-		SPEED_WALK = {
-			ntl = 120,
-			cbt = 160,
-			hos = 180,
-			pnc = 160
-		},
-		SPEED_RUN = 370,
-		crouch_move = true,
-		shooting_death = true,
-		suspicious = true,
-		surrender_break_time = {
-			20,
-			30
-		},
-		submission_max = {
-			45,
-			60
-		},
-		submission_intimidate = 15,
-		speech_prefix = "po",
-		speech_prefix_count = 1,
-		rescue_hostages = true,
-		use_radio = nil,
-		dodge = nil,
-		challenges = {
-			type = "law"
-		},
-		calls_in = true,
-		dead_body_drop_sound = "body_fall",
-		shout_radius = 500,
-		shout_radius_difficulty = {
-			200,
-			500,
-			1000,
-			1200
-		},
-		kill_shout_chance = 0,
-		experience = {}
+	presets.base = {}
+	presets.base.HEALTH_INIT = 2.5
+	presets.base.headshot_dmg_mul = 1
+	presets.base.SPEED_WALK = {
+		ntl = 120,
+		cbt = 160,
+		hos = 180,
+		pnc = 160
 	}
+	presets.base.SPEED_RUN = 370
+	presets.base.crouch_move = true
+	presets.base.shooting_death = true
+	presets.base.suspicious = true
+	presets.base.surrender_break_time = {
+		20,
+		30
+	}
+	presets.base.submission_max = {
+		45,
+		60
+	}
+	presets.base.submission_intimidate = 15
+	presets.base.speech_prefix = "po"
+	presets.base.speech_prefix_count = 1
+	presets.base.rescue_hostages = true
+	presets.base.use_radio = nil
+	presets.base.dodge = nil
+	presets.base.challenges = {
+		type = "law"
+	}
+	presets.base.calls_in = true
+	presets.base.dead_body_drop_sound = "body_fall"
+	presets.base.shout_radius = 500
+	presets.base.shout_radius_difficulty = {
+		200,
+		500,
+		1000,
+		1200
+	}
+	presets.base.kill_shout_chance = 0
+	presets.base.experience = {}
 	presets.base.experience.cable_tie = "tie_swat"
-	presets.base.damage = {
-		hurt_severity = presets.hurt_severities.base,
-		death_severity = 0.75,
-		explosion_damage_mul = 1
-	}
+	presets.base.damage = {}
+	presets.base.damage.hurt_severity = presets.hurt_severities.base
+	presets.base.damage.death_severity = 0.75
+	presets.base.damage.explosion_damage_mul = 1
 	presets.base.dismemberment_enabled = true
-	presets.gang_member_damage = {
-		HEALTH_INIT = 75,
-		REGENERATE_TIME = 2,
-		REGENERATE_TIME_AWAY = 0.2,
-		DOWNED_TIME = tweak_data.player.damage.DOWNED_TIME,
-		TASED_TIME = tweak_data.player.damage.TASED_TIME,
-		BLEED_OUT_HEALTH_INIT = tweak_data.player.damage.BLEED_OUT_HEALTH_INIT,
-		ARRESTED_TIME = tweak_data.player.damage.ARRESTED_TIME,
-		INCAPACITATED_TIME = tweak_data.player.damage.INCAPACITATED_TIME,
-		hurt_severity = deep_clone(presets.hurt_severities.base)
-	}
+	presets.gang_member_damage = {}
+	presets.gang_member_damage.HEALTH_INIT = 75
+	presets.gang_member_damage.REGENERATE_TIME = 2
+	presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.2
+	presets.gang_member_damage.DOWNED_TIME = tweak_data.player.damage.DOWNED_TIME
+	presets.gang_member_damage.TASED_TIME = tweak_data.player.damage.TASED_TIME
+	presets.gang_member_damage.BLEED_OUT_HEALTH_INIT = tweak_data.player.damage.BLEED_OUT_HEALTH_INIT
+	presets.gang_member_damage.ARRESTED_TIME = tweak_data.player.damage.ARRESTED_TIME
+	presets.gang_member_damage.INCAPACITATED_TIME = tweak_data.player.damage.INCAPACITATED_TIME
+	presets.gang_member_damage.hurt_severity = deep_clone(presets.hurt_severities.base)
 	presets.gang_member_damage.hurt_severity.bullet = {
 		health_reference = "current",
 		zones = {
@@ -1664,17 +1660,16 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.gang_member_damage.MIN_DAMAGE_INTERVAL = 0.1
 	presets.gang_member_damage.respawn_time_penalty = 0
 	presets.gang_member_damage.base_respawn_time_penalty = 5
-	presets.weapon = {
-		normal = {
-			ger_kar98_npc = {},
-			ger_luger_npc = {},
-			ger_mp38_npc = {},
-			ger_stg44_npc = {},
-			usa_garand_npc = {},
-			usa_m1911_npc = {},
-			usa_thomspon_npc = {},
-			ger_geco_npc = {}
-		}
+	presets.weapon = {}
+	presets.weapon.normal = {
+		ger_kar98_npc = {},
+		ger_luger_npc = {},
+		ger_mp38_npc = {},
+		ger_stg44_npc = {},
+		usa_garand_npc = {},
+		usa_m1911_npc = {},
+		usa_thomspon_npc = {},
+		ger_geco_npc = {}
 	}
 	presets.weapon.normal.usa_garand_npc.aim_delay = {
 		6,
@@ -5912,11 +5907,10 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		}
 	}
-	presets.vision = {
-		easy = {
-			idle = {},
-			combat = {}
-		}
+	presets.vision = {}
+	presets.vision.easy = {
+		idle = {},
+		combat = {}
 	}
 	presets.vision.easy.idle = {
 		name = "easy",
@@ -5937,9 +5931,9 @@ function CharacterTweakData:_presets(tweak_data)
 		name = "easy-cbt",
 		cone_1 = {},
 		cone_2 = {},
-		cone_3 = {},
-		detection_delay = 2
+		cone_3 = {}
 	}
+	presets.vision.easy.combat.detection_delay = 2
 	presets.vision.easy.combat.cone_1.angle = 210
 	presets.vision.easy.combat.cone_1.distance = 2000
 	presets.vision.easy.combat.cone_1.speed_mul = 0.5
@@ -5951,13 +5945,13 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.easy.combat.cone_3.speed_mul = 0.5
 	presets.vision.normal = {
 		idle = {},
-		combat = {},
-		idle = {
-			name = "normal",
-			cone_1 = {},
-			cone_2 = {},
-			cone_3 = {}
-		}
+		combat = {}
+	}
+	presets.vision.normal.idle = {
+		name = "normal",
+		cone_1 = {},
+		cone_2 = {},
+		cone_3 = {}
 	}
 	presets.vision.normal.idle.cone_1.angle = 170
 	presets.vision.normal.idle.cone_1.distance = 500
@@ -5972,9 +5966,9 @@ function CharacterTweakData:_presets(tweak_data)
 		name = "normal-cbt",
 		cone_1 = {},
 		cone_2 = {},
-		cone_3 = {},
-		detection_delay = 1
+		cone_3 = {}
 	}
+	presets.vision.normal.combat.detection_delay = 1
 	presets.vision.normal.combat.cone_1.angle = 210
 	presets.vision.normal.combat.cone_1.distance = 3000
 	presets.vision.normal.combat.cone_1.speed_mul = 0.5
@@ -5986,13 +5980,13 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.normal.combat.cone_3.speed_mul = 0.5
 	presets.vision.hard = {
 		idle = {},
-		combat = {},
-		idle = {
-			name = "hard",
-			cone_1 = {},
-			cone_2 = {},
-			cone_3 = {}
-		}
+		combat = {}
+	}
+	presets.vision.hard.idle = {
+		name = "hard",
+		cone_1 = {},
+		cone_2 = {},
+		cone_3 = {}
 	}
 	presets.vision.hard.idle.cone_1.angle = 180
 	presets.vision.hard.idle.cone_1.distance = 500
@@ -6007,9 +6001,9 @@ function CharacterTweakData:_presets(tweak_data)
 		name = "hard-cbt",
 		cone_1 = {},
 		cone_2 = {},
-		cone_3 = {},
-		detection_delay = 0.5
+		cone_3 = {}
 	}
+	presets.vision.hard.combat.detection_delay = 0.5
 	presets.vision.hard.combat.cone_1.angle = 210
 	presets.vision.hard.combat.cone_1.distance = 3500
 	presets.vision.hard.combat.cone_1.speed_mul = 0.3
@@ -6021,13 +6015,13 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.hard.combat.cone_3.speed_mul = 0.3
 	presets.vision.commander = {
 		idle = {},
-		combat = {},
-		idle = {
-			name = "commander",
-			cone_1 = {},
-			cone_2 = {},
-			cone_3 = {}
-		}
+		combat = {}
+	}
+	presets.vision.commander.idle = {
+		name = "commander",
+		cone_1 = {},
+		cone_2 = {},
+		cone_3 = {}
 	}
 	presets.vision.commander.idle.cone_1.angle = 180
 	presets.vision.commander.idle.cone_1.distance = 600
@@ -6055,13 +6049,13 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.commander.combat.cone_3.speed_mul = 0.5
 	presets.vision.special_forces = {
 		idle = {},
-		combat = {},
-		idle = {
-			name = "special_forces",
-			cone_1 = {},
-			cone_2 = {},
-			cone_3 = {}
-		}
+		combat = {}
+	}
+	presets.vision.special_forces.idle = {
+		name = "special_forces",
+		cone_1 = {},
+		cone_2 = {},
+		cone_3 = {}
 	}
 	presets.vision.special_forces.idle.cone_1.angle = 160
 	presets.vision.special_forces.idle.cone_1.distance = 500
@@ -6089,13 +6083,13 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.special_forces.combat.cone_3.speed_mul = 0.25
 	presets.vision.spotter = {
 		idle = {},
-		combat = {},
-		combat = {
-			name = "spotter",
-			cone_1 = {},
-			cone_2 = {},
-			cone_3 = {}
-		}
+		combat = {}
+	}
+	presets.vision.spotter.combat = {
+		name = "spotter",
+		cone_1 = {},
+		cone_2 = {},
+		cone_3 = {}
 	}
 	presets.vision.spotter.combat.cone_1.angle = 280
 	presets.vision.spotter.combat.cone_1.distance = 2200
@@ -6122,14 +6116,13 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.civilian.cone_3.angle = 210
 	presets.vision.civilian.cone_3.distance = 800
 	presets.vision.civilian.cone_3.speed_mul = 0.5
-	presets.detection = {
-		normal = {
-			idle = {},
-			combat = {},
-			recon = {},
-			guard = {},
-			ntl = {}
-		}
+	presets.detection = {}
+	presets.detection.normal = {
+		idle = {},
+		combat = {},
+		recon = {},
+		guard = {},
+		ntl = {}
 	}
 	presets.detection.normal.idle.dis_max = 10000
 	presets.detection.normal.idle.angle_max = 120
@@ -7216,94 +7209,93 @@ function CharacterTweakData:_presets(tweak_data)
 		poses.panic = poses.stand
 	end
 
-	presets.surrender = {
-		easy = {
-			base_chance = 0.75,
-			significant_chance = 0.1,
-			violence_timeout = 2,
-			reasons = {
-				pants_down = 1,
-				isolated = 0.1,
-				weapon_down = 0.8,
-				health = {
-					[1.0] = 0.2,
-					[0.3] = 1
-				}
-			},
-			factors = {
-				unaware_of_aggressor = 0.08,
-				enemy_weap_cold = 0.15,
-				flanked = 0.07,
-				aggressor_dis = {
-					[300.0] = 0.15,
-					[1000.0] = 0.02
-				}
+	presets.surrender = {}
+	presets.surrender.easy = {
+		base_chance = 0.75,
+		significant_chance = 0.1,
+		violence_timeout = 2,
+		reasons = {
+			pants_down = 1,
+			isolated = 0.1,
+			weapon_down = 0.8,
+			health = {
+				[1] = 0.2,
+				[0.3] = 1
 			}
 		},
-		normal = {
-			base_chance = 0.5,
-			significant_chance = 0.2,
-			violence_timeout = 2,
-			reasons = {
-				pants_down = 1,
-				isolated = 0.08,
-				weapon_down = 0.5,
-				health = {
-					[1.0] = 0,
-					[0.5] = 0.5
-				}
-			},
-			factors = {
-				unaware_of_aggressor = 0.1,
-				enemy_weap_cold = 0.11,
-				flanked = 0.05,
-				aggressor_dis = {
-					[300.0] = 0.1,
-					[1000.0] = 0
-				}
+		factors = {
+			unaware_of_aggressor = 0.08,
+			enemy_weap_cold = 0.15,
+			flanked = 0.07,
+			aggressor_dis = {
+				[300] = 0.15,
+				[1000] = 0.02
+			}
+		}
+	}
+	presets.surrender.normal = {
+		base_chance = 0.5,
+		significant_chance = 0.2,
+		violence_timeout = 2,
+		reasons = {
+			pants_down = 1,
+			isolated = 0.08,
+			weapon_down = 0.5,
+			health = {
+				[1] = 0,
+				[0.5] = 0.5
 			}
 		},
-		hard = {
-			base_chance = 0.35,
-			significant_chance = 0.25,
-			violence_timeout = 2,
-			reasons = {
-				pants_down = 0.8,
-				weapon_down = 0.2,
-				health = {
-					[1.0] = 0,
-					[0.35] = 0.5
-				}
-			},
-			factors = {
-				enemy_weap_cold = 0.05,
-				unaware_of_aggressor = 0.1,
-				flanked = 0.04,
-				isolated = 0.1,
-				aggressor_dis = {
-					[300.0] = 0.1,
-					[1000.0] = 0
-				}
+		factors = {
+			unaware_of_aggressor = 0.1,
+			enemy_weap_cold = 0.11,
+			flanked = 0.05,
+			aggressor_dis = {
+				[300] = 0.1,
+				[1000] = 0
+			}
+		}
+	}
+	presets.surrender.hard = {
+		base_chance = 0.35,
+		significant_chance = 0.25,
+		violence_timeout = 2,
+		reasons = {
+			pants_down = 0.8,
+			weapon_down = 0.2,
+			health = {
+				[1] = 0,
+				[0.35] = 0.5
 			}
 		},
-		special = {
-			base_chance = 0.25,
-			significant_chance = 0.25,
-			violence_timeout = 2,
-			reasons = {
-				pants_down = 0.6,
-				weapon_down = 0.02,
-				health = {
-					[0.5] = 0,
-					[0.2] = 0.25
-				}
-			},
-			factors = {
-				enemy_weap_cold = 0.05,
-				unaware_of_aggressor = 0.02,
-				isolated = 0.05,
-				flanked = 0.015
+		factors = {
+			enemy_weap_cold = 0.05,
+			unaware_of_aggressor = 0.1,
+			flanked = 0.04,
+			isolated = 0.1,
+			aggressor_dis = {
+				[300] = 0.1,
+				[1000] = 0
 			}
+		}
+	}
+	presets.surrender.special = {
+		base_chance = 0.25,
+		significant_chance = 0.25,
+		violence_timeout = 2,
+		reasons = {
+			pants_down = 0.6,
+			weapon_down = 0.02,
+			health = {
+				[0.5] = 0,
+				[0.2] = 0.25
+			}
+		},
+		factors = {
+			enemy_weap_cold = 0.05,
+			unaware_of_aggressor = 0.02,
+			isolated = 0.05,
+			flanked = 0.015
 		}
 	}
 	presets.suppression = {
@@ -7451,17 +7443,16 @@ function CharacterTweakData:_create_table_structure()
 		Idstring("units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace"),
 		Idstring("units/event_001_halloween/weapons/wpn_third_mel_lc14b/wpn_third_mel_lc14b")
 	}
-	self.hack_weap_unit_names = {
-		[Idstring("units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24_hand"):key()] = Idstring("units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24_husk"),
-		[Idstring("units/vanilla/weapons/wpn_fps_mel_m3_knife/wpn_fps_mel_m3_knife"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife"),
-		[Idstring("units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/wpn_fps_mel_robbins_dudley_trench_push_dagger"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger"),
-		[Idstring("units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/wpn_fps_mel_german_brass_knuckles"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles"),
-		[Idstring("units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/wpn_fps_mel_lockwood_brothers_push_dagger"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_lockwood_brothers_push_dagger/wpn_third_mel_lockwood_brothers_push_dagger"),
-		[Idstring("units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/wpn_fps_mel_bc41_knuckle_knife"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_bc41_knuckle_knife/wpn_third_mel_bc41_knuckle_knife"),
-		[Idstring("units/vanilla/weapons/wpn_fps_km_dagger/wpn_fps_km_dagger"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_km_dagger/wpn_third_mel_km_dagger"),
-		[Idstring("units/vanilla/weapons/wpn_fps_marching_mace/wpn_fps_marching_mace"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace"),
-		[Idstring("units/event_001_halloween/weapons/wpn_fps_lc14b/wpn_fps_lc14b"):key()] = Idstring("units/event_001_halloween/weapons/wpn_third_mel_lc14b/wpn_third_mel_lc14b")
-	}
+	self.hack_weap_unit_names = {}
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24_hand"):key()] = Idstring("units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24_husk")
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_fps_mel_m3_knife/wpn_fps_mel_m3_knife"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife")
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/wpn_fps_mel_robbins_dudley_trench_push_dagger"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger")
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/wpn_fps_mel_german_brass_knuckles"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles")
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/wpn_fps_mel_lockwood_brothers_push_dagger"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_lockwood_brothers_push_dagger/wpn_third_mel_lockwood_brothers_push_dagger")
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/wpn_fps_mel_bc41_knuckle_knife"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_bc41_knuckle_knife/wpn_third_mel_bc41_knuckle_knife")
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_fps_km_dagger/wpn_fps_km_dagger"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_km_dagger/wpn_third_mel_km_dagger")
+	self.hack_weap_unit_names[Idstring("units/vanilla/weapons/wpn_fps_marching_mace/wpn_fps_marching_mace"):key()] = Idstring("units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace")
+	self.hack_weap_unit_names[Idstring("units/event_001_halloween/weapons/wpn_fps_lc14b/wpn_fps_lc14b"):key()] = Idstring("units/event_001_halloween/weapons/wpn_third_mel_lc14b/wpn_third_mel_lc14b")
 end
 
 function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
@@ -7477,7 +7468,7 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 					total = total + value
 				end
 
-				local prev_value = nil
+				local prev_value
 
 				for i_firemode, value in ipairs(modes) do
 					prev_value = (prev_value or 0) + value / total
@@ -7812,15 +7803,18 @@ end
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	for _, name in ipairs(self._enemies_list) do
 		local speed_table = self[name].SPEED_WALK
+
 		speed_table.hos = speed_table.hos * walk_mul
 		speed_table.cbt = speed_table.cbt * walk_mul
+
 		local sprint_speed = self[name].SPEED_RUN
+
 		sprint_speed = sprint_speed * run_mul
 	end
 end
 
 function CharacterTweakData:_set_characters_weapon_preset(preset)
-	return
+	do return end
 
 	for _, name in ipairs(self._enemies_list) do
 		self[name].weapon = self.presets.weapon[preset]

@@ -36,6 +36,7 @@ function RaidMenuLeftOptions:_layout_list_menu()
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
 		data_source_callback = callback(self, self, "_list_menu_options_data_source")
 	}
+
 	self.list_menu_options = self._root_panel:list(list_menu_options_params)
 
 	self.list_menu_options:set_selected(true)
@@ -50,7 +51,9 @@ function RaidMenuLeftOptions:_layout_list_menu()
 		}),
 		layer = RaidGuiBase.FOREGROUND_LAYER
 	}
+
 	self._default_video_button = self._root_panel:long_secondary_button(default_video_params)
+
 	local reset_progress_params = {
 		name = "reset_progress",
 		y = 768,
@@ -61,6 +64,7 @@ function RaidMenuLeftOptions:_layout_list_menu()
 		}),
 		layer = RaidGuiBase.FOREGROUND_LAYER
 	}
+
 	self._reset_progress_button = self._root_panel:long_secondary_button(reset_progress_params)
 
 	self._reset_progress_button:set_visible(RaidMenuCallbackHandler:is_in_main_menu())
@@ -95,6 +99,7 @@ function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	end
 
 	self._callback_handler = self._callback_handler or RaidMenuCallbackHandler:new()
+
 	local on_click_callback = callback(self._callback_handler, self._callback_handler, data.callback)
 
 	if on_click_callback then

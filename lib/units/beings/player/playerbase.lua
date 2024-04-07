@@ -65,11 +65,10 @@ function PlayerBase:_setup_suspicion_and_detection_data()
 
 	self:setup_hud_offset()
 
-	self._detection_settings = {
-		multipliers = {},
-		init_delay_mul = 1,
-		init_range_mul = 1
-	}
+	self._detection_settings = {}
+	self._detection_settings.multipliers = {}
+	self._detection_settings.init_delay_mul = 1
+	self._detection_settings.init_range_mul = 1
 end
 
 function PlayerBase:setup_hud_offset(peer)
@@ -85,6 +84,7 @@ function PlayerBase:stats_screen_visible()
 end
 
 function PlayerBase:set_stats_screen_visible(visible)
+	return
 end
 
 function PlayerBase:set_enabled(enabled)
@@ -103,6 +103,7 @@ function PlayerBase:set_visible(visible)
 end
 
 function PlayerBase:_equip_default_weapon()
+	return
 end
 
 function PlayerBase:_setup_controller()
@@ -163,7 +164,7 @@ function PlayerBase:anim_data_clbk_footstep(foot)
 	local proj_dir = math.UP
 	local proj_from = obj:position()
 	local proj_to = proj_from - proj_dir * 30
-	local material_name, pos, norm = nil
+	local material_name, pos, norm
 
 	if self._unit:movement():on_ladder() then
 		material_name = on_ladder_footstep_material
@@ -199,6 +200,7 @@ end
 
 function PlayerBase:set_suspicion_multiplier(reason, multiplier)
 	self._suspicion_settings.multipliers[reason] = multiplier
+
 	local buildup_mul = self._suspicion_settings.init_buildup_mul
 	local range_mul = self._suspicion_settings.init_range_mul
 
@@ -216,6 +218,7 @@ end
 
 function PlayerBase:set_detection_multiplier(reason, multiplier)
 	self._detection_settings.multipliers[reason] = multiplier
+
 	local delay_mul = self._detection_settings.init_delay_mul
 	local range_mul = self._detection_settings.init_range_mul
 

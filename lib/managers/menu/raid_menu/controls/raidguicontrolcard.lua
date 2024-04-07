@@ -90,6 +90,7 @@ end
 
 function RaidGUIControlCard:_create_border()
 	local border_thickness = 1.6
+
 	self._border_left = self._card_panel:gradient({
 		name = "border_left",
 		y = 0,

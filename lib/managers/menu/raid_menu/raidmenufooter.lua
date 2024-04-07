@@ -46,7 +46,9 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	string_width_measure_text_field:set_text(username)
 
 	local _, _, w1, _ = string_width_measure_text_field:text_rect()
+
 	w1 = w1 + 64
+
 	local params_profile_gold_label = {
 		name = "gold_label",
 		vertical = "bottom",
@@ -103,6 +105,7 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 		color = tweak_data.gui.colors.raid_grey,
 		layer = self._object:layer()
 	}
+
 	self._name_and_gold_panel = self._object:panel({
 		name = "name_and_gold_panel",
 		y = 0,
@@ -134,6 +137,7 @@ function RaidMenuFooter:refresh_gold_amount()
 end
 
 function RaidMenuFooter:back_pressed()
+	return
 end
 
 function RaidMenuFooter:confirm_pressed()

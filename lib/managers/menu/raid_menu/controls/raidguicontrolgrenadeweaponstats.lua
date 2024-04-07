@@ -61,15 +61,19 @@ function RaidGUIControlGrenadeWeaponStats:refresh_data()
 end
 
 function RaidGUIControlGrenadeWeaponStats:_create_bottom_line()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:_initial_tab_selected(tab_idx)
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:_tab_selected(tab_idx, callback_param)
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:_unselect_all()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:set_selected(value)
@@ -79,21 +83,27 @@ function RaidGUIControlGrenadeWeaponStats:set_selected(value)
 end
 
 function RaidGUIControlGrenadeWeaponStats:move_up()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:move_down()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:move_left()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:move_right()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:highlight_on()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:highlight_off()
+	return
 end
 
 function RaidGUIControlGrenadeWeaponStats:mouse_released(o, button, x, y)

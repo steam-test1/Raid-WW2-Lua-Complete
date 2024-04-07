@@ -77,6 +77,7 @@ function CharacterCustomizationGui:_layout()
 		}
 	})
 	self._selected_filter_body_part = CharacterCustomizationTweakData.PART_TYPE_UPPER
+
 	local customization_grid_scrollable_area_params = {
 		name = "customization_grid_scrollable_area",
 		h = 598,
@@ -85,7 +86,9 @@ function CharacterCustomizationGui:_layout()
 		x = 0,
 		scroll_step = 30
 	}
+
 	self._customization_grid_scrollable_area = self._root_panel:scrollable_area(customization_grid_scrollable_area_params)
+
 	local customization_grid_params = {
 		name = "customization_grid",
 		y = 0,
@@ -110,8 +113,11 @@ function CharacterCustomizationGui:_layout()
 			row_class = RaidGUIControlGridItemActive
 		}
 	}
+
 	self._character_customizations_grid = self._customization_grid_scrollable_area:get_panel():grid_active(customization_grid_params)
+
 	local icon_data = self:get_icon_data_for_body_part(self._selected_filter_body_part)
+
 	self._body_part_icon = self._root_panel:image({
 		y = 300,
 		x = self._root_panel:right() - 520,
@@ -120,7 +126,9 @@ function CharacterCustomizationGui:_layout()
 		texture = icon_data.texture,
 		texture_rect = icon_data.texture_rect
 	})
+
 	local body_part_data = self._all_customizations[self._selected_upper_name]
+
 	self._body_part_title = self._root_panel:label({
 		wor_wrap = true,
 		wrap = true,
@@ -205,6 +213,7 @@ function CharacterCustomizationGui:_layout()
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38
 	})
+
 	local x2, y2, w2, h2 = self._gold_currency_label:text_rect()
 
 	self._gold_currency_label:set_h(h2)
@@ -302,7 +311,7 @@ function CharacterCustomizationGui:_on_selected_character_customizations(item_id
 end
 
 function CharacterCustomizationGui:_equip_selected_customization()
-	local selected_item_data, character_customizations = nil
+	local selected_item_data, character_customizations
 
 	if self._selected_filter_body_part == CharacterCustomizationTweakData.PART_TYPE_UPPER then
 		character_customizations = managers.character_customization:get_all_parts(CharacterCustomizationTweakData.PART_TYPE_UPPER)
@@ -335,7 +344,7 @@ function CharacterCustomizationGui:_equip_selected_customization()
 end
 
 function CharacterCustomizationGui:_buy_customization_yes_callback()
-	local selected_item_data, character_customizations = nil
+	local selected_item_data, character_customizations
 	local owned_gold = managers.gold_economy:current()
 
 	if self._selected_filter_body_part == CharacterCustomizationTweakData.PART_TYPE_UPPER then
@@ -393,7 +402,7 @@ function CharacterCustomizationGui:_process_controls_states()
 		self._gold_item_bought_icon:set_right(self._gold_currency_label:x() - 14)
 	end
 
-	if selected_item_data.locked == CharacterCustomizationManager.LOCKED_GOLD_NOT_OWNED and selected_item_data.gold_price and managers.gold_economy:current() < selected_item_data.gold_price then
+	if selected_item_data.locked == CharacterCustomizationManager.LOCKED_GOLD_NOT_OWNED and selected_item_data.gold_price and selected_item_data.gold_price > managers.gold_economy:current() then
 		self._equip_button:hide()
 		self._equip_gold_button:hide()
 		self._buy_button:hide()
@@ -586,6 +595,7 @@ function CharacterCustomizationGui:spawn_character_unit()
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
 		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
+
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 end
@@ -651,7 +661,7 @@ function CharacterCustomizationGui:save_equipped_customizations()
 end
 
 function CharacterCustomizationGui:get_icon_data_for_body_part(body_part)
-	local icon_data = nil
+	local icon_data
 
 	if body_part == CharacterCustomizationTweakData.PART_TYPE_UPPER then
 		icon_data = tweak_data.gui.icons.ico_upper_body

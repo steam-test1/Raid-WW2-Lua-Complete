@@ -1,5 +1,6 @@
 TestPhysXCrashRandom = TestPhysXCrashRandom or class()
 TestPhysXCrashRandom.PERIOD_BETWEEN_SPAWNS = 3
+
 local timer = 0
 local testing_active = true
 

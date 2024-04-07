@@ -62,6 +62,7 @@ function HUDChat:_create_panel(panel)
 		w = HUDChat.W,
 		h = HUDChat.H
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -83,6 +84,7 @@ function HUDChat:_create_input()
 		w = self._object:w(),
 		h = HUDChat.INPUT_PANEL_H
 	}
+
 	self._input_panel = self._object:panel(input_panel_params)
 
 	self._input_panel:set_bottom(self._object:h())
@@ -95,6 +97,7 @@ function HUDChat:_create_input()
 		w = self._input_panel:w() - HUDChat.CHAT_BOX_PADDING * 2,
 		h = HUDChat.INPUT_TEXT_PANEL_H
 	}
+
 	self._input_text_panel = self._input_panel:panel(input_text_panel_params)
 
 	self._input_text_panel:set_bottom(self._input_panel:h() - HUDChat.CHAT_BOX_PADDING)
@@ -126,7 +129,9 @@ function HUDChat:_create_input()
 		font_size = HUDChat.MESSAGE_FONT_SIZE,
 		color = HUDChat.PLAYER_MESSAGE_COLOR
 	}
+
 	self._input_text = self._input_text_panel:text(input_text_params)
+
 	local caret_params = {
 		name = "caret",
 		layer = 10,
@@ -135,6 +140,7 @@ function HUDChat:_create_input()
 		h = HUDChat.CARET_H,
 		color = HUDChat.PLAYER_MESSAGE_COLOR
 	}
+
 	self._caret = self._input_text_panel:rect(caret_params)
 
 	self._caret:set_center_y(self._input_text_panel:h() / 2)
@@ -152,6 +158,7 @@ function HUDChat:_create_message_panel()
 		h = self._object:h() - self._input_panel:h(),
 		layer = message_panel_layer
 	}
+
 	self._message_panel = self._object:panel(message_panel_params)
 end
 
@@ -488,7 +495,7 @@ function HUDChat:enter_text(o, s)
 		return
 	end
 
-	if HUDChat.MESSAGE_MAX_SIZE < utf8.len(self._input_text:text()) + utf8.len(s) then
+	if utf8.len(self._input_text:text()) + utf8.len(s) > HUDChat.MESSAGE_MAX_SIZE then
 		return
 	end
 
@@ -590,6 +597,7 @@ function HUDChat:key_press(o, k)
 	local s, e = self._input_text:selection()
 	local n = utf8.len(self._input_text:text())
 	local d = math.abs(e - s)
+
 	self._key_pressed = k
 
 	self._input_text:stop()
@@ -653,7 +661,9 @@ function HUDChat:_animate_show(panel)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local curr_alpha = Easing.quintic_in_out(t, 0, 1, duration)
 
 		panel:set_alpha(curr_alpha)
@@ -671,9 +681,11 @@ function HUDChat:_animate_hide(panel)
 	local duration = 0.2
 	local t = (1 - panel:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local curr_alpha = Easing.quintic_in_out(t, 1, -1, duration)
 
 		panel:set_alpha(curr_alpha)
@@ -692,7 +704,7 @@ function HUDChat:_layout_input_text()
 	local _, _, w, _ = self._input_text:text_rect()
 	local default_w = self._input_text_panel:w() - HUDChat.INPUT_TEXT_X - HUDChat.INPUT_TEXT_PADDING_RIGHT
 
-	if w > default_w then
+	if default_w < w then
 		self._input_text:set_w(w)
 		self._input_text:set_right(self._input_text_panel:w() - HUDChat.INPUT_TEXT_PADDING_RIGHT)
 	elseif w <= default_w then
@@ -702,6 +714,7 @@ function HUDChat:_layout_input_text()
 end
 
 function HUDChat:send_message(name, message)
+	return
 end
 
 function HUDChat:_message_in_same_thread(peer_id, system_message)
@@ -744,7 +757,7 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 
 	table.insert(self._recieved_messages, message)
 
-	if ChatManager.MESSAGE_BUFFER_SIZE < #self._recieved_messages then
+	if #self._recieved_messages > ChatManager.MESSAGE_BUFFER_SIZE then
 		table.remove(self._recieved_messages, 1)
 	end
 
@@ -794,6 +807,7 @@ function HUDChat:_layout_message_panel()
 		self._messages[i]:set_bottom(bottom)
 
 		local message_h = self._messages[i]:h()
+
 		h = h + message_h + HUDChat.MESSAGE_PADDING_DOWN
 		bottom = bottom - message_h - HUDChat.MESSAGE_PADDING_DOWN
 	end

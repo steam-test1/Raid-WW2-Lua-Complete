@@ -122,8 +122,10 @@ function IngameWaitingForRespawnState:_begin_game_enter_transition()
 
 	self._auto_respawn_t = nil
 	self._ai_trade_respawn_gui_enabled = nil
+
 	local overlay_effect_desc = tweak_data.overlay_effects.spectator
 	local fade_in_duration = overlay_effect_desc.fade_in
+
 	self._fade_in_overlay_eff_id = managers.overlay_effect:play_effect(overlay_effect_desc)
 	self._ready_to_spawn_t = TimerManager:game():time() + fade_in_duration
 end
@@ -136,6 +138,7 @@ function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 
 		if not pos_rot and managers.network then
 			local spawn_point = managers.network:session() and managers.network:session():get_next_spawn_point() or managers.network:spawn_point(1)
+
 			pos_rot = spawn_point and spawn_point.pos_rot
 		end
 
@@ -193,7 +196,7 @@ function IngameWaitingForRespawnState:update(t, dt)
 		self._ai_trade_respawn_gui_enabled = false
 	end
 
-	if ai_trade_time and (not self._auto_respawn_t or math.max(0, ai_trade_time) < self._auto_respawn_t - t) and not self._ready_to_spawn_t then
+	if ai_trade_time and (not self._auto_respawn_t or self._auto_respawn_t - t > math.max(0, ai_trade_time)) and not self._ready_to_spawn_t then
 		if not self._auto_respawn_t and not self._ai_trade_respawn_gui_enabled then
 			managers.hud:set_custody_timer_visibility(true)
 
@@ -206,12 +209,12 @@ function IngameWaitingForRespawnState:update(t, dt)
 		managers.hud:set_custody_respawn_type(false)
 		managers.hud:set_custody_respawn_time(self._auto_respawn_t - t)
 
-		if self._auto_respawn_t < t then
+		if t > self._auto_respawn_t then
 			self._auto_respawn_t = nil
 
 			self:_begin_game_enter_transition()
 		end
-	elseif self._ready_to_spawn_t and self._ready_to_spawn_t < t then
+	elseif self._ready_to_spawn_t and t > self._ready_to_spawn_t then
 		IngameWaitingForRespawnState.request_player_spawn()
 	end
 
@@ -228,7 +231,7 @@ function IngameWaitingForRespawnState:update(t, dt)
 		end
 	end
 
-	if self._play_too_long_line_t and self._play_too_long_line_t < t and managers.groupai:state():bain_state() then
+	if self._play_too_long_line_t and t > self._play_too_long_line_t and managers.groupai:state():bain_state() then
 		self._play_too_long_line_t = nil
 
 		managers.dialog:queue_dialog("Play_ban_h38x", {})
@@ -302,7 +305,7 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 			end
 		end
 
-		local vehicle_unit, vehicle_seat = nil
+		local vehicle_unit, vehicle_seat
 
 		if managers.network and managers.network:session() and watch_u_record.unit:network() then
 			if watch_u_record.unit:brain() then
@@ -342,7 +345,7 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 		mrot_set_look_at(self._rot, self._fwd, math_up)
 
 		local col_ray = World:raycast("ray", self._vec_target, self._vec_eye, "slot_mask", self._slotmask)
-		local dis_new = nil
+		local dis_new
 
 		if col_ray then
 			mvec3_set(self._vec_dir, col_ray.ray)
@@ -355,8 +358,9 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 			dis_new = mvec3_normalize(self._vec_dir)
 		end
 
-		if self._dis_curr and self._dis_curr < dis_new then
+		if self._dis_curr and dis_new > self._dis_curr then
 			local speed = math.max((dis_new - self._dis_curr) / 5, 1.5)
+
 			self._dis_curr = math.lerp(self._dis_curr, dis_new, speed * dt)
 		else
 			self._dis_curr = dis_new
@@ -494,7 +498,7 @@ end
 function IngameWaitingForRespawnState:_refresh_teammate_list()
 	local all_teammates = self._spectator_data.teammate_records
 	local teammate_list = self._spectator_data.teammate_list
-	local lost_teammate_at_i = nil
+	local lost_teammate_at_i
 	local i = #teammate_list
 
 	while i > 0 do
@@ -558,6 +562,7 @@ function IngameWaitingForRespawnState:cb_next_player()
 	end
 
 	local i_watch = self:_get_teammate_index_by_unit_key(watch_u_key)
+
 	i_watch = i_watch == #self._spectator_data.teammate_list and 1 or i_watch + 1
 	watch_u_key = self._spectator_data.teammate_list[i_watch]
 	self._spectator_data.watch_u_key = watch_u_key
@@ -607,16 +612,14 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed
 
 	local is_ai_trade_possible = managers.groupai:state():is_ai_trade_possible()
 
-	if (not Global.game_settings.single_player or is_ai_trade_possible) and managers.groupai:state():bain_state() then
-		if managers.groupai:state():get_assault_mode() and not is_ai_trade_possible then
-			-- Nothing
-		elseif is_ai_trade_possible then
-			-- Nothing
-		elseif hostages_killed == 0 then
-			-- Nothing
-		elseif hostages_killed < 3 then
-			-- Nothing
-		end
+	if Global.game_settings.single_player and not is_ai_trade_possible or not managers.groupai:state():bain_state() or managers.groupai:state():get_assault_mode() and not is_ai_trade_possible then
+		-- Nothing
+	elseif is_ai_trade_possible then
+		-- Nothing
+	elseif hostages_killed == 0 then
+		-- Nothing
+	elseif hostages_killed < 3 then
+		-- Nothing
 	end
 end
 
@@ -633,11 +636,11 @@ function IngameWaitingForRespawnState:begin_trade()
 		crims[k] = d
 	end
 
-	if managers.groupai:state():bain_state() and next(crims) then
-		if table.size(crims) <= 1 then
-			local _, data = next(crims)
-			local char_code = managers.criminals:character_static_data_by_unit(data.unit).ssuffix
-		end
+	if not managers.groupai:state():bain_state() or not next(crims) or table.size(crims) > 1 then
+		-- Nothing
+	else
+		local _, data = next(crims)
+		local char_code = managers.criminals:character_static_data_by_unit(data.unit).ssuffix
 	end
 
 	self._play_too_long_line_t = Application:time() + 60

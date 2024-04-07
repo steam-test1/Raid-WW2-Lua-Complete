@@ -35,6 +35,7 @@ function RaidGUIControlGreedBarSmall:_create_panel()
 		w = RaidGUIControlGreedBarSmall.WIDTH,
 		h = RaidGUIControlGreedBarSmall.HEIGHT
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -46,6 +47,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_icon()
 		texture = tweak_data.gui.icons[RaidGUIControlGreedBarSmall.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGreedBarSmall.LOOT_ICON].texture_rect
 	}
+
 	self._loot_icon = self._object:bitmap(loot_icon_params)
 
 	self._loot_icon:set_center_x(RaidGUIControlGreedBarSmall.LOOT_ICON_CENTER_X)
@@ -65,7 +67,9 @@ function RaidGUIControlGreedBarSmall:_create_loot_title()
 		color = RaidGUIControlGreedBarSmall.LOOT_TITLE_COLOR,
 		text = self:translate(RaidGUIControlGreedBarSmall.LOOT_TITLE_STRING, true)
 	}
+
 	self._title = self._object:text(loot_title_params)
+
 	local _, _, w, _ = self._title:text_rect()
 
 	self._title:set_w(w)
@@ -79,6 +83,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 		w = RaidGUIControlGreedBarSmall.LOOT_BAR_PANEL_W,
 		h = RaidGUIControlGreedBarSmall.LOOT_BAR_PANEL_H
 	}
+
 	self._loot_bar_panel = self._object:panel(loot_bar_panel_params)
 
 	self._loot_bar_panel:set_center_y(RaidGUIControlGreedBarSmall.LOOT_BAR_PANEL_CENTER_Y)
@@ -92,6 +97,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 		right = RaidGUIControlGreedBarSmall.LOOT_BAR_ICON_R,
 		color = RaidGUIControlGreedBarSmall.LOOT_BAR_COLOR
 	}
+
 	self._loot_bar_background = self._loot_bar_panel:three_cut_bitmap(loot_bar_background_params)
 
 	self._loot_bar_background:set_center_x(self._loot_bar_panel:w() / 2)
@@ -103,6 +109,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 		h = self._loot_bar_background:h(),
 		layer = self._loot_bar_background:layer() + 1
 	}
+
 	self._loot_bar_progress_panel = self._loot_bar_panel:panel(loot_bar_progress_panel_params)
 
 	self._loot_bar_progress_panel:set_x(self._loot_bar_background:x())
@@ -120,7 +127,7 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 end
 
 function RaidGUIControlGreedBarSmall:_fit_size()
-	if self._loot_bar_background:w() < self._title:w() then
+	if self._title:w() > self._loot_bar_background:w() then
 		self._title:set_x(64)
 		self._loot_bar_panel:set_center_x(self._title:center_x())
 	else
@@ -130,7 +137,7 @@ function RaidGUIControlGreedBarSmall:_fit_size()
 
 	local larger_width = math.max(self._title:w(), self._loot_bar_background:w())
 
-	if self._object:w() < larger_width + 64 then
+	if larger_width + 64 > self._object:w() then
 		self._object:set_w(larger_width + 64)
 	end
 end

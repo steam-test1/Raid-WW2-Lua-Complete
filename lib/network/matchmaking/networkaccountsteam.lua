@@ -83,6 +83,7 @@ function NetworkAccountSTEAM:get_win_ratio(difficulty, level)
 end
 
 function NetworkAccountSTEAM:set_lightfx()
+	return
 end
 
 function NetworkAccountSTEAM._on_troll_group_recieved(success, page)
@@ -217,10 +218,11 @@ end
 
 function NetworkAccountSTEAM:get_global_stat(key, days)
 	local value = 0
-	local global_stat = nil
+	local global_stat
 
 	if days and days < 0 then
 		local day = math.abs(days) + 1
+
 		global_stat = Steam:sa_handler():get_global_stat(key, day)
 
 		return global_stat[day] or 0
@@ -250,13 +252,13 @@ function NetworkAccountSTEAM:publish_statistics(stats, force_store)
 	local err = false
 
 	for key, stat in pairs(stats) do
-		local res = nil
+		local res
 
 		if stat.type == "int" then
 			local val = math.max(0, handler:get_stat(key))
 
 			if stat.method == "lowest" then
-				if stat.value < val then
+				if val > stat.value then
 					res = handler:set_stat(key, stat.value)
 				else
 					res = true
@@ -283,6 +285,7 @@ function NetworkAccountSTEAM:publish_statistics(stats, force_store)
 		elseif stat.type == "float" then
 			if stat.value > 0 then
 				local val = handler:get_stat_float(key)
+
 				res = handler:set_stat_float(key, val + stat.value)
 			else
 				res = true
@@ -444,9 +447,8 @@ end
 
 function NetworkAccountSTEAM:_save_globals()
 	Global.steam = Global.steam or {}
-	Global.steam.account = {
-		outfit_signature = self._outfit_signature and Application:create_luabuffer(self._outfit_signature)
-	}
+	Global.steam.account = {}
+	Global.steam.account.outfit_signature = self._outfit_signature and Application:create_luabuffer(self._outfit_signature)
 end
 
 function NetworkAccountSTEAM:is_ready_to_close()
@@ -552,9 +554,11 @@ function NetworkAccountSTEAM:inventory_remove(instance_id)
 end
 
 function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
+	return
 end
 
 function NetworkAccountSTEAM:inventory_reward_dlc(def_id, reward_promo_callback)
+	return
 end
 
 function NetworkAccountSTEAM:inventory_outfit_refresh()
@@ -605,6 +609,7 @@ function NetworkAccountSTEAM:inventory_outfit_signature()
 end
 
 function NetworkAccountSTEAM:inventory_repair_list(list)
+	return
 end
 
 function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
@@ -631,6 +636,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 	local num_days = 100
 	local sa = Steam:sa_handler()
 	local invalid = sa:get_global_stat("easy_slaughter_house_plays", num_days)
+
 	invalid[1] = 1
 	invalid[3] = 1
 	invalid[11] = 1
@@ -651,13 +657,14 @@ function NetworkAccountSTEAM.output_global_stats(file)
 			end
 		end
 
-		local num = nil
+		local num
 
 		if type(stat) == "string" then
 			num = sa:get_global_stat(diff .. "_" .. heist .. "_" .. stat, num_days)[i] or 0
 		else
 			local f = sa:get_global_stat(diff .. "_" .. heist .. "_" .. stat[1], num_days)[i] or 0
 			local s = sa:get_global_stat(diff .. "_" .. heist .. "_" .. stat[2], num_days)[i] or 1
+
 			num = f / (s == 0 and 1 or s)
 		end
 
@@ -675,13 +682,14 @@ function NetworkAccountSTEAM.output_global_stats(file)
 			end
 		end
 
-		local num = nil
+		local num
 
 		if type(stat) == "string" then
 			num = sa:get_global_stat(weapon .. "_" .. stat, num_days)[i] or 0
 		else
 			local f = sa:get_global_stat(weapon .. "_" .. stat[1], num_days)[i] or 0
 			local s = sa:get_global_stat(weapon .. "_" .. stat[2], num_days)[i] or 1
+
 			num = f / (s == 0 and 1 or s)
 		end
 

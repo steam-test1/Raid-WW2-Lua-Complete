@@ -8,10 +8,13 @@ function EditUnitVariation:init(editor)
 		name = "Variations",
 		class = self
 	})
+
 	self._panel = panel
 	self._ctrls = {}
 	self._element_guis = {}
+
 	local all_variations_sizer = EWS:BoxSizer("VERTICAL")
+
 	self._mesh_params = {
 		default = "default",
 		name = "Mesh:",

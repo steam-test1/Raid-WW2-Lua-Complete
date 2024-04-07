@@ -8,6 +8,7 @@ function EscortExt:init(unit)
 	self._safe_color = Color(1, 1, 1)
 	self._unsafe_color = Color(1, 0, 0)
 	self._ws = managers.hud._fullscreen_workspace
+
 	local tweak = self._unit:base():char_tweak()
 
 	if not tweak.immortal and not self._unit:character_damage().immortal then
@@ -150,10 +151,11 @@ function EscortExt:is_safe()
 	local someone_close = false
 	local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 	local min_dis_sq = char_tweak and char_tweak.escort_safe_dist or 1000
+
 	min_dis_sq = min_dis_sq * min_dis_sq
 
 	for c_key, c_data in pairs(managers.groupai:state():all_char_criminals()) do
-		if mvector3.distance_sq(c_data.m_pos, self._unit:position()) < min_dis_sq then
+		if min_dis_sq > mvector3.distance_sq(c_data.m_pos, self._unit:position()) then
 			someone_close = true
 
 			break
@@ -183,6 +185,7 @@ function EscortExt:update(t, dt)
 			self:set_waypoint_safe(false)
 
 			self._was_safe = false
+
 			local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 
 			if char_tweak and char_tweak.unsafe_vo then

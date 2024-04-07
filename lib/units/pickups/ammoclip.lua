@@ -1,8 +1,7 @@
 AmmoClip = AmmoClip or class(Pickup)
-AmmoClip.EVENT_IDS = {
-	bonnie_share_ammo = 1,
-	register_grenade = 16
-}
+AmmoClip.EVENT_IDS = {}
+AmmoClip.EVENT_IDS.bonnie_share_ammo = 1
+AmmoClip.EVENT_IDS.register_grenade = 16
 
 function AmmoClip:init(unit)
 	AmmoClip.super.init(self, unit)
@@ -45,23 +44,24 @@ function AmmoClip:_pickup(unit)
 				managers.player:add_grenade_amount(grenades_refill_amount or 1)
 			end
 
-			local success, add_amount = nil
+			local success, add_amount
 
 			for _, weapon in ipairs(available_selections) do
 				if not self._weapon_category or self._weapon_category == weapon.unit:base():weapon_tweak_data().category then
 					local effect_ammo_pickup_multiplier = 1
 
 					if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) then
-						effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1
+						effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1)
 					end
 
 					if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) then
-						effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1
+						effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1)
 					end
 
 					local base_ammo_amount = tweak_data.drop_loot[self.tweak_data].ammo_multiplier or 1
 					local upgrade_ammo_pickup_multiplier = managers.player:upgrade_value("player", "pick_up_ammo_multiplier", 1)
-					local add_ammo_amount_ratio = base_ammo_amount * (upgrade_ammo_pickup_multiplier + effect_ammo_pickup_multiplier - 1)
+					local add_ammo_amount_ratio = base_ammo_amount * (upgrade_ammo_pickup_multiplier + (effect_ammo_pickup_multiplier - 1))
+
 					success, add_amount = weapon.unit:base():add_ammo(add_ammo_amount_ratio, self._ammo_count)
 					picked_up = success or picked_up
 
@@ -76,7 +76,7 @@ function AmmoClip:_pickup(unit)
 			self._picked_up = true
 
 			if not self._projectile_id and not self._weapon_category then
-				local restored_health = nil
+				local restored_health
 
 				if not unit:character_damage():is_downed() and managers.player:has_category_upgrade("temporary", "loose_ammo_restore_health") and not managers.player:has_activate_temporary_upgrade("temporary", "loose_ammo_restore_health") then
 					managers.player:activate_temporary_upgrade("temporary", "loose_ammo_restore_health")
@@ -87,7 +87,9 @@ function AmmoClip:_pickup(unit)
 						local restore_value = math.random(values[1], values[2])
 						local base = tweak_data.upgrades.loose_ammo_restore_health_values.base
 						local sync_value = math.round(math.clamp(restore_value - base, 0, 13))
+
 						restore_value = restore_value * (tweak_data.upgrades.loose_ammo_restore_health_values.multiplier or 0.1)
+
 						local damage_ext = unit:character_damage()
 
 						if not damage_ext:need_revive() and not damage_ext:dead() and not damage_ext:is_berserker() then
@@ -159,11 +161,12 @@ function AmmoClip:sync_net_event(event, peer)
 
 			self._grenade_registered = true
 		end
-	elseif AmmoClip.EVENT_IDS.bonnie_share_ammo < event then
+	elseif event > AmmoClip.EVENT_IDS.bonnie_share_ammo then
 		local damage_ext = player:character_damage()
 
 		if not damage_ext:need_revive() and not damage_ext:dead() and not damage_ext:is_berserker() then
 			local restore_value = event - 2 + (tweak_data.upgrades.loose_ammo_restore_health_values.base or 3)
+
 			restore_value = restore_value * (tweak_data.upgrades.loose_ammo_restore_health_values.multiplier or 0.1)
 			restore_value = restore_value * (tweak_data.upgrades.loose_ammo_give_team_health_ratio or 0.35)
 		end

@@ -46,6 +46,7 @@ end
 
 function CreateWorldSettingFile:_add_continent_cbs(params)
 	self._cbs = {}
+
 	local sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Exclude continents")
 
 	for name, _ in pairs(params or managers.editor:continents()) do

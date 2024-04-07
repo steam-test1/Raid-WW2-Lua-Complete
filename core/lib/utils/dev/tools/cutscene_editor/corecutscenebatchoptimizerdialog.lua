@@ -2,6 +2,7 @@ require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneBatchOptimizer")
 require("core/lib/utils/dev/tools/cutscene_editor/CoreCutsceneProjectMappingPanel")
 
 CoreCutsceneBatchOptimizerDialog = CoreCutsceneBatchOptimizerDialog or class()
+
 local JOB_LIST_FILE_SPEC = "Job List (*.boj)|*.boj"
 local commands = CoreCommandRegistry:new()
 
@@ -67,6 +68,7 @@ function CoreCutsceneBatchOptimizerDialog:init(parent_window)
 	self.__window:set_sizer(sizer)
 
 	local projects_sizer = EWS:StaticBoxSizer(self.__window, "VERTICAL", "Cutscene Projects to Export")
+
 	self.__projects = core_or_local("CutsceneProjectMappingPanel", self.__window)
 
 	self.__projects:add_to_sizer(projects_sizer, 1, 0, "EXPAND")
@@ -183,7 +185,7 @@ end
 
 function CoreCutsceneBatchOptimizerDialog:_default_mappings_for_all_projects()
 	local project_names = managers.database:list_entries_of_type("cutscene_project")
-	local mappings = table.remap(project_entries, function (_, name)
+	local mappings = table.remap(project_entries, function(_, name)
 		return name, self:_default_optimized_cutscene_name(name)
 	end)
 

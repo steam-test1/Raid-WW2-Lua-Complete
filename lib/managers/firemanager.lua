@@ -2,6 +2,7 @@ FireManager = FireManager or class()
 FireManager.MAX_FLAMETHROWER_FIRES = 3
 FireManager.FLAMETHROWER_FIRE_CHANCE = 0.1
 FireManager.FLAMETHROWER_FIRE_CHANCE_INC = 0.33
+
 local idstr_explosion_std = Idstring("explosion_std")
 local empty_idstr = Idstring("")
 local molotov_effect = "effects/vanilla/fire/fire_molotov_grenade_001"
@@ -47,7 +48,7 @@ function FireManager:update(t, dt)
 	end
 
 	for i = #self._flamethrower_fire_patches, 1, -1 do
-		if self._flamethrower_fire_patches[i].expire_t < Application:time() then
+		if Application:time() > self._flamethrower_fire_patches[i].expire_t then
 			table.remove(self._flamethrower_fire_patches, i)
 		end
 	end
@@ -55,7 +56,7 @@ end
 
 function FireManager:leave_flamethrower_patch(player)
 	if Network:is_server() then
-		if FireManager.MAX_FLAMETHROWER_FIRES <= #self._flamethrower_fire_patches then
+		if #self._flamethrower_fire_patches >= FireManager.MAX_FLAMETHROWER_FIRES then
 			return
 		end
 
@@ -65,13 +66,14 @@ function FireManager:leave_flamethrower_patch(player)
 			end
 		end
 
-		if self._flamethrower_chance < math.random() then
+		if math.random() > self._flamethrower_chance then
 			self._flamethrower_chance = self._flamethrower_chance + FireManager.FLAMETHROWER_FIRE_CHANCE_INC
 
 			return
 		end
 
 		self._flamethrower_chance = FireManager.FLAMETHROWER_FIRE_CHANCE
+
 		local rot = player:rotation()
 		local pos = player:position() + rot:y() * -30
 		local td = tweak_data.projectiles[NPCFlamethrowerBase.EXPLOSION_TYPE]
@@ -227,6 +229,7 @@ function FireManager:_stop_burn_body_sound(sound_source)
 end
 
 function FireManager:_release_sound_source(...)
+	return
 end
 
 function FireManager:_start_enemy_fire_effect(dot_info)
@@ -236,7 +239,7 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 	local bone_right_arm = dot_info.enemy_unit:get_object(Idstring("RightArm"))
 	local bone_left_leg = dot_info.enemy_unit:get_object(Idstring("LeftLeg"))
 	local bone_right_leg = dot_info.enemy_unit:get_object(Idstring("RightLeg"))
-	local bone_spine_effect_id, bone_left_arm_effect_id, bone_right_arm_effect_id, bone_left_leg_effect_id, bone_right_leg_effect_id = nil
+	local bone_spine_effect_id, bone_left_arm_effect_id, bone_right_arm_effect_id, bone_left_leg_effect_id, bone_right_leg_effect_id
 
 	if bone_spine then
 		bone_spine_effect_id = World:effect_manager():spawn({
@@ -280,6 +283,7 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 		bone_left_leg_effect_id,
 		bone_right_leg_effect_id
 	}
+
 	dot_info.fire_effects = effects_table
 end
 
@@ -378,7 +382,7 @@ function FireManager:detect_and_give_dmg(params)
 		mvector3.set(pos, dir)
 		mvector3.add(pos, hit_pos)
 
-		local splinter_ray = nil
+		local splinter_ray
 
 		if ignore_unit then
 			splinter_ray = World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask)
@@ -387,6 +391,7 @@ function FireManager:detect_and_give_dmg(params)
 		end
 
 		pos = (splinter_ray and splinter_ray.position or pos) - dir:normalized() * math.min(splinter_ray and splinter_ray.distance or 0, 10)
+
 		local near_splinter = false
 
 		for _, s_pos in ipairs(splinters) do
@@ -411,13 +416,15 @@ function FireManager:detect_and_give_dmg(params)
 	local characters_hit = {}
 	local units_to_push = {}
 	local hit_units = {}
-	local type = nil
+	local type
 
 	for _, hit_body in ipairs(bodies) do
 		local character = hit_body:unit():character_damage() and hit_body:unit():character_damage().damage_fire
 		local apply_dmg = hit_body:extension() and hit_body:extension().damage
+
 		units_to_push[hit_body:unit():key()] = hit_body:unit()
-		local dir, len, damage, ray_hit = nil
+
+		local dir, len, damage, ray_hit
 
 		if character and not characters_hit[hit_body:unit():key()] then
 			if params.no_raycast_check_characters then
@@ -447,10 +454,10 @@ function FireManager:detect_and_give_dmg(params)
 						count_civilians = count_civilians + 1
 					elseif CopDamage.is_gangster(type) then
 						count_gangsters = count_gangsters + 1
-					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" and type ~= "american" and type ~= "jowi" then
-						if type ~= "hoxton" then
-							count_cops = count_cops + 1
-						end
+					elseif type == "russian" or type == "german" or type == "spanish" or type == "american" or type == "jowi" or type == "hoxton" then
+						-- Nothing
+					else
+						count_cops = count_cops + 1
 					end
 				end
 			end
@@ -468,24 +475,27 @@ function FireManager:detect_and_give_dmg(params)
 			end
 
 			damage = math.max(damage, 1)
+
 			local hit_unit = hit_body:unit()
+
 			hit_units[hit_unit:key()] = hit_unit
 
 			if character then
 				local dead_before = hit_unit:character_damage():dead()
-				local action_data = {
-					variant = "fire",
-					damage = damage,
-					attacker_unit = user_unit,
-					weapon_unit = owner,
-					ignite_character = params.ignite_character,
-					col_ray = self._col_ray or {
-						position = hit_body:position(),
-						ray = dir
-					},
-					is_fire_dot_damage = false,
-					fire_dot_data = fire_dot_data
+				local action_data = {}
+
+				action_data.variant = "fire"
+				action_data.damage = damage
+				action_data.attacker_unit = user_unit
+				action_data.weapon_unit = owner
+				action_data.ignite_character = params.ignite_character
+				action_data.col_ray = self._col_ray or {
+					position = hit_body:position(),
+					ray = dir
 				}
+				action_data.is_fire_dot_damage = false
+				action_data.fire_dot_data = fire_dot_data
+
 				local t = TimerManager:game():time()
 
 				hit_unit:character_damage():damage_fire(action_data)
@@ -497,10 +507,10 @@ function FireManager:detect_and_give_dmg(params)
 						count_civilian_kills = count_civilian_kills + 1
 					elseif CopDamage.is_gangster(type) then
 						count_gangster_kills = count_gangster_kills + 1
-					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" then
-						if type ~= "american" then
-							count_cop_kills = count_cop_kills + 1
-						end
+					elseif type == "russian" or type == "german" or type == "spanish" or type == "american" then
+						-- Nothing
+					else
+						count_cop_kills = count_cop_kills + 1
 					end
 				end
 			end
@@ -524,6 +534,7 @@ function FireManager:detect_and_give_dmg(params)
 end
 
 function FireManager:units_to_push(units_to_push, hit_pos, range)
+	return
 end
 
 function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
@@ -552,6 +563,7 @@ function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, dam
 		local local_damage = is_server or hit_unit:id() == -1
 		local sync_damage = is_server and hit_unit:id() ~= -1
 		local network_damage = math.ceil(prop_damage * 163.84)
+
 		prop_damage = network_damage / 163.84
 
 		if local_damage then
@@ -581,7 +593,7 @@ function FireManager:client_damage_and_push(position, normal, user_unit, dmg, ra
 	for _, hit_body in ipairs(bodies) do
 		local hit_unit = hit_body:unit()
 		local apply_dmg = hit_body:extension() and hit_body:extension().damage and hit_unit:id() == -1
-		local dir, len, damage = nil
+		local dir, len, damage
 
 		if apply_dmg then
 			dir = hit_body:center_of_mass()
@@ -601,6 +613,7 @@ function FireManager:play_sound_and_effects(position, normal, range, custom_para
 end
 
 function FireManager:player_feedback(position, normal, range, custom_params)
+	return
 end
 
 local decal_ray_from = Vector3()
@@ -608,7 +621,8 @@ local decal_ray_to = Vector3()
 
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration)
 	effect_name = effect_name or "effects/vanilla/fire/fire_molotov_grenade_001"
-	local effect_id = nil
+
+	local effect_id
 
 	if molotov_damage_effect_table ~= nil then
 		if effect_name ~= "none" then
@@ -643,10 +657,11 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 	end
 
 	local ray = World:raycast("ray", decal_ray_from, decal_ray_to, "slot_mask", slotmask_world_geometry)
-	local sound_switch_name = nil
+	local sound_switch_name
 
 	if ray then
 		local material_name, _, _ = World:pick_decal_material(ray.unit, decal_ray_from, decal_ray_to, slotmask_world_geometry)
+
 		sound_switch_name = material_name ~= empty_idstr and material_name
 	end
 
@@ -673,6 +688,7 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 end
 
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
+	return
 end
 
 function FireManager:_dispose_of_impact_sound(custom_params)

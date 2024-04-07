@@ -16,8 +16,10 @@ function WaypointExt:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon
 	self._pos_locator = pos_locator
 	self._map_icon = map_icon
 	self._show_on_hud = show_on_hud
+
 	local rotation = self._pos_locator and self._unit:get_object(Idstring(self._pos_locator)):rotation() or self._unit:rotation()
 	local position = self._pos_locator and self._unit:get_object(Idstring(self._pos_locator)):position() or self._unit:position()
+
 	position = position + self._pos_z_offset
 	self._icon_pos = position
 	self._icon_rot = rotation
@@ -61,6 +63,7 @@ end
 function WaypointExt:update(t, dt)
 	if self._icon_pos then
 		local position = self._pos_locator and self._unit:get_object(Idstring(self._pos_locator)):position() or self._unit:position()
+
 		position = position + self._pos_z_offset
 
 		mvector3.set(self._icon_pos, position)

@@ -116,11 +116,15 @@ function MissionSelectionGui:_layout_lists()
 		x = 0,
 		layer = 1
 	}
+
 	self._list_panel = self._root_panel:panel(list_panel_params)
+
 	local primary_lists_panel_params = {
 		name = "primary_lists_panel"
 	}
+
 	self._primary_lists_panel = self._list_panel:panel(primary_lists_panel_params)
+
 	local list_tabs_params = {
 		name = "list_tabs",
 		y = 0,
@@ -146,9 +150,11 @@ function MissionSelectionGui:_layout_lists()
 			}
 		}
 	}
+
 	list_tabs_params.tab_width = (self._primary_lists_panel:w() - 2 * list_tabs_params.x) / #list_tabs_params.tabs_params
 	self._list_tabs = self._primary_lists_panel:tabs(list_tabs_params)
 	self._current_mission_type = "raids"
+
 	local raid_list_scrollable_area_params = {
 		name = "raid_list_scrollable_area",
 		x = 0,
@@ -157,7 +163,9 @@ function MissionSelectionGui:_layout_lists()
 		w = self._primary_lists_panel:w(),
 		h = self._primary_lists_panel:h() - self._list_tabs:h()
 	}
+
 	self._raid_list_panel = self._primary_lists_panel:scrollable_area(raid_list_scrollable_area_params)
+
 	local raid_list_params = {
 		selection_enabled = true,
 		name = "raid_list",
@@ -178,6 +186,7 @@ function MissionSelectionGui:_layout_lists()
 			right = "info_button"
 		}
 	}
+
 	self._raid_list = self._raid_list_panel:get_panel():list(raid_list_params)
 
 	self._raid_list_panel:setup_scroll_area()
@@ -196,6 +205,7 @@ function MissionSelectionGui:_layout_slot_list()
 			w = self._primary_lists_panel:w(),
 			h = self._primary_lists_panel:h() - self._list_tabs:h()
 		}
+
 		self._slot_list_panel = self._list_panel:panel(slot_list_panel_params)
 
 		self._slot_list_panel:set_alpha(0)
@@ -219,6 +229,7 @@ function MissionSelectionGui:_layout_slot_list()
 		data_source_callback = callback(self, self, "_slot_list_data_source"),
 		item_class = RaidGUIControlListItemSaveSlots
 	}
+
 	self._slot_list = self._slot_list_panel:list(slot_list_params)
 end
 
@@ -229,7 +240,9 @@ function MissionSelectionGui:_layout_operations_list()
 		y = self._list_tabs:h(),
 		h = self._list_panel:h() - self._list_tabs:h()
 	}
+
 	self._operations_list_panel = self._list_panel:panel(operations_list_panel_params)
+
 	local operations_list_params = {
 		selection_enabled = true,
 		name = "operation_list",
@@ -248,6 +261,7 @@ function MissionSelectionGui:_layout_operations_list()
 			right = "info_button"
 		}
 	}
+
 	self._new_operation_list = self._operations_list_panel:list(operations_list_params)
 end
 
@@ -259,6 +273,7 @@ function MissionSelectionGui:_layout_raid_wrapper_panel()
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	}
+
 	self._raid_panel = self._root_panel:panel(raid_wrapper_panel_params)
 end
 
@@ -271,6 +286,7 @@ function MissionSelectionGui:_layout_right_panel()
 		x = 0,
 		layer = 1
 	}
+
 	self._right_panel = self._root_panel:panel(right_panel_params)
 
 	self._right_panel:set_x(self._root_panel:w() - self._right_panel:w())
@@ -280,10 +296,13 @@ function MissionSelectionGui:_layout_settings()
 	Application:trace("[MissionSelectionGui:_layout_settings]")
 
 	self._settings_controls = {}
+
 	local settings_panel_params = {
 		name = "settings_panel"
 	}
+
 	self._settings_panel = self._right_panel:panel(settings_panel_params)
+
 	local difficulty_stepper_params = {
 		name = "difficulty_stepper",
 		y = 0,
@@ -296,6 +315,7 @@ function MissionSelectionGui:_layout_settings()
 			down = "permission_stepper"
 		}
 	}
+
 	self._difficulty_stepper = self._settings_panel:stepper(difficulty_stepper_params)
 
 	self._difficulty_stepper:set_value_and_render(Global.player_manager.game_settings_difficulty, true)
@@ -314,6 +334,7 @@ function MissionSelectionGui:_layout_settings()
 			left = "audio_button"
 		}
 	}
+
 	self._permission_stepper = self._settings_panel:stepper(permission_stepper_params)
 
 	self._permission_stepper:set_value_and_render(Global.game_settings.permission, true)
@@ -332,6 +353,7 @@ function MissionSelectionGui:_layout_settings()
 			left = "audio_button"
 		}
 	}
+
 	self._drop_in_checkbox = self._settings_panel:toggle_button(drop_in_checkbox_params)
 
 	self._drop_in_checkbox:set_value_and_render(Global.game_settings.drop_in_allowed)
@@ -349,6 +371,7 @@ function MissionSelectionGui:_layout_settings()
 			up = "drop_in_checkbox"
 		}
 	}
+
 	self._team_ai_checkbox = self._settings_panel:toggle_button(team_ai_checkbox_params)
 
 	self._team_ai_checkbox:set_value_and_render(Global.game_settings.selected_team_ai, true)
@@ -360,7 +383,9 @@ function MissionSelectionGui:_layout_operation_tutorialization()
 		alpha = 0,
 		name = "operation_tutorialization"
 	}
+
 	self._operation_tutorialization_panel = self._right_panel:panel(operation_tutorialization_panel_params)
+
 	local op_tutorialization_title_params = {
 		h = 40,
 		halign = "left",
@@ -390,10 +415,13 @@ function MissionSelectionGui:_layout_settings_offline()
 	Application:trace("[MissionSelectionGui:_layout_settings_offline]")
 
 	self._settings_controls = {}
+
 	local settings_panel_params = {
 		name = "settings_panel"
 	}
+
 	self._settings_panel = self._right_panel:panel(settings_panel_params)
+
 	local difficulty_stepper_params = {
 		name = "difficulty_stepper",
 		y = 0,
@@ -406,6 +434,7 @@ function MissionSelectionGui:_layout_settings_offline()
 			down = "team_ai_checkbox"
 		}
 	}
+
 	self._difficulty_stepper = self._settings_panel:stepper(difficulty_stepper_params)
 
 	self._difficulty_stepper:set_value_and_render(Global.player_manager.game_settings_difficulty, true)
@@ -423,6 +452,7 @@ function MissionSelectionGui:_layout_settings_offline()
 			up = "difficulty_stepper"
 		}
 	}
+
 	self._team_ai_checkbox = self._settings_panel:toggle_button(team_ai_checkbox_params)
 
 	self._team_ai_checkbox:set_value_and_render(Global.game_settings.team_ai, true)
@@ -433,6 +463,7 @@ function MissionSelectionGui:_layout_difficulty_warning()
 	local difficulty_warning_panel_params = {
 		name = "difficulty_warning_panel"
 	}
+
 	self._difficulty_warning_panel = self._settings_panel:panel(difficulty_warning_panel_params)
 
 	self._difficulty_warning_panel:set_y(self._difficulty_stepper:bottom())
@@ -449,6 +480,7 @@ function MissionSelectionGui:_layout_difficulty_warning()
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.raid_red
 	}
+
 	self._difficulty_warning = self._difficulty_warning_panel:text(difficulty_warning_text_params)
 
 	self._difficulty_warning:set_bottom(0)
@@ -464,6 +496,7 @@ function MissionSelectionGui:_layout_folder_front_page()
 		h = self._root_panel:h(),
 		layer = self._primary_paper_panel:layer() + 1000
 	}
+
 	self._front_page_panel = self._root_panel:panel(front_page_panel_params)
 
 	self._front_page_panel:set_center_x(self._primary_paper_panel:center_x())
@@ -475,17 +508,21 @@ function MissionSelectionGui:_layout_folder_front_page()
 		texture = tweak_data.gui.icons.folder_mission.texture,
 		texture_rect = tweak_data.gui.icons.folder_mission.texture_rect
 	}
+
 	self._front_page_image = self._front_page_panel:bitmap(front_page_params)
 
 	self._front_page_image:set_center_x(self._front_page_panel:w() / 2)
 	self._front_page_image:set_center_y(self._front_page_panel:h() / 2 + 10)
 
 	self._current_front_page_image = "folder_mission"
+
 	local front_page_content_panel_params = {
 		alpha = 0,
 		name = "front_page_content_panel"
 	}
+
 	self._front_page_content_panel = self._front_page_panel:panel(front_page_content_panel_params)
+
 	local front_page_icon_params = {
 		name = "front_page_icon",
 		valign = "center",
@@ -495,6 +532,7 @@ function MissionSelectionGui:_layout_folder_front_page()
 		layer = self._front_page_image:layer() + 1,
 		color = tweak_data.gui.colors.raid_light_red
 	}
+
 	self._front_page_icon = self._front_page_content_panel:bitmap(front_page_icon_params)
 
 	self._front_page_icon:set_center_x(self._front_page_panel:w() / 2)
@@ -512,6 +550,7 @@ function MissionSelectionGui:_layout_folder_front_page()
 		color = tweak_data.gui.colors.raid_light_red,
 		layer = self._front_page_icon:layer()
 	}
+
 	self._front_page_title = self._front_page_content_panel:text(front_page_title_params)
 
 	self._front_page_title:set_center_x(self._front_page_image:center_x())
@@ -529,7 +568,9 @@ function MissionSelectionGui:_layout_primary_paper()
 		x = 580,
 		layer = RaidGuiBase.FOREGROUND_LAYER + 150
 	}
+
 	self._primary_paper_panel = self._root_panel:panel(primary_paper_panel_params)
+
 	local primary_paper_params = {
 		name = "primary_paper",
 		y = 0,
@@ -539,7 +580,9 @@ function MissionSelectionGui:_layout_primary_paper()
 		texture = tweak_data.gui.images[paper_image].texture,
 		texture_rect = tweak_data.gui.images[paper_image].texture_rect
 	}
+
 	self._primary_paper = self._primary_paper_panel:bitmap(primary_paper_params)
+
 	local soe_emblem_params = {
 		name = "soe_emblem",
 		y = 22,
@@ -548,7 +591,9 @@ function MissionSelectionGui:_layout_primary_paper()
 		texture_rect = tweak_data.gui.icons[soe_emblem_image].texture_rect,
 		layer = self._primary_paper:layer() + 1
 	}
+
 	self._soe_emblem = self._primary_paper_panel:bitmap(soe_emblem_params)
+
 	local mission_icon_params = {
 		name = "mission_icon",
 		y = 44,
@@ -558,7 +603,9 @@ function MissionSelectionGui:_layout_primary_paper()
 		layer = self._primary_paper:layer() + 1,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._primary_paper_mission_icon = self._primary_paper_panel:bitmap(mission_icon_params)
+
 	local title_params = {
 		text = "",
 		name = "primary_paper_title",
@@ -569,7 +616,9 @@ function MissionSelectionGui:_layout_primary_paper()
 		color = tweak_data.gui.colors.raid_black,
 		layer = self._primary_paper:layer() + 1
 	}
+
 	self._primary_paper_title = self._primary_paper_panel:label(title_params)
+
 	local subtitle_params = {
 		text = "",
 		name = "primary_paper_title",
@@ -580,7 +629,9 @@ function MissionSelectionGui:_layout_primary_paper()
 		color = tweak_data.gui.colors.raid_black,
 		layer = self._primary_paper:layer() + 1
 	}
+
 	self._primary_paper_subtitle = self._primary_paper_panel:label(subtitle_params)
+
 	local mission_difficulty_params = {
 		name = "mission_difficulty",
 		y = 78,
@@ -589,7 +640,9 @@ function MissionSelectionGui:_layout_primary_paper()
 		unavailable_color = tweak_data.gui.colors.raid_dark_grey,
 		amount = tweak_data:number_of_difficulties()
 	}
+
 	self._primary_paper_difficulty_indicator = self._primary_paper_panel:create_custom_control(RaidGuiControlDifficultyStars, mission_difficulty_params)
+
 	local separator_params = {
 		name = "primary_paper_separator",
 		h = 2,
@@ -599,6 +652,7 @@ function MissionSelectionGui:_layout_primary_paper()
 		layer = self._primary_paper:layer() + 1,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._primary_paper_separator = self._primary_paper_panel:rect(separator_params)
 
 	self:_layout_raid_description()
@@ -621,6 +675,7 @@ function MissionSelectionGui:_layout_raid_description()
 		color = tweak_data.gui.colors.raid_black,
 		layer = self._primary_paper_panel:layer() + 1
 	}
+
 	self._mission_description = self._primary_paper_panel:label(mission_description_params)
 
 	self._mission_description:set_visible(false)
@@ -636,7 +691,9 @@ function MissionSelectionGui:_layout_operation_progress_text()
 		x = self._primary_paper_mission_icon:x(),
 		y = self._mission_description:y()
 	}
+
 	self._operation_progress_panel = self._primary_paper_panel:panel(operation_progress_panel_params)
+
 	local operation_progress_params = {
 		operation = "clear_skies",
 		name = "operation_progress",
@@ -645,6 +702,7 @@ function MissionSelectionGui:_layout_operation_progress_text()
 		w = self._operation_progress_panel:w(),
 		h = self._operation_progress_panel:h()
 	}
+
 	self._operation_progress = self._operation_progress_panel:create_custom_control(RaidGUIControlOperationProgress, operation_progress_params)
 
 	self._operation_progress:set_alpha(0)
@@ -660,7 +718,9 @@ function MissionSelectionGui:_layout_operation_list()
 		x = 31,
 		layer = self._primary_paper_panel:layer() + 1
 	}
+
 	self._operation_list_panel = self._primary_paper_panel:panel(operation_list_panel_params)
+
 	local operation_list_params = {
 		selection_enabled = true,
 		name = "operation_list",
@@ -684,6 +744,7 @@ function MissionSelectionGui:_layout_operation_list()
 		selected_callback = callback(self, self, "_on_operation_list_selected"),
 		unselected_callback = callback(self, self, "_on_operation_list_unselected")
 	}
+
 	self._operation_list = self._operation_list_panel:list_active(operation_list_params)
 
 	self._operation_list:set_alpha(0)
@@ -702,6 +763,7 @@ function MissionSelectionGui:_layout_intel_image_grid()
 			down = "intel_button"
 		}
 	}
+
 	self._intel_image_grid = self._primary_paper_panel:create_custom_control(RaidGUIControlIntelImageGrid, intel_image_grid_params)
 
 	self._intel_image_grid:set_alpha(0)
@@ -722,6 +784,7 @@ function MissionSelectionGui:_layout_info_buttons()
 		w = self._primary_paper_panel:w() * 0.85,
 		layer = self._primary_paper_panel:layer() + 1
 	}
+
 	self._info_buttons_panel = self._primary_paper_panel:panel(info_buttons_panel_params)
 
 	self._info_buttons_panel:set_center_x(math.floor(self._primary_paper_panel:w() / 2))
@@ -740,6 +803,7 @@ function MissionSelectionGui:_layout_info_buttons()
 			right = "intel_button"
 		}
 	}
+
 	self._info_button = self._info_buttons_panel:info_button(info_button_params)
 
 	self._info_button:set_center_y(self._info_buttons_panel:h() / 2)
@@ -756,6 +820,7 @@ function MissionSelectionGui:_layout_info_buttons()
 		},
 		on_click_callback = callback(self, self, "_on_intel_clicked")
 	}
+
 	self._intel_button = self._info_buttons_panel:info_button(intel_button_params)
 
 	self._intel_button:set_center_y(self._info_buttons_panel:h() / 2)
@@ -773,6 +838,7 @@ function MissionSelectionGui:_layout_info_buttons()
 		},
 		on_click_callback = callback(self, self, "_on_audio_clicked")
 	}
+
 	self._audio_button = self._info_buttons_panel:info_button(audio_button_params)
 
 	self._audio_button:set_center_y(self._info_buttons_panel:h() / 2)
@@ -790,7 +856,9 @@ function MissionSelectionGui:_layout_secondary_paper()
 		x = 580,
 		layer = RaidGuiBase.FOREGROUND_LAYER
 	}
+
 	self._secondary_paper_panel = self._root_panel:panel(secondary_paper_panel_params)
+
 	local secondary_paper_params = {
 		name = "secondary_paper",
 		y = 0,
@@ -800,6 +868,7 @@ function MissionSelectionGui:_layout_secondary_paper()
 		texture = tweak_data.gui.images[paper_image].texture,
 		texture_rect = tweak_data.gui.images[paper_image].texture_rect
 	}
+
 	self._secondary_paper = self._secondary_paper_panel:bitmap(secondary_paper_params)
 
 	self:_layout_secondary_intel()
@@ -821,6 +890,7 @@ function MissionSelectionGui:_layout_secondary_intel()
 		x = 35,
 		y = 144
 	}
+
 	self._intel_image_details = self._secondary_paper_panel:create_custom_control(RaidGUIControlIntelImageDetails, intel_image_details_params)
 	self._active_secondary_paper_control = self._intel_image_details
 end
@@ -834,6 +904,7 @@ function MissionSelectionGui:_layout_secondary_save_info()
 		h = self._secondary_paper_panel:h(),
 		layer = self._secondary_paper_panel:layer() + 1
 	}
+
 	self._save_info = self._secondary_paper_panel:create_custom_control(RaidGUIControlSaveInfo, save_info_params)
 end
 
@@ -846,6 +917,7 @@ function MissionSelectionGui:_layout_start_button()
 		text = self:translate("menu_start_button_title", true),
 		on_click_callback = callback(self, self, "_on_start_button_click")
 	}
+
 	self._raid_start_button = self._raid_panel:short_primary_button(raid_start_button_params)
 
 	self._raid_start_button:set_center_y(864)
@@ -880,6 +952,7 @@ function MissionSelectionGui:_layout_start_disabled_message()
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_red
 	}
+
 	self._start_disabled_message = self._raid_panel:text(start_disabled_message_params)
 
 	self._start_disabled_message:set_center_y(self._raid_start_button:center_y())
@@ -894,6 +967,7 @@ function MissionSelectionGui:_layout_delete_button()
 		text = self:translate("menu_delete_save_button_title", true),
 		on_click_callback = callback(self, self, "_on_delete_button_click")
 	}
+
 	self._save_delete_button = self._raid_panel:short_secondary_button(save_delete_button_params)
 
 	self._save_delete_button:set_x(self._raid_list:x() + self._raid_list:w() - self._raid_start_button:x() - self._save_delete_button:w())
@@ -908,7 +982,9 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 		h = 64,
 		valign = "top"
 	}
+
 	self._progression_timer_panel = self._raid_panel:panel(progression_timer_panel_params)
+
 	local progression_timer_icon_params = {
 		name = "progression_timer_icon",
 		valign = "center",
@@ -962,16 +1038,21 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 	}
 	local timer = self._progression_timer_panel:text(timer_params)
 	local remaining_time = math.floor(managers.progression:time_until_next_unlock())
-	local text = nil
+	local text
 
 	if remaining_time <= 0 then
 		text = "...NOW!"
 	else
 		local hours = math.floor(remaining_time / 3600)
+
 		remaining_time = remaining_time - hours * 3600
+
 		local minutes = math.floor(remaining_time / 60)
+
 		remaining_time = remaining_time - minutes * 60
+
 		local seconds = math.round(remaining_time)
+
 		text = hours > 0 and string.format("%02d", hours) .. ":" or ""
 		text = text .. string.format("%02d", minutes) .. ":" .. string.format("%02d", seconds)
 	end
@@ -1024,7 +1105,9 @@ function MissionSelectionGui:_play_operations_intro_video()
 		is_root_panel = true,
 		layer = 100
 	}
+
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
+
 	local video_panel_background_params = {
 		layer = 1,
 		name = "video_background",
@@ -1039,12 +1122,14 @@ function MissionSelectionGui:_play_operations_intro_video()
 		video = operations_intro_video,
 		width = self._video_panel:w()
 	}
+
 	self._control_briefing_video = self._video_panel:video(video_params)
 
-	self._control_briefing_video:set_h(self._video_panel:w() * self._control_briefing_video:video_height() / self._control_briefing_video:video_width())
+	self._control_briefing_video:set_h(self._video_panel:w() * (self._control_briefing_video:video_height() / self._control_briefing_video:video_width()))
 	self._control_briefing_video:set_center_y(self._video_panel:h() / 2)
 
 	self._playing_briefing_video = true
+
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		name = "press_any_key_prompt",
@@ -1080,7 +1165,9 @@ function MissionSelectionGui:_animate_show_press_any_key_prompt(prompt)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.85, duration)
 
 		prompt:set_alpha(current_alpha)
@@ -1093,9 +1180,11 @@ function MissionSelectionGui:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0.85, -0.85, fade_out_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -1114,11 +1203,14 @@ function MissionSelectionGui:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_right(self._safe_panel:w() - 50)
 
 	local fade_in_duration = 0.25
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.85, fade_in_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -1227,6 +1319,7 @@ function MissionSelectionGui:_select_operations_tab()
 end
 
 function MissionSelectionGui:_select_raid(raid)
+	return
 end
 
 function MissionSelectionGui:_on_start_button_click()
@@ -1248,9 +1341,9 @@ function MissionSelectionGui:_on_delete_button_click()
 	if current_job and current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION and managers.raid_job:get_current_save_slot() == self._selected_save_slot and Network:is_server() then
 		managers.menu:show_deleting_current_operation_save_dialog()
 	else
-		local params = {
-			yes_callback = callback(self, self, "on_save_slot_delete_confirmed")
-		}
+		local params = {}
+
+		params.yes_callback = callback(self, self, "on_save_slot_delete_confirmed")
 
 		managers.menu:show_save_slot_delete_confirm_dialog(params)
 	end
@@ -1271,6 +1364,7 @@ function MissionSelectionGui:on_save_slot_delete_confirmed()
 end
 
 function MissionSelectionGui:_select_save_slot(slot)
+	return
 end
 
 function MissionSelectionGui:_set_settings_enabled(enabled)
@@ -1303,6 +1397,7 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 	self:_update_soe_stamp(self._selected_job_id)
 
 	self._selected_new_operation_index = nil
+
 	local job_tweak_data = tweak_data.operations.missions[self._selected_job_id]
 
 	if not managers.progression:mission_unlocked(job_tweak_data.job_type, self._selected_job_id) and not job_tweak_data.consumable and not job_tweak_data.debug then
@@ -1379,7 +1474,7 @@ end
 function MissionSelectionGui:_on_mission_list_double_clicked(raid_data)
 	local difficulty_available = managers.progression:get_mission_progression(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value)
 
-	if managers.progression:mission_unlocked(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value) and tweak_data:difficulty_to_index(self._difficulty_stepper:get_value()) <= difficulty_available and Network:is_server() or tweak_data.operations.missions[raid_data.value].debug then
+	if managers.progression:mission_unlocked(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value) and difficulty_available >= tweak_data:difficulty_to_index(self._difficulty_stepper:get_value()) and Network:is_server() or tweak_data.operations.missions[raid_data.value].debug then
 		self:_on_start_button_click()
 	end
 end
@@ -1522,7 +1617,7 @@ function MissionSelectionGui:_update_soe_stamp(job_id)
 		return
 	end
 
-	local stamp_texture = nil
+	local stamp_texture
 
 	if mis_tweak_data.consumable then
 		stamp_texture = tweak_data.gui.icons[MissionSelectionGui.PAPER_STAMP_ICON_CONSUMABLE]
@@ -1625,6 +1720,7 @@ function MissionSelectionGui:_on_save_selected()
 	self._selected_job_id = nil
 	self._selected_new_operation_index = nil
 	self._continue_slot_selected = self._selected_save_slot
+
 	local current_slot_data = managers.raid_job:get_save_slots()[self._continue_slot_selected]
 	local current_job = current_slot_data.current_job
 	local name_id = current_job.name_id
@@ -1783,7 +1879,7 @@ end
 
 function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 	if self._selected_job_id then
-		local first_n_missions = nil
+		local first_n_missions
 
 		if self._list_tabs._items[self._list_tabs._selected_item_idx]._name == "tab_operation" then
 			first_n_missions = 1
@@ -1800,9 +1896,9 @@ function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 			local save_data = save_slots[self._continue_slot_selected].current_job
 
 			self._intel_image_grid:set_data({
+				mission = save_data.job_id,
 				save_data.current_event,
 				image_selected = 1,
-				mission = save_data.job_id,
 				save_data = save_data
 			})
 		end
@@ -1810,6 +1906,7 @@ function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 end
 
 function MissionSelectionGui:_prepare_intel_image_for_selected_save(...)
+	return
 end
 
 function MissionSelectionGui:_on_intel_clicked()
@@ -1817,7 +1914,7 @@ function MissionSelectionGui:_on_intel_clicked()
 		return
 	end
 
-	local save_data = nil
+	local save_data
 
 	if not self._secondary_paper_shown then
 		self:_hide_all_secondary_panels()
@@ -1840,7 +1937,7 @@ function MissionSelectionGui:_on_intel_clicked()
 		save_data = managers.raid_job:get_save_slots()[self._continue_slot_selected].current_job
 	end
 
-	local first_n_missions = nil
+	local first_n_missions
 
 	if self._list_tabs._items[self._list_tabs._selected_item_idx]._name == "tab_operation" and self._selected_job_id and not self._continue_slot_selected then
 		first_n_missions = 1
@@ -1864,6 +1961,7 @@ function MissionSelectionGui:_on_audio_clicked()
 
 	if not job_id then
 		local save_slots = managers.raid_job:get_save_slots()
+
 		job_id = save_slots[self._continue_slot_selected].current_job.job_id
 	end
 
@@ -1935,6 +2033,7 @@ end
 function MissionSelectionGui:set_difficulty_stepper_data(difficulty_available, difficulty_completed)
 	difficulty_available = difficulty_available or tweak_data:number_of_difficulties()
 	difficulty_completed = difficulty_completed or 0
+
 	local difficulties = {}
 
 	for i = 1, tweak_data:number_of_difficulties() do
@@ -2004,7 +2103,9 @@ function MissionSelectionGui:_animate_set_difficulty_warning_message(o, message)
 	if self._difficulty_warning:text() ~= message then
 		while t < fade_out_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 			self._difficulty_warning:set_alpha(current_alpha)
@@ -2019,11 +2120,14 @@ function MissionSelectionGui:_animate_set_difficulty_warning_message(o, message)
 	end
 
 	local fade_in_duration = 0.2
+
 	t = self._difficulty_warning:alpha() * fade_in_duration
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._difficulty_warning:set_alpha(current_alpha)
@@ -2036,9 +2140,11 @@ function MissionSelectionGui:_animate_hide_difficulty_warning_message(o)
 	local fade_out_duration = 0.2
 	local t = (1 - self._difficulty_warning:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._difficulty_warning:set_alpha(current_alpha)
@@ -2049,7 +2155,9 @@ end
 
 function MissionSelectionGui:_animate_slide_in_difficulty_warning_message(o, message)
 	local slide_duration = 0.4
+
 	self._difficulty_warning_slide_animation_t = self._difficulty_warning_slide_animation_t or 0
+
 	local t = self._difficulty_warning_slide_animation_t * slide_duration
 	local current_warning_text = self._difficulty_warning:text()
 
@@ -2063,13 +2171,15 @@ function MissionSelectionGui:_animate_slide_in_difficulty_warning_message(o, mes
 
 	while t < slide_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_warning_bottom = Easing.quartic_in_out(t, 0, MissionSelectionGui.SETTINGS_PADDING + warning_text_h, slide_duration)
 
 		self._difficulty_warning:set_bottom(current_warning_bottom)
 
 		for index, control in pairs(self._settings_controls) do
-			if control ~= self._difficulty_stepper and self._difficulty_stepper:y() < control:y() then
+			if control ~= self._difficulty_stepper and control:y() > self._difficulty_stepper:y() then
 				local control_default_y = self._difficulty_stepper:bottom() + (index - difficulty_control_index) * (MissionSelectionGui.SETTINGS_PADDING + 32) - 32
 				local current_control_y = Easing.quartic_in_out(t, control_default_y, warning_text_h + 32, slide_duration)
 
@@ -2085,20 +2195,24 @@ end
 
 function MissionSelectionGui:_animate_slide_out_difficulty_warning_message(o)
 	local slide_duration = 0.4
+
 	self._difficulty_warning_slide_animation_t = self._difficulty_warning_slide_animation_t or 0
+
 	local t = (1 - self._difficulty_warning_slide_animation_t) * slide_duration
 	local _, _, _, warning_text_h = self._difficulty_warning:text_rect()
 	local difficulty_control_index = table.index_of(self._settings_controls, self._difficulty_stepper)
 
 	while t < slide_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_warning_bottom = Easing.quartic_in_out(t, MissionSelectionGui.SETTINGS_PADDING + warning_text_h, -(MissionSelectionGui.SETTINGS_PADDING + warning_text_h), slide_duration)
 
 		self._difficulty_warning:set_bottom(current_warning_bottom)
 
 		for index, control in pairs(self._settings_controls) do
-			if control ~= self._difficulty_stepper and self._difficulty_stepper:y() < control:y() then
+			if control ~= self._difficulty_stepper and control:y() > self._difficulty_stepper:y() then
 				local control_default_y = self._difficulty_stepper:bottom() + (index - difficulty_control_index) * (MissionSelectionGui.SETTINGS_PADDING + 32) - 32
 				local current_control_y = Easing.quartic_in_out(t, control_default_y + warning_text_h + 32, -warning_text_h - 32, slide_duration)
 
@@ -2113,6 +2227,7 @@ function MissionSelectionGui:_animate_slide_out_difficulty_warning_message(o)
 end
 
 function MissionSelectionGui:_on_permission_selected(data)
+	return
 end
 
 function MissionSelectionGui:data_source_permission_stepper()
@@ -2138,12 +2253,15 @@ function MissionSelectionGui:data_source_permission_stepper()
 end
 
 function MissionSelectionGui:_on_toggle_drop_in(button, control, value)
+	return
 end
 
 function MissionSelectionGui:_on_toggle_team_ai(button, control, value)
+	return
 end
 
 function MissionSelectionGui:_on_toggle_auto_kick(button, control, value)
+	return
 end
 
 function MissionSelectionGui:_on_toggle_vote_kick(button, control, value)
@@ -2210,7 +2328,7 @@ function MissionSelectionGui:_raid_list_data_source()
 		end
 	end
 
-	table.sort(non_consumable_list, function (l, r)
+	table.sort(non_consumable_list, function(l, r)
 		if l.unlocked and not l.debug and not r.unlocked then
 			return true
 		elseif not l.unlocked and r.unlocked and not r.debug then
@@ -2267,13 +2385,15 @@ function MissionSelectionGui:_slot_list_data_source()
 	local slot_list = {}
 
 	for i = 1, 5 do
-		local current_slot = {
-			value = i
-		}
+		local current_slot = {}
+
+		current_slot.value = i
 
 		if current_save_slots[i] then
 			current_slot.text = self:translate(current_save_slots[i].current_job.name_id)
+
 			local icon_name = tweak_data.operations:mission_data(current_save_slots[i].current_job.job_id).icon_menu
+
 			current_slot.icon = {
 				texture = tweak_data.gui.icons[icon_name].texture,
 				texture_rect = tweak_data.gui.icons[icon_name].texture_rect
@@ -2281,7 +2401,9 @@ function MissionSelectionGui:_slot_list_data_source()
 			current_slot.difficulty = current_save_slots[i].difficulty
 		else
 			current_slot.text = self:translate("menu_empty_save_slot_title")
+
 			local icon_name = "missions_operation_empty_slot_menu"
+
 			current_slot.icon = {
 				texture = tweak_data.gui.icons[icon_name].texture,
 				texture_rect = tweak_data.gui.icons[icon_name].texture_rect
@@ -2357,9 +2479,11 @@ end
 
 function MissionSelectionGui:_select_mission(job_id)
 	self._selected_job_id = job_id
+
 	local job_data = tweak_data.operations:mission_data(job_id)
 	local description = managers.localization:text(job_data.briefing_id)
 	local mission_title = managers.localization:text("menu_mission_selected_title")
+
 	self._selected_job_id = job_id
 end
 
@@ -2369,7 +2493,7 @@ end
 
 function MissionSelectionGui:_animate_change_primary_paper_control(control, mid_callback, new_active_control)
 	local fade_out_duration = 0.2
-	local t = nil
+	local t
 
 	if self._active_primary_paper_control then
 		t = (1 - self._active_primary_paper_control:alpha()) * fade_out_duration
@@ -2377,9 +2501,11 @@ function MissionSelectionGui:_animate_change_primary_paper_control(control, mid_
 		t = 0
 	end
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.cubic_in_out(t, 1, -1, fade_out_duration)
 
 		self._active_primary_paper_control:set_alpha(alpha)
@@ -2397,11 +2523,14 @@ function MissionSelectionGui:_animate_change_primary_paper_control(control, mid_
 	self._active_primary_paper_control:set_visible(true)
 
 	local fade_in_duration = 0.25
+
 	t = self._active_primary_paper_control:alpha() * fade_out_duration
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.cubic_in_out(t, 0, 1, fade_in_duration)
 
 		self._active_primary_paper_control:set_alpha(alpha)
@@ -2414,11 +2543,14 @@ function MissionSelectionGui:_animate_change_secondary_paper_control(control, mi
 	local fade_out_duration = 0.2
 	local t = (1 - self._active_secondary_paper_control:alpha()) * fade_out_duration
 	local old_control = self._active_secondary_paper_control
+
 	self._active_secondary_paper_control = new_active_control
 
 	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.cubic_in_out(t, 1, -1, fade_out_duration)
 
 		old_control:set_alpha(alpha)
@@ -2434,11 +2566,14 @@ function MissionSelectionGui:_animate_change_secondary_paper_control(control, mi
 	self._active_secondary_paper_control:set_visible(true)
 
 	local fade_in_duration = 0.25
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.cubic_in_out(t, 0, 1, fade_in_duration)
 
 		self._active_secondary_paper_control:set_alpha(alpha)
@@ -2457,7 +2592,9 @@ function MissionSelectionGui:_animate_show_secondary_paper()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local setting_alpha = Easing.cubic_in_out(t, 1, -1, duration)
 
 		self._right_panel:set_alpha(setting_alpha)
@@ -2510,7 +2647,9 @@ function MissionSelectionGui:_animate_hide_secondary_paper()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local setting_alpha = Easing.cubic_in_out(t, 0, 1, duration)
 
 		self._right_panel:set_alpha(setting_alpha)
@@ -2552,12 +2691,15 @@ end
 
 function MissionSelectionGui:_animate_show_front_page(o)
 	self._front_page_movement_t = self._front_page_movement_t or 0
+
 	local fade_in_duration = 0.4
 	local t = self._front_page_movement_t * fade_in_duration
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, fade_in_duration / 2)
 
 		self._front_page_panel:set_alpha(current_alpha)
@@ -2587,12 +2729,15 @@ end
 
 function MissionSelectionGui:_animate_hide_front_page(o)
 	self._front_page_movement_t = self._front_page_movement_t or 0
+
 	local fade_out_duration = 0.45
 	local t = (1 - self._front_page_movement_t) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quadratic_in(t, 1, -1, fade_out_duration / 2)
 
 		self._front_page_panel:set_alpha(current_alpha)
@@ -2625,12 +2770,15 @@ function MissionSelectionGui:_animate_change_front_page_data(o, icon, text_id, f
 	local fade_out_duration = 0.2
 	local t = (1 - self._front_page_content_panel:alpha()) * fade_out_duration
 	local changing_front_page_image = false
+
 	x_offset = x_offset or 0
 
 	if self._front_page_icon_id ~= icon or self._front_page_text_id ~= text_id or folder_image ~= self._current_front_page_image then
 		while t < fade_out_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 			self._front_page_content_panel:set_alpha(current_alpha)
@@ -2682,11 +2830,14 @@ function MissionSelectionGui:_animate_change_front_page_data(o, icon, text_id, f
 	self._front_page_content_panel:set_rotation(front_page_rotation)
 
 	t = self._front_page_content_panel:alpha() * fade_out_duration
+
 	local fade_in_duration = 0.2
 
 	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._front_page_content_panel:set_alpha(current_alpha)
@@ -2727,9 +2878,11 @@ function MissionSelectionGui:_animate_show_operation_tutorialization()
 	local fade_out_duration = 0.15
 	local t = (1 - self._settings_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._settings_panel:set_alpha(current_alpha)
@@ -2738,11 +2891,14 @@ function MissionSelectionGui:_animate_show_operation_tutorialization()
 	self._settings_panel:set_alpha(0)
 
 	local fade_in_duration = 0.15
+
 	t = self._operation_tutorialization_panel:alpha() * fade_in_duration
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_out_duration)
 
 		self._operation_tutorialization_panel:set_alpha(current_alpha)
@@ -2755,9 +2911,11 @@ function MissionSelectionGui:_animate_hide_operation_tutorialization()
 	local fade_out_duration = 0.15
 	local t = (1 - self._operation_tutorialization_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._operation_tutorialization_panel:set_alpha(current_alpha)
@@ -2766,11 +2924,14 @@ function MissionSelectionGui:_animate_hide_operation_tutorialization()
 	self._operation_tutorialization_panel:set_alpha(0)
 
 	local fade_in_duration = 0.15
+
 	t = self._settings_panel:alpha() * fade_in_duration
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_out_duration)
 
 		self._settings_panel:set_alpha(current_alpha)

@@ -1,5 +1,6 @@
 ProjectileBase = ProjectileBase or class(UnitBase)
 ProjectileBase.time_cheat = {}
+
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mrot1 = Rotation()
@@ -63,6 +64,7 @@ function ProjectileBase:get_parent_projectile_id()
 end
 
 function ProjectileBase:get_aim_assist()
+	return
 end
 
 function ProjectileBase:set_weapon_unit(weapon_unit)
@@ -98,23 +100,25 @@ function ProjectileBase:active()
 end
 
 function ProjectileBase:create_sweep_data()
-	self._sweep_data = {
-		slot_mask = self._slot_mask,
-		current_pos = self._unit:position()
-	}
+	self._sweep_data = {}
+	self._sweep_data.slot_mask = self._slot_mask
+	self._sweep_data.current_pos = self._unit:position()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
 function ProjectileBase:throw(params)
 	self._owner = params.owner
+
 	local velocity = params.dir
 	local adjust_z = 50
 	local launch_speed = 250
-	local push_at_body_index = nil
+	local push_at_body_index
 
 	if params.projectile_entry and tweak_data.projectiles[params.projectile_entry] then
 		adjust_z = tweak_data.projectiles[params.projectile_entry].adjust_z or adjust_z
+
 		local _adjust_z = tweak_data.projectiles[params.projectile_entry]._adjust_z or 0
+
 		adjust_z = adjust_z + _adjust_z
 		launch_speed = tweak_data.projectiles[params.projectile_entry].launch_speed or launch_speed
 		push_at_body_index = tweak_data.projectiles[params.projectile_entry].push_at_body_index
@@ -122,6 +126,7 @@ function ProjectileBase:throw(params)
 
 	velocity = velocity * launch_speed
 	velocity = Vector3(velocity.x, velocity.y, velocity.z + adjust_z)
+
 	local mass_look_up_modifier = self._mass_look_up_modifier or 2
 	local mass = math.max(mass_look_up_modifier * (1 + math.min(0, params.dir.z)), 1)
 
@@ -257,18 +262,20 @@ function ProjectileBase:_bounce(...)
 end
 
 function ProjectileBase:save(data)
-	local state = {
-		timer = self._timer
-	}
+	local state = {}
+
+	state.timer = self._timer
 	data.ProjectileBase = state
 end
 
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
+
 	self._timer = state.timer
 end
 
 function ProjectileBase:destroy()
+	return
 end
 
 function ProjectileBase:on_level_tranistion()
@@ -349,6 +356,7 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 end
 
 function ProjectileBase:add_trail_effect()
+	return
 end
 
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
@@ -361,7 +369,7 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if tweak_data.projectiles[projectile_entry].time_cheat then
 		ProjectileBase.time_cheat[projectile_type] = ProjectileBase.time_cheat[projectile_type] or {}
 
-		if ProjectileBase.time_cheat[projectile_type][owner_peer_id] and Application:time() < ProjectileBase.time_cheat[projectile_type][owner_peer_id] then
+		if ProjectileBase.time_cheat[projectile_type][owner_peer_id] and ProjectileBase.time_cheat[projectile_type][owner_peer_id] > Application:time() then
 			return false
 		end
 
@@ -378,22 +386,24 @@ function ProjectileBase.spawn(unit_name, pos, rot)
 end
 
 function ProjectileBase._dispose_of_sound(...)
+	return
 end
 
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
-	local params = {
-		hit_pos = hit_pos,
-		collision_slotmask = self._collision_slotmask,
-		user = self._user,
-		damage = self._damage,
-		player_damage = self._player_damage or self._damage,
-		range = self._range,
-		ignore_unit = self._ignore_unit,
-		curve_pow = self._curve_pow,
-		col_ray = self._col_ray,
-		alert_filter = self._alert_filter,
-		owner = self._owner
-	}
+	local params = {}
+
+	params.hit_pos = hit_pos
+	params.collision_slotmask = self._collision_slotmask
+	params.user = self._user
+	params.damage = self._damage
+	params.player_damage = self._player_damage or self._damage
+	params.range = self._range
+	params.ignore_unit = self._ignore_unit
+	params.curve_pow = self._curve_pow
+	params.col_ray = self._col_ray
+	params.alert_filter = self._alert_filter
+	params.owner = self._owner
+
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg(params)
 
 	return hit_units, splinters

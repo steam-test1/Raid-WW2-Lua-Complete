@@ -21,7 +21,9 @@ function RaidGUIControlDialogTest:init(parent, params)
 		h = self._object:h(),
 		color = tweak_data.gui.colors.raid_black:with_alpha(0.9)
 	})
+
 	local center_x, center_y = self._object:center()
+
 	self._title_label = self._object:label({
 		w = 576,
 		name = "dialog_title",

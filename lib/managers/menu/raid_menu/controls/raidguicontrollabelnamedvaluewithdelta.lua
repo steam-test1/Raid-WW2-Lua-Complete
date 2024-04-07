@@ -4,7 +4,9 @@ function RaidGUIControlLabelNamedValueWithDelta:init(parent, params)
 	RaidGUIControlLabelNamedValueWithDelta.super.init(self, parent, params)
 
 	params.align = params.value_align or "center"
+
 	local label_value_with_delta_params = clone(params)
+
 	label_value_with_delta_params.font = tweak_data.gui.fonts.din_compressed
 	label_value_with_delta_params.font_size = params.value_delta_font_size or tweak_data.gui.font_sizes.subtitle
 	label_value_with_delta_params.h = label_value_with_delta_params.font_size

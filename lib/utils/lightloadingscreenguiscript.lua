@@ -12,6 +12,7 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	self:layout_saferect()
 
 	local panel = self._ws:panel()
+
 	self._panel = panel
 	self._bg_gui = panel:rect({
 		visible = false,
@@ -19,11 +20,12 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 		layer = base_layer
 	})
 	self._saferect_panel = self._saferect:panel()
-	self._gui_tweak_data = {
-		upper_saferect_border = 64,
-		border_pad = 8
-	}
+	self._gui_tweak_data = {}
+	self._gui_tweak_data.upper_saferect_border = 64
+	self._gui_tweak_data.border_pad = 8
+
 	local text = string.upper(managers.localization:text("debug_loading_level"))
+
 	self._title_text = self._saferect_panel:text({
 		visible = false,
 		vertical = "bottom",
@@ -72,8 +74,8 @@ function LightLoadingScreenGuiScript:layout_saferect()
 	local w = scaled_size.width
 	local h = scaled_size.height
 	local sh = math.min(self._safe_rect_pixels.height, self._safe_rect_pixels.width / (w / h))
-	local sw = math.min(self._safe_rect_pixels.width, self._safe_rect_pixels.height * w / h)
-	local x = math.round(self._res.x / 2 - sh * w / h / 2)
+	local sw = math.min(self._safe_rect_pixels.width, self._safe_rect_pixels.height * (w / h))
+	local x = math.round(self._res.x / 2 - sh * (w / h) / 2)
 	local y = math.round(self._res.y / 2 - sw / (w / h) / 2)
 
 	self._saferect:set_screen(w, h, x, y, sw)
@@ -93,21 +95,20 @@ end
 
 function LightLoadingScreenGuiScript:get_safe_rect_pixels(res)
 	local safe_rect_scale = self:get_safe_rect()
-	local safe_rect_pixels = {
-		x = safe_rect_scale.x * res.x,
-		y = safe_rect_scale.y * res.y,
-		width = safe_rect_scale.width * res.x,
-		height = safe_rect_scale.height * res.y
-	}
+	local safe_rect_pixels = {}
+
+	safe_rect_pixels.x = safe_rect_scale.x * res.x
+	safe_rect_pixels.y = safe_rect_scale.y * res.y
+	safe_rect_pixels.width = safe_rect_scale.width * res.x
+	safe_rect_pixels.height = safe_rect_scale.height * res.y
 
 	return safe_rect_pixels
 end
 
 function LightLoadingScreenGuiScript:setup(res, progress)
-	self._gui_tweak_data = {
-		upper_saferect_border = 64,
-		border_pad = 8
-	}
+	self._gui_tweak_data = {}
+	self._gui_tweak_data.upper_saferect_border = 64
+	self._gui_tweak_data.border_pad = 8
 
 	self._title_text:set_font_size(32)
 	self._stonecold_small_logo:set_size(256, 56)
@@ -138,6 +139,7 @@ function LightLoadingScreenGuiScript:update(progress, dt)
 end
 
 function LightLoadingScreenGuiScript:set_text(text)
+	return
 end
 
 function LightLoadingScreenGuiScript:destroy()

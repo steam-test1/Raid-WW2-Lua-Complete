@@ -25,10 +25,12 @@ function RaidGUIControlExperiencePeerLoot:init(parent, params)
 end
 
 function RaidGUIControlExperiencePeerLoot:close()
+	return
 end
 
 function RaidGUIControlExperiencePeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlExperiencePeerLoot.WIDTH
 	control_params.h = control_params.h or RaidGUIControlExperiencePeerLoot.HEIGHT
@@ -45,6 +47,7 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 		texture = tweak_data.gui.icons[RaidGUIControlExperiencePeerLoot.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlExperiencePeerLoot.ICON].texture_rect
 	}
+
 	self._xp_image = self._object:bitmap(params_xp_image)
 
 	self._xp_image:set_center_y(self._object:h() / 2)
@@ -61,7 +64,9 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 		font = RaidGUIControlExperiencePeerLoot.FONT,
 		font_size = RaidGUIControlExperiencePeerLoot.NAME_FONT_SIZE
 	}
+
 	self._name_label = self._object:text(params_player_name)
+
 	local _, _, _, h = self._name_label:text_rect()
 
 	self._name_label:set_h(h)
@@ -78,7 +83,9 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 		font = RaidGUIControlExperiencePeerLoot.FONT,
 		font_size = RaidGUIControlExperiencePeerLoot.XP_VALUE_FONT_SIZE
 	}
+
 	self._xp_value_label = self._object:text(params_customization_xp_value)
+
 	local _, _, _, h = self._xp_value_label:text_rect()
 
 	self._xp_value_label:set_h(h)

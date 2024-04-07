@@ -120,6 +120,7 @@ function CoreRopeOperatorUnitElement:_build_panel(panel, panel_sizer)
 end
 
 function CoreRopeOperatorUnitElement:on_executed_marker_selected()
+	return
 end
 
 function CoreRopeOperatorUnitElement:_get_unit(unit_id)

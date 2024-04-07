@@ -60,6 +60,7 @@ function LocalizationManager:_setup_macros()
 
 	if swap_accept then
 		local btn_tmp = btn_a
+
 		btn_a = btn_b
 		btn_b = btn_tmp
 		btn_accept = btn_a
@@ -147,6 +148,7 @@ function LocalizationManager:debug_file(file)
 		local text = self:text(s, {
 			BTN_INTERACT = self:btn_macro("interact")
 		})
+
 		t[s] = text
 	end
 
@@ -163,11 +165,13 @@ function LocalizationManager:check_translation()
 		local s_index = string.find(file, ".", 1, true)
 		local e_index = string.find(file, ".", s_index + 1, true)
 		local prename = string.sub(file, 1, s_index - 1)
+
 		p_files[prename] = p_files[prename] or {}
 
 		table.insert(p_files[prename], file)
 
 		local language = not e_index and "english" or string.sub(file, s_index + 1, e_index - 1)
+
 		l_files[language] = l_files[language] or {}
 
 		table.insert(l_files[language], file)
@@ -212,11 +216,13 @@ function LocalizationManager:check_translation()
 		local s_index = string.find(file, ".", 1, true)
 		local e_index = string.find(file, ".", s_index + 1, true)
 		local prename = string.sub(file, 1, s_index - 1)
+
 		p_files[prename] = p_files[prename] or {}
 
 		table.insert(p_files[prename], file)
 
 		local language = not e_index and "english" or string.sub(file, s_index + 1, e_index - 1)
+
 		l_files[language] = l_files[language] or {}
 
 		table.insert(l_files[language], file)
@@ -297,6 +303,7 @@ function LocalizationManager:check_keybind_translation(binding)
 		"scroll lock",
 		"pause"
 	}
+
 	local translation = binding
 
 	for _, binding_record in ipairs(self._keybind_translations) do

@@ -41,6 +41,7 @@ function RaidGUIControlSuggestedCards:_create_items()
 		item_params.name = "suggested_card_" .. i
 		item_params.peer_id = i
 		item_data = managers.challenge_cards:get_suggested_cards()[i]
+
 		local peer_name = ""
 
 		if managers.network:session():all_peers()[i] then
@@ -63,6 +64,7 @@ function RaidGUIControlSuggestedCards:_create_items()
 			font_size = tweak_data.gui.font_sizes.filter,
 			text = utf8.to_upper(peer_name)
 		})
+
 		local item = self._suggested_cards_panel:create_custom_control(RaidGUIControlCardSuggested, item_params, item_data, self._grid_params)
 
 		if item_data then

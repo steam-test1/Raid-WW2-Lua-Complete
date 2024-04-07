@@ -23,6 +23,7 @@ function CopActionDodge:init(action_desc, common_data)
 	self._timeout = action_desc.timeout
 	self._machine = common_data.machine
 	self._ids_base = Idstring("base")
+
 	local redir_res = self._ext_movement:play_redirect("dodge")
 
 	if redir_res then
@@ -66,11 +67,12 @@ end
 function CopActionDodge:update(t)
 	if self._ext_anim.dodge then
 		local dt = TimerManager:game():delta_time()
+
 		self._last_pos = CopActionHurt._get_pos_clamped_to_graph(self)
 
 		CopActionWalk._set_new_pos(self, dt)
 
-		local new_rot = nil
+		local new_rot
 
 		if self._rot_transition then
 			local anim_rel_t = self._machine:segment_relative_time(self._ids_base)

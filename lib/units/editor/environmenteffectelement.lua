@@ -20,9 +20,11 @@ function EnvironmentEffectElement:init(unit)
 end
 
 function EnvironmentEffectElement:clear(...)
+	return
 end
 
 function EnvironmentEffectElement:add_to_mission_package()
+	return
 end
 
 function EnvironmentEffectElement:_build_panel(panel, panel_sizer)

@@ -8,6 +8,7 @@ function TankCopLogicAttack.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
 
 	local old_internal_data = data.internal_data
+
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
 
@@ -19,6 +20,7 @@ function TankCopLogicAttack.enter(data, new_logic_name, enter_params)
 	end
 
 	local key_str = tostring(data.key)
+
 	my_data.detection_task_key = "CopLogicAttack._upd_enemy_detection" .. key_str
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicAttack._upd_enemy_detection, data)
@@ -99,16 +101,17 @@ function TankCopLogicAttack.update(data)
 	end
 
 	local enemy_pos = enemy_visible and focus_enemy.m_pos or focus_enemy.verified_pos
+
 	action_taken = CopLogicAttack._request_action_turn_to_enemy(data, my_data, data.m_pos, enemy_pos)
 
 	if action_taken then
 		return
 	end
 
-	local chase = nil
+	local chase
 	local z_dist = math.abs(data.m_pos.z - focus_enemy.m_pos.z)
 
-	if AIAttentionObject.REACT_COMBAT <= focus_enemy.reaction then
+	if focus_enemy.reaction >= AIAttentionObject.REACT_COMBAT then
 		if enemy_visible then
 			if z_dist < 300 or focus_enemy.verified_dis > 2000 or engage and focus_enemy.verified_dis > 500 then
 				chase = true
@@ -141,7 +144,9 @@ function TankCopLogicAttack.update(data)
 		elseif my_data.chase_pos then
 			my_data.chase_path_search_id = tostring(unit:key()) .. "chase"
 			my_data.pathing_to_chase_pos = true
+
 			local to_pos = my_data.chase_pos
+
 			my_data.chase_pos = nil
 
 			data.brain:add_pos_rsrv("path", {
@@ -159,6 +164,7 @@ end
 
 function TankCopLogicAttack.queued_update(data)
 	local my_data = data.internal_data
+
 	my_data.update_queued = false
 	data.t = TimerManager:game():time()
 
@@ -172,7 +178,9 @@ end
 function TankCopLogicAttack._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
+
 		data.pathing_results = nil
+
 		local path = pathing_results[my_data.chase_path_search_id]
 
 		if path then
@@ -256,6 +264,7 @@ function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data,
 			variant = speed or "run",
 			end_rot = end_rot
 		}
+
 		my_data.chase_path = nil
 		my_data.walking_to_chase_pos = data.unit:brain():action_request(new_action_data)
 

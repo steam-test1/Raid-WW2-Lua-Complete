@@ -7,6 +7,7 @@ local t_rem = table.remove
 local t_ins = table.insert
 local m_min = math.min
 local tmp_vec1 = Vector3()
+
 EnemyManager = EnemyManager or class()
 EnemyManager._MAX_NR_CORPSES = 20
 EnemyManager._nr_i_lod = {
@@ -128,7 +129,7 @@ function EnemyManager:_update_gfx_lod()
 		local camera_rot = managers.viewport:get_current_camera_rotation()
 
 		if camera_rot then
-			local pl_tracker, cam_pos = nil
+			local pl_tracker, cam_pos
 			local pl_fwd = camera_rot:y()
 			local player = managers.player:player_unit()
 
@@ -198,7 +199,7 @@ function EnemyManager:_update_gfx_lod()
 						else
 							local my_wgt = mvec3_dir(tmp_vec1, cam_pos, com[i])
 							local dot = mvec3_dot(tmp_vec1, pl_fwd)
-							local previous_prio = nil
+							local previous_prio
 
 							for prio, i_entry in ipairs(imp_i_list) do
 								if i == i_entry then
@@ -209,10 +210,11 @@ function EnemyManager:_update_gfx_lod()
 							end
 
 							my_wgt = my_wgt * my_wgt * (1 - dot)
+
 							local i_wgt = #imp_wgt_list
 
 							while i_wgt > 0 do
-								if previous_prio ~= i_wgt and imp_wgt_list[i_wgt] <= my_wgt then
+								if previous_prio ~= i_wgt and my_wgt >= imp_wgt_list[i_wgt] then
 									break
 								end
 
@@ -230,17 +232,20 @@ function EnemyManager:_update_gfx_lod()
 
 									if previous_prio <= nr_lod_1 and nr_lod_1 < i_wgt and nr_lod_1 <= #imp_i_list then
 										local promote_i = imp_i_list[nr_lod_1]
+
 										states[promote_i] = 1
 
 										units[promote_i]:base():set_visibility_state(1)
 									elseif nr_lod_1 < previous_prio and i_wgt <= nr_lod_1 then
 										local denote_i = imp_i_list[nr_lod_1]
+
 										states[denote_i] = 2
 
 										units[denote_i]:base():set_visibility_state(2)
 									end
 								elseif i_wgt <= nr_lod_total and #imp_i_list == nr_lod_total then
 									local kick_i = imp_i_list[nr_lod_total]
+
 									states[kick_i] = 3
 
 									units[kick_i]:base():set_visibility_state(3)
@@ -248,7 +253,7 @@ function EnemyManager:_update_gfx_lod()
 									t_rem(imp_i_list)
 								end
 
-								local lod_stage = nil
+								local lod_stage
 
 								if i_wgt <= nr_lod_total then
 									t_ins(imp_wgt_list, i_wgt, my_wgt)
@@ -274,11 +279,7 @@ function EnemyManager:_update_gfx_lod()
 						end
 					end
 
-					if i == nr_entries then
-						i = 1
-					else
-						i = i + 1
-					end
+					i = i == nr_entries and 1 or i + 1
 				until i == start_i
 			end
 		end
@@ -287,6 +288,7 @@ end
 
 function EnemyManager:_remove_i_from_lod_prio(i, anim_lod)
 	anim_lod = anim_lod or managers.user:get_setting("video_animation_lod")
+
 	local nr_i_lod1 = self._nr_i_lod[anim_lod][1]
 
 	for prio, i_entry in ipairs(self._gfx_lod_data.prio_i) do
@@ -296,6 +298,7 @@ function EnemyManager:_remove_i_from_lod_prio(i, anim_lod)
 
 			if prio <= nr_i_lod1 and nr_i_lod1 < #self._gfx_lod_data.prio_i then
 				local promoted_i_entry = self._gfx_lod_data.prio_i[prio]
+
 				self._gfx_lod_data.entries.states[promoted_i_entry] = 1
 
 				self._gfx_lod_data.entries.units[promoted_i_entry]:base():set_visibility_state(1)
@@ -367,6 +370,7 @@ function EnemyManager:set_gfx_lod_enabled(state)
 		self._gfx_lod_data.enabled = state
 	elseif self._gfx_lod_data.enabled then
 		self._gfx_lod_data.enabled = state
+
 		local entries = self._gfx_lod_data.entries
 		local units = entries.units
 		local states = entries.states
@@ -425,6 +429,7 @@ end
 function EnemyManager:_init_enemy_data()
 	local enemy_data = {}
 	local unit_data = {}
+
 	self._enemy_data = enemy_data
 	enemy_data.unit_data = unit_data
 	enemy_data.nr_units = 0
@@ -441,14 +446,15 @@ function EnemyManager:_init_enemy_data()
 	self._queued_task_executed = nil
 	self._delayed_clbks = {}
 	self._t = 0
-	self._gfx_lod_data = {
-		enabled = true,
-		prio_i = {},
-		prio_weights = {},
-		next_chk_prio_i = 1,
-		entries = {}
-	}
+	self._gfx_lod_data = {}
+	self._gfx_lod_data.enabled = true
+	self._gfx_lod_data.prio_i = {}
+	self._gfx_lod_data.prio_weights = {}
+	self._gfx_lod_data.next_chk_prio_i = 1
+	self._gfx_lod_data.entries = {}
+
 	local lod_entries = self._gfx_lod_data.entries
+
 	lod_entries.units = {}
 	lod_entries.states = {}
 	lod_entries.move_ext = {}
@@ -530,7 +536,7 @@ function EnemyManager:unqueue_task_debug(id)
 
 	local tasks = self._queued_tasks
 	local i = #tasks
-	local removed = nil
+	local removed
 
 	while i > 0 do
 		if tasks[i].id == id then
@@ -595,11 +601,11 @@ local m_ceil = math.ceil
 local t_remove = table.remove
 
 function EnemyManager:_update_queued_tasks(t, dt)
-	local i_asap_task, asp_task_t = nil
+	local i_asap_task, asp_task_t
 	local queue_remaining = m_ceil(dt * tweak_data.group_ai.ai_tick_rate)
 
 	for i_task, task_data in ipairs(self._queued_tasks) do
-		if not task_data.t or task_data.t < t then
+		if not task_data.t or t > task_data.t then
 			self:_execute_queued_task(i_task)
 
 			queue_remaining = queue_remaining - 1
@@ -607,7 +613,7 @@ function EnemyManager:_update_queued_tasks(t, dt)
 			if queue_remaining <= 0 then
 				break
 			end
-		elseif task_data.asap and (not asp_task_t or task_data.t < asp_task_t) then
+		elseif task_data.asap and (not asp_task_t or asp_task_t > task_data.t) then
 			i_asap_task = i_task
 			asp_task_t = task_data.t
 		end
@@ -619,7 +625,7 @@ function EnemyManager:_update_queued_tasks(t, dt)
 
 	local all_clbks = self._delayed_clbks
 
-	if all_clbks[1] and all_clbks[1][2] < t then
+	if all_clbks[1] and t > all_clbks[1][2] then
 		local clbk = t_remove(all_clbks, 1)[3]
 
 		clbk()
@@ -662,7 +668,7 @@ end
 
 function EnemyManager:remove_all_delayed_clbks(id)
 	local all_clbks = self._delayed_clbks
-	local callback_data = nil
+	local callback_data
 	local i = #all_clbks
 
 	while i > 0 do
@@ -678,7 +684,7 @@ end
 
 function EnemyManager:reschedule_delayed_clbk(id, execute_t)
 	local all_clbks = self._delayed_clbks
-	local clbk_data = nil
+	local clbk_data
 
 	for i, clbk_d in ipairs(all_clbks) do
 		if clbk_d[1] == id then
@@ -690,6 +696,7 @@ function EnemyManager:reschedule_delayed_clbk(id, execute_t)
 
 	if clbk_data then
 		clbk_data[2] = execute_t
+
 		local i = #all_clbks
 
 		while i > 0 and execute_t < all_clbks[i][2] do
@@ -735,7 +742,7 @@ function EnemyManager:queued_tasks_by_callback()
 			}
 		end
 
-		if not task_data.t or task_data.t < t then
+		if not task_data.t or t > task_data.t then
 			congestion = congestion + 1
 		end
 	end
@@ -761,6 +768,7 @@ function EnemyManager:register_enemy(enemy)
 		char_tweak = char_tweak,
 		so_access = managers.navigation:convert_access_flag(char_tweak.access)
 	}
+
 	self._enemy_data.unit_data[enemy:key()] = u_data
 
 	enemy:base():add_destroy_listener(self._unit_clbk_key, callback(self, self, "on_enemy_destroyed"))
@@ -800,6 +808,7 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	self:_destroy_unit_gfx_lod_data(u_key)
 
 	u_data.u_id = dead_unit:id()
+
 	local contour_ext = dead_unit:contour()
 
 	if contour_ext then
@@ -856,6 +865,7 @@ function EnemyManager:register_civilian(unit)
 	self:_create_unit_gfx_lod_data(unit, true)
 
 	local char_tweak = tweak_data.character[unit:base()._tweak_table]
+
 	self._civilian_data.unit_data[unit:key()] = {
 		is_civilian = true,
 		unit = unit,
@@ -879,6 +889,7 @@ function EnemyManager:on_civilian_died(dead_unit, damage_info)
 
 	local u_data = self._civilian_data.unit_data[u_key]
 	local enemy_data = self._enemy_data
+
 	enemy_data.nr_corpses = enemy_data.nr_corpses + 1
 	enemy_data.corpses[dead_unit:id()] = u_data
 	u_data.death_t = TimerManager:game():time()
@@ -941,6 +952,7 @@ function EnemyManager:_upd_corpse_disposal()
 
 		if peer:unit() then
 			no_peers = no_peers + 1
+
 			local cam_pos = peer_unit:position()
 			local cam_fwd = peer_unit:movement():m_head_rot():y()
 
@@ -1052,11 +1064,13 @@ function EnemyManager:dispose_all_corpses()
 end
 
 function EnemyManager:save(data)
-	local my_data = nil
+	local my_data
+
 	my_data = my_data or {}
 
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		my_data.corpses = my_data.corpses or {}
+
 		local corpse_data = {
 			u_data.u_id,
 			u_data.unit:movement():m_pos(),
@@ -1174,6 +1188,7 @@ function EnemyManager:register_commander()
 	if self._commander_active == 1 then
 		local old_diff = managers.groupai:state():get_difficulty()
 		local new_diff = old_diff + CommanderBrain.INTENSITY_INCREASE
+
 		new_diff = math.clamp(new_diff, new_diff, 1)
 		self._difficulty_difference = new_diff - old_diff
 
@@ -1192,6 +1207,7 @@ function EnemyManager:unregister_commander()
 	if self._commander_active == 0 and self._difficulty_difference > 0 then
 		local old_diff = managers.groupai:state():get_difficulty()
 		local new_diff = old_diff - self._difficulty_difference
+
 		new_diff = math.clamp(new_diff, 0, new_diff)
 
 		Application:debug("[EnemyManager:unregister_commander()] setting new intensity value (old,new)", old_diff, new_diff)

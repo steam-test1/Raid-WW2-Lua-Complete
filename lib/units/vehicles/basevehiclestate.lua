@@ -13,9 +13,11 @@ function BaseVehicleState:update(t, dt)
 end
 
 function BaseVehicleState:enter(state_data, enter_data)
+	return
 end
 
 function BaseVehicleState:exit(state_data)
+	return
 end
 
 function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)

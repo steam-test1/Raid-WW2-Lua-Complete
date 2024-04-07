@@ -78,6 +78,7 @@ function RaidGUIControlListItemIcon:_layout_breadcrumb()
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}
+
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
 	self._breadcrumb:set_right(self._object:w())
@@ -126,7 +127,7 @@ function RaidGUIControlListItemIcon:select()
 	end
 
 	if self._on_item_selected_callback then
-		self:_on_item_selected_callback(self._data)
+		self._on_item_selected_callback(self, self._data)
 	end
 end
 

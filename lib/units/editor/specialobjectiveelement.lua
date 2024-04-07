@@ -89,7 +89,7 @@ function SpecialObjectiveUnitElement:test_element()
 		return
 	end
 
-	local spawn_unit_name = nil
+	local spawn_unit_name
 
 	if self._hed.test_unit == "default" then
 		local SO_access_strings = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
@@ -102,6 +102,7 @@ function SpecialObjectiveUnitElement:test_element()
 	end
 
 	spawn_unit_name = spawn_unit_name or Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light")
+
 	local enemy = safe_spawn_unit(spawn_unit_name, self._unit:position(), self._unit:rotation())
 
 	if not enemy then
@@ -114,9 +115,10 @@ function SpecialObjectiveUnitElement:test_element()
 
 	local t = {
 		id = self._unit:unit_data().unit_id,
-		editor_name = self._unit:unit_data().name_id,
-		values = self:new_save_values()
+		editor_name = self._unit:unit_data().name_id
 	}
+
+	t.values = self:new_save_values()
 	t.values.use_instigator = true
 	t.values.is_navigation_link = false
 	t.values.is_alert_point = false
@@ -207,7 +209,7 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 		if nav_tracker:lost() then
 			local t1 = t % 0.5
 			local t2 = t % 1
-			local alpha = nil
+			local alpha
 
 			if t2 > 0.5 then
 				alpha = t1
@@ -216,6 +218,7 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 			end
 
 			alpha = math.lerp(0.1, 0.5, alpha)
+
 			local nav_color = Color(alpha, 1, 0, 0)
 
 			Draw:brush(nav_color):cylinder(my_pos, my_pos + math.UP * 80, 20, 4)
@@ -318,7 +321,7 @@ function SpecialObjectiveUnitElement:_spawn_raycast()
 		return
 	end
 
-	local id = nil
+	local id
 
 	if string.find(ray.unit:name():s(), "ai_enemy_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_civilian_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true) then
 		id = ray.unit:unit_data().unit_id
@@ -339,7 +342,7 @@ function SpecialObjectiveUnitElement:_turret_raycast()
 		return
 	end
 
-	local id = nil
+	local id
 
 	if string.find(ray.unit:name():s(), "turret", 1, true) then
 		id = ray.unit:unit_data().unit_id
@@ -498,6 +501,7 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
+
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
 		sorted = true,
@@ -609,4 +613,5 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 end
 
 function SpecialObjectiveUnitElement:add_to_mission_package()
+	return
 end

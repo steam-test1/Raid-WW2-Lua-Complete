@@ -28,6 +28,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
+
 	my_data.detection = data.char_tweak.detection.recon
 	my_data.vision = data.char_tweak.vision.idle
 
@@ -36,6 +37,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	end
 
 	data.internal_data = my_data
+
 	local key_str = tostring(data.key)
 
 	if not data.unit:movement():cool() then
@@ -110,8 +112,9 @@ end
 
 function TeamAILogicTravel._upd_enemy_detection(data)
 	data.t = TimerManager:game():time()
+
 	local my_data = data.internal_data
-	local max_reaction = nil
+	local max_reaction
 
 	if data.cool then
 		max_reaction = AIAttentionObject.REACT_SURPRISED
@@ -124,7 +127,7 @@ function TeamAILogicTravel._upd_enemy_detection(data)
 
 	if new_attention then
 		local objective = data.objective
-		local allow_trans, obj_failed = nil
+		local allow_trans, obj_failed
 		local dont_exit = false
 
 		if data.unit:movement():chk_action_forbidden("walk") and not data.unit:anim_data().act_idle then
@@ -199,16 +202,18 @@ function TeamAILogicTravel._upd_ai_perceptors(data)
 		TeamAILogicTravel._ai_perceptors_t = data.t
 	end
 
-	if data.t < TeamAILogicTravel._ai_perceptors_t then
+	if TeamAILogicTravel._ai_perceptors_t > data.t then
 		return
 	end
 
 	if not TeamAILogicTravel._ai_perceptors then
 		TeamAILogicTravel._ai_perceptors = {}
+
 		local players = managers.player:players()
 
 		for _, p in ipairs(players) do
 			local id = managers.network:session():peer_by_unit(p):id()
+
 			TeamAILogicTravel._ai_perceptors[id] = {
 				is_moving = false,
 				is_rotating = false,
@@ -243,6 +248,7 @@ function TeamAILogicTravel._upd_ai_perceptors(data)
 
 		local dist_vec = TeamAILogicTravel._ai_perceptors[id].position - TeamAILogicTravel._ai_perceptors[id].last_position
 		local dist = dist_vec:length()
+
 		TeamAILogicTravel._ai_perceptors[id].is_moving = true
 
 		if dist <= DISTANCE_THRESHOLD then
@@ -251,6 +257,7 @@ function TeamAILogicTravel._upd_ai_perceptors(data)
 
 		local rot_diff = Rotation:rotation_difference(TeamAILogicTravel._ai_perceptors[id].rotation, TeamAILogicTravel._ai_perceptors[id].last_rotation)
 		local diff_sum = math.abs(rot_diff:yaw())
+
 		TeamAILogicTravel._ai_perceptors[id].is_rotating = true
 
 		if diff_sum <= ROTATION_THRESHOLD then
@@ -315,7 +322,7 @@ function TeamAILogicTravel._unit_cones(units, cone_depth)
 end
 
 function TeamAILogicTravel._determine_destination_occupation(data, objective)
-	local occupation = nil
+	local occupation
 
 	if objective.type == "defend_area" then
 		if objective.cover then
@@ -340,6 +347,7 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 				local cover_entry = {
 					cover
 				}
+
 				occupation = {
 					type = "defend",
 					seg = objective.nav_seg,
@@ -362,6 +370,7 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		logic.register_in_group_ai(data.unit)
 
 		local phalanx_circle_pos = logic.calc_initial_phalanx_pos(data.m_pos, objective)
+
 		occupation = {
 			type = "defend",
 			seg = objective.nav_seg,
@@ -380,9 +389,9 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local dest_nav_seg_id = my_data.coarse_path[#my_data.coarse_path][1]
 		local dest_area = managers.groupai:state():get_area_from_nav_seg_id(dest_nav_seg_id)
 		local follow_pos = follow_tracker:field_position()
-		local threat_pos = nil
+		local threat_pos
 
-		if data.attention_obj and data.attention_obj.nav_tracker and AIAttentionObject.REACT_COMBAT <= data.attention_obj.reaction then
+		if data.attention_obj and data.attention_obj.nav_tracker and data.attention_obj.reaction >= AIAttentionObject.REACT_COMBAT then
 			threat_pos = data.attention_obj.nav_tracker:field_position()
 		end
 
@@ -394,18 +403,20 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			local cover_entry = {
 				cover
 			}
+
 			occupation = {
 				type = "defend",
 				cover = cover_entry
 			}
 		else
-			local max_dist = nil
+			local max_dist
 
 			if objective.called then
 				max_dist = 600
 			end
 
 			local to_pos = CopLogicTravel._get_pos_on_wall(dest_area.pos, max_dist)
+
 			occupation = {
 				type = "defend",
 				pos = to_pos
@@ -428,19 +439,22 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			ray_params.pos_from = revive_u_pos
 		end
 
-		local stand_dis = nil
+		local stand_dis
 
 		if is_local_player or objective.follow_unit:base().is_husk_player then
 			stand_dis = 120
 		else
 			stand_dis = 90
+
 			local mid_pos = mvector3.copy(revive_u_fwd)
 
 			mvector3.multiply(mid_pos, -20)
 			mvector3.add(mid_pos, revive_u_pos)
 
 			ray_params.pos_to = mid_pos
+
 			local ray_res = managers.navigation:raycast(ray_params)
+
 			revive_u_pos = ray_params.trace[1]
 		end
 
@@ -451,6 +465,7 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		mvector3.add(revive_pos, revive_u_pos)
 
 		ray_params.pos_to = revive_pos
+
 		local ray_res = managers.navigation:raycast(ray_params)
 
 		if ray_res then
@@ -460,11 +475,12 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			mvector3.add(opposite_pos, revive_u_pos)
 
 			ray_params.pos_to = opposite_pos
+
 			local old_trace = ray_params.trace[1]
 			local opposite_ray_res = managers.navigation:raycast(ray_params)
 
 			if opposite_ray_res then
-				if mvector3.distance(revive_pos, revive_u_pos) < mvector3.distance(ray_params.trace[1], revive_u_pos) then
+				if mvector3.distance(ray_params.trace[1], revive_u_pos) > mvector3.distance(revive_pos, revive_u_pos) then
 					revive_pos = ray_params.trace[1]
 				else
 					revive_pos = old_trace
@@ -478,6 +494,7 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 
 		local revive_rot = revive_u_pos - revive_pos
 		local revive_rot = Rotation(revive_rot, math.UP)
+
 		occupation = {
 			type = "revive",
 			pos = revive_pos,

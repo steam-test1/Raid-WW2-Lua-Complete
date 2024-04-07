@@ -25,6 +25,7 @@ function CoreWorldEventUnitElement:update_selected(t, dt)
 end
 
 function CoreWorldEventUnitElement:update_editing(t, dt)
+	return
 end
 
 function CoreWorldEventUnitElement:_draw_world_link(t, dt, world_name)
@@ -47,7 +48,7 @@ function CoreWorldEventUnitElement:_world_name_raycast()
 		return nil
 	end
 
-	local world_name = nil
+	local world_name
 
 	if ray.unit:mission_element_data() and ray.unit:mission_element_data().element_class == "ElementWorldPoint" then
 		world_name = ray.unit:unit_data().name_id
@@ -153,6 +154,7 @@ end
 function CoreWorldEventUnitElement:_on_gui_set_event_data(event_list_data)
 	local guis = self:_get_guis_by_event_list_data(event_list_data)
 	local event = guis.event:get_value()
+
 	event_list_data.event = event
 end
 
@@ -195,9 +197,10 @@ function CoreWorldEventUnitElement:destroy_panel(...)
 end
 
 function CoreWorldEventUnitElement:_on_gui_select_world_list()
-	local settings = {
-		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
-	}
+	local settings = {}
+
+	settings.list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
+
 	local names = managers.worldcollection:world_name_ids()
 	local dialog = SelectNameModal:new("Select worlds", names, settings)
 
@@ -215,6 +218,7 @@ function CoreWorldEventUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local btn_toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
 	btn_toolbar:add_tool("SELECT_UNIT_LIST", "Select unit from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
@@ -261,6 +265,7 @@ function CoreWorldInputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local event = EWS:TextCtrl(panel, self._hed.event, "", "TE_PROCESS_ENTER")
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
@@ -289,6 +294,7 @@ function CoreWorldOutputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local event = EWS:TextCtrl(panel, self._hed.event, "", "TE_PROCESS_ENTER")
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
@@ -318,6 +324,7 @@ function CoreWorldSpawnerElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local worlds = managers.worldcollection:get_all_worlds()
 
 	table.insert(worlds, "")

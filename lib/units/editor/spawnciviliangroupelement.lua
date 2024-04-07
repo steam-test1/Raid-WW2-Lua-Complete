@@ -21,6 +21,7 @@ function SpawnCivilianGroupUnitElement:draw_links(t, dt, selected_unit, all_unit
 end
 
 function SpawnCivilianGroupUnitElement:update_editing()
+	return
 end
 
 function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all_units)
@@ -79,6 +80,7 @@ function SpawnCivilianGroupUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_spawn_civilian"
 	}

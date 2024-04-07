@@ -57,10 +57,12 @@ function RaidGUIControlXPProgressBar:init(parent, params)
 end
 
 function RaidGUIControlXPProgressBar:close()
+	return
 end
 
 function RaidGUIControlXPProgressBar:_create_panels()
 	local control_params = clone(self._params)
+
 	control_params.name = control_params.name .. "_panel"
 	control_params.layer = self._panel:layer() + 1
 	control_params.w = self._params.w
@@ -85,6 +87,7 @@ function RaidGUIControlXPProgressBar:_create_progress_bar()
 		w = self._bar_w + self._horizontal_padding * 2,
 		h = self._params.progress_bar_h or RaidGUIControlXPProgressBar.PROGRESS_BAR_H
 	}
+
 	self._progress_bar = self._inner_panel:progress_bar_simple(progress_bar_params)
 
 	self._progress_bar:set_bottom(96)
@@ -106,11 +109,14 @@ function RaidGUIControlXPProgressBar:_create_slider_pimples()
 		h = icon_h,
 		layer = self._progress_bar:layer() + 5
 	}
+
 	self._slider_pimples_panel = self._inner_panel:panel(slider_pimples_panel_params)
+
 	local current_level = 1
 	local level_cap = managers.experience:level_cap()
 	local character_class = managers.skilltree:get_character_profile_class()
 	local weapon_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[character_class]
+
 	self._level_pins = {}
 
 	while current_level <= level_cap do
@@ -150,13 +156,16 @@ function RaidGUIControlXPProgressBar:_create_level_marks_on_progress_bar()
 		w = self._inner_panel:w(),
 		h = self._progress_bar:h()
 	}
+
 	self._level_marks_panel = self._inner_panel:panel(level_marks_panel_params)
 
 	self._level_marks_panel:set_center_y(self._progress_bar:center_y())
 
 	local current_level = 1
 	local level_cap = managers.experience:level_cap()
+
 	self._level_marks = {}
+
 	local icon = RaidGUIControlXPProgressBar.LEVEL_MARK_ICON
 	local level_w = self._bar_w / (level_cap - 1)
 
@@ -164,7 +173,7 @@ function RaidGUIControlXPProgressBar:_create_level_marks_on_progress_bar()
 		for i = 2, RaidGUIControlXPProgressBar.MARKS_PER_LEVEL do
 			local level_mark_params = {
 				name = "level_label_" .. current_level .. "_" .. tostring(i),
-				x = self._params.horizontal_padding + (current_level - 1) * level_w - RaidGUIControlXPProgressBar.LEVEL_MARK_ICON_SIZE / 2 + (i - 1) * level_w / RaidGUIControlXPProgressBar.MARKS_PER_LEVEL,
+				x = self._params.horizontal_padding + (current_level - 1) * level_w - RaidGUIControlXPProgressBar.LEVEL_MARK_ICON_SIZE / 2 + (i - 1) * (level_w / RaidGUIControlXPProgressBar.MARKS_PER_LEVEL),
 				y = self._level_marks_panel:h() / 2 - RaidGUIControlXPProgressBar.LEVEL_MARK_ICON_SIZE / 2,
 				w = RaidGUIControlXPProgressBar.LEVEL_MARK_ICON_SIZE,
 				h = RaidGUIControlXPProgressBar.LEVEL_MARK_ICON_SIZE,
@@ -189,18 +198,20 @@ function RaidGUIControlXPProgressBar:_create_level_and_weapons_info()
 		w = self._inner_panel:w(),
 		h = RaidGUIControlXPProgressBar.LEVEL_LABELS_PANEL_H - self._slider_pimples_panel:h()
 	}
+
 	self._level_labels_panel = self._inner_panel:panel(level_labels_panel_params)
 
 	self._level_labels_panel:set_bottom(self._slider_pimples_panel:y())
 
 	self._level_labels = {}
 	self._weapon_unlock_icons = {}
+
 	local character_class = managers.skilltree:get_character_profile_class()
 	local weapon_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[character_class]
 	local level_cap = managers.experience:level_cap()
 	local current_level = 1
 
-	while level_cap >= current_level do
+	while current_level <= level_cap do
 		local draw_label = current_level == 1 or current_level % 1 == 0
 		local number_of_weapon_unlocks = weapon_unlock_progression[current_level] and weapon_unlock_progression[current_level].weapons and #weapon_unlock_progression[current_level].weapons or 0
 
@@ -228,6 +239,7 @@ function RaidGUIControlXPProgressBar:_create_new_xp_label()
 		font_size = RaidGUIControlXPProgressBar.NEW_XP_TEXT_FONT_SIZE,
 		color = RaidGUIControlXPProgressBar.NEW_XP_TEXT_COLOR
 	}
+
 	self._new_xp_text = self._inner_panel:text(new_xp_params)
 
 	self._new_xp_text:set_bottom(self._inner_panel:h())
@@ -242,7 +254,7 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 		h = self._level_labels_panel:h()
 	}
 	local level_label_panel = self._level_labels_panel:panel(level_label_panel_params)
-	local level_label = nil
+	local level_label
 
 	if draw_level_label then
 		local level_label_text_params = {
@@ -258,14 +270,16 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 			text = tostring(level),
 			color = RaidGUIControlXPProgressBar.LEVEL_LABELS_COLOR
 		}
+
 		level_label = level_label_panel:text(level_label_text_params)
+
 		local _, _, w, _ = level_label:text_rect()
 
 		level_label:set_w(w)
 		level_label:set_center_x(level_label_panel:w() / 2)
 	end
 
-	local weapon_unlock = nil
+	local weapon_unlock
 
 	if number_of_weapon_unlocks > 0 then
 		local weapon_unlock_panel_params = {
@@ -275,7 +289,9 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 			w = level_label_panel:w(),
 			h = level_label_panel:h()
 		}
+
 		weapon_unlock = level_label_panel:panel(weapon_unlock_panel_params)
+
 		local weapon_icon = RaidGUIControlXPProgressBar.WEAPON_UNLOCK_ICON
 		local icon_w = tweak_data.gui:icon_w(weapon_icon)
 		local icon_h = tweak_data.gui:icon_h(weapon_icon)
@@ -333,6 +349,7 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 			icon = weapon_unlock,
 			unlocked = unlocked
 		}
+
 		self._weapon_unlock_icons[level] = weapon_unlock_icon
 	end
 
@@ -363,7 +380,7 @@ function RaidGUIControlXPProgressBar:set_progress(progress, points_added_total)
 	self._new_xp_text:set_w(w)
 	self._new_xp_text:set_center_x(self._slider_pimples_panel:right())
 
-	if self._inner_panel:w() < self._new_xp_text:right() then
+	if self._new_xp_text:right() > self._inner_panel:w() then
 		self._new_xp_text:set_right(self._inner_panel:w())
 	end
 end
@@ -382,6 +399,7 @@ function RaidGUIControlXPProgressBar:unlock_level(level)
 	end
 
 	self._current_level = level
+
 	local level_cap = managers.experience:level_cap()
 
 	if level == level_cap then
@@ -408,6 +426,7 @@ function RaidGUIControlXPProgressBar:set_level(level)
 	end
 
 	self._current_level = level
+
 	local level_cap = managers.experience:level_cap()
 
 	if level == level_cap then
@@ -431,9 +450,11 @@ function RaidGUIControlXPProgressBar:_animate_fade_in()
 	local duration = 0.3
 	local t = self._object:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -446,9 +467,11 @@ function RaidGUIControlXPProgressBar:_animate_fade_in_object(object)
 	local duration = 0.3
 	local t = object:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
 
 		object:set_alpha(current_alpha)
@@ -464,7 +487,9 @@ function RaidGUIControlXPProgressBar:_animate_inner_panel_position(panel, new_x)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_position = Easing.quartic_in_out(t, initial_position, new_x - initial_position, duration)
 
 		panel:set_x(current_position)

@@ -5,8 +5,10 @@ CoreEditorEwsDialog = CoreEditorEwsDialog or mixin(class(), BasicEventHandling)
 function CoreEditorEwsDialog:init(parent, caption, id, position, size, style, settings)
 	self._default_position = position
 	self._default_size = size
+
 	local pos = settings and settings.position or self._default_position
 	local size = settings and settings.size or self._default_size
+
 	self._dialog = EWS:Dialog(parent, caption, id, pos, size, style)
 
 	self._dialog:set_icon(CoreEWS.image_path("world_editor_16x16.png"))
@@ -29,6 +31,7 @@ function CoreEditorEwsDialog:create_panel(orientation)
 end
 
 function CoreEditorEwsDialog:update(t, dt)
+	return
 end
 
 function CoreEditorEwsDialog:dialog()
@@ -96,9 +99,11 @@ function CoreEditorEwsDialog:set_caption(caption)
 end
 
 function CoreEditorEwsDialog:reset()
+	return
 end
 
 function CoreEditorEwsDialog:recreate()
+	return
 end
 
 function CoreEditorEwsDialog:destroy()
@@ -109,12 +114,15 @@ UnitList = UnitList or class()
 
 function UnitList:init()
 	self._dialog = EWS:Dialog(nil, "Unit debug list", "", Vector3(100, 100, 0), Vector3(850, 600, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
 	local dialog_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._dialog:set_sizer(dialog_sizer)
 
 	local panel = EWS:Panel(self._dialog, "", "")
+
 	self._panel = panel
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	panel:set_sizer(panel_sizer)
@@ -345,13 +353,14 @@ function UnitList:column_click_list(data, event)
 	end
 
 	self._column_states[column].state = state
-	local f = nil
+
+	local f
 
 	if state == "ascending" then
 		function f(item1, item2)
 			if item1[value] < item2[value] then
 				return -1
-			elseif item2[value] < item1[value] then
+			elseif item1[value] > item2[value] then
 				return 1
 			end
 
@@ -359,7 +368,7 @@ function UnitList:column_click_list(data, event)
 		end
 	else
 		function f(item1, item2)
-			if item2[value] < item1[value] then
+			if item1[value] > item2[value] then
 				return -1
 			elseif item1[value] < item2[value] then
 				return 1
@@ -394,7 +403,9 @@ function UnitList:on_select_unit_list(ignore_unit)
 		unit_list:delete_all_items()
 
 		local units = World:find_units_quick("all")
+
 		self._unit_list_units = {}
+
 		local j = 1
 
 		for _, unit in ipairs(units) do
@@ -489,6 +500,7 @@ function UnitList:spawned_unit(unit)
 	end
 
 	local stats = managers.editor:get_unit_stat(unit)
+
 	stats.amount = 1
 
 	self:append_item(unit:name():s(), stats)
@@ -545,7 +557,7 @@ function UnitList:fill_unit_list(type)
 
 	list:delete_all_items()
 
-	local data, total = nil
+	local data, total
 
 	if type == "limited" then
 		data, total = managers.editor:get_unit_stats_from_layers()
@@ -596,6 +608,7 @@ function UnitList:append_item(name, t)
 	self._list:set_item(i, 16, t.last_exported_from)
 
 	local new_t = clone(t)
+
 	new_t.name = name
 	new_t.instanced = tostring(new_t.instanced)
 
@@ -627,6 +640,7 @@ function UnitTreeBrowser:init(...)
 	self:create_panel("VERTICAL")
 
 	self._unit_names = {}
+
 	local horizontal_ctrlr_sizer = EWS:BoxSizer("HORIZONTAL")
 	local vertical_tree_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -694,33 +708,33 @@ function UnitTreeBrowser:update_tree()
 end
 
 function UnitTreeBrowser:_create_tree_data()
-	self._tree_data = {
-		total_units = 0,
-		total_units_preview = 0,
-		layers = {}
-	}
+	self._tree_data = {}
+	self._tree_data.total_units = 0
+	self._tree_data.total_units_preview = 0
+	self._tree_data.layers = {}
+
 	local layers = managers.editor:layers()
 	local layer_names = self:sorted_map(layers)
 	local filter = self._filter:get_value()
 
 	for _, layer_name in ipairs(layer_names) do
-		self._tree_data.layers[layer_name] = {
-			total_layer_units = 0,
-			total_layer_units_preview = 0,
-			categories = {},
-			path = {}
-		}
+		self._tree_data.layers[layer_name] = {}
+		self._tree_data.layers[layer_name].total_layer_units = 0
+		self._tree_data.layers[layer_name].total_layer_units_preview = 0
+		self._tree_data.layers[layer_name].categories = {}
+		self._tree_data.layers[layer_name].path = {}
+
 		local c_map = layers[layer_name]:category_map()
 
 		if c_map then
 			local c_names = self:sorted_map(c_map)
 
 			for _, c_name in ipairs(c_names) do
-				self._tree_data.layers[layer_name].categories[c_name] = {
-					total_units = 0,
-					total_preview_units = 0,
-					units = {}
-				}
+				self._tree_data.layers[layer_name].categories[c_name] = {}
+				self._tree_data.layers[layer_name].categories[c_name].total_units = 0
+				self._tree_data.layers[layer_name].categories[c_name].total_preview_units = 0
+				self._tree_data.layers[layer_name].categories[c_name].units = {}
+
 				local unit_names = self:sorted_map(c_map[c_name])
 
 				for _, unit_name in ipairs(unit_names) do
@@ -739,6 +753,7 @@ function UnitTreeBrowser:_create_tree_data()
 						end
 
 						local preview = self:has_preview(managers.editor:get_real_name(unit_name))
+
 						self._tree_data.layers[layer_name].categories[c_name].units[unit_name] = preview and true or false
 						self._tree_data.total_units = self._tree_data.total_units + 1
 						self._tree_data.total_units_preview = self._tree_data.total_units_preview + (preview and 1 or 0)
@@ -754,7 +769,7 @@ function UnitTreeBrowser:_create_tree_data()
 end
 
 function UnitTreeBrowser:_populate_unit_paths(path, id)
-	local x_unit, y_unit = nil
+	local x_unit, y_unit
 
 	local function sort(x, y)
 		x_unit = string.find(x, ".unit", nil, true) and true or false
@@ -772,6 +787,7 @@ function UnitTreeBrowser:_populate_unit_paths(path, id)
 
 	for _, pname in ipairs(ip_keys) do
 		local data = path[pname]
+
 		size = size + (type(data) ~= "table" and 1 or 0)
 	end
 
@@ -896,6 +912,7 @@ function GlobalSelectUnit:init(...)
 
 	self._preview_unit = nil
 	self._only_list_used_units = false
+
 	local horizontal_ctrlr_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 0, "EXPAND")
@@ -943,6 +960,7 @@ function GlobalSelectUnit:init(...)
 	self._filter:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	self._layer_cbs = {}
+
 	local layers = managers.editor:layers()
 	local names_layers = {}
 
@@ -1046,6 +1064,7 @@ end
 
 function GlobalSelectUnit:_on_unit_preview_start(unit_to_preview)
 	self._preview_unit = unit_to_preview
+
 	local previewed_unit_height = self:_calculate_bounding_sphere_radius(unit_to_preview)
 	local desired_distance_to_camera = previewed_unit_height
 
@@ -1053,7 +1072,7 @@ function GlobalSelectUnit:_on_unit_preview_start(unit_to_preview)
 
 	local position_in_front_camera = self._new_cam_pos + Application:last_camera_rotation():y() * desired_distance_to_camera
 
-	unit_to_preview:set_position(position_in_front_camera + unit_to_preview:position() - unit_to_preview:oobb():center())
+	unit_to_preview:set_position(position_in_front_camera + (unit_to_preview:position() - unit_to_preview:oobb():center()))
 
 	self._rotation_point_for_preview = Vector3(unit_to_preview:oobb():center().x, unit_to_preview:oobb():center().y, unit_to_preview:oobb():center().z)
 end
@@ -1061,13 +1080,9 @@ end
 function GlobalSelectUnit:_on_unit_preview_update()
 	local degrees_per_second = 45
 	local time = Application:time()
-	local dt = nil
+	local dt
 
-	if self._last_preview_update_time == nil then
-		dt = 0.01667
-	else
-		dt = time - self._last_preview_update_time
-	end
+	dt = self._last_preview_update_time == nil and 0.01667 or time - self._last_preview_update_time
 
 	if dt >= 0.01667 then
 		self:_rotate_around_point(self._preview_unit, self._rotation_point_for_preview, math.UP, dt, degrees_per_second)
@@ -1111,9 +1126,11 @@ end
 
 function GlobalSelectUnit:_setup_preview_camera(previewed_unit_height, desired_distance_to_camera)
 	local one_km = 10000
+
 	self._old_cam_pos = managers.viewport:get_current_camera():position()
 	self._new_cam_pos = Application:last_camera_position() + math.UP * one_km
 	self._old_fov = managers.viewport:get_current_camera():fov()
+
 	local new_fov = math.deg(math.atan(previewed_unit_height / (2 * desired_distance_to_camera)))
 
 	managers.viewport:get_current_camera():set_fov(new_fov)
@@ -1135,6 +1152,7 @@ end
 function GlobalSelectUnit:_stripped_unit_name(name)
 	local reverse = string.reverse(name)
 	local i = string.find(reverse, "/")
+
 	name = string.reverse(string.sub(reverse, 0, i - 1))
 
 	return name
@@ -1346,6 +1364,7 @@ function ReplaceUnit:init(name, types)
 	horizontal_units_sizer:add(notebook, 1, 0, "EXPAND")
 
 	self._all_unit_lists = {}
+
 	local category_map = {}
 	local unit_names = {}
 
@@ -1421,6 +1440,7 @@ function ReplaceUnit:init(name, types)
 	end
 
 	local btn_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._remember_cb = EWS:CheckBox(self._panel, "Remember choice", "", "ALIGN_RIGHT")
 
 	self._remember_cb:set_value(false)
@@ -1704,7 +1724,9 @@ function MoveTransformTypeIn:init()
 
 	self._min = -100000000
 	self._max = 100000000
+
 	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
+
 	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
 	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
 	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
@@ -1712,6 +1734,7 @@ function MoveTransformTypeIn:init()
 	self._panel_sizer:add(world_sizer, 1, 0, "EXPAND")
 
 	local offset_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Offset")
+
 	self._ox = self:_create_ctrl("X:", "x", 0, "offset", offset_sizer)
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
@@ -1796,6 +1819,7 @@ function MoveTransformTypeIn:update_absolut(data)
 
 	if alive(self._unit) then
 		local pos = self._unit:position()
+
 		pos = pos["with_" .. data.coor](pos, value)
 
 		data.ctrl:change_value(string.format("%.2f", value / 100))
@@ -1857,7 +1881,9 @@ function RotateTransformTypeIn:init()
 
 	self._min = -100000000
 	self._max = 100000000
+
 	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
+
 	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
 	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
 	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
@@ -1865,6 +1891,7 @@ function RotateTransformTypeIn:init()
 	self._panel_sizer:add(world_sizer, 1, 0, "EXPAND")
 
 	local offset_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Offset")
+
 	self._ox = self:_create_ctrl("X:", "x", 0, "offset", offset_sizer)
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
@@ -2015,7 +2042,9 @@ function ScaleTransformTypeIn:init()
 
 	self._min = -100000000
 	self._max = 100000000
+
 	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
+
 	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
 	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
 	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
@@ -2023,6 +2052,7 @@ function ScaleTransformTypeIn:init()
 	self._panel_sizer:add(world_sizer, 1, 0, "EXPAND")
 
 	local offset_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Offset")
+
 	self._ox = self:_create_ctrl("X:", "x", 0, "offset", offset_sizer)
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
@@ -2107,6 +2137,7 @@ function ScaleTransformTypeIn:update_absolut(data)
 
 	if alive(self._unit) then
 		local pos = self._unit:position()
+
 		pos = pos["with_" .. data.coor](pos, value)
 
 		data.ctrl:change_value(string.format("%.2f", value / 100))
@@ -2168,8 +2199,10 @@ function CameraTransformTypeIn:init()
 
 	self._min = -100000000
 	self._max = 100000000
+
 	local pos_rot_sizer = EWS:BoxSizer("HORIZONTAL")
 	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World:Pos")
+
 	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
 	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
 	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
@@ -2177,6 +2210,7 @@ function CameraTransformTypeIn:init()
 	pos_rot_sizer:add(world_sizer, 1, 0, "EXPAND")
 
 	local offset_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World:Rot")
+
 	self._ox = self:_create_ctrl("X:", "x", 0, "offset", offset_sizer)
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
@@ -2314,6 +2348,7 @@ function CameraTransformTypeIn:update_position(data)
 	end
 
 	local pos = managers.editor:camera_position()
+
 	pos = pos["with_" .. data.coor](pos, value)
 
 	data.ctrl:set_value(string.format("%.0f", value))
@@ -2345,6 +2380,7 @@ end
 
 function CameraTransformTypeIn:update_fov()
 	local value = tonumber(self._fov:get_value()) or managers.editor:camera_fov()
+
 	value = math.clamp(value, 1, 170)
 
 	self._fov:set_value(string.format("%.0f", value))
@@ -2355,10 +2391,7 @@ end
 function CameraTransformTypeIn:update_far_range()
 	local value = tonumber(self._far_range:get_value()) or managers.editor:camera_far_range() / 100
 
-	if value < 1 then
-		value = 1
-	end
-
+	value = value < 1 and 1 or value
 	value = value * 100
 
 	self._far_range:set_value(string.format("%.2f", value / 100))
@@ -2473,6 +2506,7 @@ function MissionGraph:init(...)
 
 	for _, unit in ipairs(managers.editor._layers.Mission:created_units()) do
 		local node = EWS:Node(unit:unit_data().name_id, unit:position().x / 4, unit:position().y / 4 * -1)
+
 		self._nodes[unit:unit_data().unit_id] = node
 
 		self._graph:add_node(node)
@@ -2518,6 +2552,7 @@ function WorldEditorNews:init()
 	self:create_panel("VERTICAL")
 
 	self._text = EWS:TextCtrl(self._panel, "", "", "TE_MULTILINE,TE_NOHIDESEL,TE_RICH2,TE_DONTWRAP,TE_READONLY")
+
 	local file = SystemFS:open(managers.database:base_path() .. "core\\lib\\utils\\dev\\editor\\WorldEditorNews.txt", "r")
 	local news = file:read("*a")
 
@@ -2526,6 +2561,7 @@ function WorldEditorNews:init()
 	self._text:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._cancel_btn = EWS:Button(self._panel, self._captions[math.random(#self._captions)], "", "")
 
 	button_sizer:add(self._cancel_btn, 0, 2, "RIGHT,LEFT")
@@ -2595,6 +2631,7 @@ function UnitDuality:init(collisions, pos)
 	self._panel_sizer:add(position_sizer, 0, 0, "EXPAND")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._check_btn = EWS:Button(self._panel, "Check Again", "", "")
 
 	button_sizer:add(self._check_btn, 0, 2, "RIGHT,LEFT")
@@ -2771,6 +2808,7 @@ end
 
 function BrushLayerDebug:_on_gui_help()
 	local text = "Since brush units are not always visible, this dialog shows actual amount of units in the level."
+
 	text = text .. "\n\nSorting can be done by clicking the column namnes."
 	text = text .. "\n\nDelete all units with a certain name by clicking the delete icon on toolbar."
 
@@ -2850,6 +2888,7 @@ function BrushLayerDebug:_selected_list_data(list)
 end
 
 function BrushLayerDebug:reset()
+	return
 end
 
 function BrushLayerDebug:freeze()

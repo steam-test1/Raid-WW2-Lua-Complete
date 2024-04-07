@@ -27,6 +27,7 @@ function TeamAIMovement:set_character_anim_variables()
 end
 
 function TeamAIMovement:check_visual_equipment()
+	return
 end
 
 function TeamAIMovement:m_detect_pos()

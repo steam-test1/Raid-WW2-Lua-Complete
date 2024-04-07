@@ -20,6 +20,7 @@ function HUDBigPrompt:_create_panel(hud)
 		w = HUDBigPrompt.W,
 		h = HUDBigPrompt.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -31,6 +32,7 @@ function HUDBigPrompt:_create_background()
 		texture = tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture_rect
 	}
+
 	self._background = self._object:bitmap(background_params)
 
 	self._background:set_center_x(self._object:w() / 2)
@@ -52,6 +54,7 @@ function HUDBigPrompt:_create_text()
 		font_size = HUDBigPrompt.TEXT_FONT_SIZE,
 		layer = self._background:layer() + 1
 	}
+
 	self._text = self._object:text(text_params)
 end
 
@@ -105,9 +108,11 @@ function HUDBigPrompt:_animate_change_prompt(text_control, text, id, text_color,
 	local fade_in_duration = 0.3
 	local t = (1 - self._text:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._text:set_alpha(current_alpha)
@@ -146,9 +151,11 @@ function HUDBigPrompt:_animate_change_prompt(text_control, text, id, text_color,
 	self._hidden_id = nil
 	t = 0
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_out_duration)
 
 		self._text:set_alpha(current_alpha)
@@ -163,9 +170,11 @@ function HUDBigPrompt:_animate_hide()
 	local fade_out_duration = 0.2
 	local t = (1 - self._text:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._text:set_alpha(current_alpha)

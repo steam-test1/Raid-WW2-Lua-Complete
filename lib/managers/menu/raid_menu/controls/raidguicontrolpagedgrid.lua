@@ -56,10 +56,12 @@ function RaidGUIControlPagedGrid:init(parent, params)
 end
 
 function RaidGUIControlPagedGrid:close()
+	return
 end
 
 function RaidGUIControlPagedGrid:_create_grid_panel()
 	local grid_params = clone(self._params)
+
 	grid_params.name = grid_params.name .. "_grid"
 	grid_params.layer = self._panel:layer() + 1
 	grid_params.x = 0
@@ -100,28 +102,32 @@ function RaidGUIControlPagedGrid:_create_items()
 	local item_count = 0
 	local i_vertical = 1
 	local i_horizontal = 1
+
 	self._grid_items = {}
+
 	local item_params = clone(self._item_params)
 	local first_item = (self._current_page - 1) * self._items_per_page + 1
 	local last_item = math.min(self._total_items, self._current_page * self._items_per_page)
 
 	for i_item_data = first_item, last_item do
 		local item_data = self._grid_data[i_item_data]
+
 		item_params.name = self._params.name .. "_grid_item_" .. i_horizontal .. "_" .. i_vertical
 		item_params.x = self._border_padding + (i_horizontal - 1) * self._item_width
 		item_params.y = self._border_padding + (i_vertical - 1) * self._item_height
 		item_params.color = Color.blue
+
 		local item = self:_create_item(item_params, item_data, self._grid_params)
 
 		table.insert(self._grid_items, item)
 
 		i_horizontal = i_horizontal + 1
 
-		if self._num_horizontal_items < i_horizontal then
+		if i_horizontal > self._num_horizontal_items then
 			i_horizontal = 1
 			i_vertical = i_vertical + 1
 
-			if self._num_vertical_items < i_vertical then
+			if i_vertical > self._num_vertical_items then
 				return
 			end
 		end
@@ -221,9 +227,11 @@ function RaidGUIControlPagedGrid:mouse_released(o, button, x, y)
 end
 
 function RaidGUIControlPagedGrid:highlight_on()
+	return
 end
 
 function RaidGUIControlPagedGrid:highlight_off()
+	return
 end
 
 function RaidGUIControlPagedGrid:refresh_data()

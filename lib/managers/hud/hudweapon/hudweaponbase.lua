@@ -53,18 +53,23 @@ function HUDWeaponBase:set_index(index)
 end
 
 function HUDWeaponBase:set_current_clip(current_clip)
+	return
 end
 
 function HUDWeaponBase:set_current_left(current_left)
+	return
 end
 
 function HUDWeaponBase:set_max_clip(max_clip)
+	return
 end
 
 function HUDWeaponBase:set_max(max)
+	return
 end
 
 function HUDWeaponBase:set_no_ammo(empty)
+	return
 end
 
 function HUDWeaponBase:set_selected(selected)
@@ -89,9 +94,11 @@ function HUDWeaponBase:_animate_alpha(root_panel, new_alpha)
 	local duration = 0.2
 	local t = (self._object:alpha() - start_alpha) / (new_alpha - start_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, start_alpha, new_alpha - start_alpha, duration)
 
 		self._object:set_alpha(current_alpha)

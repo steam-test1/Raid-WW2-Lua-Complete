@@ -13,6 +13,7 @@ function BlackscreenVariantElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local bscreen_params = self:_get_params(panel, panel_sizer)
 	local bscreen = CoreEWS.combobox(bscreen_params)
 
@@ -21,11 +22,11 @@ function BlackscreenVariantElement:_build_panel(panel, panel_sizer)
 		ctrlr = bscreen
 	})
 
-	local help = {
-		text = "Set blackscreen variant.",
-		panel = panel,
-		sizer = panel_sizer
-	}
+	local help = {}
+
+	help.text = "Set blackscreen variant."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end

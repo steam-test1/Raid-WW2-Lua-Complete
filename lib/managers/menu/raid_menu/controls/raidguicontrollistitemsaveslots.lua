@@ -61,6 +61,7 @@ function RaidGUIControlListItemSaveSlots:_layout_panel(params)
 		w = params.w,
 		h = RaidGUIControlListItemSaveSlots.HEIGHT
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -74,6 +75,7 @@ function RaidGUIControlListItemSaveSlots:_layout_background(params)
 		h = self._object:h() - 2,
 		color = tweak_data.gui.colors.raid_list_background
 	}
+
 	self._item_background = self._object:rect(background_params)
 end
 
@@ -87,6 +89,7 @@ function RaidGUIControlListItemSaveSlots:_layout_highlight_marker()
 		h = self._object:h() - 2,
 		color = self._selected_color
 	}
+
 	self._item_highlight_marker = self._object:rect(marker_params)
 end
 
@@ -99,6 +102,7 @@ function RaidGUIControlListItemSaveSlots:_layout_icon(params, data)
 		texture_rect = data.icon.texture_rect,
 		color = tweak_data.gui.colors.raid_dirty_white
 	}
+
 	self._item_icon = self._object:image(icon_params)
 
 	self._item_icon:set_center_x(RaidGUIControlListItemSaveSlots.ICON_CENTER_X)
@@ -118,6 +122,7 @@ function RaidGUIControlListItemSaveSlots:_layout_raid_name(params, data)
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white
 	}
+
 	self._item_label = self._object:label(raid_name_params)
 
 	self._item_label:set_center_y(RaidGUIControlListItemSaveSlots.NAME_CENTER_Y)
@@ -133,7 +138,9 @@ function RaidGUIControlListItemSaveSlots:_layout_difficulty_locked()
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_dark_grey
 	}
+
 	self._difficulty_locked_indicator = self._object:label(difficulty_locked_params)
+
 	local _, _, w, h = self._difficulty_locked_indicator:text_rect()
 
 	self._difficulty_locked_indicator:set_w(w)
@@ -146,6 +153,7 @@ function RaidGUIControlListItemSaveSlots:_layout_difficulty()
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
 		amount = tweak_data:number_of_difficulties()
 	}
+
 	self._difficulty_indicator = self._object:create_custom_control(RaidGuiControlDifficultyStars, difficulty_params)
 
 	self._difficulty_indicator:set_center_y(RaidGUIControlListItemSaveSlots.DIFFICULTY_CENTER_Y)
@@ -163,6 +171,7 @@ function RaidGUIControlListItemSaveSlots:_layout_lock_icon()
 		texture_rect = tweak_data.gui.icons[RaidGUIControlListItemSaveSlots.LOCK_ICON].texture_rect,
 		color = tweak_data.gui.colors.raid_dark_grey
 	}
+
 	self._lock_icon = self._object:bitmap(lock_icon_params)
 
 	self._lock_icon:set_center_x(self._object:w() - RaidGUIControlListItemSaveSlots.LOCK_ICON_CENTER_DISTANCE_FROM_RIGHT)
@@ -174,6 +183,7 @@ function RaidGUIControlListItemSaveSlots:_layout_breadcrumb()
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}
+
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
 	self._breadcrumb:set_right(self._object:w())
@@ -253,7 +263,7 @@ function RaidGUIControlListItemSaveSlots:select()
 	})
 
 	if self._on_item_selected_callback then
-		self:_on_item_selected_callback(self._data)
+		self._on_item_selected_callback(self, self._data)
 	end
 end
 

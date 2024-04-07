@@ -14,7 +14,7 @@ function GroupAIStateZone:_upd_assault_spawning(task_data, primary_target_area)
 
 	for group_id, group in pairs(self._groups) do
 		if group.has_spawned and group.objective.type ~= "retire" then
-			local closest_dis_sq = nil
+			local closest_dis_sq
 
 			for u_key, u_data in pairs(self:all_player_criminals()) do
 				local my_dis_sq = mvector3.distance_sq(u_data.m_pos, group.objective.area.pos)
@@ -24,7 +24,7 @@ function GroupAIStateZone:_upd_assault_spawning(task_data, primary_target_area)
 				end
 			end
 
-			if closest_dis_sq and GroupAIStateZone.MAX_DISTANCE_TO_PLAYER < closest_dis_sq then
+			if closest_dis_sq and closest_dis_sq > GroupAIStateZone.MAX_DISTANCE_TO_PLAYER then
 				self:_assign_group_to_retire(group)
 			end
 		end

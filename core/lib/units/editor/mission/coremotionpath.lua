@@ -105,6 +105,7 @@ end
 
 function CoreMotionPathOperatorUnitElement:_motion_path_markers()
 	self._hed.marker_ids = {}
+
 	local motion_path_markers = {
 		"none"
 	}

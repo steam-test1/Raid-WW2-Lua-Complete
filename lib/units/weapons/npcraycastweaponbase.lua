@@ -73,10 +73,9 @@ function NPCRaycastWeaponBase:init(unit)
 	end
 
 	if self._unit:get_object(Idstring("ls_flashlight")) then
-		self._flashlight_data = {
-			light = self._unit:get_object(Idstring("ls_flashlight")),
-			effect = self._unit:effect_spawner(Idstring("flashlight"))
-		}
+		self._flashlight_data = {}
+		self._flashlight_data.light = self._unit:get_object(Idstring("ls_flashlight"))
+		self._flashlight_data.effect = self._unit:effect_spawner(Idstring("flashlight"))
 
 		self._flashlight_data.light:set_far_range(400)
 		self._flashlight_data.light:set_spot_angle_end(25)
@@ -137,7 +136,7 @@ function NPCRaycastWeaponBase:singleshot(...)
 end
 
 function NPCRaycastWeaponBase:trigger_held(...)
-	local fired = nil
+	local fired
 
 	if self._next_fire_allowed <= Application:time() then
 		fired = self:fire(...)
@@ -205,6 +204,7 @@ function NPCRaycastWeaponBase:destroy(unit)
 end
 
 function NPCRaycastWeaponBase:_get_spread(user_unit)
+	return
 end
 
 function NPCRaycastWeaponBase:_sound_autofire_start(nr_shots)
@@ -252,11 +252,12 @@ function NPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 
 	if not is_team_ai and managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE) then
 		local effect_value_enemy_damage_modifier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE)
+
 		dmg_mul = dmg_mul * effect_value_enemy_damage_modifier
 	end
 
 	local result = {}
-	local hit_unit = nil
+	local hit_unit
 
 	mvector3.set(mvec_to, direction)
 	mvector3.multiply(mvec_to, 20000)
@@ -265,7 +266,7 @@ function NPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	local damage = self._damage * (dmg_mul or 1)
 	local col_ray = World:raycast("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
 	local bullet_class = self._bullet_class or InstantBulletBase
-	local player_hit, player_ray_data = nil
+	local player_hit, player_ray_data
 
 	if shoot_player and self._hit_player then
 		player_hit, player_ray_data = self:damage_player(col_ray, from_pos, direction)
@@ -275,7 +276,7 @@ function NPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 		end
 	end
 
-	local char_hit = nil
+	local char_hit
 
 	if not player_hit and col_ray then
 		char_hit = bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
@@ -376,4 +377,5 @@ function NPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
 end
 
 function NPCRaycastWeaponBase:set_laser_enabled(state)
+	return
 end

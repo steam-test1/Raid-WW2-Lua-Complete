@@ -8,7 +8,8 @@ function CopActionReload:init(action_desc, common_data)
 	self._body_part = action_desc.body_part
 	self._common_data = common_data
 	self._machine = common_data.machine
-	local reload_t = nil
+
+	local reload_t
 
 	for _, other_action in ipairs(common_data.active_actions) do
 		if other_action and other_action.reload_t then
@@ -25,10 +26,12 @@ function CopActionReload:init(action_desc, common_data)
 			self._reload_t = reload_t
 		else
 			local reload_delay = 3
+
 			self._reload_t = TimerManager:game():time() + reload_delay
 		end
 
 		local weapon_unit = self._ext_inventory:equipped_unit()
+
 		self._weapon_unit = weapon_unit
 		self._body_part = action_desc.body_part
 		self._modifier_name = Idstring("action_upper_body_enemy")
@@ -39,7 +42,8 @@ function CopActionReload:init(action_desc, common_data)
 
 		if self._attention then
 			self._modifier_on = true
-			local target_pos = nil
+
+			local target_pos
 
 			if self._attention.handler then
 				target_pos = self._attention.handler:get_attention_m_pos()
@@ -72,7 +76,7 @@ end
 
 function CopActionReload:update(t)
 	if self._modifier_on then
-		local target_pos = nil
+		local target_pos
 
 		if self._attention.handler then
 			target_pos = self._attention.handler:get_attention_m_pos()
@@ -91,7 +95,7 @@ function CopActionReload:update(t)
 		self._modifier:set_target_y(target_vec)
 	end
 
-	if self._reload_t < t then
+	if t > self._reload_t then
 		self._weapon_unit:base():on_reload()
 
 		self._expired = true

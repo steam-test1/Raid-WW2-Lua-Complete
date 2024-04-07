@@ -52,6 +52,7 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlXPRewardDetails.DEFAULT_WIDTH
 	control_params.h = control_params.h or RaidGUIControlXPRewardDetails.HEIGHT
@@ -67,6 +68,7 @@ function RaidGUIControlXPRewardDetails:_create_left_panel()
 		w = RaidGUIControlXPRewardDetails.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -83,7 +85,9 @@ function RaidGUIControlXPRewardDetails:_create_title()
 		color = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true)
 	}
+
 	self._title_description = self._left_panel:text(title_description_params)
+
 	local _, _, w, _ = self._title_description:text_rect()
 
 	self._title_description:set_w(w)
@@ -99,6 +103,7 @@ function RaidGUIControlXPRewardDetails:_create_title()
 		color = RaidGUIControlXPRewardDetails.TITLE_COLOR,
 		text = self:translate("menu_loot_screen_experience_bonus_title", true)
 	}
+
 	self._customization_name = self._left_panel:text(title_params)
 
 	self:_layout_title()
@@ -120,13 +125,16 @@ function RaidGUIControlXPRewardDetails:_create_reward_image()
 		w = self._left_panel:w(),
 		h = RaidGUIControlXPRewardDetails.REWARD_ICON_PANEL_H
 	}
+
 	self._reward_image_panel = self._left_panel:panel(reward_image_panel_params)
+
 	local reward_image_params = {
 		name = "reward_image",
 		alpha = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlXPRewardDetails.REWARD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlXPRewardDetails.REWARD_ICON].texture_rect
 	}
+
 	self._reward_image = self._reward_image_panel:bitmap(reward_image_params)
 
 	self._reward_image:set_center_x(self._reward_image_panel:w() / 2)
@@ -142,7 +150,9 @@ function RaidGUIControlXPRewardDetails:_create_xp_value()
 		font_size = RaidGUIControlXPRewardDetails.XP_VALUE_FONT_SIZE,
 		color = RaidGUIControlXPRewardDetails.XP_VALUE_COLOR
 	}
+
 	self._xp_value_text = self._right_panel:text(xp_value_params)
+
 	local xp_value_label_params = {
 		name = "xp_value_label",
 		alpha = 0,
@@ -151,6 +161,7 @@ function RaidGUIControlXPRewardDetails:_create_xp_value()
 		color = RaidGUIControlXPRewardDetails.XP_VALUE_LABEL_COLOR,
 		text = self:translate("xp_label", true)
 	}
+
 	self._xp_value_label = self._right_panel:text(xp_value_label_params)
 
 	self:_layout_xp_value()
@@ -196,7 +207,9 @@ function RaidGUIControlXPRewardDetails:show()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, image_duration)
 
 		self._reward_image:set_alpha(current_alpha)
@@ -272,6 +285,7 @@ function RaidGUIControlXPRewardDetails:_create_right_panel()
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 
 	self._right_panel:set_right(self._object:w())
@@ -291,6 +305,7 @@ function RaidGUIControlXPRewardDetails:_create_description()
 		color = RaidGUIControlXPRewardDetails.DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_experience_bonus_description")
 	}
+
 	self._description = self._right_panel:text(description_params)
 
 	self._description:set_right(self._right_panel:w())
@@ -310,6 +325,7 @@ function RaidGUIControlXPRewardDetails:_create_description()
 		color = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_RIGHT_COLOR,
 		text = self:translate("menu_loot_screen_bonus_xp_points", true)
 	}
+
 	self._title_description_right = self._right_panel:text(title_description_right_params)
 
 	self:_layout_description()

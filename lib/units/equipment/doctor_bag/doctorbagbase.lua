@@ -71,13 +71,12 @@ function DoctorBagBase:setup(amount_upgrade_lvl)
 		local ray = self._unit:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("world_geometry"))
 
 		if ray then
-			self._attached_data = {
-				body = ray.body,
-				position = ray.body:position(),
-				rotation = ray.body:rotation(),
-				index = 1,
-				max_index = 3
-			}
+			self._attached_data = {}
+			self._attached_data.body = ray.body
+			self._attached_data.position = ray.body:position()
+			self._attached_data.rotation = ray.body:rotation()
+			self._attached_data.index = 1
+			self._attached_data.max_index = 3
 
 			self._unit:set_extension_update_enabled(Idstring("base"), true)
 		end
@@ -177,6 +176,7 @@ end
 
 function DoctorBagBase:_take(unit)
 	local taken = 1
+
 	self._amount = self._amount - taken
 
 	unit:character_damage():recover_health()
@@ -197,15 +197,16 @@ function DoctorBagBase:_set_empty()
 end
 
 function DoctorBagBase:save(data)
-	local state = {
-		amount = self._amount,
-		is_dynamic = self._is_dynamic
-	}
+	local state = {}
+
+	state.amount = self._amount
+	state.is_dynamic = self._is_dynamic
 	data.DoctorBagBase = state
 end
 
 function DoctorBagBase:load(data)
 	local state = data.DoctorBagBase
+
 	self._amount = state.amount
 
 	if state.is_dynamic then

@@ -10,6 +10,7 @@ function CopLogicTrade.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
+
 	data.internal_data = my_data
 
 	data.unit:movement():set_allow_fire(false)
@@ -58,7 +59,7 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 		end
 
 		if Network:is_server() and not unit:anim_data().hands_tied and not unit:anim_data().tied then
-			local action_data = nil
+			local action_data
 
 			if managers.enemy:all_civilians()[unit:key()] then
 				if not unit:brain():is_tied() then
@@ -154,7 +155,7 @@ function CopLogicTrade.on_trade(data, trading_unit)
 		data.internal_data.flee_pos = flee_pos
 
 		if data.unit:anim_data().hands_tied or data.unit:anim_data().tied then
-			local new_action = nil
+			local new_action
 
 			if data.unit:anim_data().stand and data.is_tied then
 				new_action = {
@@ -195,6 +196,7 @@ function CopLogicTrade.update(data)
 		end
 	elseif my_data.flee_pos then
 		local to_pos = my_data.flee_pos
+
 		my_data.flee_pos = nil
 		my_data.pathing_to_flee_pos = true
 		my_data.flee_path_search_id = tostring(data.unit:key()) .. "flee"
@@ -204,12 +206,15 @@ function CopLogicTrade.update(data)
 end
 
 function CopLogicTrade.on_intimidated(data, amount, aggressor_unit)
+	return
 end
 
 function CopLogicTrade._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
+
 		data.pathing_results = nil
+
 		local path = pathing_results[my_data.flee_path_search_id]
 
 		if path then
@@ -226,12 +231,12 @@ function CopLogicTrade._process_pathing_results(data, my_data)
 end
 
 function CopLogicTrade._chk_request_action_walk_to_flee_pos(data, my_data, end_rot)
-	local new_action_data = {
-		type = "walk",
-		nav_path = my_data.flee_path,
-		variant = "run",
-		body_part = 2
-	}
+	local new_action_data = {}
+
+	new_action_data.type = "walk"
+	new_action_data.nav_path = my_data.flee_path
+	new_action_data.variant = "run"
+	new_action_data.body_part = 2
 	my_data.flee_path = nil
 	my_data.walking_to_flee_pos = data.unit:brain():action_request(new_action_data)
 end

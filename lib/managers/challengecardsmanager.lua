@@ -18,9 +18,8 @@ ChallengeCardsManager.READYUP_INVENTORY_LOAD_FREQUENCY = 10
 
 function ChallengeCardsManager:init()
 	if not Global.challenge_cards_manager then
-		Global.challenge_cards_manager = {
-			owned_challenge_cards = {}
-		}
+		Global.challenge_cards_manager = {}
+		Global.challenge_cards_manager.owned_challenge_cards = {}
 	end
 
 	self._active_card = nil
@@ -47,7 +46,7 @@ function ChallengeCardsManager:update(t, dt)
 	end
 
 	if self._automatic_steam_inventory_refresh then
-		if ChallengeCardsManager.READYUP_INVENTORY_LOAD_FREQUENCY < self._readyup_inventory_load_frequency_counter then
+		if self._readyup_inventory_load_frequency_counter > ChallengeCardsManager.READYUP_INVENTORY_LOAD_FREQUENCY then
 			managers.network.account:inventory_load()
 
 			self._readyup_inventory_load_frequency_counter = 0
@@ -81,10 +80,10 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 
 		local cached_list = self:get_readyup_card_cache()
 
-		table.sort(cached_list, function (a, b)
+		table.sort(cached_list, function(a, b)
 			return a.key_name < b.key_name
 		end)
-		table.sort(params.list, function (a, b)
+		table.sort(params.list, function(a, b)
 			return a.key_name < b.key_name
 		end)
 
@@ -190,6 +189,7 @@ function ChallengeCardsManager:system_pre_start_raid(params)
 end
 
 function ChallengeCardsManager:player_droped_in(params)
+	return
 end
 
 function ChallengeCardsManager:player_droped_out(params)
@@ -222,7 +222,9 @@ function ChallengeCardsManager:set_active_card(card)
 	if self._active_card and self._active_card.status == ChallengeCardsManager.CARD_STATUS_ACTIVE then
 		for _, effect in pairs(self._active_card.effects) do
 			effect.challenge_card_key = self._active_card.key_name
+
 			local effect_id = managers.buff_effect:activate_effect(effect)
+
 			effect.effect_id = effect_id
 		end
 	end
@@ -238,6 +240,7 @@ end
 
 function ChallengeCardsManager:sync_active_challenge_card(card_key, locked, card_status)
 	local card = deep_clone(tweak_data.challenge_cards:get_card_by_key_name(card_key))
+
 	card.locked_suggestion = locked
 	card.status = card_status
 
@@ -330,7 +333,9 @@ function ChallengeCardsManager:_activate_challenge_card()
 
 	for _, effect in pairs(self._active_card.effects) do
 		effect.challenge_card_key = self._active_card.key_name
+
 		local effect_id = managers.buff_effect:activate_effect(effect)
+
 		effect.effect_id = effect_id
 	end
 
@@ -406,6 +411,7 @@ end
 function ChallengeCardsManager:suggest_challenge_card(challenge_card_key, steam_instance_id)
 	local local_peer = managers.network:session():local_peer()
 	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
+
 	card.steam_instance_id = steam_instance_id
 	self._suggested_cards[local_peer._id] = card
 
@@ -415,6 +421,7 @@ end
 
 function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key, peer_id, steam_instance_id)
 	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
+
 	card.steam_instance_id = steam_instance_id
 	self._suggested_cards[peer_id] = card
 
@@ -478,6 +485,7 @@ end
 
 function ChallengeCardsManager:sync_toggle_lock_suggested_challenge_card(peer_id)
 	local suggested_card = self._suggested_cards[peer_id]
+
 	suggested_card.locked_suggestion = not suggested_card.locked_suggestion
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
@@ -528,6 +536,7 @@ function ChallengeCardsManager:save_dropin(data)
 		active_card = self._active_card,
 		suggested_cards = self._suggested_cards
 	}
+
 	data.ChallengeCardsManager = state
 end
 
@@ -545,6 +554,7 @@ function ChallengeCardsManager:get_victory_xp_amount()
 
 	if self._active_card and self._active_card.status == ChallengeCardsManager.CARD_STATUS_SUCCESS then
 		local card = tweak_data.challenge_cards.cards[self._active_card[ChallengeCardsTweakData.KEY_NAME_FIELD]]
+
 		result = card.bonus_xp or 0
 	end
 
@@ -648,28 +658,37 @@ function ChallengeCardsManager:get_cards_back_texture(card_data)
 end
 
 function ChallengeCardsManager:debug_inventory_insert(item_def_id)
+	return
 end
 
 function ChallengeCardsManager:debug_inventory_insert_all()
+	return
 end
 
 function ChallengeCardsManager:debug_clear_inventory()
+	return
 end
 
 function ChallengeCardsManager:debug_clear_inventory_callback(error, list)
+	return
 end
 
 function ChallengeCardsManager:inventory_alter_stacks(source_steam_instance_id, destination_steam_instance_id, amount)
+	return
 end
 
 function ChallengeCardsManager:start_inventory_fix_all_stacks()
+	return
 end
 
 function ChallengeCardsManager:inventory_fix_all_stacks(error, list)
+	return
 end
 
 function ChallengeCardsManager:inventory_reward_unlock(instance_id_1, instance_id_2, reward_item_def_id)
+	return
 end
 
 function ChallengeCardsManager:_clbk_inventory_reward_unlock(error, items_new, items_removed)
+	return
 end

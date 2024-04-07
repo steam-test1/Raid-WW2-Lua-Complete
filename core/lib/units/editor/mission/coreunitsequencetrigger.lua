@@ -143,6 +143,7 @@ function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 
 	if #sequences > 0 then
 		self._sequence_units[unit:unit_data().unit_id] = unit
+
 		local sequence_list_data = {
 			sequence = "none",
 			unit_id = unit:unit_data().unit_id
@@ -283,9 +284,11 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 		value = sequence_list_data.sequence
 	}
 	local sequence = CoreEws.combobox(sequence_params)
+
 	self._guis_id = self._guis_id or 0
 	self._guis_id = self._guis_id + 1
 	sequence_list_data.guis_id = self._guis_id
+
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
 	toolbar:add_tool("SELECT", "Remove", CoreEws.image_path("toolbar\\delete_16x16.png"), nil)

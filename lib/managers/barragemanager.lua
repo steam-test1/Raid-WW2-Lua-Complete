@@ -123,7 +123,7 @@ function BarrageManager:update(t, dt)
 	for i_barrage = ct_barrages, 1, -1 do
 		local barrage = self._running_barrages[i_barrage]
 
-		if barrage.end_time <= now then
+		if now >= barrage.end_time then
 			table.remove(self._running_barrages, i_barrage)
 			managers.mission:call_global_event("barrage_ended")
 			self:_call_listeners("barrage_ended")
@@ -131,7 +131,7 @@ function BarrageManager:update(t, dt)
 			if alive(barrage._spotter) then
 				barrage._spotter:brain():on_barrage_ended()
 			end
-		elseif barrage.next_projectile_time <= now then
+		elseif now >= barrage.next_projectile_time then
 			barrage.next_projectile_time = self:_get_next_projectile_time(barrage)
 
 			self:_queue_projectile(barrage)
@@ -141,7 +141,7 @@ function BarrageManager:update(t, dt)
 	local remaining_projectiles = {}
 
 	for _, projectile in ipairs(self._queued_projectiles) do
-		if projectile.time < t then
+		if t > projectile.time then
 			self:_spawn_projectile(projectile.barrage_params)
 		else
 			table.insert(remaining_projectiles, projectile)
@@ -156,7 +156,7 @@ end
 
 function BarrageManager:_check_flare_start_barrage(t)
 	for _, data in ipairs(self._flares) do
-		if alive(data.unit) and data.unit:interaction():active() and not data.called and data.barrage_time < t then
+		if alive(data.unit) and data.unit:interaction():active() and not data.called and t > data.barrage_time then
 			Application:debug("[BarrageManager][_check_flare_start_barrage] START BARRAGE")
 			self:start_spotter_barrage(data.spotter, data.unit:position())
 
@@ -206,6 +206,7 @@ function BarrageManager:start_barrage(params)
 	end
 
 	barrage_params = self:_prepare_barrage_params(barrage_params)
+
 	local player_pos = self:_get_barrage_position()
 
 	if not player_pos then
@@ -231,6 +232,7 @@ function BarrageManager:_start_barrage(barrage_params)
 
 	if barrage_params.type == BarrageType.ARTILLERY then
 		local delay = barrage_params.initial_delay or 0
+
 		barrage_params.next_projectile_time = now + delay
 
 		table.insert(self._running_barrages, barrage_params)
@@ -268,7 +270,9 @@ end
 function BarrageManager:_set_barrage_position(barrage_params, target_pos)
 	if barrage_params.type == BarrageType.ARTILLERY then
 		barrage_params.direction = barrage_params.direction:normalized()
+
 		local distance = barrage_params.distance or BarrageManager.DEFAULT_DISTANCE
+
 		barrage_params.center = target_pos + barrage_params.direction * -distance
 	elseif barrage_params.type == BarrageType.AIRPLANE then
 		barrage_params.direction = Rotation(math.random(360), 0, 0)
@@ -289,6 +293,7 @@ function BarrageManager:_get_next_projectile_time(barrage_params)
 		local min_delay = average_delay * BarrageManager.MIN_DELAY_VARIANCE
 		local max_delay = average_delay * BarrageManager.MAX_DELAY_VARIANCE
 		local delay = math.lerp(min_delay, max_delay, math.random())
+
 		next_projectile_time = now + delay
 	end
 
@@ -325,6 +330,7 @@ function BarrageManager:_spawn_projectile(barrage_params)
 
 			if distance < barrage_params.spotting_rounds_min_distance then
 				local adjustment = barrage_params.spotting_rounds_min_distance / distance
+
 				delta_x = delta_x * adjustment
 				delta_y = delta_y * adjustment
 				pos = barrage_params.center + delta_x + delta_y
@@ -350,6 +356,7 @@ function BarrageManager:_prepare_barrage_params(barrage_params)
 		end
 
 		prepared_params.projectile_index = projectile_index
+
 		local barrage_duration = managers.groupai:get_difficulty_dependent_value(prepared_params.duration)
 
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BARRAGE_LENGTH) then
@@ -363,7 +370,9 @@ function BarrageManager:_prepare_barrage_params(barrage_params)
 		prepared_params.ortho_x = prepared_params.direction:random_orthogonal():normalized()
 		prepared_params.ortho_y = math.cross(prepared_params.direction, prepared_params.ortho_x):normalized()
 		prepared_params.radius = managers.groupai:get_difficulty_dependent_value(prepared_params.area_radius)
-	elseif prepared_params.type ~= BarrageType.AIRPLANE then
+	elseif prepared_params.type == BarrageType.AIRPLANE then
+		-- Nothing
+	else
 		Application:error("[BarrageManager] Invalid barrage type (not artillery nor aircraft)")
 	end
 
@@ -383,6 +392,7 @@ function BarrageManager:_choose_random_type(barrage_params)
 
 	for name, weight in pairs(barrage_params.type_table) do
 		local w = managers.groupai:get_difficulty_dependent_value(weight)
+
 		total_weight = total_weight + w
 	end
 
@@ -459,9 +469,9 @@ function BarrageManager:start_spotter_barrage(spotter, target_pos)
 end
 
 function BarrageManager:_is_spotter_barrage_off_cooldown(t)
-	return true
+	do return true end
 
-	local off_cooldown = not self._next_spotter_barrage_time or self._next_spotter_barrage_time < t
+	local off_cooldown = not self._next_spotter_barrage_time or t > self._next_spotter_barrage_time
 
 	if not off_cooldown then
 		-- Nothing

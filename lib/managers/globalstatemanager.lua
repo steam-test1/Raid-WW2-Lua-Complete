@@ -74,7 +74,7 @@ function GlobalStateManager:unregister_trigger(trigger, flag)
 		return
 	end
 
-	local found = nil
+	local found
 
 	for i, trig in ipairs(self._triggers[flag]) do
 		if trig == trigger then
@@ -119,6 +119,7 @@ function GlobalStateManager:set_flag(flag_name)
 	end
 
 	local old_state = flag.value
+
 	flag.value = true
 
 	self:_fire_triggers(flag_name, old_state, true)
@@ -134,6 +135,7 @@ function GlobalStateManager:set_value_flag(flag_name, value)
 	end
 
 	local old_state = flag.value
+
 	flag.value = value
 
 	self:_fire_triggers(flag_name, old_state, value)
@@ -157,6 +159,7 @@ function GlobalStateManager:clear_flag(flag_name)
 	end
 
 	local old_state = flag.value
+
 	flag.value = false
 
 	self:_fire_triggers(flag_name, old_state, false)
@@ -173,9 +176,10 @@ function GlobalStateManager:fire_event(flag_name)
 			managers.queued_tasks:queue(nil, managers.global_state.fire_event, managers.global_state, flag_name, 1, nil)
 
 			self._fire_event_delay = true
+
 			local t = Application:time()
 
-			if not self._next_hint_t or self._next_hint_t < t then
+			if not self._next_hint_t or t > self._next_hint_t then
 				self._next_hint_t = t + 6
 
 				managers.notification:add_notification({
@@ -243,6 +247,7 @@ function GlobalStateManager:sync_save(data)
 	local state = {
 		data = self._states
 	}
+
 	data.GlobalStateManager = state
 end
 

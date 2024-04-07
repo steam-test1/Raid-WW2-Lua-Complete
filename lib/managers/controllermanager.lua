@@ -83,6 +83,7 @@ function ControllerManager:_handle_xbox_keyboard_hotswap()
 	end
 
 	self._connected_xbox_controllers = current_controllers_connection_state
+
 	local default_wrapper = self:get_default_wrapper_type()
 	local is_controller_present = self:is_xbox_controller_present()
 
@@ -135,6 +136,7 @@ end
 
 function ControllerManager:clear_user_mod(category, CONTROLS_INFO)
 	Global.controller_manager.user_mod = Global.controller_manager.user_mod or {}
+
 	local names = table.map_keys(Global.controller_manager.user_mod)
 
 	for _, name in ipairs(names) do
@@ -214,20 +216,20 @@ function ControllerManager:_show_controller_changed_dialog()
 	end
 
 	if not Global._attemptShowControllerDCAfterLoad then
-		local data = {
-			callback_func = callback(self, self, "connect_controller_dialog_callback"),
-			title = managers.localization:text("dialog_connect_controller_title"),
-			text = managers.localization:text("dialog_connect_controller_text", {
-				NR = Global.controller_manager.default_wrapper_index or 1
-			}),
-			button_list = {
-				{
-					text = managers.localization:text("dialog_ok")
-				}
-			},
-			id = "connect_controller_dialog",
-			force = true
+		local data = {}
+
+		data.callback_func = callback(self, self, "connect_controller_dialog_callback")
+		data.title = managers.localization:text("dialog_connect_controller_title")
+		data.text = managers.localization:text("dialog_connect_controller_text", {
+			NR = Global.controller_manager.default_wrapper_index or 1
+		})
+		data.button_list = {
+			{
+				text = managers.localization:text("dialog_ok")
+			}
 		}
+		data.id = "connect_controller_dialog"
+		data.force = true
 
 		managers.system_menu:show(data)
 	end
@@ -300,20 +302,20 @@ end
 
 function ControllerManager:on_level_transition_ended()
 	if Global._attemptShowControllerDCAfterLoad then
-		local data = {
-			callback_func = callback(self, self, "connect_controller_dialog_callback"),
-			title = managers.localization:text("dialog_connect_controller_title"),
-			text = managers.localization:text("dialog_connect_controller_text", {
-				NR = Global.controller_manager.default_wrapper_index or 1
-			}),
-			button_list = {
-				{
-					text = managers.localization:text("dialog_ok")
-				}
-			},
-			id = "connectcontroller_dialog",
-			force = true
+		local data = {}
+
+		data.callback_func = callback(self, self, "connect_controller_dialog_callback")
+		data.title = managers.localization:text("dialog_connect_controller_title")
+		data.text = managers.localization:text("dialog_connect_controller_text", {
+			NR = Global.controller_manager.default_wrapper_index or 1
+		})
+		data.button_list = {
+			{
+				text = managers.localization:text("dialog_ok")
+			}
 		}
+		data.id = "connectcontroller_dialog"
+		data.force = true
 
 		managers.system_menu:show(data)
 

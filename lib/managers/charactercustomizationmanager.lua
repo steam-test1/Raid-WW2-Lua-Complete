@@ -9,11 +9,10 @@ function CharacterCustomizationManager:init()
 	self._tweak_data = tweak_data.character_customization.customizations
 
 	if not Global.character_customization_manager then
-		Global.character_customization_manager = {
-			VERSION = CharacterCustomizationManager.VERSION,
-			owned_customizations = tweak_data.character_customization:get_defaults(),
-			random_customization_awards = {}
-		}
+		Global.character_customization_manager = {}
+		Global.character_customization_manager.VERSION = CharacterCustomizationManager.VERSION
+		Global.character_customization_manager.owned_customizations = tweak_data.character_customization:get_defaults()
+		Global.character_customization_manager.random_customization_awards = {}
 	end
 
 	self._global = Global.character_customization_manager
@@ -118,7 +117,9 @@ function CharacterCustomizationManager:get_owned_customizations_indexed(part_typ
 	for index, part_key_name in pairs(indexed_parts) do
 		if owned_customizations[part_key_name] and self:_can_nationality_use_customization(owned_customizations[part_key_name], nationality) then
 			result[counter] = {}
+
 			local customization_data = clone(owned_customizations[part_key_name])
+
 			customization_data.key_name = part_key_name
 			customization_data.part_index = counter
 			result[counter] = customization_data
@@ -167,7 +168,7 @@ function CharacterCustomizationManager:equipable_nationalities_to_string(part_ke
 end
 
 function CharacterCustomizationManager:get_equiped_part_from_character_save_slot(slot_index, part_type)
-	local result = nil
+	local result
 	local slot_cache_data = Global.savefile_manager.meta_data_list[slot_index].cache
 	local player_manager_data = slot_cache_data.PlayerManager
 	local character_nationality_name = player_manager_data.character_profile_nation
@@ -200,6 +201,7 @@ end
 
 function CharacterCustomizationManager:get_equiped_part_index(character_nationality_name, part_type, equiped_name)
 	local parts_table = {}
+
 	parts_table = self:get_owned_customizations_indexed(part_type, character_nationality_name)
 
 	if parts_table then
@@ -279,7 +281,8 @@ function CharacterCustomizationManager:get_all_parts_indexed_filtered(part_type,
 
 			if should_show then
 				new_data.breadcrumb = {}
-				local breadcrumb_category = nil
+
+				local breadcrumb_category
 
 				for i, category in pairs(BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION.subcategories) do
 					if category.identifier == new_data.part_type then
@@ -419,7 +422,8 @@ end
 
 function CharacterCustomizationManager:add_character_customization_to_inventory(part_key, bought)
 	self._global.owned_customizations[part_key] = tweak_data.character_customization.customizations[part_key]
-	local breadcrumb_category = nil
+
+	local breadcrumb_category
 
 	for index, category in pairs(BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION.subcategories) do
 		if category.identifier == tweak_data.character_customization.customizations[part_key].part_type then

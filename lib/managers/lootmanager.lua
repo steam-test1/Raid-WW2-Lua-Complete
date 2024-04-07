@@ -16,11 +16,10 @@ function LootManager:_setup()
 		end
 	end
 
-	Global.loot_manager = {
-		secured = {},
-		distribute = distribute,
-		saved_secured = saved_secured
-	}
+	Global.loot_manager = {}
+	Global.loot_manager.secured = {}
+	Global.loot_manager.distribute = distribute
+	Global.loot_manager.saved_secured = saved_secured
 	self._global = Global.loot_manager
 	self._triggers = {}
 	self._respawns = {}
@@ -133,7 +132,7 @@ function LootManager:_present(carry_id, multiplier)
 		AMOUNT = "",
 		CARRY_TYPE = type_text
 	})
-	local icon = nil
+	local icon
 
 	managers.hud:present_mid_text({
 		time = 4,

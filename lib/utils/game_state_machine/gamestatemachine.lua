@@ -34,6 +34,7 @@ function GameStateMachine:init()
 	Global.game_state_machine.is_boot_intro_done = true
 	self._is_boot_from_sign_out = Global.game_state_machine.is_boot_from_sign_out
 	Global.game_state_machine.is_boot_from_sign_out = false
+
 	local setup_boot = not self._is_boot_intro_done and not Application:editor()
 	local setup_title = (setup_boot or self._is_boot_from_sign_out) and not Application:editor()
 	local states = {}
@@ -77,6 +78,7 @@ function GameStateMachine:init()
 	local ingame_loading_func = callback(nil, ingame_loading, "default_transition")
 	local ingame_menu_func = callback(nil, ingame_menu, "default_transition")
 	local event_complete_screen_func = callback(nil, event_complete_screen, "default_transition")
+
 	self._controller_enabled_count = 1
 
 	CoreGameStateMachine.GameStateMachine.init(self, empty)

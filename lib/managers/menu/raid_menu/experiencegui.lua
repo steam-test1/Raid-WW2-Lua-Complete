@@ -43,6 +43,7 @@ function ExperienceGui:init(ws, fullscreen_ws, node, component_name)
 	ExperienceGui.super.init(self, ws, fullscreen_ws, node, component_name)
 
 	self._activated_skills = {}
+
 	local character_class = managers.skilltree:get_character_profile_class()
 
 	self._node.components.raid_menu_header:set_screen_name_raw(self:translate("menu_skill_screen_title", true) .. " - " .. self:translate("skill_class_" .. character_class .. "_name", true))
@@ -50,6 +51,7 @@ function ExperienceGui:init(ws, fullscreen_ws, node, component_name)
 end
 
 function ExperienceGui:_set_initial_data()
+	return
 end
 
 function ExperienceGui:_layout()
@@ -73,7 +75,9 @@ function ExperienceGui:_layout_character_base_info()
 		w = ExperienceGui.CHARACTER_BASE_INFO_W,
 		h = ExperienceGui.CHARACTER_BASE_INFO_H
 	}
+
 	self._character_base_info_panel = self._root_panel:panel(base_info_panel_params)
+
 	local character_class = managers.skilltree:get_character_profile_class()
 	local class_icon_params = {
 		name = "class_icon",
@@ -88,6 +92,7 @@ function ExperienceGui:_layout_character_base_info()
 		text_size = ExperienceGui.INFO_ICON_TEXT_FONT_SIZE,
 		text_color = ExperienceGui.CHARACTER_LEVEL_LABEL_FONT_COLOR
 	}
+
 	self._class_icon = self._character_base_info_panel:info_icon(class_icon_params)
 
 	self._class_icon:set_bottom(self._character_base_info_panel:h())
@@ -108,6 +113,7 @@ function ExperienceGui:_layout_character_base_info()
 		text_size = ExperienceGui.INFO_ICON_TEXT_FONT_SIZE,
 		text_color = ExperienceGui.CHARACTER_LEVEL_LABEL_FONT_COLOR
 	}
+
 	self._nationality_icon = self._character_base_info_panel:info_icon(nationality_icon_params)
 
 	self._nationality_icon:set_bottom(self._character_base_info_panel:h())
@@ -127,6 +133,7 @@ function ExperienceGui:_layout_character_base_info()
 		text_size = ExperienceGui.INFO_ICON_TEXT_FONT_SIZE,
 		text_color = ExperienceGui.CHARACTER_LEVEL_LABEL_FONT_COLOR
 	}
+
 	self._current_level_icon = self._character_base_info_panel:info_icon(level_icon_params)
 
 	self._current_level_icon:set_bottom(self._character_base_info_panel:h())
@@ -146,6 +153,7 @@ function ExperienceGui:_layout_skilltree()
 			y = ExperienceGui.SKILLTREE_Y,
 			w = self._root_panel:w()
 		}
+
 		self._skilltrack_panel = self._root_panel:panel(params_skill_track_panel)
 	end
 
@@ -164,6 +172,7 @@ function ExperienceGui:_layout_skilltree()
 		data_source_callback = callback(self, self, "data_source_branching_progress_bar"),
 		on_selection_changed_callback = callback(self, self, "on_skilltree_selection_changed")
 	}
+
 	self._skilltrack_progress_bar = self._skilltrack_panel:create_custom_control(RaidGUIControlSkilltree, params_skill_track)
 
 	self._skilltrack_progress_bar:give_points(managers.experience:total())
@@ -175,7 +184,9 @@ function ExperienceGui:_layout_respec()
 		x = ExperienceGui.RESPEC_X,
 		y = ExperienceGui.RESPEC_Y
 	}
+
 	self._respec = self._root_panel:create_custom_control(RaidGUIControlRespec, params_respecs)
+
 	local gold_icon = tweak_data.gui.icons.gold_amount_footer
 	local gold_icon_params = {
 		halign = "scale",
@@ -188,7 +199,9 @@ function ExperienceGui:_layout_respec()
 		w = gold_icon.texture_rect[3],
 		h = gold_icon.texture_rect[4]
 	}
+
 	self._cost_icon = self._root_panel:bitmap(gold_icon_params)
+
 	local cost_params = {
 		text = "",
 		name = "respec_cost",
@@ -198,6 +211,7 @@ function ExperienceGui:_layout_respec()
 		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_gold
 	}
+
 	self._cost_label = self._root_panel:label(cost_params)
 
 	self._cost_label:set_y(ExperienceGui.RESPEC_BUTTON_CENTER_Y - 19)
@@ -211,12 +225,14 @@ function ExperienceGui:_layout_respec()
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_gold
 	}
+
 	self._cost_additional_label = self._root_panel:label(cost_additional_params)
 
 	self._cost_additional_label:set_y(ExperienceGui.RESPEC_BUTTON_CENTER_Y - 13)
 end
 
 function ExperienceGui:_layout_character_overview()
+	return
 end
 
 function ExperienceGui:_layout_buttons()
@@ -227,6 +243,7 @@ function ExperienceGui:_layout_buttons()
 		text = self:translate("menu_weapons_apply", true),
 		on_click_callback = callback(self, self, "on_click_apply_callback")
 	}
+
 	self._apply_button = self._root_panel:short_primary_button(apply_button_params)
 
 	self._apply_button:set_y(ExperienceGui.APPLY_BUTTON_CENTER_Y - self._apply_button:h() / 2)
@@ -239,6 +256,7 @@ function ExperienceGui:_layout_buttons()
 		text = self:translate("menu_weapons_clear", true),
 		on_click_callback = callback(self, self, "on_click_clear_callback")
 	}
+
 	self._clear_button = self._root_panel:short_tertiary_button(clear_button_params)
 
 	self._clear_button:set_y(ExperienceGui.CLEAR_BUTTON_CENTER_Y - self._clear_button:h() / 2)
@@ -251,6 +269,7 @@ function ExperienceGui:_layout_buttons()
 		text = self:translate("menu_weapons_respec", true),
 		on_click_callback = callback(self, self, "on_click_respec_callback")
 	}
+
 	self._respec_button = self._root_panel:short_primary_gold_button(respec_button_params)
 
 	self._respec_button:set_y(ExperienceGui.RESPEC_BUTTON_CENTER_Y - self._clear_button:h() / 2)
@@ -263,6 +282,7 @@ function ExperienceGui:_layout_stats()
 		w = ExperienceGui.STATS_W,
 		h = ExperienceGui.STATS_H
 	}
+
 	self._stats_panel = self._root_panel:panel(stats_panel_params)
 
 	self._stats_panel:set_center_x(self._root_panel:w() / 2)
@@ -275,6 +295,7 @@ function ExperienceGui:_layout_stats()
 		color = tweak_data.gui.colors.raid_grey_effects,
 		w = ExperienceGui.SINGLE_STAT_W
 	}
+
 	self._health_stat = self._stats_panel:create_custom_control(RaidGUIControlLabelNamedValueWithDelta, health_stat_params)
 
 	self._health_stat:set_text(self:translate("select_character_health_label", true))
@@ -288,6 +309,7 @@ function ExperienceGui:_layout_stats()
 		color = tweak_data.gui.colors.raid_grey_effects,
 		w = ExperienceGui.SINGLE_STAT_W
 	}
+
 	self._speed_stat = self._stats_panel:create_custom_control(RaidGUIControlLabelNamedValueWithDelta, speed_stat_params)
 
 	self._speed_stat:set_text(self:translate("select_character_speed_label", true))
@@ -301,6 +323,7 @@ function ExperienceGui:_layout_stats()
 		color = tweak_data.gui.colors.raid_grey_effects,
 		w = ExperienceGui.SINGLE_STAT_W
 	}
+
 	self._stamina_stat = self._stats_panel:create_custom_control(RaidGUIControlLabelNamedValueWithDelta, stamina_stat_params)
 
 	self._stamina_stat:set_text(self:translate("select_character_stamina_label", true))
@@ -327,7 +350,7 @@ function ExperienceGui:_calculate_respec_visibility()
 		self._cost_icon:show()
 		self._cost_label:show()
 
-		if managers.gold_economy:respec_cost() <= managers.gold_economy:current() then
+		if managers.gold_economy:current() >= managers.gold_economy:respec_cost() then
 			self._cost_additional_label:hide()
 			self._respec_button:show()
 		else
@@ -452,7 +475,7 @@ end
 
 function ExperienceGui:_prepare_upgrade_stats_type_raw_value_reduction(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
-	local starting_index = string:find("$REDUCTION;") - 1
+	local starting_index = string.find(string, "$REDUCTION;") - 1
 	local current_index = starting_index
 	local macro = ""
 	local separator = " / "
@@ -494,7 +517,7 @@ end
 
 function ExperienceGui:_prepare_upgrade_stats_type_raw_value_amount(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
-	local starting_index = string:find("$AMOUNT;") - 1
+	local starting_index = string.find(string, "$AMOUNT;") - 1
 	local current_index = starting_index
 	local macro = ""
 	local separator = " / "
@@ -536,7 +559,7 @@ end
 
 function ExperienceGui:_prepare_upgrade_stats_type_temporary_reduction(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
-	local starting_index = string:find("$PERCENTAGE;") - 1
+	local starting_index = string.find(string, "$PERCENTAGE;") - 1
 	local current_index = starting_index
 	local macro = ""
 	local separator = " / "
@@ -574,7 +597,7 @@ function ExperienceGui:_prepare_upgrade_stats_type_temporary_reduction(string, c
 	})
 
 	macros.PERCENTAGE = macro
-	starting_index = string:find("$SECONDS;") + string.len(macro) - 13
+	starting_index = string.find(string, "$SECONDS;") + string.len(macro) - 13
 	current_index = starting_index
 	macro = ""
 
@@ -615,7 +638,7 @@ end
 
 function ExperienceGui:_prepare_upgrade_stats_type_multiplier(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
-	local starting_index = string:find("$PERCENTAGE;") - 1
+	local starting_index = string.find(string, "$PERCENTAGE;") - 1
 	local current_index = starting_index
 	local macro = ""
 	local separator = " / "
@@ -657,7 +680,7 @@ end
 
 function ExperienceGui:_prepare_upgrade_stats_type_multiplier_reductive_string(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
-	local starting_index = string:find("$PERCENTAGE;") - 1
+	local starting_index = string.find(string, "$PERCENTAGE;") - 1
 	local current_index = starting_index
 	local macro = ""
 	local separator = " / "
@@ -699,7 +722,7 @@ end
 
 function ExperienceGui:_prepare_upgrade_stats_type_reductive_multiplier(string, current_level, pending, upgrade_tweak_data, macros, color_changes)
 	local upgrade_values = tweak_data.upgrades.values[upgrade_tweak_data.upgrade.category][upgrade_tweak_data.upgrade.upgrade]
-	local starting_index = string:find("$PERCENTAGE;") - 1
+	local starting_index = string.find(string, "$PERCENTAGE;") - 1
 	local current_index = starting_index
 	local macro = ""
 	local separator = " / "
@@ -854,13 +877,15 @@ function ExperienceGui:_get_character_skilltree()
 
 	for level, skills in ipairs(skill_tree) do
 		local skill_level = {
-			points_needed = managers.experience:get_total_xp_for_level(skills.level_required),
-			nodes = {}
+			points_needed = managers.experience:get_total_xp_for_level(skills.level_required)
 		}
+
+		skill_level.nodes = {}
 
 		for index, skill_item in ipairs(skills) do
 			local node = {}
 			local skill = tweak_data.skilltree.skills[skill_item.skill_name]
+
 			node.value = {
 				skill = skill_item.skill_name,
 				skill_title = skill.name_id,
@@ -904,8 +929,8 @@ function ExperienceGui:close()
 end
 
 function ExperienceGui:bind_controller_inputs_initial_state()
-	local have_enough_money = managers.gold_economy:respec_cost() <= managers.gold_economy:current()
-	local respec_binding, respec_legend = nil
+	local have_enough_money = managers.gold_economy:current() >= managers.gold_economy:respec_cost()
+	local respec_binding, respec_legend
 
 	if have_enough_money then
 		respec_binding = {
@@ -972,7 +997,7 @@ function ExperienceGui:bind_controller_inputs_apply_state()
 	})
 	table.insert(legend.controller, "menu_legend_player_skill_shoulder")
 
-	local have_enough_money = managers.gold_economy:respec_cost() <= managers.gold_economy:current()
+	local have_enough_money = managers.gold_economy:current() >= managers.gold_economy:respec_cost()
 
 	if have_enough_money then
 		table.insert(bindings, {

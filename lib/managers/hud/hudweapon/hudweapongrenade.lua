@@ -25,6 +25,7 @@ function HUDWeaponGrenade:_create_panel(weapons_panel)
 		w = HUDWeaponGrenade.W,
 		h = HUDWeaponGrenade.H
 	}
+
 	self._object = weapons_panel:panel(panel_params)
 end
 
@@ -38,13 +39,16 @@ function HUDWeaponGrenade:_create_icon(icon)
 		w = self._object:w(),
 		h = self._object:h() / 2
 	}
+
 	self._icon_panel = self._object:panel(icon_panel_params)
+
 	local icon_params = {
 		name = "weapon_icon",
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED
 	}
+
 	self._icon = self._icon_panel:bitmap(icon_params)
 
 	self._icon:set_center_x(self._icon_panel:w() / 2)
@@ -60,6 +64,7 @@ function HUDWeaponGrenade:_create_amount_text()
 		color = HUDWeaponGrenade.AMOUNT_TEXT_COLOR,
 		alpha = HUDWeaponGrenade.AMOUNT_TEXT_ALPHA_WHEN_UNSELECTED
 	}
+
 	self._amount_text = self._object:text(amount_text_params)
 
 	self:set_amount(0)
@@ -91,9 +96,11 @@ function HUDWeaponGrenade:_animate_alpha(root_panel, new_alpha)
 	local duration = 0.2
 	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, start_alpha, new_alpha - start_alpha, duration)
 
 		self._icon:set_alpha(current_alpha)

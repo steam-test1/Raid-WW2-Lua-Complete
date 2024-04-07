@@ -1,4 +1,5 @@
 local flashbang_test_offset = Vector3(0, 0, 150)
+
 CoreEnvironmentControllerManager = CoreEnvironmentControllerManager or class()
 CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_START = 0.5
 CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_END = 0.1
@@ -304,7 +305,7 @@ end
 function CoreEnvironmentControllerManager:blurzone_check_cylinder(blurzone, camera_pos)
 	local pos_z = blurzone.pos.z
 	local cam_z = camera_pos.z
-	local len = nil
+	local len
 
 	if cam_z < pos_z then
 		len = (blurzone.pos - camera_pos):length()
@@ -315,6 +316,7 @@ function CoreEnvironmentControllerManager:blurzone_check_cylinder(blurzone, came
 	end
 
 	local result = math.min(len / blurzone.radius, 1)
+
 	result = result * result
 
 	return (1 - result) * blurzone.opacity
@@ -323,6 +325,7 @@ end
 function CoreEnvironmentControllerManager:blurzone_check_sphere(blurzone, camera_pos)
 	local len = (blurzone.pos - camera_pos):length()
 	local result = math.min(len / blurzone.radius, 1)
+
 	result = result * result
 
 	return (1 - result) * blurzone.opacity
@@ -402,6 +405,7 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 
 	if self._hit_some > 0 then
 		local hit_fade = dt * 1.5
+
 		self._hit_some = math.max(self._hit_some - hit_fade, 0)
 		self._hit_right = math.max(self._hit_right - hit_fade, 0)
 		self._hit_left = math.max(self._hit_left - hit_fade, 0)
@@ -453,18 +457,21 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 
 	local feedback_strength = 6
 	local health_diff = math.clamp((self._old_health_effect_value - self._health_effect_value) * feedback_strength, 0, 1)
+
 	self._old_health_effect_value = self._health_effect_value
 
-	if self._health_effect_value_diff < health_diff then
+	if health_diff > self._health_effect_value_diff then
 		self._health_effect_value_diff = health_diff
 	end
 
 	self._health_effect_value_diff = math.max(self._health_effect_value_diff - dt * 0.5, 0)
+
 	local damage_feedback = math.clamp(self._health_effect_value_diff, 0, 1)
 	local last_life = 0
 
 	if self._last_life then
 		local hurt_mod = 1 - self._health_effect_value
+
 		last_life = math.clamp((hurt_mod - 0.5) * 2, 0, 1) * self._last_life_mod
 	end
 
@@ -473,10 +480,11 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 
 	if self._health_effect_value < CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_END then
 		low_health_effect = 1
-	elseif CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_START < self._health_effect_value then
+	elseif self._health_effect_value > CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_START then
 		low_health_effect = 0
 	else
 		local fraction = (self._health_effect_value - CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_END) / CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_INTERVAL
+
 		low_health_effect = 1 - math.lerp(0, 1, fraction)
 	end
 
@@ -496,24 +504,22 @@ function CoreEnvironmentControllerManager:_update_post_process_effects()
 end
 
 function CoreEnvironmentControllerManager:_create_dof_tweak_data()
-	local new_dof_settings = {
-		none = {
-			use_no_dof = true
-		},
-		standard = {}
+	local new_dof_settings = {}
+
+	new_dof_settings.none = {
+		use_no_dof = true
 	}
-	new_dof_settings.standard.steelsight = {
-		near_plane_x = 2500,
-		near_plane_y = 2500,
-		far_plane_x = 500,
-		far_plane_y = 2000
-	}
-	new_dof_settings.standard.other = {
-		near_plane_x = 10,
-		near_plane_y = 12,
-		far_plane_x = 4000,
-		far_plane_y = 5000
-	}
+	new_dof_settings.standard = {}
+	new_dof_settings.standard.steelsight = {}
+	new_dof_settings.standard.steelsight.near_plane_x = 2500
+	new_dof_settings.standard.steelsight.near_plane_y = 2500
+	new_dof_settings.standard.steelsight.far_plane_x = 500
+	new_dof_settings.standard.steelsight.far_plane_y = 2000
+	new_dof_settings.standard.other = {}
+	new_dof_settings.standard.other.near_plane_x = 10
+	new_dof_settings.standard.other.near_plane_y = 12
+	new_dof_settings.standard.other.far_plane_x = 4000
+	new_dof_settings.standard.other.far_plane_y = 5000
 	self._dof_tweaks = new_dof_settings
 end
 
@@ -574,6 +580,7 @@ function CoreEnvironmentControllerManager:set_ssao_setting(setting)
 
 		if SSAO_processor then
 			local SSAO_combiner = SSAO_processor:modifier(Idstring("apply_SSAO"))
+
 			ssao_intensity = SSAO_combiner:material():get_variable(Idstring("ssao_intensity"))
 		end
 
@@ -667,13 +674,16 @@ function CoreEnvironmentControllerManager:_update_dof(t, dt)
 	if self._dof_override then
 		if self._dof_override_transition_params then
 			local params = self._dof_override_transition_params
+
 			params.time = math.max(0, params.time - dt)
+
 			local lerp_v = math.bezier({
 				0,
 				0,
 				1,
 				1
 			}, 1 - params.time / params.total_t)
+
 			self._dof_override_near = math.lerp(params.start.near, params.stop.near, lerp_v)
 			self._dof_override_near_pad = math.lerp(params.start.near_pad, params.stop.near_pad, lerp_v)
 			self._dof_override_far = math.lerp(params.start.far, params.stop.far, lerp_v)
@@ -698,7 +708,9 @@ function CoreEnvironmentControllerManager:_update_dof(t, dt)
 			self._material:set_variable(ids_dof_far_plane, mvec)
 		elseif self._in_steelsight then
 			dof_settings = dof_settings.steelsight
+
 			local dof_plane_v = math.clamp(self._current_dof_distance / 5000, 0, 1)
+
 			self._near_plane_x = math.lerp(500, dof_settings.near_plane_x, dof_plane_v)
 			self._near_plane_y = math.lerp(20, dof_settings.near_plane_y, dof_plane_v)
 			self._far_plane_x = math.lerp(100, dof_settings.far_plane_x, dof_plane_v)
@@ -710,7 +722,9 @@ function CoreEnvironmentControllerManager:_update_dof(t, dt)
 			self._material:set_variable(ids_dof_far_plane, mvec)
 		else
 			dof_settings = dof_settings.other
+
 			local dof_speed = math.min(10 * dt, 1)
+
 			self._near_plane_x = math.lerp(self._near_plane_x, dof_settings.near_plane_x, dof_speed)
 			self._near_plane_y = math.lerp(self._near_plane_y, dof_settings.near_plane_y, dof_speed)
 			self._far_plane_x = math.lerp(self._far_plane_x, dof_settings.far_plane_x, dof_speed)
@@ -726,6 +740,7 @@ end
 
 function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration)
 	local flash = self:test_line_of_sight(flashbang_pos + flashbang_test_offset, 200, 1000, 3000)
+
 	self._flashbang_duration = duration
 
 	if flash > 0 then
@@ -776,7 +791,7 @@ function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_dista
 	local cam_rot = camera:rotation()
 	local cam_fwd = camera:rotation():y()
 
-	if mvector3.dot(cam_fwd, test_vec) < max_dot then
+	if max_dot > mvector3.dot(cam_fwd, test_vec) then
 		if dis < dot_distance then
 			dot_mul = 0.5
 		else
@@ -791,6 +806,7 @@ function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_dista
 	end
 
 	local flash = math.max(dis - min_distance, 0) / (max_distance - min_distance)
+
 	flash = (1 - flash) * dot_mul
 
 	return flash
@@ -814,21 +830,19 @@ end
 function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(time, near, near_pad, far, far_pad)
 	self:set_dof_override(true)
 
-	self._dof_override_transition_params = {
-		total_t = time,
-		time = time,
-		start = {}
-	}
+	self._dof_override_transition_params = {}
+	self._dof_override_transition_params.total_t = time
+	self._dof_override_transition_params.time = time
+	self._dof_override_transition_params.start = {}
 	self._dof_override_transition_params.start.near = self._dof_override_near
 	self._dof_override_transition_params.start.near_pad = self._dof_override_near_pad
 	self._dof_override_transition_params.start.far = self._dof_override_far
 	self._dof_override_transition_params.start.far_pad = self._dof_override_far_pad
-	self._dof_override_transition_params.stop = {
-		near = near,
-		near_pad = near_pad,
-		far = far,
-		far_pad = far_pad
-	}
+	self._dof_override_transition_params.stop = {}
+	self._dof_override_transition_params.stop.near = near
+	self._dof_override_transition_params.stop.near_pad = near_pad
+	self._dof_override_transition_params.stop.far = far
+	self._dof_override_transition_params.stop.far_pad = far_pad
 end
 
 function CoreEnvironmentControllerManager:set_dome_occ_default()

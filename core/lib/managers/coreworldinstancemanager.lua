@@ -52,6 +52,7 @@ function CoreWorldInstanceManager:get_safe_name(instance_name, name)
 
 		for i = string.len(name), 0, -1 do
 			local sub = string.sub(name, i, string.len(name))
+
 			sub_name = string.sub(name, 0, i)
 
 			if tonumber(sub) then
@@ -74,6 +75,7 @@ function CoreWorldInstanceManager:get_safe_name(instance_name, name)
 
 	for i = start_number, 10000 do
 		i = (i < 10 and "00" or i < 100 and "0" or "") .. i
+
 		local name_id = name .. i
 
 		if not names[name_id] then
@@ -169,11 +171,13 @@ function CoreWorldInstanceManager:debug_recalculate_instance_size(ignore_not_fou
 	print("[CoreWorldInstanceManager:debug_recalculate_instance_size()] STARTED")
 
 	self._instance_data_dry_run = {}
+
 	local dry_run_ok = true
 
 	for i, instance_data in ipairs(self._instance_data) do
 		local found = false
 		local predef = instance_data.predef
+
 		predef = predef or self:_parse_instance_name_from_folder(instance_data.folder)
 
 		if predef and managers.editor:layers().Instances._predefined_instances[predef] then
@@ -282,11 +286,15 @@ end
 function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddefinition_id, custom_data)
 	local worlddefinition = worlddefinition_id ~= 0 and managers.worldcollection:worlddefinition_by_id(worlddefinition_id)
 	local instance = self:get_instance_data_by_name(instance_name, worlddefinition_id)
+
 	worlddefinition = worlddefinition or managers.worlddefinition
+
 	local continent_data = worlddefinition._continents[instance.continent]
 	local package_data = managers.world_instance:packages_by_instance(instance)
+
 	instance.position = custom_data.position or Vector3()
 	instance.rotation = custom_data.rotation or Rotation()
+
 	local prepared_unit_data = managers.world_instance:prepare_unit_data(instance, continent_data, worlddefinition)
 
 	if prepared_unit_data.statics then
@@ -352,6 +360,7 @@ function CoreWorldInstanceManager:prepare_unit_data(instance, continent_data, wo
 				local old_id = entry.unit_data.unit_id
 				local offset = self:_get_mod_id(entry.unit_data.unit_id) + self._start_offset_index + start_index
 				local temp_id = continent_data.base_id + offset
+
 				entry.unit_data.unit_id = worlddefinition:_get_new_instance_id(temp_id, offset)
 			else
 				entry.unit_data.unit_id = continent_data.base_id + self:_get_mod_id(entry.unit_data.unit_id) + self._start_offset_index + start_index
@@ -399,7 +408,8 @@ function CoreWorldInstanceManager:check_highest_id(instance)
 
 		for _, data in ipairs(datas) do
 			local mod_id = self:_get_mod_id(data.unit_data.unit_id)
-			highest_id = highest_id < mod_id and mod_id or highest_id
+
+			highest_id = mod_id > highest_id and mod_id or highest_id
 			amount = amount + 1
 			type_amount = type_amount + 1
 		end
@@ -409,10 +419,13 @@ function CoreWorldInstanceManager:check_highest_id(instance)
 
 	local path = folder .. "/" .. "world"
 	local instance_data = self:_serialize_to_script("continent", path)
+
 	type_amount.statics = compare(instance_data.statics)
 	type_amount.dynamics = compare(instance_data.dynamics)
+
 	local path = folder .. "/" .. "mission"
 	local instance_data = self:_serialize_to_script("continent", path)
+
 	type_amount.mission = compare(instance_data.mission)
 
 	return highest_id, amount, type_amount
@@ -612,7 +625,9 @@ end
 
 function CoreWorldInstanceManager:register_input_element(mission_id, instance_name, instance_input, mission_element)
 	self._registered_input_elements[mission_id] = self._registered_input_elements[mission_id] or {}
+
 	local t = self._registered_input_elements[mission_id]
+
 	t[instance_name] = t[instance_name] or {}
 	t[instance_name][instance_input] = t[instance_name][instance_input] or {}
 
@@ -639,7 +654,9 @@ end
 
 function CoreWorldInstanceManager:register_output_event_element(mission_id, instance_name, instance_output, mission_element)
 	self._registered_output_event_elements[mission_id] = self._registered_output_event_elements[mission_id] or {}
+
 	local t = self._registered_output_event_elements[mission_id]
+
 	t[instance_name] = t[instance_name] or {}
 	t[instance_name][instance_output] = t[instance_name][instance_output] or {}
 
@@ -689,6 +706,7 @@ function CoreWorldInstanceManager:sync_save(data)
 	local state = {
 		instance_params = self._instance_params
 	}
+
 	data.CoreWorldInstanceManager = state
 end
 

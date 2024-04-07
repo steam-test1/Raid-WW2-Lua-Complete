@@ -15,6 +15,7 @@ function DramaExt:play_sound(sound, sound_source)
 	self._cue = self._cue or {}
 	self._cue.sound = sound
 	self._cue.sound_source = sound_source
+
 	local playing = self._unit:sound_source(sound_source):post_event(sound, self.sound_callback, self._unit, "marker", "end_of_event")
 
 	if not playing then

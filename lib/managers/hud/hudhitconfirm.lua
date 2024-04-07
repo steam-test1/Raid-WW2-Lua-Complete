@@ -58,11 +58,10 @@ function HUDHitConfirm:hud_pos_from_world(v3)
 		return self._hud_panel:w() / 2, self._hud_panel:h() / 2
 	end
 
-	local x = v3.x
-	local y = v3.y
+	local x, y = v3.x, v3.y
 	local hud_pos = camera:world_to_screen(v3)
-	local screen_x = self._hud_panel:w() / 2
-	local screen_y = self._hud_panel:h() / 2
+	local screen_x, screen_y = self._hud_panel:w() / 2, self._hud_panel:h() / 2
+
 	screen_x = screen_x + hud_pos.x * self._hud_panel:w()
 	screen_y = screen_y + hud_pos.y * self._hud_panel:h()
 
@@ -102,6 +101,7 @@ function HUDHitConfirm:_animate_show(hint_confirm, done_cb, seconds)
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
 
 		hint_confirm:set_alpha(t / seconds)
@@ -112,4 +112,5 @@ function HUDHitConfirm:_animate_show(hint_confirm, done_cb, seconds)
 end
 
 function HUDHitConfirm:show_done()
+	return
 end

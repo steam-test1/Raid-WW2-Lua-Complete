@@ -14,6 +14,7 @@ HUDChatMessagePlayer = HUDChatMessagePlayer or class(HUDChatMessage)
 function HUDChatMessagePlayer:init(message_panel, name, message, peer_id)
 	self._message_color = HUDChatMessage.PLAYER_MESSAGE_COLOR
 	self._horizontal_text_align = "right"
+
 	local player_name = managers.network:session():local_peer():name()
 
 	HUDChatMessagePlayer.super.init(self, message_panel, player_name, message, peer_id)
@@ -24,6 +25,7 @@ HUDChatMessagePeer = HUDChatMessagePeer or class(HUDChatMessage)
 function HUDChatMessagePeer:init(message_panel, name, message, peer_id)
 	self._message_color = HUDChatMessage.PEER_MESSAGE_COLOR
 	self._horizontal_text_align = "left"
+
 	local peer_name = managers.network:session():peer(peer_id):name()
 
 	HUDChatMessagePeer.super.init(self, message_panel, peer_name, message, peer_id)
@@ -35,6 +37,7 @@ function HUDChatMessageSystem:init(message_panel, name, message)
 	self._message_color = HUDChatMessage.SYSTEM_MESSAGE_COLOR
 	self._horizontal_text_align = "left"
 	self._system_message = true
+
 	local system_name = managers.localization:to_upper_text("menu_system_message")
 
 	HUDChatMessageSystem.super.init(self, message_panel, system_name, message)
@@ -58,6 +61,7 @@ function HUDChatMessage:_create_panel(message_panel)
 		halign = "scale",
 		w = HUDChatMessage.W
 	}
+
 	self._object = message_panel:panel(panel_params)
 end
 
@@ -78,6 +82,7 @@ function HUDChatMessage:_create_name(name)
 		align = self._horizontal_text_align,
 		text = utf8.to_upper(name)
 	}
+
 	self._name = self._object:text(name_params)
 end
 
@@ -91,6 +96,7 @@ function HUDChatMessage:_create_message_panel()
 		w = self._object:w(),
 		h = self._object:h() - self._name:h()
 	}
+
 	self._message_panel = self._object:panel(message_panel_params)
 end
 
@@ -110,7 +116,9 @@ function HUDChatMessage:_create_message(message)
 		align = self._horizontal_text_align,
 		text = message
 	}
+
 	self._message = self._object:text(message_params)
+
 	local _, _, _, h = self._message:text_rect()
 
 	self._message:set_h(h)
@@ -127,7 +135,7 @@ function HUDChatMessage:_size_panel()
 		h = h + self._messages[i]:h() + HUDChatMessage.MESSAGE_PADDING_DOWN
 	end
 
-	if self._object:parent():h() < h then
+	if h > self._object:parent():h() then
 		h = self._object:parent():h()
 	end
 

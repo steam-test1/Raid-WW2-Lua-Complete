@@ -10,6 +10,7 @@ TeamAIDamage._RESULT_NAME_TABLE = {
 TeamAIDamage._ATTACK_VARIANTS = CopDamage._ATTACK_VARIANTS
 
 function HuskTeamAIDamage:update(unit, t, dt)
+	return
 end
 
 function HuskTeamAIDamage:damage_bullet(attack_data)
@@ -130,7 +131,7 @@ function HuskTeamAIDamage:sync_damage_bullet(attacker_unit, hit_offset_height, r
 
 	mvector3.set_z(hit_pos, hit_pos.z + hit_offset_height)
 
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:movement():m_head_pos()
@@ -176,7 +177,7 @@ function HuskTeamAIDamage:sync_damage_explosion(attacker_unit, result_index, i_a
 
 	mvector3.set_z(hit_pos, hit_pos.z + 130)
 
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:position()
@@ -222,7 +223,7 @@ function HuskTeamAIDamage:sync_damage_fire(attacker_unit, result_index, i_attack
 
 	mvector3.set_z(hit_pos, hit_pos.z + 130)
 
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:position()
@@ -267,7 +268,7 @@ function HuskTeamAIDamage:sync_damage_melee(attacker_unit, hit_offset_height, re
 
 	mvector3.set_z(hit_pos, hit_pos.z + 130)
 
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:movement():m_head_pos()

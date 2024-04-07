@@ -43,6 +43,7 @@ function HUDWeaponGeneric:_create_panel(weapons_panel)
 		w = HUDWeaponGeneric.W,
 		h = HUDWeaponGeneric.H
 	}
+
 	self._object = weapons_panel:panel(panel_params)
 end
 
@@ -56,13 +57,16 @@ function HUDWeaponGeneric:_create_icon(icon)
 		w = self._object:w(),
 		h = self._object:h() / 2
 	}
+
 	self._icon_panel = self._object:panel(icon_panel_params)
+
 	local icon_params = {
 		name = "weapon_icon",
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED
 	}
+
 	self._icon = self._icon_panel:bitmap(icon_params)
 
 	self._icon:set_center_x(self._icon_panel:w() / 2)
@@ -77,6 +81,7 @@ function HUDWeaponGeneric:_create_ammo_panel(weapons_panel)
 		w = HUDWeaponGeneric.AMMO_PANEL_W,
 		h = HUDWeaponGeneric.AMMO_PANEL_H
 	}
+
 	self._ammo_panel = self._object:panel(ammo_panel_params)
 
 	self._ammo_panel:set_bottom(self._object:h())
@@ -108,7 +113,9 @@ function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 		layer = current_clip_background_border:layer() + 1,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED
 	}
+
 	self._current_clip_background = self._ammo_panel:rect(current_clip_background_params)
+
 	local current_clip_text_params = {
 		text = "",
 		name = "current_clip_amount",
@@ -119,6 +126,7 @@ function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 		color = HUDWeaponGeneric.CURRENT_CLIP_TEXT_COLOR,
 		layer = self._current_clip_background:layer() + 1
 	}
+
 	self._current_clip_text = self._ammo_panel:text(current_clip_text_params)
 
 	self:set_max_clip(0)
@@ -136,6 +144,7 @@ function HUDWeaponGeneric:_create_ammo_left_info(weapons_panel)
 		color = HUDWeaponGeneric.AMMO_LEFT_TEXT_COLOR,
 		alpha = HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_UNSELECTED
 	}
+
 	self._ammo_left_text = self._ammo_panel:text(ammo_left_text_params)
 
 	self:set_current_left(0)
@@ -150,6 +159,7 @@ function HUDWeaponGeneric:_create_firemodes()
 		texture_rect = tweak_data.gui.icons[HUDWeaponGeneric.FIREMODE_AUTO_ICON].texture_rect,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED
 	}
+
 	self._firemode_auto = self._icon_panel:bitmap(firemode_auto_params)
 
 	self._firemode_auto:set_right(self._icon_panel:w() - 17)
@@ -163,6 +173,7 @@ function HUDWeaponGeneric:_create_firemodes()
 		texture_rect = tweak_data.gui.icons[HUDWeaponGeneric.FIREMODE_SINGLE_ICON].texture_rect,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED
 	}
+
 	self._firemode_single = self._icon_panel:bitmap(firemode_single_params)
 
 	self._firemode_single:set_right(self._icon_panel:w() - 12)
@@ -186,7 +197,7 @@ function HUDWeaponGeneric:set_current_clip(current_clip)
 end
 
 function HUDWeaponGeneric:set_no_ammo(empty)
-	local col = nil
+	local col
 
 	if empty then
 		col = self:_get_color_for_percentage(HUDWeaponGeneric.CLIP_BACKGROUND_COLORS, 0)
@@ -231,7 +242,7 @@ end
 
 function HUDWeaponGeneric:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
+		if percentage > color_table[i].start_percentage then
 			return color_table[i].color
 		end
 	end
@@ -246,9 +257,11 @@ function HUDWeaponGeneric:_animate_alpha(root_panel, new_alpha)
 	local duration = 0.2
 	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, start_alpha, new_alpha - start_alpha, duration)
 
 		self._icon:set_alpha(current_alpha)

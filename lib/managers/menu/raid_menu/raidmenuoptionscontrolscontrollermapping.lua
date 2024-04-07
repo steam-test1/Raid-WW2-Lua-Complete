@@ -718,6 +718,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
+
 	local x, y, w, h = self._controller_keybind_warcry:text_rect()
 
 	self._controller_keybind_warcry:set_w(w)

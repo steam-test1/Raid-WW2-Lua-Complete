@@ -93,7 +93,8 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 		xnaddr = managers.network.matchmake:external_address(sender)
 	end
 
-	local new_peer_id, new_peer = nil
+	local new_peer_id, new_peer
+
 	new_peer_id, new_peer = data.session:add_peer(peer_name, nil, false, false, false, nil, character, sender:ip_at_index(0), xuid, xnaddr)
 
 	if not new_peer_id then
@@ -107,7 +108,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	new_peer:set_xuid(xuid)
 	new_peer:set_join_attempt_identifier(join_attempt_identifier)
 
-	local new_peer_rpc = nil
+	local new_peer_rpc
 
 	if managers.network:protocol_type() == "TCP_IP" then
 		new_peer_rpc = managers.network:session():resolve_new_peer_rpc(new_peer, sender)

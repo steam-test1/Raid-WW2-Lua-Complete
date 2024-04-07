@@ -20,10 +20,9 @@ function UnlockManager:init()
 end
 
 function UnlockManager:reset()
-	self._categories = {
-		[UnlockManager.SLOT_CHARACTER] = {},
-		[UnlockManager.SLOT_PROFILE] = {}
-	}
+	self._categories = {}
+	self._categories[UnlockManager.SLOT_CHARACTER] = {}
+	self._categories[UnlockManager.SLOT_PROFILE] = {}
 end
 
 function UnlockManager:unlock(category, identifiers)
@@ -72,6 +71,7 @@ function UnlockManager:save_profile_slot(data)
 		version = UnlockManager.PROFILE_VERSION,
 		profile_unlocks = self._categories[UnlockManager.SLOT_PROFILE]
 	}
+
 	data.UnlockManager = state
 end
 

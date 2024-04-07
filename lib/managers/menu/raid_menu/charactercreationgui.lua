@@ -41,7 +41,7 @@ function CharacterCreationGui:_update_control_visibility()
 		control:set_visible(show_class_controls)
 	end
 
-	local icon_data1, icon_data2 = nil
+	local icon_data1, icon_data2
 
 	if self._current_screen == "class" then
 		icon_data1 = tweak_data.gui.icons.character_creation_1_large
@@ -166,6 +166,7 @@ function CharacterCreationGui:_layout()
 	})
 	local icon_data = tweak_data.gui.icons.character_creation_1_large
 	local tex_rect = icon_data.texture_rect
+
 	self._number_1 = self._root_panel:image({
 		x = 0,
 		y = your_selection:bottom() + 32,
@@ -206,6 +207,7 @@ function CharacterCreationGui:_layout()
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
+
 	local _, _, w, _ = self._class_label:text_rect()
 
 	self._class_label:set_w(w)
@@ -471,6 +473,7 @@ function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
 		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
+
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
 
@@ -571,7 +574,7 @@ function CharacterCreationGui:show_character_create_input_textbox(callback_yes_f
 end
 
 function trim(s)
-	return s:gsub("^%s*(.-)%s*$", "%1")
+	return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 function character_name_exists(name)
@@ -718,6 +721,7 @@ function CharacterCreationGui:_load_class_default_weapons()
 		local weapon_id = data.primary
 		local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 		local unit_path = tweak_data.weapon.factory[weapon_factory_id].unit
+
 		self._loading_units[unit_path] = true
 
 		managers.dyn_resource:load(Idstring("unit"), Idstring(unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_weapon_unit_load_complete_callback", {
@@ -738,10 +742,13 @@ function CharacterCreationGui:_weapon_unit_load_complete_callback(params)
 		self._spawned_character_unit:link(Idstring("a_weapon_right_front"), weapon_unit, weapon_unit:orientation_object():name())
 
 		local weapon_blueprint = managers.weapon_inventory:get_weapon_default_blueprint(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, params.weapon_id)
+
 		self._loaded_weapons[params.weapon_id] = {}
+
 		local parts, blueprint = managers.weapon_factory:assemble_from_blueprint(params.weapon_factory_id, weapon_unit, weapon_blueprint, true, callback(self, self, "_assemble_completed", {
 			weapon_id = params.weapon_id
 		}), true)
+
 		self._parts_being_loaded[params.weapon_id] = parts
 
 		table.insert(self._loaded_weapons[params.weapon_id], weapon_unit)
@@ -760,6 +767,7 @@ function CharacterCreationGui:_assemble_completed(params, parts, blueprint)
 	end
 
 	self._weapons_loaded[params.weapon_id] = true
+
 	local all_weapons_loaded = true
 
 	for index, data in pairs(self._weapons_loaded) do

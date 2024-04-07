@@ -15,9 +15,8 @@ function AiLayer:init(owner)
 	self._graph_types = {
 		surface = "surface"
 	}
-	self._unit_graph_types = {
-		surface = Idstring("core/units/nav_surface/nav_surface")
-	}
+	self._unit_graph_types = {}
+	self._unit_graph_types.surface = Idstring("core/units/nav_surface/nav_surface")
 	self._nav_surface_unit = Idstring("core/units/nav_surface/nav_surface")
 	self._patrol_point_unit = Idstring("core/units/patrol_point/patrol_point")
 
@@ -26,9 +25,8 @@ function AiLayer:init(owner)
 
 	self._patrol_path_brush = Draw:brush()
 	self._only_draw_selected_patrol_path = false
-	self._default_values = {
-		all_visible = true
-	}
+	self._default_values = {}
+	self._default_values.all_visible = true
 end
 
 function AiLayer:load(world_holder, offset)
@@ -109,6 +107,7 @@ function AiLayer:update(t, dt)
 
 	if managers.navigation:is_data_ready() ~= self._graph_status then
 		self._graph_status = managers.navigation:is_data_ready()
+
 		local text = self._graph_status and "Graph is correct" or "Graph is incomplete"
 		local color = self._graph_status and Vector3(0, 200, 0) or Vector3(200, 0, 0)
 
@@ -200,7 +199,7 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 
 	if #path.points > 0 then
 		for i, point in ipairs(path.points) do
-			local to_unit = nil
+			local to_unit
 
 			if i == #path.points then
 				to_unit = path.points[1].unit
@@ -223,6 +222,7 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 
 			if point.unit == self._selected_unit then
 				local dir = to_unit:position() - point.unit:position()
+
 				self._mid_pos = point.unit:position() + dir / 2
 
 				Application:draw_sphere(self._mid_pos, 10, 0, 0, 1)
@@ -314,6 +314,7 @@ function AiLayer:build_panel(notebook)
 	graphs_sizer:add(button_sizer2, 0, 0, "EXPAND")
 
 	local build_settings = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Build Settings")
+
 	self._all_visible = EWS:CheckBox(self._ews_panel, "All visible", "", "ALIGN_LEFT")
 
 	self._all_visible:set_value(self._default_values.all_visible)
@@ -335,15 +336,15 @@ function AiLayer:build_panel(notebook)
 	graphs_sizer:add(build_settings, 0, 0, "EXPAND")
 
 	local visualize_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Visualize")
-	self._nav_visualization_checkboxes = {
-		quads = EWS:CheckBox(self._ews_panel, "Quads", "", "ALIGN_LEFT"),
-		doors = EWS:CheckBox(self._ews_panel, "Doors", "", "ALIGN_LEFT"),
-		segments = EWS:CheckBox(self._ews_panel, "Segments", "", "ALIGN_LEFT"),
-		coarse_graph = EWS:CheckBox(self._ews_panel, "Coarse Graph", "", "ALIGN_LEFT"),
-		visibility_graph = EWS:CheckBox(self._ews_panel, "Visibility Graph", "", "ALIGN_LEFT"),
-		blockers = EWS:CheckBox(self._ews_panel, "Blockers", "", "ALIGN_LEFT"),
-		sectors = EWS:CheckBox(self._ews_panel, "Sectors", "", "ALIGN_LEFT")
-	}
+
+	self._nav_visualization_checkboxes = {}
+	self._nav_visualization_checkboxes.quads = EWS:CheckBox(self._ews_panel, "Quads", "", "ALIGN_LEFT")
+	self._nav_visualization_checkboxes.doors = EWS:CheckBox(self._ews_panel, "Doors", "", "ALIGN_LEFT")
+	self._nav_visualization_checkboxes.segments = EWS:CheckBox(self._ews_panel, "Segments", "", "ALIGN_LEFT")
+	self._nav_visualization_checkboxes.coarse_graph = EWS:CheckBox(self._ews_panel, "Coarse Graph", "", "ALIGN_LEFT")
+	self._nav_visualization_checkboxes.visibility_graph = EWS:CheckBox(self._ews_panel, "Visibility Graph", "", "ALIGN_LEFT")
+	self._nav_visualization_checkboxes.blockers = EWS:CheckBox(self._ews_panel, "Blockers", "", "ALIGN_LEFT")
+	self._nav_visualization_checkboxes.sectors = EWS:CheckBox(self._ews_panel, "Sectors", "", "ALIGN_LEFT")
 
 	for name, ctrl in pairs(self._nav_visualization_checkboxes) do
 		visualize_sizer:add(ctrl, 0, 0, "EXPAND")
@@ -384,9 +385,8 @@ function AiLayer:_build_ai_settings()
 
 	state:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_group_state"), nil)
 
-	self._ai_settings_guis = {
-		group_state = group_state
-	}
+	self._ai_settings_guis = {}
+	self._ai_settings_guis.group_state = group_state
 
 	return graphs_sizer
 end
@@ -433,12 +433,11 @@ function AiLayer:_build_ai_unit_settings()
 	tag_sizer:add(barrage_allowed, 1, 0, "EXPAND")
 	sizer:add(tag_sizer, 1, 0, "EXPAND")
 
-	self._ai_unit_settings_guis = {
-		text = text,
-		suspicion_multiplier = suspicion_multiplier,
-		detection_multiplier = detection_multiplier,
-		barrage_allowed = barrage_allowed
-	}
+	self._ai_unit_settings_guis = {}
+	self._ai_unit_settings_guis.text = text
+	self._ai_unit_settings_guis.suspicion_multiplier = suspicion_multiplier
+	self._ai_unit_settings_guis.detection_multiplier = detection_multiplier
+	self._ai_unit_settings_guis.barrage_allowed = barrage_allowed
 
 	return sizer
 end
@@ -531,12 +530,11 @@ function AiLayer:_build_motion_path_section()
 	speed_limit_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_mop_speed_limit"), nil)
 	speed_limit_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_mop_speed_limit"), nil)
 
-	self.motion_path_settings_guis = {
-		default_speed_limit = speed_limit,
-		default_speed_limit_ctrlr = speed_limit_ctrlr,
-		path_type = mop_type,
-		path_type_ctrlr = path_type_ctrlr
-	}
+	self.motion_path_settings_guis = {}
+	self.motion_path_settings_guis.default_speed_limit = speed_limit
+	self.motion_path_settings_guis.default_speed_limit_ctrlr = speed_limit_ctrlr
+	self.motion_path_settings_guis.path_type = mop_type
+	self.motion_path_settings_guis.path_type_ctrlr = path_type_ctrlr
 
 	return motion_paths_sizer
 end
@@ -550,6 +548,7 @@ function AiLayer:_set_mop_type()
 		end
 
 		local path_type = self.motion_path_settings_guis.path_type.value
+
 		self._motion_path_settings[selected_path].path_type = path_type
 
 		managers.motion_path:set_path_type(path_type)
@@ -719,7 +718,7 @@ end
 
 function AiLayer:_build_visibility_graph()
 	local all_visible = self._all_visible:get_value() and true
-	local exclude, include = nil
+	local exclude, include
 
 	if not all_visible then
 		exclude = {}
@@ -1052,9 +1051,8 @@ function AiLayer:update_unit_settings()
 end
 
 function AiLayer:_init_ai_settings()
-	self._ai_settings = {
-		group_state = "raid"
-	}
+	self._ai_settings = {}
+	self._ai_settings.group_state = "raid"
 
 	managers.groupai:set_state(self._ai_settings.group_state)
 end

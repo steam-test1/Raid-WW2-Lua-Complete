@@ -6,6 +6,7 @@ core:import("CoreEngineAccess")
 core:import("CoreTable")
 
 local sky_orientation_data_key = Idstring("sky_orientation/rotation"):key()
+
 WorldDefinition = WorldDefinition or class()
 WorldDefinition.LOAD_UNITS_PER_FRAME = 100
 WorldDefinition.TIME_PER_SECOND_FOR_PACKAGE_LOAD = 0.1667
@@ -89,13 +90,14 @@ function WorldDefinition:init(params)
 		self.load_packages_done = false
 		self.load_statics_done = false
 		self.load_dynamics_done = false
-		self.load_packages = coroutine.create(function ()
+		self.load_packages = coroutine.create(function()
 			self:_load_world_package()
 		end)
-		self.load_statics = coroutine.create(function ()
+		self.load_statics = coroutine.create(function()
 			if self._definition.statics then
 				for _, values in ipairs(self._definition.statics) do
 					values.unit_data.package = values.unit_data.package or self._definition.package
+
 					local unit = self:_create_statics_unit(values, self._offset, true)
 
 					coroutine.yield()
@@ -117,6 +119,7 @@ function WorldDefinition:init(params)
 					for _, values in ipairs(continent.statics) do
 						counter = counter + 1
 						values.unit_data.package = values.unit_data.package or continent.package
+
 						local unit = self:_create_statics_unit(values, self._offset, true, name)
 
 						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME then
@@ -130,7 +133,7 @@ function WorldDefinition:init(params)
 
 			self.load_statics_done = true
 		end)
-		self.load_dynamics = coroutine.create(function ()
+		self.load_dynamics = coroutine.create(function()
 			if self._definition.dynamics then
 				for _, values in ipairs(self._definition.dynamics) do
 					values.unit_data.package = values.unit_data.package or self._definition.package
@@ -148,6 +151,7 @@ function WorldDefinition:init(params)
 					for _, values in ipairs(continent.dynamics) do
 						counter = counter + 1
 						values.unit_data.package = values.unit_data.package or continent.package
+
 						local unit = self:_create_dynamics_unit(values, offset)
 
 						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME then
@@ -229,6 +233,7 @@ function WorldDefinition:_parse_replace_unit()
 		for unit in node:children() do
 			local old_name = unit:name()
 			local replace_with = unit:parameter("replace_with")
+
 			self._replace_names[old_name] = replace_with
 
 			if is_editor then
@@ -258,6 +263,7 @@ function WorldDefinition:_translate_covers(cover_data)
 
 	for _, rotation in ipairs(cover_data.rotations) do
 		local tmp_rot = Rotation(rotation, 0, 0)
+
 		tmp_rot = self._translation.rotation * tmp_rot
 		rotation = tmp_rot:yaw()
 		cover_data.positions[i] = self._translation.position + cover_data.positions[i]:rotate_with(self._translation.rotation)
@@ -274,7 +280,9 @@ function WorldDefinition:_translate_unit_entries(entries, base_id)
 		entry.unit_data.rotation = self._translation.rotation * entry.unit_data.rotation
 		entry.unit_data.position = self._translation.position + entry.unit_data.position:rotate_with(self._translation.rotation)
 		entry.unit_data.original_unit_id = entry.unit_data.unit_id
+
 		local new_id = self:_get_new_id(entry.unit_data.unit_id, base_id)
+
 		entry.unit_data.unit_id = new_id
 
 		if entry.wire_data then
@@ -331,6 +339,7 @@ function WorldDefinition:_load_world_package()
 	end
 
 	self._current_world_package = package
+
 	local init_package = self._world_dir .. "world_init"
 
 	if not DB:is_bundled() and not DB:has("package", init_package) then
@@ -398,6 +407,7 @@ function WorldDefinition:on_continent_package_loaded(params, package)
 	Application:debug("[WorldDefinition:on_continent_package_loaded()] CONTITNENT PACKAGE LOADED", package, inspect(params))
 
 	self._package_load_params[params.key].loaded = true
+
 	local name = self._package_load_params[params.key].name
 	local pkg = self._package_load_params[params.key].pkg
 	local dep_loaded = true
@@ -584,6 +594,7 @@ function WorldDefinition:parse_continents(node, t)
 				local init_path = self:world_dir() .. name .. "/" .. name .. "_init"
 				local path = self:world_dir() .. name .. "/" .. name
 				local pkg_key = self:next_key()
+
 				self._package_load_params[pkg_key] = {
 					name = name,
 					pkg = path
@@ -627,8 +638,10 @@ end
 
 function WorldDefinition:get_next_unique_id(base_id)
 	local base = base_id or 100000
+
 	self._unique_id_counter[base] = self._unique_id_counter[base] or 0
 	self._unique_id_counter[base] = self._unique_id_counter[base] + 1
+
 	local id = self._world_id % WorldDefinition.MAX_WORLD_UNIT_ID * WorldDefinition.UNIT_ID_BASE + base + self._unique_id_counter[base]
 
 	return id
@@ -642,6 +655,7 @@ end
 
 function WorldDefinition:_get_new_id(old_id, base_id)
 	local new_id = self:get_next_unique_id(base_id)
+
 	self._id_converter.old_to_new[old_id] = new_id
 	self._id_converter.new_to_old[new_id] = old_id
 
@@ -650,6 +664,7 @@ end
 
 function WorldDefinition:_get_new_instance_id(old_id, offset)
 	local new_id = self:get_next_unique_instance_id(old_id)
+
 	self._id_converter.old_to_new[old_id] = new_id
 	self._id_converter.new_to_old[new_id] = old_id
 
@@ -683,6 +698,7 @@ function WorldDefinition:_insert_instances()
 				if not skip then
 					local package_data = managers.world_instance:packages_by_instance(instance)
 					local pkg_key = self:next_key()
+
 					self._package_load_params[pkg_key] = {
 						data = data,
 						instance = instance,
@@ -742,9 +758,10 @@ function WorldDefinition:init_done()
 end
 
 function WorldDefinition:_measure_lap_time(name)
-	return
+	do return end
 
 	self._start_lap = self._start_lap or TimerManager:now()
+
 	local now = TimerManager:now()
 
 	Application:debug("Lap ", name, now - self._start_lap)
@@ -758,6 +775,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 	self:_measure_lap_time("start create")
 
 	offset = offset or Vector3(0, 0, 0)
+
 	local return_data = {}
 
 	if (layer == "level_settings" or layer == "all") and self._definition.level_settings then
@@ -945,6 +963,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 		if self._definition.statics then
 			for _, values in ipairs(self._definition.statics) do
 				values.unit_data.package = values.unit_data.package or self._definition.package
+
 				local unit = self:_create_statics_unit(values, offset)
 
 				if unit then
@@ -957,6 +976,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 			if continent.statics then
 				for _, values in ipairs(continent.statics) do
 					values.unit_data.package = values.unit_data.package or continent.package
+
 					local unit = self:_create_statics_unit(values, offset)
 
 					if unit then
@@ -982,6 +1002,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 			if continent.dynamics then
 				for _, values in ipairs(continent.dynamics) do
 					values.unit_data.package = values.unit_data.package or continent.package
+
 					local unit = self:_create_dynamics_unit(values, offset)
 
 					if unit then
@@ -1007,6 +1028,7 @@ function WorldDefinition:destroy()
 end
 
 function WorldDefinition:_load_level_settings(data, offset)
+	return
 end
 
 function WorldDefinition:_load_ai_nav_graphs(data, offset)
@@ -1069,7 +1091,8 @@ function WorldDefinition:_create_portal(data, offset)
 			local bottom = portal.bottom
 
 			if top == 0 and bottom == 0 then
-				top, bottom = nil
+				top = nil
+				bottom = nil
 			end
 
 			managers.portal:add_portal(t, bottom, top)
@@ -1201,6 +1224,7 @@ function WorldDefinition:_create_massunit(data, offset)
 				managers.editor:output("Unit " .. name:s() .. " does not exist")
 
 				local old_name = name:s()
+
 				name = managers.editor:show_replace_massunit()
 
 				if name and DB:has(Idstring("unit"), name:id()) then
@@ -1238,9 +1262,7 @@ function WorldDefinition:_set_environment(environment_name)
 	if Global.game_settings.level_id then
 		local env_params = _G.tweak_data.levels[Global.game_settings.level_id].env_params
 
-		if env_params then
-			environment_name = env_params.environment or environment_name
-		end
+		environment_name = env_params and env_params.environment or environment_name
 	end
 
 	if environment_name ~= "none" then
@@ -1359,6 +1381,7 @@ function WorldDefinition:_create_wires_unit(data, offset)
 
 	if unit then
 		unit:wire_data().slack = data.wire_data.slack
+
 		local target = unit:get_object(Idstring("a_target"))
 
 		target:set_position(data.wire_data.target_pos)
@@ -1407,6 +1430,7 @@ function WorldDefinition:preload_unit(name)
 		end
 
 		local old_name = name
+
 		name = managers.editor:show_replace_unit()
 		self._replace_names[old_name] = name
 
@@ -1436,10 +1460,11 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 	end
 
 	data.continent_name = continent_name
+
 	local pkg = data.package or ""
 	local network_sync = PackageManager:unit_data(name:id(), pkg):network_sync()
 	local need_sync = false
-	local unit = nil
+	local unit
 
 	if network_sync ~= "none" and network_sync ~= "client" then
 		need_sync = true
@@ -1640,7 +1665,8 @@ function WorldDefinition:_setup_variations(unit, data)
 	if data.material_variation and data.material_variation ~= "default" then
 		unit:unit_data().material = data.material_variation
 
-		unit:set_material_config(Idstring(unit:unit_data().material), true, function ()
+		unit:set_material_config(Idstring(unit:unit_data().material), true, function()
+			return
 		end)
 	end
 end
@@ -1780,8 +1806,9 @@ function WorldDefinition:_setup_projection_light(unit, data)
 
 	unit:unit_data().projection_textures = data.projection_textures
 	unit:unit_data().projection_light = data.projection_light
+
 	local light = unit:get_object(Idstring(data.projection_light))
-	local texture_name = nil
+	local texture_name
 
 	if unit:unit_data().projection_textures then
 		texture_name = unit:unit_data().projection_textures[data.projection_light]
@@ -1793,6 +1820,7 @@ function WorldDefinition:_setup_projection_light(unit, data)
 		end
 	else
 		local id = data.original_unit_id or unit:unit_data().unit_id
+
 		texture_name = (self._cube_lights_path or self:world_dir()) .. "cube_lights/" .. id
 
 		if not DB:has(Idstring("texture"), Idstring(texture_name)) then
@@ -1812,6 +1840,7 @@ function WorldDefinition:setup_projection_light(...)
 end
 
 function WorldDefinition:_project_assign_unit_data(...)
+	return
 end
 
 function WorldDefinition:add_trigger_sequence(unit, triggers)
@@ -1844,6 +1873,7 @@ end
 
 function WorldDefinition:use_me(unit, is_editor)
 	local id = unit:unit_data().unit_id
+
 	id = id ~= 0 and id or unit:editor_id()
 	unit:unit_data().unit_id = id
 
@@ -1852,6 +1882,7 @@ function WorldDefinition:use_me(unit, is_editor)
 	end
 
 	self._all_units[id] = self._all_units[id] or unit
+
 	local original_id = self:get_original_unit_id(id)
 
 	if self._trigger_units[original_id] then
@@ -2072,7 +2103,7 @@ function WorldDefinition:_load_package_async(pkg, callback_method, key, init_pkg
 		return
 	end
 
-	local dep_pkg = nil
+	local dep_pkg
 
 	if not init_pkg then
 		dep_pkg = pkg .. "_init"
@@ -2109,7 +2140,7 @@ function WorldDefinition:_load_package_async(pkg, callback_method, key, init_pkg
 
 	if self.is_streamed_world then
 		self:_add_loading_counter(callback_method, pkg)
-		PackageManager:load(pkg, function ()
+		PackageManager:load(pkg, function()
 			Application:debug("[WorldDefinition:_load_package_async] DONE", pkg)
 			self[callback_method](self, params, pkg)
 
@@ -2217,7 +2248,7 @@ function WorldDefinition:keep_alive(t)
 
 	self._keep_alive_t = self._keep_alive_t or t
 
-	if self._keep_alive_t < t then
+	if t > self._keep_alive_t then
 		self._keep_alive_t = t + 1
 
 		managers.network:session():send_to_peers_ip_verified("connection_keep_alive")

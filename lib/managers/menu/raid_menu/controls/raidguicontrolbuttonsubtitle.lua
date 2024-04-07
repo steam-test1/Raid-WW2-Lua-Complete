@@ -38,6 +38,7 @@ function RaidGUIControlButtonSubtitle:init(parent, params)
 	self:_create_selectors()
 
 	self._on_click_callback = params.on_click_callback
+
 	local icon_params = {
 		name = "subtitle_icon",
 		y = 0,
@@ -47,9 +48,11 @@ function RaidGUIControlButtonSubtitle:init(parent, params)
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect,
 		color = RaidGUIControlButtonSubtitle.COLOR
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 	self._icon_w = self._icon:w()
 	self._icon_h = self._icon:h()
+
 	local text_params = {
 		name = "subtitle_text",
 		vertical = "top",
@@ -63,6 +66,7 @@ function RaidGUIControlButtonSubtitle:init(parent, params)
 		color = RaidGUIControlButtonSubtitle.COLOR,
 		layer = self._object:layer() + 1
 	}
+
 	self._text = self._object:text(text_params)
 	self._align = params.align or "left"
 
@@ -85,6 +89,7 @@ end
 
 function RaidGUIControlButtonSubtitle:_init_panel()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_subtitle_button"
 	panel_params.layer = self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -101,7 +106,9 @@ function RaidGUIControlButtonSubtitle:_create_selectors()
 		halign = "scale",
 		valign = "scale"
 	}
+
 	self._selector_panel = self._object:panel(selector_panel_params)
+
 	local selector_top_left_params = {
 		name = "selector_top_left",
 		texture = tweak_data.gui.icons[RaidGUIControlButtonSubtitle.SELECTOR_TOP_LEFT].texture,
@@ -130,6 +137,7 @@ function RaidGUIControlButtonSubtitle:_fit_size()
 	local h = self._icon:h() + RaidGUIControlButtonSubtitle.ICON_PADDING_DOWN + self._text:h()
 	local object_center_x = self._object:center_x()
 	local object_w = math.max(self._icon:w(), w)
+
 	object_w = math.max(object_w, RaidGUIControlButtonSubtitle.DEFAULT_WIDTH)
 
 	self._object:set_w(object_w)
@@ -316,7 +324,9 @@ function RaidGUIControlButtonSubtitle:_animate_highlight_on()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quartic_out(t, RaidGUIControlButtonSubtitle.COLOR.r, RaidGUIControlButtonSubtitle.ACTIVE_COLOR.r - RaidGUIControlButtonSubtitle.COLOR.r, duration)
 		local current_g = Easing.quartic_out(t, RaidGUIControlButtonSubtitle.COLOR.g, RaidGUIControlButtonSubtitle.ACTIVE_COLOR.g - RaidGUIControlButtonSubtitle.COLOR.g, duration)
 		local current_b = Easing.quartic_out(t, RaidGUIControlButtonSubtitle.COLOR.b, RaidGUIControlButtonSubtitle.ACTIVE_COLOR.b - RaidGUIControlButtonSubtitle.COLOR.b, duration)
@@ -344,9 +354,11 @@ function RaidGUIControlButtonSubtitle:_animate_highlight_off()
 	local duration = 0.2
 	local t = 1 - self._color_t
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quartic_out(t, RaidGUIControlButtonSubtitle.ACTIVE_COLOR.r, RaidGUIControlButtonSubtitle.COLOR.r - RaidGUIControlButtonSubtitle.ACTIVE_COLOR.r, duration)
 		local current_g = Easing.quartic_out(t, RaidGUIControlButtonSubtitle.ACTIVE_COLOR.g, RaidGUIControlButtonSubtitle.COLOR.g - RaidGUIControlButtonSubtitle.ACTIVE_COLOR.g, duration)
 		local current_b = Easing.quartic_out(t, RaidGUIControlButtonSubtitle.ACTIVE_COLOR.b, RaidGUIControlButtonSubtitle.COLOR.b - RaidGUIControlButtonSubtitle.ACTIVE_COLOR.b, duration)
@@ -369,7 +381,9 @@ function RaidGUIControlButtonSubtitle:_animate_press()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_in(t, 1, -(1 - RaidGUIControlButtonSubtitle.PRESSED_SIZE), duration)
 
 		self._icon:set_size(self._icon_w * scale, self._icon_w * scale)
@@ -389,7 +403,9 @@ function RaidGUIControlButtonSubtitle:_animate_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, RaidGUIControlButtonSubtitle.PRESSED_SIZE, 1 - RaidGUIControlButtonSubtitle.PRESSED_SIZE, duration)
 
 		self._icon:set_size(self._icon_w * scale, self._icon_w * scale)

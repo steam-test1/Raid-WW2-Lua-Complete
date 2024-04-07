@@ -45,6 +45,7 @@ function RaidGUIControl:create_border()
 	local y = self._object:y()
 	local w = self._object:w()
 	local h = self._object:h()
+
 	self._border_left = self._parent_panel:gradient({
 		name = "border_left",
 		orientation = "vertical",
@@ -145,10 +146,11 @@ function RaidGUIControl:remove_border()
 end
 
 function RaidGUIControl:close()
+	return
 end
 
 function RaidGUIControl:translate(text, upper_case_flag, additional_macros)
-	local button_macros = nil
+	local button_macros
 
 	if additional_macros then
 		button_macros = clone(managers.localization:get_default_macros())
@@ -170,18 +172,20 @@ function RaidGUIControl:translate(text, upper_case_flag, additional_macros)
 end
 
 function RaidGUIControl:_show_dialog_error_msg(error_title, error_msg)
-	local dialog_data = {
-		title = error_title,
-		text = error_msg
-	}
-	local ok_button = {
-		text = managers.localization:text("dialog_ok")
-	}
+	local dialog_data = {}
+
+	dialog_data.title = error_title
+	dialog_data.text = error_msg
+
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
 	dialog_data.button_list = {
 		ok_button
 	}
 
 	function ok_button.callback_func()
+		return
 	end
 
 	managers.system_menu:show(dialog_data)
@@ -258,6 +262,7 @@ function RaidGUIControl:mouse_double_click(o, button, x, y)
 end
 
 function RaidGUIControl:on_mouse_moved(o, x, y)
+	return
 end
 
 function RaidGUIControl:on_mouse_over(x, y)
@@ -266,7 +271,7 @@ function RaidGUIControl:on_mouse_over(x, y)
 	self:highlight_on()
 
 	if self._on_mouse_enter_callback then
-		self:_on_mouse_enter_callback(self._data)
+		self._on_mouse_enter_callback(self, self._data)
 	end
 end
 
@@ -276,7 +281,7 @@ function RaidGUIControl:on_mouse_out(x, y)
 	self:highlight_off()
 
 	if self._on_mouse_exit_callback then
-		self:_on_mouse_exit_callback(self._data)
+		self._on_mouse_exit_callback(self, self._data)
 	end
 end
 
@@ -525,6 +530,7 @@ function RaidGUIControl:scroll_right()
 end
 
 function RaidGUIControl:special_btn_pressed(...)
+	return
 end
 
 function RaidGUIControl:set_menu_move_controls(controls)
@@ -570,6 +576,7 @@ function RaidGUIControl:_find_next_visible_control(control_ref, direction)
 end
 
 function RaidGUIControl:confirm_pressed()
+	return
 end
 
 function RaidGUIControl:check_item_availability(item, availability_flags)
@@ -578,6 +585,7 @@ function RaidGUIControl:check_item_availability(item, availability_flags)
 	end
 
 	self._callback_handler = self._callback_handler or RaidMenuCallbackHandler:new()
+
 	local result = true
 
 	for _, availability_flag in pairs(availability_flags) do
@@ -592,6 +600,7 @@ function RaidGUIControl:check_item_availability(item, availability_flags)
 end
 
 function RaidGUIControl:scrollable_area_post_setup(params)
+	return
 end
 
 function RaidGUIControl:enabled()

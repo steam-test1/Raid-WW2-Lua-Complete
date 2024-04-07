@@ -48,21 +48,23 @@ function RaidGUIControlLootRewardCards:_create_items()
 	horizontal_spacing = 0
 
 	for i = 1, RaidGUIControlLootRewardCards.CARD_COUNT do
-		local item_params = {
-			x = (self._item_params.item_w + horizontal_spacing) * (i - 1),
-			y = RaidGUIControlLootRewardCards.INITIAL_CARD_Y,
-			item_w = self._item_params.item_w,
-			item_h = self._item_params.item_h,
-			wrapper_h = self._item_params.wrapper_h,
-			name = "loot_reward_card_" .. i,
-			item_idx = i,
-			hide_card_details = true,
-			click_callback = callback(self, self, "on_card_click"),
-			hover_callback = callback(self, self, "on_card_hover")
-		}
+		local item_params = {}
+
+		item_params.x = (self._item_params.item_w + horizontal_spacing) * (i - 1)
+		item_params.y = RaidGUIControlLootRewardCards.INITIAL_CARD_Y
+		item_params.item_w = self._item_params.item_w
+		item_params.item_h = self._item_params.item_h
+		item_params.wrapper_h = self._item_params.wrapper_h
+		item_params.name = "loot_reward_card_" .. i
+		item_params.item_idx = i
+		item_params.hide_card_details = true
+		item_params.click_callback = callback(self, self, "on_card_click")
+		item_params.hover_callback = callback(self, self, "on_card_hover")
+
 		local card_key_name = self._params.loot_list[i].entry
 		local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
 		local item = self._object:create_custom_control(RaidGUIControlLootCardDetails, item_params, card_data)
+
 		self._items[i] = item
 	end
 end
@@ -71,7 +73,9 @@ function RaidGUIControlLootRewardCards:_create_title()
 	local title_panel_params = {
 		name = "title_panel"
 	}
+
 	self._title_panel = self._object:panel(title_panel_params)
+
 	local title_description_params = {
 		name = "title_description",
 		vertical = "center",
@@ -84,7 +88,9 @@ function RaidGUIControlLootRewardCards:_create_title()
 		color = RaidGUIControlLootRewardCards.TITLE_DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true)
 	}
+
 	self._title_description = self._title_panel:text(title_description_params)
+
 	local _, _, w, _ = self._title_description:text_rect()
 
 	self._title_description:set_w(w)
@@ -100,7 +106,9 @@ function RaidGUIControlLootRewardCards:_create_title()
 		color = RaidGUIControlLootRewardCards.TITLE_COLOR,
 		text = self:translate("menu_loot_screen_card_pack", true)
 	}
+
 	self._pack_title = self._title_panel:text(title_params)
+
 	local _, _, w, h = self._pack_title:text_rect()
 
 	self._pack_title:set_w(w)
@@ -115,20 +123,26 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 		name = "details_panel",
 		y = RaidGUIControlLootRewardCards.CARD_DETAILS_Y
 	}
+
 	self._details_panel = self._object:panel(details_panel_params)
+
 	local bonus_image_params = {
 		name = "bonus_image_" .. self._name,
 		texture = tweak_data.gui.icons.ico_bonus.texture,
 		texture_rect = tweak_data.gui.icons.ico_bonus.texture_rect
 	}
+
 	self._bonus_image = self._details_panel:bitmap(bonus_image_params)
+
 	local malus_image_params = {
 		name = "malus_image_" .. self._name,
 		y = self._bonus_image:y() + self._bonus_image:h() + 32,
 		texture = tweak_data.gui.icons.ico_malus.texture,
 		texture_rect = tweak_data.gui.icons.ico_malus.texture_rect
 	}
+
 	self._malus_image = self._details_panel:bitmap(malus_image_params)
+
 	local bonus_label_params = {
 		vertical = "center",
 		h = 64,
@@ -143,7 +157,9 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.raid_grey
 	}
+
 	self._bonus_label = self._details_panel:label(bonus_label_params)
+
 	local malus_label_params = {
 		vertical = "center",
 		h = 64,
@@ -158,6 +174,7 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.raid_grey
 	}
+
 	self._malus_label = self._details_panel:label(malus_label_params)
 end
 
@@ -194,7 +211,7 @@ end
 
 function RaidGUIControlLootRewardCards:_animate_show_card_details(object, key_name, positive_description, negative_description)
 	local fade_out_duration = 0.2
-	local fade_out_object = nil
+	local fade_out_object
 
 	if self._pack_title:alpha() > 0 then
 		fade_out_object = self._title_panel
@@ -204,9 +221,11 @@ function RaidGUIControlLootRewardCards:_animate_show_card_details(object, key_na
 
 	local t = (1 - fade_out_object:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		fade_out_object:set_alpha(current_alpha)
@@ -252,12 +271,16 @@ function RaidGUIControlLootRewardCards:_animate_show_card_details(object, key_na
 	end
 
 	self._shown_card_key = key_name
+
 	local fade_in_duration = 0.25
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._details_panel:set_alpha(current_alpha)
@@ -299,7 +322,9 @@ function RaidGUIControlLootRewardCards:_animate_show(panel)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_title_alpha = Easing.quartic_out(t - title_delay, 0, 1, title_duration)
 
 		self._title_description:set_alpha(current_title_alpha)
@@ -318,7 +343,7 @@ function RaidGUIControlLootRewardCards:_animate_show(panel)
 
 			self._items[i]:set_alpha(current_alpha)
 
-			local current_offset = nil
+			local current_offset
 
 			if t < timings[i] * card_duration_fast_time_percentage then
 				current_offset = Easing.linear(t, initial_offset[i], -initial_offset[i] * card_fast_move_percentage, timings[i] * card_duration_fast_time_percentage)

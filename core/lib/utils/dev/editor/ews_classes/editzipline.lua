@@ -8,7 +8,9 @@ function EditZipLine:init(editor)
 		name = "ZipLine",
 		class = self
 	})
+
 	self._panel = panel
+
 	local end_pos_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	sizer:add(end_pos_sizer, 0, 0, "EXPAND")

@@ -19,6 +19,7 @@ end
 
 function DialogueUnitElement:new_save_values(...)
 	local t = DialogueUnitElement.super.new_save_values(self, ...)
+
 	t.position = self._hed.use_position and self._unit:position() or nil
 
 	return t

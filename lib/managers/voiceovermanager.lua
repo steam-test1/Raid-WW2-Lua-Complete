@@ -33,11 +33,12 @@ function VoiceOverManager:update(t, dt)
 	for unit_key, data in pairs(self._idle_cooldowns) do
 		local elapsed_time = current_time - data.started_at
 
-		if self._idle_timers.cooldown <= elapsed_time then
+		if elapsed_time >= self._idle_timers.cooldown then
 			self._idle_cooldowns[unit_key] = nil
 
 			if self._idle_queue[unit_key] then
 				local time_offset = math.random(self._idle_timers.rnd_delay)
+
 				self._idle_queue[unit_key] = {
 					unit = self._idle_queue[unit_key].unit,
 					registered_at = Application:time(),
@@ -70,6 +71,7 @@ function VoiceOverManager:guard_register_idle(source_unit)
 	end
 
 	local time_offset = math.random(self._idle_timers.rnd_delay)
+
 	self._idle_queue[source_unit:key()] = {
 		unit = source_unit,
 		registered_at = Application:time(),

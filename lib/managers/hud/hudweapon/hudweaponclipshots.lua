@@ -23,15 +23,16 @@ function HUDWeaponClipShots:init(index, weapons_panel, _tweak_data)
 end
 
 function HUDWeaponClipShots:_create_clip_left_info(weapons_panel)
+	return
 end
 
 function HUDWeaponClipShots:set_current_clip(current_clip)
 	local icon_to_ammo_spacing = 8
 	local needed_width = self._ammo_left_text:w() + icon_to_ammo_spacing
 	local chunk_w = self._ammo_panel:w() - self._ammo_left_text:w() - icon_to_ammo_spacing
-	local is_thin = self._icon_thin_min < self._max_clip
+	local is_thin = self._max_clip > self._icon_thin_min
 	local guis = self._guis[is_thin and 1 or 2]
-	local is_doublestack = (guis[1].texture_rect[4] <= self._ammo_panel:h() / 2 or guis[2].texture_rect[4] <= self._ammo_panel:h() / 2) and self._icon_stack_min < self._max_clip or false
+	local is_doublestack = (guis[1].texture_rect[4] <= self._ammo_panel:h() / 2 or guis[2].texture_rect[4] <= self._ammo_panel:h() / 2) and self._max_clip > self._icon_stack_min or false
 
 	for i = 1, self._max_clip do
 		local bullet = self._ammo_panel:child("clip_bullet" .. i)
@@ -48,6 +49,7 @@ function HUDWeaponClipShots:set_current_clip(current_clip)
 			local scale = is_short and 0.5 or 1
 			local h = scale * self._ammo_panel:h()
 			local w = h * gui_ratio
+
 			bullet = self._ammo_panel:bitmap({
 				name = "clip_bullet" .. i,
 				w = w,
@@ -67,10 +69,7 @@ function HUDWeaponClipShots:set_current_clip(current_clip)
 
 		if is_doublestack then
 			bullets_in_row = math.floor(self._max_clip / 2)
-
-			if bullets_in_row < x_bullet then
-				x_bullet = x_bullet - bullets_in_row
-			end
+			x_bullet = bullets_in_row < x_bullet and x_bullet - bullets_in_row or x_bullet
 		end
 
 		local top_row = bullets_in_row < i
@@ -133,9 +132,11 @@ function HUDWeaponClipShots:_animate_alpha(root_panel, new_alpha)
 	local duration = 0.2
 	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, start_alpha, new_alpha - start_alpha, duration)
 
 		self._icon:set_alpha(current_alpha)

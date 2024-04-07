@@ -280,6 +280,7 @@ function CoreShapeUnitElement:add_element()
 
 	if ray and ray.unit then
 		self._hed.unit_ids = self._hed.unit_ids or {}
+
 		local id = ray.unit:unit_data().unit_id
 
 		if table.contains(self._hed.unit_ids, id) then
@@ -301,6 +302,7 @@ function CoreShapeUnitElement:_remove_unit_id(id)
 end
 
 function CoreShapeUnitElement:update_editing()
+	return
 end
 
 function CoreShapeUnitElement:add_triggers(vc)

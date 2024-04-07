@@ -20,7 +20,8 @@ end
 
 function MountedWeapon:set_cannon_sound_source()
 	self._main_cannon_soundsource = nil
-	local snd_main_cannon = nil
+
+	local snd_main_cannon
 
 	if self._unit:vehicle_driving() and self._unit:vehicle_driving()._tweak_data.seats.gunner then
 		snd_main_cannon = self._unit:get_object(Idstring(self._unit:vehicle_driving()._tweak_data.seats.gunner.fire_point))
@@ -50,9 +51,11 @@ function MountedWeapon:update(unit, t, dt)
 end
 
 function MountedWeapon:main_cannon_fire()
-	if self._main_cannon_cooldown < self._main_cannon_cooldown_counter then
+	if self._main_cannon_cooldown_counter > self._main_cannon_cooldown then
 		self._main_cannon_locator = self._unit:get_object(Idstring(self._unit:vehicle_driving()._tweak_data.seats.gunner.fire_point))
+
 		local direction = self._main_cannon_locator:rotation():y()
+
 		self._tank_shell = {
 			position = self._main_cannon_locator:position(),
 			direction = direction
@@ -100,6 +103,7 @@ function MountedWeapon:update_turret(t, dt)
 
 	if not self._turret_rot_forced then
 		local rot = self._unit:rotation()
+
 		self._turret.target_rot_yaw = rot:yaw()
 		self._turret.target_rot_pitch = rot:pitch()
 	end
@@ -138,13 +142,14 @@ function MountedWeapon:update_turret(t, dt)
 	self._turret.object:set_local_rotation(Rotation(yaw, turret_local_rot:pitch(), turret_local_rot:roll()))
 	self._turret.gun_object:set_local_rotation(Rotation(gun_local_rot:yaw(), pitch, gun_local_rot:roll()))
 
-	if self._tank_shell and self._turret.range < mvector3.distance(self._tank_shell.position, self._main_cannon_locator:position()) then
+	if self._tank_shell and mvector3.distance(self._tank_shell.position, self._main_cannon_locator:position()) > self._turret.range then
 		self._tank_shell = nil
 	end
 
 	if self._tank_shell then
 		VehicleDrivingExt.cumulative_dt = VehicleDrivingExt.cumulative_dt + dt
 		VehicleDrivingExt.cumulative_gravity = VehicleDrivingExt.cumulative_gravity + 9.81 * dt
+
 		local new_position = self._tank_shell.position + self._tank_shell.direction * self._tweak_data.main_cannon_shell_speed * dt + Vector3(0, 0, -VehicleDrivingExt.cumulative_gravity)
 		local raycast = World:raycast("ray", self._tank_shell.position, new_position)
 

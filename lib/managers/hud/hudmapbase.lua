@@ -13,6 +13,7 @@ function HUDMapBase:hide()
 end
 
 function HUDMapBase:update()
+	return
 end
 
 function HUDMapBase:set_x(x)

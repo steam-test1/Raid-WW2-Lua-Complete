@@ -139,10 +139,9 @@ function WarcryManager:warcry_acquired(warcry_name)
 end
 
 function WarcryManager:activate_peer_warcry(peer_id, warcry_type, level)
-	self._peer_warcries[peer_id] = {
-		type = warcry_type,
-		level = level
-	}
+	self._peer_warcries[peer_id] = {}
+	self._peer_warcries[peer_id].type = warcry_type
+	self._peer_warcries[peer_id].level = level
 end
 
 function WarcryManager:deactivate_peer_warcry(peer_id)
@@ -165,6 +164,7 @@ function WarcryManager:activate_warcry()
 	self._duration = self._active_warcry:duration()
 	self._remaining = self._duration
 	self._active = true
+
 	local warcry_type = self._active_warcry:get_type()
 	local warcry_level = self._active_warcry:get_level()
 
@@ -216,7 +216,7 @@ end
 function WarcryManager:_fill_meter_by_value(value, sync)
 	self._meter_value = self._meter_value + value
 
-	if self._meter_max_value <= self._meter_value then
+	if self._meter_value >= self._meter_max_value then
 		self._meter_value = self._meter_max_value
 
 		if not self._meter_full then
@@ -263,7 +263,7 @@ function WarcryManager:_on_meter_full()
 	managers.network:session():send_to_peers_synched("sync_warcry_meter_glow", true)
 	managers.hud._sound_source:post_event("warcry_available")
 
-	local prompt_text = nil
+	local prompt_text
 
 	if managers.controller:is_using_controller() then
 		prompt_text = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
@@ -326,6 +326,7 @@ function WarcryManager:update(t, dt)
 	self._active_warcry:update(dt)
 
 	self._remaining = self._remaining - dt
+
 	local diff = self._remaining / self._duration - self._last_value
 
 	self:_fill_meter_by_value(diff)
@@ -391,7 +392,7 @@ function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgr
 	local peer_warcry = self._peer_warcries[peer_id]
 
 	if peer_warcry then
-		local buffs = nil
+		local buffs
 
 		if peer_warcry.level > #tweak_data.warcry[peer_warcry.type].buffs then
 			buffs = tweak_data.warcry[peer_warcry.type].buffs[#tweak_data.warcry[peer_warcry.type].buffs]
@@ -411,7 +412,7 @@ function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgr
 			if upgrade_definition.upgrade.upgrade == upgrade_definition_name then
 				local upgrade_name = upgrade_definition.upgrade.upgrade
 				local upgrade_level = upgrade_definition.upgrade.value
-				local upgrade_category_table = nil
+				local upgrade_category_table
 
 				if type(upgrade_category) == "table" then
 					upgrade_category_table = tweak_data.upgrades.values
@@ -437,6 +438,7 @@ function WarcryManager:save(data)
 			warcries = self._warcries,
 			active_warcry = self._active_warcry
 		}
+
 		data.warcry_manager = manager_data
 	end
 end

@@ -60,45 +60,43 @@ function ElementNavigationStitcher:_calculate_extents()
 	local x_half_extent = self._values.width / 2 * self._values.rotation:x()
 	local y_half_extent = self._values.depth / 2 * self._values.rotation:y()
 	local pos = self._values.position
-	self._extents = {
-		top_left = pos - x_half_extent + y_half_extent,
-		top_right = pos + x_half_extent + y_half_extent,
-		bottom_left = pos - x_half_extent - y_half_extent,
-		bottom_right = pos + x_half_extent - y_half_extent,
-		height = pos.z
-	}
+
+	self._extents = {}
+	self._extents.top_left = pos - x_half_extent + y_half_extent
+	self._extents.top_right = pos + x_half_extent + y_half_extent
+	self._extents.bottom_left = pos - x_half_extent - y_half_extent
+	self._extents.bottom_right = pos + x_half_extent - y_half_extent
+	self._extents.height = pos.z
 
 	self:_snap_pos_to_grid(self._extents.top_left)
 	self:_snap_pos_to_grid(self._extents.top_right)
 	self:_snap_pos_to_grid(self._extents.bottom_left)
 	self:_snap_pos_to_grid(self._extents.bottom_right)
 
-	self._extents.aabb = {
-		min_x = math.min(math.min(self._extents.top_left.x, self._extents.top_right.x), math.min(self._extents.bottom_left.x, self._extents.bottom_right.x)),
-		min_y = math.min(math.min(self._extents.top_left.y, self._extents.top_right.y), math.min(self._extents.bottom_left.y, self._extents.bottom_right.y)),
-		max_x = math.max(math.max(self._extents.top_left.x, self._extents.top_right.x), math.max(self._extents.bottom_left.x, self._extents.bottom_right.x)),
-		max_y = math.max(math.max(self._extents.top_left.y, self._extents.top_right.y), math.max(self._extents.bottom_left.y, self._extents.bottom_right.y))
-	}
+	self._extents.aabb = {}
+	self._extents.aabb.min_x = math.min(math.min(self._extents.top_left.x, self._extents.top_right.x), math.min(self._extents.bottom_left.x, self._extents.bottom_right.x))
+	self._extents.aabb.min_y = math.min(math.min(self._extents.top_left.y, self._extents.top_right.y), math.min(self._extents.bottom_left.y, self._extents.bottom_right.y))
+	self._extents.aabb.max_x = math.max(math.max(self._extents.top_left.x, self._extents.top_right.x), math.max(self._extents.bottom_left.x, self._extents.bottom_right.x))
+	self._extents.aabb.max_y = math.max(math.max(self._extents.top_left.y, self._extents.top_right.y), math.max(self._extents.bottom_left.y, self._extents.bottom_right.y))
 end
 
 function ElementNavigationStitcher:_create_nav_data()
-	self._nav_data = {
-		version = 6,
-		door_high_pos = {},
-		door_low_pos = {},
-		door_high_quads = {},
-		door_low_quads = {},
-		helper_blockers = {},
-		quad_borders_x_pos = {},
-		quad_borders_x_neg = {},
-		quad_borders_y_pos = {},
-		quad_borders_y_neg = {},
-		quad_heights_xp_yp = {},
-		quad_heights_xp_yn = {},
-		quad_heights_xn_yp = {},
-		quad_heights_xn_yn = {},
-		segments = {}
-	}
+	self._nav_data = {}
+	self._nav_data.version = 6
+	self._nav_data.door_high_pos = {}
+	self._nav_data.door_low_pos = {}
+	self._nav_data.door_high_quads = {}
+	self._nav_data.door_low_quads = {}
+	self._nav_data.helper_blockers = {}
+	self._nav_data.quad_borders_x_pos = {}
+	self._nav_data.quad_borders_x_neg = {}
+	self._nav_data.quad_borders_y_pos = {}
+	self._nav_data.quad_borders_y_neg = {}
+	self._nav_data.quad_heights_xp_yp = {}
+	self._nav_data.quad_heights_xp_yn = {}
+	self._nav_data.quad_heights_xn_yp = {}
+	self._nav_data.quad_heights_xn_yn = {}
+	self._nav_data.segments = {}
 	self._nav_data.segments[1] = {
 		location_id = "location_unknown",
 		id = 1,
@@ -108,12 +106,11 @@ function ElementNavigationStitcher:_create_nav_data()
 	}
 	self._nav_data.segments[1].vis_groups[1] = 1
 	self._nav_data.segments[1].unique_id = managers.navigation:get_segment_unique_id(self._world_id, 1)
-	self._nav_data.visibility_groups = {
-		{
-			pos = self._values.position,
-			quads = {},
-			visible_groups = {}
-		}
+	self._nav_data.visibility_groups = {}
+	self._nav_data.visibility_groups[1] = {
+		pos = self._values.position,
+		quads = {},
+		visible_groups = {}
 	}
 	self._nav_data.parent_world_id = self._sync_id
 end
@@ -165,15 +162,18 @@ function ElementNavigationStitcher:_create_quads()
 	local z = self._extents.height
 	local i_x = 1
 	local i_y = 1
+
 	self._quad_grid = {}
-	local pos = nil
+
+	local pos
 	local x = self._extents.aabb.min_x + self._grid_size / 2
 
 	while x <= self._extents.aabb.max_x do
 		i_y = 1
+
 		local y = self._extents.aabb.max_y - self._grid_size / 2
 
-		while self._extents.aabb.min_y <= y do
+		while y >= self._extents.aabb.min_y do
 			if not self._quad_grid[i_y] then
 				self._quad_grid[i_y] = {}
 			end
@@ -182,6 +182,7 @@ function ElementNavigationStitcher:_create_quads()
 
 			if not inside then
 				local i_quad = self:_create_quad(x, y)
+
 				self._quad_grid[i_y][i_x] = i_quad
 
 				if i_y >= 2 and self._quad_grid[i_y - 1][i_x] then
@@ -267,6 +268,7 @@ end
 
 function ElementNavigationStitcher:_collect_external_doors()
 	self._external_doors = {}
+
 	local i_x = 1
 	local i_y = 1
 	local top_left_x = self._extents.aabb.min_x - self._grid_size / 2

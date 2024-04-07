@@ -13,6 +13,7 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local difficulty_params = {
 		name_proportions = 1,
 		name = "Difficulty:",
@@ -36,11 +37,11 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = difficulty
 	})
 
-	local help = {
-		text = "Set the current difficulty in the level. Affects what enemies will be spawned etc.",
-		panel = panel,
-		sizer = panel_sizer
-	}
+	local help = {}
+
+	help.text = "Set the current difficulty in the level. Affects what enemies will be spawned etc."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end

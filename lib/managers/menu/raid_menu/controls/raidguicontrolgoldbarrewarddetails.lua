@@ -51,6 +51,7 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlGoldBarRewardDetails.DEFAULT_WIDTH
 	control_params.h = control_params.h or RaidGUIControlGoldBarRewardDetails.HEIGHT
@@ -66,6 +67,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_left_panel()
 		w = RaidGUIControlGoldBarRewardDetails.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -82,7 +84,9 @@ function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 		color = RaidGUIControlGoldBarRewardDetails.TITLE_DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true)
 	}
+
 	self._title_description = self._left_panel:text(title_description_params)
+
 	local _, _, w, _ = self._title_description:text_rect()
 
 	self._title_description:set_w(w)
@@ -98,6 +102,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 		font_size = RaidGUIControlGoldBarRewardDetails.TITLE_FONT_SIZE,
 		color = RaidGUIControlGoldBarRewardDetails.TITLE_COLOR
 	}
+
 	self._gold_bar_value = self._left_panel:text(title_params)
 
 	self:_layout_gold_bar_value()
@@ -119,13 +124,16 @@ function RaidGUIControlGoldBarRewardDetails:_create_reward_image()
 		w = self._left_panel:w(),
 		h = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_PANEL_H
 	}
+
 	self._reward_image_panel = self._left_panel:panel(reward_image_panel_params)
+
 	local reward_image_params = {
 		name = "reward_image",
 		alpha = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE].texture_rect
 	}
+
 	self._reward_image = self._reward_image_panel:bitmap(reward_image_params)
 
 	self._reward_image:set_center_x(self._reward_image_panel:w() / 2)
@@ -138,6 +146,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_right_panel()
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 
 	self._right_panel:set_right(self._object:w())
@@ -157,6 +166,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_description()
 		color = RaidGUIControlGoldBarRewardDetails.DESCRIPTION_COLOR,
 		text = self:translate("menu_loot_screen_gold_bars_description")
 	}
+
 	self._description = self._right_panel:text(description_params)
 
 	self._description:set_right(self._right_panel:w())
@@ -177,6 +187,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 		color = RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_COLOR,
 		text = self:translate("menu_loot_screen_gold_bars_type", true)
 	}
+
 	self._item_type = self._right_panel:text(item_type_params)
 end
 
@@ -201,7 +212,9 @@ function RaidGUIControlGoldBarRewardDetails:show()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, image_duration)
 
 		self._reward_image:set_alpha(current_alpha)
@@ -275,9 +288,9 @@ function RaidGUIControlGoldBarRewardDetails:set_gold_bar_reward(amount)
 
 	local icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE
 
-	if amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY <= amount then
+	if amount and amount >= RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY then
 		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY
-	elseif amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW <= amount then
+	elseif amount and amount >= RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW then
 		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
 	end
 

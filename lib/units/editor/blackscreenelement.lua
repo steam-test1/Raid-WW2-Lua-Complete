@@ -32,6 +32,7 @@ function BlackscreenElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local loading_screens = {}
 	local all_screens = tweak_data.operations:get_all_loading_screens()
 

@@ -3,6 +3,7 @@ SpecializationBoxGui.TEXT = ""
 
 function SpecializationBoxGui:init(...)
 	local ws, title, text, content_data, config = ...
+
 	config.forced_h = 210
 	config.w = 600
 	config.is_title_outside = true
@@ -188,6 +189,7 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 		available_points_present = available_points - points_present,
 		conversion_rate = conversion_rate_number
 	}
+
 	local xp_present = content_data.xp_present
 	local points_present = content_data.points_present
 	local conversion_rate_number = math.round(xp_present / points_present)
@@ -214,7 +216,7 @@ function SpecializationBoxGui._update(o, self)
 
 	wait(1)
 
-	local dt = nil
+	local dt
 	local speed = math.max(5, self._anim_data.end_points_present / 20)
 
 	managers.menu_component:post_event("count_1")

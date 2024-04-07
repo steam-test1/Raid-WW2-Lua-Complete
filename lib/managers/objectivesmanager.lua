@@ -52,6 +52,7 @@ function ObjectivesManager:_get_difficulty_amount_from_objective_subobjective(da
 	if current_difficulty_name and difficulty_amount then
 		local difficulty_amount_table = string.split(difficulty_amount, ",")
 		local current_difficulty_id = self:table_invert(tweak_data.difficulties)[current_difficulty_name]
+
 		difficulty_amount_total = tonumber(difficulty_amount_table[current_difficulty_id])
 	end
 
@@ -88,7 +89,7 @@ function ObjectivesManager:_parse_objective(data)
 
 	for _, sub in ipairs(data) do
 		local sub_text = managers.localization:text(sub.text)
-		local sub_description = nil
+		local sub_description
 
 		if sub.description then
 			sub_description = managers.localization:text(sub.description)
@@ -116,7 +117,7 @@ end
 
 function ObjectivesManager:update(t, dt)
 	for id, data in pairs(self._remind_objectives) do
-		if data.next_t < t then
+		if t > data.next_t then
 			self:_remind_objetive(id)
 		end
 	end
@@ -147,6 +148,7 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 
 	if managers.user:get_setting("objective_reminder") then
 		title_id = title_id or "hud_objective_reminder"
+
 		local objective = self._objectives[id]
 		local title_message = managers.localization:text(title_id)
 		local text = objective.text
@@ -218,6 +220,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	objective.current_amount = objective.current_amount or load_data and load_data.current_amount or data and data.amount and 0 or 0
 	objective.amount = load_data and load_data.amount or data and data.amount or objective.amount
 	objective.world_id = world_id
+
 	local activate_params = {
 		id = id,
 		text = objective.text,
@@ -226,6 +229,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 		current_amount = objective.current_amount,
 		amount_text = objective.amount_text
 	}
+
 	self._delayed_presentation = nil
 
 	if data and data.delay_presentation then
@@ -394,7 +398,7 @@ function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 	end
 
 	if sub_objective.amount then
-		if sub_objective.amount <= sub_objective.current_amount then
+		if sub_objective.current_amount >= sub_objective.amount then
 			Application:error("Sub objective " .. tostring(sub_id) .. " " .. tostring(sub_objective.text) .. " " .. " already completed v2 ")
 
 			return
@@ -597,6 +601,7 @@ function ObjectivesManager:_check_xp_weight(level_id)
 
 	for obj, data in pairs(self._objectives_level_id[level_id]) do
 		local xp = math.round(data.xp_weight / total_xp_weight * tweak_data:get_value("experience_manager", "total_level_objectives"))
+
 		total_xp = total_xp + xp
 
 		print(obj, xp)
@@ -622,6 +627,7 @@ end
 function ObjectivesManager:save(data)
 	local state = {}
 	local objective_map = {}
+
 	state.completed_objectives_ordered = self._completed_objectives_ordered
 
 	for name, objective in pairs(self._objectives) do
@@ -677,6 +683,7 @@ function ObjectivesManager:load(data)
 
 		for name, save_data in pairs(state.objective_map) do
 			local objective_data = self._objectives[name]
+
 			objective_data.world_id = save_data.world_id
 			objective_data.current_amount = save_data.current_amount
 			objective_data.amount = save_data.amount

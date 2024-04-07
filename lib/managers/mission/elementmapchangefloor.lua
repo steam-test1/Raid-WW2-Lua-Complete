@@ -26,4 +26,5 @@ function ElementMapChangeFloor:on_executed(instigator)
 end
 
 function ElementMapChangeFloor:operation_remove()
+	return
 end

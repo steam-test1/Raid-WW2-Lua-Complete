@@ -65,6 +65,7 @@ end
 
 function BuffEffectManager:activate_effect(effect_data)
 	local effect = BuffEffect:new(effect_data.name, effect_data.value, effect_data.challenge_card_key, effect_data.fail_message)
+
 	self._effect_id_counter = self._effect_id_counter + 1
 	self._active_effects[self._effect_id_counter] = effect
 	effect.effect_id = self._effect_id_counter
@@ -217,6 +218,7 @@ function BuffEffectManager:save_dropin(data)
 		effect_id_counter = self._effect_id_counter,
 		timers = self._timers
 	}
+
 	data.BuffEffectManager = state
 end
 

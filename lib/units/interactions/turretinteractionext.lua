@@ -35,4 +35,5 @@ function TurretInteractionExt:sync_interacted(peer, player, status, skip_alive_c
 end
 
 function TurretInteractionExt:set_contour(color, opacity)
+	return
 end

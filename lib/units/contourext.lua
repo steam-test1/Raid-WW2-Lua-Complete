@@ -1,8 +1,10 @@
 ContourExt = ContourExt or class()
+
 local idstr_contour = Idstring("contour")
 local idstr_material = Idstring("material")
 local idstr_contour_color = Idstring("contour_color")
 local idstr_contour_opacity = Idstring("contour_opacity")
+
 ContourExt._types = {
 	teammate = {
 		priority = 5,
@@ -412,7 +414,7 @@ function ContourExt:update(unit, t, dt)
 		local is_current = index == 1
 
 		if data.ray_check then
-			local turn_on = nil
+			local turn_on
 
 			if is_current then
 				local cam_pos = managers.viewport:get_current_camera_position()
@@ -428,7 +430,7 @@ function ContourExt:update(unit, t, dt)
 				self:_upd_opacity(1)
 
 				setup.last_turned_on_t = t
-			elseif not setup.last_turned_on_t or data.persistence < t - setup.last_turned_on_t then
+			elseif not setup.last_turned_on_t or t - setup.last_turned_on_t > data.persistence then
 				local color = data.off_color or setup.color
 
 				self:_set_color(setup.type, color)
@@ -443,14 +445,14 @@ function ContourExt:update(unit, t, dt)
 			end
 		end
 
-		if setup.flash_t and setup.flash_t < t then
+		if setup.flash_t and t > setup.flash_t then
 			setup.flash_t = t + setup.flash_frequency
 			setup.flash_on = not setup.flash_on
 
 			self:_upd_opacity(setup.flash_on and 1 or 0)
 		end
 
-		if setup.fadeout_t and setup.fadeout_t < t then
+		if setup.fadeout_t and t > setup.fadeout_t then
 			self:_remove(index)
 			self:_chk_update_state()
 		else
@@ -534,6 +536,7 @@ end
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	local data = self._types[setup.type]
+
 	self._last_opacity = nil
 
 	if data.material_swap_required then
@@ -558,6 +561,7 @@ function ContourExt:material_applied()
 
 	local setup = self._contour_list[1]
 	local data = self._types[setup.type]
+
 	self._materials = nil
 
 	self:_upd_color()
@@ -568,7 +572,7 @@ function ContourExt:material_applied()
 end
 
 function ContourExt:_chk_update_state()
-	local needs_update = nil
+	local needs_update
 
 	if self._contour_list and next(self._contour_list) then
 		for i, setup in ipairs(self._contour_list) do

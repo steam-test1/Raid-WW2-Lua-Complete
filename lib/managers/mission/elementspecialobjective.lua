@@ -79,6 +79,7 @@ function ElementSpecialObjective:_finalize_values(values)
 
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])
+
 		values[name_in] = found_index ~= -1 and found_index or nil
 	end
 
@@ -195,6 +196,7 @@ end
 function ElementSpecialObjective:clbk_objective_administered(unit)
 	if self._values.needs_pos_rsrv then
 		self._pos_rsrv = self._pos_rsrv or {}
+
 		local unit_rsrv = self._pos_rsrv[unit:key()]
 
 		if unit_rsrv then
@@ -280,7 +282,9 @@ function ElementSpecialObjective:clbk_verify_administration(unit)
 			radius = 30,
 			position = self._values.position
 		}
+
 		local pos_rsrv = self._tmp_pos_rsrv
+
 		pos_rsrv.filter = unit:movement():pos_rsrv_id()
 
 		if managers.navigation:is_pos_free(pos_rsrv) then
@@ -295,6 +299,7 @@ end
 
 function ElementSpecialObjective:add_event_callback(name, callback, callback_id)
 	local id = callback_id or "generic_id"
+
 	self._events = self._events or {}
 	self._events[name] = self._events[name] or {}
 	self._events[name][id] = callback
@@ -358,7 +363,9 @@ function ElementSpecialObjective:on_executed(instigator)
 
 		if objective then
 			local search_dis_sq = self._values.search_distance
+
 			search_dis_sq = search_dis_sq and search_dis_sq * search_dis_sq or nil
+
 			local so_descriptor = {
 				objective = objective,
 				base_chance = self:_get_default_value_if_nil("base_chance"),
@@ -448,7 +455,7 @@ function ElementSpecialObjective:get_objective(instigator)
 		end
 
 		local objective_type = string.sub(self._values.so_action, 4)
-		local last_pos, nav_seg = nil
+		local last_pos, nav_seg
 
 		if objective_type == "phalanx" then
 			objective.nav_seg = managers.navigation:get_nav_seg_from_pos(objective.pos)
@@ -466,12 +473,16 @@ function ElementSpecialObjective:get_objective(instigator)
 				last_pos = pos or self._values.position
 			elseif path_style == "destination" then
 				local path_data = managers.ai_data:destination_path(self._values.position, Rotation(self._values.rotation, 0, 0))
+
 				objective.path_data = path_data
 				last_pos = self._values.position
 			else
 				local path_data = managers.ai_data:patrol_path(path_name)
+
 				objective.path_data = path_data
+
 				local points = path_data.points
+
 				last_pos = points[#points].position
 			end
 		end
@@ -499,7 +510,7 @@ function ElementSpecialObjective:get_objective(instigator)
 			end
 		end
 	else
-		local action = nil
+		local action
 
 		if self._values.so_action then
 			action = {
@@ -528,10 +539,12 @@ function ElementSpecialObjective:get_objective(instigator)
 
 			if path_style == "destination" then
 				local path_data = managers.ai_data:destination_path(self._values.position, Rotation(self._values.rotation or 0, 0, 0))
+
 				objective.path_data = path_data
 			else
 				local path_name = self._values.patrol_path
 				local path_data = managers.ai_data:patrol_path(path_name)
+
 				objective.path_data = path_data
 			end
 		end
@@ -550,7 +563,7 @@ function ElementSpecialObjective:_get_hunt_location(instigator)
 	end
 
 	local from_pos = instigator:movement():m_pos()
-	local nearest_criminal, nearest_dis, nearest_pos = nil
+	local nearest_criminal, nearest_dis, nearest_pos
 	local criminals = managers.groupai:state():all_criminals()
 
 	for u_key, record in pairs(criminals) do
@@ -578,8 +591,9 @@ function ElementSpecialObjective:_get_hunt_location(instigator)
 end
 
 function ElementSpecialObjective:_get_misc_SO_params()
-	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = nil
+	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice
 	local values = self._values
+
 	pos = values.align_position and values.position or nil
 	rot = values.align_position and values.align_rotation and Rotation(values.rotation, 0, 0) or nil
 	path_style = values.align_position and self._PATHING_STYLES[self:_get_default_value_if_nil("path_style")] or nil
@@ -670,7 +684,7 @@ function ElementSpecialObjective:_select_units_from_spawners()
 		self.turret_unit = managers.worldcollection:get_unit_with_id(self._values.turret_id, nil, self._sync_id or 0)
 	end
 
-	local wanted_nr_units = nil
+	local wanted_nr_units
 
 	if self._values.trigger_times and self._values.trigger_times > 0 then
 		wanted_nr_units = self._values.trigger_times
@@ -679,6 +693,7 @@ function ElementSpecialObjective:_select_units_from_spawners()
 	end
 
 	wanted_nr_units = math.min(wanted_nr_units, #candidates)
+
 	local chosen_units = {}
 	local chosen_objectives = {}
 
@@ -750,6 +765,7 @@ function ElementSpecialObjective:_administer_to_turret(unit, objective)
 	local so_object = self.turret_unit:weapon()._SO_object
 	local turret_pos = self.turret_unit:weapon()._SO_object:position()
 	local turret_rot = self.turret_unit:weapon()._SO_object:rotation()
+
 	objective.pos = turret_pos
 	objective.rot = turret_rot
 
@@ -782,7 +798,7 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
 
 	for _, followup_element_id in ipairs(self._values.followup_elements) do
-		local weight = nil
+		local weight
 		local followup_element = mission:get_element_by_id(followup_element_id)
 
 		if followup_element:enabled() then

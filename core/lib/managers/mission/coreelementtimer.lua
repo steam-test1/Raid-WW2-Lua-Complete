@@ -38,6 +38,7 @@ function ElementTimer:on_script_activated()
 
 	if not self.monitor_element and self._values.output_monitor_id then
 		local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
+
 		self.monitor_element = mission:get_element_by_id(self._values.output_monitor_id)
 	end
 
@@ -88,7 +89,7 @@ function ElementTimer:update_timer(t, dt)
 	end
 
 	for id, cb_data in pairs(self._triggers) do
-		if self._timer <= cb_data.time then
+		if cb_data.time >= self._timer then
 			cb_data.callback()
 			self:remove_trigger(id)
 		end
@@ -96,6 +97,7 @@ function ElementTimer:update_timer(t, dt)
 end
 
 function ElementTimer:client_on_executed(...)
+	return
 end
 
 function ElementTimer:on_executed(instigator)
@@ -271,7 +273,7 @@ function ElementTimerHud:update_timer(t, dt)
 	end
 
 	for id, cb_data in pairs(self._triggers) do
-		if self._timer <= cb_data.time then
+		if cb_data.time >= self._timer then
 			cb_data.callback()
 			self:remove_trigger(id)
 		end
@@ -461,6 +463,7 @@ function ElementTimerTrigger:on_script_activated()
 end
 
 function ElementTimerTrigger:client_on_executed(...)
+	return
 end
 
 function ElementTimerTrigger:on_executed(instigator)

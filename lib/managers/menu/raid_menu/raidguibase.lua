@@ -2,9 +2,8 @@ RaidGuiBase = RaidGuiBase or class()
 RaidGuiBase.BACKGROUND_LAYER = 10
 RaidGuiBase.FOREGROUND_LAYER = 20
 RaidGuiBase.PADDING = 42
-RaidGuiBase.Colors = {
-	screen_background = Color(0.85, 0, 0, 0)
-}
+RaidGuiBase.Colors = {}
+RaidGuiBase.Colors.screen_background = Color(0.85, 0, 0, 0)
 
 function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:register_on_escape_callback(callback(self, self, "on_escape"))
@@ -47,6 +46,7 @@ function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 		layer = self._panel_layer,
 		is_root_panel = self._panel_is_root_panel
 	}
+
 	self._root_panel = RaidGUIPanel:new(self._ws_panel, params_root_panel)
 
 	self:_layout()
@@ -64,6 +64,7 @@ function RaidGuiBase:_setup_properties()
 end
 
 function RaidGuiBase:_set_initial_data()
+	return
 end
 
 function RaidGuiBase:translate(text, upper_case_flag)
@@ -90,10 +91,12 @@ function RaidGuiBase:_enable_dof()
 end
 
 function RaidGuiBase:_layout()
+	return
 end
 
 function RaidGuiBase:_create_border()
 	local border_thickness = 1.6
+
 	self._border_left = self._root_panel:gradient({
 		name = "border_left",
 		y = 0,
@@ -318,7 +321,7 @@ function RaidGuiBase:set_controller_bindings(bindings, clear_old)
 end
 
 function RaidGuiBase:special_btn_pressed(button)
-	local binding_to_trigger = nil
+	local binding_to_trigger
 
 	for index, binding in ipairs(self._controller_bindings) do
 		if binding.key == button then

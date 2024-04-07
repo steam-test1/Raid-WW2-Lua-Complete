@@ -561,7 +561,7 @@ function MenuManager:hide_loading_screen()
 
 	self._loading_screen:hide()
 
-	local current_game_state_name = nil
+	local current_game_state_name
 	local event_complete_state = false
 
 	if game_state_machine then
@@ -604,6 +604,7 @@ function MenuManager:controller_hotswap_triggered()
 end
 
 function MenuManager:post_event(event)
+	return
 end
 
 function MenuManager:_cb_matchmake_found_game(game_id, created)
@@ -893,12 +894,15 @@ function MenuManager:toggle_hud_state()
 end
 
 function MenuManager:set_slot_voice(peer, peer_id, active)
+	return
 end
 
 function MenuManager:recreate_controller()
 	self._controller = managers.controller:create_controller("MenuManager", nil, false)
+
 	local setup = self._controller:get_setup()
 	local look_connection = setup:get_connection("look")
+
 	self._look_multiplier = look_connection:get_multiplier()
 
 	if not managers.savefile:is_active() then
@@ -918,6 +922,7 @@ function MenuManager:create_controller()
 
 		local setup = self._controller:get_setup()
 		local look_connection = setup:get_connection("look")
+
 		self._look_multiplier = look_connection:get_multiplier()
 
 		if not managers.savefile:is_active() then
@@ -1008,7 +1013,7 @@ end
 
 function MenuManager:set_mouse_sensitivity(zoomed)
 	local zoom_sense = zoomed
-	local sense_x, sense_y = nil
+	local sense_x, sense_y
 
 	if zoom_sense then
 		sense_x = managers.user:get_setting("camera_zoom_sensitivity_x")
@@ -1362,14 +1367,15 @@ function MenuManager:_source_files(dir)
 end
 
 function MenuManager:progress_resetted()
-	local dialog_data = {
-		title = "Dr Evil",
-		text = "HAHA, your progress is gone!"
-	}
-	local no_button = {
-		text = "Doh!",
-		callback_func = callback(self, self, "_dialog_progress_resetted_ok")
-	}
+	local dialog_data = {}
+
+	dialog_data.title = "Dr Evil"
+	dialog_data.text = "HAHA, your progress is gone!"
+
+	local no_button = {}
+
+	no_button.text = "Doh!"
+	no_button.callback_func = callback(self, self, "_dialog_progress_resetted_ok")
 	dialog_data.button_list = {
 		no_button
 	}
@@ -1378,6 +1384,7 @@ function MenuManager:progress_resetted()
 end
 
 function MenuManager:_dialog_progress_resetted_ok()
+	return
 end
 
 function MenuManager:is_console()
@@ -1704,7 +1711,7 @@ function MenuManager:show_disconnect_message(requires_signin)
 	self._showing_disconnect_message = true
 
 	self:show_mp_disconnected_internet_dialog({
-		ok_func = function ()
+		ok_func = function()
 			self._showing_disconnect_message = nil
 		end
 	})
@@ -1754,6 +1761,7 @@ function MenuManager:refresh_player_profile_gui()
 end
 
 function MenuManager:_close_lobby_menu_components()
+	return
 end
 
 function MenuManager:on_leave_lobby()
@@ -1775,10 +1783,11 @@ function MenuManager:on_leave_lobby()
 end
 
 function MenuManager:show_global_success(node)
-	local node_gui = nil
+	local node_gui
 
 	if not node then
 		local stack = managers.menu:active_menu().renderer._node_gui_stack
+
 		node_gui = stack[#stack]
 
 		if not node_gui.set_mini_info then
@@ -1807,7 +1816,8 @@ function MenuManager:show_global_success(node)
 	end
 
 	rate = rate * 100
-	local rate_str = nil
+
+	local rate_str
 
 	if rate >= 10 then
 		rate_str = string.format("%.0f", rate)
@@ -1817,6 +1827,7 @@ function MenuManager:show_global_success(node)
 
 	local diff_str = string.upper(managers.localization:text("menu_difficulty_" .. Global.game_settings.difficulty))
 	local heist_str = string.upper(managers.localization:text(tweak_data.levels[Global.game_settings.level_id].name_id))
+
 	rate_str = managers.localization:text("menu_global_success", {
 		COUNT = rate_str,
 		HEIST = heist_str,
@@ -1949,7 +1960,8 @@ function InviteFriendsPSN:modify_node(node, up)
 	end
 
 	managers.network.friends:register_callback("get_friends_done", f2)
-	managers.network.friends:register_callback("status_change", function ()
+	managers.network.friends:register_callback("status_change", function()
+		return
 	end)
 	managers.network.friends:get_friends(new_node)
 
@@ -1987,7 +1999,7 @@ function InviteFriendsPSN:refresh_node(node, friends)
 end
 
 function InviteFriendsPSN:update_node(node)
-	if self._update_friends_t and Application:time() < self._update_friends_t then
+	if self._update_friends_t and self._update_friends_t > Application:time() then
 		return
 	end
 
@@ -2007,6 +2019,7 @@ function InviteFriendsSTEAM:refresh_node(node, friend)
 end
 
 function InviteFriendsSTEAM:update_node(node)
+	return
 end
 
 PauseMenu = PauseMenu or class()
@@ -2428,6 +2441,7 @@ function MenuPSNHostBrowser:refresh_node(node, info_list, friends_only)
 
 			if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
 				dead_list[name_str] = nil
+
 				local host_name = name_str
 				local level_id = attributes_numbers and tweak_data.levels:get_level_name_from_index(attributes_numbers[1] % 1000)
 				local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id or "N/A"
@@ -2628,6 +2642,7 @@ function MenuSTEAMHostBrowser:refresh_node(node, info, friends_only)
 
 		if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
 			dead_list[room.room_id] = nil
+
 			local host_name = name_str
 			local level_id = tweak_data.levels:get_level_name_from_index(attributes_numbers[1] % 1000)
 			local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id
@@ -2934,6 +2949,7 @@ function MenuSoundCreator:modify_node(node)
 	end
 
 	option_value = "on"
+
 	local st_item = node:item("toggle_push_to_talk")
 
 	if st_item then
@@ -2982,7 +2998,7 @@ function MenuManager.refresh_level_select(node, verify_dlc_owned)
 
 	if item_difficulty then
 		for i, option in ipairs(item_difficulty:options()) do
-			option:parameters().exclude = tonumber(option:parameters().difficulty) < min_difficulty
+			option:parameters().exclude = min_difficulty > tonumber(option:parameters().difficulty)
 		end
 
 		item_difficulty:set_value(Global.game_settings.difficulty)
@@ -3167,237 +3183,236 @@ MenuCustomizeControllerCreator.AXIS_ORDERED = {
 		"turn_right"
 	}
 }
-MenuCustomizeControllerCreator.CONTROLS_INFO = {
-	move = {
-		hidden = true,
-		type = "movement",
-		category = "normal"
-	},
-	up = {
-		category = "normal",
-		type = "movement",
-		text_id = "menu_button_move_forward"
-	},
-	down = {
-		category = "normal",
-		type = "movement",
-		text_id = "menu_button_move_back"
-	},
-	left = {
-		category = "normal",
-		type = "movement",
-		text_id = "menu_button_move_left"
-	},
-	right = {
-		category = "normal",
-		type = "movement",
-		text_id = "menu_button_move_right"
-	},
-	primary_attack = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_fire_weapon"
-	},
-	secondary_attack = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_aim_down_sight"
-	},
-	primary_choice1 = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_weapon_slot1"
-	},
-	primary_choice2 = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_weapon_slot2"
-	},
-	primary_choice3 = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_weapon_slot3"
-	},
-	primary_choice4 = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_weapon_slot4"
-	},
-	switch_weapon = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_switch_weapon"
-	},
-	reload = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_reload"
-	},
-	run = {
-		category = "normal",
-		type = "movement",
-		text_id = "menu_button_sprint"
-	},
-	jump = {
-		category = "normal",
-		type = "movement",
-		text_id = "menu_button_jump"
-	},
-	duck = {
-		category = "normal",
-		type = "movement",
-		text_id = "menu_button_crouch"
-	},
-	melee = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_melee"
-	},
-	interact = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_shout"
-	},
-	use_item = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_deploy"
-	},
-	toggle_chat = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_chat_message"
-	},
-	push_to_talk = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_push_to_talk"
-	},
-	continue = {
-		category = "normal",
-		text_id = "menu_button_continue"
-	},
-	weapon_firemode = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_weapon_firemode"
-	},
-	cash_inspect = {
-		category = "normal",
-		text_id = "menu_button_cash_inspect"
-	},
-	deploy_bipod = {
-		category = "normal",
-		text_id = "menu_button_deploy_bipod"
-	},
-	comm_wheel = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel"
-	},
-	comm_wheel_yes = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_yes"
-	},
-	comm_wheel_no = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_no"
-	},
-	comm_wheel_found_it = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_found_it"
-	},
-	comm_wheel_wait = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_wait"
-	},
-	comm_wheel_not_here = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_not_here"
-	},
-	comm_wheel_follow_me = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_follow_me"
-	},
-	comm_wheel_assistance = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_assistance"
-	},
-	comm_wheel_enemy = {
-		category = "normal",
-		type = "communication",
-		text_id = "menu_button_comm_wheel_enemy"
-	},
-	activate_warcry = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_activate_warcry"
-	},
-	toggle_hud = {
-		category = "normal",
-		type = "usage",
-		text_id = "menu_button_toggle_hud"
-	},
-	drive = {
-		hidden = true,
-		type = "movement",
-		category = "vehicle"
-	},
-	accelerate = {
-		category = "vehicle",
-		type = "movement",
-		text_id = "menu_button_accelerate"
-	},
-	brake = {
-		category = "vehicle",
-		type = "movement",
-		text_id = "menu_button_brake"
-	},
-	turn_left = {
-		category = "vehicle",
-		type = "movement",
-		text_id = "menu_button_turn_left"
-	},
-	turn_right = {
-		category = "vehicle",
-		type = "movement",
-		text_id = "menu_button_turn_right"
-	},
-	hand_brake = {
-		category = "vehicle",
-		type = "movement",
-		text_id = "menu_button_handbrake"
-	},
-	vehicle_rear_camera = {
-		category = "vehicle",
-		type = "usage",
-		text_id = "menu_button_vehicle_rear_camera"
-	},
-	vehicle_shooting_stance = {
-		category = "vehicle",
-		type = "usage",
-		text_id = "menu_button_vehicle_shooting_stance",
-		block = {
-			"normal"
-		}
-	},
-	vehicle_exit = {
-		category = "vehicle",
-		type = "usage",
-		text_id = "menu_button_vehicle_exit"
-	},
-	vehicle_change_seat = {
-		category = "vehicle",
-		type = "usage",
-		text_id = "menu_button_vehicle_change_seat"
+MenuCustomizeControllerCreator.CONTROLS_INFO = {}
+MenuCustomizeControllerCreator.CONTROLS_INFO.move = {
+	hidden = true,
+	type = "movement",
+	category = "normal"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.up = {
+	category = "normal",
+	type = "movement",
+	text_id = "menu_button_move_forward"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.down = {
+	category = "normal",
+	type = "movement",
+	text_id = "menu_button_move_back"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.left = {
+	category = "normal",
+	type = "movement",
+	text_id = "menu_button_move_left"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.right = {
+	category = "normal",
+	type = "movement",
+	text_id = "menu_button_move_right"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_attack = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_fire_weapon"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.secondary_attack = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_aim_down_sight"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_choice1 = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_weapon_slot1"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_choice2 = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_weapon_slot2"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_choice3 = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_weapon_slot3"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_choice4 = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_weapon_slot4"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.switch_weapon = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_switch_weapon"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.reload = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_reload"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.run = {
+	category = "normal",
+	type = "movement",
+	text_id = "menu_button_sprint"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.jump = {
+	category = "normal",
+	type = "movement",
+	text_id = "menu_button_jump"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.duck = {
+	category = "normal",
+	type = "movement",
+	text_id = "menu_button_crouch"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.melee = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_melee"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.interact = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_shout"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.use_item = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_deploy"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.toggle_chat = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_chat_message"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.push_to_talk = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_push_to_talk"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.continue = {
+	category = "normal",
+	text_id = "menu_button_continue"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.weapon_firemode = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_weapon_firemode"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.cash_inspect = {
+	category = "normal",
+	text_id = "menu_button_cash_inspect"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.deploy_bipod = {
+	category = "normal",
+	text_id = "menu_button_deploy_bipod"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_yes = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_yes"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_no = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_no"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_found_it = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_found_it"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_wait = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_wait"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_not_here = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_not_here"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_follow_me = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_follow_me"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_assistance = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_assistance"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.comm_wheel_enemy = {
+	category = "normal",
+	type = "communication",
+	text_id = "menu_button_comm_wheel_enemy"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.activate_warcry = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_activate_warcry"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.toggle_hud = {
+	category = "normal",
+	type = "usage",
+	text_id = "menu_button_toggle_hud"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.drive = {
+	hidden = true,
+	type = "movement",
+	category = "vehicle"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.accelerate = {
+	category = "vehicle",
+	type = "movement",
+	text_id = "menu_button_accelerate"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.brake = {
+	category = "vehicle",
+	type = "movement",
+	text_id = "menu_button_brake"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.turn_left = {
+	category = "vehicle",
+	type = "movement",
+	text_id = "menu_button_turn_left"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.turn_right = {
+	category = "vehicle",
+	type = "movement",
+	text_id = "menu_button_turn_right"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.hand_brake = {
+	category = "vehicle",
+	type = "movement",
+	text_id = "menu_button_handbrake"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_rear_camera = {
+	category = "vehicle",
+	type = "usage",
+	text_id = "menu_button_vehicle_rear_camera"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_shooting_stance = {
+	category = "vehicle",
+	type = "usage",
+	text_id = "menu_button_vehicle_shooting_stance",
+	block = {
+		"normal"
 	}
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_exit = {
+	category = "vehicle",
+	type = "usage",
+	text_id = "menu_button_vehicle_exit"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_change_seat = {
+	category = "vehicle",
+	type = "usage",
+	text_id = "menu_button_vehicle_change_seat"
 }
 
 function MenuCustomizeControllerCreator.controls_info_by_category(category)
@@ -3678,6 +3693,7 @@ function MenuOptionInitiator:modify_video(node)
 	end
 
 	option_value = "off"
+
 	local st_item = node:item("toggle_subtitle")
 
 	if st_item then
@@ -3701,6 +3717,7 @@ function MenuOptionInitiator:modify_video(node)
 	end
 
 	option_value = "off"
+
 	local hud_special_weapon_panels_item = node:item("toggle_hud_special_weapon_panels")
 
 	if hud_special_weapon_panels_item then
@@ -3712,6 +3729,7 @@ function MenuOptionInitiator:modify_video(node)
 	end
 
 	option_value = "off"
+
 	local objective_reminder_item = node:item("toggle_objective_reminder")
 
 	if objective_reminder_item then
@@ -3723,6 +3741,7 @@ function MenuOptionInitiator:modify_video(node)
 	end
 
 	option_value = "off"
+
 	local objective_reminder_item = node:item("use_headbob")
 
 	if objective_reminder_item then
@@ -3769,6 +3788,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local inv_cam_horizontally_item = node:item("toggle_invert_camera_horisontally")
 
 	if inv_cam_horizontally_item then
@@ -3780,6 +3800,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local inv_cam_vertically_item = node:item("toggle_invert_camera_vertically")
 
 	if inv_cam_vertically_item then
@@ -3791,6 +3812,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local southpaw_item = node:item("toggle_southpaw")
 
 	if southpaw_item then
@@ -3802,6 +3824,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local hold_to_steelsight_item = node:item("toggle_hold_to_steelsight")
 
 	if hold_to_steelsight_item then
@@ -3813,6 +3836,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local hold_to_run_item = node:item("toggle_hold_to_run")
 
 	if hold_to_run_item then
@@ -3824,6 +3848,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local hold_to_duck_item = node:item("toggle_hold_to_duck")
 
 	if hold_to_duck_item then
@@ -3835,6 +3860,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local aim_assist_item = node:item("toggle_aim_assist")
 
 	if aim_assist_item then
@@ -3846,6 +3872,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local sticky_aim_item = node:item("toggle_sticky_aim")
 
 	if sticky_aim_item then
@@ -4064,10 +4091,11 @@ function ModMenuCreator:create_mod_menu(node)
 	table.sort(sorted_mods)
 
 	local list_of_mods = {}
-	local mod_item = nil
+	local mod_item
 
 	for _, mod_name in ipairs(sorted_mods) do
 		local conflicts = table.size(mods[mod_name].conflicted) > 0
+
 		mod_item = self:create_item(node, {
 			localize = false,
 			enabled = true,

@@ -30,6 +30,7 @@ local stance_ctl_pts = {
 	1,
 	1
 }
+
 CopMovement = CopMovement or class()
 CopMovement.set_friendly_fire = PlayerMovement.set_friendly_fire
 CopMovement.friendly_fire = PlayerMovement.friendly_fire
@@ -43,6 +44,7 @@ CopMovement._gadgets = {
 		Idstring("units/vanilla/props/props_syringe/props_syringe")
 	}
 }
+
 local action_variants = {
 	security = {
 		idle = CopActionIdle,
@@ -60,6 +62,7 @@ local action_variants = {
 	}
 }
 local security_variant = action_variants.security
+
 action_variants.german_commander = security_variant
 action_variants.german_og_commander = security_variant
 action_variants.german_officer = security_variant
@@ -171,19 +174,18 @@ action_variants.russian = action_variants.team_ai
 security_variant = nil
 CopMovement._action_variants = action_variants
 action_variants = nil
-CopMovement._stance = {
-	names = {
-		"ntl",
-		"hos",
-		"cbt",
-		"wnd"
-	},
-	blend = {
-		0.8,
-		0.5,
-		0.3,
-		0.4
-	}
+CopMovement._stance = {}
+CopMovement._stance.names = {
+	"ntl",
+	"hos",
+	"cbt",
+	"wnd"
+}
+CopMovement._stance.blend = {
+	0.8,
+	0.5,
+	0.3,
+	0.4
 }
 
 function CopMovement:init(unit)
@@ -224,6 +226,7 @@ end
 
 function CopMovement:post_init()
 	local unit = self._unit
+
 	self._ext_brain = unit:brain()
 	self._ext_network = unit:network()
 	self._ext_anim = unit:anim_data()
@@ -309,6 +312,7 @@ function CopMovement:post_init()
 
 	local weap_name = self._ext_base:default_weapon_name(managers.groupai:state():enemy_weapons_hot() and "primary" or "secondary")
 	local fwd = self._m_rot:y()
+
 	self._action_common_data = {
 		stance = self._stance,
 		pos = self._m_pos,
@@ -403,7 +407,9 @@ function CopMovement:update(unit, t, dt)
 	end
 
 	self._gnd_ray = nil
+
 	local old_need_upd = self._need_upd
+
 	self._need_upd = false
 
 	self:_upd_actions(t)
@@ -489,7 +495,7 @@ function CopMovement:_upd_stance(t)
 		local stance = self._stance
 		local transition = stance.transition
 
-		if transition.next_upd_t < t then
+		if t > transition.next_upd_t then
 			local values = stance.values
 			local prog = (t - transition.start_t) / transition.duration
 
@@ -526,12 +532,13 @@ function CopMovement:_upd_stance(t)
 		local suppression = self._suppression
 		local transition = suppression.transition
 
-		if transition.next_upd_t < t then
+		if t > transition.next_upd_t then
 			local prog = (t - transition.start_t) / transition.duration
 
 			if prog < 1 then
 				local prog_smooth = math.clamp(math.bezier(stance_ctl_pts, prog), 0, 1)
 				local val = math.lerp(transition.start_val, transition.end_val, prog_smooth)
+
 				suppression.value = val
 
 				self._machine:set_global("sup", val)
@@ -701,9 +708,10 @@ function CopMovement:action_request(action_desc)
 	end
 
 	self.has_no_action = nil
+
 	local body_part = action_desc.body_part
 	local active_actions = self._active_actions
-	local interrupted_actions = nil
+	local interrupted_actions
 
 	local function _interrupt_action(body_part)
 		local old_action = active_actions[body_part]
@@ -762,7 +770,7 @@ function CopMovement:set_attention(attention)
 	end
 
 	if attention and self._attention then
-		local different = nil
+		local different
 
 		for i, k in pairs(self._attention) do
 			if attention[i] ~= k then
@@ -795,7 +803,7 @@ function CopMovement:set_attention(attention)
 		end
 
 		if attention.unit then
-			local attention_unit = nil
+			local attention_unit
 
 			if attention.handler then
 				local attention_unit = attention.handler:unit()
@@ -822,6 +830,7 @@ function CopMovement:set_attention(attention)
 	end
 
 	local old_attention = self._attention
+
 	self._attention = attention
 	self._action_common_data.attention = attention
 
@@ -916,7 +925,7 @@ function CopMovement:_change_stance(stance_code, instant)
 			stance.name = CopMovement._stance.names[stance_code]
 		end
 
-		local delay = nil
+		local delay
 		local vis_state = self._ext_base:lod_stage()
 
 		if vis_state then
@@ -959,6 +968,7 @@ function CopMovement:_change_stance(stance_code, instant)
 			start_t = t,
 			next_upd_t = t + 0.07
 		}
+
 		stance.transition = transition
 	end
 
@@ -1029,6 +1039,7 @@ function CopMovement:set_cool(state, giveaway)
 	end
 
 	local old_state = self._cool
+
 	self._cool = state
 	self._action_common_data.is_cool = state
 
@@ -1115,6 +1126,7 @@ function CopMovement:_add_attention_destroy_listener(attention)
 		end
 
 		local listener_key = "CopMovement" .. tostring(self._unit:key())
+
 		attention.destroy_listener_key = listener_key
 
 		listener_class:add_destroy_listener(listener_key, callback(self, self, "attention_unit_destroy_clbk"))
@@ -1231,7 +1243,7 @@ function CopMovement:upd_ground_ray(from_pos)
 
 	local old_pos = self._m_pos
 	local new_pos = from_pos or self._m_pos
-	local hit_ray = nil
+	local hit_ray
 
 	if old_pos.z == new_pos.z then
 		local gnd_ray_1 = World:raycast("ray", temp_vec1, temp_vec2, "slot_mask", self._slotmask_gnd_ray, "ray_type", "walk")
@@ -1258,6 +1270,7 @@ function CopMovement:upd_ground_ray(from_pos)
 
 		if gnd_ray_1 then
 			hit_ray = gnd_ray_1
+
 			local gnd_ray_2 = World:raycast("ray", temp_vec1, temp_vec2, "slot_mask", self._slotmask_gnd_ray, "ray_type", "walk")
 
 			if gnd_ray_2 then
@@ -1280,6 +1293,7 @@ function CopMovement:upd_ground_ray(from_pos)
 		ray = math.DOWN,
 		unit = hit_ray and hit_ray.unit
 	}
+
 	self._action_common_data.gnd_ray = fake_ray
 	self._gnd_ray = fake_ray
 end
@@ -1292,6 +1306,7 @@ function CopMovement:on_suppressed(state)
 	if vis_state and end_value ~= suppression.value then
 		local t = TimerManager:game():time()
 		local duration = 0.5 * math.abs(end_value - suppression.value)
+
 		suppression.transition = {
 			end_val = end_value,
 			start_val = suppression.value,
@@ -1405,7 +1420,7 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 	local hit_pos = damage_info.col_ray and damage_info.col_ray.position or damage_info.pos
 	local lgt_hurt = hurt_type == "light_hurt"
 	local body_part = lgt_hurt and 4 or 1
-	local blocks = nil
+	local blocks
 
 	if not lgt_hurt then
 		blocks = {
@@ -1424,15 +1439,9 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 		end
 	end
 
-	if damage_info.variant == "tase" then
-		block_type = "bleedout"
-	elseif hurt_type == "expl_hurt" or hurt_type == "fire_hurt" or hurt_type == "poison_hurt" or hurt_type == "taser_tased" then
-		block_type = "heavy_hurt"
-	else
-		block_type = hurt_type
-	end
+	block_type = damage_info.variant == "tase" and "bleedout" or (hurt_type == "expl_hurt" or hurt_type == "fire_hurt" or hurt_type == "poison_hurt" or hurt_type == "taser_tased") and "heavy_hurt" or hurt_type
 
-	local client_interrupt = nil
+	local client_interrupt
 
 	if Network:is_client() and (hurt_type == "light_hurt" or hurt_type == "hurt" and damage_info.variant ~= "tase" or hurt_type == "heavy_hurt" or hurt_type == "expl_hurt" or hurt_type == "shield_knock" or hurt_type == "counter_tased" or hurt_type == "taser_tased" or hurt_type == "death" or hurt_type == "hurt_sick" or hurt_type == "fire_hurt" or hurt_type == "poison_hurt") then
 		client_interrupt = true
@@ -1450,7 +1459,7 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 		blocks = blocks,
 		client_interrupt = client_interrupt,
 		attacker_unit = damage_info.attacker_unit,
-		death_type = tweak.damage.death_severity and (tweak.damage.death_severity < damage_info.damage / tweak.HEALTH_INIT and "heavy" or "normal") or "normal",
+		death_type = tweak.damage.death_severity and (damage_info.damage / tweak.HEALTH_INIT > tweak.damage.death_severity and "heavy" or "normal") or "normal",
 		ignite_character = damage_info.ignite_character,
 		start_dot_damage_roll = damage_info.start_dot_damage_roll,
 		is_fire_dot_damage = damage_info.is_fire_dot_damage,
@@ -1478,7 +1487,7 @@ function CopMovement:anim_clbk_footstep(unit)
 end
 
 function CopMovement:get_footstep_event()
-	local event_name = nil
+	local event_name
 
 	if self._footstep_style and self._unit:anim_data()[self._footstep_style] then
 		event_name = self._footstep_event
@@ -1536,6 +1545,7 @@ function CopMovement:anim_clbk_rope(unit, state)
 		end
 
 		local hips_obj = self._unit:get_object(Idstring("Hips"))
+
 		self._rope = World:spawn_unit(Idstring("units/vanilla/dev/enemy_spawn_rope/enemy_spawn_rope"), hips_obj:position(), Rotation())
 
 		self._rope:base():setup(hips_obj)
@@ -1791,6 +1801,7 @@ function CopMovement:clbk_inventory(unit, event)
 		self._machine:set_global(weapon_hold, 1)
 
 		self._weapon_hold = weapon_hold
+
 		local weapon_usage = weap_tweak.usage_anim
 
 		self._machine:set_global(weapon_usage, 1)
@@ -1809,7 +1820,7 @@ function CopMovement:sync_shot_blank(impact)
 	local equipped_weapon = self._ext_inventory:equipped_unit()
 
 	if equipped_weapon and equipped_weapon:base().fire_blank then
-		local fire_dir = nil
+		local fire_dir
 
 		if self._attention then
 			if self._attention.unit then
@@ -1839,9 +1850,9 @@ end
 
 function CopMovement:save(save_data)
 	local ext_damage = self._unit:character_damage()
-	local my_save_data = {
-		dead = ext_damage:dead()
-	}
+	local my_save_data = {}
+
+	my_save_data.dead = ext_damage:dead()
 
 	if self._stance.code ~= 1 then
 		my_save_data.stance_code = self._stance.code
@@ -1874,6 +1885,7 @@ function CopMovement:save(save_data)
 			my_save_data.attention = self._attention
 		elseif self._attention.unit:id() == -1 then
 			local attention_pos = self._attention.handler and self._attention.handler:get_detection_m_pos() or self._attention.unit:movement() and self._attention.unit:movement():m_com() or self._unit:position()
+
 			my_save_data.attention = {
 				pos = attention_pos
 			}
@@ -1890,6 +1902,7 @@ function CopMovement:save(save_data)
 
 	if self._equipped_gadgets then
 		local equipped_items = {}
+
 		my_save_data.equipped_gadgets = equipped_items
 
 		local function _get_item_type_from_unit(item_unit)
@@ -1960,7 +1973,9 @@ end
 
 function CopMovement:_do_load()
 	local load_data = self._load_data
+
 	self._wait_load = false
+
 	local my_load_data = load_data.movement
 
 	if not my_load_data then
@@ -2156,7 +2171,7 @@ function CopMovement:sync_action_walk_nav_link(pos, rot, anim_index, from_idle)
 			return element[name]
 		end
 
-		nav_link.element.nav_link_wants_align_pos = nav_link.element.nav_link_wants_align_pos or function (element)
+		nav_link.element.nav_link_wants_align_pos = nav_link.element.nav_link_wants_align_pos or function(element)
 			Application:debug("[CopActionWalk:sync_action_walk_nav_link()] Appending something that is not nav_link", inspect(self))
 
 			return true
@@ -2453,6 +2468,7 @@ function CopMovement:anim_clbk_close_parachute(unit)
 
 	if alive(self._parachute_unit) and not self._parachute_unit:unit_data().closed then
 		self._parachute_unit:unit_data().closed = true
+
 		local position = self._parachute_unit:position()
 		local rotation = self._parachute_unit:rotation()
 

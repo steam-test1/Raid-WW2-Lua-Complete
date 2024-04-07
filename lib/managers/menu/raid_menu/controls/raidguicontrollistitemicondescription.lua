@@ -45,6 +45,7 @@ function RaidGUIControlListItemIconDescription:_create_panel()
 		w = self._params.w or self._panel:w(),
 		h = self._params.h or self._panel:h()
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -57,6 +58,7 @@ function RaidGUIControlListItemIconDescription:_create_sideline()
 		h = RaidGUIControlListItemIconDescription.ICON_HEIGHT,
 		color = RaidGUIControlListItemIconDescription.ACTIVE_COLOR
 	}
+
 	self._sideline = self._object:rect(sideline_params)
 end
 
@@ -70,6 +72,7 @@ function RaidGUIControlListItemIconDescription:_create_icon()
 		texture = self._data.icon.texture,
 		texture_rect = self._data.icon.texture_rect
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 
 	if self._params.icon_color then
@@ -90,6 +93,7 @@ function RaidGUIControlListItemIconDescription:_create_title()
 		font_size = RaidGUIControlListItemIconDescription.TITLE_FONT_SIZE,
 		color = RaidGUIControlListItemIconDescription.COLOR
 	}
+
 	self._title = self._object:text(title_params)
 
 	self._title:set_w(self._object:w() - self._title:x())
@@ -114,6 +118,7 @@ function RaidGUIControlListItemIconDescription:_create_description()
 		font_size = RaidGUIControlListItemIconDescription.DESCRIPTION_FONT_SIZE,
 		color = RaidGUIControlListItemIconDescription.COLOR
 	}
+
 	self._description = self._object:text(description_params)
 
 	self._description:set_w(self._object:w() - self._description:x())

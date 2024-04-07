@@ -5,11 +5,15 @@ function RaidGUIControlScrollableArea:init(parent, params)
 	RaidGUIControlScrollableArea.super.init(self, parent, params)
 
 	self._scroll_step = params.scroll_step
+
 	local outer_panel_params = clone(self._params)
+
 	outer_panel_params.name = outer_panel_params.name .. "_outer"
 	self._object = self._panel:panel(outer_panel_params)
+
 	local scrollbar_x_offset = self._params.scrollbar_offset or 0
 	local inner_panel_params = clone(self._params)
+
 	inner_panel_params.name = inner_panel_params.name .. "_inner"
 	inner_panel_params.w = self._object:w() - RaidGUIControlScrollableArea.SCROLLBAR_WIDTH - scrollbar_x_offset
 	inner_panel_params.scrollable = nil
@@ -17,7 +21,9 @@ function RaidGUIControlScrollableArea:init(parent, params)
 	inner_panel_params.x = 0
 	inner_panel_params.y = 0
 	self._inner_panel = self._object:panel(inner_panel_params)
+
 	local scrollbar_params = clone(self._params)
+
 	scrollbar_params.x = inner_panel_params.w + scrollbar_x_offset
 	scrollbar_params.y = 0
 	scrollbar_params.w = self._params.scrollbar_width or RaidGUIControlScrollableArea.SCROLLBAR_WIDTH
@@ -38,13 +44,13 @@ function RaidGUIControlScrollableArea:setup_scroll_area()
 	self._inner_panel:set_y(0)
 	self._inner_panel:fit_content_height()
 
-	if self._object:h() < self._inner_panel:h() then
+	if self._inner_panel:h() > self._object:h() then
 		self._scrolling_enabled = true
 
 		self._scrollbar:show()
 		self._scrollbar:set_y(0)
 
-		local scrollbar_h = self._object:h() * self._object:h() / self._inner_panel:h()
+		local scrollbar_h = self._object:h() * (self._object:h() / self._inner_panel:h())
 
 		self._scrollbar:set_h(scrollbar_h)
 		self._scrollbar:set_scroller_path_height()
@@ -67,7 +73,7 @@ function RaidGUIControlScrollableArea:move_scrollbar_manually()
 
 	self._inner_panel:set_y(new_y)
 
-	local scroll_y = self._object:h() * -new_y / ep_h
+	local scroll_y = self._object:h() * (-new_y / ep_h)
 
 	self._scrollbar:set_y(scroll_y)
 end
@@ -81,7 +87,7 @@ function RaidGUIControlScrollableArea:mouse_scroll_up(o, button, x, y)
 
 		self._inner_panel:set_y(new_y)
 
-		local scroll_y = self._object:h() * -new_y / ep_h
+		local scroll_y = self._object:h() * (-new_y / ep_h)
 
 		self._scrollbar:set_y(scroll_y)
 
@@ -102,7 +108,7 @@ function RaidGUIControlScrollableArea:mouse_scroll_down(o, button, x, y)
 
 		self._inner_panel:set_y(new_y)
 
-		local scroll_y = self._object:h() * -new_y / ep_h
+		local scroll_y = self._object:h() * (-new_y / ep_h)
 
 		self._scrollbar:set_y(scroll_y)
 
@@ -121,7 +127,7 @@ function RaidGUIControlScrollableArea:scroll_up()
 
 		self._inner_panel:set_y(new_y)
 
-		local scroll_y = self._object:h() * -new_y / ep_h
+		local scroll_y = self._object:h() * (-new_y / ep_h)
 
 		self._scrollbar:set_y(scroll_y)
 
@@ -140,7 +146,7 @@ function RaidGUIControlScrollableArea:scroll_down()
 
 		self._inner_panel:set_y(new_y)
 
-		local scroll_y = self._object:h() * -new_y / ep_h
+		local scroll_y = self._object:h() * (-new_y / ep_h)
 
 		self._scrollbar:set_y(scroll_y)
 
@@ -149,7 +155,9 @@ function RaidGUIControlScrollableArea:scroll_down()
 end
 
 function RaidGUIControlScrollableArea:highlight_on()
+	return
 end
 
 function RaidGUIControlScrollableArea:highlight_off()
+	return
 end

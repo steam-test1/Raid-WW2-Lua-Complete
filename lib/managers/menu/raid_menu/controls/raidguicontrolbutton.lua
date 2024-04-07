@@ -6,7 +6,9 @@ function RaidGUIControlButton:init(parent, params)
 
 	self._object = self._panel:panel(self._params)
 	self._controls = {}
+
 	local text_params = clone(self._params)
+
 	text_params.x = 0
 	text_params.y = 0
 	text_params.font = text_params.font or tweak_data.gui.fonts.din_compressed
@@ -23,6 +25,7 @@ function RaidGUIControlButton:init(parent, params)
 
 	if text_params.background_color then
 		local background_params = clone(text_params)
+
 		background_params.color = text_params.background_color
 		self._background = self._panel:rect(background_params)
 	end
@@ -53,6 +56,7 @@ function RaidGUIControlButton:init(parent, params)
 
 		if self._params.highlight_texture then
 			local params_highlight = clone(self._params)
+
 			params_highlight.x = 0
 			params_highlight.y = 0
 			params_highlight.texture = image_params.highlight_texture
@@ -203,6 +207,7 @@ end
 
 function RaidGUIControlButton:bottom()
 	local bottom = 0
+
 	bottom = self._object:bottom()
 
 	return bottom
@@ -352,7 +357,9 @@ function RaidGUIControlButton:_animate_press()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_in(t, 1, -(1 - RaidGUIControlButton.PRESSED_SIZE), duration)
 
 		self:set_size(self._size_w * scale, self._size_h * scale)
@@ -376,7 +383,9 @@ function RaidGUIControlButton:_animate_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, RaidGUIControlButton.PRESSED_SIZE, 1 - RaidGUIControlButton.PRESSED_SIZE, duration)
 
 		self:set_size(self._size_w * scale, self._size_h * scale)
@@ -399,7 +408,9 @@ function RaidGUIControlButton:_animate_show()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_in_out(t, 0, 1, duration)
 
 		self._object:set_alpha(alpha)
@@ -413,9 +424,11 @@ function RaidGUIControlButton:_animate_hide()
 	local duration = 0.25
 	local t = (1 - self._object:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_in_out(t, 1, -1, duration)
 
 		self._object:set_alpha(alpha)

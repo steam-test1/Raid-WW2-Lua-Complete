@@ -25,4 +25,5 @@ function CartInteractionExt:sync_interacted(peer, player, status, skip_alive_che
 end
 
 function CartInteractionExt:set_contour(color, opacity)
+	return
 end

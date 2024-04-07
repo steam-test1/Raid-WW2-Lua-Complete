@@ -28,12 +28,15 @@ function IngameMenu:set_controller_enabled(enabled)
 end
 
 function IngameMenu:exit()
+	return
 end
 
 function IngameMenu:on_destroyed()
+	return
 end
 
 function IngameMenu:update(t, dt)
+	return
 end
 
 function IngameMenu:at_enter(old_state, params)

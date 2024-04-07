@@ -10,7 +10,9 @@ function RaidGUIControlLootCardDetails:init(parent, params, item_data)
 	end
 
 	self._item_data = item_data
+
 	local object_params = clone(params)
+
 	object_params.w = params.item_w
 	object_params.h = params.wrapper_h
 	object_params.layer = self._panel:layer() + 1
@@ -61,10 +63,12 @@ function RaidGUIControlLootCardDetails:init(parent, params, item_data)
 end
 
 function RaidGUIControlLootCardDetails:close()
+	return
 end
 
 function RaidGUIControlLootCardDetails:_create_empty_card()
 	local card_back_texture, card_back_texture_rect = managers.challenge_cards:get_cards_back_texture(self._item_data)
+
 	self._card_empty = self._card_panel:image({
 		name = "card_empty",
 		y = 0,
@@ -80,16 +84,16 @@ end
 
 function RaidGUIControlLootCardDetails:_create_card_details()
 	local card_params = clone(self._params)
+
 	card_params.x = 0
 	card_params.y = 0
 	card_params.w = self._params.item_w
 	card_params.h = self._params.item_h
-	card_params.card_image_params = {
-		x = 0,
-		y = 0,
-		w = self._card_panel:w(),
-		h = self._card_panel:h()
-	}
+	card_params.card_image_params = {}
+	card_params.card_image_params.x = 0
+	card_params.card_image_params.y = 0
+	card_params.card_image_params.w = self._card_panel:w()
+	card_params.card_image_params.h = self._card_panel:h()
 	card_params.layer = self._card_panel:layer() + 1
 	self._card_control = self._card_panel:create_custom_control(RaidGUIControlCardBase, card_params, self._item_data)
 
@@ -173,6 +177,7 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 end
 
 function RaidGUIControlLootCardDetails:_switch_card()
+	return
 end
 
 function RaidGUIControlLootCardDetails:set_debug(value)
@@ -258,7 +263,9 @@ function RaidGUIControlLootCardDetails:_animate_reveal_card()
 
 	while t < close_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_scale = Easing.quartic_in(t, 1, -1, close_duration)
 
 		self._card_empty:set_w(initial_card_empty_w * current_scale)
@@ -271,11 +278,14 @@ function RaidGUIControlLootCardDetails:_animate_reveal_card()
 	self._card_control:set_alpha(1)
 
 	local open_duration = 0.25
+
 	t = 0
 
-	while open_duration > t do
+	while t < open_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_scale = Easing.quartic_out(t, 0, 1, open_duration)
 
 		self._card_control:set_w(initial_card_empty_w * current_scale)
@@ -290,11 +300,13 @@ function RaidGUIControlLootCardDetails:_animate_show_card()
 	self._sound_source:post_event("reward_reveal_card")
 
 	self._animation_t = 0
+
 	local duration = 0.45
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		self._card_empty:set_alpha(1 - self._animation_t)

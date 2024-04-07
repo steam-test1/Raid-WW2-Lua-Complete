@@ -35,7 +35,7 @@ function ElementDropPointGroup:get_random_drop_point()
 end
 
 function ElementDropPointGroup:on_executed(instigator)
-	return
+	do return end
 
 	if not self._values.enabled then
 		return
@@ -46,4 +46,5 @@ function ElementDropPointGroup:on_executed(instigator)
 end
 
 function ElementDropPointGroup:operation_remove()
+	return
 end

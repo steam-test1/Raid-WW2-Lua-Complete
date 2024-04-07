@@ -9,7 +9,7 @@ end
 local mvec_spread_direction = Vector3()
 
 function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
-	local unit = nil
+	local unit
 	local spread = self:_get_spread(user_unit)
 
 	mvector3.set(mvec_spread_direction, direction)
@@ -27,7 +27,9 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	self:_adjust_throw_z(mvec_spread_direction)
 
 	mvec_spread_direction = mvec_spread_direction * self:projectile_speed_multiplier()
+
 	local spawn_offset = self:_get_spawn_offset()
+
 	self._dmg_mul = dmg_mul or 1
 
 	if not self._client_authoritative then
@@ -57,6 +59,7 @@ function ProjectileWeaponBase:_update_stats_values()
 end
 
 function ProjectileWeaponBase:_adjust_throw_z(m_vec)
+	return
 end
 
 function ProjectileWeaponBase:projectile_damage_multiplier()

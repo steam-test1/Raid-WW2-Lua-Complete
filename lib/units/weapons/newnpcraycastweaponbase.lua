@@ -73,10 +73,9 @@ function NewNPCRaycastWeaponBase:init(unit)
 	end
 
 	if self._unit:get_object(Idstring("ls_flashlight")) then
-		self._flashlight_data = {
-			light = self._unit:get_object(Idstring("ls_flashlight")),
-			effect = self._unit:effect_spawner(Idstring("flashlight"))
-		}
+		self._flashlight_data = {}
+		self._flashlight_data.light = self._unit:get_object(Idstring("ls_flashlight"))
+		self._flashlight_data.effect = self._unit:effect_spawner(Idstring("flashlight"))
 
 		self._flashlight_data.light:set_far_range(400)
 		self._flashlight_data.light:set_spot_angle_end(25)
@@ -119,6 +118,7 @@ function NewNPCRaycastWeaponBase:assemble(factory_id)
 	NewNPCRaycastWeaponBase.super:assemble(factory_id)
 
 	self._ammo_data = managers.weapon_factory:get_ammo_data_from_weapon(self._factory_id, self._blueprint) or {}
+
 	local ammo_muzzle_effect = self._ammo_data and self._ammo_data.muzzleflash
 
 	if ammo_muzzle_effect then
@@ -151,7 +151,7 @@ function NewNPCRaycastWeaponBase:check_npc()
 	local gadgets = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("gadget", self._factory_id, self._blueprint)
 
 	if gadgets then
-		local gadget = nil
+		local gadget
 
 		for _, i in ipairs(gadgets) do
 			gadget = self._parts[i]
@@ -187,7 +187,7 @@ function NewNPCRaycastWeaponBase:singleshot(...)
 end
 
 function NewNPCRaycastWeaponBase:trigger_held(...)
-	local fired = nil
+	local fired
 
 	if self._next_fire_allowed <= Application:time() then
 		fired = self:fire(...)
@@ -240,7 +240,7 @@ function NewNPCRaycastWeaponBase:auto_fire_blank(direction, impact)
 				mvector3.set(self._trail_effect_table.normal, mspread)
 			end
 
-			local trail = nil
+			local trail
 
 			if not self:weapon_tweak_data().no_trail then
 				trail = alive(self._obj_fire) and (not col_ray or col_ray.distance > 650) and World:effect_manager():spawn(self._trail_effect_table) or nil
@@ -295,7 +295,7 @@ function NewNPCRaycastWeaponBase:fire_blank(direction, impact)
 				mvector3.set(self._trail_effect_table.normal, mspread)
 			end
 
-			local trail = nil
+			local trail
 
 			if not self:weapon_tweak_data().no_trail then
 				trail = alive(self._obj_fire) and (not col_ray or col_ray.distance > 650) and World:effect_manager():spawn(self._trail_effect_table) or nil
@@ -346,6 +346,7 @@ function NewNPCRaycastWeaponBase:destroy(unit)
 end
 
 function NewNPCRaycastWeaponBase:_get_spread(user_unit)
+	return
 end
 
 function NewNPCRaycastWeaponBase:_sound_autofire_start(nr_shots)
@@ -379,7 +380,7 @@ local mvec_to = Vector3()
 
 function NewNPCRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player)
 	local result = {}
-	local hit_unit = nil
+	local hit_unit
 
 	debug_pause_unit(user_unit, "[NewNPCRaycastWeaponBase:_fire_raycast]", user_unit, self._unit)
 	mvector3.set(mvec_to, direction)

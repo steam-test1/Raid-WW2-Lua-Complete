@@ -161,7 +161,9 @@ end
 function EnvironmentLayer:_load_environment_areas()
 	for _, area in ipairs(managers.environment_area:areas()) do
 		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation())
+
 		unit:unit_data().environment_area = area
+
 		local new_name_id = unit:unit_data().environment_area:set_unit(unit)
 
 		if new_name_id then
@@ -177,6 +179,7 @@ function EnvironmentLayer:_load_dome_occ_shapes(dome_occ_shapes)
 
 	for _, dome_occ_shape in ipairs(dome_occ_shapes) do
 		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._dome_occ_shape_unit, dome_occ_shape.position, dome_occ_shape.rotation)
+
 		unit:unit_data().occ_shape = CoreShapeManager.ShapeBox:new(dome_occ_shape)
 
 		unit:unit_data().occ_shape:set_unit(unit)
@@ -197,6 +200,7 @@ function EnvironmentLayer:old_load(environment)
 	if environment._wind then
 		local wind_angle = environment._wind.wind_angle
 		local wind_tilt = environment._wind.wind_tilt
+
 		self._wind_rot = Rotation(wind_angle, 0, wind_tilt)
 		self._wind_dir_var = environment._wind.wind_dir_var
 		self._wind_tilt_var = environment._wind.wind_tilt_var
@@ -223,7 +227,9 @@ function EnvironmentLayer:old_load(environment)
 
 	for _, area in ipairs(managers.environment_area:areas()) do
 		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation())
+
 		unit:unit_data().environment_area = area
+
 		local new_name_id = unit:unit_data().environment_area:set_unit(unit)
 
 		if new_name_id then
@@ -351,14 +357,10 @@ function EnvironmentLayer:update(t, dt)
 		end
 
 		if unit:name() == Idstring(self._environment_area_unit) then
-			local r = 0
-			local g = 0.5
-			local b = 0.5
+			local r, g, b = 0, 0.5, 0.5
 
 			if alive(self._selected_unit) and unit == self._selected_unit then
-				b = 1
-				g = 1
-				r = 0
+				r, g, b = 0, 1, 1
 			end
 
 			Application:draw(unit, r, g, b)
@@ -366,14 +368,10 @@ function EnvironmentLayer:update(t, dt)
 		end
 
 		if self._draw_occ_shape and unit:name() == Idstring(self._dome_occ_shape_unit) then
-			local r = 0.5
-			local g = 0
-			local b = 0.5
+			local r, g, b = 0.5, 0, 0.5
 
 			if alive(self._selected_unit) and unit == self._selected_unit then
-				b = 1
-				g = 0
-				r = 1
+				r, g, b = 1, 0, 1
 			end
 
 			Application:draw(unit, r, g, b)
@@ -399,10 +397,11 @@ function EnvironmentLayer:_build_environment_combobox_and_list()
 		sizer = self._environment_sizer,
 		options = managers.database:list_entries_of_type("environment"),
 		value = self._environment_values.environment,
-		value_changed_cb = function (params)
+		value_changed_cb = function(params)
 			self:change_environment(params.ctrlr)
 		end
 	})
+
 	self._environments_combobox = combobox_params
 
 	managers.viewport:editor_add_environment_created_callback(callback(self, self, "on_environment_list_changed"))
@@ -445,17 +444,20 @@ function EnvironmentLayer:build_panel(notebook)
 	self:_build_environment_combobox_and_list()
 
 	self._environment_area_ctrls = {}
+
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
 		name = "Area Environment:",
 		panel = self._env_panel,
 		sizer = self._environment_sizer,
 		options = managers.database:list_entries_of_type("environment"),
 		value = managers.viewport:game_default_environment(),
-		value_changed_cb = function (params)
+		value_changed_cb = function(params)
 			self:set_environment_area(params.ctrlr)
 		end
 	})
+
 	self._environment_area_ctrls.environment_combobox = combobox_params
+
 	local transition_prio_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	transition_prio_sizer:add(EWS:StaticText(self._env_panel, "Fade Time [sec]: ", "", ""), 0, 0, "ALIGN_CENTER_VERTICAL")
@@ -494,6 +496,7 @@ function EnvironmentLayer:build_panel(notebook)
 	self._env_sizer:add(self._environment_sizer, 0, 0, "EXPAND")
 
 	self._dome_occ_sizer = EWS:StaticBoxSizer(self._env_panel, "VERTICAL", "Dome Occlusion Shape")
+
 	local draw_occ_cb = EWS:CheckBox(self._env_panel, "Draw", "")
 
 	draw_occ_cb:set_value(self._draw_occ_shape)
@@ -575,6 +578,7 @@ function EnvironmentLayer:build_panel(notebook)
 
 	local speed_sizer = EWS:StaticBoxSizer(self._env_panel, "VERTICAL", "Speed / Variation")
 	local speed_help_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._speed_text = EWS:StaticText(self._env_panel, self._wind_speed .. " m/s", 0, "")
 	self._speed_beaufort = EWS:StaticText(self._env_panel, "Beaufort: " .. self:wind_beaufort(self._wind_speed), 0, "")
 	self._speed_description = EWS:StaticText(self._env_panel, self:wind_description(self._wind_speed), 0, "")
@@ -618,14 +622,14 @@ function EnvironmentLayer:build_panel(notebook)
 	wind_sizer:add(speed_sizer, 0, 0, "EXPAND")
 	self._env_sizer:add(wind_sizer, 0, 0, "EXPAND")
 
-	self._wind_ctrls = {
-		wind_direction = wind_direction,
-		wind_variation = wind_variation,
-		tilt_angle = tilt_angle,
-		tilt_variation = tilt_variation,
-		wind_speed = wind_speed,
-		wind_speed_variation = wind_speed_variation
-	}
+	self._wind_ctrls = {}
+	self._wind_ctrls.wind_direction = wind_direction
+	self._wind_ctrls.wind_variation = wind_variation
+	self._wind_ctrls.tilt_angle = tilt_angle
+	self._wind_ctrls.tilt_variation = tilt_variation
+	self._wind_ctrls.wind_speed = wind_speed
+	self._wind_ctrls.wind_speed_variation = wind_speed_variation
+
 	local unit_effect_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	unit_effect_sizer:add(EWS:StaticText(self._env_panel, "Effect", 0, ""), 1, 5, "EXPAND,ALIGN_CENTER_VERTICAL,TOP")
@@ -683,9 +687,10 @@ function EnvironmentLayer:create_cube_map(type)
 	end
 
 	local params = {
-		cubes = cubes,
-		output_path = managers.database:base_path() .. "environments\\cubemaps\\"
+		cubes = cubes
 	}
+
+	params.output_path = managers.database:base_path() .. "environments\\cubemaps\\"
 
 	managers.editor:create_cube_map(params)
 end
@@ -711,6 +716,7 @@ end
 function EnvironmentLayer:set_transition_time()
 	local area = self._selected_unit:unit_data().environment_area
 	local value = tonumber(self._environment_area_ctrls.transition_time:get_value())
+
 	value = math.clamp(value, 0, 100000000)
 
 	self._environment_area_ctrls.transition_time:change_value(string.format("%.2f", value))
@@ -720,6 +726,7 @@ end
 function EnvironmentLayer:set_prio()
 	local area = self._selected_unit:unit_data().environment_area
 	local value = tonumber(self._environment_area_ctrls.prio:get_value())
+
 	value = math.clamp(value, 1, 100000000)
 
 	self._environment_area_ctrls.prio:change_value(tostring(value))
@@ -727,7 +734,7 @@ function EnvironmentLayer:set_prio()
 end
 
 function EnvironmentLayer:generate_dome_occ()
-	local shape = nil
+	local shape
 
 	for _, unit in ipairs(self:created_units()) do
 		if unit:name() == Idstring(self._dome_occ_shape_unit) then
@@ -754,6 +761,7 @@ end
 
 function EnvironmentLayer:update_wind_direction(wind_direction)
 	local dir = wind_direction:get_value()
+
 	self._wind_rot = Rotation(dir, 0, self._wind_rot:roll())
 
 	self:set_wind()
@@ -774,6 +782,7 @@ end
 
 function EnvironmentLayer:update_tilt_angle(tilt_angle)
 	local dir = tilt_angle:get_value()
+
 	self._wind_rot = Rotation(self._wind_rot:yaw(), 0, dir)
 
 	self:set_wind()
@@ -980,7 +989,7 @@ function EnvironmentLayer:set_environment_area_parameters()
 end
 
 function EnvironmentLayer:wind_description(speed)
-	local description = nil
+	local description
 
 	for _, data in ipairs(self._wind_speeds) do
 		if speed < data.speed then
@@ -994,7 +1003,7 @@ function EnvironmentLayer:wind_description(speed)
 end
 
 function EnvironmentLayer:wind_beaufort(speed)
-	local beaufort = nil
+	local beaufort
 
 	for _, data in ipairs(self._wind_speeds) do
 		if speed < data.speed then

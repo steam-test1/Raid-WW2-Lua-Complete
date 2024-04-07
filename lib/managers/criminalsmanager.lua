@@ -127,7 +127,7 @@ end
 
 function CriminalsManager:get_valid_player_respawn_pos_rot()
 	local server_unit = managers.network:session():local_peer():unit()
-	local foxhole_player = nil
+	local foxhole_player
 
 	for u_key, u_data in pairs(managers.groupai:state():all_player_criminals()) do
 		if u_data and alive(u_data.unit) and u_data.unit:movement():is_in_foxhole() then
@@ -147,7 +147,7 @@ function CriminalsManager:get_valid_player_respawn_pos_rot()
 		}
 	end
 
-	local driving_player = nil
+	local driving_player
 
 	for u_key, u_data in pairs(managers.groupai:state():all_player_criminals()) do
 		if u_data and alive(u_data.unit) and u_data.unit:movement():current_state_name() == "driving" then

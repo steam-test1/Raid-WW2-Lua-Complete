@@ -27,6 +27,7 @@ end
 
 function RaidGUIControlCharacterCustomizationPeerLoot:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.x = control_params.x
 	control_params.w = control_params.w or RaidGUIControlCharacterCustomizationPeerLoot.WIDTH
 	control_params.h = control_params.h or RaidGUIControlCharacterCustomizationPeerLoot.HEIGHT
@@ -37,7 +38,7 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_control_panel()
 end
 
 function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_details(params)
-	local icon = nil
+	local icon
 
 	if params.customization.part_type == CharacterCustomizationTweakData.PART_TYPE_UPPER then
 		icon = RaidGUIControlCharacterCustomizationPeerLoot.ICON_UPPER
@@ -52,7 +53,9 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}
+
 	self._customization_image = self._control_panel:bitmap(params_customization_image)
+
 	local params_player_name = {
 		name = "peer_customization_name_label",
 		align = "left",
@@ -65,7 +68,9 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 		font = RaidGUIControlCharacterCustomizationPeerLoot.FONT,
 		font_size = RaidGUIControlCharacterCustomizationPeerLoot.NAME_FONT_SIZE
 	}
+
 	self._name_label = self._object:text(params_player_name)
+
 	local _, _, _, h = self._name_label:text_rect()
 
 	self._name_label:set_h(h)
@@ -83,6 +88,7 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 		font = RaidGUIControlCharacterCustomizationPeerLoot.FONT,
 		font_size = RaidGUIControlCharacterCustomizationPeerLoot.DESCRIPTION_FONT_SIZE
 	}
+
 	self._customization_description = self._object:text(params_customization_description)
 end
 

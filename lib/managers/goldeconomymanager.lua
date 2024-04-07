@@ -9,15 +9,14 @@ end
 
 function GoldEconomyManager:_setup()
 	if not Global.gold_economy_manager then
-		Global.gold_economy_manager = {
-			total = Application:digest_value(0, true),
-			current = Application:digest_value(0, true),
-			respec_cost_multiplier = Application:digest_value(0, true),
-			respec_reset = Application:digest_value(10, true),
-			applied_upgrades = deep_clone(tweak_data.camp_customization.default_camp),
-			owned_upgrades = tweak_data.camp_customization:get_applyable_upgrades(),
-			gold_awards = {}
-		}
+		Global.gold_economy_manager = {}
+		Global.gold_economy_manager.total = Application:digest_value(0, true)
+		Global.gold_economy_manager.current = Application:digest_value(0, true)
+		Global.gold_economy_manager.respec_cost_multiplier = Application:digest_value(0, true)
+		Global.gold_economy_manager.respec_reset = Application:digest_value(10, true)
+		Global.gold_economy_manager.applied_upgrades = deep_clone(tweak_data.camp_customization.default_camp)
+		Global.gold_economy_manager.owned_upgrades = tweak_data.camp_customization:get_applyable_upgrades()
+		Global.gold_economy_manager.gold_awards = {}
 	end
 
 	self._global = Global.gold_economy_manager
@@ -61,7 +60,7 @@ function GoldEconomyManager:current()
 end
 
 function GoldEconomyManager:_set_current(value)
-	if GoldEconomyManager.ACHIEVEMENT_CAMP_ROYALTY <= value then
+	if value >= GoldEconomyManager.ACHIEVEMENT_CAMP_ROYALTY then
 		managers.achievment:award("camp_royalty")
 	end
 
@@ -72,6 +71,7 @@ function GoldEconomyManager:respec()
 	self:spend_gold(self:respec_cost())
 
 	local old = Application:digest_value(self._global.respec_cost_multiplier, false)
+
 	self._global.respec_cost_multiplier = Application:digest_value(old + 1, true)
 end
 
@@ -139,6 +139,7 @@ function GoldEconomyManager:save(data)
 		owned_upgrades = self._global.owned_upgrades,
 		gold_awards = self._global.gold_awards
 	}
+
 	data.GoldEconomyManager = state
 end
 
@@ -292,7 +293,8 @@ function GoldEconomyManager:layout_camp()
 
 	for _, data in ipairs(self._global.applied_upgrades) do
 		local levels = self._camp_units[data.upgrade]
-		local asset_level = nil
+		local asset_level
+
 		asset_level = data.level
 
 		if levels then
@@ -317,7 +319,7 @@ function GoldEconomyManager:_calculate_gold_pile_level(gold_spread)
 	end
 
 	for i, value in ipairs(gold_spread) do
-		if self:current() < value then
+		if value > self:current() then
 			index = i - 1
 
 			break
@@ -374,6 +376,7 @@ function GoldEconomyManager:get_store_items_data()
 
 			if is_default or tweak_data.camp_customization:is_upgrade_unlocked(upgrade) then
 				local store_upgrade_data = clone(upgrade)
+
 				store_upgrade_data.upgrade_name = upgrade_slot_name
 				store_upgrade_data.level = upgrade_level
 

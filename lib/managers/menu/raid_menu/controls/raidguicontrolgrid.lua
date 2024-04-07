@@ -50,6 +50,7 @@ function RaidGUIControlGrid:init(parent, params)
 end
 
 function RaidGUIControlGrid:close()
+	return
 end
 
 function RaidGUIControlGrid:_get_data()
@@ -65,6 +66,7 @@ function RaidGUIControlGrid:_get_data()
 
 	self._grid_data = grid_data
 	self._total_items = #grid_data
+
 	local row_count = math.ceil(self._total_items / self._num_horizontal_items)
 
 	self._grid_panel:set_h(row_count * (self._selected_marker_h + self._vertical_spacing))
@@ -78,12 +80,15 @@ function RaidGUIControlGrid:_create_items()
 	local item_count = 0
 	local i_vertical = 1
 	local i_horizontal = 1
+
 	self._grid_items = {}
+
 	local item_params = clone(self._item_params)
 	local horizontal_spacing = math.floor((self._grid_panel:w() - self._num_horizontal_items * self._selected_marker_w) / (self._num_horizontal_items - 1))
 
 	for i_item_data = 1, #self._grid_data do
 		local item_data = self._grid_data[i_item_data]
+
 		item_params.name = self._params.name .. "_grid_item_" .. i_horizontal .. "_" .. i_vertical
 		item_params.x = (self._selected_marker_w + horizontal_spacing) * (i_horizontal - 1)
 		item_params.y = (self._selected_marker_h + self._vertical_spacing) * (i_vertical - 1)
@@ -96,13 +101,14 @@ function RaidGUIControlGrid:_create_items()
 		item_params.item_clicked_callback = callback(self, self, "_on_item_clicked_callback")
 		item_params.item_double_clicked_callback = callback(self, self, "_on_item_double_clicked_callback")
 		item_params.item_idx = i_item_data
+
 		local item = self:_create_item(item_params, item_data, self._grid_params)
 
 		table.insert(self._grid_items, item)
 
 		i_horizontal = i_horizontal + 1
 
-		if self._num_horizontal_items < i_horizontal then
+		if i_horizontal > self._num_horizontal_items then
 			i_horizontal = 1
 			i_vertical = i_vertical + 1
 		end
@@ -127,9 +133,11 @@ function RaidGUIControlGrid:_delete_items()
 end
 
 function RaidGUIControlGrid:highlight_on()
+	return
 end
 
 function RaidGUIControlGrid:highlight_off()
+	return
 end
 
 function RaidGUIControlGrid:refresh_data()
@@ -310,6 +318,7 @@ function RaidGUIControlGrid:_calculate_selected_item_position()
 	self._inner_panel = self._params.scrollable_area_ref._inner_panel
 	self._outer_panel = self._params.scrollable_area_ref._object
 	self._scrollbar = self._params.scrollable_area_ref._scrollbar
+
 	local inner_panel_y = self._inner_panel:y()
 	local selected_item_bottom = self._selected_item:bottom()
 	local selected_item_y = self._selected_item:y()
@@ -327,10 +336,11 @@ function RaidGUIControlGrid:_calculate_selected_item_position()
 
 	self._inner_panel:set_y(new_y)
 
-	local scroll_y = self._outer_panel:h() * -new_y / ep_h
+	local scroll_y = self._outer_panel:h() * (-new_y / ep_h)
 
 	self._scrollbar:set_y(scroll_y)
 end
 
 function RaidGUIControlGrid:confirm_pressed()
+	return
 end

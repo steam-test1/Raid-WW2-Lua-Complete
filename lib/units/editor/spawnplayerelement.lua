@@ -22,4 +22,5 @@ function SpawnPlayerElement:_build_panel(panel, panel_sizer)
 end
 
 function SpawnPlayerElement:add_to_mission_package()
+	return
 end

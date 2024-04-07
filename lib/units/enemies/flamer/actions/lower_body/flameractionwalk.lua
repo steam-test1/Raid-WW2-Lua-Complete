@@ -25,6 +25,7 @@ local tmp_vec3 = Vector3()
 local tmp_vec4 = Vector3()
 local temp_rot1 = Rotation()
 local idstr_base = Idstring("base")
+
 FlamerActionWalk = FlamerActionWalk or class(CopActionWalk)
 FlamerActionWalk.DISTANCE_SPRINT_START = 30000
 FlamerActionWalk.DISTANCE_SPRINT_END = 1200
@@ -91,14 +92,15 @@ function FlamerActionWalk:_get_max_walk_speed()
 end
 
 function FlamerActionWalk:update(t)
-	local dt = nil
+	local dt
 	local vis_state = self._ext_base:lod_stage()
+
 	vis_state = vis_state or 4
 
 	if vis_state == 1 then
 		dt = t - self._last_upd_t
 		self._last_upd_t = TimerManager:game():time()
-	elseif self._skipped_frames < vis_state then
+	elseif vis_state > self._skipped_frames then
 		self._skipped_frames = self._skipped_frames + 1
 
 		return
@@ -108,7 +110,7 @@ function FlamerActionWalk:update(t)
 		self._last_upd_t = TimerManager:game():time()
 	end
 
-	local pos_new = nil
+	local pos_new
 
 	if self._end_of_path and (not self._ext_anim.act or not self._ext_anim.walk) then
 		if self._next_is_nav_link then
@@ -143,7 +145,7 @@ function FlamerActionWalk:update(t)
 
 	if move_dir and not self._expired then
 		local face_fwd = tmp_vec1
-		local wanted_walk_dir = nil
+		local wanted_walk_dir
 		local move_dir_norm = move_dir:normalized()
 
 		if self._no_strafe or self._walk_turn then
@@ -172,27 +174,24 @@ function FlamerActionWalk:update(t)
 			local right_dot = mvec3_dot(move_dir_norm, face_right)
 			local fwd_dot = mvec3_dot(move_dir_norm, face_fwd)
 
-			if math_abs(right_dot) < math_abs(fwd_dot) then
+			if math_abs(fwd_dot) > math_abs(right_dot) then
 				if (anim_data.move_l and right_dot < 0 or anim_data.move_r and right_dot > 0) and math_abs(fwd_dot) < 0.73 then
 					wanted_walk_dir = anim_data.move_side
-				elseif fwd_dot > 0 then
-					wanted_walk_dir = "fwd"
 				else
-					wanted_walk_dir = "bwd"
+					wanted_walk_dir = fwd_dot > 0 and "fwd" or "bwd"
 				end
 			elseif (anim_data.move_fwd and fwd_dot > 0 or anim_data.move_bwd and fwd_dot < 0) and math_abs(right_dot) < 0.73 then
 				wanted_walk_dir = anim_data.move_side
-			elseif right_dot > 0 then
-				wanted_walk_dir = "r"
 			else
-				wanted_walk_dir = "l"
+				wanted_walk_dir = right_dot > 0 and "r" or "l"
 			end
 		end
 
-		local rot_new = nil
+		local rot_new
 
 		if self._curve_path_end_rot then
 			local dis_lerp = 1 - math.min(1, mvec3_dis(self._last_pos, self._footstep_pos) / 140)
+
 			rot_new = temp_rot1
 
 			mrot_slerp(rot_new, self._curve_path_end_rot, self._nav_link_rot or self._end_rot, dis_lerp)
@@ -222,21 +221,11 @@ function FlamerActionWalk:update(t)
 
 				local fwd_dot = mvec3_dot(stop_anim_fwd, move_dir_norm)
 				local r_dot = mvec3_dot(stop_anim_fwd, move_dir_r_norm)
-				local stop_anim_side = nil
+				local stop_anim_side
 
-				if math.abs(r_dot) < math.abs(fwd_dot) then
-					if fwd_dot > 0 then
-						stop_anim_side = "fwd"
-					else
-						stop_anim_side = "bwd"
-					end
-				elseif r_dot > 0 then
-					stop_anim_side = "l"
-				else
-					stop_anim_side = "r"
-				end
+				stop_anim_side = math.abs(fwd_dot) > math.abs(r_dot) and (fwd_dot > 0 and "fwd" or "bwd") or r_dot > 0 and "l" or "r"
 
-				local stop_pose = nil
+				local stop_pose
 
 				if self._action_desc.end_pose then
 					stop_pose = self._action_desc.end_pose
@@ -295,12 +284,8 @@ function FlamerActionWalk:update(t)
 				else
 					variant = "walk"
 				end
-			elseif real_velocity > 530 and self._walk_anim_velocities[pose][self._stance.name].sprint and self._ext_anim.pose == "stand" then
-				variant = "sprint"
-			elseif real_velocity > 300 then
-				variant = "run"
 			else
-				variant = "walk"
+				variant = real_velocity > 530 and self._walk_anim_velocities[pose][self._stance.name].sprint and self._ext_anim.pose == "stand" and "sprint" or real_velocity > 300 and "run" or "walk"
 			end
 		end
 
@@ -316,7 +301,7 @@ function FlamerActionWalk:update(t)
 		local wanted_walk_anim_speed = real_velocity / anim_walk_speed
 		local distance_to_target = self._unit:brain():distance_to_target()
 
-		if distance_to_target and distance_to_target < FlamerActionWalk.DISTANCE_SPRINT_START and FlamerActionWalk.DISTANCE_SPRINT_END < distance_to_target then
+		if distance_to_target and distance_to_target < FlamerActionWalk.DISTANCE_SPRINT_START and distance_to_target > FlamerActionWalk.DISTANCE_SPRINT_END then
 			wanted_walk_anim_speed = wanted_walk_anim_speed * 1.5
 		end
 

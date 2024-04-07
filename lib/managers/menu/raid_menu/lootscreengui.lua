@@ -133,7 +133,9 @@ function LootScreenGui:_create_flares()
 		layer = 1,
 		name = "loot_screen_flare_panel"
 	}
+
 	self._flare_panel = self._fullscreen_panel:panel(flare_panel_params)
+
 	local lens_glint_params = {
 		blend_mode = "add",
 		name = "loot_screen_glint",
@@ -141,6 +143,7 @@ function LootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_glint.texture,
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
 	}
+
 	self._lens_glint = self._flare_panel:bitmap(lens_glint_params)
 
 	self._lens_glint:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
@@ -152,6 +155,7 @@ function LootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_iris.texture,
 		texture_rect = tweak_data.gui.icons.lens_iris.texture_rect
 	}
+
 	self._lens_iris = self._flare_panel:bitmap(lens_iris_params)
 
 	self._lens_iris:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
@@ -163,6 +167,7 @@ function LootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_orbs.texture,
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
 	}
+
 	self._lens_orbs = self._flare_panel:bitmap(lens_orbs_params)
 
 	self._lens_orbs:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
@@ -174,6 +179,7 @@ function LootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_shimmer.texture,
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
 	}
+
 	self._lens_shimmer = self._flare_panel:bitmap(lens_shimmer_params)
 
 	self._lens_shimmer:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
@@ -185,6 +191,7 @@ function LootScreenGui:_create_flares()
 		texture = tweak_data.gui.icons.lens_spike_ball.texture,
 		texture_rect = tweak_data.gui.icons.lens_spike_ball.texture_rect
 	}
+
 	self._lens_spike_ball = self._flare_panel:bitmap(lens_spike_ball_params)
 
 	self._lens_spike_ball:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
@@ -202,7 +209,9 @@ function LootScreenGui:_layout_profile_name()
 		font_size = LootScreenGui.PROFILE_NAME_FONT_SIZE,
 		text = utf8.to_upper(managers.player:get_character_profile_name())
 	}
+
 	self._profile_name = self._root_panel:text(profile_name_label_params)
+
 	local _, _, profile_name_w, profile_name_h = self._profile_name:text_rect()
 
 	self._profile_name:set_w(profile_name_w)
@@ -215,7 +224,9 @@ function LootScreenGui:_layout_loot_breakdown_items()
 		layer = 10,
 		name = "loot_screen_persistent_panel"
 	}
+
 	self._persistent_panel = self._root_panel:panel(persistent_panel_params)
+
 	local v = not managers.challenge_cards.forced_loot_card
 	local loot_data_panel_params = {
 		name = "loot_screen_loot_data_panel",
@@ -223,10 +234,12 @@ function LootScreenGui:_layout_loot_breakdown_items()
 		y = 51,
 		visible = v
 	}
+
 	self._loot_data_panel = self._persistent_panel:panel(loot_data_panel_params)
 	self._loot_breakdown_items = {}
 	self._loot_acquired = 0
 	self._loot_total = 0
+
 	local loot_breakdown_items = game_state_machine:current_state().loot_data
 	local breakdown_items_w = 0
 
@@ -262,6 +275,7 @@ function LootScreenGui:_layout_loot_crates()
 		name = "loot_Screen_loot_crate_panel",
 		layer = 5
 	}
+
 	self._loot_crate_panel = self._root_panel:panel(loot_crate_panel_params)
 	self._crate_images = {}
 
@@ -311,8 +325,10 @@ function LootScreenGui:_layout_first_screen()
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	}
+
 	self._first_screen_panel = self._root_panel:panel(first_screen_panel_params)
 	self._brackets = self:_get_loot_point_data()
+
 	local loot_progress_bar_params = {
 		name = "loot_progress_bar",
 		total_points = 1100,
@@ -320,7 +336,9 @@ function LootScreenGui:_layout_first_screen()
 		y = LootScreenGui.LOOT_PROGRESS_BAR_Y,
 		brackets = self._brackets
 	}
+
 	self._loot_progress_bar = self._first_screen_panel:create_custom_control(RaidGUIControlLootProgressBar, loot_progress_bar_params)
+
 	local total_loot_params = {
 		vertical = "center",
 		name = "total_loot",
@@ -334,7 +352,9 @@ function LootScreenGui:_layout_first_screen()
 		font_size = LootScreenGui.LOOT_FONT_SIZE,
 		color = LootScreenGui.LOOT_COLOR
 	}
+
 	self._total_loot_label = self._first_screen_panel:text(total_loot_params)
+
 	local total_loot_description_params = {
 		vertical = "center",
 		name = "total_loot",
@@ -361,6 +381,7 @@ function LootScreenGui:_layout_first_screen()
 		font_size = LootScreenGui.LOOT_FONT_SIZE,
 		color = LootScreenGui.LOOT_COLOR
 	}
+
 	self._acquired_loot_label = self._first_screen_panel:text(acquired_loot_params)
 
 	self._acquired_loot_label:set_right(self._first_screen_panel:w() / 2)
@@ -395,7 +416,9 @@ function LootScreenGui:_layout_first_screen()
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
 		color = LootScreenGui.BRACKET_UNLOCKED_TITLE_COLOR
 	}
+
 	self._bracket_unlocked_title = self._first_screen_panel:text(bracket_unlocked_title_params)
+
 	local bracket_unlocked_label_params = {
 		vertical = "center",
 		name = "bracket_unlocked_label",
@@ -410,6 +433,7 @@ function LootScreenGui:_layout_first_screen()
 		font_size = LootScreenGui.BRACKET_UNLOCKED_LABEL_FONT_SIZE,
 		color = LootScreenGui.BRACKET_UNLOCKED_LABEL_COLOR
 	}
+
 	self._bracket_unlocked_label = self._first_screen_panel:text(bracket_unlocked_label_params)
 end
 
@@ -421,6 +445,7 @@ function LootScreenGui:_layout_second_screen()
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	}
+
 	self._second_screen_panel = self._root_panel:panel(second_screen_panel_params)
 	self._local_loot_panel = self._second_screen_panel:panel({
 		visible = false,
@@ -440,6 +465,7 @@ function LootScreenGui:_layout_second_screen()
 		w = LootScreenGui.PEER_LOOT_PANEL_W,
 		h = LootScreenGui.PEER_LOOT_PANEL_H
 	})
+
 	local customization_reward_params = {
 		y = 0,
 		name = "customization_reward",
@@ -449,7 +475,9 @@ function LootScreenGui:_layout_second_screen()
 		h = LootScreenGui.LOCAL_LOOT_H,
 		redeem_customization_callback = callback(self, self, "redeem_customization_xp")
 	}
+
 	self._customization_details = self._local_loot_panel:create_custom_control(RaidGUIControlCharacterCustomizationDetails, customization_reward_params)
+
 	local customization = tweak_data.character_customization.customizations.russian_default_head
 
 	self._customization_details:set_customization(customization)
@@ -463,7 +491,9 @@ function LootScreenGui:_layout_second_screen()
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
 	}
+
 	self._card_pack_reward = self._local_loot_panel:create_custom_control(RaidGUIControlRewardCardPack, card_pack_reward_params)
+
 	local xp_reward_params = {
 		y = 0,
 		name = "xp_reward",
@@ -472,7 +502,9 @@ function LootScreenGui:_layout_second_screen()
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
 	}
+
 	self._xp_reward = self._local_loot_panel:create_custom_control(RaidGUIControlXPRewardDetails, xp_reward_params)
+
 	local weapon_point_reward_params = {
 		y = 0,
 		name = "weapon_point_reward",
@@ -481,7 +513,9 @@ function LootScreenGui:_layout_second_screen()
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
 	}
+
 	self._weapon_point_reward = self._local_loot_panel:create_custom_control(RaidGUIControlWeaponPointRewardDetails, weapon_point_reward_params)
+
 	local melee_weapon_reward_params = {
 		y = 0,
 		name = "melee_weapon_reward",
@@ -490,7 +524,9 @@ function LootScreenGui:_layout_second_screen()
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
 	}
+
 	self._melee_weapon_reward = self._local_loot_panel:create_custom_control(RaidGUIControlMeleeWeaponRewardDetails, melee_weapon_reward_params)
+
 	local gold_bar_reward_params = {
 		y = 0,
 		name = "gold_bar_reward",
@@ -499,6 +535,7 @@ function LootScreenGui:_layout_second_screen()
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
 	}
+
 	self._gold_bar_reward = self._local_loot_panel:create_custom_control(RaidGUIControlGoldBarRewardDetails, gold_bar_reward_params)
 end
 
@@ -630,7 +667,7 @@ function LootScreenGui:close()
 end
 
 function LootScreenGui:on_loot_dropped_for_peer(drop)
-	local slot = nil
+	local slot
 
 	for i_slot, peer_slot in ipairs(self._peer_slots) do
 		if peer_slot.peer_id == drop.peer_id then
@@ -687,7 +724,7 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 		slot.control:set_melee_weapon(drop.weapon_id)
 	end
 
-	local player_name = nil
+	local player_name
 
 	if drop and drop.peer_name then
 		player_name = drop.peer_name
@@ -716,7 +753,7 @@ function LootScreenGui:set_points(points_acquired, points_total)
 	self._acquired_loot_label:set_text(string.format("%04.0f", math.ceil(points_acquired)))
 
 	for index, bracket in pairs(self._brackets) do
-		if bracket.points_needed <= points_acquired and not bracket.activated then
+		if points_acquired >= bracket.points_needed and not bracket.activated then
 			bracket.activated = true
 		end
 	end
@@ -749,7 +786,9 @@ function LootScreenGui:_animate_change_crate(panel, new_crate_index)
 	local fade_in_duration_percentage = 0.6
 	local t = 0
 	local old_crate_index = self._crate_image_shown
+
 	self._crate_image_shown = new_crate_index
+
 	local old_image_w, old_image_h = self._crate_images[old_crate_index]:size()
 	local new_image_w, new_image_h = self._crate_images[new_crate_index]:size()
 
@@ -757,7 +796,9 @@ function LootScreenGui:_animate_change_crate(panel, new_crate_index)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local old_image_alpha = Easing.quartic_in(t, 1, -1, duration * fade_out_duration_percentage)
 
 		self._crate_images[old_crate_index]:set_alpha(old_image_alpha)
@@ -792,7 +833,9 @@ function LootScreenGui:_animate_crate_hide(panel)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local crate_alpha = Easing.quartic_in(t, 1, -1, duration)
 
 		self._crate_images[self._crate_image_shown]:set_alpha(crate_alpha)
@@ -811,6 +854,7 @@ end
 
 function LootScreenGui:_animate_giving_points(panel, points_acquired, points_total)
 	local t = 0
+
 	self._given_points = false
 	self._started_lens_flares = false
 
@@ -835,7 +879,7 @@ function LootScreenGui:_animate_giving_points(panel, points_acquired, points_tot
 
 			loot_item:animate_show()
 
-			local t = nil
+			local t
 
 			if points_acquired > 7 then
 				t = self:_loot_counter_timer_value(0)
@@ -851,6 +895,7 @@ function LootScreenGui:_animate_giving_points(panel, points_acquired, points_tot
 
 			while points_given < points_acquired do
 				local dt = coroutine.yield()
+
 				t = t - dt
 
 				if t <= 0 then
@@ -865,6 +910,7 @@ function LootScreenGui:_animate_giving_points(panel, points_acquired, points_tot
 
 					points_given = points_given + 1
 					points_given_total = points_given_total + 1
+
 					local shown_crate_index = self:_crate_shown_for_points_given(points_given_total)
 
 					if shown_crate_index ~= self._crate_image_shown and self._crate_images[1] then
@@ -891,6 +937,7 @@ end
 
 function LootScreenGui:_finalize_giving_points()
 	local shown_crate_index = self:_crate_shown_for_points_given(self._loot_acquired)
+
 	self._crate_image_shown = shown_crate_index
 
 	for index, crate_image in ipairs(self._crate_images) do
@@ -937,7 +984,9 @@ function LootScreenGui:_animate_lens_flares()
 
 	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.65, fade_in_duration)
 
 		self._lens_glint:set_alpha(current_alpha)
@@ -962,6 +1011,7 @@ function LootScreenGui:_animate_lens_flares()
 
 	while true do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		self._lens_glint:rotate(math.random() * 0.06 + 0.1)
@@ -981,7 +1031,9 @@ function LootScreenGui:_animate_hide_lens_flares()
 
 	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0.65, -0.65, fade_out_duration)
 
 		self._flare_panel:set_alpha(current_alpha)
@@ -1049,12 +1101,15 @@ function LootScreenGui:_animate_show_loot(panel)
 	self._peer_loot_panel:set_visible(true)
 
 	self.peer_loot_shown = true
+
 	local t = 0
 	local peer_loot_fade_in_duration = 0.6
 
 	while t < peer_loot_fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, peer_loot_fade_in_duration)
 
 		self._peer_loot_panel:set_alpha(current_alpha)
@@ -1075,9 +1130,11 @@ function LootScreenGui:_animate_bracket_unlocked_label(label, new_bracket)
 	local fade_out_duration = 0.15
 	local t = (1 - self._bracket_unlocked_label:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._bracket_unlocked_label:set_alpha(current_alpha)
@@ -1101,11 +1158,14 @@ function LootScreenGui:_animate_bracket_unlocked_label(label, new_bracket)
 	managers.menu_component:post_event("bronze_silver_gold_prize")
 
 	local fade_in_duration = 0.2
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._bracket_unlocked_title:set_alpha(current_alpha)
@@ -1180,6 +1240,7 @@ function LootScreenGui:bind_controller_inputs()
 			}
 		}
 	}
+
 	bindings, legend = self:_check_gamercard_prompts(bindings, legend)
 
 	self:set_controller_bindings(bindings, true)
@@ -1231,6 +1292,7 @@ function LootScreenGui:_check_gamercard_prompts(bindings, legend)
 			table.insert(bindings, keybind)
 
 			local translated_text = managers.localization:get_default_macros()[LootScreenGui.GAMERCARD_BUTTONS[i][2]]
+
 			translated_text = translated_text .. utf8.to_upper(self._peer_slots[i].peer_name)
 
 			table.insert(legend.controller, {

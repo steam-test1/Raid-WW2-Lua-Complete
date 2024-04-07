@@ -39,6 +39,7 @@ end
 
 function ChallengeManager:create_challenge(challenge_category, challenge_id, tasks, complete_callback, challenge_data)
 	challenge_category = challenge_category or ChallengeManager.CATEGORY_GENERIC
+
 	local challenge = Challenge:new(challenge_category, challenge_id, tasks, complete_callback, challenge_data)
 
 	if not self._challenges[challenge_category] then
@@ -107,9 +108,11 @@ function ChallengeManager:challenge_exists(challenge_category, challenge_id)
 end
 
 function ChallengeManager:save_character_slot(data)
+	return
 end
 
 function ChallengeManager:load_character_slot(data, version)
+	return
 end
 
 function ChallengeManager:save_profile_slot(data)
@@ -117,6 +120,7 @@ function ChallengeManager:save_profile_slot(data)
 		version = ChallengeManager.VERSION,
 		challenges = self._challenges
 	}
+
 	data.ChallengeManager = state
 end
 

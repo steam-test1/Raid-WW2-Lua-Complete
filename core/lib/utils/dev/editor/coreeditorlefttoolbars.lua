@@ -71,6 +71,7 @@ function CoreEditor:build_left_toolbar()
 end
 
 function CoreEditor:_project_add_left_upper_toolbar_tool()
+	return
 end
 
 function CoreEditor:show_edit_unit()
@@ -94,6 +95,7 @@ function CoreEditor:on_list_units()
 
 	for _, u in ipairs(units) do
 		total = total + 1
+
 		local name = u:name():s()
 
 		if amount[name] then

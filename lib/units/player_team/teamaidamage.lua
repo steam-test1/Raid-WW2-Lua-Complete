@@ -26,7 +26,9 @@ TeamAIDamage.get_damage_type = CopDamage.get_damage_type
 function TeamAIDamage:init(unit)
 	self._unit = unit
 	self._char_tweak = tweak_data.character[unit:base()._tweak_table]
+
 	local damage_tweak = self._char_tweak.damage
+
 	self._HEALTH_INIT = damage_tweak.HEALTH_INIT
 	self._HEALTH_BLEEDOUT_INIT = damage_tweak.BLEED_OUT_HEALTH_INIT
 	self._HEALTH_TOTAL = self._HEALTH_INIT + self._HEALTH_BLEEDOUT_INIT
@@ -50,7 +52,7 @@ end
 
 function TeamAIDamage:update(unit, t, dt)
 	if self._regenerate_t then
-		if self._regenerate_t < t then
+		if t > self._regenerate_t then
 			self:_regenerated()
 		end
 	elseif self._arrested_timer and self._arrested_paused_counter == 0 then
@@ -58,6 +60,7 @@ function TeamAIDamage:update(unit, t, dt)
 
 		if self._arrested_timer <= 0 then
 			self._arrested_timer = nil
+
 			local action_data = {
 				variant = "stand",
 				body_part = 1,
@@ -79,7 +82,7 @@ function TeamAIDamage:update(unit, t, dt)
 		end
 	end
 
-	if self._revive_reminder_line_t and self._revive_reminder_line_t < t then
+	if self._revive_reminder_line_t and t > self._revive_reminder_line_t then
 		self._revive_reminder_line_t = nil
 	end
 end
@@ -98,6 +101,7 @@ function TeamAIDamage:damage_melee(attack_data)
 	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
 	local t = TimerManager:game():time()
+
 	self._next_allowed_dmg_t = t + self._dmg_interval
 	self._last_received_dmg_t = t
 
@@ -127,8 +131,11 @@ function TeamAIDamage:force_bleedout()
 		type = "none",
 		variant = "bullet"
 	}
+
 	attack_data.result = result
+
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result, true)
+
 	self._next_allowed_dmg_t = TimerManager:game():time() + self._dmg_interval
 	self._last_received_dmg = health_subtracted
 
@@ -149,6 +156,7 @@ function TeamAIDamage:damage_bullet(attack_data)
 		type = "none",
 		variant = "bullet"
 	}
+
 	attack_data.result = result
 
 	if self:_cannot_take_damage() then
@@ -167,6 +175,7 @@ function TeamAIDamage:damage_bullet(attack_data)
 
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
 	local t = TimerManager:game():time()
+
 	self._next_allowed_dmg_t = t + self._dmg_interval
 	self._last_received_dmg_t = t
 	self._last_received_dmg = health_subtracted
@@ -266,10 +275,12 @@ function TeamAIDamage:damage_mission(attack_data)
 		return
 	end
 
-	local result = nil
+	local result
 	local damage_percent = self._HEALTH_GRANULARITY
+
 	attack_data.damage = self._health
 	attack_data.variant = "explosion"
+
 	local result = {
 		variant = attack_data.variant
 	}
@@ -301,6 +312,7 @@ function TeamAIDamage:damage_tase(attack_data)
 	end
 
 	self._regenerate_t = nil
+
 	local damage_info = {
 		variant = "tase",
 		result = {
@@ -337,11 +349,15 @@ end
 
 function TeamAIDamage:_apply_damage(attack_data, result, force)
 	local damage = attack_data.damage * 0.8
+
 	damage = math.clamp(damage, self._HEALTH_TOTAL_PERCENT, self._HEALTH_TOTAL)
+
 	local damage_percent = math.ceil(damage / self._HEALTH_TOTAL_PERCENT)
+
 	damage = damage_percent * self._HEALTH_TOTAL_PERCENT
 	attack_data.damage = damage
-	local dodged = nil
+
+	local dodged
 
 	if not force then
 		dodged = self:inc_dodge_count(damage_percent / 2)
@@ -356,7 +372,7 @@ function TeamAIDamage:_apply_damage(attack_data, result, force)
 		return 0, 0
 	end
 
-	local health_subtracted = nil
+	local health_subtracted
 
 	if self._bleed_out then
 		health_subtracted = self._bleed_out_health
@@ -604,11 +620,14 @@ function TeamAIDamage:_regenerated()
 end
 
 function TeamAIDamage:_convert_to_health_percentage(health_abs)
+	return
 end
 
 function TeamAIDamage:_clamp_health_percentage(health_abs)
 	health_abs = math.clamp(health_abs, self._HEALTH_TOTAL_PERCENT, self._HEALTH_TOTAL)
+
 	local health_percent = math.ceil(health_abs / self._HEALTH_TOTAL_PERCENT)
+
 	health_abs = health_percent * self._HEALTH_TOTAL_PERCENT
 
 	return health_abs, health_percent
@@ -680,7 +699,9 @@ function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offs
 	end
 
 	local body = self._unit:body(i_body)
+
 	damage = damage * self._HEALTH_TOTAL_PERCENT
+
 	local result = {
 		variant = "bullet"
 	}
@@ -688,7 +709,7 @@ function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offs
 
 	mvector3.set_z(hit_pos, hit_pos.z + hit_offset_height)
 
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:movement():m_head_pos()
@@ -722,12 +743,14 @@ function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_vari
 	end
 
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
+
 	damage = damage * self._HEALTH_TOTAL_PERCENT
+
 	local result = {
 		variant = variant
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_com())
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:position()
@@ -761,12 +784,14 @@ function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 	end
 
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
+
 	damage = damage * self._HEALTH_TOTAL_PERCENT
+
 	local result = {
 		variant = variant
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_com())
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:position()
@@ -800,7 +825,9 @@ function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_per
 	end
 
 	local body = self._unit:body(i_body)
+
 	damage = damage * self._HEALTH_TOTAL_PERCENT
+
 	local result = {
 		variant = "melee"
 	}
@@ -808,7 +835,7 @@ function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_per
 
 	mvector3.set_z(hit_pos, hit_pos.z + hit_offset_height)
 
-	local attack_dir = nil
+	local attack_dir
 
 	if attacker_unit then
 		attack_dir = hit_pos - attacker_unit:movement():m_head_pos()
@@ -883,6 +910,7 @@ function TeamAIDamage:revive(reviving_unit)
 		managers.groupai:state():on_criminal_recovered(self._unit)
 	elseif self._arrested_timer then
 		self._arrested_timer = nil
+
 		local action_data = {
 			variant = "stand",
 			body_part = 1,
@@ -914,6 +942,7 @@ end
 
 function TeamAIDamage:_send_bullet_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
+
 	local attacker = attack_data.attacker_unit
 
 	if not attacker or attacker:id() == -1 then
@@ -951,6 +980,7 @@ end
 
 function TeamAIDamage:_send_melee_attack_result(attack_data, hit_offset_height)
 	hit_offset_height = hit_offset_height or math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
+
 	local attacker = attack_data.attacker_unit
 
 	if not attacker or attacker:id() == -1 then
@@ -977,6 +1007,7 @@ function TeamAIDamage:on_tase_ended()
 		managers.enemy:remove_delayed_clbk(self._to_incapacitated_clbk_id)
 
 		self._to_incapacitated_clbk_id = nil
+
 		local action_data = {
 			variant = "stand",
 			body_part = 1,
@@ -1024,12 +1055,14 @@ function TeamAIDamage:_on_incapacitated()
 	end
 
 	self._regenerate_t = nil
+
 	local dmg_info = {
 		variant = "bleeding",
 		result = {
 			type = "fatal"
 		}
 	}
+
 	self._bleed_out_health = 0
 
 	self:_check_fatal()
@@ -1118,4 +1151,5 @@ function TeamAIDamage:save(data)
 end
 
 function TeamAIDamage:run_queued_teammate_panel_update()
+	return
 end

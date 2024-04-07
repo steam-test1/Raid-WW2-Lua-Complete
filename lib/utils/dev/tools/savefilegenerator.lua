@@ -10,6 +10,7 @@ function SavefileGenerator.generate()
 	end
 
 	file_path = file_path .. "filesave_slot_11.xml"
+
 	local cache_object = Global.savefile_manager.meta_data_list[SavefileGenerator.savefile_slot].cache
 
 	SavefileGenerator._reset_indent_counter()
@@ -53,8 +54,10 @@ end
 
 function SavefileGenerator._root_path()
 	local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "..\\..\\")
+
 	path = Application:nice_path(path, true)
-	local f = nil
+
+	local f
 
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")

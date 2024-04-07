@@ -36,13 +36,16 @@ function RaidGUIControlButtonSwitch:init(parent, params)
 		text = params.description,
 		layer = self._object:layer() + 1
 	})
+
 	local switch_panel_params = {
 		x = self._object:w() - RaidGUIControlButtonSwitch.SWITCH_BORDER_W,
 		y = RaidGUIControlButtonSwitch.SWITCH_Y,
 		w = RaidGUIControlButtonSwitch.SWITCH_BORDER_W,
 		h = RaidGUIControlButtonSwitch.SWITCH_BORDER_H
 	}
+
 	self._switch_panel = self._object:panel(switch_panel_params)
+
 	local switch_border_params = {
 		halign = "scale",
 		valign = "scale",
@@ -55,7 +58,9 @@ function RaidGUIControlButtonSwitch:init(parent, params)
 		layer = self._object:layer(),
 		color = RaidGUIControlButtonSwitch.SWITCH_BORDER_COLOR
 	}
+
 	self._border = self._switch_panel:bitmap(switch_border_params)
+
 	local switch_params = {
 		halign = "scale",
 		valign = "scale",
@@ -68,6 +73,7 @@ function RaidGUIControlButtonSwitch:init(parent, params)
 		color = RaidGUIControlButtonSwitch.THUMB_COLOR_OFF,
 		layer = self._object:layer() + 1
 	}
+
 	self._thumb = self._switch_panel:bitmap(switch_params)
 	self._value = self._params.value or false
 	self._play_mouse_over_sound = true
@@ -170,7 +176,7 @@ function RaidGUIControlButtonSwitch:confirm_pressed()
 	self:_render_images()
 
 	if self._on_click_callback then
-		self:_on_click_callback(self, self._value)
+		self._on_click_callback(self, self, self._value)
 	end
 
 	return true
@@ -180,9 +186,11 @@ function RaidGUIControlButtonSwitch:_animate_highlight_on()
 	local duration = 0.2
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local description_r = Easing.quartic_out(t, RaidGUIControlButtonSwitch.TEXT_COLOR.r, RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.r - RaidGUIControlButtonSwitch.TEXT_COLOR.r, duration)
 		local description_g = Easing.quartic_out(t, RaidGUIControlButtonSwitch.TEXT_COLOR.g, RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.g - RaidGUIControlButtonSwitch.TEXT_COLOR.g, duration)
 		local description_b = Easing.quartic_out(t, RaidGUIControlButtonSwitch.TEXT_COLOR.b, RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.b - RaidGUIControlButtonSwitch.TEXT_COLOR.b, duration)
@@ -211,9 +219,11 @@ function RaidGUIControlButtonSwitch:_animate_highlight_off()
 	local duration = 0.2
 	local t = 0
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local description_r = Easing.quartic_out(t, RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.r, RaidGUIControlButtonSwitch.TEXT_COLOR.r - RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.r, duration)
 		local description_g = Easing.quartic_out(t, RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.g, RaidGUIControlButtonSwitch.TEXT_COLOR.g - RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.g, duration)
 		local description_b = Easing.quartic_out(t, RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.b, RaidGUIControlButtonSwitch.TEXT_COLOR.b - RaidGUIControlButtonSwitch.TEXT_HIGHLIGHT_COLOR.b, duration)
@@ -243,12 +253,14 @@ function RaidGUIControlButtonSwitch:_animate_switch_press()
 	local original_w = RaidGUIControlButtonSwitch.SWITCH_BORDER_W
 	local original_h = RaidGUIControlButtonSwitch.SWITCH_BORDER_H
 	local starting_scale = self._switch_panel:w() / original_w
-	local duration = 0.25 * (starting_scale - 0.9) / 0.1
+	local duration = 0.25 * ((starting_scale - 0.9) / 0.1)
 	local center_x, center_y = self._switch_panel:center()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, starting_scale, 0.9 - starting_scale, duration)
 
 		self._switch_panel:set_w(original_w * scale)
@@ -274,7 +286,9 @@ function RaidGUIControlButtonSwitch:_animate_switch_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, 0.9, 0.1, duration)
 
 		self._switch_panel:set_w(target_w * scale)

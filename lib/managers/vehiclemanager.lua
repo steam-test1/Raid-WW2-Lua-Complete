@@ -125,7 +125,7 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 			local v_ext = v:vehicle_driving()
 			local v_npc_ext = v:npc_vehicle_driving()
 			local vehicle_damage_ext = v:character_damage()
-			local driver, passenger_front, passenger_back_left, passenger_back_right = nil
+			local driver, passenger_front, passenger_back_left, passenger_back_right
 
 			if v_ext._seats.driver and alive(v_ext._seats.driver.occupant) then
 				driver = v_ext._seats.driver.occupant
@@ -143,13 +143,13 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 				passenger_back_right = v_ext._seats.passenger_back_right.occupant
 			end
 
-			local is_trunk_open = nil
+			local is_trunk_open
 
 			if v_ext._has_trunk then
 				is_trunk_open = v_ext._trunk_open
 			end
 
-			local vehicle_health = nil
+			local vehicle_health
 
 			if vehicle_damage_ext and vehicle_damage_ext.get_real_health then
 				vehicle_health = vehicle_damage_ext:get_real_health()
@@ -166,7 +166,9 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 
 			while loot_index <= #stored_loot do
 				local loot1 = stored_loot[loot_index]
+
 				loot_index = loot_index + 1
+
 				local loot2 = {
 					multiplier = 0
 				}
@@ -176,6 +178,7 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 				end
 
 				loot_index = loot_index + 1
+
 				local loot3 = {
 					multiplier = 0
 				}
@@ -336,7 +339,7 @@ function VehicleManager:find_active_vehicle_with_player()
 end
 
 function VehicleManager:find_npc_vehicle_target()
-	local target_unit = nil
+	local target_unit
 
 	for i, v in pairs(self._vehicles) do
 		if alive(v) and v:vehicle_driving()._vehicle:is_active() and v:npc_vehicle_driving() == nil and v:vehicle_driving():num_players_inside() >= 0 then

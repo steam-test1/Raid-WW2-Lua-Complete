@@ -1,9 +1,10 @@
 CharacterManageSpawnedUnits = CharacterManageSpawnedUnits or class(ManageSpawnedUnits)
+
 local mvec1 = Vector3()
 
 function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_name, unit, push_mass)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
-	local spawned_unit = nil
+	local spawned_unit
 	local child_bodies = {}
 
 	if not self._unit:character_damage() then
@@ -14,6 +15,7 @@ function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_n
 
 	if type_name(unit) == "string" then
 		local spawn_pos = align_obj:position()
+
 		spawned_unit = safe_spawn_unit(Idstring(unit), spawn_pos, Rotation(0, 0, 0))
 		spawned_unit:unit_data().parent_unit = self._unit
 	else
@@ -40,6 +42,7 @@ function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_n
 		align_obj_name = align_obj_name,
 		unit = spawned_unit
 	}
+
 	self._spawned_units[unit_id] = unit_entry
 
 	for i = 0, spawned_unit:num_bodies() - 1 do

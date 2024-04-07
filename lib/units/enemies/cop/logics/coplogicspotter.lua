@@ -1,4 +1,5 @@
 local tmp_vec1 = Vector3()
+
 CopLogicSpotter = class(CopLogicBase)
 CopLogicSpotter.damage_clbk = CopLogicBase.damage_clbk
 CopLogicSpotter.is_available_for_assignment = CopLogicAttack.is_available_for_assignment
@@ -17,6 +18,7 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	data.unit:brain():reset_spotter()
 
 	local old_internal_data = data.internal_data
+
 	my_data.detection = data.char_tweak.detection.recon
 	my_data.vision = data.char_tweak.vision.combat
 
@@ -36,7 +38,9 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	end
 
 	data.internal_data = my_data
+
 	local key_str = tostring(data.unit:key())
+
 	my_data.detection_task_key = "CopLogicSpotter._upd_enemy_detection" .. key_str
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSpotter._upd_enemy_detection, data)
@@ -97,6 +101,7 @@ function CopLogicSpotter._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
 	data.t = TimerManager:game():time()
+
 	local my_data = data.internal_data
 	local min_reaction = AIAttentionObject.REACT_AIM
 	local delay = CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, nil)
@@ -110,11 +115,7 @@ function CopLogicSpotter._upd_enemy_detection(data)
 		return
 	end
 
-	if data.important then
-		delay = 0
-	else
-		delay = 0.5 + delay * 1.5
-	end
+	delay = data.important and 0 or 0.5 + delay * 1.5
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSpotter._upd_enemy_detection, data, data.t + delay)
 end
@@ -183,7 +184,7 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 				local settings = attention_info.handler:get_attention(my_access, min_reaction, max_reaction, data.team)
 
 				if settings then
-					local acquired = nil
+					local acquired
 					local attention_pos = attention_info.handler:get_detection_m_pos()
 					local angle, distance = CopLogicBase._angle_and_dis_chk(attention_info.handler, settings, data, my_pos)
 
@@ -207,7 +208,7 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 	for u_key, attention_info in pairs(detected_obj) do
 		if alive(attention_info.unit) then
 			if t < attention_info.next_verify_t then
-				if AIAttentionObject.REACT_SUSPICIOUS <= attention_info.reaction then
+				if attention_info.reaction >= AIAttentionObject.REACT_SUSPICIOUS then
 					delay = math.min(attention_info.next_verify_t - t, delay)
 				end
 			else
@@ -215,7 +216,7 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 				delay = math.min(delay, attention_info.settings.verification_interval)
 
 				if not attention_info.identified then
-					local noticable = nil
+					local noticable
 					local angle, dis_multiplier, speed_mul = CopLogicBase._angle_and_dis_chk(attention_info.handler, attention_info.settings, data, my_pos)
 
 					if angle then
@@ -245,6 +246,7 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 							end
 
 							local notice_delay_modified = math.lerp(min_delay * notice_delay_mul, max_delay, dis_mul_mod + angle_mul_mod)
+
 							delta_prog = dt / speed_mul
 						end
 					end
@@ -288,7 +290,8 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 				if attention_info.identified then
 					delay = math.min(delay, attention_info.settings.verification_interval)
 					attention_info.nearly_visible = nil
-					local verified, vis_ray = nil
+
+					local verified, vis_ray
 					local attention_pos = attention_info.handler:get_detection_m_pos()
 					local dis = mvector3.distance(data.m_pos, attention_info.m_pos)
 
@@ -319,7 +322,7 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 						attention_info.last_verified_pos = mvector3.copy(attention_pos)
 						attention_info.verified_dis = dis
 					elseif data.enemy_slotmask and attention_info.unit:in_slot(data.enemy_slotmask) then
-						if attention_info.criminal_record and AIAttentionObject.REACT_COMBAT <= attention_info.settings.reaction then
+						if attention_info.criminal_record and attention_info.settings.reaction >= AIAttentionObject.REACT_COMBAT then
 							if not is_detection_persistent and mvector3.distance(attention_pos, attention_info.criminal_record.pos) > 700 then
 								CopLogicBase._destroy_detected_attention_object_data(data, attention_info)
 							else
@@ -331,12 +334,12 @@ function CopLogicSpotter._upd_attention_obj_detection(data, min_reaction, max_re
 									CopLogicBase._nearly_visible_chk(data, attention_info, my_pos, attention_pos)
 								end
 							end
-						elseif attention_info.release_t and attention_info.release_t < t then
+						elseif attention_info.release_t and t > attention_info.release_t then
 							CopLogicBase._destroy_detected_attention_object_data(data, attention_info)
 						else
 							attention_info.release_t = attention_info.release_t or t + attention_info.settings.release_delay
 						end
-					elseif attention_info.release_t and attention_info.release_t < t then
+					elseif attention_info.release_t and t > attention_info.release_t then
 						CopLogicBase._destroy_detected_attention_object_data(data, attention_info)
 					else
 						attention_info.release_t = attention_info.release_t or t + attention_info.settings.release_delay
@@ -363,10 +366,12 @@ function CopLogicSpotter._upd_aim(data, my_data)
 	local aim, shoot = data.logic._should_aim_or_shoot(data, my_data)
 	local focus_enemy = data.attention_obj
 	local action_taken = my_data.turning or data.unit:movement():chk_action_forbidden("walk")
+
 	action_taken = action_taken or data.logic._upd_aim_action(data, my_data)
 
 	if my_data.reposition and not action_taken and not my_data.advancing then
 		local objective = data.objective
+
 		my_data.advance_path = {
 			mvector3.copy(data.m_pos),
 			mvector3.copy(objective.pos)
@@ -382,7 +387,7 @@ function CopLogicSpotter._upd_aim(data, my_data)
 end
 
 function CopLogicSpotter._should_aim_or_shoot(data, my_data)
-	local aim, shoot = nil
+	local aim, shoot
 	local focus_enemy = data.attention_obj
 
 	if focus_enemy then
@@ -395,7 +400,7 @@ end
 
 function CopLogicSpotter._upd_aim_action(data, my_data)
 	local focus_enemy = data.attention_obj
-	local action_taken = nil
+	local action_taken
 	local anim_data = data.unit:anim_data()
 
 	if anim_data.reload and not anim_data.crouch and (not data.char_tweak.allowed_poses or data.char_tweak.allowed_poses.crouch) then
@@ -458,7 +463,7 @@ function CopLogicSpotter._aim_or_shoot(data, my_data, aim, shoot)
 		end
 	else
 		if my_data.shooting then
-			local new_action = nil
+			local new_action
 
 			if data.unit:anim_data().reload then
 				new_action = {
@@ -499,9 +504,11 @@ function CopLogicSpotter._request_action_shoot(data, my_data)
 end
 
 function CopLogicSpotter._upd_look_for_player(data, attention_info)
+	return
 end
 
 function CopLogicSpotter.on_alert(data, alert_data)
+	return
 end
 
 function CopLogicSpotter.on_attention_obj_identified(data, attention_u_key, attention_info)

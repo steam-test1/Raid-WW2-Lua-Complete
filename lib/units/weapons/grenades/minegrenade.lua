@@ -74,8 +74,10 @@ function MineGrenade:_attempt_arm()
 
 		if unit_vel.z < 0.5 then
 			self._timer = nil
+
 			local pos = self._unit:position()
 			local rot = self._unit:rotation()
+
 			self._ray_from_pos = Vector3(pos.x, pos.y, pos.z + 50)
 			self._planted = true
 
@@ -95,8 +97,10 @@ function MineGrenade:_force_arm()
 
 	if body and body:enabled() then
 		self._timer = nil
+
 		local pos = self._unit:position()
 		local rot = self._unit:rotation()
+
 		self._ray_from_pos = Vector3(pos.x, pos.y, pos.z + 50)
 		self._planted = true
 
@@ -128,6 +132,7 @@ function MineGrenade:_launch()
 	end
 
 	self._detonation_delay = self._tweak_data.enemy_proximity_delay or 0.4
+
 	local body = self._unit:body("body_dynamic")
 
 	body:set_velocity(Vector3(0, 0, self._tweak_data.jumpmine_velocity or 500))

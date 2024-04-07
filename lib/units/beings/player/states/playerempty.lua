@@ -17,4 +17,5 @@ function PlayerEmpty:update(t, dt)
 end
 
 function PlayerEmpty:destroy()
+	return
 end

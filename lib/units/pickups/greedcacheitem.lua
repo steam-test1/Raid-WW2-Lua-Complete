@@ -25,6 +25,7 @@ end
 
 function GreedCacheItem:on_interacted(amount)
 	local pickup_amount = amount or self:pickup_amount()
+
 	pickup_amount = math.clamp(pickup_amount, 0, self:reserve_left())
 	self._current_amount = self._current_amount - pickup_amount
 
@@ -51,6 +52,7 @@ end
 
 function GreedCacheItem:get_lockpick_parameters()
 	local parameters = deep_clone(tweak_data.greed.cache_items[self._tweak_table].lockpick)
+
 	parameters.circle_radius = {
 		tweak_data.interaction.MINIGAME_CIRCLE_RADIUS_SMALL,
 		tweak_data.interaction.MINIGAME_CIRCLE_RADIUS_MEDIUM,

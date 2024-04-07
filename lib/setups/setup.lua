@@ -430,13 +430,13 @@ function Setup:_start_loading_screen()
 
 	cat_print("loading_environment", "[LoadingEnvironment] Start.")
 
-	local setup = nil
+	local setup
 
 	if not LoadingEnvironmentScene:loaded() then
 		LoadingEnvironmentScene:load("levels/zone", false)
 	end
 
-	local load_level_data = nil
+	local load_level_data
 
 	if Global.load_level then
 		if not PackageManager:loaded("packages/load_level") then
@@ -444,6 +444,7 @@ function Setup:_start_loading_screen()
 		end
 
 		local using_steam_controller = false
+
 		setup = "lib/setups/LevelLoadingSetup"
 		load_level_data = {
 			level_data = Global.level_data,
@@ -455,8 +456,11 @@ function Setup:_start_loading_screen()
 		load_level_data.scale_tweak_data = tweak_data.scale
 		load_level_data.tip_id = tweak_data.tips:get_a_tip()
 
-		if not using_steam_controller then
+		if using_steam_controller then
+			-- Nothing
+		else
 			local coords = tweak_data:get_controller_help_coords()
+
 			load_level_data.controller_coords = coords and coords[table.random({
 				"normal",
 				"vehicle"
@@ -490,6 +494,7 @@ function Setup:_start_loading_screen()
 		local safe_rect = managers.viewport:get_safe_rect()
 		local aspect_ratio = managers.viewport:aspect_ratio()
 		local res = RenderSettings.resolution
+
 		load_level_data.gui_data = {
 			safe_rect_pixels = safe_rect_pixels,
 			safe_rect = safe_rect,
@@ -509,10 +514,8 @@ function Setup:_start_loading_screen()
 			},
 			bg_texture = load_data and load_data.image or "ui/loading_screens/loading_flak"
 		}
-	elseif not Global.boot_loading_environment_done then
-		setup = "lib/setups/LightLoadingSetup"
 	else
-		setup = "lib/setups/HeavyLoadingSetup"
+		setup = not Global.boot_loading_environment_done and "lib/setups/LightLoadingSetup" or "lib/setups/HeavyLoadingSetup"
 	end
 
 	local data = {
@@ -521,6 +524,7 @@ function Setup:_start_loading_screen()
 		load_level_data = load_level_data,
 		is_win32 = _G.IS_PC
 	}
+
 	Global.is_loading = true
 end
 
@@ -570,7 +574,9 @@ function Setup:init_game()
 	end
 
 	self._end_frame_clbks = {}
+
 	local scene_gui = Overlay:gui()
+
 	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, _G.IS_PC)
 	self._main_thread_loading_screen_gui_visible = true
 
@@ -599,8 +605,7 @@ function Setup:init_finalize()
 end
 
 function Setup:update(t, dt)
-	local main_t = TimerManager:main():time()
-	local main_dt = TimerManager:main():delta_time()
+	local main_t, main_dt = TimerManager:main():time(), TimerManager:main():delta_time()
 
 	managers.weapon_factory:update(t, dt)
 	managers.platform:update(t, dt)
@@ -737,7 +742,8 @@ end
 function Setup:exec(context)
 	if managers.network then
 		if _G.IS_PS4 then
-			PSN:set_matchmaking_callback("session_destroyed", function ()
+			PSN:set_matchmaking_callback("session_destroyed", function()
+				return
 			end)
 		end
 

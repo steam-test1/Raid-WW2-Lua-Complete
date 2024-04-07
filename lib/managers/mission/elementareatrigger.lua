@@ -148,6 +148,7 @@ function ElementAreaTrigger:project_amount_inside()
 		end
 	elseif self._values.instigator == "player_not_in_vehicle" then
 		counter = 0
+
 		local vehicles = managers.vehicle:get_all_vehicles()
 
 		for _, instigator in pairs(self._inside) do
@@ -170,7 +171,9 @@ function ElementAreaTrigger:is_instigator_valid(unit)
 	if self._values.instigator == "vehicle_with_players" and unit then
 		local result = false
 		local amount = self._values.amount == "all" and self:project_amount_all()
+
 		amount = amount or tonumber(self._values.amount)
+
 		local inside_vehicle = unit:vehicle_driving():num_players_inside()
 
 		if unit:vehicle_driving() and inside_vehicle > 0 and amount <= inside_vehicle then

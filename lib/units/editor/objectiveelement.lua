@@ -51,6 +51,7 @@ function ObjectiveUnitElement:get_links_to_unit(...)
 end
 
 function ObjectiveUnitElement:update_editing()
+	return
 end
 
 function ObjectiveUnitElement:add_element()
@@ -86,6 +87,7 @@ function ObjectiveUnitElement:update_sub_objectives()
 	local sub_objectives = table.list_add({
 		"none"
 	}, managers.objectives:sub_objectives_by_name(self._hed.objective))
+
 	self._hed.sub_objective = "none"
 
 	CoreEws.update_combobox_options(self._sub_objective_params, sub_objectives)
@@ -125,6 +127,7 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	local _, params = self:_build_value_combobox(panel, panel_sizer, "sub_objective", table.list_add({
 		"none"
 	}, options), "Select a sub objective from the combobox (if availible)")
+
 	self._sub_objective_params = params
 
 	self:_build_value_number(panel, panel_sizer, "amount", {
@@ -135,9 +138,10 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 	local help = {
 		panel = panel,
-		sizer = panel_sizer,
-		text = "State complete_and_activate will complete any previous objective and activate the selected objective. Note that it might not function well with objectives using amount"
+		sizer = panel_sizer
 	}
+
+	help.text = "State complete_and_activate will complete any previous objective and activate the selected objective. Note that it might not function well with objectives using amount"
 
 	self:add_help_text(help)
 end

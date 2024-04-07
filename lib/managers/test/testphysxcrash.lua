@@ -16,6 +16,7 @@ TestPhysXCrash.testPositions = {
 	Vector3(-1967.56, -3135.17, 138.751),
 	Vector3(5996.02, -2469.51, 70.2581)
 }
+
 local counter = 1
 
 function TestPhysXCrash:init()

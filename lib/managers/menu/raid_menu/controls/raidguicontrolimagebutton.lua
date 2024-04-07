@@ -141,12 +141,15 @@ end
 
 function RaidGUIControlImageButton:_animate_highlight_on()
 	self._highlight_animation_t = self._highlight_animation_t or 0
+
 	local duration = 0.2
 	local t = self._highlight_animation_t * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local border_r = Easing.quartic_out(t, self._color.r, self._highlight_color.r - self._color.r, duration)
 		local border_g = Easing.quartic_out(t, self._color.g, self._highlight_color.g - self._color.g, duration)
 		local border_b = Easing.quartic_out(t, self._color.b, self._highlight_color.b - self._color.b, duration)
@@ -163,12 +166,15 @@ end
 
 function RaidGUIControlImageButton:_animate_highlight_off()
 	self._highlight_animation_t = self._highlight_animation_t or 0
+
 	local duration = 0.2
 	local t = (1 - self._highlight_animation_t) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local border_r = Easing.quartic_out(t, self._highlight_color.r, self._color.r - self._highlight_color.r, duration)
 		local border_g = Easing.quartic_out(t, self._highlight_color.g, self._color.g - self._highlight_color.g, duration)
 		local border_b = Easing.quartic_out(t, self._highlight_color.b, self._color.b - self._highlight_color.b, duration)
@@ -188,12 +194,14 @@ function RaidGUIControlImageButton:_animate_press()
 	local original_w = self._w
 	local original_h = self._h
 	local starting_scale = self._object:w() / original_w
-	local duration = 0.25 * (starting_scale - 0.9) / 0.1
+	local duration = 0.25 * ((starting_scale - 0.9) / 0.1)
 	local center_x, center_y = self._object:center()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, starting_scale, 0.9 - starting_scale, duration)
 
 		self._object:set_w(original_w * scale)
@@ -219,7 +227,9 @@ function RaidGUIControlImageButton:_animate_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, 0.9, 0.1, duration)
 
 		self._object:set_w(target_w * scale)

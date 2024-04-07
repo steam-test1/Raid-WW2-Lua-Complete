@@ -46,6 +46,7 @@ local xb1 = Idstring("XB1")
 
 function ElementFilter:_check_platform()
 	local platform = Global.running_simulation and Idstring(managers.editor:mission_platform())
+
 	platform = platform or SystemInfo:platform()
 
 	if self._values.platform_win32 and (platform == win32 or platform == ps4 or platform == xb1) then
@@ -83,6 +84,7 @@ end
 
 function ElementFilter:_check_players()
 	local players = Global.running_simulation and managers.editor:mission_player()
+
 	players = players or managers.network:session() and managers.network:session():amount_of_players()
 
 	if not players then

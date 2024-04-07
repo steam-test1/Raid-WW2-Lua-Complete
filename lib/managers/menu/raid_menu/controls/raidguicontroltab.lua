@@ -19,6 +19,7 @@ function RaidGUIControlTab:init(parent, params)
 		h = params.h,
 		layer = parent:layer() + 1
 	})
+
 	local label_coord_x = 0
 	local label_width = params.w
 
@@ -147,9 +148,11 @@ function RaidGUIControlTab:_animate_highlight_on()
 	local duration = 0.3
 	local t = duration - (1 - self._highlight_t) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local color_r = Easing.quartic_out(t, RaidGUIControlTab.INACTIVE_COLOR.r, RaidGUIControlTab.ACTIVE_LINE_COLOR.r - RaidGUIControlTab.INACTIVE_COLOR.r, duration)
 		local color_g = Easing.quartic_out(t, RaidGUIControlTab.INACTIVE_COLOR.g, RaidGUIControlTab.ACTIVE_LINE_COLOR.g - RaidGUIControlTab.INACTIVE_COLOR.g, duration)
 		local color_b = Easing.quartic_out(t, RaidGUIControlTab.INACTIVE_COLOR.b, RaidGUIControlTab.ACTIVE_LINE_COLOR.b - RaidGUIControlTab.INACTIVE_COLOR.b, duration)
@@ -171,9 +174,11 @@ function RaidGUIControlTab:_animate_highlight_off()
 	local duration = 0.2
 	local t = duration - self._highlight_t * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local color_r = Easing.quartic_in(t, RaidGUIControlTab.ACTIVE_LINE_COLOR.r, RaidGUIControlTab.INACTIVE_COLOR.r - RaidGUIControlTab.ACTIVE_LINE_COLOR.r, duration)
 		local color_g = Easing.quartic_in(t, RaidGUIControlTab.ACTIVE_LINE_COLOR.g, RaidGUIControlTab.INACTIVE_COLOR.g - RaidGUIControlTab.ACTIVE_LINE_COLOR.g, duration)
 		local color_b = Easing.quartic_in(t, RaidGUIControlTab.ACTIVE_LINE_COLOR.b, RaidGUIControlTab.INACTIVE_COLOR.b - RaidGUIControlTab.ACTIVE_LINE_COLOR.b, duration)
@@ -195,9 +200,11 @@ function RaidGUIControlTab:_animate_select()
 	local duration = 0.3
 	local t = duration - (1 - self._select_t) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local color_r = Easing.quartic_out(t, RaidGUIControlTab.INACTIVE_COLOR.r, RaidGUIControlTab.ACTIVE_TEXT_COLOR.r - RaidGUIControlTab.INACTIVE_COLOR.r, duration)
 		local color_g = Easing.quartic_out(t, RaidGUIControlTab.INACTIVE_COLOR.g, RaidGUIControlTab.ACTIVE_TEXT_COLOR.g - RaidGUIControlTab.INACTIVE_COLOR.g, duration)
 		local color_b = Easing.quartic_out(t, RaidGUIControlTab.INACTIVE_COLOR.b, RaidGUIControlTab.ACTIVE_TEXT_COLOR.b - RaidGUIControlTab.INACTIVE_COLOR.b, duration)
@@ -224,9 +231,11 @@ function RaidGUIControlTab:_animate_deselect()
 	local duration = 0.3
 	local t = duration - self._select_t * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local color_r = Easing.quartic_out(t, RaidGUIControlTab.ACTIVE_TEXT_COLOR.r, RaidGUIControlTab.INACTIVE_COLOR.r - RaidGUIControlTab.ACTIVE_TEXT_COLOR.r, duration)
 		local color_g = Easing.quartic_out(t, RaidGUIControlTab.ACTIVE_TEXT_COLOR.g, RaidGUIControlTab.INACTIVE_COLOR.g - RaidGUIControlTab.ACTIVE_TEXT_COLOR.g, duration)
 		local color_b = Easing.quartic_out(t, RaidGUIControlTab.ACTIVE_TEXT_COLOR.b, RaidGUIControlTab.INACTIVE_COLOR.b - RaidGUIControlTab.ACTIVE_TEXT_COLOR.b, duration)

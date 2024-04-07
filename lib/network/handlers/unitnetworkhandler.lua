@@ -1,4 +1,5 @@
 local tmp_rot1 = Rotation()
+
 UnitNetworkHandler = UnitNetworkHandler or class(BaseNetworkHandler)
 
 function UnitNetworkHandler:set_unit(unit, character_name, outfit_string, outfit_version, peer_id, team_id)
@@ -109,7 +110,7 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 		return
 	end
 
-	local end_rot = nil
+	local end_rot
 
 	if end_yaw ~= 0 then
 		end_rot = Rotation(360 * (end_yaw - 1) / 254, 0, 0)
@@ -125,7 +126,7 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 			return element[name]
 		end
 
-		nav_link.element.nav_link_wants_align_pos = nav_link.element.nav_link_wants_align_pos or function (element)
+		nav_link.element.nav_link_wants_align_pos = nav_link.element.nav_link_wants_align_pos or function(element)
 			Application:debug("[CopActionWalk:action_walk_start] Appending something that is not nav_link", inspect(self))
 
 			return true
@@ -136,7 +137,7 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 		table.insert(nav_path, first_nav_point)
 	end
 
-	local end_pose = nil
+	local end_pose
 
 	if end_pose_code == 1 then
 		end_pose = "stand"
@@ -864,7 +865,7 @@ function UnitNetworkHandler:set_attention(unit, target_unit, reaction, sender)
 		return
 	end
 
-	local handler = nil
+	local handler
 
 	if target_unit:attention() then
 		handler = target_unit:attention()
@@ -967,15 +968,9 @@ function UnitNetworkHandler:alarm_pager_interaction(u_id, tweak_table, status, s
 		local peer = self._verify_sender(sender)
 
 		if peer then
-			local status_str = nil
+			local status_str
 
-			if status == 1 then
-				status_str = "started"
-			elseif status == 2 then
-				status_str = "interrupted"
-			else
-				status_str = "complete"
-			end
+			status_str = status == 1 and "started" or status == 2 and "interrupted" or "complete"
 
 			unit_data.unit:interaction():sync_interacted(peer, nil, status_str)
 		end
@@ -1074,7 +1069,7 @@ function UnitNetworkHandler:action_act_start_align(unit, act_index, blocks_hurt,
 		return
 	end
 
-	local start_rot = nil
+	local start_rot
 
 	if start_yaw and start_yaw ~= 0 then
 		start_rot = Rotation(360 * (start_yaw - 1) / 254, 0, 0)
@@ -1151,7 +1146,7 @@ function UnitNetworkHandler:alert(alerted_unit, aggressor)
 		return
 	end
 
-	local aggressor_pos = nil
+	local aggressor_pos
 
 	if aggressor:movement() and aggressor:movement().m_head_pos then
 		aggressor_pos = aggressor:movement():m_head_pos()
@@ -2199,6 +2194,7 @@ function UnitNetworkHandler:sync_throw_projectile(unit, pos, dir, projectile_typ
 	if tweak_entry.client_authoritative then
 		if not unit then
 			local unit_name = Idstring(tweak_entry.local_unit)
+
 			unit = World:spawn_unit(unit_name, pos, Rotation(dir, math.UP))
 		end
 
@@ -2466,7 +2462,7 @@ function UnitNetworkHandler:sync_contour_state(unit, u_id, type, state, multipli
 		return
 	end
 
-	local contour_unit = nil
+	local contour_unit
 
 	if alive(unit) and unit:id() ~= -1 then
 		contour_unit = unit
@@ -2600,6 +2596,7 @@ function UnitNetworkHandler:sync_statistics_result(top_stat_1_id, top_stat_1_pee
 end
 
 function UnitNetworkHandler:statistics_tied(name, sender)
+	return
 end
 
 function UnitNetworkHandler:bain_comment(bain_line, sender)
@@ -2703,6 +2700,7 @@ function UnitNetworkHandler:sync_player_kill_statistic(tweak_table_name, is_head
 	managers.statistics:killed_by_anyone(data)
 
 	local attacker_state = managers.player:current_state()
+
 	data.attacker_state = attacker_state
 
 	managers.statistics:killed(data)
@@ -2755,13 +2753,7 @@ function UnitNetworkHandler:suspicion(suspect_peer_id, susp_value, sender)
 		return
 	end
 
-	if susp_value == 0 then
-		susp_value = false
-	elseif susp_value == 255 then
-		susp_value = true
-	else
-		susp_value = susp_value / 254
-	end
+	susp_value = (susp_value ~= 0 or false) and (susp_value == 255 and true or susp_value / 254)
 
 	suspect_unit:movement():on_suspicion(nil, susp_value)
 end
@@ -2840,7 +2832,7 @@ function UnitNetworkHandler:start_timespeed_effect(effect_id, timer_name, affect
 		return
 	end
 
-	local affect_timer_names = nil
+	local affect_timer_names
 
 	if affect_timer_names_str ~= "" then
 		affect_timer_names = string.split(affect_timer_names_str, ";")
@@ -2894,7 +2886,7 @@ function UnitNetworkHandler:suppression(unit, ratio, sender)
 	end
 
 	local amount_max = (sup_tweak.brown_point or sup_tweak.react_point)[2]
-	local amount, panic_chance = nil
+	local amount, panic_chance
 
 	if ratio == 16 then
 		amount = "max"
@@ -3036,6 +3028,7 @@ function UnitNetworkHandler:sync_vehicle_driving(action, unit, player)
 	end
 
 	local ext = unit:npc_vehicle_driving()
+
 	ext = ext or unit:vehicle_driving()
 
 	if action == "start" then
@@ -3489,6 +3482,7 @@ function UnitNetworkHandler:register_munitions_stack_size(stack_unit, stack_size
 	end
 
 	local stack_unit_ext = stack_unit:base()
+
 	stack_unit_ext = stack_unit_ext or stack_unit:pickup()
 
 	if stack_unit_ext and stack_unit_ext.sync_pickup_munitions_size then
@@ -3502,6 +3496,7 @@ function UnitNetworkHandler:sync_pickup_munitions_stack(stack_unit, stack_consum
 	end
 
 	local stack_unit_ext = stack_unit:base()
+
 	stack_unit_ext = stack_unit_ext or stack_unit:pickup()
 
 	if stack_unit_ext and stack_unit_ext.sync_pickup_munitions_stack then

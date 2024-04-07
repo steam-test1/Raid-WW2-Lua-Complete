@@ -8,6 +8,7 @@ end
 
 function MolotovGrenade:_setup_from_tweak_data()
 	local grenade_entry = self.tweak_data or "molotov"
+
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
 	self._init_timer = self._tweak_data.init_timer or 10
 	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
@@ -19,9 +20,11 @@ function MolotovGrenade:_setup_from_tweak_data()
 	self._alert_radius = self._tweak_data.alert_radius
 	self._fire_alert_radius = self._tweak_data.fire_alert_radius
 	self._fire_dot_data = self._tweak_data.fire_dot_data
+
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	local sound_event_burning = self._tweak_data.sound_event_burning or "burn_loop_gen"
 	local sound_event_impact_duration = self._tweak_data.sound_event_impact_duration or 1
+
 	self._custom_params = {
 		camera_shake_max_mul = 4,
 		sound_muffle_effect = true,
@@ -65,6 +68,7 @@ function MolotovGrenade:update(unit, t, dt)
 					mvector3.subtract(pos_diff, damage_effect_entry.body_initial_position)
 
 					local effect_new_location = damage_effect_entry.effect_initial_position + pos_diff
+
 					damage_effect_entry.effect_current_position = effect_new_location
 
 					World:effect_manager():move(damage_effect_entry.effect_id, effect_new_location)
@@ -72,7 +76,7 @@ function MolotovGrenade:update(unit, t, dt)
 			end
 		end
 
-		if self._burn_tick_period <= self._burn_tick_temp_counter or self._initial_damage_done == false then
+		if self._burn_tick_temp_counter >= self._burn_tick_period or self._initial_damage_done == false then
 			self:_do_damage()
 
 			self._initial_damage_done = true
@@ -100,12 +104,13 @@ function MolotovGrenade:_do_damage()
 
 	if self._molotov_damage_effect_table then
 		local collision_safety_distance = Vector3(0, 0, 5)
-		local effect_position = nil
+		local effect_position
 		local player_damage_range = range
 
 		for _, damage_effect_entry in pairs(self._molotov_damage_effect_table) do
 			if damage_effect_entry.body ~= nil then
 				effect_position = damage_effect_entry.effect_current_position + collision_safety_distance
+
 				local damage_range = range
 
 				if _ == 1 then
@@ -174,13 +179,14 @@ function MolotovGrenade:detonate(normal)
 	})
 
 	self._detonated_position = self._unit:position()
+
 	local position = self._detonated_position
 	local range = self._range
 	local single_effect_radius = range
 	local diagonal_distance = math.sqrt(math.pow(single_effect_radius * 2, 2) - math.pow(single_effect_radius, 2))
-	local raycast = nil
+	local raycast
 	local slotmask = managers.slot:get_mask("molotov_raycasts")
-	local vector, effect_id = nil
+	local vector, effect_id
 
 	if normal == nil or mvector3.length(normal) < 0.1 then
 		normal = Vector3(0, 0, 1)
@@ -204,14 +210,17 @@ function MolotovGrenade:detonate(normal)
 
 	vector = position + Vector3(0, 0, 0)
 	raycast = World:raycast("ray", position, vector, "slot_mask", slotmask)
-	local ray_cast2, fake_ball_main = nil
+
+	local ray_cast2, fake_ball_main
 
 	if raycast == nil then
 		local vector21 = vector + Vector3(0, 0, -150)
+
 		raycast = World:raycast("ray", vector + Vector3(0, 0, 20), vector21, "slot_mask", slotmask)
 
 		if raycast == nil then
 			local vector41 = vector21 - 50 * normal
+
 			raycast = World:raycast("ray", vector21 + 20 * normal, vector41, "slot_mask", slotmask)
 
 			if raycast ~= nil then
@@ -220,6 +229,7 @@ function MolotovGrenade:detonate(normal)
 				ray_cast2 = raycast
 			else
 				local vector31 = vector + Vector3(0, 0, -1500)
+
 				raycast = World:raycast("ray", vector + Vector3(0, 0, 20), vector31, "slot_mask", slotmask)
 
 				if raycast ~= nil then
@@ -246,14 +256,17 @@ function MolotovGrenade:detonate(normal)
 	for i = 1, 6 do
 		vector = position + offset
 		raycast = World:raycast("ray", position, vector, "slot_mask", slotmask)
-		local ray_cast, fake_ball_outline = nil
+
+		local ray_cast, fake_ball_outline
 
 		if raycast == nil then
 			local vector2 = vector + Vector3(0, 0, -150)
+
 			raycast = World:raycast("ray", vector + Vector3(0, 0, 20), vector2, "slot_mask", slotmask)
 
 			if raycast == nil then
 				local vector4 = vector2 - 50 * normal
+
 				raycast = World:raycast("ray", vector2 + 20 * normal, vector4, "slot_mask", slotmask)
 
 				if raycast ~= nil then
@@ -262,6 +275,7 @@ function MolotovGrenade:detonate(normal)
 					ray_cast = raycast
 				else
 					local vector3 = vector + Vector3(0, 0, -1500)
+
 					raycast = World:raycast("ray", vector + Vector3(0, 0, 20), vector3, "slot_mask", slotmask)
 
 					if raycast ~= nil then
@@ -278,6 +292,7 @@ function MolotovGrenade:detonate(normal)
 
 			if ray_cast ~= nil then
 				local tableSize = #self._molotov_damage_effect_table
+
 				self._molotov_damage_effect_table[tableSize].body = ray_cast.body
 				self._molotov_damage_effect_table[tableSize].body_initial_position = ray_cast.body:position()
 				self._molotov_damage_effect_table[tableSize].body_initial_rotation = ray_cast.body:rotation()
@@ -319,6 +334,7 @@ end
 function MolotovGrenade:_detonate_on_client_OLD(normal)
 	if self._detonated == false then
 		self._detonated_position = self._unit:position()
+
 		local pos = self._detonated_position
 		local range = self._range
 		local slot_mask = managers.slot:get_mask("explosion_targets")

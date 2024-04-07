@@ -1,4 +1,5 @@
 local tmp_vec1 = Vector3()
+
 CivilianLogicSurrender = class(CivilianLogicBase)
 CivilianLogicSurrender.on_new_objective = CivilianLogicIdle.on_new_objective
 CivilianLogicSurrender.on_rescue_allowed_state = CivilianLogicFlee.on_rescue_allowed_state
@@ -13,6 +14,7 @@ function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
+
 	data.internal_data = my_data
 
 	if data.is_tied then
@@ -39,8 +41,11 @@ function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 	end
 
 	local scare_max = data.char_tweak.scare_max
+
 	my_data.scare_max = math.lerp(scare_max[1], scare_max[2], math.random())
+
 	local submission_max = data.char_tweak.submission_max
+
 	my_data.submission_max = math.lerp(submission_max[1], submission_max[2], math.random())
 	my_data.scare_meter = 0
 	my_data.submission_meter = 0
@@ -62,7 +67,8 @@ function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 		return
 	end
 
-	local attention_settings = nil
+	local attention_settings
+
 	attention_settings = {
 		"civ_enemy_cbt",
 		"civ_civ_cbt",
@@ -251,9 +257,13 @@ end
 function CivilianLogicSurrender._do_initial_act(data, amount, aggressor_unit, initial_act)
 	local my_data = data.internal_data
 	local adj_sumbission = amount * data.char_tweak.submission_intimidate
+
 	my_data.submission_meter = math.min(my_data.submission_max, my_data.submission_meter + adj_sumbission)
+
 	local adj_scare = amount * data.char_tweak.scare_intimidate
+
 	my_data.scare_meter = math.max(0, my_data.scare_meter + adj_scare)
+
 	local action_data = {
 		clamp_to_graph = true,
 		body_part = 1,
@@ -295,6 +305,7 @@ function CivilianLogicSurrender.on_intimidated(data, amount, aggressor_unit, ski
 			})
 		else
 			my_data.delayed_intimidate_id = "intimidate" .. tostring(data.unit:key())
+
 			local delay = math.max(0, 1 - amount) + math.random() * 0.2
 
 			CopLogicBase.add_delayed_clbk(my_data, my_data.delayed_intimidate_id, callback(CivilianLogicSurrender, CivilianLogicSurrender, "_delayed_intimidate_clbk", {
@@ -323,55 +334,56 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 	local amount = params[2]
 	local anim_data = data.unit:anim_data()
 	local adj_sumbission = amount * data.char_tweak.submission_intimidate
+
 	my_data.submission_meter = math.min(my_data.submission_max, my_data.submission_meter + adj_sumbission)
+
 	local adj_scare = amount * data.char_tweak.scare_intimidate
+
 	my_data.scare_meter = math.max(0, my_data.scare_meter + adj_scare)
 
-	if not anim_data.drop then
-		if anim_data.react_enter and not anim_data.idle then
-			-- Nothing
-		elseif anim_data.react or anim_data.panic or anim_data.halt then
-			local action_data = {
-				clamp_to_graph = true,
-				body_part = 1,
-				type = "act",
-				variant = anim_data.move and "halt" or "drop"
+	if anim_data.drop or anim_data.react_enter and not anim_data.idle then
+		-- Nothing
+	elseif anim_data.react or anim_data.panic or anim_data.halt then
+		local action_data = {
+			clamp_to_graph = true,
+			body_part = 1,
+			type = "act",
+			variant = anim_data.move and "halt" or "drop"
+		}
+		local action_res = data.unit:brain():action_request(action_data)
+
+		if action_res and action_data.variant == "drop" then
+			managers.groupai:state():unregister_fleeing_civilian(data.key)
+			data.unit:interaction():set_tweak_data("intimidate")
+			data.unit:interaction():set_active(true, true)
+
+			my_data.interaction_active = true
+		end
+	else
+		local action_data = {
+			clamp_to_graph = true,
+			variant = "panic",
+			body_part = 1,
+			type = "act"
+		}
+
+		data.unit:brain():action_request(action_data)
+		data.unit:sound():say("a02x_any", true)
+
+		if data.unit:unit_data().mission_element then
+			data.unit:unit_data().mission_element:event("panic", data.unit)
+		end
+
+		if not managers.groupai:state():enemy_weapons_hot() then
+			local alert = {
+				"vo_distress",
+				data.unit:movement():m_head_pos(),
+				200,
+				data.SO_access,
+				data.unit
 			}
-			local action_res = data.unit:brain():action_request(action_data)
 
-			if action_res and action_data.variant == "drop" then
-				managers.groupai:state():unregister_fleeing_civilian(data.key)
-				data.unit:interaction():set_tweak_data("intimidate")
-				data.unit:interaction():set_active(true, true)
-
-				my_data.interaction_active = true
-			end
-		else
-			local action_data = {
-				clamp_to_graph = true,
-				variant = "panic",
-				body_part = 1,
-				type = "act"
-			}
-
-			data.unit:brain():action_request(action_data)
-			data.unit:sound():say("a02x_any", true)
-
-			if data.unit:unit_data().mission_element then
-				data.unit:unit_data().mission_element:event("panic", data.unit)
-			end
-
-			if not managers.groupai:state():enemy_weapons_hot() then
-				local alert = {
-					"vo_distress",
-					data.unit:movement():m_head_pos(),
-					200,
-					data.SO_access,
-					data.unit
-				}
-
-				managers.groupai:state():propagate_alert(alert)
-			end
+			managers.groupai:state():propagate_alert(alert)
 		end
 	end
 end
@@ -389,7 +401,7 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 		local aggressor = alert_data[5]
 
 		if aggressor and aggressor:base() then
-			local is_intimidation = nil
+			local is_intimidation
 
 			if aggressor:base().is_local_player then
 				if managers.player:has_category_upgrade("player", "civ_calming_alerts") then
@@ -445,9 +457,12 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 
 		if alert_dis_sq < max_scare_dis_sq then
 			rand = math.lerp(rand, rand * 2, math.min(alert_dis_sq) / 4000000)
+
 			local scare_mul = (max_scare_dis_sq - alert_dis_sq) / max_scare_dis_sq
 			local max_nr_random_screams = 8
+
 			scare_mul = scare_mul * math.lerp(1, 0.3, my_data.nr_random_screams / max_nr_random_screams)
+
 			local chance_voice_1 = 0.3 * scare_mul
 			local chance_voice_2 = 0.3 * scare_mul
 
@@ -476,8 +491,10 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	local delta_t = t - my_data.last_upd_t
 	local my_pos = data.unit:movement():m_head_pos()
 	local enemies = managers.groupai:state():all_criminals()
-	local visible, closest_dis, closest_enemy = nil
+	local visible, closest_dis, closest_enemy
+
 	my_data.inside_intimidate_aura = nil
+
 	local my_tracker = data.unit:movement():nav_tracker()
 	local chk_vis_func = my_tracker.check_visibility
 
@@ -487,7 +504,7 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 			local enemy_pos = u_data.m_det_pos
 			local my_vec = tmp_vec1
 			local dis = mvector3.direction(my_vec, enemy_pos, my_pos)
-			local inside_aura = nil
+			local inside_aura
 
 			if u_data.unit:base().is_local_player then
 				if managers.player:has_category_upgrade("player", "intimidate_aura") and dis < managers.player:upgrade_value("player", "intimidate_aura", 0) then

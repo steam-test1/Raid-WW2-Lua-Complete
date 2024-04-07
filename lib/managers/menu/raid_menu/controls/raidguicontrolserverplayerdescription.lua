@@ -20,11 +20,13 @@ function RaidGUIControlServerPlayerDescription:_create_selector()
 		layer = 1,
 		color = tweak_data.gui.colors.raid_list_background
 	}
+
 	self._selector = self._object:rect(selector_params)
 end
 
 function RaidGUIControlServerPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
+
 	self._class_icon = self._object:bitmap({
 		name = "class_icon",
 		y = 0,

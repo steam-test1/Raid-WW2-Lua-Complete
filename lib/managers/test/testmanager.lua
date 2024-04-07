@@ -9,7 +9,7 @@ local tests = {
 	PhysXRandom = TestPhysXCrashRandom
 }
 local active_tests = {}
-local utils = nil
+local utils
 
 function TestManager:init()
 	self.utils = TestUtilities:new()

@@ -29,6 +29,7 @@ function WelrodRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier, no
 
 		local anim_name = data.animations[anim]
 		local length = self._unit:anim_length(Idstring(anim_name))
+
 		speed_multiplier = speed_multiplier or 1
 
 		if (anim == "fire" or anim == "fire_steelsight") and not noJump or keyOffset and keyOffset ~= 0 then
@@ -49,6 +50,7 @@ function WelrodRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier, no
 		if part_data.animations and part_data.animations[anim] then
 			local anim_name = part_data.animations[anim]
 			local length = part_data.unit:anim_length(Idstring(anim_name))
+
 			speed_multiplier = speed_multiplier or 1
 
 			part_data.unit:anim_stop(Idstring(anim_name))

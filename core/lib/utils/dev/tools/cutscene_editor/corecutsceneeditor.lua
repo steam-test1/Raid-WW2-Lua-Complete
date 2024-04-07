@@ -19,11 +19,11 @@ CoreCutsceneEditor.EDITOR_TITLE = "Cutscene Editor"
 CoreCutsceneEditor.DEFAULT_CAMERA_FAR_RANGE = 50000
 
 function CoreCutsceneEditor:_all_keys_sorted_by_time()
-	local cutscene_keys = table.collect(self._sequencer:key_track():clips(), function (sequencer_key)
+	local cutscene_keys = table.collect(self._sequencer:key_track():clips(), function(sequencer_key)
 		return sequencer_key:metadata()
 	end)
 
-	table.sort(cutscene_keys, function (a, b)
+	table.sort(cutscene_keys, function(a, b)
 		return a:frame() < b:frame()
 	end)
 
@@ -314,12 +314,12 @@ function CoreCutsceneEditor:camera_attributes()
 	if self._player then
 		return self._player:camera_attributes()
 	else
-		local attributes = {
-			aspect_ratio = self._camera:aspect_ratio(),
-			fov = self._camera:fov(),
-			near_range = self._camera:near_range(),
-			far_range = self._camera:far_range()
-		}
+		local attributes = {}
+
+		attributes.aspect_ratio = self._camera:aspect_ratio()
+		attributes.fov = self._camera:fov()
+		attributes.near_range = self._camera:near_range()
+		attributes.far_range = self._camera:far_range()
 
 		return attributes
 	end
@@ -391,7 +391,9 @@ function CoreCutsceneEditor:_create_window()
 	main_box:add(tool_bar_divider_line, 0, 0, "EXPAND")
 
 	local main_area_top_bottom_splitter = EWS:SplitterWindow(self._window)
+
 	self._top_area_splitter = EWS:SplitterWindow(main_area_top_bottom_splitter)
+
 	local bottom_area_left_right_splitter = EWS:SplitterWindow(main_area_top_bottom_splitter)
 	local bottom_left_area_top_bottom_splitter = EWS:SplitterWindow(bottom_area_left_right_splitter)
 
@@ -408,7 +410,7 @@ function CoreCutsceneEditor:_create_window()
 	self._top_area_splitter:set_sash_gravity(1)
 	bottom_area_left_right_splitter:set_minimum_pane_size(160)
 	bottom_area_left_right_splitter:set_sash_gravity(1)
-	bottom_left_area_top_bottom_splitter:connect("EVT_COMMAND_SPLITTER_SASH_POS_CHANGING", function (_, event)
+	bottom_left_area_top_bottom_splitter:connect("EVT_COMMAND_SPLITTER_SASH_POS_CHANGING", function(_, event)
 		event:veto()
 	end, "")
 	main_area_top_bottom_splitter:split_horizontally(self._top_area_splitter, bottom_area_left_right_splitter, 400)
@@ -492,7 +494,7 @@ function CoreCutsceneEditor:_create_menu_bar()
 	self._insert_menu:set_enabled("INSERT_AUDIO_FILE", false)
 	self._insert_menu:append_separator()
 
-	for label, command in table.sorted_map_iterator(table.remap(cutscene_key_insertion_commands, function (command, key_type)
+	for label, command in table.sorted_map_iterator(table.remap(cutscene_key_insertion_commands, function(command, key_type)
 		return key_type.NAME, command
 	end)) do
 		self._insert_menu:append_command(command)
@@ -559,6 +561,7 @@ end
 function CoreCutsceneEditor:_time_code_string_for_frame(frame)
 	local function consume_frames(frames_per_unit)
 		local whole_units = math.floor(frame / frames_per_unit)
+
 		frame = frame - whole_units * frames_per_unit
 
 		return whole_units
@@ -573,6 +576,7 @@ end
 
 function CoreCutsceneEditor:_create_sequencer(parent_frame)
 	self._sequencer_panel = EWS:Panel(parent_frame)
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._sequencer_panel:set_background_colour((EWS:get_system_colour("3DSHADOW") * 255):unpack())
@@ -590,6 +594,7 @@ end
 
 function CoreCutsceneEditor:_create_attribute_panel(parent_frame)
 	self._attribute_panel = EWS:Panel(parent_frame)
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._attribute_panel:set_background_colour((EWS:get_system_colour("3DSHADOW") * 255):unpack())
@@ -631,7 +636,7 @@ function CoreCutsceneEditor:_refresh_selected_footage_track()
 	local selected_clips = self._sequencer:selected_film_clips()
 	local clip = #selected_clips == 1 and selected_clips[1] or nil
 
-	if clip and clip.start_time_in_source and clip.end_time_in_source and clip:start_time_in_source() < clip:end_time_in_source() then
+	if clip and clip.start_time_in_source and clip.end_time_in_source and clip:end_time_in_source() > clip:start_time_in_source() then
 		self._selected_footage_track_region:set_range(clip:start_time_in_source(), clip:end_time_in_source())
 		self._selected_footage_track_region:set_visible(true)
 	else
@@ -653,7 +658,7 @@ function CoreCutsceneEditor:_selected_footage()
 	local selected_clips = self._sequencer:selected_film_clips()
 
 	if not table.empty(selected_clips) then
-		local selected_clip_footages = table.list_union(table.collect(selected_clips, function (clip)
+		local selected_clip_footages = table.list_union(table.collect(selected_clips, function(clip)
 			return clip:metadata() and clip:metadata().footage and clip:metadata():footage() or nil
 		end))
 
@@ -707,7 +712,9 @@ function CoreCutsceneEditor:_create_selected_footage_track(parent_frame)
 	panel:set_sizer(panel_sizer)
 
 	self._selected_footage_track_scrolled_area = EWS:ScrolledWindow(panel, "", "HSCROLL,NO_BORDER,ALWAYS_SHOW_SB")
+
 	local scrolled_area_sizer = EWS:BoxSizer("VERTICAL")
+
 	self._selected_footage_track = EWS:SequencerTrack(self._selected_footage_track_scrolled_area)
 	self._selected_footage_track_region = self._selected_footage_track:add_ornament(EWS:SequencerRangeOrnament())
 
@@ -729,7 +736,9 @@ end
 
 function CoreCutsceneEditor:_create_footage_list(parent_frame)
 	self._footage_list_ctrl = EWS:ListCtrl(parent_frame, "", "LC_LIST")
+
 	local image_list = EWS:ImageList(16, 16)
+
 	self._reel_icon = image_list:add(CoreEWS.image_path("film_reel_16x16.png"))
 	self._optimized_reel_icon = image_list:add(CoreEWS.image_path("film_reel_bw_16x16.png"))
 
@@ -746,10 +755,10 @@ function CoreCutsceneEditor:_refresh_footage_list()
 	self._footage_list_ctrl:clear_all()
 
 	local cutscene_names = managers.cutscene:get_cutscene_names()
-	local optimized_cutscene_names = table.find_all_values(cutscene_names, function (name)
+	local optimized_cutscene_names = table.find_all_values(cutscene_names, function(name)
 		return managers.cutscene:get_cutscene(name):is_optimized()
 	end)
-	local unoptimized_cutscene_names = table.find_all_values(cutscene_names, function (name)
+	local unoptimized_cutscene_names = table.find_all_values(cutscene_names, function(name)
 		return not managers.cutscene:get_cutscene(name):is_optimized()
 	end)
 
@@ -799,6 +808,7 @@ end
 
 function CoreCutsceneEditor:_evaluate_editor_cutscene_keys_for_frame(frame)
 	local time = frame / self:frames_per_second()
+
 	self._last_evaluated_time = self._last_evaluated_time or 0
 
 	if self._last_evaluated_time == 0 and time > 0 then
@@ -879,6 +889,7 @@ end
 function CoreCutsceneEditor:_camera_icons_image_list()
 	if self.__camera_icons_image_list == nil then
 		self.__camera_icons_image_list = EWS:ImageList(16, 16)
+
 		local camera_icon_base_path = CoreEWS.image_path("sequencer\\clip_icon_camera_")
 
 		for i = 0, 30 do
@@ -890,7 +901,7 @@ function CoreCutsceneEditor:_camera_icons_image_list()
 end
 
 function CoreCutsceneEditor:_camera_icon_index(icon_index)
-	if icon_index < 0 or self:_camera_icons_image_list():image_count() <= icon_index then
+	if icon_index < 0 or icon_index >= self:_camera_icons_image_list():image_count() then
 		return 0
 	else
 		return icon_index
@@ -944,7 +955,7 @@ function CoreCutsceneEditor:_serialized_audio_clips()
 		table.insert(clips, serialized_data)
 	end
 
-	table.sort(clips, function (a, b)
+	table.sort(clips, function(a, b)
 		return a.offset < b.offset
 	end)
 
@@ -971,7 +982,7 @@ function CoreCutsceneEditor:_serialized_film_clips()
 		end
 	end
 
-	table.sort(clips, function (a, b)
+	table.sort(clips, function(a, b)
 		return a.offset < b.offset
 	end)
 
@@ -979,7 +990,7 @@ function CoreCutsceneEditor:_serialized_film_clips()
 end
 
 function CoreCutsceneEditor:_serialized_cutscene_keys()
-	return table.collect(self._sequencer:key_track():clips(), function (sequencer_key)
+	return table.collect(self._sequencer:key_track():clips(), function(sequencer_key)
 		return sequencer_key:metadata()
 	end)
 end
@@ -1000,6 +1011,7 @@ end
 
 function CoreCutsceneEditor:_set_current_project(project)
 	self._current_project = project
+
 	local title = self._current_project and string.format("%s - %s", self:project_name(), CoreCutsceneEditor.EDITOR_TITLE) or CoreCutsceneEditor.EDITOR_TITLE
 
 	self._window:set_title(title)
@@ -1075,6 +1087,7 @@ end
 
 function CoreCutsceneEditor:zoom_around_playhead(multiplier)
 	multiplier = multiplier or 1
+
 	local time = self:playhead_position()
 	local offset_in_window = self._sequencer:panel():get_size().x / 2
 	local delta = self._sequencer:ruler():pixels_per_major_division() / self._sequencer:ruler():subdivision_count()
@@ -1373,7 +1386,7 @@ end
 function CoreCutsceneEditor:_on_export_to_maya()
 	local clips_on_active_track = self:_evaluated_track() and self:_evaluated_track():clips() or {}
 	local start_frame = 0
-	local end_frame = table.inject(clips_on_active_track, 0, function (final_frame, clip)
+	local end_frame = table.inject(clips_on_active_track, 0, function(final_frame, clip)
 		return math.max(final_frame, clip:end_time())
 	end)
 
@@ -1407,7 +1420,7 @@ end
 function CoreCutsceneEditor:_on_export_playblast()
 	local clips_on_active_track = self:_evaluated_track() and self:_evaluated_track():clips() or {}
 	local start_frame = 0
-	local end_frame = table.inject(clips_on_active_track, 0, function (final_frame, clip)
+	local end_frame = table.inject(clips_on_active_track, 0, function(final_frame, clip)
 		return math.max(final_frame, clip:end_time())
 	end)
 
@@ -1455,7 +1468,7 @@ function CoreCutsceneEditor:_request_asset_name_from_user(asset_db_type, default
 
 			return self:_request_asset_name_from_user(asset_db_type, default_name, duplicate_name_check_func)
 		else
-			duplicate_name_check_func = duplicate_name_check_func or function (name)
+			duplicate_name_check_func = duplicate_name_check_func or function(name)
 				return ProjectDatabase:has(asset_db_type, name)
 			end
 
@@ -1536,7 +1549,7 @@ function CoreCutsceneEditor:_on_copy()
 end
 
 function CoreCutsceneEditor:_on_paste()
-	local earliest_item_time = table.inject(self._clipboard or {}, math.huge, function (earliest_time, item)
+	local earliest_item_time = table.inject(self._clipboard or {}, math.huge, function(earliest_time, item)
 		return math.min(earliest_time, item:start_time())
 	end)
 	local offset = self:playhead_position() - earliest_item_time
@@ -1792,11 +1805,11 @@ function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event
 
 		cutscene_metadata:prime_cast(self._cast)
 
-		local earliest_clip_time = table.inject(clips_to_add, math.huge, function (earliest_time_yet, clip)
+		local earliest_clip_time = table.inject(clips_to_add, math.huge, function(earliest_time_yet, clip)
 			return math.min(earliest_time_yet, clip:start_time())
 		end)
 		local offset = self:playhead_position() - earliest_clip_time
-		local cutscene_keys = table.find_all_values(cutscene:_all_keys_sorted_by_time(), function (key)
+		local cutscene_keys = table.find_all_values(cutscene:_all_keys_sorted_by_time(), function(key)
 			return key.ELEMENT_NAME ~= CoreChangeCameraCutsceneKey.ELEMENT_NAME
 		end)
 
@@ -1804,7 +1817,7 @@ function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event
 			destination_track:add_clip(clip, offset):set_selected(true)
 
 			for _, template_key in ipairs(cutscene_keys) do
-				if clip:start_time_in_source() <= template_key:frame() and template_key:frame() < clip:end_time_in_source() then
+				if template_key:frame() >= clip:start_time_in_source() and template_key:frame() < clip:end_time_in_source() then
 					local cutscene_key = template_key:clone()
 
 					cutscene_key:set_frame(template_key:frame() + offset)
@@ -1821,7 +1834,7 @@ function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event
 
 		if selected_item_index > 0 then
 			local selected_footage = self._footage_list_ctrl:get_item_data(selected_item_index)
-			local cutscene_keys = table.find_all_values(selected_footage:keys(), function (key)
+			local cutscene_keys = table.find_all_values(selected_footage:keys(), function(key)
 				return key.ELEMENT_NAME ~= CoreChangeCameraCutsceneKey.ELEMENT_NAME
 			end)
 
@@ -2048,6 +2061,7 @@ end
 
 function CoreCutsceneEditor:_draw_unit_hierarchy(unit, unit_name, draw_root_point)
 	unit_name = unit_name or unit:name()
+
 	local root_point = unit:orientation_object()
 
 	if draw_root_point then
@@ -2085,6 +2099,7 @@ end
 
 function CoreCutsceneEditor:_draw_joint(start_object, end_object, radius)
 	radius = radius or 1
+
 	local end_position = end_object and end_object.position and end_object:position()
 
 	if end_position then
@@ -2148,18 +2163,23 @@ function CoreCutsceneEditor:_tiny_text_brush()
 end
 
 function CoreCutsceneEditor:prime_cutscene_key(player, key, cast)
+	return
 end
 
 function CoreCutsceneEditor:evaluate_cutscene_key(player, key, time, last_evaluated_time)
+	return
 end
 
 function CoreCutsceneEditor:revert_cutscene_key(player, key, time, last_evaluated_time)
+	return
 end
 
 function CoreCutsceneEditor:update_cutscene_key(player, key, time, last_evaluated_time)
+	return
 end
 
 function CoreCutsceneEditor:skip_cutscene_key(player)
+	return
 end
 
 function CoreCutsceneEditor:time_in_relation_to_cutscene_key(key)
@@ -2193,6 +2213,7 @@ end
 
 function CoreCutsceneEditor:_debug_dump_hierarchy(object, indent)
 	indent = indent or 0
+
 	local object_type = type_name(object)
 
 	cat_print("debug", string.rep("  ", indent) .. object:name() .. " : " .. object_type)

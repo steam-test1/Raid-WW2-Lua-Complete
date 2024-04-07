@@ -160,7 +160,7 @@ function Easing.sinusoidal_in(t, starting_value, change, duration)
 		return starting_value + change
 	end
 
-	return -change * math.cos(t / duration * math.pi / 2) + change + starting_value
+	return -change * math.cos(t / duration * (math.pi / 2)) + change + starting_value
 end
 
 function Easing.sinusoidal_out(t, starting_value, change, duration)
@@ -168,7 +168,7 @@ function Easing.sinusoidal_out(t, starting_value, change, duration)
 		return starting_value + change
 	end
 
-	return change * math.sin(t / duration * math.pi / 2) + starting_value
+	return change * math.sin(t / duration * (math.pi / 2)) + starting_value
 end
 
 function Easing.sinusoidal_in_out(t, starting_value, change, duration)

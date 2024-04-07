@@ -36,7 +36,9 @@ function RaidGUIControlListItemCharacterCreateNation:_layout()
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_red
 	})
+
 	local nationality_text = self:translate("character_profile_creation_" .. self._nation_name, true)
+
 	self._nation_name_label = self._object:label({
 		h = 32,
 		y = 32,
@@ -52,6 +54,7 @@ function RaidGUIControlListItemCharacterCreateNation:_layout()
 
 	local nation_icon_data = tweak_data.gui.icons["character_creation_nationality_" .. self._nation_name] or tweak_data.gui.icons.ico_flag_empty
 	local tex_rect = nation_icon_data.texture_rect
+
 	self._nationality_icon = self._object:image({
 		y = 24,
 		x = 22,
@@ -123,7 +126,7 @@ function RaidGUIControlListItemCharacterCreateNation:select()
 	self._nationality_icon:set_color(tweak_data.gui.colors.raid_red)
 
 	if self._on_item_selected_callback then
-		self:_on_item_selected_callback(self._data)
+		self._on_item_selected_callback(self, self._data)
 	end
 end
 

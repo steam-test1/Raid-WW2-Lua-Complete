@@ -81,6 +81,7 @@ function HUDNameLabel:_create_panel(hud)
 		w = HUDNameLabel.W,
 		h = HUDNameLabel.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 end
 
@@ -95,6 +96,7 @@ function HUDNameLabel:_create_name()
 		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,
 		text = utf8.to_upper(self._name)
 	}
+
 	self._character_name = self._object:text(name_params)
 
 	self._character_name:set_center_x(self._object:w() / 2)
@@ -110,6 +112,7 @@ function HUDNameLabel:_create_nationality_icon()
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}
+
 	self._nationality_icon = self._object:bitmap(icon_params)
 
 	self._nationality_icon:set_center_x(self._object:w() / 2)
@@ -126,6 +129,7 @@ function HUDNameLabel:_create_carry_icon()
 		texture = tweak_data.gui.icons[temp_carry_icon].texture,
 		texture_rect = tweak_data.gui.icons[temp_carry_icon].texture_rect
 	}
+
 	self._carry_icon = self._object:bitmap(carry_icon_params)
 
 	self._carry_icon:set_center_x(self._object:w() / 2)
@@ -134,6 +138,7 @@ end
 
 function HUDNameLabel:_create_warcry_icon(icon)
 	icon = icon or tweak_data.warcry.sharpshooter.hud_icon
+
 	local warcry_icon_params = {
 		name = "warcry_icon",
 		halign = "center",
@@ -142,6 +147,7 @@ function HUDNameLabel:_create_warcry_icon(icon)
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}
+
 	self._warcry_icon = self._object:bitmap(warcry_icon_params)
 
 	self._warcry_icon:set_center_x(self._object:w() / 2)
@@ -158,6 +164,7 @@ function HUDNameLabel:_create_lockpick_icon()
 		texture = tweak_data.gui.icons[HUDNameLabel.LOCKPICK_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.LOCKPICK_ICON].texture_rect
 	}
+
 	self._lockpick_icon = self._object:bitmap(lockpick_icon_params)
 
 	self._lockpick_icon:set_center_x(self._object:w() / 2)
@@ -173,6 +180,7 @@ function HUDNameLabel:_create_mounted_weapon_icon()
 		texture = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture_rect
 	}
+
 	self._mounted_weapon_icon = self._object:bitmap(mounted_weapon_icon_params)
 
 	self._mounted_weapon_icon:set_center_x(self._object:w() / 2)
@@ -185,7 +193,9 @@ function HUDNameLabel:_create_timer()
 		name = "timer_panel",
 		layer = 5
 	}
+
 	self._timer_panel = self._object:panel(timer_panel_params)
+
 	local timer_background_params = {
 		name = "timer_background",
 		halign = "center",
@@ -215,6 +225,7 @@ function HUDNameLabel:_create_timer()
 		w = tweak_data.gui:icon_w(HUDNameLabel.TIMER_BAR_ICON),
 		h = tweak_data.gui:icon_h(HUDNameLabel.TIMER_BAR_ICON)
 	}
+
 	self._timer_bar = self._timer_panel:bitmap(timer_bar_params)
 
 	self._timer_bar:set_center_x(self._timer_panel:w() / 2)
@@ -233,7 +244,9 @@ function HUDNameLabel:_create_timer()
 		font = tweak_data.gui.fonts[HUDNameLabel.TIMER_FONT],
 		font_size = HUDNameLabel.TIMER_FONT_SIZE
 	}
+
 	self._timer_text = self._timer_panel:text(timer_text_params)
+
 	local _, _, _, h = self._timer_text:text_rect()
 
 	self._timer_text:set_h(h)
@@ -249,6 +262,7 @@ function HUDNameLabel:_create_interaction_progress_bar()
 		w = HUDNameLabel.INTERACTION_PANEL_W,
 		h = HUDNameLabel.INTERACTION_PANEL_H
 	}
+
 	self._interaction_panel = self._object:panel(interaction_panel_params)
 
 	self._interaction_panel:set_center_x(self._object:w() / 2)
@@ -282,6 +296,7 @@ function HUDNameLabel:_create_interaction_progress_bar()
 		layer = interaction_progress_background:layer() + 1,
 		color = tweak_data.gui.colors.teammate_interaction_bar
 	}
+
 	self._interaction_progress_fill = self._interaction_panel:bitmap(interaction_progress_fill_params)
 
 	self._interaction_progress_fill:set_center_x(self._interaction_panel:w() / 2)
@@ -428,7 +443,7 @@ function HUDNameLabel:_remove_active_state(state_id)
 end
 
 function HUDNameLabel:_check_state_change()
-	local new_state = nil
+	local new_state
 
 	for i = 1, #self._states do
 		if self._active_states[self._states[i].id] then
@@ -491,11 +506,14 @@ function HUDNameLabel:_animate_state_change(status_panel, new_state)
 	local old_state = self._displayed_state
 	local fade_out_duration = 0.15
 	local t = (1 - self._object:alpha()) * fade_out_duration
+
 	self._displayed_state = new_state
 
 	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._object:set_alpha(current_alpha)
@@ -516,11 +534,14 @@ function HUDNameLabel:_animate_state_change(status_panel, new_state)
 	self._object:child(self._displayed_state.control):set_alpha(1)
 
 	local fade_in_duration = 0.15
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._object:set_alpha(current_alpha)
@@ -546,7 +567,9 @@ function HUDNameLabel:_animate_interact(interact_image, duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 0, 1, duration)
 
 		self._interaction_progress_fill:set_position_z(current_progress)
@@ -560,9 +583,11 @@ function HUDNameLabel:_animate_cancel_interact()
 	local duration = 0.2
 	local t = (1 - self._interaction_progress_fill:position_z()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 1, -1, duration)
 
 		self._interaction_progress_fill:set_position_z(current_progress)
@@ -581,7 +606,9 @@ function HUDNameLabel:_animate_complete_interact()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 1, -1, duration)
 
 		self._interaction_progress_fill:set_position_z(current_progress)

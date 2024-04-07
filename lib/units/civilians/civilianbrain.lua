@@ -38,6 +38,7 @@ function CivilianBrain:update(unit, t, dt)
 
 	if logic.update then
 		local l_data = self._logic_data
+
 		l_data.t = t
 		l_data.dt = dt
 
@@ -88,7 +89,7 @@ function CivilianBrain:on_cool_state_changed(state)
 		self._alert_listen_key = "CopBrain" .. tostring(self._unit:key())
 	end
 
-	local alert_listen_filter, alert_types = nil
+	local alert_listen_filter, alert_types
 
 	if state then
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminals_enemies_civilians")
@@ -119,7 +120,7 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 	if command == "move" then
 		local following_hostages = managers.groupai:state():get_following_hostages(interacting_unit)
 
-		if following_hostages and tweak_data.player.max_nr_following_hostages <= table.size(following_hostages) then
+		if following_hostages and table.size(following_hostages) >= tweak_data.player.max_nr_following_hostages then
 			return
 		end
 

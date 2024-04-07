@@ -30,6 +30,7 @@ end
 
 function RaidGUIControlPeerDetails:_create_panel()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_panel"
 	panel_params.layer = self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -53,6 +54,7 @@ function RaidGUIControlPeerDetails:_create_profile_name()
 		font_size = RaidGUIControlPeerDetails.NAME_FONT_SIZE,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._profile_name = self._object:text(profile_name_params)
 end
 
@@ -63,6 +65,7 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 		texture_rect = tweak_data.gui.icons.ico_class_infiltrator.texture_rect,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._class_icon = self._object:bitmap(class_icon_params)
 
 	self._class_icon:set_center_y(self._object:h() / 2)
@@ -80,6 +83,7 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._nationality = self._object:text(nationality_params)
 
 	self._nationality:set_bottom(self._object:h())
@@ -95,6 +99,7 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_black
 	}
+
 	self._level_text = self._object:text(level_text_params)
 
 	self._level_text:set_right(self._object:w())
@@ -123,4 +128,5 @@ function RaidGUIControlPeerDetails:set_level(level)
 end
 
 function RaidGUIControlPeerDetails:close()
+	return
 end

@@ -68,7 +68,9 @@ function StaticLayer:clone(to_continent)
 		for _, unit in ipairs(clone_units) do
 			local pos = unit:position()
 			local rot = unit:rotation()
+
 			self._unit_name = unit:name():s()
+
 			local old_unit = unit
 			local new_unit = self:do_spawn_unit(self._unit_name, pos, rot, to_continent)
 
@@ -246,7 +248,7 @@ end
 
 function StaticLayer:rotate_unit(btn, pressed)
 	if self._selected_unit and not self:condition() then
-		local rot_axis = nil
+		local rot_axis
 		local snap_axis = self:snap_rotation_axis()
 
 		if self:local_rot() then
@@ -367,6 +369,7 @@ function StaticLayer:update(t, dt)
 		end
 
 		local current_pos, current_rot = managers.editor:current_orientation(self._offset_move_vec, self._selected_unit)
+
 		self._current_pos = current_pos or self._current_pos
 		self._current_rot = current_rot
 
@@ -407,7 +410,7 @@ function StaticLayer:draw_marker(t, dt)
 		return
 	end
 
-	local ray = nil
+	local ray
 
 	if alive(self._selected_unit) then
 		ray = self._selected_unit:raycast(self._current_pos + Vector3(0, 0, 2000), self._current_pos + Vector3(0, 0, -500), nil, self._slot_mask)
@@ -433,7 +436,7 @@ function StaticLayer:update_move_triggers(t, dt)
 		return
 	end
 
-	local mov_vec = nil
+	local mov_vec
 	local u_rot = self._selected_unit:rotation()
 
 	if self._ctrl:down(Idstring("move_forward")) then
@@ -466,7 +469,7 @@ function StaticLayer:update_rotate_triggers(t, dt)
 		rot_speed = rot_speed / 2
 	end
 
-	local rot_axis = nil
+	local rot_axis
 	local u_rot = self._selected_unit:rotation()
 
 	if self._ctrl:down(Idstring("roll_left")) then
@@ -534,6 +537,7 @@ function StaticLayer:build_panel(notebook, settings)
 	self._ews_panel:set_sizer(self._main_sizer)
 
 	self._sizer = EWS:BoxSizer("VERTICAL")
+
 	local static_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._sizer:add(static_sizer, 0, 0, "EXPAND")
@@ -551,6 +555,7 @@ function StaticLayer:build_panel(notebook, settings)
 end
 
 function StaticLayer:build_btn_toolbar()
+	return
 end
 
 function StaticLayer:add_btns_to_toolbar()
@@ -563,6 +568,7 @@ end
 function StaticLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
+
 	text = text .. "Create unit:        Right mouse button" .. n
 	text = text .. "Select unit:        Left mouse button" .. n
 	text = text .. "Snap rotate:        Middle mouse button or K" .. n
@@ -597,6 +603,7 @@ function StaticLayer:undo()
 			if alive(unit) then
 				local new_pos = pos_info.pos
 				local new_rot = pos_info.rot
+
 				self._redo_last_move_pos[#self._redo_last_move_pos + 1] = {
 					unit = unit,
 					pos = unit:position(),

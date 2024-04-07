@@ -14,10 +14,11 @@ function NPCSpottingOpticsWeaponBase:ejects_shells()
 end
 
 function NPCSpottingOpticsWeaponBase:fire_blank(direction, impact)
+	return
 end
 
 function NPCSpottingOpticsWeaponBase:singleshot(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
-	return
+	do return end
 
 	if not Network:is_server() then
 		return
@@ -31,7 +32,7 @@ function NPCSpottingOpticsWeaponBase:singleshot(from_pos, direction, dmg_mul, sh
 		return false
 	end
 
-	local nav_seg = nil
+	local nav_seg
 
 	if target_unit:vehicle_driving() then
 		nav_seg = managers.navigation:get_nav_seg_from_pos(target_unit:position())
@@ -61,10 +62,10 @@ local mvec_spread_direction = Vector3()
 local mvec1 = Vector3()
 
 function NPCSpottingOpticsWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
-	return
+	do return end
 
 	local result = {}
-	local hit_unit = nil
+	local hit_unit
 	local ray_distance = self._weapon_range or 20000
 
 	mvector3.set(mvec_to, target_unit:position())
@@ -91,4 +92,5 @@ function NPCSpottingOpticsWeaponBase:_fire_raycast(user_unit, from_pos, directio
 end
 
 function NPCSpottingOpticsWeaponBase:_spawn_muzzle_effect()
+	return
 end

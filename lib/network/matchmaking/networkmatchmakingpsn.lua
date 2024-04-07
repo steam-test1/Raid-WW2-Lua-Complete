@@ -123,7 +123,7 @@ function NetworkMatchMakingPSN:_worlds_fetched_cb(...)
 	managers.system_menu:close("get_world_list")
 
 	if Global.boot_invite and Global.boot_invite.pending then
-		managers.menu:open_sign_in_menu(function (success)
+		managers.menu:open_sign_in_menu(function(success)
 			if not success then
 				return
 			end
@@ -133,7 +133,7 @@ function NetworkMatchMakingPSN:_worlds_fetched_cb(...)
 	end
 
 	if Global.boot_play_together and Global.boot_play_together.pending then
-		managers.menu:open_sign_in_menu(function (success)
+		managers.menu:open_sign_in_menu(function(success)
 			if not success then
 				return
 			end
@@ -201,6 +201,7 @@ function NetworkMatchMakingPSN:find_game(settings)
 	self._private = false
 	self._cancelled = false
 	self._TRY_TIME_INC = 10
+
 	local world_list = PSN:get_world_list()
 
 	if Global.psn_invite_id then
@@ -223,14 +224,15 @@ function NetworkMatchMakingPSN:find_game(settings)
 
 	local table_description = {}
 	local attributes = {}
-	local gt = {
-		type = "GAME_NUM",
-		value = self:_translate_settings(settings, "game_mode")
-	}
-	local priv = {
-		type = "GAME_NUM",
-		value = 1
-	}
+	local gt = {}
+
+	gt.type = "GAME_NUM"
+	gt.value = self:_translate_settings(settings, "game_mode")
+
+	local priv = {}
+
+	priv.type = "GAME_NUM"
+	priv.value = 1
 	attributes[1] = gt
 	attributes[2] = priv
 	table_description.attributes = attributes
@@ -282,10 +284,8 @@ function NetworkMatchMakingPSN:cancel_find()
 end
 
 function NetworkMatchMakingPSN:remove_ping_watch()
-	if self:_is_client() then
-		if self._server_rpc then
-			-- Nothing
-		end
+	if self:_is_client() and (not self._server_rpc or true) then
+		-- Nothing
 	else
 		for k, v in pairs(self._players) do
 			if v.rpc then
@@ -308,6 +308,7 @@ function NetworkMatchMakingPSN:leave_game()
 
 	self.lobby_handler = nil
 	self._server_joinable = true
+
 	local sent = false
 
 	self:remove_ping_watch()
@@ -339,9 +340,10 @@ end
 function NetworkMatchMakingPSN:join_game(id, private)
 	self._cancelled = false
 	self._private = private or false
-	local room = {
-		room_id = PSN:convert_string_to_sessionid(id)
-	}
+
+	local room = {}
+
+	room.room_id = PSN:convert_string_to_sessionid(id)
 	self._TRY_TIME_INC = 30
 
 	self:_join_server(room)
@@ -352,6 +354,7 @@ function NetworkMatchMakingPSN:start_game()
 end
 
 function NetworkMatchMakingPSN:end_game()
+	return
 end
 
 function NetworkMatchMakingPSN:destroy_game()
@@ -507,12 +510,13 @@ function NetworkMatchMakingPSN:update(time)
 		end
 	end
 
-	if self._trytime and self._trytime < TimerManager:wall():time() then
+	if self._trytime and TimerManager:wall():time() > self._trytime then
 		self._trytime = nil
 
 		print("self._trytime run out!", inspect(self))
 
 		local is_server = self._is_server_var
+
 		self._is_server_var = false
 		self._is_client_var = false
 
@@ -542,7 +546,7 @@ function NetworkMatchMakingPSN:update(time)
 		end
 	end
 
-	if self._leave_time and self._leave_time < TimerManager:wall():time() then
+	if self._leave_time and TimerManager:wall():time() > self._leave_time then
 		local closed = false
 
 		if self._room_id then
@@ -586,7 +590,7 @@ function NetworkMatchMakingPSN:update(time)
 		end
 	end
 
-	if self._leaving_timer and self._leaving_timer < TimerManager:wall():time() then
+	if self._leaving_timer and TimerManager:wall():time() > self._leaving_timer then
 		print("self._leaving_timer left_game")
 		managers.system_menu:close("leaving_game")
 
@@ -596,7 +600,7 @@ function NetworkMatchMakingPSN:update(time)
 		self:_call_callback("left_game")
 	end
 
-	if self._cancel_time and self._cancel_time < TimerManager:wall():time() then
+	if self._cancel_time and TimerManager:wall():time() > self._cancel_time then
 		self._cancel_time = nil
 		self._join_cb_room = nil
 
@@ -642,19 +646,18 @@ function NetworkMatchMakingPSN:_save_globals()
 		Global.psn = {}
 	end
 
-	Global.psn.match = {
-		_game_owner_id = self._game_owner_id,
-		_room_id = self._room_id,
-		_is_server = self._is_server_var,
-		_is_client = self._is_client_var,
-		_players = self._players,
-		_server_ip = self._server_rpc and self._server_rpc:ip_at_index(0),
-		_attributes_numbers = self._attributes_numbers,
-		_connection_info = self._connection_info,
-		_hidden = self._hidden,
-		_num_players = self._num_players,
-		lobby_filters = self._lobby_filters
-	}
+	Global.psn.match = {}
+	Global.psn.match._game_owner_id = self._game_owner_id
+	Global.psn.match._room_id = self._room_id
+	Global.psn.match._is_server = self._is_server_var
+	Global.psn.match._is_client = self._is_client_var
+	Global.psn.match._players = self._players
+	Global.psn.match._server_ip = self._server_rpc and self._server_rpc:ip_at_index(0)
+	Global.psn.match._attributes_numbers = self._attributes_numbers
+	Global.psn.match._connection_info = self._connection_info
+	Global.psn.match._hidden = self._hidden
+	Global.psn.match._num_players = self._num_players
+	Global.psn.match.lobby_filters = self._lobby_filters
 end
 
 function NetworkMatchMakingPSN:_call_callback(name, ...)
@@ -667,6 +670,7 @@ end
 
 function NetworkMatchMakingPSN:_clear_psn_callback(cb)
 	local function f()
+		return
 	end
 
 	PSN:set_matchmaking_callback(cb, f)
@@ -681,7 +685,9 @@ function NetworkMatchMakingPSN:psn_member_joined(info)
 			managers.network.voice_chat:open_session(self._room_id)
 		end
 
-		if info.user_id ~= managers.network.account:player_id() then
+		if info.user_id == managers.network.account:player_id() then
+			-- Nothing
+		else
 			local time_left = 10
 		end
 	end
@@ -767,6 +773,7 @@ end
 
 function NetworkMatchMakingPSN:check_peer_join_request_remove(user_id)
 	local has = self._peer_join_request_remove[user_id]
+
 	self._peer_join_request_remove[user_id] = nil
 
 	return has
@@ -800,12 +807,13 @@ function NetworkMatchMakingPSN:create_lobby(settings, return_to_camp_client)
 	end
 
 	self._num_players = nil
-	local dialog_data = {
-		title = managers.localization:text("dialog_creating_lobby_title"),
-		text = managers.localization:text("dialog_wait"),
-		id = "create_lobby",
-		no_buttons = true
-	}
+
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_creating_lobby_title")
+	dialog_data.text = managers.localization:text("dialog_wait")
+	dialog_data.id = "create_lobby"
+	dialog_data.no_buttons = true
 
 	managers.system_menu:show(dialog_data)
 
@@ -880,12 +888,12 @@ function NetworkMatchMakingPSN:_created_lobby(room_id)
 
 	managers.network.voice_chat:open_session(self._room_id)
 
-	local playerinfo = {
-		name = managers.network.account:username(),
-		player_id = managers.network.account:player_id(),
-		group_id = tostring(managers.network.group:room_id()),
-		rpc = Network:self("TCP_IP")
-	}
+	local playerinfo = {}
+
+	playerinfo.name = managers.network.account:username()
+	playerinfo.player_id = managers.network.account:player_id()
+	playerinfo.group_id = tostring(managers.network.group:room_id())
+	playerinfo.rpc = Network:self("TCP_IP")
 
 	self:_call_callback("found_game", self._room_id, true)
 	self:_call_callback("player_joined", playerinfo)
@@ -933,10 +941,10 @@ function NetworkMatchMakingPSN:get_lobby_filter(key)
 end
 
 function NetworkMatchMakingPSN:_filter_out_the_host(info)
-	local new_info = {
-		attribute_list = {},
-		room_list = {}
-	}
+	local new_info = {}
+
+	new_info.attribute_list = {}
+	new_info.room_list = {}
 
 	for i, room_info in ipairs(info.room_list) do
 		local numbers = info.attribute_list[i].numbers
@@ -991,11 +999,12 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 	else
 		local function f(results, ...)
 			local room_ids = {}
-			local info = {
-				attribute_list = {},
-				request_id = 0,
-				room_list = {}
-			}
+			local info = {}
+
+			info.attribute_list = {}
+			info.request_id = 0
+			info.room_list = {}
+
 			local reverse_lookup = {}
 
 			for i_user, user_info in ipairs(results.users) do
@@ -1005,17 +1014,18 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 					table.insert(room_ids, room_id)
 
 					local friend_id = user_info.user_id
+
 					reverse_lookup[tostring(room_id)] = friend_id
 				end
 			end
 
 			local function f2(results)
 				if results.rooms then
-					local info = {
-						attribute_list = {},
-						request_id = 0,
-						room_list = {}
-					}
+					local info = {}
+
+					info.attribute_list = {}
+					info.request_id = 0
+					info.room_list = {}
 
 					table.insert(self._lobbys_info_list, info)
 
@@ -1080,6 +1090,7 @@ end
 
 function NetworkMatchMakingPSN:search_lobby(friends_only)
 	self._search_friends_only = friends_only
+
 	local table_description = {
 		numbers = {
 			1,
@@ -1231,6 +1242,7 @@ function NetworkMatchMakingPSN:get_all_players_info()
 				local peer_class = managers.network:session():all_peers()[peer_id]:blackmarket_outfit().skills or "-"
 				local peer_name = peer_data:name() or ""
 				local peer_nationality = peer_data:nationality() or ""
+
 				players_data = players_data .. peer_level .. "," .. peer_class .. "," .. peer_name .. "," .. peer_nationality .. ";"
 			else
 				players_data = players_data .. "-,-,-,-;"
@@ -1279,6 +1291,7 @@ function NetworkMatchMakingPSN:add_player_info(peer_id)
 					local peer_data = managers.network:session():all_peers()[peer_id]
 					local peer_level = managers.network:session():all_peers()[peer_id]:level()
 					local peer_class = "-"
+
 					players_info = players_info .. peer_class .. "," .. peer_level .. ";"
 				else
 					players_info = players_info .. "-,-;"
@@ -1306,6 +1319,7 @@ function NetworkMatchMakingPSN:_set_attributes(settings)
 	end
 
 	self._attributes_numbers = settings and settings.numbers or self._attributes_numbers
+
 	local numbers = self._attributes_numbers
 	local S1 = ""
 
@@ -1406,6 +1420,7 @@ function NetworkMatchMakingPSN:set_server_state(state)
 	end
 
 	local state_id = tweak_data:server_state_to_index(state)
+
 	self._attributes_numbers[self.STATE_ID] = state_id
 
 	self:_set_attributes({
@@ -1529,7 +1544,7 @@ function NetworkMatchMakingPSN:_play_together_host_event_receive_cb(message)
 		return
 	end
 
-	managers.menu:open_sign_in_menu(function (success)
+	managers.menu:open_sign_in_menu(function(success)
 		if not success then
 			return
 		end
@@ -1587,7 +1602,7 @@ function NetworkMatchMakingPSN:_invitation_received_result_cb(message)
 		return
 	end
 
-	managers.menu:open_sign_in_menu(function (success)
+	managers.menu:open_sign_in_menu(function(success)
 		if not success then
 			return
 		end
@@ -1680,6 +1695,7 @@ function NetworkMatchMakingPSN:send_boot_play_together()
 
 	Global.boot_play_together.used = true
 	Global.boot_play_together.pending = false
+
 	local message = Global.boot_play_together
 
 	if not message then
@@ -1748,6 +1764,7 @@ function NetworkMatchMakingPSN:_create_server(private)
 	Application:debug("[NetworkGroupLobbyPSN:_create_server] private", private)
 
 	local world_list = PSN:get_world_list()
+
 	self._server_rpc = nil
 	self._players = {}
 
@@ -1759,13 +1776,14 @@ function NetworkMatchMakingPSN:_create_server(private)
 
 	local table_description = {}
 	local attributes = {}
-	local gt = {
-		type = "GAME_NUM",
-		value = self:_translate_settings(self._last_settings, "game_mode")
-	}
-	local priv = {
-		type = "GAME_NUM"
-	}
+	local gt = {}
+
+	gt.type = "GAME_NUM"
+	gt.value = self:_translate_settings(self._last_settings, "game_mode")
+
+	local priv = {}
+
+	priv.type = "GAME_NUM"
 
 	if private and private == true then
 		priv.value = 2
@@ -1789,12 +1807,13 @@ function NetworkMatchMakingPSN:_create_server_cb(roomid)
 	self:_is_client(false)
 
 	self._room_id = roomid
-	local playerinfo = {
-		name = managers.network.account:username(),
-		player_id = managers.network.account:player_id(),
-		group_id = tostring(managers.network.group:room_id()),
-		rpc = Network:self("TCP_IP")
-	}
+
+	local playerinfo = {}
+
+	playerinfo.name = managers.network.account:username()
+	playerinfo.player_id = managers.network.account:player_id()
+	playerinfo.group_id = tostring(managers.network.group:room_id())
+	playerinfo.rpc = Network:self("TCP_IP")
 
 	self:_call_callback("found_game", self._room_id, true)
 	self:_call_callback("player_joined", playerinfo)
@@ -1895,7 +1914,8 @@ function NetworkMatchMakingPSN:join_server_with_check(room_id, skip_permission_c
 	self._checking_server_attributes = true
 
 	local function f(results)
-		PSN:set_matchmaking_callback("fetch_session_attributes", function ()
+		PSN:set_matchmaking_callback("fetch_session_attributes", function()
+			return
 		end)
 		print("\nKrishna: fetch_session_attributes callback result => join_server() \n", inspect(results))
 
@@ -1990,11 +2010,11 @@ end
 
 function NetworkMatchMakingPSN:_update_session_attributes_result(results)
 	local info_list = {}
-	local info = {
-		attribute_list = {},
-		request_id = 0,
-		room_list = {}
-	}
+	local info = {}
+
+	info.attribute_list = {}
+	info.request_id = 0
+	info.room_list = {}
 
 	table.insert(info_list, info)
 
@@ -2026,9 +2046,9 @@ function NetworkMatchMakingPSN:_update_session_attributes_result(results)
 end
 
 function NetworkMatchMakingPSN:join_server(room_id)
-	local room = {
-		room_id = room_id
-	}
+	local room = {}
+
+	room.room_id = room_id
 
 	self:_join_server(room)
 end
@@ -2115,7 +2135,7 @@ function NetworkMatchMakingPSN:on_peer_removed(peer)
 end
 
 function NetworkMatchMakingPSN:_joined_game(res, level_index, difficulty_index, state_index)
-	if res ~= "FAILED_CONNECT" or managers.network.matchmake._server_connect_retried and NetworkMatchMaking.RETRY_CONNECT_COUNT <= managers.network.matchmake._server_connect_retried then
+	if res ~= "FAILED_CONNECT" or managers.network.matchmake._server_connect_retried and managers.network.matchmake._server_connect_retried >= NetworkMatchMaking.RETRY_CONNECT_COUNT then
 		managers.system_menu:close("waiting_for_server_response")
 
 		managers.network.matchmake._retry_join_time = nil
@@ -2138,6 +2158,7 @@ function NetworkMatchMakingPSN:_joined_game(res, level_index, difficulty_index, 
 		})
 
 		local level_id = tweak_data.levels:get_level_name_from_index(level_index)
+
 		Global.game_settings.level_id = level_id
 
 		PSN:leave_user_created_session()
@@ -2252,7 +2273,7 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 
 		managers.network.voice_chat:open_session(self._room_id)
 		managers.menu:show_waiting_for_server_response({
-			cancel_func = function ()
+			cancel_func = function()
 				managers.network.matchmake._retry_join_time = nil
 				managers.network.matchmake._retry_join_flag = false
 
@@ -2386,13 +2407,14 @@ function NetworkMatchMakingPSN:_error_message_solver(info)
 	}
 	local text_id = error_texts[info.error]
 	local title = managers.localization:text("dialog_error_title")
-	local dialog_data = {
-		title = title,
-		text = text_id and managers.localization:text(text_id) or managers.localization:text("system_msg_network_error") .. "\n[ " .. info.error .. " ]"
-	}
-	local ok_button = {
-		text = managers.localization:text("dialog_ok")
-	}
+	local dialog_data = {}
+
+	dialog_data.title = title
+	dialog_data.text = text_id and managers.localization:text(text_id) or managers.localization:text("system_msg_network_error") .. "\n[ " .. info.error .. " ]"
+
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
 	dialog_data.button_list = {
 		ok_button
 	}
@@ -2452,23 +2474,27 @@ function NetworkMatchMakingPSN:_recived_join_invite(message)
 
 	print("_recived_join_invite")
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_mp_groupinvite_title"),
-		text = managers.localization:text("dialog_mp_groupinvite_message", {
-			GROUP = tostring(message.sender)
-		})
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_join_invite_accepted", message.room_id)
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = function ()
-			self._has_pending_invite = nil
-		end,
-		class = RaidGUIControlButtonShortSecondary
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_mp_groupinvite_title")
+	dialog_data.text = managers.localization:text("dialog_mp_groupinvite_message", {
+		GROUP = tostring(message.sender)
+	})
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_join_invite_accepted", message.room_id)
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+
+	function no_button.callback_func()
+		self._has_pending_invite = nil
+	end
+
+	no_button.class = RaidGUIControlButtonShortSecondary
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -2530,6 +2556,7 @@ function NetworkMatchMakingPSN:_set_room_hidden(set)
 end
 
 function NetworkMatchMakingPSN:_server_timed_out(rpc)
+	return
 end
 
 function NetworkMatchMakingPSN:_client_timed_out(rpc)

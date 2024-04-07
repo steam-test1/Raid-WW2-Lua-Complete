@@ -2,6 +2,7 @@ HUDObjectiveBase = HUDObjectiveBase or class()
 HUDObjectiveBase.OFFSET_WHILE_HIDDEN = 20
 
 function HUDObjectiveBase:init()
+	return
 end
 
 function HUDObjectiveBase:x()
@@ -33,6 +34,7 @@ function HUDObjectiveBase:id()
 end
 
 function HUDObjectiveBase:complete()
+	return
 end
 
 function HUDObjectiveBase:animate_show(delay)
@@ -71,7 +73,9 @@ function HUDObjectiveBase:_animate_show(panel, delay)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -97,7 +101,9 @@ function HUDObjectiveBase:_animate_hide(panel, delay)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in(t, 1, -1, duration)
 
 		self._object:set_alpha(current_alpha)

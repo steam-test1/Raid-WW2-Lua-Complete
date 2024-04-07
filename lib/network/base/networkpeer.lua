@@ -1,5 +1,6 @@
 local ids_unit = Idstring("unit")
 local ids_NORMAL = Idstring("NORMAL")
+
 NetworkPeer = NetworkPeer or class()
 NetworkPeer.PRE_HANDSHAKE_CHK_TIME = 8
 NetworkPeer.CHEAT_CHECKS_DISABLED = true
@@ -10,7 +11,8 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	self._id = id
 	self._user_id = user_id
 	self._xuid = ""
-	local is_local_peer = nil
+
+	local is_local_peer
 
 	if self._rpc then
 		if self._rpc:ip_at_index(0) == Network:self("TCP_IP"):ip_at_index(0) then
@@ -183,7 +185,9 @@ function NetworkPeer:begin_ticket_session(ticket)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		self._ticket_wait_response = true
 		self._begin_ticket_session_called = true
+
 		local result = Steam:begin_ticket_session(self._user_id, ticket, callback(self, self, "on_verify_ticket"))
+
 		self._begin_ticket_session_called = nil
 
 		return result
@@ -354,13 +358,14 @@ function NetworkPeer:_verify_content(item_type, item_id)
 		return true
 	end
 
-	local dlc_item, dlc_list, item_data = nil
+	local dlc_item, dlc_list, item_data
 
 	if item_type == "weapon" then
 		item_data = tweak_data.weapon[item_id]
 		dlc_item = item_data and item_data.global_value
 	else
 		local item = tweak_data.blackmarket[item_type]
+
 		item_data = item and item[item_id]
 
 		if item_data.unatainable then
@@ -432,7 +437,7 @@ function NetworkPeer:verify_deployable(id)
 			self._deployable[id] = 1
 
 			return true
-		elseif self._deployable[id] and self._deployable[id] < max_amount then
+		elseif self._deployable[id] and max_amount > self._deployable[id] then
 			self._deployable[id] = self._deployable[id] + 1
 
 			return true
@@ -868,7 +873,7 @@ function NetworkPeer:_send_queued(queue_name, func_name, ...)
 		local overwrite_data = self._overwriteable_msgs[func_name]
 
 		if overwrite_data then
-			overwrite_data:clbk(self._overwriteable_queue, func_name, ...)
+			overwrite_data.clbk(overwrite_data, self._overwriteable_queue, func_name, ...)
 
 			return
 		end
@@ -960,7 +965,7 @@ function NetworkPeer:_clean_queue()
 	end
 
 	for type, msg_queue in pairs(self._msg_queues) do
-		local ok = nil
+		local ok
 
 		for i, msg in ipairs(msg_queue) do
 			ok = true
@@ -998,7 +1003,8 @@ function NetworkPeer:_flush_queue(queue_name)
 	end
 
 	self._msg_queues[queue_name] = nil
-	local ok = nil
+
+	local ok
 
 	for i, msg in ipairs(msg_queue) do
 		ok = true
@@ -1057,7 +1063,7 @@ end
 function NetworkPeer:pre_handshake_chk_timeout()
 	local wall_t = TimerManager:wall():time()
 
-	if self._default_timeout_check_reset and self._default_timeout_check_reset < wall_t then
+	if self._default_timeout_check_reset and wall_t > self._default_timeout_check_reset then
 		self._default_timeout_check_reset = nil
 		self.chk_timeout = nil
 	end
@@ -1129,7 +1135,7 @@ function NetworkPeer:flush_overwriteable_msgs()
 	end
 
 	for msg_name, data in pairs(self._overwriteable_msgs) do
-		data:clbk()
+		data.clbk(data)
 	end
 
 	for msg_name, rpc_params in pairs(overwriteable_queue) do
@@ -1230,6 +1236,7 @@ function NetworkPeer:set_outfit_string(outfit_string, outfit_version, outfit_sig
 	print("[NetworkPeer:set_outfit_string] ID", self._id, outfit_string, outfit_version)
 
 	local old_outfit_string = self._profile.outfit_string
+
 	self._profile.outfit_string = outfit_string
 
 	if not self._ticket_wait_response then
@@ -1462,6 +1469,7 @@ function NetworkPeer:_reload_outfit()
 	end
 
 	self._loading_outfit_assets = true
+
 	local is_local_peer = self == managers.network:session():local_peer()
 	local new_outfit_assets = {
 		unit = {},
@@ -1476,11 +1484,14 @@ function NetworkPeer:_reload_outfit()
 	local complete_outfit = self:blackmarket_outfit()
 	local factory_id = complete_outfit.primary.factory_id .. (is_local_peer and "" or "_npc")
 	local ids_primary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
+
 	new_outfit_assets.unit.primary_w = {
 		name = ids_primary_u_name
 	}
+
 	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
-	local primary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.primary.factory_id, complete_outfit.primary.blueprint, not use_fps_parts, function ()
+	local primary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.primary.factory_id, complete_outfit.primary.blueprint, not use_fps_parts, function()
+		return
 	end, true)
 
 	for part_id, part in pairs(primary_w_parts) do
@@ -1491,11 +1502,14 @@ function NetworkPeer:_reload_outfit()
 
 	local factory_id = complete_outfit.secondary.factory_id .. (is_local_peer and "" or "_npc")
 	local ids_secondary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
+
 	new_outfit_assets.unit.secondary_w = {
 		name = ids_secondary_u_name
 	}
+
 	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
-	local secondary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.secondary.factory_id, complete_outfit.secondary.blueprint, not use_fps_parts, function ()
+	local secondary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.secondary.factory_id, complete_outfit.secondary.blueprint, not use_fps_parts, function()
+		return
 	end, true)
 
 	for part_id, part in pairs(secondary_w_parts) do
@@ -1736,6 +1750,7 @@ function NetworkPeer:_spawn_unit_on_dropin()
 
 	if not pos_rot then
 		local spawn_point = managers.network:session():get_next_spawn_point() or managers.network:spawn_point(1)
+
 		pos_rot = spawn_point.pos_rot
 	end
 
@@ -1766,7 +1781,7 @@ function NetworkPeer:_spawn_unit_on_dropin()
 
 	local spawn_in_custody = (member_downed or member_dead) and (trade_entry or ai_is_downed or not trade_entry and not has_old_unit)
 	local is_local_peer = self._id == managers.network:session():local_peer():id()
-	local unit = nil
+	local unit
 	local unit_name = Idstring(tweak_data.blackmarket.characters[self:character_id()].fps_unit)
 
 	if is_local_peer then
@@ -1821,7 +1836,7 @@ function NetworkPeer:_spawn_unit_on_respawn(spawn_point_id, state_transition)
 	local pos_rot = managers.network:spawn_point(spawn_point_id).pos_rot
 	local character_name = self:character()
 	local is_local_peer = self._id == managers.network:session():local_peer():id()
-	local unit = nil
+	local unit
 	local unit_name = Idstring(tweak_data.blackmarket.characters[self:character_id()].fps_unit)
 
 	if is_local_peer then
@@ -1865,14 +1880,14 @@ end
 function NetworkPeer:_get_old_entry(null_old_entry_elements)
 	local peer_ident = _G.IS_PC and self:user_id() or self:name()
 	local old_plr_entry = managers.network:session()._old_players[peer_ident]
-	local member_downed = nil
+	local member_downed
 	local health = 1
 	local used_deployable = false
 	local used_cable_ties = 0
 	local used_body_bags = 0
-	local member_dead, hostages_killed, respawn_penalty = nil
+	local member_dead, hostages_killed, respawn_penalty
 
-	if old_plr_entry and Application:time() < old_plr_entry.t + 180 then
+	if old_plr_entry and old_plr_entry.t + 180 > Application:time() then
 		member_downed = old_plr_entry.member_downed
 		health = old_plr_entry.health
 		used_deployable = old_plr_entry.used_deployable

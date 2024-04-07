@@ -39,15 +39,9 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	local flush_gpu_command_queue = managers.user:get_setting("flush_gpu_command_queue")
 	local vsync = RenderSettings.v_sync
 	local buffer_count = RenderSettings.buffer_count
-	local vsync_value = nil
+	local vsync_value
 
-	if not vsync then
-		vsync_value = "OFF"
-	elseif buffer_count == 1 then
-		vsync_value = "DOUBLE_BUFFER"
-	else
-		vsync_value = "TRIPLE_BUFFER"
-	end
+	vsync_value = not vsync and "OFF" or buffer_count == 1 and "DOUBLE_BUFFER" or "TRIPLE_BUFFER"
 
 	local fov_multiplier = managers.user:get_setting("fov_multiplier")
 	local detail_distance = managers.user:get_setting("detail_distance")
@@ -105,7 +99,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			down = "toggle_menu_toggle_parallax"
 		}
 	}
+
 	self._toggle_menu_toggle_ssao = self._root_panel:toggle_button(toggle_menu_toggle_ssao_params)
+
 	local toggle_menu_toggle_parallax_params = {
 		name = "toggle_menu_toggle_parallax",
 		x = start_x,
@@ -118,7 +114,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "toggle_menu_toggle_ssao"
 		}
 	}
+
 	self._toggle_menu_toggle_parallax = self._root_panel:toggle_button(toggle_menu_toggle_parallax_params)
+
 	local toggle_menu_toggle_motion_blur_params = {
 		name = "toggle_menu_toggle_motion_blur",
 		x = start_x,
@@ -131,7 +129,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "toggle_menu_toggle_parallax"
 		}
 	}
+
 	self._toggle_menu_toggle_motion_blur = self._root_panel:toggle_button(toggle_menu_toggle_motion_blur_params)
+
 	local toggle_menu_toggle_dof_params = {
 		name = "toggle_menu_toggle_dof",
 		x = start_x,
@@ -144,7 +144,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "toggle_menu_toggle_motion_blur"
 		}
 	}
+
 	self._toggle_menu_toggle_dof = self._root_panel:toggle_button(toggle_menu_toggle_dof_params)
+
 	local toggle_menu_toggle_volumetric_light_scattering_params = {
 		name = "toggle_menu_toggle_volumetric_light_scattering",
 		x = start_x,
@@ -157,7 +159,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "toggle_menu_toggle_motion_blur"
 		}
 	}
+
 	self._toggle_menu_toggle_volumetric_light_scattering = self._root_panel:toggle_button(toggle_menu_toggle_volumetric_light_scattering_params)
+
 	local toggle_menu_toggle_gpu_flush_params = {
 		name = "toggle_menu_toggle_gpu_flush",
 		x = start_x,
@@ -170,7 +174,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "toggle_menu_toggle_volumetric_light_scattering"
 		}
 	}
+
 	self._toggle_menu_toggle_gpu_flush = self._root_panel:toggle_button(toggle_menu_toggle_gpu_flush_params)
+
 	local progress_bar_menu_fov_adjustment_params = {
 		name = "progress_bar_menu_fov_adjustment",
 		description = utf8.to_upper(managers.localization:text("menu_fov_adjustment")),
@@ -184,7 +190,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "toggle_menu_toggle_gpu_flush"
 		}
 	}
+
 	self._progress_bar_menu_fov_adjustment = self._root_panel:slider(progress_bar_menu_fov_adjustment_params)
+
 	local progress_bar_menu_detail_distance_params = {
 		name = "progress_bar_menu_detail_distance",
 		value_format = "%02d%%",
@@ -197,8 +205,10 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "progress_bar_menu_fov_adjustment"
 		}
 	}
+
 	self._progress_bar_menu_detail_distance = self._root_panel:slider(progress_bar_menu_detail_distance_params)
 	start_x = 704
+
 	local stepper_menu_antialias_params = {
 		name = "stepper_menu_antialias",
 		x = start_x,
@@ -212,7 +222,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "progress_bar_menu_detail_distance"
 		}
 	}
+
 	self._stepper_menu_antialias = self._root_panel:stepper(stepper_menu_antialias_params)
+
 	local stepper_menu_texture_quality_params = {
 		name = "stepper_menu_texture_quality",
 		x = start_x,
@@ -226,7 +238,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "stepper_menu_antialias"
 		}
 	}
+
 	self._stepper_menu_texture_quality = self._root_panel:stepper(stepper_menu_texture_quality_params)
+
 	local stepper_menu_shadow_quality_params = {
 		name = "stepper_menu_shadow_quality",
 		x = start_x,
@@ -240,7 +254,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "stepper_menu_texture_quality"
 		}
 	}
+
 	self._stepper_menu_shadow_quality = self._root_panel:stepper(stepper_menu_shadow_quality_params)
+
 	local stepper_menu_anisotropic_params = {
 		name = "stepper_menu_anisotropic",
 		x = start_x,
@@ -254,7 +270,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "stepper_menu_shadow_quality"
 		}
 	}
+
 	self._stepper_menu_anisotropic = self._root_panel:stepper(stepper_menu_anisotropic_params)
+
 	local stepper_menu_anim_lod_params = {
 		name = "stepper_menu_anim_lod",
 		x = start_x,
@@ -268,7 +286,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "stepper_menu_anisotropic"
 		}
 	}
+
 	self._stepper_menu_anim_lod = self._root_panel:stepper(stepper_menu_anim_lod_params)
+
 	local stepper_menu_fps_limit_params = {
 		name = "stepper_menu_fps_limit",
 		x = start_x,
@@ -282,7 +302,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "stepper_menu_anim_lod"
 		}
 	}
+
 	self._stepper_menu_fps_limit = self._root_panel:stepper(stepper_menu_fps_limit_params)
+
 	local stepper_menu_colorblind_setting_params = {
 		name = "stepper_menu_colorblind_setting",
 		x = start_x,
@@ -296,7 +318,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "stepper_menu_fps_limit"
 		}
 	}
+
 	self._stepper_menu_colorblind_setting = self._root_panel:stepper(stepper_menu_colorblind_setting_params)
+
 	local _stepper_menu_toggle_vsync_params = {
 		name = "label_menu_vsync",
 		x = start_x,
@@ -309,7 +333,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 			up = "stepper_menu_colorblind_setting"
 		}
 	}
+
 	self._stepper_menu_toggle_vsync = self._root_panel:stepper(_stepper_menu_toggle_vsync_params)
+
 	local default_advanced_video_params = {
 		name = "default_advanced_video",
 		y = 832,
@@ -318,6 +344,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_default_advanced_video"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
 	}
+
 	self._default_advanced_video_button = self._root_panel:long_secondary_button(default_advanced_video_params)
 
 	if managers.raid_menu:is_pc_controller() then
@@ -365,6 +392,7 @@ end
 
 function RaidMenuOptionsVideoAdvanced:on_value_change_fov_adjustment()
 	local fov_multiplier = self._progress_bar_menu_fov_adjustment:get_value() / 100
+
 	fov_multiplier = fov_multiplier * (tweak_data.player.fov_multiplier.MAX - 1) + 1
 
 	managers.menu:active_menu().callback_handler:set_fov_multiplier_raid(fov_multiplier)
@@ -730,7 +758,7 @@ function RaidMenuOptionsVideoAdvanced:on_click_default_advanced_video()
 	local params = {
 		title = managers.localization:text("dialog_reset_advanced_video_title"),
 		message = managers.localization:text("dialog_reset_advanced_video_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_advanced_video_setting_map()
 
 			RenderSettings.texture_quality_default = "high"

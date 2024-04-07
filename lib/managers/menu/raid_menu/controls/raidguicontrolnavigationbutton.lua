@@ -30,6 +30,7 @@ function RaidGUIControlNavigationButton:init(parent, params)
 	params.icon_texture_rect = params.icon.texture_rect
 	params.text = params.text
 	self._on_click_callback = params.on_click_callback
+
 	local icon_coord_x = 0
 	local text_coord_x = 0
 
@@ -65,6 +66,7 @@ function RaidGUIControlNavigationButton:init(parent, params)
 		text = params.text,
 		layer = self._object:layer() - 1
 	})
+
 	local x, y, w, h = self._text:text_rect()
 
 	self._text:set_w(w)

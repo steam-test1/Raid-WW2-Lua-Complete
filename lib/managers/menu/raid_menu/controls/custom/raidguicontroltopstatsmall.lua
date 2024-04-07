@@ -24,10 +24,12 @@ function RaidGUIControlTopStatSmall:init(parent, params)
 end
 
 function RaidGUIControlTopStatSmall:close()
+	return
 end
 
 function RaidGUIControlTopStatSmall:_create_panel()
 	local control_params = clone(self._params)
+
 	control_params.w = RaidGUIControlTopStatSmall.WIDTH
 	control_params.h = RaidGUIControlTopStatSmall.HEIGHT
 	control_params.name = control_params.name .. "_top_stat_small_panel"
@@ -51,7 +53,9 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 		font_size = RaidGUIControlTopStatSmall.PLAYER_NAME_FONT_SIZE,
 		color = RaidGUIControlTopStatSmall.PLAYER_NAME_COLOR
 	}
+
 	self._player_name_label = self._object:label(player_name_params)
+
 	local stat_name_params = {
 		vertical = "center",
 		wrap = true,
@@ -66,6 +70,7 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 		font_size = RaidGUIControlTopStatSmall.STAT_NAME_FONT_SIZE,
 		color = RaidGUIControlTopStatSmall.STAT_NAME_COLOR
 	}
+
 	self._stat_name_label = self._object:label(stat_name_params)
 
 	self._stat_name_label:set_y(self._player_name_label:y() + self._player_name_label:h())
@@ -82,5 +87,6 @@ function RaidGUIControlTopStatSmall:set_data(data)
 		texture = tweak_data.gui.icons[data.icon].texture,
 		texture_rect = tweak_data.gui.icons[data.icon].texture_rect
 	}
+
 	self._stat_icon = self._object:bitmap(icon_params)
 end

@@ -1,4 +1,4 @@
-local selected_setup = nil
+local selected_setup
 
 if Global.load_level then
 	selected_setup = require("lib/setups/NetworkGameSetup")

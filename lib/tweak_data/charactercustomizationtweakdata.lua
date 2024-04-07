@@ -45,9 +45,8 @@ function CharacterCustomizationTweakData:init()
 end
 
 function CharacterCustomizationTweakData:initialization()
-	self.customizations = {
-		american_default_head = {}
-	}
+	self.customizations = {}
+	self.customizations.american_default_head = {}
 	self.customizations.american_default_head.name = "character_customization_american_default_name_head"
 	self.customizations.american_default_head.description = "character_customization_american_default_desc_head"
 	self.customizations.american_default_head.part_type = CharacterCustomizationTweakData.PART_TYPE_HEAD
@@ -59,1712 +58,1601 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_default_head.redeem_xp = 0
 	self.customizations.american_default_head.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.american_default_head.default_clothing = true
-	self.customizations.american_default_upper = {
-		name = "character_customization_american_default_name_upper",
-		description = "character_customization_american_default_desc_upper",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/tanker_001/npc_criminal_usa_tanker_001_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/tanker_001/player_usa_tanker_001_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/tanker_001/player_usa_tanker_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		default_clothing = true
-	}
-	self.customizations.american_default_lower = {
-		name = "character_customization_american_default_name_lower",
-		description = "character_customization_american_default_desc_lower",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/tanker_001/npc_criminal_usa_tanker_001_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/tanker_001/npc_criminal_usa_tanker_001_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/tanker_001/player_usa_tanker_001_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		default_clothing = true
-	}
-	self.customizations.german_default_head = {
-		name = "character_customization_german_default_name_head",
-		description = "character_customization_german_default_desc_head",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_HEAD,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/head/player_german_head_002/player_german_head_002",
-		path_icon = "ui/temp/customization_temp_df",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		default_clothing = true
-	}
-	self.customizations.german_default_upper = {
-		name = "character_customization_german_default_name_upper",
-		description = "character_customization_german_default_desc_upper",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/default_002/player_german_default_002_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/default_002/player_german_default_002_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/default_002/player_german_default_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		default_clothing = true
-	}
-	self.customizations.german_default_lower = {
-		name = "character_customization_german_default_name_lower",
-		description = "character_customization_german_default_desc_lower",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/default_002/player_german_default_002_lower",
-		path_short = "units/vanilla/characters/players/german/lower/default_002/player_german_default_002_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/default_002/player_german_default_002_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		default_clothing = true
-	}
-	self.customizations.british_default_head = {
-		name = "character_customization_british_default_name_head",
-		description = "character_customization_british_default_desc_head",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_HEAD,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/head/npc_criminal_uk_default_head",
-		path_icon = "ui/temp/customization_temp_df",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		default_clothing = true
-	}
-	self.customizations.british_default_upper = {
-		name = "character_customization_british_default_name_upper",
-		description = "character_customization_british_default_desc_upper",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/default_002/player_british_default_002_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/default_002/player_uk_default_002_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/default_002/player_uk_default_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		default_clothing = true
-	}
-	self.customizations.british_default_lower = {
-		name = "character_customization_british_default_name_lower",
-		description = "character_customization_british_default_desc_lower",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/default_002/player_british_default_002_lower",
-		path_short = "units/vanilla/characters/players/british/lower/default_002/player_british_default_002_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/default_002/player_uk_default_002_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		default_clothing = true
-	}
-	self.customizations.russian_default_head = {
-		name = "character_customization_russian_default_name_head",
-		description = "character_customization_russian_default_desc_head",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_HEAD,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/head/player_soviet_head_002/player_soviet_head_002",
-		path_icon = "ui/temp/customization_temp_df",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		default_clothing = true
-	}
-	self.customizations.russian_default_upper = {
-		name = "character_customization_russian_default_name_upper",
-		description = "character_customization_russian_default_desc_upper",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/default_002/player_soviet_default_002_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/default_002/player_soviet_default_002_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/default_002/player_soviet_default_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		default_clothing = true
-	}
-	self.customizations.russian_default_lower = {
-		name = "character_customization_russian_default_name_lower",
-		description = "character_customization_russian_default_desc_lower",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/default_002/player_soviet_default_002_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/default_002/player_soviet_default_002_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/default_002/player_soviet_default_002_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		default_clothing = true
-	}
-	self.customizations.british_officer_001_upper = {
-		name = "character_customization_british_officer_001_upper_name",
-		description = "character_customization_british_officer_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/officer_001/npc_criminal_uk_officer_001_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/officer_001/player_uk_officer_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/officer_001/player_uk_officer_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/officer_001/player_uk_officer_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.british_officer_001_lower = {
-		name = "character_customization_british_officer_001_lower_name",
-		description = "character_customization_british_officer_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/officer_001/npc_criminal_uk_officer_001_lower",
-		path_short = "units/vanilla/characters/players/british/lower/officer_001/npc_criminal_uk_officer_001_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/officer_001/player_uk_officer_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/british/lower/officer_001/player_uk_officer_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.british_officer_002_upper = {
-		name = "character_customization_british_officer_002_upper_name",
-		description = "character_customization_british_officer_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/officer_002/player_british_officer_002_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/officer_002/player_british_officer_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/officer_002/player_british_officer_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/officer_002/player_uk_officer_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_officer_002_lower = {
-		name = "character_customization_british_officer_002_lower_name",
-		description = "character_customization_british_officer_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower",
-		path_short = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.british_casual_001_upper = {
-		name = "character_customization_british_casual_001_upper_name",
-		description = "character_customization_british_casual_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/casual_001/player_british_casual_001_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/casual_001/player_uk_casual_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/casual_001/player_uk_casual_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/casual_001/player_uk_casual_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_casual_001_lower = {
-		name = "character_customization_british_casual_001_lower_name",
-		description = "character_customization_british_casual_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/casual_001/player_british_casual_001_lower",
-		path_short = "units/vanilla/characters/players/british/lower/casual_001/player_british_casual_001_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/casual_001/player_uk_casual_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/british/lower/casual_001/player_uk_casual_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.british_casual_002_upper = {
-		name = "character_customization_british_casual_002_upper_name",
-		description = "character_customization_british_casual_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/casual_002/player_british_casual_002_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/casual_002/player_british_casual_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/casual_002/player_british_casual_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/casual_002/player_uk_casual_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_casual_002_lower = {
-		name = "character_customization_british_casual_002_lower_name",
-		description = "character_customization_british_casual_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower",
-		path_short = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.british_casual_003_upper = {
-		name = "character_customization_british_casual_003_upper_name",
-		description = "character_customization_british_casual_003_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/casual_003/player_british_casual_003_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/casual_003/player_british_casual_003_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/casual_003/player_british_casual_003_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/casual_003/player_uk_casual_003_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_casual_003_lower = {
-		name = "character_customization_british_casual_003_lower_name",
-		description = "character_customization_british_casual_003_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower",
-		path_short = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.british_casual_004_upper = {
-		name = "character_customization_british_casual_004_upper_name",
-		description = "character_customization_british_casual_004_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/casual_004/player_british_casual_004_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/casual_004/player_british_casual_004_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/casual_004/player_british_casual_004_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/casual_004/player_uk_casual_004_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_casual_004_lower = {
-		name = "character_customization_british_casual_004_lower_name",
-		description = "character_customization_british_casual_004_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower",
-		path_short = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.british_gangbanger_001_upper = {
-		name = "character_customization_british_gangbanger_001_upper_name",
-		description = "character_customization_british_gangbanger_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/gangbanger_001/player_british_gangbanger_001_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/gangbanger_001/player_uk_gangbanger_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/gangbanger_001/player_uk_gangbanger_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/gangbanger_001/player_uk_gangbanger_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_gangbanger_001_lower = {
-		name = "character_customization_british_gangbanger_001_lower_name",
-		description = "character_customization_british_gangbanger_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/gangbanger_001/player_british_gangbanger_001_lower",
-		path_short = "units/vanilla/characters/players/british/lower/gangbanger_001/player_british_gangbanger_001_lower_short",
-		path_icon = "units/vanilla/characters/players/british/lower/gangbanger_001/player_uk_gangbanger_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/british/lower/gangbanger_001/player_uk_gangbanger_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.british_gold_jacket_001_upper = {
-		name = "character_customization_british_gold_jacket_001_upper_name",
-		description = "character_customization_british_gold_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/gold_jacket/player_criminal_british_gold_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.german_officer_001_upper = {
-		name = "character_customization_german_officer_001_upper_name",
-		description = "character_customization_german_officer_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/officer_001/npc_criminal_ger_officer_001_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/officer_001/player_german_officer_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/officer_001/player_german_officer_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/officer_001/player_german_officer_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.german_officer_001_lower = {
-		name = "character_customization_german_officer_001_lower_name",
-		description = "character_customization_german_officer_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/officer_001/npc_criminal_ger_officer_001_lower",
-		path_short = "units/vanilla/characters/players/german/lower/officer_001/npc_criminal_ger_officer_001_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/officer_001/player_german_officer_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/german/lower/officer_001/player_german_officer_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.german_gangbanger_001_upper = {
-		name = "character_customization_german_gangbanger_001_upper_name",
-		description = "character_customization_german_gangbanger_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/gangbanger_001/npc_criminal_ger_gangbanger_001_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/gangbanger_001/player_german_gangbanger_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/gangbanger_001/player_german_gangbanger_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/gangbanger_001/player_german_gangbanger_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.german_gangbanger_001_lower = {
-		name = "character_customization_german_gangbanger_001_lower_name",
-		description = "character_customization_german_gangbanger_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/gangbanger_001/npc_criminal_ger_gangbanger_001_lower",
-		path_short = "units/vanilla/characters/players/german/lower/gangbanger_001/npc_criminal_ger_gangbanger_001_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/gangbanger_001/player_german_gangbanger_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/german/lower/gangbanger_001/player_german_gangbanger_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.german_officer_002_upper = {
-		name = "character_customization_german_officer_002_upper_name",
-		description = "character_customization_german_officer_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/officer_002/npc_criminal_ger_officer_002_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/officer_002/player_german_officer_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/officer_002/player_german_officer_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/officer_002/player_german_officer_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.german_officer_002_lower = {
-		name = "character_customization_german_officer_002_lower_name",
-		description = "character_customization_german_officer_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/officer_002/npc_criminal_ger_officer_002_lower",
-		path_short = "units/vanilla/characters/players/german/lower/officer_002/npc_criminal_ger_officer_002_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/officer_002/player_german_officer_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/german/lower/officer_002/player_german_officer_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.german_grunt_001_upper = {
-		name = "character_customization_german_grunt_001_upper_name",
-		description = "character_customization_german_grunt_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/grunt_001/player_german_grunt_001_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/grunt_001/player_german_grunt_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/grunt_001/player_german_grunt_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/grunt_001/player_german_grunt_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.german_grunt_001_lower = {
-		name = "character_customization_german_grunt_001_lower_name",
-		description = "character_customization_german_grunt_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower",
-		path_short = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.german_grunt_002_upper = {
-		name = "character_customization_german_grunt_002_upper_name",
-		description = "character_customization_german_grunt_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/grunt_002/player_german_grunt_002_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/grunt_002/player_german_grunt_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/grunt_002/player_german_grunt_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/grunt_002/player_german_grunt_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.german_grunt_002_lower = {
-		name = "character_customization_german_grunt_002_lower_name",
-		description = "character_customization_german_grunt_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower",
-		path_short = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.german_grunt_003_upper = {
-		name = "character_customization_german_grunt_003_upper_name",
-		description = "character_customization_german_grunt_003_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/grunt_003/player_criminal_german_grunt_003_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/grunt_003/player_german_grunt_003_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/grunt_003/player_german_grunt_003_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/grunt_003/player_german_grunt_003_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.german_grunt_003_lower = {
-		name = "character_customization_german_grunt_003_lower_name",
-		description = "character_customization_german_grunt_003_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/grunt_003/player_criminal_german_grunt_003_lower",
-		path_short = "units/vanilla/characters/players/german/lower/grunt_003/player_criminal_german_grunt_003_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/grunt_003/player_german_grunt_003_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/german/lower/grunt_003/player_german_grunt_003_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.german_gold_jacket_002_upper = {
-		name = "character_customization_german_gold_jacket_002_upper_name",
-		description = "character_customization_german_gold_jacket_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/gold_jacket/player_criminal_german_gold_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.german_gangbanger_002_upper = {
-		name = "character_customization_german_gangbanger_002_upper_name",
-		description = "character_customization_german_gangbanger_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/gangbanger_002/player_criminal_ger_gangbanger_002_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/gangbanger_002/player_german_gangbanger_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/gangbanger_002/player_german_gangbanger_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/gangbanger_002/player_german_default_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.german_gangbanger_002_lower = {
-		name = "character_customization_german_gangbanger_002_lower_name",
-		description = "character_customization_german_gangbanger_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/gangbanger_002/player_criminal_ger_gangbanger_002_lower",
-		path_short = "units/vanilla/characters/players/german/lower/gangbanger_002/player_criminal_ger_gangbanger_002_lower_short",
-		path_icon = "units/vanilla/characters/players/german/lower/gangbanger_002/player_german_gangbanger_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/german/lower/gangbanger_002/player_german_gangbanger_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.russian_commisar_001_upper = {
-		name = "character_customization_russian_commisar_001_upper_name",
-		description = "character_customization_russian_commisar_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/commisar_001/npc_criminal_soviet_commisar_001_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/commisar_001/player_soviet_commisar_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/commisar_001/player_soviet_commisar_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/commisar_001/player_soviet_commisar_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.russian_commisar_001_lower = {
-		name = "character_customization_russian_commisar_001_lower_name",
-		description = "character_customization_russian_commisar_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/commisar_001/npc_criminal_soviet_commisar_001_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/commisar_001/npc_criminal_soviet_commisar_001_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/commisar_001/player_soviet_commisar_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/lower/commisar_001/player_soviet_commisar_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.russian_commisar_002_upper = {
-		name = "character_customization_russian_commisar_002_upper_name",
-		description = "character_customization_russian_commisar_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/commisar_002/npc_criminal_soviet_commisar_002_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/commisar_002/player_soviet_commisar_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/commisar_002/player_soviet_commisar_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/commisar_002/player_soviet_commisar_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.russian_commisar_002_lower = {
-		name = "character_customization_russian_commisar_002_lower_name",
-		description = "character_customization_russian_commisar_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/commisar_002/npc_criminal_soviet_commisar_002_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/commisar_002/npc_criminal_soviet_commisar_002_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/commisar_002/player_soviet_commisar_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/lower/commisar_002/player_soviet_commisar_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.russian_casual_001_upper = {
-		name = "character_customization_russian_casual_001_upper_name",
-		description = "character_customization_russian_casual_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/casual_001/npc_criminal_soviet_casual_001_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/casual_001/player_soviet_casual_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/casual_001/player_soviet_casual_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/casual_001/player_soviet_casual_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.russian_casual_001_lower = {
-		name = "character_customization_russian_casual_001_lower_name",
-		description = "character_customization_russian_casual_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/casual_001/npc_criminal_soviet_casual_001_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/casual_001/npc_criminal_soviet_casual_001_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/casual_001/player_soviet_casual_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/lower/casual_001/player_soviet_casual_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.russian_commisar_003_upper = {
-		name = "character_customization_russian_commisar_003_upper_name",
-		description = "character_customization_russian_commisar_003_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/commisar_003/player_soviet_commisar_003_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/commisar_003/player_soviet_commissar_003_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/commisar_003/player_soviet_commissar_003_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/commisar_003/player_soviet_commisar_003_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.russian_commisar_003_lower = {
-		name = "character_customization_russian_commisar_003_lower_name",
-		description = "character_customization_russian_commisar_003_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.russian_grunt_001_upper = {
-		name = "character_customization_russian_grunt_001_upper_name",
-		description = "character_customization_russian_grunt_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/grunt_001/player_soviet_grunt_001_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/grunt_001/player_soviet_grunt_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/grunt_001/player_soviet_grunt_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/grunt_001/player_soviet_grunt_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.russian_grunt_001_lower = {
-		name = "character_customization_russian_grunt_001_lower_name",
-		description = "character_customization_russian_grunt_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.russian_grunt_002_upper = {
-		name = "character_customization_russian_grunt_002_upper_name",
-		description = "character_customization_russian_grunt_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/grunt_002/player_soviet_grunt_002_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/grunt_002/player_soviet_grunt_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/grunt_002/player_soviet_grunt_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/grunt_002/player_soviet_grunt_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.russian_grunt_002_lower = {
-		name = "character_customization_russian_grunt_002_lower_name",
-		description = "character_customization_russian_grunt_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.russian_mech_001_upper = {
-		name = "character_customization_russian_mech_001_upper_name",
-		description = "character_customization_russian_mech_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/mech_001/player_soviet_mech_001_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/mech_001/player_soviet_mech_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/mech_001/player_soviet_mech_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/mech_001/player_soviet_mech_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.russian_mech_001_lower = {
-		name = "character_customization_russian_mech_001_lower_name",
-		description = "character_customization_russian_mech_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower_short",
-		path_icon = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.russian_gold_jacket_001_upper = {
-		name = "character_customization_russian_gold_jacket_001_upper_name",
-		description = "character_customization_russian_gold_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/gold_jacket/player_criminal_soviet_gold_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.american_gangbanger_001_upper = {
-		name = "character_customization_american_gangbanger_001_upper_name",
-		description = "character_customization_american_gangbanger_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/gangbanger_001/npc_criminal_usa_gangbanger_001_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/gangbanger_001/player_usa_gangbanger_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/gangbanger_001/player_usa_gangbanger_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/gangbanger_001/player_usa_gangbanger_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG,
-		droppable = true
-	}
-	self.customizations.american_gangbanger_001_lower = {
-		name = "character_customization_american_gangbanger_001_lower_name",
-		description = "character_customization_american_gangbanger_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/gangbanger_001/npc_criminal_usa_gangbanger_001_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/gangbanger_001/npc_criminal_usa_gangbanger_001_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/gangbanger_001/player_usa_gangbanger_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/lower/gangbanger_001/player_usa_gangbanger_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.american_gangbanger_002_upper = {
-		name = "character_customization_american_gangbanger_002_upper_name",
-		description = "character_customization_american_gangbanger_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/gangbanger_002/npc_criminal_usa_gangbanger_002_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/gangbanger_002/player_usa_gangbanger_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/gangbanger_002/player_usa_gangbanger_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/gangbanger_002/player_usa_gangbanger_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_gangbanger_002_lower = {
-		name = "character_customization_american_gangbanger_002_lower_name",
-		description = "character_customization_american_gangbanger_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/gangbanger_002/npc_criminal_usa_gangbanger_002_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/gangbanger_002/npc_criminal_usa_gangbanger_002_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/gangbanger_002/player_usa_gangbanger_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/lower/gangbanger_002/player_usa_gangbanger_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.american_gangbanger_003_upper = {
-		name = "character_customization_american_gangbanger_003_upper_name",
-		description = "character_customization_american_gangbanger_003_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/gangbanger_003/player_criminal_usa_gangbanger_003_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/gangbanger_003/player_usa_gangbanger_003_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/gangbanger_003/player_usa_gangbanger_003_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/gangbanger_003/player_usa_gangbanger_003_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_gangbanger_003_lower = {
-		name = "character_customization_american_gangbanger_003_lower_name",
-		description = "character_customization_american_gangbanger_003_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_criminal_usa_gangbanger_003_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_criminal_usa_gangbanger_003_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_usa_gangbanger_003_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_usa_gangbanger_003_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.american_casual_001_upper = {
-		name = "character_customization_american_casual_001_upper_name",
-		description = "character_customization_american_casual_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/casual_001/player_criminal_usa_casual_001_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/casual_001/player_usa_casual_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/casual_001/player_usa_casual_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/casual_001/player_usa_casual_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_casual_001_lower = {
-		name = "character_customization_american_casual_001_lower_name",
-		description = "character_customization_american_casual_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/casual_001/player_criminal_usa_casual_001_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/casual_001/player_criminal_usa_casual_001_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/casual_001/player_usa_casual_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/lower/casual_001/player_usa_casual_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		droppable = true
-	}
-	self.customizations.american_officer_001_upper = {
-		name = "character_customization_american_officer_001_upper_name",
-		description = "character_customization_american_officer_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/officer_001/player_criminal_usa_officer_001_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/officer_001/player_usa_officer_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/officer_001/player_usa_officer_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/officer_001/player_usa_officer_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_officer_001_lower = {
-		name = "character_customization_american_officer_001_lower_name",
-		description = "character_customization_american_officer_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/officer_001/player_criminal_usa_officer_001_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/officer_001/player_criminal_usa_officer_001_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/officer_001/player_usa_officer_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/lower/officer_001/player_usa_officer_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.american_officer_002_upper = {
-		name = "character_customization_american_officer_002_upper_name",
-		description = "character_customization_american_officer_002_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/officer_002/player_criminal_usa_officer_002_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/officer_002/player_usa_officer_002_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/officer_002/player_usa_officer_002_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/officer_002/player_usa_officer_002_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_officer_002_lower = {
-		name = "character_customization_american_officer_002_lower_name",
-		description = "character_customization_american_officer_002_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/officer_002/player_criminal_usa_officer_002_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/officer_002/player_criminal_usa_officer_002_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/officer_002/player_usa_officer_002_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/lower/officer_002/player_usa_officer_002_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_COMMON,
-		droppable = true
-	}
-	self.customizations.american_grunt_001_upper = {
-		name = "character_customization_american_grunt_001_upper_name",
-		description = "character_customization_american_grunt_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/grunt_001/player_criminal_usa_grunt_001_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/grunt_001/player_usa_grunt_001_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/grunt_001/player_usa_grunt_001_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/grunt_001/player_usa_grunt_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_UNCOMMON,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_grunt_001_lower = {
-		name = "character_customization_american_grunt_001_lower_name",
-		description = "character_customization_american_grunt_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/grunt_001/player_criminal_usa_grunt_001_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/grunt_001/player_criminal_usa_grunt_001_lower_short",
-		path_icon = "units/vanilla/characters/players/usa/lower/grunt_001/player_usa_grunt_001_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/lower/grunt_001/player_usa_grunt_001_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.american_gold_jacket_001_upper = {
-		name = "character_customization_american_gold_jacket_001_upper_name",
-		description = "character_customization_american_gold_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/gold_jacket/player_criminal_usa_gold_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.american_gold_collector_jacket_001_upper = {
-		name = "character_customization_american_gold_collector_jacket_001_upper_name",
-		description = "character_customization_american_gold_collector_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/gold_collector_jacket/player_criminal_usa_gold_collector_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG
-	}
-	self.customizations.british_gold_collector_jacket_001_upper = {
-		name = "character_customization_british_gold_collector_jacket_001_upper_name",
-		description = "character_customization_british_gold_collector_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/gold_collector_jacket/player_criminal_british_gold_collector_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG
-	}
-	self.customizations.german_gold_collector_jacket_001_upper = {
-		name = "character_customization_german_gold_collector_jacket_001_upper_name",
-		description = "character_customization_german_gold_collector_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/gold_collector_jacket/player_criminal_german_gold_collector_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG
-	}
-	self.customizations.russian_gold_collector_jacket_001_upper = {
-		name = "character_customization_russian_gold_collector_jacket_001_upper_name",
-		description = "character_customization_russian_gold_collector_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/gold_collector_jacket/player_criminal_soviet_gold_collector_jacket_001_upper",
-		path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_LONG
-	}
-	self.customizations.american_special_edition_001_upper = {
-		name = "character_customization_generic_special_edition_001_upper_name",
-		description = "character_customization_generic_special_edition_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/special_edition/player_usa_special_edition_upper",
-		path_icon = "units/vanilla/characters/players/usa/upper/special_edition/player_usa_special_edition_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/usa/upper/special_edition/player_usa_special_edition_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/usa/fp/special_edition/player_usa_special_edition_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
-		dlc_show_if_locked = false
-	}
-	self.customizations.british_special_edition_001_upper = {
-		name = "character_customization_generic_special_edition_001_upper_name",
-		description = "character_customization_generic_special_edition_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/special_edition/player_british_special_edition_upper",
-		path_icon = "units/vanilla/characters/players/british/upper/special_edition/player_british_special_edition_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/british/upper/special_edition/player_british_special_edition_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/british/fp/special_edition/player_british_special_edition_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
-		dlc_show_if_locked = false
-	}
-	self.customizations.german_special_edition_001_upper = {
-		name = "character_customization_generic_special_edition_001_upper_name",
-		description = "character_customization_generic_special_edition_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/special_edition/player_german_special_edition_upper",
-		path_icon = "units/vanilla/characters/players/german/upper/special_edition/player_german_special_edition_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/german/upper/special_edition/player_german_special_edition_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/german/fp/special_edition/player_german_special_edition_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
-		dlc_show_if_locked = false
-	}
-	self.customizations.russian_special_edition_001_upper = {
-		name = "character_customization_generic_special_edition_001_upper_name",
-		description = "character_customization_generic_special_edition_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/special_edition/player_soviet_special_edition_upper",
-		path_icon = "units/vanilla/characters/players/soviet/upper/special_edition/player_soviet_special_edition_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/soviet/upper/special_edition/player_soviet_special_edition_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/soviet/fp/special_edition/player_soviet_special_edition_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
-		dlc_show_if_locked = false
-	}
-	self.customizations.american_highlander_jacket_upper = {
-		name = "character_customization_highlander_upper_name",
-		description = "character_customization_highlander_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/highlander_jacket/player_usa_highlander_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.american_highlander_jacket_lower = {
-		name = "character_customization_highlander_lower_name",
-		description = "character_customization_highlander_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/highlander_jacket/player_usa_highlander_jacket_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/highlander_jacket/player_usa_highlander_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.russian_highlander_jacket_upper = {
-		name = "character_customization_highlander_upper_name",
-		description = "character_customization_highlander_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/highlander_jacket/player_soviet_highlander_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.russian_highlander_jacket_lower = {
-		name = "character_customization_highlander_lower_name",
-		description = "character_customization_highlander_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/highlander_jacket/player_soviet_highlander_jacket_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/highlander_jacket/player_soviet_highlander_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.german_highlander_jacket_upper = {
-		name = "character_customization_highlander_upper_name",
-		description = "character_customization_highlander_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/highlander_jacket/player_german_highlander_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.german_highlander_jacket_lower = {
-		name = "character_customization_highlander_lower_name",
-		description = "character_customization_highlander_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/highlander_jacket/player_german_highlander_jacket_lower",
-		path_short = "units/vanilla/characters/players/german/lower/highlander_jacket/player_german_highlander_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.british_highlander_jacket_upper = {
-		name = "character_customization_highlander_upper_name",
-		description = "character_customization_highlander_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/highlander_jacket/player_british_highlander_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.british_highlander_jacket_lower = {
-		name = "character_customization_highlander_lower_name",
-		description = "character_customization_highlander_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/highlander_jacket/player_british_highlander_jacket_lower",
-		path_short = "units/vanilla/characters/players/british/lower/highlander_jacket/player_british_highlander_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		dlc = DLCTweakData.DLC_NAME_PREORDER,
-		dlc_show_if_locked = false
-	}
-	self.customizations.british_ace_jacket_001_upper = {
-		name = "character_customization_british_ace_jacket_001_upper_name",
-		description = "character_customization_british_ace_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/ace_jacket/player_criminal_british_ace_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_ace_jacket_001_lower = {
-		name = "character_customization_british_ace_jacket_001_lower_name",
-		description = "character_customization_british_ace_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/ace_jacket/player_british_ace_jacket_lower",
-		path_short = "units/vanilla/characters/players/british/lower/ace_jacket/player_british_ace_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
-	}
-	self.customizations.german_ace_jacket_001_upper = {
-		name = "character_customization_german_ace_jacket_001_upper_name",
-		description = "character_customization_german_ace_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/ace_jacket/player_criminal_german_ace_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.german_ace_jacket_001_lower = {
-		name = "character_customization_german_ace_jacket_001_lower_name",
-		description = "character_customization_german_ace_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/ace_jacket/player_german_ace_jacket_lower",
-		path_short = "units/vanilla/characters/players/german/lower/ace_jacket/player_german_ace_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
-	}
-	self.customizations.russian_ace_jacket_001_upper = {
-		name = "character_customization_soviet_ace_jacket_001_upper_name",
-		description = "character_customization_soviet_ace_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/ace_jacket/player_criminal_soviet_ace_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.russian_ace_jacket_001_lower = {
-		name = "character_customization_soviet_ace_jacket_001_lower_name",
-		description = "character_customization_soviet_ace_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/ace_jacket/player_soviet_ace_jacket_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/ace_jacket/player_soviet_ace_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
-	}
-	self.customizations.american_ace_jacket_001_upper = {
-		name = "character_customization_usa_ace_jacket_001_upper_name",
-		description = "character_customization_usa_ace_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/ace_jacket/player_criminal_usa_ace_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_ace_jacket_001_lower = {
-		name = "character_customization_usa_ace_jacket_001_lower_name",
-		description = "character_customization_usa_ace_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/ace_jacket/player_usa_ace_jacket_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/ace_jacket/player_usa_ace_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
-	}
-	self.customizations.british_bomber_jacket_001_upper = {
-		name = "character_customization_british_bomber_jacket_001_upper_name",
-		description = "character_customization_british_bomber_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/bomber_jacket/player_criminal_british_bomber_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.british_bomber_jacket_001_lower = {
-		name = "character_customization_british_bomber_jacket_001_lower_name",
-		description = "character_customization_british_bomber_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/bomber_jacket/player_british_bomber_jacket_lower",
-		path_short = "units/vanilla/characters/players/british/lower/bomber_jacket/player_british_bomber_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE
-	}
-	self.customizations.german_bomber_jacket_001_upper = {
-		name = "character_customization_german_bomber_jacket_001_upper_name",
-		description = "character_customization_german_bomber_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/bomber_jacket/player_criminal_german_bomber_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.german_bomber_jacket_001_lower = {
-		name = "character_customization_german_bomber_jacket_001_lower_name",
-		description = "character_customization_german_bomber_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/bomber_jacket/player_german_bomber_jacket_lower",
-		path_short = "units/vanilla/characters/players/german/lower/bomber_jacket/player_german_bomber_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE
-	}
-	self.customizations.russian_bomber_jacket_001_upper = {
-		name = "character_customization_soviet_bomber_jacket_001_upper_name",
-		description = "character_customization_soviet_bomber_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/bomber_jacket/player_criminal_soviet_bomber_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.russian_bomber_jacket_001_lower = {
-		name = "character_customization_soviet_bomber_jacket_001_lower_name",
-		description = "character_customization_soviet_bomber_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/bomber_jacket/player_soviet_bomber_jacket_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/bomber_jacket/player_soviet_bomber_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE
-	}
-	self.customizations.american_bomber_jacket_001_upper = {
-		name = "character_customization_usa_bomber_jacket_001_upper_name",
-		description = "character_customization_usa_bomber_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/bomber_jacket/player_criminal_usa_bomber_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
-	}
-	self.customizations.american_bomber_jacket_001_lower = {
-		name = "character_customization_usa_bomber_jacket_001_lower_name",
-		description = "character_customization_usa_bomber_jacket_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/bomber_jacket/player_usa_bomber_jacket_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/bomber_jacket/player_usa_bomber_jacket_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE
-	}
-	self.customizations.british_eagle_jacket_001_upper = {
-		name = "character_customization_british_eagle_jacket_001_upper_name",
-		description = "character_customization_british_eagle_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path = "units/vanilla/characters/players/british/upper/eagle_jacket/player_british_eagle_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.british_eagle_pants_001_lower = {
-		name = "character_customization_british_eagle_pants_001_lower_name",
-		description = "character_customization_british_eagle_pants_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_BRITISH
-		},
-		path_long = "units/vanilla/characters/players/british/lower/eagle_pants/player_british_eagle_lower",
-		path_short = "units/vanilla/characters/players/british/lower/eagle_pants/player_british_eagle_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.german_eagle_jacket_001_upper = {
-		name = "character_customization_german_eagle_jacket_001_upper_name",
-		description = "character_customization_german_eagle_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path = "units/vanilla/characters/players/german/upper/eagle_jacket/player_german_eagle_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.german_eagle_pants_001_lower = {
-		name = "character_customization_german_eagle_pants_001_lower_name",
-		description = "character_customization_german_eagle_pants_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_GERMAN
-		},
-		path_long = "units/vanilla/characters/players/german/lower/eagle_pants/player_german_eagle_lower",
-		path_short = "units/vanilla/characters/players/german/lower/eagle_pants/player_german_eagle_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
-	self.customizations.russian_eagle_jacket_001_upper = {
-		name = "character_customization_russian_eagle_jacket_001_upper_name",
-		description = "character_customization_russian_eagle_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path = "units/vanilla/characters/players/soviet/upper/eagle_jacket/player_soviet_eagle_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.russian_eagle_pants_001_lower = {
-		name = "character_customization_russian_eagle_pants_001_lower_name",
-		description = "character_customization_russian_eagle_pants_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
-		},
-		path_long = "units/vanilla/characters/players/soviet/lower/eagle_pants/player_soviet_eagle_lower",
-		path_short = "units/vanilla/characters/players/soviet/lower/eagle_pants/player_soviet_eagle_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE
-	}
-	self.customizations.american_eagle_jacket_001_upper = {
-		name = "character_customization_american_eagle_jacket_001_upper_name",
-		description = "character_customization_american_eagle_jacket_001_upper_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path = "units/vanilla/characters/players/usa/upper/eagle_jacket/player_usa_eagle_jacket_upper",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud",
-		path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
-	}
-	self.customizations.american_eagle_pants_001_lower = {
-		name = "character_customization_american_eagle_pants_001_lower_name",
-		description = "character_customization_american_eagle_pants_001_lower_desc",
-		part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER,
-		nationalities = {
-			CharacterCustomizationTweakData.NATIONALITY_AMERICAN
-		},
-		path_long = "units/vanilla/characters/players/usa/lower/eagle_pants/player_usa_eagle_lower",
-		path_short = "units/vanilla/characters/players/usa/lower/eagle_pants/player_usa_eagle_lower_short",
-		path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud",
-		path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud",
-		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_RARE,
-		droppable = true
-	}
+	self.customizations.american_default_upper = {}
+	self.customizations.american_default_upper.name = "character_customization_american_default_name_upper"
+	self.customizations.american_default_upper.description = "character_customization_american_default_desc_upper"
+	self.customizations.american_default_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_default_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_default_upper.path = "units/vanilla/characters/players/usa/upper/tanker_001/npc_criminal_usa_tanker_001_upper"
+	self.customizations.american_default_upper.path_icon = "units/vanilla/characters/players/usa/upper/tanker_001/player_usa_tanker_001_upper_hud"
+	self.customizations.american_default_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/tanker_001/player_usa_tanker_001_fp"
+	self.customizations.american_default_upper.redeem_xp = 0
+	self.customizations.american_default_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_default_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_default_upper.default_clothing = true
+	self.customizations.american_default_lower = {}
+	self.customizations.american_default_lower.name = "character_customization_american_default_name_lower"
+	self.customizations.american_default_lower.description = "character_customization_american_default_desc_lower"
+	self.customizations.american_default_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_default_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_default_lower.path_long = "units/vanilla/characters/players/usa/lower/tanker_001/npc_criminal_usa_tanker_001_lower"
+	self.customizations.american_default_lower.path_short = "units/vanilla/characters/players/usa/lower/tanker_001/npc_criminal_usa_tanker_001_lower_short"
+	self.customizations.american_default_lower.path_icon = "units/vanilla/characters/players/usa/lower/tanker_001/player_usa_tanker_001_lower_hud"
+	self.customizations.american_default_lower.redeem_xp = 0
+	self.customizations.american_default_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_default_lower.default_clothing = true
+	self.customizations.german_default_head = {}
+	self.customizations.german_default_head.name = "character_customization_german_default_name_head"
+	self.customizations.german_default_head.description = "character_customization_german_default_desc_head"
+	self.customizations.german_default_head.part_type = CharacterCustomizationTweakData.PART_TYPE_HEAD
+	self.customizations.german_default_head.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_default_head.path = "units/vanilla/characters/players/german/head/player_german_head_002/player_german_head_002"
+	self.customizations.german_default_head.path_icon = "ui/temp/customization_temp_df"
+	self.customizations.german_default_head.redeem_xp = 0
+	self.customizations.german_default_head.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_default_head.default_clothing = true
+	self.customizations.german_default_upper = {}
+	self.customizations.german_default_upper.name = "character_customization_german_default_name_upper"
+	self.customizations.german_default_upper.description = "character_customization_german_default_desc_upper"
+	self.customizations.german_default_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_default_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_default_upper.path = "units/vanilla/characters/players/german/upper/default_002/player_german_default_002_upper"
+	self.customizations.german_default_upper.path_icon = "units/vanilla/characters/players/german/upper/default_002/player_german_default_002_upper_hud"
+	self.customizations.german_default_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/default_002/player_german_default_002_fp"
+	self.customizations.german_default_upper.redeem_xp = 0
+	self.customizations.german_default_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_default_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_default_upper.default_clothing = true
+	self.customizations.german_default_lower = {}
+	self.customizations.german_default_lower.name = "character_customization_german_default_name_lower"
+	self.customizations.german_default_lower.description = "character_customization_german_default_desc_lower"
+	self.customizations.german_default_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_default_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_default_lower.path_long = "units/vanilla/characters/players/german/lower/default_002/player_german_default_002_lower"
+	self.customizations.german_default_lower.path_short = "units/vanilla/characters/players/german/lower/default_002/player_german_default_002_lower_short"
+	self.customizations.german_default_lower.path_icon = "units/vanilla/characters/players/german/lower/default_002/player_german_default_002_lower_hud"
+	self.customizations.german_default_lower.redeem_xp = 0
+	self.customizations.german_default_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_default_lower.default_clothing = true
+	self.customizations.british_default_head = {}
+	self.customizations.british_default_head.name = "character_customization_british_default_name_head"
+	self.customizations.british_default_head.description = "character_customization_british_default_desc_head"
+	self.customizations.british_default_head.part_type = CharacterCustomizationTweakData.PART_TYPE_HEAD
+	self.customizations.british_default_head.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_default_head.path = "units/vanilla/characters/players/british/head/npc_criminal_uk_default_head"
+	self.customizations.british_default_head.path_icon = "ui/temp/customization_temp_df"
+	self.customizations.british_default_head.redeem_xp = 0
+	self.customizations.british_default_head.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_default_head.default_clothing = true
+	self.customizations.british_default_upper = {}
+	self.customizations.british_default_upper.name = "character_customization_british_default_name_upper"
+	self.customizations.british_default_upper.description = "character_customization_british_default_desc_upper"
+	self.customizations.british_default_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_default_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_default_upper.path = "units/vanilla/characters/players/british/upper/default_002/player_british_default_002_upper"
+	self.customizations.british_default_upper.path_icon = "units/vanilla/characters/players/british/upper/default_002/player_uk_default_002_upper_hud"
+	self.customizations.british_default_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/default_002/player_uk_default_002_fp"
+	self.customizations.british_default_upper.redeem_xp = 0
+	self.customizations.british_default_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_default_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_default_upper.default_clothing = true
+	self.customizations.british_default_lower = {}
+	self.customizations.british_default_lower.name = "character_customization_british_default_name_lower"
+	self.customizations.british_default_lower.description = "character_customization_british_default_desc_lower"
+	self.customizations.british_default_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_default_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_default_lower.path_long = "units/vanilla/characters/players/british/lower/default_002/player_british_default_002_lower"
+	self.customizations.british_default_lower.path_short = "units/vanilla/characters/players/british/lower/default_002/player_british_default_002_lower_short"
+	self.customizations.british_default_lower.path_icon = "units/vanilla/characters/players/british/lower/default_002/player_uk_default_002_lower_hud"
+	self.customizations.british_default_lower.redeem_xp = 0
+	self.customizations.british_default_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_default_lower.default_clothing = true
+	self.customizations.russian_default_head = {}
+	self.customizations.russian_default_head.name = "character_customization_russian_default_name_head"
+	self.customizations.russian_default_head.description = "character_customization_russian_default_desc_head"
+	self.customizations.russian_default_head.part_type = CharacterCustomizationTweakData.PART_TYPE_HEAD
+	self.customizations.russian_default_head.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_default_head.path = "units/vanilla/characters/players/soviet/head/player_soviet_head_002/player_soviet_head_002"
+	self.customizations.russian_default_head.path_icon = "ui/temp/customization_temp_df"
+	self.customizations.russian_default_head.redeem_xp = 0
+	self.customizations.russian_default_head.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_default_head.default_clothing = true
+	self.customizations.russian_default_upper = {}
+	self.customizations.russian_default_upper.name = "character_customization_russian_default_name_upper"
+	self.customizations.russian_default_upper.description = "character_customization_russian_default_desc_upper"
+	self.customizations.russian_default_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_default_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_default_upper.path = "units/vanilla/characters/players/soviet/upper/default_002/player_soviet_default_002_upper"
+	self.customizations.russian_default_upper.path_icon = "units/vanilla/characters/players/soviet/upper/default_002/player_soviet_default_002_upper_hud"
+	self.customizations.russian_default_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/default_002/player_soviet_default_002_fp"
+	self.customizations.russian_default_upper.redeem_xp = 0
+	self.customizations.russian_default_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_default_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.russian_default_upper.default_clothing = true
+	self.customizations.russian_default_lower = {}
+	self.customizations.russian_default_lower.name = "character_customization_russian_default_name_lower"
+	self.customizations.russian_default_lower.description = "character_customization_russian_default_desc_lower"
+	self.customizations.russian_default_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_default_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_default_lower.path_long = "units/vanilla/characters/players/soviet/lower/default_002/player_soviet_default_002_lower"
+	self.customizations.russian_default_lower.path_short = "units/vanilla/characters/players/soviet/lower/default_002/player_soviet_default_002_lower_short"
+	self.customizations.russian_default_lower.path_icon = "units/vanilla/characters/players/soviet/lower/default_002/player_soviet_default_002_lower_hud"
+	self.customizations.russian_default_lower.redeem_xp = 0
+	self.customizations.russian_default_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_default_lower.default_clothing = true
+	self.customizations.british_officer_001_upper = {}
+	self.customizations.british_officer_001_upper.name = "character_customization_british_officer_001_upper_name"
+	self.customizations.british_officer_001_upper.description = "character_customization_british_officer_001_upper_desc"
+	self.customizations.british_officer_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_officer_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_officer_001_upper.path = "units/vanilla/characters/players/british/upper/officer_001/npc_criminal_uk_officer_001_upper"
+	self.customizations.british_officer_001_upper.path_icon = "units/vanilla/characters/players/british/upper/officer_001/player_uk_officer_001_upper_hud"
+	self.customizations.british_officer_001_upper.path_icon_large = "units/vanilla/characters/players/british/upper/officer_001/player_uk_officer_001_upper_large_hud"
+	self.customizations.british_officer_001_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/officer_001/player_uk_officer_001_fp"
+	self.customizations.british_officer_001_upper.redeem_xp = 0
+	self.customizations.british_officer_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.british_officer_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.british_officer_001_upper.droppable = true
+	self.customizations.british_officer_001_lower = {}
+	self.customizations.british_officer_001_lower.name = "character_customization_british_officer_001_lower_name"
+	self.customizations.british_officer_001_lower.description = "character_customization_british_officer_001_lower_desc"
+	self.customizations.british_officer_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_officer_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_officer_001_lower.path_long = "units/vanilla/characters/players/british/lower/officer_001/npc_criminal_uk_officer_001_lower"
+	self.customizations.british_officer_001_lower.path_short = "units/vanilla/characters/players/british/lower/officer_001/npc_criminal_uk_officer_001_lower_short"
+	self.customizations.british_officer_001_lower.path_icon = "units/vanilla/characters/players/british/lower/officer_001/player_uk_officer_001_lower_hud"
+	self.customizations.british_officer_001_lower.path_icon_large = "units/vanilla/characters/players/british/lower/officer_001/player_uk_officer_001_lower_large_hud"
+	self.customizations.british_officer_001_lower.redeem_xp = 0
+	self.customizations.british_officer_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.british_officer_001_lower.droppable = true
+	self.customizations.british_officer_002_upper = {}
+	self.customizations.british_officer_002_upper.name = "character_customization_british_officer_002_upper_name"
+	self.customizations.british_officer_002_upper.description = "character_customization_british_officer_002_upper_desc"
+	self.customizations.british_officer_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_officer_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_officer_002_upper.path = "units/vanilla/characters/players/british/upper/officer_002/player_british_officer_002_upper"
+	self.customizations.british_officer_002_upper.path_icon = "units/vanilla/characters/players/british/upper/officer_002/player_british_officer_002_upper_hud"
+	self.customizations.british_officer_002_upper.path_icon_large = "units/vanilla/characters/players/british/upper/officer_002/player_british_officer_002_upper_large_hud"
+	self.customizations.british_officer_002_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/officer_002/player_uk_officer_002_fp"
+	self.customizations.british_officer_002_upper.redeem_xp = 0
+	self.customizations.british_officer_002_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_officer_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_officer_002_upper.droppable = true
+	self.customizations.british_officer_002_lower = {}
+	self.customizations.british_officer_002_lower.name = "character_customization_british_officer_002_lower_name"
+	self.customizations.british_officer_002_lower.description = "character_customization_british_officer_002_lower_desc"
+	self.customizations.british_officer_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_officer_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_officer_002_lower.path_long = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower"
+	self.customizations.british_officer_002_lower.path_short = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower_short"
+	self.customizations.british_officer_002_lower.path_icon = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower_hud"
+	self.customizations.british_officer_002_lower.path_icon_large = "units/vanilla/characters/players/british/lower/officer_002/player_british_officer_002_lower_large_hud"
+	self.customizations.british_officer_002_lower.redeem_xp = 0
+	self.customizations.british_officer_002_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_officer_002_lower.droppable = true
+	self.customizations.british_casual_001_upper = {}
+	self.customizations.british_casual_001_upper.name = "character_customization_british_casual_001_upper_name"
+	self.customizations.british_casual_001_upper.description = "character_customization_british_casual_001_upper_desc"
+	self.customizations.british_casual_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_casual_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_001_upper.path = "units/vanilla/characters/players/british/upper/casual_001/player_british_casual_001_upper"
+	self.customizations.british_casual_001_upper.path_icon = "units/vanilla/characters/players/british/upper/casual_001/player_uk_casual_001_upper_hud"
+	self.customizations.british_casual_001_upper.path_icon_large = "units/vanilla/characters/players/british/upper/casual_001/player_uk_casual_001_upper_large_hud"
+	self.customizations.british_casual_001_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/casual_001/player_uk_casual_001_fp"
+	self.customizations.british_casual_001_upper.redeem_xp = 0
+	self.customizations.british_casual_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.british_casual_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_casual_001_upper.droppable = true
+	self.customizations.british_casual_001_lower = {}
+	self.customizations.british_casual_001_lower.name = "character_customization_british_casual_001_lower_name"
+	self.customizations.british_casual_001_lower.description = "character_customization_british_casual_001_lower_desc"
+	self.customizations.british_casual_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_casual_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_001_lower.path_long = "units/vanilla/characters/players/british/lower/casual_001/player_british_casual_001_lower"
+	self.customizations.british_casual_001_lower.path_short = "units/vanilla/characters/players/british/lower/casual_001/player_british_casual_001_lower_short"
+	self.customizations.british_casual_001_lower.path_icon = "units/vanilla/characters/players/british/lower/casual_001/player_uk_casual_001_lower_hud"
+	self.customizations.british_casual_001_lower.path_icon_large = "units/vanilla/characters/players/british/lower/casual_001/player_uk_casual_001_lower_large_hud"
+	self.customizations.british_casual_001_lower.redeem_xp = 0
+	self.customizations.british_casual_001_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_casual_001_lower.droppable = true
+	self.customizations.british_casual_002_upper = {}
+	self.customizations.british_casual_002_upper.name = "character_customization_british_casual_002_upper_name"
+	self.customizations.british_casual_002_upper.description = "character_customization_british_casual_002_upper_desc"
+	self.customizations.british_casual_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_casual_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_002_upper.path = "units/vanilla/characters/players/british/upper/casual_002/player_british_casual_002_upper"
+	self.customizations.british_casual_002_upper.path_icon = "units/vanilla/characters/players/british/upper/casual_002/player_british_casual_002_upper_hud"
+	self.customizations.british_casual_002_upper.path_icon_large = "units/vanilla/characters/players/british/upper/casual_002/player_british_casual_002_upper_large_hud"
+	self.customizations.british_casual_002_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/casual_002/player_uk_casual_002_fp"
+	self.customizations.british_casual_002_upper.redeem_xp = 0
+	self.customizations.british_casual_002_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_casual_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_casual_002_upper.droppable = true
+	self.customizations.british_casual_002_lower = {}
+	self.customizations.british_casual_002_lower.name = "character_customization_british_casual_002_lower_name"
+	self.customizations.british_casual_002_lower.description = "character_customization_british_casual_002_lower_desc"
+	self.customizations.british_casual_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_casual_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_002_lower.path_long = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower"
+	self.customizations.british_casual_002_lower.path_short = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower_short"
+	self.customizations.british_casual_002_lower.path_icon = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower_hud"
+	self.customizations.british_casual_002_lower.path_icon_large = "units/vanilla/characters/players/british/lower/casual_002/player_british_casual_002_lower_large_hud"
+	self.customizations.british_casual_002_lower.redeem_xp = 0
+	self.customizations.british_casual_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.british_casual_002_lower.droppable = true
+	self.customizations.british_casual_003_upper = {}
+	self.customizations.british_casual_003_upper.name = "character_customization_british_casual_003_upper_name"
+	self.customizations.british_casual_003_upper.description = "character_customization_british_casual_003_upper_desc"
+	self.customizations.british_casual_003_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_casual_003_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_003_upper.path = "units/vanilla/characters/players/british/upper/casual_003/player_british_casual_003_upper"
+	self.customizations.british_casual_003_upper.path_icon = "units/vanilla/characters/players/british/upper/casual_003/player_british_casual_003_upper_hud"
+	self.customizations.british_casual_003_upper.path_icon_large = "units/vanilla/characters/players/british/upper/casual_003/player_british_casual_003_upper_large_hud"
+	self.customizations.british_casual_003_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/casual_003/player_uk_casual_003_fp"
+	self.customizations.british_casual_003_upper.redeem_xp = 0
+	self.customizations.british_casual_003_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_casual_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_casual_003_upper.droppable = true
+	self.customizations.british_casual_003_lower = {}
+	self.customizations.british_casual_003_lower.name = "character_customization_british_casual_003_lower_name"
+	self.customizations.british_casual_003_lower.description = "character_customization_british_casual_003_lower_desc"
+	self.customizations.british_casual_003_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_casual_003_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_003_lower.path_long = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower"
+	self.customizations.british_casual_003_lower.path_short = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower_short"
+	self.customizations.british_casual_003_lower.path_icon = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower_hud"
+	self.customizations.british_casual_003_lower.path_icon_large = "units/vanilla/characters/players/british/lower/casual_003/player_british_casual_003_lower_large_hud"
+	self.customizations.british_casual_003_lower.redeem_xp = 0
+	self.customizations.british_casual_003_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_casual_003_lower.droppable = true
+	self.customizations.british_casual_004_upper = {}
+	self.customizations.british_casual_004_upper.name = "character_customization_british_casual_004_upper_name"
+	self.customizations.british_casual_004_upper.description = "character_customization_british_casual_004_upper_desc"
+	self.customizations.british_casual_004_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_casual_004_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_004_upper.path = "units/vanilla/characters/players/british/upper/casual_004/player_british_casual_004_upper"
+	self.customizations.british_casual_004_upper.path_icon = "units/vanilla/characters/players/british/upper/casual_004/player_british_casual_004_upper_hud"
+	self.customizations.british_casual_004_upper.path_icon_large = "units/vanilla/characters/players/british/upper/casual_004/player_british_casual_004_upper_large_hud"
+	self.customizations.british_casual_004_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/casual_004/player_uk_casual_004_fp"
+	self.customizations.british_casual_004_upper.redeem_xp = 0
+	self.customizations.british_casual_004_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_casual_004_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_casual_004_upper.droppable = true
+	self.customizations.british_casual_004_lower = {}
+	self.customizations.british_casual_004_lower.name = "character_customization_british_casual_004_lower_name"
+	self.customizations.british_casual_004_lower.description = "character_customization_british_casual_004_lower_desc"
+	self.customizations.british_casual_004_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_casual_004_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_casual_004_lower.path_long = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower"
+	self.customizations.british_casual_004_lower.path_short = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower_short"
+	self.customizations.british_casual_004_lower.path_icon = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower_hud"
+	self.customizations.british_casual_004_lower.path_icon_large = "units/vanilla/characters/players/british/lower/casual_004/player_british_casual_004_lower_large_hud"
+	self.customizations.british_casual_004_lower.redeem_xp = 0
+	self.customizations.british_casual_004_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.british_casual_004_lower.droppable = true
+	self.customizations.british_gangbanger_001_upper = {}
+	self.customizations.british_gangbanger_001_upper.name = "character_customization_british_gangbanger_001_upper_name"
+	self.customizations.british_gangbanger_001_upper.description = "character_customization_british_gangbanger_001_upper_desc"
+	self.customizations.british_gangbanger_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_gangbanger_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_gangbanger_001_upper.path = "units/vanilla/characters/players/british/upper/gangbanger_001/player_british_gangbanger_001_upper"
+	self.customizations.british_gangbanger_001_upper.path_icon = "units/vanilla/characters/players/british/upper/gangbanger_001/player_uk_gangbanger_001_upper_hud"
+	self.customizations.british_gangbanger_001_upper.path_icon_large = "units/vanilla/characters/players/british/upper/gangbanger_001/player_uk_gangbanger_001_upper_large_hud"
+	self.customizations.british_gangbanger_001_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/gangbanger_001/player_uk_gangbanger_001_fp"
+	self.customizations.british_gangbanger_001_upper.redeem_xp = 0
+	self.customizations.british_gangbanger_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_gangbanger_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_gangbanger_001_upper.droppable = true
+	self.customizations.british_gangbanger_001_lower = {}
+	self.customizations.british_gangbanger_001_lower.name = "character_customization_british_gangbanger_001_lower_name"
+	self.customizations.british_gangbanger_001_lower.description = "character_customization_british_gangbanger_001_lower_desc"
+	self.customizations.british_gangbanger_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_gangbanger_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_gangbanger_001_lower.path_long = "units/vanilla/characters/players/british/lower/gangbanger_001/player_british_gangbanger_001_lower"
+	self.customizations.british_gangbanger_001_lower.path_short = "units/vanilla/characters/players/british/lower/gangbanger_001/player_british_gangbanger_001_lower_short"
+	self.customizations.british_gangbanger_001_lower.path_icon = "units/vanilla/characters/players/british/lower/gangbanger_001/player_uk_gangbanger_001_lower_hud"
+	self.customizations.british_gangbanger_001_lower.path_icon_large = "units/vanilla/characters/players/british/lower/gangbanger_001/player_uk_gangbanger_001_lower_large_hud"
+	self.customizations.british_gangbanger_001_lower.redeem_xp = 0
+	self.customizations.british_gangbanger_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_gangbanger_001_lower.droppable = true
+	self.customizations.british_gold_jacket_001_upper = {}
+	self.customizations.british_gold_jacket_001_upper.name = "character_customization_british_gold_jacket_001_upper_name"
+	self.customizations.british_gold_jacket_001_upper.description = "character_customization_british_gold_jacket_001_upper_desc"
+	self.customizations.british_gold_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_gold_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_gold_jacket_001_upper.path = "units/vanilla/characters/players/british/upper/gold_jacket/player_criminal_british_gold_jacket_001_upper"
+	self.customizations.british_gold_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud"
+	self.customizations.british_gold_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud"
+	self.customizations.british_gold_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp"
+	self.customizations.british_gold_jacket_001_upper.redeem_xp = 0
+	self.customizations.british_gold_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_gold_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_officer_001_upper = {}
+	self.customizations.german_officer_001_upper.name = "character_customization_german_officer_001_upper_name"
+	self.customizations.german_officer_001_upper.description = "character_customization_german_officer_001_upper_desc"
+	self.customizations.german_officer_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_officer_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_officer_001_upper.path = "units/vanilla/characters/players/german/upper/officer_001/npc_criminal_ger_officer_001_upper"
+	self.customizations.german_officer_001_upper.path_icon = "units/vanilla/characters/players/german/upper/officer_001/player_german_officer_001_upper_hud"
+	self.customizations.german_officer_001_upper.path_icon_large = "units/vanilla/characters/players/german/upper/officer_001/player_german_officer_001_upper_large_hud"
+	self.customizations.german_officer_001_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/officer_001/player_german_officer_001_fp"
+	self.customizations.german_officer_001_upper.redeem_xp = 0
+	self.customizations.german_officer_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_officer_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_officer_001_upper.droppable = true
+	self.customizations.german_officer_001_lower = {}
+	self.customizations.german_officer_001_lower.name = "character_customization_german_officer_001_lower_name"
+	self.customizations.german_officer_001_lower.description = "character_customization_german_officer_001_lower_desc"
+	self.customizations.german_officer_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_officer_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_officer_001_lower.path_long = "units/vanilla/characters/players/german/lower/officer_001/npc_criminal_ger_officer_001_lower"
+	self.customizations.german_officer_001_lower.path_short = "units/vanilla/characters/players/german/lower/officer_001/npc_criminal_ger_officer_001_lower_short"
+	self.customizations.german_officer_001_lower.path_icon = "units/vanilla/characters/players/german/lower/officer_001/player_german_officer_001_lower_hud"
+	self.customizations.german_officer_001_lower.path_icon_large = "units/vanilla/characters/players/german/lower/officer_001/player_german_officer_001_lower_large_hud"
+	self.customizations.german_officer_001_lower.redeem_xp = 0
+	self.customizations.german_officer_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_officer_001_lower.droppable = true
+	self.customizations.german_gangbanger_001_upper = {}
+	self.customizations.german_gangbanger_001_upper.name = "character_customization_german_gangbanger_001_upper_name"
+	self.customizations.german_gangbanger_001_upper.description = "character_customization_german_gangbanger_001_upper_desc"
+	self.customizations.german_gangbanger_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_gangbanger_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_gangbanger_001_upper.path = "units/vanilla/characters/players/german/upper/gangbanger_001/npc_criminal_ger_gangbanger_001_upper"
+	self.customizations.german_gangbanger_001_upper.path_icon = "units/vanilla/characters/players/german/upper/gangbanger_001/player_german_gangbanger_001_upper_hud"
+	self.customizations.german_gangbanger_001_upper.path_icon_large = "units/vanilla/characters/players/german/upper/gangbanger_001/player_german_gangbanger_001_upper_large_hud"
+	self.customizations.german_gangbanger_001_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/gangbanger_001/player_german_gangbanger_001_fp"
+	self.customizations.german_gangbanger_001_upper.redeem_xp = 0
+	self.customizations.german_gangbanger_001_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_gangbanger_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_gangbanger_001_upper.droppable = true
+	self.customizations.german_gangbanger_001_lower = {}
+	self.customizations.german_gangbanger_001_lower.name = "character_customization_german_gangbanger_001_lower_name"
+	self.customizations.german_gangbanger_001_lower.description = "character_customization_german_gangbanger_001_lower_desc"
+	self.customizations.german_gangbanger_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_gangbanger_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_gangbanger_001_lower.path_long = "units/vanilla/characters/players/german/lower/gangbanger_001/npc_criminal_ger_gangbanger_001_lower"
+	self.customizations.german_gangbanger_001_lower.path_short = "units/vanilla/characters/players/german/lower/gangbanger_001/npc_criminal_ger_gangbanger_001_lower_short"
+	self.customizations.german_gangbanger_001_lower.path_icon = "units/vanilla/characters/players/german/lower/gangbanger_001/player_german_gangbanger_001_lower_hud"
+	self.customizations.german_gangbanger_001_lower.path_icon_large = "units/vanilla/characters/players/german/lower/gangbanger_001/player_german_gangbanger_001_lower_large_hud"
+	self.customizations.german_gangbanger_001_lower.redeem_xp = 0
+	self.customizations.german_gangbanger_001_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_gangbanger_001_lower.droppable = true
+	self.customizations.german_officer_002_upper = {}
+	self.customizations.german_officer_002_upper.name = "character_customization_german_officer_002_upper_name"
+	self.customizations.german_officer_002_upper.description = "character_customization_german_officer_002_upper_desc"
+	self.customizations.german_officer_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_officer_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_officer_002_upper.path = "units/vanilla/characters/players/german/upper/officer_002/npc_criminal_ger_officer_002_upper"
+	self.customizations.german_officer_002_upper.path_icon = "units/vanilla/characters/players/german/upper/officer_002/player_german_officer_002_upper_hud"
+	self.customizations.german_officer_002_upper.path_icon_large = "units/vanilla/characters/players/german/upper/officer_002/player_german_officer_002_upper_large_hud"
+	self.customizations.german_officer_002_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/officer_002/player_german_officer_002_fp"
+	self.customizations.german_officer_002_upper.redeem_xp = 0
+	self.customizations.german_officer_002_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.german_officer_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_officer_002_upper.droppable = true
+	self.customizations.german_officer_002_lower = {}
+	self.customizations.german_officer_002_lower.name = "character_customization_german_officer_002_lower_name"
+	self.customizations.german_officer_002_lower.description = "character_customization_german_officer_002_lower_desc"
+	self.customizations.german_officer_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_officer_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_officer_002_lower.path_long = "units/vanilla/characters/players/german/lower/officer_002/npc_criminal_ger_officer_002_lower"
+	self.customizations.german_officer_002_lower.path_short = "units/vanilla/characters/players/german/lower/officer_002/npc_criminal_ger_officer_002_lower_short"
+	self.customizations.german_officer_002_lower.path_icon = "units/vanilla/characters/players/german/lower/officer_002/player_german_officer_002_lower_hud"
+	self.customizations.german_officer_002_lower.path_icon_large = "units/vanilla/characters/players/german/lower/officer_002/player_german_officer_002_lower_large_hud"
+	self.customizations.german_officer_002_lower.redeem_xp = 0
+	self.customizations.german_officer_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.german_officer_002_lower.droppable = true
+	self.customizations.german_grunt_001_upper = {}
+	self.customizations.german_grunt_001_upper.name = "character_customization_german_grunt_001_upper_name"
+	self.customizations.german_grunt_001_upper.description = "character_customization_german_grunt_001_upper_desc"
+	self.customizations.german_grunt_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_grunt_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_grunt_001_upper.path = "units/vanilla/characters/players/german/upper/grunt_001/player_german_grunt_001_upper"
+	self.customizations.german_grunt_001_upper.path_icon = "units/vanilla/characters/players/german/upper/grunt_001/player_german_grunt_001_upper_hud"
+	self.customizations.german_grunt_001_upper.path_icon_large = "units/vanilla/characters/players/german/upper/grunt_001/player_german_grunt_001_upper_large_hud"
+	self.customizations.german_grunt_001_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/grunt_001/player_german_grunt_001_fp"
+	self.customizations.german_grunt_001_upper.redeem_xp = 0
+	self.customizations.german_grunt_001_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_grunt_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_grunt_001_upper.droppable = true
+	self.customizations.german_grunt_001_lower = {}
+	self.customizations.german_grunt_001_lower.name = "character_customization_german_grunt_001_lower_name"
+	self.customizations.german_grunt_001_lower.description = "character_customization_german_grunt_001_lower_desc"
+	self.customizations.german_grunt_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_grunt_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_grunt_001_lower.path_long = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower"
+	self.customizations.german_grunt_001_lower.path_short = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower_short"
+	self.customizations.german_grunt_001_lower.path_icon = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower_hud"
+	self.customizations.german_grunt_001_lower.path_icon_large = "units/vanilla/characters/players/german/lower/grunt_002/player_german_grunt_002_lower_large_hud"
+	self.customizations.german_grunt_001_lower.redeem_xp = 0
+	self.customizations.german_grunt_001_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_grunt_001_lower.droppable = true
+	self.customizations.german_grunt_002_upper = {}
+	self.customizations.german_grunt_002_upper.name = "character_customization_german_grunt_002_upper_name"
+	self.customizations.german_grunt_002_upper.description = "character_customization_german_grunt_002_upper_desc"
+	self.customizations.german_grunt_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_grunt_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_grunt_002_upper.path = "units/vanilla/characters/players/german/upper/grunt_002/player_german_grunt_002_upper"
+	self.customizations.german_grunt_002_upper.path_icon = "units/vanilla/characters/players/german/upper/grunt_002/player_german_grunt_002_upper_hud"
+	self.customizations.german_grunt_002_upper.path_icon_large = "units/vanilla/characters/players/german/upper/grunt_002/player_german_grunt_002_upper_large_hud"
+	self.customizations.german_grunt_002_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/grunt_002/player_german_grunt_002_fp"
+	self.customizations.german_grunt_002_upper.redeem_xp = 0
+	self.customizations.german_grunt_002_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.german_grunt_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_grunt_002_upper.droppable = true
+	self.customizations.german_grunt_002_lower = {}
+	self.customizations.german_grunt_002_lower.name = "character_customization_german_grunt_002_lower_name"
+	self.customizations.german_grunt_002_lower.description = "character_customization_german_grunt_002_lower_desc"
+	self.customizations.german_grunt_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_grunt_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_grunt_002_lower.path_long = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower"
+	self.customizations.german_grunt_002_lower.path_short = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower_short"
+	self.customizations.german_grunt_002_lower.path_icon = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower_hud"
+	self.customizations.german_grunt_002_lower.path_icon_large = "units/vanilla/characters/players/german/lower/grunt_001/player_german_grunt_001_lower_large_hud"
+	self.customizations.german_grunt_002_lower.redeem_xp = 0
+	self.customizations.german_grunt_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.german_grunt_002_lower.droppable = true
+	self.customizations.german_grunt_003_upper = {}
+	self.customizations.german_grunt_003_upper.name = "character_customization_german_grunt_003_upper_name"
+	self.customizations.german_grunt_003_upper.description = "character_customization_german_grunt_003_upper_desc"
+	self.customizations.german_grunt_003_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_grunt_003_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_grunt_003_upper.path = "units/vanilla/characters/players/german/upper/grunt_003/player_criminal_german_grunt_003_upper"
+	self.customizations.german_grunt_003_upper.path_icon = "units/vanilla/characters/players/german/upper/grunt_003/player_german_grunt_003_upper_hud"
+	self.customizations.german_grunt_003_upper.path_icon_large = "units/vanilla/characters/players/german/upper/grunt_003/player_german_grunt_003_upper_large_hud"
+	self.customizations.german_grunt_003_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/grunt_003/player_german_grunt_003_fp"
+	self.customizations.german_grunt_003_upper.redeem_xp = 0
+	self.customizations.german_grunt_003_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_grunt_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_grunt_003_upper.droppable = true
+	self.customizations.german_grunt_003_lower = {}
+	self.customizations.german_grunt_003_lower.name = "character_customization_german_grunt_003_lower_name"
+	self.customizations.german_grunt_003_lower.description = "character_customization_german_grunt_003_lower_desc"
+	self.customizations.german_grunt_003_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_grunt_003_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_grunt_003_lower.path_long = "units/vanilla/characters/players/german/lower/grunt_003/player_criminal_german_grunt_003_lower"
+	self.customizations.german_grunt_003_lower.path_short = "units/vanilla/characters/players/german/lower/grunt_003/player_criminal_german_grunt_003_lower_short"
+	self.customizations.german_grunt_003_lower.path_icon = "units/vanilla/characters/players/german/lower/grunt_003/player_german_grunt_003_lower_hud"
+	self.customizations.german_grunt_003_lower.path_icon_large = "units/vanilla/characters/players/german/lower/grunt_003/player_german_grunt_003_lower_large_hud"
+	self.customizations.german_grunt_003_lower.redeem_xp = 0
+	self.customizations.german_grunt_003_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_grunt_003_lower.droppable = true
+	self.customizations.german_gold_jacket_002_upper = {}
+	self.customizations.german_gold_jacket_002_upper.name = "character_customization_german_gold_jacket_002_upper_name"
+	self.customizations.german_gold_jacket_002_upper.description = "character_customization_german_gold_jacket_002_upper_desc"
+	self.customizations.german_gold_jacket_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_gold_jacket_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_gold_jacket_002_upper.path = "units/vanilla/characters/players/german/upper/gold_jacket/player_criminal_german_gold_jacket_001_upper"
+	self.customizations.german_gold_jacket_002_upper.path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud"
+	self.customizations.german_gold_jacket_002_upper.path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud"
+	self.customizations.german_gold_jacket_002_upper.path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp"
+	self.customizations.german_gold_jacket_002_upper.redeem_xp = 0
+	self.customizations.german_gold_jacket_002_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_gold_jacket_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_gangbanger_002_upper = {}
+	self.customizations.german_gangbanger_002_upper.name = "character_customization_german_gangbanger_002_upper_name"
+	self.customizations.german_gangbanger_002_upper.description = "character_customization_german_gangbanger_002_upper_desc"
+	self.customizations.german_gangbanger_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_gangbanger_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_gangbanger_002_upper.path = "units/vanilla/characters/players/german/upper/gangbanger_002/player_criminal_ger_gangbanger_002_upper"
+	self.customizations.german_gangbanger_002_upper.path_icon = "units/vanilla/characters/players/german/upper/gangbanger_002/player_german_gangbanger_002_upper_hud"
+	self.customizations.german_gangbanger_002_upper.path_icon_large = "units/vanilla/characters/players/german/upper/gangbanger_002/player_german_gangbanger_002_upper_large_hud"
+	self.customizations.german_gangbanger_002_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/gangbanger_002/player_german_default_fp"
+	self.customizations.german_gangbanger_002_upper.redeem_xp = 0
+	self.customizations.german_gangbanger_002_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_gangbanger_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_gangbanger_002_upper.droppable = true
+	self.customizations.german_gangbanger_002_lower = {}
+	self.customizations.german_gangbanger_002_lower.name = "character_customization_german_gangbanger_002_lower_name"
+	self.customizations.german_gangbanger_002_lower.description = "character_customization_german_gangbanger_002_lower_desc"
+	self.customizations.german_gangbanger_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_gangbanger_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_gangbanger_002_lower.path_long = "units/vanilla/characters/players/german/lower/gangbanger_002/player_criminal_ger_gangbanger_002_lower"
+	self.customizations.german_gangbanger_002_lower.path_short = "units/vanilla/characters/players/german/lower/gangbanger_002/player_criminal_ger_gangbanger_002_lower_short"
+	self.customizations.german_gangbanger_002_lower.path_icon = "units/vanilla/characters/players/german/lower/gangbanger_002/player_german_gangbanger_002_lower_hud"
+	self.customizations.german_gangbanger_002_lower.path_icon_large = "units/vanilla/characters/players/german/lower/gangbanger_002/player_german_gangbanger_002_lower_large_hud"
+	self.customizations.german_gangbanger_002_lower.redeem_xp = 0
+	self.customizations.german_gangbanger_002_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.german_gangbanger_002_lower.droppable = true
+	self.customizations.russian_commisar_001_upper = {}
+	self.customizations.russian_commisar_001_upper.name = "character_customization_russian_commisar_001_upper_name"
+	self.customizations.russian_commisar_001_upper.description = "character_customization_russian_commisar_001_upper_desc"
+	self.customizations.russian_commisar_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_commisar_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_commisar_001_upper.path = "units/vanilla/characters/players/soviet/upper/commisar_001/npc_criminal_soviet_commisar_001_upper"
+	self.customizations.russian_commisar_001_upper.path_icon = "units/vanilla/characters/players/soviet/upper/commisar_001/player_soviet_commisar_001_upper_hud"
+	self.customizations.russian_commisar_001_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/commisar_001/player_soviet_commisar_001_upper_large_hud"
+	self.customizations.russian_commisar_001_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/commisar_001/player_soviet_commisar_001_fp"
+	self.customizations.russian_commisar_001_upper.redeem_xp = 0
+	self.customizations.russian_commisar_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_commisar_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.russian_commisar_001_upper.droppable = true
+	self.customizations.russian_commisar_001_lower = {}
+	self.customizations.russian_commisar_001_lower.name = "character_customization_russian_commisar_001_lower_name"
+	self.customizations.russian_commisar_001_lower.description = "character_customization_russian_commisar_001_lower_desc"
+	self.customizations.russian_commisar_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_commisar_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_commisar_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/commisar_001/npc_criminal_soviet_commisar_001_lower"
+	self.customizations.russian_commisar_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/commisar_001/npc_criminal_soviet_commisar_001_lower_short"
+	self.customizations.russian_commisar_001_lower.path_icon = "units/vanilla/characters/players/soviet/lower/commisar_001/player_soviet_commisar_001_lower_hud"
+	self.customizations.russian_commisar_001_lower.path_icon_large = "units/vanilla/characters/players/soviet/lower/commisar_001/player_soviet_commisar_001_lower_large_hud"
+	self.customizations.russian_commisar_001_lower.redeem_xp = 0
+	self.customizations.russian_commisar_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_commisar_001_lower.droppable = true
+	self.customizations.russian_commisar_002_upper = {}
+	self.customizations.russian_commisar_002_upper.name = "character_customization_russian_commisar_002_upper_name"
+	self.customizations.russian_commisar_002_upper.description = "character_customization_russian_commisar_002_upper_desc"
+	self.customizations.russian_commisar_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_commisar_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_commisar_002_upper.path = "units/vanilla/characters/players/soviet/upper/commisar_002/npc_criminal_soviet_commisar_002_upper"
+	self.customizations.russian_commisar_002_upper.path_icon = "units/vanilla/characters/players/soviet/upper/commisar_002/player_soviet_commisar_002_upper_hud"
+	self.customizations.russian_commisar_002_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/commisar_002/player_soviet_commisar_002_upper_large_hud"
+	self.customizations.russian_commisar_002_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/commisar_002/player_soviet_commisar_002_fp"
+	self.customizations.russian_commisar_002_upper.redeem_xp = 0
+	self.customizations.russian_commisar_002_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_commisar_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.russian_commisar_002_upper.droppable = true
+	self.customizations.russian_commisar_002_lower = {}
+	self.customizations.russian_commisar_002_lower.name = "character_customization_russian_commisar_002_lower_name"
+	self.customizations.russian_commisar_002_lower.description = "character_customization_russian_commisar_002_lower_desc"
+	self.customizations.russian_commisar_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_commisar_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_commisar_002_lower.path_long = "units/vanilla/characters/players/soviet/lower/commisar_002/npc_criminal_soviet_commisar_002_lower"
+	self.customizations.russian_commisar_002_lower.path_short = "units/vanilla/characters/players/soviet/lower/commisar_002/npc_criminal_soviet_commisar_002_lower_short"
+	self.customizations.russian_commisar_002_lower.path_icon = "units/vanilla/characters/players/soviet/lower/commisar_002/player_soviet_commisar_002_lower_hud"
+	self.customizations.russian_commisar_002_lower.path_icon_large = "units/vanilla/characters/players/soviet/lower/commisar_002/player_soviet_commisar_002_lower_large_hud"
+	self.customizations.russian_commisar_002_lower.redeem_xp = 0
+	self.customizations.russian_commisar_002_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_commisar_002_lower.droppable = true
+	self.customizations.russian_casual_001_upper = {}
+	self.customizations.russian_casual_001_upper.name = "character_customization_russian_casual_001_upper_name"
+	self.customizations.russian_casual_001_upper.description = "character_customization_russian_casual_001_upper_desc"
+	self.customizations.russian_casual_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_casual_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_casual_001_upper.path = "units/vanilla/characters/players/soviet/upper/casual_001/npc_criminal_soviet_casual_001_upper"
+	self.customizations.russian_casual_001_upper.path_icon = "units/vanilla/characters/players/soviet/upper/casual_001/player_soviet_casual_001_upper_hud"
+	self.customizations.russian_casual_001_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/casual_001/player_soviet_casual_001_upper_large_hud"
+	self.customizations.russian_casual_001_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/casual_001/player_soviet_casual_001_fp"
+	self.customizations.russian_casual_001_upper.redeem_xp = 0
+	self.customizations.russian_casual_001_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_casual_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_casual_001_upper.droppable = true
+	self.customizations.russian_casual_001_lower = {}
+	self.customizations.russian_casual_001_lower.name = "character_customization_russian_casual_001_lower_name"
+	self.customizations.russian_casual_001_lower.description = "character_customization_russian_casual_001_lower_desc"
+	self.customizations.russian_casual_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_casual_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_casual_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/casual_001/npc_criminal_soviet_casual_001_lower"
+	self.customizations.russian_casual_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/casual_001/npc_criminal_soviet_casual_001_lower_short"
+	self.customizations.russian_casual_001_lower.path_icon = "units/vanilla/characters/players/soviet/lower/casual_001/player_soviet_casual_001_lower_hud"
+	self.customizations.russian_casual_001_lower.path_icon_large = "units/vanilla/characters/players/soviet/lower/casual_001/player_soviet_casual_001_lower_large_hud"
+	self.customizations.russian_casual_001_lower.redeem_xp = 0
+	self.customizations.russian_casual_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.russian_casual_001_lower.droppable = true
+	self.customizations.russian_commisar_003_upper = {}
+	self.customizations.russian_commisar_003_upper.name = "character_customization_russian_commisar_003_upper_name"
+	self.customizations.russian_commisar_003_upper.description = "character_customization_russian_commisar_003_upper_desc"
+	self.customizations.russian_commisar_003_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_commisar_003_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_commisar_003_upper.path = "units/vanilla/characters/players/soviet/upper/commisar_003/player_soviet_commisar_003_upper"
+	self.customizations.russian_commisar_003_upper.path_icon = "units/vanilla/characters/players/soviet/upper/commisar_003/player_soviet_commissar_003_upper_hud"
+	self.customizations.russian_commisar_003_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/commisar_003/player_soviet_commissar_003_upper_large_hud"
+	self.customizations.russian_commisar_003_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/commisar_003/player_soviet_commisar_003_fp"
+	self.customizations.russian_commisar_003_upper.redeem_xp = 0
+	self.customizations.russian_commisar_003_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_commisar_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.russian_commisar_003_upper.droppable = true
+	self.customizations.russian_commisar_003_lower = {}
+	self.customizations.russian_commisar_003_lower.name = "character_customization_russian_commisar_003_lower_name"
+	self.customizations.russian_commisar_003_lower.description = "character_customization_russian_commisar_003_lower_desc"
+	self.customizations.russian_commisar_003_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_commisar_003_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_commisar_003_lower.path_long = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower"
+	self.customizations.russian_commisar_003_lower.path_short = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower_short"
+	self.customizations.russian_commisar_003_lower.path_icon = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower_hud"
+	self.customizations.russian_commisar_003_lower.path_icon_large = "units/vanilla/characters/players/soviet/lower/commisar_003/player_soviet_commisar_003_lower_large_hud"
+	self.customizations.russian_commisar_003_lower.redeem_xp = 0
+	self.customizations.russian_commisar_003_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_commisar_003_lower.droppable = true
+	self.customizations.russian_grunt_001_upper = {}
+	self.customizations.russian_grunt_001_upper.name = "character_customization_russian_grunt_001_upper_name"
+	self.customizations.russian_grunt_001_upper.description = "character_customization_russian_grunt_001_upper_desc"
+	self.customizations.russian_grunt_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_grunt_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_grunt_001_upper.path = "units/vanilla/characters/players/soviet/upper/grunt_001/player_soviet_grunt_001_upper"
+	self.customizations.russian_grunt_001_upper.path_icon = "units/vanilla/characters/players/soviet/upper/grunt_001/player_soviet_grunt_001_upper_hud"
+	self.customizations.russian_grunt_001_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/grunt_001/player_soviet_grunt_001_upper_large_hud"
+	self.customizations.russian_grunt_001_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/grunt_001/player_soviet_grunt_001_fp"
+	self.customizations.russian_grunt_001_upper.redeem_xp = 0
+	self.customizations.russian_grunt_001_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_grunt_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.russian_grunt_001_upper.droppable = true
+	self.customizations.russian_grunt_001_lower = {}
+	self.customizations.russian_grunt_001_lower.name = "character_customization_russian_grunt_001_lower_name"
+	self.customizations.russian_grunt_001_lower.description = "character_customization_russian_grunt_001_lower_desc"
+	self.customizations.russian_grunt_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_grunt_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_grunt_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower"
+	self.customizations.russian_grunt_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower_short"
+	self.customizations.russian_grunt_001_lower.path_icon = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower_hud"
+	self.customizations.russian_grunt_001_lower.path_icon_large = "units/vanilla/characters/players/soviet/lower/grunt_001/player_soviet_grunt_001_lower_large_hud"
+	self.customizations.russian_grunt_001_lower.redeem_xp = 0
+	self.customizations.russian_grunt_001_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_grunt_001_lower.droppable = true
+	self.customizations.russian_grunt_002_upper = {}
+	self.customizations.russian_grunt_002_upper.name = "character_customization_russian_grunt_002_upper_name"
+	self.customizations.russian_grunt_002_upper.description = "character_customization_russian_grunt_002_upper_desc"
+	self.customizations.russian_grunt_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_grunt_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_grunt_002_upper.path = "units/vanilla/characters/players/soviet/upper/grunt_002/player_soviet_grunt_002_upper"
+	self.customizations.russian_grunt_002_upper.path_icon = "units/vanilla/characters/players/soviet/upper/grunt_002/player_soviet_grunt_002_upper_hud"
+	self.customizations.russian_grunt_002_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/grunt_002/player_soviet_grunt_002_upper_large_hud"
+	self.customizations.russian_grunt_002_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/grunt_002/player_soviet_grunt_002_fp"
+	self.customizations.russian_grunt_002_upper.redeem_xp = 0
+	self.customizations.russian_grunt_002_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.russian_grunt_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.russian_grunt_002_upper.droppable = true
+	self.customizations.russian_grunt_002_lower = {}
+	self.customizations.russian_grunt_002_lower.name = "character_customization_russian_grunt_002_lower_name"
+	self.customizations.russian_grunt_002_lower.description = "character_customization_russian_grunt_002_lower_desc"
+	self.customizations.russian_grunt_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_grunt_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_grunt_002_lower.path_long = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower"
+	self.customizations.russian_grunt_002_lower.path_short = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower_short"
+	self.customizations.russian_grunt_002_lower.path_icon = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower_hud"
+	self.customizations.russian_grunt_002_lower.path_icon_large = "units/vanilla/characters/players/soviet/lower/grunt_002/player_soviet_grunt_002_lower_large_hud"
+	self.customizations.russian_grunt_002_lower.redeem_xp = 0
+	self.customizations.russian_grunt_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.russian_grunt_002_lower.droppable = true
+	self.customizations.russian_mech_001_upper = {}
+	self.customizations.russian_mech_001_upper.name = "character_customization_russian_mech_001_upper_name"
+	self.customizations.russian_mech_001_upper.description = "character_customization_russian_mech_001_upper_desc"
+	self.customizations.russian_mech_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_mech_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_mech_001_upper.path = "units/vanilla/characters/players/soviet/upper/mech_001/player_soviet_mech_001_upper"
+	self.customizations.russian_mech_001_upper.path_icon = "units/vanilla/characters/players/soviet/upper/mech_001/player_soviet_mech_001_upper_hud"
+	self.customizations.russian_mech_001_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/mech_001/player_soviet_mech_001_upper_large_hud"
+	self.customizations.russian_mech_001_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/mech_001/player_soviet_mech_001_fp"
+	self.customizations.russian_mech_001_upper.redeem_xp = 0
+	self.customizations.russian_mech_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.russian_mech_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_mech_001_upper.droppable = true
+	self.customizations.russian_mech_001_lower = {}
+	self.customizations.russian_mech_001_lower.name = "character_customization_russian_mech_001_lower_name"
+	self.customizations.russian_mech_001_lower.description = "character_customization_russian_mech_001_lower_desc"
+	self.customizations.russian_mech_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_mech_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_mech_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower"
+	self.customizations.russian_mech_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower_short"
+	self.customizations.russian_mech_001_lower.path_icon = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower_hud"
+	self.customizations.russian_mech_001_lower.path_icon_large = "units/vanilla/characters/players/soviet/lower/mech_001/player_soviet_mech_001_lower_large_hud"
+	self.customizations.russian_mech_001_lower.redeem_xp = 0
+	self.customizations.russian_mech_001_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.russian_mech_001_lower.droppable = true
+	self.customizations.russian_gold_jacket_001_upper = {}
+	self.customizations.russian_gold_jacket_001_upper.name = "character_customization_russian_gold_jacket_001_upper_name"
+	self.customizations.russian_gold_jacket_001_upper.description = "character_customization_russian_gold_jacket_001_upper_desc"
+	self.customizations.russian_gold_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_gold_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_gold_jacket_001_upper.path = "units/vanilla/characters/players/soviet/upper/gold_jacket/player_criminal_soviet_gold_jacket_001_upper"
+	self.customizations.russian_gold_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud"
+	self.customizations.russian_gold_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud"
+	self.customizations.russian_gold_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp"
+	self.customizations.russian_gold_jacket_001_upper.redeem_xp = 0
+	self.customizations.russian_gold_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_gold_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_gangbanger_001_upper = {}
+	self.customizations.american_gangbanger_001_upper.name = "character_customization_american_gangbanger_001_upper_name"
+	self.customizations.american_gangbanger_001_upper.description = "character_customization_american_gangbanger_001_upper_desc"
+	self.customizations.american_gangbanger_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_gangbanger_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gangbanger_001_upper.path = "units/vanilla/characters/players/usa/upper/gangbanger_001/npc_criminal_usa_gangbanger_001_upper"
+	self.customizations.american_gangbanger_001_upper.path_icon = "units/vanilla/characters/players/usa/upper/gangbanger_001/player_usa_gangbanger_001_upper_hud"
+	self.customizations.american_gangbanger_001_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/gangbanger_001/player_usa_gangbanger_001_upper_large_hud"
+	self.customizations.american_gangbanger_001_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/gangbanger_001/player_usa_gangbanger_001_fp"
+	self.customizations.american_gangbanger_001_upper.redeem_xp = 0
+	self.customizations.american_gangbanger_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_gangbanger_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.american_gangbanger_001_upper.droppable = true
+	self.customizations.american_gangbanger_001_lower = {}
+	self.customizations.american_gangbanger_001_lower.name = "character_customization_american_gangbanger_001_lower_name"
+	self.customizations.american_gangbanger_001_lower.description = "character_customization_american_gangbanger_001_lower_desc"
+	self.customizations.american_gangbanger_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_gangbanger_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gangbanger_001_lower.path_long = "units/vanilla/characters/players/usa/lower/gangbanger_001/npc_criminal_usa_gangbanger_001_lower"
+	self.customizations.american_gangbanger_001_lower.path_short = "units/vanilla/characters/players/usa/lower/gangbanger_001/npc_criminal_usa_gangbanger_001_lower_short"
+	self.customizations.american_gangbanger_001_lower.path_icon = "units/vanilla/characters/players/usa/lower/gangbanger_001/player_usa_gangbanger_001_lower_hud"
+	self.customizations.american_gangbanger_001_lower.path_icon_large = "units/vanilla/characters/players/usa/lower/gangbanger_001/player_usa_gangbanger_001_lower_large_hud"
+	self.customizations.american_gangbanger_001_lower.redeem_xp = 0
+	self.customizations.american_gangbanger_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.american_gangbanger_001_lower.droppable = true
+	self.customizations.american_gangbanger_002_upper = {}
+	self.customizations.american_gangbanger_002_upper.name = "character_customization_american_gangbanger_002_upper_name"
+	self.customizations.american_gangbanger_002_upper.description = "character_customization_american_gangbanger_002_upper_desc"
+	self.customizations.american_gangbanger_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_gangbanger_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gangbanger_002_upper.path = "units/vanilla/characters/players/usa/upper/gangbanger_002/npc_criminal_usa_gangbanger_002_upper"
+	self.customizations.american_gangbanger_002_upper.path_icon = "units/vanilla/characters/players/usa/upper/gangbanger_002/player_usa_gangbanger_002_upper_hud"
+	self.customizations.american_gangbanger_002_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/gangbanger_002/player_usa_gangbanger_002_upper_large_hud"
+	self.customizations.american_gangbanger_002_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/gangbanger_002/player_usa_gangbanger_002_fp"
+	self.customizations.american_gangbanger_002_upper.redeem_xp = 0
+	self.customizations.american_gangbanger_002_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_gangbanger_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_gangbanger_002_upper.droppable = true
+	self.customizations.american_gangbanger_002_lower = {}
+	self.customizations.american_gangbanger_002_lower.name = "character_customization_american_gangbanger_002_lower_name"
+	self.customizations.american_gangbanger_002_lower.description = "character_customization_american_gangbanger_002_lower_desc"
+	self.customizations.american_gangbanger_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_gangbanger_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gangbanger_002_lower.path_long = "units/vanilla/characters/players/usa/lower/gangbanger_002/npc_criminal_usa_gangbanger_002_lower"
+	self.customizations.american_gangbanger_002_lower.path_short = "units/vanilla/characters/players/usa/lower/gangbanger_002/npc_criminal_usa_gangbanger_002_lower_short"
+	self.customizations.american_gangbanger_002_lower.path_icon = "units/vanilla/characters/players/usa/lower/gangbanger_002/player_usa_gangbanger_002_lower_hud"
+	self.customizations.american_gangbanger_002_lower.path_icon_large = "units/vanilla/characters/players/usa/lower/gangbanger_002/player_usa_gangbanger_002_lower_large_hud"
+	self.customizations.american_gangbanger_002_lower.redeem_xp = 0
+	self.customizations.american_gangbanger_002_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_gangbanger_002_lower.droppable = true
+	self.customizations.american_gangbanger_003_upper = {}
+	self.customizations.american_gangbanger_003_upper.name = "character_customization_american_gangbanger_003_upper_name"
+	self.customizations.american_gangbanger_003_upper.description = "character_customization_american_gangbanger_003_upper_desc"
+	self.customizations.american_gangbanger_003_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_gangbanger_003_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gangbanger_003_upper.path = "units/vanilla/characters/players/usa/upper/gangbanger_003/player_criminal_usa_gangbanger_003_upper"
+	self.customizations.american_gangbanger_003_upper.path_icon = "units/vanilla/characters/players/usa/upper/gangbanger_003/player_usa_gangbanger_003_upper_hud"
+	self.customizations.american_gangbanger_003_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/gangbanger_003/player_usa_gangbanger_003_upper_large_hud"
+	self.customizations.american_gangbanger_003_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/gangbanger_003/player_usa_gangbanger_003_fp"
+	self.customizations.american_gangbanger_003_upper.redeem_xp = 0
+	self.customizations.american_gangbanger_003_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.american_gangbanger_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_gangbanger_003_upper.droppable = true
+	self.customizations.american_gangbanger_003_lower = {}
+	self.customizations.american_gangbanger_003_lower.name = "character_customization_american_gangbanger_003_lower_name"
+	self.customizations.american_gangbanger_003_lower.description = "character_customization_american_gangbanger_003_lower_desc"
+	self.customizations.american_gangbanger_003_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_gangbanger_003_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gangbanger_003_lower.path_long = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_criminal_usa_gangbanger_003_lower"
+	self.customizations.american_gangbanger_003_lower.path_short = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_criminal_usa_gangbanger_003_lower_short"
+	self.customizations.american_gangbanger_003_lower.path_icon = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_usa_gangbanger_003_lower_hud"
+	self.customizations.american_gangbanger_003_lower.path_icon_large = "units/vanilla/characters/players/usa/lower/gangbanger_003/player_usa_gangbanger_003_lower_large_hud"
+	self.customizations.american_gangbanger_003_lower.redeem_xp = 0
+	self.customizations.american_gangbanger_003_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_gangbanger_003_lower.droppable = true
+	self.customizations.american_casual_001_upper = {}
+	self.customizations.american_casual_001_upper.name = "character_customization_american_casual_001_upper_name"
+	self.customizations.american_casual_001_upper.description = "character_customization_american_casual_001_upper_desc"
+	self.customizations.american_casual_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_casual_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_casual_001_upper.path = "units/vanilla/characters/players/usa/upper/casual_001/player_criminal_usa_casual_001_upper"
+	self.customizations.american_casual_001_upper.path_icon = "units/vanilla/characters/players/usa/upper/casual_001/player_usa_casual_001_upper_hud"
+	self.customizations.american_casual_001_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/casual_001/player_usa_casual_001_upper_large_hud"
+	self.customizations.american_casual_001_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/casual_001/player_usa_casual_001_fp"
+	self.customizations.american_casual_001_upper.redeem_xp = 0
+	self.customizations.american_casual_001_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_casual_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_casual_001_upper.droppable = true
+	self.customizations.american_casual_001_lower = {}
+	self.customizations.american_casual_001_lower.name = "character_customization_american_casual_001_lower_name"
+	self.customizations.american_casual_001_lower.description = "character_customization_american_casual_001_lower_desc"
+	self.customizations.american_casual_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_casual_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_casual_001_lower.path_long = "units/vanilla/characters/players/usa/lower/casual_001/player_criminal_usa_casual_001_lower"
+	self.customizations.american_casual_001_lower.path_short = "units/vanilla/characters/players/usa/lower/casual_001/player_criminal_usa_casual_001_lower_short"
+	self.customizations.american_casual_001_lower.path_icon = "units/vanilla/characters/players/usa/lower/casual_001/player_usa_casual_001_lower_hud"
+	self.customizations.american_casual_001_lower.path_icon_large = "units/vanilla/characters/players/usa/lower/casual_001/player_usa_casual_001_lower_large_hud"
+	self.customizations.american_casual_001_lower.redeem_xp = 0
+	self.customizations.american_casual_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.american_casual_001_lower.droppable = true
+	self.customizations.american_officer_001_upper = {}
+	self.customizations.american_officer_001_upper.name = "character_customization_american_officer_001_upper_name"
+	self.customizations.american_officer_001_upper.description = "character_customization_american_officer_001_upper_desc"
+	self.customizations.american_officer_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_officer_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_officer_001_upper.path = "units/vanilla/characters/players/usa/upper/officer_001/player_criminal_usa_officer_001_upper"
+	self.customizations.american_officer_001_upper.path_icon = "units/vanilla/characters/players/usa/upper/officer_001/player_usa_officer_001_upper_hud"
+	self.customizations.american_officer_001_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/officer_001/player_usa_officer_001_upper_large_hud"
+	self.customizations.american_officer_001_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/officer_001/player_usa_officer_001_fp"
+	self.customizations.american_officer_001_upper.redeem_xp = 0
+	self.customizations.american_officer_001_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_officer_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_officer_001_upper.droppable = true
+	self.customizations.american_officer_001_lower = {}
+	self.customizations.american_officer_001_lower.name = "character_customization_american_officer_001_lower_name"
+	self.customizations.american_officer_001_lower.description = "character_customization_american_officer_001_lower_desc"
+	self.customizations.american_officer_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_officer_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_officer_001_lower.path_long = "units/vanilla/characters/players/usa/lower/officer_001/player_criminal_usa_officer_001_lower"
+	self.customizations.american_officer_001_lower.path_short = "units/vanilla/characters/players/usa/lower/officer_001/player_criminal_usa_officer_001_lower_short"
+	self.customizations.american_officer_001_lower.path_icon = "units/vanilla/characters/players/usa/lower/officer_001/player_usa_officer_001_lower_hud"
+	self.customizations.american_officer_001_lower.path_icon_large = "units/vanilla/characters/players/usa/lower/officer_001/player_usa_officer_001_lower_large_hud"
+	self.customizations.american_officer_001_lower.redeem_xp = 0
+	self.customizations.american_officer_001_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_officer_001_lower.droppable = true
+	self.customizations.american_officer_002_upper = {}
+	self.customizations.american_officer_002_upper.name = "character_customization_american_officer_002_upper_name"
+	self.customizations.american_officer_002_upper.description = "character_customization_american_officer_002_upper_desc"
+	self.customizations.american_officer_002_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_officer_002_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_officer_002_upper.path = "units/vanilla/characters/players/usa/upper/officer_002/player_criminal_usa_officer_002_upper"
+	self.customizations.american_officer_002_upper.path_icon = "units/vanilla/characters/players/usa/upper/officer_002/player_usa_officer_002_upper_hud"
+	self.customizations.american_officer_002_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/officer_002/player_usa_officer_002_upper_large_hud"
+	self.customizations.american_officer_002_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/officer_002/player_usa_officer_002_fp"
+	self.customizations.american_officer_002_upper.redeem_xp = 0
+	self.customizations.american_officer_002_upper.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_officer_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_officer_002_upper.droppable = true
+	self.customizations.american_officer_002_lower = {}
+	self.customizations.american_officer_002_lower.name = "character_customization_american_officer_002_lower_name"
+	self.customizations.american_officer_002_lower.description = "character_customization_american_officer_002_lower_desc"
+	self.customizations.american_officer_002_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_officer_002_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_officer_002_lower.path_long = "units/vanilla/characters/players/usa/lower/officer_002/player_criminal_usa_officer_002_lower"
+	self.customizations.american_officer_002_lower.path_short = "units/vanilla/characters/players/usa/lower/officer_002/player_criminal_usa_officer_002_lower_short"
+	self.customizations.american_officer_002_lower.path_icon = "units/vanilla/characters/players/usa/lower/officer_002/player_usa_officer_002_lower_hud"
+	self.customizations.american_officer_002_lower.path_icon_large = "units/vanilla/characters/players/usa/lower/officer_002/player_usa_officer_002_lower_large_hud"
+	self.customizations.american_officer_002_lower.redeem_xp = 0
+	self.customizations.american_officer_002_lower.rarity = LootDropTweakData.RARITY_COMMON
+	self.customizations.american_officer_002_lower.droppable = true
+	self.customizations.american_grunt_001_upper = {}
+	self.customizations.american_grunt_001_upper.name = "character_customization_american_grunt_001_upper_name"
+	self.customizations.american_grunt_001_upper.description = "character_customization_american_grunt_001_upper_desc"
+	self.customizations.american_grunt_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_grunt_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_grunt_001_upper.path = "units/vanilla/characters/players/usa/upper/grunt_001/player_criminal_usa_grunt_001_upper"
+	self.customizations.american_grunt_001_upper.path_icon = "units/vanilla/characters/players/usa/upper/grunt_001/player_usa_grunt_001_upper_hud"
+	self.customizations.american_grunt_001_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/grunt_001/player_usa_grunt_001_upper_large_hud"
+	self.customizations.american_grunt_001_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/grunt_001/player_usa_grunt_001_fp"
+	self.customizations.american_grunt_001_upper.redeem_xp = 0
+	self.customizations.american_grunt_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.customizations.american_grunt_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_grunt_001_upper.droppable = true
+	self.customizations.american_grunt_001_lower = {}
+	self.customizations.american_grunt_001_lower.name = "character_customization_american_grunt_001_lower_name"
+	self.customizations.american_grunt_001_lower.description = "character_customization_american_grunt_001_lower_desc"
+	self.customizations.american_grunt_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_grunt_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_grunt_001_lower.path_long = "units/vanilla/characters/players/usa/lower/grunt_001/player_criminal_usa_grunt_001_lower"
+	self.customizations.american_grunt_001_lower.path_short = "units/vanilla/characters/players/usa/lower/grunt_001/player_criminal_usa_grunt_001_lower_short"
+	self.customizations.american_grunt_001_lower.path_icon = "units/vanilla/characters/players/usa/lower/grunt_001/player_usa_grunt_001_lower_hud"
+	self.customizations.american_grunt_001_lower.path_icon_large = "units/vanilla/characters/players/usa/lower/grunt_001/player_usa_grunt_001_lower_large_hud"
+	self.customizations.american_grunt_001_lower.redeem_xp = 0
+	self.customizations.american_grunt_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_grunt_001_lower.droppable = true
+	self.customizations.american_gold_jacket_001_upper = {}
+	self.customizations.american_gold_jacket_001_upper.name = "character_customization_american_gold_jacket_001_upper_name"
+	self.customizations.american_gold_jacket_001_upper.description = "character_customization_american_gold_jacket_001_upper_desc"
+	self.customizations.american_gold_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_gold_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gold_jacket_001_upper.path = "units/vanilla/characters/players/usa/upper/gold_jacket/player_criminal_usa_gold_jacket_001_upper"
+	self.customizations.american_gold_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_hud"
+	self.customizations.american_gold_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/golden_jacket/player_gold_jacket_large_hud"
+	self.customizations.american_gold_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/golden_jacket/player_generic_gold_jacket_001_fp"
+	self.customizations.american_gold_jacket_001_upper.redeem_xp = 0
+	self.customizations.american_gold_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_gold_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_gold_collector_jacket_001_upper = {}
+	self.customizations.american_gold_collector_jacket_001_upper.name = "character_customization_american_gold_collector_jacket_001_upper_name"
+	self.customizations.american_gold_collector_jacket_001_upper.description = "character_customization_american_gold_collector_jacket_001_upper_desc"
+	self.customizations.american_gold_collector_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_gold_collector_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_gold_collector_jacket_001_upper.path = "units/vanilla/characters/players/usa/upper/gold_collector_jacket/player_criminal_usa_gold_collector_jacket_001_upper"
+	self.customizations.american_gold_collector_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud"
+	self.customizations.american_gold_collector_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud"
+	self.customizations.american_gold_collector_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp"
+	self.customizations.american_gold_collector_jacket_001_upper.redeem_xp = 0
+	self.customizations.american_gold_collector_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_gold_collector_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.british_gold_collector_jacket_001_upper = {}
+	self.customizations.british_gold_collector_jacket_001_upper.name = "character_customization_british_gold_collector_jacket_001_upper_name"
+	self.customizations.british_gold_collector_jacket_001_upper.description = "character_customization_british_gold_collector_jacket_001_upper_desc"
+	self.customizations.british_gold_collector_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_gold_collector_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_gold_collector_jacket_001_upper.path = "units/vanilla/characters/players/british/upper/gold_collector_jacket/player_criminal_british_gold_collector_jacket_001_upper"
+	self.customizations.british_gold_collector_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud"
+	self.customizations.british_gold_collector_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud"
+	self.customizations.british_gold_collector_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp"
+	self.customizations.british_gold_collector_jacket_001_upper.redeem_xp = 0
+	self.customizations.british_gold_collector_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_gold_collector_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_gold_collector_jacket_001_upper = {}
+	self.customizations.german_gold_collector_jacket_001_upper.name = "character_customization_german_gold_collector_jacket_001_upper_name"
+	self.customizations.german_gold_collector_jacket_001_upper.description = "character_customization_german_gold_collector_jacket_001_upper_desc"
+	self.customizations.german_gold_collector_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_gold_collector_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_gold_collector_jacket_001_upper.path = "units/vanilla/characters/players/german/upper/gold_collector_jacket/player_criminal_german_gold_collector_jacket_001_upper"
+	self.customizations.german_gold_collector_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud"
+	self.customizations.german_gold_collector_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud"
+	self.customizations.german_gold_collector_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp"
+	self.customizations.german_gold_collector_jacket_001_upper.redeem_xp = 0
+	self.customizations.german_gold_collector_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_gold_collector_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.russian_gold_collector_jacket_001_upper = {}
+	self.customizations.russian_gold_collector_jacket_001_upper.name = "character_customization_russian_gold_collector_jacket_001_upper_name"
+	self.customizations.russian_gold_collector_jacket_001_upper.description = "character_customization_russian_gold_collector_jacket_001_upper_desc"
+	self.customizations.russian_gold_collector_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_gold_collector_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_gold_collector_jacket_001_upper.path = "units/vanilla/characters/players/soviet/upper/gold_collector_jacket/player_criminal_soviet_gold_collector_jacket_001_upper"
+	self.customizations.russian_gold_collector_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_hud"
+	self.customizations.russian_gold_collector_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/gold_collector_jacket/player_gold_collector_jacket_large_hud"
+	self.customizations.russian_gold_collector_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/gold_collector_jacket/player_generic_gold_collector_jacket_001_fp"
+	self.customizations.russian_gold_collector_jacket_001_upper.redeem_xp = 0
+	self.customizations.russian_gold_collector_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_gold_collector_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.american_special_edition_001_upper = {}
+	self.customizations.american_special_edition_001_upper.name = "character_customization_generic_special_edition_001_upper_name"
+	self.customizations.american_special_edition_001_upper.description = "character_customization_generic_special_edition_001_upper_desc"
+	self.customizations.american_special_edition_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_special_edition_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_special_edition_001_upper.path = "units/vanilla/characters/players/usa/upper/special_edition/player_usa_special_edition_upper"
+	self.customizations.american_special_edition_001_upper.path_icon = "units/vanilla/characters/players/usa/upper/special_edition/player_usa_special_edition_upper_hud"
+	self.customizations.american_special_edition_001_upper.path_icon_large = "units/vanilla/characters/players/usa/upper/special_edition/player_usa_special_edition_upper_large_hud"
+	self.customizations.american_special_edition_001_upper.path_fps_hands = "units/vanilla/characters/players/usa/fp/special_edition/player_usa_special_edition_fp"
+	self.customizations.american_special_edition_001_upper.redeem_xp = 0
+	self.customizations.american_special_edition_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_special_edition_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_special_edition_001_upper.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
+	self.customizations.american_special_edition_001_upper.dlc_show_if_locked = false
+	self.customizations.british_special_edition_001_upper = {}
+	self.customizations.british_special_edition_001_upper.name = "character_customization_generic_special_edition_001_upper_name"
+	self.customizations.british_special_edition_001_upper.description = "character_customization_generic_special_edition_001_upper_desc"
+	self.customizations.british_special_edition_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_special_edition_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_special_edition_001_upper.path = "units/vanilla/characters/players/british/upper/special_edition/player_british_special_edition_upper"
+	self.customizations.british_special_edition_001_upper.path_icon = "units/vanilla/characters/players/british/upper/special_edition/player_british_special_edition_upper_hud"
+	self.customizations.british_special_edition_001_upper.path_icon_large = "units/vanilla/characters/players/british/upper/special_edition/player_british_special_edition_upper_large_hud"
+	self.customizations.british_special_edition_001_upper.path_fps_hands = "units/vanilla/characters/players/british/fp/special_edition/player_british_special_edition_fp"
+	self.customizations.british_special_edition_001_upper.redeem_xp = 0
+	self.customizations.british_special_edition_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_special_edition_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_special_edition_001_upper.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
+	self.customizations.british_special_edition_001_upper.dlc_show_if_locked = false
+	self.customizations.german_special_edition_001_upper = {}
+	self.customizations.german_special_edition_001_upper.name = "character_customization_generic_special_edition_001_upper_name"
+	self.customizations.german_special_edition_001_upper.description = "character_customization_generic_special_edition_001_upper_desc"
+	self.customizations.german_special_edition_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_special_edition_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_special_edition_001_upper.path = "units/vanilla/characters/players/german/upper/special_edition/player_german_special_edition_upper"
+	self.customizations.german_special_edition_001_upper.path_icon = "units/vanilla/characters/players/german/upper/special_edition/player_german_special_edition_upper_hud"
+	self.customizations.german_special_edition_001_upper.path_icon_large = "units/vanilla/characters/players/german/upper/special_edition/player_german_special_edition_upper_large_hud"
+	self.customizations.german_special_edition_001_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/special_edition/player_german_special_edition_fp"
+	self.customizations.german_special_edition_001_upper.redeem_xp = 0
+	self.customizations.german_special_edition_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_special_edition_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_special_edition_001_upper.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
+	self.customizations.german_special_edition_001_upper.dlc_show_if_locked = false
+	self.customizations.russian_special_edition_001_upper = {}
+	self.customizations.russian_special_edition_001_upper.name = "character_customization_generic_special_edition_001_upper_name"
+	self.customizations.russian_special_edition_001_upper.description = "character_customization_generic_special_edition_001_upper_desc"
+	self.customizations.russian_special_edition_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_special_edition_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_special_edition_001_upper.path = "units/vanilla/characters/players/soviet/upper/special_edition/player_soviet_special_edition_upper"
+	self.customizations.russian_special_edition_001_upper.path_icon = "units/vanilla/characters/players/soviet/upper/special_edition/player_soviet_special_edition_upper_hud"
+	self.customizations.russian_special_edition_001_upper.path_icon_large = "units/vanilla/characters/players/soviet/upper/special_edition/player_soviet_special_edition_upper_large_hud"
+	self.customizations.russian_special_edition_001_upper.path_fps_hands = "units/vanilla/characters/players/soviet/fp/special_edition/player_soviet_special_edition_fp"
+	self.customizations.russian_special_edition_001_upper.redeem_xp = 0
+	self.customizations.russian_special_edition_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_special_edition_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_special_edition_001_upper.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
+	self.customizations.russian_special_edition_001_upper.dlc_show_if_locked = false
+	self.customizations.american_highlander_jacket_upper = {}
+	self.customizations.american_highlander_jacket_upper.name = "character_customization_highlander_upper_name"
+	self.customizations.american_highlander_jacket_upper.description = "character_customization_highlander_upper_desc"
+	self.customizations.american_highlander_jacket_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_highlander_jacket_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_highlander_jacket_upper.path = "units/vanilla/characters/players/usa/upper/highlander_jacket/player_usa_highlander_jacket_upper"
+	self.customizations.american_highlander_jacket_upper.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud"
+	self.customizations.american_highlander_jacket_upper.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud"
+	self.customizations.american_highlander_jacket_upper.path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp"
+	self.customizations.american_highlander_jacket_upper.redeem_xp = 0
+	self.customizations.american_highlander_jacket_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_highlander_jacket_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_highlander_jacket_upper.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.american_highlander_jacket_upper.dlc_show_if_locked = false
+	self.customizations.american_highlander_jacket_lower = {}
+	self.customizations.american_highlander_jacket_lower.name = "character_customization_highlander_lower_name"
+	self.customizations.american_highlander_jacket_lower.description = "character_customization_highlander_lower_desc"
+	self.customizations.american_highlander_jacket_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_highlander_jacket_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_highlander_jacket_lower.path_long = "units/vanilla/characters/players/usa/lower/highlander_jacket/player_usa_highlander_jacket_lower"
+	self.customizations.american_highlander_jacket_lower.path_short = "units/vanilla/characters/players/usa/lower/highlander_jacket/player_usa_highlander_jacket_lower_short"
+	self.customizations.american_highlander_jacket_lower.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud"
+	self.customizations.american_highlander_jacket_lower.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud"
+	self.customizations.american_highlander_jacket_lower.redeem_xp = 0
+	self.customizations.american_highlander_jacket_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_highlander_jacket_lower.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.american_highlander_jacket_lower.dlc_show_if_locked = false
+	self.customizations.russian_highlander_jacket_upper = {}
+	self.customizations.russian_highlander_jacket_upper.name = "character_customization_highlander_upper_name"
+	self.customizations.russian_highlander_jacket_upper.description = "character_customization_highlander_upper_desc"
+	self.customizations.russian_highlander_jacket_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_highlander_jacket_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_highlander_jacket_upper.path = "units/vanilla/characters/players/soviet/upper/highlander_jacket/player_soviet_highlander_jacket_upper"
+	self.customizations.russian_highlander_jacket_upper.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud"
+	self.customizations.russian_highlander_jacket_upper.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud"
+	self.customizations.russian_highlander_jacket_upper.path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp"
+	self.customizations.russian_highlander_jacket_upper.redeem_xp = 0
+	self.customizations.russian_highlander_jacket_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_highlander_jacket_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_highlander_jacket_upper.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.russian_highlander_jacket_upper.dlc_show_if_locked = false
+	self.customizations.russian_highlander_jacket_lower = {}
+	self.customizations.russian_highlander_jacket_lower.name = "character_customization_highlander_lower_name"
+	self.customizations.russian_highlander_jacket_lower.description = "character_customization_highlander_lower_desc"
+	self.customizations.russian_highlander_jacket_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_highlander_jacket_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_highlander_jacket_lower.path_long = "units/vanilla/characters/players/soviet/lower/highlander_jacket/player_soviet_highlander_jacket_lower"
+	self.customizations.russian_highlander_jacket_lower.path_short = "units/vanilla/characters/players/soviet/lower/highlander_jacket/player_soviet_highlander_jacket_lower_short"
+	self.customizations.russian_highlander_jacket_lower.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud"
+	self.customizations.russian_highlander_jacket_lower.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud"
+	self.customizations.russian_highlander_jacket_lower.redeem_xp = 0
+	self.customizations.russian_highlander_jacket_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_highlander_jacket_lower.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.russian_highlander_jacket_lower.dlc_show_if_locked = false
+	self.customizations.german_highlander_jacket_upper = {}
+	self.customizations.german_highlander_jacket_upper.name = "character_customization_highlander_upper_name"
+	self.customizations.german_highlander_jacket_upper.description = "character_customization_highlander_upper_desc"
+	self.customizations.german_highlander_jacket_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_highlander_jacket_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_highlander_jacket_upper.path = "units/vanilla/characters/players/german/upper/highlander_jacket/player_german_highlander_jacket_upper"
+	self.customizations.german_highlander_jacket_upper.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud"
+	self.customizations.german_highlander_jacket_upper.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud"
+	self.customizations.german_highlander_jacket_upper.path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp"
+	self.customizations.german_highlander_jacket_upper.redeem_xp = 0
+	self.customizations.german_highlander_jacket_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_highlander_jacket_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_highlander_jacket_upper.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.german_highlander_jacket_upper.dlc_show_if_locked = false
+	self.customizations.german_highlander_jacket_lower = {}
+	self.customizations.german_highlander_jacket_lower.name = "character_customization_highlander_lower_name"
+	self.customizations.german_highlander_jacket_lower.description = "character_customization_highlander_lower_desc"
+	self.customizations.german_highlander_jacket_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_highlander_jacket_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_highlander_jacket_lower.path_long = "units/vanilla/characters/players/german/lower/highlander_jacket/player_german_highlander_jacket_lower"
+	self.customizations.german_highlander_jacket_lower.path_short = "units/vanilla/characters/players/german/lower/highlander_jacket/player_german_highlander_jacket_lower_short"
+	self.customizations.german_highlander_jacket_lower.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud"
+	self.customizations.german_highlander_jacket_lower.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud"
+	self.customizations.german_highlander_jacket_lower.redeem_xp = 0
+	self.customizations.german_highlander_jacket_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_highlander_jacket_lower.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.german_highlander_jacket_lower.dlc_show_if_locked = false
+	self.customizations.british_highlander_jacket_upper = {}
+	self.customizations.british_highlander_jacket_upper.name = "character_customization_highlander_upper_name"
+	self.customizations.british_highlander_jacket_upper.description = "character_customization_highlander_upper_desc"
+	self.customizations.british_highlander_jacket_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_highlander_jacket_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_highlander_jacket_upper.path = "units/vanilla/characters/players/british/upper/highlander_jacket/player_british_highlander_jacket_upper"
+	self.customizations.british_highlander_jacket_upper.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_hud"
+	self.customizations.british_highlander_jacket_upper.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_upper_large_hud"
+	self.customizations.british_highlander_jacket_upper.path_fps_hands = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highlander_jacket_fp"
+	self.customizations.british_highlander_jacket_upper.redeem_xp = 0
+	self.customizations.british_highlander_jacket_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_highlander_jacket_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_highlander_jacket_upper.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.british_highlander_jacket_upper.dlc_show_if_locked = false
+	self.customizations.british_highlander_jacket_lower = {}
+	self.customizations.british_highlander_jacket_lower.name = "character_customization_highlander_lower_name"
+	self.customizations.british_highlander_jacket_lower.description = "character_customization_highlander_lower_desc"
+	self.customizations.british_highlander_jacket_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_highlander_jacket_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_highlander_jacket_lower.path_long = "units/vanilla/characters/players/british/lower/highlander_jacket/player_british_highlander_jacket_lower"
+	self.customizations.british_highlander_jacket_lower.path_short = "units/vanilla/characters/players/british/lower/highlander_jacket/player_british_highlander_jacket_lower_short"
+	self.customizations.british_highlander_jacket_lower.path_icon = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_hud"
+	self.customizations.british_highlander_jacket_lower.path_icon_large = "units/vanilla/characters/players/generic/highlander_jacket/player_generic_highland_lower_large_hud"
+	self.customizations.british_highlander_jacket_lower.redeem_xp = 0
+	self.customizations.british_highlander_jacket_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_highlander_jacket_lower.dlc = DLCTweakData.DLC_NAME_PREORDER
+	self.customizations.british_highlander_jacket_lower.dlc_show_if_locked = false
+	self.customizations.british_ace_jacket_001_upper = {}
+	self.customizations.british_ace_jacket_001_upper.name = "character_customization_british_ace_jacket_001_upper_name"
+	self.customizations.british_ace_jacket_001_upper.description = "character_customization_british_ace_jacket_001_upper_desc"
+	self.customizations.british_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_ace_jacket_001_upper.path = "units/vanilla/characters/players/british/upper/ace_jacket/player_criminal_british_ace_jacket_upper"
+	self.customizations.british_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.british_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.british_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.british_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.british_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.british_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_ace_jacket_001_upper.droppable = true
+	self.customizations.british_ace_jacket_001_lower = {}
+	self.customizations.british_ace_jacket_001_lower.name = "character_customization_british_ace_jacket_001_lower_name"
+	self.customizations.british_ace_jacket_001_lower.description = "character_customization_british_ace_jacket_001_lower_desc"
+	self.customizations.british_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/british/lower/ace_jacket/player_british_ace_jacket_lower"
+	self.customizations.british_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/british/lower/ace_jacket/player_british_ace_jacket_lower_short"
+	self.customizations.british_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.british_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.british_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.british_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.british_ace_jacket_001_lower.droppable = true
+	self.customizations.german_ace_jacket_001_upper = {}
+	self.customizations.german_ace_jacket_001_upper.name = "character_customization_german_ace_jacket_001_upper_name"
+	self.customizations.german_ace_jacket_001_upper.description = "character_customization_german_ace_jacket_001_upper_desc"
+	self.customizations.german_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_ace_jacket_001_upper.path = "units/vanilla/characters/players/german/upper/ace_jacket/player_criminal_german_ace_jacket_upper"
+	self.customizations.german_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.german_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.german_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.german_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.german_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.german_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_ace_jacket_001_upper.droppable = true
+	self.customizations.german_ace_jacket_001_lower = {}
+	self.customizations.german_ace_jacket_001_lower.name = "character_customization_german_ace_jacket_001_lower_name"
+	self.customizations.german_ace_jacket_001_lower.description = "character_customization_german_ace_jacket_001_lower_desc"
+	self.customizations.german_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/german/lower/ace_jacket/player_german_ace_jacket_lower"
+	self.customizations.german_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/german/lower/ace_jacket/player_german_ace_jacket_lower_short"
+	self.customizations.german_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.german_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.german_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.german_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.german_ace_jacket_001_lower.droppable = true
+	self.customizations.russian_ace_jacket_001_upper = {}
+	self.customizations.russian_ace_jacket_001_upper.name = "character_customization_soviet_ace_jacket_001_upper_name"
+	self.customizations.russian_ace_jacket_001_upper.description = "character_customization_soviet_ace_jacket_001_upper_desc"
+	self.customizations.russian_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_ace_jacket_001_upper.path = "units/vanilla/characters/players/soviet/upper/ace_jacket/player_criminal_soviet_ace_jacket_upper"
+	self.customizations.russian_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.russian_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.russian_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.russian_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.russian_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.russian_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_ace_jacket_001_upper.droppable = true
+	self.customizations.russian_ace_jacket_001_lower = {}
+	self.customizations.russian_ace_jacket_001_lower.name = "character_customization_soviet_ace_jacket_001_lower_name"
+	self.customizations.russian_ace_jacket_001_lower.description = "character_customization_soviet_ace_jacket_001_lower_desc"
+	self.customizations.russian_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/ace_jacket/player_soviet_ace_jacket_lower"
+	self.customizations.russian_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/ace_jacket/player_soviet_ace_jacket_lower_short"
+	self.customizations.russian_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.russian_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.russian_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.russian_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.russian_ace_jacket_001_lower.droppable = true
+	self.customizations.american_ace_jacket_001_upper = {}
+	self.customizations.american_ace_jacket_001_upper.name = "character_customization_usa_ace_jacket_001_upper_name"
+	self.customizations.american_ace_jacket_001_upper.description = "character_customization_usa_ace_jacket_001_upper_desc"
+	self.customizations.american_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_ace_jacket_001_upper.path = "units/vanilla/characters/players/usa/upper/ace_jacket/player_criminal_usa_ace_jacket_upper"
+	self.customizations.american_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.american_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.american_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.american_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.american_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.american_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_ace_jacket_001_upper.droppable = true
+	self.customizations.american_ace_jacket_001_lower = {}
+	self.customizations.american_ace_jacket_001_lower.name = "character_customization_usa_ace_jacket_001_lower_name"
+	self.customizations.american_ace_jacket_001_lower.description = "character_customization_usa_ace_jacket_001_lower_desc"
+	self.customizations.american_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/usa/lower/ace_jacket/player_usa_ace_jacket_lower"
+	self.customizations.american_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/usa/lower/ace_jacket/player_usa_ace_jacket_lower_short"
+	self.customizations.american_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.american_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.american_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.american_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.american_ace_jacket_001_lower.droppable = true
+	self.customizations.british_bomber_jacket_001_upper = {}
+	self.customizations.british_bomber_jacket_001_upper.name = "character_customization_british_bomber_jacket_001_upper_name"
+	self.customizations.british_bomber_jacket_001_upper.description = "character_customization_british_bomber_jacket_001_upper_desc"
+	self.customizations.british_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_bomber_jacket_001_upper.path = "units/vanilla/characters/players/british/upper/bomber_jacket/player_criminal_british_bomber_jacket_upper"
+	self.customizations.british_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.british_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.british_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.british_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.british_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_bomber_jacket_001_lower = {}
+	self.customizations.british_bomber_jacket_001_lower.name = "character_customization_british_bomber_jacket_001_lower_name"
+	self.customizations.british_bomber_jacket_001_lower.description = "character_customization_british_bomber_jacket_001_lower_desc"
+	self.customizations.british_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/british/lower/bomber_jacket/player_british_bomber_jacket_lower"
+	self.customizations.british_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/british/lower/bomber_jacket/player_british_bomber_jacket_lower_short"
+	self.customizations.british_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.british_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.british_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.british_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_bomber_jacket_001_upper = {}
+	self.customizations.german_bomber_jacket_001_upper.name = "character_customization_german_bomber_jacket_001_upper_name"
+	self.customizations.german_bomber_jacket_001_upper.description = "character_customization_german_bomber_jacket_001_upper_desc"
+	self.customizations.german_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_bomber_jacket_001_upper.path = "units/vanilla/characters/players/german/upper/bomber_jacket/player_criminal_german_bomber_jacket_upper"
+	self.customizations.german_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.german_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.german_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.german_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.german_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_bomber_jacket_001_lower = {}
+	self.customizations.german_bomber_jacket_001_lower.name = "character_customization_german_bomber_jacket_001_lower_name"
+	self.customizations.german_bomber_jacket_001_lower.description = "character_customization_german_bomber_jacket_001_lower_desc"
+	self.customizations.german_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/german/lower/bomber_jacket/player_german_bomber_jacket_lower"
+	self.customizations.german_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/german/lower/bomber_jacket/player_german_bomber_jacket_lower_short"
+	self.customizations.german_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.german_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.german_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.german_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_bomber_jacket_001_upper = {}
+	self.customizations.russian_bomber_jacket_001_upper.name = "character_customization_soviet_bomber_jacket_001_upper_name"
+	self.customizations.russian_bomber_jacket_001_upper.description = "character_customization_soviet_bomber_jacket_001_upper_desc"
+	self.customizations.russian_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_bomber_jacket_001_upper.path = "units/vanilla/characters/players/soviet/upper/bomber_jacket/player_criminal_soviet_bomber_jacket_upper"
+	self.customizations.russian_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.russian_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.russian_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.russian_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.russian_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_bomber_jacket_001_lower = {}
+	self.customizations.russian_bomber_jacket_001_lower.name = "character_customization_soviet_bomber_jacket_001_lower_name"
+	self.customizations.russian_bomber_jacket_001_lower.description = "character_customization_soviet_bomber_jacket_001_lower_desc"
+	self.customizations.russian_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/bomber_jacket/player_soviet_bomber_jacket_lower"
+	self.customizations.russian_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/bomber_jacket/player_soviet_bomber_jacket_lower_short"
+	self.customizations.russian_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.russian_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.russian_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.russian_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_bomber_jacket_001_upper = {}
+	self.customizations.american_bomber_jacket_001_upper.name = "character_customization_usa_bomber_jacket_001_upper_name"
+	self.customizations.american_bomber_jacket_001_upper.description = "character_customization_usa_bomber_jacket_001_upper_desc"
+	self.customizations.american_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_bomber_jacket_001_upper.path = "units/vanilla/characters/players/usa/upper/bomber_jacket/player_criminal_usa_bomber_jacket_upper"
+	self.customizations.american_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.american_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.american_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.american_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.american_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_bomber_jacket_001_lower = {}
+	self.customizations.american_bomber_jacket_001_lower.name = "character_customization_usa_bomber_jacket_001_lower_name"
+	self.customizations.american_bomber_jacket_001_lower.description = "character_customization_usa_bomber_jacket_001_lower_desc"
+	self.customizations.american_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/usa/lower/bomber_jacket/player_usa_bomber_jacket_lower"
+	self.customizations.american_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/usa/lower/bomber_jacket/player_usa_bomber_jacket_lower_short"
+	self.customizations.american_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.american_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.american_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.american_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_eagle_jacket_001_upper = {}
+	self.customizations.british_eagle_jacket_001_upper.name = "character_customization_british_eagle_jacket_001_upper_name"
+	self.customizations.british_eagle_jacket_001_upper.description = "character_customization_british_eagle_jacket_001_upper_desc"
+	self.customizations.british_eagle_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_eagle_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_eagle_jacket_001_upper.path = "units/vanilla/characters/players/british/upper/eagle_jacket/player_british_eagle_jacket_upper"
+	self.customizations.british_eagle_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud"
+	self.customizations.british_eagle_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud"
+	self.customizations.british_eagle_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp"
+	self.customizations.british_eagle_jacket_001_upper.redeem_xp = 0
+	self.customizations.british_eagle_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_eagle_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_eagle_jacket_001_upper.droppable = true
+	self.customizations.british_eagle_pants_001_lower = {}
+	self.customizations.british_eagle_pants_001_lower.name = "character_customization_british_eagle_pants_001_lower_name"
+	self.customizations.british_eagle_pants_001_lower.description = "character_customization_british_eagle_pants_001_lower_desc"
+	self.customizations.british_eagle_pants_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_eagle_pants_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH
+	}
+	self.customizations.british_eagle_pants_001_lower.path_long = "units/vanilla/characters/players/british/lower/eagle_pants/player_british_eagle_lower"
+	self.customizations.british_eagle_pants_001_lower.path_short = "units/vanilla/characters/players/british/lower/eagle_pants/player_british_eagle_lower_short"
+	self.customizations.british_eagle_pants_001_lower.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud"
+	self.customizations.british_eagle_pants_001_lower.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud"
+	self.customizations.british_eagle_pants_001_lower.redeem_xp = 0
+	self.customizations.british_eagle_pants_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_eagle_pants_001_lower.droppable = true
+	self.customizations.german_eagle_jacket_001_upper = {}
+	self.customizations.german_eagle_jacket_001_upper.name = "character_customization_german_eagle_jacket_001_upper_name"
+	self.customizations.german_eagle_jacket_001_upper.description = "character_customization_german_eagle_jacket_001_upper_desc"
+	self.customizations.german_eagle_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_eagle_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_eagle_jacket_001_upper.path = "units/vanilla/characters/players/german/upper/eagle_jacket/player_german_eagle_jacket_upper"
+	self.customizations.german_eagle_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud"
+	self.customizations.german_eagle_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud"
+	self.customizations.german_eagle_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp"
+	self.customizations.german_eagle_jacket_001_upper.redeem_xp = 0
+	self.customizations.german_eagle_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_eagle_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_eagle_jacket_001_upper.droppable = true
+	self.customizations.german_eagle_pants_001_lower = {}
+	self.customizations.german_eagle_pants_001_lower.name = "character_customization_german_eagle_pants_001_lower_name"
+	self.customizations.german_eagle_pants_001_lower.description = "character_customization_german_eagle_pants_001_lower_desc"
+	self.customizations.german_eagle_pants_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_eagle_pants_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN
+	}
+	self.customizations.german_eagle_pants_001_lower.path_long = "units/vanilla/characters/players/german/lower/eagle_pants/player_german_eagle_lower"
+	self.customizations.german_eagle_pants_001_lower.path_short = "units/vanilla/characters/players/german/lower/eagle_pants/player_german_eagle_lower_short"
+	self.customizations.german_eagle_pants_001_lower.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud"
+	self.customizations.german_eagle_pants_001_lower.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud"
+	self.customizations.german_eagle_pants_001_lower.redeem_xp = 0
+	self.customizations.german_eagle_pants_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_eagle_pants_001_lower.droppable = true
+	self.customizations.russian_eagle_jacket_001_upper = {}
+	self.customizations.russian_eagle_jacket_001_upper.name = "character_customization_russian_eagle_jacket_001_upper_name"
+	self.customizations.russian_eagle_jacket_001_upper.description = "character_customization_russian_eagle_jacket_001_upper_desc"
+	self.customizations.russian_eagle_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_eagle_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_eagle_jacket_001_upper.path = "units/vanilla/characters/players/soviet/upper/eagle_jacket/player_soviet_eagle_jacket_upper"
+	self.customizations.russian_eagle_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud"
+	self.customizations.russian_eagle_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud"
+	self.customizations.russian_eagle_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp"
+	self.customizations.russian_eagle_jacket_001_upper.redeem_xp = 0
+	self.customizations.russian_eagle_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_eagle_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_eagle_jacket_001_upper.droppable = true
+	self.customizations.russian_eagle_pants_001_lower = {}
+	self.customizations.russian_eagle_pants_001_lower.name = "character_customization_russian_eagle_pants_001_lower_name"
+	self.customizations.russian_eagle_pants_001_lower.description = "character_customization_russian_eagle_pants_001_lower_desc"
+	self.customizations.russian_eagle_pants_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_eagle_pants_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN
+	}
+	self.customizations.russian_eagle_pants_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/eagle_pants/player_soviet_eagle_lower"
+	self.customizations.russian_eagle_pants_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/eagle_pants/player_soviet_eagle_lower_short"
+	self.customizations.russian_eagle_pants_001_lower.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud"
+	self.customizations.russian_eagle_pants_001_lower.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud"
+	self.customizations.russian_eagle_pants_001_lower.redeem_xp = 0
+	self.customizations.russian_eagle_pants_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_eagle_jacket_001_upper = {}
+	self.customizations.american_eagle_jacket_001_upper.name = "character_customization_american_eagle_jacket_001_upper_name"
+	self.customizations.american_eagle_jacket_001_upper.description = "character_customization_american_eagle_jacket_001_upper_desc"
+	self.customizations.american_eagle_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_eagle_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_eagle_jacket_001_upper.path = "units/vanilla/characters/players/usa/upper/eagle_jacket/player_usa_eagle_jacket_upper"
+	self.customizations.american_eagle_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_hud"
+	self.customizations.american_eagle_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_upper_large_hud"
+	self.customizations.american_eagle_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_jacket_fp"
+	self.customizations.american_eagle_jacket_001_upper.redeem_xp = 0
+	self.customizations.american_eagle_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_eagle_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_eagle_jacket_001_upper.droppable = true
+	self.customizations.american_eagle_pants_001_lower = {}
+	self.customizations.american_eagle_pants_001_lower.name = "character_customization_american_eagle_pants_001_lower_name"
+	self.customizations.american_eagle_pants_001_lower.description = "character_customization_american_eagle_pants_001_lower_desc"
+	self.customizations.american_eagle_pants_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_eagle_pants_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN
+	}
+	self.customizations.american_eagle_pants_001_lower.path_long = "units/vanilla/characters/players/usa/lower/eagle_pants/player_usa_eagle_lower"
+	self.customizations.american_eagle_pants_001_lower.path_short = "units/vanilla/characters/players/usa/lower/eagle_pants/player_usa_eagle_lower_short"
+	self.customizations.american_eagle_pants_001_lower.path_icon = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_hud"
+	self.customizations.american_eagle_pants_001_lower.path_icon_large = "units/vanilla/characters/players/generic/eagle_jacket/player_generic_eagle_lower_large_hud"
+	self.customizations.american_eagle_pants_001_lower.redeem_xp = 0
+	self.customizations.american_eagle_pants_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_eagle_pants_001_lower.droppable = true
 
 	for k, cosmetic in pairs(self.customizations) do
 		if not cosmetic.default_clothing and not cosmetic.dlc and cosmetic.rarity then
@@ -1916,7 +1804,9 @@ function CharacterCustomizationTweakData:get_all_parts_indexed(part_type, nation
 
 	for index, part_key in ipairs(source_table) do
 		result[index] = {}
+
 		local data_part = clone(self.customizations[part_key])
+
 		data_part.key_name = part_key
 		result[index] = data_part
 	end
@@ -1930,7 +1820,9 @@ function CharacterCustomizationTweakData:get_all_parts(part_type)
 
 	for index, part_key in ipairs(source_table) do
 		result[part_key] = {}
+
 		local data_part = clone(self.customizations[part_key])
+
 		data_part.key_name = part_key
 		result[part_key] = data_part
 	end

@@ -35,7 +35,7 @@ function GrenadePickupNew:_randomize_stack_size()
 		local chance = 100
 
 		for i = 1, stack_amount do
-			if i == 1 or math.random(100) <= chance then
+			if i == 1 or chance >= math.random(100) then
 				chance = chance * self._mul_chance
 
 				if stack_size then
@@ -93,16 +93,18 @@ function GrenadePickupNew:_pickup(player_unit)
 			local effect_ammo_pickup_multiplier = 1
 
 			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) then
-				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1
+				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1)
 			end
 
 			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) then
-				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1
+				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1)
 			end
 
 			amount_needed = math.min(self._stack_size, amount_needed)
+
 			local tweak_data_per_stack = (tweak_data.projectiles[inventory.equipped_grenade].per_pickup or 1) * effect_ammo_pickup_multiplier
 			local grenades_to_add = math.ceil(amount_needed / tweak_data_per_stack)
+
 			amount_taken = managers.player:add_grenade_amount(grenades_to_add)
 		end
 
@@ -140,9 +142,9 @@ function GrenadePickupNew:get_pickup_type()
 end
 
 function GrenadePickupNew:save(data)
-	local state = {
-		stack_size = self._stack_size
-	}
+	local state = {}
+
+	state.stack_size = self._stack_size
 	data.GrenadePickupNew = state
 end
 

@@ -11,6 +11,7 @@ function WalletGuiObject.set_wallet(panel, layer)
 		name = "WalletGuiObject",
 		layer = layer or 0
 	})
+
 	local money_icon = Global.wallet_panel:bitmap({
 		texture = "guis/textures/pd2/shared_wallet_symbol",
 		name = "wallet_money_icon"

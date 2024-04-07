@@ -38,8 +38,10 @@ end
 
 function Ladder:set_config()
 	self._ladder_orientation_obj = self._unit:get_object(Idstring(self._ladder_orientation_obj_name))
+
 	local rotation = self._ladder_orientation_obj:rotation()
 	local position = self._ladder_orientation_obj:position()
+
 	self._normal = rotation[self.normal_axis](rotation)
 
 	if self.invert_normal_axis then
@@ -49,7 +51,9 @@ function Ladder:set_config()
 	self._up = rotation[self.up_axis](rotation)
 	self._w_dir = math.cross(self._up, self._normal)
 	position = position + self._up * self._offset
+
 	local top = position + self._up * self._height
+
 	self._bottom = position
 	self._top = top
 	self._rotation = Rotation(self._w_dir, self._up, self._normal)
@@ -91,13 +95,13 @@ function Ladder:can_access(pos, move_dir)
 
 	local w_dot = mvector3.dot(self._w_dir, mvec1)
 
-	if w_dot < 0 or self._width < w_dot then
+	if w_dot < 0 or w_dot > self._width then
 		return false
 	end
 
 	local h_dot = mvector3.dot(self._up, mvec1)
 
-	if h_dot < 0 or self._height < h_dot then
+	if h_dot < 0 or h_dot > self._height then
 		return false
 	end
 
@@ -123,7 +127,7 @@ function Ladder:check_end_climbing(pos, move_dir, gnd_ray)
 	local w_dot = mvector3.dot(self._w_dir, mvec1)
 	local h_dot = mvector3.dot(self._up, mvec1)
 
-	if w_dot < 0 or self._width < w_dot then
+	if w_dot < 0 or w_dot > self._width then
 		return true
 	elseif h_dot < 0 or h_dot > self._height + self._exit_on_top_offset then
 		return true
@@ -146,7 +150,8 @@ function Ladder:get_normal_move_offset(pos)
 
 	local normal_move_offset = math.dot(self._normal, mvec1)
 	local h_dot = mvector3.dot(self._up, mvec1)
-	normal_move_offset = self._height < h_dot and h_dot < self._height + self._exit_on_top_offset and -1 or math.lerp(0, self._normal_target_offset - normal_move_offset, 0.1)
+
+	normal_move_offset = h_dot > self._height and h_dot < self._height + self._exit_on_top_offset and -1 or math.lerp(0, self._normal_target_offset - normal_move_offset, 0.1)
 
 	return normal_move_offset
 end
@@ -231,11 +236,11 @@ function Ladder:debug_draw()
 end
 
 function Ladder:save(data)
-	local state = {
-		enabled = self._enabled,
-		height = self._height,
-		width = self._width
-	}
+	local state = {}
+
+	state.enabled = self._enabled
+	state.height = self._height
+	state.width = self._width
 	data.Ladder = state
 end
 

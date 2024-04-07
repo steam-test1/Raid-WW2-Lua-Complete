@@ -1,7 +1,5 @@
 local length_function = require("lib/utils/Bezier3Length")
-local min = math.min
-local max = math.max
-local sqrt = math.sqrt
+local min, max, sqrt = math.min, math.max, math.sqrt
 
 local function value(t, x1, x2, x3, x4)
 	return (1 - t)^3 * x1 + 3 * (1 - t)^2 * t * x2 + 3 * (1 - t) * t^2 * x3 + t^3 * x4
@@ -43,12 +41,14 @@ local function minmax(x1, x2, x3, x4)
 
 	if t1 and t1 >= 0 and t1 <= 1 then
 		local x = value(t1, x1, x2, x3, x4)
+
 		minx = min(x, minx)
 		maxx = max(x, maxx)
 	end
 
 	if t2 and t2 >= 0 and t2 <= 1 then
 		local x = value(t2, x1, x2, x3, x4)
+
 		minx = min(x, minx)
 		maxx = max(x, maxx)
 	end
@@ -104,19 +104,17 @@ local function distance3(x1, y1, z1, x2, y2, z2)
 	return (x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2
 end
 
-local pi = math.pi
-local atan2 = math.atan2
-local abs = math.abs
-local radians = math.rad
+local pi, atan2, abs, radians = math.pi, math.atan2, math.abs, math.rad
 local curve_collinearity_epsilon = 1e-30
 local curve_angle_tolerance_epsilon = 0.01
 local curve_recursion_limit = 32
-local recursive_bezier = nil
+local recursive_bezier
 
 function interpolate(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, m_approximation_scale, m_angle_tolerance, m_cusp_limit)
 	m_approximation_scale = m_approximation_scale or 1
 	m_angle_tolerance = m_angle_tolerance and radians(m_angle_tolerance) or 0
 	m_cusp_limit = m_cusp_limit and m_cusp_limit ~= 0 and pi - radians(m_cusp_limit) or 0
+
 	local m_distance_tolerance2 = (1 / (2 * m_approximation_scale))^2
 
 	recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, 0, m_distance_tolerance2, m_angle_tolerance, m_cusp_limit)
@@ -132,7 +130,7 @@ function magnitude(x)
 end
 
 function recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, level, m_distance_tolerance2, m_angle_tolerance, m_cusp_limit)
-	if curve_recursion_limit < level then
+	if level > curve_recursion_limit then
 		return
 	end
 
@@ -194,8 +192,8 @@ function recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4,
 	}
 	local d2 = abs(abs(vx24[2] * vx14[3] - vx24[3] * vx14[2]) + abs(vx24[1] * vx14[3] - vx24[3] * vx14[1]) + abs(vx24[1] * vx14[2] - vx24[2] * vx14[1]))
 	local d3 = abs(abs(vx34[2] * vx14[3] - vx34[3] * vx14[2]) + abs(vx34[1] * vx14[3] - vx34[3] * vx14[1]) + abs(vx34[1] * vx14[2] - vx34[2] * vx14[1]))
-	local da1, da2, da3, k = nil
-	local case = (curve_collinearity_epsilon < d2 and 2 or 0) + (curve_collinearity_epsilon < d3 and 1 or 0)
+	local da1, da2, da3, k
+	local case = (d2 > curve_collinearity_epsilon and 2 or 0) + (d3 > curve_collinearity_epsilon and 1 or 0)
 
 	if case == 0 then
 		k = dx^2 + dy^2 + dz^2
@@ -256,11 +254,11 @@ function recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4,
 
 			da1 = abs(math.acos(dot(C, D) / (magnitude(C) * magnitude(D))) - math.acos(dot(B, C) / (magnitude(B) * magnitude(C))))
 
-			if pi <= da1 then
+			if da1 >= pi then
 				da1 = 2 * pi - da1
 			end
 
-			if m_angle_tolerance > da1 then
+			if da1 < m_angle_tolerance then
 				write("line", x2, y2, z2)
 				write("line", x3, y3, z3)
 
@@ -283,11 +281,11 @@ function recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4,
 
 			da1 = abs(math.acos(dot(B, C) / (magnitude(B) * magnitude(C))) - math.acos(dot(A, B) / (magnitude(A) * magnitude(B))))
 
-			if pi <= da1 then
+			if da1 >= pi then
 				da1 = 2 * pi - da1
 			end
 
-			if m_angle_tolerance > da1 then
+			if da1 < m_angle_tolerance then
 				write("line", x2, y2, z2)
 				write("line", x3, y3, z3)
 
@@ -311,11 +309,11 @@ function recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4,
 		da1 = abs(k - math.acos(dot(A, B) / (magnitude(A) * magnitude(B))))
 		da2 = abs(k - math.acos(dot(C, D) / (magnitude(C) * magnitude(D))))
 
-		if pi <= da1 then
+		if da1 >= pi then
 			da1 = 2 * pi - da1
 		end
 
-		if pi <= da2 then
+		if da2 >= pi then
 			da2 = 2 * pi - da2
 		end
 

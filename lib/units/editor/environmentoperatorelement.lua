@@ -17,6 +17,7 @@ function EnvironmentOperatorElement:init(unit)
 end
 
 function EnvironmentOperatorElement:clear(...)
+	return
 end
 
 function EnvironmentOperatorElement:add_to_mission_package()

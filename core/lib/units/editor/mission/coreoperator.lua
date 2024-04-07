@@ -47,6 +47,7 @@ function CoreOperatorUnitElement:get_links_to_unit(...)
 end
 
 function CoreOperatorUnitElement:update_editing()
+	return
 end
 
 function CoreOperatorUnitElement:add_element()
@@ -83,7 +84,8 @@ function CoreOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
-	local names = nil
+
+	local names
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_combobox(panel, panel_sizer, "operation", {

@@ -14,9 +14,11 @@ function ElementWorldOutputEvent:init(...)
 end
 
 function ElementWorldOutputEvent:on_created()
+	return
 end
 
 function ElementWorldOutputEvent:client_on_executed(...)
+	return
 end
 
 function ElementWorldOutputEvent:on_executed(instigator)
@@ -40,6 +42,7 @@ function ElementWorldOutput:init(...)
 end
 
 function ElementWorldOutput:client_on_executed(...)
+	return
 end
 
 function ElementWorldOutput:on_created()
@@ -70,6 +73,7 @@ function ElementWorldInput:init(...)
 end
 
 function ElementWorldInput:client_on_executed(...)
+	return
 end
 
 function ElementWorldInput:on_executed(instigator)
@@ -95,6 +99,7 @@ function ElementWorldInputEvent:on_created()
 end
 
 function ElementWorldInputEvent:client_on_executed(...)
+	return
 end
 
 function ElementWorldInputEvent:on_executed(instigator)
@@ -130,6 +135,7 @@ function ElementWorldPoint:value(name)
 end
 
 function ElementWorldPoint:client_on_executed(...)
+	return
 end
 
 function ElementWorldPoint:on_script_activated()
@@ -148,7 +154,7 @@ function ElementWorldPoint:on_executed(instigator)
 		return
 	end
 
-	local delay_destroy, delay_create = nil
+	local delay_destroy, delay_create
 
 	if managers.network:session():count_all_peers() > 1 then
 		delay_destroy = ElementWorldPoint.DELAY_DESTROY_MULTI
@@ -202,6 +208,7 @@ function ElementWorldPoint:_create_world(world_id)
 
 	self._has_created = true
 	self._spawn_counter = self._spawn_counter + 1
+
 	local world_meta_data = managers.worldcollection:get_world_meta_data(self._values.world)
 
 	Application:debug("[ElementWorldPoint:_create() Creating world:]", world_meta_data.file, self._values.position, self._values.rotation)
@@ -221,10 +228,10 @@ function ElementWorldPoint:_create_world(world_id)
 		mrotation.multiply(rot, self._values.rotation)
 	end
 
-	local world = {
-		meta_data = world_meta_data,
-		translation = {}
-	}
+	local world = {}
+
+	world.meta_data = world_meta_data
+	world.translation = {}
 	world.translation.position = pos
 	world.translation.rotation = rot
 
@@ -259,6 +266,7 @@ function ElementWorldPoint:load(data)
 end
 
 function ElementWorldPoint:stop_simulation(...)
+	return
 end
 
 function ElementWorldPoint:execute_action(action)

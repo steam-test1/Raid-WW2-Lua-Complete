@@ -53,7 +53,9 @@ function PlayerFoxhole:_start_interaction_exit_foxhole(t)
 	end
 
 	local timer = PlayerFoxhole.EXIT_TIMER
+
 	self._exit_foxhole_expire_t = t + timer
+
 	local text = utf8.to_upper(managers.localization:text("hud_action_exit_foxhole"))
 
 	managers.hud:show_progress_timer_bar(0, timer, text)
@@ -77,7 +79,7 @@ function PlayerFoxhole:_update_action_timers(t, input)
 
 		managers.hud:set_progress_timer_bar_width(timer - (self._exit_foxhole_expire_t - t), timer)
 
-		if self._exit_foxhole_expire_t <= t then
+		if t >= self._exit_foxhole_expire_t then
 			self:_end_action_exit_foxhole()
 
 			self._exit_foxhole_expire_t = nil

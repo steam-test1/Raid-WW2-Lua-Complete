@@ -147,7 +147,9 @@ function RaidGUIControlImageViewer:_animate_image_rotation()
 
 		while t < animation_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_distance = dt / animation_duration * distance
 
 			for _, image_frame in ipairs(self._image_frames) do

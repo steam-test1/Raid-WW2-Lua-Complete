@@ -79,13 +79,16 @@ function SentryGunBase:post_init()
 end
 
 function SentryGunBase.spawn(owner, pos, rot, ammo_multiplier, armor_multiplier, damage_multiplier, peer_id, verify_equipment)
+	return
 end
 
 function SentryGunBase:spawn_from_sequence(align_obj_name, module_id)
+	return
 end
 
 function SentryGunBase:activate_as_module(team_type, tweak_table_id)
 	self._tweak_table_id = tweak_table_id
+
 	local team_id = tweak_data.levels:get_default_team_ID(team_type)
 	local team_data = managers.groupai:state():team_data(team_id)
 
@@ -261,9 +264,10 @@ end
 function SentryGunBase._attach(pos, rot, sentrygun_unit)
 	pos = pos or sentrygun_unit:position()
 	rot = rot or sentrygun_unit:rotation()
+
 	local from_pos = pos + rot:z() * 10
 	local to_pos = pos + rot:z() * -10
-	local ray = nil
+	local ray
 
 	if sentrygun_unit then
 		ray = sentrygun_unit:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("world_geometry"))
@@ -358,14 +362,15 @@ function SentryGunBase:get_net_event_id(player)
 	end
 
 	ammo_got = ammo_got / math.max(i, 1)
+
 	local ammo_wanted = ammo_needed
-	local wanted_event_id = nil
+	local wanted_event_id
 	local index = 1
 
 	repeat
 		if not refill_ratios[index] then
 			break
-		elseif refill_ratios[index] <= ammo_wanted then
+		elseif ammo_wanted >= refill_ratios[index] then
 			wanted_event_id = index
 		end
 
@@ -373,13 +378,13 @@ function SentryGunBase:get_net_event_id(player)
 	until wanted_event_id
 
 	local ammo_possible = ammo_got / sentry_gun_reload_ratio
-	local possible_event_id = nil
+	local possible_event_id
 	local index = 1
 
 	repeat
 		if not refill_ratios[index] then
 			break
-		elseif refill_ratios[index] <= ammo_possible then
+		elseif ammo_possible >= refill_ratios[index] then
 			possible_event_id = index
 		end
 
@@ -397,6 +402,7 @@ end
 
 function SentryGunBase:add_string_macros(macroes)
 	local event_id, wanted_event_id, possible_event_id = self:get_net_event_id(managers.player:local_player())
+
 	macroes.AMMO = wanted_event_id and string.format("%2.f%%", (1 - refill_ratios[wanted_event_id]) * 100) or "100%"
 end
 
@@ -438,6 +444,7 @@ function SentryGunBase:sync_net_event(event_id, peer)
 
 				if leftover > 0 and ammo_left > 0 then
 					local extra_ammo = ammo_left < leftover and ammo_left or leftover
+
 					leftover = leftover - extra_ammo
 					data.amount = data.amount + extra_ammo
 				end
@@ -515,10 +522,12 @@ function SentryGunBase:unregister()
 end
 
 function SentryGunBase:register()
+	return
 end
 
 function SentryGunBase:save(save_data)
 	local my_save_data = {}
+
 	save_data.base = my_save_data
 	my_save_data.tweak_table_id = self._tweak_table_id
 	my_save_data.is_module = self._is_module
@@ -526,6 +535,7 @@ end
 
 function SentryGunBase:load(save_data)
 	self._was_dropin = true
+
 	local my_save_data = save_data.base
 
 	if not my_save_data then

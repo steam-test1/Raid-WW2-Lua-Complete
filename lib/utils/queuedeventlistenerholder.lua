@@ -20,7 +20,7 @@ function QueuedEventListenerHolder:remove(key)
 	QueuedEventListenerHolder.super.remove(self, key)
 
 	for _, event in ipairs(self._queue) do
-		local index = nil
+		local index
 
 		for i, value in ipairs(self._queue[event]) do
 			if key == value then

@@ -8,9 +8,11 @@ require("core/lib/utils/CoreEvent")
 LevelLoadingSetup = LevelLoadingSetup or class(CoreLoadingSetup)
 
 function LevelLoadingSetup:init()
+	return
 end
 
 function LevelLoadingSetup:update(t, dt)
+	return
 end
 
 function LevelLoadingSetup:destroy()

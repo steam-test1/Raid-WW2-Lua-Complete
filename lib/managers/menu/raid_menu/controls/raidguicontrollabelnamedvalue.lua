@@ -4,7 +4,9 @@ function RaidGUIControlLabelNamedValue:init(parent, params)
 	self._object = parent:panel(params)
 	self._params = clone(params)
 	params.align = params.value_align or "center"
+
 	local label_value_params = clone(params)
+
 	label_value_params.font = tweak_data.gui.fonts.din_compressed
 	label_value_params.font_size = params.value_font_size or tweak_data.gui.font_sizes.size_56
 	label_value_params.h = label_value_params.font_size
@@ -16,7 +18,9 @@ function RaidGUIControlLabelNamedValue:init(parent, params)
 	label_value_params.color = params.value_color or tweak_data.gui.colors.raid_white
 	self._label_value = self._object:text(label_value_params)
 	params.align = params.align or "center"
+
 	local label_text_params = clone(params)
+
 	label_text_params.font_size = params.font_size or tweak_data.gui.font_sizes.medium
 	label_text_params.x = 0
 	label_text_params.y = label_value_params.font_size + (label_text_params.value_padding or 0)
@@ -51,9 +55,11 @@ function RaidGUIControlLabelNamedValue:value()
 end
 
 function RaidGUIControlLabelNamedValue:highlight_on()
+	return
 end
 
 function RaidGUIControlLabelNamedValue:highlight_off()
+	return
 end
 
 function RaidGUIControlLabelNamedValue:mouse_released(o, button, x, y)

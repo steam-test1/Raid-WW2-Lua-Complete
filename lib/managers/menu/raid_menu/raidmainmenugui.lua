@@ -27,6 +27,7 @@ function RaidMainMenuGui:_mod_overrides_warning_callback_yes_function()
 end
 
 function RaidMainMenuGui:_mod_overrides_warning_callback_no_function()
+	return
 end
 
 function RaidMainMenuGui:_setup_properties()
@@ -90,7 +91,8 @@ function RaidMainMenuGui:_layout_title_logo()
 		texture = tweak_data.gui.icons.missions_camp.texture,
 		texture_rect = tweak_data.gui.icons.missions_camp.texture_rect
 	})
-	local logo_texture, logo_texture_rect = nil
+
+	local logo_texture, logo_texture_rect
 	local is_halloween = tweak_data.lootdrop:get_month_event() == LootDropTweakData.EVENT_MONTH_HALLOWEEN
 
 	if is_halloween then
@@ -157,6 +159,7 @@ function RaidMainMenuGui:_layout_title_logo()
 end
 
 function RaidMainMenuGui:_layout_logo()
+	return
 end
 
 function RaidMainMenuGui:_layout_list_menu()
@@ -194,6 +197,7 @@ function RaidMainMenuGui:_layout_list_menu()
 			data_source_callback = callback(self, self, "_list_menu_data_source"),
 			on_menu_move = {}
 		}
+
 		self._list_menu = self._root_panel:list(list_menu_params)
 	end
 
@@ -226,6 +230,7 @@ function RaidMainMenuGui:_layout_version_id()
 		y = self._root_panel:h() - 50,
 		text = text
 	}
+
 	self._version_id = self._root_panel:label(item_params)
 end
 
@@ -238,9 +243,11 @@ function RaidMainMenuGui:_layout_steam_group_button()
 		w = 1024,
 		valign = "bottom"
 	}
+
 	self._steam_group_panel = self._root_panel:panel(steam_group_panel_params)
 	self._steam_button_t = 0
 	self._steam_button_pressed_scale = 0.95
+
 	local group_button_frame_params = {
 		texture = "ui/elements/banner_steam_group_frame",
 		name = "steam_group_button_frame",
@@ -248,6 +255,7 @@ function RaidMainMenuGui:_layout_steam_group_button()
 		halign = "scale",
 		valign = "scale"
 	}
+
 	self._steam_group_button_frame = self._steam_group_panel:bitmap(group_button_frame_params)
 
 	self._steam_group_button_frame:set_center_x(self._steam_group_panel:w() / 2)
@@ -263,6 +271,7 @@ function RaidMainMenuGui:_layout_steam_group_button()
 		on_mouse_pressed_callback = callback(self, self, "mouse_pressed_steam_group_button"),
 		on_mouse_released_callback = callback(self, self, "mouse_released_steam_group_button")
 	}
+
 	self._steam_group_button_image = self._steam_group_panel:image(group_button_image_params)
 
 	self._steam_group_button_image:set_center_x(self._steam_group_panel:w() / 2)
@@ -301,7 +310,9 @@ function RaidMainMenuGui:_animate_steam_group_button_press(o)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_scale = Easing.quartic_out(t, 1, self._steam_button_pressed_scale - 1, duration)
 
 		self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * current_scale)
@@ -328,7 +339,9 @@ function RaidMainMenuGui:_animate_steam_group_button_release(o)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_scale = Easing.quartic_out(t, self._steam_button_pressed_scale, 1 - self._steam_button_pressed_scale, duration)
 
 		self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * current_scale)
@@ -359,6 +372,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 			w = RaidMainMenuGui.WIDGET_PANEL_W,
 			h = RaidMainMenuGui.WIDGET_PANEL_H
 		}
+
 		self._widget_panel = self._root_panel:panel(widget_panel_params)
 
 		self._widget_panel:set_right(self._root_panel:w())
@@ -371,6 +385,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 			h = 64,
 			halign = "scale"
 		}
+
 		self._widget_label_panel = self._widget_panel:get_engine_panel():panel(label_panel_params)
 
 		self._widget_label_panel:set_right(self._widget_panel:w())
@@ -402,6 +417,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey_effects
 	}
+
 	self._widget_action_title = self._widget_label_panel:text(widget_action_title_params)
 
 	self._widget_action_title:set_right(self._widget_label_panel:w())
@@ -409,6 +425,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 
 	if managers.network:session() then
 		local peers = managers.network:session():peers()
+
 		self._widgets = {}
 
 		for i = 1, 3 do
@@ -455,6 +472,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 			self._widget_label_panel:set_visible(true)
 
 			invite_widget_shown = true
+
 			local w = self._widgets[widget_index]:calculate_width()
 
 			if largest_w < w then
@@ -512,7 +530,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 end
 
 function RaidMainMenuGui:on_widget_button_selected(button)
-	local widget_action = nil
+	local widget_action
 
 	if button == "kick" then
 		widget_action = "menu_kick_widget_label"
@@ -748,6 +766,7 @@ function RaidMainMenuGui:_on_list_menu_item_selected(data)
 	end
 
 	self._callback_handler = self._callback_handler or RaidMenuCallbackHandler:new()
+
 	local on_click_callback = callback(self._callback_handler, self._callback_handler, data.callback)
 
 	if on_click_callback then

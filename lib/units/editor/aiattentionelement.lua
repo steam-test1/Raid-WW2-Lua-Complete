@@ -223,7 +223,7 @@ function AIAttentionElement:_find_instigator_raycast()
 		return
 	end
 
-	local id = nil
+	local id
 
 	if string.find(ray.unit:name():s(), "ai_enemy_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_civilian_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true) then
 		id = ray.unit:unit_data().unit_id
@@ -317,6 +317,7 @@ function AIAttentionElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_spawn_enemy",
 		"ai_spawn_civilian",
@@ -340,6 +341,7 @@ function AIAttentionElement:_build_panel(panel, panel_sizer)
 end
 
 function AIAttentionElement:add_to_mission_package()
+	return
 end
 
 function AIAttentionElement:_chk_set_link_values()
@@ -350,6 +352,7 @@ function AIAttentionElement:_chk_set_link_values()
 		local parent_rot = self._parent_obj:rotation()
 		local parent_inv_rot = parent_rot:inverse()
 		local world_vec = att_obj_pos - parent_pos
+
 		self._hed.local_pos = world_vec:rotate_with(parent_inv_rot)
 	else
 		self._hed.local_pos = nil

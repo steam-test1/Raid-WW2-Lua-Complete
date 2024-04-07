@@ -1,5 +1,6 @@
 function CoreEditor:build_toolbar()
 	local icons_path = managers.database:base_path() .. "core\\lib\\utils\\dev\\editor\\icons\\"
+
 	self._toolbar = EWS:ToolBar(Global.frame, "", "TB_FLAT,TB_NODIVIDER")
 
 	Global.frame:set_tool_bar(self._toolbar)
@@ -357,7 +358,7 @@ function CoreEditor:change_combo_box(data)
 end
 
 function CoreEditor:change_combo_box_trg(data)
-	local next_i = nil
+	local next_i
 
 	for i = 1, #self[data.t] do
 		if self[data.value] == self[data.t][i] then
@@ -373,10 +374,8 @@ function CoreEditor:change_combo_box_trg(data)
 				else
 					next_i = i - 1
 				end
-			elseif i == #self[data.t] then
-				next_i = 1
 			else
-				next_i = i + 1
+				next_i = i == #self[data.t] and 1 or i + 1
 			end
 		end
 	end

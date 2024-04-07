@@ -1,4 +1,5 @@
 SentryGunWeapon = SentryGunWeapon or class()
+
 local tmp_rot1 = Rotation()
 
 function SentryGunWeapon:init(unit)
@@ -133,6 +134,7 @@ end
 
 function SentryGunWeapon:change_ammo(amount)
 	self._ammo_total = math.min(math.ceil(self._ammo_total + amount), self._ammo_max)
+
 	local ammo_percent = self._ammo_total / self._ammo_max
 	local resolution_step = math.ceil(ammo_percent / self._ammo_sync_resolution)
 
@@ -194,7 +196,7 @@ function SentryGunWeapon:stop_autofire()
 end
 
 function SentryGunWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_unit)
-	local fired = nil
+	local fired
 
 	if self._next_fire_allowed <= self._timer:time() then
 		fired = self:fire(blanks, expend_ammo, shoot_player, target_unit)
@@ -243,14 +245,14 @@ local mvec_to = Vector3()
 
 function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target_unit)
 	local result = {}
-	local hit_unit = nil
+	local hit_unit
 
 	mvector3.set(mvec_to, direction)
 	mvector3.multiply(mvec_to, tweak_data.weapon[self._name_id].FIRE_RANGE)
 	mvector3.add(mvec_to, from_pos)
 
 	local col_ray = World:raycast("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
-	local player_hit, player_ray_data = nil
+	local player_hit, player_ray_data
 
 	if shoot_player then
 		player_hit, player_ray_data = RaycastWeaponBase.damage_player(self, col_ray, from_pos, direction)
@@ -262,10 +264,11 @@ function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target
 		end
 	end
 
-	local char_hit = nil
+	local char_hit
 
 	if not player_hit and col_ray then
 		local damage = self:_apply_dmg_mul(self._damage, col_ray, from_pos)
+
 		char_hit = InstantBulletBase:on_collision(col_ray, self._unit, self._unit, damage)
 	end
 
@@ -294,7 +297,7 @@ function SentryGunWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 	if tweak_data.weapon[self._name_id].DAMAGE_MUL_RANGE then
 		local ray_dis = col_ray.distance or mvector3.distance(from_pos, col_ray.position)
 		local ranges = tweak_data.weapon[self._name_id].DAMAGE_MUL_RANGE
-		local i_range = nil
+		local i_range
 
 		for test_i_range, range_data in ipairs(ranges) do
 			if ray_dis < range_data[1] or test_i_range == #ranges then
@@ -304,10 +307,11 @@ function SentryGunWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 			end
 		end
 
-		if i_range == 1 or ranges[i_range][1] < ray_dis then
+		if i_range == 1 or ray_dis > ranges[i_range][1] then
 			damage_out = damage_out * ranges[i_range][2]
 		else
 			local dis_lerp = (ray_dis - ranges[i_range - 1][1]) / (ranges[i_range][1] - ranges[i_range - 1][1])
+
 			damage_out = damage_out * math.lerp(ranges[i_range - 1][2], ranges[i_range][2], dis_lerp)
 		end
 	end
@@ -428,6 +432,7 @@ function SentryGunWeapon:set_laser_enabled(mode, blink)
 end
 
 function SentryGunWeapon:_set_laser_state(state)
+	return
 end
 
 function SentryGunWeapon:has_laser()
@@ -439,7 +444,7 @@ function SentryGunWeapon:update_laser()
 		return
 	end
 
-	local laser_mode, blink = nil
+	local laser_mode, blink
 
 	if self._unit:character_damage():dead() then
 		-- Nothing
@@ -453,10 +458,8 @@ function SentryGunWeapon:update_laser()
 	elseif self._unit:movement():rearming() then
 		laser_mode = "turret_module_rearming"
 		blink = true
-	elseif self._unit:movement():team().foes[tweak_data.levels:get_default_team_ID("player")] then
-		laser_mode = "turret_module_active"
 	else
-		laser_mode = "turret_module_mad"
+		laser_mode = self._unit:movement():team().foes[tweak_data.levels:get_default_team_ID("player")] and "turret_module_active" or "turret_module_mad"
 	end
 
 	self:set_laser_enabled(laser_mode, blink)
@@ -464,6 +467,7 @@ end
 
 function SentryGunWeapon:save(save_data)
 	local my_save_data = {}
+
 	save_data.weapon = my_save_data
 
 	if self._spread_mul ~= 1 then
@@ -482,6 +486,7 @@ function SentryGunWeapon:load(save_data)
 	self:_init()
 
 	local my_save_data = save_data.weapon
+
 	self._ammo_ratio = my_save_data.ammo_ratio or self._ammo_ratio
 	self._spread_mul = my_save_data.spread_mul or 1
 	self._foe_teams = my_save_data.foe_teams

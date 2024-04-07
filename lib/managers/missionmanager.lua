@@ -197,12 +197,11 @@ end
 
 function MissionManager:_setup()
 	if not Global.mission_manager then
-		Global.mission_manager = {
-			stage_job_values = {},
-			job_values = {},
-			saved_job_values = {},
-			has_played_tutorial = false
-		}
+		Global.mission_manager = {}
+		Global.mission_manager.stage_job_values = {}
+		Global.mission_manager.job_values = {}
+		Global.mission_manager.saved_job_values = {}
+		Global.mission_manager.has_played_tutorial = false
 	end
 end
 
@@ -260,7 +259,7 @@ function MissionManager:activate_script(...)
 end
 
 function MissionManager:_get_mission_manager(mission_id)
-	local mission = nil
+	local mission
 
 	if mission_id > 0 then
 		mission = managers.worldcollection and managers.worldcollection:mission_by_id(mission_id)
@@ -405,6 +404,7 @@ function MissionManager:start_root_level_script()
 	end
 
 	self._root_level_script_started = true
+
 	local level = Global.level_data.level
 	local mission = Global.level_data.mission
 	local world_setting = Global.level_data.world_setting
@@ -461,6 +461,7 @@ function MissionManager:save_job_values(data)
 		saved_job_values = Global.mission_manager.saved_job_values,
 		has_played_tutorial = Global.mission_manager.has_played_tutorial
 	}
+
 	data.ProductMissionManager = state
 end
 

@@ -2,10 +2,12 @@ MeleeWeaponBase = MeleeWeaponBase or class(UnitBase)
 MeleeWeaponBase.EVENT_IDS = {
 	detonate = 1
 }
+
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 
 function MeleeWeaponBase:setup(unit, t, dt)
+	return
 end
 
 function MeleeWeaponBase:update(unit, t, dt)
@@ -21,14 +23,14 @@ function MeleeWeaponBase:is_melee_weapon()
 end
 
 function MeleeWeaponBase:get_use_data(character_setup)
-	local use_data = {
-		equip = {
-			align_place = "right_hand"
-		},
-		selection_index = self:selection_index(),
-		unequip = {
-			align_place = "back"
-		}
+	local use_data = {}
+
+	use_data.equip = {
+		align_place = "right_hand"
+	}
+	use_data.selection_index = self:selection_index()
+	use_data.unequip = {
+		align_place = "back"
 	}
 
 	return use_data
@@ -49,6 +51,7 @@ end
 function MeleeWeaponBase:anim_play(anim, speed_multiplier)
 	if anim then
 		local length = self._unit:anim_length(Idstring(anim))
+
 		speed_multiplier = speed_multiplier or 1
 
 		self._unit:anim_stop(Idstring(anim))
@@ -73,6 +76,7 @@ function MeleeWeaponBase:anim_stop(anim)
 end
 
 function MeleeWeaponBase:ammo_info()
+	return
 end
 
 function MeleeWeaponBase:add_ammo(ratio, add_amount_override, add_amount_multiplier)
@@ -84,9 +88,11 @@ function MeleeWeaponBase:add_ammo_from_bag(available)
 end
 
 function MeleeWeaponBase:on_equip()
+	return
 end
 
 function MeleeWeaponBase:on_unequip()
+	return
 end
 
 function MeleeWeaponBase:on_enabled()
@@ -146,9 +152,11 @@ function MeleeWeaponBase:start_shooting_allowed()
 end
 
 function MeleeWeaponBase:save(data)
+	return
 end
 
 function MeleeWeaponBase:load(data)
+	return
 end
 
 function MeleeWeaponBase:uses_ammo()
@@ -156,7 +164,9 @@ function MeleeWeaponBase:uses_ammo()
 end
 
 function MeleeWeaponBase:replenish()
+	return
 end
 
 function MeleeWeaponBase:get_aim_assist()
+	return
 end

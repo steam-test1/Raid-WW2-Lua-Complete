@@ -97,7 +97,7 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 	if #self._close_units > 0 then
 		for k, unit in pairs(self._close_units) do
 			if alive(unit) and unit:interaction():active() then
-				if unit:interaction():interact_distance() < mvec3_dis(player_pos, unit:interaction():interact_position()) then
+				if mvec3_dis(player_pos, unit:interaction():interact_position()) > unit:interaction():interact_distance() then
 					table.remove(self._close_units, k)
 				end
 			else
@@ -107,7 +107,7 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 	end
 
 	for i = 1, self._close_freq do
-		if self._interactive_count <= self._close_index then
+		if self._close_index >= self._interactive_count then
 			self._close_index = 1
 		else
 			self._close_index = self._close_index + 1
@@ -146,11 +146,12 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 	local bipod_deployed = managers.player:current_state() == "bipod"
 
 	if #self._close_units > 0 and not blocked and not driving and not bipod_deployed then
-		local active_unit = nil
+		local active_unit
 		local current_dot = last_dot or 0.9
-		local closest_locator = nil
+		local closest_locator
 		local player_fwd = player_unit:camera():forward()
 		local camera_pos = player_unit:camera():position()
+
 		self._close_test_index = self._close_test_index or 0
 		self._close_test_index = self._close_test_index + 1
 
@@ -206,6 +207,7 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 							current_dot = dot
 							active_unit = unit
 							self._active_locator = nil
+
 							local bracket_locator = unit:get_object(Idstring("g_bracket"))
 
 							if bracket_locator and unit:damage() and unit:damage():has_sequence("show_bracket") then

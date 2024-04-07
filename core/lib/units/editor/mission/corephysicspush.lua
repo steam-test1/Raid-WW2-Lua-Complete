@@ -26,6 +26,7 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local range_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Range")
 	local range = EWS:Slider(panel, self._hed.physicspush_range, 1, 10000, "", "SL_LABELS")
 

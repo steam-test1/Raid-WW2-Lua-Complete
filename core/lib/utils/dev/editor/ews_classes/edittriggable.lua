@@ -8,10 +8,13 @@ function EditUnitTriggable:init(editor)
 		name = "Sequences",
 		class = self
 	})
+
 	self._panel = panel
 	self._ctrls = {}
 	self._element_guis = {}
+
 	local sequence_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._triggers_params = {
 		name = "Triggers:",
 		name_proportions = 1,

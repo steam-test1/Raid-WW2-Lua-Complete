@@ -35,6 +35,7 @@ function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 end
 
 function CoreCounterResetUnitElement:update_editing()
+	return
 end
 
 function CoreCounterResetUnitElement:add_element()
@@ -73,6 +74,7 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_counter/logic_counter"
 	}

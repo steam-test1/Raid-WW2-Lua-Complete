@@ -38,10 +38,12 @@ function RaidGUIControlXPBreakdown:init(parent, params)
 end
 
 function RaidGUIControlXPBreakdown:close()
+	return
 end
 
 function RaidGUIControlXPBreakdown:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.name = control_params.name .. "_customization_panel"
 	control_params.layer = self._panel:layer() + 1
 	control_params.w = self._params.w or RaidGUIControlXPBreakdown.DEFAULT_W
@@ -63,6 +65,7 @@ function RaidGUIControlXPBreakdown:_create_experience_label()
 		color = RaidGUIControlStatsBreakdown.LABEL_COLOR,
 		text = self:translate("xp_label", true)
 	}
+
 	self._experience_label = self._object:text(experience_label_params)
 end
 
@@ -98,10 +101,12 @@ function RaidGUIControlXPBreakdown:_create_breakdown_table(params)
 			}
 		}
 	}
+
 	self._breakdown_table = self._control_panel:table(breakdown_table_params)
 end
 
 function RaidGUIControlXPBreakdown:_create_total()
+	return
 end
 
 function RaidGUIControlXPBreakdown:_fit_panel()
@@ -109,6 +114,7 @@ function RaidGUIControlXPBreakdown:_fit_panel()
 end
 
 function RaidGUIControlXPBreakdown:fade_in_total(duration)
+	return
 end
 
 function RaidGUIControlXPBreakdown:animate_fade_in_total(label, duration)
@@ -117,7 +123,9 @@ function RaidGUIControlXPBreakdown:animate_fade_in_total(label, duration)
 
 	while t < anim_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, anim_duration)
 
 		label:set_alpha(current_alpha)
@@ -127,6 +135,7 @@ function RaidGUIControlXPBreakdown:animate_fade_in_total(label, duration)
 end
 
 function RaidGUIControlXPBreakdown:set_total(total, animate)
+	return
 end
 
 function RaidGUIControlXPBreakdown:hide()
@@ -149,7 +158,9 @@ function RaidGUIControlXPBreakdown:_animate_table_fade_in()
 
 	while t < label_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quintic_out(t, initial_offset, -initial_offset, label_duration)
 
 		self._experience_label:set_y(label_y + current_offset)
@@ -164,9 +175,11 @@ function RaidGUIControlXPBreakdown:_animate_table_fade_in()
 
 	t = 0
 
-	while table_duration > t do
+	while t < table_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_out(t, 0, 1, table_duration)
 
 		self._breakdown_table._table_panel:set_alpha(current_alpha)

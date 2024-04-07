@@ -1,6 +1,7 @@
 TestUtilities = TestUtilities or class()
 
 function TestUtilities:init()
+	return
 end
 
 function TestUtilities:spawn_projectile_at_pos(trgt_pos)

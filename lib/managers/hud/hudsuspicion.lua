@@ -37,6 +37,7 @@ function HUDSuspicion:init(hud, sound_source)
 end
 
 function HUDSuspicion:show()
+	return
 end
 
 function HUDSuspicion:hide()

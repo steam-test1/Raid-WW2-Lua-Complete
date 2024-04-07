@@ -69,6 +69,7 @@ function CoreEnvEditor:init(env_file_name)
 end
 
 function CoreEnvEditor:read_mode()
+	return
 end
 
 function CoreEnvEditor:read_templates()
@@ -102,7 +103,7 @@ function CoreEnvEditor:update_mix(env1, env2, blend)
 end
 
 function CoreEnvEditor:check_news(new_only)
-	local news = nil
+	local news
 
 	if new_only then
 		news = managers.news:get_news("env_editor", self._main_frame)
@@ -111,7 +112,7 @@ function CoreEnvEditor:check_news(new_only)
 	end
 
 	if news then
-		local str = nil
+		local str
 
 		for _, n in ipairs(news) do
 			if not str then
@@ -254,6 +255,7 @@ function CoreEnvEditor:add_post_processors_param(pro, mod, param, gui)
 	end
 
 	self._posteffect.post_processors[pro].modifiers[mod].params[param] = gui
+
 	local e = self:_get_post_process_effect_name(pro)
 	local processor = managers.viewport:first_active_viewport():vp():get_post_processor_effect("World", Idstring(pro))
 
@@ -286,6 +288,7 @@ function CoreEnvEditor:add_underlay_param(mat, param, gui)
 	end
 
 	self._underlayeffect.materials[mat].params[param] = gui
+
 	local material = Underlay:material(Idstring(mat))
 
 	if material and material:variable_exists(Idstring(param)) then
@@ -382,6 +385,7 @@ function CoreEnvEditor:flipp(...)
 
 	if #v > 1 then
 		local a = v[#v]
+
 		v[#v] = v[1]
 		v[1] = a
 
@@ -401,11 +405,10 @@ end
 
 function CoreEnvEditor:create_tab(tab)
 	if not self._tabs[tab] then
-		self._tabs[tab] = {
-			child = {},
-			panel = EWS:Panel(self._main_notebook, "", ""),
-			panel_box = EWS:BoxSizer("VERTICAL")
-		}
+		self._tabs[tab] = {}
+		self._tabs[tab].child = {}
+		self._tabs[tab].panel = EWS:Panel(self._main_notebook, "", "")
+		self._tabs[tab].panel_box = EWS:BoxSizer("VERTICAL")
 
 		self._tabs[tab].panel:freeze()
 
@@ -663,6 +666,7 @@ function CoreEnvEditor:database_load_posteffect(post_effect_node)
 
 						if not parameter then
 							local data_path = "post_effect/" .. post_processor:name() .. "/" .. effect:name() .. "/" .. modifier:name() .. "/" .. k
+
 							remove_param = not managers.viewport:has_data_path_key(Idstring(data_path):key())
 
 							if not remove_param then
@@ -715,6 +719,7 @@ function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 
 					if not parameter then
 						local data_path = "underlay_effect/" .. material:name() .. "/" .. k
+
 						remove_param = not managers.viewport:has_data_path_key(Idstring(data_path):key())
 
 						if not remove_param then
@@ -765,6 +770,7 @@ function CoreEnvEditor:database_load_sky(sky_node)
 						is_colorgrade = true
 					else
 						local data_path = "others/" .. k
+
 						remove_param = not managers.viewport:has_data_path_key(Idstring(data_path):key())
 
 						if not remove_param then
@@ -1034,9 +1040,8 @@ function CoreEnvEditor:sync()
 	local undo_struct = {}
 
 	if self._out_sky then
-		undo_struct._sky = {
-			params = {}
-		}
+		undo_struct._sky = {}
+		undo_struct._sky.params = {}
 
 		for key, value in pairs(self._sky.params) do
 			self._out_sky:set_value(key, value:get_value())
@@ -1046,7 +1051,7 @@ function CoreEnvEditor:sync()
 			if not v then
 				cat_print("debug", "[CoreEnvEditor] Deprecated! Open this environment in the advanced environment editor and save it again.")
 			else
-				local out = nil
+				local out
 
 				if type(v) ~= "string" and type(v) ~= "number" then
 					out = Vector3(v.x, v.y, v.z)
@@ -1064,14 +1069,12 @@ function CoreEnvEditor:sync()
 	end
 
 	if self._out_underlayeffect then
-		undo_struct._underlay = {
-			materials = {}
-		}
+		undo_struct._underlay = {}
+		undo_struct._underlay.materials = {}
 
 		for material, material_value in pairs(self._underlayeffect.materials) do
-			undo_struct._underlay.materials[material] = {
-				params = {}
-			}
+			undo_struct._underlay.materials[material] = {}
+			undo_struct._underlay.materials[material].params = {}
 
 			for key, value in pairs(material_value.params) do
 				self._out_underlayeffect:set_value(material, key, value:get_value())
@@ -1081,7 +1084,7 @@ function CoreEnvEditor:sync()
 				if not v then
 					cat_print("debug", "[CoreEnvEditor] Deprecated! Open this environment in the advanced environment editor and save it again.")
 				else
-					local out = nil
+					local out
 
 					if type(v) ~= "string" and type(v) ~= "number" then
 						out = Vector3(v.x, v.y, v.z)
@@ -1100,19 +1103,16 @@ function CoreEnvEditor:sync()
 	end
 
 	if self._out_posteffect then
-		undo_struct._posteffect = {
-			post_processors = {}
-		}
+		undo_struct._posteffect = {}
+		undo_struct._posteffect.post_processors = {}
 
 		for post_processor, post_processor_value in pairs(self._posteffect.post_processors) do
-			undo_struct._posteffect.post_processors[post_processor] = {
-				modifiers = {}
-			}
+			undo_struct._posteffect.post_processors[post_processor] = {}
+			undo_struct._posteffect.post_processors[post_processor].modifiers = {}
 
 			for modifier, modifier_value in pairs(post_processor_value.modifiers) do
-				undo_struct._posteffect.post_processors[post_processor].modifiers[modifier] = {
-					params = {}
-				}
+				undo_struct._posteffect.post_processors[post_processor].modifiers[modifier] = {}
+				undo_struct._posteffect.post_processors[post_processor].modifiers[modifier].params = {}
 
 				for key, value in pairs(modifier_value.params) do
 					self._out_posteffect:set_value(post_processor, modifier, key, value:get_value())
@@ -1122,7 +1122,7 @@ function CoreEnvEditor:sync()
 					if not v then
 						cat_print("debug", "[CoreEnvEditor] Deprecated! Open this environment in the advanced environment editor and save it again.")
 					else
-						local out = nil
+						local out
 
 						if type(v) ~= "string" and type(v) ~= "number" then
 							out = Vector3(v.x, v.y, v.z)
@@ -1138,6 +1138,7 @@ function CoreEnvEditor:sync()
 					end
 
 					local e = self:_get_post_process_effect_name(pro)
+
 					self._out_posteffect._post_processors[post_processor]._effect = e
 				end
 			end

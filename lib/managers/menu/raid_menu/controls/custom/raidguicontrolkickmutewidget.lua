@@ -41,6 +41,7 @@ function RaidGUIControlKickMuteWidget:_create_panel(parent, params)
 		y = params.y,
 		h = RaidGUIControlKickMuteWidget.HEIGHT
 	}
+
 	self._object = parent:panel(parent_params)
 end
 
@@ -54,6 +55,7 @@ function RaidGUIControlKickMuteWidget:_create_highlight_line()
 		h = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_H,
 		color = tweak_data.gui.colors.raid_red
 	}
+
 	self._highlight_line = self._object:rect(highlight_params)
 
 	self._highlight_line:set_center_y(self._object:h() / 2)
@@ -73,6 +75,7 @@ function RaidGUIControlKickMuteWidget:_create_name_text()
 		font_size = RaidGUIControlKickMuteWidget.NAME_FONT_SIZE,
 		color = RaidGUIControlKickMuteWidget.NAME_FONT_COLOR_INACTIVE
 	}
+
 	self._name = self._object:text(name_params)
 end
 
@@ -89,6 +92,7 @@ function RaidGUIControlKickMuteWidget:_create_kick_button()
 		on_selected_callback = callback(self, self, "on_button_selected", "kick"),
 		on_unselected_callback = callback(self, self, "on_button_unselected", "kick")
 	}
+
 	self._kick_button = self._object:create_custom_control(RaidGUIControlButtonToggleSmall, kick_button_params)
 
 	if self._params.rightmost_center then
@@ -145,6 +149,7 @@ function RaidGUIControlKickMuteWidget:_create_gamercard_button()
 		on_selected_callback = callback(self, self, "on_button_selected", "gamercard"),
 		on_unselected_callback = callback(self, self, "on_button_unselected", "gamercard")
 	}
+
 	self._gamercard_button = self._object:create_custom_control(RaidGUIControlButtonToggleSmall, gamercard_button_params)
 
 	self._gamercard_button:set_center_x(self._mute_button:center_x() - RaidGUIControlKickMuteWidget.BUTTON_PADDING)
@@ -169,6 +174,7 @@ function RaidGUIControlKickMuteWidget:_create_invite_button()
 		on_selected_callback = callback(self, self, "on_button_selected", "invite"),
 		on_unselected_callback = callback(self, self, "on_button_unselected", "invite")
 	}
+
 	self._invite_button = self._object:create_custom_control(RaidGUIControlButtonToggleSmall, invite_button_params)
 
 	self._invite_button:set_right(self._object:w())
@@ -245,14 +251,16 @@ function RaidGUIControlKickMuteWidget:calculate_width()
 	local leftmost_button_x = self._object:w()
 
 	for i = 1, #self._buttons do
-		if self._buttons[i]:x() < leftmost_button_x then
+		if leftmost_button_x > self._buttons[i]:x() then
 			leftmost_button_x = self._buttons[i]:x()
 		end
 	end
 
 	w = w + self._object:w() - leftmost_button_x
 	w = w + RaidGUIControlKickMuteWidget.BUTTON_PADDING
+
 	local _, _, name_w, _ = self._name:text_rect()
+
 	w = w + name_w + RaidGUIControlKickMuteWidget.NAME_X
 
 	return w
@@ -280,7 +288,7 @@ function RaidGUIControlKickMuteWidget:_fit_size()
 		self._mute_button:set_right(self._object:w())
 	end
 
-	local button_panel_left = nil
+	local button_panel_left
 
 	if _G.IS_XB1 then
 		self._gamercard_button:set_center_x(self._mute_button:center_x() - RaidGUIControlKickMuteWidget.BUTTON_PADDING)
@@ -316,10 +324,10 @@ function RaidGUIControlKickMuteWidget:on_kick_pressed()
 		return
 	end
 
-	local params = {
-		yes_callback = callback(self, self, "on_kick_confirmed"),
-		player_name = self._peer:name()
-	}
+	local params = {}
+
+	params.yes_callback = callback(self, self, "on_kick_confirmed")
+	params.player_name = self._peer:name()
 
 	if Network:is_client() then
 		if managers.vote:option_vote_kick() and managers.vote:available() then
@@ -359,7 +367,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	local move_down_index = self._index % number_of_widgets_shown + 1
 	local is_invite_up = invite_widget_shown and self._index == 1
 	local is_invite_down = invite_widget_shown and self._index == number_of_widgets_shown - 1
-	local on_menu_move = nil
+	local on_menu_move
 
 	if _G.IS_XB1 then
 		on_menu_move = {
@@ -451,9 +459,11 @@ function RaidGUIControlKickMuteWidget:_animate_highlight_on()
 	local duration = 0.2
 	local t = self._highlight_line:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_in_out(t, 0, 1, duration)
 
 		self._highlight_line:set_alpha(current_alpha)
@@ -466,9 +476,11 @@ function RaidGUIControlKickMuteWidget:_animate_highlight_off()
 	local duration = 0.2
 	local t = (1 - self._highlight_line:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quintic_in_out(t, 1, -1, duration)
 
 		self._highlight_line:set_alpha(current_alpha)

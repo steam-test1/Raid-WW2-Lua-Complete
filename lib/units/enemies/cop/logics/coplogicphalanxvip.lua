@@ -1,4 +1,5 @@
 local tmp_vec1 = Vector3()
+
 CopLogicPhalanxVip = class(CopLogicBase)
 CopLogicPhalanxVip._upd_aim = CopLogicAttack._upd_aim
 CopLogicPhalanxVip._chk_reaction_to_attention_object = CopLogicAttack._chk_reaction_to_attention_object
@@ -37,7 +38,9 @@ function CopLogicPhalanxVip.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
 
 	local is_cool = data.unit:movement():cool()
+
 	my_data.detection = data.char_tweak.detection.combat
+
 	local old_internal_data = data.internal_data
 
 	if old_internal_data then
@@ -64,7 +67,9 @@ function CopLogicPhalanxVip.enter(data, new_logic_name, enter_params)
 	end
 
 	data.internal_data = my_data
+
 	local key_str = tostring(data.unit:key())
+
 	my_data.detection_task_key = "CopLogicPhalanxVip.update" .. key_str
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicPhalanxVip.queued_update, data, data.t)
@@ -209,6 +214,7 @@ function CopLogicPhalanxVip._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
 	data.t = TimerManager:game():time()
+
 	local my_data = data.internal_data
 	local delay = CopLogicBase._upd_attention_obj_detection(data, nil, nil)
 	local new_attention, new_prio_slot, new_reaction = CopLogicBase._get_priority_attention(data, data.detected_attention_objects)
@@ -216,7 +222,7 @@ function CopLogicPhalanxVip._upd_enemy_detection(data)
 	CopLogicBase._set_attention_obj(data, new_attention, new_reaction)
 	data.logic._upd_aim(data, my_data)
 
-	if new_reaction and AIAttentionObject.REACT_SHOOT <= new_reaction then
+	if new_reaction and new_reaction >= AIAttentionObject.REACT_SHOOT then
 		my_data.last_violent_attention = new_attention
 	end
 

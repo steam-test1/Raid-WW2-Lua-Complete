@@ -5,12 +5,11 @@ ElementSpawnEnemyGroup = ElementSpawnEnemyGroup or class(CoreMissionScriptElemen
 function ElementSpawnEnemyGroup:init(...)
 	ElementSpawnEnemyGroup.super.init(self, ...)
 
-	self._group_data = {
-		amount = self._values.amount,
-		spawn_type = self._values.spawn_type,
-		ignore_disabled = self._values.ignore_disabled,
-		spawn_points = {}
-	}
+	self._group_data = {}
+	self._group_data.amount = self._values.amount
+	self._group_data.spawn_type = self._values.spawn_type
+	self._group_data.ignore_disabled = self._values.ignore_disabled
+	self._group_data.spawn_points = {}
 	self._unused_randoms = {}
 
 	self:_finalize_values()
@@ -51,6 +50,7 @@ function ElementSpawnEnemyGroup:_check_spawn_points()
 	end
 
 	self._unused_randoms = {}
+
 	local i = 1
 
 	for _, element in pairs(self._group_data.spawn_points) do

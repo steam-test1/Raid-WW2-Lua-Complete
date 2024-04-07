@@ -39,6 +39,7 @@ function RaidGUIControlScrollbar:on_mouse_moved(o, x, y)
 	end
 
 	local dy = y - self._last_y
+
 	self._last_y = self._last_y + dy
 
 	self:set_bottom_by_y_coord(math.floor(dy))
@@ -68,7 +69,7 @@ end
 function RaidGUIControlScrollbar:set_bottom_by_y_coord(dy)
 	self._object:set_y(self._object:y() + dy)
 
-	if self._params.scroll_outer_panel:h() < self._object:bottom() then
+	if self._object:bottom() > self._params.scroll_outer_panel:h() then
 		self._object:set_bottom(self._params.scroll_outer_panel:h())
 	end
 

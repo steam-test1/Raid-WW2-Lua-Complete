@@ -47,6 +47,7 @@ end
 
 function RaidGUIControlStepper:_create_stepper_panel()
 	local stepper_params = clone(self._params)
+
 	stepper_params.name = stepper_params.name .. "_stepper"
 	stepper_params.layer = self._panel:layer() + 1
 	stepper_params.w = self._params.w or RaidGUIControlStepper.DEFAULT_CONTROL_WIDTH
@@ -64,7 +65,9 @@ function RaidGUIControlStepper:_create_stepper_controls()
 		h = self._object:h(),
 		color = RaidGUIControlStepper.SIDELINE_COLOR
 	}
+
 	self._sideline = self._object:rect(sideline_params)
+
 	local stepper_w = self._params.stepper_w or RaidGUIControlStepperSimple.DEFAULT_WIDTH
 	local stepper_params = {
 		y = 0,
@@ -75,6 +78,7 @@ function RaidGUIControlStepper:_create_stepper_controls()
 		data_source_callback = self._params.data_source_callback,
 		start_from_last = self._stepper_params.start_from_last
 	}
+
 	self._stepper = self._object:stepper_simple(stepper_params)
 	self._description = self._object:text({
 		vertical = "center",
@@ -193,6 +197,7 @@ function RaidGUIControlStepper:is_selected_control()
 end
 
 function RaidGUIControlStepper:_select_control(value)
+	return
 end
 
 function RaidGUIControlStepper:_animate_highlight_on()
@@ -200,9 +205,11 @@ function RaidGUIControlStepper:_animate_highlight_on()
 	local duration = 0.2
 	local t = duration - (1 - starting_alpha) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._sideline:set_alpha(alpha)
@@ -222,9 +229,11 @@ function RaidGUIControlStepper:_animate_highlight_off()
 	local duration = 0.2
 	local t = duration - starting_alpha * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local alpha = Easing.quartic_out(t, 1, -1, duration)
 
 		self._sideline:set_alpha(alpha)

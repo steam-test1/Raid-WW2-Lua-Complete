@@ -27,6 +27,7 @@ end
 
 function RaidGUIControlRespec:_create_control_panel()
 	local control_params = clone(self._params)
+
 	control_params.name = control_params.name .. "_customization_panel"
 	control_params.layer = self._panel:layer() + 1
 	control_params.w = self._params.w or RaidGUIControlRespec.DEFAULT_W
@@ -50,6 +51,7 @@ function RaidGUIControlRespec:_create_respec_title()
 		font_size = RaidGUIControlRespec.TITLE_FONT_SIZE,
 		color = RaidGUIControlRespec.TITLE_COLOR
 	}
+
 	self._title = self._object:label(skill_title_params)
 end
 
@@ -67,5 +69,6 @@ function RaidGUIControlRespec:_create_respec_description()
 		font_size = RaidGUIControlRespec.DESCRIPTION_FONT_SIZE,
 		color = RaidGUIControlRespec.DESCRIPTION_COLOR
 	}
+
 	self._description = self._object:label(description_text_params)
 end

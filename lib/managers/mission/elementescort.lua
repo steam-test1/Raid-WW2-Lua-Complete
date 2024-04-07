@@ -43,7 +43,7 @@ function ElementEscort:start_escort_path(unit)
 					position = self:value("position")
 				}
 			}
-			local last_element = nil
+			local last_element
 
 			while next_element do
 				table.insert(points, {

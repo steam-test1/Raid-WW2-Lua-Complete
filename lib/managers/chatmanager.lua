@@ -92,7 +92,7 @@ function ChatManager:_cache_message(channel_id, name, peer_id, message, color, i
 		system_message = system_message
 	})
 
-	if ChatManager.MESSAGE_BUFFER_SIZE < #self._message_buffer[channel_id] then
+	if #self._message_buffer[channel_id] > ChatManager.MESSAGE_BUFFER_SIZE then
 		table.remove(self._message_buffer[channel_id], 1)
 	end
 end
@@ -110,7 +110,9 @@ function ChatManager:_receive_message(channel_id, name, peer_id, message, color,
 end
 
 function ChatManager:save(data)
+	return
 end
 
 function ChatManager:load(data)
+	return
 end

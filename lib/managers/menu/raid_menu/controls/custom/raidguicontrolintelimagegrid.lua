@@ -21,6 +21,7 @@ end
 
 function RaidGUIControlIntelImageGrid:_create_panels()
 	local panel_params = clone(self._params)
+
 	panel_params.name = panel_params.name .. "_panel"
 	panel_params.layer = self._params.layer or self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
@@ -38,8 +39,10 @@ function RaidGUIControlIntelImageGrid:_create_photos(only_first_n_events)
 
 	self._scrollable = false
 	self._mission_photos = self:_get_mission_photos(only_first_n_events)
+
 	local y = 0
 	local h = 0
+
 	self._photos = {}
 
 	for i = 1, #self._mission_photos do
@@ -89,7 +92,7 @@ function RaidGUIControlIntelImageGrid:_on_photo_clicked(photo_index)
 			end
 		end
 
-		if self._object:h() < self._photos[self._selected_index]:y() + self._photos[self._selected_index]:h() + self._inner_panel:y() then
+		if self._photos[self._selected_index]:y() + self._photos[self._selected_index]:h() + self._inner_panel:y() > self._object:h() then
 			self._inner_panel:set_y(-self._photos[self._selected_index]:y())
 
 			if self._inner_panel:y() < self._object:h() - self._inner_panel:h() then
@@ -138,7 +141,7 @@ function RaidGUIControlIntelImageGrid:set_selected(value, dont_trigger_selected_
 	end
 
 	if self._selected then
-		local photo_to_select = nil
+		local photo_to_select
 
 		if #self._photos % 2 == 0 then
 			photo_to_select = #self._photos - 1
@@ -308,4 +311,5 @@ function RaidGUIControlIntelImageGrid:on_mouse_scroll_down()
 end
 
 function RaidGUIControlIntelImageGrid:close()
+	return
 end

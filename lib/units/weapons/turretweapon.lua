@@ -1,4 +1,5 @@
 TurretWeapon = TurretWeapon or class()
+
 local mvec_to = Vector3()
 
 function TurretWeapon:init(unit)
@@ -94,7 +95,9 @@ function TurretWeapon:init(unit)
 		}
 	}
 	self._SO_id = nil
+
 	local usable_by_npc = tweak_data.weapon[self.name_id].usable_by_npc or false
+
 	self._automatic_SO = usable_by_npc
 	self._lock_fire = false
 
@@ -102,6 +105,7 @@ function TurretWeapon:init(unit)
 end
 
 function TurretWeapon:_init()
+	return
 end
 
 function TurretWeapon:post_init()
@@ -109,6 +113,7 @@ function TurretWeapon:post_init()
 end
 
 function TurretWeapon:pre_destroy()
+	return
 end
 
 function TurretWeapon:zoom()
@@ -132,6 +137,7 @@ function TurretWeapon:set_laser_enabled()
 end
 
 function TurretWeapon:setup(setup_data, damage_multiplier)
+	return
 end
 
 function TurretWeapon:initialize_sentry(unit)
@@ -160,12 +166,14 @@ end
 
 function TurretWeapon:_setup_fire_effects()
 	local muzzle_effect_tweak = tweak_data.weapon[self.name_id].muzzle_effect and Idstring(tweak_data.weapon[self.name_id].muzzle_effect)
+
 	self._muzzle_effect_table = {}
 	self._muzzle_effect = muzzle_effect_tweak
 
 	for barrel_id = 1, self._number_of_barrels do
 		local fire_locator_property_name = "_locator_fire_" .. barrel_id
 		local fire_locator_object_name = Idstring("fire_" .. barrel_id)
+
 		self[fire_locator_property_name] = self._unit:get_object(fire_locator_object_name)
 
 		if muzzle_effect_tweak then
@@ -185,6 +193,7 @@ function TurretWeapon:_setup_smoke_effects()
 	for barrel_id = 1, self._number_of_barrels do
 		local smoke_locator_property_name = "_locator_smoke_" .. barrel_id
 		local smoke_locator_object_name = Idstring("es_smoke_" .. barrel_id)
+
 		self[smoke_locator_property_name] = self._unit:get_object(smoke_locator_object_name)
 
 		if self[smoke_locator_property_name] then
@@ -306,6 +315,7 @@ function TurretWeapon:set_turret_rot(dt)
 	end
 
 	local player_rotation = managers.player:player_unit():movement():m_head_rot()
+
 	self._player_rotation = player_rotation
 end
 
@@ -392,6 +402,7 @@ function TurretWeapon:_increase_heat()
 	end
 
 	local overheat_delta = self._overheat_speed * managers.player:upgrade_value("player", self._overheat_skill_id, 1) * warcry_multiplier
+
 	self._overheat_current = math.clamp(self._overheat_current + overheat_delta, 0, 1)
 
 	if self._overheat_current >= 1 then
@@ -407,6 +418,7 @@ function TurretWeapon:_enable_overheating_smoke(enabled)
 		for barrel_id = 1, self._number_of_barrels do
 			if self._overheating_smoke_effect_table[barrel_id] then
 				local smoke_spawn_name = "_overheating_smoke_spawn_" .. barrel_id
+
 				self[smoke_spawn_name] = World:effect_manager():spawn(self._overheating_smoke_effect_table[barrel_id])
 			end
 		end
@@ -483,7 +495,9 @@ function TurretWeapon:_update_rotation_pitch(dt, target_pitch_rot)
 	local current_pitch = self._joint_pitch:rotation():pitch()
 	local target_pitch = target_pitch_rot:pitch()
 	local new_pitch = (1 - anim_lerp) * current_pitch + anim_lerp * target_pitch
+
 	new_pitch = math.clamp(new_pitch, MIN_ANGLE, MAX_ANGLE)
+
 	local rot = self._joint_pitch:rotation()
 
 	mrotation.set_yaw_pitch_roll(rot, rot:yaw(), new_pitch, rot:roll())
@@ -518,6 +532,7 @@ end
 
 function TurretWeapon:_update_pitch(dt, target_pitch_rot)
 	local delta_pitch = 0
+
 	delta_pitch = delta_pitch + self:_update_rotation_pitch(dt, target_pitch_rot)
 
 	self:_update_animation_pitch("anim_arm", dt, target_pitch_rot:pitch())
@@ -530,7 +545,7 @@ function TurretWeapon:_update_turret_rot(dt)
 		return
 	end
 
-	if self._joint_root_time_limit < self._joint_root_elapsed_time then
+	if self._joint_root_elapsed_time > self._joint_root_time_limit then
 		self._joint_root_elapsed_time = 0
 
 		self._joint_pitch:set_local_position(self._joint_pitch_original_pos)
@@ -543,6 +558,7 @@ function TurretWeapon:_update_turret_rot(dt)
 
 	self._turret_info.target_rot_heading = self._player_rotation:yaw()
 	self._turret_info.target_rot_pitch = self._player_rotation:pitch()
+
 	local target_heading_rot = Rotation(self._turret_info.target_rot_heading, self._joint_heading:local_rotation():pitch(), 0)
 	local target_pitch_rot = Rotation(self._turret_info.target_rot_heading, self._turret_info.target_rot_pitch, 0)
 	local delta_heading = self:_update_heading_rotation(dt, target_heading_rot)
@@ -582,6 +598,7 @@ function TurretWeapon:sync_turret_rotation(player_rotation)
 end
 
 function TurretWeapon:set_ammo(amount)
+	return
 end
 
 function TurretWeapon:start_autofire()
@@ -612,7 +629,7 @@ function TurretWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_uni
 		return false
 	end
 
-	local fired = nil
+	local fired
 
 	if not self._lock_fire and self._next_fire_allowed <= Application:time() then
 		fired = self:fire(blanks, expend_ammo, shoot_player, target_unit, damage_multiplier)
@@ -683,6 +700,7 @@ function TurretWeapon:fire(blanks, expend_ammo, shoot_player, target_unit, damag
 	end
 
 	damage_multiplier = damage_multiplier or 1
+
 	local fire_locator = self:_get_fire_locator()
 	local from_pos = fire_locator:position()
 	local fire_direction_fp = fire_locator:rotation():y()
@@ -722,7 +740,7 @@ function TurretWeapon:fire(blanks, expend_ammo, shoot_player, target_unit, damag
 		end
 	end
 
-	local ray_res = nil
+	local ray_res
 
 	if self._bullet_type == "shell" then
 		if not self._turret_shell_sound_source then
@@ -753,14 +771,17 @@ function TurretWeapon:_update_shell_movement(dt)
 	end
 
 	self._shell_cumulative_gravity = self._shell_cumulative_gravity + 9.81 * dt
+
 	local shell_velocity = 60000
 	local fire_locator = self:_get_fire_locator()
 	local fire_position = fire_locator:position()
 	local old_shell_position = Vector3(self._turret_shell.position.x, self._turret_shell.position.y, self._turret_shell.position.z)
+
 	self._turret_shell.position = self._turret_shell.position + self._turret_shell.direction * shell_velocity * dt + Vector3(0, 0, -self._shell_cumulative_gravity)
+
 	local shell_distance = mvector3.distance(fire_position, self._turret_shell.position)
 
-	if self._fire_range < shell_distance then
+	if shell_distance > self._fire_range then
 		Application:debug("TurretWeapon:_update_shell_movement: BOOM!")
 		self:_turret_shell_explode(self._turret_shell.position, nil, true)
 
@@ -781,7 +802,7 @@ end
 
 function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 	local shell_position = from_pos
-	local shell_dir = nil
+	local shell_dir
 
 	if not detonate_now then
 		local col_ray = World:raycast("ray", from_pos, to_pos, "ignore_unit", self._setup.ignore_units)
@@ -854,7 +875,8 @@ function TurretWeapon:_alert()
 		"bullet",
 		self._locator_fire_1:position(),
 		alert_size,
-		[5] = managers.player:player_unit(),
+		nil,
+		managers.player:player_unit(),
 		self._locator_fire_1:position()
 	}
 
@@ -866,14 +888,14 @@ local mvec1 = Vector3()
 
 function TurretWeapon:_fire_raycast(from_pos, direction, shoot_player, target_unit, damage_multiplier)
 	local result = {}
-	local hit_unit = nil
+	local hit_unit
 
 	mvector3.set(mvec_to, direction)
 	mvector3.multiply(mvec_to, tweak_data.weapon[self._name_id].FIRE_RANGE)
 	mvector3.add(mvec_to, from_pos)
 
 	local col_ray = World:raycast("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
-	local player_hit, player_ray_data = nil
+	local player_hit, player_ray_data
 
 	if shoot_player then
 		player_hit, player_ray_data = RaycastWeaponBase.damage_player(self, col_ray, from_pos, direction)
@@ -885,10 +907,11 @@ function TurretWeapon:_fire_raycast(from_pos, direction, shoot_player, target_un
 		end
 	end
 
-	local char_hit = nil
+	local char_hit
 
 	if not player_hit and col_ray then
 		local damage = self:_apply_dmg_mul(self:get_damage(), col_ray, from_pos)
+
 		char_hit = InstantBulletBase:on_collision(col_ray, self._unit, self._turret_user or self._unit, damage)
 	end
 
@@ -930,7 +953,7 @@ function TurretWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 	if tweak_data.weapon[self._name_id].DAMAGE_MUL_RANGE then
 		local ray_dis = col_ray.distance or mvector3.distance(from_pos, col_ray.position)
 		local ranges = tweak_data.weapon[self._name_id].DAMAGE_MUL_RANGE
-		local i_range = nil
+		local i_range
 
 		for test_i_range, range_data in ipairs(ranges) do
 			if ray_dis < range_data[1] or test_i_range == #ranges then
@@ -940,10 +963,11 @@ function TurretWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 			end
 		end
 
-		if i_range == 1 or ranges[i_range][1] < ray_dis then
+		if i_range == 1 or ray_dis > ranges[i_range][1] then
 			damage_out = damage_out * ranges[i_range][2]
 		else
 			local dis_lerp = (ray_dis - ranges[i_range - 1][1]) / (ranges[i_range][1] - ranges[i_range - 1][1])
+
 			damage_out = damage_out * math.lerp(ranges[i_range - 1][2], ranges[i_range][2], dis_lerp)
 		end
 	end
@@ -982,15 +1006,19 @@ function TurretWeapon:_sound_fire_single()
 end
 
 function TurretWeapon:_sound_autofire_end_empty()
+	return
 end
 
 function TurretWeapon:_sound_autofire_end_cooldown()
+	return
 end
 
 function TurretWeapon:ammo_total()
+	return
 end
 
 function TurretWeapon:ammo_max()
+	return
 end
 
 function TurretWeapon:on_team_set(team_data)
@@ -1006,12 +1034,15 @@ function TurretWeapon:weapon_tweak_data()
 end
 
 function TurretWeapon:has_part()
+	return
 end
 
 function TurretWeapon:update_laser()
+	return
 end
 
 function TurretWeapon:on_death()
+	return
 end
 
 function TurretWeapon:has_shield()
@@ -1019,10 +1050,12 @@ function TurretWeapon:has_shield()
 end
 
 function TurretWeapon:unregister()
+	return
 end
 
 function TurretWeapon:save(save_data)
 	local my_save_data = {}
+
 	save_data.weapon = my_save_data
 	my_save_data.foe_teams = self._foe_teams
 	my_save_data.alert = self._alert_events and true or nil
@@ -1037,6 +1070,7 @@ end
 
 function TurretWeapon:load(save_data)
 	local my_save_data = save_data.weapon
+
 	self._foe_teams = my_save_data.foe_teams
 	self._auto_reload = my_save_data.auto_reload
 	self._player_on = my_save_data.player_on
@@ -1156,6 +1190,7 @@ function TurretWeapon:_create_turret_SO()
 		admin_clbk = callback(self, self, "on_turret_SO_administered")
 	}
 	local SO_id = "turret_" .. tostring(self._unit:key())
+
 	self._SO_data = {
 		SO_registered = true,
 		SO_id = SO_id,
@@ -1205,6 +1240,7 @@ function TurretWeapon:on_turret_SO_completed(unit)
 	self._puppet_unit:unit_data().turret_weapon = self
 	self._last_puppet_position = unit:position()
 	self._puppet_walking = false
+
 	local enter_turret_anim_name = tweak_data.weapon[self.name_id].anim_enter
 
 	self._puppet_unit:movement():enter_turret_animation(enter_turret_anim_name, callback(self, self, "activate_turret"))
@@ -1231,11 +1267,13 @@ function TurretWeapon:sync_SO_completed(puppet_unit)
 	end
 
 	local position_difference = (puppet_unit:position() - self._SO_object:position()):length()
+
 	position_difference = (puppet_unit:position() - self._SO_object:position()):length()
 	self._puppet_unit = puppet_unit
 	self._puppet_unit:unit_data().turret_weapon = self
 	self._last_puppet_position = puppet_unit:position()
 	self._puppet_walking = false
+
 	local enter_turret_anim_name = tweak_data.weapon[self.name_id].anim_enter
 
 	self._puppet_unit:movement():enter_turret_animation(enter_turret_anim_name, callback(self, self, "activate_turret"))
@@ -1248,7 +1286,9 @@ function TurretWeapon:sync_cancel_SO()
 end
 
 function TurretWeapon:remove_administered_SO()
-	local result = self._SO_data and managers.groupai:state():remove_special_objective(self._SO_data.SO_id)
+	if self._SO_data then
+		local result = managers.groupai:state():remove_special_objective(self._SO_data.SO_id)
+	end
 end
 
 function TurretWeapon:is_available()
@@ -1435,6 +1475,7 @@ function TurretWeapon:on_puppet_damaged(data, damage_info)
 	end
 
 	self._activate_turret_clbk_id = "activate_turret_" .. tostring(self._puppet_unit:key())
+
 	local dazed_duration = tweak_data.weapon[self.name_id].dazed_duration or 3
 
 	self:deactivate_sentry()
@@ -1481,6 +1522,7 @@ function TurretWeapon:on_puppet_damaged_client(attacker_unit)
 	end
 
 	self._activate_turret_clbk_id = "activate_turret_" .. tostring(self._puppet_unit:key())
+
 	local dazed_duration = tweak_data.weapon[self.name_id].dazed_duration or 3
 
 	self:deactivate_sentry()
@@ -1517,6 +1559,7 @@ function TurretWeapon:deactivate_client()
 
 		self._turret_info.target_rot_heading = self._player_rotation:yaw()
 		self._turret_info.target_rot_pitch = self._player_rotation:pitch()
+
 		local target_heading_rot = Rotation(self._turret_info.target_rot_heading, 0, 0)
 		local target_pitch_rot = Rotation(self._turret_info.target_rot_heading, self._turret_info.target_rot_pitch, 0)
 

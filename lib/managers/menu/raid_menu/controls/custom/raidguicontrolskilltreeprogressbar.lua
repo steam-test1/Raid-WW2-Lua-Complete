@@ -48,10 +48,12 @@ function RaidGUIControlSkilltreeProgressBar:init(parent, params)
 end
 
 function RaidGUIControlSkilltreeProgressBar:close()
+	return
 end
 
 function RaidGUIControlSkilltreeProgressBar:_create_panels()
 	local control_params = clone(self._params)
+
 	control_params.name = control_params.name .. "_panel"
 	control_params.layer = self._panel:layer() + 1
 	control_params.w = self._params.w
@@ -76,6 +78,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_progress_bar()
 		w = self._bar_w + self._horizontal_padding * 2,
 		h = self._params.progress_bar_h or RaidGUIControlSkilltreeProgressBar.PROGRESS_BAR_H
 	}
+
 	self._progress_bar = self._object:progress_bar_simple(progress_bar_params)
 
 	self._progress_bar:set_bottom(self._object:h())
@@ -93,7 +96,9 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 		h = self._object:h() - self._progress_bar:h(),
 		layer = self._progress_bar:layer() - 5
 	}
+
 	self._background_panel = self._object:panel(background_panel_params)
+
 	local texture_center = "skl_level_bg"
 	local texture_left = "skl_level_bg_left"
 	local texture_right = "skl_level_bg_right"
@@ -108,7 +113,9 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 		right = texture_right,
 		color = Color.white
 	}
+
 	self._background = self._background_panel:three_cut_bitmap(background_params)
+
 	local line_texture = "skl_bg_vline"
 	local progress_line_params = {
 		name = "progress_line",
@@ -120,6 +127,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 		texture = tweak_data.gui.icons[line_texture].texture,
 		texture_rect = tweak_data.gui.icons[line_texture].texture_rect
 	}
+
 	self._progress_line = self._background_panel:image(progress_line_params)
 
 	self._background_panel:set_y(128)
@@ -137,14 +145,16 @@ function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 		h = icon_h,
 		layer = self._progress_bar:layer() + 5
 	}
+
 	self._slider_pimples_panel = self._object:panel(slider_pimples_panel_params)
+
 	local current_level = 1
 	local level_cap = managers.experience:level_cap()
 	local character_class = managers.skilltree:get_character_profile_class()
 	local weapon_unlock_progression = RaidGUIControlSkilltreeProgressBar.SHOW_WEAPON_UNLOCK and tweak_data.skilltree.automatic_unlock_progressions[character_class] or {}
 
 	while current_level <= level_cap do
-		local level_mark_params = nil
+		local level_mark_params
 
 		if current_level == 1 or current_level % 5 == 0 or weapon_unlock_progression[current_level] then
 			level_mark_params = {
@@ -186,13 +196,16 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar(
 		w = self._object:w(),
 		h = self._progress_bar:h()
 	}
+
 	self._level_marks_panel = self._object:panel(level_marks_panel_params)
 
 	self._level_marks_panel:set_center_y(self._progress_bar:center_y())
 
 	local current_level = 1
 	local level_cap = managers.experience:level_cap()
+
 	self._level_marks = {}
+
 	local icon = RaidGUIControlSkilltreeProgressBar.LEVEL_MARK_ICON
 
 	while current_level <= level_cap do
@@ -222,18 +235,20 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_and_bonus_info()
 		w = self._object:w(),
 		h = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_PANEL_H - self._slider_pimples_panel:h()
 	}
+
 	self._level_labels_panel = self._object:panel(level_labels_panel_params)
 
 	self._level_labels_panel:set_bottom(self._slider_pimples_panel:y())
 
 	self._level_labels = {}
 	self._weapon_unlock_icons = {}
+
 	local character_class = managers.skilltree:get_character_profile_class()
 	local weapon_unlock_progression = RaidGUIControlSkilltreeProgressBar.SHOW_WEAPON_UNLOCK and tweak_data.skilltree.automatic_unlock_progressions[character_class] or {}
 	local level_cap = managers.experience:level_cap()
 	local current_level = 1
 
-	while level_cap >= current_level do
+	while current_level <= level_cap do
 		local draw_label = current_level == 1 or current_level % 5 == 0
 		local number_of_weapon_unlocks = weapon_unlock_progression[current_level] and weapon_unlock_progression[current_level].weapons and #weapon_unlock_progression[current_level].weapons or 0
 
@@ -257,7 +272,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_
 		h = self._level_labels_panel:h()
 	}
 	local level_label_panel = self._level_labels_panel:panel(level_label_panel_params)
-	local level_label = nil
+	local level_label
 
 	if draw_level_label then
 		local player_level = managers.experience:current_level()
@@ -274,14 +289,16 @@ function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_
 			text = tostring(level),
 			color = level <= player_level and RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR or RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR_GREY
 		}
+
 		level_label = level_label_panel:text(level_label_text_params)
+
 		local _, _, w, _ = level_label:text_rect()
 
 		level_label:set_w(w)
 		level_label:set_center_x(level_label_panel:w() / 2)
 	end
 
-	local weapon_unlock = nil
+	local weapon_unlock
 
 	if number_of_weapon_unlocks > 0 then
 		local weapon_unlock_panel_params = {
@@ -291,7 +308,9 @@ function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_
 			w = level_label_panel:w(),
 			h = level_label_panel:h()
 		}
+
 		weapon_unlock = level_label_panel:panel(weapon_unlock_panel_params)
+
 		local weapon_icon = RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON
 		local icon_w = tweak_data.gui:icon_w(weapon_icon)
 		local icon_h = tweak_data.gui:icon_h(weapon_icon)
@@ -349,6 +368,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_label_for_level(level, draw_
 			icon = weapon_unlock,
 			unlocked = unlocked
 		}
+
 		self._weapon_unlock_icons[level] = weapon_unlock_icon
 	end
 
@@ -370,8 +390,10 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 		w = self._bar_w,
 		h = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_PANEL_H
 	}
+
 	self._level_labels_panel = self._inner_panel:panel(level_labels_panel_params)
 	self._level_labels = {}
+
 	local level_label_params = {
 		vertical = "center",
 		name = "level_label_1",
@@ -392,7 +414,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 	local level_cap = managers.experience:level_cap()
 	local current_level = 5
 
-	while level_cap > current_level do
+	while current_level < level_cap do
 		level_label_params = {
 			vertical = "center",
 			align = "center",
@@ -439,11 +461,15 @@ function RaidGUIControlSkilltreeProgressBar:_create_weapon_unlock_icons()
 		w = self._bar_w,
 		h = RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICONS_PANEL_H
 	}
+
 	self._weapon_unlock_icons_panel = self._inner_panel:panel(weapon_unlock_icons_panel_params)
+
 	local weapon_icon = tweak_data.gui.icons[RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON]
 	local icon_h = self._weapon_unlock_icons_panel:h()
-	local icon_w = icon_h * tweak_data.gui:icon_w(RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON) / tweak_data.gui:icon_h(RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON)
+	local icon_w = icon_h * (tweak_data.gui:icon_w(RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON) / tweak_data.gui:icon_h(RaidGUIControlSkilltreeProgressBar.WEAPON_UNLOCK_ICON))
+
 	self._weapon_unlock_icons = {}
+
 	local character_class = managers.skilltree:get_character_profile_class()
 	local weapon_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[character_class]
 	local level_cap = managers.experience:level_cap()
@@ -453,7 +479,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_weapon_unlock_icons()
 
 		if icon_x < 0 then
 			icon_x = 0
-		elseif self._bar_w < icon_x + icon_w then
+		elseif icon_x + icon_w > self._bar_w then
 			icon_x = self._bar_w - icon_w
 		end
 
@@ -481,6 +507,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_weapon_unlock_icons()
 			icon = icon,
 			unlocked = unlocked
 		}
+
 		self._weapon_unlock_icons[level] = weapon_unlock_icon
 	end
 end
@@ -492,7 +519,7 @@ function RaidGUIControlSkilltreeProgressBar:set_progress(progress)
 
 	local right_edge_x = self._inner_panel:w() * progress
 
-	if self._object:w() < self._inner_panel:w() and right_edge_x > self._object:w() * 0.7 then
+	if self._inner_panel:w() > self._object:w() and right_edge_x > self._object:w() * 0.7 then
 		local x = -(right_edge_x - self._object:w() * 0.7)
 
 		if x < -(self._inner_panel:w() - self._object:w()) then
@@ -539,9 +566,11 @@ function RaidGUIControlSkilltreeProgressBar:_animate_fade_in()
 	local duration = 0.3
 	local t = self._object:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, duration)
 
 		self._object:set_alpha(current_alpha)

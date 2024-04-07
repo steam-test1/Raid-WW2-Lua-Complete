@@ -17,4 +17,5 @@ function DramaTweakData:init()
 end
 
 function DramaTweakData:_create_table_structure()
+	return
 end

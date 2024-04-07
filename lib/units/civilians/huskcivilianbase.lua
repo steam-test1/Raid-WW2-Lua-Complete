@@ -1,6 +1,7 @@
 local ids_lod = Idstring("lod")
 local ids_lod1 = Idstring("lod1")
 local ids_ik_aim = Idstring("ik_aim")
+
 HuskCivilianBase = HuskCivilianBase or class(HuskCopBase)
 
 function HuskCivilianBase:post_init()
@@ -12,7 +13,8 @@ function HuskCivilianBase:post_init()
 
 	self._lod_stage = 1
 	self._allow_invisible = true
-	local spawn_state = nil
+
+	local spawn_state
 
 	if self._spawn_state then
 		if self._spawn_state ~= "" then
@@ -31,6 +33,7 @@ function HuskCivilianBase:post_init()
 end
 
 function HuskCivilianBase:default_weapon_name()
+	return
 end
 
 function HuskCivilianBase:sync_net_event(event_id)

@@ -49,6 +49,7 @@ function HUDDriving:_create_panel(hud)
 		w = HUDDriving.W,
 		h = HUDDriving.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 
 	self._object:set_center_x(hud.panel:w() / 2)
@@ -63,6 +64,7 @@ function HUDDriving:_create_slot_panel()
 		w = HUDDriving.SLOT_PANEL_W,
 		h = HUDDriving.SLOT_PANEL_H
 	}
+
 	self._slot_panel = self._object:panel(slot_panel_params)
 
 	self._slot_panel:set_center_x(self._object:w() / 2)
@@ -87,16 +89,16 @@ function HUDDriving:_create_slot_panel()
 		local taken_slot = self._slot_panel:bitmap(taken_slot_params)
 
 		if i % 2 == 0 then
-			empty_slot:set_center_x(3 * self._slot_panel:w() / 4)
-			taken_slot:set_center_x(3 * self._slot_panel:w() / 4)
+			empty_slot:set_center_x(3 * (self._slot_panel:w() / 4))
+			taken_slot:set_center_x(3 * (self._slot_panel:w() / 4))
 		else
 			empty_slot:set_center_x(self._slot_panel:w() / 4)
 			taken_slot:set_center_x(self._slot_panel:w() / 4)
 		end
 
 		if math.ceil(i / 2 - 1) >= 1 then
-			empty_slot:set_center_y(3 * self._slot_panel:h() / 4)
-			taken_slot:set_center_y(3 * self._slot_panel:h() / 4)
+			empty_slot:set_center_y(3 * (self._slot_panel:h() / 4))
+			taken_slot:set_center_y(3 * (self._slot_panel:h() / 4))
 		else
 			empty_slot:set_center_y(self._slot_panel:h() / 4)
 			taken_slot:set_center_y(self._slot_panel:h() / 4)
@@ -142,6 +144,7 @@ function HUDDriving:_create_carry_info()
 		texture = tweak_data.gui.icons[HUDDriving.CARRY_PANEL_INDICATOR_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDDriving.CARRY_PANEL_INDICATOR_ICON].texture_rect
 	}
+
 	self._carry_indicator = carry_info_panel:bitmap(carry_indicator_params)
 
 	self._carry_indicator:set_y(0)
@@ -160,6 +163,7 @@ function HUDDriving:_create_carry_info()
 		font = HUDDriving.CARRY_INFO_TEXT_FONT,
 		font_size = HUDDriving.CARRY_INFO_TEXT_FONT_SIZE
 	}
+
 	self._carry_info_text = carry_info_panel:text(carry_info_text_params)
 
 	self._carry_info_text:set_center_y(self._carry_indicator:center_y())
@@ -174,6 +178,7 @@ function HUDDriving:_create_button_prompts()
 		w = self._object:w(),
 		h = HUDDriving.BUTTON_PROMPTS_H
 	}
+
 	self._button_prompts_panel = self._object:panel(button_prompts_panel_params)
 end
 
@@ -269,6 +274,7 @@ function HUDDriving:_layout_button_prompts()
 	end
 
 	total_width = total_width + (#button_prompts - 1) * HUDDriving.BUTTON_PROMPT_DISTANCE
+
 	local x = math.floor((self._button_prompts_panel:w() - total_width) / 2)
 
 	for index, button_prompt in pairs(button_prompts) do
@@ -331,9 +337,11 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 end
 
 function HUDDriving:on_vehicle_damaged()
+	return
 end
 
 function HUDDriving:refresh_health()
+	return
 end
 
 function HUDDriving:refresh_seats(refresh_button_prompts)
@@ -344,7 +352,7 @@ function HUDDriving:refresh_seats(refresh_button_prompts)
 	local seats = self._vehicle:vehicle_driving():seats()
 
 	for index, seat in pairs(seats) do
-		local seat_index = nil
+		local seat_index
 
 		for i, seat_name in pairs(HUDDriving.SEATING_ARRANGEMENT) do
 			if seat.name == seat_name then
@@ -422,7 +430,7 @@ end
 
 function HUDDriving:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
+		if percentage > color_table[i].start_percentage then
 			return color_table[i].color
 		end
 	end
@@ -456,9 +464,11 @@ function HUDDriving:_animate_show()
 	local duration = 0.5
 	local t = self._object:alpha() * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -476,9 +486,11 @@ function HUDDriving:_animate_hide()
 	local duration = 0.25
 	local t = (1 - self._object:alpha()) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 1, -1, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -498,9 +510,11 @@ function HUDDriving:_animate_refresh_seats()
 	local fade_out_duration = 0.2
 	local t = (1 - self._button_prompts_panel:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
 		self._button_prompts_panel:set_alpha(current_alpha)
@@ -512,9 +526,11 @@ function HUDDriving:_animate_refresh_seats()
 	local fade_in_duration = 0.2
 	local t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_in_duration)
 
 		self._button_prompts_panel:set_alpha(current_alpha)

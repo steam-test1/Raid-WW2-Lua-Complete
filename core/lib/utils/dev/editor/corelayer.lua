@@ -89,7 +89,9 @@ function Layer:post_load()
 
 	for _, unit in ipairs(self._post_register_units) do
 		local previous_id = unit:unit_data().unit_id
+
 		unit:unit_data().unit_id = self._owner:get_unit_id(unit)
+
 		local msg = "A unit, " .. unit:name():s() .. " in layer " .. self._save_name .. ", had duplicate unit id. The unit id was changed from " .. previous_id .. " to " .. unit:unit_data().unit_id .. ".\n\nPlease verify that no references to the unit is broken."
 
 		EWS:message_box(Global.frame_panel, msg, self._save_name, "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -125,8 +127,11 @@ end
 
 function Layer:insert_name_id(unit)
 	local name = unit:name():s()
+
 	self._name_ids[name] = self._name_ids[name] or {}
+
 	local name_id = unit:unit_data().name_id
+
 	self._name_ids[name][name_id] = (self._name_ids[name][name_id] or 0) + 1
 end
 
@@ -139,6 +144,7 @@ function Layer:get_name_id(unit, name)
 
 		for i = string.len(name), 0, -1 do
 			local sub = string.sub(name, i, string.len(name))
+
 			sub_name = string.sub(name, 0, i)
 
 			if tonumber(sub) then
@@ -152,15 +158,18 @@ function Layer:get_name_id(unit, name)
 	else
 		local reverse = string.reverse(u_name)
 		local i = string.find(reverse, "/")
+
 		name = string.reverse(string.sub(reverse, 0, i - 1))
 		name = name .. "_"
 	end
 
 	self._name_ids[u_name] = self._name_ids[u_name] or {}
+
 	local t = self._name_ids[u_name]
 
 	for i = start_number, 10000 do
 		i = (i < 10 and "00" or i < 100 and "0" or "") .. i
+
 		local name_id = name .. i
 
 		if not t[name_id] then
@@ -176,6 +185,7 @@ function Layer:remove_name_id(unit)
 
 	if self._name_ids[unit_name] then
 		local name_id = unit:unit_data().name_id
+
 		self._name_ids[unit_name][name_id] = self._name_ids[unit_name][name_id] - 1
 
 		if self._name_ids[unit_name][name_id] == 0 then
@@ -227,8 +237,11 @@ function Layer:_update_widget_affect_object(t, dt)
 
 		if widget_pos.z > 100 then
 			widget_pos = widget_pos:with_z(0)
+
 			local widget_screen_pos = widget_pos
+
 			widget_pos = managers.editor:screen_to_world(widget_pos, 1000)
+
 			local widget_rot = self:widget_rot()
 
 			if self._using_widget then
@@ -287,28 +300,24 @@ function Layer:_update_drag_select(t, dt)
 		local top_left = self._drag_start_pos
 		local bottom_right = end_pos
 
-		if bottom_right.y < top_left.y and top_left.x < bottom_right.x or top_left.y < bottom_right.y and bottom_right.x < top_left.x then
+		if top_left.y > bottom_right.y and top_left.x < bottom_right.x or top_left.y < bottom_right.y and top_left.x > bottom_right.x then
 			top_left = Vector3(self._drag_start_pos.x, end_pos.y, 0)
 			bottom_right = Vector3(end_pos.x, self._drag_start_pos.y, 0)
 		end
 
 		local units = World:find_units("camera_frustum", managers.editor:camera(), top_left, bottom_right, 500000, self._slot_mask)
+
 		self._drag_units = {}
-		local r = 1
-		local g = 1
-		local b = 1
+
+		local r, g, b = 1, 1, 1
 		local brush = Draw:brush()
 
 		if CoreInput.alt() then
-			b = 0
-			g = 0
-			r = 1
+			r, g, b = 1, 0, 0
 		end
 
 		if CoreInput.ctrl() then
-			b = 0
-			g = 1
-			r = 0
+			r, g, b = 0, 1, 0
 		end
 
 		brush:set_color(Color(0.15, 0.5 * r, 0.5 * g, 0.5 * b))
@@ -379,13 +388,13 @@ function Layer:draw_grid(t, dt)
 	end
 
 	for i = -5, 5 do
-		local from_x = self._current_pos + rot:x() * i * self:grid_size() - rot:y() * 6 * self:grid_size()
-		local to_x = self._current_pos + rot:x() * i * self:grid_size() + rot:y() * 6 * self:grid_size()
+		local from_x = self._current_pos + rot:x() * (i * self:grid_size()) - rot:y() * (6 * self:grid_size())
+		local to_x = self._current_pos + rot:x() * (i * self:grid_size()) + rot:y() * (6 * self:grid_size())
 
 		Application:draw_line(from_x, to_x, 0, 0.5, 0)
 
-		local from_y = self._current_pos + rot:y() * i * self:grid_size() - rot:x() * 6 * self:grid_size()
-		local to_y = self._current_pos + rot:y() * i * self:grid_size() + rot:x() * 6 * self:grid_size()
+		local from_y = self._current_pos + rot:y() * (i * self:grid_size()) - rot:x() * (6 * self:grid_size())
+		local to_y = self._current_pos + rot:y() * (i * self:grid_size()) + rot:x() * (6 * self:grid_size())
 
 		Application:draw_line(from_y, to_y, 0, 0.5, 0)
 	end
@@ -433,9 +442,11 @@ end
 
 function Layer:build_units(params)
 	params = params or {}
+
 	local style = params.style or "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING,LC_SINGLE_SEL"
 	local unit_events = params.unit_events or {}
 	local notebook_sizer = EWS:BoxSizer("VERTICAL")
+
 	self._notebook = EWS:Notebook(self._ews_panel, "", "NB_TOP,NB_MULTILINE")
 
 	if params and params.units_notebook_min_size then
@@ -494,6 +505,7 @@ function Layer:build_units(params)
 		})
 
 		local page_name = managers.editor:category_name(c)
+
 		self._notebook_units_lists[page_name] = {
 			units = units,
 			filter = unit_filter
@@ -508,6 +520,7 @@ end
 function Layer:_stripped_unit_name(name)
 	local reverse = string.reverse(name)
 	local i = string.find(reverse, "/")
+
 	name = string.reverse(string.sub(reverse, 0, i - 1))
 
 	return name
@@ -602,7 +615,7 @@ function Layer:change_combo_box(data)
 end
 
 function Layer:change_combo_box_trg(data)
-	local next_i = nil
+	local next_i
 
 	for i = 1, #self[data.t] do
 		if self[data.value] == self[data.t][i] then
@@ -618,10 +631,8 @@ function Layer:change_combo_box_trg(data)
 				else
 					next_i = i - 1
 				end
-			elseif i == #self[data.t] then
-				next_i = 1
 			else
-				next_i = i + 1
+				next_i = i == #self[data.t] and 1 or i + 1
 			end
 		end
 	end
@@ -661,6 +672,7 @@ function Layer:load_unit_map_from_vector(which)
 
 		for _, unit_name in ipairs(managers.database:list_units_of_type(t)) do
 			local unit_data = CoreEngineAccess._editor_unit_data(unit_name:id())
+
 			self._unit_map[unit_name] = unit_data
 			self._category_map[t][unit_name] = unit_data
 		end
@@ -836,6 +848,7 @@ end
 
 function Layer:prepare_replace(names, rules)
 	rules = rules or {}
+
 	local data = {}
 	local units = {}
 
@@ -877,7 +890,8 @@ end
 
 function Layer:recreate_units(name, data)
 	local units_to_select = {}
-	local reference_unit = nil
+	local reference_unit
+
 	self._continent_locked_picked = true
 
 	for _, params in ipairs(data) do
@@ -1086,6 +1100,7 @@ function Layer:add_highlighted_unit(unit, config)
 end
 
 function Layer:remove_highlighted_unit(unit)
+	return
 end
 
 function Layer:clear_highlighted_units()
@@ -1110,6 +1125,7 @@ function Layer:set_selected_units(units)
 	self:clear_selected_units()
 
 	self._selecting_many_units = true
+
 	local id = Profiler:start("call_set_select_unit")
 
 	for _, unit in ipairs(units) do
@@ -1292,6 +1308,7 @@ function Layer:set_reference_unit(unit)
 end
 
 function Layer:_on_reference_unit_unselected(unit)
+	return
 end
 
 function Layer:recalc_all_locals()
@@ -1301,6 +1318,7 @@ function Layer:recalc_all_locals()
 
 	if alive(self._selected_unit) then
 		local reference = self._selected_unit
+
 		reference:unit_data().local_pos = Vector3(0, 0, 0)
 		reference:unit_data().local_rot = Rotation(0, 0, 0)
 
@@ -1315,6 +1333,7 @@ end
 function Layer:recalc_locals(unit, reference)
 	local pos = reference:position()
 	local rot = reference:rotation()
+
 	unit:unit_data().local_pos = (unit:unit_data().world_pos - pos):rotate_with(rot:inverse())
 	unit:unit_data().local_rot = rot:inverse() * unit:rotation()
 end
@@ -1356,6 +1375,7 @@ function Layer:do_spawn_unit(name, pos, rot, to_continent_name)
 	if name:s() ~= "" then
 		pos = pos or self._current_pos
 		rot = rot or Rotation(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1))
+
 		local unit = self:create_unit(name, pos, rot, to_continent_name)
 
 		table.insert(self._created_units, unit)
@@ -1397,6 +1417,7 @@ function Layer:delete_unit(unit)
 end
 
 function Layer:_on_unit_created(unit)
+	return
 end
 
 function Layer:show_replace_units()
@@ -1453,6 +1474,7 @@ function Layer:clone()
 end
 
 function Layer:_cloning_done()
+	return
 end
 
 function Layer:on_center_view_on_selected_unit()
@@ -1504,7 +1526,7 @@ function Layer:clone_edited_values(unit, source)
 
 		if projection_texture then
 			local is_projection = CoreEditorUtils.is_projection_light(source, light, "projection")
-			local is_spot = (not string.match(light:properties(), "omni") or false) and true
+			local is_spot = (not string.match(light:properties(), "omni") or false) and true or false and true
 
 			if is_projection and is_spot then
 				new_light:set_projection_texture(Idstring(projection_texture), false, false)
@@ -1633,6 +1655,7 @@ function Layer:get_real_name(name)
 
 	if string.find(name, fs) then
 		local e = string.find(name, fs)
+
 		name = string.sub(name, 1, e - 1)
 	end
 
@@ -1648,24 +1671,31 @@ function Layer:grab()
 end
 
 function Layer:create_marker()
+	return
 end
 
 function Layer:use_marker()
+	return
 end
 
 function Layer:on_continent_changed()
+	return
 end
 
 function Layer:set_unit_rotations()
+	return
 end
 
 function Layer:set_unit_positions()
+	return
 end
 
 function Layer:_add_project_save_data(data)
+	return
 end
 
 function Layer:_add_project_unit_save_data(unit, data)
+	return
 end
 
 function Layer:selected_amount_string()

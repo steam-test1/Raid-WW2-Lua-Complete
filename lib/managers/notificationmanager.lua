@@ -8,7 +8,7 @@ function NotificationManager:init()
 end
 
 function NotificationManager:add_notification(notification_data)
-	local prompt = nil
+	local prompt
 
 	if notification_data.reaction then
 		notification_data.reaction.spent = false
@@ -79,6 +79,7 @@ end
 function NotificationManager:show_notification(index)
 	local notification = self._notification_queue[index]
 	local hud = HUDNotification.create(notification)
+
 	self._notification_queue[index].hud = hud
 	self._currently_displayed_notification = self._notification_queue[index]
 
@@ -207,7 +208,7 @@ function NotificationManager:_clear_outdated_notifications()
 	for i = #self._notification_queue, 1, -1 do
 		local notif = self._notification_queue[i]
 
-		if notif.shelf_life and notif.shelf_life <= t - notif.creation_time then
+		if notif.shelf_life and t - notif.creation_time >= notif.shelf_life then
 			table.remove(self._notification_queue, i)
 		end
 	end

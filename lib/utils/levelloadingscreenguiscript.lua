@@ -12,10 +12,12 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	self._gui_data = arg.load_level_data.gui_data
 	self._workspace_size = self._gui_data.workspace_size
 	self._saferect_size = self._gui_data.saferect_size
+
 	local challenges = arg.load_level_data.challenges
 	local safe_rect_pixels = self._gui_data.safe_rect_pixels
 	local safe_rect = self._gui_data.safe_rect
 	local aspect_ratio = self._gui_data.aspect_ratio
+
 	self._safe_rect_pixels = safe_rect_pixels
 	self._safe_rect = safe_rect
 	self._gui_data_manager = GuiDataManager:new(self._scene_gui, res, safe_rect_pixels, safe_rect, aspect_ratio)
@@ -31,7 +33,7 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 	level_image:set_alpha(0)
 	print("self._gui_data.bg_texture", self._gui_data.bg_texture)
-	level_image:set_size(level_image:parent():h() * level_image:texture_width() / level_image:texture_height(), level_image:parent():h())
+	level_image:set_size(level_image:parent():h() * (level_image:texture_width() / level_image:texture_height()), level_image:parent():h())
 	level_image:set_position(0, 0)
 
 	local background_fullpanel = self._back_drop_gui:get_new_background_layer()
@@ -40,6 +42,7 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 	self._back_drop_gui:set_panel_to_saferect(background_safepanel)
 
 	local text = string.upper(managers.localization:text("debug_loading_level"))
+
 	self._level_title_text = background_safepanel:text({
 		y = 0,
 		vertical = "bottom",
@@ -52,6 +55,7 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 		text = text,
 		color = Color.white
 	})
+
 	local _, _, w, h = self._level_title_text:text_rect()
 
 	self._level_title_text:set_size(w, h)
@@ -78,6 +82,7 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 				vertical = data.vertical,
 				color = data.color
 			})
+
 			local _, _, w, h = data.text:text_rect()
 
 			data.text:set_size(w, h)
@@ -114,7 +119,7 @@ function LevelLoadingScreenGuiScript:setup(res, progress)
 	local _, _, w, _ = self._level_title_text:text_rect()
 
 	self._level_title_text:set_w(w)
-	self._bg_gui:set_size(self._bg_gui:parent():h() * self._bg_gui:texture_width() / self._bg_gui:texture_height(), self._bg_gui:parent():h())
+	self._bg_gui:set_size(self._bg_gui:parent():h() * (self._bg_gui:texture_width() / self._bg_gui:texture_height()), self._bg_gui:parent():h())
 	self._bg_gui:set_center(self._bg_gui:parent():center())
 
 	if self._briefing_text then
@@ -211,6 +216,7 @@ function LevelLoadingScreenGuiScript:setup(res, progress)
 end
 
 function LevelLoadingScreenGuiScript:update(progress, t, dt)
+	return
 end
 
 function LevelLoadingScreenGuiScript:get_loading_text(dot_count)

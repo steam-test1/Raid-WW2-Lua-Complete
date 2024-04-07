@@ -34,6 +34,7 @@ function ElementEnvironmentAreaOperator:on_executed(instigator)
 	end
 
 	self._has_executed = true
+
 	local environment_area = managers.environment_area:get_area_by_name(self._values.environment_area)
 
 	environment_area:set_environment(self._values.environment)

@@ -33,8 +33,9 @@ function RaidMenuOptionsVideo:_layout_video()
 	local start_x = 0
 	local start_y = 320
 	local default_width = 512
-	local previous_panel = nil
+	local previous_panel
 	local first_panel = "btn_advanced_options"
+
 	previous_panel = {
 		name = first_panel,
 		x = start_x,
@@ -65,7 +66,7 @@ function RaidMenuOptionsVideo:_layout_video()
 	self._stepper_menu_resolution:set_value_and_render({
 		x = RenderSettings.resolution.x,
 		y = RenderSettings.resolution.y,
-		is_equal = function (self, check_x_y)
+		is_equal = function(self, check_x_y)
 			if check_x_y.x == self.x and check_x_y.y == self.y then
 				return true
 			else
@@ -86,6 +87,7 @@ function RaidMenuOptionsVideo:_layout_video()
 			up = previous_panel.name
 		}
 	}
+
 	previous_panel.name = apply_resolution.name
 	self._button_apply_video_resolution = self._root_panel:small_button(apply_resolution)
 	previous_panel = {
@@ -261,6 +263,7 @@ function RaidMenuOptionsVideo:_layout_video()
 		}
 	}
 	self._progress_bar_menu_camera_shake = self._root_panel:slider(previous_panel)
+
 	local default_video_settings_button = {
 		name = "default_video",
 		y = 832,
@@ -273,6 +276,7 @@ function RaidMenuOptionsVideo:_layout_video()
 			down = first_panel
 		}
 	}
+
 	self._default_video_button = self._root_panel:long_secondary_button(default_video_settings_button)
 
 	if managers.raid_menu:is_pc_controller() then
@@ -342,6 +346,7 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 end
 
 function RaidMenuOptionsVideo:on_item_selected_options_video_advanced_button()
+	return
 end
 
 function RaidMenuOptionsVideo:on_item_selected_stepper_menu_resolution()
@@ -440,6 +445,7 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_motion_dot_size()
 end
 
 function RaidMenuOptionsVideo:on_item_selected_refresh_rate()
+	return
 end
 
 function RaidMenuOptionsVideo:on_click_apply_resolution_refresh_rate()
@@ -486,7 +492,7 @@ function RaidMenuOptionsVideo:set_fullscreen(fullscreen, is_fullscreen, borderle
 		self._stepper_menu_resolution:set_value_and_render({
 			x = res.x,
 			y = res.y,
-			is_equal = function (self, check_x_y)
+			is_equal = function(self, check_x_y)
 				if check_x_y.x == self.x and check_x_y.y == self.y then
 					return true
 				else
@@ -502,7 +508,7 @@ function RaidMenuOptionsVideo:on_click_default_video()
 	local params = {
 		title = managers.localization:text("dialog_reset_video_title"),
 		message = managers.localization:text("dialog_reset_video_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_video_setting_map()
 			self:_load_video_values()
 			callback_function()
@@ -523,6 +529,7 @@ function RaidMenuOptionsVideo:_get_default_resolution()
 				x = res.value.x,
 				y = res.value.y
 			})
+
 			resolution = Vector3(res.value.x, res.value.y, refresh_rates[#refresh_rates].value)
 		end
 	end
@@ -540,7 +547,7 @@ function RaidMenuOptionsVideo:callback_default_video()
 	self._stepper_menu_resolution:set_value_and_render({
 		x = resolution.x,
 		y = resolution.y,
-		is_equal = function (self, check_x_y)
+		is_equal = function(self, check_x_y)
 			if check_x_y.x == self.x and check_x_y.y == self.y then
 				return true
 			else
@@ -610,13 +617,14 @@ function RaidMenuOptionsVideo:_load_video_values()
 
 	if is_borderless then
 		local monitor_res = Application:monitor_resolution()
+
 		resolution = Vector3(monitor_res.x, monitor_res.y, self._stepper_menu_refresh_rate:get_value())
 	end
 
 	self._stepper_menu_resolution:set_value_and_render({
 		x = resolution.x,
 		y = resolution.y,
-		is_equal = function (self, check_x_y)
+		is_equal = function(self, check_x_y)
 			if check_x_y.x == self.x and check_x_y.y == self.y then
 				return true
 			else

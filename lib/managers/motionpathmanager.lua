@@ -47,6 +47,7 @@ function MotionPathManager:set_path_type(path_type)
 
 	for _, marker in ipairs(path.markers) do
 		local marker_unit = self:_get_unit(marker)
+
 		marker_unit:mission_element_data().path_type = path.path_type
 
 		print("MotionPathManager:set_path_type - set marker type: ", marker, marker_unit:mission_element_data().path_type)
@@ -59,10 +60,9 @@ end
 
 function MotionPathManager:set_load_data(values, translation)
 	if not translation then
-		self._translation = {
-			position = Vector3(),
-			rotation = Rotation()
-		}
+		self._translation = {}
+		self._translation.position = Vector3()
+		self._translation.rotation = Rotation()
 	else
 		self._translation = translation
 	end
@@ -73,16 +73,18 @@ function MotionPathManager:set_load_data(values, translation)
 		for _, p in pairs(path.points) do
 			local pos = self._translation.position
 			local point_new = pos + p.point:rotate_with(self._translation.rotation)
+
 			p.point = point_new
 		end
 	end
 end
 
 function MotionPathManager:save(data)
-	data.motion_path_manager = {
-		unit_info = {}
-	}
+	data.motion_path_manager = {}
+	data.motion_path_manager.unit_info = {}
+
 	local unit_info = self:get_units_info()
+
 	data.motion_path_manager.unit_info = unit_info
 	data.motion_path_manager.consumed_triggers = self._consumed_triggers
 	data.motion_path_manager.operations = self._operations
@@ -91,9 +93,8 @@ function MotionPathManager:save(data)
 	data.motion_path_manager.paths = {}
 
 	for _, path in ipairs(self._paths) do
-		data.motion_path_manager.paths[path.id] = {
-			active = path.active
-		}
+		data.motion_path_manager.paths[path.id] = {}
+		data.motion_path_manager.paths[path.id].active = path.active
 
 		for _, bridge in ipairs(path.bridges) do
 			if bridge.disabled then
@@ -296,7 +297,7 @@ function MotionPathManager:_get_checkpoint_from_marker(path, marker)
 end
 
 function MotionPathManager:change_unit_path(from_path, target_path, target_marker, unit_and_pos)
-	local point_on_path, target_point_id = nil
+	local point_on_path, target_point_id
 
 	for idx, marker_id in pairs(target_path.marker_checkpoints) do
 		if marker_id == target_marker then
@@ -352,8 +353,10 @@ function MotionPathManager:update_path(motion_path, skip_recreate)
 	for key, path in ipairs(self._paths) do
 		if path_id == path.id then
 			path_found = true
+
 			local speed_limit = self._paths[key].default_speed_limit
 			local path_type = self._paths[key].path_type
+
 			self._paths[key] = motion_path
 			self._paths[key].default_speed_limit = speed_limit
 			self._paths[key].path_type = path_type
@@ -422,23 +425,17 @@ function MotionPathManager:update(t, dt)
 
 	for _, path in ipairs(self._paths) do
 		if path.active then
-			local default_distance_threshold = nil
+			local default_distance_threshold
 
-			if path.path_type == "airborne" then
-				default_distance_threshold = 10
-			elseif path.path_type == "ground" then
-				default_distance_threshold = 400
-			else
-				default_distance_threshold = 10
-			end
+			default_distance_threshold = path.path_type == "airborne" and 10 or path.path_type == "ground" and 400 or 10
 
 			for _, unit_and_pos in ipairs(path.units) do
 				local unit = self:_get_unit(unit_and_pos.unit)
 
-				if alive(unit) then
-					if not unit:unit_data().player_seen or unit:unit_data().player_seen <= 0 then
-						self:_move_unit(t, dt, path, unit, unit_and_pos, default_distance_threshold)
-					end
+				if not alive(unit) or unit:unit_data().player_seen and unit:unit_data().player_seen > 0 then
+					-- Nothing
+				else
+					self:_move_unit(t, dt, path, unit, unit_and_pos, default_distance_threshold)
 				end
 			end
 		end
@@ -450,7 +447,7 @@ function MotionPathManager:_move_unit(t, dt, path, unit, unit_and_pos, default_d
 
 	self._check_for_operations(path, unit_and_pos)
 
-	local points_in_direction = nil
+	local points_in_direction
 
 	if not unit_and_pos.direction or unit_and_pos.direction == "fwd" then
 		points_in_direction = path.points
@@ -482,7 +479,7 @@ function MotionPathManager:_move_unit(t, dt, path, unit, unit_and_pos, default_d
 end
 
 function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_pos, default_distance_threshold, points_in_direction)
-	local target_checkpoint_vector, distance_to_checkpoint, move_direction, move_vector, movement_distance = nil
+	local target_checkpoint_vector, distance_to_checkpoint, move_direction, move_vector, movement_distance
 	local npc_vehicle = unit:npc_vehicle_driving()
 	local find_next_checkpoint = true
 
@@ -505,6 +502,7 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 		if current_marker and unit_and_pos.is_initialized == nil then
 			current_marker = mission:get_element_by_id(path.marker_checkpoints[1])
 			unit_and_pos.start_rotation = unit:rotation()
+
 			local tgt_cp1 = points_in_direction[unit_and_pos.target_checkpoint + 1]
 			local tgt_cp2 = points_in_direction[unit_and_pos.target_checkpoint + 2]
 
@@ -515,13 +513,19 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 			end
 
 			local next_move_vector = tgt_cp2.point - tgt_cp1.point
+
 			unit_and_pos.end_rotation = Rotation:look_at(next_move_vector:normalized(), math.UP)
 			unit_and_pos.roll_y = current_marker._values.rotation:y()
+
 			local next_marker_key = self:_find_next_checkpoint_marker(path.marker_checkpoints, unit_and_pos.target_checkpoint + 1)
 			local next_marker_rotation = mission:get_element_by_id(path.marker_checkpoints[next_marker_key])._values.rotation
+
 			unit_and_pos.end_roll = Rotation:look_at(unit_and_pos.roll_y, next_marker_rotation:z())
+
 			local new_segment_vector = points_in_direction[unit_and_pos.target_checkpoint].point - unit:position()
+
 			unit_and_pos.segment_distance = new_segment_vector:length()
+
 			local id = self:_find_next_checkpoint_marker(path.marker_checkpoints, unit_and_pos.target_checkpoint)
 
 			if id ~= nil then
@@ -540,12 +544,14 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 		if current_marker then
 			unit_and_pos.previous_marker = unit_and_pos.target_checkpoint
 			unit_and_pos.last_checkpoint = unit_and_pos.target_checkpoint
+
 			local move_vector = unit:position() - current_marker._values.position
 			local distance = move_vector:length()
 			local next_marker_key = self:_find_next_checkpoint_marker(path.marker_checkpoints, unit_and_pos.target_checkpoint + 1)
 
 			if next_marker_key ~= nil then
 				local next_marker_rotation = mission:get_element_by_id(path.marker_checkpoints[next_marker_key])._values.rotation
+
 				unit_and_pos.end_roll = Rotation:look_at(unit_and_pos.roll_y, next_marker_rotation:z())
 			end
 
@@ -572,7 +578,8 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 		target_checkpoint_vector = points_in_direction[unit_and_pos.target_checkpoint].point - unit:position()
 		distance_to_checkpoint = target_checkpoint_vector:length()
 		move_direction = target_checkpoint_vector:normalized()
-		local current_speed = nil
+
+		local current_speed
 
 		if unit_and_pos.last_checkpoint ~= unit_and_pos.target_checkpoint and unit_and_pos.target_checkpoint > 1 and unit_and_pos.segment_distance ~= nil then
 			current_speed = self:_get_current_speed(unit:position(), points_in_direction[unit_and_pos.target_checkpoint].point, unit_and_pos.segment_distance, default_distance_threshold, points_in_direction[unit_and_pos.target_checkpoint - 1].speed, points_in_direction[unit_and_pos.target_checkpoint].speed)
@@ -582,7 +589,8 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 
 		move_vector = move_direction * current_speed * dt
 		movement_distance = move_vector:length()
-		local rotation_marker = nil
+
+		local rotation_marker
 
 		if current_marker then
 			rotation_marker = current_marker
@@ -590,11 +598,7 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 			rotation_marker = unit_and_pos.next_marker
 		end
 
-		if movement_distance <= distance_to_checkpoint then
-			find_next_checkpoint = false
-		else
-			find_next_checkpoint = self:_proceed_to_next_checkpoint(path, unit_and_pos, unit, default_distance_threshold)
-		end
+		find_next_checkpoint = (not (movement_distance <= distance_to_checkpoint) or false) and self:_proceed_to_next_checkpoint(path, unit_and_pos, unit, default_distance_threshold)
 
 		if distance_to_checkpoint < default_distance_threshold then
 			move_vector = target_checkpoint_vector
@@ -616,7 +620,7 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 			movement_distance = move_vector:length()
 		end
 
-		local current_rotation, smooth_rot = nil
+		local current_rotation, smooth_rot
 		local t = 0
 		local roll = unit:rotation()
 
@@ -625,6 +629,7 @@ function MotionPathManager:_move_unit_to_checkpoint(t, dt, path, unit, unit_and_
 
 			if unit_and_pos.segment_distance == nil then
 				local segment_vector = points_in_direction[unit_and_pos.target_checkpoint].point - points_in_direction[unit_and_pos.target_checkpoint - 1].point
+
 				unit_and_pos.segment_distance = segment_vector:length()
 			end
 
@@ -669,6 +674,7 @@ function MotionPathManager:_get_distance(points_in_direction, start_checkpoint, 
 
 	for i = start_checkpoint, end_checkpoint - 1 do
 		local move_vector = points_in_direction[i + 1].point - points_in_direction[i].point
+
 		distance = distance + move_vector:length()
 	end
 
@@ -684,13 +690,14 @@ end
 
 function MotionPathManager:_get_current_roll(unit, unit_and_pos, points_in_direction)
 	local angle_epsilon = 0.25
-	local rotation_t = nil
+	local rotation_t
 
 	if unit_and_pos.target_checkpoint ~= unit_and_pos.last_checkpoint or unit_and_pos.target_checkpoint == unit_and_pos.last_checkpoint and unit_and_pos.target_checkpoint == #points_in_direction then
 		local distance_to_next_checkpoint = points_in_direction[unit_and_pos.target_checkpoint].point - unit:position()
 		local distance_to_next_marker = self:_get_distance(points_in_direction, unit_and_pos.target_checkpoint, unit_and_pos.next_checkpoint)
 		local to_move = distance_to_next_checkpoint:length() + distance_to_next_marker
 		local new_rotation_t = 1 - to_move / unit_and_pos.roll_total_distance
+
 		rotation_t = new_rotation_t
 	else
 		rotation_t = 0
@@ -699,7 +706,7 @@ function MotionPathManager:_get_current_roll(unit, unit_and_pos, points_in_direc
 	local target_rotation = unit_and_pos.start_roll:slerp(unit_and_pos.end_roll, rotation_t)
 	local rotation_difference = Rotation:rotation_difference(unit:rotation(), target_rotation)
 
-	if math.abs(rotation_difference:yaw()) < angle_epsilon and math.abs(rotation_difference:pitch()) < angle_epsilon and math.abs(rotation_difference:roll()) < angle_epsilon then
+	if angle_epsilon > math.abs(rotation_difference:yaw()) and angle_epsilon > math.abs(rotation_difference:pitch()) and angle_epsilon > math.abs(rotation_difference:roll()) then
 		target_rotation = unit:rotation()
 	end
 
@@ -722,7 +729,8 @@ function MotionPathManager:_proceed_to_next_checkpoint(path, unit_and_pos, unit,
 
 	if current_marker and current_marker._values.motion_state == "move" or not current_marker then
 		unit_and_pos.start_rotation = unit:rotation()
-		local points_in_direction = nil
+
+		local points_in_direction
 
 		if not unit_and_pos.direction or unit_and_pos.direction == "fwd" then
 			points_in_direction = path.points
@@ -732,13 +740,19 @@ function MotionPathManager:_proceed_to_next_checkpoint(path, unit_and_pos, unit,
 
 		if points_in_direction[unit_and_pos.target_checkpoint + 2] ~= nil and points_in_direction[unit_and_pos.target_checkpoint + 2].point ~= points_in_direction[unit_and_pos.target_checkpoint + 1].point then
 			local new_segment_vector = points_in_direction[unit_and_pos.target_checkpoint + 1].point - unit:position()
+
 			unit_and_pos.segment_distance = new_segment_vector:length()
+
 			local next_move_vector = points_in_direction[unit_and_pos.target_checkpoint + 2].point - points_in_direction[unit_and_pos.target_checkpoint + 1].point
+
 			unit_and_pos.end_rotation = Rotation:look_at(next_move_vector:normalized(), math.UP)
 		elseif unit_and_pos.target_checkpoint + 2 == unit_and_pos.next_checkpoint and points_in_direction[unit_and_pos.target_checkpoint + 3] ~= nil then
 			local new_segment_vector = points_in_direction[unit_and_pos.target_checkpoint + 2].point - unit:position()
+
 			unit_and_pos.segment_distance = new_segment_vector:length() - default_distance_threshold
+
 			local next_move_vector = points_in_direction[unit_and_pos.target_checkpoint + 3].point - points_in_direction[unit_and_pos.target_checkpoint + 2].point
+
 			unit_and_pos.end_rotation = Rotation:look_at(next_move_vector:normalized(), math.UP)
 		end
 
@@ -949,6 +963,7 @@ end
 
 function MotionPathManager:recreate_paths()
 	self._paths = {}
+
 	local definition = self._sync_id ~= 0 and managers.worldcollection:worlddefinition_by_id(self._sync_id) or managers.worlddefinition
 	local mission_elements = definition._mission_element_units
 
@@ -1029,6 +1044,7 @@ end
 function MotionPathManager:motion_operation_path_activate(path_active, marker_ids)
 	for _, marker in ipairs(marker_ids) do
 		local path = self:get_path_of_marker(marker)
+
 		path.active = path_active
 	end
 end
@@ -1104,13 +1120,9 @@ function MotionPathManager:_choose_target_path_direction(ground_unit_position, t
 
 	local distance_forward = (ground_unit_position - point_forward.point):length()
 	local distance_backward = (ground_unit_position - point_backward.point):length()
-	local retval = nil
+	local retval
 
-	if distance_backward <= distance_forward then
-		retval = "fwd"
-	else
-		retval = "bck"
-	end
+	retval = distance_backward <= distance_forward and "fwd" or "bck"
 
 	return retval
 end
@@ -1121,7 +1133,7 @@ function MotionPathManager:_is_marker_in_front(marker_position, unit)
 	local angle_to_target = unit_fwd_vector:angle(target_direction)
 	local target_direction_360 = math.mod(360 + target_direction:to_polar().spin, 360)
 	local unit_fwd_vector_360 = math.mod(360 + unit_fwd_vector:to_polar().spin, 360)
-	local relative_angle = math.mod(360 + target_direction_360 - unit_fwd_vector_360, 360)
+	local relative_angle = math.mod(360 + (target_direction_360 - unit_fwd_vector_360), 360)
 	local FWD_ANGLE = 90
 	local retval = relative_angle < FWD_ANGLE and relative_angle > 0 or relative_angle < 360 and relative_angle > 360 - FWD_ANGLE
 
@@ -1172,6 +1184,7 @@ end
 
 function MotionPathManager:get_player_proximity_distance_for_unit(unit_id)
 	local retval = self._units_in_player_proximity[unit_id]
+
 	retval = retval or 0
 
 	return retval

@@ -28,6 +28,7 @@ function HUDObjectiveMain:_create_panel(objectives_panel)
 		w = objectives_panel:w(),
 		h = HUDObjectiveMain.H
 	}
+
 	self._object = objectives_panel:panel(panel_params)
 end
 
@@ -39,6 +40,7 @@ function HUDObjectiveMain:_create_timer()
 		w = self._object:h(),
 		h = self._object:h()
 	}
+
 	self._timer_panel = self._object:panel(timer_panel_params)
 
 	self._timer_panel:set_x(self._object:w() + HUDObjectiveSub.OBJECTIVE_TEXT_PADDING_RIGHT)
@@ -60,6 +62,7 @@ function HUDObjectiveMain:_create_timer()
 		texture_rect = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture_rect,
 		layer = timer_background:layer() + 1
 	}
+
 	self._timer_static_fill = self._timer_panel:bitmap(timer_static_fill_params)
 
 	self._timer_static_fill:set_center_x(self._timer_panel:w() / 2)
@@ -80,6 +83,7 @@ function HUDObjectiveMain:_create_timer()
 		h = tweak_data.gui:icon_h(HUDObjectiveMain.TIMER_FILL_ICON),
 		layer = self._timer_static_fill:layer() + 1
 	}
+
 	self._timer_fill = self._timer_panel:bitmap(timer_fill_params)
 
 	self._timer_fill:set_center_x(self._timer_panel:w() / 2)
@@ -97,7 +101,9 @@ function HUDObjectiveMain:_create_timer()
 		font_size = HUDObjectiveMain.AMOUNT_TEXT_FONT_SIZE,
 		layer = self._timer_fill:layer() + 1
 	}
+
 	self._timer_text_minutes = self._timer_panel:text(timer_minutes_text_params)
+
 	local _, _, w, h = self._timer_text_minutes:text_rect()
 
 	self._timer_text_minutes:set_w(w + 10)
@@ -117,7 +123,9 @@ function HUDObjectiveMain:_create_timer()
 		font_size = HUDObjectiveMain.TIMER_SECONDS_FONT_SIZE,
 		layer = self._timer_fill:layer() + 1
 	}
+
 	self._timer_text_seconds = self._timer_panel:text(timer_seconds_text_params)
+
 	local _, _, w, h = self._timer_text_seconds:text_rect()
 
 	self._timer_text_seconds:set_w(w + 10)
@@ -127,6 +135,7 @@ function HUDObjectiveMain:_create_timer()
 end
 
 function HUDObjectiveMain:_create_checkbox()
+	return
 end
 
 function HUDObjectiveMain:show_timer()

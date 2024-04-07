@@ -22,8 +22,8 @@ function MousePointerManager:_setup()
 		self:unacquire_input()
 	end
 
-	local x = 640
-	local y = 360
+	local x, y = 640, 360
+
 	self._mouse = self._ws:panel():panel({
 		name = "mouse",
 		h = 23,
@@ -147,6 +147,7 @@ end
 
 function MousePointerManager:get_id()
 	local id = "mouse_pointer_id" .. tostring(self._id)
+
 	self._id = self._id + 1
 
 	return id

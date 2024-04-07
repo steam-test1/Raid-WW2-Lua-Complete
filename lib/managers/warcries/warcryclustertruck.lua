@@ -75,7 +75,7 @@ function WarcryClustertruck:_on_enemy_killed(params)
 
 	table.insert(self._killstreak_list, Application:time())
 
-	while self._tweak_data.killstreak_duration < Application:time() - self._killstreak_list[1] do
+	while Application:time() - self._killstreak_list[1] > self._tweak_data.killstreak_duration do
 		table.remove(self._killstreak_list, 1)
 
 		if #self._killstreak_list == 0 then
@@ -84,6 +84,7 @@ function WarcryClustertruck:_on_enemy_killed(params)
 	end
 
 	multiplier = multiplier + self._tweak_data.killstreak_multiplier_bonus_per_enemy * (#self._killstreak_list - 1) * managers.player:upgrade_value("player", "warcry_killstreak_multiplier_bonus", 1)
+
 	local base_fill_value = self._tweak_data.base_kill_fill_amount
 
 	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)

@@ -13,6 +13,7 @@ function FadeToBlackElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local state = EWS:CheckBox(panel, "Fade in/out", "")
 
 	state:set_value(self._hed.state)
@@ -22,11 +23,11 @@ function FadeToBlackElement:_build_panel(panel, panel_sizer)
 	})
 	panel_sizer:add(state, 0, 0, "EXPAND")
 
-	local help = {
-		text = "Fade in or out, takes 3 seconds. Hardcore.",
-		panel = panel,
-		sizer = panel_sizer
-	}
+	local help = {}
+
+	help.text = "Fade in or out, takes 3 seconds. Hardcore."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end

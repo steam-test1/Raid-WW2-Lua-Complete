@@ -32,6 +32,7 @@ function NetworkAccountXBL:local_signin_state()
 end
 
 function NetworkAccountXBL:show_signin_ui()
+	return
 end
 
 function NetworkAccountXBL:username_id()
@@ -154,14 +155,14 @@ function NetworkAccountXBL:inventory_reward(key_name_id, callback_ref)
 			local added = false
 
 			if not added then
-				local new_card = {
-					amount = 1,
-					bonus = false,
-					category = "challenge_card",
-					def_id = card.def_id,
-					entry = card.key_name,
-					quality = ""
-				}
+				local new_card = {}
+
+				new_card.amount = 1
+				new_card.bonus = false
+				new_card.category = "challenge_card"
+				new_card.def_id = card.def_id
+				new_card.entry = card.key_name
+				new_card.quality = ""
 
 				table.insert(Global.console_local_inventory, new_card)
 			end

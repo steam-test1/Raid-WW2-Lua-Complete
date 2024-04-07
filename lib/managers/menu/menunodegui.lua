@@ -4,14 +4,16 @@ MenuNodeGui = MenuNodeGui or class(CoreMenuNodeGui.NodeGui)
 
 function MenuNodeGui:init(node, layer, parameters)
 	local name = node:parameters().name
-	local lang_mods = {
-		[Idstring("german"):key()] = name == "kit" and 0.95 or name == "challenges_active" and 0.875 or name == "challenges_awarded" and 0.875 or 0.9,
-		[Idstring("french"):key()] = name == "kit" and 0.975 or name == "challenges_active" and 0.874 or name == "challenges_awarded" and 0.874 or name == "upgrades_support" and 0.875 or 0.9,
-		[Idstring("italian"):key()] = name == "kit" and 0.975 or name == "challenges_active" and 0.875 or name == "challenges_awarded" and 0.875 or 0.95,
-		[Idstring("spanish"):key()] = name == "kit" and 1 or name == "challenges_active" and 0.84 or name == "challenges_awarded" and 0.84 or (name == "upgrades_assault" or name == "upgrades_sharpshooter" or name == "upgrades_support") and 0.975 or 0.925,
-		[Idstring("english"):key()] = name == "challenges_active" and 0.925 or name == "challenges_awarded" and 0.925 or 1
-	}
+	local lang_mods = {}
+
+	lang_mods[Idstring("german"):key()] = name == "kit" and 0.95 or name == "challenges_active" and 0.875 or name == "challenges_awarded" and 0.875 or 0.9
+	lang_mods[Idstring("french"):key()] = name == "kit" and 0.975 or name == "challenges_active" and 0.874 or name == "challenges_awarded" and 0.874 or name == "upgrades_support" and 0.875 or 0.9
+	lang_mods[Idstring("italian"):key()] = name == "kit" and 0.975 or name == "challenges_active" and 0.875 or name == "challenges_awarded" and 0.875 or 0.95
+	lang_mods[Idstring("spanish"):key()] = name == "kit" and 1 or name == "challenges_active" and 0.84 or name == "challenges_awarded" and 0.84 or (name == "upgrades_assault" or name == "upgrades_sharpshooter" or name == "upgrades_support") and 0.975 or 0.925
+	lang_mods[Idstring("english"):key()] = name == "challenges_active" and 0.925 or name == "challenges_awarded" and 0.925 or 1
+
 	local mod = lang_mods[SystemInfo:language():key()] or 1
+
 	self._align_line_proportions = node:parameters().align_line_proportions or 0.65
 	self._align_line_padding = 10 * tweak_data.scale.align_line_padding_multiplier
 	self._use_info_rect = node:parameters().use_info_rect or node:parameters().use_info_rect == nil and true
@@ -82,6 +84,7 @@ function MenuNodeGui:_setup_panels(node)
 
 	local safe_rect_pixels = self:_scaled_size()
 	local res = RenderSettings.resolution
+
 	self._topic_panel2 = self.ws:panel():panel({
 		visible = not self._no_menu_wrapper,
 		x = safe_rect_pixels.x,
@@ -103,6 +106,7 @@ function MenuNodeGui:_setup_panels(node)
 		color = self.row_item_color,
 		layer = self.layers.items + 1
 	})
+
 	local _, _, w, h = self._topic_text2:text_rect()
 
 	self._topic_text2:set_h(h)
@@ -114,6 +118,7 @@ function MenuNodeGui:_setup_panels(node)
 	local base = 20
 	local height = 15
 	local aw = safe_rect_pixels.width - self:_mid_align()
+
 	self._info_bg_rect = self.safe_rect_panel:rect({
 		visible = false,
 		x = 0,
@@ -172,6 +177,7 @@ function MenuNodeGui:_create_legends(node)
 	local res = RenderSettings.resolution
 	local visible = not managers.menu:is_pc_controller()
 	local is_pc = managers.menu:is_pc_controller()
+
 	self._legends_panel = self.ws:panel():panel({
 		visible = visible,
 		x = safe_rect_pixels.x,
@@ -179,9 +185,10 @@ function MenuNodeGui:_create_legends(node)
 		w = safe_rect_pixels.width,
 		h = safe_rect_pixels.height
 	})
+
 	local t_text = ""
 	local has_pc_legend = false
-	local visible_callback_name, visible_callback = nil
+	local visible_callback_name, visible_callback
 
 	for i, legend in ipairs(node:legends()) do
 		visible_callback_name = legend.visible_callback
@@ -193,7 +200,9 @@ function MenuNodeGui:_create_legends(node)
 
 		if (not is_pc or legend.pc) and (not visible_callback or visible_callback(self)) then
 			has_pc_legend = has_pc_legend or legend.pc
+
 			local spacing = i > 1 and "  |  " or ""
+
 			t_text = t_text .. spacing .. utf8.to_upper(managers.localization:text(legend.string_id, {
 				BTN_UPDATE = managers.localization:btn_macro("menu_update"),
 				BTN_BACK = managers.localization:btn_macro("back")
@@ -219,32 +228,32 @@ function MenuNodeGui:_create_legends(node)
 end
 
 function MenuNodeGui:_create_align(node)
-	self._align_data = {
-		panel = self._item_panel_parent:panel({
-			y = 0,
-			x = self:_left_align(),
-			w = self._align_line_padding * 2,
-			h = self._item_panel_parent:h(),
-			layer = self.layers.marker
-		})
-	}
+	self._align_data = {}
+	self._align_data.panel = self._item_panel_parent:panel({
+		y = 0,
+		x = self:_left_align(),
+		w = self._align_line_padding * 2,
+		h = self._item_panel_parent:h(),
+		layer = self.layers.marker
+	})
 end
 
 function MenuNodeGui:_create_marker(node)
-	self._marker_data = {
-		marker = self.item_panel:panel({
-			h = 10,
-			y = 0,
-			w = 1920,
-			x = 0,
-			layer = self.layers.marker
-		})
-	}
+	self._marker_data = {}
+	self._marker_data.marker = self.item_panel:panel({
+		h = 10,
+		y = 0,
+		w = 1920,
+		x = 0,
+		layer = self.layers.marker
+	})
 end
 
 function MenuNodeGui:_setup_item_panel_parent(safe_rect, shape)
 	local res = RenderSettings.resolution
+
 	shape = shape or {}
+
 	local x = shape.x or safe_rect.x
 	local y = shape.y or safe_rect.y + CoreMenuRenderer.Renderer.border_height
 	local w = shape.w or safe_rect.width
@@ -311,9 +320,7 @@ function MenuNodeGui:_set_topic_position()
 
 	local bottom = self.item_panel:top() + self._item_panel_parent:y()
 
-	if bottom < self._item_panel_parent:y() then
-		bottom = self._item_panel_parent:y() or bottom
-	end
+	bottom = bottom < self._item_panel_parent:y() and self._item_panel_parent:y() or bottom
 
 	self._topic_panel2:set_bottom(bottom)
 	self._topic_text2:set_rightbottom(self._topic_panel2:size())
@@ -353,7 +360,9 @@ function MenuNodeGui:_create_menu_item(row_item)
 		row_item.gui_pd2_panel = self.ws:panel():panel({
 			layer = self.layers.items
 		})
+
 		local row_item_panel = managers.menu:is_pc_controller() and row_item.gui_pd2_panel or row_item.gui_panel
+
 		row_item.gui_text = row_item_panel:bitmap({
 			texture = "ui/main_menu/textures/debug_menu_icons",
 			texture_rect = {
@@ -383,9 +392,13 @@ function MenuNodeGui:_create_menu_item(row_item)
 			w = self:_left_align(),
 			h = self._item_panel_parent:h()
 		})
+
 		local level_data = row_item.item:parameters().level_id
+
 		level_data = tweak_data.levels[level_data]
+
 		local description = level_data and level_data.briefing_id and managers.localization:text(level_data.briefing_id) or "Missing description text"
+
 		row_item.level_title = row_item.gui_level_panel:text({
 			word_wrap = false,
 			vertical = "top",
@@ -448,6 +461,7 @@ function MenuNodeGui:_create_menu_item(row_item)
 		self:_align_chat(row_item)
 	elseif row_item.type == "friend" then
 		local cot_align = row_item.align == "right" and "left" or row_item.align == "left" and "right" or row_item.align
+
 		row_item.gui_panel = self.item_panel:panel({
 			w = self.item_panel:w()
 		})
@@ -469,6 +483,7 @@ function MenuNodeGui:_create_menu_item(row_item)
 		row_item.item:setup_gui(self, row_item)
 	elseif not row_item.item:setup_gui(self, row_item) then
 		local cot_align = row_item.align == "right" and "left" or row_item.align == "left" and "right" or row_item.align
+
 		row_item.gui_panel = self:_text_item_part(row_item, self.item_panel, self:_left_align(), "left")
 
 		if row_item.item:parameters().trial_buy then
@@ -567,7 +582,9 @@ function MenuNodeGui:_create_lobby_campaign(row_item)
 		layer = self.layers.items,
 		text = string.upper(managers.localization:text(tweak_data.levels[row_item.level_id].name_id))
 	})
+
 	local briefing_text = string.upper(managers.localization:text(tweak_data.levels[row_item.level_id].briefing_id))
+
 	row_item.level_briefing = row_item.gui_info_panel:text({
 		halign = "top",
 		vertical = "top",
@@ -632,6 +649,7 @@ function MenuNodeGui:_reload_lobby_campaign(row_item)
 	end
 
 	row_item.level_id = Global.game_settings.level_id
+
 	local text = string.upper(managers.localization:text(tweak_data.levels[row_item.level_id].name_id))
 
 	row_item.level_title:set_text(text)
@@ -827,9 +845,7 @@ function MenuNodeGui:_key_press(o, key, input_id, item, no_add)
 
 	local key_name = "" .. (input_id == "mouse" and Input:mouse():button_name_str(key) or Input:keyboard():button_name_str(key))
 
-	if not no_add and input_id == "mouse" then
-		key_name = "mouse " .. key_name or key_name
-	end
+	key_name = not no_add and input_id == "mouse" and "mouse " .. key_name or key_name
 
 	local forbidden_btns = {
 		"esc",
@@ -932,7 +948,7 @@ function MenuNodeGui:_end_customize_controller(o, item)
 	o:mouse_release(nil)
 	Input:mouse():remove_trigger(self._mouse_wheel_up_trigger)
 	Input:mouse():remove_trigger(self._mouse_wheel_down_trigger)
-	setup:add_end_frame_clbk(function ()
+	setup:add_end_frame_clbk(function()
 		self._listening_to_input = false
 	end)
 	item:dirty()
@@ -971,9 +987,11 @@ function MenuNodeGui:_say(message, row_item, id)
 end
 
 function MenuNodeGui:_cb_unlock()
+	return
 end
 
 function MenuNodeGui:_cb_lock()
+	return
 end
 
 function MenuNodeGui:_text_item_part(row_item, panel, align_x, text_align)
@@ -1111,7 +1129,7 @@ end
 function MenuNodeGui:update_item_icon_visibility()
 	for _, row_item in pairs(self.row_items) do
 		if alive(row_item.icon) then
-			row_item.icon:set_visible(row_item.item:icon_visible() and self._item_panel_parent:world_y() <= row_item.icon:world_y() and row_item.icon:world_bottom() <= self._item_panel_parent:world_bottom())
+			row_item.icon:set_visible(row_item.item:icon_visible() and row_item.icon:world_y() >= self._item_panel_parent:world_y() and row_item.icon:world_bottom() <= self._item_panel_parent:world_bottom())
 		end
 	end
 end
@@ -1145,6 +1163,7 @@ end
 function MenuNodeGui:_highlight_row_item(row_item, mouse_over)
 	if row_item then
 		row_item.highlighted = true
+
 		local active_menu = managers.menu:active_menu()
 
 		if active_menu then
@@ -1429,16 +1448,14 @@ function MenuNodeGui:resolution_changed()
 			self:_setup_fake_disabled(row_item)
 		end
 
-		if not row_item.item:reload(row_item, self) then
-			if row_item.item:parameters().back then
-				-- Nothing
-			elseif row_item.item:parameters().pd2_corner then
-				-- Nothing
-			elseif row_item.type == "chat" then
-				self:_align_chat(row_item)
-			elseif row_item.type ~= "kitslot" and row_item.type ~= "server_column" then
-				self:_align_normal(row_item)
-			end
+		if row_item.item:reload(row_item, self) or row_item.item:parameters().back then
+			-- Nothing
+		elseif row_item.item:parameters().pd2_corner then
+			-- Nothing
+		elseif row_item.type == "chat" then
+			self:_align_chat(row_item)
+		elseif row_item.type ~= "kitslot" and row_item.type ~= "server_column" then
+			self:_align_normal(row_item)
 		end
 	end
 

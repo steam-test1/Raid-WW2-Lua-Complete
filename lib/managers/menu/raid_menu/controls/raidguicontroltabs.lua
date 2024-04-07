@@ -8,6 +8,7 @@ function RaidGUIControlTabs:init(parent, params)
 
 	self._tab_width = self._params.tab_width or parent:w() / #self._params.tabs_params
 	self._tab_height = self._params.tab_height or RaidGUIControlTabs.DEFAULT_HEIGHT
+
 	local panel_params = {
 		name = "tabs_control",
 		x = self._params.x,
@@ -16,6 +17,7 @@ function RaidGUIControlTabs:init(parent, params)
 		h = self._tab_height,
 		layer = self._panel:layer() + 1
 	}
+
 	self._object = self._panel:panel(panel_params)
 
 	if self._params.icon then
@@ -63,6 +65,7 @@ function RaidGUIControlTabs:_create_items()
 			tab_params.callback_param = tab_params.callback_param
 			tab_params.parent_control_ref = self
 			tab_params.tab_font_size = self._params.tab_font_size
+
 			local item = self._object:create_custom_control(self._params.item_class or RaidGUIControlTab, tab_params, self._params)
 
 			if index ~= #self._params.tabs_params and self._item_class.needs_divider() then
@@ -84,6 +87,7 @@ function RaidGUIControlTabs:_create_bottom_line()
 		color = RaidGUIControlTabs.ACTIVE_LINE_COLOR,
 		layer = self._object:layer() + 3
 	}
+
 	self._bottom_line = self._object:rect(bottom_line_params)
 	self._line_movement_t = 0
 end
@@ -140,6 +144,7 @@ function RaidGUIControlTabs:set_selected(value)
 
 	if self._selected then
 		self._selected_item_idx = self._selected_item_idx or self._initial_tab_idx
+
 		local callback_param = self._items[self._selected_item_idx]:get_callback_param()
 
 		self:_tab_selected(self._selected_item_idx, callback_param)
@@ -207,7 +212,9 @@ function RaidGUIControlTabs:_move_bottom_line()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_x = Easing.quartic_in_out(t, original_x, (self._selected_item_idx - 1) * self._tab_width - original_x, duration)
 
 		self._bottom_line:set_x(current_x)

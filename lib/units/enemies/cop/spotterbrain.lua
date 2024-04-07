@@ -17,6 +17,7 @@ function SpotterBrain:reset_spotter()
 end
 
 function SpotterBrain:on_barrage_ended()
+	return
 end
 
 function SpotterBrain:schedule_spotter_reset(delay)

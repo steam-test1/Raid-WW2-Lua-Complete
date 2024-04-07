@@ -15,6 +15,7 @@ function HuskPlayerInventory:init(unit)
 end
 
 function HuskPlayerInventory:_send_equipped_weapon()
+	return
 end
 
 function HuskPlayerInventory:synch_equipped_weapon(send_equipped_weapon_type, equipped_weapon_category_id, equipped_weapon_identifier, blueprint_string, cosmetics_string, peer)
@@ -28,11 +29,13 @@ function HuskPlayerInventory:synch_equipped_weapon(send_equipped_weapon_type, eq
 	elseif send_equipped_weapon_type == PlayerInventory.SEND_WEAPON_TYPE_PLAYER_MELEE_GRENADE then
 		if equipped_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_GRENADES_ID then
 			local grenade_data = tweak_data.projectiles[equipped_weapon_identifier]
+
 			weapon_name = Idstring(grenade_data.unit_dummy)
 
 			self:add_unit_by_name(weapon_name, true, true)
 		elseif equipped_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
 			local melee_data = tweak_data.blackmarket.melee_weapons[equipped_weapon_identifier]
+
 			weapon_name = Idstring(melee_data.third_unit)
 
 			self:add_unit_by_name(weapon_name, true, true)
@@ -79,17 +82,17 @@ function HuskPlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 	end
 
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
-	local setup_data = {
-		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit
-		},
-		expend_ammo = false,
-		autoaim = false,
-		alert_AI = false,
-		user_sound_variant = "1"
+	local setup_data = {}
+
+	setup_data.user_unit = self._unit
+	setup_data.ignore_units = {
+		self._unit,
+		new_unit
 	}
+	setup_data.expend_ammo = false
+	setup_data.autoaim = false
+	setup_data.alert_AI = false
+	setup_data.user_sound_variant = "1"
 
 	new_unit:base():setup(setup_data)
 	self:add_unit(new_unit, equip, instant)
@@ -116,17 +119,17 @@ function HuskPlayerInventory:add_unit_by_factory_blueprint(factory_name, equip, 
 	new_unit:base():assemble_from_blueprint(factory_name, blueprint)
 	new_unit:base():check_npc()
 
-	local setup_data = {
-		user_unit = self._unit,
-		ignore_units = {
-			self._unit,
-			new_unit
-		},
-		expend_ammo = false,
-		autoaim = false,
-		alert_AI = false,
-		user_sound_variant = "1"
+	local setup_data = {}
+
+	setup_data.user_unit = self._unit
+	setup_data.ignore_units = {
+		self._unit,
+		new_unit
 	}
+	setup_data.expend_ammo = false
+	setup_data.autoaim = false
+	setup_data.alert_AI = false
+	setup_data.user_sound_variant = "1"
 
 	new_unit:base():setup(setup_data)
 	self:add_unit(new_unit, equip, instant)

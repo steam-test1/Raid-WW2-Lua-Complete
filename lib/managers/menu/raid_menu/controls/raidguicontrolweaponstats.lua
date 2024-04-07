@@ -31,6 +31,7 @@ function RaidGUIControlWeaponStats:_create_items()
 			tabs_params.tab_idx = index
 			tabs_params.callback_param = tabs_params.callback_param
 			tabs_params.label_class = self._params.label_class
+
 			local item = self._object:create_custom_control(self._params.item_class or RaidGUIControlTab, tabs_params)
 
 			if index ~= #self._params.tabs_params and self._item_class.needs_divider() then
@@ -181,15 +182,19 @@ function RaidGUIControlWeaponStats:refresh_data()
 end
 
 function RaidGUIControlWeaponStats:_create_bottom_line()
+	return
 end
 
 function RaidGUIControlWeaponStats:_initial_tab_selected(tab_idx)
+	return
 end
 
 function RaidGUIControlWeaponStats:_tab_selected(tab_idx, callback_param)
+	return
 end
 
 function RaidGUIControlWeaponStats:_unselect_all()
+	return
 end
 
 function RaidGUIControlWeaponStats:set_selected(value)
@@ -199,21 +204,27 @@ function RaidGUIControlWeaponStats:set_selected(value)
 end
 
 function RaidGUIControlWeaponStats:move_up()
+	return
 end
 
 function RaidGUIControlWeaponStats:move_down()
+	return
 end
 
 function RaidGUIControlWeaponStats:move_left()
+	return
 end
 
 function RaidGUIControlWeaponStats:move_right()
+	return
 end
 
 function RaidGUIControlWeaponStats:highlight_on()
+	return
 end
 
 function RaidGUIControlWeaponStats:highlight_off()
+	return
 end
 
 function RaidGUIControlWeaponStats:mouse_released(o, button, x, y)

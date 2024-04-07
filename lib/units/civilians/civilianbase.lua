@@ -3,7 +3,8 @@ CivilianBase = CivilianBase or class(CopBase)
 function CivilianBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
-	local spawn_state = nil
+
+	local spawn_state
 
 	if self._spawn_state then
 		if self._spawn_state ~= "" then
@@ -25,4 +26,5 @@ function CivilianBase:post_init()
 end
 
 function CivilianBase:default_weapon_name()
+	return
 end

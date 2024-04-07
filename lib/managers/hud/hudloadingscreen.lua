@@ -99,6 +99,7 @@ function HUDLoadingScreen:_create_loading_icon()
 		w = self._panel:w(),
 		h = HUDLoadingScreen.LOADING_ICON_PANEL_H
 	}
+
 	self._loading_icon_panel = self._panel:panel(loading_icon_panel_params)
 	self._loading_icon = HUDSaveIcon:new(self._loading_icon_panel)
 end
@@ -118,6 +119,7 @@ function HUDLoadingScreen:setup(data)
 		texture = "ui/loading_screens/" .. data.background,
 		layer = self._black:layer() + 1
 	})
+
 	local screen_ratio = self:_real_aspect_ratio()
 	local image_ratio = self._bg:texture_width() / self._bg:texture_height()
 
@@ -125,14 +127,14 @@ function HUDLoadingScreen:setup(data)
 		self._bg:set_h(self._hud_panel:h())
 		self._bg:set_w(self._bg:h() * image_ratio)
 
-		if self._panel:w() < self._bg:w() then
+		if self._bg:w() > self._panel:w() then
 			self._bg:set_x(-(self._bg:w() - self._panel:w()) / 2)
 		end
 	else
 		self._bg:set_w(self._hud_panel:w())
 		self._bg:set_h(self._bg:w() / image_ratio)
 
-		if self._panel:h() < self._bg:h() then
+		if self._bg:h() > self._panel:h() then
 			self._bg:set_y(-(self._bg:h() - self._panel:h()) / 2)
 		end
 	end
@@ -168,7 +170,9 @@ function HUDLoadingScreen:_layout_raid(current_job)
 		h = HUDLoadingScreen.RAID_INFO_H,
 		layer = self._bg:layer() + 1
 	}
+
 	self._info_panel = self._panel:panel(info_panel_params)
+
 	local raid_title_panel_params = {
 		name = "raid_title_panel",
 		h = HUDLoadingScreen.INFO_TITLE_H,
@@ -244,7 +248,9 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 		h = HUDLoadingScreen.RAID_COMPLETED_H,
 		layer = self._bg:layer() + 1
 	}
+
 	self._info_panel = self._panel:panel(info_panel_params)
+
 	local raid_title_panel_params = {
 		name = "raid_title_panel",
 		y = HUDLoadingScreen.INFO_TITLE_Y,
@@ -325,7 +331,9 @@ function HUDLoadingScreen:_layout_operation(current_job)
 		h = HUDLoadingScreen.OPERATION_INFO_H,
 		layer = self._bg:layer() + 1
 	}
+
 	self._info_panel = self._panel:panel(info_panel_params)
+
 	local operation_title_panel_params = {
 		name = "raid_title_panel",
 		y = HUDLoadingScreen.INFO_TITLE_Y,
@@ -416,7 +424,9 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 		h = HUDLoadingScreen.OPERATION_INFO_H,
 		layer = self._bg:layer() + 1
 	}
+
 	self._info_panel = self._panel:panel(info_panel_params)
+
 	local current_event = managers.raid_job:current_job().current_event
 	local operation_tweak_data = tweak_data.operations.missions[managers.raid_job:current_job().job_id]
 	local current_event_tweak_data = operation_tweak_data.events[managers.raid_job:current_job().events_index[current_event]]
@@ -518,7 +528,9 @@ function HUDLoadingScreen:_layout_camp()
 		h = HUDLoadingScreen.DEFAULT_INFO_H,
 		layer = self._bg:layer() + 1
 	}
+
 	self._info_panel = self._panel:panel(info_panel_params)
+
 	local title_panel_params = {
 		name = "raid_title_panel",
 		y = HUDLoadingScreen.INFO_TITLE_Y,
@@ -578,6 +590,7 @@ function HUDLoadingScreen:_layout_camp()
 end
 
 function HUDLoadingScreen:_layout_default()
+	return
 end
 
 function HUDLoadingScreen:_get_random_tip()
@@ -807,6 +820,7 @@ function HUDLoadingScreen:_animate_show_summary(summary_panel, delay)
 
 	while t < 0.95 do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		if t < 0.75 then
@@ -867,6 +881,7 @@ function HUDLoadingScreen:_animate_hide_summary(summary_panel, delay)
 
 	while t < 0.95 do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		if t < 0.75 then
@@ -910,7 +925,9 @@ function HUDLoadingScreen:_animate_alpha(o, new_alpha, duration, delay, callback
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local curr_alpha = self:_ease_in_out_quart(t, starting_alpha, change, duration)
 
 		o:set_alpha(curr_alpha)
@@ -931,7 +948,9 @@ function HUDLoadingScreen:_animate_move_background_horizontal(background)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local curr_x = self:_linear(t, starting_x, change_x, duration)
 
 		background:set_x(curr_x)
@@ -995,7 +1014,9 @@ function HUDLoadingScreen:_animate_fade_in(mid_text)
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
+
 		local a = (d - t) / d
 
 		mid_text:set_alpha(a)
@@ -1024,7 +1045,9 @@ function HUDLoadingScreen:_animate_fade_out(mid_text)
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
+
 		local a = t / d
 
 		mid_text:set_alpha(a)

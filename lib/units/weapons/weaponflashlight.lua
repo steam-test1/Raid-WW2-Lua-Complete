@@ -8,7 +8,9 @@ function WeaponFlashLight:init(unit)
 	self._off_event = "gadget_flashlight_off"
 	self._a_flashlight_obj = self._unit:get_object(Idstring("a_flashlight"))
 	self._g_light = self._unit:get_object(Idstring("g_light"))
+
 	local texture = "units/lights/spot_light_projection_textures/spotprojection_11_flashlight_df"
+
 	self._light = World:create_light("spot|specular|plane_projection", texture)
 	self._light_multiplier = 2
 	self._current_light_multiplier = self._light_multiplier
@@ -21,6 +23,7 @@ function WeaponFlashLight:init(unit)
 	self._light:set_enable(false)
 
 	local effect_path = "effects/vanilla/weapons/flashlight/fp_flashlight"
+
 	self._light_effect = World:effect_manager():spawn({
 		force_synch = true,
 		effect = Idstring(effect_path),
@@ -37,6 +40,7 @@ function WeaponFlashLight:set_npc()
 
 	local obj = self._unit:get_object(Idstring("a_flashlight"))
 	local effect_path = "effects/vanilla/weapons/flashlight/flashlight"
+
 	self._light_effect = World:effect_manager():spawn({
 		effect = Idstring(effect_path),
 		parent = obj
@@ -73,6 +77,7 @@ function WeaponFlashLight:destroy(unit)
 end
 
 local mvec1 = Vector3()
+
 WeaponFlashLight.HALLOWEEN_FLICKER = 1
 WeaponFlashLight.HALLOWEEN_LAUGHTER = 2
 WeaponFlashLight.HALLOWEEN_FROZEN = 3
@@ -122,7 +127,7 @@ function WeaponFlashLight:update(unit, t, dt)
 		self._kittens_timer = t + 25
 	end
 
-	if self._kittens_timer < t then
+	if t > self._kittens_timer then
 		if math.rand(1) < 0.75 then
 			self:run_net_event(self.HALLOWEEN_FLICKER)
 
@@ -166,6 +171,7 @@ end
 function WeaponFlashLight:update_laughter(t, dt)
 	if self._laughter_t then
 		self._laughter_t = math.max(0, self._laughter_t - dt)
+
 		local math_sin = math.sin(self._laughter_t * 720)
 
 		mvector3.set_static(mvec1, 1, 0.6 + math_sin * 0.4, 0.7 + math_sin * 0.3)
@@ -184,7 +190,7 @@ function WeaponFlashLight:update_laughter(t, dt)
 end
 
 function WeaponFlashLight:update_frozen(t, dt)
-	if self._frozen_t and self._frozen_t <= t then
+	if self._frozen_t and t >= self._frozen_t then
 		local obj = self._unit:get_object(Idstring("a_flashlight"))
 
 		World:effect_manager():set_frozen(self._light_effect, false)

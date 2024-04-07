@@ -16,11 +16,11 @@ end
 function GreedItem:value_line_id()
 	local v = self:value()
 
-	if GreedTweakData.HIGH_END_ITEM_VALUE <= v then
+	if v >= GreedTweakData.HIGH_END_ITEM_VALUE then
 		return "large"
-	elseif GreedTweakData.MID_END_ITEM_VALUE <= v then
+	elseif v >= GreedTweakData.MID_END_ITEM_VALUE then
 		return "medium"
-	elseif GreedTweakData.LOW_END_ITEM_VALUE <= v then
+	elseif v >= GreedTweakData.LOW_END_ITEM_VALUE then
 		return "small"
 	end
 

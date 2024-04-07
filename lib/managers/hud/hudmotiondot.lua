@@ -139,15 +139,12 @@ end
 
 function HUDMotionDot:on_setting_icons(index)
 	if type(index) == "boolean" then
-		if index then
-			index = 2
-		else
-			index = 1
-		end
+		index = index and 2 or 1
 	end
 
 	self._motion_icon_index = index <= #HUDMotionDot.ICONS and index or 1
 	self._motion_icon_index = self._motion_icon_index < 1 and #HUDMotionDot.ICONS or self._motion_icon_index
+
 	local icon_img = HUDMotionDot.ICONS[self._motion_icon_index]
 	local image = tweak_data.gui.icons[icon_img].texture
 
@@ -164,11 +161,7 @@ end
 
 function HUDMotionDot:on_setting_sizes(index)
 	if type(index) == "boolean" then
-		if index then
-			index = 2
-		else
-			index = 1
-		end
+		index = index and 2 or 1
 	end
 
 	self._size_icon_index = index
@@ -184,11 +177,7 @@ end
 
 function HUDMotionDot:on_setting_offsets(index)
 	if type(index) == "boolean" then
-		if index then
-			index = 2
-		else
-			index = 1
-		end
+		index = index and 2 or 1
 	end
 
 	self._offset_index = index
@@ -210,8 +199,7 @@ function HUDMotionDot:_update_dots()
 	local size = HUDMotionDot.SIZES[self._size_icon_index]
 
 	for i, icon in ipairs(self._motion_icons) do
-		local tgt_x = center_screen_x
-		local tgt_y = center_screen_y
+		local tgt_x, tgt_y = center_screen_x, center_screen_y
 
 		if not template or i > #template then
 			icon:set_visible(false)
@@ -235,11 +223,7 @@ end
 
 function HUDMotionDot:on_setting_counts(index)
 	if type(index) == "boolean" then
-		if index then
-			index = 2
-		else
-			index = 1
-		end
+		index = index and 2 or 1
 	end
 
 	self._dot_mode_idx = index
@@ -280,6 +264,7 @@ function HUDMotionDot:_animate_silly(item_ref, done_cb)
 
 	while self._silly_mode == true do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		item_ref:set_color(Color(math.max(0.25, math.sin(t * 13)), math.max(0.25, math.sin(t * 69)), math.max(0.25, math.sin(t * 420))))
@@ -289,6 +274,7 @@ function HUDMotionDot:_animate_silly(item_ref, done_cb)
 end
 
 function HUDMotionDot:show_done()
+	return
 end
 
 function HUDMotionDot:cleanup()

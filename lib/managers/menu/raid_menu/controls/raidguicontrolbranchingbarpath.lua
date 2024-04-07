@@ -16,15 +16,19 @@ function RaidGUIControlBranchingBarPath:init(parent, params)
 end
 
 function RaidGUIControlBranchingBarPath:set_locked()
+	return
 end
 
 function RaidGUIControlBranchingBarPath:set_active()
+	return
 end
 
 function RaidGUIControlBranchingBarPath:set_full()
+	return
 end
 
 function RaidGUIControlBranchingBarPath:set_disabled()
+	return
 end
 
 function RaidGUIControlBranchingBarPath:set_progress(progress)
@@ -43,4 +47,5 @@ function RaidGUIControlBranchingBarPath:endpoints()
 end
 
 function RaidGUIControlBranchingBarPath:init_to_state(state)
+	return
 end

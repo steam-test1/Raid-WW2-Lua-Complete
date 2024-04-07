@@ -43,6 +43,7 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 			}
 		}
 	})
+
 	local default_controls_keybinds_params = {
 		name = "default_controls_keybinds",
 		y = 832,
@@ -51,6 +52,7 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		on_click_callback = callback(self, self, "on_click_default_controls_keybinds"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
 	}
+
 	self._default_controls_button = self._root_panel:long_secondary_button(default_controls_keybinds_params)
 
 	self:_layout_controls_keybinds()
@@ -89,10 +91,12 @@ function RaidMenuOptionsControlsKeybinds:close()
 end
 
 function RaidMenuOptionsControlsKeybinds:_save_controls_keybinds_values()
+	return
 end
 
 function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 	self._keybind_controls_table = {}
+
 	local default_controller_type = managers.controller:get_default_wrapper_type()
 
 	if default_controller_type ~= "pc" then
@@ -100,6 +104,7 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 	end
 
 	self._keybinds = {}
+
 	local keybind_types = {
 		"movement",
 		"usage",
@@ -163,7 +168,9 @@ end
 
 function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 	local controller_category = self._controller_category
+
 	self._keybinds[keybind_type] = {}
+
 	local connections = managers.controller:get_settings(managers.controller:get_default_wrapper_type()):get_connection_map()
 
 	for _, name in ipairs(self.controls_info_by_category(controller_category, keybind_type)) do
@@ -210,7 +217,7 @@ function RaidMenuOptionsControlsKeybinds:on_click_default_controls_keybinds()
 	local params = {
 		title = managers.localization:text("dialog_reset_controls_keybinds_title"),
 		message = managers.localization:text("dialog_reset_controls_keybinds_message"),
-		callback = function ()
+		callback = function()
 			managers.controller:load_settings("settings/controller_settings")
 			managers.controller:clear_user_mod("all", MenuCustomizeControllerCreator.CONTROLS_INFO)
 			self:refresh_keybinds()

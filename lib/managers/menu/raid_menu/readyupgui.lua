@@ -69,6 +69,7 @@ end
 
 function ReadyUpGui:_layout_buttons()
 	local button_y = 848
+
 	self._ready_up_button = self._root_panel:short_primary_button({
 		name = "ready_up_button",
 		visible = false,
@@ -104,6 +105,7 @@ function ReadyUpGui:_layout_buttons()
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_red
 	})
+
 	local x1, y1, w1, h1 = self._no_cards_warning_label:text_rect()
 
 	self._no_cards_warning_label:set_w(w1)
@@ -167,7 +169,7 @@ function ReadyUpGui:_layout_header()
 
 	self._node.components.raid_menu_header:set_header_icon(item_icon)
 
-	local mission_name = nil
+	local mission_name
 
 	if current_job then
 		local name_id = current_job.name_id
@@ -176,6 +178,7 @@ function ReadyUpGui:_layout_header()
 		local mission_progress_fraction = " " .. current_event .. "/" .. total_events .. ": "
 		local event_name = self:translate(current_job.current_event_data.name_id, true)
 		local title_text = self:translate(name_id, true) .. mission_progress_fraction .. event_name
+
 		mission_name = title_text
 	else
 		mission_name = utf8.to_upper(managers.localization:text(tweak_data.operations.missions[selected_job.job_id].name_id))
@@ -199,6 +202,7 @@ function ReadyUpGui:_layout_header()
 		name = "mission_difficulty",
 		amount = tweak_data:number_of_difficulties()
 	}
+
 	self._difficulty_indicator = RaidGuiControlDifficultyStars:new(self._root_panel, difficulty_params)
 
 	self._difficulty_indicator:set_x(mission_name:x())
@@ -230,6 +234,7 @@ function ReadyUpGui:_layout_player_list()
 	self._player_control_list = {}
 	self._current_peer = nil
 	self._current_peer_index = nil
+
 	local width = 432
 
 	for peer_index, peer in pairs(managers.network:session():all_peers()) do
@@ -273,11 +278,13 @@ function ReadyUpGui:_layout_card_info()
 		x = self._root_panel:w() - 160,
 		item_w = card_w
 	}
+
 	self._card_control = self._root_panel:create_custom_control(RaidGUIControlCardBase, card_params)
 
 	self._card_control:set_visible(false)
 
 	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
+
 	self._empty_card_slot = self._root_panel:bitmap({
 		name = "cc_empty_slot",
 		y = 384,
@@ -341,6 +348,7 @@ end
 function ReadyUpGui:_get_character_spawn_locations()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 	local ids_ready_up_scene_name = Idstring("units/vanilla/characters/scenes/ready_up_scene")
+
 	self._character_spawn_locations = {}
 
 	if units then
@@ -413,6 +421,7 @@ function ReadyUpGui:_spawn_character_units()
 	self._spawned_character_units = {}
 	self._weapon_assembled = {}
 	self._spawned_weapon_parts = {}
+
 	local ids_unit_name = Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT)
 
 	for peer, control in pairs(self._player_control_list) do
@@ -420,6 +429,7 @@ function ReadyUpGui:_spawn_character_units()
 		local position = self._character_spawn_locations[locator_index]:position() or Vector3(0, 0, 0)
 		local rotation = Rotation(0, 0, 0)
 		local spawned_unit = World:spawn_unit(ids_unit_name, position, rotation)
+
 		self._spawned_character_units[peer] = spawned_unit
 
 		spawned_unit:customization():set_visible(false)
@@ -431,6 +441,7 @@ function ReadyUpGui:_spawn_character_units()
 		local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(outfit.primary.factory_id)
 		local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 		local unit_path = Idstring(tweak_data.weapon.factory[weapon_factory_id].unit)
+
 		self._weapon_assembled[peer] = false
 
 		managers.dyn_resource:load(Idstring("unit"), unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_weapon", {
@@ -687,7 +698,7 @@ function ReadyUpGui:_update_status()
 				local outfit = peer:blackmarket_outfit()
 				local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(outfit.primary.factory_id)
 				local anim_state_name = "hos_to_cbt_" .. weapon_id
-				local state = nil
+				local state
 
 				if self._spawned_character_units and self._spawned_character_units[peer] then
 					state = self._spawned_character_units[peer]:play_redirect(Idstring(anim_state_name))
@@ -768,10 +779,10 @@ function ReadyUpGui:_on_ready_up_button()
 end
 
 function ReadyUpGui:_on_kick_button()
-	local params = {
-		yes_callback = callback(self, self, "_on_kick_confirmed"),
-		player_name = self._current_peer:name()
-	}
+	local params = {}
+
+	params.yes_callback = callback(self, self, "_on_kick_confirmed")
+	params.player_name = self._current_peer:name()
 
 	managers.menu:show_kick_peer_dialog(params)
 end
@@ -797,6 +808,7 @@ function ReadyUpGui:_peer_no_longer_in_lobby(peer, state)
 		peer_control:select_off()
 
 		self._current_peer = nil
+
 		local local_peer = managers.network:session():local_peer()
 
 		if peer ~= local_peer then

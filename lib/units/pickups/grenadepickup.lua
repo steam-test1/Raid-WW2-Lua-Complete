@@ -21,15 +21,16 @@ function GrenadePickup:_pickup(unit)
 
 		if not managers.player:got_max_grenades() then
 			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) then
-				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1
+				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1)
 			end
 
 			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) then
-				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1
+				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + ((managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1)
 			end
 
 			local grenades_amount = tweak_data.drop_loot[self.tweak_data].grenades_amount or 1
 			local grenades_pku_add = tweak_data.projectiles[inventory.equipped_grenade].per_pickup or 1
+
 			grenades_to_add = grenades_amount * grenades_pku_add * effect_ammo_pickup_multiplier
 			gained_grenades = managers.player:add_grenade_amount(math.floor(grenades_to_add))
 			excess_grenades_remaining = grenades_amount - math.ceil(gained_grenades / grenades_pku_add)

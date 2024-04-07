@@ -113,6 +113,7 @@ end
 
 function AIAreaElement:_add_unit(unit)
 	local u_id = unit:unit_data().unit_id
+
 	self._nav_seg_units[u_id] = unit
 
 	self:_add_nav_seg(unit)
@@ -120,6 +121,7 @@ end
 
 function AIAreaElement:_remove_unit(unit)
 	local u_id = unit:unit_data().unit_id
+
 	self._nav_seg_units[u_id] = nil
 
 	self:_remove_nav_seg(u_id)
@@ -186,6 +188,7 @@ function AIAreaElement:remove_unit_list_btn()
 end
 
 function AIAreaElement:add_to_mission_package()
+	return
 end
 
 function AIAreaElement:_add_nav_seg(unit)

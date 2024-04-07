@@ -22,7 +22,7 @@ function AttackBlimp:_update_movement(dt)
 		local travel_vec = self._travel_to - old_pos
 		local travel_distance = travel_vec:length()
 
-		if AttackBlimp.DEFAULT_STOP_DISTANCE < travel_distance then
+		if travel_distance > AttackBlimp.DEFAULT_STOP_DISTANCE then
 			local old_rot = self._unit:rotation()
 			local travel_rot = Rotation:look_at(travel_dir, math.UP)
 
@@ -30,6 +30,7 @@ function AttackBlimp:_update_movement(dt)
 
 			local travel_dir = travel_vec:normalized()
 			local speed_mul = (travel_distance - AttackBlimp.DEFAULT_STOP_DISTANCE) / AttackBlimp.DEFAULT_SLOW_DISTANCE
+
 			speed_mul = math.clamp(speed_mul * speed_mul, 0.05, 1)
 
 			self._unit:set_position(old_pos + travel_dir * AttackBlimp.DEFAULT_MOVE_SPEED * speed_mul * dt)
@@ -44,7 +45,7 @@ end
 function AttackBlimp:debug_force_find_player()
 	Application:trace("[AttackBlimp:debug_force_find_player] Blimbo HUNT THEM!")
 
-	local pos = nil
+	local pos
 
 	for criminal_key, criminal_data in pairs(managers.groupai:state():all_char_criminals()) do
 		if not criminal_data.status then

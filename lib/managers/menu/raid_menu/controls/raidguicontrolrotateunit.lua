@@ -49,7 +49,7 @@ function RaidGUIControlRotateUnit:on_mouse_moved(o, x, y)
 
 	self._last_x = x
 
-	if self._params.sound_click_every_n_degrees and self._params.sound_click_every_n_degrees < math.abs(self._unit:rotation():yaw() - self._last_sound_click_angle) then
+	if self._params.sound_click_every_n_degrees and math.abs(self._unit:rotation():yaw() - self._last_sound_click_angle) > self._params.sound_click_every_n_degrees then
 		if not self._params.rotation_click_sound then
 			debug_pause("Rotation click sound not set for rotate unit control " .. tostring(self._name))
 
@@ -71,7 +71,9 @@ function RaidGUIControlRotateUnit:_rotate_unit_by(yaw_delta)
 	local yaw = rotation:yaw()
 	local pitch = rotation:pitch()
 	local roll = rotation:roll()
+
 	yaw = yaw + yaw_delta
+
 	local rot_out = Rotation(yaw, pitch, roll)
 	local rotated_offset = self._unit_center_offset:rotate_with(rot_out)
 

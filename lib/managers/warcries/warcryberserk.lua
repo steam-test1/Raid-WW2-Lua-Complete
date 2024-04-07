@@ -53,7 +53,9 @@ end
 
 function WarcryBerserk:_heal_step()
 	self._heals_delay = 0.5
+
 	local health_restoration_percentage = self._tweak_data.base_team_heal_percentage
+
 	health_restoration_percentage = health_restoration_percentage * managers.player:upgrade_value("player", "warcry_team_heal_bonus", 1)
 
 	if managers.player:player_unit() then
@@ -107,6 +109,7 @@ function WarcryBerserk:_on_enemy_killed(params)
 
 	if health_ratio < self._tweak_data.low_health_multiplier_activation_percentage then
 		local low_health_multiplier = math.lerp(self._tweak_data.low_health_multiplier_min, self._tweak_data.low_health_multiplier_max, 1 - health_ratio / self._tweak_data.low_health_multiplier_activation_percentage)
+
 		multiplier = multiplier + low_health_multiplier * managers.player:upgrade_value("player", "warcry_low_health_multiplier_bonus", 1)
 	end
 

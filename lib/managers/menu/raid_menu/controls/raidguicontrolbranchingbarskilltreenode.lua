@@ -38,6 +38,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:_layout_breadcrumb()
 		},
 		layer = self._icon:layer() + 1
 	}
+
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
 	self._breadcrumb:set_right(self._object:w())
@@ -55,7 +56,9 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 		w = self._object:w(),
 		h = self._object:h()
 	}
+
 	self._selector_panel = self._object:panel(selector_panel_params)
+
 	local selector_background_params = {
 		halign = "scale",
 		name = "selector_background",
@@ -67,7 +70,9 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 		h = self._selector_panel:h(),
 		color = tweak_data.gui.colors.raid_select_card_background
 	}
+
 	self._selector_rect = self._selector_panel:rect(selector_background_params)
+
 	local selector_triangle_up_params = {
 		name = "selector_triangle_up",
 		y = 0,
@@ -80,7 +85,9 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect
 	}
+
 	self._selector_triangle_up = self._selector_panel:image(selector_triangle_up_params)
+
 	local selector_triangle_down_params = {
 		name = "selector_triangle_down",
 		alpha = 1,
@@ -93,6 +100,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 		texture = tweak_data.gui.icons.ico_sel_rect_bottom_right.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_bottom_right.texture_rect
 	}
+
 	self._selector_triangle_down = self._selector_panel:image(selector_triangle_down_params)
 end
 
@@ -110,61 +118,54 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_icon()
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
 		layer = self._selector_panel:layer() + 5
 	}
+
 	self._icon = self._object:image(icon_params)
 
 	self._icon:set_center(self._object:w() / 2, self._object:h() / 2)
 end
 
 function RaidGUIControlBranchingBarSkilltreeNode:_init_state_data()
-	self._state_data = {
-		STATE_INACTIVE = {}
-	}
+	self._state_data = {}
+	self._state_data.STATE_INACTIVE = {}
 	self._state_data.STATE_INACTIVE.color = Color("9e9e9e"):with_alpha(0.7)
 	self._state_data.STATE_INACTIVE.selector_opacity = 0
 	self._state_data.STATE_INACTIVE.show_triangles = false
 	self._state_data.STATE_INACTIVE.scale = 0.7
-	self._state_data.STATE_HOVER = {
-		color = tweak_data.gui.colors.raid_red,
-		selector_opacity = 1,
-		show_triangles = false,
-		scale = 0.9
-	}
-	self._state_data.STATE_SELECTED = {
-		color = tweak_data.gui.colors.raid_red,
-		selector_opacity = 0.7,
-		show_triangles = true,
-		scale = 1
-	}
-	self._state_data.STATE_RESPEC = {
-		color = tweak_data.gui.colors.raid_gold,
-		selector_opacity = 0.7,
-		show_triangles = true,
-		scale = 0.7
-	}
-	self._state_data.STATE_ACTIVE = {
-		color = tweak_data.gui.colors.raid_red,
-		selector_opacity = 0,
-		show_triangles = false,
-		scale = 1
-	}
-	self._state_data.STATE_PENDING = {
-		color = Color.white:with_alpha(0.7),
-		selector_opacity = 0,
-		show_triangles = false,
-		scale = 0.7
-	}
-	self._state_data.STATE_PENDING_BLOCKED = {
-		color = Color.white:with_alpha(0.5),
-		selector_opacity = 0,
-		show_triangles = false,
-		scale = 0.7
-	}
-	self._state_data.STATE_DISABLED = {
-		color = Color("9e9e9e"):with_alpha(0.5),
-		selector_opacity = 0,
-		show_triangles = false,
-		scale = 0.7
-	}
+	self._state_data.STATE_HOVER = {}
+	self._state_data.STATE_HOVER.color = tweak_data.gui.colors.raid_red
+	self._state_data.STATE_HOVER.selector_opacity = 1
+	self._state_data.STATE_HOVER.show_triangles = false
+	self._state_data.STATE_HOVER.scale = 0.9
+	self._state_data.STATE_SELECTED = {}
+	self._state_data.STATE_SELECTED.color = tweak_data.gui.colors.raid_red
+	self._state_data.STATE_SELECTED.selector_opacity = 0.7
+	self._state_data.STATE_SELECTED.show_triangles = true
+	self._state_data.STATE_SELECTED.scale = 1
+	self._state_data.STATE_RESPEC = {}
+	self._state_data.STATE_RESPEC.color = tweak_data.gui.colors.raid_gold
+	self._state_data.STATE_RESPEC.selector_opacity = 0.7
+	self._state_data.STATE_RESPEC.show_triangles = true
+	self._state_data.STATE_RESPEC.scale = 0.7
+	self._state_data.STATE_ACTIVE = {}
+	self._state_data.STATE_ACTIVE.color = tweak_data.gui.colors.raid_red
+	self._state_data.STATE_ACTIVE.selector_opacity = 0
+	self._state_data.STATE_ACTIVE.show_triangles = false
+	self._state_data.STATE_ACTIVE.scale = 1
+	self._state_data.STATE_PENDING = {}
+	self._state_data.STATE_PENDING.color = Color.white:with_alpha(0.7)
+	self._state_data.STATE_PENDING.selector_opacity = 0
+	self._state_data.STATE_PENDING.show_triangles = false
+	self._state_data.STATE_PENDING.scale = 0.7
+	self._state_data.STATE_PENDING_BLOCKED = {}
+	self._state_data.STATE_PENDING_BLOCKED.color = Color.white:with_alpha(0.5)
+	self._state_data.STATE_PENDING_BLOCKED.selector_opacity = 0
+	self._state_data.STATE_PENDING_BLOCKED.show_triangles = false
+	self._state_data.STATE_PENDING_BLOCKED.scale = 0.7
+	self._state_data.STATE_DISABLED = {}
+	self._state_data.STATE_DISABLED.color = Color("9e9e9e"):with_alpha(0.5)
+	self._state_data.STATE_DISABLED.selector_opacity = 0
+	self._state_data.STATE_DISABLED.show_triangles = false
+	self._state_data.STATE_DISABLED.scale = 0.7
 end
 
 function RaidGUIControlBranchingBarSkilltreeNode:set_inactive()
@@ -267,7 +268,7 @@ end
 
 function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_clicked(button)
 	if self._on_click_callback then
-		self:_on_click_callback(self._data)
+		self._on_click_callback(self, self._data)
 	end
 end
 
@@ -301,7 +302,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_over(x, y)
 	self._mouse_inside = true
 
 	if self._on_mouse_enter_callback then
-		self:_on_mouse_enter_callback(self._data)
+		self._on_mouse_enter_callback(self, self._data)
 	end
 
 	if self._breadcrumb then
@@ -315,7 +316,7 @@ function RaidGUIControlBranchingBarSkilltreeNode:on_mouse_out(x, y)
 	self._mouse_inside = false
 
 	if self._on_mouse_exit_callback then
-		self:_on_mouse_exit_callback(self._data)
+		self._on_mouse_exit_callback(self, self._data)
 	end
 end
 
@@ -326,7 +327,9 @@ function RaidGUIControlBranchingBarSkilltreeNode:_animate_pressed()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_r = Easing.quintic_out(t, starting_color.r, self._state_data.STATE_ACTIVE.color.r - starting_color.r, duration)
 		local current_g = Easing.quintic_out(t, starting_color.g, self._state_data.STATE_ACTIVE.color.g - starting_color.g, duration)
 		local current_b = Easing.quintic_out(t, starting_color.b, self._state_data.STATE_ACTIVE.color.b - starting_color.b, duration)

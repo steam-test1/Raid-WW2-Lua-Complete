@@ -53,6 +53,7 @@ function HUDSpecialInteraction:init(hud, params)
 
 	local res_x = tweak_data.gui.base_resolution.x
 	local res_y = tweak_data.gui.base_resolution.y
+
 	self._background_texture = self._bg_panel:bitmap({
 		name = "_background_texture",
 		layer = 1,
@@ -171,6 +172,7 @@ function HUDSpecialInteraction:complete_stage(index)
 
 	if circle_data then
 		circle_data.completed = true
+
 		local color = Color(self._tweak_data.circle_difficulty[index], 0.3, 0.3, 0.3)
 
 		circle_data.circle:set_color(color)
@@ -199,12 +201,14 @@ end
 function HUDSpecialInteraction:set_bar_valid(circle_id, valid)
 	if circle_id < 1 then
 		return
-	elseif self._tweak_data.number_of_circles < circle_id then
+	elseif circle_id > self._tweak_data.number_of_circles then
 		return
 	end
 
 	local circle_data = self._circles[circle_id]
+
 	circle_data.valid = valid
+
 	local color = Color(self._tweak_data.circle_difficulty[circle_id], 1, 1, 1)
 
 	if not valid then
@@ -280,7 +284,9 @@ function HUDSpecialInteraction:_animate_interaction_complete()
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
+
 		local progress = t / TOTAL_T
 
 		for i = 1, #self._circles do
@@ -305,9 +311,11 @@ function HUDSpecialInteraction:_animate_stage_complete()
 	local end_y = start_y - DELTA_Y
 	local t = 0.3
 
-	while TOTAL_T >= t do
+	while t <= TOTAL_T do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local cur_delta_y = HUDSpecialInteraction:_ease_in_quint(t, 0, DELTA_Y, TOTAL_T)
 
 		self._lockpick_texture:set_y(start_y - cur_delta_y)
@@ -319,5 +327,5 @@ end
 function HUDSpecialInteraction:_ease_in_quint(time, begin, change, duration)
 	local alpha = time / duration
 
-	return begin + change * alpha * alpha * alpha * alpha * alpha
+	return begin + change * (alpha * alpha * alpha * alpha * alpha)
 end

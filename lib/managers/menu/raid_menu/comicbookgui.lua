@@ -186,6 +186,7 @@ function ComicBookGui:_animate_bullets(params)
 
 	while t < animation_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		if t < animation_duration / 2 then
@@ -254,7 +255,7 @@ function ComicBookGui:_page_right()
 	self._previous_page = self._current_page
 	self._current_page = self._current_page + 1
 
-	if ComicBookGui.TOTAL_PAGE_COUNT < self._current_page then
+	if self._current_page > ComicBookGui.TOTAL_PAGE_COUNT then
 		self._current_page = ComicBookGui.TOTAL_PAGE_COUNT
 	end
 

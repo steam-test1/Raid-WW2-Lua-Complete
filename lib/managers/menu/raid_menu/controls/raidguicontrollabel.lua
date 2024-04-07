@@ -11,6 +11,7 @@ function RaidGUIControlLabel:init(parent, params)
 
 	local default_font_size = tweak_data.gui.font_sizes.size_24
 	local default_font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, default_font_size)
+
 	self._params.font = self._params.font or default_font
 	self._params.font_size = self._params.font_size or default_font_size
 	self._params.text = self._params.text or managers.localization:text(self._params.text_id)
@@ -20,6 +21,7 @@ function RaidGUIControlLabel:init(parent, params)
 
 	if self._params.background_color then
 		local background_params = clone(self._params)
+
 		background_params.color = self._params.background_color
 		self._background = self._panel:rect(background_params)
 	end
@@ -78,9 +80,11 @@ function RaidGUIControlLabel:set_font_size(size)
 end
 
 function RaidGUIControlLabel:highlight_on()
+	return
 end
 
 function RaidGUIControlLabel:highlight_off()
+	return
 end
 
 function RaidGUIControlLabel:center_x(coord)

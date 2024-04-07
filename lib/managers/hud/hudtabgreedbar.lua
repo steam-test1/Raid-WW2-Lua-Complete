@@ -56,6 +56,7 @@ function HUDTabGreedBar:_create_panel(panel, params)
 		h = HUDTabGreedBar.HEIGHT,
 		layer = params.layer or panel:layer()
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -67,7 +68,9 @@ function HUDTabGreedBar:_create_icons()
 		w = HUDTabGreedBar.ICONS_W,
 		h = self._object:h()
 	}
+
 	self._icons_panel = self._object:panel(icons_panel_params)
+
 	local frame_icon_params = {
 		name = "frame_icon",
 		valign = "center",
@@ -76,6 +79,7 @@ function HUDTabGreedBar:_create_icons()
 		texture = tweak_data.gui.icons[HUDTabGreedBar.FRAME_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.FRAME_ICON].texture_rect
 	}
+
 	self._frame_icon = self._icons_panel:bitmap(frame_icon_params)
 
 	self._frame_icon:set_center_x(self._icons_panel:w() / 2)
@@ -89,6 +93,7 @@ function HUDTabGreedBar:_create_icons()
 		texture = tweak_data.gui.icons[HUDTabGreedBar.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.LOOT_ICON].texture_rect
 	}
+
 	self._loot_icon = self._icons_panel:bitmap(loot_icon_params)
 
 	self._loot_icon:set_center_x(self._icons_panel:w() / 2)
@@ -104,6 +109,7 @@ function HUDTabGreedBar:_create_icons()
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.GOLD_ICON].texture_rect,
 		color = tweak_data.gui.colors.raid_gold
 	}
+
 	self._gold_icon = self._icons_panel:bitmap(gold_icon_params)
 
 	self._gold_icon:set_center_x(self._icons_panel:w() / 2)
@@ -118,6 +124,7 @@ function HUDTabGreedBar:_create_right_panel()
 		w = self._object:w() - self._icons_panel:w(),
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 
 	self._right_panel:set_right(self._object:w())
@@ -135,6 +142,7 @@ function HUDTabGreedBar:_create_title()
 		color = HUDTabGreedBar.TITLE_COLOR,
 		text = utf8.to_upper(managers.localization:text(HUDTabGreedBar.TITLE_STRING))
 	}
+
 	self._title = self._right_panel:text(title_params)
 
 	self._title:set_center_x(self._right_panel:w() / 2)
@@ -151,6 +159,7 @@ function HUDTabGreedBar:_create_bar()
 		right = HUDTabGreedBar.LOOT_BAR_ICON_R,
 		color = HUDTabGreedBar.LOOT_BAR_COLOR
 	}
+
 	self._progress_bar_background = RaidGUIControlThreeCutBitmap:new(self._right_panel, progress_bar_background_params)
 
 	self._progress_bar_background:set_center_y(64)
@@ -161,6 +170,7 @@ function HUDTabGreedBar:_create_bar()
 		h = self._progress_bar_background:h(),
 		layer = self._progress_bar_background:layer() + 1
 	}
+
 	self._progress_bar_progress_panel = self._right_panel:panel(progress_bar_progress_panel_params)
 
 	self._progress_bar_progress_panel:set_x(self._progress_bar_background:x())
@@ -175,6 +185,7 @@ function HUDTabGreedBar:_create_bar()
 		right = HUDTabGreedBar.LOOT_BAR_ICON_R,
 		color = HUDTabGreedBar.LOOT_BAR_FOREGROUND_COLOR
 	}
+
 	self._loot_bar_foreground = RaidGUIControlThreeCutBitmap:new(self._progress_bar_progress_panel, progress_bar_foreground_params)
 end
 
@@ -190,6 +201,7 @@ function HUDTabGreedBar:_create_counter()
 		font_size = HUDTabGreedBar.COUNTER_FONT_SIZE,
 		color = HUDTabGreedBar.COUNTER_COLOR
 	}
+
 	self._counter = self._right_panel:text(counter_params)
 
 	self._counter:set_right(self._right_panel:w())
@@ -207,7 +219,9 @@ function HUDTabGreedBar:_create_tutorialization()
 		color = HUDTabGreedBar.TUTORIALIZATION_COLOR,
 		text = managers.localization:text(HUDTabGreedBar.TUTORIALIZATION_STRING)
 	}
+
 	self._tutorialization = self._object:text(tutorialization_params)
+
 	local _, _, _, h = self._tutorialization:text_rect()
 
 	self._tutorialization:set_h(h)
@@ -258,13 +272,16 @@ end
 
 function HUDTabGreedBar:_animate_change_progress(o)
 	self._animating_progress_change = true
+
 	local points_per_second = 120
 	local t = 0
 
 	while self._updated_progress - self._current_progress > 0 do
 		local dt = coroutine.yield()
+
 		t = t + dt
 		self._current_progress = self._current_progress + points_per_second * dt
+
 		local current_percentage = self._current_progress % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar()
 
 		self:set_progress(current_percentage)
@@ -307,7 +324,9 @@ function HUDTabGreedBar:_animate_counter_increase(o)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_in(t, HUDTabGreedBar.COUNTER_OFFSET, -HUDTabGreedBar.COUNTER_OFFSET, duration)
 
 		self._counter:set_center_y(self._progress_bar_background:center_y() - current_offset)
@@ -325,6 +344,7 @@ end
 
 function HUDTabGreedBar:_animate_pulse(o)
 	self._pulsing = true
+
 	local frame_default_w = tweak_data.gui:icon_w(HUDTabGreedBar.FRAME_ICON)
 	local frame_default_h = tweak_data.gui:icon_h(HUDTabGreedBar.FRAME_ICON)
 	local duration_in = 0.5
@@ -333,7 +353,9 @@ function HUDTabGreedBar:_animate_pulse(o)
 	while true do
 		while t < duration_in do
 			local dt = coroutine.yield()
+
 			t = t + dt
+
 			local current_frame_scale = Easing.quartic_out(t, 1.4, -0.4, duration_in)
 
 			self._frame_icon:set_w(frame_default_w * current_frame_scale)
@@ -358,12 +380,15 @@ end
 
 function HUDTabGreedBar:_animate_gold_bar(o)
 	self._animating_gold_bar = true
+
 	local duration_in = 0.5
 	local t = 0
 
-	while duration_in > t do
+	while t < duration_in do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_in_out(t, 0, HUDTabGreedBar.ICON_HIDDEN_OFFSET, duration_in)
 		local current_loot_icon_alpha = Easing.quartic_in_out(t, 1, -1, duration_in / 2)
 
@@ -386,11 +411,14 @@ function HUDTabGreedBar:_animate_gold_bar(o)
 	wait(1.5)
 
 	local duration_out = 0.7
+
 	t = 0
 
-	while duration_out > t do
+	while t < duration_out do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_offset = Easing.quartic_in_out(t, 0, HUDTabGreedBar.ICON_HIDDEN_OFFSET, duration_in)
 		local current_gold_icon_alpha = Easing.quartic_in_out(t, 1, -1, duration_in / 2)
 

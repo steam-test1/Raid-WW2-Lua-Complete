@@ -51,9 +51,11 @@ function RaidGUIControlTabWeaponStats:get_callback_param()
 end
 
 function RaidGUIControlTabWeaponStats:highlight_on()
+	return
 end
 
 function RaidGUIControlTabWeaponStats:highlight_off()
+	return
 end
 
 function RaidGUIControlTabWeaponStats:select()

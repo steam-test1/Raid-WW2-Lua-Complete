@@ -28,6 +28,7 @@ function RaidGUIControlButtonToggleSmall:_create_panel()
 		w = tweak_data.gui:icon_w(RaidGUIControlButtonToggleSmall.BORDER_ICON),
 		h = tweak_data.gui:icon_h(RaidGUIControlButtonToggleSmall.BORDER_ICON)
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -35,6 +36,7 @@ function RaidGUIControlButtonToggleSmall:_create_image_panel()
 	local image_panel_params = {
 		name = "image_panel"
 	}
+
 	self._image_panel = self._object:panel(image_panel_params)
 end
 
@@ -46,6 +48,7 @@ function RaidGUIControlButtonToggleSmall:_create_border()
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonToggleSmall.BORDER_ICON].texture_rect,
 		color = RaidGUIControlButtonToggleSmall.BORDER_COLOR
 	}
+
 	self._border = self._image_panel:bitmap(checkbox_border_params)
 end
 
@@ -57,6 +60,7 @@ function RaidGUIControlButtonToggleSmall:_create_active_icon()
 		texture = tweak_data.gui.icons[active_icon].texture,
 		texture_rect = tweak_data.gui.icons[active_icon].texture_rect
 	}
+
 	self._active_icon = self._image_panel:bitmap(active_icon_params)
 
 	self._active_icon:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
@@ -70,6 +74,7 @@ function RaidGUIControlButtonToggleSmall:_create_inactive_icon()
 		texture = tweak_data.gui.icons[inactive_icon].texture,
 		texture_rect = tweak_data.gui.icons[inactive_icon].texture_rect
 	}
+
 	self._inactive_icon = self._image_panel:bitmap(inactive_icon_params)
 
 	self._inactive_icon:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
@@ -194,7 +199,7 @@ function RaidGUIControlButtonToggleSmall:confirm_pressed()
 		self:_render_images()
 
 		if self._on_click_callback then
-			self:_on_click_callback(self, self._value)
+			self._on_click_callback(self, self, self._value)
 		end
 
 		return true
@@ -207,10 +212,12 @@ function RaidGUIControlButtonToggleSmall:_animate_highlight_on()
 	local duration = 0.2
 	local t = duration - (1 - self._highlight_animation_t) * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
 		self._highlight_animation_t = t / duration
+
 		local border_r = Easing.quartic_out(t, RaidGUIControlButtonToggleSmall.BORDER_COLOR.r, RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.r - RaidGUIControlButtonToggleSmall.BORDER_COLOR.r, duration)
 		local border_g = Easing.quartic_out(t, RaidGUIControlButtonToggleSmall.BORDER_COLOR.g, RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.g - RaidGUIControlButtonToggleSmall.BORDER_COLOR.g, duration)
 		local border_b = Easing.quartic_out(t, RaidGUIControlButtonToggleSmall.BORDER_COLOR.b, RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.b - RaidGUIControlButtonToggleSmall.BORDER_COLOR.b, duration)
@@ -227,10 +234,12 @@ function RaidGUIControlButtonToggleSmall:_animate_highlight_off()
 	local duration = 0.2
 	local t = duration - self._highlight_animation_t * duration
 
-	while duration > t do
+	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
 		self._highlight_animation_t = 1 - t / duration
+
 		local border_r = Easing.quartic_out(t, RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.r, RaidGUIControlButtonToggleSmall.BORDER_COLOR.r - RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.r, duration)
 		local border_g = Easing.quartic_out(t, RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.g, RaidGUIControlButtonToggleSmall.BORDER_COLOR.g - RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.g, duration)
 		local border_b = Easing.quartic_out(t, RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.b, RaidGUIControlButtonToggleSmall.BORDER_COLOR.b - RaidGUIControlButtonToggleSmall.BORDER_HOVER_COLOR.b, duration)
@@ -248,12 +257,14 @@ function RaidGUIControlButtonToggleSmall:_animate_press()
 	local original_w = tweak_data.gui:icon_w(RaidGUIControlButtonToggleSmall.BORDER_ICON)
 	local original_h = tweak_data.gui:icon_h(RaidGUIControlButtonToggleSmall.BORDER_ICON)
 	local starting_scale = self._image_panel:w() / original_w
-	local duration = 0.25 * (starting_scale - 0.9) / 0.1
+	local duration = 0.25 * ((starting_scale - 0.9) / 0.1)
 	local center_x, center_y = self._image_panel:center()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, starting_scale, 0.9 - starting_scale, duration)
 
 		self._image_panel:set_w(original_w * scale)
@@ -279,7 +290,9 @@ function RaidGUIControlButtonToggleSmall:_animate_release()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local scale = Easing.quartic_out(t, 0.9, 0.1, duration)
 
 		self._image_panel:set_w(target_w * scale)

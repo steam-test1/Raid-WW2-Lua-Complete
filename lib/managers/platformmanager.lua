@@ -3,6 +3,7 @@ core:import("CoreEvent")
 
 local empty_vector = Vector3()
 local tmp_vector = Vector3()
+
 PlatformManager = PlatformManager or class()
 PlatformManager.PLATFORM_CLASS_MAP = {}
 
@@ -31,6 +32,7 @@ function GenericPlatformManager:event(event_type, ...)
 end
 
 function GenericPlatformManager:destroy_context()
+	return
 end
 
 function GenericPlatformManager:add_event_callback(event_type, callback_func)
@@ -91,9 +93,11 @@ function GenericPlatformManager:set_playing(is_playing)
 end
 
 function GenericPlatformManager:set_progress(progress)
+	return
 end
 
 function GenericPlatformManager:set_feedback_color(color)
+	return
 end
 
 Xbox360PlatformManager = Xbox360PlatformManager or class(GenericPlatformManager)
@@ -116,7 +120,8 @@ function Xbox360PlatformManager:set_rich_presence(name, callback)
 	if callback then
 		XboxLive:set_context("presence", name, callback)
 	else
-		XboxLive:set_context("presence", name, function ()
+		XboxLive:set_context("presence", name, function()
+			return
 		end)
 	end
 end
@@ -145,7 +150,8 @@ function XB1PlatformManager:set_rich_presence(name, callback)
 	if callback then
 		XboxLive:set_context("presence", name, callback)
 	else
-		XboxLive:set_context("presence", name, function ()
+		XboxLive:set_context("presence", name, function()
+			return
 		end)
 	end
 end
@@ -191,7 +197,7 @@ end
 function PS3PlatformManager:update(t, dt)
 	PS3PlatformManager.super.update(self, t, dt)
 
-	if self._current_psn_presence ~= self:presence() and self._psn_set_presence_time <= t then
+	if self._current_psn_presence ~= self:presence() and t >= self._psn_set_presence_time then
 		self._psn_set_presence_time = t + 10
 		self._current_psn_presence = self:presence()
 
@@ -227,7 +233,7 @@ end
 function PS4PlatformManager:update(t, dt)
 	PS4PlatformManager.super.update(self, t, dt)
 
-	if self._current_psn_presence ~= self:presence() and self._psn_set_presence_time <= t then
+	if self._current_psn_presence ~= self:presence() and t >= self._psn_set_presence_time then
 		self._psn_set_presence_time = t + 10
 		self._current_psn_presence = self:presence()
 

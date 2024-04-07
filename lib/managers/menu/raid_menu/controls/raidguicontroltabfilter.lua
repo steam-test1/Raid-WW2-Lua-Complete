@@ -58,9 +58,11 @@ function RaidGUIControlTabFilter:get_callback_param()
 end
 
 function RaidGUIControlTabFilter:highlight_on()
+	return
 end
 
 function RaidGUIControlTabFilter:highlight_off()
+	return
 end
 
 function RaidGUIControlTabFilter:select()

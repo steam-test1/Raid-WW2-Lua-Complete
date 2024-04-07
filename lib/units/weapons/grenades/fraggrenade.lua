@@ -3,6 +3,7 @@ FragGrenade.MAX_CLUSTER_ATTEMPTS = 15
 
 function FragGrenade:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
+
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
 	self._init_timer = self._tweak_data.init_timer or 2.5
 	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
@@ -23,7 +24,9 @@ function FragGrenade:_setup_from_tweak_data()
 
 	self._player_damage = self._tweak_data.player_damage
 	self._alert_radius = self._tweak_data.alert_radius
+
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
+
 	self._custom_params = {
 		camera_shake_max_mul = 4,
 		sound_muffle_effect = true,
@@ -38,7 +41,9 @@ function FragGrenade:set_thrower_unit(unit)
 
 	self._clusters_to_spawn = 0
 	self._airburst_near_enemy = 0
+
 	local peer = managers.network:session():peer_by_unit(self._thrower_unit)
+
 	self.cluster_range = self._range
 	self.cluster_damage = self._damage
 
@@ -113,7 +118,9 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	if self._clusters_to_spawn > 0 then
 		local index = tweak_data.blackmarket:get_index_from_projectile_id("cluster")
 		local unit_position = self._unit:position()
+
 		unit_position = Vector3(unit_position.x, unit_position.y, unit_position.z + 2)
+
 		local clusters_spawned = 0
 
 		while clusters_spawned < self._clusters_to_spawn do
@@ -138,7 +145,7 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 				Application:debug("[FragGrenade:_detonate] unit position: \t" .. inspect(unit_position))
 				Application:debug("[FragGrenade:_detonate] Unit hit: \t\t" .. inspect(collision.unit))
 
-				if FragGrenade.MAX_CLUSTER_ATTEMPTS < spawn_attempts then
+				if spawn_attempts > FragGrenade.MAX_CLUSTER_ATTEMPTS then
 					Application:debug("[FragGrenade:_detonate] ----------------------------------------------")
 					Application:debug("[FragGrenade:_detonate] Gave up trying to spawn clsuters, reached max munber of attempts")
 

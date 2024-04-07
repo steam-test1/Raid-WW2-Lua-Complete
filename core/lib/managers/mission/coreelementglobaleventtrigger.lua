@@ -5,6 +5,7 @@ core:import("CoreCode")
 ElementGlobalEventTrigger = ElementGlobalEventTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
 function ElementGlobalEventTrigger:client_on_executed(...)
+	return
 end
 
 function ElementGlobalEventTrigger:init(...)

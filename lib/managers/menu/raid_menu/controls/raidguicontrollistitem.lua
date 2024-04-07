@@ -99,7 +99,7 @@ function RaidGUIControlListItem:select(dont_trigger_selected_callback)
 	end
 
 	if self._on_item_selected_callback and not dont_trigger_selected_callback then
-		self:_on_item_selected_callback(self._data)
+		self._on_item_selected_callback(self, self._data)
 	end
 
 	if self._data.breadcrumb then

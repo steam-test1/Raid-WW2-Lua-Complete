@@ -1,4 +1,5 @@
 GoldAssetExt = GoldAssetExt or class()
+
 local idstr_gold_asset = Idstring("gold_asset")
 
 function GoldAssetExt:init(unit)

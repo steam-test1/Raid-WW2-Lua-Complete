@@ -38,15 +38,14 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 		files[Idstring("english"):key()] = "_uk"
 	end
 
-	if (file == "eula" or file == "trial") and files[lang_key] then
-		file = file .. files[lang_key] or file
-	end
+	file = (file == "eula" or file == "trial") and files[lang_key] and file .. files[lang_key] or file
 
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), (self.PATH .. file):id())
 	local ypos = 0
 	local safe_rect_pixels = managers.gui_data:scaled_size()
 	local res = RenderSettings.resolution
 	local side_padding = 200
+
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
 	self._full_panel = self._fullscreen_ws:panel()
 	self._safe_rect_workspace = Overlay:gui():create_screen_workspace()
@@ -57,7 +56,9 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 	self._clipping_panel = self._fullscreen_ws:panel():panel({
 		layer = 1
 	})
+
 	local text_offset = self._clipping_panel:height() - 50
+
 	self._credits_panel = self._clipping_panel:panel({
 		x = safe_rect_pixels.x + side_padding,
 		y = text_offset,
@@ -68,11 +69,12 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 	self._credits_panel:set_center_x(self._credits_panel:parent():w() / 2)
 
 	local text_width = self._credits_panel:width()
+
 	self._commands = {}
 
 	for _, data in ipairs(list) do
 		if data._meta == "text" then
-			local font_size, color = nil
+			local font_size, color
 
 			if data.type == "title" then
 				font_size = tweak_data.gui.font_sizes.size_38
@@ -107,9 +109,10 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 				font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, font_size),
 				color = color
 			})
+
 			ypos = ypos + height
 		elseif data._meta == "image" then
-			local bitmap = nil
+			local bitmap
 
 			if data.src then
 				bitmap = self._credits_panel:bitmap({
@@ -123,6 +126,7 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 					texture = tweak_data.gui.icons[data.atlas_src].texture,
 					texture_rect = tweak_data.gui.icons[data.atlas_src].texture_rect
 				}
+
 				bitmap = self._credits_panel:bitmap(icon_params)
 			else
 				Application:error("[RaidMenuCreditsGui][_build_credits_panel] Unknown image type")
@@ -154,7 +158,9 @@ function RaidMenuCreditsGui:_show_intro_video()
 		is_root_panel = true,
 		layer = 100
 	}
+
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
+
 	local video_panel_background_params = {
 		name = "video_background",
 		layer = 1,
@@ -167,12 +173,14 @@ function RaidMenuCreditsGui:_show_intro_video()
 		video = RaidMenuCreditsGui.INTRO_VIDEO,
 		width = self._video_panel:w()
 	}
+
 	self._credits_intro_video = self._video_panel:video(video_params)
 
-	self._credits_intro_video:set_h(self._video_panel:w() * self._credits_intro_video:video_height() / self._credits_intro_video:video_width())
+	self._credits_intro_video:set_h(self._video_panel:w() * (self._credits_intro_video:video_height() / self._credits_intro_video:video_width()))
 	self._credits_intro_video:set_center_y(self._video_panel:h() / 2)
 
 	self._playing_intro_video = true
+
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		name = "press_any_key_prompt",
@@ -201,7 +209,9 @@ function RaidMenuCreditsGui:_animate_show_press_any_key_prompt(prompt)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.85, duration)
 
 		prompt:set_alpha(current_alpha)
@@ -214,9 +224,11 @@ function RaidMenuCreditsGui:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
 
-	while fade_out_duration > t do
+	while t < fade_out_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0.85, -0.85, fade_out_duration)
 
 		prompt:set_alpha(current_alpha)
@@ -235,11 +247,14 @@ function RaidMenuCreditsGui:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_right(self._safe_panel:w() - 50)
 
 	local fade_in_duration = 0.25
+
 	t = 0
 
-	while fade_in_duration > t do
+	while t < fade_in_duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, 0, 0.85, fade_in_duration)
 
 		prompt:set_alpha(current_alpha)

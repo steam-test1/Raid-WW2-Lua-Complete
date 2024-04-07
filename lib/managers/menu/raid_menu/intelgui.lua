@@ -39,12 +39,11 @@ function IntelGui:_layout_tab_categories()
 	}
 
 	for category_index, category_name in ipairs(tweak_data.intel.category_index) do
-		category_tabs_params.tabs_params[category_index] = {
-			name = "tab_" .. category_name,
-			icon = nil,
-			text = self:translate(tweak_data.intel.categories[category_name].name_id, true),
-			callback_param = category_name
-		}
+		category_tabs_params.tabs_params[category_index] = {}
+		category_tabs_params.tabs_params[category_index].name = "tab_" .. category_name
+		category_tabs_params.tabs_params[category_index].icon = nil
+		category_tabs_params.tabs_params[category_index].text = self:translate(tweak_data.intel.categories[category_name].name_id, true)
+		category_tabs_params.tabs_params[category_index].callback_param = category_name
 	end
 
 	self._category_tabs = self._root_panel:tabs(category_tabs_params)
@@ -60,7 +59,9 @@ function IntelGui:_layout_list()
 		x = 0,
 		scroll_step = 19
 	}
+
 	self._category_items_list_scrollable_area = self._root_panel:scrollable_area(category_items_list_scrollable_area_params)
+
 	local category_items_list_params = {
 		selection_enabled = true,
 		name = "category_items_list",
@@ -78,6 +79,7 @@ function IntelGui:_layout_list()
 		item_class = RaidGUIControlListItem,
 		scrollable_area_ref = self._category_items_list_scrollable_area
 	}
+
 	self._category_items_list = self._category_items_list_scrollable_area:get_panel():list(category_items_list_params)
 
 	self._category_items_list_scrollable_area:setup_scroll_area()

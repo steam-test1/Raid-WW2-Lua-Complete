@@ -103,7 +103,7 @@ function TweakData:get_raw_value(...)
 		...
 	}
 	local value = self
-	local v = nil
+	local v
 
 	for i = 1, #arg do
 		v = arg[i]
@@ -288,12 +288,11 @@ function TweakData:init()
 		"blackmarket_mask",
 		"payday"
 	}
-	self.difficulty_name_ids = {
-		difficulty_1 = "menu_difficulty_1",
-		difficulty_2 = "menu_difficulty_2",
-		difficulty_3 = "menu_difficulty_3",
-		difficulty_4 = "menu_difficulty_4"
-	}
+	self.difficulty_name_ids = {}
+	self.difficulty_name_ids.difficulty_1 = "menu_difficulty_1"
+	self.difficulty_name_ids.difficulty_2 = "menu_difficulty_2"
+	self.difficulty_name_ids.difficulty_3 = "menu_difficulty_3"
+	self.difficulty_name_ids.difficulty_4 = "menu_difficulty_4"
 	self.hud_icons = HudIconsTweakData:new()
 	self.weapon = WeaponTweakData:new(self)
 	self.equipments = EquipmentsTweakData:new()
@@ -337,37 +336,32 @@ function TweakData:init()
 	self.greed = GreedTweakData:new()
 	self.network = NetworkTweakData:new(self)
 	self.link_prefabs = LinkPrefabsTweakData:new()
-	self.criminals = {
-		character_names = {
-			"russian",
-			"german",
-			"british",
-			"american"
-		},
-		character_nations = {
-			"british",
-			"russian",
-			"american",
-			"german"
-		},
-		character_nation_name = {}
+	self.criminals = {}
+	self.criminals.character_names = {
+		"russian",
+		"german",
+		"british",
+		"american"
 	}
-	self.criminals.character_nation_name.russian = {
-		char_name = "Kurgan",
-		flag_name = "ico_flag_russian"
+	self.criminals.character_nations = {
+		"british",
+		"russian",
+		"american",
+		"german"
 	}
-	self.criminals.character_nation_name.german = {
-		char_name = "Wolfgang",
-		flag_name = "ico_flag_german"
-	}
-	self.criminals.character_nation_name.british = {
-		char_name = "Sterling",
-		flag_name = "ico_flag_british"
-	}
-	self.criminals.character_nation_name.american = {
-		char_name = "Rivet",
-		flag_name = "ico_flag_american"
-	}
+	self.criminals.character_nation_name = {}
+	self.criminals.character_nation_name.russian = {}
+	self.criminals.character_nation_name.russian.char_name = "Kurgan"
+	self.criminals.character_nation_name.russian.flag_name = "ico_flag_russian"
+	self.criminals.character_nation_name.german = {}
+	self.criminals.character_nation_name.german.char_name = "Wolfgang"
+	self.criminals.character_nation_name.german.flag_name = "ico_flag_german"
+	self.criminals.character_nation_name.british = {}
+	self.criminals.character_nation_name.british.char_name = "Sterling"
+	self.criminals.character_nation_name.british.flag_name = "ico_flag_british"
+	self.criminals.character_nation_name.american = {}
+	self.criminals.character_nation_name.american.char_name = "Rivet"
+	self.criminals.character_nation_name.american.flag_name = "ico_flag_american"
 	self.criminals.characters = {
 		{
 			name = "german",
@@ -421,27 +415,25 @@ function TweakData:init()
 
 	self:set_scale()
 
-	self.states = {
-		title = {}
-	}
+	self.states = {}
+	self.states.title = {}
 	self.states.title.ATTRACT_VIDEO_DELAY = 60
-	self.menu = {
-		BRIGHTNESS_CHANGE = 0.05,
-		MIN_BRIGHTNESS = 0.5,
-		MAX_BRIGHTNESS = 1.5,
-		MUSIC_CHANGE = 10,
-		MIN_MUSIC_VOLUME = 0,
-		MAX_MUSIC_VOLUME = 100,
-		VOICE_OVER_CHANGE = 10,
-		MIN_VOICE_OVER_VOLUME = 0,
-		MAX_VOICE_OVER_VOLUME = 100,
-		SFX_CHANGE = 10,
-		MIN_SFX_VOLUME = 0,
-		MAX_SFX_VOLUME = 100,
-		VOICE_CHANGE = 0.05,
-		MIN_VOICE_VOLUME = 0,
-		MAX_VOICE_VOLUME = 1
-	}
+	self.menu = {}
+	self.menu.BRIGHTNESS_CHANGE = 0.05
+	self.menu.MIN_BRIGHTNESS = 0.5
+	self.menu.MAX_BRIGHTNESS = 1.5
+	self.menu.MUSIC_CHANGE = 10
+	self.menu.MIN_MUSIC_VOLUME = 0
+	self.menu.MAX_MUSIC_VOLUME = 100
+	self.menu.VOICE_OVER_CHANGE = 10
+	self.menu.MIN_VOICE_OVER_VOLUME = 0
+	self.menu.MAX_VOICE_OVER_VOLUME = 100
+	self.menu.SFX_CHANGE = 10
+	self.menu.MIN_SFX_VOLUME = 0
+	self.menu.MAX_SFX_VOLUME = 100
+	self.menu.VOICE_CHANGE = 0.05
+	self.menu.MIN_VOICE_VOLUME = 0
+	self.menu.MAX_VOICE_VOLUME = 1
 
 	self:set_menu_scale()
 
@@ -450,6 +442,7 @@ function TweakData:init()
 	local brown = Vector3(178, 104, 89) / 255
 	local blue = Vector3(120, 183, 204) / 255
 	local team_ai = Vector3(0.2, 0.8, 1)
+
 	self.peer_vector_colors = {
 		green,
 		blue,
@@ -471,32 +464,31 @@ function TweakData:init()
 		Color(self.peer_vector_colors[4]:unpack()),
 		Color(self.peer_vector_colors[5]:unpack())
 	}
-	self.screen_colors = {
-		text = Color(255, 255, 255, 255) / 255,
-		resource = Color(255, 77, 198, 255) / 255,
-		important_1 = Color(255, 255, 51, 51) / 255,
-		important_2 = Color(125, 255, 51, 51) / 255,
-		item_stage_1 = Color(255, 255, 255, 255) / 255,
-		item_stage_2 = Color(255, 89, 115, 128) / 255,
-		item_stage_3 = Color(255, 23, 33, 38) / 255,
-		button_stage_1 = Color(255, 0, 0, 0) / 255,
-		button_stage_2 = Color(255, 255, 50, 50) / 255,
-		button_stage_3 = Color(240, 240, 240, 240) / 255,
-		crimenet_lines = Color(255, 127, 157, 182) / 255,
-		risk = Color(255, 255, 204, 0) / 255,
-		friend_color = Color(255, 41, 204, 122) / 255,
-		regular_color = Color(255, 41, 150, 240) / 255,
-		pro_color = Color(255, 255, 51, 51) / 255,
-		dlc_color = Color(255, 255, 212, 0) / 255,
-		skill_color = Color(255, 77, 198, 255) / 255,
-		ghost_color = Color("4ca6ff"),
-		extra_bonus_color = Color(255, 255, 255, 255) / 255,
-		community_color = Color(255, 59, 174, 254) / 255,
-		challenge_completed_color = Color(255, 255, 168, 0) / 255,
-		heat_cold_color = Color(255, 255, 51, 51) / 255,
-		heat_warm_color = Color("ff7f00"),
-		heat_standard_color = Color(255, 255, 255, 255) / 255
-	}
+	self.screen_colors = {}
+	self.screen_colors.text = Color(255, 255, 255, 255) / 255
+	self.screen_colors.resource = Color(255, 77, 198, 255) / 255
+	self.screen_colors.important_1 = Color(255, 255, 51, 51) / 255
+	self.screen_colors.important_2 = Color(125, 255, 51, 51) / 255
+	self.screen_colors.item_stage_1 = Color(255, 255, 255, 255) / 255
+	self.screen_colors.item_stage_2 = Color(255, 89, 115, 128) / 255
+	self.screen_colors.item_stage_3 = Color(255, 23, 33, 38) / 255
+	self.screen_colors.button_stage_1 = Color(255, 0, 0, 0) / 255
+	self.screen_colors.button_stage_2 = Color(255, 255, 50, 50) / 255
+	self.screen_colors.button_stage_3 = Color(240, 240, 240, 240) / 255
+	self.screen_colors.crimenet_lines = Color(255, 127, 157, 182) / 255
+	self.screen_colors.risk = Color(255, 255, 204, 0) / 255
+	self.screen_colors.friend_color = Color(255, 41, 204, 122) / 255
+	self.screen_colors.regular_color = Color(255, 41, 150, 240) / 255
+	self.screen_colors.pro_color = Color(255, 255, 51, 51) / 255
+	self.screen_colors.dlc_color = Color(255, 255, 212, 0) / 255
+	self.screen_colors.skill_color = Color(255, 77, 198, 255) / 255
+	self.screen_colors.ghost_color = Color("4ca6ff")
+	self.screen_colors.extra_bonus_color = Color(255, 255, 255, 255) / 255
+	self.screen_colors.community_color = Color(255, 59, 174, 254) / 255
+	self.screen_colors.challenge_completed_color = Color(255, 255, 168, 0) / 255
+	self.screen_colors.heat_cold_color = Color(255, 255, 51, 51) / 255
+	self.screen_colors.heat_warm_color = Color("ff7f00")
+	self.screen_colors.heat_standard_color = Color(255, 255, 255, 255) / 255
 	self.screen_colors.heat_color = self.screen_colors.heat_standard_color
 	self.screen_colors.stats_positive = Color(255, 191, 221, 125) / 255
 	self.screen_colors.stats_negative = Color(255, 254, 93, 99) / 255
@@ -536,29 +528,28 @@ function TweakData:init()
 		self.screen_color_yellow_noselected = Color(0.7333333333333333, 0.42745098039215684, 0.0784313725490196)
 	end
 
-	self.dialog = {
-		WIDTH = 400,
-		HEIGHT = 300,
-		PADDING = 30,
-		BUTTON_PADDING = 5,
-		BUTTON_SPACING = 10,
-		FONT = self.menu.default_font,
-		BG_COLOR = self.menu.default_menu_background_color,
-		TITLE_TEXT_COLOR = Color(1, 1, 1, 1),
-		TEXT_COLOR = self.menu.default_font_row_item_color,
-		BUTTON_BG_COLOR = Color(0, 0.5, 0.5, 0.5),
-		BUTTON_TEXT_COLOR = self.menu.default_font_row_item_color,
-		SELECTED_BUTTON_BG_COLOR = self.menu.default_font_row_item_color,
-		SELECTED_BUTTON_TEXT_COLOR = self.menu.default_hightlight_row_item_color,
-		TITLE_SIZE = self.menu.topic_font_size,
-		TEXT_SIZE = self.menu.dialog_text_font_size,
-		BUTTON_SIZE = self.menu.dialog_title_font_size,
-		TITLE_TEXT_SPACING = 20,
-		BUTTON_TEXT_SPACING = 3,
-		DEFAULT_PRIORITY = 1,
-		MINIMUM_DURATION = 2,
-		DURATION_PER_CHAR = 0.07
-	}
+	self.dialog = {}
+	self.dialog.WIDTH = 400
+	self.dialog.HEIGHT = 300
+	self.dialog.PADDING = 30
+	self.dialog.BUTTON_PADDING = 5
+	self.dialog.BUTTON_SPACING = 10
+	self.dialog.FONT = self.menu.default_font
+	self.dialog.BG_COLOR = self.menu.default_menu_background_color
+	self.dialog.TITLE_TEXT_COLOR = Color(1, 1, 1, 1)
+	self.dialog.TEXT_COLOR = self.menu.default_font_row_item_color
+	self.dialog.BUTTON_BG_COLOR = Color(0, 0.5, 0.5, 0.5)
+	self.dialog.BUTTON_TEXT_COLOR = self.menu.default_font_row_item_color
+	self.dialog.SELECTED_BUTTON_BG_COLOR = self.menu.default_font_row_item_color
+	self.dialog.SELECTED_BUTTON_TEXT_COLOR = self.menu.default_hightlight_row_item_color
+	self.dialog.TITLE_SIZE = self.menu.topic_font_size
+	self.dialog.TEXT_SIZE = self.menu.dialog_text_font_size
+	self.dialog.BUTTON_SIZE = self.menu.dialog_title_font_size
+	self.dialog.TITLE_TEXT_SPACING = 20
+	self.dialog.BUTTON_TEXT_SPACING = 3
+	self.dialog.DEFAULT_PRIORITY = 1
+	self.dialog.MINIMUM_DURATION = 2
+	self.dialog.DURATION_PER_CHAR = 0.07
 	self.motion_dot_modes = {
 		"off",
 		"single",
@@ -593,81 +584,82 @@ function TweakData:init()
 	self.gui.CRIMENET_CHAT_LAYER = 3000
 	self.gui.DIALOG_LAYER = 3100
 	self.gui.MOUSE_LAYER = 3200
-	self.overlay_effects = {
-		spectator = {
-			blend_mode = "normal",
-			fade_out = 2,
-			play_paused = true,
-			fade_in = 3,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		},
-		level_fade_in = {
-			blend_mode = "normal",
-			sustain = 1,
-			play_paused = true,
-			fade_in = 0,
-			fade_out = 3,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:game()
-		},
-		fade_in = {
-			blend_mode = "normal",
-			sustain = 0,
-			play_paused = true,
-			fade_in = 0,
-			fade_out = 3,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		},
-		fade_out = {
-			blend_mode = "normal",
-			sustain = 30,
-			play_paused = true,
-			fade_in = 3,
-			fade_out = 0,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		},
-		fade_out_permanent = {
-			blend_mode = "normal",
-			fade_out = 0,
-			play_paused = true,
-			fade_in = 1,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		},
-		fade_out_in = {
-			blend_mode = "normal",
-			sustain = 1,
-			play_paused = true,
-			fade_in = 1,
-			fade_out = 1,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		},
-		element_fade_in = {
-			blend_mode = "normal",
-			sustain = 0,
-			play_paused = true,
-			fade_in = 0,
-			fade_out = 3,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		},
-		element_fade_out = {
-			blend_mode = "normal",
-			sustain = 0,
-			play_paused = true,
-			fade_in = 3,
-			fade_out = 0,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		}
+	self.overlay_effects = {}
+	self.overlay_effects.spectator = {
+		blend_mode = "normal",
+		fade_out = 2,
+		play_paused = true,
+		fade_in = 3,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
 	}
+	self.overlay_effects.level_fade_in = {
+		blend_mode = "normal",
+		sustain = 1,
+		play_paused = true,
+		fade_in = 0,
+		fade_out = 3,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:game()
+	}
+	self.overlay_effects.fade_in = {
+		blend_mode = "normal",
+		sustain = 0,
+		play_paused = true,
+		fade_in = 0,
+		fade_out = 3,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
+	}
+	self.overlay_effects.fade_out = {
+		blend_mode = "normal",
+		sustain = 30,
+		play_paused = true,
+		fade_in = 3,
+		fade_out = 0,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
+	}
+	self.overlay_effects.fade_out_permanent = {
+		blend_mode = "normal",
+		fade_out = 0,
+		play_paused = true,
+		fade_in = 1,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
+	}
+	self.overlay_effects.fade_out_in = {
+		blend_mode = "normal",
+		sustain = 1,
+		play_paused = true,
+		fade_in = 1,
+		fade_out = 1,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
+	}
+	self.overlay_effects.element_fade_in = {
+		blend_mode = "normal",
+		sustain = 0,
+		play_paused = true,
+		fade_in = 0,
+		fade_out = 3,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
+	}
+	self.overlay_effects.element_fade_out = {
+		blend_mode = "normal",
+		sustain = 0,
+		play_paused = true,
+		fade_in = 3,
+		fade_out = 0,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
+	}
+
 	local d_color = Color(0.75, 1, 1, 1)
 	local d_sustain = 0.1
 	local d_fade_out = 0.9
+
 	self.overlay_effects.damage = {
 		blend_mode = "add",
 		fade_in = 0,
@@ -762,87 +754,80 @@ function TweakData:init()
 		text_blend_mode = "add",
 		fade_out = 0,
 		font = "fonts/font_large_mf",
-		text = [[
-Great job, Raid gang!
-
-You've reached the end of our PAX EAST demo.
-]],
+		text = "Great job, Raid gang!\n\nYou've reached the end of our PAX EAST demo.\n",
 		font_size = 44,
 		play_paused = true,
 		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 		text_color = Color(255, 255, 204, 0) / 255
 	}
-	self.materials = {
-		[Idstring("concrete"):key()] = "concrete",
-		[Idstring("ceramic"):key()] = "ceramic",
-		[Idstring("marble"):key()] = "marble",
-		[Idstring("flesh"):key()] = "flesh",
-		[Idstring("parket"):key()] = "parket",
-		[Idstring("sheet_metal"):key()] = "sheet_metal",
-		[Idstring("iron"):key()] = "iron",
-		[Idstring("wood"):key()] = "wood",
-		[Idstring("gravel"):key()] = "gravel",
-		[Idstring("cloth"):key()] = "cloth",
-		[Idstring("cloth_no_decal"):key()] = "cloth",
-		[Idstring("cloth_stuffed"):key()] = "cloth_stuffed",
-		[Idstring("dirt"):key()] = "dirt",
-		[Idstring("grass"):key()] = "grass",
-		[Idstring("carpet"):key()] = "carpet",
-		[Idstring("metal"):key()] = "metal",
-		[Idstring("glass_breakable"):key()] = "glass_breakable",
-		[Idstring("glass_unbreakable"):key()] = "glass_unbreakable",
-		[Idstring("glass_no_decal"):key()] = "glass_unbreakable",
-		[Idstring("rubber"):key()] = "rubber",
-		[Idstring("plastic"):key()] = "plastic",
-		[Idstring("asphalt"):key()] = "asphalt",
-		[Idstring("foliage"):key()] = "foliage",
-		[Idstring("stone"):key()] = "stone",
-		[Idstring("sand"):key()] = "sand",
-		[Idstring("thin_layer"):key()] = "thin_layer",
-		[Idstring("no_decal"):key()] = "silent_material",
-		[Idstring("plaster"):key()] = "plaster",
-		[Idstring("no_material"):key()] = "no_material",
-		[Idstring("paper"):key()] = "paper",
-		[Idstring("metal_hollow"):key()] = "metal_hollow",
-		[Idstring("metal_chassis"):key()] = "metal_chassis",
-		[Idstring("metal_catwalk"):key()] = "metal_catwalk",
-		[Idstring("hardwood"):key()] = "hardwood",
-		[Idstring("fence"):key()] = "fence",
-		[Idstring("steel"):key()] = "steel",
-		[Idstring("steel_no_decal"):key()] = "steel",
-		[Idstring("tile"):key()] = "tile",
-		[Idstring("water_deep"):key()] = "water_deep",
-		[Idstring("water_puddle"):key()] = "water_puddle",
-		[Idstring("water_shallow"):key()] = "water_shallow",
-		[Idstring("shield"):key()] = "shield",
-		[Idstring("heavy_swat_steel_no_decal"):key()] = "shield",
-		[Idstring("glass"):key()] = "glass",
-		[Idstring("metalsheet"):key()] = "metalsheet",
-		[Idstring("mud"):key()] = "mud",
-		[Idstring("puddle"):key()] = "puddle",
-		[Idstring("water"):key()] = "water",
-		[Idstring("car"):key()] = "car",
-		[Idstring("brick"):key()] = "brick",
-		[Idstring("helmet"):key()] = "metalsheet",
-		[Idstring("snow"):key()] = "snow",
-		[Idstring("ice"):key()] = "ice_thick",
-		[Idstring("flamer_metal"):key()] = "flamer_metal"
+	self.materials = {}
+	self.materials[Idstring("concrete"):key()] = "concrete"
+	self.materials[Idstring("ceramic"):key()] = "ceramic"
+	self.materials[Idstring("marble"):key()] = "marble"
+	self.materials[Idstring("flesh"):key()] = "flesh"
+	self.materials[Idstring("parket"):key()] = "parket"
+	self.materials[Idstring("sheet_metal"):key()] = "sheet_metal"
+	self.materials[Idstring("iron"):key()] = "iron"
+	self.materials[Idstring("wood"):key()] = "wood"
+	self.materials[Idstring("gravel"):key()] = "gravel"
+	self.materials[Idstring("cloth"):key()] = "cloth"
+	self.materials[Idstring("cloth_no_decal"):key()] = "cloth"
+	self.materials[Idstring("cloth_stuffed"):key()] = "cloth_stuffed"
+	self.materials[Idstring("dirt"):key()] = "dirt"
+	self.materials[Idstring("grass"):key()] = "grass"
+	self.materials[Idstring("carpet"):key()] = "carpet"
+	self.materials[Idstring("metal"):key()] = "metal"
+	self.materials[Idstring("glass_breakable"):key()] = "glass_breakable"
+	self.materials[Idstring("glass_unbreakable"):key()] = "glass_unbreakable"
+	self.materials[Idstring("glass_no_decal"):key()] = "glass_unbreakable"
+	self.materials[Idstring("rubber"):key()] = "rubber"
+	self.materials[Idstring("plastic"):key()] = "plastic"
+	self.materials[Idstring("asphalt"):key()] = "asphalt"
+	self.materials[Idstring("foliage"):key()] = "foliage"
+	self.materials[Idstring("stone"):key()] = "stone"
+	self.materials[Idstring("sand"):key()] = "sand"
+	self.materials[Idstring("thin_layer"):key()] = "thin_layer"
+	self.materials[Idstring("no_decal"):key()] = "silent_material"
+	self.materials[Idstring("plaster"):key()] = "plaster"
+	self.materials[Idstring("no_material"):key()] = "no_material"
+	self.materials[Idstring("paper"):key()] = "paper"
+	self.materials[Idstring("metal_hollow"):key()] = "metal_hollow"
+	self.materials[Idstring("metal_chassis"):key()] = "metal_chassis"
+	self.materials[Idstring("metal_catwalk"):key()] = "metal_catwalk"
+	self.materials[Idstring("hardwood"):key()] = "hardwood"
+	self.materials[Idstring("fence"):key()] = "fence"
+	self.materials[Idstring("steel"):key()] = "steel"
+	self.materials[Idstring("steel_no_decal"):key()] = "steel"
+	self.materials[Idstring("tile"):key()] = "tile"
+	self.materials[Idstring("water_deep"):key()] = "water_deep"
+	self.materials[Idstring("water_puddle"):key()] = "water_puddle"
+	self.materials[Idstring("water_shallow"):key()] = "water_shallow"
+	self.materials[Idstring("shield"):key()] = "shield"
+	self.materials[Idstring("heavy_swat_steel_no_decal"):key()] = "shield"
+	self.materials[Idstring("glass"):key()] = "glass"
+	self.materials[Idstring("metalsheet"):key()] = "metalsheet"
+	self.materials[Idstring("mud"):key()] = "mud"
+	self.materials[Idstring("puddle"):key()] = "puddle"
+	self.materials[Idstring("water"):key()] = "water"
+	self.materials[Idstring("car"):key()] = "car"
+	self.materials[Idstring("brick"):key()] = "brick"
+	self.materials[Idstring("helmet"):key()] = "metalsheet"
+	self.materials[Idstring("snow"):key()] = "snow"
+	self.materials[Idstring("ice"):key()] = "ice_thick"
+	self.materials[Idstring("flamer_metal"):key()] = "flamer_metal"
+	self.screen = {}
+	self.screen.fadein_delay = 1
+	self.experience_manager = {}
+	self.experience_manager.level_failed_multiplier = 0.075
+	self.experience_manager.human_player_multiplier = {
+		1,
+		1.25,
+		1.35,
+		1.5
 	}
-	self.screen = {
-		fadein_delay = 1
-	}
-	self.experience_manager = {
-		level_failed_multiplier = 0.075,
-		human_player_multiplier = {
-			1,
-			1.25,
-			1.35,
-			1.5
-		},
-		level_diff_max_multiplier = 2,
-		difficulty_multiplier = {}
-	}
+	self.experience_manager.level_diff_max_multiplier = 2
+	self.experience_manager.difficulty_multiplier = {}
 	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 1
 	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 1.5
 	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 3
@@ -851,49 +836,52 @@ You've reached the end of our PAX EAST demo.
 	self.experience_manager.side_quest_bonus = 1.5
 	self.experience_manager.extra_objectives_bonus = 1.2
 	self.experience_manager.tiny_objectives_bonus = 1.01
-	local level_xp_requirements = {
-		0,
-		1200,
-		1440,
-		1728,
-		2074,
-		2488,
-		2986,
-		3583,
-		4300,
-		5160,
-		6192,
-		7430,
-		8916,
-		10254,
-		11381,
-		12520,
-		13771,
-		15149,
-		16664,
-		18330,
-		20163,
-		22179,
-		24397,
-		26837,
-		29520,
-		32472,
-		35720,
-		39292,
-		43221,
-		47543,
-		52297,
-		57527,
-		63280,
-		69608,
-		80049,
-		92056,
-		105864,
-		121744,
-		140006,
-		161007
-	}
+
+	local level_xp_requirements = {}
+
+	level_xp_requirements[1] = 0
+	level_xp_requirements[2] = 1200
+	level_xp_requirements[3] = 1440
+	level_xp_requirements[4] = 1728
+	level_xp_requirements[5] = 2074
+	level_xp_requirements[6] = 2488
+	level_xp_requirements[7] = 2986
+	level_xp_requirements[8] = 3583
+	level_xp_requirements[9] = 4300
+	level_xp_requirements[10] = 5160
+	level_xp_requirements[11] = 6192
+	level_xp_requirements[12] = 7430
+	level_xp_requirements[13] = 8916
+	level_xp_requirements[14] = 10254
+	level_xp_requirements[15] = 11381
+	level_xp_requirements[16] = 12520
+	level_xp_requirements[17] = 13771
+	level_xp_requirements[18] = 15149
+	level_xp_requirements[19] = 16664
+	level_xp_requirements[20] = 18330
+	level_xp_requirements[21] = 20163
+	level_xp_requirements[22] = 22179
+	level_xp_requirements[23] = 24397
+	level_xp_requirements[24] = 26837
+	level_xp_requirements[25] = 29520
+	level_xp_requirements[26] = 32472
+	level_xp_requirements[27] = 35720
+	level_xp_requirements[28] = 39292
+	level_xp_requirements[29] = 43221
+	level_xp_requirements[30] = 47543
+	level_xp_requirements[31] = 52297
+	level_xp_requirements[32] = 57527
+	level_xp_requirements[33] = 63280
+	level_xp_requirements[34] = 69608
+	level_xp_requirements[35] = 80049
+	level_xp_requirements[36] = 92056
+	level_xp_requirements[37] = 105864
+	level_xp_requirements[38] = 121744
+	level_xp_requirements[39] = 140006
+	level_xp_requirements[40] = 161007
+
 	local multiplier = 1
+
 	self.experience_manager.levels = {}
 
 	for i = 1, #level_xp_requirements do
@@ -908,71 +896,70 @@ You've reached the end of our PAX EAST demo.
 
 	for i = 146, exp_step_end do
 		self.experience_manager.levels[i] = {
-			points = math.round(22000 * exp_step * (i - exp_step_start) - 6000) * multiplier
+			points = math.round(22000 * (exp_step * (i - exp_step_start)) - 6000) * multiplier
 		}
 	end
 
-	self.pickups = {
-		bank_manager_key = {
-			unit = Idstring("units/pickups/pickup_bank_manager_key/pickup_bank_manager_key")
-		},
-		chavez_key = {
-			unit = Idstring("units/pickups/pickup_chavez_key/pickup_chavez_key")
-		},
-		drill = {
-			unit = Idstring("units/pickups/pickup_drill/pickup_drill")
-		},
-		keycard_outlined = {
-			unit = Idstring("units/pd2_dlc_red/pickups/gen_pku_keycard_outlined/gen_pku_keycard_outlined")
-		},
-		hotel_room_key = {
-			unit = Idstring("units/pd2_dlc_casino/props/cas_prop_keycard/cas_prop_keycard")
-		},
-		pku_rambo = {
-			unit = Idstring("units/pd2_dlc_jolly/pickups/gen_pku_rambo/gen_pku_rambo")
-		},
-		equip_safe_key_chain = {
-			unit = Idstring("units/vanilla/equipment/equip_safe_key_chain/equip_safe_key_chain")
-		},
-		health_big_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big_beam")
-		},
-		health_medium_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_medium_beam")
-		},
-		health_small_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_small_beam")
-		},
-		ammo_big_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_big_beam")
-		},
-		ammo_medium_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_medium_beam")
-		},
-		ammo_small_beam = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small_beam")
-		},
-		health_big = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big")
-		},
-		health_medium = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_medium")
-		},
-		health_small = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_small")
-		},
-		ammo_big = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_big")
-		},
-		ammo_medium = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_medium")
-		},
-		ammo_small = {
-			unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small")
-		},
-		grenade_big = {
-			unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max5")
-		}
+	self.pickups = {}
+	self.pickups.bank_manager_key = {
+		unit = Idstring("units/pickups/pickup_bank_manager_key/pickup_bank_manager_key")
+	}
+	self.pickups.chavez_key = {
+		unit = Idstring("units/pickups/pickup_chavez_key/pickup_chavez_key")
+	}
+	self.pickups.drill = {
+		unit = Idstring("units/pickups/pickup_drill/pickup_drill")
+	}
+	self.pickups.keycard_outlined = {
+		unit = Idstring("units/pd2_dlc_red/pickups/gen_pku_keycard_outlined/gen_pku_keycard_outlined")
+	}
+	self.pickups.hotel_room_key = {
+		unit = Idstring("units/pd2_dlc_casino/props/cas_prop_keycard/cas_prop_keycard")
+	}
+	self.pickups.pku_rambo = {
+		unit = Idstring("units/pd2_dlc_jolly/pickups/gen_pku_rambo/gen_pku_rambo")
+	}
+	self.pickups.equip_safe_key_chain = {
+		unit = Idstring("units/vanilla/equipment/equip_safe_key_chain/equip_safe_key_chain")
+	}
+	self.pickups.health_big_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big_beam")
+	}
+	self.pickups.health_medium_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_medium_beam")
+	}
+	self.pickups.health_small_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_small_beam")
+	}
+	self.pickups.ammo_big_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_big_beam")
+	}
+	self.pickups.ammo_medium_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_medium_beam")
+	}
+	self.pickups.ammo_small_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small_beam")
+	}
+	self.pickups.health_big = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big")
+	}
+	self.pickups.health_medium = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_medium")
+	}
+	self.pickups.health_small = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_small")
+	}
+	self.pickups.ammo_big = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_big")
+	}
+	self.pickups.ammo_medium = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_medium")
+	}
+	self.pickups.ammo_small = {
+		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small")
+	}
+	self.pickups.grenade_big = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max5")
 	}
 	self.pickups.grenade_big_beam = deep_clone(self.pickups.grenade_big)
 	self.pickups.grenade_medium = {
@@ -1044,9 +1031,8 @@ You've reached the end of our PAX EAST demo.
 		0.35,
 		0.1
 	}
-	self.contour = {
-		character = {}
-	}
+	self.contour = {}
+	self.contour.character = {}
 	self.contour.character.standard_color = Vector3(0.1, 1, 0.5)
 	self.contour.character.friendly_color = Vector3(0.2, 0.8, 1)
 	self.contour.character.downed_color = Vector3(1, 0.5, 0)
@@ -1056,95 +1042,76 @@ You've reached the end of our PAX EAST demo.
 	self.contour.character.standard_opacity = 0
 	self.contour.character.ghost_warcry = Vector3(0.6, 0.2, 0.2)
 	self.contour.character.sharpshooter_warcry = Vector3(1, 0, 0)
-	self.contour.character_interactable = {
-		standard_color = Vector3(1, 0.5, 0),
-		selected_color = Vector3(1, 1, 1)
-	}
-	self.contour.interactable = {
-		standard_color = Vector3(1, 0.5, 0),
-		selected_color = Vector3(1, 1, 1)
-	}
-	self.contour.contour_off = {
-		standard_color = Vector3(0, 0, 0),
-		selected_color = Vector3(0, 0, 0),
-		standard_opacity = 0
-	}
-	self.contour.deployable = {
-		standard_color = Vector3(0.1, 1, 0.5),
-		selected_color = Vector3(1, 1, 1),
-		active_color = Vector3(0.1, 0.5, 1),
-		interact_color = Vector3(0.1, 1, 0.1),
-		disabled_color = Vector3(1, 0.1, 0.1)
-	}
-	self.contour.upgradable = {
-		standard_color = Vector3(0.1, 0.5, 1),
-		selected_color = Vector3(1, 1, 1)
-	}
-	self.contour.pickup = {
-		standard_color = Vector3(0.1, 1, 0.5),
-		selected_color = Vector3(1, 1, 1),
-		standard_opacity = 1
-	}
-	self.contour.interactable_icon = {
-		standard_color = Vector3(0, 0, 0),
-		selected_color = Vector3(0, 1, 0),
-		standard_opacity = 0
-	}
-	self.contour.interactable_look_at = {
-		standard_color = Vector3(0, 0, 0),
-		selected_color = Vector3(1, 1, 1)
-	}
-	self.music = {
-		camp = {}
-	}
+	self.contour.character_interactable = {}
+	self.contour.character_interactable.standard_color = Vector3(1, 0.5, 0)
+	self.contour.character_interactable.selected_color = Vector3(1, 1, 1)
+	self.contour.interactable = {}
+	self.contour.interactable.standard_color = Vector3(1, 0.5, 0)
+	self.contour.interactable.selected_color = Vector3(1, 1, 1)
+	self.contour.contour_off = {}
+	self.contour.contour_off.standard_color = Vector3(0, 0, 0)
+	self.contour.contour_off.selected_color = Vector3(0, 0, 0)
+	self.contour.contour_off.standard_opacity = 0
+	self.contour.deployable = {}
+	self.contour.deployable.standard_color = Vector3(0.1, 1, 0.5)
+	self.contour.deployable.selected_color = Vector3(1, 1, 1)
+	self.contour.deployable.active_color = Vector3(0.1, 0.5, 1)
+	self.contour.deployable.interact_color = Vector3(0.1, 1, 0.1)
+	self.contour.deployable.disabled_color = Vector3(1, 0.1, 0.1)
+	self.contour.upgradable = {}
+	self.contour.upgradable.standard_color = Vector3(0.1, 0.5, 1)
+	self.contour.upgradable.selected_color = Vector3(1, 1, 1)
+	self.contour.pickup = {}
+	self.contour.pickup.standard_color = Vector3(0.1, 1, 0.5)
+	self.contour.pickup.selected_color = Vector3(1, 1, 1)
+	self.contour.pickup.standard_opacity = 1
+	self.contour.interactable_icon = {}
+	self.contour.interactable_icon.standard_color = Vector3(0, 0, 0)
+	self.contour.interactable_icon.selected_color = Vector3(0, 1, 0)
+	self.contour.interactable_icon.standard_opacity = 0
+	self.contour.interactable_look_at = {}
+	self.contour.interactable_look_at.standard_color = Vector3(0, 0, 0)
+	self.contour.interactable_look_at.selected_color = Vector3(1, 1, 1)
+	self.music = {}
+	self.music.camp = {}
 	self.music.camp.start = "music_camp"
-	self.music.flakturm = {
-		start = "music_level_flakturm",
-		include_in_shuffle = true
-	}
-	self.music.train_yard = {
-		start = "music_level_trainyard",
-		include_in_shuffle = true
-	}
-	self.music.reichsbank = {
-		start = "music_level_treasury",
-		include_in_shuffle = true
-	}
-	self.music.radio_defense = {
-		start = "music_radio_defense",
-		include_in_shuffle = true
-	}
-	self.music.ger_bridge = {
-		start = "music_level_bridge",
-		include_in_shuffle = true
-	}
-	self.music.castle = {
-		start = "music_level_castle",
-		include_in_shuffle = true
-	}
-	self.music.forest_gumpy = {
-		start = "consumable_level_music_one",
-		include_in_shuffle = true
-	}
+	self.music.flakturm = {}
+	self.music.flakturm.start = "music_level_flakturm"
+	self.music.flakturm.include_in_shuffle = true
+	self.music.train_yard = {}
+	self.music.train_yard.start = "music_level_trainyard"
+	self.music.train_yard.include_in_shuffle = true
+	self.music.reichsbank = {}
+	self.music.reichsbank.start = "music_level_treasury"
+	self.music.reichsbank.include_in_shuffle = true
+	self.music.radio_defense = {}
+	self.music.radio_defense.start = "music_radio_defense"
+	self.music.radio_defense.include_in_shuffle = true
+	self.music.ger_bridge = {}
+	self.music.ger_bridge.start = "music_level_bridge"
+	self.music.ger_bridge.include_in_shuffle = true
+	self.music.castle = {}
+	self.music.castle.start = "music_level_castle"
+	self.music.castle.include_in_shuffle = true
+	self.music.forest_gumpy = {}
+	self.music.forest_gumpy.start = "consumable_level_music_one"
+	self.music.forest_gumpy.include_in_shuffle = true
 	self.music.default = deep_clone(self.music.flakturm)
 	self.music.soundbank_list = {}
-	self.voiceover = {
-		idle_delay = 10,
-		idle_rnd_delay = 50,
-		idle_cooldown = 30
-	}
-	self.voting = {
-		timeout = 30,
-		cooldown = 50,
-		restart_delay = 3
-	}
-	self.dot_types = {
-		poison = {
-			damage_class = "PoisonBulletBase",
-			dot_damage = 2,
-			dot_length = 10,
-			hurt_animation_chance = 0.5
-		}
+	self.voiceover = {}
+	self.voiceover.idle_delay = 10
+	self.voiceover.idle_rnd_delay = 50
+	self.voiceover.idle_cooldown = 30
+	self.voting = {}
+	self.voting.timeout = 30
+	self.voting.cooldown = 50
+	self.voting.restart_delay = 3
+	self.dot_types = {}
+	self.dot_types.poison = {
+		damage_class = "PoisonBulletBase",
+		dot_damage = 2,
+		dot_length = 10,
+		hurt_animation_chance = 0.5
 	}
 
 	self:set_mode()
@@ -1207,52 +1174,54 @@ function TweakData:set_scale()
 			sd_small = 0.9,
 			w_interact_multiplier = 1.65,
 			stats_upgrade_kern = -1
-		},
-		[Idstring("french"):key()] = {
-			small = 1,
-			sd_large = 0.9,
-			level_up_text_kern = -1.5,
-			sd_level_up_font_multiplier = 0.9,
-			stats_upgrade_kern = -1,
-			sd_w_interact_multiplier = 1.3,
-			kit_desc_large = 0.9,
-			subtitle_multiplier = 0.85,
-			large = 0.9,
-			victory_screen_kern = -0.5,
-			sd_small = 0.95,
-			w_interact_multiplier = 1.4,
-			objectives_text_kern = -0.8
-		},
-		[Idstring("italian"):key()] = {
-			small = 1,
-			large = 1,
-			sd_large = 1,
-			kit_desc_large = 0.9,
-			sd_small = 1,
-			sd_w_interact_multiplier = 1.5,
-			w_interact_multiplier = 1.35,
-			objectives_text_kern = -0.8
-		},
-		[Idstring("spanish"):key()] = {
-			level_up_text_kern = -1.5,
-			victory_title_multiplier = 0.9,
-			objectives_text_kern = -0.8,
-			sd_level_up_font_multiplier = 0.9,
-			kit_desc_large = 0.9,
-			server_list_font_multiplier = 0.9,
-			sd_large = 1,
-			small = 1,
-			objectives_desc_text_kern = 0,
-			sd_menu_border_multiplier = 0.85,
-			sd_w_interact_multiplier = 1.5,
-			menu_logo_multiplier = 0.9,
-			large = 1,
-			upgrade_menu_kern = -1.25,
-			sd_small = 0.9,
-			w_interact_multiplier = 1.6,
-			stats_upgrade_kern = -1
 		}
 	}
+
+	lang_mods[Idstring("french"):key()] = {
+		small = 1,
+		sd_large = 0.9,
+		level_up_text_kern = -1.5,
+		sd_level_up_font_multiplier = 0.9,
+		stats_upgrade_kern = -1,
+		sd_w_interact_multiplier = 1.3,
+		kit_desc_large = 0.9,
+		subtitle_multiplier = 0.85,
+		large = 0.9,
+		victory_screen_kern = -0.5,
+		sd_small = 0.95,
+		w_interact_multiplier = 1.4,
+		objectives_text_kern = -0.8
+	}
+	lang_mods[Idstring("italian"):key()] = {
+		small = 1,
+		large = 1,
+		sd_large = 1,
+		kit_desc_large = 0.9,
+		sd_small = 1,
+		sd_w_interact_multiplier = 1.5,
+		w_interact_multiplier = 1.35,
+		objectives_text_kern = -0.8
+	}
+	lang_mods[Idstring("spanish"):key()] = {
+		level_up_text_kern = -1.5,
+		victory_title_multiplier = 0.9,
+		objectives_text_kern = -0.8,
+		sd_level_up_font_multiplier = 0.9,
+		kit_desc_large = 0.9,
+		server_list_font_multiplier = 0.9,
+		sd_large = 1,
+		small = 1,
+		objectives_desc_text_kern = 0,
+		sd_menu_border_multiplier = 0.85,
+		sd_w_interact_multiplier = 1.5,
+		menu_logo_multiplier = 0.9,
+		large = 1,
+		upgrade_menu_kern = -1.25,
+		sd_small = 0.9,
+		w_interact_multiplier = 1.6,
+		stats_upgrade_kern = -1
+	}
+
 	local lang_l_mod = lang_mods[lang_key] and lang_mods[lang_key].large or 1
 	local lang_s_mod = lang_mods[lang_key] and lang_mods[lang_key].small or 1
 	local lang_lsd_mod = lang_mods[lang_key] and lang_mods[lang_key].sd_large or 1
@@ -1274,105 +1243,104 @@ function TweakData:set_scale()
 	local victory_title_multiplier = lang_mods[lang_key] and lang_mods[lang_key].victory_title_multiplier
 	local subtitle_multiplier = lang_mods[lang_key] and lang_mods[lang_key].subtitle_multiplier or 1
 	local res = RenderSettings.resolution
-	self.sd_scale = {
-		is_sd = true,
-		title_image_multiplier = 0.6,
-		menu_logo_multiplier = 0.575 * menu_logo_multiplier,
-		menu_border_multiplier = 0.6 * sd_menu_border_multiplier,
-		default_font_multiplier = 0.6 * lang_lsd_mod,
-		small_font_multiplier = 0.8 * lang_ssd_mod,
-		lobby_info_font_size_scale_multiplier = 0.65,
-		lobby_name_font_size_scale_multiplier = 0.6,
-		server_list_font_size_multiplier = 0.55,
-		multichoice_arrow_multiplier = 0.7,
-		align_line_padding_multiplier = 0.4,
-		menu_arrow_padding_multiplier = 0.5,
-		briefing_text_h_multiplier = 0.5,
-		experience_bar_multiplier = 0.825,
-		hud_equipment_icon_multiplier = 0.65,
-		hud_default_font_multiplier = 0.7,
-		hud_ammo_clip_multiplier = 0.75,
-		hud_ammo_clip_large_multiplier = 0.5,
-		hud_health_multiplier = 0.75,
-		hud_mugshot_multiplier = 0.75,
-		hud_assault_image_multiplier = 0.5,
-		hud_crosshair_offset_multiplier = 0.75,
-		hud_objectives_pad_multiplier = 0.65,
-		experience_upgrade_multiplier = 0.75,
-		level_up_multiplier = 0.7,
-		next_upgrade_font_multiplier = 0.75,
-		level_up_font_multiplier = 0.51 * sd_level_up_font_multiplier,
-		present_multiplier = 0.75,
-		lobby_info_offset_multiplier = 0.7,
-		info_padding_multiplier = 0.4,
-		loading_challenge_bar_scale = 0.8,
-		button_layout_multiplier = 0.7,
-		subtitle_pos_multiplier = 0.7,
-		subtitle_font_multiplier = 0.65,
-		subtitle_lang_multiplier = subtitle_multiplier,
-		default_font_kern = 0,
-		stats_upgrade_kern = stats_upgrade_kern or 0,
-		level_up_text_kern = level_up_text_kern or 0,
-		victory_screen_kern = victory_screen_kern or -0.5,
-		upgrade_menu_kern = upgrade_menu_kern or 0,
-		mugshot_name_kern = mugshot_name_kern or -1,
-		objectives_text_kern = objectives_text_kern or 0,
-		objectives_desc_text_kern = objectives_desc_text_kern or 0,
-		kit_description_multiplier = 0.8 * lang_ssd_mod,
-		chat_multiplier = 0.68,
-		chat_menu_h_multiplier = 0.34,
-		w_interact_multiplier = 0.8 * sd_w_interact_multiplier,
-		victory_title_multiplier = victory_title_multiplier and victory_title_multiplier * 0.95 or 1
-	}
-	self.scale = {
-		is_sd = false,
-		title_image_multiplier = 1,
-		menu_logo_multiplier = 1,
-		menu_border_multiplier = 1,
-		default_font_multiplier = 1 * lang_l_mod,
-		small_font_multiplier = 1 * lang_s_mod,
-		lobby_info_font_size_scale_multiplier = 1 * lang_l_mod,
-		lobby_name_font_size_scale_multiplier = 1 * lang_l_mod,
-		server_list_font_size_multiplier = 1 * lang_l_mod * server_list_font_multiplier,
-		multichoice_arrow_multiplier = 1,
-		align_line_padding_multiplier = 1,
-		menu_arrow_padding_multiplier = 1,
-		briefing_text_h_multiplier = 1 * lang_s_mod,
-		experience_bar_multiplier = 1,
-		hud_equipment_icon_multiplier = 1,
-		hud_default_font_multiplier = 1 * lang_l_mod,
-		hud_ammo_clip_multiplier = 1,
-		hud_health_multiplier = 1,
-		hud_mugshot_multiplier = 1,
-		hud_assault_image_multiplier = 1,
-		hud_crosshair_offset_multiplier = 1,
-		hud_objectives_pad_multiplier = 1,
-		experience_upgrade_multiplier = 1,
-		level_up_multiplier = 1,
-		next_upgrade_font_multiplier = 1 * lang_l_mod,
-		level_up_font_multiplier = 1 * lang_l_mod,
-		present_multiplier = 1,
-		lobby_info_offset_multiplier = 1,
-		info_padding_multiplier = 1,
-		loading_challenge_bar_scale = 1,
-		button_layout_multiplier = 1,
-		subtitle_pos_multiplier = 1,
-		subtitle_font_multiplier = 1 * lang_l_mod,
-		subtitle_lang_multiplier = subtitle_multiplier,
-		default_font_kern = 0,
-		stats_upgrade_kern = stats_upgrade_kern or 0,
-		level_up_text_kern = 0,
-		victory_screen_kern = victory_screen_kern or 0,
-		upgrade_menu_kern = 0,
-		mugshot_name_kern = 0,
-		objectives_text_kern = objectives_text_kern or 0,
-		objectives_desc_text_kern = objectives_desc_text_kern or 0,
-		kit_description_multiplier = 1 * kit_desc_large,
-		chat_multiplier = 1,
-		chat_menu_h_multiplier = 1,
-		w_interact_multiplier = 1 * w_interact_multiplier,
-		victory_title_multiplier = victory_title_multiplier or 1
-	}
+
+	self.sd_scale = {}
+	self.sd_scale.is_sd = true
+	self.sd_scale.title_image_multiplier = 0.6
+	self.sd_scale.menu_logo_multiplier = 0.575 * menu_logo_multiplier
+	self.sd_scale.menu_border_multiplier = 0.6 * sd_menu_border_multiplier
+	self.sd_scale.default_font_multiplier = 0.6 * lang_lsd_mod
+	self.sd_scale.small_font_multiplier = 0.8 * lang_ssd_mod
+	self.sd_scale.lobby_info_font_size_scale_multiplier = 0.65
+	self.sd_scale.lobby_name_font_size_scale_multiplier = 0.6
+	self.sd_scale.server_list_font_size_multiplier = 0.55
+	self.sd_scale.multichoice_arrow_multiplier = 0.7
+	self.sd_scale.align_line_padding_multiplier = 0.4
+	self.sd_scale.menu_arrow_padding_multiplier = 0.5
+	self.sd_scale.briefing_text_h_multiplier = 0.5
+	self.sd_scale.experience_bar_multiplier = 0.825
+	self.sd_scale.hud_equipment_icon_multiplier = 0.65
+	self.sd_scale.hud_default_font_multiplier = 0.7
+	self.sd_scale.hud_ammo_clip_multiplier = 0.75
+	self.sd_scale.hud_ammo_clip_large_multiplier = 0.5
+	self.sd_scale.hud_health_multiplier = 0.75
+	self.sd_scale.hud_mugshot_multiplier = 0.75
+	self.sd_scale.hud_assault_image_multiplier = 0.5
+	self.sd_scale.hud_crosshair_offset_multiplier = 0.75
+	self.sd_scale.hud_objectives_pad_multiplier = 0.65
+	self.sd_scale.experience_upgrade_multiplier = 0.75
+	self.sd_scale.level_up_multiplier = 0.7
+	self.sd_scale.next_upgrade_font_multiplier = 0.75
+	self.sd_scale.level_up_font_multiplier = 0.51 * sd_level_up_font_multiplier
+	self.sd_scale.present_multiplier = 0.75
+	self.sd_scale.lobby_info_offset_multiplier = 0.7
+	self.sd_scale.info_padding_multiplier = 0.4
+	self.sd_scale.loading_challenge_bar_scale = 0.8
+	self.sd_scale.button_layout_multiplier = 0.7
+	self.sd_scale.subtitle_pos_multiplier = 0.7
+	self.sd_scale.subtitle_font_multiplier = 0.65
+	self.sd_scale.subtitle_lang_multiplier = subtitle_multiplier
+	self.sd_scale.default_font_kern = 0
+	self.sd_scale.stats_upgrade_kern = stats_upgrade_kern or 0
+	self.sd_scale.level_up_text_kern = level_up_text_kern or 0
+	self.sd_scale.victory_screen_kern = victory_screen_kern or -0.5
+	self.sd_scale.upgrade_menu_kern = upgrade_menu_kern or 0
+	self.sd_scale.mugshot_name_kern = mugshot_name_kern or -1
+	self.sd_scale.objectives_text_kern = objectives_text_kern or 0
+	self.sd_scale.objectives_desc_text_kern = objectives_desc_text_kern or 0
+	self.sd_scale.kit_description_multiplier = 0.8 * lang_ssd_mod
+	self.sd_scale.chat_multiplier = 0.68
+	self.sd_scale.chat_menu_h_multiplier = 0.34
+	self.sd_scale.w_interact_multiplier = 0.8 * sd_w_interact_multiplier
+	self.sd_scale.victory_title_multiplier = victory_title_multiplier and victory_title_multiplier * 0.95 or 1
+	self.scale = {}
+	self.scale.is_sd = false
+	self.scale.title_image_multiplier = 1
+	self.scale.menu_logo_multiplier = 1
+	self.scale.menu_border_multiplier = 1
+	self.scale.default_font_multiplier = 1 * lang_l_mod
+	self.scale.small_font_multiplier = 1 * lang_s_mod
+	self.scale.lobby_info_font_size_scale_multiplier = 1 * lang_l_mod
+	self.scale.lobby_name_font_size_scale_multiplier = 1 * lang_l_mod
+	self.scale.server_list_font_size_multiplier = 1 * lang_l_mod * server_list_font_multiplier
+	self.scale.multichoice_arrow_multiplier = 1
+	self.scale.align_line_padding_multiplier = 1
+	self.scale.menu_arrow_padding_multiplier = 1
+	self.scale.briefing_text_h_multiplier = 1 * lang_s_mod
+	self.scale.experience_bar_multiplier = 1
+	self.scale.hud_equipment_icon_multiplier = 1
+	self.scale.hud_default_font_multiplier = 1 * lang_l_mod
+	self.scale.hud_ammo_clip_multiplier = 1
+	self.scale.hud_health_multiplier = 1
+	self.scale.hud_mugshot_multiplier = 1
+	self.scale.hud_assault_image_multiplier = 1
+	self.scale.hud_crosshair_offset_multiplier = 1
+	self.scale.hud_objectives_pad_multiplier = 1
+	self.scale.experience_upgrade_multiplier = 1
+	self.scale.level_up_multiplier = 1
+	self.scale.next_upgrade_font_multiplier = 1 * lang_l_mod
+	self.scale.level_up_font_multiplier = 1 * lang_l_mod
+	self.scale.present_multiplier = 1
+	self.scale.lobby_info_offset_multiplier = 1
+	self.scale.info_padding_multiplier = 1
+	self.scale.loading_challenge_bar_scale = 1
+	self.scale.button_layout_multiplier = 1
+	self.scale.subtitle_pos_multiplier = 1
+	self.scale.subtitle_font_multiplier = 1 * lang_l_mod
+	self.scale.subtitle_lang_multiplier = subtitle_multiplier
+	self.scale.default_font_kern = 0
+	self.scale.stats_upgrade_kern = stats_upgrade_kern or 0
+	self.scale.level_up_text_kern = 0
+	self.scale.victory_screen_kern = victory_screen_kern or 0
+	self.scale.upgrade_menu_kern = 0
+	self.scale.mugshot_name_kern = 0
+	self.scale.objectives_text_kern = objectives_text_kern or 0
+	self.scale.objectives_desc_text_kern = objectives_desc_text_kern or 0
+	self.scale.kit_description_multiplier = 1 * kit_desc_large
+	self.scale.chat_multiplier = 1
+	self.scale.chat_menu_h_multiplier = 1
+	self.scale.w_interact_multiplier = 1 * w_interact_multiplier
+	self.scale.victory_title_multiplier = victory_title_multiplier or 1
 end
 
 function TweakData:set_menu_scale()
@@ -1410,6 +1378,7 @@ function TweakData:set_menu_scale()
 	}
 	local scale_multiplier = self.scale.default_font_multiplier
 	local small_scale_multiplier = self.scale.small_font_multiplier
+
 	self.menu.default_font = "fonts/font_medium_shadow_mf"
 	self.menu.default_font_no_outline = "fonts/font_medium_noshadow_mf"
 	self.menu.default_font_id = Idstring(self.menu.default_font)
@@ -1472,14 +1441,13 @@ function TweakData:set_menu_scale()
 	self.menu.upper_saferect_border = 64 * self.scale.menu_border_multiplier
 	self.menu.border_pad = 8 * self.scale.menu_border_multiplier
 	self.menu.kit_description_font_size = 14 * self.scale.kit_description_multiplier
-	self.load_level = {
-		briefing_text = {
-			h = 192 * self.scale.briefing_text_h_multiplier
-		},
-		upper_saferect_border = self.menu.upper_saferect_border,
-		border_pad = self.menu.border_pad,
-		stonecold_small_logo = "guis/textures/game_small_logo"
+	self.load_level = {}
+	self.load_level.briefing_text = {
+		h = 192 * self.scale.briefing_text_h_multiplier
 	}
+	self.load_level.upper_saferect_border = self.menu.upper_saferect_border
+	self.load_level.border_pad = self.menu.border_pad
+	self.load_level.stonecold_small_logo = "guis/textures/game_small_logo"
 end
 
 function TweakData:set_hud_values()
@@ -1525,6 +1493,7 @@ function TweakData:set_hud_values()
 		stats_challenges_font_size = 1,
 		hint_font_size = 1
 	}
+
 	self.hud.large_font = "fonts/font_large"
 	self.hud.medium_kern = 1.7
 	self.hud.medium_font = "fonts/font_medium_mf"
@@ -1574,6 +1543,7 @@ end
 if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	local reload = tweak_data and tweak_data.RELOAD
 	local reload_clbks = tweak_data and tweak_data._reload_clbks
+
 	tweak_data = TweakData:new()
 	tweak_data._reload_clbks = reload_clbks
 
@@ -2509,6 +2479,7 @@ function TweakData:get_controller_help_coords()
 
 	if managers.user and managers.user:get_setting("southpaw") then
 		local tmp = coords.normal.menu_button_move
+
 		coords.normal.menu_button_move = coords.normal.menu_button_look
 		coords.normal.menu_button_look = tmp
 	end

@@ -66,6 +66,7 @@ function HUDTeammateAI:_create_panel(teammates_panel)
 		h = HUDTeammateAI.DEFAULT_H,
 		layer = tweak_data.gui.PLAYER_PANELS_LAYER
 	}
+
 	self._object = teammates_panel:panel(panel_params)
 end
 
@@ -77,6 +78,7 @@ function HUDTeammateAI:_create_left_panel()
 		w = HUDTeammateAI.LEFT_PANEL_W,
 		h = self._object:h()
 	}
+
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
@@ -88,6 +90,7 @@ function HUDTeammateAI:_create_status_panel()
 		w = self._left_panel:w(),
 		h = self._left_panel:h()
 	}
+
 	self._status_panel = self._left_panel:panel(status_panel_params)
 end
 
@@ -101,6 +104,7 @@ function HUDTeammateAI:_create_nationality_icon()
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}
+
 	self._nationality_icon = self._status_panel:bitmap(nationality_icon_params)
 
 	self._nationality_icon:set_center_x(self._status_panel:w() / 2)
@@ -115,7 +119,9 @@ function HUDTeammateAI:_create_interaction_meter()
 		alpha = 0,
 		valign = "center"
 	}
+
 	self._interaction_meter_panel = self._status_panel:panel(interaction_meter_panel_params)
+
 	local interaction_meter_background_params = {
 		name = "interaction_meter_background",
 		halign = "scale",
@@ -147,6 +153,7 @@ function HUDTeammateAI:_create_interaction_meter()
 		h = interaction_meter_background:h() + 8,
 		color = tweak_data.gui.colors.teammate_interaction_bar
 	}
+
 	self._interaction_meter = self._interaction_meter_panel:bitmap(interaction_meter_params)
 
 	self._interaction_meter:set_center_x(self._interaction_meter_panel:w() / 2)
@@ -163,7 +170,9 @@ function HUDTeammateAI:_create_timer()
 		x = 0,
 		valign = "center"
 	}
+
 	self._timer_panel = self._status_panel:panel(timer_panel_params)
+
 	local timer_background_params = {
 		name = "timer_background",
 		halign = "scale",
@@ -193,6 +202,7 @@ function HUDTeammateAI:_create_timer()
 		w = tweak_data.gui:icon_w(HUDTeammateAI.TIMER_ICON),
 		h = tweak_data.gui:icon_h(HUDTeammateAI.TIMER_ICON)
 	}
+
 	self._timer_bar = self._timer_panel:bitmap(timer_bar_params)
 
 	self._timer_bar:set_center_x(self._timer_panel:w() / 2)
@@ -211,7 +221,9 @@ function HUDTeammateAI:_create_timer()
 		font = tweak_data.gui.fonts[HUDTeammateAI.TIMER_FONT],
 		font_size = HUDTeammateAI.TIMER_FONT_SIZE
 	}
+
 	self._timer_text = self._timer_panel:text(timer_text_params)
+
 	local _, _, _, h = self._timer_text:text_rect()
 
 	self._timer_text:set_h(h)
@@ -227,6 +239,7 @@ function HUDTeammateAI:_create_dead_icon()
 		texture = tweak_data.gui.icons[HUDTeammateAI.DEAD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.DEAD_ICON].texture_rect
 	}
+
 	self._dead_icon = self._status_panel:bitmap(dead_icon_params)
 
 	self._dead_icon:set_center_x(self._status_panel:w() / 2)
@@ -242,6 +255,7 @@ function HUDTeammateAI:_create_mounted_weapon_icon()
 		texture = tweak_data.gui.icons[HUDTeammateAI.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.MOUNTED_WEAPON_ICON].texture_rect
 	}
+
 	self._mounted_weapon_icon = self._status_panel:bitmap(mounted_weapon_icon_params)
 
 	self._mounted_weapon_icon:set_center_x(self._status_panel:w() / 2)
@@ -256,6 +270,7 @@ function HUDTeammateAI:_create_right_panel()
 		w = self._object:w() - HUDTeammateAI.RIGHT_PANEL_X,
 		h = self._object:h()
 	}
+
 	self._right_panel = self._object:panel(right_panel_params)
 end
 
@@ -272,7 +287,9 @@ function HUDTeammateAI:_create_player_name()
 		font = tweak_data.gui.fonts[HUDTeammateAI.PLAYER_NAME_FONT],
 		font_size = HUDTeammateAI.PLAYER_NAME_FONT_SIZE
 	}
+
 	self._player_name = self._right_panel:text(player_name_params)
+
 	local _, _, _, h = self._player_name:text_rect()
 
 	self._player_name:set_h(h)
@@ -376,7 +393,9 @@ function HUDTeammateAI:_animate_interact(interact_image, duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 0, 1, duration)
 
 		self._interaction_meter:set_position_z(current_progress)
@@ -389,7 +408,7 @@ end
 
 function HUDTeammateAI:_animate_cancel_interact()
 	local duration = 0.2
-	local t = nil
+	local t
 
 	if not self._current_progress then
 		t = duration
@@ -401,7 +420,9 @@ function HUDTeammateAI:_animate_cancel_interact()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 1, -1, duration)
 
 		self._interaction_meter:set_position_z(current_progress)
@@ -414,6 +435,7 @@ function HUDTeammateAI:_animate_complete_interact()
 	local size_decrease_duration = 0.18
 	local duration = 0.2
 	local t = 0
+
 	self._current_progress = 0
 
 	self._interaction_meter:set_position_z(1)
@@ -421,7 +443,9 @@ function HUDTeammateAI:_animate_complete_interact()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_progress = Easing.linear(t, 1, -1, duration)
 
 		self._interaction_meter:set_position_z(current_progress)

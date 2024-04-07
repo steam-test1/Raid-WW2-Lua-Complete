@@ -13,7 +13,7 @@ end
 
 function CharacterAttentionObject:chk_settings_diff(settings_set)
 	local attention_data = self._attention_data
-	local changes = nil
+	local changes
 
 	if settings_set then
 		for _, id in ipairs(settings_set) do
@@ -33,7 +33,7 @@ function CharacterAttentionObject:chk_settings_diff(settings_set)
 
 	if attention_data then
 		for old_id, setting in pairs(attention_data) do
-			local found = nil
+			local found
 
 			if settings_set then
 				for _, new_id in ipairs(settings_set) do
@@ -59,7 +59,7 @@ end
 
 function CharacterAttentionObject:set_settings_set(settings_set)
 	local attention_data = self._attention_data
-	local changed, register, unregister = nil
+	local changed, register, unregister
 
 	if attention_data then
 		if not settings_set or not next(settings_set) then

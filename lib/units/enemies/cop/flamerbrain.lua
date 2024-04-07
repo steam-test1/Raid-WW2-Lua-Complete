@@ -20,6 +20,7 @@ end
 
 function FlamerBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
 	pos_rsrv.radius = pos_rsrv.radius * 2
+
 	local pos_reservations = self._logic_data.pos_rsrv
 
 	if pos_reservations[rsrv_name] then
@@ -84,7 +85,7 @@ function FlamerBrain:_queued_update(t, dt)
 		end
 	end
 
-	local assalut_target = nil
+	local assalut_target
 	local should_aquire_new_pos = false
 
 	if #assault_candidates > 0 then
@@ -112,11 +113,12 @@ function FlamerBrain:_queued_update(t, dt)
 
 	if should_aquire_new_pos then
 		self._old_assault_pos = mvector3.copy(assalut_target.pos)
-		local attack_objective = {
-			type = "free",
-			no_retreat = true,
-			attitude = "engage"
-		}
+
+		local attack_objective = {}
+
+		attack_objective.type = "free"
+		attack_objective.no_retreat = true
+		attack_objective.attitude = "engage"
 
 		self:set_objective(attack_objective)
 		managers.queued_tasks:queue(nil, self._hunt, self, assalut_target, FlamerBrain.ATTACK_INTERVAL)
@@ -135,14 +137,14 @@ function FlamerBrain:_hunt(assalut_target)
 	end
 
 	if self._distance_to_target > 1200 then
-		local objective = {
-			type = "defend_area",
-			area = assalut_target.area,
-			nav_seg = assalut_target.nav_seg,
-			pos = mvector3.copy(assalut_target.pos),
-			no_retreat = true,
-			attitude = "engage"
-		}
+		local objective = {}
+
+		objective.type = "defend_area"
+		objective.area = assalut_target.area
+		objective.nav_seg = assalut_target.nav_seg
+		objective.pos = mvector3.copy(assalut_target.pos)
+		objective.no_retreat = true
+		objective.attitude = "engage"
 
 		self:set_objective(objective)
 	end

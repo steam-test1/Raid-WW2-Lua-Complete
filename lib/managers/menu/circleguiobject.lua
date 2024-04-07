@@ -73,6 +73,7 @@ function CircleBitmapGuiObject:init(panel, config)
 
 	if config.use_bg then
 		local bg_config = deep_clone(config)
+
 		bg_config.texture_rect = bg_config.bg_texture_rect or nil
 		bg_config.texture = config.bg_image or "guis/textures/pd2/hud_progress_bg"
 		bg_config.layer = bg_config.layer - 1

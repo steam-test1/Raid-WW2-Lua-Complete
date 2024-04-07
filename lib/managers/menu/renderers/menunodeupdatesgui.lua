@@ -55,6 +55,7 @@ function MenuNodeUpdatesGui:_db_result_recieved(success, page)
 		if item and item.use_db then
 			local suffix = index == num_items and "##end##" or "##" .. tonumber(index + 1) .. "##"
 			local item_end = string.find(page, suffix)
+
 			items_source["fav" .. tostring(index)] = string.sub(page, item_start, item_end)
 			item_start = item_end
 		end
@@ -69,11 +70,10 @@ function MenuNodeUpdatesGui:_db_result_recieved(success, page)
 			link_text = "http:" .. link_text
 		end
 
-		items[item_id] = {
-			title = title_text,
-			desc = desc_text,
-			link = link_text
-		}
+		items[item_id] = {}
+		items[item_id].title = title_text
+		items[item_id].desc = desc_text
+		items[item_id].link = link_text
 	end
 
 	self._db_items = items
@@ -129,10 +129,12 @@ function MenuNodeUpdatesGui:setup()
 	self._next_page_highlighted = nil
 	self._prev_page_highlighted = nil
 	self._back_button_highlighted = nil
+
 	local ws = self.ws
 	local panel = ws:panel():child("MenuNodeUpdatesGui") or ws:panel():panel({
 		name = "MenuNodeUpdatesGui"
 	})
+
 	self._panel = panel
 
 	panel:clear()
@@ -200,6 +202,7 @@ function MenuNodeUpdatesGui:setup()
 	end
 
 	self._requested_textures = {}
+
 	local num_previous_updates = self._tweak_data.num_items or 5
 	local current_page = self._node:parameters().current_page or 1
 	local start_number = (current_page - 1) * num_previous_updates
@@ -214,6 +217,7 @@ function MenuNodeUpdatesGui:setup()
 	self._lastest_content_update = latest_update
 	self._previous_content_updates = previous_updates
 	self._num_previous_updates = num_previous_updates
+
 	local latest_update_panel = panel:panel({
 		name = "lastest_content_update",
 		y = 70,
@@ -245,10 +249,10 @@ function MenuNodeUpdatesGui:setup()
 		}
 	})
 
-	self._selects = {
-		[latest_update.id] = selected
-	}
+	self._selects = {}
+	self._selects[latest_update.id] = selected
 	self._select_x = 1
+
 	local w = panel:w()
 	local padding = _G.IS_PC and 30 or 5
 	local dech_panel_h = _G.IS_PC and latest_update_panel:h() or panel:h() / 2
@@ -299,14 +303,20 @@ function MenuNodeUpdatesGui:setup()
 		color = tweak_data.screen_colors.text,
 		x = self.PADDING
 	})
-	local x, y, w, h = title_text:text_rect()
 
-	title_text:set_size(w, h)
+	do
+		local x, y, w, h = title_text:text_rect()
 
-	local x, y, w, h = date_text:text_rect()
+		title_text:set_size(w, h)
+	end
 
-	date_text:set_size(w, h)
-	date_text:set_top(title_text:bottom())
+	do
+		local x, y, w, h = date_text:text_rect()
+
+		date_text:set_size(w, h)
+		date_text:set_top(title_text:bottom())
+	end
+
 	desc_text:set_top(date_text:bottom())
 	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, latest_desc_panel:h() - desc_text:top() - self.PADDING)
 
@@ -316,8 +326,7 @@ function MenuNodeUpdatesGui:setup()
 			name = "top_button",
 			h = 32
 		})
-		local w = 0
-		local h = 0
+		local w, h = 0, 0
 
 		if self._tweak_data.button.text_id then
 			local text = top_button:text({
@@ -378,7 +387,8 @@ function MenuNodeUpdatesGui:setup()
 	self:make_fine_text(previous_update_text)
 	previous_update_text:set_leftbottom(previous_updates_panel:left(), previous_updates_panel:top())
 
-	local data = nil
+	local data
+
 	self._previous_update_texts = {}
 
 	for index, data in ipairs(previous_updates) do
@@ -419,6 +429,7 @@ function MenuNodeUpdatesGui:setup()
 		text:set_bottom(previous_updates_panel:bottom() - self.PADDING + 1)
 
 		self._previous_update_texts[data.id] = text
+
 		local selected = BoxGuiObject:new(content_panel, {
 			sides = {
 				2,
@@ -427,6 +438,7 @@ function MenuNodeUpdatesGui:setup()
 				2
 			}
 		})
+
 		self._selects[data.id] = selected
 	end
 
@@ -450,6 +462,7 @@ function MenuNodeUpdatesGui:setup()
 
 	if num_previous_updates < #content_updates then
 		local num_pages = self._num_pages
+
 		self._prev_page = panel:panel({
 			name = "previous_page",
 			w = tweak_data.menu.pd2_medium_font_size,
@@ -460,6 +473,7 @@ function MenuNodeUpdatesGui:setup()
 			w = tweak_data.menu.pd2_medium_font_size,
 			h = tweak_data.menu.pd2_medium_font_size
 		})
+
 		local prev_text = self._prev_page:text({
 			name = "text_obj",
 			vertical = "center",
@@ -523,7 +537,7 @@ function MenuNodeUpdatesGui:check_inside(x, y)
 	if latest_update_panel:inside(x, y) then
 		return self._lastest_content_update
 	elseif previous_updates_panel:inside(x, y) then
-		local child = nil
+		local child
 
 		for index, data in ipairs(self._previous_content_updates) do
 			child = previous_updates_panel:child(data.id)
@@ -541,6 +555,7 @@ end
 
 function MenuNodeUpdatesGui:mouse_moved(o, x, y)
 	local moved = self._mouse_x ~= x or self._mouse_y ~= y
+
 	self._mouse_x = x
 	self._mouse_y = y
 
@@ -569,7 +584,7 @@ function MenuNodeUpdatesGui:mouse_moved(o, x, y)
 		local text = self._next_page:child("text_obj")
 		local num_pages = self._num_pages
 
-		if self._current_page < num_pages then
+		if num_pages > self._current_page then
 			if self._next_page:inside(x, y) then
 				if not self._next_page_highlighted then
 					self._next_page_highlighted = true
@@ -654,7 +669,7 @@ function MenuNodeUpdatesGui:mouse_pressed(button, x, y)
 	if alive(self._next_page) then
 		local num_pages = self._num_pages
 
-		if self._current_page < num_pages and self._next_page:inside(x, y) then
+		if num_pages > self._current_page and self._next_page:inside(x, y) then
 			self._node:parameters().current_page = self._current_page + 1
 
 			self:setup()
@@ -664,6 +679,7 @@ function MenuNodeUpdatesGui:mouse_pressed(button, x, y)
 	end
 
 	self._pressed = self:check_inside(x, y)
+
 	local ws = self.ws
 	local panel = ws:panel():child("MenuNodeUpdatesGui")
 	local back_button = panel:child("back_button")
@@ -769,15 +785,21 @@ function MenuNodeUpdatesGui:set_latest_text()
 
 	title_text:set_text(title_string)
 
-	local x, y, w, h = title_text:text_rect()
+	do
+		local x, y, w, h = title_text:text_rect()
 
-	title_text:set_size(w, h)
+		title_text:set_size(w, h)
+	end
+
 	date_text:set_text(date_string)
 
-	local x, y, w, h = date_text:text_rect()
+	do
+		local x, y, w, h = date_text:text_rect()
 
-	date_text:set_size(w, h)
-	date_text:set_top(title_text:bottom())
+		date_text:set_size(w, h)
+		date_text:set_top(title_text:bottom())
+	end
+
 	desc_text:set_text(desc_string)
 	desc_text:set_top(date_text:bottom())
 	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, latest_desc_panel:h() - desc_text:top() - self.PADDING)
@@ -807,6 +829,7 @@ function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refre
 
 			local texture = content_highlighted.image
 			local texture_count = managers.menu_component:request_texture(texture, callback(self, self, "texture_done_clbk", latest_update_panel))
+
 			self._lastest_texture_request = {
 				texture_count = texture_count,
 				texture = texture
@@ -834,12 +857,16 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 	local previous_updates_panel = panel:child("previous_content_updates")
 	local content_highlighted = self._content_highlighted
 
-	if content_highlighted then
+	if not content_highlighted then
+		-- Nothing
+	else
 		self._select_x = self._select_x + x
 	end
 
 	local old_x = self._select_x
+
 	self._select_x = math.clamp(self._select_x, 1, math.min(#self._previous_content_updates, self._num_previous_updates))
+
 	local diff_x = old_x - self._select_x
 
 	if diff_x < 0 then
@@ -849,10 +876,8 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 
 			self:set_latest_content(content_highlighted, true)
 		end
-	elseif diff_x > 0 then
-		if self:next_page() then
-			-- Nothing
-		end
+	elseif diff_x > 0 and (not self:next_page() or true) then
+		-- Nothing
 	else
 		content_highlighted = self._previous_content_updates[self._select_x]
 
@@ -873,7 +898,7 @@ end
 function MenuNodeUpdatesGui:next_page()
 	local num_pages = self._num_pages
 
-	if self._current_page < num_pages then
+	if num_pages > self._current_page then
 		self._node:parameters().current_page = self._current_page + 1
 
 		self:setup()
@@ -883,9 +908,11 @@ function MenuNodeUpdatesGui:next_page()
 end
 
 function MenuNodeUpdatesGui:move_up()
+	return
 end
 
 function MenuNodeUpdatesGui:move_down()
+	return
 end
 
 function MenuNodeUpdatesGui:move_left()

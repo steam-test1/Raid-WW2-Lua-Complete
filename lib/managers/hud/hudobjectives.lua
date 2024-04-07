@@ -17,6 +17,7 @@ function HUDObjectives:_create_panel(panel)
 		w = HUDObjectives.W,
 		h = HUDObjectives.H
 	}
+
 	self._object = panel:panel(panel_params)
 end
 
@@ -41,6 +42,7 @@ function HUDObjectives:show()
 end
 
 function HUDObjectives:hide()
+	return
 end
 
 function HUDObjectives:render_objective()
@@ -55,6 +57,7 @@ function HUDObjectives:render_objective()
 	self:_clear_objectives()
 
 	self._main_objective = HUDObjectiveMain:new(self._object, active_objective)
+
 	local y = self._main_objective:y() + self._main_objective:h()
 
 	if self._show_objective_descriptions and active_objective.description then
@@ -80,6 +83,7 @@ function HUDObjectives:render_objective()
 
 			if self._show_objective_descriptions and sub_objective.description then
 				y = y + HUDObjectives.OBJECTIVE_DESCRIPTION_PADDING
+
 				local sub_objective_description = HUDObjectiveDescription:new(self._object, sub_objective)
 
 				sub_objective_description:set_x(self._object:w() - sub_objective_description:w())
@@ -95,6 +99,7 @@ function HUDObjectives:render_objective()
 end
 
 function HUDObjectives:update_objectives()
+	return
 end
 
 function HUDObjectives:activate_objective(data)
@@ -108,6 +113,7 @@ function HUDObjectives:remind_objective(id)
 end
 
 function HUDObjectives:remind_sub_objective(id)
+	return
 end
 
 function HUDObjectives:complete_objective(data)
@@ -137,6 +143,7 @@ function HUDObjectives:update_amount_sub_objective(data)
 end
 
 function HUDObjectives:open_right_done(uses_amount)
+	return
 end
 
 function HUDObjectives:show_timer()

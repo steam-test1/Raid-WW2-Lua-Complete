@@ -47,10 +47,9 @@ require("lib/managers/hud/HUDTurret")
 require("lib/managers/hud/HUDWatermark/HUDWatermarkBase")
 require("lib/managers/hud/HUDPlayerVoiceChatStatus")
 
-HUDManager.disabled = {
-	[Idstring("guis/player_hud"):key()] = true,
-	[Idstring("guis/experience_hud"):key()] = true
-}
+HUDManager.disabled = {}
+HUDManager.disabled[Idstring("guis/player_hud"):key()] = true
+HUDManager.disabled[Idstring("guis/experience_hud"):key()] = true
 HUDManager.PLAYER_PANEL = 4
 HUDManager.TEAMMATE_PANEL_W = 444
 HUDManager.TEAMMATE_PANEL_DISTANCE = 32
@@ -71,6 +70,7 @@ function HUDManager:add_weapon(data)
 		inventory_index = data.inventory_index,
 		unit = data.unit
 	}
+
 	local tweak_data = data.unit:base():weapon_tweak_data()
 
 	if tweak_data.hud and (not self._weapon_panels[data.inventory_index] or self._weapon_panels[data.inventory_index] and self._weapon_panels[data.inventory_index]:name_id() ~= tweak_data.name_id) then
@@ -79,6 +79,7 @@ function HUDManager:add_weapon(data)
 		end
 
 		self._weapon_panels[data.inventory_index] = nil
+
 		local weapons_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:child("weapons_panel")
 
 		if data.inventory_index == 1 or data.inventory_index == 2 then
@@ -99,6 +100,7 @@ function HUDManager:add_weapon(data)
 			local is_grenade = panel_class_id and panel_class_id == "grenade"
 			local use_custom_ui = managers.user:get_setting("hud_special_weapon_panels") or is_grenade
 			local panel_class = use_custom_ui and self._weapon_panel_classes[panel_class_id] or HUDWeaponGeneric
+
 			self._weapon_panels[data.inventory_index] = panel_class:new(data.inventory_index, weapons_panel, tweak_data)
 		else
 			self._weapon_panels[data.inventory_index] = HUDWeaponGeneric:new(data.inventory_index, weapons_panel, tweak_data)
@@ -151,6 +153,7 @@ end
 
 function HUDManager:_set_weapon_selected(id)
 	self._hud.selected_weapon = id
+
 	local icon = self._hud.weapons[self._hud.selected_weapon].unit:base():weapon_tweak_data().hud and self._hud.weapons[self._hud.selected_weapon].unit:base():weapon_tweak_data().hud.icon
 
 	self:_set_teammate_weapon_selected(HUDManager.PLAYER_PANEL, id, icon)
@@ -173,6 +176,7 @@ function HUDManager:unselect_all_weapons()
 end
 
 function HUDManager:recreate_weapon_firemode(i)
+	return
 end
 
 function HUDManager:set_teammate_weapon_firemode(i, id, firemode)
@@ -229,6 +233,7 @@ function HUDManager:set_weapon_ammo_by_unit(unit)
 end
 
 function HUDManager:_update_second_weapon_ammo_info(i, unit)
+	return
 end
 
 function HUDManager:set_player_panel_character_data(data)
@@ -363,9 +368,11 @@ function HUDManager:hide_teammate_turret_icon(teammate_panel_id, name_label_id)
 end
 
 function HUDManager:set_player_armor(data)
+	return
 end
 
 function HUDManager:set_teammate_armor(i, data)
+	return
 end
 
 function HUDManager:set_teammate_name(i, teammate_name)
@@ -418,21 +425,27 @@ function HUDManager:clear_player_special_equipments()
 end
 
 function HUDManager:set_stored_health(stored_health_ratio)
+	return
 end
 
 function HUDManager:set_stored_health_max(stored_health_ratio)
+	return
 end
 
 function HUDManager:add_item(data)
+	return
 end
 
 function HUDManager:set_deployable_equipment(i, data)
+	return
 end
 
 function HUDManager:set_item_amount(index, amount)
+	return
 end
 
 function HUDManager:set_teammate_deployable_equipment_amount(i, index, data)
+	return
 end
 
 function HUDManager:set_teammate_grenades(i, data)
@@ -778,7 +791,7 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 
 			if peer_carry_data then
 				local unit_data = managers.network:session():peer(peer_id):unit():unit_data()
-				local name_label_id = nil
+				local name_label_id
 
 				if unit_data.name_label_id then
 					name_label_id = unit_data.name_label_id
@@ -903,6 +916,7 @@ function HUDManager:_create_teammates_panel(hud)
 			taken = false,
 			special_equipments = {}
 		}
+
 		local ai_teammate = HUDTeammateAI:new(i, teammates_panel)
 
 		ai_teammate:set_y((i - 1) * (HUDTeammateAI.DEFAULT_H + ai_teammate:padding_down()))
@@ -950,6 +964,7 @@ end
 
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+
 	local weapons_panel_params = {
 		name = "weapons_panel",
 		halign = "right",
@@ -962,19 +977,20 @@ function HUDManager:_create_weapons_panel(hud)
 	weapons_panel:set_right(hud.panel:w())
 	weapons_panel:set_bottom(hud.panel:h())
 
-	self._weapon_panel_classes = {
-		grenade = HUDWeaponGrenade,
-		clip_shots = HUDWeaponClipShots,
-		drum_mag = HUDWeaponDrum,
-		revolver = HUDWeaponRevolver
-	}
+	self._weapon_panel_classes = {}
+	self._weapon_panel_classes.grenade = HUDWeaponGrenade
+	self._weapon_panel_classes.clip_shots = HUDWeaponClipShots
+	self._weapon_panel_classes.drum_mag = HUDWeaponDrum
+	self._weapon_panel_classes.revolver = HUDWeaponRevolver
 	self._weapon_panels = {}
 end
 
 function HUDManager:_create_comm_wheel(hud, params)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+
 	local params = tweak_data.interaction.com_wheel
 	local pm = managers.player
+
 	params.show_clbks = {
 		callback(pm, pm, "disable_view_movement")
 	}
@@ -1103,6 +1119,7 @@ function HUDManager:present(params)
 end
 
 function HUDManager:present_done()
+	return
 end
 
 function HUDManager:_create_interaction(hud)
@@ -1158,6 +1175,7 @@ function HUDManager:show_progress_timer_bar(current, total, description)
 		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
 		description = description
 	}
+
 	self._progress_timer_progress_bar = ProgressBarGuiObject:new(hud.panel, progress_bar_params)
 
 	self._progress_timer_progress_bar:show()
@@ -1216,6 +1234,7 @@ function HUDManager:hide_objectives_timer_hud()
 end
 
 function HUDManager:set_control_info(data)
+	return
 end
 
 function HUDManager:sync_start_assault(data)
@@ -1279,6 +1298,7 @@ function HUDManager:_setup_tab_screen()
 
 	local hud_tab_fullscreen = managers.hud:script(HUDManager.TAB_SCREEN_FULLSCREEN)
 	local hud_tab_safe = managers.hud:script(HUDManager.TAB_SCREEN_SAFERECT)
+
 	self._tab_screen = HUDTabScreen:new(hud_tab_fullscreen, hud_tab_safe)
 
 	self._tab_screen:hide()
@@ -1335,12 +1355,15 @@ function HUDManager:set_loot_total(amount)
 end
 
 function HUDManager:feed_point_of_no_return_timer(time, is_inside)
+	return
 end
 
 function HUDManager:show_point_of_no_return_timer()
+	return
 end
 
 function HUDManager:hide_point_of_no_return_timer()
+	return
 end
 
 function HUDManager:flash_point_of_no_return_timer(beep)
@@ -1514,6 +1537,7 @@ function HUDManager:player_turret_cooldown()
 end
 
 function HUDManager:_create_watermark(hud)
+	return
 end
 
 function HUDManager:_create_carry(hud)
@@ -1807,7 +1831,7 @@ function HUDManager:_add_name_label(data)
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_FULLSCREEN)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels]:id() or 0
 	local id = last_id + 1
-	local peer_id = nil
+	local peer_id
 	local is_husk_player = data.unit:base().is_husk_player
 
 	if is_husk_player then
@@ -1921,12 +1945,15 @@ function HUDManager:_get_name_label(id)
 end
 
 function HUDManager:set_name_label_carry_info(peer_id, carry_id)
+	return
 end
 
 function HUDManager:set_vehicle_label_carry_info(label_id, value, number)
+	return
 end
 
 function HUDManager:remove_name_label_carry_info(peer_id)
+	return
 end
 
 function HUDManager:teammate_start_progress(teammate_panel_id, name_label_id, timer)
@@ -1971,8 +1998,9 @@ end
 function HUDManager:_animate_label_interact(panel, interact, timer)
 	local t = 0
 
-	while timer >= t do
+	while t <= timer do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		interact:set_current(t / timer)
@@ -2008,7 +2036,7 @@ function HUDManager:set_chat_focus(focus)
 		self:hide_comm_wheel(true)
 	end
 
-	setup:add_end_frame_callback(function ()
+	setup:add_end_frame_callback(function()
 		self._chat_focus = focus
 	end)
 	self._chatinput_changed_callback_handler:dispatch(focus)
@@ -2022,6 +2050,7 @@ end
 
 function HUDManager:_setup_driving_hud()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+
 	self._hud_driving = HUDDriving:new(hud)
 end
 

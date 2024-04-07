@@ -31,6 +31,7 @@ function GlobalStateTriggerElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local flag_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Flag options")
 	local flag_element_sizer = EWS:BoxSizer("HORIZONTAL")
 

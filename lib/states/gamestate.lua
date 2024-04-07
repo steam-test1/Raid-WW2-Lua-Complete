@@ -9,6 +9,7 @@ function GameState:freeflight_drop_player(pos, rot)
 end
 
 function GameState:set_controller_enabled(enabled)
+	return
 end
 
 function GameState:default_transition(next_state, params)
@@ -23,6 +24,7 @@ function GameState:default_transition(next_state, params)
 end
 
 function GameState:on_disconnected()
+	return
 end
 
 function GameState:on_server_left(message)

@@ -21,6 +21,7 @@ function ElementCounter:on_script_activated()
 
 	if self._values.output_monitor_id then
 		local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
+
 		self.monitor_element = mission:get_element_by_id(self._values.output_monitor_id)
 	end
 
@@ -281,6 +282,7 @@ function ElementCounterTrigger:on_script_activated()
 end
 
 function ElementCounterTrigger:client_on_executed(...)
+	return
 end
 
 function ElementCounterTrigger:on_executed(instigator)
@@ -298,9 +300,11 @@ function ElementCounterFilter:init(...)
 end
 
 function ElementCounterFilter:on_script_activated()
+	return
 end
 
 function ElementCounterFilter:client_on_executed(...)
+	return
 end
 
 function ElementCounterFilter:on_executed(instigator)
@@ -334,10 +338,11 @@ function ElementCounterFilter:_values_ok()
 end
 
 function ElementCounterFilter:_all_counter_values_equal()
-	local test_value = nil
+	local test_value
 
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
+
 		test_value = test_value or element:counter_value()
 
 		if test_value ~= element:counter_value() then
@@ -378,7 +383,7 @@ function ElementCounterFilter:_check_type(element)
 	end
 
 	if self._values.check_type == "greater_or_equal" then
-		return self._values.value <= element:counter_value()
+		return element:counter_value() >= self._values.value
 	end
 
 	if self._values.check_type == "less_than" then
@@ -386,6 +391,6 @@ function ElementCounterFilter:_check_type(element)
 	end
 
 	if self._values.check_type == "greater_than" then
-		return self._values.value < element:counter_value()
+		return element:counter_value() > self._values.value
 	end
 end

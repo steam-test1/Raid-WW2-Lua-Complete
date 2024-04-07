@@ -29,6 +29,7 @@ function HUDCombatDebug:init(hud)
 		h = self._combat_debug_panel:h(),
 		color = Color.black:with_alpha(0.7)
 	})
+
 	self._default_font_size = tweak_data.gui.font_sizes.size_16
 	self._default_font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, self._default_font_size)
 	self._game_intensity = self._combat_debug_panel:text({
@@ -432,6 +433,7 @@ function HUDCombatDebug:_animate_change(text, final_color)
 
 	while t < 0.5 do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		text:set_x(self:_ease_in_quart(t, -30, 20, 0.5))

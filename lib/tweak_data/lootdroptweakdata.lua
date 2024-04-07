@@ -68,9 +68,11 @@ end
 
 function LootDropTweakData:_init_xp_packs()
 	self.xp_packs = {}
+
 	local multi = 2
 	local xp = 500
 	local xp2 = xp * multi
+
 	self.xp_packs.tiny = {
 		reward_type = LootDropTweakData.REWARD_XP,
 		xp_min = xp,
@@ -100,150 +102,135 @@ function LootDropTweakData:_init_xp_packs()
 end
 
 function LootDropTweakData:_init_card_packs()
-	self.card_packs = {
-		regular = {
-			reward_type = LootDropTweakData.REWARD_CARD_PACK,
-			pack_type = ChallengeCardsTweakData.PACK_TYPE_REGULAR
-		}
+	self.card_packs = {}
+	self.card_packs.regular = {
+		reward_type = LootDropTweakData.REWARD_CARD_PACK,
+		pack_type = ChallengeCardsTweakData.PACK_TYPE_REGULAR
 	}
 end
 
 function LootDropTweakData:_init_customization_rewards()
-	self.customization_rewards = {
-		common = {
-			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
-			rarity = LootDropTweakData.RARITY_COMMON
-		},
-		uncommon = {
-			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
-			rarity = LootDropTweakData.RARITY_UNCOMMON
-		},
-		rare = {
-			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
-			rarity = LootDropTweakData.RARITY_RARE
-		},
-		halloween = {
-			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
-			rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
-		}
+	self.customization_rewards = {}
+	self.customization_rewards.common = {
+		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
+		rarity = LootDropTweakData.RARITY_COMMON
+	}
+	self.customization_rewards.uncommon = {
+		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
+		rarity = LootDropTweakData.RARITY_UNCOMMON
+	}
+	self.customization_rewards.rare = {
+		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
+		rarity = LootDropTweakData.RARITY_RARE
+	}
+	self.customization_rewards.halloween = {
+		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	}
 end
 
 function LootDropTweakData:_init_gold_bar_rewards()
-	self.gold_bar_rewards = {
-		tiny = {
-			gold_bars_max = 1,
-			gold_bars_min = 1,
-			reward_type = LootDropTweakData.REWARD_GOLD_BARS
-		},
-		small = {
-			gold_bars_max = 4,
-			gold_bars_min = 2,
-			reward_type = LootDropTweakData.REWARD_GOLD_BARS
-		},
-		medium = {
-			gold_bars_max = 10,
-			gold_bars_min = 5,
-			reward_type = LootDropTweakData.REWARD_GOLD_BARS
-		},
-		large = {
-			gold_bars_max = 15,
-			gold_bars_min = 11,
-			reward_type = LootDropTweakData.REWARD_GOLD_BARS
-		}
+	self.gold_bar_rewards = {}
+	self.gold_bar_rewards.tiny = {
+		gold_bars_max = 1,
+		gold_bars_min = 1,
+		reward_type = LootDropTweakData.REWARD_GOLD_BARS
+	}
+	self.gold_bar_rewards.small = {
+		gold_bars_max = 4,
+		gold_bars_min = 2,
+		reward_type = LootDropTweakData.REWARD_GOLD_BARS
+	}
+	self.gold_bar_rewards.medium = {
+		gold_bars_max = 10,
+		gold_bars_min = 5,
+		reward_type = LootDropTweakData.REWARD_GOLD_BARS
+	}
+	self.gold_bar_rewards.large = {
+		gold_bars_max = 15,
+		gold_bars_min = 11,
+		reward_type = LootDropTweakData.REWARD_GOLD_BARS
 	}
 end
 
 function LootDropTweakData:_init_categories()
-	self.loot_categories = {
-		category_xp_min = {}
-	}
+	self.loot_categories = {}
+	self.loot_categories.category_xp_min = {}
 	self.loot_categories.category_xp_min[1] = {
 		chance = 100,
 		value = self.xp_packs.tiny
 	}
-	self.loot_categories.category_xp_low = {
-		{
-			chance = 100,
-			value = self.xp_packs.small
+	self.loot_categories.category_xp_low = {}
+	self.loot_categories.category_xp_low[1] = {
+		chance = 100,
+		value = self.xp_packs.small
+	}
+	self.loot_categories.category_xp_mid = {}
+	self.loot_categories.category_xp_mid[1] = {
+		chance = 100,
+		value = self.xp_packs.medium
+	}
+	self.loot_categories.category_xp_high = {}
+	self.loot_categories.category_xp_high[1] = {
+		chance = 100,
+		value = self.xp_packs.large
+	}
+	self.loot_categories.category_gold_tiny = {}
+	self.loot_categories.category_gold_tiny[1] = {
+		chance = 100,
+		value = self.gold_bar_rewards.tiny
+	}
+	self.loot_categories.category_gold_low = {}
+	self.loot_categories.category_gold_low[1] = {
+		chance = 100,
+		value = self.gold_bar_rewards.small
+	}
+	self.loot_categories.category_gold_mid = {}
+	self.loot_categories.category_gold_mid[1] = {
+		chance = 100,
+		value = self.gold_bar_rewards.medium
+	}
+	self.loot_categories.category_gold_high = {}
+	self.loot_categories.category_gold_high[1] = {
+		chance = 100,
+		value = self.gold_bar_rewards.large
+	}
+	self.loot_categories.category_melee = {}
+	self.loot_categories.category_melee[1] = {
+		chance = 100,
+		value = {
+			reward_type = LootDropTweakData.REWARD_MELEE_WEAPON
 		}
 	}
-	self.loot_categories.category_xp_mid = {
-		{
-			chance = 100,
-			value = self.xp_packs.medium
+	self.loot_categories.category_cards_pack = {}
+	self.loot_categories.category_cards_pack[1] = {
+		chance = 100,
+		value = self.card_packs.regular
+	}
+	self.loot_categories.category_cosmetics = {}
+	self.loot_categories.category_cosmetics[1] = {
+		chance = 50,
+		value = self.customization_rewards.common
+	}
+	self.loot_categories.category_cosmetics[2] = {
+		chance = 30,
+		value = self.customization_rewards.uncommon
+	}
+	self.loot_categories.category_cosmetics[3] = {
+		chance = 15,
+		value = self.customization_rewards.rare
+	}
+	self.loot_categories.category_halloween_2017 = {}
+	self.loot_categories.category_halloween_2017[1] = {
+		chance = 20,
+		value = {
+			weapon_id = "lc14b",
+			reward_type = LootDropTweakData.REWARD_HALLOWEEN_2017
 		}
 	}
-	self.loot_categories.category_xp_high = {
-		{
-			chance = 100,
-			value = self.xp_packs.large
-		}
-	}
-	self.loot_categories.category_gold_tiny = {
-		{
-			chance = 100,
-			value = self.gold_bar_rewards.tiny
-		}
-	}
-	self.loot_categories.category_gold_low = {
-		{
-			chance = 100,
-			value = self.gold_bar_rewards.small
-		}
-	}
-	self.loot_categories.category_gold_mid = {
-		{
-			chance = 100,
-			value = self.gold_bar_rewards.medium
-		}
-	}
-	self.loot_categories.category_gold_high = {
-		{
-			chance = 100,
-			value = self.gold_bar_rewards.large
-		}
-	}
-	self.loot_categories.category_melee = {
-		{
-			chance = 100,
-			value = {
-				reward_type = LootDropTweakData.REWARD_MELEE_WEAPON
-			}
-		}
-	}
-	self.loot_categories.category_cards_pack = {
-		{
-			chance = 100,
-			value = self.card_packs.regular
-		}
-	}
-	self.loot_categories.category_cosmetics = {
-		{
-			chance = 50,
-			value = self.customization_rewards.common
-		},
-		{
-			chance = 30,
-			value = self.customization_rewards.uncommon
-		},
-		{
-			chance = 15,
-			value = self.customization_rewards.rare
-		}
-	}
-	self.loot_categories.category_halloween_2017 = {
-		{
-			chance = 20,
-			value = {
-				weapon_id = "lc14b",
-				reward_type = LootDropTweakData.REWARD_HALLOWEEN_2017
-			}
-		},
-		{
-			chance = 80,
-			value = self.customization_rewards.halloween
-		}
+	self.loot_categories.category_halloween_2017[2] = {
+		chance = 80,
+		value = self.customization_rewards.halloween
 	}
 end
 
@@ -376,14 +363,13 @@ function LootDropTweakData:_init_groups_gold()
 end
 
 function LootDropTweakData:_init_groups_challenges()
-	self.loot_groups.loot_group_halloween_2017 = {
-		{
-			chance = 100,
-			value = self.loot_categories.category_halloween_2017
-		},
-		min_loot_value = 9999998,
-		max_loot_value = 9999999
+	self.loot_groups.loot_group_halloween_2017 = {}
+	self.loot_groups.loot_group_halloween_2017[1] = {
+		chance = 100,
+		value = self.loot_categories.category_halloween_2017
 	}
+	self.loot_groups.loot_group_halloween_2017.min_loot_value = 9999998
+	self.loot_groups.loot_group_halloween_2017.max_loot_value = 9999999
 end
 
 function LootDropTweakData:_init_loot_values()
@@ -406,17 +392,15 @@ function LootDropTweakData:_init_loot_values()
 end
 
 function LootDropTweakData:_init_dog_tag_stats()
-	self.dog_tag = {
-		loot_value = 125
-	}
+	self.dog_tag = {}
+	self.dog_tag.loot_value = 125
 end
 
 function LootDropTweakData:_payday_init(tweak_data)
 	self.PC_STEP = 10
-	self.no_drop = {
-		BASE = 35,
-		HUMAN_STEP_MODIFIER = 10
-	}
+	self.no_drop = {}
+	self.no_drop.BASE = 35
+	self.no_drop.HUMAN_STEP_MODIFIER = 10
 	self.joker_chance = 0
 	self.level_limit = 1
 	self.risk_pc_multiplier = {
@@ -431,78 +415,76 @@ function LootDropTweakData:_payday_init(tweak_data)
 		3,
 		5
 	}
-	self.PC_CHANCE = {
-		0.7,
-		0.7,
-		0.7,
-		0.7,
-		0.9,
-		0.91,
-		0.92,
-		0.93,
-		0.94,
-		0.95
+	self.PC_CHANCE = {}
+	self.PC_CHANCE[1] = 0.7
+	self.PC_CHANCE[2] = 0.7
+	self.PC_CHANCE[3] = 0.7
+	self.PC_CHANCE[4] = 0.7
+	self.PC_CHANCE[5] = 0.9
+	self.PC_CHANCE[6] = 0.91
+	self.PC_CHANCE[7] = 0.92
+	self.PC_CHANCE[8] = 0.93
+	self.PC_CHANCE[9] = 0.94
+	self.PC_CHANCE[10] = 0.95
+	self.STARS = {}
+	self.STARS[1] = {
+		pcs = {
+			10,
+			10
+		}
 	}
-	self.STARS = {
-		{
-			pcs = {
-				10,
-				10
-			}
-		},
-		{
-			pcs = {
-				20,
-				20
-			}
-		},
-		{
-			pcs = {
-				30,
-				30
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
+	self.STARS[2] = {
+		pcs = {
+			20,
+			20
+		}
+	}
+	self.STARS[3] = {
+		pcs = {
+			30,
+			30
+		}
+	}
+	self.STARS[4] = {
+		pcs = {
+			40,
+			40
+		}
+	}
+	self.STARS[5] = {
+		pcs = {
+			40,
+			40
+		}
+	}
+	self.STARS[6] = {
+		pcs = {
+			40,
+			40
+		}
+	}
+	self.STARS[7] = {
+		pcs = {
+			40,
+			40
+		}
+	}
+	self.STARS[8] = {
+		pcs = {
+			40,
+			40
+		}
+	}
+	self.STARS[9] = {
+		pcs = {
+			40,
+			40
+		}
+	}
+	self.STARS[10] = {
+		pcs = {
+			40,
+			40
 		}
 	}
 	self.STARS_CURVES = {
@@ -518,6 +500,7 @@ function LootDropTweakData:_payday_init(tweak_data)
 		1
 	}
 	self.WEIGHTED_TYPE_CHANCE = {}
+
 	local min = 10
 	local max = 100
 	local range = {
@@ -559,6 +542,7 @@ function LootDropTweakData:_payday_init(tweak_data)
 		local materials = math.lerp(range.materials[1], range.materials[2], i / max)
 		local masks = math.lerp(range.masks[1], range.masks[2], i / max)
 		local xp = math.lerp(range.xp[1], range.xp[2], i / max)
+
 		self.WEIGHTED_TYPE_CHANCE[i] = {
 			cash = cash,
 			weapon_mods = weapon_mods,
@@ -572,56 +556,51 @@ function LootDropTweakData:_payday_init(tweak_data)
 
 	self.DEFAULT_WEIGHT = 1
 	self.got_item_weight_mod = 0.5
-	self.type_weight_mod_funcs = {
-		weapon_mods = function (global_value, category, id)
-			local weapons = managers.weapon_factory:get_weapons_uses_part(id) or {}
-			local primaries = managers.blackmarket:get_crafted_category("primaries") or {}
-			local secondaries = managers.blackmarket:get_crafted_category("secondaries") or {}
-			local crafted_weapons = {}
+	self.type_weight_mod_funcs = {}
 
-			for _, weapon in pairs(primaries) do
-				table.insert(crafted_weapons, weapon.factory_id)
-			end
+	function self.type_weight_mod_funcs.weapon_mods(global_value, category, id)
+		local weapons = managers.weapon_factory:get_weapons_uses_part(id) or {}
+		local primaries = managers.blackmarket:get_crafted_category("primaries") or {}
+		local secondaries = managers.blackmarket:get_crafted_category("secondaries") or {}
+		local crafted_weapons = {}
 
-			for _, weapon in pairs(secondaries) do
-				table.insert(crafted_weapons, weapon.factory_id)
-			end
-
-			table.list_union(crafted_weapons)
-
-			for _, factory_id in pairs(weapons) do
-				if table.contains(crafted_weapons, factory_id) then
-					return 2
-				end
-			end
-
-			return 1
+		for _, weapon in pairs(primaries) do
+			table.insert(crafted_weapons, weapon.factory_id)
 		end
-	}
-	self.global_value_category = {
-		normal = {}
-	}
+
+		for _, weapon in pairs(secondaries) do
+			table.insert(crafted_weapons, weapon.factory_id)
+		end
+
+		table.list_union(crafted_weapons)
+
+		for _, factory_id in pairs(weapons) do
+			if table.contains(crafted_weapons, factory_id) then
+				return 2
+			end
+		end
+
+		return 1
+	end
+
+	self.global_value_category = {}
+	self.global_value_category.normal = {}
 	self.global_value_category.normal.name_id = "bm_global_value_normal"
 	self.global_value_category.normal.sort_number = 0
-	self.global_value_category.dlc = {
-		name_id = "bm_menu_dlc",
-		sort_number = 10
-	}
-	self.global_value_category.global_event = {
-		name_id = "bm_menu_global_event",
-		sort_number = 20
-	}
-	self.global_value_category.infamous = {
-		name_id = "bm_global_value_infamous",
-		sort_number = 30
-	}
-	self.global_value_category.collaboration = {
-		name_id = "bm_global_value_collaboration",
-		sort_number = 25
-	}
-	self.global_values = {
-		normal = {}
-	}
+	self.global_value_category.dlc = {}
+	self.global_value_category.dlc.name_id = "bm_menu_dlc"
+	self.global_value_category.dlc.sort_number = 10
+	self.global_value_category.global_event = {}
+	self.global_value_category.global_event.name_id = "bm_menu_global_event"
+	self.global_value_category.global_event.sort_number = 20
+	self.global_value_category.infamous = {}
+	self.global_value_category.infamous.name_id = "bm_global_value_infamous"
+	self.global_value_category.infamous.sort_number = 30
+	self.global_value_category.collaboration = {}
+	self.global_value_category.collaboration.name_id = "bm_global_value_collaboration"
+	self.global_value_category.collaboration.sort_number = 25
+	self.global_values = {}
+	self.global_values.normal = {}
 	self.global_values.normal.name_id = "bm_global_value_normal"
 	self.global_values.normal.desc_id = "menu_l_global_value_normal"
 	self.global_values.normal.color = Color.white
@@ -633,72 +612,67 @@ function LootDropTweakData:_payday_init(tweak_data)
 	self.global_values.normal.track = false
 	self.global_values.normal.sort_number = 0
 	self.global_values.normal.category = "normal"
-	self.global_values.superior = {
-		name_id = "bm_global_value_superior",
-		desc_id = "menu_l_global_value_superior",
-		color = Color.blue,
-		dlc = false,
-		chance = 0.1,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "superior"),
-		durability_multiplier = 1.5,
-		drops = false,
-		track = false,
-		sort_number = 25,
-		category = nil
-	}
-	self.global_values.exceptional = {
-		name_id = "bm_global_value_exceptional",
-		desc_id = "menu_l_global_value_exceptional",
-		color = Color.yellow,
-		dlc = false,
-		chance = 0.05,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "exceptional"),
-		durability_multiplier = 2.25,
-		drops = false,
-		track = false,
-		sort_number = 26,
-		category = nil
-	}
-	self.global_values.infamous = {
-		name_id = "bm_global_value_infamous",
-		desc_id = "menu_l_global_value_infamous",
-		color = Color(1, 0.1, 1),
-		dlc = false,
-		chance = 0.05,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "infamous"),
-		durability_multiplier = 3,
-		drops = true,
-		track = false,
-		sort_number = 30,
-		category = "infamous"
-	}
-	self.global_values.infamy = {
-		name_id = "bm_global_value_infamous",
-		desc_id = "menu_l_global_value_infamous",
-		color = Color(1, 0.1, 1),
-		dlc = false,
-		chance = 0.05,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "infamous"),
-		durability_multiplier = 3,
-		drops = false,
-		track = false,
-		sort_number = 35,
-		hide_unavailable = true,
-		category = "infamous"
-	}
-	self.global_values.preorder = {
-		name_id = "bm_global_value_preorder",
-		desc_id = "menu_l_global_value_preorder",
-		color = Color(255, 255, 212, 0) / 255,
-		dlc = true,
-		chance = 1,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "preorder"),
-		durability_multiplier = 1,
-		drops = false,
-		track = true,
-		sort_number = -10,
-		hide_unavailable = true
-	}
+	self.global_values.superior = {}
+	self.global_values.superior.name_id = "bm_global_value_superior"
+	self.global_values.superior.desc_id = "menu_l_global_value_superior"
+	self.global_values.superior.color = Color.blue
+	self.global_values.superior.dlc = false
+	self.global_values.superior.chance = 0.1
+	self.global_values.superior.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "superior")
+	self.global_values.superior.durability_multiplier = 1.5
+	self.global_values.superior.drops = false
+	self.global_values.superior.track = false
+	self.global_values.superior.sort_number = 25
+	self.global_values.superior.category = nil
+	self.global_values.exceptional = {}
+	self.global_values.exceptional.name_id = "bm_global_value_exceptional"
+	self.global_values.exceptional.desc_id = "menu_l_global_value_exceptional"
+	self.global_values.exceptional.color = Color.yellow
+	self.global_values.exceptional.dlc = false
+	self.global_values.exceptional.chance = 0.05
+	self.global_values.exceptional.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "exceptional")
+	self.global_values.exceptional.durability_multiplier = 2.25
+	self.global_values.exceptional.drops = false
+	self.global_values.exceptional.track = false
+	self.global_values.exceptional.sort_number = 26
+	self.global_values.exceptional.category = nil
+	self.global_values.infamous = {}
+	self.global_values.infamous.name_id = "bm_global_value_infamous"
+	self.global_values.infamous.desc_id = "menu_l_global_value_infamous"
+	self.global_values.infamous.color = Color(1, 0.1, 1)
+	self.global_values.infamous.dlc = false
+	self.global_values.infamous.chance = 0.05
+	self.global_values.infamous.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "infamous")
+	self.global_values.infamous.durability_multiplier = 3
+	self.global_values.infamous.drops = true
+	self.global_values.infamous.track = false
+	self.global_values.infamous.sort_number = 30
+	self.global_values.infamous.category = "infamous"
+	self.global_values.infamy = {}
+	self.global_values.infamy.name_id = "bm_global_value_infamous"
+	self.global_values.infamy.desc_id = "menu_l_global_value_infamous"
+	self.global_values.infamy.color = Color(1, 0.1, 1)
+	self.global_values.infamy.dlc = false
+	self.global_values.infamy.chance = 0.05
+	self.global_values.infamy.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "infamous")
+	self.global_values.infamy.durability_multiplier = 3
+	self.global_values.infamy.drops = false
+	self.global_values.infamy.track = false
+	self.global_values.infamy.sort_number = 35
+	self.global_values.infamy.hide_unavailable = true
+	self.global_values.infamy.category = "infamous"
+	self.global_values.preorder = {}
+	self.global_values.preorder.name_id = "bm_global_value_preorder"
+	self.global_values.preorder.desc_id = "menu_l_global_value_preorder"
+	self.global_values.preorder.color = Color(255, 255, 212, 0) / 255
+	self.global_values.preorder.dlc = true
+	self.global_values.preorder.chance = 1
+	self.global_values.preorder.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "preorder")
+	self.global_values.preorder.durability_multiplier = 1
+	self.global_values.preorder.drops = false
+	self.global_values.preorder.track = true
+	self.global_values.preorder.sort_number = -10
+	self.global_values.preorder.hide_unavailable = true
 	self.global_value_list_index = {
 		"normal"
 	}

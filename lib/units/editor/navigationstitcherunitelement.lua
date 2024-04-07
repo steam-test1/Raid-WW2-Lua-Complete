@@ -45,12 +45,15 @@ function NavigationStitcherUnitElement:draw_links(t, dt, selected_unit, all_unit
 end
 
 function NavigationStitcherUnitElement:update_editing()
+	return
 end
 
 function NavigationStitcherUnitElement:add_element()
+	return
 end
 
 function NavigationStitcherUnitElement:remove_links(unit)
+	return
 end
 
 function NavigationStitcherUnitElement:update_selected(t, dt, selected_unit, all_units)
@@ -74,6 +77,7 @@ function NavigationStitcherUnitElement:set_shape_property(params)
 end
 
 function NavigationStitcherUnitElement:add_triggers(vc)
+	return
 end
 
 function NavigationStitcherUnitElement:_set_shape_type()

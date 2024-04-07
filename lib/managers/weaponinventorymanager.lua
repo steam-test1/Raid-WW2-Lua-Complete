@@ -30,13 +30,12 @@ function WeaponInventoryManager.get_instance()
 end
 
 function WeaponInventoryManager:init()
-	self._categories = {
-		[WeaponInventoryManager.CATEGORY_NAME_MELEE] = {
-			save = WeaponInventoryManager.SAVE_TYPE_ACCOUNT,
-			bm_name = WeaponInventoryManager.BM_CATEGORY_MELEE_NAME,
-			bm_id = WeaponInventoryManager.BM_CATEGORY_MELEE_ID,
-			index_table = tweak_data.weapon_inventory.weapon_melee_index
-		}
+	self._categories = {}
+	self._categories[WeaponInventoryManager.CATEGORY_NAME_MELEE] = {
+		save = WeaponInventoryManager.SAVE_TYPE_ACCOUNT,
+		bm_name = WeaponInventoryManager.BM_CATEGORY_MELEE_NAME,
+		bm_id = WeaponInventoryManager.BM_CATEGORY_MELEE_ID,
+		index_table = tweak_data.weapon_inventory.weapon_melee_index
 	}
 end
 
@@ -94,9 +93,8 @@ function WeaponInventoryManager:_setup_initial_weapons()
 end
 
 function WeaponInventoryManager:_setup_initial_weapon_skins()
-	self._weapon_skins = {
-		_applied = {}
-	}
+	self._weapon_skins = {}
+	self._weapon_skins._applied = {}
 end
 
 function WeaponInventoryManager:get_all_weapons_from_category(category_name)
@@ -140,7 +138,7 @@ function WeaponInventoryManager:remove_melee_weapon_as_drop(drop)
 end
 
 function WeaponInventoryManager:get_weapon_data(weapon_category_name, weapon_id)
-	local result = nil
+	local result
 	local weapon_category_data = self._categories[weapon_category_name]
 
 	for _, weapon_data in pairs(weapon_category_data.index_table) do
@@ -211,6 +209,7 @@ function WeaponInventoryManager:save_account_wide_info(data)
 		melee_weapons = self._weapons[WeaponInventoryManager.CATEGORY_NAME_MELEE],
 		weapon_skins = self._weapon_skins
 	}
+
 	data.WeaponInventoryManager = state
 end
 
@@ -432,6 +431,7 @@ function WeaponInventoryManager:get_owned_grenades()
 	if tweak_data.weapon_inventory.weapon_grenades_index then
 		for index, weapon_data in pairs(tweak_data.weapon_inventory.weapon_grenades_index) do
 			local weapon_stats = tweak_data.projectiles[weapon_data.weapon_id]
+
 			weapon_data.unlocked = weapon_data.default or managers.upgrades:aquired(weapon_data.weapon_id)
 
 			if weapon_stats then

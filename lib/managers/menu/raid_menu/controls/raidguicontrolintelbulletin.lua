@@ -58,7 +58,9 @@ function RaidGUIControlIntelBulletin:_layout()
 		scroll_step = 19,
 		layer = self._object:layer() + 2
 	}
+
 	self.content_panel_scrollable_area = self._object:scrollable_area(content_panel_scrollable_area_params)
+
 	local content_panel_params = {
 		h = 512,
 		y = 0,
@@ -66,6 +68,7 @@ function RaidGUIControlIntelBulletin:_layout()
 		x = 0,
 		layer = self._object:layer() + 2
 	}
+
 	self._content_panel = self.content_panel_scrollable_area:get_panel():panel(content_panel_params)
 	self._title = self._content_panel:text({
 		vertical = "center",
@@ -106,6 +109,7 @@ end
 
 function RaidGUIControlIntelBulletin:set_data(item_value)
 	self._data = tweak_data.intel:get_item_data(self._category_name, item_value)
+
 	local text_top_coord = 0
 	local content_panel_height = 0
 

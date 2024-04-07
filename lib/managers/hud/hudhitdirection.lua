@@ -38,6 +38,7 @@ function HUDHitDirection:_create_panel(hud)
 		w = HUDHitDirection.W,
 		h = HUDHitDirection.H
 	}
+
 	self._object = hud.panel:panel(panel_params)
 
 	self._object:set_center(hud.panel:w() / 2, hud.panel:h() / 2)
@@ -96,6 +97,7 @@ function HUDHitDirection:_animate_hit_direction(direction)
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
 
 		direction:set_alpha(t / duration)
@@ -110,6 +112,7 @@ function HUDHitDirection:on_hit_unit(attack_data, unit_type_hit)
 	if not self._indicators[attacker_id] then
 		local indicator = self:_create_indicator("damage_indicator_unit_" .. attacker_id, 0, "center", "center")
 		local enemy_position = attack_data.attacker_unit:position()
+
 		self._indicators[attacker_id] = {
 			severity = 1,
 			need_to_extend = false,
@@ -134,7 +137,7 @@ function HUDHitDirection:_set_proper_severity(id)
 		return
 	end
 
-	if HUDHitDirection.SEVERITY_THRESHOLDS[self._indicators[id].severity + 1] < self._indicators[id].damage then
+	if self._indicators[id].damage > HUDHitDirection.SEVERITY_THRESHOLDS[self._indicators[id].severity + 1] then
 		self._indicators[id].severity = self._indicators[id].severity + 1
 
 		self._indicators[id].indicator:set_texture_rect(unpack(tweak_data.gui.icons[HUDHitDirection.DAMAGE_INDICATOR_BASE .. self._indicators[id].severity].texture_rect))

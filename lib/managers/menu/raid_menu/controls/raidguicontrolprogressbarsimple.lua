@@ -16,6 +16,7 @@ end
 
 function RaidGUIControlProgressBarSimple:_create_panel()
 	local progress_bar_params = clone(self._params)
+
 	progress_bar_params.name = progress_bar_params.name
 	progress_bar_params.layer = self._panel:layer() + 1
 	progress_bar_params.w = self._params.w or self._parent_panel:w()
@@ -37,6 +38,7 @@ function RaidGUIControlProgressBarSimple:_create_background_bar(...)
 		color = self._params.background_color or RaidGUIControlProgressBarSimple.DEFAULT_BACKGROUND_COLOR,
 		layer = self._object:layer() + 1
 	}
+
 	self._background = self._object:three_cut_bitmap(background_bar_params)
 end
 
@@ -49,7 +51,9 @@ function RaidGUIControlProgressBarSimple:_create_foreground_bar()
 		h = self._object:h(),
 		layer = self._object:layer() + 10
 	}
+
 	self._foreground = self._object:panel(foreground_panel_params)
+
 	local foreground_image_params = {
 		name = "foreground_bar",
 		y = 0,
@@ -61,6 +65,7 @@ function RaidGUIControlProgressBarSimple:_create_foreground_bar()
 		right = self._params.right or "if_right_base",
 		color = self._params.foreground_color or RaidGUIControlProgressBarSimple.DEFAULT_FOREGROUND_COLOR
 	}
+
 	self._foreground_image = self._foreground:three_cut_bitmap(foreground_image_params)
 end
 

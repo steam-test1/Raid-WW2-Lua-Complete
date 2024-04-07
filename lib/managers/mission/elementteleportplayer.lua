@@ -1,12 +1,11 @@
 core:import("CoreMissionScriptElement")
 
 ElementTeleportPlayer = ElementTeleportPlayer or class(CoreMissionScriptElement.MissionScriptElement)
-ElementTeleportPlayer.PEER_OFFSETS = {
-	0,
-	1,
-	-1,
-	2
-}
+ElementTeleportPlayer.PEER_OFFSETS = {}
+ElementTeleportPlayer.PEER_OFFSETS[1] = 0
+ElementTeleportPlayer.PEER_OFFSETS[2] = 1
+ElementTeleportPlayer.PEER_OFFSETS[3] = -1
+ElementTeleportPlayer.PEER_OFFSETS[4] = 2
 
 function ElementTeleportPlayer:init(...)
 	ElementTeleportPlayer.super.init(self, ...)
@@ -20,6 +19,7 @@ function ElementTeleportPlayer:get_spawn_position()
 	local peer_id = managers.network:session():local_peer():id()
 	local position = self._values.position
 	local x = self._values.rotation:x()
+
 	position = position + ElementTeleportPlayer.PEER_OFFSETS[peer_id] * x * 100
 
 	return position

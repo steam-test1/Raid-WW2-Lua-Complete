@@ -47,7 +47,7 @@ function GroupAIManager:set_state(name, world_id)
 end
 
 function GroupAIManager:set_current_state(name, world_id)
-	local new_state = nil
+	local new_state
 
 	if name == "empty" then
 		new_state = GroupAIStateEmpty

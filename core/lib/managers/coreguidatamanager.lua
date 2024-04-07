@@ -15,6 +15,7 @@ function GuiDataManager:init(scene_gui, res, safe_rect_pixels, safe_rect, static
 end
 
 function GuiDataManager:destroy()
+	return
 end
 
 function GuiDataManager:create_saferect_workspace()
@@ -111,6 +112,7 @@ function GuiDataManager:_setup_workspace_data()
 	self._fullrect_16_9_data = {}
 	self._fullrect_1280_data = {}
 	self._corner_saferect_1280_data = {}
+
 	local safe_rect = self:_get_safe_rect_pixels()
 	local scaled_size = self:scaled_size()
 	local res = self._static_resolution or RenderSettings.resolution
@@ -121,6 +123,7 @@ function GuiDataManager:_setup_workspace_data()
 	local safe_w = math.min(safe_rect.width, safe_rect.height * scaled_aspect)
 	local safe_x = (res.x - safe_h * scaled_aspect) / 2
 	local safe_y = (res.y - safe_w / scaled_aspect) / 2
+
 	self._safe_x = safe_x
 	self._safe_y = safe_y
 	self._saferect_data.w = scaled_w
@@ -130,9 +133,13 @@ function GuiDataManager:_setup_workspace_data()
 	self._saferect_data.x = safe_x
 	self._saferect_data.y = safe_y
 	self._saferect_data.on_screen_width = safe_w
+
 	local h_c = scaled_w / (safe_rect.width / safe_rect.height)
+
 	scaled_h = math.max(scaled_h, h_c)
+
 	local w_c = h_c / scaled_h
+
 	scaled_w = math.max(scaled_w, scaled_w / w_c)
 	self._corner_saferect_data.w = scaled_w
 	self._corner_saferect_data.h = scaled_h
@@ -160,8 +167,10 @@ function GuiDataManager:_setup_workspace_data()
 	scaled_h = base_res.y
 	safe_h = math.min(res.y, res.x / scaled_aspect)
 	safe_w = math.min(res.x, res.y * scaled_aspect)
+
 	local safe_x = (res.x - safe_h * scaled_aspect) / 2
 	local safe_y = (res.y - safe_w / scaled_aspect) / 2
+
 	self._fullrect_16_9_data.w = scaled_w
 	self._fullrect_16_9_data.h = scaled_h
 	self._fullrect_16_9_data.width = scaled_w
@@ -171,7 +180,9 @@ function GuiDataManager:_setup_workspace_data()
 	self._fullrect_16_9_data.on_screen_width = safe_w
 	self._fullrect_16_9_data.convert_x = math.floor((self._fullrect_16_9_data.w - self._saferect_data.w) / 2)
 	self._fullrect_16_9_data.convert_y = (self._fullrect_16_9_data.h - self._saferect_data.h) / 2
+
 	local aspect = math.clamp(res.x / res.y, 1, 1.7777777777777777)
+
 	scaled_w = base_res.x
 	scaled_h = base_res.x / aspect
 	safe_w = math.min(res.x, res.y * aspect)

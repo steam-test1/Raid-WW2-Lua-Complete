@@ -41,7 +41,9 @@ function RaidMenuOptionsSound:_layout_sound()
 			down = "slider_music"
 		}
 	}
+
 	self._progress_bar_menu_master_volume = self._root_panel:slider(master_params)
+
 	local music_params = {
 		name = "slider_music",
 		value_format = "%02d%%",
@@ -55,7 +57,9 @@ function RaidMenuOptionsSound:_layout_sound()
 			up = "slider_master"
 		}
 	}
+
 	self._progress_bar_menu_music_volume = self._root_panel:slider(music_params)
+
 	local sfx_params = {
 		name = "slider_sfx",
 		value_format = "%02d%%",
@@ -69,7 +73,9 @@ function RaidMenuOptionsSound:_layout_sound()
 			up = "slider_music"
 		}
 	}
+
 	self._progress_bar_menu_sfx_volume = self._root_panel:slider(sfx_params)
+
 	local voice_over_params = {
 		name = "slider_voice_over",
 		value_format = "%02d%%",
@@ -83,7 +89,9 @@ function RaidMenuOptionsSound:_layout_sound()
 			up = "slider_sfx"
 		}
 	}
+
 	self._progress_bar_menu_voice_over_volume = self._root_panel:slider(voice_over_params)
+
 	local voice_chat_params = {
 		name = "slider_voice_chat",
 		value_format = "%02d%%",
@@ -97,7 +105,9 @@ function RaidMenuOptionsSound:_layout_sound()
 			up = "slider_voice_over"
 		}
 	}
+
 	self._progress_bar_menu_voice_volume = self._root_panel:slider(voice_chat_params)
+
 	local use_voice_chat_params = {
 		name = "use_voice_chat",
 		description = utf8.to_upper(managers.localization:text("menu_voicechat_toggle")),
@@ -110,7 +120,9 @@ function RaidMenuOptionsSound:_layout_sound()
 			up = "slider_voice_chat"
 		}
 	}
+
 	self._toggle_menu_voicechat_toggle = self._root_panel:toggle_button(use_voice_chat_params)
+
 	local push_to_talk_params = {
 		name = "push_to_talk",
 		description = utf8.to_upper(managers.localization:text("menu_push_to_talk_toggle")),
@@ -123,7 +135,9 @@ function RaidMenuOptionsSound:_layout_sound()
 			up = "use_voice_chat"
 		}
 	}
+
 	self._toggle_menu_push_to_talk_toggle = self._root_panel:toggle_button(push_to_talk_params)
+
 	local tinnitus_params = {
 		name = "tinnitus",
 		description = utf8.to_upper(managers.localization:text("menu_tinnitus_toggle")),
@@ -135,6 +149,7 @@ function RaidMenuOptionsSound:_layout_sound()
 			up = "push_to_talk"
 		}
 	}
+
 	self._toggle_menu_tinnitus_toggle = self._root_panel:toggle_button(tinnitus_params)
 end
 

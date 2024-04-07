@@ -1,4 +1,5 @@
 local tmp_vec1 = Vector3()
+
 CopLogicSniper = class(CopLogicBase)
 CopLogicSniper.damage_clbk = CopLogicBase.damage_clbk
 CopLogicSniper.is_available_for_assignment = CopLogicAttack.is_available_for_assignment
@@ -17,10 +18,11 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 
 	local old_internal_data = data.internal_data
 	local my_data = {
-		unit = data.unit,
-		detection = data.char_tweak.detection.recon,
-		vision = data.char_tweak.vision.combat
+		unit = data.unit
 	}
+
+	my_data.detection = data.char_tweak.detection.recon
+	my_data.vision = data.char_tweak.vision.combat
 
 	if old_internal_data then
 		my_data.turning = old_internal_data.turning
@@ -38,7 +40,9 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	end
 
 	data.internal_data = my_data
+
 	local key_str = tostring(data.unit:key())
+
 	my_data.detection_task_key = "CopLogicSniper._upd_enemy_detection" .. key_str
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSniper._upd_enemy_detection, data)
@@ -96,6 +100,7 @@ function CopLogicSniper._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
 	data.t = TimerManager:game():time()
+
 	local my_data = data.internal_data
 	local min_reaction = AIAttentionObject.REACT_AIM
 	local delay = CopLogicBase._upd_attention_obj_detection(data, min_reaction, nil)
@@ -104,9 +109,9 @@ function CopLogicSniper._upd_enemy_detection(data)
 
 	CopLogicBase._set_attention_obj(data, new_attention, new_reaction)
 
-	if new_reaction and AIAttentionObject.REACT_SCARED <= new_reaction then
+	if new_reaction and new_reaction >= AIAttentionObject.REACT_SCARED then
 		local objective = data.objective
-		local wanted_state = nil
+		local wanted_state
 		local allow_trans, obj_failed = CopLogicBase.is_obstructed(data, objective, nil, new_attention)
 
 		if allow_trans and obj_failed then
@@ -138,11 +143,7 @@ function CopLogicSniper._upd_enemy_detection(data)
 		return
 	end
 
-	if data.important then
-		delay = 0
-	else
-		delay = 0.5 + delay * 1.5
-	end
+	delay = data.important and 0 or 0.5 + delay * 1.5
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSniper._upd_enemy_detection, data, data.t + delay)
 	CopLogicBase._report_detections(data.detected_attention_objects)
@@ -189,10 +190,12 @@ function CopLogicSniper._upd_aim(data, my_data)
 	local aim, shoot = data.logic._should_aim_or_shoot(data, my_data)
 	local focus_enemy = data.attention_obj
 	local action_taken = my_data.turning or data.unit:movement():chk_action_forbidden("walk")
+
 	action_taken = action_taken or data.logic._upd_aim_action(data, my_data)
 
 	if my_data.reposition and not action_taken and not my_data.advancing then
 		local objective = data.objective
+
 		my_data.advance_path = {
 			mvector3.copy(data.m_pos),
 			mvector3.copy(objective.pos)
@@ -209,7 +212,7 @@ end
 
 function CopLogicSniper._upd_aim_action(data, my_data)
 	local focus_enemy = data.attention_obj
-	local action_taken = nil
+	local action_taken
 	local anim_data = data.unit:anim_data()
 
 	if anim_data.reload and not anim_data.crouch and (not data.char_tweak.allowed_poses or data.char_tweak.allowed_poses.crouch) then
@@ -256,7 +259,7 @@ function CopLogicSniper._upd_aim_action(data, my_data)
 end
 
 function CopLogicSniper._should_aim_or_shoot(data, my_data)
-	local aim, shoot = nil
+	local aim, shoot
 	local focus_enemy = data.attention_obj
 
 	if focus_enemy then
@@ -300,7 +303,7 @@ function CopLogicSniper._aim_or_shoot(data, my_data, aim, shoot)
 		data.logic._request_action_shoot(data, my_data)
 	else
 		if my_data.shooting then
-			local new_action = nil
+			local new_action
 
 			if data.unit:anim_data().reload then
 				new_action = {

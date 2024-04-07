@@ -68,7 +68,9 @@ function RaidGUIControlLootBreakdownItem:_add_point(main_icon, duration)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_y_offset = Easing.linear(t, 0, y_move, duration)
 
 		icon:set_center_y(RaidGUIControlLootBreakdownItem.TOP_PART_H / 2 + current_y_offset)
@@ -89,6 +91,7 @@ function RaidGUIControlLootBreakdownItem:_create_panel()
 		alpha = 0,
 		w = RaidGUIControlLootBreakdownItem.W
 	}
+
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -98,6 +101,7 @@ function RaidGUIControlLootBreakdownItem:_create_icon()
 		texture = tweak_data.gui.icons[self._params.icon].texture,
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect
 	}
+
 	self._icon = self._object:bitmap(icon_params)
 
 	self._icon:set_center_y(RaidGUIControlLootBreakdownItem.TOP_PART_H / 2)
@@ -108,6 +112,7 @@ function RaidGUIControlLootBreakdownItem:_create_text_panel()
 		name = "text_panel",
 		h = RaidGUIControlLootBreakdownItem.TEXT_PANEL_H
 	}
+
 	self._text_panel = self._object:panel(text_panel_params)
 
 	self._text_panel:set_center_y(RaidGUIControlLootBreakdownItem.TOP_PART_H / 2)
@@ -126,6 +131,7 @@ function RaidGUIControlLootBreakdownItem:_create_counter()
 		font_size = RaidGUIControlLootBreakdownItem.COUNTER_FONT_SIZE,
 		color = RaidGUIControlLootBreakdownItem.COUNTER_COLOR
 	}
+
 	self._counter = self._text_panel:text(counter_params)
 
 	self:_refresh_counter()
@@ -155,6 +161,7 @@ function RaidGUIControlLootBreakdownItem:_create_title()
 		color = RaidGUIControlLootBreakdownItem.TITLE_COLOR,
 		text = self:translate(self._params.title, true)
 	}
+
 	self._title = self._text_panel:text(title_params)
 end
 
@@ -162,13 +169,14 @@ function RaidGUIControlLootBreakdownItem:_refresh_layout()
 	local _, _, counter_w, _ = self._counter:text_rect()
 	local _, _, title_w, _ = self._title:text_rect()
 	local text_w = title_w < counter_w and counter_w or title_w
+
 	text_w = 32 * math.ceil((text_w + 33) / 32)
 
 	self._text_panel:set_w(math.ceil(text_w))
 	self._counter:set_w(math.ceil(text_w))
 	self._title:set_w(math.ceil(text_w))
 
-	if self._object:w() < self._text_panel:w() + RaidGUIControlLootBreakdownItem.ICON_LAYOUT_W + 2 * RaidGUIControlLootBreakdownItem.HORIZONTAL_PADDING then
+	if self._text_panel:w() + RaidGUIControlLootBreakdownItem.ICON_LAYOUT_W + 2 * RaidGUIControlLootBreakdownItem.HORIZONTAL_PADDING > self._object:w() then
 		self._object:set_w(math.ceil(self._text_panel:w() + RaidGUIControlLootBreakdownItem.ICON_LAYOUT_W + 2 * RaidGUIControlLootBreakdownItem.HORIZONTAL_PADDING))
 	end
 
@@ -179,6 +187,7 @@ function RaidGUIControlLootBreakdownItem:_refresh_layout()
 end
 
 function RaidGUIControlLootBreakdownItem:close()
+	return
 end
 
 function RaidGUIControlLootBreakdownItem:animate_icon()
@@ -198,7 +207,9 @@ function RaidGUIControlLootBreakdownItem:animate_show()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_out(t, 0, 1, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -224,7 +235,9 @@ function RaidGUIControlLootBreakdownItem:animate_empty()
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_icon_r = Easing.quartic_out(t, initial_icon_color.r, RaidGUIControlLootBreakdownItem.COLOR_EMPTY.r - initial_icon_color.r, duration)
 		local current_icon_g = Easing.quartic_out(t, initial_icon_color.g, RaidGUIControlLootBreakdownItem.COLOR_EMPTY.g - initial_icon_color.g, duration)
 		local current_icon_b = Easing.quartic_out(t, initial_icon_color.b, RaidGUIControlLootBreakdownItem.COLOR_EMPTY.b - initial_icon_color.b, duration)
@@ -293,7 +306,9 @@ function RaidGUIControlLootBreakdownItem:_animate_hide(panel, delay)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, initial_alpha, -initial_alpha, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -316,7 +331,9 @@ function RaidGUIControlLootBreakdownItem:_animate_move_right(panel, offset)
 
 	while t < duration do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local current_alpha = Easing.quartic_in_out(t, initial_alpha, 0.5 - initial_alpha, duration)
 
 		self._object:set_alpha(current_alpha)
@@ -353,8 +370,10 @@ function RaidGUIControlLootBreakdownItem:_animate_icon(icon)
 
 		while t < cycle_duration do
 			local dt = coroutine.yield()
+
 			t = t + dt
-			local current_y_offset = nil
+
+			local current_y_offset
 
 			if first_cycle then
 				current_y_offset = Easing.quartic_in(t, 0, y_move, cycle_duration)
