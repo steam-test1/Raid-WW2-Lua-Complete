@@ -20,8 +20,6 @@ function RumbleManager:add_preset_rumbles(name, data)
 end
 
 function RumbleManager:initialize_controller_types()
-	self._rumbling_controller_types.xbox360 = true
-	self._rumbling_controller_types.ps3 = true
 	self._rumbling_controller_types.ps4 = true
 	self._rumbling_controller_types.xb1 = true
 end

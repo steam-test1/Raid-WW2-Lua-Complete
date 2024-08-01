@@ -1,4 +1,3 @@
-local ids_unit = Idstring("unit")
 WeaponFactoryManager = WeaponFactoryManager or class()
 WeaponFactoryManager._uses_tasks = false
 WeaponFactoryManager._uses_streaming = true
@@ -430,7 +429,7 @@ function WeaponFactoryManager:_preload_part(factory_id, part_id, forbidden, over
 
 		if not only_record then
 			if async_task_data then
-				managers.dyn_resource:load(ids_unit, ids_unit_name, managers.dyn_resource.DYN_RESOURCES_PACKAGE, callback(self, self, "clbk_part_unit_loaded", async_task_data))
+				managers.dyn_resource:load(IDS_UNIT, ids_unit_name, managers.dyn_resource.DYN_RESOURCES_PACKAGE, callback(self, self, "clbk_part_unit_loaded", async_task_data))
 			else
 				managers.dyn_resource:load(unpack(parts[part_id]))
 			end
@@ -445,6 +444,8 @@ function WeaponFactoryManager:assemble_default(factory_id, p_unit, third_person,
 end
 
 function WeaponFactoryManager:assemble_from_blueprint(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
+	Application:trace("[WEPTEST] assemble_from_blueprint", debug.traceback())
+
 	return self:_assemble(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
 end
 
@@ -539,7 +540,7 @@ function WeaponFactoryManager:_add_part_for_visual_only(p_unit, factory_id, part
 	local unit_name = third_person and part.third_unit or part.unit
 	local ids_unit_name = Idstring(unit_name)
 
-	managers.dyn_resource:load(ids_unit, ids_unit_name, "packages/dyn_resources", false)
+	managers.dyn_resource:load(IDS_UNIT, ids_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 
 	local unit = World:spawn_unit(Idstring(part.unit), link_to_unit:get_object(Idstring(part.a_obj)):position(), link_to_unit:get_object(Idstring(part.a_obj)):rotation())
 	parts[part_id] = {
@@ -834,10 +835,10 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 			parent = part.parent
 		}
 
-		managers.dyn_resource:load(ids_unit, ids_unit_name, "packages/dyn_resources", callback(self, self, "clbk_part_unit_loaded", async_task_data))
+		managers.dyn_resource:load(IDS_UNIT, ids_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "clbk_part_unit_loaded", async_task_data))
 	else
 		if not package then
-			managers.dyn_resource:load(ids_unit, ids_unit_name, "packages/dyn_resources", false)
+			managers.dyn_resource:load(IDS_UNIT, ids_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 		end
 
 		local unit = self:_spawn_and_link_unit(ids_unit_name, Idstring(part.a_obj), third_person, link_to_unit)
@@ -859,11 +860,13 @@ function WeaponFactoryManager:clbk_part_unit_loaded(task_data, status, u_type, u
 		local function _spawn(part)
 			local unit = self:_spawn_and_link_unit(part.name, part.a_obj, task_data.third_person, part.link_to_unit)
 
-			unit:set_enabled(false)
+			if alive(unit) then
+				unit:set_enabled(false)
 
-			part.unit = unit
-			part.a_obj = nil
-			part.link_to_unit = nil
+				part.unit = unit
+				part.a_obj = nil
+				part.link_to_unit = nil
+			end
 		end
 
 		for part_id, part in pairs(task_data.parts) do
@@ -935,14 +938,18 @@ function WeaponFactoryManager:clbk_part_unit_loaded(task_data, status, u_type, u
 end
 
 function WeaponFactoryManager:_spawn_and_link_unit(u_name, a_obj, third_person, link_to_unit)
-	local unit = World:spawn_unit(u_name, Vector3(), Rotation())
-	local res = link_to_unit:link(a_obj, unit, unit:orientation_object():name())
+	if alive(link_to_unit) then
+		local unit = World:spawn_unit(u_name, Vector3(), Rotation())
+		local res = link_to_unit:link(a_obj, unit, unit:orientation_object():name())
 
-	if managers.occlusion and not third_person then
-		managers.occlusion:remove_occlusion(unit)
+		if managers.occlusion and not third_person then
+			managers.occlusion:remove_occlusion(unit)
+		end
+
+		return unit
+	else
+		Application:error("[WeaponFactoryManager:_spawn_and_link_unit] LINK TO UNIT WAS NOT ALIVE", u_name, a_obj, third_person, link_to_unit)
 	end
-
-	return unit
 end
 
 function WeaponFactoryManager:load_package(package)
@@ -1636,7 +1643,7 @@ function WeaponFactoryManager:disassemble(parts)
 	parts = {}
 
 	for _, name in pairs(names) do
-		managers.dyn_resource:unload(ids_unit, name, "packages/dyn_resources", false)
+		managers.dyn_resource:unload(IDS_UNIT, name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 	end
 end
 

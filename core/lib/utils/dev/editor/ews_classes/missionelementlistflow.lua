@@ -1,14 +1,16 @@
 MissionElementListFlow = MissionElementListFlow or class(CoreEditorEwsDialog)
 
 function MissionElementListFlow:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Mission List Flow", "", Vector3(300, 150, 0), Vector3(700, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "Mission List Flow", "", Vector3(300, 150, 0), Vector3(700, 400, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(600, 380, 0))
 	self:create_panel("VERTICAL")
 
 	self._use_look_at = false
 	local toolbar_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._panel_sizer:add(toolbar_sizer, 0, 0, "EXPAND")
-	self._panel:set_background_colour(255, 255, 255)
 
 	local toolbar = EWS:ToolBar(self._panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -77,8 +79,8 @@ function MissionElementListFlow:init(...)
 	button_sizer:add(close_btn, 0, 2, "RIGHT,LEFT")
 	close_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	close_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,LEFT,RIGHT")
 	self._dialog:set_visible(true)
 
 	self._unit_history = {}

@@ -1,5 +1,6 @@
 core:register_module("lib/managers/RumbleManager")
 core:import("CoreAiDataManager")
+core:import("CoreSubtitlePresenter")
 require("lib/setups/Setup")
 require("lib/utils/ListenerHolder")
 require("lib/managers/SlotManager")
@@ -96,6 +97,7 @@ require("lib/units/characters/CharacterCustomization")
 require("lib/units/characters/CharacterCustomizationFps")
 require("lib/units/vehicles/AnimatedVehicleBase")
 require("lib/units/props/PowerupShelf")
+require("lib/units/props/CarryAlignAnimator")
 require("lib/units/vehicles/VehicleDrivingExt")
 require("lib/units/vehicles/VehicleDamage")
 require("lib/units/vehicles/npc/NpcVehicleDamage")
@@ -196,7 +198,7 @@ require("lib/units/props/FlamerTank")
 require("lib/units/props/MetalDetector")
 require("lib/units/props/ManageSpawnedUnits")
 require("lib/units/characters/CharacterManageSpawnedUnits")
-require("lib/units/RevivePumpkinExt")
+require("lib/units/props/RevivePumpkinExt")
 require("lib/units/props/FauxContainer")
 
 GameSetup = GameSetup or class(Setup)
@@ -243,6 +245,8 @@ function GameSetup:load_packages()
 		local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 		level_package = lvl_tweak_data and lvl_tweak_data.package
 	end
+
+	Application:debug("[GameSetup:load_packages()] Loading level package exists?", level_package)
 
 	if level_package then
 		Application:debug("[GameSetup:load_packages()] Loading level package", inspect(level_package))
@@ -341,10 +345,6 @@ function GameSetup:init_managers(managers)
 	managers.drop_loot = DropLootManager:new()
 	managers.notification = NotificationManager:new()
 	managers.test = TestManager:new()
-
-	if _G.IS_XB360 then
-		managers.blackmarket:load_equipped_weapons()
-	end
 end
 
 function GameSetup:init_game()
@@ -385,6 +385,8 @@ function GameSetup:init_game()
 end
 
 function GameSetup:init_finalize()
+	Application:debug("[GameSetup:init_finalize()] Finalizing now...")
+
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
 	end
@@ -401,18 +403,15 @@ function GameSetup:init_finalize()
 
 	if not Application:editor() then
 		managers.navigation:on_game_started()
-	end
-
-	if not Application:editor() then
 		game_state_machine:change_state_by_name("ingame_waiting_for_players")
-	end
-
-	if _G.IS_PS3 or _G.IS_PS4 then
-		managers.achievment:chk_install_trophies()
 	end
 
 	if managers.music then
 		managers.music:init_finalize()
+	end
+
+	if managers.savefile and not Application:editor() then
+		managers.savefile:precache_data()
 	end
 
 	managers.dyn_resource:post_init()
@@ -420,6 +419,7 @@ function GameSetup:init_finalize()
 	self._keyboard = Input:keyboard()
 
 	managers.network.account:set_playing(true)
+	Application:debug("[GameSetup:init_finalize()] Finalizing done!")
 end
 
 function GameSetup:update(t, dt)
@@ -450,6 +450,7 @@ function GameSetup:update(t, dt)
 	managers.barrage:update(t, dt)
 	managers.queued_tasks:update(t, dt)
 	managers.test:update(t, dt)
+	managers.warcry:update(t, dt)
 
 	if script_data.level_script and script_data.level_script.update then
 		script_data.level_script:update(t, dt)
@@ -495,7 +496,6 @@ function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
 	managers.hud:save(data)
-	managers.objectives:save(data)
 	managers.music:save(data)
 	managers.environment_effects:save(data)
 	managers.mission:save(data)
@@ -515,13 +515,13 @@ function GameSetup:save(data)
 	managers.buff_effect:save_dropin(data)
 	managers.lootdrop:sync_save(data)
 	managers.raid_job:sync_save(data)
+	managers.objectives:save(data)
 	managers.statistics:sync_save(data)
 end
 
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.hud:load(data)
-	managers.objectives:load(data)
 	managers.music:load(data)
 	managers.environment_effects:load(data)
 	managers.mission:load(data)
@@ -542,6 +542,7 @@ function GameSetup:load(data)
 	managers.buff_effect:load_dropin(data)
 	managers.lootdrop:sync_load(data)
 	managers.raid_job:sync_load(data)
+	managers.objectives:load(data)
 	managers.statistics:sync_load(data)
 end
 

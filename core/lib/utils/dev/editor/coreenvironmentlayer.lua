@@ -420,7 +420,10 @@ function EnvironmentLayer:on_environment_list_changed()
 end
 
 function EnvironmentLayer:build_panel(notebook)
-	EnvironmentLayer.super.build_panel(self, notebook)
+	EnvironmentLayer.super.build_panel(self, notebook, {
+		units_noteboook_proportion = 0,
+		units_notebook_min_size = Vector3(1, 165, 0)
+	})
 	cat_print("editor", "EnvironmentLayer:build_panel")
 
 	self._env_panel = EWS:Panel(self._ews_panel, "", "TAB_TRAVERSAL")
@@ -642,7 +645,7 @@ function EnvironmentLayer:build_panel(notebook)
 	reload_effects:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "populate_unit_effects"), nil)
 	unit_effect_sizer:add(reload_effects, 0, 5, "EXPAND,LEFT")
 	self._env_sizer:add(unit_effect_sizer, 0, 0, "EXPAND")
-	self._sizer:add(self._env_panel, 4, 0, "EXPAND")
+	self._sizer:add(self._env_panel, 1, 0, "EXPAND")
 
 	return self._ews_panel
 end
@@ -652,9 +655,7 @@ function EnvironmentLayer:populate_unit_effects()
 	self._unit_effects:append("none")
 
 	for _, name in ipairs(managers.database:list_entries_of_type("effect")) do
-		if string.match(name, "scene_") then
-			self._unit_effects:append(name)
-		end
+		self._unit_effects:append(name)
 	end
 
 	self._unit_effects:set_value("none")
@@ -663,22 +664,23 @@ end
 
 function EnvironmentLayer:create_cube_map(type)
 	local cubes = {}
+	local output_name = "output_"
 
 	if type == "all" then
 		for _, unit in ipairs(self._created_units) do
 			if unit:name() == Idstring(self._cubemap_unit) then
 				table.insert(cubes, {
-					output_name = "outputcube",
 					position = unit:position(),
-					name = unit:unit_data().name_id
+					name = unit:unit_data().name_id,
+					output_name = output_name .. unit:unit_data().name_id
 				})
 			end
 		end
 	elseif type == "selected" and self._selected_unit:name() == Idstring(self._cubemap_unit) then
 		table.insert(cubes, {
-			output_name = "outputcube",
 			position = self._selected_unit:position(),
-			name = self._selected_unit:unit_data().name_id
+			name = self._selected_unit:unit_data().name_id,
+			output_name = output_name .. self._selected_unit:name()
 		})
 	end
 
@@ -973,10 +975,6 @@ function EnvironmentLayer:set_environment_area_parameters()
 			self._current_shape_panel:set_visible(true)
 		end
 	end
-
-	self._env_panel:layout()
-	self._ews_panel:fit_inside()
-	self._ews_panel:refresh()
 end
 
 function EnvironmentLayer:wind_description(speed)

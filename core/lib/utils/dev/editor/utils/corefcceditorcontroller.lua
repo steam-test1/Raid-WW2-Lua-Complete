@@ -201,6 +201,8 @@ function FFCEditorController:start_cube_map(params)
 			rot = Rotation(-rot:z(), rot:y())
 
 			self._params.unit:set_rotation(rot)
+		else
+			self._camera:set_rotation(self._params.unit:rotation())
 		end
 	end
 
@@ -317,6 +319,13 @@ function FFCEditorController:_create_spot_projection()
 
 	self._camera:set_rotation(Rotation(-self._params.light:rotation():z(), Vector3(0, 0, 1)))
 	Application:screenshot(self._name_ordered[1], x1, y1, x2, y2)
+end
+
+function FFCEditorController:_add_meta_data(file, meta)
+	local execute = managers.database:root_path() .. "aux_assets/engine/tools/diesel_dds_tagger.exe "
+	execute = execute .. file .. " " .. meta
+
+	os.execute(execute)
 end
 
 function FFCEditorController:update_orthographic(time, rel_time)

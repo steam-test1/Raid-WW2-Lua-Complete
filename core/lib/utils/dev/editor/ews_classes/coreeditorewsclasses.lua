@@ -623,7 +623,10 @@ end
 UnitTreeBrowser = UnitTreeBrowser or class(CoreEditorEwsDialog)
 
 function UnitTreeBrowser:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Browse avalible units", "", Vector3(200, 100, 0), Vector3(400, 900, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "Browse avalible units", "", Vector3(200, 100, 0), Vector3(400, 800, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(350, 500, 0))
 	self:create_panel("VERTICAL")
 
 	self._unit_names = {}
@@ -647,7 +650,7 @@ function UnitTreeBrowser:init(...)
 
 	self:create_image_list()
 	vertical_tree_sizer:add(self._unit_tree, 1, 0, "EXPAND")
-	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 0, "EXPAND")
+	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 5, "EXPAND,ALL")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
 	local expand_all_btn = EWS:Button(self._panel, "Expand All", "", "")
@@ -671,7 +674,7 @@ function UnitTreeBrowser:init(...)
 	self:update_tree()
 	self._unit_tree:connect("EVT_COMMAND_TREE_SEL_CHANGED", callback(self, self, "on_select"), "")
 	self._unit_tree:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:set_visible(true)
 end
 
@@ -891,7 +894,10 @@ end
 GlobalSelectUnit = GlobalSelectUnit or class(CoreEditorEwsDialog)
 
 function GlobalSelectUnit:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Global select unit v2", "", Vector3(525, 160, 0), Vector3(560, 680, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX")
+
+	CoreEditorEwsDialog.init(self, nil, "Global select unit v2", "", Vector3(525, 160, 0), Vector3(560, 660, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(555, 610, 0))
 	self:create_panel("VERTICAL")
 
 	self._preview_unit = nil
@@ -902,23 +908,17 @@ function GlobalSelectUnit:init(...)
 
 	local list_sizer = EWS:BoxSizer("VERTICAL")
 
-	horizontal_ctrlr_sizer:add(list_sizer, 3, 0, "EXPAND")
+	horizontal_ctrlr_sizer:add(list_sizer, 4, 0, "EXPAND")
 
-	local layers_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Type filter")
+	local list_ctrlrs = EWS:BoxSizer("VERTICAL")
 
-	horizontal_ctrlr_sizer:add(layers_sizer, 1, 0, "EXPAND")
+	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 5, "EXPAND,ALIGN_RIGHT,LEFT")
 
-	self._all_names = self:_all_unit_names()
-	self._names_as_ipairs = table.map_keys(self._all_names)
+	local filter_settings_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Filter settings")
 	self._short_name = EWS:CheckBox(self._panel, "Short name", "", "ALIGN_LEFT")
 
 	self._short_name:set_value(true)
-	list_sizer:add(self._short_name, 0, 5, "TOP,LEFT,EXPAND")
-	list_sizer:add(EWS:StaticText(self._panel, "Filter", 0, ""), 0, 0, "ALIGN_CENTER_HORIZONTAL")
-
-	self._filter = EWS:TextCtrl(self._panel, "", "", "TE_CENTRE")
-
-	list_sizer:add(self._filter, 0, 0, "EXPAND")
+	filter_settings_sizer:add(self._short_name, 0, 2, "EXPAND,BOTTOM,LEFT")
 
 	local cb = EWS:CheckBox(self._panel, "Only list used units", "", "ALIGN_LEFT")
 
@@ -927,7 +927,21 @@ function GlobalSelectUnit:init(...)
 		cb = cb
 	})
 	cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	list_sizer:add(cb, 0, 5, "TOP,BOTTOM,LEFT")
+	filter_settings_sizer:add(cb, 0, 2, "EXPAND,BOTTOM,LEFT")
+	list_ctrlrs:add(filter_settings_sizer, 0, 2, "EXPAND,BOTTOM")
+
+	local layers_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Type filter")
+
+	list_ctrlrs:add(layers_sizer, 1, 2, "EXPAND,TOP")
+
+	self._all_names = self:_all_unit_names()
+	self._names_as_ipairs = table.map_keys(self._all_names)
+
+	list_sizer:add(EWS:StaticText(self._panel, "Filter", 0, ""), 0, 0, "ALIGN_CENTER_HORIZONTAL")
+
+	self._filter = EWS:TextCtrl(self._panel, "", "", "TE_CENTRE")
+
+	list_sizer:add(self._filter, 0, 0, "EXPAND")
 
 	self._units = EWS:ListCtrl(self._panel, "", "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING,LC_SINGLE_SEL")
 
@@ -941,33 +955,6 @@ function GlobalSelectUnit:init(...)
 	self._short_name:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "update_list"), nil)
 	self._filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_list"), nil)
 	self._filter:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	self._layer_cbs = {}
-	local layers = managers.editor:layers()
-	local names_layers = {}
-
-	for name, layer in pairs(layers) do
-		for _, type in ipairs(layer:unit_types()) do
-			table.insert(names_layers, type)
-		end
-	end
-
-	table.sort(names_layers)
-
-	for _, name in ipairs(names_layers) do
-		local cb = EWS:CheckBox(self._panel, name, "")
-
-		cb:set_value(true)
-
-		self._layer_cbs[name] = cb
-
-		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
-			cb = cb,
-			name = name
-		})
-		cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-		layers_sizer:add(cb, 0, 2, "EXPAND,TOP")
-	end
 
 	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
 	local all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
@@ -988,6 +975,47 @@ function GlobalSelectUnit:init(...)
 	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
 	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
+
+	local layers_panel = EWS:ScrolledWindow(self._panel, "", "VSCROLL")
+
+	layers_panel:set_scroll_rate(Vector3(0, 20, 0))
+	layers_panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
+	layers_panel:refresh()
+
+	local layers_panel_sizer = EWS:BoxSizer("VERTICAL")
+
+	layers_panel:set_sizer(layers_panel_sizer)
+
+	self._layer_cbs = {}
+	local layers = managers.editor:layers()
+	local names_layers = {}
+
+	for name, layer in pairs(layers) do
+		for _, type in ipairs(layer:unit_types()) do
+			table.insert(names_layers, type)
+		end
+	end
+
+	table.sort(names_layers)
+
+	for _, name in ipairs(names_layers) do
+		local cb = EWS:CheckBox(layers_panel, name, "")
+
+		cb:set_value(true)
+
+		self._layer_cbs[name] = cb
+
+		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
+			cb = cb,
+			name = name
+		})
+		cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+		layers_panel_sizer:add(cb, 1, 2, "EXPAND,TOP,LEFT")
+	end
+
+	layers_panel:refresh()
+	layers_panel:fit_inside()
+	layers_sizer:add(layers_panel, 2, 0, "EXPAND")
 	self:update_list()
 
 	local btn_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -1002,9 +1030,9 @@ function GlobalSelectUnit:init(...)
 
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	btn_sizer:add(cancel_btn, 0, 5, "RIGHT")
-	self._panel_sizer:add(btn_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	btn_sizer:add(cancel_btn, 0, 0, "")
+	self._panel_sizer:add(btn_sizer, 0, 4, "ALIGN_RIGHT,TOP")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:set_visible(true)
 end
 
@@ -1699,7 +1727,8 @@ end
 MoveTransformTypeIn = MoveTransformTypeIn or class(CoreEditorEwsDialog)
 
 function MoveTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(264, 129, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(320, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
@@ -1716,8 +1745,8 @@ function MoveTransformTypeIn:init()
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
-	self._panel_sizer:add(offset_sizer, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
 
@@ -1852,7 +1881,8 @@ end
 RotateTransformTypeIn = RotateTransformTypeIn or class(CoreEditorEwsDialog)
 
 function RotateTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(264, 129, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(320, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
@@ -1869,8 +1899,8 @@ function RotateTransformTypeIn:init()
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
-	self._panel_sizer:add(offset_sizer, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
 
@@ -2163,7 +2193,8 @@ end
 CameraTransformTypeIn = CameraTransformTypeIn or class(CoreEditorEwsDialog)
 
 function CameraTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Camera transform type-in", "", Vector3(761, 180, 0), Vector3(291, 210, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	CoreEditorEwsDialog.init(self, nil, "Camera transform type-in", "", Vector3(761, 180, 0), Vector3(330, 220, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(330, 220, 0))
 	self:create_panel("VERTICAL")
 
 	self._min = -100000000
@@ -2181,7 +2212,7 @@ function CameraTransformTypeIn:init()
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
-	pos_rot_sizer:add(offset_sizer, 1, 0, "EXPAND")
+	pos_rot_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
 	self._panel_sizer:add(pos_rot_sizer, 5, 0, "EXPAND")
 
 	local settings_sizer = EWS:StaticBoxSizer(self._panel, "HORIZONTAL")
@@ -2191,7 +2222,7 @@ function CameraTransformTypeIn:init()
 	self._fov = self:_create_fov_ctrl(settings_sizer)
 	self._far_range = self:_create_far_range_ctrl(settings_sizer)
 
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(true)
 end
 
@@ -2505,7 +2536,10 @@ end
 WorldEditorNews = WorldEditorNews or class(CoreEditorEwsDialog)
 
 function WorldEditorNews:init()
-	CoreEditorEwsDialog.init(self, nil, "World editor news", "", Vector3(270, 130, 0), Vector3(560, 620, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "World editor news", "", Vector3(270, 130, 0), Vector3(600, 620, 0), styles)
+	self._dialog:set_min_size(Vector3(550, 500, 0))
 
 	self._captions = {}
 
@@ -2531,8 +2565,8 @@ function WorldEditorNews:init()
 	button_sizer:add(self._cancel_btn, 0, 2, "RIGHT,LEFT")
 	self._cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	self._cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,TOP,LEFT,RIGHT")
 	self._dialog:set_visible(true)
 end
 

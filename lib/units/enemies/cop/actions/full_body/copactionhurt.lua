@@ -497,7 +497,7 @@ function CopActionHurt:init(action_desc, common_data)
 		self._machine:set_parameter(redir_res, "var" .. tostring(variant), 1)
 	elseif action_type == "death" and (self._ext_anim.run or self._ext_anim.ragdoll) and self:_start_ragdoll() then
 		self.update = self._upd_ragdolled
-	elseif action_type == "heavy_hurt" and (self._ext_anim.run or self._ext_anim.sprint) and not common_data.is_suppressed and not crouching then
+	elseif action_type == "knockdown" or action_type == "heavy_hurt" and (self._ext_anim.run or self._ext_anim.sprint) and not common_data.is_suppressed and not crouching then
 		redir_res = self._ext_movement:play_redirect("heavy_run")
 
 		if not redir_res then
@@ -752,25 +752,13 @@ function CopActionHurt:init(action_desc, common_data)
 		end
 
 		if Network:is_server() then
-			local radius, filter_name = nil
-			local default_radius = managers.groupai:state():whisper_mode() and tweak_data.upgrades.cop_hurt_alert_radius_whisper or tweak_data.upgrades.cop_hurt_alert_radius
-
-			if action_desc.attacker_unit and action_desc.attacker_unit:base().upgrade_value then
-				radius = action_desc.attacker_unit:base():upgrade_value("player", "silent_kill") or default_radius
-			elseif action_desc.attacker_unit and action_desc.attacker_unit:base().is_local_player then
-				radius = managers.player:upgrade_value("player", "silent_kill", default_radius)
-			end
-
-			local radius = 25
-			local new_alert = {
+			managers.groupai:state():propagate_alert({
 				"vo_distress",
 				common_data.ext_movement:m_head_pos(),
-				radius or default_radius,
+				25,
 				self._unit:brain():SO_access(),
 				self._unit
-			}
-
-			managers.groupai:state():propagate_alert(new_alert)
+			})
 		end
 	end
 

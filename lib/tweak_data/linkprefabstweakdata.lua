@@ -6,27 +6,16 @@ function LinkPrefabsTweakData:init()
 		align_obj = "anim_body",
 		props = {
 			{
-				unit = "units/vanilla/props/props_wood_box_weapons/props_wooden_box_weapons2",
-				pos = Vector3(0, 0, 60),
-				rot = Rotation(90, 0, 0),
-				sequences = {
-					_init = "set_body_animated"
-				}
+				unit = "units/vanilla/props/props_sandbags_05/props_sandbags_05",
+				pos = Vector3(0, 25, 70),
+				rot = Rotation(0, 0, 0)
 			},
 			{
-				unit = "units/vanilla/props/props_wood_box_weapons/props_wooden_box_weapons2",
-				pos = Vector3(0, 0, 85),
-				rot = Rotation(88, 0, 0),
+				unit = "units/vanilla/turrets/turret_m2/turret_m2",
+				pos = Vector3(0, -10, 70),
+				rot = Rotation(0, 0, 0),
 				sequences = {
-					_init = "set_body_animated"
-				}
-			},
-			{
-				unit = "units/vanilla/props/props_wood_box_weapons/props_wooden_box_weapons2",
-				pos = Vector3(0, -55, 60),
-				rot = Rotation(93, 0, 0),
-				sequences = {
-					_init = "set_body_animated"
+					_init = "disable_search_for_enemies"
 				}
 			}
 		}

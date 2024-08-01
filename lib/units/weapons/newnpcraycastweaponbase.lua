@@ -38,7 +38,7 @@ function NewNPCRaycastWeaponBase:init(unit)
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
-	self._use_shell_ejection_effect = _G.IS_PC
+	self._use_shell_ejection_effect = IS_PC
 
 	if self._use_shell_ejection_effect then
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
@@ -187,13 +187,15 @@ function NewNPCRaycastWeaponBase:singleshot(...)
 end
 
 function NewNPCRaycastWeaponBase:trigger_held(...)
-	local fired = nil
+	local fired = false
+	local app_t = Application:time()
 
-	if self._next_fire_allowed <= Application:time() then
+	if self._next_fire_allowed <= app_t then
 		fired = self:fire(...)
 
 		if fired then
-			self._next_fire_allowed = self._next_fire_allowed + tweak_data.weapon[self._name_id].auto.fire_rate
+			local fire_rate = tweak_data.weapon[self._name_id].auto and tweak_data.weapon[self._name_id].auto.fire_rate or 2
+			self._next_fire_allowed = app_t + fire_rate
 		end
 	end
 
@@ -202,12 +204,14 @@ end
 
 function NewNPCRaycastWeaponBase:auto_trigger_held(direction, impact)
 	local fired = false
+	local app_t = Application:time()
 
-	if self._next_fire_allowed <= Application:time() then
+	if self._next_fire_allowed <= app_t then
 		fired = self:auto_fire_blank(direction, impact)
 
 		if fired then
-			self._next_fire_allowed = self._next_fire_allowed + (tweak_data.weapon[self._name_id].auto and tweak_data.weapon[self._name_id].auto.fire_rate or 0.1)
+			local fire_rate = tweak_data.weapon[self._name_id].auto and tweak_data.weapon[self._name_id].auto.fire_rate or 2
+			self._next_fire_allowed = app_t + fire_rate
 		end
 	end
 

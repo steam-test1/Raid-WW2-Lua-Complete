@@ -24,15 +24,20 @@ CopBase._anim_lods = {
 }
 CopBase._material_translation_map = {}
 local character_path = ""
+local bodybag_path = ""
 local char_map = tweak_data.character.character_map()
 
 for _, data in pairs(char_map) do
 	for _, character in ipairs(data.list) do
-		character_path = data.path .. character .. "/" .. character
-		CopBase._material_translation_map[tostring(Idstring(character_path):key())] = Idstring(character_path .. "_contour")
+		bodybag_path = data.path .. character
+		character_path = bodybag_path .. "/" .. character
+		local key = tostring(Idstring(character_path):key())
+		CopBase._material_translation_map[key] = Idstring(character_path .. "_contour")
 		CopBase._material_translation_map[tostring(Idstring(character_path .. "_contour"):key())] = Idstring(character_path)
 	end
 end
+
+Application:debug("[CopBase] translation maps ready!")
 
 function CopBase:init(unit)
 	UnitBase.init(self, unit, false)
@@ -79,11 +84,11 @@ function CopBase:default_weapon_name()
 end
 
 function CopBase:is_special()
-	if self._char_tweak.is_special == true then
-		return true
-	end
+	return self._char_tweak.is_special
+end
 
-	return false
+function CopBase:special_type()
+	return self._char_tweak.special_type
 end
 
 function CopBase:visibility_state()
@@ -215,7 +220,7 @@ function CopBase:swap_material_config(material_applied_clbk)
 			self:on_material_applied()
 		end
 	else
-		print("[CopBase:swap_material_config] fail", self._unit:material_config(), self._unit)
+		Application:error("[CopBase:swap_material_config] fail", self._unit:material_config(), self._unit)
 		Application:stack_dump()
 	end
 end
@@ -248,6 +253,10 @@ end
 
 function CopBase:char_tweak()
 	return self._char_tweak
+end
+
+function CopBase:char_tweak_id()
+	return self._tweak_table
 end
 
 function CopBase:melee_weapon()

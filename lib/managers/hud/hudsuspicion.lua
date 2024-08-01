@@ -21,7 +21,7 @@ function HUDSuspicion:init(hud, sound_source)
 
 	local scale = 1
 	local ring = self._suspicion_panel:bitmap({
-		texture = "ui/ingame/textures/hud/hud_circle",
+		texture = "ui/icons/hud_circle",
 		name = "ring",
 		h = 256,
 		visible = true,

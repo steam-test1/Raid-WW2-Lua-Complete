@@ -1,4 +1,8 @@
 PlayerCarryCorpse = PlayerCarryCorpse or class(PlayerCarry)
+PlayerCarryCorpse.target_tilt = -5
+PlayerCarryCorpse.IDS_CORPSE_EQUIP = Idstring("carry_corpse_equip")
+PlayerCarryCorpse.IDS_CORPSE_UNEQUIP = Idstring("carry_corpse_unequip")
+PlayerCarryCorpse.UNEQUIP_TIMER = 0.76
 
 function PlayerCarryCorpse:init(unit)
 	PlayerCarryCorpse.super.init(self, unit)
@@ -10,11 +14,7 @@ function PlayerCarryCorpse:enter(state_data, enter_data)
 	end
 
 	PlayerCarryCorpse.super.enter(self, state_data, enter_data)
-	Application:debug("[PlayerCarryCorpse:enter] **********************************************************")
-	managers.dialog:queue_dialog("player_gen_carry_body", {
-		skip_idle_check = true,
-		instigator = managers.player:local_player()
-	})
+	self._unit:camera():camera_unit():base():set_target_tilt(PlayerCarryCorpse.target_tilt)
 
 	local t = managers.player:player_timer():time()
 
@@ -37,13 +37,13 @@ end
 
 function PlayerCarryCorpse:_enter(enter_data)
 	PlayerCarryCorpse.super._enter(self, enter_data)
-	self._unit:camera():play_redirect(Idstring("carry_corpse_equip"))
+	self._unit:camera():play_redirect(self.IDS_CORPSE_EQUIP)
 
 	self._carrying_corpse = true
 end
 
 function PlayerCarryCorpse:exit(state_data, new_state_name)
-	self._unit:camera():play_redirect(Idstring("carry_corpse_unequip"))
+	self:_start_action_equip(self.IDS_CORPSE_UNEQUIP, self.UNEQUIP_TIMER)
 
 	self._carrying_corpse = false
 	local exit_data = PlayerCarryCorpse.super.exit(self, state_data, new_state_name)
@@ -57,8 +57,6 @@ end
 
 function PlayerCarryCorpse:set_tweak_data(name)
 	self._tweak_data_name = name
-
-	self:_check_dye_pack()
 end
 
 function PlayerCarryCorpse:_check_change_weapon(...)
@@ -66,6 +64,10 @@ function PlayerCarryCorpse:_check_change_weapon(...)
 end
 
 function PlayerCarryCorpse:_check_action_equip(...)
+	return false
+end
+
+function PlayerCarryCorpse:_check_action_mantle(...)
 	return false
 end
 
@@ -94,15 +96,20 @@ function PlayerCarryCorpse:_update_movement(t, dt)
 	PlayerCarryCorpse.super._update_movement(self, t, dt)
 end
 
+function PlayerCarryCorpse:_update_crosshair_offset()
+	managers.hud:set_crosshair_fade(false)
+end
+
 function PlayerCarryCorpse:_start_action_jump(...)
 	PlayerCarryCorpse.super._start_action_jump(self, ...)
 end
 
 function PlayerCarryCorpse:_perform_jump(jump_vec)
-	if not managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
-		if not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
-			mvector3.multiply(jump_vec, tweak_data.carry.types[self._tweak_data_name].jump_modifier)
-		end
+	if not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
+		local ratio = managers.player:get_my_carry_weight_ratio()
+		local jump_modifier = tweak_data.carry:get_type_value_weighted(self._tweak_data_name, "jump_modifier", ratio)
+
+		mvector3.multiply(jump_vec, jump_modifier)
 	end
 
 	PlayerCarryCorpse.super._perform_jump(self, jump_vec)
@@ -116,7 +123,7 @@ function PlayerCarryCorpse:_update_check_actions(t, dt)
 	self:_update_running_timers(t)
 	self:_update_zipline_timers(t, dt)
 
-	local warcry_action = self:_check_warcry(t, input)
+	local warcry_action = self:_check_action_warcry(t, input)
 
 	self:_update_foley(t, input)
 	self:_check_action_interact(t, input)

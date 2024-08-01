@@ -1,4 +1,3 @@
-local ids_unit = Idstring("unit")
 local ids_NORMAL = Idstring("NORMAL")
 NetworkPeer = NetworkPeer or class()
 NetworkPeer.PRE_HANDSHAKE_CHK_TIME = 8
@@ -15,7 +14,7 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	if self._rpc then
 		if self._rpc:ip_at_index(0) == Network:self("TCP_IP"):ip_at_index(0) then
 			is_local_peer = true
-		elseif _G.IS_PS4 then
+		elseif IS_PS4 then
 			PSNVoice:send_to(self._name, self._rpc)
 		end
 	elseif self._steam_rpc and self._steam_rpc:ip_at_index(0) == Network:self("STEAM"):ip_at_index(0) then
@@ -39,7 +38,7 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 		self._ip = self._rpc:ip_at_index(0)
 	end
 
-	if user_id and SystemInfo:distribution() == Idstring("STEAM") then
+	if user_id and IS_STEAM then
 		self._steam_rpc = Network:handshake(user_id, nil, "STEAM")
 
 		Network:set_connection_persistent(self._steam_rpc, true)
@@ -161,7 +160,7 @@ function NetworkPeer:set_rpc(rpc)
 		Network:set_connection_id(self._rpc, self._id)
 		self:_chk_flush_msg_queues()
 
-		if _G.IS_PS4 then
+		if IS_PS4 then
 			PSNVoice:send_to(self._name, self._rpc)
 		end
 
@@ -172,7 +171,7 @@ function NetworkPeer:set_rpc(rpc)
 end
 
 function NetworkPeer:create_ticket()
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		return Steam:create_ticket(self._user_id)
 	end
 
@@ -180,7 +179,7 @@ function NetworkPeer:create_ticket()
 end
 
 function NetworkPeer:begin_ticket_session(ticket)
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		self._ticket_wait_response = true
 		self._begin_ticket_session_called = true
 		local result = Steam:begin_ticket_session(self._user_id, ticket, callback(self, self, "on_verify_ticket"))
@@ -221,7 +220,7 @@ function NetworkPeer:on_verify_ticket(result, reason)
 end
 
 function NetworkPeer:end_ticket_session()
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		self._ticket_wait_response = nil
 
 		Steam:end_ticket_session(self._user_id)
@@ -230,13 +229,13 @@ function NetworkPeer:end_ticket_session()
 end
 
 function NetworkPeer:change_ticket_callback()
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		Steam:change_ticket_callback(self._user_id, callback(self, self, "on_verify_ticket"))
 	end
 end
 
 function NetworkPeer:verify_job(job)
-	if not _G.IS_PC then
+	if not IS_PC then
 		return
 	end
 
@@ -252,13 +251,13 @@ function NetworkPeer:verify_job(job)
 		return
 	end
 
-	if SystemInfo:distribution() == Idstring("STEAM") and not Steam:is_user_product_owned(self._user_id, dlc_data.app_id) then
+	if IS_STEAM and not Steam:is_user_product_owned(self._user_id, dlc_data.app_id) then
 		self:mark_cheater(VoteManager.REASON.invalid_job, Network:is_server())
 	end
 end
 
 function NetworkPeer:verify_character()
-	if not _G.IS_PC then
+	if not IS_PC then
 		return
 	end
 
@@ -278,7 +277,7 @@ function NetworkPeer:verify_character()
 		return
 	end
 
-	if SystemInfo:distribution() == Idstring("STEAM") and not Steam:is_user_product_owned(self._user_id, dlc_data.app_id) then
+	if IS_STEAM and not Steam:is_user_product_owned(self._user_id, dlc_data.app_id) then
 		self:mark_cheater(VoteManager.REASON.invalid_character, Network:is_server())
 	end
 end
@@ -350,7 +349,7 @@ function NetworkPeer:_verify_cheated_outfit(item_type, item_id, result)
 end
 
 function NetworkPeer:_verify_content(item_type, item_id)
-	if not _G.IS_PC then
+	if not IS_PC then
 		return true
 	end
 
@@ -390,7 +389,7 @@ function NetworkPeer:_verify_content(item_type, item_id)
 	else
 		local dlc_data = Global.dlc_manager.all_dlc_data[dlc_item]
 
-		if dlc_data and dlc_data.app_id and not dlc_data.external and SystemInfo:distribution() == Idstring("STEAM") then
+		if dlc_data and dlc_data.app_id and not dlc_data.external and IS_STEAM then
 			return Steam:is_user_product_owned(self._user_id, dlc_data.app_id)
 		end
 	end
@@ -454,8 +453,8 @@ function NetworkPeer:is_cheater()
 	return self._cheater
 end
 
-function NetworkPeer:mark_cheater(reason, auto_kick)
-	if Application:editor() or not _G.IS_PC or NetworkPeer.CHEAT_CHECKS_DISABLED then
+function NetworkPeer:mark_cheater(reason)
+	if Application:editor() or not IS_PC or NetworkPeer.CHEAT_CHECKS_DISABLED then
 		return
 	end
 
@@ -465,9 +464,7 @@ function NetworkPeer:mark_cheater(reason, auto_kick)
 		name = self:name()
 	}))
 
-	if auto_kick and Global.game_settings.auto_kick then
-		managers.vote:kick_auto(reason, self, self._begin_ticket_session_called)
-	elseif managers.hud then
+	if managers.hud then
 		managers.hud:mark_cheater(self._id)
 	end
 end
@@ -499,7 +496,7 @@ function NetworkPeer:load(data)
 
 	self._name = data.name
 
-	if _G.IS_PC then
+	if IS_PC then
 		self._name = managers.network.account:username_by_id(data.user_id)
 	end
 
@@ -544,13 +541,6 @@ function NetworkPeer:load(data)
 
 	if self._rpc and not self._loading and managers.network.voice_chat.on_member_added then
 		managers.network.voice_chat:on_member_added(self, self._muted)
-	end
-
-	local local_peer = managers.network:session():local_peer()
-
-	if self == local_peer and managers.blackmarket:equipped_deployable() == "armor_kit" then
-		local_peer:set_outfit_string(managers.blackmarket:outfit_string())
-		managers.network:session():check_send_outfit(local_peer)
 	end
 
 	self._expected_dropin_pause_confirmations = data.expected_dropin_pause_confirmations
@@ -659,30 +649,6 @@ function NetworkPeer:qos()
 	return Network:qos(self._rpc)
 end
 
-function NetworkPeer:set_used_cable_ties(used_cable_ties)
-	self._used_cable_ties = used_cable_ties
-end
-
-function NetworkPeer:on_used_cable_tie()
-	self._used_cable_ties = (self._used_cable_ties or 0) + 1
-end
-
-function NetworkPeer:used_cable_ties()
-	return self._used_cable_ties
-end
-
-function NetworkPeer:set_used_body_bags(used_body_bags)
-	self._used_body_bags = used_body_bags
-end
-
-function NetworkPeer:on_used_body_bags()
-	self._used_body_bags = (self._used_body_bags or 0) + 1
-end
-
-function NetworkPeer:used_body_bags()
-	return self._used_body_bags or 0
-end
-
 function NetworkPeer:waiting_for_player_ready()
 	return self._waiting_for_player_ready
 end
@@ -703,6 +669,8 @@ function NetworkPeer:set_loading(state)
 	Application:debug("[NetworkPeer:set_loading]", state, "was loading", self._loading, "id", self._id)
 
 	if self._loading and not state then
+		Application:debug("[NetworkPeer:set_loading] ", self._id, "is loaded")
+
 		self._loaded = true
 	end
 
@@ -794,6 +762,7 @@ function NetworkPeer:set_character(character)
 
 	self:_reload_outfit()
 	self:verify_character()
+	self:set_character_customization()
 end
 
 function NetworkPeer:set_waiting_for_player_ready(state)
@@ -1228,6 +1197,7 @@ end
 
 function NetworkPeer:set_outfit_string(outfit_string, outfit_version, outfit_signature)
 	print("[NetworkPeer:set_outfit_string] ID", self._id, outfit_string, outfit_version)
+	Application:stack_dump()
 
 	local old_outfit_string = self._profile.outfit_string
 	self._profile.outfit_string = outfit_string
@@ -1274,12 +1244,6 @@ function NetworkPeer:mask_id()
 	local data = string.split(outfit_string, " ")
 
 	return data[managers.blackmarket:outfit_string_index("mask")]
-end
-
-function NetworkPeer:mask_blueprint()
-	local outfit_string = self:profile("outfit_string")
-
-	return managers.blackmarket:mask_blueprint_from_outfit_string(outfit_string)
 end
 
 function NetworkPeer:armor_id(get_current)
@@ -1439,7 +1403,7 @@ end
 
 function NetworkPeer:_unload_outfit()
 	for asset_id, asset_data in pairs(self._outfit_assets.unit) do
-		managers.dyn_resource:unload(ids_unit, asset_data.name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+		managers.dyn_resource:unload(IDS_UNIT, asset_data.name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 	end
 
 	for asset_id, asset_data in pairs(self._outfit_assets.texture) do
@@ -1545,7 +1509,7 @@ function NetworkPeer:_reload_outfit()
 	for asset_id, asset_data in pairs(new_outfit_assets.unit) do
 		asset_data.is_streaming = true
 
-		managers.dyn_resource:load(ids_unit, asset_data.name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, asset_load_result_clbk)
+		managers.dyn_resource:load(IDS_UNIT, asset_data.name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, asset_load_result_clbk)
 	end
 
 	for asset_id, asset_data in pairs(new_outfit_assets.texture) do
@@ -1691,7 +1655,6 @@ function NetworkPeer:sync_data(peer)
 	peer:send_queued_sync("sync_profile", level, self._class)
 	managers.network:session():check_send_outfit(peer)
 	managers.player:update_deployable_equipment_to_peer(peer)
-	managers.player:update_cable_ties_to_peer(peer)
 	managers.player:update_grenades_to_peer(peer)
 	managers.player:update_equipment_possession_to_peer(peer)
 	managers.player:update_ammo_info_to_peer(peer)
@@ -1740,7 +1703,7 @@ function NetworkPeer:_spawn_unit_on_dropin()
 	end
 
 	local character_name = self:character()
-	local member_downed, member_dead, health, used_deployable, used_cable_ties, used_body_bags, hostages_killed, respawn_penalty, old_plr_entry = self:_get_old_entry()
+	local member_downed, member_dead, health, used_deployable, hostages_killed, respawn_penalty, old_plr_entry = self:_get_old_entry()
 
 	if old_plr_entry then
 		old_plr_entry.member_downed = nil
@@ -1759,7 +1722,7 @@ function NetworkPeer:_spawn_unit_on_dropin()
 	local ai_is_downed = false
 
 	if alive(old_unit) then
-		ai_is_downed = old_unit:character_damage():bleed_out() or old_unit:character_damage():fatal() or old_unit:character_damage():arrested() or old_unit:character_damage():need_revive() or old_unit:character_damage():dead()
+		ai_is_downed = old_unit:character_damage():bleed_out() or old_unit:character_damage():fatal() or old_unit:character_damage():need_revive() or old_unit:character_damage():dead()
 
 		World:delete_unit(old_unit)
 	end
@@ -1786,13 +1749,12 @@ function NetworkPeer:_spawn_unit_on_dropin()
 
 	managers.groupai:state():set_dropin_hostages_killed(unit, hostages_killed, respawn_penalty)
 	self:set_used_deployable(used_deployable)
-	self:set_used_body_bags(used_body_bags)
 
 	if is_local_peer then
-		managers.player:spawn_dropin_penalty(spawn_in_custody, spawn_in_custody, health, used_deployable, used_cable_ties, used_body_bags)
+		managers.player:spawn_dropin_penalty(spawn_in_custody, spawn_in_custody, health, used_deployable)
 		managers.player:sync_upgrades()
 	else
-		self:send_queued_sync("spawn_dropin_penalty", spawn_in_custody, spawn_in_custody, health, used_deployable, used_cable_ties, used_body_bags)
+		self:send_queued_sync("spawn_dropin_penalty", spawn_in_custody, spawn_in_custody, health, used_deployable)
 	end
 
 	if Network:is_server() then
@@ -1837,8 +1799,6 @@ function NetworkPeer:_spawn_unit_on_respawn(spawn_point_id, state_transition)
 
 	if not is_local_peer then
 		managers.criminals:sync_teamai_to_peer(self)
-	else
-		managers.player:sync_upgrades()
 	end
 
 	if Network:is_server() then
@@ -1863,27 +1823,23 @@ function NetworkPeer:_spawn_unit_on_respawn(spawn_point_id, state_transition)
 end
 
 function NetworkPeer:_get_old_entry(null_old_entry_elements)
-	local peer_ident = _G.IS_PC and self:user_id() or self:name()
+	local peer_ident = IS_PC and self:user_id() or self:name()
 	local old_plr_entry = managers.network:session()._old_players[peer_ident]
 	local member_downed = nil
 	local health = 1
 	local used_deployable = false
-	local used_cable_ties = 0
-	local used_body_bags = 0
 	local member_dead, hostages_killed, respawn_penalty = nil
 
 	if old_plr_entry and Application:time() < old_plr_entry.t + 180 then
 		member_downed = old_plr_entry.member_downed
 		health = old_plr_entry.health
 		used_deployable = old_plr_entry.used_deployable
-		used_cable_ties = old_plr_entry.used_cable_ties
-		used_body_bags = old_plr_entry.used_body_bags
 		member_dead = old_plr_entry.member_dead
 		hostages_killed = old_plr_entry.hostages_killed
 		respawn_penalty = old_plr_entry.respawn_penalty
 	end
 
-	return member_downed, member_dead, health, used_deployable, used_cable_ties, used_body_bags, hostages_killed, respawn_penalty, old_plr_entry
+	return member_downed, member_dead, health, used_deployable, hostages_killed, respawn_penalty, old_plr_entry
 end
 
 function NetworkPeer:spawn_unit_called()
@@ -1945,6 +1901,7 @@ function NetworkPeer:set_unit(unit, character_name, team_id)
 
 	if self._id == managers.network:session():local_peer():id() then
 		managers.weapon_skills:update_weapon_part_animation_weights()
+		managers.player:sync_upgrades()
 	end
 
 	self:set_character_customization()

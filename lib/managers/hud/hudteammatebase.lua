@@ -95,10 +95,10 @@ end
 function HUDTeammateBase:hide_turret_icon()
 end
 
-function HUDTeammateBase:show_lockpick_icon()
+function HUDTeammateBase:show_special_interaction_icon(interaction_type)
 end
 
-function HUDTeammateBase:hide_lockpick_icon()
+function HUDTeammateBase:hide_special_interaction_icon()
 end
 
 function HUDTeammateBase:add_special_equipment(data)
@@ -207,7 +207,11 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 		end
 	end
 
-	self._status_panel:child(self._displayed_state.control):set_alpha(1)
+	local cc = self._status_panel:child(self._displayed_state.control)
+
+	if cc then
+		cc:set_alpha(1)
+	end
 
 	local fade_in_duration = 0.15
 	t = 0

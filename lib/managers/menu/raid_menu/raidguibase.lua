@@ -2,6 +2,7 @@ RaidGuiBase = RaidGuiBase or class()
 RaidGuiBase.BACKGROUND_LAYER = 10
 RaidGuiBase.FOREGROUND_LAYER = 20
 RaidGuiBase.PADDING = 42
+RaidGuiBase.MENU_ANIMATION_DISTANCE = 0
 RaidGuiBase.Colors = {
 	screen_background = Color(0.85, 0, 0, 0)
 }
@@ -50,6 +51,8 @@ function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	self._root_panel = RaidGUIPanel:new(self._ws_panel, params_root_panel)
 
 	self:_layout()
+	self._ws_panel:stop()
+	self._ws_panel:animate(callback(self, self, "_animate_open"))
 	managers.menu_component:post_event("menu_enter")
 end
 
@@ -198,10 +201,15 @@ function RaidGuiBase:close()
 		control:close()
 	end
 
+	self._ws_panel:stop()
+	self._ws_panel:animate(callback(self, self, "_animate_close"))
+	managers.menu_component:post_event("menu_exit")
+end
+
+function RaidGuiBase:_close()
 	self._root_panel:close()
 	self._ws:panel():remove(self._ws_panel)
 	self._fullscreen_ws_panel:clear()
-	managers.menu_component:post_event("menu_exit")
 end
 
 function RaidGuiBase:mouse_moved(o, x, y)
@@ -339,4 +347,43 @@ end
 
 function RaidGuiBase:_on_legend_pc_back()
 	managers.raid_menu:on_escape()
+end
+
+function RaidGuiBase:_animate_open()
+	local duration = 0.15
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_alpha = Easing.quadratic_out(t, 0, 1, duration)
+
+		self._ws_panel:set_alpha(current_alpha)
+
+		local current_offset = Easing.quadratic_out(t, RaidGuiBase.MENU_ANIMATION_DISTANCE, -RaidGuiBase.MENU_ANIMATION_DISTANCE, duration)
+
+		self._ws_panel:set_x(current_offset)
+	end
+
+	self._ws_panel:set_alpha(1)
+	self._ws_panel:set_x(0)
+end
+
+function RaidGuiBase:_animate_close()
+	local duration = 0.15
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_alpha = Easing.quadratic_in(t, 1, -1, duration)
+
+		self._ws_panel:set_alpha(current_alpha)
+
+		local current_offset = Easing.quadratic_in(t, 0, RaidGuiBase.MENU_ANIMATION_DISTANCE, duration)
+
+		self._ws_panel:set_x(current_offset)
+	end
+
+	self:_close()
 end

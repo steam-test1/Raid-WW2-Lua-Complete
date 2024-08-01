@@ -32,7 +32,7 @@ function ExplodingProp:detonate(pos, range, damage, player_damage)
 		local slot_mask = managers.slot:get_mask("explosion_targets")
 		local damage_params = {
 			curve_pow = 3,
-			no_raycast_check_characters = false,
+			no_raycast_check_characters = true,
 			player_damage = 0,
 			hit_pos = pos,
 			range = range,

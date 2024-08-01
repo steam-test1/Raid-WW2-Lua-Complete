@@ -8,7 +8,10 @@ function VehicleStateBroken:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 	self._unit:vehicle_driving():_start_broken_engine_sound()
 	self:adjust_interactions()
-	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+
+	if Network:is_server() then
+		self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+	end
 
 	local player_vehicle = managers.player:get_vehicle()
 
@@ -54,14 +57,15 @@ function VehicleStateBroken:get_action_for_interaction(pos, locator, tweak_data)
 	local seat, seat_distance = self._unit:vehicle_driving():get_available_seat(pos)
 	local loot_point, loot_point_distance = self._unit:vehicle_driving():get_nearest_loot_point(pos)
 
-	if self._unit:vehicle_driving():is_loot_interaction_enabled() and seat and loot_point and loot_point_distance <= seat_distance and not managers.player:is_carrying() and self._unit:vehicle_driving():has_loot_stored() then
+	if self._unit:vehicle_driving():is_loot_interaction_enabled() and seat and loot_point and loot_point_distance <= seat_distance and self._unit:vehicle_driving():has_loot_stored() then
 		action = VehicleDrivingExt.INTERACT_LOOT
 
 		self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
 	else
 		action = VehicleDrivingExt.INTERACT_REPAIR
+		local multiplier = managers.player:upgrade_value("interaction", "handyman_vehicle_speed_multipler", 1)
 
-		self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_REPAIR)
+		self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_REPAIR * multiplier)
 	end
 
 	return action

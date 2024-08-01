@@ -20,6 +20,7 @@ function PlayerBase:init(unit)
 	self._stats_screen_visible = false
 
 	managers.game_play_central:restart_portal_effects()
+	managers.occlusion:remove_occlusion(self._unit)
 end
 
 function PlayerBase:post_init()
@@ -36,8 +37,8 @@ function PlayerBase:post_init()
 
 	local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():local_peer())
 
-	self:set_suspicion_multiplier("equipment", 1 / con_mul)
-	self:set_detection_multiplier("equipment", 1 / con_mul)
+	self:set_suspicion_multiplier("equipment", 1)
+	self:set_detection_multiplier("equipment", 1)
 end
 
 function PlayerBase:update(unit, t, dt)
@@ -93,7 +94,11 @@ end
 
 function PlayerBase:set_visible(visible)
 	self._unit:set_visible(visible)
-	self._unit:camera():camera_unit():set_visible(visible)
+
+	local camera_unit = self._unit:camera():camera_unit()
+
+	camera_unit:set_visible(visible)
+	camera_unit:customizationfps():set_visible(visible)
 
 	if visible then
 		self._unit:inventory():show_equipped_unit()
@@ -171,7 +176,7 @@ function PlayerBase:anim_data_clbk_footstep(foot)
 		material_name, pos, norm = World:pick_decal_material(proj_from, proj_to, managers.slot:get_mask("surface_move"))
 	end
 
-	self._unit:sound():play_footstep(foot, material_name)
+	self._unit:sound():play_footstep(foot, material_name, pos and pos - Vector3(0, 0, 45))
 end
 
 function PlayerBase:get_rumble_position()
@@ -226,10 +231,6 @@ function PlayerBase:set_detection_multiplier(reason, multiplier)
 
 	self._detection_settings.delay_mul = delay_mul
 	self._detection_settings.range_mul = range_mul
-end
-
-function PlayerBase:arrest_settings()
-	return tweak_data.player.arrest
 end
 
 function PlayerBase:_unregister()

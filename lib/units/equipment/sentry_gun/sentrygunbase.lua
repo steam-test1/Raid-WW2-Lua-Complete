@@ -443,7 +443,7 @@ function SentryGunBase:sync_net_event(event_id, peer)
 				end
 
 				if data.amount > 0 then
-					data.unit:base():reduce_ammo_by_procentage_of_total(data.amount)
+					data.unit:base():reduce_ammo_by_percentage_of_total(data.amount)
 					managers.hud:set_ammo_amount(id, data.unit:base():ammo_info())
 				end
 			end

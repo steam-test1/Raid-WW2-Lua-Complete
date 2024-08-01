@@ -2,6 +2,10 @@ RaidGUIControlReadyUpPlayerDescription = RaidGUIControlReadyUpPlayerDescription 
 RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
 RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED = "voice_chat_muted_icon"
 RaidGUIControlReadyUpPlayerDescription.CHAT_PANEL_SIZE = 60
+RaidGUIControlReadyUpPlayerDescription.STATE_READY = "ready"
+RaidGUIControlReadyUpPlayerDescription.STATE_NOT_READY = "not_ready"
+RaidGUIControlReadyUpPlayerDescription.STATE_KICKED = "kicked"
+RaidGUIControlReadyUpPlayerDescription.STATE_LEFT = "left"
 
 function RaidGUIControlReadyUpPlayerDescription:init(parent, params)
 	RaidGUIControlReadyUpPlayerDescription.super.init(self, parent, params)
@@ -62,7 +66,7 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		h = 24,
 		w = 64,
 		align = "left",
-		text = "17",
+		text = "00",
 		x = self._selected_card_icon:right() + 16,
 		y = self._player_name:top(),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -251,17 +255,19 @@ function RaidGUIControlReadyUpPlayerDescription:select_off()
 end
 
 function RaidGUIControlReadyUpPlayerDescription:set_state(state)
-	if state == "ready" then
+	Application:debug("[RaidGUIControlReadyUpPlayerDescription:set_state] State: " .. tostring(state))
+
+	if state == RaidGUIControlReadyUpPlayerDescription.STATE_READY then
 		self._status_label:set_text(self:translate("menu_ready", true))
 		self._status_label:set_color(tweak_data.gui.colors.raid_red)
 
 		self._params.ready = true
-	elseif state == "not_ready" then
+	elseif state == RaidGUIControlReadyUpPlayerDescription.STATE_NOT_READY then
 		self._status_label:set_text(self:translate("menu_not_ready", true))
 		self._status_label:set_color(tweak_data.gui.colors.raid_grey_effects)
 
 		self._params.ready = false
-	elseif state == "kicked" then
+	elseif state == RaidGUIControlReadyUpPlayerDescription.STATE_KICKED then
 		self._status_label:set_text(self:translate("menu_kicked", true))
 		self._class_icon:set_color(tweak_data.gui.colors.raid_grey_effects)
 		self._player_name:set_color(tweak_data.gui.colors.raid_grey_effects)
@@ -271,7 +277,7 @@ function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 		self:set_selected(false)
 
 		self._enabled = false
-	elseif state == "left" then
+	elseif state == RaidGUIControlReadyUpPlayerDescription.STATE_LEFT then
 		self._status_label:set_text(self:translate("menu_left", true))
 		self._class_icon:set_color(tweak_data.gui.colors.raid_grey_effects)
 		self._player_name:set_color(tweak_data.gui.colors.raid_grey_effects)
@@ -285,9 +291,7 @@ function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 end
 
 function RaidGUIControlReadyUpPlayerDescription:set_challenge_card_selected(selected)
-	if selected then
-		self._selected_card_icon:set_image(tweak_data.gui.icons.ready_up_card_selected_active.texture, unpack(tweak_data.gui.icons.ready_up_card_selected_active.texture_rect))
-	else
-		self._selected_card_icon:set_image(tweak_data.gui.icons.ready_up_card_not_selected.texture, unpack(tweak_data.gui.icons.ready_up_card_not_selected.texture_rect))
-	end
+	local gui_data = tweak_data.gui.icons[selected and "ready_up_card_selected_active" or "ready_up_card_not_selected"]
+
+	self._selected_card_icon:set_image(gui_data.texture, unpack(gui_data.texture_rect))
 end

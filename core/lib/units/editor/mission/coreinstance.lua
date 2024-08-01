@@ -86,10 +86,6 @@ function InstanceEventUnitElement:layer_finished(...)
 	end
 end
 
-function InstanceEventUnitElement:selected()
-	InstanceEventUnitElement.super.selected(self)
-end
-
 function InstanceEventUnitElement:update_selected(t, dt)
 	for _, data in ipairs(self._hed.event_list) do
 		self:_draw_instance_link(t, dt, data.instance)
@@ -304,7 +300,7 @@ function InstanceEventUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 	local btn_toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
-	btn_toolbar:add_tool("SELECT_UNIT_LIST", "Select unit from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
+	btn_toolbar:add_tool("SELECT_UNIT_LIST", "Select instance from instance list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	btn_toolbar:connect("SELECT_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_select_instance_list"), nil)
 	btn_toolbar:realize()
 	panel_sizer:add(btn_toolbar, 0, 1, "EXPAND,LEFT")
@@ -360,7 +356,7 @@ function InstancePointUnitElement:update_editing(t, dt)
 end
 
 function InstancePointUnitElement:selected()
-	InstanceEventUnitElement.super.selected(self)
+	InstancePointUnitElement.super.selected(self)
 
 	local names = self:_get_options()
 
@@ -375,6 +371,13 @@ function InstancePointUnitElement:selected()
 	if self._instance_params then
 		CoreEws.change_combobox_value(self._instance_params, self._hed.instance)
 	end
+
+	self:_update_preview_unit()
+end
+
+function InstancePointUnitElement:on_unselected()
+	self:_update_preview_unit(true)
+	InstancePointUnitElement.super.on_unselected(self)
 end
 
 function InstancePointUnitElement:external_change_instance(instance)
@@ -437,6 +440,40 @@ end
 
 function InstancePointUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_set_instance_by_raycast"))
+end
+
+function InstancePointUnitElement:_update_preview_unit(destroy_only)
+	if alive(self._preview_unit) then
+		World:delete_unit(self._preview_unit)
+
+		self._preview_unit = nil
+	end
+
+	if destroy_only then
+		return
+	end
+
+	if self._hed.instance then
+		local inst_data = managers.world_instance:get_instance_data_by_name(self._hed.instance)
+
+		if inst_data then
+			local low_poly = managers.editor:layer("Instances"):get_preview_unit(inst_data.predef)
+
+			if low_poly and low_poly ~= "" then
+				local ids_rootpoint = Idstring("rp_hub_element")
+				self._preview_unit = CoreUnit.safe_spawn_unit(low_poly, self._unit:position(), self._unit:rotation())
+
+				self._unit:link(ids_rootpoint, self._preview_unit)
+			end
+		else
+			Application:error("[InstancePointUnitElement:_update_preview_unit] No instance data, This might be bad. On instance:", self._hed.instance)
+		end
+	end
+end
+
+function InstancePointUnitElement:clear()
+	self:_update_preview_unit(true)
+	InstancePointUnitElement.super.clear(self)
 end
 
 CoreInstanceParamsUnitElement = CoreInstanceParamsUnitElement or class(MissionElement)

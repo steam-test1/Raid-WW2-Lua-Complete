@@ -307,7 +307,7 @@ function HuskPlayerMovement:init(unit)
 	self._state_enter_t = TimerManager:game():time()
 	self._pose_code = 1
 	self._tase_effect_table = {
-		effect = Idstring("effects/vanilla/character/taser_hittarget_001"),
+		effect = tweak_data.common_effects.taser_hit,
 		parent = self._unit:get_object(Idstring("e_taser"))
 	}
 	self._sequenced_events = {}
@@ -348,6 +348,8 @@ function HuskPlayerMovement:post_init()
 
 	if network_peer then
 		self:set_player_class(network_peer:class())
+	else
+		self:set_player_class(SkillTreeTweakData.CLASS_RECON)
 	end
 
 	self._enemy_weapons_hot_listen_id = "PlayerMovement" .. tostring(self._unit:key())
@@ -795,21 +797,22 @@ function HuskPlayerMovement:_register_revive_SO()
 	}
 	local objective = {
 		type = "revive",
-		interrupt_suppression = true,
+		pose = "stand",
 		called = true,
-		interrupt_health = 0.25,
+		haste = "run",
 		scan = true,
 		destroy_clbk_key = false,
-		interrupt_dis = 300,
 		follow_unit = self._unit,
 		nav_seg = self._unit:movement():nav_tracker():nav_segment(),
+		action_duration = tweak_data.interaction.revive.timer,
 		fail_clbk = callback(self, self, "on_revive_SO_failed"),
 		complete_clbk = callback(self, self, "on_revive_SO_completed"),
+		followup_objective = followup_objective,
 		action = {
-			align_sync = true,
-			type = "act",
 			body_part = 1,
-			variant = self._state == "arrested" and "untie" or "revive",
+			type = "act",
+			align_sync = true,
+			variant = "revive",
 			blocks = {
 				light_hurt = -1,
 				hurt = -1,
@@ -818,9 +821,7 @@ function HuskPlayerMovement:_register_revive_SO()
 				aim = -1,
 				walk = -1
 			}
-		},
-		action_duration = tweak_data.interaction[self._state == "arrested" and "free" or "revive"].timer,
-		followup_objective = followup_objective
+		}
 	}
 	local so_descriptor = {
 		interval = 1,
@@ -1344,10 +1345,6 @@ function HuskPlayerMovement:_upd_sequenced_events(t, dt)
 		end
 	elseif event_type == "dead" then
 		if self:_start_dead(next_event) then
-			table.remove(sequenced_events, 1)
-		end
-	elseif event_type == "arrested" then
-		if self:_start_arrested(next_event) then
 			table.remove(sequenced_events, 1)
 		end
 	elseif event_type == "zipline" then
@@ -2096,6 +2093,15 @@ function HuskPlayerMovement:_upd_move_turret(t, dt)
 		self._machine:set_parameter(redirect_state, "t", deflection_normalized)
 		self:play_redirect(redirect_animation)
 	end
+
+	local update_alignments = false
+
+	if update_alignments then
+		local third_person_locator = turret_unit:weapon()._locator_tpp
+
+		self:set_position(third_person_locator:position())
+		self:set_rotation(third_person_locator:rotation())
+	end
 end
 
 function HuskPlayerMovement:_start_standard(event_desc)
@@ -2367,37 +2373,6 @@ function HuskPlayerMovement:_start_dead(event_desc)
 
 	self._attention_updator = false
 	self._movement_updator = callback(self, self, "_upd_move_downed")
-
-	return true
-end
-
-function HuskPlayerMovement:_start_arrested(event_desc)
-	if not self._ext_anim.hands_tied then
-		local redir_res = self:play_redirect("tied")
-
-		if not redir_res then
-			print("[HuskPlayerMovement:_start_arrested] redirect failed in", self._machine:segment_state(self._ids_base), self._unit)
-
-			return
-		end
-	end
-
-	self._unit:set_slot(5)
-	managers.groupai:state():on_criminal_neutralized(self._unit)
-	self._unit:interaction():set_tweak_data("free")
-	self:set_need_revive(true)
-
-	if self._atention_on then
-		self._machine:forbid_modifier(self._look_modifier_name)
-		self._machine:forbid_modifier(self._head_modifier_name)
-		self._machine:forbid_modifier(self._arm_modifier_name)
-		self._machine:forbid_modifier(self._mask_off_modifier_name)
-
-		self._atention_on = false
-	end
-
-	self._attention_updator = callback(self, self, "_upd_attention_disarmed")
-	self._movement_updator = false
 
 	return true
 end
@@ -2758,16 +2733,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 	end
 end
 
-function HuskPlayerMovement:on_cuffed()
-	self._unit:network():send_to_unit({
-		"sync_player_movement_state",
-		self._unit,
-		"arrested",
-		0,
-		self._unit:id()
-	})
-end
-
 function HuskPlayerMovement:on_uncovered(enemy_unit)
 	self._unit:network():send_to_unit({
 		"suspect_uncovered",
@@ -2823,6 +2788,10 @@ end
 
 function HuskPlayerMovement:tased()
 	return self._state == "tased"
+end
+
+function HuskPlayerMovement:charging()
+	return self._state == "charging"
 end
 
 function HuskPlayerMovement:on_death_exit()
@@ -2995,59 +2964,6 @@ end
 
 function HuskPlayerMovement:_apply_attention_setting_modifications(setting)
 	setting.detection = self._unit:base():detection_settings()
-	local weight_mul = self._unit:base():upgrade_value("player", "camouflage_bonus") or 1
-	weight_mul = weight_mul * (self._unit:base():upgrade_value("player", "camouflage_multiplier") or 1)
-	weight_mul = weight_mul * (self._unit:base():upgrade_value("player", "uncover_multiplier") or 1)
-
-	if weight_mul and weight_mul ~= 1 then
-		setting.weight_mul = (setting.weight_mul or 1) * weight_mul
-	end
-end
-
-function HuskPlayerMovement:sync_call_civilian(civilian_unit)
-	if not self._sympathy_civ and civilian_unit:brain():is_available_for_assignment({
-		type = "revive"
-	}) then
-		local followup_objective = {
-			interrupt_health = 1,
-			interrupt_dis = -1,
-			type = "free",
-			action = {
-				sync = true,
-				body_part = 1,
-				type = "idle"
-			}
-		}
-		local objective = {
-			type = "act",
-			haste = "run",
-			destroy_clbk_key = false,
-			nav_seg = self:nav_tracker():nav_segment(),
-			pos = self:nav_tracker():field_position(),
-			fail_clbk = callback(self, self, "on_civ_revive_failed"),
-			complete_clbk = callback(self, self, "on_civ_revive_completed"),
-			action_start_clbk = callback(self, self, "on_civ_revive_started"),
-			action = {
-				align_sync = true,
-				type = "act",
-				body_part = 1,
-				variant = "revive",
-				blocks = {
-					light_hurt = -1,
-					hurt = -1,
-					action = -1,
-					heavy_hurt = -1,
-					aim = -1,
-					walk = -1
-				}
-			},
-			action_duration = tweak_data.interaction.revive.timer,
-			followup_objective = followup_objective
-		}
-		self._sympathy_civ = civilian_unit
-
-		civilian_unit:brain():set_objective(objective)
-	end
 end
 
 function HuskPlayerMovement:on_civ_revive_started(sympathy_civ)
@@ -3074,27 +2990,6 @@ function HuskPlayerMovement:on_civ_revive_failed(sympathy_civ)
 end
 
 function HuskPlayerMovement:on_civ_revive_completed(sympathy_civ)
-	if sympathy_civ ~= self._sympathy_civ then
-		debug_pause_unit(sympathy_civ, "[HuskPlayerMovement:on_civ_revive_completed] idiot thinks he is reviving", sympathy_civ)
-
-		return
-	end
-
-	self._sympathy_civ = nil
-
-	if self._unit:interaction():active() then
-		self._unit:interaction():interact(sympathy_civ)
-	end
-
-	self:_unregister_revive_SO()
-
-	if self._unit:base():upgrade_value("player", "civilian_gives_ammo") then
-		managers.game_play_central:spawn_pickup({
-			name = "ammo",
-			position = sympathy_civ:position(),
-			rotation = Rotation()
-		})
-	end
 end
 
 function HuskPlayerMovement:sync_stance(stance_code)
@@ -3126,17 +3021,22 @@ end
 function HuskPlayerMovement:_get_max_move_speed(run)
 	local class_tweak_data = self._class_tweak_data
 	local unit_base = self._unit:base()
-	local global_multiplier = unit_base:upgrade_value("player", "all_movement_speed_increase") or 1
+	local base_speed = class_tweak_data.movement.speed.WALKING_SPEED
+	local multiplier = unit_base:upgrade_value("player", "fleetfoot_movement_speed_multiplier") or 1
 
 	if self._pose_code == 2 then
-		return class_tweak_data.movement.speed.CROUCHING_SPEED * (unit_base:upgrade_value("player", "crouch_speed_increase") or 1) * global_multiplier
+		base_speed = class_tweak_data.movement.speed.CROUCHING_SPEED
+		multiplier = multiplier * (unit_base:upgrade_value("player", "scuttler_crouch_speed_increase") or 1)
+	elseif run then
+		base_speed = class_tweak_data.movement.speed.RUNNING_SPEED
+		multiplier = multiplier * (unit_base:upgrade_value("player", "sprinter_run_speed_increase") or 1)
 	end
 
-	if run then
-		return class_tweak_data.movement.speed.RUNNING_SPEED * (unit_base:upgrade_value("player", "run_speed_increase") or 1) * global_multiplier
+	if self:charging() then
+		multiplier = multiplier * PlayerCharging.SPEED_MUL
 	end
 
-	return class_tweak_data.movement.speed.WALKING_SPEED * global_multiplier
+	return base_speed * multiplier
 end
 
 function HuskPlayerMovement._walk_spline(move_data, pos, walk_dis)

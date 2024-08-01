@@ -741,7 +741,7 @@ function TextBoxGui:_set_button_selected(index, is_selected)
 end
 
 function TextBoxGui:change_focus_button(change)
-	if self._input_field and self._input_field:input_focus() and not managers.controller:is_xbox_controller_present() then
+	if self._input_field and self._input_field:input_focus() and not managers.controller:is_controller_present() then
 		return
 	end
 

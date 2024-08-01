@@ -796,6 +796,14 @@ function RaidGUIPanel:three_cut_bitmap(params)
 	return control
 end
 
+function RaidGUIPanel:nine_cut_bitmap(params)
+	local control = RaidGUIControlNineCutBitmap:new(self, params)
+
+	self:_add_control(control)
+
+	return control
+end
+
 function RaidGUIPanel:image_button(params)
 	local control = RaidGUIControlImageButton:new(self, params)
 
@@ -964,6 +972,14 @@ function RaidGUIPanel:paged_grid_character_customization(params)
 	return control
 end
 
+function RaidGUIPanel:categorized_grid(params)
+	local control = RaidGUIControlCategorizedGrid:new(self, params)
+
+	self:_add_control(control)
+
+	return control
+end
+
 function RaidGUIPanel:suggested_cards_grid(params)
 	local control = RaidGUIControlSuggestedCards:new(self, params)
 
@@ -1014,6 +1030,14 @@ end
 
 function RaidGUIPanel:create_custom_control(control_class, params, ...)
 	local control = control_class:new(self, params, ...)
+
+	self:_add_control(control)
+
+	return control
+end
+
+function RaidGUIPanel:player_stats(params)
+	local control = RaidGUIControlPlayerStats:new(self, params)
 
 	self:_add_control(control)
 

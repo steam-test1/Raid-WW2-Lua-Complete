@@ -213,7 +213,7 @@ function compile_and_reload()
 		return f(path)
 	end
 
-	assert(SystemInfo:platform() == Idstring("WIN32"), "You can only compile on win32 platforms!")
+	assert(IS_WIN32, "You can only compile on win32 platforms!")
 	Application:data_compile({
 		target_db_name = "all",
 		preprocessor_definitions = "preprocessor_definitions",

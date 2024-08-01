@@ -43,49 +43,28 @@ function TeamAIDamage:init(unit)
 	self._last_received_dmg = 0
 	self._spine2_obj = unit:get_object(Idstring("Spine2"))
 	self._tase_effect_table = {
-		effect = Idstring("effects/vanilla/character/taser_hittarget_001"),
+		effect = tweak_data.common_effects.taser_hit,
 		parent = self._unit:get_object(Idstring("e_taser"))
 	}
 end
 
 function TeamAIDamage:update(unit, t, dt)
-	if self._regenerate_t then
-		if self._regenerate_t < t then
-			self:_regenerated()
-		end
-	elseif self._arrested_timer and self._arrested_paused_counter == 0 then
-		self._arrested_timer = self._arrested_timer - dt
-
-		if self._arrested_timer <= 0 then
-			self._arrested_timer = nil
-			local action_data = {
-				variant = "stand",
-				body_part = 1,
-				type = "act",
-				blocks = {
-					heavy_hurt = -1,
-					hurt = -1,
-					action = -1,
-					aim = -1,
-					walk = -1
-				}
-			}
-			local res = self._unit:movement():action_request(action_data)
-
-			self._unit:brain():on_recovered(self._unit)
-			self._unit:network():send("from_server_unit_recovered")
-			managers.groupai:state():on_criminal_recovered(self._unit)
-			managers.hud:set_mugshot_normal(self._unit:unit_data().mugshot_id)
-		end
+	if self._regenerate_t and self._regenerate_t < t then
+		self:_regenerated()
 	end
 
 	if self._revive_reminder_line_t and self._revive_reminder_line_t < t then
+		managers.dialog:queue_dialog("player_gen_call_help", {
+			skip_idle_check = true,
+			instigator = self._unit
+		})
+
 		self._revive_reminder_line_t = nil
 	end
 end
 
 function TeamAIDamage:damage_melee(attack_data)
-	if self._invulnerable or self._dead or self._fatal or self._arrested_timer then
+	if self._invulnerable or self._dead or self._fatal then
 		return
 	end
 
@@ -447,7 +426,10 @@ function TeamAIDamage:_check_bleed_out()
 				managers.enemy:add_delayed_clbk(self._to_dead_clbk_id, callback(self, self, "clbk_exit_to_dead"), self._to_dead_t)
 			end
 
-			self._unit:sound():say("player_gen_call_help", true)
+			managers.dialog:queue_dialog("player_gen_downed", {
+				skip_idle_check = true,
+				instigator = self._unit
+			})
 
 			self._revive_reminder_line_t = self._to_dead_t - 10
 		end
@@ -526,29 +508,6 @@ end
 
 function TeamAIDamage:stop_bleedout()
 	self:_regenerated()
-end
-
-function TeamAIDamage:on_arrested()
-	self:stop_bleedout()
-
-	self._arrested_timer = self._char_dmg_tweak.ARRESTED_TIME
-	self._arrested_paused_counter = 0
-
-	if Network:is_server() then
-		managers.groupai:state():report_criminal_downed(self._unit)
-	end
-end
-
-function TeamAIDamage:pause_arrested_timer(peer_id)
-	self._arrested_paused_counter = self._arrested_paused_counter + 1
-
-	PlayerDamage.set_peer_paused_counter(self, peer_id, "arrested")
-end
-
-function TeamAIDamage:unpause_arrested_timer(peer_id)
-	self._arrested_paused_counter = self._arrested_paused_counter - 1
-
-	PlayerDamage.set_peer_paused_counter(self, peer_id, nil)
 end
 
 function TeamAIDamage:_on_hurt()
@@ -846,10 +805,6 @@ function TeamAIDamage:need_revive()
 	return (self._bleed_out or self._fatal) and not self._dead
 end
 
-function TeamAIDamage:arrested()
-	return self._arrested_timer
-end
-
 function TeamAIDamage:revive(reviving_unit)
 	if self._dead then
 		return
@@ -881,34 +836,12 @@ function TeamAIDamage:revive(reviving_unit)
 		}, "team_AI")
 		self._unit:network():send("from_server_unit_recovered")
 		managers.groupai:state():on_criminal_recovered(self._unit)
-	elseif self._arrested_timer then
-		self._arrested_timer = nil
-		local action_data = {
-			variant = "stand",
-			body_part = 1,
-			type = "act",
-			blocks = {
-				heavy_hurt = -1,
-				hurt = -1,
-				action = -1,
-				aim = -1,
-				walk = -1
-			}
-		}
-		local res = self._unit:movement():action_request(action_data)
-
-		self._unit:brain():on_recovered(reviving_unit)
-		PlayerMovement.set_attention_settings(self._unit:brain(), {
-			"team_enemy_cbt"
-		}, "team_AI")
-		self._unit:network():send("from_server_unit_recovered")
-		managers.groupai:state():on_criminal_recovered(self._unit)
 	end
 
 	managers.hud:on_teammate_revived(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)
 	managers.dialog:queue_dialog("player_gen_revive_thanks", {
 		skip_idle_check = true,
-		instigator = managers.player:local_player()
+		instigator = self._unit
 	})
 end
 
@@ -1071,7 +1004,7 @@ function TeamAIDamage:pre_destroy()
 end
 
 function TeamAIDamage:_cannot_take_damage()
-	return self._invulnerable or self._dead or self._fatal or self._arrested_timer
+	return self._invulnerable or self._dead or self._fatal
 end
 
 function TeamAIDamage:disable()
@@ -1101,11 +1034,6 @@ function TeamAIDamage:can_attach_projectiles()
 end
 
 function TeamAIDamage:save(data)
-	if self._arrested_timer then
-		data.char_dmg = data.char_dmg or {}
-		data.char_dmg.arrested = true
-	end
-
 	if self._bleed_out then
 		data.char_dmg = data.char_dmg or {}
 		data.char_dmg.bleedout = true

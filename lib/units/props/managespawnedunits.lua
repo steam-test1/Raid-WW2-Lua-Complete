@@ -7,19 +7,28 @@ function ManageSpawnedUnits:init(unit)
 	self._temp_link_units = {}
 end
 
-function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
+function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit, pos, rot)
+	if Network:is_server() and self._spawned_units[unit_id] and alive(self._spawned_units[unit_id].unit) then
+		Application:warn("[ManageSpawnedUnits:spawn_unit] Tried spawning unit, already had one!", unit_id, align_obj_name)
+		self._spawned_units[unit_id].unit:set_slot(0)
+	end
+
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local spawn_unit = nil
 
 	if type_name(unit) == "string" then
 		if Network:is_server() then
-			local spawn_pos = align_obj:position()
-			local spawn_rot = align_obj:rotation()
+			local spawn_pos = not not pos and align_obj:position() + pos or align_obj:position()
+			local spawn_rot = not not rot and align_obj:rotation() + rot or align_obj:rotation()
 			spawn_unit = safe_spawn_unit(Idstring(unit), spawn_pos, spawn_rot)
 			spawn_unit:unit_data().parent_unit = self._unit
+		else
+			Application:warn("[ManageSpawnedUnits:spawn_unit] I dont think this is meant to be possible, Client was given a string, We can't use this.")
 		end
 	else
 		spawn_unit = unit
+		pos = align_obj:position()
+		rot = align_obj:rotation()
 	end
 
 	if not spawn_unit then
@@ -28,6 +37,14 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 
 	self._unit:link(Idstring(align_obj_name), spawn_unit, spawn_unit:orientation_object():name(), true)
 
+	if pos then
+		spawn_unit:set_position(pos)
+	end
+
+	if rot then
+		spawn_unit:set_rotation(rot)
+	end
+
 	local unit_entry = {
 		align_obj_name = align_obj_name,
 		unit = spawn_unit
@@ -35,7 +52,7 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	self._spawned_units[unit_id] = unit_entry
 
 	if Network:is_server() then
-		managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, spawn_unit, align_obj_name, unit_id, "spawn_manager")
+		managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, spawn_unit, align_obj_name, unit_id, "spawn_manager", pos, rot)
 	end
 end
 
@@ -207,8 +224,6 @@ function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
 	end
 
 	if table.empty(spawn_units) then
-		Application:debug("[ManageSpawnedUnits:link_unit] spawn_units empty")
-
 		return
 	end
 
@@ -221,11 +236,11 @@ function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
 		self._spawned_units[unit_id] = unit_entry
 
 		if Network:is_server() then
-			managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, spawn_unit, align_obj_name, unit_id, "spawn_manager")
+			managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, spawn_unit, align_obj_name, unit_id, "spawn_manager", spawn_unit:position(), spawn_unit:rotation())
 		end
 	end
 
-	self._spawned_prefabs[prefab_nick] = true
+	self._spawned_prefabs[prefab_nick] = #spawn_units
 end
 
 function ManageSpawnedUnits:remove_prefab(prefab_nick)
@@ -251,6 +266,10 @@ function ManageSpawnedUnits:remove_prefab(prefab_nick)
 end
 
 function ManageSpawnedUnits:destroy(unit)
+	self:_cleanup_all_units()
+end
+
+function ManageSpawnedUnits:_cleanup_all_units()
 	for i, entry in pairs(self._spawned_units) do
 		if alive(entry.unit) then
 			entry.unit:set_slot(0)
@@ -271,14 +290,25 @@ function ManageSpawnedUnits:save(data)
 
 	for nick_id, unit_entry in pairs(self._spawned_units) do
 		if alive(unit_entry.unit) and nick_id ~= -1 then
-			managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, unit_entry.unit, unit_entry.align_obj_name, nick_id, "spawn_manager")
+			managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, unit_entry.unit, unit_entry.align_obj_name, nick_id, "spawn_manager", unit_entry.unit:position(), unit_entry.unit:rotation())
 		end
 	end
 
-	for nick_id, prefab_entry in pairs(self._spawned_prefabs) do
-		for _, unit in ipairs(prefab_entry) do
-			if alive(unit) and nick_id ~= -1 then
-				managers.network:session():send_to_peers_synched("sync_prefab_unit_spawn", self._unit, unit_entry.unit, unit_entry.align_obj_name, nick_id, "spawn_manager")
+	for nick_id, ready in pairs(self._spawned_prefabs) do
+		if ready and ready > 0 then
+			for i = 1, ready do
+				local unit_nick_id = nick_id .. "#" .. i
+				local unit_entry = self._spawned_units[unit_nick_id]
+
+				if not unit_entry then
+					Application:warn("[ManageSpawnedUnits:save] PREFAB, spawned unit doesnt exist.", unit_nick_id)
+
+					break
+				end
+
+				if alive(unit_entry.unit) and nick_id ~= -1 then
+					managers.network:session():send_to_peers_synched("sync_unit_spawn", self._unit, unit_entry.unit, unit_entry.align_obj_name, unit_nick_id, "spawn_manager", unit_entry.unit:position(), unit_entry.unit:rotation())
+				end
 			end
 		end
 	end
@@ -304,7 +334,7 @@ function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	end
 
 	if not sequence_name then
-		Application:error("No sequence_name param passed\n", self._unit:name(), "\n")
+		Application:error("[ManageSpawnedUnits:_spawn_run_sequence] No sequence_name param passed: ", self._unit:name())
 
 		return
 	end
@@ -312,7 +342,7 @@ function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	if self._spawned_units[unit_id].unit:damage():has_sequence(sequence_name) then
 		self._spawned_units[unit_id].unit:damage():run_sequence_simple(sequence_name)
 	else
-		Application:error(sequence_name, "sequence does not exist in:\n", self._spawned_units[unit_id].unit:name())
+		Application:error("[ManageSpawnedUnits:_spawn_run_sequence]", sequence_name, "sequence does not exist in: ", self._spawned_units[unit_id].unit:name())
 	end
 end
 
@@ -342,4 +372,16 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	end
 
 	self._unit:set_moving()
+end
+
+function ManageSpawnedUnits:get_spawned_units()
+	local t = {}
+
+	for key, data in pairs(self._spawned_units) do
+		if alive(data.unit) then
+			table.insert(t, data.unit)
+		end
+	end
+
+	return t
 end

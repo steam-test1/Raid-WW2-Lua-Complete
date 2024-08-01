@@ -39,7 +39,7 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 			waypoint_type = "hostage_trade",
 			text = text,
 			position = unit:movement():m_pos(),
-			distance = _G.IS_PC
+			distance = IS_PC
 		})
 
 		if managers.network:session() and not managers.trade:is_peer_in_custody(managers.network:session():local_peer():id()) then
@@ -134,52 +134,6 @@ function CopLogicTrade.on_trade(data, trading_unit)
 	if not data.internal_data._trade_enabled then
 		return
 	end
-
-	managers.trade:on_hostage_traded(trading_unit)
-
-	data.internal_data._trade_enabled = false
-
-	data.unit:network():send("hostage_trade", false, true)
-	CopLogicTrade.hostage_trade(data.unit, false, true)
-	managers.groupai:state():on_hostage_state(false, data.key, managers.enemy:all_enemies()[data.key] and true or false)
-
-	if data.is_converted then
-		managers.groupai:state():remove_minion(data.key, nil)
-	end
-
-	local flee_pos = managers.groupai:state():flee_point(data.unit:movement():nav_tracker():nav_segment())
-
-	if flee_pos then
-		data.internal_data.fleeing = true
-		data.internal_data.flee_pos = flee_pos
-
-		if data.unit:anim_data().hands_tied or data.unit:anim_data().tied then
-			local new_action = nil
-
-			if data.unit:anim_data().stand and data.is_tied then
-				new_action = {
-					variant = "panic",
-					body_part = 1,
-					type = "act"
-				}
-				data.is_tied = nil
-
-				data.unit:movement():set_stance("hos")
-			else
-				new_action = {
-					variant = "stand",
-					body_part = 1,
-					type = "act"
-				}
-			end
-
-			data.unit:brain():action_request(new_action)
-		end
-
-		data.unit:contour():add("hostage_trade", true, nil)
-	else
-		data.unit:set_slot(0)
-	end
 end
 
 function CopLogicTrade.update(data)
@@ -270,5 +224,4 @@ function CopLogicTrade._set_verified_paths(data, verified_paths)
 end
 
 function CopLogicTrade.pre_destroy(data)
-	managers.trade:change_hostage()
 end

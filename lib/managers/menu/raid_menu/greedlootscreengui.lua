@@ -54,6 +54,7 @@ end
 
 function GreedLootScreenGui:_layout()
 	GreedLootScreenGui.super._layout(self)
+	managers.raid_menu:show_background_video()
 	self:_create_fullscreen_panel()
 	self:_create_flares()
 	self:_create_loot_image()

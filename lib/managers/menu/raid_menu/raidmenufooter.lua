@@ -84,10 +84,9 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 		vertical = "bottom",
 		h = 32,
 		type = "label",
-		y = 0,
-		text = gold,
 		x = w1 + w2,
 		w = w3,
+		text = gold,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24
@@ -131,6 +130,10 @@ function RaidMenuFooter:refresh_gold_amount()
 	local gold_amount = managers.gold_economy:gold_string(managers.gold_economy:current())
 
 	self._profile_name_label:set_text(gold_amount)
+
+	local _, _, w = self._profile_name_label:text_rect()
+
+	self._profile_name_label:set_w(w)
 end
 
 function RaidMenuFooter:back_pressed()

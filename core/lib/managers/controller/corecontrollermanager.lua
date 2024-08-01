@@ -1,12 +1,8 @@
 core:module("CoreControllerManager")
 core:import("CoreControllerWrapperSettings")
-core:import("CoreControllerWrapperGamepad")
 core:import("CoreControllerWrapperPC")
-core:import("CoreControllerWrapperXbox360")
-core:import("CoreControllerWrapperPS3")
 core:import("CoreControllerWrapperPS4")
 core:import("CoreControllerWrapperXB1")
-core:import("CoreControllerWrapperSteam")
 core:import("CoreControllerWrapperDebug")
 core:import("CoreManagerBase")
 core:import("CoreEvent")
@@ -25,7 +21,7 @@ function ControllerManager:init(path, default_settings_path)
 
 	self._skip_controller_map = {}
 
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not IS_PC then
 		self._skip_controller_map.win32_keyboard = true
 		self._skip_controller_map.win32_mouse = true
 	end
@@ -44,17 +40,14 @@ function ControllerManager:init(path, default_settings_path)
 	self._next_controller_wrapper_id = 1
 	self._supported_wrapper_types = {}
 
-	if _G.IS_PC then
+	if IS_PC then
 		self._supported_wrapper_types[CoreControllerWrapperPC.ControllerWrapperPC.TYPE] = CoreControllerWrapperPC.ControllerWrapperPC
-		self._supported_wrapper_types[CoreControllerWrapperXbox360.ControllerWrapperXbox360.TYPE] = CoreControllerWrapperXbox360.ControllerWrapperXbox360
-	elseif _G.IS_PS3 then
-		self._supported_wrapper_types[CoreControllerWrapperPS3.ControllerWrapperPS3.TYPE] = CoreControllerWrapperPS3.ControllerWrapperPS3
-	elseif _G.IS_PS4 then
-		self._supported_wrapper_types[CoreControllerWrapperPS4.ControllerWrapperPS4.TYPE] = CoreControllerWrapperPS4.ControllerWrapperPS4
-	elseif _G.IS_XB1 then
 		self._supported_wrapper_types[CoreControllerWrapperXB1.ControllerWrapperXB1.TYPE] = CoreControllerWrapperXB1.ControllerWrapperXB1
-	elseif _G.IS_XB360 then
-		self._supported_wrapper_types[CoreControllerWrapperXbox360.ControllerWrapperXbox360.TYPE] = CoreControllerWrapperXbox360.ControllerWrapperXbox360
+		self._supported_wrapper_types[CoreControllerWrapperPS4.ControllerWrapperPS4.TYPE] = CoreControllerWrapperPS4.ControllerWrapperPS4
+	elseif IS_PS4 then
+		self._supported_wrapper_types[CoreControllerWrapperPS4.ControllerWrapperPS4.TYPE] = CoreControllerWrapperPS4.ControllerWrapperPS4
+	elseif IS_XB1 then
+		self._supported_wrapper_types[CoreControllerWrapperXB1.ControllerWrapperXB1.TYPE] = CoreControllerWrapperXB1.ControllerWrapperXB1
 	end
 
 	self._supported_controller_type_map = {}
@@ -129,7 +122,7 @@ function ControllerManager:setup_default_controller_list()
 
 			table.insert(self._default_controller_list, controller)
 
-			if not self._controller_device_id and controller:type() == "xb1_controller" and SystemInfo:platform() == Idstring("XB1") then
+			if not self._controller_device_id and controller:type() == "xb1_controller" and IS_XB1 then
 				self._controller_device_id = controller:device_id()
 			end
 		end
@@ -144,14 +137,6 @@ function ControllerManager:update(t, dt)
 	end
 
 	self:check_connect_change()
-
-	if self:is_using_controller() and managers.hud and managers.raid_menu and not managers.raid_menu:is_any_menu_open() then
-		local toggle_chat_key = Idstring(managers.controller:get_settings("pc"):get_connection("toggle_chat"):get_input_name_list()[1])
-
-		if Input:keyboard():pressed(toggle_chat_key) then
-			managers.hud:toggle_chatinput()
-		end
-	end
 end
 
 function ControllerManager:paused_update(t, dt)
@@ -189,9 +174,9 @@ function ControllerManager:replace_active_controller(replacement_ctrl_index, rep
 end
 
 function ControllerManager:check_connect_change()
-	if _G.IS_PC then
+	if IS_PC then
 		return
-	elseif (_G.IS_PS4 or SystemInfo:platform() == Idstring("XB1")) and self._default_controller_list then
+	elseif (IS_PS4 or IS_XB1) and self._default_controller_list then
 		local connected = true
 
 		for _, controller in ipairs(self._default_controller_list) do
@@ -199,7 +184,7 @@ function ControllerManager:check_connect_change()
 				connected = false
 
 				break
-			elseif SystemInfo:platform() == Idstring("XB1") and controller:type() == "xb1_controller" and (controller:device_id() ~= self._controller_device_id or XboxLive:current_user() and controller:user_xuid() ~= XboxLive:current_user()) then
+			elseif IS_XB1 and controller:type() == "xb1_controller" and (controller:device_id() ~= self._controller_device_id or XboxLive:current_user() and controller:user_xuid() ~= XboxLive:current_user()) then
 				connected = false
 
 				print("[ControllerManager:check_connect_change] not connected controller:device_id()", controller:device_id(), "self._controller_device_id", self._controller_device_id, "controller:connected()", controller:connected(), "controller:user_xuid()", controller:user_xuid(), "XboxLive:current_user()", XboxLive:current_user())
@@ -208,7 +193,7 @@ function ControllerManager:check_connect_change()
 			end
 		end
 
-		if not connected and SystemInfo:platform() == Idstring("XB1") then
+		if not connected and IS_XB1 then
 			print("[ControllerManager:check_connect_change] not connected")
 
 			local current_user = XboxLive:current_user()

@@ -19,6 +19,7 @@ function GameState:default_transition(next_state, params)
 		next_state:set_controller_enabled(true)
 	end
 
+	managers.dyn_resource:set_file_streaming_profile(next_state._file_streaming_profile())
 	next_state:at_enter(self, params)
 end
 
@@ -46,6 +47,10 @@ end
 
 function GameState:is_joinable()
 	return true
+end
+
+function GameState._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_INGAME
 end
 
 CoreClass.override_class(CoreInternalGameState.GameState, GameState)

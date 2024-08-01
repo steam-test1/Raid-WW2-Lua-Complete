@@ -116,10 +116,6 @@ function NetworkGroupLobbyPSN:send_return_group_lobby()
 
 	local timeout = 40
 
-	if Application:bundled() then
-		timeout = 15
-	end
-
 	self._server_rpc:lobby_return(managers.network.account:player_id())
 
 	for k, v in pairs(self._players) do

@@ -130,7 +130,6 @@ function ElementNavLink:_finalize_values(values)
 	_index_or_nil(ElementNavLink._INTERACTION_VOICES, "interaction_voice")
 	_save_boolean("repeatable")
 	_save_boolean("forced")
-	_save_boolean("no_arrest")
 	_save_boolean("scan")
 	_save_boolean("allow_followup_self")
 	_index_or_nil(ElementNavLink._STANCES, "path_stance")
@@ -317,7 +316,6 @@ function ElementNavLink:get_objective(instigator)
 		haste = haste,
 		interrupt_dis = interrupt_dis,
 		interrupt_health = interrupt_health,
-		no_retreat = not interrupt_dis and not interrupt_health,
 		trigger_on = trigger_on,
 		interaction_voice = interaction_voice,
 		followup_SO = self._values.followup_elements and self or nil,
@@ -326,8 +324,7 @@ function ElementNavLink:get_objective(instigator)
 		complete_clbk = callback(self, self, "clbk_objective_complete"),
 		verification_clbk = callback(self, self, "clbk_verify_administration"),
 		scan = self._values.scan,
-		forced = self._values.forced,
-		no_arrest = self._values.no_arrest
+		forced = self._values.forced
 	}
 	local action = nil
 

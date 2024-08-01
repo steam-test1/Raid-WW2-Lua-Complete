@@ -26,10 +26,6 @@ function ElementEnableUnit:_load_unit(unit)
 	table.insert(self._units, unit)
 end
 
-function ElementEnableUnit:client_on_executed(...)
-	self:on_executed(...)
-end
-
 function ElementEnableUnit:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -40,6 +36,10 @@ function ElementEnableUnit:on_executed(instigator)
 	end
 
 	ElementEnableUnit.super.on_executed(self, instigator)
+end
+
+function ElementEnableUnit:client_on_executed(...)
+	self:on_executed(...)
 end
 
 function ElementEnableUnit:save(data)

@@ -210,7 +210,7 @@ function NewRaycastWeaponBase:apply_texture_switches()
 				if texture_switch and part_data then
 					unit = part_data.unit
 					material_ids = Idstring(texture_switch.material)
-					material_config = unit:get_objects_by_type(Idstring("material"))
+					material_config = unit:get_objects_by_type(IDS_MATERIAL)
 
 					for _, material in ipairs(material_config) do
 						if material:name() == material_ids then
@@ -252,50 +252,6 @@ function NewRaycastWeaponBase:has_scope()
 	end
 
 	return true
-end
-
-function NewRaycastWeaponBase:has_range_distance_scope()
-	if not self._scopes or not self._parts then
-		return false
-	end
-
-	if not self._assembly_complete then
-		return false
-	end
-
-	local part = nil
-
-	for i, part_id in ipairs(self._scopes) do
-		part = self._parts[part_id]
-
-		if part and (part.unit:digital_gui() or part.unit:digital_gui_upper()) then
-			return true
-		end
-	end
-
-	return false
-end
-
-function NewRaycastWeaponBase:set_scope_range_distance(distance)
-	if not self._assembly_complete then
-		return
-	end
-
-	if self._scopes and self._parts then
-		local part = nil
-
-		for i, part_id in ipairs(self._scopes) do
-			part = self._parts[part_id]
-
-			if part and part.unit:digital_gui() then
-				part.unit:digital_gui():number_set(distance and math.round(distance) or false, false)
-			end
-
-			if part and part.unit:digital_gui_upper() then
-				part.unit:digital_gui_upper():number_set(distance and math.round(distance) or false, false)
-			end
-		end
-	end
 end
 
 function NewRaycastWeaponBase:change_part(part_id)
@@ -353,6 +309,7 @@ local ids_single = Idstring("single")
 local ids_auto = Idstring("auto")
 
 function NewRaycastWeaponBase:_update_stats_values()
+	Application:debug("[NewRaycaseWeaponBase:_update_stats_values]")
 	self:_check_sound_switch()
 
 	self._silencer = managers.weapon_factory:has_perk("silencer", self._factory_id, self._blueprint)
@@ -384,15 +341,15 @@ function NewRaycastWeaponBase:_update_stats_values()
 
 	if self._ammo_data then
 		if self._ammo_data.can_shoot_through_shield ~= nil then
-			self._can_shoot_through_shield = self._ammo_data.can_shoot_through_shield
+			self._can_shoot_through_shield = self._can_shoot_through_shield + (self._ammo_data.can_shoot_through_shield and 1)
 		end
 
 		if self._ammo_data.can_shoot_through_enemy ~= nil then
-			self._can_shoot_through_enemy = self._ammo_data.can_shoot_through_enemy
+			self._can_shoot_through_enemy = self._can_shoot_through_enemy + (self._ammo_data.can_shoot_through_enemy and 1)
 		end
 
 		if self._ammo_data.can_shoot_through_wall ~= nil then
-			self._can_shoot_through_wall = self._ammo_data.can_shoot_through_wall
+			self._can_shoot_through_wall = self._can_shoot_through_wall + (self._ammo_data.can_shoot_through_wall and 1)
 		end
 
 		if self._ammo_data.bullet_class ~= nil then
@@ -435,7 +392,7 @@ function NewRaycastWeaponBase:_update_stats_values()
 	local modifier_stats = self:weapon_tweak_data().stats_modifiers
 
 	if stats.zoom then
-		stats.zoom = math.min(stats.zoom + managers.player:upgrade_value(self:weapon_tweak_data().category, "zoom_increase", 0), #stats_tweak_data.zoom)
+		stats.zoom = math.min(stats.zoom + managers.player:upgrade_value(self:category(), "zoom_increase", 0), #stats_tweak_data.zoom)
 	end
 
 	for stat, _ in pairs(stats) do
@@ -568,26 +525,29 @@ function NewRaycastWeaponBase:weapon_hold()
 end
 
 function NewRaycastWeaponBase:replenish()
-	local ammo_max_multiplier = managers.player:upgrade_value(self:weapon_tweak_data().category, "extra_ammo_multiplier", 1)
-
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY) and (tweak_data.weapon[self._name_id].use_data.selection_index == 1 or tweak_data.weapon[self._name_id].use_data.selection_index == 2) then
-		ammo_max_multiplier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY) or 1
-	elseif managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_PRIMARY_AMMO_CAPACITY) and tweak_data.weapon[self._name_id].use_data.selection_index == 2 then
-		ammo_max_multiplier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_PRIMARY_AMMO_CAPACITY) or 1
-	elseif managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_SECONDARY_AMMO_CAPACITY) and tweak_data.weapon[self._name_id].use_data.selection_index == 1 then
-		ammo_max_multiplier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_SECONDARY_AMMO_CAPACITY) or 1
-	end
-
+	local ammo_max_multiplier = managers.player:upgrade_value(self:category(), "extra_ammo_multiplier", 1)
 	local idx = self:selection_index()
 
 	if idx then
-		if idx == 1 then
+		local buff_name = nil
+
+		if idx == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 			ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("weapon", "secondary_ammo_increase", 1)
 			ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "secondary_ammo_increase", 1)
-		elseif idx == 2 then
+			buff_name = BuffEffectManager.EFFECT_PLAYER_SECONDARY_AMMO_CAPACITY
+		elseif idx == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 			ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("weapon", "primary_ammo_increase", 1)
 			ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "primary_ammo_increase", 1)
+			buff_name = BuffEffectManager.EFFECT_PLAYER_PRIMARY_AMMO_CAPACITY
 		end
+
+		if managers.buff_effect:is_effect_active(buff_name) then
+			ammo_max_multiplier = managers.buff_effect:get_effect_value(buff_name) or 1
+		elseif managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY) and buff_name ~= nil then
+			ammo_max_multiplier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY) or 1
+		end
+
+		ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "pack_mule_ammo_total_increase", 1)
 	end
 
 	local ammo_max_per_clip = self:calculate_ammo_max_per_clip()
@@ -607,6 +567,7 @@ function NewRaycastWeaponBase:replenish()
 
 	self._ammo_pickup = tweak_data.weapon[self._name_id].AMMO_PICKUP
 
+	self:tweak_data_anim_stop("magazine_empty")
 	self:update_damage()
 end
 
@@ -620,35 +581,33 @@ function NewRaycastWeaponBase:update_damage()
 end
 
 function NewRaycastWeaponBase:calculate_ammo_max_per_clip()
-	local ammo = tweak_data.weapon[self._name_id].CLIP_AMMO_MAX
-	ammo = ammo + managers.player:upgrade_value(self._name_id, "clip_ammo_increase")
+	local weapon_tweak = self:weapon_tweak_data()
+	local ammo = weapon_tweak.CLIP_AMMO_MAX
+	local selection_index = weapon_tweak.use_data.selection_index
+	local selection_category = selection_index == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and "primary_weapon" or "secondary_weapon"
+	local weapon_category = weapon_tweak.category
 
-	if not self:upgrade_blocked("weapon", "clip_ammo_increase") then
-		ammo = ammo + managers.player:upgrade_value("weapon", "clip_ammo_increase", 0)
+	if self._extra_ammo then
+		ammo = ammo + self._extra_ammo
 	end
 
-	if not self:upgrade_blocked(tweak_data.weapon[self._name_id].category, "clip_ammo_increase") then
-		ammo = ammo + managers.player:upgrade_value(tweak_data.weapon[self._name_id].category, "clip_ammo_increase", 0)
-	end
-
-	ammo = ammo + (self._extra_ammo or 0)
-
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PRIMARY_AMMO_MAG) and tweak_data.weapon[self._name_id].use_data.selection_index == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PRIMARY_AMMO_MAG) and selection_index == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		local ammo_multiplier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PRIMARY_AMMO_MAG) or 1
 		ammo = math.floor(ammo * ammo_multiplier)
 	end
 
-	local upg_category = self:weapon_tweak_data().category
-	local guess_upg_category = managers.player:upgrade_value(upg_category, "magazine_upgrade", 0)
+	local guess_upg_category = managers.player:upgrade_value(weapon_category, "magazine_upgrade", 0)
 
 	if guess_upg_category ~= 0 then
-		Application:debug("[NewRaycastWeaponBase:calculate_ammo_max_per_clip] Using class type", upg_category, guess_upg_category)
+		Application:debug("[NewRaycastWeaponBase:calculate_ammo_max_per_clip] Using class type", weapon_category, guess_upg_category)
 
 		ammo = ammo + guess_upg_category
-	elseif tweak_data.weapon[self._name_id].use_data.selection_index == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
-		ammo = ammo + managers.player:upgrade_value("primary_weapon", "magazine_upgrade", 0)
-	elseif tweak_data.weapon[self._name_id].use_data.selection_index == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
-		ammo = ammo + managers.player:upgrade_value("secondary_weapon", "magazine_upgrade", 0)
+	else
+		ammo = ammo + managers.player:upgrade_value(selection_category, "magazine_upgrade", 0)
+	end
+
+	if not self:upgrade_blocked(weapon_category, "clipazines_magazine_upgrade") then
+		ammo = ammo + managers.player:upgrade_value(weapon_category, "clipazines_magazine_upgrade", 0)
 	end
 
 	return ammo
@@ -795,6 +754,12 @@ function NewRaycastWeaponBase:fire_mode()
 	return self._fire_mode == ids_single and "single" or "auto"
 end
 
+function NewRaycastWeaponBase:is_single_fire()
+	self._fire_mode = self._locked_fire_mode or self._fire_mode or Idstring(tweak_data.weapon[self._name_id].FIRE_MODE or "single")
+
+	return self._fire_mode == ids_single
+end
+
 function NewRaycastWeaponBase:recoil_wait()
 	local tweak_is_auto = tweak_data.weapon[self._name_id].FIRE_MODE == "auto"
 	local weapon_is_auto = self:fire_mode() == "auto"
@@ -818,6 +783,8 @@ function NewRaycastWeaponBase:toggle_firemode()
 	if can_toggle then
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYERS_CAN_ONLY_USE_SINGLE_FIRE) then
 			self._fire_mode = ids_single
+
+			return false
 		elseif self._fire_mode == ids_single then
 			self._fire_mode = ids_auto
 
@@ -827,11 +794,9 @@ function NewRaycastWeaponBase:toggle_firemode()
 
 			self._sound_fire:post_event("wp_auto_switch_off")
 		end
-
-		return true
 	end
 
-	return false
+	return can_toggle
 end
 
 function NewRaycastWeaponBase:set_ammo_remaining_in_clip(...)
@@ -1020,7 +985,7 @@ function NewRaycastWeaponBase:check_stats()
 	local stats = deep_clone(base_stats)
 	local tweak_data = tweak_data.weapon.stats
 	local modifier_stats = self:weapon_tweak_data().stats_modifiers
-	stats.zoom = math.min(stats.zoom + managers.player:upgrade_value(self:weapon_tweak_data().category, "zoom_increase", 0), #tweak_data.zoom)
+	stats.zoom = math.min(stats.zoom + managers.player:upgrade_value(self:category(), "zoom_increase", 0), #tweak_data.zoom)
 
 	for stat, _ in pairs(stats) do
 		if parts_stats[stat] then
@@ -1220,12 +1185,22 @@ function NewRaycastWeaponBase:_convert_add_to_mul(value)
 end
 
 function NewRaycastWeaponBase:_get_spread(user_unit)
-	if user_unit == managers.player:player_unit() and managers.player:upgrade_value("player", "warcry_nullify_spread", false) == true then
-		return 0
+	if user_unit == managers.player:player_unit() then
+		if managers.player:upgrade_value("player", "warcry_nullify_spread", false) then
+			return 0
+		end
+
+		if self:in_steelsight() then
+			if managers.player:upgrade_value("player", "warcry_nullify_spread_steelsight", false) then
+				return 0
+			end
+		elseif managers.player:upgrade_value("player", "warcry_nullify_spread_hipfire", false) then
+			return 0
+		end
 	end
 
-	local current_state = user_unit:movement()._current_state
-	local spread_stat = current_state and current_state._moving and self._spread_moving or self._spread
+	local current_state = user_unit:movement():current_state()
+	local spread_stat = current_state and current_state:moving() and self._spread_moving or self._spread
 	local spread_addend = self:spread_addend(current_state)
 	local spread_multiplier = self:spread_multiplier(current_state)
 	local spread_firing = self._spread_firing or 0
@@ -1233,24 +1208,17 @@ function NewRaycastWeaponBase:_get_spread(user_unit)
 	return math.max(0, (spread_stat + spread_addend) * spread_multiplier + spread_firing)
 end
 
-function NewRaycastWeaponBase:fire_rate_multiplier()
-	local user_unit = self._setup and self._setup.user_unit
-	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
-
-	return managers.blackmarket:fire_rate_multiplier(self._name_id, self:weapon_tweak_data().category, self._silencer, nil, current_state, self._blueprint)
-end
-
 function NewRaycastWeaponBase:damage_addend()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
 
-	return managers.blackmarket:damage_addend(self._name_id, self:weapon_tweak_data().category, self._silencer, nil, current_state, self._blueprint)
+	return managers.blackmarket:damage_addend(self._name_id, self:category(), self._silencer, nil, current_state, self._blueprint)
 end
 
 function NewRaycastWeaponBase:damage_multiplier()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
-	local multiplier = managers.blackmarket:damage_multiplier(self._name_id, self:weapon_tweak_data().category, self._silencer, nil, current_state, self._blueprint)
+	local multiplier = managers.blackmarket:damage_multiplier(self._name_id, self:category(), self._silencer, nil, current_state, self._blueprint)
 
 	return multiplier
 end
@@ -1260,31 +1228,64 @@ function NewRaycastWeaponBase:melee_damage_multiplier()
 end
 
 function NewRaycastWeaponBase:spread_addend(current_state)
-	return managers.blackmarket:accuracy_addend(self._name_id, self:weapon_tweak_data().category, self._current_stats_indices and self._current_stats_indices.spread, self._silencer, current_state, self:fire_mode(), self._blueprint)
+	return managers.blackmarket:accuracy_addend(self._name_id, self:category(), self._current_stats_indices and self._current_stats_indices.spread, self._silencer, current_state, self:fire_mode(), self._blueprint)
 end
 
 function NewRaycastWeaponBase:spread_multiplier(current_state)
-	return managers.blackmarket:accuracy_multiplier(self._name_id, self:weapon_tweak_data().category, self._silencer, current_state, self._spread_moving, self:fire_mode(), self._blueprint)
+	return managers.blackmarket:accuracy_multiplier(self._name_id, self:category(), self._silencer, current_state, self._spread_moving, self:fire_mode(), self._blueprint)
 end
 
 function NewRaycastWeaponBase:recoil_addend()
-	local recoil = managers.blackmarket:recoil_addend(self._name_id, self:weapon_tweak_data().category, self._current_stats_indices and self._current_stats_indices.recoil, self._silencer, self._blueprint)
+	local recoil = managers.blackmarket:recoil_addend(self._name_id, self:category(), self._current_stats_indices and self._current_stats_indices.recoil, self._silencer, self._blueprint)
 	local re = recoil + (self._recoil_firing or 0)
 
 	return re
 end
 
 function NewRaycastWeaponBase:recoil_multiplier()
-	return managers.blackmarket:recoil_multiplier(self._name_id, self:weapon_tweak_data().category, self._silencer, self._blueprint)
+	return managers.blackmarket:recoil_multiplier(self._name_id, self:category(), self._silencer, self._blueprint)
+end
+
+function NewRaycastWeaponBase:dismember_chance()
+	local chance = self:weapon_tweak_data().dismember_chance or 0
+
+	if self:is_single_fire() then
+		chance = chance + managers.player:upgrade_value("player", "brutality_single_dismember_chance", 1) - 1
+	end
+
+	if chance <= 0 then
+		return
+	end
+
+	local multiplier = 1
+
+	if self:in_steelsight() then
+		multiplier = multiplier * managers.player:upgrade_value(self:category(), "steelsight_dismember_chance", 1)
+	end
+
+	return chance * multiplier
+end
+
+function NewRaycastWeaponBase:critical_hit_chance()
+	local chance = 0
+	chance = chance + managers.player:upgrade_value(self:category(), "anatomist_critical_hit_chance", 1) - 1
+
+	if self:is_single_fire() then
+		chance = chance + managers.player:upgrade_value("player", "brutality_single_critical_hit_chance", 1) - 1
+	end
+
+	return chance
 end
 
 function NewRaycastWeaponBase:enter_steelsight_speed_multiplier()
 	local multiplier = 1
-	multiplier = multiplier + 1 - managers.player:upgrade_value(self:weapon_tweak_data().category, "enter_steelsight_speed_multiplier", 1)
+	multiplier = multiplier + 1 - managers.player:upgrade_value(self:category(), "enter_steelsight_speed_multiplier", 1)
+	multiplier = multiplier + 1 - managers.player:upgrade_value("player", "fasthand_enter_steelsight_speed_multiplier", 1)
+	local idx = self:selection_index()
 
-	if managers.player:local_player():inventory():equipped_selection() == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
+	if idx == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		multiplier = multiplier + 1 - managers.player:upgrade_value("primary_weapon", "enter_steelsight_speed_multiplier", 1)
-	elseif managers.player:local_player():inventory():equipped_selection() == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
+	elseif idx == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 		multiplier = multiplier + 1 - managers.player:upgrade_value("secondary_weapon", "enter_steelsight_speed_multiplier", 1)
 	end
 
@@ -1292,23 +1293,36 @@ function NewRaycastWeaponBase:enter_steelsight_speed_multiplier()
 end
 
 function NewRaycastWeaponBase:fire_rate_multiplier()
+	local weapon_category = self:category()
 	local multiplier = 1
-	multiplier = multiplier + 1 - managers.player:upgrade_value(self:weapon_tweak_data().category, "fire_rate_multiplier", 1)
-	multiplier = multiplier + 1 - managers.player:upgrade_value(self._name_id, "fire_rate_multiplier", 1)
 	multiplier = multiplier + 1 - managers.player:upgrade_value("weapon", "fire_rate_multiplier", 1)
+	multiplier = multiplier + 1 - managers.player:upgrade_value(self._name_id, "fire_rate_multiplier", 1)
+	multiplier = multiplier + 1 - managers.player:upgrade_value(weapon_category, "fire_rate_multiplier", 1)
+
+	if self:in_steelsight() then
+		multiplier = multiplier + 1 - managers.player:upgrade_value(weapon_category, "steelsight_fire_rate_multiplier", 1)
+	end
 
 	return self:_convert_add_to_mul(multiplier)
 end
 
 function NewRaycastWeaponBase:reload_speed_multiplier()
 	local multiplier = 1
-	multiplier = multiplier + 1 - managers.player:upgrade_value(self:weapon_tweak_data().category, "reload_speed_multiplier", 1)
+	multiplier = multiplier + 1 - managers.player:upgrade_value(self:category(), "reload_speed_multiplier", 1)
 	multiplier = multiplier + 1 - managers.player:upgrade_value("weapon", "passive_reload_speed_multiplier", 1)
+	multiplier = multiplier + 1 - managers.player:upgrade_value("weapon", "fasthand_reload_speed_multiplier", 1)
 	multiplier = multiplier + 1 - managers.player:upgrade_value(self._name_id, "reload_speed_multiplier", 1)
+	local empty_reload = self._started_reload_empty or self:clip_empty()
 
-	if managers.player:local_player():inventory():equipped_selection() == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
+	if empty_reload then
+		multiplier = multiplier + 1 - managers.player:upgrade_value("weapon", "clipazines_empty_reload_speed_multiplier", 1)
+	end
+
+	local idx = self:selection_index()
+
+	if idx == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
 		multiplier = multiplier + 1 - managers.player:upgrade_value("primary_weapon", "reload_speed_multiplier", 1)
-	elseif managers.player:local_player():inventory():equipped_selection() == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
+	elseif idx == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 		multiplier = multiplier + 1 - managers.player:upgrade_value("secondary_weapon", "reload_speed_multiplier", 1)
 	end
 
@@ -1374,8 +1388,10 @@ end
 function NewRaycastWeaponBase:reload_expire_t()
 	if self._use_shotgun_reload then
 		local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()
+		local shells_needed = math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip)
+		local total_loads = math.ceil(shells_needed / self:get_ammo_reload_clip_single())
 
-		return math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * self:reload_shell_expire_t()
+		return total_loads * self:reload_shell_expire_t()
 	end
 
 	return nil
@@ -1424,39 +1440,43 @@ end
 function NewRaycastWeaponBase:start_reload(...)
 	NewRaycastWeaponBase.super.start_reload(self, ...)
 
-	if self._use_shotgun_reload then
-		self._started_reload_empty = self:clip_empty()
-		local speed_multiplier = self:reload_speed_multiplier()
-		self._next_shell_reloded_t = managers.player:player_timer():time() + self:_first_shell_reload_expire_t() / speed_multiplier
+	self._started_reload_empty = self:clip_empty()
+
+	if self:use_shotgun_reload() then
+		self:update_next_shell_reload_t(true)
 	end
 end
 
 function NewRaycastWeaponBase:started_reload_empty()
-	if self._use_shotgun_reload then
-		return self._started_reload_empty
-	end
-
-	return nil
+	return self._use_shotgun_reload and self._started_reload_empty
 end
 
 function NewRaycastWeaponBase:update_reloading(t, dt, time_left)
-	if self._use_shotgun_reload and self._next_shell_reloded_t and self._next_shell_reloded_t < t then
-		local speed_multiplier = self:reload_speed_multiplier()
-		self._next_shell_reloded_t = self._next_shell_reloded_t + self:reload_shell_expire_t() / speed_multiplier
+	if self:use_shotgun_reload() and self._next_shell_reloded_t and self._next_shell_reloded_t <= t then
+		local reload_clip_single = self:get_ammo_reload_clip_single()
+		local ammo_in_clip = self:get_ammo_remaining_in_clip()
+		local new_total = math.max(0, self:get_ammo_total() - ammo_in_clip)
+		local reload_amount = math.min(reload_clip_single, new_total)
 
-		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip() + self:get_ammo_reload_clip_single()))
+		self:update_next_shell_reload_t()
+		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), ammo_in_clip + reload_amount))
 		managers.raid_job:set_memory("kill_count_no_reload_" .. tostring(self._name_id), nil, true)
 
 		return true
 	end
 end
 
-function NewRaycastWeaponBase:reload_interuptable()
-	if self._use_shotgun_reload then
-		return true
-	end
+function NewRaycastWeaponBase:update_next_shell_reload_t(start)
+	local reload_expire_t = start and self:_first_shell_reload_expire_t() or self:reload_shell_expire_t()
 
-	return false
+	if reload_expire_t then
+		local speed_multiplier = self:reload_speed_multiplier()
+		self._next_shell_reloded_t = managers.player:player_timer():time() + reload_expire_t / speed_multiplier
+	end
+end
+
+function NewRaycastWeaponBase:reload_interuptable()
+	return self._use_shotgun_reload
 end
 
 function NewRaycastWeaponBase:shotgun_shell_data()

@@ -196,7 +196,6 @@ function MenuInput:update(t, dt)
 		end
 
 		if self._controller:get_input_pressed("menu_update") then
-			print("update something")
 			self._logic:update_node()
 		end
 	end

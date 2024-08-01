@@ -16,6 +16,8 @@ function ElementNavObstacle:on_script_activated()
 				obj_name = self._values.obstacle_obj_name
 			}
 		}
+
+		Application:debug("[ElementNavObstacle:on_script_activated] Converted unit id, object name.", self._values.obstacle_unit_id)
 	end
 
 	for _, data in ipairs(self._values.obstacle_list) do
@@ -59,9 +61,9 @@ function ElementNavObstacle:on_executed(instigator)
 
 	for _, data in ipairs(self._obstacle_units) do
 		if not alive(data.unit) then
-			print("[ElementNavObstacle:on_executed] dead obstacle unit. element_id:", self._id)
+			Application:warn("[ElementNavObstacle:on_executed] dead obstacle unit. element_id:", self._id)
 		elseif not data.unit:get_object(data.obj_name) then
-			debug_pause("[ElementNavObstacle:on_executed] object missing from unit. element_id:", self._id, "unit", data.unit, "Objec3D", data.obj_name)
+			debug_pause_unit(data.unit, "[ElementNavObstacle:on_executed] object missing from unit. element_id:", self._id, "unit", data.unit, "Objec3D", data.obj_name)
 		elseif self._values.operation == "add" then
 			managers.navigation:add_obstacle(data.unit, data.obj_name, self._sync_id)
 		else

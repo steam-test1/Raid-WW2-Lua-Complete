@@ -37,7 +37,7 @@ function reload_units(unit_name)
 	local units = World:find_units_quick("all")
 	local num_reloads = 0
 
-	PackageManager:reload(Idstring("unit"), unit_name:id())
+	PackageManager:reload(IDS_UNIT, unit_name:id())
 	managers.sequence:reload(unit_name, true)
 
 	if units then
@@ -76,17 +76,16 @@ end
 
 function editor_load_unit(unit_name)
 	if Application:editor() then
-		local type_ids = Idstring("unit")
 		local name_ids = unit_name:id()
 
-		if not DB:has(type_ids, name_ids) then
+		if not DB:has(IDS_UNIT, name_ids) then
 			Application:error("Unit not found in DB", name_ids)
 			Application:stack_dump("error")
 
 			return
 		end
 
-		CoreEngineAccess._editor_load(type_ids, name_ids)
+		CoreEngineAccess._editor_load(IDS_UNIT, name_ids)
 
 		return true
 	else

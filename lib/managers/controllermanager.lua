@@ -11,26 +11,34 @@ function ControllerManager:init(path, default_settings_path)
 
 	ControllerManager.super.init(self, path, default_settings_path)
 
-	self._connected_xbox_controllers = {}
+	self._connected_pc_controllers = {}
 
-	self:_initial_connected_xbox_controllers()
+	self:_initial_connected_pc_controllers()
 end
 
 function ControllerManager:update(t, dt)
 	ControllerManager.super.update(self, t, dt)
 	self:_poll_reconnected_controller()
+
+	if self:is_using_controller() and managers.hud and managers.raid_menu and not managers.raid_menu:is_any_menu_open() then
+		local toggle_chat_key = Idstring(managers.controller:get_settings("pc"):get_connection("toggle_chat"):get_input_name_list()[1])
+
+		if Input:keyboard():pressed(toggle_chat_key) then
+			managers.hud:toggle_chatinput()
+		end
+	end
 end
 
 function ControllerManager:is_using_controller()
-	return managers.controller:is_xbox_controller_present() and not managers.menu:is_pc_controller()
+	return managers.controller:is_controller_present() and not managers.menu:is_pc_controller()
 end
 
-function ControllerManager:is_xbox_controller_present()
-	if not self._connected_xbox_controllers then
+function ControllerManager:is_controller_present()
+	if not self._connected_pc_controllers then
 		return false
 	end
 
-	for _, connected in pairs(self._connected_xbox_controllers) do
+	for _, connected in pairs(self._connected_pc_controllers) do
 		if connected then
 			return true
 		end
@@ -39,20 +47,20 @@ function ControllerManager:is_xbox_controller_present()
 	return false
 end
 
-function ControllerManager:_initial_connected_xbox_controllers()
-	self._connected_xbox_controllers = self:_collect_connected_xbox_controllers()
+function ControllerManager:_initial_connected_pc_controllers()
+	self._connected_pc_controllers = self:_collect_connected_pc_controllers()
 end
 
-function ControllerManager:_collect_connected_xbox_controllers()
+function ControllerManager:_collect_connected_pc_controllers()
 	local controllers_list = {}
 
-	if _G.IS_PC then
+	if IS_PC then
 		local nr_controllers = Input:num_controllers()
 
 		for i_controller = 0, nr_controllers - 1 do
 			local controller = Input:controller(i_controller)
 
-			if controller:type() == "xbox_controller" then
+			if controller:type() == "ps4_controller" or controller:type() == "xb1_controller" then
 				controllers_list[i_controller] = controller:connected()
 			end
 		end
@@ -61,14 +69,14 @@ function ControllerManager:_collect_connected_xbox_controllers()
 	return controllers_list
 end
 
-function ControllerManager:_handle_xbox_keyboard_hotswap()
-	local current_controllers_connection_state = self:_collect_connected_xbox_controllers()
+function ControllerManager:_handle_controller_keyboard_hotswap()
+	local current_controllers_connection_state = self:_collect_connected_pc_controllers()
 	local trigger_hotswap = false
 	local default_wrapper_old = self:get_default_wrapper_type()
-	local is_controller_present_old = self:is_xbox_controller_present()
+	local is_controller_present_old = self:is_controller_present()
 
 	for idx, connected in pairs(current_controllers_connection_state) do
-		if current_controllers_connection_state[idx] ~= self._connected_xbox_controllers[idx] then
+		if current_controllers_connection_state[idx] ~= self._connected_pc_controllers[idx] then
 			local wrapper_index = 1
 
 			if connected then
@@ -82,9 +90,9 @@ function ControllerManager:_handle_xbox_keyboard_hotswap()
 		end
 	end
 
-	self._connected_xbox_controllers = current_controllers_connection_state
+	self._connected_pc_controllers = current_controllers_connection_state
 	local default_wrapper = self:get_default_wrapper_type()
-	local is_controller_present = self:is_xbox_controller_present()
+	local is_controller_present = self:is_controller_present()
 
 	if trigger_hotswap and (default_wrapper ~= default_wrapper_old or is_controller_present == is_controller_present_old) then
 		self:dispatch_hotswap_callbacks()
@@ -92,9 +100,9 @@ function ControllerManager:_handle_xbox_keyboard_hotswap()
 end
 
 function ControllerManager:_poll_reconnected_controller()
-	self:_handle_xbox_keyboard_hotswap()
+	self:_handle_controller_keyboard_hotswap()
 
-	if SystemInfo:platform() == Idstring("XB1") and Global.controller_manager.connect_controller_dialog_visible then
+	if IS_XB1 and Global.controller_manager.connect_controller_dialog_visible then
 		local active_xuid = XboxLive:current_user()
 		local nr_controllers = Input:num_controllers()
 
@@ -209,7 +217,7 @@ function ControllerManager:_show_controller_changed_dialog()
 
 	Global.controller_manager.connect_controller_dialog_visible = true
 
-	if SystemInfo:platform() == Idstring("PS4") and not Global._attemptShowControllerDCAfterLoad then
+	if IS_PS4 and not Global._attemptShowControllerDCAfterLoad then
 		Global._attemptShowControllerDCAfterLoad = managers.menu._loading_screen:visible()
 	end
 
@@ -238,7 +246,7 @@ function ControllerManager:_change_mode(mode)
 end
 
 function ControllerManager:set_menu_mode_enabled(enabled)
-	if _G.IS_PC then
+	if IS_PC then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
 		self._menu_mode_enabled = self._menu_mode_enabled + (enabled and 1 or -1)
 
@@ -259,7 +267,7 @@ function ControllerManager:get_menu_mode_enabled()
 end
 
 function ControllerManager:set_ingame_mode(mode)
-	if _G.IS_PC then
+	if IS_PC then
 		if mode then
 			self._ingame_mode = mode
 		end
@@ -283,18 +291,6 @@ function ControllerManager:connect_controller_dialog_callback()
 end
 
 function ControllerManager:get_mouse_controller()
-	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
-	local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
-
-	if wrapper_class and wrapper_class.TYPE == "steam" then
-		local controller_index = self._wrapper_to_controller_list[index][1]
-		local controller = Input:controller(controller_index)
-		local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
-		local wrapper_class = self._wrapper_class_map[index]
-
-		return controller
-	end
-
 	return Input:mouse()
 end
 

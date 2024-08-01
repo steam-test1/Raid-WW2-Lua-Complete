@@ -212,7 +212,7 @@ function SentryGunBrain:_update_noticing(t, my_pos, attention_info, ignore_units
 		attention_info.identified_t = t
 		noticable = true
 
-		if self._turret_type and self._turret_type == SentryGunBrain.TURRET_TYPE_TANK then
+		if self:is_tank() then
 			local p = self._unit:unit_data().parent_unit
 
 			if alive(p) then
@@ -448,7 +448,7 @@ function SentryGunBrain:_destroy_detected_attention_object_data(attention_info)
 
 	self._detected_attention_objects[attention_info.u_key] = nil
 
-	if self._turret_type and self._turret_type == SentryGunBrain.TURRET_TYPE_TANK then
+	if self:is_tank() then
 		self._ukey = "setry_gun_player_seen_" .. tostring(self._unit:key())
 
 		managers.queued_tasks:queue(self._ukey, self._player_seen_decrease, self, nil, SentryGunBrain.TANK_ATTENTION_TIME, nil)
@@ -621,24 +621,6 @@ function SentryGunBrain:_upd_go_idle(t)
 
 	if managers.groupai:state():is_detection_persistent() then
 		self._has_seen_assault_mode = true
-	end
-
-	if self._tweak_data.AUTO_REPAIR and self._unit:character_damage():needs_repair() then
-		if not self._idle and not self._ext_movement:is_inactivating() then
-			if not self._auto_repair_counter then
-				self._auto_repair_counter = 0
-			end
-
-			if self._auto_repair_counter < self._tweak_data.AUTO_REPAIR_MAX_COUNT then
-				self._auto_repair_counter = self._auto_repair_counter + 1
-
-				self:set_idle(true)
-			end
-		end
-
-		if self._idle and self._ext_movement:is_inactivated() and not self._ext_movement:repairing() then
-			self._ext_movement:repair()
-		end
 	end
 
 	if not self._ext_movement:is_inactivating() and not self._ext_movement:repairing() then
@@ -860,6 +842,10 @@ function SentryGunBrain:pre_destroy()
 	if Network:is_server() and self._attention_handler then
 		PlayerMovement.set_attention_settings(self, nil)
 	end
+end
+
+function SentryGunBrain:is_tank()
+	return self._turret_type and self._turret_type == SentryGunBrain.TURRET_TYPE_TANK
 end
 
 function SentryGunBrain:on_intimidated(amount, aggressor_unit)

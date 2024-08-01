@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_21_06"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_01"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -10,7 +10,7 @@ function NetworkMatchMakingSTEAM:init()
 	self._lobby_filters = {}
 	self._distance_filter = 2
 	self._difficulty_filter = 0
-	self._lobby_return_count = 25
+	self._lobby_return_count = 50
 	self._try_re_enter_lobby = nil
 	self._server_joinable = false
 end
@@ -662,6 +662,7 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 			managers.platform:set_presence("Signed_in")
 			managers.network:start_client()
 
+			Global.game_settings.single_player = false
 			managers.network._restart_in_camp = managers.player and managers.player:local_player_in_camp()
 
 			managers.menu:show_waiting_for_server_response({

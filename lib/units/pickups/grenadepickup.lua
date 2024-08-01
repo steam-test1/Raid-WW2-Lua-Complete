@@ -1,8 +1,8 @@
 GrenadePickup = GrenadePickup or class(Pickup)
 
 function GrenadePickup:init(unit)
+	Application:warn("[GrenadePickup] TODO: DEPRECATE ME!")
 	GrenadePickup.super.init(self, unit)
-	self:_randomize_glow_effect()
 end
 
 function GrenadePickup:_pickup(unit)

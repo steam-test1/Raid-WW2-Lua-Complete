@@ -407,7 +407,7 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_revive = {
-		texture = "ui/ingame/textures/hud/hud_waypoint_icons_01",
+		texture = "ui/atlas/raid_atlas_waypoint",
 		texture_rect = {
 			320,
 			0,
@@ -832,15 +832,6 @@ function HudIconsTweakData:init()
 			48
 		}
 	}
-	self.equipment_cable_ties = {
-		texture = "guis/textures/hud_icons",
-		texture_rect = {
-			384,
-			96,
-			48,
-			48
-		}
-	}
 	self.equipment_bleed_out = {
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
@@ -1192,139 +1183,40 @@ function HudIconsTweakData:init()
 			96
 		}
 	}
-	self.ps3buttonhighlight = {
-		texture = "guis/textures/hud_icons",
-		texture_rect = {
-			240,
-			192,
-			32,
-			32
-		}
-	}
-	self.equipment_dynamite = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			64,
-			0,
-			64,
-			64
-		}
-	}
-	self.equipment_gas_tank = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			0,
-			64,
-			64,
-			64
-		}
-	}
-	self.equipment_empty_fuel_canister = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			448,
-			0,
-			64,
-			64
-		}
-	}
-	self.equipment_parachute = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			128,
-			0,
-			64,
-			64
-		}
-	}
-	self.equipment_scrap_parts = {
-		texture = "guis/textures/hud_icons",
-		texture_rect = {
-			104,
-			276,
-			32,
-			32
-		}
-	}
-	self.equipment_tools = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			192,
-			0,
-			64,
-			64
-		}
-	}
-	self.equipment_code_book = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			256,
-			0,
-			64,
-			64
-		}
-	}
-	self.equipment_recording_device = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			320,
-			0,
-			64,
-			64
-		}
-	}
-	self.equipment_gas_fuel = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			128,
-			64,
-			64,
-			64
-		}
-	}
-	self.equipment_enigma = {
-		texture = "ui/ingame/textures/hud/hud_pickup_icons_01",
-		texture_rect = {
-			64,
-			64,
-			64,
-			64
-		}
-	}
 	self.raid_prisoner = {
-		texture = "ui/ingame/textures/hud/hud_waypoint_icons_01",
+		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
-			384,
-			0,
-			32,
-			32
+			241,
+			439,
+			38,
+			38
 		}
 	}
 	self.raid_wp_wait = {
-		texture = "ui/ingame/textures/hud/hud_waypoint_icons_01",
+		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
-			64,
-			32,
-			32,
-			32
+			201,
+			451,
+			38,
+			38
 		}
 	}
 	self.waypoint_escort_stand = {
-		texture = "ui/ingame/textures/hud/hud_waypoint_icons_01",
+		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
-			96,
-			32,
-			32,
-			32
+			281,
+			399,
+			38,
+			38
 		}
 	}
 	self.waypoint_escort_crouch = {
-		texture = "ui/ingame/textures/hud/hud_waypoint_icons_01",
+		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
-			128,
-			32,
-			32,
-			32
+			241,
+			399,
+			38,
+			38
 		}
 	}
 end

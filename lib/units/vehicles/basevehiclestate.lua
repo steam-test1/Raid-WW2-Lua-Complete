@@ -32,7 +32,7 @@ function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 		end
 	end
 
-	if self._unit:vehicle_driving():is_loot_interaction_enabled() and not managers.player:is_carrying() and self._unit:vehicle_driving():has_loot_stored() then
+	if self._unit:vehicle_driving():is_loot_interaction_enabled() and self._unit:vehicle_driving():has_loot_stored() then
 		for _, loot_point in pairs(tweak_data.loot_points) do
 			if locator_name == Idstring(VehicleDrivingExt.INTERACTION_PREFIX .. loot_point.name) then
 				return VehicleDrivingExt.INTERACT_LOOT

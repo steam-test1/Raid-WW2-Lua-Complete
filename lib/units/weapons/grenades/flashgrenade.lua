@@ -23,7 +23,7 @@ end
 
 function FlashGrenade:_play_sound_and_effects()
 	World:effect_manager():spawn({
-		effect = Idstring("effects/particles/explosions/explosion_flash_grenade"),
+		effect = tweak_data.common_effects.flash_grenade_bang,
 		position = self._unit:position(),
 		normal = self._unit:rotation():y()
 	})

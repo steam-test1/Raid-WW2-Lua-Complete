@@ -214,7 +214,7 @@ function TeamAILogicDisabled.on_recovered(data, reviving_unit)
 		TeamAILogicDisabled._unregister_revive_SO(my_data)
 	end
 
-	CopLogicBase._exit(data.unit, "assault")
+	CopLogicBase._exit_to_state(data.unit, "assault")
 end
 
 function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
@@ -256,7 +256,7 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 				walk = -1
 			}
 		},
-		action_duration = tweak_data.interaction[data.name == "surrender" and "free" or "revive"].timer,
+		action_duration = tweak_data.interaction:get_interaction(data.name == "surrender" and "free" or "revive").timer,
 		followup_objective = followup_objective
 	}
 	local so_descriptor = {
@@ -332,7 +332,7 @@ end
 function TeamAILogicDisabled.on_revive_SO_failed(ignore_this, data)
 	local my_data = data.internal_data
 
-	if my_data.rescuer and (data.unit:character_damage():need_revive() or data.unit:character_damage():arrested()) and not my_data.exiting then
+	if my_data.rescuer and data.unit:character_damage():need_revive() and not my_data.exiting then
 		my_data.rescuer = nil
 
 		TeamAILogicDisabled._register_revive_SO(data, my_data, "revive")

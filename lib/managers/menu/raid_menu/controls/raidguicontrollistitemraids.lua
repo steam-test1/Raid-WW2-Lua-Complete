@@ -49,6 +49,7 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 	self:_layout_highlight_marker()
 	self:_layout_icon(params, data)
 	self:_layout_raid_name(params, data)
+	self:_layout_exp(params, data)
 
 	if self._is_consumable then
 		self:_layout_consumable_mission_label()
@@ -142,6 +143,24 @@ function RaidGUIControlListItemRaids:_layout_raid_name(params, data)
 	self._item_label:set_center_y(RaidGUIControlListItemRaids.NAME_CENTER_Y)
 end
 
+function RaidGUIControlListItemRaids:_layout_exp(params, data)
+	local xp_value = tweak_data.operations.missions[self._data.value].xp
+	self._exp_label = self._object:text({
+		vertical = "center",
+		align = "right",
+		name = "list_item_exp_label_" .. self._name,
+		text = utf8.to_upper(xp_value .. " XP"),
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
+		color = tweak_data.gui.colors.raid_grey
+	})
+	local _, _, w, h = self._exp_label:text_rect()
+
+	self._exp_label:set_size(w, h)
+	self._exp_label:set_right(self._item_label:w() - 20)
+	self._exp_label:set_center_y(RaidGUIControlListItemRaids.DIFFICULTY_CENTER_Y)
+end
+
 function RaidGUIControlListItemRaids:_layout_consumable_mission_label()
 	local consumable_mission_label_params = {
 		vertical = "center",
@@ -163,11 +182,12 @@ function RaidGUIControlListItemRaids:_layout_consumable_mission_label()
 end
 
 function RaidGUIControlListItemRaids:_layout_difficulty_locked()
+	local locked_subtext = self:translate("raid_next_raid_in_description", true)
 	local difficulty_locked_params = {
-		text = "--",
 		vertical = "center",
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
+		text = locked_subtext,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_dark_grey
@@ -216,6 +236,7 @@ end
 function RaidGUIControlListItemRaids:_apply_progression_layout()
 	if self._unlocked then
 		self._lock_icon:hide()
+		self._exp_label:show()
 		self._difficulty_locked_indicator:hide()
 		self._difficulty_indicator:show()
 
@@ -224,13 +245,16 @@ function RaidGUIControlListItemRaids:_apply_progression_layout()
 		if difficulty_available and difficulty_completed then
 			self._difficulty_indicator:set_progress(difficulty_available, difficulty_completed)
 		end
+
+		self._item_icon:set_color(self._color)
 	else
 		self._lock_icon:show()
+		self._exp_label:hide()
 		self._difficulty_locked_indicator:show()
 		self._difficulty_indicator:hide()
+		self._item_icon:set_color(self._color_type)
 	end
 
-	self._item_icon:set_color(self._color)
 	self._item_label:set_color(self._color_type)
 end
 

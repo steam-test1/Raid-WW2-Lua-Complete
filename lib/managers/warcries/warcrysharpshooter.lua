@@ -1,21 +1,27 @@
 WarcrySharpshooter = WarcrySharpshooter or class(Warcry)
+local ids_layer1_animate_factor = Idstring("layer1_animate_factor")
+local ids_blend_factor = Idstring("blend_factor")
+local ids_contour_post_processor = Idstring("contour_post_processor")
+local ids_contour = Idstring("contour")
+local ids_empty = Idstring("empty")
+local ids_contour_color = Idstring("contour_color")
 
 function WarcrySharpshooter:init()
 	WarcrySharpshooter.super.init(self)
-	managers.system_event_listener:add_listener("warcry_sharpshooter_enemy_killed", {
-		CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY
-	}, callback(self, self, "_on_enemy_killed"))
 
-	self._active = false
 	self._type = Warcry.SHARPSHOOTER
 	self._tweak_data = tweak_data.warcry[self._type]
+
+	managers.system_event_listener:add_listener("warcry_" .. self:get_type() .. "_enemy_killed", {
+		CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY
+	}, callback(self, self, "_on_enemy_killed"))
 end
 
-local ids_layer1_animate_factor = Idstring("layer1_animate_factor")
-local ids_blend_factor = Idstring("blend_factor")
-
 function WarcrySharpshooter:update(dt)
+	local FADE_TIME = 0.2
+	local FADE_TIME_CHEAT = 0.05
 	local lerp = WarcrySharpshooter.super.update(self, dt)
+	local remain = managers.warcry:remaining()
 	local material = managers.warcry:warcry_post_material()
 
 	if material then
@@ -29,21 +35,18 @@ function WarcrySharpshooter:update(dt)
 		material:set_variable(ids_layer1_animate_factor, animation_factor)
 	end
 
-	local player_unit = managers.player:player_unit()
+	if alive(self._local_player) then
+		local enemy = self._local_player:camera():camera_unit():base():locked_unit()
 
-	if player_unit then
-		local locked_enemy = player_unit:camera():camera_unit():base():locked_unit()
-
-		if alive(locked_enemy) then
-			locked_enemy:contour():add("mark_enemy_sharpshooter")
+		if alive(enemy) and enemy:contour() then
+			if remain < FADE_TIME_CHEAT then
+				enemy:contour():remove("mark_enemy_sharpshooter", false)
+			else
+				enemy:contour():add("mark_enemy_sharpshooter")
+			end
 		end
 	end
 end
-
-local ids_contour_post_processor = Idstring("contour_post_processor")
-local ids_contour = Idstring("contour")
-local ids_empty = Idstring("empty")
-local ids_contour_color = Idstring("contour_color")
 
 function WarcrySharpshooter:activate()
 	WarcrySharpshooter.super.activate(self)
@@ -62,56 +65,47 @@ end
 function WarcrySharpshooter:deactivate()
 	WarcrySharpshooter.super.deactivate(self)
 
-	if not managers.player:player_unit() then
+	if not alive(self._local_player) then
 		return
 	end
 
 	managers.player:get_current_state():reset_aim_assist_look_multiplier()
 
+	self._local_player = nil
 	local vp = managers.viewport:first_active_viewport()
 
 	if vp then
 		vp:vp():set_post_processor_effect("World", ids_contour_post_processor, ids_contour)
 	end
 
-	managers.enemy:disable_countours_on_dead_enemies()
-end
-
-function WarcrySharpshooter:duration()
-	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
-end
-
-function WarcrySharpshooter:get_level_description(level)
-	level = math.clamp(level, 1, #self._tweak_data.buffs)
-
-	return managers.localization:text("skill_warcry_sharpshooter_level_" .. tostring(level) .. "_desc")
+	managers.enemy:unmark_dead_enemies()
 end
 
 function WarcrySharpshooter:_on_enemy_killed(params)
-	local unit = managers.player:player_unit()
+	self:_fill_charge_on_enemy_killed(params)
 
-	if self._active or not alive(unit) or not unit:character_damage() or unit:character_damage():is_downed() then
-		return
+	if self:is_active() and params.damage_type and params.damage_type == "bullet" then
+		local kill_wpn = tweak_data.weapon[params.weapon_used:base():get_name_id()]
+		local kill_wpn_cat = kill_wpn and kill_wpn.category
+
+		if kill_wpn and kill_wpn_cat and managers.player:upgrade_value("player", "warcry_health_regen_on_kill", false) then
+			local health_regen_amount = managers.player:upgrade_value("player", "warcry_health_regen_amount", false)
+
+			if health_regen_amount then
+				health_regen_amount = math.ceil(health_regen_amount * WeaponTweakData.get_weapon_class_regen_multiplier(kill_wpn_cat))
+
+				if alive(self._local_player) and self._local_player:character_damage() then
+					self._local_player:character_damage():restore_health(health_regen_amount, true)
+				end
+
+				if managers.hud then
+					managers.hud:post_event(self._tweak_data.health_boost_sound or "recon_warcry_enemy_hit")
+				end
+			end
+		end
 	end
-
-	local multiplier = 1
-
-	if params.headshot == true then
-		multiplier = multiplier + self._tweak_data.headshot_multiplier * managers.player:upgrade_value("player", "warcry_headshot_multiplier_bonus", 1)
-	end
-
-	local activation_distance = self._tweak_data.distance_multiplier_activation_distance
-
-	if params.enemy_distance and activation_distance < params.enemy_distance then
-		local wc_long_range_multi_bonus = managers.player:upgrade_value("player", "warcry_long_range_multiplier_bonus", 1)
-		multiplier = multiplier + self._tweak_data.distance_multiplier_addition_per_meter * (params.enemy_distance - activation_distance) / 100 * wc_long_range_multi_bonus
-	end
-
-	local base_fill_value = self._tweak_data.base_kill_fill_amount
-
-	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)
 end
 
 function WarcrySharpshooter:cleanup()
-	managers.system_event_listener:remove_listener("warcry_sharpshooter_enemy_killed")
+	managers.system_event_listener:remove_listener("warcry_" .. self:get_type() .. "_enemy_killed")
 end

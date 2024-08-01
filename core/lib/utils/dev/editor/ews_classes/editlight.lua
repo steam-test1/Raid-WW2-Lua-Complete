@@ -26,7 +26,7 @@ function EditUnitLight:init(editor)
 		name_proportions = 3,
 		tooltip = "Select a light to edit from the combobox",
 		sorted = true,
-		sizer_proportions = 2,
+		sizer_proportions = 4,
 		ctrlr_proportions = 4,
 		panel = panel,
 		sizer = lights_sizer,
@@ -40,6 +40,11 @@ function EditUnitLight:init(editor)
 
 	self._color_ctrlr:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
 	lights_sizer:add(self._color_ctrlr, 0, 5, "EXPAND,LEFT")
+
+	self._color_hex_ctrl = EWS:TextCtrl(panel, "000000", "", "TE_LEFT")
+
+	self._color_hex_ctrl:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_color"), "")
+	lights_sizer:add(self._color_hex_ctrl, 0, 5, "EXPAND,LEFT")
 
 	self._enabled_ctrlr = EWS:CheckBox(panel, "Enabled", "")
 
@@ -304,7 +309,11 @@ end
 function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_combobox_value(self._lights_params, light:name():s())
 	self._enabled_ctrlr:set_value(light:enable())
-	self._color_ctrlr:set_background_colour(light:color().x * 255, light:color().y * 255, light:color().z * 255)
+
+	local r, g, b = (light:color() * 255):unpack()
+
+	self._color_ctrlr:set_background_colour(r, g, b)
+	self._color_hex_ctrl:set_value(string.format("%X%X%X", r, g, b))
 	CoreEws.change_entered_number(self._range_params, light:far_range())
 	CoreEws.change_entered_number(self._near_range_params, light:near_range())
 
@@ -320,10 +329,17 @@ function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_combobox_value(self._intensity_params, intensity:s())
 	CoreEws.change_slider_and_number_value(self._falloff_params, light:falloff_exponent())
 	CoreEws.change_slider_and_number_value(self._linear_atten_params, light:linear_attenuation_factor())
+
+	local is_falloff = string.match(light:properties(), "falloff") and true or false
+
+	self._falloff_params.number_ctrlr:set_enabled(is_falloff)
+	self._falloff_params.slider_ctrlr:set_enabled(is_falloff)
+	self._linear_atten_params.number_ctrlr:set_enabled(is_falloff)
+	self._linear_atten_params.slider_ctrlr:set_enabled(is_falloff)
 	CoreEws.change_slider_and_number_value(self._spot_start_angle_params, light:spot_angle_start())
 	CoreEws.change_slider_and_number_value(self._spot_end_angle_params, light:spot_angle_end())
 
-	local is_spot = (not string.match(light:properties(), "omni") or false) and true
+	local is_spot = string.match(light:properties(), "spot") and true or false
 
 	self._spot_start_angle_params.number_ctrlr:set_enabled(is_spot)
 	self._spot_start_angle_params.slider_ctrlr:set_enabled(is_spot)
@@ -376,6 +392,18 @@ function EditUnitLight:show_color_dialog()
 		for _, light in ipairs(self:_selected_lights()) do
 			light:set_color(self._color_ctrlr:background_colour() / 255)
 		end
+	end
+end
+
+function EditUnitLight:update_color()
+	local color_value = self._color_hex_ctrl:get_value():gsub("#", "")
+	local color = Color(color_value)
+	local color_vect = Vector3(color:unpack())
+
+	self._color_ctrlr:set_background_colour((color * 255):unpack())
+
+	for _, light in ipairs(self:_selected_lights()) do
+		light:set_color(color_vect)
 	end
 end
 

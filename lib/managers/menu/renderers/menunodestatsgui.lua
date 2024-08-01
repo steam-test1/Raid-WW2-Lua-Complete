@@ -67,7 +67,7 @@ function MenuNodeStatsGui:_setup_stats(node)
 		data = "" .. managers.statistics:total_head_shots()
 	})
 
-	if _G.IS_PC then
+	if IS_PC then
 		local y = 30
 
 		for _, panel in ipairs(self._stats_items) do

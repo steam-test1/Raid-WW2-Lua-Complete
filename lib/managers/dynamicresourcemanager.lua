@@ -1,18 +1,25 @@
 DynamicResourceManager = DynamicResourceManager or class()
 DynamicResourceManager.DYN_RESOURCES_PACKAGE = "packages/dyn_resources"
+DynamicResourceManager.STREAMING_PROFILE_INGAME = "ingame"
+DynamicResourceManager.STREAMING_PROFILE_LOADING = "loading"
+DynamicResourceManager.STREAMING_PROFILES = {
+	[DynamicResourceManager.STREAMING_PROFILE_INGAME] = {
+		sleep_time = 5,
+		chunk_size = 1048576
+	},
+	[DynamicResourceManager.STREAMING_PROFILE_LOADING] = {
+		sleep_time = 1,
+		chunk_size = 5242880
+	}
+}
 DynamicResourceManager.listener_events = {
 	file_streamer_workload = 1
 }
-local ids_unit = Idstring("unit")
 
 function DynamicResourceManager:init()
 	if not Global.dyn_resource_manager_data then
 		Global.dyn_resource_manager_data = {
-			streaming_settings = {
-				chunk_size_kb = 4096,
-				sleep_time = 3,
-				chunk_size_mul = 1
-			},
+			streaming_settings = self.STREAMING_PROFILES[self.STREAMING_PROFILE_INGAME],
 			dyn_resources = {}
 		}
 	end
@@ -24,13 +31,7 @@ function DynamicResourceManager:init()
 end
 
 function DynamicResourceManager:post_init()
-	local chunk_size_kb = managers.user:get_setting("max_streaming_chunk")
-
-	if self._streaming_settings.chunk_size_kb ~= chunk_size_kb then
-		self:_set_file_streamer_settings(chunk_size_kb, self._streaming_settings.sleep_time)
-	end
-
-	managers.user:add_setting_changed_callback("max_streaming_chunk", callback(self, self, "clbk_streaming_chunk_size_changed"), true)
+	self:_set_file_streamer_settings(self:file_streamer_settings())
 	self:preload_units()
 end
 
@@ -234,27 +235,31 @@ function DynamicResourceManager:is_file_streamer_idle()
 	return nr_tasks == 0
 end
 
-function DynamicResourceManager:set_file_streaming_chunk_size_mul(mul, sleep_time)
-	mul = mul or self._streaming_settings.chunk_size_mul
-	sleep_time = sleep_time or self._streaming_settings.sleep_time
+function DynamicResourceManager:set_file_streaming_profile(profile_name)
+	local profile = DynamicResourceManager.STREAMING_PROFILES[profile_name]
 
-	if mul == self._streaming_settings.chunk_size_mul and sleep_time == self._streaming_settings.sleep_time then
+	if not profile and not profile.chunk_size and not profile.sleep_time then
+		Application:error("[DynamicResourceManager:set_file_streaming_profile] invalid streaming profile:", profile_name)
+
 		return
 	end
 
-	print("[DynamicResourceManager:set_file_streaming_chunk_size_mul]", mul, "sleep_time", sleep_time)
+	if profile == self._streaming_settings then
+		return
+	end
 
-	self._streaming_settings.chunk_size_mul = mul
+	self._streaming_settings = profile
 
-	self:_set_file_streamer_settings(self._streaming_settings.chunk_size_kb, sleep_time)
+	Application:debug("[DynamicResourceManager:set_file_streaming_profile] name, chunk_size, sleep time:", profile_name, profile.chunk_size, profile.sleep_time)
+	self:_set_file_streamer_settings(self:file_streamer_settings())
 end
 
-function DynamicResourceManager:_set_file_streamer_settings(chunk_size_kb, sleep_time)
-	self._streaming_settings.chunk_size_kb = chunk_size_kb
-	self._streaming_settings.sleep_time = sleep_time
-	local chunk_size_kb_end_value = chunk_size_kb * 1024 * self._streaming_settings.chunk_size_mul
+function DynamicResourceManager:_set_file_streamer_settings(chunk_size, sleep_time)
+	Application:set_file_streamer_settings(chunk_size, sleep_time)
+end
 
-	Application:set_file_streamer_settings(chunk_size_kb_end_value, sleep_time)
+function DynamicResourceManager:file_streamer_settings()
+	return self._streaming_settings.chunk_size, self._streaming_settings.sleep_time
 end
 
 function DynamicResourceManager:add_listener(key, events, clbk)
@@ -263,14 +268,6 @@ end
 
 function DynamicResourceManager:remove_listener(key)
 	self._listener_holder:remove(key)
-end
-
-function DynamicResourceManager:max_streaming_chunk()
-	return self._max_streaming_chunk_kb
-end
-
-function DynamicResourceManager:clbk_streaming_chunk_size_changed(name, old_value, new_value)
-	self:_set_file_streamer_settings(new_value, self._streaming_settings.sleep_time)
 end
 
 function DynamicResourceManager:preload_units()

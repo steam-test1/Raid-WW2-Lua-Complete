@@ -282,13 +282,14 @@ function dump_mesh(units, name, get_objects_string)
 	MeshDumper:dump_meshes(managers.database:root_path() .. name, objects, Rotation(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0)))
 end
 
-function dump_all(units, name, get_objects_string)
-	name = name or "all_dumped"
+function dump_all_meshes(units, dump_name, get_objects_string)
+	local out_name = "all_dumped"
+	dump_name = dump_name or "all_dumped"
 	get_objects_string = get_objects_string or "g_*"
 	units = units or World:find_units_quick("all", managers.slot:get_mask("dump_all"))
 	local objects = {}
 
-	cat_print("editor", "Starting dump mesh")
+	cat_print("editor", "Starting dump mesh", dump_name)
 	cat_print("editor", "  Dumping from " .. #units .. " units")
 
 	for _, u in ipairs(units) do
@@ -330,9 +331,13 @@ function dump_all(units, name, get_objects_string)
 		end
 	end
 
-	cat_print("editor", "  Starting dump of " .. #objects .. " objects...")
-	MeshDumper:dump_meshes(managers.database:root_path() .. name, objects, Rotation(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0)))
-	cat_print("editor", "  .. dumping done.")
+	if #objects > 0 then
+		cat_print("editor", "  Starting dump of " .. #objects .. " objects...")
+		MeshDumper:dump_meshes(managers.database:root_path() .. dump_name, objects, Rotation(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0)))
+		cat_print("editor", "  .. dumping done.")
+	else
+		cat_print("editor", "0 objects to dump!")
+	end
 end
 
 function find_unit_references(start, prefix)

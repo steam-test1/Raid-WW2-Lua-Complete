@@ -204,7 +204,7 @@ function RaidGUIControlSaveInfo:set_save_info(slot_index)
 
 			if peer_data.is_local_player then
 				name = self:translate("menu_save_info_you", true) .. " (" .. peer_data.name .. ")"
-			elseif _G.IS_XB1 then
+			elseif IS_XB1 then
 				name = managers.hud:get_character_name_by_nationality(peer_data.nationality)
 			else
 				name = peer_data.name

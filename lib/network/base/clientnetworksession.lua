@@ -8,10 +8,10 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 
 	self._cb_find_game = result_cb
 	local host_name = managers.network.matchmake:game_owner_name()
-	local host_user_id = SystemInfo:platform() == self._ids_WIN32 and host_rpc:ip_at_index(0) or false
+	local host_user_id = IS_PC and host_rpc:ip_at_index(0) or false
 	local id, peer = self:add_peer(host_name, nil, nil, nil, nil, 1, nil, host_user_id, "", "")
 
-	if SystemInfo:platform() == self._ids_WIN32 then
+	if IS_PC then
 		peer:set_steam_rpc(host_rpc)
 	end
 
@@ -21,8 +21,8 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 	Network:set_multiplayer(true)
 	Network:set_client(host_rpc)
 
-	local request_rpc = SystemInfo:platform() == self._ids_WIN32 and peer:steam_rpc() or host_rpc
-	local xuid = _G.IS_XB1 and managers.network.account:player_id() or ""
+	local request_rpc = IS_PC and peer:steam_rpc() or host_rpc
+	local xuid = IS_XB1 and managers.network.account:player_id() or ""
 	local lvl = managers.experience:current_level()
 	local gameversion = managers.network.matchmake.GAMEVERSION or -1
 	local join_req_id = self:_get_join_attempt_identifier()
@@ -61,7 +61,7 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 
 	self._last_join_request_t = nil
 
-	if SystemInfo:platform() == self._ids_WIN32 then
+	if IS_PC then
 		if self._server_peer:user_id() and user_id ~= self._server_peer:user_id() then
 			print("[ClientNetworkSession:on_join_request_reply] wrong host replied", self._server_peer:user_id(), user_id)
 
@@ -100,12 +100,12 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 		self._server_peer:set_character(server_character)
 		self._server_peer:set_xuid(xuid)
 
-		if _G.IS_XB1 then
+		if IS_XB1 then
 			local xnaddr = managers.network.matchmake:external_address(self._server_peer:rpc())
 
 			self._server_peer:set_xnaddr(xnaddr)
 			managers.network.matchmake:on_peer_added(self._server_peer)
-		elseif _G.IS_PS4 then
+		elseif IS_PS4 then
 			managers.network.matchmake:on_peer_added(self._server_peer)
 		end
 
@@ -152,8 +152,11 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 			mission.job_type = OperationsTweakData.JOB_TYPE_RAID
 
 			self._server_peer:verify_job(job_id)
+			managers.raid_job:load_level_tweak_packages(job_id)
 			managers.raid_job:on_mission_started()
 		else
+			managers.raid_job:load_level_tweak_packages(RaidJobManager.CAMP_ID)
+
 			mission = tweak_data.operations:mission_data(RaidJobManager.CAMP_ID)
 			data.background = tweak_data.operations.missions[RaidJobManager.CAMP_ID].loading.image
 			data.loading_text = tweak_data.operations.missions[RaidJobManager.CAMP_ID].loading.text
@@ -320,11 +323,11 @@ function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lob
 		Network:add_co_client(rpc)
 	end
 
-	if SystemInfo:platform() ~= self._ids_WIN32 then
+	if not IS_PC then
 		peer_user_id = false
 	end
 
-	if _G.IS_PC then
+	if IS_PC then
 		name = managers.network.account:username_by_id(peer_user_id)
 	end
 
@@ -332,7 +335,7 @@ function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lob
 
 	cat_print("multiplayer_base", "[ClientNetworkSession:peer_handshake]", name, peer_user_id, loading, synched, id, inspect(peer))
 
-	local check_peer = _G.IS_XB1 and peer or nil
+	local check_peer = IS_XB1 and peer or nil
 
 	self:chk_send_connection_established(name, peer_user_id, check_peer)
 
@@ -342,7 +345,7 @@ function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lob
 end
 
 function ClientNetworkSession:on_PSN_connection_established(name, ip)
-	if SystemInfo:platform() ~= Idstring("PS4") then
+	if not IS_PS4 then
 		return
 	end
 
@@ -473,7 +476,7 @@ function ClientNetworkSession:update()
 
 		self:_upd_request_join_resend(wall_time)
 
-		if _G.IS_XB1 then
+		if IS_XB1 then
 			for peer_id, peer in pairs(self._peers) do
 				if peer ~= self._server_peer and not peer:rpc() then
 					self:chk_send_connection_established(peer:name(), peer:user_id(), peer)

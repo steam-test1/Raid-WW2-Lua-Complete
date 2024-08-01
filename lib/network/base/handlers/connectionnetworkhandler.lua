@@ -187,12 +187,12 @@ function ConnectionNetworkHandler:set_dropin()
 	end
 end
 
-function ConnectionNetworkHandler:spawn_dropin_penalty(dead, bleed_out, health, used_deployable, used_cable_ties, used_body_bags)
+function ConnectionNetworkHandler:spawn_dropin_penalty(dead, bleed_out, health, used_deployable)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return
 	end
 
-	managers.player:spawn_dropin_penalty(dead, bleed_out, health, used_deployable, used_cable_ties, used_body_bags)
+	managers.player:spawn_dropin_penalty(dead, bleed_out, health, used_deployable)
 	managers.player:set_player_state("standard")
 end
 
@@ -322,6 +322,17 @@ function ConnectionNetworkHandler:sync_on_restart_mission(sender)
 	end
 end
 
+function ConnectionNetworkHandler:sync_selected_raid_objective(obj_id, sender)
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
+	Application:debug("[ConnectionNetworkHandler:sync_selected_raid_objective] obj_id", obj_id)
+	managers.raid_job:sync_goto_job_objective(obj_id)
+end
+
 function ConnectionNetworkHandler:lobby_sync_update_level_id(level_id_index)
 	local level_id = tweak_data.levels:get_level_name_from_index(level_id_index)
 	local lobby_menu = managers.menu:get_menu("lobby_menu")
@@ -397,14 +408,6 @@ function ConnectionNetworkHandler:request_spawn_member(sender)
 	end
 
 	IngameWaitingForRespawnState.request_player_spawn(peer:id())
-end
-
-function ConnectionNetworkHandler:hostage_trade_dialog(i)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.trade:sync_hostage_trade_dialog(i)
 end
 
 function ConnectionNetworkHandler:warn_about_civilian_free(i)
@@ -528,12 +531,6 @@ function ConnectionNetworkHandler:set_member_ready(peer_id, ready, mode, outfit_
 
 		if Network:is_server() then
 			managers.network:session():send_to_peers_loaded_except(peer_id, "set_member_ready", peer_id, ready and 1 or 0, 1, "")
-
-			if game_state_machine:current_state().start_game_intro then
-				-- Nothing
-			elseif ready then
-				-- Nothing
-			end
 		end
 	elseif mode == 2 then
 		peer:set_streaming_status(ready)
@@ -764,13 +761,18 @@ function ConnectionNetworkHandler:voting_data(type, value, result, sender)
 	managers.vote:network_package(type, value, result, peer:id())
 end
 
-function ConnectionNetworkHandler:sync_award_achievement(achievement_id, sender)
-	if not self._verify_sender(sender) then
-		return
-	end
+ConnectionNetworkHandler._SYNC_AWARD_ACHIEVEMENT_ALLOWED = {
+	"ach_kill_enemies_with_single_grenade_5",
+	"landmines_kill_some",
+	"ach_all_players_go_to_bleedout"
+}
 
-	print("ConnectionNetworkHandler:sync_award_achievement():", achievement_id)
-	managers.achievment:award(achievement_id)
+function ConnectionNetworkHandler:sync_award_achievement(achievement_id, sender)
+	if ConnectionNetworkHandler._SYNC_AWARD_ACHIEVEMENT_ALLOWED[achievement_id] then
+		managers.achievment:award(achievement_id)
+	else
+		Application:warn("[ConnectionNetworkHandler:sync_award_achievement()] Someone tried to send you an achievement that isnt allowed!!!", achievement_id, sender)
+	end
 end
 
 function ConnectionNetworkHandler:propagate_alert(type, position, range, filter, aggressor, head_position, sender)
@@ -832,11 +834,23 @@ end
 function ConnectionNetworkHandler:connection_keep_alive(sender)
 end
 
-function ConnectionNetworkHandler:request_change_criminal_character(peer_id, new_character_name, peer_unit)
+function ConnectionNetworkHandler:request_change_criminal_character(peer_id, new_character_name, peer_unit, sender)
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
 	managers.character_customization:request_change_criminal_character(peer_id, new_character_name, peer_unit)
 end
 
-function ConnectionNetworkHandler:change_criminal_character(peer_id, new_character_name, peer_unit)
+function ConnectionNetworkHandler:change_criminal_character(peer_id, new_character_name, peer_unit, sender)
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
 	managers.character_customization:change_criminal_character(peer_id, new_character_name, peer_unit)
 end
 
@@ -1068,10 +1082,12 @@ function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percent
 
 	local character_data = managers.criminals:character_data_by_peer_id(sender_peer:id())
 
-	managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
-		total = 100,
-		current = fill_percentage
-	})
+	if managers.hud and character_data then
+		managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
+			total = 100,
+			current = fill_percentage
+		})
+	end
 end
 
 function ConnectionNetworkHandler:sync_warcry_meter_glow(value, sender)
@@ -1083,7 +1099,9 @@ function ConnectionNetworkHandler:sync_warcry_meter_glow(value, sender)
 
 	local character_data = managers.criminals:character_data_by_peer_id(sender_peer:id())
 
-	managers.hud:set_warcry_meter_glow(character_data.panel_id, value)
+	if managers.hud then
+		managers.hud:set_warcry_meter_glow(character_data.panel_id, value)
+	end
 end
 
 function ConnectionNetworkHandler:sync_activate_warcry(warcry_type, warcry_level, duration, sender)
@@ -1110,7 +1128,10 @@ function ConnectionNetworkHandler:sync_deactivate_warcry(sender)
 	local character_data = managers.criminals:character_data_by_peer_id(sender_peer:id())
 	local name_label_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().name_label_id
 
-	managers.hud:deactivate_teammate_warcry(character_data.panel_id, name_label_id)
+	if managers.hud then
+		managers.hud:deactivate_teammate_warcry(character_data.panel_id, name_label_id)
+	end
+
 	managers.warcry:deactivate_peer_warcry(sender_peer:id())
 end
 
@@ -1198,7 +1219,7 @@ function ConnectionNetworkHandler:sync_spotter_flare_disabled(unit, sender)
 		return
 	end
 
-	unit:damage():run_sequence_simple("state_interaction_disabled")
+	unit:damage():run_sequence_simple("state_barrage")
 end
 
 function ConnectionNetworkHandler:sync_randomize_operation(operation_id, string_delimited, sender)
@@ -1233,7 +1254,7 @@ function ConnectionNetworkHandler:restore_health_by_percentage(health_percentage
 	end
 end
 
-function ConnectionNetworkHandler:enter_lockpicking_state(sender)
+function ConnectionNetworkHandler:enter_special_interaction_state(interaction_type, sender)
 	local sender_peer = self._verify_sender(sender)
 
 	if not sender_peer then
@@ -1243,10 +1264,12 @@ function ConnectionNetworkHandler:enter_lockpicking_state(sender)
 	local teammate_panel_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().teammate_panel_id
 	local name_label_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().name_label_id
 
-	managers.hud:on_teammate_start_lockpicking(teammate_panel_id, name_label_id)
+	if managers.hud then
+		managers.hud:on_teammate_start_special_interaction(teammate_panel_id, name_label_id, interaction_type)
+	end
 end
 
-function ConnectionNetworkHandler:exit_lockpicking_state(sender)
+function ConnectionNetworkHandler:exit_special_interaction_state(sender)
 	local sender_peer = self._verify_sender(sender)
 
 	if not sender_peer then
@@ -1256,7 +1279,9 @@ function ConnectionNetworkHandler:exit_lockpicking_state(sender)
 	local teammate_panel_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().teammate_panel_id
 	local name_label_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().name_label_id
 
-	managers.hud:on_teammate_stop_lockpicking(teammate_panel_id, name_label_id)
+	if managers.hud then
+		managers.hud:on_teammate_stop_special_interaction(teammate_panel_id, name_label_id)
+	end
 end
 
 function ConnectionNetworkHandler:sync_document_spawn_chance(document_spawn_chance, sender)

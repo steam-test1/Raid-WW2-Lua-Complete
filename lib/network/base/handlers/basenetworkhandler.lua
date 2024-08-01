@@ -56,12 +56,8 @@ BaseNetworkHandler._gamestate_filter = {
 	},
 	need_revive = {
 		ingame_incapacitated = true,
-		ingame_arrested = true,
 		ingame_bleed_out = true,
 		ingame_fatal = true
-	},
-	arrested = {
-		ingame_arrested = true
 	},
 	game_over = {
 		gameoverscreen = true
@@ -131,7 +127,7 @@ function BaseNetworkHandler._verify_sender(rpc)
 	local session = managers.network:session()
 	local peer = nil
 
-	if session then
+	if rpc and session then
 		if rpc:protocol_at_index(0) == "STEAM" then
 			peer = session:peer_by_user_id(rpc:ip_at_index(0))
 		else
@@ -143,7 +139,7 @@ function BaseNetworkHandler._verify_sender(rpc)
 		end
 	end
 
-	print("[BaseNetworkHandler._verify_sender] Discarding message", session, peer and peer:id())
+	Application:error("[BaseNetworkHandler._verify_sender] Discarding message", rpc, session, peer and peer:id())
 	Application:stack_dump()
 end
 

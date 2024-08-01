@@ -324,7 +324,14 @@ function StaticLayer:delete_selected_unit(btn, pressed)
 			if table.contains(self._created_units, unit) then
 				self:delete_unit(unit)
 			else
-				managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to " .. tostring(managers.editor:unit_in_layer_name(unit)) .. " and cannot be deleted from here.")
+				local unit_in_layer_name = managers.editor:unit_in_layer_name(unit)
+
+				if unit_in_layer_name then
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to " .. tostring(unit_in_layer_name) .. " and cannot be deleted from here.")
+				else
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to nothing and will be deleted")
+					self:delete_unit(unit)
+				end
 			end
 		end
 	end
@@ -526,7 +533,7 @@ function StaticLayer:build_panel(notebook, settings)
 
 	self._ews_panel = EWS:ScrolledWindow(notebook, "", "VSCROLL")
 
-	self._ews_panel:set_scroll_rate(Vector3(0, 20, 0))
+	self._ews_panel:set_scroll_rate(Vector3(10, 20, 0))
 	self._ews_panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
 
 	self._main_sizer = EWS:BoxSizer("VERTICAL")

@@ -120,6 +120,7 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 				})
 			elseif data.atlas_src then
 				local icon_params = {
+					y = ypos,
 					texture = tweak_data.gui.icons[data.atlas_src].texture,
 					texture_rect = tweak_data.gui.icons[data.atlas_src].texture_rect
 				}
@@ -317,7 +318,7 @@ function RaidMenuCreditsGui:_skip_video()
 				if cmd.cmd == "speed" then
 					speed = cmd.param
 				elseif cmd.cmd == "close" then
-					managers.menu:back()
+					managers.raid_menu:on_escape()
 
 					return
 				elseif cmd.cmd == "stop" then

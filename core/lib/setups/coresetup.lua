@@ -1,7 +1,6 @@
 core:import("CoreClass")
 core:import("CoreEngineAccess")
 core:import("CoreLocalizationManager")
-core:import("CoreNewsReportManager")
 core:import("CoreSubtitleManager")
 core:import("CoreViewportManager")
 core:import("CoreSequenceManager")
@@ -16,10 +15,7 @@ core:import("CorePortalManager")
 core:import("CoreDOFManager")
 core:import("CoreRumbleManager")
 core:import("CoreOverlayEffectManager")
-core:import("CoreSessionManager")
-core:import("CoreInputManager")
 core:import("CoreGTextureManager")
-core:import("CoreSmoketestManager")
 core:import("CoreEnvironmentAreaManager")
 core:import("CoreEnvironmentEffectsManager")
 core:import("CoreSlaveManager")
@@ -45,14 +41,9 @@ if Application:ews_enabled() then
 	core:import("CoreLuaProfilerViewer")
 	core:import("CoreDatabaseManager")
 	core:import("CoreToolHub")
-	core:import("CoreInteractionEditor")
-	core:import("CoreInteractionEditorConfig")
-	require("core/lib/utils/dev/tools/CoreUnitReloader")
 	require("core/lib/utils/dev/tools/CoreUnitTestBrowser")
 	require("core/lib/utils/dev/tools/CoreEnvEditor")
-	require("core/lib/utils/dev/tools/CoreDatabaseBrowser")
 	require("core/lib/utils/dev/tools/CoreLuaProfiler")
-	require("core/lib/utils/dev/tools/CoreXMLEditor")
 	require("core/lib/utils/dev/ews/CoreEWSDeprecated")
 	require("core/lib/utils/dev/tools/CorePuppeteer")
 	require("core/lib/utils/dev/tools/material_editor/CoreMaterialEditor")
@@ -64,6 +55,7 @@ CoreSetup = CoreSetup or class()
 local _CoreSetup = CoreSetup
 
 function CoreSetup:init()
+	Application:debug("[CoreSetup:init]")
 	CoreClass.close_override()
 
 	self.__quit = false
@@ -107,6 +99,9 @@ function CoreSetup:update(t, dt)
 end
 
 function CoreSetup:paused_update(t, dt)
+end
+
+function CoreSetup:pre_render()
 end
 
 function CoreSetup:render()
@@ -233,14 +228,12 @@ function CoreSetup:__init()
 	if Application:editor() then
 		local frame_resolution = SystemInfo:desktop_resolution()
 		aspect_ratio = frame_resolution.x / frame_resolution.y
-	elseif SystemInfo:platform() == Idstring("WIN32") then
+	elseif IS_PC then
 		aspect_ratio = RenderSettings.aspect_ratio
 
 		if aspect_ratio == 0 then
 			aspect_ratio = RenderSettings.resolution.x / RenderSettings.resolution.y
 		end
-	elseif SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("PS3") and SystemInfo:widescreen() then
-		aspect_ratio = RenderSettings.resolution.x / RenderSettings.resolution.y
 	else
 		aspect_ratio = RenderSettings.resolution.x / RenderSettings.resolution.y
 	end
@@ -272,15 +265,11 @@ function CoreSetup:__init()
 	managers.world_instance = CoreWorldInstanceManager:new()
 	managers.environment_controller = CoreEnvironmentControllerManager:new()
 	managers.helper_unit = CoreHelperUnitManager.HelperUnitManager:new()
-	self._input = CoreInputManager.InputManager:new()
-	self._session = CoreSessionManager.SessionManager:new(self.session_factory, self._input)
-	self._smoketest = CoreSmoketestManager.Manager:new(self._session:session())
 
 	managers.sequence:internal_load()
 	self:init_managers(managers)
 
 	if Application:ews_enabled() then
-		managers.news = CoreNewsReportManager.NewsReportManager:new()
 		managers.toolhub = CoreToolHub.ToolHub:new()
 
 		managers.toolhub:add("Environment Editor", CoreEnvEditor)
@@ -289,11 +278,6 @@ function CoreSetup:__init()
 		managers.toolhub:add("Particle Editor", CoreParticleEditor)
 		managers.toolhub:add(CorePuppeteer.EDITOR_TITLE, CorePuppeteer)
 		managers.toolhub:add(CoreCutsceneEditor.EDITOR_TITLE, CoreCutsceneEditor)
-
-		if not Application:editor() then
-			managers.toolhub:add("Unit Reloader", CoreUnitReloader)
-		end
-
 		self:init_toolhub(managers.toolhub)
 		managers.toolhub:buildmenu()
 	end
@@ -301,12 +285,6 @@ function CoreSetup:__init()
 	self.__gsm = assert(self:init_game(), "self:init_game must return a GameStateMachine.")
 
 	managers.cutscene:post_init()
-	self._smoketest:post_init()
-
-	if not Application:editor() then
-		-- Nothing
-	end
-
 	self:init_finalize()
 end
 
@@ -319,9 +297,6 @@ function CoreSetup:__destroy()
 	managers.worldcamera:destroy()
 	managers.viewport:destroy()
 	managers.overlay_effect:destroy()
-	self._session:destroy()
-	self._input:destroy()
-	self._smoketest:destroy()
 end
 
 function CoreSetup:loading_update(t, dt)
@@ -347,9 +322,6 @@ function CoreSetup:__update(t, dt)
 	managers.viewport:update(t, dt)
 	managers.mission:update(t, dt)
 	managers.slave:update(t, dt)
-	self._session:update(t, dt)
-	self._input:update(t, dt)
-	self._smoketest:update(t, dt)
 	managers.environment_controller:update(t, dt)
 	self:update(t, dt)
 end
@@ -360,15 +332,11 @@ function CoreSetup:__paused_update(t, dt)
 	managers.cutscene:paused_update(t, dt)
 	managers.overlay_effect:paused_update(t, dt)
 	managers.slave:paused_update(t, dt)
-	self._session:update(t, dt)
-	self._input:update(t, dt)
-	self._smoketest:update(t, dt)
 	self:paused_update(t, dt)
 end
 
 function CoreSetup:__end_update(t, dt)
 	managers.camera:update(t, dt)
-	self._session:end_update(t, dt)
 	self:end_update(t, dt)
 	self.__gsm:end_update(t, dt)
 	managers.viewport:end_update(t, dt)
@@ -388,6 +356,7 @@ end
 
 function CoreSetup:__render()
 	managers.portal:render()
+	self:pre_render()
 	managers.viewport:render()
 	managers.overlay_effect:render()
 	self:render()
@@ -453,7 +422,6 @@ function CoreSetup:__end_frame(t, dt)
 end
 
 function CoreSetup:__loading_update(t, dt)
-	self._session:update(t, dt)
 	self:loading_update()
 end
 

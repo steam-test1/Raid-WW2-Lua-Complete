@@ -80,7 +80,14 @@ function DynamicLayer:delete_selected_unit()
 			if table.contains(self._created_units, unit) then
 				self:delete_unit(unit)
 			else
-				managers.editor:output_warning("" .. unit:unit_data().name_id .. " belongs to " .. managers.editor:unit_in_layer_name(unit) .. " and cannot be deleted from here.")
+				local unit_in_layer_name = managers.editor:unit_in_layer_name(unit)
+
+				if unit_in_layer_name then
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to " .. tostring(unit_in_layer_name) .. " and cannot be deleted from here.")
+				else
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to nothing and will be deleted")
+					self:delete_unit(unit)
+				end
 			end
 		end
 	end

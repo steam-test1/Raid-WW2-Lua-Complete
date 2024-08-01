@@ -165,6 +165,15 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	self:_health_recap(attack_data)
 
+	local occupant = self._unit:vehicle_driving():get_random_occupant(false)
+
+	if occupant then
+		managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
+			skip_idle_check = true,
+			instigator = occupant
+		})
+	end
+
 	local body_index = 1
 	local hit_offset_height = 1
 
@@ -535,6 +544,10 @@ function VehicleDamage:damage_collision(attack_data)
 
 		local damage = attack_data.damage
 
+		if not damage then
+			return
+		end
+
 		if self._health <= damage then
 			attack_data.damage = self._health
 
@@ -545,10 +558,17 @@ function VehicleDamage:damage_collision(attack_data)
 			self:set_health(self._health - damage)
 		end
 
-		managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
-			skip_idle_check = true
-		})
 		self:_health_recap()
+
+		local occupant = self._unit:vehicle_driving():get_random_occupant(false)
+
+		if occupant then
+			managers.dialog:queue_dialog("gen_vehicle_collision", {
+				skip_idle_check = true,
+				instigator = occupant
+			})
+		end
+
 		self:_send_vehicle_health(self._health)
 	end
 end
@@ -584,8 +604,15 @@ function VehicleDamage:incapacitated()
 	return self._incapacitated
 end
 
-function VehicleDamage:revive()
+function VehicleDamage:revive(instigator)
 	self:_revive()
+
+	if alive(instigator) then
+		managers.dialog:queue_dialog("gen_vehicle_repaired", {
+			skip_idle_check = true,
+			instigator = instigator
+		})
+	end
 
 	if managers.network and managers.network:session() then
 		managers.network:session():send_to_peers_synched("sync_ai_vehicle_action", "revive", self._unit, nil, nil)
@@ -598,10 +625,6 @@ function VehicleDamage:_revive()
 	if self._unit:damage():has_sequence(VehicleDrivingExt.SEQUENCE_REPAIRED) then
 		self._unit:damage():run_sequence_simple(VehicleDrivingExt.SEQUENCE_REPAIRED)
 	end
-
-	managers.dialog:queue_dialog("gen_vehicle_repaired", {
-		skip_idle_check = true
-	})
 
 	self._half_damaged_squence_played = false
 end
@@ -732,6 +755,15 @@ function VehicleDamage:_health_recap()
 	if not self._half_damaged_squence_played and self:get_real_health() / self:_max_health() <= 0.5 then
 		if self._unit:damage():has_sequence(VehicleDrivingExt.SEQUENCE_HALF_DAMAGED) then
 			self._unit:damage():run_sequence_simple(VehicleDrivingExt.SEQUENCE_HALF_DAMAGED)
+		end
+
+		local occupant = self._unit:vehicle_driving():get_random_occupant(true)
+
+		if occupant then
+			managers.dialog:queue_dialog("gen_vehicle_at_50_percent", {
+				skip_idle_check = true,
+				instigator = occupant
+			})
 		end
 
 		self._half_damaged_squence_played = true

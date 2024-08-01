@@ -64,10 +64,9 @@ end
 
 local ids_contour_color = Idstring("contour_color")
 local ids_contour_opacity = Idstring("contour_opacity")
-local ids_material = Idstring("material")
 
 function PlayerEquipment:_disable_contour(unit)
-	local materials = unit:get_objects_by_type(ids_material)
+	local materials = unit:get_objects_by_type(IDS_MATERIAL)
 
 	for _, m in ipairs(materials) do
 		m:set_variable(ids_contour_opacity, 0)
@@ -91,10 +90,6 @@ function PlayerEquipment:use_ammo_bag()
 			managers.network:session():send_to_host("place_deployable_bag", "AmmoBagBase", pos, rot, ammo_upgrade_lvl)
 		else
 			local unit = AmmoBagBase.spawn(pos, rot, ammo_upgrade_lvl, managers.network:session():local_peer():id())
-		end
-
-		if managers.player:has_category_upgrade("temporary", "no_ammo_cost") then
-			managers.player:activate_temporary_upgrade("temporary", "no_ammo_cost")
 		end
 
 		return true
@@ -145,44 +140,6 @@ function PlayerEquipment:use_first_aid_kit()
 			managers.network:session():send_to_host("place_deployable_bag", "FirstAidKitBase", pos, rot, upgrade_lvl)
 		else
 			local unit = FirstAidKitBase.spawn(pos, rot, upgrade_lvl, managers.network:session():local_peer():id())
-		end
-
-		return true
-	end
-
-	return false
-end
-
-function PlayerEquipment:use_armor_kit()
-	local function redirect()
-		if Network:is_client() then
-			managers.network:session():send_to_host("used_deployable")
-		else
-			managers.network:session():local_peer():set_used_deployable(true)
-		end
-
-		managers.statistics:use_armor_bag()
-		MenuCallbackHandler:_update_outfit_information()
-	end
-
-	return true, redirect
-end
-
-function PlayerEquipment:use_armor_kit_dropin_penalty()
-	MenuCallbackHandler:_update_outfit_information()
-
-	return true
-end
-
-function PlayerEquipment:use_satchel()
-	local ray = self:valid_look_at_placement()
-
-	if ray then
-		if Network:is_client() then
-			self._ecm_jammer_placement_requested = true
-		else
-			local rot = Rotation(ray.normal, math.UP)
-			local unit = SatchelBase.spawn(ray.position, rot)
 		end
 
 		return true
@@ -342,14 +299,9 @@ function PlayerEquipment:throw_projectile()
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
 	local dir = self._unit:movement():m_head_rot():y()
-	local say_line = projectile_data.throw_shout or "g43"
+	local say_line = projectile_data.throw_shout or "player_throw_grenade"
 
-	if say_line and say_line ~= true then
-		managers.dialog:queue_dialog("player_throw_grenade", {
-			skip_idle_check = true,
-			instigator = managers.player:local_player()
-		})
-	end
+	self._unit:sound():say(say_line, nil, true)
 
 	local projectile_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_entry)
 
@@ -374,13 +326,10 @@ function PlayerEquipment:throw_grenade()
 	local dir = self._unit:movement():m_head_rot():y()
 	local equipped_grenade = managers.blackmarket:equipped_grenade()
 	local weapon_data = tweak_data.weapon[equipped_grenade]
-	local say_line = weapon_data.throw_shout_replace or "player_throw_grenade"
+	local say_line = weapon_data.throw_shout or "player_throw_grenade"
 
 	Application:debug("[PlayerEquipment:throw_grenade]", equipped_grenade, say_line)
-	managers.dialog:queue_dialog(say_line, {
-		skip_idle_check = true,
-		instigator = managers.player:local_player()
-	})
+	self._unit:sound():say(say_line, nil, true)
 
 	local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
 	local cooking_t = nil

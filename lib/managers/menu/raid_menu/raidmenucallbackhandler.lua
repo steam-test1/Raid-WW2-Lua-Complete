@@ -3,7 +3,6 @@ RaidGUIItemAvailabilityFlag.ALWAYS_HIDE = "always_hide"
 RaidGUIItemAvailabilityFlag.CAN_SAVE_GAME = "can_save_game"
 RaidGUIItemAvailabilityFlag.CUSTOMIZE_CONTROLLER_ENABLED = "customize_controller_enabled"
 RaidGUIItemAvailabilityFlag.HAS_INSTALLED_MODS = "has_installed_mods"
-RaidGUIItemAvailabilityFlag.IS_CASH_SAFE_BACK_VISIBLE = "is_cash_safe_back_visible"
 RaidGUIItemAvailabilityFlag.IS_FULLSCREEN = "is_fullscreen"
 RaidGUIItemAvailabilityFlag.IS_IN_CAMP = "is_in_camp"
 RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER = "is_multiplayer"
@@ -13,14 +12,11 @@ RaidGUIItemAvailabilityFlag.IS_NOT_CONSUMABLE = "is_not_consumable"
 RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP = "is_not_in_camp"
 RaidGUIItemAvailabilityFlag.IS_NOT_MULTIPLAYER = "is_not_multiplayer"
 RaidGUIItemAvailabilityFlag.IS_NOT_PC_CONTROLLER = "is_not_pc_controller"
-RaidGUIItemAvailabilityFlag.IS_NOT_XBOX = "is_not_xbox"
 RaidGUIItemAvailabilityFlag.IS_PC_CONTROLLER = "is_pc_controller"
 RaidGUIItemAvailabilityFlag.IS_SERVER = "is_server"
 RaidGUIItemAvailabilityFlag.IS_WIN32 = "is_win32"
-RaidGUIItemAvailabilityFlag.IS_X360 = "is_x360"
 RaidGUIItemAvailabilityFlag.KICK_PLAYER_VISIBLE = "kick_player_visible"
 RaidGUIItemAvailabilityFlag.KICK_VOTE_VISIBLE = "kick_vote_visible"
-RaidGUIItemAvailabilityFlag.NON_OVERKILL_145 = "non_overkill_145"
 RaidGUIItemAvailabilityFlag.REPUTATION_CHECK = "reputation_check"
 RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE = "restart_level_visible"
 RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT = "restart_level_visible_client"
@@ -41,6 +37,10 @@ end
 
 function RaidMenuCallbackHandler:menu_options_on_click_video()
 	managers.raid_menu:open_menu("raid_menu_options_video")
+end
+
+function RaidMenuCallbackHandler:menu_options_on_click_interface()
+	managers.raid_menu:open_menu("raid_menu_options_interface")
 end
 
 function RaidMenuCallbackHandler:menu_options_on_click_sound()
@@ -343,11 +343,11 @@ function RaidMenuCallbackHandler:should_show_tutorial_skip()
 end
 
 function RaidMenuCallbackHandler:is_ps3()
-	return _G.IS_PS3
+	return false
 end
 
 function RaidMenuCallbackHandler:is_win32()
-	return _G.IS_PC
+	return IS_PC
 end
 
 function RaidMenuCallbackHandler:restart_vote_visible()
@@ -556,40 +556,14 @@ function RaidMenuCallbackHandler:_dialog_quit_no()
 end
 
 function RaidMenuCallbackHandler:raid_play_online()
-	if _G.IS_PC then
-		Global.game_settings.single_player = false
-		Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
-		Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
+	Global.game_settings.single_player = false
+	Global.exe_argument_level = OperationsTweakData.ENTRY_POINT_LEVEL
+	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
-		MenuCallbackHandler:start_job({
-			job_id = Global.exe_argument_level,
-			difficulty = Global.exe_argument_difficulty
-		})
-	elseif _G.IS_PS4 then
-		if Global.boot_invite and Global.boot_invite.pending then
-			managers.menu:show_fetching_status_dialog()
-
-			return
-		end
-
-		managers.menu:open_sign_in_menu(function (success)
-			if not success then
-				if managers.network.account:signin_state() == "not signed in" and PSN:cable_connected() then
-					managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_err_not_signed_in")
-				end
-
-				return
-			end
-
-			Global.exe_argument_level = "streaming_level"
-			Global.exe_argument_difficulty = Global.exe_argument_difficulty or "difficulty_1"
-
-			MenuCallbackHandler:start_job({
-				job_id = Global.exe_argument_level,
-				difficulty = Global.exe_argument_difficulty
-			})
-		end)
-	end
+	MenuCallbackHandler:start_job({
+		job_id = Global.exe_argument_level,
+		difficulty = Global.exe_argument_difficulty
+	})
 end
 
 function RaidMenuCallbackHandler:raid_play_offline()
@@ -621,10 +595,8 @@ end
 
 function RaidMenuCallbackHandler:raid_skip_tutorial()
 	Application:debug("[RaidMenuCallbackHandler][raid_skip_tutorial] Skipping and ending tutorial")
-	managers.raid_job:save_tutorial_played_flag(true)
-	managers.global_state:fire_event("system_end_tutorial")
 	managers.raid_menu:on_escape()
-	managers.queued_tasks:queue(nil, managers.global_state.fire_event, managers.global_state, "system_end_raid", 1, nil)
+	managers.raid_job:external_end_tutorial()
 end
 
 function MenuCallbackHandler:on_play_clicked()
@@ -687,9 +659,9 @@ end
 
 function RaidMenuCallbackHandler.invite_friend()
 	if Network:multiplayer() then
-		if _G.IS_PS4 then
+		if IS_PS4 then
 			MenuCallbackHandler:invite_friends_ps4()
-		elseif _G.IS_XB1 then
+		elseif IS_XB1 then
 			MenuCallbackHandler:invite_friends_XB1()
 		end
 	end
@@ -765,10 +737,14 @@ function MenuCallbackHandler:set_master_volume_raid(volume)
 	managers.user:set_setting("master_volume", volume)
 	managers.video:volume_changed(volume / 100)
 
-	if old_volume < volume then
-		self._sound_source:post_event("slider_increase")
-	elseif volume < old_volume then
-		self._sound_source:post_event("slider_decrease")
+	if self._sound_source then
+		if old_volume < volume then
+			self._sound_source:post_event("slider_increase")
+		elseif volume < old_volume then
+			self._sound_source:post_event("slider_decrease")
+		end
+	else
+		Application:error("[MenuCallbackHandler] Missing sound source for master volume!")
 	end
 end
 
@@ -777,10 +753,14 @@ function MenuCallbackHandler:set_music_volume_raid(volume)
 
 	managers.user:set_setting("music_volume", volume)
 
-	if old_volume < volume then
-		self._sound_source:post_event("slider_increase")
-	elseif volume < old_volume then
-		self._sound_source:post_event("slider_decrease")
+	if self._sound_source then
+		if old_volume < volume then
+			self._sound_source:post_event("slider_increase")
+		elseif volume < old_volume then
+			self._sound_source:post_event("slider_decrease")
+		end
+	else
+		Application:error("[MenuCallbackHandler] Missing sound source for master volume!")
 	end
 end
 
@@ -789,10 +769,14 @@ function MenuCallbackHandler:set_sfx_volume_raid(volume)
 
 	managers.user:set_setting("sfx_volume", volume)
 
-	if old_volume < volume then
-		self._sound_source:post_event("slider_increase")
-	elseif volume < old_volume then
-		self._sound_source:post_event("slider_decrease")
+	if self._sound_source then
+		if old_volume < volume then
+			self._sound_source:post_event("slider_increase")
+		elseif volume < old_volume then
+			self._sound_source:post_event("slider_decrease")
+		end
+	else
+		Application:error("[MenuCallbackHandler] Missing sound source for master volume!")
 	end
 end
 
@@ -801,10 +785,14 @@ function MenuCallbackHandler:set_voice_volume_raid(volume)
 
 	managers.user:set_setting("voice_volume", volume / 100)
 
-	if old_volume < volume then
-		self._sound_source:post_event("slider_increase")
-	elseif volume < old_volume then
-		self._sound_source:post_event("slider_decrease")
+	if self._sound_source then
+		if old_volume < volume then
+			self._sound_source:post_event("slider_increase")
+		elseif volume < old_volume then
+			self._sound_source:post_event("slider_decrease")
+		end
+	else
+		Application:error("[MenuCallbackHandler] Missing sound source for master volume!")
 	end
 end
 
@@ -813,10 +801,14 @@ function MenuCallbackHandler:set_voice_over_volume_raid(volume)
 
 	managers.user:set_setting("voice_over_volume", volume)
 
-	if old_volume < volume then
-		self._sound_source:post_event("slider_increase")
-	elseif volume < old_volume then
-		self._sound_source:post_event("slider_decrease")
+	if self._sound_source then
+		if old_volume < volume then
+			self._sound_source:post_event("slider_increase")
+		elseif volume < old_volume then
+			self._sound_source:post_event("slider_decrease")
+		end
+	else
+		Application:error("[MenuCallbackHandler] Missing sound source for master volume!")
 	end
 end
 
@@ -854,23 +846,6 @@ function MenuCallbackHandler:change_resolution_raid(resolution, no_dialog)
 	RenderSettings.resolution = resolution
 
 	Application:apply_render_settings()
-
-	local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
-
-	blackborder_workspace:set_screen(resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, resolution.x, resolution.y)
-
-	if not no_dialog then
-		managers.menu:show_accept_gfx_settings_dialog(function ()
-			managers.viewport:set_resolution(old_resolution)
-			managers.viewport:set_aspect_ratio(old_resolution.x / old_resolution.y)
-			managers.worldcamera:scale_worldcamera_fov(old_resolution.x / old_resolution.y)
-
-			local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
-
-			blackborder_workspace:set_screen(old_resolution.x, old_resolution.y, 0, 0, old_resolution.x, old_resolution.y, old_resolution.x, old_resolution.y)
-		end)
-	end
-
 	self:_refresh_brightness()
 end
 
@@ -884,10 +859,6 @@ function MenuCallbackHandler:set_resolution_default_raid_no_dialog(resolution)
 	managers.viewport:set_resolution(resolution)
 	managers.viewport:set_aspect_ratio(resolution.x / resolution.y)
 	managers.worldcamera:scale_worldcamera_fov(resolution.x / resolution.y)
-
-	local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
-
-	blackborder_workspace:set_screen(resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, resolution.x, resolution.y)
 end
 
 function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, current_fullscreen, borderless, current_borderless, callback)
@@ -953,6 +924,14 @@ function MenuCallbackHandler:set_hit_indicator_raid(value)
 	managers.user:set_setting("hit_indicator", value)
 end
 
+function MenuCallbackHandler:set_hud_crosshairs_raid(value)
+	managers.user:set_setting("hud_crosshairs", value)
+
+	if managers.hud then
+		managers.hud:set_crosshair_visible(value)
+	end
+end
+
 function MenuCallbackHandler:toggle_hud_special_weapon_panels(value)
 	managers.user:set_setting("hud_special_weapon_panels", value)
 end
@@ -961,7 +940,7 @@ function MenuCallbackHandler:set_motion_dot_raid(value)
 	managers.user:set_setting("motion_dot", value)
 
 	if managers.hud then
-		managers.hud:set_motiondot_visibility(value)
+		managers.hud:set_motiondot_type(value)
 	end
 end
 
@@ -975,6 +954,10 @@ end
 
 function MenuCallbackHandler:toggle_objective_reminder_raid(value)
 	managers.user:set_setting("objective_reminder", value)
+end
+
+function MenuCallbackHandler:toggle_skip_cinematics_raid(value)
+	managers.user:set_setting("skip_cinematics", value)
 end
 
 function MenuCallbackHandler:toggle_headbob_raid(value)
@@ -1007,14 +990,6 @@ end
 
 function MenuCallbackHandler:toggle_volumetric_light_scattering_setting_raid(value)
 	managers.user:set_setting("vls_setting", value and "standard" or "none")
-end
-
-function MenuCallbackHandler:toggle_gpu_flush_setting_raid(value)
-	managers.user:set_setting("flush_gpu_command_queue", value)
-end
-
-function MenuCallbackHandler:toggle_lightfx_raid(value)
-	managers.user:set_setting("use_lightfx", value)
 end
 
 function MenuCallbackHandler:toggle_vsync_raid(vsync_value, buffer_count)

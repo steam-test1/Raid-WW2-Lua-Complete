@@ -157,7 +157,6 @@ function ElementSpecialObjective:_finalize_values(values)
 	_index_or_nil(ElementSpecialObjective._INTERACTION_VOICES, "interaction_voice")
 	_save_boolean("repeatable")
 	_save_boolean("forced")
-	_save_boolean("no_arrest")
 	_save_boolean("scan")
 	_save_boolean("allow_followup_self")
 	_save_boolean("is_navigation_link")
@@ -418,7 +417,6 @@ function ElementSpecialObjective:get_objective(instigator)
 		haste = haste,
 		interrupt_dis = interrupt_dis,
 		interrupt_health = interrupt_health,
-		no_retreat = not interrupt_dis and not interrupt_health,
 		trigger_on = trigger_on,
 		action_duration = self:_get_action_duration(),
 		interaction_voice = interaction_voice,
@@ -428,8 +426,7 @@ function ElementSpecialObjective:get_objective(instigator)
 		complete_clbk = callback(self, self, "clbk_objective_complete"),
 		verification_clbk = callback(self, self, "clbk_verify_administration"),
 		scan = self._values.scan,
-		forced = self._values.forced,
-		no_arrest = self._values.no_arrest
+		forced = self._values.forced
 	}
 
 	if self._values.followup_elements then
@@ -485,14 +482,6 @@ function ElementSpecialObjective:get_objective(instigator)
 		elseif objective_type ~= "phalanx" then
 			objective.type = objective_type
 			objective.nav_seg = nav_seg or pos and last_pos and managers.navigation:get_nav_seg_from_pos(last_pos)
-
-			if objective_type == "sniper" then
-				objective.no_retreat = true
-			end
-
-			if objective_type == "spotter" then
-				objective.no_retreat = true
-			end
 
 			if objective_type == "security" then
 				objective.rubberband_rotation = true

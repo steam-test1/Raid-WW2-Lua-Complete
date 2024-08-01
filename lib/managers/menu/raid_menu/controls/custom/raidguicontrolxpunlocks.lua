@@ -105,26 +105,36 @@ function RaidGUIControlXPSkillSet:set_level(level)
 	flavor_text:set_x(title:x())
 
 	local character_class = managers.skilltree:get_character_profile_class()
-	local level_skills = tweak_data.skilltree.skill_trees[character_class][level]
+	local skills_organised = tweak_data.skilltree:get_skills_organised(character_class)
+	local level_skills = {}
 
-	self._content_panel:get_engine_panel():stop()
-	self._content_panel:get_engine_panel():animate(callback(self, self, "_animate_skill_change"), level_skills)
+	for type, entries in ipairs(skills_organised) do
+		for skill_id, skill in pairs(entries) do
+			if skill.level_required and skill.level_required == level then
+				level_skills[skill_id] = skill
+			end
+		end
+	end
+
+	if next(level_skills) then
+		self._content_panel:get_engine_panel():stop()
+		self._content_panel:get_engine_panel():animate(callback(self, self, "_animate_skill_change"), level_skills)
+	end
 end
 
 function RaidGUIControlXPSkillSet:_create_icons(skills)
 	local icons = {}
 
-	for _, skill in pairs(skills) do
-		local skill_data = tweak_data.skilltree.skills[skill.skill_name]
-
-		Application:debug("[RaidGUIControlXPSkillSet] Creating large icon for skill " .. tostring(skill.skill_name))
-
-		local icon_params = {
-			name = "skill_" .. tostring(skill_data.name_id) .. "_icon",
-			texture = tweak_data.gui.icons[skill_data.icon_large].texture,
-			texture_rect = tweak_data.gui.icons[skill_data.icon_large].texture_rect
-		}
-		local icon = self._icon_panel:bitmap(icon_params)
+	for skill_id, skill in pairs(skills) do
+		local icon = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
+		local gui_data = tweak_data.gui:get_full_gui_data(icon)
+		local icon = self._icon_panel:bitmap({
+			blend_mode = "add",
+			name = "skill_" .. tostring(skill.name_id) .. "_icon",
+			texture = gui_data.texture,
+			texture_rect = gui_data.texture_rect,
+			color = tweak_data.gui.colors.raid_white
+		})
 
 		table.insert(icons, icon)
 	end
@@ -332,10 +342,21 @@ function RaidGUIControlXPDoubleUnlock:set_level(level)
 	})))
 
 	local character_class = managers.skilltree:get_character_profile_class()
-	local level_skills = tweak_data.skilltree.skill_trees[character_class][level]
+	local skills_organised = tweak_data.skilltree:get_skills_organised(character_class)
+	local level_skills = {}
 
-	self._skill_panel:get_engine_panel():stop()
-	self._skill_panel:get_engine_panel():animate(callback(self, self, "_animate_skill_change"), level_skills)
+	for type, entries in ipairs(skills_organised) do
+		for skill_id, skill in pairs(entries) do
+			if skill.level_required and skill.level_required == level then
+				level_skills[skill_id] = skill
+			end
+		end
+	end
+
+	if next(level_skills) then
+		self._skill_panel:get_engine_panel():stop()
+		self._skill_panel:get_engine_panel():animate(callback(self, self, "_animate_skill_change"), level_skills)
+	end
 
 	local weapon_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[character_class]
 
@@ -348,14 +369,16 @@ end
 function RaidGUIControlXPDoubleUnlock:_create_skill_icons(skills)
 	local icons = {}
 
-	for _, skill in pairs(skills) do
-		local skill_data = tweak_data.skilltree.skills[skill.skill_name]
-		local icon_params = {
-			name = "skill_" .. tostring(skill_data.name_id) .. "_icon",
-			texture = tweak_data.gui.icons[skill_data.icon_large].texture,
-			texture_rect = tweak_data.gui.icons[skill_data.icon_large].texture_rect
-		}
-		local icon = self._skill_icon_panel:bitmap(icon_params)
+	for skill_id, skill in pairs(skills) do
+		local icon = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
+		local gui_data = tweak_data.gui:get_full_gui_data(icon)
+		local icon = self._skill_icon_panel:bitmap({
+			blend_mode = "add",
+			name = "skill_" .. tostring(skill.name_id) .. "_icon",
+			texture = gui_data.texture,
+			texture_rect = gui_data.texture_rect,
+			color = tweak_data.gui.colors.raid_white
+		})
 
 		table.insert(icons, icon)
 	end

@@ -14,7 +14,12 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	local objective = data.objective
 
 	data.unit:brain():cancel_all_pathing_searches()
-	data.unit:brain():reset_spotter()
+
+	if data.unit:brain().reset_spotter then
+		data.unit:brain():reset_spotter()
+	else
+		Application:error("[CopLogicSpotter.enter] Cannot reset_spotter there is no function for it for", data.unit)
+	end
 
 	local old_internal_data = data.internal_data
 	my_data.detection = data.char_tweak.detection.recon
@@ -126,20 +131,11 @@ function CopLogicSpotter._chk_reaction_to_attention_object(data, attention_data,
 		return attention_data.settings.reaction
 	end
 
-	local att_unit = attention_data.unit
-	local assault_mode = managers.groupai:state():get_assault_mode()
-
-	if attention_data.is_deployable or data.t < record.arrest_timeout then
-		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-	end
-
 	if record.status == "disabled" then
 		if record.assault_t and record.assault_t - record.disabled_t > 0.6 then
 			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 		end
 
-		return AIAttentionObject.REACT_AIM
-	elseif record.being_arrested then
 		return AIAttentionObject.REACT_AIM
 	end
 

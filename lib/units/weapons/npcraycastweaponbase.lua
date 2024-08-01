@@ -5,6 +5,8 @@ NPCRaycastWeaponBase._VOICES = {
 	"c"
 }
 NPCRaycastWeaponBase._next_i_voice = {}
+local idstr_contour_color = Idstring("contour_color")
+local idstr_contour_opacity = Idstring("contour_opacity")
 
 function NPCRaycastWeaponBase:init(unit)
 	RaycastWeaponBase.super.init(self, unit, false)
@@ -38,7 +40,7 @@ function NPCRaycastWeaponBase:init(unit)
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
-	self._use_shell_ejection_effect = self:ejects_shells() and _G.IS_PC
+	self._use_shell_ejection_effect = self:ejects_shells() and IS_PC
 
 	if self._use_shell_ejection_effect then
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
@@ -86,6 +88,25 @@ function NPCRaycastWeaponBase:init(unit)
 	if tweak_data.weapon[self._name_id].has_suppressor then
 		self._sound_fire:set_switch("suppressed", tweak_data.weapon[self._name_id].has_suppressor)
 	end
+
+	self:_setup_contours()
+end
+
+function NPCRaycastWeaponBase:_setup_contours()
+	self._contour_materials = {}
+	local all_materials = self._unit:get_objects_by_type(IDS_MATERIAL)
+
+	for _, m in ipairs(all_materials) do
+		if m:variable_exists(idstr_contour_color) then
+			table.insert(self._contour_materials, m)
+			m:set_variable(idstr_contour_color, Vector3(0, 0, 0))
+			m:set_variable(idstr_contour_opacity, 0)
+		end
+	end
+end
+
+function NPCRaycastWeaponBase:get_contour_materials()
+	return self._contour_materials
 end
 
 function NPCRaycastWeaponBase:setup(setup_data)
@@ -127,10 +148,20 @@ function NPCRaycastWeaponBase:stop_autofire()
 end
 
 function NPCRaycastWeaponBase:singleshot(...)
-	local fired = self:fire(...)
+	local fired = false
+	local t = Application:time()
 
-	if fired then
-		self:_sound_singleshot()
+	if self._next_fire_allowed <= t then
+		fired = self:fire(...)
+		local wtd = tweak_data.weapon[self._name_id]
+
+		if fired then
+			self:_sound_singleshot()
+
+			if wtd.single then
+				self._next_fire_allowed = t + (wtd.single.fire_rate or 0.5)
+			end
+		end
 	end
 
 	return fired
@@ -138,12 +169,14 @@ end
 
 function NPCRaycastWeaponBase:trigger_held(...)
 	local fired = nil
+	local t = Application:time()
 
-	if self._next_fire_allowed <= Application:time() then
+	if self:next_fire_allowed() <= t then
 		fired = self:fire(...)
+		local wtd = tweak_data.weapon[self._name_id]
 
-		if fired then
-			self._next_fire_allowed = self._next_fire_allowed + tweak_data.weapon[self._name_id].auto.fire_rate
+		if fired and wtd.auto then
+			self._next_fire_allowed = t + (wtd.auto.fire_rate or 0.5)
 		end
 	end
 

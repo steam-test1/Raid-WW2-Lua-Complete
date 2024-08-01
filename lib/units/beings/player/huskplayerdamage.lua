@@ -28,6 +28,10 @@ function HuskPlayerDamage:remove_listener(key)
 	CopDamage.remove_listener(self, key)
 end
 
+function HuskPlayerDamage:sync_martyrdom(projectile_entry)
+	PlayerDamage.on_martyrdom(self, projectile_entry)
+end
+
 function HuskPlayerDamage:sync_damage_bullet(attacker_unit, damage, i_body, height_offset)
 	local attack_data = {
 		attacker_unit = attacker_unit,
@@ -56,10 +60,6 @@ end
 
 function HuskPlayerDamage:down_time()
 	return self._last_down_time
-end
-
-function HuskPlayerDamage:arrested()
-	return self._unit:movement():current_state_name() == "arrested"
 end
 
 function HuskPlayerDamage:incapacitated()

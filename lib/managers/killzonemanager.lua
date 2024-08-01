@@ -1,4 +1,10 @@
 KillzoneManager = KillzoneManager or class()
+KillzoneManager.TYPES = {
+	"sniper",
+	"gas",
+	"fire",
+	"inferno"
+}
 
 function KillzoneManager:init()
 	self._units = {}
@@ -7,49 +13,49 @@ end
 function KillzoneManager:update(t, dt)
 	for _, data in pairs(self._units) do
 		if alive(data.unit) then
+			local kill_tweak = tweak_data.player.killzones[data.type]
+
 			if data.type == "sniper" then
 				data.timer = data.timer + dt
 
 				if data.next_shot < data.timer then
-					local warning_time = 4
-					data.next_shot = data.timer + math.rand(warning_time < data.timer and 0.5 or 1)
+					local warning_time = kill_tweak.warning_timer
+					data.next_shot = data.timer + math.rand(warning_time < data.timer and kill_tweak.timer / 2 or kill_tweak.timer)
 					local warning_shot = math.max(warning_time - data.timer, 1)
-					warning_shot = math.rand(warning_shot) > 0.75
+					warning_shot = kill_tweak.warning_chance < math.rand(warning_shot)
 
 					if warning_shot then
 						self:_warning_shot(data.unit)
 					else
-						self:_deal_damage(data.unit)
+						self:_deal_damage(data.unit, kill_tweak.damage)
 					end
 				end
 			elseif data.type == "gas" then
 				data.timer = data.timer + dt
 
 				if data.next_gas < data.timer then
-					data.next_gas = data.timer + 0.25
+					data.next_gas = data.timer + kill_tweak.timer
 
-					if not managers.player:has_category_upgrade("player", "immune_to_gas") then
-						self:_deal_gas_damage(data.unit)
-					end
+					self:_deal_gas_damage(data.unit, kill_tweak.damage)
 				end
 			elseif data.type == "fire" then
 				data.timer = data.timer + dt
 
 				if data.next_fire < data.timer then
-					data.next_fire = data.timer + 0.25
+					data.next_fire = data.timer + kill_tweak.timer
 
-					self:_deal_fire_damage(data.unit)
+					self:_deal_fire_damage(data.unit, kill_tweak.damage)
+				end
+			elseif data.type == "inferno" then
+				data.timer = data.timer + dt
+
+				if data.next_inferno < data.timer then
+					data.next_inferno = data.timer + kill_tweak.timer
+
+					self:_deal_fire_damage(data.unit, kill_tweak.damage, kill_tweak.death_on_down)
 				end
 			end
 		end
-	end
-end
-
-function KillzoneManager:set_unit(unit, type)
-	if self._units[unit:key()] then
-		self:_remove_unit(unit)
-	else
-		self:_add_unit(unit, type)
 	end
 end
 
@@ -70,7 +76,7 @@ function KillzoneManager:_warning_shot(unit)
 	end
 end
 
-function KillzoneManager:_deal_damage(unit)
+function KillzoneManager:_deal_damage(unit, damage)
 	if unit:character_damage():need_revive() then
 		return
 	end
@@ -80,16 +86,16 @@ function KillzoneManager:_deal_damage(unit)
 	ray = ray:with_z(-0.4):normalized()
 	col_ray.ray = ray
 	local attack_data = {
-		damage = 1,
+		damage = damage,
 		col_ray = col_ray
 	}
 
 	unit:character_damage():damage_killzone(attack_data)
 end
 
-function KillzoneManager:_deal_gas_damage(unit)
+function KillzoneManager:_deal_gas_damage(unit, damage)
 	local attack_data = {
-		damage = 0.75,
+		damage = damage,
 		col_ray = {
 			ray = math.UP
 		}
@@ -98,15 +104,24 @@ function KillzoneManager:_deal_gas_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
-function KillzoneManager:_deal_fire_damage(unit)
+function KillzoneManager:_deal_fire_damage(unit, damage, death_on_down)
 	local attack_data = {
-		damage = 0.5,
+		damage = damage,
 		col_ray = {
 			ray = math.UP
-		}
+		},
+		death_on_down = death_on_down
 	}
 
 	unit:character_damage():damage_killzone(attack_data)
+end
+
+function KillzoneManager:set_unit(unit, type)
+	if self._units[unit:key()] then
+		self:_remove_unit(unit)
+	else
+		self:_add_unit(unit, type)
+	end
 end
 
 function KillzoneManager:_add_unit(unit, type)
@@ -132,6 +147,14 @@ function KillzoneManager:_add_unit(unit, type)
 			timer = 0,
 			type = type,
 			next_fire = next_fire,
+			unit = unit
+		}
+	elseif type == "inferno" then
+		local next_inferno = math.rand(1)
+		self._units[unit:key()] = {
+			timer = 0,
+			type = type,
+			next_inferno = next_inferno,
 			unit = unit
 		}
 	end

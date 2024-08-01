@@ -3,12 +3,16 @@ local tmp_vec2 = Vector3()
 local empty_idstr = Idstring("")
 local idstr_concrete = Idstring("concrete")
 local idstr_blood_spatter = Idstring("blood_spatter")
-local idstr_blood_screen = Idstring("effects/vanilla/dismemberment/dis_blood_screen_001")
-local idstr_bullet_hit_blood = Idstring("effects/vanilla/impacts/imp_blood_hit_001")
-local idstr_fallback = Idstring("effects/vanilla/impacts/imp_fallback_001")
 local idstr_no_material = Idstring("no_material")
 local idstr_bullet_hit = Idstring("bullet_hit")
+local idstr_blood_screen = tweak_data.common_effects.blood_screen
+local idstr_bullet_hit_blood = tweak_data.common_effects.blood_impact_1
+local idstr_pellet_hit_blood = tweak_data.common_effects.blood_impact_3
+local idstr_fallback = tweak_data.common_effects.impact
+local mvec_1 = Vector3()
+local mvec_2 = Vector3()
 GamePlayCentralManager = GamePlayCentralManager or class()
+GamePlayCentralManager.MAX_BULLET_HITS_PERFRAME = 5
 
 function GamePlayCentralManager:init()
 	self._bullet_hits = {}
@@ -17,8 +21,10 @@ function GamePlayCentralManager:init()
 	self._footsteps = {}
 	self._queue_fire_raycast = {}
 	self._projectile_trails = {}
+	self._spawned_warcry_units = {}
 	self._spawned_projectiles = {}
 	self._spawned_pickups = {}
+	self._bullet_hits_max_frame = 0
 	self._effect_manager = World:effect_manager()
 	self._slotmask_flesh = managers.slot:get_mask("flesh")
 	self._slotmask_world_geometry = managers.slot:get_mask("world_geometry")
@@ -47,10 +53,6 @@ function GamePlayCentralManager:init()
 		running = false,
 		start_time = 0
 	}
-	local is_ps3 = _G.IS_PS3
-	local is_x360 = _G.IS_XB360
-	self._block_bullet_decals = is_ps3 or is_x360
-	self._block_blood_decals = is_x360
 end
 
 function GamePlayCentralManager:setup_effects(level_id)
@@ -213,7 +215,9 @@ function GamePlayCentralManager:end_update(t, dt)
 end
 
 function GamePlayCentralManager:play_impact_sound_and_effects(params)
-	table.insert(self._bullet_hits, params)
+	if params and not table.empty(params) then
+		table.insert(self._bullet_hits, params)
+	end
 end
 
 function GamePlayCentralManager:request_play_footstep(unit, m_pos)
@@ -281,14 +285,12 @@ function GamePlayCentralManager:play_impact_flesh(params)
 	local col_ray = params.col_ray
 
 	if alive(col_ray.unit) and col_ray.unit:in_slot(self._slotmask_flesh) then
-		if not self._block_blood_decals then
-			local splatter_from = col_ray.position
-			local splatter_to = col_ray.position + col_ray.ray * 1000
-			local splatter_ray = col_ray.unit:raycast("ray", splatter_from, splatter_to, "slot_mask", self._slotmask_world_geometry)
+		local splatter_from = col_ray.position
+		local splatter_to = col_ray.position + col_ray.ray * 1000
+		local splatter_ray = col_ray.unit:raycast("ray", splatter_from, splatter_to, "slot_mask", self._slotmask_world_geometry)
 
-			if splatter_ray then
-				World:project_decal(idstr_blood_spatter, splatter_ray.position, splatter_ray.ray, splatter_ray.unit, nil, splatter_ray.normal)
-			end
+		if splatter_ray then
+			World:project_decal(idstr_blood_spatter, splatter_ray.position, splatter_ray.ray, splatter_ray.unit, nil, splatter_ray.normal)
 		end
 
 		if managers.player:player_unit() and mvector3.distance_sq(col_ray.position, managers.player:player_unit():movement():m_head_pos()) < 40000 then
@@ -348,28 +350,74 @@ function GamePlayCentralManager:spawn_pickup(params)
 	local unit_name = tweak_data.pickups[params.name].unit
 	local unit = World:spawn_unit(unit_name, params.position, params.rotation)
 
-	if not Application:editor() then
-		managers.worldcollection:register_spawned_unit(unit, params.position, params.world_id)
-	else
+	if Application:editor() then
 		table.insert(self._spawned_pickups, unit)
+	else
+		managers.worldcollection:register_spawned_unit(unit, params.position, params.world_id)
+	end
+
+	return unit
+end
+
+function GamePlayCentralManager:spawn_warcry_unit(params)
+	local tweak = tweak_data.warcry_units[params.name]
+
+	if not tweak then
+		Application:error("No warcry unit definition for " .. tostring(params.name))
+
+		return
+	end
+
+	mvector3.set(mvec_1, params.position)
+
+	if tweak.drop_to_ground then
+		mvector3.set(mvec_2, math.UP)
+		mvector3.multiply(mvec_2, -10000)
+		mvector3.add(mvec_2, mvec_1)
+
+		local ray = World:raycast("ray", mvec_1, mvec_2, "slot_mask", managers.slot:get_mask("bullet_impact_targets"))
+
+		if ray then
+			mvector3.set(mvec_1, ray.hit_position)
+		end
+	end
+
+	local unit = World:spawn_unit(tweak.unit, mvec_1, params.rotation)
+
+	if Application:editor() then
+		table.insert(self._spawned_pickups, unit)
+	else
+		managers.worldcollection:register_spawned_unit(unit, mvec_1, params.world_id)
+	end
+
+	if unit:damage() and tweak.level_seq and params.level then
+		unit:damage():run_sequence_simple(tweak.level_seq[params.level])
 	end
 
 	return unit
 end
 
 function GamePlayCentralManager:add_spawned_projectiles(unit, world_id)
-	if not Application:editor() then
-		managers.worldcollection:register_spawned_unit(unit, unit:position(), world_id)
-	else
+	if Application:editor() then
 		table.insert(self._spawned_projectiles, unit)
+	else
+		managers.worldcollection:register_spawned_unit(unit, unit:position(), world_id)
 	end
 
 	return unit
 end
 
 function GamePlayCentralManager:_flush_bullet_hits()
-	if #self._bullet_hits > 0 then
+	while not table.empty(self._bullet_hits) do
 		self:_play_bullet_hit(table.remove(self._bullet_hits, 1))
+
+		if not self._bullet_hits_max_frame or GamePlayCentralManager.MAX_BULLET_HITS_PERFRAME < self._bullet_hits_max_frame then
+			self._bullet_hits_max_frame = 0
+
+			break
+		else
+			self._bullet_hits_max_frame = self._bullet_hits_max_frame + 1
+		end
 	end
 end
 
@@ -391,7 +439,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	local hit_pos = params.col_ray.position
 	local need_sound = not params.no_sound and World:in_view_with_options(hit_pos, 2000, 0, 0)
 	local need_effect = World:in_view_with_options(hit_pos, 20, 100, 5000)
-	local need_decal = not self._block_bullet_decals and not params.no_decal and need_effect and World:in_view_with_options(hit_pos, 3000, 0, 0)
+	local need_decal = not params.no_decal and need_effect and World:in_view_with_options(hit_pos, 3000, 0, 0)
 
 	if not need_sound and not need_effect and not need_decal then
 		return
@@ -436,15 +484,19 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 		end
 
 		if need_effect then
+			if params.weapon_type then
+				if params.weapon_type and (params.weapon_type == WeaponTweakData.WEAPON_CATEGORY_MOUNTED_TURRET or params.weapon_type == WeaponTweakData.WEAPON_CATEGORY_MOUNTED_AAGUN) then
+					self:_turret_effect(effects, effect or redir_name, col_ray.normal, hit_pos + offset)
+				elseif redir_name == idstr_bullet_hit_blood and params.weapon_type == WeaponTweakData.WEAPON_CATEGORY_SHOTGUN then
+					effect = idstr_pellet_hit_blood
+				end
+			end
+
 			table.insert(effects, {
 				effect = effect or redir_name,
 				position = hit_pos + offset,
 				normal = col_ray.normal
 			})
-
-			if params.weapon_type and params.weapon_type == "turret" then
-				self:_turret_effect(effects, effect or redir_name, col_ray.normal, hit_pos + offset)
-			end
 		end
 
 		sound_switch_name = need_sound and material_name
@@ -458,7 +510,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 				normal = col_ray.normal
 			})
 
-			if params.weapon_type and params.weapon_type == "turret" then
+			if params.weapon_type and (params.weapon_type == WeaponTweakData.WEAPON_CATEGORY_MOUNTED_TURRET or params.weapon_type == WeaponTweakData.WEAPON_CATEGORY_MOUNTED_AAGUN) then
 				self:_turret_effect(effects, generic_effect, col_ray.normal, hit_pos)
 			end
 		end
@@ -613,28 +665,6 @@ function GamePlayCentralManager:flashlights_on()
 	return self._flashlights_on
 end
 
-function GamePlayCentralManager:on_simulation_ended()
-	self:set_flashlights_on(false)
-	self:set_flashlights_on_player_on(false)
-	self:stop_heist_timer()
-
-	for i = #self._spawned_pickups, 1, -1 do
-		if alive(self._spawned_pickups[i]) then
-			self._spawned_pickups[i]:set_slot(0)
-		end
-
-		self._spawned_pickups[i] = nil
-	end
-
-	for i = #self._spawned_projectiles, 1, -1 do
-		if alive(self._spawned_projectiles[i]) then
-			self._spawned_projectiles[i]:set_slot(0)
-		end
-
-		self._spawned_projectiles[i] = nil
-	end
-end
-
 function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_player_on)
 	if self._flashlights_on_player_on == flashlights_on_player_on then
 		return
@@ -652,19 +682,45 @@ function GamePlayCentralManager:flashlights_on_player_on()
 	return self._flashlights_on_player_on
 end
 
-function GamePlayCentralManager:mission_disable_unit(unit)
+function GamePlayCentralManager:on_simulation_ended()
+	self:set_flashlights_on(false)
+	self:set_flashlights_on_player_on(false)
+	self:stop_heist_timer()
+
+	local function _clean_me(tbl)
+		for i = #tbl, 1, -1 do
+			if alive(tbl[i]) then
+				tbl[i]:set_slot(0)
+			end
+
+			tbl[i] = nil
+		end
+	end
+
+	_clean_me(self._spawned_pickups)
+	_clean_me(self._spawned_projectiles)
+	_clean_me(self._spawned_warcry_units)
+end
+
+function GamePlayCentralManager:mission_disable_unit(unit, destroy)
 	if alive(unit) then
 		self._mission_disabled_units[unit:unit_data().unit_id] = true
 
-		unit:set_enabled(false)
+		if destroy then
+			unit:set_slot(0)
+		else
+			unit:set_enabled(false)
 
-		if unit:base() and unit:base().on_unit_set_enabled then
-			unit:base():on_unit_set_enabled(false)
-		end
+			if unit:base() and unit:base().on_unit_set_enabled then
+				unit:base():on_unit_set_enabled(false)
+			end
 
-		if unit:editable_gui() then
-			unit:editable_gui():on_unit_set_enabled(false)
+			if unit:editable_gui() then
+				unit:editable_gui():on_unit_set_enabled(false)
+			end
 		end
+	else
+		Application:warn("[GamePlayCentralManager:mission_disable_unit] Cannot disable unit, unit is not alive!", unit)
 	end
 end
 
@@ -681,6 +737,8 @@ function GamePlayCentralManager:mission_enable_unit(unit)
 		if unit:editable_gui() then
 			unit:editable_gui():on_unit_set_enabled(true)
 		end
+	else
+		Application:warn("[GamePlayCentralManager:mission_enable_unit] Cannot enable unit, unit is not alive!", unit)
 	end
 end
 
@@ -788,9 +846,9 @@ function GamePlayCentralManager:_flush_queue_fire_raycast()
 			table.remove(self._queue_fire_raycast, i)
 
 			local data = ray_data.data
-			local user_unit = data[1]
+			local player_unit = data[1]
 
-			if alive(ray_data.weapon_unit) and alive(user_unit) then
+			if alive(ray_data.weapon_unit) and alive(player_unit) then
 				ray_data.weapon_unit:base():_fire_raycast(unpack(data))
 			end
 		else
@@ -800,47 +858,58 @@ function GamePlayCentralManager:_flush_queue_fire_raycast()
 end
 
 function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
-	self._auto_highlighted_enemies = self._auto_highlighted_enemies or {}
-
-	if self._auto_highlighted_enemies[unit:key()] and Application:time() < self._auto_highlighted_enemies[unit:key()] then
-		return false
-	end
-
-	self._auto_highlighted_enemies[unit:key()] = Application:time() + (managers.groupai:state():whisper_mode() and 9 or 4)
-
 	if not unit:contour() then
 		debug_pause_unit(unit, "[GamePlayCentralManager:auto_highlight_enemy]: Unit doesn't have Contour Extension")
+
+		return false
 	end
 
 	local contour_type = "mark_enemy"
 	local time_multiplier = 1
+	local damage_multiplier = 1
 
 	if use_player_upgrades then
-		if managers.player:has_category_upgrade("player", "marked_enemy_extra_damage") then
+		time_multiplier = managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1)
+		damage_multiplier = managers.player:upgrade_value("player", "big_game_highlight_enemy_multiplier", 1)
+
+		if damage_multiplier > 1 then
 			contour_type = "mark_enemy_damage_bonus"
 		end
-
-		time_multiplier = time_multiplier + managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1)
 	end
 
-	unit:contour():add(contour_type, true, time_multiplier)
+	local dmg_mul = unit:character_damage():marked_dmg_mul()
+
+	if dmg_mul and damage_multiplier < dmg_mul then
+		return false
+	end
+
+	if unit:unit_data().turret_weapon then
+		unit:unit_data().turret_weapon:mark_turret({
+			contour_type,
+			true,
+			time_multiplier,
+			damage_multiplier
+		})
+	else
+		unit:contour():add(contour_type, true, time_multiplier, damage_multiplier)
+	end
 
 	return true
 end
 
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
-	local HARDCODED_DISTANCE = 450
-	local HARDCODED_STRENGTH = 550
+	local HARDCODED_DISTANCE = 500
 
-	if HARDCODED_DISTANCE < distance then
+	if distance > HARDCODED_DISTANCE then
 		return
 	end
+
+	local HARDCODED_STRENGTH = 40
 
 	if unit:movement()._active_actions[1] and unit:movement()._active_actions[1]:type() == "hurt" then
 		unit:movement()._active_actions[1]:force_ragdoll()
 	end
 
-	local scale = math.clamp(1 - distance / HARDCODED_DISTANCE, 0.65, 1)
 	local height = mvector3.distance(hit_pos, unit:position()) - 100
 	local twist_dir = math.rand_bool() and 1 or -1
 	local rot_acc = (dir:cross(math.UP) + math.UP * 0.175 * twist_dir) * -1000 * math.sign(height)
@@ -852,9 +921,9 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 		local u_body = unit:body(i_u_body)
 
 		if u_body:enabled() and u_body:dynamic() then
-			local body_mass = u_body:mass()
+			local pvec3 = Vector3(dir.x, dir.y, dir.z * 0.3 + 0.4):normalized()
 
-			World:play_physic_effect(Idstring("physic_effects/shotgun_hit"), u_body, Vector3(dir.x, dir.y, dir.z + 0.5) * HARDCODED_STRENGTH * scale, 4 * body_mass / math.random(2), rot_acc, rot_time)
+			World:play_physic_effect(tweak_data.physics_effects.shotgun_push, u_body, pvec3, HARDCODED_STRENGTH, rot_acc, rot_time)
 		end
 
 		i_u_body = i_u_body + 1
@@ -862,11 +931,7 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 end
 
 function GamePlayCentralManager:announcer_say(event)
-	if not self._announcer_sound_source then
-		self._announcer_sound_source = SoundDevice:create_source("announcer")
-	end
-
-	self._announcer_sound_source:post_event(event)
+	Application:warn("[GamePlayCentralManager:announcer_say] This is being removed!")
 end
 
 function GamePlayCentralManager:save(data)
@@ -910,7 +975,7 @@ function GamePlayCentralManager:on_world_loaded()
 	end
 end
 
-function GamePlayCentralManager:on_level_tranistion()
+function GamePlayCentralManager:on_level_transition()
 	self._mission_disabled_units = {}
 	self._bullet_hits = {}
 	self._queue_fire_raycast = {}

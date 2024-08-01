@@ -338,19 +338,16 @@ function CoreWorldSpawnerElement:post_init()
 end
 
 function CoreWorldSpawnerElement:_change_world()
-	if self._low_poly_unit then
-		World:delete_unit(self._low_poly_unit)
-
-		self._low_poly_unit = nil
-	end
+	self:_delete_low_poly_unit()
 
 	local world_meta_data = managers.worldcollection:get_world_meta_data(self._hed.world)
 
 	if world_meta_data then
 		if world_meta_data.low_poly and world_meta_data.low_poly ~= "" then
+			local ids_rp_worlds = Idstring("rp_worlds")
 			self._low_poly_unit = CoreUnit.safe_spawn_unit(world_meta_data.low_poly, self._unit:position(), self._unit:rotation())
 
-			self._unit:link(Idstring("rp_worlds"), self._low_poly_unit)
+			self._unit:link(ids_rp_worlds, self._low_poly_unit)
 		end
 
 		managers.worldcollection:register_editor_name(self._unit:unit_data().name_id, self._hed.world)
@@ -358,38 +355,35 @@ function CoreWorldSpawnerElement:_change_world()
 		self._hed.world = nil
 
 		managers.worldcollection:register_editor_name(self._unit:unit_data().name_id)
-
-		if self._low_poly_unit then
-			World:delete_unit(self._low_poly_unit)
-
-			self._low_poly_unit = nil
-		end
 	end
 end
 
-function CoreWorldSpawnerElement:destroy()
+function CoreWorldSpawnerElement:_delete_low_poly_unit()
 	if alive(self._low_poly_unit) then
 		World:delete_unit(self._low_poly_unit)
 
 		self._low_poly_unit = nil
 	end
+end
 
+function CoreWorldSpawnerElement:_set_vis_low_poly_unit(state)
+	if self._low_poly_unit then
+		self._low_poly_unit:set_visible(state)
+	end
+end
+
+function CoreWorldSpawnerElement:destroy()
+	self:_delete_low_poly_unit()
 	CoreWorldSpawnerElement.super.destroy(self)
 end
 
 function CoreWorldSpawnerElement:set_disabled()
-	if self._low_poly_unit then
-		self._low_poly_unit:set_visible(false)
-	end
-
+	self:_set_vis_low_poly_unit(false)
 	CoreWorldSpawnerElement.super.set_disabled(self)
 end
 
 function CoreWorldSpawnerElement:set_enabled()
-	if self._low_poly_unit then
-		self._low_poly_unit:set_visible(true)
-	end
-
+	self:_set_vis_low_poly_unit(true)
 	CoreWorldSpawnerElement.super.set_enabled(self)
 end
 

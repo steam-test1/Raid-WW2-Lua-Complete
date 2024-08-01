@@ -21,8 +21,9 @@ function FragGrenade:_setup_from_tweak_data()
 		self._damage = self._damage * (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_GRENADE_DAMAGE) or 1)
 	end
 
-	self._player_damage = self._tweak_data.player_damage
 	self._alert_radius = self._tweak_data.alert_radius
+	self._player_damage = self._tweak_data.player_damage
+	self._targets_slotmask = managers.slot:get_mask("trip_mine_targets")
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
 		camera_shake_max_mul = 4,
@@ -37,32 +38,28 @@ function FragGrenade:set_thrower_unit(unit)
 	FragGrenade.super.set_thrower_unit(self, unit)
 
 	self._clusters_to_spawn = 0
-	self._airburst_near_enemy = 0
+	self._airburst_near_enemy = false
 	local peer = managers.network:session():peer_by_unit(self._thrower_unit)
 	self.cluster_range = self._range
 	self.cluster_damage = self._damage
 
 	if peer then
-		if peer._id == managers.network:session():local_peer()._id then
-			self._clusters_to_spawn = managers.player:upgrade_value("player", "warcry_grenade_clusters", 0)
-			self.cluster_range = self.cluster_range * managers.player:upgrade_value("player", "warcry_grenade_cluster_range", self.cluster_range)
-			self.cluster_damage = self.cluster_damage * managers.player:upgrade_value("player", "warcry_grenade_cluster_damage", self.cluster_damage)
+		local wpn_tweak = self:weapon_tweak_data()
+		local client_player = peer:id() ~= managers.network:session():local_peer():id()
+		local peer_id = client_player and peer:id() or nil
+		local thrower_unit = client_player and self._thrower_unit or nil
+		self._clusters_to_spawn = PlayerSkill.warcry_data("player", "warcry_grenade_clusters", 0, peer_id)
+		self.cluster_range = self.cluster_range * (PlayerSkill.warcry_data("player", "warcry_grenade_cluster_range", 2, peer_id) - 1)
+		self.cluster_damage = self.cluster_damage * (PlayerSkill.warcry_data("player", "warcry_grenade_cluster_damage", 2, peer_id) - 1)
 
-			if self:weapon_tweak_data().can_airburst then
-				self._airburst_near_enemy = managers.player:upgrade_value("player", "warcry_grenade_cluster_damage", 0)
-			end
-		else
-			self._clusters_to_spawn = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_grenade_clusters", 0)
-			self.cluster_range = self.cluster_range * managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_grenade_cluster_range", self.cluster_range)
-			self.cluster_damage = self.cluster_damage * managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_grenade_cluster_damage", self.cluster_damage)
-
-			if self:weapon_tweak_data().can_airburst then
-				self._airburst_near_enemy = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_grenade_cluster_damage", 0)
-			end
+		if wpn_tweak.can_airburst then
+			self._airburst_near_enemy = PlayerSkill.warcry_data("player", "warcry_grenade_airburst", false, peer_id)
 		end
-	end
 
-	print("----------Will airburst this grenade: " .. self._airburst_near_enemy)
+		self._range = self._range * PlayerSkill.skill_data("player", "grenadier_grenade_radius_multiplier", 1, thrower_unit)
+		local pdamage_mul = PlayerSkill.skill_data("player", "blammfu_grenade_player_damage_reduction", 1, thrower_unit)
+		self._player_damage = self._player_damage * pdamage_mul
+	end
 end
 
 function FragGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
@@ -74,6 +71,8 @@ function FragGrenade:_on_collision(col_ray)
 end
 
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
+	FragGrenade.super._detonate(self, tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
+
 	local pos = self._unit:position() + GrenadeBase.DETONATE_UP_OFFSET
 	local normal = math.UP
 	local range = self._range
@@ -81,9 +80,11 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
+	self._unit:set_slot(0)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
 		player_damage = 0,
+		push_units = true,
 		hit_pos = pos,
 		range = range,
 		collision_slotmask = slot_mask,
@@ -102,8 +103,10 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	end
 
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
-	self._unit:set_slot(0)
+	self:_detonate_with_clusters()
+end
 
+function FragGrenade:_detonate_with_clusters()
 	if not self._thrower_unit then
 		return
 	end
@@ -117,7 +120,7 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 		local clusters_spawned = 0
 
 		while clusters_spawned < self._clusters_to_spawn do
-			local spawn_position = Vector3(unit_position.x + math.random(-30, 30), unit_position.y + math.random(-30, 30), unit_position.z + math.random(20, 50))
+			local spawn_position = Vector3(unit_position.x + math.random(-25, 25), unit_position.y + math.random(-25, 25), unit_position.z + math.random(20, 40))
 			local collision = World:raycast("ray", unit_position, spawn_position, "slot_mask", managers.slot:get_mask("bullet_impact_targets"))
 
 			if not collision then
@@ -128,22 +131,8 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 				cluster:base():set_damage(self.cluster_damage)
 
 				clusters_spawned = clusters_spawned + 1
-
-				Application:debug("FragGrenade -- Spawned cluster @:" .. spawn_position .. ", start pos: " .. pos)
-				Application:debug("FragGrenade -- Cluster_range:" .. self.cluster_range .. ", cluster damage: " .. self.cluster_damage)
-			else
-				Application:debug("[FragGrenade:_detonate] Trying to spawn a cluser, but there is a collision!")
-				Application:debug("[FragGrenade:_detonate] Spawn position: \t" .. inspect(spawn_position))
-				Application:debug("[FragGrenade:_detonate] Hit position: \t" .. inspect(collision.position))
-				Application:debug("[FragGrenade:_detonate] unit position: \t" .. inspect(unit_position))
-				Application:debug("[FragGrenade:_detonate] Unit hit: \t\t" .. inspect(collision.unit))
-
-				if FragGrenade.MAX_CLUSTER_ATTEMPTS < spawn_attempts then
-					Application:debug("[FragGrenade:_detonate] ----------------------------------------------")
-					Application:debug("[FragGrenade:_detonate] Gave up trying to spawn clsuters, reached max munber of attempts")
-
-					return
-				end
+			elseif FragGrenade.MAX_CLUSTER_ATTEMPTS < spawn_attempts then
+				return
 			end
 
 			spawn_attempts = spawn_attempts + 1
@@ -176,15 +165,13 @@ function FragGrenade:bullet_hit()
 		return
 	end
 
-	print("FragGrenade:bullet_hit()")
-
 	self._timer = nil
 
 	self:_detonate()
 end
 
 function FragGrenade:_check_targets()
-	local units = World:find_units_quick("sphere", self._ray_from_pos or self._unit:position(), self._tweak_data.enemy_proximity_range or self._tweak_data.range, managers.slot:get_mask("trip_mine_targets"))
+	local units = World:find_units_quick("sphere", self._ray_from_pos or self._unit:position(), self._tweak_data.enemy_proximity_range or self._tweak_data.range, self._targets_slotmask)
 
 	return units
 end
@@ -196,13 +183,23 @@ function FragGrenade:_filtered_check_targets()
 
 	local ray = self:_check_targets()
 
-	for _, unit in ipairs(ray) do
-		if ray and unit and tweak_data.character[unit:base()._tweak_table] and not tweak_data.character[unit:base()._tweak_table].is_escort and unit:movement() and unit:movement():team() then
-			local team_id_player = tweak_data.levels:get_default_team_ID("player")
-			local team_id_ray = unit:movement():team().id
+	if not ray then
+		return
+	end
 
-			if managers.groupai:state():team_data(team_id_player).foes[team_id_ray] then
-				return true
+	for _, unit in ipairs(ray) do
+		if alive(unit) then
+			local valid = tweak_data.character[unit:base()._tweak_table] and not tweak_data.character[unit:base()._tweak_table].is_escort or unit:brain() and unit:brain().is_tank and unit:brain():is_tank()
+
+			if valid and unit:movement() and unit:movement():team() then
+				local team_id_player = tweak_data.levels:get_default_team_ID("player")
+				local team_id_ray = unit:movement():team().id
+
+				Application:debug("[GrenadeBase:DemoAirbust] filtering check targets", managers.groupai:state():team_data(team_id_player).foes[team_id_ray])
+
+				if managers.groupai:state():team_data(team_id_player).foes[team_id_ray] then
+					return true
+				end
 			end
 		end
 	end

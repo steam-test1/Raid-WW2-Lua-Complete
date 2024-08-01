@@ -10,12 +10,12 @@ function CampCustomizationTweakData:_setup_camp_assets()
 		gold_pile = {}
 	}
 	self.camp_upgrades_automatic.gold_pile.gold = {}
-	local total_tiers = 88
-	local max_pile = 4000
+	local total_tiers = 76
+	local max_pile = 5000
 
 	for i = 1, total_tiers do
 		local v = i / total_tiers
-		local gold = math.ceil(max_pile * v * v)
+		local gold = math.ceil(max_pile * v * v * v)
 
 		table.insert(self.camp_upgrades_automatic.gold_pile.gold, gold)
 	end

@@ -1,20 +1,17 @@
 core:import("CoreWorldDefinition")
 
 CoreWorldCollection = CoreWorldCollection or class()
+CoreWorldCollection.PREDEFINED_WORLDS_XML = "lib/utils/dev/editor/xml/predefined_worlds"
 CoreWorldCollection.MAX_STITCHER_ID = 1000
+CoreWorldCollection.SKIP_LOADING_TICKS = 5
 CoreWorldCollection.STAGE_PREPARE = "STAGE_PREPARE"
 CoreWorldCollection.STAGE_LOAD = "STAGE_LOAD"
 CoreWorldCollection.STAGE_LOAD_FINISHED = "STAGE_LOAD_FINISHED"
 CoreWorldCollection.STAGE_DESTROY = "STAGE_DESTROY"
-CoreWorldCollection.STATES_NOT_ALOWED_TRANSITION = {
-	"ingame_special_interaction",
-	"world_camera",
-	"event_complete_screen",
-	"ingame_waiting_for_players",
-	"ingame_driving"
-}
+CoreWorldCollection.SKIP_WAITING_TEXTURES = false
 
 function CoreWorldCollection:init(params)
+	self._skip_loading_counter = CoreWorldCollection.SKIP_LOADING_TICKS
 	self.queued_client_mission_executions = {}
 	self.queued_server_mission_executions = {}
 	self.queued_world_creation = {}
@@ -28,7 +25,6 @@ function CoreWorldCollection:init(params)
 	self._mission_params = {}
 	self._motion_paths = {}
 	self._package_loading = {}
-	self._predefined_worlds_file = "lib/utils/dev/editor/xml/predefined_worlds"
 
 	self:_load_predefined_worlds()
 
@@ -79,6 +75,8 @@ end
 
 function CoreWorldCollection:register_world_despawn(world_id, editor_name)
 	if not self._world_spawns[world_id] then
+		Application:error("[CoreWorldCollection:register_world_despawn] Attempted to despawn a world that was not in the world spawns list!", world_id, editor_name)
+
 		return
 	end
 
@@ -161,6 +159,14 @@ function CoreWorldCollection:get_world_from_pos(position)
 	return result
 end
 
+function CoreWorldCollection:get_world_id_from_pos(position)
+	local result = nil
+	local nav_seg_id = managers.navigation:get_nav_seg_from_pos(position, true)
+	local world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
+
+	return world_id
+end
+
 function CoreWorldCollection:on_editor_changed_name(old_name, new_name)
 	if self._editor_world_names[old_name] then
 		self._editor_world_names[new_name] = self._editor_world_names[old_name]
@@ -169,8 +175,8 @@ function CoreWorldCollection:on_editor_changed_name(old_name, new_name)
 end
 
 function CoreWorldCollection:_load_predefined_worlds()
-	if DB:has("xml", self._predefined_worlds_file) then
-		local file = DB:open("xml", self._predefined_worlds_file)
+	if DB:has("xml", CoreWorldCollection.PREDEFINED_WORLDS_XML) then
+		local file = DB:open("xml", CoreWorldCollection.PREDEFINED_WORLDS_XML)
 		self._all_worlds = ScriptSerializer:from_generic_xml(file:read())
 
 		table.sort(self._all_worlds)
@@ -294,19 +300,17 @@ function CoreWorldCollection:create(index, nav_graph_loaded)
 end
 
 function CoreWorldCollection:set_world_counter(value)
-	self.world_counter = value
+	self._wait_for_worlds_count = value
 	self.sync_world_counter = value
 end
 
 function CoreWorldCollection:on_world_loaded(index)
 	Application:debug("[CoreWorldCollection:on_world_loaded]", index)
 
-	if not self.world_counter or self.world_counter == 0 then
+	if not self._wait_for_worlds_count or self._wait_for_worlds_count == 0 then
 		self:execute_world_loaded_callbacks()
-	end
-
-	if self.world_counter and self.world_counter > 0 then
-		self.world_counter = self.world_counter - 1
+	else
+		self._wait_for_worlds_count = self._wait_for_worlds_count - 1
 	end
 
 	if index > 0 then
@@ -326,18 +330,22 @@ function CoreWorldCollection:on_world_loaded(index)
 		for i, exec in ipairs(self.queued_server_mission_executions) do
 			local mission = managers.worldcollection:mission_by_id(exec.mission_id)
 
-			for name, data in pairs(mission._scripts) do
-				local element = data:element(exec.id)
+			if mission and mission._scripts then
+				for name, data in pairs(mission._scripts) do
+					local element = data:element(exec.id)
 
-				if element then
-					Application:debug("[CoreWorldCollection:on_world_loaded] Firing queued execution on server:", inspect(exec))
-					element:on_executed(exec.unit)
+					if element then
+						Application:debug("[CoreWorldCollection:on_world_loaded] Firing queued execution on server:", inspect(exec))
+						element:on_executed(exec.unit)
 
-					break
+						break
+					end
 				end
-			end
 
-			self.queued_server_mission_executions[i] = nil
+				self.queued_server_mission_executions[i] = nil
+			else
+				_G.debug_pause("[CoreWorldCollection:on_world_loaded] No mission found of ID.", exec.mission_id)
+			end
 		end
 	else
 		self:check_queued_client_mission_executions()
@@ -449,8 +457,6 @@ function CoreWorldCollection:_check_all_peers_synced(world_id, stage)
 
 	for id, peer in pairs(managers.network:session():peers()) do
 		if not peer._synced_worlds[world_id] or not peer._synced_worlds[world_id][stage] then
-			Application:debug("\twaiting - peer", id, "world_id", world_id, "stage", stage)
-
 			result = false
 		end
 	end
@@ -483,7 +489,6 @@ function CoreWorldCollection:_do_complete_world_loading_stage(params)
 	peer._synced_worlds[world_id] = peer._synced_worlds[world_id] or {}
 	peer._synced_worlds[world_id][stage] = true
 
-	Application:debug("[CoreWorldCollection:update] Sending world spawn sync: (world_id, peer)", world_id, peer:id())
 	managers.network:session():send_to_peers("sync_prepare_world", world_id, peer:id(), stage)
 end
 
@@ -492,18 +497,6 @@ function CoreWorldCollection:update_synced_worlds_to_peer(peer)
 
 	for world_id, data in pairs(local_peer._synced_worlds) do
 		peer:send_queued_sync("sync_peer_world_data", world_id, data[CoreWorldCollection.STAGE_PREPARE] or false, data[CoreWorldCollection.STAGE_LOAD] or false, data[CoreWorldCollection.STAGE_LOAD_FINISHED] or false)
-	end
-end
-
-function CoreWorldCollection:update_synced_worlds_to_all_peers()
-	Application:trace("[CoreWorldCollection:update_synced_worlds_to_all_peers()]")
-
-	if not managers.network:session() then
-		return
-	end
-
-	for peer_id, peer in pairs(managers.network:session():peers()) do
-		self:update_synced_worlds_to_peer(peer)
 	end
 end
 
@@ -519,6 +512,18 @@ function CoreWorldCollection:sync_loading_status(t)
 	end
 end
 
+function CoreWorldCollection:update_synced_worlds_to_all_peers()
+	Application:trace("[CoreWorldCollection:update_synced_worlds_to_all_peers()]")
+
+	if not managers.network:session() then
+		return
+	end
+
+	for peer_id, peer in pairs(managers.network:session():peers()) do
+		self:update_synced_worlds_to_peer(peer)
+	end
+end
+
 function CoreWorldCollection:update(t, dt, paused_update)
 	if managers.worldcollection.destroying then
 		return
@@ -527,7 +532,11 @@ function CoreWorldCollection:update(t, dt, paused_update)
 	self:check_queued_world_create()
 	self:sync_loading_status_to_peers()
 
-	if not self._skip_one_loading_frame then
+	if self._skip_loading_counter > 0 then
+		Application:trace("[CoreWorldCollection:update] Waiting frames #", self._skip_loading_counter)
+
+		self._skip_loading_counter = self._skip_loading_counter - 1
+	else
 		for key, definition in pairs(self._world_definitions) do
 			if not definition.destroyed then
 				if definition.is_prepared and definition.create_called then
@@ -546,11 +555,9 @@ function CoreWorldCollection:update(t, dt, paused_update)
 						end
 					elseif not definition.mission_scripts_created then
 						local all_peers_spawned_world = self:_check_all_peers_synced(definition._world_id, CoreWorldCollection.STAGE_LOAD)
-						local texture_loaded = TextureCache:check_textures_loaded()
+						local texture_loaded = CoreWorldCollection.SKIP_WAITING_TEXTURES or TextureCache:check_textures_loaded()
 
 						if all_peers_spawned_world and texture_loaded then
-							Application:debug("[CoreWorldCollection:update] Creating mission params", definition._world_id)
-
 							if self._mission_params[definition._world_id] then
 								self._missions[definition._world_id]:parse(self._mission_params[definition._world_id])
 
@@ -567,8 +574,6 @@ function CoreWorldCollection:update(t, dt, paused_update)
 						elseif texture_loaded then
 							Application:trace("[CoreWorldCollection:update] All peers still not spawned worlds, waiting...")
 							self:sync_loading_status(t)
-
-							self._time_tex_check = nil
 						end
 					elseif definition.mission_scripts_created and not definition.is_created then
 						self:complete_world_loading_stage(definition._world_id, CoreWorldCollection.STAGE_LOAD_FINISHED)
@@ -581,8 +586,6 @@ function CoreWorldCollection:update(t, dt, paused_update)
 				end
 			end
 		end
-	else
-		self._skip_one_loading_frame = false
 	end
 
 	if not paused_update and not self.level_transition_in_progress then
@@ -618,7 +621,6 @@ function CoreWorldCollection:check_drop_in_sync()
 		local local_peer = managers.network:session():local_peer()
 
 		if self:all_worlds_created() and local_peer:is_drop_in() and self._atleast_one_world_loaded then
-			Application:debug("[CoreWorldCollection:check_drop_in_sync] all worlds created, sending set_member_ready!")
 			Application:set_pause(false)
 			managers.navigation:set_data_ready_flag(true)
 			managers.network:session():chk_send_local_player_ready(true)
@@ -670,9 +672,7 @@ end
 
 function CoreWorldCollection:check_queued_world_destroy()
 	for i = #self.queued_world_destruction, 1, -1 do
-		local world_id = self.queued_world_destruction[i]
-
-		self:destroy_world(world_id)
+		self:destroy_world(self.queued_world_destruction[i])
 		table.remove(self.queued_world_destruction, i)
 	end
 end
@@ -794,12 +794,8 @@ function CoreWorldCollection:destroy_world(id)
 				if not unit:vehicle_driving() then
 					managers.interaction:remove_unit(unit)
 					unit:set_slot(0)
-				else
-					local cont_vehicle = unit:unit_data().continent_name and unit:unit_data().continent_name == WorldDefinition.VEHICLES_CONTINENT_NAME
-
-					if not cont_vehicle then
-						managers.vehicle:remove_vehicle(unit)
-					end
+				elseif not unit:unit_data().continent_name or unit:unit_data().continent_name ~= WorldDefinition.VEHICLES_CONTINENT_NAME then
+					managers.vehicle:remove_vehicle(unit)
 				end
 			end
 		end
@@ -831,82 +827,6 @@ function CoreWorldCollection:finish_destroy(data)
 	end
 
 	self._world_definitions[data.world_id] = nil
-end
-
-function CoreWorldCollection:_create_test(params)
-	print("CoreWorldCollection:_create_test( params )", inspect(params))
-
-	local worlds = {}
-
-	if true or false then
-		table.insert(worlds, {
-			level_path = "levels/tests/stealth_test_garden",
-			translation = {
-				position = Vector3(0, 0, 5000),
-				rotation = Rotation(0, 0, 0)
-			}
-		})
-		table.insert(worlds, {
-			level_path = "levels/tests/stealth_test_garden",
-			translation = {
-				position = Vector3(0, 5000, 2500),
-				rotation = Rotation(0, 0, 0)
-			}
-		})
-		table.insert(worlds, {
-			level_path = "levels/tests/stealth_test_garden",
-			translation = {
-				position = Vector3(5000, 0, 2500),
-				rotation = Rotation(0, 0, 0)
-			}
-		})
-	end
-
-	return worlds
-end
-
-function CoreWorldCollection:_new_random_world(worlds, ordered)
-	local files = {
-		"levels/tests/world_part1",
-		"levels/tests/world_part2",
-		"levels/tests/world_part3",
-		"levels/tests/world_part4",
-		"levels/tests/world_part5",
-		"levels/tests/world_part6",
-		"levels/tests/world_part7",
-		"levels/tests/world_part8",
-		"levels/tests/world_part2"
-	}
-	local s = 4
-	local k = 0
-	local l = 0
-	local s_pos = -800 * s / 2
-
-	for i = 0, s do
-		for j = 0, s do
-			local pos = Vector3(s_pos + i * 800, s_pos + j * 800, 0)
-			local yaw = ordered and math.mod(l, 4) * 90 or math.round(math.rand(360) / 90) * 90
-			local rot = Rotation(yaw, 0, 0)
-			local file = nil
-
-			if ordered then
-				file = files[k + 1]
-			else
-				file = files[math.random(#files)]
-			end
-
-			table.insert(worlds, {
-				level_path = file,
-				translation = {
-					position = pos,
-					rotation = rot
-				}
-			})
-
-			k = math.mod(k + 1, #files)
-			l = l + 1
-		end
-	end
 end
 
 function CoreWorldCollection:on_simulation_ended()
@@ -1016,7 +936,7 @@ function CoreWorldCollection:sync_load(data)
 	self._unique_id_counter = state.unique_id_counter
 	self._world_id_counter = state.world_id_counter
 	self.sync_world_counter = state.sync_world_counter
-	self.world_counter = state.sync_world_counter
+	self._wait_for_worlds_count = state.sync_world_counter
 
 	for _, synced_units in ipairs(state.synced_units) do
 		local world_id = synced_units.world_id
@@ -1243,7 +1163,7 @@ function CoreWorldCollection:get_alarm_for_world(world_id)
 		local world_spawn = self._world_spawns[world_id]
 
 		if world_spawn then
-			return world_spawn.alarm
+			return world_spawn.alarm or false
 		else
 			return false
 		end
@@ -1328,7 +1248,7 @@ function CoreWorldCollection:sync_loaded_packages(packages_packed)
 		return
 	end
 
-	PackageManager:set_resource_loaded_clbk(Idstring("unit"), nil)
+	PackageManager:set_resource_loaded_clbk(IDS_UNIT, nil)
 
 	self._sync_loading_packages = 0
 
@@ -1354,23 +1274,25 @@ function CoreWorldCollection:sync_loaded_packages(packages_packed)
 
 						if self._sync_loading_packages == 0 then
 							managers.sequence:preload()
-							PackageManager:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+							PackageManager:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 						end
 					end)
 				else
 					PackageManager:load(pkg.package)
 				end
 			else
-				Application:trace("[CoreWorldCollection:sync_load] Package already loaded:", pkg.package)
+				Application:trace("[CoreWorldCollection:sync_loaded_packages] Package already loaded:", pkg.package)
 			end
 		end
 	end
+
+	Application:trace("[CoreWorldCollection:sync_loaded_packages] Sync loading status to peers: TRUE!")
 
 	self._sync_loading_status_to_peers = true
 
 	if not Global.STREAM_ALL_PACKAGES then
 		managers.sequence:preload()
-		PackageManager:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+		PackageManager:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 	end
 end
 
@@ -1402,6 +1324,7 @@ function CoreWorldCollection:level_transition_cleanup()
 	MassUnitManager:delete_all_units()
 	managers.objectives:on_level_transition()
 	managers.trade:remove_all_criminals_to_respawn()
+	managers.warcry:deactivate_warcry(true)
 	managers.hud:clear_hit_direction_indicators()
 	managers.hud:clear_suspicion_direction_indicators()
 	managers.hud:clear_waypoints()
@@ -1410,17 +1333,13 @@ function CoreWorldCollection:level_transition_cleanup()
 	managers.music:stop()
 	managers.groupai:kill_all_AI()
 	managers.queued_tasks:queue(nil, managers.groupai:state().clean_up, managers.groupai:state(), nil, 0.1, nil, true)
-	managers.game_play_central:on_level_tranistion()
+	managers.game_play_central:on_level_transition()
 	managers.portal:clear()
 	managers.drop_loot:clear()
 end
 
 function CoreWorldCollection:level_transition_started()
-	Application:trace("[CoreWorldCollection:world_transition_started()]", self._first_pass, self.world_counter)
-
-	if managers.network.voice_chat then
-		managers.network.voice_chat:soft_disable()
-	end
+	Application:trace("[CoreWorldCollection:world_transition_started()]", self._first_pass, self._wait_for_worlds_count)
 
 	self.level_transition_in_progress = true
 	managers.network:session():local_peer().loading_worlds = true
@@ -1447,7 +1366,7 @@ function CoreWorldCollection:level_transition_started()
 	managers.enemy:dispose_all_corpses()
 	managers.enemy:unqueue_all_tasks()
 	managers.enemy:remove_delayed_clbks()
-	managers.enemy:on_level_tranistion()
+	managers.enemy:on_level_transition()
 	managers.sequence:on_level_transition()
 	managers.hud:clean_up()
 	managers.barrage:stop_barrages()
@@ -1470,10 +1389,7 @@ function CoreWorldCollection:level_transition_started()
 
 	managers.player:set_player_state("standard")
 
-	if false then
-		Application:trace("[CoreWorldCollection:level_transition_started()] event_complete_screen")
-		game_state_machine:change_state_by_name("event_complete_screen")
-	elseif game_state_machine:current_state_name() ~= "ingame_loading" then
+	if game_state_machine:current_state_name() ~= "ingame_loading" then
 		game_state_machine:change_state_by_name("ingame_loading")
 	end
 
@@ -1591,7 +1507,7 @@ function CoreWorldCollection:on_server_left()
 	Application:trace("CoreWorldCollection:on_server_left()")
 	self:destroy_all_worlds()
 
-	self._skip_one_loading_frame = true
+	self._skip_loading_counter = CoreWorldCollection.SKIP_LOADING_TICKS
 end
 
 function CoreWorldCollection:destroy_all_worlds()

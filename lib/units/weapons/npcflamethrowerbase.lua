@@ -7,7 +7,6 @@ function NPCFlamethrowerBase:init(...)
 	self._bullet_class = FlameBulletBase
 	self._use_shell_ejection_effect = false
 	self._use_trails = false
-	self._already_detonated = false
 end
 
 function NPCFlamethrowerBase:ejects_shells()

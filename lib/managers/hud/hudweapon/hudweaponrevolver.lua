@@ -43,6 +43,8 @@ function HUDWeaponRevolver:_create_clip_left_info(weapons_panel)
 	for i = 1, self._max_clip do
 		local dx, dy = self:_orbit_math(self._offset_from_center, single_bullet_angle * i + self._initial_rotation + single_bullet_angle / 2)
 		local bullet = self._rotation_panel:bitmap({
+			h = 8,
+			w = 8,
 			name = "bullet" .. i,
 			texture = gui_bullet.texture,
 			texture_rect = gui_bullet.texture_rect,
@@ -163,13 +165,16 @@ function HUDWeaponRevolver:_animate_rotation_panel_items(clockwise)
 end
 
 function HUDWeaponRevolver:_animate_alpha(root_panel, new_alpha)
+	local cowboy = math.random(100) <= 1 and new_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED
 	local start_alpha = new_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED and HUDWeaponBase.ALPHA_WHEN_UNSELECTED or HUDWeaponBase.ALPHA_WHEN_SELECTED
 	local start_ammo_left_alpha = start_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED and HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_SELECTED or HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_UNSELECTED
 	local new_ammo_left_alpha = start_ammo_left_alpha == HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_SELECTED and HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_UNSELECTED or HUDWeaponGeneric.AMMO_LEFT_ALPHA_WHEN_SELECTED
-	local duration = 0.8
-	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * duration / 4
-	local cowboy = math.random(360) <= 1 and new_alpha == HUDWeaponBase.ALPHA_WHEN_SELECTED
-	local cx, cy = self._icon:center()
+	local duration = cowboy and 0.45 or 0.2
+	local t = (self._icon:alpha() - start_alpha) / (new_alpha - start_alpha) * duration
+	local cx, cy = self._icon_panel:center()
+
+	self._icon:set_center_x(cx)
+	self._icon:set_center_y(cy)
 
 	while t < duration do
 		local dt = coroutine.yield()
@@ -180,11 +185,11 @@ function HUDWeaponRevolver:_animate_alpha(root_panel, new_alpha)
 
 		if cowboy then
 			local aaa = t / duration
-			local dx, dy = self:_orbit_math(20, math.lerp(0, 360, aaa))
+			local dx, dy = self:_orbit_math(16, math.lerp(0, 360, aaa))
 
-			self._icon:set_center_x(cx + dx)
+			self._icon:set_center_x(cx + dx + 8)
 			self._icon:set_center_y(cy + dy)
-			self._icon:set_rotation(math.lerp(0, -1080, aaa))
+			self._icon:set_rotation(math.lerp(0, -720, aaa))
 		end
 
 		self._firemode_single:set_alpha(current_alpha)

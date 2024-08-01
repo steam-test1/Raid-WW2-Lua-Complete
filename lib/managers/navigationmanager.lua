@@ -76,7 +76,7 @@ NavigationManager._sector_grid_size = 500
 function NavigationManager:init()
 	Application:trace("[NavigationManager][init]")
 
-	self._debug = _G.IS_PC and Application:production_build()
+	self._debug = IS_PC and Application:production_build()
 	self._builder = NavFieldBuilder:new()
 	self._get_room_height_at_pos = self._builder._get_room_height_at_pos
 	self._check_room_overlap_bool = self._builder._check_room_overlap_bool
@@ -895,16 +895,6 @@ function NavigationManager:find_random_position_in_segment(seg_id)
 	return self._quad_field:random_position_in_nav_segment(seg_id)
 end
 
-function NavigationManager:get_random_point_on_graph()
-	if #nav_seg_keys < 1 then
-		for key, value in pairs(self._nav_segments) do
-			nav_seg_keys[#nav_seg_keys + 1] = key
-		end
-	end
-
-	return self:find_random_position_in_segment(nav_seg_keys[math.random(#nav_seg_keys)])
-end
-
 function NavigationManager:register_cover_units(world_id)
 	Application:debug("[NavigationManager:register_cover_units] World:", world_id)
 
@@ -912,8 +902,9 @@ function NavigationManager:register_cover_units(world_id)
 		return
 	end
 
-	local rooms = self._rooms
 	self._covers = self._covers or {}
+	local is_stream_world = not world_id or world_id == 0
+	local rooms = self._rooms
 	local world_definition = managers.worldcollection:worlddefinition_by_id(world_id or 0)
 	local cover_data = world_definition:get_cover_data()
 	local t_ins = table.insert
@@ -955,7 +946,7 @@ function NavigationManager:register_cover_units(world_id)
 				_register_cover(cover_desc[1], mvector3.copy(temp_vec1))
 			end
 		end
-	elseif not world_id or world_id == 0 then
+	elseif is_stream_world then
 		local all_cover_units = World:find_units_quick("all", managers.slot:get_mask("cover"))
 
 		for i, unit in ipairs(all_cover_units) do
@@ -999,8 +990,7 @@ function NavigationManager:_unregister_cover_units()
 		if alive(cover[NavigationManager.COVER_TRACKER]) then
 			self._quad_field:destroy_nav_tracker(cover[NavigationManager.COVER_TRACKER])
 		else
-			Application:error("Cover tracker is not alive!", i_cover)
-			print(inspect(cover))
+			Application:error("[NavigationManager:_unregister_cover_units] Cover tracker is not alive!", i_cover, inspect(cover))
 		end
 	end
 
@@ -1176,6 +1166,16 @@ function NavigationManager:release_cover(cover)
 	end
 end
 
+function NavigationManager:find_cover_nearest_pos(near_pos, max_near_dis)
+	local search_params = {
+		variation_z = 250,
+		near_pos = near_pos,
+		max_distance = max_near_dis
+	}
+
+	return self._quad_field:find_cover(search_params)
+end
+
 function NavigationManager:find_cover_near_pos_1(near_pos, threat_pos, max_near_dis, min_threat_dis, allow_fwd)
 	local search_params = {
 		variation_z = 250,
@@ -1203,16 +1203,6 @@ function NavigationManager:find_cover_away_from_pos(near_pos, threat_pos, nav_se
 	}
 
 	return self._quad_field:find_cover(search_params)
-end
-
-function NavigationManager._convert_nav_seg_map_to_vec(nav_seg_map)
-	local nav_seg_vec = {}
-
-	for nav_seg, _ in pairs(nav_seg_map) do
-		table.insert(nav_seg_vec, nav_seg)
-	end
-
-	return nav_seg_vec
 end
 
 function NavigationManager:find_cover_in_nav_seg_1(nav_seg_id)
@@ -1285,6 +1275,16 @@ function NavigationManager:find_cover_from_threat(nav_seg_id, optimal_threat_dis
 	}
 
 	return self._quad_field:find_cover(search_params)
+end
+
+function NavigationManager._convert_nav_seg_map_to_vec(nav_seg_map)
+	local nav_seg_vec = {}
+
+	for nav_seg, _ in pairs(nav_seg_map) do
+		table.insert(nav_seg_vec, nav_seg)
+	end
+
+	return nav_seg_vec
 end
 
 function NavigationManager:find_cover_in_cone_from_threat_pos(threat_pos, cone_base, near_pos, cone_angle, nav_seg, rsrv_filter)
@@ -2166,7 +2166,7 @@ function NavigationManager:get_nav_seg_metadata(nav_seg_id)
 end
 
 function NavigationManager:get_world_for_nav_seg(nav_seg_id)
-	return self._nav_segments[nav_seg_id].world_id
+	return self._nav_segments[nav_seg_id] and self._nav_segments[nav_seg_id].world_id
 end
 
 function NavigationManager:get_nav_seg_for_world(world_id)
@@ -2219,16 +2219,6 @@ function NavigationManager:_set_nav_seg_metadata(nav_seg_id, param_name, param_v
 end
 
 function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name, world_id)
-	if self._debug then
-		for i, obs_data in ipairs(self._obstacles) do
-			if obstacle_unit == obs_data.unit and obstacle_obj_name == obs_data.obstacle_obj_name then
-				debug_pause_unit(obstacle_unit, "[NavigationManager:add_obstacle] obstacle added twice", obstacle_unit, obstacle_obj_name)
-
-				return
-			end
-		end
-	end
-
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 	local id = self._quad_field:add_obstacle(obstacle_obj)
 
@@ -2286,7 +2276,7 @@ function NavigationManager:_remove_obstacles_for_world(world_id)
 end
 
 function NavigationManager:clbk_navfield(event_name, args, args2, args3)
-	print("[NavigationManager:clbk_navfield]", event_name, inspect(args[1]), inspect(args2), inspect(args3))
+	Application:debug("[NavigationManager:clbk_navfield]", event_name, inspect(args[1]), inspect(args2), inspect(args3))
 
 	if event_name == "add_nav_seg_neighbours" then
 		for nav_seg_id, add_neighbours in pairs(args) do

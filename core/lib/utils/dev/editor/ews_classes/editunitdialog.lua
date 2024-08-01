@@ -3,8 +3,11 @@ core:import("CoreEditorUtils")
 EditUnitDialog = EditUnitDialog or class(CoreEditorEwsDialog)
 
 function EditUnitDialog:init(toolbar, btn)
-	CoreEditorEwsDialog.init(self, nil, "Edit Unit", "", Vector3(300, 150, 0), Vector3(360, 338, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX")
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX")
+
+	CoreEditorEwsDialog.init(self, nil, "Edit Unit", "", Vector3(300, 150, 0), Vector3(620, 410, 0), styles)
 	self:create_panel("VERTICAL")
+	self._dialog:set_min_size(Vector3(620, 410, 0))
 	self._dialog:connect("EVT_CLOSE_WINDOW", callback(self, self, "dialog_closed"), "")
 	self._dialog:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
@@ -13,7 +16,7 @@ function EditUnitDialog:init(toolbar, btn)
 
 	self._notebook:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	self._panel_sizer:add(self._notebook, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 end
 
 function EditUnitDialog:add_page(data)
@@ -49,6 +52,25 @@ function EditUnitDialog:set_enabled(unit, units)
 			self._notebook:set_page_text(page.nr, page.panel:enabled() and page.name .. "*" or page.name)
 		end
 	end
+
+	local title = "Edit Unit"
+
+	if units and #units > 1 then
+		title = "Edit Unit: " .. #units .. " selected units"
+	elseif alive(unit) then
+		local unit_name = self:_stripped_unit_name(unit:name():s())
+		title = "Edit Unit: " .. unit_name
+	end
+
+	self._dialog:set_title(title)
+end
+
+function EditUnitDialog:_stripped_unit_name(name)
+	local reverse = string.reverse(name)
+	local i = string.find(reverse, "/")
+	name = string.reverse(string.sub(reverse, 0, i - 1))
+
+	return name
 end
 
 function EditUnitDialog:update(t, dt)

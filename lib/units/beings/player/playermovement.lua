@@ -13,8 +13,26 @@ require("lib/units/beings/player/states/PlayerParachuting")
 require("lib/units/beings/player/states/PlayerFreefall")
 require("lib/units/beings/player/states/PlayerTurret")
 require("lib/units/beings/player/states/PlayerFoxhole")
+require("lib/units/beings/player/states/PlayerCharging")
 
 PlayerMovement = PlayerMovement or class()
+PlayerMovement._STATES = {
+	empty = PlayerEmpty,
+	standard = PlayerStandard,
+	bleed_out = PlayerBleedOut,
+	fatal = PlayerFatal,
+	tased = PlayerTased,
+	incapacitated = PlayerIncapacitated,
+	carry = PlayerCarry,
+	carry_corpse = PlayerCarryCorpse,
+	bipod = PlayerBipod,
+	driving = PlayerDriving,
+	parachuting = PlayerParachuting,
+	freefall = PlayerFreefall,
+	turret = PlayerTurret,
+	foxhole = PlayerFoxhole,
+	charging = PlayerCharging
+}
 PlayerMovement.OUT_OF_WORLD_Z = -4000
 
 function PlayerMovement:init(unit)
@@ -69,7 +87,7 @@ function PlayerMovement:init(unit)
 			morale_boost_delay_t = managers.player:has_category_upgrade("player", "morale_boost") and 0 or nil,
 			long_dis_revive = managers.player:has_category_upgrade("player", "long_dis_revive"),
 			revive_chance = managers.player:upgrade_value("player", "long_dis_revive", 0),
-			morale_boost_cooldown_t = tweak_data.upgrades.morale_boost_base_cooldown * managers.player:upgrade_value("player", "morale_boost_cooldown_multiplier", 1)
+			morale_boost_cooldown_t = tweak_data.upgrades.morale_boost_base_cooldown
 		}
 	end
 
@@ -89,8 +107,8 @@ function PlayerMovement:post_init()
 		"add",
 		"equip"
 	}, callback(self, self, "inventory_clbk_listener"))
-	self:_setup_states()
 
+	self._states = {}
 	self._attention_handler = CharacterAttentionObject:new(self._unit, true)
 	self._enemy_weapons_hot_listen_id = "PlayerMovement" .. tostring(self._unit:key())
 
@@ -125,87 +143,25 @@ function PlayerMovement:warp_to(pos, rot)
 	self._unit:network():send("sync_warp_position", pos, rot)
 end
 
-function PlayerMovement:_setup_states()
-	local unit = self._unit
-	self._states = {
-		empty = PlayerEmpty:new(unit),
-		standard = PlayerStandard:new(unit),
-		bleed_out = PlayerBleedOut:new(unit),
-		fatal = PlayerFatal:new(unit),
-		tased = PlayerTased:new(unit),
-		incapacitated = PlayerIncapacitated:new(unit),
-		carry = PlayerCarry:new(unit),
-		carry_corpse = PlayerCarryCorpse:new(unit),
-		bipod = PlayerBipod:new(unit),
-		driving = PlayerDriving:new(unit),
-		parachuting = PlayerParachuting:new(unit),
-		freefall = PlayerFreefall:new(unit),
-		turret = PlayerTurret:new(unit),
-		foxhole = PlayerFoxhole:new(unit)
-	}
+function PlayerMovement:_setup_state(name)
+	if not PlayerMovement._STATES[name] then
+		return
+	end
+
+	local new_state = self._states[name] or PlayerMovement._STATES[name]:new(self._unit)
+	self._states[name] = new_state
+
+	return new_state
 end
 
 function PlayerMovement:set_character_anim_variables()
-	local char_name = managers.criminals:character_name_by_unit(self._unit)
-	local mesh_names = nil
-	local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
-	local unit_suit = lvl_tweak_data and lvl_tweak_data.unit_suit or "suit"
-
-	if not lvl_tweak_data then
-		mesh_names = {
-			british = "",
-			russian = "",
-			german = "",
-			american = ""
-		}
-	elseif unit_suit == "cat_suit" then
-		mesh_names = {
-			british = "_chains",
-			russian = "",
-			german = "",
-			american = ""
-		}
-	elseif managers.player._player_mesh_suffix == "_scrubs" then
-		mesh_names = {
-			british = "_chains",
-			russian = "",
-			german = "",
-			american = ""
-		}
-	else
-		mesh_names = {
-			british = "_chains",
-			russian = "_dallas",
-			german = "",
-			american = "_hoxton"
-		}
-	end
-
-	local mesh_name = Idstring("g_fps_hand" .. (mesh_names[char_name] or "") .. managers.player._player_mesh_suffix)
-	local mesh_obj = self._unit:camera():camera_unit():get_object(mesh_name)
-
-	if mesh_obj then
-		if self._plr_mesh_name then
-			local old_mesh_obj = self._unit:camera():camera_unit():get_object(self._plr_mesh_name)
-
-			if old_mesh_obj then
-				old_mesh_obj:set_visibility(false)
-			end
-		end
-
-		self._plr_mesh_name = mesh_name
-
-		mesh_obj:set_visibility(true)
-	end
-
 	local camera_unit = self._unit:camera():camera_unit()
 
 	if camera_unit:damage() then
+		local char_name = managers.criminals:character_name_by_unit(self._unit)
 		local sequence = managers.blackmarket:character_sequence_by_character_name(char_name)
 
-		if camera_unit:damage():has_sequence(sequence) then
-			camera_unit:damage():run_sequence_simple(sequence)
-		end
+		camera_unit:damage():has_then_run_sequence_simple(sequence)
 	end
 end
 
@@ -220,7 +176,12 @@ function PlayerMovement:change_state(name)
 		exit_data = self._current_state:exit(self._state_data, name)
 	end
 
-	local new_state = self._states[name]
+	local new_state = self._states[name] or self:_setup_state(name)
+
+	if not new_state then
+		return
+	end
+
 	self._current_state = new_state
 	self._current_state_name = name
 	self._state_enter_t = managers.player:player_timer():time()
@@ -282,15 +243,21 @@ function PlayerMovement:update_stamina(t, dt, ignore_running)
 	self._last_stamina_regen_t = t
 
 	if not ignore_running and self._is_running then
-		local stamina_drain_multi = 1
+		local drain_multiplier = 1
 
-		if self._current_state_name == "carry" or self._current_state_name == "carry_corpse" then
+		if managers.player:is_carrying() then
+			local ratio = nil
 			local carry_data = managers.player:get_my_carry_data()
-			local carry_tweak = tweak_data.carry[carry_data.carry_id]
-			stamina_drain_multi = tweak_data.carry.types[carry_tweak.type].stamina_consume_multi or 1
+			local carry_item = carry_data[1]
+			local carry_type = tweak_data.carry[carry_item.carry_id].type
+			ratio = (managers.player:has_category_upgrade("player", "bellhop_weight_penalty_removal_throwables") and managers.player:equipped_weapon_index() == tweak_data.WEAPON_SLOT_THROWABLE or managers.player:has_category_upgrade("player", "bellhop_weight_penalty_removal_melees") and managers.player:equipped_weapon_index() == tweak_data.WEAPON_SLOT_MELEE) and 0 or managers.player:get_my_carry_weight_ratio()
+			drain_multiplier = tweak_data.carry:get_type_value_weighted(carry_type, "stamina_consume_multi", ratio) - 1
+			local multiplier = managers.player:upgrade_value("player", "bellhop_carry_stamina_consume_slower", 1)
+			multiplier = multiplier * managers.player:upgrade_value("carry", "dac_stamina_consumption_reduction", 1)
+			drain_multiplier = drain_multiplier * multiplier + 1
 		end
 
-		self:subtract_stamina(dt * self._class_tweak_data.movement.stamina.BASE_STAMINA_DRAIN_RATE * stamina_drain_multi)
+		self:subtract_stamina(dt * self._class_tweak_data.movement.stamina.BASE_STAMINA_DRAIN_RATE * drain_multiplier)
 	elseif self._regenerate_timer then
 		self._regenerate_timer = self._regenerate_timer - dt
 
@@ -299,6 +266,12 @@ function PlayerMovement:update_stamina(t, dt, ignore_running)
 
 			if self:_max_stamina() <= self._stamina then
 				self._regenerate_timer = nil
+
+				if self._exhausted then
+					self._exhausted = nil
+
+					managers.hud:set_stamina_value(self._stamina)
+				end
 			end
 		end
 	end
@@ -355,7 +328,7 @@ function PlayerMovement:get_object(object_name)
 end
 
 function PlayerMovement:downed()
-	return self._current_state_name == "bleed_out" or self._current_state_name == "fatal" or self._current_state_name == "arrested" or self._current_state_name == "incapacitated"
+	return self._current_state_name == "bleed_out" or self._current_state_name == "fatal" or self._current_state_name == "incapacitated"
 end
 
 function PlayerMovement:current_state()
@@ -396,10 +369,6 @@ function PlayerMovement:chk_action_forbidden(action_type)
 	return self._current_state.chk_action_forbidden and self._current_state:chk_action_forbidden(action_type)
 end
 
-function PlayerMovement:get_melee_damage_result(...)
-	return self._current_state.get_melee_damage_result and self._current_state:get_melee_damage_result(...)
-end
-
 function PlayerMovement:linked(state, physical, parent_unit)
 	if state then
 		self._link_data = {
@@ -421,18 +390,6 @@ end
 
 function PlayerMovement:is_physically_linked()
 	return self._link_data and self._link_data.physical
-end
-
-function PlayerMovement:on_cuffed()
-	if self._unit:character_damage()._god_mode then
-		return
-	end
-
-	if self._current_state_name == "standard" or self._current_state_name == "bipod" or self._current_state_name == "bleed_out" or self._current_state_name == "carry" or _current_state_name._state == "carry_corpse" or self._current_state_name == "turret" then
-		managers.player:set_player_state("arrested")
-	else
-		debug_pause("[PlayerMovement:on_cuffed] transition failed", self._current_state_name)
-	end
 end
 
 function PlayerMovement:on_uncovered(enemy_unit)
@@ -494,18 +451,6 @@ end
 
 function PlayerMovement:_apply_attention_setting_modifications(setting)
 	setting.detection = self._unit:base():detection_settings()
-
-	if managers.player:has_category_upgrade("player", "camouflage_bonus") then
-		setting.weight_mul = (setting.weight_mul or 1) * managers.player:upgrade_value("player", "camouflage_bonus", 1)
-	end
-
-	if managers.player:has_category_upgrade("player", "camouflage_multiplier") then
-		setting.weight_mul = (setting.weight_mul or 1) * managers.player:upgrade_value("player", "camouflage_multiplier", 1)
-	end
-
-	if managers.player:has_category_upgrade("player", "uncover_multiplier") then
-		setting.weight_mul = (setting.weight_mul or 1) * managers.player:upgrade_value("player", "uncover_multiplier", 1)
-	end
 end
 
 function PlayerMovement:set_attention_settings(settings_list)
@@ -713,18 +658,6 @@ function PlayerMovement:inventory_clbk_listener(unit, event)
 
 	if self._current_state and self._current_state.inventory_clbk_listener then
 		self._current_state:inventory_clbk_listener(unit, event)
-	end
-end
-
-function PlayerMovement:chk_play_mask_on_slow_mo(state_data)
-	if not state_data.uncovered and managers.enemy:chk_any_unit_in_slotmask_visible(managers.slot:get_mask("enemies"), self._unit:camera():position(), self._nav_trakcer) then
-		local effect_id_world = "world_MaskOn_Peer" .. tostring(managers.network:session():local_peer():id())
-
-		managers.time_speed:play_effect(effect_id_world, tweak_data.timespeed.mask_on)
-
-		local effect_id_player = "player_MaskOn_Peer" .. tostring(managers.network:session():local_peer():id())
-
-		managers.time_speed:play_effect(effect_id_player, tweak_data.timespeed.mask_on_player)
 	end
 end
 
@@ -955,7 +888,10 @@ function PlayerMovement:destroy(unit)
 		self._link_data.parent:base():remove_destroy_listener("PlayerMovement" .. tostring(self._unit:key()))
 	end
 
-	self._current_state:destroy(unit)
+	if self._current_state then
+		self._current_state:destroy(unit)
+	end
+
 	managers.hud:set_suspicion(false)
 	SoundDevice:set_rtpc("suspicion", 0)
 	SoundDevice:set_rtpc("stamina", 100)
@@ -972,14 +908,6 @@ function PlayerMovement:set_player_class(class)
 	end
 end
 
-function PlayerMovement:_max_stamina()
-	local max_stamina = self:get_base_stamina() * managers.player:stamina_multiplier()
-
-	managers.hud:set_max_stamina(max_stamina)
-
-	return max_stamina
-end
-
 function PlayerMovement:_change_stamina(value)
 	local max_stamina = self:_max_stamina()
 	local stamina_maxed = self._stamina == max_stamina
@@ -993,10 +921,19 @@ function PlayerMovement:_change_stamina(value)
 		self._unit:sound():play("fatigue_breath_stop")
 	end
 
-	local stamina_to_threshold = max_stamina - self._class_tweak_data.movement.stamina.MIN_STAMINA_THRESHOLD
-	local stamina_breath = math.clamp((self._stamina - self._class_tweak_data.movement.stamina.MIN_STAMINA_THRESHOLD) / stamina_to_threshold, 0, 1) * 100
+	local stamina_threshold = self._exhausted and max_stamina or self:get_stamina_threshold()
+	local stamina_to_threshold = max_stamina - stamina_threshold
+	local stamina_breath = math.clamp((self._stamina - stamina_threshold) / stamina_to_threshold, 0, 1) * 100
 
 	SoundDevice:set_rtpc("stamina", stamina_breath)
+end
+
+function PlayerMovement:_max_stamina()
+	local max_stamina = self:get_base_stamina() * managers.player:stamina_multiplier()
+
+	managers.hud:set_max_stamina(max_stamina)
+
+	return max_stamina
 end
 
 function PlayerMovement:get_base_stamina()
@@ -1004,7 +941,15 @@ function PlayerMovement:get_base_stamina()
 end
 
 function PlayerMovement:get_jump_stamina_drain()
-	return self._class_tweak_data.movement.stamina.JUMP_STAMINA_DRAIN
+	local multiplier = managers.player:upgrade_value("player", "dac_jump_stamina_drain_reduction", 1)
+
+	return self._class_tweak_data.movement.stamina.JUMP_STAMINA_DRAIN * multiplier
+end
+
+function PlayerMovement:get_stamina_threshold()
+	local multiplier = managers.player:upgrade_value("player", "fitness_stamina_threshold_decrease", 1)
+
+	return self._class_tweak_data.movement.stamina.MIN_STAMINA_THRESHOLD * multiplier
 end
 
 function PlayerMovement:get_stamina()
@@ -1012,15 +957,17 @@ function PlayerMovement:get_stamina()
 end
 
 function PlayerMovement:subtract_stamina(value)
-	self:_change_stamina(-math.abs(value * managers.player:upgrade_value("player", "stamina_decay_decrease", 1)))
+	self:_change_stamina(-math.abs(value))
 end
 
 function PlayerMovement:add_stamina(value)
-	self:_change_stamina(math.abs(value) * managers.player:upgrade_value("player", "stamina_regeneration_increase", 1))
+	local multiplier = managers.player:stamina_regen_multiplier(self._state_data.ducking, self._state_data.in_steelsight)
+
+	self:_change_stamina(math.abs(value) * multiplier)
 end
 
 function PlayerMovement:is_above_stamina_threshold()
-	return self._class_tweak_data.movement.stamina.MIN_STAMINA_THRESHOLD < self._stamina
+	return not self._exhausted and self:get_stamina_threshold() < self._stamina
 end
 
 function PlayerMovement:is_stamina_drained()
@@ -1029,7 +976,21 @@ end
 
 function PlayerMovement:set_running(running)
 	self._is_running = running
-	self._regenerate_timer = (self._class_tweak_data.movement.stamina.STAMINA_REGENERATION_DELAY or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
+
+	self:_reset_stamina_regeneration()
+end
+
+function PlayerMovement:reset_stamina_regeneration(instant)
+	if instant then
+		self._regenerate_timer = 0
+	else
+		self:_reset_stamina_regeneration()
+	end
+end
+
+function PlayerMovement:_reset_stamina_regeneration()
+	local multiplier = managers.player:stamina_regen_delay_multiplier()
+	self._regenerate_timer = (self._class_tweak_data.movement.stamina.STAMINA_REGENERATION_DELAY or 5) * multiplier
 end
 
 function PlayerMovement:running()
@@ -1046,6 +1007,21 @@ end
 
 function PlayerMovement:on_ladder()
 	return self._state_data.on_ladder
+end
+
+function PlayerMovement:in_steelsight()
+	return self._state_data.in_steelsight
+end
+
+function PlayerMovement:apply_exhaustion(stamina_change)
+	self._exhausted = true
+
+	self:subtract_stamina(stamina_change)
+	self:_reset_stamina_regeneration()
+end
+
+function PlayerMovement:exhausted()
+	return self._exhausted
 end
 
 function PlayerMovement:on_enter_ladder(ladder_unit)

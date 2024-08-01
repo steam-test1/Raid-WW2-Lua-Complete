@@ -1028,6 +1028,9 @@ function Layer:set_drag_select()
 	end
 
 	self._drag_select = true
+
+	self:remove_polyline()
+
 	self._polyline = managers.editor._gui:polyline({
 		color = Color(0.5, 1, 1, 1)
 	})
@@ -1669,34 +1672,57 @@ function Layer:_add_project_unit_save_data(unit, data)
 end
 
 function Layer:selected_amount_string()
-	return "Selected " .. self._save_name .. ": " .. #self._selected_units
+	local str = "Selected " .. self._save_name .. ": " .. #self._selected_units
+	local i = 0
+
+	while true do
+		i = i + 1
+
+		if self._selected_units[i] then
+			str = str .. "\n    " .. tostring(self._selected_units[i]:unit_data().name_id)
+		else
+			break
+		end
+
+		if i == 16 then
+			str = str .. "\n    +MORE..."
+
+			break
+		end
+	end
+
+	return str
 end
 
 local idstring_wpn = Idstring("wpn")
 
 function Layer:save()
 	for _, unit in ipairs(self._created_units) do
-		local unit_data = unit:unit_data()
+		if alive(unit) then
+			local unit_data = unit:unit_data()
 
-		if not unit_data.instance then
-			local t = {
-				entry = self._save_name,
-				continent = unit_data.continent and unit_data.continent:name(),
-				data = {
-					unit_data = CoreEditorSave.save_data_table(unit)
+			if not unit_data.instance then
+				local t = {
+					entry = self._save_name,
+					continent = unit_data.continent and unit_data.continent:name(),
+					data = {
+						unit_data = CoreEditorSave.save_data_table(unit)
+					}
 				}
-			}
 
-			self:_add_project_unit_save_data(unit, t.data)
-			managers.editor:add_save_data(t)
+				self:_add_project_unit_save_data(unit, t.data)
+				managers.editor:add_save_data(t)
 
-			if unit:type() ~= idstring_wpn then
-				managers.editor:add_to_world_package({
-					category = "units",
-					name = unit:name():s(),
-					continent = unit_data.continent
-				})
+				if unit:type() ~= idstring_wpn then
+					managers.editor:add_to_world_package({
+						category = "units",
+						name = unit:name():s(),
+						continent = unit_data.continent
+					})
+				end
 			end
+		else
+			Application:error("[Layer:save] This isnt good. Tried to save a dead unit.", unit)
 		end
 	end
 end

@@ -411,7 +411,7 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 		self._hit_back = math.max(self._hit_back - hit_fade, 0)
 	end
 
-	local downed_value = self._downed_value / 100 * 0.5
+	local downed_value = self._downed_value / 100
 
 	if self._custom_dof_settings then
 		self._material:set_variable(ids_dof_settings, self._custom_dof_settings)
@@ -485,12 +485,12 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 end
 
 function CoreEnvironmentControllerManager:_update_post_process_effects()
-	self:set_volumetric_light_scatter_setting(managers.user:get_setting("vls_setting"))
-	self:set_motion_blur_setting(managers.user:get_setting("motion_blur_setting"))
-	self:set_ssao_setting(managers.user:get_setting("ssao_setting"))
-	self:set_AA_setting(managers.user:get_setting("AA_setting"))
-	self:set_colorblind_mode(managers.user:get_setting("colorblind_setting"))
-	self:set_parallax_setting(managers.user:get_setting("use_parallax"))
+	self:set_volumetric_light_scatter_setting(managers.user and managers.user:get_setting("vls_setting") or 0)
+	self:set_motion_blur_setting(managers.user and managers.user:get_setting("motion_blur_setting") or 0)
+	self:set_ssao_setting(managers.user and managers.user:get_setting("ssao_setting") or 0)
+	self:set_AA_setting(managers.user and managers.user:get_setting("AA_setting") or false)
+	self:set_colorblind_mode(managers.user and managers.user:get_setting("colorblind_setting") or "off")
+	self:set_parallax_setting(managers.user and managers.user:get_setting("use_parallax") or true)
 	self._vp:vp():set_post_processor_effect("World", Idstring("color_grading_post"), Idstring("colorgrade"))
 	managers.viewport:first_active_viewport():set_force_feeder_update()
 end
@@ -562,7 +562,9 @@ function CoreEnvironmentControllerManager:set_colorblind_mode(setting)
 		cb_correction:set_visibility(setting ~= "off")
 	end
 
-	World:set_colorblind_mode(Idstring(setting))
+	if type(setting) == "string" then
+		World:set_colorblind_mode(Idstring(setting))
+	end
 end
 
 function CoreEnvironmentControllerManager:set_ssao_setting(setting)
@@ -865,10 +867,10 @@ function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 		local shadow = deferred_processor:modifier(Idstring("move_global_occ"))
 
 		if shadow then
-			local dome_occ_feed_ps3 = shadow:material()
+			local dome_occ_feed_global = shadow:material()
 
-			if dome_occ_feed_ps3 then
-				Application:set_material_texture(dome_occ_feed_ps3, Idstring("filter_color_texture"), Idstring(self._occ_texture), Idstring("normal"), 0)
+			if dome_occ_feed_global then
+				Application:set_material_texture(dome_occ_feed_global, Idstring("filter_color_texture"), Idstring(self._occ_texture), Idstring("normal"), 0)
 			end
 		end
 	end

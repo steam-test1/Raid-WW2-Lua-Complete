@@ -45,10 +45,6 @@ function CriminalsManager:player_droped_out(params)
 	managers.global_state:fire_event("system_player_disconnected")
 end
 
-function CriminalsManager.convert_old_to_new_character_workname(workname)
-	return workname
-end
-
 function CriminalsManager.character_names()
 	return tweak_data.criminals.character_names
 end
@@ -512,8 +508,6 @@ function CriminalsManager:on_peer_left(peer_id)
 			if counter_name then
 				if counter_name == "downed" then
 					char_dmg:unpause_downed_timer(peer_id)
-				elseif counter_name == "arrested" then
-					char_dmg:unpause_arrested_timer(peer_id)
 				elseif counter_name == "bleed_out" then
 					char_dmg:unpause_bleed_out(peer_id)
 				else
@@ -645,6 +639,18 @@ function CriminalsManager:taken_criminal_names()
 
 	for i, char_data in pairs(self._characters) do
 		if char_data.taken then
+			table.insert(result, char_data.name)
+		end
+	end
+
+	return result
+end
+
+function CriminalsManager:alive_criminal_names()
+	local result = {}
+
+	for i, char_data in pairs(self._characters) do
+		if char_data.taken and alive(char_data.unit) and char_data.unit:id() ~= -1 then
 			table.insert(result, char_data.name)
 		end
 	end

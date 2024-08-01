@@ -36,7 +36,7 @@ function GameStateMachine:init()
 	Global.game_state_machine.is_boot_from_sign_out = false
 	local setup_boot = not self._is_boot_intro_done and not Application:editor()
 	local setup_title = (setup_boot or self._is_boot_from_sign_out) and not Application:editor()
-	local states = {}
+	self._controller_enabled_count = 1
 	local empty = GameState:new("empty", self)
 	local editor = EditorState:new(self)
 	local world_camera = WorldCameraState:new(self)
@@ -77,7 +77,6 @@ function GameStateMachine:init()
 	local ingame_loading_func = callback(nil, ingame_loading, "default_transition")
 	local ingame_menu_func = callback(nil, ingame_menu, "default_transition")
 	local event_complete_screen_func = callback(nil, event_complete_screen, "default_transition")
-	self._controller_enabled_count = 1
 
 	CoreGameStateMachine.GameStateMachine.init(self, empty)
 	self:add_transition(editor, empty, editor_func)
@@ -308,12 +307,7 @@ end
 function GameStateMachine:_set_controller_enabled(enabled)
 	local was_enabled = self:is_controller_enabled()
 	local old_controller_enabled_count = self._controller_enabled_count
-
-	if enabled then
-		self._controller_enabled_count = self._controller_enabled_count + 1
-	else
-		self._controller_enabled_count = self._controller_enabled_count - 1
-	end
+	self._controller_enabled_count = self._controller_enabled_count + (enabled and 1 or -1)
 
 	if not was_enabled ~= not self:is_controller_enabled() then
 		local state = self:current_state()

@@ -30,7 +30,11 @@ function ElementPlayerState:on_executed(instigator)
 
 	if (not self._values.use_instigator or instigator == player_unit) and (not requires_alive_player or alive(player_unit)) then
 		if self._values.state ~= "none" then
-			managers.player:set_player_state(state)
+			if self._values.state == "dead" and alive(player_unit) then
+				managers.player:kill()
+			else
+				managers.player:set_player_state(state)
+			end
 		elseif Application:editor() then
 			managers.editor:output_error("Cant change to player state " .. state .. " in element " .. self._editor_name .. ".")
 		end

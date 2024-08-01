@@ -1,6 +1,8 @@
 core:import("CoreMenuInput")
 
 MenuInput = MenuInput or class(CoreMenuInput.MenuInput)
+MenuInput.AXIS_TIMER_A = 0.12
+MenuInput.AXIS_TIMER_B = 0.3
 MenuInput.special_buttons = {
 	"menu_controller_face_right",
 	"menu_controller_face_left",
@@ -20,7 +22,6 @@ function MenuInput:init(logic, ...)
 	MenuInput.super.init(self, logic, ...)
 
 	self._move_axis_limit = 0.5
-	self._sound_source = SoundDevice:create_source("MenuInput")
 	self._controller_mouse_active_counter = 0
 	self._item_input_action_map[ItemColumn.TYPE] = callback(self, self, "input_item")
 	self._item_input_action_map[ItemServerColumn.TYPE] = callback(self, self, "input_item")
@@ -249,80 +250,7 @@ function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	managers.mouse_pointer:set_pointer_image("arrow")
 end
 
-function MenuInput:input_kitslot(item, controller, mouse_click)
-	local slider_delay_down = 0.1
-	local slider_delay_pressed = 0.2
-
-	if self:menu_right_input_bool() then
-		if item:next() then
-			self:post_event("selection_next")
-		end
-
-		self._logic:trigger_item(true, item)
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_right_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	elseif self:menu_left_input_bool() then
-		if item:previous() then
-			self:post_event("selection_previous")
-		end
-
-		self._logic:trigger_item(true, item)
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_left_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	end
-
-	if controller:get_input_pressed("confirm") or mouse_click then
-		if item:next() then
-			self:post_event("selection_next")
-		end
-
-		self._logic:trigger_item(true, item)
-	end
-end
-
 function MenuInput:input_multi_choice(item, controller, mouse_click)
-	local slider_delay_down = 0.1
-	local slider_delay_pressed = 0.2
-	local node_gui = managers.menu:active_menu().renderer:active_node_gui()
-
-	if node_gui and node_gui._listening_to_input then
-		return
-	end
-
-	if self:menu_right_input_bool() then
-		if item:next() then
-			self:post_event("selection_next")
-			self._logic:trigger_item(true, item)
-		end
-
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_right_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	elseif self:menu_left_input_bool() then
-		if item:previous() then
-			self:post_event("selection_previous")
-			self._logic:trigger_item(true, item)
-		end
-
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_left_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	end
-
-	if (controller:get_input_pressed("confirm") or mouse_click) and item:next() then
-		self:post_event("selection_next")
-		self._logic:trigger_item(true, item)
-	end
 end
 
 function MenuInput:input_expand(item, controller, mouse_click)
@@ -418,12 +346,6 @@ function MenuInput:mouse_released(o, button, x, y)
 
 	x, y = self:_modified_mouse_pos(x, y)
 
-	if self._slider_marker then
-		self:post_event("slider_release")
-	end
-
-	self._slider_marker = nil
-
 	if button == Idstring("0") and managers.menu_component:input_focus() ~= true then
 		local node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
@@ -447,8 +369,6 @@ function MenuInput:mouse_released(o, button, x, y)
 					if row_item.type == "divider" then
 						-- Nothing
 					elseif row_item.type == "slider" then
-						self:post_event("slider_grab")
-
 						if row_item.gui_slider_marker:inside(x, y) then
 							self._slider_marker = {
 								button = button,
@@ -474,17 +394,9 @@ function MenuInput:mouse_released(o, button, x, y)
 						if row_item.arrow_right:inside(x, y) then
 							item:next()
 							self._logic:trigger_item(true, item)
-
-							if row_item.arrow_right:visible() then
-								self:post_event("selection_next")
-							end
 						elseif row_item.arrow_left:inside(x, y) then
 							item:previous()
 							self._logic:trigger_item(true, item)
-
-							if row_item.arrow_left:visible() then
-								self:post_event("selection_previous")
-							end
 						elseif not row_item.choice_panel:inside(x, y) then
 							self._item_input_action_map[item.TYPE](item, self._controller, true)
 
@@ -495,22 +407,18 @@ function MenuInput:mouse_released(o, button, x, y)
 
 						if row_item.arrow_right:inside(x, y) then
 							if item:next() then
-								self:post_event("selection_next")
 								self._logic:trigger_item(true, item)
 							end
 						elseif row_item.arrow_left:inside(x, y) then
 							if item:previous() then
-								self:post_event("selection_previous")
 								self._logic:trigger_item(true, item)
 							end
 						elseif row_item.gui_text:inside(x, y) then
 							if row_item.align == "left" then
 								if item:previous() then
-									self:post_event("selection_previous")
 									self._logic:trigger_item(true, item)
 								end
 							elseif item:next() then
-								self:post_event("selection_next")
 								self._logic:trigger_item(true, item)
 							end
 						end
@@ -596,17 +504,17 @@ function MenuInput:update(t, dt)
 		if axis_timer.y <= 0 then
 			if self:menu_up_input_bool() then
 				managers.menu:active_menu().renderer:move_up()
-				self:set_axis_y_timer(0.12)
+				self:set_axis_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_up_pressed() then
-					self:set_axis_y_timer(0.3)
+					self:set_axis_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_down_input_bool() then
 				managers.menu:active_menu().renderer:move_down()
-				self:set_axis_y_timer(0.12)
+				self:set_axis_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_down_pressed() then
-					self:set_axis_y_timer(0.3)
+					self:set_axis_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -614,17 +522,17 @@ function MenuInput:update(t, dt)
 		if axis_timer.x <= 0 then
 			if self:menu_left_input_bool() then
 				managers.menu:active_menu().renderer:move_left()
-				self:set_axis_x_timer(0.12)
+				self:set_axis_x_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_left_pressed() then
-					self:set_axis_x_timer(0.3)
+					self:set_axis_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_right_input_bool() then
 				managers.menu:active_menu().renderer:move_right()
-				self:set_axis_x_timer(0.12)
+				self:set_axis_x_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_right_pressed() then
-					self:set_axis_x_timer(0.3)
+					self:set_axis_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -634,17 +542,17 @@ function MenuInput:update(t, dt)
 		if scroll_timer.y <= 0 then
 			if self:menu_scroll_up_input_bool() then
 				managers.menu:active_menu().renderer:scroll_up()
-				self:set_scroll_y_timer(0.12)
+				self:set_scroll_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_scroll_up_pressed() then
-					self:set_scroll_y_timer(0.3)
+					self:set_scroll_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_scroll_down_input_bool() then
 				managers.menu:active_menu().renderer:scroll_down()
-				self:set_scroll_y_timer(0.12)
+				self:set_scroll_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_scroll_down_pressed() then
-					self:set_scroll_y_timer(0.3)
+					self:set_scroll_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -652,17 +560,17 @@ function MenuInput:update(t, dt)
 		if scroll_timer.x <= 0 then
 			if self:menu_scroll_left_input_bool() then
 				managers.menu:active_menu().renderer:scroll_left()
-				self:set_scroll_x_timer(0.3)
+				self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 
 				if self:menu_scroll_left_pressed() then
-					self:set_scroll_x_timer(0.3)
+					self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_scroll_right_input_bool() then
 				managers.menu:active_menu().renderer:scroll_right()
-				self:set_scroll_x_timer(0.3)
+				self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 
 				if self:menu_scroll_right_pressed() then
-					self:set_scroll_x_timer(0.3)
+					self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -670,17 +578,17 @@ function MenuInput:update(t, dt)
 		if self._page_timer <= 0 then
 			if self:menu_previous_page_input_bool() then
 				managers.menu:active_menu().renderer:previous_page()
-				self:set_page_timer(0.12)
+				self:set_page_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_previous_page_pressed() then
-					self:set_page_timer(0.3)
+					self:set_page_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_next_page_input_bool() then
 				managers.menu:active_menu().renderer:next_page()
-				self:set_page_timer(0.12)
+				self:set_page_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_next_page_pressed() then
-					self:set_page_timer(0.3)
+					self:set_page_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 
@@ -783,10 +691,6 @@ function MenuInput:menu_axis_scroll()
 	end
 
 	return axis_scrolled
-end
-
-function MenuInput:post_event(event)
-	self._sound_source:post_event(event)
 end
 
 function MenuInput:menu_up_input_bool()

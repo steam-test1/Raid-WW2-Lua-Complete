@@ -2,8 +2,6 @@ NetworkAccount = NetworkAccount or class()
 
 function NetworkAccount:init()
 	self._postprocess_username = callback(self, self, "_standard_username")
-
-	self:set_lightfx()
 end
 
 function NetworkAccount:update()
@@ -42,13 +40,6 @@ end
 
 function NetworkAccount:signin_state()
 	return "not signed in"
-end
-
-function NetworkAccount:set_lightfx()
-end
-
-function NetworkAccount:has_alienware()
-	return self._has_alienware
 end
 
 function NetworkAccount:clan_tag()

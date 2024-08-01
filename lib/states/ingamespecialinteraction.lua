@@ -7,19 +7,21 @@ IngameSpecialInteraction.LOCKPICK_DOF_DIST = 3
 
 function IngameSpecialInteraction:init(game_state_machine)
 	IngameSpecialInteraction.super.init(self, "ingame_special_interaction", game_state_machine)
-
-	self._current_stage = 1
 end
 
 function IngameSpecialInteraction:_setup_controller()
 	managers.menu:get_controller():disable()
 
 	self._controller = managers.controller:create_controller("ingame_special_interaction", managers.controller:get_default_wrapper_index(), false)
-	self._leave_cb = callback(self, self, "cb_leave")
-	self._interact_cb = callback(self, self, "cb_interact")
+	self._cb_table = {
+		jump = callback(self, self, "cb_leave"),
+		interact = callback(self, self, "cb_interact")
+	}
 
-	self._controller:add_trigger("jump", self._leave_cb)
-	self._controller:add_trigger("interact", self._interact_cb)
+	for k, cb in pairs(self._cb_table) do
+		self._controller:add_trigger(k, cb)
+	end
+
 	self._controller:set_enabled(true)
 end
 
@@ -31,8 +33,10 @@ function IngameSpecialInteraction:_clear_controller()
 	end
 
 	if self._controller then
-		self._controller:remove_trigger("jump", self._leave_cb)
-		self._controller:remove_trigger("interact", self._interact_cb)
+		for k, cb in pairs(self._cb_table) do
+			self._controller:remove_trigger(k, cb)
+		end
+
 		self._controller:set_enabled(false)
 		self._controller:destroy()
 
@@ -47,25 +51,30 @@ function IngameSpecialInteraction:set_controller_enabled(enabled)
 end
 
 function IngameSpecialInteraction:cb_leave()
-	Application:debug("[IngameSpecialInteraction:cb_leave()]")
+	Application:debug("[IngameSpecialInteraction:cb_leave]")
 
-	if self._completed then
+	if self._hud:cooldown() or self._completed then
 		return
 	end
 
-	game_state_machine:change_state_by_name(self._old_state)
+	if self._hud:on_leave() then
+		game_state_machine:change_state_by_name(self._old_state)
+	end
 end
 
 function IngameSpecialInteraction:cb_interact()
-	if self._cooldown > 0 or self._completed then
+	Application:debug("[IngameSpecialInteraction:cb_interact]")
+
+	if self._hud:cooldown() or self._completed then
 		return
 	end
 
-	self:_check_stage_complete()
+	self:_check_interact()
 	self:_check_all_complete()
 end
 
 function IngameSpecialInteraction:on_destroyed()
+	Application:debug("[IngameSpecialInteraction:on_destroyed]")
 end
 
 function IngameSpecialInteraction:update(t, dt)
@@ -73,25 +82,7 @@ function IngameSpecialInteraction:update(t, dt)
 		return
 	end
 
-	self._hud:rotate_circles(dt)
-
-	if self._cooldown > 0 then
-		self._cooldown = self._cooldown - dt
-
-		if self._cooldown <= 0 then
-			self._cooldown = 0
-
-			if self._invalid_stage then
-				self._hud:set_bar_valid(self._invalid_stage, true)
-
-				self._invalid_stage = nil
-
-				if self._tweak_data.sounds then
-					self:_play_sound(self._tweak_data.sounds.circles[self._current_stage].mechanics)
-				end
-			end
-		end
-	end
+	self._hud:update(t, dt)
 
 	if self._completed then
 		self._end_t = self._end_t - dt
@@ -99,11 +90,19 @@ function IngameSpecialInteraction:update(t, dt)
 		if self._end_t <= 0 then
 			self._end_t = 0
 
-			if self._tweak_data.target_unit:interaction() then
-				self._tweak_data.target_unit:interaction():special_interaction_done()
+			if alive(self._tweak_data.target_unit) and self._tweak_data.target_unit:interaction() then
+				local data = self._hud:get_interaction_data()
+				local itu = self._tweak_data.target_unit:interaction()
+
+				if itu.special_interaction_done then
+					itu:special_interaction_done(data)
+				end
+
 				game_state_machine:change_state_by_name(self._old_state)
 			end
 		end
+	else
+		self:_check_all_complete()
 	end
 
 	if alive(self._tweak_data.target_unit) and self._tweak_data.target_unit:unit_data()._interaction_done then
@@ -125,9 +124,11 @@ function IngameSpecialInteraction:_player_damage(info)
 end
 
 function IngameSpecialInteraction:at_enter(old_state, params)
+	Application:debug("[IngameSpecialInteraction:at_enter]", inspect(params))
+
 	local player = managers.player:player_unit()
 
-	if player then
+	if alive(player) then
 		player:movement():current_state():interupt_all_actions()
 		player:camera():play_redirect(PlayerStandard.IDS_UNEQUIP)
 		player:base():set_enabled(true)
@@ -135,10 +136,15 @@ function IngameSpecialInteraction:at_enter(old_state, params)
 			"hurt",
 			"death"
 		}, callback(self, self, "_player_damage"))
-		managers.dialog:queue_dialog("player_gen_picking_lock", {
-			skip_idle_check = true,
-			instigator = managers.player:local_player()
-		})
+
+		if params.sounds and params.sounds.dialog_enter then
+			player:sound():say(params.sounds.dialog_enter, nil, true)
+		end
+
+		if params.sounds and params.sounds.start then
+			player:sound():play(params.sounds.start)
+		end
+
 		SoundDevice:set_rtpc("stamina", 100)
 	end
 
@@ -146,8 +152,8 @@ function IngameSpecialInteraction:at_enter(old_state, params)
 
 	self._sound_source:set_position(player:position())
 
+	params.sound_source = self._sound_source
 	self._tweak_data = params
-	self._cooldown = 0.1
 	self._completed = false
 	self._old_state = old_state:name()
 
@@ -157,35 +163,20 @@ function IngameSpecialInteraction:at_enter(old_state, params)
 	self._hud = managers.hud:create_special_interaction(managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT), params)
 
 	self._hud:show()
-	managers.environment_controller:set_vignette(1)
+	managers.hud:hide_stats_screen()
 	self:_setup_controller()
-
-	if self._tweak_data.sounds then
-		self:_play_sound(self._tweak_data.sounds.circles[1].mechanics)
-	end
-
 	managers.hud:show(PlayerBase.INGAME_HUD_SAFERECT)
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
-	managers.network:session():send_to_peers("enter_lockpicking_state")
+	managers.network:session():send_to_peers("enter_special_interaction_state", self:minigame_type())
 end
 
 function IngameSpecialInteraction:at_exit()
 	self._sound_source:stop()
-
-	if self._completed then
-		self:_play_sound(self._tweak_data.sounds.success)
-		managers.dialog:queue_dialog("player_gen_lock_picked", {
-			skip_idle_check = true,
-			instigator = managers.player:local_player()
-		})
-	end
-
-	managers.environment_controller:set_vignette(0)
 	self:_clear_controller()
 
 	local player = managers.player:player_unit()
 
-	if player then
+	if alive(player) then
 		player:base():set_enabled(true)
 		player:base():set_visible(true)
 
@@ -193,6 +184,14 @@ function IngameSpecialInteraction:at_exit()
 
 		player:camera():play_redirect(PlayerStandard.IDS_EQUIP)
 		player:character_damage():remove_listener("IngameSpecialInteraction")
+
+		if self._completed and self._tweak_data.sounds and self._tweak_data.sounds.dialog_success then
+			player:sound():say(self._tweak_data.sounds.dialog_success, true, true)
+		end
+
+		if self._tweak_data.sounds and self._tweak_data.sounds.finish then
+			player:sound():play(self._tweak_data.sounds.finish)
+		end
 	end
 
 	managers.hud:hide_special_interaction(self._completed)
@@ -205,57 +204,15 @@ function IngameSpecialInteraction:at_exit()
 
 	managers.hud:hide(PlayerBase.INGAME_HUD_SAFERECT)
 	managers.hud:hide(PlayerBase.INGAME_HUD_FULLSCREEN)
-	managers.network:session():send_to_peers("exit_lockpicking_state")
+	managers.network:session():send_to_peers("exit_special_interaction_state")
 end
 
-function IngameSpecialInteraction:_check_stage_complete()
-	local current_stage_data, current_stage = nil
+function IngameSpecialInteraction:_check_interact()
+	if not self._hud:check_interact() then
+		local player = managers.player:player_unit()
 
-	for stage, stage_data in pairs(self._hud:circles()) do
-		if not stage_data.completed then
-			current_stage = stage
-			current_stage_data = stage_data
-
-			break
-		end
-	end
-
-	if not current_stage then
-		return
-	end
-
-	self._current_stage = current_stage
-	local circle_difficulty = self._tweak_data.circle_difficulty[current_stage]
-	local diff_degrees = 360 * (1 - circle_difficulty) - 3
-	local circle = current_stage_data.circle._circle
-	local current_rot = circle:rotation()
-
-	if current_rot < diff_degrees then
-		self._hud:complete_stage(current_stage)
-
-		if self._tweak_data.sounds then
-			self:_play_sound(self._tweak_data.sounds.circles[current_stage].lock)
-
-			if self._tweak_data.sounds.circles[current_stage + 1] then
-				self:_play_sound(self._tweak_data.sounds.circles[current_stage + 1].mechanics, true)
-			end
-		end
-	else
-		self._hud:set_bar_valid(current_stage, false)
-
-		local new_start_rotation = math.random() * 360
-
-		circle:set_rotation(new_start_rotation)
-
-		self._cooldown = IngameSpecialInteraction.FAILED_COOLDOWN
-		self._invalid_stage = current_stage
-
-		if self._tweak_data.sounds then
-			self:_play_sound(self._tweak_data.sounds.failed)
-			managers.dialog:queue_dialog("player_gen_lockpick_fail", {
-				skip_idle_check = true,
-				instigator = managers.player:local_player()
-			})
+		if alive(player) and self._tweak_data.sounds and self._tweak_data.sounds.dialog_fail then
+			player:sound():say(self._tweak_data.sounds.dialog_fail, nil, true)
 		end
 
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_FAILED_INTERACTION_MINI_GAME) then
@@ -264,30 +221,15 @@ function IngameSpecialInteraction:_check_stage_complete()
 	end
 end
 
-function IngameSpecialInteraction:_check_all_complete(t, dt)
-	local completed = true
-
-	for stage, stage_data in pairs(self._hud:circles()) do
-		completed = completed and stage_data.completed
-	end
-
+function IngameSpecialInteraction:_check_all_complete()
+	local completed = self._hud:check_all_complete()
 	self._completed = completed
 
 	if completed then
-		if self._tweak_data.sounds then
-			self:_play_sound(self._tweak_data.sounds.last_circle)
-		end
-
 		self._end_t = IngameSpecialInteraction.COMPLETED_DELAY
 	end
 end
 
-function IngameSpecialInteraction:_play_sound(event, no_stop)
-	if event then
-		if not no_stop then
-			self._sound_source:stop()
-		end
-
-		self._sound_source:post_event(event)
-	end
+function IngameSpecialInteraction:minigame_type()
+	return self._tweak_data.minigame_type
 end

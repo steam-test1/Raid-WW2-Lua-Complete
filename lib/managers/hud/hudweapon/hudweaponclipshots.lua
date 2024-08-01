@@ -31,7 +31,7 @@ function HUDWeaponClipShots:set_current_clip(current_clip)
 	local chunk_w = self._ammo_panel:w() - self._ammo_left_text:w() - icon_to_ammo_spacing
 	local is_thin = self._icon_thin_min < self._max_clip
 	local guis = self._guis[is_thin and 1 or 2]
-	local is_doublestack = (guis[1].texture_rect[4] <= self._ammo_panel:h() / 2 or guis[2].texture_rect[4] <= self._ammo_panel:h() / 2) and self._icon_stack_min < self._max_clip or false
+	local is_doublestack = (guis[1].texture_rect[4] / 2 <= self._ammo_panel:h() / 2 or guis[2].texture_rect[4] / 2 <= self._ammo_panel:h() / 2) and self._icon_stack_min < self._max_clip or false
 
 	for i = 1, self._max_clip do
 		local bullet = self._ammo_panel:child("clip_bullet" .. i)
@@ -43,8 +43,8 @@ function HUDWeaponClipShots:set_current_clip(current_clip)
 
 			bullet:set_color(spent and self:_get_color_for_percentage(HUDWeaponGeneric.CLIP_BACKGROUND_SPENT_COLORS, clip_percentage) or self:_get_color_for_percentage(HUDWeaponGeneric.CLIP_BACKGROUND_COLORS, clip_percentage))
 		else
-			local gui_ratio = gui.texture_rect[3] / gui.texture_rect[4]
-			local is_short = gui.texture_rect[4] <= 16
+			local gui_ratio = gui.texture_rect[3] / 2 / gui.texture_rect[4] / 2
+			local is_short = gui.texture_rect[4] / 2 <= 16
 			local scale = is_short and 0.5 or 1
 			local h = scale * self._ammo_panel:h()
 			local w = h * gui_ratio
@@ -59,8 +59,8 @@ function HUDWeaponClipShots:set_current_clip(current_clip)
 
 		bullet:set_image(gui.texture)
 		bullet:set_texture_rect(unpack(gui.texture_rect))
-		bullet:set_w(gui.texture_rect[3])
-		bullet:set_h(gui.texture_rect[4])
+		bullet:set_w(gui.texture_rect[3] / 2)
+		bullet:set_h(gui.texture_rect[4] / 2)
 
 		local x_bullet = i
 		local bullets_in_row = self._max_clip

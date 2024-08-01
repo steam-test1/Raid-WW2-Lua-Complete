@@ -24,20 +24,12 @@ HUDNameLabel.STATES = {
 		control = "interaction_panel"
 	},
 	{
-		id = "carry",
-		control = "carry_icon"
-	},
-	{
-		id = "lockpick",
-		control = "lockpick_icon"
+		id = "special_interaction",
+		control = "special_interaction_icon"
 	},
 	{
 		id = "mounted_weapon",
 		control = "mounted_weapon_icon"
-	},
-	{
-		id = "warcry",
-		control = "warcry_icon"
 	},
 	{
 		id = "normal",
@@ -57,20 +49,16 @@ function HUDNameLabel:init(hud, params)
 
 	self:_add_active_state(self._displayed_state.id)
 
-	for peer_id, peer in pairs(managers.network:session():all_peers()) do
-		if peer._name == self._name then
-			self._peer_id = peer_id
-			self.class = peer._class
-			self.warcry = WarcryManager.CLASS_TO_WARCRY[self.class]
-		end
+	local peer = managers.network:session():peer(self._peer_id)
+
+	if peer then
+		self.class = peer:class()
 	end
 
 	self:_create_panel(hud)
 	self:_create_name()
 	self:_create_timer()
-	self:_create_carry_icon()
-	self:_create_warcry_icon()
-	self:_create_lockpick_icon()
+	self:_create_special_interaction_icon()
 	self:_create_mounted_weapon_icon()
 	self:_create_interaction_progress_bar()
 end
@@ -116,52 +104,18 @@ function HUDNameLabel:_create_nationality_icon()
 	self._nationality_icon:set_center_y(self._object:h() / 2)
 end
 
-function HUDNameLabel:_create_carry_icon()
-	local temp_carry_icon = "carry_alive"
-	local carry_icon_params = {
-		name = "carry_icon",
+function HUDNameLabel:_create_special_interaction_icon()
+	local gui_icon = tweak_data.gui:get_full_gui_data(HUDNameLabel.LOCKPICK_ICON)
+	self._special_interaction_icon = self._object:bitmap({
+		name = "special_interaction_icon",
 		halign = "center",
 		alpha = 0,
 		valign = "center",
-		texture = tweak_data.gui.icons[temp_carry_icon].texture,
-		texture_rect = tweak_data.gui.icons[temp_carry_icon].texture_rect
-	}
-	self._carry_icon = self._object:bitmap(carry_icon_params)
+		texture = gui_icon.texture,
+		texture_rect = gui_icon.texture_rect
+	})
 
-	self._carry_icon:set_center_x(self._object:w() / 2)
-	self._carry_icon:set_center_y(self._object:h() / 2)
-end
-
-function HUDNameLabel:_create_warcry_icon(icon)
-	icon = icon or tweak_data.warcry.sharpshooter.hud_icon
-	local warcry_icon_params = {
-		name = "warcry_icon",
-		halign = "center",
-		alpha = 0,
-		valign = "center",
-		texture = tweak_data.gui.icons[icon].texture,
-		texture_rect = tweak_data.gui.icons[icon].texture_rect
-	}
-	self._warcry_icon = self._object:bitmap(warcry_icon_params)
-
-	self._warcry_icon:set_center_x(self._object:w() / 2)
-	self._warcry_icon:set_center_y(self._object:h() / 2)
-	self._warcry_icon:set_color(tweak_data.gui.colors.warcry_active)
-end
-
-function HUDNameLabel:_create_lockpick_icon()
-	local lockpick_icon_params = {
-		name = "lockpick_icon",
-		halign = "center",
-		alpha = 0,
-		valign = "center",
-		texture = tweak_data.gui.icons[HUDNameLabel.LOCKPICK_ICON].texture,
-		texture_rect = tweak_data.gui.icons[HUDNameLabel.LOCKPICK_ICON].texture_rect
-	}
-	self._lockpick_icon = self._object:bitmap(lockpick_icon_params)
-
-	self._lockpick_icon:set_center_x(self._object:w() / 2)
-	self._lockpick_icon:set_center_y(self._object:h() / 2)
+	self._special_interaction_icon:set_center(self._object:w() / 2, self._object:h() / 2)
 end
 
 function HUDNameLabel:_create_mounted_weapon_icon()
@@ -345,48 +299,21 @@ function HUDNameLabel:is_overlapping(name_label)
 	return y_overlap and x_overlap
 end
 
-function HUDNameLabel:set_carry_info(carry_id)
-	local carry_tweak_data = tweak_data.carry[carry_id]
+function HUDNameLabel:show_special_interaction_icon(interaction_type)
+	local minigame_icon = tweak_data.interaction.minigame_icons[interaction_type]
 
-	if carry_tweak_data and carry_tweak_data.hud_icon then
-		self._carry_icon:set_image(tweak_data.gui.icons[carry_tweak_data.hud_icon].texture)
-		self._carry_icon:set_texture_rect(unpack(tweak_data.gui.icons[carry_tweak_data.hud_icon].texture_rect))
-		self._carry_icon:set_center_x(self._object:w() / 2)
-		self._carry_icon:set_center_y(self._object:h() / 2)
-		self:_add_active_state("carry")
-	else
-		Application:debug("[HUDNameLabel] set_carry_info(): no tweak data or HUD icon for item " .. tostring(carry_id))
+	if minigame_icon then
+		local gui_icon = tweak_data.gui:get_full_gui_data(minigame_icon)
+
+		self._special_interaction_icon:set_image(gui_icon.texture)
+		self._special_interaction_icon:set_texture_rect(unpack(gui_icon.texture_rect))
+		self._special_interaction_icon:set_center(self._object:w() / 2, self._object:h() / 2)
+		self:_add_active_state("special_interaction")
 	end
 end
 
-function HUDNameLabel:remove_carry_info()
-	self:_remove_active_state("carry")
-end
-
-function HUDNameLabel:show_lockpick_icon()
-	self:_add_active_state("lockpick")
-end
-
-function HUDNameLabel:hide_lockpick_icon()
-	self:_remove_active_state("lockpick")
-end
-
-function HUDNameLabel:set_warcry(warcry)
-	if self._warcry_icon then
-		self._object:remove(self._warcry_icon)
-	end
-
-	local icon = tweak_data.warcry[warcry].hud_icon
-
-	self:_create_warcry_icon(icon)
-end
-
-function HUDNameLabel:activate_warcry()
-	self:_add_active_state("warcry")
-end
-
-function HUDNameLabel:deactivate_warcry()
-	self:_remove_active_state("warcry")
+function HUDNameLabel:hide_special_interaction_icon()
+	self:_remove_active_state("special_interaction")
 end
 
 function HUDNameLabel:show_turret_icon()

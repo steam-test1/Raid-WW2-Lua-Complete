@@ -11,15 +11,27 @@ function TurretInteractionExt:can_select(player)
 		return false
 	end
 
-	local sprinting = player:movement() and player:movement():running() or false
-	local taken = self._unit:weapon():player_on()
-	local locked = self._unit:weapon():locked_fire()
-
-	return super_condition and not taken and not locked and not sprinting
+	return super_condition
 end
 
-function TurretInteractionExt:check_interupt()
-	return TurretInteractionExt.super.check_interupt(self)
+function TurretInteractionExt:_interact_blocked(player)
+	if self._unit:weapon():player_on() then
+		return true, nil, "hud_action_mounting_turret_blocked_taken"
+	end
+
+	if self._unit:weapon():locked_fire() then
+		return true, nil, "hud_action_mounting_turret_blocked_locked_fire"
+	end
+
+	if managers.player:is_carrying() then
+		return true, nil, "hud_action_mounting_turret_blocked_bag"
+	end
+
+	if player:movement() and player:movement():running() then
+		return true, nil, "hud_action_mounting_turret_blocked_sprint"
+	end
+
+	return false
 end
 
 function TurretInteractionExt:interact(player)

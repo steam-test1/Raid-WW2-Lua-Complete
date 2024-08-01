@@ -1,11 +1,9 @@
 require("core/lib/utils/dev/tools/material_editor/CoreMaterialEditorUI")
 require("core/lib/utils/dev/tools/material_editor/CoreMaterialEditorPopups")
 require("core/lib/utils/dev/tools/material_editor/CoreMaterialEditorUtils")
-require("core/lib/utils/dev/tools/material_editor/CoreMaterialEditorRemote")
 require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 
 CoreMaterialEditor = CoreMaterialEditor or class()
-CoreMaterialEditor.NEWS_STREAM = "material_editor"
 CoreMaterialEditor.TOOLHUB_NAME = "Material Editor"
 CoreMaterialEditor.FRAME_TITLE = CoreMaterialEditor.TOOLHUB_NAME
 CoreMaterialEditor.MATERIAL_CONFIG_VERSION_TAG = "3"
@@ -44,7 +42,6 @@ function CoreMaterialEditor:init()
 	self:_create_main_frame()
 	self:_load_shader_dropdown()
 	self:_build_shader_options()
-	CoreEWS.check_news(self._main_frame, CoreMaterialEditor.NEWS_STREAM, true)
 
 	self._compile_warning_dialog = CoreMaterialEditorCompileWarningDialog:new(self._main_frame)
 	self._start_dialog = CoreMaterialEditorStartDialog:new(self._main_frame, self)
@@ -125,10 +122,6 @@ function CoreMaterialEditor:_on_close()
 	end
 
 	managers.toolhub:close(self.TOOLHUB_NAME)
-end
-
-function CoreMaterialEditor:_on_check_news()
-	CoreEWS.check_news(self._main_frame, self.NEWS_STREAM)
 end
 
 function CoreMaterialEditor:_on_new()

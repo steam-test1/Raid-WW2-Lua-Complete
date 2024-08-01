@@ -12,7 +12,7 @@ function TestUtilities:spawn_projectile_at_pos(trgt_pos)
 end
 
 function TestUtilities:spawn_projectile_on_graph()
-	local pos = managers.navigation:get_random_point_on_graph()
+	local pos = managers.navigation:HACK_get_random_point_on_graph()
 
 	self:spawn_projectile_at_pos(pos)
 end
@@ -27,7 +27,7 @@ function TestUtilities:spawn_enemy_at_pos(trgt_pos)
 end
 
 function TestUtilities:spawn_enemy_on_graph()
-	local position = managers.navigation:get_random_point_on_graph()
+	local position = managers.navigation:HACK_get_random_point_on_graph()
 
 	self:spawn_enemy_at_pos(position)
 end

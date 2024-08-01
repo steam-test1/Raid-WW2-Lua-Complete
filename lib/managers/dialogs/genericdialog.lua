@@ -199,7 +199,7 @@ end
 function GenericDialog:controller_hotswap_triggered()
 	self._controller:add_trigger("confirm", self._confirm_func)
 
-	local is_pc_controller = not managers.controller:is_xbox_controller_present()
+	local is_pc_controller = not managers.controller:is_controller_present()
 
 	if is_pc_controller then
 		self._controller:add_trigger("toggle_menu", self._cancel_func)
@@ -324,7 +324,7 @@ function GenericDialog:force_close()
 end
 
 function GenericDialog:dialog_cancel_callback()
-	if not _G.IS_PC then
+	if not IS_PC then
 		return
 	end
 

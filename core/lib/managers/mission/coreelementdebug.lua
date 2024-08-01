@@ -2,6 +2,7 @@ core:module("CoreElementDebug")
 core:import("CoreMissionScriptElement")
 
 ElementDebug = ElementDebug or class(CoreMissionScriptElement.MissionScriptElement)
+ElementDebug._PRINT = false
 
 function ElementDebug:init(...)
 	ElementDebug.super.init(self, ...)
@@ -16,21 +17,24 @@ function ElementDebug:on_executed(instigator)
 		return
 	end
 
-	local prefix = "<debug>    "
-	local text = prefix .. self._values.debug_string
+	if ElementDebug._PRINT then
+		local prefix = "<debug>    "
+		local text = prefix .. self._values.debug_string
 
-	if not self._values.as_subtitle and self._values.show_instigator then
-		text = text .. " - " .. tostring(instigator)
+		if not self._values.as_subtitle and self._values.show_instigator then
+			text = text .. " - " .. tostring(instigator)
+		end
+
+		local color = self._values.color or self._values.as_subtitle and Color.yellow
+
+		managers.mission:add_fading_debug_output(text, color, self._values.as_subtitle)
 	end
 
-	local color = self._values.color or self._values.as_subtitle and Color.yellow
-
-	managers.mission:add_fading_debug_output(text, color, self._values.as_subtitle)
 	ElementDebug.super.on_executed(self, instigator)
 end
 
 function ElementDebug:on_monitored_element(monitored_element_name, output_string)
-	if not self._values.enabled then
+	if not self._values.enabled or not ElementDebug._PRINT then
 		return
 	end
 

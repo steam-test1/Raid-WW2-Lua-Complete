@@ -202,33 +202,31 @@ function ToolHub:buildmenu()
 	self._main_frame:connect("SPECULAR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_visualization"), "specular_visualization")
 	self._main_frame:connect("GLOSSINESS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_visualization"), "glossiness_visualization")
 
-	if SystemInfo:platform() == Idstring("WIN32") then
-		local resolution_menu = EWS:Menu("")
+	local resolution_menu = EWS:Menu("")
 
-		for _, res in ipairs(RenderSettings.modes) do
-			local str = res.x .. "x" .. res.y .. ":" .. res.z
+	for _, res in ipairs(RenderSettings.modes) do
+		local str = res.x .. "x" .. res.y .. ":" .. res.z
 
-			resolution_menu:append_item(str, str, "")
-			self._main_frame:connect(str, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_resolution"), res)
-		end
-
-		resolution_menu:append_separator()
-		resolution_menu:append_item("4/3", "4/3", "")
-		resolution_menu:append_item("16/9", "16/9", "")
-		resolution_menu:append_item("16/10", "16/10", "")
-		resolution_menu:append_item("w/h", "w/h", "")
-		self._main_frame:connect("4/3", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.3333333333333333)
-		self._main_frame:connect("16/9", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.7777777777777777)
-		self._main_frame:connect("16/10", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.6)
-
-		local res = RenderSettings.resolution
-
-		self._main_frame:connect("w/h", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), res.x / res.y)
-		resolution_menu:append_separator()
-		resolution_menu:append_item("TOGGLE_FULLSCREEN", "Toggle Fullscreen", "")
-		self._main_frame:connect("TOGGLE_FULLSCREEN", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_fullscreen"), "")
-		menu_bar:append(resolution_menu, "Resolution")
+		resolution_menu:append_item(str, str, "")
+		self._main_frame:connect(str, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_resolution"), res)
 	end
+
+	resolution_menu:append_separator()
+	resolution_menu:append_item("4/3", "4/3", "")
+	resolution_menu:append_item("16/9", "16/9", "")
+	resolution_menu:append_item("16/10", "16/10", "")
+	resolution_menu:append_item("w/h", "w/h", "")
+	self._main_frame:connect("4/3", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.3333333333333333)
+	self._main_frame:connect("16/9", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.7777777777777777)
+	self._main_frame:connect("16/10", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.6)
+
+	local res = RenderSettings.resolution
+
+	self._main_frame:connect("w/h", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), res.x / res.y)
+	resolution_menu:append_separator()
+	resolution_menu:append_item("TOGGLE_FULLSCREEN", "Toggle Fullscreen", "")
+	self._main_frame:connect("TOGGLE_FULLSCREEN", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_fullscreen"), "")
+	menu_bar:append(resolution_menu, "Resolution")
 end
 
 function ToolHub:change_visualization(viz)

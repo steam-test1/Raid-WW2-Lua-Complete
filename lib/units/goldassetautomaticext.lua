@@ -15,11 +15,11 @@ end
 function GoldAssetAutomaticExt:apply_upgrade_level(level)
 	if Network:is_server() then
 		managers.network:session():send_to_peers_synched("sync_automatic_camp_asset", self._unit, level)
-		self:_apply_upgrade_level(level)
+		self:local_apply_upgrade_level(level)
 	end
 end
 
-function GoldAssetAutomaticExt:_apply_upgrade_level(level)
+function GoldAssetAutomaticExt:local_apply_upgrade_level(level)
 	self._unit:set_enabled(true)
 
 	if self._unit:damage() and self._unit:damage():has_sequence("reset") then
@@ -28,7 +28,15 @@ function GoldAssetAutomaticExt:_apply_upgrade_level(level)
 
 	if level > 0 then
 		for counter = 1, level do
-			self._unit:damage():run_sequence_simple("level_" .. string.format("%02d", counter))
+			local seq = "level_" .. string.format("%02d", counter)
+
+			if self._unit:damage():has_sequence(seq) then
+				self._unit:damage():run_sequence(seq)
+			else
+				Application:warn("[GoldAssetAutomaticExt:_apply_upgrade_level] Cant apply missing sequence", seq, "for level", level)
+
+				break
+			end
 		end
 	end
 end

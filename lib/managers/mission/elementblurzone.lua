@@ -4,6 +4,7 @@ ElementBlurZone = ElementBlurZone or class(CoreMissionScriptElement.MissionScrip
 
 function ElementBlurZone:init(...)
 	ElementBlurZone.super.init(self, ...)
+	managers.environment_controller:set_blurzone(self._id, -1)
 end
 
 function ElementBlurZone:client_on_executed(...)

@@ -9,6 +9,8 @@ function EnvironmentEffectsManager:init()
 	self:add_effect("rain_light", RainEffectLight:new())
 	self:add_effect("raindrop_screen", RainDropScreenEffect:new())
 	self:add_effect("lightning", LightningEffect:new())
+	self:add_effect("speed_lines", SpeedLinesEffect:new())
+	self:add_effect("smoke_of_war", SmokeOfWarEffect:new())
 
 	self._camera_position = Vector3()
 	self._camera_rotation = Rotation()
@@ -344,6 +346,89 @@ function RainDropScreenEffect:stop()
 	end
 
 	self._material = nil
+end
+
+SpeedLinesEffect = SpeedLinesEffect or class(EnvironmentEffect)
+
+function SpeedLinesEffect:init()
+	EnvironmentEffect.init(self)
+
+	self._effect_name = Idstring("effects/upd_skills/character/speed_lines_01")
+end
+
+function SpeedLinesEffect:load_effects()
+	if is_editor then
+		CoreEngineAccess._editor_load(Idstring("effect"), self._effect_name)
+	end
+end
+
+function SpeedLinesEffect:update(t, dt)
+	local c_pos = managers.environment_effects:camera_position()
+
+	if not c_pos then
+		return
+	end
+
+	World:effect_manager():move(self._effect, c_pos)
+end
+
+function SpeedLinesEffect:start()
+	local c_rot = managers.environment_effects:camera_rotation()
+
+	if not c_rot then
+		return
+	end
+
+	local yaw = c_rot:yaw() + 90
+	self._effect = World:effect_manager():spawn({
+		effect = self._effect_name,
+		position = Vector3(),
+		rotation = Rotation(yaw, 0, 0)
+	})
+end
+
+function SpeedLinesEffect:stop()
+	World:effect_manager():kill(self._effect)
+
+	self._effect = nil
+end
+
+SmokeOfWarEffect = SmokeOfWarEffect or class(EnvironmentEffect)
+
+function SmokeOfWarEffect:init()
+	EnvironmentEffect.init(self)
+
+	self._effect_name = Idstring("effects/vanilla/environment/smoke_of_war")
+end
+
+function SmokeOfWarEffect:load_effects()
+	if is_editor then
+		CoreEngineAccess._editor_load(Idstring("effect"), self._effect_name)
+	end
+end
+
+function SmokeOfWarEffect:update(t, dt)
+	local c_pos = managers.environment_effects:camera_position()
+
+	if not c_pos then
+		return
+	end
+
+	World:effect_manager():move(self._effect, c_pos)
+end
+
+function SmokeOfWarEffect:start()
+	self._effect = World:effect_manager():spawn({
+		effect = self._effect_name,
+		position = Vector3(),
+		rotation = Rotation()
+	})
+end
+
+function SmokeOfWarEffect:stop()
+	World:effect_manager():kill(self._effect)
+
+	self._effect = nil
 end
 
 CoreClass.override_class(CoreEnvironmentEffectsManager.EnvironmentEffectsManager, EnvironmentEffectsManager)

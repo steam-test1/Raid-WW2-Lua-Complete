@@ -99,7 +99,7 @@ function NavigationStitcherOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
 	local function f(unit)
-		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
+		if not unit or not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
 		end
 

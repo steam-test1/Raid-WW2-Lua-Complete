@@ -123,9 +123,7 @@ function PlayerFatal:_check_action_interact(t, input)
 	if input.btn_interact_press and (not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t) then
 		self._intimidate_t = t
 
-		if not self:call_teammate(self, "f11", t, true, true, true) then
-			PlayerBleedOut.call_civilian(self, "f11", t, false, true, self._revive_SO_data)
-		end
+		self:call_teammate(self, "f11", t, true, true, true)
 	end
 end
 

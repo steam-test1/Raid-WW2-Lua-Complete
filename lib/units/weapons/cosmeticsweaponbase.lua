@@ -95,7 +95,7 @@ function NewRaycastWeaponBase:_update_materials()
 				self._materials_default = {}
 
 				for part_id, part in pairs(self._parts) do
-					local materials = part.unit:get_objects_by_type(Idstring("material"))
+					local materials = part.unit:get_objects_by_type(IDS_MATERIAL)
 
 					for _, m in ipairs(materials) do
 						if m:variable_exists(Idstring("wear_tear_value")) then

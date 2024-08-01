@@ -1,5 +1,5 @@
 Pickup = Pickup or class()
-Pickup.PATH = "units/vanilla/pickups/pku_health_ammo_granade/"
+Pickup.PATH = "to be removed"
 
 function Pickup:init(unit)
 	if not Network:is_server() and unit:slot() == 23 then
@@ -10,17 +10,23 @@ function Pickup:init(unit)
 	self._beaming = self.beaming or false
 	self._automatic_pickup = self.automatic_pickup or false
 	self._active = true
-end
-
-local ids_mat_effect = Idstring("mat_effect")
-local ids_uv0_offset = Idstring("uv0_offset")
-
-function Pickup:_randomize_glow_effect()
-	local material = self._unit:material(ids_mat_effect)
+	local material = self._unit:material(Idstring("mat_effect"))
 
 	if material then
-		material:set_variable(ids_uv0_offset, Vector3(0, math.random(), 0))
+		Pickup.randomize_glow_effect(material)
 	end
+end
+
+function Pickup.randomize_glow_effect(material)
+	local ids_uv0_offset = Idstring("uv0_offset")
+	local ids_uv0_speed = Idstring("uv0_speed")
+	local r = math.random()
+
+	material:set_variable(ids_uv0_offset, Vector3(r, r, r))
+
+	r = math.rand(0.2, 0.4)
+
+	material:set_variable(ids_uv0_speed, Vector3(r, r, r))
 end
 
 function Pickup:sync_pickup()
@@ -48,7 +54,11 @@ function Pickup:set_active(active)
 end
 
 function Pickup:delete_unit()
-	World:delete_unit(self._unit)
+	if Network:is_server() then
+		managers.drop_loot:despawn_item(self._unit)
+	end
+
+	self._unit:set_slot(0)
 end
 
 function Pickup:save(data)

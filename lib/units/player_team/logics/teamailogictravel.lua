@@ -32,6 +32,9 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	my_data.vision = data.char_tweak.vision.idle
 
 	if old_internal_data then
+		my_data.turning = old_internal_data.turning
+		my_data.firing = old_internal_data.firing
+		my_data.shooting = old_internal_data.shooting
 		my_data.attention_unit = old_internal_data.attention_unit
 	end
 
@@ -55,6 +58,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	my_data.path_ahead = data.team.id == tweak_data.levels:get_default_team_ID("player")
 
 	if data.objective then
+		my_data.attitude = data.objective.attitude
 		data.objective.called = false
 		my_data.called = true
 
@@ -229,8 +233,8 @@ function TeamAILogicTravel._upd_ai_perceptors(data)
 		return
 	end
 
-	local DISTANCE_THRESHOLD = 0.1 * tweak_data.player.team_ai.movement.speed.WALKING_SPEED
-	local ROTATION_THRESHOLD = 100
+	local DISTANCE_THRESHOLD = 0.25 * tweak_data.player.team_ai.movement.speed.WALKING_SPEED
+	local ROTATION_THRESHOLD = 120
 	local players = managers.player:players()
 
 	for _, p in ipairs(players) do
@@ -391,12 +395,11 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local cover = managers.navigation:find_cover_in_nav_seg_excluding_cones(dest_area.nav_segs, nil, follow_pos, threat_pos, cones_to_send)
 
 		if cover then
-			local cover_entry = {
-				cover
-			}
 			occupation = {
 				type = "defend",
-				cover = cover_entry
+				cover = {
+					cover
+				}
 			}
 		else
 			local max_dist = nil
@@ -444,7 +447,7 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			revive_u_pos = ray_params.trace[1]
 		end
 
-		local rand_side_mul = math.random() > 0.5 and 1 or -1
+		local rand_side_mul = math.rand_bool() and 1 or -1
 		local revive_pos = mvector3.copy(revive_u_right)
 
 		mvector3.multiply(revive_pos, rand_side_mul * stand_dis)
@@ -491,16 +494,4 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 	end
 
 	return occupation
-end
-
-function TeamAILogicTravel._draw_debug_unit_cones(cones)
-	local brush = Draw:brush(Color.green:with_alpha(0.5), 2)
-
-	for _, c in ipairs(cones) do
-		local h = (c.cone_top - c.cone_base):length()
-		local angle = c.cone_angle / 2
-		local radius = math.tan(angle) * h
-
-		brush:cone(c.cone_top, c.cone_base, radius)
-	end
 end

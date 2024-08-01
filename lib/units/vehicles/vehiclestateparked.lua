@@ -12,7 +12,10 @@ function VehicleStateParked:enter(state_data, enter_data)
 
 	self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
 	self:adjust_interactions()
-	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+
+	if Network:is_server() then
+		self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+	end
 end
 
 function VehicleStateParked:adjust_interactions()

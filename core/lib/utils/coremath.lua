@@ -166,34 +166,9 @@ function get_fit_size(width, height, bounding_width, bounding_height)
 	end
 end
 
-function os.get_oldest_date(date1, date2)
-	if date2.year < date1.year then
-		return date1
-	elseif date1.year < date2.year then
-		return date2
-	elseif date2.yday < date1.yday then
-		return date1
-	elseif date1.yday < date2.yday then
-		return date2
-	elseif date2.hour < date1.hour then
-		return date1
-	elseif date1.hour < date2.hour then
-		return date2
-	elseif date2.min < date1.min then
-		return date1
-	elseif date1.min < date2.min then
-		return date2
-	elseif date2.sec < date1.sec then
-		return date1
-	elseif date1.sec < date2.sec then
-		return date2
-	else
-		return nil
-	end
-end
-
 math.UP = Vector3(0, 0, 1)
 math.DOWN = Vector3(0, 0, -1)
+math.ZERO = Vector3(0, 0, 0)
 math.Z = math.UP
 math.X = Vector3(1, 0, 0)
 math.Y = Vector3(0, 1, 0)
@@ -208,6 +183,13 @@ end
 
 function math.rand_bool()
 	return math.random(2) == 1
+end
+
+function math.rand_color(a, b)
+	a = a or 0
+	b = b or 1
+
+	return Color(math.rand(a, b), math.rand(a, b), math.rand(a, b))
 end
 
 function math.round(n, precision)
@@ -248,6 +230,20 @@ end
 
 function math.lerp(a, b, t)
 	return a * (1 - t) + b * t
+end
+
+function math.rotation_lerp(a, b, t)
+	local function f(v)
+		v = v % 360
+
+		if v < 0 then
+			v = 360 - v
+		end
+
+		return v
+	end
+
+	return Rotation(f(a:yaw() * (1 - t) + b:yaw() * t), f(a:pitch() * (1 - t) + b:pitch() * t), f(a:roll() * (1 - t) + b:roll() * t))
 end
 
 function math.string_to_rotation(v)
@@ -373,7 +369,11 @@ function math.obj_to_world(obj, point)
 end
 
 function math.within(x, min, max)
-	return min <= x and x <= max
+	return x and min <= x and x <= max
+end
+
+function math.in_range(x, min, max)
+	return x and min < x and x < max
 end
 
 function math.shuffle(array)

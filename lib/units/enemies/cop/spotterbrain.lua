@@ -16,19 +16,12 @@ function SpotterBrain:reset_spotter()
 	self.on_cooldown = false
 end
 
-function SpotterBrain:on_barrage_ended()
-end
-
 function SpotterBrain:schedule_spotter_reset(delay)
 	Application:debug("[SpotterBrain:schedule_spotter_reset()] delay", delay)
 
 	self.on_cooldown = true
 
 	managers.queued_tasks:queue(nil, self.reset_spotter, self, nil, delay, nil)
-end
-
-function SpotterBrain:set_logic(name, enter_params)
-	SpotterBrain.super.set_logic(self, name, enter_params)
 end
 
 function SpotterBrain:action_request(action)
@@ -40,7 +33,7 @@ function SpotterBrain:action_request(action)
 end
 
 function SpotterBrain:anim_clbk_throw_flare()
-	Application:debug("[SpotterBrain:anim_clbk_throw_flare()]")
+	self._unit:sound():say("spotter_flare_thrown", true, true)
 	managers.barrage:spawn_flare(self._unit, self._spotted_unit)
 end
 

@@ -27,6 +27,30 @@ function TeamAIMovement:set_character_anim_variables()
 end
 
 function TeamAIMovement:check_visual_equipment()
+	if Network:is_server() and self._unit:customization() then
+		local nationality = managers.criminals:character_name_by_unit(self._unit) or "british"
+		local customization = managers.player:get_customization_for_nationality(nationality)
+
+		self:set_character_customization(customization)
+	end
+end
+
+function TeamAIMovement:set_character_customization(customization)
+	customization = customization or {
+		nationality = managers.criminals:character_name_by_unit(self._unit) or "british"
+	}
+	local head_name = customization.equiped_head_name
+	local upper_name = customization.equiped_upper_name
+	local lower_name = customization.equiped_lower_name
+	local nationality = customization.nationality
+
+	self._unit:customization():attach_all_parts_to_character_by_parts_for_husk(nationality, head_name, upper_name, lower_name)
+
+	self._customization = managers.blackmarket:team_ai_customization_string(customization)
+
+	if Network:is_server() then
+		self._unit:network():send("set_character_customization", self._customization, 0, 0)
+	end
 end
 
 function TeamAIMovement:m_detect_pos()
@@ -55,12 +79,6 @@ end
 
 function TeamAIMovement:get_location_id()
 	return managers.navigation:get_nav_seg_metadata(self._standing_nav_seg_id).location_id
-end
-
-function TeamAIMovement:on_cuffed()
-	self._unit:brain():set_logic("surrender")
-	self._unit:network():send("arrested")
-	self._unit:character_damage():on_arrested()
 end
 
 function TeamAIMovement:on_discovered()
@@ -119,8 +137,8 @@ function TeamAIMovement:set_cool(state)
 	end
 end
 
-function TeamAIMovement:heat_clbk(state)
-	if self._cool and not state then
+function TeamAIMovement:heat_clbk(whisper_state)
+	if self._cool and not whisper_state then
 		self:_switch_to_not_cool()
 	end
 end
@@ -179,6 +197,12 @@ end
 
 function TeamAIMovement:current_state_name()
 	return nil
+end
+
+function TeamAIMovement:save(data)
+	data.movement = {
+		customization = self._customization
+	}
 end
 
 function TeamAIMovement:pre_destroy()

@@ -5,19 +5,19 @@ function SelectByName:init(...)
 end
 
 function SelectByName:_build_buttons(panel, sizer)
-	local find_btn = EWS:Button(panel, "Find", "", "BU_BOTTOM")
+	local find_btn = EWS:Button(panel, "Find", "", "")
 
 	sizer:add(find_btn, 0, 2, "RIGHT,LEFT")
 	find_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_on_find_unit"), "")
 	find_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
-	local select_btn = EWS:Button(panel, "Select", "", "BU_BOTTOM")
+	local select_btn = EWS:Button(panel, "Select", "", "")
 
 	sizer:add(select_btn, 0, 2, "RIGHT,LEFT")
 	select_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_on_select_unit"), "")
 	select_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
-	local delete_btn = EWS:Button(panel, "Delete", "", "BU_BOTTOM")
+	local delete_btn = EWS:Button(panel, "Delete", "", "")
 
 	sizer:add(delete_btn, 0, 2, "RIGHT,LEFT")
 	delete_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_on_delete"), "")

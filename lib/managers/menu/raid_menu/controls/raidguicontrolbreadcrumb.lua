@@ -67,7 +67,7 @@ function RaidGUIControlBreadcrumb:check_presence()
 	local should_be_visible = false
 
 	if self._params.category or self._params.identifiers then
-		should_be_visible = should_be_visible or managers.breadcrumb:category_has_breadcrumbs(self._params.category, self._params.identifiers)
+		should_be_visible = managers.breadcrumb:category_has_breadcrumbs(self._params.category, self._params.identifiers)
 	end
 
 	if self._params.check_callback then

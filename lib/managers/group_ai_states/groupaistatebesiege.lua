@@ -1,24 +1,25 @@
 GroupAIStateBesiege = GroupAIStateBesiege or class(GroupAIStateBase)
 GroupAIStateBesiege._MAX_SIMULTANEOUS_SPAWNS = 4
-GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MIN = 0.4
-GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MAX = 2
+GroupAIStateBesiege._ANTICIPATION_RESERVE = 6
+GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MIN = 0.5
+GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MAX = 1
 
 function GroupAIStateBesiege:init()
 	GroupAIStateBesiege.super.init(self)
 
 	self._tweak_data = tweak_data.group_ai.besiege
 
-	if Network:is_server() and not self._police_upd_task_queued and managers.navigation:is_data_ready() then
+	if not Network:is_server() then
+		return
+	end
+
+	if not self._police_upd_task_queued and managers.navigation:is_data_ready() then
 		self:_queue_police_upd_task()
 	end
 end
 
 function GroupAIStateBesiege:_init_misc_data(clean_up)
 	GroupAIStateBesiege.super._init_misc_data(self, clean_up)
-
-	self._nr_dynamic_waves = 0
-	self._nr_waves = 0
-
 	self:_create_area_data()
 
 	self._task_data = {
@@ -111,8 +112,9 @@ end
 
 function GroupAIStateBesiege:_queue_police_upd_task()
 	self._police_upd_task_queued = true
+	local delay = next(self._spawning_groups) and GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MIN or GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MAX
 
-	managers.enemy:queue_task("GroupAIStateBesiege._upd_police_activity", self._upd_police_activity, self, self._t + (next(self._spawning_groups) and GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MIN or GroupAIStateBesiege._POLICE_UPDATE_INTERVAL_MAX))
+	managers.enemy:queue_task("GroupAIStateBesiege._upd_police_activity", self._upd_police_activity, self, self._t + delay)
 end
 
 function GroupAIStateBesiege:assign_enemy_to_group_ai(unit, team_id)
@@ -168,7 +170,7 @@ end
 function GroupAIStateBesiege:on_enemy_unregistered(unit)
 	GroupAIStateBesiege.super.on_enemy_unregistered(self, unit)
 
-	if self._is_server then
+	if Network:is_server() then
 		self:set_enemy_assigned(nil, unit:key())
 
 		local objective = unit:brain():objective()
@@ -193,7 +195,7 @@ function GroupAIStateBesiege:_upd_police_activity()
 		self:_check_phalanx_damage_reduction_increase()
 
 		if self._enemy_weapons_hot then
-			self:_claculate_drama_value()
+			self:_calculate_drama_value()
 			self:_upd_regroup_task()
 			self:_upd_reenforce_tasks()
 			self:_upd_recon_tasks()
@@ -234,7 +236,7 @@ function GroupAIStateBesiege:_upd_SO()
 				so.delay_t = t + so.data.interval
 			end
 
-			if math.random() <= so.chance then
+			if so.chance == 1 or math.random() <= so.chance then
 				local so_data = so.data
 				so.chance = so_data.base_chance
 
@@ -257,7 +259,7 @@ function GroupAIStateBesiege:_upd_SO()
 						end
 					end
 				end
-			else
+			elseif so.data.chance_inc then
 				so.chance = so.chance + so.data.chance_inc
 			end
 
@@ -295,7 +297,7 @@ function GroupAIStateBesiege:_begin_new_tasks()
 	local assault_candidates = nil
 	local assault_data = task_data.assault
 
-	if self._difficulty_value > 0 and assault_data.next_dispatch_t and assault_data.next_dispatch_t < t and not task_data.regroup.active then
+	if self:get_clamped_difficulty() > 0 and assault_data.next_dispatch_t and assault_data.next_dispatch_t < t and not task_data.regroup.active then
 		assault_candidates = {}
 	end
 
@@ -356,8 +358,9 @@ function GroupAIStateBesiege:_begin_new_tasks()
 		local demand = force_factor and force_factor.force
 		local nr_police = table.size(area.police.units)
 		local nr_criminals = table.size(area.criminal.units)
+		local is_area_safe = nr_criminals == 0
 
-		if reenforce_candidates and demand and demand > 0 and nr_criminals == 0 then
+		if reenforce_candidates and demand and demand > 0 and is_area_safe then
 			local area_free = true
 
 			for i_task, reenforce_task_data in ipairs(reenforce_data.tasks) do
@@ -385,8 +388,6 @@ function GroupAIStateBesiege:_begin_new_tasks()
 			end
 
 			if not occupied then
-				local is_area_safe = nr_criminals == 0
-
 				if is_area_safe then
 					if are_recon_candidates_safe then
 						table.insert(recon_candidates, area)
@@ -412,7 +413,7 @@ function GroupAIStateBesiege:_begin_new_tasks()
 			end
 		end
 
-		if nr_criminals == 0 then
+		if is_area_safe then
 			for neighbour_area_id, neighbour_area in pairs(area.neighbours) do
 				if not found_areas[neighbour_area_id] then
 					table.insert(to_search_areas, neighbour_area)
@@ -520,7 +521,6 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 
 			self:set_assault_mode(true)
 			managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ASSAULT)
-			managers.trade:set_trade_countdown(false)
 		else
 			managers.hud:check_start_anticipation_music(task_data.phase_end_t - t)
 
@@ -554,10 +554,9 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 		end
 	elseif task_data.phase == "sustain" then
 		if task_spawn_allowance <= 0 then
-			task_data.phase = "fade"
-
 			managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ASSAULT)
 
+			task_data.phase = "fade"
 			task_data.phase_end_t = t + self._tweak_data.assault.fade_duration
 		elseif task_data.phase_end_t < t and not self._hunt_mode then
 			managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_CONTROL)
@@ -567,27 +566,31 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 		end
 	else
 		local end_assault = false
-		local enemies_left = self:_count_police_force("assault")
 
 		if not self._hunt_mode then
-			local min_enemies_left = 7
+			local min_enemies_left = self._tweak_data.assault.enemy_low_limit
+			local enemies_left = self:_count_police_force("assault")
+			local enemies_low = enemies_left < min_enemies_left
+			local timed_out = t > task_data.phase_end_t + self._tweak_data.assault.task_timeout
 
-			if enemies_left < min_enemies_left or t > task_data.phase_end_t + 350 then
-				if t > task_data.phase_end_t - 8 and not task_data.said_retreat then
-					if self._drama_data.amount < tweak_data.drama.assault_fade_end then
-						task_data.said_retreat = true
+			if enemies_low or timed_out then
+				local engagement_low = self:_count_criminals_engaged_force(4) <= 3
+				local drama_low = self._drama_data.amount < tweak_data.drama.assault_fade_end
+				timed_out = t > task_data.phase_end_t + self._tweak_data.assault.drama_timeout
 
-						self:_police_announce_retreat()
-					end
-				elseif task_data.phase_end_t < t and self._drama_data.amount < tweak_data.drama.assault_fade_end and self:_count_criminals_engaged_force(4) <= 3 then
+				if not task_data.said_retreat then
+					task_data.said_retreat = true
+
+					self:_police_announce_retreat()
+				elseif drama_low and engagement_low or timed_out then
 					end_assault = true
+
+					Application:debug("[GroupAi:Generic] END ASSAULT!", "Reason: " .. (timed_out and "Timed Out" or "Drama & Engagement Low"))
 				end
-			else
-				print("kill more enemies to end fade phase: ", min_enemies_left - enemies_left)
 			end
 
 			if task_data.force_end or end_assault then
-				print("assault task clear")
+				Application:debug("[GroupAi:Generic] assault task clear")
 
 				task_data.active = nil
 				task_data.phase = nil
@@ -603,12 +606,10 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 
 				return
 			end
-		else
-			print("disable hunt mode to end fade phase")
 		end
 	end
 
-	if self._drama_data.amount <= tweak_data.drama.low then
+	if managers.enemy:is_commander_active() or self._drama_data.amount <= tweak_data.drama.low then
 		for criminal_key, criminal_data in pairs(self._player_criminals) do
 			self:criminal_spotted(criminal_data.unit)
 
@@ -634,7 +635,7 @@ function GroupAIStateBesiege:_upd_assault_tasks()
 
 		for criminal_key, criminal_data in pairs(self._player_criminals) do
 			if not criminal_data.status then
-				local dis = target_pos and mvector3.distance_sq(target_pos, criminal_data.m_pos) or 1000000
+				local dis = target_pos and mvector3.distance_sq(target_pos, criminal_data.m_pos) or math.huge
 
 				if not nearest_dis or dis < nearest_dis then
 					nearest_dis = dis
@@ -673,7 +674,7 @@ function GroupAIStateBesiege:_upd_assault_spawning(task_data, primary_target_are
 	local nr_wanted = task_data.force - self:_count_police_force("assault")
 
 	if task_data.phase == "anticipation" then
-		nr_wanted = nr_wanted - 5
+		nr_wanted = nr_wanted - GroupAIStateBesiege._ANTICIPATION_RESERVE
 	end
 
 	if nr_wanted > 0 and task_data.phase ~= "fade" then
@@ -704,10 +705,10 @@ function GroupAIStateBesiege:_upd_assault_spawning(task_data, primary_target_are
 end
 
 function GroupAIStateBesiege:_distance_based_retire_groups()
-	local current_level = managers.raid_job:current_job()
+	local current_job = managers.raid_job:current_job()
 
-	if current_level then
-		local max_distance = current_level.enemy_retire_distance_threshold or GroupAIStateZone.MAX_DISTANCE_TO_PLAYER
+	if current_job then
+		local max_distance = current_job.enemy_retire_distance_threshold or self._tweak_data.max_distance_to_player or math.huge
 
 		for group_id, group in pairs(self._groups) do
 			if group.has_spawned and group.objective.type ~= "retire" then
@@ -785,7 +786,6 @@ function GroupAIStateBesiege:_end_regroup_task()
 	if self._task_data.regroup.active then
 		self._task_data.regroup.active = nil
 
-		managers.trade:set_trade_countdown(true)
 		self:set_assault_mode(false)
 
 		if not self._smoke_grenade_ignore_control then
@@ -1016,7 +1016,7 @@ function GroupAIStateBesiege:_find_spawn_group_near_area(target_area, allowed_gr
 	local mvec3_dis = mvector3.distance_sq
 	max_dis = max_dis or self._tweak_data.max_spawning_distance
 	local min_dis = self._tweak_data.min_spawning_distance and self._tweak_data.min_spawning_distance * self._tweak_data.min_spawning_distance or 0
-	local max_z_dis_sq = self._tweak_data.max_spawning_height_diff and self._tweak_data.max_spawning_height_diff * self._tweak_data.max_spawning_height_diff or 0
+	local max_z_dis_sq = self._tweak_data.max_spawning_height_diff or 0
 	max_dis = max_dis and max_dis * max_dis
 	local t = self._t
 	local valid_spawn_groups = {}
@@ -1099,26 +1099,26 @@ function GroupAIStateBesiege:_choose_best_groups(best_groups, group, nationality
 	local total_weight = 0
 
 	for _, group_type in ipairs(group_types) do
-		if not managers.enemy:is_spawn_group_allowed(group_type) then
-			-- Nothing
-		elseif tweak_data.group_ai.enemy_spawn_groups[nationality][group_type] then
-			local cat_weights = allowed_groups[group_type]
+		if managers.enemy:is_spawn_group_allowed(group_type) then
+			if tweak_data.group_ai.enemy_spawn_groups[nationality][group_type] then
+				local cat_weights = allowed_groups[group_type]
 
-			if cat_weights then
-				local cat_weight = self:get_difficulty_dependent_value(cat_weights)
-				local mod_weight = weight * cat_weight
+				if cat_weights then
+					local cat_weight = self:get_difficulty_dependent_value(cat_weights)
+					local mod_weight = weight * cat_weight
 
-				table.insert(best_groups, {
-					group = group,
-					nationality = nationality,
-					group_type = group_type,
-					wght = mod_weight
-				})
+					table.insert(best_groups, {
+						group = group,
+						nationality = nationality,
+						group_type = group_type,
+						wght = mod_weight
+					})
 
-				total_weight = total_weight + mod_weight
+					total_weight = total_weight + mod_weight
+				end
+			else
+				debug_pause("[GroupAIStateBesiege:_find_spawn_group_near_area] inexistent spawn_group:", group_type, ". element id:", group.mission_element._id)
 			end
-		else
-			debug_pause("[GroupAIStateBesiege:_find_spawn_group_near_area] inexistent spawn_group:", group_type, ". element id:", group.mission_element._id)
 		end
 	end
 
@@ -1266,7 +1266,7 @@ function GroupAIStateBesiege:_spawn_in_group(spawn_group, group_nationality, spa
 	end
 
 	for _, sp_data in ipairs(spawn_group.spawn_pts) do
-		sp_data.delay_t = self._t + math.rand(0.5)
+		sp_data.delay_t = self._t + math.rand(3)
 	end
 
 	local spawn_task = {
@@ -1413,20 +1413,22 @@ function GroupAIStateBesiege:_try_spawn_unit(u_type_name, nationality, spawn_ent
 					end
 				end
 
-				spawned_unit:brain():set_spawn_entry(spawn_entry, u_data.tactics_map)
+				local sp_brain = spawned_unit:brain()
+
+				sp_brain:set_spawn_entry(spawn_entry, u_data.tactics_map)
 
 				u_data.rank = spawn_entry.rank
 
 				self:_add_group_member(spawn_task.group, u_key)
 
-				if spawned_unit:brain():is_available_for_assignment(objective) then
+				if sp_brain:is_available_for_assignment(objective) then
 					if objective.element then
 						objective.element:clbk_objective_administered(spawned_unit)
 					end
 
-					spawned_unit:brain():set_objective(objective)
+					sp_brain:set_objective(objective)
 				else
-					spawned_unit:brain():set_followup_objective(objective)
+					sp_brain:set_followup_objective(objective)
 				end
 
 				if spawn_task.ai_task then
@@ -1468,34 +1470,34 @@ function GroupAIStateBesiege:_upd_group_spawning()
 
 	for u_type_name, spawn_info in pairs(spawn_task.units_remaining) do
 		if not group_ai_tweak.unit_categories[spawn_info.nationality][u_type_name].access.acrobatic then
-			local no_spawned = 0
+			local nr_spawned = 0
 
 			for i = spawn_info.amount, 1, -1 do
 				local success = self:_try_spawn_unit(u_type_name, spawn_info.nationality, spawn_info.spawn_entry, spawn_task, nr_units_spawned, produce_data)
 
 				if success then
-					no_spawned = no_spawned + 1
+					nr_spawned = nr_spawned + 1
 					nr_units_spawned = nr_units_spawned + 1
 				end
 			end
 
-			spawn_info.amount = spawn_info.amount - no_spawned
+			spawn_info.amount = spawn_info.amount - nr_spawned
 		end
 	end
 
 	for u_type_name, spawn_info in pairs(spawn_task.units_remaining) do
-		local no_spawned = 0
+		local nr_spawned = 0
 
 		for i = spawn_info.amount, 1, -1 do
 			local success = self:_try_spawn_unit(u_type_name, spawn_info.nationality, spawn_info.spawn_entry, spawn_task, nr_units_spawned, produce_data)
 
 			if success then
-				no_spawned = no_spawned + 1
+				nr_spawned = nr_spawned + 1
 				nr_units_spawned = nr_units_spawned + 1
 			end
 		end
 
-		spawn_info.amount = spawn_info.amount - no_spawned
+		spawn_info.amount = spawn_info.amount - nr_spawned
 	end
 
 	local complete = true
@@ -1644,10 +1646,14 @@ function GroupAIStateBesiege:unregister_criminal(unit)
 		local u_key = unit:key()
 		local record = self._criminals[u_key]
 
-		for area_id, area in pairs(self._area_data) do
-			if area.nav_segs[record.seg] then
-				area.criminal.units[u_key] = nil
+		if record then
+			for area_id, area in pairs(self._area_data) do
+				if area.nav_segs[record.seg] then
+					area.criminal.units[u_key] = nil
+				end
 			end
+		else
+			Application:error("[GroupAIStateBesiege:unregister_criminal] Missing criminal record for u_key", u_key, "in", inspect(self._criminals))
 		end
 	end
 
@@ -1686,29 +1692,6 @@ function GroupAIStateBesiege:on_objective_complete(unit, objective)
 	else
 		local seg = unit:movement():nav_tracker():nav_segment()
 		local area_data = self:get_area_from_nav_seg_id(seg)
-
-		if self:rescue_state() and tweak_data.character[unit:base()._tweak_table].rescue_hostages then
-			for u_key, u_data in pairs(managers.enemy:all_civilians()) do
-				if seg == u_data.tracker:nav_segment() then
-					local so_id = u_data.unit:brain():wants_rescue()
-
-					if so_id then
-						local so = self._special_objectives[so_id]
-						local so_data = so.data
-						local so_objective = so_data.objective
-						new_objective = self.clone_objective(so_objective)
-
-						if so_data.admin_clbk then
-							so_data.admin_clbk(unit)
-						end
-
-						self:remove_special_objective(so_id)
-
-						break
-					end
-				end
-			end
-		end
 
 		if not new_objective and objective.type == "free" then
 			new_objective = {
@@ -1759,20 +1742,22 @@ function GroupAIStateBesiege:on_cop_jobless(unit)
 	local u_key = unit:key()
 
 	if not self._police[u_key].assigned_area then
-		return
+		return nil
 	end
 
+	local jobless = false
 	local nav_seg = unit:movement():nav_tracker():nav_segment()
 	local area = self:get_area_from_nav_seg_id(nav_seg)
 	local force_factor = area.factors.force
 	local demand = force_factor and force_factor.force
 	local nr_police = table.size(area.police.units)
 	local undershot = demand and demand - nr_police
+	local new_objective = nil
 
 	if undershot and undershot > 0 then
-		local new_objective = {
+		new_objective = {
 			type = "defend_area",
-			interrupt_health = 0.75,
+			interrupt_health = 0.5,
 			is_default = true,
 			stance = "hos",
 			in_place = true,
@@ -1781,15 +1766,9 @@ function GroupAIStateBesiege:on_cop_jobless(unit)
 			attitude = "avoid",
 			nav_seg = nav_seg
 		}
-
-		self:set_enemy_assigned(self._area_data[nav_seg], u_key)
-		unit:brain():set_objective(new_objective)
-
-		return true
-	end
-
-	if not area.is_safe then
-		local new_objective = {
+		jobless = true
+	elseif not area.is_safe then
+		new_objective = {
 			stance = "hos",
 			scan = true,
 			in_place = true,
@@ -1798,12 +1777,15 @@ function GroupAIStateBesiege:on_cop_jobless(unit)
 			attitude = "avoid",
 			nav_seg = nav_seg
 		}
+		jobless = true
+	end
 
+	if not jobless and new_objective then
 		self:set_enemy_assigned(self._area_data[nav_seg], u_key)
 		unit:brain():set_objective(new_objective)
-
-		return true
 	end
+
+	return jobless
 end
 
 function GroupAIStateBesiege:_animate_health_change(bar, final_color)
@@ -1831,24 +1813,27 @@ function GroupAIStateBesiege:_ease_in_quart(t, starting_value, change, duration)
 end
 
 function GroupAIStateBesiege:_draw_enemy_activity(t)
-	local draw_data = self._AI_draw_data
-	local brush_area = draw_data.brush_area
-	local area_normal = -math.UP
-	local logic_name_texts = draw_data.logic_name_texts
-	local unit_type_texts = draw_data.unit_type_texts
-	local unit_health_bars = draw_data.unit_health_bars
-	local unit_health_bars_bg = draw_data.unit_health_bars_bg
-	local unit_health_bar_vals = draw_data.unit_health_bar_vals
-	local rect_bgs = draw_data.rect_bgs
-	local rect_bg_width = 0
-	local group_id_texts = draw_data.group_id_texts
-	local panel = draw_data.panel
 	local camera = managers.viewport:get_current_camera()
 
 	if not camera then
 		return
 	end
 
+	local the_width = 130
+	local the_height = 10
+	local area_normal = -math.UP
+	local draw_data = self._AI_draw_data
+	local brush_area = draw_data.brush_area
+	local logic_name_texts = draw_data.logic_name_texts
+	local unit_type_texts = draw_data.unit_type_texts
+	local unit_health_bars_bg = draw_data.unit_health_bars_bg
+	local unit_health_bars = draw_data.unit_health_bars
+	local unit_health_bar_prevs = draw_data.unit_health_bar_prevs
+	local unit_health_bar_vals = draw_data.unit_health_bar_vals
+	local rect_bgs = draw_data.rect_bgs
+	local rect_bg_width = 0
+	local group_id_texts = draw_data.group_id_texts
+	local panel = draw_data.panel
 	local ws = draw_data.workspace
 	local mid_pos1 = Vector3()
 	local mid_pos2 = Vector3()
@@ -1923,29 +1908,33 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 	end
 
 	local function _f_draw_unit_health(u_key, l_data, draw_color)
-		local unit_health_bar = unit_health_bars[u_key]
 		local unit_health_bar_bg = unit_health_bars_bg[u_key]
+		local unit_health_bar_prev = unit_health_bar_prevs[u_key]
+		local unit_health_bar = unit_health_bars[u_key]
 		local unit_health_bar_val = unit_health_bar_vals[u_key]
 		local current_health = tostring(l_data.unit:character_damage():health_ratio())
-		local current_health_raw_value = nil
+		local current_health_raw_value, current_health_ini_value = nil
 
 		if l_data.unit:character_damage().health ~= nil then
 			current_health_raw_value = tostring(string.format("%.2f", l_data.unit:character_damage():health()))
+			current_health_ini_value = tostring(string.format("%.2f", l_data.unit:character_damage():health_init()))
 		else
 			current_health_raw_value = string.format("%.2f", current_health)
+			current_health_ini_value = "?"
 		end
 
 		if unit_health_bar then
-			local current_w = 130 * current_health
+			local current_w = the_width * current_health
 
 			if unit_health_bar:w() ~= current_w then
 				unit_health_bar:stop()
 				unit_health_bar:animate(callback(self, self, "_animate_health_change"), Color(0.47058823529411764, 0.8509803921568627, 0.30196078431372547))
 				unit_health_bar_val:animate(callback(self, self, "_animate_health_change"), Color(0.47058823529411764, 0.8509803921568627, 0.30196078431372547))
+				unit_health_bar_prev:set_w(unit_health_bar:w())
 			end
 
-			unit_health_bar:set_w(130 * current_health)
-			unit_health_bar_val:set_text(tostring(current_health_raw_value))
+			unit_health_bar:set_w(the_width * current_health)
+			unit_health_bar_val:set_text(tostring(current_health_raw_value) .. "/" .. tostring(current_health_ini_value))
 
 			local x, y, w, h = unit_health_bar_val:text_rect()
 
@@ -1956,17 +1945,25 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 			unit_health_bar_bg = panel:rect({
 				blend_mode = "normal",
 				name = "unit_health_bar_bg",
-				h = 7,
 				layer = 1,
-				w = 130 * current_health,
+				w = the_width * current_health,
+				h = the_height,
 				color = Color.black:with_alpha(0.7)
+			})
+			unit_health_bar_prev = panel:rect({
+				blend_mode = "normal",
+				name = "unit_health_bar_prev",
+				layer = 1,
+				w = the_width * current_health,
+				h = the_height,
+				color = Color(0.39215686274509803, 0.058823529411764705, 0.058823529411764705)
 			})
 			unit_health_bar = panel:rect({
 				blend_mode = "normal",
 				name = "unit_health_bar",
-				h = 7,
 				layer = 1,
-				w = 130 * current_health,
+				w = the_width * current_health,
+				h = the_height,
 				color = Color(0.47058823529411764, 0.8509803921568627, 0.30196078431372547)
 			})
 			unit_health_bar_val = panel:text({
@@ -1980,6 +1977,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 			unit_health_bar_vals[u_key] = unit_health_bar_val
 			unit_health_bars_bg[u_key] = unit_health_bar_bg
 			unit_health_bars[u_key] = unit_health_bar
+			unit_health_bar_prevs[u_key] = unit_health_bar_prev
 			local x, y, w, h = unit_health_bar_val:text_rect()
 
 			if rect_bg_width < unit_health_bar_bg:w() + w then
@@ -1990,28 +1988,33 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		local my_head_pos = mid_pos1
 
 		mvector3.set(my_head_pos, l_data.unit:movement():m_head_pos())
-		mvector3.set_z(my_head_pos, my_head_pos.z + 30)
+		mvector3.set_z(my_head_pos, my_head_pos.z + 45)
 
 		local my_head_pos_screen = camera:world_to_screen(my_head_pos)
 
 		if my_head_pos_screen.z > 0 then
 			local screen_x = (my_head_pos_screen.x + 1) * 0.5 * RenderSettings.resolution.x
 			local screen_y = (my_head_pos_screen.y + 1) * 0.5 * RenderSettings.resolution.y
+			local yoff = 4
 
 			unit_health_bar_bg:set_x(screen_x)
-			unit_health_bar_bg:set_y(screen_y - 9)
-			unit_health_bar_val:set_x(screen_x + 135)
-			unit_health_bar_val:set_y(screen_y - 16)
+			unit_health_bar_bg:set_y(screen_y + yoff)
+			unit_health_bar_prev:set_x(screen_x)
+			unit_health_bar_prev:set_y(screen_y + yoff)
 			unit_health_bar:set_x(screen_x)
-			unit_health_bar:set_y(screen_y - 9)
+			unit_health_bar:set_y(screen_y + yoff)
+			unit_health_bar_val:set_x(screen_x + 135)
+			unit_health_bar_val:set_y(screen_y + yoff)
 
 			if not unit_health_bar:visible() then
 				unit_health_bar_bg:show()
+				unit_health_bar_prev:show()
 				unit_health_bar:show()
 				unit_health_bar_val:show()
 			end
 		elseif unit_health_bar:visible() then
 			unit_health_bar_bg:hide()
+			unit_health_bar_prev:hide()
 			unit_health_bar:hide()
 			unit_health_bar_val:hide()
 		end
@@ -2320,7 +2323,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-	for u_key, gui_text in pairs(unit_type_texts) do
+	for u_key, gui_text in pairs(unit_type_texts or {}) do
 		local keep = nil
 
 		for _, group_data in ipairs(groups) do
@@ -2338,7 +2341,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-	for u_key, gui_text in pairs(logic_name_texts) do
+	for u_key, gui_text in pairs(logic_name_texts or {}) do
 		local keep = nil
 
 		for _, group_data in ipairs(groups) do
@@ -2356,7 +2359,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-	for u_key, gui_bar in pairs(unit_health_bars) do
+	for u_key, gui_bar in pairs(unit_health_bars or {}) do
 		local keep = nil
 
 		for _, group_data in ipairs(groups) do
@@ -2374,7 +2377,25 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-	for u_key, gui_bar in pairs(unit_health_bars_bg) do
+	for u_key, gui_bar in pairs(unit_health_bar_prevs or {}) do
+		local keep = nil
+
+		for _, group_data in ipairs(groups) do
+			if group_data.group[u_key] then
+				keep = true
+
+				break
+			end
+		end
+
+		if not keep then
+			panel:remove(gui_bar)
+
+			unit_health_bar_prevs[u_key] = nil
+		end
+	end
+
+	for u_key, gui_bar in pairs(unit_health_bars_bg or {}) do
 		local keep = nil
 
 		for _, group_data in ipairs(groups) do
@@ -2653,12 +2674,12 @@ function GroupAIStateBesiege:can_hostage_flee()
 	return not self._hostage_fleeing
 end
 
-function GroupAIStateBesiege:add_to_surrendered(unit, update)
+function GroupAIStateBesiege:add_to_surrendered(unit, callback)
 	local hos_data = self._hostage_data
 	local nr_entries = #hos_data
 	local entry = {
 		u_key = unit:key(),
-		clbk = update
+		clbk = callback
 	}
 
 	if not self._hostage_upd_key then
@@ -2744,7 +2765,6 @@ function GroupAIStateBesiege:set_wave_mode(flag)
 		managers.hud:start_assault()
 		self:_set_rescue_state(false)
 		self:set_assault_mode(true)
-		managers.trade:set_trade_countdown(false)
 		self:_end_regroup_task()
 
 		if self._task_data.assault.active then
@@ -3123,20 +3143,26 @@ function GroupAIStateBesiege:_upd_groups()
 		self:_verify_group_objective(group)
 
 		for u_key, u_data in pairs(group.units) do
-			local brain = u_data.unit:brain()
-			local current_objective = brain:objective()
+			local nav_seg = u_data.tracker:nav_segment()
+			local world_id = managers.navigation:get_world_for_nav_seg(nav_seg)
+			local alarm = managers.worldcollection:get_alarm_for_world(world_id)
 
-			if (not current_objective or current_objective.is_default or current_objective.grp_objective and current_objective.grp_objective ~= group.objective and not current_objective.grp_objective.no_retry) and (not group.objective.follow_unit or alive(group.objective.follow_unit)) then
-				local objective = self._create_objective_from_group_objective(group.objective, u_data.unit)
+			if alarm then
+				local brain = u_data.unit:brain()
+				local current_objective = brain:objective()
 
-				if objective and brain:is_available_for_assignment(objective) then
-					self:set_enemy_assigned(objective.area or group.objective.area, u_key)
+				if (not current_objective or current_objective.is_default or current_objective.grp_objective and current_objective.grp_objective ~= group.objective and not current_objective.grp_objective.no_retry) and (not group.objective.follow_unit or alive(group.objective.follow_unit)) then
+					local objective = self._create_objective_from_group_objective(group.objective, u_data.unit)
 
-					if objective.element then
-						objective.element:clbk_objective_administered(u_data.unit)
+					if objective and brain:is_available_for_assignment(objective) then
+						self:set_enemy_assigned(objective.area or group.objective.area, u_key)
+
+						if objective.element then
+							objective.element:clbk_objective_administered(u_data.unit)
+						end
+
+						u_data.unit:brain():set_objective(objective)
 					end
-
-					u_data.unit:brain():set_objective(objective)
 				end
 			end
 		end
@@ -3386,8 +3412,8 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 				end
 
 				if push and not group.push_t then
-					local balm = self:_get_balancing_multiplier(self._tweak_data.assault.push_delay) or 0
-					group.push_t = self._t + balm
+					local push_delay_balm = self:_get_balancing_multiplier(self._tweak_data.assault.push_delay) or 0
+					group.push_t = self._t + push_delay_balm
 
 					return
 				end
@@ -3471,11 +3497,9 @@ function GroupAIStateBesiege._create_objective_from_group_objective(grp_objectiv
 	if grp_objective.element then
 		objective = grp_objective.element:get_random_SO(receiving_unit)
 
-		if not objective then
-			return
+		if objective then
+			objective.grp_objective = grp_objective
 		end
-
-		objective.grp_objective = grp_objective
 
 		return
 	elseif grp_objective.type == "defend_area" or grp_objective.type == "recon_area" or grp_objective.type == "reenforce_area" then
@@ -4083,16 +4107,6 @@ function GroupAIStateBesiege:_count_criminals_engaged_force(max_count)
 						end
 					end
 				end
-			else
-				debug_pause_unit(e_data_prev.unit, "non-enemy engaging player", e_key, inspect(e_data_prev), e_data_prev.unit)
-
-				if managers.enemy:all_civilians()[e_key] then
-					print("he is civilian")
-				elseif self._criminals[e_key] then
-					print("he is criminal")
-				else
-					print("unknown unit type")
-				end
 			end
 		end
 	end
@@ -4179,7 +4193,7 @@ function GroupAIStateBesiege:_verify_group_objective(group)
 	end
 
 	if not new_area then
-		print("[GroupAIStateBesiege:_verify_group_objective] could not find replacement area to", inspect(grp_objective.area))
+		Application:debug("[GroupAi:Generic] [GroupAIStateBesiege:_verify_group_objective] could not find replacement area to", inspect(grp_objective.area))
 
 		return
 	end
@@ -4324,7 +4338,6 @@ function GroupAIStateBesiege:_spawn_phalanx()
 				self._phalanx_spawn_group = self:_spawn_in_group(spawn_group, group_nationality, spawn_group_type, grp_objective, nil)
 
 				self:set_assault_endless(true)
-				managers.game_play_central:announcer_say("cpa_a02_01")
 				managers.network:session():send_to_peers_synched("group_ai_event", self:get_sync_event_id("phalanx_spawned"), 0)
 			end
 		end
@@ -4347,13 +4360,13 @@ function GroupAIStateBesiege:_check_phalanx_group_has_spawned()
 					pos = pos
 				}
 
-				print("Phalanx spawn finished, setting phalanx objective!")
+				Application:warn("[GroupAIStateBesiege:_check_phalanx_group_has_spawned] Phalanx spawn finished, setting phalanx objective!")
 				self:_set_objective_to_enemy_group(self._phalanx_spawn_group, grp_objective)
 
 				self._phalanx_spawn_group.set_to_phalanx_group_obj = true
 			end
 		else
-			print("Phalanx group has not yet spawned completely!")
+			Application:warn("[GroupAIStateBesiege:_check_phalanx_group_has_spawned] Phalanx group has not yet spawned completely!")
 		end
 	end
 end

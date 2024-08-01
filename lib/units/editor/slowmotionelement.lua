@@ -16,7 +16,7 @@ function SlowMotionElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "eff_name", table.map_keys(tweak_data.timespeed.mission_effects), "Choose effect. Descriptions in lib/TimeSpeedEffectTweakData.lua")
+	self:_build_value_combobox(panel, panel_sizer, "eff_name", table.map_keys(tweak_data.timespeed), "Choose effect. Descriptions in lib/TimeSpeedEffectTweakData.lua")
 
 	local help = {
 		panel = panel,

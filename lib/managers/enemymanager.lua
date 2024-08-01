@@ -8,7 +8,7 @@ local t_ins = table.insert
 local m_min = math.min
 local tmp_vec1 = Vector3()
 EnemyManager = EnemyManager or class()
-EnemyManager._MAX_NR_CORPSES = 20
+EnemyManager._MAX_NR_CORPSES = 30
 EnemyManager._nr_i_lod = {
 	{
 		2,
@@ -75,6 +75,8 @@ EnemyManager.ENEMIES = {
 }
 
 function EnemyManager:init()
+	self._tickrate = tweak_data.group_ai.ai_tick_rate_stealth
+
 	self:_init_enemy_data()
 
 	self._unit_clbk_key = "EnemyManager"
@@ -596,7 +598,7 @@ local t_remove = table.remove
 
 function EnemyManager:_update_queued_tasks(t, dt)
 	local i_asap_task, asp_task_t = nil
-	local queue_remaining = m_ceil(dt * tweak_data.group_ai.ai_tick_rate)
+	local queue_remaining = m_ceil(dt * self._tickrate)
 
 	for i_task, task_data in ipairs(self._queued_tasks) do
 		if not task_data.t or task_data.t < t then
@@ -782,11 +784,19 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 
 	managers.mission:call_global_event("enemy_killed")
 
-	if not managers.groupai:state():is_police_called() then
-		managers.dialog:queue_dialog("player_gen_stealth_kill", {
-			skip_idle_check = true,
-			instigator = managers.player:local_player()
-		})
+	local atk_from_pos = damage_info.attacker_unit and damage_info.attacker_unit:position()
+
+	if atk_from_pos then
+		local world = managers.worldcollection:get_world_id_from_pos(atk_from_pos)
+		local alarm = managers.worldcollection:get_alarm_for_world(world)
+		local is_cool = dead_unit:movement() and dead_unit:movement():cool()
+
+		if not alarm and is_cool then
+			managers.dialog:queue_dialog("player_gen_stealth_kill", {
+				skip_idle_check = true,
+				instigator = damage_info.attacker_unit
+			})
+		end
 	end
 
 	if dead_unit:movement() then
@@ -807,7 +817,29 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	end
 end
 
-function EnemyManager:disable_countours_on_dead_enemies()
+function EnemyManager:add_corpse_lootbag(corpse)
+	if self._destroyed then
+		debug_pause("[EnemyManager:add_corpse_lootbag] enemy manager is destroyed", corpse)
+	end
+
+	local ignore_corpse_cleanup = corpse:carry_data() and corpse:carry_data():carry_tweak_data() and corpse:carry_data():carry_tweak_data().ignore_corpse_cleanup
+
+	if ignore_corpse_cleanup then
+		Application:debug("[EnemyManager:add_corpse_lootbag] Not adding ignored corpse", inspect(corpse))
+	else
+		Application:debug("[EnemyManager:add_corpse_lootbag] Adding", inspect(corpse))
+
+		local enemy_data = self._enemy_data
+		enemy_data.nr_corpses = enemy_data.nr_corpses + 1
+		enemy_data.corpses[corpse:id()] = {
+			unit = corpse,
+			m_pos = corpse:position(),
+			death_t = self._t
+		}
+	end
+end
+
+function EnemyManager:unmark_dead_enemies()
 	for _, corpse in pairs(managers.enemy._enemy_data.corpses) do
 		local unit = corpse.unit
 
@@ -931,7 +963,18 @@ function EnemyManager:_upd_corpse_disposal()
 		return
 	end
 
-	local player = managers.player:player_unit()
+	local function unit_remove(u_data)
+		Application:debug("[EnemyManager:_upd_corpse_disposal()] off with the corpse!", u_data.unit)
+
+		local uu = u_data.unit
+
+		if uu:base() then
+			uu:base():set_slot(uu, 0)
+		else
+			uu:set_slot(uu, 0)
+		end
+	end
+
 	local to_dispose = {}
 	local nr_found = 0
 	local no_peers = 0
@@ -972,7 +1015,7 @@ function EnemyManager:_upd_corpse_disposal()
 			local u_data = corpses[u_key]
 
 			if alive(u_data.unit) then
-				u_data.unit:base():set_slot(u_data.unit, 0)
+				unit_remove(u_data)
 			end
 
 			corpses[u_key] = nil
@@ -986,7 +1029,7 @@ function EnemyManager:_upd_corpse_disposal()
 		for u_key, u_data in pairs(corpses) do
 			if t - u_data.death_t > 10 then
 				if alive(u_data.unit) then
-					u_data.unit:base():set_slot(u_data.unit, 0)
+					unit_remove(u_data)
 				end
 
 				disposals_needed = disposals_needed - 1
@@ -999,6 +1042,12 @@ function EnemyManager:_upd_corpse_disposal()
 			end
 		end
 	end
+end
+
+function EnemyManager:set_hot_state(state)
+	self._tickrate = tweak_data.group_ai[state and "ai_tick_rate_loud" or "ai_tick_rate_stealth"]
+
+	self:set_corpse_disposal_enabled(state)
 end
 
 function EnemyManager:set_corpse_disposal_enabled(state)
@@ -1029,7 +1078,7 @@ function EnemyManager:on_simulation_started()
 	self._destroyed = nil
 end
 
-function EnemyManager:on_level_tranistion()
+function EnemyManager:on_level_transition()
 	self._destroyed = nil
 
 	self:unqueue_all_tasks()
@@ -1056,17 +1105,24 @@ function EnemyManager:save(data)
 	my_data = my_data or {}
 
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
-		my_data.corpses = my_data.corpses or {}
-		local corpse_data = {
-			u_data.u_id,
-			u_data.unit:movement():m_pos(),
-			u_data.is_civilian and true or false,
-			u_data.unit:interaction():active() and true or false,
-			u_data.unit:interaction().tweak_data,
-			u_data.unit:contour():is_flashing()
-		}
+		local unit = u_data.unit
 
-		table.insert(my_data.corpses, corpse_data)
+		if alive(unit) then
+			local movement = unit:movement()
+			local corpse_data = {
+				u_data.u_id,
+				movement and movement:m_pos() or unit:position(),
+				u_data.is_civilian and true or false,
+				unit:interaction():active() and true or false,
+				unit:interaction().tweak_data,
+				unit:contour() and unit:contour():is_flashing() or false
+			}
+			my_data.corpses = my_data.corpses or {}
+
+			table.insert(my_data.corpses, corpse_data)
+		else
+			Application:warn("[EnemyManager:save] Tried to use a unit that was not alive(), skipping this u_data", inspect(u_data))
+		end
 	end
 
 	data.enemy_manager = my_data
@@ -1090,23 +1146,27 @@ function EnemyManager:load(data)
 			local grnd_ray = World:raycast("ray", spawn_pos + Vector3(0, 0, 50), spawn_pos - Vector3(0, 0, 100), "slot_mask", managers.slot:get_mask("AI_graph_obstacle_check"), "ray_type", "walk")
 			local corpse = World:unit_manager():get_unit_by_id(u_id)
 
-			corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
+			if alive(corpse) then
+				corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
 
-			self._enemy_data.corpses[u_id] = {
-				death_t = 0,
-				unit = corpse,
-				u_id = u_id,
-				m_pos = corpse:position()
-			}
-			self._enemy_data.nr_corpses = self._enemy_data.nr_corpses + 1
+				self._enemy_data.corpses[u_id] = {
+					death_t = 0,
+					unit = corpse,
+					u_id = u_id,
+					m_pos = corpse:position()
+				}
+				self._enemy_data.nr_corpses = self._enemy_data.nr_corpses + 1
 
-			if corpse:damage() and corpse:damage():has_sequence("unfreeze_ragdoll") then
-				Application:debug("[EnemyManager:load] call unfreeze_ragdoll", corpse)
-				corpse:damage():run_sequence_simple("unfreeze_ragdoll")
-				corpse:set_extension_update_enabled(Idstring("movement"), false)
-				managers.queued_tasks:queue(nil, self._queue_freeze_ragdoll, self, {
-					corpse = corpse
-				}, 6, nil)
+				if corpse:damage() and corpse:damage():has_sequence("unfreeze_ragdoll") then
+					Application:debug("[EnemyManager:load] call unfreeze_ragdoll", corpse)
+					corpse:damage():run_sequence_simple("unfreeze_ragdoll")
+					corpse:set_extension_update_enabled(Idstring("movement"), false)
+					managers.queued_tasks:queue(nil, self._queue_freeze_ragdoll, self, {
+						corpse = corpse
+					}, 6, nil)
+				end
+			else
+				Application:warn("[EnemyManager:load] Tried to use a unit that was not alive(), skipping this corpse", corpse)
 			end
 		end
 	end
@@ -1152,11 +1212,9 @@ function EnemyManager:is_spawn_group_allowed(group_type)
 	local allowed = true
 
 	if not managers.enemy:is_commander_active() then
-		for i, v in ipairs(tweak_data.group_ai.normally_forbidden_groups) do
+		for i, v in ipairs(tweak_data.group_ai.commander_backup_groups) do
 			if group_type == v then
 				allowed = false
-
-				Application:trace("[EnemyManager:is_spawn_group_allowed]   DISALLOWING", allowed, group_type, managers.enemy:is_commander_active())
 
 				break
 			end
@@ -1181,6 +1239,19 @@ function EnemyManager:register_commander()
 			Application:debug("[EnemyManager:register_commander()] setting new intensity value (old,new)", old_diff, new_diff)
 			managers.groupai:state():set_difficulty(new_diff)
 		end
+
+		local count = managers.statistics._global.killed.german_commander.count + managers.statistics._global.killed.german_og_commander.count
+
+		if count < 5 then
+			managers.hud:set_big_prompt({
+				id = "commander_arrived",
+				duration = 5,
+				title = utf8.to_upper(managers.localization:text("hint_commander_arrived")),
+				description = managers.localization:text("hint_commander_arrived_desc")
+			})
+		end
+	elseif self._commander_active > 1 then
+		Application:warn("[EnemyManager:register_commander()] More than one commander is active!!", self._commander_active)
 	end
 end
 

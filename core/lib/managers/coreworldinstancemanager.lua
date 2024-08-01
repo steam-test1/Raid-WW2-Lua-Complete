@@ -1,4 +1,6 @@
 CoreWorldInstanceManager = CoreWorldInstanceManager or class()
+CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME = "world"
+CoreWorldInstanceManager.MISSION_NAME_STRING = "mission"
 
 function CoreWorldInstanceManager:init()
 	self._instance_data = {}
@@ -270,7 +272,7 @@ end
 
 function CoreWorldInstanceManager:packages_by_instance(instance)
 	local folder = instance.folder
-	local package = folder .. "/" .. "world"
+	local package = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local init_package = folder .. "/" .. "world_init"
 
 	return {
@@ -284,7 +286,6 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 	local instance = self:get_instance_data_by_name(instance_name, worlddefinition_id)
 	worlddefinition = worlddefinition or managers.worlddefinition
 	local continent_data = worlddefinition._continents[instance.continent]
-	local package_data = managers.world_instance:packages_by_instance(instance)
 	instance.position = custom_data.position or Vector3()
 	instance.rotation = custom_data.rotation or Rotation()
 	local prepared_unit_data = managers.world_instance:prepare_unit_data(instance, continent_data, worlddefinition)
@@ -336,7 +337,7 @@ end
 function CoreWorldInstanceManager:prepare_unit_data(instance, continent_data, worlddefinition)
 	local start_index = instance.start_index
 	local folder = instance.folder
-	local path = folder .. "/" .. "world"
+	local path = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local instance_data = self:_get_instance_continent_data(path)
 
 	local function _prepare_entries(entries)
@@ -378,7 +379,7 @@ end
 
 function CoreWorldInstanceManager:prepare_serialized_instance_data(instance)
 	local folder = instance.folder
-	local path = folder .. "/" .. "world"
+	local path = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 
 	self:_get_instance_mission_data(path)
 	self:_get_instance_continent_data(path)
@@ -407,11 +408,11 @@ function CoreWorldInstanceManager:check_highest_id(instance)
 		return type_amount
 	end
 
-	local path = folder .. "/" .. "world"
+	local path = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local instance_data = self:_serialize_to_script("continent", path)
 	type_amount.statics = compare(instance_data.statics)
 	type_amount.dynamics = compare(instance_data.dynamics)
-	local path = folder .. "/" .. "mission"
+	local path = folder .. "/" .. CoreWorldInstanceManager.MISSION_NAME_STRING
 	local instance_data = self:_serialize_to_script("continent", path)
 	type_amount.mission = compare(instance_data.mission)
 
@@ -443,7 +444,7 @@ end
 function CoreWorldInstanceManager:prepare_mission_data(instance)
 	local start_index = instance.start_index
 	local folder = instance.folder
-	local path = folder .. "/" .. "world"
+	local path = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local instance_data = self:_get_instance_mission_data(path)
 	local worlddefinition = instance.worlddefinition_id and managers.worldcollection:worlddefinition_by_id(instance.worlddefinition_id) or managers.worlddefinition
 	local continent_data = worlddefinition._continents[instance.continent]
@@ -516,9 +517,15 @@ function CoreWorldInstanceManager:get_mission_inputs_by_name(name)
 end
 
 function CoreWorldInstanceManager:get_mission_inputs(instance)
+	if not instance then
+		Application:warn("[CoreWorldInstanceManager:get_mission_inputs] Called with: " .. tostring(instance))
+
+		return {}
+	end
+
 	local start_index = instance.start_index
 	local folder = instance.folder
-	local path = folder .. "/" .. "world"
+	local path = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local instance_data = self:_serialize_to_script("mission", path)
 	local mission_inputs = {}
 
@@ -546,7 +553,7 @@ end
 function CoreWorldInstanceManager:get_mission_outputs(instance)
 	local start_index = instance.start_index
 	local folder = instance.folder
-	local path = folder .. "/" .. "world"
+	local path = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local instance_data = self:_serialize_to_script("mission", path)
 	local mission_inputs = {}
 
@@ -573,7 +580,7 @@ end
 
 function CoreWorldInstanceManager:get_instance_params(instance)
 	local folder = instance.folder
-	local path = folder .. "/" .. "world"
+	local path = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local instance_data = self:_serialize_to_script("mission", path)
 	local instance_params = {}
 
@@ -669,10 +676,6 @@ function CoreWorldInstanceManager:set_instance_params(mission_id, instance_name,
 	self._instance_params[mission_id][instance_name] = params
 end
 
-function CoreWorldInstanceManager:remove_instance_params(mission_id)
-	self._instance_params[mission_id] = {}
-end
-
 function CoreWorldInstanceManager:get_instance_param(mission_id, instance_name, var_name)
 	if not self._instance_params[mission_id] then
 		return nil
@@ -685,11 +688,18 @@ function CoreWorldInstanceManager:get_instance_param(mission_id, instance_name, 
 	return self._instance_params[mission_id][instance_name][var_name]
 end
 
+function CoreWorldInstanceManager:remove_instance_params(mission_id)
+	self._instance_params[mission_id] = {}
+end
+
+function CoreWorldInstanceManager:clear()
+	self._instance_data = {}
+end
+
 function CoreWorldInstanceManager:sync_save(data)
-	local state = {
+	data.CoreWorldInstanceManager = {
 		instance_params = self._instance_params
 	}
-	data.CoreWorldInstanceManager = state
 end
 
 function CoreWorldInstanceManager:sync_load(data)
@@ -704,8 +714,4 @@ function CoreWorldInstanceManager:on_simulation_ended()
 	self._registered_input_elements = {}
 	self._registered_output_event_elements = {}
 	self._instance_params = {}
-end
-
-function CoreWorldInstanceManager:clear()
-	self._instance_data = {}
 end

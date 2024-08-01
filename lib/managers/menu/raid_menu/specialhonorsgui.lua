@@ -45,6 +45,7 @@ end
 
 function SpecialHonorsGui:_layout()
 	SpecialHonorsGui.super._layout(self)
+	managers.raid_menu:show_background_video()
 	self:_layout_first_screen()
 
 	if game_state_machine:current_state().stats_ready then
@@ -218,7 +219,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 		}
 	}
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		local gamercard_prompts_shown = 0
 		local stats_per_peer = {}
 

@@ -67,7 +67,6 @@ function PlayerBipod:exit(state_data, new_state_name)
 	local exit_data = {
 		skip_equip = true
 	}
-	self._dye_risk = nil
 	PlayerStandard.IDS_RECOIL = Idstring("recoil")
 	PlayerStandard.IDS_RECOIL_ENTER = Idstring("recoil_enter")
 	PlayerStandard.IDS_RECOIL_LOOP = Idstring("recoil_loop")
@@ -132,7 +131,7 @@ function PlayerBipod:_update_check_actions(t, dt)
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
 	if tweak_data.projectiles[projectile_entry].is_a_grenade then
-		self:_update_throw_grenade_timers(t, input)
+		self:_update_throw_grenade_timers(t, dt, input)
 	else
 		self:_update_throw_projectile_timers(t, input)
 	end

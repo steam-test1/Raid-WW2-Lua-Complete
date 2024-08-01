@@ -89,7 +89,7 @@ function WaypointUnitElement:init(unit)
 	self._hed.width = 100
 	self._hed.depth = 100
 	self._hed.radius = 150
-	self._hed.icon = "pd2_goto"
+	self._hed.icon = "map_waypoint_pov_in"
 	self._hed.text_id = "debug_none"
 	self._hed.only_in_civilian = false
 

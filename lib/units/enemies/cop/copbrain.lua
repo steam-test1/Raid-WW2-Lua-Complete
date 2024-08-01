@@ -4,7 +4,6 @@ require("lib/units/enemies/cop/logics/CopLogicIdle")
 require("lib/units/enemies/cop/logics/CopLogicAttack")
 require("lib/units/enemies/cop/logics/CopLogicIntimidated")
 require("lib/units/enemies/cop/logics/CopLogicTravel")
-require("lib/units/enemies/cop/logics/CopLogicArrest")
 require("lib/units/enemies/cop/logics/CopLogicFlee")
 require("lib/units/enemies/cop/logics/CopLogicSniper")
 require("lib/units/enemies/cop/logics/CopLogicSpotter")
@@ -12,6 +11,7 @@ require("lib/units/enemies/cop/logics/CopLogicTrade")
 require("lib/units/enemies/cop/logics/CopLogicPhalanxMinion")
 require("lib/units/enemies/cop/logics/CopLogicPhalanxVip")
 require("lib/units/enemies/cop/logics/CopLogicTurret")
+require("lib/units/enemies/cop/logics/CopLogicAlarm")
 require("lib/units/enemies/tank/logics/TankCopLogicAttack")
 require("lib/units/enemies/shield/logics/ShieldLogicAttack")
 require("lib/units/enemies/flamer/logics/FlamerLogicAttack")
@@ -24,13 +24,13 @@ local logic_variants = {
 		travel = CopLogicTravel,
 		inactive = CopLogicInactive,
 		intimidated = CopLogicIntimidated,
-		arrest = CopLogicArrest,
 		flee = CopLogicFlee,
 		sniper = CopLogicSniper,
 		spotter = CopLogicSpotter,
 		trade = CopLogicTrade,
 		phalanx = CopLogicPhalanxMinion,
-		turret = CopLogicTurret
+		turret = CopLogicTurret,
+		alarm = CopLogicAlarm
 	}
 }
 local security_variant = logic_variants.security
@@ -203,8 +203,8 @@ function CopBrain:post_init()
 		debug_pause_unit(self._unit, "[CopBrain:post_init] character missing contour extension", self._unit)
 	end
 
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() and self._unit:damage():has_sequence("halloween_2017") then
-		self._unit:damage():run_sequence_simple("halloween_2017")
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() then
+		self._unit:damage():has_then_run_sequence_simple("halloween_2017")
 	end
 end
 
@@ -843,12 +843,16 @@ function CopBrain:set_attention_settings(params)
 			att_settings = {
 				"enemy_combatant_corpse_cbt"
 			}
+
+			Application:debug("[CopBrain:set_attention_settings] CORPSE'D: corpse_cbt mode")
 		elseif params.corpse_sneak then
 			att_settings = {
 				"enemy_law_corpse_sneak",
 				"enemy_team_corpse_sneak",
 				"enemy_civ_cbt"
 			}
+
+			Application:debug("[CopBrain:set_attention_settings] CORPSE'D: corpse_sneak mode")
 		end
 	end
 
@@ -891,6 +895,8 @@ function CopBrain:on_cool_state_changed(state)
 		if self._logic_data and self._logic_data.internal_data.vision_cool then
 			self._logic_data.internal_data.vision = self._logic_data.internal_data.vision_cool
 		end
+
+		self:_chk_enable_pickpocket_interaction()
 	else
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
 		alert_types = {
@@ -907,6 +913,8 @@ function CopBrain:on_cool_state_changed(state)
 				self._logic_data.internal_data.vision = self._logic_data.internal_data.vision_not_cool
 			end
 		end
+
+		self:_chk_disable_pickpocket_interaction()
 	end
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, alert_types, self._unit:movement():m_head_pos())
@@ -941,8 +949,6 @@ function CopBrain:clbk_enemy_weapons_hot()
 
 	self._enemy_weapons_hot_listen_id = nil
 
-	self:end_alarm_pager()
-
 	if self._logic_data.logic.on_enemy_weapons_hot then
 		self._logic_data.logic.on_enemy_weapons_hot(self._logic_data)
 	end
@@ -971,9 +977,11 @@ end
 function CopBrain:convert_to_criminal(mastermind_criminal)
 	self._logic_data.is_converted = true
 	self._logic_data.group = nil
-	local mover_col_body = self._unit:body("mover_blocker")
+	local mover_col_body = self._unit:movement():get_mover_blocker()
 
-	mover_col_body:set_enabled(false)
+	if mover_col_body then
+		mover_col_body:set_enabled(false)
+	end
 
 	local attention_preset = PlayerMovement._create_attention_setting_from_descriptor(self, tweak_data.attention.settings.team_enemy_cbt, "team_enemy_cbt")
 
@@ -1062,7 +1070,7 @@ function CopBrain:on_surrender_chance()
 	local window_duration = 5 + 4 * math.random()
 	local timeout_duration = 5 + 5 * math.random()
 	self._logic_data.surrender_window = {
-		chance_mul = 0.05,
+		chance_mul = 0.04975,
 		expire_clbk_id = "CopBrain_sur_op" .. tostring(self._unit:key()),
 		window_expire_t = t + window_duration,
 		expire_t = t + window_duration + timeout_duration,
@@ -1158,185 +1166,55 @@ function CopBrain:rem_all_pos_rsrv()
 	self._logic_data.pos_rsrv = {}
 end
 
-function CopBrain:begin_alarm_pager(reset)
-	if not reset and self._alarm_pager_has_run then
+function CopBrain:_chk_enable_pickpocket_interaction()
+	if self._unit:character_damage():dead() or not self._unit:movement():cool() then
 		return
 	end
 
-	self._alarm_pager_has_run = true
-	self._alarm_pager_data = {
-		total_nr_calls = math.random(tweak_data.player.alarm_pager.nr_of_calls[1], tweak_data.player.alarm_pager.nr_of_calls[2]),
-		nr_calls_made = 0
-	}
-	local call_delay = math.lerp(tweak_data.player.alarm_pager.first_call_delay[1], tweak_data.player.alarm_pager.first_call_delay[2], math.random())
-	self._alarm_pager_data.pager_clbk_id = "pager" .. tostring(self._unit:key())
+	if self._pickpocketed then
+		return
+	end
 
-	managers.enemy:add_delayed_clbk(self._alarm_pager_data.pager_clbk_id, callback(self, self, "clbk_alarm_pager"), TimerManager:game():time() + call_delay)
+	self._unit:interaction():set_tweak_data("pickpocket_steal")
+	self._unit:interaction():set_active(true, true)
+
+	return true
 end
 
-function CopBrain:is_pager_started()
-	return self._alarm_pager_data and true or nil
+function CopBrain:_chk_disable_pickpocket_interaction()
+	if self._unit:character_damage():dead() or self._unit:movement():cool() then
+		return
+	end
+
+	self._unit:interaction():set_active(false, true)
+
+	return true
 end
 
-function CopBrain:end_alarm_pager()
-	if not self._alarm_pager_data then
+function CopBrain:on_pickpocket_interaction(player)
+	if not alive(player) or self._unit:character_damage():dead() or not self._unit:movement():cool() then
 		return
 	end
 
-	if self._alarm_pager_data.pager_clbk_id then
-		managers.enemy:remove_delayed_clbk(self._alarm_pager_data.pager_clbk_id)
+	local has_upgrade = nil
+
+	if player:base().is_local_player then
+		has_upgrade = managers.player:has_category_upgrade("interaction", "pickpocket_greed_steal")
+	else
+		has_upgrade = player:base():upgrade_value("interaction", "pickpocket_greed_steal")
 	end
 
-	self._alarm_pager_data = nil
-end
+	if has_upgrade then
+		self._pickpocketed = true
+		local tweak_table_name, tweak_table = managers.greed:on_loot_pickpocketed()
+		local value_line = tweak_data.greed:value_line_id(tweak_table and tweak_table.value)
 
-function CopBrain:on_alarm_pager_interaction(status, player)
-	if not managers.groupai:state():whisper_mode() then
-		return
-	end
+		managers.dialog:queue_dialog("player_gen_loot_" .. value_line, {
+			skip_idle_check = true,
+			instigator = player
+		})
 
-	local is_dead = self._unit:character_damage():dead()
-	local pager_data = self._alarm_pager_data
-
-	if not pager_data then
-		return
-	end
-
-	if status == "started" then
-		self._unit:sound():stop()
-		self._unit:interaction():set_outline_flash_state(nil, true)
-
-		if pager_data.pager_clbk_id then
-			managers.enemy:remove_delayed_clbk(pager_data.pager_clbk_id)
-
-			pager_data.pager_clbk_id = nil
-		end
-	elseif status == "complete" then
-		local nr_previous_bluffs = managers.groupai:state():get_nr_successful_alarm_pager_bluffs()
-		local has_upgrade = nil
-
-		if player:base().is_local_player then
-			has_upgrade = managers.player:has_category_upgrade("player", "corpse_alarm_pager_bluff")
-		else
-			has_upgrade = player:base():upgrade_value("player", "corpse_alarm_pager_bluff")
-		end
-
-		local chance_table = tweak_data.player.alarm_pager[has_upgrade and "bluff_success_chance_w_skill" or "bluff_success_chance"]
-		local chance_index = math.min(nr_previous_bluffs + 1, #chance_table)
-		local is_last = chance_table[math.min(chance_index + 1, #chance_table)] == 0
-		local rand_nr = math.random()
-		local success = chance_table[chance_index] > 0 and rand_nr < chance_table[chance_index]
-
-		self._unit:sound():stop()
-
-		if success then
-			managers.groupai:state():on_successful_alarm_pager_bluff()
-
-			local cue_index = is_last and 4 or 1
-
-			if is_dead then
-				self._unit:sound():corpse_play("dsp_radio_fooled_" .. tostring(cue_index), nil, true)
-			else
-				self._unit:sound():play("dsp_radio_fooled_" .. tostring(cue_index), nil, true)
-			end
-
-			if is_last then
-				-- Nothing
-			end
-		else
-			managers.groupai:state():on_police_called("alarm_pager_bluff_failed")
-			self._unit:interaction():set_active(false, true)
-
-			if is_dead then
-				self._unit:sound():corpse_play("dsp_radio_alarm_1", nil, true)
-			else
-				self._unit:sound():play("dsp_radio_alarm_1", nil, true)
-			end
-		end
-
-		self:end_alarm_pager()
-
-		if not self:_chk_enable_bodybag_interaction() then
-			self._unit:interaction():set_active(false, true)
-		end
-	elseif status == "interrupted" then
-		managers.groupai:state():on_police_called("alarm_pager_hang_up")
-		self._unit:interaction():set_active(false, true)
-		self._unit:sound():stop()
-
-		if is_dead then
-			self._unit:sound():corpse_play("dsp_radio_alarm_1", nil, true)
-		else
-			self._unit:sound():play("dsp_radio_alarm_1", nil, true)
-		end
-
-		self:end_alarm_pager()
-	end
-end
-
-function CopBrain:clbk_alarm_pager(ignore_this, data)
-	local pager_data = self._alarm_pager_data
-	local clbk_id = pager_data.pager_clbk_id
-	pager_data.pager_clbk_id = nil
-
-	if not managers.groupai:state():whisper_mode() then
-		self:end_alarm_pager()
-
-		return
-	end
-
-	if pager_data.nr_calls_made == 0 then
-		if managers.groupai:state():is_ecm_jammer_active("pager") then
-			self:end_alarm_pager()
-			self:begin_alarm_pager(true)
-
-			return
-		end
-
-		self._unit:sound():stop()
-
-		if self._unit:character_damage():dead() then
-			self._unit:sound():corpse_play("dsp_radio_query_1", nil, true)
-		else
-			self._unit:sound():play("dsp_radio_query_1", nil, true)
-		end
-
-		self._unit:interaction():set_tweak_data("corpse_alarm_pager")
-		self._unit:interaction():set_active(true, true)
-	elseif pager_data.nr_calls_made < pager_data.total_nr_calls then
-		self._unit:sound():stop()
-
-		if self._unit:character_damage():dead() then
-			self._unit:sound():corpse_play("dsp_radio_reminder_1", nil, true)
-		else
-			self._unit:sound():play("dsp_radio_reminder_1", nil, true)
-		end
-	elseif pager_data.nr_calls_made == pager_data.total_nr_calls then
-		self._unit:interaction():set_active(false, true)
-		managers.groupai:state():on_police_called("alarm_pager_not_answered")
-		self._unit:sound():stop()
-
-		if self._unit:character_damage():dead() then
-			self._unit:sound():corpse_play("pln_alm_any_any", nil, true)
-		else
-			self._unit:sound():play("pln_alm_any_any", nil, true)
-		end
-
-		self:end_alarm_pager()
-	end
-
-	if pager_data.nr_calls_made == pager_data.total_nr_calls - 1 then
-		self._unit:interaction():set_outline_flash_state(true, true)
-	end
-
-	pager_data.nr_calls_made = pager_data.nr_calls_made + 1
-
-	if pager_data.nr_calls_made <= pager_data.total_nr_calls then
-		local duration_settings = tweak_data.player.alarm_pager.call_duration[math.min(#tweak_data.player.alarm_pager.call_duration, pager_data.nr_calls_made)]
-		local call_delay = math.lerp(duration_settings[1], duration_settings[2], math.random())
-		self._alarm_pager_data.pager_clbk_id = clbk_id
-
-		managers.enemy:add_delayed_clbk(self._alarm_pager_data.pager_clbk_id, callback(self, self, "clbk_alarm_pager"), TimerManager:game():time() + call_delay)
+		return tweak_table_name
 	end
 end
 
@@ -1374,7 +1252,6 @@ function CopBrain:pre_destroy(unit)
 	self._attention_handler:set_attention(nil)
 	self._unit:movement():set_attention(nil)
 	self:rem_all_pos_rsrv()
-	self:end_alarm_pager()
 
 	if self._current_logic.pre_destroy then
 		self._current_logic.pre_destroy(self._logic_data)

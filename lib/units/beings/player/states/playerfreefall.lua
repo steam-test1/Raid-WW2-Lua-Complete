@@ -33,6 +33,7 @@ function PlayerFreefall:enter(state_data, enter_data)
 
 	self._unit:mover():set_damping(self._tweak_data.gravity / self._tweak_data.terminal_velocity)
 	self._unit:sound():play("free_falling", nil, false)
+	managers.hud:set_crosshair_fade(false)
 end
 
 function PlayerFreefall:_enter(enter_data)

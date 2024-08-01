@@ -14,11 +14,42 @@ NavLinkUnitElement._AI_SO_types = {
 	"AI_escort",
 	"AI_sniper"
 }
+NavLinkUnitElement.PRESETS = {
+	civilians = {
+		"civ_male",
+		"civ_female"
+	},
+	team_ai = {
+		"teamAI1",
+		"teamAI2",
+		"teamAI3",
+		"teamAI4"
+	},
+	security = {
+		"security",
+		"security_patrol"
+	},
+	acrobats = {
+		"cop",
+		"fbi",
+		"swat",
+		"sniper",
+		"gangster",
+		"murky",
+		"teamAI1",
+		"teamAI2",
+		"teamAI3",
+		"teamAI4"
+	},
+	heavies = {
+		"shield",
+		"tank"
+	}
+}
 
 function NavLinkUnitElement:init(unit)
 	NavLinkUnitElement.super.init(self, unit)
 
-	self._enemies = {}
 	self._nav_link_filter = {}
 	self._nav_link_filter_check_boxes = {}
 	self._hed.ai_group = "none"
@@ -66,6 +97,8 @@ function NavLinkUnitElement:test_element()
 		return
 	end
 
+	self:stop_test_element()
+
 	local spawn_unit_name = nil
 
 	if self._hed.test_unit == "default" then
@@ -79,42 +112,60 @@ function NavLinkUnitElement:test_element()
 	end
 
 	spawn_unit_name = spawn_unit_name or Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light")
-	local enemy = safe_spawn_unit(spawn_unit_name, self._unit:position(), self._unit:rotation())
+	self._test_unit = safe_spawn_unit(spawn_unit_name, self._unit:position(), self._unit:rotation())
 
-	if not enemy then
+	if not alive(self._test_unit) then
 		return
 	end
 
-	table.insert(self._enemies, enemy)
-	managers.groupai:state():set_char_team(enemy, tweak_data.levels:get_default_team_ID("non_combatant"))
-	enemy:movement():set_root_blend(false)
+	managers.groupai:state():set_char_team(self._test_unit, tweak_data.levels:get_default_team_ID("non_combatant"))
+	self._test_unit:movement():set_root_blend(false)
 
 	local t = {
 		id = self._unit:unit_data().unit_id,
 		editor_name = self._unit:unit_data().name_id,
 		values = self:new_save_values()
 	}
+	t.values.enabled = true
+	t.values.use_instigator = true
+	t.values.is_navigation_link = false
+	t.values.is_alert_point = false
 	t.values.followup_elements = nil
+	t.values.spawn_instigator_ids = nil
 	self._script = MissionScript:new({
 		elements = {}
 	})
-	self._so_class = ElementNavLink:new(self._script, t)
+	self._so_class = ElementSpecialObjective:new(self._script, t)
 	self._so_class._values.align_position = nil
 	self._so_class._values.align_rotation = nil
 
-	self._so_class:on_executed(enemy)
+	self._so_class:on_executed(self._test_unit)
+	self._so_class:add_event_callback("complete", callback(self, self, "loop_test_element"))
 
 	self._start_test_t = Application:time()
 end
 
+function NavLinkUnitElement:loop_test_element()
+	self._test_unit:warp_to(self._unit:rotation(), self._unit:position())
+	self._so_class:on_executed(self._test_unit)
+end
+
 function NavLinkUnitElement:stop_test_element()
-	for _, enemy in ipairs(self._enemies) do
-		enemy:set_slot(0)
+	if alive(self._test_unit) then
+		self._test_unit:set_slot(0)
 	end
 
-	self._enemies = {}
+	if self._start_test_t then
+		print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
 
-	print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
+		self._start_test_t = nil
+	end
+
+	if self._so_class then
+		self._so_class:destroy()
+
+		self._so_class = nil
+	end
 end
 
 function NavLinkUnitElement:draw_links(t, dt, selected_unit, all_units)
@@ -313,6 +364,8 @@ function NavLinkUnitElement:_apply_preset(params)
 		self:_clear_all_nav_link_filters()
 	elseif value == "all" then
 		self:_enable_all_nav_link_filters()
+	elseif NavLinkUnitElement.PRESETS[value] then
+		self:_set_preset_nav_link_filters(value)
 	else
 		print("Didn't have preset", value, "yet.")
 	end
@@ -331,6 +384,20 @@ end
 function NavLinkUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
+		self:_toggle_nav_link_filter_value({
+			ctrlr = ctrlr,
+			name = name
+		})
+	end
+end
+
+function NavLinkUnitElement:_set_preset_nav_link_filters(value)
+	local list = NavLinkUnitElement.PRESETS[value]
+
+	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
+		local state = table.contains(list, name)
+
+		ctrlr:set_value(state)
 		self:_toggle_nav_link_filter_value({
 			ctrlr = ctrlr,
 			name = name
@@ -373,7 +440,12 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 		sizer = opt_sizer,
 		options = {
 			"clear",
-			"all"
+			"all",
+			"civilians",
+			"team_ai",
+			"security",
+			"acrobats",
+			"heavies"
 		}
 	}
 	local filter_preset = CoreEWS.combobox(filter_preset_params)

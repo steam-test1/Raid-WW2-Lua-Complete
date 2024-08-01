@@ -39,7 +39,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout()
 		visible = false
 	})
 
-	if _G.IS_PS4 then
+	if IS_PS4 then
 		self:_layout_on_foot_ps4()
 		self:_layout_in_vehicle_ps4()
 	else

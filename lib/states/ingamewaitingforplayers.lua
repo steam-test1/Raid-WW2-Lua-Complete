@@ -6,7 +6,6 @@ IngameWaitingForPlayersState = IngameWaitingForPlayersState or class(GameState)
 function IngameWaitingForPlayersState:init(game_state_machine)
 	GameState.init(self, "ingame_waiting_for_players", game_state_machine)
 
-	self._intro_source = SoundDevice:create_source("intro_source")
 	self._start_cb = callback(self, self, "_start")
 	self._skip_cb = callback(self, self, "_skip")
 	self._controller = nil
@@ -56,7 +55,6 @@ end
 function IngameWaitingForPlayersState:sync_skip()
 	self._skipped = true
 
-	managers.briefing:stop_event(true)
 	self:_start_delay()
 end
 
@@ -73,40 +71,13 @@ end
 
 function IngameWaitingForPlayersState:sync_start(variant, soundtrack)
 	self._briefing_start_t = nil
-
-	managers.briefing:stop_event()
-
 	self._blackscreen_started = true
 
-	if self._intro_event then
-		self._delay_audio_t = Application:time() + 1
-	else
-		self:_start_delay()
-	end
+	self:_start_delay()
 end
 
 function IngameWaitingForPlayersState:blackscreen_started()
 	return self._blackscreen_started or false
-end
-
-function IngameWaitingForPlayersState:_start_audio()
-	self._intro_cue_index = 1
-	self._audio_started = true
-	local event_started = managers.briefing:post_event(self._intro_event, {
-		show_subtitle = true,
-		listener = {
-			end_of_event = true,
-			clbk = callback(self, self, "_audio_done")
-		}
-	})
-
-	if not event_started then
-		print("failed to start audio, or played safehouse before")
-
-		if Network:is_server() then
-			self:_start_delay()
-		end
-	end
 end
 
 function IngameWaitingForPlayersState:_start_delay()
@@ -154,12 +125,6 @@ function IngameWaitingForPlayersState:update(t, dt)
 
 	if self._briefing_start_t and self._briefing_start_t < t then
 		self._briefing_start_t = nil
-	end
-
-	if self._delay_audio_t and self._delay_audio_t < t then
-		self._delay_audio_t = nil
-
-		self:_start_audio()
 	end
 
 	if self._delay_start_t then
@@ -312,7 +277,7 @@ function IngameWaitingForPlayersState:show_intro_video()
 		background_color = Color.black
 	}
 	self._panel = RaidGUIPanel:new(self._full_panel, params_root_panel)
-	local video = "movies/vanilla/intro/global/01_intro_v014"
+	local video = "movies/vanilla/intro/01_intro_v014"
 	local intro_video_params = {
 		layer = self._panel:layer() + 1,
 		video = video,
@@ -410,7 +375,7 @@ function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 	Global.statistics_manager.playing_from_start = nil
 
-	print("Joining as " .. char_name)
+	Application:debug("[IngameWaitingForPlayersState:set_dropin()] Joining as " .. char_name or "NIL")
 end
 
 function IngameWaitingForPlayersState:check_is_dropin()
@@ -426,7 +391,6 @@ function IngameWaitingForPlayersState:at_exit()
 		managers.dyn_resource:remove_listener(self)
 	end
 
-	managers.briefing:stop_event(true)
 	managers.menu:close_menu("kit_menu")
 
 	if self._sound_listener then

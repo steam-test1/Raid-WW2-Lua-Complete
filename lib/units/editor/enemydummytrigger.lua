@@ -98,6 +98,7 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 
 	local options = {
+		"marked",
 		"alerted",
 		"death",
 		"killshot",

@@ -43,7 +43,6 @@ function NetworkAccountSTEAM:init()
 	managers.savefile:add_load_done_callback(callback(self, self, "_load_done"))
 	Steam:lb_handler():register_storage_done_callback(NetworkAccountSTEAM._on_leaderboard_stored)
 	Steam:lb_handler():register_mappings_done_callback(NetworkAccountSTEAM._on_leaderboard_mapped)
-	self:set_lightfx()
 	self:inventory_load()
 end
 
@@ -80,35 +79,6 @@ function NetworkAccountSTEAM:get_win_ratio(difficulty, level)
 	table.sort(ratio)
 
 	return ratio[#ratio / 2]
-end
-
-function NetworkAccountSTEAM:set_lightfx()
-end
-
-function NetworkAccountSTEAM._on_troll_group_recieved(success, page)
-	if success and string.find(page, "<steamID64>" .. Steam:userid() .. "</steamID64>") then
-		managers.network.account._masks.troll = true
-	end
-
-	Steam:http_request("http://steamcommunity.com/gid/103582791432592205/memberslistxml/?xml=1", NetworkAccountSTEAM._on_com_group_recieved)
-end
-
-function NetworkAccountSTEAM._on_com_group_recieved(success, page)
-	if success and string.find(page, "<steamID64>" .. Steam:userid() .. "</steamID64>") then
-		managers.network.account._masks.hockey_com = true
-	end
-
-	Steam:http_request("http://steamcommunity.com/gid/103582791432508229/memberslistxml/?xml=1", NetworkAccountSTEAM._on_dev_group_recieved)
-end
-
-function NetworkAccountSTEAM._on_dev_group_recieved(success, page)
-	if success and string.find(page, "<steamID64>" .. Steam:userid() .. "</steamID64>") then
-		managers.network.account._masks.developer = true
-	end
-end
-
-function NetworkAccountSTEAM:has_alienware()
-	return self._has_alienware
 end
 
 function NetworkAccountSTEAM:_call_listeners(event, params)
@@ -491,17 +461,22 @@ function NetworkAccountSTEAM:_verify_filter_cards(card_list)
 	local result = {}
 
 	if card_list then
-		for _, card_steam_data in pairs(card_list) do
-			if card_steam_data.category == "challenge_card" then
-				local challenge_card_data = managers.challenge_cards:get_challenge_card_data(card_steam_data.entry)
+		for _, cc_steamdata in pairs(card_list) do
+			if cc_steamdata.category == ChallengeCardsManager.INV_CAT_CHALCARD then
+				local cc_tweakdata = managers.challenge_cards:get_challenge_card_data(cc_steamdata.entry)
 
-				if challenge_card_data then
-					if not filtered_list[challenge_card_data.key_name] then
-						filtered_list[challenge_card_data.key_name] = challenge_card_data
-						filtered_list[challenge_card_data.key_name].steam_instance_ids = {}
+				if cc_tweakdata then
+					if not filtered_list[cc_tweakdata.key_name] then
+						filtered_list[cc_tweakdata.key_name] = cc_tweakdata
+						filtered_list[cc_tweakdata.key_name].steam_instances = {}
 					end
 
-					table.insert(filtered_list[challenge_card_data.key_name].steam_instance_ids, card_steam_data.instance_id)
+					local instance_id = cc_steamdata.instance_id or #filtered_list[cc_tweakdata.key_name].steam_instances
+
+					table.insert(filtered_list[cc_tweakdata.key_name].steam_instances, {
+						stack_amount = cc_steamdata.amount or 1,
+						instance_id = tostring(instance_id)
+					})
 				end
 			end
 		end
@@ -521,17 +496,13 @@ function NetworkAccountSTEAM:inventory_is_loading()
 end
 
 function NetworkAccountSTEAM:inventory_reward(item_def_id, callback_ref)
-	if not item_def_id or item_def_id < 1 then
-		Application:error("[NetworkAccountSTEAM:inventory_reward] item_def_id nil")
+	item_def_id = item_def_id or 1
 
-		item_def_id = 1
-	end
+	Application:debug("[NetworkAccountSTEAM:inventory_reward] item_def_id:", item_def_id)
 
 	if callback_ref then
-		Application:debug("[NetworkAccountSTEAM:inventory_reward] callback_ref exists:", callback_ref, item_def_id)
 		Steam:inventory_reward(callback_ref, item_def_id)
 	else
-		Application:debug("[NetworkAccountSTEAM:inventory_reward] callback_ref nil:", item_def_id)
 		Steam:inventory_reward(callback(self, self, "_clbk_inventory_reward"), item_def_id)
 	end
 
@@ -539,16 +510,15 @@ function NetworkAccountSTEAM:inventory_reward(item_def_id, callback_ref)
 end
 
 function NetworkAccountSTEAM:_clbk_inventory_reward(error, tradable_list)
-	Application:trace("[NetworkAccountSTEAM:_clbk_inventory_reward]")
-	Application:trace("error ", inspect(error))
-	Application:trace("tradable_list ", inspect(tradable_list))
-	Application:error("*This is empty callback, you need to pass callback that you want to process loot drop. If you are seeing this there was no valid callback set!")
+	Application:trace("[NetworkAccountSTEAM:_clbk_inventory_reward] Dummy fallback")
+	Application:trace("\t-error ", inspect(error))
+	Application:trace("\t-tradable_list ", inspect(tradable_list))
 end
 
 function NetworkAccountSTEAM:inventory_remove(instance_id)
-	Application:trace("[ChallengeCardsManager:inventory_remove] instance_id ", instance_id)
-
 	local return_status = Steam:inventory_remove(instance_id)
+
+	Application:trace("[ChallengeCardsManager:inventory_remove] instance_id ", instance_id, ", status", return_status)
 end
 
 function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
@@ -624,147 +594,5 @@ function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 
 	if managers.network:session() then
 		managers.network:session():check_send_outfit()
-	end
-end
-
-function NetworkAccountSTEAM.output_global_stats(file)
-	local num_days = 100
-	local sa = Steam:sa_handler()
-	local invalid = sa:get_global_stat("easy_slaughter_house_plays", num_days)
-	invalid[1] = 1
-	invalid[3] = 1
-	invalid[11] = 1
-	invalid[12] = 1
-	invalid[19] = 1
-	invalid[28] = 1
-	invalid[51] = 1
-	invalid[57] = 1
-
-	local function get_lvl_stat(diff, heist, stat, i)
-		if i == 0 then
-			local st = NetworkAccountSTEAM.lb_levels[heist] .. ", " .. NetworkAccountSTEAM.lb_diffs[diff] .. " - "
-
-			if type(stat) == "string" then
-				return st .. stat
-			else
-				return st .. stat[1] .. "/" .. stat[2]
-			end
-		end
-
-		local num = nil
-
-		if type(stat) == "string" then
-			num = sa:get_global_stat(diff .. "_" .. heist .. "_" .. stat, num_days)[i] or 0
-		else
-			local f = sa:get_global_stat(diff .. "_" .. heist .. "_" .. stat[1], num_days)[i] or 0
-			local s = sa:get_global_stat(diff .. "_" .. heist .. "_" .. stat[2], num_days)[i] or 1
-			num = f / (s == 0 and 1 or s)
-		end
-
-		return num
-	end
-
-	local function get_weapon_stat(weapon, stat, i)
-		if i == 0 then
-			local st = weapon .. " - "
-
-			if type(stat) == "string" then
-				return st .. stat
-			else
-				return st .. stat[1] .. "/" .. stat[2]
-			end
-		end
-
-		local num = nil
-
-		if type(stat) == "string" then
-			num = sa:get_global_stat(weapon .. "_" .. stat, num_days)[i] or 0
-		else
-			local f = sa:get_global_stat(weapon .. "_" .. stat[1], num_days)[i] or 0
-			local s = sa:get_global_stat(weapon .. "_" .. stat[2], num_days)[i] or 1
-			num = f / (s == 0 and 1 or s)
-		end
-
-		return num
-	end
-
-	local diffs = {
-		"easy",
-		"normal",
-		"hard",
-		"overkill",
-		"overkill_145",
-		"overkill_290"
-	}
-	local heists = {
-		"bank",
-		"heat_street",
-		"bridge",
-		"apartment",
-		"slaughter_house",
-		"diamond_heist"
-	}
-	local weapons = {
-		"beretta92",
-		"c45",
-		"raging_bull",
-		"r870_shotgun",
-		"mossberg",
-		"m4",
-		"mp5",
-		"mac11",
-		"m14",
-		"hk21"
-	}
-	local lvl_stats = {
-		"plays",
-		{
-			"wins",
-			"plays"
-		},
-		{
-			"kills",
-			"plays"
-		}
-	}
-	local wep_stats = {
-		"kills",
-		{
-			"kills",
-			"shots"
-		},
-		{
-			"headshots",
-			"shots"
-		}
-	}
-	local lines = {}
-
-	for i = 0, #invalid do
-		if i == 0 or invalid[i] == 0 then
-			local out = "" .. i
-
-			for _, lvl_stat in ipairs(lvl_stats) do
-				for _, diff in ipairs(diffs) do
-					for _, heist in ipairs(heists) do
-						out = out .. ";" .. get_lvl_stat(diff, heist, lvl_stat, i)
-					end
-				end
-			end
-
-			for _, wep_stat in ipairs(wep_stats) do
-				for _, weapon in ipairs(weapons) do
-					out = out .. ";" .. get_weapon_stat(weapon, wep_stat, i)
-				end
-			end
-
-			table.insert(lines, out)
-		end
-	end
-
-	local file_handle = SystemFS:open(file, "w")
-
-	for i = 1, #lines do
-		file_handle:puts(lines[i == 1 and 1 or #lines - i + 2])
 	end
 end

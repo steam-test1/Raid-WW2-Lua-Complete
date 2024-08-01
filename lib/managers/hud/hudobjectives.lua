@@ -123,7 +123,7 @@ function HUDObjectives:complete_sub_objective(data)
 end
 
 function HUDObjectives:update_amount_objective(data)
-	if self._main_objective:id() == data.id then
+	if self._main_objective and self._main_objective:id() == data.id then
 		self._main_objective:set_current_amount(data.current_amount)
 	end
 end
@@ -140,15 +140,21 @@ function HUDObjectives:open_right_done(uses_amount)
 end
 
 function HUDObjectives:show_timer()
-	self._main_objective:show_timer()
+	if self._main_objective then
+		self._main_objective:show_timer()
+	end
 end
 
 function HUDObjectives:hide_timer()
-	self._main_objective:hide_timer()
+	if self._main_objective then
+		self._main_objective:hide_timer()
+	end
 end
 
 function HUDObjectives:set_timer_value(current, total)
-	self._main_objective:set_timer_value(current, total)
+	if self._main_objective then
+		self._main_objective:set_timer_value(current, total)
+	end
 end
 
 function HUDObjectives:_clear_objectives()

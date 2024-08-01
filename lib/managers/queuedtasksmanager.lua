@@ -46,6 +46,26 @@ function QueuedTasksManager:queue(id, callback, task_self, data, delay, verifica
 	table.insert(self._queued_tasks, task)
 end
 
+function QueuedTasksManager:delay_queued_task(id, delay, replaced)
+	if self:has_task(id) then
+		for _, task in pairs(self._queued_tasks) do
+			if task.id == id then
+				if replaced then
+					task.execute_time = self._t + delay
+
+					break
+				end
+
+				task.execute_time = task.execute_time + delay
+
+				break
+			end
+		end
+	else
+		Application:warn("[QueuedTasksManager:delay_queued_task] Task doesnt exist:", id)
+	end
+end
+
 function QueuedTasksManager:unqueue(id)
 	local tasks = self._queued_tasks
 	local i_task = #tasks

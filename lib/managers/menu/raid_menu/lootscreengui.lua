@@ -108,6 +108,7 @@ end
 
 function LootScreenGui:_layout()
 	LootScreenGui.super._layout(self)
+	managers.raid_menu:show_background_video()
 	self:_create_fullscreen_panel()
 	self:_create_flares()
 	self:_layout_loot_breakdown_items()
@@ -526,6 +527,10 @@ end
 
 function LootScreenGui:data_source_branching_progress_bar()
 	return self:_get_loot_point_data()
+end
+
+function LootScreenGui:set_local_loot_drop(loot_drop)
+	self.local_player_loot_drop = loot_drop
 end
 
 function LootScreenGui:_show_local_loot_display()
@@ -1024,8 +1029,6 @@ function LootScreenGui:_animate_show_loot(panel)
 	wait(1)
 
 	while not self.local_player_loot_drop do
-		self.local_player_loot_drop = self.current_state.local_player_loot_drop
-
 		coroutine.yield()
 	end
 
@@ -1219,7 +1222,7 @@ function LootScreenGui:bind_controller_inputs_card_rewards()
 end
 
 function LootScreenGui:_check_gamercard_prompts(bindings, legend)
-	if _G.IS_XB1 and self.peer_loot_shown then
+	if IS_XB1 and self.peer_loot_shown then
 		local gamercard_prompts_shown = 0
 
 		for i = 1, #self._peer_slots do

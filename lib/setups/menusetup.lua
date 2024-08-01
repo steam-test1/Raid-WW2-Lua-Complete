@@ -1,3 +1,4 @@
+core:import("CoreSubtitlePresenter")
 require("lib/setups/Setup")
 require("lib/network/base/NetworkManager")
 require("lib/managers/StatisticsManager")
@@ -44,9 +45,7 @@ function MenuSetup:load_packages()
 		end
 	end
 
-	local platform = SystemInfo:platform()
-
-	if platform == Idstring("XB1") or platform == Idstring("PS4") then
+	if IS_CONSOLE then
 		if not PackageManager:loaded("packages/game_base_init") then
 			PackageManager:load("packages/game_base_init")
 			PackageManager:load("packages/game_base")
@@ -58,7 +57,7 @@ function MenuSetup:load_packages()
 			Global._game_base_package_loaded = true
 		end
 	elseif not PackageManager:loaded("packages/game_base_init") then
-		local function _load_wip_func()
+		local function clbk_wips_and_camp()
 			if PackageManager:package_exists("packages/wip/game_base") then
 				if not PackageManager:loaded("packages/wip/game_base") then
 					PackageManager:load("packages/wip/game_base", function ()
@@ -70,11 +69,11 @@ function MenuSetup:load_packages()
 			end
 		end
 
-		local function load_base_func()
-			PackageManager:load("packages/game_base", _load_wip_func)
+		local function clbk_load_base_func()
+			PackageManager:load("packages/game_base", clbk_wips_and_camp)
 		end
 
-		PackageManager:load("packages/game_base_init", load_base_func)
+		PackageManager:load("packages/game_base_init", clbk_load_base_func)
 	end
 
 	if PackageManager:package_exists("packages/wip/start_menu") and not PackageManager:loaded("packages/wip/start_menu") then
@@ -103,9 +102,10 @@ function MenuSetup:load_stream_level_packages()
 	Application:debug("[MenuSetup:load_stream_level_packages]")
 
 	local function _empty_func()
+		Application:debug("[MenuSetup:load_stream_level_packages] DONE")
 	end
 
-	setup:set_resource_loaded_clbk(Idstring("unit"), nil)
+	setup:set_resource_loaded_clbk(IDS_UNIT, nil)
 
 	if not PackageManager:loaded("levels/vanilla/streaming_level/world_sounds") then
 		PackageManager:load("levels/vanilla/streaming_level/world_sounds", _empty_func)
@@ -119,10 +119,11 @@ function MenuSetup:load_camp_packages()
 	Application:debug("[MenuSetup:load_camp_packages]")
 
 	local function _empty_func()
+		Application:debug("[MenuSetup:load_camp_packages] DONE")
 	end
 
-	if not PackageManager:loaded("levels/wip/camp/world_sounds") then
-		PackageManager:load("levels/wip/camp/world_sounds", _empty_func)
+	if not PackageManager:loaded("levels/vanilla/camp/world_sounds") then
+		PackageManager:load("levels/vanilla/camp/world_sounds", _empty_func)
 	end
 
 	self:_load_pkg_with_init("levels/vanilla/camp/world")
@@ -249,7 +250,7 @@ function MenuSetup:init_managers(managers)
 		self:load_stream_level_packages()
 	else
 		managers.sequence:preload()
-		setup:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+		setup:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 	end
 end
 
@@ -260,17 +261,7 @@ function MenuSetup:init_finalize()
 		managers.network:init_finalize()
 	end
 
-	if _G.IS_PS3 then
-		if not Global.hdd_space_checked then
-			managers.savefile:check_space_required()
-
-			self.update = self.update_wait_for_savegame_info
-		else
-			managers.achievment:chk_install_trophies()
-		end
-	end
-
-	if _G.IS_PS4 then
+	if IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 
@@ -288,7 +279,7 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	if managers.savefile:fetch_savegame_hdd_space_required() then
 		Application:check_sufficient_hdd_space_to_launch(managers.savefile:fetch_savegame_hdd_space_required(), managers.dlc:has_full_game())
 
-		if _G.IS_PS3 or _G.IS_PS4 then
+		if IS_PS4 then
 			Trophies:set_translation_text(managers.localization:text("err_load"), managers.localization:text("err_ins"), managers.localization:text("err_disk"))
 			managers.achievment:chk_install_trophies()
 		end

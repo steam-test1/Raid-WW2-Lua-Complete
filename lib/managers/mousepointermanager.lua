@@ -360,16 +360,6 @@ function MousePointerManager:_mouse_move(o, x, y)
 end
 
 function MousePointerManager:_modify_mouse_button(button)
-	if MenuCallbackHandler:is_steam_controller() then
-		if button == Idstring("grip_l") then
-			return Idstring("0")
-		elseif button == Idstring("grip_r") then
-			return Idstring("1")
-		end
-
-		return nil
-	end
-
 	return button
 end
 

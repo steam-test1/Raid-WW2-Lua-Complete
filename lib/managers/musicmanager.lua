@@ -60,10 +60,6 @@ function MusicManager:load_profile(data)
 	end
 end
 
-function MusicManager:music_tracks()
-	return tweak_data.music.soundbank_list
-end
-
 function MusicManager:get_random_event()
 	local event_names = {}
 

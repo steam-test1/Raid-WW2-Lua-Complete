@@ -31,11 +31,9 @@ require("lib/units/beings/player/PlayerMovement")
 
 NetworkManager = NetworkManager or class()
 
-if SystemInfo:platform() == Idstring("X360") then
-	NetworkManager.DEFAULT_PORT = 1000
-elseif SystemInfo:platform() == Idstring("XB1") then
+if IS_XB1 then
 	NetworkManager.DEFAULT_PORT = 43210
-elseif SystemInfo:platform() == Idstring("PS4") then
+elseif IS_PS4 then
 	NetworkManager.DEFAULT_PORT = 22222
 else
 	NetworkManager.DEFAULT_PORT = 9899
@@ -43,7 +41,7 @@ end
 
 NetworkManager.DROPIN_ENABLED = true
 
-if _G.IS_XB360 or _G.IS_PS3 or _G.IS_PS4 or _G.IS_XB1 then
+if IS_PS4 or IS_XB1 then
 	NetworkManager.PROTOCOL_TYPE = "TCP_IP"
 else
 	NetworkManager.PROTOCOL_TYPE = "STEAM"
@@ -63,22 +61,9 @@ function NetworkManager:init()
 			indexes = {}
 		}
 	}
-
-	if _G.IS_PS3 then
-		self._is_ps3 = true
-	elseif _G.IS_XB360 then
-		self._is_x360 = true
-	elseif _G.IS_PS4 then
-		self._is_ps4 = true
-	elseif _G.IS_XB1 then
-		self._is_xb1 = true
-	else
-		self._is_win32 = true
-	end
-
 	self._spawn_points = {}
 
-	if self._is_ps4 then
+	if IS_PS4 then
 		Network:set_use_psn_network(true)
 
 		if #PSN:get_world_list() == 0 then
@@ -86,11 +71,11 @@ function NetworkManager:init()
 		end
 
 		self:_register_PSN_matchmaking_callbacks()
-	elseif self._is_xb1 then
+	elseif IS_XB1 then
 		self.account = NetworkAccountXBL:new()
 		self.voice_chat = NetworkVoiceChatXBL:new()
-	elseif self._is_win32 then
-		if SystemInfo:distribution() == Idstring("STEAM") then
+	elseif IS_PC then
+		if IS_STEAM then
 			self.account = NetworkAccountSTEAM:new()
 			self.voice_chat = NetworkVoiceChatSTEAM:new()
 		else
@@ -119,15 +104,15 @@ function NetworkManager:init_finalize()
 end
 
 function NetworkManager:_create_lobby()
-	if self._is_win32 then
+	if IS_PC then
 		cat_print("lobby", "Online Lobby is PC")
 
-		if SystemInfo:distribution() == Idstring("STEAM") then
+		if IS_STEAM then
 			self.matchmake = NetworkMatchMakingSTEAM:new()
 		else
 			self.matchmake = NetworkMatchMaking:new()
 		end
-	elseif self._is_ps4 then
+	elseif IS_PS4 then
 		cat_print("lobby", "Online Lobby is PS4")
 
 		self.friends = NetworkFriendsPSN:new()
@@ -138,28 +123,10 @@ function NetworkManager:_create_lobby()
 		self.account = NetworkAccountPSN:new()
 		self.match = nil
 
-		self:ps3_determine_voice()
+		self:psn_determine_voice()
 
 		self._shared_update = self.shared_psn
-	elseif self._is_xb1 then
-		self.friends = NetworkFriendsXBL:new()
-		self.matchmake = NetworkMatchMakingXBL:new()
-	elseif self._is_ps3 then
-		cat_print("lobby", "Online Lobby is PS3")
-
-		self.friends = NetworkFriendsPSN:new()
-		self.group = NetworkGroupLobbyPSN:new()
-		self.matchmake = NetworkMatchMakingPSN:new()
-		self.shared_psn = NetworkGenericPSN:new()
-		self.shared = self.shared_psn
-		self.account = NetworkAccountPSN:new()
-		self.match = nil
-
-		print("voice chat _create_lobby")
-		self:ps3_determine_voice()
-
-		self._shared_update = self.shared_psn
-	elseif self._is_x360 then
+	elseif IS_XB1 then
 		self.friends = NetworkFriendsXBL:new()
 		self.matchmake = NetworkMatchMakingXBL:new()
 	else
@@ -171,7 +138,7 @@ function NetworkManager:_create_lobby()
 	end
 end
 
-function NetworkManager:ps3_determine_voice(lan)
+function NetworkManager:psn_determine_voice(lan)
 	local voice = "voice_quiet"
 
 	if lan == true then
@@ -232,16 +199,11 @@ function NetworkManager:load()
 		self._session:load(Global.network.session)
 		managers.network.matchmake:_load_globals()
 		managers.network.account:_load_globals()
-
-		if self._is_x360 then
-			managers.network.voice_chat:resume()
-		else
-			managers.network.voice_chat:_load_globals()
-		end
+		managers.network.voice_chat:_load_globals()
 
 		Global.network = nil
 
-		if self._is_win32 then
+		if IS_PC then
 			managers.network.voice_chat:open()
 		end
 	end
@@ -268,7 +230,7 @@ function NetworkManager:save()
 		managers.network.account:_save_globals()
 		managers.network.voice_chat:_save_globals(true)
 
-		if self._is_win32 then
+		if IS_PC then
 			managers.network.voice_chat:destroy_voice()
 		end
 	end
@@ -344,7 +306,7 @@ function NetworkManager:prepare_stop_network(...)
 	if self._session then
 		self._session:prepare_to_close(...)
 
-		if self.voice_chat and self._is_win32 then
+		if self.voice_chat and IS_PC then
 			self.voice_chat:destroy_voice()
 		end
 	end
@@ -457,7 +419,7 @@ function NetworkManager:start_client()
 	self:stop_network(true)
 	self:start_network()
 
-	if self._is_win32 then
+	if IS_PC then
 		self.voice_chat:open()
 	end
 
@@ -521,7 +483,7 @@ function NetworkManager:host_game()
 	self:stop_network(true)
 	self:start_network()
 
-	if self._is_win32 then
+	if IS_PC then
 		self.voice_chat:open()
 	end
 
@@ -646,7 +608,7 @@ function NetworkManager:protocol_type()
 end
 
 function NetworkManager:set_packet_throttling_enabled(state)
-	if self._session and self._is_win32 then
+	if self._session and IS_PC then
 		self._session:set_packet_throttling_enabled(state)
 	end
 end
@@ -658,7 +620,7 @@ function NetworkManager:on_peer_added(peer, peer_id)
 		managers.network.matchmake:set_num_players(managers.network:session():amount_of_players())
 	end
 
-	if _G.IS_XB360 or _G.IS_XB1 then
+	if IS_XB1 then
 		managers.network.matchmake:on_peer_added(peer)
 	end
 
@@ -674,30 +636,20 @@ function NetworkManager:update_matchmake_attributes()
 end
 
 function NetworkManager:get_matchmake_attributes()
-	local is_win32 = _G.IS_PC
 	local difficulty_id = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
 	local permission_id = tweak_data:permission_to_index(Global.game_settings.permission)
 	local min_lvl = Global.game_settings.reputation_permission or 0
 	local drop_in = Global.game_settings.drop_in_allowed and 1 or 0
 	local level_id, job_id, progress, mission_type, server_state_id = managers.network.matchmake:get_job_info_by_current_job()
 	local level_id_index = 0
+	level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
 
-	if not is_win32 then
-		level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
-
+	if not IS_PC then
 		if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
 			level_id_index = tweak_data.operations:get_raid_index_from_raid_id(job_id, level_id)
 		elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
 			level_id_index = tweak_data.operations:get_index_from_raid_id(level_id)
 		end
-	else
-		level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
-	end
-
-	local region = 1
-
-	if Global.game_settings.level_id and tweak_data.operations and tweak_data.operations.missions and tweak_data.operations.missions[Global.game_settings.level_id] and tweak_data.operations.missions[Global.game_settings.level_id].region then
-		region = tweak_data.operations:get_region_index_from_name(tweak_data.operations.missions[Global.game_settings.level_id].region)
 	end
 
 	local attributes = {
@@ -710,14 +662,20 @@ function NetworkManager:get_matchmake_attributes()
 			[7] = min_lvl
 		}
 	}
+	local region = 1
 
-	if is_win32 then
+	if Global.game_settings.level_id and tweak_data.operations and tweak_data.operations.missions and tweak_data.operations.missions[Global.game_settings.level_id] and tweak_data.operations.missions[Global.game_settings.level_id].region then
+		region = tweak_data.operations:get_region_index_from_name(tweak_data.operations.missions[Global.game_settings.level_id].region)
+	end
+
+	attributes.numbers[11] = region
+
+	if IS_PC then
 		local kick_option = Global.game_settings.kick_option
 
 		table.insert(attributes.numbers, kick_option)
 	end
 
-	attributes.numbers[11] = region
 	local active_card = managers.challenge_cards:get_active_card()
 	local card_key = "nocards"
 
@@ -726,11 +684,11 @@ function NetworkManager:get_matchmake_attributes()
 	end
 
 	attributes.numbers[12] = card_key
-	local players_info = managers.network.matchmake:get_all_players_info()
 	attributes.numbers[13] = "-"
 	attributes.numbers[14] = job_id
 	attributes.numbers[15] = progress
 	attributes.numbers[16] = mission_type
+	local players_info = managers.network.matchmake:get_all_players_info()
 	attributes.numbers[17] = players_info[1]
 	attributes.numbers[18] = players_info[2]
 	attributes.numbers[19] = players_info[3]

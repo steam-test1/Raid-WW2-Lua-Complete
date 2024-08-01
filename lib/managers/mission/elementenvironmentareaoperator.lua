@@ -20,7 +20,9 @@ function ElementEnvironmentAreaOperator:load(data)
 	if self._has_executed == true then
 		local environment_area = managers.environment_area:get_area_by_name(self._values.environment_area)
 
-		environment_area:set_environment(self._values.environment)
+		if environment_area then
+			environment_area:set_environment(self._values.environment)
+		end
 	end
 end
 
@@ -33,9 +35,13 @@ function ElementEnvironmentAreaOperator:on_executed(instigator)
 		return
 	end
 
-	self._has_executed = true
 	local environment_area = managers.environment_area:get_area_by_name(self._values.environment_area)
 
-	environment_area:set_environment(self._values.environment)
+	if environment_area then
+		environment_area:set_environment(self._values.environment)
+	end
+
+	self._has_executed = true
+
 	ElementEnvironmentAreaOperator.super.on_executed(self, instigator)
 end

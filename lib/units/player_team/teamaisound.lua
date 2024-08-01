@@ -7,13 +7,13 @@ function TeamAISound:init(unit)
 
 	local ss = unit:sound_source()
 
-	ss:set_switch("robber", tweak_data.character[unit:base()._tweak_table].speech_prefix)
-	ss:set_switch("int_ext", "third")
+	ss:set_switch("hero_switch", tweak_data.character[unit:base()._tweak_table].speech_prefix)
+	ss:set_switch("actor_switch", "third")
 end
 
 function TeamAISound:set_voice(voice)
 	local ss = self._unit:sound_source()
 
-	ss:set_switch("robber", voice)
-	ss:set_switch("int_ext", "third")
+	ss:set_switch("hero_switch", voice)
+	ss:set_switch("actor_switch", "third")
 end

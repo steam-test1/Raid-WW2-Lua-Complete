@@ -1,8 +1,10 @@
 core:module("CoreString")
 
-function utf8.find_char(text, char)
+function utf8.find_char(text, char, start)
+	start = start or 1
+
 	for i, c in ipairs(utf8.characters(text)) do
-		if c == char then
+		if start < i and c == char then
 			return i
 		end
 	end

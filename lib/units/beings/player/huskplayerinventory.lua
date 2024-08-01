@@ -45,10 +45,6 @@ function HuskPlayerInventory:synch_equipped_weapon(send_equipped_weapon_type, eq
 end
 
 function HuskPlayerInventory:check_peer_weapon_spawn()
-	if SystemInfo:platform() ~= Idstring("PS3") then
-		return true
-	end
-
 	local next_in_line = self._peer_weapons[1]
 
 	if next_in_line then
@@ -74,8 +70,8 @@ function HuskPlayerInventory:set_melee_weapon_by_peer(peer)
 end
 
 function HuskPlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
-	if not managers.dyn_resource:is_resource_ready(Idstring("unit"), new_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE) then
-		managers.dyn_resource:load(Idstring("unit"), new_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+	if not managers.dyn_resource:is_resource_ready(IDS_UNIT, new_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE) then
+		managers.dyn_resource:load(IDS_UNIT, new_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 	end
 
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
@@ -104,9 +100,9 @@ end
 function HuskPlayerInventory:add_unit_by_factory_blueprint(factory_name, equip, instant, blueprint, cosmetics)
 	local factory_weapon = tweak_data.weapon.factory[factory_name]
 
-	if not managers.dyn_resource:is_resource_ready(Idstring("unit"), Idstring(factory_weapon.unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE) then
+	if not managers.dyn_resource:is_resource_ready(IDS_UNIT, Idstring(factory_weapon.unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE) then
 		print("[HuskPlayerInventory:add_unit_by_factory_blueprint]", "Weapon unit is not loaded, force loading it.", factory_weapon.unit)
-		managers.dyn_resource:load(Idstring("unit"), Idstring(factory_weapon.unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+		managers.dyn_resource:load(IDS_UNIT, Idstring(factory_weapon.unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 	end
 
 	local new_unit = World:spawn_unit(Idstring(factory_weapon.unit), Vector3(), Rotation())

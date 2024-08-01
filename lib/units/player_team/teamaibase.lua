@@ -25,13 +25,14 @@ function TeamAIBase:default_weapon_name(slot)
 	return tweak_data.character[self._tweak_table].weapon.weapons_of_choice[slot or "primary"]
 end
 
-function TeamAIBase:arrest_settings()
-	return tweak_data.character[self._tweak_table].arrest
-end
-
 function TeamAIBase:pre_destroy(unit)
 	self:remove_from_vehicle()
 	self:unregister()
+
+	if self._unit:customization() then
+		self._unit:customization():destroy_all_parts_on_character()
+	end
+
 	UnitBase.pre_destroy(self, unit)
 end
 
@@ -74,7 +75,7 @@ function TeamAIBase:remove_from_vehicle()
 	local unit_movement = self._unit:movement()
 
 	if unit_movement.vehicle_unit and unit_movement.vehicle_seat and unit_movement.vehicle_seat.occupant == self._unit then
-		unit_movement.vehicle_unit:vehicle_driving():_evacuate_seat(unit_movement.vehicle_seat)
+		unit_movement.vehicle_unit:vehicle_driving():evacuate_seat(unit_movement.vehicle_seat)
 	end
 end
 

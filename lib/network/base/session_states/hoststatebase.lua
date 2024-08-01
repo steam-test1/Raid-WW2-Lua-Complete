@@ -23,17 +23,12 @@ end
 function HostStateBase:_send_request_denied(sender, reason, my_user_id)
 	Application:trace("[HostStateBase:_send_request_denied]", reason, debug.traceback())
 
-	local xuid = (_G.IS_XB360 or _G.IS_XB1) and managers.network.account:player_id() or ""
+	local xuid = IS_XB1 and managers.network.account:player_id() or ""
 
 	sender:join_request_reply(reason, 0, "", 1, 1, 0, "", my_user_id, "", 0, 0, 0, 0, xuid, 0)
 end
 
 function HostStateBase:_has_peer_left_PSN(peer_name)
-	if _G.IS_PS3 and managers.network.matchmake:check_peer_join_request_remove(peer_name) then
-		print("this CLIENT has left us from PSN, ignore his request", peer_name)
-
-		return
-	end
 end
 
 function HostStateBase:_is_in_server_state()
@@ -41,7 +36,7 @@ function HostStateBase:_is_in_server_state()
 end
 
 function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading, peer_name, character, mask_set, xuid, xnaddr)
-	local new_peer_user_id = _G.IS_PC and new_peer:user_id() or ""
+	local new_peer_user_id = IS_PC and new_peer:user_id() or ""
 	local new_peer_id = new_peer:id()
 
 	for old_pid, old_peer in pairs(data.peers) do
@@ -111,7 +106,7 @@ function HostStateBase:on_handshake_confirmation(data, peer, introduced_peer_id)
 end
 
 function HostStateBase:_is_kicked(data, peer_name, peer_rpc)
-	local ident = _G.IS_PC and peer_rpc:ip_at_index(0) or peer_name
+	local ident = IS_PC and peer_rpc:ip_at_index(0) or peer_name
 
 	if data.kicked_list[ident] then
 		return true

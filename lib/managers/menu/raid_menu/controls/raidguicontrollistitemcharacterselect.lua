@@ -100,12 +100,15 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 	local profile_name = self:translate("character_selection_empty_slot", true)
 	local character_nationality = nil
 	local character_name = "---"
-	local character_flag = nil
+	local character_class = "---"
+	local character_flag, class_name = nil
 
 	if self._item_data.cache then
 		profile_name = self._item_data.cache.PlayerManager.character_profile_name
-		character_nationality = self._item_data.cache.PlayerManager.character_profile_nation
+		character_nationality = self._item_data.cache.PlayerManager.character_profile_nation or "british"
+		character_class = self._item_data.cache.SkillTreeManager.character_profile_base_class or "assault"
 		character_name = self:translate("menu_" .. character_nationality, true)
+		class_name = self:translate(tweak_data.skilltree.classes[character_class].name_id, true)
 		character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 		self._customize_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
@@ -177,11 +180,13 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 		table.insert(self._special_action_buttons, self._create_button)
 	end
 
-	self._profile_name_label:set_text(utf8.to_upper(profile_name))
-	self._character_name_label:set_text(utf8.to_upper(character_name))
+	local label_text = class_name and character_name .. " | " .. class_name or character_name
+
+	self._profile_name_label:set_text(profile_name)
+	self._character_name_label:set_text(label_text)
 
 	if character_nationality then
-		self:update_flag(character_nationality)
+		self:update_flag(character_nationality, character_class)
 		self:_layout_breadcrumb(character_nationality)
 	end
 end
@@ -247,7 +252,7 @@ function RaidGUIControlListItemCharacterSelect:activate_off()
 	end
 end
 
-function RaidGUIControlListItemCharacterSelect:update_flag(character_nationality)
+function RaidGUIControlListItemCharacterSelect:update_flag(character_nationality, character_class)
 	local character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 
 	if character_flag then
@@ -258,7 +263,13 @@ function RaidGUIControlListItemCharacterSelect:update_flag(character_nationality
 	if self._character_name_label and alive(self._character_name_label._object) then
 		local character_name = self:translate("menu_" .. character_nationality, true)
 
-		self._character_name_label:set_text(utf8.to_upper(character_name))
+		if character_class then
+			local class_name = self:translate(tweak_data.skilltree.classes[character_class].name_id, true)
+
+			self._character_name_label:set_text(character_name .. " | " .. class_name)
+		else
+			self._character_name_label:set_text(character_name)
+		end
 	end
 end
 
@@ -285,6 +296,10 @@ function RaidGUIControlListItemCharacterSelect:on_mouse_released(button)
 end
 
 function RaidGUIControlListItemCharacterSelect:confirm_pressed()
+	if not self._selected then
+		return false
+	end
+
 	if not self._item_data or not self._item_data.cache then
 		return self._create_button:on_mouse_released()
 	end
@@ -313,24 +328,26 @@ function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_call
 		self:_on_item_selected_callback(self._character_slot)
 	end
 
-	if self._customize_button and self._active then
-		self._customize_button:set_visible(true)
-	end
+	if not managers.controller:is_controller_present() then
+		if self._customize_button and self._active then
+			self._customize_button:set_visible(true)
+		end
 
-	if self._delete_button then
-		self._delete_button:set_visible(true)
-	end
+		if self._delete_button then
+			self._delete_button:set_visible(true)
+		end
 
-	if self._create_button then
-		self._create_button:set_visible(true)
-	end
+		if self._create_button then
+			self._create_button:set_visible(true)
+		end
 
-	if self._nationality_button and self._active then
-		self._nationality_button:set_visible(true)
-	end
+		if self._nationality_button and self._active then
+			self._nationality_button:set_visible(true)
+		end
 
-	if self._rename_button and self._active then
-		self._rename_button:set_visible(true)
+		if self._rename_button and self._active then
+			self._rename_button:set_visible(true)
+		end
 	end
 
 	if self._active then

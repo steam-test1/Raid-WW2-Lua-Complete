@@ -65,12 +65,6 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 
 					success = true
 				end
-			elseif revive_unit:character_damage():arrested() then
-				if data.unit:brain():action_request(objective.action) then
-					revive_unit:character_damage():pause_arrested_timer()
-
-					success = true
-				end
 			elseif revive_unit:character_damage():need_revive() and data.unit:brain():action_request(objective.action) then
 				revive_unit:character_damage():pause_downed_timer()
 
@@ -90,22 +84,10 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 				local revive_t = TimerManager:game():time() + (objective.action_duration or 0)
 
 				CopLogicBase.add_delayed_clbk(my_data, my_data.revive_complete_clbk_id, callback(TeamAILogicIdle, TeamAILogicIdle, "clbk_revive_complete", data), revive_t)
-
-				if not revive_unit:character_damage():arrested() then
-					local suffix = "a"
-					local downed_time = revive_unit:character_damage():down_time()
-
-					if downed_time <= tweak_data.player.damage.DOWNED_TIME_MIN then
-						suffix = "c"
-					elseif downed_time <= tweak_data.player.damage.DOWNED_TIME / 2 + tweak_data.player.damage.DOWNED_TIME_DEC then
-						suffix = "b"
-					end
-
-					managers.dialog:queue_dialog("player_gen_revive_start", {
-						skip_idle_check = true,
-						instigator = data.unit
-					})
-				end
+				managers.dialog:queue_dialog("player_gen_revive_start", {
+					skip_idle_check = true,
+					instigator = data.unit
+				})
 			else
 				data.unit:brain():set_objective()
 
@@ -157,8 +139,6 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 				revive_unit:interaction():interact_interupt(data.unit)
 				managers.hud:teammate_cancel_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
 				managers.network:session():send_to_peers_synched("sync_ai_interaction_cancel", data.unit)
-			elseif revive_unit:character_damage():arrested() then
-				revive_unit:character_damage():unpause_arrested_timer()
 			elseif revive_unit:character_damage():need_revive() then
 				revive_unit:character_damage():unpause_downed_timer()
 				managers.hud:teammate_cancel_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
@@ -205,12 +185,12 @@ function TeamAILogicIdle.update(data)
 				if TeamAILogicIdle._check_should_relocate(data, my_data, objective) and not data.unit:movement():chk_action_forbidden("walk") then
 					objective.in_place = nil
 
-					TeamAILogicBase._exit(data.unit, "travel")
+					TeamAILogicBase._exit_to_state(data.unit, "travel")
 				end
 			elseif objective.type == "revive" then
 				objective.in_place = nil
 
-				TeamAILogicBase._exit(data.unit, "travel")
+				TeamAILogicBase._exit_to_state(data.unit, "travel")
 			end
 		end
 	elseif not data.path_fail_t or data.t - data.path_fail_t > 6 then
@@ -282,7 +262,7 @@ function TeamAILogicIdle.damage_clbk(data, damage_info)
 	end
 
 	if (damage_info.result.type == "bleedout" or damage_info.result.type == "fatal" or damage_info.variant == "tase") and data.name ~= "disabled" then
-		CopLogicBase._exit(data.unit, "disabled")
+		CopLogicBase._exit_to_state(data.unit, "disabled")
 	end
 end
 
@@ -320,20 +300,12 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 		if other_unit:character_damage():need_revive() then
 			objective_type = "revive"
 			objective_action = "revive"
-		elseif other_unit:character_damage():arrested() then
-			objective_type = "revive"
-			objective_action = "untie"
 		else
 			objective_type = "follow"
 		end
 	elseif other_unit:movement():need_revive() then
 		objective_type = "revive"
-
-		if other_unit:movement():current_state_name() == "arrested" then
-			objective_action = "untie"
-		else
-			objective_action = "revive"
-		end
+		objective_action = "revive"
 	else
 		objective_type = "follow"
 	end
@@ -348,11 +320,6 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 			type = objective_type,
 			follow_unit = other_unit
 		}
-
-		managers.dialog:queue_dialog("player_intimidate_follow", {
-			skip_idle_check = true,
-			instigator = managers.player:local_player()
-		})
 	else
 		local followup_objective = {
 			scan = true,
@@ -391,7 +358,7 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 					walk = -1
 				}
 			},
-			action_duration = tweak_data.interaction[objective_action == "untie" and "free" or objective_action].timer,
+			action_duration = tweak_data.interaction:get_interaction(objective_action == "untie" and "free" or objective_action).timer,
 			followup_objective = followup_objective
 		}
 
@@ -411,12 +378,12 @@ function TeamAILogicIdle.on_new_objective(data, old_objective)
 	if not my_data.exiting then
 		if new_objective then
 			if (new_objective.nav_seg or new_objective.follow_unit) and not new_objective.in_place then
-				CopLogicBase._exit(data.unit, "travel")
+				CopLogicBase._exit_to_state(data.unit, "travel")
 			else
-				CopLogicBase._exit(data.unit, "idle")
+				CopLogicBase._exit_to_state(data.unit, "idle")
 			end
 		else
-			CopLogicBase._exit(data.unit, "idle")
+			CopLogicBase._exit_to_state(data.unit, "idle")
 		end
 	else
 		debug_pause("[TeamAILogicIdle.on_new_objective] Already exiting", data.name, data.unit, old_objective and inspect(old_objective), new_objective and inspect(new_objective))
@@ -499,7 +466,7 @@ function TeamAILogicIdle._upd_enemy_detection(data)
 			end
 
 			if my_data == data.internal_data then
-				CopLogicBase._exit(data.unit, wanted_state)
+				CopLogicBase._exit_to_state(data.unit, wanted_state)
 			end
 
 			return
@@ -690,8 +657,6 @@ function TeamAILogicIdle.on_action_completed(data, action)
 					if revive_unit:interaction():active() then
 						revive_unit:interaction():interact_interupt(data.unit)
 					end
-				elseif revive_unit:character_damage():arrested() then
-					revive_unit:character_damage():unpause_arrested_timer()
 				elseif revive_unit:character_damage():need_revive() then
 					revive_unit:character_damage():unpause_downed_timer()
 				end
@@ -764,11 +729,11 @@ function TeamAILogicIdle.clbk_revive_complete(ignore_this, data)
 				managers.hud:teammate_complete_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
 				managers.network:session():send_to_peers_synched("sync_ai_interaction_complete", data.unit)
 			end
-		elseif revive_unit:character_damage() and (revive_unit:character_damage():need_revive() or revive_unit:character_damage():arrested()) then
+		elseif revive_unit:character_damage() and revive_unit:character_damage():need_revive() then
 			local hint = revive_unit:character_damage():need_revive() and 2 or 3
 
 			managers.network:session():send_to_peers_synched("sync_teammate_helped_hint", hint, revive_unit, data.unit)
-			revive_unit:character_damage():revive(data.unit)
+			revive_unit:character_damage():revive(false, data.unit)
 			managers.hud:teammate_complete_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
 			managers.network:session():send_to_peers_synched("sync_ai_interaction_complete", data.unit)
 		end

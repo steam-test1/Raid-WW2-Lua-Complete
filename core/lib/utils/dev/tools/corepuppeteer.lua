@@ -11,7 +11,6 @@ function CorePuppeteer:init(unit)
 	unit = unit or World:selected_unit()
 
 	self:_create_window(unit):set_visible(true)
-	CoreEWS.check_news(self._window, "puppeteer", true)
 
 	if managers.editor then
 		self._selected_unit_callback = managers.editor:add_selected_unit_callback(callback(self, self, "_on_selected_unit_changed"))

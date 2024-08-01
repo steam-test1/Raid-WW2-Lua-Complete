@@ -19,7 +19,9 @@ function HUDObjectiveSub:init(objectives_panel, active_objective)
 	self:_create_objective_text()
 	self:_create_checkbox()
 
-	if active_objective.amount then
+	if active_objective.start_completed then
+		self:complete()
+	elseif active_objective.amount then
 		self:_create_amount()
 		self:set_total_amount(active_objective.amount)
 		self:set_current_amount(active_objective.current_amount)

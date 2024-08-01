@@ -69,12 +69,7 @@ function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	self._upgrades[category][upgrade] = value
 	self._upgrade_levels[category][upgrade] = level
 
-	if upgrade == "passive_concealment_modifier" then
-		local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
-
-		self:set_suspicion_multiplier("equipment", 1 / con_mul)
-		self:set_detection_multiplier("equipment", 1 / con_mul)
-	elseif upgrade == "suspicion_multiplier" then
+	if upgrade == "suspicion_multiplier" then
 		self:set_suspicion_multiplier(upgrade, value)
 	end
 end

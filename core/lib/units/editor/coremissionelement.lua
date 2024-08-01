@@ -349,7 +349,7 @@ function CoreMissionElement:_add_unit_to_orientation_elements()
 			return
 		end
 
-		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
+		if not alive(unit) or not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
 		end
 
@@ -474,7 +474,7 @@ end
 function CoreMissionElement:_add_panel(parent, parent_sizer)
 	local panel = EWS:ScrolledWindow(parent, "", "VSCROLL,TAB_TRAVERSAL")
 
-	panel:set_scroll_rate(Vector3(0, 20, 0))
+	panel:set_scroll_rate(Vector3(1, 20, 0))
 	panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
 
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -563,6 +563,9 @@ end
 
 function CoreMissionElement:selected()
 	self:append_elements_sorted()
+end
+
+function CoreMissionElement:on_unselected()
 end
 
 function CoreMissionElement:update_selected()
@@ -1467,7 +1470,7 @@ function CoreMissionElement:_add_unit_list_btn(params)
 	end
 
 	local function f(unit)
-		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
+		if not alive(unit) or not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
 		end
 
@@ -1484,7 +1487,7 @@ function CoreMissionElement:_add_unit_list_btn(params)
 		return false
 	end
 
-	local dialog = SelectUnitByNameModal:new("Add Unit", f)
+	local dialog = SelectUnitByNameModal:new("Add Units", f)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		local id = unit:unit_data().unit_id
@@ -1500,7 +1503,7 @@ function CoreMissionElement:_remove_unit_list_btn(params)
 		return table.contains(elements, unit:unit_data().unit_id)
 	end
 
-	local dialog = SelectUnitByNameModal:new("Remove Unit", f)
+	local dialog = SelectUnitByNameModal:new("Remove Units", f)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		local id = unit:unit_data().unit_id
@@ -1512,16 +1515,16 @@ end
 function CoreMissionElement:_build_add_remove_static_unit_from_list(panel, sizer, params)
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
-	toolbar:add_tool("ADD_UNIT_LIST", "Add unit from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
+	toolbar:add_tool("ADD_UNIT_LIST", "Add units from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_add_static_unit_list_btn"), params)
-	toolbar:add_tool("REMOVE_UNIT_LIST", "Remove unit from unit list", CoreEws.image_path("toolbar\\delete_16x16.png"), nil)
+	toolbar:add_tool("REMOVE_UNIT_LIST", "Remove units from unit list", CoreEws.image_path("toolbar\\delete_16x16.png"), nil)
 	toolbar:connect("REMOVE_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_remove_static_unit_list_btn"), params)
 	toolbar:realize()
 	sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 end
 
 function CoreMissionElement:_add_static_unit_list_btn(params)
-	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Add Unit", params.add_filter)
+	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Add Static Units", params.add_filter)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		local id = unit:unit_data().unit_id
@@ -1531,7 +1534,7 @@ function CoreMissionElement:_add_static_unit_list_btn(params)
 end
 
 function CoreMissionElement:_remove_static_unit_list_btn(params)
-	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Remove Unit", params.remove_filter)
+	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Remove Static Units", params.remove_filter)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		params.remove_result(unit)

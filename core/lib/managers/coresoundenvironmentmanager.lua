@@ -46,8 +46,7 @@ function CoreSoundEnvironmentManager:init()
 	end
 
 	self._ambience_enabled = false
-	self._occasional_blocked_by_platform = _G.IS_XB360
-	self._ambience_sources_count = 1
+	self._ambience_sources_count = 2
 	self.POSITION_OFFSET = 50
 	self._active_ambience_soundbanks = {}
 	self._occasional_sound_source = SoundDevice:create_source("occasional")
@@ -602,7 +601,7 @@ function CoreSoundEnvironmentManager:_update_object(t, dt, id, data)
 	if data.next_occasional < t then
 		data.next_occasional = self:_next_occasional()
 
-		if self._ambience_enabled and not self._occasional_blocked_by_platform then
+		if self._ambience_enabled then
 			local event = data.area and data.area:use_occasional() and data.area:occasional_event() or self._default_occasional
 
 			if event then

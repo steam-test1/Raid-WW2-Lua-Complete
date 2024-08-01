@@ -11,19 +11,10 @@ function GrenadePickupNew:init(unit)
 		self:_randomize_stack_size()
 	end
 
-	self:_randomize_glow_effect()
-end
-
-local ids_mat_effect = Idstring("mat_sweep")
-local ids_uv0_offset = Idstring("uv0_offset")
-
-function GrenadePickupNew:_randomize_glow_effect()
-	local material = self._unit:material(ids_mat_effect)
+	local material = self._unit:material(Idstring("mat_effect"))
 
 	if material then
-		local r = math.random()
-
-		material:set_variable(ids_uv0_offset, Vector3(r, r, r))
+		Pickup.randomize_glow_effect(material)
 	end
 end
 
@@ -68,13 +59,15 @@ function GrenadePickupNew:sync_pickup_munitions_size(stack_size)
 end
 
 function GrenadePickupNew:consume(stack_consume)
-	if self._stack_size then
-		self:set_stack_size(self._stack_size - stack_consume)
-	end
+	self:set_stack_size(self._stack_size - stack_consume)
 end
 
 function GrenadePickupNew:delete_unit()
-	World:delete_unit(self._unit)
+	if Network:is_server() then
+		managers.drop_loot:despawn_item(self._unit)
+	end
+
+	self._unit:set_slot(0)
 end
 
 function GrenadePickupNew:pickup(player_unit)
@@ -111,6 +104,37 @@ function GrenadePickupNew:_pickup(player_unit)
 				managers.player:register_grenade(local_peer)
 			end
 
+			local grant_ammo = math.rand_bool()
+
+			if managers.player:has_category_upgrade("player", "opportunist_pick_up_grenade_to_ammo") and grant_ammo then
+				local add_ammo_ratio = managers.player:upgrade_value("player", "opportunist_pick_up_grenade_to_ammo") - 1
+				local any_picked_up = false
+
+				for id, weapon in pairs(player_unit:inventory():available_selections()) do
+					local picked_up = weapon.unit:base():add_ammo(add_ammo_ratio)
+
+					if picked_up then
+						managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
+
+						any_picked_up = true
+					end
+				end
+
+				if not any_picked_up then
+					grant_ammo = false
+				end
+			end
+
+			if managers.player:has_category_upgrade("player", "opportunist_pick_up_grenade_to_health") and not grant_ammo then
+				local damage_ext = player_unit:character_damage()
+
+				if damage_ext and not damage_ext:is_downed() and not damage_ext:dead() and not damage_ext:is_perseverating() then
+					local restore_value = managers.player:upgrade_value("player", "opportunist_pick_up_grenade_to_health")
+
+					damage_ext:restore_health(restore_value, true)
+				end
+			end
+
 			managers.network:session():send_to_peers_synched("sync_pickup_munitions_stack", self._unit, amount_taken)
 			self:consume(amount_taken)
 
@@ -135,29 +159,15 @@ function GrenadePickupNew:register_grenades(gained_grenades, peer)
 	end
 end
 
-function GrenadePickupNew:get_pickup_type()
-	return "grenade"
-end
-
-function GrenadePickupNew:save(data)
-	local state = {
-		stack_size = self._stack_size
-	}
-	data.GrenadePickupNew = state
-end
-
-function GrenadePickupNew:load(data)
-	local state = data.GrenadePickupNew
-
-	if state then
-		self:set_stack_size(state.stack_size)
-	end
+function GrenadePickupNew:get_stack_size()
+	return self._stack_size or 0
 end
 
 function GrenadePickupNew:set_stack_size(stack_size)
 	self._stack_size = stack_size
 
 	if self._stack_size <= 0 then
+		Application:debug("[GrenadePickupNew] EMPTY... KILL IT")
 		self:delete_unit()
 
 		return
@@ -181,5 +191,24 @@ function GrenadePickupNew:set_stack_size(stack_size)
 				end
 			end
 		end
+	end
+end
+
+function GrenadePickupNew:get_pickup_type()
+	return "grenade"
+end
+
+function GrenadePickupNew:save(data)
+	local state = {
+		stack_size = self._stack_size
+	}
+	data.GrenadePickupNew = state
+end
+
+function GrenadePickupNew:load(data)
+	local state = data.GrenadePickupNew
+
+	if state then
+		self:set_stack_size(state.stack_size)
 	end
 end

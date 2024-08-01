@@ -488,23 +488,25 @@ function CharacterCustomizationManager:request_change_criminal_character(peer_id
 end
 
 function CharacterCustomizationManager:change_criminal_character(peer_id, new_character_name, peer_unit, remove_unit_in_source_slot)
+	local local_peer = managers.network:session():local_peer()
 	local unit_to_remove = managers.criminals:character_unit_by_name(new_character_name)
 
 	managers.hud:_remove_name_label(peer_unit and peer_unit:unit_data() and peer_unit:unit_data().name_label_id)
 
-	if unit_to_remove and remove_unit_in_source_slot then
+	if alive(unit_to_remove) and remove_unit_in_source_slot then
 		unit_to_remove:set_slot(0)
 	end
 
 	managers.criminals:remove_character_by_peer_id(peer_id)
-	managers.criminals:add_character(new_character_name, peer_unit, peer_id, false)
 	managers.network:session():peer(peer_id):set_character(new_character_name)
+	managers.criminals:add_character(new_character_name, peer_unit, peer_id, false)
 
-	local head_data = self:get_default_head_data(new_character_name)
+	if local_peer:id() == peer_id then
+		local outfit_string = managers.blackmarket:outfit_string()
 
-	if peer_unit and peer_unit:customization() then
-		self:increase_current_version_to_attach()
-		peer_unit:customization():attach_head_for_husk(head_data.path)
+		local_peer:set_outfit_string(outfit_string)
+		local_peer:set_character_customization()
+		managers.network:session():send_to_peers_synched("set_character_customization", local_peer:unit(), outfit_string, local_peer:outfit_version(), local_peer:id())
 	end
 
 	if Global.game_settings.team_ai and Network:is_server() then

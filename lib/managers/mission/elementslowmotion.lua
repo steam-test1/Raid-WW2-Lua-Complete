@@ -7,7 +7,7 @@ function ElementSlowMotion:on_executed(instigator)
 		return
 	end
 
-	local eff_desc = tweak_data.timespeed.mission_effects[self._values.eff_name]
+	local eff_desc = tweak_data.timespeed[self._values.eff_name]
 
 	if not eff_desc then
 		debug_pause("[ElementSlowMotion] could not find effect", self._values.eff_name)

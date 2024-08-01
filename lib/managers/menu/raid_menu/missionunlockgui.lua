@@ -372,7 +372,10 @@ function MissionUnlockGui:on_unlock_confirmed()
 	managers.progression:choose_offered_mission(self._selected_mission)
 	managers.menu_component:post_event("new_raid_unlocked")
 
-	if tweak_data.operations.missions[self._selected_mission] and tweak_data.operations.missions[self._selected_mission].control_brief_video then
+	local skip_cinematics = managers.user:get_setting("skip_cinematics")
+	local brief_video = tweak_data.operations.missions[self._selected_mission] and tweak_data.operations.missions[self._selected_mission].control_brief_video
+
+	if brief_video and not skip_cinematics then
 		if managers.controller:is_using_controller() then
 			managers.queued_tasks:queue("play_unlocked_raid_control_video", self._play_control_briefing_video, self, self._selected_mission, 0.1, nil)
 		else

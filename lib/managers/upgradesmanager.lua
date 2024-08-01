@@ -8,6 +8,16 @@ UpgradesManager.AQUIRE_STRINGS = {
 	"WeaponSkill",
 	"MeleeWeaponDrop"
 }
+UpgradesManager.CATEGORY_ARMOR = "armor"
+UpgradesManager.CATEGORY_FEATURE = "feature"
+UpgradesManager.CATEGORY_WEAPON = "weapon"
+UpgradesManager.CATEGORY_GRENADE = "grenade"
+UpgradesManager.CATEGORY_MELEE_WEAPON = "melee_weapon"
+UpgradesManager.CATEGORY_EQUIPMENT = "equipment"
+UpgradesManager.CATEGORY_EQUIPMENT_UPGRADE = "equipment_upgrade"
+UpgradesManager.CATEGORY_TEMPORARY = "temporary"
+UpgradesManager.CATEGORY_COOLDOWN = "cooldown"
+UpgradesManager.CATEGORY_TEAM = "team"
 
 function UpgradesManager:init()
 	self:_setup()
@@ -15,6 +25,8 @@ end
 
 function UpgradesManager:_setup()
 	if not Global.upgrades_manager then
+		Application:debug("[UpgradesManager] Setting up upgrades_manager tables...")
+
 		Global.upgrades_manager = {
 			aquired = {},
 			automanage = false,
@@ -45,24 +57,6 @@ function UpgradesManager:toggle_visual_weapon_upgrade(upgrade)
 	else
 		self._global.disabled_visual_upgrades[upgrade] = true
 	end
-end
-
-function UpgradesManager:set_target_tree(tree)
-	local level = managers.experience:current_level()
-	local step = self._global.progress[tree]
-	local cap = tweak_data.upgrades.tree_caps[self._global.progress[tree] + 1]
-
-	if cap and level < cap then
-		return
-	end
-
-	self:_set_target_tree(tree)
-end
-
-function UpgradesManager:_set_target_tree(tree)
-	local i = self._global.progress[tree] + 1
-	local upgrade = tweak_data.upgrades.definitions[tweak_data.upgrades.progress[tree][i]]
-	self._global.target_tree = tree
 end
 
 function UpgradesManager:current_tree_name()
@@ -215,7 +209,7 @@ function UpgradesManager:aquire_default(id, identifier)
 	local identify_key = Idstring(identifier):key()
 
 	if self._global.aquired[id] and self._global.aquired[id][identify_key] then
-		Application:error("Tried to aquire an upgrade that has already been aquired: " .. id, "identifier", identifier, "id_key", identify_key)
+		Application:error("[UpgradesManager:aquire_default] Tried to aquire an upgrade that has already been aquired: " .. id, "identifier", identifier, "id_key", identify_key)
 		Application:stack_dump()
 
 		return
@@ -252,7 +246,7 @@ function UpgradesManager:enable_weapon(id, identifier)
 	local identify_key = Idstring(identifier):key()
 
 	if self._global.aquired[id] and self._global.aquired[id][identify_key] then
-		Application:error("Tried to aquire an upgrade that has already been aquired: " .. id, "identifier", identifier, "id_key", identify_key)
+		Application:error("[UpgradesManager:enable_weapon] Tried to aquire an upgrade that has already been aquired: " .. id, "identifier", identifier, "id_key", identify_key)
 		Application:stack_dump()
 
 		return
@@ -266,7 +260,7 @@ end
 
 function UpgradesManager:aquire(id, loading, identifier)
 	if not tweak_data.upgrades.definitions[id] then
-		Application:error("Tried to aquire an upgrade that doesn't exist: " .. (id or "nil") .. "")
+		Application:error("Tried to aquire an upgrade that doesn't exist: " .. tostring(id))
 
 		return
 	end
@@ -288,7 +282,7 @@ function UpgradesManager:aquire(id, loading, identifier)
 	local identify_key = Idstring(identifier):key()
 
 	if self._global.aquired[id] and self._global.aquired[id][identify_key] then
-		Application:error("Tried to aquire an upgrade that has already been aquired: " .. id, "identifier", identifier, "id_key", identify_key)
+		Application:error("[UpgradesManager:aquire] Tried to aquire an upgrade that has already been aquired: " .. id, "identifier", identifier, "id_key", identify_key)
 		Application:stack_dump()
 
 		return
@@ -338,51 +332,49 @@ function UpgradesManager:unaquire(id, identifier)
 end
 
 function UpgradesManager:_aquire_upgrade(upgrade, id, loading)
-	if upgrade.category == "weapon" then
+	if upgrade.category == UpgradesManager.CATEGORY_WEAPON then
 		self:_aquire_weapon(upgrade, id, loading)
-	elseif upgrade.category == "feature" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_FEATURE then
 		self:_aquire_feature(upgrade, id, loading)
-	elseif upgrade.category == "equipment" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_EQUIPMENT then
 		self:_aquire_equipment(upgrade, id, loading)
-	elseif upgrade.category == "equipment_upgrade" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_EQUIPMENT_UPGRADE then
 		self:_aquire_equipment_upgrade(upgrade, id, loading)
-	elseif upgrade.category == "temporary" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_TEMPORARY then
 		self:_aquire_temporary(upgrade, id, loading)
-	elseif upgrade.category == "cooldown" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_COOLDOWN then
 		self:_aquire_cooldown(upgrade, id, loading)
-	elseif upgrade.category == "team" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_TEAM then
 		self:_aquire_team(upgrade, id, loading)
-	elseif upgrade.category == "armor" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_ARMOR then
 		self:_aquire_armor(upgrade, id, loading)
-	elseif upgrade.category == "rep_upgrade" then
-		self:_aquire_rep_upgrade(upgrade, id, loading)
-	elseif upgrade.category == "melee_weapon" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_MELEE_WEAPON then
 		self:_aquire_melee_weapon(upgrade, id, loading)
-	elseif upgrade.category == "grenade" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_GRENADE then
 		self:_aquire_grenade(upgrade, id, loading)
 	end
 end
 
 function UpgradesManager:_unaquire_upgrade(upgrade, id)
-	if upgrade.category == "weapon" then
+	if upgrade.category == UpgradesManager.CATEGORY_WEAPON then
 		self:_unaquire_weapon(upgrade, id)
-	elseif upgrade.category == "feature" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_FEATURE then
 		self:_unaquire_feature(upgrade, id)
-	elseif upgrade.category == "equipment" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_EQUIPMENT then
 		self:_unaquire_equipment(upgrade, id)
-	elseif upgrade.category == "equipment_upgrade" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_EQUIPMENT_UPGRADE then
 		self:_unaquire_equipment_upgrade(upgrade, id)
-	elseif upgrade.category == "temporary" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_TEMPORARY then
 		self:_unaquire_temporary(upgrade, id)
-	elseif upgrade.category == "cooldown" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_COOLDOWN then
 		self:_unaquire_cooldown(upgrade, id)
-	elseif upgrade.category == "team" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_TEAM then
 		self:_unaquire_team(upgrade, id)
-	elseif upgrade.category == "armor" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_ARMOR then
 		self:_unaquire_armor(upgrade, id)
-	elseif upgrade.category == "melee_weapon" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_MELEE_WEAPON then
 		self:_unaquire_melee_weapon(upgrade, id)
-	elseif upgrade.category == "grenade" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_GRENADE then
 		self:_unaquire_grenade(upgrade, id)
 	end
 end
@@ -497,10 +489,6 @@ function UpgradesManager:_unaquire_armor(upgrade, id)
 	managers.blackmarket:on_unaquired_armor(upgrade, id)
 end
 
-function UpgradesManager:_aquire_rep_upgrade(upgrade, id)
-	managers.skilltree:rep_upgrade(upgrade, id)
-end
-
 function UpgradesManager:get_value(upgrade_id, ...)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
@@ -510,25 +498,25 @@ function UpgradesManager:get_value(upgrade_id, ...)
 
 	local u = upgrade.upgrade
 
-	if upgrade.category == "feature" then
+	if upgrade.category == UpgradesManager.CATEGORY_FEATURE then
 		return tweak_data.upgrades.values[u.category][u.upgrade][u.value]
-	elseif upgrade.category == "equipment" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_EQUIPMENT then
 		return upgrade.equipment_id
-	elseif upgrade.category == "equipment_upgrade" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_EQUIPMENT_UPGRADE then
 		return tweak_data.upgrades.values[u.category][u.upgrade][u.value]
-	elseif upgrade.category == "temporary" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_TEMPORARY then
 		local temporary = tweak_data.upgrades.values[u.category][u.upgrade][u.value]
 
 		return "Value: " .. tostring(temporary[1]) .. " Time: " .. temporary[2]
-	elseif upgrade.category == "cooldown" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_COOLDOWN then
 		local cooldown = tweak_data.upgrades.values[u.category][u.upgrade][u.value]
 
 		return "Value: " .. tostring(cooldown[1]) .. " Time: " .. cooldown[2]
-	elseif upgrade.category == "team" then
-		local value = tweak_data.upgrades.values.team[u.category][u.upgrade][u.value]
+	elseif upgrade.category == UpgradesManager.CATEGORY_TEAM then
+		local value = tweak_data.upgrades.values[UpgradesManager.CATEGORY_TEAM][u.category][u.upgrade][u.value]
 
 		return value
-	elseif upgrade.category == "weapon" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_WEAPON then
 		local default_weapons = {
 			BlackMarketManager.DEFAULT_SECONDARY_WEAPON_ID,
 			BlackMarketManager.DEFAULT_PRIMARY_WEAPON_ID
@@ -549,11 +537,11 @@ function UpgradesManager:get_value(upgrade_id, ...)
 		end
 
 		return is_default_weapon, weapon_level, weapon_id ~= new_weapon_id
-	elseif upgrade.category == "melee_weapon" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_MELEE_WEAPON then
 		local params = {
 			...
 		}
-		local default_id = params[1] or managers.blackmarket and managers.blackmarket:get_category_default("melee_weapon") or "weapon"
+		local default_id = params[1] or managers.blackmarket and managers.blackmarket:get_category_default(UpgradesManager.CATEGORY_MELEE_WEAPON) or UpgradesManager.CATEGORY_WEAPON
 		local melee_weapon_id = upgrade_id
 		local is_default_weapon = melee_weapon_id == default_id
 		local melee_weapon_level = 0
@@ -569,11 +557,11 @@ function UpgradesManager:get_value(upgrade_id, ...)
 		end
 
 		return is_default_weapon, melee_weapon_level
-	elseif upgrade.category == "grenade" then
+	elseif upgrade.category == UpgradesManager.CATEGORY_GRENADE then
 		local params = {
 			...
 		}
-		local default_id = params[1] or managers.blackmarket and managers.blackmarket:get_category_default("grenade") or "weapon"
+		local default_id = params[1] or managers.blackmarket and managers.blackmarket:get_category_default(UpgradesManager.CATEGORY_GRENADE) or UpgradesManager.CATEGORY_WEAPON
 		local grenade_id = upgrade_id
 		local is_default_weapon = grenade_id == default_id
 		local grenade_level = 0
@@ -784,11 +772,43 @@ function UpgradesManager:aquired_by_category(category)
 end
 
 function UpgradesManager:aquired_features()
-	return self:aquired_by_category("feature")
+	return self:aquired_by_category(UpgradesManager.CATEGORY_FEATURE)
+end
+
+function UpgradesManager:aquired_armors()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_ARMOR)
 end
 
 function UpgradesManager:aquired_weapons()
-	return self:aquired_by_category("weapon")
+	return self:aquired_by_category(UpgradesManager.CATEGORY_WEAPON)
+end
+
+function UpgradesManager:aquired_grenades()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_GRENADE)
+end
+
+function UpgradesManager:aquired_melee_weapons()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_MELEE_WEAPON)
+end
+
+function UpgradesManager:aquired_equipments()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_EQUIPMENT)
+end
+
+function UpgradesManager:aquired_equipment_upgrades()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_EQUIPMENT_UPGRADE)
+end
+
+function UpgradesManager:aquired_temporary()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_TEMPORARY)
+end
+
+function UpgradesManager:aquired_cooldowns()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_COOLDOWN)
+end
+
+function UpgradesManager:aquired_teams()
+	return self:aquired_by_category(UpgradesManager.CATEGORY_TEAM)
 end
 
 function UpgradesManager:list_level_rewards(dlcs)
@@ -817,7 +837,7 @@ end
 
 function UpgradesManager:all_weapon_upgrades()
 	for id, data in pairs(tweak_data.upgrades.definitions) do
-		if data.category == "weapon" then
+		if data.category == UpgradesManager.CATEGORY_WEAPON then
 			print(id)
 		end
 	end
@@ -825,7 +845,7 @@ end
 
 function UpgradesManager:weapon_upgrade_by_weapon_id(weapon_id)
 	for id, data in pairs(tweak_data.upgrades.definitions) do
-		if data.category == "weapon" and data.weapon_id == weapon_id then
+		if data.category == UpgradesManager.CATEGORY_WEAPON and data.weapon_id == weapon_id then
 			return data
 		end
 	end
@@ -833,7 +853,7 @@ end
 
 function UpgradesManager:weapon_upgrade_by_factory_id(factory_id)
 	for id, data in pairs(tweak_data.upgrades.definitions) do
-		if data.category == "weapon" and data.factory_id == factory_id then
+		if data.category == UpgradesManager.CATEGORY_WEAPON and data.factory_id == factory_id then
 			return data
 		end
 	end
@@ -879,7 +899,7 @@ function UpgradesManager:analyze()
 						placed[name] = lvl
 					end
 
-					if data.category == "feature" then
+					if data.category == UpgradesManager.CATEGORY_FEATURE then
 						features[data.upgrade.category] = features[data.upgrade.category] or {}
 
 						table.insert(features[data.upgrade.category], {
@@ -984,6 +1004,8 @@ function UpgradesManager:_verify_loaded_data()
 end
 
 function UpgradesManager:reset()
+	Application:debug("[UpgradesManager:reset] resetting and going to _setup()")
+
 	Global.upgrades_manager = nil
 
 	self:_setup()

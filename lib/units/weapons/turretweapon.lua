@@ -4,7 +4,6 @@ local mvec_to = Vector3()
 function TurretWeapon:init(unit)
 	self._unit = unit
 	self._name_id = self.name_id
-	self._overheat_skill_id = self._name_id .. "_overheat_reduction"
 
 	self:set_active(true)
 
@@ -81,6 +80,7 @@ function TurretWeapon:init(unit)
 	self._overheat_current = 0
 	self._overheat_time = tweak_data.weapon[self.name_id].overheat_time or 1
 	self._overheat_speed = tweak_data.weapon[self.name_id].overheat_speed or 0
+	self._overheat_upgrade = tweak_data.weapon[self.name_id].overheat_upgrade
 	self._overheated = false
 
 	self:_enable_overheating_smoke(false)
@@ -246,9 +246,10 @@ function TurretWeapon:debug_deactivate()
 end
 
 function TurretWeapon:update(unit, t, dt)
-	SoundDevice:set_rtpc("turret_heat_rtpc", self._overheat_current * 100)
+	local is_puppet_alive = alive(self._puppet_unit) and not self._puppet_unit:character_damage():dead()
+	local is_enemy_mode = self._mode and self._mode == "enemy"
 
-	if self._mode and self._mode == "enemy" and not alive(self._puppet_unit) then
+	if is_enemy_mode and not is_puppet_alive then
 		Application:trace("TurretWeapon:update: ghost turret detected.")
 		self:deactivate()
 	end
@@ -276,6 +277,8 @@ function TurretWeapon:update(unit, t, dt)
 	if not self._active then
 		return
 	end
+
+	self._sound_fire:set_rtpc("turret_heat_rtpc", self._overheat_current * 100)
 
 	if self._turret_shell then
 		self:_update_shell_movement(dt)
@@ -344,8 +347,8 @@ function TurretWeapon:deactivate()
 
 	self._unit:interaction():set_active(true, true)
 
-	if self._unit:damage() and self._unit:damage():has_sequence("turret_is_available") then
-		self._unit:damage():run_sequence_simple("turret_is_available")
+	if self._unit:damage() then
+		self._unit:damage():has_then_run_sequence_simple("turret_is_available")
 	end
 
 	local team = managers.groupai:state():team_data(tweak_data.levels:get_default_team_ID("player"))
@@ -391,7 +394,13 @@ function TurretWeapon:_increase_heat()
 		warcry_multiplier = managers.player:upgrade_value("player", "warcry_overheat_multiplier", 1)
 	end
 
-	local overheat_delta = self._overheat_speed * managers.player:upgrade_value("player", self._overheat_skill_id, 1) * warcry_multiplier
+	local upgrade_multiplier = 1
+
+	if self._overheat_upgrade then
+		upgrade_multiplier = managers.player:upgrade_value("player", self._overheat_upgrade, 1)
+	end
+
+	local overheat_delta = self._overheat_speed * upgrade_multiplier * warcry_multiplier
 	self._overheat_current = math.clamp(self._overheat_current + overheat_delta, 0, 1)
 
 	if self._overheat_current >= 1 then
@@ -424,7 +433,8 @@ function TurretWeapon:_enable_overheating_smoke(enabled)
 end
 
 function TurretWeapon:_update_heading_rotation(dt, target_heading_rot)
-	local anim_lerp = dt * 8
+	local lerp_multiplier = 8 * managers.player:upgrade_value("player", "gunner_turret_camera_speed_multiplier", 1)
+	local anim_lerp = dt * lerp_multiplier
 	local smooth_heading_rot = self._joint_heading:rotation():slerp(target_heading_rot, anim_lerp)
 
 	self._joint_heading:set_rotation(smooth_heading_rot)
@@ -589,12 +599,14 @@ function TurretWeapon:start_autofire()
 		return
 	end
 
+	self._rate_of_fire = 1 / (tweak_data.weapon[self.name_id].rate_of_fire / 60)
+
+	self._sound_fire:set_rtpc("fire_rate", self._rate_of_fire)
 	self:_sound_autofire_start()
 
 	self._next_fire_allowed = math.max(self._next_fire_allowed, Application:time())
-	self._shooting = true
-	self._rate_of_fire = 1 / (tweak_data.weapon[self.name_id].rate_of_fire / 60)
 	self._overheat_speed = self._rate_of_fire / self._overheat_time
+	self._shooting = true
 
 	self:_play_recoil_animation()
 end
@@ -624,6 +636,7 @@ function TurretWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_uni
 
 			self._next_fire_allowed = self._next_fire_allowed + self._rate_of_fire
 
+			self._sound_fire:set_rtpc("fire_rate", self._rate_of_fire)
 			self:_increase_heat()
 		end
 	end
@@ -652,12 +665,14 @@ function TurretWeapon:_upd_puppet_movement()
 	local deflection_direction = math.sign((original_direction - current_direction):to_polar_with_reference(current_direction, math.UP).spin)
 	local spin_max = self._unit:movement()._spin_max or deflection
 	local deflection_normalized = deflection / math.abs(spin_max)
-	local redirect_animation = "e_so_mg34_aim_right"
-	local redirect_state = Idstring("std/stand/so/idle/e_so_mg34_aim_right")
+	local redirect_animation, redirect_state = nil
 
 	if deflection_direction < 0 then
 		redirect_animation = "e_so_mg34_aim_left"
 		redirect_state = Idstring("std/stand/so/idle/e_so_mg34_aim_left")
+	else
+		redirect_animation = "e_so_mg34_aim_right"
+		redirect_state = Idstring("std/stand/so/idle/e_so_mg34_aim_right")
 	end
 
 	local position_difference = (self._puppet_unit:position() - self._SO_object:position()):length()
@@ -675,6 +690,23 @@ function TurretWeapon:_play_recoil_animation()
 	if alive(self._puppet_unit) then
 		self._puppet_unit:movement():play_redirect("recoil_turret_m2")
 	end
+end
+
+function TurretWeapon:get_fire_fp_pos_dir()
+	local fire_locator = self:_get_fire_locator()
+	local from_pos = fire_locator:position()
+
+	return from_pos, fire_locator:rotation():y()
+end
+
+function TurretWeapon:get_fire_tp_pos_dir()
+	if not self._puppet_unit then
+		local jp = self._joint_pitch
+
+		return jp:position(), jp:rotation():y()
+	end
+
+	return nil
 end
 
 function TurretWeapon:fire(blanks, expend_ammo, shoot_player, target_unit, damage_multiplier)
@@ -953,19 +985,27 @@ end
 
 function TurretWeapon:_sound_autofire_start()
 	if self._fire_type == "auto" and self._sound_fire_start then
-		local sound_event = alive(self._turret_user) and self._turret_user == managers.player:player_unit() and self._sound_fire_start_fps or self._sound_fire_start
+		local local_user = alive(self._turret_user) and self._turret_user == managers.player:local_player()
+		local sound_event = local_user and self._sound_fire_start_fps or self._sound_fire_start
 
-		self._sound_fire:post_event("turret_heat")
 		self._sound_fire:post_event(sound_event)
+
+		if local_user then
+			self._sound_fire:post_event("turret_heat")
+		end
 	end
 end
 
 function TurretWeapon:_sound_autofire_end()
 	if self._fire_type == "auto" and self._sound_fire and self._sound_fire_stop then
-		local sound_event = alive(self._turret_user) and self._turret_user == managers.player:player_unit() and self._sound_fire_stop_fps or self._sound_fire_stop
+		local local_user = alive(self._turret_user) and self._turret_user == managers.player:local_player()
+		local sound_event = local_user and self._sound_fire_stop_fps or self._sound_fire_stop
 
-		self._sound_fire:post_event("turret_heat_stop")
 		self._sound_fire:post_event(sound_event)
+
+		if local_user then
+			self._sound_fire:post_event("turret_heat_stop")
+		end
 
 		if self._overheated then
 			self._sound_fire:post_event("turret_cool_down")
@@ -975,7 +1015,8 @@ end
 
 function TurretWeapon:_sound_fire_single()
 	if self._fire_type == "single" then
-		local sound_event = alive(self._turret_user) and self._turret_user == managers.player:player_unit() and self._sound_fire_start_fps or self._sound_fire_start
+		local local_user = alive(self._turret_user) and self._turret_user == managers.player:local_player()
+		local sound_event = local_user and self._sound_fire_start_fps or self._sound_fire_start
 
 		self._sound_fire:post_event(sound_event)
 	end
@@ -1088,7 +1129,7 @@ function TurretWeapon:destroy(unit)
 end
 
 function TurretWeapon:_create_turret_SO()
-	if not alive(self._unit) then
+	if not alive(self._unit) or not managers.navigation:is_data_ready() then
 		return
 	end
 
@@ -1136,15 +1177,17 @@ function TurretWeapon:_create_turret_SO()
 			}
 		}
 	}
+	local twk_data = tweak_data.weapon[self.name_id]
 	local SO_descriptor = {
-		interval = -1,
+		interval = 1,
 		search_dis_sq = 4000000,
 		AI_group = "enemies",
-		base_chance = 1,
-		chance_inc = 0,
 		usage_amount = 1,
 		objective = turret_objective,
 		search_pos = turret_objective.pos,
+		base_chance = twk_data.SO_CHANCE_BASE or 1,
+		chance_inc = twk_data.SO_CHANCE_INC or 0.1,
+		admin_clbk = callback(self, self, "on_turret_SO_administered"),
 		access = managers.navigation:convert_access_filter_to_number({
 			"gangster",
 			"security",
@@ -1152,8 +1195,7 @@ function TurretWeapon:_create_turret_SO()
 			"cop",
 			"swat",
 			"murky"
-		}),
-		admin_clbk = callback(self, self, "on_turret_SO_administered")
+		})
 	}
 	local SO_id = "turret_" .. tostring(self._unit:key())
 	self._SO_data = {
@@ -1271,8 +1313,9 @@ function TurretWeapon:activate_turret()
 
 	self:set_active(true)
 
-	if Network:is_server() and self._unit:damage() and self._unit:damage():has_sequence("turret_is_occupied") then
-		self._unit:damage():run_sequence_simple("turret_is_occupied")
+	if Network:is_server() and self._unit:damage() then
+		self._unit:damage():has_then_run_sequence_simple("turret_is_occupied")
+		self._unit:damage():has_then_run_sequence_simple("enemy_enter")
 	end
 end
 
@@ -1385,9 +1428,11 @@ end
 function TurretWeapon:_cancel_active_SO()
 	if self._administered_unit_data and alive(self._administered_unit_data.unit) and self._administered_unit_data.unit:character_damage() and self._administered_unit_data.unit:character_damage().dead and not self._administered_unit_data.unit:character_damage():dead() then
 		if Network:is_server() then
-			self._administered_unit_data.unit:brain():set_objective(nil)
-			self._administered_unit_data.unit:brain():set_logic("idle", nil)
-			self._administered_unit_data.unit:brain():action_request({
+			local admin_unit_brain = self._administered_unit_data.unit:brain()
+
+			admin_unit_brain:set_objective(nil)
+			admin_unit_brain:set_logic("idle", nil)
+			admin_unit_brain:action_request({
 				sync = true,
 				body_part = 2,
 				type = "idle"
@@ -1429,6 +1474,7 @@ function TurretWeapon:on_puppet_damaged(data, damage_info)
 		if shot_from_behind then
 			managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
 			self:deactivate()
+			Application:debug("[TurretTests] Enemy being attacked from behind, exit turret")
 
 			return
 		end
@@ -1559,8 +1605,8 @@ function TurretWeapon:deactivate_client()
 
 	self._unit:interaction():set_active(true, true)
 
-	if self._unit:damage() and self._unit:damage():has_sequence("turret_is_available") then
-		self._unit:damage():run_sequence_simple("turret_is_available")
+	if self._unit:damage() then
+		self._unit:damage():has_then_run_sequence_simple("turret_is_available")
 	end
 
 	local team = managers.groupai:state():team_data(tweak_data.levels:get_default_team_ID("player"))
@@ -1627,13 +1673,13 @@ end
 
 function TurretWeapon:unmark_turret()
 	if self._turret_marked and self._contour_data then
-		if self._puppet_unit:contour() then
+		if alive(self._puppet_unit) and self._puppet_unit:contour() then
 			self._puppet_unit:contour():remove(self._contour_data[1], self._contour_data[2])
 		else
 			Application:debug("[TurretWeapon:mark_turret] No puppet contour to remove.")
 		end
 
-		if self._unit:contour() then
+		if self._unit and self._unit:contour() then
 			self._unit:contour():remove("mark_enemy_turret", self._contour_data[2])
 		else
 			Application:debug("[TurretWeapon:mark_turret] No turret contour to remove.")

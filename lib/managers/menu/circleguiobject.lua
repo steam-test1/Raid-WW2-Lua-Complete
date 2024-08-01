@@ -50,6 +50,14 @@ function CircleGuiObject:layer()
 	return self._circle:layer()
 end
 
+function CircleGuiObject:set_rotation(rotation)
+	self._circle:set_rotation(rotation)
+end
+
+function CircleGuiObject:rotation()
+	return self._circle:rotation()
+end
+
 function CircleGuiObject:remove()
 	self._panel:remove(self._circle)
 end
@@ -77,12 +85,18 @@ function CircleBitmapGuiObject:init(panel, config)
 		bg_config.texture = config.bg_image or "guis/textures/pd2/hud_progress_bg"
 		bg_config.layer = bg_config.layer - 1
 		bg_config.blend_mode = "normal"
+		bg_config.color = bg_config.bg_color or Color(1, 1, 1)
+		bg_config.alpha = bg_config.bg_alpha or 1
 		self._bg_circle = self._panel:bitmap(bg_config)
 	end
 end
 
 function CircleBitmapGuiObject:radius()
 	return self._radius
+end
+
+function CircleBitmapGuiObject:current()
+	return self._circle:position_z()
 end
 
 function CircleBitmapGuiObject:set_current(current)
@@ -96,11 +110,43 @@ function CircleBitmapGuiObject:position()
 	return self._circle:position()
 end
 
+function CircleBitmapGuiObject:bottom()
+	return self._circle:bottom()
+end
+
+function CircleBitmapGuiObject:right()
+	return self._circle:right()
+end
+
 function CircleBitmapGuiObject:set_position(x, y)
 	self._circle:set_position(x, y)
 
 	if self._bg_circle then
 		self._bg_circle:set_position(x, y)
+	end
+end
+
+function CircleBitmapGuiObject:set_center_x(x)
+	self._circle:set_center_x(x)
+
+	if self._bg_circle then
+		self._bg_circle:set_center_x(x)
+	end
+end
+
+function CircleBitmapGuiObject:set_center_y(y)
+	self._circle:set_center_y(y)
+
+	if self._bg_circle then
+		self._bg_circle:set_center_y(y)
+	end
+end
+
+function CircleBitmapGuiObject:set_center(x, y)
+	self._circle:set_center(x, y)
+
+	if self._bg_circle then
+		self._bg_circle:set_center(x, y)
 	end
 end
 
@@ -132,8 +178,40 @@ function CircleBitmapGuiObject:color()
 	return self._circle:color()
 end
 
+function CircleBitmapGuiObject:set_rotation(rotation)
+	self._circle:set_rotation(rotation)
+end
+
+function CircleBitmapGuiObject:rotation()
+	return self._circle:rotation()
+end
+
 function CircleBitmapGuiObject:size()
 	return self._circle:size()
+end
+
+function CircleBitmapGuiObject:set_w(w)
+	self._circle:set_w(w)
+
+	if self._bg_circle then
+		self._bg_circle:set_w(w)
+	end
+end
+
+function CircleBitmapGuiObject:set_h(h)
+	self._circle:set_h(h)
+
+	if self._bg_circle then
+		self._bg_circle:set_h(h)
+	end
+end
+
+function CircleBitmapGuiObject:set_size(w, h)
+	self._circle:set_size(w, h)
+
+	if self._bg_circle then
+		self._bg_circle:set_size(w, h)
+	end
 end
 
 function CircleBitmapGuiObject:set_image(texture)

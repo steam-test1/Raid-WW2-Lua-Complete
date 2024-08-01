@@ -13,9 +13,8 @@ function RaidMenuProfileSwitcher:_layout()
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	})
-	local is_xb1 = SystemInfo:platform() == Idstring("XB1")
 
-	if is_xb1 then
+	if IS_XB1 then
 		self:_bind_raid_controller_inputs()
 	end
 end

@@ -153,6 +153,9 @@ function CoreEditor:build_menubar()
 	end
 
 	self._edit_menu:append_menu("SNAP_ROTATION_AIXS_MENU", "Snap Rotation Axis\t(" .. self:ctrl_binding("change_snaprot_axis") .. ")", self._snap_rotations_axis_menu, "Snap Rotation Axis")
+	self._edit_menu:append_separator()
+	self._edit_menu:append_item("DUMP_ALL", "Big Dumpy", "Dump everything to mesh!")
+	Global.frame:connect("DUMP_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "dump_all_meshes"), nil)
 	menu_bar:append(self._edit_menu, "Edit")
 
 	self._group_menu = EWS:Menu("")
@@ -716,6 +719,10 @@ function CoreEditor:dump_group()
 	end
 end
 
+function CoreEditor:dump_all_meshes()
+	managers.editor:dump_all(nil, nil)
+end
+
 function CoreEditor:on_difficulty(difficulty)
 	self._mission_difficulty = difficulty
 end
@@ -771,6 +778,7 @@ function CoreEditor:on_post_processor_effect(effect)
 	self:viewport():vp():set_post_processor_effect("World", Idstring("bloom_combine_post_processor"), bloom_combine_effect)
 	self:viewport():vp():set_post_processor_effect("World", Idstring("lens_distortion"), lens_distortion_effect)
 	self:viewport():vp():set_post_processor_effect("World", Idstring("contour_post_processor"), contour_effect)
+	self:viewport():vp():set_post_processor_effect("World", Idstring("chromatic_aberration_post_processor"), chromatic_aberration_effect)
 	self:viewport():vp():set_post_processor_effect("World", Idstring("color_grading_post"), cg_effect)
 	self:viewport():vp():set_post_processor_effect("World", Idstring("lens_flare_post_processor"), lens_flare_effect)
 	self:viewport():vp():set_post_processor_effect("World", Idstring("lens_flare_apply_post_processor"), lens_flare_apply_effect)
@@ -954,13 +962,50 @@ function CoreEditor:toggle_draw_occluders(data)
 	self._draw_occluders = data[1]:is_checked(data[2])
 end
 
-local leveltools_ids = Idstring("leveltools")
+CoreEditor.MAX_HIDE_HELPERS_PER_FRAME = 15000
 
 function CoreEditor:on_hide_helper_units(data)
+	for name, layer in pairs(self._layers) do
+		local units = clone(layer:created_units())
+
+		if not table.empty(units) then
+			local que_units = {}
+
+			repeat
+				local unit = table.remove(units)
+
+				if unit and alive(unit) then
+					table.insert(que_units, unit)
+				end
+
+				if not data.ignore_max_per_frame and #que_units == CoreEditor.MAX_HIDE_HELPERS_PER_FRAME or not unit then
+					self:queue_hide_units(que_units, data)
+
+					que_units = {}
+				end
+			until not unit
+		end
+	end
+end
+
+function CoreEditor:queue_hide_units(units, data)
+	self._hide_helper_queue = self._hide_helper_queue or {}
+
+	table.insert(self._hide_helper_queue, {
+		data = data,
+		units = units
+	})
+end
+
+local leveltools_ids = Idstring("leveltools")
+
+function CoreEditor:_hide_these_units(units, data)
+	Application:debug("[CoreEditor:_hide_these_units] #units:", #units, "Visibility:", data.vis)
+
 	local cache = {}
 
-	for name, layer in pairs(self._layers) do
-		for _, unit in ipairs(layer:created_units()) do
+	for _, unit in ipairs(units) do
+		if alive(unit) then
 			local u_key = unit:name():s()
 
 			if cache[u_key] then

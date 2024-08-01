@@ -374,54 +374,8 @@ function CopLogicFlee._chk_reaction_to_attention_object(data, attention_data, st
 		return attention_data.settings.reaction
 	end
 
-	local att_unit = attention_data.unit
-	local assault_mode = managers.groupai:state():get_assault_mode()
-
-	if record.status == "disabled" then
-		if (not record.assault_t or record.assault_t - record.disabled_t > 0.6) and (record.engaged_force < 5 or attention_data.is_human_player and CopLogicBase._is_important_to_player(record, data.key)) then
-			return math.min(attention_data.reaction, AIAttentionObject.REACT_COMBAT)
-		end
-	elseif not record.being_arrested then
-		local my_vec = data.m_pos - attention_data.m_pos
-		local dis = mvector3.normalize(my_vec)
-
-		if dis < 500 then
-			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-		elseif dis < 3000 then
-			local criminal_fwd = att_unit:movement():m_head_rot():y()
-			local criminal_look_dot = mvector3.dot(my_vec, criminal_fwd)
-
-			if criminal_look_dot > 0.9 then
-				local aggression_age = record.assault_t and data.t - record.assault_t
-
-				if aggression_age and aggression_age < 2 then
-					return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-				end
-			end
-
-			if record.engaged_force == 0 or record.engaged_force == 1 and record.engaged[data.unit:key()] then
-				return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-			end
-
-			local my_data = data.internal_data
-
-			if my_data.flee_path then
-				local walk_to_pos = CopLogicBase._nav_point_pos(my_data.flee_path[2])
-				local move_dir = walk_to_pos - data.m_pos
-
-				mvector3.normalize(move_dir)
-
-				local move_dot = mvector3.dot(my_vec, move_dir)
-
-				if move_dot < -0.5 then
-					my_data.path_blocked = true
-
-					return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-				else
-					my_data.path_blocked = false
-				end
-			end
-		end
+	if record.status == "disabled" and (not record.assault_t or record.assault_t - record.disabled_t > 0.6) and (record.engaged_force < 5 or attention_data.is_human_player and CopLogicBase._is_important_to_player(record, data.key)) then
+		return math.min(attention_data.reaction, AIAttentionObject.REACT_COMBAT)
 	end
 
 	return AIAttentionObject.REACT_IDLE

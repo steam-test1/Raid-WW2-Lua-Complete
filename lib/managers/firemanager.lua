@@ -1,7 +1,7 @@
 FireManager = FireManager or class()
 FireManager.MAX_FLAMETHROWER_FIRES = 3
-FireManager.FLAMETHROWER_FIRE_CHANCE = 0.1
-FireManager.FLAMETHROWER_FIRE_CHANCE_INC = 0.33
+FireManager.FLAMETHROWER_FIRE_CHANCE = 0
+FireManager.FLAMETHROWER_FIRE_CHANCE_INC = 0.1
 local idstr_explosion_std = Idstring("explosion_std")
 local empty_idstr = Idstring("")
 local molotov_effect = "effects/vanilla/fire/fire_molotov_grenade_001"
@@ -447,10 +447,8 @@ function FireManager:detect_and_give_dmg(params)
 						count_civilians = count_civilians + 1
 					elseif CopDamage.is_gangster(type) then
 						count_gangsters = count_gangsters + 1
-					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" and type ~= "american" and type ~= "jowi" then
-						if type ~= "hoxton" then
-							count_cops = count_cops + 1
-						end
+					else
+						count_cops = count_cops + 1
 					end
 				end
 			end
@@ -497,10 +495,8 @@ function FireManager:detect_and_give_dmg(params)
 						count_civilian_kills = count_civilian_kills + 1
 					elseif CopDamage.is_gangster(type) then
 						count_gangster_kills = count_gangster_kills + 1
-					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" then
-						if type ~= "american" then
-							count_cop_kills = count_cop_kills + 1
-						end
+					else
+						count_cop_kills = count_cop_kills + 1
 					end
 				end
 			end
@@ -607,7 +603,7 @@ local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration)
-	effect_name = effect_name or "effects/vanilla/fire/fire_molotov_grenade_001"
+	effect_name = effect_name or molotov_effect
 	local effect_id = nil
 
 	if molotov_damage_effect_table ~= nil then

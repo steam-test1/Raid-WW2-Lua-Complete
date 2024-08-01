@@ -5,6 +5,88 @@ Ladder.ladder_index = 1
 Ladder.LADDERS_PER_FRAME = 100
 Ladder.DEBUG = false
 Ladder.EVENT_IDS = {}
+LadderExtended = LadderExtended or class(Ladder)
+
+function LadderExtended:init(unit)
+	LadderExtended.super.init(self, unit)
+
+	self.g_top = not not self.g_top and Idstring(self.g_top) or false
+	self.g_mid = not not self.g_mid and Idstring(self.g_mid) or false
+	self.g_bot = not not self.g_bot and Idstring(self.g_bot) or false
+	self.g_top_height = self.g_top_height or 25
+	self.g_mid_height = self.g_mid_height or 25
+	self.g_bot_height = self.g_bot_height or 25
+	self.prop_yaw = self.prop_yaw or 180
+	self._ladder_graphics_spawned = 0
+	self._ladder_graphics = {}
+end
+
+function LadderExtended:destroy(unit)
+	self:despawn_prop_units()
+	LadderExtended.super.destroy(self, unit)
+end
+
+function LadderExtended:set_height(v)
+	LadderExtended.super.set_height(self, v)
+
+	if self._ladder_graphics_spawned > 0 then
+		self:despawn_prop_units()
+		self:spawn_prop_units()
+	end
+end
+
+function LadderExtended:set_enabled(enabled, show_props)
+	LadderExtended.super.set_enabled(self, enabled)
+
+	if show_props == nil then
+		return
+	end
+
+	if not self._enabled and self._ladder_graphics_spawned > 0 then
+		self:despawn_prop_units()
+	elseif self._enabled then
+		self:spawn_prop_units()
+	end
+end
+
+function LadderExtended:despawn_prop_units()
+	for _, unit in ipairs(self._ladder_graphics) do
+		if alive(unit) then
+			unit:set_slot(0)
+		end
+	end
+
+	self._ladder_graphics_spawned = 0
+end
+
+function LadderExtended:spawn_prop_units()
+	local mid_parts = math.floor((self._height - self.g_bot_height - self.g_top_height - self._exit_on_top_offset - 10) / self.g_mid_height)
+	local rot = self._ladder_orientation_obj:rotation()
+	rot = Rotation(rot:yaw() + self.prop_yaw, rot:pitch(), rot:roll())
+	local pos = self._ladder_orientation_obj:position()
+	local _spawned_unit = nil
+	_spawned_unit = safe_spawn_unit(self.g_bot, pos, rot)
+
+	table.insert(self._ladder_graphics, _spawned_unit)
+
+	self._ladder_graphics_spawned = 1
+	pos = pos + self._up * self.g_bot_height
+
+	for i = 0, mid_parts do
+		_spawned_unit = safe_spawn_unit(self.g_mid, pos, rot)
+
+		table.insert(self._ladder_graphics, _spawned_unit)
+
+		self._ladder_graphics_spawned = self._ladder_graphics_spawned + 1
+		pos = pos + self._up * self.g_mid_height
+	end
+
+	_spawned_unit = safe_spawn_unit(self.g_top, pos, rot)
+
+	table.insert(self._ladder_graphics, _spawned_unit)
+
+	self._ladder_graphics_spawned = self._ladder_graphics_spawned + 1
+end
 
 function Ladder.current_ladder()
 	return Ladder.active_ladders[Ladder.ladder_index]
@@ -25,6 +107,7 @@ function Ladder:init(unit)
 	self.normal_axis = self.normal_axis or "y"
 	self.up_axis = self.up_axis or "z"
 	self._offset = self._offset or 0
+	self._offset_normal = self._offset_normal or 0
 
 	self:set_enabled(true)
 
@@ -49,6 +132,7 @@ function Ladder:set_config()
 	self._up = rotation[self.up_axis](rotation)
 	self._w_dir = math.cross(self._up, self._normal)
 	position = position + self._up * self._offset
+	position = position + self._normal * self._offset_normal
 	local top = position + self._up * self._height
 	self._bottom = position
 	self._top = top

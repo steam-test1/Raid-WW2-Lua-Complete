@@ -3,18 +3,16 @@ FilterUnitElement = FilterUnitElement or class(MissionElement)
 function FilterUnitElement:init(unit)
 	FilterUnitElement.super.init(self, unit)
 
-	self._hed.difficulty_easy = true
 	self._hed.difficulty_normal = true
 	self._hed.difficulty_hard = true
 	self._hed.difficulty_overkill = true
 	self._hed.difficulty_overkill_145 = true
-	self._hed.difficulty_overkill_290 = nil
 	self._hed.player_1 = true
 	self._hed.player_2 = true
 	self._hed.player_3 = true
 	self._hed.player_4 = true
 	self._hed.platform_win32 = true
-	self._hed.platform_ps3 = true
+	self._hed.platform_console = true
 	self._hed.mode_assault = true
 	self._hed.mode_control = true
 	self._hed.alarm_on = true
@@ -29,7 +27,7 @@ function FilterUnitElement:init(unit)
 	table.insert(self._save_values, "player_3")
 	table.insert(self._save_values, "player_4")
 	table.insert(self._save_values, "platform_win32")
-	table.insert(self._save_values, "platform_ps3")
+	table.insert(self._save_values, "platform_console")
 	table.insert(self._save_values, "mode_assault")
 	table.insert(self._save_values, "mode_control")
 	table.insert(self._save_values, "alarm_on")
@@ -42,9 +40,6 @@ function FilterUnitElement:post_init(...)
 end
 
 function FilterUnitElement:_check_convertion()
-	if self._hed.difficulty_overkill_290 == nil then
-		self._hed.difficulty_overkill_290 = self._hed.difficulty_overkill_145
-	end
 end
 
 function FilterUnitElement:_build_panel(panel, panel_sizer)
@@ -65,7 +60,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	h_sizer:add(difficulty_sizer, 1, 0, "EXPAND")
 
-	local difficulty_normal = EWS:CheckBox(panel, "Normal", "")
+	local difficulty_normal = EWS:CheckBox(panel, "Easy", "")
 
 	difficulty_normal:set_value(self._hed.difficulty_normal)
 	difficulty_normal:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
@@ -74,7 +69,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	difficulty_sizer:add(difficulty_normal, 0, 0, "EXPAND")
 
-	local difficulty_hard = EWS:CheckBox(panel, "Hard", "")
+	local difficulty_hard = EWS:CheckBox(panel, "Normal", "")
 
 	difficulty_hard:set_value(self._hed.difficulty_hard)
 	difficulty_hard:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
@@ -83,7 +78,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	difficulty_sizer:add(difficulty_hard, 0, 0, "EXPAND")
 
-	local difficulty_overkill = EWS:CheckBox(panel, "Very Hard", "")
+	local difficulty_overkill = EWS:CheckBox(panel, "Hard", "")
 
 	difficulty_overkill:set_value(self._hed.difficulty_overkill)
 	difficulty_overkill:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
@@ -92,7 +87,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	difficulty_sizer:add(difficulty_overkill, 0, 0, "EXPAND")
 
-	local difficulty_overkill_145 = EWS:CheckBox(panel, "Overkill", "")
+	local difficulty_overkill_145 = EWS:CheckBox(panel, "V.Hard", "")
 
 	difficulty_overkill_145:set_value(self._hed.difficulty_overkill_145)
 	difficulty_overkill_145:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
@@ -154,14 +149,14 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	platform_sizer:add(platform_win32, 0, 0, "EXPAND")
 
-	local platform_ps3 = EWS:CheckBox(panel, "PS3", "")
+	local platform_console = EWS:CheckBox(panel, "Console", "")
 
-	platform_ps3:set_value(self._hed.platform_ps3)
-	platform_ps3:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "platform_ps3",
-		ctrlr = platform_ps3
+	platform_console:set_value(self._hed.platform_console)
+	platform_console:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "platform_console",
+		ctrlr = platform_console
 	})
-	platform_sizer:add(platform_ps3, 0, 0, "EXPAND")
+	platform_sizer:add(platform_console, 0, 0, "EXPAND")
 
 	local mode_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Mode")
 
@@ -189,7 +184,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	h2_sizer:add(alarm_sizer, 1, 0, "EXPAND")
 
-	local alarm_on = EWS:CheckBox(panel, "Alarm ON", "")
+	local alarm_on = EWS:CheckBox(panel, "Alarmed", "")
 
 	alarm_on:set_value(self._hed.alarm_on == nil and true or self._hed.alarm_on)
 	alarm_on:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
@@ -198,7 +193,7 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 	})
 	alarm_sizer:add(alarm_on, 0, 0, "EXPAND")
 
-	local alarm_off = EWS:CheckBox(panel, "Alarm OFF", "")
+	local alarm_off = EWS:CheckBox(panel, "Unalarmed", "")
 
 	alarm_off:set_value(self._hed.alarm_off == nil and true or self._hed.alarm_off)
 	alarm_off:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {

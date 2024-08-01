@@ -1,8 +1,11 @@
 WorldOperatorUnitElement = WorldOperatorUnitElement or class(MissionElement)
 WorldOperatorUnitElement.ACTIONS = {
 	"spawn",
+	"spawn_alarmed",
 	"despawn",
-	"enable_plant_loot"
+	"enable_plant_loot",
+	"enable_alarm_state",
+	"disable_alarm_state"
 }
 
 function WorldOperatorUnitElement:init(unit)
@@ -103,7 +106,7 @@ function WorldOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
 	local function f(unit)
-		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
+		if not unit or not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
 		end
 

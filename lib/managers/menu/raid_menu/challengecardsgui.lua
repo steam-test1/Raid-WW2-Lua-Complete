@@ -398,7 +398,7 @@ end
 
 function ChallengeCardsGui:_on_click_inventory_cards(item_data)
 	if item_data then
-		self._card_details:set_card(item_data.key_name, item_data.steam_instance_ids[1])
+		self._card_details:set_card(item_data.key_name, item_data.steam_instances[1].instance_id)
 		self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_SUGGESTING)
 		self._suggested_cards_grid:select_grid_item_by_item(nil)
 	end
@@ -408,7 +408,7 @@ end
 
 function ChallengeCardsGui:_on_select_inventory_cards(item_idx, item_data)
 	if item_data then
-		self._card_details:set_card(item_data.key_name, item_data.steam_instance_ids[1])
+		self._card_details:set_card(item_data.key_name, item_data.steam_instances[1].instance_id)
 		self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_SUGGESTING)
 		self._suggested_cards_grid:select_grid_item_by_item(nil)
 	end
@@ -417,10 +417,10 @@ function ChallengeCardsGui:_on_select_inventory_cards(item_idx, item_data)
 end
 
 function ChallengeCardsGui:suggest_card()
-	local card, steam_instance_id = self._card_details:get_card()
+	local card = self._card_details:get_card()
 
 	if card then
-		managers.challenge_cards:suggest_challenge_card(card.key_name, steam_instance_id)
+		managers.challenge_cards:suggest_challenge_card(card.key_name, card.steam_instance_id)
 	end
 
 	managers.raid_menu:register_on_escape_callback(nil)
@@ -527,7 +527,7 @@ function ChallengeCardsGui:_auto_select_first_card_in_grid()
 	if self._challenge_cards_data_source and #self._challenge_cards_data_source >= 1 then
 		card_data = self._challenge_cards_data_source[1]
 
-		self._card_details:set_card(card_data.key_name, card_data.steam_instance_ids[1])
+		self._card_details:set_card(card_data.key_name, card_data.steam_instances[1].instance_id)
 		self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_SUGGESTING)
 		self._suggested_cards_grid:select_grid_item_by_item(nil)
 		self._card_details:show()

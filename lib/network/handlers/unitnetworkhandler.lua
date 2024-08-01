@@ -49,17 +49,23 @@ function UnitNetworkHandler:set_character_customization(unit, outfit_string, out
 		return
 	end
 
-	local peer = managers.network:session():peer(peer_id)
+	if peer_id == 0 then
+		local customization = managers.blackmarket:unpack_team_ai_customization_from_string(outfit_string)
 
-	if not peer then
-		return
+		unit:movement():set_character_customization(customization)
+	else
+		local peer = managers.network:session():peer(peer_id)
+
+		if not peer then
+			return
+		end
+
+		if peer ~= managers.network:session():local_peer() then
+			peer:set_outfit_string(outfit_string, outfit_version)
+		end
+
+		peer:set_character_customization()
 	end
-
-	if peer ~= managers.network:session():local_peer() then
-		peer:set_outfit_string(outfit_string, outfit_version)
-	end
-
-	peer:set_character_customization()
 end
 
 function UnitNetworkHandler:set_equipped_weapon(unit, send_equipped_weapon_type, equipped_weapon_category_id, equipped_weapon_identifier, blueprint_string, cosmetics_string, sender)
@@ -200,14 +206,14 @@ function UnitNetworkHandler:action_change_pose(unit, pose_code, pos)
 	unit:movement():sync_action_change_pose(pose_code, pos)
 end
 
-function UnitNetworkHandler:skill_action_knockdown(unit, hit_position, direction, sender)
+function UnitNetworkHandler:skill_action_knockdown(unit, hit_position, direction, hurt_type, sender)
 	local peer = self._verify_sender(sender)
 
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	CopDamage.skill_action_knockdown(unit, hit_position, direction)
+	CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_type)
 end
 
 function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, sender)
@@ -931,7 +937,6 @@ function UnitNetworkHandler:long_dis_interaction(target_unit, amount, aggressor_
 	end
 
 	local target_is_criminal = target_unit:in_slot(managers.slot:get_mask("criminals")) or target_unit:in_slot(managers.slot:get_mask("harmless_criminals"))
-	local target_is_civilian = not target_is_criminal and target_unit:in_slot(21)
 	local aggressor_is_criminal = aggressor_unit:in_slot(managers.slot:get_mask("criminals")) or aggressor_unit:in_slot(managers.slot:get_mask("harmless_criminals"))
 
 	if target_is_criminal then
@@ -947,38 +952,8 @@ function UnitNetworkHandler:long_dis_interaction(target_unit, amount, aggressor_
 		else
 			target_unit:brain():on_intimidated(amount / 10, aggressor_unit)
 		end
-	elseif amount == 0 and target_is_civilian and aggressor_is_criminal then
-		if self._verify_in_server_session() then
-			aggressor_unit:movement():sync_call_civilian(target_unit)
-		end
 	elseif target_unit:brain() then
 		target_unit:brain():on_intimidated(amount / 10, aggressor_unit)
-	end
-end
-
-function UnitNetworkHandler:alarm_pager_interaction(u_id, tweak_table, status, sender)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	local unit_data = managers.enemy:get_corpse_unit_data_from_id(u_id)
-
-	if unit_data and unit_data.unit:interaction():active() and unit_data.unit:interaction().tweak_data == tweak_table then
-		local peer = self._verify_sender(sender)
-
-		if peer then
-			local status_str = nil
-
-			if status == 1 then
-				status_str = "started"
-			elseif status == 2 then
-				status_str = "interrupted"
-			else
-				status_str = "complete"
-			end
-
-			unit_data.unit:interaction():sync_interacted(peer, nil, status_str)
-		end
 	end
 end
 
@@ -1174,15 +1149,11 @@ function UnitNetworkHandler:revive_player(revive_health_level, revive_damage_red
 		return
 	end
 
-	local player = managers.player:player_unit()
-
-	if revive_health_level > 0 and alive(player) then
-		player:character_damage():set_revive_boost(revive_health_level)
-	end
-
 	if revive_damage_reduction > 0 then
 		managers.player:activate_temporary_upgrade_by_level("temporary", "passive_revive_damage_reduction", revive_damage_reduction)
 	end
+
+	local player = managers.player:player_unit()
 
 	if alive(player) then
 		player:character_damage():revive()
@@ -1229,54 +1200,6 @@ function UnitNetworkHandler:interupt_revive_player(sender)
 	if alive(player) then
 		player:character_damage():unpause_downed_timer(peer:id())
 	end
-end
-
-function UnitNetworkHandler:start_free_player(sender)
-	local peer = self._verify_sender(sender)
-
-	if not self._verify_gamestate(self._gamestate_filter.arrested) or not peer then
-		return
-	end
-
-	local player = managers.player:player_unit()
-
-	if alive(player) then
-		player:character_damage():pause_arrested_timer(peer:id())
-	end
-end
-
-function UnitNetworkHandler:interupt_free_player(sender)
-	local peer = self._verify_sender(sender)
-
-	if not self._verify_gamestate(self._gamestate_filter.arrested) or not peer then
-		return
-	end
-
-	local player = managers.player:player_unit()
-
-	if alive(player) then
-		player:character_damage():unpause_arrested_timer(peer:id())
-	end
-end
-
-function UnitNetworkHandler:pause_arrested_timer(unit, sender)
-	local peer = self._verify_sender(sender)
-
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer or not self._verify_character(unit) then
-		return
-	end
-
-	unit:character_damage():pause_arrested_timer(peer:id())
-end
-
-function UnitNetworkHandler:unpause_arrested_timer(unit, sender)
-	local peer = self._verify_sender(sender)
-
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer or not self._verify_character(unit) then
-		return
-	end
-
-	unit:character_damage():unpause_arrested_timer(peer:id())
 end
 
 function UnitNetworkHandler:revive_unit(unit, reviving_unit)
@@ -1488,6 +1411,18 @@ function UnitNetworkHandler:special_interaction_done(unit)
 	end
 end
 
+function UnitNetworkHandler:special_interaction_dynamite_done(unit, cuts)
+	Application:trace("[UnitNetworkHandler:special_interaction_dynamite_done] unit, cuts ", unit, cuts)
+
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	if unit then
+		unit:interaction():set_special_interaction_dynamite_done(cuts)
+	end
+end
+
 function UnitNetworkHandler:greed_cache_item_interacted_with(unit, amount)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -1505,6 +1440,16 @@ function UnitNetworkHandler:greed_item_picked_up(unit, amount)
 
 	if unit then
 		unit:interaction():on_peer_interacted(amount)
+	end
+end
+
+function UnitNetworkHandler:pickpocket_interaction(unit, tweak_table_name)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	if unit then
+		unit:interaction():on_peer_interacted(tweak_table_name)
 	end
 end
 
@@ -1532,20 +1477,12 @@ function UnitNetworkHandler:turret_idle_state(unit, state)
 	unit:brain():set_idle(state)
 end
 
-function UnitNetworkHandler:turret_update_shield_smoke_level(unit, ratio, up)
+function UnitNetworkHandler:turret_sabotaged(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
 
-	unit:character_damage():update_shield_smoke_level(ratio, up)
-end
-
-function UnitNetworkHandler:turret_repair(unit)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	unit:movement():repair()
+	unit:character_damage():sync_sabotaged()
 end
 
 function UnitNetworkHandler:turret_complete_repairing(unit)
@@ -1556,12 +1493,12 @@ function UnitNetworkHandler:turret_complete_repairing(unit)
 	unit:movement():complete_repairing()
 end
 
-function UnitNetworkHandler:turret_repair_shield(unit)
+function UnitNetworkHandler:turret_repair_sabotage(unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
 
-	unit:character_damage():repair_shield()
+	unit:character_damage():repair_sabotage()
 end
 
 function UnitNetworkHandler:sync_unit_module(parent_unit, module_unit, align_obj_name, module_id, parent_extension_name)
@@ -1818,73 +1755,119 @@ function UnitNetworkHandler:dangerzone_set_level(level)
 	managers.player:player_unit():character_damage():set_danger_level(level)
 end
 
-function UnitNetworkHandler:set_player_level(unit, level, unit_id_str)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+function UnitNetworkHandler:set_player_level(unit, level, unit_id_str, sender)
+	local peer = self._verify_sender(sender)
+
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	self:_chk_unit_too_early(unit, unit_id_str, "set_player_level", 1, unit, level, unit_id_str)
+	if self:_chk_unit_too_early(unit, unit_id_str, "set_player_level", 1, unit, level, unit_id_str) then
+		return
+	end
 
 	if not alive(unit) then
 		return
 	end
 
-	unit:set_level(level)
+	level = math.clamp(level, 0, managers.experience:level_cap())
+
+	peer:set_level(level)
 
 	local character_data = managers.criminals:character_data_by_peer_id(unit:id())
-	local panel_id = character_data.panel_id
+	local panel_id = character_data and character_data.panel_id
 
 	if panel_id then
 		managers.hud:set_teammate_level(panel_id, level)
-	else
-		debug_pause("[UnitNetworkHandler:set_player_level] Trying to set player level for a player without a HUD panel!")
 	end
 end
 
-function UnitNetworkHandler:set_player_nationality(unit, nationality, unit_id_str)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+function UnitNetworkHandler:set_player_nationality(unit, nationality, unit_id_str, sender)
+	local peer = self._verify_sender(sender)
+
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	self:_chk_unit_too_early(unit, unit_id_str, "set_player_nationality", 1, unit, nationality, unit_id_str)
+	if self:_chk_unit_too_early(unit, unit_id_str, "set_player_nationality", 1, unit, nationality, unit_id_str) then
+		return
+	end
 
 	if not alive(unit) then
 		return
 	end
 
-	unit:set_nationality(nationality)
-end
+	if not nationality or not tweak_data.criminals.character_nation_name[nationality] then
+		debug_pause("[UnitNetworkHandler:set_player_nationality] peer attempted to change to a non-existant nationality:", peer:id(), nationality)
 
-function UnitNetworkHandler:set_player_class(unit, class, unit_id_str)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
+		nationality = tweak_data.criminals.character_nations[1]
 	end
 
-	self:_chk_unit_too_early(unit, unit_id_str, "set_player_nationality", 1, unit, nationality, unit_id_str)
-
-	if not alive(unit) then
-		return
-	end
-
-	unit:set_class(class)
-end
-
-function UnitNetworkHandler:set_active_warcry(unit, warcry_name, fill_percentage, unit_id_str)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	self:_chk_unit_too_early(unit, unit_id_str, "set_player_nationality", 1, unit, nationality, unit_id_str)
-
-	if not alive(unit) then
-		return
-	end
-
-	unit:set_active_warcry(warcry_name)
+	peer:set_nationality(nationality)
 
 	local character_data = managers.criminals:character_data_by_peer_id(unit:id())
-	local panel_id = character_data.panel_id
-	local name_label_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().name_label_id
+	local panel_id = character_data and character_data.panel_id
+
+	if panel_id then
+		managers.hud:set_teammate_nationality(panel_id, level)
+	end
+end
+
+function UnitNetworkHandler:set_player_class(unit, class, unit_id_str, sender)
+	local peer = self._verify_sender(sender)
+
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
+		return
+	end
+
+	if self:_chk_unit_too_early(unit, unit_id_str, "set_player_class", 1, unit, class, unit_id_str) then
+		return
+	end
+
+	if not alive(unit) then
+		return
+	end
+
+	if not class or not tweak_data.skilltree.classes[class] then
+		debug_pause("[UnitNetworkHandler:set_player_class] peer attempted to change to a non-existant class:", peer:id(), class)
+
+		class = SkillTreeTweakData.CLASS_RECON
+	end
+
+	peer:set_class(class)
+end
+
+function UnitNetworkHandler:set_active_warcry(unit, warcry_name, fill_percentage, unit_id_str, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
+	if self:_chk_unit_too_early(unit, unit_id_str, "set_active_warcry", 1, unit, warcry_name, unit_id_str) then
+		return
+	end
+
+	if not alive(unit) then
+		return
+	end
+
+	if not warcry_name or not tweak_data.warcry[warcry_name] then
+		debug_pause("[UnitNetworkHandler:set_active_warcry] peer attempted to activate a warcry that doesn't exist:", peer:id(), warcry_name)
+
+		local peer_class = peer:class() or SkillTreeTweakData.CLASS_RECON
+		warcry_name = tweak_data.skilltree.class_warcry_data[peer_class][1]
+	end
+
+	peer:set_active_warcry(warcry_name)
+
+	local character_data = managers.criminals:character_data_by_peer_id(peer:id())
+	local panel_id = character_data and character_data.panel_id
+	local name_label_id = peer:unit() and peer:unit():unit_data() and peer:unit():unit_data().name_label_id
 
 	if panel_id then
 		if warcry_name then
@@ -1897,8 +1880,6 @@ function UnitNetworkHandler:set_active_warcry(unit, warcry_name, fill_percentage
 				current = fill_percentage
 			})
 		end
-	else
-		debug_pause("[UnitNetworkHandler:set_player_level] Trying to set active warcry for a player without a HUD panel!")
 	end
 end
 
@@ -1918,21 +1899,18 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 	if local_peer:unit() and unit:key() == local_peer:unit():key() then
 		local valid_transitions = {
 			standard = {
-				arrested = true,
 				incapacitated = true,
-				carry = true,
 				bleed_out = true,
+				carry = true,
 				tased = true
 			},
 			carry = {
-				arrested = true,
 				incapacitated = true,
-				standard = true,
 				bleed_out = true,
+				standard = true,
 				tased = true
 			},
 			mask_off = {
-				arrested = true,
 				carry = true,
 				standard = true
 			},
@@ -1942,10 +1920,6 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 				standard = true
 			},
 			fatal = {
-				carry = true,
-				standard = true
-			},
-			arrested = {
 				carry = true,
 				standard = true
 			},
@@ -1959,18 +1933,10 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 				standard = true
 			},
 			clean = {
-				arrested = true,
-				carry = true,
 				mask_off = true,
+				carry = true,
 				standard = true,
 				civilian = true
-			},
-			civilian = {
-				arrested = true,
-				carry = true,
-				clean = true,
-				standard = true,
-				mask_off = true
 			}
 		}
 
@@ -2014,14 +1980,6 @@ function UnitNetworkHandler:criminal_hurt(criminal_unit, attacker_unit, damage_r
 	end
 
 	managers.groupai:state():criminal_hurt_drama(criminal_unit, attacker_unit, damage_ratio * 0.01)
-end
-
-function UnitNetworkHandler:arrested(unit)
-	if not alive(unit) then
-		return
-	end
-
-	unit:movement():sync_arrested()
 end
 
 function UnitNetworkHandler:suspect_uncovered(enemy_unit, sender)
@@ -2088,16 +2046,6 @@ function UnitNetworkHandler:sync_peer_world_data(world_id, stage_prepare, stage_
 	peer._synced_worlds[world_id][CoreWorldCollection.STAGE_LOAD_FINISHED] = stage_load_finished
 end
 
-function UnitNetworkHandler:sync_cable_ties(amount, sender)
-	local peer = self._verify_sender(sender)
-
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
-		return
-	end
-
-	managers.player:set_synced_cable_ties(peer:id(), amount)
-end
-
 function UnitNetworkHandler:sync_grenades(grenade, amount, sender)
 	local peer = self._verify_sender(sender)
 
@@ -2128,42 +2076,52 @@ function UnitNetworkHandler:sync_bipod(bipod_pos, body_pos, sender)
 	managers.player:set_synced_bipod(peer, bipod_pos, body_pos)
 end
 
-function UnitNetworkHandler:sync_carry(carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, sender)
+function UnitNetworkHandler:sync_add_carry(carry_id, multiplier, sender)
 	local peer = self._verify_sender(sender)
 
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	managers.player:set_synced_carry(peer, carry_id, multiplier, dye_initiated, has_dye_pack, dye_value_multiplier)
+	managers.player:add_synced_carry(peer, carry_id, multiplier)
 end
 
-function UnitNetworkHandler:sync_remove_carry(sender)
+function UnitNetworkHandler:sync_remove_all_carry(sender)
 	local peer = self._verify_sender(sender)
 
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	managers.player:remove_synced_carry(peer)
+	managers.player:remove_synced_carry(nil, peer)
 end
 
-function UnitNetworkHandler:server_drop_carry(carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, rotation, dir, throw_distance_multiplier_upgrade_level, zipline_unit, sender)
+function UnitNetworkHandler:sync_remove_carry(carry_id, sender)
 	local peer = self._verify_sender(sender)
 
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	managers.player:server_drop_carry(carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, rotation, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer)
+	managers.player:remove_synced_carry(carry_id, peer)
 end
 
-function UnitNetworkHandler:sync_carry_data(unit, carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id, sender)
+function UnitNetworkHandler:server_drop_carry(carry_id, carry_multiplier, position, rotation, dir, throw_distance_multiplier_upgrade_level, zipline_unit, sender)
+	local peer = self._verify_sender(sender)
+
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
+		return
+	end
+
+	managers.player:server_drop_carry(carry_id, carry_multiplier, position, rotation, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer)
+end
+
+function UnitNetworkHandler:sync_carry_data(unit, carry_id, carry_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id, sender)
 	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
 	end
 
-	managers.player:sync_carry_data(unit, carry_id, carry_multiplier, dye_initiated, has_dye_pack, dye_value_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id)
+	managers.player:sync_carry_data(unit, carry_id, carry_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id)
 end
 
 function UnitNetworkHandler:request_throw_projectile(projectile_type, position, dir, cooking_t, sender)
@@ -2175,6 +2133,11 @@ function UnitNetworkHandler:request_throw_projectile(projectile_type, position, 
 
 	local peer_id = peer:id()
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
+
+	if not projectile_entry or not tweak_data.projectiles[projectile_entry] then
+		return
+	end
+
 	local no_cheat_count = tweak_data.projectiles[projectile_entry].no_cheat_count
 
 	if not no_cheat_count and not managers.player:verify_grenade(peer_id) then
@@ -2278,14 +2241,14 @@ function UnitNetworkHandler:sync_add_doted_enemy(enemy_unit, fire_damage_receive
 	managers.fire:sync_add_fire_dot(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, peer)
 end
 
-function UnitNetworkHandler:server_secure_loot(carry_id, multiplier_level, sender)
+function UnitNetworkHandler:server_secure_loot(carry_id, multiplier_level, silent, sender)
 	local peer = self._verify_sender(sender)
 
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
 		return
 	end
 
-	managers.loot:server_secure_loot(carry_id, multiplier_level)
+	managers.loot:server_secure_loot(carry_id, multiplier_level, silent)
 end
 
 function UnitNetworkHandler:sync_secure_loot(carry_id, multiplier_level, silent, sender)
@@ -2389,20 +2352,23 @@ function UnitNetworkHandler:set_health(unit, percent, sender)
 	local peer = self._verify_sender(sender)
 	local peer_id = peer:id()
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
+	local health_ratio = percent / 100
 
 	if character_data and character_data.panel_id then
 		managers.hud:set_teammate_health(character_data.panel_id, {
 			total = 1,
 			max = 1,
-			current = percent / 100
+			current = health_ratio
 		})
 	else
-		managers.hud:set_mugshot_health(unit:unit_data().mugshot_id, percent / 100)
+		managers.hud:set_mugshot_health(unit:unit_data().mugshot_id, health_ratio)
 	end
 
 	if percent ~= 100 then
 		managers.mission:call_global_event("player_damaged")
 	end
+
+	unit:character_damage():set_health_ratio(health_ratio)
 end
 
 function UnitNetworkHandler:sync_equipment_possession(peer_id, equipment, amount, sender)
@@ -2646,17 +2612,31 @@ function UnitNetworkHandler:sync_character_level(level, sender)
 		return
 	end
 
+	level = math.clamp(level, 0, managers.experience:level_cap())
+
 	peer:set_level(level)
 end
 
-function UnitNetworkHandler:sync_character_class_nationality(character_class_name, character_nation_name, sender)
+function UnitNetworkHandler:sync_character_class_nationality(class, nationality, sender)
 	local peer = self._verify_sender(sender)
 
 	if not peer then
 		return
 	end
 
-	peer:set_class_nation(character_class_name, character_nation_name)
+	if not nationality or not tweak_data.criminals.character_nation_name[nationality] then
+		debug_pause("[UnitNetworkHandler:sync_character_class_nationality] peer attempted to change to a non-existant nationality:", peer:id(), nationality)
+
+		nationality = tweak_data.criminals.character_nations[1]
+	end
+
+	if not class or not tweak_data.skilltree.classes[class] then
+		debug_pause("[UnitNetworkHandler:set_player_class] peer attempted to change to a non-existant class:", peer:id(), class)
+
+		class = SkillTreeTweakData.CLASS_RECON
+	end
+
+	peer:set_class_nation(class, nationality)
 end
 
 function UnitNetworkHandler:update_matchmake_attributes(sender)
@@ -2866,17 +2846,18 @@ function UnitNetworkHandler:stop_timespeed_effect(effect_id, fade_out_duration, 
 	managers.time_speed:stop_effect(effect_id, fade_out_duration)
 end
 
-function UnitNetworkHandler:sync_upgrade(unit, upgrade_category, upgrade_name, upgrade_level, unit_id_str)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+function UnitNetworkHandler:sync_upgrade(unit, upgrade_category, upgrade_name, upgrade_level, unit_id_str, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
+		return
+	end
+
+	if not alive(unit) then
+		Application:error("[UnitNetworkHandler:sync_upgrade] Unit is missing", unit, upgrade_category, upgrade_name, upgrade_level, unit_id_str, sender)
+
 		return
 	end
 
 	self:_chk_unit_too_early(unit, unit_id_str, "sync_upgrade", 1, unit, upgrade_category, upgrade_name, upgrade_level, unit_id_str)
-
-	if not alive(unit) then
-		return
-	end
-
 	unit:base():set_upgrade_value(upgrade_category, upgrade_name, upgrade_level)
 end
 
@@ -3644,7 +3625,7 @@ function UnitNetworkHandler:sync_warcry(source_unit, radius_idx, effect_name_idx
 	end
 end
 
-function UnitNetworkHandler:sync_unit_spawn(parent_unit, spawn_unit, align_obj_name, unit_id, parent_extension_name)
+function UnitNetworkHandler:sync_unit_spawn(parent_unit, spawn_unit, align_obj_name, unit_id, parent_extension_name, offset_position, offset_rotation)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
@@ -3653,7 +3634,7 @@ function UnitNetworkHandler:sync_unit_spawn(parent_unit, spawn_unit, align_obj_n
 		return
 	end
 
-	parent_unit[parent_extension_name](parent_unit):spawn_unit(unit_id, align_obj_name, spawn_unit)
+	parent_unit[parent_extension_name](parent_unit):spawn_unit(unit_id, align_obj_name, spawn_unit, offset_position, offset_rotation)
 	parent_unit[parent_extension_name](parent_unit):sync_unit_spawn(unit_id)
 end
 
@@ -3705,7 +3686,7 @@ function UnitNetworkHandler:sync_automatic_camp_asset(unit, level, sender)
 	end
 
 	if alive(unit) then
-		unit:gold_asset():_apply_upgrade_level(level)
+		unit:gold_asset():local_apply_upgrade_level(level)
 	end
 end
 
@@ -3801,4 +3782,48 @@ function UnitNetworkHandler:sync_honk_horn(vehicle, honk_state, sender)
 			vehicle:vehicle_driving():stop_horn_sound()
 		end
 	end
+end
+
+function UnitNetworkHandler:sync_pile_store_carry(align_unit, carry_unit, carry_id, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	if alive(align_unit) and alive(carry_unit) then
+		align_unit:carry_align():client_store_carry(carry_unit, carry_id)
+	end
+end
+
+function UnitNetworkHandler:sync_pile_remove_carry(unit, carry_id, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	if alive(unit) then
+		unit:carry_align():client_remove_carry(carry_id)
+	end
+end
+
+function UnitNetworkHandler:sync_set_lootcrate_tier(unit, tier, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	if alive(unit) and unit:interaction() then
+		unit:interaction():set_lootcrate_tier(tier)
+	end
+end
+
+function UnitNetworkHandler:sync_martyrdom(unit, projectile_type, sender)
+	if not alive(unit) or not self._verify_sender(sender) then
+		return
+	end
+
+	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
+
+	if not projectile_entry or not tweak_data.projectiles[projectile_entry] then
+		return
+	end
+
+	unit:character_damage():sync_martyrdom(projectile_entry)
 end

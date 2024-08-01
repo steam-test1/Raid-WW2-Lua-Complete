@@ -448,64 +448,65 @@ function CopActionShoot:update(t)
 				shoot = true
 			end
 
-			if shoot then
-				local melee = nil
+			local melee = nil
 
-				if autotarget and (not self._common_data.melee_countered_t or t - self._common_data.melee_countered_t > 15) and target_dis < 130 and self._w_usage_tweak.melee_speed and self._melee_timeout_t < t then
-					melee = self:_chk_start_melee(target_vec, target_dis, autotarget, target_pos)
+			if autotarget and (not self._common_data.melee_countered_t or t - self._common_data.melee_countered_t > 15) and target_dis < 130 and self._w_usage_tweak.melee_speed and self._melee_timeout_t < t then
+				melee = self:_chk_start_melee(target_vec, target_dis, autotarget, target_pos)
+				shoot = shoot or melee
+			end
+
+			if shoot and not melee and self._weapon_base:start_shooting_allowed() then
+				local falloff, i_range = self:_get_shoot_falloff(target_dis, self._falloff)
+				local firemode = nil
+
+				if self._automatic_weap then
+					local random_mode = math.random()
+
+					for i_mode, mode_chance in ipairs(falloff.mode) do
+						if random_mode <= mode_chance then
+							firemode = i_mode
+
+							break
+						end
+					end
+				else
+					firemode = 1
 				end
 
-				if not melee then
-					local falloff, i_range = self:_get_shoot_falloff(target_dis, self._falloff)
-					local firemode = nil
+				if firemode > 1 then
+					self._weapon_base:start_autofire(firemode < 4 and firemode)
 
-					if self._automatic_weap then
-						local random_mode = math.random()
+					self._autofiring = firemode < 4 and firemode or math.random(self._w_usage_tweak.autofire_rounds[1], self._w_usage_tweak.autofire_rounds[2])
+					self._autoshots_fired = 0
 
-						for i_mode, mode_chance in ipairs(falloff.mode) do
-							if random_mode <= mode_chance then
-								firemode = i_mode
+					if vis_state == 1 and not ext_anim.base_no_recoil then
+						self._ext_movement:play_redirect("recoil_auto")
+					end
+				else
+					local spread = self._spread
 
-								break
-							end
+					if autotarget then
+						local new_target_pos = self._shoot_history and self:_get_unit_shoot_pos(t, target_pos, target_dis, self._w_usage_tweak, falloff, i_range, autotarget)
+
+						if new_target_pos then
+							target_pos = new_target_pos
+						else
+							spread = math.min(20, spread)
 						end
-					else
-						firemode = 1
 					end
 
-					if firemode > 1 then
-						self._weapon_base:start_autofire(firemode < 4 and firemode)
+					local spread_pos = temp_vec2
 
-						self._autofiring = firemode < 4 and firemode or math.random(self._w_usage_tweak.autofire_rounds[1], self._w_usage_tweak.autofire_rounds[2])
-						self._autoshots_fired = 0
+					mvec3_rand_orth(spread_pos, target_vec)
+					mvec3_set_l(spread_pos, spread)
+					mvec3_add(spread_pos, target_pos)
 
-						if vis_state == 1 and not ext_anim.base_no_recoil then
-							self._ext_movement:play_redirect("recoil_auto")
-						end
-					else
-						local spread = self._spread
+					target_dis = mvec3_dir(target_vec, shoot_from_pos, spread_pos)
+					local damage_multiplier = self:_get_shoot_falloff_damage(self._falloff, target_dis, i_range)
+					local fired = self._weapon_base:singleshot(shoot_from_pos, target_vec, damage_multiplier, self._shooting_player, nil, nil, nil, self._attention.unit)
 
-						if autotarget then
-							local new_target_pos = self._shoot_history and self:_get_unit_shoot_pos(t, target_pos, target_dis, self._w_usage_tweak, falloff, i_range, autotarget)
-
-							if new_target_pos then
-								target_pos = new_target_pos
-							else
-								spread = math.min(20, spread)
-							end
-						end
-
-						local spread_pos = temp_vec2
-
-						mvec3_rand_orth(spread_pos, target_vec)
-						mvec3_set_l(spread_pos, spread)
-						mvec3_add(spread_pos, target_pos)
-
-						target_dis = mvec3_dir(target_vec, shoot_from_pos, spread_pos)
-						local damage_multiplier = self:_get_shoot_falloff_damage(self._falloff, target_dis, i_range)
-						local fired = self._weapon_base:singleshot(shoot_from_pos, target_vec, damage_multiplier, self._shooting_player, nil, nil, nil, self._attention.unit)
-
-						if fired and fired.hit_enemy and fired.hit_enemy.type == "death" and self._unit:unit_data().mission_element then
+					if fired then
+						if fired.hit_enemy and fired.hit_enemy.type == "death" and self._unit:unit_data().mission_element then
 							self._unit:unit_data().mission_element:event("killshot", self._unit)
 						end
 

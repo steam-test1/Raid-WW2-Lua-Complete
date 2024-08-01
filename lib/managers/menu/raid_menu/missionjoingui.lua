@@ -180,37 +180,32 @@ end
 
 function MissionJoinGui:_layout_server_list_table()
 	self._servers_title_label = self._list_panel:label({
-		name = "servers_title_label",
 		vertical = "top",
 		h = 69,
+		name = "servers_title_label",
 		w = 320,
-		y = 0,
-		x = 0,
 		text = utf8.to_upper(managers.localization:text("menu_mission_join_server_list_title")),
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title
 	})
-	local server_list_scrollable_area_params = {
+	self._server_list_scrollable_area = self._list_panel:scrollable_area({
 		name = "servers_table_scrollable_area",
 		h = 720,
 		y = 96,
 		w = 1216,
-		x = 0,
 		scroll_step = 35
-	}
-	self._server_list_scrollable_area = self._list_panel:scrollable_area(server_list_scrollable_area_params)
+	})
 	self._params_servers_table = {
-		use_row_dividers = true,
-		name = "servers_table",
 		loop_items = true,
+		use_row_dividers = true,
 		use_selector_mark = true,
-		y = 0,
-		x = 0,
+		name = "servers_table",
 		w = self._server_list_scrollable_area:w(),
 		scrollable_area_ref = self._server_list_scrollable_area,
 		on_selected_callback = callback(self, self, "bind_controller_inputs"),
 		table_params = {
+			data_source_callback = callback(self, self, "data_source_servers_table"),
 			header_params = {
 				header_height = 32,
 				text_color = tweak_data.gui.colors.raid_white,
@@ -232,7 +227,6 @@ function MissionJoinGui:_layout_server_list_table()
 				on_row_click_callback = callback(self, self, "on_row_clicked_servers_table"),
 				on_row_double_clicked_callback = callback(self, self, "on_row_double_clicked_servers_table")
 			},
-			data_source_callback = callback(self, self, "data_source_servers_table"),
 			columns = {
 				{
 					vertical = "center",
@@ -290,7 +284,7 @@ function MissionJoinGui:_layout_server_list_table()
 		}
 	}
 
-	if _G.IS_XB1 or _G.IS_XB360 then
+	if IS_XB1 then
 		self._params_servers_table.on_menu_move = {
 			right = "player_description_1"
 		}
@@ -379,7 +373,7 @@ function MissionJoinGui:_layout_game_description()
 			y = (counter - 1) * 96
 		}
 
-		if _G.IS_XB1 or _G.IS_XB360 then
+		if IS_XB1 then
 			player_description_params.on_menu_move = {
 				left = "servers_table",
 				up = "player_description_" .. tostring(counter > 1 and counter - 1 or 3),
@@ -525,9 +519,6 @@ end
 function MissionJoinGui:_layout_footer_buttons()
 	self._join_button = self._footer_buttons_panel:short_primary_button({
 		name = "join_button",
-		visible = true,
-		y = 0,
-		x = 0,
 		on_click_callback = callback(self, self, "on_click_join_button"),
 		text = self:translate("menu_mission_join_join", true),
 		on_menu_move = {
@@ -536,32 +527,28 @@ function MissionJoinGui:_layout_footer_buttons()
 		}
 	})
 	self._apply_filters_button = self._footer_buttons_panel:short_tertiary_button({
-		w = 128,
+		vertical = "center",
 		name = "apply_filters_button",
 		h = 28,
+		w = 128,
 		align = "center",
-		vertical = "center",
-		y = 0,
-		visible = true,
 		x = 1280,
-		on_click_callback = callback(self, self, "on_click_apply_filters_button"),
-		text = self:translate("menu_mission_join_filters_apply", true),
 		color = Color.black,
 		highlight_color = Color.white,
+		on_click_callback = callback(self, self, "on_click_apply_filters_button"),
+		text = self:translate("menu_mission_join_filters_apply", true),
 		texture_color = tweak_data.menu.raid_red,
 		texture_highlight_color = tweak_data.menu.raid_red
 	})
 	self._show_filters_button = self._footer_buttons_panel:short_secondary_button({
 		w = 128,
-		name = "show_filters_button",
+		vertical = "center",
 		h = 28,
 		align = "center",
-		vertical = "center",
-		y = 0,
-		visible = true,
+		name = "show_filters_button",
 		x = 1536,
-		on_click_callback = callback(self, self, "on_click_show_filters_button"),
 		text = self:translate("menu_mission_join_filters_show", true),
+		on_click_callback = callback(self, self, "on_click_show_filters_button"),
 		color = Color.black,
 		highlight_color = Color.white,
 		texture_color = tweak_data.menu.raid_red,
@@ -574,7 +561,6 @@ function MissionJoinGui:_layout_footer_buttons()
 		w = 320,
 		align = "left",
 		text = "",
-		y = 0,
 		x = 960,
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -596,9 +582,6 @@ function MissionJoinGui:close()
 	MissionJoinGui.super.close(self)
 	managers.network.matchmake:register_callback("search_lobby", nil)
 	self:_remove_active_controls()
-end
-
-function MissionJoinGui:update(t, dt)
 end
 
 function MissionJoinGui:friends_only_button_on_click()
@@ -967,7 +950,7 @@ function MissionJoinGui:_set_game_description_data(data)
 		end
 	end
 
-	if _G.IS_XB1 or _G.IS_XB360 then
+	if IS_XB1 then
 		for i = 1, control_counter do
 			if not self._player_controls[i] then
 				break
@@ -1031,7 +1014,7 @@ function MissionJoinGui:_set_game_description_data(data)
 		local type_definition = tweak_data.challenge_cards.type_definition[card_data.card_type]
 
 		self._desc_challenge_card_type_icon_on_card:set_image(type_definition.texture_path)
-		self._desc_challenge_card_type_icon_on_card:set_texture_rect(type_definition.texture_rect)
+		self._desc_challenge_card_type_icon_on_card:set_texture_rect(type_definition.texture_rect or tweak_data.challenge_cards.challenge_card_texture_rect)
 
 		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card_key_name)
 		local card_effect_y = 64
@@ -1069,9 +1052,9 @@ function MissionJoinGui:_set_game_description_data(data)
 	end
 end
 
-local is_win32 = _G.IS_PC
-local is_xb1 = _G.IS_XB1
-local is_ps4 = _G.IS_PS4
+local is_win32 = IS_PC
+local is_xb1 = IS_XB1
+local is_ps4 = IS_PS4
 
 function MissionJoinGui:_find_online_games(friends_only)
 	if is_win32 then

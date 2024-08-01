@@ -49,8 +49,6 @@ function LootManager:add_trigger(id, type, amount, callback)
 end
 
 function LootManager:_check_triggers(type)
-	print("LootManager:_check_triggers", type)
-
 	if not self._triggers[type] then
 		return
 	end
@@ -62,10 +60,6 @@ function LootManager:_check_triggers(type)
 	else
 		debug_pause("[LootManager:_check_triggers] Unsupported trigger type!", type)
 	end
-end
-
-function LootManager:on_restart_to_camp()
-	self:clear()
 end
 
 function LootManager:get_secured()
@@ -97,11 +91,15 @@ function LootManager:on_job_deactivated()
 	self:clear()
 end
 
+function LootManager:on_restart_to_camp()
+	self:clear()
+end
+
 function LootManager:secure(carry_id, multiplier_level, silent)
 	if Network:is_server() then
 		self:server_secure_loot(carry_id, multiplier_level, silent)
 	else
-		managers.network:session():send_to_host("server_secure_loot", carry_id, multiplier_level)
+		managers.network:session():send_to_host("server_secure_loot", carry_id, multiplier_level, silent)
 	end
 end
 
@@ -120,12 +118,17 @@ function LootManager:sync_secure_loot(carry_id, multiplier_level, silent)
 	self:_check_triggers("report_only")
 
 	if not silent then
-		self:_present(carry_id, multiplier)
+		-- Nothing
 	end
+
+	if managers.raid_job:current_job() and not managers.raid_job:current_job().consumable then
+		managers.greed:secure_greed_carry_loot(carry_id, multiplier)
+	end
+
+	managers.experience:mission_xp_award("tiny_loot_bonus")
 end
 
 function LootManager:_present(carry_id, multiplier)
-	local real_value = 0
 	local carry_data = tweak_data.carry[carry_id]
 	local title = managers.localization:text("hud_loot_secured_title")
 	local type_text = carry_data.name_id and managers.localization:text(carry_data.name_id)

@@ -6,8 +6,10 @@ function SelectNameModal:init(name, assets_list, settings, ...)
 	self._dialog_name = self._dialog_name or name or "Assets"
 	self._cancelled = true
 	self._assets_list = assets_list
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
 
-	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
+	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(350, 500, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(330, 300, 0))
 	self:create_panel("VERTICAL")
 
 	local panel = self._panel
@@ -41,8 +43,8 @@ function SelectNameModal:init(name, assets_list, settings, ...)
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self:_build_buttons(panel, button_sizer)
-	panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,LEFT,RIGHT")
 	self:fill_asset_list()
 	self._dialog:set_visible(true)
 	self:show_modal()
@@ -55,7 +57,7 @@ function SelectNameModal:_on_select_asset()
 end
 
 function SelectNameModal:_build_buttons(panel, sizer)
-	local select_btn = EWS:Button(panel, "Select", "", "BU_BOTTOM")
+	local select_btn = EWS:Button(panel, "Select", "", "")
 
 	sizer:add(select_btn, 0, 2, "RIGHT,LEFT")
 	select_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_on_select_asset"), "")

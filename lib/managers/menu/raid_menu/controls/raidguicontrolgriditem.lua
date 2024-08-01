@@ -61,6 +61,65 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	self._select_background_panel = self._object:panel(background_panel_params)
 	self._select_background = self._select_background_panel:rect(background_rect_params)
 	self._triangle_markers_panel = self._object:panel(background_panel_params)
+
+	self:_layout_triangles()
+	self:_layout_grid_item_icon(params)
+	self:_layout_locks()
+	self:_toggle_visibility_status_icons()
+
+	if self._item_data.breadcrumb then
+		self:_layout_breadcrumb()
+	end
+end
+
+function RaidGUIControlGridItem:_layout_grid_item_icon(params)
+	local image_coord_x = (params.selected_marker_w - params.item_w) / 2
+	local image_coord_y = (params.selected_marker_h - params.item_h) / 2
+	self._grid_item_icon = self._object:image({
+		name = "grid_item_icon",
+		layer = 100,
+		x = image_coord_x,
+		y = image_coord_y,
+		w = params.item_w,
+		h = params.item_h,
+		texture = self._item_data[self._params.grid_item_icon]
+	})
+end
+
+function RaidGUIControlGridItem:_layout_locks()
+	self._item_status_resource_icon = self._object:image({
+		name = "grid_item_resource_icon",
+		layer = 200,
+		color = tweak_data.gui.colors.gold_orange,
+		texture = tweak_data.gui.icons.gold_amount_footer.texture,
+		texture_rect = tweak_data.gui.icons.gold_amount_footer.texture_rect
+	})
+
+	self._item_status_resource_icon:set_right(self._grid_item_icon:right() - 14)
+	self._item_status_resource_icon:set_bottom(self._grid_item_icon:bottom() - 14)
+
+	self._item_status_lock_icon = self._object:image({
+		name = "grid_item_lock_icon",
+		layer = 200,
+		texture = tweak_data.gui.icons.ico_locker.texture,
+		texture_rect = tweak_data.gui.icons.ico_locker.texture_rect
+	})
+
+	self._item_status_lock_icon:set_right(self._grid_item_icon:right() - 14)
+	self._item_status_lock_icon:set_bottom(self._grid_item_icon:bottom() - 14)
+
+	self._item_status_dlc_lock = self._object:image({
+		name = "grid_item_dlc_lock_icon",
+		layer = 200,
+		texture = tweak_data.gui.icons.ico_dlc.texture,
+		texture_rect = tweak_data.gui.icons.ico_dlc.texture_rect
+	})
+
+	self._item_status_dlc_lock:set_right(self._grid_item_icon:right() - 14)
+	self._item_status_dlc_lock:set_bottom(self._grid_item_icon:bottom() - 14)
+end
+
+function RaidGUIControlGridItem:_layout_triangles()
 	self._top_marker_triangle = self._triangle_markers_panel:image({
 		y = 0,
 		x = 0,
@@ -81,58 +140,6 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 		texture = tweak_data.gui.icons.ico_sel_rect_bottom_right_white.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_bottom_right_white.texture_rect
 	})
-	local image_coord_x = (params.selected_marker_w - params.item_w) / 2
-	local image_coord_y = (params.selected_marker_h - params.item_h) / 2
-	self._grid_item_icon = self._object:image({
-		name = "grid_item_icon",
-		layer = 100,
-		x = image_coord_x,
-		y = image_coord_y,
-		w = params.item_w,
-		h = params.item_h,
-		texture = self._item_data[self._params.grid_item_icon]
-	})
-	self._item_status_resource_icon = self._object:image({
-		name = "grid_item_resource_icon",
-		y = 5,
-		x = 100,
-		layer = 200,
-		color = tweak_data.gui.colors.gold_orange,
-		texture = tweak_data.gui.icons.gold_amount_footer.texture,
-		texture_rect = tweak_data.gui.icons.gold_amount_footer.texture_rect
-	})
-
-	self._item_status_resource_icon:set_right(self._grid_item_icon:right() - 14)
-	self._item_status_resource_icon:set_bottom(self._grid_item_icon:bottom() - 14)
-
-	self._item_status_lock_icon = self._object:image({
-		name = "grid_item_lock_icon",
-		y = 5,
-		x = 100,
-		layer = 200,
-		texture = tweak_data.gui.icons.ico_locker.texture,
-		texture_rect = tweak_data.gui.icons.ico_locker.texture_rect
-	})
-
-	self._item_status_lock_icon:set_right(self._grid_item_icon:right() - 14)
-	self._item_status_lock_icon:set_bottom(self._grid_item_icon:bottom() - 14)
-
-	self._item_status_dlc_lock = self._object:image({
-		name = "grid_item_dlc_lock_icon",
-		y = 5,
-		x = 100,
-		layer = 200,
-		texture = tweak_data.gui.icons.ico_dlc.texture,
-		texture_rect = tweak_data.gui.icons.ico_dlc.texture_rect
-	})
-
-	self._item_status_dlc_lock:set_right(self._grid_item_icon:right() - 14)
-	self._item_status_dlc_lock:set_bottom(self._grid_item_icon:bottom() - 14)
-	self:_toggle_visibility_status_icons()
-
-	if self._item_data.breadcrumb then
-		self:_layout_breadcrumb()
-	end
 end
 
 function RaidGUIControlGridItem:_layout_breadcrumb()
@@ -150,24 +157,92 @@ end
 
 function RaidGUIControlGridItem:_toggle_visibility_status_icons()
 	if self._item_data.status == RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED then
-		self._item_status_resource_icon:hide()
-		self._item_status_lock_icon:hide()
-		self._item_status_dlc_lock:hide()
+		self._grid_item_icon:set_color(Color(1, 1, 1))
+	else
+		local v = 0.33
+
+		self._grid_item_icon:set_color(Color(v, v, v))
+	end
+
+	if self._item_data.status == RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED then
+		self:_toggle_visibility_status_owned_unlocked()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_LOCKED then
-		self._item_status_resource_icon:hide()
-		self._item_status_lock_icon:show()
-		self._item_status_dlc_lock:hide()
+		self:_toggle_visibility_status_locked()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_PURCHASABLE then
-		self._item_status_resource_icon:show()
-		self._item_status_lock_icon:hide()
-		self._item_status_dlc_lock:hide()
+		self:_toggle_visibility_status_purchasable()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_NOT_ENOUGHT_RESOURCES then
-		self._item_status_resource_icon:show()
-		self._item_status_lock_icon:hide()
-		self._item_status_dlc_lock:hide()
+		self:_toggle_visibility_status_not_enough_resources()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_LOCKED_DLC then
+		self:_toggle_visibility_status_locked_dlc()
+	end
+end
+
+function RaidGUIControlGridItem:_toggle_visibility_status_owned_unlocked()
+	if self._item_status_resource_icon then
 		self._item_status_resource_icon:hide()
+	end
+
+	if self._item_status_lock_icon then
 		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+function RaidGUIControlGridItem:_toggle_visibility_status_locked()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:hide()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:show()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+function RaidGUIControlGridItem:_toggle_visibility_status_purchasable()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:show()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+function RaidGUIControlGridItem:_toggle_visibility_status_not_enough_resources()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:show()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+function RaidGUIControlGridItem:_toggle_visibility_status_locked_dlc()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:hide()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
 		self._item_status_dlc_lock:show()
 	end
 end
@@ -236,4 +311,12 @@ end
 
 function RaidGUIControlGridItem:confirm_pressed()
 	self:on_mouse_released(nil)
+end
+
+function RaidGUIControlGridItem:on_mouse_over(x, y)
+	RaidGUIControlGridItem.super.on_mouse_over(self, x, y)
+
+	if self._params.hover_selects and self._on_click_callback then
+		self._on_click_callback(self._item_data, self._params.key_value_field)
+	end
 end

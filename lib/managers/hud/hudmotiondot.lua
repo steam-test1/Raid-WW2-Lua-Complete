@@ -105,7 +105,7 @@ HUDMotionDot.MODES = {
 function HUDMotionDot:init(hud)
 	self._hud_panel = hud.panel
 
-	self:cleanup()
+	self:clean_up()
 
 	self._size_icon_index = managers.user:get_setting("motion_dot_size")
 	self._offset_index = managers.user:get_setting("motion_dot_offset")
@@ -118,9 +118,7 @@ function HUDMotionDot:init(hud)
 		table.insert(self._motion_icons, self:_create_icon("motion_icon_" .. tostring(i), HUDMotionDot.ICONS[self._motion_icon_index]))
 	end
 
-	if managers.user:get_setting("motion_dot") ~= 0 then
-		self:_update_dots()
-	end
+	self:_update_dots()
 end
 
 function HUDMotionDot:_create_icon(name, icon)
@@ -233,6 +231,10 @@ function HUDMotionDot:_update_dots()
 	Application:debug("[HUDMotionDot] on_setting_offsets", self._offset_index, offset)
 end
 
+function HUDMotionDot:type_index()
+	return self._dot_mode_idx
+end
+
 function HUDMotionDot:on_setting_counts(index)
 	if type(index) == "boolean" then
 		if index then
@@ -291,7 +293,7 @@ end
 function HUDMotionDot:show_done()
 end
 
-function HUDMotionDot:cleanup()
+function HUDMotionDot:clean_up()
 	for i = 1, 4 do
 		if self._hud_panel:child("motion_icon_" .. tostring(i)) then
 			self._hud_panel:remove(self._hud_panel:child("motion_icon_" .. tostring(i)))

@@ -20,7 +20,13 @@ function GreedCacheItem:reserve_left()
 end
 
 function GreedCacheItem:pickup_amount()
-	return tweak_data.greed.cache_items[self._tweak_table].single_interaction_value
+	local value = tweak_data.greed.cache_items[self._tweak_table].single_interaction_value
+	local data = tweak_data.greed.cache_items[self._tweak_table].single_interaction_value_rand
+	local rand = math.random(data[1]) * data[2]
+
+	Application:debug("[GreedCacheItem:pickup_amount] value + rand", value, rand)
+
+	return value + rand
 end
 
 function GreedCacheItem:on_interacted(amount)
@@ -30,7 +36,7 @@ function GreedCacheItem:on_interacted(amount)
 
 	self:_check_current_sequence()
 
-	return pickup_amount
+	return pickup_amount * managers.player:upgrade_value("player", "greed_loot_bonus", 1)
 end
 
 function GreedCacheItem:_check_current_sequence()

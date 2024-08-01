@@ -5,59 +5,64 @@ DLCTweakData.DLC_GRANT_TYPE_BUY = 3
 DLCTweakData.DLC_NAME_FULL_GAME = "full_game"
 DLCTweakData.DLC_NAME_PREORDER = "preorder"
 DLCTweakData.DLC_NAME_SPECIAL_EDITION = "special_edition"
-DLCTweakData.DLC_NAME_RAID_COMMUNITY = "raid_community"
 DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK = "official_soundtrack"
 DLCTweakData.DLC_NAME_STARTER_KIT = "starter_kit"
 
 function DLCTweakData:init(tweak_data)
-	if managers.dlc:is_installing() then
-		tweak_data.BUNDLED_DLC_PACKAGES = {}
-	else
-		tweak_data.BUNDLED_DLC_PACKAGES = {}
-	end
+	tweak_data.BUNDLED_DLC_PACKAGES = {}
 
 	self:_init_descriptions()
 end
 
 function DLCTweakData:_init_descriptions()
 	self.descriptions = {
-		[DLCTweakData.DLC_NAME_PREORDER] = {}
+		[DLCTweakData.DLC_NAME_STARTER_KIT] = {}
 	}
-	self.descriptions[DLCTweakData.DLC_NAME_PREORDER].content = {
-		customizations = {
-			{
-				item = "american_highlander_jacket_upper"
-			},
-			{
-				item = "american_highlander_jacket_lower"
-			},
-			{
-				item = "russian_highlander_jacket_upper"
-			},
-			{
-				item = "russian_highlander_jacket_lower"
-			},
-			{
-				item = "german_highlander_jacket_upper"
-			},
-			{
-				item = "german_highlander_jacket_lower"
-			},
-			{
-				item = "british_highlander_jacket_upper"
-			},
-			{
-				item = "british_highlander_jacket_lower"
-			}
-		},
-		weapon_skins = {
-			{
-				item = "garand_special_edition"
-			}
-		},
+	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].free = true
+	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].content = {
+		loot_global_value = "normal",
 		gold_award = {
-			item = "preorder_army_crate",
+			item = "starter_kit_army_crate",
 			amount = 50
+		}
+	}
+	self.descriptions[DLCTweakData.DLC_NAME_PREORDER] = {
+		content = {
+			customizations = {
+				{
+					item = "american_highlander_jacket_upper"
+				},
+				{
+					item = "american_highlander_jacket_lower"
+				},
+				{
+					item = "russian_highlander_jacket_upper"
+				},
+				{
+					item = "russian_highlander_jacket_lower"
+				},
+				{
+					item = "german_highlander_jacket_upper"
+				},
+				{
+					item = "german_highlander_jacket_lower"
+				},
+				{
+					item = "british_highlander_jacket_upper"
+				},
+				{
+					item = "british_highlander_jacket_lower"
+				}
+			},
+			weapon_skins = {
+				{
+					item = "garand_special_edition"
+				}
+			},
+			gold_award = {
+				item = "preorder_army_crate",
+				amount = 50
+			}
 		}
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_SPECIAL_EDITION] = {
@@ -103,9 +108,6 @@ function DLCTweakData:_init_descriptions()
 			melee_weapons = {
 				{
 					item = "km_dagger"
-				},
-				{
-					item = "marching_mace"
 				}
 			},
 			vehicle_skins = {
@@ -125,19 +127,8 @@ function DLCTweakData:_init_descriptions()
 				}
 			},
 			gold_award = {
-				item = "preorder_army_crate",
+				item = "special_edition_army_crate",
 				amount = 50
-			}
-		}
-	}
-	self.descriptions[DLCTweakData.DLC_NAME_RAID_COMMUNITY] = {
-		content = {
-			gold_award = {
-				item = "raid_community_group",
-				amount = 100
-			},
-			random_customization = {
-				item = "raid_community_group"
 			}
 		}
 	}

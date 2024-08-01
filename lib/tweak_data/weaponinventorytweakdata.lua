@@ -188,7 +188,8 @@ function WeaponInventoryTweakData:init()
 			slot = 8,
 			redeemed_xp = 80,
 			droppable = true,
-			weapon_id = "lc14b"
+			weapon_id = "lc14b",
+			is_challenge_reward = true
 		}
 	}
 end

@@ -1,24 +1,13 @@
 BaseNetworkSession = BaseNetworkSession or class()
 BaseNetworkSession.TIMEOUT_CHK_INTERVAL = 5
-
-if _G.IS_XB360 then
-	BaseNetworkSession.CONNECTION_TIMEOUT = 10
-elseif _G.IS_PS4 then
-	BaseNetworkSession.CONNECTION_TIMEOUT = 10
-elseif _G.IS_XB1 then
-	BaseNetworkSession.CONNECTION_TIMEOUT = 10
-else
-	BaseNetworkSession.CONNECTION_TIMEOUT = 10
-end
-
-BaseNetworkSession.LOADING_CONNECTION_TIMEOUT = _G.IS_PC and 75 or 80
-BaseNetworkSession._LOAD_WAIT_TIME = _G.IS_PC and 2 or 5
+BaseNetworkSession.CONNECTION_TIMEOUT = 10
+BaseNetworkSession.LOADING_CONNECTION_TIMEOUT = IS_PC and 75 or 80
+BaseNetworkSession._LOAD_WAIT_TIME = IS_PC and 2 or 5
 BaseNetworkSession._STEAM_P2P_SEND_INTERVAL = 1
 
 function BaseNetworkSession:init()
-	print("[BaseNetworkSession:init]")
+	Application:debug("[BaseNetworkSession:init]")
 
-	self._ids_WIN32 = Idstring("WIN32")
 	self._peers = {}
 	self._peers_all = {}
 	self._server_peer = nil
@@ -39,7 +28,7 @@ function BaseNetworkSession:create_local_peer(load_outfit)
 	Application:debug("[BaseNetworkSession:create_local_peer] 1 load_outfit", load_outfit)
 
 	local my_name = managers.network.account:username_id()
-	local my_user_id = SystemInfo:distribution() == Idstring("STEAM") and Steam:userid() or managers.network.account:username_id()
+	local my_user_id = IS_STEAM and Steam:userid() or managers.network.account:username_id()
 
 	Application:debug("[BaseNetworkSession:create_local_peer] 2 my_name, my_user_id", my_name, my_user_id)
 
@@ -243,6 +232,18 @@ function BaseNetworkSession:peer_by_unit_key(wanted_key)
 	end
 end
 
+function BaseNetworkSession:peer_id_by_unit(unit)
+	local wanted_key = unit:key()
+
+	for id, peer in pairs(self._peers_all) do
+		local test_unit = peer:unit()
+
+		if alive(test_unit) and test_unit:key() == wanted_key then
+			return id
+		end
+	end
+end
+
 function BaseNetworkSession:amount_of_players()
 	return table.size(self._peers_all)
 end
@@ -268,17 +269,17 @@ function BaseNetworkSession:is_kicked(peer_name)
 end
 
 function BaseNetworkSession:add_peer(name, rpc, in_lobby, loading, synched, id, character, user_id, xuid, xnaddr)
-	print("[BaseNetworkSession:add_peer]", name, rpc, in_lobby, loading, synched, id, character, user_id, xuid, xnaddr)
+	Application:debug("[BaseNetworkSession:add_peer]", name, rpc, in_lobby, loading, synched, id, character, user_id, xuid, xnaddr)
 
 	local peer = NetworkPeer:new(name, rpc, id, loading, synched, in_lobby, character, user_id)
 
 	peer:set_xuid(xuid)
 
-	if _G.IS_XB360 or self:is_host() then
+	if self:is_host() then
 		peer:set_xnaddr(xnaddr)
 	end
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		Steam:set_played_with(peer:user_id())
 	end
 
@@ -302,7 +303,7 @@ function BaseNetworkSession:add_peer(name, rpc, in_lobby, loading, synched, id, 
 end
 
 function BaseNetworkSession:remove_peer(peer, peer_id, reason)
-	print("[BaseNetworkSession:remove_peer]", inspect(peer), peer_id, reason)
+	Application:debug("[BaseNetworkSession:remove_peer]", inspect(peer), peer_id, reason)
 	Application:stack_dump()
 
 	for _, p in pairs(self._peers) do
@@ -418,19 +419,17 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 	end
 
 	local member_used_deployable = peer:used_deployable() or false
-	local member_used_cable_ties = peer:used_cable_ties() or 0
-	local member_used_body_bags = peer:used_body_bags()
 
 	peer:unit_delete()
 
-	local peer_ident = _G.IS_PC and peer:user_id() or peer:name()
+	local peer_ident = IS_PC and peer:user_id() or peer:name()
 
 	if Network:is_server() then
 		self:check_start_game_intro()
 	end
 
 	if Network:multiplayer() then
-		if _G.IS_XB360 or _G.IS_XB1 or _G.IS_PS4 then
+		if IS_PS4 or IS_XB1 then
 			managers.network.matchmake:on_peer_removed(peer)
 		end
 
@@ -456,8 +455,6 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 					member_downed = member_downed,
 					health = member_health,
 					used_deployable = member_used_deployable,
-					used_cable_ties = member_used_cable_ties,
-					used_body_bags = member_used_body_bags,
 					member_dead = member_dead,
 					hostages_killed = hostages_killed,
 					respawn_penalty = respawn_penalty
@@ -489,7 +486,7 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 				end
 			end
 		else
-			print("Tried to remove client when neither server or client")
+			Application:error("[BaseNetworkSession:_on_peer_removed] Tried to remove client when neither server or client")
 			Application:stack_dump()
 		end
 	end
@@ -572,7 +569,7 @@ end
 function BaseNetworkSession:on_peer_kicked(peer, peer_id, message_id)
 	if peer ~= self._local_peer then
 		if message_id == 0 then
-			local ident = self._ids_WIN32 == SystemInfo:platform() and peer:user_id() or peer:name()
+			local ident = IS_PC and peer:user_id() or peer:name()
 			self._kicked_list[ident] = true
 		end
 
@@ -717,6 +714,7 @@ function BaseNetworkSession:_load_level(...)
 	self._local_peer:set_loading(true)
 	Network:set_multiplayer(true)
 	setup:load_level(...)
+	Application:debug("[BaseNetworkSession:_load_level] Wait timeout", self._LOAD_WAIT_TIME)
 
 	self._load_wait_timeout_t = TimerManager:wall():time() + self._LOAD_WAIT_TIME
 end
@@ -801,7 +799,7 @@ function BaseNetworkSession:is_ready_to_close()
 		end
 
 		if not peer:rpc() then
-			print("[BaseNetworkSession:is_ready_to_close] waiting rpc", peer_id)
+			Application:debug("[BaseNetworkSession:is_ready_to_close] waiting rpc", peer_id)
 
 			return false
 		end
@@ -815,7 +813,7 @@ function BaseNetworkSession:closing()
 end
 
 function BaseNetworkSession:prepare_to_close(skip_destroy_matchmaking)
-	print("[BaseNetworkSession:prepare_to_close]")
+	Application:debug("[BaseNetworkSession:prepare_to_close]")
 
 	self._closing = true
 
@@ -827,7 +825,7 @@ function BaseNetworkSession:prepare_to_close(skip_destroy_matchmaking)
 end
 
 function BaseNetworkSession:set_peer_loading_state(peer, state, load_counter)
-	print("[BaseNetworkSession:set_peer_loading_state]", peer:id(), state)
+	Application:debug("[BaseNetworkSession:set_peer_loading_state]", peer:id(), state, load_counter)
 
 	if Global.load_start_menu_lobby then
 		return
@@ -930,6 +928,7 @@ end
 
 function BaseNetworkSession:chk_send_local_player_ready(streaming_worlds_finished)
 	if streaming_worlds_finished then
+		Application:debug("[BaseNetworkSession:chk_send_local_player_ready] streaming_worlds_finished!", self._local_peer:id())
 		self:send_to_peers("set_member_ready", self._local_peer:id(), 1, 5, "")
 
 		managers.player._need_to_send_player_status = true
@@ -977,19 +976,15 @@ function BaseNetworkSession:on_load_complete(simulation)
 		self._local_peer:set_loading(false)
 	end
 
-	if not setup.IS_START_MENU then
-		if _G.IS_PS3 then
-			PSN:set_online_callback(callback(self, self, "ps3_disconnect"))
-		elseif _G.IS_PS4 then
-			PSN:set_online_callback(callback(self, self, "ps4_disconnect"))
-		end
+	if not setup.IS_START_MENU and IS_PS4 then
+		PSN:set_online_callback(callback(self, self, "psn_disconnect"))
 	end
 end
 
 function BaseNetworkSession:send_loading_finished_to_peers()
 	for peer_id, peer in pairs(self:peers()) do
 		if peer:ip_verified() then
-			Application:debug("[CoreWorldCollection:sync_loaded_packages] send level loaded to peer", peer_id)
+			Application:debug("[BaseNetworkSession:send_loading_finished_to_peers] send level loaded to peer", peer_id)
 			peer:send("set_loading_state", false, self._load_counter)
 		end
 	end
@@ -1049,27 +1044,11 @@ function BaseNetworkSession:xbox_disconnected()
 	})
 end
 
-function BaseNetworkSession:ps4_disconnect(connected)
+function BaseNetworkSession:psn_disconnect(connected)
 	managers.network.matchmake:psn_disconnected()
 
 	if not connected then
 		managers.platform:event("disconnect")
-	end
-end
-
-function BaseNetworkSession:ps3_disconnect(connected)
-	print("BaseNetworkSession ps3_disconnect", connected)
-
-	if Global.game_settings.single_player then
-		return
-	end
-
-	if not connected and not PSN:is_online() then
-		if game_state_machine:current_state().on_disconnected then
-			game_state_machine:current_state():on_disconnected()
-		end
-
-		managers.network.voice_chat:destroy_voice(true)
 	end
 end
 
@@ -1111,7 +1090,7 @@ function BaseNetworkSession:on_steam_p2p_ping(sender_rpc)
 end
 
 function BaseNetworkSession:chk_send_connection_established(name, user_id, peer)
-	if _G.IS_PS3 or _G.IS_PS4 then
+	if IS_PS4 then
 		peer = self:peer_by_name(name)
 
 		if not peer then
@@ -1146,7 +1125,7 @@ function BaseNetworkSession:chk_send_connection_established(name, user_id, peer)
 		Network:add_co_client(rpc)
 		self:remove_connection_from_trash(rpc)
 		self:remove_connection_from_soft_remove_peers(rpc)
-	elseif _G.IS_XB1 then
+	elseif IS_XB1 then
 		local xnaddr = managers.network.matchmake:internal_address(peer:xuid())
 
 		if not xnaddr then
@@ -1197,7 +1176,7 @@ function BaseNetworkSession:send_steam_p2p_msgs(wall_t)
 		return
 	end
 
-	if SystemInfo:platform() ~= self._ids_WIN32 then
+	if not IS_PC then
 		return
 	end
 
@@ -1210,7 +1189,7 @@ function BaseNetworkSession:send_steam_p2p_msgs(wall_t)
 end
 
 function BaseNetworkSession:resolve_new_peer_rpc(new_peer, incomming_rpc)
-	if SystemInfo:platform() ~= self._ids_WIN32 then
+	if not IS_PC then
 		return incomming_rpc
 	end
 
@@ -1641,7 +1620,7 @@ function BaseNetworkSession:on_drop_in_pause_request_received(peer_id, nickname,
 				if table.size(self._dropin_pause_info) == 1 then
 					print("DROP-IN PAUSE")
 					Application:set_pause(true)
-					SoundDevice:set_rtpc("ingame_sound", 0)
+					managers.menu_component:post_event("pause_all_gameplay_sounds")
 				end
 
 				if Network:is_client() then
@@ -1651,7 +1630,7 @@ function BaseNetworkSession:on_drop_in_pause_request_received(peer_id, nickname,
 		elseif not next(self._dropin_pause_info) then
 			print("DROP-IN UNPAUSE")
 			Application:set_pause(false)
-			SoundDevice:set_rtpc("ingame_sound", 1)
+			managers.menu_component:post_event("resume_all_gameplay_sounds")
 		else
 			print("MAINTAINING DROP-IN UNPAUSE. # dropping peers:", table.size(self._dropin_pause_info))
 		end

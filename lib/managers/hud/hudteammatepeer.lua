@@ -64,8 +64,8 @@ HUDTeammatePeer.STATES = {
 		}
 	},
 	{
-		id = "lockpick",
-		control = "lockpick_icon"
+		id = "special_interaction",
+		control = "special_interaction_icon"
 	},
 	{
 		id = "mounted_weapon",
@@ -98,7 +98,7 @@ function HUDTeammatePeer:init(i, teammates_panel)
 	self:_create_nationality_icon()
 	self:_create_dead_icon()
 	self:_create_carry_icon()
-	self:_create_lockpick_icon()
+	self:_create_special_interaction_icon()
 	self:_create_mounted_weapon_icon()
 	self:_create_warcry_bar()
 	self:_create_timer()
@@ -240,19 +240,18 @@ function HUDTeammatePeer:_create_carry_icon()
 	self._carry_icon:set_center_y(self._status_panel:h() / 2)
 end
 
-function HUDTeammatePeer:_create_lockpick_icon()
-	local lockpick_icon_params = {
-		name = "lockpick_icon",
+function HUDTeammatePeer:_create_special_interaction_icon()
+	local gui_icon = tweak_data.gui:get_full_gui_data(HUDNameLabel.LOCKPICK_ICON)
+	self._special_interaction_icon = self._status_panel:bitmap({
+		name = "special_interaction_icon",
 		halign = "center",
 		alpha = 0,
 		valign = "center",
-		texture = tweak_data.gui.icons[HUDTeammatePeer.LOCKPICK_ICON].texture,
-		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.LOCKPICK_ICON].texture_rect
-	}
-	self._lockpick_icon = self._status_panel:bitmap(lockpick_icon_params)
+		texture = gui_icon.texture,
+		texture_rect = gui_icon.texture_rect
+	})
 
-	self._lockpick_icon:set_center_x(self._status_panel:w() / 2)
-	self._lockpick_icon:set_center_y(self._status_panel:h() / 2)
+	self._special_interaction_icon:set_center(self._status_panel:w() / 2, self._status_panel:h() / 2)
 end
 
 function HUDTeammatePeer:_create_mounted_weapon_icon()
@@ -584,7 +583,7 @@ function HUDTeammatePeer:set_health(data)
 end
 
 function HUDTeammatePeer:set_active_warcry(warcry)
-	if self._warcry_icon then
+	if alive(self._warcry_icon) then
 		self._warcry_icon:stop()
 		self._status_panel:remove(self._warcry_icon)
 	end
@@ -623,7 +622,7 @@ function HUDTeammatePeer:activate_warcry(duration)
 end
 
 function HUDTeammatePeer:deactivate_warcry()
-	if self._warcry_icon then
+	if alive(self._warcry_icon) then
 		self._warcry_icon:stop()
 		self._warcry_icon:animate(callback(self, self, "_animate_warcry_not_ready"))
 	end
@@ -634,7 +633,7 @@ function HUDTeammatePeer:deactivate_warcry()
 end
 
 function HUDTeammatePeer:set_warcry_ready(value)
-	if self._warcry_icon then
+	if alive(self._warcry_icon) then
 		self._warcry_icon:stop()
 
 		if value == true then
@@ -697,12 +696,21 @@ function HUDTeammatePeer:hide_turret_icon()
 	self:_remove_active_state("mounted_weapon")
 end
 
-function HUDTeammatePeer:show_lockpick_icon()
-	self:_add_active_state("lockpick")
+function HUDTeammatePeer:show_special_interaction_icon(interaction_type)
+	local minigame_icon = tweak_data.interaction.minigame_icons[interaction_type]
+
+	if minigame_icon then
+		local gui_icon = tweak_data.gui:get_full_gui_data(minigame_icon)
+
+		self._special_interaction_icon:set_image(gui_icon.texture)
+		self._special_interaction_icon:set_texture_rect(unpack(gui_icon.texture_rect))
+		self._special_interaction_icon:set_center(self._status_panel:w() / 2, self._status_panel:h() / 2)
+		self:_add_active_state("special_interaction")
+	end
 end
 
-function HUDTeammatePeer:hide_lockpick_icon()
-	self:_remove_active_state("lockpick")
+function HUDTeammatePeer:hide_special_interaction_icon()
+	self:_remove_active_state("special_interaction")
 end
 
 function HUDTeammatePeer:show_host_indicator()

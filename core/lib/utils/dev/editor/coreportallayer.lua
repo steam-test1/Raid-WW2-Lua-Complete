@@ -5,6 +5,7 @@ core:import("CoreEws")
 core:import("CorePortalManager")
 
 PortalLayer = PortalLayer or class(CoreStaticLayer.StaticLayer)
+local portal_brush_alpha = 0.04
 
 function PortalLayer:init(owner)
 	PortalLayer.super.init(self, owner, "portal", {
@@ -162,6 +163,8 @@ function PortalLayer:update(time, rel_time)
 		if self._current_group then
 			self._current_group:draw(time, rel_time, 1, self._dont_draw_boxes, self._dont_draw_units)
 		end
+
+		self:hover_highlight()
 	end
 
 	if self._draw_units_in_no_portal_state then
@@ -214,7 +217,7 @@ function PortalLayer:draw_portal(data)
 	local g = data.g * int
 	local b = data.b * int
 
-	self._portal_brush:set_color(Color(0.75, r, g, b))
+	self._portal_brush:set_color(Color(portal_brush_alpha, r, g, b))
 
 	for i = 1, #portal do
 		local s_point = portal[i]
@@ -240,7 +243,7 @@ function PortalLayer:draw_portal(data)
 end
 
 function PortalLayer:_draw_units_in_no_portal()
-	self._portal_brush:set_color(Color(0.75, 1, 0, 0))
+	self._portal_brush:set_color(Color(portal_brush_alpha, 1, 0, 0))
 
 	for _, unit in pairs(managers.editor:layer("Statics"):created_units()) do
 		if unit:visible() and not unit:unit_data().only_visible_in_editor and not unit:unit_data().only_exists_in_editor and not managers.portal:unit_in_any_unit_group(unit) then
@@ -254,7 +257,7 @@ function PortalLayer:_draw_units_in_not_current_portal()
 		return
 	end
 
-	self._portal_brush:set_color(Color(0.75, 0, 0, 1))
+	self._portal_brush:set_color(Color(portal_brush_alpha, 0, 0, 1))
 
 	for _, unit in pairs(managers.editor:layer("Statics"):created_units()) do
 		if unit:visible() and not unit:unit_data().only_visible_in_editor and not unit:unit_data().only_exists_in_editor and not self._current_group:unit_in_group(unit) then
@@ -295,7 +298,10 @@ function PortalLayer:toggle_portal_system()
 end
 
 function PortalLayer:build_panel(notebook)
-	PortalLayer.super.build_panel(self, notebook)
+	PortalLayer.super.build_panel(self, notebook, {
+		units_noteboook_proportion = 0,
+		units_notebook_min_size = Vector3(-1, 160, 0)
+	})
 
 	local dont_draw = EWS:CheckBox(self._ews_panel, "Don't draw portals", "")
 
@@ -547,6 +553,27 @@ function PortalLayer:click_select_unit()
 	end
 
 	PortalLayer.super.click_select_unit(self)
+end
+
+function PortalLayer:hover_highlight()
+	if self._ctrl:down(Idstring("add_to_portal_unit_group")) and self._current_group then
+		local ray = managers.editor:unit_by_raycast({
+			ray_type = "body editor",
+			sample = true,
+			mask = 1
+		})
+
+		if ray and ray.unit then
+			local is_in = self._current_group:unit_in_group(ray.unit)
+			local alpha = portal_brush_alpha * 4
+			local rgb = is_in and Color(1, 0.3, 0.3) or Color(0.7, 0.6, 1)
+
+			self._portal_brush:set_color(rgb:with_alpha(alpha))
+			self._portal_brush:unit(ray.unit)
+		end
+
+		return
+	end
 end
 
 function PortalLayer:set_select_unit(unit)

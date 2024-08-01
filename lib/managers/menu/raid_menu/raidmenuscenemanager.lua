@@ -78,6 +78,11 @@ RaidMenuSceneManager.menus.raid_menu_options_video_advanced = {
 	camera = nil,
 	keep_state = true
 }
+RaidMenuSceneManager.menus.raid_menu_options_interface = {
+	name = "raid_menu_options_interface",
+	camera = nil,
+	keep_state = true
+}
 RaidMenuSceneManager.menus.raid_menu_options_sound = {
 	name = "raid_menu_options_sound",
 	camera = nil,
@@ -133,7 +138,7 @@ RaidMenuSceneManager.menus.comic_book_menu = {
 
 function _get_background_image_instance()
 	if not Global.background_image then
-		Global.menu_background_image = RaidGUIControlBackgroundImage:new()
+		Global.menu_background_image = RaidGUIControlMenuBackground:new()
 	end
 
 	return Global.menu_background_image
@@ -153,9 +158,7 @@ function RaidMenuSceneManager:init()
 end
 
 function RaidMenuSceneManager:is_offline_mode()
-	local callback_handler = RaidMenuCallbackHandler:new()
-
-	return callback_handler:is_singleplayer()
+	return RaidMenuCallbackHandler:is_singleplayer()
 end
 
 function RaidMenuSceneManager:register_on_escape_callback(callback_ref)
@@ -164,11 +167,25 @@ end
 
 function RaidMenuSceneManager:show_background()
 	managers.menu:hide_loading_screen()
-	self._background_image:set_visible(true)
+
+	if RaidMenuCallbackHandler:is_in_main_menu() then
+		self._background_image:set_video_visible(true)
+	else
+		self._background_image:set_visible(true)
+	end
+end
+
+function RaidMenuSceneManager:show_background_video()
+	managers.menu:hide_loading_screen()
+	self._background_image:set_video_visible(true)
 end
 
 function RaidMenuSceneManager:hide_background()
 	self._background_image:set_visible(false)
+end
+
+function RaidMenuSceneManager:hide_background_video()
+	self._background_image:set_video_visible(false)
 end
 
 function RaidMenuSceneManager:clean_up_background()
@@ -212,16 +229,19 @@ function RaidMenuSceneManager:open_menu(name, dont_add_on_stack)
 
 	managers.raid_menu:close_menu(true)
 
-	if #self._menu_stack == 0 and Global.game_settings.single_player then
-		managers.menu_component:post_event("pause_all_gameplay_sounds")
+	if #self._menu_stack == 0 then
+		if managers.raid_job:is_camp_loaded() then
+			managers.menu_component:post_event("open_pause_menu_camp")
+		else
+			managers.menu_component:post_event("open_pause_menu")
+
+			if Global.game_settings.single_player then
+				managers.menu_component:post_event("pause_all_gameplay_sounds")
+			end
+		end
 	end
 
 	self:_start_menu_camera(menu)
-
-	if #self._menu_stack == 0 then
-		managers.hud:post_event("bckg_fire")
-	end
-
 	self:show_background()
 
 	if managers.hud then
@@ -248,8 +268,6 @@ function RaidMenuSceneManager:close_all_menus()
 			self:close_menu(false)
 		end
 	end
-
-	MenuRenderer._remove_blackborders()
 end
 
 function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
@@ -265,19 +283,15 @@ function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
 	end
 
 	if #self._menu_stack == 0 then
-		if Global.game_settings.single_player and not dont_remove_from_stack then
-			managers.menu_component:post_event("resume_all_gameplay_sounds")
+		if not dont_remove_from_stack then
+			managers.menu_component:post_event("close_pause_menu")
 		end
 
 		managers.worldcamera:stop_sequences()
 
 		if Global.game_settings.single_player and game_state_machine:current_state_name() ~= "menu_main" then
 			Application:set_pause(false)
-			SoundDevice:set_rtpc("ingame_sound", 1)
-		end
-
-		if game_state_machine:current_state_name() == "ingame_menu" then
-			-- Nothing
+			managers.menu_component:post_event("resume_all_gameplay_sounds")
 		end
 
 		if managers.hud then
@@ -290,7 +304,6 @@ function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
 		end
 
 		self:_reinitialize_viewports()
-		managers.hud:post_event("bckg_fire_stop")
 		self:hide_background()
 	end
 
@@ -309,10 +322,10 @@ function RaidMenuSceneManager:add_menu_name_on_stack(menu_name)
 	if managers.dialog then
 		if managers.raid_job:is_camp_loaded() then
 			managers.dialog:set_paused(true)
-		elseif managers.subtitle:is_showing_subtitles() then
-			managers.dialog:set_subtitles_shown(false)
-			managers.subtitle:set_enabled(false)
 		end
+
+		managers.dialog:set_subtitles_shown(false)
+		managers.subtitle:set_enabled(false)
 	end
 end
 
@@ -448,7 +461,6 @@ function RaidMenuSceneManager:save_sync_player_data()
 	managers.raid_menu._character_sync_player_data.synced_ammo_info = clone(managers.player._global.synced_ammo_info)
 	managers.raid_menu._character_sync_player_data.synced_bipod = clone(managers.player._global.synced_bipod)
 	managers.raid_menu._character_sync_player_data.synced_bonuses = clone(managers.player._global.synced_bonuses)
-	managers.raid_menu._character_sync_player_data.synced_cable_ties = clone(managers.player._global.synced_cable_ties)
 	managers.raid_menu._character_sync_player_data.synced_carry = clone(managers.player._global.synced_carry)
 	managers.raid_menu._character_sync_player_data.synced_deployables = clone(managers.player._global.synced_deployables)
 	managers.raid_menu._character_sync_player_data.synced_drag_body = clone(managers.player._global.synced_drag_body)
@@ -463,7 +475,6 @@ function RaidMenuSceneManager:load_sync_player_data()
 	managers.player._global.synced_ammo_info = clone(managers.raid_menu._character_sync_player_data.synced_ammo_info)
 	managers.player._global.synced_bipod = clone(managers.raid_menu._character_sync_player_data.synced_bipod)
 	managers.player._global.synced_bonuses = clone(managers.raid_menu._character_sync_player_data.synced_bonuses)
-	managers.player._global.synced_cable_ties = clone(managers.raid_menu._character_sync_player_data.synced_cable_ties)
 	managers.player._global.synced_carry = clone(managers.raid_menu._character_sync_player_data.synced_carry)
 	managers.player._global.synced_deployables = clone(managers.raid_menu._character_sync_player_data.synced_deployables)
 	managers.player._global.synced_drag_body = clone(managers.raid_menu._character_sync_player_data.synced_drag_body)
@@ -522,7 +533,7 @@ function RaidMenuSceneManager:toggle_fullscreen_raid()
 end
 
 function RaidMenuSceneManager:is_pc_controller()
-	if not managers.controller:is_xbox_controller_present() or managers.menu:is_pc_controller() then
+	if not managers.controller:is_controller_present() or managers.menu:is_pc_controller() then
 		return true
 	else
 		return false

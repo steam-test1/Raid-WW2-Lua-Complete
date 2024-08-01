@@ -32,8 +32,6 @@ function ControllerWrapperPS4:virtual_connect_cancel(controller_id, controller, 
 	self:virtual_connect2(controller_id, controller, input_name, connection_name, connection)
 end
 
-local is_PS4 = SystemInfo:platform() == Idstring("PS4")
-
 function ControllerWrapperPS4:is_confirm_cancel_inverted()
-	return is_PS4 and PS3:pad_cross_circle_inverted()
+	return IS_PS4 and PS4:pad_cross_circle_inverted()
 end

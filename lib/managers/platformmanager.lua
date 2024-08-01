@@ -96,35 +96,6 @@ end
 function GenericPlatformManager:set_feedback_color(color)
 end
 
-Xbox360PlatformManager = Xbox360PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("X360"):key()] = Xbox360PlatformManager
-
-function Xbox360PlatformManager:init()
-	GenericPlatformManager.init(self)
-	XboxLive:set_callback(callback(self, self, "event"))
-end
-
-function Xbox360PlatformManager:destroy_context()
-	GenericPlatformManager.destroy_context(self)
-	XboxLive:set_callback(nil)
-end
-
-function Xbox360PlatformManager:set_rich_presence(name, callback)
-	print("Xbox360PlatformManager:set_rich_presence", name)
-	GenericPlatformManager.set_rich_presence(self, name)
-
-	if callback then
-		XboxLive:set_context("presence", name, callback)
-	else
-		XboxLive:set_context("presence", name, function ()
-		end)
-	end
-end
-
-function Xbox360PlatformManager:set_presence(name, callback)
-	GenericPlatformManager.set_presence(self, name)
-end
-
 XB1PlatformManager = XB1PlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("XB1"):key()] = XB1PlatformManager
 
@@ -172,36 +143,6 @@ end
 
 function XB1PlatformManager:set_progress(progress)
 	XboxLive:write_game_progress(progress * 100)
-end
-
-PS3PlatformManager = PS3PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("PS3"):key()] = PS3PlatformManager
-
-function PS3PlatformManager:init(...)
-	PS3PlatformManager.super.init(self, ...)
-
-	self._current_psn_presence = ""
-	self._psn_set_presence_time = 0
-end
-
-function PS3PlatformManager:translate_path(path)
-	return string.gsub(path, "\\+([~\\]*)", "/%1")
-end
-
-function PS3PlatformManager:update(t, dt)
-	PS3PlatformManager.super.update(self, t, dt)
-
-	if self._current_psn_presence ~= self:presence() and self._psn_set_presence_time <= t then
-		self._psn_set_presence_time = t + 10
-		self._current_psn_presence = self:presence()
-
-		print("SET PRESENCE", self._current_psn_presence)
-		PSN:set_presence_info(self._current_psn_presence)
-	end
-end
-
-function PS3PlatformManager:set_presence(name)
-	GenericPlatformManager.set_presence(self, name)
 end
 
 PS4PlatformManager = PS4PlatformManager or class(GenericPlatformManager)

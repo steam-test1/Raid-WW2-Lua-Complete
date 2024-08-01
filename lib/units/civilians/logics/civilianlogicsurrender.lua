@@ -389,21 +389,9 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 		local aggressor = alert_data[5]
 
 		if aggressor and aggressor:base() then
-			local is_intimidation = nil
+			data.unit:brain():on_intimidated(1, aggressor)
 
-			if aggressor:base().is_local_player then
-				if managers.player:has_category_upgrade("player", "civ_calming_alerts") then
-					is_intimidation = true
-				end
-			elseif aggressor:base().is_husk_player and aggressor:base():upgrade_value("player", "civ_calming_alerts") then
-				is_intimidation = true
-			end
-
-			if is_intimidation and not data.is_tied then
-				data.unit:brain():on_intimidated(1, aggressor)
-
-				return
-			end
+			return
 		end
 	end
 
@@ -489,22 +477,12 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 			local dis = mvector3.direction(my_vec, enemy_pos, my_pos)
 			local inside_aura = nil
 
-			if u_data.unit:base().is_local_player then
-				if managers.player:has_category_upgrade("player", "intimidate_aura") and dis < managers.player:upgrade_value("player", "intimidate_aura", 0) then
-					inside_aura = true
+			if dis < 700 then
+				if not closest_dis or dis < closest_dis then
+					closest_dis = dis
+					closest_enemy = enemy_unit
 				end
-			elseif u_data.unit:base().is_husk_player and u_data.unit:base():upgrade_value("player", "intimidate_aura") and dis < u_data.unit:base():upgrade_value("player", "intimidate_aura") then
-				inside_aura = true
-			end
 
-			if (inside_aura or dis < 700) and (not closest_dis or dis < closest_dis) then
-				closest_dis = dis
-				closest_enemy = enemy_unit
-			end
-
-			if inside_aura then
-				my_data.inside_intimidate_aura = true
-			elseif dis < 700 then
 				local look_dir = enemy_unit:movement():m_head_rot():y()
 
 				if mvector3.dot(my_vec, look_dir) > 0.65 then

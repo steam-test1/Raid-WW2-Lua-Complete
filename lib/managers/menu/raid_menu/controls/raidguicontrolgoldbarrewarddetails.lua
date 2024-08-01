@@ -18,6 +18,10 @@ RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE = "gold_bar_single"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW = "gold_bar_3"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY = "gold_bar_box"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_OUTLAW = "missions_consumable_mission"
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN = 20
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MAX = 100
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_PREFIX = "reward_pile_gold_"
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT = 5
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_Y = 304
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_W = 416
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_FONT = tweak_data.gui.fonts.lato
@@ -275,12 +279,22 @@ function RaidGUIControlGoldBarRewardDetails:set_gold_bar_reward(amount)
 
 	local icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE
 
-	if amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY <= amount then
-		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY
-	elseif amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW <= amount then
-		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
+	if amount then
+		if RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN <= amount then
+			local idx = 1
+			local amount_per_tier = (RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MAX - RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN) / RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT
+			local amount_start_point = amount - RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN
+			idx = math.ceil(math.lerp(1, RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT, amount_start_point / amount_per_tier))
+			icon = RaidGUIControlGoldBarRewardDetails.GOLD_PILE_PREFIX .. math.clamp(idx, 1, RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT)
+		elseif RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY <= amount then
+			icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY
+		elseif RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW <= amount then
+			icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
+		end
 	end
 
-	self._reward_image:set_image(tweak_data.gui.icons[icon].texture)
-	self._reward_image:set_texture_rect(unpack(tweak_data.gui.icons[icon].texture_rect))
+	local gui_icon = tweak_data.gui:get_full_gui_data(icon)
+
+	self._reward_image:set_image(gui_icon.texture)
+	self._reward_image:set_texture_rect(unpack(gui_icon.texture_rect))
 end

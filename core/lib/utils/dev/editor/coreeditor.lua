@@ -83,13 +83,17 @@ require("core/lib/utils/dev/editor/CoreEditorCubeMap")
 require("core/lib/utils/dev/editor/CoreEditorDomeOcclusion")
 require("core/lib/utils/dev/editor/utils/CoreFCCEditorController")
 
-function CoreEditor:init(game_state_machine, session_state)
+CoreEditor._SIM_TXT_STARTING = "SIMULATION IS STARTING"
+CoreEditor._SIM_TXT_STARTED = "SIMULATION HAS STARTED"
+CoreEditor._SIM_TXT_STARTED_NOSCRIPT = "SIMULATION HAS STARTED (Without Script)"
+CoreEditor._SIM_TXT_STOPPED = "SIMULATION HAS ENDED"
+
+function CoreEditor:init(game_state_machine)
 	assert(game_state_machine)
 
 	self._gsm = game_state_machine
-	self._session_state = session_state
 
-	PackageManager:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+	PackageManager:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 	World:get_object(Idstring("ref")):set_visibility(false)
 
 	self._WORKING_ON_CONTINENTS = true
@@ -102,8 +106,10 @@ function CoreEditor:init(game_state_machine, session_state)
 	self._triggers_added = false
 	self._enabled = false
 	self._confirm_on_new = true
+	self._cube_map_done = true
 	self._continents = {}
 	self._current_continent = nil
+	self._hide_helper_queue = nil
 	self._world_holder = WorldHolder:new({})
 
 	self:_load_packages()
@@ -258,7 +264,6 @@ function CoreEditor:_init_layer_classes()
 
 	self._layer_load_order = {
 		"Ai",
-		"Heatmap",
 		"WorldCamera",
 		"Dynamics",
 		"Wires",
@@ -425,10 +430,10 @@ end
 
 function CoreEditor:_init_mission_platforms()
 	self._mission_platforms = {
-		"WIN32",
-		"PS3"
+		"PC",
+		"CONSOLE"
 	}
-	self._mission_platform = "WIN32"
+	self._mission_platform = "PC"
 end
 
 function CoreEditor:_init_title_messages()
@@ -441,6 +446,8 @@ function CoreEditor:_init_title_messages()
 	self:add_title_message("Anyone of you guys into Dota? ")
 	self:add_title_message("They say it's impossible, I say: Watch me! ")
 	self:add_title_message("Please help me, Im not meant to be here! ")
+	self:add_title_message("Shoulda, woulda, coulda... ")
+	self:add_title_message("Application has crashed: C++ exception ")
 end
 
 function CoreEditor:_init_edit_unit_dialog()
@@ -814,8 +821,6 @@ function CoreEditor:pickup_tool()
 	managers.sequence:set_proximity_enabled(false)
 
 	if Global.running_simulation then
-		Global.running_simulation = false
-
 		self:stop_simulation()
 	end
 
@@ -853,7 +858,13 @@ function CoreEditor:run_simulation(with_mission)
 		})
 	end
 
-	if not Global.running_simulation then
+	if Global.running_simulation then
+		self:toggle()
+
+		Global.running_simulation = false
+
+		managers.editor:output(CoreEditor._SIM_TXT_STOPPED, nil, Vector3(0, 0, 255))
+	else
 		self:_interupt_frustum_freeze()
 
 		self._saved_simulation_values = {}
@@ -880,7 +891,7 @@ function CoreEditor:run_simulation(with_mission)
 		self._saved_simulation_values.script = mission:current_script()
 
 		if with_mission then
-			managers.editor:output("Start simulation with mission script.", nil, Vector3(0, 0, 255))
+			managers.editor:output(CoreEditor._SIM_TXT_STARTED, nil, Vector3(0, 0, 255))
 
 			local script = mission:simulate_with_current_script() and mission:current_script()
 			local mission_params = {
@@ -890,7 +901,7 @@ function CoreEditor:run_simulation(with_mission)
 
 			managers.mission:parse(mission_params)
 		else
-			managers.editor:output("Start simulation without mission script.", nil, Vector3(0, 0, 255))
+			managers.editor:output(CoreEditor._SIM_TXT_STARTED_NOSCRIPT, nil, Vector3(0, 0, 255))
 		end
 
 		self._current_layer:deactivate({
@@ -903,19 +914,14 @@ function CoreEditor:run_simulation(with_mission)
 		managers.sequence:set_proximity_enabled(true)
 		self:_simulation_disable_continents()
 		self:project_run_simulation(with_mission)
-
-		if self._session_state then
-			self._session_state:player_slots():primary_slot():request_debug_local_user_binding()
-			self._session_state:session_info():set_run_mission_script(with_mission)
-			self._session_state:session_info():set_should_load_level(false)
-			self._session_state:join_standard_session()
-		end
-
-		managers.editor:output("Simulation started successfully.", nil, Vector3(0, 0, 255))
-	else
-		self:toggle()
-		managers.editor:output("Simulation ended successfully.", nil, Vector3(0, 0, 255))
+		managers.queued_tasks:queue(nil, self._fire_level_loaded_event, self, nil, 0.56, nil)
+		managers.editor:output(CoreEditor._SIM_TXT_STARTED, nil, Vector3(0, 0, 255))
 	end
+end
+
+function CoreEditor:_fire_level_loaded_event()
+	Application:trace("[CoreEditor:_fire_level_loaded_event()]")
+	managers.global_state:fire_event("system_level_loaded")
 end
 
 function CoreEditor:_simulation_disable_continents()
@@ -1006,18 +1012,13 @@ function CoreEditor:stop_simulation()
 	self._stopping_simulation = true
 
 	self._notebook:set_enabled(true)
-	managers.editor:output("End simulation.", nil, Vector3(0, 0, 255))
+	managers.editor:output("--- Ending the Simulation ---", nil, Vector3(0, 0, 255))
 	managers.mission:stop_simulation()
 	managers.worldcamera:stop_simulation()
 	managers.environment_effects:kill_all_mission_effects()
 	managers.music:stop()
 	managers.worldcollection:on_simulation_ended()
 	managers.world_instance:on_simulation_ended()
-
-	if self._session_state then
-		self._session_state:quit_session()
-	end
-
 	self:project_clear_units()
 	self:project_stop_simulation()
 	self:clear_layers_and_units()
@@ -1906,7 +1907,7 @@ function CoreEditor:reload_units(unit_names, small_compile, skip_replace_units)
 
 	for _, unit_name in ipairs(unit_names) do
 		managers.sequence:reload(unit_name, true)
-		CoreEngineAccess._editor_reload(Idstring("unit"), unit_name:id())
+		CoreEngineAccess._editor_reload(IDS_UNIT, unit_name:id())
 
 		local material_config = CoreEngineAccess._editor_unit_data(unit_name:id()):material_config()
 
@@ -2648,7 +2649,22 @@ function CoreEditor:update(time, rel_time)
 		self:_tick_generate_dome_occlusion(time, rel_time)
 	end
 
+	self:_update_helper_queues()
 	self:_update_mute_state(time, rel_time)
+end
+
+function CoreEditor:_update_helper_queues()
+	if not self._hide_helper_queue then
+		return
+	end
+
+	local que = table.remove(self._hide_helper_queue)
+
+	if que then
+		self:_hide_these_units(que.units, que.data)
+	else
+		self._hide_helper_queue = nil
+	end
 end
 
 function CoreEditor:_update_mute_state(t, dt)
@@ -2742,7 +2758,7 @@ function CoreEditor:current_orientation(offset_move_vec, unit)
 	end
 
 	if alive(unit) and self:use_snappoints() and current_pos then
-		local r = 1100
+		local r = self._grid_size or 100
 		local pos = current_pos
 
 		Application:draw_sphere(pos, r, 1, 0, 1)
@@ -3334,12 +3350,6 @@ function CoreEditor:_save_packages(dir)
 		win32 = {
 			"texture"
 		},
-		ps3 = {
-			"texture"
-		},
-		x360 = {
-			"texture"
-		},
 		ps4 = is_not_init_chunk and {
 			"texture"
 		} or {},
@@ -3424,11 +3434,15 @@ function CoreEditor:_save_package(file, package_table, streaming_options)
 			end
 		end
 
-		fill_platform_streaming_params("win32")
-		fill_platform_streaming_params("ps3")
-		fill_platform_streaming_params("x360")
-		fill_platform_streaming_params("xb1")
-		fill_platform_streaming_params("ps4")
+		local list = {
+			"win32",
+			"xb1",
+			"ps4"
+		}
+
+		for _, k in ipairs(list) do
+			fill_platform_streaming_params(k)
+		end
 
 		streaming_element = streaming_element .. "/>"
 
@@ -3788,7 +3802,7 @@ function CoreEditor:get_unit_stat(u)
 		slot = u:slot(),
 		mass = string.format("%.4f", u:mass()),
 		nr_textures = #u:used_texture_names(),
-		nr_materials = #u:get_objects_by_type(Idstring("material")),
+		nr_materials = #u:get_objects_by_type(IDS_MATERIAL),
 		vertices_per_tris = self:vertices_per_tris(u),
 		instanced = self:_is_instanced(u),
 		unit_filename = u:unit_filename(),
@@ -3983,6 +3997,12 @@ function CoreEditor:dialogs_stay_on_top()
 	return self._dialogs_stay_on_top
 end
 
+function CoreEditor:format_dialog_styles(styles)
+	styles = styles .. (self._dialogs_stay_on_top and ",STAY_ON_TOP" or "")
+
+	return styles
+end
+
 function CoreEditor:add_unit_edit_page(name)
 	if not self._dialogs.edit_unit then
 		self:show_dialog("edit_unit", "EditUnitDialog")
@@ -4150,7 +4170,14 @@ function CoreEditor:unit_in_layer_name(unit)
 end
 
 function CoreEditor:delete_unit(unit)
-	self:unit_in_layer(unit):delete_unit(unit)
+	local unit_in_layer = self:unit_in_layer(unit)
+
+	if unit_in_layer then
+		unit_in_layer:delete_unit(unit)
+	else
+		Application:error("[CoreEditor:delete_unit] Unit was not in layer, destroying!", unit)
+		unit:set_slot(0)
+	end
 end
 
 function CoreEditor:delete_selected_unit()
@@ -4421,7 +4448,7 @@ function CoreEditor:dump_mesh(...)
 end
 
 function CoreEditor:dump_all(...)
-	CoreEditorUtils.dump_all(...)
+	CoreEditorUtils.dump_all_meshes(...)
 end
 
 function CoreEditor:destroy()

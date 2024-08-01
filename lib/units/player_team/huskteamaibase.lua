@@ -28,6 +28,10 @@ function HuskTeamAIBase:on_death_exit()
 end
 
 function HuskTeamAIBase:pre_destroy(unit)
+	if self._unit:customization() then
+		self._unit:customization():destroy_all_parts_on_character()
+	end
+
 	TeamAIBase.unregister(self)
 	UnitBase.pre_destroy(self, unit)
 end

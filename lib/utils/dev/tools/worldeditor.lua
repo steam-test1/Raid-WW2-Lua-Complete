@@ -1,5 +1,4 @@
 core:import("CoreAiLayer")
-core:import("CoreHeatmapLayer")
 require("lib/units/editor/SpawnEnemyGroupElement")
 require("lib/units/editor/EnemyPreferedElement")
 require("lib/units/editor/AIGraphElement")
@@ -94,7 +93,6 @@ require("lib/units/editor/BarrageElement")
 require("lib/units/editor/InvulnerableElement")
 require("lib/units/editor/CharacterDamageTriggerElement")
 require("lib/units/editor/EscortElement")
-require("lib/utils/dev/tools/InventoryIconCreator")
 
 WorldEditor = WorldEditor or class(CoreEditor)
 
@@ -156,7 +154,6 @@ end
 
 function WorldEditor:_project_init_layer_classes()
 	self:add_layer("Ai", CoreAiLayer.AiLayer)
-	self:add_layer("Heatmap", CoreHeatmapLayer.HeatmapLayer)
 end
 
 function WorldEditor:_project_init_slot_masks()
@@ -164,6 +161,12 @@ function WorldEditor:_project_init_slot_masks()
 end
 
 function WorldEditor:project_prestart_up(with_mission)
+	local mission_flag = self:layer("Level Settings"):get_setting("simulation_mission_flag")
+
+	if mission_flag then
+		managers.global_state:set_flag(mission_flag)
+	end
+
 	managers.navigation:on_simulation_started()
 	managers.groupai:on_simulation_started()
 	managers.enemy:on_simulation_started()
@@ -219,6 +222,7 @@ function WorldEditor:project_stop_simulation()
 	managers.game_play_central:on_simulation_ended()
 	managers.criminals:on_simulation_ended()
 	managers.loot:on_simulation_ended()
+	managers.trade:on_simulation_ended()
 	managers.motion_path:on_simulation_ended()
 	managers.fire:on_simulation_ended()
 	managers.dot:on_simulation_ended()
@@ -230,6 +234,7 @@ function WorldEditor:project_stop_simulation()
 	managers.raid_job:on_simulation_ended()
 	managers.notification:on_simulation_ended()
 	managers.lootdrop:on_simulation_ended()
+	managers.warcry:on_simulation_ended()
 end
 
 function WorldEditor:project_clear_units()
@@ -252,15 +257,4 @@ function WorldEditor:project_clear_layers()
 end
 
 function WorldEditor:project_recreate_layers()
-end
-
-function WorldEditor:_project_add_left_upper_toolbar_tool()
-	self._left_upper_toolbar:add_tool("TB_INVENTORY_ICON_CREATOR", "Icon Creator", CoreEWS.image_path("world_editor/icon_creator_16x16.png"), "Material Editor")
-	self._left_upper_toolbar:connect("TB_INVENTORY_ICON_CREATOR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_inventory_icon_creator"), nil)
-end
-
-function WorldEditor:_open_inventory_icon_creator()
-	self._inventory_icon_creator = self._inventory_icon_creator or InventoryIconCreator:new()
-
-	self._inventory_icon_creator:show_ews()
 end

@@ -47,11 +47,7 @@ function RaidGUIControlLegend:_create_legend()
 
 	self._labels = {}
 
-	if _G.IS_PC then
-		if not managers.controller:is_xbox_controller_present() or managers.menu:is_pc_controller() then
-			self:_create_pc_legend()
-		end
-	else
+	if managers.controller:is_controller_present() then
 		self:_create_console_legend({
 			y = 0,
 			w = 200,
@@ -61,6 +57,8 @@ function RaidGUIControlLegend:_create_legend()
 			font_size = self._params.font_size or RaidGUIControlLegend.FONT_SIZE,
 			color = RaidGUIControlLegend.COLOR
 		})
+	elseif managers.menu:is_pc_controller() then
+		self:_create_pc_legend()
 	end
 end
 

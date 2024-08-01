@@ -114,8 +114,14 @@ function ProjectileBase:throw(params)
 
 	if params.projectile_entry and tweak_data.projectiles[params.projectile_entry] then
 		adjust_z = tweak_data.projectiles[params.projectile_entry].adjust_z or adjust_z
-		local _adjust_z = tweak_data.projectiles[params.projectile_entry]._adjust_z or 0
-		adjust_z = adjust_z + _adjust_z
+
+		if tweak_data.projectiles[params.projectile_entry].adjust_z_range then
+			local adjust_z_range = tweak_data.projectiles[params.projectile_entry].adjust_z_range
+			adjust_z = math.rand(adjust_z_range[1], adjust_z_range[2])
+		end
+
+		local context_adjust_z = tweak_data.projectiles[params.projectile_entry].context_adjust_z or 0
+		adjust_z = adjust_z + context_adjust_z
 		launch_speed = tweak_data.projectiles[params.projectile_entry].launch_speed or launch_speed
 		push_at_body_index = tweak_data.projectiles[params.projectile_entry].push_at_body_index
 	end
@@ -271,10 +277,6 @@ end
 function ProjectileBase:destroy()
 end
 
-function ProjectileBase:on_level_tranistion()
-	print("ProjectileBase:on_level_tranistion()")
-end
-
 local ids_object3d = Idstring("object3d")
 
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id, cooking_t, parent_projectile_id)
@@ -291,8 +293,8 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	end
 
 	local tweak_entry = tweak_data.projectiles[projectile_entry]
-	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
-	local rot_dir = tweak_entry._rot_dir or math.UP
+	local unit_name = Idstring(Network:is_server() and tweak_entry.unit or tweak_entry.local_unit)
+	local rot_dir = tweak_entry.context_rot_dir or math.UP
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, rot_dir))
 
 	managers.game_play_central:add_spawned_projectiles(unit)
@@ -306,7 +308,9 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	if cooking_t and unit:base()._timer then
 		unit:base()._timer = unit:base()._timer - cooking_t
 
-		if unit:base()._timer < 0.3 then
+		if cooking_t == -1 then
+			unit:base()._timer = 0.001
+		elseif unit:base()._timer < 0.3 then
 			unit:base()._timer = 0.3
 		end
 	end

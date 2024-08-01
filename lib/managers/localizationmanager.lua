@@ -33,9 +33,9 @@ function LocalizationManager:_setup_macros()
 	local btn_stick_l = utf8.char(57356)
 	local btn_stick_r = utf8.char(57357)
 	local btn_dpad_d = utf8.char(57358)
-	local btn_dpad_r = utf8.char(57359)
-	local btn_dpad_u = utf8.char(57360)
-	local btn_dpad_l = utf8.char(57361)
+	local btn_dpad_u = utf8.char(57359)
+	local btn_dpad_l = utf8.char(57360)
+	local btn_dpad_r = utf8.char(57361)
 	local btn_inv_new = utf8.char(57362)
 	local btn_ghost = utf8.char(57363)
 	local btn_skull = utf8.char(57364)
@@ -54,7 +54,7 @@ function LocalizationManager:_setup_macros()
 	local btn_jump = btn_a
 	local swap_accept = false
 
-	if SystemInfo:platform() == Idstring("PS3") and PS3:pad_cross_circle_inverted() then
+	if IS_PS4 and PS4:pad_cross_circle_inverted() then
 		swap_accept = true
 	end
 
@@ -66,7 +66,7 @@ function LocalizationManager:_setup_macros()
 		btn_cancel = btn_b
 	end
 
-	if _G.IS_PC then
+	if IS_PC then
 		btn_stick_r = stick_r
 		btn_stick_l = stick_l
 	end
@@ -100,7 +100,9 @@ function LocalizationManager:_setup_macros()
 	self:set_default_macro("CONTINUE", btn_a)
 	self:set_default_macro("BTN_GADGET", btn_dpad_d)
 	self:set_default_macro("BTN_BIPOD", btn_dpad_d)
+	self:set_default_macro("BTN_DPAD_UP", btn_dpad_u)
 	self:set_default_macro("BTN_DPAD_RIGHT", btn_dpad_r)
+	self:set_default_macro("BTN_DPAD_LEFT", btn_dpad_l)
 	self:set_default_macro("BTN_INV_NEW", btn_inv_new)
 	self:set_default_macro("BTN_GHOST", btn_ghost)
 	self:set_default_macro("BTN_SKULL", btn_skull)

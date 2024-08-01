@@ -43,7 +43,7 @@ function EditUnitVariation:init(editor)
 
 	CoreEws.combobox(self._material_params)
 	self._material_params.ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "change_material"), nil)
-	sizer:add(all_variations_sizer, 0, 0, "EXPAND")
+	sizer:add(all_variations_sizer, 0, 4, "EXPAND,ALL")
 
 	self._avalible_material_groups = {}
 

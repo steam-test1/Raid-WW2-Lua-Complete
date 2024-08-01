@@ -6,6 +6,7 @@ core:import("CoreEws")
 core:import("CoreTable")
 core:import("CoreEditorUtils")
 
+local mvector3_add = mvector3.add
 BrushLayer = BrushLayer or class(CoreLayer.Layer)
 
 function BrushLayer:init(owner, dont_load_unit_map)
@@ -16,12 +17,15 @@ function BrushLayer:init(owner, dont_load_unit_map)
 	self._brush_size = 15
 	self._brush_density = 3
 	self._brush_pressure = 1
+	self._brush_smoothness = 1
 	self._random_roll = 0
+	self._random_lean = 0
 	self._spraying = false
 	self._erasing = false
 	self._brush_height = 40
 	self._angle_override = 0
 	self._offset = 0
+	self._random_offset = 0
 	self._visible = true
 	self._erase_with_pressure = false
 	self._erase_with_units = false
@@ -79,14 +83,17 @@ function BrushLayer:reposition_all()
 
 	for name, unit in pairs(self._unit_map) do
 		name = self:get_real_name(name)
-		local unit = safe_spawn_unit(name, Vector3(0, 0, 20000), Rotation(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1)))
+		local name_ids = Idstring(name)
+		local unit = CoreUnit.safe_spawn_unit(name_ids, Vector3(0, 0, 20000), Rotation(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1)))
 
 		if unit then
 			local dynamic_unit = false
 			local index = 0
 
 			while index < unit:num_bodies() and not dynamic_unit do
-				if unit:body_by_index(index):dynamic() then
+				local body = unit:body_by_index(index)
+
+				if body and body:dynamic() then
 					dynamic_unit = true
 				end
 
@@ -99,12 +106,12 @@ function BrushLayer:reposition_all()
 				managers.editor:output(" * Skipped unit type " .. name .. " it seems to be dynamic")
 			else
 				local nudged_units = 0
-				local positions = MassUnitManager:unit_positions(name)
+				local positions = MassUnitManager:unit_positions(name_ids)
 
 				if #positions > 0 then
-					local rotations = MassUnitManager:unit_rotations(name)
+					local rotations = MassUnitManager:unit_rotations(name_ids)
 
-					MassUnitManager:delete_units(name)
+					MassUnitManager:delete_units(name_ids)
 
 					for counter = 1, #positions do
 						local rot = rotations[counter]
@@ -134,11 +141,15 @@ function BrushLayer:reposition_all()
 					managers.editor:output(" * Nudged " .. nudged_units .. " units of type " .. name)
 				end
 			end
+		else
+			managers.editor:output(" * Couldnt test unit " .. name)
 		end
 	end
 end
 
 function BrushLayer:reload()
+	managers.editor:output(" Brush Layer reload called, this does nothing! ")
+
 	for name, unit in pairs(self._unit_map) do
 		name = self:get_real_name(name)
 	end
@@ -234,7 +245,7 @@ function BrushLayer:erase_units_release()
 	end
 end
 
-function BrushLayer:update(time, rel_time)
+function BrushLayer:update(t, dt)
 	if self._amount_dirty then
 		self._amount_dirty = nil
 
@@ -288,6 +299,27 @@ function BrushLayer:update(time, rel_time)
 				local rand_nudge = ray.normal:random_orthogonal() * self._brush_size * nudge_amount
 				local place_ray = managers.editor:select_unit_by_raycast(self._place_slot_mask, ray_type, tip + rand_nudge, base + rand_nudge)
 
+				if place_ray and place_ray.normal and self._brush_smoothness > 1 then
+					local smoothness_checked = 0
+					local smoothness_success = 0
+
+					while place_ray and smoothness_checked <= self._brush_smoothness do
+						nudge_amount = 1 - math.rand(self._brush_size * self._brush_size) / (self._brush_size * self._brush_size)
+						rand_nudge = ray.normal:random_orthogonal() * self._brush_size * nudge_amount
+						local smooth_ray = managers.editor:select_unit_by_raycast(self._place_slot_mask, ray_type, tip + rand_nudge, base + rand_nudge)
+						smoothness_checked = smoothness_checked + 1
+
+						if smooth_ray then
+							smoothness_success = smoothness_success + 1
+							local was = place_ray.normal
+
+							mvector3_add(place_ray.normal, smooth_ray.normal)
+						end
+					end
+
+					place_ray.normal = place_ray.normal:normalized()
+				end
+
 				self:create_brush(place_ray)
 
 				created = created + 1
@@ -323,10 +355,6 @@ function BrushLayer:update(time, rel_time)
 						self._amount_dirty = true
 					end
 				end
-
-				if self._brush_density == 0 then
-					self:erase_units_release()
-				end
 			else
 				for _, brush in ipairs(units) do
 					if not self._erase_with_units or self._erase_with_units and table.contains(self._brush_names, brush:name():s()) then
@@ -345,11 +373,25 @@ function BrushLayer:update(time, rel_time)
 end
 
 function BrushLayer:_draw_unit_orientations()
-	local brush_stats = self:get_brush_stats()
+	local brush_stats = self:get_brush_stats(#self._brush_names and self._brush_names)
+	local check_dist = 0
 
-	for _, stats in ipairs(brush_stats) do
-		for i = 1, stats.amount do
-			Application:draw_rotation(stats.positions[i], stats.rotations[i])
+	if check_dist > 0 then
+		local cam_pos = self._owner._vp:camera():position()
+		local mv3d = mvector3.distance
+
+		for _, stats in ipairs(brush_stats) do
+			for i = 1, stats.amount do
+				if mv3d(cam_pos, stats.positions[i]) < check_dist then
+					Application:draw_rotation(stats.positions[i], stats.rotations[i])
+				end
+			end
+		end
+	else
+		for _, stats in ipairs(brush_stats) do
+			for i = 1, stats.amount do
+				Application:draw_rotation(stats.positions[i], stats.rotations[i])
+			end
 		end
 	end
 end
@@ -377,6 +419,15 @@ function BrushLayer:create_brush(ray)
 		local brush_type = self._brush_types[name]
 		local at = Vector3(0, 0, 1)
 		local up = self._overide_surface_normal and Vector3(0, 0, 1) or ray.normal
+
+		if self._random_lean > 0 then
+			local ls = self._random_lean / 90
+
+			mvector3_add(up, Vector3(math.rand(-ls, ls), math.rand(-ls, ls), 0))
+
+			up = up:normalized()
+		end
+
 		local rand_rotator = Rotation(up, math.rand(self._random_roll) - self._random_roll / 2)
 
 		if self._angle_override ~= 0 then
@@ -400,7 +451,7 @@ function BrushLayer:create_brush(ray)
 			at = up:cross(right)
 		end
 
-		brush_type:spawn_brush(ray.position + up * self._offset, Rotation(right, at, up))
+		brush_type:spawn_brush(ray.position + up * (self._offset + math.rand(self._random_offset)), Rotation(right, at, up))
 
 		self._amount_dirty = true
 	end
@@ -416,50 +467,67 @@ function BrushLayer:build_panel(notebook)
 
 	self._sizer = EWS:BoxSizer("VERTICAL")
 	local ctrl_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL")
+	local h_sizer = EWS:BoxSizer("HORIZONTAL")
+	local sizer_pb = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Paintbrush")
 
-	ctrl_sizer:add(self:create_slider("Random Roll [deg]", "_random_roll", 0, 360), 0, 0, "EXPAND")
-	ctrl_sizer:add(self:create_slider("Radius [cm]", "_brush_size", 1, 1000), 0, 0, "EXPAND")
-	ctrl_sizer:add(self:create_slider("Density [/m2]", "_brush_density", 0, 30), 0, 0, "EXPAND")
-	ctrl_sizer:add(self:create_slider("Pressure", "_brush_pressure", 1, 20), 0, 0, "EXPAND")
-	ctrl_sizer:add(self:create_slider("Height [cm]", "_brush_height", 10, 1000), 0, 0, "EXPAND")
-	ctrl_sizer:add(self:create_slider("Angle [deg]", "_angle_override", 0, 360), 0, 0, "EXPAND")
-	ctrl_sizer:add(self:create_slider("Offset [cm]", "_offset", -30, 1000, 0), 0, 0, "EXPAND")
+	sizer_pb:add(self:create_slider("Density [/m2]", "_brush_density", 0, 30), 0, 0, "EXPAND")
+	sizer_pb:add(self:create_slider("Pressure", "_brush_pressure", 1, 20), 0, 0, "EXPAND")
+	sizer_pb:add(self:create_slider("Radius [cm]", "_brush_size", 1, 1000), 0, 0, "EXPAND")
+	sizer_pb:add(self:create_slider("Smoothness", "_brush_smoothness", 1, 16), 0, 0, "EXPAND")
+	h_sizer:add(sizer_pb, 1, 2, "EXPAND")
 
-	local pressure_cb = EWS:CheckBox(self._ews_panel, "Use Pressure when Erasing", "")
+	local sizer_rot = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Rotations")
+
+	sizer_rot:add(self:create_slider("Angle [deg]", "_angle_override", 0, 360), 0, 0, "EXPAND")
+	sizer_rot:add(self:create_slider("Random Angle [deg]", "_random_roll", 0, 360), 0, 0, "EXPAND")
+	sizer_rot:add(self:create_slider("Random Lean [deg]", "_random_lean", 0, 90), 0, 0, "EXPAND")
+	h_sizer:add(sizer_rot, 1, 1, "EXPAND")
+
+	local sizer_pos = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Positions")
+
+	sizer_pos:add(self:create_slider("Height [cm]", "_brush_height", 10, 1000), 0, 0, "EXPAND")
+	sizer_pos:add(self:create_slider("Offset [cm]", "_offset", -50, 50, 0), 0, 0, "EXPAND")
+	sizer_pos:add(self:create_slider("Offset Random [cm]", "_random_offset", 0, 100, 0), 0, 0, "EXPAND")
+	h_sizer:add(sizer_pos, 1, 1, "EXPAND")
+	ctrl_sizer:add(h_sizer, 0, 0, "EXPAND")
+
+	local brush_toggles_sizer = EWS:StaticBoxSizer(self._ews_panel, "HORIZONTAL", "Toggles")
+	local pressure_cb = EWS:CheckBox(self._ews_panel, "Pressure Erase", "")
 
 	pressure_cb:set_value(self._erase_with_pressure)
-	ctrl_sizer:add(pressure_cb, 0, 5, "SHAPED,TOP")
+	brush_toggles_sizer:add(pressure_cb, 0, 0, "EXPAND")
 	pressure_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_erase_with_pressure",
 		cb = pressure_cb
 	})
 
-	local erase_cb = EWS:CheckBox(self._ews_panel, "Erase with selected units", "")
+	local erase_cb = EWS:CheckBox(self._ews_panel, "Filter Erase", "")
 
 	erase_cb:set_value(self._erase_with_units)
-	ctrl_sizer:add(erase_cb, 0, 0, "SHAPED")
+	brush_toggles_sizer:add(erase_cb, 0, 0, "EXPAND")
 	erase_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_erase_with_units",
 		cb = erase_cb
 	})
 
-	local force_up_cb = EWS:CheckBox(self._ews_panel, "Override surface normal rotation", "")
+	local force_up_cb = EWS:CheckBox(self._ews_panel, "Override Surface", "")
 
 	force_up_cb:set_value(self._overide_surface_normal)
-	ctrl_sizer:add(force_up_cb, 0, 0, "SHAPED")
+	brush_toggles_sizer:add(force_up_cb, 0, 0, "EXPAND")
 	force_up_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_overide_surface_normal",
 		cb = force_up_cb
 	})
 
-	local brush_on_editor_bodies_cb = EWS:CheckBox(self._ews_panel, "Brush on editor bodies", "")
+	local brush_on_editor_bodies_cb = EWS:CheckBox(self._ews_panel, "Brush On Editor Units", "")
 
 	brush_on_editor_bodies_cb:set_value(self._brush_on_editor_bodies)
-	ctrl_sizer:add(brush_on_editor_bodies_cb, 0, 0, "SHAPED")
+	brush_toggles_sizer:add(brush_on_editor_bodies_cb, 0, 0, "EXPAND")
 	brush_on_editor_bodies_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_brush_on_editor_bodies",
 		cb = brush_on_editor_bodies_cb
 	})
+	ctrl_sizer:add(brush_toggles_sizer, 0, 0, "EXPAND")
 	self._sizer:add(ctrl_sizer, 0, 0, "EXPAND")
 
 	local btn_sizer = EWS:StaticBoxSizer(self._ews_panel, "HORIZONTAL", "")
@@ -515,9 +583,11 @@ function BrushLayer:build_panel(notebook)
 	toolbar:realize()
 
 	self._debug_units_total = EWS:StaticText(self._ews_panel, "Units Total:", "", "ALIGN_LEFT")
-	self._debug_units_unique = EWS:StaticText(self._ews_panel, "Units Unique:", "", "ALIGN_LEFT")
 
 	debug_sizer:add(self._debug_units_total, 0, 0, "EXPAND")
+
+	self._debug_units_unique = EWS:StaticText(self._ews_panel, "Units Unique:", "", "ALIGN_LEFT")
+
 	debug_sizer:add(self._debug_units_unique, 0, 0, "EXPAND")
 
 	local units_params = {
@@ -653,8 +723,8 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 
 	local slider_params = {
 		floats = 0,
-		slider_ctrlr_proportions = 3,
-		number_ctrlr_proportions = 1,
+		slider_ctrlr_proportions = 0.2,
+		number_ctrlr_proportions = 0.1,
 		panel = self._ews_panel,
 		sizer = slider_sizer,
 		value = default_value or s_value,
@@ -721,7 +791,8 @@ function BrushLayer:_on_gui_open_debug_list()
 	self._debug_list = _G.BrushLayerDebug:new()
 end
 
-function BrushLayer:get_brush_stats()
+function BrushLayer:get_brush_stats(filter)
+	local skip_filtering = not filter or not next(filter)
 	local brush_stats = {}
 	local total = {
 		unique = 0,
@@ -729,19 +800,21 @@ function BrushLayer:get_brush_stats()
 	}
 
 	for _, unit_name in ipairs(MassUnitManager:list()) do
-		local rotations = MassUnitManager:unit_rotations(unit_name)
-		local positions = MassUnitManager:unit_positions(unit_name)
-		local stats = {
-			unit_name = unit_name,
-			amount = #rotations,
-			positions = positions,
-			rotations = rotations
-		}
+		if skip_filtering or table.contains(filter, unit_name:s()) then
+			local rotations = MassUnitManager:unit_rotations(unit_name)
+			local positions = MassUnitManager:unit_positions(unit_name)
+			local stats = {
+				unit_name = unit_name,
+				amount = #positions,
+				positions = positions,
+				rotations = rotations
+			}
 
-		table.insert(brush_stats, stats)
+			table.insert(brush_stats, stats)
 
-		total.amount = total.amount + #rotations
-		total.unique = total.unique + 1
+			total.amount = total.amount + #rotations
+			total.unique = total.unique + 1
+		end
 	end
 
 	return brush_stats, total

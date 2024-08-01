@@ -25,7 +25,6 @@ function CoreLuaProfiler:init()
 	core_lua_profiler_reload = true
 
 	self._main_frame_table._table_list_ctrl:autosize_column(0)
-	self:check_news(true)
 end
 
 function CoreLuaProfiler:create_main_frame()
@@ -44,7 +43,6 @@ function CoreLuaProfiler:create_main_frame()
 	local menu_bar = EWS:MenuBar()
 	local file_menu = EWS:Menu("")
 
-	file_menu:append_item("NEWS", "Get Latest News", "")
 	file_menu:append_separator()
 	file_menu:append_item("EXIT", "Exit", "")
 	menu_bar:append(file_menu, "File")
@@ -64,7 +62,6 @@ function CoreLuaProfiler:create_main_frame()
 	lua_menu:append_item("GOTO_GLOBAL", "Goto Global\tCtrl+G", "")
 	menu_bar:append(lua_menu, "LUA")
 	self._main_frame:set_menu_bar(menu_bar)
-	self._main_frame:connect("NEWS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_check_news"), "")
 	self._main_frame:connect("EXIT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_close"), "")
 	self._main_frame:connect("COLLECT_RESOURCES", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_update_resources"), "")
 	self._main_frame:connect("SORT_NAME", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_set_resource_sort_func"), sort_by_name)
@@ -169,34 +166,6 @@ end
 
 function CoreLuaProfiler:notebook_selected()
 	return self._main_notebook_page_selected
-end
-
-function CoreLuaProfiler:on_check_news()
-	self:check_news()
-end
-
-function CoreLuaProfiler:check_news(new_only)
-	local news = nil
-
-	if new_only then
-		news = managers.news:get_news("lua_profiler", self._main_frame)
-	else
-		news = managers.news:get_old_news("lua_profiler", self._main_frame)
-	end
-
-	if news then
-		local str = nil
-
-		for _, n in ipairs(news) do
-			if not str then
-				str = n
-			else
-				str = str .. "\n" .. n
-			end
-		end
-
-		EWS:MessageDialog(self._main_frame, str, "New Features!", "OK,ICON_INFORMATION"):show_modal()
-	end
 end
 
 function CoreLuaProfiler:binary_to_string(str)

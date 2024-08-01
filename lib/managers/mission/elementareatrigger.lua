@@ -95,7 +95,7 @@ function ElementAreaTrigger:project_instigators()
 			table.insert(instigators, data.unit)
 		end
 	elseif self._values.instigator == "loot" or self._values.instigator == "unique_loot" then
-		local all_found = World:find_units_quick("all", 14)
+		local all_found = World:find_units_quick("all", 14, 17)
 
 		for _, unit in ipairs(all_found) do
 			local carry_data = unit:carry_data()

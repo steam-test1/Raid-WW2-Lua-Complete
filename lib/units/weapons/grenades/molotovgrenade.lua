@@ -165,6 +165,7 @@ function MolotovGrenade:detonate(normal)
 		curve_pow = 0.1,
 		damage = 3,
 		player_damage = 0,
+		ignite_character = true,
 		push_units = false,
 		hit_pos = self._unit:position(),
 		collision_slotmask = managers.slot:get_mask("explosion_targets"),

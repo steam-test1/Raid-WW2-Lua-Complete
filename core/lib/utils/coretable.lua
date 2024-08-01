@@ -299,6 +299,18 @@ function table.ordering(prioritized_order_list)
 	end
 end
 
+function table.shuffled(t)
+	local shuffled = {}
+
+	for _, v in ipairs(t) do
+		local pos = math.random(1, #shuffled + 1)
+
+		table.insert(shuffled, pos, v)
+	end
+
+	return shuffled
+end
+
 function table.sorted_copy(t, predicate)
 	local sorted_copy = {}
 
@@ -569,7 +581,7 @@ function table.print_data(data, t)
 	end
 end
 
-function table.fill_with_item(item, amount, data)
+function table.fill_with_item(data, item, amount)
 	data = data or {}
 
 	for i = 1, amount do
@@ -591,6 +603,20 @@ function table.trail_exists(table, list)
 	end
 
 	return true
+end
+
+function table.trail_get(table, list)
+	local item = table
+
+	for _, key in ipairs(list) do
+		if item[key] then
+			item = item[key]
+		else
+			return nil
+		end
+	end
+
+	return item
 end
 
 if Application:ews_enabled() then

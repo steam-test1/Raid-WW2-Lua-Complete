@@ -1,5 +1,6 @@
 NavFieldBuilder = NavFieldBuilder or class()
 NavFieldBuilder._VERSION = 6
+NavFieldBuilder._HELPER_SLOT = 15
 
 function NavFieldBuilder:init()
 	self._door_access_types = {
@@ -497,7 +498,7 @@ function NavFieldBuilder:start_build_nav_segment(build_settings, segment_index)
 		location_id = build_seg.location_id,
 		barrage_allowed = build_seg.barrage_allowed
 	}
-	local all_blockers = World:find_units_quick("all", 15)
+	local all_blockers = World:find_units_quick("all", NavFieldBuilder._HELPER_SLOT)
 	local to_remove = {}
 
 	for u_id, segment in pairs(self._helper_blockers) do
@@ -2415,7 +2416,7 @@ function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space,
 		if air_ray then
 			obstacle_found = "walls"
 
-			if air_ray.unit:in_slot(15) then
+			if air_ray.unit:in_slot(NavFieldBuilder._HELPER_SLOT) then
 				self:_on_helper_hit(air_ray.unit)
 			end
 		else

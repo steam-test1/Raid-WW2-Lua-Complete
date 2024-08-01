@@ -177,17 +177,13 @@ function CoreMaterialEditor:_get_make_params()
 	make_params.source = managers.database:base_path() .. shader._entry .. ".shader_source"
 	make_params.working_directory = tmppath
 	make_params.render_templates = srcpath .. ".render_template_database"
-	make_params.win32d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d9.win32.shaders"
 	make_params.win32d3d11 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d11.win32.shaders"
-	make_params.ps3 = tmppath .. managers.database:entry_name(shader._entry) .. ".ps3.shaders"
-	make_params.x360d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".x360.shaders"
-	make_params.lrb = tmppath .. managers.database:entry_name(shader._entry) .. ".lrb.shaders"
+	make_params.ps4 = tmppath .. managers.database:entry_name(shader._entry) .. ".ps4.shaders"
+	make_params.xb1 = tmppath .. managers.database:entry_name(shader._entry) .. ".xb1.shaders"
 	temp_params.render_templates = tmppath .. managers.database:entry_name(shader._entry) .. ".render_template_database"
-	temp_params.win32d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d9.win32.shaders"
 	temp_params.win32d3d11 = tmppath .. managers.database:entry_name(shader._entry) .. ".d3d11.win32.shaders"
-	temp_params.ps3 = tmppath .. managers.database:entry_name(shader._entry) .. ".ps3.shaders"
-	temp_params.x360d3d9 = tmppath .. managers.database:entry_name(shader._entry) .. ".x360.shaders"
-	temp_params.lrb = tmppath .. managers.database:entry_name(shader._entry) .. ".lrb.shaders"
+	temp_params.ps4 = tmppath .. managers.database:entry_name(shader._entry) .. ".ps4.shaders"
+	temp_params.xb1 = tmppath .. managers.database:entry_name(shader._entry) .. ".xb1.shaders"
 
 	return make_params, temp_params
 end

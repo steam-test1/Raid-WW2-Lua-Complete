@@ -5,9 +5,13 @@ function SetOutlineElement:init(unit)
 
 	self._hed.elements = {}
 	self._hed.set_outline = true
+	self._hed.outline_type = "highlight_character"
+	self._hed.instigator_only = false
 
 	table.insert(self._save_values, "elements")
 	table.insert(self._save_values, "set_outline")
+	table.insert(self._save_values, "outline_type")
+	table.insert(self._save_values, "instigator_only")
 end
 
 function SetOutlineElement:_build_panel(panel, panel_sizer)
@@ -30,6 +34,19 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 		ctrlr = set_outline
 	})
 	panel_sizer:add(set_outline, 0, 0, "EXPAND")
+
+	local instigator_only = EWS:CheckBox(panel, "Outline instigator only", "")
+
+	instigator_only:set_value(self._hed.instigator_only)
+	instigator_only:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "instigator_only",
+		ctrlr = instigator_only
+	})
+	panel_sizer:add(instigator_only, 0, 0, "EXPAND")
+
+	local outline_list = table.map_keys(ContourExt._types)
+
+	self:_build_value_combobox(panel, panel_sizer, "outline_type", outline_list, "Select outline type.")
 end
 
 function SetOutlineElement:draw_links(t, dt, selected_unit, all_units)

@@ -34,8 +34,8 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 		my_data.detection = data.char_tweak.detection.ntl
 		my_data.vision = data.char_tweak.vision.idle
 	else
-		my_data.vision = data.char_tweak.vision.combat
 		my_data.detection = data.char_tweak.detection.idle
+		my_data.vision = data.char_tweak.vision.combat
 	end
 
 	my_data.vision_cool = data.char_tweak.vision.idle
@@ -230,7 +230,7 @@ function CopLogicIdle._upd_enemy_detection(data)
 					}
 				end
 
-				CopLogicBase._exit(data.unit, wanted_logic, params)
+				CopLogicBase._exit_to_state(data.unit, wanted_logic, params)
 			end
 		end
 	end
@@ -354,20 +354,13 @@ end
 
 function CopLogicIdle._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
-	local can_arrest = CopLogicBase._can_arrest(data)
 
-	if not record or not attention_data.is_person then
-		if attention_data.settings.reaction == AIAttentionObject.REACT_ARREST and not can_arrest then
-			return AIAttentionObject.REACT_AIM
-		else
-			return attention_data.settings.reaction
-		end
+	if attention_data.is_deployable then
+		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 	end
 
-	local att_unit = attention_data.unit
-
-	if attention_data.is_deployable or data.t < record.arrest_timeout then
-		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
+	if not record or not attention_data.is_person then
+		return attention_data.settings.reaction
 	end
 
 	if record.status == "dead" then
@@ -375,30 +368,6 @@ function CopLogicIdle._chk_reaction_to_attention_object(data, attention_data, st
 	elseif record.status == "disabled" then
 		if record.assault_t and record.assault_t - record.disabled_t > 0.6 then
 			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-		else
-			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_AIM)
-		end
-	elseif record.being_arrested then
-		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_AIM)
-	elseif can_arrest and (not record.assault_t or att_unit:base():arrest_settings().aggression_timeout < data.t - record.assault_t) and record.arrest_timeout < data.t and not record.status then
-		local under_threat = false
-
-		if attention_data.dis < CopLogicArrest.ARREST_RANGE then
-			for u_key, other_crim_rec in pairs(managers.groupai:state():all_criminals()) do
-				local other_crim_attention_info = data.detected_attention_objects[u_key]
-
-				if other_crim_attention_info and (other_crim_attention_info.is_deployable or other_crim_attention_info.verified and other_crim_rec.assault_t and data.t - other_crim_rec.assault_t < other_crim_rec.unit:base():arrest_settings().aggression_timeout) then
-					under_threat = true
-
-					break
-				end
-			end
-		end
-
-		if under_threat then
-			-- Nothing
-		elseif attention_data.dis < CopLogicArrest.ARREST_RANGE and attention_data.verified then
-			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_ARREST)
 		else
 			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_AIM)
 		end
@@ -765,11 +734,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 end
 
 function CopLogicIdle._chk_objective_needs_travel(data, objective)
-	if not objective.nav_seg and objective.type ~= "follow" then
-		return false
-	end
-
-	if objective.in_place then
+	if not objective.nav_seg and objective.type ~= "follow" or objective.in_place then
 		return false
 	end
 

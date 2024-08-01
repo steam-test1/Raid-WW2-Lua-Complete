@@ -18,32 +18,6 @@ function CoreEWS.image_path(file_name)
 	return path .. file_name
 end
 
-function CoreEWS.check_news(parent, category, new_only, style)
-	local news = managers.news:check_news(category, not new_only, "TEXT")
-
-	if news then
-		if style == "RICH" then
-			local dialog = EWS:Dialog(parent, "New Features!", "", Vector3(-1, -1, -1), Vector3(400, 450, 0), "")
-			local box = EWS:BoxSizer("VERTICAL")
-
-			box:add(EWS:TextCtrl(dialog, news, "", "TE_RICH2,TE_AUTO_URL,TE_MULTILINE,TE_READONLY,TE_DONTWRAP"), 1, 0, "EXPAND")
-
-			local button = EWS:Button(dialog, "OK", "", "")
-
-			button:connect("", "EVT_COMMAND_BUTTON_CLICKED", callback(dialog, dialog, "end_modal"), "")
-			box:add(button, 0, 0, "ALIGN_RIGHT")
-			dialog:set_sizer(box)
-			dialog:show_modal()
-		elseif style == "TIP" then
-			EWS:tip_window(parent, news, CoreEWS.TIP_MAX_LEN)
-		else
-			EWS:MessageDialog(parent, news, "New Features!", "OK,ICON_INFORMATION"):show_modal()
-		end
-	end
-
-	return news
-end
-
 function CoreEWS.create_small_label(parent, text)
 	local text = EWS:StaticText(parent, text, 0, "")
 

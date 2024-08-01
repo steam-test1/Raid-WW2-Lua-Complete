@@ -148,6 +148,10 @@ function CivilianLogicIdle._upd_outline_detection(data)
 
 	if seen then
 		CivilianLogicIdle._enable_outline(data)
+
+		if data.unit:unit_data().mission_element then
+			data.unit:unit_data().mission_element:event("marked", data.unit)
+		end
 	else
 		CopLogicBase.queue_task(my_data, my_data.outline_detection_task_key, CivilianLogicIdle._upd_outline_detection, data, t + 0.33)
 	end
@@ -186,23 +190,11 @@ function CivilianLogicIdle.on_alert(data, alert_data)
 			local aggressor = alert_data[5]
 
 			if aggressor and aggressor:base() then
-				local is_intimidation = nil
-
-				if aggressor:base().is_local_player then
-					if managers.player:has_category_upgrade("player", "civ_calming_alerts") then
-						is_intimidation = true
-					end
-				elseif aggressor:base().is_husk_player and aggressor:base():upgrade_value("player", "civ_calming_alerts") then
-					is_intimidation = true
+				if not data.brain:interaction_voice() then
+					data.unit:brain():on_intimidated(1, aggressor)
 				end
 
-				if is_intimidation then
-					if not data.brain:interaction_voice() then
-						data.unit:brain():on_intimidated(1, aggressor)
-					end
-
-					return
-				end
+				return
 			end
 		end
 
@@ -306,28 +298,28 @@ function CivilianLogicIdle.on_new_objective(data, old_objective)
 
 	if new_objective then
 		if new_objective.type == "escort" then
-			CopLogicBase._exit(data.unit, "escort")
+			CopLogicBase._exit_to_state(data.unit, "escort")
 		elseif CopLogicIdle._chk_objective_needs_travel(data, new_objective) then
-			CopLogicBase._exit(data.unit, "travel")
+			CopLogicBase._exit_to_state(data.unit, "travel")
 		elseif new_objective.type == "act" then
-			CopLogicBase._exit(data.unit, "idle")
+			CopLogicBase._exit_to_state(data.unit, "idle")
 		elseif data.is_tied then
-			CopLogicBase._exit(data.unit, "surrender")
+			CopLogicBase._exit_to_state(data.unit, "surrender")
 		elseif new_objective.type == "free" then
 			if data.unit:movement():cool() or not new_objective.is_default then
-				CopLogicBase._exit(data.unit, "idle")
+				CopLogicBase._exit_to_state(data.unit, "idle")
 			else
-				CopLogicBase._exit(data.unit, "flee")
+				CopLogicBase._exit_to_state(data.unit, "flee")
 			end
 		elseif new_objective.type == "surrender" then
-			CopLogicBase._exit(data.unit, "surrender")
+			CopLogicBase._exit_to_state(data.unit, "surrender")
 		end
 	elseif data.unit:movement():cool() then
-		CopLogicBase._exit(data.unit, "idle")
+		CopLogicBase._exit_to_state(data.unit, "idle")
 	elseif data.is_tied then
-		CopLogicBase._exit(data.unit, "surrender")
+		CopLogicBase._exit_to_state(data.unit, "surrender")
 	else
-		CopLogicBase._exit(data.unit, "flee")
+		CopLogicBase._exit_to_state(data.unit, "flee")
 	end
 
 	if new_objective and new_objective.stance then
@@ -515,7 +507,7 @@ function CivilianLogicIdle._get_priority_attention(data, attention_objects)
 
 			if not reaction or best_target_reaction and reaction < best_target_reaction then
 				reaction_too_mild = true
-			elseif distance < 150 and reaction == AIAttentionObject.REACT_IDLE then
+			elseif distance < 200 and reaction == AIAttentionObject.REACT_IDLE then
 				reaction_too_mild = true
 			end
 

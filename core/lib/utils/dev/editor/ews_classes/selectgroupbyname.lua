@@ -1,7 +1,10 @@
 SelectGroupByName = SelectGroupByName or class(CoreEditorEwsDialog)
 
 function SelectGroupByName:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Select group by name", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "Select group by name", "", Vector3(300, 150, 0), Vector3(400, 500, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(400, 400, 0))
 	self:create_panel("VERTICAL")
 
 	local horizontal_ctrlr_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -27,19 +30,19 @@ function SelectGroupByName:init(...)
 	self._list:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
-	local select_btn = EWS:Button(self._panel, "Select", "", "BU_BOTTOM")
+	local select_btn = EWS:Button(self._panel, "Select", "", "")
 
 	button_sizer:add(select_btn, 0, 2, "RIGHT,LEFT")
 	select_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_select_group"), "")
 	select_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
-	local find_btn = EWS:Button(self._panel, "Ungroup", "", "BU_BOTTOM")
+	local find_btn = EWS:Button(self._panel, "Ungroup", "", "")
 
 	button_sizer:add(find_btn, 0, 2, "RIGHT,LEFT")
 	find_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_ungroup"), "")
 	find_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
-	local delete_btn = EWS:Button(self._panel, "Delete", "", "BU_BOTTOM")
+	local delete_btn = EWS:Button(self._panel, "Delete", "", "")
 
 	button_sizer:add(delete_btn, 0, 2, "RIGHT,LEFT")
 	delete_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_delete"), "")
@@ -50,8 +53,8 @@ function SelectGroupByName:init(...)
 	button_sizer:add(cancel_btn, 0, 2, "RIGHT,LEFT")
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,LEFT,RIGHT")
 	self:fill_group_list()
 	self._dialog:set_visible(true)
 end
@@ -181,7 +184,8 @@ function SelectGroupByName:fill_group_list()
 
 	for name, group in pairs(groups) do
 		if string.find(name, filter, 1, true) then
-			local i = self._list:append_item(name)
+			local units = group._units
+			local i = self._list:append_item(name .. " [" .. #units .. "]")
 			self._groups[j] = group
 
 			self._list:set_item_data(i, j)

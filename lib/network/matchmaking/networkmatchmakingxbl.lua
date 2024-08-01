@@ -276,7 +276,6 @@ function NetworkMatchMakingXBL:leave_game()
 		self._session = nil
 		self._server_joinable = false
 
-		print("NetworkMatchMakingXBL:leave_game() done")
 		Application:stack_dump()
 	else
 		cat_print("multiplayer", "Dont have a session!?")
@@ -1503,7 +1502,7 @@ function NetworkMatchMakingXBL:on_peer_added(peer)
 
 	XboxLive:set_up_p2p_in_session(self._session)
 
-	if SystemInfo:platform() == Idstring("XB1") and not peer:xnaddr() then
+	if not peer:xnaddr() then
 		return
 	end
 

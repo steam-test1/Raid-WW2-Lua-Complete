@@ -95,10 +95,6 @@ function SentryGunMovement:_update_activating(t, dt)
 		if managers.game_play_central:flashlights_on() and self._lights_on_sequence_name then
 			self._unit:damage():run_sequence_simple(self._lights_on_sequence_name)
 		end
-
-		if self._unit:character_damage():shield_smoke_level() > 0 and self._shield_sparks_enable then
-			self._unit:damage():run_sequence_simple(self._shield_sparks_enable)
-		end
 	end
 end
 
@@ -134,10 +130,6 @@ function SentryGunMovement:complete_rearming()
 end
 
 function SentryGunMovement:_update_repairing(t, dt)
-	local repair_complete_ratio = 1 - (self._repair_complete_t - t) / self._tweak.AUTO_REPAIR_DURATION
-
-	self._unit:character_damage():update_shield_smoke_level(repair_complete_ratio, true)
-
 	if self._repair_complete_t and self._repair_complete_t < t then
 		self:complete_repairing()
 	end
@@ -145,11 +137,8 @@ end
 
 function SentryGunMovement:complete_repairing()
 	if Network:is_server() then
-		self._unit:character_damage():repair_shield()
-	end
-
-	if self._repair_complete_seq then
-		self._unit:damage():run_sequence_simple(self._repair_complete_seq)
+		self._unit:character_damage():repair_sabotage()
+		self._unit:network():send("turret_complete_repairing")
 	end
 
 	self._repairing = false
@@ -893,15 +882,11 @@ end
 
 function SentryGunMovement:repair()
 	self._updator = callback(self, self, "_update_repairing")
-
-	if self._repair_start_seq then
-		self._unit:damage():run_sequence_simple(self._repair_start_seq)
-	end
-
 	self._repairing = true
 
 	if Network:is_server() then
-		self._repair_complete_t = TimerManager:game():time() + self._tweak.AUTO_REPAIR_DURATION
+		local repair_duration = managers.player:upgrade_value_by_level("player", "sapper_tank_disabler", 1, 0)
+		self._repair_complete_t = TimerManager:game():time() + repair_duration
 	end
 end
 

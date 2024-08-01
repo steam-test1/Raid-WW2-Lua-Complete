@@ -105,6 +105,14 @@ function GreedManager:plant_greed_items_on_level(world_id)
 		print("[GreedManager][plant_greed_items_on_level] A cache item will be spawned! Unit: " .. tostring(chosen_cache_unit))
 	end
 
+	if alive(chosen_cache_unit) then
+		if chosen_cache_unit:damage() and chosen_cache_unit:damage():has_sequence("chosen_one") then
+			chosen_cache_unit:damage():run_sequence_simple("chosen_one")
+		end
+	else
+		Application:warn("[GreedManager] Chosen Cache Unit was not alive, this might be a problem...")
+	end
+
 	for index, cache_item in pairs(self._registered_greed_cache_items[world_id]) do
 		if alive(cache_item.unit) and cache_item.unit ~= chosen_cache_unit then
 			cache_item.unit:set_slot(0)
@@ -146,8 +154,29 @@ function GreedManager:remove_greed_items_from_level(world_id)
 	self._registered_greed_cache_items[world_id] = {}
 end
 
+function GreedManager:greed_value_difficulty_multiplier()
+	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+	local current_difficulty = tweak_data:difficulty_to_index(difficulty)
+
+	return tweak_data.greed.difficulty_level_point_multipliers_carry[current_difficulty]
+end
+
 function GreedManager:pickup_greed_item(value, unit)
-	self:on_loot_picked_up(value)
+	value = math.clamp(value, 1, 4000)
+	local notification_item = {
+		name_id = "menu_greed_loot_title",
+		icon = "carry_gold",
+		value = value
+	}
+
+	if alive(unit) and unit:greed() then
+		local tweak = tweak_data.greed.greed_items[unit:greed():tweak_id()]
+		value = unit:greed():value()
+		notification_item.name_id = tweak.name_id
+		notification_item.icon = tweak.hud_icon
+	end
+
+	self:on_loot_picked_up(value, notification_item)
 
 	for i = #self._active_greed_items, 1, -1 do
 		if self._active_greed_items[i] == unit then
@@ -158,27 +187,68 @@ function GreedManager:pickup_greed_item(value, unit)
 	end
 end
 
+function GreedManager:secure_greed_carry_loot(carry_id, multiplier)
+	local tweak = tweak_data.carry[carry_id]
+	local value = tweak.loot_greed_value
+	value = value and value * multiplier * self:greed_value_difficulty_multiplier() * managers.player:upgrade_value("player", "greed_loot_bonus", 1)
+
+	if value then
+		local notification_item = {
+			name_id = tweak.name_id,
+			icon = tweak.hud_icon,
+			value = value
+		}
+
+		self:on_loot_picked_up(value, notification_item)
+	end
+end
+
+function GreedManager:on_loot_pickpocketed()
+	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+	local current_difficulty = tweak_data:difficulty_to_index(difficulty)
+	local weights = tweak_data.greed.value_weights.pickpocket[current_difficulty]
+	local tweak_table_name, tweak = tweak_data.greed:get_random_item_weighted(weights)
+
+	if tweak then
+		local value = tweak.value
+		local notification_item = {
+			name_id = tweak.name_id,
+			icon = tweak.hud_icon,
+			value = value
+		}
+
+		self:on_loot_picked_up(value, notification_item)
+
+		return tweak_table_name, tweak
+	end
+end
+
 function GreedManager:pickup_cache_loot(value)
 	self:on_loot_picked_up(value)
 end
 
-function GreedManager:on_loot_picked_up(value)
+function GreedManager:on_loot_picked_up(value, notification_item)
 	self._mission_loot_counter = self._mission_loot_counter + value
-	local acquired_new_goldbar = tweak_data.greed.points_needed_for_gold_bar <= self._current_loot_counter + self._mission_loot_counter - self._gold_awarded_in_mission * tweak_data.greed.points_needed_for_gold_bar
+	local total_loot_counter = self:current_loot_counter() + self:current_mission_loot_counter() - self._gold_awarded_in_mission * self:loot_needed_for_gold_bar()
+	local acquired_new_goldbar = self:loot_needed_for_gold_bar() <= total_loot_counter
 
 	if acquired_new_goldbar then
-		self._gold_awarded_in_mission = self._gold_awarded_in_mission + 1
+		self._gold_awarded_in_mission = self._gold_awarded_in_mission + math.floor(total_loot_counter / self:loot_needed_for_gold_bar())
 	end
 
-	managers.hud:on_greed_loot_picked_up(self._current_loot_counter + self._mission_loot_counter - value, self._current_loot_counter + self._mission_loot_counter)
+	managers.hud:on_greed_loot_picked_up(self._current_loot_counter + self._mission_loot_counter - value, self._current_loot_counter + self._mission_loot_counter, notification_item)
 end
 
 function GreedManager:current_loot_counter()
 	return self._current_loot_counter
 end
 
+function GreedManager:current_mission_loot_counter()
+	return self._mission_loot_counter
+end
+
 function GreedManager:loot_needed_for_gold_bar()
-	return tweak_data.greed.points_needed_for_gold_bar
+	return tweak_data.greed.item_value.complete_gold_bar
 end
 
 function GreedManager:on_level_exited(success)
@@ -188,10 +258,11 @@ function GreedManager:on_level_exited(success)
 	self._cache_current = self._current_loot_counter
 	self._cache_mission = self._mission_loot_counter
 
-	if not success then
-		self._gold_awarded_in_mission = 0
+	if success then
+		self._current_loot_counter = self._current_loot_counter + self._mission_loot_counter - self._gold_awarded_in_mission * tweak_data.greed.item_value.complete_gold_bar
+		self._current_loot_counter = self._current_loot_counter % self:loot_needed_for_gold_bar()
 	else
-		self._current_loot_counter = self._current_loot_counter + self._mission_loot_counter - self._gold_awarded_in_mission * tweak_data.greed.points_needed_for_gold_bar
+		self._gold_awarded_in_mission = 0
 	end
 
 	self._mission_loot_counter = 0
@@ -214,6 +285,10 @@ function GreedManager:acquired_gold_in_mission()
 	return self._gold_awarded_in_mission > 0
 end
 
+function GreedManager:greed_items_spawned_value()
+	return self._greed_items_spawned_value
+end
+
 function GreedManager:award_gold_picked_up_in_mission()
 	managers.gold_economy:add_gold(self._gold_awarded_in_mission)
 
@@ -223,7 +298,7 @@ end
 function GreedManager:save_profile_slot(data)
 	local state = {
 		version = GreedManager.VERSION,
-		current_loot_counter = self._current_loot_counter
+		current_loot_counter = self._current_loot_counter % self:loot_needed_for_gold_bar()
 	}
 	data.GreedManager = state
 end
@@ -241,5 +316,5 @@ function GreedManager:load_profile_slot(data, version)
 		return
 	end
 
-	self._current_loot_counter = state.current_loot_counter
+	self._current_loot_counter = state.current_loot_counter % self:loot_needed_for_gold_bar()
 end

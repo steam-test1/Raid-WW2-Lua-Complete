@@ -151,7 +151,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				if u_body:enabled() and u_body:dynamic() then
 					local body_mass = u_body:mass()
 
-					World:play_physic_effect(Idstring("physic_effects/shotgun_hit"), u_body, Vector3(col_ray.ray.x, col_ray.ray.y, col_ray.ray.z + 0.5) * 600 * scale, 4 * body_mass / math.random(2), rot_acc, rot_time)
+					World:play_physic_effect(tweak_data.physics_effects.shotgun_push, u_body, Vector3(col_ray.ray.x, col_ray.ray.y, col_ray.ray.z + 0.5) * 600 * scale, 4 * body_mass / math.random(2), rot_acc, rot_time)
 				end
 
 				i_u_body = i_u_body + 1
@@ -183,8 +183,9 @@ end
 
 function ShotgunBase:reload_expire_t()
 	local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()
+	local v = math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * 20 / 30
 
-	return math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * 20 / 30
+	return v
 end
 
 function ShotgunBase:reload_enter_expire_t()

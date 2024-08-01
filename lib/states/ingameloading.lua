@@ -76,3 +76,7 @@ end
 function IngameLoading:is_joinable()
 	return false
 end
+
+function IngameLoading._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_LOADING
+end

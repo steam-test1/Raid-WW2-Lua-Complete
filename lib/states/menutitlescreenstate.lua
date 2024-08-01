@@ -5,11 +5,11 @@ MenuTitlescreenState.BACKGROUND_IMAGE = "ui/backgrounds/raid_main_bg_hud"
 MenuTitlescreenState.FONT = tweak_data.gui.fonts.din_compressed
 MenuTitlescreenState.TEXT_COLOR = Color.white
 MenuTitlescreenState.LEGAL_TEXT_FONT = tweak_data.gui.fonts.lato
-MenuTitlescreenState.LEGAL_TEXT_CENTER_Y = 0.9
+MenuTitlescreenState.LEGAL_TEXT_CENTER_Y = 60
 MenuTitlescreenState.LEGAL_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_18
 MenuTitlescreenState.PRESS_ANY_KEY_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_32
 MenuTitlescreenState.GAME_LOGO_IMAGE = "raid_logo_big"
-MenuTitlescreenState.GAME_LOGO_CENTER_Y = 640
+MenuTitlescreenState.GAME_LOGO_CENTER_Y = 620
 
 function MenuTitlescreenState:init(game_state_machine, setup)
 	GameState.init(self, "menu_titlescreen", game_state_machine)
@@ -18,12 +18,6 @@ function MenuTitlescreenState:init(game_state_machine, setup)
 		self:setup()
 	end
 end
-
-local is_ps3 = _G.IS_PS3
-local is_ps4 = _G.IS_PS4
-local is_xb1 = _G.IS_XB1
-local is_x360 = _G.IS_XB360
-local is_win32 = _G.IS_PC
 
 function MenuTitlescreenState:setup()
 	local res = RenderSettings.resolution
@@ -38,42 +32,36 @@ function MenuTitlescreenState:setup()
 	self._full_workspace:hide()
 
 	local x_scale, y_scale = self:_resolution_scale()
+	local panel = self._full_workspace:panel()
 
-	self._full_workspace:panel():rect({
+	panel:rect({
 		visible = false,
 		color = Color.black
 	})
 
-	local background_params = {
+	self._background = panel:bitmap({
 		name = "title_screen_background_image",
 		alpha = 0,
 		layer = 1,
 		texture = MenuTitlescreenState.BACKGROUND_IMAGE
-	}
-	self._background = self._full_workspace:panel():bitmap(background_params)
-	local panel = self._full_workspace:panel()
-	local screen_ratio = self:_real_aspect_ratio()
-	local image_ratio = self._background:texture_width() / self._background:texture_height()
+	})
+	local good_size = Vector3(1920, 1080, res.z)
+	local ratio_2048_to_1920 = res.x / good_size.x
+	local ratio_1024_to_1080 = good_size.y / res.y
+	good_size = good_size * (ratio_2048_to_1920 > ratio_1024_to_1080 and ratio_2048_to_1920 or ratio_1024_to_1080)
 
-	if screen_ratio < image_ratio then
-		self._background:set_h(panel:h())
-		self._background:set_w(panel:w())
-	else
-		self._background:set_w(panel:w())
-		self._background:set_h(panel:h())
-	end
-
-	self._background:set_center_x(self._full_workspace:panel():w() / 2)
-	self._background:set_center_y(self._full_workspace:panel():h() / 2)
+	self._background:set_w(good_size.x)
+	self._background:set_h(good_size.y)
+	self._background:set_center_x(panel:center_x())
 
 	local gradient_params = {
 		valign = "grow",
 		name = "text_background_gradient",
-		h = 270,
+		h = 320,
 		y = 0,
 		orientation = "vertical",
 		x = 0,
-		w = self._full_workspace:panel():w(),
+		w = panel:w(),
 		gradient_points = {
 			0,
 			Color.black:with_alpha(0),
@@ -84,9 +72,9 @@ function MenuTitlescreenState:setup()
 		},
 		layer = self._background:layer() + 10
 	}
-	self._text_gradient = self._full_workspace:panel():gradient(gradient_params)
+	self._text_gradient = panel:gradient(gradient_params)
 
-	self._text_gradient:set_bottom(self._full_workspace:panel():h())
+	self._text_gradient:set_bottom(panel:h())
 
 	local logo_params = {
 		name = "title_screen_game_logo",
@@ -97,7 +85,7 @@ function MenuTitlescreenState:setup()
 		h = tweak_data.gui:icon_h(MenuTitlescreenState.GAME_LOGO_IMAGE) * y_scale,
 		layer = self._text_gradient:layer() + 1
 	}
-	self._game_logo = self._full_workspace:panel():bitmap(logo_params)
+	self._game_logo = panel:bitmap(logo_params)
 
 	self._game_logo:set_center_x(self._game_logo:parent():w() / 2)
 	self._game_logo:set_center_y(self:_recalculate_y_for_current_resolution(MenuTitlescreenState.GAME_LOGO_CENTER_Y))
@@ -121,7 +109,7 @@ function MenuTitlescreenState:setup()
 	local _, _, _, h = self._legal_text:text_rect()
 
 	self._legal_text:set_h(h)
-	self._legal_text:set_center_y(self._workspace:panel():h() * MenuTitlescreenState.LEGAL_TEXT_CENTER_Y)
+	self._legal_text:set_center_y(self._workspace:panel():h() - MenuTitlescreenState.LEGAL_TEXT_CENTER_Y)
 
 	local press_any_key_font_size = MenuTitlescreenState.PRESS_ANY_KEY_TEXT_FONT_SIZE
 	local press_any_key_prompt_params = {
@@ -135,16 +123,16 @@ function MenuTitlescreenState:setup()
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
 		font_size = press_any_key_font_size,
 		color = MenuTitlescreenState.TEXT_COLOR,
-		text = utf8.to_upper(managers.localization:text(_G.IS_PC and "press_any_key" or "press_any_key_controller")),
+		text = utf8.to_upper(managers.localization:text(IS_PC and "press_any_key" or "press_any_key_controller")),
 		layer = self._legal_text:layer()
 	}
 	self._press_any_key_text = self._workspace:panel():text(press_any_key_prompt_params)
 	local _, _, _, h = self._press_any_key_text:text_rect()
 
 	self._press_any_key_text:set_h(h)
-	self._press_any_key_text:set_center_y(self._workspace:panel():h() * MenuTitlescreenState.LEGAL_TEXT_CENTER_Y)
+	self._press_any_key_text:set_center_y(self._workspace:panel():h() - MenuTitlescreenState.LEGAL_TEXT_CENTER_Y)
 
-	local text_id = (is_ps3 or is_x360 or is_ps4 or is_xb1) and "menu_press_start" or "menu_visit_forum3"
+	local text_id = (IS_PS4 or IS_XB1) and "menu_press_start" or "menu_visit_forum3"
 	local din_path = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_24)
 	local text = self._workspace:panel():text({
 		vertical = "bottom",
@@ -166,22 +154,24 @@ function MenuTitlescreenState:setup()
 	for index = 1, managers.controller:get_wrapper_count() do
 		self._controller_list[index] = managers.controller:create_controller("title_" .. index, index, false)
 
-		if is_win32 and self._controller_list[index]:get_type() == "xbox360" then
-			self._controller_list[index]:add_connect_changed_callback(callback(self, self, "_update_pc_xbox_controller_connection", {
-				text_gui = text,
-				text_id = text_id
-			}))
+		if IS_PC then
+			local controller_type = self._controller_list[index]:get_type()
+
+			if controller_type == "ps4" or controller_type == "xb1" then
+				self._controller_list[index]:add_connect_changed_callback(callback(self, self, "_update_pc_controller_connection", {
+					text_gui = text,
+					text_id = text_id
+				}))
+			end
 		end
 	end
 
-	if is_win32 then
-		self:_update_pc_xbox_controller_connection({
+	if IS_PC then
+		self:_update_pc_controller_connection({
 			text_gui = text,
 			text_id = text_id
 		})
 	end
-
-	self:reset_attract_video()
 end
 
 function MenuTitlescreenState:_resolution_scale()
@@ -201,7 +191,7 @@ function MenuTitlescreenState:_recalculate_y_for_current_resolution(y)
 end
 
 function MenuTitlescreenState:_real_aspect_ratio()
-	if _G.IS_PC then
+	if IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()
@@ -211,13 +201,13 @@ function MenuTitlescreenState:_real_aspect_ratio()
 	end
 end
 
-function MenuTitlescreenState:_update_pc_xbox_controller_connection(params)
+function MenuTitlescreenState:_update_pc_controller_connection(params)
 	local text_string = managers.localization:to_upper_text(params.text_id)
 	local added_text = nil
 
 	for _, controller in pairs(self._controller_list) do
-		if controller:get_type() == "xbox360" and controller:connected() then
-			text_string = text_string .. "\n" .. managers.localization:to_upper_text("menu_or_press_any_xbox_button")
+		if (controller:get_type() == "ps4" or controller:get_type() == "xb1") and controller:connected() then
+			text_string = text_string .. "\n" .. managers.localization:to_upper_text("menu_or_press_any_controller_button")
 
 			break
 		end
@@ -242,19 +232,8 @@ function MenuTitlescreenState:at_enter()
 	self._full_workspace:show()
 	managers.user:set_index(nil)
 	managers.controller:set_default_wrapper_index(nil)
-
-	self._clbk_game_has_music_control_callback = callback(self, self, "clbk_game_has_music_control")
-
-	managers.platform:add_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
-	self:reset_attract_video()
 	self._background:stop()
 	self._background:animate(callback(self, self, "_animate_screen_display"))
-end
-
-function MenuTitlescreenState:clbk_game_has_music_control(status)
-	if alive(self._attract_video_gui) then
-		self._attract_video_gui:set_volume_gain(status and 1 or 0)
-	end
 end
 
 function MenuTitlescreenState:update(t, dt)
@@ -268,9 +247,7 @@ function MenuTitlescreenState:update(t, dt)
 
 	self:check_confirm_pressed()
 
-	if managers.system_menu:is_active() then
-		self:reset_attract_video()
-	else
+	if not managers.system_menu:is_active() then
 		if Global.exe_argument_level then
 			self._controller_index = 1
 		else
@@ -278,7 +255,7 @@ function MenuTitlescreenState:update(t, dt)
 		end
 
 		if self._controller_index then
-			if is_xb1 then
+			if IS_XB1 then
 				local controller_wrapper = self._controller_list[self._controller_index]
 				local xb1_ctrl = controller_wrapper:get_controller_map().xb1pad
 				local xuid = xb1_ctrl:user_xuid()
@@ -290,9 +267,8 @@ function MenuTitlescreenState:update(t, dt)
 			end
 
 			self._press_any_key_text:set_alpha(0)
-			self:reset_attract_video()
 
-			if is_xb1 then
+			if IS_XB1 then
 				managers.user:confirm_select_user_callback(callback(self, self, "check_user_callback"), true)
 			else
 				managers.user:check_user(callback(self, self, "check_user_callback"), true)
@@ -304,8 +280,6 @@ function MenuTitlescreenState:update(t, dt)
 				print("[MenuTitlescreenState:update] showing corrupt_DLC")
 				managers.menu:show_corrupt_dlc()
 			end
-		elseif not self:check_attract_video() and self:is_attract_video_delay_done() then
-			self:play_attract_video()
 		end
 	end
 end
@@ -424,20 +398,6 @@ function MenuTitlescreenState:continue_without_saving_no_callback()
 	managers.controller:set_default_wrapper_index(nil)
 end
 
-function MenuTitlescreenState:check_attract_video()
-	if alive(self._attract_video_gui) then
-		if self._attract_video_gui:loop_count() > 0 or self:is_any_input_pressed() then
-			self:reset_attract_video()
-		else
-			return true
-		end
-	elseif self:is_any_input_pressed() then
-		self:reset_attract_video()
-	end
-
-	return false
-end
-
 function MenuTitlescreenState:is_any_input_pressed()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -448,58 +408,7 @@ function MenuTitlescreenState:is_any_input_pressed()
 	return false
 end
 
-function MenuTitlescreenState:reset_attract_video()
-	self._attract_video_time = TimerManager:main():time()
-
-	if alive(self._attract_video_gui) then
-		self._attract_video_gui:stop()
-		self._full_workspace:panel():remove(self._attract_video_gui)
-		self._full_workspace:panel():remove(self._attract_video_background)
-
-		self._attract_video_gui = nil
-		self._attract_video_background = nil
-	end
-end
-
-function MenuTitlescreenState:is_attract_video_delay_done()
-	return TimerManager:main():time() > self._attract_video_time + _G.tweak_data.states.title.ATTRACT_VIDEO_DELAY
-end
-
-function MenuTitlescreenState:play_attract_video()
-	self:reset_attract_video()
-
-	local res = RenderSettings.resolution
-	local width = res.x
-	local height = res.y
-	local x = (res.x - width) / 2
-	local y = (res.y - height) / 2
-	self._attract_video_background = self._full_workspace:panel():rect({
-		color = Color.black,
-		layer = tweak_data.gui.ATTRACT_SCREEN_LAYER - 1
-	})
-	self._attract_video_gui = self._full_workspace:panel():video({
-		video = "movies/vanilla/raid_trailer_1080p_final",
-		x = x,
-		y = y,
-		width = width,
-		height = height,
-		layer = tweak_data.gui.ATTRACT_SCREEN_LAYER
-	})
-	local w = self._attract_video_gui:video_width()
-	local h = self._attract_video_gui:video_height()
-	local m = h / w
-
-	self._attract_video_gui:set_size(res.x, res.x * m)
-	self._attract_video_gui:set_center(res.x / 2, res.y / 2)
-	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and 0.5 or 0)
-	self._attract_video_gui:set_h(self._full_workspace:panel():w() * self._attract_video_gui:video_height() / self._attract_video_gui:video_width())
-	self._attract_video_gui:set_center_y(self._full_workspace:panel():h() / 2)
-	self._attract_video_gui:play()
-end
-
 function MenuTitlescreenState:at_exit()
-	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
-
 	if alive(self._workspace) then
 		Overlay:gui():destroy_workspace(self._workspace)
 
@@ -587,7 +496,7 @@ function MenuTitlescreenState:_animate_screen_display(background)
 		t = t + dt
 		local current_alpha = Easing.quintic_in_out(t, 0, 1, press_any_key_fade_in_duration)
 
-		if is_ps4 then
+		if IS_PS4 then
 			if not Application:has_boot_invite_received() then
 				self._press_any_key_text:set_alpha(current_alpha)
 			end
@@ -596,7 +505,7 @@ function MenuTitlescreenState:_animate_screen_display(background)
 		end
 	end
 
-	if is_ps4 then
+	if IS_PS4 then
 		if not Application:has_boot_invite_received() then
 			self._press_any_key_text:set_alpha(1)
 		end
@@ -626,4 +535,8 @@ function MenuTitlescreenState:_animate_any_key_pressed(background)
 
 	sound_source:post_event("menu_enter")
 	self:gsm():change_state_by_name("menu_main")
+end
+
+function MenuTitlescreenState._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_LOADING
 end

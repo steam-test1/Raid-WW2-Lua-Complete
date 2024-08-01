@@ -1,18 +1,17 @@
 WarcryBerserk = WarcryBerserk or class(Warcry)
+local ids_layer1_animate_factor = Idstring("layer1_animate_factor")
+local ids_blend_factor = Idstring("blend_factor")
 
 function WarcryBerserk:init()
 	WarcryBerserk.super.init(self)
-	managers.system_event_listener:add_listener("warcry_berserk_enemy_killed", {
-		CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY
-	}, callback(self, self, "_on_enemy_killed"))
 
-	self._active = false
 	self._type = Warcry.BERSERK
 	self._tweak_data = tweak_data.warcry[self._type]
-end
 
-local ids_layer1_animate_factor = Idstring("layer1_animate_factor")
-local ids_blend_factor = Idstring("blend_factor")
+	managers.system_event_listener:add_listener("warcry_" .. self:get_type() .. "_enemy_killed", {
+		CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY
+	}, callback(self, self, "_on_enemy_killed"))
+end
 
 function WarcryBerserk:update(dt)
 	local lerp = WarcryBerserk.super.update(self, dt)
@@ -34,31 +33,15 @@ function WarcryBerserk:update(dt)
 
 		material:set_variable(ids_layer1_animate_factor, animation_factor)
 	end
-
-	if self._active then
-		if self._heals_delay > 0 then
-			self._heals_delay = self._heals_delay - dt
-		else
-			self:_heal_step()
-		end
-	end
 end
 
 function WarcryBerserk:activate()
 	WarcryBerserk.super.activate(self)
 
 	self._ammo_consumption_counter = managers.player:upgrade_value("player", "warcry_ammo_consumption", 1)
-	self._heals_delay = 0.5
-end
 
-function WarcryBerserk:_heal_step()
-	self._heals_delay = 0.5
-	local health_restoration_percentage = self._tweak_data.base_team_heal_percentage
-	health_restoration_percentage = health_restoration_percentage * managers.player:upgrade_value("player", "warcry_team_heal_bonus", 1)
-
-	if managers.player:player_unit() then
-		managers.player:player_unit():character_damage():restore_health(health_restoration_percentage / 100)
-		managers.network:session():send_to_peers_synched("restore_health_by_percentage", health_restoration_percentage)
+	if not alive(self._local_player) or not self._local_player:character_damage() then
+		return
 	end
 end
 
@@ -67,20 +50,12 @@ function WarcryBerserk:deactivate()
 	managers.environment_controller:reset_lens_distortion_value()
 
 	self._ammo_consumption_counter = nil
-end
 
-function WarcryBerserk:duration()
-	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
-end
-
-function WarcryBerserk:get_level_description(level)
-	level = math.clamp(level, 1, #self._tweak_data.buffs)
-
-	if level >= 2 then
-		return managers.localization:text("skill_warcry_berserk_level_" .. tostring(level) .. "_desc")
+	if not alive(self._local_player) or not self._local_player:character_damage() then
+		return
 	end
 
-	return "warcry_berserk_desc"
+	self._local_player = nil
 end
 
 function WarcryBerserk:check_ammo_consumption()
@@ -96,29 +71,29 @@ function WarcryBerserk:check_ammo_consumption()
 end
 
 function WarcryBerserk:_on_enemy_killed(params)
-	local unit = managers.player:player_unit()
+	self:_fill_charge_on_enemy_killed(params)
 
-	if self._active or not alive(unit) or not unit:character_damage() or unit:character_damage():is_downed() then
-		return
+	if self:is_active() and params.damage_type and params.damage_type == "bullet" then
+		if not alive(self._local_player) or not self._local_player:character_damage() then
+			return
+		end
+
+		local health_regen_amount = managers.player:upgrade_value("player", "warcry_kill_heal_bonus", 1) - 1
+		local kill_wpn = tweak_data.weapon[params.weapon_used:base():get_name_id()]
+		local kill_wpn_cat = kill_wpn and kill_wpn.category
+
+		if kill_wpn and kill_wpn_cat then
+			health_regen_amount = health_regen_amount * WeaponTweakData.get_weapon_class_regen_multiplier(kill_wpn_cat)
+		end
+
+		self._local_player:character_damage():restore_health(health_regen_amount)
+
+		if managers.hud then
+			managers.hud:post_event(self._tweak_data.health_boost_sound or "recon_warcry_enemy_hit")
+		end
 	end
-
-	local health_ratio = managers.player:player_unit():character_damage():health_ratio()
-	local multiplier = 1
-
-	if health_ratio < self._tweak_data.low_health_multiplier_activation_percentage then
-		local low_health_multiplier = math.lerp(self._tweak_data.low_health_multiplier_min, self._tweak_data.low_health_multiplier_max, 1 - health_ratio / self._tweak_data.low_health_multiplier_activation_percentage)
-		multiplier = multiplier + low_health_multiplier * managers.player:upgrade_value("player", "warcry_low_health_multiplier_bonus", 1)
-	end
-
-	if params.dismemberment_occured then
-		multiplier = multiplier + self._tweak_data.dismemberment_multiplier * managers.player:upgrade_value("player", "warcry_dismemberment_multiplier_bonus", 1)
-	end
-
-	local base_fill_value = self._tweak_data.base_kill_fill_amount
-
-	managers.warcry:fill_meter_by_value(base_fill_value * multiplier, true)
 end
 
 function WarcryBerserk:cleanup()
-	managers.system_event_listener:remove_listener("warcry_berserk_enemy_killed")
+	managers.system_event_listener:remove_listener("warcry_" .. self:get_type() .. "_enemy_killed")
 end

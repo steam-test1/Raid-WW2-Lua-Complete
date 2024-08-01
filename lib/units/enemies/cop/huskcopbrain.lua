@@ -28,8 +28,8 @@ function HuskCopBrain:post_init()
 		"death"
 	}, callback(self, self, "clbk_death"))
 
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() and self._unit:damage():has_sequence("halloween_2017") then
-		self._unit:damage():run_sequence_simple("halloween_2017")
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() then
+		self._unit:damage():has_then_run_sequence_simple("halloween_2017")
 	end
 end
 
@@ -130,12 +130,15 @@ function HuskCopBrain:sync_net_event(event_id)
 	if event_id == self._NET_EVENTS.weapon_laser_on then
 		self._weapon_laser_on = true
 
-		self._unit:inventory():equipped_unit():base():set_laser_enabled(true)
+		if self._unit:inventory() and self._unit:inventory():equipped_unit() and self._unit:inventory():equipped_unit():base() and self._unit:inventory():equipped_unit():base().set_laser_enabled then
+			self._unit:inventory():equipped_unit():base():set_laser_enabled(true)
+		end
+
 		managers.enemy:_destroy_unit_gfx_lod_data(self._unit:key())
 	elseif event_id == self._NET_EVENTS.weapon_laser_off then
 		self._weapon_laser_on = nil
 
-		if self._unit:inventory():equipped_unit() then
+		if self._unit:inventory() and self._unit:inventory():equipped_unit() and self._unit:inventory():equipped_unit():base() and self._unit:inventory():equipped_unit():base().set_laser_enabled then
 			self._unit:inventory():equipped_unit():base():set_laser_enabled(false)
 		end
 

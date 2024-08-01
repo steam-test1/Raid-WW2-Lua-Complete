@@ -3,7 +3,6 @@ core:import("CoreEditorUtils")
 core:import("CoreEngineAccess")
 core:import("CoreUnit")
 
-local sky_orientation_data_key = Idstring("sky_orientation/rotation"):key()
 CoreOldWorldDefinition = CoreOldWorldDefinition or class()
 CoreMissionElementUnit = CoreMissionElementUnit or class()
 WorldHolder = WorldHolder or class()
@@ -67,6 +66,26 @@ function WorldHolder:init(params)
 				end
 			end
 		end
+	end
+
+	if params.excluded_continents then
+		Application:debug("[WorldHolder:init] init with excluded_continents", inspect(excluded_continents))
+
+		self._excluded_continents = params.excluded_continents
+	end
+end
+
+function WorldHolder:set_excluded_continents(data)
+	local t = type(data)
+
+	if t == "table" then
+		self._excluded_continents = data
+	elseif t == "string" then
+		self._excluded_continents = {
+			data
+		}
+	else
+		Application:error("[WorldHolder:set_excluded_continents] data was not a table or string", inspect(data))
 	end
 end
 
@@ -903,7 +922,7 @@ function CoreOldWorldDefinition:load_massunit(path, offset)
 		local l = MassUnitManager:list(path:id())
 
 		for _, name in ipairs(l) do
-			if DB:has(Idstring("unit"), name:id()) then
+			if DB:has(IDS_UNIT, name:id()) then
 				CoreUnit.editor_load_unit(name)
 			elseif not table.has(self._massunit_replace_names, name:s()) then
 				managers.editor:output("Unit " .. name:s() .. " does not exist")
@@ -911,7 +930,7 @@ function CoreOldWorldDefinition:load_massunit(path, offset)
 				local old_name = name:s()
 				name = managers.editor:show_replace_massunit()
 
-				if name and DB:has(Idstring("unit"), name:id()) then
+				if name and DB:has(IDS_UNIT, name:id()) then
 					CoreUnit.editor_load_unit(name)
 				end
 
@@ -949,8 +968,8 @@ function CoreOldWorldDefinition:preload_unit(name)
 
 	if table.has(self._replace_names, name) then
 		name = self._replace_names[name]
-	elseif is_editor and (not DB:has(Idstring("unit"), name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
-		if not DB:has(Idstring("unit"), name:id()) then
+	elseif is_editor and (not DB:has(IDS_UNIT, name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
+		if not DB:has(IDS_UNIT, name:id()) then
 			managers.editor:output_info("Unit " .. name .. " does not exist")
 		else
 			managers.editor:output_info("Unit " .. name .. " is of type " .. CoreEngineAccess._editor_unit_data(name:id()):type():t())

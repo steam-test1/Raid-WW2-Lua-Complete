@@ -152,7 +152,7 @@ function RaidGUIControlCharacterDescription:_layout()
 		align = "center",
 		text = "PROFILE NAME",
 		x = 1376,
-		y = self._level_label:bottom() + 8,
+		y = self._level_label:bottom() + 2,
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
@@ -166,9 +166,9 @@ function RaidGUIControlCharacterDescription:_layout()
 		name = "character_name_label",
 		h = 32,
 		align = "center",
-		text = "NAMEMAN",
+		text = "RAIDER",
 		x = 1376,
-		y = self._profile_name_label:bottom() - 8,
+		y = self._profile_name_label:bottom() - 4,
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -181,7 +181,7 @@ function RaidGUIControlCharacterDescription:_layout()
 		self._description_label = self._object:label({
 			name = "description_label",
 			vertical = "top",
-			h = 224,
+			h = 268,
 			wrap = true,
 			align = "center",
 			x = padding,
@@ -193,9 +193,29 @@ function RaidGUIControlCharacterDescription:_layout()
 			font_size = tweak_data.gui.font_sizes.size_20,
 			color = tweak_data.gui.colors.raid_black
 		})
-		local y_stats = 360
+		self._skills_label = self._object:label({
+			name = "profile_name_label",
+			h = 32,
+			align = "center",
+			y = self._description_label:bottom() + 2,
+			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
+			text = self:translate("menu_skills", true),
+			color = tweak_data.gui.colors.raid_black,
+			font = tweak_data.gui.fonts.din_compressed,
+			font_size = tweak_data.gui.font_sizes.size_24
+		})
+
+		self._profile_name_label:set_center_x(self._object:w() / 2)
+
+		self._skills_panel = self._object:panel({
+			name = "skills_breakdown",
+			x = padding,
+			y = self._skills_label:bottom(),
+			w = padded_width
+		})
+		local y_stats = self._object:h() - 144
 		local y_stats_label = y_stats + 48
-		local x_stats_step = self._object:w() / 4
+		local x_stats_step = self._object:w() / 5
 		self._health_amount_label = self._object:label({
 			w = 100,
 			name = "health_amount_label",
@@ -213,7 +233,7 @@ function RaidGUIControlCharacterDescription:_layout()
 		self._health_label = self._object:label({
 			w = 100,
 			name = "health_label",
-			h = 32,
+			h = 64,
 			vertical = "center",
 			align = "center",
 			text = "",
@@ -241,7 +261,7 @@ function RaidGUIControlCharacterDescription:_layout()
 		self._speed_label = self._object:label({
 			w = 100,
 			name = "speed_label",
-			h = 32,
+			h = 64,
 			vertical = "center",
 			align = "center",
 			text = "",
@@ -269,7 +289,35 @@ function RaidGUIControlCharacterDescription:_layout()
 		self._stamina_label = self._object:label({
 			w = 100,
 			name = "stamina_label",
-			h = 32,
+			h = 64,
+			vertical = "center",
+			align = "center",
+			text = "",
+			x = 320,
+			y = y_stats_label,
+			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
+			font = tweak_data.gui.fonts.din_compressed,
+			font_size = tweak_data.gui.font_sizes.size_24,
+			color = tweak_data.gui.colors.raid_black
+		})
+		self._carry_weight_label = self._object:label({
+			w = 100,
+			name = "carry_weight_label",
+			h = 64,
+			vertical = "center",
+			align = "center",
+			text = "",
+			x = 320,
+			y = y_stats,
+			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
+			font = tweak_data.gui.fonts.din_compressed,
+			font_size = tweak_data.gui.font_sizes.size_52,
+			color = tweak_data.gui.colors.raid_black
+		})
+		self._carry_label = self._object:label({
+			w = 100,
+			name = "carry_label",
+			h = 64,
 			vertical = "center",
 			align = "center",
 			text = "",
@@ -287,119 +335,50 @@ function RaidGUIControlCharacterDescription:_layout()
 		self._speed_amount_label:set_center_x(x_stats_step * 2)
 		self._stamina_label:set_center_x(x_stats_step * 3)
 		self._stamina_amount_label:set_center_x(x_stats_step * 3)
+		self._carry_weight_label:set_center_x(x_stats_step * 4)
+		self._carry_label:set_center_x(x_stats_step * 4)
+	end
+end
 
-		local y_warcry = self._stamina_amount_label:bottom() + 64
-		self._warcry_icon = self._object:image({
-			name = "warcry_icon",
-			x = 0,
-			y = y_warcry,
-			texture = tweak_data.gui.icons.warcry_sharpshooter.texture,
-			texture_rect = tweak_data.gui.icons.warcry_sharpshooter.texture_rect,
-			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
-			color = tweak_data.gui.colors.raid_dark_red
-		})
+function RaidGUIControlCharacterDescription:_recreate_skills(skills_applied)
+	self._skills_panel:clear()
 
-		self._warcry_icon:set_center_x(self._object:w() / 2)
+	local skill_types = {
+		SkillTreeTweakData.TYPE_WARCRY,
+		SkillTreeTweakData.TYPE_BOOSTS,
+		SkillTreeTweakData.TYPE_TALENT
+	}
+	local icon_size = 42
+	local padding = 4
+	local last_icon = nil
 
-		local _, c_y = self._warcry_icon:center()
-		self._warcry_name_label = self._object:label({
-			w = 242,
-			name = "warcry_name_label",
-			h = 32,
-			align = "left",
-			text = "WARCRYNAME",
-			y = 0,
-			x = 0,
-			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
-			font = tweak_data.gui.fonts.din_compressed,
-			font_size = tweak_data.gui.font_sizes.size_32,
-			color = tweak_data.gui.colors.raid_black
-		})
+	for slot_type, idx in ipairs(skill_types) do
+		if skills_applied[idx] then
+			for id, skill in pairs(skills_applied[idx]) do
+				local skill_tweak = tweak_data.skilltree.skills[id]
 
-		self._warcry_name_label:set_center_y(c_y)
+				if skill.active then
+					local tag_color = tweak_data.skilltree.skill_category_colors[slot_type]
+					local icon = tweak_data.skilltree:get_skill_icon_tiered(id)
+					local x = last_icon and last_icon:right() or 0
+					local gui_skill = tweak_data.gui:get_full_gui_data(icon)
+					last_icon = self._skills_panel:image({
+						name = "object_bg",
+						x = x + padding,
+						w = icon_size,
+						h = icon_size,
+						color = tag_color,
+						texture = gui_skill.texture,
+						texture_rect = gui_skill.texture_rect
+					})
+				end
+			end
+		end
+	end
 
-		self._warcries_label = self._object:label({
-			w = 96,
-			name = "warcries_label",
-			h = 32,
-			align = "right",
-			y = 0,
-			x = 0,
-			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
-			text = self:translate("select_character_warcries_label", true),
-			font = tweak_data.gui.fonts.din_compressed,
-			font_size = tweak_data.gui.font_sizes.size_32,
-			color = tweak_data.gui.colors.raid_black
-		})
-
-		self._warcries_label:set_center_y(c_y)
-
-		local _, _, w, _ = self._warcries_label:text_rect()
-
-		self._warcries_label:set_w(w)
-		self._warcries_label:set_right(self._warcry_icon:left() - 4)
-
-		local _, _, w, _ = self._warcry_name_label:text_rect()
-
-		self._warcry_name_label:set_w(w)
-		self._warcry_name_label:set_left(self._warcry_icon:right() + 4)
-
-		self._warcry_description_short = self._object:label({
-			name = "warcry_description_short",
-			h = 24,
-			align = "center",
-			text = "",
-			x = padding,
-			w = padded_width,
-			y = self._warcry_icon:bottom() + 32,
-			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
-			font = tweak_data.gui.fonts.din_compressed,
-			font_size = tweak_data.gui.font_sizes.size_24,
-			color = tweak_data.gui.colors.raid_black
-		})
-		self._warcry_description_label = self._object:label({
-			name = "warcry_description_label",
-			h = 64,
-			wrap = true,
-			align = "center",
-			vertical = "top",
-			text = "",
-			x = padding,
-			w = padded_width,
-			y = self._warcry_description_short:bottom() + 8,
-			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
-			font = tweak_data.gui.fonts.lato,
-			font_size = tweak_data.gui.font_sizes.size_18,
-			color = tweak_data.gui.colors.raid_black
-		})
-		self._warcry_team_buff_description_short = self._object:label({
-			name = "warcry_description_team_short_label",
-			h = 24,
-			align = "center",
-			text = "",
-			x = padding,
-			w = padded_width,
-			y = self._warcry_description_label:bottom() + 24,
-			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
-			font = tweak_data.gui.fonts.din_compressed,
-			font_size = tweak_data.gui.font_sizes.size_24,
-			color = tweak_data.gui.colors.raid_black
-		})
-		self._warcry_team_buff_description = self._object:label({
-			name = "warcry_description_team_label",
-			h = 120,
-			wrap = true,
-			align = "center",
-			vertical = "top",
-			text = "",
-			x = padding,
-			w = padded_width,
-			y = self._warcry_team_buff_description_short:bottom() + 8,
-			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
-			font = tweak_data.gui.fonts.lato,
-			font_size = tweak_data.gui.font_sizes.size_18,
-			color = tweak_data.gui.colors.raid_black
-		})
+	if last_icon then
+		self._skills_panel:set_w(last_icon:right())
+		self._skills_panel:set_center_x(self._object:w() / 2)
 	end
 end
 
@@ -430,54 +409,35 @@ function RaidGUIControlCharacterDescription:set_data(data)
 	self._level_label:set_text(self:translate("select_character_level_label", true))
 
 	if self._mode == RaidGUIControlCharacterDescription.MODE_SELECTION then
+		self:_recreate_skills(data.skill_tree)
+
 		local class_description = self:translate(tweak_data.skilltree.classes[data.class_name].desc_id, false) or ""
 
 		self._description_label:set_text(class_description)
 
-		local health_amount = data.character_stats and data.character_stats.health.base or 0
+		local health_amount = data.character_stats and data.character_stats.health or 0
 
 		self._health_amount_label:set_text(string.format("%.0f", health_amount))
-		self._health_label:set_text(self:translate("select_character_health_label", true))
+		self._health_label:set_text(self:translate("character_stats_health_label", true))
 
 		local _, _, w, _ = self._health_label:text_rect()
 
 		self._health_label:set_w(w)
 		self._health_label:set_center_x(self._health_amount_label:x() + self._health_amount_label:w() / 2)
 
-		local speed_amount = data.character_stats and data.character_stats.speed.base or 0
+		local speed_amount = data.character_stats and data.character_stats.speed_walk or 0
 
 		self._speed_amount_label:set_text(string.format("%.0f", speed_amount))
-		self._speed_label:set_text(self:translate("select_character_speed_label", true))
+		self._speed_label:set_text(self:translate("character_stats_speed_walk_label", true))
 
-		local stamina_amount = data.character_stats and data.character_stats.stamina.base or 0
+		local stamina_amount = data.character_stats and data.character_stats.stamina or 0
 
 		self._stamina_amount_label:set_text(string.format("%.0f", stamina_amount))
-		self._stamina_label:set_text(self:translate("select_character_stamina_label", true))
-		self._warcries_label:set_text(self:translate("select_character_warcries_label", true))
+		self._stamina_label:set_text(self:translate("character_stats_stamina_label", true))
 
-		local _, _, w, _ = self._warcries_label:text_rect()
+		local carry_limit = data.character_stats and data.character_stats.carry_limit or 0
 
-		self._warcries_label:set_w(w)
-
-		local warcry_name_id = tweak_data.skilltree.class_warcry_data[data.class_name]
-		local warcry_name = self:translate(tweak_data.warcry[warcry_name_id].name_id, true)
-		local warcry_desc = self:translate(tweak_data.warcry[warcry_name_id].desc_id, false)
-		local warcry_menu_icon_name = tweak_data.warcry[warcry_name_id].menu_icon
-		local warcry_icon_data = tweak_data.gui.icons[warcry_menu_icon_name]
-
-		self._warcry_name_label:set_text(warcry_name)
-
-		local _, _, w, _ = self._warcry_name_label:text_rect()
-
-		self._warcry_name_label:set_w(w)
-		self._warcry_description_label:set_text(warcry_desc)
-
-		local _, _, _, h = self._warcry_description_label:text_rect()
-
-		self._warcry_description_label:set_h(h)
-		self._warcry_description_short:set_y(self._warcries_label:bottom())
-		self._warcry_description_label:set_y(self._warcry_description_short:bottom() + 8)
-		self._warcry_icon:set_image(warcry_icon_data.texture)
-		self._warcry_icon:set_texture_rect(warcry_icon_data.texture_rect)
+		self._carry_weight_label:set_text(carry_limit)
+		self._carry_label:set_text(self:translate("character_stats_carry_limit_label", true))
 	end
 end

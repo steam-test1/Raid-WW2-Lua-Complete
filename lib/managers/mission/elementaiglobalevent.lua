@@ -3,7 +3,6 @@ core:import("CoreMissionScriptElement")
 ElementAiGlobalEvent = ElementAiGlobalEvent or class(CoreMissionScriptElement.MissionScriptElement)
 ElementAiGlobalEvent._wave_modes = {
 	"none",
-	"assault",
 	"besiege",
 	"blockade",
 	"hunt",

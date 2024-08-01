@@ -8,11 +8,6 @@ SavefileManager.BACKUP_SLOT = 31
 SavefileManager.MIN_SLOT = 0
 SavefileManager.MAX_SLOT = 15
 SavefileManager.MAX_PROFILE_SAVE_INTERVAL = 300
-
-if _G.IS_XB360 then
-	SavefileManager.TASK_MIN_DURATION = 3
-end
-
 SavefileManager.IDLE_TASK_TYPE = 1
 SavefileManager.LOAD_TASK_TYPE = 2
 SavefileManager.SAVE_TASK_TYPE = 3
@@ -29,10 +24,10 @@ SavefileManager.DEBUG_TASK_TYPE_NAME_LIST = {
 SavefileManager.RESERVED_BYTES = 204800
 SavefileManager.VERSION = 5
 
-if _G.IS_PS4 then
+if IS_PS4 then
 	SavefileManager.VERSION_NAME = "01.00"
 	SavefileManager.LOWEST_COMPATIBLE_VERSION = "01.00"
-elseif _G.IS_XB1 then
+elseif IS_XB1 then
 	SavefileManager.VERSION_NAME = "1.0.0.0"
 	SavefileManager.LOWEST_COMPATIBLE_VERSION = "1.0.0.0"
 else
@@ -74,6 +69,29 @@ function SavefileManager:init()
 	self._force_load_slot = {}
 
 	SaveGameManager:set_max_nr_slots(self.MAX_SLOT - self.MIN_SLOT + 1)
+end
+
+function SavefileManager:precache_data()
+	Application:debug("[SavefileManager:_precache_data] Starting precache of save data!")
+
+	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
+		if Global.savefile_manager.meta_data_list and Global.savefile_manager.meta_data_list[slot_index] then
+			Global.savefile_manager.meta_data_list[slot_index].is_load_done = false
+			Global.savefile_manager.meta_data_list[slot_index].is_cached_slot = false
+		end
+
+		self:_set_cache(slot_index, nil)
+		self:_load(slot_index, false, nil)
+	end
+
+	local last_selected_slot = self:get_save_progress_slot()
+
+	if last_selected_slot ~= -1 then
+		self:_set_cache(last_selected_slot, nil)
+		self:_load(last_selected_slot, false, nil)
+	end
+
+	Application:debug("[SavefileManager:_precache_data] Finished precache of save data!")
 end
 
 function SavefileManager:set_save_progress_slot(slot_index)
@@ -138,7 +156,7 @@ function SavefileManager:storage_changed()
 			last_slot = self.MAX_SLOT
 		}
 
-		if _G.IS_PC then
+		if IS_PC then
 			task_data.save_system = self.SAVE_SYSTEM
 		end
 
@@ -209,7 +227,7 @@ function SavefileManager:save_progress(save_system)
 
 		self:_save(progress_slot, nil, save_system)
 
-		Global.savefile_manager.backup_save_enabled = _G.IS_PC
+		Global.savefile_manager.backup_save_enabled = IS_PC
 	end
 end
 
@@ -456,7 +474,7 @@ function SavefileManager:_save(slot, cache_only, save_system)
 			user_index = managers.user:get_platform_id()
 		}
 
-		if _G.IS_PS4 then
+		if IS_PS4 then
 			task_data.title = managers.localization:text("savefile_game_title")
 		end
 
@@ -468,12 +486,11 @@ function SavefileManager:_save(slot, cache_only, save_system)
 			meta_data.cache
 		}
 
-		if SystemInfo:distribution() == Idstring("STEAM") then
+		if IS_STEAM then
 			task_data.save_system = save_system or "steam_cloud"
 		end
 
 		self:_on_task_queued(task_data)
-		Application:debug("[SavefileManager:AAAAAAAAAAAAAAAAAAAAAA] we even savig?", task_data)
 		SaveGameManager:save(task_data, callback(self, self, "clbk_result_save"))
 	end
 end
@@ -507,6 +524,7 @@ function SavefileManager:_save_cache(slot)
 		managers.raid_job:save_game(cache)
 		managers.statistics:save(cache)
 		managers.weapon_inventory:save_account_wide_info(cache)
+		managers.skilltree:save_profile_slot(cache)
 		managers.challenge:save_profile_slot(cache)
 		managers.breadcrumb:save_profile_slot(cache)
 		managers.consumable_missions:save(cache)
@@ -519,7 +537,7 @@ function SavefileManager:_save_cache(slot)
 		managers.player:save(cache)
 		managers.experience:save(cache)
 		managers.upgrades:save(cache)
-		managers.skilltree:save(cache)
+		managers.skilltree:save_character_slot(cache)
 		managers.blackmarket:save(cache)
 		managers.mission:save_job_values(cache)
 		managers.dlc:save(cache)
@@ -530,7 +548,7 @@ function SavefileManager:_save_cache(slot)
 		managers.breadcrumb:save_character_slot(cache)
 	end
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		cache.user_id = self._USER_ID_OVERRRIDE or Steam:userid()
 
 		cat_print("savefile_manager", "[SavefileManager:_save_cache] user_id:", cache.user_id)
@@ -614,16 +632,11 @@ function SavefileManager:_load(slot, cache_only, save_system)
 				user_index = managers.user:get_platform_id()
 			}
 
-			if SystemInfo:platform() == Idstring("PS3") then
-				task_data.disable_ownership_check = is_setting_slot
-			end
-
-			if SystemInfo:distribution() == Idstring("STEAM") then
+			if IS_STEAM then
 				task_data.save_system = save_system or "steam_cloud"
 			end
 
 			local load_callback_obj = task_data.save_system == "local_hdd" and callback(self, self, "clbk_result_load_backup") or callback(self, self, "clbk_result_load")
-			local load_callback_obj_test = task_data.save_system == "local_hdd" and "clbk_result_load_backup" or "clbk_result_load"
 
 			self:_on_task_queued(task_data)
 			SaveGameManager:load(task_data, load_callback_obj)
@@ -872,7 +885,7 @@ function SavefileManager:_remove(slot, save_system)
 		user_index = managers.user:get_platform_id()
 	}
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		task_data.save_system = save_system or "steam_cloud"
 	end
 
@@ -914,6 +927,7 @@ function SavefileManager:_load_cache(slot)
 			managers.statistics:load(cache, version)
 			self:_set_setting_changed(false)
 			managers.weapon_inventory:load_account_wide_info(cache)
+			managers.skilltree:load_profile_slot(cache, version)
 			managers.challenge:load_profile_slot(cache, version)
 			managers.breadcrumb:load_profile_slot(cache, version)
 			managers.consumable_missions:load(cache, version)
@@ -927,7 +941,7 @@ function SavefileManager:_load_cache(slot)
 			managers.blackmarket:load(cache, version)
 			managers.upgrades:load(cache, version)
 			managers.player:load(cache, version)
-			managers.skilltree:load(cache, version)
+			managers.skilltree:load_character_slot(cache, version)
 			managers.mission:load_job_values(cache, version)
 			managers.dlc:load(cache, version)
 			managers.challenge:load_character_slot(cache, version)
@@ -975,10 +989,8 @@ function SavefileManager:_set_current_task_type(task_type)
 		end
 
 		local wall_time = TimerManager:wall():time()
-		local ps3_ps4_load_enabled = true
-		local is_ps3_ps4 = _G.IS_PS3 or _G.IS_PS4
-		local use_load_task_type = ps3_ps4_load_enabled and is_ps3_ps4 and task_type == self.LOAD_TASK_TYPE
-		local check_t = ps3_ps4_load_enabled and is_ps3_ps4 and old_task_type == self.LOAD_TASK_TYPE and 0 or 3
+		local use_load_task_type = IS_PS4 and task_type == self.LOAD_TASK_TYPE
+		local check_t = IS_PS4 and old_task_type == self.LOAD_TASK_TYPE and 0 or 3
 
 		if task_type == self.SAVE_TASK_TYPE or task_type == self.REMOVE_TASK_TYPE or use_load_task_type then
 			self._workspace:show()
@@ -1235,12 +1247,12 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 				cache = slot_data.data
 			end
 
-			if cache and _G.IS_PC and cache.version ~= SavefileManager.VERSION then
+			if cache and IS_PC and cache.version ~= SavefileManager.VERSION then
 				cache = nil
 				wrong_version = true
 			end
 
-			if cache and SystemInfo:distribution() == Idstring("STEAM") and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
+			if cache and IS_STEAM and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
 				cat_print("savefile_manager", "[SavefileManager:clbk_result_load] User ID missmatch. cache.user_id:", cache.user_id, ". expected user id:", self._USER_ID_OVERRRIDE or Steam:userid())
 
 				cache = nil
@@ -1277,7 +1289,7 @@ function SavefileManager:clbk_result_load_backup(task_data, result_data)
 					local version = cache.version or 0
 					local version_name = cache.version_name
 
-					if SystemInfo:distribution() == Idstring("STEAM") and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
+					if IS_STEAM and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
 						-- Nothing
 					elseif version <= SavefileManager.VERSION then
 						self._backup_data = {
@@ -1351,6 +1363,7 @@ function SavefileManager:clbk_result_save(task_data, result_data)
 
 			if not success then
 				Application:warn("[SavefileManager:clbk_result_save] Save result status is not OK?, so what is it?", slot_data.status)
+				Application:warn("[SavefileManager:clbk_result_save] INSPECT:", inspect(slot_data))
 			end
 
 			self:_save_done(slot, false, task_data, slot_data, success)
@@ -1383,7 +1396,7 @@ function SavefileManager:clbk_result_space_required(task_data, result_data)
 	end
 
 	if type_name(result_data) == "table" then
-		if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+		if IS_PS4 then
 			self._savegame_hdd_space_required = (2 - table.size(result_data)) * self.RESERVED_BYTES / 1024
 		end
 	else

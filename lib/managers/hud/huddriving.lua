@@ -72,6 +72,7 @@ function HUDDriving:_create_slot_panel()
 
 	for i = 1, 4 do
 		local empty_slot_params = {
+			alpha = 0.5,
 			name = "empty_slot_" .. tostring(i),
 			texture = tweak_data.gui.icons[HUDDriving.EMPTY_SEAT_ICON].texture,
 			texture_rect = tweak_data.gui.icons[HUDDriving.EMPTY_SEAT_ICON].texture_rect
@@ -238,7 +239,7 @@ function HUDDriving:refresh_button_prompts(force)
 end
 
 function HUDDriving:_create_button_prompt(prompt_name, prompt, buttons)
-	if managers.controller:is_xbox_controller_present() and not managers.menu:is_pc_controller() then
+	if managers.controller:is_controller_present() and not managers.menu:is_pc_controller() then
 		buttons = managers.localization:get_default_macros()
 	end
 

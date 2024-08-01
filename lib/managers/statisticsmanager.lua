@@ -362,22 +362,6 @@ function StatisticsManager:_setup(reset)
 				explosion = 0,
 				tied = 0
 			},
-			soviet_nkvd_int_security_captain = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			soviet_nkvd_int_security_captain_b = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
 			german_flamer = {
 				melee = 0,
 				dismembered = 0,
@@ -395,6 +379,22 @@ function StatisticsManager:_setup(reset)
 				tied = 0
 			},
 			german_spotter = {
+				melee = 0,
+				dismembered = 0,
+				count = 0,
+				head_shots = 0,
+				explosion = 0,
+				tied = 0
+			},
+			soviet_nkvd_int_security_captain = {
+				melee = 0,
+				dismembered = 0,
+				count = 0,
+				head_shots = 0,
+				explosion = 0,
+				tied = 0
+			},
+			soviet_nkvd_int_security_captain_b = {
 				melee = 0,
 				dismembered = 0,
 				count = 0,
@@ -729,7 +729,7 @@ function StatisticsManager:stop_session(data)
 		Global.statistics_manager.playing_from_start = nil
 	end
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		self:publish_to_steam(self._global.session, success, completion)
 	end
 end
@@ -739,6 +739,12 @@ function StatisticsManager:started_session_from_beginning()
 end
 
 function StatisticsManager:_increment_misc(name, amount)
+	if type(amount) ~= "number" then
+		Application:error("[StatisticsManager:_increment_misc] Cannot increment '" .. name .. "' without an amount number, Tried to use ->", amount)
+
+		return
+	end
+
 	if not self._global.misc then
 		self._global.misc = {}
 	end
@@ -825,9 +831,11 @@ function StatisticsManager:_increment_challenge_card_stat(start_complete_flag, j
 		self._global.challenge_cards = {}
 	end
 
-	local job_type_name = "raid"
+	local job_type_name = ""
 
-	if job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+	if job_type == OperationsTweakData.JOB_TYPE_RAID then
+		job_type_name = "raid"
+	elseif job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		job_type_name = "operation"
 	end
 
@@ -898,7 +906,7 @@ function StatisticsManager:received_best_of_stat(best_of_stat_count)
 
 	self:publish_top_stats_to_steam()
 
-	if _G.IS_CONSOLE then
+	if IS_CONSOLE then
 		managers.achievment:check_cumulative_achievements()
 	end
 end
@@ -909,6 +917,10 @@ end
 
 function StatisticsManager:trade(data)
 	self:_increment_misc("trade", 1)
+end
+
+function StatisticsManager:collect_dogtags(count)
+	self:_increment_misc("dogtags_collected", count or 1)
 end
 
 function StatisticsManager:mission_stats(name)
@@ -966,21 +978,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	local level_list, job_list, weapon_list, melee_list, grenade_list, enemy_list, character_list = tweak_data.statistics:statistics_table()
 	local stats = self:check_version()
 	self._global.play_time.minutes = math.ceil(self._global.play_time.minutes + session_time_minutes)
-	local current_time = math.floor(self._global.play_time.minutes / 60)
-	local time_found = false
-	local play_times = {
-		1000,
-		500,
-		250,
-		200,
-		150,
-		100,
-		80,
-		40,
-		20,
-		10,
-		0
-	}
 
 	if completion then
 		for weapon_name, weapon_data in pairs(session.shots_by_weapon) do
@@ -1186,6 +1183,10 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		type = "int",
 		value = self._global.misc.character_level_40_count or 0
 	}
+	stats.dogtags_collected = {
+		type = "int",
+		value = session.misc.dogtags_collected or 0
+	}
 	local count_revives = session.revives.player_count + session.revives.npc_count
 	stats.ach_revive_teammates = {
 		type = "int",
@@ -1243,10 +1244,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	end
 
 	local level_id = managers.raid_job:current_job_id()
-
-	if completion then
-		-- Nothing
-	end
 
 	if table.contains(level_list, level_id) then
 		for level_name, level_data in pairs(self._global.sessions.levels) do
@@ -1332,6 +1329,28 @@ function StatisticsManager:publish_level_to_steam()
 	}
 
 	managers.network.account:publish_statistics(stats)
+end
+
+function StatisticsManager:publish_gold_to_steam()
+	if Application:editor() then
+		return
+	end
+
+	local stats = {}
+	local player_gold_amount = managers.gold_economy:current()
+
+	if player_gold_amount then
+		stats.player_gold_amount = {
+			method = "set",
+			type = "int",
+			value = player_gold_amount
+		}
+
+		managers.network.account:publish_statistics(stats)
+		Application:debug("[StatisticsManager:publish_gold_to_steam] Amount:", player_gold_amount)
+	else
+		Application:warn("[StatisticsManager:publish_gold_to_steam] Couldnt get player gold amount", player_gold_amount)
+	end
 end
 
 function StatisticsManager:publish_custom_stat_to_steam(name, value)
@@ -1420,6 +1439,14 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	local character_name = managers.blackmarket:get_preferred_character()
 	local character_index = self:_table_contains(character_list, character_name)
+
+	if character_index then
+		stats.equipped_character = {
+			method = "set",
+			type = "int",
+			value = character_index
+		}
+	end
 
 	managers.network.account:publish_statistics(stats)
 end
@@ -1612,10 +1639,6 @@ function StatisticsManager:killed(data)
 			if data and data.attacker_state == "turret" then
 				self:_add_to_killed_by_turret(data)
 			end
-
-			if data.name == "tank" then
-				managers.achievment:set_script_data("dodge_this_active", true)
-			end
 		end
 	elseif by_melee then
 		local name_id = data.name_id
@@ -1659,7 +1682,7 @@ function StatisticsManager:killed(data)
 		self:_add_to_killed_by_weapon(name_id, data)
 	end
 
-	if _G.IS_CONSOLE then
+	if IS_CONSOLE then
 		managers.achievment:check_cumulative_achievements()
 		managers.achievment:set_achievement_progress_xbox("ach_nazi_hell", managers.statistics._global.killed.total.count / AchievmentManager.NUM_KILLS_FOR_NAZI_HELL_ACHIEVEMENT * 100)
 		managers.achievment:set_achievement_progress_xbox("ach_burn_mf_burn", managers.statistics._global.killed.german_flamer.count / AchievmentManager.NUM_KILLS_FOR_FLAMER_ACHIEVEMENT * 100)
@@ -1767,7 +1790,7 @@ function StatisticsManager:revived(data)
 		})
 	end
 
-	if _G.IS_CONSOLE then
+	if IS_CONSOLE then
 		managers.achievment:check_cumulative_achievements()
 	end
 end
@@ -1837,8 +1860,6 @@ function StatisticsManager:shot_fired(data)
 end
 
 function StatisticsManager:downed(data)
-	managers.achievment:set_script_data("stand_together_fail", true)
-
 	local counter = data.bleed_out and "bleed_out" or data.fatal and "fatal" or data.incapacitated and "incapacitated" or "death"
 	self._global.downed[counter] = self._global.downed[counter] + 1
 

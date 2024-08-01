@@ -1,6 +1,5 @@
 core:module("CoreSequenceManager")
 core:import("CoreEngineAccess")
-core:import("CoreLinkedStackMap")
 core:import("CoreTable")
 core:import("CoreUnit")
 core:import("CoreClass")
@@ -9,7 +8,6 @@ SequenceManager = SequenceManager or class()
 SequenceManager.GLOBAL_CORE_SEQUENCE_PATH = "core/settings/core_sequence_manager"
 SequenceManager.GLOBAL_SEQUENCE_PATH = "settings/sequence_manager"
 SequenceManager.SEQUENCE_FILE_EXTENSION = "sequence_manager"
-SequenceManager.IDS_UNIT = Idstring("unit")
 
 function SequenceManager:init(area_damage_mask, target_world_mask, beings_mask)
 	self._area_damage_mask = area_damage_mask
@@ -20,8 +18,6 @@ function SequenceManager:init(area_damage_mask, target_world_mask, beings_mask)
 	self:register_event_element_class(AnimationGroupElement)
 	self:register_event_element_class(AnimationRedirectElement)
 	self:register_event_element_class(AreaDamageElement)
-	self:register_event_element_class(AlertElement)
-	self:register_event_element_class(AttentionElement)
 	self:register_event_element_class(BodyElement)
 	self:register_event_element_class(ConstraintElement)
 	self:register_event_element_class(DebugElement)
@@ -468,10 +464,6 @@ function SequenceManager:remove_startup_callback(id)
 end
 
 function SequenceManager:update(t, dt)
-	if managers.menu.loading_screen_visible then
-		return
-	end
-
 	self:update_startup_callbacks()
 	self:update_start_time_callbacks(dt)
 	self:update_retry_callbacks()
@@ -711,7 +703,7 @@ end
 function SequenceManager:reload(unit_name, sequences_only)
 	if self:remove(unit_name) then
 		if not sequences_only then
-			CoreEngineAccess._editor_reload(self.IDS_UNIT, unit_name:id())
+			CoreEngineAccess._editor_reload(_G.IDS_UNIT, unit_name:id())
 			Application:reload_material_config(PackageManager:unit_data(unit_name:id(), ""):material_config():id())
 		end
 
@@ -736,7 +728,7 @@ function SequenceManager:reload_all()
 	self:clear()
 
 	for _, unit_element in pairs(old_unit_element_map) do
-		CoreEngineAccess._editor_reload(self.IDS_UNIT, unit_element:get_name():id())
+		CoreEngineAccess._editor_reload(_G.IDS_UNIT, unit_element:get_name():id())
 	end
 
 	self:preload()
@@ -2150,15 +2142,13 @@ function BaseElement:get_xml_origin(node)
 	return "File: \"" .. tostring(file or "N/A") .. "\" (Line: " .. tostring(line or "N/A, remove .xmb file") .. ")\nUnit: \"" .. tostring(self._unit_element and self._unit_element:get_name():t() or "[None]") .. "\"\nElement: " .. self:get_xml_element_string(node)
 end
 
-local is_win32 = _G.IS_PC
-
 function BaseElement:get_model_xml_file()
 	if self._node_file then
 		return self._node_file
 	elseif self._unit_element and DB:has("unit", self._unit_element:get_name():id()) then
 		local model_name = CoreEngineAccess._editor_unit_data(self._unit_element:get_name():id()):model()
 
-		return is_win32 and model_name:s() or model_name
+		return IS_PC and model_name:s() or model_name
 	end
 
 	return nil
@@ -4214,61 +4204,6 @@ function DebugElement:activate_callback(env)
 	local text = self:run_parsed_func(env, self._text)
 
 	cat_debug("sequence", "[SequenceManager] " .. tostring(text))
-end
-
-AlertElement = AlertElement or class(BaseElement)
-AlertElement.NAME = "alert"
-
-function AlertElement:init(node, unit_element)
-	BaseElement.init(self, node, unit_element)
-end
-
-function AlertElement:activate_callback(env)
-	local new_alert = {
-		"aggression",
-		env.pos,
-		1200,
-		managers.groupai:state():get_unit_type_filter("civilians_enemies"),
-		env.dest_unit
-	}
-
-	managers.groupai:state():propagate_alert(new_alert)
-end
-
-AttentionElement = AttentionElement or class(BaseElement)
-AttentionElement.NAME = "attention"
-
-function AttentionElement:init(node, unit_element)
-	BaseElement.init(self, node, unit_element)
-
-	self._preset_name = self:get("preset_name")
-	self._operation = self:get("operation")
-	self._giveaway = self:get("giveaway")
-	self._obj_name = self:get("object_name")
-end
-
-function AttentionElement:activate_callback(env)
-	local operation = self:run_parsed_func(env, self._operation)
-	local preset_name = self:run_parsed_func(env, self._preset_name)
-	local giveaway = self:run_parsed_func(env, self._giveaway)
-	local obj_name = self:run_parsed_func(env, self._obj_name)
-
-	if not env.dest_unit:attention() then
-		_G.debug_pause_unit(env.dest_unit, "AttentionElement:activate_callback: unit missing attention extension", env.dest_unit)
-	elseif operation == "add" then
-		local attention_setting = _G.PlayerMovement._create_attention_setting_from_descriptor(self, _G.tweak_data.attention.settings[preset_name], preset_name)
-		attention_setting.giveaway = giveaway
-
-		env.dest_unit:attention():add_attention(attention_setting)
-
-		if obj_name then
-			env.dest_unit:attention():set_detection_object_name(obj_name)
-		end
-	elseif operation == "remove" then
-		env.dest_unit:attention():remove_attention(preset_name)
-	else
-		_G.debug_pause_unit(env.dest_unit, "AttentionElement:activate_callback: operation not 'add' nor 'remove'", operation, env.dest_unit)
-	end
 end
 
 DecalMeshElement = DecalMeshElement or class(BaseElement)

@@ -211,6 +211,8 @@ end
 
 function RaidGUIControl:mouse_pressed(o, button, x, y)
 	if self:inside(x, y) then
+		self._mouse_pressed = true
+
 		return self:on_mouse_pressed(button, x, y)
 	end
 
@@ -226,7 +228,9 @@ function RaidGUIControl:mouse_clicked(o, button, x, y)
 end
 
 function RaidGUIControl:mouse_released(o, button, x, y)
-	if self:inside(x, y) then
+	if self:inside(x, y) and self._mouse_pressed then
+		self._mouse_pressed = nil
+
 		return self:on_mouse_released(button)
 	end
 
@@ -537,6 +541,8 @@ function RaidGUIControl:_menu_move_to(target_control_name, direction)
 	for _, controls in pairs(component_controls) do
 		for _, control in pairs(controls) do
 			if control._name == target_control_name then
+				Application:debug("[RaidGUIControl:_menu_move_to] - found next ", control._name)
+
 				if control:visible() and control:selectable() and control:enabled() then
 					self:set_selected(false)
 

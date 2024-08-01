@@ -15,6 +15,7 @@ function PlayerFoxhole:enter(state_data, enter_data)
 
 	self._unit:kill_mover()
 	self._unit:character_damage():set_invulnerable(true)
+	managers.hud:set_crosshair_fade(false)
 end
 
 function PlayerFoxhole:exit(state_data, new_state_name)

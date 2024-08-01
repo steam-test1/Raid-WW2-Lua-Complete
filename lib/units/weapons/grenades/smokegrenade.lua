@@ -35,7 +35,7 @@ end
 
 function SmokeGrenade:_play_sound_and_effects()
 	World:effect_manager():spawn({
-		effect = Idstring("effects/vanilla/explosions/exp_smoke_grenade_001"),
+		effect = tweak_data.common_effects.smoke_grenade_bang,
 		position = self._unit:position(),
 		normal = self._unit:rotation():y()
 	})
@@ -43,7 +43,7 @@ function SmokeGrenade:_play_sound_and_effects()
 
 	local parent = self._unit:orientation_object()
 	self._smoke_effect = World:effect_manager():spawn({
-		effect = Idstring("effects/vanilla/weapons/smoke_grenade_smoke"),
+		effect = tweak_data.common_effects.smoke_grenade,
 		parent = parent
 	})
 	self._smoke_timer = 10

@@ -64,7 +64,7 @@ function PrefHud:build_gui()
 	local res = RenderSettings.resolution
 	local safe_rect = 0.05
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if IS_PC then
 		safe_rect = 0
 	end
 
@@ -185,10 +185,8 @@ function PrefHud:update_bars(t, dt)
 	end
 end
 
-local ids_win32 = Idstring("WIN32")
 local ids_left_ctrl = Idstring("left ctrl")
 local ids_f1 = Idstring("f1")
-local is_win32 = SystemInfo:platform() == ids_win32
 
 function PrefHud:update_keys()
 end

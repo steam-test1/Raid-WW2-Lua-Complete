@@ -6,14 +6,47 @@ CarryData.EVENT_IDS = {
 
 function CarryData:init(unit)
 	self._unit = unit
-	self._dye_initiated = false
-	self._has_dye_pack = false
-	self._dye_value_multiplier = 100
 	self._value = 0
+	self._grab_body = self.grab_body
 
 	if self._disable_update then
 		Application:debug("CarryData:init disabled!")
 		self._unit:set_extension_update_enabled(Idstring("carry_data"), false)
+	end
+
+	self:_randomize_glow_effect()
+	managers.occlusion:remove_occlusion(self._unit)
+end
+
+local ids_mat_effect = Idstring("mat_effect")
+local ids_uv0_offset = Idstring("uv0_offset")
+local ids_uv0_speed = Idstring("uv0_speed")
+
+function CarryData:_randomize_glow_effect()
+	local material = self._unit:material(ids_mat_effect)
+
+	if material then
+		local r = math.random()
+
+		material:set_variable(ids_uv0_offset, Vector3(r, r, r))
+
+		r = math.random()
+
+		material:set_variable(ids_uv0_speed, Vector3(r, r, r))
+	end
+end
+
+function CarryData:_set_tweakdata_vis()
+	local show_objects = tweak_data.carry[self._carry_id].show_objects
+
+	if show_objects then
+		for k, v in pairs(show_objects) do
+			local obj = self._unit:get_object(Idstring(k))
+
+			if obj then
+				obj:set_visibility(v)
+			end
+		end
 	end
 end
 
@@ -39,36 +72,6 @@ function CarryData:update(unit, t, dt)
 
 		self:_explode()
 	end
-end
-
-function CarryData:_check_dye_explode()
-	return
-
-	local chance = math.rand(1)
-
-	if chance < 0.25 then
-		self._dye_risk = nil
-
-		self:_dye_exploded()
-
-		return
-	end
-
-	self._dye_risk.next_t = Application:time() + 2 + math.random(3)
-end
-
-function CarryData:sync_dye_exploded()
-	self:_dye_exploded()
-end
-
-function CarryData:_dye_exploded()
-	return
-
-	print("CarryData DYE BOOM")
-
-	self._value = self._value * (1 - self._dye_value_multiplier / 100)
-	self._value = math.round(self._value)
-	self._has_dye_pack = false
 end
 
 function CarryData:check_explodes_on_impact(velocity, air_time)
@@ -119,9 +122,7 @@ function CarryData:can_explode()
 		return false
 	end
 
-	local tweak_info = tweak_data.carry[self._carry_id]
-
-	return tweak_data.carry.types[tweak_info.type].can_explode
+	return tweak_data.carry[self._carry_id].can_explode
 end
 
 function CarryData:start_explosion()
@@ -285,52 +286,17 @@ function CarryData:set_carry_id(carry_id)
 	self._register_steal_SO_clbk_id = "CarryDataregiserSO" .. tostring(self._unit:key())
 
 	managers.enemy:add_delayed_clbk(self._register_steal_SO_clbk_id, callback(self, self, "clbk_register_steal_SO"), 0)
+	self:_set_tweakdata_vis()
+end
+
+function CarryData:carry_tweak_data()
+	return tweak_data.carry[self._carry_id]
 end
 
 function CarryData:clbk_register_steal_SO(carry_id)
 	self._register_steal_SO_clbk_id = nil
 
 	self:_chk_register_steal_SO()
-end
-
-function CarryData:set_dye_initiated(initiated)
-	self._dye_initiated = initiated
-end
-
-function CarryData:dye_initiated()
-	return self._dye_initiated
-end
-
-function CarryData:has_dye_pack()
-	return self._has_dye_pack
-end
-
-function CarryData:dye_value_multiplier()
-	return self._dye_value_multiplier
-end
-
-function CarryData:set_dye_pack_data(dye_initiated, has_dye_pack, dye_value_multiplier)
-	self._dye_initiated = dye_initiated
-	self._has_dye_pack = has_dye_pack
-	self._dye_value_multiplier = dye_value_multiplier
-
-	if not Network:is_server() then
-		return
-	end
-
-	if self._has_dye_pack then
-		self._dye_risk = {
-			next_t = Application:time() + 2 + math.random(3)
-		}
-	end
-end
-
-function CarryData:dye_pack_data()
-	return self._dye_initiated, self._has_dye_pack, self._dye_value_multiplier
-end
-
-function CarryData:_disable_dye_pack()
-	self._dye_risk = false
 end
 
 function CarryData:value()
@@ -350,7 +316,6 @@ function CarryData:set_multiplier(multiplier)
 end
 
 function CarryData:sequence_clbk_secured()
-	self:_disable_dye_pack()
 	self:disarm()
 end
 
@@ -378,8 +343,12 @@ function CarryData:_unregister_steal_SO()
 	self._steal_SO_data = nil
 end
 
+function CarryData:get_grab_body()
+	return self._grab_body and self._unit:body(self._grab_body) or self._unit:body(0)
+end
+
 function CarryData:_chk_register_steal_SO()
-	local body = self._unit:body("hinge_body_1") or self._unit:body(0)
+	local body = self:get_grab_body()
 
 	if not self._has_body_activation_clbk then
 		self._has_body_activation_clbk = {
@@ -605,7 +574,7 @@ function CarryData:on_secure_SO_failed(thief)
 end
 
 function CarryData:link_to(parent_unit)
-	local body = self._unit:body("hinge_body_1") or self._unit:body(0)
+	local body = self:get_grab_body()
 
 	body:set_keyframed()
 
@@ -643,7 +612,7 @@ end
 function CarryData:unlink()
 	self._unit:unlink()
 
-	local body = self._unit:body("hinge_body_1") or self._unit:body(0)
+	local body = self:get_grab_body()
 
 	body:set_dynamic()
 
@@ -735,10 +704,7 @@ end
 function CarryData:save(data)
 	local state = {
 		carry_id = self._carry_id,
-		value = self._value,
-		dye_initiated = self._dye_initiated,
-		has_dye_pack = self._has_dye_pack,
-		dye_value_multiplier = self._dye_value_multiplier
+		value = self._value
 	}
 
 	if self._steal_SO_data and self._steal_SO_data.picked_up then
@@ -753,9 +719,6 @@ function CarryData:load(data)
 	local state = data.CarryData
 	self._carry_id = state.carry_id
 	self._value = state.value
-	self._dye_initiated = state.dye_initiated
-	self._has_dye_pack = state.has_dye_pack
-	self._dye_value_multiplier = state.dye_value_multiplier
 
 	if data.zip_line_unit_id then
 		local worlddefinition = managers.worldcollection and managers.worldcollection:get_worlddefinition_by_unit_id(data.zip_line_unit_id) or managers.worlddefinition

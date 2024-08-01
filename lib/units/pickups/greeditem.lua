@@ -10,21 +10,15 @@ function GreedItem:set_value(value)
 end
 
 function GreedItem:value()
-	return self._value
+	return self._value * managers.player:upgrade_value("player", "greed_loot_bonus", 1)
+end
+
+function GreedItem:tweak_id()
+	return self._tweak_table
 end
 
 function GreedItem:value_line_id()
-	local v = self:value()
-
-	if GreedTweakData.HIGH_END_ITEM_VALUE <= v then
-		return "large"
-	elseif GreedTweakData.MID_END_ITEM_VALUE <= v then
-		return "medium"
-	elseif GreedTweakData.LOW_END_ITEM_VALUE <= v then
-		return "small"
-	end
-
-	return "none"
+	return tweak_data.greed:value_line_id(self:value())
 end
 
 function GreedItem:on_load_complete()

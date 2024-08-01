@@ -11,3 +11,7 @@ end
 
 function WorldCameraState:at_exit()
 end
+
+function WorldCameraState._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_LOADING
+end

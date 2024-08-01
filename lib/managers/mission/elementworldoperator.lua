@@ -33,8 +33,6 @@ function ElementWorldOperator:_apply_operator(mission_script_element)
 end
 
 function ElementWorldOperator:on_executed(instigator)
-	Application:debug("ElementWorldOperator:on_executed", self._editor_name)
-
 	if not self._values.enabled then
 		return
 	end

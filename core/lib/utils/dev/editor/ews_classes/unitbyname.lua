@@ -4,7 +4,8 @@ function UnitByName:init(name, unit_filter_function, ...)
 	self._dialog_name = self._dialog_name or name or "UnitByName"
 	self._unit_filter_function = unit_filter_function
 
-	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(480, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	self._dialog:set_min_size(Vector3(480, 450, 0))
 	self:create_panel("VERTICAL")
 
 	local panel = self._panel
@@ -27,20 +28,20 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self._list:clear_all()
 	self._list:append_column("Name")
-	list_sizer:add(self._list, 1, 0, "EXPAND")
+	list_sizer:add(self._list, 1, 2, "EXPAND,BOTTOM")
 	horizontal_ctrlr_sizer:add(list_sizer, 3, 0, "EXPAND")
 
 	local list_ctrlrs = EWS:BoxSizer("VERTICAL")
 	local filter_type_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter By Type")
 
-	list_ctrlrs:add(filter_type_sizer, 0, 0, "EXPAND")
+	list_ctrlrs:add(filter_type_sizer, 0, 2, "EXPAND,BOTTOM")
 
 	self._filter_buttons = {}
 
 	local function add_filter_button(id, name)
 		self._filter_buttons[id] = EWS:RadioButton(panel, name, "filter_type", "")
 
-		filter_type_sizer:add(self._filter_buttons[id], 0, 0, "")
+		filter_type_sizer:add(self._filter_buttons[id], 0, 2, "LEFT,RIGHT")
 	end
 
 	add_filter_button("by_name_id", "Name ID")
@@ -51,6 +52,26 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self._layer_cbs = {}
 	local layers_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "List Layers")
+	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
+	local all_btn = EWS:Button(panel, "All", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
+	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
+	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local none_btn = EWS:Button(panel, "None", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
+	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
+	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local invert_btn = EWS:Button(panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
+	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
+	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+	layers_sizer:add(layer_buttons_sizer, 0, 1, "TOP,BOTTOM")
+
 	local layers = managers.editor:layers()
 	local names_layers = {}
 
@@ -72,31 +93,12 @@ function UnitByName:init(name, unit_filter_function, ...)
 			name = name
 		})
 		cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-		layers_sizer:add(cb, 0, 2, "EXPAND,TOP")
+		layers_sizer:add(cb, 0, 2, "EXPAND,TOP,LEFT,RIGHT")
 	end
 
-	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
-	local all_btn = EWS:Button(panel, "All", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
-	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
-	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local none_btn = EWS:Button(panel, "None", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
-	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
-	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local invert_btn = EWS:Button(panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
-	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
-	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
 	list_ctrlrs:add(layers_sizer, 0, 2, "EXPAND,TOP")
 	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 5, "EXPAND,LEFT")
-	panel_sizer:add(horizontal_ctrlr_sizer, 1, 0, "EXPAND")
+	panel_sizer:add(horizontal_ctrlr_sizer, 1, 5, "EXPAND,ALL")
 	self._list:connect("EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "_on_mark_unit"), nil)
 	self._list:connect("EVT_COMMAND_LIST_ITEM_ACTIVATED", callback(self, self, "_on_select_unit"), nil)
 	self._list:connect("EVT_CHAR", callback(self, self, "key_delete"), "")
@@ -106,7 +108,7 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self:_build_buttons(panel, button_sizer)
 	panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:fill_unit_list()
 	self._dialog:set_visible(true)
 end
@@ -360,6 +362,10 @@ function UnitByName:fill_unit_list()
 end
 
 function UnitByName:_get_filter_string(unit)
+	if not alive(unit) then
+		return 0
+	end
+
 	local filter = self:_get_filter_type()
 
 	if filter == "by_unit_id" then

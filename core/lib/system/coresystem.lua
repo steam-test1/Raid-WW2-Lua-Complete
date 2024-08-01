@@ -2,6 +2,7 @@ require("core/lib/system/CorePatchLua")
 require("core/lib/system/CorePatchEngine")
 require("core/lib/system/CoreModule")
 require("core/lib/system/CoreModules")
+require("core/lib/system/CoreGlobals")
 core:import("CoreExtendLua")
 core:import("CoreEngineAccess")
 

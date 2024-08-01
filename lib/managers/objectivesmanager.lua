@@ -58,6 +58,11 @@ function ObjectivesManager:_get_difficulty_amount_from_objective_subobjective(da
 	return difficulty_amount_total
 end
 
+function ObjectivesManager:generate_dynamic_objective(data)
+	self:_parse_objective(data)
+	managers.objectives:remove_and_activate_objective(data.id, nil, {}, 1)
+end
+
 function ObjectivesManager:_parse_objective(data)
 	local id = data.id
 	local text = managers.localization:text(data.text)
@@ -97,7 +102,8 @@ function ObjectivesManager:_parse_objective(data)
 		self._objectives[id].sub_objectives[sub.id] = {
 			id = sub.id,
 			text = sub_text,
-			description = sub_description
+			description = sub_description,
+			start_completed = sub.start_completed
 		}
 
 		if sub.difficulty_amount then
@@ -146,19 +152,23 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 	end
 
 	if managers.user:get_setting("objective_reminder") then
-		title_id = title_id or "hud_objective_reminder"
 		local objective = self._objectives[id]
+
+		if not objective then
+			return
+		end
+
+		title_id = title_id or "hud_objective_reminder"
 		local title_message = managers.localization:text(title_id)
 		local text = objective.text
 
+		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
 			time = 4,
 			text = text,
 			title = title_message
 		})
 	end
-
-	managers.hud:remind_objective(id)
 end
 
 function ObjectivesManager:_remind_sub_objective(id, title_id)
@@ -206,11 +216,13 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	local objective = self._objectives[id]
 
-	for _, sub_objective in pairs(objective.sub_objectives) do
+	for k, sub_objective in pairs(objective.sub_objectives) do
 		sub_objective.completed = false
 
-		if sub_objective.amount and sub_objective.amount == sub_objective.current_amount then
+		if sub_objective.amount and sub_objective.amount == sub_objective.current_amount or sub_objective.start_completed then
 			self:check_and_set_subobjective_finished(objective, sub_objective)
+
+			sub_objective.start_completed = true
 		end
 	end
 
@@ -230,7 +242,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if data and data.delay_presentation then
 		self._delayed_presentation = {
-			t = 0.6,
+			t = 1,
 			activate_params = activate_params
 		}
 	else
@@ -241,19 +253,11 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	local text = objective.text
 
 	if not skip_toast then
-		if self._delayed_presentation then
-			self._delayed_presentation.mid_text_params = {
-				time = 4,
-				text = text,
-				title = title_message
-			}
-		else
-			managers.hud:present_mid_text({
-				time = 4,
-				text = text,
-				title = title_message
-			})
-		end
+		managers.hud:present_mid_text({
+			time = 4.5,
+			text = text,
+			title = title_message
+		})
 	end
 
 	self._active_objectives[id] = objective
@@ -447,6 +451,12 @@ end
 function ObjectivesManager:set_objective_current_amount(objective_id, current_amount)
 	local objective = self._objectives[objective_id]
 
+	if not objective then
+		Application:error("[ObjectivesManager:set_objective_current_amount] Tried to set an amount of an objective that doesnt exist!", objective_id)
+
+		return
+	end
+
 	if objective.amount then
 		objective.current_amount = current_amount
 	end
@@ -454,6 +464,13 @@ end
 
 function ObjectivesManager:set_sub_objective_amount(objective_id, sub_id, amount)
 	local objective = self._objectives[objective_id]
+
+	if not objective then
+		Application:error("[ObjectivesManager:set_sub_objective_amount] Tried to set an amount of an objective that doesnt exist!", objective_id)
+
+		return
+	end
+
 	local sub_objective = objective.sub_objectives[sub_id]
 
 	if not sub_objective then
@@ -473,6 +490,13 @@ end
 
 function ObjectivesManager:set_sub_objective_current_amount(objective_id, sub_id, current_amount)
 	local objective = self._objectives[objective_id]
+
+	if not objective then
+		Application:error("[ObjectivesManager:set_sub_objective_current_amount] Tried to set an amount of an objective that doesnt exist!", objective_id)
+
+		return
+	end
+
 	local sub_objective = objective.sub_objectives[sub_id]
 
 	if not sub_objective then
@@ -553,72 +577,6 @@ function ObjectivesManager:sub_objectives_by_name(id)
 	return t
 end
 
-function ObjectivesManager:_get_xp(level_id, id)
-	if not self._objectives_level_id[level_id] then
-		Application:error("Had no xp for level", level_id)
-
-		return 0
-	end
-
-	if not self._objectives_level_id[level_id][id] then
-		Application:error("Had no xp for objective", id)
-
-		return 0
-	end
-
-	local xp_weight = self:_get_real_xp_weight(level_id, self._objectives_level_id[level_id][id].xp_weight)
-
-	return math.round(xp_weight * tweak_data:get_value("experience_manager", "total_level_objectives"))
-end
-
-function ObjectivesManager:_get_real_xp_weight(level_id, xp_weight)
-	local total_xp_weight = self:_total_xp_weight(level_id)
-
-	return xp_weight / total_xp_weight
-end
-
-function ObjectivesManager:_total_xp_weight(level_id)
-	if not self._objectives_level_id[level_id] then
-		return 0
-	end
-
-	local xp_weight = 0
-
-	for obj, data in pairs(self._objectives_level_id[level_id]) do
-		xp_weight = xp_weight + data.xp_weight
-	end
-
-	return xp_weight
-end
-
-function ObjectivesManager:_check_xp_weight(level_id)
-	local total_xp = 0
-	local total_xp_weight = self:_total_xp_weight(level_id)
-
-	for obj, data in pairs(self._objectives_level_id[level_id]) do
-		local xp = math.round(data.xp_weight / total_xp_weight * tweak_data:get_value("experience_manager", "total_level_objectives"))
-		total_xp = total_xp + xp
-
-		print(obj, xp)
-	end
-
-	print("total", total_xp)
-end
-
-function ObjectivesManager:total_objectives(level_id)
-	if not self._objectives_level_id[level_id] then
-		return 0
-	end
-
-	local i = 0
-
-	for _, _ in pairs(self._objectives_level_id[level_id]) do
-		i = i + 1
-	end
-
-	return i
-end
-
 function ObjectivesManager:save(data)
 	local state = {}
 	local objective_map = {}
@@ -677,6 +635,13 @@ function ObjectivesManager:load(data)
 
 		for name, save_data in pairs(state.objective_map) do
 			local objective_data = self._objectives[name]
+
+			if save_data and not objective_data then
+				Application:error("[ObjectivesManager:load]", name, save_data.id)
+
+				objective_data = save_data
+			end
+
 			objective_data.world_id = save_data.world_id
 			objective_data.current_amount = save_data.current_amount
 			objective_data.amount = save_data.amount

@@ -865,7 +865,7 @@ function MenuManager:show_internet_connection_required()
 end
 
 function MenuManager:show_err_no_chat_parental_control()
-	if _G.IS_PS4 then
+	if IS_PS4 then
 		PSN:show_chat_parental_control()
 	else
 		local dialog_data = {
@@ -1098,22 +1098,6 @@ function MenuManager:show_game_is_installing()
 	local dialog_data = {
 		title = string.upper(managers.localization:text("dialog_information_title")),
 		text = managers.localization:text("dialog_game_is_installing"),
-		no_upper = true
-	}
-	local ok_button = {
-		text = managers.localization:text("dialog_ok")
-	}
-	dialog_data.button_list = {
-		ok_button
-	}
-
-	managers.system_menu:show(dialog_data)
-end
-
-function MenuManager:show_game_is_installing_menu()
-	local dialog_data = {
-		title = string.upper(managers.localization:text("dialog_information_title")),
-		text = managers.localization:text("dialog_game_is_installing_menu"),
 		no_upper = true
 	}
 	local ok_button = {
@@ -1609,26 +1593,6 @@ function MenuManager:show_requires_big_picture()
 	dialog_data.button_list = {
 		ok_button
 	}
-
-	managers.system_menu:show(dialog_data)
-end
-
-function MenuManager:show_buying_tradable_item_dialog()
-	local dialog_data = {
-		title = managers.localization:text("dialog_tradable_item_store_title"),
-		text = managers.localization:text("dialog_checking_out"),
-		id = "buy_tradable_item"
-	}
-	local cancel_button = {
-		text = managers.localization:text("dialog_cancel"),
-		callback_func = function ()
-			MenuCallbackHandler:on_steam_transaction_over(true)
-		end
-	}
-	dialog_data.button_list = {
-		cancel_button
-	}
-	dialog_data.indicator = true
 
 	managers.system_menu:show(dialog_data)
 end
@@ -2145,7 +2109,7 @@ end
 function MenuManager:show_storage_removed_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_storage_removed_warning_X360"),
+		text = managers.localization:text("dialog_storage_removed_warning"),
 		force = true
 	}
 	local ok_button = {
@@ -2626,6 +2590,22 @@ function MenuManager:show_invite_rejected_message()
 	}
 	dialog_data.button_list = {
 		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function MenuManager:show_loyalty_reward_message(text_id, amount)
+	local dialog_data = {
+		title = managers.localization:text("dialog_loyalty_reward_title"),
+		text = managers.localization:text(text_id, {
+			AMOUNT = amount
+		}),
+		button_list = {
+			{
+				text = managers.localization:text("dialog_ok")
+			}
+		}
 	}
 
 	managers.system_menu:show(dialog_data)

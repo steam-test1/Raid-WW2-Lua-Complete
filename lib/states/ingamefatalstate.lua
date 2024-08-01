@@ -12,6 +12,7 @@ function IngameFatalState.on_local_player_dead()
 
 	player:network():send("sync_player_movement_state", "dead", player:character_damage():down_time(), player:id())
 	managers.groupai:state():on_player_criminal_death(peer_id)
+	managers.warcry:deactivate_warcry(true)
 end
 
 function IngameFatalState:update(t, dt)

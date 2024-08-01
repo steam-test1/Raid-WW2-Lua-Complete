@@ -3,6 +3,16 @@ WeaponSkillsManager.VERSION = 94
 WeaponSkillsManager.SCOPE_WEAPON_PART_TYPE = "scope"
 WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE = "activate"
 WeaponSkillsManager.UPGRADE_ACTION_DEACTIVATE = "deactivate"
+WeaponSkillsManager.UPGRADE_MAP = {
+	[WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE] = "damage_multiplier",
+	[WeaponSkillsTweakData.SKILL_DECREASE_RECOIL] = "recoil_reduction",
+	[WeaponSkillsTweakData.SKILL_FASTER_RELOAD] = "reload_speed_multiplier",
+	[WeaponSkillsTweakData.SKILL_FASTER_ADS] = "enter_steelsight_speed_multiplier",
+	[WeaponSkillsTweakData.SKILL_FASTER_ROF] = "firerate_multiplier",
+	[WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD] = "spread_multiplier",
+	[WeaponSkillsTweakData.SKILL_WIDER_SPREAD] = "spread_multiplier",
+	[WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE] = "magazine_upgrade"
+}
 
 function WeaponSkillsManager:init()
 	self:_setup()
@@ -188,6 +198,67 @@ function WeaponSkillsManager:_goldm1_convert_weapon_skill_challenges()
 	end
 end
 
+function WeaponSkillsManager:_load_check_weapon_parts_valid(weapon_id)
+	local something_changed = 0
+	local wpn_saved_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
+
+	if wpn_saved_skill_tree then
+		local wpn_tweak_skill_tree = tweak_data.weapon_skills.skill_trees[weapon_id]
+
+		for tier_index, tier_data in ipairs(wpn_saved_skill_tree) do
+			for level_index, level_data in ipairs(tier_data) do
+				local wpn_saved_skill_data = wpn_saved_skill_tree[tier_index] and wpn_saved_skill_tree[tier_index][level_index] and wpn_saved_skill_tree[tier_index][level_index][1] or nil
+
+				if wpn_saved_skill_data then
+					local wpn_tweak_skill_data = wpn_tweak_skill_tree[tier_index] and wpn_tweak_skill_tree[tier_index][level_index] and wpn_tweak_skill_tree[tier_index][level_index][1] or nil
+
+					if (not wpn_saved_skill_data.weapon_parts or #wpn_saved_skill_data.weapon_parts == 0) and wpn_tweak_skill_data and wpn_tweak_skill_data.weapon_parts then
+						Application:debug("[WeaponSkillsManager:_load_check_weapon_parts_valid] " .. tostring(weapon_id) .. " weapon parts were missing, resetting!")
+
+						wpn_saved_skill_data.weapon_parts = deep_clone(wpn_tweak_skill_data.weapon_parts)
+						something_changed = 1
+					elseif wpn_saved_skill_data.weapon_parts and (not wpn_tweak_skill_data.weapon_parts or #wpn_tweak_skill_data.weapon_parts == 0) then
+						Application:debug("[WeaponSkillsManager:_load_check_weapon_parts_valid] " .. tostring(weapon_id) .. " tweakdata weapon parts were empty, deleting from save!")
+
+						wpn_saved_skill_data.weapon_parts = nil
+						something_changed = 2
+					elseif wpn_saved_skill_data.weapon_parts and #wpn_saved_skill_data.weapon_parts > 0 and wpn_tweak_skill_data.weapon_parts and #wpn_tweak_skill_data.weapon_parts > 0 then
+						if #wpn_saved_skill_data.weapon_parts ~= #wpn_tweak_skill_data.weapon_parts then
+							Application:debug("[WeaponSkillsManager:_load_check_weapon_parts_valid] " .. tostring(weapon_id) .. " number of weapon parts were different, resetting!")
+
+							wpn_saved_skill_data.weapon_parts = deep_clone(wpn_tweak_skill_data.weapon_parts)
+							something_changed = 3
+						else
+							for i, key in ipairs(wpn_saved_skill_data.weapon_parts) do
+								if wpn_tweak_skill_data.weapon_parts[i] ~= key then
+									Application:debug("[WeaponSkillsManager:_load_check_weapon_parts_valid] " .. tostring(weapon_id) .. " weapon part keys were different, resetting!")
+
+									wpn_saved_skill_data.weapon_parts = deep_clone(wpn_tweak_skill_data.weapon_parts)
+									something_changed = 4
+
+									break
+								end
+							end
+						end
+					end
+
+					wpn_saved_skill_data.value = wpn_tweak_skill_data.value
+					wpn_saved_skill_data.cost = wpn_tweak_skill_data.cost
+					wpn_saved_skill_data.challenge_tasks = wpn_tweak_skill_data.challenge_tasks
+				else
+					Application:warn("[WeaponSkillsManager:_load_check_weapon_parts_valid] " .. tostring(weapon_id) .. " wpn_saved_skill_data was falsy, this might not catch new parts!")
+				end
+			end
+		end
+	end
+
+	if something_changed > 0 then
+		Application:debug("[WeaponSkillsManager:_load_check_weapon_parts_valid] " .. tostring(weapon_id) .. " changed! CODE:", something_changed)
+	end
+
+	return something_changed > 0
+end
+
 function WeaponSkillsManager:activate_current_challenges_for_weapon(weapon_id)
 	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
@@ -276,8 +347,6 @@ function WeaponSkillsManager:update_weapon_challenges(weapon_id)
 						end
 
 						if challenge_from_manager._tasks[1]._target <= challenge_from_manager._tasks[1]._count then
-							Application:trace("[WeaponSkillsManager:update_weapon_challenges] Target for new Weapon challenge already met! Challenge_id: " .. skill[1].challenge_id .. ", Count is: " .. challenge_from_manager._tasks[1]._count .. " ,  New target is: " .. challenge_from_manager._tasks[1]._target .. ", Forcing a challenge completetion")
-
 							challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
 
 							challenge_from_manager:force_complete()
@@ -359,6 +428,8 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 		end
 	end
 
+	Application:debug("[WeaponSkillsManager:check_weapon_challenges_for_changes]", weapon_id, "changed", challenges_changed)
+
 	return challenges_changed
 end
 
@@ -396,7 +467,7 @@ function WeaponSkillsManager:on_weapon_challenge_completed(weapon_id, tier_index
 	local weapon_selection_index = tweak_data.weapon[weapon_id].use_data.selection_index
 	local weapon_category = managers.weapon_inventory:get_weapon_category_name_by_bm_category_id(weapon_selection_index)
 
-	managers.hud._sound_source:post_event("weapon_challenge_complete")
+	managers.hud:post_event("weapon_challenge_complete")
 	managers.breadcrumb:add_breadcrumb(BreadcrumbManager.CATEGORY_WEAPON_UPGRADE, {
 		weapon_category,
 		weapon_id,
@@ -406,29 +477,51 @@ function WeaponSkillsManager:on_weapon_challenge_completed(weapon_id, tier_index
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
-function WeaponSkillsManager:has_new_weapon_upgrades(params)
-	if not params or not params.weapon_category or params.weapon_category == WeaponInventoryManager.CATEGORY_NAME_PRIMARY then
-		local owned_primary_weapons = managers.weapon_inventory:get_owned_weapons(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID)
+function WeaponSkillsManager:has_weapon_breadcrumbs(params)
+	local wanted_category = params and params.weapon_category
+	local wanted_weapon = params and params.weapon_id
+	local primary_category = WeaponInventoryManager.CATEGORY_NAME_PRIMARY
 
-		for index, weapon in pairs(owned_primary_weapons) do
-			if weapon.unlocked and managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_UPGRADE, {
-				WeaponInventoryManager.CATEGORY_NAME_PRIMARY,
-				weapon.weapon_id
-			}) and (not params or not params.weapon_id or params.weapon_id == weapon.weapon_id) then
-				return true
+	if not wanted_category or wanted_category == primary_category then
+		local owned_primaries = managers.weapon_inventory:get_owned_weapons(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID)
+
+		for index, weapon in pairs(owned_primaries) do
+			local check_weapon = not wanted_weapon or wanted_weapon == weapon.weapon_id
+
+			if weapon.unlocked and check_weapon then
+				local has_breadcrumbs = managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON, {
+					weapon.weapon_id
+				}) or managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_UPGRADE, {
+					primary_category,
+					weapon.weapon_id
+				})
+
+				if has_breadcrumbs then
+					return true
+				end
 			end
 		end
 	end
 
-	if not params or not params.weapon_category or params.weapon_category == WeaponInventoryManager.CATEGORY_NAME_SECONDARY then
-		local owned_secondary_weapons = managers.weapon_inventory:get_owned_weapons(WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID)
+	local secondary_category = WeaponInventoryManager.CATEGORY_NAME_SECONDARY
 
-		for index, weapon in pairs(owned_secondary_weapons) do
-			if weapon.unlocked and managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_UPGRADE, {
-				WeaponInventoryManager.CATEGORY_NAME_SECONDARY,
-				weapon.weapon_id
-			}) and (not params or not params.weapon_id or params.weapon_id == weapon.weapon_id) then
-				return true
+	if not wanted_category or wanted_category == secondary_category then
+		local owned_secondaries = managers.weapon_inventory:get_owned_weapons(WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID)
+
+		for index, weapon in pairs(owned_secondaries) do
+			local check_weapon = not wanted_weapon or wanted_weapon == weapon.weapon_id
+
+			if weapon.unlocked and check_weapon then
+				local has_breadcrumbs = managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON, {
+					weapon.weapon_id
+				}) or managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_UPGRADE, {
+					secondary_category,
+					weapon.weapon_id
+				})
+
+				if has_breadcrumbs then
+					return true
+				end
 			end
 		end
 	end
@@ -645,8 +738,8 @@ end
 
 function WeaponSkillsManager:update_weapon_skill(raid_stat_name, data, weapon_category_id, action)
 	local upgrade_name = self:get_upgrade_name_from_raid_stat_name(raid_stat_name)
-	local prefex_category = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and "primary_weapon" or "secondary_weapon"
-	local upgrade_full_name = prefex_category .. "_" .. upgrade_name .. "_" .. (data.value or "")
+	local weapon_category_string = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and "primary_weapon" or "secondary_weapon"
+	local upgrade_full_name = weapon_category_string .. "_" .. upgrade_name .. "_" .. (data.value or "")
 
 	if action == WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE then
 		local upgrade_level = self:get_weapon_skills_current_upgrade_level(raid_stat_name, weapon_category_id)
@@ -678,27 +771,7 @@ function WeaponSkillsManager:update_weapon_skill_by_upgrade_name(upgrade_categor
 end
 
 function WeaponSkillsManager:get_upgrade_name_from_raid_stat_name(raid_stat_name)
-	local upgrade_name = ""
-
-	if raid_stat_name == WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE then
-		upgrade_name = "damage_multiplier"
-	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_DECREASE_RECOIL then
-		upgrade_name = "recoil_reduction"
-	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_FASTER_RELOAD then
-		upgrade_name = "reload_speed_multiplier"
-	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_FASTER_ADS then
-		upgrade_name = "enter_steelsight_speed_multiplier"
-	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_FASTER_ROF then
-		upgrade_name = "firerate_multiplier"
-	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD then
-		upgrade_name = "spread_multiplier"
-	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_WIDER_SPREAD then
-		upgrade_name = "spread_multiplier"
-	elseif raid_stat_name == WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE then
-		upgrade_name = "magazine_upgrade"
-	end
-
-	return upgrade_name
+	return WeaponSkillsManager.UPGRADE_MAP[raid_stat_name] or ""
 end
 
 function WeaponSkillsManager:get_character_level_needed_for_tier(weapon_id, tier)
@@ -800,7 +873,6 @@ function WeaponSkillsManager:deactivate_all_upgrades_for_bm_weapon_category_id(w
 			local upgrade_full_name = weapon_category_name .. "_" .. upgrade_name .. "_" .. current_upgrade_level
 
 			managers.upgrades:unaquire(upgrade_full_name, UpgradesManager.AQUIRE_STRINGS[6])
-			Application:trace("WeaponSkillsManager:deactivate_all_upgrades_for_bm_weapon_category_id] unaquire upgrade_full_name ")
 		end
 	end
 end
@@ -846,7 +918,6 @@ function WeaponSkillsManager:save(data)
 end
 
 function WeaponSkillsManager:load(data, version)
-	Application:trace("[WeaponSkillsManager:load] data.WeaponSkillsManager ", inspect(data.WeaponSkillsManager.weapon_skills_skill_tree.thompson))
 	self:_setup(true)
 
 	local state = data.WeaponSkillsManager
@@ -856,8 +927,6 @@ function WeaponSkillsManager:load(data, version)
 	end
 
 	if not state.version or state.version and state.version ~= WeaponSkillsManager.VERSION then
-		Application:trace("[WeaponSkillsManager:load] The save data and manager version are mismatched! Migrating...")
-
 		Global.weapon_skills_manager.version = WeaponSkillsManager.VERSION
 		Global.weapon_skills_manager.available_weapon_skill_points = state.gained_weapon_skill_points or 0
 		Global.weapon_skills_manager.gained_weapon_skill_points = state.gained_weapon_skill_points or 0
@@ -872,7 +941,19 @@ function WeaponSkillsManager:load(data, version)
 		local new_weapon_added = false
 
 		for weapon_id, weapon_skill_tree_data in pairs(tweak_data.weapon_skills.skill_trees) do
-			if not Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
+			if Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
+				local please_resave = false
+
+				if managers.weapon_skills:check_weapon_challenges_for_changes(weapon_id) then
+					managers.weapon_skills:update_weapon_challenges(weapon_id)
+				end
+
+				please_resave = self:_load_check_weapon_parts_valid(weapon_id) or please_resave
+
+				if please_resave then
+					managers.savefile:set_resave_required()
+				end
+			else
 				Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] = deep_clone(weapon_skill_tree_data)
 				local skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 
@@ -918,9 +999,6 @@ function WeaponSkillsManager:load(data, version)
 				end
 
 				new_weapon_added = true
-			elseif managers.weapon_skills:check_weapon_challenges_for_changes(weapon_id) then
-				Application:trace("[WeaponSkillsManager:load] Weapon challenges for " .. weapon_id .. " are mismatched, Updating...")
-				managers.weapon_skills:update_weapon_challenges(weapon_id)
 			end
 		end
 

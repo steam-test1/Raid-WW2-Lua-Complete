@@ -12,15 +12,14 @@ ChallengeCardsManager.CARD_STATUS_NORMAL = "normal"
 ChallengeCardsManager.CARD_STATUS_ACTIVE = "active"
 ChallengeCardsManager.CARD_STATUS_FAILED = "failed"
 ChallengeCardsManager.CARD_STATUS_SUCCESS = "success"
+ChallengeCardsManager.INV_CAT_CHALCARD = "challenge_card"
 ChallengeCardsManager.CARD_PASS_KEY_NAME = "empty"
 ChallengeCardsManager.CARD_PASS_TEXTURE = "ui/main_menu/textures/cards_atlas"
 ChallengeCardsManager.READYUP_INVENTORY_LOAD_FREQUENCY = 10
 
 function ChallengeCardsManager:init()
 	if not Global.challenge_cards_manager then
-		Global.challenge_cards_manager = {
-			owned_challenge_cards = {}
-		}
+		Global.challenge_cards_manager = {}
 	end
 
 	self._active_card = nil
@@ -100,7 +99,7 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 				return
 			end
 
-			if cached_card_data.key_name == steam_card_data.key_name and #cached_card_data.steam_instance_ids ~= #steam_card_data.steam_instance_ids then
+			if cached_card_data.key_name == steam_card_data.key_name and cached_card_data.stack_amount ~= steam_card_data.stack_amount then
 				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Amount) in cached and fresh list index ", card_index)
 				self:set_readyup_card_cache(params.list)
 				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
@@ -228,6 +227,8 @@ function ChallengeCardsManager:set_active_card(card)
 	end
 
 	if Network:is_server() then
+		Application:trace("[ChallengeCardsManager:set_active_card] server only", inspect(card))
+
 		local card_key = card.key_name
 		local locked = card.locked_suggestion or true
 		local card_status = card.status or ChallengeCardsManager.CARD_STATUS_ACTIVE
@@ -288,14 +289,14 @@ function ChallengeCardsManager:mark_active_card_as_spent()
 end
 
 function ChallengeCardsManager:select_challenge_card(peer_id)
-	if not peer_id then
-		self._active_card = nil
-	else
+	if peer_id then
 		self._active_card = self:get_suggested_cards()[peer_id]
 
 		if self._active_card then
 			self._active_card.status = ChallengeCardsManager.CARD_STATUS_NORMAL
 		end
+	else
+		self._active_card = nil
 	end
 
 	if Network:is_server() then
@@ -315,6 +316,8 @@ function ChallengeCardsManager:sync_activate_challenge_card()
 end
 
 function ChallengeCardsManager:_activate_challenge_card()
+	Application:debug("[ChallengeCardsManager:_activate_challenge_card]")
+
 	managers.challenge_cards._suggested_cards = nil
 	managers.challenge_cards._temp_steam_loot = nil
 
@@ -344,7 +347,11 @@ function ChallengeCardsManager:_activate_challenge_card()
 end
 
 function ChallengeCardsManager:consume_steam_challenge_card(steam_instance_id)
+	Application:trace("[ChallengeCardsManager:consume_steam_challenge_card] steam_instance_id ", steam_instance_id)
+
 	if not steam_instance_id or steam_instance_id == 0 then
+		Application:error("[ChallengeCardsManager:consume_steam_challenge_card] COULD NOT CONSUME steam_instance_id ", steam_instance_id)
+
 		return
 	end
 
@@ -404,6 +411,8 @@ function ChallengeCardsManager:deactivate_active_effects()
 end
 
 function ChallengeCardsManager:suggest_challenge_card(challenge_card_key, steam_instance_id)
+	Application:trace("[ChallengeCardsManager:suggest_challenge_card] challenge_card_key steam_instance_id ", challenge_card_key, steam_instance_id)
+
 	local local_peer = managers.network:session():local_peer()
 	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
 	card.steam_instance_id = steam_instance_id
@@ -414,6 +423,8 @@ function ChallengeCardsManager:suggest_challenge_card(challenge_card_key, steam_
 end
 
 function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key, peer_id, steam_instance_id)
+	Application:trace("[ChallengeCardsManager:sync_suggested_card_from_peer] challenge_card_key, peer_id, steam_instance_id ", challenge_card_key, peer_id, steam_instance_id)
+
 	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
 	card.steam_instance_id = steam_instance_id
 	self._suggested_cards[peer_id] = card
@@ -618,14 +629,20 @@ function ChallengeCardsManager:get_loot_drop_group(card_name)
 end
 
 function ChallengeCardsManager:get_cards_stacking_texture(card_data)
-	if card_data and card_data.steam_instance_ids and #card_data.steam_instance_ids > 1 and not card_data.card_back then
-		if card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER and #card_data.steam_instance_ids == 2 then
+	if card_data and card_data.steam_instances and not card_data.card_back then
+		local stack_amount = 0
+
+		for steam_inst_id, steam_data in pairs(card_data.steam_instances) do
+			stack_amount = stack_amount + (steam_data.stack_amount or 1)
+		end
+
+		if card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER and stack_amount == 2 then
 			return tweak_data.challenge_cards.challenge_card_stackable_booster_2_texture_path, tweak_data.challenge_cards.challenge_card_stackable_booster_2_texture_rect
-		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER and #card_data.steam_instance_ids > 2 then
+		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER and stack_amount > 2 then
 			return tweak_data.challenge_cards.challenge_card_stackable_booster_3_texture_path, tweak_data.challenge_cards.challenge_card_stackable_booster_3_texture_rect
-		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD and #card_data.steam_instance_ids == 2 then
+		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD and stack_amount == 2 then
 			return tweak_data.challenge_cards.challenge_card_stackable_2_texture_path, tweak_data.challenge_cards.challenge_card_stackable_2_texture_rect
-		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD and #card_data.steam_instance_ids > 2 then
+		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD and stack_amount > 2 then
 			return tweak_data.challenge_cards.challenge_card_stackable_3_texture_path, tweak_data.challenge_cards.challenge_card_stackable_3_texture_rect
 		end
 	end
@@ -645,18 +662,6 @@ function ChallengeCardsManager:get_cards_back_texture(card_data)
 	end
 
 	return nil, nil
-end
-
-function ChallengeCardsManager:debug_inventory_insert(item_def_id)
-end
-
-function ChallengeCardsManager:debug_inventory_insert_all()
-end
-
-function ChallengeCardsManager:debug_clear_inventory()
-end
-
-function ChallengeCardsManager:debug_clear_inventory_callback(error, list)
 end
 
 function ChallengeCardsManager:inventory_alter_stacks(source_steam_instance_id, destination_steam_instance_id, amount)

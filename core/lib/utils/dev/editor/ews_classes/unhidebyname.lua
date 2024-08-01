@@ -1,7 +1,10 @@
 UnhideByName = UnhideByName or class(CoreEditorEwsDialog)
 
 function UnhideByName:init(...)
-	CoreEditorEwsDialog.init(self, nil, self.TITLE or "Unhide by name", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, self.TITLE or "Unhide by name", "", Vector3(300, 150, 0), Vector3(500, 540, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(500, 540, 0))
 	self:create_panel("VERTICAL")
 
 	local horizontal_ctrlr_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -18,12 +21,32 @@ function UnhideByName:init(...)
 
 	self._list:clear_all()
 	self._list:append_column("Name")
-	list_sizer:add(self._list, 1, 0, "EXPAND")
-	horizontal_ctrlr_sizer:add(list_sizer, 3, 0, "EXPAND")
+	list_sizer:add(self._list, 1, 2, "EXPAND,BOTTOM")
+	horizontal_ctrlr_sizer:add(list_sizer, 4, 0, "EXPAND")
 
 	local list_ctrlrs = EWS:BoxSizer("VERTICAL")
 	self._layer_cbs = {}
 	local layers_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "List Layers")
+	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
+	local all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
+	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
+	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local none_btn = EWS:Button(self._panel, "None", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
+	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
+	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local invert_btn = EWS:Button(self._panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
+	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
+	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
+
 	local layers = managers.editor:layers()
 	local names_layers = {}
 
@@ -48,34 +71,9 @@ function UnhideByName:init(...)
 		layers_sizer:add(cb, 0, 2, "EXPAND,TOP")
 	end
 
-	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
-	local all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
-	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
-	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local none_btn = EWS:Button(self._panel, "None", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
-	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
-	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local invert_btn = EWS:Button(self._panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
-	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
-	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
-	list_ctrlrs:add(layers_sizer, 0, 30, "EXPAND,TOP")
+	list_ctrlrs:add(layers_sizer, 0, 0, "EXPAND")
 
 	local continents_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Continents")
-	self._continents_sizer = EWS:BoxSizer("VERTICAL")
-
-	self:build_continent_cbs()
-	continents_sizer:add(self._continents_sizer, 0, 2, "TOP,BOTTOM")
-	list_ctrlrs:add(continents_sizer, 0, 5, "EXPAND,TOP")
-
 	local continent_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
 	local continent_all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
 
@@ -95,14 +93,20 @@ function UnhideByName:init(...)
 	continent_invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_continents"), "")
 	continent_invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	continents_sizer:add(continent_buttons_sizer, 0, 2, "TOP,BOTTOM")
-	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 0, "EXPAND")
-	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 0, "EXPAND")
+
+	self._continents_sizer = EWS:BoxSizer("VERTICAL")
+
+	self:build_continent_cbs()
+	continents_sizer:add(self._continents_sizer, 0, 2, "TOP,BOTTOM")
+	list_ctrlrs:add(continents_sizer, 0, 5, "EXPAND,TOP")
+	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 5, "EXPAND,LEFT")
+	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 5, "EXPAND,ALL")
 	self._list:connect("EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "on_mark_unit"), nil)
 	self._list:connect("EVT_COMMAND_LIST_ITEM_ACTIVATED", callback(self, self, "on_unhide"), nil)
 	self._list:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
-	local unhide_btn = EWS:Button(self._panel, self.BTN_NAME or "Unhide", "", "BU_BOTTOM")
+	local unhide_btn = EWS:Button(self._panel, self.BTN_NAME or "Unhide", "", "")
 
 	button_sizer:add(unhide_btn, 0, 2, "RIGHT,LEFT")
 	unhide_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_unhide"), "")
@@ -114,7 +118,7 @@ function UnhideByName:init(...)
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:fill_unit_list()
 	self._dialog:set_visible(true)
 end

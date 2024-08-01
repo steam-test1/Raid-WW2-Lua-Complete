@@ -20,7 +20,7 @@ function RaidGUIControlLabelNamedValue:init(parent, params)
 	label_text_params.font_size = params.font_size or tweak_data.gui.font_sizes.medium
 	label_text_params.x = 0
 	label_text_params.y = label_value_params.font_size + (label_text_params.value_padding or 0)
-	label_text_params.h = label_text_params.font_size + 3
+	label_text_params.h = params.h or label_text_params.font_size + 3
 	label_text_params.w = nil
 	label_text_params.text = params.text or ""
 	label_text_params.color = params.color or tweak_data.gui.colors.raid_white

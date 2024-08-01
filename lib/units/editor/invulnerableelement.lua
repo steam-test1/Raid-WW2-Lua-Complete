@@ -8,10 +8,12 @@ function InvulnerableUnitElement:init(unit)
 
 	self._hed.invulnerable = true
 	self._hed.immortal = false
+	self._hed.apply_instigator = false
 	self._hed.elements = {}
 
 	table.insert(self._save_values, "invulnerable")
 	table.insert(self._save_values, "immortal")
+	table.insert(self._save_values, "apply_instigator")
 	table.insert(self._save_values, "elements")
 end
 
@@ -103,6 +105,15 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = immortal
 	})
 	panel_sizer:add(immortal, 0, 0, "EXPAND")
+
+	local apply_instigator = EWS:CheckBox(panel, "apply_instigator", "")
+
+	apply_instigator:set_value(self._hed.apply_instigator)
+	apply_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "apply_instigator",
+		ctrlr = apply_instigator
+	})
+	panel_sizer:add(apply_instigator, 0, 0, "EXPAND")
 
 	local help = {
 		text = "Makes a unit invulnerable or immortal.",

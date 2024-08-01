@@ -80,21 +80,20 @@ function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
 
-	if unit and unit:damage() then
+	if alive(unit) and unit:damage() then
 		unit:unlink()
-		unit:damage():run_sequence_simple("enable_body")
+		unit:set_slot(18)
+		unit:damage():has_then_run_sequence_simple("enable_body")
 		self:_call_listeners("unequip")
+		self:remove_selection(self._equipped_selection)
 		managers.game_play_central:weapon_dropped(unit)
 	end
 end
 
 function CopInventory:drop_shield()
-	if alive(self._shield_unit) then
+	if alive(self._shield_unit) and self._shield_unit:damage() then
 		self._shield_unit:unlink()
-
-		if self._shield_unit:damage() then
-			self._shield_unit:damage():run_sequence_simple("enable_body")
-		end
+		self._shield_unit:damage():has_then_run_sequence_simple("enable_body")
 	end
 end
 

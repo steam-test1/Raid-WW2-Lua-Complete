@@ -24,7 +24,6 @@ function GenericDLCManager:_set_dlc_save_table()
 end
 
 function GenericDLCManager:setup()
-	self:_modify_locked_content()
 	self:_create_achievement_locked_content_table()
 end
 
@@ -49,62 +48,6 @@ function GenericDLCManager:_create_achievement_locked_content_table()
 							self._dlc_locked_content[loot_drop.type_items][loot_drop.item_entry] = name
 						end
 					end
-				end
-			end
-		end
-	end
-end
-
-function GenericDLCManager:_modify_locked_content()
-	if _G.IS_PC then
-		return
-	end
-
-	local function _modify_loot_drop(loot_drop)
-		local entry = tweak_data.blackmarket[loot_drop.type_items] and tweak_data.blackmarket[loot_drop.type_items][loot_drop.item_entry]
-
-		if entry then
-			if not entry.pc and (not entry.pcs or #entry.pcs == 0) then
-				entry.pcs = {
-					10,
-					20,
-					30,
-					40
-				}
-
-				if loot_drop.type_items == "weapon_mods" then
-					tweak_data.weapon.factory.parts[loot_drop.item_entry].pcs = {
-						10,
-						20,
-						30,
-						40
-					}
-				end
-			end
-		else
-			print(" -- entry not exists")
-		end
-	end
-
-	for name, dlc in pairs(tweak_data.dlc.descriptions) do
-		if not dlc.content_on_consoles then
-			local content = dlc.content
-
-			if content then
-				local loot_drops = content.loot_drops
-
-				if loot_drops then
-					for _, loot_drop in ipairs(loot_drops) do
-						if #loot_drop > 0 then
-							for _, lp in ipairs(loot_drop) do
-								_modify_loot_drop(lp)
-							end
-						else
-							_modify_loot_drop(loot_drop)
-						end
-					end
-
-					content.loot_drops = {}
 				end
 			end
 		end
@@ -283,7 +226,7 @@ function GenericDLCManager:is_trial()
 end
 
 function GenericDLCManager:is_installing()
-	if not DB:is_bundled() or _G.IS_PC then
+	if not DB:is_bundled() or IS_PC then
 		return false, 1
 	end
 
@@ -318,286 +261,6 @@ function GenericDLCManager:has_achievement(data)
 	return achievement and achievement.awarded or false
 end
 
-PS3DLCManager = PS3DLCManager or class(GenericDLCManager)
-DLCManager.PLATFORM_CLASS_MAP[Idstring("PS3"):key()] = PS3DLCManager
-PS3DLCManager.SERVICE_ID = "EP4040-BLES01902_00"
-
-function PS3DLCManager:init()
-	PS3DLCManager.super.init(self)
-
-	if not Global.dlc_manager then
-		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					filename = "full_game_key.edat",
-					product_id = self.SERVICE_ID .. "-PAYDAY2NPEU00000"
-				},
-				preorder = {
-					filename = "preorder_dlc_key.edat",
-					product_id = self.SERVICE_ID .. "-PPAYDAY2XX000006"
-				}
-			}
-		}
-
-		self:_verify_dlcs()
-	end
-end
-
-function PS3DLCManager:_verify_dlcs()
-	local all_dlc = {}
-
-	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
-		if not dlc_data.verified then
-			table.insert(all_dlc, dlc_data.filename)
-		end
-	end
-
-	local verified_dlcs = PS3:check_dlc_availability(all_dlc)
-	Global.dlc_manager.verified_dlcs = verified_dlcs
-
-	for _, verified_filename in pairs(verified_dlcs) do
-		for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
-			if dlc_data.filename == verified_filename then
-				print("DLC verified:", verified_filename)
-
-				dlc_data.verified = true
-
-				break
-			end
-		end
-	end
-end
-
-function PS3DLCManager:_init_NPCommerce()
-	PS3:set_service_id(self.SERVICE_ID)
-
-	local result = NPCommerce:init()
-
-	print("init result", result)
-
-	if not result then
-		MenuManager:show_np_commerce_init_fail()
-		NPCommerce:destroy()
-
-		return
-	end
-
-	local result = NPCommerce:open(callback(self, self, "cb_NPCommerce"))
-
-	print("open result", result)
-
-	if result < 0 then
-		MenuManager:show_np_commerce_init_fail()
-		NPCommerce:destroy()
-
-		return
-	end
-
-	return true
-end
-
-function PS3DLCManager:buy_full_game()
-	print("[PS3DLCManager:buy_full_game]")
-
-	if self._activity then
-		return
-	end
-
-	if not self:_init_NPCommerce() then
-		return
-	end
-
-	managers.menu:show_waiting_NPCommerce_open()
-
-	self._request = {
-		product = "full_game",
-		type = "buy_product"
-	}
-	self._activity = {
-		type = "open"
-	}
-end
-
-function PS3DLCManager:buy_product(product_name)
-	print("[PS3DLCManager:buy_product]", product_name)
-
-	if self._activity then
-		return
-	end
-
-	if not self:_init_NPCommerce() then
-		return
-	end
-
-	managers.menu:show_waiting_NPCommerce_open()
-
-	self._request = {
-		type = "buy_product",
-		product = product_name
-	}
-	self._activity = {
-		type = "open"
-	}
-end
-
-function PS3DLCManager:cb_NPCommerce(result, info)
-	print("[PS3DLCManager:cb_NPCommerce]", result, info)
-
-	for i, k in pairs(info) do
-		print(i, k)
-	end
-
-	self._NPCommerce_cb_results = self._NPCommerce_cb_results or {}
-
-	print("self._activity", self._activity and inspect(self._activity))
-	table.insert(self._NPCommerce_cb_results, {
-		result,
-		info
-	})
-
-	if not self._activity then
-		return
-	elseif self._activity.type == "open" then
-		if info.category_error or info.category_done == false then
-			self._activity = nil
-
-			managers.system_menu:close("waiting_for_NPCommerce_open")
-			self:_close_NPCommerce()
-		else
-			managers.system_menu:close("waiting_for_NPCommerce_open")
-
-			local product_id = Global.dlc_manager.all_dlc_data[self._request.product].product_id
-
-			print("starting storebrowse", product_id)
-
-			local ret = NPCommerce:storebrowse("product", product_id, true)
-
-			if not ret then
-				self._activity = nil
-
-				managers.menu:show_NPCommerce_checkout_fail()
-				self:_close_NPCommerce()
-			end
-
-			self._activity = {
-				type = "browse"
-			}
-		end
-	elseif self._activity.type == "browse" then
-		if info.browse_succes then
-			self._activity = nil
-
-			managers.menu:show_NPCommerce_browse_success()
-			self:_close_NPCommerce()
-		elseif info.browse_back then
-			self._activity = nil
-
-			self:_close_NPCommerce()
-		elseif info.category_error then
-			self._activity = nil
-
-			managers.menu:show_NPCommerce_browse_fail()
-			self:_close_NPCommerce()
-		end
-	elseif self._activity.type == "checkout" then
-		if info.checkout_error then
-			self._activity = nil
-
-			managers.menu:show_NPCommerce_checkout_fail()
-			self:_close_NPCommerce()
-		elseif info.checkout_cancel then
-			self._activity = nil
-
-			self:_close_NPCommerce()
-		elseif info.checkout_success then
-			self._activity = nil
-
-			self:_close_NPCommerce()
-		end
-	end
-
-	print("/[PS3DLCManager:cb_NPCommerce]")
-end
-
-function PS3DLCManager:_close_NPCommerce()
-	print("[PS3DLCManager:_close_NPCommerce]")
-	NPCommerce:destroy()
-end
-
-function PS3DLCManager:cb_confirm_purchase_yes(sku_data)
-	NPCommerce:checkout(sku_data.skuid)
-end
-
-function PS3DLCManager:cb_confirm_purchase_no()
-	self._activity = nil
-
-	self:_close_NPCommerce()
-end
-
-X360DLCManager = X360DLCManager or class(GenericDLCManager)
-DLCManager.PLATFORM_CLASS_MAP[Idstring("X360"):key()] = X360DLCManager
-
-function X360DLCManager:init()
-	X360DLCManager.super.init(self)
-
-	if not Global.dlc_manager then
-		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					is_default = true,
-					verified = true,
-					index = 0
-				},
-				preorder = {
-					is_default = false,
-					index = 1
-				}
-			}
-		}
-
-		self:_verify_dlcs()
-	end
-end
-
-function X360DLCManager:_verify_dlcs()
-	local found_dlc = {}
-	local status = XboxLive:check_dlc_availability(0, 100, found_dlc)
-
-	if not status then
-		Application:error("XboxLive:check_dlc_availability failed", inspect(found_dlc))
-
-		return
-	end
-
-	print("[X360DLCManager:_verify_dlcs] found DLC:")
-
-	for i, k in pairs(found_dlc) do
-		print(i, k)
-	end
-
-	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
-		if found_dlc[dlc_data.index] == "corrupt" then
-			print("[X360DLCManager:_verify_dlcs] Found corrupt DLC:", dlc_name)
-
-			dlc_data.is_corrupt = true
-		elseif dlc_data.is_default or found_dlc[dlc_data.index] == true then
-			dlc_data.verified = true
-		else
-			dlc_data.verified = false
-		end
-	end
-
-	if found_dlc.has_corrupt_data then
-		print("[X360DLCManager:_verify_dlcs] Found at least one corrupt DLC.")
-
-		self._has_corrupt_data = true
-	end
-end
-
-function X360DLCManager:on_signin_complete()
-	self:_verify_dlcs()
-end
-
 PS4DLCManager = PS4DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("PS4"):key()] = PS4DLCManager
 PS4DLCManager.SERVICE_ID = "EP4040-BLES01902_00"
@@ -626,7 +289,7 @@ function PS4DLCManager:_verify_dlcs()
 		if dlc_data.is_default or dlc_data.verified == true then
 			dlc_data.verified = true
 		else
-			dlc_data.verified = PS3:has_entitlement(dlc_data.product_id)
+			dlc_data.verified = PS4:has_entitlement(dlc_data.product_id)
 		end
 	end
 end
@@ -904,7 +567,7 @@ function WINDLCManager:get_app_id()
 end
 
 function WINDLCManager:_check_dlc_data(dlc_data)
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		if dlc_data.app_id then
 			if dlc_data.no_install then
 				if Steam:is_product_owned(dlc_data.app_id) then

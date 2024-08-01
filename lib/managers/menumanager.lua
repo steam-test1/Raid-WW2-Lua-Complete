@@ -19,8 +19,6 @@ MenuManager = MenuManager or class(CoreMenuManager.Manager)
 
 require("lib/managers/MenuManagerPD2")
 
-MenuManager.IS_NORTH_AMERICA = _G.IS_PC or Application:is_northamerica()
-MenuManager.ONLINE_AGE = (_G.IS_PS3 or _G.IS_PS4) and MenuManager.IS_NORTH_AMERICA and 17 or 18
 MenuManager.MENU_ITEM_WIDTH = 400
 MenuManager.MENU_ITEM_HEIGHT = 32
 MenuManager.MENU_ITEM_LEFT_PADDING = 20
@@ -49,6 +47,17 @@ function MenuManager:init(is_start_menu)
 		}
 
 		self:register_menu(menu_main)
+
+		local mission_join_menu = {
+			input = "MenuInput",
+			name = "mission_join_menu",
+			renderer = "MenuRenderer",
+			id = "mission_join_menu",
+			content_file = "gamedata/raid/menus/mission_join_menu",
+			callback_handler = MenuCallbackHandler:new()
+		}
+
+		self:register_menu(mission_join_menu)
 
 		local raid_options_menu = {
 			input = "MenuInput",
@@ -126,6 +135,17 @@ function MenuManager:init(is_start_menu)
 		}
 
 		self:register_menu(raid_menu_options_video_advanced)
+
+		local raid_menu_options_interface = {
+			input = "MenuInput",
+			name = "raid_menu_options_interface",
+			renderer = "MenuRenderer",
+			id = "raid_menu_options_interface",
+			content_file = "gamedata/raid/menus/raid_menu_options_interface",
+			callback_handler = MenuCallbackHandler:new()
+		}
+
+		self:register_menu(raid_menu_options_interface)
 
 		local raid_menu_options_sound = {
 			input = "MenuInput",
@@ -402,6 +422,17 @@ function MenuManager:init(is_start_menu)
 
 		self:register_menu(raid_menu_options_video_advanced)
 
+		local raid_menu_options_interface = {
+			input = "MenuInput",
+			name = "raid_menu_options_interface",
+			renderer = "MenuRenderer",
+			id = "raid_menu_options_interface",
+			content_file = "gamedata/raid/menus/raid_menu_options_interface",
+			callback_handler = MenuCallbackHandler:new()
+		}
+
+		self:register_menu(raid_menu_options_interface)
+
 		local raid_menu_options_sound = {
 			input = "MenuInput",
 			name = "raid_menu_options_sound",
@@ -461,11 +492,11 @@ function MenuManager:init(is_start_menu)
 	self._controller:add_trigger("toggle_menu", callback(self, self, "toggle_menu_state"))
 	self._controller:add_trigger("toggle_hud", callback(self, self, "toggle_hud_state"))
 
-	if MenuCallbackHandler:is_pc_controller() and MenuCallbackHandler:is_not_steam_controller() then
+	if MenuCallbackHandler:is_pc_controller() then
 		self._controller:add_trigger("toggle_chat", callback(self, self, "toggle_chatinput"))
 	end
 
-	if _G.IS_PC or _G.IS_CONSOLE then
+	if IS_PC or IS_CONSOLE then
 		self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
 		self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
 	end
@@ -487,7 +518,6 @@ function MenuManager:init(is_start_menu)
 	managers.user:add_setting_changed_callback("voice_volume", callback(self, self, "voice_volume_changed"), true)
 	managers.user:add_setting_changed_callback("voice_over_volume", callback(self, self, "voice_over_volume_changed"), true)
 	managers.user:add_setting_changed_callback("master_volume", callback(self, self, "master_volume_changed"), true)
-	managers.user:add_setting_changed_callback("use_lightfx", callback(self, self, "lightfx_changed"), true)
 	managers.user:add_setting_changed_callback("effect_quality", callback(self, self, "effect_quality_changed"), true)
 	managers.user:add_setting_changed_callback("ssao_setting", callback(self, self, "ssao_setting_changed"), true)
 	managers.user:add_setting_changed_callback("motion_blur_setting", callback(self, self, "motion_blur_setting_changed"), true)
@@ -498,7 +528,6 @@ function MenuManager:init(is_start_menu)
 	managers.user:add_setting_changed_callback("net_packet_throttling", callback(self, self, "net_packet_throttling_changed"), true)
 	managers.user:add_setting_changed_callback("net_forwarding", callback(self, self, "net_forwarding_changed"), true)
 	managers.user:add_setting_changed_callback("net_use_compression", callback(self, self, "net_use_compression_changed"), true)
-	managers.user:add_setting_changed_callback("flush_gpu_command_queue", callback(self, self, "flush_gpu_command_queue_changed"), true)
 	managers.user:add_setting_changed_callback("use_thq_weapon_parts", callback(self, self, "use_thq_weapon_parts_changed"), true)
 	managers.user:add_setting_changed_callback("detail_distance", callback(self, self, "detail_distance_setting_changed"), true)
 	managers.user:add_setting_changed_callback("use_parallax", callback(self, self, "use_parallax_setting_changed"), true)
@@ -516,7 +545,6 @@ function MenuManager:init(is_start_menu)
 	self:net_packet_throttling_changed(nil, nil, managers.user:get_setting("net_packet_throttling"))
 	self:net_forwarding_changed(nil, nil, managers.user:get_setting("net_forwarding"))
 	self:net_use_compression_changed(nil, nil, managers.user:get_setting("net_use_compression"))
-	self:flush_gpu_command_queue_changed(nil, nil, managers.user:get_setting("flush_gpu_command_queue"))
 	self:invert_camera_y_changed("invert_camera_y", nil, managers.user:get_setting("invert_camera_y"))
 	self:southpaw_changed("southpaw", nil, managers.user:get_setting("southpaw"))
 	self:ssao_setting_changed("ssao_setting", nil, managers.user:get_setting("ssao_setting"))
@@ -581,9 +609,9 @@ function MenuManager:controller_hotswap_triggered()
 	self:recreate_controller()
 	self._controller:add_trigger("toggle_menu", callback(self, self, "toggle_menu_state"))
 
-	local is_pc_controller = not managers.controller:is_xbox_controller_present()
+	local is_pc_controller = not managers.controller:is_controller_present()
 
-	if is_pc_controller and MenuCallbackHandler:is_not_steam_controller() then
+	if is_pc_controller then
 		self._controller:add_trigger("toggle_chat", callback(self, self, "toggle_chatinput"))
 	end
 
@@ -597,7 +625,7 @@ function MenuManager:controller_hotswap_triggered()
 		end
 	end
 
-	if _G.IS_PC or _G.IS_CONSOLE then
+	if IS_PC or IS_CONSOLE then
 		self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
 		self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
 	end
@@ -781,11 +809,7 @@ function MenuManager:is_in_root(menu_name)
 end
 
 function MenuManager:is_pc_controller()
-	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and self:active_menu().input._controller.TYPE == "pc" or managers.controller:get_default_wrapper_type() == "pc" or self:is_steam_controller()
-end
-
-function MenuManager:is_steam_controller()
-	return false
+	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and self:active_menu().input._controller.TYPE == "pc" or managers.controller:get_default_wrapper_type() == "pc"
 end
 
 function MenuManager:is_xb1_controller()
@@ -829,23 +853,28 @@ function MenuManager:toggle_menu_state()
 
 	if (not Application:editor() or Global.running_simulation) and not managers.system_menu:is_active() then
 		if managers.raid_menu._menu_stack and #managers.raid_menu._menu_stack > 0 then
+			Application:debug("[MenuManager:toggle_menu_state] Menu Stack >0")
 			managers.raid_menu:on_escape()
-		elseif (not self:active_menu() or #self:active_menu().logic._node_stack == 1 or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().allow_pause_menu) and managers.menu_component:input_focus() ~= 1 then
-			local success = managers.raid_menu:open_menu("raid_main_menu")
+		else
+			Application:debug("[MenuManager:toggle_menu_state] Menu Stack Empty")
 
-			if Global.game_settings.single_player then
-				if not managers.raid_job:is_camp_loaded() then
-					Application:debug("[MenuManager:toggle_menu_state()] PAUSING")
-					Application:set_pause(true)
-				end
+			if (not self:active_menu() or #self:active_menu().logic._node_stack == 1 or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().allow_pause_menu) and managers.menu_component:input_focus() ~= 1 then
+				local success = managers.raid_menu:open_menu("raid_main_menu")
 
-				self:post_event("game_pause_in_game_menu")
-				SoundDevice:set_rtpc("ingame_sound", 0)
+				if Global.game_settings.single_player then
+					if not managers.raid_job:is_camp_loaded() then
+						Application:debug("[MenuManager:toggle_menu_state()] PAUSING")
+						Application:set_pause(true)
+					end
 
-				local player_unit = managers.player:player_unit()
+					self:post_event("game_pause_in_game_menu")
+					SoundDevice:set_rtpc("ingame_sound", 0)
 
-				if alive(player_unit) and player_unit:movement():current_state().update_check_actions_paused then
-					player_unit:movement():current_state():update_check_actions_paused()
+					local player_unit = managers.player:player_unit()
+
+					if alive(player_unit) and player_unit:movement():current_state().update_check_actions_paused then
+						player_unit:movement():current_state():update_check_actions_paused()
+					end
 				end
 			end
 		end
@@ -863,7 +892,7 @@ function MenuManager:toggle_chatinput()
 		return
 	end
 
-	if not _G.IS_PC then
+	if not IS_PC then
 		return
 	end
 
@@ -883,7 +912,7 @@ function MenuManager:toggle_chatinput()
 end
 
 function MenuManager:toggle_hud_state()
-	if managers.hud and not managers.hud:chat_focus() then
+	if managers.hud and not managers.hud:chat_focus() and not self:is_active() then
 		if managers.hud._disabled then
 			managers.hud:set_enabled()
 		else
@@ -1103,7 +1132,7 @@ function MenuManager:invert_camera_y_changed(name, old_value, new_value)
 end
 
 function MenuManager:southpaw_changed(name, old_value, new_value)
-	if self._controller.TYPE ~= "xbox360" and self._controller.TYPE ~= "ps3" and self._controller.TYPE ~= "xb1" and self._controller.TYPE ~= "ps4" then
+	if self._controller.TYPE ~= "xb1" and self._controller.TYPE ~= "ps4" then
 		return
 	end
 
@@ -1207,7 +1236,7 @@ function MenuManager:dof_setting_changed(name, old_value, new_value)
 end
 
 function MenuManager:fps_limit_changed(name, old_value, new_value)
-	if not _G.IS_PC then
+	if not IS_PC then
 		return
 	end
 
@@ -1227,10 +1256,6 @@ end
 
 function MenuManager:net_use_compression_changed(name, old_value, new_value)
 	Network:set_use_compression(new_value)
-end
-
-function MenuManager:flush_gpu_command_queue_changed(name, old_value, new_value)
-	RenderSettings.flush_gpu_command_queue = new_value
 end
 
 function MenuManager:use_thq_weapon_parts_changed(name, old_value, new_value)
@@ -1284,12 +1309,6 @@ function MenuManager:master_volume_changed(name, old_value, new_value)
 	local tweak = _G.tweak_data.menu
 
 	SoundDevice:set_rtpc("option_master_volume", new_value)
-end
-
-function MenuManager:lightfx_changed(name, old_value, new_value)
-	if managers.network and managers.network.account then
-		managers.network.account:set_lightfx()
-	end
 end
 
 function MenuManager:set_debug_menu_enabled(enabled)
@@ -1380,32 +1399,8 @@ end
 function MenuManager:_dialog_progress_resetted_ok()
 end
 
-function MenuManager:is_console()
-	return self:is_ps3() or self:is_x360() or self:is_ps4() or self:is_xb1()
-end
-
-function MenuManager:is_ps3()
-	return _G.IS_PS3
-end
-
-function MenuManager:is_ps4()
-	return _G.IS_PS4
-end
-
-function MenuManager:is_x360()
-	return _G.IS_XB360
-end
-
-function MenuManager:is_xb1()
-	return _G.IS_XB1
-end
-
-function MenuManager:is_na()
-	return MenuManager.IS_NORTH_AMERICA
-end
-
 function MenuManager:open_sign_in_menu(cb)
-	if self:is_ps4() then
+	if IS_PS4 then
 		managers.network.matchmake:register_callback("found_game", callback(self, self, "_cb_matchmake_found_game"))
 		managers.network.matchmake:register_callback("player_joined", callback(self, self, "_cb_matchmake_player_joined"))
 
@@ -1421,7 +1416,7 @@ function MenuManager:open_sign_in_menu(cb)
 		else
 			self:open_ps4_sign_in_menu(cb)
 		end
-	elseif self:is_xb1() then
+	elseif IS_XB1 then
 		self._queued_privilege_check_cb = nil
 
 		managers.system_menu:close("fetching_status")
@@ -1460,35 +1455,6 @@ function MenuManager:_check_privilege_callback(is_success)
 	end
 end
 
-function MenuManager:open_ps3_sign_in_menu(cb)
-	local success = true
-
-	if managers.network.account:signin_state() == "not signed in" then
-		managers.network.account:show_signin_ui()
-
-		if managers.network.account:signin_state() == "signed in" then
-			print("SIGNED IN")
-
-			if #PSN:get_world_list() == 0 then
-				managers.network.matchmake:getting_world_list()
-			end
-
-			success = self:_enter_online_menus()
-		else
-			success = false
-		end
-	else
-		if #PSN:get_world_list() == 0 then
-			managers.network.matchmake:getting_world_list()
-			PSN:init_matchmaking()
-		end
-
-		success = self:_enter_online_menus()
-	end
-
-	cb(success)
-end
-
 function MenuManager:open_ps4_sign_in_menu(cb)
 	if managers.system_menu:is_active_by_id("fetching_status") then
 		managers.system_menu:close("fetching_status")
@@ -1514,7 +1480,7 @@ function MenuManager:open_ps4_sign_in_menu(cb)
 				managers.network.matchmake:getting_world_list()
 			end
 
-			success = self:_enter_online_menus()
+			success = self:_enter_online_menus_ps4()
 		else
 			success = false
 		end
@@ -1530,14 +1496,8 @@ function MenuManager:open_ps4_sign_in_menu(cb)
 			PSN:init_matchmaking()
 		end
 
-		success = self:_enter_online_menus()
+		success = self:_enter_online_menus_ps4()
 	end
-
-	cb(success)
-end
-
-function MenuManager:open_x360_sign_in_menu(cb)
-	local success = self:_enter_online_menus_x360()
 
 	cb(success)
 end
@@ -1571,18 +1531,14 @@ function MenuManager:open_xb1_sign_in_menu_after_voice_check()
 end
 
 function MenuManager:external_enter_online_menus()
-	if self:is_ps3() then
-		self:_enter_online_menus()
-	elseif self:is_ps4() then
+	if IS_PS4 then
 		self:_enter_online_menus_ps4()
-	elseif self:is_x360() then
-		self:_enter_online_menus_x360()
-	elseif self:is_xb1() then
+	elseif IS_XB1 then
 		self:_enter_online_menus_xb1()
 	end
 end
 
-function MenuManager:_enter_online_menus()
+function MenuManager:_enter_online_menus_ps4()
 	if PSN:parental_control_settings_active() then
 		Global.boot_invite = nil
 		Global.boot_play_together = nil
@@ -1596,14 +1552,13 @@ function MenuManager:_enter_online_menus()
 		if res == 1 then
 			managers.platform:set_presence("Signed_in")
 			print("voice chat from enter_online_menus")
-			managers.network:ps3_determine_voice(false)
 			managers.network.voice_chat:check_status_information()
 
 			if PSN:is_online() and not PSN:online_chat_allowed() then
 				managers.menu:show_err_no_chat_parental_control()
 			end
 
-			PSN:set_online_callback(callback(self, self, "ps3_disconnect"))
+			PSN:set_online_callback(callback(self, self, "psn_disconnect"))
 
 			return true
 		elseif res ~= 2 then
@@ -1612,21 +1567,6 @@ function MenuManager:_enter_online_menus()
 	end
 
 	return false
-end
-
-function MenuManager:_enter_online_menus_ps4()
-	managers.platform:set_presence("Signed_in")
-	print("voice chat from enter_online_menus_ps4")
-	managers.network:ps3_determine_voice(false)
-	managers.network.voice_chat:check_status_information()
-	PSN:set_online_callback(callback(self, self, "ps3_disconnect"))
-end
-
-function MenuManager:_enter_online_menus_x360()
-	managers.platform:set_presence("Signed_in")
-	managers.user:on_entered_online_menus()
-
-	return true
 end
 
 function MenuManager:_enter_online_menus_xb1()
@@ -1676,7 +1616,7 @@ function MenuManager:xbox_disconnected()
 	self:show_mp_disconnected_internet_dialog({})
 end
 
-function MenuManager:ps3_disconnect(connected)
+function MenuManager:psn_disconnect(connected)
 	if not connected then
 		managers.network:queue_stop_network()
 		managers.platform:set_presence("Idle")
@@ -1693,10 +1633,6 @@ end
 function MenuManager:show_disconnect_message(requires_signin)
 	if self._showing_disconnect_message then
 		return
-	end
-
-	if self:is_ps3() then
-		PS3:abort_display_keyboard()
 	end
 
 	self:exit_online_menues()
@@ -1738,11 +1674,11 @@ function MenuManager:exit_online_menues()
 end
 
 function MenuManager:leave_online_menu()
-	if self:is_ps3() or self:is_ps4() then
+	if IS_PS4 then
 		PSN:set_online_callback(callback(self, self, "refresh_player_profile_gui"))
 	end
 
-	if self:is_x360() or self:is_xb1() then
+	if IS_XB1 then
 		managers.user:on_exit_online_menus()
 	end
 end
@@ -1757,11 +1693,11 @@ function MenuManager:_close_lobby_menu_components()
 end
 
 function MenuManager:on_leave_lobby()
-	local skip_destroy_matchmaking = self:is_ps3() or self:is_ps4()
+	local skip_destroy_matchmaking = IS_PS4
 
 	managers.network:prepare_stop_network(skip_destroy_matchmaking)
 
-	if self:is_x360() or self:is_xb1() then
+	if IS_XB1 then
 		managers.user:on_exit_online_menus()
 	end
 
@@ -1831,7 +1767,7 @@ function MenuManager:show_global_success(node)
 end
 
 function MenuManager:on_storage_changed(old_user_data, user_data)
-	if old_user_data and old_user_data.storage_id and user_data and user_data.signin_state ~= "not_signed_in" and not old_user_data.has_signed_out and managers.user:get_platform_id() == user_data.platform_id and not self:is_xb1() then
+	if old_user_data and old_user_data.storage_id and user_data and user_data.signin_state ~= "not_signed_in" and not old_user_data.has_signed_out and managers.user:get_platform_id() == user_data.platform_id and not IS_XB1 then
 		self:show_storage_removed_dialog()
 		print("!!!!!!!!!!!!!!!!!!! STORAGE LOST")
 		managers.savefile:break_loading_sequence()
@@ -1870,7 +1806,7 @@ function MenuManager:do_clear_progress()
 	managers.raid_job:cleanup()
 	managers.user:set_setting("mask_set", "clowns")
 
-	if _G.IS_PC then
+	if IS_PC then
 		managers.statistics:publish_level_to_steam()
 	end
 end
@@ -2130,66 +2066,6 @@ function MutePlayer:modify_node(node, up)
 	return new_node
 end
 
-MutePlayerX360 = MutePlayerX360 or class()
-
-function MutePlayerX360:modify_node(node, up)
-	local new_node = deep_clone(node)
-
-	if managers.network:session() then
-		for _, peer in pairs(managers.network:session():peers()) do
-			local params = {
-				localize = "false",
-				to_upper = false,
-				callback = "mute_xbox_player",
-				name = peer:name(),
-				text_id = peer:name(),
-				rpc = peer:rpc(),
-				peer = peer,
-				xuid = peer:xuid()
-			}
-			local data = {
-				{
-					w = 24,
-					y = 0,
-					h = 24,
-					s_y = 24,
-					value = "on",
-					s_w = 24,
-					s_h = 24,
-					s_x = 24,
-					_meta = "option",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					x = 24,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox"
-				},
-				{
-					w = 24,
-					y = 0,
-					h = 24,
-					s_y = 24,
-					value = "off",
-					s_w = 24,
-					s_h = 24,
-					s_x = 0,
-					_meta = "option",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					x = 0,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox"
-				},
-				type = "CoreMenuItemToggle.ItemToggle"
-			}
-			local new_item = node:create_item(data, params)
-
-			new_item:set_value(peer:is_muted() and "on" or "off")
-			new_node:add_item(new_item)
-		end
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
 MutePlayerXB1 = MutePlayerXB1 or class()
 
 function MutePlayerXB1:modify_node(node, up)
@@ -2357,9 +2233,9 @@ function MenuPSNHostBrowser:add_filter(node)
 	end
 
 	local params = {
-		visible_callback = "is_ps3",
+		visible_callback = "is_ps4",
 		name = "difficulty_filter",
-		callback = "choice_difficulty_filter_ps3",
+		callback = "choice_difficulty_filter_ps4",
 		text_id = "menu_diff_filter",
 		help_id = "menu_diff_filter_help",
 		filter = true
@@ -2857,7 +2733,7 @@ MenuResolutionCreator = MenuResolutionCreator or class()
 function MenuResolutionCreator:modify_node(node)
 	local new_node = deep_clone(node)
 
-	if _G.IS_PC then
+	if IS_PC then
 		local resolutions = {}
 
 		for _, res in ipairs(RenderSettings.modes) do
@@ -3033,7 +2909,7 @@ end
 MenuPSNPlayerProfileInitiator = MenuPSNPlayerProfileInitiator or class()
 
 function MenuPSNPlayerProfileInitiator:modify_node(node)
-	if (managers.menu:is_ps3() or managers.menu:is_ps4()) and not managers.network:session() then
+	if IS_PS4 and not managers.network:session() then
 		PSN:set_online_callback(callback(managers.menu, managers.menu, "refresh_player_profile_gui"))
 	end
 
@@ -3069,12 +2945,6 @@ function LobbyOptionInitiator:modify_node(node)
 
 	if item_lobby_toggle_ai then
 		item_lobby_toggle_ai:set_value(Global.game_settings.team_ai and "on" or "off")
-	end
-
-	local item_lobby_toggle_auto_kick = node:item("toggle_auto_kick")
-
-	if item_lobby_toggle_auto_kick then
-		item_lobby_toggle_auto_kick:set_value(Global.game_settings.auto_kick and "on" or "off")
 	end
 
 	local character_item = node:item("choose_character")
@@ -3546,7 +3416,7 @@ function MenuOptionInitiator:refresh_node(node)
 end
 
 function MenuOptionInitiator:modify_resolution(node)
-	if _G.IS_PC then
+	if IS_PC then
 		local res_name = string.format("%d x %d, %dHz", RenderSettings.resolution.x, RenderSettings.resolution.y, RenderSettings.resolution.z)
 
 		node:set_default_item_name(res_name)
@@ -3576,7 +3446,6 @@ function MenuOptionInitiator:modify_adv_video(node)
 		node:item("choose_color_grading"):set_value(managers.user:get_setting("video_color_grading"))
 	end
 
-	node:item("use_lightfx"):set_value(managers.user:get_setting("use_lightfx") and "on" or "off")
 	node:item("choose_texture_quality"):set_value(RenderSettings.texture_quality_default)
 	node:item("choose_shadow_quality"):set_value(RenderSettings.shadow_quality_default)
 	node:item("choose_anisotropic"):set_value(RenderSettings.max_anisotropy)
@@ -3589,7 +3458,6 @@ function MenuOptionInitiator:modify_adv_video(node)
 		node:item("detail_distance"):set_value(managers.user:get_setting("detail_distance"))
 	end
 
-	node:item("choose_gpu_flush"):set_value(managers.user:get_setting("flush_gpu_command_queue") and "on" or "off")
 	node:item("choose_fps_cap"):set_value(managers.user:get_setting("fps_cap"))
 	node:item("max_streaming_chunk"):set_value(managers.user:get_setting("max_streaming_chunk"))
 
@@ -4163,46 +4031,6 @@ function ModMenuCreator:add_back_button(node)
 	local new_item = node:create_item(nil, params)
 
 	node:add_item(new_item)
-end
-
-function MenuManager:e3_end_game()
-	setup:add_end_frame_clbk(callback(self, self, "e3_quit_game"))
-end
-
-function MenuManager:e3_quit_game()
-	if Network:is_server() then
-		managers.menu._e3_end_game_counter = 1
-	else
-		self:e3_shutdown_game()
-	end
-end
-
-function MenuManager:e3_shutdown_game()
-	managers.platform:set_playing(false)
-	managers.statistics:stop_session({
-		quit = true
-	})
-	managers.savefile:save_setting(true)
-	managers.savefile:save_progress()
-	managers.raid_job:deactivate_current_job()
-	managers.raid_job:cleanup()
-	managers.worldcollection:on_simulation_ended()
-
-	if Network:multiplayer() then
-		Network:set_multiplayer(false)
-		managers.network:session():send_to_peers("set_peer_left")
-		managers.network:queue_stop_network()
-	end
-
-	managers.network.matchmake:destroy_game()
-	managers.network.voice_chat:destroy_voice()
-	managers.groupai:state():set_AI_enabled(false)
-	managers.menu:post_event("menu_exit")
-	managers.menu:close_menu("menu_pause")
-
-	managers.menu._e3_end_game = false
-
-	setup:load_start_menu()
 end
 
 function MenuManager:create_menu_item_background(panel, coord_x, coord_y, width, layer)

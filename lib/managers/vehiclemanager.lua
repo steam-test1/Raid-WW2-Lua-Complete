@@ -4,28 +4,28 @@ function VehicleManager:init()
 	self._vehicles = {}
 	self._queue_state_change = {}
 	self._listener_holder = EventListenerHolder:new()
-	self._debug = _G.IS_PC and Application:production_build()
+	self._debug = IS_PC and Application:production_build()
 	self._draw_enabled = false
 end
 
 function VehicleManager:on_simulation_started()
-	for i, v in pairs(self._vehicles) do
-		if not alive(v) then
-			self._vehicles[i] = nil
+	for key, vehicle in pairs(self._vehicles) do
+		if not alive(vehicle) then
+			self:_set_vehicle_from_key(key, nil)
 		end
 	end
 end
 
 function VehicleManager:on_simulation_ended()
-	for i, v in pairs(self._vehicles) do
-		if alive(v) then
-			v:interaction():set_contour("standard_color", 0)
-			v:vehicle_driving():stop_all_sound_events()
+	for key, vehicle in pairs(self._vehicles) do
+		if alive(vehicle) then
+			vehicle:interaction():set_contour("standard_color", 0)
+			vehicle:vehicle_driving():stop_all_sound_events()
 
-			if v.character_damage and v:character_damage()._broken_effect_id then
-				World:effect_manager():fade_kill(v:character_damage()._broken_effect_id)
+			if vehicle.character_damage and vehicle:character_damage()._broken_effect_id then
+				World:effect_manager():fade_kill(vehicle:character_damage()._broken_effect_id)
 
-				v:character_damage()._broken_effect_id = nil
+				vehicle:character_damage()._broken_effect_id = nil
 			end
 		end
 	end
@@ -47,27 +47,40 @@ function VehicleManager:remove_listener(key)
 end
 
 function VehicleManager:add_vehicle(vehicle)
-	self._vehicles[vehicle:key()] = vehicle
+	self:_set_vehicle_from_key(vehicle:key(), vehicle)
 end
 
 function VehicleManager:remove_vehicle(vehicle)
 	Application:debug("[VehicleManager:remove_vehicle]", vehicle)
-
-	self._vehicles[vehicle:key()] = nil
-
-	managers.hud:_remove_name_label(vehicle:unit_data().name_label_id)
-	managers.interaction:remove_unit(vehicle)
-	vehicle:set_slot(0)
+	self:_set_vehicle_from_key(vehicle:key(), nil)
 end
 
 function VehicleManager:get_all_vehicles()
 	return self._vehicles
 end
 
+function VehicleManager:get_vehicle_from_key(key)
+	return self._vehicles[key]
+end
+
+function VehicleManager:_set_vehicle_from_key(key, value)
+	if not value then
+		local vehicle = self:get_vehicle_from_key(key)
+
+		if alive(vehicle) then
+			managers.hud:_remove_name_label(vehicle:unit_data().name_label_id)
+			managers.interaction:remove_unit(vehicle)
+			vehicle:set_slot(0)
+		end
+	end
+
+	self._vehicles[key] = value
+end
+
 function VehicleManager:get_vehicle(animation_id)
-	for i, v in pairs(self._vehicles) do
-		if v:vehicle_driving()._tweak_data.animations.vehicle_id == animation_id then
-			return v
+	for key, vehicle in pairs(self._vehicles) do
+		if vehicle:vehicle_driving()._tweak_data.animations.vehicle_id == animation_id then
+			return vehicle
 		end
 	end
 
@@ -87,7 +100,9 @@ function VehicleManager:all_players_in_vehicles()
 	local players_in_vehicles = 0
 
 	for _, vehicle in pairs(self._vehicles) do
-		players_in_vehicles = players_in_vehicles + vehicle:vehicle_driving():num_players_inside()
+		if alive(vehicle) then
+			players_in_vehicles = players_in_vehicles + vehicle:vehicle_driving():num_players_inside()
+		end
 	end
 
 	local all_in = total_players == players_in_vehicles
@@ -100,17 +115,17 @@ function VehicleManager:on_player_exited_vehicle(vehicle_unit, player)
 end
 
 function VehicleManager:remove_player_from_all_vehicles(player)
-	for i, v in pairs(self._vehicles) do
-		if alive(v) then
-			v:vehicle_driving():exit_vehicle(player)
+	for k, vehicle in pairs(self._vehicles) do
+		if alive(vehicle) then
+			vehicle:vehicle_driving():exit_vehicle(player)
 		end
 	end
 end
 
 function VehicleManager:remove_teamai_from_all_vehicles(unit)
-	for i, v in pairs(self._vehicles) do
-		if alive(v) then
-			for seat_name, seat in pairs(v:vehicle_driving()._seats) do
+	for k, vehicle in pairs(self._vehicles) do
+		if alive(vehicle) then
+			for seat_name, seat in pairs(vehicle:vehicle_driving()._seats) do
 				if unit == seat.occupant then
 					seat.occupant = nil
 				end
@@ -384,19 +399,18 @@ end
 function VehicleManager:delete_all_vehicles()
 	Application:debug("[VehicleManager:delete_all_vehicles]")
 
-	for i, v in pairs(self._vehicles) do
-		if alive(v) then
-			self:remove_vehicle(v)
+	for k, vehicle in pairs(self._vehicles) do
+		if alive(vehicle) then
+			self:remove_vehicle(vehicle)
 		end
 	end
 end
 
 function VehicleManager:clean_up_dead_vehicles()
-	for i, v in pairs(self._vehicles) do
-		if not alive(v) then
-			Application:debug("[VehicleManager:clean_up_dead_vehicles()] Removeing DEAD vehicle", i)
-
-			self._vehicles[i] = nil
+	for key, vehicle in pairs(self._vehicles) do
+		if not alive(vehicle) then
+			Application:debug("[VehicleManager:clean_up_dead_vehicles()] Removeing DEAD vehicle", key)
+			self:_set_vehicle_from_key(key, nil)
 		end
 	end
 end

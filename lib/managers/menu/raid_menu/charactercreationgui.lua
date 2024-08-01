@@ -418,7 +418,7 @@ function CharacterCreationGui:back_pressed()
 		managers.raid_menu:register_on_escape_callback(nil)
 
 		return true, nil
-	elseif managers.controller:is_xbox_controller_present() then
+	elseif managers.controller:is_controller_present() then
 		managers.raid_menu:register_on_escape_callback(nil)
 		managers.raid_menu:on_escape()
 	end
@@ -457,7 +457,7 @@ function CharacterCreationGui:_spawn_empty_character_skeleton()
 
 	self._loading_units[CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT] = true
 
-	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_empty_character_skeleton_loaded"))
+	managers.dyn_resource:load(IDS_UNIT, Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_empty_character_skeleton_loaded"))
 end
 
 function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
@@ -505,7 +505,7 @@ function CharacterCreationGui:close()
 	if self._loading_units then
 		for unit_name, _ in pairs(self._loading_units) do
 			Application:trace("[CharacterCreationGui][close] Unloading unit ", unit_name)
-			managers.dyn_resource:unload(Idstring("unit"), Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+			managers.dyn_resource:unload(IDS_UNIT, Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 		end
 	end
 
@@ -564,7 +564,7 @@ function CharacterCreationGui:show_character_create_input_textbox(callback_yes_f
 	local params = {
 		callback_yes = callback_yes_function,
 		callback_no = callback_no_function,
-		textbox_value = self:translate("menu_" .. self._selected_nation, true) .. " " .. num_append_txt[slot_index - 10]
+		textbox_value = num_append_txt[slot_index - 10]
 	}
 
 	managers.menu:show_character_create_dialog(params)
@@ -667,7 +667,8 @@ function CharacterCreationGui:create_new_character(character_profile_name)
 		managers.player:tutorial_clear_all_ammo()
 	end
 
-	managers.savefile:save_game(managers.savefile:get_save_progress_slot())
+	managers.savefile:save_game(slot_index)
+	managers.savefile:save_last_selected_character_profile_slot()
 	Application:debug("[CharacterCreationGui:create_new_character] managers.global_state.fire_character_created_event = true")
 
 	managers.global_state.fire_character_created_event = true
@@ -684,7 +685,7 @@ function CharacterCreationGui:_character_save_done_callback(slot, success, is_se
 	managers.raid_menu:set_close_menu_allowed(true)
 	managers.statistics:create_character()
 	managers.statistics:publish_camp_stats_to_steam()
-	managers.player:sync_upgrades()
+	managers.player:on_upgrades_changed()
 	managers.raid_menu:on_escape()
 end
 
@@ -720,7 +721,7 @@ function CharacterCreationGui:_load_class_default_weapons()
 		local unit_path = tweak_data.weapon.factory[weapon_factory_id].unit
 		self._loading_units[unit_path] = true
 
-		managers.dyn_resource:load(Idstring("unit"), Idstring(unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_weapon_unit_load_complete_callback", {
+		managers.dyn_resource:load(IDS_UNIT, Idstring(unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_weapon_unit_load_complete_callback", {
 			weapon_factory_id = weapon_factory_id,
 			unit_path = unit_path,
 			weapon_id = weapon_id

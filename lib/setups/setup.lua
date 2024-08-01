@@ -10,7 +10,7 @@ core:register_module("lib/utils/dev/FreeFlight")
 
 Global.DEBUG_MENU_ON = Application:debug_enabled()
 Global.DEFAULT_DIFFICULTY = "difficulty_2"
-Global.DEFAULT_PERMISSION = "public"
+Global.DEFAULT_PERMISSION = "friends_only"
 Global.STREAM_ALL_PACKAGES = false
 
 core:import("CoreSetup")
@@ -20,13 +20,13 @@ managers.dlc = DLCManager:new()
 
 require("lib/tweak_data/TweakData")
 require("lib/utils/Utl")
-require("lib/utils/MessageSystem")
 require("lib/utils/CoroutineManager")
 require("lib/utils/EventListenerHolder")
 require("lib/utils/QueuedEventListenerHolder")
 require("lib/utils/Easing")
 require("lib/utils/UIAnimation")
 require("lib/utils/TemporaryPropertyManager")
+require("lib/utils/PlayerSkill")
 require("lib/managers/UpgradesManager")
 require("lib/managers/GoldEconomyManager")
 require("lib/managers/RaidExperienceManager")
@@ -40,8 +40,6 @@ require("lib/managers/VehicleManager")
 require("lib/managers/FireManager")
 require("lib/managers/menu/raid_menu/RaidMenuSceneManager")
 require("lib/managers/CharacterCustomizationManager")
-require("lib/units/BuffEffect")
-require("lib/managers/BuffEffectManager")
 require("lib/managers/ChallengeCardsManager")
 require("lib/managers/ConsumableMissionManager")
 require("lib/managers/GreedManager")
@@ -49,14 +47,8 @@ require("lib/managers/EventSystemManager")
 require("lib/managers/ProgressionManager")
 require("lib/managers/WeaponSkillsManager")
 require("lib/managers/QueuedTasksManager")
-require("lib/managers/WarcryManager")
-require("lib/managers/warcries/Warcry")
-require("lib/managers/warcries/WarcryBerserk")
-require("lib/managers/warcries/WarcryClustertruck")
-require("lib/managers/warcries/WarcryGhost")
-require("lib/managers/warcries/WarcrySharpshooter")
 require("lib/managers/WeaponInventoryManager")
-require("lib/utils/PlayerSkill")
+require("lib/managers/WarcryManager")
 core:import("PlatformManager")
 core:import("SystemMenuManager")
 core:import("UserManager")
@@ -85,7 +77,6 @@ require("lib/managers/LootDropManager")
 require("lib/managers/ChatManager")
 require("lib/managers/LootManager")
 require("lib/managers/RaidJobManager")
-require("lib/managers/VoiceBriefingManager")
 require("lib/managers/VoiceOverManager")
 require("lib/managers/BreadcrumbManager")
 require("lib/managers/ChallengeManager")
@@ -126,8 +117,9 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlButtonLongTertiary")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlButtonSubtitle")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlImage")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlInfoIcon")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlBackgroundImage")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlMenuBackground")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlThreeCutBitmap")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlNineCutBitmap")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlImageButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlNavigationButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlAnimatedBitmap")
@@ -168,7 +160,6 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlRotateUnit")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlProgressBar")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlProgressBarSimple")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingProgressBar")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlSkilltree")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarNode")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarSkilltreeNode")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarPath")
@@ -183,6 +174,7 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlGridItemActive")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlPagedGrid")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlScrollGrid")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlPagedGridCharacterCustomization")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlCategorizedGrid")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlScrollableArea")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlScrollbar")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlLegend")
@@ -215,6 +207,8 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlXPRewardDetails")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlServerPlayerDescription")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlReadyUpPlayerDescription")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlRewardCardPack")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlPlayerStats")
+require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlSkillsBreakdown")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlXPUnlocks")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlXPBreakdown")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlStatsBreakdown")
@@ -239,6 +233,9 @@ require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlSkilltreeProg
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlLootProgressBar")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlLootBracket")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlKickMuteWidget")
+require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlGridItemSkill")
+require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlSkillProgression")
+require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlButtonSkillTiny")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlWeaponStats")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlMeleeWeaponStats")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlGrenadeWeaponStats")
@@ -303,7 +300,7 @@ end
 
 function Setup:load_packages()
 	Application:debug("[Setup:load_packages()]")
-	setup:set_resource_loaded_clbk(Idstring("unit"), nil)
+	setup:set_resource_loaded_clbk(IDS_UNIT, nil)
 	TextureCache:set_streaming_enabled(true)
 	TextureCache:set_LOD_streaming_enabled(true)
 
@@ -318,21 +315,16 @@ function Setup:load_packages()
 	if not PackageManager:loaded("packages/dyn_resources") then
 		PackageManager:load("packages/dyn_resources")
 	end
-
-	if not PackageManager:loaded("packages/zone_germany") then
-		PackageManager:load("packages/zone_germany")
-	end
 end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
 		drop_in_allowed = true,
-		auto_kick = true,
+		permission = "public",
 		job_plan = -1,
 		team_ai = true,
 		search_appropriate_jobs = true,
 		kick_option = 1,
-		permission = "public",
 		is_playing = false,
 		reputation_permission = 0,
 		selected_team_ai = true,
@@ -369,7 +361,6 @@ function Setup:init_managers(managers)
 	managers.menu_component = MenuComponentManager:new()
 	managers.loot = LootManager:new()
 	managers.raid_job = RaidJobManager.get_instance()
-	managers.briefing = VoiceBriefingManager:new()
 	managers.voice_over = VoiceOverManager:new()
 	managers.breadcrumb = BreadcrumbManager.get_instance()
 	managers.challenge = ChallengeManager.get_instance()
@@ -392,6 +383,10 @@ function Setup:init_managers(managers)
 end
 
 function Setup:start_boot_loading_screen()
+	if not PackageManager:loaded("packages/boot_screen") then
+		PackageManager:load("packages/boot_screen")
+	end
+
 	self:_start_loading_screen()
 end
 
@@ -443,7 +438,6 @@ function Setup:_start_loading_screen()
 			PackageManager:load("packages/load_level")
 		end
 
-		local using_steam_controller = false
 		setup = "lib/setups/LevelLoadingSetup"
 		load_level_data = {
 			level_data = Global.level_data,
@@ -454,29 +448,36 @@ function Setup:_start_loading_screen()
 		load_level_data.menu_tweak_data = tweak_data.menu
 		load_level_data.scale_tweak_data = tweak_data.scale
 		load_level_data.tip_id = tweak_data.tips:get_a_tip()
+		local packages_to_load = load_level_data.level_tweak_data.package
 
-		if not using_steam_controller then
-			local coords = tweak_data:get_controller_help_coords()
-			load_level_data.controller_coords = coords and coords[table.random({
-				"normal",
-				"vehicle"
-			})]
-			load_level_data.controller_image = "guis/textures/controller"
-			load_level_data.controller_shapes = {
-				{
-					position = {
-						cy = 0.5,
-						cx = 0.5
-					},
-					texture_rect = {
-						0,
-						0,
-						512,
-						256
-					}
+		if packages_to_load then
+			Application:debug("[Setup:_start_loading_screen()] Load coded level packages: #" .. tostring(#packages_to_load))
+
+			for _, v in ipairs(packages_to_load) do
+				PackageManager:load(v)
+			end
+		end
+
+		local coords = tweak_data:get_controller_help_coords()
+		load_level_data.controller_coords = coords and coords[table.random({
+			"normal",
+			"vehicle"
+		})]
+		load_level_data.controller_image = "guis/textures/controller"
+		load_level_data.controller_shapes = {
+			{
+				position = {
+					cy = 0.5,
+					cx = 0.5
+				},
+				texture_rect = {
+					0,
+					0,
+					512,
+					256
 				}
 			}
-		end
+		}
 
 		if load_level_data.controller_coords then
 			for id, data in pairs(load_level_data.controller_coords) do
@@ -519,7 +520,7 @@ function Setup:_start_loading_screen()
 		res = RenderSettings.resolution,
 		layer = tweak_data.gui.LOADING_SCREEN_LAYER,
 		load_level_data = load_level_data,
-		is_win32 = _G.IS_PC
+		is_win32 = IS_PC
 	}
 	Global.is_loading = true
 end
@@ -571,7 +572,7 @@ function Setup:init_game()
 
 	self._end_frame_clbks = {}
 	local scene_gui = Overlay:gui()
-	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, _G.IS_PC)
+	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, IS_PC)
 	self._main_thread_loading_screen_gui_visible = true
 
 	return game_state_machine
@@ -591,7 +592,7 @@ function Setup:init_finalize()
 
 	managers.blackmarket:init_finalize()
 
-	if _G.IS_PC then
+	if IS_PC then
 		AnimationManager:set_anim_cache_size(10485760, 0)
 	end
 
@@ -613,7 +614,6 @@ function Setup:update(t, dt)
 	managers.blackmarket:update(t, dt)
 	managers.vote:update(t, dt)
 	managers.vehicle:update(t, dt)
-	managers.warcry:update(t, dt)
 	managers.progression:update(t, dt)
 	managers.video:update(t, dt)
 	game_state_machine:update(t, dt)
@@ -736,7 +736,7 @@ end
 
 function Setup:exec(context)
 	if managers.network then
-		if _G.IS_PS4 then
+		if IS_PS4 then
 			PSN:set_matchmaking_callback("session_destroyed", function ()
 			end)
 		end
@@ -750,7 +750,7 @@ function Setup:exec(context)
 		end
 	end
 
-	if _G.IS_PC then
+	if IS_PC then
 		self:set_fps_cap(30)
 	end
 
@@ -827,7 +827,7 @@ function Setup:quit_to_main_menu()
 		setup.exit_to_main_menu = false
 
 		managers.menu:post_event("menu_exit")
-		managers.menu:close_menu("menu_pause")
+		managers.raid_menu:close_all_menus()
 		setup:load_start_menu(true)
 	end
 end

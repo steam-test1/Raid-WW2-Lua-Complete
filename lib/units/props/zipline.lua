@@ -570,7 +570,7 @@ end
 
 function ZipLine:attach_bag(bag)
 	self._booked_bag_peer_id = nil
-	local body = bag:body("hinge_body_1") or bag:body(0)
+	local body = bag:get_grab_body()
 
 	body:set_keyframed()
 
@@ -597,7 +597,7 @@ function ZipLine:attach_bag(bag)
 end
 
 function ZipLine:release_bag()
-	local body = self._attached_bag:body("hinge_body_1") or self._attached_bag:body(0)
+	local body = bag:get_grab_body()
 
 	body:set_dynamic()
 

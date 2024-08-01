@@ -1543,7 +1543,7 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			{
 				cost = 6,
-				value = 5,
+				value = 4,
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
@@ -2131,7 +2131,7 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				cost = 6,
-				value = 5,
+				value = 4,
 				challenge_done_text_id = "weapon_skill_last_round_kill_completed",
 				challenge_briefing_id = "weapon_skill_last_round_kill_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
@@ -5328,6 +5328,9 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 						450
 					}
 				}
+			},
+			weapon_parts = {
+				"wpn_fps_ass_carbine_b_medium"
 			}
 		}
 	}
@@ -5350,6 +5353,9 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 							600
 						}
 					}
+				},
+				weapon_parts = {
+					"wpn_fps_ass_carbine_b_standard"
 				}
 			}
 		},

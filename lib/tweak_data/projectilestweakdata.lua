@@ -1,6 +1,14 @@
 ProjectilesTweakData = ProjectilesTweakData or class()
 
 function ProjectilesTweakData:init(tweak_data)
+	self.GRENADE_QUANTITY_UPGARDE = {
+		upgrade = "grenadier_grenade_quantity",
+		category = "player"
+	}
+	self.MINE_QUANTITY_UPGARDE = {
+		upgrade = "sapper_mine_quantity",
+		category = "player"
+	}
 	self.m24 = {
 		name_id = "bm_grenade_frag",
 		weapon_id = "m24_grenade",
@@ -8,20 +16,21 @@ function ProjectilesTweakData:init(tweak_data)
 		unit_hand = "units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24_hand",
 		unit_dummy = "units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24_husk",
 		icon = "frag_grenade",
+		anim_global_param = "projectile_frag",
 		throwable = true,
 		max_amount = 3,
-		anim_global_param = "projectile_frag",
-		throw_allowed_expire_t = 0.1,
-		expire_t = 1.1,
-		repeat_expire_t = 1.5,
+		upgrade_amount = self.GRENADE_QUANTITY_UPGARDE,
+		throw_allowed_expire_t = 0.662,
+		expire_t = 0.455,
+		repeat_expire_t = 1,
 		is_a_grenade = true,
-		can_airburst = true,
-		damage = 950,
+		damage = 600,
 		player_damage = 20,
-		range = 500
+		range = 850,
+		can_airburst = true
 	}
 	self.m24.enemy_proximity_range = self.m24.range * 0.6
-	self.m24.killzone_range = 0.75
+	self.m24.killzone_range = 0.33
 	self.m24.init_timer = 4.5
 	self.m24.animations = {
 		equip_id = "equip_welrod"
@@ -46,18 +55,19 @@ function ProjectilesTweakData:init(tweak_data)
 		icon = "frag_grenade",
 		throwable = true,
 		max_amount = 3,
+		upgrade_amount = self.GRENADE_QUANTITY_UPGARDE,
 		anim_global_param = "projectile_frag",
-		throw_allowed_expire_t = 0.1,
-		expire_t = 1.1,
+		throw_allowed_expire_t = 0.662,
+		expire_t = 0.455,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
-		can_airburst = true,
-		damage = 850,
-		player_damage = 24,
-		range = 750
+		damage = 800,
+		player_damage = 20,
+		range = 900,
+		can_airburst = true
 	}
 	self.concrete.enemy_proximity_range = self.concrete.range * 0.6
-	self.concrete.killzone_range = 0.75
+	self.concrete.killzone_range = 0.33
 	self.concrete.init_timer = 4.5
 	self.concrete.animations = {
 		equip_id = "equip_welrod"
@@ -81,25 +91,26 @@ function ProjectilesTweakData:init(tweak_data)
 		unit_dummy = "units/upd_003/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343_husk",
 		icon = "frag_grenade",
 		throwable = true,
-		max_amount = 3,
+		max_amount = 4,
+		upgrade_amount = self.GRENADE_QUANTITY_UPGARDE,
 		anim_global_param = "projectile_frag",
-		throw_allowed_expire_t = 0.1,
-		expire_t = 1.1,
+		throw_allowed_expire_t = 0.662,
+		expire_t = 0.455,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
 		can_airburst = true,
-		damage = 950,
-		player_damage = 28,
-		range = 500
+		damage = 850,
+		player_damage = 20,
+		range = 900
 	}
 	self.d343.enemy_proximity_range = self.d343.range * 0.6
-	self.d343.killzone_range = 0.75
+	self.d343.killzone_range = 0.33
 	self.d343.init_timer = 4.5
 	self.d343.animations = {
 		equip_id = "equip_welrod"
 	}
 	self.d343.sound_event = "d43d_grenade_explode"
-	self.d343.launch_speed = 200
+	self.d343.launch_speed = 210
 	self.d343.gui = {
 		rotation_offset = 0,
 		distance_offset = -120,
@@ -118,24 +129,25 @@ function ProjectilesTweakData:init(tweak_data)
 		icon = "frag_grenade",
 		throwable = true,
 		max_amount = 3,
+		upgrade_amount = self.GRENADE_QUANTITY_UPGARDE,
 		anim_global_param = "projectile_frag",
-		throw_allowed_expire_t = 0.1,
-		expire_t = 1.1,
+		throw_allowed_expire_t = 0.662,
+		expire_t = 0.455,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
 		can_airburst = true,
-		damage = 850,
-		player_damage = 24,
-		range = 1000
+		damage = 900,
+		player_damage = 20,
+		range = 700
 	}
 	self.mills.enemy_proximity_range = self.mills.range * 0.6
-	self.mills.killzone_range = 0.75
+	self.mills.killzone_range = 0.33
 	self.mills.init_timer = 4.5
 	self.mills.animations = {
 		equip_id = "equip_welrod"
 	}
 	self.mills.sound_event = "mills_grenade_explode"
-	self.mills.launch_speed = 200
+	self.mills.launch_speed = 210
 	self.mills.gui = {
 		rotation_offset = 0,
 		distance_offset = -120,
@@ -155,15 +167,16 @@ function ProjectilesTweakData:init(tweak_data)
 		throwable = true,
 		instant_throw = true,
 		max_amount = 2,
+		upgrade_amount = self.MINE_QUANTITY_UPGARDE,
 		anim_global_param = "projectile_frag",
-		throw_allowed_expire_t = 0.13333333333333333,
-		expire_t = 0.5,
+		throw_allowed_expire_t = 0,
+		expire_t = 0.46,
 		repeat_expire_t = 1,
 		is_a_grenade = true,
-		damage = 950,
+		damage = 750,
 		player_damage = 35,
-		range = 500,
-		killzone_range = 0.75,
+		range = 550,
+		killzone_range = 0.5,
 		init_timer = 3,
 		animations = {}
 	}
@@ -171,8 +184,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.betty.sound_event = "mills_grenade_explode"
 	self.betty.launch_speed = 150
 	self.betty.enemy_proximity_range = 200
-	self.betty.enemy_proximity_delay = 0.4
-	self.betty.jumpmine_velocity = 540
+	self.betty.enemy_proximity_delay = 0.44
+	self.betty.jumpmine_velocity = 350
 	self.betty.gui = {
 		rotation_offset = 0,
 		distance_offset = -120,
@@ -191,13 +204,16 @@ function ProjectilesTweakData:init(tweak_data)
 		impact_detonation = true,
 		max_amount = 3,
 		anim_global_param = "projectile_frag",
-		killzone_range = 0.15,
+		killzone_range = 0.33,
 		is_a_grenade = true,
 		damage = 250,
-		launch_speed = 20,
-		adjust_z = 5,
 		player_damage = 3,
-		range = 350,
+		range = 250,
+		launch_speed = 2,
+		adjust_z_range = {
+			1,
+			1.8
+		},
 		animations = {}
 	}
 	self.cluster.animations.equip_id = "equip_welrod"
@@ -210,7 +226,7 @@ function ProjectilesTweakData:init(tweak_data)
 		throwable = true,
 		max_amount = 3,
 		anim_global_param = "projectile_frag",
-		throw_allowed_expire_t = 0.1,
+		throw_allowed_expire_t = 0,
 		expire_t = 1.1,
 		repeat_expire_t = 1.5,
 		is_a_grenade = false,
@@ -218,10 +234,10 @@ function ProjectilesTweakData:init(tweak_data)
 		player_damage = 0,
 		range = 1000,
 		init_timer = 4.5,
+		push_at_body_index = 0,
 		animations = {}
 	}
 	self.ammo_bag.animations.equip_id = "equip_welrod"
-	self.ammo_bag.push_at_body_index = 0
 	self.molotov = {
 		name_id = "bm_grenade_molotov",
 		icon = "molotov_grenade",
@@ -230,20 +246,21 @@ function ProjectilesTweakData:init(tweak_data)
 		time_cheat = 1,
 		throwable = false,
 		max_amount = 3,
+		upgrade_amount = self.GRENADE_QUANTITY_UPGARDE,
 		texture_bundle_folder = "bbq",
-		physic_effect = Idstring("physic_effects/molotov_throw"),
+		physic_effect = tweak_data.physics_effects.molotov_throw,
 		anim_global_param = "projectile_molotov",
-		throw_allowed_expire_t = 0.1,
-		expire_t = 1.1,
+		throw_allowed_expire_t = 0.662,
+		expire_t = 0.46,
 		repeat_expire_t = 1.5,
 		is_a_grenade = true,
 		init_timer = 10,
-		damage = 30,
+		damage = 15,
 		player_damage = 5,
 		fire_dot_data = {
 			dot_trigger_chance = 35,
 			dot_damage = 10,
-			dot_length = 3,
+			dot_length = 2.01,
 			dot_trigger_max_distance = 3000,
 			dot_tick_period = 0.5
 		},
@@ -269,15 +286,15 @@ function ProjectilesTweakData:init(tweak_data)
 	self.decoy_coin.throwable = true
 	self.decoy_coin.instant_throw = true
 	self.decoy_coin.anim_global_param = "projectile_molotov"
-	self.decoy_coin.throw_allowed_expire_t = 0.13333333333333333
-	self.decoy_coin.expire_t = 0.5
+	self.decoy_coin.throw_allowed_expire_t = 0
+	self.decoy_coin.expire_t = 0.46
 	self.decoy_coin.repeat_expire_t = 1
 	self.decoy_coin.is_a_grenade = true
 	self.decoy_coin.range = 1000
+	self.decoy_coin.launch_speed = 200
 	self.decoy_coin.animations = {
 		equip_id = "equip_welrod"
 	}
-	self.decoy_coin.launch_speed = 200
 	self.decoy_coin.gui = {
 		rotation_offset = 0,
 		distance_offset = -160,
@@ -295,13 +312,13 @@ function ProjectilesTweakData:init(tweak_data)
 		weapon_id = "mortar_shell",
 		no_cheat_count = false,
 		impact_detonation = true,
-		physic_effect = Idstring("physic_effects/anti_gravitate"),
+		physic_effect = tweak_data.physics_effects.no_gravity,
 		adjust_z = 0,
 		push_at_body_index = 0,
 		init_timer = 5,
 		damage = 80,
-		player_damage = 15,
-		range = 1200,
+		player_damage = 20,
+		range = 1500,
 		killzone_range = 0,
 		init_timer = 15,
 		effect_name = "effects/vanilla/explosions/exp_artillery_explosion_001",
@@ -314,6 +331,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.flamer_death_fake.throwable = false
 	self.flamer_death_fake.unit = "units/vanilla/dev/flamer_death_fake/flamer_death_fake"
 	self.flamer_death_fake.unit_dummy = "units/vanilla/dev/flamer_death_fake/flamer_death_fake_husk"
+	self.flamer_death_fake.burn_duration = 10
+	self.flamer_death_fake.sound_event_impact_duration = 1
 	self._projectiles_index = {
 		"m24",
 		"cluster",

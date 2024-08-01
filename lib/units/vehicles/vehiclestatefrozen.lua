@@ -13,7 +13,10 @@ function VehicleStateFrozen:enter(state_data, enter_data)
 	self._unit:vehicle_driving()._shooting_stance_allowed = false
 
 	self:disable_interactions()
-	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+
+	if Network:is_server() then
+		self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+	end
 end
 
 function VehicleStateFrozen:allow_exit()

@@ -108,7 +108,11 @@ end
 function WorldCameraLayer:build_panel(notebook)
 	cat_print("editor", "WorldCameraLayer:build_panel")
 
-	self._ews_panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
+	self._ews_panel = EWS:ScrolledWindow(notebook, "", "TAB_TRAVERSAL")
+
+	self._ews_panel:set_scroll_rate(Vector3(20, 20, 0))
+	self._ews_panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
+
 	self._main_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._ews_panel:set_sizer(self._main_sizer)

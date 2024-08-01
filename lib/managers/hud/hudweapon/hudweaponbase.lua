@@ -4,6 +4,7 @@ HUDWeaponBase.ALPHA_WHEN_UNSELECTED = 0.5
 
 function HUDWeaponBase:init(index, weapons_panel, tweak_data)
 	self._tweak_data = tweak_data
+	self._blocked = false
 end
 
 function HUDWeaponBase:panel()
@@ -37,6 +38,10 @@ function HUDWeaponBase:hide()
 end
 
 function HUDWeaponBase:destroy()
+	if self._index and managers.queued_tasks:has_task("hud_weapon_animate_" .. self._index) then
+		managers.queued_tasks:unqueue("hud_weapon_animate_" .. self._index)
+	end
+
 	self._object:parent():remove(self._object)
 end
 
@@ -65,6 +70,18 @@ function HUDWeaponBase:set_max(max)
 end
 
 function HUDWeaponBase:set_no_ammo(empty)
+end
+
+function HUDWeaponBase:set_blocked(state)
+	self._blocked = not not state
+
+	if self:is_blocked() then
+		-- Nothing
+	end
+end
+
+function HUDWeaponBase:is_blocked()
+	return self._blocked
 end
 
 function HUDWeaponBase:set_selected(selected)

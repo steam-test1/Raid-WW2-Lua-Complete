@@ -52,7 +52,7 @@ end
 
 function IntelGui:_layout_list()
 	local category_items_list_scrollable_area_params = {
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		name = "category_items_list_scrollable_area",
 		h = 752,
 		y = 192,

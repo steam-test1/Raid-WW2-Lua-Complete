@@ -16,8 +16,6 @@ MenuRenderer = MenuRenderer or class(CoreMenuRenderer.Renderer)
 
 function MenuRenderer:init(logic, ...)
 	MenuRenderer.super.init(self, logic, ...)
-
-	self._sound_source = SoundDevice:create_source("MenuRenderer")
 end
 
 function MenuRenderer:show_node(node)
@@ -50,195 +48,37 @@ function MenuRenderer:open(...)
 	self._menu_stencil_align = "left"
 	self._menu_stencil_default_image = "guis/textures/empty"
 	self._menu_stencil_image = self._menu_stencil_default_image
-
-	self._create_blackborders()
-end
-
-function MenuRenderer.destroy_blackborder_workspace_instance()
-	if alive(Global.blackborder_workspace) then
-		Overlay:gui():destroy_workspace(Global.blackborder_workspace)
-	end
-
-	Global.blackborder_workspace = nil
-end
-
-function MenuRenderer.get_blackborder_workspace_instance()
-	if not Global.blackborder_workspace then
-		Global.blackborder_workspace = managers.gui_data:create_fullscreen_workspace()
-
-		Global.blackborder_workspace:panel():rect({
-			name = "top_border",
-			layer = 1000,
-			color = Color.black
-		})
-		Global.blackborder_workspace:panel():rect({
-			name = "bottom_border",
-			layer = 1000,
-			color = Color.black
-		})
-		Global.blackborder_workspace:panel():rect({
-			name = "left_border",
-			layer = 1000,
-			color = Color.black
-		})
-		Global.blackborder_workspace:panel():rect({
-			name = "right_border",
-			layer = 1000,
-			color = Color.black
-		})
-	end
-
-	return Global.blackborder_workspace
 end
 
 function MenuRenderer:close(...)
 	MenuRenderer.super.close(self, ...)
-
-	if managers.raid_menu:ct_open_menus() == 1 then
-		MenuRenderer._remove_blackborders()
-	end
-end
-
-function MenuRenderer._remove_blackborders()
-	local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
-
-	blackborder_workspace:panel():set_visible(false)
-end
-
-function MenuRenderer._create_blackborders()
-	Application:debug("[MenuRenderer][_create_blackborders]")
-
-	local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
-
-	blackborder_workspace:panel():set_visible(true)
-
-	local top_border = blackborder_workspace:panel():child("top_border")
-	local bottom_border = blackborder_workspace:panel():child("bottom_border")
-	local left_border = blackborder_workspace:panel():child("left_border")
-	local right_border = blackborder_workspace:panel():child("right_border")
-	local width = blackborder_workspace:panel():w()
-	local height = blackborder_workspace:panel():h()
-	local base_resolution = clone(tweak_data.gui.base_resolution)
-	local base_aspect_ratio = base_resolution.x / base_resolution.y
-	base_resolution.y = width / base_aspect_ratio
-	base_resolution.x = height * base_aspect_ratio
-	local border_w = (width - base_resolution.x) / 2
-	local border_h = (height - base_resolution.y) / 2
-
-	top_border:set_position(-1, -1)
-	top_border:set_size(width + 2, border_h + 2)
-	top_border:set_visible(border_h > 0)
-	bottom_border:set_position(-1, math.ceil(border_h) + base_resolution.y - 1)
-	bottom_border:set_size(width + 2, border_h + 2)
-	bottom_border:set_visible(border_h > 0)
-	left_border:set_position(-1, -1)
-	left_border:set_size(border_w + 2, height + 2)
-	left_border:set_visible(border_w > 0)
-	right_border:set_position(math.floor(border_w) + base_resolution.x - 1, -1)
-	right_border:set_size(border_w + 2, height + 2)
-	right_border:set_visible(border_w > 0)
 end
 
 function MenuRenderer:update(t, dt)
 	MenuRenderer.super.update(self, t, dt)
 end
 
-local mugshot_stencil = {
-	random = {
-		"bg_lobby_fullteam",
-		65
-	},
-	undecided = {
-		"bg_lobby_fullteam",
-		65
-	},
-	american = {
-		"bg_hoxton",
-		65
-	},
-	german = {
-		"bg_wolf",
-		55
-	},
-	russian = {
-		"bg_dallas",
-		65
-	},
-	spanish = {
-		"bg_chains",
-		60
-	}
-}
-
 function MenuRenderer:highlight_item(item, ...)
 	MenuRenderer.super.highlight_item(self, item, ...)
-	self:post_event("highlight")
 end
 
 function MenuRenderer:trigger_item(item)
 	MenuRenderer.super.trigger_item(self, item)
-
-	if item and item:visible() and item:parameters().sound ~= "false" then
-		local item_type = item:type()
-
-		if item_type == "" then
-			self:post_event("menu_enter")
-		elseif item_type == "toggle" then
-			if item:value() == "on" then
-				self:post_event("box_tick")
-			else
-				self:post_event("box_untick")
-			end
-		elseif item_type == "slider" then
-			local percentage = item:percentage()
-
-			if percentage > 0 and percentage < 100 then
-				-- Nothing
-			end
-		elseif item_type == "multi_choice" then
-			-- Nothing
-		end
-	end
-end
-
-function MenuRenderer:post_event(event)
-	self._sound_source:post_event(event)
 end
 
 function MenuRenderer:navigate_back()
 	MenuRenderer.super.navigate_back(self)
 	self:active_node_gui():update_item_icon_visibility()
-	self:post_event("menu_exit")
 end
 
 function MenuRenderer:resolution_changed(...)
 	MenuRenderer.super.resolution_changed(self, ...)
-	self._create_blackborders()
 
 	local active_node_gui = self:active_node_gui()
 
 	if active_node_gui and active_node_gui.update_item_icon_visibility then
 		self:active_node_gui():update_item_icon_visibility()
 	end
-end
-
-function MenuRenderer:current_menu_text(topic_id)
-	local ids = {}
-
-	for i, node_gui in ipairs(self._node_gui_stack) do
-		table.insert(ids, node_gui.node:parameters().topic_id)
-	end
-
-	table.insert(ids, topic_id)
-
-	local s = ""
-
-	for i, id in ipairs(ids) do
-		s = s .. managers.localization:text(id)
-		s = s .. (i < #ids and " > " or "")
-	end
-
-	return s
 end
 
 function MenuRenderer:accept_input(accept)

@@ -1,6 +1,6 @@
 NetworkMatchMaking = NetworkMatchMaking or class()
 NetworkMatchMaking.OPEN_SLOTS = 4
-NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_21_06"
+NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_01"
 NetworkMatchMaking.RETRY_CONNECT_COUNT = 15
 
 function NetworkMatchMaking:init()
@@ -23,7 +23,7 @@ function NetworkMatchMaking:_call_callback(name, ...)
 	if self._callback_map[name] then
 		return self._callback_map[name](...)
 	else
-		Application:error("Callback " .. name .. " not found.")
+		Application:error("Callback " .. tostring(name) .. " not found.")
 	end
 end
 

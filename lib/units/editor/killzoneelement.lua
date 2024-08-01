@@ -14,9 +14,5 @@ function KillzoneUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "type", {
-		"sniper",
-		"gas",
-		"fire"
-	})
+	self:_build_value_combobox(panel, panel_sizer, "type", KillzoneManager.TYPES)
 end

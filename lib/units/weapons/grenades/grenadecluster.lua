@@ -9,12 +9,12 @@ function GrenadeCluster:_setup_from_tweak_data()
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
 	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
 	self._range = self._tweak_data.range
-	self._effect_name = self._tweak_data.effect_name or "effects/vanilla/explosions/exp_hand_grenade_001"
+	self._effect_name = self._tweak_data.effect_name or "effects/vanilla/explosions/exp_cluster_001"
 	self._curve_pow = self._tweak_data.curve_pow or 3
 	self._damage = self._tweak_data.damage
 	self._killzone_range = self._tweak_data.killzone_range or 0.1
-	self._player_damage = self._tweak_data.player_damage
 	self._alert_radius = self._tweak_data.alert_radius
+	self._player_damage = self._tweak_data.player_damage
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
 		camera_shake_max_mul = 4,
@@ -41,13 +41,10 @@ function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, posit
 	local thrower_peer_id = self:get_thrower_peer_id()
 
 	if thrower_peer_id then
-		if thrower_peer_id == managers.network:session():local_peer():id() then
-			self._range = self._range * managers.player:upgrade_value("player", "warcry_grenade_cluster_range", 1)
-			self._damage = self._damage * managers.player:upgrade_value("player", "warcry_grenade_cluster_damage", 1)
-		else
-			self._range = self._range * managers.warcry:peer_warcry_upgrade_value(thrower_peer_id, "player", "warcry_grenade_cluster_range", 1)
-			self._damage = self._damage * managers.warcry:peer_warcry_upgrade_value(thrower_peer_id, "player", "warcry_grenade_cluster_damage", 1)
-		end
+		local client_player = thrower_peer_id ~= managers.network:session():local_peer():id()
+		local peer_id = client_player and thrower_peer_id or nil
+		self._range = self._range * (PlayerSkill.warcry_data("player", "warcry_grenade_cluster_range", 2, peer_id) - 1)
+		self._damage = self._damage * (PlayerSkill.warcry_data("player", "warcry_grenade_cluster_damage", 2, peer_id) - 1)
 	end
 
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)

@@ -111,7 +111,7 @@ function HuskTeamAIDamage:damage_melee(attack_data)
 			attacker = self._unit
 		end
 
-		self._unit:network():send_to_host("damage_melee", attacker, damage_percent, 1, hit_offset_height, 0)
+		self._unit:network():send_to_host("damage_melee", attacker, damage_percent, 1, 0, hit_offset_height, 0, self._dead and true or false)
 		self:_send_damage_drama(attack_data, damage_abs)
 	end
 end
@@ -371,26 +371,6 @@ function HuskTeamAIDamage:unpause_bleed_out()
 	end
 
 	self._unit:network():send_to_host("unpause_bleed_out")
-end
-
-function HuskTeamAIDamage:pause_arrested_timer()
-	if self._dead then
-		return
-	end
-
-	self._unit:network():send_to_host("pause_arrested_timer")
-end
-
-function HuskTeamAIDamage:unpause_arrested_timer()
-	if self._dead then
-		return
-	end
-
-	if self._unit:id() == -1 then
-		return
-	end
-
-	self._unit:network():send_to_host("unpause_arrested_timer")
 end
 
 function HuskTeamAIDamage:_on_bleedout(from_dropin)

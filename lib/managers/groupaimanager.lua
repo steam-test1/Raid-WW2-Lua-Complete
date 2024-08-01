@@ -47,6 +47,8 @@ function GroupAIManager:set_state(name, world_id)
 end
 
 function GroupAIManager:set_current_state(name, world_id)
+	Application:debug("[GroupAIManager:set_current_state] group state: " .. (name or "nil") .. ", for WorldID:" .. tostring(world_id))
+
 	local new_state = nil
 
 	if name == "empty" then

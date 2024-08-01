@@ -13,7 +13,7 @@ HostNetworkSession._STATES = {
 	game_end = HostStateGameEnd,
 	closing = HostStateClosing
 }
-HostNetworkSession._DEAD_CONNECTION_REPORT_PROCESS_DELAY = math.max(HostNetworkSession.CONNECTION_TIMEOUT, HostNetworkSession.LOADING_CONNECTION_TIMEOUT) + 1.5
+HostNetworkSession._DEAD_CONNECTION_REPORT_PROCESS_DELAY = math.max(HostNetworkSession.CONNECTION_TIMEOUT, HostNetworkSession.LOADING_CONNECTION_TIMEOUT) + 3
 HostNetworkSession._LOAD_COUNTER_LIMITS = {
 	1,
 	1024
@@ -68,7 +68,7 @@ function HostNetworkSession:is_client()
 end
 
 function HostNetworkSession:on_PSN_connection_established(name, ip)
-	if not _G.IS_PS4 then
+	if not IS_PS4 then
 		return
 	end
 
@@ -294,7 +294,7 @@ function HostNetworkSession:check_dropin(t, dt)
 end
 
 function HostNetworkSession:set_peer_loading_state(peer, state, load_counter)
-	print("[HostNetworkSession:set_peer_loading_state]", peer:id(), state, load_counter)
+	Application:debug("[HostNetworkSession:set_peer_loading_state]", peer:id(), state, load_counter)
 
 	if load_counter ~= self._load_counter then
 		Application:error("wrong load counter", self._load_counter)
@@ -344,14 +344,14 @@ function HostNetworkSession:set_peer_loading_state(peer, state, load_counter)
 			if dropin_pause_ok then
 				self:chk_drop_in_peer(peer)
 			else
-				print(" setting set_expecting_pause_sequence", peer:id())
+				Application:debug(" setting set_expecting_pause_sequence", peer:id())
 			end
 		end
 	end
 end
 
 function HostNetworkSession:on_drop_in_pause_confirmation_received(dropin_peer_id, sender_peer)
-	print("[HostNetworkSession:on_drop_in_pause_confirmation_received]", sender_peer:id(), " paused for ", dropin_peer_id)
+	Application:debug("[HostNetworkSession:on_drop_in_pause_confirmation_received]", sender_peer:id(), " paused for ", dropin_peer_id)
 
 	local is_expecting = sender_peer:is_expecting_pause_confirmation(dropin_peer_id)
 	local dropin_peer = self._peers[dropin_peer_id]
@@ -360,7 +360,7 @@ function HostNetworkSession:on_drop_in_pause_confirmation_received(dropin_peer_i
 		if is_expecting == "asked" then
 			self:set_dropin_pause_request(sender_peer, dropin_peer_id, "paused")
 		else
-			print("peer", sender_peer:id(), "was not asked for confirmation. is_expecting:", is_expecting)
+			Application:debug("[HostNetworkSession:on_drop_in_pause_confirmation_received] Peer ID:", sender_peer:id(), "was not asked for confirmation. is_expecting:", is_expecting)
 		end
 
 		self:chk_drop_in_peer(dropin_peer)
@@ -374,16 +374,16 @@ function HostNetworkSession:on_drop_in_pause_confirmation_received(dropin_peer_i
 end
 
 function HostNetworkSession:chk_initiate_dropin_pause(dropin_peer)
-	print("[HostNetworkSession:chk_initiate_dropin_pause]", dropin_peer:id())
+	Application:debug("[HostNetworkSession:chk_initiate_dropin_pause] Peer ID:", dropin_peer:id())
 
 	if not dropin_peer:expecting_pause_sequence() then
-		print("not expecting")
+		Application:debug("[HostNetworkSession:chk_initiate_dropin_pause] FAILED not expecting...")
 
 		return
 	end
 
 	if not self:chk_peer_handshakes_complete(dropin_peer) then
-		print("misses handshakes")
+		Application:debug("[HostNetworkSession:chk_initiate_dropin_pause] FAILED misses handshakes...")
 
 		return
 	end
@@ -392,7 +392,7 @@ function HostNetworkSession:chk_initiate_dropin_pause(dropin_peer)
 		local is_expecting = peer:is_expecting_pause_confirmation(dropin_peer:id())
 
 		if is_expecting then
-			print(" peer", peer_id, "is still to confirm", is_expecting)
+			Application:debug("[HostNetworkSession:chk_initiate_dropin_pause] peer", peer_id, "is still to confirm", is_expecting)
 
 			return
 		end
@@ -401,14 +401,17 @@ function HostNetworkSession:chk_initiate_dropin_pause(dropin_peer)
 	for other_peer_id, other_peer in pairs(self._peers) do
 		if other_peer_id ~= dropin_peer:id() and not other_peer:is_expecting_pause_confirmation(dropin_peer:id()) then
 			self:set_dropin_pause_request(other_peer, dropin_peer:id(), "asked")
+			Application:debug("[HostNetworkSession:chk_initiate_dropin_pause] Asked peer to pause for dropin", dropin_peer:id())
 		end
 	end
 
 	if not self._local_peer:is_expecting_pause_confirmation(dropin_peer:id()) then
+		Application:debug("[HostNetworkSession:chk_initiate_dropin_pause] Is expecting pause confirmation for ID", dropin_peer:id())
 		self._local_peer:set_expecting_drop_in_pause_confirmation(dropin_peer:id(), "paused")
 		self:on_drop_in_pause_request_received(dropin_peer:id(), dropin_peer:name(), true)
 	end
 
+	Application:debug("[HostNetworkSession:chk_initiate_dropin_pause] PAUSE ALL GOOD -- EXPECTING DROPIN NOW! -- EXPECTING PAUSE NIL!")
 	dropin_peer:set_expecting_pause_sequence(nil)
 	dropin_peer:set_expecting_dropin(true)
 

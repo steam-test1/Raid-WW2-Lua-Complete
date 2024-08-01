@@ -119,7 +119,7 @@ function CopLogicIntimidated._update_enemy_detection(data, my_data)
 				local crim_pos = u_data.m_pos
 				local dis = mvector3.direction(tmp_vec1, data.m_pos, crim_pos)
 
-				if dis < tweak_data.player.long_dis_interaction.intimidate_range_enemies * tweak_data.upgrades.values.player.intimidate_range_mul[1] * 1.05 then
+				if dis < tweak_data.player.long_dis_interaction.intimidate_range_enemies * 1.05 then
 					local crim_fwd = crim_unit:movement():m_head_rot():y()
 
 					mvector3.set_z(crim_fwd, 0)
@@ -143,7 +143,7 @@ function CopLogicIntimidated._update_enemy_detection(data, my_data)
 		my_data.surrender_clbk_registered = nil
 
 		data.brain:set_objective(nil)
-		CopLogicBase._exit(data.unit, "idle")
+		CopLogicBase._exit_to_state(data.unit, "idle")
 
 		local new_action = {
 			variant = "idle",
@@ -371,12 +371,8 @@ function CopLogicIntimidated._do_tied(data, aggressor_unit)
 	data.brain:rem_pos_rsrv("stand")
 	managers.groupai:state():on_enemy_tied(data.unit:key())
 	data.unit:base():set_slot(data.unit, 22)
-	CopLogicIntimidated._chk_begin_alarm_pager(data)
-
-	if not data.brain:is_pager_started() then
-		data.unit:interaction():set_tweak_data("hostage_convert")
-		data.unit:interaction():set_active(true, true, false)
-	end
+	data.unit:interaction():set_tweak_data("hostage_convert")
+	data.unit:interaction():set_active(true, true, false)
 
 	if data.unit:unit_data().mission_element then
 		data.unit:unit_data().mission_element:event("tied", data.unit)
@@ -482,7 +478,7 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 				walk = -1
 			}
 		},
-		action_duration = tweak_data.interaction.free.timer
+		action_duration = tweak_data.interaction:get_interaction("free").timer
 	}
 	local objective = {
 		interrupt_health = 0.85,
@@ -505,7 +501,7 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 				walk = -1
 			}
 		},
-		action_duration = tweak_data.interaction.free.timer,
+		action_duration = tweak_data.interaction:get_interaction("free").timer,
 		followup_objective = followup_objective
 	}
 	local so_descriptor = {
@@ -548,7 +544,7 @@ function CopLogicIntimidated.on_rescue_SO_administered(ignore_this, data, receiv
 end
 
 function CopLogicIntimidated.rescue_SO_verification(ignore_this, data, unit)
-	return unit:base():char_tweak().rescue_hostages and not unit:movement():cool() and not data.team.foes[unit:movement():team().id]
+	return not unit:movement():cool() and not data.team.foes[unit:movement():team().id]
 end
 
 function CopLogicIntimidated.on_rescue_SO_failed(ignore_this, data)
@@ -585,7 +581,7 @@ function CopLogicIntimidated.on_rescue_SO_completed(ignore_this, data, good_pig)
 		data.unit:brain():action_request(new_action)
 	end
 
-	CopLogicBase._exit(data.unit, "idle")
+	CopLogicBase._exit_to_state(data.unit, "idle")
 end
 
 function CopLogicIntimidated.on_rescue_allowed_state(data, state)
@@ -627,11 +623,5 @@ function CopLogicIntimidated._start_action_hands_up(data)
 
 	if my_data.act_action and data.unit:anim_data().hands_tied then
 		CopLogicIntimidated._do_tied(data, my_data.aggressor_unit)
-	end
-end
-
-function CopLogicIntimidated._chk_begin_alarm_pager(data)
-	if managers.groupai:state():whisper_mode() and data.unit:unit_data().has_alarm_pager then
-		data.brain:begin_alarm_pager()
 	end
 end

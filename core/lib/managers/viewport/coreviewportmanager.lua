@@ -289,10 +289,6 @@ function ViewportManager:active_vp()
 	return #vps > 0 and vps[1]
 end
 
-local is_win32 = _G.IS_PC
-local is_ps4 = _G.IS_PS4
-local is_xb1 = _G.IS_XB1
-
 function ViewportManager:get_safe_rect()
 	local a = 0.05
 	local b = 1 - a * 2

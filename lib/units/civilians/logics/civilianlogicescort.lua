@@ -1,4 +1,7 @@
 CivilianLogicEscort = class(CivilianLogicBase)
+CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY = 0.75
+CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY_LONGER = 1.5
+CivilianLogicEscort.IDLE_TALK_DELAY = 45
 
 function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	local my_data = {
@@ -13,14 +16,12 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
 
 	if data.char_tweak.escort_idle_talk then
-		my_data._say_random_t = Application:time() + 45
+		my_data._say_random_t = Application:time() + CivilianLogicEscort.IDLE_TALK_DELAY
 	end
 
 	CivilianLogicEscort._get_objective_path_data(data, my_data)
 
 	data.internal_data = my_data
-
-	data.unit:contour():add("highlight")
 
 	if not data.objective.allow_cool then
 		data.unit:movement():set_cool(false, "escort")
@@ -43,10 +44,14 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 		data.unit:brain():action_request(action_data)
 	end
 
-	if not data.been_outlined and data.char_tweak.outline_on_discover then
-		my_data.outline_detection_task_key = "CivilianLogicIdle._upd_outline_detection" .. tostring(data.key)
+	if data.char_tweak.outline_on_discover then
+		if not data.been_outlined then
+			my_data.outline_detection_task_key = "CivilianLogicIdle._upd_outline_detection" .. tostring(data.key)
 
-		CopLogicBase.queue_task(my_data, my_data.outline_detection_task_key, CivilianLogicIdle._upd_outline_detection, data, data.t + 2)
+			CopLogicBase.queue_task(my_data, my_data.outline_detection_task_key, CivilianLogicIdle._upd_outline_detection, data, data.t + 2)
+		end
+	else
+		data.unit:contour():add("highlight_character")
 	end
 
 	local attention_settings = nil
@@ -111,6 +116,10 @@ function CivilianLogicEscort.update(data)
 			})
 		end
 
+		if scared_reason == "hostiles" then
+			-- Nothing
+		end
+
 		if not data.unit:anim_data().panic then
 			my_data.commanded_to_move = nil
 
@@ -135,7 +144,7 @@ function CivilianLogicEscort.update(data)
 	elseif not my_data.advancing then
 		if my_data.getting_up then
 			-- Nothing
-		elseif my_data.advance_path and (not my_data.last_avoidance_t or my_data.last_avoidance_t + 0.75 < data.t) then
+		elseif my_data.advance_path and (not my_data.last_avoidance_t or my_data.last_avoidance_t + CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY < data.t) then
 			if my_data.commanded_to_move then
 				if data.unit:anim_data().standing_hesitant then
 					CivilianLogicEscort._begin_advance_action(data, my_data)
@@ -165,11 +174,11 @@ function CivilianLogicEscort.update(data)
 				my_data.processing_coarse_path = true
 			end
 		else
-			CopLogicBase._exit(data.unit, "idle")
+			CopLogicBase._exit_to_state(data.unit, "idle")
 		end
 	end
 
-	if data.unit:anim_data().walk and (not my_data.last_avoidance_t or my_data.last_avoidance_t + 1.5 < data.t) then
+	if data.unit:anim_data().walk and (not my_data.last_avoidance_t or my_data.last_avoidance_t + CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY_LONGER < data.t) then
 		local pos = data.unit:position() + Vector3(0, 0, 100)
 		local avoidance_ray = data.unit:raycast("ray", pos, pos + data.unit:rotation():y() * 20, "slot_mask", 21)
 		avoidance_ray = avoidance_ray or data.unit:raycast("ray", pos, pos + data.unit:rotation():x() * 20, "slot_mask", 21)
@@ -349,7 +358,7 @@ function CivilianLogicEscort.too_scared_to_move(data)
 	end
 
 	if not nobody_close then
-		return "pigs"
+		return "hostiles"
 	end
 end
 

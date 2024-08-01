@@ -30,8 +30,8 @@ VehicleDrivingExt.STATE_LOCKED = "locked"
 VehicleDrivingExt.STATE_SECURED = "secured"
 VehicleDrivingExt.STATE_FROZEN = "frozen"
 VehicleDrivingExt.STATE_BLOCKED = "blocked"
-VehicleDrivingExt.TIME_ENTER = 0.3
-VehicleDrivingExt.TIME_REPAIR = 10
+VehicleDrivingExt.TIME_ENTER = 0.15
+VehicleDrivingExt.TIME_REPAIR = 5
 VehicleDrivingExt.INTERACT_ENTRY_ENABLED = "state_vis_icon_entry_enabled"
 VehicleDrivingExt.INTERACT_ENTRY_DISABLED = "state_vis_icon_entry_disabled"
 VehicleDrivingExt.INTERACT_LOOT_ENABLED = "state_vis_icon_loot_enabled"
@@ -77,6 +77,7 @@ function VehicleDrivingExt:init(unit)
 	self._could_not_move = false
 	self._last_input_fwd_dt = 0
 	self._last_input_bwd_dt = 0
+	self._last_sync_t = 0
 	self._pos_reservation_id = nil
 	self._pos_reservation = nil
 	self.inertia_modifier = self.inertia_modifier or 1
@@ -242,7 +243,11 @@ function VehicleDrivingExt:get_view()
 end
 
 function VehicleDrivingExt:update(unit, t, dt)
-	if not alive(self._unit) or not managers.vehicle:get_all_vehicles()[self._unit:key()] then
+	if Application:editor() and not Global.running_simulation then
+		return
+	end
+
+	if not alive(self._unit) or not managers.vehicle:get_vehicle_from_key(self._unit:key()) then
 		Application:debug("[VehicleDrivingExt:update] VEHICLE DEAD")
 
 		return
@@ -269,28 +274,11 @@ function VehicleDrivingExt:update(unit, t, dt)
 
 	for _, seat in pairs(self._seats) do
 		if alive(seat.occupant) and seat.occupant:brain() and seat.occupant:character_damage():is_downed() then
-			self:_evacuate_seat(seat)
+			self:evacuate_seat(seat)
 		end
 	end
 
 	self._current_state:update(t, dt)
-end
-
-function VehicleDrivingExt:_create_position_reservation()
-	self._pos_reservation_id = managers.navigation:get_pos_reservation_id()
-
-	if self._pos_reservation_id then
-		self._pos_reservation = {
-			radius = 500,
-			position = self._unit:position(),
-			filter = self._pos_reservation_id
-		}
-
-		managers.navigation:add_pos_reservation(self._pos_reservation)
-
-		local nav_seg_id = managers.navigation:get_nav_seg_from_pos(self._unit:position(), true)
-		self.current_world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
-	end
 end
 
 function VehicleDrivingExt:_manage_position_reservation()
@@ -312,6 +300,23 @@ function VehicleDrivingExt:_manage_position_reservation()
 			local nav_seg_id = managers.navigation:get_nav_seg_from_pos(pos, true)
 			self.current_world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 		end
+	end
+end
+
+function VehicleDrivingExt:_create_position_reservation()
+	self._pos_reservation_id = managers.navigation:get_pos_reservation_id()
+
+	if self._pos_reservation_id then
+		self._pos_reservation = {
+			radius = 500,
+			position = self._unit:position(),
+			filter = self._pos_reservation_id
+		}
+
+		managers.navigation:add_pos_reservation(self._pos_reservation)
+
+		local nav_seg_id = managers.navigation:get_nav_seg_from_pos(self._unit:position(), true)
+		self.current_world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 	end
 end
 
@@ -372,24 +377,19 @@ function VehicleDrivingExt:set_state(name, do_not_sync)
 		exit_data = self._current_state:exit(self._state_data, name)
 	end
 
-	local new_state = self._states[name]
+	local new_state = self._states[name] or self._states[VehicleDrivingExt.STATE_PARKED]
 
-	if not new_state then
-		new_state = self._states[VehicleDrivingExt.STATE_PARKED]
-		self._current_state = new_state
-		self._current_state_name = VehicleDrivingExt.STATE_PARKED
-		self._state_enter_t = managers.player:player_timer():time()
-
-		new_state:enter(self._state_data, exit_data)
-	else
+	if new_state then
 		self._current_state = new_state
 		self._current_state_name = name
 		self._state_enter_t = managers.player:player_timer():time()
 
 		new_state:enter(self._state_data, exit_data)
+	else
+		Application:error("[VehicleDrivingExt:set_state()] Failed to set new state or use fallback state!", name, self._unit)
 	end
 
-	if managers.network and managers.network:session() and not do_not_sync then
+	if not do_not_sync and managers.network and managers.network:session() then
 		managers.network:session():send_to_peers_synched("sync_ai_vehicle_action", "state", self._unit, name, nil)
 	end
 end
@@ -450,6 +450,8 @@ function VehicleDrivingExt:block()
 end
 
 function VehicleDrivingExt:add_loot(carry_id, multiplier)
+	Application:debug("[VehicleDrivingExt:add_loot] START:", carry_id, multiplier)
+
 	if not carry_id or carry_id == "" then
 		return false
 	end
@@ -478,7 +480,7 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	end
 
 	if self._secure_loot then
-		Application:trace("VehicleDrivingExt:add_loot secure the loot", carry_id, multiplier)
+		Application:trace("[VehicleDrivingExt:add_loot] secure the loot", carry_id, multiplier)
 
 		local silent = self._secure_loot == "secure_silent"
 
@@ -515,6 +517,8 @@ end
 
 function VehicleDrivingExt:remove_loot(carry_id, multiplier)
 	if not carry_id or carry_id == "" then
+		Application:error("[VehicleDrivingExt] Trying to remove loot without a carry ID!")
+
 		return false
 	end
 
@@ -568,6 +572,34 @@ function VehicleDrivingExt:get_current_loot_amount()
 	return entry
 end
 
+function VehicleDrivingExt:get_carry_id_loot_amount(carry_id)
+	local count = 0
+
+	for i = #self._loot, 1, -1 do
+		local loot = self._loot[i]
+
+		if loot.carry_id == carry_id then
+			count = count + 1
+		end
+	end
+
+	return count
+end
+
+function VehicleDrivingExt:get_carry_id_loot(carry_id)
+	local loots = {}
+
+	for i = 1, #self._loot do
+		local loot = self._loot[i]
+
+		if loot.carry_id == carry_id then
+			table.insert(loots, loot)
+		end
+	end
+
+	return loots
+end
+
 function VehicleDrivingExt:get_max_loot()
 	return self._max_loot or self._tweak_data.max_loot_bags
 end
@@ -589,12 +621,30 @@ function VehicleDrivingExt:give_vehicle_loot_to_player(peer_id)
 end
 
 function VehicleDrivingExt:server_give_vehicle_loot_to_player(peer_id)
-	local loot = self._loot[self:get_current_loot_amount()]
+	local loot_index = self:get_good_carry_item()
+
+	if not loot_index then
+		Application:debug("[VehicleDrivingExt:server_give_vehicle_loot_to_player] No good carry item gotten!")
+
+		return
+	end
+
+	local loot = self:get_loot()[loot_index]
 
 	if loot then
 		managers.network:session():send_to_peers_synched("sync_give_vehicle_loot_to_player", self._unit, loot.carry_id, loot.multiplier, peer_id)
 		self:sync_give_vehicle_loot_to_player(loot.carry_id, loot.multiplier, peer_id)
 	end
+end
+
+function VehicleDrivingExt:get_good_carry_item()
+	for idx, carry_item in ipairs(self:get_loot()) do
+		if managers.player:local_can_carry(carry_item.carry_id) then
+			return idx
+		end
+	end
+
+	return 0
 end
 
 function VehicleDrivingExt:sync_give_vehicle_loot_to_player(carry_id, multiplier, peer_id)
@@ -605,7 +655,11 @@ function VehicleDrivingExt:sync_give_vehicle_loot_to_player(carry_id, multiplier
 	end
 
 	if peer_id == managers.network:session():local_peer():id() then
-		managers.player:set_carry(carry_id, multiplier, true, false, 1)
+		managers.player:add_carry(carry_id, multiplier, true, false, 1)
+	end
+
+	if self._unit:carry_align() then
+		self._unit:carry_align():client_remove_carry(carry_id)
 	end
 end
 
@@ -614,7 +668,15 @@ function VehicleDrivingExt:drop_loot()
 		return
 	end
 
-	local loot = self._loot[self:get_current_loot_amount()]
+	local loot_index = self:get_good_carry_item()
+
+	if not loot_index then
+		Application:debug("[VehicleDrivingExt:drop_loot] No good carry item gotten!")
+
+		return
+	end
+
+	local loot = self:get_loot()[loot_index]
 
 	if loot then
 		local pos = self._unit:get_object(Idstring(self._tweak_data.loot_drop_point)):position()
@@ -630,7 +692,7 @@ function VehicleDrivingExt:drop_loot()
 		local rot = self._unit:rotation()
 		local dir = Vector3(0, 0, 0)
 
-		managers.player:server_drop_carry(loot.carry_id, loot.multiplier, true, false, 1, drop_point, rot, dir, 0, nil, nil)
+		managers.player:server_drop_carry(loot.carry_id, loot.multiplier, drop_point, rot, dir, 0, nil, nil)
 	end
 end
 
@@ -651,6 +713,12 @@ function VehicleDrivingExt:_store_loot(unit)
 end
 
 function VehicleDrivingExt:server_store_loot_in_vehicle(unit)
+	Application:trace("VehicleDrivingExt:server_store_loot_in_vehicle")
+
+	if self._unit:carry_align() then
+		self._unit:carry_align():server_store_carry(unit)
+	end
+
 	local carry_ext = unit:carry_data()
 	local carry_id = carry_ext:carry_id()
 	local multiplier = carry_ext:multiplier()
@@ -660,16 +728,17 @@ function VehicleDrivingExt:server_store_loot_in_vehicle(unit)
 end
 
 function VehicleDrivingExt:sync_store_loot_in_vehicle(unit, carry_id, multiplier)
-	local carry_ext = unit:carry_data()
+	Application:trace("VehicleDrivingExt:sync_store_loot_in_vehicle", carry_id)
 
-	carry_ext:disarm()
-	self:add_loot(carry_id, multiplier)
-	unit:set_slot(0)
-	carry_ext:set_value(0)
+	if alive(unit) then
+		local carry_ext = unit:carry_data()
 
-	if unit:damage():has_sequence("secured") then
-		unit:damage():run_sequence_simple("secured")
+		carry_ext:disarm()
+		carry_ext:set_value(0)
+		unit:set_slot(0)
 	end
+
+	self:add_loot(carry_id, multiplier)
 end
 
 function VehicleDrivingExt:_loot_filter_func(carry_data)
@@ -680,7 +749,7 @@ function VehicleDrivingExt:_loot_filter_func(carry_data)
 	end
 
 	local carry_data = tweak_data.carry[carry_id]
-	local carry_id_allowed = not self._tweak_data.allow_only_filtered and (carry_data.is_unique_loot or carry_data.loot_value or carry_data.value_in_gold)
+	local carry_id_allowed = not self._tweak_data.allow_only_filtered and (carry_data.is_unique_loot or carry_data.loot_value or carry_data.loot_outlaw_value)
 
 	return carry_id_allowed
 end
@@ -898,8 +967,13 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 
 				local count = self:_number_in_the_vehicle()
 
-				if count == 1 then
-					-- Nothing
+				if count == 1 and self._current_state_name == VehicleDrivingExt.STATE_INACTIVE then
+					local dialog = seat == self._seats.driver and "gen_vehicle_player_in_driver_position" or "gen_vehicle_player_in_passenger_position"
+
+					managers.dialog:queue_dialog(dialog, {
+						skip_idle_check = true,
+						instigator = player
+					})
 				end
 
 				if count == 1 and self._current_state_name ~= VehicleDrivingExt.STATE_BROKEN and self._current_state_name ~= VehicleDrivingExt.STATE_BLOCKED then
@@ -1054,7 +1128,7 @@ end
 function VehicleDrivingExt:_evacuate_vehicle()
 	for _, seat in pairs(self._seats) do
 		if alive(seat.occupant) and seat.occupant:brain() then
-			self:_evacuate_seat(seat)
+			self:evacuate_seat(seat)
 		end
 	end
 
@@ -1062,7 +1136,7 @@ function VehicleDrivingExt:_evacuate_vehicle()
 	self._unit:attention():set_attention(nil, nil)
 end
 
-function VehicleDrivingExt:_evacuate_seat(seat)
+function VehicleDrivingExt:evacuate_seat(seat)
 	seat.occupant:unlink()
 
 	seat.occupant:movement().vehicle_unit = nil
@@ -1262,6 +1336,22 @@ function VehicleDrivingExt:num_players_inside()
 	return num_players
 end
 
+function VehicleDrivingExt:get_random_occupant(include_driver)
+	local occupants = {}
+
+	for _, seat in pairs(self._seats) do
+		if alive(seat.occupant) and (include_driver or seat.name ~= "driver") then
+			table.insert(occupants, seat.occupant)
+		end
+	end
+
+	if #occupants > 0 then
+		return occupants[math.random(#occupants)]
+	end
+
+	return nil
+end
+
 function VehicleDrivingExt:on_team_ai_enter(ai_unit)
 	local original_seat = ai_unit:movement().vehicle_seat
 	local target_seat = original_seat
@@ -1348,10 +1438,19 @@ end
 
 function VehicleDrivingExt:on_vehicle_death()
 	self:set_state(VehicleDrivingExt.STATE_BROKEN)
+
+	local occupant = self:get_random_occupant(true)
+
+	if occupant then
+		managers.dialog:queue_dialog("gen_vehicle_at_0_percent", {
+			skip_idle_check = true,
+			instigator = occupant
+		})
+	end
 end
 
-function VehicleDrivingExt:repair_vehicle()
-	self._unit:character_damage():revive()
+function VehicleDrivingExt:repair_vehicle(instigator)
+	self._unit:character_damage():revive(instigator)
 	self:set_state(VehicleDrivingExt.STATE_DRIVING)
 end
 
@@ -1437,11 +1536,14 @@ function VehicleDrivingExt:set_input(accelerate, steer, brake, handbrake, gear_u
 		managers.network:session():send_to_peers_synched("sync_vehicle_set_input", self._unit, accelerate, steer, brake, handbrake, gear_up, gear_down, forced_gear)
 
 		local distance = mvector3.distance(self._last_synced_position, pos)
+		local t = TimerManager:game():time()
+		local sync_dt = t - self._last_sync_t
 
-		if distance > 1 then
+		if distance > 1 and tweak_data.network.driving.network_wait_delta_t < sync_dt then
 			managers.network:session():send_to_peers_synched("sync_vehicle_state", self._unit, self._vehicle:position(), self._vehicle:rotation(), self._vehicle:velocity())
 
 			self._last_synced_position = pos
+			self._last_sync_t = t
 		end
 	end
 end
@@ -1473,12 +1575,18 @@ function VehicleDrivingExt:_set_input(accelerate, steer, brake, handbrake, gear_
 end
 
 function VehicleDrivingExt:_wake_nearby_dynamics()
+	if not self:is_driving_fast() then
+		return
+	end
+
+	local radius = 250
+	local pos = self._vehicle:position() + self._vehicle:velocity() / 12
 	local slotmask = World:make_slot_mask(1)
-	local units = World:find_units_quick("sphere", self._vehicle:position(), 500, slotmask)
+	local units = World:find_units_quick("sphere", pos, radius, slotmask)
 
 	for _, unit in pairs(units) do
-		if unit:damage() and unit:damage():has_sequence("car_destructable") then
-			unit:damage():run_sequence_simple("car_destructable")
+		if unit:damage() then
+			unit:damage():has_then_run_sequence_simple("car_destructable")
 		end
 	end
 end
@@ -1493,10 +1601,14 @@ function VehicleDrivingExt:_should_push(unit)
 	return true
 end
 
-function VehicleDrivingExt:_detect_npc_collisions()
+function VehicleDrivingExt:is_driving_fast()
 	local vel = self._vehicle:velocity()
 
-	if vel:length() < 150 then
+	return vel:length() > 220
+end
+
+function VehicleDrivingExt:_detect_npc_collisions()
+	if not self:is_driving_fast() then
 		return
 	end
 
@@ -1510,13 +1622,21 @@ function VehicleDrivingExt:_detect_npc_collisions()
 		if unit_is_criminal then
 			-- Nothing
 		elseif unit:character_damage() and not unit:character_damage():dead() then
+			local vel = self._vehicle:velocity()
+
 			self._hit_soundsource:set_position(unit:position())
 			self._hit_soundsource:set_rtpc(self._hit_rtpc, math.clamp(vel:length() / 100 * 2, 0, 100))
 			self._hit_soundsource:post_event(self._hit_enemy)
 			Application:trace("[VehicleDrivingExt][_detect_npc_collisions] SPLAT")
-			managers.dialog:queue_dialog("gen_vehicle_hits_enemy", {
-				skip_idle_check = true
-			})
+
+			local occupant = self:get_random_occupant(false)
+
+			if occupant then
+				managers.dialog:queue_dialog("gen_vehicle_hits_enemy", {
+					skip_idle_check = true,
+					instigator = occupant
+				})
+			end
 
 			local damage_ext = unit:character_damage()
 			local attack_data = {
@@ -1563,7 +1683,7 @@ function VehicleDrivingExt:_detect_collisions(t, dt)
 		local dv = self._old_speed - current_speed
 		local gforce = math.abs(dv:length() / 100 / dt) / 9.81
 
-		if gforce > 15 then
+		if gforce > 16 then
 			local ray_from = self._seats.driver.object:position() + Vector3(0, 0, 100)
 			local distance = mvector3.copy(self._old_speed)
 
@@ -1653,6 +1773,14 @@ function VehicleDrivingExt:_detect_invalid_possition(t, dt)
 
 	if self.respawn_available and not self._respawn_available_since then
 		self._respawn_available_since = t
+		local occupant = self:get_random_occupant(false)
+
+		if occupant then
+			managers.dialog:queue_dialog("gen_vehicle_rough_ride", {
+				skip_idle_check = true,
+				instigator = occupant
+			})
+		end
 	elseif not self.respawn_available then
 		self._respawn_available_since = nil
 	end
@@ -1795,9 +1923,15 @@ function VehicleDrivingExt:_play_sound_events(t, dt)
 	if bump and self._bump_sound then
 		self._bump_soundsource:set_rtpc(self._bump_rtpc, 2 * math.clamp(speed, 0, 100))
 		self._bump_soundsource:post_event(self._bump_sound)
-		managers.dialog:queue_dialog("gen_vehicle_rough_ride", {
-			skip_idle_check = true
-		})
+
+		local occupant = self:get_random_occupant(false)
+
+		if occupant then
+			managers.dialog:queue_dialog("gen_vehicle_rough_ride", {
+				skip_idle_check = true,
+				instigator = occupant
+			})
+		end
 	end
 
 	local current_gear = self._vehicle:get_state():get_gear()
@@ -2127,6 +2261,8 @@ function VehicleDrivingExt:collision_callback(tag, unit, body, other_unit, other
 end
 
 function VehicleDrivingExt:on_impact(ray, gforce, velocity)
+	Application:debug("Impact detected, gforce: ", gforce)
+
 	if ray then
 		self._hit_soundsource:set_position(ray.hit_position)
 	else
@@ -2138,7 +2274,11 @@ function VehicleDrivingExt:on_impact(ray, gforce, velocity)
 		self._hit_soundsource:post_event(self._hit_sound)
 	end
 
-	local damage_ammount = gforce / 20
+	local damage_ammount = gforce > 5 and math.ceil(gforce * 2) or false
+
+	if not damage_ammount then
+		return
+	end
 
 	if ray then
 		local body = ray.body
@@ -2154,13 +2294,10 @@ function VehicleDrivingExt:on_impact(ray, gforce, velocity)
 	}
 
 	self._unit:character_damage():damage_collision(attack_data)
-	managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
-		skip_idle_check = true
-	})
 
 	for _, seat in pairs(self._seats) do
 		if alive(seat.occupant) and seat.occupant:camera() then
-			seat.occupant:camera():play_shaker("player_land", gforce / 500)
+			seat.occupant:camera():play_shaker("player_land", gforce / 100)
 		end
 	end
 end
@@ -2185,6 +2322,15 @@ function VehicleDrivingExt:_number_in_the_vehicle()
 	return count
 end
 
+function VehicleDrivingExt:clear_all_visual_props()
+	for _, loot in ipairs(self._loot) do
+		if loot.visual_prop then
+			Application:debug("[VehicleDrivingExt:clear_all_visual_props()] visual_prop", loot.visual_prop)
+			loot.visual_prop:set_slot(0)
+		end
+	end
+end
+
 function VehicleDrivingExt:pre_destroy(unit)
 	self:_stop_seat_sound_environment()
 	self._hit_soundsource:stop()
@@ -2200,6 +2346,7 @@ function VehicleDrivingExt:pre_destroy(unit)
 end
 
 function VehicleDrivingExt:destroy()
+	self:clear_all_visual_props()
 	managers.hud:_remove_name_label(self._unit:unit_data().name_label_id)
 	managers.hud:remove_vehicle_name_label(self._unit:unit_data().name_label_id)
 end

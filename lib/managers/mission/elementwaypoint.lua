@@ -31,11 +31,13 @@ function ElementWaypoint:on_executed(instigator)
 		return
 	end
 
-	if not self._values.only_in_civilian or managers.player:current_state() == "civilian" then
-		Application:debug("[ElementWaypoint] self._values.icon", self._values.icon)
+	local only_civ_player_is_civ = self._values.only_in_civilian and managers.player:current_state() == "civilian"
 
+	if not only_civ_player_is_civ then
 		local text = managers.localization:text(self._values.text_id)
-		local wp_color = tweak_data.gui.icons[self._values.icon].color or Color(1, 1, 1)
+		local wp_data = tweak_data.gui.icons[self._values.icon]
+		wp_data = wp_data or tweak_data.gui.icons.wp_standard
+		local wp_color = wp_data and wp_data.color or Color(1, 1, 1)
 
 		managers.hud:add_waypoint(self:_get_unique_id(), {
 			distance = true,

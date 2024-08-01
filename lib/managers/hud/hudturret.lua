@@ -15,6 +15,8 @@ HUDTurret.DISMOUNT_PROMPT_INITIAL_DELAY = 1
 HUDTurret.DISMOUNT_PROMPT_HOLD_TIME = 4
 HUDTurret.DISMOUNT_PROMPT_DELAY = 8
 HUDTurret.DEFAULT_RETICLE = "weapons_reticles_ass_carbine"
+HUDTurret.DEFAULT_RETICLE_STATIC = "weapons_reticles_static_dot"
+HUDTurret.DEFAULT_A = 0.665
 HUDTurret.SHELL_POSITION_CENTER_X = 770
 
 function HUDTurret:init(hud)
@@ -117,18 +119,29 @@ function HUDTurret:_create_dismount_prompt()
 end
 
 function HUDTurret:_create_reticle()
-	local reticle_params = {
+	self._reticle = self._object:bitmap({
 		name = "turret_reticle",
 		halign = "center",
 		alpha = 0,
 		valign = "center",
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture_rect
-	}
-	self._reticle = self._object:bitmap(reticle_params)
+	})
 
 	self._reticle:set_center_x(self._object:w() / 2)
 	self._reticle:set_center_y(self._object:h() / 2)
+
+	self._reticle_static = self._object:bitmap({
+		name = "turret_reticle_static",
+		halign = "center",
+		alpha = 0,
+		valign = "center",
+		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture,
+		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture_rect
+	})
+
+	self._reticle_static:set_center_x(self._object:w() / 2)
+	self._reticle_static:set_center_y(self._object:h() / 2)
 end
 
 function HUDTurret:_create_shell()
@@ -176,12 +189,50 @@ function HUDTurret:_create_shell()
 end
 
 function HUDTurret:set_reticle(reticle)
-	self._reticle:set_image(tweak_data.gui.icons[reticle].texture)
-	self._reticle:set_texture_rect(unpack(tweak_data.gui.icons[reticle].texture_rect))
+	local gui = tweak_data.gui.icons[reticle] or tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE]
+
+	self._reticle:set_image(gui.texture)
+	self._reticle:set_texture_rect(unpack(gui.texture_rect))
 	self._reticle:set_center_x(self._object:w() / 2)
 	self._reticle:set_center_y(self._object:h() / 2)
 	self._reticle:stop()
-	self._reticle:animate(callback(self, self, "_animate_show"), 0.15, 0.75)
+	self._reticle:animate(callback(self, self, "_animate_show"), 0.15, HUDTurret.DEFAULT_A)
+end
+
+function HUDTurret:set_static_reticle(reticle)
+	local gui = tweak_data.gui.icons[reticle] or tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC]
+
+	self._reticle_static:set_image(gui.texture)
+	self._reticle_static:set_texture_rect(unpack(gui.texture_rect))
+	self._reticle_static:set_center_x(self._object:w() / 2)
+	self._reticle_static:set_center_y(self._object:h() / 2)
+	self._reticle_static:stop()
+	self._reticle_static:animate(callback(self, self, "_animate_show"), 0.15, HUDTurret.DEFAULT_A)
+end
+
+function HUDTurret:update_turret_reticle(v3)
+	if v3 then
+		self._reticle:set_center(self:hud_pos_from_world(v3))
+	else
+		self._reticle:set_center_x(self._object:w() / 2)
+		self._reticle:set_center_y(self._object:h() / 2)
+	end
+end
+
+function HUDTurret:hud_pos_from_world(world_v3)
+	local camera = managers.viewport:get_current_camera()
+
+	if not camera then
+		return self._hud_panel:w() / 2, self._hud_panel:h() / 2
+	end
+
+	local hud_pos = camera:world_to_screen(world_v3)
+	local screen_x = self._hud_panel:w() / 2
+	local screen_y = self._hud_panel:h() / 2
+	screen_x = screen_x + hud_pos.x * self._hud_panel:w() / 2
+	screen_y = screen_y + hud_pos.y * self._hud_panel:h() / 2
+
+	return screen_x, screen_y
 end
 
 function HUDTurret:show(turret_unit, bullet_type)
@@ -204,8 +255,14 @@ function HUDTurret:show(turret_unit, bullet_type)
 	local turret_unit = managers.player:get_turret_unit()
 	local turret_tweak_data = turret_unit:weapon():weapon_tweak_data()
 
-	if turret_tweak_data.hud and turret_tweak_data.hud.reticle then
-		self:set_reticle(turret_tweak_data.hud.reticle)
+	if turret_tweak_data.hud then
+		if turret_tweak_data.hud.reticle then
+			self:set_reticle(turret_tweak_data.hud.reticle)
+		end
+
+		if turret_tweak_data.hud.static_reticle then
+			self:set_static_reticle(turret_tweak_data.hud.static_reticle)
+		end
 	end
 end
 
@@ -215,6 +272,8 @@ function HUDTurret:hide()
 	managers.queued_tasks:unqueue("hud_turret_prompt")
 	self._reticle:stop()
 	self._reticle:animate(callback(self, self, "_animate_hide"), 0.15)
+	self._reticle_static:stop()
+	self._reticle_static:animate(callback(self, self, "_animate_hide"), 0.15)
 end
 
 function HUDTurret:show_prompt()

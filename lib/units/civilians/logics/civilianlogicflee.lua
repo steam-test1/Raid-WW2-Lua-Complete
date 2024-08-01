@@ -232,10 +232,6 @@ function CivilianLogicFlee._upd_detection(data)
 
 	CivilianLogicIdle._set_attention_obj(data, new_attention, new_reaction)
 
-	if not managers.groupai:state():is_police_called() then
-		CopLogicArrest._mark_call_in_event(data, my_data, new_attention)
-	end
-
 	if not my_data.flee_target then
 		CivilianLogicFlee._chk_add_delayed_rescue_SO(data, my_data)
 	end
@@ -314,21 +310,9 @@ function CivilianLogicFlee.on_alert(data, alert_data)
 		local aggressor = alert_data[5]
 
 		if aggressor and aggressor:base() then
-			local is_intimidation = nil
+			data.unit:brain():on_intimidated(1, aggressor)
 
-			if aggressor:base().is_local_player then
-				if managers.player:has_category_upgrade("player", "civ_calming_alerts") then
-					is_intimidation = true
-				end
-			elseif aggressor:base().is_husk_player and aggressor:base():upgrade_value("player", "civ_calming_alerts") then
-				is_intimidation = true
-			end
-
-			if is_intimidation then
-				data.unit:brain():on_intimidated(1, aggressor)
-
-				return
-			end
+			return
 		end
 	end
 
@@ -779,7 +763,7 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 				walk = -1
 			}
 		},
-		action_duration = tweak_data.interaction.free.timer
+		action_duration = tweak_data.interaction:get_interaction("free").timer
 	}
 	local receiver_areas = managers.groupai:state():get_areas_from_nav_seg_id(objective.nav_seg)
 	local so_descriptor = {
@@ -839,7 +823,7 @@ function CivilianLogicFlee.rescue_SO_verification(ignore_this, params, unit)
 	local areas = params.areas
 	local data = params.logic_data
 
-	if not unit:base():char_tweak().rescue_hostages or unit:movement():cool() or data.team.foes[unit:movement():team().id] then
+	if unit:movement():cool() or data.team.foes[unit:movement():team().id] then
 		return
 	end
 

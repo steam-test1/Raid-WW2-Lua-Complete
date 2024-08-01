@@ -258,7 +258,7 @@ end
 
 function HUDTabGreedBar:_animate_change_progress(o)
 	self._animating_progress_change = true
-	local points_per_second = 120
+	local points_per_second = 580
 	local t = 0
 
 	while self._updated_progress - self._current_progress > 0 do

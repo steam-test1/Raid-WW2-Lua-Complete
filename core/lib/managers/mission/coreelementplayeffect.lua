@@ -26,17 +26,17 @@ function ElementPlayEffect:on_executed(instigator)
 		return
 	end
 
-	self:play_effect()
+	self:play_effect(instigator)
 	ElementPlayEffect.super.on_executed(self, instigator)
 end
 
-function ElementPlayEffect:play_effect()
+function ElementPlayEffect:play_effect(instigator)
 	if self._values.effect ~= "none" then
 		local params = {
 			effect = Idstring(self._values.effect)
 		}
 		local pos, rot = self:get_orientation()
-		params.position = self._values.screen_space and Vector3() or pos
+		params.position = self._values.screen_space and Vector3() or self._values.on_instigator and instigator and instigator:position() or pos
 		params.rotation = self._values.screen_space and Rotation() or rot
 		params.base_time = self._values.base_time or 0
 		params.random_time = self._values.random_time or 0

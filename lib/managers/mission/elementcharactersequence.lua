@@ -16,7 +16,9 @@ function ElementCharacterSequence:on_executed(instigator)
 	end
 
 	local function f(unit)
-		unit:damage():run_sequence_simple(self._values.sequence)
+		if unit:damage():has_sequence(self._values.sequence) then
+			unit:damage():run_sequence_simple(self._values.sequence)
+		end
 	end
 
 	if self._values.sequence == "" then

@@ -22,7 +22,7 @@ function ElementMissionEnd:on_executed(instigator)
 	end
 
 	if game_state_machine:current_state_name() == "event_complete_screen" then
-		Application:debug("Mission end element triggered even though the game is already in that state! Element name: " .. tostring(self._editor_name), "Element id: " .. tostring(self._id))
+		Application:error("Mission end element triggered even though the game is already in that state! Element name: " .. tostring(self._editor_name), "Element id: " .. tostring(self._id))
 	end
 
 	game_state_machine:change_state_by_name("event_complete_screen")

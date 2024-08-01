@@ -40,6 +40,12 @@ function RaidGUIControlVideo:_update(t, dt)
 		return
 	end
 
+	if not managers.user:get_setting("subtitle") then
+		self._subtitle:set_text("")
+
+		return
+	end
+
 	local video_t = self._object:time()
 	local subtitle = tweak_data.subtitles:get_subtitle(self._params.video, video_t)
 
@@ -54,6 +60,14 @@ end
 
 function RaidGUIControlVideo:loop_count()
 	return self._object:loop_count()
+end
+
+function RaidGUIControlVideo:pause()
+	return self._object:pause()
+end
+
+function RaidGUIControlVideo:play()
+	return self._object:play()
 end
 
 function RaidGUIControlVideo:video_height()

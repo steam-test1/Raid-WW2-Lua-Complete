@@ -98,37 +98,42 @@ function EventSystemManager:_fire_daily_event()
 	local reward_data = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins]
 	local reward = reward_data.reward
 	local notification_params = {
-		name = "active_duty_bonus",
 		priority = 4,
+		name = "active_duty_bonus",
 		notification_type = "active_duty_bonus",
-		duration = 6,
-		icon = reward_data.icon,
+		duration = 13,
 		consecutive = self._consecutive_logins,
 		total = #tweak_data.events.active_duty_bonus_rewards
 	}
 
-	if reward == EventsTweakData.REWERD_TYPE_GOLD then
-		managers.gold_economy:add_gold(tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount)
-
-		notification_params.amount = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount
-
-		managers.notification:add_notification(notification_params)
-	elseif reward == EventsTweakData.REWERD_TYPE_OUTLAW then
+	if reward == EventsTweakData.REWERD_TYPE_OUTLAW then
 		if not managers.consumable_missions:is_all_missions_unlocked() then
-			local outlaw_id = tweak_data.operations:get_random_consumable_raid()
+			local outlaw_id = tweak_data.operations:get_random_unowned_consumable_raid()
 
 			managers.consumable_missions:instant_unlock_mission(outlaw_id)
 
-			notification_params.notification_type = "active_duty_bonus_outlaw"
+			notification_params.notification_type = HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW
+			notification_params.icon = reward_data.icon_outlaw
 		else
-			local amount = EventsTweakData.REWARD_TRADE_OUTLAW
-			notification_params.amount = amount
+			local amount = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount
 
 			managers.gold_economy:add_gold(amount)
-		end
 
-		managers.notification:add_notification(notification_params)
+			notification_params.amount = amount
+			notification_params.icon = reward_data.icon
+		end
+	elseif reward == EventsTweakData.REWERD_TYPE_GOLD then
+		local amount = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount
+
+		managers.gold_economy:add_gold(amount)
+
+		notification_params.amount = amount
+		notification_params.icon = reward_data.icon
 	else
 		Application:warn("[EventSystemManager:_fire_daily_event()] Not implemented!", reward)
+
+		return
 	end
+
+	managers.notification:add_notification(notification_params)
 end

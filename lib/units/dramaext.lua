@@ -15,9 +15,9 @@ function DramaExt:play_sound(sound, sound_source)
 	self._cue = self._cue or {}
 	self._cue.sound = sound
 	self._cue.sound_source = sound_source
-	local playing = self._unit:sound_source(sound_source):post_event(sound, self.sound_callback, self._unit, "marker", "end_of_event")
+	self._cue.event = self._unit:sound_source(sound_source):post_event(sound, self.sound_callback, self._unit, "marker", "end_of_event")
 
-	if not playing then
+	if not self._cue.event then
 		Application:error("[DramaExt:play_sound] Wasn't able to play sound event " .. sound)
 		Application:stack_dump()
 		self:sound_callback(nil, "end_of_event", self._unit, sound_source, nil, nil, nil)
@@ -52,7 +52,9 @@ function DramaExt:stop_cue()
 			managers.subtitle:set_enabled(false)
 		end
 
-		if self._cue.sound then
+		if alive(self._cue.event) then
+			self._cue.event:stop()
+		elseif self._cue.sound then
 			self._unit:sound_source(self._cue.sound_source):stop()
 		end
 
@@ -88,5 +90,5 @@ function DramaExt:set_voice(voice)
 	local ss = self._unit:sound_source()
 
 	ss:set_switch("hero_switch", voice)
-	ss:set_switch("int_ext", "third")
+	ss:set_switch("actor_switch", "third")
 end

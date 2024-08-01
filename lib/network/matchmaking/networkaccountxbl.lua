@@ -97,17 +97,22 @@ function NetworkAccountXBL:_verify_filter_cards(card_list)
 
 	local filtered_list = {}
 
-	for _, card_data in pairs(card_list) do
-		if card_data.category == "challenge_card" then
-			local challenge_card_data = managers.challenge_cards:get_challenge_card_data(card_data.entry)
+	if card_list then
+		for _, cc_steamdata in pairs(card_list) do
+			if cc_steamdata.category == ChallengeCardsManager.INV_CAT_CHALCARD then
+				local cc_tweakdata = managers.challenge_cards:get_challenge_card_data(cc_steamdata.entry)
 
-			if challenge_card_data then
-				if not filtered_list[challenge_card_data.key_name] then
-					filtered_list[challenge_card_data.key_name] = challenge_card_data
-					filtered_list[challenge_card_data.key_name].steam_instance_ids = {}
+				if cc_tweakdata then
+					if not filtered_list[cc_tweakdata.key_name] then
+						filtered_list[cc_tweakdata.key_name] = cc_tweakdata
+						filtered_list[cc_tweakdata.key_name].steam_instances = {}
+					end
+
+					local instance_id = cc_steamdata.instance_id or #filtered_list[cc_tweakdata.key_name].steam_instances
+					filtered_list[cc_tweakdata.key_name].steam_instances[tostring(instance_id)] = {
+						stack_amount = cc_steamdata.amount or 1
+					}
 				end
-
-				table.insert(filtered_list[challenge_card_data.key_name].steam_instance_ids, card_data.instance_id or "1")
 			end
 		end
 	end

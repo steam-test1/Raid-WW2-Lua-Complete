@@ -13,12 +13,14 @@ function CorePlayEffectUnitElement:init(unit)
 
 	self._hed.effect = "none"
 	self._hed.screen_space = false
+	self._hed.on_instigator = false
 	self._hed.base_time = 0
 	self._hed.random_time = 0
 	self._hed.max_amount = 0
 
 	table.insert(self._save_values, "effect")
 	table.insert(self._save_values, "screen_space")
+	table.insert(self._save_values, "on_instigator")
 	table.insert(self._save_values, "base_time")
 	table.insert(self._save_values, "random_time")
 	table.insert(self._save_values, "max_amount")
@@ -66,6 +68,7 @@ function CorePlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_checkbox(panel, panel_sizer, "screen_space", "Play in Screen Space")
+	self:_build_value_checkbox(panel, panel_sizer, "on_instigator", "Play at the instigators position")
 	self:_build_value_combobox(panel, panel_sizer, "effect", self:_effect_options(), "Select and effect from the combobox")
 	self:_build_value_number(panel, panel_sizer, "base_time", {
 		floats = 2,

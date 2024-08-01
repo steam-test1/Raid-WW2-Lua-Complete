@@ -17,6 +17,10 @@ function RaidGUIControlGrenadeWeaponStats:_set_default_values()
 		distance = {
 			value = "000",
 			text = self:translate("menu_weapons_stats_grenade_throw", true)
+		},
+		capacity = {
+			value = "0-00",
+			text = self:translate("menu_weapons_stats_grenade_capacity", true)
 		}
 	}
 end
@@ -37,16 +41,22 @@ function RaidGUIControlGrenadeWeaponStats:_get_tabs_params()
 			name = "distance",
 			text = self._values.distance.text,
 			value = self._values.distance.value
+		},
+		{
+			name = "capacity",
+			text = self._values.capacity.text,
+			value = self._values.capacity.value
 		}
 	}
 
 	return tabs_params
 end
 
-function RaidGUIControlGrenadeWeaponStats:set_stats(damage, range, distance)
+function RaidGUIControlGrenadeWeaponStats:set_stats(damage, range, distance, capacity)
 	self._values.damage.value = damage
 	self._values.range.value = range
 	self._values.distance.value = distance
+	self._values.capacity.value = capacity
 
 	for _, item in ipairs(self._items) do
 		local name = item:name()

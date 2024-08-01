@@ -715,10 +715,6 @@ function HUDLoadingScreen:_on_faded_to_black()
 		managers.hud:on_loading_screen_faded_to_black()
 	end
 
-	if managers.warcry then
-		managers.warcry:deactivate_warcry()
-	end
-
 	self._loading_icon_panel:show()
 	self._loading_icon:show({
 		text = "generic_loading"
@@ -781,7 +777,7 @@ function HUDLoadingScreen:clean_up()
 end
 
 function HUDLoadingScreen:_real_aspect_ratio()
-	if _G.IS_PC then
+	if IS_PC then
 		return RenderSettings.aspect_ratio
 	else
 		local screen_res = Application:screen_resolution()

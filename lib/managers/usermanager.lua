@@ -76,24 +76,17 @@ function GenericUserManager:is_global_initialized()
 	return Global.user_manager and not Global.user_manager.initializing
 end
 
-local is_ps3 = _G.IS_PS3
-local is_x360 = _G.IS_XB360
-local is_ps4 = _G.IS_PS4
-local is_xb1 = _G.IS_XB1
-local is_console = _G.IS_CONSOLE
-local is_pc = not _G.IS_CONSOLE
-
 function GenericUserManager:setup_setting_map()
 	self:setup_setting(1, "invert_camera_x", false)
 	self:setup_setting(2, "invert_camera_y", false)
 	self:setup_setting(3, "camera_sensitivity", 1)
 	self:setup_setting(4, "rumble", true)
 	self:setup_setting(5, "music_volume", 100)
-	self:setup_setting(6, "sfx_volume", 100)
+	self:setup_setting(6, "sfx_volume", 75)
 	self:setup_setting(7, "subtitle", true)
 	self:setup_setting(8, "brightness", 1)
 	self:setup_setting(9, "hold_to_steelsight", true)
-	self:setup_setting(10, "hold_to_run", not is_pc and true)
+	self:setup_setting(10, "hold_to_run", not IS_PC and true)
 	self:setup_setting(11, "voice_volume", 100)
 	self:setup_setting(12, "controller_mod", {})
 	self:setup_setting(13, "alienware_mask", true)
@@ -103,7 +96,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(17, "hold_to_duck", false)
 	self:setup_setting(18, "video_color_grading", "color_off")
 	self:setup_setting(19, "video_anti_alias", "AA")
-	self:setup_setting(20, "video_animation_lod", not is_pc and 3 or 2)
+	self:setup_setting(20, "video_animation_lod", not IS_PC and 3 or 2)
 	self:setup_setting(21, "video_streaks", true)
 	self:setup_setting(22, "mask_set", "clowns")
 	self:setup_setting(23, "use_lightfx", false)
@@ -114,12 +107,12 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(28, "light_adaption", true)
 	self:setup_setting(29, "menu_theme", "fire")
 	self:setup_setting(30, "newest_theme", "fire")
-	self:setup_setting(31, "hit_indicator", 2)
+	self:setup_setting(31, "hit_indicator", 3)
 	self:setup_setting(32, "aim_assist", true)
 	self:setup_setting(33, "controller_mod_type", "pc")
 	self:setup_setting(34, "objective_reminder", true)
 	self:setup_setting(35, "effect_quality", _G.tweak_data.EFFECT_QUALITY)
-	self:setup_setting(36, "fov_multiplier", 1.25)
+	self:setup_setting(36, "fov_multiplier", 1.5)
 	self:setup_setting(37, "southpaw", false)
 	self:setup_setting(38, "dof_setting", "standard")
 	self:setup_setting(39, "fps_cap", 60)
@@ -136,19 +129,19 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(50, "last_selected_character_profile_slot", 11)
 	self:setup_setting(51, "motion_blur_setting", "standard")
 	self:setup_setting(52, "vls_setting", "standard")
-	self:setup_setting(53, "detail_distance", _G.IS_PC and 1 or 0.75)
+	self:setup_setting(53, "detail_distance", IS_PC and 1 or 0.75)
 	self:setup_setting(54, "use_parallax", true)
 	self:setup_setting(55, "colorblind_setting", "off")
 	self:setup_setting(56, "voice_over_volume", 100)
-	self:setup_setting(57, "master_volume", 40)
+	self:setup_setting(57, "master_volume", 60)
 	self:setup_setting(58, "camera_sensitivity_x", 1)
 	self:setup_setting(59, "camera_sensitivity_y", 1)
 	self:setup_setting(60, "enable_camera_sensitivity_separate", false)
 	self:setup_setting(61, "camera_zoom_sensitivity_x", 1)
 	self:setup_setting(62, "camera_zoom_sensitivity_y", 1)
-	self:setup_setting(63, "sticky_aim", is_console)
+	self:setup_setting(63, "sticky_aim", IS_CONSOLE)
 	self:setup_setting(64, "use_camera_accel", true)
-	self:setup_setting(65, "motion_dot", 0)
+	self:setup_setting(65, "motion_dot", 1)
 	self:setup_setting(66, "motion_dot_size", 2)
 	self:setup_setting(67, "motion_dot_icon", 1)
 	self:setup_setting(68, "motion_dot_offset", 3)
@@ -157,6 +150,8 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(71, "tinnitus_sound_enabled", true)
 	self:setup_setting(72, "hud_special_weapon_panels", true)
 	self:setup_setting(73, "camera_shake", 1)
+	self:setup_setting(74, "hud_crosshairs", true)
+	self:setup_setting(75, "skip_cinematics", false)
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)
@@ -224,13 +219,12 @@ end
 
 function GenericUserManager:reset_video_setting_map()
 	local settings = {
-		"subtitle",
-		"hit_indicator",
 		"brightness",
 		"effect_quality",
 		"use_headbob",
 		"use_camera_accel",
-		"camera_shake"
+		"camera_shake",
+		"fov_multiplier"
 	}
 
 	for _, name in pairs(settings) do
@@ -244,7 +238,6 @@ function GenericUserManager:reset_advanced_video_setting_map()
 		"use_parallax",
 		"motion_blur_setting",
 		"vls_setting",
-		"flush_gpu_command_queue",
 		"fov_multiplier",
 		"detail_distance",
 		"AA_setting",
@@ -252,14 +245,28 @@ function GenericUserManager:reset_advanced_video_setting_map()
 		"fps_cap",
 		"max_streaming_chunk",
 		"colorblind_setting",
-		"dof_setting",
-		"fov_multiplier",
+		"dof_setting"
+	}
+
+	for _, name in pairs(settings) do
+		self:set_setting(name, self:get_default_setting(name))
+	end
+end
+
+function GenericUserManager:reset_interface_setting_map()
+	local settings = {
+		"subtitle",
+		"hit_indicator",
+		"hud_crosshairs",
+		"hud_special_weapon_panels",
 		"motion_dot",
 		"motion_dot_size",
 		"motion_dot_icon",
 		"motion_dot_offset",
 		"motion_dot_color",
-		"motion_dot_toggle_aim"
+		"motion_dot_toggle_aim",
+		"objective_reminder",
+		"skip_cinematics"
 	}
 
 	for _, name in pairs(settings) do
@@ -499,7 +506,7 @@ function GenericUserManager:check_user_state_change(old_user_data, user_data, ig
 end
 
 function GenericUserManager:active_user_change_state(old_user_data, user_data)
-	if self:get_active_user_state_change_quit() or is_x360 and managers.savefile:is_in_loading_sequence() then
+	if self:get_active_user_state_change_quit() then
 		print("-- Cause loading", self:get_active_user_state_change_quit(), managers.savefile:is_in_loading_sequence())
 
 		local dialog_data = {
@@ -580,11 +587,11 @@ function GenericUserManager:set_index(user_index)
 		Global.user_manager.user_index = user_index
 		local old_user_data = old_user_index and self:_get_user_data(old_user_index)
 
-		if not user_index and old_user_data and not is_xb1 then
+		if not user_index and old_user_data and not IS_XB1 then
 			old_user_data.storage_id = nil
 		end
 
-		if not user_index and not is_xb1 then
+		if not user_index and not IS_XB1 then
 			for _, data in pairs(Global.user_manager.user_map) do
 				data.storage_id = nil
 			end
@@ -812,319 +819,6 @@ function GenericUserManager:_apply_loaded_user_settings()
 	SoundDevice:set_rtpc("option_master_volume", math.clamp(self:get_setting("master_volume"), 0, 100))
 end
 
-Xbox360UserManager = Xbox360UserManager or class(GenericUserManager)
-Xbox360UserManager.NOT_SIGNED_IN_STATE = "not_signed_in"
-Xbox360UserManager.STORE_SETTINGS_ON_PROFILE = true
-Xbox360UserManager.CAN_SELECT_USER = true
-Xbox360UserManager.CAN_SELECT_STORAGE = true
-Xbox360UserManager.CUSTOM_PROFILE_VARIABLE_COUNT = 3
-Xbox360UserManager.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT = 999
-Xbox360UserManager.CAN_CHANGE_STORAGE_ONLY_ONCE = false
-UserManager.PLATFORM_CLASS_MAP[Idstring("X360"):key()] = Xbox360UserManager
-
-function Xbox360UserManager:init()
-	self._platform_setting_conversion_func_map = {
-		gamer_control_sensitivity = callback(self, self, "convert_gamer_control_sensitivity")
-	}
-
-	GenericUserManager.init(self)
-	managers.platform:add_event_callback("signin_changed", callback(self, self, "signin_changed_callback"))
-	managers.platform:add_event_callback("profile_setting_changed", callback(self, self, "profile_setting_changed_callback"))
-	managers.platform:add_event_callback("storage_devices_changed", callback(self, self, "storage_devices_changed_callback"))
-	managers.platform:add_event_callback("disconnect", callback(self, self, "disconnect_callback"))
-	managers.platform:add_event_callback("connect", callback(self, self, "connect_callback"))
-
-	self._setting_map_save_counter = 0
-end
-
-function Xbox360UserManager:disconnect_callback(reason)
-	print("  Xbox360UserManager:disconnect_callback", reason, XboxLive:signin_state(0))
-
-	if Global.game_settings.single_player then
-		return
-	end
-
-	if managers.network:session() and managers.network:session():_local_peer_in_lobby() then
-		managers.menu:xbox_disconnected()
-	elseif self._in_online_menu then
-		managers.menu:xbox_disconnected()
-	elseif managers.network:session() then
-		managers.network:session():xbox_disconnected()
-	end
-end
-
-function Xbox360UserManager:connect_callback()
-end
-
-function Xbox360UserManager:on_entered_online_menus()
-	self._in_online_menu = true
-end
-
-function Xbox360UserManager:on_exit_online_menus()
-	self._in_online_menu = false
-end
-
-function Xbox360UserManager:is_online_menu()
-	return self._in_online_menu
-end
-
-function Xbox360UserManager:setup_setting_map()
-	local platform_default_type_map = {
-		invert_camera_y = "gamer_yaxis_inversion",
-		camera_sensitivity = "gamer_control_sensitivity"
-	}
-	Global.user_manager.platform_setting_map = nil
-	Global.user_manager.platform_default_type_map = platform_default_type_map
-
-	GenericUserManager.setup_setting_map(self)
-end
-
-function Xbox360UserManager:convert_gamer_control_sensitivity(value)
-	if value == "low" then
-		return 0.5
-	elseif value == "medium" then
-		return 1
-	else
-		return 1.5
-	end
-end
-
-function Xbox360UserManager:get_default_setting(name)
-	if Global.user_manager.platform_setting_map then
-		local platform_default_type = Global.user_manager.platform_default_type_map[name]
-
-		if platform_default_type then
-			local platform_default = Global.user_manager.platform_setting_map[platform_default_type]
-			local conversion_func = self._platform_setting_conversion_func_map[platform_default_type]
-
-			if conversion_func then
-				return conversion_func(platform_default)
-			else
-				return platform_default
-			end
-		end
-	end
-
-	return GenericUserManager.get_default_setting(self, name)
-end
-
-function Xbox360UserManager:active_user_change_state(old_user_data, user_data)
-	Global.user_manager.platform_setting_map = nil
-
-	managers.savefile:active_user_changed()
-	GenericUserManager.active_user_change_state(self, old_user_data, user_data)
-end
-
-function Xbox360UserManager:load_platform_setting_map(callback_func)
-	cat_print("user_manager", "[UserManager] Loading platform setting map.")
-	XboxLive:read_profile_settings(self:get_platform_id(nil), callback(self, self, "_load_platform_setting_map_callback", callback_func))
-end
-
-function Xbox360UserManager:_load_platform_setting_map_callback(callback_func, platform_setting_map)
-	cat_print("user_manager", "[UserManager] Done loading platform setting map. Success: " .. tostring(not not platform_setting_map))
-
-	Global.user_manager.platform_setting_map = platform_setting_map
-
-	self:reset_setting_map()
-
-	if callback_func then
-		callback_func(platform_setting_map)
-	end
-end
-
-function Xbox360UserManager:save_platform_setting(setting_name, setting_value, callback_func)
-	cat_print("user_manager", "[UserManager] Saving platform setting \"" .. tostring(setting_name) .. "\": " .. tostring(setting_value))
-	XboxLive:write_profile_setting(self:get_platform_id(nil), setting_name, setting_value, callback(self, self, "_save_platform_setting_callback", callback_func))
-end
-
-function Xbox360UserManager:_save_platform_setting_callback(callback_func, success)
-	cat_print("user_manager", "[UserManager] Done saving platform setting \"" .. tostring("Dont get setting name in callback") .. "\". Success: " .. tostring(success))
-
-	if callback_func then
-		callback_func(success)
-	end
-end
-
-function Xbox360UserManager:get_setting_map()
-	local platform_setting_map = Global.user_manager.platform_setting_map
-	local setting_map = nil
-
-	if platform_setting_map then
-		local packed_string_value = ""
-
-		for i = 1, self.CUSTOM_PROFILE_VARIABLE_COUNT do
-			local setting_name = "title_specific" .. i
-			packed_string_value = packed_string_value .. (platform_setting_map[setting_name] or "")
-		end
-
-		setting_map = Utility:unpack(packed_string_value) or {}
-	end
-
-	return setting_map
-end
-
-function Xbox360UserManager:save_setting_map(callback_func)
-	if self._setting_map_save_counter > 0 then
-		Appliction:error("[UserManager] Tried to set setting map again before it was done with previous set.")
-
-		if callback_func then
-			callback_func(false)
-
-			return
-		end
-	end
-
-	local complete_setting_value = Utility:pack(Global.user_manager.setting_map)
-	local current_char = 1
-	local char_count = #complete_setting_value
-	local setting_count = 1
-	local max_char_count = self.CUSTOM_PROFILE_VARIABLE_COUNT * self.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT
-
-	if char_count > max_char_count then
-		Application:stack_dump_error("[UserManager] Exceeded (" .. char_count .. ") maximum character count that can be stored in the profile (" .. max_char_count .. ").")
-		callback_func(false)
-
-		return
-	end
-
-	self._setting_map_save_success = true
-
-	repeat
-		local setting_name = "title_specific" .. setting_count
-		local end_char = math.min(current_char + self.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT - 1, char_count)
-		local setting_value = string.sub(complete_setting_value, current_char, end_char)
-
-		cat_print("save_manager", "[UserManager] Saving profile setting \"" .. setting_name .. "\" (" .. current_char .. " to " .. end_char .. " of " .. char_count .. " characters).")
-
-		Global.user_manager.platform_setting_map[setting_name] = setting_value
-		self._setting_map_save_counter = self._setting_map_save_counter + 1
-
-		self:save_platform_setting(setting_name, setting_value, callback(self, self, "_save_setting_map_callback", callback_func))
-
-		current_char = end_char + 1
-		setting_count = setting_count + 1
-	until char_count <= current_char
-end
-
-function Xbox360UserManager:_save_setting_map_callback(callback_func, success)
-	self._setting_map_save_success = self._setting_map_save_success and success
-	self._setting_map_save_counter = self._setting_map_save_counter - 1
-
-	if callback_func and self._setting_map_save_counter == 0 then
-		callback_func(self._setting_map_save_success)
-	end
-end
-
-function Xbox360UserManager:signin_changed_callback(...)
-	for user_index, signed_in in ipairs({
-		...
-	}) do
-		local was_signed_in = self:is_signed_in(user_index)
-		Global.user_manager.user_map[user_index].has_signed_out = was_signed_in and not signed_in
-
-		if Global.user_manager.user_index == user_index and not was_signed_in and signed_in and self._active_check_user_callback_func then
-			print("RUN ACTIVE USER CALLBACK FUNC")
-			managers.system_menu:close("show_select_user_question_dialog")
-			self._active_check_user_callback_func(true)
-
-			self._active_check_user_callback_func = nil
-		end
-
-		if not signed_in ~= not was_signed_in then
-			self:update_user(user_index, false)
-		else
-			local platform_id = user_index - 1
-			local signin_state = XboxLive:signin_state(platform_id)
-			local old_signin_state = Global.user_manager.user_map[user_index].signin_state
-
-			if old_signin_state ~= signin_state then
-				Global.user_manager.user_map[user_index].signin_state = signin_state
-			end
-		end
-	end
-end
-
-function Xbox360UserManager:profile_setting_changed_callback(...)
-end
-
-function Xbox360UserManager:update_all_users()
-	for user_index = 1, 4 do
-		self:update_user(user_index, false)
-	end
-end
-
-function Xbox360UserManager:update_user(user_index, ignore_username_change)
-	local platform_id = user_index - 1
-	local signin_state = XboxLive:signin_state(platform_id)
-	local is_signed_in = signin_state ~= self.NOT_SIGNED_IN_STATE
-	local storage_id, username = nil
-
-	if is_signed_in then
-		username = XboxLive:name(platform_id)
-		storage_id = Application:current_storage_device_id(platform_id)
-
-		if storage_id == 0 then
-			storage_id = nil
-		end
-	end
-
-	self:set_user(user_index, platform_id, storage_id, username, signin_state, ignore_username_change)
-end
-
-function Xbox360UserManager:storage_devices_changed_callback()
-	self:update_all_users()
-end
-
-function Xbox360UserManager:check_privilege(user_index, privilege, callback_func)
-	local platform_id = self:get_platform_id(user_index)
-	local result = XboxLive:check_privilege(platform_id, privilege)
-
-	if callback_func then
-		func(result)
-	end
-
-	return result
-end
-
-function Xbox360UserManager:get_xuid(user_index)
-	local platform_id = self:get_platform_id(user_index)
-
-	return XboxLive:xuid(platform_id)
-end
-
-function Xbox360UserManager:invite_accepted_by_inactive_user()
-	managers.platform:set_rich_presence("Idle")
-	self:perform_load_start_menu()
-	managers.menu:reset_all_loaded_data()
-end
-
-PS3UserManager = PS3UserManager or class(GenericUserManager)
-UserManager.PLATFORM_CLASS_MAP[Idstring("PS3"):key()] = PS3UserManager
-
-function PS3UserManager:init()
-	self._init_finalize_index = not self:is_global_initialized()
-
-	GenericUserManager.init(self)
-end
-
-function PS3UserManager:init_finalize()
-	GenericUserManager.init_finalize(self)
-
-	if self._init_finalize_index then
-		self:set_user(1, nil, true, nil, true, false)
-
-		self._init_finalize_index = nil
-	end
-end
-
-function PS3UserManager:set_index(user_index)
-	if user_index then
-		self:set_user_soft(user_index, nil, true, nil, true, false)
-	end
-
-	GenericUserManager.set_index(self, user_index)
-end
-
 PS4UserManager = PS4UserManager or class(GenericUserManager)
 UserManager.PLATFORM_CLASS_MAP[Idstring("PS4"):key()] = PS4UserManager
 
@@ -1204,7 +898,6 @@ end
 
 XB1UserManager = XB1UserManager or class(GenericUserManager)
 XB1UserManager.NOT_SIGNED_IN_STATE = "not_signed_in"
-XB1UserManager.STORE_SETTINGS_ON_PROFILE = false
 XB1UserManager.CAN_SELECT_USER = true
 XB1UserManager.CAN_SELECT_STORAGE = true
 XB1UserManager.CUSTOM_PROFILE_VARIABLE_COUNT = 3
@@ -1357,58 +1050,6 @@ function XB1UserManager:_save_platform_setting_callback(callback_func, success)
 
 	if callback_func then
 		callback_func(success)
-	end
-end
-
-function XB1UserManager:save_setting_map(callback_func)
-	if self._setting_map_save_counter > 0 then
-		Appliction:error("[UserManager] Tried to set setting map again before it was done with previous set.")
-
-		if callback_func then
-			callback_func(false)
-
-			return
-		end
-	end
-
-	local complete_setting_value = Utility:pack(Global.user_manager.setting_map)
-	local current_char = 1
-	local char_count = #complete_setting_value
-	local setting_count = 1
-	local max_char_count = self.CUSTOM_PROFILE_VARIABLE_COUNT * self.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT
-
-	if char_count > max_char_count then
-		Application:stack_dump_error("[UserManager] Exceeded (" .. char_count .. ") maximum character count that can be stored in the profile (" .. max_char_count .. ").")
-		callback_func(false)
-
-		return
-	end
-
-	self._setting_map_save_success = true
-
-	repeat
-		local setting_name = "title_specific" .. setting_count
-		local end_char = math.min(current_char + self.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT - 1, char_count)
-		local setting_value = string.sub(complete_setting_value, current_char, end_char)
-
-		cat_print("save_manager", "[UserManager] Saving profile setting \"" .. setting_name .. "\" (" .. current_char .. " to " .. end_char .. " of " .. char_count .. " characters).")
-
-		Global.user_manager.platform_setting_map[setting_name] = setting_value
-		self._setting_map_save_counter = self._setting_map_save_counter + 1
-
-		self:save_platform_setting(setting_name, setting_value, callback(self, self, "_save_setting_map_callback", callback_func))
-
-		current_char = end_char + 1
-		setting_count = setting_count + 1
-	until char_count <= current_char
-end
-
-function XB1UserManager:_save_setting_map_callback(callback_func, success)
-	self._setting_map_save_success = self._setting_map_save_success and success
-	self._setting_map_save_counter = self._setting_map_save_counter - 1
-
-	if callback_func and self._setting_map_save_counter == 0 then
-		callback_func(self._setting_map_save_success)
 	end
 end
 

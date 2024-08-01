@@ -55,8 +55,6 @@ function ElementSpecialObjectiveGroup:on_executed(instigator)
 		local chosen_units = self:_select_units_from_spawners()
 
 		if chosen_units then
-			Application:debug("ElementSpecialObjectiveGroup:on_executed( instigator ) - chosen_units: ", inspect(chosen_units))
-
 			for _, chosen_unit in ipairs(chosen_units) do
 				self:_execute_random_SO(chosen_unit)
 			end
@@ -74,7 +72,7 @@ function ElementSpecialObjectiveGroup:on_executed(instigator)
 			Application:error("[ElementSpecialObjectiveGroup:on_executed] Special Objective missing instigator. Possibly improper \"use instigator\" flag use. Element id:", self._id)
 		end
 	else
-		Application:debug("ElementSpecialObjectiveGroup:on_executed( instigator ) - exec random: ")
+		Application:debug("[ElementSpecialObjectiveGroup:on_executed] Else exe random SO, Nil instigator")
 		self:_execute_random_SO(nil)
 	end
 

@@ -67,17 +67,16 @@ function RaidGUIControlXPBreakdown:_create_experience_label()
 end
 
 function RaidGUIControlXPBreakdown:_create_breakdown_table(params)
-	local breakdown_table_params = {
+	self._breakdown_table = self._control_panel:table({
 		name = "breakdown_table",
-		x = 0,
-		y = self._experience_label:y() + self._experience_label:h() + RaidGUIControlXPBreakdown.LABEL_PADDING_DOWN,
+		y = self._experience_label:bottom() + RaidGUIControlXPBreakdown.LABEL_PADDING_DOWN,
 		w = RaidGUIControlXPBreakdown.DEFAULT_W,
 		table_params = {
+			data_source_callback = params.data_source_callback,
 			row_params = {
 				height = RaidGUIControlXPBreakdown.TABLE_ROW_HEIGHT,
 				font_size = RaidGUIControlXPBreakdown.TABLE_FONT_SIZE
 			},
-			data_source_callback = params.data_source_callback,
 			columns = {
 				{
 					vertical = "center",
@@ -97,8 +96,7 @@ function RaidGUIControlXPBreakdown:_create_breakdown_table(params)
 				}
 			}
 		}
-	}
-	self._breakdown_table = self._control_panel:table(breakdown_table_params)
+	})
 end
 
 function RaidGUIControlXPBreakdown:_create_total()
@@ -173,8 +171,4 @@ function RaidGUIControlXPBreakdown:_animate_table_fade_in()
 	end
 
 	self._breakdown_table._table_panel:set_alpha(1)
-end
-
-function RaidGUIControlXPBreakdown:set_debug(value)
-	self._control_border:set_debug(value)
 end

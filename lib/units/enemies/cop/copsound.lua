@@ -1,5 +1,5 @@
 CopSound = CopSound or class()
-CopSound.MAX_DISTANCE_FROM_PLAYER = 1800
+CopSound.MAX_DISTANCE_FROM_PLAYER = 2000
 CopSound.FOOTSTEP_COOLDOWN = 1.1
 CopSound.VO_COOLDOWN = 2
 

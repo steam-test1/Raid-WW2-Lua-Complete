@@ -246,7 +246,10 @@ function AiLayer:draw_patrol_path_externaly(name)
 end
 
 function AiLayer:build_panel(notebook)
-	AiLayer.super.build_panel(self, notebook)
+	AiLayer.super.build_panel(self, notebook, {
+		units_noteboook_proportion = 0,
+		units_notebook_min_size = Vector3(-1, 140, 0)
+	})
 
 	local ai_sizer = EWS:BoxSizer("VERTICAL")
 	local graphs_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Graphs")
@@ -320,13 +323,14 @@ function AiLayer:build_panel(notebook)
 	build_settings:add(self._all_visible, 0, 0, "EXPAND")
 
 	self._ray_length_params = {
-		value = 150,
-		name = "Ray length [cm]:",
-		ctrlr_proportions = 1,
 		name_proportions = 1,
+		name = "Ray length [cm]:",
+		ctrlr_proportions = 3,
+		value = 150,
 		tooltip = "Specifies the visible graph ray lenght in centimeter",
 		min = 1,
 		floats = 0,
+		sizer_proportions = 1,
 		panel = self._ews_panel,
 		sizer = build_settings
 	}
@@ -342,6 +346,7 @@ function AiLayer:build_panel(notebook)
 		coarse_graph = EWS:CheckBox(self._ews_panel, "Coarse Graph", "", "ALIGN_LEFT"),
 		visibility_graph = EWS:CheckBox(self._ews_panel, "Visibility Graph", "", "ALIGN_LEFT"),
 		blockers = EWS:CheckBox(self._ews_panel, "Blockers", "", "ALIGN_LEFT"),
+		covers = EWS:CheckBox(self._ews_panel, "Covers", "", "ALIGN_LEFT"),
 		sectors = EWS:CheckBox(self._ews_panel, "Sectors", "", "ALIGN_LEFT")
 	}
 
@@ -358,9 +363,9 @@ function AiLayer:build_panel(notebook)
 	ai_sizer:add(graphs_sizer, 0, 0, "EXPAND")
 	ai_sizer:add(self:_build_ai_settings(), 0, 0, "EXPAND")
 	ai_sizer:add(self:_build_ai_unit_settings(), 0, 0, "EXPAND")
-	ai_sizer:add(self:_build_ai_data(), 1, 0, "EXPAND")
-	ai_sizer:add(self:_build_motion_path_section(), 1, 0, "EXPAND")
-	self._sizer:add(ai_sizer, 4, 0, "EXPAND")
+	ai_sizer:add(self:_build_ai_data(), 0, 0, "EXPAND")
+	ai_sizer:add(self:_build_motion_path_section(), 0, 0, "EXPAND")
+	self._sizer:add(ai_sizer, 1, 0, "EXPAND")
 
 	self._graphs = graphs
 
@@ -370,11 +375,12 @@ end
 function AiLayer:_build_ai_settings()
 	local graphs_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Settings")
 	local group_state = {
+		sizer_proportions = 1,
 		name = "Group state:",
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Select a group state from the combo box",
 		sorted = true,
-		ctrlr_proportions = 2,
 		panel = self._ews_panel,
 		sizer = graphs_sizer,
 		options = managers.groupai:state_names(),
@@ -394,13 +400,14 @@ end
 function AiLayer:_build_ai_unit_settings()
 	local sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Unit settings")
 	local suspicion_multiplier = {
-		value = 1,
-		name = "Suspicion Multiplier:",
-		ctrlr_proportions = 2,
 		name_proportions = 1,
+		name = "Suspicion Multiplier:",
+		ctrlr_proportions = 4,
+		value = 1,
 		tooltip = "multiplier applied to suspicion buildup rate",
 		min = 1,
 		floats = 1,
+		sizer_proportions = 1,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -410,13 +417,14 @@ function AiLayer:_build_ai_unit_settings()
 	suspicion_multiplier_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_suspicion_mul"), nil)
 
 	local detection_multiplier = {
-		value = 1,
-		name = "Detection Multiplier:",
-		ctrlr_proportions = 2,
 		name_proportions = 1,
+		name = "Detection Multiplier:",
+		ctrlr_proportions = 4,
+		value = 1,
 		tooltip = "multiplier applied to AI detection speed. min is 0.01",
 		min = 0.01,
 		floats = 2,
+		sizer_proportions = 1,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -461,8 +469,8 @@ function AiLayer:_build_ai_data()
 	self._patrol_paths_list = EWS:ListBox(self._ews_panel, "ai_layer_patrol_paths", "LB_SINGLE,LB_HSCROLL,LB_NEEDED_SB,LB_SORT")
 
 	self._patrol_paths_list:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "_select_patrol_path"), nil)
-	patrol_paths_sizer:add(self._patrol_paths_list, 1, 0, "EXPAND")
-	ai_data_sizer:add(patrol_paths_sizer, 1, 0, "EXPAND")
+	patrol_paths_sizer:add(self._patrol_paths_list, 4, 0, "EXPAND")
+	ai_data_sizer:add(patrol_paths_sizer, 0, 0, "EXPAND")
 
 	return ai_data_sizer
 end
@@ -505,7 +513,7 @@ function AiLayer:_build_motion_path_section()
 		name_proportions = 1,
 		tooltip = "Path is used for either ground or airborne units.",
 		sorted = false,
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer,
 		options = mop_path_types,
@@ -518,7 +526,7 @@ function AiLayer:_build_motion_path_section()
 	local speed_limit = {
 		value = 50,
 		name = "Default Speed Limit [km/h]:",
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
 		min = -1,
@@ -692,6 +700,17 @@ function AiLayer:_calc_graphs(params)
 						if unit:unit_data().disable_on_ai_graph then
 							unit:set_enabled(false)
 							table.insert(self._saved_disabled_units, unit)
+						else
+							local instance_name = unit:unit_data().instance
+
+							if not not instance_name then
+								local instance_data = managers.world_instance:get_instance_data_by_name(instance_name)
+
+								if instance_data.mission_placed then
+									unit:set_enabled(false)
+									table.insert(self._saved_disabled_units, unit)
+								end
+							end
 						end
 					end
 				end

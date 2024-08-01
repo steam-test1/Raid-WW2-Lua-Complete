@@ -60,7 +60,9 @@ function PlayerCamera:setup_viewport(data)
 end
 
 function PlayerCamera:_set_dimensions()
-	self._vp._vp:set_dimensions(0, (1 - RenderSettings.aspect_ratio / 1.7777777777777777) / 2, 1, RenderSettings.aspect_ratio / 1.7777777777777777)
+	local aspect_ratio = RenderSettings.aspect_ratio / 1.7777777777777777
+
+	self._vp._vp:set_dimensions(0, (1 - aspect_ratio) / 2, 1, aspect_ratio)
 end
 
 function PlayerCamera:spawn_camera_unit()
@@ -90,6 +92,12 @@ end
 
 function PlayerCamera:play_redirect(redirect_name, speed, offset_time)
 	local result = self._camera_unit:base():play_redirect(redirect_name, speed, offset_time)
+
+	return result ~= PlayerCamera.IDS_NOTHING and result
+end
+
+function PlayerCamera:play_use_redirect(redirect_name, speed, offset_time)
+	local result = self._camera_unit:base():play_use_redirect(redirect_name, speed, offset_time)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
@@ -145,12 +153,6 @@ function PlayerCamera:remove_sound_listener()
 	managers.listener:remove_set("player_camera")
 
 	self._listener_id = nil
-end
-
-function PlayerCamera:clbk_fp_enter(aim_dir)
-	if self._camera_manager_mode ~= "first_person" then
-		self._camera_manager_mode = "first_person"
-	end
 end
 
 function PlayerCamera:_setup_sound_listener()
@@ -238,6 +240,10 @@ function PlayerCamera:set_rotation(rot)
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
 
 	if tweak_data.network then
+		if sync_dt < tweak_data.network.camera.network_wait_delta_t then
+			return
+		end
+
 		local update_network = tweak_data.network.camera.network_sync_delta_t < sync_dt and angle_delta > 0 or tweak_data.network.camera.network_angle_delta < angle_delta
 
 		if update_network then
@@ -269,12 +275,16 @@ function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 end
 
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
-	local mul = managers.user:get_setting("camera_shake")
-	amplitude = (amplitude or 1) * mul
-	frequency = frequency or 1
-	offset = offset or 0
+	if self._shaker then
+		local mul = managers.user:get_setting("camera_shake")
+		amplitude = (amplitude or 1) * mul
+		frequency = frequency or 1
+		offset = offset or 0
 
-	return self._shaker:play(effect, amplitude, frequency, offset)
+		return self._shaker:play(effect, amplitude, frequency, offset)
+	else
+		Application:error("[PlayerCamera:play_shaker] Tried to play shaker without a shaker")
+	end
 end
 
 function PlayerCamera:stop_shaker(id)

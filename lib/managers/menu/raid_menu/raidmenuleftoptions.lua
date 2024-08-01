@@ -78,6 +78,10 @@ function RaidMenuLeftOptions:_list_menu_options_data_source()
 		text = utf8.to_upper(managers.localization:text("menu_video"))
 	})
 	table.insert(_list_items, {
+		callback = "menu_options_on_click_interface",
+		text = utf8.to_upper(managers.localization:text("menu_interface"))
+	})
+	table.insert(_list_items, {
 		callback = "menu_options_on_click_sound",
 		text = utf8.to_upper(managers.localization:text("menu_sound"))
 	})

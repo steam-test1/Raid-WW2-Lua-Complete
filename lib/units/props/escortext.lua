@@ -7,7 +7,7 @@ function EscortExt:init(unit)
 	self._was_safe = false
 	self._safe_color = Color(1, 1, 1)
 	self._unsafe_color = Color(1, 0, 0)
-	self._ws = managers.hud._fullscreen_workspace
+	self._ws = managers.hud:fullscreen_workspace()
 	local tweak = self._unit:base():char_tweak()
 
 	if not tweak.immortal and not self._unit:character_damage().immortal then

@@ -31,6 +31,8 @@ HUDTeammatePlayer.PLAYER_HEALTH_H = 10
 HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON = "backgrounds_health_bg"
 HUDTeammatePlayer.PLAYER_HEALTH_COLORS = tweak_data.gui.colors.player_health_colors
 HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR = tweak_data.gui.colors.progress_dark_red
+HUDTeammatePlayer.PLAYER_HEALTH_HEAL_COLOR = tweak_data.gui.colors.progress_green
+HUDTeammatePlayer.PLAYER_HEALTH_SPECIAL_COLOR = tweak_data.gui.colors.raid_dirty_white:with_alpha(0.5)
 HUDTeammatePlayer.EQUIPMENT_H = 37
 HUDTeammatePlayer.EQUIPMENT_PADDING = 6
 HUDTeammatePlayer.HOST_ICON = "player_panel_host_indicator"
@@ -61,6 +63,10 @@ function HUDTeammatePlayer:init(i, teammates_panel)
 	self._id = i
 	self._max_stamina = 1
 	self._equipment = {}
+	self._health_data = {
+		current = 0,
+		total = 0
+	}
 	self._states = HUDTeammatePlayer.STATES
 	self._displayed_state = self._states[#self._states]
 	self._active_states = {}
@@ -358,35 +364,19 @@ function HUDTeammatePlayer:_create_down_indicator()
 	local warcry_panel = self._left_panel:child("warcry_panel")
 	local warcry_background = warcry_panel:child("warcry_background")
 	local downs = tweak_data.player.class_defaults.default.damage.BASE_LIVES
-	local texture, texture_rect, color = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
+	local guis = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
 	local down_indicator_params = {
 		name = "down_indicator",
 		layer = 30,
 		alpha = 1,
-		texture = texture,
-		texture_rect = texture_rect,
-		color = color
+		texture = guis.texture,
+		texture_rect = guis.texture_rect,
+		color = guis.color
 	}
 	local down_indicator = self._left_panel:bitmap(down_indicator_params)
 
 	down_indicator:set_left(-2)
 	down_indicator:set_bottom(self._warcry_panel:y() + warcry_background:y() + warcry_background:h() + 2)
-	self:_update_down_indicator()
-end
-
-function HUDTeammatePlayer:_update_down_indicator()
-	local player_damage = managers.player:player_unit() and managers.player:player_unit():character_damage()
-
-	if not player_damage then
-		return
-	end
-
-	local downs_icon = self._left_panel:child("down_indicator")
-	local downs = math.clamp(player_damage:get_revives(), 1, 5)
-	local texture, texture_rect, color = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
-
-	downs_icon:set_image(texture, unpack(texture_rect))
-	downs_icon:set_color(color)
 end
 
 function HUDTeammatePlayer:_create_right_panel()
@@ -438,49 +428,54 @@ function HUDTeammatePlayer:_create_player_level()
 end
 
 function HUDTeammatePlayer:_create_player_health()
-	local health_panel_params = {
+	local health_panel = self._right_panel:panel({
 		name = "health_panel",
 		x = 0,
 		y = self._right_panel:h() / 2 - HUDTeammatePlayer.PLAYER_HEALTH_H,
 		w = self._right_panel:w(),
 		h = HUDTeammatePlayer.PLAYER_HEALTH_H
-	}
-	local health_panel = self._right_panel:panel(health_panel_params)
-	local health_background_params = {
+	})
+	local health_icon = tweak_data.gui:get_full_gui_data(HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON)
+	local health_background = health_panel:bitmap({
 		name = "health_background",
 		halign = "center",
 		valign = "center",
-		texture = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture,
-		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture_rect
-	}
-	local health_background = health_panel:bitmap(health_background_params)
+		texture = health_icon.texture,
+		texture_rect = health_icon.texture_rect
+	})
 
-	health_background:set_center_x(health_panel:w() / 2)
-	health_background:set_center_y(health_panel:h() / 2)
+	health_background:set_center(health_panel:w() / 2, health_panel:h() / 2)
 
-	local health_bar_hurt_params = {
+	self._special_health_bar = health_panel:rect({
+		name = "special_health_bar",
+		visible = false,
+		w = health_background:w() - 2,
+		h = health_background:h() - 2,
+		color = HUDTeammatePlayer.PLAYER_HEALTH_SPECIAL_COLOR,
+		layer = health_background:layer() + 1
+	})
+
+	self._special_health_bar:set_center(health_background:center())
+
+	self._health_bar_hurt = health_panel:rect({
 		name = "health_bar_hurt",
 		w = health_background:w() - 2,
 		h = health_background:h() - 2,
 		color = HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR,
-		layer = health_background:layer() + 1
-	}
-	self._health_bar_hurt = health_panel:rect(health_bar_hurt_params)
+		layer = health_background:layer() + 2
+	})
 
-	self._health_bar_hurt:set_center_x(health_panel:w() / 2)
-	self._health_bar_hurt:set_center_y(health_panel:h() / 2)
+	self._health_bar_hurt:set_center(health_background:center())
 
-	local health_bar_params = {
+	self._health_bar = health_panel:rect({
 		name = "health_bar",
 		w = health_background:w() - 2,
 		h = health_background:h() - 2,
 		color = tweak_data.gui.colors.progress_75,
-		layer = health_background:layer() + 1
-	}
-	self._health_bar = health_panel:rect(health_bar_params)
+		layer = health_background:layer() + 3
+	})
 
-	self._health_bar:set_center_x(health_panel:w() / 2)
-	self._health_bar:set_center_y(health_panel:h() / 2)
+	self._health_bar:set_center(health_background:center())
 
 	self._full_health_bar_w = self._health_bar:w()
 end
@@ -512,7 +507,6 @@ function HUDTeammatePlayer:refresh()
 
 	self:set_level(current_level)
 	self._player_level:set_text(current_level)
-	self:_update_down_indicator()
 end
 
 function HUDTeammatePlayer:reset_state()
@@ -528,7 +522,6 @@ function HUDTeammatePlayer:reset_state()
 
 	self:_add_active_state(self._displayed_state.id)
 	self._status_panel:child(self._displayed_state.control):set_alpha(1)
-	self:_update_down_indicator()
 end
 
 function HUDTeammatePlayer:set_character_data(data)
@@ -544,14 +537,38 @@ function HUDTeammatePlayer:set_character_data(data)
 	end
 end
 
+function HUDTeammatePlayer:set_armor(data)
+end
+
 function HUDTeammatePlayer:set_health(data)
 	local health_percentage = math.clamp(data.current / data.total, 0, 1)
+	local healthbar_size = health_percentage * self._full_health_bar_w
 
-	self._health_bar:set_w(health_percentage * self._full_health_bar_w)
-	self._health_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.PLAYER_HEALTH_COLORS, health_percentage))
+	self._health_bar:set_color(GuiTweakData.get_color_for_percentage(HUDTeammatePlayer.PLAYER_HEALTH_COLORS, health_percentage))
+	self._health_bar:stop()
 	self._health_bar_hurt:stop()
-	self._health_bar_hurt:animate(callback(self, self, "_animate_health_change"))
-	self:_update_down_indicator()
+	self._special_health_bar:set_x(healthbar_size)
+
+	if self._health_bar:w() < healthbar_size then
+		self._health_bar_hurt:set_color(HUDTeammatePlayer.PLAYER_HEALTH_HEAL_COLOR)
+		self._health_bar_hurt:set_w(healthbar_size)
+		self._health_bar:animate(callback(self, self, "_animate_health_change", healthbar_size))
+	else
+		self._health_bar_hurt:set_color(HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR)
+		self._health_bar:set_w(healthbar_size)
+		self._health_bar_hurt:animate(callback(self, self, "_animate_health_change", healthbar_size), 1)
+	end
+
+	self._health_data = data
+end
+
+function HUDTeammatePlayer:set_special_health(data)
+	local special_health_percentage = math.clamp(data.current / data.total, 0, 1)
+	local health_percentage = math.clamp(self._health_data.current / self._health_data.total, 0, 1)
+
+	self._special_health_bar:set_x(health_percentage * self._full_health_bar_w)
+	self._special_health_bar:set_w(special_health_percentage * self._full_health_bar_w)
+	self._special_health_bar:set_visible(special_health_percentage > 0)
 end
 
 function HUDTeammatePlayer:set_stamina(value)
@@ -563,12 +580,12 @@ function HUDTeammatePlayer:set_stamina(value)
 
 	if player_unit and player_unit:movement() then
 		if player_unit:movement():is_above_stamina_threshold() then
-			self._stamina_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, 1))
+			self._stamina_bar:set_color(GuiTweakData.get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, 1))
 		else
-			self._stamina_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, 0.001))
+			self._stamina_bar:set_color(GuiTweakData.get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, 0.001))
 		end
 	else
-		self._stamina_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, stamina_percentage))
+		self._stamina_bar:set_color(GuiTweakData.get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, stamina_percentage))
 	end
 end
 
@@ -602,8 +619,8 @@ function HUDTeammatePlayer:set_warcry_meter_fill(data)
 	self._true_warcry_percentage = warcry_percentage
 
 	if self._true_warcry_percentage < 1 then
-		self._warcry_panel:stop()
-		self._warcry_panel:animate(callback(self, self, "_animate_warcry_fill"))
+		self._warcry_bar:stop()
+		self._warcry_bar:animate(callback(self, self, "_animate_warcry_fill"))
 	else
 		self._warcry_bar:set_position_z(warcry_percentage)
 	end
@@ -657,7 +674,6 @@ function HUDTeammatePlayer:set_cheater(state)
 end
 
 function HUDTeammatePlayer:go_into_bleedout()
-	self:_update_down_indicator()
 	HUDTeammatePlayer.super.go_into_bleedout(self)
 end
 
@@ -759,35 +775,49 @@ end
 function HUDTeammatePlayer:set_condition(icon_data, text)
 end
 
-function HUDTeammatePlayer:_get_color_for_percentage(color_table, percentage)
-	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
-			return color_table[i].color
-		end
-	end
+function HUDTeammatePlayer:set_downs_amount(downs_amount)
+	local downs_icon = self._left_panel:child("down_indicator")
+	downs_amount = math.clamp(downs_amount, 1, 5)
+	local guis = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs_amount)
 
-	return color_table[1].color
+	downs_icon:set_image(guis.texture, unpack(guis.texture_rect))
+	downs_icon:set_color(self._downs_icon_color or guis.color)
 end
 
-function HUDTeammatePlayer:_animate_health_change()
-	local from = self._health_bar_hurt:w()
-	local to = self._health_bar:w()
-	local duration = (from - to) / 100
+function HUDTeammatePlayer:override_downs_color(color)
+	self._downs_icon_color = color
 
-	if duration > 0 then
-		local t = 0
+	if self._downs_icon_color then
+		local downs_icon = self._left_panel:child("down_indicator")
 
-		while duration > t do
-			local dt = coroutine.yield()
-			t = t + dt
-
-			self._health_bar_hurt:set_w(math.lerp(from, to, t / duration))
-		end
-
-		self._health_bar_hurt:set_w(to)
-	else
-		self._health_bar_hurt:set_w(to)
+		downs_icon:set_color(self._downs_icon_color)
 	end
+end
+
+function HUDTeammatePlayer:_animate_health_change(to, o, delay)
+	local from = o:w()
+	local change = to - from
+	local t = 0
+	local duration = math.abs(change) / 100
+	duration = math.clamp(duration, 0.25, 1)
+
+	if change < 0 then
+		wait(0.1)
+	end
+
+	if delay then
+		wait(delay)
+	end
+
+	while t < duration do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_w = Easing.quadratic_out(t, from, change, duration)
+
+		o:set_w(curr_w)
+	end
+
+	o:set_w(to)
 end
 
 function HUDTeammatePlayer:_animate_warcry_fill()

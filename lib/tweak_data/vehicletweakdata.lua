@@ -1,7 +1,7 @@
 VehicleTweakData = VehicleTweakData or class()
-VehicleTweakData.AI_TELEPORT_DISTANCE = 20
-VehicleTweakData.FADE_DISTANCE = 2400
-VehicleTweakData.FADE_DISTANCE_START = 2400
+VehicleTweakData.AI_TELEPORT_DISTANCE = 2000
+VehicleTweakData.FADE_DISTANCE = 3800
+VehicleTweakData.FADE_DISTANCE_START = 3800
 
 function VehicleTweakData:init(tweak_data)
 	self:_init_data_jeep_willy()
@@ -49,7 +49,6 @@ function VehicleTweakData:_init_data_jeep_willy()
 			driver = {
 				next_seat = "passenger_front",
 				name = "driver",
-				fov = 75,
 				driving = true
 			},
 			passenger_front = {
@@ -82,7 +81,7 @@ function VehicleTweakData:_init_data_jeep_willy()
 		repair_point = "v_repair_engine",
 		trunk_point = "interact_trunk",
 		damage = {
-			max_health = 10
+			max_health = 1250
 		},
 		max_speed = 160,
 		max_rpm = 8000,
@@ -131,11 +130,10 @@ function VehicleTweakData:_init_data_kubelwagen()
 		},
 		seats = {
 			driver = {
-				has_shooting_mode = false,
 				name = "driver",
+				has_shooting_mode = false,
 				next_seat = "passenger_front",
 				allow_shooting = false,
-				fov = 75,
 				driving = true,
 				camera_limits = {
 					50,
@@ -193,20 +191,20 @@ function VehicleTweakData:_init_data_kubelwagen()
 		repair_point = "v_repair_engine",
 		trunk_point = "interact_trunk",
 		damage = {
-			max_health = 100000
+			max_health = 1250
 		},
 		max_speed = 120,
 		max_rpm = 6000,
 		loot_drop_point = "v_repair_engine",
 		max_loot_bags = 8,
 		interact_distance = 350,
-		driver_camera_offset = Vector3(0, 0.5, 15.5),
 		skins = {}
 	}
 	self.kubelwagen.skins.special_edition = {
 		sequence = "state_collector_edition_skin",
 		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
 	}
+	self.kubelwagen.driver_camera_offset = Vector3(0, 2, 22)
 end
 
 function VehicleTweakData:_init_data_truck()
@@ -247,11 +245,10 @@ function VehicleTweakData:_init_data_truck()
 		},
 		seats = {
 			driver = {
-				sound_environment_start = "enter_truck",
+				next_seat = "passenger_front",
 				name = "driver",
 				sound_environment_end = "leave_truck",
-				next_seat = "passenger_front",
-				fov = 75,
+				sound_environment_start = "enter_truck",
 				driving = true
 			},
 			passenger_front = {
@@ -302,9 +299,16 @@ function VehicleTweakData:_init_data_truck()
 				name = "loot"
 			}
 		},
+		loot_filter = {
+			painting_sto_cheap = true,
+			crate_explosives = true,
+			gold = true,
+			gold_bar = true,
+			painting_sto = true
+		},
 		repair_point = "v_repair_engine",
 		damage = {
-			max_health = 250
+			max_health = 2500
 		},
 		max_speed = 85,
 		max_rpm = 5000,
@@ -313,6 +317,9 @@ function VehicleTweakData:_init_data_truck()
 		interact_distance = 475,
 		driver_camera_offset = Vector3(0, 2, 20)
 	}
+	self.truck_ss = deep_clone(self.truck)
+	self.truck_ss.seats.passenger_back_right.has_shooting_mode = false
+	self.truck_ss.seats.passenger_back_left.has_shooting_mode = false
 end
 
 function VehicleTweakData:_init_data_foxhole()
@@ -348,10 +355,9 @@ function VehicleTweakData:_init_data_foxhole()
 		},
 		seats = {
 			driver = {
-				has_shooting_mode = false,
 				name = "driver",
+				has_shooting_mode = false,
 				next_seat = "driver",
-				fov = 75,
 				driving = false,
 				camera_limits = {
 					90,

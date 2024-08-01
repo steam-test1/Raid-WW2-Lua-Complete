@@ -1,5 +1,17 @@
 MineGrenade = MineGrenade or class(FragGrenade)
 
+function MineGrenade:set_thrower_unit(unit)
+	MineGrenade.super.set_thrower_unit(self, unit)
+
+	if alive(unit) then
+		local husk_player = unit:base().is_husk_player and unit
+
+		if PlayerSkill.has_skill("player", "sapper_tank_disabler", husk_player) then
+			self._targets_slotmask = managers.slot:get_mask("betty_mine_targets")
+		end
+	end
+end
+
 function MineGrenade:update(unit, t, dt)
 	if self._hand_held then
 		return

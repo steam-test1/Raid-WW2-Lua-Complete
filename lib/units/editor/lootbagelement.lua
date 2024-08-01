@@ -28,7 +28,7 @@ function LootBagUnitElement:test_element()
 	if self._hed.carry_id ~= "none" then
 		unit_name = tweak_data.carry[self._hed.carry_id].unit or unit_name
 		local carry_type = tweak_data.carry[self._hed.carry_id].type
-		throw_distance_multiplier = tweak_data.carry.types[carry_type].throw_distance_multiplier or throw_distance_multiplier
+		throw_distance_multiplier = tweak_data.carry.types[carry_type].throw_distance_multiplier[1] or throw_distance_multiplier
 	end
 
 	local unit = safe_spawn_unit(unit_name, self._unit:position(), self._unit:rotation())
@@ -37,7 +37,7 @@ function LootBagUnitElement:test_element()
 
 	local push_value = self._hed.push_multiplier and self._hed.spawn_dir * self._hed.push_multiplier or 0
 
-	unit:push(100, 600 * push_value * throw_distance_multiplier)
+	unit:push(100, push_value * throw_distance_multiplier * 600)
 end
 
 function LootBagUnitElement:stop_test_element()

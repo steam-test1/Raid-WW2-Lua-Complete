@@ -23,9 +23,9 @@ function GrenadeBase:update(unit, t, dt)
 	end
 
 	if self._timer then
-		if not self._airbust_primed and self._airburst_near_enemy and self._airburst_near_enemy > 0 and self:_filtered_check_targets() then
+		if not self._airbust_primed and self._airburst_near_enemy and self:_filtered_check_targets() then
 			self._airbust_primed = true
-			self._timer = math.min(self._timer, self._tweak_data.enemy_proximity_delay or 0.4)
+			self._timer = math.min(self._timer, self._tweak_data.enemy_proximity_delay or 0.5)
 		end
 
 		self._timer = self._timer - dt
@@ -51,7 +51,6 @@ function GrenadeBase:_on_collision(col_ray)
 end
 
 function GrenadeBase:_detonate()
-	print("no _detonate function for grenade base")
 end
 
 function GrenadeBase:_detonate_on_client()
@@ -175,7 +174,7 @@ function GrenadeBase:ammo_info()
 end
 
 function GrenadeBase:add_ammo(ratio, add_amount_override, add_amount_multiplier)
-	return false, 0
+	return false, 0, 0
 end
 
 function GrenadeBase:add_ammo_from_bag(available)
@@ -184,6 +183,12 @@ end
 
 function GrenadeBase:set_hand_held(value)
 	self._hand_held = value
+
+	if value then
+		self._unit:set_slot(1)
+	else
+		self._unit:set_slot(14)
+	end
 end
 
 function GrenadeBase:on_equip()
@@ -226,6 +231,14 @@ end
 
 function GrenadeBase:weapon_hold()
 	return self:weapon_tweak_data().weapon_hold
+end
+
+function GrenadeBase:category()
+	return self:weapon_tweak_data().category
+end
+
+function GrenadeBase:is_category(category)
+	return self:category() == category
 end
 
 function GrenadeBase:selection_index()

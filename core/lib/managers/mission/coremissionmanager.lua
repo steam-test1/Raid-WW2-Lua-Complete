@@ -19,31 +19,9 @@ function MissionManager:init()
 
 	self:add_area_instigator_categories("none")
 	self:set_default_area_instigator("none")
-
-	self._global_event_listener = rawget(_G, "EventListenerHolder"):new()
-	self._global_event_list = {}
 end
 
 function MissionManager:post_init()
-	self._workspace = managers.gui_data:create_saferect_workspace()
-
-	self._workspace:set_timer(TimerManager:game())
-	managers.gui_data:layout_corner_saferect_workspace(self._workspace)
-	self._workspace:set_timer(TimerManager:main())
-
-	self._fading_debug_output = self._workspace:panel():gui(Idstring("core/guis/core_fading_debug_output"))
-
-	self._fading_debug_output:set_leftbottom(0, self._workspace:height() / 3)
-	self._fading_debug_output:script().configure({
-		font_size = 18,
-		max_rows = 20
-	})
-
-	self._persistent_debug_output = self._workspace:panel():gui(Idstring("core/guis/core_persistent_debug_output"))
-
-	self._persistent_debug_output:set_righttop(self._workspace:width(), 0)
-	self:set_persistent_debug_enabled(false)
-	self:set_fading_debug_enabled(true)
 	managers.viewport:add_resolution_changed_func(callback(self, self, "_resolution_changed"))
 end
 
@@ -238,7 +216,6 @@ function MissionManager:stop_simulation(...)
 
 	self._scripts = {}
 	self._runned_unit_sequences_callbacks = {}
-	self._global_event_listener = rawget(_G, "EventListenerHolder"):new()
 end
 
 function MissionManager:on_simulation_started()
@@ -403,30 +380,6 @@ function MissionManager:get_element_by_name(name)
 			end
 		end
 	end
-end
-
-function MissionManager:add_global_event_listener(key, events, clbk)
-	self._global_event_listener:add(key, events, clbk)
-end
-
-function MissionManager:remove_global_event_listener(key)
-	self._global_event_listener:remove(key)
-end
-
-function MissionManager:global_event_listener_exists(key)
-	return self._global_event_listener:listener_exists(key)
-end
-
-function MissionManager:call_global_event(event, ...)
-	self._global_event_listener:call(event, ...)
-end
-
-function MissionManager:set_global_event_list(list)
-	self._global_event_list = list
-end
-
-function MissionManager:get_global_event_list()
-	return self._global_event_list
 end
 
 function MissionManager:save(data)

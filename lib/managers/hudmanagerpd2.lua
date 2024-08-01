@@ -41,7 +41,13 @@ require("lib/managers/hud/HUDPlayerCustody")
 require("lib/managers/hud/HUDMotionDot")
 require("lib/managers/hud/HUDCenterPrompt")
 require("lib/managers/hud/HUDBigPrompt")
-require("lib/managers/hud/HUDSpecialInteraction")
+require("lib/managers/hud/HUDControllerHotswap")
+require("lib/managers/hud/HUDCrosshair")
+require("lib/managers/hud/HUDSpecialInteraction/Base")
+require("lib/managers/hud/HUDSpecialInteraction/LockPick")
+require("lib/managers/hud/HUDSpecialInteraction/FuseCutting")
+require("lib/managers/hud/HUDSpecialInteraction/Rewiring")
+require("lib/managers/hud/HUDSpecialInteraction/Roulette")
 require("lib/managers/hud/HUDMultipleChoiceWheel")
 require("lib/managers/hud/HUDTurret")
 require("lib/managers/hud/HUDWatermark/HUDWatermarkBase")
@@ -59,10 +65,29 @@ HUDManager.PEER_TEAMMATE_PANEL_PADDING = 10
 HUDManager.WEAPONS_PANEL_W = 384
 HUDManager.WEAPONS_PANEL_H = 84
 HUDManager.CHAT_DISTANCE_FROM_BOTTOM = 128
+HUDManager.MINIGAMES = {
+	pick_lock = HUDSpecialInteractionLockPick,
+	cut_fuse = HUDSpecialInteractionFuseCutting,
+	rewire = HUDSpecialInteractionRewiring,
+	roulette = HUDSpecialInteractionRoulette
+}
 
 function HUDManager:controller_mod_changed()
 	if alive(managers.interaction:active_unit()) then
 		managers.interaction:active_unit():interaction():selected()
+	end
+end
+
+function HUDManager:fit_text(text, default_font_size)
+	text:set_font_size(default_font_size)
+
+	local rect_w = select(3, text:text_rect())
+	local text_w = text:w()
+
+	if text_w < rect_w then
+		local scale = text_w / rect_w
+
+		text:set_font_size(default_font_size * scale)
 	end
 end
 
@@ -172,18 +197,41 @@ function HUDManager:unselect_all_weapons()
 	end
 end
 
+function HUDManager:remove_all_weapons()
+	while self._weapon_panels and #self._weapon_panels > 0 do
+		self._weapon_panels[1]:destroy()
+		table.remove(self._weapon_panels, 1)
+	end
+end
+
+function HUDManager:set_weapon_blocked_by_inventory_index(inventory_index, state)
+	self:_set_teammate_weapon_blocked(HUDManager.PLAYER_PANEL, inventory_index, state)
+end
+
+function HUDManager:_set_teammate_weapon_blocked(i, id, blocked)
+	if i ~= HUDManager.PLAYER_PANEL then
+		return
+	end
+
+	for j = 1, #self._weapon_panels do
+		if j == id then
+			self._weapon_panels[j]:set_blocked(blocked)
+		end
+	end
+end
+
 function HUDManager:recreate_weapon_firemode(i)
 end
 
 function HUDManager:set_teammate_weapon_firemode(i, id, firemode)
-	if i == HUDManager.PLAYER_PANEL then
+	if i == HUDManager.PLAYER_PANEL and self._weapon_panels[id] then
 		self._weapon_panels[id]:set_firemode(firemode)
 	end
 end
 
 function HUDManager:set_firemode_for_weapon(weapon_name_id, firemode)
 	for i = 1, #self._weapon_panels do
-		local panel_name_id = self._weapon_panels[i]:name_id()
+		local panel_name_id = self._weapon_panels[i] and self._weapon_panels[i]:name_id()
 
 		if panel_name_id and panel_name_id == weapon_name_id then
 			self._weapon_panels[i]:set_firemode(firemode)
@@ -202,6 +250,12 @@ function HUDManager:set_ammo_amount(selection_index, max_clip, current_clip, cur
 end
 
 function HUDManager:set_teammate_ammo_amount(id, selection_index, max_clip, current_clip, current_left, max)
+	if not self._weapon_panels[selection_index] then
+		Application:error("[HUDManager:set_teammate_ammo_amount] Attempting to set ammo for non existant weapon panel")
+
+		return
+	end
+
 	local type = selection_index == 1 and "secondary" or "primary"
 
 	self._weapon_panels[selection_index]:set_max_clip(max_clip)
@@ -239,6 +293,15 @@ function HUDManager:refresh_player_panel()
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:refresh()
 end
 
+function HUDManager:show_player_panel()
+	self._teammate_panels[HUDManager.PLAYER_PANEL]:show()
+	self._teammate_panels[HUDManager.PLAYER_PANEL]:set_peer_id(managers.network:session():local_peer():id())
+end
+
+function HUDManager:hide_player_panel()
+	self._teammate_panels[HUDManager.PLAYER_PANEL]:hide()
+end
+
 function HUDManager:reset_player_state()
 	self:reset_teammate_state(HUDManager.PLAYER_PANEL)
 end
@@ -268,6 +331,28 @@ function HUDManager:set_teammate_health(i, data)
 	end
 end
 
+function HUDManager:set_player_special_health(data)
+	self:set_teammate_special_health(HUDManager.PLAYER_PANEL, data)
+end
+
+function HUDManager:set_teammate_special_health(i, recoverable_percent)
+	if self._teammate_panels[i] then
+		self._teammate_panels[i]:set_special_health(recoverable_percent)
+	end
+end
+
+function HUDManager:set_player_downs(downs_amount)
+	if self._teammate_panels[HUDManager.PLAYER_PANEL] then
+		self._teammate_panels[HUDManager.PLAYER_PANEL]:set_downs_amount(downs_amount)
+	end
+end
+
+function HUDManager:override_player_down_color(color)
+	if self._teammate_panels[HUDManager.PLAYER_PANEL] then
+		self._teammate_panels[HUDManager.PLAYER_PANEL]:override_downs_color(color)
+	end
+end
+
 function HUDManager:set_player_warcry_meter_fill(data)
 	self:set_teammate_warcry_meter_fill(HUDManager.PLAYER_PANEL, data)
 end
@@ -286,12 +371,6 @@ end
 
 function HUDManager:set_teammate_active_warcry(i, name_label_id, warcry)
 	self._teammate_panels[i]:set_active_warcry(warcry)
-
-	local name_label = self:_get_name_label(name_label_id)
-
-	if name_label then
-		name_label:set_warcry(warcry)
-	end
 end
 
 function HUDManager:set_warcry_meter_glow(i, value)
@@ -300,30 +379,17 @@ end
 
 function HUDManager:activate_teammate_warcry(i, name_label_id, duration)
 	self._teammate_panels[i]:activate_warcry(duration)
-
-	local name_label = self:_get_name_label(name_label_id)
-
-	if name_label then
-		name_label:activate_warcry()
-	end
 end
 
 function HUDManager:deactivate_player_warcry()
-	self:set_player_warcry_meter_glow(false)
-	self:remove_comm_wheel_option("warcry")
 	self._sound_source:post_event("warcry_active_stop")
-	self:hide_big_prompt()
+	self:set_player_warcry_meter_glow(false)
+	self:hide_big_prompt("warcry_ready")
 	self:deactivate_teammate_warcry(HUDManager.PLAYER_PANEL, nil)
 end
 
 function HUDManager:deactivate_teammate_warcry(i, name_label_id)
 	self._teammate_panels[i]:deactivate_warcry()
-
-	local name_label = self:_get_name_label(name_label_id)
-
-	if name_label then
-		name_label:deactivate_warcry()
-	end
 end
 
 function HUDManager:set_player_level(level)
@@ -363,9 +429,16 @@ function HUDManager:hide_teammate_turret_icon(teammate_panel_id, name_label_id)
 end
 
 function HUDManager:set_player_armor(data)
+	self:set_teammate_armor(HUDManager.PLAYER_PANEL, data)
 end
 
 function HUDManager:set_teammate_armor(i, data)
+	if not self._teammate_panels[i] then
+		debug_pause("[ HUDManager:set_teammate_armor ] teammate panel " .. tostring(i) .. " doesn't exist!")
+		Application:error("data:", inspect(data))
+		Application:error("teammate panels:", inspect(self._teammate_panels))
+		Application:error(debug.traceback())
+	end
 end
 
 function HUDManager:set_teammate_name(i, teammate_name)
@@ -498,31 +571,31 @@ function HUDManager:on_teammate_died(teammate_panel_id, name_label_id)
 	end
 end
 
-function HUDManager:on_teammate_start_lockpicking(teammate_panel_id, name_label_id)
+function HUDManager:on_teammate_start_special_interaction(teammate_panel_id, name_label_id, interaction_type)
 	local teammate_panel = self._teammate_panels[teammate_panel_id]
 
 	if teammate_panel then
-		self._teammate_panels[teammate_panel_id]:show_lockpick_icon()
+		self._teammate_panels[teammate_panel_id]:show_special_interaction_icon(interaction_type)
 	end
 
 	local name_label = self:_get_name_label(name_label_id)
 
 	if name_label then
-		name_label:show_lockpick_icon()
+		name_label:show_special_interaction_icon(interaction_type)
 	end
 end
 
-function HUDManager:on_teammate_stop_lockpicking(teammate_panel_id, name_label_id)
+function HUDManager:on_teammate_stop_special_interaction(teammate_panel_id, name_label_id)
 	local teammate_panel = self._teammate_panels[teammate_panel_id]
 
 	if teammate_panel then
-		self._teammate_panels[teammate_panel_id]:hide_lockpick_icon()
+		self._teammate_panels[teammate_panel_id]:hide_special_interaction_icon()
 	end
 
 	local name_label = self:_get_name_label(name_label_id)
 
 	if name_label then
-		name_label:hide_lockpick_icon()
+		name_label:hide_special_interaction_icon()
 	end
 end
 
@@ -530,23 +603,11 @@ function HUDManager:set_teammate_carry_info(teammate_panel_id, name_label_id, ca
 	if teammate_panel_id and self._teammate_panels[teammate_panel_id] and teammate_panel_id ~= HUDManager.PLAYER_PANEL then
 		self._teammate_panels[teammate_panel_id]:set_carry_info(carry_id)
 	end
-
-	local name_label = self:_get_name_label(name_label_id)
-
-	if name_label then
-		name_label:set_carry_info(carry_id)
-	end
 end
 
 function HUDManager:remove_teammate_carry_info(teammate_panel_id, name_label_id)
 	if teammate_panel_id and self._teammate_panels[teammate_panel_id] and teammate_panel_id ~= HUDManager.PLAYER_PANEL then
 		self._teammate_panels[teammate_panel_id]:remove_carry_info()
-	end
-
-	local name_label = self:_get_name_label(name_label_id)
-
-	if name_label then
-		name_label:remove_carry_info()
 	end
 end
 
@@ -619,16 +680,17 @@ function HUDManager:_setup_ingame_hud_saferect()
 	self:_create_hit_direction(hud)
 	self:_create_center_prompt(hud)
 	self:_create_big_prompt(hud)
+	self:_create_controller_hotswap(hud)
 	self:_create_suspicion_direction(hud)
 	self:_create_turret_hud(hud)
 	self:_create_carry(hud)
 	self:_setup_driving_hud()
 	self:_create_custody_hud()
-	self:_create_motiondot_hud()
 	self:_create_hud_chat()
 	self:_setup_tab_screen()
 	self:_get_tab_objectives()
 	self:_create_watermark(hud)
+	self:_create_crosshair(hud)
 end
 
 function HUDManager:_create_ammo_test()
@@ -776,7 +838,7 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 
 			local peer_carry_data = managers.player:get_synced_carry(peer_id)
 
-			if peer_carry_data then
+			if peer_carry_data and #peer_carry_data > 0 then
 				local unit_data = managers.network:session():peer(peer_id):unit():unit_data()
 				local name_label_id = nil
 
@@ -784,7 +846,7 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 					name_label_id = unit_data.name_label_id
 				end
 
-				self:set_teammate_carry_info(i, name_label_id, peer_carry_data.carry_id)
+				self:set_teammate_carry_info(i, name_label_id, peer_carry_data[1].carry_id)
 			end
 
 			data.taken = true
@@ -932,15 +994,14 @@ end
 function HUDManager:_fix_peer_warcry_icons()
 	for i = 1, #self._hud.name_labels do
 		local peer_name_label = self._hud.name_labels[i]
-		local peer_id = peer_name_label._peer_id
+		local peer_id = peer_name_label:peer_id()
 		local warcry = peer_name_label.warcry
 
-		if peer_name_label and peer_id then
+		if peer_name_label and peer_id and warcry then
 			for j = 1, #self._teammate_panels do
 				local teammate_panel = self._teammate_panels[j]
 
-				if teammate_panel._peer_id == peer_id then
-					print(inspect(teammate_panel))
+				if teammate_panel:peer_id() == peer_id then
 					teammate_panel:set_active_warcry(warcry)
 				end
 			end
@@ -971,9 +1032,15 @@ function HUDManager:_create_weapons_panel(hud)
 	self._weapon_panels = {}
 end
 
-function HUDManager:_create_comm_wheel(hud, params)
+function HUDManager:_create_comm_wheel(hud, in_params)
+	if self._hud_comm_wheel then
+		self._hud_comm_wheel:destroy()
+
+		self._hud_comm_wheel = nil
+	end
+
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
-	local params = tweak_data.interaction.com_wheel
+	local params = tweak_data.interaction:get_interaction("com_wheel")
 	local pm = managers.player
 	params.show_clbks = {
 		callback(pm, pm, "disable_view_movement")
@@ -981,7 +1048,7 @@ function HUDManager:_create_comm_wheel(hud, params)
 	params.hide_clbks = {
 		callback(pm, pm, "enable_view_movement")
 	}
-	self._hud_comm_wheel = HUDMultipleChoiceWheel:new(self._saferect, hud, params or tweak_data.interaction.com_wheel)
+	self._hud_comm_wheel = HUDMultipleChoiceWheel:new(self._saferect, hud, params)
 
 	self._hud_comm_wheel:set_x(hud.panel:w() / 2 - self._hud_comm_wheel:w() / 2)
 	self._hud_comm_wheel:set_y(0)
@@ -1045,12 +1112,81 @@ function HUDManager:is_comm_wheel_visible()
 end
 
 function HUDManager:_destroy_comm_wheel()
-	self._hud_comm_wheel = nil
+	if self._hud_comm_wheel then
+		self._hud_comm_wheel:destroy()
+
+		self._hud_comm_wheel = nil
+	end
+end
+
+function HUDManager:_create_carry_wheel(hud, in_params)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	local params = tweak_data.interaction:get_interaction("carry_wheel")
+	local pm = managers.player
+	params.show_clbks = {
+		callback(pm, pm, "disable_view_movement")
+	}
+	params.hide_clbks = {
+		callback(pm, pm, "enable_view_movement")
+	}
+	self._hud_carry_wheel = HUDMultipleChoiceWheel:new(self._saferect, hud, params)
+
+	self._hud_carry_wheel:hide()
+end
+
+function HUDManager:show_carry_wheel()
+	if not self._hud_carry_wheel then
+		self:_create_carry_wheel()
+	end
+
+	self._hud_carry_wheel:show()
+end
+
+function HUDManager:hide_carry_wheel(quiet)
+	if self._hud_carry_wheel then
+		self._hud_carry_wheel:hide(quiet)
+	end
+end
+
+function HUDManager:set_carry_wheel_options(options)
+	if not self._hud_carry_wheel then
+		self:_create_carry_wheel()
+	end
+
+	self._hud_carry_wheel:set_options(options)
+end
+
+function HUDManager:is_carry_wheel_visible()
+	if self._hud_carry_wheel ~= nil then
+		return self._hud_carry_wheel:is_visible()
+	end
+
+	return false
+end
+
+function HUDManager:_destroy_carry_wheel()
+	if self._hud_carry_wheel then
+		self._hud_carry_wheel:destroy()
+
+		self._hud_carry_wheel = nil
+	end
 end
 
 function HUDManager:create_special_interaction(hud, params)
+	Application:debug("[HUDManager:create_special_interaction] TYPE", params.minigame_type)
+
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
-	self._hud_special_interaction = self._hud_special_interaction or HUDSpecialInteraction:new(hud, params)
+	local mini = params.minigame_type or tweak_data.interaction.MINIGAME_PICK_LOCK
+
+	if not HUDManager.MINIGAMES[mini] then
+		debug_pause("[HUDManager:create_special_interaction] minigame_type was nil!!")
+	end
+
+	if self._hud_special_interaction then
+		self._hud_special_interaction:destroy()
+	end
+
+	self._hud_special_interaction = HUDManager.MINIGAMES[mini]:new(hud, params)
 
 	self._hud_special_interaction:set_tweak_data(params)
 	self._hud_special_interaction:hide()
@@ -1087,7 +1223,7 @@ function HUDManager:_create_present_panel(hud)
 	self._toast_notification = HUDToastNotification:new(hud)
 
 	self._toast_notification:set_x(hud.panel:w() / 2 - self._toast_notification:w() / 2)
-	self._toast_notification:set_y(0)
+	self._toast_notification:set_y(70)
 end
 
 function HUDManager:present(params)
@@ -1245,17 +1381,18 @@ function HUDManager:on_progression_cycle_completed()
 	managers.notification:add_notification(notification_params)
 end
 
-function HUDManager:on_greed_loot_picked_up(old_progress, new_progress)
+function HUDManager:on_greed_loot_picked_up(old_progress, new_progress, notification_item)
 	if self._tab_screen then
 		self._tab_screen:on_greed_loot_picked_up(old_progress, new_progress)
 	end
 
 	managers.notification:add_notification({
 		id = "greed_item_picked_up",
-		shelf_life = 6,
+		shelf_life = 8,
 		notification_type = HUDNotification.GREED_ITEM,
 		initial_progress = old_progress,
-		new_progress = new_progress
+		new_progress = new_progress,
+		item = notification_item
 	})
 end
 
@@ -1283,7 +1420,7 @@ function HUDManager:_setup_tab_screen()
 
 	self._tab_screen:hide()
 
-	if _G.IS_PC and SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_PC and IS_STEAM then
 		managers.network.account:add_overlay_listener("[HUDManager] hide_tab_screen", {
 			"overlay_open"
 		}, callback(self, self, "hide_stats_screen"))
@@ -1309,10 +1446,10 @@ function HUDManager:hide_stats_screen()
 
 	if game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
 		self:show(IngameWaitingForRespawnState.GUI_SPECTATOR)
-	else
-		self:show(PlayerBase.INGAME_HUD_FULLSCREEN)
-		self:show(PlayerBase.INGAME_HUD_SAFERECT)
 	end
+
+	self:show(PlayerBase.INGAME_HUD_FULLSCREEN)
+	self:show(PlayerBase.INGAME_HUD_SAFERECT)
 
 	if self._showing_stats_screen then
 		self:hide(HUDManager.TAB_SCREEN_FULLSCREEN)
@@ -1493,6 +1630,10 @@ function HUDManager:hide_turret_hud(turret_unit)
 	self._turret_hud:hide(turret_unit)
 end
 
+function HUDManager:update_turret_reticle(v3)
+	self._turret_hud:update_turret_reticle(v3)
+end
+
 function HUDManager:update_heat_indicator(current)
 	self._turret_hud:update_heat_indicator(current)
 end
@@ -1517,6 +1658,7 @@ function HUDManager:_create_watermark(hud)
 end
 
 function HUDManager:_create_carry(hud)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	self._carry_hud = HUDCarry:new(hud)
 
 	self._carry_hud:set_x(hud.panel:w() / 2 - self._carry_hud:w() / 2)
@@ -1529,6 +1671,14 @@ end
 
 function HUDManager:hide_carry_item()
 	self._carry_hud:hide_carry_item()
+end
+
+function HUDManager:set_carry_weight(ratio, overweight)
+	self._carry_hud:set_carry_weight(ratio, overweight)
+end
+
+function HUDManager:shake_carry_icon()
+	self._carry_hud:shake_carry_icon()
 end
 
 function HUDManager:_create_suspicion(hud)
@@ -1557,25 +1707,62 @@ function HUDManager:set_suspicion(status)
 end
 
 function HUDManager:_create_hit_confirm(hud)
-	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_FULLSCREEN)
 	self._hud_hit_confirm = HUDHitConfirm:new(hud)
 end
 
-function HUDManager:on_hit_confirmed(world_hit_pos, wep_type_shotgun)
-	if managers.user:get_setting("hit_indicator") > 1 then
-		self._hud_hit_confirm:on_hit_confirmed(world_hit_pos, wep_type_shotgun)
+function HUDManager:on_hit_confirmed(world_hit_pos, is_killshot, is_headshot, is_crit, is_pellet)
+	if HUDHitConfirm.MODE_OFF < managers.user:get_setting("hit_indicator") then
+		self._hud_hit_confirm:on_hit_confirmed(world_hit_pos, is_killshot, is_headshot, is_crit, is_pellet)
 	end
 end
 
-function HUDManager:on_headshot_confirmed(world_hit_pos, wep_type_shotgun)
-	if managers.user:get_setting("hit_indicator") > 1 then
-		self._hud_hit_confirm:on_headshot_confirmed(world_hit_pos, wep_type_shotgun)
+function HUDManager:_create_crosshair(hud)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	self._hud_crosshair = HUDCrosshair:new(hud)
+
+	self:set_crosshair_visible(true)
+end
+
+function HUDManager:set_crosshair_type(t)
+	if self._hud_crosshair then
+		self._hud_crosshair:set_crosshair_type(t)
 	end
 end
 
-function HUDManager:on_crit_confirmed(world_hit_pos, wep_type_shotgun)
-	if managers.user:get_setting("hit_indicator") > 1 then
-		self._hud_hit_confirm:on_crit_confirmed(world_hit_pos, wep_type_shotgun)
+function HUDManager:set_crosshair_visible(visible)
+	if self._hud_crosshair then
+		self._hud_crosshair:set_crosshair_visible(managers.user:get_setting("hud_crosshairs") and visible)
+	end
+end
+
+function HUDManager:set_crosshair_fade(visible)
+	if self._hud_crosshair then
+		self._hud_crosshair:set_crosshair_fade(visible)
+	end
+end
+
+function HUDManager:set_crosshair_offset(offset)
+	if self._hud_crosshair then
+		self._hud_crosshair:set_crosshair_offset(offset)
+	end
+end
+
+function HUDManager:set_crosshair_offset_instant(offset)
+	if self._hud_crosshair then
+		self._hud_crosshair:set_crosshair_offset_instant(offset)
+	end
+end
+
+function HUDManager:set_crosshair_offset_kick(offset)
+	if self._hud_crosshair then
+		self._hud_crosshair:set_crosshair_offset_kick(offset)
+	end
+end
+
+function HUDManager:update_crosshair_offset(t, dt)
+	if self._hud_crosshair and managers.user:get_setting("hud_crosshairs") then
+		self._hud_crosshair:update_crosshair_offset(t, dt)
 	end
 end
 
@@ -1599,9 +1786,10 @@ end
 function HUDManager:_create_center_prompt(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	self._center_prompt = HUDCenterPrompt:new(hud)
+	local y_offset = 128
 
 	self._center_prompt:set_x(hud.panel:w() / 2 - self._center_prompt:w() / 2)
-	self._center_prompt:set_y(hud.panel:h() / 2 + 48 - self._center_prompt:h() / 2)
+	self._center_prompt:set_y(hud.panel:h() / 2 + y_offset - self._center_prompt:h() / 2)
 end
 
 function HUDManager:set_prompt(id, text, duration)
@@ -1617,7 +1805,7 @@ function HUDManager:_create_big_prompt(hud)
 	self._big_prompt = HUDBigPrompt:new(hud)
 
 	self._big_prompt:set_x(hud.panel:w() / 2 - self._big_prompt:w() / 2)
-	self._big_prompt:set_y(hud.panel:h() / 2 + 116 - self._big_prompt:h() / 2)
+	self._big_prompt:set_y(hud.panel:h() / 2 - 262)
 end
 
 function HUDManager:set_big_prompt(params)
@@ -1626,6 +1814,22 @@ end
 
 function HUDManager:hide_big_prompt(id)
 	self._big_prompt:hide_prompt(id)
+end
+
+function HUDManager:_create_controller_hotswap(hud)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	self._controller_hotswap = HUDControllerHotswap:new(hud)
+
+	self._controller_hotswap:set_x(0)
+	self._controller_hotswap:set_y(hud.panel:h() / 2 - 140)
+end
+
+function HUDManager:set_controller_hotswap(params)
+	self._controller_hotswap:show_prompt(params)
+end
+
+function HUDManager:hide_controller_hotswap(id)
+	self._controller_hotswap:hide_prompt(id)
 end
 
 function HUDManager:_create_suspicion_direction(hud)
@@ -1670,6 +1874,10 @@ function HUDManager:set_custody_respawn_time(time)
 	self._hud_player_custody:set_respawn_time(time)
 end
 
+function HUDManager:set_custody_respawn_type(is_ai_trade)
+	self._hud_player_custody:set_respawn_type(is_ai_trade)
+end
+
 function HUDManager:set_custody_timer_visibility(visible)
 	self._hud_player_custody:set_timer_visibility(visible)
 end
@@ -1698,61 +1906,119 @@ function HUDManager:set_custody_pumpkin_challenge()
 	self._hud_player_custody:set_pumpkin_challenge()
 end
 
-function HUDManager:_create_motiondot_hud(hud)
-	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
-	self._hud_motion_dot = HUDMotionDot:new(hud)
+function HUDManager:set_custody_spectator_info(unit)
+	self._hud_player_custody:set_spectator_info(unit)
 end
 
-function HUDManager:set_motiondot_visibility(visible)
-	self._hud_motion_dot:on_setting_counts(visible)
+function HUDManager:_create_motiondot_hud(hud)
+	if not self:is_motion_dot_active() then
+		hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+		self._hud_motion_dot = HUDMotionDot:new(hud)
+	else
+		Application:warn("[HUDManager:_create_motiondot_hud] Motion dot already exists")
+	end
+end
+
+function HUDManager:_kill_motiondot_hud()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:clean_up()
+
+		self._hud_motion_dot = nil
+	else
+		Application:warn("[HUDManager:_kill_motiondot_hud] Motion dot doesnt exist to kill")
+	end
+end
+
+function HUDManager:set_motiondot_type(index)
+	if index > 1 then
+		if not self:is_motion_dot_active() then
+			self:_create_motiondot_hud()
+		else
+			self._hud_motion_dot:on_setting_counts(index)
+		end
+	else
+		self:_kill_motiondot_hud()
+	end
 end
 
 function HUDManager:set_motiondot_counts(index)
-	self._hud_motion_dot:on_setting_counts(index)
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_counts(index)
+	end
 end
 
 function HUDManager:increment_motiondot_counts()
-	self._hud_motion_dot:on_setting_counts_increment()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_counts_increment()
+	end
 end
 
 function HUDManager:set_motiondot_offsets(index)
-	self._hud_motion_dot:on_setting_offsets(index)
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_offsets(index)
+	end
 end
 
 function HUDManager:increment_motiondot_offsets()
-	self._hud_motion_dot:on_setting_offsets_increment()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_offsets_increment()
+	end
 end
 
 function HUDManager:set_motiondot_icons(index)
-	self._hud_motion_dot:on_setting_icons(index)
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_icons(index)
+	end
 end
 
 function HUDManager:increment_motiondot_icons()
-	self._hud_motion_dot:on_setting_icons_increment()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_icons_increment()
+	end
 end
 
 function HUDManager:set_motiondot_sizes(index)
-	self._hud_motion_dot:on_setting_sizes(index)
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_sizes(index)
+	end
 end
 
 function HUDManager:increment_motiondot_sizes()
-	self._hud_motion_dot:on_setting_sizes_increment()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_sizes_increment()
+	end
 end
 
 function HUDManager:set_motiondot_color(color)
-	self._hud_motion_dot:on_setting_color(color)
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_color(color)
+	end
 end
 
 function HUDManager:set_motiondot_color_silly()
-	self._hud_motion_dot:on_setting_color_silly()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:on_setting_color_silly()
+	end
 end
 
 function HUDManager:fade_out_motion_dot()
-	self._hud_motion_dot:set_fade_hide_dots()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:set_fade_hide_dots()
+	end
 end
 
 function HUDManager:fade_in_motion_dot()
-	self._hud_motion_dot:set_fade_show_dots()
+	if self:is_motion_dot_active() then
+		self._hud_motion_dot:set_fade_show_dots()
+	end
+end
+
+function HUDManager:is_motion_dot_active()
+	return not not self._hud_motion_dot
+end
+
+function HUDManager:is_motion_dot_ads_fade()
+	return self._hud_motion_dot and tweak_data.motion_dot_modes_ads_hides[math.min(self._hud_motion_dot:type_index(), #tweak_data.motion_dot_modes_ads_hides)] or false
 end
 
 function HUDManager:align_teammate_name_label(panel, interact, double_radius)
@@ -2074,8 +2340,4 @@ end
 
 function HUDManager:hide_vehicle_hud()
 	self._hud_driving:hide()
-end
-
-function HUDManager:set_custody_respawn_type(is_ai_trade)
-	self._hud_player_custody:set_respawn_type(is_ai_trade)
 end

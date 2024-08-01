@@ -9,8 +9,6 @@ function ElementDisableUnit:init(...)
 end
 
 function ElementDisableUnit:on_script_activated()
-	local elementBroken = false
-
 	for _, id in ipairs(self._values.unit_ids) do
 		local unit = managers.worldcollection:get_unit_with_id(id, callback(self, self, "_load_unit"), self._mission_script:sync_id())
 
@@ -28,10 +26,6 @@ function ElementDisableUnit:_load_unit(unit)
 	table.insert(self._units, unit)
 end
 
-function ElementDisableUnit:client_on_executed(...)
-	self:on_executed(...)
-end
-
 function ElementDisableUnit:on_executed(instigator)
 	self._has_executed = true
 
@@ -40,16 +34,14 @@ function ElementDisableUnit:on_executed(instigator)
 	end
 
 	for _, unit in ipairs(self._units) do
-		if self._values.destroy_units then
-			if alive(unit) then
-				unit:set_slot(0)
-			end
-		else
-			managers.game_play_central:mission_disable_unit(unit)
-		end
+		managers.game_play_central:mission_disable_unit(unit, self._values.destroy_units)
 	end
 
 	ElementDisableUnit.super.on_executed(self, instigator)
+end
+
+function ElementDisableUnit:client_on_executed(...)
+	self:on_executed(...)
 end
 
 function ElementDisableUnit:save(data)

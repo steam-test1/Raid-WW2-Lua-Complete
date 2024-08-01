@@ -14,7 +14,7 @@ local FAR_RANGE_MAX = 250000
 local PITCH_LIMIT_MIN = -80
 local PITCH_LIMIT_MAX = 80
 local TEXT_FADE_TIME = 0.3
-local TEXT_ON_SCREEN_TIME = 2
+local TEXT_ON_SCREEN_TIME = 3.5
 local FREEFLIGHT_HEADER_TEXT = "FREEFLIGHT, PRESS 'F' OR 'C'"
 local DESELECTED = Color(0.5, 0.5, 0.5)
 local SELECTED = Color(1, 1, 1)
@@ -148,6 +148,7 @@ function FreeFlight:_setup_actions()
 	local FFA = CoreFreeFlightAction.FreeFlightAction
 	local FFAT = CoreFreeFlightAction.FreeFlightActionToggle
 	local dp = FFA:new("DROP PLAYER", callback(self, self, "_drop_player"))
+	local ri = FFA:new("RAY INSPECT", callback(self, self, "_ray_inspect"))
 	local au = FFA:new("ATTACH TO UNIT", callback(self, self, "_attach_unit"))
 	local pd = FFA:new("POSITION DEBUG", callback(self, self, "_position_debug"))
 	local yc = FFA:new("YIELD CONTROL (F9 EXIT)", callback(self, self, "_yield_control"))
@@ -157,6 +158,7 @@ function FreeFlight:_setup_actions()
 	self._actions = {
 		ps,
 		dp,
+		ri,
 		au,
 		pd,
 		yc,
@@ -203,6 +205,7 @@ function FreeFlight:_setup_gui()
 	local TEXT_HEIGHT_OFFSET = 27
 	local config = {
 		font = "core/fonts/system_font",
+		name = "text",
 		font_scale = 0.9,
 		color = DESELECTED,
 		x = 45,
@@ -561,6 +564,18 @@ function FreeFlight:_update_camera(t, dt)
 
 	if not CoreApp.arg_supplied("-vpslave") then
 		self:_set_camera(pos_new, rot_new)
+	end
+end
+
+function FreeFlight:_ray_inspect()
+	local cam = self._camera_object
+	local ray = World:raycast("ray", cam:position(), cam:position() + cam:rotation():y() * 10000)
+
+	if ray then
+		print("ray hit", ray.unit:name():s(), ray.body:name())
+		World:select_unit(ray.unit)
+	else
+		World:select_unit(nil)
 	end
 end
 

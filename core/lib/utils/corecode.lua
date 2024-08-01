@@ -360,10 +360,9 @@ function memory_report(limit)
 	recurse(_G, nil, nil)
 
 	local units = World:unit_manager():get_units()
-	local is_windows = _G.IS_PC
 
 	for _, u in ipairs(units) do
-		recurse(u, "Units", is_windows and u:name():s() or u:name(), u)
+		recurse(u, "Units", IS_PC and u:name():s() or u:name(), u)
 	end
 
 	local total = 0

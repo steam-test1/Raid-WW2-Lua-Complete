@@ -22,13 +22,14 @@ function SmallLootBase:take(unit)
 		managers.network:session():send_to_host("sync_small_loot_taken", self._unit)
 	end
 
-	managers.dialog:queue_dialog("player_gen_loot_" .. tostring(self._unit:loot_drop()._loot_size), {
+	local count = self._unit:loot_drop() and self._unit:loot_drop():value()
+	local loot_size = self._unit:loot_drop() and self._unit:loot_drop()._loot_size
+
+	managers.statistics:collect_dogtags(count)
+	managers.dialog:queue_dialog("player_gen_loot_" .. tostring(loot_size), {
 		skip_idle_check = true,
 		instigator = managers.player:local_player()
 	})
-
-	local percentage_picked_up = math.clamp(math.ceil(100 * managers.lootdrop:picked_up_current_leg() / managers.lootdrop:loot_spawned_current_leg()), 0, 100)
-
 	managers.notification:add_notification({
 		id = "hud_hint_grabbed_nazi_gold",
 		duration = 2,

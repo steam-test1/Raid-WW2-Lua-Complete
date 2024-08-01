@@ -65,7 +65,6 @@ function CoreEnvEditor:init(env_file_name)
 
 	self:database_load_env(self._env_path)
 	managers.viewport:first_active_viewport():set_environment_editor_callback(callback(self, self, "feed"))
-	self:check_news(true)
 end
 
 function CoreEnvEditor:read_mode()
@@ -87,10 +86,6 @@ function CoreEnvEditor:read_templates()
 	end
 end
 
-function CoreEnvEditor:on_check_news()
-	self:check_news()
-end
-
 function CoreEnvEditor:reg_mixer(widget)
 	table.insert(self._mixer_widgets, widget)
 end
@@ -98,30 +93,6 @@ end
 function CoreEnvEditor:update_mix(env1, env2, blend)
 	for _, widget in ipairs(self._mixer_widgets) do
 		widget:update_mix(env1, env2, blend)
-	end
-end
-
-function CoreEnvEditor:check_news(new_only)
-	local news = nil
-
-	if new_only then
-		news = managers.news:get_news("env_editor", self._main_frame)
-	else
-		news = managers.news:get_old_news("env_editor", self._main_frame)
-	end
-
-	if news then
-		local str = nil
-
-		for _, n in ipairs(news) do
-			if not str then
-				str = n
-			else
-				str = str .. "\n" .. n
-			end
-		end
-
-		EWS:MessageDialog(self._main_frame, str, "New Features!", "OK,ICON_INFORMATION"):show_modal()
 	end
 end
 
@@ -168,7 +139,7 @@ function CoreEnvEditor:set_data_path(data_path, handler, value)
 end
 
 function CoreEnvEditor:create_main_frame()
-	self._main_frame = EWS:Frame("", Vector3(250, 0, 0), Vector3(450, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
+	self._main_frame = EWS:Frame("", Vector3(250, 0, 0), Vector3(740, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
 	self:set_title()
 
@@ -181,8 +152,6 @@ function CoreEnvEditor:create_main_frame()
 	file_menu:append_item("ENVSAVEAS", "Save As.. \tCtrl+Alt+S", "")
 	file_menu:append_separator()
 	file_menu:append_item("ENCODE_PARAMETERS", "Encode Parameters", "")
-	file_menu:append_separator()
-	file_menu:append_item("NEWS", "Get Latest News", "")
 	file_menu:append_separator()
 	file_menu:append_item("EXIT", "Exit", "")
 	menu_bar:append(file_menu, "File")
@@ -197,7 +166,6 @@ function CoreEnvEditor:create_main_frame()
 	self._main_frame:connect("ENVSAVE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_save_file"), "")
 	self._main_frame:connect("ENVSAVEAS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_save_file_as"), "")
 	self._main_frame:connect("ENCODE_PARAMETERS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_encode_parameters"), "")
-	self._main_frame:connect("NEWS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_check_news"), "")
 	self._main_frame:connect("EXIT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_close"), "")
 	self._main_frame:connect("UNDO", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_undo"), "")
 	self._main_frame:connect("REDO", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_redo"), "")

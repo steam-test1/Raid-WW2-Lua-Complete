@@ -641,10 +641,11 @@ end
 function combobox_and_list(params)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
-	params.sizer:add(horizontal_sizer, 0, 1, "EXPAND,LEFT")
+	params.sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	params.sizer = horizontal_sizer
 	params.sizer_proportions = params.sizer_proportions or 1
+	params.ctrlr_proportions = params.ctrlr_proportions or 2
 	params.tooltip = params.tooltip or "Select an option from the combobox"
 	local ctrlr = combobox(params)
 	local toolbar = EWS:ToolBar(params.panel, "", "TB_FLAT,TB_NODIVIDER")

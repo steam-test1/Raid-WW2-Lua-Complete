@@ -176,21 +176,17 @@ function CallbackEventHandler:clear()
 	self._callback_map = nil
 end
 
-function CallbackEventHandler:add(func)
+function CallbackEventHandler:add(clbk)
 	self._callback_map = self._callback_map or {}
-	self._callback_map[func] = true
+	self._callback_map[clbk] = true
 end
 
-function CallbackEventHandler:remove(func)
-	if not self._callback_map or not self._callback_map[func] then
+function CallbackEventHandler:remove(clbk)
+	if not self._callback_map or not self._callback_map[clbk] then
 		return
 	end
 
-	if self._next_callback == func then
-		self._next_callback = next(self._callback_map, self._next_callback)
-	end
-
-	self._callback_map[func] = nil
+	self._callback_map[clbk] = nil
 
 	if not next(self._callback_map) then
 		self._callback_map = nil
@@ -198,17 +194,13 @@ function CallbackEventHandler:remove(func)
 end
 
 function CallbackEventHandler:dispatch(...)
-	if self._callback_map then
-		self._next_callback = next(self._callback_map)
+	if not self._callback_map then
+		return
+	end
 
-		self._next_callback(...)
-
-		while self._next_callback do
-			self._next_callback = next(self._callback_map, self._next_callback)
-
-			if self._next_callback then
-				self._next_callback(...)
-			end
+	for clbk, event in pairs(self._callback_map) do
+		if event then
+			clbk(...)
 		end
 	end
 end

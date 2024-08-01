@@ -417,8 +417,11 @@ function CharacterCustomizationGui:_process_controls_states()
 		self._equip_button:hide()
 		self._equip_gold_button:hide()
 		self._buy_button:hide()
+
+		local info_label_text = self:translate("character_customization_locked_drop_label", true)
+
 		self._info_label:show()
-		self._info_label:set_text(self:translate("character_customization_locked_drop_label", true))
+		self._info_label:set_text(info_label_text)
 		self._info_label:set_color(tweak_data.gui.colors.raid_red)
 		self._gold_currency_icon:hide()
 		self._gold_currency_label:hide()
@@ -544,11 +547,14 @@ function CharacterCustomizationGui:_select_grid_item(item_data)
 		instigator = managers.player:local_player()
 	})
 
-	local random_animation_index = math.random(1, #tweak_data.character_customization.customization_animations)
-	local anim_state_name = tweak_data.character_customization.customization_animations[random_animation_index]
-	local state = self._spawned_character_unit:play_redirect(Idstring(anim_state_name))
+	local machine = self._spawned_character_unit:anim_state_machine()
 
-	self._spawned_character_unit:anim_state_machine():set_parameter(state)
+	if not self._anim_state or not machine:is_playing(self._anim_state) then
+		local random_animation_index = math.random(1, #tweak_data.character_customization.customization_animations)
+		local anim_state_name = tweak_data.character_customization.customization_animations[random_animation_index]
+		self._anim_state = self._spawned_character_unit:play_redirect(Idstring(anim_state_name))
+	end
+
 	self:show_character_description(item_data)
 	managers.menu_component:post_event("clothes_selection_change")
 end

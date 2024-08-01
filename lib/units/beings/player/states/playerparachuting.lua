@@ -18,12 +18,13 @@ function PlayerParachuting:enter(state_data, enter_data)
 
 	self._unit:mover():set_damping(self._tweak_data.gravity / self._tweak_data.terminal_velocity)
 	self._unit:sound():play("parachute_open", nil, false)
+	managers.hud:set_crosshair_fade(false)
 end
 
 function PlayerParachuting:_enter(enter_data)
 	if not self._unit:camera():anim_data().equipped then
-		self._unit:camera():play_redirect(self.IDS_EQUIP)
 		self._unit:inventory():show_equipped_unit()
+		self:_start_action_equip()
 	end
 
 	self._unit:movement().fall_rotation = self._unit:movement().fall_rotation or Rotation(0, 0, 0)
@@ -108,7 +109,7 @@ function PlayerParachuting:_update_check_actions(t, dt)
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
 	if tweak_data.projectiles[projectile_entry].is_a_grenade then
-		self:_update_throw_grenade_timers(t, input)
+		self:_update_throw_grenade_timers(t, dt, input)
 	else
 		self:_update_throw_projectile_timers(t, input)
 	end

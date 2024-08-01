@@ -10,6 +10,8 @@ function NewShotgunBase:setup_default()
 	self._damage_falloff_far = tweak_data.weapon[self._name_id].damage_falloff_far
 	self._DAMAGE_AT_FAR = tweak_data.weapon[self._name_id].DAMAGE_AT_FAR or 1
 	self._rays = tweak_data.weapon[self._name_id].rays or 6
+	self._rays_choked = math.floor(self._rays / 3)
+	self._spread_choke = tweak_data.weapon[self._name_id].spread_choke or 0.667
 	self._range = self._damage_falloff_far
 	self._use_shotgun_reload = self._use_shotgun_reload or self._use_shotgun_reload == nil
 end
@@ -63,27 +65,24 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 	end
 
 	local damage = self:_get_current_damage(dmg_mul)
-	local damage_per_pellet = damage / self._rays
 	local autoaim, dodge_enemies = self:check_autoaim(from_pos, direction, self._range)
 	local weight = 0.1
 	local enemy_died = false
 
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() then
-			local enemy_key = col_ray.unit:key()
-
-			if not hit_enemies[enemy_key] or col_ray.unit:character_damage().is_head and col_ray.unit:character_damage():is_head(col_ray.body) then
-				hit_enemies[enemy_key] = col_ray
+			if not col_ray.unit:character_damage():dead() then
+				table.insert(hit_enemies, col_ray)
 			end
 		else
-			local add_shoot_through_bullet = self._can_shoot_through_shield or self._can_shoot_through_wall
+			local add_shoot_through_bullet = self:can_shoot_through_shields() or self:can_shoot_through_walls()
 
 			if add_shoot_through_bullet then
 				hit_objects[col_ray.unit:key()] = hit_objects[col_ray.unit:key()] or {}
 
 				table.insert(hit_objects[col_ray.unit:key()], col_ray)
 			else
-				self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage_per_pellet)
+				self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
 			end
 		end
 	end
@@ -100,7 +99,15 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 		mvector3.set(mvec_spread_direction, mvec_direction)
 
 		if spread then
-			mvector3.spread(mvec_spread_direction, spread * (spread_mul or 1))
+			local s = nil
+
+			if self._rays > 1 and self._rays_choked and i <= self._rays_choked then
+				s = spread * (spread_mul or 1) * self._spread_choke
+			else
+				s = spread * (spread_mul or 1)
+			end
+
+			mvector3.spread(mvec_spread_direction, s)
 		end
 
 		mvector3.set(mvec_to, mvec_spread_direction)
@@ -187,14 +194,16 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 		NewShotgunBase.super._fire_raycast(self, user_unit, from_pos, center_ray.ray, dmg_mul, shoot_player, 0, autohit_mul, suppr_mul, shoot_through_data)
 	end
 
-	for _, col_ray in pairs(hit_enemies) do
+	for i, col_ray in ipairs(hit_enemies) do
 		local damage = self:get_damage_falloff(col_ray, user_unit)
 
 		if damage > 0 then
 			local my_result = nil
-			local add_shoot_through_bullet = self._can_shoot_through_shield or self._can_shoot_through_enemy or self._can_shoot_through_wall
+			local add_shoot_through_bullet = self:can_shoot_through_shields() or self:can_shoot_through_enemies() or self:can_shoot_through_walls()
 
 			if add_shoot_through_bullet then
+				print("[WEAPON_PEN] add_shoot_through_bullet")
+
 				my_result = NewShotgunBase.super._fire_raycast(self, user_unit, from_pos, col_ray.ray, dmg_mul, shoot_player, 0, autohit_mul, suppr_mul, shoot_through_data)
 			else
 				my_result = self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)

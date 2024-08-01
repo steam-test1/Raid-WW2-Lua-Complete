@@ -5,9 +5,9 @@ core:import("CoreEditorUtils")
 core:import("CoreEngineAccess")
 core:import("CoreTable")
 
-local sky_orientation_data_key = Idstring("sky_orientation/rotation"):key()
 WorldDefinition = WorldDefinition or class()
-WorldDefinition.LOAD_UNITS_PER_FRAME = 100
+WorldDefinition.LOAD_UNITS_PER_FRAME_HEAVY = 150
+WorldDefinition.LOAD_UNITS_PER_FRAME_LIGHT = 50
 WorldDefinition.TIME_PER_SECOND_FOR_PACKAGE_LOAD = 0.1667
 WorldDefinition.ASYNC_CALLBACKS = Global.STREAM_ALL_PACKAGES
 WorldDefinition.VEHICLES_CONTINENT_NAME = "NOT_USED_vehicles"
@@ -67,7 +67,7 @@ function WorldDefinition:init(params)
 	self._file_path = params.file_path
 
 	Application:debug("[WorldDefinition:init:set_resource_loaded_clbk]")
-	PackageManager:set_resource_loaded_clbk(Idstring("unit"), nil)
+	PackageManager:set_resource_loaded_clbk(IDS_UNIT, nil)
 	self:_load_world_package()
 
 	if not self.is_streamed_world or not WorldDefinition.ASYNC_CALLBACKS then
@@ -119,7 +119,7 @@ function WorldDefinition:init(params)
 						values.unit_data.package = values.unit_data.package or continent.package
 						local unit = self:_create_statics_unit(values, self._offset, true, name)
 
-						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME then
+						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME_HEAVY then
 							counter = 1
 
 							coroutine.yield()
@@ -150,7 +150,7 @@ function WorldDefinition:init(params)
 						values.unit_data.package = values.unit_data.package or continent.package
 						local unit = self:_create_dynamics_unit(values, offset)
 
-						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME then
+						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME_HEAVY then
 							counter = 1
 
 							coroutine.yield()
@@ -183,7 +183,7 @@ function WorldDefinition:init(params)
 	if not WorldDefinition.ASYNC_CALLBACKS or not self.is_streamed_world then
 		Application:debug("[WorldDefinition:init] Reenabling PackageManager:set_resource_loaded_clbk()")
 		managers.sequence:preload()
-		PackageManager:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+		PackageManager:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 	end
 
 	self._next_cleanup_t = 0
@@ -565,6 +565,8 @@ function WorldDefinition:_parse_world_setting(world_setting, excluded_continents
 end
 
 function WorldDefinition:parse_continents(node, t)
+	Application:debug("[WorldDefinition:parse_continents] parse_continents", node, t)
+
 	local path = self:world_dir() .. self._definition.world_data.continents_file
 
 	if not DB:has("continents", path) then
@@ -1188,6 +1190,7 @@ local zero_rot = Rotation()
 
 function WorldDefinition:_create_massunit(data, offset)
 	local path = self:world_dir() .. data.file
+	local spawn_mass = true
 
 	if Application:editor() then
 		CoreEngineAccess._editor_load(Idstring("massunit"), path:id())
@@ -1195,33 +1198,26 @@ function WorldDefinition:_create_massunit(data, offset)
 		local l = MassUnitManager:list(path:id())
 
 		for _, name in ipairs(l) do
-			if DB:has(Idstring("unit"), name:id()) then
-				CoreEngineAccess._editor_load(Idstring("unit"), name:id())
-			elseif not table.has(self._massunit_replace_names, name:s()) then
-				managers.editor:output("Unit " .. name:s() .. " does not exist")
+			if DB:has(IDS_UNIT, name:id()) then
+				CoreEngineAccess._editor_load(IDS_UNIT, name:id())
+			else
+				spawn_mass = false
 
-				local old_name = name:s()
-				name = managers.editor:show_replace_massunit()
-
-				if name and DB:has(Idstring("unit"), name:id()) then
-					CoreEngineAccess._editor_load(Idstring("unit"), name:id())
-				end
-
-				self._massunit_replace_names[old_name] = name or ""
-
-				managers.editor:output("Unit " .. old_name .. " changed to " .. tostring(name))
+				Application:error("[WorldDefinition:_create_massunit] Cannot spawn massunit '" .. tostring(path) .. "'")
 			end
 		end
 	end
 
-	local rotation = self._translation and self._translation.rotation or zero_rot
+	if spawn_mass then
+		local rotation = self._translation and self._translation.rotation or zero_rot
 
-	if self._translation then
-		offset = self._translation.position
+		if self._translation then
+			offset = self._translation.position
+		end
+
+		MassUnitManager:delete_all_units()
+		MassUnitManager:load(path:id(), offset, rotation, self._massunit_replace_names)
 	end
-
-	MassUnitManager:delete_all_units()
-	MassUnitManager:load(path:id(), offset, rotation, self._massunit_replace_names)
 end
 
 function check_is_environment_vanilla(environment_name)
@@ -1399,8 +1395,8 @@ function WorldDefinition:preload_unit(name)
 
 	if table.has(self._replace_names, name) then
 		name = self._replace_names[name]
-	elseif is_editor and (not DB:has(Idstring("unit"), name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
-		if not DB:has(Idstring("unit"), name:id()) then
+	elseif is_editor and (not DB:has(IDS_UNIT, name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
+		if not DB:has(IDS_UNIT, name:id()) then
 			managers.editor:output_info("Unit " .. name .. " does not exist")
 		else
 			managers.editor:output_info("Unit " .. name .. " is of type " .. CoreEngineAccess._editor_unit_data(name:id()):type():t())
@@ -1414,7 +1410,7 @@ function WorldDefinition:preload_unit(name)
 	end
 
 	if is_editor and name then
-		CoreEngineAccess._editor_load(Idstring("unit"), name:id())
+		CoreEngineAccess._editor_load(IDS_UNIT, name:id())
 	end
 end
 
@@ -2021,7 +2017,7 @@ function WorldDefinition:update_prepare(t, dt)
 				managers.sequence:preload()
 			end
 
-			PackageManager:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+			PackageManager:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 			Application:debug("[WorldDefinition:update_prepare()] Managers sequence count:", managers.sequence:count())
 		end
 	end
