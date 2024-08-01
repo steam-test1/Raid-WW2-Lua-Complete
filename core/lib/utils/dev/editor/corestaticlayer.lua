@@ -333,7 +333,7 @@ function StaticLayer:release_unit()
 	end
 end
 
--- Lines 268-281
+-- Lines 268-288
 function StaticLayer:delete_selected_unit(btn, pressed)
 	managers.editor:freeze_gui_lists()
 
@@ -344,7 +344,14 @@ function StaticLayer:delete_selected_unit(btn, pressed)
 			if table.contains(self._created_units, unit) then
 				self:delete_unit(unit)
 			else
-				managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to " .. tostring(managers.editor:unit_in_layer_name(unit)) .. " and cannot be deleted from here.")
+				local unit_in_layer_name = managers.editor:unit_in_layer_name(unit)
+
+				if unit_in_layer_name then
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to " .. tostring(unit_in_layer_name) .. " and cannot be deleted from here.")
+				else
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to nothing and will be deleted")
+					self:delete_unit(unit)
+				end
 			end
 		end
 	end
@@ -352,7 +359,7 @@ function StaticLayer:delete_selected_unit(btn, pressed)
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines 283-289
+-- Lines 290-296
 function StaticLayer:create_marker(marker)
 	if self._selected_unit then
 		marker:set_pos(self._selected_unit:position())
@@ -362,7 +369,7 @@ function StaticLayer:create_marker(marker)
 	end
 end
 
--- Lines 290-295
+-- Lines 297-302
 function StaticLayer:use_marker(marker)
 	if self._selected_unit then
 		self:set_unit_positions(marker._pos)
@@ -370,7 +377,7 @@ function StaticLayer:use_marker(marker)
 	end
 end
 
--- Lines 297-302
+-- Lines 304-309
 function StaticLayer:reset_rotation()
 	if self._selected_unit then
 		local yaw = not self:shift() and self._selected_unit:rotation():yaw() or 0
@@ -379,7 +386,7 @@ function StaticLayer:reset_rotation()
 	end
 end
 
--- Lines 304-350
+-- Lines 311-357
 function StaticLayer:update(t, dt)
 	self:draw_units(t, dt)
 	self:draw_rotation(t, dt)
@@ -426,7 +433,7 @@ function StaticLayer:update(t, dt)
 	self:update_rotate_triggers(t, dt)
 end
 
--- Lines 352-371
+-- Lines 359-378
 function StaticLayer:draw_marker(t, dt)
 	if not managers.editor:layer_draw_marker() then
 		return
@@ -449,7 +456,7 @@ function StaticLayer:draw_marker(t, dt)
 	end
 end
 
--- Lines 374-403
+-- Lines 381-410
 function StaticLayer:update_move_triggers(t, dt)
 	if not alive(self._selected_unit) or not self._editor_data.keyboard_available or self:condition() then
 		return
@@ -481,7 +488,7 @@ function StaticLayer:update_move_triggers(t, dt)
 	end
 end
 
--- Lines 406-437
+-- Lines 413-444
 function StaticLayer:update_rotate_triggers(t, dt)
 	if not alive(self._selected_unit) or not self._editor_data.keyboard_available or self:condition() then
 		return
@@ -517,7 +524,7 @@ function StaticLayer:update_rotate_triggers(t, dt)
 	end
 end
 
--- Lines 439-450
+-- Lines 446-457
 function StaticLayer:draw_rotation(t, dt)
 	if not alive(self._selected_unit) then
 		return
@@ -532,7 +539,7 @@ function StaticLayer:draw_rotation(t, dt)
 	end
 end
 
--- Lines 452-472
+-- Lines 459-479
 function StaticLayer:draw_units(t, dt)
 	if self._selected_units then
 		for _, unit in ipairs(self._selected_units) do
@@ -550,13 +557,13 @@ function StaticLayer:draw_units(t, dt)
 	Application:draw(self._selected_unit, 0, 1, 0)
 end
 
--- Lines 474-505
+-- Lines 481-512
 function StaticLayer:build_panel(notebook, settings)
 	cat_print("editor", "StaticLayer:build_panel")
 
 	self._ews_panel = EWS:ScrolledWindow(notebook, "", "VSCROLL")
 
-	self._ews_panel:set_scroll_rate(Vector3(0, 20, 0))
+	self._ews_panel:set_scroll_rate(Vector3(10, 20, 0))
 	self._ews_panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
 
 	self._main_sizer = EWS:BoxSizer("VERTICAL")
@@ -580,11 +587,11 @@ function StaticLayer:build_panel(notebook, settings)
 	return self._ews_panel
 end
 
--- Lines 507-509
+-- Lines 514-516
 function StaticLayer:build_btn_toolbar()
 end
 
--- Lines 511-517
+-- Lines 518-524
 function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:add_tool("HIDE_ALL", "Hide All", CoreEws.image_path("toolbar\\hide_16x16.png"), "Hide All")
 	self._btn_toolbar:connect("HIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "hide_all"), nil)
@@ -592,7 +599,7 @@ function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:connect("UNHIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "unhide_all"), nil)
 end
 
--- Lines 519-539
+-- Lines 526-546
 function StaticLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -616,7 +623,7 @@ function StaticLayer:get_help(text)
 	return text
 end
 
--- Lines 541-568
+-- Lines 548-575
 function StaticLayer:undo()
 	if not managers.editor:use_beta_undo() then
 		return
@@ -653,12 +660,12 @@ function StaticLayer:undo()
 	end
 end
 
--- Lines 570-572
+-- Lines 577-579
 function StaticLayer:deactivate()
 	StaticLayer.super.deactivate(self)
 end
 
--- Lines 574-594
+-- Lines 581-601
 function StaticLayer:add_triggers()
 	StaticLayer.super.add_triggers(self)
 

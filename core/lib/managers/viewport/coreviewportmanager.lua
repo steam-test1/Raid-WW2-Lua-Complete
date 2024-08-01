@@ -328,11 +328,7 @@ function ViewportManager:active_vp()
 	return #vps > 0 and vps[1]
 end
 
-local is_win32 = _G.IS_PC
-local is_ps4 = _G.IS_PS4
-local is_xb1 = _G.IS_XB1
-
--- Lines 305-310
+-- Lines 302-306
 function ViewportManager:get_safe_rect()
 	local a = 0.05
 	local b = 1 - a * 2
@@ -345,7 +341,7 @@ function ViewportManager:get_safe_rect()
 	}
 end
 
--- Lines 312-323
+-- Lines 308-319
 function ViewportManager:get_safe_rect_pixels()
 	local res = RenderSettings.resolution
 	local safe_rect_scale = self:get_safe_rect()
@@ -359,7 +355,7 @@ function ViewportManager:get_safe_rect_pixels()
 	return safe_rect_pixels
 end
 
--- Lines 325-330
+-- Lines 321-326
 function ViewportManager:set_resolution(resolution)
 	if RenderSettings.resolution ~= resolution or self._render_settings_change_map and self._render_settings_change_map.resolution ~= resolution then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -367,7 +363,7 @@ function ViewportManager:set_resolution(resolution)
 	end
 end
 
--- Lines 332-338
+-- Lines 328-334
 function ViewportManager:is_fullscreen()
 	if self._render_settings_change_map and self._render_settings_change_map.fullscreen ~= nil then
 		return self._render_settings_change_map.fullscreen
@@ -376,7 +372,7 @@ function ViewportManager:is_fullscreen()
 	end
 end
 
--- Lines 340-346
+-- Lines 336-342
 function ViewportManager:is_borderless()
 	if self._render_settings_change_map and self._render_settings_change_map.borderless ~= nil then
 		return self._render_settings_change_map.borderless
@@ -385,7 +381,7 @@ function ViewportManager:is_borderless()
 	end
 end
 
--- Lines 348-353
+-- Lines 344-349
 function ViewportManager:set_fullscreen(fullscreen)
 	if not RenderSettings.fullscreen ~= not fullscreen or self._render_settings_change_map and not self._render_settings_change_map.fullscreen ~= not fullscreen then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -393,7 +389,7 @@ function ViewportManager:set_fullscreen(fullscreen)
 	end
 end
 
--- Lines 355-360
+-- Lines 351-356
 function ViewportManager:set_borderless(borderless)
 	if not RenderSettings.borderless ~= not borderless or self._render_settings_change_map and not self._render_settings_change_map.borderless ~= not borderless then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -401,7 +397,7 @@ function ViewportManager:set_borderless(borderless)
 	end
 end
 
--- Lines 362-368
+-- Lines 358-364
 function ViewportManager:set_aspect_ratio(aspect_ratio)
 	if RenderSettings.aspect_ratio ~= aspect_ratio or self._render_settings_change_map and self._render_settings_change_map.aspect_ratio ~= aspect_ratio then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -410,7 +406,7 @@ function ViewportManager:set_aspect_ratio(aspect_ratio)
 	end
 end
 
--- Lines 370-376
+-- Lines 366-372
 function ViewportManager:set_vsync(vsync)
 	if RenderSettings.v_sync ~= vsync or self._render_settings_change_map and self._render_settings_change_map.v_sync ~= vsync then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -419,7 +415,7 @@ function ViewportManager:set_vsync(vsync)
 	end
 end
 
--- Lines 378-383
+-- Lines 374-379
 function ViewportManager:set_buffer_count(buffer_count)
 	if RenderSettings.buffer_count ~= buffer_count or self._render_settings_change_map and self._render_settings_change_map.buffer_count ~= buffer_count then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -427,7 +423,7 @@ function ViewportManager:set_buffer_count(buffer_count)
 	end
 end
 
--- Lines 386-391
+-- Lines 382-387
 function ViewportManager:set_adapter_index(adapter_index)
 	if RenderSettings.adapter_index ~= adapter_index or self._render_settings_change_map and self._render_settings_change_map.adapter_index ~= adapter_index then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -435,17 +431,17 @@ function ViewportManager:set_adapter_index(adapter_index)
 	end
 end
 
--- Lines 395-397
+-- Lines 391-393
 function ViewportManager:aspect_ratio()
 	return self._aspect_ratio
 end
 
--- Lines 399-401
+-- Lines 395-397
 function ViewportManager:set_aspect_ratio2(aspect_ratio)
 	self._aspect_ratio = aspect_ratio
 end
 
--- Lines 404-408
+-- Lines 400-404
 function ViewportManager:save(data)
 	local state = {
 		default_environment = self:default_environment()
@@ -453,7 +449,7 @@ function ViewportManager:save(data)
 	data.ViewportManager = state
 end
 
--- Lines 410-416
+-- Lines 406-412
 function ViewportManager:load(data)
 	local state = data.ViewportManager
 

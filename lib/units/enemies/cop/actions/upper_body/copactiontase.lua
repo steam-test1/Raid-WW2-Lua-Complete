@@ -277,7 +277,7 @@ function CopActionTase:update(t)
 
 			self._tase_effect = World:effect_manager():spawn({
 				force_synch = true,
-				effect = Idstring("effects/vanilla/character/taser_thread"),
+				effect = tweak_data.common_effects.taser_thread,
 				parent = self._ext_inventory:equipped_unit():get_object(Idstring("fire"))
 			})
 
@@ -374,7 +374,7 @@ function CopActionTase:clbk_malfunction()
 	end
 
 	World:effect_manager():spawn({
-		effect = Idstring("effects/vanilla/character/taser_stop"),
+		effect = tweak_data.common_effects.taser_stop,
 		position = self._ext_movement:m_head_pos(),
 		normal = math.UP
 	})

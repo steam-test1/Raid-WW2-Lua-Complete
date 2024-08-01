@@ -4,7 +4,7 @@ ObjectivesManager.FILE_EXTENSION = "objective"
 ObjectivesManager.FULL_PATH = ObjectivesManager.PATH .. "." .. ObjectivesManager.FILE_EXTENSION
 ObjectivesManager.REMINDER_INTERVAL = 240
 
--- Lines 7-18
+-- Lines 7-19
 function ObjectivesManager:init()
 	self._objectives = {}
 	self._active_objectives = {}
@@ -17,7 +17,7 @@ function ObjectivesManager:init()
 	self:_parse_objectives()
 end
 
--- Lines 20-34
+-- Lines 21-35
 function ObjectivesManager:_parse_objectives()
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 
@@ -32,12 +32,12 @@ function ObjectivesManager:_parse_objectives()
 	self._parsed_objectives = deep_clone(self._objectives)
 end
 
--- Lines 36-38
+-- Lines 37-39
 function ObjectivesManager:on_level_transition()
 	self._objectives = deep_clone(self._parsed_objectives)
 end
 
--- Lines 40-46
+-- Lines 41-47
 function ObjectivesManager:table_invert(t)
 	local s = {}
 
@@ -48,7 +48,7 @@ function ObjectivesManager:table_invert(t)
 	return s
 end
 
--- Lines 48-60
+-- Lines 49-61
 function ObjectivesManager:_get_difficulty_amount_from_objective_subobjective(data)
 	local current_difficulty_name = Global.game_settings.difficulty
 	local difficulty_amount = data.difficulty_amount
@@ -63,7 +63,13 @@ function ObjectivesManager:_get_difficulty_amount_from_objective_subobjective(da
 	return difficulty_amount_total
 end
 
--- Lines 76-135
+-- Lines 65-70
+function ObjectivesManager:generate_dynamic_objective(data)
+	self:_parse_objective(data)
+	managers.objectives:remove_and_activate_objective(data.id, nil, {}, 1)
+end
+
+-- Lines 72-129
 function ObjectivesManager:_parse_objective(data)
 	local id = data.id
 	local text = managers.localization:text(data.text)
@@ -103,7 +109,8 @@ function ObjectivesManager:_parse_objective(data)
 		self._objectives[id].sub_objectives[sub.id] = {
 			id = sub.id,
 			text = sub_text,
-			description = sub_description
+			description = sub_description,
+			start_completed = sub.start_completed
 		}
 
 		if sub.difficulty_amount then
@@ -120,7 +127,7 @@ function ObjectivesManager:_parse_objective(data)
 	end
 end
 
--- Lines 139-157
+-- Lines 133-151
 function ObjectivesManager:update(t, dt)
 	for id, data in pairs(self._remind_objectives) do
 		if data.next_t < t then
@@ -143,7 +150,7 @@ function ObjectivesManager:update(t, dt)
 	end
 end
 
--- Lines 160-177
+-- Lines 154-176
 function ObjectivesManager:_remind_objetive(id, title_id)
 	if not Application:editor() and managers.platform:presence() ~= "Playing" then
 		return
@@ -154,34 +161,38 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 	end
 
 	if managers.user:get_setting("objective_reminder") then
-		title_id = title_id or "hud_objective_reminder"
 		local objective = self._objectives[id]
+
+		if not objective then
+			return
+		end
+
+		title_id = title_id or "hud_objective_reminder"
 		local title_message = managers.localization:text(title_id)
 		local text = objective.text
 
+		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
 			time = 4,
 			text = text,
 			title = title_message
 		})
 	end
-
-	managers.hud:remind_objective(id)
 end
 
--- Lines 179-196
+-- Lines 178-180
 function ObjectivesManager:_remind_sub_objective(id, title_id)
 	managers.hud:remind_sub_objective(id)
 end
 
--- Lines 201-203
+-- Lines 185-187
 function ObjectivesManager:update_objective(id, load_data)
 	self:activate_objective(id, load_data, {
 		title_message = managers.localization:text("mission_objective_updated")
 	})
 end
 
--- Lines 207-215
+-- Lines 191-199
 function ObjectivesManager:complete_and_activate_objective(id, load_data, data, world_id)
 	local delay_presentation = next(self._active_objectives) and true or nil
 
@@ -195,7 +206,7 @@ function ObjectivesManager:complete_and_activate_objective(id, load_data, data, 
 	self:activate_objective(id, nil, data, world_id)
 end
 
--- Lines 219-227
+-- Lines 203-211
 function ObjectivesManager:remove_and_activate_objective(id, load_data, data, world_id)
 	local delay_presentation = next(self._active_objectives) and true or nil
 
@@ -209,7 +220,7 @@ function ObjectivesManager:remove_and_activate_objective(id, load_data, data, wo
 	self:activate_objective(id, nil, data, world_id)
 end
 
--- Lines 229-292
+-- Lines 213-272
 function ObjectivesManager:activate_objective(id, load_data, data, world_id, skip_toast)
 	if not id or not self._objectives[id] then
 		Application:stack_dump_error("Bad id to activate objective, " .. tostring(id) .. ".")
@@ -219,11 +230,13 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	local objective = self._objectives[id]
 
-	for _, sub_objective in pairs(objective.sub_objectives) do
+	for k, sub_objective in pairs(objective.sub_objectives) do
 		sub_objective.completed = false
 
-		if sub_objective.amount and sub_objective.amount == sub_objective.current_amount then
+		if sub_objective.amount and sub_objective.amount == sub_objective.current_amount or sub_objective.start_completed then
 			self:check_and_set_subobjective_finished(objective, sub_objective)
+
+			sub_objective.start_completed = true
 		end
 	end
 
@@ -243,7 +256,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if data and data.delay_presentation then
 		self._delayed_presentation = {
-			t = 0.6,
+			t = 1,
 			activate_params = activate_params
 		}
 	else
@@ -254,19 +267,11 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	local text = objective.text
 
 	if not skip_toast then
-		if self._delayed_presentation then
-			self._delayed_presentation.mid_text_params = {
-				time = 4,
-				text = text,
-				title = title_message
-			}
-		else
-			managers.hud:present_mid_text({
-				time = 4,
-				text = text,
-				title = title_message
-			})
-		end
+		managers.hud:present_mid_text({
+			time = 4.5,
+			text = text,
+			title = title_message
+		})
 	end
 
 	self._active_objectives[id] = objective
@@ -276,7 +281,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	}
 end
 
--- Lines 295-318
+-- Lines 275-298
 function ObjectivesManager:remove_objective(id, load_data)
 	if not load_data then
 		if not id or not self._objectives[id] then
@@ -306,7 +311,7 @@ function ObjectivesManager:remove_objective(id, load_data)
 	end
 end
 
--- Lines 321-341
+-- Lines 301-321
 function ObjectivesManager:remove_objective_for_world(world_id)
 	for id, objective in pairs(self._active_objectives) do
 		if objective.world_id == world_id then
@@ -333,7 +338,7 @@ function ObjectivesManager:remove_objective_for_world(world_id)
 	managers.hud:clear_objectives()
 end
 
--- Lines 343-394
+-- Lines 323-367
 function ObjectivesManager:complete_objective(id, load_data)
 	if not load_data then
 		if not id or not self._objectives[id] then
@@ -393,7 +398,7 @@ function ObjectivesManager:complete_objective(id, load_data)
 	end
 end
 
--- Lines 396-428
+-- Lines 369-401
 function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 	local objective = self._objectives[id]
 	local sub_objective = objective.sub_objectives[sub_id]
@@ -438,7 +443,7 @@ function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 	self:check_and_set_subobjective_finished(objective, sub_objective)
 end
 
--- Lines 430-449
+-- Lines 403-422
 function ObjectivesManager:check_and_set_subobjective_finished(objective, sub_objective)
 	sub_objective.completed = true
 
@@ -462,18 +467,31 @@ function ObjectivesManager:check_and_set_subobjective_finished(objective, sub_ob
 	end
 end
 
--- Lines 451-462
+-- Lines 424-439
 function ObjectivesManager:set_objective_current_amount(objective_id, current_amount)
 	local objective = self._objectives[objective_id]
+
+	if not objective then
+		Application:error("[ObjectivesManager:set_objective_current_amount] Tried to set an amount of an objective that doesnt exist!", objective_id)
+
+		return
+	end
 
 	if objective.amount then
 		objective.current_amount = current_amount
 	end
 end
 
--- Lines 465-480
+-- Lines 442-462
 function ObjectivesManager:set_sub_objective_amount(objective_id, sub_id, amount)
 	local objective = self._objectives[objective_id]
+
+	if not objective then
+		Application:error("[ObjectivesManager:set_sub_objective_amount] Tried to set an amount of an objective that doesnt exist!", objective_id)
+
+		return
+	end
+
 	local sub_objective = objective.sub_objectives[sub_id]
 
 	if not sub_objective then
@@ -491,9 +509,16 @@ function ObjectivesManager:set_sub_objective_amount(objective_id, sub_id, amount
 	managers.hud:render_objective()
 end
 
--- Lines 482-501
+-- Lines 464-488
 function ObjectivesManager:set_sub_objective_current_amount(objective_id, sub_id, current_amount)
 	local objective = self._objectives[objective_id]
+
+	if not objective then
+		Application:error("[ObjectivesManager:set_sub_objective_current_amount] Tried to set an amount of an objective that doesnt exist!", objective_id)
+
+		return
+	end
+
 	local sub_objective = objective.sub_objectives[sub_id]
 
 	if not sub_objective then
@@ -515,22 +540,22 @@ function ObjectivesManager:set_sub_objective_current_amount(objective_id, sub_id
 	managers.hud:render_objective()
 end
 
--- Lines 503-505
+-- Lines 490-492
 function ObjectivesManager:objective_is_active(id)
 	return self._active_objectives[id]
 end
 
--- Lines 507-509
+-- Lines 494-496
 function ObjectivesManager:objective_is_completed(id)
 	return self._completed_objectives[id]
 end
 
--- Lines 511-513
+-- Lines 498-500
 function ObjectivesManager:get_objective(id)
 	return self._objectives[id]
 end
 
--- Lines 515-519
+-- Lines 502-506
 function ObjectivesManager:get_all_objectives()
 	local res = {}
 
@@ -539,22 +564,22 @@ function ObjectivesManager:get_all_objectives()
 	return res
 end
 
--- Lines 521-523
+-- Lines 508-510
 function ObjectivesManager:get_active_objectives()
 	return self._active_objectives
 end
 
--- Lines 525-527
+-- Lines 512-514
 function ObjectivesManager:get_completed_objectives()
 	return self._completed_objectives
 end
 
--- Lines 529-531
+-- Lines 516-518
 function ObjectivesManager:get_completed_objectives_ordered()
 	return self._completed_objectives_ordered
 end
 
--- Lines 533-540
+-- Lines 520-527
 function ObjectivesManager:objectives_by_name()
 	local t = {}
 
@@ -567,7 +592,7 @@ function ObjectivesManager:objectives_by_name()
 	return t
 end
 
--- Lines 542-552
+-- Lines 529-539
 function ObjectivesManager:sub_objectives_by_name(id)
 	local t = {}
 	local objective = self._objectives[id]
@@ -583,78 +608,7 @@ function ObjectivesManager:sub_objectives_by_name(id)
 	return t
 end
 
--- Lines 554-567
-function ObjectivesManager:_get_xp(level_id, id)
-	if not self._objectives_level_id[level_id] then
-		Application:error("Had no xp for level", level_id)
-
-		return 0
-	end
-
-	if not self._objectives_level_id[level_id][id] then
-		Application:error("Had no xp for objective", id)
-
-		return 0
-	end
-
-	local xp_weight = self:_get_real_xp_weight(level_id, self._objectives_level_id[level_id][id].xp_weight)
-
-	return math.round(xp_weight * tweak_data:get_value("experience_manager", "total_level_objectives"))
-end
-
--- Lines 570-574
-function ObjectivesManager:_get_real_xp_weight(level_id, xp_weight)
-	local total_xp_weight = self:_total_xp_weight(level_id)
-
-	return xp_weight / total_xp_weight
-end
-
--- Lines 576-585
-function ObjectivesManager:_total_xp_weight(level_id)
-	if not self._objectives_level_id[level_id] then
-		return 0
-	end
-
-	local xp_weight = 0
-
-	for obj, data in pairs(self._objectives_level_id[level_id]) do
-		xp_weight = xp_weight + data.xp_weight
-	end
-
-	return xp_weight
-end
-
--- Lines 587-597
-function ObjectivesManager:_check_xp_weight(level_id)
-	local total_xp = 0
-	local total_xp_weight = self:_total_xp_weight(level_id)
-
-	for obj, data in pairs(self._objectives_level_id[level_id]) do
-		local xp = math.round(data.xp_weight / total_xp_weight * tweak_data:get_value("experience_manager", "total_level_objectives"))
-		total_xp = total_xp + xp
-
-		print(obj, xp)
-	end
-
-	print("total", total_xp)
-end
-
--- Lines 600-609
-function ObjectivesManager:total_objectives(level_id)
-	if not self._objectives_level_id[level_id] then
-		return 0
-	end
-
-	local i = 0
-
-	for _, _ in pairs(self._objectives_level_id[level_id]) do
-		i = i + 1
-	end
-
-	return i
-end
-
--- Lines 611-654
+-- Lines 541-588
 function ObjectivesManager:save(data)
 	local state = {}
 	local objective_map = {}
@@ -705,7 +659,7 @@ function ObjectivesManager:save(data)
 	return true
 end
 
--- Lines 656-697
+-- Lines 590-637
 function ObjectivesManager:load(data)
 	local state = data.ObjectivesManager
 
@@ -714,6 +668,13 @@ function ObjectivesManager:load(data)
 
 		for name, save_data in pairs(state.objective_map) do
 			local objective_data = self._objectives[name]
+
+			if save_data and not objective_data then
+				Application:error("[ObjectivesManager:load]", name, save_data.id)
+
+				objective_data = save_data
+			end
+
 			objective_data.world_id = save_data.world_id
 			objective_data.current_amount = save_data.current_amount
 			objective_data.amount = save_data.amount
@@ -759,7 +720,7 @@ function ObjectivesManager:load(data)
 	end
 end
 
--- Lines 700-707
+-- Lines 640-647
 function ObjectivesManager:reset()
 	self._active_objectives = {}
 	self._completed_objectives = {}
@@ -770,7 +731,7 @@ function ObjectivesManager:reset()
 	self:_parse_objectives()
 end
 
--- Lines 713-719
+-- Lines 653-659
 function ObjectivesManager:on_mission_start_callback()
 	self:reset()
 
@@ -779,12 +740,12 @@ function ObjectivesManager:on_mission_start_callback()
 	end
 end
 
--- Lines 721-723
+-- Lines 661-663
 function ObjectivesManager:set_read(id, is_read)
 	self._read_objectives[id] = is_read
 end
 
--- Lines 724-726
+-- Lines 664-666
 function ObjectivesManager:is_read(id)
 	return self._read_objectives[id]
 end

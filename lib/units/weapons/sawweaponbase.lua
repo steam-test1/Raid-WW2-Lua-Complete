@@ -80,7 +80,7 @@ function SawWeaponBase:setup(setup_data)
 	self._hit_alert_size = tweak_data.weapon.stats.alert_size[math.clamp(self:check_stats().alert_size - (self:weapon_tweak_data().hit_alert_size_increase or 0), 1, #tweak_data.weapon.stats.alert_size)]
 end
 
--- Lines 72-126
+-- Lines 72-125
 function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	if self:get_ammo_remaining_in_clip() == 0 then
 		return
@@ -117,7 +117,6 @@ function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_m
 
 		self:set_ammo_remaining_in_clip(math.max(self:get_ammo_remaining_in_clip() - ammo_usage, 0))
 		self:set_ammo_total(math.max(self:get_ammo_total() - ammo_usage, 0))
-		self:_check_ammo_total(user_unit)
 	else
 		self:_stop_sawing_effect()
 	end
@@ -140,7 +139,7 @@ end
 local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 130-187
+-- Lines 129-186
 function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	local result = {}
 	local hit_unit = nil
@@ -179,19 +178,19 @@ function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, sh
 	return result, col_ray and col_ray.unit
 end
 
--- Lines 189-192
+-- Lines 188-191
 function SawWeaponBase:ammo_info()
 	return self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip(), self:remaining_full_clips(), self:get_ammo_max()
 end
 
--- Lines 194-196
+-- Lines 193-195
 function SawWeaponBase:can_reload()
 	return self:clip_empty() and SawWeaponBase.super.can_reload(self)
 end
 
 SawHit = SawHit or class(InstantBulletBase)
 
--- Lines 202-223
+-- Lines 201-222
 function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	local hit_unit = col_ray.unit
 
@@ -214,7 +213,7 @@ function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	return result
 end
 
--- Lines 226-228
+-- Lines 225-227
 function SawHit:play_impact_sound_and_effects(col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
 		decal = "saw",

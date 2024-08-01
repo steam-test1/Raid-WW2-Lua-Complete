@@ -1,3 +1,4 @@
+core:import("CoreSubtitlePresenter")
 require("lib/setups/Setup")
 require("lib/network/base/NetworkManager")
 require("lib/managers/StatisticsManager")
@@ -16,7 +17,7 @@ core:import("SequenceManager")
 MenuSetup = MenuSetup or class(Setup)
 MenuSetup.IS_START_MENU = true
 
--- Lines 24-81
+-- Lines 26-91
 function MenuSetup:load_packages()
 	Application:debug("[MenuSetup:load_packages()]")
 	Setup.load_packages(self)
@@ -45,9 +46,7 @@ function MenuSetup:load_packages()
 		end
 	end
 
-	local platform = SystemInfo:platform()
-
-	if platform == Idstring("XB1") or platform == Idstring("PS4") then
+	if IS_CONSOLE then
 		if not PackageManager:loaded("packages/game_base_init") then
 			PackageManager:load("packages/game_base_init")
 			PackageManager:load("packages/game_base")
@@ -59,8 +58,8 @@ function MenuSetup:load_packages()
 			Global._game_base_package_loaded = true
 		end
 	elseif not PackageManager:loaded("packages/game_base_init") then
-		-- Lines 61-69
-		local function _load_wip_func()
+		-- Lines 64-73
+		local function clbk_wips_and_camp()
 			if PackageManager:package_exists("packages/wip/game_base") then
 				if not PackageManager:loaded("packages/wip/game_base") then
 					PackageManager:load("packages/wip/game_base", function ()
@@ -72,12 +71,12 @@ function MenuSetup:load_packages()
 			end
 		end
 
-		-- Lines 70-72
-		local function load_base_func()
-			PackageManager:load("packages/game_base", _load_wip_func)
+		-- Lines 76-78
+		local function clbk_load_base_func()
+			PackageManager:load("packages/game_base", clbk_wips_and_camp)
 		end
 
-		PackageManager:load("packages/game_base_init", load_base_func)
+		PackageManager:load("packages/game_base_init", clbk_load_base_func)
 	end
 
 	if PackageManager:package_exists("packages/wip/start_menu") and not PackageManager:loaded("packages/wip/start_menu") then
@@ -85,7 +84,7 @@ function MenuSetup:load_packages()
 	end
 end
 
--- Lines 83-101
+-- Lines 93-111
 function MenuSetup:_load_pkg_with_init(pkg)
 	local init_pkg = pkg .. "_init"
 
@@ -103,15 +102,16 @@ function MenuSetup:_load_pkg_with_init(pkg)
 	end
 end
 
--- Lines 103-113
+-- Lines 114-126
 function MenuSetup:load_stream_level_packages()
 	Application:debug("[MenuSetup:load_stream_level_packages]")
 
-	-- Lines 105-105
+	-- Lines 116-118
 	local function _empty_func()
+		Application:debug("[MenuSetup:load_stream_level_packages] DONE")
 	end
 
-	setup:set_resource_loaded_clbk(Idstring("unit"), nil)
+	setup:set_resource_loaded_clbk(IDS_UNIT, nil)
 
 	if not PackageManager:loaded("levels/vanilla/streaming_level/world_sounds") then
 		PackageManager:load("levels/vanilla/streaming_level/world_sounds", _empty_func)
@@ -121,16 +121,17 @@ function MenuSetup:load_stream_level_packages()
 	self:_load_pkg_with_init("levels/vanilla/streaming_level/world/world")
 end
 
--- Lines 115-131
+-- Lines 129-147
 function MenuSetup:load_camp_packages()
 	Application:debug("[MenuSetup:load_camp_packages]")
 
-	-- Lines 117-117
+	-- Lines 131-133
 	local function _empty_func()
+		Application:debug("[MenuSetup:load_camp_packages] DONE")
 	end
 
-	if not PackageManager:loaded("levels/wip/camp/world_sounds") then
-		PackageManager:load("levels/wip/camp/world_sounds", _empty_func)
+	if not PackageManager:loaded("levels/vanilla/camp/world_sounds") then
+		PackageManager:load("levels/vanilla/camp/world_sounds", _empty_func)
 	end
 
 	self:_load_pkg_with_init("levels/vanilla/camp/world")
@@ -140,7 +141,7 @@ function MenuSetup:load_camp_packages()
 	self:_load_pkg_with_init("levels/vanilla/camp/world/world")
 end
 
--- Lines 133-159
+-- Lines 149-175
 function MenuSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -170,7 +171,7 @@ function MenuSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 161-167
+-- Lines 177-183
 function MenuSetup:unload_packages()
 	Setup.unload_packages(self)
 
@@ -179,7 +180,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines 169-248
+-- Lines 185-264
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -248,7 +249,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines 250-268
+-- Lines 266-284
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	Application:debug("[MenuSetup:init_managers]")
@@ -261,11 +262,11 @@ function MenuSetup:init_managers(managers)
 		self:load_stream_level_packages()
 	else
 		managers.sequence:preload()
-		setup:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+		setup:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 	end
 end
 
--- Lines 270-295
+-- Lines 286-302
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -273,17 +274,7 @@ function MenuSetup:init_finalize()
 		managers.network:init_finalize()
 	end
 
-	if _G.IS_PS3 then
-		if not Global.hdd_space_checked then
-			managers.savefile:check_space_required()
-
-			self.update = self.update_wait_for_savegame_info
-		else
-			managers.achievment:chk_install_trophies()
-		end
-	end
-
-	if _G.IS_PS4 then
+	if IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 
@@ -294,7 +285,7 @@ function MenuSetup:init_finalize()
 	managers.dyn_resource:post_init()
 end
 
--- Lines 297-316
+-- Lines 304-323
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -302,7 +293,7 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	if managers.savefile:fetch_savegame_hdd_space_required() then
 		Application:check_sufficient_hdd_space_to_launch(managers.savefile:fetch_savegame_hdd_space_required(), managers.dlc:has_full_game())
 
-		if _G.IS_PS3 or _G.IS_PS4 then
+		if IS_PS4 then
 			Trophies:set_translation_text(managers.localization:text("err_load"), managers.localization:text("err_ins"), managers.localization:text("err_disk"))
 			managers.achievment:chk_install_trophies()
 		end
@@ -312,31 +303,31 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines 318-322
+-- Lines 325-329
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 324-328
+-- Lines 331-335
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 330-358
+-- Lines 337-365
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 360-364
+-- Lines 367-371
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 366-368
+-- Lines 373-375
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 end

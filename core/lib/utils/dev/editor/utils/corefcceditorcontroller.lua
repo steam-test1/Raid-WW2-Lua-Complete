@@ -116,54 +116,54 @@ function FFCEditorController:set_camera_rot(rot)
 	self._camera:set_rotation(Rotation(self._yaw, self._pitch, rot:roll()))
 end
 
--- Lines 132-136
+-- Lines 132-135
 function FFCEditorController:set_camera_roll(roll)
 	local rot = Rotation(self._camera:rotation():y(), roll)
 
 	self._camera:set_rotation(Rotation(self._camera:rotation():y(), rot:z()))
 end
 
--- Lines 138-140
+-- Lines 137-139
 function FFCEditorController:set_controller(c)
 	self._controller = c
 end
 
--- Lines 142-144
+-- Lines 141-143
 function FFCEditorController:set_move_speed(speed)
 	self._move_speed = speed
 end
 
--- Lines 146-148
+-- Lines 145-147
 function FFCEditorController:set_turn_speed(t_speed)
 	self._turn_speed = t_speed
 end
 
--- Lines 150-152
+-- Lines 149-151
 function FFCEditorController:set_fov(fov)
 	self._camera:set_fov(fov)
 end
 
--- Lines 154-156
+-- Lines 153-155
 function FFCEditorController:get_camera_pos()
 	return self._camera:position()
 end
 
--- Lines 158-160
+-- Lines 157-159
 function FFCEditorController:get_camera_rot()
 	return self._camera:rotation()
 end
 
--- Lines 162-164
+-- Lines 161-163
 function FFCEditorController:get_move_speed()
 	return self._move_speed
 end
 
--- Lines 166-168
+-- Lines 165-167
 function FFCEditorController:get_turn_speed()
 	return self._turn_speed
 end
 
--- Lines 170-187
+-- Lines 169-186
 function FFCEditorController:frustum_freeze(camera)
 	self._frustum_frozen = true
 	local old_cam = camera
@@ -182,7 +182,7 @@ function FFCEditorController:frustum_freeze(camera)
 	self._frozen_camera = old_cam
 end
 
--- Lines 189-197
+-- Lines 188-196
 function FFCEditorController:frustum_unfreeze(camera)
 	self._frustum_frozen = false
 	local old_cam = camera
@@ -195,12 +195,12 @@ function FFCEditorController:frustum_unfreeze(camera)
 	self._frozen_camera = nil
 end
 
--- Lines 199-201
+-- Lines 198-200
 function FFCEditorController:frustum_frozen()
 	return self._frustum_frozen
 end
 
--- Lines 203-247
+-- Lines 203-248
 function FFCEditorController:start_cube_map(params)
 	self._params = params
 	self._cubemap_name = params.name or ""
@@ -221,6 +221,8 @@ function FFCEditorController:start_cube_map(params)
 			rot = Rotation(-rot:z(), rot:y())
 
 			self._params.unit:set_rotation(rot)
+		else
+			self._camera:set_rotation(self._params.unit:rotation())
 		end
 	end
 
@@ -249,12 +251,12 @@ function FFCEditorController:start_cube_map(params)
 	table.insert(self._name_ordered, self._names[1])
 end
 
--- Lines 249-251
+-- Lines 250-252
 function FFCEditorController:creating_cube_map()
 	return self._creating_cube_map
 end
 
--- Lines 253-305
+-- Lines 254-304
 function FFCEditorController:create_cube_map()
 	if self._wait_frames > 0 then
 		self._wait_frames = self._wait_frames - 1
@@ -311,7 +313,7 @@ function FFCEditorController:create_cube_map()
 	return false
 end
 
--- Lines 307-316
+-- Lines 306-315
 function FFCEditorController:_cubemap_done()
 	if alive(self._light) then
 		World:delete_light(self._light)
@@ -324,7 +326,7 @@ function FFCEditorController:_cubemap_done()
 	end
 end
 
--- Lines 318-329
+-- Lines 317-328
 function FFCEditorController:_get_screen_size()
 	local res = Application:screen_resolution()
 	local diff = res.x - res.y
@@ -336,12 +338,20 @@ function FFCEditorController:_get_screen_size()
 	return x1, y1, x2, y2
 end
 
--- Lines 332-338
+-- Lines 331-337
 function FFCEditorController:_create_spot_projection()
 	local x1, y1, x2, y2 = self:_get_screen_size()
 
 	self._camera:set_rotation(Rotation(-self._params.light:rotation():z(), Vector3(0, 0, 1)))
 	Application:screenshot(self._name_ordered[1], x1, y1, x2, y2)
+end
+
+-- Lines 385-389
+function FFCEditorController:_add_meta_data(file, meta)
+	local execute = managers.database:root_path() .. "aux_assets/engine/tools/diesel_dds_tagger.exe "
+	execute = execute .. file .. " " .. meta
+
+	os.execute(execute)
 end
 
 -- Lines 391-400

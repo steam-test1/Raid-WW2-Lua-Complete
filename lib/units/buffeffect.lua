@@ -1,6 +1,6 @@
 BuffEffect = BuffEffect or class()
 
--- Lines 3-9
+-- Lines 5-11
 function BuffEffect:init(effect_name, value, challenge_card_key, fail_message)
 	self.effect_name = effect_name
 	self.value = value

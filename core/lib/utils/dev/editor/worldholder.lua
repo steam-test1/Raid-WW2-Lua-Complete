@@ -3,19 +3,18 @@ core:import("CoreEditorUtils")
 core:import("CoreEngineAccess")
 core:import("CoreUnit")
 
-local sky_orientation_data_key = Idstring("sky_orientation/rotation"):key()
 CoreOldWorldDefinition = CoreOldWorldDefinition or class()
 CoreMissionElementUnit = CoreMissionElementUnit or class()
 WorldHolder = WorldHolder or class()
 
--- Lines 12-15
+-- Lines 10-13
 function WorldHolder:get_world_file()
 	Application:error("FIXME: Either unused or broken.")
 
 	return nil
 end
 
--- Lines 17-67
+-- Lines 15-70
 function WorldHolder:init(params)
 	if type_name(params) ~= "table" then
 		Application:throw_exception("WorldHolder:init needs a table as param (was of type " .. type_name(params) .. "). Check wiki for documentation.")
@@ -70,9 +69,30 @@ function WorldHolder:init(params)
 			end
 		end
 	end
+
+	if params.excluded_continents then
+		Application:debug("[WorldHolder:init] init with excluded_continents", inspect(excluded_continents))
+
+		self._excluded_continents = params.excluded_continents
+	end
 end
 
--- Lines 69-74
+-- Lines 74-83
+function WorldHolder:set_excluded_continents(data)
+	local t = type(data)
+
+	if t == "table" then
+		self._excluded_continents = data
+	elseif t == "string" then
+		self._excluded_continents = {
+			data
+		}
+	else
+		Application:error("[WorldHolder:set_excluded_continents] data was not a table or string", inspect(data))
+	end
+end
+
+-- Lines 85-90
 function WorldHolder:_error(msg)
 	if Application:editor() then
 		managers.editor:output_error(msg)
@@ -81,7 +101,7 @@ function WorldHolder:_error(msg)
 	Application:error(msg)
 end
 
--- Lines 76-99
+-- Lines 92-115
 function WorldHolder:_worldfile_generation(file_type, file_path)
 	if file_type == "level" then
 		return "level"
@@ -109,7 +129,7 @@ function WorldHolder:_worldfile_generation(file_type, file_path)
 	return "unknown"
 end
 
--- Lines 101-106
+-- Lines 117-122
 function WorldHolder:status()
 	if self._worldfile_generation == "new" then
 		return "ok"
@@ -118,7 +138,7 @@ function WorldHolder:status()
 	return self._worldfile_generation
 end
 
--- Lines 108-135
+-- Lines 124-151
 function WorldHolder:create_world(world, layer, offset)
 	if self._definition then
 		local return_data = self._definition:create(layer, offset)
@@ -150,7 +170,7 @@ function WorldHolder:create_world(world, layer, offset)
 	end
 end
 
--- Lines 137-144
+-- Lines 153-160
 function WorldHolder:get_player_data(world, layer, offset)
 	local c_world = self._worlds[world]
 
@@ -161,7 +181,7 @@ function WorldHolder:get_player_data(world, layer, offset)
 	end
 end
 
--- Lines 145-155
+-- Lines 161-171
 function WorldHolder:get_max_id(world)
 	if self._definition then
 		return self._definition:get_max_id()
@@ -176,7 +196,7 @@ function WorldHolder:get_max_id(world)
 	end
 end
 
--- Lines 156-163
+-- Lines 172-179
 function WorldHolder:get_level_name(world)
 	local c_world = self._worlds[world]
 
@@ -187,7 +207,7 @@ function WorldHolder:get_level_name(world)
 	end
 end
 
--- Lines 167-237
+-- Lines 183-253
 function CoreOldWorldDefinition:init(params)
 	managers.worlddefinition = self
 	self._max_id = 0
@@ -243,14 +263,14 @@ function CoreOldWorldDefinition:init(params)
 	self._mission_element_units = {}
 end
 
--- Lines 239-243
+-- Lines 255-259
 function CoreOldWorldDefinition:_load_node(type, path)
 	local path = managers.database:entry_expanded_path(type, path)
 
 	return SystemFS:parse_xml(path)
 end
 
--- Lines 246-260
+-- Lines 262-276
 function CoreOldWorldDefinition:_load_world_package()
 	if Application:editor() then
 		return
@@ -271,7 +291,7 @@ function CoreOldWorldDefinition:_load_world_package()
 	end
 end
 
--- Lines 263-280
+-- Lines 279-296
 function CoreOldWorldDefinition:_load_continent_package(path)
 	if Application:editor() then
 		return
@@ -292,7 +312,7 @@ function CoreOldWorldDefinition:_load_continent_package(path)
 	end
 end
 
--- Lines 282-291
+-- Lines 298-307
 function CoreOldWorldDefinition:unload_packages()
 	if self._current_world_package and PackageManager:loaded(self._current_world_package) then
 		PackageManager:unload(self._current_world_package)
@@ -303,7 +323,7 @@ function CoreOldWorldDefinition:unload_packages()
 	end
 end
 
--- Lines 293-297
+-- Lines 309-313
 function CoreOldWorldDefinition:nice_path(path)
 	path = string.match(string.gsub(path, ".*assets[/\\]", ""), "([^.]*)")
 	path = string.gsub(path, "\\", "/")
@@ -311,7 +331,7 @@ function CoreOldWorldDefinition:nice_path(path)
 	return path
 end
 
--- Lines 300-315
+-- Lines 316-331
 function CoreOldWorldDefinition:_parse_world_setting(world_setting)
 	if not world_setting then
 		return
@@ -332,7 +352,7 @@ function CoreOldWorldDefinition:_parse_world_setting(world_setting)
 	end
 end
 
--- Lines 317-334
+-- Lines 333-350
 function CoreOldWorldDefinition:parse_definitions(node)
 	local num_children = node:num_children()
 	local num_progress = 0
@@ -355,22 +375,22 @@ function CoreOldWorldDefinition:parse_definitions(node)
 	end
 end
 
--- Lines 336-338
+-- Lines 352-354
 function CoreOldWorldDefinition:world_dir()
 	return self._world_dir
 end
 
--- Lines 340-342
+-- Lines 356-358
 function CoreOldWorldDefinition:get_max_id()
 	return self._max_id
 end
 
--- Lines 344-346
+-- Lines 360-362
 function CoreOldWorldDefinition:get_level_name()
 	return self._level_name
 end
 
--- Lines 348-381
+-- Lines 364-397
 function CoreOldWorldDefinition:parse_continents(node, t)
 	local path = node:parameter("file")
 
@@ -417,12 +437,12 @@ function CoreOldWorldDefinition:parse_continents(node, t)
 	end
 end
 
--- Lines 384-386
+-- Lines 400-402
 function CoreOldWorldDefinition:_continent_editor_only(data)
 	return not Application:editor() and data.editor_only
 end
 
--- Lines 388-394
+-- Lines 404-410
 function CoreOldWorldDefinition:parse_values(node, t)
 	for child in node:children() do
 		local name, value = parse_value_node(child)
@@ -430,14 +450,14 @@ function CoreOldWorldDefinition:parse_values(node, t)
 	end
 end
 
--- Lines 396-400
+-- Lines 412-416
 function CoreOldWorldDefinition:parse_markers(node, t)
 	for child in node:children() do
 		table.insert(t, LoadedMarker:new(child))
 	end
 end
 
--- Lines 402-412
+-- Lines 418-428
 function CoreOldWorldDefinition:parse_groups(node, t)
 	for child in node:children() do
 		local name = child:parameter("name")
@@ -451,7 +471,7 @@ function CoreOldWorldDefinition:parse_groups(node, t)
 	end
 end
 
--- Lines 414-438
+-- Lines 430-454
 function CoreOldWorldDefinition:parse_editor_groups(node, t)
 	local groups = self._old_groups.groups
 	local group_names = self._old_groups.group_names
@@ -487,7 +507,7 @@ function CoreOldWorldDefinition:parse_editor_groups(node, t)
 	t.group_names = group_names
 end
 
--- Lines 441-447
+-- Lines 457-463
 function CoreOldWorldDefinition:add_editor_group(name, reference)
 	table.insert(self._old_groups.group_names, name)
 
@@ -497,14 +517,14 @@ function CoreOldWorldDefinition:add_editor_group(name, reference)
 	self._old_groups.groups[name].units = self._old_groups.groups[name].units or {}
 end
 
--- Lines 450-453
+-- Lines 466-469
 function CoreOldWorldDefinition:add_editor_group_unit(name, id)
 	self._old_groups.groups[name].units = self._old_groups.groups[name].units or {}
 
 	table.insert(self._old_groups.groups[name].units, id)
 end
 
--- Lines 455-467
+-- Lines 471-483
 function CoreOldWorldDefinition:parse_brush(node)
 	if node:has_parameter("path") then
 		self._massunit_path = node:parameter("path")
@@ -517,7 +537,7 @@ function CoreOldWorldDefinition:parse_brush(node)
 	end
 end
 
--- Lines 469-490
+-- Lines 485-506
 function CoreOldWorldDefinition:parse_sounds(node, t)
 	local path = nil
 
@@ -541,7 +561,7 @@ function CoreOldWorldDefinition:parse_sounds(node, t)
 	self._sounds = CoreWDSoundEnvironment:new(node)
 end
 
--- Lines 502-511
+-- Lines 518-527
 function CoreOldWorldDefinition:parse_mission_scripts(node, t)
 	if not Application:editor() then
 		return
@@ -555,7 +575,7 @@ function CoreOldWorldDefinition:parse_mission_scripts(node, t)
 	end
 end
 
--- Lines 513-520
+-- Lines 529-536
 function CoreOldWorldDefinition:parse_mission(node, t)
 	if Application:editor() then
 		local MissionClass = rawget(_G, "MissionElementUnit") or rawget(_G, "CoreMissionElementUnit")
@@ -566,12 +586,12 @@ function CoreOldWorldDefinition:parse_mission(node, t)
 	end
 end
 
--- Lines 522-524
+-- Lines 538-540
 function CoreOldWorldDefinition:parse_environment(node)
 	self._environment = CoreEnvironment:new(node)
 end
 
--- Lines 526-537
+-- Lines 542-553
 function CoreOldWorldDefinition:parse_world_camera(node)
 	if node:has_parameter("path") then
 		self._world_camera_path = node:parameter("path")
@@ -584,38 +604,38 @@ function CoreOldWorldDefinition:parse_world_camera(node)
 	end
 end
 
--- Lines 539-541
+-- Lines 555-557
 function CoreOldWorldDefinition:parse_portal(node)
 	self._portal = CorePortal:new(node)
 end
 
--- Lines 543-547
+-- Lines 559-563
 function CoreOldWorldDefinition:parse_wires(node, t)
 	for child in node:children() do
 		table.insert(t, CoreWire:new(child))
 	end
 end
 
--- Lines 549-553
+-- Lines 565-569
 function CoreOldWorldDefinition:parse_statics(node, t)
 	for child in node:children() do
 		table.insert(t, CoreStaticUnit:new(child))
 	end
 end
 
--- Lines 555-559
+-- Lines 571-575
 function CoreOldWorldDefinition:parse_dynamics(node, t)
 	for child in node:children() do
 		table.insert(t, CoreDynamicUnit:new(child))
 	end
 end
 
--- Lines 561-563
+-- Lines 577-579
 function CoreOldWorldDefinition:clear_definitions()
 	self._definitions = nil
 end
 
--- Lines 566-575
+-- Lines 582-591
 function CoreOldWorldDefinition:create(layer, offset)
 	if self._level_file then
 		self:create_from_level_file({
@@ -632,7 +652,7 @@ function CoreOldWorldDefinition:create(layer, offset)
 	end
 end
 
--- Lines 578-609
+-- Lines 594-625
 function CoreOldWorldDefinition:_create_continent_level(layer, offset)
 	if not self._level_file:data(Idstring("continents")) then
 		Application:error("No continent data saved to level file, please resave.")
@@ -679,7 +699,7 @@ function CoreOldWorldDefinition:_create_continent_level(layer, offset)
 	end
 end
 
--- Lines 611-702
+-- Lines 627-718
 function CoreOldWorldDefinition:create_units(layer, offset)
 	if layer ~= "all" and not self._definitions[layer] then
 		return {}
@@ -760,7 +780,7 @@ function CoreOldWorldDefinition:create_units(layer, offset)
 	return return_data
 end
 
--- Lines 705-786
+-- Lines 721-802
 function CoreOldWorldDefinition:create_from_level_file(params)
 	local layer = params.layer
 	local offset = params.offset
@@ -837,7 +857,7 @@ function CoreOldWorldDefinition:create_from_level_file(params)
 	end
 end
 
--- Lines 788-800
+-- Lines 804-816
 function CoreOldWorldDefinition:create_level_units(params)
 	local layer = params.layer
 	local offset = params.offset
@@ -855,7 +875,7 @@ function CoreOldWorldDefinition:create_level_units(params)
 	return t
 end
 
--- Lines 803-818
+-- Lines 819-834
 function CoreOldWorldDefinition:create_portals(portals, offset)
 	for _, portal in ipairs(portals) do
 		local t = {}
@@ -875,7 +895,7 @@ function CoreOldWorldDefinition:create_portals(portals, offset)
 	end
 end
 
--- Lines 821-832
+-- Lines 837-848
 function CoreOldWorldDefinition:create_portal_unit_groups(unit_groups, offset)
 	if not unit_groups then
 		return
@@ -890,7 +910,7 @@ function CoreOldWorldDefinition:create_portal_unit_groups(unit_groups, offset)
 	end
 end
 
--- Lines 835-853
+-- Lines 851-869
 function CoreOldWorldDefinition:create_sounds(path)
 	local sounds_level = Level:load(path)
 	local sounds = sounds_level:data(Idstring("sounds"))
@@ -916,7 +936,7 @@ function CoreOldWorldDefinition:create_sounds(path)
 	sounds_level:destroy()
 end
 
--- Lines 856-879
+-- Lines 872-895
 function CoreOldWorldDefinition:create_environment(data, offset)
 	managers.viewport:set_default_environment(data.environment, nil, nil)
 
@@ -946,13 +966,13 @@ function CoreOldWorldDefinition:create_environment(data, offset)
 	end
 end
 
--- Lines 881-907
+-- Lines 897-923
 function CoreOldWorldDefinition:load_massunit(path, offset)
 	if Application:editor() then
 		local l = MassUnitManager:list(path:id())
 
 		for _, name in ipairs(l) do
-			if DB:has(Idstring("unit"), name:id()) then
+			if DB:has(IDS_UNIT, name:id()) then
 				CoreUnit.editor_load_unit(name)
 			elseif not table.has(self._massunit_replace_names, name:s()) then
 				managers.editor:output("Unit " .. name:s() .. " does not exist")
@@ -960,7 +980,7 @@ function CoreOldWorldDefinition:load_massunit(path, offset)
 				local old_name = name:s()
 				name = managers.editor:show_replace_massunit()
 
-				if name and DB:has(Idstring("unit"), name:id()) then
+				if name and DB:has(IDS_UNIT, name:id()) then
 					CoreUnit.editor_load_unit(name)
 				end
 
@@ -975,7 +995,7 @@ function CoreOldWorldDefinition:load_massunit(path, offset)
 	MassUnitManager:load(path:id(), offset, Rotation(), self._massunit_replace_names)
 end
 
--- Lines 910-923
+-- Lines 926-939
 function CoreOldWorldDefinition:parse_replace_unit()
 	local is_editor = Application:editor()
 
@@ -994,14 +1014,14 @@ function CoreOldWorldDefinition:parse_replace_unit()
 	end
 end
 
--- Lines 927-950
+-- Lines 943-966
 function CoreOldWorldDefinition:preload_unit(name)
 	local is_editor = Application:editor()
 
 	if table.has(self._replace_names, name) then
 		name = self._replace_names[name]
-	elseif is_editor and (not DB:has(Idstring("unit"), name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
-		if not DB:has(Idstring("unit"), name:id()) then
+	elseif is_editor and (not DB:has(IDS_UNIT, name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
+		if not DB:has(IDS_UNIT, name:id()) then
 			managers.editor:output_info("Unit " .. name .. " does not exist")
 		else
 			managers.editor:output_info("Unit " .. name .. " is of type " .. CoreEngineAccess._editor_unit_data(name:id()):type():t())
@@ -1019,7 +1039,7 @@ function CoreOldWorldDefinition:preload_unit(name)
 	end
 end
 
--- Lines 953-977
+-- Lines 969-993
 function CoreOldWorldDefinition:make_unit(name, data, offset)
 	local is_editor = Application:editor()
 
@@ -1048,7 +1068,7 @@ function CoreOldWorldDefinition:make_unit(name, data, offset)
 	return unit
 end
 
--- Lines 979-1116
+-- Lines 995-1132
 function CoreOldWorldDefinition:assign_unit_data(unit, data)
 	local is_editor = Application:editor()
 
@@ -1189,7 +1209,7 @@ function CoreOldWorldDefinition:assign_unit_data(unit, data)
 	end
 end
 
--- Lines 1119-1143
+-- Lines 1135-1159
 function CoreOldWorldDefinition:add_trigger_sequence(unit, triggers)
 	local is_editor = Application:editor()
 
@@ -1216,7 +1236,7 @@ function CoreOldWorldDefinition:add_trigger_sequence(unit, triggers)
 	end
 end
 
--- Lines 1145-1157
+-- Lines 1161-1173
 function CoreOldWorldDefinition:use_me(unit, is_editor)
 	local id = unit:unit_data().unit_id
 
@@ -1233,7 +1253,7 @@ function CoreOldWorldDefinition:use_me(unit, is_editor)
 	end
 end
 
--- Lines 1159-1169
+-- Lines 1175-1185
 function CoreOldWorldDefinition:get_unit_on_load(id, call)
 	if self._all_units[id] then
 		return self._all_units[id]
@@ -1250,7 +1270,7 @@ function CoreOldWorldDefinition:get_unit_on_load(id, call)
 	return nil
 end
 
--- Lines 1171-1181
+-- Lines 1187-1197
 function CoreOldWorldDefinition:check_stage_depended_units(stage)
 	for _, unit in ipairs(self._stage_depended_units) do
 		for i, value in ipairs(unit:unit_data().exists_in_stages) do
@@ -1261,36 +1281,36 @@ function CoreOldWorldDefinition:check_stage_depended_units(stage)
 	end
 end
 
--- Lines 1183-1185
+-- Lines 1199-1201
 function CoreOldWorldDefinition:get_unit(id)
 	return self._all_units[id]
 end
 
--- Lines 1188-1190
+-- Lines 1204-1206
 function CoreOldWorldDefinition:add_mission_element_unit(unit)
 	self._mission_element_units[unit:unit_data().unit_id] = unit
 end
 
--- Lines 1193-1195
+-- Lines 1209-1211
 function CoreOldWorldDefinition:get_mission_element_unit(id)
 	return self._mission_element_units[id]
 end
 
--- Lines 1198-1201
+-- Lines 1214-1217
 function CoreOldWorldDefinition:get_hub_element_unit(id)
 	Application:stack_dump_error("CoreOldWorldDefinition:get_hub_element_unit is deprecated, use CoreOldWorldDefinition:get_mission_element_unit instead.")
 
 	return self._mission_element_units[id]
 end
 
--- Lines 1203-1205
+-- Lines 1219-1221
 function CoreOldWorldDefinition:get_soundbank()
 	return self._soundbank
 end
 
 LoadedMarker = LoadedMarker or class()
 
--- Lines 1211-1216
+-- Lines 1227-1232
 function LoadedMarker:init(node)
 	self._name = node:parameter("name")
 	self._pos = math.string_to_vector(node:parameter("pos"))
@@ -1300,7 +1320,7 @@ end
 
 CoreWDSoundEnvironment = CoreWDSoundEnvironment or class()
 
--- Lines 1222-1231
+-- Lines 1238-1247
 function CoreWDSoundEnvironment:init(node)
 	self._sound_environments = {}
 	self._sound_emitters = {}
@@ -1313,19 +1333,19 @@ function CoreWDSoundEnvironment:init(node)
 	node:for_each("sound_area_emitter", callback(self, self, "parse_sound_area_emitter"))
 end
 
--- Lines 1233-1237
+-- Lines 1249-1253
 function CoreWDSoundEnvironment:parse_default(node)
 	self._default_ambience_soundbank = node:parameter("ambience_soundbank")
 	self._default_environment = node:parameter("environment")
 	self._default_ambience = node:parameter("ambience")
 end
 
--- Lines 1239-1241
+-- Lines 1255-1257
 function CoreWDSoundEnvironment:parse_ambience(node)
 	self._ambience_enabled = toboolean(node:parameter("enabled"))
 end
 
--- Lines 1243-1255
+-- Lines 1259-1271
 function CoreWDSoundEnvironment:parse_sound_environment(node)
 	local t = {
 		environment = node:parameter("environment"),
@@ -1342,14 +1362,14 @@ function CoreWDSoundEnvironment:parse_sound_environment(node)
 	table.insert(self._sound_environments, t)
 end
 
--- Lines 1257-1261
+-- Lines 1273-1277
 function CoreWDSoundEnvironment:parse_sound_emitter(node)
 	for emitter in node:children() do
 		table.insert(self._sound_emitters, parse_values_node(emitter))
 	end
 end
 
--- Lines 1263-1274
+-- Lines 1279-1290
 function CoreWDSoundEnvironment:parse_sound_area_emitter(node)
 	local t = {}
 
@@ -1366,7 +1386,7 @@ function CoreWDSoundEnvironment:parse_sound_area_emitter(node)
 	table.insert(self._sound_area_emitters, t)
 end
 
--- Lines 1276-1289
+-- Lines 1292-1305
 function CoreWDSoundEnvironment:create()
 	managers.sound_environment:set_default_environment(self._default_environment)
 	managers.sound_environment:set_default_ambience(self._default_ambience, self._default_ambience_soundbank)
@@ -1387,7 +1407,7 @@ end
 
 CoreEnvironment = CoreEnvironment or class()
 
--- Lines 1295-1311
+-- Lines 1311-1327
 function CoreEnvironment:init(node)
 	self._values = {}
 
@@ -1412,12 +1432,12 @@ function CoreEnvironment:init(node)
 	node:for_each("unit", callback(self, self, "parse_unit"))
 end
 
--- Lines 1313-1315
+-- Lines 1329-1331
 function CoreEnvironment:parse_value(node)
 	self._values[node:parameter("name")] = string_to_value(node:parameter("type"), node:parameter("value"))
 end
 
--- Lines 1317-1329
+-- Lines 1333-1345
 function CoreEnvironment:parse_wind(node)
 	self._wind = {
 		wind_angle = tonumber(node:parameter("angle")),
@@ -1435,7 +1455,7 @@ function CoreEnvironment:parse_wind(node)
 	end
 end
 
--- Lines 1331-1340
+-- Lines 1347-1356
 function CoreEnvironment:parse_unit_effect(node)
 	local pos, rot = nil
 
@@ -1454,7 +1474,7 @@ function CoreEnvironment:parse_unit_effect(node)
 	table.insert(self._unit_effects, t)
 end
 
--- Lines 1342-1348
+-- Lines 1358-1364
 function CoreEnvironment:parse_environment_area(node)
 	local t = {}
 
@@ -1465,7 +1485,7 @@ function CoreEnvironment:parse_environment_area(node)
 	table.insert(self._environment_areas, t)
 end
 
--- Lines 1350-1360
+-- Lines 1366-1376
 function CoreEnvironment:parse_unit(node)
 	if not Application:editor() then
 		return
@@ -1479,7 +1499,7 @@ function CoreEnvironment:parse_unit(node)
 	table.insert(self._units_data, t)
 end
 
--- Lines 1362-1393
+-- Lines 1378-1409
 function CoreEnvironment:create(offset)
 	if self._values.environment ~= "none" then
 		managers.viewport:set_default_environment(self._values.environment, nil, nil)
@@ -1519,7 +1539,7 @@ end
 
 CorePortal = CorePortal or class()
 
--- Lines 1399-1405
+-- Lines 1415-1421
 function CorePortal:init(node)
 	managers.worlddefinition:preload_unit("core/units/portal_point/portal_point")
 
@@ -1530,7 +1550,7 @@ function CorePortal:init(node)
 	node:for_each("unit_group", callback(self, self, "parse_unit_group"))
 end
 
--- Lines 1407-1418
+-- Lines 1423-1434
 function CorePortal:parse_portal_list(node)
 	local name = node:parameter("name")
 	local top = tonumber(node:parameter("top")) or 0
@@ -1553,7 +1573,7 @@ function CorePortal:parse_portal_list(node)
 	end
 end
 
--- Lines 1420-1427
+-- Lines 1436-1443
 function CorePortal:parse_unit_group(node)
 	local name = node:parameter("name")
 	local shapes = {}
@@ -1565,7 +1585,7 @@ function CorePortal:parse_unit_group(node)
 	self._unit_groups[name] = shapes
 end
 
--- Lines 1429-1453
+-- Lines 1445-1469
 function CorePortal:create(offset)
 	if not Application:editor() then
 		for name, portal in pairs(self._portal_shapes) do
@@ -1597,7 +1617,7 @@ end
 
 CoreWire = CoreWire or class()
 
--- Lines 1459-1468
+-- Lines 1475-1484
 function CoreWire:init(node)
 	self._unit_name = node:parameter("name")
 
@@ -1608,7 +1628,7 @@ function CoreWire:init(node)
 	node:for_each("wire", callback(self, self, "parse_wire"))
 end
 
--- Lines 1470-1475
+-- Lines 1486-1491
 function CoreWire:parse_wire(node)
 	self._target_pos = math.string_to_vector(node:parameter("target_pos"))
 	local rot = math.string_to_vector(node:parameter("target_rot"))
@@ -1616,7 +1636,7 @@ function CoreWire:parse_wire(node)
 	self._slack = tonumber(node:parameter("slack"))
 end
 
--- Lines 1478-1489
+-- Lines 1494-1505
 function CoreWire:create_unit(offset)
 	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
 
@@ -1635,7 +1655,7 @@ end
 
 CoreStaticUnit = CoreStaticUnit or class()
 
--- Lines 1495-1500
+-- Lines 1511-1516
 function CoreStaticUnit:init(node)
 	self._unit_name = node:parameter("name")
 
@@ -1646,7 +1666,7 @@ function CoreStaticUnit:init(node)
 	self._generic:continent_upgrade_nil_to_world()
 end
 
--- Lines 1502-1505
+-- Lines 1518-1521
 function CoreStaticUnit:create_unit(offset)
 	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
 
@@ -1655,7 +1675,7 @@ end
 
 CoreDynamicUnit = CoreDynamicUnit or class()
 
--- Lines 1511-1516
+-- Lines 1527-1532
 function CoreDynamicUnit:init(node)
 	self._unit_name = node:parameter("name")
 
@@ -1666,14 +1686,14 @@ function CoreDynamicUnit:init(node)
 	self._generic:continent_upgrade_nil_to_world()
 end
 
--- Lines 1518-1521
+-- Lines 1534-1537
 function CoreDynamicUnit:create_unit(offset)
 	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
 
 	return self._unit
 end
 
--- Lines 1527-1539
+-- Lines 1543-1555
 function CoreMissionElementUnit:init(node)
 	self._unit_name = node:parameter("name")
 
@@ -1689,12 +1709,12 @@ function CoreMissionElementUnit:init(node)
 	node:for_each("values", callback(self, self, "parse_values"))
 end
 
--- Lines 1541-1543
+-- Lines 1557-1559
 function CoreMissionElementUnit:parse_values(node)
 	self._values = MissionElementValues:new(node)
 end
 
--- Lines 1545-1558
+-- Lines 1561-1574
 function CoreMissionElementUnit:create_unit(offset)
 	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
 
@@ -1717,19 +1737,19 @@ end
 
 MissionElementValues = MissionElementValues or class()
 
--- Lines 1564-1566
+-- Lines 1580-1582
 function MissionElementValues:init(node)
 	self._values = parse_values_node(node)
 end
 
--- Lines 1568-1572
+-- Lines 1584-1588
 function MissionElementValues:set_values(unit)
 	for name, value in pairs(self._values) do
 		unit:mission_element_data()[name] = value
 	end
 end
 
--- Lines 1576-1618
+-- Lines 1592-1634
 function CoreOldWorldDefinition:make_generic_data(in_data)
 	local data = {
 		_name_id = "none",
@@ -1784,7 +1804,7 @@ end
 
 Generic = Generic or class()
 
--- Lines 1622-1640
+-- Lines 1638-1656
 function Generic:init(node)
 	self._name_id = "none"
 	self._lights = {}
@@ -1805,14 +1825,14 @@ function Generic:init(node)
 	node:for_each("disable_shadows", callback(self, self, "parse_disable_shadows"))
 end
 
--- Lines 1641-1645
+-- Lines 1657-1661
 function Generic:parse_orientation(node)
 	self._position = math.string_to_vector(node:parameter("pos"))
 	local rot = math.string_to_vector(node:parameter("rot"))
 	self._rotation = Rotation(rot.x, rot.y, rot.z)
 end
 
--- Lines 1647-1664
+-- Lines 1663-1680
 function Generic:parse_generic(node)
 	if node:has_parameter("unit_id") then
 		self._unit_id = tonumber(node:parameter("unit_id"))
@@ -1835,14 +1855,14 @@ function Generic:parse_generic(node)
 	end
 end
 
--- Lines 1668-1672
+-- Lines 1684-1688
 function Generic:continent_upgrade_nil_to_world()
 	if not self._continent then
 		self._continent = "world"
 	end
 end
 
--- Lines 1674-1697
+-- Lines 1690-1713
 function Generic:parse_light(node)
 	local name = node:parameter("name")
 	local far_range = tonumber(node:parameter("far_range"))
@@ -1881,42 +1901,42 @@ function Generic:parse_light(node)
 	})
 end
 
--- Lines 1699-1701
+-- Lines 1715-1717
 function Generic:parse_variation(node)
 	self._variation = node:parameter("value")
 end
 
--- Lines 1703-1705
+-- Lines 1719-1721
 function Generic:parse_material_variation(node)
 	self._material_variation = node:parameter("value")
 end
 
--- Lines 1707-1709
+-- Lines 1723-1725
 function Generic:parse_settings(node)
 	self._unique_item = toboolean(node:parameter("unique_item"))
 end
 
--- Lines 1711-1713
+-- Lines 1727-1729
 function Generic:parse_legend_settings(node)
 	self._legend_name = node:parameter("legend_name")
 end
 
--- Lines 1715-1717
+-- Lines 1731-1733
 function Generic:cutscene_actor_settings(node)
 	self.cutscene_actor = node:parameter("name")
 end
 
--- Lines 1719-1721
+-- Lines 1735-1737
 function Generic:parse_disable_shadows(node)
 	self.disable_shadows = toboolean(node:parameter("value"))
 end
 
--- Lines 1723-1725
+-- Lines 1739-1741
 function Generic:parse_exists_in_stage(node)
 	self._exists_in_stages[tonumber(node:parameter("stage"))] = toboolean(node:parameter("value"))
 end
 
--- Lines 1727-1736
+-- Lines 1743-1752
 function Generic:parse_trigger(node)
 	local trigger = {
 		name = node:parameter("name"),
@@ -1929,7 +1949,7 @@ function Generic:parse_trigger(node)
 	table.insert(self._triggers, trigger)
 end
 
--- Lines 1738-1753
+-- Lines 1754-1769
 function Generic:parse_editable_gui(node)
 	local text = node:parameter("text")
 	local font_color = math.string_to_vector(node:parameter("font_color"))

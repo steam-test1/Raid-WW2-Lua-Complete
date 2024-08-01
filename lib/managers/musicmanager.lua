@@ -68,12 +68,7 @@ function MusicManager:load_profile(data)
 	end
 end
 
--- Lines 75-77
-function MusicManager:music_tracks()
-	return tweak_data.music.soundbank_list
-end
-
--- Lines 80-92
+-- Lines 76-88
 function MusicManager:get_random_event()
 	local event_names = {}
 
@@ -91,7 +86,7 @@ function MusicManager:get_random_event()
 	return event_name
 end
 
--- Lines 94-114
+-- Lines 90-110
 function MusicManager:get_default_event()
 	local tweak_id = Global.level_data and Global.level_data.level_id
 	local job = managers.raid_job:current_job()

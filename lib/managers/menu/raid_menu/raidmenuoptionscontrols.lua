@@ -246,7 +246,7 @@ function RaidMenuOptionsControls:_modify_controller_layout()
 	self._toggle_menu_controller_southpaw:show()
 	self._toggle_menu_controller_sticky_aim:show()
 
-	if managers.raid_menu:is_pc_controller() or _G.IS_CONSOLE then
+	if managers.raid_menu:is_pc_controller() or IS_CONSOLE then
 		self._btn_keybinding:set_text(self:translate("menu_options_controls_controller_mapping", true))
 	end
 end

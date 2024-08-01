@@ -118,7 +118,7 @@ function NetworkMatchMakingPSN:_on_disconnect_detected()
 	elseif managers.network:session() then
 		managers.network:session():psn_disconnected()
 	elseif setup.IS_START_MENU then
-		managers.menu:ps3_disconnect(false)
+		managers.menu:psn_disconnect(false)
 	end
 end
 
@@ -1760,7 +1760,7 @@ function NetworkMatchMakingPSN:join_boot_invite()
 
 	Global.game_settings.single_player = false
 
-	managers.network:ps3_determine_voice(false)
+	managers.network:psn_determine_voice(false)
 	self:_join_invite_accepted(message.room_id)
 end
 
@@ -1793,7 +1793,7 @@ function NetworkMatchMakingPSN:send_boot_play_together()
 	if not isInCamp then
 		Global.game_settings.single_player = false
 
-		managers.network:ps3_determine_voice(false)
+		managers.network:psn_determine_voice(false)
 	end
 
 	self:_send_play_together_invite()

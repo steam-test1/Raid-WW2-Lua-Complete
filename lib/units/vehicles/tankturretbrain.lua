@@ -65,7 +65,7 @@ function TankTurretBrain:_fire_at_locked_position()
 	self._unit:weapon():singleshot(false, expend_ammo, true, self._locked_on_pos)
 end
 
--- Lines 58-119
+-- Lines 57-124
 function TankTurretBrain:_upd_fire(t)
 	if not alive(self._unit) then
 		return
@@ -107,6 +107,10 @@ function TankTurretBrain:_upd_fire(t)
 		end
 	elseif self._ext_movement:rearming() then
 		self._ext_movement:complete_rearming()
+	elseif self._unit:character_damage():sabotaged() then
+		if not self._ext_movement:repairing() then
+			self._ext_movement:repair()
+		end
 	elseif attention and attention.reaction and AIAttentionObject.REACT_SHOOT <= attention.reaction and not self._ext_movement:warming_up(t) then
 		if attention.pos then
 			mvec3_dir(tmp_vec1, self._ext_movement:m_head_pos(), attention.pos)

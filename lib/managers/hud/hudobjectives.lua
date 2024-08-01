@@ -139,7 +139,7 @@ end
 
 -- Lines 131-135
 function HUDObjectives:update_amount_objective(data)
-	if self._main_objective:id() == data.id then
+	if self._main_objective and self._main_objective:id() == data.id then
 		self._main_objective:set_current_amount(data.current_amount)
 	end
 end
@@ -157,22 +157,28 @@ end
 function HUDObjectives:open_right_done(uses_amount)
 end
 
--- Lines 148-150
+-- Lines 148-152
 function HUDObjectives:show_timer()
-	self._main_objective:show_timer()
+	if self._main_objective then
+		self._main_objective:show_timer()
+	end
 end
 
--- Lines 152-154
+-- Lines 154-158
 function HUDObjectives:hide_timer()
-	self._main_objective:hide_timer()
+	if self._main_objective then
+		self._main_objective:hide_timer()
+	end
 end
 
--- Lines 156-158
+-- Lines 160-164
 function HUDObjectives:set_timer_value(current, total)
-	self._main_objective:set_timer_value(current, total)
+	if self._main_objective then
+		self._main_objective:set_timer_value(current, total)
+	end
 end
 
--- Lines 160-167
+-- Lines 166-173
 function HUDObjectives:_clear_objectives()
 	self._object:clear()
 
@@ -182,7 +188,7 @@ function HUDObjectives:_clear_objectives()
 	self._objective_descriptions = {}
 end
 
--- Lines 169-175
+-- Lines 175-181
 function HUDObjectives:clean_up()
 	self._active_objective_id = nil
 
@@ -191,7 +197,7 @@ function HUDObjectives:clean_up()
 	end
 end
 
--- Lines 177-200
+-- Lines 183-206
 function HUDObjectives:_animate_show()
 	local delay = 0
 	local delay_step = 0.1
@@ -217,7 +223,7 @@ function HUDObjectives:_animate_show()
 	end
 end
 
--- Lines 202-223
+-- Lines 208-229
 function HUDObjectives:_animate_hide()
 	local delay = 0
 	local delay_step = 0.1

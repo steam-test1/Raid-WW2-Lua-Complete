@@ -1,11 +1,11 @@
 SpawnManager = SpawnManager or class()
 
--- Lines 3-5
+-- Lines 7-9
 function SpawnManager:init()
 	self._spawn_requests = {}
 end
 
--- Lines 9-32
+-- Lines 13-36
 function SpawnManager:spawn_enemy_group_in_vis_group(event, i_vis_group)
 	local spawn_request = {
 		groups = {}
@@ -41,7 +41,7 @@ function SpawnManager:spawn_enemy_group_in_vis_group(event, i_vis_group)
 	return self:_spawn_units()
 end
 
--- Lines 36-90
+-- Lines 40-94
 function SpawnManager:spawn_enemy_group(event)
 	local spawn_request = {
 		groups = {}
@@ -113,11 +113,11 @@ function SpawnManager:spawn_enemy_group(event)
 	return self:_spawn_units()
 end
 
--- Lines 94-95
+-- Lines 98-99
 function SpawnManager:update(unit, t, dt)
 end
 
--- Lines 99-148
+-- Lines 103-152
 function SpawnManager:_spawn_units()
 	if self._spawn_requests then
 		local units_spawned = {}

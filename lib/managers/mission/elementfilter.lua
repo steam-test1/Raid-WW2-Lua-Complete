@@ -41,52 +41,61 @@ function ElementFilter:on_executed(instigator)
 	ElementFilter.super.on_executed(self, instigator)
 end
 
-local win32 = Idstring("WIN32")
-local ps3 = Idstring("PS3")
-local x360 = Idstring("X360")
-local ps4 = Idstring("PS4")
-local xb1 = Idstring("XB1")
+local pc_only = Idstring("PC")
+local console_only = Idstring("CONSOLE")
 
--- Lines 46-56
+-- Lines 43-70
 function ElementFilter:_check_platform()
-	local platform = Global.running_simulation and Idstring(managers.editor:mission_platform())
-	platform = platform or SystemInfo:platform()
+	local simulation_platform = Global.running_simulation and Idstring(managers.editor:mission_platform())
 
-	if self._values.platform_win32 and (platform == win32 or platform == ps4 or platform == xb1) then
-		return true
+	if self._values.platform_win32 then
+		if simulation_platform then
+			if simulation_platform == pc_only then
+				return true
+			end
+		elseif IS_PC then
+			return true
+		end
 	end
 
-	if self._values.platform_ps3 and (platform == ps3 or platform == x360) then
-		return true
+	if self._values.platform_console then
+		if simulation_platform then
+			if simulation_platform == console_only then
+				return true
+			end
+		elseif IS_CONSOLE then
+			return true
+		end
 	end
 
 	return false
 end
 
--- Lines 58-73
+-- Lines 72-88
 function ElementFilter:_check_difficulty()
 	local diff = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+	local diff_list = tweak_data.difficulties
 
-	if self._values.difficulty_normal and diff == "difficulty_1" then
+	if self._values.difficulty_normal and diff == diff_list[1] then
 		return true
 	end
 
-	if self._values.difficulty_hard and diff == "difficulty_2" then
+	if self._values.difficulty_hard and diff == diff_list[2] then
 		return true
 	end
 
-	if self._values.difficulty_overkill and diff == "difficulty_3" then
+	if self._values.difficulty_overkill and diff == diff_list[3] then
 		return true
 	end
 
-	if self._values.difficulty_overkill_145 and diff == "difficulty_4" then
+	if self._values.difficulty_overkill_145 and diff == diff_list[4] then
 		return true
 	end
 
 	return false
 end
 
--- Lines 75-94
+-- Lines 90-109
 function ElementFilter:_check_players()
 	local players = Global.running_simulation and managers.editor:mission_player()
 	players = players or managers.network:session() and managers.network:session():amount_of_players()
@@ -114,7 +123,7 @@ function ElementFilter:_check_players()
 	return false
 end
 
--- Lines 97-111
+-- Lines 112-126
 function ElementFilter:_check_mode()
 	if self._values.mode_control == nil or self._values.mode_assault == nil then
 		return true
@@ -131,7 +140,7 @@ function ElementFilter:_check_mode()
 	return false
 end
 
--- Lines 113-130
+-- Lines 128-145
 function ElementFilter:_check_alarm()
 	local alarm = managers.worldcollection:get_alarm_for_world(self._sync_id)
 

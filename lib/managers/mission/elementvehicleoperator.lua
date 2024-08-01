@@ -40,8 +40,6 @@ end
 
 -- Lines 37-57
 function ElementVehicleOperator:on_executed(instigator)
-	Application:debug("ElementVehicleOperator:on_executed")
-
 	if not self._values.enabled then
 		return
 	end

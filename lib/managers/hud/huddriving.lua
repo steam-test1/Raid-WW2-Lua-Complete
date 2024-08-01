@@ -57,7 +57,7 @@ function HUDDriving:_create_panel(hud)
 	self._object:set_bottom(hud.panel:h())
 end
 
--- Lines 67-121
+-- Lines 67-122
 function HUDDriving:_create_slot_panel()
 	local slot_panel_params = {
 		name = "slot_panel",
@@ -75,6 +75,7 @@ function HUDDriving:_create_slot_panel()
 
 	for i = 1, 4 do
 		local empty_slot_params = {
+			alpha = 0.5,
 			name = "empty_slot_" .. tostring(i),
 			texture = tweak_data.gui.icons[HUDDriving.EMPTY_SEAT_ICON].texture,
 			texture_rect = tweak_data.gui.icons[HUDDriving.EMPTY_SEAT_ICON].texture_rect
@@ -115,7 +116,7 @@ function HUDDriving:_create_slot_panel()
 	end
 end
 
--- Lines 151-195
+-- Lines 152-196
 function HUDDriving:_create_carry_info()
 	local carry_panel_x = self._slot_panel:x() + self._slot_panel:w() + HUDDriving.CARRY_PANEL_PADDING_LEFT
 	local carry_info_panel_params = {
@@ -169,7 +170,7 @@ function HUDDriving:_create_carry_info()
 	self._carry_info_text:set_center_y(self._carry_indicator:center_y())
 end
 
--- Lines 197-206
+-- Lines 198-207
 function HUDDriving:_create_button_prompts()
 	local button_prompts_panel_params = {
 		alpha = 0,
@@ -182,7 +183,7 @@ function HUDDriving:_create_button_prompts()
 	self._button_prompts_panel = self._object:panel(button_prompts_panel_params)
 end
 
--- Lines 208-226
+-- Lines 209-227
 function HUDDriving:show(vehicle)
 	self._vehicle = vehicle
 
@@ -203,12 +204,12 @@ function HUDDriving:show(vehicle)
 	self:refresh_button_prompts()
 end
 
--- Lines 228-230
+-- Lines 229-231
 function HUDDriving:controller_mod_changed()
 	self:refresh_button_prompts(true)
 end
 
--- Lines 232-264
+-- Lines 233-265
 function HUDDriving:refresh_button_prompts(force)
 	if not managers.player:current_state() == "driving" then
 		return
@@ -245,9 +246,9 @@ function HUDDriving:refresh_button_prompts(force)
 	end
 end
 
--- Lines 266-286
+-- Lines 267-287
 function HUDDriving:_create_button_prompt(prompt_name, prompt, buttons)
-	if managers.controller:is_xbox_controller_present() and not managers.menu:is_pc_controller() then
+	if managers.controller:is_controller_present() and not managers.menu:is_pc_controller() then
 		buttons = managers.localization:get_default_macros()
 	end
 
@@ -269,7 +270,7 @@ function HUDDriving:_create_button_prompt(prompt_name, prompt, buttons)
 	button_prompt:set_center_y(self._button_prompts_panel:h() / 2)
 end
 
--- Lines 288-302
+-- Lines 289-303
 function HUDDriving:_layout_button_prompts()
 	local button_prompts = self._button_prompts_panel:children()
 	local total_width = 0
@@ -288,7 +289,7 @@ function HUDDriving:_layout_button_prompts()
 	end
 end
 
--- Lines 304-312
+-- Lines 305-313
 function HUDDriving:_create_current_seat_prompts()
 	self._button_prompts_panel:clear()
 
@@ -299,7 +300,7 @@ function HUDDriving:_create_current_seat_prompts()
 	self:_layout_button_prompts()
 end
 
--- Lines 314-327
+-- Lines 315-328
 function HUDDriving:_get_prompts_needed_for_current_seat()
 	local player_seat = self._vehicle:vehicle_driving():find_seat_for_player(managers.player:local_player())
 	local seat_prompts = {}
@@ -342,15 +343,15 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 	return seat_prompts
 end
 
--- Lines 329-331
+-- Lines 330-332
 function HUDDriving:on_vehicle_damaged()
 end
 
--- Lines 333-342
+-- Lines 334-343
 function HUDDriving:refresh_health()
 end
 
--- Lines 344-370
+-- Lines 345-371
 function HUDDriving:refresh_seats(refresh_button_prompts)
 	if not self._vehicle then
 		return
@@ -379,7 +380,7 @@ function HUDDriving:refresh_seats(refresh_button_prompts)
 	end
 end
 
--- Lines 372-377
+-- Lines 373-378
 function HUDDriving:free_seat(id)
 	self._slots[id].taken:set_visible(false)
 	self._slots[id].empty:set_visible(true)
@@ -388,7 +389,7 @@ function HUDDriving:free_seat(id)
 	self._slots[id].occupant = nil
 end
 
--- Lines 379-393
+-- Lines 380-394
 function HUDDriving:occupy_seat(id, unit)
 	local nationality = managers.criminals:character_name_by_unit(unit)
 
@@ -405,7 +406,7 @@ function HUDDriving:occupy_seat(id, unit)
 	self._slots[id].occupant = unit
 end
 
--- Lines 395-424
+-- Lines 396-427
 function HUDDriving:set_vehicle_loot_info(vehicle, current_loot, current_loot_amount, max_loot_amount)
 	if vehicle ~= self._vehicle then
 		return
@@ -438,7 +439,7 @@ function HUDDriving:set_vehicle_loot_info(vehicle, current_loot, current_loot_am
 	end
 end
 
--- Lines 426-434
+-- Lines 429-437
 function HUDDriving:_get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
 		if color_table[i].start_percentage < percentage then
@@ -449,7 +450,7 @@ function HUDDriving:_get_color_for_percentage(color_table, percentage)
 	return color_table[1].color
 end
 
--- Lines 436-447
+-- Lines 439-450
 function HUDDriving:hide()
 	if not self._vehicle then
 		return
@@ -463,7 +464,7 @@ function HUDDriving:hide()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 449-454
+-- Lines 452-457
 function HUDDriving:_on_hidden()
 	managers.controller:remove_hotswap_callback("hud_driving")
 
@@ -473,7 +474,7 @@ function HUDDriving:_on_hidden()
 	self._button_prompts_panel:set_alpha(0)
 end
 
--- Lines 457-474
+-- Lines 460-477
 function HUDDriving:_animate_show()
 	local duration = 0.5
 	local t = self._object:alpha() * duration
@@ -494,7 +495,7 @@ function HUDDriving:_animate_show()
 	self._object:set_bottom(self._object:parent():h())
 end
 
--- Lines 476-496
+-- Lines 479-499
 function HUDDriving:_animate_hide()
 	local duration = 0.25
 	local t = (1 - self._object:alpha()) * duration
@@ -517,7 +518,7 @@ function HUDDriving:_animate_hide()
 	self:_on_hidden()
 end
 
--- Lines 498-526
+-- Lines 501-529
 function HUDDriving:_animate_refresh_seats()
 	local fade_out_duration = 0.2
 	local t = (1 - self._button_prompts_panel:alpha()) * fade_out_duration

@@ -53,9 +53,10 @@ function GreedLootScreenGui:init(ws, fullscreen_ws, node, component_name)
 	self:_set_progress(self._greed_counter_before_mission)
 end
 
--- Lines 66-82
+-- Lines 66-84
 function GreedLootScreenGui:_layout()
 	GreedLootScreenGui.super._layout(self)
+	managers.raid_menu:show_background_video()
 	self:_create_fullscreen_panel()
 	self:_create_flares()
 	self:_create_loot_image()
@@ -68,13 +69,13 @@ function GreedLootScreenGui:_layout()
 	self._loot_image:animate(callback(self, self, "_animate_giving_points"))
 end
 
--- Lines 84-87
+-- Lines 86-89
 function GreedLootScreenGui:_create_fullscreen_panel()
 	self._full_workspace = Overlay:gui():create_screen_workspace()
 	self._fullscreen_panel = self._full_workspace:panel()
 end
 
--- Lines 89-148
+-- Lines 91-150
 function GreedLootScreenGui:_create_flares()
 	local flare_panel_params = {
 		layer = 1,
@@ -139,7 +140,7 @@ function GreedLootScreenGui:_create_flares()
 	self._lens_spike_ball:set_center(flare_center_x, flare_center_y)
 end
 
--- Lines 150-160
+-- Lines 152-162
 function GreedLootScreenGui:_create_loot_image()
 	local loot_image_params = {
 		name = "loot_image",
@@ -153,7 +154,7 @@ function GreedLootScreenGui:_create_loot_image()
 	self._loot_image:set_center_y(self._root_panel:h() / 2)
 end
 
--- Lines 162-266
+-- Lines 164-268
 function GreedLootScreenGui:_create_greed_bar()
 	local greed_bar_panel_params = {
 		halign = "center",
@@ -267,7 +268,7 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._counter:set_center_y(self._progress_bar_background:center_y())
 end
 
--- Lines 268-273
+-- Lines 270-275
 function GreedLootScreenGui:_create_second_panel()
 	local second_panel_params = {
 		name = "second_panel"
@@ -275,7 +276,7 @@ function GreedLootScreenGui:_create_second_panel()
 	self._second_panel = self._root_panel:panel(second_panel_params)
 end
 
--- Lines 275-316
+-- Lines 277-318
 function GreedLootScreenGui:_create_gold_bar_image()
 	local gold_bar_image_params = {
 		name = "central_gold_bar_image",
@@ -321,7 +322,7 @@ function GreedLootScreenGui:_create_gold_bar_image()
 	self:_layout_gold_bar_value_text()
 end
 
--- Lines 318-377
+-- Lines 320-379
 function GreedLootScreenGui:_create_description_panel()
 	local description_panel_params = {
 		alpha = 0,
@@ -390,7 +391,7 @@ function GreedLootScreenGui:_create_description_panel()
 	greed_description:set_y(self._second_panel_greed_bar._object:bottom())
 end
 
--- Lines 379-389
+-- Lines 381-391
 function GreedLootScreenGui:_set_progress(points)
 	self._current_points = points
 	local current_percentage = self._current_points % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar()
@@ -402,7 +403,7 @@ function GreedLootScreenGui:_set_progress(points)
 	return current_percentage
 end
 
--- Lines 391-396
+-- Lines 393-398
 function GreedLootScreenGui:_layout_gold_bar_value_text()
 	local _, _, w, _ = self._gold_bar_value:text_rect()
 
@@ -411,7 +412,7 @@ function GreedLootScreenGui:_layout_gold_bar_value_text()
 	self._title_description:set_x(self._gold_bar_value:x())
 end
 
--- Lines 400-436
+-- Lines 402-438
 function GreedLootScreenGui:_animate_giving_points()
 	local t = 0
 	local duration = 2
@@ -448,7 +449,7 @@ function GreedLootScreenGui:_animate_giving_points()
 	self._central_gold_bar_image:animate(callback(self, self, "_animate_second_panel"))
 end
 
--- Lines 438-466
+-- Lines 440-468
 function GreedLootScreenGui:_add_gold_bar()
 	self._gold_bars_added = self._gold_bars_added + 1
 
@@ -480,7 +481,7 @@ function GreedLootScreenGui:_add_gold_bar()
 	self:_layout_gold_bar_value_text()
 end
 
--- Lines 468-513
+-- Lines 470-515
 function GreedLootScreenGui:_animate_lens_flares()
 	local fade_in_duration = 1.1
 	local t = 0
@@ -522,7 +523,7 @@ function GreedLootScreenGui:_animate_lens_flares()
 	end
 end
 
--- Lines 515-546
+-- Lines 517-548
 function GreedLootScreenGui:_animate_hide_lens_flares()
 	local fade_out_duration = 0.2
 	local t = 0
@@ -554,7 +555,7 @@ function GreedLootScreenGui:_animate_hide_lens_flares()
 	self._flare_panel:set_alpha(0)
 end
 
--- Lines 548-571
+-- Lines 550-573
 function GreedLootScreenGui:_animate_central_image_hide()
 	local duration = 0.2
 	local t = 0
@@ -580,7 +581,7 @@ function GreedLootScreenGui:_animate_central_image_hide()
 	self._greed_bar_panel:set_alpha(0)
 end
 
--- Lines 573-595
+-- Lines 575-597
 function GreedLootScreenGui:_animate_counter_add_gold_bar()
 	local duration = 0.5
 	local t = 0
@@ -599,7 +600,7 @@ function GreedLootScreenGui:_animate_counter_add_gold_bar()
 	self._counter:set_center_y(self._progress_bar_background:center_y())
 end
 
--- Lines 597-624
+-- Lines 599-626
 function GreedLootScreenGui:_animate_change_icon()
 	local duration = 0.5
 	local t = 0
@@ -628,7 +629,7 @@ function GreedLootScreenGui:_animate_change_icon()
 	self._gold_icon:set_center_y(self._greed_bar_panel:h() / 2)
 end
 
--- Lines 626-648
+-- Lines 628-650
 function GreedLootScreenGui:_animate_pulse()
 	local frame_default_w = tweak_data.gui:icon_w(GreedLootScreenGui.FRAME_ICON)
 	local frame_default_h = tweak_data.gui:icon_h(GreedLootScreenGui.FRAME_ICON)
@@ -653,7 +654,7 @@ function GreedLootScreenGui:_animate_pulse()
 	end
 end
 
--- Lines 650-713
+-- Lines 652-715
 function GreedLootScreenGui:_animate_second_panel()
 	local duration = 1.9
 	local t = 0
@@ -724,7 +725,7 @@ function GreedLootScreenGui:_animate_second_panel()
 	self._gold_bar_value:set_y(gold_bar_value_y)
 end
 
--- Lines 721-745
+-- Lines 723-747
 function GreedLootScreenGui:close()
 	self._root_panel:get_engine_panel():stop()
 	self._loot_image:stop()
@@ -750,12 +751,12 @@ function GreedLootScreenGui:close()
 	GreedLootScreenGui.super.close(self)
 end
 
--- Lines 748-750
+-- Lines 750-752
 function GreedLootScreenGui:on_escape()
 	return true
 end
 
--- Lines 752-767
+-- Lines 754-769
 function GreedLootScreenGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -779,7 +780,7 @@ function GreedLootScreenGui:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 769-771
+-- Lines 771-773
 function GreedLootScreenGui:_continue_button_on_click()
 	managers.raid_menu:close_menu()
 end

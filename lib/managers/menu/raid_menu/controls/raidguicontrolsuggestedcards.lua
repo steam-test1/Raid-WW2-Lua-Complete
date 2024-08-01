@@ -30,7 +30,7 @@ function RaidGUIControlSuggestedCards:layout()
 	self:_create_items()
 end
 
--- Lines 30-68
+-- Lines 30-67
 function RaidGUIControlSuggestedCards:_create_items()
 	local item_data = {}
 	local item_params = {}
@@ -76,7 +76,7 @@ function RaidGUIControlSuggestedCards:_create_items()
 	end
 end
 
--- Lines 70-78
+-- Lines 69-77
 function RaidGUIControlSuggestedCards:_delete_items()
 	for index, control in pairs(self._suggested_cards_panel._controls) do
 		-- Nothing
@@ -85,13 +85,13 @@ function RaidGUIControlSuggestedCards:_delete_items()
 	self._suggested_cards_panel:clear()
 end
 
--- Lines 80-83
+-- Lines 79-82
 function RaidGUIControlSuggestedCards:refresh_data()
 	self:_delete_items()
 	self:_create_items()
 end
 
--- Lines 85-97
+-- Lines 84-96
 function RaidGUIControlSuggestedCards:mouse_released(o, button, x, y)
 	for _, grid_item in ipairs(self._grid_items) do
 		if grid_item:inside(x, y) then
@@ -108,7 +108,7 @@ function RaidGUIControlSuggestedCards:mouse_released(o, button, x, y)
 	return false
 end
 
--- Lines 99-108
+-- Lines 98-107
 function RaidGUIControlSuggestedCards:select_grid_item_by_item(grid_item)
 	if self._selected_item then
 		self._selected_item:unselect()
@@ -121,7 +121,7 @@ function RaidGUIControlSuggestedCards:select_grid_item_by_item(grid_item)
 	end
 end
 
--- Lines 110-117
+-- Lines 109-116
 function RaidGUIControlSuggestedCards:selected_grid_item()
 	for index, grid_item in ipairs(self._grid_items) do
 		if grid_item == self._selected_item then
@@ -132,7 +132,7 @@ function RaidGUIControlSuggestedCards:selected_grid_item()
 	return nil, nil
 end
 
--- Lines 119-124
+-- Lines 118-123
 function RaidGUIControlSuggestedCards:lock_selected_grid_item()
 	if self._selected_item then
 		self._locked_item = self._selected_item
@@ -141,7 +141,7 @@ function RaidGUIControlSuggestedCards:lock_selected_grid_item()
 	end
 end
 
--- Lines 126-131
+-- Lines 125-130
 function RaidGUIControlSuggestedCards:unlock_grid_item()
 	if self._locked_item then
 		self._locked_item:unlock()
@@ -150,12 +150,12 @@ function RaidGUIControlSuggestedCards:unlock_grid_item()
 	end
 end
 
--- Lines 133-135
+-- Lines 132-134
 function RaidGUIControlSuggestedCards:locked_grid_item()
 	return self._locked_item
 end
 
--- Lines 137-147
+-- Lines 136-146
 function RaidGUIControlSuggestedCards:mouse_moved(o, x, y)
 	if self._grid_items then
 		for i = 1, #self._grid_items do

@@ -122,7 +122,7 @@ function CopLogicSniper._upd_enemy_detection(data)
 			end
 
 			if my_data == data.internal_data then
-				CopLogicBase._exit(data.unit, wanted_state)
+				CopLogicBase._exit_to_state(data.unit, wanted_state)
 			end
 
 			CopLogicBase._report_detections(data.detected_attention_objects)
@@ -351,19 +351,12 @@ function CopLogicSniper._request_action_shoot(data, my_data)
 	end
 end
 
--- Lines 357-383
+-- Lines 357-374
 function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
 	if not record or not attention_data.is_person then
 		return attention_data.settings.reaction
-	end
-
-	local att_unit = attention_data.unit
-	local assault_mode = managers.groupai:state():get_assault_mode()
-
-	if attention_data.is_deployable or data.t < record.arrest_timeout then
-		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 	end
 
 	if record.status == "disabled" then
@@ -372,14 +365,16 @@ function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, 
 		end
 
 		return AIAttentionObject.REACT_AIM
-	elseif record.being_arrested then
-		return AIAttentionObject.REACT_AIM
 	end
 
 	return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 end
 
--- Lines 387-389
+-- Lines 378-380
 function CopLogicSniper.should_duck_on_alert(data, alert_data)
 	return data.internal_data.attitude == "avoid" and CopLogicBase.should_duck_on_alert(data, alert_data)
+end
+
+-- Lines 384-386
+function CopLogicSniper._request_action_crouch(data)
 end

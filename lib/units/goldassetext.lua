@@ -27,7 +27,6 @@ function GoldAssetExt:apply_upgrade_level(level)
 
 		self._unit:set_enabled(false)
 	else
-		Application:debug("[GoldAssetExt:apply_upgrade_level] Applying camp upgrade ", self.tweak_data_name, level)
 		self._unit:set_enabled(true)
 
 		if self._unit:damage() and self._unit:damage():has_sequence("enable_interaction") then

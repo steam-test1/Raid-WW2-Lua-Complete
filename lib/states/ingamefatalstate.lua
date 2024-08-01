@@ -7,16 +7,17 @@ function IngameFatalState:init(game_state_machine)
 	IngameFatalState.super.init(self, "ingame_fatal", game_state_machine)
 end
 
--- Lines 9-15
+-- Lines 9-16
 function IngameFatalState.on_local_player_dead()
 	local peer_id = managers.network:session():local_peer():id()
 	local player = managers.player:player_unit()
 
 	player:network():send("sync_player_movement_state", "dead", player:character_damage():down_time(), player:id())
 	managers.groupai:state():on_player_criminal_death(peer_id)
+	managers.warcry:deactivate_warcry(true)
 end
 
--- Lines 17-37
+-- Lines 18-38
 function IngameFatalState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -38,7 +39,7 @@ function IngameFatalState:update(t, dt)
 	end
 end
 
--- Lines 40-61
+-- Lines 41-62
 function IngameFatalState:at_enter()
 	local players = managers.player:players()
 
@@ -66,7 +67,7 @@ function IngameFatalState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
--- Lines 63-71
+-- Lines 64-72
 function IngameFatalState:at_exit()
 	local player = managers.player:player_unit()
 

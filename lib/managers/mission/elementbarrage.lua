@@ -7,13 +7,9 @@ function ElementBarrage:init(...)
 	ElementBarrage.super.init(self, ...)
 end
 
--- Lines 9-39
+-- Lines 9-43
 function ElementBarrage:on_executed(instigator)
-	if not self._values.enabled then
-		return
-	end
-
-	if not self._values.type or not self._values.operation then
+	if not self._values.enabled or not self._values.type or not self._values.operation then
 		return
 	end
 
@@ -28,7 +24,7 @@ function ElementBarrage:on_executed(instigator)
 
 		managers.barrage:start_barrage(tweak_data)
 	elseif self._values.operation == "stop" then
-		managers.barrage:stop_barrage()
+		managers.barrage:stop_barrages()
 	elseif self._values.operation == "set_spotter_type" then
 		local tweak_data = tweak_data.barrage[self._values.type]
 
@@ -46,7 +42,7 @@ function ElementBarrage:on_executed(instigator)
 	ElementBarrage.super.on_executed(self, instigator)
 end
 
--- Lines 41-43
+-- Lines 45-47
 function ElementBarrage:client_on_executed(...)
 	ElementBarrage.super.on_executed(self)
 end

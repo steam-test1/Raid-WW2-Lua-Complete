@@ -220,16 +220,18 @@ function RaidGUIControl:mouse_moved(o, x, y)
 	return false
 end
 
--- Lines 147-153
+-- Lines 147-154
 function RaidGUIControl:mouse_pressed(o, button, x, y)
 	if self:inside(x, y) then
+		self._mouse_pressed = true
+
 		return self:on_mouse_pressed(button, x, y)
 	end
 
 	return false
 end
 
--- Lines 155-161
+-- Lines 156-162
 function RaidGUIControl:mouse_clicked(o, button, x, y)
 	if self:inside(x, y) then
 		return self:on_mouse_clicked(button)
@@ -238,16 +240,18 @@ function RaidGUIControl:mouse_clicked(o, button, x, y)
 	return false
 end
 
--- Lines 163-169
+-- Lines 164-171
 function RaidGUIControl:mouse_released(o, button, x, y)
-	if self:inside(x, y) then
+	if self:inside(x, y) and self._mouse_pressed then
+		self._mouse_pressed = nil
+
 		return self:on_mouse_released(button)
 	end
 
 	return false
 end
 
--- Lines 171-176
+-- Lines 173-178
 function RaidGUIControl:mouse_scroll_up(o, button, x, y)
 	if self:inside(x, y) then
 		return self:on_mouse_scroll_up(button)
@@ -256,7 +260,7 @@ function RaidGUIControl:mouse_scroll_up(o, button, x, y)
 	return false
 end
 
--- Lines 178-183
+-- Lines 180-185
 function RaidGUIControl:mouse_scroll_down(o, button, x, y)
 	if self:inside(x, y) then
 		return self:on_mouse_scroll_down(button)
@@ -265,7 +269,7 @@ function RaidGUIControl:mouse_scroll_down(o, button, x, y)
 	return false
 end
 
--- Lines 185-190
+-- Lines 187-192
 function RaidGUIControl:mouse_double_click(o, button, x, y)
 	if self:inside(x, y) and self.on_double_click then
 		return self:on_double_click(button)
@@ -274,11 +278,11 @@ function RaidGUIControl:mouse_double_click(o, button, x, y)
 	return false
 end
 
--- Lines 192-193
+-- Lines 194-195
 function RaidGUIControl:on_mouse_moved(o, x, y)
 end
 
--- Lines 195-203
+-- Lines 197-205
 function RaidGUIControl:on_mouse_over(x, y)
 	self._mouse_inside = true
 
@@ -289,7 +293,7 @@ function RaidGUIControl:on_mouse_over(x, y)
 	end
 end
 
--- Lines 205-213
+-- Lines 207-215
 function RaidGUIControl:on_mouse_out(x, y)
 	self._mouse_inside = false
 
@@ -300,106 +304,106 @@ function RaidGUIControl:on_mouse_out(x, y)
 	end
 end
 
--- Lines 215-217
+-- Lines 217-219
 function RaidGUIControl:on_mouse_pressed()
 	return false
 end
 
--- Lines 219-221
+-- Lines 221-223
 function RaidGUIControl:on_mouse_clicked()
 	return false
 end
 
--- Lines 223-226
+-- Lines 225-228
 function RaidGUIControl:on_mouse_released()
 	return false
 end
 
--- Lines 228-230
+-- Lines 230-232
 function RaidGUIControl:on_mouse_double_click()
 	return false
 end
 
--- Lines 232-234
+-- Lines 234-236
 function RaidGUIControl:on_mouse_scroll_up()
 	return false
 end
 
--- Lines 236-238
+-- Lines 238-240
 function RaidGUIControl:on_mouse_scroll_down()
 	return false
 end
 
--- Lines 240-251
+-- Lines 242-253
 function RaidGUIControl:highlight_on()
 	if self._object and self._object.highlight_on then
 		self._object:highlight_on()
 	end
 end
 
--- Lines 253-261
+-- Lines 255-263
 function RaidGUIControl:highlight_off()
 	if self._object and self._object.highlight_off then
 		self._object:highlight_off()
 	end
 end
 
--- Lines 263-265
+-- Lines 265-267
 function RaidGUIControl:show()
 	self._object:show()
 end
 
--- Lines 267-269
+-- Lines 269-271
 function RaidGUIControl:hide()
 	self._object:hide()
 end
 
--- Lines 271-273
+-- Lines 273-275
 function RaidGUIControl:center_x()
 	return self._object:center_x()
 end
 
--- Lines 275-277
+-- Lines 277-279
 function RaidGUIControl:center_y()
 	return self._object:center_y()
 end
 
--- Lines 279-281
+-- Lines 281-283
 function RaidGUIControl:set_center_x(x)
 	self._object:set_center_x(x)
 end
 
--- Lines 283-285
+-- Lines 285-287
 function RaidGUIControl:set_center_y(y)
 	self._object:set_center_y(y)
 end
 
--- Lines 287-289
+-- Lines 289-291
 function RaidGUIControl:set_center(x, y)
 	self._object:set_center(x, y)
 end
 
--- Lines 291-293
+-- Lines 293-295
 function RaidGUIControl:rotate(angle)
 	self._object:rotate(angle)
 end
 
--- Lines 295-297
+-- Lines 297-299
 function RaidGUIControl:set_rotation(angle)
 	self._object:set_rotation(angle)
 end
 
--- Lines 299-301
+-- Lines 301-303
 function RaidGUIControl:rotation()
 	return self._object:rotation()
 end
 
--- Lines 303-305
+-- Lines 305-307
 function RaidGUIControl:set_visible(visible)
 	self._object:set_visible(visible)
 end
 
--- Lines 307-315
+-- Lines 309-317
 function RaidGUIControl:visible()
 	if self._object.alive then
 		return self._object.alive and alive(self._object) and self._object:visible()
@@ -408,24 +412,24 @@ function RaidGUIControl:visible()
 	end
 end
 
--- Lines 317-319
+-- Lines 319-321
 function RaidGUIControl:set_selectable(value)
 	self._selectable = value
 end
 
--- Lines 321-323
+-- Lines 323-325
 function RaidGUIControl:selectable()
 	return self._selectable
 end
 
--- Lines 325-329
+-- Lines 327-331
 function RaidGUIControl:set_alpha(alpha)
 	if self._object.set_alpha then
 		self._object:set_alpha(alpha)
 	end
 end
 
--- Lines 331-337
+-- Lines 333-339
 function RaidGUIControl:alpha()
 	if self._object.alpha then
 		return self._object:alpha()
@@ -434,107 +438,107 @@ function RaidGUIControl:alpha()
 	return nil
 end
 
--- Lines 339-341
+-- Lines 341-343
 function RaidGUIControl:set_x(x)
 	self._object:set_x(x)
 end
 
--- Lines 343-345
+-- Lines 345-347
 function RaidGUIControl:set_top(value)
 	self._object:set_top(value)
 end
 
--- Lines 347-349
+-- Lines 349-351
 function RaidGUIControl:set_bottom(value)
 	self._object:set_bottom(value)
 end
 
--- Lines 351-353
+-- Lines 353-355
 function RaidGUIControl:set_right(value)
 	self._object:set_right(value)
 end
 
--- Lines 355-357
+-- Lines 357-359
 function RaidGUIControl:set_left(value)
 	self._object:set_left(value)
 end
 
--- Lines 359-361
+-- Lines 361-363
 function RaidGUIControl:set_y(y)
 	self._object:set_y(y)
 end
 
--- Lines 363-365
+-- Lines 365-367
 function RaidGUIControl:set_w(w)
 	self._object:set_w(w)
 end
 
--- Lines 367-369
+-- Lines 369-371
 function RaidGUIControl:set_h(h)
 	self._object:set_h(h)
 end
 
--- Lines 371-373
+-- Lines 373-375
 function RaidGUIControl:w()
 	return self._object:w()
 end
 
--- Lines 375-377
+-- Lines 377-379
 function RaidGUIControl:h()
 	return self._object:h()
 end
 
--- Lines 379-381
+-- Lines 381-383
 function RaidGUIControl:x()
 	return self._object:x()
 end
 
--- Lines 383-385
+-- Lines 385-387
 function RaidGUIControl:y()
 	return self._object:y()
 end
 
--- Lines 387-389
+-- Lines 389-391
 function RaidGUIControl:world_x()
 	return self._object:world_x()
 end
 
--- Lines 391-393
+-- Lines 393-395
 function RaidGUIControl:world_y()
 	return self._object:world_y()
 end
 
--- Lines 395-397
+-- Lines 397-399
 function RaidGUIControl:layer()
 	return self._object:layer()
 end
 
--- Lines 399-401
+-- Lines 401-403
 function RaidGUIControl:set_layer(layer)
 	return self._object._engine_panel:set_layer(layer)
 end
 
--- Lines 409-411
+-- Lines 411-413
 function RaidGUIControl:left()
 	return self._object:left()
 end
 
--- Lines 413-415
+-- Lines 415-417
 function RaidGUIControl:right()
 	return self._object:right()
 end
 
--- Lines 416-418
+-- Lines 418-420
 function RaidGUIControl:top()
 	return self._object:top()
 end
 
--- Lines 420-422
+-- Lines 422-424
 function RaidGUIControl:bottom()
 	return self._object:bottom()
 end
 
--- Lines 424-432
+-- Lines 426-434
 function RaidGUIControl:set_selected(value)
 	self._selected = value
 
@@ -545,75 +549,77 @@ function RaidGUIControl:set_selected(value)
 	end
 end
 
--- Lines 434-436
+-- Lines 436-438
 function RaidGUIControl:is_selected()
 	return self._selected
 end
 
--- Lines 438-442
+-- Lines 440-445
 function RaidGUIControl:move_up()
 	if self._selected and self._on_menu_move and self._on_menu_move.up then
 		return self:_menu_move_to(self._on_menu_move.up, "up")
 	end
 end
 
--- Lines 444-448
+-- Lines 447-452
 function RaidGUIControl:move_down()
 	if self._selected and self._on_menu_move and self._on_menu_move.down then
 		return self:_menu_move_to(self._on_menu_move.down, "down")
 	end
 end
 
--- Lines 450-454
+-- Lines 454-459
 function RaidGUIControl:move_left()
 	if self._selected and self._on_menu_move and self._on_menu_move.left then
 		return self:_menu_move_to(self._on_menu_move.left, "left")
 	end
 end
 
--- Lines 456-460
+-- Lines 461-466
 function RaidGUIControl:move_right()
 	if self._selected and self._on_menu_move and self._on_menu_move.right then
 		return self:_menu_move_to(self._on_menu_move.right, "right")
 	end
 end
 
--- Lines 462-464
+-- Lines 468-470
 function RaidGUIControl:scroll_up()
 	return false
 end
 
--- Lines 466-468
+-- Lines 472-474
 function RaidGUIControl:scroll_down()
 	return false
 end
 
--- Lines 470-472
+-- Lines 476-478
 function RaidGUIControl:scroll_left()
 	return false
 end
 
--- Lines 474-476
+-- Lines 480-482
 function RaidGUIControl:scroll_right()
 	return false
 end
 
--- Lines 478-480
+-- Lines 484-486
 function RaidGUIControl:special_btn_pressed(...)
 end
 
--- Lines 482-484
+-- Lines 488-490
 function RaidGUIControl:set_menu_move_controls(controls)
 	self._on_menu_move = controls
 end
 
--- Lines 486-508
+-- Lines 492-518
 function RaidGUIControl:_menu_move_to(target_control_name, direction)
 	local component_controls = managers.menu_component._active_controls
 
 	for _, controls in pairs(component_controls) do
 		for _, control in pairs(controls) do
 			if control._name == target_control_name then
+				Application:debug("[RaidGUIControl:_menu_move_to] - found next ", control._name)
+
 				if control:visible() and control:selectable() and control:enabled() then
 					self:set_selected(false)
 
@@ -636,7 +642,7 @@ function RaidGUIControl:_menu_move_to(target_control_name, direction)
 	return nil, target_control_name
 end
 
--- Lines 510-517
+-- Lines 520-527
 function RaidGUIControl:_find_next_visible_control(control_ref, direction)
 	local next_control_name = control_ref and control_ref._on_menu_move and control_ref._on_menu_move[direction]
 
@@ -647,11 +653,11 @@ function RaidGUIControl:_find_next_visible_control(control_ref, direction)
 	end
 end
 
--- Lines 519-520
+-- Lines 529-530
 function RaidGUIControl:confirm_pressed()
 end
 
--- Lines 523-541
+-- Lines 533-551
 function RaidGUIControl:check_item_availability(item, availability_flags)
 	if not availability_flags then
 		return true
@@ -671,16 +677,16 @@ function RaidGUIControl:check_item_availability(item, availability_flags)
 	return result
 end
 
--- Lines 545-547
+-- Lines 555-557
 function RaidGUIControl:scrollable_area_post_setup(params)
 end
 
--- Lines 551-553
+-- Lines 561-563
 function RaidGUIControl:enabled()
 	return self._enabled
 end
 
--- Lines 555-557
+-- Lines 565-567
 function RaidGUIControl:set_enabled(enabled)
 	self._enabled = enabled
 end

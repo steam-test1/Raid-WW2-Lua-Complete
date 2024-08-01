@@ -47,7 +47,7 @@ function CubeMapCreator:start_cube_map(pos)
 	self._creating_cube_map = true
 end
 
--- Lines 41-69
+-- Lines 41-68
 function CubeMapCreator:create_cube_map()
 	local hardcoded_numer = 512
 	local ypos = Application:create_texture("render_target", hardcoded_numer, hardcoded_numer)

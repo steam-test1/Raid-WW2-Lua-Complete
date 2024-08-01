@@ -1,6 +1,9 @@
 CivilianLogicEscort = class(CivilianLogicBase)
+CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY = 0.75
+CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY_LONGER = 1.5
+CivilianLogicEscort.IDLE_TALK_DELAY = 45
 
--- Lines 7-59
+-- Lines 12-67
 function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -14,14 +17,12 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
 
 	if data.char_tweak.escort_idle_talk then
-		my_data._say_random_t = Application:time() + 45
+		my_data._say_random_t = Application:time() + CivilianLogicEscort.IDLE_TALK_DELAY
 	end
 
 	CivilianLogicEscort._get_objective_path_data(data, my_data)
 
 	data.internal_data = my_data
-
-	data.unit:contour():add("highlight")
 
 	if not data.objective.allow_cool then
 		data.unit:movement():set_cool(false, "escort")
@@ -44,10 +45,14 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 		data.unit:brain():action_request(action_data)
 	end
 
-	if not data.been_outlined and data.char_tweak.outline_on_discover then
-		my_data.outline_detection_task_key = "CivilianLogicIdle._upd_outline_detection" .. tostring(data.key)
+	if data.char_tweak.outline_on_discover then
+		if not data.been_outlined then
+			my_data.outline_detection_task_key = "CivilianLogicIdle._upd_outline_detection" .. tostring(data.key)
 
-		CopLogicBase.queue_task(my_data, my_data.outline_detection_task_key, CivilianLogicIdle._upd_outline_detection, data, data.t + 2)
+			CopLogicBase.queue_task(my_data, my_data.outline_detection_task_key, CivilianLogicIdle._upd_outline_detection, data, data.t + 2)
+		end
+	else
+		data.unit:contour():add("highlight_character")
 	end
 
 	local attention_settings = nil
@@ -68,7 +73,7 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	my_data.safe_distance_offset = math.rand(100)
 end
 
--- Lines 63-80
+-- Lines 71-88
 function CivilianLogicEscort.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -86,7 +91,7 @@ function CivilianLogicEscort.exit(data, new_logic_name, enter_params)
 	my_data.safe_distance_offset = nil
 end
 
--- Lines 84-165
+-- Lines 92-179
 function CivilianLogicEscort.update(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -114,6 +119,10 @@ function CivilianLogicEscort.update(data)
 			})
 		end
 
+		if scared_reason == "hostiles" then
+			-- Nothing
+		end
+
 		if not data.unit:anim_data().panic then
 			my_data.commanded_to_move = nil
 
@@ -138,7 +147,7 @@ function CivilianLogicEscort.update(data)
 	elseif not my_data.advancing then
 		if my_data.getting_up then
 			-- Nothing
-		elseif my_data.advance_path and (not my_data.last_avoidance_t or my_data.last_avoidance_t + 0.75 < data.t) then
+		elseif my_data.advance_path and (not my_data.last_avoidance_t or my_data.last_avoidance_t + CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY < data.t) then
 			if my_data.commanded_to_move then
 				if data.unit:anim_data().standing_hesitant then
 					CivilianLogicEscort._begin_advance_action(data, my_data)
@@ -168,11 +177,11 @@ function CivilianLogicEscort.update(data)
 				my_data.processing_coarse_path = true
 			end
 		else
-			CopLogicBase._exit(data.unit, "idle")
+			CopLogicBase._exit_to_state(data.unit, "idle")
 		end
 	end
 
-	if data.unit:anim_data().walk and (not my_data.last_avoidance_t or my_data.last_avoidance_t + 1.5 < data.t) then
+	if data.unit:anim_data().walk and (not my_data.last_avoidance_t or my_data.last_avoidance_t + CivilianLogicEscort.AVOIDANCE_PATH_CHECK_DELAY_LONGER < data.t) then
 		local pos = data.unit:position() + Vector3(0, 0, 100)
 		local avoidance_ray = data.unit:raycast("ray", pos, pos + data.unit:rotation():y() * 20, "slot_mask", 21)
 		avoidance_ray = avoidance_ray or data.unit:raycast("ray", pos, pos + data.unit:rotation():x() * 20, "slot_mask", 21)
@@ -188,11 +197,11 @@ function CivilianLogicEscort.update(data)
 	end
 end
 
--- Lines 169-170
+-- Lines 183-184
 function CivilianLogicEscort.on_intimidated(data, amount, aggressor_unit)
 end
 
--- Lines 174-187
+-- Lines 188-201
 function CivilianLogicEscort.on_action_completed(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -208,7 +217,7 @@ function CivilianLogicEscort.on_action_completed(data, action)
 	end
 end
 
--- Lines 191-220
+-- Lines 205-234
 function CivilianLogicEscort._upd_pathing(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -245,16 +254,16 @@ function CivilianLogicEscort._upd_pathing(data, my_data)
 	end
 end
 
--- Lines 224-226
+-- Lines 238-240
 function CivilianLogicEscort.on_new_objective(data, old_objective)
 	CivilianLogicIdle.on_new_objective(data, old_objective)
 end
 
--- Lines 230-231
+-- Lines 244-245
 function CivilianLogicEscort.damage_clbk(data, damage_info)
 end
 
--- Lines 235-273
+-- Lines 249-287
 function CivilianLogicEscort._get_objective_path_data(data, my_data)
 	local objective = data.objective
 	local path_data = objective.path_data
@@ -326,7 +335,7 @@ function CivilianLogicEscort._get_objective_path_data(data, my_data)
 	end
 end
 
--- Lines 277-310
+-- Lines 291-325
 function CivilianLogicEscort.too_scared_to_move(data)
 	local my_data = data.internal_data
 	local nobody_close = true
@@ -359,11 +368,11 @@ function CivilianLogicEscort.too_scared_to_move(data)
 	end
 
 	if not nobody_close then
-		return "pigs"
+		return "hostiles"
 	end
 end
 
--- Lines 314-333
+-- Lines 329-348
 function CivilianLogicEscort._begin_advance_action(data, my_data)
 	CopLogicAttack._adjust_path_start_pos(data, my_data.advance_path)
 
@@ -387,7 +396,7 @@ function CivilianLogicEscort._begin_advance_action(data, my_data)
 	end
 end
 
--- Lines 337-351
+-- Lines 352-366
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
 		clamp_to_graph = true,
@@ -404,18 +413,18 @@ function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	my_data.getting_up = data.unit:movement():action_request(action)
 end
 
--- Lines 355-359
+-- Lines 370-374
 function CivilianLogicEscort._get_all_paths(data)
 	return {
 		advance_path = data.internal_data.advance_path
 	}
 end
 
--- Lines 363-365
+-- Lines 378-380
 function CivilianLogicEscort._set_verified_paths(data, verified_paths)
 	data.internal_data.stare_path = verified_paths.stare_path
 end
 
--- Lines 370-371
+-- Lines 385-386
 function CivilianLogicEscort.on_alert()
 end

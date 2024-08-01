@@ -23,12 +23,18 @@ function GreedCacheItem:reserve_left()
 	return self._current_amount
 end
 
--- Lines 22-24
+-- Lines 22-28
 function GreedCacheItem:pickup_amount()
-	return tweak_data.greed.cache_items[self._tweak_table].single_interaction_value
+	local value = tweak_data.greed.cache_items[self._tweak_table].single_interaction_value
+	local data = tweak_data.greed.cache_items[self._tweak_table].single_interaction_value_rand
+	local rand = math.random(data[1]) * data[2]
+
+	Application:debug("[GreedCacheItem:pickup_amount] value + rand", value, rand)
+
+	return value + rand
 end
 
--- Lines 26-35
+-- Lines 30-39
 function GreedCacheItem:on_interacted(amount)
 	local pickup_amount = amount or self:pickup_amount()
 	pickup_amount = math.clamp(pickup_amount, 0, self:reserve_left())
@@ -36,10 +42,10 @@ function GreedCacheItem:on_interacted(amount)
 
 	self:_check_current_sequence()
 
-	return pickup_amount
+	return pickup_amount * managers.player:upgrade_value("player", "greed_loot_bonus", 1)
 end
 
--- Lines 37-49
+-- Lines 41-53
 function GreedCacheItem:_check_current_sequence()
 	local fill_sequences = tweak_data.greed.cache_items[self._tweak_table].sequences
 
@@ -56,7 +62,7 @@ function GreedCacheItem:_check_current_sequence()
 	end
 end
 
--- Lines 51-60
+-- Lines 55-64
 function GreedCacheItem:get_lockpick_parameters()
 	local parameters = deep_clone(tweak_data.greed.cache_items[self._tweak_table].lockpick)
 	parameters.circle_radius = {
@@ -68,24 +74,24 @@ function GreedCacheItem:get_lockpick_parameters()
 	return parameters
 end
 
--- Lines 62-65
+-- Lines 66-69
 function GreedCacheItem:unlock()
 	self._unlocked = true
 
 	self:_check_current_sequence()
 end
 
--- Lines 67-69
+-- Lines 71-73
 function GreedCacheItem:locked()
 	return not self._unlocked
 end
 
--- Lines 71-73
+-- Lines 75-77
 function GreedCacheItem:interaction_timer_value()
 	return tweak_data.greed.cache_items[self._tweak_table].interaction_timer
 end
 
--- Lines 75-82
+-- Lines 79-86
 function GreedCacheItem:on_load_complete()
 	local world_id = managers.worldcollection:get_worlddefinition_by_unit_id(self._unit:unit_data().unit_id):world_id()
 
@@ -96,14 +102,14 @@ function GreedCacheItem:on_load_complete()
 	end
 end
 
--- Lines 84-88
+-- Lines 88-92
 function GreedCacheItem:save(data)
 	data.reserve = self._reserve
 	data.current_amount = self._current_amount
 	data.unlocked = self._unlocked
 end
 
--- Lines 90-98
+-- Lines 94-102
 function GreedCacheItem:load(data)
 	self._reserve = data.reserve
 	self._current_amount = data.current_amount

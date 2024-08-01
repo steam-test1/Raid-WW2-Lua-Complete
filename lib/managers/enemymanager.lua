@@ -8,7 +8,7 @@ local t_ins = table.insert
 local m_min = math.min
 local tmp_vec1 = Vector3()
 EnemyManager = EnemyManager or class()
-EnemyManager._MAX_NR_CORPSES = 20
+EnemyManager._MAX_NR_CORPSES = 30
 EnemyManager._nr_i_lod = {
 	{
 		2,
@@ -74,8 +74,10 @@ EnemyManager.ENEMIES = {
 	german_waffen_ss_kar98 = "units/vanilla/characters/enemies/models/german_waffen_ss/german_waffen_ss_kar98"
 }
 
--- Lines 99-107
+-- Lines 99-109
 function EnemyManager:init()
+	self._tickrate = tweak_data.group_ai.ai_tick_rate_stealth
+
 	self:_init_enemy_data()
 
 	self._unit_clbk_key = "EnemyManager"
@@ -83,7 +85,7 @@ function EnemyManager:init()
 	self._commander_active = 0
 end
 
--- Lines 109-118
+-- Lines 111-120
 function EnemyManager:enemy_names()
 	local result = {}
 	local n = 0
@@ -98,7 +100,7 @@ function EnemyManager:enemy_names()
 	return result
 end
 
--- Lines 120-129
+-- Lines 122-131
 function EnemyManager:enemy_units()
 	local result = {}
 	local n = 0
@@ -113,7 +115,7 @@ function EnemyManager:enemy_units()
 	return result
 end
 
--- Lines 133-153
+-- Lines 135-155
 function EnemyManager:update(t, dt)
 	if not managers.navigation:is_streamed_data_ready() then
 		return
@@ -127,7 +129,7 @@ function EnemyManager:update(t, dt)
 	self:_cleanup_queued_tasks()
 end
 
--- Lines 157-341
+-- Lines 159-343
 function EnemyManager:_update_gfx_lod()
 	if self._gfx_lod_data.enabled and managers.navigation:is_data_ready() then
 		local camera_rot = managers.viewport:get_current_camera_rotation()
@@ -290,7 +292,7 @@ function EnemyManager:_update_gfx_lod()
 	end
 end
 
--- Lines 345-364
+-- Lines 347-366
 function EnemyManager:_remove_i_from_lod_prio(i, anim_lod)
 	anim_lod = anim_lod or managers.user:get_setting("video_animation_lod")
 	local nr_i_lod1 = self._nr_i_lod[anim_lod][1]
@@ -312,7 +314,7 @@ function EnemyManager:_remove_i_from_lod_prio(i, anim_lod)
 	end
 end
 
--- Lines 368-375
+-- Lines 370-377
 function EnemyManager:_create_unit_gfx_lod_data(unit)
 	local lod_entries = self._gfx_lod_data.entries
 
@@ -323,7 +325,7 @@ function EnemyManager:_create_unit_gfx_lod_data(unit)
 	table.insert(lod_entries.com, unit:movement():m_com())
 end
 
--- Lines 379-410
+-- Lines 381-412
 function EnemyManager:_destroy_unit_gfx_lod_data(u_key)
 	local lod_entries = self._gfx_lod_data.entries
 
@@ -370,7 +372,7 @@ function EnemyManager:_destroy_unit_gfx_lod_data(u_key)
 	end
 end
 
--- Lines 414-430
+-- Lines 416-432
 function EnemyManager:set_gfx_lod_enabled(state)
 	if state then
 		self._gfx_lod_data.enabled = state
@@ -390,7 +392,7 @@ function EnemyManager:set_gfx_lod_enabled(state)
 	end
 end
 
--- Lines 432-480
+-- Lines 434-482
 function EnemyManager:chk_any_unit_in_slotmask_visible(slotmask, cam_pos, cam_nav_tracker)
 	if self._gfx_lod_data.enabled and managers.navigation:is_data_ready() then
 		local camera_rot = managers.viewport:get_current_camera_rotation()
@@ -432,7 +434,7 @@ function EnemyManager:chk_any_unit_in_slotmask_visible(slotmask, cam_pos, cam_na
 	end
 end
 
--- Lines 484-521
+-- Lines 486-523
 function EnemyManager:_init_enemy_data()
 	local enemy_data = {}
 	local unit_data = {}
@@ -468,27 +470,27 @@ function EnemyManager:_init_enemy_data()
 	self._corpse_disposal_enabled = false
 end
 
--- Lines 525-527
+-- Lines 527-529
 function EnemyManager:all_enemies()
 	return self._enemy_data.unit_data
 end
 
--- Lines 529-531
+-- Lines 531-533
 function EnemyManager:is_enemy(unit)
 	return self._enemy_data.unit_data[unit:key()] and true or false
 end
 
--- Lines 535-537
+-- Lines 537-539
 function EnemyManager:all_civilians()
 	return self._civilian_data.unit_data
 end
 
--- Lines 539-541
+-- Lines 541-543
 function EnemyManager:is_civilian(unit)
 	return self._civilian_data.unit_data[unit:key()] and true or false
 end
 
--- Lines 545-548
+-- Lines 547-550
 function EnemyManager:queue_task(id, task_clbk, data, execute_t, verification_clbk, asap)
 	local task_data = {
 		clbk = task_clbk,
@@ -503,17 +505,17 @@ function EnemyManager:queue_task(id, task_clbk, data, execute_t, verification_cl
 	table.insert(self._queued_tasks, task_data)
 end
 
--- Lines 552-554
+-- Lines 554-556
 function EnemyManager:unqueue_all_tasks()
 	self._queued_tasks = {}
 end
 
--- Lines 556-558
+-- Lines 558-560
 function EnemyManager:remove_delayed_clbks()
 	self._delayed_clbks = {}
 end
 
--- Lines 561-571
+-- Lines 563-573
 function EnemyManager:unqueue_task(id)
 	local tasks = self._queued_tasks
 	local i = #tasks
@@ -529,7 +531,7 @@ function EnemyManager:unqueue_task(id)
 	end
 end
 
--- Lines 573-582
+-- Lines 575-584
 function EnemyManager:_cleanup_queued_tasks()
 	local tasks = self._queued_tasks
 	local i = #tasks
@@ -543,7 +545,7 @@ function EnemyManager:_cleanup_queued_tasks()
 	end
 end
 
--- Lines 586-608
+-- Lines 588-610
 function EnemyManager:unqueue_task_debug(id)
 	if not id then
 		Application:stack_dump()
@@ -572,7 +574,7 @@ function EnemyManager:unqueue_task_debug(id)
 	end
 end
 
--- Lines 612-623
+-- Lines 614-625
 function EnemyManager:has_task(id)
 	local tasks = self._queued_tasks
 	local i = #tasks
@@ -589,7 +591,7 @@ function EnemyManager:has_task(id)
 	return count > 0 and count
 end
 
--- Lines 627-649
+-- Lines 629-651
 function EnemyManager:_execute_queued_task(i)
 	local task = self._queued_tasks[i]
 	local time = TimerManager:game():time()
@@ -617,10 +619,10 @@ end
 local m_ceil = math.ceil
 local t_remove = table.remove
 
--- Lines 656-683
+-- Lines 658-685
 function EnemyManager:_update_queued_tasks(t, dt)
 	local i_asap_task, asp_task_t = nil
-	local queue_remaining = m_ceil(dt * tweak_data.group_ai.ai_tick_rate)
+	local queue_remaining = m_ceil(dt * self._tickrate)
 
 	for i_task, task_data in ipairs(self._queued_tasks) do
 		if not task_data.t or task_data.t < t then
@@ -650,7 +652,7 @@ function EnemyManager:_update_queued_tasks(t, dt)
 	end
 end
 
--- Lines 687-699
+-- Lines 689-701
 function EnemyManager:add_delayed_clbk(id, clbk, execute_t)
 	if not clbk then
 		debug_pause("[EnemyManager:add_delayed_clbk] Empty callback object!!!")
@@ -671,7 +673,7 @@ function EnemyManager:add_delayed_clbk(id, clbk, execute_t)
 	table.insert(all_clbks, i + 1, clbk_data)
 end
 
--- Lines 703-713
+-- Lines 705-715
 function EnemyManager:remove_delayed_clbk(id)
 	local all_clbks = self._delayed_clbks
 
@@ -686,7 +688,7 @@ function EnemyManager:remove_delayed_clbk(id)
 	Application:error("[EnemyManager:remove_delayed_clbk] id", id, "was not scheduled!!!")
 end
 
--- Lines 715-726
+-- Lines 717-728
 function EnemyManager:remove_all_delayed_clbks(id)
 	local all_clbks = self._delayed_clbks
 	local callback_data = nil
@@ -703,7 +705,7 @@ function EnemyManager:remove_all_delayed_clbks(id)
 	end
 end
 
--- Lines 730-751
+-- Lines 732-753
 function EnemyManager:reschedule_delayed_clbk(id, execute_t)
 	local all_clbks = self._delayed_clbks
 	local clbk_data = nil
@@ -732,7 +734,7 @@ function EnemyManager:reschedule_delayed_clbk(id, execute_t)
 	print("[EnemyManager:reschedule_delayed_clbk] id", id, "was not scheduled!!!")
 end
 
--- Lines 755-765
+-- Lines 757-767
 function EnemyManager:force_delayed_clbk(id)
 	local all_clbks = self._delayed_clbks
 
@@ -749,7 +751,7 @@ function EnemyManager:force_delayed_clbk(id)
 	debug_pause("[EnemyManager:force_delayed_clbk] id", id, "was not scheduled!!!")
 end
 
--- Lines 769-787
+-- Lines 771-789
 function EnemyManager:queued_tasks_by_callback()
 	local t = TimerManager:game():time()
 	local categorised_queued_tasks = {}
@@ -777,7 +779,7 @@ function EnemyManager:queued_tasks_by_callback()
 	end
 end
 
--- Lines 791-812
+-- Lines 793-814
 function EnemyManager:register_enemy(enemy)
 	if self._destroyed then
 		debug_pause("[EnemyManager:register_enemy] enemy manager is destroyed")
@@ -798,7 +800,7 @@ function EnemyManager:register_enemy(enemy)
 	self:on_enemy_registered(enemy)
 end
 
--- Lines 816-855
+-- Lines 818-862
 function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	if self._destroyed then
 		debug_pause("[EnemyManager:on_enemy_died] enemy manager is destroyed", dead_unit)
@@ -814,11 +816,19 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 
 	managers.mission:call_global_event("enemy_killed")
 
-	if not managers.groupai:state():is_police_called() then
-		managers.dialog:queue_dialog("player_gen_stealth_kill", {
-			skip_idle_check = true,
-			instigator = managers.player:local_player()
-		})
+	local atk_from_pos = damage_info.attacker_unit and damage_info.attacker_unit:position()
+
+	if atk_from_pos then
+		local world = managers.worldcollection:get_world_id_from_pos(atk_from_pos)
+		local alarm = managers.worldcollection:get_alarm_for_world(world)
+		local is_cool = dead_unit:movement() and dead_unit:movement():cool()
+
+		if not alarm and is_cool then
+			managers.dialog:queue_dialog("player_gen_stealth_kill", {
+				skip_idle_check = true,
+				instigator = damage_info.attacker_unit
+			})
+		end
 	end
 
 	if dead_unit:movement() then
@@ -839,8 +849,31 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	end
 end
 
--- Lines 858-868
-function EnemyManager:disable_countours_on_dead_enemies()
+-- Lines 866-886
+function EnemyManager:add_corpse_lootbag(corpse)
+	if self._destroyed then
+		debug_pause("[EnemyManager:add_corpse_lootbag] enemy manager is destroyed", corpse)
+	end
+
+	local ignore_corpse_cleanup = corpse:carry_data() and corpse:carry_data():carry_tweak_data() and corpse:carry_data():carry_tweak_data().ignore_corpse_cleanup
+
+	if ignore_corpse_cleanup then
+		Application:debug("[EnemyManager:add_corpse_lootbag] Not adding ignored corpse", inspect(corpse))
+	else
+		Application:debug("[EnemyManager:add_corpse_lootbag] Adding", inspect(corpse))
+
+		local enemy_data = self._enemy_data
+		enemy_data.nr_corpses = enemy_data.nr_corpses + 1
+		enemy_data.corpses[corpse:id()] = {
+			unit = corpse,
+			m_pos = corpse:position(),
+			death_t = self._t
+		}
+	end
+end
+
+-- Lines 890-900
+function EnemyManager:unmark_dead_enemies()
 	for _, corpse in pairs(managers.enemy._enemy_data.corpses) do
 		local unit = corpse.unit
 
@@ -854,7 +887,7 @@ function EnemyManager:disable_countours_on_dead_enemies()
 	end
 end
 
--- Lines 872-885
+-- Lines 904-917
 function EnemyManager:on_enemy_destroyed(enemy)
 	local u_key = enemy:key()
 	local u_id = enemy:id()
@@ -872,7 +905,7 @@ function EnemyManager:on_enemy_destroyed(enemy)
 	end
 end
 
--- Lines 889-893
+-- Lines 921-925
 function EnemyManager:on_enemy_registered(unit)
 	self._enemy_data.nr_units = self._enemy_data.nr_units + 1
 
@@ -880,14 +913,14 @@ function EnemyManager:on_enemy_registered(unit)
 	managers.groupai:state():on_enemy_registered(unit)
 end
 
--- Lines 897-900
+-- Lines 929-932
 function EnemyManager:on_enemy_unregistered(unit)
 	self._enemy_data.nr_units = self._enemy_data.nr_units - 1
 
 	managers.groupai:state():on_enemy_unregistered(unit)
 end
 
--- Lines 904-919
+-- Lines 936-951
 function EnemyManager:register_civilian(unit)
 	unit:base():add_destroy_listener(self._unit_clbk_key, callback(self, self, "on_civilian_destroyed"))
 	self:_create_unit_gfx_lod_data(unit, true)
@@ -903,7 +936,7 @@ function EnemyManager:register_civilian(unit)
 	}
 end
 
--- Lines 923-949
+-- Lines 955-981
 function EnemyManager:on_civilian_died(dead_unit, damage_info)
 	local u_key = dead_unit:key()
 
@@ -927,7 +960,7 @@ function EnemyManager:on_civilian_died(dead_unit, damage_info)
 	u_data.u_id = dead_unit:id()
 end
 
--- Lines 953-966
+-- Lines 985-998
 function EnemyManager:on_civilian_destroyed(enemy)
 	local u_key = enemy:key()
 	local u_id = enemy:id()
@@ -945,17 +978,17 @@ function EnemyManager:on_civilian_destroyed(enemy)
 	end
 end
 
--- Lines 970-972
+-- Lines 1002-1004
 function EnemyManager:on_criminal_registered(unit)
 	self:_create_unit_gfx_lod_data(unit, false)
 end
 
--- Lines 976-978
+-- Lines 1008-1010
 function EnemyManager:on_criminal_unregistered(u_key)
 	self:_destroy_unit_gfx_lod_data(u_key)
 end
 
--- Lines 982-1066
+-- Lines 1014-1107
 function EnemyManager:_upd_corpse_disposal()
 	if not Network:is_server() then
 		return
@@ -973,7 +1006,19 @@ function EnemyManager:_upd_corpse_disposal()
 		return
 	end
 
-	local player = managers.player:player_unit()
+	-- Lines 1033-1041
+	local function unit_remove(u_data)
+		Application:debug("[EnemyManager:_upd_corpse_disposal()] off with the corpse!", u_data.unit)
+
+		local uu = u_data.unit
+
+		if uu:base() then
+			uu:base():set_slot(uu, 0)
+		else
+			uu:set_slot(uu, 0)
+		end
+	end
+
 	local to_dispose = {}
 	local nr_found = 0
 	local no_peers = 0
@@ -1014,7 +1059,7 @@ function EnemyManager:_upd_corpse_disposal()
 			local u_data = corpses[u_key]
 
 			if alive(u_data.unit) then
-				u_data.unit:base():set_slot(u_data.unit, 0)
+				unit_remove(u_data)
 			end
 
 			corpses[u_key] = nil
@@ -1028,7 +1073,7 @@ function EnemyManager:_upd_corpse_disposal()
 		for u_key, u_data in pairs(corpses) do
 			if t - u_data.death_t > 10 then
 				if alive(u_data.unit) then
-					u_data.unit:base():set_slot(u_data.unit, 0)
+					unit_remove(u_data)
 				end
 
 				disposals_needed = disposals_needed - 1
@@ -1043,7 +1088,14 @@ function EnemyManager:_upd_corpse_disposal()
 	end
 end
 
--- Lines 1070-1083
+-- Lines 1111-1115
+function EnemyManager:set_hot_state(state)
+	self._tickrate = tweak_data.group_ai[state and "ai_tick_rate_loud" or "ai_tick_rate_stealth"]
+
+	self:set_corpse_disposal_enabled(state)
+end
+
+-- Lines 1120-1133
 function EnemyManager:set_corpse_disposal_enabled(state)
 	if not Network:is_server() then
 		return
@@ -1060,23 +1112,23 @@ function EnemyManager:set_corpse_disposal_enabled(state)
 	end
 end
 
--- Lines 1087-1089
+-- Lines 1137-1139
 function EnemyManager:is_corpse_disposal_enabled()
 	return self._corpse_disposal_enabled
 end
 
--- Lines 1093-1096
+-- Lines 1143-1145
 function EnemyManager:on_simulation_ended()
 	self._commander_active = 0
 end
 
--- Lines 1100-1102
+-- Lines 1149-1151
 function EnemyManager:on_simulation_started()
 	self._destroyed = nil
 end
 
--- Lines 1104-1109
-function EnemyManager:on_level_tranistion()
+-- Lines 1153-1158
+function EnemyManager:on_level_transition()
 	self._destroyed = nil
 
 	self:unqueue_all_tasks()
@@ -1084,7 +1136,7 @@ function EnemyManager:on_level_tranistion()
 	self:dispose_all_corpses()
 end
 
--- Lines 1113-1124
+-- Lines 1162-1173
 function EnemyManager:dispose_all_corpses()
 	if not Network:is_server() then
 		return
@@ -1099,29 +1151,36 @@ function EnemyManager:dispose_all_corpses()
 	self._enemy_data.corpses = {}
 end
 
--- Lines 1128-1146
+-- Lines 1177-1203
 function EnemyManager:save(data)
 	local my_data = nil
 	my_data = my_data or {}
 
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
-		my_data.corpses = my_data.corpses or {}
-		local corpse_data = {
-			u_data.u_id,
-			u_data.unit:movement():m_pos(),
-			u_data.is_civilian and true or false,
-			u_data.unit:interaction():active() and true or false,
-			u_data.unit:interaction().tweak_data,
-			u_data.unit:contour():is_flashing()
-		}
+		local unit = u_data.unit
 
-		table.insert(my_data.corpses, corpse_data)
+		if alive(unit) then
+			local movement = unit:movement()
+			local corpse_data = {
+				u_data.u_id,
+				movement and movement:m_pos() or unit:position(),
+				u_data.is_civilian and true or false,
+				unit:interaction():active() and true or false,
+				unit:interaction().tweak_data,
+				unit:contour() and unit:contour():is_flashing() or false
+			}
+			my_data.corpses = my_data.corpses or {}
+
+			table.insert(my_data.corpses, corpse_data)
+		else
+			Application:warn("[EnemyManager:save] Tried to use a unit that was not alive(), skipping this u_data", inspect(u_data))
+		end
 	end
 
 	data.enemy_manager = my_data
 end
 
--- Lines 1150-1178
+-- Lines 1207-1240
 function EnemyManager:load(data)
 	local my_data = data.enemy_manager
 
@@ -1140,41 +1199,45 @@ function EnemyManager:load(data)
 			local grnd_ray = World:raycast("ray", spawn_pos + Vector3(0, 0, 50), spawn_pos - Vector3(0, 0, 100), "slot_mask", managers.slot:get_mask("AI_graph_obstacle_check"), "ray_type", "walk")
 			local corpse = World:unit_manager():get_unit_by_id(u_id)
 
-			corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
+			if alive(corpse) then
+				corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
 
-			self._enemy_data.corpses[u_id] = {
-				death_t = 0,
-				unit = corpse,
-				u_id = u_id,
-				m_pos = corpse:position()
-			}
-			self._enemy_data.nr_corpses = self._enemy_data.nr_corpses + 1
+				self._enemy_data.corpses[u_id] = {
+					death_t = 0,
+					unit = corpse,
+					u_id = u_id,
+					m_pos = corpse:position()
+				}
+				self._enemy_data.nr_corpses = self._enemy_data.nr_corpses + 1
 
-			if corpse:damage() and corpse:damage():has_sequence("unfreeze_ragdoll") then
-				Application:debug("[EnemyManager:load] call unfreeze_ragdoll", corpse)
-				corpse:damage():run_sequence_simple("unfreeze_ragdoll")
-				corpse:set_extension_update_enabled(Idstring("movement"), false)
-				managers.queued_tasks:queue(nil, self._queue_freeze_ragdoll, self, {
-					corpse = corpse
-				}, 6, nil)
+				if corpse:damage() and corpse:damage():has_sequence("unfreeze_ragdoll") then
+					Application:debug("[EnemyManager:load] call unfreeze_ragdoll", corpse)
+					corpse:damage():run_sequence_simple("unfreeze_ragdoll")
+					corpse:set_extension_update_enabled(Idstring("movement"), false)
+					managers.queued_tasks:queue(nil, self._queue_freeze_ragdoll, self, {
+						corpse = corpse
+					}, 6, nil)
+				end
+			else
+				Application:warn("[EnemyManager:load] Tried to use a unit that was not alive(), skipping this corpse", corpse)
 			end
 		end
 	end
 end
 
--- Lines 1180-1185
+-- Lines 1242-1247
 function EnemyManager:_queue_freeze_ragdoll(data)
 	if alive(data.corpse) then
 		data.corpse:damage():run_sequence_simple("freeze_ragdoll")
 	end
 end
 
--- Lines 1189-1191
+-- Lines 1251-1253
 function EnemyManager:get_corpse_unit_data_from_key(u_id)
 	return self._enemy_data.corpses[u_id]
 end
 
--- Lines 1195-1201
+-- Lines 1257-1263
 function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1183,7 +1246,7 @@ function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	end
 end
 
--- Lines 1205-1212
+-- Lines 1267-1274
 function EnemyManager:remove_corpse_by_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1194,26 +1257,24 @@ function EnemyManager:remove_corpse_by_id(u_id)
 	end
 end
 
--- Lines 1214-1216
+-- Lines 1276-1278
 function EnemyManager:commander_difficulty()
 	return self._difficulty_difference or 0
 end
 
--- Lines 1218-1221
+-- Lines 1280-1283
 function EnemyManager:is_commander_active()
 	return self._commander_active and self._commander_active > 0
 end
 
--- Lines 1223-1237
+-- Lines 1285-1299
 function EnemyManager:is_spawn_group_allowed(group_type)
 	local allowed = true
 
 	if not managers.enemy:is_commander_active() then
-		for i, v in ipairs(tweak_data.group_ai.normally_forbidden_groups) do
+		for i, v in ipairs(tweak_data.group_ai.commander_backup_groups) do
 			if group_type == v then
 				allowed = false
-
-				Application:trace("[EnemyManager:is_spawn_group_allowed]   DISALLOWING", allowed, group_type, managers.enemy:is_commander_active())
 
 				break
 			end
@@ -1223,7 +1284,7 @@ function EnemyManager:is_spawn_group_allowed(group_type)
 	return allowed
 end
 
--- Lines 1241-1254
+-- Lines 1303-1329
 function EnemyManager:register_commander()
 	Application:debug("[EnemyManager:register_commander()]", self._commander_active)
 
@@ -1239,10 +1300,23 @@ function EnemyManager:register_commander()
 			Application:debug("[EnemyManager:register_commander()] setting new intensity value (old,new)", old_diff, new_diff)
 			managers.groupai:state():set_difficulty(new_diff)
 		end
+
+		local count = managers.statistics._global.killed.german_commander.count + managers.statistics._global.killed.german_og_commander.count
+
+		if count < 5 then
+			managers.hud:set_big_prompt({
+				id = "commander_arrived",
+				duration = 5,
+				title = utf8.to_upper(managers.localization:text("hint_commander_arrived")),
+				description = managers.localization:text("hint_commander_arrived_desc")
+			})
+		end
+	elseif self._commander_active > 1 then
+		Application:warn("[EnemyManager:register_commander()] More than one commander is active!!", self._commander_active)
 	end
 end
 
--- Lines 1258-1269
+-- Lines 1333-1344
 function EnemyManager:unregister_commander()
 	Application:debug("[EnemyManager:unregister_commander()]", self._commander_active)
 

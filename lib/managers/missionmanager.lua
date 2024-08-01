@@ -101,9 +101,13 @@ require("lib/managers/mission/ElementEscort")
 
 MissionManager = MissionManager or class(CoreMissionManager.MissionManager)
 
--- Lines 116-153
+-- Lines 116-157
 function MissionManager:init(...)
 	MissionManager.super.init(self, ...)
+
+	self._global_event_listener = EventListenerHolder:new()
+	self._global_event_list = {}
+
 	self:add_area_instigator_categories("player")
 	self:add_area_instigator_categories("enemies")
 	self:add_area_instigator_categories("civilians")
@@ -167,6 +171,7 @@ function MissionManager:init(...)
 		"pku_key_02",
 		"pku_key_03",
 		"pku_key_04",
+		"pku_safe_key",
 		"enigma_part_02",
 		"enigma_part_03",
 		"enigma_part_04",
@@ -188,7 +193,8 @@ function MissionManager:init(...)
 		"pku_candelabrum",
 		"pku_crucifix",
 		"pku_baptismal_font",
-		"pku_religious_figurine"
+		"pku_religious_figurine",
+		"pku_explosives"
 	})
 
 	self._mission_filter = {}
@@ -196,7 +202,31 @@ function MissionManager:init(...)
 	self:_setup()
 end
 
--- Lines 155-165
+-- Lines 159-176
+function MissionManager:post_init()
+	self._workspace = managers.gui_data:create_saferect_workspace()
+
+	self._workspace:set_timer(TimerManager:game())
+	managers.gui_data:layout_corner_saferect_workspace(self._workspace)
+	self._workspace:set_timer(TimerManager:main())
+
+	self._fading_debug_output = self._workspace:panel():gui(Idstring("core/guis/core_fading_debug_output"))
+
+	self._fading_debug_output:set_leftbottom(0, self._workspace:height() / 3)
+	self._fading_debug_output:script().configure({
+		font_size = 18,
+		max_rows = 20
+	})
+
+	self._persistent_debug_output = self._workspace:panel():gui(Idstring("core/guis/core_persistent_debug_output"))
+
+	self._persistent_debug_output:set_righttop(self._workspace:width(), 0)
+	self:set_persistent_debug_enabled(false)
+	self:set_fading_debug_enabled(true)
+	MissionManager.super.post_init(self)
+end
+
+-- Lines 178-188
 function MissionManager:_setup()
 	if not Global.mission_manager then
 		Global.mission_manager = {
@@ -208,43 +238,43 @@ function MissionManager:_setup()
 	end
 end
 
--- Lines 167-169
+-- Lines 190-192
 function MissionManager:set_saved_job_value(key, value)
 	Global.mission_manager.saved_job_values[key] = value
 end
 
--- Lines 171-173
+-- Lines 194-196
 function MissionManager:get_saved_job_value(key)
 	return Global.mission_manager.saved_job_values[key]
 end
 
--- Lines 180-182
+-- Lines 198-200
 function MissionManager:on_reset_profile()
 	Global.mission_manager.saved_job_values.playedSafeHouseBefore = nil
 end
 
--- Lines 184-187
+-- Lines 202-205
 function MissionManager:set_job_value(key, value)
 	Global.mission_manager.stage_job_values[key] = value
 end
 
--- Lines 189-191
+-- Lines 207-209
 function MissionManager:get_job_value(key)
 	return Global.mission_manager.job_values[key] or Global.mission_manager.stage_job_values[key]
 end
 
--- Lines 193-196
+-- Lines 211-214
 function MissionManager:on_job_deactivated()
 	Global.mission_manager.job_values = {}
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines 198-201
+-- Lines 216-219
 function MissionManager:on_restart_to_camp()
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines 203-209
+-- Lines 221-227
 function MissionManager:on_stage_success()
 	for key, value in pairs(Global.mission_manager.stage_job_values) do
 		Global.mission_manager.job_values[key] = value
@@ -253,27 +283,27 @@ function MissionManager:on_stage_success()
 	Global.mission_manager.stage_job_values = {}
 end
 
--- Lines 211-213
+-- Lines 229-231
 function MissionManager:set_mission_filter(mission_filter)
 	self._mission_filter = mission_filter
 end
 
--- Lines 215-217
+-- Lines 233-235
 function MissionManager:check_mission_filter(value)
 	return table.contains(self._mission_filter, value)
 end
 
--- Lines 219-221
+-- Lines 237-239
 function MissionManager:default_instigator()
 	return managers.player:player_unit()
 end
 
--- Lines 223-228
+-- Lines 241-246
 function MissionManager:activate_script(...)
 	MissionManager.super.activate_script(self, ...)
 end
 
--- Lines 230-241
+-- Lines 248-259
 function MissionManager:_get_mission_manager(mission_id)
 	local mission = nil
 
@@ -290,7 +320,7 @@ function MissionManager:_get_mission_manager(mission_id)
 	return mission
 end
 
--- Lines 243-261
+-- Lines 261-279
 function MissionManager:client_run_mission_element(mission_id, id, unit, orientation_element_index)
 	local mission = self:_get_mission_manager(mission_id)
 
@@ -321,7 +351,7 @@ function MissionManager:client_run_mission_element(mission_id, id, unit, orienta
 	})
 end
 
--- Lines 263-279
+-- Lines 281-297
 function MissionManager:sync_client_hud_timer_command(mission_id, id, orientation_element_index, command, command_value)
 	local mission = self:_get_mission_manager(mission_id)
 
@@ -340,7 +370,7 @@ function MissionManager:sync_client_hud_timer_command(mission_id, id, orientatio
 	end
 end
 
--- Lines 282-298
+-- Lines 300-316
 function MissionManager:client_run_mission_element_end_screen(mission_id, id, unit, orientation_element_index)
 	local mission = self:_get_mission_manager(mission_id)
 
@@ -362,7 +392,7 @@ function MissionManager:client_run_mission_element_end_screen(mission_id, id, un
 	end
 end
 
--- Lines 300-315
+-- Lines 318-333
 function MissionManager:server_run_mission_element_trigger(mission_id, id, unit)
 	local mission = self:_get_mission_manager(mission_id)
 
@@ -390,7 +420,7 @@ function MissionManager:server_run_mission_element_trigger(mission_id, id, unit)
 	})
 end
 
--- Lines 318-338
+-- Lines 336-356
 function MissionManager:to_server_area_event(event_id, mission_id, id, unit)
 	local mission = self:_get_mission_manager(mission_id)
 
@@ -417,7 +447,7 @@ function MissionManager:to_server_area_event(event_id, mission_id, id, unit)
 	end
 end
 
--- Lines 341-372
+-- Lines 359-390
 function MissionManager:start_root_level_script()
 	self._root_level_script_started = self._root_level_script_started or false
 
@@ -459,7 +489,7 @@ function MissionManager:start_root_level_script()
 	end
 end
 
--- Lines 396-408
+-- Lines 393-405
 function MissionManager:to_server_access_camera_trigger(mission_id, id, trigger, instigator)
 	local mission = self:_get_mission_manager(mission_id)
 
@@ -478,7 +508,7 @@ function MissionManager:to_server_access_camera_trigger(mission_id, id, trigger,
 	end
 end
 
--- Lines 410-416
+-- Lines 407-413
 function MissionManager:save_job_values(data)
 	local state = {
 		saved_job_values = Global.mission_manager.saved_job_values,
@@ -487,27 +517,30 @@ function MissionManager:save_job_values(data)
 	data.ProductMissionManager = state
 end
 
--- Lines 418-424
+-- Lines 415-422
 function MissionManager:load_job_values(data)
 	local state = data.ProductMissionManager
 
 	if state then
 		Global.mission_manager.saved_job_values = state.saved_job_values
 		Global.mission_manager.has_played_tutorial = state.has_played_tutorial
+
+		Application:debug("[MissionManager] load_job_values:", inspect(Global.mission_manager))
 	end
 end
 
--- Lines 427-432
+-- Lines 425-433
 function MissionManager:stop_simulation(...)
 	MissionManager.super.stop_simulation(self, ...)
 
+	self._global_event_listener = EventListenerHolder:new()
 	Global.mission_manager.saved_job_values = {}
 
 	self:on_job_deactivated()
 	managers.loot:reset()
 end
 
--- Lines 435-445
+-- Lines 436-446
 function MissionManager:execute_mission_element_by_name(name)
 	for _, data in pairs(self._scripts) do
 		for id, element in pairs(data:elements()) do
@@ -520,11 +553,41 @@ function MissionManager:execute_mission_element_by_name(name)
 	end
 end
 
+-- Lines 451-453
+function MissionManager:add_global_event_listener(key, events, clbk)
+	self._global_event_listener:add(key, events, clbk)
+end
+
+-- Lines 456-458
+function MissionManager:remove_global_event_listener(key)
+	self._global_event_listener:remove(key)
+end
+
+-- Lines 461-463
+function MissionManager:global_event_listener_exists(key)
+	return self._global_event_listener:listener_exists(key)
+end
+
+-- Lines 466-468
+function MissionManager:call_global_event(event, ...)
+	self._global_event_listener:call(event, ...)
+end
+
+-- Lines 471-473
+function MissionManager:set_global_event_list(list)
+	self._global_event_list = list
+end
+
+-- Lines 476-478
+function MissionManager:get_global_event_list()
+	return self._global_event_list
+end
+
 CoreClass.override_class(CoreMissionManager.MissionManager, MissionManager)
 
 MissionScript = MissionScript or class(CoreMissionManager.MissionScript)
 
--- Lines 451-462
+-- Lines 486-497
 function MissionScript:activate(...)
 	if Network:is_server() then
 		MissionScript.super.activate(self, ...)

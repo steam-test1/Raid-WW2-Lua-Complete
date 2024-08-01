@@ -26,9 +26,9 @@ function GrenadeBase:update(unit, t, dt)
 	end
 
 	if self._timer then
-		if not self._airbust_primed and self._airburst_near_enemy and self._airburst_near_enemy > 0 and self:_filtered_check_targets() then
+		if not self._airbust_primed and self._airburst_near_enemy and self:_filtered_check_targets() then
 			self._airbust_primed = true
-			self._timer = math.min(self._timer, self._tweak_data.enemy_proximity_delay or 0.4)
+			self._timer = math.min(self._timer, self._tweak_data.enemy_proximity_delay or 0.5)
 		end
 
 		self._timer = self._timer - dt
@@ -57,7 +57,6 @@ end
 
 -- Lines 60-62
 function GrenadeBase:_detonate()
-	print("no _detonate function for grenade base")
 end
 
 -- Lines 64-66
@@ -193,7 +192,7 @@ end
 
 -- Lines 167-170
 function GrenadeBase:add_ammo(ratio, add_amount_override, add_amount_multiplier)
-	return false, 0
+	return false, 0, 0
 end
 
 -- Lines 173-175
@@ -201,95 +200,111 @@ function GrenadeBase:add_ammo_from_bag(available)
 	return 0
 end
 
--- Lines 177-179
+-- Lines 177-185
 function GrenadeBase:set_hand_held(value)
 	self._hand_held = value
+
+	if value then
+		self._unit:set_slot(1)
+	else
+		self._unit:set_slot(14)
+	end
 end
 
--- Lines 181-182
+-- Lines 187-188
 function GrenadeBase:on_equip()
 end
 
--- Lines 184-185
+-- Lines 190-191
 function GrenadeBase:on_unequip()
 end
 
--- Lines 187-189
+-- Lines 193-195
 function GrenadeBase:on_enabled()
 	self._enabled = true
 end
 
--- Lines 191-193
+-- Lines 197-199
 function GrenadeBase:on_disabled()
 	self._enabled = false
 end
 
--- Lines 195-197
+-- Lines 201-203
 function GrenadeBase:enabled()
 	return self._enabled
 end
 
--- Lines 199-201
+-- Lines 205-207
 function GrenadeBase:get_stance_id()
 	return self:weapon_tweak_data().stance
 end
 
--- Lines 203-205
+-- Lines 209-211
 function GrenadeBase:transition_duration()
 	return self:weapon_tweak_data().transition_duration
 end
 
--- Lines 208-210
+-- Lines 214-216
 function GrenadeBase:enter_steelsight_speed_multiplier()
 	return 1
 end
 
--- Lines 212-214
+-- Lines 218-220
 function GrenadeBase:exit_run_speed_multiplier()
 	return self:weapon_tweak_data().exit_run_speed_multiplier
 end
 
--- Lines 216-218
+-- Lines 222-224
 function GrenadeBase:weapon_tweak_data()
 	return tweak_data.projectiles[self.name_id]
 end
 
--- Lines 220-222
+-- Lines 226-228
 function GrenadeBase:weapon_hold()
 	return self:weapon_tweak_data().weapon_hold
 end
 
--- Lines 224-226
+-- Lines 230-232
+function GrenadeBase:category()
+	return self:weapon_tweak_data().category
+end
+
+-- Lines 234-236
+function GrenadeBase:is_category(category)
+	return self:category() == category
+end
+
+-- Lines 238-240
 function GrenadeBase:selection_index()
 	return PlayerInventory.SLOT_3
 end
 
--- Lines 228-230
+-- Lines 242-244
 function GrenadeBase:has_range_distance_scope()
 	return false
 end
 
--- Lines 232-234
+-- Lines 246-248
 function GrenadeBase:set_visibility_state(state)
 	self._unit:set_visible(state)
 end
 
--- Lines 236-238
+-- Lines 250-252
 function GrenadeBase:movement_penalty()
 	return self:weapon_tweak_data().weapon_movement_penalty or 1
 end
 
--- Lines 240-242
+-- Lines 254-256
 function GrenadeBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines 244-246
+-- Lines 258-260
 function GrenadeBase:start_shooting_allowed()
 	return true
 end
 
--- Lines 248-252
+-- Lines 262-266
 function GrenadeBase:save(data)
 	local state = {
 		timer = self._timer
@@ -297,18 +312,18 @@ function GrenadeBase:save(data)
 	data.GrenadeBase = state
 end
 
--- Lines 254-257
+-- Lines 268-271
 function GrenadeBase:load(data)
 	local state = data.GrenadeBase
 	self._timer = state.timer
 end
 
--- Lines 260-262
+-- Lines 274-276
 function GrenadeBase:uses_ammo()
 	return false
 end
 
--- Lines 264-267
+-- Lines 278-281
 function GrenadeBase:replenish()
 	local name, amount = managers.blackmarket:equipped_grenade()
 

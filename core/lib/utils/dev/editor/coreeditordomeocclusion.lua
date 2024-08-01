@@ -44,7 +44,8 @@ function CoreEditor:_create_dome_occlusion(params)
 	self._show_center = false
 
 	self:on_hide_helper_units({
-		vis = false
+		vis = false,
+		ignore_max_per_frame = true
 	})
 
 	self._saved_hidden_object = {}
@@ -146,7 +147,7 @@ function CoreEditor:generate_dome_occlusion(path)
 	Application:screenshot(path .. self._dome_occlusion_params.file_name .. ".tga", x1, y1, x2, y2)
 end
 
--- Lines 143-158
+-- Lines 143-157
 function CoreEditor:_convert_dome_occlusion()
 	local path = self._dome_occlusion_params.output_path .. "\\"
 	local execute = managers.database:root_path() .. "aux_assets/engine/tools/spotmapgen.bat "
@@ -162,7 +163,7 @@ function CoreEditor:_convert_dome_occlusion()
 	self._camera_controller:_add_meta_data(output_path, "colormap_no_alpha_no_mips")
 end
 
--- Lines 161-216
+-- Lines 160-205
 function CoreEditor:dome_occlusion_done()
 	if not self._dome_occlusion_params then
 		Application:error("CoreEditor:dome_occlusion_done. Generate has not been started")
@@ -189,7 +190,8 @@ function CoreEditor:dome_occlusion_done()
 	self._show_center = self._saved_show_center
 
 	self:on_hide_helper_units({
-		vis = true
+		vis = true,
+		ignore_max_per_frame = false
 	})
 
 	for _, obj in ipairs(self._saved_hidden_object) do

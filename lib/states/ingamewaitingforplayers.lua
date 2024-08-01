@@ -3,17 +3,16 @@ require("lib/states/GameState")
 
 IngameWaitingForPlayersState = IngameWaitingForPlayersState or class(GameState)
 
--- Lines 7-15
+-- Lines 7-13
 function IngameWaitingForPlayersState:init(game_state_machine)
 	GameState.init(self, "ingame_waiting_for_players", game_state_machine)
 
-	self._intro_source = SoundDevice:create_source("intro_source")
 	self._start_cb = callback(self, self, "_start")
 	self._skip_cb = callback(self, self, "_skip")
 	self._controller = nil
 end
 
--- Lines 17-32
+-- Lines 15-30
 function IngameWaitingForPlayersState:setup_controller()
 	if not self._controller then
 		self._controller = managers.controller:create_controller("waiting_for_players", managers.controller:get_default_wrapper_index(), false)
@@ -32,14 +31,14 @@ function IngameWaitingForPlayersState:setup_controller()
 	end
 end
 
--- Lines 34-38
+-- Lines 32-36
 function IngameWaitingForPlayersState:set_controller_enabled(enabled)
 	if self._controller then
 		-- Nothing
 	end
 end
 
--- Lines 40-55
+-- Lines 38-53
 function IngameWaitingForPlayersState:_skip()
 	if not Network:is_server() then
 		return
@@ -57,15 +56,14 @@ function IngameWaitingForPlayersState:_skip()
 	managers.network:session():send_to_peers_synched("sync_waiting_for_player_skip")
 end
 
--- Lines 57-63
+-- Lines 55-59
 function IngameWaitingForPlayersState:sync_skip()
 	self._skipped = true
 
-	managers.briefing:stop_event(true)
 	self:_start_delay()
 end
 
--- Lines 65-73
+-- Lines 61-69
 function IngameWaitingForPlayersState:_start()
 	if not Network:is_server() then
 		return
@@ -77,48 +75,20 @@ function IngameWaitingForPlayersState:_start()
 	managers.network:session():send_to_peers_synched("sync_waiting_for_player_start", variant, Global.music_manager.current_track)
 end
 
--- Lines 75-107
+-- Lines 71-78
 function IngameWaitingForPlayersState:sync_start(variant, soundtrack)
 	self._briefing_start_t = nil
-
-	managers.briefing:stop_event()
-
 	self._blackscreen_started = true
 
-	if self._intro_event then
-		self._delay_audio_t = Application:time() + 1
-	else
-		self:_start_delay()
-	end
+	self:_start_delay()
 end
 
--- Lines 109-111
+-- Lines 80-82
 function IngameWaitingForPlayersState:blackscreen_started()
 	return self._blackscreen_started or false
 end
 
--- Lines 113-132
-function IngameWaitingForPlayersState:_start_audio()
-	self._intro_cue_index = 1
-	self._audio_started = true
-	local event_started = managers.briefing:post_event(self._intro_event, {
-		show_subtitle = true,
-		listener = {
-			end_of_event = true,
-			clbk = callback(self, self, "_audio_done")
-		}
-	})
-
-	if not event_started then
-		print("failed to start audio, or played safehouse before")
-
-		if Network:is_server() then
-			self:_start_delay()
-		end
-	end
-end
-
--- Lines 134-139
+-- Lines 84-89
 function IngameWaitingForPlayersState:_start_delay()
 	if self._delay_start_t then
 		return
@@ -127,7 +97,7 @@ function IngameWaitingForPlayersState:_start_delay()
 	self._delay_start_t = Application:time() + 1
 end
 
--- Lines 142-164
+-- Lines 92-98
 function IngameWaitingForPlayersState:_audio_done(event_type, label, cookie)
 	self:_create_blackscreen_loading_icon()
 
@@ -136,12 +106,12 @@ function IngameWaitingForPlayersState:_audio_done(event_type, label, cookie)
 	end
 end
 
--- Lines 166-168
+-- Lines 100-102
 function IngameWaitingForPlayersState:_briefing_callback(event_type, label, cookie)
 	print("[IngameWaitingForPlayersState]", "event_type", event_type, "label", label, "cookie", cookie)
 end
 
--- Lines 177-268
+-- Lines 104-188
 function IngameWaitingForPlayersState:update(t, dt)
 	if not managers.network:session() then
 		return
@@ -167,12 +137,6 @@ function IngameWaitingForPlayersState:update(t, dt)
 
 	if self._briefing_start_t and self._briefing_start_t < t then
 		self._briefing_start_t = nil
-	end
-
-	if self._delay_audio_t and self._delay_audio_t < t then
-		self._delay_audio_t = nil
-
-		self:_start_audio()
 	end
 
 	if self._delay_start_t then
@@ -225,17 +189,17 @@ function IngameWaitingForPlayersState:update(t, dt)
 	end
 end
 
--- Lines 270-272
+-- Lines 190-192
 function IngameWaitingForPlayersState:intro_video_playing()
 	return alive(self._intro_video)
 end
 
--- Lines 274-276
+-- Lines 194-196
 function IngameWaitingForPlayersState:intro_video_done()
 	return self._intro_video:loop_count() >= 1
 end
 
--- Lines 278-286
+-- Lines 198-206
 function IngameWaitingForPlayersState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -246,7 +210,7 @@ function IngameWaitingForPlayersState:is_skipped()
 	return false
 end
 
--- Lines 288-366
+-- Lines 208-276
 function IngameWaitingForPlayersState:at_enter()
 	self._started_from_beginning = true
 
@@ -318,7 +282,7 @@ function IngameWaitingForPlayersState:at_enter()
 	end
 end
 
--- Lines 368-412
+-- Lines 278-318
 function IngameWaitingForPlayersState:show_intro_video()
 	local params_root_panel = {
 		is_root_panel = true,
@@ -330,7 +294,7 @@ function IngameWaitingForPlayersState:show_intro_video()
 		background_color = Color.black
 	}
 	self._panel = RaidGUIPanel:new(self._full_panel, params_root_panel)
-	local video = "movies/vanilla/intro/global/01_intro_v014"
+	local video = "movies/vanilla/intro/01_intro_v014"
 	local intro_video_params = {
 		layer = self._panel:layer() + 1,
 		video = video,
@@ -361,7 +325,7 @@ function IngameWaitingForPlayersState:show_intro_video()
 	press_any_key_prompt:animate(callback(self, self, "_animate_show_press_any_key_prompt"))
 end
 
--- Lines 414-429
+-- Lines 320-335
 function IngameWaitingForPlayersState:_animate_show_press_any_key_prompt(prompt)
 	local duration = 0.7
 	local t = 0
@@ -379,7 +343,7 @@ function IngameWaitingForPlayersState:_animate_show_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.75)
 end
 
--- Lines 433-457
+-- Lines 339-363
 function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	if not managers.network:session() then
 		self._file_streamer_max_workload = nil
@@ -410,14 +374,14 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 end
 
--- Lines 461-467
+-- Lines 367-373
 function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	if not self._skip_promt_shown and not self._file_streamer_max_workload and not managers.menu:active_menu() and managers.network:session() and managers.network:session():are_peers_done_streaming() then
 		self._skip_promt_shown = true
 	end
 end
 
--- Lines 469-476
+-- Lines 375-382
 function IngameWaitingForPlayersState:start_game_intro()
 	if self._starting_game_intro then
 		return
@@ -428,20 +392,20 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines 479-485
+-- Lines 385-390
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 	Global.statistics_manager.playing_from_start = nil
 
-	print("Joining as " .. char_name)
+	Application:debug("[IngameWaitingForPlayersState:set_dropin()] Joining as " .. char_name or "NIL")
 end
 
--- Lines 487-489
+-- Lines 392-394
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines 491-540
+-- Lines 396-431
 function IngameWaitingForPlayersState:at_exit()
 	Application:debug("[IngameWaitingForPlayersState:at_exit()]")
 
@@ -451,7 +415,6 @@ function IngameWaitingForPlayersState:at_exit()
 		managers.dyn_resource:remove_listener(self)
 	end
 
-	managers.briefing:stop_event(true)
 	managers.menu:close_menu("kit_menu")
 
 	if self._sound_listener then
@@ -482,7 +445,7 @@ function IngameWaitingForPlayersState:at_exit()
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
 end
 
--- Lines 542-544
+-- Lines 433-435
 function IngameWaitingForPlayersState:is_joinable()
 	return false
 end

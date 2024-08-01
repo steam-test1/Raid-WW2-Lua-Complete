@@ -21,7 +21,7 @@ end
 
 -- Lines 22-29
 function CharacterCustomizationFps:_attach_unit(slot, name)
-	managers.dyn_resource:load(Idstring("unit"), Idstring(name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_part_loaded_callback", {
+	managers.dyn_resource:load(IDS_UNIT, Idstring(name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_part_loaded_callback", {
 		name = name,
 		slot = slot
 	}))

@@ -5,7 +5,7 @@ function RaidGUIControlGrenadeWeaponStats:init(parent, params)
 	RaidGUIControlGrenadeWeaponStats.super.init(self, parent, params)
 end
 
--- Lines 7-13
+-- Lines 7-14
 function RaidGUIControlGrenadeWeaponStats:_set_default_values()
 	self._values = {
 		damage = {
@@ -19,11 +19,15 @@ function RaidGUIControlGrenadeWeaponStats:_set_default_values()
 		distance = {
 			value = "000",
 			text = self:translate("menu_weapons_stats_grenade_throw", true)
+		},
+		capacity = {
+			value = "0-00",
+			text = self:translate("menu_weapons_stats_grenade_capacity", true)
 		}
 	}
 end
 
--- Lines 15-22
+-- Lines 16-24
 function RaidGUIControlGrenadeWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
@@ -40,17 +44,23 @@ function RaidGUIControlGrenadeWeaponStats:_get_tabs_params()
 			name = "distance",
 			text = self._values.distance.text,
 			value = self._values.distance.value
+		},
+		{
+			name = "capacity",
+			text = self._values.capacity.text,
+			value = self._values.capacity.value
 		}
 	}
 
 	return tabs_params
 end
 
--- Lines 24-36
-function RaidGUIControlGrenadeWeaponStats:set_stats(damage, range, distance)
+-- Lines 26-39
+function RaidGUIControlGrenadeWeaponStats:set_stats(damage, range, distance, capacity)
 	self._values.damage.value = damage
 	self._values.range.value = range
 	self._values.distance.value = distance
+	self._values.capacity.value = capacity
 
 	for _, item in ipairs(self._items) do
 		local name = item:name()
@@ -60,59 +70,59 @@ function RaidGUIControlGrenadeWeaponStats:set_stats(damage, range, distance)
 	end
 end
 
--- Lines 38-40
+-- Lines 41-43
 function RaidGUIControlGrenadeWeaponStats:refresh_data()
 	Application:trace("[RaidGUIControlGrenadeWeaponStats:refresh_data]")
 end
 
--- Lines 42-43
+-- Lines 45-46
 function RaidGUIControlGrenadeWeaponStats:_create_bottom_line()
 end
 
--- Lines 45-46
+-- Lines 48-49
 function RaidGUIControlGrenadeWeaponStats:_initial_tab_selected(tab_idx)
 end
 
--- Lines 48-49
+-- Lines 51-52
 function RaidGUIControlGrenadeWeaponStats:_tab_selected(tab_idx, callback_param)
 end
 
--- Lines 51-52
+-- Lines 54-55
 function RaidGUIControlGrenadeWeaponStats:_unselect_all()
 end
 
--- Lines 58-61
+-- Lines 61-64
 function RaidGUIControlGrenadeWeaponStats:set_selected(value)
 	Application:error("[RaidGUIControlGrenadeWeaponStats:set_selected] weapon stats control can't be selected")
 
 	self._selected = false
 end
 
--- Lines 63-64
+-- Lines 66-67
 function RaidGUIControlGrenadeWeaponStats:move_up()
 end
 
--- Lines 66-67
+-- Lines 69-70
 function RaidGUIControlGrenadeWeaponStats:move_down()
 end
 
--- Lines 69-70
+-- Lines 72-73
 function RaidGUIControlGrenadeWeaponStats:move_left()
 end
 
--- Lines 72-73
+-- Lines 75-76
 function RaidGUIControlGrenadeWeaponStats:move_right()
 end
 
--- Lines 76-77
+-- Lines 79-80
 function RaidGUIControlGrenadeWeaponStats:highlight_on()
 end
 
--- Lines 79-80
+-- Lines 82-83
 function RaidGUIControlGrenadeWeaponStats:highlight_off()
 end
 
--- Lines 82-84
+-- Lines 85-87
 function RaidGUIControlGrenadeWeaponStats:mouse_released(o, button, x, y)
 	return false
 end

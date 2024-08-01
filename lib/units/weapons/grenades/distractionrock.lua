@@ -1,6 +1,6 @@
 DistractionRock = DistractionRock or class(GrenadeBase)
 
--- Lines 8-23
+-- Lines 4-19
 function DistractionRock:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -18,17 +18,17 @@ function DistractionRock:_setup_from_tweak_data()
 	}
 end
 
--- Lines 28-30
+-- Lines 24-26
 function DistractionRock:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	Application:debug("[DistractionRock:clbk_impact]", tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines 32-34
+-- Lines 28-30
 function DistractionRock:_on_collision(col_ray)
 	Application:debug("[DistractionRock:_on_collision]")
 end
 
--- Lines 36-162
+-- Lines 32-158
 function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._hand_held then
 		return
@@ -111,7 +111,7 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	end
 end
 
--- Lines 164-202
+-- Lines 160-198
 function DistractionRock:clbk_pathing_results(search_id, path)
 	Application:debug("[DistractionRock:clbk_pathing_results] Whoop", search_id, path)
 
@@ -150,7 +150,7 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 	end
 end
 
--- Lines 218-226
+-- Lines 214-222
 function DistractionRock:_abort_all_unfinished_pathing()
 	for search_id, search in pairs(self._pathing_searches) do
 		if not search.finished then
@@ -159,16 +159,16 @@ function DistractionRock:_abort_all_unfinished_pathing()
 	end
 end
 
--- Lines 230-231
+-- Lines 226-227
 function DistractionRock:_detonate_on_client()
 end
 
--- Lines 235-237
+-- Lines 231-233
 function DistractionRock:bullet_hit()
 	Application:debug("[DistractionRock:bullet_hit]")
 end
 
--- Lines 241-256
+-- Lines 237-252
 function DistractionRock:set_attention_state(state)
 	if state then
 		if not self._attention_setting then
@@ -190,7 +190,7 @@ function DistractionRock:set_attention_state(state)
 	end
 end
 
--- Lines 258-264
+-- Lines 254-260
 function DistractionRock:update_attention_settings(descriptor)
 	local tweak_data = tweak_data.attention.settings[descriptor]
 

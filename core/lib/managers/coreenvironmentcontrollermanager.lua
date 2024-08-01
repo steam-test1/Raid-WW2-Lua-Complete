@@ -392,7 +392,7 @@ function CoreEnvironmentControllerManager:set_lut_lerp_value(lut_lerp_value)
 	self._lut_lerp_value = lut_lerp_value
 end
 
--- Lines 441-587
+-- Lines 441-590
 function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -448,7 +448,7 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 		self._hit_back = math.max(self._hit_back - hit_fade, 0)
 	end
 
-	local downed_value = self._downed_value / 100 * 0.5
+	local downed_value = self._downed_value / 100
 
 	if self._custom_dof_settings then
 		self._material:set_variable(ids_dof_settings, self._custom_dof_settings)
@@ -521,19 +521,19 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 	self._lut_modifier_material:set_variable(ids_low_health_params, Vector3(low_health_effect, low_health_effect_power, self._vignette))
 end
 
--- Lines 589-598
+-- Lines 592-602
 function CoreEnvironmentControllerManager:_update_post_process_effects()
-	self:set_volumetric_light_scatter_setting(managers.user:get_setting("vls_setting"))
-	self:set_motion_blur_setting(managers.user:get_setting("motion_blur_setting"))
-	self:set_ssao_setting(managers.user:get_setting("ssao_setting"))
-	self:set_AA_setting(managers.user:get_setting("AA_setting"))
-	self:set_colorblind_mode(managers.user:get_setting("colorblind_setting"))
-	self:set_parallax_setting(managers.user:get_setting("use_parallax"))
+	self:set_volumetric_light_scatter_setting(managers.user and managers.user:get_setting("vls_setting") or 0)
+	self:set_motion_blur_setting(managers.user and managers.user:get_setting("motion_blur_setting") or 0)
+	self:set_ssao_setting(managers.user and managers.user:get_setting("ssao_setting") or 0)
+	self:set_AA_setting(managers.user and managers.user:get_setting("AA_setting") or false)
+	self:set_colorblind_mode(managers.user and managers.user:get_setting("colorblind_setting") or "off")
+	self:set_parallax_setting(managers.user and managers.user:get_setting("use_parallax") or true)
 	self._vp:vp():set_post_processor_effect("World", Idstring("color_grading_post"), Idstring("colorgrade"))
 	managers.viewport:first_active_viewport():set_force_feeder_update()
 end
 
--- Lines 600-618
+-- Lines 604-622
 function CoreEnvironmentControllerManager:_create_dof_tweak_data()
 	local new_dof_settings = {
 		none = {
@@ -556,7 +556,7 @@ function CoreEnvironmentControllerManager:_create_dof_tweak_data()
 	self._dof_tweaks = new_dof_settings
 end
 
--- Lines 620-631
+-- Lines 624-635
 function CoreEnvironmentControllerManager:set_AA_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -571,7 +571,7 @@ function CoreEnvironmentControllerManager:set_AA_setting(setting)
 	end
 end
 
--- Lines 633-638
+-- Lines 637-642
 function CoreEnvironmentControllerManager:set_parallax_setting(setting)
 	local global_material = Application:global_material()
 
@@ -580,7 +580,7 @@ function CoreEnvironmentControllerManager:set_parallax_setting(setting)
 	end
 end
 
--- Lines 640-649
+-- Lines 644-653
 function CoreEnvironmentControllerManager:set_dof_setting(setting)
 	if not self._dof_tweaks[setting] then
 		Application:error("[CoreEnvironmentControllerManager:set_dof_setting] DOF setting do not exist!", setting)
@@ -595,7 +595,7 @@ function CoreEnvironmentControllerManager:set_dof_setting(setting)
 	end
 end
 
--- Lines 651-659
+-- Lines 655-665
 function CoreEnvironmentControllerManager:set_colorblind_mode(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -605,10 +605,12 @@ function CoreEnvironmentControllerManager:set_colorblind_mode(setting)
 		cb_correction:set_visibility(setting ~= "off")
 	end
 
-	World:set_colorblind_mode(Idstring(setting))
+	if type(setting) == "string" then
+		World:set_colorblind_mode(Idstring(setting))
+	end
 end
 
--- Lines 661-692
+-- Lines 667-698
 function CoreEnvironmentControllerManager:set_ssao_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -645,7 +647,7 @@ function CoreEnvironmentControllerManager:set_ssao_setting(setting)
 	end
 end
 
--- Lines 694-702
+-- Lines 700-708
 function CoreEnvironmentControllerManager:set_motion_blur_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -658,7 +660,7 @@ function CoreEnvironmentControllerManager:set_motion_blur_setting(setting)
 	end
 end
 
--- Lines 704-719
+-- Lines 710-725
 function CoreEnvironmentControllerManager:set_volumetric_light_scatter_setting(setting)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -678,7 +680,7 @@ function CoreEnvironmentControllerManager:set_volumetric_light_scatter_setting(s
 	end
 end
 
--- Lines 721-736
+-- Lines 727-742
 function CoreEnvironmentControllerManager:remove_dof_tweak_data(remove_setting_name)
 	if not self._dof_tweaks[new_setting_name] then
 		Application:error("[CoreEnvironmentControllerManager:remove_dof_tweak_data] DOF setting do not exist!", remove_setting_name)
@@ -697,7 +699,7 @@ function CoreEnvironmentControllerManager:remove_dof_tweak_data(remove_setting_n
 	end
 end
 
--- Lines 738-745
+-- Lines 744-751
 function CoreEnvironmentControllerManager:add_dof_tweak_data(new_setting_name, new_setting_tweak_data)
 	if self._dof_tweaks[new_setting_name] then
 		Application:error("[CoreEnvironmentControllerManager:add_dof_tweak_data] DOF setting already exists!", new_setting_name)
@@ -708,7 +710,7 @@ function CoreEnvironmentControllerManager:add_dof_tweak_data(new_setting_name, n
 	self._dof_tweaks[new_setting_name] = new_setting_tweak_data
 end
 
--- Lines 747-813
+-- Lines 753-819
 function CoreEnvironmentControllerManager:_update_dof(t, dt)
 	local mvec_set = mvector3.set_static
 	local mvec = mvec1
@@ -773,7 +775,7 @@ function CoreEnvironmentControllerManager:_update_dof(t, dt)
 	end
 end
 
--- Lines 815-829
+-- Lines 821-835
 function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration)
 	local flash = self:test_line_of_sight(flashbang_pos + flashbang_test_offset, 200, 1000, 3000)
 	self._flashbang_duration = duration
@@ -790,13 +792,13 @@ function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_s
 	})
 end
 
--- Lines 831-835
+-- Lines 837-841
 function CoreEnvironmentControllerManager:set_flashbang_multiplier(multiplier)
 	self._flashbang_multiplier = multiplier ~= 0 and multiplier or 1
 	self._flashbang_multiplier = 1 + (1 - self._flashbang_multiplier) * 2
 end
 
--- Lines 837-895
+-- Lines 843-901
 function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_distance, dot_distance, max_distance)
 	local tmp_vec1 = Vector3()
 	local tmp_vec2 = Vector3()
@@ -848,17 +850,17 @@ function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_dista
 	return flash
 end
 
--- Lines 897-899
+-- Lines 903-905
 function CoreEnvironmentControllerManager:set_dof_override(mode)
 	self._dof_override = mode
 end
 
--- Lines 901-903
+-- Lines 907-909
 function CoreEnvironmentControllerManager:get_dof_override_ranges()
 	return self._dof_override_near, self._dof_override_near_pad, self._dof_override_far, self._dof_override_far_pad
 end
 
--- Lines 905-910
+-- Lines 911-916
 function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad, far, far_pad)
 	self._dof_override_near = near
 	self._dof_override_near_pad = near_pad
@@ -866,7 +868,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad
 	self._dof_override_far_pad = far_pad
 end
 
--- Lines 913-930
+-- Lines 919-936
 function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(time, near, near_pad, far, far_pad)
 	self:set_dof_override(true)
 
@@ -887,7 +889,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(tim
 	}
 end
 
--- Lines 932-936
+-- Lines 938-942
 function CoreEnvironmentControllerManager:set_dome_occ_default()
 	local area = 20000
 	local occ_texture = "core/textures/dome_occ_test"
@@ -895,7 +897,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_default()
 	self:set_dome_occ_params(Vector3(-(area * 0.5), -(area * 0.5), 0), Vector3(area, area, 1200), occ_texture)
 end
 
--- Lines 938-946
+-- Lines 944-952
 function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size, occ_texture)
 	self._occ_dirty = true
 	self._occ_pos = occ_pos
@@ -904,7 +906,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size,
 	self._occ_texture = occ_texture
 end
 
--- Lines 948-972
+-- Lines 954-978
 function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 	local deferred_processor = (vp or self._vp):vp():get_post_processor_effect("World", Idstring("deferred"))
 
@@ -924,31 +926,31 @@ function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 		local shadow = deferred_processor:modifier(Idstring("move_global_occ"))
 
 		if shadow then
-			local dome_occ_feed_ps3 = shadow:material()
+			local dome_occ_feed_global = shadow:material()
 
-			if dome_occ_feed_ps3 then
-				Application:set_material_texture(dome_occ_feed_ps3, Idstring("filter_color_texture"), Idstring(self._occ_texture), Idstring("normal"), 0)
+			if dome_occ_feed_global then
+				Application:set_material_texture(dome_occ_feed_global, Idstring("filter_color_texture"), Idstring(self._occ_texture), Idstring("normal"), 0)
 			end
 		end
 	end
 end
 
--- Lines 975-977
+-- Lines 981-983
 function CoreEnvironmentControllerManager:set_custom_dof_settings(custom_dof_settings)
 	self._custom_dof_settings = custom_dof_settings
 end
 
--- Lines 979-981
+-- Lines 985-987
 function CoreEnvironmentControllerManager:set_base_contrast(base_contrast)
 	self._base_contrast = base_contrast
 end
 
--- Lines 983-985
+-- Lines 989-991
 function CoreEnvironmentControllerManager:base_contrast()
 	return self._base_contrast
 end
 
--- Lines 987-990
+-- Lines 993-996
 function CoreEnvironmentControllerManager:feed_param_underlay(material_name, param_name, param_value)
 	local material = Underlay:material(Idstring(material_name))
 

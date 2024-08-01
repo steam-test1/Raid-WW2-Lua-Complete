@@ -1,8 +1,9 @@
 CoreEnvEditor = CoreEnvEditor or class()
 
--- Lines 3-136
+-- Lines 8-145
 function CoreEnvEditor:create_interface()
-	local gui = self:add_sky_param("sun_ray_color", EnvEdColorBox:new(self, self:get_tab("Global illumination"), "Sun color"))
+	local gui = nil
+	gui = self:add_sky_param("sun_ray_color", EnvEdColorBox:new(self, self:get_tab("Global illumination"), "Sun color"))
 
 	self:add_gui_element(gui, "Global illumination", "Global lighting")
 
@@ -163,6 +164,6 @@ function CoreEnvEditor:create_interface()
 	self:add_gui_element(gui, "Global textures", "Colorgrade")
 end
 
--- Lines 138-140
+-- Lines 147-149
 function CoreEnvEditor:create_simple_interface()
 end

@@ -5,25 +5,28 @@ function VehicleStateLocked:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines 9-17
+-- Lines 9-19
 function VehicleStateLocked:enter(state_data, enter_data)
 	self._unit:vehicle_driving():_stop_engine_sound()
 	self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
 	self:disable_interactions()
-	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+
+	if Network:is_server() then
+		self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+	end
 end
 
--- Lines 21-23
+-- Lines 23-25
 function VehicleStateLocked:allow_exit()
 	return true
 end
 
--- Lines 27-29
+-- Lines 29-31
 function VehicleStateLocked:stop_vehicle()
 	return true
 end
 
--- Lines 33-35
+-- Lines 35-37
 function VehicleStateLocked:is_vulnerable()
 	return false
 end

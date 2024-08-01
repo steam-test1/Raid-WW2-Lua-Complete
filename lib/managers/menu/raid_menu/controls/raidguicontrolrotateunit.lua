@@ -120,7 +120,7 @@ function RaidGUIControlRotateUnit:update(t, dt)
 	local menu_controller = managers.menu:get_controller()
 
 	if not managers.menu:is_pc_controller() and menu_controller then
-		self:_rotate_unit_by(menu_controller:get_input_axis("look").x * 4)
+		self:_rotate_unit_by(menu_controller:get_input_axis("look").x * 0.4)
 	end
 end
 

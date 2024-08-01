@@ -116,7 +116,7 @@ function HuskTeamAIDamage:damage_melee(attack_data)
 			attacker = self._unit
 		end
 
-		self._unit:network():send_to_host("damage_melee", attacker, damage_percent, 1, hit_offset_height, 0)
+		self._unit:network():send_to_host("damage_melee", attacker, damage_percent, 1, 0, hit_offset_height, 0, self._dead and true or false)
 		self:_send_damage_drama(attack_data, damage_abs)
 	end
 end
@@ -389,29 +389,7 @@ function HuskTeamAIDamage:unpause_bleed_out()
 	self._unit:network():send_to_host("unpause_bleed_out")
 end
 
--- Lines 343-348
-function HuskTeamAIDamage:pause_arrested_timer()
-	if self._dead then
-		return
-	end
-
-	self._unit:network():send_to_host("pause_arrested_timer")
-end
-
--- Lines 350-358
-function HuskTeamAIDamage:unpause_arrested_timer()
-	if self._dead then
-		return
-	end
-
-	if self._unit:id() == -1 then
-		return
-	end
-
-	self._unit:network():send_to_host("unpause_arrested_timer")
-end
-
--- Lines 362-370
+-- Lines 345-354
 function HuskTeamAIDamage:_on_bleedout(from_dropin)
 	self._bleed_out = true
 	self._fatal = nil
@@ -423,7 +401,7 @@ function HuskTeamAIDamage:_on_bleedout(from_dropin)
 	end
 end
 
--- Lines 374-382
+-- Lines 358-367
 function HuskTeamAIDamage:_on_fatal(from_dropin)
 	self._fatal = true
 
@@ -436,7 +414,7 @@ function HuskTeamAIDamage:_on_fatal(from_dropin)
 	self._bleed_out = nil
 end
 
--- Lines 386-392
+-- Lines 371-377
 function HuskTeamAIDamage:_on_death()
 	self._dead = true
 	self._bleed_out = nil
@@ -446,7 +424,7 @@ function HuskTeamAIDamage:_on_death()
 	self:_unregister_unit()
 end
 
--- Lines 396-410
+-- Lines 381-395
 function HuskTeamAIDamage:load(data)
 	if not data.char_dmg then
 		return
@@ -465,7 +443,7 @@ function HuskTeamAIDamage:load(data)
 	end
 end
 
--- Lines 412-422
+-- Lines 397-407
 function HuskTeamAIDamage:run_queued_teammate_panel_update()
 	if self._queued_teammate_panel_update then
 		if self._queued_teammate_panel_update == "bleedout" then

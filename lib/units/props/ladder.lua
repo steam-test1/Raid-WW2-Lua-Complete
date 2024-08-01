@@ -5,13 +5,101 @@ Ladder.ladder_index = 1
 Ladder.LADDERS_PER_FRAME = 100
 Ladder.DEBUG = false
 Ladder.EVENT_IDS = {}
+LadderExtended = LadderExtended or class(Ladder)
 
--- Lines 10-12
+-- Lines 14-29
+function LadderExtended:init(unit)
+	LadderExtended.super.init(self, unit)
+
+	self.g_top = not not self.g_top and Idstring(self.g_top) or false
+	self.g_mid = not not self.g_mid and Idstring(self.g_mid) or false
+	self.g_bot = not not self.g_bot and Idstring(self.g_bot) or false
+	self.g_top_height = self.g_top_height or 25
+	self.g_mid_height = self.g_mid_height or 25
+	self.g_bot_height = self.g_bot_height or 25
+	self.prop_yaw = self.prop_yaw or 180
+	self._ladder_graphics_spawned = 0
+	self._ladder_graphics = {}
+end
+
+-- Lines 31-34
+function LadderExtended:destroy(unit)
+	self:despawn_prop_units()
+	LadderExtended.super.destroy(self, unit)
+end
+
+-- Lines 36-43
+function LadderExtended:set_height(v)
+	LadderExtended.super.set_height(self, v)
+
+	if self._ladder_graphics_spawned > 0 then
+		self:despawn_prop_units()
+		self:spawn_prop_units()
+	end
+end
+
+-- Lines 45-57
+function LadderExtended:set_enabled(enabled, show_props)
+	LadderExtended.super.set_enabled(self, enabled)
+
+	if show_props == nil then
+		return
+	end
+
+	if not self._enabled and self._ladder_graphics_spawned > 0 then
+		self:despawn_prop_units()
+	elseif self._enabled then
+		self:spawn_prop_units()
+	end
+end
+
+-- Lines 60-67
+function LadderExtended:despawn_prop_units()
+	for _, unit in ipairs(self._ladder_graphics) do
+		if alive(unit) then
+			unit:set_slot(0)
+		end
+	end
+
+	self._ladder_graphics_spawned = 0
+end
+
+-- Lines 70-98
+function LadderExtended:spawn_prop_units()
+	local mid_parts = math.floor((self._height - self.g_bot_height - self.g_top_height - self._exit_on_top_offset - 10) / self.g_mid_height)
+	local rot = self._ladder_orientation_obj:rotation()
+	rot = Rotation(rot:yaw() + self.prop_yaw, rot:pitch(), rot:roll())
+	local pos = self._ladder_orientation_obj:position()
+	local _spawned_unit = nil
+	_spawned_unit = safe_spawn_unit(self.g_bot, pos, rot)
+
+	table.insert(self._ladder_graphics, _spawned_unit)
+
+	self._ladder_graphics_spawned = 1
+	pos = pos + self._up * self.g_bot_height
+
+	for i = 0, mid_parts do
+		_spawned_unit = safe_spawn_unit(self.g_mid, pos, rot)
+
+		table.insert(self._ladder_graphics, _spawned_unit)
+
+		self._ladder_graphics_spawned = self._ladder_graphics_spawned + 1
+		pos = pos + self._up * self.g_mid_height
+	end
+
+	_spawned_unit = safe_spawn_unit(self.g_top, pos, rot)
+
+	table.insert(self._ladder_graphics, _spawned_unit)
+
+	self._ladder_graphics_spawned = self._ladder_graphics_spawned + 1
+end
+
+-- Lines 102-104
 function Ladder.current_ladder()
 	return Ladder.active_ladders[Ladder.ladder_index]
 end
 
--- Lines 14-20
+-- Lines 106-112
 function Ladder.next_ladder()
 	Ladder.ladder_index = Ladder.ladder_index + 1
 
@@ -22,12 +110,13 @@ function Ladder.next_ladder()
 	return Ladder.current_ladder()
 end
 
--- Lines 22-39
+-- Lines 114-132
 function Ladder:init(unit)
 	self._unit = unit
 	self.normal_axis = self.normal_axis or "y"
 	self.up_axis = self.up_axis or "z"
 	self._offset = self._offset or 0
+	self._offset_normal = self._offset_normal or 0
 
 	self:set_enabled(true)
 
@@ -39,7 +128,7 @@ function Ladder:init(unit)
 	table.insert(Ladder.ladders, self._unit)
 end
 
--- Lines 41-68
+-- Lines 134-162
 function Ladder:set_config()
 	self._ladder_orientation_obj = self._unit:get_object(Idstring(self._ladder_orientation_obj_name))
 	local rotation = self._ladder_orientation_obj:rotation()
@@ -53,6 +142,7 @@ function Ladder:set_config()
 	self._up = rotation[self.up_axis](rotation)
 	self._w_dir = math.cross(self._up, self._normal)
 	position = position + self._up * self._offset
+	position = position + self._normal * self._offset_normal
 	local top = position + self._up * self._height
 	self._bottom = position
 	self._top = top
@@ -65,7 +155,7 @@ function Ladder:set_config()
 	}
 end
 
--- Lines 70-74
+-- Lines 164-168
 function Ladder:update(t, dt)
 	if Ladder.DEBUG then
 		self:debug_draw()
@@ -74,7 +164,7 @@ end
 
 local mvec1 = Vector3()
 
--- Lines 77-115
+-- Lines 171-209
 function Ladder:can_access(pos, move_dir)
 	if not self._enabled then
 		return
@@ -118,7 +208,7 @@ function Ladder:can_access(pos, move_dir)
 	end
 end
 
--- Lines 117-151
+-- Lines 211-245
 function Ladder:check_end_climbing(pos, move_dir, gnd_ray)
 	if not self._enabled then
 		return true
@@ -147,7 +237,7 @@ function Ladder:check_end_climbing(pos, move_dir, gnd_ray)
 	end
 end
 
--- Lines 154-167
+-- Lines 248-261
 function Ladder:get_normal_move_offset(pos)
 	mvector3.set(mvec1, pos)
 	mvector3.subtract(mvec1, self._corners[1])
@@ -159,66 +249,66 @@ function Ladder:get_normal_move_offset(pos)
 	return normal_move_offset
 end
 
--- Lines 169-171
+-- Lines 263-265
 function Ladder:rotation()
 	return self._rotation
 end
 
--- Lines 173-175
+-- Lines 267-269
 function Ladder:up()
 	return self._up
 end
 
--- Lines 177-179
+-- Lines 271-273
 function Ladder:normal()
 	return self._normal
 end
 
--- Lines 181-183
+-- Lines 275-277
 function Ladder:w_dir()
 	return self._w_dir
 end
 
--- Lines 185-187
+-- Lines 279-281
 function Ladder:bottom()
 	return self._bottom
 end
 
--- Lines 189-191
+-- Lines 283-285
 function Ladder:top()
 	return self._top
 end
 
--- Lines 193-196
+-- Lines 287-290
 function Ladder:set_width(width)
 	self._width = width
 
 	self:set_config()
 end
 
--- Lines 198-200
+-- Lines 292-294
 function Ladder:width()
 	return self._width
 end
 
--- Lines 202-205
+-- Lines 296-299
 function Ladder:set_height(height)
 	self._height = height
 
 	self:set_config()
 end
 
--- Lines 207-209
+-- Lines 301-303
 function Ladder:height()
 	return self._height
 end
 
--- Lines 211-213
+-- Lines 305-307
 function Ladder:corners()
 	return self._corners
 end
 
--- Lines 215-224
+-- Lines 309-318
 function Ladder:set_enabled(enabled)
 	self._enabled = enabled
 
@@ -231,13 +321,13 @@ function Ladder:set_enabled(enabled)
 	end
 end
 
--- Lines 226-229
+-- Lines 320-323
 function Ladder:destroy(unit)
 	table.delete(Ladder.ladders, self._unit)
 	table.delete(Ladder.active_ladders, self._unit)
 end
 
--- Lines 231-246
+-- Lines 325-340
 function Ladder:debug_draw()
 	local brush = Draw:brush(Color.white:with_alpha(0.5))
 
@@ -252,7 +342,7 @@ function Ladder:debug_draw()
 	brush:sphere(self._corners[1], 5)
 end
 
--- Lines 248-254
+-- Lines 342-348
 function Ladder:save(data)
 	local state = {
 		enabled = self._enabled,
@@ -262,7 +352,7 @@ function Ladder:save(data)
 	data.Ladder = state
 end
 
--- Lines 256-264
+-- Lines 350-358
 function Ladder:load(data)
 	local state = data.Ladder
 

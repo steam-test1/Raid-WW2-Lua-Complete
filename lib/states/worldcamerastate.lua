@@ -14,3 +14,8 @@ end
 -- Lines 12-13
 function WorldCameraState:at_exit()
 end
+
+-- Lines 15-17
+function WorldCameraState._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_LOADING
+end

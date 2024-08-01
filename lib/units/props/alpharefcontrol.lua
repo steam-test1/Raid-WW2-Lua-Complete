@@ -5,7 +5,7 @@ local ids_alpha_ref = Idstring("alpha_ref")
 function AlphaRefControl:init(unit)
 	self._unit = unit
 	self._materials = {}
-	local materials = self._unit:get_objects_by_type(Idstring("material"))
+	local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 
 	for _, material in ipairs(materials) do
 		if material:variable_exists(ids_alpha_ref) then

@@ -8,7 +8,7 @@ end
 
 -- Lines 8-15
 function SelectUnitByNameModal:_build_buttons(panel, sizer)
-	local select_btn = EWS:Button(panel, "Select", "", "BU_BOTTOM")
+	local select_btn = EWS:Button(panel, "Select", "", "")
 
 	sizer:add(select_btn, 0, 2, "RIGHT,LEFT")
 	select_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_on_select_unit"), "")

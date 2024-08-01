@@ -6,7 +6,7 @@ function RaidMenuFooter:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuFooter.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
--- Lines 9-29
+-- Lines 9-15
 function RaidMenuFooter:_layout()
 	self._object = self._root_panel:panel({
 		name = "footer_object_panel",
@@ -22,12 +22,12 @@ function RaidMenuFooter:_layout()
 	self:_create_name_and_gold_panel()
 end
 
--- Lines 31-33
+-- Lines 17-19
 function RaidMenuFooter:set_navigation_button_visibility(flag)
 	self._navigation_button:set_visible(flag)
 end
 
--- Lines 36-43
+-- Lines 22-29
 function RaidMenuFooter:_setup_properties()
 	self._panel_x = 0
 	self._panel_y = self._ws:height() - RaidGuiBase.PADDING
@@ -37,7 +37,7 @@ function RaidMenuFooter:_setup_properties()
 	self._panel_is_root_panel = true
 end
 
--- Lines 45-90
+-- Lines 31-85
 function RaidMenuFooter:_create_name_and_gold_panel()
 	local string_width_measure_text_field = self._object:child("string_width") or self._object:text({
 		name = "string_width",
@@ -89,10 +89,9 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 		vertical = "bottom",
 		h = 32,
 		type = "label",
-		y = 0,
-		text = gold,
 		x = w1 + w2,
 		w = w3,
+		text = gold,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24
@@ -122,30 +121,34 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	self._separator = self._name_and_gold_panel:rect(separator_params)
 end
 
--- Lines 92-94
+-- Lines 87-89
 function RaidMenuFooter:hide_name_and_gold_panel()
 	self._name_and_gold_panel:hide()
 end
 
--- Lines 97-101
+-- Lines 92-96
 function RaidMenuFooter:refresh_player_profile()
 	local username = utf8.to_upper(managers.network.account:username())
 
 	self._profile_gold_label:set_text(username)
 end
 
--- Lines 103-106
+-- Lines 98-104
 function RaidMenuFooter:refresh_gold_amount()
 	local gold_amount = managers.gold_economy:gold_string(managers.gold_economy:current())
 
 	self._profile_name_label:set_text(gold_amount)
+
+	local _, _, w = self._profile_name_label:text_rect()
+
+	self._profile_name_label:set_w(w)
 end
 
--- Lines 133-134
+-- Lines 131-132
 function RaidMenuFooter:back_pressed()
 end
 
--- Lines 136-138
+-- Lines 134-136
 function RaidMenuFooter:confirm_pressed()
 	return false
 end

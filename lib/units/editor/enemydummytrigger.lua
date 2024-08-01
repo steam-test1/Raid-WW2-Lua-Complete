@@ -91,7 +91,7 @@ function EnemyDummyTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 68-79
+-- Lines 68-99
 function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -107,6 +107,7 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 
 	local options = {
+		"marked",
 		"alerted",
 		"death",
 		"killshot",

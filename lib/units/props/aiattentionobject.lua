@@ -6,8 +6,7 @@ AIAttentionObject.REACT_SUSPICIOUS = 4
 AIAttentionObject.REACT_SURPRISED = 5
 AIAttentionObject.REACT_SCARED = 6
 AIAttentionObject.REACT_AIM = 7
-AIAttentionObject.REACT_ARREST = 8
-AIAttentionObject.REACT_DISARM = 9
+AIAttentionObject.REACT_ALARM = 9
 AIAttentionObject.REACT_SHOOT = 10
 AIAttentionObject.REACT_MELEE = 11
 AIAttentionObject.REACT_COMBAT = 12
@@ -15,7 +14,7 @@ AIAttentionObject.REACT_SPECIAL_ATTACK = 13
 AIAttentionObject.REACT_MIN = AIAttentionObject.REACT_IDLE
 AIAttentionObject.REACT_MAX = AIAttentionObject.REACT_SPECIAL_ATTACK
 
--- Lines 20-44
+-- Lines 24-48
 function AIAttentionObject:init(unit, is_not_extension)
 	self._unit = unit
 	self._attention_data = nil
@@ -45,24 +44,24 @@ function AIAttentionObject:init(unit, is_not_extension)
 	end
 end
 
--- Lines 48-51
+-- Lines 52-55
 function AIAttentionObject:update(unit, t, dt)
 	self._attention_obj:m_position(self._observer_info.m_pos)
 end
 
--- Lines 55-57
+-- Lines 59-61
 function AIAttentionObject:set_update_enabled(state)
 	self._unit:set_extension_update_enabled(Idstring("attention"), state)
 end
 
--- Lines 61-64
+-- Lines 65-68
 function AIAttentionObject:set_detection_object_name(obj_name)
 	self._attention_obj_name = obj_name
 
 	self:setup_attention_positions()
 end
 
--- Lines 68-78
+-- Lines 72-82
 function AIAttentionObject:setup_attention_positions()
 	if self._attention_obj_name then
 		self._attention_obj = self._unit:get_object(Idstring(self._attention_obj_name))
@@ -75,17 +74,17 @@ function AIAttentionObject:setup_attention_positions()
 	}
 end
 
--- Lines 82-84
+-- Lines 86-88
 function AIAttentionObject:attention_data()
 	return self._attention_data
 end
 
--- Lines 88-90
+-- Lines 92-94
 function AIAttentionObject:unit()
 	return self._unit
 end
 
--- Lines 94-109
+-- Lines 98-113
 function AIAttentionObject:add_attention(settings)
 	local needs_register = nil
 
@@ -103,7 +102,7 @@ function AIAttentionObject:add_attention(settings)
 	self:_call_listeners()
 end
 
--- Lines 113-127
+-- Lines 117-131
 function AIAttentionObject:remove_attention(id)
 	if not self._attention_data then
 		return
@@ -122,7 +121,7 @@ function AIAttentionObject:remove_attention(id)
 	end
 end
 
--- Lines 131-150
+-- Lines 135-154
 function AIAttentionObject:set_attention(settings, id)
 	if self._attention_data then
 		if settings then
@@ -147,7 +146,7 @@ function AIAttentionObject:set_attention(settings, id)
 	end
 end
 
--- Lines 154-172
+-- Lines 158-176
 function AIAttentionObject:override_attention(original_preset_name, override_preset)
 	if override_preset then
 		self._overrides = self._overrides or {}
@@ -168,7 +167,7 @@ function AIAttentionObject:override_attention(original_preset_name, override_pre
 	end
 end
 
--- Lines 176-217
+-- Lines 180-221
 function AIAttentionObject:get_attention(filter, min, max, team)
 	if not self._attention_data then
 		return
@@ -205,7 +204,7 @@ function AIAttentionObject:get_attention(filter, min, max, team)
 	return settings_match
 end
 
--- Lines 221-228
+-- Lines 225-232
 function AIAttentionObject:verify_attention(test_settings, min, max, team)
 	if not self._attention_data then
 		return
@@ -216,32 +215,32 @@ function AIAttentionObject:verify_attention(test_settings, min, max, team)
 	return new_settings == test_settings
 end
 
--- Lines 232-234
+-- Lines 236-238
 function AIAttentionObject:get_attention_m_pos(settings)
 	return self._observer_info.m_pos
 end
 
--- Lines 238-240
+-- Lines 242-244
 function AIAttentionObject:get_detection_m_pos()
 	return self._observer_info.m_pos
 end
 
--- Lines 244-246
+-- Lines 248-250
 function AIAttentionObject:get_ground_m_pos()
 	return self._observer_info.m_pos
 end
 
--- Lines 250-252
+-- Lines 254-256
 function AIAttentionObject:add_listener(key, clbk)
 	self._listener_holder:add(key, clbk)
 end
 
--- Lines 256-258
+-- Lines 260-262
 function AIAttentionObject:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 262-266
+-- Lines 266-270
 function AIAttentionObject:_call_listeners()
 	local u_key = (self._parent_unit or self._unit):key()
 
@@ -249,12 +248,12 @@ function AIAttentionObject:_call_listeners()
 	self._listener_holder:call(u_key)
 end
 
--- Lines 270-272
+-- Lines 274-276
 function AIAttentionObject:_register()
 	managers.groupai:state():register_AI_attention_object(self._parent_unit or self._unit, self, nil)
 end
 
--- Lines 276-321
+-- Lines 280-325
 function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 	self._unit:unlink()
 
@@ -298,7 +297,7 @@ function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 	end
 end
 
--- Lines 325-342
+-- Lines 329-346
 function AIAttentionObject:set_team(team)
 	local call_listeners = self._team ~= team or team and team.id ~= self._team.id
 	self._team = team
@@ -318,7 +317,7 @@ function AIAttentionObject:set_team(team)
 	self:_call_listeners()
 end
 
--- Lines 346-353
+-- Lines 350-357
 function AIAttentionObject:save(data)
 	if alive(self._parent_unit) then
 		data.parent_u_id = self._parent_unit:unit_data().unit_id
@@ -327,7 +326,7 @@ function AIAttentionObject:save(data)
 	end
 end
 
--- Lines 357-380
+-- Lines 361-384
 function AIAttentionObject:load(data)
 	if not data or not data.parent_u_id then
 		return
@@ -352,7 +351,7 @@ function AIAttentionObject:load(data)
 	end
 end
 
--- Lines 384-390
+-- Lines 388-394
 function AIAttentionObject:clbk_load_parent_unit(parent_unit)
 	if parent_unit then
 		self:link(parent_unit, self._load_data.parent_obj_name, self._load_data.local_pos)
@@ -361,7 +360,7 @@ function AIAttentionObject:clbk_load_parent_unit(parent_unit)
 	self._load_data = nil
 end
 
--- Lines 394-396
+-- Lines 398-400
 function AIAttentionObject:destroy()
 	self:set_attention(nil)
 end

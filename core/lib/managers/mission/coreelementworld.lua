@@ -162,7 +162,7 @@ ElementWorldPoint.DELAY_CREATE_SINGLE = 2
 ElementWorldPoint.DELAY_DESTROY_MULTI = 3
 ElementWorldPoint.DELAY_CREATE_MULTI = 5
 
--- Lines 168-203
+-- Lines 168-214
 function ElementWorldPoint:on_executed(instigator)
 	Application:debug("[ElementWorldPoint:on_executed] on_executed", self._values.world, self._values.enabled, self._world_id, self._action)
 
@@ -180,6 +180,8 @@ function ElementWorldPoint:on_executed(instigator)
 		delay_create = ElementWorldPoint.DELAY_CREATE_SINGLE
 	end
 
+	self._action = self._action or "spawn"
+
 	if self._action == "despawn" then
 		Application:debug("[ElementWorldPoint:on_executed] on_executed queue destroy world...")
 		managers.queued_tasks:queue(nil, self._destroy_world, self, nil, delay_destroy, nil, true)
@@ -191,14 +193,39 @@ function ElementWorldPoint:on_executed(instigator)
 		else
 			spawn.plant_loot = true
 		end
-	else
-		managers.queued_tasks:queue(nil, self._create_world, self, nil, delay_create, nil, true)
+	elseif self._action == "enable_alarm_state" then
+		self:_set_alarm_state(true)
+	elseif self._action == "disable_alarm_state" then
+		self:_set_alarm_state(false)
+	elseif self._action == "spawn" or self._action == "spawn_alarmed" then
+		local alarmed = self._action == "spawn_alarmed"
+
+		Application:debug("[ElementWorldPoint:_set_alarm_state()] alarmed????", alarmed, self._action)
+
+		local que_data = {
+			alarmed = alarmed
+		}
+
+		managers.queued_tasks:queue(nil, self._create_world, self, que_data, delay_create, nil, true)
 	end
 
 	ElementWorldPoint.super.on_executed(self, instigator)
 end
 
--- Lines 205-216
+-- Lines 216-224
+function ElementWorldPoint:_set_alarm_state(state)
+	Application:debug("[ElementWorldPoint:_set_alarm_state()] set state:", state, "for world", self._world_id)
+
+	local spawn = managers.worldcollection:world_spawn(self._world_id)
+
+	if not spawn then
+		_G.debug_pause("[ElementWorldPoint:on_executed] Tried to set alarm flag on world that is still not spawned!")
+	else
+		managers.worldcollection:set_alarm_for_world_id(self._world_id, state)
+	end
+end
+
+-- Lines 226-237
 function ElementWorldPoint:_destroy_world()
 	Application:debug("[ElementWorldPoint:_destroy_world()]", self._world_id, self._has_created)
 
@@ -214,12 +241,15 @@ function ElementWorldPoint:_destroy_world()
 	self._world_id = nil
 end
 
--- Lines 218-271
-function ElementWorldPoint:_create_world(world_id)
-	Application:debug("[ElementWorldPoint:_create()", world_id, self._has_created, inspect(self._values))
+-- Lines 239-305
+function ElementWorldPoint:_create_world(data)
+	local world_id = data.world_id or nil
+	local alarmed = data.alarmed or false
+
+	Application:debug("[ElementWorldPoint:_create_world()] world_id: (nil means new) " .. tostring(data.world_id) .. ", alarmed:" .. tostring(data.alarmed), self._has_created, inspect(self._values))
 
 	if self._has_created or not self._values.world then
-		Application:debug("[ElementWorldPoint:_create() World is alreaedy created (or if nil doesnt exist), skipping!]", world_id)
+		Application:debug("[ElementWorldPoint:_create_world()] World is alreaedy created (or if nil doesnt exist), skipping!]", world_id)
 
 		return
 	end
@@ -228,7 +258,7 @@ function ElementWorldPoint:_create_world(world_id)
 	self._spawn_counter = self._spawn_counter + 1
 	local world_meta_data = managers.worldcollection:get_world_meta_data(self._values.world)
 
-	Application:debug("[ElementWorldPoint:_create() Creating world:]", world_meta_data.file, self._values.position, self._values.rotation)
+	Application:debug("[ElementWorldPoint:_create_world()]  Creating world:", world_meta_data.file, self._values.position, self._values.rotation)
 
 	local world_def = managers.worldcollection:get_worlddefinition_by_unit_id(self._id)
 	local pos = Vector3()
@@ -258,37 +288,45 @@ function ElementWorldPoint:_create_world(world_id)
 		self._world_id = world_id
 	end
 
+	Application:debug("[ElementWorldPoint:_create] world prepare...", self._world_id, self._editor_name)
 	managers.worldcollection:prepare_world(world, self._world_id, self._editor_name, self._spawn_counter, self._excluded_continents)
 	managers.worldcollection:register_world_spawn(self._world_id, self._editor_name, self._spawn_loot)
+	self:_set_alarm_state(alarmed)
 	Application:debug("[ElementWorldPoint:_create] world created")
 end
 
--- Lines 274-280
+-- Lines 308-315
 function ElementWorldPoint:save(data)
 	data.has_created = self._has_created
 	data.world_id = self._world_id
 	data.excluded_continents = self._excluded_continents
 	data.enabled = self._values.enabled
 	data.world = self._values.world
+	data.alarmed = managers.worldcollection:get_alarm_for_world(self._world_id)
 end
 
--- Lines 282-289
+-- Lines 317-325
 function ElementWorldPoint:load(data)
 	self._values.world = data.world
 	self._excluded_continents = data.excluded_continents
 
 	if data.has_created then
-		self:_create_world(data.world_id)
+		local data = {
+			world_id = data.world_id,
+			alarmed = data.alarmed
+		}
+
+		self:_create_world(data)
 	end
 
 	self:set_enabled(data.enabled)
 end
 
--- Lines 291-293
+-- Lines 327-329
 function ElementWorldPoint:stop_simulation(...)
 end
 
--- Lines 295-299
+-- Lines 331-335
 function ElementWorldPoint:execute_action(action)
 	Application:debug("[ElementWorldPoint:execute_action]", action)
 
@@ -297,7 +335,7 @@ function ElementWorldPoint:execute_action(action)
 	self:on_executed(nil)
 end
 
--- Lines 301-303
+-- Lines 337-339
 function ElementWorldPoint:destroy()
 	self:_destroy_world()
 end

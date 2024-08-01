@@ -14,7 +14,7 @@ local FAR_RANGE_MAX = 250000
 local PITCH_LIMIT_MIN = -80
 local PITCH_LIMIT_MAX = 80
 local TEXT_FADE_TIME = 0.3
-local TEXT_ON_SCREEN_TIME = 2
+local TEXT_ON_SCREEN_TIME = 3.5
 local FREEFLIGHT_HEADER_TEXT = "FREEFLIGHT, PRESS 'F' OR 'C'"
 local DESELECTED = Color(0.5, 0.5, 0.5)
 local SELECTED = Color(1, 1, 1)
@@ -147,11 +147,12 @@ function FreeFlight:_setup_modifiers()
 	self._turn_speed = ts
 end
 
--- Lines 111-134
+-- Lines 111-136
 function FreeFlight:_setup_actions()
 	local FFA = CoreFreeFlightAction.FreeFlightAction
 	local FFAT = CoreFreeFlightAction.FreeFlightActionToggle
 	local dp = FFA:new("DROP PLAYER", callback(self, self, "_drop_player"))
+	local ri = FFA:new("RAY INSPECT", callback(self, self, "_ray_inspect"))
 	local au = FFA:new("ATTACH TO UNIT", callback(self, self, "_attach_unit"))
 	local pd = FFA:new("POSITION DEBUG", callback(self, self, "_position_debug"))
 	local yc = FFA:new("YIELD CONTROL (F9 EXIT)", callback(self, self, "_yield_control"))
@@ -161,6 +162,7 @@ function FreeFlight:_setup_actions()
 	self._actions = {
 		ps,
 		dp,
+		ri,
 		au,
 		pd,
 		yc,
@@ -170,7 +172,7 @@ function FreeFlight:_setup_actions()
 	self._action_index = 1
 end
 
--- Lines 136-146
+-- Lines 138-148
 function FreeFlight:_setup_viewport(viewport_manager)
 	self._camera_object = World:create_camera()
 
@@ -185,7 +187,7 @@ function FreeFlight:_setup_viewport(viewport_manager)
 	self._camera_rot = self._camera_object:rotation()
 end
 
--- Lines 148-156
+-- Lines 150-158
 function FreeFlight:_setup_controller(controller_manager)
 	self._con = controller_manager:create_controller("freeflight", nil, true, PRIO_FREEFLIGHT)
 
@@ -197,7 +199,7 @@ function FreeFlight:_setup_controller(controller_manager)
 	self._con:add_trigger("freeflight_modifier_down", callback(self, self, "_curr_modifier_down"))
 end
 
--- Lines 158-220
+-- Lines 160-223
 function FreeFlight:_setup_gui()
 	local gui_scene = Overlay:gui()
 	local res = RenderSettings.resolution
@@ -210,6 +212,7 @@ function FreeFlight:_setup_gui()
 	local TEXT_HEIGHT_OFFSET = 27
 	local config = {
 		font = "core/fonts/system_font",
+		name = "text",
 		font_scale = 0.9,
 		color = DESELECTED,
 		x = 45,
@@ -217,14 +220,14 @@ function FreeFlight:_setup_gui()
 		layer = 1000000
 	}
 
-	-- Lines 178-182
+	-- Lines 181-185
 	local function anim_fade_out_func(o)
 		CoreEvent.over(TEXT_FADE_TIME, function (t)
 			o:set_color(o:color():with_alpha(1 - t))
 		end)
 	end
 
-	-- Lines 183-187
+	-- Lines 186-190
 	local function anim_fade_in_func(o)
 		CoreEvent.over(TEXT_FADE_TIME, function (t)
 			o:set_color(o:color():with_alpha(t))
@@ -275,7 +278,7 @@ function FreeFlight:_setup_gui()
 	self._workspace:hide()
 end
 
--- Lines 226-247
+-- Lines 229-250
 function FreeFlight:enable()
 	if self._gsm:current_state():allow_freeflight() then
 		local active_vp = self._vpm:first_active_viewport()
@@ -304,7 +307,7 @@ function FreeFlight:enable()
 	end
 end
 
--- Lines 249-260
+-- Lines 252-263
 function FreeFlight:disable()
 	for _, a in ipairs(self._actions) do
 		a:reset()
@@ -321,12 +324,12 @@ function FreeFlight:disable()
 	end
 end
 
--- Lines 262-264
+-- Lines 265-267
 function FreeFlight:enabled()
 	return self._state ~= FF_OFF
 end
 
--- Lines 269-282
+-- Lines 272-285
 function FreeFlight:_on_F9()
 	if Application:editor() and not Global.running_simulation then
 		return
@@ -343,7 +346,7 @@ function FreeFlight:_on_F9()
 	end
 end
 
--- Lines 284-291
+-- Lines 287-294
 function FreeFlight:_action_toggle()
 	if self:_actions_are_visible() then
 		self._action_gui[self._action_index]:set_color(DESELECTED)
@@ -356,7 +359,7 @@ function FreeFlight:_action_toggle()
 	self:_draw_actions()
 end
 
--- Lines 293-298
+-- Lines 296-301
 function FreeFlight:_action_execute()
 	if self:_actions_are_visible() then
 		self:_current_action():do_action()
@@ -365,17 +368,17 @@ function FreeFlight:_action_execute()
 	self:_draw_actions()
 end
 
--- Lines 300-302
+-- Lines 303-305
 function FreeFlight:_quick_action_execute()
 	self:_current_action():do_action()
 end
 
--- Lines 304-306
+-- Lines 307-309
 function FreeFlight:_exit_freeflight()
 	self:disable()
 end
 
--- Lines 308-312
+-- Lines 311-315
 function FreeFlight:_yield_control()
 	assert(self._state == FF_ON)
 
@@ -384,31 +387,31 @@ function FreeFlight:_yield_control()
 	self._con:disable()
 end
 
--- Lines 314-317
+-- Lines 317-320
 function FreeFlight:_drop_player()
 	local rot_new = Rotation(self._camera_rot:yaw(), 0, 0)
 
 	self._gsm:current_state():freeflight_drop_player(self._camera_pos, rot_new)
 end
 
--- Lines 319-322
+-- Lines 322-325
 function FreeFlight:_position_debug()
 	local p = self._camera_pos
 
 	cat_print("debug", "CAMERA POSITION: Vector3(" .. p.x .. "," .. p.y .. "," .. p.z .. ")")
 end
 
--- Lines 324-326
+-- Lines 327-329
 function FreeFlight:_pause()
 	Application:set_pause(true)
 end
 
--- Lines 328-330
+-- Lines 331-333
 function FreeFlight:_unpause()
 	Application:set_pause(false)
 end
 
--- Lines 332-351
+-- Lines 335-354
 function FreeFlight:_frustum_freeze()
 	local old_cam = self._camera_object
 	local new_cam = World:create_camera()
@@ -431,7 +434,7 @@ function FreeFlight:_frustum_freeze()
 	self._camera_object = new_cam
 end
 
--- Lines 353-359
+-- Lines 356-362
 function FreeFlight:_frustum_unfreeze()
 	local old_cam = self._frozen_camera
 
@@ -442,7 +445,7 @@ function FreeFlight:_frustum_unfreeze()
 	self._frozen_camera = nil
 end
 
--- Lines 365-372
+-- Lines 368-375
 function FreeFlight:_next_modifier_toggle()
 	if self:_modifiers_are_visible() then
 		self._modifier_gui[self._modifier_index]:set_color(DESELECTED)
@@ -455,7 +458,7 @@ function FreeFlight:_next_modifier_toggle()
 	self:_draw_modifiers()
 end
 
--- Lines 374-380
+-- Lines 377-383
 function FreeFlight:_curr_modifier_up()
 	if self:_modifiers_are_visible() then
 		self:_current_modifier():step_up()
@@ -465,7 +468,7 @@ function FreeFlight:_curr_modifier_up()
 	self:_draw_modifiers()
 end
 
--- Lines 382-388
+-- Lines 385-391
 function FreeFlight:_curr_modifier_down()
 	if self:_modifiers_are_visible() then
 		self:_current_modifier():step_down()
@@ -475,42 +478,42 @@ function FreeFlight:_curr_modifier_down()
 	self:_draw_modifiers()
 end
 
--- Lines 390-392
+-- Lines 393-395
 function FreeFlight:_set_fov(value)
 	self._camera_object:set_fov(value)
 end
 
--- Lines 394-397
+-- Lines 397-400
 function FreeFlight:_set_game_timer(value)
 	TimerManager:pausable():set_multiplier(value)
 	TimerManager:game_animation():set_multiplier(value)
 end
 
--- Lines 403-405
+-- Lines 406-408
 function FreeFlight:_current_action()
 	return self._actions[self._action_index]
 end
 
--- Lines 407-409
+-- Lines 410-412
 function FreeFlight:_current_modifier()
 	return self._modifiers[self._modifier_index]
 end
 
--- Lines 411-414
+-- Lines 414-417
 function FreeFlight:_actions_are_visible()
 	local t = TimerManager:main():time()
 
 	return self._action_vis_time and t + TEXT_FADE_TIME < self._action_vis_time
 end
 
--- Lines 416-419
+-- Lines 419-422
 function FreeFlight:_modifiers_are_visible()
 	local t = TimerManager:main():time()
 
 	return self._modifier_vis_time and t + TEXT_FADE_TIME < self._modifier_vis_time
 end
 
--- Lines 421-432
+-- Lines 424-435
 function FreeFlight:_draw_actions()
 	if not self:_actions_are_visible() then
 		for i, text in ipairs(self._action_gui) do
@@ -526,7 +529,7 @@ function FreeFlight:_draw_actions()
 	self._action_vis_time = TimerManager:main():time() + TEXT_ON_SCREEN_TIME
 end
 
--- Lines 434-442
+-- Lines 437-445
 function FreeFlight:_draw_modifiers()
 	if not self:_modifiers_are_visible() then
 		for _, text in ipairs(self._modifier_gui) do
@@ -538,7 +541,7 @@ function FreeFlight:_draw_modifiers()
 	self._modifier_vis_time = TimerManager:main():time() + TEXT_ON_SCREEN_TIME
 end
 
--- Lines 444-449
+-- Lines 447-452
 function FreeFlight:_set_camera(pos, rot)
 	self._camera_object:set_position((alive(self._attached_to_unit) and self._attached_to_unit:position() or Vector3()) + pos)
 	self._camera_object:set_rotation(rot)
@@ -547,7 +550,7 @@ function FreeFlight:_set_camera(pos, rot)
 	self._camera_rot = rot
 end
 
--- Lines 455-464
+-- Lines 458-467
 function FreeFlight:update(t, dt)
 	local main_t = TimerManager:main():time()
 	local main_dt = TimerManager:main():delta_time()
@@ -560,11 +563,11 @@ function FreeFlight:update(t, dt)
 	end
 end
 
--- Lines 466-467
+-- Lines 469-470
 function FreeFlight:_update_controller(t, dt)
 end
 
--- Lines 469-485
+-- Lines 472-488
 function FreeFlight:_update_gui(t, dt)
 	if self._action_vis_time and self._action_vis_time < t then
 		for _, text in ipairs(self._action_gui) do
@@ -585,7 +588,7 @@ function FreeFlight:_update_gui(t, dt)
 	end
 end
 
--- Lines 487-508
+-- Lines 490-511
 function FreeFlight:_update_camera(t, dt)
 	local axis_move = self._con:get_input_axis("freeflight_axis_move")
 	local axis_look = self._con:get_input_axis("freeflight_axis_look")
@@ -604,7 +607,20 @@ function FreeFlight:_update_camera(t, dt)
 	end
 end
 
--- Lines 510-523
+-- Lines 513-523
+function FreeFlight:_ray_inspect()
+	local cam = self._camera_object
+	local ray = World:raycast("ray", cam:position(), cam:position() + cam:rotation():y() * 10000)
+
+	if ray then
+		print("ray hit", ray.unit:name():s(), ray.body:name())
+		World:select_unit(ray.unit)
+	else
+		World:select_unit(nil)
+	end
+end
+
+-- Lines 525-538
 function FreeFlight:_attach_unit()
 	local cam = self._camera_object
 	local ray = World:raycast("ray", cam:position(), cam:position() + cam:rotation():y() * 10000)
@@ -622,7 +638,7 @@ function FreeFlight:_attach_unit()
 	end
 end
 
--- Lines 525-537
+-- Lines 540-552
 function FreeFlight:attach_to_unit(unit)
 	if not alive(unit) or alive(self._attached_to_unit) and unit ~= self._attached_to_unit then
 		local pos = self._camera_pos + self._attached_to_unit:position()
@@ -640,7 +656,7 @@ function FreeFlight:attach_to_unit(unit)
 	self._attached_to_unit = unit
 end
 
--- Lines 539-570
+-- Lines 554-585
 function FreeFlight:_update_frustum_debug_box(t, dt)
 	if self._frozen_camera then
 		local near = self._frozen_camera:near_range()
@@ -672,7 +688,7 @@ function FreeFlight:_update_frustum_debug_box(t, dt)
 	end
 end
 
--- Lines 576-589
+-- Lines 591-604
 function FreeFlight:destroy()
 	if alive(self._con_toggle) then
 		Input:destroy_virtual_controller(self._con_toggle)

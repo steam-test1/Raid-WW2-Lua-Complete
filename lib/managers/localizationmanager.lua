@@ -19,7 +19,7 @@ function LocalizationManager:_convert_typewriter_font(char)
 	return retVal
 end
 
--- Lines 22-167
+-- Lines 22-165
 function LocalizationManager:_setup_macros()
 	local btn_a = utf8.char(57344)
 	local btn_b = utf8.char(57345)
@@ -36,9 +36,9 @@ function LocalizationManager:_setup_macros()
 	local btn_stick_l = utf8.char(57356)
 	local btn_stick_r = utf8.char(57357)
 	local btn_dpad_d = utf8.char(57358)
-	local btn_dpad_r = utf8.char(57359)
-	local btn_dpad_u = utf8.char(57360)
-	local btn_dpad_l = utf8.char(57361)
+	local btn_dpad_u = utf8.char(57359)
+	local btn_dpad_l = utf8.char(57360)
+	local btn_dpad_r = utf8.char(57361)
 	local btn_inv_new = utf8.char(57362)
 	local btn_ghost = utf8.char(57363)
 	local btn_skull = utf8.char(57364)
@@ -57,7 +57,7 @@ function LocalizationManager:_setup_macros()
 	local btn_jump = btn_a
 	local swap_accept = false
 
-	if SystemInfo:platform() == Idstring("PS3") and PS3:pad_cross_circle_inverted() then
+	if IS_PS4 and PS4:pad_cross_circle_inverted() then
 		swap_accept = true
 	end
 
@@ -69,7 +69,7 @@ function LocalizationManager:_setup_macros()
 		btn_cancel = btn_b
 	end
 
-	if _G.IS_PC then
+	if IS_PC then
 		btn_stick_r = stick_r
 		btn_stick_l = stick_l
 	end
@@ -103,7 +103,9 @@ function LocalizationManager:_setup_macros()
 	self:set_default_macro("CONTINUE", btn_a)
 	self:set_default_macro("BTN_GADGET", btn_dpad_d)
 	self:set_default_macro("BTN_BIPOD", btn_dpad_d)
+	self:set_default_macro("BTN_DPAD_UP", btn_dpad_u)
 	self:set_default_macro("BTN_DPAD_RIGHT", btn_dpad_r)
+	self:set_default_macro("BTN_DPAD_LEFT", btn_dpad_l)
 	self:set_default_macro("BTN_INV_NEW", btn_inv_new)
 	self:set_default_macro("BTN_GHOST", btn_ghost)
 	self:set_default_macro("BTN_SKULL", btn_skull)
@@ -117,7 +119,7 @@ function LocalizationManager:_setup_macros()
 	self:set_default_macro("BTN_RESET_ALL_SKILLS", btn_start)
 end
 
--- Lines 170-181
+-- Lines 168-179
 function LocalizationManager:btn_macro(button, to_upper)
 	if not managers.menu:is_pc_controller() then
 		return
@@ -130,22 +132,22 @@ function LocalizationManager:btn_macro(button, to_upper)
 	return to_upper and utf8.to_upper(text) or text
 end
 
--- Lines 183-185
+-- Lines 181-183
 function LocalizationManager:ids(file)
 	return Localizer:ids(Idstring(file))
 end
 
--- Lines 187-189
+-- Lines 185-187
 function LocalizationManager:to_upper_text(string_id, macros)
 	return utf8.to_upper(self:text(string_id, macros))
 end
 
--- Lines 191-193
+-- Lines 189-191
 function LocalizationManager:steam_btn(button)
 	return button
 end
 
--- Lines 195-205
+-- Lines 193-203
 function LocalizationManager:debug_file(file)
 	local t = {}
 	local ids_in_file = self:ids(file)
@@ -161,7 +163,7 @@ function LocalizationManager:debug_file(file)
 	return t
 end
 
--- Lines 207-252
+-- Lines 205-250
 function LocalizationManager:check_translation()
 	local path = "g:/projects/payday2/trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -211,7 +213,7 @@ end
 
 CoreClass.override_class(CoreLocalizationManager.LocalizationManager, LocalizationManager)
 
--- Lines 257-322
+-- Lines 255-320
 function LocalizationManager:check_translation()
 	local path = "d:/raid_ww2_trunk/assets/strings"
 	local files = SystemFS:list(path)
@@ -278,7 +280,7 @@ function LocalizationManager:check_translation()
 	io.close(out_file)
 end
 
--- Lines 326-361
+-- Lines 324-359
 function LocalizationManager:check_keybind_translation(binding)
 	self._keybind_translations = {
 		"left ctrl",

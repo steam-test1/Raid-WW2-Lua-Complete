@@ -11,109 +11,109 @@ EventCompleteState.LOOT_DATA_READY_KEY = "loot_data_ready"
 EventCompleteState.SUCCESS_VIDEOS = {
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_01_throws_himself_v007"
+		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_02_chickens_out_v007"
+		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_03_salutes_v006"
+		path = "movies/vanilla/debrief_success/s_03_salutes_v006"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_04_shoots_and_miss_v008"
+		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_05_crunches_bones_v006"
+		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_06_plays_with_tin_men_v006"
+		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_07_cries_tannenbaum_v007"
+		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_08_chess_v008"
+		path = "movies/vanilla/debrief_success/s_08_chess_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_09_is_having_a_reverie_v007"
+		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_10_colours_a_map_v009"
+		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_11_swears_v005"
+		path = "movies/vanilla/debrief_success/s_11_swears_v005"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_12_plays_with_tanks_v005"
+		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_13_flips_a_table_v007"
+		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_success/global/s_14_moustache_v006"
+		path = "movies/vanilla/debrief_success/s_14_moustache_v006"
 	}
 }
 EventCompleteState.FAILURE_VIDEOS = {
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_01_edelweiss_v007"
+		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_02_sizzles_v007"
+		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_03_toasts_v008"
+		path = "movies/vanilla/debrief_failure/f_03_toasts_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_04_misunderstands_v008"
+		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_05_hugs_the_world_v008"
+		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_06_tin_soldiers_v008"
+		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_07_told_you_so_v008"
+		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_08_pumps_his_fists_v008"
+		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_09_bras_dhonneur_v008"
+		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_10_executes_v008"
+		path = "movies/vanilla/debrief_failure/f_10_executes_v008"
 	},
 	{
 		chance = 1,
-		path = "movies/vanilla/debrief_failure/global/f_11_sings_v007"
+		path = "movies/vanilla/debrief_failure/f_11_sings_v007"
 	}
 }
 
--- Lines 77-89
+-- Lines 46-58
 function EventCompleteState:init(game_state_machine, setup)
 	GameState.init(self, "event_complete_screen", game_state_machine)
 
@@ -128,7 +128,7 @@ function EventCompleteState:init(game_state_machine, setup)
 	}
 end
 
--- Lines 91-98
+-- Lines 60-67
 function EventCompleteState:setup_controller()
 	if not self._controller then
 		self._controller = managers.controller:create_controller("victoryscreen", managers.controller:get_default_wrapper_index(), false)
@@ -138,11 +138,11 @@ function EventCompleteState:setup_controller()
 	end
 end
 
--- Lines 100-101
+-- Lines 69-70
 function EventCompleteState:set_controller_enabled(enabled)
 end
 
--- Lines 104-311
+-- Lines 73-278
 function EventCompleteState:at_enter(old_state, params)
 	Application:trace("[EventCompleteState:at_enter()]")
 	managers.player:replenish_player()
@@ -174,6 +174,7 @@ function EventCompleteState:at_enter(old_state, params)
 	self.is_at_last_event = managers.raid_job:is_at_last_event()
 	self._success = managers.raid_job:stage_success()
 	self.initial_xp = managers.experience:total()
+	self.initial_skills_xp = self:get_skill_xp_progress()
 	self.peers_loot_drops = {}
 
 	managers.consumable_missions:on_mission_completed(self._success)
@@ -201,10 +202,6 @@ function EventCompleteState:at_enter(old_state, params)
 	})
 	managers.statistics:send_statistics()
 	self:get_personal_stats()
-
-	if self._success then
-		managers.gold_economy:decrease_respec_reset()
-	end
 
 	if self.is_at_last_event and self:is_success() then
 		managers.lootdrop:add_listener(LootScreenGui.EVENT_KEY_PEER_LOOT_RECEIVED, {
@@ -258,9 +255,10 @@ function EventCompleteState:at_enter(old_state, params)
 	self._safe_rect_workspace = gui:create_screen_workspace()
 	self._safe_panel = self._safe_rect_workspace:panel()
 	self._active_screen = EventCompleteState.SCREEN_ACTIVE_DEBRIEF_VIDEO
+	local skip_cinematics = managers.user:get_setting("skip_cinematics")
 
-	if self.is_at_last_event or not self._success then
-		self:_play_debrief_video()
+	if not skip_cinematics and (self.is_at_last_event or not self._success) then
+		self:_create_debrief_video()
 	else
 		self:_continue()
 	end
@@ -268,7 +266,7 @@ function EventCompleteState:at_enter(old_state, params)
 	self._difficulty = Global.game_settings.difficulty
 end
 
--- Lines 313-327
+-- Lines 280-294
 function EventCompleteState:_calculate_card_xp_bonuses()
 	local card_bonus_xp = 0
 
@@ -287,17 +285,17 @@ function EventCompleteState:_calculate_card_xp_bonuses()
 	self._card_xp_multiplier = card_xp_multiplier
 end
 
--- Lines 329-331
+-- Lines 296-298
 function EventCompleteState:card_bonus_xp()
 	return self._card_bonus_xp
 end
 
--- Lines 333-335
+-- Lines 300-302
 function EventCompleteState:card_xp_multiplier()
 	return self._card_xp_multiplier
 end
 
--- Lines 337-361
+-- Lines 304-328
 function EventCompleteState:_calculate_extra_loot_secured()
 	local extra_loot_value = 0
 	local extra_loot_count = 0
@@ -326,7 +324,7 @@ function EventCompleteState:_calculate_extra_loot_secured()
 	end
 end
 
--- Lines 364-394
+-- Lines 331-361
 function EventCompleteState:on_loot_data_ready()
 	self.loot_acquired = managers.raid_job:loot_acquired_in_job()
 	self.loot_spawned = managers.raid_job:loot_spawned_in_job()
@@ -355,7 +353,7 @@ function EventCompleteState:on_loot_data_ready()
 	end
 end
 
--- Lines 396-421
+-- Lines 363-388
 function EventCompleteState:drop_loot_for_player()
 	Application:trace("[EventCompleteState:drop_loot_for_player()]")
 
@@ -385,14 +383,18 @@ function EventCompleteState:drop_loot_for_player()
 	self._awarded_rewards.loot = true
 end
 
--- Lines 423-426
+-- Lines 390-397
 function EventCompleteState:on_loot_dropped_for_player()
 	Application:trace("[EventCompleteState:on_loot_dropped_for_player()]")
 
 	self.local_player_loot_drop = managers.lootdrop:get_dropped_loot()
+
+	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_LOOT and managers.menu_component._raid_menu_loot_gui then
+		managers.menu_component._raid_menu_loot_gui:set_local_loot_drop(self.local_player_loot_drop)
+	end
 end
 
--- Lines 428-435
+-- Lines 399-406
 function EventCompleteState:on_loot_dropped_for_peer()
 	Application:trace("[EventCompleteState:on_loot_dropped_for_peer()]")
 
@@ -403,7 +405,7 @@ function EventCompleteState:on_loot_dropped_for_peer()
 	end
 end
 
--- Lines 437-462
+-- Lines 408-433
 function EventCompleteState:_get_debrief_video(success)
 	local video_list = nil
 
@@ -435,9 +437,9 @@ function EventCompleteState:_get_debrief_video(success)
 	return chosen_video
 end
 
--- Lines 464-533
-function EventCompleteState:_play_debrief_video()
-	Application:trace("[EventCompleteState:_play_debrief_video()]")
+-- Lines 435-494
+function EventCompleteState:_create_debrief_video()
+	Application:trace("[EventCompleteState:_create_debrief_video()]")
 
 	if managers.network.voice_chat then
 		managers.network.voice_chat:trc_check_mute()
@@ -464,25 +466,9 @@ function EventCompleteState:_play_debrief_video()
 	}
 	self._debrief_video = self._panel:video(debrief_video_params)
 
+	self._debrief_video:pause()
 	self._debrief_video:set_h(self._panel:w() * self._debrief_video:video_height() / self._debrief_video:video_width())
 	self._debrief_video:set_center_y(self._panel:h() / 2)
-
-	local disclaimer_label_params = {
-		w = 600,
-		name = "event_complete_disclaimer",
-		h = 600,
-		wrap = true,
-		visible = false,
-		text = "HITLER VIDEOS HERE WHEN THEY'RE DONE",
-		y = 400,
-		x = 200,
-		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_76),
-		font_size = tweak_data.gui.font_sizes.size_76,
-		color = tweak_data.gui.colors.raid_red,
-		layer = self._debrief_video:layer() + 1
-	}
-	local disclaimer = self._panel:text(disclaimer_label_params)
-
 	managers.gui_data:layout_workspace(self._safe_rect_workspace)
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
@@ -503,9 +489,17 @@ function EventCompleteState:_play_debrief_video()
 	press_any_key_prompt:set_right(self._safe_panel:w() - 50)
 	press_any_key_prompt:set_bottom(self._safe_panel:h() - 50)
 	press_any_key_prompt:animate(callback(self, self, "_animate_show_press_any_key_prompt"))
+	managers.queued_tasks:queue("play_debrief_video", self._play_debrief_video, self, nil, 2.3)
 end
 
--- Lines 535-550
+-- Lines 496-500
+function EventCompleteState:_play_debrief_video()
+	if self._debrief_video then
+		self._debrief_video:play()
+	end
+end
+
+-- Lines 502-517
 function EventCompleteState:_animate_show_press_any_key_prompt(prompt)
 	local duration = 0.7
 	local t = 0
@@ -523,7 +517,7 @@ function EventCompleteState:_animate_show_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.75)
 end
 
--- Lines 552-585
+-- Lines 519-552
 function EventCompleteState:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
@@ -562,7 +556,7 @@ function EventCompleteState:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.75)
 end
 
--- Lines 587-594
+-- Lines 554-561
 function EventCompleteState:on_controller_hotswap()
 	local press_any_key_prompt = self._safe_panel:child("press_any_key_prompt")
 
@@ -572,12 +566,12 @@ function EventCompleteState:on_controller_hotswap()
 	end
 end
 
--- Lines 597-599
+-- Lines 564-566
 function EventCompleteState:job_data()
 	return self._current_job_data
 end
 
--- Lines 601-649
+-- Lines 568-616
 function EventCompleteState:on_server_left(message)
 	local dialog_data = {
 		title = managers.localization:text("dialog_returning_to_main_menu"),
@@ -647,7 +641,7 @@ function EventCompleteState:on_server_left(message)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 651-752
+-- Lines 618-715
 function EventCompleteState:on_top_stats_ready()
 	Application:trace("[EventCompleteState:on_top_stats_ready()]")
 
@@ -703,14 +697,11 @@ function EventCompleteState:on_top_stats_ready()
 			return
 		end
 
-		managers.achievment:check_achievement_operation_clear_sky_no_bleedout(operation_save_data)
-		managers.achievment:check_achievement_operation_clear_sky_hardest(operation_save_data)
-		managers.achievment:check_achievement_operation_burn_no_bleedout(operation_save_data)
-		managers.achievment:check_achievement_operation_burn_hardest(operation_save_data)
+		managers.achievment:check_achievement_operation(operation_save_data)
 	end
 end
 
--- Lines 754-767
+-- Lines 717-732
 function EventCompleteState:update(t, dt)
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_DEBRIEF_VIDEO and (self:is_playing() and self:is_skipped() or not self:is_playing()) then
 		self._debrief_video:destroy()
@@ -727,12 +718,12 @@ function EventCompleteState:update(t, dt)
 	end
 end
 
--- Lines 769-771
+-- Lines 734-736
 function EventCompleteState:is_playing()
 	return self._debrief_video:loop_count() < 1
 end
 
--- Lines 773-781
+-- Lines 738-746
 function EventCompleteState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -743,7 +734,7 @@ function EventCompleteState:is_skipped()
 	return false
 end
 
--- Lines 783-805
+-- Lines 748-770
 function EventCompleteState:get_personal_stats()
 	local personal_stats = {
 		session_killed = managers.statistics:session_killed().total.count or 0,
@@ -768,7 +759,49 @@ function EventCompleteState:get_personal_stats()
 	self.personal_stats = personal_stats
 end
 
--- Lines 807-857
+-- Lines 772-814
+function EventCompleteState:get_skill_xp_progress()
+	local skills_applied = managers.skilltree:get_skills_applied_grouped()
+	local skill_types = {
+		SkillTreeTweakData.TYPE_WARCRY,
+		SkillTreeTweakData.TYPE_BOOSTS,
+		SkillTreeTweakData.TYPE_TALENT
+	}
+	local skills_table = {}
+
+	for _, idx in ipairs(skill_types) do
+		if skills_applied[idx] then
+			for id, skill in pairs(skills_applied[idx]) do
+				local skill_tweak = tweak_data.skilltree.skills[id]
+
+				if skill_tweak and skill_tweak.exp_requirements then
+					local slot_type = skill_tweak.upgrades_type
+					local exp_progression = skill.exp_progression or 0
+					local current_tier = skill.exp_tier or 1
+					local max_tier = #skill_tweak.exp_requirements
+					local exp_requirement_tier = skill_tweak.exp_requirements[math.min(max_tier, current_tier)]
+					local tag_color = tweak_data.skilltree.skill_category_colors[slot_type]
+					local at_max_tier = current_tier == max_tier
+					local progress = 0
+					progress = at_max_tier and 1 or exp_progression / exp_requirement_tier
+
+					table.insert(skills_table, {
+						id = id,
+						progress = progress,
+						tier = current_tier,
+						max_tier = max_tier,
+						at_max_tier = at_max_tier,
+						tag_color = tag_color
+					})
+				end
+			end
+		end
+	end
+
+	return skills_table
+end
+
+-- Lines 816-866
 function EventCompleteState:get_base_xp_breakdown()
 	local is_in_operation = self._current_job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION
 	local current_operation = is_in_operation and self._current_job_data.job_id or nil
@@ -789,7 +822,7 @@ function EventCompleteState:get_base_xp_breakdown()
 	end
 end
 
--- Lines 860-876
+-- Lines 869-889
 function EventCompleteState:calculate_xp()
 	self:get_base_xp_breakdown()
 
@@ -803,6 +836,10 @@ function EventCompleteState:calculate_xp()
 
 	for i = 1, #self.xp_breakdown.multiplicative do
 		multiplicative = multiplicative + self.xp_breakdown.multiplicative[i].amount
+
+		if self.xp_breakdown.multiplicative[i].id == "xp_multiplicative_level_difference" then
+			self._level_difference_bonus = 1 + self.xp_breakdown.multiplicative[i].amount
+		end
 	end
 
 	self.total_xp = additive * multiplicative
@@ -810,7 +847,7 @@ function EventCompleteState:calculate_xp()
 	return self.total_xp
 end
 
--- Lines 878-884
+-- Lines 891-897
 function EventCompleteState:recalculate_xp()
 	local total_xp = self:calculate_xp()
 
@@ -819,10 +856,20 @@ function EventCompleteState:recalculate_xp()
 	end
 end
 
--- Lines 886-896
+-- Lines 899-917
 function EventCompleteState:award_xp(value)
 	Application:trace("[EventCompleteState:award_xp()] value: " .. tostring(value))
 	managers.experience:add_points(value, false)
+
+	local skill_value = value
+
+	if self._level_difference_bonus and self._level_difference_bonus > 1 then
+		skill_value = skill_value / self._level_difference_bonus
+
+		Application:trace("[EventCompleteState:award_xp()] reduced skill value: " .. tostring(skill_value), self._level_difference_bonus)
+	end
+
+	managers.skilltree:add_skill_points(skill_value)
 
 	if not self._awarded_xp then
 		self._awarded_xp = 0
@@ -832,15 +879,14 @@ function EventCompleteState:award_xp(value)
 	self._awarded_rewards.xp = true
 end
 
--- Lines 898-900
+-- Lines 919-921
 function EventCompleteState:is_success()
 	return self._success
 end
 
--- Lines 902-967
+-- Lines 923-988
 function EventCompleteState:at_exit(next_state)
 	Application:trace("[EventCompleteState:at_exit()]")
-	managers.briefing:stop_event(true)
 	self:_clear_controller()
 
 	if managers.network.voice_chat then
@@ -856,6 +902,7 @@ function EventCompleteState:at_exit(next_state)
 	self.total_xp = nil
 	self.stats_ready = nil
 	self.local_player_loot_drop = nil
+	self._level_difference_bonus = nil
 	self._awarded_xp = 0
 	self.loot_acquired = 0
 	self.loot_spawned = 0
@@ -889,7 +936,7 @@ function EventCompleteState:at_exit(next_state)
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
 end
 
--- Lines 970-975
+-- Lines 991-996
 function EventCompleteState:_shut_down_network()
 	Network:set_multiplayer(false)
 	managers.network:queue_stop_network()
@@ -897,7 +944,7 @@ function EventCompleteState:_shut_down_network()
 	managers.network.voice_chat:destroy_voice()
 end
 
--- Lines 978-1001
+-- Lines 999-1022
 function EventCompleteState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._mission_end_menu
 
@@ -924,16 +971,18 @@ function EventCompleteState:_continue_blocked()
 	return false
 end
 
--- Lines 1003-1005
+-- Lines 1024-1026
 function EventCompleteState:continue()
 	self:_continue()
 end
 
--- Lines 1007-1101
+-- Lines 1028-1124
 function EventCompleteState:_continue()
 	Application:trace("[EventCompleteState:_continue()]")
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_DEBRIEF_VIDEO then
+		managers.queued_tasks:unqueue("play_debrief_video")
+
 		if self:is_success() then
 			managers.music:post_event("music_mission_success", true)
 		else
@@ -1013,7 +1062,7 @@ function EventCompleteState:_continue()
 	end
 end
 
--- Lines 1103-1113
+-- Lines 1126-1136
 function EventCompleteState:_clear_controller()
 	managers.controller:remove_hotswap_callback("event_complete_state")
 
@@ -1027,12 +1076,12 @@ function EventCompleteState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines 1115-1117
+-- Lines 1138-1140
 function EventCompleteState:game_ended()
 	return true
 end
 
--- Lines 1119-1150
+-- Lines 1142-1173
 function EventCompleteState:check_complete_achievements()
 	if self:is_success() then
 		managers.achievment:check_achievement_complete_raid_with_4_different_classes()
@@ -1041,7 +1090,7 @@ function EventCompleteState:check_complete_achievements()
 	end
 end
 
--- Lines 1152-1173
+-- Lines 1175-1196
 function EventCompleteState:set_statistics_values()
 	local usingChallengeCard = false
 
@@ -1054,7 +1103,7 @@ function EventCompleteState:set_statistics_values()
 	end
 end
 
--- Lines 1176-1178
+-- Lines 1199-1201
 function EventCompleteState:is_joinable()
 	return false
 end

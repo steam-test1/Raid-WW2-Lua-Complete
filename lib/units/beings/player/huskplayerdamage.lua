@@ -34,7 +34,12 @@ function HuskPlayerDamage:remove_listener(key)
 	CopDamage.remove_listener(self, key)
 end
 
--- Lines 40-48
+-- Lines 40-42
+function HuskPlayerDamage:sync_martyrdom(projectile_entry)
+	PlayerDamage.on_martyrdom(self, projectile_entry)
+end
+
+-- Lines 46-54
 function HuskPlayerDamage:sync_damage_bullet(attacker_unit, damage, i_body, height_offset)
 	local attack_data = {
 		attacker_unit = attacker_unit,
@@ -49,46 +54,41 @@ function HuskPlayerDamage:sync_damage_bullet(attacker_unit, damage, i_body, heig
 	self:_call_listeners(attack_data)
 end
 
--- Lines 52-54
+-- Lines 58-60
 function HuskPlayerDamage:shoot_pos_mid(m_pos)
 	self._spine2_obj:m_position(m_pos)
 end
 
--- Lines 58-60
+-- Lines 64-66
 function HuskPlayerDamage:can_attach_projectiles()
 	return false
 end
 
--- Lines 64-66
+-- Lines 70-72
 function HuskPlayerDamage:set_last_down_time(down_time)
 	self._last_down_time = down_time
 end
 
--- Lines 70-72
+-- Lines 76-78
 function HuskPlayerDamage:down_time()
 	return self._last_down_time
 end
 
--- Lines 76-78
-function HuskPlayerDamage:arrested()
-	return self._unit:movement():current_state_name() == "arrested"
-end
-
--- Lines 82-84
+-- Lines 81-83
 function HuskPlayerDamage:incapacitated()
 	return self._unit:movement():current_state_name() == "incapacitated"
 end
 
--- Lines 88-90
+-- Lines 87-89
 function HuskPlayerDamage:set_mission_damage_blockers(type, state)
 	self._mission_damage_blockers[type] = state
 end
 
--- Lines 93-95
+-- Lines 92-94
 function HuskPlayerDamage:get_mission_blocker(type)
 	return self._mission_damage_blockers[type]
 end
 
--- Lines 99-100
+-- Lines 98-99
 function HuskPlayerDamage:dead()
 end

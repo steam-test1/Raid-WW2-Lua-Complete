@@ -2,7 +2,7 @@ core:import("CoreShapeManager")
 
 CoreSoundEnvironmentManager = CoreSoundEnvironmentManager or class()
 
--- Lines 19-74
+-- Lines 19-71
 function CoreSoundEnvironmentManager:init()
 	self._areas = {}
 	self._areas_per_frame = 1
@@ -47,14 +47,13 @@ function CoreSoundEnvironmentManager:init()
 	end
 
 	self._ambience_enabled = false
-	self._occasional_blocked_by_platform = _G.IS_XB360
-	self._ambience_sources_count = 1
+	self._ambience_sources_count = 2
 	self.POSITION_OFFSET = 50
 	self._active_ambience_soundbanks = {}
 	self._occasional_sound_source = SoundDevice:create_source("occasional")
 end
 
--- Lines 76-91
+-- Lines 73-88
 function CoreSoundEnvironmentManager:_find_emitter_events()
 	self._emitter = {
 		events = {},
@@ -81,7 +80,7 @@ function CoreSoundEnvironmentManager:_find_emitter_events()
 	table.sort(self._emitter.paths)
 end
 
--- Lines 93-104
+-- Lines 90-101
 function CoreSoundEnvironmentManager:_find_ambience_events()
 	self._ambience = {
 		events = {},
@@ -101,7 +100,7 @@ function CoreSoundEnvironmentManager:_find_ambience_events()
 	table.sort(self._ambience.events)
 end
 
--- Lines 106-121
+-- Lines 103-118
 function CoreSoundEnvironmentManager:_find_scene_events()
 	self._scene = {
 		events = {},
@@ -126,7 +125,7 @@ function CoreSoundEnvironmentManager:_find_scene_events()
 	table.sort(self._scene.paths)
 end
 
--- Lines 123-134
+-- Lines 120-131
 function CoreSoundEnvironmentManager:_find_occasional_events()
 	self._occasional = {
 		events = {},
@@ -146,37 +145,37 @@ function CoreSoundEnvironmentManager:_find_occasional_events()
 	table.sort(self._occasional.events)
 end
 
--- Lines 136-138
+-- Lines 133-135
 function CoreSoundEnvironmentManager:areas()
 	return self._areas
 end
 
--- Lines 140-142
+-- Lines 137-139
 function CoreSoundEnvironmentManager:game_default_ambience()
 	return self.GAME_DEFAULT_AMBIENCE
 end
 
--- Lines 144-146
+-- Lines 141-143
 function CoreSoundEnvironmentManager:game_default_occasional()
 	return self.GAME_DEFAULT_OCCASIONAL
 end
 
--- Lines 149-151
+-- Lines 146-148
 function CoreSoundEnvironmentManager:game_default_emitter_path()
 	return self.GAME_DEFAULT_EMITTER_PATH
 end
 
--- Lines 154-156
+-- Lines 151-153
 function CoreSoundEnvironmentManager:emitter_paths()
 	return self._emitter.paths
 end
 
--- Lines 159-161
+-- Lines 156-158
 function CoreSoundEnvironmentManager:emitter_events(path)
 	return path and self._emitter.events[path] or self._emitter.events
 end
 
--- Lines 164-169
+-- Lines 161-166
 function CoreSoundEnvironmentManager:emitter_soundbank(event)
 	if not self._emitter then
 		return
@@ -185,7 +184,7 @@ function CoreSoundEnvironmentManager:emitter_soundbank(event)
 	return self._emitter.soundbanks[event]
 end
 
--- Lines 172-177
+-- Lines 169-174
 function CoreSoundEnvironmentManager:emitter_soundbanks()
 	if not self._emitter then
 		return
@@ -194,12 +193,12 @@ function CoreSoundEnvironmentManager:emitter_soundbanks()
 	return self._emitter.soundbanks
 end
 
--- Lines 180-182
+-- Lines 177-179
 function CoreSoundEnvironmentManager:ambience_events()
 	return self._ambience.events
 end
 
--- Lines 185-190
+-- Lines 182-187
 function CoreSoundEnvironmentManager:ambience_soundbank(event)
 	if not self._ambience then
 		return
@@ -208,7 +207,7 @@ function CoreSoundEnvironmentManager:ambience_soundbank(event)
 	return self._ambience.soundbanks[event]
 end
 
--- Lines 193-198
+-- Lines 190-195
 function CoreSoundEnvironmentManager:ambience_soundbanks()
 	if not self._ambience then
 		return
@@ -217,7 +216,7 @@ function CoreSoundEnvironmentManager:ambience_soundbanks()
 	return self._ambience.soundbanks
 end
 
--- Lines 201-206
+-- Lines 198-203
 function CoreSoundEnvironmentManager:occasional_events()
 	if not self._occasional then
 		return
@@ -226,7 +225,7 @@ function CoreSoundEnvironmentManager:occasional_events()
 	return self._occasional.events
 end
 
--- Lines 209-214
+-- Lines 206-211
 function CoreSoundEnvironmentManager:occasional_soundbank(event)
 	if not self._occasional then
 		return
@@ -235,7 +234,7 @@ function CoreSoundEnvironmentManager:occasional_soundbank(event)
 	return self._occasional.soundbanks[event]
 end
 
--- Lines 217-222
+-- Lines 214-219
 function CoreSoundEnvironmentManager:occasional_soundbanks()
 	if not self._occasional then
 		return
@@ -244,32 +243,32 @@ function CoreSoundEnvironmentManager:occasional_soundbanks()
 	return self._occasional.soundbanks
 end
 
--- Lines 225-227
+-- Lines 222-224
 function CoreSoundEnvironmentManager:game_default_scene_path()
 	return self.GAME_DEFAULT_SCENE_PATH
 end
 
--- Lines 230-232
+-- Lines 227-229
 function CoreSoundEnvironmentManager:scene_paths()
 	return self._scene.paths
 end
 
--- Lines 235-237
+-- Lines 232-234
 function CoreSoundEnvironmentManager:scene_events(path)
 	return path and self._scene.events[path] or self._scene.events
 end
 
--- Lines 240-242
+-- Lines 237-239
 function CoreSoundEnvironmentManager:scene_soundbank(event)
 	return self._scene.soundbanks[event]
 end
 
--- Lines 245-247
+-- Lines 242-244
 function CoreSoundEnvironmentManager:scene_soundbanks()
 	return self._scene.soundbanks
 end
 
--- Lines 250-256
+-- Lines 247-253
 function CoreSoundEnvironmentManager:scene_path(event)
 	for path, events in pairs(self._scene.events) do
 		if table.contains(events, event) then
@@ -278,17 +277,17 @@ function CoreSoundEnvironmentManager:scene_path(event)
 	end
 end
 
--- Lines 259-261
+-- Lines 256-258
 function CoreSoundEnvironmentManager:emitters()
 	return self._emitters
 end
 
--- Lines 264-266
+-- Lines 261-263
 function CoreSoundEnvironmentManager:area_emitters()
 	return self._area_emitters
 end
 
--- Lines 269-276
+-- Lines 266-273
 function CoreSoundEnvironmentManager:_environment_effects()
 	local effects = {}
 
@@ -301,22 +300,22 @@ function CoreSoundEnvironmentManager:_environment_effects()
 	return effects
 end
 
--- Lines 279-281
+-- Lines 276-278
 function CoreSoundEnvironmentManager:environments()
 	return self._environments
 end
 
--- Lines 283-285
+-- Lines 280-282
 function CoreSoundEnvironmentManager:game_default_environment()
 	return self.GAME_DEFAULT_ENVIRONMENT
 end
 
--- Lines 287-289
+-- Lines 284-286
 function CoreSoundEnvironmentManager:default_environment()
 	return self._default_environment
 end
 
--- Lines 291-295
+-- Lines 288-292
 function CoreSoundEnvironmentManager:set_default_environment(environment)
 	self._default_environment = environment
 
@@ -324,7 +323,7 @@ function CoreSoundEnvironmentManager:set_default_environment(environment)
 	self:_change_acoustic(self._default_environment)
 end
 
--- Lines 297-305
+-- Lines 294-302
 function CoreSoundEnvironmentManager:_set_environment(environment)
 	for _, func in ipairs(self._environment_changed_callback) do
 		func(environment)
@@ -338,12 +337,12 @@ function CoreSoundEnvironmentManager:_set_environment(environment)
 	})
 end
 
--- Lines 307-309
+-- Lines 304-306
 function CoreSoundEnvironmentManager:current_environment()
 	return self._current_environment
 end
 
--- Lines 311-323
+-- Lines 308-320
 function CoreSoundEnvironmentManager:set_default_ambience(ambience_event)
 	if not ambience_event then
 		return
@@ -360,12 +359,12 @@ function CoreSoundEnvironmentManager:set_default_ambience(ambience_event)
 	end
 end
 
--- Lines 325-327
+-- Lines 322-324
 function CoreSoundEnvironmentManager:default_ambience()
 	return self._default_ambience
 end
 
--- Lines 329-345
+-- Lines 326-342
 function CoreSoundEnvironmentManager:set_default_occasional(occasional_event)
 	if not occasional_event then
 		return
@@ -386,12 +385,12 @@ function CoreSoundEnvironmentManager:set_default_occasional(occasional_event)
 	end
 end
 
--- Lines 347-349
+-- Lines 344-346
 function CoreSoundEnvironmentManager:default_occasional()
 	return self._default_occasional
 end
 
--- Lines 351-360
+-- Lines 348-357
 function CoreSoundEnvironmentManager:add_soundbank(soundbank)
 	if not soundbank then
 		Application:error("Cant load nil soundbank")
@@ -404,7 +403,7 @@ function CoreSoundEnvironmentManager:add_soundbank(soundbank)
 	end
 end
 
--- Lines 363-368
+-- Lines 360-365
 function CoreSoundEnvironmentManager:set_to_default()
 	self:set_default_environment(self.GAME_DEFAULT_ENVIRONMENT)
 	self:set_default_ambience(self.GAME_DEFAULT_AMBIENCE)
@@ -412,7 +411,7 @@ function CoreSoundEnvironmentManager:set_to_default()
 	self:set_ambience_enabled(false)
 end
 
--- Lines 370-375
+-- Lines 367-372
 function CoreSoundEnvironmentManager:add_area(area_params, world_id)
 	local area = SoundEnvironmentArea:new(area_params)
 	area._world_id = world_id
@@ -422,7 +421,7 @@ function CoreSoundEnvironmentManager:add_area(area_params, world_id)
 	return area
 end
 
--- Lines 377-387
+-- Lines 374-384
 function CoreSoundEnvironmentManager:remove_area(area)
 	area:remove()
 
@@ -439,7 +438,7 @@ function CoreSoundEnvironmentManager:remove_area(area)
 	table.delete(self._areas, area)
 end
 
--- Lines 389-403
+-- Lines 386-400
 function CoreSoundEnvironmentManager:enable_area(name, enable)
 	for _, area in pairs(self._areas) do
 		if area:name() == name then
@@ -456,7 +455,7 @@ function CoreSoundEnvironmentManager:enable_area(name, enable)
 	end
 end
 
--- Lines 405-410
+-- Lines 402-407
 function CoreSoundEnvironmentManager:add_emitter(emitter_params, world_id)
 	local emitter = SoundEnvironmentEmitter:new(emitter_params)
 	emitter._world_id = world_id
@@ -466,13 +465,13 @@ function CoreSoundEnvironmentManager:add_emitter(emitter_params, world_id)
 	return emitter
 end
 
--- Lines 412-415
+-- Lines 409-412
 function CoreSoundEnvironmentManager:remove_emitter(emitter)
 	emitter:destroy()
 	table.delete(self._emitters, emitter)
 end
 
--- Lines 417-422
+-- Lines 414-419
 function CoreSoundEnvironmentManager:add_area_emitter(emitter_params, world_id)
 	local emitter = SoundEnvironmentAreaEmitter:new(emitter_params)
 	emitter._world_id = world_id
@@ -482,13 +481,13 @@ function CoreSoundEnvironmentManager:add_area_emitter(emitter_params, world_id)
 	return emitter
 end
 
--- Lines 424-427
+-- Lines 421-424
 function CoreSoundEnvironmentManager:remove_area_emitter(emitter)
 	emitter:destroy()
 	table.delete(self._area_emitters, emitter)
 end
 
--- Lines 432-437
+-- Lines 429-434
 function CoreSoundEnvironmentManager:add_listener(data)
 	Application:throw_exception("add_listener function is no longer working because of new sound implementation. Use add_check_object instead.")
 
@@ -498,7 +497,7 @@ function CoreSoundEnvironmentManager:add_listener(data)
 	return self:add_check_object(data)
 end
 
--- Lines 442-478
+-- Lines 439-475
 function CoreSoundEnvironmentManager:add_check_object(data)
 	if not data.object then
 		Application:error("Must use an Object3D when adding check objects to sound environment manager.")
@@ -552,7 +551,7 @@ function CoreSoundEnvironmentManager:add_check_object(data)
 	return self._check_object_id
 end
 
--- Lines 481-491
+-- Lines 478-488
 function CoreSoundEnvironmentManager:remove_check_object(id)
 	local remove_object = self._check_objects[id]
 
@@ -569,7 +568,7 @@ function CoreSoundEnvironmentManager:remove_check_object(id)
 	self:_enable_fallback()
 end
 
--- Lines 494-517
+-- Lines 491-514
 function CoreSoundEnvironmentManager:set_check_object_active(id, active)
 	local object = self._check_objects[id]
 
@@ -596,19 +595,19 @@ function CoreSoundEnvironmentManager:set_check_object_active(id, active)
 	end
 end
 
--- Lines 519-522
+-- Lines 516-519
 function CoreSoundEnvironmentManager:obj_alive(id)
 	local data = self._check_objects[id]
 
 	return data and alive(data.object)
 end
 
--- Lines 525-527
+-- Lines 522-524
 function CoreSoundEnvironmentManager:check_object(id)
 	return self._check_objects[id]
 end
 
--- Lines 530-535
+-- Lines 527-532
 function CoreSoundEnvironmentManager:_disable_fallback()
 	local fallback = self._check_objects[self._fallback_id]
 
@@ -617,7 +616,7 @@ function CoreSoundEnvironmentManager:_disable_fallback()
 	end
 end
 
--- Lines 538-548
+-- Lines 535-545
 function CoreSoundEnvironmentManager:_enable_fallback()
 	local fallback = self._check_objects[self._fallback_id]
 
@@ -632,7 +631,7 @@ function CoreSoundEnvironmentManager:_enable_fallback()
 	end
 end
 
--- Lines 550-552
+-- Lines 547-549
 function CoreSoundEnvironmentManager:_next_occasional()
 	return Application:time() + 6 + math.rand(4)
 end
@@ -640,7 +639,7 @@ end
 local check_pos = Vector3()
 local mvec_surround_pos = Vector3()
 
--- Lines 557-614
+-- Lines 554-611
 function CoreSoundEnvironmentManager:_update_object(t, dt, id, data)
 	data.object:m_position(check_pos)
 
@@ -659,7 +658,7 @@ function CoreSoundEnvironmentManager:_update_object(t, dt, id, data)
 	if data.next_occasional < t then
 		data.next_occasional = self:_next_occasional()
 
-		if self._ambience_enabled and not self._occasional_blocked_by_platform then
+		if self._ambience_enabled then
 			local event = data.area and data.area:use_occasional() and data.area:occasional_event() or self._default_occasional
 
 			if event then
@@ -695,7 +694,7 @@ function CoreSoundEnvironmentManager:_update_object(t, dt, id, data)
 	return nil
 end
 
--- Lines 617-642
+-- Lines 614-639
 function CoreSoundEnvironmentManager:_fallback_on_camera()
 	if not self._use_fallback_on_camera then
 		return
@@ -729,7 +728,7 @@ function CoreSoundEnvironmentManager:_fallback_on_camera()
 	end
 end
 
--- Lines 644-653
+-- Lines 641-650
 function CoreSoundEnvironmentManager:update(t, dt)
 	for id, data in pairs(self._check_objects) do
 		if data.active then
@@ -738,7 +737,7 @@ function CoreSoundEnvironmentManager:update(t, dt)
 	end
 end
 
--- Lines 655-679
+-- Lines 652-676
 function CoreSoundEnvironmentManager:_change_ambience(data, sound_gain)
 	local area = data.area
 	local ambience_event = area and area:ambience_event() or self._default_ambience
@@ -764,7 +763,7 @@ function CoreSoundEnvironmentManager:_change_ambience(data, sound_gain)
 	end
 end
 
--- Lines 681-692
+-- Lines 678-689
 function CoreSoundEnvironmentManager:_change_acoustic(environment)
 	self._acoustic = environment
 
@@ -778,7 +777,7 @@ end
 
 local check_pos2 = Vector3()
 
--- Lines 695-717
+-- Lines 692-714
 function CoreSoundEnvironmentManager:_check_inside(data)
 	if #self._areas > 0 then
 		local check_pos = check_pos2
@@ -806,12 +805,12 @@ function CoreSoundEnvironmentManager:_check_inside(data)
 	return data.area
 end
 
--- Lines 720-722
+-- Lines 717-719
 function CoreSoundEnvironmentManager:ambience_enabled()
 	return self._ambience_enabled
 end
 
--- Lines 725-743
+-- Lines 722-740
 function CoreSoundEnvironmentManager:set_ambience_enabled(enabled)
 	self._ambience_enabled = enabled
 
@@ -834,7 +833,7 @@ function CoreSoundEnvironmentManager:set_ambience_enabled(enabled)
 	end
 end
 
--- Lines 746-759
+-- Lines 743-756
 function CoreSoundEnvironmentManager:environment_at_position(pos)
 	local environment = self._default_environment
 	local ambience = self._default_ambience
@@ -853,7 +852,7 @@ function CoreSoundEnvironmentManager:environment_at_position(pos)
 	return environment, ambience, occasional
 end
 
--- Lines 762-774
+-- Lines 759-771
 function CoreSoundEnvironmentManager:apply_ambience_switch(switch_name, switch_value)
 	self._current_switch_values = self._current_switch_values or {}
 
@@ -871,7 +870,7 @@ function CoreSoundEnvironmentManager:apply_ambience_switch(switch_name, switch_v
 	self._current_switch_values[switch_name] = switch_value
 end
 
--- Lines 781-788
+-- Lines 778-785
 function CoreSoundEnvironmentManager:add_ambience_changed_callback(func, id)
 	if id then
 		self._ambience_changed_callbacks[id] = self._ambience_changed_callbacks[id] or {}
@@ -884,7 +883,7 @@ function CoreSoundEnvironmentManager:add_ambience_changed_callback(func, id)
 	table.insert(self._ambience_changed_callback, func)
 end
 
--- Lines 794-800
+-- Lines 791-797
 function CoreSoundEnvironmentManager:remove_ambience_changed_callback(func, id)
 	if id and self._ambience_changed_callbacks[id] then
 		table.delete(self._ambience_changed_callbacks[id], func)
@@ -895,17 +894,17 @@ function CoreSoundEnvironmentManager:remove_ambience_changed_callback(func, id)
 	table.delete(self._ambience_changed_callback, func)
 end
 
--- Lines 804-806
+-- Lines 801-803
 function CoreSoundEnvironmentManager:add_environment_changed_callback(func)
 	table.insert(self._environment_changed_callback, func)
 end
 
--- Lines 810-812
+-- Lines 807-809
 function CoreSoundEnvironmentManager:remove_environment_changed_callback(func)
 	table.delete(self._environment_changed_callback, func)
 end
 
--- Lines 814-833
+-- Lines 811-830
 function CoreSoundEnvironmentManager:destroy()
 	for i, emitter in ipairs(self._emitters) do
 		emitter:destroy()
@@ -930,7 +929,7 @@ function CoreSoundEnvironmentManager:destroy()
 	end
 end
 
--- Lines 835-856
+-- Lines 832-853
 function CoreSoundEnvironmentManager:destroy_world_sounds(world_id)
 	for i = #self._emitters, 1, -1 do
 		local emitter = self._emitters[i]
@@ -959,7 +958,7 @@ end
 
 SoundEnvironmentArea = SoundEnvironmentArea or class(CoreShapeManager.ShapeBox)
 
--- Lines 862-883
+-- Lines 859-880
 function SoundEnvironmentArea:init(params)
 	params.type = "box"
 
@@ -988,7 +987,7 @@ function SoundEnvironmentArea:init(params)
 	end
 end
 
--- Lines 886-897
+-- Lines 883-894
 function SoundEnvironmentArea:_init_event()
 	if Application:editor() then
 		if not table.contains(managers.sound_environment:ambience_events(), self._ambience_event) then
@@ -1003,7 +1002,7 @@ function SoundEnvironmentArea:_init_event()
 	end
 end
 
--- Lines 900-907
+-- Lines 897-904
 function SoundEnvironmentArea:_init_environment_effect()
 	if Application:editor() and not table.contains(managers.sound_environment:environments(), self._environment) then
 		managers.editor:output_error("Environment effect " .. self._environment .. " no longer exits. Falls back on default.")
@@ -1011,7 +1010,7 @@ function SoundEnvironmentArea:_init_environment_effect()
 	end
 end
 
--- Lines 909-913
+-- Lines 906-910
 function SoundEnvironmentArea:_add_environment()
 	if self._use_environment and not self._environment_id then
 		self._environment_id = SoundDevice:add_environment({
@@ -1022,7 +1021,7 @@ function SoundEnvironmentArea:_add_environment()
 	end
 end
 
--- Lines 915-920
+-- Lines 912-917
 function SoundEnvironmentArea:_remove_environment()
 	if self._environment_id then
 		SoundDevice:remove_environment(self._environment_id)
@@ -1031,34 +1030,34 @@ function SoundEnvironmentArea:_remove_environment()
 	end
 end
 
--- Lines 922-924
+-- Lines 919-921
 function SoundEnvironmentArea:enable(enable)
 	self._enable = enable
 end
 
--- Lines 926-928
+-- Lines 923-925
 function SoundEnvironmentArea:name()
 	return self._unit and self._unit:unit_data().name_id or self._name
 end
 
--- Lines 930-932
+-- Lines 927-929
 function SoundEnvironmentArea:environment()
 	return self._environment
 end
 
--- Lines 934-937
+-- Lines 931-934
 function SoundEnvironmentArea:set_environment(environment)
 	self._environment = environment
 
 	self:_update_environment()
 end
 
--- Lines 940-942
+-- Lines 937-939
 function SoundEnvironmentArea:ambience_event()
 	return self._ambience_event
 end
 
--- Lines 945-953
+-- Lines 942-950
 function SoundEnvironmentArea:set_environment_ambience(ambience_event)
 	if not ambience_event then
 		return
@@ -1071,22 +1070,22 @@ function SoundEnvironmentArea:set_environment_ambience(ambience_event)
 	end
 end
 
--- Lines 955-957
+-- Lines 952-954
 function SoundEnvironmentArea:set_use_ambience(use_ambience)
 	self._use_ambience = use_ambience
 end
 
--- Lines 959-961
+-- Lines 956-958
 function SoundEnvironmentArea:use_ambience()
 	return self._use_ambience
 end
 
--- Lines 964-966
+-- Lines 961-963
 function SoundEnvironmentArea:occasional_event()
 	return self._occasional_event
 end
 
--- Lines 969-977
+-- Lines 966-974
 function SoundEnvironmentArea:set_environment_occasional(occasional_event)
 	self._occasional_event = occasional_event
 
@@ -1099,17 +1098,17 @@ function SoundEnvironmentArea:set_environment_occasional(occasional_event)
 	end
 end
 
--- Lines 979-981
+-- Lines 976-978
 function SoundEnvironmentArea:set_use_occasional(use_occasional)
 	self._use_occasional = use_occasional
 end
 
--- Lines 983-985
+-- Lines 980-982
 function SoundEnvironmentArea:use_occasional()
 	return self._use_occasional
 end
 
--- Lines 987-994
+-- Lines 984-991
 function SoundEnvironmentArea:set_use_environment(use_environment)
 	self._use_environment = use_environment
 
@@ -1120,18 +1119,18 @@ function SoundEnvironmentArea:set_use_environment(use_environment)
 	end
 end
 
--- Lines 996-998
+-- Lines 993-995
 function SoundEnvironmentArea:use_environment()
 	return self._use_environment
 end
 
--- Lines 1000-1003
+-- Lines 997-1000
 function SoundEnvironmentArea:set_unit(unit)
 	SoundEnvironmentArea.super.set_unit(self, unit)
 	self._environment_shape:link(unit:orientation_object())
 end
 
--- Lines 1005-1009
+-- Lines 1002-1006
 function SoundEnvironmentArea:_update_environment()
 	if self._environment_id then
 		SoundDevice:update_environment(self._environment_id, {
@@ -1142,42 +1141,42 @@ function SoundEnvironmentArea:_update_environment()
 	end
 end
 
--- Lines 1011-1014
+-- Lines 1008-1011
 function SoundEnvironmentArea:_update_environment_size()
 	self._environment_shape:set_size(self:size())
 	self:_update_environment()
 end
 
--- Lines 1017-1020
+-- Lines 1014-1017
 function SoundEnvironmentArea:set_property(property, value)
 	SoundEnvironmentArea.super.set_property(self, property, value)
 	self:_update_environment_size()
 end
 
--- Lines 1022-1025
+-- Lines 1019-1022
 function SoundEnvironmentArea:set_width(width)
 	SoundEnvironmentArea.super.set_width(self, width)
 	self:_update_environment_size()
 end
 
--- Lines 1027-1031
+-- Lines 1024-1028
 function SoundEnvironmentArea:set_depth(depth)
 	SoundEnvironmentArea.super.set_depth(self, depth)
 	self:_update_environment_size()
 end
 
--- Lines 1033-1037
+-- Lines 1030-1034
 function SoundEnvironmentArea:set_height(height)
 	SoundEnvironmentArea.super.set_height(self, height)
 	self:_update_environment_size()
 end
 
--- Lines 1039-1042
+-- Lines 1036-1039
 function SoundEnvironmentArea:remove()
 	self:_remove_environment()
 end
 
--- Lines 1044-1049
+-- Lines 1041-1046
 function SoundEnvironmentArea:still_inside(pos)
 	if not self._enable or not self._use_ambience then
 		return false
@@ -1186,7 +1185,7 @@ function SoundEnvironmentArea:still_inside(pos)
 	return SoundEnvironmentArea.super.still_inside(self, pos)
 end
 
--- Lines 1051-1056
+-- Lines 1048-1053
 function SoundEnvironmentArea:is_inside(pos)
 	if not self._enable or not self._use_ambience then
 		return false
@@ -1197,7 +1196,7 @@ end
 
 SoundEnvironmentEmitter = SoundEnvironmentEmitter or class()
 
--- Lines 1062-1069
+-- Lines 1059-1066
 function SoundEnvironmentEmitter:init(params)
 	self._position = params.position or Vector3()
 	self._rotation = params.rotation or Rotation()
@@ -1208,7 +1207,7 @@ function SoundEnvironmentEmitter:init(params)
 	self:set_emitter_event(params.emitter_event or managers.sound_environment:emitter_events(emitter_path)[1])
 end
 
--- Lines 1072-1079
+-- Lines 1069-1076
 function SoundEnvironmentEmitter:save_xml(t)
 	local properties = {
 		name = self:name(),
@@ -1220,12 +1219,12 @@ function SoundEnvironmentEmitter:save_xml(t)
 	return simple_value_string("properties", properties, t)
 end
 
--- Lines 1081-1083
+-- Lines 1078-1080
 function SoundEnvironmentEmitter:name()
 	return self._unit and self._unit:unit_data().name_id or self._name
 end
 
--- Lines 1086-1092
+-- Lines 1083-1089
 function SoundEnvironmentEmitter:emitter_path()
 	for path, events in pairs(managers.sound_environment:emitter_events()) do
 		if table.contains(events, self._emitter_event) then
@@ -1234,12 +1233,12 @@ function SoundEnvironmentEmitter:emitter_path()
 	end
 end
 
--- Lines 1095-1097
+-- Lines 1092-1094
 function SoundEnvironmentEmitter:emitter_event()
 	return self._emitter_event
 end
 
--- Lines 1101-1112
+-- Lines 1098-1109
 function SoundEnvironmentEmitter:set_emitter_path(emitter_path)
 	if not emitter_path then
 		return
@@ -1254,7 +1253,7 @@ function SoundEnvironmentEmitter:set_emitter_path(emitter_path)
 	self:set_emitter_event(managers.sound_environment:emitter_events(emitter_path)[1])
 end
 
--- Lines 1115-1121
+-- Lines 1112-1118
 function SoundEnvironmentEmitter:set_emitter_event(emitter_event)
 	self._emitter_event = emitter_event
 
@@ -1265,34 +1264,34 @@ function SoundEnvironmentEmitter:set_emitter_event(emitter_event)
 	self:play_sound()
 end
 
--- Lines 1123-1126
+-- Lines 1120-1123
 function SoundEnvironmentEmitter:set_unit(unit)
 	self._unit = unit
 
 	self._soundsource:link(self._unit:orientation_object())
 end
 
--- Lines 1128-1130
+-- Lines 1125-1127
 function SoundEnvironmentEmitter:position()
 	return self._unit and self._unit:position() or self._position
 end
 
--- Lines 1132-1134
+-- Lines 1129-1131
 function SoundEnvironmentEmitter:set_position(position)
 	self._position = position
 end
 
--- Lines 1136-1138
+-- Lines 1133-1135
 function SoundEnvironmentEmitter:rotation()
 	return self._unit and self._unit:rotation() or self._rotation
 end
 
--- Lines 1140-1142
+-- Lines 1137-1139
 function SoundEnvironmentEmitter:set_rotation(rotation)
 	self._rotation = rotation
 end
 
--- Lines 1145-1156
+-- Lines 1142-1153
 function SoundEnvironmentEmitter:play_sound()
 	if self._sound_event then
 		self._sound_event:stop()
@@ -1309,19 +1308,19 @@ function SoundEnvironmentEmitter:play_sound()
 	self._sound_event = self._soundsource:post_event(self._emitter_event)
 end
 
--- Lines 1158-1160
+-- Lines 1155-1157
 function SoundEnvironmentEmitter:restart()
 	self:play_sound()
 end
 
--- Lines 1162-1166
+-- Lines 1159-1163
 function SoundEnvironmentEmitter:draw(t, dt, r, g, b)
 	Application:draw_sphere(self:position(), 75, r, g, b)
 	Application:draw_cone(self:position(), self:position() + self:rotation():y() * 500, 500, r, g, b)
 	Application:draw_cone(self:position(), self:position() - self:rotation():y() * 500, 500, r, g, b)
 end
 
--- Lines 1168-1177
+-- Lines 1165-1174
 function SoundEnvironmentEmitter:destroy()
 	if self._sound_event then
 		self._sound_event:stop()
@@ -1338,7 +1337,7 @@ end
 
 SoundEnvironmentAreaEmitter = SoundEnvironmentAreaEmitter or class(CoreShapeManager.ShapeBoxMiddle)
 
--- Lines 1183-1190
+-- Lines 1180-1187
 function SoundEnvironmentAreaEmitter:init(params)
 	params.type = "box_middle"
 
@@ -1351,19 +1350,19 @@ function SoundEnvironmentAreaEmitter:init(params)
 	self:set_emitter_event(params.emitter_event or managers.sound_environment:emitter_events(emitter_path)[1])
 end
 
--- Lines 1192-1195
+-- Lines 1189-1192
 function SoundEnvironmentAreaEmitter:save(...)
 	self._properties.name = self:name()
 
 	return SoundEnvironmentAreaEmitter.super.save(self, ...)
 end
 
--- Lines 1197-1199
+-- Lines 1194-1196
 function SoundEnvironmentAreaEmitter:name()
 	return self._unit and self._unit:unit_data().name_id or self._name
 end
 
--- Lines 1202-1208
+-- Lines 1199-1205
 function SoundEnvironmentAreaEmitter:emitter_path()
 	for path, events in pairs(managers.sound_environment:emitter_events()) do
 		if table.contains(events, self._properties.emitter_event) then
@@ -1372,12 +1371,12 @@ function SoundEnvironmentAreaEmitter:emitter_path()
 	end
 end
 
--- Lines 1211-1213
+-- Lines 1208-1210
 function SoundEnvironmentAreaEmitter:emitter_event()
 	return self._properties.emitter_event
 end
 
--- Lines 1216-1227
+-- Lines 1213-1224
 function SoundEnvironmentAreaEmitter:set_emitter_path(emitter_path)
 	if not emitter_path then
 		return
@@ -1392,7 +1391,7 @@ function SoundEnvironmentAreaEmitter:set_emitter_path(emitter_path)
 	self:set_emitter_event(managers.sound_environment:emitter_events(emitter_path)[1])
 end
 
--- Lines 1229-1235
+-- Lines 1226-1232
 function SoundEnvironmentAreaEmitter:set_emitter_event(emitter_event)
 	self._properties.emitter_event = emitter_event
 
@@ -1403,7 +1402,7 @@ function SoundEnvironmentAreaEmitter:set_emitter_event(emitter_event)
 	self:play_sound()
 end
 
--- Lines 1237-1248
+-- Lines 1234-1245
 function SoundEnvironmentAreaEmitter:play_sound()
 	if self._sound_event then
 		self._sound_event:stop()
@@ -1418,33 +1417,33 @@ function SoundEnvironmentAreaEmitter:play_sound()
 	self._sound_event = self._soundsource:post_event(self._properties.emitter_event)
 end
 
--- Lines 1250-1255
+-- Lines 1247-1252
 function SoundEnvironmentAreaEmitter:set_extent()
 end
 
--- Lines 1257-1259
+-- Lines 1254-1256
 function SoundEnvironmentAreaEmitter:extent()
 	return Vector3(self._properties.width / 2, self._properties.depth / 2, self._properties.height / 2)
 end
 
--- Lines 1261-1264
+-- Lines 1258-1261
 function SoundEnvironmentAreaEmitter:set_property(...)
 	SoundEnvironmentAreaEmitter.super.set_property(self, ...)
 	self:set_extent()
 end
 
--- Lines 1266-1269
+-- Lines 1263-1266
 function SoundEnvironmentAreaEmitter:set_unit(unit)
 	SoundEnvironmentAreaEmitter.super.set_unit(self, unit)
 	self._soundsource:link(self._unit:orientation_object())
 end
 
--- Lines 1271-1273
+-- Lines 1268-1270
 function SoundEnvironmentAreaEmitter:restart()
 	self:play_sound()
 end
 
--- Lines 1275-1284
+-- Lines 1272-1281
 function SoundEnvironmentAreaEmitter:destroy()
 	if self._sound_event then
 		self._sound_event:stop()

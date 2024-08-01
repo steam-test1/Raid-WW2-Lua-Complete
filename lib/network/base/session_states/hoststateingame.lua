@@ -5,13 +5,13 @@ function HostStateInGame:enter(data, enter_params)
 	print("[HostStateInGame:enter]", data, inspect(enter_params))
 end
 
--- Lines 9-172
+-- Lines 9-168
 function HostStateInGame:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, gameversion, join_attempt_identifier, auth_ticket, sender)
 	print("[HostStateInGame:on_join_request_received]", data, peer_name, client_preferred_character, dlcs, xuid, peer_level, gameversion, join_attempt_identifier, sender:ip_at_index(0))
 
 	local my_user_id = data.local_peer:user_id() or ""
 
-	if _G.IS_PC then
+	if IS_PC then
 		peer_name = managers.network.account:username_by_id(sender:ip_at_index(0))
 	end
 
@@ -91,7 +91,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	local character = managers.network:session():check_peer_preferred_character(client_preferred_character)
 	local xnaddr = ""
 
-	if _G.IS_XB360 or _G.IS_XB1 then
+	if IS_XB1 then
 		xnaddr = managers.network.matchmake:external_address(sender)
 	end
 
@@ -146,14 +146,14 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 		end
 	end
 
-	local server_xuid = (_G.IS_XB360 or _G.IS_XB1) and managers.network.account:player_id() or ""
+	local server_xuid = IS_XB1 and managers.network.account:player_id() or ""
 
 	new_peer:send("join_request_reply", 1, new_peer_id, character, level_index, difficulty_index, 2, data.local_peer:character(), my_user_id, Global.game_settings.mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, server_xuid, ticket)
 	Application:debug("[HostStateInGame:on_join_request_received]", data.session:load_counter())
 	new_peer:send("set_loading_state", false, data.session:load_counter())
 	managers.worldcollection:send_loaded_packages(new_peer)
 
-	if _G.IS_XB360 or _G.IS_XB1 then
+	if IS_XB1 then
 		new_peer:send("request_player_name_reply", managers.network:session():local_peer():name())
 	end
 
@@ -162,7 +162,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	self:on_handshake_confirmation(data, new_peer, 1)
 end
 
--- Lines 176-184
+-- Lines 172-180
 function HostStateInGame:on_peer_finished_loading(data, peer)
 	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, peer)
@@ -172,7 +172,7 @@ function HostStateInGame:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines 188-190
+-- Lines 184-186
 function HostStateInGame:is_joinable(data)
 	return not data.wants_to_load_level
 end

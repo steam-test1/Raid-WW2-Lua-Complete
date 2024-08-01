@@ -13,25 +13,20 @@ end
 
 -- Lines 12-14
 function GreedItem:value()
-	return self._value
+	return self._value * managers.player:upgrade_value("player", "greed_loot_bonus", 1)
 end
 
--- Lines 16-25
+-- Lines 16-18
+function GreedItem:tweak_id()
+	return self._tweak_table
+end
+
+-- Lines 20-22
 function GreedItem:value_line_id()
-	local v = self:value()
-
-	if GreedTweakData.HIGH_END_ITEM_VALUE <= v then
-		return "large"
-	elseif GreedTweakData.MID_END_ITEM_VALUE <= v then
-		return "medium"
-	elseif GreedTweakData.LOW_END_ITEM_VALUE <= v then
-		return "small"
-	end
-
-	return "none"
+	return tweak_data.greed:value_line_id(self:value())
 end
 
--- Lines 27-35
+-- Lines 24-32
 function GreedItem:on_load_complete()
 	if not self._dont_register then
 		local world_id = managers.worldcollection:get_worlddefinition_by_unit_id(self._unit:unit_data().unit_id):world_id()

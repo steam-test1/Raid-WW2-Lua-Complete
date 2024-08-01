@@ -561,8 +561,6 @@ function NpcVehicleDrivingExt:_get_player_speed()
 	if player_vehicle and player_vehicle:vehicle_driving() then
 		local p_speed = player_vehicle:vehicle_driving()._vehicle:get_state():get_speed() * 3.6
 
-		Application:debug("got player speed:", p_speed)
-
 		return p_speed
 	end
 end

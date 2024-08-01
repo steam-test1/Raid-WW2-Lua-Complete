@@ -705,7 +705,7 @@ SSAOIntensityFeeder.FILTER_CATEGORY = "Ambient"
 
 -- Lines 706-713
 function SSAOIntensityFeeder:apply(handler, viewport, scene)
-	managers.environment_controller:set_ssao_setting(managers.user:get_setting("ssao_setting"))
+	managers.environment_controller:set_ssao_setting(managers.user and managers.user:get_setting("ssao_setting") or 0)
 
 	local material = handler:_get_post_processor_modifier_material(viewport, scene, ids_apply_SSAO_id, ids_post_SSAO, ids_SSAO, ids_apply_SSAO)
 
@@ -854,7 +854,7 @@ PostVLSExposureFeeder.FILTER_CATEGORY = "Sun"
 
 -- Lines 849-852
 function PostVLSExposureFeeder:apply(handler, viewport, scene)
-	managers.environment_controller:set_volumetric_light_scatter_setting(managers.user:get_setting("vls_setting"))
+	managers.environment_controller:set_volumetric_light_scatter_setting(managers.user and managers.user:get_setting("vls_setting") or 0)
 	self:_set_variable(viewport, scene, ids_vls, ids_vls, ids_post_vls, ids_vls_exposure)
 end
 

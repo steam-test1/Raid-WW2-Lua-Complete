@@ -22,7 +22,7 @@ require("lib/states/IngameMenu")
 
 GameStateMachine = GameStateMachine or class(CoreGameStateMachine.GameStateMachine)
 
--- Lines 28-307
+-- Lines 35-314
 function GameStateMachine:init()
 	if not Global.game_state_machine then
 		Global.game_state_machine = {
@@ -37,7 +37,7 @@ function GameStateMachine:init()
 	Global.game_state_machine.is_boot_from_sign_out = false
 	local setup_boot = not self._is_boot_intro_done and not Application:editor()
 	local setup_title = (setup_boot or self._is_boot_from_sign_out) and not Application:editor()
-	local states = {}
+	self._controller_enabled_count = 1
 	local empty = GameState:new("empty", self)
 	local editor = EditorState:new(self)
 	local world_camera = WorldCameraState:new(self)
@@ -78,7 +78,6 @@ function GameStateMachine:init()
 	local ingame_loading_func = callback(nil, ingame_loading, "default_transition")
 	local ingame_menu_func = callback(nil, ingame_menu, "default_transition")
 	local event_complete_screen_func = callback(nil, event_complete_screen, "default_transition")
-	self._controller_enabled_count = 1
 
 	CoreGameStateMachine.GameStateMachine.init(self, empty)
 	self:add_transition(editor, empty, editor_func)
@@ -267,64 +266,59 @@ function GameStateMachine:init()
 	managers.system_menu:add_active_changed_callback(callback(self, self, "dialog_active_changed_callback"))
 end
 
--- Lines 309-313
+-- Lines 316-320
 function GameStateMachine:init_finilize()
 	if managers.hud then
 		managers.hud:add_chatinput_changed_callback(callback(self, self, "chatinput_changed_callback"))
 	end
 end
 
--- Lines 315-318
+-- Lines 322-325
 function GameStateMachine:set_boot_intro_done(is_boot_intro_done)
 	Global.game_state_machine.is_boot_intro_done = is_boot_intro_done
 	self._is_boot_intro_done = is_boot_intro_done
 end
 
--- Lines 320-322
+-- Lines 327-329
 function GameStateMachine:is_boot_intro_done()
 	return self._is_boot_intro_done
 end
 
--- Lines 324-326
+-- Lines 331-333
 function GameStateMachine:set_boot_from_sign_out(is_boot_from_sign_out)
 	Global.game_state_machine.is_boot_from_sign_out = is_boot_from_sign_out
 end
 
--- Lines 328-330
+-- Lines 335-337
 function GameStateMachine:is_boot_from_sign_out()
 	return self._is_boot_from_sign_out
 end
 
--- Lines 332-334
+-- Lines 341-343
 function GameStateMachine:menu_active_changed_callback(active)
 	self:_set_controller_enabled(not active)
 end
 
--- Lines 336-338
+-- Lines 345-347
 function GameStateMachine:dialog_active_changed_callback(active)
 	self:_set_controller_enabled(not active)
 end
 
--- Lines 340-342
+-- Lines 349-351
 function GameStateMachine:chatinput_changed_callback(active)
 	self:_set_controller_enabled(not active)
 end
 
--- Lines 344-346
+-- Lines 353-355
 function GameStateMachine:is_controller_enabled()
 	return self._controller_enabled_count > 0
 end
 
--- Lines 348-371
+-- Lines 357-376
 function GameStateMachine:_set_controller_enabled(enabled)
 	local was_enabled = self:is_controller_enabled()
 	local old_controller_enabled_count = self._controller_enabled_count
-
-	if enabled then
-		self._controller_enabled_count = self._controller_enabled_count + 1
-	else
-		self._controller_enabled_count = self._controller_enabled_count - 1
-	end
+	self._controller_enabled_count = self._controller_enabled_count + (enabled and 1 or -1)
 
 	if not was_enabled ~= not self:is_controller_enabled() then
 		local state = self:current_state()

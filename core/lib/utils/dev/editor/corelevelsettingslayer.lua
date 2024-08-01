@@ -64,7 +64,7 @@ end
 function LevelSettingsLayer:update(t, dt)
 end
 
--- Lines 62-79
+-- Lines 62-80
 function LevelSettingsLayer:build_panel(notebook)
 	cat_print("editor", "LevelSettingsLayer:build_panel")
 
@@ -76,6 +76,7 @@ function LevelSettingsLayer:build_panel(notebook)
 	self._sizer = EWS:BoxSizer("VERTICAL")
 
 	self:_add_chunk_name(self._ews_panel, self._sizer)
+	self:_add_simulation_mission_flag(self._sizer)
 	self:_add_simulation_level_id(self._sizer)
 	self:_add_simulation_mission_filter(self._sizer)
 	self._main_sizer:add(self._sizer, 1, 0, "EXPAND")
@@ -83,7 +84,7 @@ function LevelSettingsLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines 82-100
+-- Lines 83-101
 function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	local id = "simulation_level_id"
 	local params = {
@@ -113,7 +114,37 @@ function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	}
 end
 
--- Lines 102-112
+-- Lines 104-122
+function LevelSettingsLayer:_add_simulation_mission_flag(sizer)
+	local id = "simulation_mission_flag"
+	local params = {
+		default = "none",
+		name = "Simulation mission flag:",
+		value = "none",
+		ctrlr_proportions = 2,
+		name_proportions = 1,
+		tooltip = "Select a mission flag to use when simulating the level.",
+		sorted = true,
+		panel = self._ews_panel,
+		sizer = sizer,
+		options = rawget(_G, "tweak_data").operations:get_all_mission_flags()
+	}
+	local ctrlr = CoreEws.combobox(params)
+
+	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_data"), {
+		ctrlr = ctrlr,
+		value = id
+	})
+
+	self._settings_ctrlrs[id] = {
+		default = "none",
+		type = "combobox",
+		params = params,
+		ctrlr = ctrlr
+	}
+end
+
+-- Lines 124-134
 function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 	for i = 1, 5 do
 		local id = "mission_filter_" .. i
@@ -134,7 +165,7 @@ function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 	end
 end
 
--- Lines 131-158
+-- Lines 136-163
 function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	local id = "chunk_name"
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -172,30 +203,30 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	}
 end
 
--- Lines 160-163
+-- Lines 165-168
 function LevelSettingsLayer:_set_data(data)
 	self._settings[data.value] = data.ctrlr:get_value()
 	self._settings[data.value] = tonumber(self._settings[data.value]) or self._settings[data.value]
 end
 
--- Lines 165-170
+-- Lines 170-175
 function LevelSettingsLayer:add_triggers()
 	LevelSettingsLayer.super.add_triggers(self)
 
 	local vc = self._editor_data.virtual_controller
 end
 
--- Lines 172-174
+-- Lines 177-179
 function LevelSettingsLayer:activate()
 	LevelSettingsLayer.super.activate(self)
 end
 
--- Lines 176-178
+-- Lines 181-183
 function LevelSettingsLayer:deactivate()
 	LevelSettingsLayer.super.deactivate(self)
 end
 
--- Lines 180-191
+-- Lines 185-196
 function LevelSettingsLayer:clear()
 	LevelSettingsLayer.super.clear(self)
 

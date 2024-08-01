@@ -10,7 +10,7 @@ RaidGUIControlGridItem.STATUS_PURCHASABLE = "grid_item_status_purchasable"
 RaidGUIControlGridItem.STATUS_NOT_ENOUGHT_RESOURCES = "grid_item_status_not_enought_resources"
 RaidGUIControlGridItem.STATUS_LOCKED_DLC = "grid_item_status_locked_dlc"
 
--- Lines 16-98
+-- Lines 16-64
 function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	RaidGUIControlGridItem.super.init(self, parent, params)
 
@@ -62,6 +62,68 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	self._select_background_panel = self._object:panel(background_panel_params)
 	self._select_background = self._select_background_panel:rect(background_rect_params)
 	self._triangle_markers_panel = self._object:panel(background_panel_params)
+
+	self:_layout_triangles()
+	self:_layout_grid_item_icon(params)
+	self:_layout_locks()
+	self:_toggle_visibility_status_icons()
+
+	if self._item_data.breadcrumb then
+		self:_layout_breadcrumb()
+	end
+end
+
+-- Lines 67-80
+function RaidGUIControlGridItem:_layout_grid_item_icon(params)
+	local image_coord_x = (params.selected_marker_w - params.item_w) / 2
+	local image_coord_y = (params.selected_marker_h - params.item_h) / 2
+	self._grid_item_icon = self._object:image({
+		name = "grid_item_icon",
+		layer = 100,
+		x = image_coord_x,
+		y = image_coord_y,
+		w = params.item_w,
+		h = params.item_h,
+		texture = self._item_data[self._params.grid_item_icon]
+	})
+end
+
+-- Lines 83-115
+function RaidGUIControlGridItem:_layout_locks()
+	self._item_status_resource_icon = self._object:image({
+		name = "grid_item_resource_icon",
+		layer = 200,
+		color = tweak_data.gui.colors.gold_orange,
+		texture = tweak_data.gui.icons.gold_amount_footer.texture,
+		texture_rect = tweak_data.gui.icons.gold_amount_footer.texture_rect
+	})
+
+	self._item_status_resource_icon:set_right(self._grid_item_icon:right() - 14)
+	self._item_status_resource_icon:set_bottom(self._grid_item_icon:bottom() - 14)
+
+	self._item_status_lock_icon = self._object:image({
+		name = "grid_item_lock_icon",
+		layer = 200,
+		texture = tweak_data.gui.icons.ico_locker.texture,
+		texture_rect = tweak_data.gui.icons.ico_locker.texture_rect
+	})
+
+	self._item_status_lock_icon:set_right(self._grid_item_icon:right() - 14)
+	self._item_status_lock_icon:set_bottom(self._grid_item_icon:bottom() - 14)
+
+	self._item_status_dlc_lock = self._object:image({
+		name = "grid_item_dlc_lock_icon",
+		layer = 200,
+		texture = tweak_data.gui.icons.ico_dlc.texture,
+		texture_rect = tweak_data.gui.icons.ico_dlc.texture_rect
+	})
+
+	self._item_status_dlc_lock:set_right(self._grid_item_icon:right() - 14)
+	self._item_status_dlc_lock:set_bottom(self._grid_item_icon:bottom() - 14)
+end
+
+-- Lines 117-138
+function RaidGUIControlGridItem:_layout_triangles()
 	self._top_marker_triangle = self._triangle_markers_panel:image({
 		y = 0,
 		x = 0,
@@ -82,61 +144,9 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 		texture = tweak_data.gui.icons.ico_sel_rect_bottom_right_white.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_bottom_right_white.texture_rect
 	})
-	local image_coord_x = (params.selected_marker_w - params.item_w) / 2
-	local image_coord_y = (params.selected_marker_h - params.item_h) / 2
-	self._grid_item_icon = self._object:image({
-		name = "grid_item_icon",
-		layer = 100,
-		x = image_coord_x,
-		y = image_coord_y,
-		w = params.item_w,
-		h = params.item_h,
-		texture = self._item_data[self._params.grid_item_icon]
-	})
-	self._item_status_resource_icon = self._object:image({
-		name = "grid_item_resource_icon",
-		y = 5,
-		x = 100,
-		layer = 200,
-		color = tweak_data.gui.colors.gold_orange,
-		texture = tweak_data.gui.icons.gold_amount_footer.texture,
-		texture_rect = tweak_data.gui.icons.gold_amount_footer.texture_rect
-	})
-
-	self._item_status_resource_icon:set_right(self._grid_item_icon:right() - 14)
-	self._item_status_resource_icon:set_bottom(self._grid_item_icon:bottom() - 14)
-
-	self._item_status_lock_icon = self._object:image({
-		name = "grid_item_lock_icon",
-		y = 5,
-		x = 100,
-		layer = 200,
-		texture = tweak_data.gui.icons.ico_locker.texture,
-		texture_rect = tweak_data.gui.icons.ico_locker.texture_rect
-	})
-
-	self._item_status_lock_icon:set_right(self._grid_item_icon:right() - 14)
-	self._item_status_lock_icon:set_bottom(self._grid_item_icon:bottom() - 14)
-
-	self._item_status_dlc_lock = self._object:image({
-		name = "grid_item_dlc_lock_icon",
-		y = 5,
-		x = 100,
-		layer = 200,
-		texture = tweak_data.gui.icons.ico_dlc.texture,
-		texture_rect = tweak_data.gui.icons.ico_dlc.texture_rect
-	})
-
-	self._item_status_dlc_lock:set_right(self._grid_item_icon:right() - 14)
-	self._item_status_dlc_lock:set_bottom(self._grid_item_icon:bottom() - 14)
-	self:_toggle_visibility_status_icons()
-
-	if self._item_data.breadcrumb then
-		self:_layout_breadcrumb()
-	end
 end
 
--- Lines 100-110
+-- Lines 140-150
 function RaidGUIControlGridItem:_layout_breadcrumb()
 	local breadcrumb_params = {
 		padding = 10,
@@ -150,70 +160,143 @@ function RaidGUIControlGridItem:_layout_breadcrumb()
 	self._breadcrumb:set_y(0)
 end
 
--- Lines 112-148
+-- Lines 152-180
 function RaidGUIControlGridItem:_toggle_visibility_status_icons()
 	if self._item_data.status == RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED then
-		self._item_status_resource_icon:hide()
-		self._item_status_lock_icon:hide()
-		self._item_status_dlc_lock:hide()
+		self._grid_item_icon:set_color(Color(1, 1, 1))
+	else
+		local v = 0.33
+
+		self._grid_item_icon:set_color(Color(v, v, v))
+	end
+
+	if self._item_data.status == RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED then
+		self:_toggle_visibility_status_owned_unlocked()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_LOCKED then
-		self._item_status_resource_icon:hide()
-		self._item_status_lock_icon:show()
-		self._item_status_dlc_lock:hide()
+		self:_toggle_visibility_status_locked()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_PURCHASABLE then
-		self._item_status_resource_icon:show()
-		self._item_status_lock_icon:hide()
-		self._item_status_dlc_lock:hide()
+		self:_toggle_visibility_status_purchasable()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_NOT_ENOUGHT_RESOURCES then
-		self._item_status_resource_icon:show()
-		self._item_status_lock_icon:hide()
-		self._item_status_dlc_lock:hide()
+		self:_toggle_visibility_status_not_enough_resources()
 	elseif self._item_data.status == RaidGUIControlGridItem.STATUS_LOCKED_DLC then
+		self:_toggle_visibility_status_locked_dlc()
+	end
+end
+
+-- Lines 182-193
+function RaidGUIControlGridItem:_toggle_visibility_status_owned_unlocked()
+	if self._item_status_resource_icon then
 		self._item_status_resource_icon:hide()
+	end
+
+	if self._item_status_lock_icon then
 		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+-- Lines 195-206
+function RaidGUIControlGridItem:_toggle_visibility_status_locked()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:hide()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:show()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+-- Lines 208-219
+function RaidGUIControlGridItem:_toggle_visibility_status_purchasable()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:show()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+-- Lines 221-232
+function RaidGUIControlGridItem:_toggle_visibility_status_not_enough_resources()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:show()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
+		self._item_status_dlc_lock:hide()
+	end
+end
+
+-- Lines 234-245
+function RaidGUIControlGridItem:_toggle_visibility_status_locked_dlc()
+	if self._item_status_resource_icon then
+		self._item_status_resource_icon:hide()
+	end
+
+	if self._item_status_lock_icon then
+		self._item_status_lock_icon:hide()
+	end
+
+	if self._item_status_dlc_lock then
 		self._item_status_dlc_lock:show()
 	end
 end
 
--- Lines 150-152
+-- Lines 247-249
 function RaidGUIControlGridItem:get_data()
 	return self._item_data
 end
 
--- Lines 154-157
+-- Lines 251-254
 function RaidGUIControlGridItem:mouse_released(o, button, x, y)
 	self:on_mouse_released(button)
 
 	return true
 end
 
--- Lines 159-165
+-- Lines 256-262
 function RaidGUIControlGridItem:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(self._item_data, self._params.key_value_field)
 	end
 end
 
--- Lines 167-170
+-- Lines 264-267
 function RaidGUIControlGridItem:mouse_double_click(o, button, x, y)
 	self:on_mouse_double_click(button)
 
 	return true
 end
 
--- Lines 172-178
+-- Lines 269-275
 function RaidGUIControlGridItem:on_mouse_double_click(button)
 	if self._on_double_click_callback then
 		self._on_double_click_callback(self._item_data, self._params.key_value_field)
 	end
 end
 
--- Lines 180-182
+-- Lines 277-279
 function RaidGUIControlGridItem:selected()
 	return self._selected
 end
 
--- Lines 184-195
+-- Lines 281-292
 function RaidGUIControlGridItem:select(dont_fire_selected_callback)
 	self._selected = true
 
@@ -228,26 +311,35 @@ function RaidGUIControlGridItem:select(dont_fire_selected_callback)
 	end
 end
 
--- Lines 197-201
+-- Lines 294-298
 function RaidGUIControlGridItem:unselect()
 	self._selected = false
 
 	self:select_off()
 end
 
--- Lines 203-206
+-- Lines 300-303
 function RaidGUIControlGridItem:select_on()
 	self._select_background_panel:show()
 	self._triangle_markers_panel:show()
 end
 
--- Lines 208-211
+-- Lines 305-308
 function RaidGUIControlGridItem:select_off()
 	self._select_background_panel:hide()
 	self._triangle_markers_panel:hide()
 end
 
--- Lines 214-216
+-- Lines 311-313
 function RaidGUIControlGridItem:confirm_pressed()
 	self:on_mouse_released(nil)
+end
+
+-- Lines 315-321
+function RaidGUIControlGridItem:on_mouse_over(x, y)
+	RaidGUIControlGridItem.super.on_mouse_over(self, x, y)
+
+	if self._params.hover_selects and self._on_click_callback then
+		self._on_click_callback(self._item_data, self._params.key_value_field)
+	end
 end

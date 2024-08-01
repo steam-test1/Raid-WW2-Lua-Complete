@@ -385,7 +385,7 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 	end
 end
 
--- Lines 424-502
+-- Lines 424-500
 function IngameWaitingForRespawnState:at_enter()
 	Application:trace("[IngameWaitingForRespawnState:at_enter()]")
 
@@ -404,6 +404,7 @@ function IngameWaitingForRespawnState:at_enter()
 	end
 
 	managers.hud:hide_comm_wheel(true)
+	managers.hud:set_crosshair_fade(false)
 	managers.hud._hud_hit_direction:clean_up()
 	managers.player:force_drop_carry()
 	managers.hud:hide_stats_screen()
@@ -440,16 +441,14 @@ function IngameWaitingForRespawnState:at_enter()
 	end
 
 	managers.hud:show(self.GUI_SPECTATOR)
-	managers.hud:hide(PlayerBase.INGAME_HUD_SAFERECT)
-	managers.hud:hide(PlayerBase.INGAME_HUD_FULLSCREEN)
-	managers.hud:set_custody_can_be_trade_visible(false)
-	managers.hud:set_custody_negotiating_visible(false)
-	managers.hud:set_custody_trade_delay_visible(false)
+	managers.hud:show(PlayerBase.INGAME_HUD_SAFERECT)
+	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
+	self:_hide_hud_panels()
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE) then
 		managers.hud:set_custody_pumpkin_challenge()
 	elseif tweak_data.player.damage.automatic_respawn_time and not Global.game_settings.single_player then
-		self._auto_respawn_t = Application:time() + tweak_data.player.damage.automatic_respawn_time * managers.player:upgrade_value("player", "respawn_time_multiplier", 1)
+		self._auto_respawn_t = Application:time() + tweak_data.player.damage.automatic_respawn_time
 
 		managers.hud:set_custody_timer_visibility(true)
 	else
@@ -470,12 +469,21 @@ function IngameWaitingForRespawnState:at_enter()
 		managers.hud:set_custody_negotiating_visible(false)
 		managers.hud:set_custody_trade_delay_visible(false)
 	end
-
-	managers.hud:hide(PlayerBase.INGAME_HUD_SAFERECT)
-	managers.hud:hide(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
--- Lines 506-534
+-- Lines 505-516
+function IngameWaitingForRespawnState:_hide_hud_panels()
+	managers.hud:set_custody_can_be_trade_visible(false)
+	managers.hud:set_custody_negotiating_visible(false)
+	managers.hud:set_custody_trade_delay_visible(false)
+	managers.hud:hide_prompt("hud_reload_prompt")
+	managers.hud:hide_prompt("hud_no_ammo_prompt")
+	managers.hud:remove_interact()
+	managers.hud:hide_player_panel()
+	managers.hud:remove_all_weapons()
+end
+
+-- Lines 520-549
 function IngameWaitingForRespawnState:at_exit()
 	Application:trace("[IngameWaitingForRespawnState:at_exit()]")
 	managers.hud:hide(self.GUI_SPECTATOR)
@@ -502,11 +510,12 @@ function IngameWaitingForRespawnState:at_exit()
 	end
 
 	managers.system_event_listener:call_listeners(PlayerManager.EVENT_LOCAL_PLAYER_EXIT_RESPAWN)
+	managers.hud:show_player_panel()
 	managers.hud:show(PlayerBase.INGAME_HUD_SAFERECT)
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
--- Lines 538-581
+-- Lines 553-598
 function IngameWaitingForRespawnState:_refresh_teammate_list()
 	local all_teammates = self._spectator_data.teammate_records
 	local teammate_list = self._spectator_data.teammate_list
@@ -554,9 +563,11 @@ function IngameWaitingForRespawnState:_refresh_teammate_list()
 	if not self._spectator_data.watch_u_key and #teammate_list > 0 then
 		self._spectator_data.watch_u_key = teammate_list[1]
 	end
+
+	managers.hud:set_custody_spectator_info(self:currently_spectated_unit())
 end
 
--- Lines 585-591
+-- Lines 602-608
 function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	for i_key, test_u_key in ipairs(self._spectator_data.teammate_list) do
 		if test_u_key == u_key then
@@ -565,7 +576,7 @@ function IngameWaitingForRespawnState:_get_teammate_index_by_unit_key(u_key)
 	end
 end
 
--- Lines 595-612
+-- Lines 612-631
 function IngameWaitingForRespawnState:cb_next_player()
 	self:_refresh_teammate_list()
 
@@ -579,10 +590,13 @@ function IngameWaitingForRespawnState:cb_next_player()
 	i_watch = i_watch == #self._spectator_data.teammate_list and 1 or i_watch + 1
 	watch_u_key = self._spectator_data.teammate_list[i_watch]
 	self._spectator_data.watch_u_key = watch_u_key
+
+	managers.hud:set_custody_spectator_info(self:currently_spectated_unit())
+
 	self._dis_curr = nil
 end
 
--- Lines 616-633
+-- Lines 635-654
 function IngameWaitingForRespawnState:cb_prev_player()
 	self:_refresh_teammate_list()
 
@@ -602,17 +616,20 @@ function IngameWaitingForRespawnState:cb_prev_player()
 
 	watch_u_key = self._spectator_data.teammate_list[i_watch]
 	self._spectator_data.watch_u_key = watch_u_key
+
+	managers.hud:set_custody_spectator_info(self:currently_spectated_unit())
+
 	self._dis_curr = nil
 end
 
--- Lines 637-644
+-- Lines 658-665
 function IngameWaitingForRespawnState:currently_spectated_unit()
 	if self._spectator_data and self._spectator_data.teammate_records and self._spectator_data.watch_u_key and self._spectator_data.teammate_records[self._spectator_data.watch_u_key] then
 		return self._spectator_data.teammate_records[self._spectator_data.watch_u_key].unit
 	end
 end
 
--- Lines 648-681
+-- Lines 669-702
 function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed)
 	managers.hud:set_custody_can_be_trade_visible(false)
 
@@ -641,12 +658,12 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed
 	end
 end
 
--- Lines 683-685
+-- Lines 704-706
 function IngameWaitingForRespawnState:finish_trade()
 	self:_begin_game_enter_transition()
 end
 
--- Lines 687-706
+-- Lines 708-727
 function IngameWaitingForRespawnState:begin_trade()
 	managers.hud:set_custody_can_be_trade_visible(true)
 
@@ -666,7 +683,7 @@ function IngameWaitingForRespawnState:begin_trade()
 	self._play_too_long_line_t = Application:time() + 60
 end
 
--- Lines 708-710
+-- Lines 729-731
 function IngameWaitingForRespawnState:cancel_trade()
 	managers.hud:set_custody_can_be_trade_visible(false)
 end

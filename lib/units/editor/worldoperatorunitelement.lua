@@ -1,11 +1,14 @@
 WorldOperatorUnitElement = WorldOperatorUnitElement or class(MissionElement)
 WorldOperatorUnitElement.ACTIONS = {
 	"spawn",
+	"spawn_alarmed",
 	"despawn",
-	"enable_plant_loot"
+	"enable_plant_loot",
+	"enable_alarm_state",
+	"disable_alarm_state"
 }
 
--- Lines 8-20
+-- Lines 15-27
 function WorldOperatorUnitElement:init(unit)
 	WorldOperatorUnitElement.super.init(self, unit)
 
@@ -20,7 +23,7 @@ function WorldOperatorUnitElement:init(unit)
 	self._actions = WorldOperatorUnitElement.ACTIONS
 end
 
--- Lines 23-34
+-- Lines 30-41
 function WorldOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -38,12 +41,12 @@ function WorldOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 38-40
+-- Lines 45-47
 function WorldOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 44-53
+-- Lines 51-60
 function WorldOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -59,7 +62,7 @@ function WorldOperatorUnitElement:update_editing()
 	end
 end
 
--- Lines 56-72
+-- Lines 63-79
 function WorldOperatorUnitElement:draw_links_unselected(...)
 	WorldOperatorUnitElement.super.draw_links_unselected(self, ...)
 
@@ -81,7 +84,7 @@ function WorldOperatorUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines 75-93
+-- Lines 82-100
 function WorldOperatorUnitElement:draw_links_selected(...)
 	WorldOperatorUnitElement.super.draw_links_selected(self, ...)
 
@@ -105,13 +108,13 @@ function WorldOperatorUnitElement:draw_links_selected(...)
 	end
 end
 
--- Lines 96-114
+-- Lines 103-121
 function WorldOperatorUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 98-107
+	-- Lines 105-114
 	local function f(unit)
-		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
+		if not unit or not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
 		end
 
@@ -133,9 +136,9 @@ function WorldOperatorUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines 116-123
+-- Lines 123-130
 function WorldOperatorUnitElement:remove_unit_list_btn()
-	-- Lines 117-117
+	-- Lines 124-124
 	local function f(unit)
 		return table.contains(self._hed.elements, unit:unit_data().unit_id)
 	end
@@ -149,7 +152,7 @@ function WorldOperatorUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 125-146
+-- Lines 132-153
 function WorldOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

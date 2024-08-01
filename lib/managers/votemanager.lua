@@ -478,7 +478,7 @@ function VoteManager:network_package(type, value, result, peer_id)
 	end
 end
 
--- Lines 451-542
+-- Lines 451-543
 function VoteManager:update(t, dt)
 	local current_time = TimerManager:wall():time()
 
@@ -589,7 +589,7 @@ function VoteManager:update(t, dt)
 	end
 end
 
--- Lines 544-549
+-- Lines 545-550
 function VoteManager:stop()
 	self._callback_type = nil
 	self._callback_counter = nil
@@ -597,7 +597,7 @@ function VoteManager:stop()
 	self._stopped = true
 end
 
--- Lines 551-653
+-- Lines 552-654
 function VoteManager:message_vote()
 	if not self._type or self._voted or not managers.network:session() then
 		return
@@ -709,7 +709,7 @@ function VoteManager:message_vote()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 655-677
+-- Lines 656-678
 function VoteManager:message_host_kick(peer)
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_kick_player_title"),
@@ -741,39 +741,39 @@ function VoteManager:message_host_kick(peer)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 679-681
+-- Lines 680-682
 function VoteManager:sync_server_kick_option(peer)
 	peer:send("voting_data", self.VOTE_EVENT.server_kick_option, Global.game_settings.kick_option, 0)
 end
 
--- Lines 684-686
+-- Lines 685-687
 function VoteManager:sync_server_kick_option_with_peers()
 	managers.network:session():send_to_peers("voting_data", self.VOTE_EVENT.server_kick_option, Global.game_settings.kick_option, 0)
 end
 
--- Lines 689-691
+-- Lines 690-692
 function VoteManager:option_vote_kick()
 	return game_state_machine:current_state_name() ~= "menu_main" and (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 2
 end
 
--- Lines 693-695
+-- Lines 694-696
 function VoteManager:option_host_kick()
 	return game_state_machine:current_state_name() == "menu_main" or (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 1
 end
 
--- Lines 697-699
+-- Lines 698-700
 function VoteManager:option_no_kick()
 	return (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 0
 end
 
--- Lines 701-704
+-- Lines 702-705
 function VoteManager:option_vote_restart()
 	local setting = Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced
 
 	return setting == 2 or setting == 0
 end
 
--- Lines 706-708
+-- Lines 707-709
 function VoteManager:option_host_restart()
 	return (Network:is_server() and Global.game_settings.kick_option or Global.game_settings.kick_option_synced) == 1
 end

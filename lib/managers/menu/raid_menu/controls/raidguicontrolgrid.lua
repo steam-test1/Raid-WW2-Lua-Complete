@@ -60,6 +60,8 @@ function RaidGUIControlGrid:_get_data()
 
 	local grid_data = self._data_source_callback()
 
+	Application:trace("[RaidGUIControlGrid:_get_data] grid_data ", inspect(grid_data))
+
 	if not grid_data or #grid_data == 0 then
 		self._total_items = 0
 

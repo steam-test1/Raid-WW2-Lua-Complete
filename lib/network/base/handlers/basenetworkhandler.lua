@@ -56,12 +56,8 @@ BaseNetworkHandler._gamestate_filter = {
 	},
 	need_revive = {
 		ingame_incapacitated = true,
-		ingame_arrested = true,
 		ingame_bleed_out = true,
 		ingame_fatal = true
-	},
-	arrested = {
-		ingame_arrested = true
 	},
 	game_over = {
 		gameoverscreen = true
@@ -92,7 +88,7 @@ BaseNetworkHandler._gamestate_filter = {
 	}
 }
 
--- Lines 98-105
+-- Lines 94-101
 function BaseNetworkHandler._verify_in_session()
 	local session = managers.network:session()
 
@@ -104,7 +100,7 @@ function BaseNetworkHandler._verify_in_session()
 	return session
 end
 
--- Lines 109-117
+-- Lines 105-113
 function BaseNetworkHandler._verify_in_server_session()
 	local session = managers.network:session()
 	session = session and session:is_host()
@@ -117,7 +113,7 @@ function BaseNetworkHandler._verify_in_server_session()
 	return session
 end
 
--- Lines 121-129
+-- Lines 117-125
 function BaseNetworkHandler._verify_in_client_session()
 	local session = managers.network:session()
 	session = session and session:is_client()
@@ -130,12 +126,12 @@ function BaseNetworkHandler._verify_in_client_session()
 	return session
 end
 
--- Lines 133-149
+-- Lines 129-147
 function BaseNetworkHandler._verify_sender(rpc)
 	local session = managers.network:session()
 	local peer = nil
 
-	if session then
+	if rpc and session then
 		if rpc:protocol_at_index(0) == "STEAM" then
 			peer = session:peer_by_user_id(rpc:ip_at_index(0))
 		else
@@ -147,21 +143,21 @@ function BaseNetworkHandler._verify_sender(rpc)
 		end
 	end
 
-	print("[BaseNetworkHandler._verify_sender] Discarding message", session, peer and peer:id())
+	Application:error("[BaseNetworkHandler._verify_sender] Discarding message", rpc, session, peer and peer:id())
 	Application:stack_dump()
 end
 
--- Lines 153-155
+-- Lines 151-153
 function BaseNetworkHandler._verify_character_and_sender(unit, rpc)
 	return BaseNetworkHandler._verify_sender(rpc) and BaseNetworkHandler._verify_character(unit)
 end
 
--- Lines 159-161
+-- Lines 157-159
 function BaseNetworkHandler._verify_character(unit)
 	return alive(unit) and not unit:character_damage():dead()
 end
 
--- Lines 165-173
+-- Lines 163-171
 function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
 	local correct_state = acceptable_gamestates[game_state_machine:last_queued_state_name()]
 
@@ -173,7 +169,7 @@ function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
 	Application:stack_dump()
 end
 
--- Lines 177-215
+-- Lines 175-213
 function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 	if self._flushing_unit_too_early_packets then
 		return
@@ -220,7 +216,7 @@ function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 	self._flushing_unit_too_early_packets = nil
 end
 
--- Lines 219-244
+-- Lines 217-242
 function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, unit_param_index, ...)
 	if self._flushing_unit_too_early_packets then
 		return

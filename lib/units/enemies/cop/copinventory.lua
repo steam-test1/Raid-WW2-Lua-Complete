@@ -83,31 +83,30 @@ function CopInventory:get_weapon()
 	return unit
 end
 
--- Lines 81-91
+-- Lines 81-96
 function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
 
-	if unit and unit:damage() then
+	if alive(unit) and unit:damage() then
 		unit:unlink()
-		unit:damage():run_sequence_simple("enable_body")
+		unit:set_slot(18)
+		unit:damage():has_then_run_sequence_simple("enable_body")
 		self:_call_listeners("unequip")
+		self:remove_selection(self._equipped_selection)
 		managers.game_play_central:weapon_dropped(unit)
 	end
 end
 
--- Lines 95-102
+-- Lines 100-110
 function CopInventory:drop_shield()
-	if alive(self._shield_unit) then
+	if alive(self._shield_unit) and self._shield_unit:damage() then
 		self._shield_unit:unlink()
-
-		if self._shield_unit:damage() then
-			self._shield_unit:damage():run_sequence_simple("enable_body")
-		end
+		self._shield_unit:damage():has_then_run_sequence_simple("enable_body")
 	end
 end
 
--- Lines 106-121
+-- Lines 114-129
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -125,7 +124,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 125-131
+-- Lines 133-139
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 
@@ -136,7 +135,7 @@ function CopInventory:destroy_all_items()
 	end
 end
 
--- Lines 134-136
+-- Lines 142-144
 function CopInventory:anim_clbk_equip_enter(unit)
 	self:show_equipped_unit()
 end

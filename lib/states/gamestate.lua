@@ -13,7 +13,7 @@ end
 function GameState:set_controller_enabled(enabled)
 end
 
--- Lines 13-23
+-- Lines 13-26
 function GameState:default_transition(next_state, params)
 	self:at_exit(next_state, params)
 	self:set_controller_enabled(false)
@@ -22,14 +22,15 @@ function GameState:default_transition(next_state, params)
 		next_state:set_controller_enabled(true)
 	end
 
+	managers.dyn_resource:set_file_streaming_profile(next_state._file_streaming_profile())
 	next_state:at_enter(self, params)
 end
 
--- Lines 25-26
+-- Lines 28-29
 function GameState:on_disconnected()
 end
 
--- Lines 28-39
+-- Lines 31-42
 function GameState:on_server_left(message)
 	managers.worldcollection:on_server_left()
 
@@ -44,15 +45,20 @@ function GameState:on_server_left(message)
 	end
 end
 
--- Lines 41-44
+-- Lines 44-47
 function GameState:on_kicked()
 	managers.menu:show_peer_kicked_dialog()
 	managers.menu_component:post_event("kick_player")
 end
 
--- Lines 46-48
+-- Lines 49-51
 function GameState:is_joinable()
 	return true
+end
+
+-- Lines 53-55
+function GameState._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_INGAME
 end
 
 CoreClass.override_class(CoreInternalGameState.GameState, GameState)

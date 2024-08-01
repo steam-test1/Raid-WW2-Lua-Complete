@@ -2,17 +2,18 @@ core:import("CoreMissionScriptElement")
 
 ElementBlurZone = ElementBlurZone or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 5-7
+-- Lines 5-9
 function ElementBlurZone:init(...)
 	ElementBlurZone.super.init(self, ...)
+	managers.environment_controller:set_blurzone(self._id, -1)
 end
 
--- Lines 9-11
+-- Lines 11-13
 function ElementBlurZone:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 13-28
+-- Lines 15-27
 function ElementBlurZone:on_executed(instigator)
 	if not self._values.enabled then
 		return

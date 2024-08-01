@@ -7,7 +7,7 @@ CoreShaderLibCompiler.SHADER_PATH = "core\\shader_sources\\"
 CoreShaderLibCompiler.RT_PATH = "shaders\\"
 CoreShaderLibCompiler.ROOT_PATH = "..\\"
 
--- Lines 11-72
+-- Lines 11-50
 function CoreShaderLibCompiler:compile(file, dest, force_recompile)
 	if file.name ~= "shaders/base" or file.type ~= "render_template_database" then
 		return false
@@ -18,23 +18,11 @@ function CoreShaderLibCompiler:compile(file, dest, force_recompile)
 
 		if target() == "win32" then
 			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {
-				"d3d9"
-			})
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {
-				"d3d10"
-			})
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {
 				"d3d11"
 			})
-		elseif target() == "ps3" then
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {})
 		elseif target() == "ps4" then
 			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {})
 		elseif target() == "xb1" then
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {})
-		elseif target() == "x360" then
-			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {})
-		elseif target() == "lrb" then
 			dest:skip_update("shaders", "core/temp/" .. self.SHADER_NAME, {})
 		else
 			error("[CoreShaderLibCompiler] Unknown target: " .. target())
@@ -50,25 +38,13 @@ function CoreShaderLibCompiler:compile(file, dest, force_recompile)
 	self:run_compiler()
 
 	if target() == "win32" then
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".d3d9.win32.shaders", "core/temp/" .. self.SHADER_NAME, {
-			"d3d9"
-		}, dest)
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".d3d10.win32.shaders", "core/temp/" .. self.SHADER_NAME, {
-			"d3d10"
-		}, dest)
 		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".d3d11.win32.shaders", "core/temp/" .. self.SHADER_NAME, {
 			"d3d11"
 		}, dest)
-	elseif target() == "ps3" then
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".ps3.shaders", "core/temp/" .. self.SHADER_NAME, {}, dest)
-	elseif target() == "xb1" then
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".xb1.shaders", "core/temp/" .. self.SHADER_NAME, {}, dest)
 	elseif target() == "ps4" then
 		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".ps4.shaders", "core/temp/" .. self.SHADER_NAME, {}, dest)
-	elseif target() == "x360" then
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".x360.shaders", "core/temp/" .. self.SHADER_NAME, {}, dest)
-	elseif target() == "lrb" then
-		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".lrb.shaders", "core/temp/" .. self.SHADER_NAME, {}, dest)
+	elseif target() == "xb1" then
+		self:copy_file(self:base_path() .. self.TEMP_PATH .. self.SHADER_NAME .. ".xb1.shaders", "core/temp/" .. self.SHADER_NAME, {}, dest)
 	else
 		error("[CoreShaderLibCompiler] Unknown target: " .. target())
 	end
@@ -78,22 +54,22 @@ function CoreShaderLibCompiler:compile(file, dest, force_recompile)
 	return false
 end
 
--- Lines 74-87
+-- Lines 52-54
 function CoreShaderLibCompiler:cleanup(params)
 	cat_print("debug", "[CoreShaderLibCompiler] Cleaning...")
 end
 
--- Lines 89-91
+-- Lines 56-58
 function CoreShaderLibCompiler:base_path()
 	return self:root_path() .. "assets\\"
 end
 
--- Lines 93-105
+-- Lines 60-72
 function CoreShaderLibCompiler:root_path()
 	local path = data_path_abs() .. self.ROOT_PATH
 	local f = nil
 
-	-- Lines 97-97
+	-- Lines 64-64
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.\\", "\\")
 
@@ -109,12 +85,12 @@ function CoreShaderLibCompiler:root_path()
 	return out_path
 end
 
--- Lines 107-111
+-- Lines 74-78
 function CoreShaderLibCompiler:up_to_date(file, dest)
 	return dest:up_to_date(file.path, "render_template_database", file.name, file.properties) and dest:up_to_date("core\\shader_sources\\base", "shader_source", "core/shader_sources/base", {}) and dest:up_to_date("core\\shader_sources\\common_include", "shader_source", "core/shader_sources/common_include", {})
 end
 
--- Lines 113-128
+-- Lines 80-95
 function CoreShaderLibCompiler:copy_file(from, to, properties, dest)
 	local from_file = io.open(from, "rb")
 
@@ -132,7 +108,7 @@ function CoreShaderLibCompiler:copy_file(from, to, properties, dest)
 	end
 end
 
--- Lines 130-147
+-- Lines 97-114
 function CoreShaderLibCompiler:create_make_file()
 	local make_params = self:get_make_params()
 	local file = assert(io.open(self:base_path() .. self.TEMP_PATH .. "make.xml", "w+"))
@@ -152,7 +128,7 @@ function CoreShaderLibCompiler:create_make_file()
 	return make_params
 end
 
--- Lines 149-153
+-- Lines 116-120
 function CoreShaderLibCompiler:run_compiler()
 	local cmd = string.format("%saux_assets\\engine\\bin\\shaderdev\\shaderdev -m \"%s%smake.xml\"", self:root_path(), self:base_path(), self.TEMP_PATH)
 	local file = assert(io.popen(cmd, "r"), cmd)
@@ -162,7 +138,7 @@ function CoreShaderLibCompiler:run_compiler()
 	end
 end
 
--- Lines 155-231
+-- Lines 122-151
 function CoreShaderLibCompiler:get_make_params()
 	local rt = self:base_path() .. self.RT_PATH .. self.SHADER_NAME
 	local src = self:base_path() .. self.SHADER_PATH .. self.SHADER_NAME
@@ -174,65 +150,20 @@ function CoreShaderLibCompiler:get_make_params()
 	}
 
 	if target() == "win32" then
-		make_params.win32d3d9 = tmp .. self.SHADER_NAME .. ".d3d9.win32.shaders"
-		make_params.win32d3d10 = tmp .. self.SHADER_NAME .. ".d3d10.win32.shaders"
 		make_params.win32d3d11 = tmp .. self.SHADER_NAME .. ".d3d11.win32.shaders"
 		make_params.ogl = tmp .. self.SHADER_NAME .. ".ogl.win32.shaders"
-		make_params.ps3 = ""
 		make_params.ps4 = ""
 		make_params.xb1 = ""
-		make_params.x360d3d9 = ""
-		make_params.lrb = ""
-	elseif target() == "ps3" then
-		make_params.win32d3d9 = ""
-		make_params.win32d3d10 = ""
-		make_params.win32d3d11 = ""
-		make_params.ogl = ""
-		make_params.ps3 = tmp .. self.SHADER_NAME .. ".ps3.shaders"
-		make_params.ps4 = ""
-		make_params.xb1 = ""
-		make_params.x360d3d9 = ""
-		make_params.lrb = ""
 	elseif target() == "ps4" then
-		make_params.win32d3d9 = ""
-		make_params.win32d3d10 = ""
 		make_params.win32d3d11 = ""
 		make_params.ogl = ""
-		make_params.ps3 = ""
 		make_params.ps4 = tmp .. self.SHADER_NAME .. ".ps4.shaders"
 		make_params.xb1 = ""
-		make_params.x360d3d9 = ""
-		make_params.lrb = ""
 	elseif target() == "xb1" then
-		make_params.win32d3d9 = ""
-		make_params.win32d3d10 = ""
 		make_params.win32d3d11 = ""
 		make_params.ogl = ""
-		make_params.ps3 = ""
 		make_params.ps4 = ""
 		make_params.xb1 = tmp .. self.SHADER_NAME .. ".xb1.shaders"
-		make_params.x360d3d9 = ""
-		make_params.lrb = ""
-	elseif target() == "x360" then
-		make_params.win32d3d9 = ""
-		make_params.win32d3d10 = ""
-		make_params.win32d3d11 = ""
-		make_params.ogl = ""
-		make_params.ps3 = ""
-		make_params.ps4 = ""
-		make_params.xb1 = ""
-		make_params.x360d3d9 = tmp .. self.SHADER_NAME .. ".x360.shaders"
-		make_params.lrb = ""
-	elseif target() == "lrb" then
-		make_params.win32d3d9 = ""
-		make_params.win32d3d10 = ""
-		make_params.win32d3d11 = ""
-		make_params.ogl = ""
-		make_params.ps3 = ""
-		make_params.ps4 = ""
-		make_params.xb1 = ""
-		make_params.x360d3d9 = ""
-		make_params.lrb = tmp .. self.SHADER_NAME .. ".lrb.shaders"
 	else
 		error("[CoreShaderLibCompiler] Unknown target: " .. target())
 	end

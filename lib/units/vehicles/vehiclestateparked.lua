@@ -5,7 +5,7 @@ function VehicleStateParked:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines 9-19
+-- Lines 9-21
 function VehicleStateParked:enter(state_data, enter_data)
 	if not self._unit:vehicle():is_active() then
 		self._unit:vehicle_driving():activate_vehicle()
@@ -14,10 +14,13 @@ function VehicleStateParked:enter(state_data, enter_data)
 
 	self._unit:interaction():set_override_timer_value(VehicleDrivingExt.TIME_ENTER)
 	self:adjust_interactions()
-	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+
+	if Network:is_server() then
+		self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+	end
 end
 
--- Lines 23-40
+-- Lines 25-42
 function VehicleStateParked:adjust_interactions()
 	VehicleStateParked.super.adjust_interactions(self)
 
@@ -41,12 +44,12 @@ function VehicleStateParked:adjust_interactions()
 	end
 end
 
--- Lines 44-46
+-- Lines 46-48
 function VehicleStateParked:is_vulnerable()
 	return true
 end
 
--- Lines 50-52
+-- Lines 52-54
 function VehicleStateParked:stop_vehicle()
 	return true
 end

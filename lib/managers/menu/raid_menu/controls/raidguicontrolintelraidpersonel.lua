@@ -74,7 +74,7 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 		color = tweak_data.gui.colors.chat_border
 	})
 	local scrollable_area_notes_params = {
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		name = "scrollable_area_notes",
 		h = 384,
 		y = 288,

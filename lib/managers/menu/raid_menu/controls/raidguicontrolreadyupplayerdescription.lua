@@ -2,8 +2,12 @@ RaidGUIControlReadyUpPlayerDescription = RaidGUIControlReadyUpPlayerDescription 
 RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
 RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED = "voice_chat_muted_icon"
 RaidGUIControlReadyUpPlayerDescription.CHAT_PANEL_SIZE = 60
+RaidGUIControlReadyUpPlayerDescription.STATE_READY = "ready"
+RaidGUIControlReadyUpPlayerDescription.STATE_NOT_READY = "not_ready"
+RaidGUIControlReadyUpPlayerDescription.STATE_KICKED = "kicked"
+RaidGUIControlReadyUpPlayerDescription.STATE_LEFT = "left"
 
--- Lines 7-18
+-- Lines 13-24
 function RaidGUIControlReadyUpPlayerDescription:init(parent, params)
 	RaidGUIControlReadyUpPlayerDescription.super.init(self, parent, params)
 
@@ -15,7 +19,7 @@ function RaidGUIControlReadyUpPlayerDescription:init(parent, params)
 	self:_create_voice_chat_indicator()
 end
 
--- Lines 20-51
+-- Lines 27-111
 function RaidGUIControlReadyUpPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
@@ -64,7 +68,7 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		h = 24,
 		w = 64,
 		align = "left",
-		text = "17",
+		text = "00",
 		x = self._selected_card_icon:right() + 16,
 		y = self._player_name:top(),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -105,7 +109,7 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 	self._bottom_select_triangle:hide()
 end
 
--- Lines 54-82
+-- Lines 115-143
 function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
 	local chat_indicator_params_speaking = {
 		name = "chat_indicator_speaking",
@@ -135,7 +139,7 @@ function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
 	self._chat_indicator_muted:set_center_y(y)
 end
 
--- Lines 84-96
+-- Lines 146-158
 function RaidGUIControlReadyUpPlayerDescription:show_chat_indicator(chat_indicator_name)
 	local chat_indicator = nil
 
@@ -150,7 +154,7 @@ function RaidGUIControlReadyUpPlayerDescription:show_chat_indicator(chat_indicat
 	end
 end
 
--- Lines 98-110
+-- Lines 161-173
 function RaidGUIControlReadyUpPlayerDescription:hide_chat_indicator(chat_indicator_name)
 	local chat_indicator = nil
 
@@ -165,7 +169,7 @@ function RaidGUIControlReadyUpPlayerDescription:hide_chat_indicator(chat_indicat
 	end
 end
 
--- Lines 113-140
+-- Lines 176-203
 function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 	if not data then
 		return
@@ -200,17 +204,17 @@ function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 	end
 end
 
--- Lines 142-144
+-- Lines 206-208
 function RaidGUIControlReadyUpPlayerDescription:params()
 	return self._params
 end
 
--- Lines 146-148
+-- Lines 211-213
 function RaidGUIControlReadyUpPlayerDescription:is_ready()
 	return self._params.ready
 end
 
--- Lines 150-161
+-- Lines 216-227
 function RaidGUIControlReadyUpPlayerDescription:highlight_on()
 	if not self._enabled then
 		return
@@ -225,7 +229,7 @@ function RaidGUIControlReadyUpPlayerDescription:highlight_on()
 	end
 end
 
--- Lines 163-170
+-- Lines 230-237
 function RaidGUIControlReadyUpPlayerDescription:highlight_off()
 	if self._selected then
 		return
@@ -236,7 +240,7 @@ function RaidGUIControlReadyUpPlayerDescription:highlight_off()
 	self._play_mouse_over_sound = true
 end
 
--- Lines 172-182
+-- Lines 240-250
 function RaidGUIControlReadyUpPlayerDescription:on_mouse_clicked()
 	if not self._enabled then
 		return
@@ -249,33 +253,35 @@ function RaidGUIControlReadyUpPlayerDescription:on_mouse_clicked()
 	self:select_on()
 end
 
--- Lines 184-188
+-- Lines 253-257
 function RaidGUIControlReadyUpPlayerDescription:select_on()
 	self:set_selected(true)
 	self._top_select_triangle:show()
 	self._bottom_select_triangle:show()
 end
 
--- Lines 190-194
+-- Lines 260-264
 function RaidGUIControlReadyUpPlayerDescription:select_off()
 	self:set_selected(false)
 	self._top_select_triangle:hide()
 	self._bottom_select_triangle:hide()
 end
 
--- Lines 196-229
+-- Lines 266-307
 function RaidGUIControlReadyUpPlayerDescription:set_state(state)
-	if state == "ready" then
+	Application:debug("[RaidGUIControlReadyUpPlayerDescription:set_state] State: " .. tostring(state))
+
+	if state == RaidGUIControlReadyUpPlayerDescription.STATE_READY then
 		self._status_label:set_text(self:translate("menu_ready", true))
 		self._status_label:set_color(tweak_data.gui.colors.raid_red)
 
 		self._params.ready = true
-	elseif state == "not_ready" then
+	elseif state == RaidGUIControlReadyUpPlayerDescription.STATE_NOT_READY then
 		self._status_label:set_text(self:translate("menu_not_ready", true))
 		self._status_label:set_color(tweak_data.gui.colors.raid_grey_effects)
 
 		self._params.ready = false
-	elseif state == "kicked" then
+	elseif state == RaidGUIControlReadyUpPlayerDescription.STATE_KICKED then
 		self._status_label:set_text(self:translate("menu_kicked", true))
 		self._class_icon:set_color(tweak_data.gui.colors.raid_grey_effects)
 		self._player_name:set_color(tweak_data.gui.colors.raid_grey_effects)
@@ -285,7 +291,7 @@ function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 		self:set_selected(false)
 
 		self._enabled = false
-	elseif state == "left" then
+	elseif state == RaidGUIControlReadyUpPlayerDescription.STATE_LEFT then
 		self._status_label:set_text(self:translate("menu_left", true))
 		self._class_icon:set_color(tweak_data.gui.colors.raid_grey_effects)
 		self._player_name:set_color(tweak_data.gui.colors.raid_grey_effects)
@@ -298,11 +304,9 @@ function RaidGUIControlReadyUpPlayerDescription:set_state(state)
 	end
 end
 
--- Lines 232-238
+-- Lines 310-313
 function RaidGUIControlReadyUpPlayerDescription:set_challenge_card_selected(selected)
-	if selected then
-		self._selected_card_icon:set_image(tweak_data.gui.icons.ready_up_card_selected_active.texture, unpack(tweak_data.gui.icons.ready_up_card_selected_active.texture_rect))
-	else
-		self._selected_card_icon:set_image(tweak_data.gui.icons.ready_up_card_not_selected.texture, unpack(tweak_data.gui.icons.ready_up_card_not_selected.texture_rect))
-	end
+	local gui_data = tweak_data.gui.icons[selected and "ready_up_card_selected_active" or "ready_up_card_not_selected"]
+
+	self._selected_card_icon:set_image(gui_data.texture, unpack(gui_data.texture_rect))
 end

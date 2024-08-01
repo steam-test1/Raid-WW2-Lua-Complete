@@ -1,6 +1,6 @@
 RaidExperienceManager = RaidExperienceManager or class()
 RaidExperienceManager.LEVEL_CAP = Application:digest_value(40, true)
-RaidExperienceManager.THOUSAND_SEPARATOR = "."
+RaidExperienceManager.THOUSAND_SEPARATOR = ","
 RaidExperienceManager.VERSION = 87
 RaidExperienceManager.XP_MIGRATION_VERSION_LIST = {
 	85,
@@ -11,15 +11,16 @@ RaidExperienceManager.SCRIPT_XP_EVENTS = {
 	"escort_survived_bonus",
 	"side_quest_bonus",
 	"extra_objectives_bonus",
-	"tiny_objectives_bonus"
+	"tiny_objectives_bonus",
+	"tiny_loot_bonus"
 }
 
--- Lines 15-17
+-- Lines 16-18
 function RaidExperienceManager:init()
 	self:_setup()
 end
 
--- Lines 19-26
+-- Lines 20-27
 function RaidExperienceManager:xp_migration_needed(version)
 	for i = 1, #RaidExperienceManager.XP_MIGRATION_VERSION_LIST do
 		if RaidExperienceManager.XP_MIGRATION_VERSION_LIST[i] == version then
@@ -30,7 +31,7 @@ function RaidExperienceManager:xp_migration_needed(version)
 	return false
 end
 
--- Lines 28-48
+-- Lines 29-49
 function RaidExperienceManager:_setup()
 	self._total_levels = #tweak_data.experience_manager.levels
 
@@ -58,7 +59,7 @@ function RaidExperienceManager:_setup()
 	self._global.mission_xp = {}
 end
 
--- Lines 50-56
+-- Lines 51-57
 function RaidExperienceManager:get_script_xp_events()
 	local events = {}
 
@@ -69,7 +70,7 @@ function RaidExperienceManager:get_script_xp_events()
 	return events
 end
 
--- Lines 58-67
+-- Lines 59-68
 function RaidExperienceManager:_set_next_level_data(level)
 	if self._total_levels < level then
 		print("Reached the level cap")
@@ -84,7 +85,7 @@ function RaidExperienceManager:_set_next_level_data(level)
 	self:_set_next_level_data_current_points(0)
 end
 
--- Lines 69-80
+-- Lines 70-81
 function RaidExperienceManager:get_total_xp_for_level(level)
 	if not level or level < 1 then
 		Application:error("[RaidExperienceManager:get_total_xp_for_level] level passed in is below 1: ", level)
@@ -101,27 +102,27 @@ function RaidExperienceManager:get_total_xp_for_level(level)
 	return xp
 end
 
--- Lines 82-84
+-- Lines 83-85
 function RaidExperienceManager:next_level_data_points()
 	return self._global.next_level_data and Application:digest_value(self._global.next_level_data.points, false) or 0
 end
 
--- Lines 86-88
+-- Lines 87-89
 function RaidExperienceManager:_set_next_level_data_points(value)
 	self._global.next_level_data.points = value
 end
 
--- Lines 90-92
+-- Lines 91-93
 function RaidExperienceManager:next_level_data_current_points()
 	return self._global.next_level_data and Application:digest_value(self._global.next_level_data.current_points, false) or 0
 end
 
--- Lines 94-96
+-- Lines 95-97
 function RaidExperienceManager:_set_next_level_data_current_points(value)
 	self._global.next_level_data.current_points = Application:digest_value(value, true)
 end
 
--- Lines 98-100
+-- Lines 99-101
 function RaidExperienceManager:next_level_data()
 	return {
 		points = self:next_level_data_points(),
@@ -129,22 +130,20 @@ function RaidExperienceManager:next_level_data()
 	}
 end
 
--- Lines 103-105
-function RaidExperienceManager:debug_add_points(points)
-	self:add_points(points, true)
-end
-
--- Lines 108-110
+-- Lines 110-113
 function RaidExperienceManager:mission_xp_award(event)
 	table.insert(self._global.mission_xp, event)
+	Application:debug("[MissionXPAwards] Added event '" .. event .. "' list size:", #self._global.mission_xp)
 end
 
--- Lines 112-114
+-- Lines 115-118
 function RaidExperienceManager:clear_mission_xp()
 	self._global.mission_xp = {}
+
+	Application:debug("[MissionXPAwards] Reset XP events")
 end
 
--- Lines 116-124
+-- Lines 120-128
 function RaidExperienceManager:add_loot_redeemed_xp(xp)
 	if not self._loot_redeemed_xp then
 		self._loot_redeemed_xp = 0
@@ -153,22 +152,22 @@ function RaidExperienceManager:add_loot_redeemed_xp(xp)
 	self._loot_redeemed_xp = self._loot_redeemed_xp + xp
 end
 
--- Lines 126-128
+-- Lines 130-132
 function RaidExperienceManager:clear_loot_redeemed_xp()
 	self._loot_redeemed_xp = nil
 end
 
--- Lines 130-132
+-- Lines 134-136
 function RaidExperienceManager:set_loot_bonus_xp(amount)
 	self._loot_bonus_xp = amount
 end
 
--- Lines 134-136
+-- Lines 138-140
 function RaidExperienceManager:clear_loot_bonus_xp()
 	self._loot_bonus_xp = nil
 end
 
--- Lines 138-273
+-- Lines 142-277
 function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id, success)
 	local exp_table = {
 		additive = {},
@@ -231,7 +230,7 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 		table.insert(exp_table.multiplicative, event_fail_multiplicative)
 	end
 
-	Application:trace("[RaidExperienceManager:calculate_exp_brakedown] This runs stored mission_xp events:", unpack(self._global.mission_xp))
+	Application:trace("[RaidExperienceManager:calculate_exp_brakedown] This runs stored mission_xp events:", inspect(self._global.mission_xp))
 
 	for _, event_id in ipairs(self._global.mission_xp) do
 		if table.contains(RaidExperienceManager.SCRIPT_XP_EVENTS, event_id) then
@@ -307,7 +306,7 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 	return exp_table
 end
 
--- Lines 275-290
+-- Lines 279-294
 function RaidExperienceManager:player_level_difference()
 	local my_level = self:current_level()
 	local min_level = my_level
@@ -326,14 +325,14 @@ function RaidExperienceManager:player_level_difference()
 	return max_level - min_level
 end
 
--- Lines 292-295
+-- Lines 296-299
 function RaidExperienceManager:on_loot_drop_xp(value_id)
 	local amount = tweak_data:get_value("experience_manager", "loot_drop_value", value_id) or 0
 
 	self:add_points(amount, false)
 end
 
--- Lines 297-332
+-- Lines 301-337
 function RaidExperienceManager:add_points(points, is_debug)
 	if not is_debug and managers.platform:presence() ~= "Playing" and managers.platform:presence() ~= "Mission_end" then
 		return
@@ -373,7 +372,7 @@ function RaidExperienceManager:add_points(points, is_debug)
 	return self:add_points(points - points_left, is_debug)
 end
 
--- Lines 334-365
+-- Lines 339-375
 function RaidExperienceManager:_level_up()
 	self:_set_current_level(self:current_level() + 1)
 	self:_set_next_level_data(self:current_level() + 1)
@@ -390,7 +389,10 @@ function RaidExperienceManager:_level_up()
 
 	managers.skilltree:apply_automatic_unlocks_for_level(self:current_level())
 	managers.skilltree:create_breadcrumbs_for_level(self:current_level())
-	self:_check_achievements()
+
+	if managers.achievment then
+		self:_check_achievements()
+	end
 
 	if managers.network:session() then
 		managers.network:session():send_to_peers_synched("sync_character_level", self:current_level())
@@ -399,7 +401,7 @@ function RaidExperienceManager:_level_up()
 	managers.hud:set_player_level(self:current_level())
 end
 
--- Lines 367-381
+-- Lines 377-391
 function RaidExperienceManager:_check_achievements()
 	if not managers.achievment.handler:initialized() then
 		return
@@ -415,12 +417,12 @@ function RaidExperienceManager:_check_achievements()
 	end
 end
 
--- Lines 383-385
+-- Lines 393-395
 function RaidExperienceManager:current_level()
 	return self._global.level and Application:digest_value(self._global.level, false) or 0
 end
 
--- Lines 387-399
+-- Lines 397-409
 function RaidExperienceManager:_set_current_level(value)
 	local current_level = self:current_level()
 	value = math.max(value, 0)
@@ -435,17 +437,17 @@ function RaidExperienceManager:_set_current_level(value)
 	end
 end
 
--- Lines 401-403
+-- Lines 411-413
 function RaidExperienceManager:total()
 	return Application:digest_value(self._global.total, false)
 end
 
--- Lines 405-407
+-- Lines 415-417
 function RaidExperienceManager:_set_total(value)
 	self._global.total = Application:digest_value(value, true)
 end
 
--- Lines 409-417
+-- Lines 419-427
 function RaidExperienceManager:experience_string(xp)
 	local total = tostring(math.round(math.abs(xp)))
 	local reverse = string.reverse(total)
@@ -458,14 +460,14 @@ function RaidExperienceManager:experience_string(xp)
 	return string.reverse(s)
 end
 
--- Lines 420-423
+-- Lines 430-433
 function RaidExperienceManager:get_difficulty_multiplier(difficulty)
 	local multiplier = tweak_data:get_value("experience_manager", "difficulty_multiplier", difficulty)
 
 	return multiplier or 0
 end
 
--- Lines 425-444
+-- Lines 435-454
 function RaidExperienceManager:get_levels_gained_from_xp(xp)
 	local next_level_data = self:next_level_data()
 	local xp_needed_to_level = math.max(1, next_level_data.points - next_level_data.current_points)
@@ -484,17 +486,17 @@ function RaidExperienceManager:get_levels_gained_from_xp(xp)
 	return level_gained
 end
 
--- Lines 448-450
+-- Lines 458-460
 function RaidExperienceManager:level_cap()
 	return Application:digest_value(self.LEVEL_CAP, false)
 end
 
--- Lines 452-454
+-- Lines 462-464
 function RaidExperienceManager:reached_level_cap()
 	return self:level_cap() <= self:current_level()
 end
 
--- Lines 456-462
+-- Lines 466-472
 function RaidExperienceManager:get_total_xp_for_levels(level)
 	local total_xp = 0
 
@@ -505,7 +507,7 @@ function RaidExperienceManager:get_total_xp_for_levels(level)
 	return total_xp
 end
 
--- Lines 466-475
+-- Lines 476-485
 function RaidExperienceManager:save(data)
 	local state = {
 		version = self._global.version,
@@ -517,45 +519,47 @@ function RaidExperienceManager:save(data)
 	data.RaidExperienceManager = state
 end
 
--- Lines 477-521
+-- Lines 487-537
 function RaidExperienceManager:load(data)
 	self:reset()
 
 	local state = data.RaidExperienceManager
 
-	if not state.version or state.version and state.version ~= RaidExperienceManager.VERSION and self:xp_migration_needed(state.version) then
-		Application:trace("[RaidExperienceManager:load] The save data and manager version are mismatched! Migrating...")
+	if state then
+		if not state.version or state.version and state.version ~= RaidExperienceManager.VERSION and self:xp_migration_needed(state.version) then
+			Application:trace("[RaidExperienceManager:load] The save data and manager version are mismatched! Migrating...")
 
-		local temp = {
-			level = Application:digest_value(state.level, false),
-			max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false)
-		}
-		self._global.version = RaidExperienceManager.VERSION
-		self._global.level = state.level or Application:digest_value(1, true)
-		local current_xp_ratio = Application:digest_value(state.next_level_data.current_points, false) / Application:digest_value(state.next_level_data.points, false)
-		self._global.total = Application:digest_value(managers.experience:get_total_xp_for_level(temp.level) + Application:digest_value(tweak_data.experience_manager.levels[temp.level].points, false) * current_xp_ratio, true)
-		self._global.xp_gained = state.xp_gained or state.total
-		local next_level = temp.level + 1
+			local temp = {
+				level = Application:digest_value(state.level, false),
+				max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false)
+			}
+			self._global.version = RaidExperienceManager.VERSION
+			self._global.level = state.level or Application:digest_value(1, true)
+			local current_xp_ratio = Application:digest_value(state.next_level_data.current_points, false) / Application:digest_value(state.next_level_data.points, false)
+			self._global.total = Application:digest_value(managers.experience:get_total_xp_for_level(temp.level) + Application:digest_value(tweak_data.experience_manager.levels[temp.level].points, false) * current_xp_ratio, true)
+			self._global.xp_gained = state.xp_gained or state.total
+			local next_level = temp.level + 1
 
-		if temp.max_level < next_level then
-			next_level = temp.max_level
-		end
+			if temp.max_level < next_level then
+				next_level = temp.max_level
+			end
 
-		self._global.next_level_data = {
-			points = tweak_data.experience_manager.levels[next_level].points,
-			current_points = Application:digest_value(Application:digest_value(tweak_data.experience_manager.levels[next_level].points, false) * current_xp_ratio, true)
-		}
-	elseif state then
-		self._global.version = state.version
-		self._global.total = state.total
-		self._global.xp_gained = state.xp_gained or state.total
-		self._global.next_level_data = state.next_level_data
-		self._global.level = state.level or Application:digest_value(1, true)
+			self._global.next_level_data = {
+				points = tweak_data.experience_manager.levels[next_level].points,
+				current_points = Application:digest_value(Application:digest_value(tweak_data.experience_manager.levels[next_level].points, false) * current_xp_ratio, true)
+			}
+		else
+			self._global.version = state.version
+			self._global.total = state.total
+			self._global.xp_gained = state.xp_gained or state.total
+			self._global.next_level_data = state.next_level_data
+			self._global.level = state.level or Application:digest_value(1, true)
 
-		self:_set_current_level(math.min(self:current_level(), self:level_cap()))
+			self:_set_current_level(math.min(self:current_level(), self:level_cap()))
 
-		if not self._global.next_level_data or not tweak_data.experience_manager.levels[self:current_level() + 1] or self:next_level_data_points() ~= tweak_data:get_value("experience_manager", "levels", self:current_level() + 1, "points") then
-			self:_set_next_level_data(self:current_level() + 1)
+			if not self._global.next_level_data or not tweak_data.experience_manager.levels[self:current_level() + 1] or self:next_level_data_points() ~= tweak_data:get_value("experience_manager", "levels", self:current_level() + 1, "points") then
+				self:_set_next_level_data(self:current_level() + 1)
+			end
 		end
 	end
 
@@ -563,7 +567,7 @@ function RaidExperienceManager:load(data)
 	self:_check_achievements()
 end
 
--- Lines 523-529
+-- Lines 539-545
 function RaidExperienceManager:reset()
 	managers.upgrades:reset()
 	managers.player:reset()
@@ -574,12 +578,12 @@ function RaidExperienceManager:reset()
 	self:update_progress()
 end
 
--- Lines 531-533
+-- Lines 547-549
 function RaidExperienceManager:update_progress()
 	managers.platform:set_progress(math.clamp(self:current_level() / self:level_cap(), 0, 1))
 end
 
--- Lines 537-553
+-- Lines 553-569
 function RaidExperienceManager:chk_ask_use_backup(savegame_data, backup_savegame_data)
 	local savegame_exp_total, backup_savegame_exp_total = nil
 	local state = savegame_data.RaidExperienceManager

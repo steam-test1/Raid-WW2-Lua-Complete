@@ -9,7 +9,7 @@ function NpcVehicleDamage:init(unit)
 	self._is_alive = true
 end
 
--- Lines 14-58
+-- Lines 14-57
 function NpcVehicleDamage:damage_bullet(attack_data)
 	local result = nil
 	local damage = attack_data.damage
@@ -55,12 +55,12 @@ function NpcVehicleDamage:damage_bullet(attack_data)
 	return result
 end
 
--- Lines 60-62
+-- Lines 59-61
 function NpcVehicleDamage:_send_bullet_attack_result(attack_data, attacker, damage_percent, body_index, hit_offset_height)
 	self._unit:network():send("damage_bullet", attacker, damage_percent, body_index, hit_offset_height, 0, self:dead() and true or false)
 end
 
--- Lines 64-113
+-- Lines 63-112
 function NpcVehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit_offset_height, variant, death)
 	if self:dead() then
 		return
@@ -111,11 +111,11 @@ function NpcVehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_bo
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 115-116
+-- Lines 114-115
 function NpcVehicleDamage:_send_sync_bullet_attack_result(attack_data, hit_offset_height)
 end
 
--- Lines 121-159
+-- Lines 120-158
 function NpcVehicleDamage:damage_explosion(attack_data)
 	Application:trace("[NpcVehicleDamage:damage_explosion]")
 
@@ -156,12 +156,12 @@ function NpcVehicleDamage:damage_explosion(attack_data)
 	return result
 end
 
--- Lines 161-164
+-- Lines 160-163
 function NpcVehicleDamage:_send_explosion_attack_result(attack_data, attacker, damage_percent, i_attack_variant, direction)
 	self._unit:network():send("damage_explosion_fire", attacker, damage_percent, i_attack_variant, self._dead and true or false, direction)
 end
 
--- Lines 166-218
+-- Lines 165-219
 function NpcVehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	Application:trace("[NpcVehicleDamage:sync_damage_explosion]")
 
@@ -228,11 +228,11 @@ function NpcVehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 220-221
+-- Lines 221-222
 function NpcVehicleDamage:_send_sync_explosion_attack_result(attack_data)
 end
 
--- Lines 225-263
+-- Lines 226-264
 function NpcVehicleDamage:damage_fire(attack_data)
 	Application:trace("[NpcVehicleDamage:damage_fire]")
 
@@ -273,12 +273,12 @@ function NpcVehicleDamage:damage_fire(attack_data)
 	return result
 end
 
--- Lines 265-268
+-- Lines 266-269
 function NpcVehicleDamage:_send_fire_attack_result(attack_data, attacker, damage_percent, i_attack_variant, direction)
 	self._unit:network():send("damage_explosion_fire", attacker, damage_percent, i_attack_variant, self._dead and true or false, direction)
 end
 
--- Lines 270-321
+-- Lines 271-324
 function NpcVehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	Application:trace("[NpcVehicleDamage:sync_damage_fire]")
 
@@ -345,11 +345,11 @@ function NpcVehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_atta
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 323-324
+-- Lines 326-327
 function NpcVehicleDamage:_send_sync_fire_attack_result(attack_data)
 end
 
--- Lines 328-364
+-- Lines 331-367
 function NpcVehicleDamage:damage_collision(attack_data)
 	if Network:is_server() then
 		if not self._unit:vehicle_driving():is_vulnerable() then
@@ -380,7 +380,7 @@ function NpcVehicleDamage:damage_collision(attack_data)
 	end
 end
 
--- Lines 368-387
+-- Lines 371-390
 function NpcVehicleDamage:is_friendly_fire(attacker_unit)
 	local friendly_fire = false
 
@@ -397,7 +397,7 @@ function NpcVehicleDamage:is_friendly_fire(attacker_unit)
 	return not friendly_fire
 end
 
--- Lines 391-397
+-- Lines 394-400
 function NpcVehicleDamage:_health_recap()
 	local current_health = self:get_real_health()
 

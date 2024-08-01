@@ -1,14 +1,16 @@
 SelectNameModal = SelectNameModal or class(CoreEditorEwsDialog)
 
--- Lines 6-58
+-- Lines 6-60
 function SelectNameModal:init(name, assets_list, settings, ...)
 	Global.world_editor = Global.world_editor or {}
 	Global.world_editor.filter = Global.world_editor.filter or ""
 	self._dialog_name = self._dialog_name or name or "Assets"
 	self._cancelled = true
 	self._assets_list = assets_list
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
 
-	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
+	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(350, 500, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(330, 300, 0))
 	self:create_panel("VERTICAL")
 
 	local panel = self._panel
@@ -42,24 +44,24 @@ function SelectNameModal:init(name, assets_list, settings, ...)
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self:_build_buttons(panel, button_sizer)
-	panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,LEFT,RIGHT")
 	self:fill_asset_list()
 	self._dialog:set_visible(true)
 	self:show_modal()
 end
 
--- Lines 60-61
+-- Lines 62-63
 function SelectNameModal:_on_mark_assett()
 end
 
--- Lines 63-64
+-- Lines 65-66
 function SelectNameModal:_on_select_asset()
 end
 
--- Lines 73-83
+-- Lines 75-85
 function SelectNameModal:_build_buttons(panel, sizer)
-	local select_btn = EWS:Button(panel, "Select", "", "BU_BOTTOM")
+	local select_btn = EWS:Button(panel, "Select", "", "")
 
 	sizer:add(select_btn, 0, 2, "RIGHT,LEFT")
 	select_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_on_select_asset"), "")
@@ -72,36 +74,36 @@ function SelectNameModal:_build_buttons(panel, sizer)
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 end
 
--- Lines 85-89
+-- Lines 87-91
 function SelectNameModal:_on_select_asset()
 	self._cancelled = false
 
 	self._dialog:end_modal("hello")
 end
 
--- Lines 96-98
+-- Lines 98-100
 function SelectNameModal:on_cancel()
 	self._dialog:end_modal("hello")
 end
 
--- Lines 100-102
+-- Lines 102-104
 function SelectNameModal:selected_assets()
 	return self:_selected_item_assets()
 end
 
--- Lines 104-107
+-- Lines 106-109
 function SelectNameModal:update_filter()
 	Global.world_editor.filter = self._filter:get_value()
 
 	self:fill_asset_list()
 end
 
--- Lines 109-111
+-- Lines 111-113
 function SelectNameModal:cancelled()
 	return self._cancelled
 end
 
--- Lines 115-135
+-- Lines 117-137
 function SelectNameModal:fill_asset_list()
 	self._list:delete_all_items()
 
@@ -129,7 +131,7 @@ function SelectNameModal:fill_asset_list()
 	self._list:autosize_column(0)
 end
 
--- Lines 137-142
+-- Lines 139-144
 function SelectNameModal:key_delete(ctrlr, event)
 	event:skip()
 
@@ -138,7 +140,7 @@ function SelectNameModal:key_delete(ctrlr, event)
 	end
 end
 
--- Lines 144-149
+-- Lines 146-151
 function SelectNameModal:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -147,11 +149,11 @@ function SelectNameModal:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines 151-153
+-- Lines 153-155
 function SelectNameModal:_on_delete()
 end
 
--- Lines 155-163
+-- Lines 157-165
 function SelectNameModal:_selected_item_assets()
 	local assets = {}
 

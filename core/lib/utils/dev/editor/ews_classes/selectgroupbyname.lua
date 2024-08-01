@@ -1,8 +1,11 @@
 SelectGroupByName = SelectGroupByName or class(CoreEditorEwsDialog)
 
--- Lines 3-64
+-- Lines 3-66
 function SelectGroupByName:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Select group by name", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "Select group by name", "", Vector3(300, 150, 0), Vector3(400, 500, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(400, 400, 0))
 	self:create_panel("VERTICAL")
 
 	local horizontal_ctrlr_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -28,19 +31,19 @@ function SelectGroupByName:init(...)
 	self._list:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
-	local select_btn = EWS:Button(self._panel, "Select", "", "BU_BOTTOM")
+	local select_btn = EWS:Button(self._panel, "Select", "", "")
 
 	button_sizer:add(select_btn, 0, 2, "RIGHT,LEFT")
 	select_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_select_group"), "")
 	select_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
-	local find_btn = EWS:Button(self._panel, "Ungroup", "", "BU_BOTTOM")
+	local find_btn = EWS:Button(self._panel, "Ungroup", "", "")
 
 	button_sizer:add(find_btn, 0, 2, "RIGHT,LEFT")
 	find_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_ungroup"), "")
 	find_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
-	local delete_btn = EWS:Button(self._panel, "Delete", "", "BU_BOTTOM")
+	local delete_btn = EWS:Button(self._panel, "Delete", "", "")
 
 	button_sizer:add(delete_btn, 0, 2, "RIGHT,LEFT")
 	delete_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_delete"), "")
@@ -51,13 +54,13 @@ function SelectGroupByName:init(...)
 	button_sizer:add(cancel_btn, 0, 2, "RIGHT,LEFT")
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,LEFT,RIGHT")
 	self:fill_group_list()
 	self._dialog:set_visible(true)
 end
 
--- Lines 66-71
+-- Lines 68-73
 function SelectGroupByName:key_delete(ctrlr, event)
 	event:skip()
 
@@ -66,7 +69,7 @@ function SelectGroupByName:key_delete(ctrlr, event)
 	end
 end
 
--- Lines 73-78
+-- Lines 75-80
 function SelectGroupByName:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -75,7 +78,7 @@ function SelectGroupByName:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines 80-89
+-- Lines 82-91
 function SelectGroupByName:on_delete()
 	managers.editor:freeze_gui_lists()
 
@@ -90,11 +93,11 @@ function SelectGroupByName:on_delete()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines 91-93
+-- Lines 93-95
 function SelectGroupByName:on_mark_group()
 end
 
--- Lines 95-100
+-- Lines 97-102
 function SelectGroupByName:on_ungroup()
 	local groups = self:_selected_item_groups()
 
@@ -103,7 +106,7 @@ function SelectGroupByName:on_ungroup()
 	end
 end
 
--- Lines 102-113
+-- Lines 104-115
 function SelectGroupByName:on_select_group()
 	local group = self:_selected_item_group()
 
@@ -119,7 +122,7 @@ function SelectGroupByName:on_select_group()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines 116-123
+-- Lines 118-125
 function SelectGroupByName:_selected_item_groups()
 	local groups = {}
 
@@ -132,7 +135,7 @@ function SelectGroupByName:_selected_item_groups()
 	return groups
 end
 
--- Lines 126-131
+-- Lines 128-133
 function SelectGroupByName:_selected_item_group()
 	local index = self._list:selected_item()
 
@@ -141,7 +144,7 @@ function SelectGroupByName:_selected_item_group()
 	end
 end
 
--- Lines 134-141
+-- Lines 136-143
 function SelectGroupByName:group_removed(group)
 	for i = 0, self._list:item_count() - 1 do
 		if self._groups[self._list:get_item_data(i)] == group then
@@ -152,7 +155,7 @@ function SelectGroupByName:group_removed(group)
 	end
 end
 
--- Lines 144-149
+-- Lines 146-151
 function SelectGroupByName:group_created(group)
 	local i = self._list:append_item(group:name())
 	local j = #self._groups + 1
@@ -161,7 +164,7 @@ function SelectGroupByName:group_created(group)
 	self._list:set_item_data(i, j)
 end
 
--- Lines 152-164
+-- Lines 154-166
 function SelectGroupByName:group_selected(group)
 	for _, i in ipairs(self._list:selected_items()) do
 		self._list:set_item_selected(i, false)
@@ -177,12 +180,12 @@ function SelectGroupByName:group_selected(group)
 	end
 end
 
--- Lines 166-168
+-- Lines 168-170
 function SelectGroupByName:update_filter()
 	self:fill_group_list()
 end
 
--- Lines 172-189
+-- Lines 174-192
 function SelectGroupByName:fill_group_list()
 	self._list:delete_all_items()
 
@@ -195,7 +198,8 @@ function SelectGroupByName:fill_group_list()
 
 	for name, group in pairs(groups) do
 		if string.find(name, filter, 1, true) then
-			local i = self._list:append_item(name)
+			local units = group._units
+			local i = self._list:append_item(name .. " [" .. #units .. "]")
 			self._groups[j] = group
 
 			self._list:set_item_data(i, j)
@@ -208,17 +212,17 @@ function SelectGroupByName:fill_group_list()
 	self._list:autosize_column(0)
 end
 
--- Lines 191-193
+-- Lines 194-196
 function SelectGroupByName:reset()
 	self:fill_group_list()
 end
 
--- Lines 195-197
+-- Lines 198-200
 function SelectGroupByName:freeze()
 	self._list:freeze()
 end
 
--- Lines 199-201
+-- Lines 202-204
 function SelectGroupByName:thaw()
 	self._list:thaw()
 end

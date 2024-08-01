@@ -1,13 +1,13 @@
 WarcryManager = WarcryManager or class()
-WarcryManager.WARCRY_READY_MESSAGE_DURATION = 6
-WarcryManager.CLASS_TO_WARCRY = {
-	recon = "sharpshooter",
-	demolitions = "clustertruck",
-	assault = "berserk",
-	infiltrator = "ghost"
-}
 
--- Lines 12-22
+require("lib/managers/warcries/Warcry")
+
+WarcryManager.WARCRY_READY_MESSAGE_DURATION = 4
+WarcryManager.WARCRY_BLOCKED_MESSAGE_DURATION = 3
+WarcryManager.WARCRY_BLOCKED_TEXT = "hud_warcry_blocked"
+WarcryManager.WARCRY_BLOCKED_AIR_TEXT = "hud_warcry_blocked_in_air"
+
+-- Lines 11-21
 function WarcryManager.get_instance()
 	if not Global.warcry_manager then
 		Global.warcry_manager = WarcryManager:new()
@@ -19,7 +19,7 @@ function WarcryManager.get_instance()
 	return Global.warcry_manager
 end
 
--- Lines 24-33
+-- Lines 23-32
 function WarcryManager:init()
 	self._meter_value = 0
 	self._meter_max_value = 1
@@ -29,11 +29,12 @@ function WarcryManager:init()
 	self._ids_warcry_modifier = Idstring("warcry")
 end
 
--- Lines 35-41
+-- Lines 34-44
 function WarcryManager:_setup()
 	self:reset()
 
 	if self._active_warcry then
+		Application:debug("[WarcryManager:_setup] Warcry", self._active_warcry:get_type(), "LV", self._active_warcry:get_level())
 		self:set_active_warcry({
 			name = self._active_warcry:get_type(),
 			level = self._active_warcry:get_level()
@@ -41,7 +42,12 @@ function WarcryManager:_setup()
 	end
 end
 
--- Lines 43-48
+-- Lines 46-48
+function WarcryManager:get_active_warcry()
+	return self._active_warcry
+end
+
+-- Lines 50-55
 function WarcryManager:set_warcry_post_effect(ids_effect)
 	local vp = managers.viewport:first_active_viewport()
 
@@ -50,7 +56,7 @@ function WarcryManager:set_warcry_post_effect(ids_effect)
 	end
 end
 
--- Lines 50-61
+-- Lines 57-68
 function WarcryManager:warcry_post_material()
 	local vp = managers.viewport:first_active_viewport()
 
@@ -67,14 +73,16 @@ function WarcryManager:warcry_post_material()
 	end
 end
 
--- Lines 63-80
+-- Lines 70-89
 function WarcryManager:acquire_warcry(warcry_name)
+	Application:debug("[WarcryManager:acquire_warcry] WARCRY NAME", warcry_name)
+
 	if self:warcry_acquired(warcry_name) then
 		return
 	end
 
 	if self._active_warcry then
-		self:deactivate_warcry()
+		self:deactivate_warcry(true)
 	end
 
 	local warcry = {
@@ -86,12 +94,24 @@ function WarcryManager:acquire_warcry(warcry_name)
 	self:set_active_warcry(warcry)
 end
 
--- Lines 82-95
+-- Lines 91-119
 function WarcryManager:set_active_warcry(warcry)
+	if not warcry or not warcry.name then
+		debug_pause("[WarcryManager:set_active_warcry] tried to activate a warcry that doesn't exist", warcry)
+	end
+
+	Application:debug("[WarcryManager:set_active_warcry] Activating warcry", inspect(warcry))
+
 	if self._active_warcry then
+		self:deactivate_warcry(true)
 		self._active_warcry:cleanup()
 
 		self._active_warcry = nil
+		self._meter_full = nil
+
+		if managers.hud then
+			managers.hud:deactivate_player_warcry()
+		end
 	end
 
 	self._active_warcry = Warcry.create(warcry.name)
@@ -100,22 +120,24 @@ function WarcryManager:set_active_warcry(warcry)
 
 	self._active_warcry_name = warcry.name
 
+	self:setup_upgrades()
+
 	if managers.hud then
 		managers.hud:set_player_active_warcry(warcry.name)
 	end
 end
 
--- Lines 97-99
+-- Lines 121-123
 function WarcryManager:get_active_warcry()
 	return self._active_warcry
 end
 
--- Lines 101-103
+-- Lines 125-127
 function WarcryManager:get_active_warcry_name()
 	return self._active_warcry_name
 end
 
--- Lines 105-129
+-- Lines 129-153
 function WarcryManager:increase_warcry_level(warcry_name, amount)
 	local increase_amount = amount or 1
 
@@ -138,7 +160,7 @@ function WarcryManager:increase_warcry_level(warcry_name, amount)
 	end
 end
 
--- Lines 131-139
+-- Lines 155-163
 function WarcryManager:warcry_acquired(warcry_name)
 	for i = 1, #self._warcries do
 		if self._warcries[i].name == warcry_name then
@@ -149,7 +171,7 @@ function WarcryManager:warcry_acquired(warcry_name)
 	return false
 end
 
--- Lines 141-145
+-- Lines 165-169
 function WarcryManager:activate_peer_warcry(peer_id, warcry_type, level)
 	self._peer_warcries[peer_id] = {
 		type = warcry_type,
@@ -157,18 +179,34 @@ function WarcryManager:activate_peer_warcry(peer_id, warcry_type, level)
 	}
 end
 
--- Lines 147-149
+-- Lines 171-173
 function WarcryManager:deactivate_peer_warcry(peer_id)
 	self._peer_warcries[peer_id] = nil
 end
 
--- Lines 151-193
+-- Lines 175-238
 function WarcryManager:activate_warcry()
 	if not self._active_warcry then
 		return
 	end
 
-	managers.hud:remove_comm_wheel_option("warcry")
+	local can_activate, blocked_text_id = self._active_warcry:can_activate()
+
+	if not can_activate then
+		blocked_text_id = blocked_text_id or self.WARCRY_BLOCKED_TEXT
+		local notification_data = {
+			shelf_life = 5,
+			sound_effect = "generic_fail_sound",
+			id = self.WARCRY_BLOCKED_TEXT,
+			text = managers.localization:text(blocked_text_id),
+			duration = self.WARCRY_BLOCKED_MESSAGE_DURATION
+		}
+
+		managers.notification:add_notification(notification_data)
+
+		return
+	end
+
 	managers.hud:hide_big_prompt("warcry_ready")
 	self._active_warcry:activate()
 
@@ -176,38 +214,53 @@ function WarcryManager:activate_warcry()
 		managers.buff_effect:fail_effect(BuffEffectManager.EFFECT_PLAYERS_CANT_USE_WARCRIES, managers.network:session():local_peer():id())
 	end
 
-	self._duration = self._active_warcry:duration()
-	self._remaining = self._duration
+	self._duration = self._active_warcry:duration() * self:duration_multiplier()
+	self._remaining = self._duration * self._meter_value
 	self._active = true
 	local warcry_type = self._active_warcry:get_type()
 	local warcry_level = self._active_warcry:get_level()
+	local sound_switch = self._active_warcry:get_sound_switch()
 
 	managers.network:session():send_to_peers_synched("sync_activate_warcry", warcry_type, warcry_level, self._duration)
 
-	local warcry_switch = managers.hud._sound_source
+	if sound_switch then
+		managers.hud:set_sound_switch("warcry_switch", sound_switch)
+		managers.hud:post_event("warcry_active")
+	end
 
-	warcry_switch:set_switch("warcry_switch", tostring("warcry_" .. tostring(warcry_type)))
-	warcry_switch:set_switch("warcry_level", tostring("warcry_level_" .. tostring(warcry_level)))
-	managers.hud._sound_source:post_event("warcry_active")
-	managers.dialog:queue_dialog(tostring("warcry_" .. tostring(warcry_type)), {
+	managers.dialog:queue_dialog(self._active_warcry:get_activation_callout(), {
 		skip_idle_check = true,
 		instigator = managers.player:local_player()
 	})
 
 	if Network:is_server() then
-		self:activate_peer_warcry(managers.network:session():local_peer()._id, warcry_type, warcry_level)
+		self:activate_peer_warcry(managers.network:session():local_peer():id(), warcry_type, warcry_level)
 	end
 end
 
--- Lines 195-208
-function WarcryManager:deactivate_warcry()
-	self:_fill_meter_by_value(-self._meter_value, true)
+-- Lines 240-271
+function WarcryManager:deactivate_warcry(force_reset)
+	if not self._active_warcry then
+		return
+	end
+
+	local value = self._meter_value
+	local threshold = self._active_warcry.activation_threshold and self._active_warcry:activation_threshold()
+
+	if threshold and not force_reset then
+		local penalty_percentage, penalty_multiplier = self._active_warcry:interrupt_penalty()
+		value = self._meter_value * (penalty_multiplier or 0)
+		value = value + (penalty_percentage or 0)
+		value = value * (1 - self._interrupt_penalty_reduction)
+
+		if threshold < self._meter_value - value then
+			value = self._meter_value - threshold
+		end
+	end
+
+	self:_fill_meter_by_value(-value, true)
 
 	self._meter_full = false
-
-	if managers.hud then
-		managers.hud:deactivate_player_warcry()
-	end
 
 	if not self._active then
 		return
@@ -216,7 +269,7 @@ function WarcryManager:deactivate_warcry()
 	self:_deactivate_warcry()
 end
 
--- Lines 210-219
+-- Lines 273-283
 function WarcryManager:fill_meter_by_value(value, sync)
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_WARCRIES_DISABLED) then
 		return
@@ -229,20 +282,51 @@ function WarcryManager:fill_meter_by_value(value, sync)
 	self:_fill_meter_by_value(value, sync)
 end
 
--- Lines 222-244
-function WarcryManager:_fill_meter_by_value(value, sync)
-	self._meter_value = self._meter_value + value
+-- Lines 285-304
+function WarcryManager:downed()
+	local multiplier = tweak_data.player.damage.DOWNED_WARCRY_REDUCTION
+	multiplier = multiplier - self._interrupt_penalty_reduction
+	local reduction = self._meter_value * multiplier
 
-	if self._meter_max_value <= self._meter_value then
-		self._meter_value = self._meter_max_value
+	self:_fill_meter_by_value(-reduction, true)
 
-		if not self._meter_full then
-			self:_on_meter_full()
-		end
+	self._meter_full = false
+	self._is_perseverating = false
+
+	if managers.hud then
+		managers.hud:deactivate_player_warcry()
 	end
 
-	if self._meter_value < 0 then
-		self._meter_value = 0
+	if not self._active then
+		return
+	end
+
+	self:_deactivate_warcry()
+end
+
+-- Lines 306-311
+function WarcryManager:on_enter_perseverance()
+	self._is_perseverating = true
+	self._meter_full = false
+
+	self:_deactivate_warcry()
+end
+
+-- Lines 313-335
+function WarcryManager:_fill_meter_by_value(value, sync)
+	if not self._active_warcry then
+		return
+	end
+
+	self._meter_value = math.max(self._meter_value + value, 0)
+	local threshold = self._active_warcry.activation_threshold and self._active_warcry:activation_threshold() or self._meter_max_value
+
+	if threshold <= self._meter_value then
+		self._meter_value = math.min(self._meter_value, self._meter_max_value)
+
+		if not self._meter_full and not self._is_perseverating then
+			self:_on_meter_full()
+		end
 	end
 
 	if managers.hud then
@@ -257,7 +341,7 @@ function WarcryManager:_fill_meter_by_value(value, sync)
 	end
 end
 
--- Lines 246-256
+-- Lines 337-347
 function WarcryManager:add_warcry_comm_wheel_option(index)
 	local warcry_comm_wheel_option = {
 		id = "warcry",
@@ -270,55 +354,62 @@ function WarcryManager:add_warcry_comm_wheel_option(index)
 	managers.hud:add_comm_wheel_option(warcry_comm_wheel_option, index)
 end
 
--- Lines 259-261
+-- Lines 350-352
 function WarcryManager:current_meter_percentage()
 	return self._meter_value / self._meter_max_value * 100
 end
 
--- Lines 263-291
-function WarcryManager:_on_meter_full()
+-- Lines 354-387
+function WarcryManager:_on_meter_full(skip_notification)
 	self._meter_full = true
 
 	managers.hud:set_player_warcry_meter_glow(true)
 	managers.network:session():send_to_peers_synched("sync_warcry_meter_glow", true)
-	managers.hud._sound_source:post_event("warcry_available")
 
-	local prompt_text = nil
+	if self._active_warcry and not skip_notification then
+		managers.hud:post_event("warcry_available")
 
-	if managers.controller:is_using_controller() then
-		prompt_text = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
-			BTN_USE_ITEM = managers.localization:get_default_macros().BTN_TOP_L .. " + " .. managers.localization:get_default_macros().BTN_TOP_R
+		local warcry = self._active_warcry:get_type()
+		local name_id = tweak_data.warcry[warcry].name_id
+		local icon = tweak_data.warcry[warcry].hud_icon
+		local prompt_title = utf8.to_upper(managers.localization:text("hud_hint_warcry_ready_title", {
+			WARCRY = managers.localization:text(name_id)
 		}))
-	else
-		prompt_text = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
-			BTN_USE_ITEM = managers.localization:btn_macro("activate_warcry")
-		}))
+		local prompt_desc = nil
+
+		if managers.controller:is_using_controller() then
+			prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
+				BTN_USE_ITEM = managers.localization:get_default_macros().BTN_TOP_L .. " + " .. managers.localization:get_default_macros().BTN_TOP_R
+			}))
+		else
+			prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
+				BTN_USE_ITEM = managers.localization:btn_macro("activate_warcry")
+			}))
+		end
+
+		managers.hud:set_big_prompt({
+			priority = true,
+			flares = true,
+			background = "backgrounds_warcry_msg",
+			id = "warcry_ready",
+			title = prompt_title,
+			description = prompt_desc,
+			icon = icon,
+			duration = WarcryManager.WARCRY_READY_MESSAGE_DURATION,
+			text_color = tweak_data.gui.colors.raid_gold
+		})
 	end
-
-	local interact_data = {
-		id = "warcry_ready",
-		text = prompt_text,
-		duration = WarcryManager.WARCRY_READY_MESSAGE_DURATION
-	}
-
-	managers.hud:set_big_prompt({
-		background = "backgrounds_warcry_msg",
-		id = interact_data.id,
-		text = interact_data.text,
-		duration = interact_data.duration,
-		text_color = Color("dd9a38")
-	})
 end
 
--- Lines 293-317
+-- Lines 389-412
 function WarcryManager:_deactivate_warcry()
 	if self._active_warcry then
 		self._active_warcry:deactivate()
 	end
 
+	self._meter_full = false
 	self._duration = nil
 	self._active = false
-	self._meter_full = false
 	self._last_value = nil
 
 	if managers.hud then
@@ -335,7 +426,7 @@ function WarcryManager:_deactivate_warcry()
 	end
 end
 
--- Lines 319-338
+-- Lines 414-435
 function WarcryManager:update(t, dt)
 	if not self._active then
 		return
@@ -347,7 +438,8 @@ function WarcryManager:update(t, dt)
 
 	self._active_warcry:update(dt)
 
-	self._remaining = self._remaining - dt
+	local consume = dt * self._active_warcry:drain_rate()
+	self._remaining = self._remaining - consume
 	local diff = self._remaining / self._duration - self._last_value
 
 	self:_fill_meter_by_value(diff)
@@ -359,43 +451,59 @@ function WarcryManager:update(t, dt)
 	end
 end
 
--- Lines 340-342
+-- Lines 438-440
+function WarcryManager:add_remaining(value)
+	self._remaining = math.clamp(self._remaining + value, 0, self._duration)
+end
+
+-- Lines 442-444
 function WarcryManager:remaining()
 	return self._remaining
 end
 
--- Lines 344-346
+-- Lines 446-448
 function WarcryManager:duration()
 	return self._duration
 end
 
--- Lines 348-350
+-- Lines 450-454
+function WarcryManager:duration_multiplier()
+	local multiplier = managers.player:upgrade_value("player", "helpcry_warcry_duration_multiplier", 1)
+
+	return multiplier
+end
+
+-- Lines 457-459
 function WarcryManager:active()
 	return self._active
 end
 
--- Lines 352-354
+-- Lines 461-463
 function WarcryManager:current_meter_value()
 	return self._meter_value
 end
 
--- Lines 356-358
+-- Lines 465-467
 function WarcryManager:meter_full()
 	return self._meter_full
 end
 
--- Lines 360-378
+-- Lines 469-490
 function WarcryManager:reset()
 	if self._active_warcry then
-		self:_fill_meter_by_value(-self._meter_value, true)
+		if self._meter_value > 0 then
+			self:_fill_meter_by_value(-self._meter_value, true)
+		end
+
 		setmetatable(self._active_warcry, Warcry.get_metatable(self._active_warcry_name))
-		self:deactivate_warcry()
+		self:deactivate_warcry(true)
 		self._active_warcry:cleanup()
 	end
 
 	self._meter_value = 0
 	self._meter_max_value = 1
 	self._remaining = nil
+	self._is_perseverating = nil
 	self._peer_warcries = {}
 
 	for i = 1, 4 do
@@ -403,12 +511,12 @@ function WarcryManager:reset()
 	end
 end
 
--- Lines 380-391
+-- Lines 492-503
 function WarcryManager:clear_active_warcry()
 	if self._active_warcry then
 		self:_fill_meter_by_value(-self._meter_value, true)
 		setmetatable(self._active_warcry, Warcry.get_metatable(self._active_warcry_name))
-		self:deactivate_warcry()
+		self:deactivate_warcry(true)
 		self._active_warcry:cleanup()
 	end
 
@@ -416,63 +524,84 @@ function WarcryManager:clear_active_warcry()
 	self._active_warcry = nil
 end
 
--- Lines 393-435
+-- Lines 505-560
 function WarcryManager:peer_warcry_upgrade_value(peer_id, upgrade_category, upgrade_definition_name, default_value)
 	local peer_warcry = self._peer_warcries[peer_id]
 
-	if peer_warcry then
-		local buffs = nil
+	if not peer_warcry then
+		return default_value
+	end
 
-		if peer_warcry.level > #tweak_data.warcry[peer_warcry.type].buffs then
-			buffs = tweak_data.warcry[peer_warcry.type].buffs[#tweak_data.warcry[peer_warcry.type].buffs]
-		else
-			buffs = tweak_data.warcry[peer_warcry.type].buffs[peer_warcry.level]
-		end
+	local tweak_buffs = tweak_data.warcry[peer_warcry.type].buffs
+	local level = math.min(peer_warcry.level, #tweak_buffs)
+	local wanted_upgrade = nil
+
+	for i = 1, level do
+		local buffs = tweak_buffs[i]
 
 		for index, buff in pairs(buffs) do
 			local upgrade_definition = tweak_data.upgrades.definitions[buff]
 
-			if not upgrade_definition then
+			if not upgrade_definition and not upgrade_definition.upgrade then
 				Application:error("[WarcryManager:peer_warcry_upgrade_value] upgrade_definition is not valid", buff)
 
 				return default_value
 			end
 
 			if upgrade_definition.upgrade.upgrade == upgrade_definition_name then
-				local upgrade_name = upgrade_definition.upgrade.upgrade
 				local upgrade_level = upgrade_definition.upgrade.value
-				local upgrade_category_table = nil
 
-				if type(upgrade_category) == "table" then
-					upgrade_category_table = tweak_data.upgrades.values
+				if not wanted_upgrade or wanted_upgrade.value < upgrade_level then
+					wanted_upgrade = upgrade_definition.upgrade
 
-					for j = 1, #upgrade_category do
-						upgrade_category_table = upgrade_category_table[upgrade_category[j]]
-					end
-				else
-					upgrade_category_table = tweak_data.upgrades.values[upgrade_category]
+					break
 				end
-
-				return upgrade_category_table[upgrade_name][upgrade_level]
 			end
 		end
+	end
+
+	if wanted_upgrade then
+		local upgrade_name = wanted_upgrade.upgrade
+		local upgrade_level = wanted_upgrade.value
+		local upgrade_category_table = nil
+
+		if type(upgrade_category) == "table" then
+			upgrade_category_table = tweak_data.upgrades.values
+
+			for j = 1, #upgrade_category do
+				upgrade_category_table = upgrade_category_table[upgrade_category[j]]
+			end
+		else
+			upgrade_category_table = tweak_data.upgrades.values[upgrade_category]
+		end
+
+		return upgrade_category_table[upgrade_name][upgrade_level]
 	end
 
 	return default_value
 end
 
--- Lines 437-446
+-- Lines 562-579
 function WarcryManager:save(data)
 	if self._warcries then
+		local active_warcry = nil
+
+		if self._active_warcry then
+			active_warcry = {
+				name = self._active_warcry:get_type(),
+				level = self._active_warcry:get_level()
+			}
+		end
+
 		local manager_data = {
 			warcries = self._warcries,
-			active_warcry = self._active_warcry
+			active_warcry = active_warcry
 		}
 		data.warcry_manager = manager_data
 	end
 end
 
--- Lines 448-467
+-- Lines 581-604
 function WarcryManager:load(data, version)
 	if data.warcry_manager and data.warcry_manager.warcries then
 		self:reset()
@@ -480,28 +609,43 @@ function WarcryManager:load(data, version)
 
 		self._meter_value = 0
 		self._meter_max_value = 1
-		self._warcries = {}
+		self._warcries = data.warcry_manager.warcries or {}
 		self._active_warcry = nil
-		self._warcries = data.warcry_manager.warcries
 
-		if data.warcry_manager.active_warcry then
-			self:set_active_warcry({
-				level = data.warcry_manager.active_warcry._level,
-				name = data.warcry_manager.active_warcry._type
-			})
-		else
-			self:set_active_warcry(self._warcries[#self._warcries])
+		Application:debug("[WarcryManager:load] Fallback to getting first active warcry from 'managers.skilltree:get_warcries_applied()'")
+
+		local warcries = managers.skilltree:get_warcries_applied()
+
+		for id, skill_data in pairs(warcries) do
+			if skill_data.active and skill_data.warcry_id then
+				Application:debug("[WarcryManager:load] warcry_id", skill_data.warcry_id, "Tier", skill_data.exp_tier)
+				self:set_active_warcry({
+					name = skill_data.warcry_id,
+					level = skill_data.exp_tier or 1
+				})
+
+				break
+			end
 		end
 	end
 end
 
--- Lines 470-472
-function WarcryManager:on_simulation_ended()
-	self._meter_value = 0
+-- Lines 607-615
+function WarcryManager:setup_upgrades()
+	if self._active then
+		self:_deactivate_warcry()
+	end
+
+	local pm = managers.player
+	self._interrupt_penalty_reduction = pm:upgrade_value("player", "helpcry_warcry_downed_reduction", 1) - 1
 end
 
--- Lines 474-477
+-- Lines 618-620
+function WarcryManager:on_simulation_ended()
+	self:on_mission_end_callback()
+end
+
+-- Lines 622-624
 function WarcryManager:on_mission_end_callback()
-	self:_deactivate_warcry()
-	self:_fill_meter_by_value(-self._meter_value, true)
+	self:deactivate_warcry(true)
 end

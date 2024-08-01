@@ -1,6 +1,6 @@
 ShotgunBase = ShotgunBase or class(RaycastWeaponBase)
 
--- Lines 3-12
+-- Lines 3-11
 function ShotgunBase:init(...)
 	ShotgunBase.super.init(self, ...)
 
@@ -10,7 +10,7 @@ function ShotgunBase:init(...)
 	self._range = self._damage_falloff_far
 end
 
--- Lines 16-26
+-- Lines 15-25
 function ShotgunBase:_create_use_setups()
 	local use_data = {}
 	local player_setup = {
@@ -29,7 +29,7 @@ end
 local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 32-179
+-- Lines 31-189
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	local result = {}
 	local hit_enemies = {}
@@ -45,7 +45,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local weight = 0.1
 	local enemy_died = false
 
-	-- Lines 46-55
+	-- Lines 49-58
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() and col_ray.unit:character_damage().is_head then
 			local enemy_key = col_ray.unit:key()
@@ -155,7 +155,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				if u_body:enabled() and u_body:dynamic() then
 					local body_mass = u_body:mass()
 
-					World:play_physic_effect(Idstring("physic_effects/shotgun_hit"), u_body, Vector3(col_ray.ray.x, col_ray.ray.y, col_ray.ray.z + 0.5) * 600 * scale, 4 * body_mass / math.random(2), rot_acc, rot_time)
+					World:play_physic_effect(tweak_data.physics_effects.shotgun_push, u_body, Vector3(col_ray.ray.x, col_ray.ray.y, col_ray.ray.z + 0.5) * 600 * scale, 4 * body_mass / math.random(2), rot_acc, rot_time)
 				end
 
 				i_u_body = i_u_body + 1
@@ -185,29 +185,30 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	return result
 end
 
--- Lines 183-186
+-- Lines 193-197
 function ShotgunBase:reload_expire_t()
 	local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()
+	local v = math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * 20 / 30
 
-	return math.min(self:get_ammo_total() - ammo_remaining_in_clip, self:get_ammo_max_per_clip() - ammo_remaining_in_clip) * 20 / 30
+	return v
 end
 
--- Lines 188-190
+-- Lines 199-201
 function ShotgunBase:reload_enter_expire_t()
 	return 0.3
 end
 
--- Lines 192-194
+-- Lines 203-205
 function ShotgunBase:reload_exit_expire_t()
 	return 1.3
 end
 
--- Lines 196-198
+-- Lines 207-209
 function ShotgunBase:reload_not_empty_exit_expire_t()
 	return 1
 end
 
--- Lines 201-207
+-- Lines 212-218
 function ShotgunBase:start_reload(...)
 	ShotgunBase.super.start_reload(self, ...)
 
@@ -216,12 +217,12 @@ function ShotgunBase:start_reload(...)
 	self._next_shell_reloded_t = Application:time() + 0.3366666666666666 / speed_multiplier
 end
 
--- Lines 209-211
+-- Lines 220-222
 function ShotgunBase:started_reload_empty()
 	return self._started_reload_empty
 end
 
--- Lines 214-229
+-- Lines 225-240
 function ShotgunBase:update_reloading(t, dt, time_left)
 	if self._next_shell_reloded_t < t then
 		local speed_multiplier = self:reload_speed_multiplier()
@@ -234,7 +235,7 @@ function ShotgunBase:update_reloading(t, dt, time_left)
 	end
 end
 
--- Lines 232-234
+-- Lines 243-245
 function ShotgunBase:reload_interuptable()
 	return true
 end

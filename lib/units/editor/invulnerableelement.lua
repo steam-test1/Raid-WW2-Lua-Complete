@@ -3,20 +3,22 @@ InvulnerableUnitElement.LINK_ELEMENTS = {
 	"elements"
 }
 
--- Lines 4-14
+-- Lines 4-16
 function InvulnerableUnitElement:init(unit)
 	InvulnerableUnitElement.super.init(self, unit)
 
 	self._hed.invulnerable = true
 	self._hed.immortal = false
+	self._hed.apply_instigator = false
 	self._hed.elements = {}
 
 	table.insert(self._save_values, "invulnerable")
 	table.insert(self._save_values, "immortal")
+	table.insert(self._save_values, "apply_instigator")
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 16-25
+-- Lines 18-27
 function InvulnerableUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -36,17 +38,17 @@ function InvulnerableUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 27-30
+-- Lines 29-32
 function InvulnerableUnitElement:get_links_to_unit(...)
 	InvulnerableUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
--- Lines 32-33
+-- Lines 34-35
 function InvulnerableUnitElement:update_editing()
 end
 
--- Lines 35-45
+-- Lines 37-47
 function InvulnerableUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -64,7 +66,7 @@ function InvulnerableUnitElement:add_element()
 	end
 end
 
--- Lines 47-55
+-- Lines 49-57
 function InvulnerableUnitElement:_correct_unit(u_name)
 	local names = {
 		"ai_spawn_enemy",
@@ -83,12 +85,12 @@ function InvulnerableUnitElement:_correct_unit(u_name)
 	return false
 end
 
--- Lines 57-59
+-- Lines 59-61
 function InvulnerableUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 61-83
+-- Lines 63-90
 function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -111,6 +113,15 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = immortal
 	})
 	panel_sizer:add(immortal, 0, 0, "EXPAND")
+
+	local apply_instigator = EWS:CheckBox(panel, "apply_instigator", "")
+
+	apply_instigator:set_value(self._hed.apply_instigator)
+	apply_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "apply_instigator",
+		ctrlr = apply_instigator
+	})
+	panel_sizer:add(apply_instigator, 0, 0, "EXPAND")
 
 	local help = {
 		text = "Makes a unit invulnerable or immortal.",

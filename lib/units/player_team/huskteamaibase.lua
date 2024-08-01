@@ -31,13 +31,17 @@ function HuskTeamAIBase:on_death_exit()
 	self:set_slot(self._unit, 0)
 end
 
--- Lines 36-39
+-- Lines 36-43
 function HuskTeamAIBase:pre_destroy(unit)
+	if self._unit:customization() then
+		self._unit:customization():destroy_all_parts_on_character()
+	end
+
 	TeamAIBase.unregister(self)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 43-55
+-- Lines 47-59
 function HuskTeamAIBase:load(data)
 	self._tweak_table = data.base.tweak_table or self._tweak_table
 	local character_name = self._tweak_table
@@ -55,11 +59,11 @@ function HuskTeamAIBase:load(data)
 	end
 end
 
--- Lines 59-60
+-- Lines 63-64
 function HuskTeamAIBase:chk_freeze_anims()
 end
 
--- Lines 64-66
+-- Lines 68-70
 function HuskTeamAIBase:unregister()
 	TeamAIBase.unregister(self)
 end

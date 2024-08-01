@@ -42,7 +42,7 @@ function RaidGUIControlLegend:set_labels(legend)
 	self:_create_legend()
 end
 
--- Lines 43-68
+-- Lines 43-65
 function RaidGUIControlLegend:_create_legend()
 	if not self._object or not alive(self._object._engine_panel) or not self._legend then
 		return
@@ -52,11 +52,7 @@ function RaidGUIControlLegend:_create_legend()
 
 	self._labels = {}
 
-	if _G.IS_PC then
-		if not managers.controller:is_xbox_controller_present() or managers.menu:is_pc_controller() then
-			self:_create_pc_legend()
-		end
-	else
+	if managers.controller:is_controller_present() then
 		self:_create_console_legend({
 			y = 0,
 			w = 200,
@@ -66,10 +62,12 @@ function RaidGUIControlLegend:_create_legend()
 			font_size = self._params.font_size or RaidGUIControlLegend.FONT_SIZE,
 			color = RaidGUIControlLegend.COLOR
 		})
+	elseif managers.menu:is_pc_controller() then
+		self:_create_pc_legend()
 	end
 end
 
--- Lines 70-97
+-- Lines 67-94
 function RaidGUIControlLegend:_create_console_legend(label_params)
 	if not self._legend.controller then
 		return
@@ -103,7 +101,7 @@ function RaidGUIControlLegend:_create_console_legend(label_params)
 	end
 end
 
--- Lines 99-124
+-- Lines 96-121
 function RaidGUIControlLegend:_create_pc_legend()
 	if not self._legend.keyboard then
 		return

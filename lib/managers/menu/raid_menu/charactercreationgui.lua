@@ -433,7 +433,7 @@ function CharacterCreationGui:back_pressed()
 		managers.raid_menu:register_on_escape_callback(nil)
 
 		return true, nil
-	elseif managers.controller:is_xbox_controller_present() then
+	elseif managers.controller:is_controller_present() then
 		managers.raid_menu:register_on_escape_callback(nil)
 		managers.raid_menu:on_escape()
 	end
@@ -445,7 +445,7 @@ function CharacterCreationGui:on_click_character_name()
 	self:_on_focus()
 end
 
--- Lines 413-418
+-- Lines 413-423
 function CharacterCreationGui:show_selected_character_description()
 	local right_side_info = self._current_screen == "class" and self._right_side_info_class or self._right_side_info_nationality
 
@@ -457,7 +457,7 @@ function CharacterCreationGui:show_selected_character_description()
 	})
 end
 
--- Lines 421-433
+-- Lines 426-438
 function CharacterCreationGui:show_selected_character()
 	if self._spawned_character_unit then
 		local anim_state_name = "character_creation_" .. tweak_data.skilltree.default_weapons[self._selected_class].primary
@@ -470,16 +470,16 @@ function CharacterCreationGui:show_selected_character()
 	self:show_selected_character_default_customization(self._selected_nation)
 end
 
--- Lines 435-443
+-- Lines 440-448
 function CharacterCreationGui:_spawn_empty_character_skeleton()
 	self:set_character_select_allowed(false)
 
 	self._loading_units[CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT] = true
 
-	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_empty_character_skeleton_loaded"))
+	managers.dyn_resource:load(IDS_UNIT, Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_empty_character_skeleton_loaded"))
 end
 
--- Lines 445-470
+-- Lines 450-475
 function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
 	self._loading_units[CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT] = nil
 
@@ -500,7 +500,7 @@ function CharacterCreationGui:_spawn_empty_character_skeleton_loaded()
 	self:set_character_select_allowed(true)
 end
 
--- Lines 472-485
+-- Lines 477-490
 function CharacterCreationGui:get_character_spawn_location()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 
@@ -515,7 +515,7 @@ function CharacterCreationGui:get_character_spawn_location()
 	end
 end
 
--- Lines 487-538
+-- Lines 492-543
 function CharacterCreationGui:close()
 	if self._parts_being_loaded then
 		for _, parts in pairs(self._parts_being_loaded) do
@@ -527,7 +527,7 @@ function CharacterCreationGui:close()
 	if self._loading_units then
 		for unit_name, _ in pairs(self._loading_units) do
 			Application:trace("[CharacterCreationGui][close] Unloading unit ", unit_name)
-			managers.dyn_resource:unload(Idstring("unit"), Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+			managers.dyn_resource:unload(IDS_UNIT, Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 		end
 	end
 
@@ -553,7 +553,7 @@ function CharacterCreationGui:close()
 	managers.weapon_skills:update_weapon_part_animation_weights()
 end
 
--- Lines 540-551
+-- Lines 545-556
 function CharacterCreationGui:show_selected_character_default_customization(nationality)
 	self._spawned_character_unit:customization():destroy_all_parts_on_character()
 
@@ -565,7 +565,7 @@ function CharacterCreationGui:show_selected_character_default_customization(nati
 	self._spawned_character_unit:customization():attach_all_parts_to_character_by_parts(nationality, default_head, default_upper, default_lower)
 end
 
--- Lines 553-560
+-- Lines 558-565
 function CharacterCreationGui:_destroy_character_unit()
 	if self._spawned_character_unit then
 		self._spawned_character_unit:customization():destroy_all_parts_on_character()
@@ -575,7 +575,7 @@ function CharacterCreationGui:_destroy_character_unit()
 	end
 end
 
--- Lines 562-572
+-- Lines 567-577
 function CharacterCreationGui:show_character_create_input_textbox(callback_yes_function, callback_no_function)
 	local slot_index = managers.savefile:get_create_character_slot()
 	local num_append_txt = {
@@ -589,18 +589,18 @@ function CharacterCreationGui:show_character_create_input_textbox(callback_yes_f
 	local params = {
 		callback_yes = callback_yes_function,
 		callback_no = callback_no_function,
-		textbox_value = self:translate("menu_" .. self._selected_nation, true) .. " " .. num_append_txt[slot_index - 10]
+		textbox_value = num_append_txt[slot_index - 10]
 	}
 
 	managers.menu:show_character_create_dialog(params)
 end
 
--- Lines 574-576
+-- Lines 579-581
 function trim(s)
 	return s:gsub("^%s*(.-)%s*$", "%1")
 end
 
--- Lines 578-591
+-- Lines 583-596
 function character_name_exists(name)
 	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		local slot_data = Global.savefile_manager.meta_data_list[slot_index]
@@ -617,12 +617,12 @@ function character_name_exists(name)
 	return false
 end
 
--- Lines 593-595
+-- Lines 598-600
 function CharacterCreationGui:_callback_error_ok_function()
 	self._should_show_character_create_input_textbox = true
 end
 
--- Lines 597-617
+-- Lines 602-622
 function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	local new_profile_name = trim(data.input_field_text)
 
@@ -649,12 +649,12 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	self:create_new_character(new_profile_name)
 end
 
--- Lines 620-625
+-- Lines 625-630
 function CharacterCreationGui:_empty_char_name_dismissed_clbk()
 	self:show_character_create_input_textbox(callback(self, self, "_callback_yes_function"), callback(self, self, "_callback_no_function"))
 end
 
--- Lines 627-635
+-- Lines 632-640
 function CharacterCreationGui:_callback_no_function()
 	self._current_screen = "nationality"
 
@@ -662,7 +662,7 @@ function CharacterCreationGui:_callback_no_function()
 	self._next_button:enable()
 end
 
--- Lines 637-694
+-- Lines 642-694
 function CharacterCreationGui:create_new_character(character_profile_name)
 	local character_profile_nation = self._selected_nation
 	local character_profile_base_class = self._selected_class
@@ -699,7 +699,8 @@ function CharacterCreationGui:create_new_character(character_profile_name)
 		managers.player:tutorial_clear_all_ammo()
 	end
 
-	managers.savefile:save_game(managers.savefile:get_save_progress_slot())
+	managers.savefile:save_game(slot_index)
+	managers.savefile:save_last_selected_character_profile_slot()
 	Application:debug("[CharacterCreationGui:create_new_character] managers.global_state.fire_character_created_event = true")
 
 	managers.global_state.fire_character_created_event = true
@@ -717,7 +718,7 @@ function CharacterCreationGui:_character_save_done_callback(slot, success, is_se
 	managers.raid_menu:set_close_menu_allowed(true)
 	managers.statistics:create_character()
 	managers.statistics:publish_camp_stats_to_steam()
-	managers.player:sync_upgrades()
+	managers.player:on_upgrades_changed()
 	managers.raid_menu:on_escape()
 end
 
@@ -755,7 +756,7 @@ function CharacterCreationGui:_load_class_default_weapons()
 		local unit_path = tweak_data.weapon.factory[weapon_factory_id].unit
 		self._loading_units[unit_path] = true
 
-		managers.dyn_resource:load(Idstring("unit"), Idstring(unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_weapon_unit_load_complete_callback", {
+		managers.dyn_resource:load(IDS_UNIT, Idstring(unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_weapon_unit_load_complete_callback", {
 			weapon_factory_id = weapon_factory_id,
 			unit_path = unit_path,
 			weapon_id = weapon_id

@@ -28,20 +28,22 @@ function HUDEquipment:_create_panel(equipment_panel, equipment_id)
 	self._object = equipment_panel:panel(panel_params)
 end
 
--- Lines 31-41
+-- Lines 31-43
 function HUDEquipment:_create_icon(icon)
+	local full_gui = tweak_data.gui:get_full_gui_data(icon)
 	local icon_params = {
 		name = "icon",
 		layer = 1,
-		texture = tweak_data.gui.icons[icon].texture,
-		texture_rect = tweak_data.gui.icons[icon].texture_rect
+		texture = full_gui.texture,
+		texture_rect = full_gui.texture_rect,
+		color = full_gui.color
 	}
 	self._icon = self._object:bitmap(icon_params)
 
 	self._icon:set_bottom(self._object:h())
 end
 
--- Lines 43-56
+-- Lines 45-58
 function HUDEquipment:_create_amount_text()
 	local amount_text_params = {
 		name = "amount_text",
@@ -59,7 +61,7 @@ function HUDEquipment:_create_amount_text()
 	self:_fit_amount_text()
 end
 
--- Lines 58-68
+-- Lines 60-70
 function HUDEquipment:set_amount(amount)
 	self._amount = amount
 
@@ -73,7 +75,7 @@ function HUDEquipment:set_amount(amount)
 	end
 end
 
--- Lines 70-77
+-- Lines 72-79
 function HUDEquipment:_fit_amount_text()
 	local _, _, w, h = self._amount_text:text_rect()
 
@@ -83,27 +85,27 @@ function HUDEquipment:_fit_amount_text()
 	self._amount_text:set_top(0)
 end
 
--- Lines 79-81
+-- Lines 81-83
 function HUDEquipment:set_x(x)
 	self._object:set_x(x)
 end
 
--- Lines 83-85
+-- Lines 85-87
 function HUDEquipment:w()
 	return self._object:w()
 end
 
--- Lines 87-89
+-- Lines 89-91
 function HUDEquipment:id()
 	return self._id
 end
 
--- Lines 91-93
+-- Lines 93-95
 function HUDEquipment:amount()
 	return self._amount
 end
 
--- Lines 95-97
+-- Lines 97-99
 function HUDEquipment:destroy()
 	self._object:clear()
 end

@@ -24,7 +24,7 @@ function GroupAIManager:paused_update(t, dt)
 	self._state:paused_update(t, dt)
 end
 
--- Lines 31-52
+-- Lines 31-47
 function GroupAIManager:set_state(name, world_id)
 	if world_id and world_id > 0 then
 		self._state:merge_world_data(world_id)
@@ -50,8 +50,10 @@ function GroupAIManager:set_state(name, world_id)
 	end
 end
 
--- Lines 59-83
+-- Lines 54-77
 function GroupAIManager:set_current_state(name, world_id)
+	Application:debug("[GroupAIManager:set_current_state] group state: " .. (name or "nil") .. ", for WorldID:" .. tostring(world_id))
+
 	local new_state = nil
 
 	if name == "empty" then
@@ -85,22 +87,22 @@ function GroupAIManager:set_current_state(name, world_id)
 	self._state:_queue_police_upd_task()
 end
 
--- Lines 87-89
+-- Lines 81-83
 function GroupAIManager:unload_nav_data(world_id, all_nav_segs)
 	self._state:unload_world_nav_data(world_id, all_nav_segs)
 end
 
--- Lines 93-95
+-- Lines 87-89
 function GroupAIManager:state()
 	return self._state
 end
 
--- Lines 99-101
+-- Lines 93-95
 function GroupAIManager:state_name()
 	return self._state_name
 end
 
--- Lines 105-107
+-- Lines 99-101
 function GroupAIManager:state_names()
 	return {
 		"empty",
@@ -111,27 +113,27 @@ function GroupAIManager:state_names()
 	}
 end
 
--- Lines 111-113
+-- Lines 105-107
 function GroupAIManager:on_simulation_started()
 	self._state:on_simulation_started()
 end
 
--- Lines 117-119
+-- Lines 111-113
 function GroupAIManager:on_simulation_ended()
 	self._state:on_simulation_ended()
 end
 
--- Lines 123-125
+-- Lines 117-119
 function GroupAIManager:visualization_enabled()
 	return self._state._draw_enabled
 end
 
--- Lines 129-131
+-- Lines 123-125
 function GroupAIManager:get_difficulty_dependent_value(tweak_values)
 	return self._state:get_difficulty_dependent_value(tweak_values)
 end
 
--- Lines 135-159
+-- Lines 129-153
 function GroupAIManager:kill_all_AI()
 	Application:debug("[GroupAIManager:kill_all_AI()]")
 
@@ -157,7 +159,7 @@ function GroupAIManager:kill_all_AI()
 	managers.enemy._enemy_data.nr_units = 0
 end
 
--- Lines 162-168
+-- Lines 156-162
 function GroupAIManager:kill_all_team_ai()
 	for _, data in pairs(managers.groupai:state():all_AI_criminals()) do
 		if data and alive(data.unit) then

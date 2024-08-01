@@ -1,5 +1,4 @@
 core:import("CoreAiLayer")
-core:import("CoreHeatmapLayer")
 require("lib/units/editor/SpawnEnemyGroupElement")
 require("lib/units/editor/EnemyPreferedElement")
 require("lib/units/editor/AIGraphElement")
@@ -94,11 +93,10 @@ require("lib/units/editor/BarrageElement")
 require("lib/units/editor/InvulnerableElement")
 require("lib/units/editor/CharacterDamageTriggerElement")
 require("lib/units/editor/EscortElement")
-require("lib/utils/dev/tools/InventoryIconCreator")
 
 WorldEditor = WorldEditor or class(CoreEditor)
 
--- Lines 113-120
+-- Lines 110-117
 function WorldEditor:init(game_state_machine)
 	WorldEditor.super.init(self, game_state_machine)
 	Network:set_multiplayer(true)
@@ -107,7 +105,7 @@ function WorldEditor:init(game_state_machine)
 	self._tool_updators = {}
 end
 
--- Lines 122-127
+-- Lines 119-124
 function WorldEditor:update(...)
 	WorldEditor.super.update(self, ...)
 
@@ -116,17 +114,17 @@ function WorldEditor:update(...)
 	end
 end
 
--- Lines 129-131
+-- Lines 126-128
 function WorldEditor:add_tool_updator(name, updator)
 	self._tool_updators[name] = updator
 end
 
--- Lines 133-135
+-- Lines 130-132
 function WorldEditor:remove_tool_updator(name)
 	self._tool_updators[name] = nil
 end
 
--- Lines 137-140
+-- Lines 134-137
 function WorldEditor:_init_mission_difficulties()
 	self._mission_difficulties = {
 		{
@@ -149,7 +147,7 @@ function WorldEditor:_init_mission_difficulties()
 	self._mission_difficulty = Global.DEFAULT_DIFFICULTY
 end
 
--- Lines 142-145
+-- Lines 139-142
 function WorldEditor:_init_mission_players()
 	self._mission_players = {
 		1,
@@ -160,25 +158,30 @@ function WorldEditor:_init_mission_players()
 	self._mission_player = 1
 end
 
--- Lines 148-152
+-- Lines 145-148
 function WorldEditor:_project_init_layer_classes()
 	self:add_layer("Ai", CoreAiLayer.AiLayer)
-	self:add_layer("Heatmap", CoreHeatmapLayer.HeatmapLayer)
 end
 
--- Lines 155-157
+-- Lines 151-153
 function WorldEditor:_project_init_slot_masks()
 	self._go_through_units_before_simulaton_mask = self._go_through_units_before_simulaton_mask + 15
 end
 
--- Lines 159-163
+-- Lines 155-165
 function WorldEditor:project_prestart_up(with_mission)
+	local mission_flag = self:layer("Level Settings"):get_setting("simulation_mission_flag")
+
+	if mission_flag then
+		managers.global_state:set_flag(mission_flag)
+	end
+
 	managers.navigation:on_simulation_started()
 	managers.groupai:on_simulation_started()
 	managers.enemy:on_simulation_started()
 end
 
--- Lines 167-194
+-- Lines 169-198
 function WorldEditor:project_run_simulation(with_mission)
 	tweak_data:set_difficulty(self._mission_difficulty or Global.DEFAULT_DIFFICULTY)
 	managers.network:host_game()
@@ -207,11 +210,11 @@ function WorldEditor:project_run_simulation(with_mission)
 	managers.game_play_central:start_heist_timer()
 end
 
--- Lines 196-198
+-- Lines 200-202
 function WorldEditor:_project_check_unit(unit)
 end
 
--- Lines 202-239
+-- Lines 206-248
 function WorldEditor:project_stop_simulation()
 	managers.hud:on_simulation_ended()
 	managers.hud:clear_waypoints()
@@ -231,6 +234,7 @@ function WorldEditor:project_stop_simulation()
 	managers.game_play_central:on_simulation_ended()
 	managers.criminals:on_simulation_ended()
 	managers.loot:on_simulation_ended()
+	managers.trade:on_simulation_ended()
 	managers.motion_path:on_simulation_ended()
 	managers.fire:on_simulation_ended()
 	managers.dot:on_simulation_ended()
@@ -242,9 +246,10 @@ function WorldEditor:project_stop_simulation()
 	managers.raid_job:on_simulation_ended()
 	managers.notification:on_simulation_ended()
 	managers.lootdrop:on_simulation_ended()
+	managers.warcry:on_simulation_ended()
 end
 
--- Lines 243-255
+-- Lines 252-264
 function WorldEditor:project_clear_units()
 	managers.groupai:state():set_AI_enabled(false)
 
@@ -261,23 +266,10 @@ function WorldEditor:project_clear_units()
 	end
 end
 
--- Lines 260-261
+-- Lines 269-270
 function WorldEditor:project_clear_layers()
 end
 
--- Lines 266-267
+-- Lines 275-276
 function WorldEditor:project_recreate_layers()
-end
-
--- Lines 270-273
-function WorldEditor:_project_add_left_upper_toolbar_tool()
-	self._left_upper_toolbar:add_tool("TB_INVENTORY_ICON_CREATOR", "Icon Creator", CoreEWS.image_path("world_editor/icon_creator_16x16.png"), "Material Editor")
-	self._left_upper_toolbar:connect("TB_INVENTORY_ICON_CREATOR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_inventory_icon_creator"), nil)
-end
-
--- Lines 275-278
-function WorldEditor:_open_inventory_icon_creator()
-	self._inventory_icon_creator = self._inventory_icon_creator or InventoryIconCreator:new()
-
-	self._inventory_icon_creator:show_ews()
 end

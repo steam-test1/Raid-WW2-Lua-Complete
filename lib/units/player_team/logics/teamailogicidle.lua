@@ -6,7 +6,7 @@ local tmp_vec2 = Vector3()
 local tmp_vec3 = Vector3()
 TeamAILogicIdle = TeamAILogicIdle or class(TeamAILogicBase)
 
--- Lines 10-134
+-- Lines 10-128
 function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -66,12 +66,6 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 
 					success = true
 				end
-			elseif revive_unit:character_damage():arrested() then
-				if data.unit:brain():action_request(objective.action) then
-					revive_unit:character_damage():pause_arrested_timer()
-
-					success = true
-				end
 			elseif revive_unit:character_damage():need_revive() and data.unit:brain():action_request(objective.action) then
 				revive_unit:character_damage():pause_downed_timer()
 
@@ -91,22 +85,10 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 				local revive_t = TimerManager:game():time() + (objective.action_duration or 0)
 
 				CopLogicBase.add_delayed_clbk(my_data, my_data.revive_complete_clbk_id, callback(TeamAILogicIdle, TeamAILogicIdle, "clbk_revive_complete", data), revive_t)
-
-				if not revive_unit:character_damage():arrested() then
-					local suffix = "a"
-					local downed_time = revive_unit:character_damage():down_time()
-
-					if downed_time <= tweak_data.player.damage.DOWNED_TIME_MIN then
-						suffix = "c"
-					elseif downed_time <= tweak_data.player.damage.DOWNED_TIME / 2 + tweak_data.player.damage.DOWNED_TIME_DEC then
-						suffix = "b"
-					end
-
-					managers.dialog:queue_dialog("player_gen_revive_start", {
-						skip_idle_check = true,
-						instigator = data.unit
-					})
-				end
+				managers.dialog:queue_dialog("player_gen_revive_start", {
+					skip_idle_check = true,
+					instigator = data.unit
+				})
 			else
 				data.unit:brain():set_objective()
 
@@ -145,7 +127,7 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 138-179
+-- Lines 132-171
 function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -159,8 +141,6 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 				revive_unit:interaction():interact_interupt(data.unit)
 				managers.hud:teammate_cancel_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
 				managers.network:session():send_to_peers_synched("sync_ai_interaction_cancel", data.unit)
-			elseif revive_unit:character_damage():arrested() then
-				revive_unit:character_damage():unpause_arrested_timer()
 			elseif revive_unit:character_damage():need_revive() then
 				revive_unit:character_damage():unpause_downed_timer()
 				managers.hud:teammate_cancel_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
@@ -191,7 +171,7 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
--- Lines 183-207
+-- Lines 175-199
 function TeamAILogicIdle.update(data)
 	TeamAILogicTravel._upd_ai_perceptors(data)
 
@@ -208,12 +188,12 @@ function TeamAILogicIdle.update(data)
 				if TeamAILogicIdle._check_should_relocate(data, my_data, objective) and not data.unit:movement():chk_action_forbidden("walk") then
 					objective.in_place = nil
 
-					TeamAILogicBase._exit(data.unit, "travel")
+					TeamAILogicBase._exit_to_state(data.unit, "travel")
 				end
 			elseif objective.type == "revive" then
 				objective.in_place = nil
 
-				TeamAILogicBase._exit(data.unit, "travel")
+				TeamAILogicBase._exit_to_state(data.unit, "travel")
 			end
 		end
 	elseif not data.path_fail_t or data.t - data.path_fail_t > 6 then
@@ -221,15 +201,15 @@ function TeamAILogicIdle.update(data)
 	end
 end
 
--- Lines 211-212
+-- Lines 203-204
 function TeamAILogicIdle.on_detected_enemy_destroyed(data, enemy_unit)
 end
 
--- Lines 216-217
+-- Lines 208-209
 function TeamAILogicIdle.on_cop_neutralized(data, cop_key)
 end
 
--- Lines 221-271
+-- Lines 213-263
 function TeamAILogicIdle.damage_clbk(data, damage_info)
 	local attacker_unit = damage_info.attacker_unit
 
@@ -288,11 +268,11 @@ function TeamAILogicIdle.damage_clbk(data, damage_info)
 	end
 
 	if (damage_info.result.type == "bleedout" or damage_info.result.type == "fatal" or damage_info.variant == "tase") and data.name ~= "disabled" then
-		CopLogicBase._exit(data.unit, "disabled")
+		CopLogicBase._exit_to_state(data.unit, "disabled")
 	end
 end
 
--- Lines 275-279
+-- Lines 267-271
 function TeamAILogicIdle.on_objective_unit_damaged(data, unit, attacker_unit)
 	if attacker_unit ~= nil then
 		TeamAILogicIdle.on_alert(data, {
@@ -303,7 +283,7 @@ function TeamAILogicIdle.on_objective_unit_damaged(data, unit, attacker_unit)
 	end
 end
 
--- Lines 284-296
+-- Lines 276-288
 function TeamAILogicIdle.on_alert(data, alert_data)
 	local alert_type = alert_data[1]
 	local alert_unit = alert_data[5]
@@ -317,7 +297,7 @@ function TeamAILogicIdle.on_alert(data, alert_data)
 	end
 end
 
--- Lines 300-389
+-- Lines 292-372
 function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 	if data.objective and data.objective.type == "revive" then
 		return
@@ -329,20 +309,12 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 		if other_unit:character_damage():need_revive() then
 			objective_type = "revive"
 			objective_action = "revive"
-		elseif other_unit:character_damage():arrested() then
-			objective_type = "revive"
-			objective_action = "untie"
 		else
 			objective_type = "follow"
 		end
 	elseif other_unit:movement():need_revive() then
 		objective_type = "revive"
-
-		if other_unit:movement():current_state_name() == "arrested" then
-			objective_action = "untie"
-		else
-			objective_action = "revive"
-		end
+		objective_action = "revive"
 	else
 		objective_type = "follow"
 	end
@@ -357,11 +329,6 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 			type = objective_type,
 			follow_unit = other_unit
 		}
-
-		managers.dialog:queue_dialog("player_intimidate_follow", {
-			skip_idle_check = true,
-			instigator = managers.player:local_player()
-		})
 	else
 		local followup_objective = {
 			scan = true,
@@ -400,7 +367,7 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 					walk = -1
 				}
 			},
-			action_duration = tweak_data.interaction[objective_action == "untie" and "free" or objective_action].timer,
+			action_duration = tweak_data.interaction:get_interaction(objective_action == "untie" and "free" or objective_action).timer,
 			followup_objective = followup_objective
 		}
 
@@ -410,7 +377,7 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 	data.unit:brain():set_objective(objective)
 end
 
--- Lines 393-422
+-- Lines 376-405
 function TeamAILogicIdle.on_new_objective(data, old_objective)
 	local new_objective = data.objective
 
@@ -421,12 +388,12 @@ function TeamAILogicIdle.on_new_objective(data, old_objective)
 	if not my_data.exiting then
 		if new_objective then
 			if (new_objective.nav_seg or new_objective.follow_unit) and not new_objective.in_place then
-				CopLogicBase._exit(data.unit, "travel")
+				CopLogicBase._exit_to_state(data.unit, "travel")
 			else
-				CopLogicBase._exit(data.unit, "idle")
+				CopLogicBase._exit_to_state(data.unit, "idle")
 			end
 		else
-			CopLogicBase._exit(data.unit, "idle")
+			CopLogicBase._exit_to_state(data.unit, "idle")
 		end
 	else
 		debug_pause("[TeamAILogicIdle.on_new_objective] Already exiting", data.name, data.unit, old_objective and inspect(old_objective), new_objective and inspect(new_objective))
@@ -445,7 +412,7 @@ function TeamAILogicIdle.on_new_objective(data, old_objective)
 	end
 end
 
--- Lines 426-509
+-- Lines 409-492
 function TeamAILogicIdle._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -510,7 +477,7 @@ function TeamAILogicIdle._upd_enemy_detection(data)
 			end
 
 			if my_data == data.internal_data then
-				CopLogicBase._exit(data.unit, wanted_state)
+				CopLogicBase._exit_to_state(data.unit, wanted_state)
 			end
 
 			return
@@ -526,14 +493,14 @@ function TeamAILogicIdle._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicIdle._upd_enemy_detection, data, data.t + delay)
 end
 
--- Lines 513-518
+-- Lines 496-501
 function TeamAILogicIdle.find_civilian_to_intimidate(criminal, max_angle, max_dis)
 	local best_civ = TeamAILogicIdle._find_intimidateable_civilians(criminal, false, max_angle, max_dis)
 
 	return best_civ
 end
 
--- Lines 522-570
+-- Lines 505-553
 function TeamAILogicIdle._find_intimidateable_civilians(criminal, use_default_shout_shape, max_angle, max_dis)
 	local head_pos = criminal:movement():m_head_pos()
 	local look_vec = criminal:movement():m_rot():y()
@@ -588,7 +555,7 @@ function TeamAILogicIdle._find_intimidateable_civilians(criminal, use_default_sh
 	return best_civ, highest_wgt, intimidateable_civilians
 end
 
--- Lines 573-643
+-- Lines 556-626
 function TeamAILogicIdle.intimidate_civilians(data, criminal, play_sound, play_action, primary_target)
 	if primary_target and (not alive(primary_target) or not managers.groupai:state():fleeing_civilians()[primary_target:key()]) then
 		primary_target = nil
@@ -667,7 +634,7 @@ function TeamAILogicIdle.intimidate_civilians(data, criminal, play_sound, play_a
 	return primary_target or best_civ
 end
 
--- Lines 647-695
+-- Lines 630-676
 function TeamAILogicIdle.on_action_completed(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -705,8 +672,6 @@ function TeamAILogicIdle.on_action_completed(data, action)
 					if revive_unit:interaction():active() then
 						revive_unit:interaction():interact_interupt(data.unit)
 					end
-				elseif revive_unit:character_damage():arrested() then
-					revive_unit:character_damage():unpause_arrested_timer()
 				elseif revive_unit:character_damage():need_revive() then
 					revive_unit:character_damage():unpause_downed_timer()
 				end
@@ -725,7 +690,7 @@ function TeamAILogicIdle.on_action_completed(data, action)
 	end
 end
 
--- Lines 699-724
+-- Lines 680-705
 function TeamAILogicIdle.is_available_for_assignment(data, new_objective)
 	if data.internal_data.exiting then
 		return
@@ -754,7 +719,7 @@ function TeamAILogicIdle.is_available_for_assignment(data, new_objective)
 	return true
 end
 
--- Lines 728-733
+-- Lines 709-714
 function TeamAILogicIdle.clbk_heat(data)
 	local inventory = data.unit:inventory()
 
@@ -763,7 +728,7 @@ function TeamAILogicIdle.clbk_heat(data)
 	end
 end
 
--- Lines 737-768
+-- Lines 718-749
 function TeamAILogicIdle.clbk_revive_complete(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -782,11 +747,11 @@ function TeamAILogicIdle.clbk_revive_complete(ignore_this, data)
 				managers.hud:teammate_complete_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
 				managers.network:session():send_to_peers_synched("sync_ai_interaction_complete", data.unit)
 			end
-		elseif revive_unit:character_damage() and (revive_unit:character_damage():need_revive() or revive_unit:character_damage():arrested()) then
+		elseif revive_unit:character_damage() and revive_unit:character_damage():need_revive() then
 			local hint = revive_unit:character_damage():need_revive() and 2 or 3
 
 			managers.network:session():send_to_peers_synched("sync_teammate_helped_hint", hint, revive_unit, data.unit)
-			revive_unit:character_damage():revive(data.unit)
+			revive_unit:character_damage():revive(false, data.unit)
 			managers.hud:teammate_complete_progress(data.unit:unit_data().teammate_panel_id, data.unit:unit_data().name_label_id)
 			managers.network:session():send_to_peers_synched("sync_ai_interaction_complete", data.unit)
 		end
@@ -796,7 +761,7 @@ function TeamAILogicIdle.clbk_revive_complete(ignore_this, data)
 	end
 end
 
--- Lines 772-788
+-- Lines 753-769
 function TeamAILogicIdle.clbk_action_timeout(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -819,7 +784,7 @@ function TeamAILogicIdle.clbk_action_timeout(ignore_this, data)
 	data.objective_complete_clbk(data.unit, old_objective)
 end
 
--- Lines 792-852
+-- Lines 773-833
 function TeamAILogicIdle._check_should_relocate(data, my_data, objective)
 	local follow_unit = objective.follow_unit
 
@@ -884,7 +849,7 @@ function TeamAILogicIdle._check_should_relocate(data, my_data, objective)
 	end
 end
 
--- Lines 856-963
+-- Lines 837-944
 function TeamAILogicIdle._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or TeamAILogicBase._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -984,7 +949,7 @@ function TeamAILogicIdle._get_priority_attention(data, attention_objects, reacti
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines 967-984
+-- Lines 948-965
 function TeamAILogicIdle._upd_sneak_spotting(data, my_data)
 	if false and managers.groupai:state():whisper_mode() and (not TeamAILogicAssault._mark_special_chk_t or TeamAILogicAssault._mark_special_chk_t + 0.75 < data.t) and (not TeamAILogicAssault._mark_special_t or TeamAILogicAssault._mark_special_t + 6 < data.t) and not data.unit:sound():speaking() then
 		local nmy = TeamAILogicIdle.find_sneak_char_to_mark(data)
@@ -998,7 +963,7 @@ function TeamAILogicIdle._upd_sneak_spotting(data, my_data)
 	end
 end
 
--- Lines 988-1008
+-- Lines 969-989
 function TeamAILogicIdle.find_sneak_char_to_mark(data)
 	local best_nmy, best_nmy_wgt = nil
 
@@ -1012,7 +977,7 @@ function TeamAILogicIdle.find_sneak_char_to_mark(data)
 	return best_nmy
 end
 
--- Lines 1012-1026
+-- Lines 993-1007
 function TeamAILogicIdle.mark_sneak_char(data, criminal, to_mark, play_sound, play_action)
 	if play_sound then
 		criminal:sound():say(to_mark:base():char_tweak().silent_priority_shout, nil, true)

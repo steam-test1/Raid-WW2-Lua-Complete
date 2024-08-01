@@ -2,11 +2,12 @@ RaidGuiBase = RaidGuiBase or class()
 RaidGuiBase.BACKGROUND_LAYER = 10
 RaidGuiBase.FOREGROUND_LAYER = 20
 RaidGuiBase.PADDING = 42
+RaidGuiBase.MENU_ANIMATION_DISTANCE = 0
 RaidGuiBase.Colors = {
 	screen_background = Color(0.85, 0, 0, 0)
 }
 
--- Lines 10-41
+-- Lines 12-45
 function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:register_on_escape_callback(callback(self, self, "on_escape"))
 
@@ -51,10 +52,12 @@ function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	self._root_panel = RaidGUIPanel:new(self._ws_panel, params_root_panel)
 
 	self:_layout()
+	self._ws_panel:stop()
+	self._ws_panel:animate(callback(self, self, "_animate_open"))
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 54-62
+-- Lines 58-66
 function RaidGuiBase:_setup_properties()
 	self._panel_x = 0
 	self._panel_y = 0
@@ -65,11 +68,11 @@ function RaidGuiBase:_setup_properties()
 	self._background = true
 end
 
--- Lines 66-68
+-- Lines 70-72
 function RaidGuiBase:_set_initial_data()
 end
 
--- Lines 71-78
+-- Lines 75-82
 function RaidGuiBase:translate(text, upper_case_flag)
 	local button_macros = managers.localization:get_default_macros()
 	local result = managers.localization:text(text, button_macros)
@@ -81,7 +84,7 @@ function RaidGuiBase:translate(text, upper_case_flag)
 	return result
 end
 
--- Lines 80-88
+-- Lines 84-92
 function RaidGuiBase:_disable_dof()
 	self._odof_near, self._odof_near_pad, self._odof_far, self._odof_far_pad = managers.environment_controller:get_dof_override_ranges()
 
@@ -89,17 +92,17 @@ function RaidGuiBase:_disable_dof()
 	managers.environment_controller:set_dof_override_ranges(0, 0, 100000, 0, 0)
 end
 
--- Lines 90-93
+-- Lines 94-97
 function RaidGuiBase:_enable_dof()
 	managers.environment_controller:set_dof_override_ranges(self._odof_near, self._odof_near_pad, self._odof_far, self._odof_far_pad)
 	managers.environment_controller:set_dof_override(false)
 end
 
--- Lines 95-96
+-- Lines 99-100
 function RaidGuiBase:_layout()
 end
 
--- Lines 99-114
+-- Lines 103-118
 function RaidGuiBase:_create_border()
 	local border_thickness = 1.6
 	self._border_left = self._root_panel:gradient({
@@ -181,7 +184,7 @@ function RaidGuiBase:_create_border()
 	})
 end
 
--- Lines 157-166
+-- Lines 161-170
 function RaidGuiBase:_remove_border()
 	self._border_left:parent():remove(self._border_left)
 
@@ -200,7 +203,7 @@ function RaidGuiBase:_remove_border()
 	self._border_up = nil
 end
 
--- Lines 169-180
+-- Lines 173-182
 function RaidGuiBase:close()
 	self._node.components[self._name] = nil
 
@@ -208,13 +211,19 @@ function RaidGuiBase:close()
 		control:close()
 	end
 
-	self._root_panel:close()
-	self._ws:panel():remove(self._ws_panel)
-	self._fullscreen_ws_panel:clear()
+	self._ws_panel:stop()
+	self._ws_panel:animate(callback(self, self, "_animate_close"))
 	managers.menu_component:post_event("menu_exit")
 end
 
--- Lines 183-190
+-- Lines 184-188
+function RaidGuiBase:_close()
+	self._root_panel:close()
+	self._ws:panel():remove(self._ws_panel)
+	self._fullscreen_ws_panel:clear()
+end
+
+-- Lines 191-198
 function RaidGuiBase:mouse_moved(o, x, y)
 	local active_control = managers.raid_menu:get_active_control()
 
@@ -227,7 +236,7 @@ function RaidGuiBase:mouse_moved(o, x, y)
 	return self._root_panel:mouse_moved(o, x, y)
 end
 
--- Lines 192-203
+-- Lines 200-211
 function RaidGuiBase:mouse_pressed(o, button, x, y)
 	if button == Idstring("mouse wheel up") then
 		return self._root_panel:mouse_scroll_up(o, button, x, y)
@@ -238,17 +247,17 @@ function RaidGuiBase:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 205-207
+-- Lines 213-215
 function RaidGuiBase:mouse_clicked(o, button, x, y)
 	return self._root_panel:mouse_clicked(o, button, x, y)
 end
 
--- Lines 209-211
+-- Lines 217-219
 function RaidGuiBase:mouse_double_click(o, button, x, y)
 	return self._root_panel:mouse_double_click(o, button, x, y)
 end
 
--- Lines 214-222
+-- Lines 222-230
 function RaidGuiBase:mouse_released(o, button, x, y)
 	local is_left_click = button == Idstring("0")
 
@@ -261,69 +270,69 @@ function RaidGuiBase:mouse_released(o, button, x, y)
 	return self._root_panel:mouse_released(o, button, x, y)
 end
 
--- Lines 224-228
+-- Lines 232-236
 function RaidGuiBase:back_pressed()
 	managers.raid_menu:on_escape()
 
 	return true
 end
 
--- Lines 230-233
+-- Lines 238-241
 function RaidGuiBase:move_up()
 	return self._root_panel:move_up()
 end
 
--- Lines 235-238
+-- Lines 243-246
 function RaidGuiBase:move_down()
 	return self._root_panel:move_down()
 end
 
--- Lines 240-243
+-- Lines 248-251
 function RaidGuiBase:move_left()
 	return self._root_panel:move_left()
 end
 
--- Lines 245-248
+-- Lines 253-256
 function RaidGuiBase:move_right()
 	return self._root_panel:move_right()
 end
 
--- Lines 250-252
+-- Lines 258-260
 function RaidGuiBase:scroll_up()
 	return self._root_panel:scroll_up()
 end
 
--- Lines 254-256
+-- Lines 262-264
 function RaidGuiBase:scroll_down()
 	return self._root_panel:scroll_down()
 end
 
--- Lines 258-260
+-- Lines 266-268
 function RaidGuiBase:scroll_left()
 	return self._root_panel:scroll_left()
 end
 
--- Lines 262-264
+-- Lines 270-272
 function RaidGuiBase:scroll_right()
 	return self._root_panel:scroll_right()
 end
 
--- Lines 266-269
+-- Lines 274-277
 function RaidGuiBase:confirm_pressed()
 	return self._root_panel:confirm_pressed()
 end
 
--- Lines 271-273
+-- Lines 279-281
 function RaidGuiBase:on_escape()
 	return false
 end
 
--- Lines 277-279
+-- Lines 285-287
 function RaidGuiBase:_clear_controller_bindings()
 	self._controller_bindings = {}
 end
 
--- Lines 285-302
+-- Lines 293-310
 function RaidGuiBase:set_controller_bindings(bindings, clear_old)
 	if clear_old then
 		self:_clear_controller_bindings()
@@ -345,7 +354,7 @@ function RaidGuiBase:set_controller_bindings(bindings, clear_old)
 	end
 end
 
--- Lines 304-321
+-- Lines 312-329
 function RaidGuiBase:special_btn_pressed(button)
 	local binding_to_trigger = nil
 
@@ -362,12 +371,53 @@ function RaidGuiBase:special_btn_pressed(button)
 	return false, nil
 end
 
--- Lines 323-325
+-- Lines 331-333
 function RaidGuiBase:set_legend(legend)
 	managers.raid_menu:set_legend_labels(legend)
 end
 
--- Lines 327-329
+-- Lines 335-337
 function RaidGuiBase:_on_legend_pc_back()
 	managers.raid_menu:on_escape()
+end
+
+-- Lines 339-356
+function RaidGuiBase:_animate_open()
+	local duration = 0.15
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_alpha = Easing.quadratic_out(t, 0, 1, duration)
+
+		self._ws_panel:set_alpha(current_alpha)
+
+		local current_offset = Easing.quadratic_out(t, RaidGuiBase.MENU_ANIMATION_DISTANCE, -RaidGuiBase.MENU_ANIMATION_DISTANCE, duration)
+
+		self._ws_panel:set_x(current_offset)
+	end
+
+	self._ws_panel:set_alpha(1)
+	self._ws_panel:set_x(0)
+end
+
+-- Lines 358-374
+function RaidGuiBase:_animate_close()
+	local duration = 0.15
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_alpha = Easing.quadratic_in(t, 1, -1, duration)
+
+		self._ws_panel:set_alpha(current_alpha)
+
+		local current_offset = Easing.quadratic_in(t, 0, RaidGuiBase.MENU_ANIMATION_DISTANCE, duration)
+
+		self._ws_panel:set_x(current_offset)
+	end
+
+	self:_close()
 end

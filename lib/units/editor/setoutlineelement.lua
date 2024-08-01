@@ -1,17 +1,21 @@
 SetOutlineElement = SetOutlineElement or class(MissionElement)
 
--- Lines 3-11
+-- Lines 3-15
 function SetOutlineElement:init(unit)
 	SetOutlineElement.super.init(self, unit)
 
 	self._hed.elements = {}
 	self._hed.set_outline = true
+	self._hed.outline_type = "highlight_character"
+	self._hed.instigator_only = false
 
 	table.insert(self._save_values, "elements")
 	table.insert(self._save_values, "set_outline")
+	table.insert(self._save_values, "outline_type")
+	table.insert(self._save_values, "instigator_only")
 end
 
--- Lines 15-28
+-- Lines 19-40
 function SetOutlineElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -32,18 +36,31 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 		ctrlr = set_outline
 	})
 	panel_sizer:add(set_outline, 0, 0, "EXPAND")
+
+	local instigator_only = EWS:CheckBox(panel, "Outline instigator only", "")
+
+	instigator_only:set_value(self._hed.instigator_only)
+	instigator_only:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "instigator_only",
+		ctrlr = instigator_only
+	})
+	panel_sizer:add(instigator_only, 0, 0, "EXPAND")
+
+	local outline_list = table.map_keys(ContourExt._types)
+
+	self:_build_value_combobox(panel, panel_sizer, "outline_type", outline_list, "Select outline type.")
 end
 
--- Lines 32-34
+-- Lines 44-46
 function SetOutlineElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines 36-37
+-- Lines 48-49
 function SetOutlineElement:update_editing()
 end
 
--- Lines 40-48
+-- Lines 52-60
 function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -61,7 +78,7 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 50-62
+-- Lines 62-74
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -79,7 +96,7 @@ function SetOutlineElement:add_element()
 	end
 end
 
--- Lines 64-70
+-- Lines 76-82
 function SetOutlineElement:remove_links(unit)
 	for _, id in ipairs(self._hed.elements) do
 		if id == unit:unit_data().unit_id then
@@ -88,7 +105,7 @@ function SetOutlineElement:remove_links(unit)
 	end
 end
 
--- Lines 73-75
+-- Lines 85-87
 function SetOutlineElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

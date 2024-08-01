@@ -7,22 +7,28 @@ function ElementAIRemove:init(...)
 	ElementAIRemove.super.init(self, ...)
 end
 
--- Lines 9-33
+-- Lines 9-39
 function ElementAIRemove:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
 	if self._values.use_instigator then
-		if self._values.true_death then
-			instigator:character_damage():damage_mission({
-				damage = 1000,
-				col_ray = {},
-				drop_loot = self._values.drop_loot
-			})
-		else
-			instigator:brain():set_active(false)
-			instigator:base():set_slot(instigator, 0)
+		if instigator then
+			if self._values.true_death then
+				if instigator:character_damage() and instigator:character_damage().damage_mission then
+					instigator:character_damage():damage_mission({
+						damage = 9001,
+						col_ray = {},
+						drop_loot = self._values.drop_loot
+					})
+				else
+					debug_pause_unit(instigator, "[ElementAIRemove:on_executed] instigator lacks 'damage_mission' method.", instigator:character_damage() and instigator:character_damage().damage_mission)
+				end
+			else
+				instigator:brain():set_active(false)
+				instigator:base():set_slot(instigator, 0)
+			end
 		end
 	else
 		for _, id in ipairs(self._values.elements) do

@@ -28,26 +28,26 @@ function TeamAIBase:default_weapon_name(slot)
 	return tweak_data.character[self._tweak_table].weapon.weapons_of_choice[slot or "primary"]
 end
 
--- Lines 35-37
-function TeamAIBase:arrest_settings()
-	return tweak_data.character[self._tweak_table].arrest
-end
-
--- Lines 41-45
+-- Lines 35-44
 function TeamAIBase:pre_destroy(unit)
 	self:remove_from_vehicle()
 	self:unregister()
+
+	if self._unit:customization() then
+		self._unit:customization():destroy_all_parts_on_character()
+	end
+
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 49-51
+-- Lines 48-50
 function TeamAIBase:save(data)
 	data.base = {
 		tweak_table = self._tweak_table
 	}
 end
 
--- Lines 55-59
+-- Lines 54-59
 function TeamAIBase:on_death_exit()
 	TeamAIBase.super.on_death_exit(self)
 	self:unregister()
@@ -79,15 +79,15 @@ function TeamAIBase:unregister()
 	end
 end
 
--- Lines 87-98
+-- Lines 87-99
 function TeamAIBase:remove_from_vehicle()
 	local unit_movement = self._unit:movement()
 
 	if unit_movement.vehicle_unit and unit_movement.vehicle_seat and unit_movement.vehicle_seat.occupant == self._unit then
-		unit_movement.vehicle_unit:vehicle_driving():_evacuate_seat(unit_movement.vehicle_seat)
+		unit_movement.vehicle_unit:vehicle_driving():evacuate_seat(unit_movement.vehicle_seat)
 	end
 end
 
--- Lines 102-103
+-- Lines 103-104
 function TeamAIBase:chk_freeze_anims()
 end

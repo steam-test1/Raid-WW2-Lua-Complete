@@ -332,19 +332,19 @@ function SentryGunBase:weapon_tweak_data()
 	return tweak_data.weapon[self._unit:weapon()._name_id]
 end
 
--- Lines 413-424
+-- Lines 413-423
 function SentryGunBase:check_interact_blocked(player)
 	local result = not alive(self._unit) or self._unit:character_damage():dead() or self._unit:weapon():ammo_ratio() == 1 or not self:get_net_event_id(player) or false
 
 	return result
 end
 
--- Lines 426-428
+-- Lines 425-427
 function SentryGunBase:can_interact(player)
 	return not self:check_interact_blocked(player)
 end
 
--- Lines 430-432
+-- Lines 429-431
 function SentryGunBase:show_blocked_hint(interaction_tweak_data, player, skip_hint)
 	print("SentryGunBase:show_blocked_hint", interaction_tweak_data, player, skip_hint)
 end
@@ -368,7 +368,7 @@ local refill_ratios = {
 	0.0625
 }
 
--- Lines 436-489
+-- Lines 435-488
 function SentryGunBase:get_net_event_id(player)
 	local sentry_gun_reload_ratio = tweak_data.upgrades.sentry_gun_reload_ratio or 1
 
@@ -419,18 +419,18 @@ function SentryGunBase:get_net_event_id(player)
 	return event_id, wanted_event_id, possible_event_id
 end
 
--- Lines 491-493
+-- Lines 490-492
 function SentryGunBase:interaction_text_id()
 	return "debug_interact_sentry_gun_reload"
 end
 
--- Lines 495-498
+-- Lines 494-497
 function SentryGunBase:add_string_macros(macroes)
 	local event_id, wanted_event_id, possible_event_id = self:get_net_event_id(managers.player:local_player())
 	macroes.AMMO = wanted_event_id and string.format("%2.f%%", (1 - refill_ratios[wanted_event_id]) * 100) or "100%"
 end
 
--- Lines 500-559
+-- Lines 499-558
 function SentryGunBase:sync_net_event(event_id, peer)
 	local player = peer:unit()
 	local ammo_ratio = refill_ratios[event_id]
@@ -474,7 +474,7 @@ function SentryGunBase:sync_net_event(event_id, peer)
 				end
 
 				if data.amount > 0 then
-					data.unit:base():reduce_ammo_by_procentage_of_total(data.amount)
+					data.unit:base():reduce_ammo_by_percentage_of_total(data.amount)
 					managers.hud:set_ammo_amount(id, data.unit:base():ammo_info())
 				end
 			end
@@ -486,7 +486,7 @@ function SentryGunBase:sync_net_event(event_id, peer)
 	end
 end
 
--- Lines 561-580
+-- Lines 560-579
 function SentryGunBase:refill(ammo_ratio)
 	if self._unit:character_damage():dead() then
 		return
@@ -507,17 +507,17 @@ function SentryGunBase:refill(ammo_ratio)
 	self._unit:contour():remove("deployable_disabled")
 end
 
--- Lines 582-584
+-- Lines 581-583
 function SentryGunBase:set_waiting_for_refill(state)
 	self._waiting_for_refill = state and true or nil
 end
 
--- Lines 586-588
+-- Lines 585-587
 function SentryGunBase:waiting_for_refill()
 	return self._waiting_for_refill
 end
 
--- Lines 592-599
+-- Lines 591-598
 function SentryGunBase:on_death()
 	if self._unit:contour() then
 		self._unit:contour():remove("deployable_active")
@@ -528,7 +528,7 @@ function SentryGunBase:on_death()
 	self:unregister()
 end
 
--- Lines 603-611
+-- Lines 602-609
 function SentryGunBase:enable_shield()
 	self._has_shield = true
 
@@ -538,12 +538,12 @@ function SentryGunBase:enable_shield()
 	self._unit:body("shield"):set_enabled(true)
 end
 
--- Lines 615-617
+-- Lines 613-615
 function SentryGunBase:has_shield()
 	return self._has_shield
 end
 
--- Lines 622-627
+-- Lines 620-625
 function SentryGunBase:unregister()
 	if self._registered then
 		self._registered = nil
@@ -552,11 +552,11 @@ function SentryGunBase:unregister()
 	end
 end
 
--- Lines 631-634
+-- Lines 629-632
 function SentryGunBase:register()
 end
 
--- Lines 638-644
+-- Lines 636-642
 function SentryGunBase:save(save_data)
 	local my_save_data = {}
 	save_data.base = my_save_data
@@ -564,7 +564,7 @@ function SentryGunBase:save(save_data)
 	my_save_data.is_module = self._is_module
 end
 
--- Lines 648-666
+-- Lines 646-664
 function SentryGunBase:load(save_data)
 	self._was_dropin = true
 	local my_save_data = save_data.base
@@ -585,7 +585,7 @@ function SentryGunBase:load(save_data)
 	end
 end
 
--- Lines 670-679
+-- Lines 668-677
 function SentryGunBase:pre_destroy()
 	SentryGunBase.super.pre_destroy(self, self._unit)
 	self:unregister()

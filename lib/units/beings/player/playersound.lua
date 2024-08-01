@@ -1,6 +1,7 @@
 PlayerSound = PlayerSound or class()
+PlayerSound.IDS_ROOT = Idstring("root")
 
--- Lines 3-22
+-- Lines 4-22
 function PlayerSound:init(unit)
 	self._unit = unit
 
@@ -8,7 +9,7 @@ function PlayerSound:init(unit)
 
 	local ss = unit:sound_source()
 
-	ss:set_switch("robber", "rb3")
+	ss:set_switch("hero_switch", "amer")
 
 	if unit:base().is_local_player then
 		ss:set_switch("actor_switch", "first")
@@ -19,55 +20,13 @@ function PlayerSound:init(unit)
 	self._queue = {}
 end
 
--- Lines 25-26
+-- Lines 25-28
 function PlayerSound:destroy(unit)
+	self:clear_queue()
+	self:stop()
 end
 
--- Lines 30-42
-function PlayerSound:_play(sound_name, source_name)
-	local source = nil
-
-	if source_name then
-		source = Idstring(source_name)
-	end
-
-	local event = self._unit:sound_source(source):post_event(sound_name, self.sound_callback, self._unit, "marker", "end_of_event")
-
-	return event
-end
-
--- Lines 46-59
-function PlayerSound:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
-	if not alive(unit) then
-		return
-	end
-
-	if event_type == "end_of_event" then
-		unit:sound()._speaking = nil
-
-		if unit:sound()._queue ~= nil and #unit:sound()._queue > 0 then
-			unit:sound():say(unit:sound()._queue[1]._sound, unit:sound()._queue[1]._source, unit:sound()._queue[1]._sync)
-			table.remove(unit:sound()._queue, 1)
-		end
-	end
-end
-
--- Lines 63-65
-function PlayerSound:queue_sound(id, sound_name, source_name, sync)
-	table.insert(self._queue, {
-		_id = id,
-		_sound = sound_name,
-		_source = source_name,
-		_sync = sync
-	})
-end
-
--- Lines 67-69
-function PlayerSound:clear_queue()
-	self._queue = {}
-end
-
--- Lines 73-92
+-- Lines 32-50
 function PlayerSound:play(sound_name, source_name, sync)
 	local event_id = nil
 
@@ -88,7 +47,7 @@ function PlayerSound:play(sound_name, source_name, sync)
 	return event
 end
 
--- Lines 96-102
+-- Lines 54-60
 function PlayerSound:stop(source_name)
 	local source = nil
 
@@ -99,44 +58,96 @@ function PlayerSound:stop(source_name)
 	self._unit:sound_source(source):stop()
 end
 
--- Lines 106-114
-function PlayerSound:play_footstep(foot, material_name)
-	if self._last_material ~= material_name then
-		self._last_material = material_name
-		local material_name = tweak_data.materials[material_name:key()]
+-- Lines 64-73
+function PlayerSound:_play(sound_name, source_name)
+	local source = nil
 
-		self._unit:sound_source(Idstring("root")):set_switch("materials", material_name or "no_material")
+	if source_name then
+		source = Idstring(source_name)
 	end
 
-	local sound_name = self._unit:movement():running() and "footsteps_1p_run" or "footsteps_1p"
+	local event = self._unit:sound_source(source):post_event(sound_name)
 
-	self:_play(sound_name)
+	return event
 end
 
--- Lines 118-125
-function PlayerSound:play_land(material_name)
+-- Lines 77-103
+function PlayerSound:play_footstep(foot, material_name, pos)
 	if self._last_material ~= material_name then
 		self._last_material = material_name
 		local material_name = tweak_data.materials[material_name:key()]
 
-		self._unit:sound_source(Idstring("root")):set_switch("materials", material_name or "concrete")
+		self._unit:sound_source(PlayerSound.IDS_ROOT):set_switch("materials", material_name or "no_material")
+
+		self._last_material_effect = material_name and tweak_data.materials_effects[material_name:key()] or nil
+	end
+
+	local sprinting = self._unit:movement():running()
+
+	self:_play(sprinting and "footsteps_1p_run" or "footsteps_1p")
+
+	local world_effect = self._last_material_effect and self._last_material_effect.step and World:effect_manager():spawn({
+		effect = self._last_material_effect[sprinting and "sprint" or "step"],
+		position = pos or self._unit:position(),
+		rotation = self._unit:rotation()
+	})
+end
+
+-- Lines 107-130
+function PlayerSound:play_land(material_name, pos)
+	if self._last_material ~= material_name then
+		self._last_material = material_name
+		local material_name = tweak_data.materials[material_name:key()]
+
+		self._unit:sound_source(PlayerSound.IDS_ROOT):set_switch("materials", material_name or "concrete")
+
+		self._last_material_effect = material_name and tweak_data.materials_effects[material_name:key()] or nil
 	end
 
 	self:_play("footstep_land_1p")
+
+	local world_effect = self._last_material_effect and self._last_material_effect.land and World:effect_manager():spawn({
+		effect = self._last_material_effect.land,
+		position = pos or self._unit:position(),
+		rotation = self._unit:rotation()
+	})
 end
 
--- Lines 129-134
+-- Lines 134-143
+function PlayerSound:play_melee(sound_name, material_name)
+	if self._last_material ~= material_name then
+		self._last_material = material_name
+
+		self._unit:sound_source(PlayerSound.IDS_ROOT):set_switch("materials", material_name or "no_material")
+	end
+
+	if sound_name then
+		self:_play(sound_name)
+	end
+end
+
+-- Lines 147-149
 function PlayerSound:play_whizby(params)
 	self:_play("whizby")
 end
 
--- Lines 138-162
+-- Lines 153-185
 function PlayerSound:say(sound_name, important_say, sync)
-	if self._last_speech and self._speaking and important_say == true then
-		self._last_speech:stop()
-
-		self._speaking = nil
+	if self._speaking and not important_say then
+		return
 	end
+
+	if self._speaking == sound_name then
+		return
+	end
+
+	if managers.dialog:is_unit_talking(self._unit) then
+		Application:trace("[PlayerSound:say] can't talk while a dialog is already playing, skipping")
+
+		return
+	end
+
+	self:stop_speaking(true)
 
 	local event_id = nil
 
@@ -151,31 +162,57 @@ function PlayerSound:say(sound_name, important_say, sync)
 		self._unit:network():send("say", event_id)
 	end
 
-	if important_say == true or self._speaking == nil or self._speaking == false then
-		self._last_speech = self:_play(sound_name or event_id, nil, true)
-		self._speaking = true
-	end
+	local ss = self._unit:sound_source()
+	self._last_speech = ss:post_event(sound_name or event_id, callback(self, self, "sound_callback"), self._unit, "end_of_event")
+	self._speaking = sound_name or event_id
 
 	return self._last_speech
 end
 
--- Lines 166-168
+-- Lines 189-196
+function PlayerSound:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
+	self._speaking = nil
+
+	if self._queue ~= nil and #self._queue > 0 then
+		self:say(unpack(self._queue[1]))
+		table.remove(self._queue, 1)
+	end
+end
+
+-- Lines 200-202
+function PlayerSound:queue_sound(id, sound_name, source_name, sync)
+	table.insert(self._queue, {
+		sound_name,
+		source_name,
+		sync,
+		id
+	})
+end
+
+-- Lines 204-206
+function PlayerSound:clear_queue()
+	self._queue = {}
+end
+
+-- Lines 210-212
 function PlayerSound:speaking()
 	return self._speaking
 end
 
--- Lines 172-174
+-- Lines 216-218
 function PlayerSound:set_voice(voice)
-	self._unit:sound_source():set_switch("robber", voice)
+	self._unit:sound_source():set_switch("hero_switch", voice)
 end
 
--- Lines 178-185
-function PlayerSound:stop_speaking()
+-- Lines 222-231
+function PlayerSound:stop_speaking(keep_queue)
 	if self._last_speech and self._speaking then
 		self._last_speech:stop()
 
 		self._speaking = nil
 	end
 
-	self:clear_queue()
+	if not keep_queue then
+		self:clear_queue()
+	end
 end

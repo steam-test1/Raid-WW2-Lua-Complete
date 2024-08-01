@@ -11,7 +11,7 @@ HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.size_20
 HUDObjectiveSub.CHECKBOX_UNCHECKED_ICON = "objective_unchecked"
 HUDObjectiveSub.CHECKBOX_CHECKED_ICON = "objective_checked"
 
--- Lines 19-40
+-- Lines 19-42
 function HUDObjectiveSub:init(objectives_panel, active_objective)
 	self._objective = active_objective
 	self._id = active_objective.id
@@ -20,7 +20,9 @@ function HUDObjectiveSub:init(objectives_panel, active_objective)
 	self:_create_objective_text()
 	self:_create_checkbox()
 
-	if active_objective.amount then
+	if active_objective.start_completed then
+		self:complete()
+	elseif active_objective.amount then
 		self:_create_amount()
 		self:set_total_amount(active_objective.amount)
 		self:set_current_amount(active_objective.current_amount)
@@ -33,7 +35,7 @@ function HUDObjectiveSub:init(objectives_panel, active_objective)
 	self:set_hidden()
 end
 
--- Lines 42-50
+-- Lines 44-52
 function HUDObjectiveSub:_create_panel(objectives_panel)
 	local panel_params = {
 		name = "sub_objective",
@@ -45,7 +47,7 @@ function HUDObjectiveSub:_create_panel(objectives_panel)
 	self._object = objectives_panel:panel(panel_params)
 end
 
--- Lines 52-64
+-- Lines 54-66
 function HUDObjectiveSub:_create_objective_text()
 	local objective_text_params = {
 		name = "objective_text",
@@ -64,7 +66,7 @@ function HUDObjectiveSub:_create_objective_text()
 	self._objective_text:set_center_y(self._object:h() / 2)
 end
 
--- Lines 66-153
+-- Lines 68-155
 function HUDObjectiveSub:_create_amount()
 	local amount_panel_params = {
 		name = "amount_panel",
@@ -168,7 +170,7 @@ function HUDObjectiveSub:_create_amount()
 	self._percentage_amount_text = self._amount_panel:text(percentage_amount_text_params)
 end
 
--- Lines 155-186
+-- Lines 157-188
 function HUDObjectiveSub:_create_checkbox()
 	local checkbox_panel_params = {
 		name = "checkbox_panel",
@@ -205,7 +207,7 @@ function HUDObjectiveSub:_create_checkbox()
 	self._objective_text:set_right(self._object:w() - self._checkbox_panel:w() - HUDObjectiveSub.OBJECTIVE_TEXT_PADDING_RIGHT)
 end
 
--- Lines 188-203
+-- Lines 190-205
 function HUDObjectiveSub:set_current_amount(current_amount)
 	self._current_amount = current_amount
 	local amount_string = tostring(current_amount)
@@ -225,7 +227,7 @@ function HUDObjectiveSub:set_current_amount(current_amount)
 	self._amount_progress_fill:set_position_z(self._current_amount / self._total_amount)
 end
 
--- Lines 205-222
+-- Lines 207-224
 function HUDObjectiveSub:set_total_amount(total_amount)
 	self._total_amount = total_amount
 
@@ -245,12 +247,12 @@ function HUDObjectiveSub:set_total_amount(total_amount)
 	self:set_current_amount(self._current_amount or 0)
 end
 
--- Lines 224-226
+-- Lines 226-228
 function HUDObjectiveSub:set_objective_text(text)
 	self._objective_text:set_text(utf8.to_upper(text))
 end
 
--- Lines 228-237
+-- Lines 230-239
 function HUDObjectiveSub:complete()
 	self._objective_text:set_right(self._object:w() - self._checkbox_panel:w() - HUDObjectiveSub.OBJECTIVE_TEXT_PADDING_RIGHT)
 	self._checkbox_panel:child("checkbox_unchecked"):set_visible(false)

@@ -249,7 +249,7 @@ function GuiDataManager:layout_corner_saferect_1280_workspace(ws)
 	ws:set_screen(self._corner_saferect_1280_data.w, self._corner_saferect_1280_data.h, self._corner_saferect_1280_data.x, self._corner_saferect_1280_data.y, self._corner_saferect_1280_data.on_screen_width)
 end
 
--- Lines 276-282
+-- Lines 276-281
 function GuiDataManager:scaled_size()
 	local w = math.round(self:_get_safe_rect().width * base_res.x)
 	local h = math.round(self:_get_safe_rect().height * base_res.y)
@@ -262,67 +262,67 @@ function GuiDataManager:scaled_size()
 	}
 end
 
--- Lines 284-286
+-- Lines 283-285
 function GuiDataManager:safe_scaled_size()
 	return self._saferect_data
 end
 
--- Lines 288-290
+-- Lines 287-289
 function GuiDataManager:corner_scaled_size()
 	return self._corner_saferect_data
 end
 
--- Lines 292-294
+-- Lines 291-293
 function GuiDataManager:full_scaled_size()
 	return self._fullrect_data
 end
 
--- Lines 296-298
+-- Lines 295-297
 function GuiDataManager:full_16_9_size()
 	return self._fullrect_16_9_data
 end
 
--- Lines 300-302
+-- Lines 299-301
 function GuiDataManager:full_1280_size()
 	return self._fullrect_1280_data
 end
 
--- Lines 305-308
+-- Lines 304-307
 function GuiDataManager:full_to_full_16_9(in_x, in_y)
 	return self:safe_to_full_16_9(self:full_to_safe(in_x, in_y))
 end
 
--- Lines 310-312
+-- Lines 309-311
 function GuiDataManager:safe_to_full_16_9(in_x, in_y)
 	return self._fullrect_16_9_data.convert_x + in_x, self._fullrect_16_9_data.convert_y + in_y
 end
 
--- Lines 314-316
+-- Lines 313-315
 function GuiDataManager:full_16_9_to_safe(in_x, in_y)
 	return in_x - self._fullrect_16_9_data.convert_x, in_y - self._fullrect_16_9_data.convert_y
 end
 
--- Lines 319-321
+-- Lines 318-320
 function GuiDataManager:safe_to_full(in_x, in_y)
 	return self._fullrect_data.convert_x + in_x, self._fullrect_data.convert_y + in_y
 end
 
--- Lines 323-325
+-- Lines 322-324
 function GuiDataManager:full_to_safe(in_x, in_y)
 	return in_x - self._fullrect_data.convert_x, in_y - self._fullrect_data.convert_y
 end
 
--- Lines 327-329
+-- Lines 326-328
 function GuiDataManager:corner_safe_to_full(in_x, in_y)
 	return self._fullrect_data.corner_convert_x + in_x, self._fullrect_data.corner_convert_y + in_y
 end
 
--- Lines 331-333
+-- Lines 330-332
 function GuiDataManager:y_safe_to_full(in_y)
 	return self._fullrect_data.convert_y + in_y
 end
 
--- Lines 335-337
+-- Lines 334-336
 function GuiDataManager:resolution_changed()
 	self:_setup_workspace_data()
 end

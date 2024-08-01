@@ -79,7 +79,7 @@ function DynamicLayer:release_unit()
 	self._unit_picked = false
 end
 
--- Lines 74-85
+-- Lines 74-92
 function DynamicLayer:delete_selected_unit()
 	if self._selected_unit then
 		self:release_unit()
@@ -88,13 +88,20 @@ function DynamicLayer:delete_selected_unit()
 			if table.contains(self._created_units, unit) then
 				self:delete_unit(unit)
 			else
-				managers.editor:output_warning("" .. unit:unit_data().name_id .. " belongs to " .. managers.editor:unit_in_layer_name(unit) .. " and cannot be deleted from here.")
+				local unit_in_layer_name = managers.editor:unit_in_layer_name(unit)
+
+				if unit_in_layer_name then
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to " .. tostring(unit_in_layer_name) .. " and cannot be deleted from here.")
+				else
+					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to nothing and will be deleted")
+					self:delete_unit(unit)
+				end
 			end
 		end
 	end
 end
 
--- Lines 87-160
+-- Lines 94-167
 function DynamicLayer:update(t, dt)
 	DynamicLayer.super.update(self, t, dt)
 
@@ -173,7 +180,7 @@ function DynamicLayer:update(t, dt)
 	end
 end
 
--- Lines 162-188
+-- Lines 169-195
 function DynamicLayer:build_panel(notebook)
 	cat_print("editor", "DynamicLayer:build_panel")
 
@@ -198,12 +205,12 @@ function DynamicLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines 190-192
+-- Lines 197-199
 function DynamicLayer:update_ews_distance(slider)
 	self:set_distance(slider:get_value())
 end
 
--- Lines 194-199
+-- Lines 201-206
 function DynamicLayer:deselect()
 	if self._selected_unit then
 		self:release_unit()
@@ -212,7 +219,7 @@ function DynamicLayer:deselect()
 	DynamicLayer.super.deselect(self)
 end
 
--- Lines 201-212
+-- Lines 208-219
 function DynamicLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -227,7 +234,7 @@ function DynamicLayer:get_help(text)
 	return text
 end
 
--- Lines 214-225
+-- Lines 221-232
 function DynamicLayer:add_triggers()
 	DynamicLayer.super.add_triggers(self)
 
@@ -242,13 +249,13 @@ function DynamicLayer:add_triggers()
 	end
 end
 
--- Lines 228-231
+-- Lines 235-238
 function DynamicLayer:deactivate()
 	DynamicLayer.super.deactivate(self)
 	DynamicLayer.super.deselect(self)
 end
 
--- Lines 233-235
+-- Lines 240-242
 function DynamicLayer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end

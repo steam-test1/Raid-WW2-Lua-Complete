@@ -14,13 +14,13 @@ end
 -- Lines 15-30
 function FlamethrowerEffectExtension:setup_default()
 	self._flame_effect = {
-		effect = Idstring("effects/vanilla/fire/fire_flame_burst_001")
+		effect = tweak_data.common_effects.flamer_burst
 	}
 	self._nozzle_effect = {
-		effect = Idstring("effects/vanilla/explosions/exp_flamer_nosel_001")
+		effect = tweak_data.common_effects.flamer_nosel
 	}
 	self._pilot_light = {
-		effect = Idstring("effects/vanilla/fire/fire_flame_burst_pilot_001")
+		effect = tweak_data.common_effects.flamer_pilot
 	}
 	self._flame_max_range = tweak_data.weapon[self._name_id].flame_max_range
 	self._single_flame_effect_duration = tweak_data.weapon[self._name_id].single_flame_effect_duration

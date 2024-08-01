@@ -75,7 +75,7 @@ function ElementSpecialObjective:init(...)
 	self._values = clone(self._values)
 end
 
--- Lines 35-139
+-- Lines 35-138
 function ElementSpecialObjective:_finalize_values(values)
 	values.so_action = self:value("so_action")
 
@@ -163,7 +163,6 @@ function ElementSpecialObjective:_finalize_values(values)
 	_index_or_nil(ElementSpecialObjective._INTERACTION_VOICES, "interaction_voice")
 	_save_boolean("repeatable")
 	_save_boolean("forced")
-	_save_boolean("no_arrest")
 	_save_boolean("scan")
 	_save_boolean("allow_followup_self")
 	_save_boolean("is_navigation_link")
@@ -186,7 +185,7 @@ function ElementSpecialObjective:_finalize_values(values)
 	values.SO_access = managers.navigation:convert_access_filter_to_number(values.SO_access)
 end
 
--- Lines 143-149
+-- Lines 142-148
 function ElementSpecialObjective:event(name, unit)
 	if self._events and self._events[name] then
 		for _, callback in pairs(self._events[name]) do
@@ -195,12 +194,12 @@ function ElementSpecialObjective:event(name, unit)
 	end
 end
 
--- Lines 153-155
+-- Lines 152-154
 function ElementSpecialObjective:clbk_objective_action_start(unit)
 	self:event("anim_start", unit)
 end
 
--- Lines 159-178
+-- Lines 158-177
 function ElementSpecialObjective:clbk_objective_administered(unit)
 	if self._values.needs_pos_rsrv then
 		self._pos_rsrv = self._pos_rsrv or {}
@@ -227,7 +226,7 @@ function ElementSpecialObjective:clbk_objective_administered(unit)
 	self:event("administered", unit)
 end
 
--- Lines 182-203
+-- Lines 181-202
 function ElementSpecialObjective:clbk_objective_complete(unit)
 	if self._pos_rsrv then
 		local unit_rsrv = self._pos_rsrv[unit:key()]
@@ -254,7 +253,7 @@ function ElementSpecialObjective:clbk_objective_complete(unit)
 	self:event("complete", unit)
 end
 
--- Lines 207-232
+-- Lines 206-231
 function ElementSpecialObjective:clbk_objective_failed(unit)
 	if self._pos_rsrv then
 		local unit_rsrv = self._pos_rsrv[unit:key()]
@@ -285,7 +284,7 @@ function ElementSpecialObjective:clbk_objective_failed(unit)
 	self:event("fail", unit)
 end
 
--- Lines 236-249
+-- Lines 235-248
 function ElementSpecialObjective:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
@@ -305,7 +304,7 @@ function ElementSpecialObjective:clbk_verify_administration(unit)
 	return true
 end
 
--- Lines 253-258
+-- Lines 252-257
 function ElementSpecialObjective:add_event_callback(name, callback, callback_id)
 	local id = callback_id or "generic_id"
 	self._events = self._events or {}
@@ -313,7 +312,7 @@ function ElementSpecialObjective:add_event_callback(name, callback, callback_id)
 	self._events[name][id] = callback
 end
 
--- Lines 260-270
+-- Lines 259-269
 function ElementSpecialObjective:remove_event_callback(callback_id)
 	if self._events and self._events.complete then
 		self._events.complete[callback_id] = nil
@@ -328,7 +327,7 @@ function ElementSpecialObjective:remove_event_callback(callback_id)
 	end
 end
 
--- Lines 274-334
+-- Lines 273-333
 function ElementSpecialObjective:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -395,7 +394,7 @@ function ElementSpecialObjective:on_executed(instigator)
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
 
--- Lines 338-355
+-- Lines 337-354
 function ElementSpecialObjective:operation_remove()
 	if self._nav_link then
 		managers.navigation:unregister_anim_nav_link(self)
@@ -419,7 +418,7 @@ function ElementSpecialObjective:operation_remove()
 	end
 end
 
--- Lines 360-489
+-- Lines 359-483
 function ElementSpecialObjective:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
@@ -435,7 +434,6 @@ function ElementSpecialObjective:get_objective(instigator)
 		haste = haste,
 		interrupt_dis = interrupt_dis,
 		interrupt_health = interrupt_health,
-		no_retreat = not interrupt_dis and not interrupt_health,
 		trigger_on = trigger_on,
 		action_duration = self:_get_action_duration(),
 		interaction_voice = interaction_voice,
@@ -445,8 +443,7 @@ function ElementSpecialObjective:get_objective(instigator)
 		complete_clbk = callback(self, self, "clbk_objective_complete"),
 		verification_clbk = callback(self, self, "clbk_verify_administration"),
 		scan = self._values.scan,
-		forced = self._values.forced,
-		no_arrest = self._values.no_arrest
+		forced = self._values.forced
 	}
 
 	if self._values.followup_elements then
@@ -503,14 +500,6 @@ function ElementSpecialObjective:get_objective(instigator)
 			objective.type = objective_type
 			objective.nav_seg = nav_seg or pos and last_pos and managers.navigation:get_nav_seg_from_pos(last_pos)
 
-			if objective_type == "sniper" then
-				objective.no_retreat = true
-			end
-
-			if objective_type == "spotter" then
-				objective.no_retreat = true
-			end
-
 			if objective_type == "security" then
 				objective.rubberband_rotation = true
 			end
@@ -561,7 +550,7 @@ function ElementSpecialObjective:get_objective(instigator)
 	return objective
 end
 
--- Lines 493-519
+-- Lines 487-513
 function ElementSpecialObjective:_get_hunt_location(instigator)
 	if not alive(instigator) then
 		return
@@ -595,7 +584,7 @@ function ElementSpecialObjective:_get_hunt_location(instigator)
 	return objective_nav_seg, criminal_tracker:field_position()
 end
 
--- Lines 523-551
+-- Lines 517-545
 function ElementSpecialObjective:_get_misc_SO_params()
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = nil
 	local values = self._values
@@ -625,52 +614,52 @@ function ElementSpecialObjective:_get_misc_SO_params()
 	return pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice
 end
 
--- Lines 555-557
+-- Lines 549-551
 function ElementSpecialObjective:nav_link_end_pos()
 	return self._values.search_position
 end
 
--- Lines 561-563
+-- Lines 555-557
 function ElementSpecialObjective:nav_link_access()
 	return tonumber(self._values.SO_access)
 end
 
--- Lines 567-569
+-- Lines 561-563
 function ElementSpecialObjective:chance()
 	return self:_get_default_value_if_nil("base_chance")
 end
 
--- Lines 573-575
+-- Lines 567-569
 function ElementSpecialObjective:nav_link_delay()
 	return self:_get_default_value_if_nil("interval")
 end
 
--- Lines 579-581
+-- Lines 573-575
 function ElementSpecialObjective:nav_link()
 	return self._nav_link
 end
 
--- Lines 585-587
+-- Lines 579-581
 function ElementSpecialObjective:id()
 	return self._id
 end
 
--- Lines 591-593
+-- Lines 585-587
 function ElementSpecialObjective:_is_nav_link()
 	return self._values.is_navigation_link or self._values.navigation_link and self._values.navigation_link ~= -1
 end
 
--- Lines 597-599
+-- Lines 591-593
 function ElementSpecialObjective:set_nav_link(nav_link)
 	self._nav_link = nav_link
 end
 
--- Lines 603-605
+-- Lines 597-599
 function ElementSpecialObjective:nav_link_wants_align_pos()
 	return self._values.align_position
 end
 
--- Lines 609-652
+-- Lines 603-646
 function ElementSpecialObjective:_select_units_from_spawners()
 	local candidates = {}
 	local objectives = {}
@@ -722,12 +711,12 @@ function ElementSpecialObjective:_select_units_from_spawners()
 	return chosen_units, chosen_objectives
 end
 
--- Lines 656-658
+-- Lines 650-652
 function ElementSpecialObjective:get_objective_trigger()
 	return self._values.trigger_on
 end
 
--- Lines 662-701
+-- Lines 656-695
 function ElementSpecialObjective:_administer_objective(unit, objective)
 	if objective.type == "phalanx" then
 		GroupAIStateBase:register_phalanx_unit(unit)
@@ -771,7 +760,7 @@ function ElementSpecialObjective:_administer_objective(unit, objective)
 	end
 end
 
--- Lines 704-726
+-- Lines 698-720
 function ElementSpecialObjective:_administer_to_turret(unit, objective)
 	if not self.turret_unit or not self.turret_unit:weapon() or not self.turret_unit:weapon():is_available() then
 		self:clbk_objective_failed(unit)
@@ -790,7 +779,7 @@ function ElementSpecialObjective:_administer_to_turret(unit, objective)
 	self:clbk_objective_administered(unit)
 end
 
--- Lines 731-791
+-- Lines 725-785
 function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	if not self._values.followup_elements then
 		return
@@ -852,7 +841,7 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	end
 end
 
--- Lines 795-802
+-- Lines 789-796
 function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	if (not unit or managers.navigation:check_access(self._values.SO_access, unit:brain():SO_access(), 0) and self:clbk_verify_administration(unit)) and not skip_element_ids[self._id] then
 		return self, self:_get_default_value_if_nil("base_chance")
@@ -861,7 +850,7 @@ function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	self:event("admin_fail", unit)
 end
 
--- Lines 806-816
+-- Lines 800-810
 function ElementSpecialObjective:_get_action_duration()
 	if not self._values.action_duration_max and not self._values.action_duration_min then
 		return
@@ -875,12 +864,12 @@ function ElementSpecialObjective:_get_action_duration()
 	end
 end
 
--- Lines 820-822
+-- Lines 814-816
 function ElementSpecialObjective:_get_default_value_if_nil(name_in)
 	return self._values[name_in] or self._DEFAULT_VALUES[name_in]
 end
 
--- Lines 825-835
+-- Lines 819-829
 function ElementSpecialObjective:destroy()
 	ElementSpecialObjective.super.destroy(self)
 

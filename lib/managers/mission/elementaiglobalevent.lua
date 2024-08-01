@@ -3,7 +3,6 @@ core:import("CoreMissionScriptElement")
 ElementAiGlobalEvent = ElementAiGlobalEvent or class(CoreMissionScriptElement.MissionScriptElement)
 ElementAiGlobalEvent._wave_modes = {
 	"none",
-	"assault",
 	"besiege",
 	"blockade",
 	"hunt",
@@ -36,7 +35,7 @@ ElementAiGlobalEvent._blames = {
 	"csgo_gunfire"
 }
 
--- Lines 9-18
+-- Lines 41-50
 function ElementAiGlobalEvent:init(...)
 	ElementAiGlobalEvent.super.init(self, ...)
 
@@ -48,14 +47,14 @@ function ElementAiGlobalEvent:init(...)
 	self:_finalize_values(self._values)
 end
 
--- Lines 20-24
+-- Lines 52-56
 function ElementAiGlobalEvent:_finalize_values(values)
 	values.wave_mode = table.index_of(self._wave_modes, values.wave_mode)
 	values.AI_event = table.index_of(self._AI_events, values.AI_event)
 	values.blame = table.index_of(self._blames, values.blame)
 end
 
--- Lines 26-56
+-- Lines 58-88
 function ElementAiGlobalEvent:on_executed(instigator)
 	if not self._values.enabled then
 		return

@@ -100,16 +100,27 @@ function ObjectiveUnitElement:update_sub_objectives()
 	CoreEws.change_combobox_value(self._sub_objective_params, self._hed.sub_objective)
 end
 
--- Lines 78-83
+-- Lines 78-84
+function ObjectiveUnitElement:update_localization()
+	local objective = managers.objectives:get_objective(self._hed.objective)
+	local sub_objective = objective and objective.sub_objectives[self._hed.sub_objective]
+
+	self._objective_text:set_value(objective and objective.text or "")
+	self._sub_objective_text:set_value(sub_objective and sub_objective.text or "")
+end
+
+-- Lines 86-92
 function ObjectiveUnitElement:set_element_data(params, ...)
 	ObjectiveUnitElement.super.set_element_data(self, params, ...)
 
 	if params.value == "objective" then
 		self:update_sub_objectives()
 	end
+
+	self:update_localization()
 end
 
--- Lines 85-105
+-- Lines 94-121
 function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -131,12 +142,18 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, managers.objectives:objectives_by_name()))
 
+	self._objective_text = EWS:TextCtrl(panel, "", 0, "TE_NOHIDESEL,TE_RICH2,TE_DONTWRAP,TE_READONLY")
+
+	panel_sizer:add(self._objective_text, 0, 0, "EXPAND,ALIGN_CENTER")
+
 	local options = self._hed.objective ~= "none" and managers.objectives:sub_objectives_by_name(self._hed.objective) or {}
 	local _, params = self:_build_value_combobox(panel, panel_sizer, "sub_objective", table.list_add({
 		"none"
 	}, options), "Select a sub objective from the combobox (if availible)")
 	self._sub_objective_params = params
+	self._sub_objective_text = EWS:TextCtrl(panel, "", 0, "TE_NOHIDESEL,TE_RICH2,TE_DONTWRAP,TE_READONLY")
 
+	panel_sizer:add(self._sub_objective_text, 0, 0, "EXPAND,ALIGN_CENTER")
 	self:_build_value_number(panel, panel_sizer, "amount", {
 		min = 0,
 		floats = 0,
@@ -150,4 +167,5 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	}
 
 	self:add_help_text(help)
+	self:update_localization()
 end

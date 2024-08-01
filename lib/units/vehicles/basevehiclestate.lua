@@ -22,7 +22,7 @@ end
 function BaseVehicleState:exit(state_data)
 end
 
--- Lines 41-80
+-- Lines 41-82
 function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 	local locator_name = locator:name()
 	local seats = self._unit:vehicle_driving():seats()
@@ -37,7 +37,7 @@ function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 		end
 	end
 
-	if self._unit:vehicle_driving():is_loot_interaction_enabled() and not managers.player:is_carrying() and self._unit:vehicle_driving():has_loot_stored() then
+	if self._unit:vehicle_driving():is_loot_interaction_enabled() and self._unit:vehicle_driving():has_loot_stored() then
 		for _, loot_point in pairs(tweak_data.loot_points) do
 			if locator_name == Idstring(VehicleDrivingExt.INTERACTION_PREFIX .. loot_point.name) then
 				return VehicleDrivingExt.INTERACT_LOOT
@@ -56,14 +56,14 @@ function BaseVehicleState:get_action_for_interaction(pos, locator, tweak_data)
 	return VehicleDrivingExt.INTERACT_INVALID
 end
 
--- Lines 84-88
+-- Lines 86-90
 function BaseVehicleState:adjust_interactions()
 	if not self._unit:vehicle_driving():is_interaction_allowed() then
 		self:disable_interactions()
 	end
 end
 
--- Lines 92-103
+-- Lines 94-105
 function BaseVehicleState:disable_interactions()
 	if self._unit:damage() and self._unit:damage():has_sequence(VehicleDrivingExt.INTERACT_ENTRY_ENABLED) then
 		self._unit:damage():run_sequence_simple(VehicleDrivingExt.INTERACT_ENTRY_DISABLED)
@@ -78,17 +78,17 @@ function BaseVehicleState:disable_interactions()
 	end
 end
 
--- Lines 107-109
+-- Lines 109-111
 function BaseVehicleState:allow_exit()
 	return true
 end
 
--- Lines 113-115
+-- Lines 115-117
 function BaseVehicleState:is_vulnerable()
 	return false
 end
 
--- Lines 119-121
+-- Lines 121-123
 function BaseVehicleState:stop_vehicle()
 	return false
 end

@@ -1,6 +1,10 @@
 HUDInteraction = HUDInteraction or class()
+HUDInteraction.DETAILS_ICON_SIZE = 42
+HUDInteraction.DETAILS_PADDING = 4
+HUDInteraction.FONT_SIZE = tweak_data.gui.font_sizes.size_24
+HUDInteraction.FONT = tweak_data.gui.fonts.din_compressed_outlined_24
 
--- Lines 4-36
+-- Lines 10-53
 function HUDInteraction:init(hud, child_name)
 	self._hud_panel = hud.panel
 	self._progress_bar_width = 288
@@ -32,14 +36,13 @@ function HUDInteraction:init(hud, child_name)
 	local interact_text = self._hud_panel:text({
 		layer = 1,
 		h = 64,
-		font_size = 24,
 		align = "center",
 		text = "HELLO",
 		visible = false,
 		valign = "center",
 		name = self._child_name_text,
-		color = Color.white,
-		font = tweak_data.gui.fonts.din_compressed_outlined_24
+		font = HUDInteraction.FONT,
+		font_size = HUDInteraction.FONT_SIZE
 	})
 	local invalid_text = self._hud_panel:text({
 		layer = 3,
@@ -61,7 +64,7 @@ function HUDInteraction:init(hud, child_name)
 	self._panels_being_animated = {}
 end
 
--- Lines 39-61
+-- Lines 56-86
 function HUDInteraction:show_interact(data)
 	self._prompt_id = nil
 	self._saved_text = data and data.text or self._saved_text
@@ -88,16 +91,24 @@ function HUDInteraction:show_interact(data)
 
 		managers.queued_tasks:queue("hud_interaction_prompt_hide", self.hide_prompt, self, self._prompt_id, data.duration, nil)
 	end
+
+	if data and data.details then
+		self:_show_details(data.details)
+	elseif data then
+		self:_remove_details()
+	elseif self._details_panel then
+		self._details_panel:show()
+	end
 end
 
--- Lines 63-67
+-- Lines 88-92
 function HUDInteraction:hide_prompt(id)
 	if self._prompt_id == id then
 		self._hud_panel:child(self._child_name_text):set_visible(false)
 	end
 end
 
--- Lines 69-75
+-- Lines 94-104
 function HUDInteraction:remove_interact()
 	if not alive(self._hud_panel) then
 		return
@@ -105,9 +116,13 @@ function HUDInteraction:remove_interact()
 
 	self._hud_panel:child(self._child_name_text):set_visible(false)
 	self._hud_panel:child(self._child_ivalid_name_text):set_visible(false)
+
+	if self._details_panel then
+		self._details_panel:hide()
+	end
 end
 
--- Lines 77-91
+-- Lines 106-119
 function HUDInteraction:show_interaction_bar(current, total)
 	self:remove_interact()
 
@@ -133,7 +148,7 @@ function HUDInteraction:show_interaction_bar(current, total)
 	self._progress_bar:animate(callback(self, self, "_animate_interaction_start"), 0.25)
 end
 
--- Lines 96-103
+-- Lines 124-131
 function HUDInteraction:set_interaction_bar_width(current, total)
 	if not self._progress_bar then
 		return
@@ -144,7 +159,7 @@ function HUDInteraction:set_interaction_bar_width(current, total)
 	self._progress_bar:set_width(progress * self._progress_bar_width)
 end
 
--- Lines 108-113
+-- Lines 136-141
 function HUDInteraction:animate_progress(duration)
 	if not self._progress_bar then
 		self:show_interaction_bar(0, duration)
@@ -153,7 +168,7 @@ function HUDInteraction:animate_progress(duration)
 	self._auto_animation = self._progress_bar:animate(callback(self, self, "_animate_interaction_duration"), duration)
 end
 
--- Lines 115-135
+-- Lines 143-163
 function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 	if complete then
 		local progress_full = self._hud_panel:rect({
@@ -197,7 +212,7 @@ function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 	end
 end
 
--- Lines 137-145
+-- Lines 165-173
 function HUDInteraction:set_bar_valid(valid, text_id)
 	self._hud_panel:child(self._child_name_text):set_visible(valid)
 
@@ -210,7 +225,7 @@ function HUDInteraction:set_bar_valid(valid, text_id)
 	invalid_text:set_visible(not valid)
 end
 
--- Lines 147-162
+-- Lines 175-192
 function HUDInteraction:destroy()
 	self._hud_panel:remove(self._hud_panel:child(self._child_name_text))
 	self._hud_panel:remove(self._hud_panel:child(self._child_ivalid_name_text))
@@ -226,9 +241,61 @@ function HUDInteraction:destroy()
 		self._progress_bar = nil
 		self._progress_bar_bg = nil
 	end
+
+	self:_remove_details()
 end
 
--- Lines 166-182
+-- Lines 196-235
+function HUDInteraction:_show_details(params)
+	if self._details_panel then
+		self._details_panel:parent():remove(self._details_panel)
+
+		self._details_panel = nil
+	end
+
+	local interact_text = self._hud_panel:child(self._child_name_text)
+	local _, interact_y, _, interact_h = interact_text:text_rect()
+	self._details_panel = self._hud_panel:panel({
+		name = "interaction_details_panel"
+	})
+	local icon_gui = tweak_data.gui:get_full_gui_data(params.icon)
+	local detail_icon = self._details_panel:bitmap({
+		name = "details_icon",
+		x = HUDInteraction.DETAILS_PADDING,
+		w = HUDInteraction.DETAILS_ICON_SIZE,
+		h = HUDInteraction.DETAILS_ICON_SIZE,
+		color = params.color,
+		texture = icon_gui.texture,
+		texture_rect = icon_gui.texture_rect
+	})
+	local detail_text = self._details_panel:text({
+		name = "detail_text",
+		vertical = "center",
+		text = tostring(params.text),
+		font = HUDInteraction.FONT,
+		font_size = HUDInteraction.FONT_SIZE,
+		color = params.color
+	})
+	local _, _, w, h = detail_text:text_rect()
+
+	detail_text:set_size(w + HUDInteraction.DETAILS_PADDING, detail_icon:h())
+	detail_text:set_x(detail_icon:right() + HUDInteraction.DETAILS_PADDING)
+	detail_text:set_center_y(detail_icon:center_y() + 3)
+	self._details_panel:set_size(detail_text:right(), detail_text:bottom())
+	self._details_panel:set_center_x(self._hud_panel:w() / 2)
+	self._details_panel:set_y(interact_y + interact_h + HUDInteraction.DETAILS_PADDING)
+end
+
+-- Lines 237-242
+function HUDInteraction:_remove_details()
+	if self._details_panel then
+		self._details_panel:parent():remove(self._details_panel)
+
+		self._details_panel = nil
+	end
+end
+
+-- Lines 246-262
 function HUDInteraction:_animate_interaction_start(progress_bar, duration)
 	local t = 0
 	self._panels_being_animated[tostring(progress_bar)] = true
@@ -247,7 +314,7 @@ function HUDInteraction:_animate_interaction_start(progress_bar, duration)
 	self._panels_being_animated[tostring(progress_bar)] = false
 end
 
--- Lines 184-193
+-- Lines 264-273
 function HUDInteraction:_animate_interaction_duration(progress_bar, duration)
 	local t = 0
 
@@ -263,7 +330,7 @@ function HUDInteraction:_animate_interaction_duration(progress_bar, duration)
 	self:set_interaction_bar_width(duration, duration)
 end
 
--- Lines 195-210
+-- Lines 275-290
 function HUDInteraction:_animate_interaction_cancel(progress_bar, duration)
 	local t = 0
 	local start_height = progress_bar:h()
@@ -281,7 +348,7 @@ function HUDInteraction:_animate_interaction_cancel(progress_bar, duration)
 	progress_bar:parent():remove(progress_bar)
 end
 
--- Lines 212-229
+-- Lines 292-309
 function HUDInteraction:_animate_interaction_complete(progress_bar)
 	local duration = 0.5
 	local t = 0
@@ -301,7 +368,7 @@ function HUDInteraction:_animate_interaction_complete(progress_bar)
 	progress_bar:parent():remove(progress_bar)
 end
 
--- Lines 231-238
+-- Lines 311-318
 function HUDInteraction:ease_in_out_multiple(t, starting_value, change, duration)
 	t = t / (duration / 2)
 
@@ -314,21 +381,21 @@ function HUDInteraction:ease_in_out_multiple(t, starting_value, change, duration
 	return -change / 2 * (t * (t - 2) - 1) + starting_value
 end
 
--- Lines 240-243
+-- Lines 320-323
 function HUDInteraction:_ease_in_quart(t, starting_value, change, duration)
 	t = t / duration
 
 	return change * t * t * t * t + starting_value
 end
 
--- Lines 245-248
+-- Lines 325-328
 function HUDInteraction:_ease_in_quint(t, starting_value, change, duration)
 	t = t / duration
 
 	return change * t * t * t * t * t + starting_value
 end
 
--- Lines 250-254
+-- Lines 330-334
 function HUDInteraction:_ease_out_quint(t, starting_value, change, duration)
 	t = t / duration
 	t = t - 1

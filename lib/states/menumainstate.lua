@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-140
+-- Lines 9-133
 function MenuMainState:at_enter(old_state)
 	managers.worldcollection:reset_global_ref_counter()
 	managers.platform:set_playing(false)
@@ -48,7 +48,7 @@ function MenuMainState:at_enter(old_state)
 	local has_invite = false
 	local has_play_together = false
 
-	if _G.IS_PS4 then
+	if IS_PS4 then
 		local is_boot = not Global.psn_boot_invite_checked and Application:is_booted_from_invitation()
 
 		if not is_boot then
@@ -101,15 +101,15 @@ function MenuMainState:at_enter(old_state)
 		end
 
 		Global.psn_boot_playtogether_checked = true
-	elseif _G.IS_PC then
-		if SystemInfo:distribution() == Idstring("STEAM") and Global.boot_invite then
+	elseif IS_PC then
+		if IS_STEAM and Global.boot_invite then
 			has_invite = true
 			local lobby = Global.boot_invite
 			Global.boot_invite = nil
 
 			managers.network.matchmake:join_server_with_check(lobby)
 		end
-	elseif _G.IS_XB1 and Global.boot_invite and next(Global.boot_invite) then
+	elseif IS_XB1 and Global.boot_invite and next(Global.boot_invite) then
 		has_invite = true
 
 		managers.network.matchmake:join_boot_invite()
@@ -132,10 +132,6 @@ function MenuMainState:at_enter(old_state)
 		})
 	end
 
-	if Global.savefile_manager.backup_save_enabled then
-		-- Nothing
-	end
-
 	if Global.exe_argument_level then
 		MenuCallbackHandler:start_job({
 			job_id = Global.exe_argument_level,
@@ -152,7 +148,7 @@ function MenuMainState:at_enter(old_state)
 	end
 end
 
--- Lines 142-151
+-- Lines 135-144
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -165,7 +161,7 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 153-159
+-- Lines 146-152
 function MenuMainState:server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -174,11 +170,16 @@ function MenuMainState:server_left()
 	managers.menu:show_host_left_dialog("dialog_server_left")
 end
 
--- Lines 161-162
+-- Lines 154-155
 function MenuMainState:on_disconnected()
 end
 
--- Lines 164-166
+-- Lines 157-159
 function MenuMainState:is_joinable()
 	return false
+end
+
+-- Lines 161-163
+function MenuMainState:_file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_LOADING
 end

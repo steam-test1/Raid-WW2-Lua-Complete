@@ -8,7 +8,7 @@ end
 -- Lines 8-20
 function MaterialControl:save(save_data)
 	local data = {}
-	local materials = self._unit:get_objects_by_type(Idstring("material"))
+	local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 
 	for idx, material in ipairs(materials) do
 		local material_data = {
@@ -30,7 +30,7 @@ function MaterialControl:load(load_data)
 		return
 	end
 
-	local materials = self._unit:get_objects_by_type(Idstring("material"))
+	local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 
 	for idx, material in ipairs(materials) do
 		local material_data = data[idx]
@@ -49,7 +49,7 @@ end
 
 -- Lines 44-53
 function MaterialControl:play(material_name, speed)
-	local materials = self._unit:get_objects_by_type(Idstring("material"))
+	local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 	local material_id = Idstring(material_name)
 
 	for i, material in ipairs(materials) do
@@ -61,7 +61,7 @@ end
 
 -- Lines 56-65
 function MaterialControl:stop(material_name)
-	local materials = self._unit:get_objects_by_type(Idstring("material"))
+	local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 	local material_id = Idstring(material_name)
 
 	for _, material in ipairs(materials) do
@@ -73,7 +73,7 @@ end
 
 -- Lines 68-77
 function MaterialControl:pause(material_name)
-	local materials = self._unit:get_objects_by_type(Idstring("material"))
+	local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 	local material_id = Idstring(material_name)
 
 	for _, material in ipairs(materials) do
@@ -85,7 +85,7 @@ end
 
 -- Lines 80-89
 function MaterialControl:set_time(material_name, time)
-	local materials = self._unit:get_objects_by_type(Idstring("material"))
+	local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 	local material_id = Idstring(material_name)
 
 	for _, material in ipairs(materials) do

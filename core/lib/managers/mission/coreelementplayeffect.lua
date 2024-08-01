@@ -29,18 +29,18 @@ function ElementPlayEffect:on_executed(instigator)
 		return
 	end
 
-	self:play_effect()
+	self:play_effect(instigator)
 	ElementPlayEffect.super.on_executed(self, instigator)
 end
 
--- Lines 34-48
-function ElementPlayEffect:play_effect()
+-- Lines 34-57
+function ElementPlayEffect:play_effect(instigator)
 	if self._values.effect ~= "none" then
 		local params = {
 			effect = Idstring(self._values.effect)
 		}
 		local pos, rot = self:get_orientation()
-		params.position = self._values.screen_space and Vector3() or pos
+		params.position = self._values.screen_space and Vector3() or self._values.on_instigator and instigator and instigator:position() or pos
 		params.rotation = self._values.screen_space and Rotation() or rot
 		params.base_time = self._values.base_time or 0
 		params.random_time = self._values.random_time or 0
@@ -52,29 +52,29 @@ function ElementPlayEffect:play_effect()
 	end
 end
 
--- Lines 50-52
+-- Lines 59-61
 function ElementPlayEffect:kill()
 	managers.environment_effects:kill_mission_effect(self:_unique_string_id())
 end
 
--- Lines 54-56
+-- Lines 63-65
 function ElementPlayEffect:fade_kill()
 	managers.environment_effects:fade_kill_mission_effect(self:_unique_string_id())
 end
 
 ElementStopEffect = ElementStopEffect or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 62-64
+-- Lines 71-73
 function ElementStopEffect:init(...)
 	ElementStopEffect.super.init(self, ...)
 end
 
--- Lines 66-68
+-- Lines 75-77
 function ElementStopEffect:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 70-87
+-- Lines 79-96
 function ElementStopEffect:on_executed(instigator)
 	if not self._values.enabled then
 		return

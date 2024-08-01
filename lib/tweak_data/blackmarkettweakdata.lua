@@ -7,9 +7,7 @@ require("lib/tweak_data/blackmarket/MasksTweakData")
 require("lib/tweak_data/blackmarket/MeleeWeaponsTweakData")
 require("lib/tweak_data/blackmarket/WeaponSkinsTweakData")
 
-local is_nextgen_console = _G.IS_PS4 or _G.IS_XB1
-
--- Lines 23-43
+-- Lines 21-45
 function BlackMarketTweakData:init(tweak_data)
 	self:_init_colors()
 	self:_init_materials()
@@ -20,16 +18,16 @@ function BlackMarketTweakData:init(tweak_data)
 	self:_init_xp()
 	self:_init_armors()
 	self:_init_deployables(tweak_data)
-	self:_init_melee_weapons()
+	self:_init_melee_weapons(tweak_data)
 	self:_init_weapon_skins()
 	self:_init_weapon_mods(tweak_data)
 end
 
--- Lines 47-77
+-- Lines 49-79
 function BlackMarketTweakData:print_missing_strings(skip_print_id)
 end
 
--- Lines 79-88
+-- Lines 81-90
 function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	for id, data in pairs(tweak_data) do
 		if data.name_id and not data.desc_id then
@@ -42,15 +40,11 @@ function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	end
 end
 
--- Lines 92-111
+-- Lines 94-118
 function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self.weapon_mods = {}
 
 	for id, data in pairs(tweak_data.weapon.factory.parts) do
-		if is_nextgen_console then
-			data.is_a_unlockable = nil
-		end
-
 		self.weapon_mods[id] = {
 			max_in_inventory = data.is_a_unlockable and 1 or 2,
 			pc = data.pc,
@@ -71,7 +65,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self:_add_desc_from_name_macro(self.weapon_mods)
 end
 
--- Lines 115-169
+-- Lines 122-181
 function BlackMarketTweakData:_init_characters()
 	self.characters = {
 		american = {}
@@ -99,13 +93,11 @@ function BlackMarketTweakData:_init_characters()
 		name_id = "bm_character_russian"
 	}
 	self.characters.ai_german = {
-		fps_unit = "units/temp/characters/fps_mover_ger/fps_mover",
 		npc_unit = "units/vanilla/characters/players/german/npc_criminal_ger",
 		sequence = "var_mtr_german",
 		name_id = "bm_character_ai_german"
 	}
 	self.characters.ai_british = {
-		fps_unit = "units/temp/characters/fps_mover_uk/fps_mover",
 		npc_unit = "units/vanilla/characters/players/british/npc_criminal_uk",
 		sequence = "var_mtr_brit",
 		name_id = "bm_character_ai_brit"
@@ -116,14 +108,13 @@ function BlackMarketTweakData:_init_characters()
 		name_id = "bm_character_ai_amer"
 	}
 	self.characters.ai_russian = {
-		fps_unit = "units/temp/characters/fps_mover_ru/fps_mover",
 		npc_unit = "units/vanilla/characters/players/soviet/npc_criminal_ru",
 		sequence = "var_mtr_rus",
 		name_id = "bm_character_ai_rus"
 	}
 end
 
--- Lines 173-249
+-- Lines 185-261
 function BlackMarketTweakData:_init_cash()
 	self.cash = {
 		cash10 = {}
@@ -229,7 +220,7 @@ function BlackMarketTweakData:_init_cash()
 		multiplier = 1.2
 	}
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		self.cash.xone_bonus = {
 			name_id = "bm_csh_cash_xone",
 			value_id = "xone_bonus",
@@ -238,7 +229,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines 253-315
+-- Lines 265-327
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -340,7 +331,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines 319-358
+-- Lines 331-370
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -382,7 +373,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 362-385
+-- Lines 374-391
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -394,14 +385,8 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables.trip_mine = {
 		name_id = "bm_equipment_trip_mine"
 	}
-	self.deployables.armor_kit = {
-		name_id = "bm_equipment_armor_kit"
-	}
 	self.deployables.first_aid_kit = {
 		name_id = "bm_equipment_first_aid_kit"
-	}
-	self.deployables.bodybags_bag = {
-		name_id = "bm_equipment_bodybags_bag"
 	}
 
 	self:_add_desc_from_name_macro(self.deployables)

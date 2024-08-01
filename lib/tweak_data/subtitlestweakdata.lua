@@ -1,17 +1,17 @@
 SubtitlesTweakData = SubtitlesTweakData or class()
 
--- Lines 3-88
+-- Lines 3-48
 function SubtitlesTweakData:init()
 	self:_init_intro_video()
-	self:_init_mission_brief_b2()
-	self:_init_mission_brief_b4()
 	self:_init_mission_brief_a1()
 	self:_init_mission_brief_a2()
 	self:_init_mission_brief_a3()
 	self:_init_mission_brief_a4()
 	self:_init_mission_brief_a5()
 	self:_init_mission_brief_b1()
+	self:_init_mission_brief_b2()
 	self:_init_mission_brief_b3()
+	self:_init_mission_brief_b4()
 	self:_init_mission_brief_b5()
 	self:_init_debrief_success_1()
 	self:_init_debrief_success_2()
@@ -40,7 +40,7 @@ function SubtitlesTweakData:init()
 	self:_init_debrief_failure_11()
 end
 
--- Lines 92-110
+-- Lines 52-70
 function SubtitlesTweakData:get_subtitle(movie, time)
 	local split_movie_path = string.split(movie, "/")
 	local movie_name = split_movie_path[#split_movie_path]
@@ -61,7 +61,7 @@ function SubtitlesTweakData:get_subtitle(movie, time)
 	return ""
 end
 
--- Lines 200-284
+-- Lines 74-158
 function SubtitlesTweakData:_init_intro_video()
 	self["01_intro_v014"] = {
 		{
@@ -147,7 +147,7 @@ function SubtitlesTweakData:_init_intro_video()
 	}
 end
 
--- Lines 287-325
+-- Lines 160-198
 function SubtitlesTweakData:_init_mission_brief_a3()
 	self["05_credits_v003"] = {
 		{
@@ -188,7 +188,7 @@ function SubtitlesTweakData:_init_mission_brief_a3()
 	}
 end
 
--- Lines 352-360
+-- Lines 203-211
 function SubtitlesTweakData:_init_mission_brief_b2()
 	self["02_mission_brief_b2_assassination_v004"] = {
 		{
@@ -199,7 +199,7 @@ function SubtitlesTweakData:_init_mission_brief_b2()
 	}
 end
 
--- Lines 362-370
+-- Lines 213-221
 function SubtitlesTweakData:_init_mission_brief_b4()
 	self["02_mission_brief_b4_steal-valuables_cause-carnage_v004"] = {
 		{
@@ -210,7 +210,7 @@ function SubtitlesTweakData:_init_mission_brief_b4()
 	}
 end
 
--- Lines 374-382
+-- Lines 223-231
 function SubtitlesTweakData:_init_mission_brief_a1()
 	self["02_mission_brief_a1_demolition_v005"] = {
 		{
@@ -221,7 +221,7 @@ function SubtitlesTweakData:_init_mission_brief_a1()
 	}
 end
 
--- Lines 384-392
+-- Lines 233-241
 function SubtitlesTweakData:_init_mission_brief_a2()
 	self["02_mission_brief_a2_cause-carnage_v005"] = {
 		{
@@ -232,7 +232,7 @@ function SubtitlesTweakData:_init_mission_brief_a2()
 	}
 end
 
--- Lines 394-402
+-- Lines 243-251
 function SubtitlesTweakData:_init_mission_brief_a3()
 	self["02_mission_brief_a3_ambush_v005"] = {
 		{
@@ -243,7 +243,7 @@ function SubtitlesTweakData:_init_mission_brief_a3()
 	}
 end
 
--- Lines 404-412
+-- Lines 253-261
 function SubtitlesTweakData:_init_mission_brief_a4()
 	self["02_mission_brief_a4_infiltration_v004"] = {
 		{
@@ -254,7 +254,7 @@ function SubtitlesTweakData:_init_mission_brief_a4()
 	}
 end
 
--- Lines 414-422
+-- Lines 263-271
 function SubtitlesTweakData:_init_mission_brief_a5()
 	self["02_mission_brief_a5_rescue_v005"] = {
 		{
@@ -265,7 +265,7 @@ function SubtitlesTweakData:_init_mission_brief_a5()
 	}
 end
 
--- Lines 424-432
+-- Lines 273-281
 function SubtitlesTweakData:_init_mission_brief_b1()
 	self["02_mission_brief_b1_cause-carnage_v004"] = {
 		{
@@ -276,7 +276,7 @@ function SubtitlesTweakData:_init_mission_brief_b1()
 	}
 end
 
--- Lines 434-442
+-- Lines 283-291
 function SubtitlesTweakData:_init_mission_brief_b3()
 	self["02_mission_brief_b3_steal-intel_v004"] = {
 		{
@@ -287,7 +287,7 @@ function SubtitlesTweakData:_init_mission_brief_b3()
 	}
 end
 
--- Lines 444-452
+-- Lines 293-301
 function SubtitlesTweakData:_init_mission_brief_b5()
 	self["02_mission_brief_b5_steal-valuables_cause-carnage_v004"] = {
 		{
@@ -298,7 +298,7 @@ function SubtitlesTweakData:_init_mission_brief_b5()
 	}
 end
 
--- Lines 682-690
+-- Lines 304-312
 function SubtitlesTweakData:_init_debrief_success_1()
 	self.s_01_throws_himself_v007 = {
 		{
@@ -309,7 +309,7 @@ function SubtitlesTweakData:_init_debrief_success_1()
 	}
 end
 
--- Lines 692-710
+-- Lines 314-332
 function SubtitlesTweakData:_init_debrief_success_2()
 	self.s_02_chickens_out_v007 = {
 		{
@@ -330,7 +330,7 @@ function SubtitlesTweakData:_init_debrief_success_2()
 	}
 end
 
--- Lines 712-730
+-- Lines 334-352
 function SubtitlesTweakData:_init_debrief_success_3()
 	self.s_03_salutes_v006 = {
 		{
@@ -351,7 +351,7 @@ function SubtitlesTweakData:_init_debrief_success_3()
 	}
 end
 
--- Lines 732-740
+-- Lines 354-362
 function SubtitlesTweakData:_init_debrief_success_4()
 	self.s_04_shoots_and_miss_v008 = {
 		{
@@ -362,7 +362,7 @@ function SubtitlesTweakData:_init_debrief_success_4()
 	}
 end
 
--- Lines 742-765
+-- Lines 364-387
 function SubtitlesTweakData:_init_debrief_success_5()
 	self.s_05_crunches_bones_v006 = {
 		{
@@ -388,7 +388,7 @@ function SubtitlesTweakData:_init_debrief_success_5()
 	}
 end
 
--- Lines 767-785
+-- Lines 389-407
 function SubtitlesTweakData:_init_debrief_success_6()
 	self.s_06_plays_with_tin_men_v006 = {
 		{
@@ -409,12 +409,12 @@ function SubtitlesTweakData:_init_debrief_success_6()
 	}
 end
 
--- Lines 787-790
+-- Lines 409-412
 function SubtitlesTweakData:_init_debrief_success_7()
 	self.s_07_cries_tannenbaum_v007 = {}
 end
 
--- Lines 792-805
+-- Lines 414-427
 function SubtitlesTweakData:_init_debrief_success_8()
 	self.s_08_chess_v008 = {
 		{
@@ -430,7 +430,7 @@ function SubtitlesTweakData:_init_debrief_success_8()
 	}
 end
 
--- Lines 807-825
+-- Lines 429-447
 function SubtitlesTweakData:_init_debrief_success_9()
 	self.s_09_is_having_a_reverie_v007 = {
 		{
@@ -451,12 +451,12 @@ function SubtitlesTweakData:_init_debrief_success_9()
 	}
 end
 
--- Lines 827-830
+-- Lines 449-452
 function SubtitlesTweakData:_init_debrief_success_10()
 	self.s_10_colours_a_map_v009 = {}
 end
 
--- Lines 832-840
+-- Lines 454-462
 function SubtitlesTweakData:_init_debrief_success_11()
 	self.s_11_swears_v005 = {
 		{
@@ -467,7 +467,7 @@ function SubtitlesTweakData:_init_debrief_success_11()
 	}
 end
 
--- Lines 842-850
+-- Lines 464-472
 function SubtitlesTweakData:_init_debrief_success_12()
 	self.s_12_plays_with_tanks_v005 = {
 		{
@@ -478,7 +478,7 @@ function SubtitlesTweakData:_init_debrief_success_12()
 	}
 end
 
--- Lines 852-865
+-- Lines 474-487
 function SubtitlesTweakData:_init_debrief_success_13()
 	self.s_13_flips_a_table_v007 = {
 		{
@@ -494,7 +494,7 @@ function SubtitlesTweakData:_init_debrief_success_13()
 	}
 end
 
--- Lines 867-875
+-- Lines 489-497
 function SubtitlesTweakData:_init_debrief_success_14()
 	self.s_14_moustache_v006 = {
 		{
@@ -505,17 +505,17 @@ function SubtitlesTweakData:_init_debrief_success_14()
 	}
 end
 
--- Lines 1054-1057
+-- Lines 501-504
 function SubtitlesTweakData:_init_debrief_failure_1()
 	self.f_01_edelweiss_v007 = {}
 end
 
--- Lines 1059-1062
+-- Lines 506-509
 function SubtitlesTweakData:_init_debrief_failure_2()
 	self.f_02_sizzles_v007 = {}
 end
 
--- Lines 1064-1072
+-- Lines 511-519
 function SubtitlesTweakData:_init_debrief_failure_3()
 	self.f_03_toasts_v008 = {
 		{
@@ -526,7 +526,7 @@ function SubtitlesTweakData:_init_debrief_failure_3()
 	}
 end
 
--- Lines 1074-1082
+-- Lines 521-529
 function SubtitlesTweakData:_init_debrief_failure_4()
 	self.f_04_misunderstands_v008 = {
 		{
@@ -537,7 +537,7 @@ function SubtitlesTweakData:_init_debrief_failure_4()
 	}
 end
 
--- Lines 1084-1097
+-- Lines 531-544
 function SubtitlesTweakData:_init_debrief_failure_5()
 	self.f_05_hugs_the_world_v008 = {
 		{
@@ -553,7 +553,7 @@ function SubtitlesTweakData:_init_debrief_failure_5()
 	}
 end
 
--- Lines 1099-1107
+-- Lines 546-554
 function SubtitlesTweakData:_init_debrief_failure_6()
 	self.f_06_tin_soldiers_v008 = {
 		{
@@ -564,7 +564,7 @@ function SubtitlesTweakData:_init_debrief_failure_6()
 	}
 end
 
--- Lines 1109-1132
+-- Lines 556-579
 function SubtitlesTweakData:_init_debrief_failure_7()
 	self.f_07_told_you_so_v008 = {
 		{
@@ -590,12 +590,12 @@ function SubtitlesTweakData:_init_debrief_failure_7()
 	}
 end
 
--- Lines 1134-1137
+-- Lines 581-584
 function SubtitlesTweakData:_init_debrief_failure_8()
 	self.f_08_pumps_his_fists_v008 = {}
 end
 
--- Lines 1139-1147
+-- Lines 586-594
 function SubtitlesTweakData:_init_debrief_failure_9()
 	self.f_09_bras_dhonneur_v008 = {
 		{
@@ -606,7 +606,7 @@ function SubtitlesTweakData:_init_debrief_failure_9()
 	}
 end
 
--- Lines 1149-1162
+-- Lines 596-609
 function SubtitlesTweakData:_init_debrief_failure_10()
 	self.f_10_executes_v008 = {
 		{
@@ -622,7 +622,7 @@ function SubtitlesTweakData:_init_debrief_failure_10()
 	}
 end
 
--- Lines 1164-1177
+-- Lines 611-624
 function SubtitlesTweakData:_init_debrief_failure_11()
 	self.f_11_sings_v007 = {
 		{

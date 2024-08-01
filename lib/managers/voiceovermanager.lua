@@ -1,11 +1,11 @@
 VoiceOverManager = VoiceOverManager or class()
 
--- Lines 3-5
+-- Lines 6-8
 function VoiceOverManager:init()
 	self:_setup()
 end
 
--- Lines 7-27
+-- Lines 11-31
 function VoiceOverManager:_setup()
 	self._disabled = false
 	self._investigated = {}
@@ -19,18 +19,21 @@ function VoiceOverManager:_setup()
 	self._units_speaking = {}
 end
 
--- Lines 30-81
+-- Lines 34-46
 function VoiceOverManager:update(t, dt)
 	if self._disabled then
 		return
 	end
 
-	local group_ai_state = managers.groupai:state()
-
-	if group_ai_state._police_called then
-		self._disabled = true
+	if managers.groupai:state():is_police_called() then
+		self:disable()
 	end
 
+	self:_update_idle_chatter()
+end
+
+-- Lines 49-83
+function VoiceOverManager:_update_idle_chatter()
 	local current_time = Application:time()
 
 	for unit_key, data in pairs(self._idle_cooldowns) do
@@ -55,7 +58,7 @@ function VoiceOverManager:update(t, dt)
 
 		if elapsed_time > self._idle_timers.delay + data.time_offset and not self._idle_cooldowns[unit_key] then
 			if alive(data.unit) and not data.unit:character_damage():dead() then
-				self:_play_sound(data.unit, "ste_idle")
+				self:_play_sound(data.unit, math.rand_bool() and "ste_idle" or "ste_patrol")
 
 				self._idle_cooldowns[unit_key] = {
 					started_at = current_time
@@ -67,7 +70,7 @@ function VoiceOverManager:update(t, dt)
 	end
 end
 
--- Lines 83-93
+-- Lines 86-96
 function VoiceOverManager:guard_register_idle(source_unit)
 	if self._disabled then
 		return
@@ -81,7 +84,7 @@ function VoiceOverManager:guard_register_idle(source_unit)
 	}
 end
 
--- Lines 95-102
+-- Lines 99-106
 function VoiceOverManager:guard_unregister_idle(source_unit)
 	if self._disabled then
 		return
@@ -90,15 +93,11 @@ function VoiceOverManager:guard_unregister_idle(source_unit)
 	self._idle_queue[source_unit:key()] = nil
 end
 
--- Lines 104-118
+-- Lines 109-120
 function VoiceOverManager:guard_investigate(source_unit)
 	if self._disabled then
 		return
 	end
-
-	self._sound_source = self._sound_source or SoundDevice:create_source("GuardVoiceOver")
-
-	self._sound_source:set_position(source_unit:position())
 
 	if not self._investigated[source_unit:key()] then
 		self._investigated[source_unit:key()] = Application:time()
@@ -109,31 +108,25 @@ function VoiceOverManager:guard_investigate(source_unit)
 	end
 end
 
--- Lines 120-132
+-- Lines 123-129
 function VoiceOverManager:guard_saw_something_ot(source_unit)
 	if self._disabled then
 		return
 	end
 
-	local chance = math.random(2)
-
-	if chance > 1 then
-		self:_play_sound(source_unit, "ste_sawsomethingot")
-	else
-		self:_play_sound(source_unit, "ste_sawsomethingut")
-	end
+	self:_play_sound(source_unit, "ste_sawsomethingot")
 end
 
--- Lines 134-141
+-- Lines 132-138
 function VoiceOverManager:guard_saw_something_ut(source_unit)
-	if true or self._disabled then
+	if self._disabled then
 		return
 	end
 
 	self:_play_sound(source_unit, "ste_sawsomethingut")
 end
 
--- Lines 143-149
+-- Lines 141-147
 function VoiceOverManager:guard_saw_enemy(source_unit)
 	if self._disabled then
 		return
@@ -142,7 +135,7 @@ function VoiceOverManager:guard_saw_enemy(source_unit)
 	self:_play_sound(source_unit, "ste_sawenemy")
 end
 
--- Lines 151-157
+-- Lines 150-156
 function VoiceOverManager:guard_saw_body(source_unit)
 	if self._disabled then
 		return
@@ -160,43 +153,26 @@ function VoiceOverManager:guard_saw_bag(source_unit)
 	self:_play_sound(source_unit, "ste_sawbag")
 end
 
--- Lines 167-177
+-- Lines 168-170
 function VoiceOverManager:guard_raise_alarm(source_unit)
 	self:_play_sound(source_unit, "ste_raisealarm")
 end
 
--- Lines 179-191
+-- Lines 173-179
 function VoiceOverManager:guard_back_to_patrol(source_unit)
 	if self._disabled then
 		return
 	end
 
-	local chance = math.random(2)
-
-	if chance > 1 then
-		self:_play_sound(source_unit, "ste_patrol")
-	else
-		self:_play_sound(source_unit, "ste_investigateresult")
-	end
+	self:_play_sound(source_unit, "ste_investigateresult")
 end
 
--- Lines 193-198
+-- Lines 182-185
 function VoiceOverManager:enemy_reload(source_unit)
-	if self._disabled then
-		return
-	end
-
 	self:_play_sound(source_unit, "reload", false)
 end
 
--- Lines 201-204
-function VoiceOverManager:disable()
-	Application:trace("VoiceOverManager:disable()")
-
-	self._disabled = true
-end
-
--- Lines 206-227
+-- Lines 188-207
 function VoiceOverManager:_play_sound(source_unit, event)
 	if self._disabled then
 		return
@@ -211,12 +187,26 @@ function VoiceOverManager:_play_sound(source_unit, event)
 	end
 end
 
--- Lines 234-236
+-- Lines 210-212
 function VoiceOverManager:on_simulation_ended()
-	self._disabled = false
+	self:enable()
 end
 
--- Lines 238-240
+-- Lines 215-217
 function VoiceOverManager:on_tweak_data_reloaded()
 	self:_setup()
+end
+
+-- Lines 220-223
+function VoiceOverManager:disable()
+	Application:debug("[VoiceOverManager] disable")
+
+	self._disabled = true
+end
+
+-- Lines 226-229
+function VoiceOverManager:enable()
+	Application:debug("[VoiceOverManager] enable")
+
+	self._disabled = false
 end

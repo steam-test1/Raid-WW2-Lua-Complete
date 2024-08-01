@@ -1,6 +1,6 @@
 WeaponInventoryTweakData = WeaponInventoryTweakData or class()
 
--- Lines 3-119
+-- Lines 3-72
 function WeaponInventoryTweakData:init()
 	self.weapon_primaries_index = {
 		{
@@ -189,7 +189,8 @@ function WeaponInventoryTweakData:init()
 			slot = 8,
 			redeemed_xp = 80,
 			droppable = true,
-			weapon_id = "lc14b"
+			weapon_id = "lc14b",
+			is_challenge_reward = true
 		}
 	}
 end

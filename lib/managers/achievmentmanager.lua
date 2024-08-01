@@ -12,8 +12,8 @@ function AchievmentManager:init()
 	}
 	self.script_data = {}
 
-	if _G.IS_PC then
-		if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_PC then
+		if IS_STEAM then
 			AchievmentManager.do_award = AchievmentManager.award_steam
 
 			if not Global.achievment_manager then
@@ -45,7 +45,7 @@ function AchievmentManager:init()
 
 			self.achievments = Global.achievment_manager.achievments
 		end
-	elseif _G.IS_PS4 then
+	elseif IS_PS4 then
 		if not Global.achievment_manager then
 			self:_parse_achievments("PS4")
 
@@ -58,7 +58,7 @@ function AchievmentManager:init()
 		end
 
 		AchievmentManager.do_award = AchievmentManager.award_psn
-	elseif _G.IS_XB1 then
+	elseif IS_XB1 then
 		if not Global.achievment_manager then
 			self:_parse_achievments("XB1")
 
@@ -69,7 +69,7 @@ function AchievmentManager:init()
 			self.achievments = Global.achievment_manager.achievments
 		end
 
-		AchievmentManager.do_award = AchievmentManager.award_x360
+		AchievmentManager.do_award = AchievmentManager.award_xblive
 	else
 		Application:error("[AchievmentManager:init] Unsupported platform")
 	end
@@ -82,7 +82,7 @@ end
 
 -- Lines 78-82
 function AchievmentManager:fetch_trophies()
-	if _G.IS_PS4 then
+	if IS_PS4 then
 		Trophies:get_unlockstate(AchievmentManager.unlockstate_result)
 	end
 end
@@ -122,7 +122,7 @@ end
 
 -- Lines 117-125
 function AchievmentManager:_load_done()
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		print("[AchievmentManager] _load_done()")
 
 		self._is_fetching_achievments = XboxLive:achievements(managers.user:get_xuid(0), 99, false, callback(self, self, "_achievments_loaded"))
@@ -156,7 +156,7 @@ end
 
 -- Lines 148-157
 function AchievmentManager:on_user_signout()
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		print("[AchievmentManager] on_user_signout()")
 
 		self._is_fetching_achievments = nil
@@ -260,7 +260,7 @@ function AchievmentManager:award_progress(stat, value)
 		return
 	end
 
-	if _G.IS_PC then
+	if IS_PC then
 		self.handler:achievement_store_callback(AchievmentManager.steam_unlock_result)
 	end
 
@@ -276,7 +276,7 @@ end
 
 -- Lines 256-261
 function AchievmentManager:get_stat(stat)
-	if _G.IS_PC then
+	if IS_PC then
 		return managers.network.account:get_stat(stat)
 	end
 
@@ -350,11 +350,11 @@ function AchievmentManager.steam_unlock_result(achievment)
 end
 
 -- Lines 329-345
-function AchievmentManager:award_x360(id)
-	print("[AchievmentManager:award_x360] Awarded X360 achievment", id)
+function AchievmentManager:award_xblive(id)
+	print("[AchievmentManager:award_xblive] Awarded Xbox Live achievment", id)
 
 	-- Lines 337-342
-	local function x360_unlock_result(result)
+	local function xblive_unlock_result(result)
 		print("result", result)
 
 		if result then
@@ -362,7 +362,7 @@ function AchievmentManager:award_x360(id)
 		end
 	end
 
-	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, x360_unlock_result)
+	XboxLive:award_achievement(managers.user:get_platform_id(), self:get_info(id).id, xblive_unlock_result)
 end
 
 -- Lines 349-360
@@ -468,79 +468,63 @@ function AchievmentManager:check_achievement_kill_30_enemies_with_vehicle_on_ban
 	end
 end
 
--- Lines 456-463
-function AchievmentManager:check_achievement_operation_clear_sky_hardest(operation_save_data)
-	if Network:is_server() and operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id and operation_save_data.current_job.job_id == "clear_skies" then
-		managers.achievment:award("ach_clear_skies_hardest")
-		managers.network:session():send_to_peers("sync_award_achievement", "ach_clear_skies_hardest")
-	end
-end
+AchievmentManager._T = {
+	clear_skies = {
+		hardest = "ach_clear_skies_hardest",
+		nobleed = "ach_clear_skies_no_bleedout",
+		hardest_nobleed = "ach_clear_skies_hardest_no_bleedout"
+	},
+	oper_flamable = {
+		hardest = "ach_burn_hardest",
+		nobleed = "ach_burn_no_bleedout",
+		hardest_nobleed = "ach_burn_hardest_no_bleedout"
+	}
+}
 
--- Lines 465-491
-function AchievmentManager:check_achievement_operation_clear_sky_no_bleedout(operation_save_data)
-	if Network:is_server() and managers.network:session():count_all_peers() >= 2 then
+-- Lines 473-519
+function AchievmentManager:check_achievement_operation(operation_save_data)
+	local job_achi_data = AchievmentManager._T[operation_save_data.current_job.job_id]
+
+	if not job_achi_data then
+		return
+	end
+
+	local is_hardest_difficulty = operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id
+
+	if is_hardest_difficulty and job_achi_data.hardest then
+		managers.achievment:award(job_achi_data.hardest)
+	end
+
+	if managers.network:session():count_all_peers() >= 2 and (job_achi_data.nobleed or job_achi_data.hardest_nobleed) then
 		local total_downed_count = 0
 
-		if operation_save_data.current_job.job_id == "clear_skies" then
-			for events_index_index, events_index_level_name in ipairs(operation_save_data.events_index) do
-				local event_data = operation_save_data.event_data[events_index_index]
+		for events_index_index, events_index_level_name in ipairs(operation_save_data.events_index) do
+			local event_data = operation_save_data.event_data[events_index_index]
 
+			Application:debug("[AchievmentManager:check_achievement_operation] NOBLEED Check event data:", inspect(event_data))
+
+			if event_data and event_data.peer_data then
 				for peer_index, peer_data in pairs(event_data.peer_data) do
 					if peer_data.statistics ~= nil then
 						total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
 					end
 				end
 			end
+		end
 
-			if total_downed_count <= 0 then
-				managers.achievment:award("ach_clear_skies_no_bleedout")
-				managers.network:session():send_to_peers("sync_award_achievement", "ach_clear_skies_no_bleedout")
+		if total_downed_count <= 0 then
+			if job_achi_data.nobleed then
+				managers.achievment:award(job_achi_data.nobleed)
+			end
 
-				if operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id then
-					managers.achievment:award("ach_clear_skies_hardest_no_bleedout")
-					managers.network:session():send_to_peers("sync_award_achievement", "ach_clear_skies_hardest_no_bleedout")
-				end
+			if is_hardest_difficulty and job_achi_data.hardest_nobleed then
+				managers.achievment:award(job_achi_data.hardest_nobleed)
 			end
 		end
 	end
 end
 
--- Lines 493-500
-function AchievmentManager:check_achievement_operation_burn_hardest(operation_save_data)
-	if Network:is_server() and operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id and operation_save_data.current_job.job_id == "oper_flamable" then
-		managers.achievment:award("ach_burn_hardest")
-		managers.network:session():send_to_peers("sync_award_achievement", "ach_burn_hardest")
-	end
-end
-
--- Lines 502-526
-function AchievmentManager:check_achievement_operation_burn_no_bleedout(operation_save_data)
-	if Network:is_server() and managers.network:session():count_all_peers() >= 2 then
-		local total_downed_count = 0
-
-		if operation_save_data.current_job.job_id == "oper_flamable" then
-			for events_index_index, events_index_level_name in ipairs(operation_save_data.events_index) do
-				local event_data = operation_save_data.event_data[events_index_index]
-
-				for peer_index, peer_data in pairs(event_data.peer_data) do
-					total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
-				end
-			end
-
-			if total_downed_count <= 0 then
-				managers.achievment:award("ach_burn_no_bleedout")
-				managers.network:session():send_to_peers("sync_award_achievement", "ach_burn_no_bleedout")
-
-				if operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id then
-					managers.achievment:award("ach_burn_hardest_no_bleedout")
-					managers.network:session():send_to_peers("sync_award_achievement", "ach_burn_hardest_no_bleedout")
-				end
-			end
-		end
-	end
-end
-
--- Lines 530-547
+-- Lines 523-539
 function AchievmentManager:check_achievement_group_bring_them_home(current_job_data)
 	if current_job_data and current_job_data.job_type and current_job_data.job_type == OperationsTweakData.JOB_TYPE_RAID then
 		if current_job_data.job_id == "flakturm" then

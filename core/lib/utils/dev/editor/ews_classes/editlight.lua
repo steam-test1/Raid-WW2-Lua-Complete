@@ -5,7 +5,7 @@ EditUnitLight = EditUnitLight or class(EditUnitBase)
 EditUnitLight.DEFAULT_SHADOW_RESOLUTION = 128
 EditUnitLight.DEFAULT_SPOT_PROJECTION_TEXTURE = "units/lights/spot_light_projection_textures/default_df"
 
--- Lines 8-264
+-- Lines 8-268
 function EditUnitLight:init(editor)
 	EditUnitLight.super.init(self)
 
@@ -27,7 +27,7 @@ function EditUnitLight:init(editor)
 		name_proportions = 3,
 		tooltip = "Select a light to edit from the combobox",
 		sorted = true,
-		sizer_proportions = 2,
+		sizer_proportions = 4,
 		ctrlr_proportions = 4,
 		panel = panel,
 		sizer = lights_sizer,
@@ -41,6 +41,11 @@ function EditUnitLight:init(editor)
 
 	self._color_ctrlr:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
 	lights_sizer:add(self._color_ctrlr, 0, 5, "EXPAND,LEFT")
+
+	self._color_hex_ctrl = EWS:TextCtrl(panel, "000000", "", "TE_LEFT")
+
+	self._color_hex_ctrl:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_color"), "")
+	lights_sizer:add(self._color_hex_ctrl, 0, 5, "EXPAND,LEFT")
 
 	self._enabled_ctrlr = EWS:CheckBox(panel, "Enabled", "")
 
@@ -282,7 +287,7 @@ function EditUnitLight:init(editor)
 	self._panel = panel
 end
 
--- Lines 266-275
+-- Lines 270-279
 function EditUnitLight:get_spot_projection_textures()
 	local entry_path = managers.database:entry_path(managers.database:base_path() .. "units\\lights\\spot_light_projection_textures")
 	local files = SystemFS:list(managers.database:base_path() .. "units\\lights\\spot_light_projection_textures")
@@ -295,7 +300,7 @@ function EditUnitLight:get_spot_projection_textures()
 	return textures
 end
 
--- Lines 277-282
+-- Lines 281-286
 function EditUnitLight:change_light()
 	if alive(self._reference_unit) then
 		local light = self._reference_unit:get_object(Idstring(self._lights_params.ctrlr:get_value()))
@@ -304,11 +309,15 @@ function EditUnitLight:change_light()
 	end
 end
 
--- Lines 284-325
+-- Lines 288-340
 function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_combobox_value(self._lights_params, light:name():s())
 	self._enabled_ctrlr:set_value(light:enable())
-	self._color_ctrlr:set_background_colour(light:color().x * 255, light:color().y * 255, light:color().z * 255)
+
+	local r, g, b = (light:color() * 255):unpack()
+
+	self._color_ctrlr:set_background_colour(r, g, b)
+	self._color_hex_ctrl:set_value(string.format("%X%X%X", r, g, b))
 	CoreEws.change_entered_number(self._range_params, light:far_range())
 	CoreEws.change_entered_number(self._near_range_params, light:near_range())
 
@@ -324,10 +333,17 @@ function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_combobox_value(self._intensity_params, intensity:s())
 	CoreEws.change_slider_and_number_value(self._falloff_params, light:falloff_exponent())
 	CoreEws.change_slider_and_number_value(self._linear_atten_params, light:linear_attenuation_factor())
+
+	local is_falloff = string.match(light:properties(), "falloff") and true or false
+
+	self._falloff_params.number_ctrlr:set_enabled(is_falloff)
+	self._falloff_params.slider_ctrlr:set_enabled(is_falloff)
+	self._linear_atten_params.number_ctrlr:set_enabled(is_falloff)
+	self._linear_atten_params.slider_ctrlr:set_enabled(is_falloff)
 	CoreEws.change_slider_and_number_value(self._spot_start_angle_params, light:spot_angle_start())
 	CoreEws.change_slider_and_number_value(self._spot_end_angle_params, light:spot_angle_end())
 
-	local is_spot = (not string.match(light:properties(), "omni") or false) and true
+	local is_spot = string.match(light:properties(), "spot") and true or false
 
 	self._spot_start_angle_params.number_ctrlr:set_enabled(is_spot)
 	self._spot_start_angle_params.slider_ctrlr:set_enabled(is_spot)
@@ -353,28 +369,28 @@ function EditUnitLight:update_light_ctrls_from_light(light)
 	CoreEws.change_combobox_value(self._spot_projection_texture_params, projection_texture)
 end
 
--- Lines 327-331
+-- Lines 342-346
 function EditUnitLight:update_falloff()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_falloff_exponent(self._falloff_params.value)
 	end
 end
 
--- Lines 333-337
+-- Lines 348-352
 function EditUnitLight:update_linear_atten()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_linear_attenuation_factor(self._linear_atten_params.value)
 	end
 end
 
--- Lines 339-343
+-- Lines 354-358
 function EditUnitLight:update_enabled()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_enable(self._enabled_ctrlr:get_value())
 	end
 end
 
--- Lines 345-353
+-- Lines 360-368
 function EditUnitLight:show_color_dialog()
 	local colordlg = EWS:ColourDialog(self._panel, true, self._color_ctrlr:background_colour() / 255)
 
@@ -387,7 +403,20 @@ function EditUnitLight:show_color_dialog()
 	end
 end
 
--- Lines 355-360
+-- Lines 370-379
+function EditUnitLight:update_color()
+	local color_value = self._color_hex_ctrl:get_value():gsub("#", "")
+	local color = Color(color_value)
+	local color_vect = Vector3(color:unpack())
+
+	self._color_ctrlr:set_background_colour((color * 255):unpack())
+
+	for _, light in ipairs(self:_selected_lights()) do
+		light:set_color(color_vect)
+	end
+end
+
+-- Lines 381-386
 function EditUnitLight:update_intensity()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_multiplier(LightIntensityDB:lookup(Idstring(self._intensity_params.value)))
@@ -395,21 +424,21 @@ function EditUnitLight:update_intensity()
 	end
 end
 
--- Lines 362-366
+-- Lines 388-392
 function EditUnitLight:update_near_range(params)
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_near_range(params.value)
 	end
 end
 
--- Lines 368-372
+-- Lines 394-398
 function EditUnitLight:update_far_range(params)
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_far_range(params.value)
 	end
 end
 
--- Lines 374-385
+-- Lines 400-411
 function EditUnitLight:update_clipping(value, params)
 	for _, light in ipairs(self:_selected_lights()) do
 		local clipping_values = light:clipping_values()
@@ -424,21 +453,21 @@ function EditUnitLight:update_clipping(value, params)
 	end
 end
 
--- Lines 387-391
+-- Lines 413-417
 function EditUnitLight:update_start_angle()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_spot_angle_start(self._spot_start_angle_params.value)
 	end
 end
 
--- Lines 393-397
+-- Lines 419-423
 function EditUnitLight:update_end_angle()
 	for _, light in ipairs(self:_selected_lights()) do
 		light:set_spot_angle_end(self._spot_end_angle_params.value)
 	end
 end
 
--- Lines 399-413
+-- Lines 425-439
 function EditUnitLight:update_resolution()
 	local value = self._shadow_resolution_params.value
 
@@ -457,7 +486,7 @@ function EditUnitLight:update_resolution()
 	end
 end
 
--- Lines 415-428
+-- Lines 441-454
 function EditUnitLight:update_spot_projection_texture()
 	local value = self._spot_projection_texture_params.value
 
@@ -475,7 +504,7 @@ function EditUnitLight:update_spot_projection_texture()
 	end
 end
 
--- Lines 430-441
+-- Lines 456-467
 function EditUnitLight:_selected_lights()
 	local lights = {}
 
@@ -492,19 +521,19 @@ function EditUnitLight:_selected_lights()
 	return lights
 end
 
--- Lines 443-447
+-- Lines 469-473
 function EditUnitLight:_reference_light()
 	if alive(self._reference_unit) then
 		return self._reference_unit:get_object(Idstring(self._lights_params.ctrlr:get_value()))
 	end
 end
 
--- Lines 449-451
+-- Lines 475-477
 function EditUnitLight:_is_type(type)
 	return string.find(self:_reference_light():properties(), type)
 end
 
--- Lines 453-474
+-- Lines 479-500
 function EditUnitLight:is_editable(unit, units)
 	if alive(unit) then
 		local lights = CoreEditorUtils.get_editable_lights(unit) or {}
@@ -531,12 +560,12 @@ function EditUnitLight:is_editable(unit, units)
 	return false
 end
 
--- Lines 476-478
+-- Lines 502-504
 function EditUnitLight:update(t, dt)
 	self:_draw(t, dt)
 end
 
--- Lines 480-488
+-- Lines 506-514
 function EditUnitLight:_draw(t, dt)
 	if not self._debug then
 		return
@@ -547,7 +576,7 @@ function EditUnitLight:_draw(t, dt)
 	end
 end
 
--- Lines 490-528
+-- Lines 516-554
 function EditUnitLight:_draw_light(light, t, dt)
 	if not light:enable() then
 		return

@@ -374,7 +374,7 @@ function CopLogicFlee._update_cover_pathing(data, my_data)
 	end
 end
 
--- Lines 358-419
+-- Lines 358-376
 function CopLogicFlee._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
@@ -382,60 +382,14 @@ function CopLogicFlee._chk_reaction_to_attention_object(data, attention_data, st
 		return attention_data.settings.reaction
 	end
 
-	local att_unit = attention_data.unit
-	local assault_mode = managers.groupai:state():get_assault_mode()
-
-	if record.status == "disabled" then
-		if (not record.assault_t or record.assault_t - record.disabled_t > 0.6) and (record.engaged_force < 5 or attention_data.is_human_player and CopLogicBase._is_important_to_player(record, data.key)) then
-			return math.min(attention_data.reaction, AIAttentionObject.REACT_COMBAT)
-		end
-	elseif not record.being_arrested then
-		local my_vec = data.m_pos - attention_data.m_pos
-		local dis = mvector3.normalize(my_vec)
-
-		if dis < 500 then
-			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-		elseif dis < 3000 then
-			local criminal_fwd = att_unit:movement():m_head_rot():y()
-			local criminal_look_dot = mvector3.dot(my_vec, criminal_fwd)
-
-			if criminal_look_dot > 0.9 then
-				local aggression_age = record.assault_t and data.t - record.assault_t
-
-				if aggression_age and aggression_age < 2 then
-					return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-				end
-			end
-
-			if record.engaged_force == 0 or record.engaged_force == 1 and record.engaged[data.unit:key()] then
-				return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-			end
-
-			local my_data = data.internal_data
-
-			if my_data.flee_path then
-				local walk_to_pos = CopLogicBase._nav_point_pos(my_data.flee_path[2])
-				local move_dir = walk_to_pos - data.m_pos
-
-				mvector3.normalize(move_dir)
-
-				local move_dot = mvector3.dot(my_vec, move_dir)
-
-				if move_dot < -0.5 then
-					my_data.path_blocked = true
-
-					return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
-				else
-					my_data.path_blocked = false
-				end
-			end
-		end
+	if record.status == "disabled" and (not record.assault_t or record.assault_t - record.disabled_t > 0.6) and (record.engaged_force < 5 or attention_data.is_human_player and CopLogicBase._is_important_to_player(record, data.key)) then
+		return math.min(attention_data.reaction, AIAttentionObject.REACT_COMBAT)
 	end
 
 	return AIAttentionObject.REACT_IDLE
 end
 
--- Lines 423-475
+-- Lines 380-432
 function CopLogicFlee.on_action_completed(data, action)
 	local action_type = action:type()
 
@@ -499,7 +453,7 @@ function CopLogicFlee.on_action_completed(data, action)
 	end
 end
 
--- Lines 479-534
+-- Lines 436-491
 function CopLogicFlee._update_cover(data)
 	local my_data = data.internal_data
 	local cover_release_dis = 100
@@ -559,7 +513,7 @@ function CopLogicFlee._update_cover(data)
 	CopLogicBase.queue_task(my_data, my_data.cover_update_task_key, CopLogicFlee._update_cover, data, data.t + delay)
 end
 
--- Lines 538-549
+-- Lines 495-506
 function CopLogicFlee._cancel_cover_pathing(data, my_data)
 	if my_data.cover_pathing then
 		if data.active_searches[my_data.cover_path_search_id] then
@@ -576,7 +530,7 @@ function CopLogicFlee._cancel_cover_pathing(data, my_data)
 	my_data.cover_path = nil
 end
 
--- Lines 553-573
+-- Lines 510-530
 function CopLogicFlee._cancel_flee_pathing(data, my_data)
 	if my_data.flee_path_search_id then
 		if data.active_searches[my_data.flee_path_search_id] then
@@ -601,17 +555,17 @@ function CopLogicFlee._cancel_flee_pathing(data, my_data)
 	end
 end
 
--- Lines 577-579
+-- Lines 534-536
 function CopLogicFlee.damage_clbk(data, damage_info)
 	CopLogicBase.damage_clbk(data, damage_info)
 end
 
--- Lines 583-585
+-- Lines 540-542
 function CopLogicFlee.death_clbk(data, damage_info)
 	CopLogicAttack.death_clbk(data, damage_info)
 end
 
--- Lines 589-594
+-- Lines 546-551
 function CopLogicFlee.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -620,29 +574,29 @@ function CopLogicFlee.is_available_for_assignment(data, objective)
 	return false
 end
 
--- Lines 598-600
+-- Lines 555-557
 function CopLogicFlee._flee_coarse_path_verify_clbk(shait, nav_seg)
 	return managers.groupai:state():is_nav_seg_safe(nav_seg)
 end
 
--- Lines 604-606
+-- Lines 561-563
 function CopLogicFlee.on_new_objective(data, old_objective)
 	CopLogicBase.update_follow_unit(data, old_objective)
 end
 
--- Lines 610-612
+-- Lines 567-569
 function CopLogicFlee.on_intimidated(data, amount, aggressor_unit)
 	CopLogicBase._surrender(data, amount)
 end
 
--- Lines 616-620
+-- Lines 573-577
 function CopLogicFlee._get_all_paths(data)
 	return {
 		flee_path = data.internal_data.flee_path
 	}
 end
 
--- Lines 624-626
+-- Lines 581-583
 function CopLogicFlee._set_verified_paths(data, verified_paths)
 	data.internal_data.flee_path = verified_paths.flee_path
 end

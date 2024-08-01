@@ -1,15 +1,17 @@
 MissionElementListFlow = MissionElementListFlow or class(CoreEditorEwsDialog)
 
--- Lines 5-109
+-- Lines 5-111
 function MissionElementListFlow:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Mission List Flow", "", Vector3(300, 150, 0), Vector3(700, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "Mission List Flow", "", Vector3(300, 150, 0), Vector3(700, 400, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(600, 380, 0))
 	self:create_panel("VERTICAL")
 
 	self._use_look_at = false
 	local toolbar_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._panel_sizer:add(toolbar_sizer, 0, 0, "EXPAND")
-	self._panel:set_background_colour(255, 255, 255)
 
 	local toolbar = EWS:ToolBar(self._panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -78,20 +80,20 @@ function MissionElementListFlow:init(...)
 	button_sizer:add(close_btn, 0, 2, "RIGHT,LEFT")
 	close_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	close_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,LEFT,RIGHT")
 	self._dialog:set_visible(true)
 
 	self._unit_history = {}
 	self._unit_history_index = 0
 end
 
--- Lines 111-113
+-- Lines 113-115
 function MissionElementListFlow:_toolbar_toggle(params, event)
 	self[params.value] = params.toolbar:tool_state(event:get_id())
 end
 
--- Lines 115-121
+-- Lines 117-123
 function MissionElementListFlow:_on_gui_help()
 	local text = "Mission flow show connections between different mission components.\n\nAt the top is the current selected mission element. The left list shows what is affecting it and the right what it affects."
 	text = text .. "\n\nThe 'Type' column displays what type of connection it is. It can be on_executed, operator, trigger etc."
@@ -101,7 +103,7 @@ function MissionElementListFlow:_on_gui_help()
 	EWS:message_box(self._panel, text, "Help", "OK", Vector3())
 end
 
--- Lines 124-178
+-- Lines 126-180
 function MissionElementListFlow:on_unit_selected(unit)
 	self:freeze()
 	self._selected_list:delete_all_items()
@@ -166,14 +168,14 @@ function MissionElementListFlow:on_unit_selected(unit)
 	self:thaw()
 end
 
--- Lines 180-184
+-- Lines 182-186
 function MissionElementListFlow:_autosize_columns(list)
 	for i = 0, list:column_count() - 1 do
 		list:autosize_column(i)
 	end
 end
 
--- Lines 186-195
+-- Lines 188-197
 function MissionElementListFlow:_on_gui_previous()
 	if self._unit_history_index == 0 then
 		return
@@ -187,7 +189,7 @@ function MissionElementListFlow:_on_gui_previous()
 	})
 end
 
--- Lines 197-206
+-- Lines 199-208
 function MissionElementListFlow:_on_gui_next()
 	if self._unit_history_index > #self._unit_history then
 		return
@@ -201,7 +203,7 @@ function MissionElementListFlow:_on_gui_next()
 	})
 end
 
--- Lines 208-213
+-- Lines 210-215
 function MissionElementListFlow:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -210,7 +212,7 @@ function MissionElementListFlow:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines 215-222
+-- Lines 217-224
 function MissionElementListFlow:_on_select_selected()
 	local current_data = self:_current_data()
 
@@ -219,7 +221,7 @@ function MissionElementListFlow:_on_select_selected()
 	end
 end
 
--- Lines 224-229
+-- Lines 226-231
 function MissionElementListFlow:_right_clicked(list)
 	local item_data = self:_selected_list_data(list)
 
@@ -228,12 +230,12 @@ function MissionElementListFlow:_right_clicked(list)
 	end
 end
 
--- Lines 231-234
+-- Lines 233-236
 function MissionElementListFlow:_on_mark_executer()
 	local item_data = self:_selected_executer_data()
 end
 
--- Lines 236-244
+-- Lines 238-246
 function MissionElementListFlow:_on_select_executer()
 	local item_data = self:_selected_executer_data()
 
@@ -248,12 +250,12 @@ function MissionElementListFlow:_on_select_executer()
 	end
 end
 
--- Lines 246-249
+-- Lines 248-251
 function MissionElementListFlow:_on_mark_on_executed()
 	local item_data = self:_selected_on_executed_data()
 end
 
--- Lines 251-259
+-- Lines 253-261
 function MissionElementListFlow:_on_select_on_executed()
 	local item_data = self:_selected_on_executed_data()
 
@@ -268,7 +270,7 @@ function MissionElementListFlow:_on_select_on_executed()
 	end
 end
 
--- Lines 261-267
+-- Lines 263-269
 function MissionElementListFlow:_current_data()
 	local index = self._selected_list:selected_item()
 
@@ -279,7 +281,7 @@ function MissionElementListFlow:_current_data()
 	return self._selected_list:get_item_data_ref(0)
 end
 
--- Lines 269-275
+-- Lines 271-277
 function MissionElementListFlow:_selected_list_data(list)
 	local index = list:selected_item()
 
@@ -290,7 +292,7 @@ function MissionElementListFlow:_selected_list_data(list)
 	return list:get_item_data_ref(index)
 end
 
--- Lines 277-283
+-- Lines 279-285
 function MissionElementListFlow:_selected_on_executed_data()
 	local index = self._on_executed_list:selected_item()
 
@@ -301,7 +303,7 @@ function MissionElementListFlow:_selected_on_executed_data()
 	return self._on_executed_list:get_item_data_ref(index)
 end
 
--- Lines 285-291
+-- Lines 287-293
 function MissionElementListFlow:_selected_executer_data()
 	local index = self._executers_list:selected_item()
 
@@ -312,29 +314,29 @@ function MissionElementListFlow:_selected_executer_data()
 	return self._executers_list:get_item_data_ref(index)
 end
 
--- Lines 293-295
+-- Lines 295-297
 function MissionElementListFlow:on_goto()
 end
 
--- Lines 297-299
+-- Lines 299-301
 function MissionElementListFlow:reset()
 end
 
--- Lines 301-305
+-- Lines 303-307
 function MissionElementListFlow:freeze()
 	self._selected_list:freeze()
 	self._executers_list:freeze()
 	self._on_executed_list:freeze()
 end
 
--- Lines 307-311
+-- Lines 309-313
 function MissionElementListFlow:thaw()
 	self._selected_list:thaw()
 	self._executers_list:thaw()
 	self._on_executed_list:thaw()
 end
 
--- Lines 313-319
+-- Lines 315-321
 function MissionElementListFlow:recreate()
 	for name, cb in pairs(self._continents_cbs) do
 		self._continents_sizer:detach(cb)

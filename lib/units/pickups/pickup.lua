@@ -1,7 +1,7 @@
 Pickup = Pickup or class()
-Pickup.PATH = "units/vanilla/pickups/pku_health_ammo_granade/"
+Pickup.PATH = "to be removed"
 
--- Lines 5-17
+-- Lines 5-20
 function Pickup:init(unit)
 	if not Network:is_server() and unit:slot() == 23 then
 		unit:set_slot(20)
@@ -11,31 +11,37 @@ function Pickup:init(unit)
 	self._beaming = self.beaming or false
 	self._automatic_pickup = self.automatic_pickup or false
 	self._active = true
-end
-
-local ids_mat_effect = Idstring("mat_effect")
-local ids_uv0_offset = Idstring("uv0_offset")
-
--- Lines 22-27
-function Pickup:_randomize_glow_effect()
-	local material = self._unit:material(ids_mat_effect)
+	local material = self._unit:material(Idstring("mat_effect"))
 
 	if material then
-		material:set_variable(ids_uv0_offset, Vector3(0, math.random(), 0))
+		Pickup.randomize_glow_effect(material)
 	end
 end
 
--- Lines 29-31
+-- Lines 23-32
+function Pickup.randomize_glow_effect(material)
+	local ids_uv0_offset = Idstring("uv0_offset")
+	local ids_uv0_speed = Idstring("uv0_speed")
+	local r = math.random()
+
+	material:set_variable(ids_uv0_offset, Vector3(r, r, r))
+
+	r = math.rand(0.2, 0.4)
+
+	material:set_variable(ids_uv0_speed, Vector3(r, r, r))
+end
+
+-- Lines 34-36
 function Pickup:sync_pickup()
 	self:consume()
 end
 
--- Lines 33-35
+-- Lines 38-40
 function Pickup:_pickup()
 	Application:error("Pickup didn't have a _pickup() function!")
 end
 
--- Lines 37-43
+-- Lines 42-48
 function Pickup:pickup(unit)
 	if not self._active then
 		return
@@ -44,22 +50,26 @@ function Pickup:pickup(unit)
 	return self:_pickup(unit)
 end
 
--- Lines 45-47
+-- Lines 50-52
 function Pickup:consume()
 	self:delete_unit()
 end
 
--- Lines 49-51
+-- Lines 54-56
 function Pickup:set_active(active)
 	self._active = active
 end
 
--- Lines 53-55
+-- Lines 59-64
 function Pickup:delete_unit()
-	World:delete_unit(self._unit)
+	if Network:is_server() then
+		managers.drop_loot:despawn_item(self._unit)
+	end
+
+	self._unit:set_slot(0)
 end
 
--- Lines 57-61
+-- Lines 66-70
 function Pickup:save(data)
 	local state = {
 		active = self._active
@@ -67,7 +77,7 @@ function Pickup:save(data)
 	data.Pickup = state
 end
 
--- Lines 63-68
+-- Lines 72-77
 function Pickup:load(data)
 	local state = data.Pickup
 
@@ -76,20 +86,20 @@ function Pickup:load(data)
 	end
 end
 
--- Lines 70-71
+-- Lines 79-80
 function Pickup:sync_net_event(event, peer)
 end
 
--- Lines 73-74
+-- Lines 82-83
 function Pickup:destroy(unit)
 end
 
--- Lines 76-78
+-- Lines 85-87
 function Pickup:get_automatic_pickup()
 	return self._automatic_pickup
 end
 
--- Lines 80-82
+-- Lines 89-91
 function Pickup:get_pickup_type()
 	return nil
 end

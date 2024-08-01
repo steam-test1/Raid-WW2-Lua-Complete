@@ -30,12 +30,21 @@ function HuskTeamAIMovement:_upd_actions(t)
 	HuskCopMovement._chk_start_queued_action(self)
 end
 
--- Lines 37-39
+-- Lines 37-43
+function HuskTeamAIMovement:load(data)
+	if self._unit:customization() and data.movement and data.movement.customization then
+		local customization = managers.blackmarket:unpack_team_ai_customization_from_string(data.movement.customization)
+
+		self:set_character_customization(customization)
+	end
+end
+
+-- Lines 47-49
 function HuskTeamAIMovement:action_request(action_desc)
 	return HuskCopMovement.action_request(self, action_desc)
 end
 
--- Lines 43-45
+-- Lines 53-55
 function HuskTeamAIMovement:chk_action_forbidden(action_desc)
 	return HuskCopMovement.chk_action_forbidden(self, action_desc)
 end

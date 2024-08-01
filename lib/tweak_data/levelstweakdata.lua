@@ -1,19 +1,25 @@
 LevelsTweakData = LevelsTweakData or class()
 
--- Lines 3-705
+-- Lines 3-741
 function LevelsTweakData:init()
 	self.altitude_difference_limit = 300
 	self.editor_level = "zone_germany_park"
 	self.streaming_level = {
 		name_id = "menu_stream",
 		world_name = "vanilla/streaming_level",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.camp = {
 		name_id = "menu_camp_hl",
 		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/germany_camp",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.tutorial = {
 		name_id = "menu_tutorial_hl",
@@ -30,62 +36,89 @@ function LevelsTweakData:init()
 		briefing_id = "menu_ger_miss_01_desc",
 		world_name = "vanilla/flakturm",
 		predefined_world = "germany_flakturm",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.gold_rush = {
 		name_id = "menu_ger_miss_03_ld_hl",
 		briefing_id = "menu_ger_miss_03_ld_desc",
 		world_name = "vanilla/gold_rush",
 		predefined_world = "germany_gold_rush",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.train_yard = {
 		name_id = "menu_ger_miss_04_hl",
 		briefing_id = "menu_ger_miss_04_desc",
 		world_name = "vanilla/train_yard",
 		predefined_world = "germany_train_yard",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.ger_bridge = {
 		name_id = "menu_ger_bridge_00_hl",
 		briefing_id = "menu_ger_bridge_00_desc",
 		world_name = "vanilla/bridge",
 		predefined_world = "germany_bridge",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.ger_bridge_operation = {
 		name_id = "menu_ger_bridge_00_hl",
 		briefing_id = "menu_ger_bridge_00_desc",
 		world_name = "vanilla/bridge",
 		predefined_world = "germany_bridge_operation",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.radio_defense = {
 		name_id = "menu_afr_miss_04_hl",
 		briefing_id = "menu_afr_miss_04_desc",
 		world_name = "vanilla/radio_defense",
 		predefined_world = "germany_radio",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.settlement = {
 		name_id = "menu_afr_miss_05_hl",
 		briefing_id = "menu_afr_miss_05_desc",
 		world_name = "vanilla/castle",
 		predefined_world = "germany_castle",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.forest_gumpy = {
 		name_id = "forest_gumpy",
 		briefing_id = "tank_radio_test_briefing",
 		world_name = "vanilla/forest_gumpy",
 		predefined_world = "forest_gumpy",
-		cube = "cube_apply_heist_bank"
+		cube = "cube_apply_heist_bank",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.zone_germany_park = {
 		name_id = "menu_germany_hl",
 		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_park",
 		predefined_world = "zone_germany_park",
+		package = {
+			"packages/zone_germany"
+		},
 		cube = "cube_apply_heist_bank",
 		floor_coordinates = {
 			-10000
@@ -116,6 +149,9 @@ function LevelsTweakData:init()
 		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_destroyed",
 		predefined_world = "zone_germany_destroyed",
+		package = {
+			"packages/zone_germany"
+		},
 		cube = "cube_apply_heist_bank",
 		floor_coordinates = {
 			-10000
@@ -146,6 +182,9 @@ function LevelsTweakData:init()
 		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_destroyed_fuel",
 		predefined_world = "zone_germany_destroyed_fuel",
+		package = {
+			"packages/zone_germany"
+		},
 		cube = "cube_apply_heist_bank",
 		floor_coordinates = {
 			-10000
@@ -176,6 +215,9 @@ function LevelsTweakData:init()
 		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_roundabout",
 		predefined_world = "zone_germany_roundabout",
+		package = {
+			"packages/zone_germany"
+		},
 		cube = "cube_apply_heist_bank",
 		floor_coordinates = {
 			-10000
@@ -206,6 +248,9 @@ function LevelsTweakData:init()
 		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_roundabout_fuel",
 		predefined_world = "zone_germany_roundabout_fuel",
+		package = {
+			"packages/zone_germany"
+		},
 		cube = "cube_apply_heist_bank",
 		floor_coordinates = {
 			-10000
@@ -236,48 +281,66 @@ function LevelsTweakData:init()
 		briefing_id = "bunker_test_briefing",
 		world_name = "vanilla/bunker_test",
 		cube = "cube_apply_heist_bank",
-		predefined_world = "bunker_test"
+		predefined_world = "bunker_test",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.tnd = {
 		name_id = "tnd",
 		briefing_id = "tnd_briefing",
 		world_name = "vanilla/tnd",
 		cube = "cube_apply_heist_bank",
-		predefined_world = "tnd"
+		predefined_world = "tnd",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.hunters = {
 		name_id = "hunters",
 		briefing_id = "hunters_briefing",
 		world_name = "vanilla/hunters",
 		cube = "cube_apply_heist_bank",
-		predefined_world = "hunters"
+		predefined_world = "hunters",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.convoy = {
 		name_id = "convoy",
 		briefing_id = "convoy_briefing",
 		world_name = "vanilla/convoy",
 		cube = "cube_apply_heist_bank",
-		predefined_world = "convoy"
+		predefined_world = "convoy",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.spies_test = {
 		name_id = "spies_test",
 		briefing_id = "spies_test_briefing",
 		world_name = "vanilla/spies_test_layout",
 		cube = "cube_apply_heist_bank",
-		predefined_world = "spies_test"
+		predefined_world = "spies_test",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.sto = {
 		name_id = "sto",
 		briefing_id = "sto_briefing",
 		world_name = "vanilla/sto",
 		cube = "cube_apply_heist_bank",
-		predefined_world = "sto"
+		predefined_world = "sto",
+		package = {
+			"packages/zone_germany"
+		}
 	}
 	self.silo = {
 		name_id = "silo",
 		briefing_id = "silo_briefing",
 		world_name = "upg_002/silo/silo_start",
-		packages = {
+		package = {
 			"packages/zone_germany"
 		},
 		cube = "cube_apply_heist_bank",
@@ -287,7 +350,7 @@ function LevelsTweakData:init()
 		name_id = "kelly",
 		briefing_id = "kelly_briefing",
 		world_name = "upg_003/kelly",
-		packages = {
+		package = {
 			"packages/zone_germany"
 		},
 		cube = "cube_apply_heist_bank",
@@ -298,7 +361,7 @@ function LevelsTweakData:init()
 		briefing_id = "fury_railway_briefing",
 		world_name = "upg_005/fury_railway",
 		cube = "cube_apply_heist_bank",
-		packages = {
+		package = {
 			"packages/zone_germany"
 		},
 		predefined_world = "fury_railway"
@@ -329,12 +392,12 @@ function LevelsTweakData:init()
 	self.escape_levels = {}
 end
 
--- Lines 709-711
+-- Lines 745-747
 function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
--- Lines 713-718
+-- Lines 749-754
 function LevelsTweakData:get_world_name_from_index(index)
 	if not self._level_index[index] then
 		return
@@ -343,12 +406,12 @@ function LevelsTweakData:get_world_name_from_index(index)
 	return self[self._level_index[index]].world_name
 end
 
--- Lines 722-724
+-- Lines 758-760
 function LevelsTweakData:get_level_name_from_index(index)
 	return self._level_index[index]
 end
 
--- Lines 728-734
+-- Lines 764-770
 function LevelsTweakData:get_index_from_world_name(world_name)
 	for index, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -357,7 +420,7 @@ function LevelsTweakData:get_index_from_world_name(world_name)
 	end
 end
 
--- Lines 738-744
+-- Lines 774-780
 function LevelsTweakData:get_index_from_level_id(level_id)
 	for index, entry_name in ipairs(self._level_index) do
 		if entry_name == level_id then
@@ -366,17 +429,17 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
--- Lines 746-748
+-- Lines 782-784
 function LevelsTweakData:requires_dlc(level_id)
 	return self[level_id].dlc
 end
 
--- Lines 750-752
+-- Lines 786-788
 function LevelsTweakData:requires_dlc_by_index(index)
 	return self[self._level_index[index]].dlc
 end
 
--- Lines 756-762
+-- Lines 792-798
 function LevelsTweakData:get_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -385,7 +448,7 @@ function LevelsTweakData:get_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 764-770
+-- Lines 800-806
 function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -394,7 +457,7 @@ function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 772-778
+-- Lines 808-814
 function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	for _, entry_name in ipairs(self._level_index) do
 		if level_id == entry_name then
@@ -403,7 +466,7 @@ function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	end
 end
 
--- Lines 781-799
+-- Lines 817-835
 function LevelsTweakData:get_default_team_ID(type)
 	local lvl_tweak = self[Global.level_data.level_id]
 
@@ -426,7 +489,7 @@ function LevelsTweakData:get_default_team_ID(type)
 	end
 end
 
--- Lines 801-828
+-- Lines 837-864
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -481,7 +544,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
--- Lines 830-848
+-- Lines 866-884
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -496,7 +559,7 @@ function LevelsTweakData:get_default_team_IDs()
 	return default_team_IDs
 end
 
--- Lines 850-864
+-- Lines 886-900
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -516,7 +579,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
--- Lines 866-873
+-- Lines 902-909
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 

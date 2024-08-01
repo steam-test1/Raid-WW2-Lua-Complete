@@ -159,7 +159,7 @@ function EnableUnitUnitElement:add_unit_list_btn()
 		return managers.editor:layer("Statics"):category_map()[unit:type():s()]
 	end
 
-	local dialog = SelectUnitByNameModal:new("Add Unit", f)
+	local dialog = SelectUnitByNameModal:new("Add Units", f)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		if not self._units[unit:unit_data().unit_id] then
@@ -175,7 +175,7 @@ function EnableUnitUnitElement:remove_unit_list_btn()
 		return self._units[unit:unit_data().unit_id]
 	end
 
-	local dialog = SelectUnitByNameModal:new("Remove Unit", f)
+	local dialog = SelectUnitByNameModal:new("Remove Units", f)
 
 	for _, unit in ipairs(dialog:selected_units()) do
 		if self._units[unit:unit_data().unit_id] then
@@ -184,7 +184,19 @@ function EnableUnitUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 151-168
+-- Lines 151-155
+function EnableUnitUnitElement:select_unit_list_btn()
+	-- Lines 152-152
+	local function f(unit)
+		return self._units[unit:unit_data().unit_id]
+	end
+
+	local dialog = SelectUnitByNameModal:new("Select Units", f)
+
+	managers.editor:select_units(dialog:selected_units())
+end
+
+-- Lines 157-178
 function EnableUnitUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -192,10 +204,12 @@ function EnableUnitUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 	self._btn_toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
-	self._btn_toolbar:add_tool("ADD_UNIT_LIST", "Add unit from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
+	self._btn_toolbar:add_tool("ADD_UNIT_LIST", "Add units from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	self._btn_toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "add_unit_list_btn"), nil)
-	self._btn_toolbar:add_tool("REMOVE_UNIT_LIST", "Remove unit from unit list", CoreEws.image_path("toolbar\\delete_16x16.png"), nil)
+	self._btn_toolbar:add_tool("REMOVE_UNIT_LIST", "Remove units from unit list", CoreEws.image_path("toolbar\\delete_16x16.png"), nil)
 	self._btn_toolbar:connect("REMOVE_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "remove_unit_list_btn"), nil)
+	self._btn_toolbar:add_tool("SELECT_UNIT_LIST", "Select units from unit list", CoreEws.image_path("world_editor\\gift_wrap.png"), nil)
+	self._btn_toolbar:connect("SELECT_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "select_unit_list_btn"), nil)
 	self._btn_toolbar:realize()
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end

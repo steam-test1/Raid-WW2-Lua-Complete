@@ -47,8 +47,6 @@ end
 
 -- Lines 41-64
 function ElementTeleportPlayer:on_executed(instigator)
-	Application:debug("[ElementTeleportPlayer:on_executed]", self._sync_id)
-
 	if not self._values.enabled then
 		return
 	end
@@ -67,7 +65,7 @@ function ElementTeleportPlayer:on_executed(instigator)
 end
 
 -- Lines 66-69
-function ElementTeleportPlayer:_spawnt_team_ai()
+function ElementTeleportPlayer:_spawn_team_ai()
 	managers.worldcollection.team_ai_transition = false
 
 	managers.groupai:state():on_criminal_team_AI_enabled_state_changed(true)

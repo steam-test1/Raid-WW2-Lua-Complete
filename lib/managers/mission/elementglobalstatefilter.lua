@@ -10,7 +10,7 @@ function ElementGlobalStateFilter:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 11-32
+-- Lines 11-33
 function ElementGlobalStateFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return

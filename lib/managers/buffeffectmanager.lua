@@ -19,7 +19,7 @@ BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE = "player_headshot_doe
 BuffEffectManager.EFFECT_PLAYER_HEADSHOT_AUTO_KILL = "player_headshot_auto_kill"
 BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE = "player_headshot_damage"
 BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT = "enemies_die_only_on_headshot"
-BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED = "player_movement_speed"
+BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED = "effect_player_movement_speed"
 BuffEffectManager.EFFECT_PLAYER_CAN_MOVE_ONLY_BACK_AND_SIDE = "player_can_move_only_back_and_side"
 BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN = "bags_dont_slow_players_down"
 BuffEffectManager.EFFECT_BAG_WEIGHT = "bag_weight"
@@ -35,6 +35,7 @@ BuffEffectManager.EFFECT_ENEMY_HEALTH = "enemy_health"
 BuffEffectManager.EFFECT_PLAYER_DIED = "player_died"
 BuffEffectManager.EFFECT_PLAYER_BLEEDOUT = "player_bleedout"
 BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED = "all_chests_are_locked"
+BuffEffectManager.EFFECT_ALL_CHESTS_ARE_TIER3 = "effect_all_chests_are_tier3"
 BuffEffectManager.EFFECT_PLAYER_FAILED_INTERACTION_MINI_GAME = "player_failed_interaction_mini_game"
 BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH = "player_melee_kill_regenerates_health"
 BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH = "player_kill_regenerates_health"
@@ -47,6 +48,16 @@ BuffEffectManager.EFFECT_WARCRIES_DISABLED = "players_warcries_disabled"
 BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR = "attack_only_in_air"
 BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE = "player_low_health_damage"
 BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE = "no_bleedout_pumpkin_revive"
+BuffEffectManager.EFFECT_XMAS_FOIL = "effect_xmas_foil"
+BuffEffectManager.EFFECT_XMAS_LOOTBOXES = "effect_xmas_lootboxes"
+BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED = "effect_player_carry_invert_speed"
+BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE = "effect_enemies_melee_damage_increase"
+BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR = "effect_player_equip_crowbar"
+BuffEffectManager.EFFECT_LUCKY_DAY = "effect_lucky_day"
+BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY = "effect_player_dooms_day"
+BuffEffectManager.EFFECT_PLAYER_CANNOT_ADS = "effect_player_cannot_ads"
+BuffEffectManager.EFFECT_PLAYER_CANNOT_SPRINT = "effect_player_cannot_sprint"
+BuffEffectManager.EFFECT_PLAYER_ROULETTE = "effect_player_roulette"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_SPENT_AMMO = "challenge_card_effect_failed_message_player_spent_all_ammo"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_FAILED_INTERACTION_MINI_GAME = "challenge_card_effect_failed_message_player_failed_interaction_mini_game"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_WENT_TO_BLEEDOUT = "challenge_card_effect_failed_message_player_went_to_bleedout"
@@ -56,7 +67,7 @@ BuffEffectManager.FAIL_EFFECT_MESSAGE_COMPLETE_RAID_WITHIN_TIME = "challenge_car
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_USED_WARCRY = "challenge_card_effect_failed_message_player_used_warcry"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_EMPTIED_A_CLIP = "challenge_card_effect_failed_message_player_emptied_a_clip"
 
--- Lines 242-248
+-- Lines 185-191
 function BuffEffectManager:init()
 	self._active_effects = {}
 	self._effect_id_counter = 0
@@ -64,7 +75,7 @@ function BuffEffectManager:init()
 	self._dt_sum = 0
 end
 
--- Lines 250-271
+-- Lines 193-214
 function BuffEffectManager:activate_effect(effect_data)
 	local effect = BuffEffect:new(effect_data.name, effect_data.value, effect_data.challenge_card_key, effect_data.fail_message)
 	self._effect_id_counter = self._effect_id_counter + 1
@@ -91,7 +102,7 @@ function BuffEffectManager:activate_effect(effect_data)
 	return self._effect_id_counter
 end
 
--- Lines 273-282
+-- Lines 216-225
 function BuffEffectManager:deactivate_effect(active_effect_id)
 	self:deactivate_special_effect_and_timer(active_effect_id)
 
@@ -100,7 +111,7 @@ function BuffEffectManager:deactivate_effect(active_effect_id)
 	end
 end
 
--- Lines 284-302
+-- Lines 227-245
 function BuffEffectManager:deactivate_special_effect_and_timer(active_effect_id)
 	if self._active_effects and self._active_effects[active_effect_id] then
 		local effect = self._active_effects[active_effect_id]
@@ -119,7 +130,7 @@ function BuffEffectManager:deactivate_special_effect_and_timer(active_effect_id)
 	end
 end
 
--- Lines 304-320
+-- Lines 247-263
 function BuffEffectManager:is_effect_active(effect_name)
 	if managers.player:local_player_in_camp() then
 		return false
@@ -138,7 +149,7 @@ function BuffEffectManager:is_effect_active(effect_name)
 	return result
 end
 
--- Lines 323-338
+-- Lines 266-281
 function BuffEffectManager:get_effect_value(effect_name)
 	if managers.player:local_player_in_camp() then
 		return 0
@@ -157,7 +168,7 @@ function BuffEffectManager:get_effect_value(effect_name)
 	return result
 end
 
--- Lines 340-355
+-- Lines 283-298
 function BuffEffectManager:update(t, dt)
 	self._dt_sum = self._dt_sum + dt
 
@@ -176,12 +187,12 @@ function BuffEffectManager:update(t, dt)
 	end
 end
 
--- Lines 357-359
+-- Lines 300-302
 function BuffEffectManager:get_active_effect_by_effect_id(effect_id)
 	return self._active_effects[effect_id]
 end
 
--- Lines 363-382
+-- Lines 306-325
 function BuffEffectManager:player_failed_challenge_card_effect(failed_effect_name, peer_id)
 	if Network:is_server() then
 		local challenge_card_key = ""
@@ -204,7 +215,7 @@ function BuffEffectManager:player_failed_challenge_card_effect(failed_effect_nam
 	end
 end
 
--- Lines 384-400
+-- Lines 327-343
 function BuffEffectManager:fail_effect(failed_effect_name, peer_id)
 	local active_card = managers.challenge_cards:get_active_card()
 	local active_card_status = managers.challenge_cards:get_active_card_status()
@@ -220,7 +231,7 @@ function BuffEffectManager:fail_effect(failed_effect_name, peer_id)
 	end
 end
 
--- Lines 405-416
+-- Lines 348-359
 function BuffEffectManager:save_dropin(data)
 	local state = {
 		active_effects = self._active_effects,
@@ -231,7 +242,7 @@ function BuffEffectManager:save_dropin(data)
 	data.BuffEffectManager = state
 end
 
--- Lines 419-434
+-- Lines 362-377
 function BuffEffectManager:load_dropin(data)
 	local state = data.BuffEffectManager
 

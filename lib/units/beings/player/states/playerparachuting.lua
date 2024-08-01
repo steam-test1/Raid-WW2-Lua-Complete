@@ -7,7 +7,7 @@ function PlayerParachuting:init(unit)
 	self._tweak_data = tweak_data.player.parachute
 end
 
--- Lines 13-25
+-- Lines 13-28
 function PlayerParachuting:enter(state_data, enter_data)
 	print("[PlayerParachuting:enter]", "Enter parachuting state")
 	PlayerParachuting.super.enter(self, state_data, enter_data)
@@ -20,13 +20,14 @@ function PlayerParachuting:enter(state_data, enter_data)
 
 	self._unit:mover():set_damping(self._tweak_data.gravity / self._tweak_data.terminal_velocity)
 	self._unit:sound():play("parachute_open", nil, false)
+	managers.hud:set_crosshair_fade(false)
 end
 
--- Lines 29-45
+-- Lines 32-44
 function PlayerParachuting:_enter(enter_data)
 	if not self._unit:camera():anim_data().equipped then
-		self._unit:camera():play_redirect(self.IDS_EQUIP)
 		self._unit:inventory():show_equipped_unit()
+		self:_start_action_equip()
 	end
 
 	self._unit:movement().fall_rotation = self._unit:movement().fall_rotation or Rotation(0, 0, 0)
@@ -35,7 +36,7 @@ function PlayerParachuting:_enter(enter_data)
 	self:_set_camera_limits()
 end
 
--- Lines 49-60
+-- Lines 48-59
 function PlayerParachuting:exit(state_data, new_state_name)
 	print("[PlayerParachuting:exit]", "Exiting parachuting state")
 	PlayerParachuting.super.exit(self, state_data)
@@ -47,22 +48,22 @@ function PlayerParachuting:exit(state_data, new_state_name)
 	self._unit:sound():play("parachute_landing", nil, false)
 end
 
--- Lines 64-66
+-- Lines 63-65
 function PlayerParachuting:interaction_blocked()
 	return true
 end
 
--- Lines 68-70
+-- Lines 67-69
 function PlayerParachuting:bleed_out_blocked()
 	return true
 end
 
--- Lines 73-78
+-- Lines 72-77
 function PlayerParachuting:update(t, dt)
 	PlayerParachuting.super.update(self, t, dt)
 end
 
--- Lines 81-120
+-- Lines 80-119
 function PlayerParachuting:_update_movement(t, dt)
 	local direction = self._controller:get_input_axis("move")
 
@@ -100,7 +101,7 @@ function PlayerParachuting:_update_movement(t, dt)
 	end
 end
 
--- Lines 125-224
+-- Lines 124-223
 function PlayerParachuting:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -117,7 +118,7 @@ function PlayerParachuting:_update_check_actions(t, dt)
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
 	if tweak_data.projectiles[projectile_entry].is_a_grenade then
-		self:_update_throw_grenade_timers(t, input)
+		self:_update_throw_grenade_timers(t, dt, input)
 	else
 		self:_update_throw_projectile_timers(t, input)
 	end
@@ -166,18 +167,18 @@ function PlayerParachuting:_update_check_actions(t, dt)
 	self:_check_action_steelsight(t, input)
 end
 
--- Lines 228-230
+-- Lines 227-229
 function PlayerParachuting:_get_walk_headbob()
 	return 0
 end
 
--- Lines 234-237
+-- Lines 233-236
 function PlayerParachuting:_set_camera_limits()
 	self._camera_unit:base():set_pitch(self._tweak_data.camera.target_pitch)
 	self._camera_unit:base():set_limits(self._tweak_data.camera.limits.spin, self._tweak_data.camera.limits.pitch)
 end
 
--- Lines 241-245
+-- Lines 240-244
 function PlayerParachuting:_remove_camera_limits()
 	self._camera_unit:base()._p_exit = true
 
@@ -185,7 +186,7 @@ function PlayerParachuting:_remove_camera_limits()
 	self._camera_unit:base():set_target_tilt(0)
 end
 
--- Lines 250-263
+-- Lines 249-262
 function PlayerParachuting:_check_action_interact(t, input)
 	local new_action = nil
 	local interaction_wanted = input.btn_interact_press
@@ -201,7 +202,7 @@ function PlayerParachuting:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines 267-276
+-- Lines 266-275
 function PlayerParachuting:_update_foley(t, input)
 	if self._gnd_ray then
 		self._camera_unit:base():set_target_tilt(0)
@@ -211,7 +212,7 @@ function PlayerParachuting:_update_foley(t, input)
 	end
 end
 
--- Lines 280-283
+-- Lines 279-282
 function PlayerParachuting:_pitch_up()
 	local t = Application:time()
 

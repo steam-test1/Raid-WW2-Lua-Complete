@@ -12,15 +12,17 @@ function ElementCharacterSequence:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 13-43
+-- Lines 13-49
 function ElementCharacterSequence:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
-	-- Lines 18-20
+	-- Lines 18-26
 	local function f(unit)
-		unit:damage():run_sequence_simple(self._values.sequence)
+		if unit:damage():has_sequence(self._values.sequence) then
+			unit:damage():run_sequence_simple(self._values.sequence)
+		end
 	end
 
 	if self._values.sequence == "" then

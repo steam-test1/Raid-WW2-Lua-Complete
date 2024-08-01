@@ -1,6 +1,6 @@
 AchievementTweakData = AchievementTweakData or class()
 
--- Lines 3-15
+-- Lines 3-12
 function AchievementTweakData:init(tweak_data)
 	self.levels = {
 		{

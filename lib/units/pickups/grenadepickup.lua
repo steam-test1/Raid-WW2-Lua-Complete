@@ -1,12 +1,12 @@
 GrenadePickup = GrenadePickup or class(Pickup)
 
--- Lines 12-15
+-- Lines 12-17
 function GrenadePickup:init(unit)
+	Application:warn("[GrenadePickup] TODO: DEPRECATE ME!")
 	GrenadePickup.super.init(self, unit)
-	self:_randomize_glow_effect()
 end
 
--- Lines 17-83
+-- Lines 19-85
 function GrenadePickup:_pickup(unit)
 	if self._picked_up then
 		return
@@ -69,7 +69,7 @@ function GrenadePickup:_pickup(unit)
 	return false
 end
 
--- Lines 85-97
+-- Lines 87-99
 function GrenadePickup:register_grenades(gained_grenades, peer)
 	local player = managers.player:local_player()
 
@@ -86,7 +86,7 @@ function GrenadePickup:register_grenades(gained_grenades, peer)
 	end
 end
 
--- Lines 100-102
+-- Lines 102-104
 function GrenadePickup:get_pickup_type()
 	return "grenade"
 end

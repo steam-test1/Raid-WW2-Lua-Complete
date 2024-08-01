@@ -45,7 +45,7 @@ end
 function IngameLoading:update(t, dt)
 end
 
--- Lines 41-62
+-- Lines 41-59
 function IngameLoading:at_enter(old_state, params)
 	self._old_state = old_state:name()
 	self._old_state = "ingame_standard"
@@ -65,7 +65,7 @@ function IngameLoading:at_enter(old_state, params)
 	self:_setup_controller()
 end
 
--- Lines 64-76
+-- Lines 61-73
 function IngameLoading:at_exit()
 	managers.worldcollection.team_ai_transition = false
 
@@ -78,12 +78,17 @@ function IngameLoading:at_exit()
 	self:_clear_controller()
 end
 
--- Lines 79-81
+-- Lines 76-78
 function IngameLoading:game_ended()
 	return true
 end
 
--- Lines 84-86
+-- Lines 81-83
 function IngameLoading:is_joinable()
 	return false
+end
+
+-- Lines 85-87
+function IngameLoading._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_LOADING
 end

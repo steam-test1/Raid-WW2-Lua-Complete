@@ -23,33 +23,58 @@ function TeamAIMovement:_post_init()
 	self:play_redirect("idle")
 end
 
--- Lines 25-40
+-- Lines 25-27
 function TeamAIMovement:set_character_anim_variables()
 	HuskPlayerMovement.set_character_anim_variables(self)
 end
 
--- Lines 42-43
+-- Lines 32-41
 function TeamAIMovement:check_visual_equipment()
+	if Network:is_server() and self._unit:customization() then
+		local nationality = managers.criminals:character_name_by_unit(self._unit) or "british"
+		local customization = managers.player:get_customization_for_nationality(nationality)
+
+		self:set_character_customization(customization)
+	end
 end
 
--- Lines 47-49
+-- Lines 43-59
+function TeamAIMovement:set_character_customization(customization)
+	customization = customization or {
+		nationality = managers.criminals:character_name_by_unit(self._unit) or "british"
+	}
+	local head_name = customization.equiped_head_name
+	local upper_name = customization.equiped_upper_name
+	local lower_name = customization.equiped_lower_name
+	local nationality = customization.nationality
+
+	self._unit:customization():attach_all_parts_to_character_by_parts_for_husk(nationality, head_name, upper_name, lower_name)
+
+	self._customization = managers.blackmarket:team_ai_customization_string(customization)
+
+	if Network:is_server() then
+		self._unit:network():send("set_character_customization", self._customization, 0, 0)
+	end
+end
+
+-- Lines 63-65
 function TeamAIMovement:m_detect_pos()
 	return self._m_head_pos
 end
 
--- Lines 53-56
+-- Lines 69-72
 function TeamAIMovement:set_position(pos)
 	CopMovement.set_position(self, pos)
 	self:_upd_location()
 end
 
--- Lines 60-63
+-- Lines 76-79
 function TeamAIMovement:set_m_pos(pos)
 	CopMovement.set_m_pos(self, pos)
 	self:_upd_location()
 end
 
--- Lines 67-73
+-- Lines 83-89
 function TeamAIMovement:_upd_location()
 	local nav_seg_id = self._nav_tracker:nav_segment()
 
@@ -60,46 +85,39 @@ function TeamAIMovement:_upd_location()
 	end
 end
 
--- Lines 77-79
+-- Lines 93-95
 function TeamAIMovement:get_location_id()
 	return managers.navigation:get_nav_seg_metadata(self._standing_nav_seg_id).location_id
 end
 
--- Lines 83-87
-function TeamAIMovement:on_cuffed()
-	self._unit:brain():set_logic("surrender")
-	self._unit:network():send("arrested")
-	self._unit:character_damage():on_arrested()
-end
-
--- Lines 91-95
+-- Lines 99-103
 function TeamAIMovement:on_discovered()
 	if self._cool then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 99-101
+-- Lines 107-109
 function TeamAIMovement:on_tase_ended()
 	self._unit:character_damage():on_tase_ended()
 end
 
--- Lines 105-107
+-- Lines 113-115
 function TeamAIMovement:tased()
 	return self._unit:anim_data().tased
 end
 
--- Lines 111-113
+-- Lines 119-121
 function TeamAIMovement:cool()
 	return self._cool
 end
 
--- Lines 117-119
+-- Lines 125-127
 function TeamAIMovement:downed()
 	return self._unit:interaction()._active
 end
 
--- Lines 123-153
+-- Lines 131-161
 function TeamAIMovement:set_cool(state)
 	state = state and true or false
 
@@ -134,14 +152,14 @@ function TeamAIMovement:set_cool(state)
 	end
 end
 
--- Lines 157-161
-function TeamAIMovement:heat_clbk(state)
-	if self._cool and not state then
+-- Lines 165-169
+function TeamAIMovement:heat_clbk(whisper_state)
+	if self._cool and not whisper_state then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 165-185
+-- Lines 173-193
 function TeamAIMovement:_switch_to_not_cool(instant)
 	if not Network:is_server() then
 		return
@@ -168,7 +186,7 @@ function TeamAIMovement:_switch_to_not_cool(instant)
 	end
 end
 
--- Lines 189-203
+-- Lines 197-211
 function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	if self._switch_to_not_cool_clbk_id and self._cool then
 		self._switch_to_not_cool_clbk_id = nil
@@ -191,17 +209,24 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	end
 end
 
--- Lines 207-209
+-- Lines 215-217
 function TeamAIMovement:zipline_unit()
 	return nil
 end
 
--- Lines 211-213
+-- Lines 219-221
 function TeamAIMovement:current_state_name()
 	return nil
 end
 
--- Lines 217-252
+-- Lines 224-228
+function TeamAIMovement:save(data)
+	data.movement = {
+		customization = self._customization
+	}
+end
+
+-- Lines 230-267
 function TeamAIMovement:pre_destroy()
 	if self._heat_listener_clbk then
 		managers.groupai:state():remove_listener(self._heat_listener_clbk)

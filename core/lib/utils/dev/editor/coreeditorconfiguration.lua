@@ -1,8 +1,8 @@
 -- Lines 1-151
 function CoreEditor:build_configuration()
 	self._config = {}
-	local frame_size_height = 200
-	local frame_size_width = 300
+	local frame_size_width = 350
+	local frame_size_height = 250
 	self._configuration = EWS:Dialog(nil, "Configuration", "_configuration", Vector3(-1, -1, 0), Vector3(frame_size_width, frame_size_height), "")
 	local main_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -154,7 +154,7 @@ function CoreEditor:build_configuration()
 	slave_sizer:add(slave_batches_sizer, 0, 0, "EXPAND")
 	slave_page_sizer:add(slave_sizer, 1, 0, "EXPAND")
 	notebook:add_page(page_slave, "Slave System", false)
-	main_sizer:add(notebook, 1, 0, "EXPAND")
+	main_sizer:add(notebook, 1, 5, "EXPAND,TOP,LEFT,RIGHT")
 
 	local buttons_sizer = EWS:BoxSizer("HORIZONTAL")
 	local ok_button = EWS:Button(self._configuration, "OK", "", "")
@@ -171,7 +171,7 @@ function CoreEditor:build_configuration()
 
 	apply_button:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_configuration_apply"), self._configuration)
 	buttons_sizer:add(apply_button, 0, 0, "EXPAND")
-	main_sizer:add(buttons_sizer, 0, 0, "ALIGN_RIGHT")
+	main_sizer:add(buttons_sizer, 0, 3, "ALIGN_RIGHT,ALL")
 	notebook:fit()
 end
 

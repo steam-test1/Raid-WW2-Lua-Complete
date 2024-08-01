@@ -13,9 +13,9 @@ ProgressionManager.TROPHY_DIFFICULTY_SEQUENCES = {
 	"silver",
 	"gold"
 }
-ProgressionManager.TROPHY_MAX_ROTATION_OFFSET = 22
-ProgressionManager.TROPHY_MAX_X_OFFSET = 8
-ProgressionManager.TROPHY_MAX_Y_OFFSET = 5
+ProgressionManager.TROPHY_MAX_ROTATION_OFFSET = 16
+ProgressionManager.TROPHY_MAX_X_OFFSET = 6
+ProgressionManager.TROPHY_MAX_Y_OFFSET = 4
 
 -- Lines 37-45
 function ProgressionManager.get_instance()
@@ -395,10 +395,10 @@ function ProgressionManager:_offer_new_missions()
 	})
 end
 
--- Lines 393-402
+-- Lines 393-409
 function ProgressionManager:update(t, dt)
-	local is_in_mission = BaseNetworkHandler._gamestate_filter.any_ingame_mission[game_state_machine:current_state_name()] and not managers.raid_job:is_camp_loaded()
-	local doneso = is_in_mission and managers.raid_job:played_tutorial() and not self._mission_progression_completed and not self._mission_progression_completion_pending and self._mission_unlock_timer > 0
+	local is_in_mission = BaseNetworkHandler._gamestate_filter.any_ingame_mission[game_state_machine:current_state_name()] and not managers.raid_job:is_camp_loaded() and not managers.raid_job:is_in_tutorial()
+	local doneso = is_in_mission and not self._mission_progression_completed and not self._mission_progression_completion_pending and self._mission_unlock_timer > 0
 
 	if doneso then
 		self._mission_unlock_timer = math.max(0, self._mission_unlock_timer - dt)
@@ -409,7 +409,7 @@ function ProgressionManager:update(t, dt)
 	end
 end
 
--- Lines 405-419
+-- Lines 412-426
 function ProgressionManager:_on_cycle_completed()
 	Application:trace("[ProgressionManager][_on_cycle_completed] Progression cycle completed. Determining what to do...")
 
@@ -428,7 +428,7 @@ function ProgressionManager:_on_cycle_completed()
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
--- Lines 422-462
+-- Lines 429-469
 function ProgressionManager:layout_camp()
 	Application:trace("[ProgressionManager][layout_camp] Laying out camp.")
 
@@ -470,14 +470,14 @@ function ProgressionManager:layout_camp()
 	end
 end
 
--- Lines 464-467
+-- Lines 471-474
 function ProgressionManager:sync_trophy_level(unit, trophy_level)
 	local difficulty_sequence_to_run = ProgressionManager.TROPHY_DIFFICULTY_SEQUENCES[trophy_level]
 
 	unit:damage():run_sequence_simple(difficulty_sequence_to_run)
 end
 
--- Lines 470-483
+-- Lines 477-490
 function ProgressionManager:_get_trophy_case_unit()
 	local units = World:find_units_quick("all", managers.slot:get_mask("world_geometry"))
 
@@ -490,7 +490,7 @@ function ProgressionManager:_get_trophy_case_unit()
 	end
 end
 
--- Lines 486-498
+-- Lines 493-505
 function ProgressionManager:save_profile_slot(data)
 	local state = {
 		version = ProgressionManager.VERSION,
@@ -505,8 +505,10 @@ function ProgressionManager:save_profile_slot(data)
 	data.ProgressionManager = state
 end
 
--- Lines 501-527
+-- Lines 508-549
 function ProgressionManager:load_profile_slot(data, version)
+	Application:debug("[ProgressionManager:load_profile_slot]")
+
 	local state = data.ProgressionManager
 
 	if not state then
@@ -527,6 +529,16 @@ function ProgressionManager:load_profile_slot(data, version)
 		self._operations_state = state.operations_state
 		self._mission_unlock_timer = math.max(30, state.mission_unlock_timer)
 		self._mission_progression = state.mission_progression or {}
+
+		for job_type, job_data in ipairs(self._mission_progression) do
+			for job_name, saved_data in pairs(job_data) do
+				if saved_data.difficulty_available and saved_data.difficulty_available < tweak_data.operations.progression.initially_unlocked_difficulty then
+					Application:debug("[ProgressionManager:load_profile_slot] Available was below initial for " .. tostring(job_name) .. " (" .. tostring(saved_data.difficulty_available) .. "/" .. tostring(tweak_data.operations.progression.initially_unlocked_difficulty) .. ")")
+
+					saved_data.difficulty_available = tweak_data.operations.progression.initially_unlocked_difficulty
+				end
+			end
+		end
 	end
 
 	self:_setup()

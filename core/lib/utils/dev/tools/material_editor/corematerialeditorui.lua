@@ -3,7 +3,7 @@ require("core/lib/utils/dev/ews/tree_control/CoreManagedTreeControl")
 
 CoreMaterialEditor = CoreMaterialEditor or class()
 
--- Lines 8-217
+-- Lines 8-214
 function CoreMaterialEditor:_create_main_frame()
 	self._main_frame = EWS:Frame(self.FRAME_TITLE, Vector3(-1, -1, 0), Vector3(450, 800, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
@@ -38,8 +38,6 @@ function CoreMaterialEditor:_create_main_frame()
 	file_menu:append_separator()
 	file_menu:append_item("RELOAD", "Reload Material Config", "")
 	file_menu:append_separator()
-	file_menu:append_item("NEWS", "Get Latest News", "")
-	file_menu:append_separator()
 	file_menu:append_item("EXIT", "Exit", "")
 	menu_bar:append(file_menu, "File")
 
@@ -64,7 +62,6 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame:connect("SAVE_AS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_save_as"), "")
 	self._main_frame:connect("SAVE_GLOBAL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_save_global"), "")
 	self._main_frame:connect("RELOAD", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_reload"), "")
-	self._main_frame:connect("NEWS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_check_news"), "")
 	self._main_frame:connect("EXIT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_close"), "")
 	self._main_frame:connect("REBUILD", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_rebuild"), "")
 	self._main_frame:connect("EDIT_GLOBAL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_edit_global"), "")
@@ -219,7 +216,7 @@ function CoreMaterialEditor:_create_main_frame()
 	self._main_frame:set_visible(true)
 end
 
--- Lines 219-236
+-- Lines 216-233
 function CoreMaterialEditor:_build_shader_options()
 	local shader_name = self._compilable_shader_combo_box:get_value()
 
@@ -239,14 +236,14 @@ function CoreMaterialEditor:_build_shader_options()
 	end
 end
 
--- Lines 238-241
+-- Lines 235-238
 function CoreMaterialEditor:_set_shader_option_tooltip(node, item)
 	local tooltip = node:parameter("tooltip") or ""
 
 	self._shader_option_tree:set_tooltip(item, tooltip)
 end
 
--- Lines 243-262
+-- Lines 240-259
 function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	for child in node:children() do
 		local project = child:parameter("project")
@@ -274,7 +271,7 @@ function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	end
 end
 
--- Lines 264-330
+-- Lines 261-327
 function CoreMaterialEditor:_create_parameter_panel()
 	local progress_dialog = nil
 

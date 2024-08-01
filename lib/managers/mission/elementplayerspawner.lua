@@ -4,14 +4,13 @@ ElementPlayerSpawner = ElementPlayerSpawner or class(CoreMissionScriptElement.Mi
 ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
 ElementPlayerSpawner.BASE_DELAY = 3.5
 
--- Lines 15-21
+-- Lines 15-19
 function ElementPlayerSpawner:init(...)
 	ElementPlayerSpawner.super.init(self, ...)
-	Application:debug("[ElementPlayerSpawner:init]")
 	managers.player:preload()
 end
 
--- Lines 23-29
+-- Lines 21-27
 function ElementPlayerSpawner:get_spawn_position()
 	local peer_id = managers.network:session():local_peer():id()
 	local position = self._values.position
@@ -21,34 +20,23 @@ function ElementPlayerSpawner:get_spawn_position()
 	return position
 end
 
--- Lines 32-34
+-- Lines 30-32
 function ElementPlayerSpawner:value(name)
 	return self._values[name]
 end
 
--- Lines 36-59
+-- Lines 34-41
 function ElementPlayerSpawner:client_on_executed(...)
-	Application:debug("[ElementPlayerSpawner:client_on_executed] enabled", self._values.enabled)
-
 	if not self._values.enabled then
 		return
 	end
 
-	if managers.player:set_player_state(self._values.state or managers.player:default_player_state()) and false and managers.player:local_player() then
-		local position = self:get_spawn_position()
-
-		Application:debug("[ElementPlayerSpawner:client_on_executed()] Using spawner as teleporter!", position, self._values.rotation)
-		managers.player:warp_to(position, self._values.rotation)
-		managers.player:set_player_state(self._values.state or managers.player:current_state())
-	end
-
+	managers.player:set_player_state(self._values.state or managers.player:default_player_state())
 	self:_end_transition(true)
 end
 
--- Lines 61-88
+-- Lines 43-54
 function ElementPlayerSpawner:on_executed(instigator)
-	Application:debug("[ElementPlayerSpawner:on_executed] enabled, syncID", self._values.enabled, self._sync_id)
-
 	if not self._values.enabled then
 		return
 	end
@@ -59,21 +47,11 @@ function ElementPlayerSpawner:on_executed(instigator)
 		position = self._values.position,
 		rotation = self._values.rotation
 	})
-
-	if ElementPlayerSpawner.super.on_executed(self, self._unit or instigator) and false and managers.player:local_player() then
-		local position = self:get_spawn_position()
-
-		Application:debug("[ElementPlayerSpawner:on_executed()] Using spawner as teleporter!", instigator, position, self._values.rotation)
-		managers.player:warp_to(position, self._values.rotation)
-		managers.player:set_player_state(self._values.state or managers.player:current_state())
-		managers.groupai:state():on_player_spawn_state_set(self._values.state or managers.player:default_player_state())
-		ElementPlayerSpawner.super.on_executed(self, self._unit or instigator)
-	end
-
+	ElementPlayerSpawner.super.on_executed(self, self._unit or instigator)
 	self:_end_transition()
 end
 
--- Lines 90-107
+-- Lines 56-72
 function ElementPlayerSpawner:_end_transition(client)
 	local cnt = managers.worldcollection.world_counter or 0
 	local player_spawned = true
@@ -83,7 +61,6 @@ function ElementPlayerSpawner:_end_transition(client)
 	end
 
 	if not managers.worldcollection:check_all_peers_synced_last_world(CoreWorldCollection.STAGE_LOAD_FINISHED) or cnt > 0 or not player_spawned then
-		Application:debug("[ElementPlayerSpawner:_end_transition()] Waiting...", client, player_spawned)
 		managers.queued_tasks:queue(nil, self._end_transition, self, client, 0.5)
 
 		return
@@ -97,23 +74,24 @@ function ElementPlayerSpawner:_end_transition(client)
 	end
 end
 
--- Lines 109-126
+-- Lines 74-101
 function ElementPlayerSpawner:_do_hide_loading_screen()
-	if not managers.raid_job:is_camp_loaded() and managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
-		managers.player:get_current_state():_start_action_unequip_weapon(managers.player:player_timer():time(), {
-			selection_wanted = PlayerInventory.SLOT_4
-		})
+	if managers.raid_job:is_camp_loaded() or managers.raid_job:is_in_tutorial() then
+		managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 0.5)
 	else
-		managers.player:get_current_state():_start_action_unequip_weapon(managers.player:player_timer():time(), {
-			selection_wanted = PlayerInventory.SLOT_2
-		})
+		local spawned_weapon_slot = PlayerInventory.SLOT_2
+
+		if managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
+			spawned_weapon_slot = PlayerInventory.SLOT_4
+		end
+
+		managers.player:get_current_state():force_change_weapon_slot(spawned_weapon_slot)
 	end
 
 	managers.menu:hide_loading_screen()
-	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 1)
 end
 
--- Lines 128-138
+-- Lines 105-117
 function ElementPlayerSpawner:_first_login_check()
 	if managers.worldcollection.first_login_check then
 		managers.worldcollection.first_login_check = false
@@ -121,12 +99,14 @@ function ElementPlayerSpawner:_first_login_check()
 		managers.raid_menu:first_login_check()
 
 		if not managers.raid_menu:is_offline_mode() then
-			managers.event_system:on_camp_entered()
+			if not managers.raid_job:is_in_tutorial() then
+				managers.event_system:on_camp_entered()
+			end
 		end
 	end
 end
 
--- Lines 140-143
+-- Lines 119-122
 function ElementPlayerSpawner:destroy()
 	ElementPlayerSpawner.super.destroy(self)
 	managers.queued_tasks:unqueue_all(nil, self)

@@ -51,7 +51,7 @@ function RaidGUIControlCardDetails:_create_object()
 	self._object = self._panel:panel(control_params)
 end
 
--- Lines 65-120
+-- Lines 65-146
 function RaidGUIControlCardDetails:_create_card_details()
 	local card_params = {
 		name = "player_loot_card",
@@ -121,13 +121,14 @@ function RaidGUIControlCardDetails:_create_card_details()
 		text = self:translate("challenge_cards_label_experience", true),
 		color = tweak_data.gui.colors.raid_grey
 	})
+	local type_def_icon = tweak_data.challenge_cards.type_definition.card_type_raid.texture_gui
 	self._type_icon = self._object:image({
 		name = "type_icon",
 		visible = false,
 		x = x_spacing,
 		y = icon_y,
-		texture = tweak_data.challenge_cards.type_definition.card_type_raid.texture_path,
-		texture_rect = tweak_data.challenge_cards.type_definition.card_type_raid.texture_rect
+		texture = type_def_icon.texture,
+		texture_rect = type_def_icon.texture_rect
 	})
 	self._type_label = self._object:label({
 		w = 96,
@@ -141,13 +142,14 @@ function RaidGUIControlCardDetails:_create_card_details()
 		font_size = tweak_data.gui.font_sizes.medium,
 		color = tweak_data.gui.colors.raid_grey
 	})
+	local rarity_def_icon = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_gui
 	self._rarity_icon = self._object:image({
 		name = "rarity_icon",
 		visible = false,
 		x = x_spacing + 128,
 		y = icon_y,
-		texture = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_path_icon,
-		texture_rect = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_rect_icon
+		texture = rarity_def_icon.texture,
+		texture_rect = rarity_def_icon.texture_rect
 	})
 	self._rarity_label = self._object:label({
 		w = 128,
@@ -211,33 +213,33 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 end
 
--- Lines 122-219
+-- Lines 148-247
 function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
 	self._card = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
 
 	if self._card then
 		local card_rarity = self._card.rarity
-		local card_type = self._card.card_type
-		local card_rarity_icon_texture = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_path_icon
-		local card_rarity_icon_texture_rect = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_rect_icon
+		local rarity_definitions_icon = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_gui
 
-		if card_rarity_icon_texture and card_rarity_icon_texture_rect then
-			self._rarity_icon:set_image(card_rarity_icon_texture)
-			self._rarity_icon:set_texture_rect(card_rarity_icon_texture_rect)
+		if rarity_definitions_icon then
+			self._rarity_icon:set_image(rarity_definitions_icon.texture)
+			self._rarity_icon:set_texture_rect(rarity_definitions_icon.texture_rect)
 			self._rarity_icon:show()
 		else
 			self._rarity_icon:hide()
+			Application:error("[RaidGUIControlCardDetails:set_card]", card_key_name, "is missing rarity icons!")
 		end
 
-		local card_type_icon_texture = tweak_data.challenge_cards.type_definition[card_type].texture_path
-		local card_type_icon_texture_rect = tweak_data.challenge_cards.type_definition[card_type].texture_rect
+		local card_type = self._card.card_type
+		local type_definitions_icon = tweak_data.challenge_cards.type_definition[card_type].texture_gui
 
-		if card_type_icon_texture and card_rarity_icon_texture_rect then
-			self._type_icon:set_image(card_type_icon_texture)
-			self._type_icon:set_texture_rect(card_type_icon_texture_rect)
+		if type_definitions_icon then
+			self._type_icon:set_image(type_definitions_icon.texture)
+			self._type_icon:set_texture_rect(type_definitions_icon.texture_rect)
 			self._type_icon:show()
 		else
 			self._type_icon:hide()
+			Application:error("[RaidGUIControlCardDetails:set_card]", card_key_name, "is missing type icons!")
 		end
 
 		self._card.steam_instance_id = steam_instance_id
@@ -314,17 +316,17 @@ function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
 	end
 end
 
--- Lines 221-223
+-- Lines 249-251
 function RaidGUIControlCardDetails:set_mode_layout()
 	self._type_icon:set_center_x(self._type_label:center_x())
 end
 
--- Lines 225-228
+-- Lines 253-256
 function RaidGUIControlCardDetails:get_card()
-	return self._card, self._card.steam_instance_id
+	return self._card
 end
 
--- Lines 230-234
+-- Lines 258-262
 function RaidGUIControlCardDetails:set_control_mode(mode)
 	self._mode = mode
 

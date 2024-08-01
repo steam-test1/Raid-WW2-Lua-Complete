@@ -24,20 +24,12 @@ HUDNameLabel.STATES = {
 		control = "interaction_panel"
 	},
 	{
-		id = "carry",
-		control = "carry_icon"
-	},
-	{
-		id = "lockpick",
-		control = "lockpick_icon"
+		id = "special_interaction",
+		control = "special_interaction_icon"
 	},
 	{
 		id = "mounted_weapon",
 		control = "mounted_weapon_icon"
-	},
-	{
-		id = "warcry",
-		control = "warcry_icon"
 	},
 	{
 		id = "normal",
@@ -45,7 +37,7 @@ HUDNameLabel.STATES = {
 	}
 }
 
--- Lines 35-64
+-- Lines 33-57
 function HUDNameLabel:init(hud, params)
 	self._name = params.name
 	self._nationality = params.nationality
@@ -58,25 +50,21 @@ function HUDNameLabel:init(hud, params)
 
 	self:_add_active_state(self._displayed_state.id)
 
-	for peer_id, peer in pairs(managers.network:session():all_peers()) do
-		if peer._name == self._name then
-			self._peer_id = peer_id
-			self.class = peer._class
-			self.warcry = WarcryManager.CLASS_TO_WARCRY[self.class]
-		end
+	local peer = managers.network:session():peer(self._peer_id)
+
+	if peer then
+		self.class = peer:class()
 	end
 
 	self:_create_panel(hud)
 	self:_create_name()
 	self:_create_timer()
-	self:_create_carry_icon()
-	self:_create_warcry_icon()
-	self:_create_lockpick_icon()
+	self:_create_special_interaction_icon()
 	self:_create_mounted_weapon_icon()
 	self:_create_interaction_progress_bar()
 end
 
--- Lines 66-73
+-- Lines 59-66
 function HUDNameLabel:_create_panel(hud)
 	local panel_params = {
 		name = "name_label_" .. tostring(self._nationality),
@@ -86,7 +74,7 @@ function HUDNameLabel:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
--- Lines 75-88
+-- Lines 68-81
 function HUDNameLabel:_create_name()
 	local name_params = {
 		align = "center",
@@ -104,7 +92,7 @@ function HUDNameLabel:_create_name()
 	self._character_name:set_center_y(self._object:h() / 2)
 end
 
--- Lines 90-103
+-- Lines 84-97
 function HUDNameLabel:_create_nationality_icon()
 	local nationality_icon = "player_panel_nationality_" .. tostring(self._nationality)
 	local icon_params = {
@@ -120,58 +108,22 @@ function HUDNameLabel:_create_nationality_icon()
 	self._nationality_icon:set_center_y(self._object:h() / 2)
 end
 
--- Lines 105-117
-function HUDNameLabel:_create_carry_icon()
-	local temp_carry_icon = "carry_alive"
-	local carry_icon_params = {
-		name = "carry_icon",
+-- Lines 99-111
+function HUDNameLabel:_create_special_interaction_icon()
+	local gui_icon = tweak_data.gui:get_full_gui_data(HUDNameLabel.LOCKPICK_ICON)
+	self._special_interaction_icon = self._object:bitmap({
+		name = "special_interaction_icon",
 		halign = "center",
 		alpha = 0,
 		valign = "center",
-		texture = tweak_data.gui.icons[temp_carry_icon].texture,
-		texture_rect = tweak_data.gui.icons[temp_carry_icon].texture_rect
-	}
-	self._carry_icon = self._object:bitmap(carry_icon_params)
+		texture = gui_icon.texture,
+		texture_rect = gui_icon.texture_rect
+	})
 
-	self._carry_icon:set_center_x(self._object:w() / 2)
-	self._carry_icon:set_center_y(self._object:h() / 2)
+	self._special_interaction_icon:set_center(self._object:w() / 2, self._object:h() / 2)
 end
 
--- Lines 119-132
-function HUDNameLabel:_create_warcry_icon(icon)
-	icon = icon or tweak_data.warcry.sharpshooter.hud_icon
-	local warcry_icon_params = {
-		name = "warcry_icon",
-		halign = "center",
-		alpha = 0,
-		valign = "center",
-		texture = tweak_data.gui.icons[icon].texture,
-		texture_rect = tweak_data.gui.icons[icon].texture_rect
-	}
-	self._warcry_icon = self._object:bitmap(warcry_icon_params)
-
-	self._warcry_icon:set_center_x(self._object:w() / 2)
-	self._warcry_icon:set_center_y(self._object:h() / 2)
-	self._warcry_icon:set_color(tweak_data.gui.colors.warcry_active)
-end
-
--- Lines 134-146
-function HUDNameLabel:_create_lockpick_icon()
-	local lockpick_icon_params = {
-		name = "lockpick_icon",
-		halign = "center",
-		alpha = 0,
-		valign = "center",
-		texture = tweak_data.gui.icons[HUDNameLabel.LOCKPICK_ICON].texture,
-		texture_rect = tweak_data.gui.icons[HUDNameLabel.LOCKPICK_ICON].texture_rect
-	}
-	self._lockpick_icon = self._object:bitmap(lockpick_icon_params)
-
-	self._lockpick_icon:set_center_x(self._object:w() / 2)
-	self._lockpick_icon:set_center_y(self._object:h() / 2)
-end
-
--- Lines 148-160
+-- Lines 113-125
 function HUDNameLabel:_create_mounted_weapon_icon()
 	local mounted_weapon_icon_params = {
 		name = "mounted_weapon_icon",
@@ -187,7 +139,7 @@ function HUDNameLabel:_create_mounted_weapon_icon()
 	self._mounted_weapon_icon:set_center_y(self._object:h() / 2)
 end
 
--- Lines 162-208
+-- Lines 127-173
 function HUDNameLabel:_create_timer()
 	local timer_panel_params = {
 		alpha = 0,
@@ -249,7 +201,7 @@ function HUDNameLabel:_create_timer()
 	self._timer_text:set_center_y(self._timer_panel:h() / 2)
 end
 
--- Lines 210-246
+-- Lines 175-211
 function HUDNameLabel:_create_interaction_progress_bar()
 	local interaction_panel_params = {
 		alpha = 0,
@@ -298,32 +250,32 @@ function HUDNameLabel:_create_interaction_progress_bar()
 	self._interaction_progress_fill:set_center_y(self._interaction_panel:h() / 2)
 end
 
--- Lines 248-250
+-- Lines 213-215
 function HUDNameLabel:nationality()
 	return self._nationality
 end
 
--- Lines 252-254
+-- Lines 217-219
 function HUDNameLabel:id()
 	return self._id
 end
 
--- Lines 256-258
+-- Lines 221-223
 function HUDNameLabel:peer_id()
 	return self._peer_id
 end
 
--- Lines 260-262
+-- Lines 225-227
 function HUDNameLabel:movement()
 	return self._movement
 end
 
--- Lines 264-266
+-- Lines 229-231
 function HUDNameLabel:panel()
 	return self._object
 end
 
--- Lines 268-272
+-- Lines 233-237
 function HUDNameLabel:destroy()
 	self._object:clear()
 	self._object:parent():remove(self._object)
@@ -331,28 +283,28 @@ function HUDNameLabel:destroy()
 	self._nationality = nil
 end
 
--- Lines 274-276
+-- Lines 239-241
 function HUDNameLabel:go_into_bleedout()
 	self:_add_active_state("downed")
 end
 
--- Lines 278-281
+-- Lines 243-246
 function HUDNameLabel:on_revived()
 	self:_remove_active_state("downed")
 	self:stop_timer()
 end
 
--- Lines 283-285
+-- Lines 248-250
 function HUDNameLabel:show()
 	self._object:set_visible(true)
 end
 
--- Lines 287-289
+-- Lines 252-254
 function HUDNameLabel:hide()
 	self._object:set_visible(false)
 end
 
--- Lines 291-303
+-- Lines 256-268
 function HUDNameLabel:is_overlapping(name_label)
 	local c1x = self._object:center_x()
 	local c1y = self._object:center_y()
@@ -366,103 +318,71 @@ function HUDNameLabel:is_overlapping(name_label)
 	return y_overlap and x_overlap
 end
 
--- Lines 305-317
-function HUDNameLabel:set_carry_info(carry_id)
-	local carry_tweak_data = tweak_data.carry[carry_id]
+-- Lines 270-281
+function HUDNameLabel:show_special_interaction_icon(interaction_type)
+	local minigame_icon = tweak_data.interaction.minigame_icons[interaction_type]
 
-	if carry_tweak_data and carry_tweak_data.hud_icon then
-		self._carry_icon:set_image(tweak_data.gui.icons[carry_tweak_data.hud_icon].texture)
-		self._carry_icon:set_texture_rect(unpack(tweak_data.gui.icons[carry_tweak_data.hud_icon].texture_rect))
-		self._carry_icon:set_center_x(self._object:w() / 2)
-		self._carry_icon:set_center_y(self._object:h() / 2)
-		self:_add_active_state("carry")
-	else
-		Application:debug("[HUDNameLabel] set_carry_info(): no tweak data or HUD icon for item " .. tostring(carry_id))
+	if minigame_icon then
+		local gui_icon = tweak_data.gui:get_full_gui_data(minigame_icon)
+
+		self._special_interaction_icon:set_image(gui_icon.texture)
+		self._special_interaction_icon:set_texture_rect(unpack(gui_icon.texture_rect))
+		self._special_interaction_icon:set_center(self._object:w() / 2, self._object:h() / 2)
+		self:_add_active_state("special_interaction")
 	end
 end
 
--- Lines 319-321
-function HUDNameLabel:remove_carry_info()
-	self:_remove_active_state("carry")
+-- Lines 283-285
+function HUDNameLabel:hide_special_interaction_icon()
+	self:_remove_active_state("special_interaction")
 end
 
--- Lines 323-325
-function HUDNameLabel:show_lockpick_icon()
-	self:_add_active_state("lockpick")
-end
-
--- Lines 327-329
-function HUDNameLabel:hide_lockpick_icon()
-	self:_remove_active_state("lockpick")
-end
-
--- Lines 331-339
-function HUDNameLabel:set_warcry(warcry)
-	if self._warcry_icon then
-		self._object:remove(self._warcry_icon)
-	end
-
-	local icon = tweak_data.warcry[warcry].hud_icon
-
-	self:_create_warcry_icon(icon)
-end
-
--- Lines 341-343
-function HUDNameLabel:activate_warcry()
-	self:_add_active_state("warcry")
-end
-
--- Lines 345-347
-function HUDNameLabel:deactivate_warcry()
-	self:_remove_active_state("warcry")
-end
-
--- Lines 349-351
+-- Lines 287-289
 function HUDNameLabel:show_turret_icon()
 	self:_add_active_state("mounted_weapon")
 end
 
--- Lines 353-355
+-- Lines 291-293
 function HUDNameLabel:hide_turret_icon()
 	self:_remove_active_state("mounted_weapon")
 end
 
--- Lines 357-362
+-- Lines 295-300
 function HUDNameLabel:start_interact(duration)
 	self:_add_active_state("interaction")
 	self._interaction_progress_fill:stop()
 	self._interaction_progress_fill:animate(callback(self, self, "_animate_interact"), duration)
 end
 
--- Lines 364-369
+-- Lines 302-307
 function HUDNameLabel:cancel_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_progress_fill:stop()
 	self._interaction_progress_fill:animate(callback(self, self, "_animate_cancel_interact"))
 end
 
--- Lines 371-376
+-- Lines 309-314
 function HUDNameLabel:complete_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_progress_fill:stop()
 	self._interaction_progress_fill:animate(callback(self, self, "_animate_complete_interact"))
 end
 
--- Lines 378-381
+-- Lines 316-319
 function HUDNameLabel:_add_active_state(state_id)
 	self._active_states[state_id] = true
 
 	self:_check_state_change()
 end
 
--- Lines 383-386
+-- Lines 321-324
 function HUDNameLabel:_remove_active_state(state_id)
 	self._active_states[state_id] = nil
 
 	self:_check_state_change()
 end
 
--- Lines 388-406
+-- Lines 326-344
 function HUDNameLabel:_check_state_change()
 	local new_state = nil
 
@@ -484,7 +404,7 @@ function HUDNameLabel:_check_state_change()
 	end
 end
 
--- Lines 408-414
+-- Lines 346-352
 function HUDNameLabel:start_timer(time, current)
 	self._timer_total = time
 	self._timer_current = current or time
@@ -493,17 +413,17 @@ function HUDNameLabel:start_timer(time, current)
 	self._timer_text:animate(callback(self, self, "_animate_timer_countdown"))
 end
 
--- Lines 416-418
+-- Lines 354-356
 function HUDNameLabel:set_pause_timer(pause)
 	self._is_timer_running = not pause
 end
 
--- Lines 420-422
+-- Lines 358-360
 function HUDNameLabel:is_timer_running()
 	return self._is_timer_running
 end
 
--- Lines 424-429
+-- Lines 362-367
 function HUDNameLabel:stop_timer()
 	self._timer_total = nil
 	self._is_timer_running = false
@@ -511,7 +431,7 @@ function HUDNameLabel:stop_timer()
 	self._timer_text:stop()
 end
 
--- Lines 431-444
+-- Lines 369-382
 function HUDNameLabel:_animate_timer_countdown()
 	while self._timer_current > 0 and self._timer_total and self._timer_total > 0 do
 		local dt = coroutine.yield()
@@ -528,7 +448,7 @@ function HUDNameLabel:_animate_timer_countdown()
 	end
 end
 
--- Lines 446-492
+-- Lines 384-430
 function HUDNameLabel:_animate_state_change(status_panel, new_state)
 	local old_state = self._displayed_state
 	local fade_out_duration = 0.15
@@ -579,7 +499,7 @@ function HUDNameLabel:_animate_state_change(status_panel, new_state)
 	self._object:set_alpha(1)
 end
 
--- Lines 494-511
+-- Lines 432-449
 function HUDNameLabel:_animate_interact(interact_image, duration)
 	local size_increase_duration = 0.18
 	local t = 0
@@ -598,7 +518,7 @@ function HUDNameLabel:_animate_interact(interact_image, duration)
 	self._interaction_progress_fill:set_position_z(1)
 end
 
--- Lines 513-529
+-- Lines 451-467
 function HUDNameLabel:_animate_cancel_interact()
 	local size_decrease_duration = 0.18
 	local duration = 0.2
@@ -615,7 +535,7 @@ function HUDNameLabel:_animate_cancel_interact()
 	self._interaction_progress_fill:set_position_z(0)
 end
 
--- Lines 531-552
+-- Lines 469-490
 function HUDNameLabel:_animate_complete_interact()
 	local size_decrease_duration = 0.18
 	local duration = 0.2

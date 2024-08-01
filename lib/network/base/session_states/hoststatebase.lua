@@ -27,28 +27,23 @@ end
 function HostStateBase:_send_request_denied(sender, reason, my_user_id)
 	Application:trace("[HostStateBase:_send_request_denied]", reason, debug.traceback())
 
-	local xuid = (_G.IS_XB360 or _G.IS_XB1) and managers.network.account:player_id() or ""
+	local xuid = IS_XB1 and managers.network.account:player_id() or ""
 
 	sender:join_request_reply(reason, 0, "", 1, 1, 0, "", my_user_id, "", 0, 0, 0, 0, xuid, 0)
 end
 
--- Lines 35-40
+-- Lines 35-36
 function HostStateBase:_has_peer_left_PSN(peer_name)
-	if _G.IS_PS3 and managers.network.matchmake:check_peer_join_request_remove(peer_name) then
-		print("this CLIENT has left us from PSN, ignore his request", peer_name)
-
-		return
-	end
 end
 
--- Lines 44-46
+-- Lines 40-42
 function HostStateBase:_is_in_server_state()
 	return managers.network:session() and Network:is_server()
 end
 
--- Lines 57-71
+-- Lines 53-67
 function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading, peer_name, character, mask_set, xuid, xnaddr)
-	local new_peer_user_id = _G.IS_PC and new_peer:user_id() or ""
+	local new_peer_user_id = IS_PC and new_peer:user_id() or ""
 	local new_peer_id = new_peer:id()
 
 	for old_pid, old_peer in pairs(data.peers) do
@@ -64,7 +59,7 @@ function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading,
 	end
 end
 
--- Lines 75-88
+-- Lines 71-84
 function HostStateBase:_introduce_old_peers_to_new_peer(data, new_peer)
 	local new_peer_id = new_peer:id()
 
@@ -81,7 +76,7 @@ function HostStateBase:_introduce_old_peers_to_new_peer(data, new_peer)
 	end
 end
 
--- Lines 92-102
+-- Lines 88-98
 function HostStateBase:_chk_mutual_connection_established(data, peer, introduced_peer_id)
 	local introduced_peer = data.peers[introduced_peer_id]
 
@@ -96,7 +91,7 @@ function HostStateBase:_chk_mutual_connection_established(data, peer, introduced
 	return false
 end
 
--- Lines 106-126
+-- Lines 102-122
 function HostStateBase:on_handshake_confirmation(data, peer, introduced_peer_id)
 	cat_print("multiplayer_base", "[HostStateBase:on_handshake_confirmation]", inspect(peer), peer:id(), introduced_peer_id)
 
@@ -120,16 +115,16 @@ function HostStateBase:on_handshake_confirmation(data, peer, introduced_peer_id)
 	data.session:check_start_game_intro()
 end
 
--- Lines 130-136
+-- Lines 126-132
 function HostStateBase:_is_kicked(data, peer_name, peer_rpc)
-	local ident = _G.IS_PC and peer_rpc:ip_at_index(0) or peer_name
+	local ident = IS_PC and peer_rpc:ip_at_index(0) or peer_name
 
 	if data.kicked_list[ident] then
 		return true
 	end
 end
 
--- Lines 140-151
+-- Lines 136-147
 function HostStateBase:_chk_peer_owns_current_dlc(data, peer_dlcs)
 	local requires_dlc = tweak_data.levels[Global.game_settings.level_id].dlc
 
@@ -146,7 +141,7 @@ function HostStateBase:_chk_peer_owns_current_dlc(data, peer_dlcs)
 	return false
 end
 
--- Lines 155-161
+-- Lines 151-157
 function HostStateBase:on_peer_finished_loading(data, peer)
 	print("[HostStateBase:on_peer_finished_loading]", inspect(peer))
 
@@ -156,12 +151,12 @@ function HostStateBase:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines 165-167
+-- Lines 161-163
 function HostStateBase:on_load_level(data)
 	data.wants_to_load_level = true
 end
 
--- Lines 171-173
+-- Lines 167-169
 function HostStateBase:is_joinable(data)
 	return false
 end

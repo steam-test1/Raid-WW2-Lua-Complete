@@ -1,6 +1,19 @@
 MineGrenade = MineGrenade or class(FragGrenade)
 
--- Lines 22-53
+-- Lines 22-32
+function MineGrenade:set_thrower_unit(unit)
+	MineGrenade.super.set_thrower_unit(self, unit)
+
+	if alive(unit) then
+		local husk_player = unit:base().is_husk_player and unit
+
+		if PlayerSkill.has_skill("player", "sapper_tank_disabler", husk_player) then
+			self._targets_slotmask = managers.slot:get_mask("betty_mine_targets")
+		end
+	end
+end
+
+-- Lines 34-65
 function MineGrenade:update(unit, t, dt)
 	if self._hand_held then
 		return
@@ -35,7 +48,7 @@ function MineGrenade:update(unit, t, dt)
 	GrenadeBase.super.update(self, unit, t, dt)
 end
 
--- Lines 58-66
+-- Lines 70-78
 function MineGrenade:_award_achievement_multi_kill(thrower_peer_id)
 	local achievement_id = "landmines_kill_some"
 
@@ -48,7 +61,7 @@ function MineGrenade:_award_achievement_multi_kill(thrower_peer_id)
 	end
 end
 
--- Lines 70-94
+-- Lines 82-106
 function MineGrenade:_dyn_update(dt)
 	local body = self._unit:body("body_dynamic")
 
@@ -69,7 +82,7 @@ function MineGrenade:_dyn_update(dt)
 	end
 end
 
--- Lines 99-120
+-- Lines 111-132
 function MineGrenade:_attempt_arm()
 	local body = self._unit:body("body_dynamic")
 
@@ -94,7 +107,7 @@ function MineGrenade:_attempt_arm()
 	end
 end
 
--- Lines 123-137
+-- Lines 135-149
 function MineGrenade:_force_arm()
 	local body = self._unit:body("body_dynamic")
 
@@ -111,14 +124,14 @@ function MineGrenade:_force_arm()
 	end
 end
 
--- Lines 139-143
+-- Lines 151-155
 function MineGrenade:sync_grenade_freeze(pos, rot)
 	self:_force_arm()
 	self._unit:set_rotation(rot)
 	self._unit:set_position(pos)
 end
 
--- Lines 147-155
+-- Lines 159-167
 function MineGrenade:_filtered_check_targets()
 	local is_enemy_near = self.super._filtered_check_targets(self)
 
@@ -129,7 +142,7 @@ function MineGrenade:_filtered_check_targets()
 	return is_enemy_near
 end
 
--- Lines 159-168
+-- Lines 171-180
 function MineGrenade:_launch()
 	if self._unit:damage():has_sequence("set_dynamic") then
 		self._unit:damage():run_sequence("set_dynamic")

@@ -40,7 +40,7 @@ function reload_units(unit_name)
 	local units = World:find_units_quick("all")
 	local num_reloads = 0
 
-	PackageManager:reload(Idstring("unit"), unit_name:id())
+	PackageManager:reload(IDS_UNIT, unit_name:id())
 	managers.sequence:reload(unit_name, true)
 
 	if units then
@@ -78,20 +78,19 @@ function set_unit_and_children_visible(unit, visible, filter_func)
 	end
 end
 
--- Lines 75-91
+-- Lines 75-90
 function editor_load_unit(unit_name)
 	if Application:editor() then
-		local type_ids = Idstring("unit")
 		local name_ids = unit_name:id()
 
-		if not DB:has(type_ids, name_ids) then
+		if not DB:has(IDS_UNIT, name_ids) then
 			Application:error("Unit not found in DB", name_ids)
 			Application:stack_dump("error")
 
 			return
 		end
 
-		CoreEngineAccess._editor_load(type_ids, name_ids)
+		CoreEngineAccess._editor_load(IDS_UNIT, name_ids)
 
 		return true
 	else
@@ -99,21 +98,21 @@ function editor_load_unit(unit_name)
 	end
 end
 
--- Lines 93-97
+-- Lines 92-96
 function safe_spawn_unit(unit_name, ...)
 	if editor_load_unit(unit_name) then
 		return World:spawn_unit(unit_name:id(), ...)
 	end
 end
 
--- Lines 99-103
+-- Lines 98-102
 function safe_spawn_unit_from_package(unit_name, package, ...)
 	if editor_load_unit(unit_name) then
 		return World:spawn_unit_from_package(unit_name:id(), package, ...)
 	end
 end
 
--- Lines 105-108
+-- Lines 104-107
 function safe_spawn_unit_without_extensions(unit_name, ...)
 	editor_load_unit(unit_name)
 

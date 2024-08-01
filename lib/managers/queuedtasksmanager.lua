@@ -35,7 +35,7 @@ function QueuedTasksManager:update(t, dt)
 	self:_set_iterating(false)
 end
 
--- Lines 56-59
+-- Lines 56-67
 function QueuedTasksManager:queue(id, callback, task_self, data, delay, verification_callback, persistant)
 	local task = {
 		id = id,
@@ -50,7 +50,28 @@ function QueuedTasksManager:queue(id, callback, task_self, data, delay, verifica
 	table.insert(self._queued_tasks, task)
 end
 
--- Lines 64-89
+-- Lines 71-87
+function QueuedTasksManager:delay_queued_task(id, delay, replaced)
+	if self:has_task(id) then
+		for _, task in pairs(self._queued_tasks) do
+			if task.id == id then
+				if replaced then
+					task.execute_time = self._t + delay
+
+					break
+				end
+
+				task.execute_time = task.execute_time + delay
+
+				break
+			end
+		end
+	else
+		Application:warn("[QueuedTasksManager:delay_queued_task] Task doesnt exist:", id)
+	end
+end
+
+-- Lines 90-115
 function QueuedTasksManager:unqueue(id)
 	local tasks = self._queued_tasks
 	local i_task = #tasks
@@ -66,7 +87,7 @@ function QueuedTasksManager:unqueue(id)
 	end
 end
 
--- Lines 91-115
+-- Lines 117-141
 function QueuedTasksManager:unqueue_all(id, task_self, skip_persistant_tasks)
 	local tasks = self._queued_tasks
 	local i_task = #tasks
@@ -89,7 +110,7 @@ function QueuedTasksManager:unqueue_all(id, task_self, skip_persistant_tasks)
 	end
 end
 
--- Lines 118-126
+-- Lines 144-152
 function QueuedTasksManager:has_task(id)
 	for _, task in pairs(self._queued_tasks) do
 		if task.id == id then
@@ -100,7 +121,7 @@ function QueuedTasksManager:has_task(id)
 	return false
 end
 
--- Lines 130-145
+-- Lines 156-171
 function QueuedTasksManager:when(id)
 	local time_remaining = nil
 	local tasks = self._queued_tasks
@@ -117,7 +138,7 @@ function QueuedTasksManager:when(id)
 	return time_remaining
 end
 
--- Lines 148-159
+-- Lines 174-185
 function QueuedTasksManager:_execute_queued_task(task)
 	if task.verification_callback then
 		task.verification_callback(task.id)
@@ -130,7 +151,7 @@ function QueuedTasksManager:_execute_queued_task(task)
 	end
 end
 
--- Lines 161-163
+-- Lines 187-189
 function QueuedTasksManager:on_simulation_ended()
 	self._queued_tasks = {}
 end

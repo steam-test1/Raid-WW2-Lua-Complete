@@ -35,6 +35,8 @@ LootDropTweakData.BRONZE_POINT_REQUIREMENT = 0.2
 LootDropTweakData.SILVER_POINT_REQUIREMENT = 0.6
 LootDropTweakData.GOLD_POINT_REQUIREMENT = 0.85
 LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL = "below_max_level"
+LootDropTweakData.DROP_CONDITION_IS_RAID = "is_raid"
+LootDropTweakData.DROP_CONDITION_IS_OPERATION = "is_operation"
 LootDropTweakData.POINT_REQUIREMENTS = {
 	LootDropTweakData.BRONZE_POINT_REQUIREMENT,
 	LootDropTweakData.SILVER_POINT_REQUIREMENT,
@@ -47,7 +49,7 @@ LootDropTweakData.EVENT_MONTHS = {
 	[10] = LootDropTweakData.EVENT_MONTH_HALLOWEEN
 }
 
--- Lines 87-103
+-- Lines 90-103
 function LootDropTweakData:init(tweak_data)
 	self:_payday_init(tweak_data)
 	self:_init_xp_packs()
@@ -58,26 +60,20 @@ function LootDropTweakData:init(tweak_data)
 	self:_init_groups()
 	self:_init_loot_values()
 	self:_init_dog_tag_stats()
-
-	self.difficulty_reward_multiplier = {
-		1,
-		2,
-		3,
-		4.5
-	}
 end
 
--- Lines 105-140
+-- Lines 105-141
 function LootDropTweakData:_init_xp_packs()
 	self.xp_packs = {}
-	local multi = 2
-	local xp = 500
+	local multi = 4
+	local xp = 200
 	local xp2 = xp * multi
 	self.xp_packs.tiny = {
 		reward_type = LootDropTweakData.REWARD_XP,
 		xp_min = xp,
 		xp_max = xp2
 	}
+	multi = 2
 	xp = xp2
 	xp2 = xp * multi
 	self.xp_packs.small = {
@@ -101,7 +97,7 @@ function LootDropTweakData:_init_xp_packs()
 	}
 end
 
--- Lines 142-149
+-- Lines 143-150
 function LootDropTweakData:_init_card_packs()
 	self.card_packs = {
 		regular = {
@@ -111,7 +107,7 @@ function LootDropTweakData:_init_card_packs()
 	}
 end
 
--- Lines 151-173
+-- Lines 152-174
 function LootDropTweakData:_init_customization_rewards()
 	self.customization_rewards = {
 		common = {
@@ -133,7 +129,7 @@ function LootDropTweakData:_init_customization_rewards()
 	}
 end
 
--- Lines 175-223
+-- Lines 176-228
 function LootDropTweakData:_init_gold_bar_rewards()
 	self.gold_bar_rewards = {
 		tiny = {
@@ -155,11 +151,31 @@ function LootDropTweakData:_init_gold_bar_rewards()
 			gold_bars_max = 15,
 			gold_bars_min = 11,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
+		},
+		tiny_operation = {
+			gold_bars_max = 35,
+			gold_bars_min = 25,
+			reward_type = LootDropTweakData.REWARD_GOLD_BARS
+		},
+		small_operation = {
+			gold_bars_max = 50,
+			gold_bars_min = 35,
+			reward_type = LootDropTweakData.REWARD_GOLD_BARS
+		},
+		medium_operation = {
+			gold_bars_max = 100,
+			gold_bars_min = 50,
+			reward_type = LootDropTweakData.REWARD_GOLD_BARS
+		},
+		large_operation = {
+			gold_bars_max = 200,
+			gold_bars_min = 100,
+			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		}
 	}
 end
 
--- Lines 225-447
+-- Lines 230-358
 function LootDropTweakData:_init_categories()
 	self.loot_categories = {
 		category_xp_min = {}
@@ -210,6 +226,30 @@ function LootDropTweakData:_init_categories()
 			value = self.gold_bar_rewards.large
 		}
 	}
+	self.loot_categories.category_gold_tiny_operation = {
+		{
+			chance = 100,
+			value = self.gold_bar_rewards.tiny_operation
+		}
+	}
+	self.loot_categories.category_gold_low_operation = {
+		{
+			chance = 100,
+			value = self.gold_bar_rewards.small_operation
+		}
+	}
+	self.loot_categories.category_gold_mid_operation = {
+		{
+			chance = 100,
+			value = self.gold_bar_rewards.medium_operation
+		}
+	}
+	self.loot_categories.category_gold_high_operation = {
+		{
+			chance = 100,
+			value = self.gold_bar_rewards.large_operation
+		}
+	}
 	self.loot_categories.category_melee = {
 		{
 			chance = 100,
@@ -253,7 +293,7 @@ function LootDropTweakData:_init_categories()
 	}
 end
 
--- Lines 449-482
+-- Lines 360-376
 function LootDropTweakData:_init_groups()
 	self.loot_groups = {}
 	self.loot_groups_doubles_fallback = {}
@@ -265,26 +305,36 @@ function LootDropTweakData:_init_groups()
 	self:_init_groups_challenges()
 end
 
--- Lines 485-500
+-- Lines 379-404
 function LootDropTweakData:_init_groups_basic()
 	self.loot_groups_doubles_fallback.loot_group_basic = {}
 
 	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
-		chance = 30,
+		chance = 60,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
 		},
 		value = self.loot_categories.category_xp_min
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
-		chance = 15,
+		chance = 30,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_RAID
+		},
 		value = self.loot_categories.category_gold_tiny
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
+		chance = 30,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_OPERATION
+		},
+		value = self.loot_categories.category_gold_tiny_operation
 	})
 
 	self.loot_groups.loot_group_basic = deep_clone(self.loot_groups_doubles_fallback.loot_group_basic)
 end
 
--- Lines 503-531
+-- Lines 407-453
 function LootDropTweakData:_init_groups_bronze()
 	self.loot_groups_doubles_fallback.loot_group_bronze = {}
 
@@ -303,22 +353,42 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_xp_low
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		chance = 60,
+		chance = 30,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_RAID
+		},
 		value = self.loot_categories.category_gold_low
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
 		chance = 60,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_RAID
+		},
 		value = self.loot_categories.category_gold_mid
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		chance = 15,
+		chance = 30,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_OPERATION
+		},
+		value = self.loot_categories.category_gold_low_operation
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
+		chance = 60,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_OPERATION
+		},
+		value = self.loot_categories.category_gold_mid_operation
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
+		chance = 20,
 		value = self.loot_categories.category_cards_pack
 	})
 
 	self.loot_groups.loot_group_bronze = deep_clone(self.loot_groups_doubles_fallback.loot_group_bronze)
 end
 
--- Lines 534-565
+-- Lines 456-497
 function LootDropTweakData:_init_groups_silver()
 	self.loot_groups_doubles_fallback.loot_group_silver = {}
 
@@ -331,14 +401,20 @@ function LootDropTweakData:_init_groups_silver()
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
 		chance = 60,
-		value = self.loot_categories.category_gold_low
-	})
-	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
-		chance = 30,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_RAID
+		},
 		value = self.loot_categories.category_gold_mid
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
-		chance = 15,
+		chance = 60,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_OPERATION
+		},
+		value = self.loot_categories.category_gold_mid_operation
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
+		chance = 20,
 		value = self.loot_categories.category_cards_pack
 	})
 
@@ -354,7 +430,7 @@ function LootDropTweakData:_init_groups_silver()
 	})
 end
 
--- Lines 568-595
+-- Lines 500-540
 function LootDropTweakData:_init_groups_gold()
 	self.loot_groups_doubles_fallback.loot_group_gold = {}
 
@@ -367,10 +443,20 @@ function LootDropTweakData:_init_groups_gold()
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
 		chance = 90,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_RAID
+		},
 		value = self.loot_categories.category_gold_high
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
-		chance = 15,
+		chance = 90,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_IS_OPERATION
+		},
+		value = self.loot_categories.category_gold_high_operation
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
+		chance = 20,
 		value = self.loot_categories.category_cards_pack
 	})
 
@@ -386,7 +472,7 @@ function LootDropTweakData:_init_groups_gold()
 	})
 end
 
--- Lines 598-606
+-- Lines 544-552
 function LootDropTweakData:_init_groups_challenges()
 	self.loot_groups.loot_group_halloween_2017 = {
 		{
@@ -398,7 +484,7 @@ function LootDropTweakData:_init_groups_challenges()
 	}
 end
 
--- Lines 609-636
+-- Lines 555-582
 function LootDropTweakData:_init_loot_values()
 	self.loot_groups.loot_group_basic.min_loot_value = -1000000
 	self.loot_groups.loot_group_basic.max_loot_value = LootDropTweakData.BRONZE_POINT_REQUIREMENT
@@ -418,14 +504,14 @@ function LootDropTweakData:_init_loot_values()
 	self.loot_groups_doubles_fallback.loot_group_gold.max_loot_value = self.loot_groups.loot_group_gold.max_loot_value
 end
 
--- Lines 638-641
+-- Lines 584-587
 function LootDropTweakData:_init_dog_tag_stats()
 	self.dog_tag = {
 		loot_value = 125
 	}
 end
 
--- Lines 644-832
+-- Lines 590-778
 function LootDropTweakData:_payday_init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -721,7 +807,7 @@ function LootDropTweakData:_payday_init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 835-840
+-- Lines 781-786
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 
@@ -730,7 +816,7 @@ function LootDropTweakData:_create_global_value_list_map()
 	end
 end
 
--- Lines 844-860
+-- Lines 790-806
 function LootDropTweakData:get_gold_from_rarity(rarity)
 	if LootDropTweakData.RARITY_ALL == rarity then
 		return 100
@@ -749,7 +835,7 @@ function LootDropTweakData:get_gold_from_rarity(rarity)
 	end
 end
 
--- Lines 863-866
+-- Lines 809-812
 function LootDropTweakData:get_month_event()
 	local tdate = os.date("*t")
 

@@ -121,7 +121,7 @@ function SpawnEnemyGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 101-163
+-- Lines 101-166
 function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -202,7 +202,7 @@ function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	opt_sizer:add(filter_sizer, 1, 0, "EXPAND")
 end
 
--- Lines 167-185
+-- Lines 170-188
 function SpawnEnemyGroupUnitElement:on_preferred_spawn_groups_checkbox_changed(params)
 	local value = params.ctrlr:get_value()
 

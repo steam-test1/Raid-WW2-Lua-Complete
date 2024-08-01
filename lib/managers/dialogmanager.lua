@@ -1,4 +1,5 @@
 DialogManager = DialogManager or class()
+DialogManager.MAX_CASE_PLAYER_NUM = 4
 DialogManager.MRS_WHITE = {
 	sound_switch = "mrs_white",
 	char = "MRS_WHITE"
@@ -82,7 +83,7 @@ DialogManager.CHARS = {
 	DialogManager.FEMALE_SPY
 }
 
--- Lines 44-53
+-- Lines 46-55
 function DialogManager:init()
 	self._dialog_list = {}
 	self._random_list = {}
@@ -92,16 +93,16 @@ function DialogManager:init()
 	self._ventrilo_unit = World:spawn_unit(Idstring("units/vanilla/characters/players/fps_mover/mrs_white"), Vector3(), Rotation())
 end
 
--- Lines 55-57
+-- Lines 57-59
 function DialogManager:init_finalize()
 	self:_load_dialogs()
 end
 
--- Lines 59-112
+-- Lines 61-106
 function DialogManager:_create_dialogue_instance(id, instigator, test)
 	local dialogue = deep_clone(self._dialog_list[id])
-	local nr_criminals = managers.criminals:nr_taken_criminals()
-	local char_names = managers.criminals:taken_criminal_names()
+	local char_names = managers.criminals:alive_criminal_names()
+	local nr_criminals = math.min(#char_names, DialogManager.MAX_CASE_PLAYER_NUM)
 	local default_char = nil
 
 	if test then
@@ -120,47 +121,29 @@ function DialogManager:_create_dialogue_instance(id, instigator, test)
 		end
 	end
 
-	local charA = nil
-
 	if instigator then
-		charA = instigator
-	else
-		charA = char_names[self:_random_criminal(nr_criminals)]
+		table.delete(char_names, instigator)
 	end
 
-	local charB = charA
-
-	if nr_criminals > 1 then
-		charB = char_names[self:_random_criminal(nr_criminals)]
-
-		while charA == charB do
-			charB = char_names[self:_random_criminal(nr_criminals)]
-		end
-	end
-
-	local charC = charA
-
-	if nr_criminals > 2 then
-		charC = char_names[self:_random_criminal(nr_criminals)]
-
-		while charC == charA or charC == charB do
-			charC = char_names[self:_random_criminal(nr_criminals)]
-		end
-	end
+	local characters = {
+		A = instigator or self:_random_criminal(char_names, default_char)
+	}
+	characters.B = self:_random_criminal(char_names, characters.A)
+	characters.C = self:_random_criminal(char_names, characters.A)
 
 	if dialogue.lines then
 		for _, line in ipairs(dialogue.lines) do
-			line.character = self:_parse_dialog_character(line.character, charA, charB, charC, dialogue, line, instigator, default_char)
+			line.character = self:_parse_dialog_character(line.character, characters, dialogue, line, default_char)
 		end
 	else
-		dialogue.character = self:_parse_dialog_character(dialogue.character, charA, charB, charC, dialogue, nil, instigator, default_char)
+		dialogue.character = self:_parse_dialog_character(dialogue.character, characters, dialogue, nil, default_char)
 	end
 
 	return dialogue
 end
 
--- Lines 114-139
-function DialogManager:_parse_dialog_character(char, charA, charB, charC, dialogue, line, instigator, default_char)
+-- Lines 108-129
+function DialogManager:_parse_dialog_character(char, characters, dialogue, line, default_char)
 	local result = nil
 
 	for _, v in ipairs(DialogManager.CHARS) do
@@ -178,21 +161,27 @@ function DialogManager:_parse_dialog_character(char, charA, charB, charC, dialog
 	end
 
 	if not char then
-		result = instigator or managers.criminals:character_name_by_unit(managers.player:local_player()) or default_char
-	elseif char == "A" then
-		result = charA
-	elseif char == "B" then
-		result = charB
-	elseif char == "C" then
-		result = charC
+		result = characters.A or managers.criminals:character_name_by_unit(managers.player:local_player()) or default_char
+	else
+		return characters[char]
 	end
 
 	return result
 end
 
--- Lines 141-143
-function DialogManager:_random_criminal(nr_criminals)
-	return math.floor(math.random() * 100 % nr_criminals + 1)
+-- Lines 131-143
+function DialogManager:_random_criminal(char_names, default)
+	if not char_names or #char_names == 0 then
+		return default
+	end
+
+	local num_chars = math.min(#char_names, DialogManager.MAX_CASE_PLAYER_NUM)
+	local char_index = math.floor(math.random() * 100 % num_chars + 1)
+	local char_name = char_names[char_index]
+
+	table.remove(char_names, char_index)
+
+	return char_name
 end
 
 -- Lines 146-152
@@ -249,7 +238,7 @@ function DialogManager:sync_queue_dialog(id, instigator)
 	})
 end
 
--- Lines 188-219
+-- Lines 188-222
 function DialogManager:queue_dialog(id, params, test)
 	if not self._dialog_list[id] then
 		Application:error("[DialogManager:queue_dialog] The dialog script tries to queue a dialog with id '" .. tostring(id) .. "' which doesn't seem to exist!")
@@ -261,7 +250,9 @@ function DialogManager:queue_dialog(id, params, test)
 		return
 	end
 
-	if self._current_dialog and self._current_dialog.id == id then
+	if self._current_dialog and self._current_dialog.id == id or self._next_dialog and self._next_dialog.id == id then
+		Application:warn("[DialogManager:queue_dialog] Dialog already playing, skipping", id)
+
 		return
 	end
 
@@ -284,7 +275,7 @@ function DialogManager:queue_dialog(id, params, test)
 	end
 end
 
--- Lines 221-233
+-- Lines 224-236
 function DialogManager:_calc_instigator_string(params)
 	local instigator = nil
 
@@ -301,7 +292,41 @@ function DialogManager:_calc_instigator_string(params)
 	return instigator
 end
 
--- Lines 235-240
+-- Lines 238-250
+function DialogManager:_calc_character_string(character)
+	if not character then
+		return
+	end
+
+	if type(character) == "string" then
+		if character ~= "nil" then
+			return character
+		end
+	else
+		return managers.criminals:character_name_by_unit(character)
+	end
+end
+
+-- Lines 252-268
+function DialogManager:_get_dialog_characters(params)
+	local characters = {}
+
+	if params.char_a or params.instigator then
+		characters.A = self:_calc_character_string(params.char_a or params.instigator)
+	end
+
+	if params.char_b then
+		characters.B = self:_calc_character_string(params.char_b)
+	end
+
+	if params.char_c then
+		characters.C = self:_calc_character_string(params.char_c)
+	end
+
+	return characters
+end
+
+-- Lines 270-275
 function DialogManager:set_paused(value)
 	self._paused = value
 
@@ -310,15 +335,13 @@ function DialogManager:set_paused(value)
 	end
 end
 
--- Lines 242-244
+-- Lines 277-279
 function DialogManager:paused()
 	return self._paused
 end
 
--- Lines 246-295
+-- Lines 281-330
 function DialogManager:do_queue_dialog(id, params, test)
-	Application:debug("[DialogManager:do_queue_dialog]", id, inspect(params))
-
 	local instigator = self:_calc_instigator_string(params)
 
 	if Network:is_server() then
@@ -367,7 +390,7 @@ function DialogManager:do_queue_dialog(id, params, test)
 	return true
 end
 
--- Lines 297-324
+-- Lines 332-359
 function DialogManager:finished()
 	self:_stop_dialog()
 
@@ -405,14 +428,14 @@ function DialogManager:finished()
 	end
 end
 
--- Lines 326-331
+-- Lines 361-366
 function DialogManager:on_dialog_completed()
 	if self._current_dialog.params and self._current_dialog.params.done_cbk then
 		self:_call_done_callback(self._current_dialog.params.done_cbk, "done")
 	end
 end
 
--- Lines 333-347
+-- Lines 368-382
 function DialogManager:quit_dialog(no_done_cbk)
 	managers.queued_tasks:unqueue_all(nil, self)
 	managers.subtitle:clear_subtitle()
@@ -428,7 +451,7 @@ function DialogManager:quit_dialog(no_done_cbk)
 	self._next_dialog = nil
 end
 
--- Lines 349-356
+-- Lines 384-391
 function DialogManager:conversation_names()
 	local t = {}
 
@@ -441,7 +464,7 @@ function DialogManager:conversation_names()
 	return t
 end
 
--- Lines 358-365
+-- Lines 393-400
 function DialogManager:random_names()
 	local t = {}
 
@@ -454,12 +477,12 @@ function DialogManager:random_names()
 	return t
 end
 
--- Lines 367-369
+-- Lines 402-404
 function DialogManager:on_simulation_ended()
 	self:quit_dialog(true)
 end
 
--- Lines 371-394
+-- Lines 406-433
 function DialogManager:_setup_position(dialog, char_data)
 	local unit = managers.dialog._ventrilo_unit
 
@@ -469,20 +492,28 @@ function DialogManager:_setup_position(dialog, char_data)
 
 	if dialog.params.position then
 		unit:set_position(dialog.params.position)
+
+		if dialog.params.rotation then
+			unit:set_rotation(dialog.params.rotation)
+		end
 	elseif char_data.unit then
 		if alive(char_data.unit) then
 			unit:set_position(char_data.unit:position())
 			unit:set_rotation(char_data.unit:rotation())
 		end
-	elseif managers.player:local_player() then
-		unit:set_position(managers.player:local_player():position())
-		unit:set_rotation(managers.player:local_player():rotation())
+	else
+		local player = managers.player:local_player()
+
+		if alive(player) then
+			unit:set_position(player:position())
+			unit:set_rotation(player:rotation())
+		end
 	end
 
 	return unit
 end
 
--- Lines 396-488
+-- Lines 435-527
 function DialogManager:_play_dialog(data)
 	local dialog = data.dialog
 	local unit = dialog.params.on_unit or dialog.params.override_characters and managers.player:player_unit()
@@ -527,7 +558,7 @@ function DialogManager:_play_dialog(data)
 	end
 
 	if not nationality_icon then
-		Application:debug("[DialogManager:_play_dialog] nationality_icon was NIL for dialogue.", data.dialog, data.line)
+		Application:debug("[DialogManager:_play_dialog] nationality_icon was NIL for dialogue.", data.line, inspect(data.dialog))
 	end
 
 	dialog.unit = unit
@@ -579,21 +610,21 @@ function DialogManager:_play_dialog(data)
 	end
 end
 
--- Lines 490-496
+-- Lines 529-535
 function DialogManager:_stop_dialog()
 	if self._current_dialog and alive(self._current_dialog.unit) then
 		self._current_dialog.unit:drama():stop_cue()
 	end
 end
 
--- Lines 498-503
+-- Lines 537-542
 function DialogManager:_call_done_callback(done_cbk, reason)
 	if done_cbk then
 		done_cbk(reason)
 	end
 end
 
--- Lines 505-514
+-- Lines 544-553
 function DialogManager:_load_dialogs()
 	local file_name = "gamedata/dialogs/index"
 	local data = PackageManager:script_data(Idstring("dialog_index"), file_name:id())
@@ -605,7 +636,7 @@ function DialogManager:_load_dialogs()
 	end
 end
 
--- Lines 516-569
+-- Lines 555-608
 function DialogManager:_load_dialog_data(name)
 	local file_name = "gamedata/dialogs/" .. name
 	local data = PackageManager:script_data(Idstring("dialog"), file_name:id())
@@ -670,9 +701,8 @@ function DialogManager:_load_dialog_data(name)
 	end
 end
 
--- Lines 571-583
+-- Lines 610-617
 function DialogManager:_parse_line_node(node)
-	local censored = node.censored
 	local sound = node.sound
 
 	if not sound then
@@ -687,7 +717,7 @@ function DialogManager:_parse_line_node(node)
 	}
 end
 
--- Lines 585-596
+-- Lines 619-630
 function DialogManager:_parse_case_node(parent_id, node)
 	self._dialog_list[parent_id].cases = self._dialog_list[parent_id].cases or {}
 	local case_node = {
@@ -707,12 +737,10 @@ function DialogManager:_parse_case_node(parent_id, node)
 	table.insert(self._dialog_list[parent_id].cases, case_node)
 end
 
--- Lines 598-617
-function DialogManager:is_dialogue_playing_for_local_player()
-	local res = false
-
+-- Lines 632-652
+function DialogManager:is_unit_talking(unit)
 	if self._current_dialog then
-		local local_crim = managers.criminals:local_character_name()
+		local character = managers.criminals:character_name_by_unit(unit)
 		local current_sound = nil
 
 		if self._current_dialog.character then
@@ -720,18 +748,18 @@ function DialogManager:is_dialogue_playing_for_local_player()
 		elseif self._current_dialog.lines and self._current_dialog.line and self._current_dialog.lines[self._current_dialog.line] then
 			current_sound = self._current_dialog.lines[self._current_dialog.line].character
 		else
-			Application:debug("[DialogManager:is_dialogue_playing_for_local_player()] current dialog without line!?", self._current_dialog.line, inspect(self._current_dialog.lines))
+			Application:debug("[DialogManager:is_unit_talking()] current dialog without line!?", self._current_dialog.line, inspect(self._current_dialog.lines))
 		end
 
-		if local_crim == current_sound then
-			res = true
+		if character == current_sound then
+			return true
 		end
 	end
 
-	return res
+	return false
 end
 
--- Lines 619-630
+-- Lines 654-665
 function DialogManager:register_character(char, unit)
 	local found = nil
 
@@ -747,12 +775,18 @@ function DialogManager:register_character(char, unit)
 	end
 end
 
--- Lines 632-634
+-- Lines 667-677
 function DialogManager:update(t, dt)
+	local player = managers.player:local_player()
+
+	if alive(player) and alive(self._ventrilo_unit) and self:is_unit_talking(player) then
+		self._ventrilo_unit:set_position(player:position())
+		self._ventrilo_unit:set_rotation(player:rotation())
+	end
 end
 
--- Lines 636-681
-function DialogManager:debug_print_missiong_strings()
+-- Lines 679-724
+function DialogManager:debug_print_missing_strings()
 	for dialog_id, data in pairs(managers.dialog._dialog_list) do
 		if data.cases then
 			for _, case in pairs(data.cases) do
@@ -774,12 +808,12 @@ function DialogManager:debug_print_missiong_strings()
 	end
 end
 
--- Lines 683-685
+-- Lines 726-728
 function DialogManager:set_subtitles_shown(show_subtitles)
 	self._show_subtitles = not not show_subtitles
 end
 
--- Lines 687-689
+-- Lines 730-732
 function DialogManager:is_showing_subtitles()
 	return self._show_subtitles
 end

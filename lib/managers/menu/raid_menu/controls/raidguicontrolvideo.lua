@@ -34,10 +34,16 @@ function RaidGUIControlVideo:init(parent, params)
 	})
 end
 
--- Lines 31-39
+-- Lines 31-43
 function RaidGUIControlVideo:_update(t, dt)
 	if not alive(self._object) then
 		self:destroy()
+
+		return
+	end
+
+	if not managers.user:get_setting("subtitle") then
+		self._subtitle:set_text("")
 
 		return
 	end
@@ -48,29 +54,39 @@ function RaidGUIControlVideo:_update(t, dt)
 	self._subtitle:set_text(subtitle)
 end
 
--- Lines 41-46
+-- Lines 45-50
 function RaidGUIControlVideo:destroy()
 	managers.video:remove_video(self._object)
 	managers.video:remove_updator(self._params.video)
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
 end
 
--- Lines 48-50
+-- Lines 52-54
 function RaidGUIControlVideo:loop_count()
 	return self._object:loop_count()
 end
 
--- Lines 52-54
+-- Lines 56-58
+function RaidGUIControlVideo:pause()
+	return self._object:pause()
+end
+
+-- Lines 60-62
+function RaidGUIControlVideo:play()
+	return self._object:play()
+end
+
+-- Lines 64-66
 function RaidGUIControlVideo:video_height()
 	return self._object:video_height()
 end
 
--- Lines 56-58
+-- Lines 68-70
 function RaidGUIControlVideo:video_width()
 	return self._object:video_width()
 end
 
--- Lines 60-62
+-- Lines 72-74
 function RaidGUIControlVideo:alive()
 	return self._object and self._object:alive()
 end

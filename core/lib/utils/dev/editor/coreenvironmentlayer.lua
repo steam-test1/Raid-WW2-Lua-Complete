@@ -435,7 +435,10 @@ end
 
 -- Lines 348-580
 function EnvironmentLayer:build_panel(notebook)
-	EnvironmentLayer.super.build_panel(self, notebook)
+	EnvironmentLayer.super.build_panel(self, notebook, {
+		units_noteboook_proportion = 0,
+		units_notebook_min_size = Vector3(1, 165, 0)
+	})
 	cat_print("editor", "EnvironmentLayer:build_panel")
 
 	self._env_panel = EWS:Panel(self._ews_panel, "", "TAB_TRAVERSAL")
@@ -657,45 +660,44 @@ function EnvironmentLayer:build_panel(notebook)
 	reload_effects:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "populate_unit_effects"), nil)
 	unit_effect_sizer:add(reload_effects, 0, 5, "EXPAND,LEFT")
 	self._env_sizer:add(unit_effect_sizer, 0, 0, "EXPAND")
-	self._sizer:add(self._env_panel, 4, 0, "EXPAND")
+	self._sizer:add(self._env_panel, 1, 0, "EXPAND")
 
 	return self._ews_panel
 end
 
--- Lines 582-592
+-- Lines 582-593
 function EnvironmentLayer:populate_unit_effects()
 	self._unit_effects:clear()
 	self._unit_effects:append("none")
 
 	for _, name in ipairs(managers.database:list_entries_of_type("effect")) do
-		if string.match(name, "scene_") then
-			self._unit_effects:append(name)
-		end
+		self._unit_effects:append(name)
 	end
 
 	self._unit_effects:set_value("none")
 	self:update_unit_settings()
 end
 
--- Lines 594-610
+-- Lines 595-612
 function EnvironmentLayer:create_cube_map(type)
 	local cubes = {}
+	local output_name = "output_"
 
 	if type == "all" then
 		for _, unit in ipairs(self._created_units) do
 			if unit:name() == Idstring(self._cubemap_unit) then
 				table.insert(cubes, {
-					output_name = "outputcube",
 					position = unit:position(),
-					name = unit:unit_data().name_id
+					name = unit:unit_data().name_id,
+					output_name = output_name .. unit:unit_data().name_id
 				})
 			end
 		end
 	elseif type == "selected" and self._selected_unit:name() == Idstring(self._cubemap_unit) then
 		table.insert(cubes, {
-			output_name = "outputcube",
 			position = self._selected_unit:position(),
-			name = self._selected_unit:unit_data().name_id
+			name = self._selected_unit:unit_data().name_id,
+			output_name = output_name .. self._selected_unit:name()
 		})
 	end
 
@@ -707,28 +709,28 @@ function EnvironmentLayer:create_cube_map(type)
 	managers.editor:create_cube_map(params)
 end
 
--- Lines 612-616
+-- Lines 614-618
 function EnvironmentLayer:change_environment(ctrlr)
 	self._environment_values.environment = ctrlr:get_value()
 
 	managers.viewport:set_default_environment(self._environment_values.environment, nil, nil)
 end
 
--- Lines 618-621
+-- Lines 620-623
 function EnvironmentLayer:set_environment_area()
 	local area = self._selected_unit:unit_data().environment_area
 
 	area:set_environment(self._environment_area_ctrls.environment_combobox.value)
 end
 
--- Lines 623-626
+-- Lines 625-628
 function EnvironmentLayer:set_permanent()
 	local area = self._selected_unit:unit_data().environment_area
 
 	area:set_permanent(self._environment_area_ctrls.permanent_cb:get_value())
 end
 
--- Lines 628-634
+-- Lines 630-636
 function EnvironmentLayer:set_transition_time()
 	local area = self._selected_unit:unit_data().environment_area
 	local value = tonumber(self._environment_area_ctrls.transition_time:get_value())
@@ -738,7 +740,7 @@ function EnvironmentLayer:set_transition_time()
 	area:set_transition_time(value)
 end
 
--- Lines 636-642
+-- Lines 638-644
 function EnvironmentLayer:set_prio()
 	local area = self._selected_unit:unit_data().environment_area
 	local value = tonumber(self._environment_area_ctrls.prio:get_value())
@@ -748,7 +750,7 @@ function EnvironmentLayer:set_prio()
 	area:set_prio(value)
 end
 
--- Lines 644-659
+-- Lines 646-661
 function EnvironmentLayer:generate_dome_occ()
 	local shape = nil
 
@@ -771,12 +773,12 @@ function EnvironmentLayer:generate_dome_occ()
 	managers.editor:init_create_dome_occlusion(shape, res)
 end
 
--- Lines 661-663
+-- Lines 663-665
 function EnvironmentLayer:set_dome_occ_resolution()
 	self._environment_values.dome_occ_resolution = tonumber(self._dome_occ_resolution_ctrlr:get_value())
 end
 
--- Lines 665-669
+-- Lines 667-671
 function EnvironmentLayer:update_wind_direction(wind_direction)
 	local dir = wind_direction:get_value()
 	self._wind_rot = Rotation(dir, 0, self._wind_rot:roll())
@@ -784,7 +786,7 @@ function EnvironmentLayer:update_wind_direction(wind_direction)
 	self:set_wind()
 end
 
--- Lines 671-676
+-- Lines 673-678
 function EnvironmentLayer:set_wind()
 	Wind:set_direction(self._wind_rot:yaw(), self._wind_dir_var, 5)
 	Wind:set_tilt(self._wind_rot:roll(), self._wind_tilt_var, 5)
@@ -792,14 +794,14 @@ function EnvironmentLayer:set_wind()
 	Wind:set_enabled(true)
 end
 
--- Lines 678-681
+-- Lines 680-683
 function EnvironmentLayer:update_wind_variation(wind_variation)
 	self._wind_dir_var = wind_variation:get_value()
 
 	self:set_wind()
 end
 
--- Lines 683-687
+-- Lines 685-689
 function EnvironmentLayer:update_tilt_angle(tilt_angle)
 	local dir = tilt_angle:get_value()
 	self._wind_rot = Rotation(self._wind_rot:yaw(), 0, dir)
@@ -807,19 +809,19 @@ function EnvironmentLayer:update_tilt_angle(tilt_angle)
 	self:set_wind()
 end
 
--- Lines 689-692
+-- Lines 691-694
 function EnvironmentLayer:update_tilt_variation(tilt_variation)
 	self._wind_tilt_var = tilt_variation:get_value()
 
 	self:set_wind()
 end
 
--- Lines 694-696
+-- Lines 696-698
 function EnvironmentLayer:on_wind_speed_help()
 	EWS:launch_url("http://en.wikipedia.org/wiki/Beaufort_scale")
 end
 
--- Lines 698-702
+-- Lines 700-704
 function EnvironmentLayer:update_wind_speed(wind_speed)
 	self._wind_speed = wind_speed:get_value() / 10
 
@@ -827,7 +829,7 @@ function EnvironmentLayer:update_wind_speed(wind_speed)
 	self:set_wind()
 end
 
--- Lines 704-708
+-- Lines 706-710
 function EnvironmentLayer:update_wind_speed_variation(wind_speed_variation)
 	self._wind_speed_variation = wind_speed_variation:get_value() / 10
 
@@ -835,7 +837,7 @@ function EnvironmentLayer:update_wind_speed_variation(wind_speed_variation)
 	self:set_wind()
 end
 
--- Lines 710-715
+-- Lines 712-717
 function EnvironmentLayer:update_wind_speed_labels()
 	self._speed_text:set_value(string.format("%.3g", self._wind_speed) .. " m/s")
 	self._speed_beaufort:set_value("Beaufort: " .. self:wind_beaufort(self._wind_speed))
@@ -843,12 +845,12 @@ function EnvironmentLayer:update_wind_speed_labels()
 	self._speed_variation_text:set_value(string.format("%.3g", self._wind_speed_variation) .. " m/s")
 end
 
--- Lines 717-721
+-- Lines 719-723
 function EnvironmentLayer:unit_ok(unit)
 	return unit:name() == Idstring(self._effect_unit) or unit:name() == Idstring(self._cubemap_unit) or unit:name() == Idstring(self._environment_area_unit) or unit:name() == Idstring(self._dome_occ_shape_unit)
 end
 
--- Lines 723-748
+-- Lines 725-750
 function EnvironmentLayer:do_spawn_unit(...)
 	local unit = EnvironmentLayer.super.do_spawn_unit(self, ...)
 
@@ -881,7 +883,7 @@ function EnvironmentLayer:do_spawn_unit(...)
 	return unit
 end
 
--- Lines 750-768
+-- Lines 752-770
 function EnvironmentLayer:clone_edited_values(unit, source)
 	EnvironmentLayer.super.clone_edited_values(self, unit, source)
 
@@ -905,7 +907,7 @@ function EnvironmentLayer:clone_edited_values(unit, source)
 	end
 end
 
--- Lines 771-795
+-- Lines 773-797
 function EnvironmentLayer:delete_unit(unit)
 	self:kill_effect(unit)
 
@@ -934,7 +936,7 @@ function EnvironmentLayer:delete_unit(unit)
 	EnvironmentLayer.super.delete_unit(self, unit)
 end
 
--- Lines 797-803
+-- Lines 799-805
 function EnvironmentLayer:play_effect(unit, effect)
 	unit:unit_data().effect = effect
 
@@ -949,7 +951,7 @@ function EnvironmentLayer:play_effect(unit, effect)
 	end
 end
 
--- Lines 805-812
+-- Lines 807-814
 function EnvironmentLayer:kill_effect(unit)
 	if unit:name() == Idstring(self._effect_unit) and unit:unit_data().current_effect then
 		World:effect_manager():kill(unit:unit_data().current_effect)
@@ -958,13 +960,13 @@ function EnvironmentLayer:kill_effect(unit)
 	end
 end
 
--- Lines 814-817
+-- Lines 816-819
 function EnvironmentLayer:change_unit_effect()
 	self:kill_effect(self._selected_unit)
 	self:play_effect(self._selected_unit, self._unit_effects:get_value())
 end
 
--- Lines 819-829
+-- Lines 821-831
 function EnvironmentLayer:update_unit_settings()
 	EnvironmentLayer.super.update_unit_settings(self)
 	self._unit_effects:set_enabled(false)
@@ -977,7 +979,7 @@ function EnvironmentLayer:update_unit_settings()
 	self:set_environment_area_parameters()
 end
 
--- Lines 831-874
+-- Lines 833-872
 function EnvironmentLayer:set_environment_area_parameters()
 	CoreEws.set_combobox_and_list_enabled(self._environment_area_ctrls.environment_combobox, false)
 	self._environment_area_ctrls.permanent_cb:set_enabled(false)
@@ -1015,13 +1017,9 @@ function EnvironmentLayer:set_environment_area_parameters()
 			self._current_shape_panel:set_visible(true)
 		end
 	end
-
-	self._env_panel:layout()
-	self._ews_panel:fit_inside()
-	self._ews_panel:refresh()
 end
 
--- Lines 877-886
+-- Lines 875-884
 function EnvironmentLayer:wind_description(speed)
 	local description = nil
 
@@ -1036,7 +1034,7 @@ function EnvironmentLayer:wind_description(speed)
 	return description
 end
 
--- Lines 888-897
+-- Lines 886-895
 function EnvironmentLayer:wind_beaufort(speed)
 	local beaufort = nil
 
@@ -1051,7 +1049,7 @@ function EnvironmentLayer:wind_beaufort(speed)
 	return beaufort
 end
 
--- Lines 899-906
+-- Lines 897-904
 function EnvironmentLayer:reset_environment_values()
 	self._environment_values.environment = managers.viewport:game_default_environment()
 
@@ -1060,7 +1058,7 @@ function EnvironmentLayer:reset_environment_values()
 	self._environment_values.dome_occ_resolution = 256
 end
 
--- Lines 908-946
+-- Lines 906-944
 function EnvironmentLayer:clear()
 	managers.viewport:editor_reset_environment()
 	self:reset_environment_values()
@@ -1095,12 +1093,12 @@ function EnvironmentLayer:clear()
 	self:set_environment_area_parameters()
 end
 
--- Lines 948-950
+-- Lines 946-948
 function EnvironmentLayer:add_triggers()
 	EnvironmentLayer.super.add_triggers(self)
 end
 
--- Lines 952-954
+-- Lines 950-952
 function EnvironmentLayer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end

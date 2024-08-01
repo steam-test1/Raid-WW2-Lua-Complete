@@ -1,19 +1,26 @@
 DynamicResourceManager = DynamicResourceManager or class()
 DynamicResourceManager.DYN_RESOURCES_PACKAGE = "packages/dyn_resources"
+DynamicResourceManager.STREAMING_PROFILE_INGAME = "ingame"
+DynamicResourceManager.STREAMING_PROFILE_LOADING = "loading"
+DynamicResourceManager.STREAMING_PROFILES = {
+	[DynamicResourceManager.STREAMING_PROFILE_INGAME] = {
+		sleep_time = 5,
+		chunk_size = 1048576
+	},
+	[DynamicResourceManager.STREAMING_PROFILE_LOADING] = {
+		sleep_time = 1,
+		chunk_size = 5242880
+	}
+}
 DynamicResourceManager.listener_events = {
 	file_streamer_workload = 1
 }
-local ids_unit = Idstring("unit")
 
--- Lines 10-28
+-- Lines 30-44
 function DynamicResourceManager:init()
 	if not Global.dyn_resource_manager_data then
 		Global.dyn_resource_manager_data = {
-			streaming_settings = {
-				chunk_size_kb = 4096,
-				sleep_time = 3,
-				chunk_size_mul = 1
-			},
+			streaming_settings = self.STREAMING_PROFILES[self.STREAMING_PROFILE_INGAME],
 			dyn_resources = {}
 		}
 	end
@@ -24,19 +31,13 @@ function DynamicResourceManager:init()
 	self._listener_holder = EventListenerHolder:new()
 end
 
--- Lines 32-42
+-- Lines 48-52
 function DynamicResourceManager:post_init()
-	local chunk_size_kb = managers.user:get_setting("max_streaming_chunk")
-
-	if self._streaming_settings.chunk_size_kb ~= chunk_size_kb then
-		self:_set_file_streamer_settings(chunk_size_kb, self._streaming_settings.sleep_time)
-	end
-
-	managers.user:add_setting_changed_callback("max_streaming_chunk", callback(self, self, "clbk_streaming_chunk_size_changed"), true)
+	self:_set_file_streamer_settings(self:file_streamer_settings())
 	self:preload_units()
 end
 
--- Lines 46-57
+-- Lines 56-67
 function DynamicResourceManager:update()
 	if self._to_unload then
 		for key, unload_params in pairs(self._to_unload) do
@@ -51,7 +52,7 @@ function DynamicResourceManager:update()
 	end
 end
 
--- Lines 61-89
+-- Lines 71-99
 function DynamicResourceManager:is_ready_to_close()
 	if self._to_unload then
 		if not self._still_unloading_msg then
@@ -88,12 +89,12 @@ function DynamicResourceManager:is_ready_to_close()
 	return true
 end
 
--- Lines 93-95
+-- Lines 103-105
 function DynamicResourceManager._get_resource_key(resource_type, resource_name, package_name)
 	return package_name .. resource_name:key() .. resource_type:key()
 end
 
--- Lines 99-154
+-- Lines 109-164
 function DynamicResourceManager:load(resource_type, resource_name, package_name, complete_clbk)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._to_unload and self._to_unload[key]
@@ -157,7 +158,7 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 	end
 end
 
--- Lines 158-176
+-- Lines 168-186
 function DynamicResourceManager:unload(resource_type, resource_name, package_name, keep_using)
 	if keep_using then
 		debug_pause("[DynamicResourceManager:unload] keep_using should be false!", resource_type, resource_name, package_name, keep_using)
@@ -178,14 +179,14 @@ function DynamicResourceManager:unload(resource_type, resource_name, package_nam
 	self._dyn_resources[key] = nil
 end
 
--- Lines 180-183
+-- Lines 190-193
 function DynamicResourceManager:has_resource(resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 
 	return self._dyn_resources[key] and true or false
 end
 
--- Lines 188-192
+-- Lines 198-202
 function DynamicResourceManager:is_resource_ready(resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._dyn_resources[key]
@@ -193,7 +194,7 @@ function DynamicResourceManager:is_resource_ready(resource_type, resource_name, 
 	return entry and entry.ready
 end
 
--- Lines 196-217
+-- Lines 206-227
 function DynamicResourceManager:clbk_resource_loaded(status, resource_type, resource_name, package_name)
 	local key = self._get_resource_key(resource_type, resource_name, package_name)
 	local entry = self._dyn_resources[key] or self._to_unload and self._to_unload[key]
@@ -216,12 +217,12 @@ function DynamicResourceManager:clbk_resource_loaded(status, resource_type, reso
 	end
 end
 
--- Lines 221-223
+-- Lines 231-233
 function DynamicResourceManager:change_material_config(name, unit)
 	unit:set_material_config(name, true, callback(self, self, "on_material_applied", unit), 100)
 end
 
--- Lines 227-237
+-- Lines 237-247
 function DynamicResourceManager:on_material_applied(unit)
 	if alive(unit) then
 		if unit:interaction() then
@@ -234,65 +235,60 @@ function DynamicResourceManager:on_material_applied(unit)
 	end
 end
 
--- Lines 241-245
+-- Lines 251-255
 function DynamicResourceManager:_check_file_streamer_status()
 	local nr_tasks = Application:file_streamer_workload()
 
 	self._listener_holder:call(self.listener_events.file_streamer_workload, nr_tasks)
 end
 
--- Lines 249-252
+-- Lines 259-262
 function DynamicResourceManager:is_file_streamer_idle()
 	local nr_tasks = Application:file_streamer_workload()
 
 	return nr_tasks == 0
 end
 
--- Lines 256-269
-function DynamicResourceManager:set_file_streaming_chunk_size_mul(mul, sleep_time)
-	mul = mul or self._streaming_settings.chunk_size_mul
-	sleep_time = sleep_time or self._streaming_settings.sleep_time
+-- Lines 266-282
+function DynamicResourceManager:set_file_streaming_profile(profile_name)
+	local profile = DynamicResourceManager.STREAMING_PROFILES[profile_name]
 
-	if mul == self._streaming_settings.chunk_size_mul and sleep_time == self._streaming_settings.sleep_time then
+	if not profile and not profile.chunk_size and not profile.sleep_time then
+		Application:error("[DynamicResourceManager:set_file_streaming_profile] invalid streaming profile:", profile_name)
+
 		return
 	end
 
-	print("[DynamicResourceManager:set_file_streaming_chunk_size_mul]", mul, "sleep_time", sleep_time)
+	if profile == self._streaming_settings then
+		return
+	end
 
-	self._streaming_settings.chunk_size_mul = mul
+	self._streaming_settings = profile
 
-	self:_set_file_streamer_settings(self._streaming_settings.chunk_size_kb, sleep_time)
+	Application:debug("[DynamicResourceManager:set_file_streaming_profile] name, chunk_size, sleep time:", profile_name, profile.chunk_size, profile.sleep_time)
+	self:_set_file_streamer_settings(self:file_streamer_settings())
 end
 
--- Lines 273-283
-function DynamicResourceManager:_set_file_streamer_settings(chunk_size_kb, sleep_time)
-	self._streaming_settings.chunk_size_kb = chunk_size_kb
-	self._streaming_settings.sleep_time = sleep_time
-	local chunk_size_kb_end_value = chunk_size_kb * 1024 * self._streaming_settings.chunk_size_mul
-
-	Application:set_file_streamer_settings(chunk_size_kb_end_value, sleep_time)
+-- Lines 286-288
+function DynamicResourceManager:_set_file_streamer_settings(chunk_size, sleep_time)
+	Application:set_file_streamer_settings(chunk_size, sleep_time)
 end
 
--- Lines 287-289
+-- Lines 292-294
+function DynamicResourceManager:file_streamer_settings()
+	return self._streaming_settings.chunk_size, self._streaming_settings.sleep_time
+end
+
+-- Lines 298-300
 function DynamicResourceManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 293-295
+-- Lines 304-306
 function DynamicResourceManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 299-301
-function DynamicResourceManager:max_streaming_chunk()
-	return self._max_streaming_chunk_kb
-end
-
--- Lines 305-307
-function DynamicResourceManager:clbk_streaming_chunk_size_changed(name, old_value, new_value)
-	self:_set_file_streamer_settings(new_value, self._streaming_settings.sleep_time)
-end
-
--- Lines 311-312
+-- Lines 310-311
 function DynamicResourceManager:preload_units()
 end

@@ -2,39 +2,43 @@ core:module("CoreElementDebug")
 core:import("CoreMissionScriptElement")
 
 ElementDebug = ElementDebug or class(CoreMissionScriptElement.MissionScriptElement)
+ElementDebug._PRINT = false
 
--- Lines 6-8
+-- Lines 14-16
 function ElementDebug:init(...)
 	ElementDebug.super.init(self, ...)
 end
 
--- Lines 10-12
+-- Lines 18-20
 function ElementDebug:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 14-31
+-- Lines 22-40
 function ElementDebug:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
-	local prefix = "<debug>    "
-	local text = prefix .. self._values.debug_string
+	if ElementDebug._PRINT then
+		local prefix = "<debug>    "
+		local text = prefix .. self._values.debug_string
 
-	if not self._values.as_subtitle and self._values.show_instigator then
-		text = text .. " - " .. tostring(instigator)
+		if not self._values.as_subtitle and self._values.show_instigator then
+			text = text .. " - " .. tostring(instigator)
+		end
+
+		local color = self._values.color or self._values.as_subtitle and Color.yellow
+
+		managers.mission:add_fading_debug_output(text, color, self._values.as_subtitle)
 	end
 
-	local color = self._values.color or self._values.as_subtitle and Color.yellow
-
-	managers.mission:add_fading_debug_output(text, color, self._values.as_subtitle)
 	ElementDebug.super.on_executed(self, instigator)
 end
 
--- Lines 33-48
+-- Lines 42-56
 function ElementDebug:on_monitored_element(monitored_element_name, output_string)
-	if not self._values.enabled then
+	if not self._values.enabled or not ElementDebug._PRINT then
 		return
 	end
 

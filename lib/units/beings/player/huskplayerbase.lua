@@ -59,7 +59,7 @@ function HuskPlayerBase:_do_post_init()
 	end
 end
 
--- Lines 61-81
+-- Lines 61-77
 function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	if category == UpgradesTweakData.CLEAR_UPGRADES_FLAG then
 		self._upgrades = {}
@@ -73,27 +73,22 @@ function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	self._upgrades[category][upgrade] = value
 	self._upgrade_levels[category][upgrade] = level
 
-	if upgrade == "passive_concealment_modifier" then
-		local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
-
-		self:set_suspicion_multiplier("equipment", 1 / con_mul)
-		self:set_detection_multiplier("equipment", 1 / con_mul)
-	elseif upgrade == "suspicion_multiplier" then
+	if upgrade == "suspicion_multiplier" then
 		self:set_suspicion_multiplier(upgrade, value)
 	end
 end
 
--- Lines 85-87
+-- Lines 81-83
 function HuskPlayerBase:upgrade_value(category, upgrade)
 	return self._upgrades[category] and self._upgrades[category][upgrade]
 end
 
--- Lines 89-91
+-- Lines 85-87
 function HuskPlayerBase:upgrade_level(category, upgrade)
 	return self._upgrade_levels[category] and self._upgrade_levels[category][upgrade]
 end
 
--- Lines 95-105
+-- Lines 91-101
 function HuskPlayerBase:pre_destroy(unit)
 	managers.groupai:state():unregister_criminal(self._unit)
 
@@ -108,17 +103,17 @@ function HuskPlayerBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 109-112
+-- Lines 105-108
 function HuskPlayerBase:nick_name()
 	local peer = managers.network:session():peer_by_unit(self._unit)
 
 	return peer and peer:name() or ""
 end
 
--- Lines 116-118
+-- Lines 112-114
 function HuskPlayerBase:on_death_exit()
 end
 
--- Lines 122-123
+-- Lines 118-119
 function HuskPlayerBase:chk_freeze_anims()
 end

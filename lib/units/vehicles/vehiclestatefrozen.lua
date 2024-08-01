@@ -5,7 +5,7 @@ function VehicleStateFrozen:init(unit)
 	BaseVehicleState.init(self, unit)
 end
 
--- Lines 9-21
+-- Lines 9-23
 function VehicleStateFrozen:enter(state_data, enter_data)
 	self._unit:vehicle_driving()._hit_soundsource:stop()
 	self._unit:vehicle_driving()._slip_soundsource:stop()
@@ -15,20 +15,23 @@ function VehicleStateFrozen:enter(state_data, enter_data)
 	self._unit:vehicle_driving()._shooting_stance_allowed = false
 
 	self:disable_interactions()
-	self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+
+	if Network:is_server() then
+		self._unit:vehicle_driving():set_input(0, 0, 1, 1, false, false, 2)
+	end
 end
 
--- Lines 25-27
+-- Lines 27-29
 function VehicleStateFrozen:allow_exit()
 	return false
 end
 
--- Lines 31-33
+-- Lines 33-35
 function VehicleStateFrozen:stop_vehicle()
 	return true
 end
 
--- Lines 37-39
+-- Lines 39-41
 function VehicleStateFrozen:is_vulnerable()
 	return false
 end

@@ -13,7 +13,7 @@ CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT = "units/vanilla/chara
 CharacterCustomizationTweakData.PART_LENGTH_SHORT = "length_short"
 CharacterCustomizationTweakData.PART_LENGTH_LONG = "length_long"
 
--- Lines 21-31
+-- Lines 21-42
 function CharacterCustomizationTweakData:init()
 	self:initialization()
 
@@ -45,7 +45,7 @@ function CharacterCustomizationTweakData:init()
 	}
 end
 
--- Lines 33-1765
+-- Lines 44-1896
 function CharacterCustomizationTweakData:initialization()
 	self.customizations = {
 		american_default_head = {}
@@ -1418,7 +1418,8 @@ function CharacterCustomizationTweakData:initialization()
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.british_ace_jacket_001_lower = {
 		name = "character_customization_british_ace_jacket_001_lower_name",
@@ -1433,7 +1434,8 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.german_ace_jacket_001_upper = {
 		name = "character_customization_german_ace_jacket_001_upper_name",
@@ -1449,7 +1451,8 @@ function CharacterCustomizationTweakData:initialization()
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.german_ace_jacket_001_lower = {
 		name = "character_customization_german_ace_jacket_001_lower_name",
@@ -1464,7 +1467,8 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.russian_ace_jacket_001_upper = {
 		name = "character_customization_soviet_ace_jacket_001_upper_name",
@@ -1480,7 +1484,8 @@ function CharacterCustomizationTweakData:initialization()
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.russian_ace_jacket_001_lower = {
 		name = "character_customization_soviet_ace_jacket_001_lower_name",
@@ -1495,7 +1500,8 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.american_ace_jacket_001_upper = {
 		name = "character_customization_usa_ace_jacket_001_upper_name",
@@ -1511,7 +1517,8 @@ function CharacterCustomizationTweakData:initialization()
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.american_ace_jacket_001_lower = {
 		name = "character_customization_usa_ace_jacket_001_lower_name",
@@ -1526,7 +1533,8 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
 		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
-		droppable = true
+		droppable = true,
+		is_challenge_reward = true
 	}
 	self.customizations.british_bomber_jacket_001_upper = {
 		name = "character_customization_british_bomber_jacket_001_upper_name",
@@ -1852,33 +1860,33 @@ function CharacterCustomizationTweakData:initialization()
 		"british_default_lower",
 		"russian_default_lower",
 		"american_gangbanger_001_lower",
-		"russian_commisar_001_lower",
+		"british_gangbanger_001_lower",
 		"german_officer_001_lower",
 		"british_officer_001_lower",
 		"british_casual_001_lower",
 		"british_casual_003_lower",
 		"british_casual_004_lower",
-		"british_gangbanger_001_lower",
+		"russian_commisar_001_lower",
 		"russian_commisar_002_lower",
+		"russian_commisar_003_lower",
 		"german_gangbanger_001_lower",
 		"american_gangbanger_002_lower",
-		"german_officer_002_lower",
 		"russian_casual_001_lower",
 		"american_casual_001_lower",
 		"american_officer_001_lower",
 		"american_officer_002_lower",
+		"german_officer_002_lower",
+		"british_officer_002_lower",
 		"american_grunt_001_lower",
 		"german_grunt_001_lower",
-		"german_grunt_002_lower",
-		"russian_commisar_003_lower",
-		"russian_mech_001_lower",
 		"russian_grunt_001_lower",
+		"german_grunt_002_lower",
+		"russian_grunt_002_lower",
+		"russian_mech_001_lower",
 		"british_casual_002_lower",
 		"german_gangbanger_002_lower",
 		"american_gangbanger_003_lower",
-		"russian_grunt_002_lower",
 		"german_grunt_003_lower",
-		"british_officer_002_lower",
 		"british_bomber_jacket_001_lower",
 		"american_bomber_jacket_001_lower",
 		"german_bomber_jacket_001_lower",
@@ -1898,7 +1906,7 @@ function CharacterCustomizationTweakData:initialization()
 	}
 end
 
--- Lines 1767-1777
+-- Lines 1900-1910
 function CharacterCustomizationTweakData:get_index_table(part_type)
 	local source_table = {}
 
@@ -1913,7 +1921,7 @@ function CharacterCustomizationTweakData:get_index_table(part_type)
 	return source_table
 end
 
--- Lines 1779-1792
+-- Lines 1912-1925
 function CharacterCustomizationTweakData:get_all_parts_indexed(part_type, nationality, owned)
 	local result = {}
 	local source_table = self:get_index_table(part_type)
@@ -1928,7 +1936,7 @@ function CharacterCustomizationTweakData:get_all_parts_indexed(part_type, nation
 	return result
 end
 
--- Lines 1794-1807
+-- Lines 1927-1940
 function CharacterCustomizationTweakData:get_all_parts(part_type)
 	local result = {}
 	local source_table = self:get_index_table(part_type)
@@ -1943,7 +1951,7 @@ function CharacterCustomizationTweakData:get_all_parts(part_type)
 	return result
 end
 
--- Lines 1810-1822
+-- Lines 1943-1955
 function CharacterCustomizationTweakData:get_defaults()
 	local customizations = {}
 
@@ -1956,7 +1964,7 @@ function CharacterCustomizationTweakData:get_defaults()
 	return customizations
 end
 
--- Lines 1825-1835
+-- Lines 1958-1968
 function CharacterCustomizationTweakData:get_reward_loot_by_rarity(rarity)
 	local customizations = {}
 
@@ -1969,7 +1977,7 @@ function CharacterCustomizationTweakData:get_reward_loot_by_rarity(rarity)
 	return customizations
 end
 
--- Lines 1838-1846
+-- Lines 1971-1979
 function CharacterCustomizationTweakData:get_droppable_customizations()
 	local customizations = {}
 
@@ -1982,7 +1990,7 @@ function CharacterCustomizationTweakData:get_droppable_customizations()
 	return customizations
 end
 
--- Lines 1849-1868
+-- Lines 1982-1995
 function CharacterCustomizationTweakData:_is_customization_droppable(customization)
 	if not customization.droppable then
 		return false
@@ -1995,7 +2003,7 @@ function CharacterCustomizationTweakData:_is_customization_droppable(customizati
 	return true
 end
 
--- Lines 1871-1889
+-- Lines 1998-2016
 function CharacterCustomizationTweakData:_is_customization_default(key, customization)
 	if customization.default_clothing then
 		return true

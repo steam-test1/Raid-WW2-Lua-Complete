@@ -257,9 +257,12 @@ function AiLayer:draw_patrol_path_externaly(name)
 	self:_draw_patrol_path(name, managers.ai_data:patrol_path(name))
 end
 
--- Lines 238-350
+-- Lines 238-352
 function AiLayer:build_panel(notebook)
-	AiLayer.super.build_panel(self, notebook)
+	AiLayer.super.build_panel(self, notebook, {
+		units_noteboook_proportion = 0,
+		units_notebook_min_size = Vector3(-1, 140, 0)
+	})
 
 	local ai_sizer = EWS:BoxSizer("VERTICAL")
 	local graphs_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Graphs")
@@ -333,13 +336,14 @@ function AiLayer:build_panel(notebook)
 	build_settings:add(self._all_visible, 0, 0, "EXPAND")
 
 	self._ray_length_params = {
-		value = 150,
-		name = "Ray length [cm]:",
-		ctrlr_proportions = 1,
 		name_proportions = 1,
+		name = "Ray length [cm]:",
+		ctrlr_proportions = 3,
+		value = 150,
 		tooltip = "Specifies the visible graph ray lenght in centimeter",
 		min = 1,
 		floats = 0,
+		sizer_proportions = 1,
 		panel = self._ews_panel,
 		sizer = build_settings
 	}
@@ -355,6 +359,7 @@ function AiLayer:build_panel(notebook)
 		coarse_graph = EWS:CheckBox(self._ews_panel, "Coarse Graph", "", "ALIGN_LEFT"),
 		visibility_graph = EWS:CheckBox(self._ews_panel, "Visibility Graph", "", "ALIGN_LEFT"),
 		blockers = EWS:CheckBox(self._ews_panel, "Blockers", "", "ALIGN_LEFT"),
+		covers = EWS:CheckBox(self._ews_panel, "Covers", "", "ALIGN_LEFT"),
 		sectors = EWS:CheckBox(self._ews_panel, "Sectors", "", "ALIGN_LEFT")
 	}
 
@@ -371,24 +376,25 @@ function AiLayer:build_panel(notebook)
 	ai_sizer:add(graphs_sizer, 0, 0, "EXPAND")
 	ai_sizer:add(self:_build_ai_settings(), 0, 0, "EXPAND")
 	ai_sizer:add(self:_build_ai_unit_settings(), 0, 0, "EXPAND")
-	ai_sizer:add(self:_build_ai_data(), 1, 0, "EXPAND")
-	ai_sizer:add(self:_build_motion_path_section(), 1, 0, "EXPAND")
-	self._sizer:add(ai_sizer, 4, 0, "EXPAND")
+	ai_sizer:add(self:_build_ai_data(), 0, 0, "EXPAND")
+	ai_sizer:add(self:_build_motion_path_section(), 0, 0, "EXPAND")
+	self._sizer:add(ai_sizer, 1, 0, "EXPAND")
 
 	self._graphs = graphs
 
 	return self._ews_panel
 end
 
--- Lines 352-375
+-- Lines 354-378
 function AiLayer:_build_ai_settings()
 	local graphs_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Settings")
 	local group_state = {
+		sizer_proportions = 1,
 		name = "Group state:",
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Select a group state from the combo box",
 		sorted = true,
-		ctrlr_proportions = 2,
 		panel = self._ews_panel,
 		sizer = graphs_sizer,
 		options = managers.groupai:state_names(),
@@ -405,17 +411,18 @@ function AiLayer:_build_ai_settings()
 	return graphs_sizer
 end
 
--- Lines 377-429
+-- Lines 380-436
 function AiLayer:_build_ai_unit_settings()
 	local sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Unit settings")
 	local suspicion_multiplier = {
-		value = 1,
-		name = "Suspicion Multiplier:",
-		ctrlr_proportions = 2,
 		name_proportions = 1,
+		name = "Suspicion Multiplier:",
+		ctrlr_proportions = 4,
+		value = 1,
 		tooltip = "multiplier applied to suspicion buildup rate",
 		min = 1,
 		floats = 1,
+		sizer_proportions = 1,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -425,13 +432,14 @@ function AiLayer:_build_ai_unit_settings()
 	suspicion_multiplier_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_suspicion_mul"), nil)
 
 	local detection_multiplier = {
-		value = 1,
-		name = "Detection Multiplier:",
-		ctrlr_proportions = 2,
 		name_proportions = 1,
+		name = "Detection Multiplier:",
+		ctrlr_proportions = 4,
+		value = 1,
 		tooltip = "multiplier applied to AI detection speed. min is 0.01",
 		min = 0.01,
 		floats = 2,
+		sizer_proportions = 1,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -458,7 +466,7 @@ function AiLayer:_build_ai_unit_settings()
 	return sizer
 end
 
--- Lines 432-460
+-- Lines 439-467
 function AiLayer:_build_ai_data()
 	local ai_data_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Ai Data")
 	local patrol_paths_sizer = EWS:StaticBoxSizer(self._ews_panel, "HORIZONTAL", "Patrol paths")
@@ -477,13 +485,13 @@ function AiLayer:_build_ai_data()
 	self._patrol_paths_list = EWS:ListBox(self._ews_panel, "ai_layer_patrol_paths", "LB_SINGLE,LB_HSCROLL,LB_NEEDED_SB,LB_SORT")
 
 	self._patrol_paths_list:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "_select_patrol_path"), nil)
-	patrol_paths_sizer:add(self._patrol_paths_list, 1, 0, "EXPAND")
-	ai_data_sizer:add(patrol_paths_sizer, 1, 0, "EXPAND")
+	patrol_paths_sizer:add(self._patrol_paths_list, 4, 0, "EXPAND")
+	ai_data_sizer:add(patrol_paths_sizer, 0, 0, "EXPAND")
 
 	return ai_data_sizer
 end
 
--- Lines 462-544
+-- Lines 469-551
 function AiLayer:_build_motion_path_section()
 	local motion_paths_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Motion Paths (Work In Progress)")
 	local create_paths_btn = EWS:Button(self._ews_panel, "Recreate Paths", "", "BU_EXACTFIT,NO_BORDER")
@@ -522,7 +530,7 @@ function AiLayer:_build_motion_path_section()
 		name_proportions = 1,
 		tooltip = "Path is used for either ground or airborne units.",
 		sorted = false,
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer,
 		options = mop_path_types,
@@ -535,7 +543,7 @@ function AiLayer:_build_motion_path_section()
 	local speed_limit = {
 		value = 50,
 		name = "Default Speed Limit [km/h]:",
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
 		min = -1,
@@ -558,7 +566,7 @@ function AiLayer:_build_motion_path_section()
 	return motion_paths_sizer
 end
 
--- Lines 546-557
+-- Lines 553-564
 function AiLayer:_set_mop_type()
 	local selected_path = self:_selected_motion_path()
 
@@ -574,7 +582,7 @@ function AiLayer:_set_mop_type()
 	end
 end
 
--- Lines 560-572
+-- Lines 567-579
 function AiLayer:_set_mop_speed_limit()
 	local speed_limit = self.motion_path_settings_guis.default_speed_limit.value
 	local selected_path = self:_selected_motion_path()
@@ -590,17 +598,17 @@ function AiLayer:_set_mop_speed_limit()
 	managers.motion_path:set_default_speed_limit(speed_limit)
 end
 
--- Lines 574-576
+-- Lines 581-583
 function AiLayer:_delete_motion_path()
 	Application:debug("AiLayer:_delete_motion_path()")
 end
 
--- Lines 578-580
+-- Lines 585-587
 function AiLayer:_toggle_only_draw_selected_motion_path(motion_path_toolbar)
 	self._only_draw_selected_motion_path = motion_path_toolbar:tool_state("ONLY_DRAW_SELECTED_MOTION_PATH")
 end
 
--- Lines 583-632
+-- Lines 590-639
 function AiLayer:_update_motion_paths_list()
 	self._motion_paths_list:clear()
 
@@ -652,13 +660,13 @@ function AiLayer:_update_motion_paths_list()
 	end
 end
 
--- Lines 634-637
+-- Lines 641-644
 function AiLayer:_create_motion_paths()
 	managers.motion_path:recreate_paths()
 	self:_update_motion_paths_list()
 end
 
--- Lines 640-650
+-- Lines 647-657
 function AiLayer:_select_motion_path()
 	local motion_path_name = self:_selected_motion_path()
 
@@ -670,7 +678,7 @@ function AiLayer:_select_motion_path()
 	end
 end
 
--- Lines 652-658
+-- Lines 659-665
 function AiLayer:_selected_motion_path()
 	local index = self._motion_paths_list:selected_index()
 
@@ -681,12 +689,12 @@ function AiLayer:_selected_motion_path()
 	return nil
 end
 
--- Lines 660-662
+-- Lines 667-669
 function AiLayer:_toggle_only_draw_selected_patrol_path(patrol_path_toolbar)
 	self._only_draw_selected_patrol_path = patrol_path_toolbar:tool_state("ONLY_DRAW_SELECTED_PATH")
 end
 
--- Lines 664-700
+-- Lines 671-716
 function AiLayer:_calc_graphs(params)
 	local build_type = params.build_type
 
@@ -719,6 +727,17 @@ function AiLayer:_calc_graphs(params)
 						if unit:unit_data().disable_on_ai_graph then
 							unit:set_enabled(false)
 							table.insert(self._saved_disabled_units, unit)
+						else
+							local instance_name = unit:unit_data().instance
+
+							if not not instance_name then
+								local instance_data = managers.world_instance:get_instance_data_by_name(instance_name)
+
+								if instance_data.mission_placed then
+									unit:set_enabled(false)
+									table.insert(self._saved_disabled_units, unit)
+								end
+							end
 						end
 					end
 				end
@@ -732,7 +751,7 @@ function AiLayer:_calc_graphs(params)
 	end
 end
 
--- Lines 703-711
+-- Lines 719-727
 function AiLayer:_graphs_done(vis_graph)
 	managers.editor:output("Navigation seqments calculated")
 
@@ -745,7 +764,7 @@ function AiLayer:_graphs_done(vis_graph)
 	end
 end
 
--- Lines 713-731
+-- Lines 729-747
 function AiLayer:_build_visibility_graph()
 	local all_visible = self._all_visible:get_value() and true
 	local exclude, include = nil
@@ -767,12 +786,12 @@ function AiLayer:_build_visibility_graph()
 	managers.navigation:build_visibility_graph(callback(self, self, "_visibility_graph_done"), all_visible, exclude, include, ray_lenght)
 end
 
--- Lines 734-736
+-- Lines 750-752
 function AiLayer:_visibility_graph_done()
 	managers.editor:output("Visibility graph calculated")
 end
 
--- Lines 739-762
+-- Lines 755-778
 function AiLayer:_get_build_settings(type, build_type)
 	local settings = {}
 	local units = self:_get_units(type, build_type)
@@ -799,7 +818,7 @@ function AiLayer:_get_build_settings(type, build_type)
 	return settings
 end
 
--- Lines 765-774
+-- Lines 781-790
 function AiLayer:_get_units(type, build_type)
 	local unit_name = self._unit_graph_types[type]
 	local units = {}
@@ -813,7 +832,7 @@ function AiLayer:_get_units(type, build_type)
 	return units
 end
 
--- Lines 776-783
+-- Lines 792-799
 function AiLayer:_apply_visualization_options()
 	local options = {}
 
@@ -824,14 +843,14 @@ function AiLayer:_apply_visualization_options()
 	managers.navigation:set_debug_draw_state(options)
 end
 
--- Lines 785-788
+-- Lines 801-804
 function AiLayer:_set_group_state()
 	self._ai_settings.group_state = self._ai_settings_guis.group_state.value
 
 	managers.groupai:set_state(self._ai_settings.group_state)
 end
 
--- Lines 790-796
+-- Lines 806-812
 function AiLayer:_update_settings()
 	for name, value in pairs(self._ai_settings) do
 		if self._ai_settings_guis[name] then
@@ -840,7 +859,7 @@ function AiLayer:_update_settings()
 	end
 end
 
--- Lines 798-805
+-- Lines 814-821
 function AiLayer:_clear_graphs()
 	local confirm = EWS:message_box(Global.frame_panel, "Clear all graphs?", "AI", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -851,7 +870,7 @@ function AiLayer:_clear_graphs()
 	managers.navigation:clear()
 end
 
--- Lines 807-820
+-- Lines 823-836
 function AiLayer:_clear_selected_nav_segment()
 	local confirm = EWS:message_box(Global.frame_panel, "Clear selected graph segment?", "AI", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -870,7 +889,7 @@ function AiLayer:_clear_selected_nav_segment()
 	end
 end
 
--- Lines 823-843
+-- Lines 839-859
 function AiLayer:set_select_unit(unit)
 	if alive(unit) then
 		if unit:name() == self._patrol_point_unit then
@@ -893,7 +912,7 @@ function AiLayer:set_select_unit(unit)
 	end
 end
 
--- Lines 845-885
+-- Lines 861-901
 function AiLayer:_add_to_visible_exlude_filter(unit)
 	if not alive(unit) then
 		return false
@@ -934,7 +953,7 @@ function AiLayer:_add_to_visible_exlude_filter(unit)
 	return false
 end
 
--- Lines 889-901
+-- Lines 905-917
 function AiLayer:_set_selection_patrol_paths_listbox(name)
 	for i = 0, self._patrol_paths_list:nr_items() - 1 do
 		if self._patrol_paths_list:get_string(i) == name then
@@ -945,7 +964,7 @@ function AiLayer:_set_selection_patrol_paths_listbox(name)
 	self:_select_patrol_path()
 end
 
--- Lines 903-918
+-- Lines 919-934
 function AiLayer:_create_new_patrol_path()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for the new patrol path:", "Create patrol path", "new_patrol_path", Vector3(-1, -1, 0), true)
 
@@ -966,7 +985,7 @@ function AiLayer:_create_new_patrol_path()
 	end
 end
 
--- Lines 920-927
+-- Lines 936-943
 function AiLayer:_current_patrol_units(name)
 	local t = {}
 	local path = managers.ai_data:patrol_path(name)
@@ -978,7 +997,7 @@ function AiLayer:_current_patrol_units(name)
 	return t
 end
 
--- Lines 929-946
+-- Lines 945-962
 function AiLayer:_delete_patrol_path()
 	local name = self:_selected_patrol_path()
 
@@ -1002,7 +1021,7 @@ function AiLayer:_delete_patrol_path()
 	end
 end
 
--- Lines 948-954
+-- Lines 964-970
 function AiLayer:_update_patrol_paths_list()
 	self._patrol_paths_list:clear()
 
@@ -1011,7 +1030,7 @@ function AiLayer:_update_patrol_paths_list()
 	end
 end
 
--- Lines 956-962
+-- Lines 972-978
 function AiLayer:_selected_patrol_path()
 	local index = self._patrol_paths_list:selected_index()
 
@@ -1022,7 +1041,7 @@ function AiLayer:_selected_patrol_path()
 	return nil
 end
 
--- Lines 964-972
+-- Lines 980-988
 function AiLayer:_select_patrol_path()
 	local name = self:_selected_patrol_path()
 
@@ -1035,7 +1054,7 @@ function AiLayer:_select_patrol_path()
 	end
 end
 
--- Lines 974-987
+-- Lines 990-1003
 function AiLayer:do_spawn_unit(name, pos, rot)
 	if Idstring(name) == self._patrol_point_unit and not self._current_patrol_path then
 		managers.editor:output("Create or select a patrol path first!")
@@ -1052,7 +1071,7 @@ function AiLayer:do_spawn_unit(name, pos, rot)
 	return unit
 end
 
--- Lines 989-996
+-- Lines 1005-1012
 function AiLayer:_add_patrol_point(unit)
 	local name = self:_selected_patrol_path()
 
@@ -1063,7 +1082,7 @@ function AiLayer:_add_patrol_point(unit)
 	managers.ai_data:add_patrol_point(name, unit)
 end
 
--- Lines 998-1009
+-- Lines 1014-1025
 function AiLayer:_insert()
 	if not alive(self._selected_unit) or self._selected_unit:name() ~= self._patrol_point_unit then
 		return
@@ -1079,7 +1098,7 @@ function AiLayer:_insert()
 	table.insert(path.points, i + 1, point)
 end
 
--- Lines 1011-1026
+-- Lines 1027-1042
 function AiLayer:delete_unit(unit)
 	for _, u in ipairs(self._created_units) do
 		if u:name() == self._nav_surface_unit and u ~= unit then
@@ -1097,12 +1116,12 @@ function AiLayer:delete_unit(unit)
 	AiLayer.super.delete_unit(self, unit)
 end
 
--- Lines 1028-1030
+-- Lines 1044-1046
 function AiLayer:update_unit_settings()
 	AiLayer.super.update_unit_settings(self)
 end
 
--- Lines 1032-1037
+-- Lines 1048-1053
 function AiLayer:_init_ai_settings()
 	self._ai_settings = {
 		group_state = "raid"
@@ -1111,7 +1130,7 @@ function AiLayer:_init_ai_settings()
 	managers.groupai:set_state(self._ai_settings.group_state)
 end
 
--- Lines 1039-1048
+-- Lines 1055-1064
 function AiLayer:_init_mop_settings()
 	self._motion_path_settings = {}
 
@@ -1124,7 +1143,7 @@ function AiLayer:_init_mop_settings()
 	end
 end
 
--- Lines 1050-1064
+-- Lines 1066-1080
 function AiLayer:clear()
 	AiLayer.super.clear(self)
 
@@ -1141,7 +1160,7 @@ function AiLayer:clear()
 	managers.navigation:clear()
 end
 
--- Lines 1066-1070
+-- Lines 1082-1086
 function AiLayer:add_triggers()
 	AiLayer.super.add_triggers(self)
 
@@ -1150,7 +1169,7 @@ function AiLayer:add_triggers()
 	vc:add_trigger(Idstring("enter"), callback(self, self, "_insert"))
 end
 
--- Lines 1072-1078
+-- Lines 1088-1094
 function AiLayer:_set_suspicion_mul()
 	if not self._selected_unit or not self._selected_unit:ai_editor_data() then
 		return
@@ -1161,7 +1180,7 @@ function AiLayer:_set_suspicion_mul()
 	managers.navigation:set_suspicion_multiplier(self._selected_unit:unit_data().unit_id, self._ai_unit_settings_guis.suspicion_multiplier.value)
 end
 
--- Lines 1080-1086
+-- Lines 1096-1102
 function AiLayer:_set_detection_mul()
 	if not self._selected_unit or not self._selected_unit:ai_editor_data() then
 		return
@@ -1172,7 +1191,7 @@ function AiLayer:_set_detection_mul()
 	managers.navigation:set_detection_multiplier(self._selected_unit:unit_data().unit_id, self._ai_unit_settings_guis.detection_multiplier.value)
 end
 
--- Lines 1088-1094
+-- Lines 1104-1110
 function AiLayer:_set_barrage_allowed()
 	if not self._selected_unit or not self._selected_unit:ai_editor_data() then
 		return

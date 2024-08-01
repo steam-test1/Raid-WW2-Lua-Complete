@@ -23,7 +23,7 @@ function MountedWeaponTweakData:_init_data_sherman()
 			range = 20000,
 			damage = 25,
 			locator = "anim_turret",
-			damage_radius = 1000,
+			damage_radius = 750,
 			traverse_time = 10,
 			player_damage = 15,
 			armor_piercing = true
@@ -49,7 +49,7 @@ function MountedWeaponTweakData:_init_data_tiger()
 			range = 20000,
 			damage = 75,
 			locator = "anim_turret",
-			damage_radius = 1000,
+			damage_radius = 750,
 			traverse_time = 10,
 			player_damage = 15,
 			armor_piercing = true
@@ -75,7 +75,7 @@ function MountedWeaponTweakData:_init_data_luchs()
 			range = 20000,
 			damage = 35,
 			locator = "anim_turret_heading",
-			damage_radius = 1000,
+			damage_radius = 750,
 			traverse_time = 10,
 			player_damage = 15,
 			armor_piercing = true

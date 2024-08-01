@@ -1,11 +1,12 @@
 UnitByName = UnitByName or class(CoreEditorEwsDialog)
 
--- Lines 3-104
+-- Lines 3-107
 function UnitByName:init(name, unit_filter_function, ...)
 	self._dialog_name = self._dialog_name or name or "UnitByName"
 	self._unit_filter_function = unit_filter_function
 
-	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	CoreEditorEwsDialog.init(self, nil, self._dialog_name, "", Vector3(300, 150, 0), Vector3(480, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	self._dialog:set_min_size(Vector3(480, 450, 0))
 	self:create_panel("VERTICAL")
 
 	local panel = self._panel
@@ -28,21 +29,21 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self._list:clear_all()
 	self._list:append_column("Name")
-	list_sizer:add(self._list, 1, 0, "EXPAND")
+	list_sizer:add(self._list, 1, 2, "EXPAND,BOTTOM")
 	horizontal_ctrlr_sizer:add(list_sizer, 3, 0, "EXPAND")
 
 	local list_ctrlrs = EWS:BoxSizer("VERTICAL")
 	local filter_type_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter By Type")
 
-	list_ctrlrs:add(filter_type_sizer, 0, 0, "EXPAND")
+	list_ctrlrs:add(filter_type_sizer, 0, 2, "EXPAND,BOTTOM")
 
 	self._filter_buttons = {}
 
-	-- Lines 37-40
+	-- Lines 38-41
 	local function add_filter_button(id, name)
 		self._filter_buttons[id] = EWS:RadioButton(panel, name, "filter_type", "")
 
-		filter_type_sizer:add(self._filter_buttons[id], 0, 0, "")
+		filter_type_sizer:add(self._filter_buttons[id], 0, 2, "LEFT,RIGHT")
 	end
 
 	add_filter_button("by_name_id", "Name ID")
@@ -53,6 +54,26 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self._layer_cbs = {}
 	local layers_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "List Layers")
+	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
+	local all_btn = EWS:Button(panel, "All", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
+	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
+	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local none_btn = EWS:Button(panel, "None", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
+	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
+	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local invert_btn = EWS:Button(panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
+	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
+	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+	layers_sizer:add(layer_buttons_sizer, 0, 1, "TOP,BOTTOM")
+
 	local layers = managers.editor:layers()
 	local names_layers = {}
 
@@ -74,31 +95,12 @@ function UnitByName:init(name, unit_filter_function, ...)
 			name = name
 		})
 		cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-		layers_sizer:add(cb, 0, 2, "EXPAND,TOP")
+		layers_sizer:add(cb, 0, 2, "EXPAND,TOP,LEFT,RIGHT")
 	end
 
-	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
-	local all_btn = EWS:Button(panel, "All", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
-	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
-	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local none_btn = EWS:Button(panel, "None", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
-	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
-	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local invert_btn = EWS:Button(panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
-	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
-	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
 	list_ctrlrs:add(layers_sizer, 0, 2, "EXPAND,TOP")
 	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 5, "EXPAND,LEFT")
-	panel_sizer:add(horizontal_ctrlr_sizer, 1, 0, "EXPAND")
+	panel_sizer:add(horizontal_ctrlr_sizer, 1, 5, "EXPAND,ALL")
 	self._list:connect("EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "_on_mark_unit"), nil)
 	self._list:connect("EVT_COMMAND_LIST_ITEM_ACTIVATED", callback(self, self, "_on_select_unit"), nil)
 	self._list:connect("EVT_CHAR", callback(self, self, "key_delete"), "")
@@ -108,12 +110,12 @@ function UnitByName:init(name, unit_filter_function, ...)
 
 	self:_build_buttons(panel, button_sizer)
 	panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:fill_unit_list()
 	self._dialog:set_visible(true)
 end
 
--- Lines 106-111
+-- Lines 109-114
 function UnitByName:_build_buttons(panel, sizer)
 	local cancel_btn = EWS:Button(panel, "Cancel", "", "")
 
@@ -122,12 +124,12 @@ function UnitByName:_build_buttons(panel, sizer)
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 end
 
--- Lines 113-115
+-- Lines 116-118
 function UnitByName:_on_set_filter()
 	self:fill_unit_list()
 end
 
--- Lines 117-123
+-- Lines 120-126
 function UnitByName:_get_filter_type()
 	for name, ctrlr in pairs(self._filter_buttons) do
 		if ctrlr:get_value() then
@@ -136,7 +138,7 @@ function UnitByName:_get_filter_type()
 	end
 end
 
--- Lines 125-130
+-- Lines 128-133
 function UnitByName:on_all_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(true)
@@ -145,7 +147,7 @@ function UnitByName:on_all_layers()
 	self:fill_unit_list()
 end
 
--- Lines 132-137
+-- Lines 135-140
 function UnitByName:on_none_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(false)
@@ -154,7 +156,7 @@ function UnitByName:on_none_layers()
 	self:fill_unit_list()
 end
 
--- Lines 139-144
+-- Lines 142-147
 function UnitByName:on_invert_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(not cb:get_value())
@@ -163,7 +165,7 @@ function UnitByName:on_invert_layers()
 	self:fill_unit_list()
 end
 
--- Lines 146-151
+-- Lines 149-154
 function UnitByName:key_delete(ctrlr, event)
 	event:skip()
 
@@ -172,7 +174,7 @@ function UnitByName:key_delete(ctrlr, event)
 	end
 end
 
--- Lines 153-158
+-- Lines 156-161
 function UnitByName:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -181,29 +183,29 @@ function UnitByName:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines 160-162
+-- Lines 163-165
 function UnitByName:on_layer_cb(data)
 	self:fill_unit_list()
 end
 
--- Lines 164-166
+-- Lines 167-169
 function UnitByName:on_cancel()
 	self._dialog:set_visible(false)
 end
 
--- Lines 168-170
+-- Lines 171-173
 function UnitByName:_on_delete()
 end
 
--- Lines 172-174
+-- Lines 175-177
 function UnitByName:_on_mark_unit()
 end
 
--- Lines 176-178
+-- Lines 179-181
 function UnitByName:_on_select_unit()
 end
 
--- Lines 181-194
+-- Lines 184-197
 function UnitByName:_selected_item_units()
 	if self._cancelled then
 		return {}
@@ -222,7 +224,7 @@ function UnitByName:_selected_item_units()
 	return units
 end
 
--- Lines 197-202
+-- Lines 200-205
 function UnitByName:_selected_item_unit()
 	local index = self._list:selected_item()
 
@@ -231,7 +233,7 @@ function UnitByName:_selected_item_unit()
 	end
 end
 
--- Lines 205-212
+-- Lines 208-215
 function UnitByName:deleted_unit(unit)
 	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
@@ -242,7 +244,7 @@ function UnitByName:deleted_unit(unit)
 	end
 end
 
--- Lines 215-220
+-- Lines 218-223
 function UnitByName:spawned_unit(unit)
 	local i = self._list:append_item(unit:unit_data().name_id)
 	local j = #self._units + 1
@@ -251,7 +253,7 @@ function UnitByName:spawned_unit(unit)
 	self._list:set_item_data(i, j)
 end
 
--- Lines 223-235
+-- Lines 226-238
 function UnitByName:selected_unit(unit)
 	for _, i in ipairs(self._list:selected_items()) do
 		self._list:set_item_selected(i, false)
@@ -267,7 +269,7 @@ function UnitByName:selected_unit(unit)
 	end
 end
 
--- Lines 238-264
+-- Lines 241-267
 function UnitByName:selected_units(units)
 	if self._blocked then
 		return
@@ -302,7 +304,7 @@ function UnitByName:selected_units(units)
 	self._list:thaw()
 end
 
--- Lines 267-295
+-- Lines 270-298
 function UnitByName:unit_name_changed(unit)
 	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
@@ -338,12 +340,12 @@ function UnitByName:unit_name_changed(unit)
 	end
 end
 
--- Lines 298-300
+-- Lines 301-303
 function UnitByName:update_filter()
 	self:fill_unit_list()
 end
 
--- Lines 304-336
+-- Lines 307-339
 function UnitByName:fill_unit_list()
 	self._list:freeze()
 	self._list:delete_all_items()
@@ -383,8 +385,12 @@ function UnitByName:fill_unit_list()
 	self._list:autosize_column(0)
 end
 
--- Lines 338-349
+-- Lines 341-356
 function UnitByName:_get_filter_string(unit)
+	if not alive(unit) then
+		return 0
+	end
+
 	local filter = self:_get_filter_type()
 
 	if filter == "by_unit_id" then
@@ -400,7 +406,7 @@ function UnitByName:_get_filter_string(unit)
 	end
 end
 
--- Lines 351-357
+-- Lines 358-364
 function UnitByName:_continent_locked(unit)
 	local continent = unit:unit_data().continent
 
@@ -411,7 +417,7 @@ function UnitByName:_continent_locked(unit)
 	return unit:unit_data().continent:value("locked")
 end
 
--- Lines 359-364
+-- Lines 366-371
 function UnitByName:_unit_condition(unit)
 	if self._unit_filter_function then
 		return self._unit_filter_function(unit)
@@ -420,17 +426,17 @@ function UnitByName:_unit_condition(unit)
 	return not unit:unit_data().instance
 end
 
--- Lines 366-368
+-- Lines 373-375
 function UnitByName:reset()
 	self:fill_unit_list()
 end
 
--- Lines 370-372
+-- Lines 377-379
 function UnitByName:freeze()
 	self._list:freeze()
 end
 
--- Lines 374-376
+-- Lines 381-383
 function UnitByName:thaw()
 	self._list:thaw()
 end

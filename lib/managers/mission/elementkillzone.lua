@@ -7,7 +7,7 @@ function ElementKillZone:init(...)
 	ElementKillZone.super.init(self, ...)
 end
 
--- Lines 13-34
+-- Lines 9-30
 function ElementKillZone:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -28,7 +28,7 @@ function ElementKillZone:on_executed(instigator)
 		elseif Application:production_build() and instigator.chracter_damage and Network:is_server() then
 			managers.killzone:set_unit(instigator, self._values.type)
 		else
-			Application:error("Unsupported unit type added to killzone:   " .. inspect(instigator))
+			Application:error("Unsupported unit type added to killzone: " .. inspect(instigator))
 		end
 	end
 

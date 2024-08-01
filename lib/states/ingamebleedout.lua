@@ -60,7 +60,7 @@ function IngameBleedOutState:at_enter()
 		player:base():set_enabled(true)
 	end
 
-	managers.warcry:deactivate_warcry()
+	managers.warcry:downed()
 	managers.dialog:queue_dialog("player_gen_downed", {
 		skip_idle_check = true,
 		instigator = managers.player:local_player()

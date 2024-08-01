@@ -9,24 +9,26 @@ function PlayEffectUnitElement:init(...)
 	CorePlayEffectUnitElement.init(self, ...)
 end
 
--- Lines 12-32
+-- Lines 12-34
 function CorePlayEffectUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
 	self._hed.effect = "none"
 	self._hed.screen_space = false
+	self._hed.on_instigator = false
 	self._hed.base_time = 0
 	self._hed.random_time = 0
 	self._hed.max_amount = 0
 
 	table.insert(self._save_values, "effect")
 	table.insert(self._save_values, "screen_space")
+	table.insert(self._save_values, "on_instigator")
 	table.insert(self._save_values, "base_time")
 	table.insert(self._save_values, "random_time")
 	table.insert(self._save_values, "max_amount")
 end
 
--- Lines 34-42
+-- Lines 36-44
 function CorePlayEffectUnitElement:test_element()
 	if self._hed.effect ~= "none" then
 		self:stop_test_element()
@@ -42,7 +44,7 @@ function CorePlayEffectUnitElement:test_element()
 	end
 end
 
--- Lines 44-49
+-- Lines 46-51
 function CorePlayEffectUnitElement:stop_test_element()
 	if self._effect then
 		World:effect_manager():kill(self._effect)
@@ -51,7 +53,7 @@ function CorePlayEffectUnitElement:stop_test_element()
 	end
 end
 
--- Lines 51-57
+-- Lines 53-59
 function CorePlayEffectUnitElement:_effect_options()
 	local effect_options = {
 		"none"
@@ -64,7 +66,7 @@ function CorePlayEffectUnitElement:_effect_options()
 	return effect_options
 end
 
--- Lines 59-77
+-- Lines 61-80
 function CorePlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -72,6 +74,7 @@ function CorePlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_checkbox(panel, panel_sizer, "screen_space", "Play in Screen Space")
+	self:_build_value_checkbox(panel, panel_sizer, "on_instigator", "Play at the instigators position")
 	self:_build_value_combobox(panel, panel_sizer, "effect", self:_effect_options(), "Select and effect from the combobox")
 	self:_build_value_number(panel, panel_sizer, "base_time", {
 		floats = 2,
@@ -100,7 +103,7 @@ Be sure not to use a looping effect when using repeat or the effects will add to
 	self:add_help_text(help)
 end
 
--- Lines 79-83
+-- Lines 82-86
 function CorePlayEffectUnitElement:add_to_mission_package()
 	if self._hed.effect and self._hed.effect ~= "none" then
 		managers.editor:add_to_world_package({
@@ -114,12 +117,12 @@ end
 CoreStopEffectUnitElement = CoreStopEffectUnitElement or class(MissionElement)
 StopEffectUnitElement = StopEffectUnitElement or class(CoreStopEffectUnitElement)
 
--- Lines 91-93
+-- Lines 94-96
 function StopEffectUnitElement:init(...)
 	CoreStopEffectUnitElement.init(self, ...)
 end
 
--- Lines 95-103
+-- Lines 98-106
 function CoreStopEffectUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -130,7 +133,7 @@ function CoreStopEffectUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 105-114
+-- Lines 108-117
 function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -150,17 +153,17 @@ function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 116-119
+-- Lines 119-122
 function CoreStopEffectUnitElement:get_links_to_unit(...)
 	CoreStopEffectUnitElement.super.get_links_to_unit(self, ...)
 	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
--- Lines 121-122
+-- Lines 124-125
 function CoreStopEffectUnitElement:update_editing()
 end
 
--- Lines 124-134
+-- Lines 127-137
 function CoreStopEffectUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -178,7 +181,7 @@ function CoreStopEffectUnitElement:add_element()
 	end
 end
 
--- Lines 136-143
+-- Lines 139-146
 function CoreStopEffectUnitElement:remove_links(unit)
 	MissionElement.remove_links(self, unit)
 
@@ -189,12 +192,12 @@ function CoreStopEffectUnitElement:remove_links(unit)
 	end
 end
 
--- Lines 146-148
+-- Lines 149-151
 function CoreStopEffectUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 150-160
+-- Lines 153-163
 function CoreStopEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

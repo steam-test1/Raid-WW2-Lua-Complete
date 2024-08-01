@@ -45,9 +45,10 @@ function SpecialHonorsGui:_set_initial_data()
 	self._node.components.raid_menu_header._screen_name_label:set_alpha(0)
 end
 
--- Lines 41-55
+-- Lines 41-56
 function SpecialHonorsGui:_layout()
 	SpecialHonorsGui.super._layout(self)
+	managers.raid_menu:show_background_video()
 	self:_layout_first_screen()
 
 	if game_state_machine:current_state().stats_ready then
@@ -58,7 +59,7 @@ function SpecialHonorsGui:_layout()
 	managers.menu_component:_voice_panel_align_top_right()
 end
 
--- Lines 57-92
+-- Lines 58-93
 function SpecialHonorsGui:_layout_first_screen()
 	local top_stats_big_panel_params = {
 		halign = "scale",
@@ -95,12 +96,12 @@ function SpecialHonorsGui:_layout_first_screen()
 	end
 end
 
--- Lines 95-97
+-- Lines 96-98
 function SpecialHonorsGui:_continue_button_on_click()
 	managers.raid_menu:close_menu()
 end
 
--- Lines 99-112
+-- Lines 100-113
 function SpecialHonorsGui:close()
 	if self._closing then
 		return
@@ -116,7 +117,7 @@ function SpecialHonorsGui:close()
 	SpecialHonorsGui.super.close(self)
 end
 
--- Lines 114-149
+-- Lines 115-150
 function SpecialHonorsGui:show_honors()
 	local top_stats_title = self._top_stats_big_panel:child("top_stats_title")
 
@@ -156,7 +157,7 @@ function SpecialHonorsGui:show_honors()
 	end
 end
 
--- Lines 151-170
+-- Lines 152-171
 function SpecialHonorsGui:show_gamercard(i)
 	local peer_id = game_state_machine:current_state().special_honors[i].peer_id
 	local peer = managers.network:session():peer(peer_id)
@@ -177,7 +178,7 @@ function SpecialHonorsGui:show_gamercard(i)
 	end
 end
 
--- Lines 172-190
+-- Lines 173-191
 function SpecialHonorsGui:_fade_in_label(text, duration, delay)
 	local anim_duration = duration or 0.15
 	local t = text:alpha() * anim_duration
@@ -197,17 +198,17 @@ function SpecialHonorsGui:_fade_in_label(text, duration, delay)
 	text:set_alpha(1)
 end
 
--- Lines 193-195
+-- Lines 194-196
 function SpecialHonorsGui:confirm_pressed()
 	self:_continue_button_on_click()
 end
 
--- Lines 197-199
+-- Lines 198-200
 function SpecialHonorsGui:on_escape()
 	return true
 end
 
--- Lines 201-259
+-- Lines 202-260
 function SpecialHonorsGui:bind_controller_inputs()
 	local bindings = {
 		{
@@ -230,7 +231,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 		}
 	}
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		local gamercard_prompts_shown = 0
 		local stats_per_peer = {}
 

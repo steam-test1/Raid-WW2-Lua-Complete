@@ -102,11 +102,11 @@ HUDMotionDot.MODES = {
 	HUDMotionDot.DOT_MODE_CORNERS_ALIGNED_TEMPLATE
 }
 
--- Lines 40-63
+-- Lines 39-59
 function HUDMotionDot:init(hud)
 	self._hud_panel = hud.panel
 
-	self:cleanup()
+	self:clean_up()
 
 	self._size_icon_index = managers.user:get_setting("motion_dot_size")
 	self._offset_index = managers.user:get_setting("motion_dot_offset")
@@ -119,12 +119,10 @@ function HUDMotionDot:init(hud)
 		table.insert(self._motion_icons, self:_create_icon("motion_icon_" .. tostring(i), HUDMotionDot.ICONS[self._motion_icon_index]))
 	end
 
-	if managers.user:get_setting("motion_dot") ~= 0 then
-		self:_update_dots()
-	end
+	self:_update_dots()
 end
 
--- Lines 65-75
+-- Lines 61-71
 function HUDMotionDot:_create_icon(name, icon)
 	local icon_params = {
 		valign = "center",
@@ -139,7 +137,7 @@ function HUDMotionDot:_create_icon(name, icon)
 	return icon
 end
 
--- Lines 80-95
+-- Lines 76-91
 function HUDMotionDot:on_setting_icons(index)
 	if type(index) == "boolean" then
 		if index then
@@ -161,12 +159,12 @@ function HUDMotionDot:on_setting_icons(index)
 	Application:debug("[HUDMotionDot] on_setting_icons", icon_img, index, "/", #HUDMotionDot.ICONS)
 end
 
--- Lines 97-99
+-- Lines 93-95
 function HUDMotionDot:on_setting_icons_increment()
 	self:on_setting_icons(self._motion_icon_index + 1)
 end
 
--- Lines 104-114
+-- Lines 100-110
 function HUDMotionDot:on_setting_sizes(index)
 	if type(index) == "boolean" then
 		if index then
@@ -183,12 +181,12 @@ function HUDMotionDot:on_setting_sizes(index)
 	self:_update_dots()
 end
 
--- Lines 116-118
+-- Lines 112-114
 function HUDMotionDot:on_setting_sizes_increment()
 	self:on_setting_sizes(self._size_icon_index + 1)
 end
 
--- Lines 123-133
+-- Lines 119-129
 function HUDMotionDot:on_setting_offsets(index)
 	if type(index) == "boolean" then
 		if index then
@@ -205,12 +203,12 @@ function HUDMotionDot:on_setting_offsets(index)
 	self:_update_dots()
 end
 
--- Lines 135-137
+-- Lines 131-133
 function HUDMotionDot:on_setting_offsets_increment()
 	self:on_setting_offsets((self._offset_index or 1) + 1)
 end
 
--- Lines 141-164
+-- Lines 137-160
 function HUDMotionDot:_update_dots()
 	local offset = HUDMotionDot.OFFSETS[self._offset_index]
 	local center_screen_x = self._hud_panel:w() / 2
@@ -242,7 +240,12 @@ function HUDMotionDot:_update_dots()
 	Application:debug("[HUDMotionDot] on_setting_offsets", self._offset_index, offset)
 end
 
--- Lines 169-180
+-- Lines 164-166
+function HUDMotionDot:type_index()
+	return self._dot_mode_idx
+end
+
+-- Lines 171-182
 function HUDMotionDot:on_setting_counts(index)
 	if type(index) == "boolean" then
 		if index then
@@ -260,12 +263,12 @@ function HUDMotionDot:on_setting_counts(index)
 	self:_update_dots()
 end
 
--- Lines 182-184
+-- Lines 184-186
 function HUDMotionDot:on_setting_counts_increment()
 	self:on_setting_counts(self._dot_mode_idx + 1)
 end
 
--- Lines 189-196
+-- Lines 191-198
 function HUDMotionDot:on_setting_color(color)
 	self._dot_color = color
 
@@ -278,7 +281,7 @@ function HUDMotionDot:on_setting_color(color)
 	self:_update_dots()
 end
 
--- Lines 198-204
+-- Lines 200-206
 function HUDMotionDot:on_setting_color_silly()
 	self._silly_mode = true
 
@@ -288,7 +291,7 @@ function HUDMotionDot:on_setting_color_silly()
 	end
 end
 
--- Lines 206-217
+-- Lines 208-219
 function HUDMotionDot:_animate_silly(item_ref, done_cb)
 	local t = 0
 
@@ -302,12 +305,12 @@ function HUDMotionDot:_animate_silly(item_ref, done_cb)
 	done_cb()
 end
 
--- Lines 219-221
+-- Lines 221-223
 function HUDMotionDot:show_done()
 end
 
--- Lines 225-231
-function HUDMotionDot:cleanup()
+-- Lines 227-233
+function HUDMotionDot:clean_up()
 	for i = 1, 4 do
 		if self._hud_panel:child("motion_icon_" .. tostring(i)) then
 			self._hud_panel:remove(self._hud_panel:child("motion_icon_" .. tostring(i)))
@@ -315,14 +318,14 @@ function HUDMotionDot:cleanup()
 	end
 end
 
--- Lines 233-237
+-- Lines 235-239
 function HUDMotionDot:set_fade_hide_dots()
 	for i, icon in ipairs(self._motion_icons) do
 		icon:set_visible(false)
 	end
 end
 
--- Lines 239-241
+-- Lines 241-243
 function HUDMotionDot:set_fade_show_dots()
 	self:_update_dots()
 end

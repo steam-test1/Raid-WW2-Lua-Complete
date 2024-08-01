@@ -1,5 +1,5 @@
 RaidGUIControlScrollableArea = RaidGUIControlScrollableArea or class(RaidGUIControl)
-RaidGUIControlScrollableArea.SCROLLBAR_WIDTH = 5
+RaidGUIControlScrollableArea.SCROLLBAR_WIDTH = 8
 
 -- Lines 5-38
 function RaidGUIControlScrollableArea:init(parent, params)
@@ -66,7 +66,7 @@ end
 
 -- Lines 72-79
 function RaidGUIControlScrollableArea:move_scrollbar_manually()
-	local new_y = self._inner_panel:y()
+	local new_y = math.round(self._inner_panel:y())
 	local ep_h = self._inner_panel:h()
 
 	self._inner_panel:set_y(new_y)
@@ -82,7 +82,7 @@ function RaidGUIControlScrollableArea:mouse_scroll_up(o, button, x, y)
 		local ep_h = self._inner_panel:h()
 		local top_clip_y = -self._inner_panel:y()
 		local scroll_move = math.clamp(top_clip_y, 0, self._scroll_step)
-		local new_y = self._inner_panel:y() + scroll_move
+		local new_y = math.round(self._inner_panel:y() + scroll_move)
 
 		self._inner_panel:set_y(new_y)
 
@@ -104,7 +104,7 @@ function RaidGUIControlScrollableArea:mouse_scroll_down(o, button, x, y)
 		local s_h = self._object:h()
 		local bottom_clip_y = self._inner_panel:y() + self._inner_panel:h() - self._object:h()
 		local scroll_move = math.clamp(bottom_clip_y, 0, self._scroll_step)
-		local new_y = self._inner_panel:y() - scroll_move
+		local new_y = math.round(self._inner_panel:y() - scroll_move)
 
 		self._inner_panel:set_y(new_y)
 
@@ -124,7 +124,7 @@ function RaidGUIControlScrollableArea:scroll_up()
 		local ep_h = self._inner_panel:h()
 		local top_clip_y = -self._inner_panel:y()
 		local scroll_move = math.clamp(top_clip_y, 0, self._scroll_step)
-		local new_y = self._inner_panel:y() + scroll_move
+		local new_y = math.round(self._inner_panel:y() + scroll_move)
 
 		self._inner_panel:set_y(new_y)
 
@@ -144,7 +144,7 @@ function RaidGUIControlScrollableArea:scroll_down()
 		local s_h = self._object:h()
 		local bottom_clip_y = self._inner_panel:y() + self._inner_panel:h() - self._object:h()
 		local scroll_move = math.clamp(bottom_clip_y, 0, self._scroll_step)
-		local new_y = self._inner_panel:y() - scroll_move
+		local new_y = math.round(self._inner_panel:y() - scroll_move)
 
 		self._inner_panel:set_y(new_y)
 

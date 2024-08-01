@@ -388,12 +388,15 @@ function MissionUnlockGui:show_unlock_confirmation_prompt()
 	managers.menu:show_unlock_mission_confirm_dialog(confirmation_dialog_params)
 end
 
--- Lines 348-362
+-- Lines 348-364
 function MissionUnlockGui:on_unlock_confirmed()
 	managers.progression:choose_offered_mission(self._selected_mission)
 	managers.menu_component:post_event("new_raid_unlocked")
 
-	if tweak_data.operations.missions[self._selected_mission] and tweak_data.operations.missions[self._selected_mission].control_brief_video then
+	local skip_cinematics = managers.user:get_setting("skip_cinematics")
+	local brief_video = tweak_data.operations.missions[self._selected_mission] and tweak_data.operations.missions[self._selected_mission].control_brief_video
+
+	if brief_video and not skip_cinematics then
 		if managers.controller:is_using_controller() then
 			managers.queued_tasks:queue("play_unlocked_raid_control_video", self._play_control_briefing_video, self, self._selected_mission, 0.1, nil)
 		else
@@ -404,13 +407,13 @@ function MissionUnlockGui:on_unlock_confirmed()
 	end
 end
 
--- Lines 364-367
+-- Lines 366-369
 function MissionUnlockGui:_complete_mission_unlock_process()
 	managers.raid_menu:remove_menu_name_from_stack("mission_unlock_menu")
 	managers.raid_menu:open_menu("mission_selection_menu", false)
 end
 
--- Lines 369-388
+-- Lines 371-390
 function MissionUnlockGui:_bind_controller_inputs()
 	local bindings = {
 		{

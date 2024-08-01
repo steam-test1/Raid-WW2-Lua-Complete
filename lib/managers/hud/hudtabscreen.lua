@@ -166,7 +166,7 @@ function HUDTabScreen:_create_card_info()
 		x = 0,
 		y = HUDTabScreen.CARD_Y,
 		w = HUDTabScreen.CARD_W,
-		h = tweak_data.gui:icon_h(HUDTabScreen.NO_CARD_ICON) / tweak_data.gui:icon_w(HUDTabScreen.NO_CARD_ICON) * HUDTabScreen.CARD_W,
+		h = HUDTabScreen.CARD_H,
 		texture = empty_slot_texture.texture,
 		texture_rect = empty_slot_texture.texture_rect
 	}
@@ -220,7 +220,7 @@ function HUDTabScreen:_create_card_info()
 		h = self._active_card_panel:h() - HUDTabScreen.CARD_Y,
 		card_image_params = {
 			w = HUDTabScreen.CARD_W,
-			h = tweak_data.gui:icon_h(HUDTabScreen.NO_CARD_ICON) / tweak_data.gui:icon_w(HUDTabScreen.NO_CARD_ICON) * HUDTabScreen.CARD_W
+			h = HUDTabScreen.CARD_H
 		}
 	}
 	self._active_card = HUDCardDetails:new(self._active_card_panel, active_card_params)
@@ -394,7 +394,7 @@ function HUDTabScreen:_create_timer()
 	self:set_time(0)
 end
 
--- Lines 441-514
+-- Lines 441-515
 function HUDTabScreen:_create_progression_timer()
 	local progression_timer_panel_params = {
 		halign = "right",
@@ -479,7 +479,7 @@ function HUDTabScreen:_create_progression_timer()
 	local timer = self._progression_timer_content_panel:text(timer_params)
 end
 
--- Lines 516-576
+-- Lines 517-577
 function HUDTabScreen:_create_mission_info()
 	local mission_info_panel_params = {
 		name = "mission_info_panel",
@@ -545,7 +545,7 @@ function HUDTabScreen:_create_mission_info()
 	self._difficulty_indicator:set_active_difficulty(current_difficulty)
 end
 
--- Lines 578-718
+-- Lines 579-719
 function HUDTabScreen:_create_loot_info()
 	local loot_panel_params = {
 		valing = "bottom",
@@ -618,29 +618,29 @@ function HUDTabScreen:_create_loot_info()
 	self:_refresh_loot_info()
 end
 
--- Lines 720-723
+-- Lines 721-724
 function HUDTabScreen:_create_greed_bar()
 	self._greed_bar = HUDTabGreedBar:new(self._loot_info_panel, {})
 
 	self._greed_bar:set_right(self._loot_info_panel:w())
 end
 
--- Lines 725-727
+-- Lines 726-728
 function HUDTabScreen:on_greed_loot_picked_up(old_progress, new_progress)
 	self._greed_bar:change_progress(old_progress, new_progress)
 end
 
--- Lines 729-731
+-- Lines 730-732
 function HUDTabScreen:set_current_greed_amount(amount)
 	self._greed_bar:set_current_greed_amount(amount)
 end
 
--- Lines 733-735
+-- Lines 734-736
 function HUDTabScreen:reset_greed_indicator()
 	self._greed_bar:reset_state()
 end
 
--- Lines 737-741
+-- Lines 738-742
 function HUDTabScreen:_create_objectives_info(hud)
 	self._objectives = HUDObjectivesTab:new(self._object)
 
@@ -648,12 +648,12 @@ function HUDTabScreen:_create_objectives_info(hud)
 	self._objectives:set_y(HUDTabScreen.OBJECTIVES_INFO_Y)
 end
 
--- Lines 743-745
+-- Lines 744-746
 function HUDTabScreen:get_objectives_control()
 	return self._objectives
 end
 
--- Lines 747-804
+-- Lines 748-805
 function HUDTabScreen:_refresh_mission_info()
 	local mission_icon, mission_name = nil
 	local control_mission_name = self._mission_info_panel:child("mission_name")
@@ -713,7 +713,7 @@ function HUDTabScreen:_refresh_mission_info()
 	self._mission_info_panel:child("mission_icon"):set_texture_rect(unpack(tweak_data.gui.icons[mission_icon].texture_rect))
 end
 
--- Lines 806-822
+-- Lines 807-823
 function HUDTabScreen:_refresh_profile_info()
 	local profile_name = managers.network:session():local_peer():name()
 
@@ -743,7 +743,7 @@ function HUDTabScreen:_refresh_profile_info()
 	})
 end
 
--- Lines 824-847
+-- Lines 825-848
 function HUDTabScreen:_refresh_loot_info()
 	local current_job = managers.raid_job:current_job()
 
@@ -765,21 +765,21 @@ function HUDTabScreen:_refresh_loot_info()
 	end
 end
 
--- Lines 903-906
+-- Lines 904-907
 function HUDTabScreen:set_loot_picked_up(amount)
 	self._loot_picked_up = amount
 
 	self:_refresh_loot_info()
 end
 
--- Lines 908-911
+-- Lines 909-912
 function HUDTabScreen:set_loot_total(amount)
 	self._loot_total = amount
 
 	self:_refresh_loot_info()
 end
 
--- Lines 913-938
+-- Lines 914-939
 function HUDTabScreen:set_time(time)
 	if math.floor(time) < self._last_set_time then
 		return
@@ -805,14 +805,14 @@ function HUDTabScreen:set_time(time)
 	self._timer:set_right(self._timer_panel:w())
 end
 
--- Lines 940-944
+-- Lines 941-945
 function HUDTabScreen:reset_time()
 	self._last_set_time = 0
 
 	self:set_time(0)
 end
 
--- Lines 946-966
+-- Lines 947-967
 function HUDTabScreen:_refresh_card_info()
 	local active_card = managers.challenge_cards:get_active_card()
 
@@ -836,7 +836,7 @@ function HUDTabScreen:_refresh_card_info()
 	end
 end
 
--- Lines 968-995
+-- Lines 969-996
 function HUDTabScreen:_refresh_weapon_challenge_info()
 	if not managers.player:player_unit() then
 		self._weapon_challenge_info:hide()
@@ -869,7 +869,7 @@ function HUDTabScreen:_refresh_weapon_challenge_info()
 	self._profile_info_panel:set_visible(true)
 end
 
--- Lines 997-1005
+-- Lines 998-1006
 function HUDTabScreen:show_next_weapon_challenge(dont_animate, next_delay)
 	self._currently_displayed_weapon_challenge = self._currently_displayed_weapon_challenge % #self._active_weapon_challenges + 1
 
@@ -880,7 +880,7 @@ function HUDTabScreen:show_next_weapon_challenge(dont_animate, next_delay)
 	end
 end
 
--- Lines 1007-1037
+-- Lines 1008-1038
 function HUDTabScreen:show()
 	self._progression_timer_shown = not managers.progression:mission_progression_completed() and managers.raid_job:played_tutorial()
 
@@ -914,7 +914,7 @@ function HUDTabScreen:show()
 	end
 end
 
--- Lines 1039-1092
+-- Lines 1040-1093
 function HUDTabScreen:_layout_progression()
 	local is_final_unlock_cycle = managers.progression:at_final_unlock_cycle()
 	local cycle_completed = managers.progression:have_pending_missions_to_unlock()
@@ -972,7 +972,7 @@ function HUDTabScreen:_layout_progression()
 	end
 end
 
--- Lines 1094-1119
+-- Lines 1095-1120
 function HUDTabScreen:_set_progress_timer_value()
 	local timer_control = self._progression_timer_content_panel:child("progression_timer_timer")
 	local remaining_time = math.floor(managers.progression:time_until_next_unlock())
@@ -999,7 +999,7 @@ function HUDTabScreen:_set_progress_timer_value()
 	self._progression_timer_panel:set_right(self._timer_panel:x())
 end
 
--- Lines 1121-1127
+-- Lines 1122-1128
 function HUDTabScreen:update()
 	self._loot_info_panel:set_bottom(self._background:parent():h() - HUDTabScreen.LOOT_INFO_BOTTOM_OFFSET)
 
@@ -1008,7 +1008,7 @@ function HUDTabScreen:update()
 	end
 end
 
--- Lines 1129-1147
+-- Lines 1130-1148
 function HUDTabScreen:hide()
 	managers.hud:remove_updator("tab")
 
@@ -1025,37 +1025,37 @@ function HUDTabScreen:hide()
 	end
 end
 
--- Lines 1149-1151
+-- Lines 1150-1152
 function HUDTabScreen:refresh_peers()
 	self._map:refresh_peers()
 end
 
--- Lines 1153-1155
+-- Lines 1154-1156
 function HUDTabScreen:add_waypoint(waypoint_data)
 	self._map:add_waypoint(waypoint_data)
 end
 
--- Lines 1157-1159
+-- Lines 1158-1160
 function HUDTabScreen:remove_waypoint(id)
 	self._map:remove_waypoint(id)
 end
 
--- Lines 1161-1163
+-- Lines 1162-1164
 function HUDTabScreen:peer_enter_vehicle(peer_id)
 	self._map:peer_enter_vehicle(peer_id)
 end
 
--- Lines 1165-1167
+-- Lines 1166-1168
 function HUDTabScreen:peer_exit_vehicle(peer_id)
 	self._map:peer_exit_vehicle(peer_id)
 end
 
--- Lines 1170-1172
+-- Lines 1171-1173
 function HUDTabScreen:is_shown()
 	return self._object:visible()
 end
 
--- Lines 1174-1182
+-- Lines 1175-1183
 function HUDTabScreen:_current_level_has_map()
 	local player_world = self:_get_current_player_level()
 
@@ -1066,7 +1066,7 @@ function HUDTabScreen:_current_level_has_map()
 	return false
 end
 
--- Lines 1184-1207
+-- Lines 1185-1208
 function HUDTabScreen:_get_current_player_level()
 	local current_job = managers.raid_job:current_job()
 
@@ -1086,13 +1086,13 @@ function HUDTabScreen:_get_current_player_level()
 	return nil
 end
 
--- Lines 1210-1213
+-- Lines 1211-1214
 function HUDTabScreen:on_progression_cycle_completed()
 	self._progression_timer_content_panel:stop()
 	self._progression_timer_content_panel:animate(callback(self, self, "animate_progression_cycle_completed"))
 end
 
--- Lines 1215-1252
+-- Lines 1216-1253
 function HUDTabScreen:animate_progression_cycle_completed()
 	self._animating_cycle_completed = true
 	local fade_out_duration = 0.35

@@ -21,7 +21,7 @@ CopLogicIdle.allowed_transitional_actions = {
 	}
 }
 
--- Lines 16-134
+-- Lines 16-133
 function CopLogicIdle.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
@@ -35,8 +35,8 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 		my_data.detection = data.char_tweak.detection.ntl
 		my_data.vision = data.char_tweak.vision.idle
 	else
-		my_data.vision = data.char_tweak.vision.combat
 		my_data.detection = data.char_tweak.detection.idle
+		my_data.vision = data.char_tweak.vision.combat
 	end
 
 	my_data.vision_cool = data.char_tweak.vision.idle
@@ -131,7 +131,7 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 	CopLogicIdle._perform_objective_action(data, my_data, objective)
 end
 
--- Lines 138-157
+-- Lines 137-156
 function CopLogicIdle.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -144,7 +144,7 @@ function CopLogicIdle.exit(data, new_logic_name, enter_params)
 	managers.voice_over:guard_unregister_idle(data.unit)
 end
 
--- Lines 161-237
+-- Lines 160-236
 function CopLogicIdle.queued_update(data)
 	local my_data = data.internal_data
 	local delay = data.logic._upd_enemy_detection(data)
@@ -196,7 +196,7 @@ function CopLogicIdle.queued_update(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicIdle.queued_update, data, data.t + delay, data.important and true)
 end
 
--- Lines 241-307
+-- Lines 240-306
 function CopLogicIdle._upd_enemy_detection(data)
 	if data.unit:brain().dead then
 		return
@@ -234,7 +234,7 @@ function CopLogicIdle._upd_enemy_detection(data)
 					}
 				end
 
-				CopLogicBase._exit(data.unit, wanted_logic, params)
+				CopLogicBase._exit_to_state(data.unit, wanted_logic, params)
 			end
 		end
 	end
@@ -250,7 +250,7 @@ function CopLogicIdle._upd_enemy_detection(data)
 	return delay
 end
 
--- Lines 311-351
+-- Lines 310-350
 function CopLogicIdle._upd_pathing(data, my_data)
 	if not data.pathing_results then
 		return
@@ -287,7 +287,7 @@ function CopLogicIdle._upd_pathing(data, my_data)
 	end
 end
 
--- Lines 356-430
+-- Lines 355-429
 function CopLogicIdle._upd_scan(data, my_data)
 	if CopLogicBase._chk_focus_on_attention_object(data, my_data) then
 		return
@@ -358,23 +358,16 @@ function CopLogicIdle._upd_scan(data, my_data)
 	my_data.next_scan_t = data.t + math.random(3, 10)
 end
 
--- Lines 435-518
+-- Lines 434-459
 function CopLogicIdle._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
-	local can_arrest = CopLogicBase._can_arrest(data)
 
-	if not record or not attention_data.is_person then
-		if attention_data.settings.reaction == AIAttentionObject.REACT_ARREST and not can_arrest then
-			return AIAttentionObject.REACT_AIM
-		else
-			return attention_data.settings.reaction
-		end
+	if attention_data.is_deployable then
+		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 	end
 
-	local att_unit = attention_data.unit
-
-	if attention_data.is_deployable or data.t < record.arrest_timeout then
-		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
+	if not record or not attention_data.is_person then
+		return attention_data.settings.reaction
 	end
 
 	if record.status == "dead" then
@@ -385,36 +378,12 @@ function CopLogicIdle._chk_reaction_to_attention_object(data, attention_data, st
 		else
 			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_AIM)
 		end
-	elseif record.being_arrested then
-		return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_AIM)
-	elseif can_arrest and (not record.assault_t or att_unit:base():arrest_settings().aggression_timeout < data.t - record.assault_t) and record.arrest_timeout < data.t and not record.status then
-		local under_threat = false
-
-		if attention_data.dis < CopLogicArrest.ARREST_RANGE then
-			for u_key, other_crim_rec in pairs(managers.groupai:state():all_criminals()) do
-				local other_crim_attention_info = data.detected_attention_objects[u_key]
-
-				if other_crim_attention_info and (other_crim_attention_info.is_deployable or other_crim_attention_info.verified and other_crim_rec.assault_t and data.t - other_crim_rec.assault_t < other_crim_rec.unit:base():arrest_settings().aggression_timeout) then
-					under_threat = true
-
-					break
-				end
-			end
-		end
-
-		if under_threat then
-			-- Nothing
-		elseif attention_data.dis < CopLogicArrest.ARREST_RANGE and attention_data.verified then
-			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_ARREST)
-		else
-			return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_AIM)
-		end
 	end
 
 	return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 end
 
--- Lines 523-538
+-- Lines 464-479
 function CopLogicIdle._area_has_enemies(data, area)
 	local is_enemy = data.unit:in_slot(managers.slot:get_mask("enemies"))
 
@@ -429,7 +398,7 @@ function CopLogicIdle._area_has_enemies(data, area)
 	return false
 end
 
--- Lines 543-653
+-- Lines 484-594
 function CopLogicIdle._scan_for_dangerous_areas(data)
 	local nav_tracker = data.unit:movement():nav_tracker()
 	local current_area = managers.groupai:state():get_area_from_nav_seg_id(nav_tracker:nav_segment())
@@ -530,7 +499,7 @@ function CopLogicIdle._scan_for_dangerous_areas(data)
 	end
 end
 
--- Lines 659-763
+-- Lines 600-704
 function CopLogicIdle._smooth_stare_path(data)
 	local my_data = data.internal_data
 	local slotmask = data.visibility_slotmask
@@ -619,7 +588,7 @@ function CopLogicIdle._smooth_stare_path(data)
 	end
 end
 
--- Lines 768-790
+-- Lines 709-731
 function CopLogicIdle.on_area_safety(data, nav_seg, safe, event)
 	if safe or event.reason ~= "criminal" then
 		return
@@ -642,7 +611,7 @@ function CopLogicIdle.on_area_safety(data, nav_seg, safe, event)
 	end
 end
 
--- Lines 795-846
+-- Lines 736-787
 function CopLogicIdle.on_action_completed(data, action)
 	local action_type = action:type()
 
@@ -681,7 +650,7 @@ function CopLogicIdle.on_action_completed(data, action)
 	end
 end
 
--- Lines 851-883
+-- Lines 792-824
 function CopLogicIdle.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -706,12 +675,12 @@ function CopLogicIdle.is_available_for_assignment(data, objective)
 	return true
 end
 
--- Lines 888-891
+-- Lines 829-832
 function CopLogicIdle._can_move(data)
 	return not data.objective or not data.objective.pos or not data.objective.in_place
 end
 
--- Lines 895-923
+-- Lines 836-864
 function CopLogicIdle._exit_non_walkable_area(data)
 	local my_data = data.internal_data
 
@@ -738,19 +707,19 @@ function CopLogicIdle._exit_non_walkable_area(data)
 	end
 end
 
--- Lines 927-931
+-- Lines 868-872
 function CopLogicIdle._get_all_paths(data)
 	return {
 		stare_path = data.internal_data.stare_path
 	}
 end
 
--- Lines 935-937
+-- Lines 876-878
 function CopLogicIdle._set_verified_paths(data, verified_paths)
 	data.internal_data.stare_path = verified_paths.stare_path
 end
 
--- Lines 942-977
+-- Lines 883-918
 function CopLogicIdle._upd_curious_reaction(data)
 	local my_data = data.internal_data
 	local attention_obj = data.attention_obj
@@ -782,13 +751,9 @@ function CopLogicIdle._upd_curious_reaction(data)
 	end
 end
 
--- Lines 982-1010
+-- Lines 923-945
 function CopLogicIdle._chk_objective_needs_travel(data, objective)
-	if not objective.nav_seg and objective.type ~= "follow" then
-		return false
-	end
-
-	if objective.in_place then
+	if not objective.nav_seg and objective.type ~= "follow" or objective.in_place then
 		return false
 	end
 
@@ -805,7 +770,7 @@ function CopLogicIdle._chk_objective_needs_travel(data, objective)
 	return true
 end
 
--- Lines 1014-1087
+-- Lines 949-1022
 function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	if data.unit:movement():chk_action_forbidden("walk") then
 		return
@@ -867,7 +832,7 @@ function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	end
 end
 
--- Lines 1091-1121
+-- Lines 1026-1056
 function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	if not objective or my_data.action_started or not data.unit:anim_data().act_idle and data.unit:movement():chk_action_forbidden("action") then
 		return

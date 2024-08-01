@@ -122,19 +122,15 @@ function CopLogicInactive._register_attention(data, my_data)
 	end
 end
 
--- Lines 120-130
+-- Lines 120-125
 function CopLogicInactive._set_interaction(data, my_data)
 	if data.unit:character_damage():dead() and managers.groupai:state():whisper_mode() then
-		if data.unit:unit_data().has_alarm_pager then
-			data.brain:begin_alarm_pager()
-		else
-			data.unit:interaction():set_tweak_data("corpse_dispose")
-			data.unit:interaction():set_active(true, true, true)
-		end
+		data.unit:interaction():set_tweak_data("corpse_dispose")
+		data.unit:interaction():set_active(true, true, true)
 	end
 end
 
--- Lines 134-143
+-- Lines 129-138
 function CopLogicInactive.on_new_objective(data, old_objective)
 	if not data.internal_data.removing_objective then
 		debug_pause_unit(data.unit, "[CopLogicInactive.on_new_objective]", data.unit, "new_objective", data.objective and inspect(data.objective), "old_objective", old_objective and inspect(old_objective))
@@ -147,6 +143,6 @@ function CopLogicInactive.on_new_objective(data, old_objective)
 	end
 end
 
--- Lines 148-149
+-- Lines 143-144
 function CopLogicInactive.on_intimidated(data, amount, aggressor_unit)
 end

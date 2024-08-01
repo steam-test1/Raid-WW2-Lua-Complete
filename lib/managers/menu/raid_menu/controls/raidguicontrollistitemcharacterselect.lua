@@ -98,17 +98,20 @@ function RaidGUIControlListItemCharacterSelect:_layout()
 	})
 end
 
--- Lines 58-160
+-- Lines 58-167
 function RaidGUIControlListItemCharacterSelect:_load_data()
 	local profile_name = self:translate("character_selection_empty_slot", true)
 	local character_nationality = nil
 	local character_name = "---"
-	local character_flag = nil
+	local character_class = "---"
+	local character_flag, class_name = nil
 
 	if self._item_data.cache then
 		profile_name = self._item_data.cache.PlayerManager.character_profile_name
-		character_nationality = self._item_data.cache.PlayerManager.character_profile_nation
+		character_nationality = self._item_data.cache.PlayerManager.character_profile_nation or "british"
+		character_class = self._item_data.cache.SkillTreeManager.character_profile_base_class or "assault"
 		character_name = self:translate("menu_" .. character_nationality, true)
+		class_name = self:translate(tweak_data.skilltree.classes[character_class].name_id, true)
 		character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 		self._customize_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
@@ -180,16 +183,18 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 		table.insert(self._special_action_buttons, self._create_button)
 	end
 
-	self._profile_name_label:set_text(utf8.to_upper(profile_name))
-	self._character_name_label:set_text(utf8.to_upper(character_name))
+	local label_text = class_name and character_name .. " | " .. class_name or character_name
+
+	self._profile_name_label:set_text(profile_name)
+	self._character_name_label:set_text(label_text)
 
 	if character_nationality then
-		self:update_flag(character_nationality)
+		self:update_flag(character_nationality, character_class)
 		self:_layout_breadcrumb(character_nationality)
 	end
 end
 
--- Lines 162-170
+-- Lines 169-177
 function RaidGUIControlListItemCharacterSelect:_layout_breadcrumb(character_nationality)
 	local breadcrumb_params = {
 		category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION,
@@ -203,12 +208,12 @@ function RaidGUIControlListItemCharacterSelect:_layout_breadcrumb(character_nati
 	self._breadcrumb:set_center_y(self._object:h() / 2)
 end
 
--- Lines 174-176
+-- Lines 181-183
 function RaidGUIControlListItemCharacterSelect:data()
 	return self._item_data
 end
 
--- Lines 180-190
+-- Lines 187-197
 function RaidGUIControlListItemCharacterSelect:inside(x, y)
 	local is_object_ready = self._object and self._object:inside(x, y) and self._object:tree_visible() and self._background:inside(x, y)
 	local is_inside_create = self._create_button and self._create_button:inside(x, y)
@@ -220,19 +225,19 @@ function RaidGUIControlListItemCharacterSelect:inside(x, y)
 	return is_object_ready or is_inside_create or is_inside_customize or is_inside_delete or is_inside_rename or is_inside_nationality
 end
 
--- Lines 193-195
+-- Lines 200-202
 function RaidGUIControlListItemCharacterSelect:highlight_on()
 	self._background:show()
 end
 
--- Lines 197-208
+-- Lines 204-215
 function RaidGUIControlListItemCharacterSelect:highlight_off()
 	if not self._selected and not self._active and self._background and self._red_selected_line and self._background and alive(self._background) then
 		self._background:set_visible(false)
 	end
 end
 
--- Lines 210-216
+-- Lines 217-223
 function RaidGUIControlListItemCharacterSelect:activate_on()
 	self._background:show()
 	self._red_selected_line:show()
@@ -240,7 +245,7 @@ function RaidGUIControlListItemCharacterSelect:activate_on()
 	self._character_name_label:set_color(tweak_data.gui.colors.raid_red)
 end
 
--- Lines 218-230
+-- Lines 225-237
 function RaidGUIControlListItemCharacterSelect:activate_off()
 	self:highlight_off()
 
@@ -257,8 +262,8 @@ function RaidGUIControlListItemCharacterSelect:activate_off()
 	end
 end
 
--- Lines 232-244
-function RaidGUIControlListItemCharacterSelect:update_flag(character_nationality)
+-- Lines 239-257
+function RaidGUIControlListItemCharacterSelect:update_flag(character_nationality, character_class)
 	local character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 
 	if character_flag then
@@ -269,11 +274,17 @@ function RaidGUIControlListItemCharacterSelect:update_flag(character_nationality
 	if self._character_name_label and alive(self._character_name_label._object) then
 		local character_name = self:translate("menu_" .. character_nationality, true)
 
-		self._character_name_label:set_text(utf8.to_upper(character_name))
+		if character_class then
+			local class_name = self:translate(tweak_data.skilltree.classes[character_class].name_id, true)
+
+			self._character_name_label:set_text(character_name .. " | " .. class_name)
+		else
+			self._character_name_label:set_text(character_name)
+		end
 	end
 end
 
--- Lines 246-262
+-- Lines 259-275
 function RaidGUIControlListItemCharacterSelect:mouse_released(o, button, x, y)
 	if self._special_action_buttons then
 		for _, special_button in ipairs(self._special_action_buttons) do
@@ -288,7 +299,7 @@ function RaidGUIControlListItemCharacterSelect:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines 264-274
+-- Lines 277-287
 function RaidGUIControlListItemCharacterSelect:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(nil, self, self._character_slot, true)
@@ -297,8 +308,12 @@ function RaidGUIControlListItemCharacterSelect:on_mouse_released(button)
 	end
 end
 
--- Lines 276-287
+-- Lines 289-304
 function RaidGUIControlListItemCharacterSelect:confirm_pressed()
+	if not self._selected then
+		return false
+	end
+
 	if not self._item_data or not self._item_data.cache then
 		return self._create_button:on_mouse_released()
 	end
@@ -310,7 +325,7 @@ function RaidGUIControlListItemCharacterSelect:confirm_pressed()
 	end
 end
 
--- Lines 289-299
+-- Lines 306-316
 function RaidGUIControlListItemCharacterSelect:mouse_double_click(o, button, x, y)
 	if self._on_double_click_callback then
 		self._on_double_click_callback(nil, self, self._character_slot)
@@ -319,7 +334,7 @@ function RaidGUIControlListItemCharacterSelect:mouse_double_click(o, button, x, 
 	end
 end
 
--- Lines 301-342
+-- Lines 318-361
 function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_callback)
 	self._selected = true
 
@@ -329,24 +344,26 @@ function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_call
 		self:_on_item_selected_callback(self._character_slot)
 	end
 
-	if self._customize_button and self._active then
-		self._customize_button:set_visible(true)
-	end
+	if not managers.controller:is_controller_present() then
+		if self._customize_button and self._active then
+			self._customize_button:set_visible(true)
+		end
 
-	if self._delete_button then
-		self._delete_button:set_visible(true)
-	end
+		if self._delete_button then
+			self._delete_button:set_visible(true)
+		end
 
-	if self._create_button then
-		self._create_button:set_visible(true)
-	end
+		if self._create_button then
+			self._create_button:set_visible(true)
+		end
 
-	if self._nationality_button and self._active then
-		self._nationality_button:set_visible(true)
-	end
+		if self._nationality_button and self._active then
+			self._nationality_button:set_visible(true)
+		end
 
-	if self._rename_button and self._active then
-		self._rename_button:set_visible(true)
+		if self._rename_button and self._active then
+			self._rename_button:set_visible(true)
+		end
 	end
 
 	if self._active then
@@ -364,7 +381,7 @@ function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_call
 	end
 end
 
--- Lines 344-366
+-- Lines 363-385
 function RaidGUIControlListItemCharacterSelect:unselect()
 	self._selected = false
 
@@ -391,12 +408,12 @@ function RaidGUIControlListItemCharacterSelect:unselect()
 	end
 end
 
--- Lines 368-370
+-- Lines 387-389
 function RaidGUIControlListItemCharacterSelect:selected()
 	return self._selected
 end
 
--- Lines 372-377
+-- Lines 391-396
 function RaidGUIControlListItemCharacterSelect:activate()
 	self._active = true
 
@@ -404,24 +421,24 @@ function RaidGUIControlListItemCharacterSelect:activate()
 	self:highlight_on()
 end
 
--- Lines 379-383
+-- Lines 398-402
 function RaidGUIControlListItemCharacterSelect:deactivate()
 	self._active = false
 
 	self:activate_off()
 end
 
--- Lines 385-387
+-- Lines 404-406
 function RaidGUIControlListItemCharacterSelect:activated()
 	return self._active
 end
 
--- Lines 389-391
+-- Lines 408-410
 function RaidGUIControlListItemCharacterSelect:empty()
 	return not self._item_data or not self._item_data.cache
 end
 
--- Lines 393-399
+-- Lines 412-418
 function RaidGUIControlListItemCharacterSelect:_set_button_slot(button_ref, slot_index)
 	if button_ref then
 		button_ref:set_x(RaidGUIControlListItemCharacterSelect.SLOTS[slot_index].x)

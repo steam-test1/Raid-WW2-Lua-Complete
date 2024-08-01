@@ -240,7 +240,7 @@ function _ScriptViewport:pop_ref_fov()
 	return false
 end
 
--- Lines 198-224
+-- Lines 204-230
 function _ScriptViewport:set_visualization_mode(effect_name)
 	local scene = self._render_params[1]
 	local effects = {
@@ -268,7 +268,7 @@ function _ScriptViewport:set_visualization_mode(effect_name)
 	self._vp:set_post_processor_effect(scene, Idstring("deferred"), Idstring(effect_name)):set_visibility(true)
 end
 
--- Lines 226-233
+-- Lines 232-239
 function _ScriptViewport:is_rendering_scene(scene_name)
 	for _, param in ipairs(self:render_params()) do
 		if param == scene_name then
@@ -279,11 +279,11 @@ function _ScriptViewport:is_rendering_scene(scene_name)
 	return false
 end
 
--- Lines 235-239
+-- Lines 241-245
 function _ScriptViewport:set_dof(clamp, near_focus_distance_min, near_focus_distance_max, far_focus_distance_min, far_focus_distance_max)
 end
 
--- Lines 242-246
+-- Lines 248-252
 function _ScriptViewport:replace_engine_vp(vp)
 	self:destroy()
 
@@ -291,12 +291,12 @@ function _ScriptViewport:replace_engine_vp(vp)
 	self._vp = vp
 end
 
--- Lines 248-250
+-- Lines 254-256
 function _ScriptViewport:set_environment_editor_callback(env_editor_callback)
 	self._env_editor_callback = env_editor_callback
 end
 
--- Lines 259-271
+-- Lines 265-277
 function _ScriptViewport:_update(is_first_viewport, t, dt)
 	local scene = self._render_params[1]
 
@@ -311,19 +311,19 @@ function _ScriptViewport:_update(is_first_viewport, t, dt)
 	self._env_handler:apply(is_first_viewport, self._vp, scene)
 end
 
--- Lines 273-278
+-- Lines 279-284
 function _ScriptViewport:_render(nr)
 	if Global.render_debug.render_world then
 		Application:render(unpack(self._render_params))
 	end
 end
 
--- Lines 280-282
+-- Lines 286-288
 function _ScriptViewport:_resolution_changed()
 	self:_set_width_multiplier()
 end
 
--- Lines 284-299
+-- Lines 290-305
 function _ScriptViewport:_set_width_multiplier()
 	local camera = self:camera()
 
@@ -341,7 +341,7 @@ function _ScriptViewport:_set_width_multiplier()
 	end
 end
 
--- Lines 301-306
+-- Lines 307-312
 function _ScriptViewport:set_active(state)
 	_ScriptViewport.super.set_active(self, state)
 

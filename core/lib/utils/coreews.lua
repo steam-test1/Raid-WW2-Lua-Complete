@@ -688,14 +688,15 @@ function _list_selector_updated_callback(params)
 	end
 end
 
--- Lines 744-763
+-- Lines 744-764
 function combobox_and_list(params)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
-	params.sizer:add(horizontal_sizer, 0, 1, "EXPAND,LEFT")
+	params.sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	params.sizer = horizontal_sizer
 	params.sizer_proportions = params.sizer_proportions or 1
+	params.ctrlr_proportions = params.ctrlr_proportions or 2
 	params.tooltip = params.tooltip or "Select an option from the combobox"
 	local ctrlr = combobox(params)
 	local toolbar = EWS:ToolBar(params.panel, "", "TB_FLAT,TB_NODIVIDER")
@@ -712,7 +713,7 @@ function combobox_and_list(params)
 	return ctrlr, params
 end
 
--- Lines 766-774
+-- Lines 767-775
 function _on_gui_value_combobox_toolbar_select_dialog(params)
 	local dialog = _G.SelectNameModal:new("Select name", params.combobox_params.options)
 
@@ -725,13 +726,13 @@ function _on_gui_value_combobox_toolbar_select_dialog(params)
 	end
 end
 
--- Lines 776-779
+-- Lines 777-780
 function set_combobox_and_list_enabled(params, enabled)
 	params.ctrlr:set_enabled(enabled)
 	params.toolbar:set_enabled(enabled)
 end
 
--- Lines 784-792
+-- Lines 785-793
 function get_notebook_current_page_index(notebook)
 	local page = notebook:get_current_page()
 

@@ -112,55 +112,22 @@ end
 function GenericPlatformManager:set_feedback_color(color)
 end
 
-Xbox360PlatformManager = Xbox360PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("X360"):key()] = Xbox360PlatformManager
-
--- Lines 102-106
-function Xbox360PlatformManager:init()
-	GenericPlatformManager.init(self)
-	XboxLive:set_callback(callback(self, self, "event"))
-end
-
--- Lines 108-112
-function Xbox360PlatformManager:destroy_context()
-	GenericPlatformManager.destroy_context(self)
-	XboxLive:set_callback(nil)
-end
-
--- Lines 114-122
-function Xbox360PlatformManager:set_rich_presence(name, callback)
-	print("Xbox360PlatformManager:set_rich_presence", name)
-	GenericPlatformManager.set_rich_presence(self, name)
-
-	if callback then
-		XboxLive:set_context("presence", name, callback)
-	else
-		XboxLive:set_context("presence", name, function ()
-		end)
-	end
-end
-
--- Lines 124-135
-function Xbox360PlatformManager:set_presence(name, callback)
-	GenericPlatformManager.set_presence(self, name)
-end
-
 XB1PlatformManager = XB1PlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("XB1"):key()] = XB1PlatformManager
 
--- Lines 140-144
+-- Lines 103-107
 function XB1PlatformManager:init()
 	GenericPlatformManager.init(self)
 	XboxLive:set_callback(callback(self, self, "event"))
 end
 
--- Lines 146-150
+-- Lines 109-113
 function XB1PlatformManager:destroy_context()
 	GenericPlatformManager.destroy_context(self)
 	XboxLive:set_callback(nil)
 end
 
--- Lines 152-160
+-- Lines 115-123
 function XB1PlatformManager:set_rich_presence(name, callback)
 	print("XB1PlatformManager:set_rich_presence", name)
 	GenericPlatformManager.set_rich_presence(self, name)
@@ -173,12 +140,12 @@ function XB1PlatformManager:set_rich_presence(name, callback)
 	end
 end
 
--- Lines 162-173
+-- Lines 125-136
 function XB1PlatformManager:set_presence(name, callback)
 	GenericPlatformManager.set_presence(self, name)
 end
 
--- Lines 175-187
+-- Lines 138-150
 function XB1PlatformManager:set_playing(is_playing)
 	if not Global.game_settings.is_playing ~= not is_playing then
 		if not Global.game_settings.single_player then
@@ -195,49 +162,15 @@ function XB1PlatformManager:set_playing(is_playing)
 	end
 end
 
--- Lines 189-191
+-- Lines 152-154
 function XB1PlatformManager:set_progress(progress)
 	XboxLive:write_game_progress(progress * 100)
-end
-
-PS3PlatformManager = PS3PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("PS3"):key()] = PS3PlatformManager
-
--- Lines 197-201
-function PS3PlatformManager:init(...)
-	PS3PlatformManager.super.init(self, ...)
-
-	self._current_psn_presence = ""
-	self._psn_set_presence_time = 0
-end
-
--- Lines 203-205
-function PS3PlatformManager:translate_path(path)
-	return string.gsub(path, "\\+([~\\]*)", "/%1")
-end
-
--- Lines 207-215
-function PS3PlatformManager:update(t, dt)
-	PS3PlatformManager.super.update(self, t, dt)
-
-	if self._current_psn_presence ~= self:presence() and self._psn_set_presence_time <= t then
-		self._psn_set_presence_time = t + 10
-		self._current_psn_presence = self:presence()
-
-		print("SET PRESENCE", self._current_psn_presence)
-		PSN:set_presence_info(self._current_psn_presence)
-	end
-end
-
--- Lines 217-220
-function PS3PlatformManager:set_presence(name)
-	GenericPlatformManager.set_presence(self, name)
 end
 
 PS4PlatformManager = PS4PlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("PS4"):key()] = PS4PlatformManager
 
--- Lines 225-229
+-- Lines 161-165
 function PS4PlatformManager:init(...)
 	PS4PlatformManager.super.init(self, ...)
 
@@ -245,19 +178,19 @@ function PS4PlatformManager:init(...)
 	self._psn_set_presence_time = 0
 end
 
--- Lines 231-236
+-- Lines 167-172
 function PS4PlatformManager:destroy_context()
 	GenericPlatformManager.destroy_context(self)
 	PSN:set_online_callback(nil)
 	self:set_feedback_color(nil)
 end
 
--- Lines 238-240
+-- Lines 174-176
 function PS4PlatformManager:translate_path(path)
 	return string.gsub(path, "\\+([~\\]*)", "/%1")
 end
 
--- Lines 242-250
+-- Lines 178-185
 function PS4PlatformManager:update(t, dt)
 	PS4PlatformManager.super.update(self, t, dt)
 
@@ -269,7 +202,7 @@ function PS4PlatformManager:update(t, dt)
 	end
 end
 
--- Lines 252-264
+-- Lines 187-199
 function PS4PlatformManager:set_playing(is_playing)
 	if not Global.game_settings.is_playing ~= not is_playing then
 		if not Global.game_settings.single_player then
@@ -284,19 +217,19 @@ function PS4PlatformManager:set_playing(is_playing)
 	end
 end
 
--- Lines 266-269
+-- Lines 201-203
 function PS4PlatformManager:set_presence(name)
 	GenericPlatformManager.set_presence(self, name)
 end
 
--- Lines 271-275
+-- Lines 205-209
 function PS4PlatformManager:set_rich_presence(name)
 	print("PS4PlatformManager:set_rich_presence", name)
 	GenericPlatformManager.set_rich_presence(self, name)
 	PSN:set_presence_info(managers.localization:text("ps4_presence_" .. name))
 end
 
--- Lines 278-306
+-- Lines 212-240
 function PS4PlatformManager:set_feedback_color(color)
 	local wrapper_index = managers.controller:get_default_wrapper_index()
 

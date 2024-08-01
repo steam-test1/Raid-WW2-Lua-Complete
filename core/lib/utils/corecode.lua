@@ -311,7 +311,7 @@ function ascii_table(t, raw)
 	return out
 end
 
--- Lines 292-352
+-- Lines 292-351
 function memory_report(limit)
 	local seen = {}
 	local count = {}
@@ -376,10 +376,9 @@ function memory_report(limit)
 	recurse(_G, nil, nil)
 
 	local units = World:unit_manager():get_units()
-	local is_windows = _G.IS_PC
 
 	for _, u in ipairs(units) do
-		recurse(u, "Units", is_windows and u:name():s() or u:name(), u)
+		recurse(u, "Units", IS_PC and u:name():s() or u:name(), u)
 	end
 
 	local total = 0
@@ -414,7 +413,7 @@ end
 
 __profiled = {}
 
--- Lines 367-403
+-- Lines 366-402
 function profile(s)
 	if __profiled[s] then
 		return
@@ -437,7 +436,7 @@ function profile(s)
 
 		t.f = rawget(_G, t.class)[t.name]
 
-		-- Lines 381-381
+		-- Lines 380-380
 		function t.patch(f)
 			_G[t.class][t.name] = f
 		end
@@ -445,7 +444,7 @@ function profile(s)
 		t.name = s
 		t.f = rawget(_G, t.name)
 
-		-- Lines 385-385
+		-- Lines 384-384
 		function t.patch(f)
 			_G[t.name] = f
 		end
@@ -457,7 +456,7 @@ function profile(s)
 		return
 	end
 
-	-- Lines 393-398
+	-- Lines 392-397
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)
 		res = t.f(...)
@@ -474,7 +473,7 @@ function profile(s)
 	Application:console_command("profiler add " .. s)
 end
 
--- Lines 405-412
+-- Lines 404-411
 function unprofile(s)
 	local t = __profiled[s]
 
@@ -487,7 +486,7 @@ function unprofile(s)
 	__profiled[s] = nil
 end
 
--- Lines 414-419
+-- Lines 413-418
 function reprofile()
 	for k, v in pairs(__old_profiled) do
 		profile(k)

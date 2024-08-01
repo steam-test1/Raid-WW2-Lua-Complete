@@ -1,42 +1,67 @@
 Warcry = Warcry or class()
+
+require("lib/managers/warcries/WarcryBerserk")
+require("lib/managers/warcries/WarcryClustertruck")
+require("lib/managers/warcries/WarcryGhost")
+require("lib/managers/warcries/WarcrySharpshooter")
+require("lib/managers/warcries/WarcrySilverBullet")
+require("lib/managers/warcries/WarcrySentry")
+require("lib/managers/warcries/WarcryPainTrain")
+require("lib/managers/warcries/WarcryHoldTheLine")
+
+local ids_empty = Idstring("empty")
 Warcry.BERSERK = "berserk"
 Warcry.CLUSTERTRUCK = "clustertruck"
 Warcry.GHOST = "ghost"
 Warcry.SHARPSHOOTER = "sharpshooter"
+Warcry.SILVER_BULLET = "silver_bullet"
+Warcry.SENTRY = "sentry"
+Warcry.PAIN_TRAIN = "pain_train"
+Warcry.HOLD_THE_LINE = "hold_the_line"
+
+-- Lines 29-42
+function Warcry.get_metatable(warcry_name)
+	if warcry_name == Warcry.BERSERK then
+		return WarcryBerserk
+	elseif warcry_name == Warcry.CLUSTERTRUCK then
+		return WarcryClustertruck
+	elseif warcry_name == Warcry.GHOST then
+		return WarcryGhost
+	elseif warcry_name == Warcry.SHARPSHOOTER then
+		return WarcrySharpshooter
+	elseif warcry_name == Warcry.SILVER_BULLET then
+		return WarcrySilverBullet
+	elseif warcry_name == Warcry.SENTRY then
+		return WarcrySentry
+	elseif warcry_name == Warcry.PAIN_TRAIN then
+		return WarcryPainTrain
+	elseif warcry_name == Warcry.HOLD_THE_LINE then
+		return WarcryHoldTheLine
+	else
+		Application:error("[Warcry] get_metatable could not get a warcry from '" .. tostring(warcry_name) .. "' using fallback: WarcryBerserk")
+
+		return WarcryBerserk
+	end
+end
+
 Warcry.team_buffs = {}
 
--- Lines 10-20
+-- Lines 51-54
 function Warcry.create(warcry_name)
-	if warcry_name == "berserk" then
-		return WarcryBerserk:new()
-	elseif warcry_name == "clustertruck" then
-		return WarcryClustertruck:new()
-	elseif warcry_name == "ghost" then
-		return WarcryGhost:new()
-	elseif warcry_name == "sharpshooter" then
-		return WarcrySharpshooter:new()
-	end
+	Application:debug("[Warcry] create " .. (warcry_name or "NIL 'warcry_name'!"))
+
+	return Warcry.get_metatable(warcry_name):new()
 end
 
--- Lines 22-32
-function Warcry.get_metatable(warcry_name)
-	if warcry_name == "berserk" then
-		return WarcryBerserk
-	elseif warcry_name == "clustertruck" then
-		return WarcryClustertruck
-	elseif warcry_name == "ghost" then
-		return WarcryGhost
-	elseif warcry_name == "sharpshooter" then
-		return WarcrySharpshooter
-	end
-end
-
--- Lines 34-36
+-- Lines 57-61
 function Warcry:init()
+	Application:debug("[Warcry:init]", self:get_type())
+
 	self._level = 1
+	self._active = false
 end
 
--- Lines 39-53
+-- Lines 65-79
 function Warcry:update(dt)
 	local remaining = managers.warcry:remaining()
 	local duration = managers.warcry:duration()
@@ -52,78 +77,67 @@ function Warcry:update(dt)
 	return 1
 end
 
--- Lines 55-57
+-- Lines 82-84
 function Warcry:get_type()
-	return self._type
+	return tostring(self._type)
 end
 
--- Lines 59-61
+-- Lines 87-89
 function Warcry:set_level(level)
 	self._level = level
 end
 
--- Lines 63-65
+-- Lines 92-94
 function Warcry:get_level()
 	return self._level
 end
 
--- Lines 67-68
-function Warcry:get_level_description(level)
+-- Lines 98-100
+function Warcry:is_active()
+	return self._active
 end
 
--- Lines 70-90
+-- Lines 105-107
+function Warcry:distorts_lense()
+	return self._tweak_data.distorts_lense or false
+end
+
+-- Lines 110-142
 function Warcry:activate()
-	local current_buffs = nil
+	Application:debug("[WARCRY] activate")
+	self:_acquire_buffs()
 
-	if self._level > #self._tweak_data.buffs then
-		current_buffs = self._tweak_data.buffs[#self._tweak_data.buffs]
-	else
-		current_buffs = self._tweak_data.buffs[self._level]
-	end
-
-	for index, buff in pairs(current_buffs) do
-		self:_acquire_buff(buff)
-	end
-
-	self:_acquire_team_buffs()
-
+	self._local_player = managers.player:local_player()
 	self._active = true
 
 	managers.environment_controller:set_last_life_mod(0)
-	managers.warcry:set_warcry_post_effect(self._tweak_data.ids_effect_name)
+
+	if self._tweak_data.ids_effect_name then
+		managers.warcry:set_warcry_post_effect(self._tweak_data.ids_effect_name)
+	end
+
+	if self._tweak_data.activation_spawn_unit and alive(self._local_player) then
+		self._activation_spawned_unit = managers.game_play_central:spawn_warcry_unit({
+			world_id = 0,
+			name = self._tweak_data.activation_spawn_unit,
+			position = self._local_player:position(),
+			rotation = self._local_player:rotation(),
+			level = self._level
+		})
+	end
+
+	self._local_player:character_damage():set_health_effects_blocked(true)
 end
 
--- Lines 92-94
-function Warcry:_buff_identifier(buff)
-	return "warcry_" .. tostring(self._type) .. "_buff_" .. tostring(buff)
-end
-
--- Lines 96-98
-function Warcry:_acquire_buff(buff)
-	managers.upgrades:aquire(buff, nil, self:_buff_identifier(buff))
-end
-
-local ids_empty = Idstring("empty")
-
--- Lines 101-129
+-- Lines 144-176
 function Warcry:deactivate()
-	if not self._active then
+	Application:debug("[WARCRY] deactivate")
+
+	if not self:is_active() then
 		return
 	end
 
-	local current_buffs = nil
-
-	if self._level > #self._tweak_data.buffs then
-		current_buffs = self._tweak_data.buffs[#self._tweak_data.buffs]
-	else
-		current_buffs = self._tweak_data.buffs[self._level]
-	end
-
-	for index, buff in pairs(current_buffs) do
-		self:_unacquire_buff(buff)
-	end
-
-	self:_unacquire_team_buffs()
+	self:_unacquire_buffs()
 
 	self._active = false
 
@@ -132,14 +146,21 @@ function Warcry:deactivate()
 	if managers.warcry then
 		managers.warcry:set_warcry_post_effect(ids_empty)
 	end
+
+	self._local_player:character_damage():set_health_effects_blocked(false)
+
+	if self._tweak_data.activation_spawn_unit and alive(self._activation_spawned_unit) then
+		if self._activation_spawned_unit:damage() then
+			self._activation_spawned_unit:damage():run_sequence_simple("deactivate")
+		else
+			self._activation_spawned_unit:set_slot(0)
+		end
+
+		self._activation_spawned_unit = nil
+	end
 end
 
--- Lines 131-133
-function Warcry:_unacquire_buff(buff)
-	managers.upgrades:unaquire(buff, self:_buff_identifier(buff))
-end
-
--- Lines 135-146
+-- Lines 178-189
 function Warcry:_get_upgrade_definition_name(upgrade_definition_name)
 	if tweak_data.upgrades:upgrade_has_levels(upgrade_definition_name) then
 		local upgrade_level = self._level
@@ -154,67 +175,170 @@ function Warcry:_get_upgrade_definition_name(upgrade_definition_name)
 	return upgrade_definition_name
 end
 
--- Lines 148-150
+-- Lines 195-295
+function Warcry:_fill_charge_on_enemy_killed(params)
+	local player = managers.player:player_unit()
+
+	if self._active or not alive(player) or not player:character_damage() or player:character_damage():is_downed() or player:character_damage():is_perseverating() then
+		return
+	end
+
+	local multiplier = 1
+
+	if params.headshot then
+		multiplier = multiplier + managers.player:upgrade_value("player", "steadiness_headshot_warcry_fill_multiplier", 1) - 1
+	end
+
+	if managers.player:has_category_upgrade("player", "farsighted_long_range_warcry_fill_multiplier") then
+		local activation_distance = tweak_data.upgrades.farsighted_activation_distance
+
+		if params.enemy_distance and activation_distance < params.enemy_distance then
+			multiplier = multiplier + managers.player:upgrade_value("player", "farsighted_long_range_warcry_fill_multiplier", 1) - 1
+		end
+	end
+
+	if managers.player:has_category_upgrade("player", "toughness_low_health_warcry_fill_multiplier") then
+		local health_ratio = player:character_damage():health_ratio()
+		local activation_ratio = tweak_data.upgrades.toughness_activation_ratio
+
+		if health_ratio < activation_ratio then
+			local upgrade = managers.player:upgrade_value("player", "toughness_low_health_warcry_fill_multiplier", 1) - 1
+			local low_health_multiplier = math.max(tweak_data.upgrades.toughness_multiplier_min, 1 - health_ratio / activation_ratio)
+			multiplier = multiplier + low_health_multiplier * upgrade
+		end
+	end
+
+	if params.dismemberment_occured then
+		multiplier = multiplier + managers.player:upgrade_value("player", "brutality_dismemberment_warcry_fill_multiplier", 1) - 1
+	end
+
+	if params.damage_type == "melee" then
+		multiplier = multiplier + managers.player:upgrade_value("player", "boxer_melee_warcry_fill_multiplier", 1) - 1
+		multiplier = multiplier + managers.player:upgrade_value("player", "do_die_melee_warcry_fill_multiplier", 1) - 1
+	elseif params.damage_type == "explosion" then
+		multiplier = multiplier + managers.player:upgrade_value("player", "grenadier_explosive_warcry_fill_multiplier", 1) - 1
+	end
+
+	multiplier = multiplier * (managers.player:upgrade_value("player", "helpcry_warcry_fill_multiplier", 2) - 1)
+
+	if multiplier > 0 then
+		local kill_fill_amount = self._tweak_data.base_kill_fill_amount * multiplier
+
+		managers.warcry:fill_meter_by_value(kill_fill_amount, true)
+	end
+end
+
+-- Lines 300-302
 function Warcry:duration()
+	return self._tweak_data.base_duration or 10
 end
 
--- Lines 152-154
+-- Lines 306-308
+function Warcry:base_kill_fill_amount()
+	return self._tweak_data.base_kill_fill_amount
+end
+
+-- Lines 312-314
+function Warcry:drain_rate()
+	return 1
+end
+
+-- Lines 317-319
 function Warcry:cleanup()
-	self:_unacquire_team_buffs()
+	self:_unacquire_buffs()
 end
 
--- Lines 158-173
-function Warcry:_acquire_team_buffs()
-	if self.team_buffs then
-		for _, buff in ipairs(self.team_buffs) do
-			if managers.player:has_team_category_upgrade(buff.category, buff.id) then
-				if buff.use_levels then
-					local level = managers.player:team_upgrade_value(buff.category, buff.id, 0)
+-- Lines 322-324
+function Warcry:get_activation_callout()
+	return self._tweak_data.activation_callout or tostring("warcry_" .. tostring(self:get_type()))
+end
 
-					if level > 0 then
-						self:_acquire_team_buff(buff.upgrade .. "_" .. tostring(level))
-					end
-				else
-					self:_acquire_team_buff(buff.upgrade)
-				end
-			end
+-- Lines 326-328
+function Warcry:get_sound_switch()
+	return self._tweak_data.sound_switch
+end
+
+-- Lines 341-343
+function Warcry:_on_enemy_killed(params)
+end
+
+-- Lines 347-349
+function Warcry:can_activate()
+	return true
+end
+
+-- Lines 351-353
+function Warcry:activation_threshold()
+	return self._tweak_data.activation_threshold
+end
+
+-- Lines 355-357
+function Warcry:interrupt_penalty()
+	return self._tweak_data.interrupt_penalty_percentage, self._tweak_data.interrupt_penalty_multiplier
+end
+
+-- Lines 375-380
+function Warcry:_buff_identifier(buff)
+	return "warcry_" .. self:get_type() .. "_buff_" .. tostring(buff)
+end
+
+-- Lines 385-392
+function Warcry:get_buff_upgrades()
+	return managers.skilltree:get_team_buff_upgrades()
+end
+
+-- Lines 396-443
+function Warcry:_acquire_buffs()
+	self._active_buffs = self._active_buffs or {}
+	local skillbuffs = self:get_buff_upgrades()
+	local save_data_skilltree = managers.skilltree:get_character_skilltree()
+
+	for skill_id, buffs in pairs(skillbuffs) do
+		for _, buff in ipairs(buffs) do
+			self:_acquire_buff(buff, true)
+		end
+	end
+
+	local level = math.min(self._level, #self._tweak_data.buffs)
+
+	for i = 1, level do
+		local buffs = self._tweak_data.buffs[i]
+
+		for _, buff in ipairs(buffs) do
+			self:_acquire_buff(buff, false)
 		end
 	end
 end
 
--- Lines 175-180
-function Warcry:_acquire_team_buff(id)
-	self:_acquire_buff(id)
+-- Lines 445-459
+function Warcry:_acquire_buff(buff, team)
+	Application:debug("[WARCRY]   + Acquire buff:", buff)
+	managers.upgrades:aquire(buff, nil, self:_buff_identifier(buff))
 
-	if managers.network and managers.network:session() then
-		managers.network:session():send_to_peers("sync_warcry_team_buff", id, self:_buff_identifier(id), true)
+	self._active_buffs[buff] = team
+
+	if team and managers.network and managers.network:session() then
+		managers.network:session():send_to_peers("sync_warcry_team_buff", buff, self:_buff_identifier(buff), true)
 	end
 end
 
--- Lines 182-199
-function Warcry:_unacquire_team_buffs()
-	if self.team_buffs then
-		for _, buff in ipairs(self.team_buffs) do
-			if buff.use_levels then
-				local buff_values = tweak_data.upgrades.values.team[buff.category] and tweak_data.upgrades.values.team[buff.category][buff.id]
-
-				if buff_values then
-					for level = 1, #buff_values do
-						self:_unacquire_team_buff(buff.upgrade .. "_" .. tostring(level))
-					end
-				end
-			else
-				self:_unacquire_team_buff(buff.upgrade)
-			end
+-- Lines 463-481
+function Warcry:_unacquire_buffs()
+	if self._active_buffs then
+		for buff, team_sync in pairs(self._active_buffs) do
+			self:_unacquire_buff(buff, team_sync)
 		end
 	end
+
+	self._active_buffs = nil
 end
 
--- Lines 201-206
-function Warcry:_unacquire_team_buff(id)
-	self:_unacquire_buff(id)
+-- Lines 483-496
+function Warcry:_unacquire_buff(buff, team)
+	Application:debug("[WARCRY]   - UN-Acquire buff:", buff)
+	managers.upgrades:unaquire(buff, self:_buff_identifier(buff))
 
-	if managers.network and managers.network:session() then
-		managers.network:session():send_to_peers("sync_warcry_team_buff", id, self:_buff_identifier(id), false)
+	if team and managers.network and managers.network:session() then
+		managers.network:session():send_to_peers("sync_warcry_team_buff", buff, self:_buff_identifier(buff), false)
 	end
 end

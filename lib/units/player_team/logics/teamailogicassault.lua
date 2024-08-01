@@ -161,7 +161,7 @@ function TeamAILogicAssault._upd_enemy_detection(data, is_synchronous)
 			data.objective.called = true
 		end
 
-		TeamAILogicBase._exit(data.unit, "travel")
+		TeamAILogicBase._exit_to_state(data.unit, "travel")
 
 		return
 	end
@@ -236,7 +236,7 @@ function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play
 		end
 	end
 
-	to_mark:contour():add("mark_enemy", true)
+	to_mark:contour():add("mark_enemy", true, nil, 1)
 end
 
 -- Lines 286-325
@@ -315,7 +315,7 @@ function TeamAILogicAssault._chk_exit_attack_logic(data, new_reaction)
 			if obj_failed then
 				data.objective_failed_clbk(data.unit, data.objective)
 			else
-				TeamAILogicBase._exit(data.unit, wanted_state)
+				TeamAILogicBase._exit_to_state(data.unit, wanted_state)
 			end
 		end
 	end

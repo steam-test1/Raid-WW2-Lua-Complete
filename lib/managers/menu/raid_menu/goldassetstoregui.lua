@@ -326,7 +326,7 @@ function GoldAssetStoreGui:_load_scene_camp_unit(item_data)
 
 	self._loaded_units[item_data.scene_unit] = false
 
-	managers.dyn_resource:load(Idstring("unit"), Idstring(item_data.scene_unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_camp_scene_unit_loaded_callback", item_data))
+	managers.dyn_resource:load(IDS_UNIT, Idstring(item_data.scene_unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_camp_scene_unit_loaded_callback", item_data))
 end
 
 -- Lines 286-296
@@ -479,7 +479,7 @@ function GoldAssetStoreGui:close()
 	for scene_unit, loaded in pairs(self._loaded_units) do
 		if not loaded then
 			Application:trace("[GoldAssetStoreGui][close] Unloading unit ", scene_unit)
-			managers.dyn_resource:unload(Idstring("unit"), Idstring(scene_unit), managers.dyn_resource.DYN_RESOURCES_PACKAGE, false)
+			managers.dyn_resource:unload(IDS_UNIT, Idstring(scene_unit), managers.dyn_resource.DYN_RESOURCES_PACKAGE, false)
 		end
 	end
 

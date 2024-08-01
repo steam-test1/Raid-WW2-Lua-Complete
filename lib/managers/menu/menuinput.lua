@@ -1,6 +1,8 @@
 core:import("CoreMenuInput")
 
 MenuInput = MenuInput or class(CoreMenuInput.MenuInput)
+MenuInput.AXIS_TIMER_A = 0.12
+MenuInput.AXIS_TIMER_B = 0.3
 MenuInput.special_buttons = {
 	"menu_controller_face_right",
 	"menu_controller_face_left",
@@ -16,12 +18,11 @@ MenuInput.special_buttons = {
 	"menu_controller_dpad_right"
 }
 
--- Lines 22-45
+-- Lines 25-46
 function MenuInput:init(logic, ...)
 	MenuInput.super.init(self, logic, ...)
 
 	self._move_axis_limit = 0.5
-	self._sound_source = SoundDevice:create_source("MenuInput")
 	self._controller_mouse_active_counter = 0
 	self._item_input_action_map[ItemColumn.TYPE] = callback(self, self, "input_item")
 	self._item_input_action_map[ItemServerColumn.TYPE] = callback(self, self, "input_item")
@@ -39,7 +40,7 @@ function MenuInput:init(logic, ...)
 	}
 end
 
--- Lines 47-65
+-- Lines 48-66
 function MenuInput:back(...)
 	self._slider_marker = nil
 	local active_menu = managers.menu:active_menu()
@@ -60,7 +61,7 @@ function MenuInput:back(...)
 	MenuInput.super.back(self, ...)
 end
 
--- Lines 67-82
+-- Lines 68-83
 function MenuInput:activate_mouse(position, controller_activated)
 	if not controller_activated and managers.controller:get_default_wrapper_type() ~= "pc" and managers.controller:get_default_wrapper_type() ~= "steam" then
 		return
@@ -79,7 +80,7 @@ function MenuInput:activate_mouse(position, controller_activated)
 	managers.mouse_pointer:use_mouse(data, position)
 end
 
--- Lines 84-93
+-- Lines 85-94
 function MenuInput:activate_controller_mouse(position)
 	self._controller_mouse_active_counter = self._controller_mouse_active_counter + 1
 
@@ -90,7 +91,7 @@ function MenuInput:activate_controller_mouse(position)
 	end
 end
 
--- Lines 95-108
+-- Lines 96-109
 function MenuInput:deactivate_controller_mouse()
 	self._controller_mouse_active_counter = self._controller_mouse_active_counter - 1
 
@@ -105,17 +106,17 @@ function MenuInput:deactivate_controller_mouse()
 	end
 end
 
--- Lines 110-112
+-- Lines 111-113
 function MenuInput:get_controller_class()
 	return self._controller
 end
 
--- Lines 114-116
+-- Lines 115-117
 function MenuInput:get_controller()
 	return self._controller:get_controller()
 end
 
--- Lines 118-125
+-- Lines 119-126
 function MenuInput:deactivate_mouse()
 	if not self._mouse_active then
 		return
@@ -126,7 +127,7 @@ function MenuInput:deactivate_mouse()
 	managers.mouse_pointer:remove_mouse(self._menu_name)
 end
 
--- Lines 127-146
+-- Lines 128-147
 function MenuInput:open(position, ...)
 	MenuInput.super.open(self, ...)
 
@@ -144,29 +145,29 @@ function MenuInput:open(position, ...)
 	managers.controller:set_menu_mode_enabled(true)
 end
 
--- Lines 148-152
+-- Lines 149-153
 function MenuInput:close(...)
 	MenuInput.super.close(self, ...)
 	self:deactivate_mouse()
 	managers.controller:set_menu_mode_enabled(false)
 end
 
--- Lines 156-158
+-- Lines 157-159
 function MenuInput:set_page_timer(time)
 	self._page_timer = time
 end
 
--- Lines 161-163
+-- Lines 162-164
 function MenuInput:force_input()
 	return self._force_input
 end
 
--- Lines 164-166
+-- Lines 165-167
 function MenuInput:set_force_input(enabled)
 	self._force_input = enabled
 end
 
--- Lines 169-174
+-- Lines 170-175
 function MenuInput:accept_input(accept, ...)
 	if managers.menu:active_menu() then
 		managers.menu:active_menu().renderer:accept_input(accept)
@@ -175,12 +176,12 @@ function MenuInput:accept_input(accept, ...)
 	MenuInput.super.accept_input(self, accept, ...)
 end
 
--- Lines 176-178
+-- Lines 177-179
 function MenuInput:_modified_mouse_pos(x, y)
 	return managers.mouse_pointer:convert_mouse_pos(x, y)
 end
 
--- Lines 180-262
+-- Lines 181-263
 function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	if not managers.menu:active_menu() then
 		return
@@ -265,85 +266,11 @@ function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	managers.mouse_pointer:set_pointer_image("arrow")
 end
 
--- Lines 265-296
-function MenuInput:input_kitslot(item, controller, mouse_click)
-	local slider_delay_down = 0.1
-	local slider_delay_pressed = 0.2
-
-	if self:menu_right_input_bool() then
-		if item:next() then
-			self:post_event("selection_next")
-		end
-
-		self._logic:trigger_item(true, item)
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_right_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	elseif self:menu_left_input_bool() then
-		if item:previous() then
-			self:post_event("selection_previous")
-		end
-
-		self._logic:trigger_item(true, item)
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_left_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	end
-
-	if controller:get_input_pressed("confirm") or mouse_click then
-		if item:next() then
-			self:post_event("selection_next")
-		end
-
-		self._logic:trigger_item(true, item)
-	end
-end
-
--- Lines 298-334
+-- Lines 265-266
 function MenuInput:input_multi_choice(item, controller, mouse_click)
-	local slider_delay_down = 0.1
-	local slider_delay_pressed = 0.2
-	local node_gui = managers.menu:active_menu().renderer:active_node_gui()
-
-	if node_gui and node_gui._listening_to_input then
-		return
-	end
-
-	if self:menu_right_input_bool() then
-		if item:next() then
-			self:post_event("selection_next")
-			self._logic:trigger_item(true, item)
-		end
-
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_right_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	elseif self:menu_left_input_bool() then
-		if item:previous() then
-			self:post_event("selection_previous")
-			self._logic:trigger_item(true, item)
-		end
-
-		self:set_axis_x_timer(slider_delay_down)
-
-		if self:menu_left_pressed() then
-			self:set_axis_x_timer(slider_delay_pressed)
-		end
-	end
-
-	if (controller:get_input_pressed("confirm") or mouse_click) and item:next() then
-		self:post_event("selection_next")
-		self._logic:trigger_item(true, item)
-	end
 end
 
--- Lines 336-344
+-- Lines 268-273
 function MenuInput:input_expand(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		item:toggle()
@@ -351,14 +278,14 @@ function MenuInput:input_expand(item, controller, mouse_click)
 	end
 end
 
--- Lines 346-351
+-- Lines 275-280
 function MenuInput:input_chat(item, controller, mouse_click)
 	if not controller:get_input_pressed("confirm") and mouse_click then
 		-- Nothing
 	end
 end
 
--- Lines 353-362
+-- Lines 282-291
 function MenuInput:input_customize_controller(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		local node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -373,12 +300,12 @@ function MenuInput:input_customize_controller(item, controller, mouse_click)
 	end
 end
 
--- Lines 364-366
+-- Lines 293-295
 function MenuInput:get_accept_input()
 	return self._accept_input and true or false
 end
 
--- Lines 368-374
+-- Lines 297-303
 function MenuInput:register_callback(input, name, callback)
 	if not self._callback_map[input] then
 		Application:error("MenuInput:register_callback", "Failed to register callback", "input: " .. input, "name: " .. name)
@@ -389,7 +316,7 @@ function MenuInput:register_callback(input, name, callback)
 	self._callback_map[input][name] = callback
 end
 
--- Lines 376-382
+-- Lines 305-311
 function MenuInput:unregister_callback(input, name)
 	if not self._callback_map[input] then
 		Application:error("MenuInput:register_callback", "Failed to unregister callback", "input: " .. input, "name: " .. name)
@@ -400,7 +327,7 @@ function MenuInput:unregister_callback(input, name)
 	self._callback_map[input][name] = nil
 end
 
--- Lines 384-391
+-- Lines 313-320
 function MenuInput:can_toggle_chat()
 	local item = self._logic:selected_item()
 
@@ -411,7 +338,7 @@ function MenuInput:can_toggle_chat()
 	return true
 end
 
--- Lines 393-432
+-- Lines 322-361
 function MenuInput:mouse_pressed(o, button, x, y)
 	if not self._accept_input then
 		return
@@ -437,19 +364,13 @@ function MenuInput:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 434-585
+-- Lines 363-471
 function MenuInput:mouse_released(o, button, x, y)
 	if not managers.menu:active_menu() then
 		return
 	end
 
 	x, y = self:_modified_mouse_pos(x, y)
-
-	if self._slider_marker then
-		self:post_event("slider_release")
-	end
-
-	self._slider_marker = nil
 
 	if button == Idstring("0") and managers.menu_component:input_focus() ~= true then
 		local node_gui = managers.menu:active_menu().renderer:active_node_gui()
@@ -474,8 +395,6 @@ function MenuInput:mouse_released(o, button, x, y)
 					if row_item.type == "divider" then
 						-- Nothing
 					elseif row_item.type == "slider" then
-						self:post_event("slider_grab")
-
 						if row_item.gui_slider_marker:inside(x, y) then
 							self._slider_marker = {
 								button = button,
@@ -501,17 +420,9 @@ function MenuInput:mouse_released(o, button, x, y)
 						if row_item.arrow_right:inside(x, y) then
 							item:next()
 							self._logic:trigger_item(true, item)
-
-							if row_item.arrow_right:visible() then
-								self:post_event("selection_next")
-							end
 						elseif row_item.arrow_left:inside(x, y) then
 							item:previous()
 							self._logic:trigger_item(true, item)
-
-							if row_item.arrow_left:visible() then
-								self:post_event("selection_previous")
-							end
 						elseif not row_item.choice_panel:inside(x, y) then
 							self._item_input_action_map[item.TYPE](item, self._controller, true)
 
@@ -522,22 +433,18 @@ function MenuInput:mouse_released(o, button, x, y)
 
 						if row_item.arrow_right:inside(x, y) then
 							if item:next() then
-								self:post_event("selection_next")
 								self._logic:trigger_item(true, item)
 							end
 						elseif row_item.arrow_left:inside(x, y) then
 							if item:previous() then
-								self:post_event("selection_previous")
 								self._logic:trigger_item(true, item)
 							end
 						elseif row_item.gui_text:inside(x, y) then
 							if row_item.align == "left" then
 								if item:previous() then
-									self:post_event("selection_previous")
 									self._logic:trigger_item(true, item)
 								end
 							elseif item:next() then
-								self:post_event("selection_next")
 								self._logic:trigger_item(true, item)
 							end
 						end
@@ -570,7 +477,7 @@ function MenuInput:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines 587-604
+-- Lines 473-490
 function MenuInput:mouse_clicked(o, button, x, y)
 	x, y = self:_modified_mouse_pos(x, y)
 
@@ -585,7 +492,7 @@ function MenuInput:mouse_clicked(o, button, x, y)
 	return managers.menu:active_menu().renderer:mouse_clicked(o, button, x, y)
 end
 
--- Lines 606-626
+-- Lines 492-512
 function MenuInput:mouse_double_click(o, button, x, y)
 	x, y = self:_modified_mouse_pos(x, y)
 
@@ -600,7 +507,7 @@ function MenuInput:mouse_double_click(o, button, x, y)
 	return managers.menu:active_menu().renderer:mouse_double_click(o, button, x, y)
 end
 
--- Lines 629-849
+-- Lines 514-734
 function MenuInput:update(t, dt)
 	if self._menu_plane then
 		self._menu_plane:set_rotation(Rotation(math.sin(t * 60) * 40, math.sin(t * 50) * 30, 0))
@@ -626,17 +533,17 @@ function MenuInput:update(t, dt)
 		if axis_timer.y <= 0 then
 			if self:menu_up_input_bool() then
 				managers.menu:active_menu().renderer:move_up()
-				self:set_axis_y_timer(0.12)
+				self:set_axis_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_up_pressed() then
-					self:set_axis_y_timer(0.3)
+					self:set_axis_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_down_input_bool() then
 				managers.menu:active_menu().renderer:move_down()
-				self:set_axis_y_timer(0.12)
+				self:set_axis_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_down_pressed() then
-					self:set_axis_y_timer(0.3)
+					self:set_axis_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -644,17 +551,17 @@ function MenuInput:update(t, dt)
 		if axis_timer.x <= 0 then
 			if self:menu_left_input_bool() then
 				managers.menu:active_menu().renderer:move_left()
-				self:set_axis_x_timer(0.12)
+				self:set_axis_x_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_left_pressed() then
-					self:set_axis_x_timer(0.3)
+					self:set_axis_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_right_input_bool() then
 				managers.menu:active_menu().renderer:move_right()
-				self:set_axis_x_timer(0.12)
+				self:set_axis_x_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_right_pressed() then
-					self:set_axis_x_timer(0.3)
+					self:set_axis_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -664,17 +571,17 @@ function MenuInput:update(t, dt)
 		if scroll_timer.y <= 0 then
 			if self:menu_scroll_up_input_bool() then
 				managers.menu:active_menu().renderer:scroll_up()
-				self:set_scroll_y_timer(0.12)
+				self:set_scroll_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_scroll_up_pressed() then
-					self:set_scroll_y_timer(0.3)
+					self:set_scroll_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_scroll_down_input_bool() then
 				managers.menu:active_menu().renderer:scroll_down()
-				self:set_scroll_y_timer(0.12)
+				self:set_scroll_y_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_scroll_down_pressed() then
-					self:set_scroll_y_timer(0.3)
+					self:set_scroll_y_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -682,17 +589,17 @@ function MenuInput:update(t, dt)
 		if scroll_timer.x <= 0 then
 			if self:menu_scroll_left_input_bool() then
 				managers.menu:active_menu().renderer:scroll_left()
-				self:set_scroll_x_timer(0.3)
+				self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 
 				if self:menu_scroll_left_pressed() then
-					self:set_scroll_x_timer(0.3)
+					self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_scroll_right_input_bool() then
 				managers.menu:active_menu().renderer:scroll_right()
-				self:set_scroll_x_timer(0.3)
+				self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 
 				if self:menu_scroll_right_pressed() then
-					self:set_scroll_x_timer(0.3)
+					self:set_scroll_x_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 		end
@@ -700,17 +607,17 @@ function MenuInput:update(t, dt)
 		if self._page_timer <= 0 then
 			if self:menu_previous_page_input_bool() then
 				managers.menu:active_menu().renderer:previous_page()
-				self:set_page_timer(0.12)
+				self:set_page_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_previous_page_pressed() then
-					self:set_page_timer(0.3)
+					self:set_page_timer(MenuInput.AXIS_TIMER_B)
 				end
 			elseif self:menu_next_page_input_bool() then
 				managers.menu:active_menu().renderer:next_page()
-				self:set_page_timer(0.12)
+				self:set_page_timer(MenuInput.AXIS_TIMER_A)
 
 				if self:menu_next_page_pressed() then
-					self:set_page_timer(0.3)
+					self:set_page_timer(MenuInput.AXIS_TIMER_B)
 				end
 			end
 
@@ -781,7 +688,7 @@ function MenuInput:update(t, dt)
 	self._mouse_moved = nil
 end
 
--- Lines 851-861
+-- Lines 736-746
 function MenuInput:menu_axis_move()
 	local axis_moved = {
 		x = 0,
@@ -799,7 +706,7 @@ function MenuInput:menu_axis_move()
 	return axis_moved
 end
 
--- Lines 863-873
+-- Lines 748-758
 function MenuInput:menu_axis_scroll()
 	local axis_scrolled = {
 		x = 0,
@@ -817,12 +724,7 @@ function MenuInput:menu_axis_scroll()
 	return axis_scrolled
 end
 
--- Lines 875-877
-function MenuInput:post_event(event)
-	self._sound_source:post_event(event)
-end
-
--- Lines 880-884
+-- Lines 761-765
 function MenuInput:menu_up_input_bool()
 	local result_1 = MenuInput.super.menu_up_input_bool(self)
 	local result_2 = self._move_axis_limit < self:menu_axis_move().y
@@ -830,32 +732,32 @@ function MenuInput:menu_up_input_bool()
 	return result_1 or result_2
 end
 
--- Lines 885-888
+-- Lines 766-769
 function MenuInput:menu_up_pressed()
 	return MenuInput.super.menu_up_pressed(self) or self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_move().y > 0
 end
 
--- Lines 889-891
+-- Lines 770-772
 function MenuInput:menu_up_released()
 	return MenuInput.super.menu_up_released(self) or self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 895-897
+-- Lines 776-778
 function MenuInput:menu_down_input_bool()
 	return MenuInput.super.menu_down_input_bool(self) or self:menu_axis_move().y < -self._move_axis_limit
 end
 
--- Lines 898-901
+-- Lines 779-782
 function MenuInput:menu_down_pressed()
 	return MenuInput.super.menu_down_pressed(self) or self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_move().y < 0
 end
 
--- Lines 902-904
+-- Lines 783-785
 function MenuInput:menu_down_released()
 	return MenuInput.super.menu_down_released(self) or self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 908-912
+-- Lines 789-793
 function MenuInput:menu_left_input_bool()
 	local result_1 = MenuInput.super.menu_left_input_bool(self)
 	local result_2 = self:menu_axis_move().x < -self._move_axis_limit
@@ -863,92 +765,92 @@ function MenuInput:menu_left_input_bool()
 	return result_1 or result_2
 end
 
--- Lines 913-916
+-- Lines 794-797
 function MenuInput:menu_left_pressed()
 	return MenuInput.super.menu_left_pressed(self) or self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_move().x < 0
 end
 
--- Lines 917-919
+-- Lines 798-800
 function MenuInput:menu_left_released()
 	return MenuInput.super.menu_left_released(self) or self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 923-926
+-- Lines 804-807
 function MenuInput:menu_right_input_bool()
 	return MenuInput.super.menu_right_input_bool(self) or self._move_axis_limit < self:menu_axis_move().x
 end
 
--- Lines 927-930
+-- Lines 808-811
 function MenuInput:menu_right_pressed()
 	return MenuInput.super.menu_right_pressed(self) or self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_move().x > 0
 end
 
--- Lines 931-933
+-- Lines 812-814
 function MenuInput:menu_right_released()
 	return MenuInput.super.menu_right_released(self) or self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 938-940
+-- Lines 819-821
 function MenuInput:menu_scroll_up_input_bool()
 	return self._move_axis_limit < self:menu_axis_scroll().y
 end
 
--- Lines 941-943
+-- Lines 822-824
 function MenuInput:menu_scroll_up_pressed()
 	return self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_scroll().y > 0
 end
 
--- Lines 944-946
+-- Lines 825-827
 function MenuInput:menu_scroll_up_released()
 	return self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 950-952
+-- Lines 831-833
 function MenuInput:menu_scroll_down_input_bool()
 	return self:menu_axis_scroll().y < -self._move_axis_limit
 end
 
--- Lines 953-955
+-- Lines 834-836
 function MenuInput:menu_scroll_down_pressed()
 	return self._axis_status.y == self.AXIS_STATUS_PRESSED and self:menu_axis_scroll().y < 0
 end
 
--- Lines 956-958
+-- Lines 837-839
 function MenuInput:menu_scroll_down_released()
 	return self._axis_status.y == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 962-964
+-- Lines 843-845
 function MenuInput:menu_scroll_left_input_bool()
 	return self:menu_axis_scroll().x < -self._move_axis_limit
 end
 
--- Lines 965-967
+-- Lines 846-848
 function MenuInput:menu_scroll_left_pressed()
 	return self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_scroll().x < 0
 end
 
--- Lines 968-970
+-- Lines 849-851
 function MenuInput:menu_scroll_left_released()
 	return self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 974-976
+-- Lines 855-857
 function MenuInput:menu_scroll_right_input_bool()
 	return self._move_axis_limit < self:menu_axis_scroll().x
 end
 
--- Lines 977-979
+-- Lines 858-860
 function MenuInput:menu_scroll_right_pressed()
 	return self._axis_status.x == self.AXIS_STATUS_PRESSED and self:menu_axis_scroll().x > 0
 end
 
--- Lines 980-982
+-- Lines 861-863
 function MenuInput:menu_scroll_right_released()
 	return self._axis_status.x == self.AXIS_STATUS_RELEASED
 end
 
--- Lines 997-1002
+-- Lines 878-883
 function MenuInput:menu_next_page_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("next_page")
@@ -957,7 +859,7 @@ function MenuInput:menu_next_page_input_bool()
 	return false
 end
 
--- Lines 1004-1009
+-- Lines 885-890
 function MenuInput:menu_next_page_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("next_page")
@@ -966,7 +868,7 @@ function MenuInput:menu_next_page_pressed()
 	return false
 end
 
--- Lines 1010-1015
+-- Lines 891-896
 function MenuInput:menu_next_page_released()
 	if self._controller then
 		return self._controller:get_input_released("next_page")
@@ -975,7 +877,7 @@ function MenuInput:menu_next_page_released()
 	return false
 end
 
--- Lines 1019-1024
+-- Lines 900-905
 function MenuInput:menu_previous_page_input_bool()
 	if self._controller then
 		return self._controller:get_input_bool("previous_page")
@@ -984,7 +886,7 @@ function MenuInput:menu_previous_page_input_bool()
 	return false
 end
 
--- Lines 1026-1031
+-- Lines 907-912
 function MenuInput:menu_previous_page_pressed()
 	if self._controller then
 		return self._controller:get_input_pressed("previous_page")
@@ -993,7 +895,7 @@ function MenuInput:menu_previous_page_pressed()
 	return false
 end
 
--- Lines 1032-1037
+-- Lines 913-918
 function MenuInput:menu_previous_page_released()
 	if self._controller then
 		return self._controller:get_input_released("previous_page")
@@ -1002,7 +904,7 @@ function MenuInput:menu_previous_page_released()
 	return false
 end
 
--- Lines 1044-1068
+-- Lines 925-949
 function MenuInput:_update_axis_status()
 	local axis_moved = self:menu_axis_move()
 
@@ -1027,7 +929,7 @@ function MenuInput:_update_axis_status()
 	end
 end
 
--- Lines 1071-1093
+-- Lines 952-974
 function MenuInput:_update_axis_scroll_status()
 	local axis_scrolled = self:menu_axis_scroll()
 

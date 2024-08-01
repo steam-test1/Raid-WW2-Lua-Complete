@@ -2,7 +2,7 @@ require("lib/network/matchmaking/NetworkGroupLobby")
 
 NetworkGroupLobbyPSN = NetworkGroupLobbyPSN or class(NetworkGroupLobby)
 
--- Lines 89-116
+-- Lines 88-115
 function NetworkGroupLobbyPSN:init()
 	NetworkGroupLobby.init(self)
 	cat_print("lobby", "group = NetworkGroupLobbyPSN")
@@ -17,7 +17,7 @@ function NetworkGroupLobbyPSN:init()
 	self._is_client_var = false
 	self._callback_map = {}
 
-	-- Lines 110-110
+	-- Lines 109-109
 	local function f(...)
 		self:_custom_message_cb(...)
 	end
@@ -29,7 +29,7 @@ function NetworkGroupLobbyPSN:init()
 	self:_load_globals()
 end
 
--- Lines 118-123
+-- Lines 117-122
 function NetworkGroupLobbyPSN:_session_destroyed_cb(room_id)
 	cat_print("lobby", "NetworkGroupLobbyPSN:_session_destroyed_cb")
 
@@ -38,11 +38,11 @@ function NetworkGroupLobbyPSN:_session_destroyed_cb(room_id)
 	end
 end
 
--- Lines 125-126
+-- Lines 124-125
 function NetworkGroupLobbyPSN:destroy()
 end
 
--- Lines 128-137
+-- Lines 127-136
 function NetworkGroupLobbyPSN:update(time)
 	if self._time_to_leave and self._time_to_leave < TimerManager:wall():time() then
 		self._time_to_leave = nil
@@ -57,14 +57,14 @@ function NetworkGroupLobbyPSN:update(time)
 	end
 end
 
--- Lines 139-151
+-- Lines 138-150
 function NetworkGroupLobbyPSN:create_group_lobby()
 	Application:debug("[NetworkGroupLobbyPSN:create_group_lobby]")
 
 	self._players = {}
 	local world_list = PSN:get_world_list()
 
-	-- Lines 146-146
+	-- Lines 145-145
 	local function session_created(roomid)
 		managers.network.group:_created_group_lobby(roomid)
 	end
@@ -73,7 +73,7 @@ function NetworkGroupLobbyPSN:create_group_lobby()
 	PSN:create_session(0, world_list[1].world_id, 0, self.OPEN_SLOTS, 0)
 end
 
--- Lines 153-171
+-- Lines 152-170
 function NetworkGroupLobbyPSN:join_group_lobby(room_info)
 	self:_is_server(false)
 	self:_is_client(true)
@@ -88,7 +88,7 @@ function NetworkGroupLobbyPSN:join_group_lobby(room_info)
 
 	self._room_id = room_info.room_id
 
-	-- Lines 166-166
+	-- Lines 165-165
 	local function f(...)
 		self:_join_invite(...)
 	end
@@ -100,7 +100,7 @@ function NetworkGroupLobbyPSN:join_group_lobby(room_info)
 	PSN:join_session(self._room_id)
 end
 
--- Lines 173-181
+-- Lines 172-180
 function NetworkGroupLobbyPSN:send_go_to_lobby()
 	if self:_is_server() then
 		for k, v in pairs(self._players) do
@@ -111,7 +111,7 @@ function NetworkGroupLobbyPSN:send_go_to_lobby()
 	end
 end
 
--- Lines 183-190
+-- Lines 182-189
 function NetworkGroupLobbyPSN:go_to_lobby()
 	if self._callback_map.go_to_lobby then
 		self:_call_callback("go_to_lobby")
@@ -120,17 +120,13 @@ function NetworkGroupLobbyPSN:go_to_lobby()
 	end
 end
 
--- Lines 192-210
+-- Lines 191-204
 function NetworkGroupLobbyPSN:send_return_group_lobby()
 	local playerid = managers.network.account:player_id()
 
 	cat_print("lobby", "Now telling server that im back and ready. My playerid is: ", tostring(playerid))
 
 	local timeout = 40
-
-	if Application:bundled() then
-		timeout = 15
-	end
 
 	self._server_rpc:lobby_return(managers.network.account:player_id())
 
@@ -143,7 +139,7 @@ function NetworkGroupLobbyPSN:send_return_group_lobby()
 	end
 end
 
--- Lines 212-236
+-- Lines 206-230
 function NetworkGroupLobbyPSN:_handle_returned_players()
 	if #self._returned_players ~= 0 and self._callback_map.player_returned then
 		cat_print("lobby", "We now have a return callback so now handling players")
@@ -168,7 +164,7 @@ function NetworkGroupLobbyPSN:_handle_returned_players()
 	end
 end
 
--- Lines 238-247
+-- Lines 232-241
 function NetworkGroupLobbyPSN:return_group_lobby(playerid, sender)
 	cat_print("lobby", "Client reports that it has returned to group lobby. ", tostring(playerid))
 	table.insert(self._returned_players, playerid)
@@ -180,7 +176,7 @@ function NetworkGroupLobbyPSN:return_group_lobby(playerid, sender)
 	end
 end
 
--- Lines 249-261
+-- Lines 243-255
 function NetworkGroupLobbyPSN:lobby_return_answer(answer, sender)
 	cat_print("lobby", "Group leader tell us lobby_return_answer. ", tostring(answer), tostring(self._server_rpc))
 
@@ -197,7 +193,7 @@ function NetworkGroupLobbyPSN:lobby_return_answer(answer, sender)
 	end
 end
 
--- Lines 263-272
+-- Lines 257-266
 function NetworkGroupLobbyPSN:find(playerid)
 	for k, v in pairs(self._players) do
 		if tostring(v.playerid) == tostring(playerid) then
@@ -208,7 +204,7 @@ function NetworkGroupLobbyPSN:find(playerid)
 	return nil, nil
 end
 
--- Lines 274-299
+-- Lines 268-293
 function NetworkGroupLobbyPSN:leave_group_lobby(instant)
 	if self:_is_server() and #self._players == 0 then
 		self:leave_group_lobby_cb()
@@ -235,7 +231,7 @@ function NetworkGroupLobbyPSN:leave_group_lobby(instant)
 	end
 end
 
--- Lines 301-324
+-- Lines 295-318
 function NetworkGroupLobbyPSN:leave_group_lobby_cb(error_callback)
 	if self._room_id then
 		managers.network.voice_chat:close_session()
@@ -262,7 +258,7 @@ function NetworkGroupLobbyPSN:leave_group_lobby_cb(error_callback)
 	self:_call_callback(error_callback or "left_group")
 end
 
--- Lines 326-333
+-- Lines 320-327
 function NetworkGroupLobbyPSN:set_join_enabled(enabled)
 	self._join_enable = enabled
 
@@ -273,7 +269,7 @@ function NetworkGroupLobbyPSN:set_join_enabled(enabled)
 	end
 end
 
--- Lines 335-365
+-- Lines 329-359
 function NetworkGroupLobbyPSN:send_group_lobby_invite(network_friend)
 	if self._room_id == nil then
 		return false
@@ -310,7 +306,7 @@ function NetworkGroupLobbyPSN:send_group_lobby_invite(network_friend)
 	return false
 end
 
--- Lines 367-379
+-- Lines 361-373
 function NetworkGroupLobbyPSN:kick_player(player_id, timeout)
 	local v, k, rpc = nil
 	k, v = self:find(player_id)
@@ -324,14 +320,14 @@ function NetworkGroupLobbyPSN:kick_player(player_id, timeout)
 	self:_unregister_player(player_id, false, rpc)
 end
 
--- Lines 381-385
+-- Lines 375-379
 function NetworkGroupLobbyPSN:accept_group_lobby_invite(room, accept)
 	if accept == true then
 		self:_call_callback("accepted_group_lobby_invite", room)
 	end
 end
 
--- Lines 387-397
+-- Lines 381-391
 function NetworkGroupLobbyPSN:send_game_id(id, private, created)
 	if created and created == true then
 		for k, v in pairs(self._players) do
@@ -344,21 +340,21 @@ function NetworkGroupLobbyPSN:send_game_id(id, private, created)
 	end
 end
 
--- Lines 399-401
+-- Lines 393-395
 function NetworkGroupLobbyPSN:register_callback(event, callback)
 	self._callback_map[event] = callback
 end
 
--- Lines 403-405
+-- Lines 397-399
 function NetworkGroupLobbyPSN:start_game()
 	self:_call_callback("game_started")
 end
 
--- Lines 407-408
+-- Lines 401-402
 function NetworkGroupLobbyPSN:end_game()
 end
 
--- Lines 410-419
+-- Lines 404-413
 function NetworkGroupLobbyPSN:ingame_start_game()
 	if self._server_rpc then
 		for k, v in pairs(self._players) do
@@ -371,7 +367,7 @@ function NetworkGroupLobbyPSN:ingame_start_game()
 	end
 end
 
--- Lines 421-427
+-- Lines 415-421
 function NetworkGroupLobbyPSN:say(message)
 	if self:_is_server() then
 		for k, v in pairs(self._players) do
@@ -380,7 +376,7 @@ function NetworkGroupLobbyPSN:say(message)
 	end
 end
 
--- Lines 429-435
+-- Lines 423-429
 function NetworkGroupLobbyPSN:membervoted(player, votes)
 	if self:_is_server() then
 		for k, v in pairs(self._players) do
@@ -389,17 +385,17 @@ function NetworkGroupLobbyPSN:membervoted(player, votes)
 	end
 end
 
--- Lines 437-439
+-- Lines 431-433
 function NetworkGroupLobbyPSN:is_group_leader()
 	return self:_is_server() == true
 end
 
--- Lines 441-443
+-- Lines 435-437
 function NetworkGroupLobbyPSN:has_pending_invite()
 	return false
 end
 
--- Lines 445-450
+-- Lines 439-444
 function NetworkGroupLobbyPSN:is_in_group()
 	if self._inlobby then
 		return true
@@ -408,7 +404,7 @@ function NetworkGroupLobbyPSN:is_in_group()
 	return false
 end
 
--- Lines 452-458
+-- Lines 446-452
 function NetworkGroupLobbyPSN:num_group_players()
 	local x = 0
 
@@ -419,12 +415,12 @@ function NetworkGroupLobbyPSN:num_group_players()
 	return x
 end
 
--- Lines 460-462
+-- Lines 454-456
 function NetworkGroupLobbyPSN:get_group_players()
 	return self._players
 end
 
--- Lines 464-469
+-- Lines 458-463
 function NetworkGroupLobbyPSN:is_full()
 	if #self._players == self.OPEN_SLOTS - 1 then
 		return true
@@ -433,12 +429,12 @@ function NetworkGroupLobbyPSN:is_full()
 	return false
 end
 
--- Lines 472-474
+-- Lines 466-468
 function NetworkGroupLobbyPSN:get_leader_rpc()
 	return self._server_rpc
 end
 
--- Lines 477-491
+-- Lines 471-485
 function NetworkGroupLobbyPSN:get_members_rpcs()
 	local rpcs = {}
 
@@ -453,7 +449,7 @@ function NetworkGroupLobbyPSN:get_members_rpcs()
 	return rpcs
 end
 
--- Lines 493-520
+-- Lines 487-514
 function NetworkGroupLobbyPSN:resync_screen()
 	managers.network:bind_port()
 
@@ -489,12 +485,12 @@ function NetworkGroupLobbyPSN:resync_screen()
 	end
 end
 
--- Lines 522-524
+-- Lines 516-518
 function NetworkGroupLobbyPSN:room_id()
 	return self._room_id
 end
 
--- Lines 528-540
+-- Lines 522-534
 function NetworkGroupLobbyPSN:_load_globals()
 	if Global.psn and Global.psn.group then
 		self._room_id = Global.psn.group.room_id
@@ -508,7 +504,7 @@ function NetworkGroupLobbyPSN:_load_globals()
 	end
 end
 
--- Lines 541-554
+-- Lines 535-548
 function NetworkGroupLobbyPSN:_save_global()
 	if not Global.psn then
 		Global.psn = {}
@@ -525,7 +521,7 @@ function NetworkGroupLobbyPSN:_save_global()
 	}
 end
 
--- Lines 556-562
+-- Lines 550-556
 function NetworkGroupLobbyPSN:_call_callback(name, ...)
 	if self._callback_map[name] then
 		return self._callback_map[name](...)
@@ -534,7 +530,7 @@ function NetworkGroupLobbyPSN:_call_callback(name, ...)
 	end
 end
 
--- Lines 564-570
+-- Lines 558-564
 function NetworkGroupLobbyPSN:_is_server(set)
 	if set == true or set == false then
 		self._is_server_var = set
@@ -543,7 +539,7 @@ function NetworkGroupLobbyPSN:_is_server(set)
 	end
 end
 
--- Lines 572-578
+-- Lines 566-572
 function NetworkGroupLobbyPSN:_is_client(set)
 	if set == true or set == false then
 		self._is_client_var = set
@@ -552,7 +548,7 @@ function NetworkGroupLobbyPSN:_is_client(set)
 	end
 end
 
--- Lines 580-589
+-- Lines 574-583
 function NetworkGroupLobbyPSN:_custom_message_cb(message)
 	if message.custom_table and message.custom_table.join_invite and self._join_enable then
 		self._invite_id = message.custom_table.invite_id
@@ -561,12 +557,12 @@ function NetworkGroupLobbyPSN:_custom_message_cb(message)
 	end
 end
 
--- Lines 591-593
+-- Lines 585-587
 function NetworkGroupLobbyPSN:_recv_game_id(id, private)
 	self:_call_callback("receive_game_id", id, private)
 end
 
--- Lines 595-630
+-- Lines 589-624
 function NetworkGroupLobbyPSN:_created_group_lobby(room_id)
 	if not room_id then
 		self:_call_callback("create_group_failed")
@@ -601,16 +597,16 @@ function NetworkGroupLobbyPSN:_created_group_lobby(room_id)
 	self:_call_callback("player_joined", playerinfo)
 end
 
--- Lines 634-637
+-- Lines 628-631
 function NetworkGroupLobbyPSN:_clear_psn_callback(cb)
-	-- Lines 635-635
+	-- Lines 629-629
 	local function f()
 	end
 
 	PSN:set_matchmaking_callback(cb, f)
 end
 
--- Lines 639-657
+-- Lines 633-651
 function NetworkGroupLobbyPSN:_join_invite(info)
 	if info.room_id == self._room_id and info.user_id == info.owner_id then
 		self:_clear_psn_callback("connection_etablished")
@@ -633,7 +629,7 @@ function NetworkGroupLobbyPSN:_join_invite(info)
 	end
 end
 
--- Lines 659-670
+-- Lines 653-664
 function NetworkGroupLobbyPSN:_server_alive(server)
 	if self._server_rpc and self._server_rpc:ip_at_index(0) == server:ip_at_index(0) then
 		self._try_time = nil
@@ -646,7 +642,7 @@ function NetworkGroupLobbyPSN:_server_alive(server)
 	end
 end
 
--- Lines 672-718
+-- Lines 666-712
 function NetworkGroupLobbyPSN:_register_player(name, pnid, group, rpc, is_server)
 	if self.OPEN_SLOTS <= #self._players + 1 then
 		return
@@ -702,7 +698,7 @@ function NetworkGroupLobbyPSN:_register_player(name, pnid, group, rpc, is_server
 	self:_call_callback("player_joined", playerinfo)
 end
 
--- Lines 720-748
+-- Lines 714-742
 function NetworkGroupLobbyPSN:_unregister_player(pnid, is_server, rpc)
 	if self:_is_client() and is_server == true then
 		self:leave_group_lobby_cb()
@@ -740,7 +736,7 @@ function NetworkGroupLobbyPSN:_unregister_player(pnid, is_server, rpc)
 	})
 end
 
--- Lines 750-757
+-- Lines 744-751
 function NetworkGroupLobbyPSN:_in_list(id)
 	for k, v in pairs(self._players) do
 		if tostring(v.pnid) == tostring(id) then
@@ -751,13 +747,13 @@ function NetworkGroupLobbyPSN:_in_list(id)
 	return false
 end
 
--- Lines 759-763
+-- Lines 753-757
 function NetworkGroupLobbyPSN:_server_timed_out(rpc)
 	NetworkGroupLobby._server_timed_out(self, rpc)
 	self:_unregister_player(nil, true, rpc)
 end
 
--- Lines 765-774
+-- Lines 759-768
 function NetworkGroupLobbyPSN:_client_timed_out(rpc)
 	for k, v in pairs(self._players) do
 		if v.rpc and v.rpc:ip_at_index(0) == rpc:ip_at_index(0) then
@@ -768,7 +764,7 @@ function NetworkGroupLobbyPSN:_client_timed_out(rpc)
 	end
 end
 
--- Lines 777-781
+-- Lines 771-775
 function NetworkGroupLobbyPSN:leaving_game()
 	if self:_is_server() then
 		self:leave_group_lobby(true)

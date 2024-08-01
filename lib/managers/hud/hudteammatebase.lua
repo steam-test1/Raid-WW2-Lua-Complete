@@ -123,11 +123,11 @@ function HUDTeammateBase:hide_turret_icon()
 end
 
 -- Lines 103-104
-function HUDTeammateBase:show_lockpick_icon()
+function HUDTeammateBase:show_special_interaction_icon(interaction_type)
 end
 
 -- Lines 106-107
-function HUDTeammateBase:hide_lockpick_icon()
+function HUDTeammateBase:hide_special_interaction_icon()
 end
 
 -- Lines 111-112
@@ -217,7 +217,7 @@ function HUDTeammateBase:_check_state_change()
 	end
 end
 
--- Lines 184-236
+-- Lines 184-239
 function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	local old_state = self._displayed_state
 	local fade_out_duration = 0.15
@@ -250,7 +250,11 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 		end
 	end
 
-	self._status_panel:child(self._displayed_state.control):set_alpha(1)
+	local cc = self._status_panel:child(self._displayed_state.control)
+
+	if cc then
+		cc:set_alpha(1)
+	end
 
 	local fade_in_duration = 0.15
 	t = 0
@@ -274,7 +278,7 @@ function HUDTeammateBase:_animate_state_change(status_panel, new_state)
 	self._status_panel:set_alpha(1)
 end
 
--- Lines 240-246
+-- Lines 243-249
 function HUDTeammateBase:start_timer(time, current)
 	self._timer_total = time
 	self._timer_current = current or time
@@ -283,17 +287,17 @@ function HUDTeammateBase:start_timer(time, current)
 	self._timer_text:animate(callback(self, self, "_animate_timer_countdown"))
 end
 
--- Lines 248-250
+-- Lines 251-253
 function HUDTeammateBase:set_pause_timer(pause)
 	self._is_timer_running = not pause
 end
 
--- Lines 252-254
+-- Lines 255-257
 function HUDTeammateBase:is_timer_running()
 	return self._is_timer_running
 end
 
--- Lines 256-261
+-- Lines 259-264
 function HUDTeammateBase:stop_timer()
 	self._timer_total = nil
 	self._is_timer_running = false
@@ -301,7 +305,7 @@ function HUDTeammateBase:stop_timer()
 	self._timer_text:stop()
 end
 
--- Lines 263-276
+-- Lines 266-279
 function HUDTeammateBase:_animate_timer_countdown()
 	while self._timer_current > 0 and self._timer_total and self._timer_total > 0 do
 		local dt = coroutine.yield()
@@ -318,6 +322,6 @@ function HUDTeammateBase:_animate_timer_countdown()
 	end
 end
 
--- Lines 280-281
+-- Lines 283-284
 function HUDTeammateBase:_set_status_icon(new_status_icon)
 end

@@ -20,7 +20,7 @@ HUDNotification.TYPES = {
 HUDNotification.ANIMATION_MOVE_X_DISTANCE = 30
 HUDNotification.DEFAULT_DISTANCE_FROM_BOTTOM = 130
 
--- Lines 30-74
+-- Lines 30-35
 function HUDNotification.create(notification_data)
 	local notification_type = notification_data.notification_type or HUDNotification.GENERIC
 	local notification_class = HUDNotification.TYPES[notification_type]
@@ -28,7 +28,7 @@ function HUDNotification.create(notification_data)
 	return notification_class:new(notification_data)
 end
 
--- Lines 77-113
+-- Lines 38-78
 function HUDNotification:init(notification_data)
 	self._hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	self._hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -68,6 +68,10 @@ function HUDNotification:init(notification_data)
 		notification_text = notification_text .. "\n" .. notification_data.prompt
 	end
 
+	if notification_data.sound_effect then
+		self._sound_effect = notification_data.sound_effect
+	end
+
 	self._text = self._object:text({
 		name = "text",
 		vertical = "center",
@@ -93,38 +97,44 @@ function HUDNotification:init(notification_data)
 	self._progress = 0
 end
 
--- Lines 115-119
+-- Lines 80-85
 function HUDNotification:hide()
 	self._removed = true
 
-	self._object:animate(callback(self, self, "_animate_hide"))
-end
-
--- Lines 121-123
-function HUDNotification:cancel_execution()
-	self._object:animate(callback(self, self, "_animate_cancel"))
-end
-
--- Lines 125-129
-function HUDNotification:execute()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 131-135
+-- Lines 87-92
+function HUDNotification:cancel_execution()
+	if self._object then
+		self._object:stop()
+		self._object:animate(callback(self, self, "_animate_cancel"))
+	end
+end
+
+-- Lines 94-100
+function HUDNotification:execute()
+	if self._object then
+		self._object:stop()
+		self._object:animate(callback(self, self, "_animate_hide"))
+	end
+end
+
+-- Lines 102-106
 function HUDNotification:destroy()
 	self._object:stop()
 	self._object:parent():remove(self._object)
 end
 
--- Lines 137-141
+-- Lines 108-112
 function HUDNotification:update_data(data)
 	if data.text and alive(self._text) and not self._removed then
 		self._text:set_text(data.text)
 	end
 end
 
--- Lines 147-157
+-- Lines 118-128
 function HUDNotification:set_progress(progress)
 	local scale = 1 - 0.15 * progress
 
@@ -137,12 +147,12 @@ function HUDNotification:set_progress(progress)
 	self._progress = progress
 end
 
--- Lines 159-161
+-- Lines 130-132
 function HUDNotification:get_progress()
 	return self._progress
 end
 
--- Lines 164-168
+-- Lines 135-139
 function HUDNotification:set_full_progress()
 	self._progress = 1
 
@@ -150,7 +160,7 @@ function HUDNotification:set_full_progress()
 	self._object:animate(callback(self, self, "_animate_full_progress"))
 end
 
--- Lines 174-231
+-- Lines 145-202
 function HUDNotificationCardFail:init(notification_data)
 	self._hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	self._hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -246,20 +256,26 @@ function HUDNotificationCardFail:init(notification_data)
 	self._progress = 0
 end
 
--- Lines 233-235
+-- Lines 204-209
 function HUDNotificationCardFail:hide()
-	self._object:animate(callback(self, self, "_animate_hide"))
+	if self._object then
+		self._object:stop()
+		self._object:animate(callback(self, self, "_animate_hide"))
+	end
 end
 
--- Lines 237-241
+-- Lines 211-218
 function HUDNotificationCardFail:destroy()
-	self._object:stop()
-	self._object:clear()
+	if self._object then
+		self._object:stop()
+		self._object:close()
+		self._object:parent():remove(self._object:get_engine_panel())
+	end
 
 	self = nil
 end
 
--- Lines 249-256
+-- Lines 226-233
 function HUDNotificationIcon:init()
 	Application:error("HUDNotificationIcon has not been implemented yet!")
 end
@@ -274,7 +290,7 @@ HUDNotificationRaidUnlocked.DESCRIPTION_COLOR = tweak_data.gui.colors.raid_dirty
 HUDNotificationRaidUnlocked.FOLDER_ICON = "folder_mission_hud_notification_raid"
 HUDNotificationRaidUnlocked.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 
--- Lines 286-299
+-- Lines 263-276
 function HUDNotificationRaidUnlocked:init(notification_data)
 	self:_create_panel()
 	self:_create_folder_image()
@@ -292,21 +308,21 @@ function HUDNotificationRaidUnlocked:init(notification_data)
 	self._progress = 0
 end
 
--- Lines 301-304
+-- Lines 278-281
 function HUDNotificationRaidUnlocked:hide()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 306-310
+-- Lines 283-287
 function HUDNotificationRaidUnlocked:destroy()
 	self._object:stop()
-	self._object:clear()
+	self._object:parent():remove(self._object)
 
 	self = nil
 end
 
--- Lines 312-333
+-- Lines 289-310
 function HUDNotificationRaidUnlocked:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -332,7 +348,7 @@ function HUDNotificationRaidUnlocked:_create_panel()
 	self._object:bitmap(background_params)
 end
 
--- Lines 335-344
+-- Lines 312-321
 function HUDNotificationRaidUnlocked:_create_folder_image()
 	local folder_image_params = {
 		name = "notification_raid_unlocked_folder_image",
@@ -345,7 +361,7 @@ function HUDNotificationRaidUnlocked:_create_folder_image()
 	self._folder_image:set_right(self._object:w() - 32)
 end
 
--- Lines 346-366
+-- Lines 323-343
 function HUDNotificationRaidUnlocked:_create_description()
 	local is_at_last_step = managers.progression:mission_progression_completion_pending()
 	local description_text = is_at_last_step and "raid_final_unlocked_title" or "raid_next_unlocked_title"
@@ -368,7 +384,7 @@ function HUDNotificationRaidUnlocked:_create_description()
 	self._description:set_right(self._object:w() - 32)
 end
 
--- Lines 368-380
+-- Lines 345-357
 function HUDNotificationRaidUnlocked:_fit_size()
 	local top_padding = 32
 	local middle_padding = 32
@@ -391,7 +407,7 @@ HUDNotificationConsumablePickup.DESCRIPTION_COLOR = tweak_data.gui.colors.raid_d
 HUDNotificationConsumablePickup.DOCUMENT_ICON = "notification_consumable"
 HUDNotificationConsumablePickup.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 
--- Lines 411-424
+-- Lines 388-401
 function HUDNotificationConsumablePickup:init(notification_data)
 	self:_create_panel()
 	self:_create_document_image()
@@ -409,21 +425,21 @@ function HUDNotificationConsumablePickup:init(notification_data)
 	self._progress = 0
 end
 
--- Lines 426-429
+-- Lines 403-406
 function HUDNotificationConsumablePickup:hide()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 431-435
+-- Lines 408-412
 function HUDNotificationConsumablePickup:destroy()
 	self._object:stop()
-	self._object:clear()
+	self._object:parent():remove(self._object)
 
 	self = nil
 end
 
--- Lines 437-458
+-- Lines 414-435
 function HUDNotificationConsumablePickup:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -449,7 +465,7 @@ function HUDNotificationConsumablePickup:_create_panel()
 	self._object:bitmap(background_params)
 end
 
--- Lines 460-469
+-- Lines 437-446
 function HUDNotificationConsumablePickup:_create_document_image()
 	local folder_image_params = {
 		name = "notification_outlaw_raid_unlocked_document_image",
@@ -462,7 +478,7 @@ function HUDNotificationConsumablePickup:_create_document_image()
 	self._folder_image:set_right(self._object:w() - 32)
 end
 
--- Lines 471-488
+-- Lines 448-465
 function HUDNotificationConsumablePickup:_create_description()
 	local description_params = {
 		vertical = "center",
@@ -483,7 +499,7 @@ function HUDNotificationConsumablePickup:_create_description()
 	self._description:set_right(self._object:w() - 32)
 end
 
--- Lines 490-502
+-- Lines 467-479
 function HUDNotificationConsumablePickup:_fit_size()
 	local top_padding = 32
 	local middle_padding = 32
@@ -498,7 +514,7 @@ end
 
 HUDNotificationGreedItem = HUDNotificationGreedItem or class(HUDNotification)
 HUDNotification.TYPES[HUDNotification.GREED_ITEM] = HUDNotificationGreedItem
-HUDNotificationGreedItem.BOTTOM = 800
+HUDNotificationGreedItem.BOTTOM = 830
 HUDNotificationGreedItem.WIDTH = 352
 HUDNotificationGreedItem.HEIGHT = 160
 HUDNotificationGreedItem.BACKGROUND_IMAGE = "backgrounds_chat_bg"
@@ -508,18 +524,18 @@ HUDNotificationGreedItem.LOOT_ICON = "rewards_extra_loot_middle_loot"
 HUDNotificationGreedItem.GOLD_ICON = "rewards_extra_loot_middle_gold"
 HUDNotificationGreedItem.TITLE_STRING = "menu_save_info_loot_title"
 HUDNotificationGreedItem.GOLD_ACQUIRED_STRING = "hud_greed_gold_bar_acquired"
-HUDNotificationGreedItem.LOOT_BAR_ICON_L = "loot_meter_parts_l"
-HUDNotificationGreedItem.LOOT_BAR_ICON_M = "loot_meter_parts_m"
-HUDNotificationGreedItem.LOOT_BAR_ICON_R = "loot_meter_parts_r"
-HUDNotificationGreedItem.LOOT_BAR_COLOR = tweak_data.gui.colors.raid_dark_grey
-HUDNotificationGreedItem.LOOT_BAR_FOREGROUND_COLOR = tweak_data.gui.colors.raid_gold
+HUDNotificationGreedItem.ITEMS_MAX = 6
+HUDNotificationGreedItem.ITEMS_HEIGHT = 40
+HUDNotificationGreedItem.ITEMS_MARGIN = 5
+HUDNotificationGreedItem.ITEMS_PADDING = 30
 HUDNotificationGreedItem.ICON_HIDDEN_OFFSET = 40
 
--- Lines 541-556
+-- Lines 523-544
 function HUDNotificationGreedItem:init(notification_data)
 	self:_create_panel()
 	self:_create_icons()
 	self:_create_right_panel()
+	self:_create_items_panel()
 	self:_create_title()
 
 	self._initial_progress = notification_data.initial_progress
@@ -530,11 +546,19 @@ function HUDNotificationGreedItem:init(notification_data)
 	self._object:animate(callback(self, self, "_animate_show"))
 
 	self._progress = 0
+	self._items = {}
+	self._progress_queue = {
+		notification_data
+	}
 
 	managers.queued_tasks:queue("greed_notification_animate", self.animate_progress_change, self, nil, 0.5, nil, false)
+
+	if notification_data.item then
+		self:_create_item(notification_data.item)
+	end
 end
 
--- Lines 558-563
+-- Lines 546-551
 function HUDNotificationGreedItem:hide()
 	self._gold_icon:stop()
 	self._icons_panel:stop()
@@ -542,15 +566,17 @@ function HUDNotificationGreedItem:hide()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 565-569
+-- Lines 553-559
 function HUDNotificationGreedItem:destroy()
 	self._object:stop()
-	self._object:clear()
+	self._object:parent():remove(self._object)
+	self._items_panel:parent():remove(self._items_panel)
 
+	self._items = {}
 	self = nil
 end
 
--- Lines 571-595
+-- Lines 561-585
 function HUDNotificationGreedItem:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -581,7 +607,7 @@ function HUDNotificationGreedItem:_create_panel()
 	self._object:bitmap(background_params)
 end
 
--- Lines 597-656
+-- Lines 587-646
 function HUDNotificationGreedItem:_create_icons()
 	local icons_panel_params = {
 		name = "icons_panel",
@@ -649,7 +675,7 @@ function HUDNotificationGreedItem:_create_icons()
 	self._gold_icon:set_center_y(self._icons_panel:h() / 2)
 end
 
--- Lines 658-669
+-- Lines 648-659
 function HUDNotificationGreedItem:_create_right_panel()
 	local right_panel_params = {
 		h = 96,
@@ -663,23 +689,29 @@ function HUDNotificationGreedItem:_create_right_panel()
 	self._right_panel:set_center_y(self._object:h() / 2)
 end
 
--- Lines 672-716
+-- Lines 662-714
 function HUDNotificationGreedItem:_create_title()
-	local title_params = {
+	self._title = self._right_panel:text({
 		name = "greed_item_notification_title",
-		vertical = "center",
 		h = 64,
+		vertical = "center",
+		w = 90,
 		align = "left",
 		halign = "left",
 		valign = "center",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
 		font_size = tweak_data.gui.font_sizes.size_56,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		text = utf8.to_upper(managers.localization:text(HUDNotificationGreedItem.TITLE_STRING))
-	}
-	self._title = self._right_panel:text(title_params)
+		text = managers.localization:to_upper_text(HUDNotificationGreedItem.TITLE_STRING),
+		color = tweak_data.gui.colors.raid_dirty_white
+	})
 
 	self._title:set_center_y(self._right_panel:h() / 2)
+
+	local _, _, w = self._title:text_rect()
+
+	if self._title:w() < w then
+		self._title:set_font_size(tweak_data.gui.font_sizes.size_56 * self._title:w() / w)
+	end
 
 	local progress_amount_text_params = {
 		name = "greed_item_notification_amount_progress",
@@ -717,65 +749,213 @@ function HUDNotificationGreedItem:_create_title()
 	self._gold_acquired = self._right_panel:text(title_params)
 end
 
--- Lines 718-724
+-- Lines 716-727
+function HUDNotificationGreedItem:_create_items_panel()
+	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
+	self._items_panel = hud.panel:panel({
+		name = "notification_greed_item_secured",
+		w = HUDNotificationGreedItem.WIDTH,
+		h = (HUDNotificationGreedItem.ITEMS_HEIGHT + HUDNotificationGreedItem.ITEMS_MARGIN) * HUDNotificationGreedItem.ITEMS_MAX
+	})
+
+	self._items_panel:set_right(hud.panel:w())
+	self._items_panel:set_bottom(self._object:top() + HUDNotificationGreedItem.ITEMS_HEIGHT / 2)
+end
+
+-- Lines 729-814
+function HUDNotificationGreedItem:_create_item(data)
+	local item_panel = self._items_panel:panel({
+		name = "notification_greed_item_pickup",
+		w = HUDNotificationGreedItem.WIDTH,
+		h = HUDNotificationGreedItem.ITEMS_HEIGHT
+	})
+
+	item_panel:set_right(self._items_panel:w())
+	item_panel:set_bottom(self._items_panel:h() - #self._items * (HUDNotificationGreedItem.ITEMS_HEIGHT + HUDNotificationGreedItem.ITEMS_MARGIN))
+
+	local icon_data = tweak_data.gui:get_full_gui_data(HUDNotificationGreedItem.BACKGROUND_IMAGE)
+	local background = item_panel:bitmap({
+		valign = "scale",
+		halign = "scale",
+		w = item_panel:w(),
+		h = item_panel:h(),
+		texture = icon_data.texture,
+		texture_rect = icon_data.texture_rect
+	})
+	icon_data = tweak_data.gui:get_full_gui_data(data.icon)
+	local loot_icon = item_panel:bitmap({
+		name = "loot_icon",
+		valign = "center",
+		halign = "center",
+		x = HUDNotificationGreedItem.ITEMS_PADDING,
+		w = item_panel:h(),
+		h = item_panel:h(),
+		texture = icon_data.texture,
+		texture_rect = icon_data.texture_rect,
+		layer = background:layer() + 1
+	})
+	local loot_title = item_panel:text({
+		name = "loot_title",
+		vertical = "center",
+		align = "left",
+		halign = "left",
+		valign = "center",
+		h = item_panel:h(),
+		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
+		font_size = tweak_data.gui.font_sizes.small,
+		color = tweak_data.gui.colors.raid_dirty_white,
+		text = utf8.to_upper(managers.localization:text(data.name_id)),
+		layer = background:layer() + 1
+	})
+
+	loot_title:set_x(loot_icon:right() + 4)
+
+	local value_label = item_panel:text({
+		name = "value_label",
+		vertical = "center",
+		align = "right",
+		halign = "left",
+		valign = "center",
+		h = item_panel:h(),
+		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
+		font_size = tweak_data.gui.font_sizes.small,
+		color = tweak_data.gui.colors.raid_gold,
+		text = "+" .. tostring(data.value) .. "g",
+		layer = background:layer() + 1
+	})
+	local w = select(3, value_label:text_rect())
+
+	value_label:set_w(w)
+	value_label:set_right(item_panel:w() - HUDNotificationGreedItem.ITEMS_PADDING)
+
+	local col = tweak_data.gui.colors.raid_white
+	local attention_grabber = self._items_panel:gradient({
+		name = "attention_grabber",
+		halign = "center",
+		orientation = "horizontal",
+		valign = "center",
+		w = item_panel:w() / 2,
+		h = item_panel:h(),
+		layer = background:layer() + 5
+	})
+
+	attention_grabber:set_world_right(item_panel:world_x())
+	attention_grabber:set_world_y(item_panel:world_y())
+	attention_grabber:set_gradient_points({
+		0,
+		col:with_alpha(0),
+		0.3,
+		col:with_alpha(1),
+		0.7,
+		col:with_alpha(1),
+		1,
+		col:with_alpha(0)
+	})
+	table.insert(self._items, item_panel)
+	item_panel:stop()
+	item_panel:animate(callback(self, self, "_animate_show_item", attention_grabber))
+end
+
+-- Lines 816-822
 function HUDNotificationGreedItem:_set_progress(progress)
-	local grams = math.ceil(progress * tweak_data.greed.points_needed_for_gold_bar)
+	local grams = math.ceil(progress * tweak_data.greed.item_value.complete_gold_bar)
 
 	self._gold_progress:set_text(tostring(grams) .. "g")
 	self._frame_fill:set_position_z(progress)
 end
 
--- Lines 726-732
+-- Lines 824-837
 function HUDNotificationGreedItem:update_data(data)
-	self._updated_progress = data.new_progress
+	table.insert(self._progress_queue, data)
+	self:_check_item_queued()
 
-	if not self._animating_progress_change and not self._removed then
+	if not self._animating_progress_change then
 		self:animate_progress_change()
+
+		if self._removed and alive(self._object) then
+			self._object:stop()
+			self._object:animate(callback(self, self, "_animate_reshow"))
+
+			self._removed = false
+		end
 	end
 end
 
--- Lines 734-739
+-- Lines 839-844
 function HUDNotificationGreedItem:animate_progress_change()
-	if self._gold_icon then
+	if alive(self._gold_icon) then
 		self._gold_icon:stop()
 		self._gold_icon:animate(callback(self, self, "_animate_progress_change"))
 	end
 end
 
--- Lines 741-772
+-- Lines 846-909
 function HUDNotificationGreedItem:_animate_progress_change(o)
 	self._animating_progress_change = true
-	local points_per_second = 100
 	local t = 0
 
-	while self._updated_progress - self._current_progress > 0 do
-		local dt = coroutine.yield()
-		t = t + dt
-		self._current_progress = self._current_progress + points_per_second * dt
-		local current_percentage = self._current_progress % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar()
+	while #self._progress_queue > 0 do
+		self._updated_progress = self._progress_queue[1].new_progress
+		local points_per_second = self._updated_progress - self._current_progress
+
+		while self._updated_progress - self._current_progress > 0 do
+			local dt = coroutine.yield()
+			t = t + dt
+			self._current_progress = self._current_progress + points_per_second * dt
+			local current_percentage = self._current_progress % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar()
+
+			self:_set_progress(current_percentage)
+
+			if self._previous_percentage and current_percentage < self._previous_percentage then
+				self._icons_panel:stop()
+				self._icons_panel:animate(callback(self, self, "_animate_gold_bar"))
+				managers.hud:post_event("greed_item_picked_up")
+			end
+
+			self._previous_percentage = current_percentage
+		end
+
+		local current_percentage = self._updated_progress % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar()
 
 		self:_set_progress(current_percentage)
 
-		if self._previous_percentage and current_percentage < self._previous_percentage then
-			self._icons_panel:stop()
-			self._icons_panel:animate(callback(self, self, "_animate_gold_bar"))
-			managers.hud:post_event("greed_item_picked_up")
+		local duration = 0.3
+		t = 0
+
+		while duration > t do
+			local dt = coroutine.yield()
+			t = t + dt
+			local current_offset = Easing.quartic_in_out(t, -20, 20, duration)
+
+			self._gold_progress:set_center_y(self._title:center_y() + current_offset)
+
+			local current_r = Easing.quartic_out(t, tweak_data.gui.colors.raid_light_gold.r, tweak_data.gui.colors.raid_gold.r - tweak_data.gui.colors.raid_light_gold.r, duration)
+			local current_g = Easing.quartic_out(t, tweak_data.gui.colors.raid_light_gold.g, tweak_data.gui.colors.raid_gold.g - tweak_data.gui.colors.raid_light_gold.g, duration)
+			local current_b = Easing.quartic_out(t, tweak_data.gui.colors.raid_light_gold.b, tweak_data.gui.colors.raid_gold.b - tweak_data.gui.colors.raid_light_gold.b, duration)
+
+			self._gold_progress:set_color(Color(current_r, current_g, current_b))
 		end
 
-		self._previous_percentage = current_percentage
+		wait(0.5)
+
+		if #self._items > 0 then
+			self._items_panel:stop()
+			self._items_panel:animate(callback(self, self, "_animate_cycle_items", self._items[1]))
+			table.remove(self._items, 1)
+			wait(0.2)
+		end
+
+		table.remove(self._progress_queue, 1)
 	end
-
-	local current_percentage = self._updated_progress % managers.greed:loot_needed_for_gold_bar() / managers.greed:loot_needed_for_gold_bar()
-
-	self:_set_progress(current_percentage)
 
 	self._animating_progress_change = false
 
-	wait(1)
+	wait(2)
 	self:_check_hide()
 end
 
--- Lines 774-897
+-- Lines 911-1034
 function HUDNotificationGreedItem:_animate_gold_bar(o)
 	self._animating_gold_bar = true
 	local frame_default_w = tweak_data.gui:icon_w(HUDNotificationGreedItem.FRAME_ICON)
@@ -808,21 +988,15 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 
 		self._loot_icon:set_alpha(current_loot_icon_alpha)
 		self._loot_icon:set_center_y(self._icons_panel:h() / 2 - current_offset)
-		self._title:set_alpha(current_loot_icon_alpha)
-		self._title:set_center_y(self._right_panel:h() / 2 - current_offset)
-		self._gold_progress:set_alpha(current_loot_icon_alpha)
-		self._gold_progress:set_center_y(self._title:center_y())
 		self._frame_fill:set_alpha(current_loot_icon_alpha)
 
 		if t >= duration_in / 2 then
 			local current_gold_icon_alpha = Easing.quartic_in_out(t - duration_in / 2, 0, 1, duration_in / 2)
 
 			self._gold_icon:set_alpha(current_gold_icon_alpha)
-			self._gold_acquired:set_alpha(current_gold_icon_alpha)
 		end
 
 		self._gold_icon:set_center_y(self._icons_panel:h() / 2 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
-		self._gold_acquired:set_y(HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
 	end
 
 	self._frame_icon:set_color(tweak_data.gui.colors.raid_gold)
@@ -838,7 +1012,7 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 	self._frame_icon:set_center_y(self._icons_panel:h() / 2)
 	self._frame_fill:set_center_x(self._icons_panel:w() / 2)
 	self._frame_fill:set_center_y(self._icons_panel:h() / 2)
-	wait(1.5)
+	wait(1)
 
 	local duration_out = 0.7
 	t = 0
@@ -863,21 +1037,15 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 
 		self._gold_icon:set_alpha(current_gold_icon_alpha)
 		self._gold_icon:set_center_y(self._icons_panel:h() / 2 - current_offset)
-		self._gold_acquired:set_alpha(current_gold_icon_alpha)
-		self._gold_acquired:set_y(current_offset)
 
 		if t >= duration_in / 2 then
 			local current_loot_icon_alpha = Easing.quartic_in_out(t - duration_in / 2, 0, 1, duration_in / 2)
 
 			self._loot_icon:set_alpha(current_loot_icon_alpha)
-			self._title:set_alpha(current_loot_icon_alpha)
-			self._gold_progress:set_alpha(current_loot_icon_alpha)
 			self._frame_fill:set_alpha(current_loot_icon_alpha)
 		end
 
 		self._loot_icon:set_center_y(self._icons_panel:h() / 2 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
-		self._title:set_center_y(self._right_panel:h() / 2 + HUDNotificationGreedItem.ICON_HIDDEN_OFFSET - current_offset)
-		self._gold_progress:set_center_y(self._title:center_y())
 	end
 
 	self._frame_icon:set_color(Color.white)
@@ -896,7 +1064,70 @@ function HUDNotificationGreedItem:_animate_gold_bar(o)
 	self:_check_hide()
 end
 
--- Lines 899-904
+-- Lines 1036-1062
+function HUDNotificationGreedItem:_animate_show_item(attention, panel)
+	panel:set_alpha(0)
+
+	local panel_right = panel:parent():w()
+	local attention_right = attention:parent():w() + attention:w()
+	local duration = 0.35
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_alpha = Easing.quadratic_in(t, 0, 1, duration)
+
+		panel:set_alpha(curr_alpha)
+
+		local current_x_offset = -(1 - curr_alpha) * HUDNotification.ANIMATION_MOVE_X_DISTANCE
+
+		panel:set_right(panel_right + current_x_offset)
+		attention:set_right(attention_right * curr_alpha)
+		attention:set_world_y(panel:world_y())
+	end
+
+	panel:set_alpha(1)
+	panel:set_right(panel_right)
+	attention:parent():remove(attention)
+end
+
+-- Lines 1064-1084
+function HUDNotificationGreedItem:_animate_cycle_items(first_item, panel)
+	local h = HUDNotificationGreedItem.ITEMS_HEIGHT + HUDNotificationGreedItem.ITEMS_MARGIN
+	local duration = 0.2
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local curr_alpha = Easing.quadratic_in(t, 1, -1, duration)
+
+		first_item:set_alpha(curr_alpha)
+
+		for i = 1, #self._items do
+			local curr_y = Easing.quadratic_in(t, i * h, -h, duration)
+
+			self._items[i]:set_bottom(panel:h() - curr_y)
+		end
+	end
+
+	panel:remove(first_item)
+	self:_check_item_queued()
+end
+
+-- Lines 1087-1095
+function HUDNotificationGreedItem:_check_item_queued()
+	if #self._items < HUDNotificationGreedItem.ITEMS_MAX and alive(self._items_panel) then
+		local data = self._progress_queue[#self._items + 1]
+
+		if data and data.item then
+			self:_create_item(data.item)
+		end
+	end
+end
+
+-- Lines 1097-1102
 function HUDNotificationGreedItem:_check_hide()
 	if not self._animating_progress_change and not self._animating_gold_bar then
 		self._removed = true
@@ -914,7 +1145,7 @@ HUDNotificationDogTag.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 HUDNotificationDogTag.DOG_TAG_ICON = "rewards_dog_tags"
 HUDNotificationDogTag.TITLE_STRING = "hud_dog_tags"
 
--- Lines 936-945
+-- Lines 1134-1143
 function HUDNotificationDogTag:init(notification_data)
 	self:_create_panel()
 	self:_create_icon()
@@ -925,21 +1156,21 @@ function HUDNotificationDogTag:init(notification_data)
 	self._object:animate(callback(self, self, "_animate_show"))
 end
 
--- Lines 947-950
+-- Lines 1145-1148
 function HUDNotificationDogTag:hide()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 952-956
+-- Lines 1150-1154
 function HUDNotificationDogTag:destroy()
 	self._object:stop()
-	self._object:clear()
+	self._object:parent():remove(self._object)
 
 	self = nil
 end
 
--- Lines 958-981
+-- Lines 1156-1179
 function HUDNotificationDogTag:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -969,7 +1200,7 @@ function HUDNotificationDogTag:_create_panel()
 	self._object:bitmap(background_params)
 end
 
--- Lines 983-1002
+-- Lines 1181-1200
 function HUDNotificationDogTag:_create_icon()
 	local icon_panel_params = {
 		name = "icon_panel",
@@ -994,7 +1225,7 @@ function HUDNotificationDogTag:_create_icon()
 	self._dog_tag_icon:set_center_y(self._icon_panel:h() / 2)
 end
 
--- Lines 1004-1015
+-- Lines 1202-1213
 function HUDNotificationDogTag:_create_right_panel()
 	local right_panel_params = {
 		h = 96,
@@ -1008,7 +1239,7 @@ function HUDNotificationDogTag:_create_right_panel()
 	self._right_panel:set_center_y(self._object:h() / 2)
 end
 
--- Lines 1017-1030
+-- Lines 1215-1228
 function HUDNotificationDogTag:_create_title()
 	local title_params = {
 		name = "dog_tag_notification_title",
@@ -1027,7 +1258,7 @@ function HUDNotificationDogTag:_create_title()
 	self._title:set_center_y(80)
 end
 
--- Lines 1032-1047
+-- Lines 1230-1245
 function HUDNotificationDogTag:_create_progress()
 	local progress_text_params = {
 		name = "dog_tag_notification_progress_text",
@@ -1048,18 +1279,23 @@ function HUDNotificationDogTag:_create_progress()
 	self._progress_text:set_center_y(32)
 end
 
--- Lines 1049-1053
+-- Lines 1247-1251
 function HUDNotificationDogTag:_set_progress(acquired, total)
 	if alive(self._progress_text) then
 		self._progress_text:set_text(tostring(acquired) .. " / " .. tostring(total))
 	end
 end
 
--- Lines 1055-1060
+-- Lines 1253-1262
 function HUDNotificationDogTag:update_data(data)
 	self:_set_progress(data.acquired, data.total)
-	self._object:stop()
-	self._object:animate(callback(self, self, "_animate_reshow"))
+
+	if alive(self._object) then
+		self._object:stop()
+		self._object:animate(callback(self, self, "_animate_reshow"))
+	else
+		Application:error("[HUDNotificationDogTag:update_data] Tried stopping on a dead notification.")
+	end
 end
 
 HUDNotificationWeaponChallenge = HUDNotificationWeaponChallenge or class(HUDNotification)
@@ -1083,7 +1319,7 @@ HUDNotificationWeaponChallenge.DESCRIPTION_COLOR = Color("b8b8b8")
 HUDNotificationWeaponChallenge.DESCRIPTION_DISTANCE_FROM_PROGRESS_BAR = 23
 HUDNotificationWeaponChallenge.PROGRESS_BAR_DISTANCE_FROM_BOTTOM = 32
 
--- Lines 1101-1116
+-- Lines 1303-1318
 function HUDNotificationWeaponChallenge:init(notification_data)
 	self:_create_panel()
 	self:_create_title()
@@ -1101,7 +1337,7 @@ function HUDNotificationWeaponChallenge:init(notification_data)
 	self._progress = 0
 end
 
--- Lines 1118-1143
+-- Lines 1320-1345
 function HUDNotificationWeaponChallenge:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -1129,7 +1365,7 @@ function HUDNotificationWeaponChallenge:_create_panel()
 	self._object:bitmap(background_params)
 end
 
--- Lines 1145-1160
+-- Lines 1347-1362
 function HUDNotificationWeaponChallenge:_create_title()
 	local title_params = {
 		name = "notification_weapon_challenge_title",
@@ -1148,7 +1384,7 @@ function HUDNotificationWeaponChallenge:_create_title()
 	self._title = self._object:text(title_params)
 end
 
--- Lines 1162-1175
+-- Lines 1364-1377
 function HUDNotificationWeaponChallenge:_create_tier_label()
 	local tier_label_params = {
 		name = "weapon_challenge_tier",
@@ -1165,7 +1401,7 @@ function HUDNotificationWeaponChallenge:_create_tier_label()
 	self._tier = self._object:text(tier_label_params)
 end
 
--- Lines 1177-1189
+-- Lines 1379-1391
 function HUDNotificationWeaponChallenge:_create_icon()
 	local default_icon = "wpn_skill_accuracy"
 	local icon_params = {
@@ -1178,7 +1414,7 @@ function HUDNotificationWeaponChallenge:_create_icon()
 	self._icon = self._object:bitmap(icon_params)
 end
 
--- Lines 1191-1205
+-- Lines 1393-1407
 function HUDNotificationWeaponChallenge:_create_description()
 	local description_params = {
 		name = "weapon_challenge_description",
@@ -1195,7 +1431,7 @@ function HUDNotificationWeaponChallenge:_create_description()
 	self._description = self._object:text(description_params)
 end
 
--- Lines 1207-1271
+-- Lines 1409-1473
 function HUDNotificationWeaponChallenge:_create_progress_bar()
 	local texture_center = "slider_large_center"
 	local texture_left = "slider_large_left"
@@ -1262,7 +1498,7 @@ function HUDNotificationWeaponChallenge:_create_progress_bar()
 	self._progress_text = self._progress_bar_panel:label(progress_bar_text_params)
 end
 
--- Lines 1273-1327
+-- Lines 1475-1529
 function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
 	local challenge, count, target, min_range, briefing_id = nil
 
@@ -1313,7 +1549,7 @@ function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
 	self:_fit_size()
 end
 
--- Lines 1329-1347
+-- Lines 1531-1549
 function HUDNotificationWeaponChallenge:_fit_size()
 	local notification_height = HUDNotificationWeaponChallenge.PROGRESS_BAR_DISTANCE_FROM_BOTTOM
 	notification_height = notification_height + self._progress_bar_panel:h()
@@ -1347,7 +1583,7 @@ HUDNotificationActiveDuty.FONT_TITLE_SIZE = tweak_data.gui.font_sizes.size_32
 HUDNotificationActiveDuty.TITLE_COLOR = tweak_data.gui.colors.raid_red
 HUDNotificationActiveDuty.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 
--- Lines 1376-1389
+-- Lines 1578-1591
 function HUDNotificationActiveDuty:init(notification_data)
 	self:_create_panel()
 	self:_create_image(notification_data.icon)
@@ -1365,21 +1601,21 @@ function HUDNotificationActiveDuty:init(notification_data)
 	self._progress = 0
 end
 
--- Lines 1391-1394
+-- Lines 1593-1596
 function HUDNotificationActiveDuty:hide()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 1396-1400
+-- Lines 1598-1602
 function HUDNotificationActiveDuty:destroy()
 	self._object:stop()
-	self._object:clear()
+	self._object:parent():remove(self._object)
 
 	self = nil
 end
 
--- Lines 1402-1423
+-- Lines 1604-1625
 function HUDNotificationActiveDuty:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
@@ -1405,7 +1641,7 @@ function HUDNotificationActiveDuty:_create_panel()
 	self._object:bitmap(background_params)
 end
 
--- Lines 1425-1436
+-- Lines 1627-1638
 function HUDNotificationActiveDuty:_create_image(icon)
 	local image_params = {
 		name = "notification_active_duty_gold_image",
@@ -1425,7 +1661,7 @@ function HUDNotificationActiveDuty:_create_image(icon)
 	self._image:set_right(self._object:w())
 end
 
--- Lines 1438-1473
+-- Lines 1640-1675
 function HUDNotificationActiveDuty:_create_description(notification_data)
 	local notification_type = notification_data.notification_type
 	local text = ""
@@ -1463,7 +1699,7 @@ function HUDNotificationActiveDuty:_create_description(notification_data)
 	self._description:set_right(self._object:w() - 32)
 end
 
--- Lines 1475-1487
+-- Lines 1677-1689
 function HUDNotificationActiveDuty:_fit_size()
 	local top_padding = 32
 	local middle_padding = 32
@@ -1476,7 +1712,7 @@ function HUDNotificationActiveDuty:_fit_size()
 	self._object:set_bottom(HUDNotificationActiveDuty.BOTTOM)
 end
 
--- Lines 1513-1542
+-- Lines 1715-1744
 function HUDNotification:_animate_show(panel)
 	panel:set_alpha(0)
 
@@ -1510,7 +1746,7 @@ function HUDNotification:_animate_show(panel)
 	self._object:set_right(self._initial_right_x)
 end
 
--- Lines 1546-1563
+-- Lines 1748-1765
 function HUDNotification:_animate_reshow(panel)
 	local duration = 0.4
 	local t = self._object:alpha() * duration
@@ -1531,7 +1767,7 @@ function HUDNotification:_animate_reshow(panel)
 	self._object:set_right(self._initial_right_x)
 end
 
--- Lines 1565-1579
+-- Lines 1767-1781
 function HUDNotification:_animate_full_progress()
 	local t = 0
 	local starting_scale = self._object:w() / self._panel_shape_w
@@ -1548,7 +1784,7 @@ function HUDNotification:_animate_full_progress()
 	end
 end
 
--- Lines 1581-1625
+-- Lines 1783-1827
 function HUDNotification:_animate_execute()
 	local t = 0
 
@@ -1595,7 +1831,7 @@ function HUDNotification:_animate_execute()
 	managers.queued_tasks:queue("notification_done", managers.notification.notification_done, managers.notification, nil, 0.1, nil, true)
 end
 
--- Lines 1627-1651
+-- Lines 1829-1853
 function HUDNotification:_animate_cancel()
 	local t = 0
 	local starting_progress = self._progress
@@ -1623,7 +1859,7 @@ function HUDNotification:_animate_cancel()
 	end
 end
 
--- Lines 1653-1670
+-- Lines 1855-1872
 function HUDNotification:_animate_hide(panel)
 	local t = 0
 

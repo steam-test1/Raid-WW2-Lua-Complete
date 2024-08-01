@@ -33,7 +33,7 @@ function RaidGUIControlIntelOppositeForces:_layout()
 		color = tweak_data.gui.colors.chat_border
 	})
 	local scrollable_area_description_params = {
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		name = "scrollable_area_description",
 		h = 448,
 		y = 160,

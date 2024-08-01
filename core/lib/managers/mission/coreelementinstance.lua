@@ -148,9 +148,11 @@ function ElementInstancePoint:on_executed(instigator)
 	ElementInstancePoint.super.on_executed(self, instigator)
 end
 
--- Lines 164-177
+-- Lines 164-180
 function ElementInstancePoint:_create()
 	if self._has_created then
+		managers.editor:output_error("[ElementInstancePoint:_create()] Attempted to double-spawn a spawned instance [" .. self._editor_name .. "]")
+
 		return
 	end
 
@@ -170,13 +172,13 @@ function ElementInstancePoint:_create()
 	end
 end
 
--- Lines 180-183
+-- Lines 183-186
 function ElementInstancePoint:save(data)
 	data.has_created = self._has_created
 	data.enabled = self._values.enabled
 end
 
--- Lines 185-190
+-- Lines 188-193
 function ElementInstancePoint:load(data)
 	if data.has_created then
 		self:_create()
@@ -188,7 +190,7 @@ end
 ElementInstanceParams = ElementInstanceParams or class(CoreMissionScriptElement.MissionScriptElement)
 ElementInstanceSetParams = ElementInstanceSetParams or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 201-207
+-- Lines 204-210
 function ElementInstanceSetParams:init(...)
 	ElementInstanceOutputEvent.super.init(self, ...)
 
@@ -197,12 +199,12 @@ function ElementInstanceSetParams:init(...)
 	end
 end
 
--- Lines 209-211
+-- Lines 212-214
 function ElementInstanceSetParams:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 213-219
+-- Lines 216-222
 function ElementInstanceSetParams:_apply_instance_params()
 	if self._values.instance then
 		managers.world_instance:set_instance_params(self._sync_id, self._values.instance, self._values.params)
@@ -211,7 +213,7 @@ function ElementInstanceSetParams:_apply_instance_params()
 	end
 end
 
--- Lines 221-232
+-- Lines 224-235
 function ElementInstanceSetParams:on_executed(instigator)
 	if not self._values.enabled then
 		return

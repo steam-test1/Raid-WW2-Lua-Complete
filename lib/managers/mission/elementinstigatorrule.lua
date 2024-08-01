@@ -69,13 +69,13 @@ function ElementInstigatorRule:check_rules(instigator_type, instigator)
 	return check_result
 end
 
--- Lines 71-99
+-- Lines 71-98
 function ElementInstigatorRule:_check_player_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "carry_ids" then
-			local current_carry_id = managers.player:current_carry_id()
+			local current_carry_id = managers.player:is_carrying_carry_id(data)
 
-			if not data[current_carry_id] then
+			if not current_carry_id then
 				return false
 			end
 		end
@@ -100,7 +100,7 @@ function ElementInstigatorRule:_check_player_rules(rules, instigator)
 	return true
 end
 
--- Lines 102-120
+-- Lines 101-119
 function ElementInstigatorRule:_check_enemies_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "enemy_names" and not data[instigator:name():key()] then
@@ -115,7 +115,7 @@ function ElementInstigatorRule:_check_enemies_rules(rules, instigator)
 	return true
 end
 
--- Lines 123-141
+-- Lines 122-140
 function ElementInstigatorRule:_check_civilians_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "civilian_names" and not data[instigator:name():key()] then
@@ -130,7 +130,7 @@ function ElementInstigatorRule:_check_civilians_rules(rules, instigator)
 	return true
 end
 
--- Lines 144-155
+-- Lines 143-154
 function ElementInstigatorRule:_check_loot_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "carry_ids" and not data[instigator:carry_data():carry_id()] then
@@ -141,7 +141,7 @@ function ElementInstigatorRule:_check_loot_rules(rules, instigator)
 	return true
 end
 
--- Lines 157-163
+-- Lines 156-162
 function ElementInstigatorRule:on_executed(instigator)
 	if not self._values.enabled then
 		return

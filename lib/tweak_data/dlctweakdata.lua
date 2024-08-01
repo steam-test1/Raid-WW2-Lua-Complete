@@ -5,61 +5,66 @@ DLCTweakData.DLC_GRANT_TYPE_BUY = 3
 DLCTweakData.DLC_NAME_FULL_GAME = "full_game"
 DLCTweakData.DLC_NAME_PREORDER = "preorder"
 DLCTweakData.DLC_NAME_SPECIAL_EDITION = "special_edition"
-DLCTweakData.DLC_NAME_RAID_COMMUNITY = "raid_community"
 DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK = "official_soundtrack"
 DLCTweakData.DLC_NAME_STARTER_KIT = "starter_kit"
 
--- Lines 20-34
+-- Lines 19-28
 function DLCTweakData:init(tweak_data)
-	if managers.dlc:is_installing() then
-		tweak_data.BUNDLED_DLC_PACKAGES = {}
-	else
-		tweak_data.BUNDLED_DLC_PACKAGES = {}
-	end
+	tweak_data.BUNDLED_DLC_PACKAGES = {}
 
 	self:_init_descriptions()
 end
 
--- Lines 36-179
+-- Lines 30-165
 function DLCTweakData:_init_descriptions()
 	self.descriptions = {
-		[DLCTweakData.DLC_NAME_PREORDER] = {}
+		[DLCTweakData.DLC_NAME_STARTER_KIT] = {}
 	}
-	self.descriptions[DLCTweakData.DLC_NAME_PREORDER].content = {
-		customizations = {
-			{
-				item = "american_highlander_jacket_upper"
-			},
-			{
-				item = "american_highlander_jacket_lower"
-			},
-			{
-				item = "russian_highlander_jacket_upper"
-			},
-			{
-				item = "russian_highlander_jacket_lower"
-			},
-			{
-				item = "german_highlander_jacket_upper"
-			},
-			{
-				item = "german_highlander_jacket_lower"
-			},
-			{
-				item = "british_highlander_jacket_upper"
-			},
-			{
-				item = "british_highlander_jacket_lower"
-			}
-		},
-		weapon_skins = {
-			{
-				item = "garand_special_edition"
-			}
-		},
+	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].free = true
+	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].content = {
+		loot_global_value = "normal",
 		gold_award = {
-			item = "preorder_army_crate",
+			item = "starter_kit_army_crate",
 			amount = 50
+		}
+	}
+	self.descriptions[DLCTweakData.DLC_NAME_PREORDER] = {
+		content = {
+			customizations = {
+				{
+					item = "american_highlander_jacket_upper"
+				},
+				{
+					item = "american_highlander_jacket_lower"
+				},
+				{
+					item = "russian_highlander_jacket_upper"
+				},
+				{
+					item = "russian_highlander_jacket_lower"
+				},
+				{
+					item = "german_highlander_jacket_upper"
+				},
+				{
+					item = "german_highlander_jacket_lower"
+				},
+				{
+					item = "british_highlander_jacket_upper"
+				},
+				{
+					item = "british_highlander_jacket_lower"
+				}
+			},
+			weapon_skins = {
+				{
+					item = "garand_special_edition"
+				}
+			},
+			gold_award = {
+				item = "preorder_army_crate",
+				amount = 50
+			}
 		}
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_SPECIAL_EDITION] = {
@@ -105,9 +110,6 @@ function DLCTweakData:_init_descriptions()
 			melee_weapons = {
 				{
 					item = "km_dagger"
-				},
-				{
-					item = "marching_mace"
 				}
 			},
 			vehicle_skins = {
@@ -127,19 +129,8 @@ function DLCTweakData:_init_descriptions()
 				}
 			},
 			gold_award = {
-				item = "preorder_army_crate",
+				item = "special_edition_army_crate",
 				amount = 50
-			}
-		}
-	}
-	self.descriptions[DLCTweakData.DLC_NAME_RAID_COMMUNITY] = {
-		content = {
-			gold_award = {
-				item = "raid_community_group",
-				amount = 100
-			},
-			random_customization = {
-				item = "raid_community_group"
 			}
 		}
 	}
@@ -154,7 +145,7 @@ function DLCTweakData:_init_descriptions()
 	}
 end
 
--- Lines 181-189
+-- Lines 167-175
 function DLCTweakData:get_eligible_gold_awards()
 	local eligible_awards = {}
 
@@ -171,7 +162,7 @@ function DLCTweakData:get_eligible_gold_awards()
 	return eligible_awards
 end
 
--- Lines 191-199
+-- Lines 177-185
 function DLCTweakData:get_eligible_random_customizations()
 	local eligible_awards = {}
 
@@ -186,7 +177,7 @@ function DLCTweakData:get_eligible_random_customizations()
 	return eligible_awards
 end
 
--- Lines 203-213
+-- Lines 189-199
 function DLCTweakData:get_unlocked_weapons()
 	local weapons = {}
 
@@ -201,7 +192,7 @@ function DLCTweakData:get_unlocked_weapons()
 	return weapons
 end
 
--- Lines 215-228
+-- Lines 201-214
 function DLCTweakData:get_locked_weapons()
 	local unlocked_weapons = self:get_unlocked_weapons()
 	local weapons = {}
@@ -219,7 +210,7 @@ function DLCTweakData:get_locked_weapons()
 	return weapons
 end
 
--- Lines 230-234
+-- Lines 216-220
 function DLCTweakData:is_weapon_unlocked(weapon_id)
 	local weapons = self:get_unlocked_weapons()
 	local unlocked = weapons[weapon_id] and true or false
@@ -227,7 +218,7 @@ function DLCTweakData:is_weapon_unlocked(weapon_id)
 	return unlocked
 end
 
--- Lines 238-250
+-- Lines 224-234
 function DLCTweakData:get_unlocked_weapon_skins()
 	local skins = {}
 
@@ -242,7 +233,7 @@ function DLCTweakData:get_unlocked_weapon_skins()
 	return skins
 end
 
--- Lines 252-265
+-- Lines 236-249
 function DLCTweakData:get_locked_weapon_skins()
 	local unlocked_weapons = self:get_unlocked_weapon_skins()
 	local skins = {}
@@ -260,7 +251,7 @@ function DLCTweakData:get_locked_weapon_skins()
 	return skins
 end
 
--- Lines 267-271
+-- Lines 251-255
 function DLCTweakData:is_weapon_skin_unlocked(skin_id)
 	local skins = self:get_unlocked_weapon_skins()
 	local unlocked = skins[skin_id] and true or false
@@ -268,7 +259,7 @@ function DLCTweakData:is_weapon_skin_unlocked(skin_id)
 	return unlocked
 end
 
--- Lines 275-285
+-- Lines 259-269
 function DLCTweakData:get_unlocked_melee_weapons()
 	local weapons = {}
 
@@ -283,7 +274,7 @@ function DLCTweakData:get_unlocked_melee_weapons()
 	return weapons
 end
 
--- Lines 287-300
+-- Lines 271-284
 function DLCTweakData:get_locked_melee_weapons()
 	local unlocked_weapons = self:get_unlocked_melee_weapons()
 	local weapons = {}
@@ -301,7 +292,7 @@ function DLCTweakData:get_locked_melee_weapons()
 	return weapons
 end
 
--- Lines 302-306
+-- Lines 286-290
 function DLCTweakData:is_melee_weapon_unlocked(weapon_id)
 	local melee_weapons = self:get_unlocked_melee_weapons()
 	local unlocked = melee_weapons[weapon_id] and true or false
@@ -309,7 +300,7 @@ function DLCTweakData:is_melee_weapon_unlocked(weapon_id)
 	return unlocked
 end
 
--- Lines 308-318
+-- Lines 292-302
 function DLCTweakData:get_unlocked_customizations()
 	local customizations = {}
 
@@ -324,7 +315,7 @@ function DLCTweakData:get_unlocked_customizations()
 	return customizations
 end
 
--- Lines 320-336
+-- Lines 304-320
 function DLCTweakData:get_locked_customizations()
 	local unlocked_customizations = self:get_unlocked_customizations()
 	local customizations = {}
@@ -342,7 +333,7 @@ function DLCTweakData:get_locked_customizations()
 	return customizations
 end
 
--- Lines 338-342
+-- Lines 322-326
 function DLCTweakData:is_customization_unlocked(customization_name)
 	local customizations = self:get_unlocked_customizations()
 	local unlocked = customizations[customization_id] and true or false

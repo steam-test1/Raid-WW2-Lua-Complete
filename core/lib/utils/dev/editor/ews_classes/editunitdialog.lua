@@ -2,10 +2,13 @@ core:import("CoreEditorUtils")
 
 EditUnitDialog = EditUnitDialog or class(CoreEditorEwsDialog)
 
--- Lines 5-18
+-- Lines 5-20
 function EditUnitDialog:init(toolbar, btn)
-	CoreEditorEwsDialog.init(self, nil, "Edit Unit", "", Vector3(300, 150, 0), Vector3(360, 338, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX")
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX")
+
+	CoreEditorEwsDialog.init(self, nil, "Edit Unit", "", Vector3(300, 150, 0), Vector3(620, 410, 0), styles)
 	self:create_panel("VERTICAL")
+	self._dialog:set_min_size(Vector3(620, 410, 0))
 	self._dialog:connect("EVT_CLOSE_WINDOW", callback(self, self, "dialog_closed"), "")
 	self._dialog:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
@@ -14,10 +17,10 @@ function EditUnitDialog:init(toolbar, btn)
 
 	self._notebook:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	self._panel_sizer:add(self._notebook, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 end
 
--- Lines 20-37
+-- Lines 22-39
 function EditUnitDialog:add_page(data)
 	local name = data.name
 	local start_page = data.start_page
@@ -43,7 +46,7 @@ function EditUnitDialog:add_page(data)
 	return panel, sizer
 end
 
--- Lines 39-47
+-- Lines 41-59
 function EditUnitDialog:set_enabled(unit, units)
 	for _, page in ipairs(self._pages) do
 		if page.class then
@@ -52,9 +55,29 @@ function EditUnitDialog:set_enabled(unit, units)
 			self._notebook:set_page_text(page.nr, page.panel:enabled() and page.name .. "*" or page.name)
 		end
 	end
+
+	local title = "Edit Unit"
+
+	if units and #units > 1 then
+		title = "Edit Unit: " .. #units .. " selected units"
+	elseif alive(unit) then
+		local unit_name = self:_stripped_unit_name(unit:name():s())
+		title = "Edit Unit: " .. unit_name
+	end
+
+	self._dialog:set_title(title)
 end
 
--- Lines 49-54
+-- Lines 61-66
+function EditUnitDialog:_stripped_unit_name(name)
+	local reverse = string.reverse(name)
+	local i = string.find(reverse, "/")
+	name = string.reverse(string.sub(reverse, 0, i - 1))
+
+	return name
+end
+
+-- Lines 68-73
 function EditUnitDialog:update(t, dt)
 	local current_page = self:_current_page()
 
@@ -63,7 +86,7 @@ function EditUnitDialog:update(t, dt)
 	end
 end
 
--- Lines 56-66
+-- Lines 75-85
 function EditUnitDialog:_current_page()
 	if not self._dialog:visible() then
 		return nil
@@ -76,7 +99,7 @@ function EditUnitDialog:_current_page()
 	end
 end
 
--- Lines 72-79
+-- Lines 91-98
 function EditUnitDialog:dialog_closed(data, event)
 	for _, page in ipairs(self._pages) do
 		if page.class then
@@ -89,22 +112,22 @@ end
 
 EditUnitBase = EditUnitBase or class()
 
--- Lines 85-89
+-- Lines 104-108
 function EditUnitBase:init()
 	self._debug = false
 	self._brush = Draw:brush()
 	self._pen = Draw:pen()
 end
 
--- Lines 91-93
+-- Lines 110-112
 function EditUnitBase:update()
 end
 
--- Lines 95-97
+-- Lines 114-116
 function EditUnitBase:dialog_closed()
 end
 
--- Lines 99-101
+-- Lines 118-120
 function EditUnitBase:update_debug(ctrlr)
 	self._debug = ctrlr:get_value()
 end

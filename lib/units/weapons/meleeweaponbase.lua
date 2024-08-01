@@ -87,7 +87,7 @@ end
 
 -- Lines 64-67
 function MeleeWeaponBase:add_ammo(ratio, add_amount_override, add_amount_multiplier)
-	return false, 0
+	return false, 0, 0
 end
 
 -- Lines 70-72
@@ -144,52 +144,62 @@ function MeleeWeaponBase:weapon_tweak_data()
 end
 
 -- Lines 113-115
+function MeleeWeaponBase:category()
+	return WeaponTweakData.WEAPON_CATEGORY_MELEE
+end
+
+-- Lines 117-119
+function MeleeWeaponBase:is_category(category)
+	return self:category() == category
+end
+
+-- Lines 121-123
 function MeleeWeaponBase:weapon_hold()
 	return self:weapon_tweak_data().weapon_hold
 end
 
--- Lines 117-119
+-- Lines 125-127
 function MeleeWeaponBase:selection_index()
 	return PlayerInventory.SLOT_4
 end
 
--- Lines 121-123
+-- Lines 129-131
 function MeleeWeaponBase:has_range_distance_scope()
 	return false
 end
 
--- Lines 124-126
+-- Lines 132-134
 function MeleeWeaponBase:movement_penalty()
 	return self:weapon_tweak_data().weapon_movement_penalty or 1
 end
 
--- Lines 128-130
+-- Lines 136-138
 function MeleeWeaponBase:set_visibility_state(state)
 	self._unit:set_visible(state)
 end
 
--- Lines 132-134
+-- Lines 140-142
 function MeleeWeaponBase:start_shooting_allowed()
 	return true
 end
 
--- Lines 136-137
+-- Lines 144-145
 function MeleeWeaponBase:save(data)
 end
 
--- Lines 139-140
+-- Lines 147-148
 function MeleeWeaponBase:load(data)
 end
 
--- Lines 143-145
+-- Lines 151-153
 function MeleeWeaponBase:uses_ammo()
 	return false
 end
 
--- Lines 148-150
+-- Lines 156-158
 function MeleeWeaponBase:replenish()
 end
 
--- Lines 152-153
+-- Lines 160-161
 function MeleeWeaponBase:get_aim_assist()
 end

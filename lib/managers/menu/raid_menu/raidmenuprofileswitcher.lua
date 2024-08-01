@@ -6,7 +6,7 @@ function RaidMenuProfileSwitcher:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuProfileSwitcher.super.init(self, ws, fullscreen_ws, node, component_name)
 end
 
--- Lines 9-16
+-- Lines 9-15
 function RaidMenuProfileSwitcher:_layout()
 	self._object = self._root_panel:panel({
 		name = "profile_switcher_object_panel",
@@ -15,14 +15,13 @@ function RaidMenuProfileSwitcher:_layout()
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	})
-	local is_xb1 = SystemInfo:platform() == Idstring("XB1")
 
-	if is_xb1 then
+	if IS_XB1 then
 		self:_bind_raid_controller_inputs()
 	end
 end
 
--- Lines 18-30
+-- Lines 17-29
 function RaidMenuProfileSwitcher:_bind_raid_controller_inputs()
 	local bindings = {
 		{
@@ -43,12 +42,12 @@ function RaidMenuProfileSwitcher:_bind_raid_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 32-34
+-- Lines 31-33
 function RaidMenuProfileSwitcher:_show_account_picker()
 	managers.user:confirm_select_user_callback(nil, true)
 end
 
--- Lines 37-44
+-- Lines 36-43
 function RaidMenuProfileSwitcher:_setup_properties()
 	self._panel_x = 0
 	self._panel_y = self._ws:height() - RaidGuiBase.PADDING

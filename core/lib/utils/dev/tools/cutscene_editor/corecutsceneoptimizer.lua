@@ -9,9 +9,9 @@ function CoreCutsceneOptimizer:init()
 	self.super.init(self)
 
 	self.__compression_enabled = {
-		ps3 = true,
+		xb1 = true,
 		win32 = false,
-		x360 = true
+		ps4 = true
 	}
 end
 

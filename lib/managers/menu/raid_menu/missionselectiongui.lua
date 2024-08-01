@@ -11,11 +11,14 @@ MissionSelectionGui.PAPER_STAMP_ICON_OPERATION = "icon_paper_stamp_consumable_ve
 MissionSelectionGui.SETTINGS_PADDING = 32
 MissionSelectionGui.DISPLAY_FIRST = "first"
 MissionSelectionGui.DISPLAY_SECOND = "second"
+MissionSelectionGui.COLUMN_MISSIONS = 1
+MissionSelectionGui.COLUMN_INFO = 2
+MissionSelectionGui.COLUMN_SETTINGS = 3
 
--- Lines 19-52
+-- Lines 23-55
 function MissionSelectionGui:init(ws, fullscreen_ws, node, component_name)
 	self._settings_selected = {}
-	self._selected_column = "left"
+	self._selected_column = MissionSelectionGui.COLUMN_MISSIONS
 	self._selected_tab = "left"
 	self._current_display = MissionSelectionGui.DISPLAY_FIRST
 
@@ -44,13 +47,12 @@ function MissionSelectionGui:init(ws, fullscreen_ws, node, component_name)
 	end
 
 	if managers.raid_job:selected_job() then
-		print(self._selected_job_id)
 		self._raid_list:select_item_by_value(managers.raid_job:selected_job().level_id)
 		self._difficulty_stepper:set_value_and_render(Global.game_settings.difficulty, true)
 	end
 end
 
--- Lines 54-62
+-- Lines 57-64
 function MissionSelectionGui:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_missions_screen_name")
 
@@ -58,10 +60,9 @@ function MissionSelectionGui:_set_initial_data()
 	self._settings_selected.permission = Global.game_settings.permission
 	self._settings_selected.drop_in_allowed = Global.game_settings.drop_in_allowed
 	self._settings_selected.team_ai = Global.game_settings.selected_team_ai
-	self._settings_selected.auto_kick = Global.game_settings.auto_kick
 end
 
--- Lines 64-71
+-- Lines 66-73
 function MissionSelectionGui:close()
 	self._primary_paper:stop()
 	self._secondary_paper:stop()
@@ -70,7 +71,7 @@ function MissionSelectionGui:close()
 	MissionSelectionGui.super.close(self)
 end
 
--- Lines 73-124
+-- Lines 75-129
 function MissionSelectionGui:_layout()
 	MissionSelectionGui.super._layout(self)
 	self:_layout_lists()
@@ -102,7 +103,7 @@ function MissionSelectionGui:_layout()
 	self:_select_raids_tab()
 	self:bind_controller_inputs()
 
-	if managers.controller:is_xbox_controller_present() and not managers.menu:is_pc_controller() then
+	if managers.controller:is_controller_present() and not managers.menu:is_pc_controller() then
 		self._raid_start_button:hide()
 		self._save_delete_button:hide()
 	end
@@ -111,7 +112,7 @@ function MissionSelectionGui:_layout()
 	self:_check_consumables_achievement()
 end
 
--- Lines 130-208
+-- Lines 135-212
 function MissionSelectionGui:_layout_lists()
 	local list_panel_params = {
 		name = "list_panel",
@@ -178,10 +179,7 @@ function MissionSelectionGui:_layout_lists()
 		on_item_double_clicked_callback = callback(self, self, "_on_mission_list_double_clicked"),
 		data_source_callback = callback(self, self, "_raid_list_data_source"),
 		item_class = RaidGUIControlListItemRaids,
-		scrollable_area_ref = self._raid_list_panel,
-		on_menu_move = {
-			right = "info_button"
-		}
+		scrollable_area_ref = self._raid_list_panel
 	}
 	self._raid_list = self._raid_list_panel:get_panel():list(raid_list_params)
 
@@ -190,7 +188,7 @@ function MissionSelectionGui:_layout_lists()
 	self:_layout_operations_list()
 end
 
--- Lines 210-246
+-- Lines 214-250
 function MissionSelectionGui:_layout_slot_list()
 	if self._slot_list_panel then
 		self._slot_list_panel:clear()
@@ -228,7 +226,7 @@ function MissionSelectionGui:_layout_slot_list()
 	self._slot_list = self._slot_list_panel:list(slot_list_params)
 end
 
--- Lines 248-274
+-- Lines 252-277
 function MissionSelectionGui:_layout_operations_list()
 	local operations_list_panel_params = {
 		visible = false,
@@ -250,15 +248,12 @@ function MissionSelectionGui:_layout_operations_list()
 		data_source_callback = callback(self, self, "_operation_list_data_source"),
 		selected_callback = callback(self, self, "_on_operation_list_selected"),
 		unselected_callback = callback(self, self, "_on_operation_list_unselected"),
-		item_class = RaidGUIControlListItemOperations,
-		on_menu_move = {
-			right = "info_button"
-		}
+		item_class = RaidGUIControlListItemOperations
 	}
 	self._new_operation_list = self._operations_list_panel:list(operations_list_params)
 end
 
--- Lines 276-285
+-- Lines 279-288
 function MissionSelectionGui:_layout_raid_wrapper_panel()
 	local raid_wrapper_panel_params = {
 		name = "raid_wrapper_panel",
@@ -270,7 +265,7 @@ function MissionSelectionGui:_layout_raid_wrapper_panel()
 	self._raid_panel = self._root_panel:panel(raid_wrapper_panel_params)
 end
 
--- Lines 287-296
+-- Lines 290-299
 function MissionSelectionGui:_layout_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -285,46 +280,37 @@ function MissionSelectionGui:_layout_right_panel()
 	self._right_panel:set_x(self._root_panel:w() - self._right_panel:w())
 end
 
--- Lines 298-396
+-- Lines 301-366
 function MissionSelectionGui:_layout_settings()
 	Application:trace("[MissionSelectionGui:_layout_settings]")
 
 	self._settings_controls = {}
-	local settings_panel_params = {
-		name = "settings_panel"
-	}
-	self._settings_panel = self._right_panel:panel(settings_panel_params)
 	local difficulty_stepper_params = {
-		name = "difficulty_stepper",
-		y = 0,
-		x = 0,
+		name = "difficulty",
 		description = self:translate("menu_difficulty_title", true),
 		on_item_selected_callback = callback(self, self, "_on_difficulty_selected"),
 		data_source_callback = callback(self, self, "data_source_difficulty_stepper"),
 		on_menu_move = {
-			left = "audio_button",
-			down = "permission_stepper"
+			down = "permission"
 		}
 	}
-	self._difficulty_stepper = self._settings_panel:stepper(difficulty_stepper_params)
+	self._difficulty_stepper = self._right_panel:stepper(difficulty_stepper_params)
 
 	self._difficulty_stepper:set_value_and_render(Global.player_manager.game_settings_difficulty, true)
 	table.insert(self._settings_controls, self._difficulty_stepper)
 
 	local permission_stepper_params = {
-		name = "permission_stepper",
-		x = 0,
+		name = "permission",
 		y = self._difficulty_stepper:y() + self._difficulty_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 		description = self:translate("menu_permission_title", true),
 		on_item_selected_callback = callback(self, self, "_on_permission_selected"),
 		data_source_callback = callback(self, self, "data_source_permission_stepper"),
 		on_menu_move = {
-			up = "difficulty_stepper",
-			down = "drop_in_checkbox",
-			left = "audio_button"
+			up = "difficulty",
+			down = "drop_in_checkbox"
 		}
 	}
-	self._permission_stepper = self._settings_panel:stepper(permission_stepper_params)
+	self._permission_stepper = self._right_panel:stepper(permission_stepper_params)
 
 	self._permission_stepper:set_value_and_render(Global.game_settings.permission, true)
 	table.insert(self._settings_controls, self._permission_stepper)
@@ -332,17 +318,15 @@ function MissionSelectionGui:_layout_settings()
 	local drop_in_checkbox_params = {
 		name = "drop_in_checkbox",
 		value = true,
-		x = 0,
 		y = self._permission_stepper:y() + self._permission_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 		description = self:translate("menu_allow_drop_in_title", true),
 		on_click_callback = callback(self, self, "_on_toggle_drop_in"),
 		on_menu_move = {
-			up = "permission_stepper",
-			down = "team_ai_checkbox",
-			left = "audio_button"
+			up = "permission",
+			down = "team_ai_checkbox"
 		}
 	}
-	self._drop_in_checkbox = self._settings_panel:toggle_button(drop_in_checkbox_params)
+	self._drop_in_checkbox = self._right_panel:toggle_button(drop_in_checkbox_params)
 
 	self._drop_in_checkbox:set_value_and_render(Global.game_settings.drop_in_allowed)
 	table.insert(self._settings_controls, self._drop_in_checkbox)
@@ -350,22 +334,20 @@ function MissionSelectionGui:_layout_settings()
 	local team_ai_checkbox_params = {
 		name = "team_ai_checkbox",
 		value = true,
-		x = 0,
 		y = self._drop_in_checkbox:y() + self._drop_in_checkbox:h() + MissionSelectionGui.SETTINGS_PADDING,
 		description = self:translate("menu_play_with_team_ai_title", true),
 		on_click_callback = callback(self, self, "_on_toggle_team_ai"),
 		on_menu_move = {
-			left = "audio_button",
 			up = "drop_in_checkbox"
 		}
 	}
-	self._team_ai_checkbox = self._settings_panel:toggle_button(team_ai_checkbox_params)
+	self._team_ai_checkbox = self._right_panel:toggle_button(team_ai_checkbox_params)
 
 	self._team_ai_checkbox:set_value_and_render(Global.game_settings.selected_team_ai, true)
 	table.insert(self._settings_controls, self._team_ai_checkbox)
 end
 
--- Lines 398-431
+-- Lines 368-397
 function MissionSelectionGui:_layout_operation_tutorialization()
 	local operation_tutorialization_panel_params = {
 		alpha = 0,
@@ -397,28 +379,23 @@ function MissionSelectionGui:_layout_operation_tutorialization()
 	local description = self._operation_tutorialization_panel:text(op_tutorialization_title_params)
 end
 
--- Lines 433-484
+-- Lines 399-439
 function MissionSelectionGui:_layout_settings_offline()
 	Application:trace("[MissionSelectionGui:_layout_settings_offline]")
 
 	self._settings_controls = {}
-	local settings_panel_params = {
-		name = "settings_panel"
-	}
-	self._settings_panel = self._right_panel:panel(settings_panel_params)
 	local difficulty_stepper_params = {
-		name = "difficulty_stepper",
+		name = "difficulty",
 		y = 0,
 		x = 0,
 		description = self:translate("menu_difficulty_title", true),
 		on_item_selected_callback = callback(self, self, "_on_difficulty_selected"),
 		data_source_callback = callback(self, self, "data_source_difficulty_stepper"),
 		on_menu_move = {
-			left = "audio_button",
 			down = "team_ai_checkbox"
 		}
 	}
-	self._difficulty_stepper = self._settings_panel:stepper(difficulty_stepper_params)
+	self._difficulty_stepper = self._right_panel:stepper(difficulty_stepper_params)
 
 	self._difficulty_stepper:set_value_and_render(Global.player_manager.game_settings_difficulty, true)
 	table.insert(self._settings_controls, self._difficulty_stepper)
@@ -431,22 +408,21 @@ function MissionSelectionGui:_layout_settings_offline()
 		description = self:translate("menu_play_with_team_ai_title", true),
 		on_click_callback = callback(self, self, "_on_toggle_team_ai"),
 		on_menu_move = {
-			left = "audio_button",
-			up = "difficulty_stepper"
+			up = "difficulty"
 		}
 	}
-	self._team_ai_checkbox = self._settings_panel:toggle_button(team_ai_checkbox_params)
+	self._team_ai_checkbox = self._right_panel:toggle_button(team_ai_checkbox_params)
 
 	self._team_ai_checkbox:set_value_and_render(Global.game_settings.team_ai, true)
 	table.insert(self._settings_controls, self._team_ai_checkbox)
 end
 
--- Lines 486-508
+-- Lines 441-463
 function MissionSelectionGui:_layout_difficulty_warning()
 	local difficulty_warning_panel_params = {
 		name = "difficulty_warning_panel"
 	}
-	self._difficulty_warning_panel = self._settings_panel:panel(difficulty_warning_panel_params)
+	self._difficulty_warning_panel = self._right_panel:panel(difficulty_warning_panel_params)
 
 	self._difficulty_warning_panel:set_y(self._difficulty_stepper:bottom())
 
@@ -467,7 +443,7 @@ function MissionSelectionGui:_layout_difficulty_warning()
 	self._difficulty_warning:set_bottom(0)
 end
 
--- Lines 510-565
+-- Lines 465-520
 function MissionSelectionGui:_layout_folder_front_page()
 	local front_page_panel_params = {
 		name = "front_page_panel",
@@ -532,7 +508,7 @@ function MissionSelectionGui:_layout_folder_front_page()
 	self._front_page_title:set_center_y(self._front_page_image:center_y() + 238)
 end
 
--- Lines 567-669
+-- Lines 522-624
 function MissionSelectionGui:_layout_primary_paper()
 	local paper_image = "menu_paper"
 	local soe_emblem_image = "icon_paper_stamp"
@@ -622,7 +598,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	self:_layout_operation_list()
 end
 
--- Lines 671-687
+-- Lines 626-642
 function MissionSelectionGui:_layout_raid_description()
 	local mission_description_params = {
 		w = 432,
@@ -644,7 +620,7 @@ function MissionSelectionGui:_layout_raid_description()
 	self._active_primary_paper_control = self._mission_description
 end
 
--- Lines 689-707
+-- Lines 644-662
 function MissionSelectionGui:_layout_operation_progress_text()
 	local operation_progress_panel_params = {
 		name = "operation_progress_panel",
@@ -668,7 +644,7 @@ function MissionSelectionGui:_layout_operation_progress_text()
 	self._operation_progress:set_visible(false)
 end
 
--- Lines 709-737
+-- Lines 664-692
 function MissionSelectionGui:_layout_operation_list()
 	local operation_list_panel_params = {
 		name = "operation_list_panel",
@@ -695,9 +671,7 @@ function MissionSelectionGui:_layout_operation_list()
 			icon_color = Color.black
 		},
 		on_menu_move = {
-			down = "info_button",
-			left = "list_tabs",
-			right = "difficulty_stepper"
+			down = "info_button"
 		},
 		selected_callback = callback(self, self, "_on_operation_list_selected"),
 		unselected_callback = callback(self, self, "_on_operation_list_unselected")
@@ -708,7 +682,7 @@ function MissionSelectionGui:_layout_operation_list()
 	self._operation_list:set_visible(false)
 end
 
--- Lines 739-750
+-- Lines 694-705
 function MissionSelectionGui:_layout_intel_image_grid()
 	local intel_image_grid_params = {
 		name = "intel_image_grid",
@@ -717,7 +691,6 @@ function MissionSelectionGui:_layout_intel_image_grid()
 		on_click_callback = callback(self, self, "_on_intel_image_selected"),
 		layer = self._primary_paper_panel:layer() + 1,
 		on_menu_move = {
-			left = "list_tabs",
 			down = "intel_button"
 		}
 	}
@@ -727,12 +700,12 @@ function MissionSelectionGui:_layout_intel_image_grid()
 	self._intel_image_grid:set_visible(false)
 end
 
--- Lines 752-754
+-- Lines 707-709
 function MissionSelectionGui:_on_intel_image_selected(image_index, image_data)
 	self._intel_image_details:set_image(image_data.photo, image_data.title_id, image_data.description_id)
 end
 
--- Lines 756-814
+-- Lines 711-769
 function MissionSelectionGui:_layout_info_buttons()
 	local wrapper_panel_padding = 10
 	local info_buttons_panel_params = {
@@ -757,7 +730,6 @@ function MissionSelectionGui:_layout_info_buttons()
 		on_click_callback = callback(self, self, "_on_info_clicked"),
 		on_menu_move = {
 			up = "intel_image_grid",
-			left = "list_tabs",
 			right = "intel_button"
 		}
 	}
@@ -788,9 +760,8 @@ function MissionSelectionGui:_layout_info_buttons()
 		icon = "ico_play_audio",
 		text = self:translate("menu_audio_button_title", true),
 		on_menu_move = {
-			up = "intel_image_grid",
 			left = "intel_button",
-			right = "difficulty_stepper"
+			up = "intel_image_grid"
 		},
 		on_click_callback = callback(self, self, "_on_audio_clicked")
 	}
@@ -800,7 +771,7 @@ function MissionSelectionGui:_layout_info_buttons()
 	self._audio_button:set_center_x(260 + self._info_button:center_x())
 end
 
--- Lines 816-851
+-- Lines 771-806
 function MissionSelectionGui:_layout_secondary_paper()
 	local paper_image = "menu_paper"
 	local soe_emblem_image = "icon_paper_stamp"
@@ -837,7 +808,7 @@ function MissionSelectionGui:_layout_secondary_paper()
 	self._paper_animation_t = 0
 end
 
--- Lines 853-861
+-- Lines 808-816
 function MissionSelectionGui:_layout_secondary_intel()
 	local intel_image_details_params = {
 		name = "intel_image_details",
@@ -848,7 +819,7 @@ function MissionSelectionGui:_layout_secondary_intel()
 	self._active_secondary_paper_control = self._intel_image_details
 end
 
--- Lines 863-871
+-- Lines 818-826
 function MissionSelectionGui:_layout_secondary_save_info()
 	local save_info_params = {
 		name = "save_info",
@@ -861,13 +832,13 @@ function MissionSelectionGui:_layout_secondary_save_info()
 	self._save_info = self._secondary_paper_panel:create_custom_control(RaidGUIControlSaveInfo, save_info_params)
 end
 
--- Lines 873-899
+-- Lines 828-854
 function MissionSelectionGui:_layout_start_button()
 	local raid_start_button_params = {
 		name = "raid_start_button",
 		x = 6,
 		layer = 1,
-		y = self._settings_panel:y() + self._settings_panel:h() + 248,
+		y = self._right_panel:y() + self._right_panel:h() + 248,
 		text = self:translate("menu_start_button_title", true),
 		on_click_callback = callback(self, self, "_on_start_button_click")
 	}
@@ -893,7 +864,7 @@ function MissionSelectionGui:_layout_start_button()
 	end
 end
 
--- Lines 901-914
+-- Lines 856-869
 function MissionSelectionGui:_layout_start_disabled_message()
 	local start_disabled_message_params = {
 		name = "start_disabled_message",
@@ -911,13 +882,13 @@ function MissionSelectionGui:_layout_start_disabled_message()
 	self._start_disabled_message:set_center_y(self._raid_start_button:center_y())
 end
 
--- Lines 916-928
+-- Lines 871-883
 function MissionSelectionGui:_layout_delete_button()
 	local save_delete_button_params = {
 		name = "save_delete_button",
 		x = 6,
 		layer = 1,
-		y = self._settings_panel:y() + self._settings_panel:h() + 248,
+		y = self._right_panel:y() + self._right_panel:h() + 248,
 		text = self:translate("menu_delete_save_button_title", true),
 		on_click_callback = callback(self, self, "_on_delete_button_click")
 	}
@@ -928,7 +899,7 @@ function MissionSelectionGui:_layout_delete_button()
 	self._save_delete_button:set_center_y(self._raid_start_button:center_y())
 end
 
--- Lines 930-1016
+-- Lines 885-971
 function MissionSelectionGui:_layout_progression_unlock_timer()
 	local progression_timer_panel_params = {
 		halign = "right",
@@ -1021,11 +992,11 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 
 	local panel_w = math.max(timer_title:w() + 32 + timer:w(), timer_description:w()) + 64
 
-	self._progression_timer_panel:set_w(math.max(panel_w, self._settings_panel:w() - 8))
+	self._progression_timer_panel:set_w(math.max(panel_w, self._right_panel:w() - 8))
 	self._progression_timer_panel:set_right(self._raid_panel:w())
 end
 
--- Lines 1018-1025
+-- Lines 973-980
 function MissionSelectionGui:_create_video_panels()
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
 	self._full_panel = self._fullscreen_ws:panel()
@@ -1036,9 +1007,9 @@ function MissionSelectionGui:_create_video_panels()
 	self._safe_panel = self._safe_rect_workspace:panel()
 end
 
--- Lines 1041-1108
+-- Lines 996-1059
 function MissionSelectionGui:_play_operations_intro_video()
-	local operations_intro_video = "movies/vanilla/operation_briefings/global/03_operation_brief_op-c3_v004"
+	local operations_intro_video = "movies/vanilla/operation_briefings/03_operation_brief_op-c3_v004"
 	local operations_intro_video_id = tweak_data.intel:get_control_video_by_path(operations_intro_video)
 
 	if operations_intro_video_id then
@@ -1102,7 +1073,7 @@ function MissionSelectionGui:_play_operations_intro_video()
 	managers.raid_menu:register_on_escape_callback(callback(self, self, "_destroy_operations_intro_video"))
 end
 
--- Lines 1110-1125
+-- Lines 1061-1076
 function MissionSelectionGui:_animate_show_press_any_key_prompt(prompt)
 	local duration = 0.7
 	local t = 0
@@ -1120,7 +1091,7 @@ function MissionSelectionGui:_animate_show_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.85)
 end
 
--- Lines 1127-1160
+-- Lines 1078-1111
 function MissionSelectionGui:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
@@ -1159,7 +1130,7 @@ function MissionSelectionGui:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.85)
 end
 
--- Lines 1162-1169
+-- Lines 1113-1120
 function MissionSelectionGui:on_controller_hotswap()
 	local press_any_key_prompt = self._safe_panel:child("press_any_key_prompt")
 
@@ -1169,14 +1140,14 @@ function MissionSelectionGui:on_controller_hotswap()
 	end
 end
 
--- Lines 1171-1175
+-- Lines 1122-1126
 function MissionSelectionGui:update(t, dt)
 	if self._playing_briefing_video and (self:is_playing() and self:is_skipped() or not self:is_playing()) then
 		self:_destroy_operations_intro_video()
 	end
 end
 
--- Lines 1177-1195
+-- Lines 1128-1146
 function MissionSelectionGui:_destroy_operations_intro_video()
 	self._control_briefing_video:destroy()
 
@@ -1201,7 +1172,7 @@ function MissionSelectionGui:_destroy_operations_intro_video()
 	return true
 end
 
--- Lines 1197-1203
+-- Lines 1148-1154
 function MissionSelectionGui:is_playing()
 	if alive(self._control_briefing_video) then
 		return self._control_briefing_video:loop_count() < 1
@@ -1210,7 +1181,7 @@ function MissionSelectionGui:is_playing()
 	end
 end
 
--- Lines 1205-1213
+-- Lines 1156-1164
 function MissionSelectionGui:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_released() then
@@ -1221,7 +1192,7 @@ function MissionSelectionGui:is_skipped()
 	return false
 end
 
--- Lines 1215-1226
+-- Lines 1166-1177
 function MissionSelectionGui:_finish_video()
 	managers.menu_component:post_event("menu_volume_reset")
 	managers.music:stop()
@@ -1232,7 +1203,7 @@ function MissionSelectionGui:_finish_video()
 	managers.raid_menu:register_on_escape_callback(nil)
 end
 
--- Lines 1231-1239
+-- Lines 1182-1190
 function MissionSelectionGui:_on_mission_type_changed(mission_type)
 	self._current_mission_type = mission_type
 
@@ -1243,7 +1214,7 @@ function MissionSelectionGui:_on_mission_type_changed(mission_type)
 	end
 end
 
--- Lines 1241-1255
+-- Lines 1192-1206
 function MissionSelectionGui:_select_raids_tab()
 	self._selected_save_slot = nil
 	self._continue_slot_selected = nil
@@ -1257,7 +1228,7 @@ function MissionSelectionGui:_select_raids_tab()
 	self._slot_list_panel:set_alpha(0)
 end
 
--- Lines 1257-1271
+-- Lines 1208-1222
 function MissionSelectionGui:_select_operations_tab()
 	self._raid_list:set_selected(false)
 	self._slot_list:set_selected(true)
@@ -1267,11 +1238,11 @@ function MissionSelectionGui:_select_operations_tab()
 	self._slot_list_panel:set_alpha(1)
 end
 
--- Lines 1273-1275
+-- Lines 1224-1226
 function MissionSelectionGui:_select_raid(raid)
 end
 
--- Lines 1277-1291
+-- Lines 1228-1242
 function MissionSelectionGui:_on_start_button_click()
 	managers.challenge_cards:remove_active_challenge_card()
 
@@ -1284,7 +1255,7 @@ function MissionSelectionGui:_on_start_button_click()
 	end
 end
 
--- Lines 1293-1307
+-- Lines 1244-1258
 function MissionSelectionGui:_on_delete_button_click()
 	local selected_job = managers.raid_job:get_save_slots()[self._continue_slot_selected].current_job
 	local current_job = managers.raid_job:current_job()
@@ -1300,7 +1271,7 @@ function MissionSelectionGui:_on_delete_button_click()
 	end
 end
 
--- Lines 1309-1322
+-- Lines 1260-1273
 function MissionSelectionGui:on_save_slot_delete_confirmed()
 	if self._continue_slot_selected then
 		managers.raid_job:delete_save(self._continue_slot_selected)
@@ -1315,18 +1286,18 @@ function MissionSelectionGui:on_save_slot_delete_confirmed()
 	end
 end
 
--- Lines 1324-1326
+-- Lines 1275-1277
 function MissionSelectionGui:_select_save_slot(slot)
 end
 
--- Lines 1328-1332
+-- Lines 1279-1283
 function MissionSelectionGui:_set_settings_enabled(enabled)
 	for index, setting_control in pairs(self._settings_controls) do
 		setting_control:set_enabled(enabled)
 	end
 end
 
--- Lines 1334-1427
+-- Lines 1285-1365
 function MissionSelectionGui:_on_raid_clicked(raid_data)
 	if self._selected_job_id and self._selected_job_id == raid_data.value then
 		return
@@ -1389,19 +1360,7 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 			self._primary_paper_difficulty_indicator:set_progress(difficulty_available, difficulty_completed)
 		end
 
-		self._info_button:set_active(true)
-		self._intel_button:set_active(false)
-		self._audio_button:set_active(false)
-		self._info_button:enable()
-		self._intel_button:enable()
-
-		if raid_tweak_data.consumable then
-			self._audio_button:hide()
-		else
-			self._audio_button:show()
-			self._audio_button:enable()
-		end
-
+		self:_update_information_buttons(true, true, not raid_tweak_data.consumable)
 		self:_on_info_clicked(nil, true)
 		self._intel_image_grid:clear_selection()
 		self:_stop_mission_briefing_audio()
@@ -1414,19 +1373,19 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 	end
 end
 
--- Lines 1429-1433
+-- Lines 1367-1371
 function MissionSelectionGui:play_short_audio_briefing(briefing_id)
 	if briefing_id and briefing_id ~= "" then
 		self._briefing_audio = managers.menu_component:post_event(briefing_id)
 	end
 end
 
--- Lines 1435-1437
+-- Lines 1373-1375
 function MissionSelectionGui:_on_raid_selected(raid_data)
 	self:_on_raid_clicked(raid_data)
 end
 
--- Lines 1439-1444
+-- Lines 1377-1382
 function MissionSelectionGui:_on_mission_list_double_clicked(raid_data)
 	local difficulty_available = managers.progression:get_mission_progression(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value)
 
@@ -1435,7 +1394,7 @@ function MissionSelectionGui:_on_mission_list_double_clicked(raid_data)
 	end
 end
 
--- Lines 1446-1458
+-- Lines 1384-1396
 function MissionSelectionGui:_on_slot_double_clicked(slot_data)
 	if not managers.progression:operations_unlocked() or not Network:is_server() then
 		return
@@ -1450,9 +1409,10 @@ function MissionSelectionGui:_on_slot_double_clicked(slot_data)
 	end
 end
 
--- Lines 1460-1484
+-- Lines 1398-1425
 function MissionSelectionGui:_display_second_screen()
 	self._current_display = MissionSelectionGui.DISPLAY_SECOND
+	self._selected_column = MissionSelectionGui.COLUMN_MISSIONS
 
 	self._primary_lists_panel:hide()
 	self._list_tabs:set_enabled(false)
@@ -1461,10 +1421,11 @@ function MissionSelectionGui:_display_second_screen()
 	self._operations_list_panel:show()
 	self._new_operation_list:set_selected(true)
 	self._slot_list:set_selected(false)
+	self:_unselect_middle_column()
+	self:_unselect_right_column()
 
 	local info_button_menu_move = {
 		up = "intel_image_grid",
-		left = "operation_list",
 		right = "intel_button"
 	}
 
@@ -1479,9 +1440,10 @@ function MissionSelectionGui:_display_second_screen()
 	return true, nil
 end
 
--- Lines 1486-1505
+-- Lines 1427-1449
 function MissionSelectionGui:_display_first_screen()
 	self._current_display = MissionSelectionGui.DISPLAY_FIRST
+	self._selected_column = MissionSelectionGui.COLUMN_MISSIONS
 
 	self._primary_lists_panel:show()
 	self._list_tabs:set_enabled(true)
@@ -1490,10 +1452,11 @@ function MissionSelectionGui:_display_first_screen()
 	self._operations_list_panel:hide()
 	self._new_operation_list:set_selected(false)
 	self._slot_list:set_selected(true)
+	self:_unselect_middle_column()
+	self:_unselect_right_column()
 
 	local info_button_menu_move = {
 		up = "intel_image_grid",
-		left = "list_tabs",
 		right = "intel_button"
 	}
 
@@ -1503,10 +1466,8 @@ function MissionSelectionGui:_display_first_screen()
 	return true, nil
 end
 
--- Lines 1507-1563
+-- Lines 1451-1499
 function MissionSelectionGui:_on_operation_selected(operation_data)
-	print("_on_operation_selected_on_operation_selected_on_operation_selected")
-
 	self._selected_new_operation_index = operation_data.index
 
 	if self._selected_job_id ~= operation_data.value then
@@ -1524,12 +1485,7 @@ function MissionSelectionGui:_on_operation_selected(operation_data)
 		self._secondary_paper:animate(callback(self, self, "_animate_hide_secondary_paper"))
 	end
 
-	self._info_button:enable()
-	self._intel_button:enable()
-	self._audio_button:enable()
-	self._info_button:set_active(true)
-	self._intel_button:set_active(false)
-	self._audio_button:set_active(false)
+	self:_update_information_buttons(true, true, true)
 	self:_set_settings_enabled(true)
 
 	local operation_tweak_data = tweak_data.operations:mission_data(operation_data.value)
@@ -1562,7 +1518,7 @@ function MissionSelectionGui:_on_operation_selected(operation_data)
 	self._primary_paper_difficulty_indicator:set_progress(difficulty_available, difficulty_completed)
 end
 
--- Lines 1565-1588
+-- Lines 1501-1524
 function MissionSelectionGui:_update_soe_stamp(job_id)
 	if not self._soe_emblem then
 		Application:error("[MissionSelectionGui:_update_soe_stamp] self._soe_emblem does not exist")
@@ -1592,22 +1548,23 @@ function MissionSelectionGui:_update_soe_stamp(job_id)
 	self._soe_emblem:set_texture_rect(unpack(stamp_texture.texture_rect))
 end
 
--- Lines 1590-1592
+-- Lines 1526-1528
 function MissionSelectionGui:_on_operation_list_selected()
 	self:_bind_operation_list_controller_inputs()
 end
 
--- Lines 1594-1596
+-- Lines 1530-1532
 function MissionSelectionGui:_on_operation_list_unselected()
 	self:_bind_empty_slot_controller_inputs()
 end
 
--- Lines 1598-1658
+-- Lines 1534-1601
 function MissionSelectionGui:_on_slot_clicked(slot_data)
 	if self._selected_save_slot == slot_data.value then
 		return
 	end
 
+	self:_update_information_buttons(true, true, true)
 	self:_stop_mission_briefing_audio()
 
 	self._selected_save_slot = slot_data.value
@@ -1642,7 +1599,12 @@ function MissionSelectionGui:_on_slot_clicked(slot_data)
 				delay = 0.2
 			end
 
-			managers.queued_tasks:queue("mission_screen_play_operation_intro_video", self._play_operations_intro_video, self, nil, delay, nil)
+			local skip_cinematics = managers.user:get_setting("skip_cinematics")
+
+			if not skip_cinematics then
+				managers.queued_tasks:queue("mission_screen_play_operation_intro_video", self._play_operations_intro_video, self, nil, delay, nil)
+			end
+
 			managers.progression:set_operations_state(ProgressionManager.OPERATIONS_STATE_UNLOCKED)
 		end
 
@@ -1662,12 +1624,12 @@ function MissionSelectionGui:_on_slot_clicked(slot_data)
 	end
 end
 
--- Lines 1660-1662
+-- Lines 1603-1605
 function MissionSelectionGui:_on_slot_selected(slot_data)
 	self:_on_slot_clicked(slot_data)
 end
 
--- Lines 1664-1676
+-- Lines 1607-1619
 function MissionSelectionGui:set_current_slot_progress_report()
 	local save_slots = managers.raid_job:get_save_slots()
 
@@ -1682,7 +1644,7 @@ function MissionSelectionGui:set_current_slot_progress_report()
 	self._operation_progress:set_number_drawn(selected_job.current_event)
 end
 
--- Lines 1678-1739
+-- Lines 1621-1682
 function MissionSelectionGui:_on_save_selected()
 	self._selected_job_id = nil
 	self._selected_new_operation_index = nil
@@ -1738,7 +1700,7 @@ function MissionSelectionGui:_on_save_selected()
 	self._slot_list:set_menu_move_controls(slot_list_move_controls)
 end
 
--- Lines 1741-1790
+-- Lines 1684-1733
 function MissionSelectionGui:_on_empty_slot_selected()
 	self._continue_slot_selected = nil
 	self._selected_job_id = nil
@@ -1762,7 +1724,7 @@ function MissionSelectionGui:_on_empty_slot_selected()
 	self:_bind_empty_slot_controller_inputs()
 end
 
--- Lines 1792-1813
+-- Lines 1735-1756
 function MissionSelectionGui:_on_locked_raid_clicked()
 	self._info_button:disable()
 	self._intel_button:disable()
@@ -1782,7 +1744,7 @@ function MissionSelectionGui:_on_locked_raid_clicked()
 	self:_bind_locked_raid_controller_inputs()
 end
 
--- Lines 1815-1876
+-- Lines 1758-1826
 function MissionSelectionGui:_on_info_clicked(secondary_paper_callback, force)
 	if self._info_button:active() and force ~= true then
 		return
@@ -1805,7 +1767,13 @@ function MissionSelectionGui:_on_info_clicked(secondary_paper_callback, force)
 			self._primary_paper:stop()
 			self._primary_paper:animate(callback(self, self, "_animate_change_primary_paper_control"), clbk, self._mission_description)
 		else
-			local clbk = callback(self._mission_description, self._mission_description, "set_text", self:translate(tweak_data.operations.missions[self._selected_job_id].briefing_id))
+			local paragraph_text = self:translate(tweak_data.operations.missions[self._selected_job_id].briefing_id)
+
+			if tweak_data.operations.missions[self._selected_job_id].stealth_description then
+				paragraph_text = paragraph_text .. "\n\n" .. self:translate(tweak_data.operations.missions[self._selected_job_id].stealth_description)
+			end
+
+			local clbk = callback(self._mission_description, self._mission_description, "set_text", paragraph_text)
 
 			self._primary_paper:stop()
 			self._primary_paper:animate(callback(self, self, "_animate_change_primary_paper_control"), clbk, self._mission_description)
@@ -1846,7 +1814,7 @@ function MissionSelectionGui:_on_info_clicked(secondary_paper_callback, force)
 	end
 end
 
--- Lines 1878-1895
+-- Lines 1828-1845
 function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 	if self._selected_job_id then
 		local first_n_missions = nil
@@ -1875,11 +1843,11 @@ function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 	end
 end
 
--- Lines 1897-1899
+-- Lines 1847-1849
 function MissionSelectionGui:_prepare_intel_image_for_selected_save(...)
 end
 
--- Lines 1901-1938
+-- Lines 1851-1888
 function MissionSelectionGui:_on_intel_clicked()
 	if self._intel_button:active() then
 		return
@@ -1927,7 +1895,7 @@ function MissionSelectionGui:_on_intel_clicked()
 	self._audio_button:set_active(false)
 end
 
--- Lines 1940-1959
+-- Lines 1890-1909
 function MissionSelectionGui:_on_audio_clicked()
 	local job_id = self._selected_job_id
 
@@ -1947,7 +1915,7 @@ function MissionSelectionGui:_on_audio_clicked()
 	end
 end
 
--- Lines 1961-1973
+-- Lines 1911-1923
 function MissionSelectionGui:_stop_mission_briefing_audio()
 	managers.queued_tasks:unqueue("play_short_audio_briefing")
 
@@ -1964,7 +1932,7 @@ function MissionSelectionGui:_stop_mission_briefing_audio()
 	end
 end
 
--- Lines 1975-1980
+-- Lines 1925-1930
 function MissionSelectionGui:_hide_all_secondary_panels()
 	self._intel_image_details:set_alpha(0)
 	self._intel_image_details:set_visible(false)
@@ -1972,12 +1940,12 @@ function MissionSelectionGui:_hide_all_secondary_panels()
 	self._save_info:set_visible(false)
 end
 
--- Lines 1986-1988
+-- Lines 1936-1938
 function MissionSelectionGui:_on_difficulty_selected(data)
 	self:_check_difficulty_warning()
 end
 
--- Lines 1990-1999
+-- Lines 1940-1949
 function MissionSelectionGui:data_source_difficulty_stepper()
 	local difficulties = {}
 
@@ -2005,7 +1973,7 @@ function MissionSelectionGui:data_source_difficulty_stepper()
 	return difficulties
 end
 
--- Lines 2002-2015
+-- Lines 1952-1965
 function MissionSelectionGui:set_difficulty_stepper_data(difficulty_available, difficulty_completed)
 	difficulty_available = difficulty_available or tweak_data:number_of_difficulties()
 	difficulty_completed = difficulty_completed or 0
@@ -2021,7 +1989,7 @@ function MissionSelectionGui:set_difficulty_stepper_data(difficulty_available, d
 	self:_check_difficulty_warning()
 end
 
--- Lines 2017-2066
+-- Lines 1967-2016
 function MissionSelectionGui:_check_difficulty_warning()
 	if self._selected_job_id and tweak_data.operations.missions[self._selected_job_id].consumable then
 		self._difficulty_warning_panel:get_engine_panel():stop()
@@ -2072,7 +2040,7 @@ function MissionSelectionGui:_check_difficulty_warning()
 	end
 end
 
--- Lines 2068-2100
+-- Lines 2018-2050
 function MissionSelectionGui:_animate_set_difficulty_warning_message(o, message)
 	local fade_out_duration = 0.2
 	local t = (1 - self._difficulty_warning:alpha()) * fade_out_duration
@@ -2108,7 +2076,7 @@ function MissionSelectionGui:_animate_set_difficulty_warning_message(o, message)
 	self._difficulty_warning:set_alpha(1)
 end
 
--- Lines 2102-2115
+-- Lines 2052-2065
 function MissionSelectionGui:_animate_hide_difficulty_warning_message(o)
 	local fade_out_duration = 0.2
 	local t = (1 - self._difficulty_warning:alpha()) * fade_out_duration
@@ -2124,7 +2092,7 @@ function MissionSelectionGui:_animate_hide_difficulty_warning_message(o)
 	self._difficulty_warning:set_alpha(0)
 end
 
--- Lines 2117-2148
+-- Lines 2067-2098
 function MissionSelectionGui:_animate_slide_in_difficulty_warning_message(o, message)
 	local slide_duration = 0.4
 	self._difficulty_warning_slide_animation_t = self._difficulty_warning_slide_animation_t or 0
@@ -2161,7 +2129,7 @@ function MissionSelectionGui:_animate_slide_in_difficulty_warning_message(o, mes
 	self._difficulty_warning_slide_animation_t = 1
 end
 
--- Lines 2150-2178
+-- Lines 2100-2128
 function MissionSelectionGui:_animate_slide_out_difficulty_warning_message(o)
 	local slide_duration = 0.4
 	self._difficulty_warning_slide_animation_t = self._difficulty_warning_slide_animation_t or 0
@@ -2191,11 +2159,11 @@ function MissionSelectionGui:_animate_slide_out_difficulty_warning_message(o)
 	self._difficulty_warning_slide_animation_t = 0
 end
 
--- Lines 2183-2184
+-- Lines 2133-2134
 function MissionSelectionGui:_on_permission_selected(data)
 end
 
--- Lines 2186-2194
+-- Lines 2136-2144
 function MissionSelectionGui:data_source_permission_stepper()
 	local permissions = {}
 
@@ -2218,19 +2186,15 @@ function MissionSelectionGui:data_source_permission_stepper()
 	return permissions
 end
 
--- Lines 2199-2200
+-- Lines 2149-2150
 function MissionSelectionGui:_on_toggle_drop_in(button, control, value)
 end
 
--- Lines 2205-2206
+-- Lines 2155-2156
 function MissionSelectionGui:_on_toggle_team_ai(button, control, value)
 end
 
--- Lines 2211-2212
-function MissionSelectionGui:_on_toggle_auto_kick(button, control, value)
-end
-
--- Lines 2217-2230
+-- Lines 2161-2174
 function MissionSelectionGui:_on_toggle_vote_kick(button, control, value)
 	if Network:is_client() then
 		return
@@ -2245,7 +2209,7 @@ function MissionSelectionGui:_on_toggle_vote_kick(button, control, value)
 	managers.vote:sync_server_kick_option_with_peers()
 end
 
--- Lines 2235-2306
+-- Lines 2179-2250
 function MissionSelectionGui:_raid_list_data_source()
 	local non_consumable_list = {}
 	local consumable_list = {}
@@ -2319,7 +2283,7 @@ function MissionSelectionGui:_raid_list_data_source()
 	return raid_list
 end
 
--- Lines 2309-2328
+-- Lines 2253-2272
 function MissionSelectionGui:_operation_list_data_source()
 	local operation_list = {}
 
@@ -2349,7 +2313,7 @@ function MissionSelectionGui:_operation_list_data_source()
 	return operation_list
 end
 
--- Lines 2330-2362
+-- Lines 2274-2306
 function MissionSelectionGui:_slot_list_data_source()
 	local current_save_slots = managers.raid_job:get_save_slots()
 	local slot_list = {}
@@ -2383,7 +2347,7 @@ function MissionSelectionGui:_slot_list_data_source()
 	return slot_list
 end
 
--- Lines 2364-2379
+-- Lines 2308-2323
 function MissionSelectionGui:_continue_operation()
 	if self._continue_slot_selected then
 		managers.raid_job:continue_operation(self._continue_slot_selected)
@@ -2403,13 +2367,12 @@ function MissionSelectionGui:_continue_operation()
 	managers.menu:input_enabled(false)
 end
 
--- Lines 2381-2438
+-- Lines 2325-2379
 function MissionSelectionGui:_start_job(job_id)
 	local difficulty = self._difficulty_stepper:get_value()
 	local team_ai = self._team_ai_checkbox:get_value()
 	local permission = Global.DEFAULT_PERMISSION
 	local drop_in_allowed = true
-	local auto_kick = true
 
 	tweak_data:set_difficulty(difficulty)
 
@@ -2424,17 +2387,15 @@ function MissionSelectionGui:_start_job(job_id)
 		drop_in_allowed = self._drop_in_checkbox:get_value()
 		Global.game_settings.permission = permission
 		Global.game_settings.drop_in_allowed = drop_in_allowed
-		Global.game_settings.auto_kick = auto_kick
 		Global.player_manager.game_settings_permission = permission
 		Global.player_manager.game_settings_drop_in_allowed = drop_in_allowed
-		Global.player_manager.game_settings_auto_kick = auto_kick
 	end
 
 	if Network:is_server() then
 		managers.network:session():chk_server_joinable_state()
 		managers.network:update_matchmake_attributes()
 
-		if self._settings_selected.difficulty ~= Global.game_settings.difficulty or self._settings_selected.permission ~= Global.game_settings.permission or self._settings_selected.drop_in_allowed ~= Global.game_settings.drop_in_allowed or self._settings_selected.team_ai ~= Global.game_settings.team_ai or self._settings_selected.auto_kick ~= Global.game_settings.auto_kick then
+		if self._settings_selected.difficulty ~= Global.game_settings.difficulty or self._settings_selected.permission ~= Global.game_settings.permission or self._settings_selected.drop_in_allowed ~= Global.game_settings.drop_in_allowed or self._settings_selected.team_ai ~= Global.game_settings.team_ai then
 			managers.savefile:save_game(managers.savefile:get_save_progress_slot())
 		end
 	end
@@ -2445,7 +2406,7 @@ function MissionSelectionGui:_start_job(job_id)
 	managers.raid_menu:close_all_menus()
 end
 
--- Lines 2440-2448
+-- Lines 2381-2389
 function MissionSelectionGui:_select_mission(job_id)
 	self._selected_job_id = job_id
 	local job_data = tweak_data.operations:mission_data(job_id)
@@ -2454,12 +2415,12 @@ function MissionSelectionGui:_select_mission(job_id)
 	self._selected_job_id = job_id
 end
 
--- Lines 2450-2452
+-- Lines 2391-2393
 function MissionSelectionGui:_select_slot(slot)
 	self._selected_operation_save_slot = slot
 end
 
--- Lines 2456-2496
+-- Lines 2397-2437
 function MissionSelectionGui:_animate_change_primary_paper_control(control, mid_callback, new_active_control)
 	local fade_out_duration = 0.2
 	local t = nil
@@ -2503,7 +2464,7 @@ function MissionSelectionGui:_animate_change_primary_paper_control(control, mid_
 	self._active_primary_paper_control:set_alpha(1)
 end
 
--- Lines 2498-2534
+-- Lines 2439-2475
 function MissionSelectionGui:_animate_change_secondary_paper_control(control, mid_callback, new_active_control)
 	local fade_out_duration = 0.2
 	local t = (1 - self._active_secondary_paper_control:alpha()) * fade_out_duration
@@ -2541,7 +2502,7 @@ function MissionSelectionGui:_animate_change_secondary_paper_control(control, mi
 	self._active_secondary_paper_control:set_alpha(1)
 end
 
--- Lines 2537-2584
+-- Lines 2478-2525
 function MissionSelectionGui:_animate_show_secondary_paper()
 	local duration = 0.5
 	local t = self._paper_animation_t * duration
@@ -2593,7 +2554,7 @@ function MissionSelectionGui:_animate_show_secondary_paper()
 	self._paper_animation_t = 1
 end
 
--- Lines 2586-2633
+-- Lines 2527-2574
 function MissionSelectionGui:_animate_hide_secondary_paper()
 	local duration = 0.5
 	local t = (1 - self._paper_animation_t) * duration
@@ -2646,7 +2607,7 @@ function MissionSelectionGui:_animate_hide_secondary_paper()
 	self._paper_animation_t = 0
 end
 
--- Lines 2635-2664
+-- Lines 2576-2605
 function MissionSelectionGui:_animate_show_front_page(o)
 	self._front_page_movement_t = self._front_page_movement_t or 0
 	local fade_in_duration = 0.4
@@ -2682,7 +2643,7 @@ function MissionSelectionGui:_animate_show_front_page(o)
 	self._front_page_movement_t = 1
 end
 
--- Lines 2666-2696
+-- Lines 2607-2637
 function MissionSelectionGui:_animate_hide_front_page(o)
 	self._front_page_movement_t = self._front_page_movement_t or 0
 	local fade_out_duration = 0.45
@@ -2719,7 +2680,7 @@ function MissionSelectionGui:_animate_hide_front_page(o)
 	self._front_page_movement_t = 0
 end
 
--- Lines 2698-2770
+-- Lines 2639-2711
 function MissionSelectionGui:_animate_change_front_page_data(o, icon, text_id, folder_image, text_color, x_offset)
 	local fade_out_duration = 0.2
 	local t = (1 - self._front_page_content_panel:alpha()) * fade_out_duration
@@ -2799,7 +2760,7 @@ function MissionSelectionGui:_animate_change_front_page_data(o, icon, text_id, f
 	self._front_page_image:set_alpha(1)
 end
 
--- Lines 2772-2792
+-- Lines 2713-2733
 function MissionSelectionGui:_fit_front_page_title()
 	local default_font_size = tweak_data.gui.font_sizes.title
 	local font_sizes = {}
@@ -2823,20 +2784,20 @@ function MissionSelectionGui:_fit_front_page_title()
 	end
 end
 
--- Lines 2794-2820
+-- Lines 2735-2761
 function MissionSelectionGui:_animate_show_operation_tutorialization()
 	local fade_out_duration = 0.15
-	local t = (1 - self._settings_panel:alpha()) * fade_out_duration
+	local t = (1 - self._right_panel:alpha()) * fade_out_duration
 
 	while fade_out_duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
-		self._settings_panel:set_alpha(current_alpha)
+		self._right_panel:set_alpha(current_alpha)
 	end
 
-	self._settings_panel:set_alpha(0)
+	self._right_panel:set_alpha(0)
 
 	local fade_in_duration = 0.15
 	t = self._operation_tutorialization_panel:alpha() * fade_in_duration
@@ -2852,7 +2813,7 @@ function MissionSelectionGui:_animate_show_operation_tutorialization()
 	self._operation_tutorialization_panel:set_alpha(1)
 end
 
--- Lines 2822-2848
+-- Lines 2763-2789
 function MissionSelectionGui:_animate_hide_operation_tutorialization()
 	local fade_out_duration = 0.15
 	local t = (1 - self._operation_tutorialization_panel:alpha()) * fade_out_duration
@@ -2868,45 +2829,20 @@ function MissionSelectionGui:_animate_hide_operation_tutorialization()
 	self._operation_tutorialization_panel:set_alpha(0)
 
 	local fade_in_duration = 0.15
-	t = self._settings_panel:alpha() * fade_in_duration
+	t = self._right_panel:alpha() * fade_in_duration
 
 	while fade_in_duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_out_duration)
 
-		self._settings_panel:set_alpha(current_alpha)
+		self._right_panel:set_alpha(current_alpha)
 	end
 
-	self._settings_panel:set_alpha(1)
+	self._right_panel:set_alpha(1)
 end
 
--- Lines 2850-2878
-function MissionSelectionGui:special_btn_pressed_old(...)
-	local button_pressed = select(1, ...)
-
-	if not button_pressed then
-		return
-	end
-
-	if button_pressed == Idstring("trigger_right") then
-		if not self._secondary_paper_shown then
-			self._difficulty_stepper:set_selected(true)
-			self._list_tabs:set_selected(false)
-			self._raid_list:set_selected(false)
-			self._slot_list:set_selected(false)
-		end
-	elseif button_pressed == Idstring("trigger_left") then
-		self:_unselect_right_column()
-		self._list_tabs:set_selected(true)
-	elseif button_pressed == Idstring("menu_tab_right") or button_pressed == Idstring("menu_tab_left") then
-		self:_unselect_right_column()
-	elseif button_pressed == Idstring("menu_mission_selection_start") then
-		self:_on_start_button_click()
-	end
-end
-
--- Lines 2880-2891
+-- Lines 2791-2802
 function MissionSelectionGui:back_pressed()
 	if self._current_display == MissionSelectionGui.DISPLAY_FIRST then
 		if managers.controller:is_using_controller() then
@@ -2921,7 +2857,22 @@ function MissionSelectionGui:back_pressed()
 	end
 end
 
--- Lines 2894-2902
+-- Lines 2804-2808
+function MissionSelectionGui:_unselect_left_column()
+	self._raid_list:set_selected(false)
+	self._new_operation_list:set_selected(false)
+	self._list_tabs:set_selected(false)
+end
+
+-- Lines 2810-2815
+function MissionSelectionGui:_unselect_middle_column()
+	self._info_button:set_selected(false)
+	self._intel_button:set_selected(false)
+	self._audio_button:set_selected(false)
+	self._intel_image_grid:set_selected(false)
+end
+
+-- Lines 2817-2825
 function MissionSelectionGui:_unselect_right_column()
 	self._difficulty_stepper:set_selected(false)
 	self._team_ai_checkbox:set_selected(false)
@@ -2932,20 +2883,12 @@ function MissionSelectionGui:_unselect_right_column()
 	end
 end
 
--- Lines 2904-2909
-function MissionSelectionGui:_unselect_middle_column()
-	self._info_button:set_selected(false)
-	self._intel_button:set_selected(false)
-	self._audio_button:set_selected(false)
-	self._intel_image_grid:set_selected(false)
-end
-
--- Lines 2914-2916
+-- Lines 2830-2832
 function MissionSelectionGui:bind_controller_inputs()
 	self:_bind_raid_controller_inputs()
 end
 
--- Lines 2918-2944
+-- Lines 2834-2864
 function MissionSelectionGui:_bind_raid_controller_inputs()
 	local bindings = {
 		{
@@ -2956,6 +2899,14 @@ function MissionSelectionGui:_bind_raid_controller_inputs()
 		{
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_list_tabs_right")
+		},
+		{
+			key = Idstring("menu_controller_trigger_left"),
+			callback = callback(self, self, "_on_column_left")
+		},
+		{
+			key = Idstring("menu_controller_trigger_right"),
+			callback = callback(self, self, "_on_column_right")
 		}
 	}
 
@@ -2972,7 +2923,8 @@ function MissionSelectionGui:_bind_raid_controller_inputs()
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_raids",
-			"menu_legend_mission_operations"
+			"menu_legend_mission_operations",
+			"menu_legend_mission_column"
 		},
 		keyboard = {
 			{
@@ -2989,7 +2941,7 @@ function MissionSelectionGui:_bind_raid_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 2946-2967
+-- Lines 2866-2887
 function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 	local bindings = {
 		{
@@ -3000,6 +2952,14 @@ function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 		{
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_list_tabs_right")
+		},
+		{
+			key = Idstring("menu_controller_trigger_left"),
+			callback = callback(self, self, "_on_column_left")
+		},
+		{
+			key = Idstring("menu_controller_trigger_right"),
+			callback = callback(self, self, "_on_column_right")
 		}
 	}
 
@@ -3009,7 +2969,8 @@ function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_raids",
-			"menu_legend_mission_operations"
+			"menu_legend_mission_operations",
+			"menu_legend_mission_column"
 		},
 		keyboard = {
 			{
@@ -3022,7 +2983,7 @@ function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 2969-2994
+-- Lines 2889-2914
 function MissionSelectionGui:_bind_save_slot_controller_inputs()
 	local bindings = {
 		{
@@ -3071,7 +3032,7 @@ function MissionSelectionGui:_bind_save_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 2996-3024
+-- Lines 2916-2944
 function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 	local bindings = {
 		{
@@ -3082,6 +3043,14 @@ function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 		{
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_list_tabs_right")
+		},
+		{
+			key = Idstring("menu_controller_trigger_left"),
+			callback = callback(self, self, "_on_column_left")
+		},
+		{
+			key = Idstring("menu_controller_trigger_right"),
+			callback = callback(self, self, "_on_column_right")
 		}
 	}
 
@@ -3098,7 +3067,8 @@ function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_raids",
-			"menu_legend_mission_operations"
+			"menu_legend_mission_operations",
+			"menu_legend_mission_column"
 		},
 		keyboard = {
 			{
@@ -3115,9 +3085,18 @@ function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 3026-3052
+-- Lines 2946-2973
 function MissionSelectionGui:_bind_operation_list_controller_inputs()
-	local bindings = {}
+	local bindings = {
+		{
+			key = Idstring("menu_controller_trigger_left"),
+			callback = callback(self, self, "_on_column_left")
+		},
+		{
+			key = Idstring("menu_controller_trigger_right"),
+			callback = callback(self, self, "_on_column_right")
+		}
+	}
 
 	if Network:is_server() then
 		table.insert(bindings, {
@@ -3130,7 +3109,8 @@ function MissionSelectionGui:_bind_operation_list_controller_inputs()
 
 	local legend = {
 		controller = {
-			"menu_legend_back"
+			"menu_legend_back",
+			"menu_legend_mission_column"
 		},
 		keyboard = {
 			{
@@ -3147,7 +3127,7 @@ function MissionSelectionGui:_bind_operation_list_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 3054-3074
+-- Lines 2975-2988
 function MissionSelectionGui:_bind_locked_operation_list_controller_inputs()
 	local bindings = {}
 
@@ -3168,7 +3148,7 @@ function MissionSelectionGui:_bind_locked_operation_list_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 3076-3087
+-- Lines 2990-3001
 function MissionSelectionGui:_on_list_tabs_left()
 	if self._selected_tab == "left" or not self._list_tabs:enabled() then
 		return
@@ -3178,13 +3158,13 @@ function MissionSelectionGui:_on_list_tabs_left()
 	self:_unselect_middle_column()
 	self._list_tabs:_move_left()
 
-	self._selected_column = "left"
+	self._selected_column = MissionSelectionGui.COLUMN_MISSIONS
 	self._selected_tab = "left"
 
-	return true, nil
+	return true
 end
 
--- Lines 3089-3100
+-- Lines 3003-3015
 function MissionSelectionGui:_on_list_tabs_right()
 	if self._selected_tab == "right" or not self._list_tabs:enabled() then
 		return
@@ -3194,92 +3174,149 @@ function MissionSelectionGui:_on_list_tabs_right()
 	self:_unselect_middle_column()
 	self._list_tabs:_move_right()
 
-	self._selected_column = "left"
+	self._selected_column = MissionSelectionGui.COLUMN_MISSIONS
 	self._selected_tab = "right"
 
-	return true, nil
+	return true
 end
 
--- Lines 3102-3115
+-- Lines 3017-3041
 function MissionSelectionGui:_on_column_left()
-	if self._selected_column == "left" then
-		return true, nil
+	if self._selected_column == MissionSelectionGui.COLUMN_MISSIONS then
+		return true
 	end
 
-	self:_unselect_right_column()
-	self._list_tabs:set_selected(true)
+	self._selected_column = self._selected_column - 1
 
-	self._selected_column = "left"
+	if self._selected_column == MissionSelectionGui.COLUMN_MISSIONS then
+		self:_unselect_middle_column()
 
-	return true, nil
+		if self._selected_tab == "right" then
+			self._new_operation_list:set_selected(true)
+		else
+			self._list_tabs:set_selected(true)
+		end
+	elseif self._selected_column == MissionSelectionGui.COLUMN_INFO then
+		self:_unselect_right_column()
+		self._info_button:set_selected(true)
+	end
+
+	return true
 end
 
--- Lines 3117-3135
+-- Lines 3043-3068
 function MissionSelectionGui:_on_column_right()
-	if self._selected_column == "right" then
-		return true, nil
+	if self._selected_column == MissionSelectionGui.COLUMN_SETTINGS then
+		return true
 	end
 
-	self:_unselect_right_column()
+	if self._selected_tab == "right" and self._current_display == MissionSelectionGui.DISPLAY_FIRST then
+		return
+	end
 
-	if not self._secondary_paper_shown then
+	self._selected_column = self._selected_column + 1
+
+	if self._selected_column == MissionSelectionGui.COLUMN_INFO then
+		self:_unselect_left_column()
+		self._info_button:set_selected(true)
+	elseif self._selected_column == MissionSelectionGui.COLUMN_SETTINGS and not self._secondary_paper_shown then
+		self:_unselect_middle_column()
 		self._difficulty_stepper:set_selected(true)
-		self._list_tabs:set_selected(false)
-		self._raid_list:set_selected(false)
-		self._slot_list:set_selected(false)
 	end
 
-	self._selected_column = "right"
-
-	return true, nil
+	return true
 end
 
--- Lines 3137-3140
+-- Lines 3070-3073
 function MissionSelectionGui:_on_start_raid()
 	self:_on_start_button_click()
 
 	return true, nil
 end
 
--- Lines 3142-3145
+-- Lines 3075-3078
 function MissionSelectionGui:_on_delete_save()
 	self:_on_delete_button_click()
 
 	return true, nil
 end
 
--- Lines 3147-3150
+-- Lines 3080-3083
 function MissionSelectionGui:_on_continue_save()
 	self:_on_start_button_click()
 
 	return true, nil
 end
 
--- Lines 3152-3154
+-- Lines 3085-3087
 function MissionSelectionGui:_on_next_operation()
 	self._operation_list:select_next_row()
 end
 
--- Lines 3156-3159
+-- Lines 3089-3092
 function MissionSelectionGui:_on_start_operation()
 	self:_on_start_button_click()
 
 	return true, nil
 end
 
--- Lines 3161-3164
+-- Lines 3094-3097
 function MissionSelectionGui:_on_select_confirm()
 	self:_on_start_button_click()
 
 	return true, nil
 end
 
--- Lines 3166-3173
+-- Lines 3099-3106
 function MissionSelectionGui:_check_consumables_achievement()
 	if managers.consumable_missions:is_all_missions_unlocked() then
-		Application:debug("[MissionSelectionGui:_check_consumables_achievement] award outlaw_librarian")
 		managers.achievment:award("outlaw_librarian")
-	else
-		Application:debug("[MissionSelectionGui:_check_consumables_achievement] dont award outlaw_librarian")
+	end
+end
+
+-- Lines 3109-3156
+function MissionSelectionGui:_update_information_buttons(show_info, show_intel, show_audio)
+	local icons_list = {}
+
+	if show_info ~= nil then
+		if show_info == true then
+			self._info_button:enable()
+			self._info_button:show()
+			table.insert(icons_list, self._info_button)
+		else
+			self._info_button:set_active(false)
+			self._info_button:disable()
+			self._info_button:hide()
+		end
+	end
+
+	if show_intel ~= nil then
+		if show_intel == true then
+			self._intel_button:enable()
+			self._intel_button:show()
+			table.insert(icons_list, self._intel_button)
+		else
+			self._intel_button:set_active(false)
+			self._intel_button:disable()
+			self._intel_button:hide()
+		end
+	end
+
+	if show_audio ~= nil then
+		if show_audio == true then
+			self._audio_button:enable()
+			self._audio_button:show()
+			table.insert(icons_list, self._audio_button)
+		else
+			self._audio_button:set_active(false)
+			self._audio_button:disable()
+			self._audio_button:hide()
+		end
+	end
+
+	local x = self._info_buttons_panel:w() / (#icons_list + 1)
+
+	for i, v in ipairs(icons_list) do
+		v:set_center_x(x * i)
 	end
 end

@@ -11,7 +11,7 @@ end
 function ElementSmokeGrenade:client_on_executed(...)
 end
 
--- Lines 13-43
+-- Lines 13-35
 function ElementSmokeGrenade:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -40,6 +40,5 @@ function ElementSmokeGrenade:on_executed(instigator)
 		}
 	end
 
-	print(is_flashbang and "FLAAAASHBAAAAANG" or "SMOOOOOOOKEEEEEEEE")
 	ElementSmokeGrenade.super.on_executed(self, instigator)
 end

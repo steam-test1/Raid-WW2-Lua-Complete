@@ -1,15 +1,17 @@
 core:module("CoreString")
 
--- Lines 15-21
-function utf8.find_char(text, char)
+-- Lines 15-22
+function utf8.find_char(text, char, start)
+	start = start or 1
+
 	for i, c in ipairs(utf8.characters(text)) do
-		if c == char then
+		if start < i and c == char then
 			return i
 		end
 	end
 end
 
--- Lines 27-33
+-- Lines 28-34
 function string.begins(s, beginning)
 	if s and beginning then
 		return s:sub(1, #beginning) == beginning
@@ -18,7 +20,7 @@ function string.begins(s, beginning)
 	return false
 end
 
--- Lines 35-41
+-- Lines 36-42
 function string.ends(s, ending)
 	if s and ending then
 		return #ending == 0 or s:sub(-(#ending)) == ending
@@ -27,12 +29,12 @@ function string.ends(s, ending)
 	return false
 end
 
--- Lines 46-48
+-- Lines 47-49
 function string.case_insensitive_compare(a, b)
 	return string.lower(a) < string.lower(b)
 end
 
--- Lines 57-76
+-- Lines 58-77
 function string.split(s, separator_pattern, keep_empty, max_splits)
 	local result = {}
 	local pattern = "(.-)" .. separator_pattern .. "()"
@@ -58,7 +60,7 @@ function string.split(s, separator_pattern, keep_empty, max_splits)
 	return result
 end
 
--- Lines 78-87
+-- Lines 79-88
 function string.join(separator, elements, keep_empty)
 	local strings = table.collect(elements, function (element)
 		local as_string = tostring(element)
@@ -71,28 +73,28 @@ function string.join(separator, elements, keep_empty)
 	return table.concat(strings, separator)
 end
 
--- Lines 89-92
+-- Lines 90-93
 function string.trim(s, pattern)
 	pattern = pattern or "%s*"
 
 	return string.match(s, "^" .. pattern .. "(.-)" .. pattern .. "$")
 end
 
--- Lines 94-96
+-- Lines 95-97
 function string.capitalize(s)
 	return string.gsub(s, "(%w)(%w*)", function (first_letter, remaining_letters)
 		return string.upper(first_letter) .. string.lower(remaining_letters)
 	end)
 end
 
--- Lines 98-101
+-- Lines 99-102
 function string.pretty(s, capitalize)
 	local pretty = string.gsub(s, "%W", " ")
 
 	return capitalize and string.capitalize(pretty) or pretty
 end
 
--- Lines 103-107
+-- Lines 104-108
 function string:rep(n)
 	local out = ""
 
@@ -103,12 +105,12 @@ function string:rep(n)
 	return out
 end
 
--- Lines 109-111
+-- Lines 110-112
 function string:left(n)
 	return self .. (" "):rep(n - self:len())
 end
 
--- Lines 113-121
+-- Lines 114-122
 function string.add_decimal_marks_to_string(str)
 	local total = str
 	local reverse = string.reverse(total)

@@ -1,15 +1,15 @@
 PostGameBreakdownGui = PostGameBreakdownGui or class(RaidGuiBase)
-PostGameBreakdownGui.XP_BREAKDOWN_X = 2
-PostGameBreakdownGui.XP_BREAKDOWN_Y = 126
 PostGameBreakdownGui.TOP_STATS_SMALL_Y = 448
 PostGameBreakdownGui.TOP_STATS_SMALL_W = 320
 PostGameBreakdownGui.TOP_STATS_SMALL_H = 224
 PostGameBreakdownGui.PROGRESS_BAR_Y = 719
-PostGameBreakdownGui.XP_BREAKDOWN_WIDTH = 284
-PostGameBreakdownGui.XP_BREAKDOWN_HEIGHT = 270
+PostGameBreakdownGui.XP_BREAKDOWN_X = 2
+PostGameBreakdownGui.XP_BREAKDOWN_Y = 126
+PostGameBreakdownGui.SKILLS_BREAKDOWN_X = 2
+PostGameBreakdownGui.SKILLS_BREAKDOWN_Y_PADDING = 6
+PostGameBreakdownGui.STATS_BREAKDOWN_Y = 126
 PostGameBreakdownGui.STATS_BREAKDOWN_WIDTH = 284
 PostGameBreakdownGui.STATS_BREAKDOWN_HEIGHT = 250
-PostGameBreakdownGui.STATS_BREAKDOWN_Y = 126
 PostGameBreakdownGui.NEW_LEVEL_LABEL_Y = 533
 PostGameBreakdownGui.NEW_LEVEL_LABEL_W = 640
 PostGameBreakdownGui.NEW_LEVEL_LABEL_H = 50
@@ -43,11 +43,10 @@ PostGameBreakdownGui.FAIL_ICON = "experience_mission_fail_large"
 PostGameBreakdownGui.ONE_POINT_SOUND_EFFECT = "one_number_one_click"
 PostGameBreakdownGui.LEVEL_UP_SOUND_EFFECT = "leveled_up"
 
--- Lines 73-93
+-- Lines 76-95
 function PostGameBreakdownGui:init(ws, fullscreen_ws, node, component_name)
-	print("[PostGameBreakdownGui:init()]")
-
 	self._closing = false
+	self._played_level_up_sound_effect = false
 	self.current_state = game_state_machine:current_state()
 	self.current_state_name = game_state_machine:current_state_name()
 	self.initial_xp = self.current_state.initial_xp
@@ -63,7 +62,7 @@ function PostGameBreakdownGui:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:register_on_escape_callback(callback(self, self, "on_escape"))
 end
 
--- Lines 95-104
+-- Lines 99-108
 function PostGameBreakdownGui:_set_initial_data()
 	if self.state_success then
 		self._node.components.raid_menu_header:set_screen_name("menu_header_experience_success")
@@ -74,9 +73,10 @@ function PostGameBreakdownGui:_set_initial_data()
 	self._node.components.raid_menu_header._screen_name_label:set_alpha(0)
 end
 
--- Lines 106-217
+-- Lines 112-236
 function PostGameBreakdownGui:_layout()
 	PostGameBreakdownGui.super._layout(self)
+	managers.raid_menu:show_background_video()
 
 	local params_xp_breakdown = {
 		name = "xp_breakdown",
@@ -88,6 +88,16 @@ function PostGameBreakdownGui:_layout()
 	self._xp_breakdown = self._root_panel:create_custom_control(RaidGUIControlXPBreakdown, params_xp_breakdown)
 
 	self._xp_breakdown:hide()
+
+	self._skills_breakdown = self._root_panel:create_custom_control(RaidGUIControlSkillsBreakdown, {
+		name = "skills_breakdown",
+		visible = true,
+		x = PostGameBreakdownGui.SKILLS_BREAKDOWN_X,
+		y = self._xp_breakdown:bottom() + PostGameBreakdownGui.SKILLS_BREAKDOWN_Y_PADDING,
+		data_source_callback = callback(self, self, "data_source_skills_breakdown")
+	})
+
+	self._skills_breakdown:hide()
 
 	local params_stats_breakdown = {
 		name = "stats_breakdown",
@@ -167,7 +177,10 @@ function PostGameBreakdownGui:_layout()
 	self._total_xp_label = self._root_panel:label_named_value(total_xp_params)
 
 	self._total_xp_label:set_alpha(0)
-	self._total_xp_label:set_value(string.format("%d", self.initial_xp))
+
+	local total_xp_string = managers.experience:experience_string(self.initial_xp)
+
+	self._total_xp_label:set_value(total_xp_string)
 	self:_layout_central_display()
 	self:_layout_generic_win_display()
 	self:_layout_fail_display()
@@ -190,7 +203,7 @@ function PostGameBreakdownGui:_layout()
 	managers.menu_component:_voice_panel_align_mid_right(-30)
 end
 
--- Lines 219-229
+-- Lines 240-250
 function PostGameBreakdownGui:_layout_central_display()
 	local central_display_panel_params = {
 		alpha = 0,
@@ -205,34 +218,27 @@ function PostGameBreakdownGui:_layout_central_display()
 	self._central_display_panel:set_center_x(self._root_panel:w() / 2)
 end
 
--- Lines 232-292
+-- Lines 255-312
 function PostGameBreakdownGui:_layout_generic_win_display()
-	local generic_win_panel_params = {
-		visible = true,
+	self._generic_win_panel = self._central_display_panel:panel({
 		name = "generic_win_panel",
 		halign = "scale",
 		valign = "scale",
 		w = self._central_display_panel:w(),
-		h = self._central_display_panel:h()
-	}
-	self._generic_win_panel = self._central_display_panel:panel(generic_win_panel_params)
-
-	if not self.state_success then
-		self._generic_win_panel:set_visible(false)
-	end
-
-	local icon_params = {
+		h = self._central_display_panel:h(),
+		visible = self.state_success
+	})
+	local icon = self._generic_win_panel:bitmap({
 		name = "generic_win_icon",
 		texture = tweak_data.gui.icons[PostGameBreakdownGui.GENERIC_WIN_ICON].texture,
 		texture_rect = tweak_data.gui.icons[PostGameBreakdownGui.GENERIC_WIN_ICON].texture_rect
-	}
-	local icon = self._generic_win_panel:bitmap(icon_params)
+	})
 
 	icon:set_center_x(self._generic_win_panel:w() / 2)
 	icon:set_center_y(PostGameBreakdownGui.CENTRAL_DISPLAY_SINGLE_ICON_CENTER_Y)
 
 	local is_player_max_level = managers.experience:reached_level_cap()
-	local title_text_params = {
+	local title = self._generic_win_panel:text({
 		vertical = "center",
 		name = "generic_win_title_text",
 		align = "center",
@@ -242,8 +248,7 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 		color = PostGameBreakdownGui.CENTRAL_DISPLAY_TITLE_COLOR,
 		text = self:translate("menu_almost_there", true),
 		visible = not is_player_max_level
-	}
-	local title = self._generic_win_panel:text(title_text_params)
+	})
 	local _, _, w, h = title:text_rect()
 
 	title:set_w(w)
@@ -251,18 +256,17 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 	title:set_bottom(self._generic_win_panel:h())
 	title:set_center_x(self._generic_win_panel:w() / 2)
 
-	local flavor_text_params = {
-		vertical = "center",
+	local flavor_text = self._generic_win_panel:text({
 		name = "generic_win_flavor_text",
+		vertical = "center",
 		align = "center",
+		text = self:translate("menu_keep_it_up", true),
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_FLAVOR_TEXT_FONT_SIZE,
 		color = PostGameBreakdownGui.CENTRAL_DISPLAY_FLAVOR_TEXT_COLOR,
-		text = self:translate("menu_keep_it_up", true),
 		visible = not is_player_max_level
-	}
-	local flavor_text = self._generic_win_panel:text(flavor_text_params)
+	})
 	local _, _, w, _ = flavor_text:text_rect()
 
 	flavor_text:set_w(w)
@@ -270,43 +274,35 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 	flavor_text:set_x(title:x())
 end
 
--- Lines 296-351
+-- Lines 318-370
 function PostGameBreakdownGui:_layout_fail_display()
-	local fail_panel_params = {
-		visible = false,
+	self._fail_panel = self._central_display_panel:panel({
 		name = "fail_display_panel",
 		halign = "scale",
 		valign = "scale",
 		w = self._central_display_panel:w(),
-		h = self._central_display_panel:h()
-	}
-	self._fail_panel = self._central_display_panel:panel(fail_panel_params)
-
-	if not self.state_success then
-		self._fail_panel:set_visible(true)
-	end
-
-	local icon_params = {
+		h = self._central_display_panel:h(),
+		visible = not self.state_success
+	})
+	local icon = self._fail_panel:bitmap({
 		name = "fail_icon",
 		texture = tweak_data.gui.icons[PostGameBreakdownGui.FAIL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[PostGameBreakdownGui.FAIL_ICON].texture_rect
-	}
-	local icon = self._fail_panel:bitmap(icon_params)
+	})
 
 	icon:set_center_x(self._fail_panel:w() / 2)
 	icon:set_center_y(PostGameBreakdownGui.CENTRAL_DISPLAY_SINGLE_ICON_CENTER_Y)
 
-	local title_text_params = {
+	local title = self._fail_panel:text({
 		align = "center",
-		vertical = "center",
 		name = "fail_title_text",
-		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
+		vertical = "center",
+		text = self:translate("menu_better_luck_next_time", true),
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_TITLE_FONT_SIZE,
 		color = PostGameBreakdownGui.CENTRAL_DISPLAY_TITLE_COLOR,
-		text = self:translate("menu_better_luck_next_time", true)
-	}
-	local title = self._fail_panel:text(title_text_params)
+		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H
+	})
 	local _, _, w, h = title:text_rect()
 
 	title:set_w(w)
@@ -314,17 +310,16 @@ function PostGameBreakdownGui:_layout_fail_display()
 	title:set_bottom(self._fail_panel:h())
 	title:set_center_x(self._fail_panel:w() / 2)
 
-	local flavor_text_params = {
+	local flavor_text = self._fail_panel:text({
 		align = "center",
-		vertical = "center",
 		name = "fail_flavor_text",
-		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
+		vertical = "center",
+		text = self:translate("menu_fail", true),
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_FLAVOR_TEXT_FONT_SIZE,
 		color = PostGameBreakdownGui.CENTRAL_DISPLAY_FLAVOR_TEXT_COLOR,
-		text = self:translate("menu_fail", true)
-	}
-	local flavor_text = self._fail_panel:text(flavor_text_params)
+		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H
+	})
 	local _, _, w, _ = flavor_text:text_rect()
 
 	flavor_text:set_w(w)
@@ -332,17 +327,17 @@ function PostGameBreakdownGui:_layout_fail_display()
 	flavor_text:set_x(title:x())
 end
 
--- Lines 354-356
+-- Lines 375-377
 function PostGameBreakdownGui:_layout_skill_unlock_display()
 	self._skill_unlock_display = RaidGUIControlXPSkillSet:new(self._central_display_panel)
 end
 
--- Lines 358-360
+-- Lines 381-383
 function PostGameBreakdownGui:_layout_double_unlock_display()
 	self._double_unlock_display = RaidGUIControlXPDoubleUnlock:new(self._central_display_panel)
 end
 
--- Lines 364-382
+-- Lines 387-405
 function PostGameBreakdownGui:_get_progress(current_xp)
 	local level_cap = managers.experience:level_cap()
 	local current_level = self:_get_level_by_xp(current_xp)
@@ -363,7 +358,7 @@ function PostGameBreakdownGui:_get_progress(current_xp)
 	return math.clamp(progress_to_level + progress_in_level, 0, 1)
 end
 
--- Lines 384-392
+-- Lines 409-417
 function PostGameBreakdownGui:_calculate_xp_needed_for_levels()
 	local level_cap = managers.experience:level_cap()
 	self._levels_by_xp = {}
@@ -375,7 +370,7 @@ function PostGameBreakdownGui:_calculate_xp_needed_for_levels()
 	end
 end
 
--- Lines 394-407
+-- Lines 420-433
 function PostGameBreakdownGui:_get_level_by_xp(xp)
 	local level_cap = managers.experience:level_cap()
 	local points_needed = self._levels_by_xp[1]
@@ -389,153 +384,39 @@ function PostGameBreakdownGui:_get_level_by_xp(xp)
 	return level
 end
 
--- Lines 410-463
-function PostGameBreakdownGui:_get_xp_breakdown()
-	local xp_table = {
+-- Lines 437-451
+function PostGameBreakdownGui:data_source_xp_breakdown()
+	local xp_table = {}
+	local entries = #self.xp_breakdown.additive + #self.xp_breakdown.multiplicative
+	local dummy_entry = {
 		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
+			value = 1,
+			info = "empty",
+			text = ""
 		},
 		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
-		},
-		{
-			{
-				value = 1,
-				info = "empty",
-				text = ""
-			},
-			{
-				value = 0,
-				info = "empty",
-				text = ""
-			}
+			value = 0,
+			info = "empty",
+			text = ""
 		}
 	}
+
+	for i = 0, entries do
+		table.insert(xp_table, dummy_entry)
+	end
 
 	return xp_table
 end
 
--- Lines 465-467
-function PostGameBreakdownGui:data_source_xp_breakdown()
-	return self:_get_xp_breakdown()
+-- Lines 455-457
+function PostGameBreakdownGui:data_source_skills_breakdown()
+	return game_state_machine:current_state().initial_skills_xp
 end
 
--- Lines 469-500
+-- Lines 461-497
 function PostGameBreakdownGui:_get_stats_breakdown()
+	Application:debug("[PostGameBreakdownGui] get stats breakdown data")
+
 	local personal_stats = game_state_machine:current_state().personal_stats
 	local stats_breakdown = {
 		{
@@ -615,18 +496,21 @@ function PostGameBreakdownGui:_get_stats_breakdown()
 	return stats_breakdown
 end
 
--- Lines 502-504
+-- Lines 501-503
 function PostGameBreakdownGui:data_source_stats_breakdown()
 	return self:_get_stats_breakdown()
 end
 
--- Lines 507-509
+-- Lines 508-511
 function PostGameBreakdownGui:_continue_button_on_click()
+	Application:debug("[PostGameBreakdownGui] *Continue button click*")
 	managers.raid_menu:close_menu()
 end
 
--- Lines 511-526
+-- Lines 515-532
 function PostGameBreakdownGui:close()
+	Application:debug("[PostGameBreakdownGui] CLOSE BREAKDOWN")
+
 	if self._closing then
 		return
 	end
@@ -634,6 +518,7 @@ function PostGameBreakdownGui:close()
 	self._root_panel:get_engine_panel():stop()
 
 	self._closing = true
+	self._played_level_up_sound_effect = false
 
 	if game_state_machine:current_state_name() == "event_complete_screen" then
 		game_state_machine:current_state():continue()
@@ -643,18 +528,23 @@ function PostGameBreakdownGui:close()
 	managers.menu_component:_voice_panel_align_mid_right()
 end
 
--- Lines 528-530
+-- Lines 536-539
 function PostGameBreakdownGui:give_xp(xp_earned)
+	Application:debug("[PostGameBreakdownGui] Give XP, Start giving XP animations")
 	self._root_panel:get_engine_panel():animate(callback(self, self, "_animate_giving_xp"), xp_earned)
 end
 
--- Lines 532-555
+-- Lines 543-578
 function PostGameBreakdownGui:_unlock_level(level)
 	if level == 1 then
 		return
 	end
 
-	managers.menu_component:post_event(PostGameBreakdownGui.LEVEL_UP_SOUND_EFFECT)
+	if not self._played_level_up_sound_effect then
+		managers.menu_component:post_event(PostGameBreakdownGui.LEVEL_UP_SOUND_EFFECT)
+
+		self._played_level_up_sound_effect = true
+	end
 
 	local character_class = managers.skilltree:get_character_profile_class()
 	local weapon_unlock_progression = tweak_data.skilltree.automatic_unlock_progressions[character_class]
@@ -665,18 +555,18 @@ function PostGameBreakdownGui:_unlock_level(level)
 
 	self._displaying_double_unlock = false
 
-	if (weapon_unlock_progression[level] and weapon_unlock_progression[level].weapons or self._should_display_double_unlock) and not self._displaying_double_unlock then
+	self._central_display_panel:get_engine_panel():stop()
+
+	if weapon_unlock_progression[level] and weapon_unlock_progression[level].weapons or self._should_display_double_unlock then
 		self._should_display_double_unlock = true
 
-		self._central_display_panel:get_engine_panel():stop()
 		self._central_display_panel:get_engine_panel():animate(callback(self, self, "_animate_active_display_panel"), self._double_unlock_display)
 	elseif self._current_central_display == self._generic_win_panel or self._current_central_display == self._fail_panel then
-		self._central_display_panel:get_engine_panel():stop()
 		self._central_display_panel:get_engine_panel():animate(callback(self, self, "_animate_active_display_panel"), self._skill_unlock_display)
 	end
 end
 
--- Lines 557-589
+-- Lines 582-614
 function PostGameBreakdownGui:_animate_active_display_panel(central_display_panel, new_active_panel)
 	local fade_out_duration = 0.25
 	local fade_in_duration = 0.3
@@ -714,7 +604,7 @@ function PostGameBreakdownGui:_animate_active_display_panel(central_display_pane
 	self._central_display_panel:set_alpha(1)
 end
 
--- Lines 591-622
+-- Lines 618-643
 function PostGameBreakdownGui:animate_breakdown()
 	if managers.network:session():amount_of_players() > 1 then
 		local top_stats = managers.statistics:get_top_stats()
@@ -739,7 +629,7 @@ function PostGameBreakdownGui:animate_breakdown()
 	self._root_panel:get_engine_panel():animate(callback(self, self, "_animate_xp_breakdown"))
 end
 
--- Lines 624-773
+-- Lines 647-819
 function PostGameBreakdownGui:_animate_xp_breakdown()
 	local t = 0
 	local xp_breakdown = self.xp_breakdown
@@ -748,12 +638,12 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 	local total_row_cells = table_rows[#table_rows]:get_cells()
 	local shown_total_row = false
 	local current_index = 1
-	local current_multiplier = 1
 	local current_total = 0
 	local previous_level = self:_get_level_by_xp(self.initial_xp)
 	local current_level = previous_level
 	local max_unlocked_level = previous_level
 	local actual_level = managers.experience:current_level()
+	local skills_xp = game_state_machine:current_state():get_skill_xp_progress()
 
 	wait(0.5)
 	self._node.components.raid_menu_header._screen_name_label._object:animate(callback(self, self, "_fade_in_label"), 0.2)
@@ -766,12 +656,11 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 	for i = 1, #xp_breakdown.additive do
 		local previous_value = 0
 		local current_value = 0
-		t = 0
 		local row_cells = table_rows[current_index]:get_cells()
 
 		row_cells[1]:set_visible(false)
 		row_cells[2]:set_visible(false)
-		row_cells[1]:set_text(utf8.to_upper(managers.localization:text(xp_breakdown.additive[i].id)))
+		row_cells[1]:set_text(managers.localization:to_upper_text(xp_breakdown.additive[i].id))
 		row_cells[2]:set_text("0")
 		row_cells[1]:fade_in(0.15)
 		row_cells[2]:fade_in(0.15)
@@ -785,14 +674,21 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 
 		wait(0.13)
 
-		while t < 0.5 do
+		local target_value = xp_breakdown.additive[i].amount
+		local duration = target_value > 0 and 0.5 or 0
+		t = 0
+
+		while duration > t do
 			local dt = coroutine.yield()
 			t = t + dt
-			current_value = Easing.quartic_in_out(t, 0, xp_breakdown.additive[i].amount, 0.5)
+			current_value = Easing.quartic_in_out(t, 0, target_value, 0.5)
 
 			row_cells[2]:set_text(string.format("%.0f", current_value), true)
 			self._xp_breakdown:set_total(string.format("%.0f", current_total + current_value), true)
-			self._total_xp_label:set_value(string.format("%.0f", self.initial_xp + current_total + current_value), true)
+
+			local total_xp_string = managers.experience:experience_string(self.initial_xp + current_total + current_value)
+
+			self._total_xp_label:set_value(total_xp_string, true)
 
 			if current_value ~= previous_value then
 				managers.menu_component:post_event(PostGameBreakdownGui.ONE_POINT_SOUND_EFFECT)
@@ -812,13 +708,14 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 			previous_level = current_level
 		end
 
-		wait(0.1)
+		wait(0.2)
 
 		current_total = current_total + xp_breakdown.additive[i].amount
 		current_index = current_index + 1
 	end
 
-	wait(0.25)
+	wait(0.15)
+	self._skills_breakdown:fade_in()
 
 	current_index = current_index + 1
 	local total_base = current_total
@@ -826,25 +723,31 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 	for i = 1, #xp_breakdown.multiplicative do
 		local previous_value = 0
 		local current_value = 0
-		t = 0
 		local row_cells = table_rows[current_index]:get_cells()
 
 		row_cells[1]:set_visible(false)
 		row_cells[2]:set_visible(false)
-		row_cells[1]:set_text(utf8.to_upper(managers.localization:text(xp_breakdown.multiplicative[i].id)))
+		row_cells[1]:set_text(managers.localization:to_upper_text(xp_breakdown.multiplicative[i].id))
 		row_cells[2]:set_text("+0%")
 		row_cells[1]:fade_in(0.15)
 		row_cells[2]:fade_in(0.15)
 		wait(0.13)
 
-		while t < 0.5 do
+		local target_value = xp_breakdown.multiplicative[i].amount
+		local duration = target_value > 0 and 1 or 0
+		t = 0
+
+		while duration > t do
 			local dt = coroutine.yield()
 			t = t + dt
-			current_value = Easing.quartic_in_out(t, 0, xp_breakdown.multiplicative[i].amount, 0.5)
+			current_value = Easing.quartic_in_out(t, 0, target_value, 0.5)
 
 			row_cells[2]:set_text(string.format("+%.0f%%", current_value * 100), true)
 			self._xp_breakdown:set_total(string.format("%.0f", current_total + current_value * total_base), true)
-			self._total_xp_label:set_value(string.format("%.0f", self.initial_xp + current_total + current_value * total_base), true)
+
+			local total_xp_string = managers.experience:experience_string(self.initial_xp + current_total + current_value * total_base)
+
+			self._total_xp_label:set_value(total_xp_string, true)
 
 			if current_value ~= previous_value then
 				managers.menu_component:post_event(PostGameBreakdownGui.ONE_POINT_SOUND_EFFECT)
@@ -866,21 +769,23 @@ function PostGameBreakdownGui:_animate_xp_breakdown()
 			previous_level = current_level
 		end
 
-		wait(0.1)
+		wait(0.2)
 
 		current_total = current_total + xp_breakdown.multiplicative[i].amount * total_base
 		current_index = current_index + 1
 	end
 
+	wait(0.3)
 	self._stats_breakdown:fade_in()
+	self._skills_breakdown:progress_skills(skills_xp)
 
-	if managers.network:session():amount_of_players() > 1 and game_state_machine:current_state():is_success() and SystemInfo:platform() ~= Idstring("XB1") and SystemInfo:platform() ~= Idstring("X360") then
+	if managers.network:session():amount_of_players() > 1 and game_state_machine:current_state():is_success() and not IS_XB1 then
 		wait(1.5)
 		self._top_stats_small_panel:get_engine_panel():animate(callback(self, self, "_fade_in_label"), 0.2)
 	end
 end
 
--- Lines 775-793
+-- Lines 823-841
 function PostGameBreakdownGui:_fade_in_label(text, duration, delay)
 	local anim_duration = duration or 0.15
 	local t = text:alpha() * anim_duration
@@ -900,10 +805,10 @@ function PostGameBreakdownGui:_fade_in_label(text, duration, delay)
 	text:set_alpha(1)
 end
 
--- Lines 795-821
+-- Lines 845-871
 function PostGameBreakdownGui:_animate_giving_xp(panel, xp_earned)
 	local points_given = 0
-	local mid_speed = 30
+	local mid_speed = 10
 	local in_duration = 3
 	local out_duration = 2
 	local t = 0
@@ -926,17 +831,17 @@ function PostGameBreakdownGui:_animate_giving_xp(panel, xp_earned)
 	end
 end
 
--- Lines 823-825
+-- Lines 874-876
 function PostGameBreakdownGui:confirm_pressed()
 	self:_continue_button_on_click()
 end
 
--- Lines 827-829
+-- Lines 879-881
 function PostGameBreakdownGui:on_escape()
 	return true
 end
 
--- Lines 831-846
+-- Lines 884-899
 function PostGameBreakdownGui:bind_controller_inputs()
 	local bindings = {
 		{

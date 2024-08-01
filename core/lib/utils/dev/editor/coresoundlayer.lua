@@ -225,9 +225,12 @@ function SoundLayer:update(t, dt)
 	end
 end
 
--- Lines 173-245
+-- Lines 173-249
 function SoundLayer:build_panel(notebook)
-	SoundLayer.super.build_panel(self, notebook)
+	SoundLayer.super.build_panel(self, notebook, {
+		units_noteboook_proportion = 0,
+		units_notebook_min_size = Vector3(-1, 160, 0)
+	})
 
 	self._sound_panel = EWS:Panel(self._ews_panel, "", "TAB_TRAVERSAL")
 	self._sound_sizer = EWS:BoxSizer("VERTICAL")
@@ -259,6 +262,8 @@ function SoundLayer:build_panel(notebook)
 	local emitter_paths = managers.sound_environment:emitter_paths()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
 		name = "Categories",
+		sizer_proportions = 1,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = self._sound_emitter_sizer,
 		options = #emitter_paths > 0 and emitter_paths or {
@@ -271,8 +276,10 @@ function SoundLayer:build_panel(notebook)
 	})
 	self._emitter_path_combobox = combobox_params
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		sorted = true,
 		name = "Events",
+		sizer_proportions = 1,
+		ctrlr_proportions = 3,
+		sorted = true,
 		panel = self._sound_panel,
 		sizer = self._sound_emitter_sizer,
 		options = default_emitter_path and managers.sound_environment:emitter_events(default_emitter_path) or {
@@ -299,7 +306,7 @@ function SoundLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines 247-313
+-- Lines 251-317
 function SoundLayer:_build_defaults(sizer)
 	self._default_environment = {
 		sizer_proportions = 1,
@@ -367,17 +374,18 @@ function SoundLayer:_build_defaults(sizer)
 	self._ambience_enabled:set_enabled(not no_ambiences_availible)
 end
 
--- Lines 315-419
+-- Lines 319-424
 function SoundLayer:_build_environment()
 	local sound_environment_sizer = EWS:StaticBoxSizer(self._sound_panel, "VERTICAL", "Sound Environment")
 	self._priority_params = {
 		name_proportions = 1,
 		name = "Priority:",
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		value = 9,
 		tooltip = "DISABLED",
 		min = 1,
 		floats = 0,
+		sizer_proportions = 1,
 		max = 9,
 		panel = self._sound_panel,
 		sizer = sound_environment_sizer
@@ -391,7 +399,7 @@ function SoundLayer:_build_environment()
 	self._effect_params = {
 		sizer_proportions = 1,
 		name = "Effect:",
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Select an environment effect from the combobox",
 		sorted = true,
@@ -408,14 +416,14 @@ function SoundLayer:_build_environment()
 
 	self._use_environment:set_value(true)
 	self._use_environment:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_use_environment"), nil)
-	environment_sizer:add(self._use_environment, 0, 0, "EXPAND")
+	environment_sizer:add(self._use_environment, 0, 2, "EXPAND,LEFT")
 	sound_environment_sizer:add(environment_sizer, 1, 0, "EXPAND")
 
 	local ambience_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._ambience_params = {
 		sizer_proportions = 1,
 		name = "Ambience:",
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Select an ambience from the combobox",
 		sorted = true,
@@ -432,14 +440,14 @@ function SoundLayer:_build_environment()
 
 	self._use_ambience:set_value(true)
 	self._use_ambience:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_use_ambience"), nil)
-	ambience_sizer:add(self._use_ambience, 0, 0, "EXPAND")
+	ambience_sizer:add(self._use_ambience, 0, 2, "EXPAND,LEFT")
 	sound_environment_sizer:add(ambience_sizer, 1, 0, "EXPAND")
 
 	local occasional_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._occasional_params = {
 		sizer_proportions = 1,
 		name = "Occasional:",
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Select an occasional from the combobox",
 		sorted = true,
@@ -456,7 +464,7 @@ function SoundLayer:_build_environment()
 
 	self._use_occasional:set_value(true)
 	self._use_occasional:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_use_occasional"), nil)
-	occasional_sizer:add(self._use_occasional, 0, 0, "EXPAND")
+	occasional_sizer:add(self._use_occasional, 0, 2, "EXPAND,LEFT")
 	sound_environment_sizer:add(occasional_sizer, 1, 0, "EXPAND")
 
 	self._sound_environment_sizer = sound_environment_sizer
@@ -464,37 +472,37 @@ function SoundLayer:_build_environment()
 	self._sound_sizer:add(sound_environment_sizer, 0, 0, "EXPAND")
 end
 
--- Lines 421-423
+-- Lines 426-428
 function SoundLayer:toggle_show_sound(show_sound)
 	Application:console_command("set show_sound " .. tostring(show_sound:get_value()))
 end
 
--- Lines 425-427
+-- Lines 430-432
 function SoundLayer:toggle_sound_always_on(sound_always_on)
 	managers.editor:set_listener_always_enabled(sound_always_on:get_value())
 end
 
--- Lines 429-432
+-- Lines 434-437
 function SoundLayer:select_default_ambience()
 	managers.sound_environment:set_default_ambience(self._default_ambience.value)
 end
 
--- Lines 434-437
+-- Lines 439-442
 function SoundLayer:select_default_occasional()
 	managers.sound_environment:set_default_occasional(self._default_occasional.value)
 end
 
--- Lines 439-441
+-- Lines 444-446
 function SoundLayer:set_ambience_enabled(ambience_enabled)
 	managers.sound_environment:set_ambience_enabled(ambience_enabled:get_value())
 end
 
--- Lines 448-451
+-- Lines 453-456
 function SoundLayer:select_default_sound_environment(environments)
 	managers.sound_environment:set_default_environment(self._default_environment.value)
 end
 
--- Lines 454-459
+-- Lines 459-464
 function SoundLayer:select_emitter_path(path)
 	local emitter = self._selected_unit:sound_data().emitter
 
@@ -503,66 +511,66 @@ function SoundLayer:select_emitter_path(path)
 	CoreEws.change_combobox_value(self._emitter_events_combobox, emitter:emitter_event())
 end
 
--- Lines 462-464
+-- Lines 467-469
 function SoundLayer:set_sound_emitter_events(path)
 	CoreEws.update_combobox_options(self._emitter_events_combobox, managers.sound_environment:emitter_events(path))
 end
 
--- Lines 467-470
+-- Lines 472-475
 function SoundLayer:select_emitter_event(value)
 	local emitter = self._selected_unit:sound_data().emitter
 
 	emitter:set_emitter_event(value)
 end
 
--- Lines 472-475
+-- Lines 477-480
 function SoundLayer:set_environment_priority()
 	local area = self._selected_unit:sound_data().environment_area
 end
 
--- Lines 477-480
+-- Lines 482-485
 function SoundLayer:select_sound_environment()
 	local area = self._selected_unit:sound_data().environment_area
 
 	area:set_environment(self._effect_params.value)
 end
 
--- Lines 482-485
+-- Lines 487-490
 function SoundLayer:toggle_use_environment()
 	local area = self._selected_unit:sound_data().environment_area
 
 	area:set_use_environment(self._use_environment:get_value())
 end
 
--- Lines 487-490
+-- Lines 492-495
 function SoundLayer:select_environment_ambience()
 	local area = self._selected_unit:sound_data().environment_area
 
 	area:set_environment_ambience(self._ambience_params.value)
 end
 
--- Lines 492-495
+-- Lines 497-500
 function SoundLayer:toggle_use_ambience()
 	local area = self._selected_unit:sound_data().environment_area
 
 	area:set_use_ambience(self._use_ambience:get_value())
 end
 
--- Lines 497-500
+-- Lines 502-505
 function SoundLayer:select_environment_occasional()
 	local area = self._selected_unit:sound_data().environment_area
 
 	area:set_environment_occasional(self._occasional_params.value)
 end
 
--- Lines 502-505
+-- Lines 507-510
 function SoundLayer:toggle_use_occasional()
 	local area = self._selected_unit:sound_data().environment_area
 
 	area:set_use_occasional(self._use_occasional:get_value())
 end
 
--- Lines 507-513
+-- Lines 512-518
 function SoundLayer:on_restart_emitters()
 	for _, unit in ipairs(self._created_units) do
 		if unit:name() == Idstring(self._emitter_unit) or unit:name() == Idstring(self._area_emitter_unit) then
@@ -571,7 +579,7 @@ function SoundLayer:on_restart_emitters()
 	end
 end
 
--- Lines 515-536
+-- Lines 520-541
 function SoundLayer:clear()
 	managers.sound_environment:set_to_default()
 	CoreEws.change_combobox_value(self._default_environment, managers.sound_environment:game_default_environment())
@@ -597,7 +605,7 @@ function SoundLayer:clear()
 	self:set_sound_environment_parameters()
 end
 
--- Lines 538-568
+-- Lines 543-573
 function SoundLayer:do_spawn_unit(...)
 	local unit = SoundLayer.super.do_spawn_unit(self, ...)
 
@@ -640,7 +648,7 @@ function SoundLayer:do_spawn_unit(...)
 	return unit
 end
 
--- Lines 570-575
+-- Lines 575-580
 function SoundLayer:select_unit_ray_authorised(ray)
 	local unit = ray and ray.unit
 
@@ -649,7 +657,7 @@ function SoundLayer:select_unit_ray_authorised(ray)
 	end
 end
 
--- Lines 577-593
+-- Lines 582-598
 function SoundLayer:clone_edited_values(unit, source)
 	SoundLayer.super.clone_edited_values(self, unit, source)
 
@@ -672,7 +680,7 @@ function SoundLayer:clone_edited_values(unit, source)
 	end
 end
 
--- Lines 595-613
+-- Lines 600-618
 function SoundLayer:delete_unit(unit)
 	if unit:name() == Idstring(self._environment_unit) then
 		managers.sound_environment:remove_area(unit:sound_data().environment_area)
@@ -698,7 +706,7 @@ function SoundLayer:delete_unit(unit)
 	SoundLayer.super.delete_unit(self, unit)
 end
 
--- Lines 615-622
+-- Lines 620-627
 function SoundLayer:update_unit_settings()
 	SoundLayer.super.update_unit_settings(self)
 
@@ -710,7 +718,7 @@ function SoundLayer:update_unit_settings()
 	self:set_sound_environment_parameters()
 end
 
--- Lines 624-657
+-- Lines 629-662
 function SoundLayer:set_sound_environment_parameters()
 	self._priority_params.number_ctrlr:set_enabled(false)
 	self._effect_params.ctrlr:set_enabled(false)
@@ -746,7 +754,7 @@ function SoundLayer:set_sound_environment_parameters()
 	self._sound_panel:layout()
 end
 
--- Lines 659-683
+-- Lines 664-688
 function SoundLayer:set_sound_emitter_parameters()
 	self._emitter_path_combobox.ctrlr:set_enabled(false)
 	self._emitter_path_combobox.toolbar:set_enabled(false)
@@ -777,14 +785,14 @@ function SoundLayer:set_sound_emitter_parameters()
 	end
 end
 
--- Lines 685-689
+-- Lines 690-694
 function SoundLayer:activate()
 	SoundLayer.super.activate(self)
 	managers.editor:set_listener_enabled(true)
 	managers.editor:set_wanted_mute(false)
 end
 
--- Lines 691-697
+-- Lines 696-702
 function SoundLayer:deactivate(params)
 	managers.editor:set_listener_enabled(false)
 	SoundLayer.super.deactivate(self)
@@ -794,17 +802,17 @@ function SoundLayer:deactivate(params)
 	end
 end
 
--- Lines 699-702
+-- Lines 704-707
 function SoundLayer:add_triggers()
 	SoundLayer.super.add_triggers(self)
 end
 
--- Lines 704-706
+-- Lines 709-711
 function SoundLayer:get_layer_name()
 	return "Sound"
 end
 
--- Lines 708-717
+-- Lines 713-722
 function SoundLayer:set_unit_name(units)
 	SoundLayer.super.set_unit_name(self, units)
 

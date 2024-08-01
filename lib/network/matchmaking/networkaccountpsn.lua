@@ -47,7 +47,7 @@ function NetworkAccountPSN:username_id()
 	if online_name then
 		return online_name
 	else
-		local local_user_info_name = PS3:get_userinfo()
+		local local_user_info_name = PS4:get_userinfo()
 
 		if local_user_info_name then
 			return local_user_info_name
@@ -130,7 +130,7 @@ function NetworkAccountPSN:_clbk_inventory_load(error, list)
 	})
 end
 
--- Lines 166-204
+-- Lines 168-211
 function NetworkAccountPSN:_verify_filter_cards(card_list)
 	Application:trace("[NetworkAccountPSN:_verify_filter_cards] card_list: ", inspect(card_list))
 
@@ -142,17 +142,22 @@ function NetworkAccountPSN:_verify_filter_cards(card_list)
 
 	local filtered_list = {}
 
-	for _, card_data in pairs(card_list) do
-		if card_data.category == "challenge_card" then
-			local challenge_card_data = managers.challenge_cards:get_challenge_card_data(card_data.entry)
+	if card_list then
+		for _, cc_steamdata in pairs(card_list) do
+			if cc_steamdata.category == ChallengeCardsManager.INV_CAT_CHALCARD then
+				local cc_tweakdata = managers.challenge_cards:get_challenge_card_data(cc_steamdata.entry)
 
-			if challenge_card_data then
-				if not filtered_list[challenge_card_data.key_name] then
-					filtered_list[challenge_card_data.key_name] = challenge_card_data
-					filtered_list[challenge_card_data.key_name].steam_instance_ids = {}
+				if cc_tweakdata then
+					if not filtered_list[cc_tweakdata.key_name] then
+						filtered_list[cc_tweakdata.key_name] = cc_tweakdata
+						filtered_list[cc_tweakdata.key_name].steam_instances = {}
+					end
+
+					local instance_id = cc_steamdata.instance_id or #filtered_list[cc_tweakdata.key_name].steam_instances
+					filtered_list[cc_tweakdata.key_name].steam_instances[tostring(instance_id)] = {
+						stack_amount = cc_steamdata.amount or 1
+					}
 				end
-
-				table.insert(filtered_list[challenge_card_data.key_name].steam_instance_ids, card_data.instance_id or "1")
 			end
 		end
 	end
@@ -164,7 +169,7 @@ function NetworkAccountPSN:_verify_filter_cards(card_list)
 	return result
 end
 
--- Lines 206-227
+-- Lines 213-234
 function NetworkAccountPSN:inventory_remove(item_def_id)
 	local card_data = managers.challenge_cards:get_challenge_card_data(item_def_id)
 
@@ -187,7 +192,7 @@ function NetworkAccountPSN:inventory_remove(item_def_id)
 	end
 end
 
--- Lines 229-267
+-- Lines 236-274
 function NetworkAccountPSN:inventory_reward(key_name_id, callback_ref)
 	local cardsAwarded = {}
 	local bundleData = managers.challenge_cards:get_card_bundle_def(key_name_id)

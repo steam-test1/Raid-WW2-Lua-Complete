@@ -1,24 +1,26 @@
 PlayerTurret = PlayerTurret or class(PlayerStandard)
+PlayerTurret.IDS_FPS_VIEW = Idstring("first_person_view")
 
--- Lines 5-7
+-- Lines 6-8
 function PlayerTurret:init(unit)
 	PlayerTurret.super.init(self, unit)
 end
 
--- Lines 11-68
+-- Lines 12-71
 function PlayerTurret:enter(state_data, enter_data)
 	PlayerTurret.super.enter(self, state_data, enter_data)
 
-	self._weapon_index = managers.player:get_current_state()._unit:inventory()._selected_primary
+	self._weapon_index = self._ext_inventory:equipped_selection()
 
-	managers.player:get_current_state()._unit:inventory():equip_selection(4, true)
+	self._ext_inventory:equip_selection(PlayerInventory.SLOT_4, true)
 
 	self._turret_unit = managers.player:get_turret_unit()
 	self._turret_weapon = self._turret_unit:weapon()
+	self._fps_obj = self._turret_unit:get_object(PlayerTurret.IDS_FPS_VIEW)
 	self._turret_overheated = false
 	self._turret_weapon._mode = "player"
 	local turret_weapon_name = self._turret_weapon:get_name_id()
-	self._state_data.in_steelsight = tweak_data.weapon[turret_weapon_name].use_dof or nil
+	self._use_dof = tweak_data.weapon[turret_weapon_name].use_dof or false
 	self._exit_turret_timer = tweak_data.weapon[turret_weapon_name].exit_turret_speed or 1
 	self._camera_limit_h = tweak_data.weapon[turret_weapon_name].camera_limit_horizontal or 45
 	self._camera_limit_v = tweak_data.weapon[turret_weapon_name].camera_limit_vertical or 30
@@ -30,6 +32,7 @@ function PlayerTurret:enter(state_data, enter_data)
 	end
 
 	self._shaker_multiplier = tweak_data.weapon[turret_weapon_name].shaker_multiplier or 0.5
+	self._damage_multiplier = managers.player:upgrade_value("player", "gunner_turret_damage_multiplier", 0) - 1
 
 	self:_init_locators()
 	self._turret_unit:interaction():set_active(false, true)
@@ -37,33 +40,36 @@ function PlayerTurret:enter(state_data, enter_data)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_activate", self._turret_unit)
 	managers.hud:show_turret_hud(self._turret_unit, tweak_data.weapon[turret_weapon_name].bullet_type)
 	managers.hud:set_player_turret_overheating(self._turret_weapon:is_overheating())
+	self._ext_camera:set_shaker_parameter("breathing", "amplitude", 0)
 
 	self._turret_sync_dt = 0
 
 	self._turret_weapon:on_player_enter()
 	self._turret_weapon:set_weapon_user(self._unit)
 	self:_husk_turret_data()
-
-	self._announce_shooting = false
-	local result = self._unit:sound_source():post_event("turret_connect")
-
-	self._turret_unit:link(Idstring("first_person_view"), self._unit)
+	self._unit:sound_source():post_event("turret_connect")
+	self._turret_unit:link(PlayerTurret.IDS_FPS_VIEW, self._unit)
 	self:_hide_hud_prompts()
 end
 
--- Lines 72-79
+-- Lines 75-82
 function PlayerTurret:_enter(enter_data)
 	if self._unit and self._unit:base().is_local_player then
 		self._unit_deploy_position = self._unit:position()
 	end
 end
 
--- Lines 82-84
+-- Lines 85-87
 function PlayerTurret:get_camera_speed_limit()
 	return self._camera_speed_limit
 end
 
--- Lines 88-107
+-- Lines 90-92
+function PlayerTurret:get_current_heat()
+	return self._turret_weapon:get_current_heat()
+end
+
+-- Lines 96-115
 function PlayerTurret:_init_locators()
 	self._turret_unit = managers.player:get_turret_unit()
 
@@ -73,17 +79,17 @@ function PlayerTurret:_init_locators()
 		return
 	end
 
-	self._unit:camera():play_redirect(Idstring("unequip"), 5, 60)
-	self._unit:inventory():hide_equipped_unit()
+	self._ext_camera:play_redirect(self.IDS_UNEQUIP, 5, 60)
+	self._ext_inventory:hide_equipped_unit()
 	self._unit:kill_mover()
 	self:_postion_player()
-	self._unit:camera():camera_unit():base():set_pitch(self._camera_limit_v_mid)
-	self._unit:camera():camera_unit():base():set_limits(self._camera_limit_h, self._camera_limit_v, nil, self._camera_limit_v_mid)
+	self._camera_unit:base():set_pitch(self._camera_limit_v_mid)
+	self._camera_unit:base():set_limits(self._camera_limit_h, self._camera_limit_v, nil, self._camera_limit_v_mid)
 end
 
--- Lines 112-123
+-- Lines 119-130
 function PlayerTurret:_hide_hud_prompts()
-	local player_equipped_unit_base = managers.player:local_player():inventory():equipped_unit():base()
+	local player_equipped_unit_base = self._ext_inventory:equipped_unit():base()
 
 	if player_equipped_unit_base.out_of_ammo and player_equipped_unit_base:out_of_ammo() then
 		self._out_of_ammo_prompt_hidden = true
@@ -95,7 +101,7 @@ function PlayerTurret:_hide_hud_prompts()
 	managers.hud:hide_prompt("hud_no_ammo_prompt")
 end
 
--- Lines 126-134
+-- Lines 133-141
 function PlayerTurret:_show_hud_prompts()
 	if self._out_of_ammo_prompt_hidden then
 		managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
@@ -110,7 +116,7 @@ function PlayerTurret:_show_hud_prompts()
 	end
 end
 
--- Lines 138-201
+-- Lines 145-224
 function PlayerTurret:exit(state_data, new_state_name)
 	PlayerTurret.super.exit(self, state_data or self._state_data, new_state_name)
 
@@ -118,27 +124,38 @@ function PlayerTurret:exit(state_data, new_state_name)
 		managers.network:session():send_to_peers_synched("sync_ground_turret_stop_autofire", self._turret_unit)
 	end
 
-	local player_head_rotation = self._unit:movement():m_head_rot()
+	local player_head_rotation = self._ext_movement:m_head_rot()
 
 	self._turret_weapon:on_player_exit()
 
 	self._state_data.in_steelsight = nil
+	self._steelsight_wanted = false
 
 	self:_interupt_action_exit_turret()
 
 	self._firing = false
 
-	self._unit:camera():camera_unit():base():remove_limits()
-	self._unit:camera():camera_unit():base():set_pitch(0)
+	self._camera_unit:base():remove_limits()
+	self._camera_unit:base():set_pitch(0)
 	self._unit:unlink()
-	self._unit:inventory():show_equipped_unit()
-	self._unit:camera():play_redirect(self.IDS_EQUIP)
+	self._ext_inventory:show_equipped_unit()
+	self:_start_action_equip()
 
 	if self._player_original_position then
 		self._unit:warp_to(self._unit:rotation(), self._unit:position() - self._player_original_position)
 	end
 
-	self:_activate_mover(Idstring("stand"))
+	if self._announce_shooting then
+		self:_announce_cooldown()
+	end
+
+	local exit_data = {
+		skip_equip = true,
+		ducking = false,
+		equip_weapon_expire_t = self._equip_weapon_expire_t
+	}
+
+	self:_activate_mover(PlayerStandard.MOVER_STAND)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_rot", self._turret_unit:weapon()._player_rotation, self._turret_unit)
 	self._turret_weapon:deactivate()
 	self._turret_weapon:set_weapon_user(nil)
@@ -152,16 +169,19 @@ function PlayerTurret:exit(state_data, new_state_name)
 	})
 	self._turret_weapon:enable_automatic_SO(true)
 	self:_show_hud_prompts()
-	managers.player:get_current_state()._unit:inventory():equip_selection(self._weapon_index, true)
+	self._ext_inventory:equip_selection(self._weapon_index, true)
 
+	self._equip_weapon_expire_t = nil
 	local weap_base = self._equipped_unit:base()
 
 	if weap_base._name_id == "dp28" then
 		weap_base:set_magazine_pos_based_on_ammo()
 	end
+
+	return exit_data
 end
 
--- Lines 205-216
+-- Lines 228-239
 function PlayerTurret:_husk_turret_data()
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local husk_pos = self._turret_weapon._locator_tpp:position()
@@ -181,7 +201,7 @@ function PlayerTurret:_husk_turret_data()
 	managers.network:session():send_to_peers_synched("sync_ground_turret_husk", husk_pos, turret_rot, enter_animation, exit_animation, self._turret_unit)
 end
 
--- Lines 220-258
+-- Lines 243-291
 function PlayerTurret:update(t, dt)
 	PlayerTurret.super.update(self, t, dt)
 
@@ -193,8 +213,19 @@ function PlayerTurret:update(t, dt)
 	self:_update_action_timers(t, dt)
 	self._turret_weapon:set_turret_rot(dt)
 
-	local body_pos = Vector3(self._m_pos.x, self._m_pos.y, self._m_pos.z)
-	local player_head_rotation = self._unit:movement():m_head_rot()
+	local base = self._turret_unit:weapon()
+
+	if base then
+		local fire_from_pos, fire_from_dir = base:get_fire_tp_pos_dir()
+
+		if fire_from_pos and fire_from_dir then
+			managers.hud:update_turret_reticle(fire_from_pos + fire_from_dir * 42069)
+		else
+			managers.hud:update_turret_reticle(nil)
+		end
+	end
+
+	local player_head_rotation = self._ext_movement:m_head_rot()
 
 	if self._turret_sync_dt > 1 then
 		managers.network:session():send_to_peers_synched("sync_ground_turret_rot", player_head_rotation, self._turret_unit)
@@ -209,30 +240,32 @@ function PlayerTurret:update(t, dt)
 
 		if self._turret_overheated == true then
 			managers.hud:player_turret_overheat(self._turret_unit)
+			self:_announce_cooldown()
 		else
 			managers.hud:player_turret_cooldown()
 		end
 	end
 
-	managers.hud:update_heat_indicator(self._turret_weapon:get_current_heat())
+	managers.hud:update_heat_indicator(self:get_current_heat())
 end
 
--- Lines 264-265
+-- Lines 297-298
 function PlayerTurret:set_tweak_data(name)
 end
 
--- Lines 272-295
+-- Lines 305-330
 function PlayerTurret:_update_check_actions(t, dt)
 	local input = self:_get_input()
 
 	self:_check_stats_screen(t, dt, input)
+	self:_check_action_steelsight(t, input)
 	self:_check_action_primary_attack(t, input)
 	self:_check_action_exit_turret(t, input)
+	self:_check_action_warcry(t, input)
 	self:_update_foley(t, input)
-	self:_check_warcry(t, input)
 end
 
--- Lines 297-305
+-- Lines 332-340
 function PlayerTurret:_check_action_exit_turret(t, input)
 	if input.btn_interact_press then
 		self:_start_action_exit_turret(t)
@@ -243,12 +276,12 @@ function PlayerTurret:_check_action_exit_turret(t, input)
 	end
 end
 
--- Lines 307-318
+-- Lines 342-353
 function PlayerTurret:_start_action_exit_turret(t)
 	self:_end_action_exit_turret()
 end
 
--- Lines 320-326
+-- Lines 355-361
 function PlayerTurret:_interupt_action_exit_turret()
 	if self._exit_turret_expire_t then
 		self._exit_turret_expire_t = nil
@@ -258,7 +291,7 @@ function PlayerTurret:_interupt_action_exit_turret()
 	end
 end
 
--- Lines 328-336
+-- Lines 363-371
 function PlayerTurret:_update_action_timers(t, dt)
 	if self._exit_turret_expire_t then
 		managers.hud:set_progress_timer_bar_width(self._exit_turret_timer - (self._exit_turret_expire_t - t), self._exit_turret_timer)
@@ -271,23 +304,23 @@ function PlayerTurret:_update_action_timers(t, dt)
 	end
 end
 
--- Lines 339-351
+-- Lines 374-386
 function PlayerTurret:_end_action_exit_turret()
 	if self._turret_weapon._moving then
 		self._turret_weapon:stop_moving_sound()
 	end
 
-	self._unit:camera():play_redirect(self.IDS_IDLE)
+	self._ext_camera:play_redirect(self.IDS_IDLE)
 	managers.player:leave_turret()
 	managers.player:set_player_state("standard")
 end
 
--- Lines 354-356
+-- Lines 389-391
 function PlayerTurret:interaction_blocked()
 	return true
 end
 
--- Lines 358-372
+-- Lines 393-407
 function PlayerTurret:_announce_cooldown()
 	self._announce_shooting_clbk_id = "announce_shooting_" .. tostring(managers.network:session():local_peer()._id)
 	local weapon_name = self._turret_weapon:get_name_id()
@@ -302,12 +335,24 @@ function PlayerTurret:_announce_cooldown()
 	managers.queued_tasks:queue(self._announce_shooting_clbk_id, self._enable_announcing, self, nil, final_cooldown)
 end
 
--- Lines 374-377
+-- Lines 409-416
+function PlayerTurret:_play_announce_shooting()
+	if self._firing then
+		managers.dialog:queue_dialog("player_shooting_turret", {
+			skip_idle_check = true,
+			instigator = self._unit
+		})
+	else
+		self._announce_shooting = false
+	end
+end
+
+-- Lines 418-421
 function PlayerTurret:_enable_announcing()
 	self._announce_shooting = false
 end
 
--- Lines 379-422
+-- Lines 423-466
 function PlayerTurret:_check_action_primary_attack(t, input)
 	if not self._turret_weapon then
 		return
@@ -326,10 +371,11 @@ function PlayerTurret:_check_action_primary_attack(t, input)
 			self._firing = true
 
 			if not self._announce_shooting then
-				local result = self._unit:sound_source():post_event("player_shooting_turret")
-				self._announce_shooting = true
+				self._announce_shooting_clbk_id = "announce_shooting_" .. tostring(managers.network:session():local_peer():id())
 
-				self:_announce_cooldown()
+				managers.queued_tasks:queue(self._announce_shooting_clbk_id, self._play_announce_shooting, self, nil, 0)
+
+				self._announce_shooting = true
 			end
 
 			managers.network:session():send_to_peers_synched("sync_ground_turret_start_autofire", self._turret_unit)
@@ -344,11 +390,12 @@ function PlayerTurret:_check_action_primary_attack(t, input)
 		end
 
 		if self._firing then
-			local fired = self._turret_weapon:trigger_held(false, false, false, nil, 1)
+			local damage_multiplier = 1 + self:get_current_heat() * self._damage_multiplier
+			local fired = self._turret_weapon:trigger_held(false, false, false, nil, damage_multiplier)
 
 			if fired then
-				self._unit:camera():play_shaker("fire_weapon_rot", 1 * self._shaker_multiplier)
-				self._unit:camera():play_shaker("fire_weapon_kick", 1 * self._shaker_multiplier, 1, 0.15)
+				self._ext_camera:play_shaker("fire_weapon_rot", 1 * self._shaker_multiplier)
+				self._ext_camera:play_shaker("fire_weapon_kick", 1 * self._shaker_multiplier, 1, 0.15)
 			end
 
 			managers.network:session():send_to_peers_synched("sync_ground_turret_trigger_held", self._turret_unit, false, false, false, nil, 0)
@@ -356,7 +403,7 @@ function PlayerTurret:_check_action_primary_attack(t, input)
 	end
 end
 
--- Lines 424-438
+-- Lines 468-482
 function PlayerTurret:_check_stop_shooting()
 	if self._shooting then
 		self._equipped_unit:base():stop_shooting()
@@ -366,42 +413,53 @@ function PlayerTurret:_check_stop_shooting()
 		local fire_mode = weap_base:fire_mode()
 
 		if fire_mode == "auto" and not self:_is_reloading() and not self:_is_meleeing() then
-			self._unit:camera():play_redirect(self.IDS_RECOIL_EXIT)
+			self._ext_camera:play_redirect(self.IDS_RECOIL_EXIT)
 		end
 
 		self._shooting = false
 	end
 end
 
--- Lines 441-442
+-- Lines 485-486
 function PlayerTurret:_check_step(t)
 end
 
--- Lines 444-445
+-- Lines 488-489
 function PlayerTurret:_check_action_reload(t, input)
 end
 
--- Lines 447-448
+-- Lines 491-492
 function PlayerTurret:_check_action_run(...)
 end
 
--- Lines 450-451
+-- Lines 494-495
 function PlayerTurret:_check_use_item(t, input)
 end
 
--- Lines 455-471
-function PlayerTurret:_check_change_weapon(t, input)
+-- Lines 498-528
+function PlayerTurret:_check_action_steelsight(t, input)
 	local new_action = nil
-	local action_wanted = input.btn_switch_weapon_press
+	local action_forbidden = self:_is_comm_wheel_active()
 
-	if action_wanted then
-		local action_forbidden = self:_changing_weapon()
-		action_forbidden = action_forbidden or self._use_item_expire_t or self._change_item_expire_t
-		action_forbidden = action_forbidden or self._unit:inventory():num_selections() == 1
+	if not alive(self._equipped_unit) or action_forbidden then
+		return new_action
+	end
 
-		if not action_forbidden then
-			self:exit(nil, "standard")
-			managers.player:set_player_state("standard")
+	if managers.user:get_setting("hold_to_steelsight") and input.btn_steelsight_release then
+		self._steelsight_wanted = false
+
+		if self._state_data.in_steelsight then
+			self:_end_action_steelsight(t)
+
+			new_action = true
+		end
+	elseif input.btn_steelsight_press or self._steelsight_wanted then
+		if self._state_data.in_steelsight then
+			self:_end_action_steelsight(t)
+
+			new_action = true
+		else
+			self:_start_action_steelsight(t)
 
 			new_action = true
 		end
@@ -410,109 +468,82 @@ function PlayerTurret:_check_change_weapon(t, input)
 	return new_action
 end
 
--- Lines 473-493
-function PlayerTurret:_check_action_equip(t, input)
-	local new_action = nil
-	local selection_wanted = input.btn_primary_choice
+-- Lines 532-543
+function PlayerTurret:get_zoom_fov(stance_data)
+	local fov = stance_data and stance_data.FOV or 75
+	local fov_multiplier = managers.user:get_setting("fov_multiplier")
 
-	if selection_wanted then
-		local action_forbidden = self:chk_action_forbidden("equip")
-		action_forbidden = action_forbidden or not self._ext_inventory:is_selection_available(selection_wanted) or self._use_item_expire_t or self:_changing_weapon()
+	if self._state_data.in_steelsight then
+		local base = self._turret_unit:weapon()
 
-		if not action_forbidden then
-			local new_action = not self._ext_inventory:is_equipped(selection_wanted)
-
-			if new_action then
-				self:exit(nil, "standard")
-				managers.player:set_player_state("standard")
-			end
+		if base.zoom then
+			fov = base:zoom() or fov
 		end
+
+		fov_multiplier = 1 + (fov_multiplier - 1) / 2
 	end
 
-	return new_action
+	return fov * fov_multiplier
 end
 
--- Lines 496-517
-function PlayerTurret:_check_action_jump(t, input)
-	local new_action = nil
-	local action_wanted = input.btn_jump_press
-
-	if action_wanted then
-		local action_forbidden = self._jump_t and t < self._jump_t + 0.55
-		action_forbidden = action_forbidden or self._unit:base():stats_screen_visible() or self._state_data.in_air
-
-		if not action_forbidden then
-			local action_start_data = {}
-			local jump_vel_z = self._tweak_data.movement.jump_velocity.z
-			action_start_data.jump_vel_z = jump_vel_z
-
-			self:exit(nil, "standard")
-			managers.player:set_player_state("standard")
-
-			new_action = self:_start_action_jump(t, action_start_data)
-		end
-	end
-
-	return new_action
-end
-
--- Lines 520-521
-function PlayerTurret:_check_action_steelsight(t, input)
-end
-
--- Lines 525-526
+-- Lines 547-548
 function PlayerTurret:_update_movement(t, dt)
 end
 
--- Lines 530-532
+-- Lines 551-553
+function PlayerTurret:_update_fwd_ray()
+	PlayerTurret.super._update_fwd_ray(self, self._use_dof)
+end
+
+-- Lines 558-560
 function PlayerTurret:_get_max_walk_speed(...)
 	return 0
 end
 
--- Lines 534-536
+-- Lines 562-564
 function PlayerTurret:_get_walk_headbob(...)
 	return 0
 end
 
--- Lines 539-555
+-- Lines 567-580
 function PlayerTurret:_postion_player()
 	local rot = self._turret_unit:rotation()
 
 	self._unit:set_rotation(rot)
 
-	local pos = self._turret_unit:get_object(Idstring("first_person_view")):position()
+	local pos = self._fps_obj:position()
 	self._player_original_position = pos - self._unit:position()
 
 	self._unit:set_position(pos)
-	self._unit:camera():set_rotation(rot)
-	self._unit:camera():set_position(pos)
-	self._unit:camera():camera_unit():base():set_spin(rot:y():to_polar().spin)
-	self._unit:camera():camera_unit():base():set_pitch(0)
+	self._ext_camera:set_rotation(rot)
+	self._ext_camera:set_position(pos)
+	self._camera_unit:base():set_spin(rot:y():to_polar().spin)
+	self._camera_unit:base():set_pitch(0)
 end
 
--- Lines 560-571
+-- Lines 585-596
 function PlayerTurret:_reposition_player()
 	if not managers.raid_job:current_level_id() then
 		return
 	end
 
-	local pos = self._turret_unit:get_object(Idstring("first_person_view")):position()
+	local pos = self._fps_obj:position()
 
 	if self._unit:position() ~= pos then
 		self._unit:set_position(pos)
-		self._unit:camera():set_position(pos)
+		self._ext_camera:set_position(pos)
 	end
 end
 
--- Lines 576-578
+-- Lines 601-603
 function PlayerTurret:pre_destroy(unit)
 end
 
--- Lines 582-584
+-- Lines 607-609
 function PlayerTurret:destroy()
 end
 
--- Lines 588-611
+-- Lines 613-636
 function PlayerTurret:_debug_draw_positions()
 	Application:trace([[
 

@@ -668,9 +668,12 @@ end
 
 UnitTreeBrowser = UnitTreeBrowser or class(CoreEditorEwsDialog)
 
--- Lines 603-687
+-- Lines 603-689
 function UnitTreeBrowser:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Browse avalible units", "", Vector3(200, 100, 0), Vector3(400, 900, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "Browse avalible units", "", Vector3(200, 100, 0), Vector3(400, 800, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(350, 500, 0))
 	self:create_panel("VERTICAL")
 
 	self._unit_names = {}
@@ -694,7 +697,7 @@ function UnitTreeBrowser:init(...)
 
 	self:create_image_list()
 	vertical_tree_sizer:add(self._unit_tree, 1, 0, "EXPAND")
-	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 0, "EXPAND")
+	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 5, "EXPAND,ALL")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
 	local expand_all_btn = EWS:Button(self._panel, "Expand All", "", "")
@@ -718,11 +721,11 @@ function UnitTreeBrowser:init(...)
 	self:update_tree()
 	self._unit_tree:connect("EVT_COMMAND_TREE_SEL_CHANGED", callback(self, self, "on_select"), "")
 	self._unit_tree:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:set_visible(true)
 end
 
--- Lines 689-699
+-- Lines 691-701
 function UnitTreeBrowser:create_image_list()
 	self._image_list = EWS:ImageList(16, 16)
 	self._world_icon = self._image_list:add(CoreEWS.image_path("connection_16x16.png"))
@@ -736,13 +739,13 @@ function UnitTreeBrowser:create_image_list()
 	self._unit_tree:set_image_list(self._image_list)
 end
 
--- Lines 701-704
+-- Lines 703-706
 function UnitTreeBrowser:update_tree()
 	self:_create_tree_data()
 	self:_populate_tree()
 end
 
--- Lines 706-770
+-- Lines 708-772
 function UnitTreeBrowser:_create_tree_data()
 	self._tree_data = {
 		total_units = 0,
@@ -803,11 +806,11 @@ function UnitTreeBrowser:_create_tree_data()
 	end
 end
 
--- Lines 772-816
+-- Lines 774-818
 function UnitTreeBrowser:_populate_unit_paths(path, id)
 	local x_unit, y_unit = nil
 
-	-- Lines 774-782
+	-- Lines 776-784
 	local function sort(x, y)
 		x_unit = string.find(x, ".unit", nil, true) and true or false
 		y_unit = string.find(y, ".unit", nil, true) and true or false
@@ -852,7 +855,7 @@ function UnitTreeBrowser:_populate_unit_paths(path, id)
 	return size
 end
 
--- Lines 818-884
+-- Lines 820-886
 function UnitTreeBrowser:_populate_tree()
 	self._unit_tree:freeze()
 	self._unit_tree:clear()
@@ -884,7 +887,7 @@ function UnitTreeBrowser:_populate_tree()
 	self._unit_tree:thaw()
 end
 
--- Lines 886-893
+-- Lines 888-895
 function UnitTreeBrowser:sorted_map(map)
 	local sorted = {}
 
@@ -897,7 +900,7 @@ function UnitTreeBrowser:sorted_map(map)
 	return sorted
 end
 
--- Lines 895-911
+-- Lines 897-913
 function UnitTreeBrowser:on_select(a, event)
 	local id = event:get_item()
 
@@ -909,7 +912,7 @@ function UnitTreeBrowser:on_select(a, event)
 	end
 end
 
--- Lines 913-918
+-- Lines 915-920
 function UnitTreeBrowser:has_preview(name)
 	if DB:has("preview_texture", name) then
 		return managers.database:entry_expanded_path("preview_texture", name)
@@ -918,14 +921,14 @@ function UnitTreeBrowser:has_preview(name)
 	return nil
 end
 
--- Lines 920-925
+-- Lines 922-927
 function UnitTreeBrowser:on_expand_all()
 	self._unit_tree:freeze()
 	self:expand_children(self._unit_tree:get_children(self._root))
 	self._unit_tree:thaw()
 end
 
--- Lines 927-932
+-- Lines 929-934
 function UnitTreeBrowser:expand_children(children)
 	for _, child in ipairs(children) do
 		self:expand_children(self._unit_tree:get_children(child))
@@ -933,14 +936,14 @@ function UnitTreeBrowser:expand_children(children)
 	end
 end
 
--- Lines 934-938
+-- Lines 936-940
 function UnitTreeBrowser:on_collapse_all()
 	self._unit_tree:freeze()
 	self:collapse_children(self._unit_tree:get_children(self._root))
 	self._unit_tree:thaw()
 end
 
--- Lines 940-945
+-- Lines 942-947
 function UnitTreeBrowser:collapse_children(children)
 	for _, child in ipairs(children) do
 		self:collapse_children(self._unit_tree:get_children(child))
@@ -950,9 +953,12 @@ end
 
 GlobalSelectUnit = GlobalSelectUnit or class(CoreEditorEwsDialog)
 
--- Lines 952-1067
+-- Lines 954-1093
 function GlobalSelectUnit:init(...)
-	CoreEditorEwsDialog.init(self, nil, "Global select unit v2", "", Vector3(525, 160, 0), Vector3(560, 680, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER,MINIMIZE_BOX,MAXIMIZE_BOX")
+
+	CoreEditorEwsDialog.init(self, nil, "Global select unit v2", "", Vector3(525, 160, 0), Vector3(560, 660, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(555, 610, 0))
 	self:create_panel("VERTICAL")
 
 	self._preview_unit = nil
@@ -963,23 +969,17 @@ function GlobalSelectUnit:init(...)
 
 	local list_sizer = EWS:BoxSizer("VERTICAL")
 
-	horizontal_ctrlr_sizer:add(list_sizer, 3, 0, "EXPAND")
+	horizontal_ctrlr_sizer:add(list_sizer, 4, 0, "EXPAND")
 
-	local layers_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Type filter")
+	local list_ctrlrs = EWS:BoxSizer("VERTICAL")
 
-	horizontal_ctrlr_sizer:add(layers_sizer, 1, 0, "EXPAND")
+	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 5, "EXPAND,ALIGN_RIGHT,LEFT")
 
-	self._all_names = self:_all_unit_names()
-	self._names_as_ipairs = table.map_keys(self._all_names)
+	local filter_settings_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Filter settings")
 	self._short_name = EWS:CheckBox(self._panel, "Short name", "", "ALIGN_LEFT")
 
 	self._short_name:set_value(true)
-	list_sizer:add(self._short_name, 0, 5, "TOP,LEFT,EXPAND")
-	list_sizer:add(EWS:StaticText(self._panel, "Filter", 0, ""), 0, 0, "ALIGN_CENTER_HORIZONTAL")
-
-	self._filter = EWS:TextCtrl(self._panel, "", "", "TE_CENTRE")
-
-	list_sizer:add(self._filter, 0, 0, "EXPAND")
+	filter_settings_sizer:add(self._short_name, 0, 2, "EXPAND,BOTTOM,LEFT")
 
 	local cb = EWS:CheckBox(self._panel, "Only list used units", "", "ALIGN_LEFT")
 
@@ -988,7 +988,21 @@ function GlobalSelectUnit:init(...)
 		cb = cb
 	})
 	cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	list_sizer:add(cb, 0, 5, "TOP,BOTTOM,LEFT")
+	filter_settings_sizer:add(cb, 0, 2, "EXPAND,BOTTOM,LEFT")
+	list_ctrlrs:add(filter_settings_sizer, 0, 2, "EXPAND,BOTTOM")
+
+	local layers_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Type filter")
+
+	list_ctrlrs:add(layers_sizer, 1, 2, "EXPAND,TOP")
+
+	self._all_names = self:_all_unit_names()
+	self._names_as_ipairs = table.map_keys(self._all_names)
+
+	list_sizer:add(EWS:StaticText(self._panel, "Filter", 0, ""), 0, 0, "ALIGN_CENTER_HORIZONTAL")
+
+	self._filter = EWS:TextCtrl(self._panel, "", "", "TE_CENTRE")
+
+	list_sizer:add(self._filter, 0, 0, "EXPAND")
 
 	self._units = EWS:ListCtrl(self._panel, "", "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING,LC_SINGLE_SEL")
 
@@ -1002,33 +1016,6 @@ function GlobalSelectUnit:init(...)
 	self._short_name:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "update_list"), nil)
 	self._filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_list"), nil)
 	self._filter:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	self._layer_cbs = {}
-	local layers = managers.editor:layers()
-	local names_layers = {}
-
-	for name, layer in pairs(layers) do
-		for _, type in ipairs(layer:unit_types()) do
-			table.insert(names_layers, type)
-		end
-	end
-
-	table.sort(names_layers)
-
-	for _, name in ipairs(names_layers) do
-		local cb = EWS:CheckBox(self._panel, name, "")
-
-		cb:set_value(true)
-
-		self._layer_cbs[name] = cb
-
-		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
-			cb = cb,
-			name = name
-		})
-		cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-		layers_sizer:add(cb, 0, 2, "EXPAND,TOP")
-	end
 
 	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
 	local all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
@@ -1049,6 +1036,47 @@ function GlobalSelectUnit:init(...)
 	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
 	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
+
+	local layers_panel = EWS:ScrolledWindow(self._panel, "", "VSCROLL")
+
+	layers_panel:set_scroll_rate(Vector3(0, 20, 0))
+	layers_panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
+	layers_panel:refresh()
+
+	local layers_panel_sizer = EWS:BoxSizer("VERTICAL")
+
+	layers_panel:set_sizer(layers_panel_sizer)
+
+	self._layer_cbs = {}
+	local layers = managers.editor:layers()
+	local names_layers = {}
+
+	for name, layer in pairs(layers) do
+		for _, type in ipairs(layer:unit_types()) do
+			table.insert(names_layers, type)
+		end
+	end
+
+	table.sort(names_layers)
+
+	for _, name in ipairs(names_layers) do
+		local cb = EWS:CheckBox(layers_panel, name, "")
+
+		cb:set_value(true)
+
+		self._layer_cbs[name] = cb
+
+		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
+			cb = cb,
+			name = name
+		})
+		cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+		layers_panel_sizer:add(cb, 1, 2, "EXPAND,TOP,LEFT")
+	end
+
+	layers_panel:refresh()
+	layers_panel:fit_inside()
+	layers_sizer:add(layers_panel, 2, 0, "EXPAND")
 	self:update_list()
 
 	local btn_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -1063,13 +1091,13 @@ function GlobalSelectUnit:init(...)
 
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	btn_sizer:add(cancel_btn, 0, 5, "RIGHT")
-	self._panel_sizer:add(btn_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	btn_sizer:add(cancel_btn, 0, 0, "")
+	self._panel_sizer:add(btn_sizer, 0, 4, "ALIGN_RIGHT,TOP")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:set_visible(true)
 end
 
--- Lines 1069-1078
+-- Lines 1095-1104
 function GlobalSelectUnit:key_down(ctrlr, event)
 	event:skip()
 
@@ -1081,7 +1109,7 @@ function GlobalSelectUnit:key_down(ctrlr, event)
 	end
 end
 
--- Lines 1080-1088
+-- Lines 1106-1114
 function GlobalSelectUnit:key_up(ctrlr, event)
 	event:skip()
 
@@ -1093,7 +1121,7 @@ function GlobalSelectUnit:key_up(ctrlr, event)
 	end
 end
 
--- Lines 1091-1098
+-- Lines 1117-1124
 function GlobalSelectUnit:_show_unit_preview()
 	if self:_is_unit_being_previewed() then
 		self:_on_unit_preview_update()
@@ -1104,12 +1132,12 @@ function GlobalSelectUnit:_show_unit_preview()
 	self:_on_unit_preview_start(self:_get_selected_unit())
 end
 
--- Lines 1100-1102
+-- Lines 1126-1128
 function GlobalSelectUnit:_on_units_focus_lost(ctrlr, event)
 	self:_on_unit_preview_end()
 end
 
--- Lines 1104-1116
+-- Lines 1130-1142
 function GlobalSelectUnit:_on_unit_preview_start(unit_to_preview)
 	self._preview_unit = unit_to_preview
 	local previewed_unit_height = self:_calculate_bounding_sphere_radius(unit_to_preview)
@@ -1124,7 +1152,7 @@ function GlobalSelectUnit:_on_unit_preview_start(unit_to_preview)
 	self._rotation_point_for_preview = Vector3(unit_to_preview:oobb():center().x, unit_to_preview:oobb():center().y, unit_to_preview:oobb():center().z)
 end
 
--- Lines 1118-1133
+-- Lines 1144-1159
 function GlobalSelectUnit:_on_unit_preview_update()
 	local degrees_per_second = 45
 	local time = Application:time()
@@ -1143,7 +1171,7 @@ function GlobalSelectUnit:_on_unit_preview_update()
 	end
 end
 
--- Lines 1135-1148
+-- Lines 1161-1174
 function GlobalSelectUnit:_on_unit_preview_end()
 	if not self:_is_unit_being_previewed() then
 		return
@@ -1162,12 +1190,12 @@ function GlobalSelectUnit:_on_unit_preview_end()
 	self._last_preview_update_time = nil
 end
 
--- Lines 1150-1152
+-- Lines 1176-1178
 function GlobalSelectUnit:_is_unit_being_previewed()
 	return self._preview_unit
 end
 
--- Lines 1154-1162
+-- Lines 1180-1188
 function GlobalSelectUnit:_get_selected_unit()
 	if self._units:selected_item() == -1 then
 		return
@@ -1179,7 +1207,7 @@ function GlobalSelectUnit:_get_selected_unit()
 	return CoreUnit.safe_spawn_unit(name, Application:last_camera_position() + Application:last_camera_rotation():y(), Rotation(0, 0, 0))
 end
 
--- Lines 1164-1172
+-- Lines 1190-1198
 function GlobalSelectUnit:_setup_preview_camera(previewed_unit_height, desired_distance_to_camera)
 	local one_km = 10000
 	self._old_cam_pos = managers.viewport:get_current_camera():position()
@@ -1191,21 +1219,21 @@ function GlobalSelectUnit:_setup_preview_camera(previewed_unit_height, desired_d
 	managers.viewport:get_current_camera():set_position(self._new_cam_pos)
 end
 
--- Lines 1174-1177
+-- Lines 1200-1203
 function GlobalSelectUnit:_calculate_bounding_sphere_radius(unit)
 	local oobb_diagonal_length = math.sqrt(unit:oobb():size().x * unit:oobb():size().x + unit:oobb():size().y * unit:oobb():size().y + unit:oobb():size().z * unit:oobb():size().z)
 
 	return oobb_diagonal_length * 2
 end
 
--- Lines 1179-1183
+-- Lines 1205-1209
 function GlobalSelectUnit:_rotate_around_point(unit, point_to_rotate_around, axis, dt, speed)
 	unit:set_position(unit:position() - point_to_rotate_around * dt)
 	unit:set_rotation(unit:rotation() * Rotation(axis, speed * dt))
 	unit:set_position(unit:position() + point_to_rotate_around * dt)
 end
 
--- Lines 1185-1190
+-- Lines 1211-1216
 function GlobalSelectUnit:_stripped_unit_name(name)
 	local reverse = string.reverse(name)
 	local i = string.find(reverse, "/")
@@ -1214,7 +1242,7 @@ function GlobalSelectUnit:_stripped_unit_name(name)
 	return name
 end
 
--- Lines 1192-1202
+-- Lines 1218-1228
 function GlobalSelectUnit:_all_unit_names()
 	local names = {}
 	local layers = managers.editor:layers()
@@ -1230,7 +1258,7 @@ function GlobalSelectUnit:_all_unit_names()
 	return names
 end
 
--- Lines 1204-1222
+-- Lines 1230-1248
 function GlobalSelectUnit:_current_unit_names()
 	local layers = managers.editor:layers()
 	local current_names = {}
@@ -1254,14 +1282,14 @@ function GlobalSelectUnit:_current_unit_names()
 	return names
 end
 
--- Lines 1224-1227
+-- Lines 1250-1253
 function GlobalSelectUnit:on_only_list_used_units(data)
 	self._only_list_used_units = data.cb:get_value()
 
 	self:update_list()
 end
 
--- Lines 1229-1235
+-- Lines 1255-1261
 function GlobalSelectUnit:on_reload()
 	local i = self._units:selected_item()
 
@@ -1274,7 +1302,7 @@ function GlobalSelectUnit:on_reload()
 	end
 end
 
--- Lines 1237-1244
+-- Lines 1263-1270
 function GlobalSelectUnit:on_select_unit_dialog(units)
 	Application:trace("GlobalSelectUnit:on_select_unit_dialog( units )")
 
@@ -1287,7 +1315,7 @@ function GlobalSelectUnit:on_select_unit_dialog(units)
 	end
 end
 
--- Lines 1246-1286
+-- Lines 1272-1312
 function GlobalSelectUnit:update_list(current)
 	self._units:freeze()
 
@@ -1331,7 +1359,7 @@ function GlobalSelectUnit:update_list(current)
 	self._units:autosize_column(0)
 end
 
--- Lines 1288-1305
+-- Lines 1314-1331
 function GlobalSelectUnit:spawned_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1356,7 +1384,7 @@ function GlobalSelectUnit:spawned_unit(unit)
 	end
 end
 
--- Lines 1307-1320
+-- Lines 1333-1346
 function GlobalSelectUnit:deleted_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1375,19 +1403,19 @@ function GlobalSelectUnit:deleted_unit(unit)
 	end
 end
 
--- Lines 1322-1326
+-- Lines 1348-1352
 function GlobalSelectUnit:set_visible(...)
 	CoreEditorEwsDialog.set_visible(self, ...)
 	self._filter:set_focus()
 	self._filter:set_selection(-1, -1)
 end
 
--- Lines 1328-1330
+-- Lines 1354-1356
 function GlobalSelectUnit:reset()
 	self:update_list()
 end
 
--- Lines 1332-1337
+-- Lines 1358-1363
 function GlobalSelectUnit:on_all_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(true)
@@ -1396,7 +1424,7 @@ function GlobalSelectUnit:on_all_layers()
 	self:update_list()
 end
 
--- Lines 1339-1344
+-- Lines 1365-1370
 function GlobalSelectUnit:on_none_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(false)
@@ -1405,7 +1433,7 @@ function GlobalSelectUnit:on_none_layers()
 	self:update_list()
 end
 
--- Lines 1346-1351
+-- Lines 1372-1377
 function GlobalSelectUnit:on_invert_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(not cb:get_value())
@@ -1414,14 +1442,14 @@ function GlobalSelectUnit:on_invert_layers()
 	self:update_list()
 end
 
--- Lines 1353-1355
+-- Lines 1379-1381
 function GlobalSelectUnit:on_layer_cb(data)
 	self:update_list()
 end
 
 ReplaceUnit = ReplaceUnit or class(CoreEditorEwsDialog)
 
--- Lines 1361-1452
+-- Lines 1387-1478
 function ReplaceUnit:init(name, types)
 	CoreEditorEwsDialog.init(self, nil, name, "", Vector3(300, 150, 0), Vector3(900, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
 	self:create_panel("VERTICAL")
@@ -1533,19 +1561,19 @@ function ReplaceUnit:init(name, types)
 	self:show_modal()
 end
 
--- Lines 1454-1459
+-- Lines 1480-1485
 function ReplaceUnit:show_modal()
 	if not self._remember_replace_choice then
 		self._dialog:show_modal()
 	end
 end
 
--- Lines 1461-1463
+-- Lines 1487-1489
 function ReplaceUnit:reset()
 	self._remember_replace_choice = nil
 end
 
--- Lines 1465-1478
+-- Lines 1491-1504
 function ReplaceUnit:replace_unit_name(units)
 	for _, units_list in ipairs(self._all_unit_lists) do
 		if units_list ~= units then
@@ -1564,7 +1592,7 @@ function ReplaceUnit:replace_unit_name(units)
 	end
 end
 
--- Lines 1480-1491
+-- Lines 1506-1517
 function ReplaceUnit:update_filter(data)
 	local filter = data.filter:get_value()
 
@@ -1580,7 +1608,7 @@ function ReplaceUnit:update_filter(data)
 	data.units:thaw()
 end
 
--- Lines 1493-1497
+-- Lines 1519-1523
 function ReplaceUnit:close_replace_unit(data)
 	self._made_replace_choice = data.value
 	self._remember_replace_choice = self._remember_cb:get_value()
@@ -1588,7 +1616,7 @@ function ReplaceUnit:close_replace_unit(data)
 	self:end_modal()
 end
 
--- Lines 1499-1504
+-- Lines 1525-1530
 function ReplaceUnit:result()
 	if self._made_replace_choice and self._replace_unit_name then
 		return self._replace_unit_name
@@ -1599,7 +1627,7 @@ end
 
 LayerReplaceUnit = LayerReplaceUnit or class(CoreEditorEwsDialog)
 
--- Lines 1511-1562
+-- Lines 1537-1588
 function LayerReplaceUnit:init(layer)
 	CoreEditorEwsDialog.init(self, nil, "Replace Units", "", Vector3(525, 200, 0), Vector3(270, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("VERTICAL")
@@ -1664,7 +1692,7 @@ function LayerReplaceUnit:init(layer)
 	self:set_visible(true)
 end
 
--- Lines 1564-1571
+-- Lines 1590-1597
 function LayerReplaceUnit:_all_unit_names(layer)
 	local names = {}
 
@@ -1677,7 +1705,7 @@ function LayerReplaceUnit:_all_unit_names(layer)
 	return names
 end
 
--- Lines 1573-1582
+-- Lines 1599-1608
 function LayerReplaceUnit:replace_unit(data)
 	if self._layer:selected_unit() and data then
 		local units = data.units
@@ -1691,7 +1719,7 @@ function LayerReplaceUnit:replace_unit(data)
 	end
 end
 
--- Lines 1584-1599
+-- Lines 1610-1625
 function LayerReplaceUnit:_current_unit_names()
 	local current_names = {}
 
@@ -1712,14 +1740,14 @@ function LayerReplaceUnit:_current_unit_names()
 	return names
 end
 
--- Lines 1601-1604
+-- Lines 1627-1630
 function LayerReplaceUnit:on_only_list_used_units(data)
 	self._only_list_used_units = data.cb:get_value()
 
 	self:update_list()
 end
 
--- Lines 1606-1625
+-- Lines 1632-1651
 function LayerReplaceUnit:update_list(current)
 	self._units:freeze()
 
@@ -1746,13 +1774,13 @@ function LayerReplaceUnit:update_list(current)
 	self._units:thaw()
 end
 
--- Lines 1627-1630
+-- Lines 1653-1656
 function LayerReplaceUnit:set_visible(visible)
 	CoreEditorEwsDialog.set_visible(self, visible)
 	self:update_list()
 end
 
--- Lines 1632-1649
+-- Lines 1658-1675
 function LayerReplaceUnit:spawned_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1777,7 +1805,7 @@ function LayerReplaceUnit:spawned_unit(unit)
 	end
 end
 
--- Lines 1651-1664
+-- Lines 1677-1690
 function LayerReplaceUnit:deleted_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -1796,16 +1824,17 @@ function LayerReplaceUnit:deleted_unit(unit)
 	end
 end
 
--- Lines 1666-1668
+-- Lines 1692-1694
 function LayerReplaceUnit:reset()
 	self:update_list()
 end
 
 MoveTransformTypeIn = MoveTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines 1675-1701
+-- Lines 1701-1728
 function MoveTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(264, 129, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(320, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
@@ -1822,12 +1851,12 @@ function MoveTransformTypeIn:init()
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
-	self._panel_sizer:add(offset_sizer, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
 
--- Lines 1703-1734
+-- Lines 1730-1761
 function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -1883,7 +1912,7 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines 1736-1742
+-- Lines 1763-1769
 function MoveTransformTypeIn:update_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -1893,7 +1922,7 @@ function MoveTransformTypeIn:update_spin(data)
 	self:update_absolut(data)
 end
 
--- Lines 1744-1758
+-- Lines 1771-1785
 function MoveTransformTypeIn:update_absolut(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -1913,7 +1942,7 @@ function MoveTransformTypeIn:update_absolut(data)
 	end
 end
 
--- Lines 1760-1777
+-- Lines 1787-1804
 function MoveTransformTypeIn:update_offset(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -1935,14 +1964,14 @@ function MoveTransformTypeIn:update_offset(data, event)
 	end
 end
 
--- Lines 1779-1782
+-- Lines 1806-1809
 function MoveTransformTypeIn:set_unit(unit)
 	self._unit = unit
 
 	self._panel:set_enabled(alive(self._unit))
 end
 
--- Lines 1784-1797
+-- Lines 1811-1824
 function MoveTransformTypeIn:update(t, dt)
 	if alive(self._unit) then
 		local pos = self._unit:position()
@@ -1963,9 +1992,10 @@ end
 
 RotateTransformTypeIn = RotateTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines 1804-1830
+-- Lines 1831-1858
 function RotateTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(264, 129, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(320, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
@@ -1982,12 +2012,12 @@ function RotateTransformTypeIn:init()
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
-	self._panel_sizer:add(offset_sizer, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
 
--- Lines 1832-1863
+-- Lines 1860-1891
 function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2043,7 +2073,7 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines 1865-1871
+-- Lines 1893-1899
 function RotateTransformTypeIn:update_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2053,7 +2083,7 @@ function RotateTransformTypeIn:update_spin(data)
 	self:update_absolut(data)
 end
 
--- Lines 1873-1894
+-- Lines 1901-1922
 function RotateTransformTypeIn:update_absolut(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2078,7 +2108,7 @@ function RotateTransformTypeIn:update_absolut(data)
 	end
 end
 
--- Lines 1896-1913
+-- Lines 1924-1941
 function RotateTransformTypeIn:update_offset(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2100,14 +2130,14 @@ function RotateTransformTypeIn:update_offset(data, event)
 	end
 end
 
--- Lines 1915-1918
+-- Lines 1943-1946
 function RotateTransformTypeIn:set_unit(unit)
 	self._unit = unit
 
 	self._panel:set_enabled(alive(self._unit))
 end
 
--- Lines 1920-1933
+-- Lines 1948-1961
 function RotateTransformTypeIn:update(t, dt)
 	if alive(self._unit) then
 		local rot = self._unit:rotation()
@@ -2128,7 +2158,7 @@ end
 
 ScaleTransformTypeIn = ScaleTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines 1940-1966
+-- Lines 1968-1994
 function ScaleTransformTypeIn:init()
 	CoreEditorEwsDialog.init(self, nil, "Scale transform type-in", "", Vector3(761, 67, 0), Vector3(264, 129, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("HORIZONTAL")
@@ -2152,7 +2182,7 @@ function ScaleTransformTypeIn:init()
 	self._panel:set_enabled(false)
 end
 
--- Lines 1968-1999
+-- Lines 1996-2027
 function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2208,7 +2238,7 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines 2001-2007
+-- Lines 2029-2035
 function ScaleTransformTypeIn:update_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2218,7 +2248,7 @@ function ScaleTransformTypeIn:update_spin(data)
 	self:update_absolut(data)
 end
 
--- Lines 2009-2023
+-- Lines 2037-2051
 function ScaleTransformTypeIn:update_absolut(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2238,7 +2268,7 @@ function ScaleTransformTypeIn:update_absolut(data)
 	end
 end
 
--- Lines 2025-2042
+-- Lines 2053-2070
 function ScaleTransformTypeIn:update_offset(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2260,14 +2290,14 @@ function ScaleTransformTypeIn:update_offset(data, event)
 	end
 end
 
--- Lines 2044-2047
+-- Lines 2072-2075
 function ScaleTransformTypeIn:set_unit(unit)
 	self._unit = unit
 
 	self._panel:set_enabled(alive(self._unit))
 end
 
--- Lines 2049-2062
+-- Lines 2077-2090
 function ScaleTransformTypeIn:update(t, dt)
 	if alive(self._unit) then
 		local scale = self._unit:position()
@@ -2288,9 +2318,10 @@ end
 
 CameraTransformTypeIn = CameraTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines 2069-2108
+-- Lines 2097-2137
 function CameraTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Camera transform type-in", "", Vector3(761, 180, 0), Vector3(291, 210, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	CoreEditorEwsDialog.init(self, nil, "Camera transform type-in", "", Vector3(761, 180, 0), Vector3(330, 220, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(330, 220, 0))
 	self:create_panel("VERTICAL")
 
 	self._min = -100000000
@@ -2308,7 +2339,7 @@ function CameraTransformTypeIn:init()
 	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
-	pos_rot_sizer:add(offset_sizer, 1, 0, "EXPAND")
+	pos_rot_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
 	self._panel_sizer:add(pos_rot_sizer, 5, 0, "EXPAND")
 
 	local settings_sizer = EWS:StaticBoxSizer(self._panel, "HORIZONTAL")
@@ -2318,11 +2349,11 @@ function CameraTransformTypeIn:init()
 	self._fov = self:_create_fov_ctrl(settings_sizer)
 	self._far_range = self:_create_far_range_ctrl(settings_sizer)
 
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(true)
 end
 
--- Lines 2110-2123
+-- Lines 2139-2152
 function CameraTransformTypeIn:_create_fov_ctrl(sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2340,7 +2371,7 @@ function CameraTransformTypeIn:_create_fov_ctrl(sizer)
 	return ctrl
 end
 
--- Lines 2125-2138
+-- Lines 2154-2167
 function CameraTransformTypeIn:_create_far_range_ctrl(sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2358,7 +2389,7 @@ function CameraTransformTypeIn:_create_far_range_ctrl(sizer)
 	return ctrl
 end
 
--- Lines 2140-2169
+-- Lines 2169-2198
 function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2418,7 +2449,7 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines 2171-2177
+-- Lines 2200-2206
 function CameraTransformTypeIn:update_position_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2428,7 +2459,7 @@ function CameraTransformTypeIn:update_position_spin(data)
 	self:update_position(data)
 end
 
--- Lines 2179-2185
+-- Lines 2208-2214
 function CameraTransformTypeIn:update_rotation_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2438,7 +2469,7 @@ function CameraTransformTypeIn:update_rotation_spin(data)
 	self:update_rotation(data)
 end
 
--- Lines 2187-2199
+-- Lines 2216-2228
 function CameraTransformTypeIn:update_position(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2454,7 +2485,7 @@ function CameraTransformTypeIn:update_position(data)
 	managers.editor:set_camera(pos, managers.editor:camera_rotation())
 end
 
--- Lines 2201-2219
+-- Lines 2230-2248
 function CameraTransformTypeIn:update_rotation(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2477,7 +2508,7 @@ function CameraTransformTypeIn:update_rotation(data)
 	managers.editor:set_camera(managers.editor:camera_position(), rot)
 end
 
--- Lines 2221-2228
+-- Lines 2250-2257
 function CameraTransformTypeIn:update_fov()
 	local value = tonumber(self._fov:get_value()) or managers.editor:camera_fov()
 	value = math.clamp(value, 1, 170)
@@ -2487,7 +2518,7 @@ function CameraTransformTypeIn:update_fov()
 	managers.editor:set_default_camera_fov(value)
 end
 
--- Lines 2230-2238
+-- Lines 2259-2267
 function CameraTransformTypeIn:update_far_range()
 	local value = tonumber(self._far_range:get_value()) or managers.editor:camera_far_range() / 100
 
@@ -2502,7 +2533,7 @@ function CameraTransformTypeIn:update_far_range()
 	managers.editor:set_camera_far_range(value)
 end
 
--- Lines 2240-2272
+-- Lines 2269-2301
 function CameraTransformTypeIn:update(t, dt)
 	local pos = managers.editor:camera_position()
 
@@ -2543,7 +2574,7 @@ end
 
 EditControllerBindings = EditControllerBindings or class(CoreEditorEwsDialog)
 
--- Lines 2278-2321
+-- Lines 2307-2350
 function EditControllerBindings:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Controller bindings", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -2583,7 +2614,7 @@ function EditControllerBindings:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines 2323-2333
+-- Lines 2352-2362
 function EditControllerBindings:add_list(list)
 	local names = {}
 
@@ -2602,7 +2633,7 @@ end
 
 MissionGraph = MissionGraph or class(CoreEditorEwsDialog)
 
--- Lines 2339-2394
+-- Lines 2368-2423
 function MissionGraph:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Mission Graph", "", Vector3(100, 100, 0), Vector3(800, 600, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,,MINIMIZE_BOX,MAXIMIZE_BOX,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -2637,7 +2668,7 @@ function MissionGraph:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines 2396-2400
+-- Lines 2425-2429
 function MissionGraph:update(t, dt)
 	self._graph_view:update_graph(dt)
 	self._graph:notify_views()
@@ -2645,9 +2676,12 @@ end
 
 WorldEditorNews = WorldEditorNews or class(CoreEditorEwsDialog)
 
--- Lines 2406-2442
+-- Lines 2435-2473
 function WorldEditorNews:init()
-	CoreEditorEwsDialog.init(self, nil, "World editor news", "", Vector3(270, 130, 0), Vector3(560, 620, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, "World editor news", "", Vector3(270, 130, 0), Vector3(600, 620, 0), styles)
+	self._dialog:set_min_size(Vector3(550, 500, 0))
 
 	self._captions = {}
 
@@ -2673,12 +2707,12 @@ function WorldEditorNews:init()
 	button_sizer:add(self._cancel_btn, 0, 2, "RIGHT,LEFT")
 	self._cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	self._cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._panel_sizer:add(button_sizer, 0, 4, "ALIGN_RIGHT,TOP,BOTTOM")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,TOP,LEFT,RIGHT")
 	self._dialog:set_visible(true)
 end
 
--- Lines 2444-2450
+-- Lines 2475-2481
 function WorldEditorNews:set_visible(visible)
 	if visible then
 		self._cancel_btn:set_caption(self._captions[math.random(#self._captions)])
@@ -2688,14 +2722,14 @@ function WorldEditorNews:set_visible(visible)
 	CoreEditorEwsDialog.set_visible(self, visible)
 end
 
--- Lines 2452-2454
+-- Lines 2483-2485
 function WorldEditorNews:version()
 	return self._text:get_last_position()
 end
 
 UnitDuality = UnitDuality or class(CoreEditorEwsDialog)
 
--- Lines 2460-2519
+-- Lines 2491-2550
 function UnitDuality:init(collisions, pos)
 	pos = pos or Vector3(120, 130, 0)
 
@@ -2757,7 +2791,7 @@ function UnitDuality:init(collisions, pos)
 	self._dialog:set_visible(true)
 end
 
--- Lines 2521-2525
+-- Lines 2552-2556
 function UnitDuality:calc_size(collisions, y_size)
 	local size = self._dialog:get_size()
 	local y = (#collisions.complete + #collisions.only_positions) * 25 + 50 + 40 + y_size
@@ -2765,7 +2799,7 @@ function UnitDuality:calc_size(collisions, y_size)
 	self._dialog:set_size(Vector3(size.x, y, 0))
 end
 
--- Lines 2527-2565
+-- Lines 2558-2596
 function UnitDuality:build_collision(collision)
 	local u1 = collision.u1
 	local u2 = collision.u2
@@ -2819,7 +2853,7 @@ function UnitDuality:build_collision(collision)
 	return panel
 end
 
--- Lines 2567-2575
+-- Lines 2598-2606
 function UnitDuality:goto(collision)
 	local u1 = collision.u1
 	local u2 = collision.u2
@@ -2832,7 +2866,7 @@ function UnitDuality:goto(collision)
 	managers.editor:center_view_on_unit(u1)
 end
 
--- Lines 2577-2583
+-- Lines 2608-2614
 function UnitDuality:delete_unit(data)
 	if alive(data.unit) then
 		managers.editor:delete_unit(data.unit)
@@ -2842,14 +2876,14 @@ function UnitDuality:delete_unit(data)
 	data.panel:set_enabled(false)
 end
 
--- Lines 2585-2587
+-- Lines 2616-2618
 function UnitDuality:on_check_again()
 	managers.editor:on_check_duality()
 end
 
 BrushLayerDebug = BrushLayerDebug or class(CoreEditorEwsDialog)
 
--- Lines 2595-2646
+-- Lines 2626-2677
 function BrushLayerDebug:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Brush layer debug", "", Vector3(300, 150, 0), Vector3(600, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
 	self:create_panel("VERTICAL")
@@ -2905,12 +2939,12 @@ function BrushLayerDebug:init(...)
 	self:fill_unit_list()
 end
 
--- Lines 2648-2650
+-- Lines 2679-2681
 function BrushLayerDebug:_toolbar_toggle(params, event)
 	self[params.value] = params.toolbar:tool_state(event:get_id())
 end
 
--- Lines 2652-2659
+-- Lines 2683-2690
 function BrushLayerDebug:_on_gui_delete()
 	local current_data = self:_current_data()
 
@@ -2922,7 +2956,7 @@ function BrushLayerDebug:_on_gui_delete()
 	end
 end
 
--- Lines 2661-2666
+-- Lines 2692-2697
 function BrushLayerDebug:_on_gui_help()
 	local text = "Since brush units are not always visible, this dialog shows actual amount of units in the level."
 	text = text .. "\n\nSorting can be done by clicking the column namnes."
@@ -2931,7 +2965,7 @@ function BrushLayerDebug:_on_gui_help()
 	EWS:message_box(self._panel, text, "Help", "OK", Vector3())
 end
 
--- Lines 2669-2683
+-- Lines 2700-2714
 function BrushLayerDebug:fill_unit_list()
 	self:freeze()
 	self._unit_list:delete_all_items()
@@ -2952,14 +2986,14 @@ function BrushLayerDebug:fill_unit_list()
 	self:thaw()
 end
 
--- Lines 2685-2689
+-- Lines 2716-2720
 function BrushLayerDebug:_autosize_columns(list)
 	for i = 0, list:column_count() - 1 do
 		list:autosize_column(i)
 	end
 end
 
--- Lines 2691-2696
+-- Lines 2722-2727
 function BrushLayerDebug:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -2968,7 +3002,7 @@ function BrushLayerDebug:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines 2698-2705
+-- Lines 2729-2736
 function BrushLayerDebug:_on_select_unit()
 	local current_data = self:_current_data()
 
@@ -2977,19 +3011,19 @@ function BrushLayerDebug:_on_select_unit()
 	end
 end
 
--- Lines 2707-2710
+-- Lines 2738-2741
 function BrushLayerDebug:column_click_list(...)
 	self._list = self._unit_list
 
 	UnitList.column_click_list(self, ...)
 end
 
--- Lines 2712-2714
+-- Lines 2743-2745
 function BrushLayerDebug:_right_clicked(list)
 	local item_data = self:_selected_list_data(list)
 end
 
--- Lines 2716-2722
+-- Lines 2747-2753
 function BrushLayerDebug:_current_data()
 	local index = self._unit_list:selected_item()
 
@@ -3000,7 +3034,7 @@ function BrushLayerDebug:_current_data()
 	return self._unit_list:get_item_data_ref(index)
 end
 
--- Lines 2724-2730
+-- Lines 2755-2761
 function BrushLayerDebug:_selected_list_data(list)
 	local index = list:selected_item()
 
@@ -3011,16 +3045,16 @@ function BrushLayerDebug:_selected_list_data(list)
 	return list:get_item_data_ref(index)
 end
 
--- Lines 2732-2734
+-- Lines 2763-2765
 function BrushLayerDebug:reset()
 end
 
--- Lines 2736-2738
+-- Lines 2767-2769
 function BrushLayerDebug:freeze()
 	self._unit_list:freeze()
 end
 
--- Lines 2740-2742
+-- Lines 2771-2773
 function BrushLayerDebug:thaw()
 	self._unit_list:thaw()
 end

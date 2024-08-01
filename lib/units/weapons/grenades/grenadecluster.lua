@@ -5,18 +5,18 @@ function GrenadeCluster:init(unit)
 	GrenadeCluster.super.init(self, unit)
 end
 
--- Lines 9-28
+-- Lines 9-29
 function GrenadeCluster:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
 	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
 	self._range = self._tweak_data.range
-	self._effect_name = self._tweak_data.effect_name or "effects/vanilla/explosions/exp_hand_grenade_001"
+	self._effect_name = self._tweak_data.effect_name or "effects/vanilla/explosions/exp_cluster_001"
 	self._curve_pow = self._tweak_data.curve_pow or 3
 	self._damage = self._tweak_data.damage
 	self._killzone_range = self._tweak_data.killzone_range or 0.1
-	self._player_damage = self._tweak_data.player_damage
 	self._alert_radius = self._tweak_data.alert_radius
+	self._player_damage = self._tweak_data.player_damage
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
 		camera_shake_max_mul = 4,
@@ -27,17 +27,17 @@ function GrenadeCluster:_setup_from_tweak_data()
 	}
 end
 
--- Lines 33-35
+-- Lines 34-36
 function GrenadeCluster:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines 37-39
+-- Lines 38-40
 function GrenadeCluster:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 42-78
+-- Lines 43-77
 function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -46,13 +46,10 @@ function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, posit
 	local thrower_peer_id = self:get_thrower_peer_id()
 
 	if thrower_peer_id then
-		if thrower_peer_id == managers.network:session():local_peer():id() then
-			self._range = self._range * managers.player:upgrade_value("player", "warcry_grenade_cluster_range", 1)
-			self._damage = self._damage * managers.player:upgrade_value("player", "warcry_grenade_cluster_damage", 1)
-		else
-			self._range = self._range * managers.warcry:peer_warcry_upgrade_value(thrower_peer_id, "player", "warcry_grenade_cluster_range", 1)
-			self._damage = self._damage * managers.warcry:peer_warcry_upgrade_value(thrower_peer_id, "player", "warcry_grenade_cluster_damage", 1)
-		end
+		local client_player = thrower_peer_id ~= managers.network:session():local_peer():id()
+		local peer_id = client_player and thrower_peer_id or nil
+		self._range = self._range * (PlayerSkill.warcry_data("player", "warcry_grenade_cluster_range", 2, peer_id) - 1)
+		self._damage = self._damage * (PlayerSkill.warcry_data("player", "warcry_grenade_cluster_damage", 2, peer_id) - 1)
 	end
 
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
@@ -75,17 +72,17 @@ function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, posit
 	self._unit:set_slot(0)
 end
 
--- Lines 80-82
+-- Lines 79-81
 function GrenadeCluster:set_range(range)
 	self._range = range
 end
 
--- Lines 84-86
+-- Lines 83-85
 function GrenadeCluster:set_damage(damage)
 	self._damage = damage
 end
 
--- Lines 90-111
+-- Lines 89-110
 function GrenadeCluster:_detonate_on_client()
 	local pos = self._unit:position()
 	local range = self._range
@@ -109,7 +106,7 @@ function GrenadeCluster:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
--- Lines 115-122
+-- Lines 114-121
 function GrenadeCluster:bullet_hit()
 	if not Network:is_server() then
 		return

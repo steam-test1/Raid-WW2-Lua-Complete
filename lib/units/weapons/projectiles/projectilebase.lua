@@ -122,7 +122,7 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
--- Lines 135-196
+-- Lines 135-215
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 	local velocity = params.dir
@@ -132,8 +132,14 @@ function ProjectileBase:throw(params)
 
 	if params.projectile_entry and tweak_data.projectiles[params.projectile_entry] then
 		adjust_z = tweak_data.projectiles[params.projectile_entry].adjust_z or adjust_z
-		local _adjust_z = tweak_data.projectiles[params.projectile_entry]._adjust_z or 0
-		adjust_z = adjust_z + _adjust_z
+
+		if tweak_data.projectiles[params.projectile_entry].adjust_z_range then
+			local adjust_z_range = tweak_data.projectiles[params.projectile_entry].adjust_z_range
+			adjust_z = math.rand(adjust_z_range[1], adjust_z_range[2])
+		end
+
+		local context_adjust_z = tweak_data.projectiles[params.projectile_entry].context_adjust_z or 0
+		adjust_z = adjust_z + context_adjust_z
 		launch_speed = tweak_data.projectiles[params.projectile_entry].launch_speed or launch_speed
 		push_at_body_index = tweak_data.projectiles[params.projectile_entry].push_at_body_index
 	end
@@ -184,7 +190,7 @@ function ProjectileBase:throw(params)
 	end
 end
 
--- Lines 200-203
+-- Lines 219-222
 function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
 
@@ -194,7 +200,7 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	})
 end
 
--- Lines 207-245
+-- Lines 226-264
 function ProjectileBase:update(unit, t, dt)
 	if not self._simulated and not self._collided then
 		self._unit:m_position(mvec1)
@@ -240,7 +246,7 @@ function ProjectileBase:update(unit, t, dt)
 	end
 end
 
--- Lines 250-278
+-- Lines 269-297
 function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._sweep_data and not self._collided then
 		mvector3.set(mvec2, position)
@@ -269,17 +275,17 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 	end
 end
 
--- Lines 282-284
+-- Lines 301-303
 function ProjectileBase:_on_collision(col_ray)
 	print("_on_collision", inspect(col_ray))
 end
 
--- Lines 288-290
+-- Lines 307-309
 function ProjectileBase:_bounce(...)
 	print("_bounce", ...)
 end
 
--- Lines 294-299
+-- Lines 313-318
 function ProjectileBase:save(data)
 	local state = {
 		timer = self._timer
@@ -287,24 +293,19 @@ function ProjectileBase:save(data)
 	data.ProjectileBase = state
 end
 
--- Lines 303-306
+-- Lines 322-325
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 	self._timer = state.timer
 end
 
--- Lines 310-311
+-- Lines 329-330
 function ProjectileBase:destroy()
-end
-
--- Lines 315-317
-function ProjectileBase:on_level_tranistion()
-	print("ProjectileBase:on_level_tranistion()")
 end
 
 local ids_object3d = Idstring("object3d")
 
--- Lines 324-388
+-- Lines 337-402
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id, cooking_t, parent_projectile_id)
 	if not projectile_type then
 		Application:error("[ProjectileBase.throw_projectile] Trying to spawn an unknown projectile type: ", self._values.grenade_type, debug.traceback())
@@ -319,8 +320,8 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	end
 
 	local tweak_entry = tweak_data.projectiles[projectile_entry]
-	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
-	local rot_dir = tweak_entry._rot_dir or math.UP
+	local unit_name = Idstring(Network:is_server() and tweak_entry.unit or tweak_entry.local_unit)
+	local rot_dir = tweak_entry.context_rot_dir or math.UP
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, rot_dir))
 
 	managers.game_play_central:add_spawned_projectiles(unit)
@@ -334,7 +335,9 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	if cooking_t and unit:base()._timer then
 		unit:base()._timer = unit:base()._timer - cooking_t
 
-		if unit:base()._timer < 0.3 then
+		if cooking_t == -1 then
+			unit:base()._timer = 0.001
+		elseif unit:base()._timer < 0.3 then
 			unit:base()._timer = 0.3
 		end
 	end
@@ -376,11 +379,11 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines 392-393
+-- Lines 406-407
 function ProjectileBase:add_trail_effect()
 end
 
--- Lines 397-414
+-- Lines 411-428
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -401,18 +404,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines 418-429
+-- Lines 432-443
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines 433-434
+-- Lines 447-448
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines 439-455
+-- Lines 453-469
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -432,13 +435,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines 492-495
+-- Lines 472-475
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 523-525
+-- Lines 477-479
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end

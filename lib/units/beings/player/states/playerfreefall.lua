@@ -8,7 +8,7 @@ function PlayerFreefall:init(unit)
 	self._dt = 0
 end
 
--- Lines 15-39
+-- Lines 15-42
 function PlayerFreefall:enter(state_data, enter_data)
 	print("[PlayerFreefall:enter]", "Enter freefall state")
 	PlayerFreefall.super.enter(self, state_data, enter_data)
@@ -35,9 +35,10 @@ function PlayerFreefall:enter(state_data, enter_data)
 
 	self._unit:mover():set_damping(self._tweak_data.gravity / self._tweak_data.terminal_velocity)
 	self._unit:sound():play("free_falling", nil, false)
+	managers.hud:set_crosshair_fade(false)
 end
 
--- Lines 43-59
+-- Lines 46-58
 function PlayerFreefall:_enter(enter_data)
 	if self._ext_camera:anim_data().equipped then
 		self._ext_camera:play_redirect(self.IDS_UNEQUIP)
@@ -51,7 +52,7 @@ function PlayerFreefall:_enter(enter_data)
 	self._shaker_id = self._ext_camera:shaker():play("player_freefall", 0)
 end
 
--- Lines 63-74
+-- Lines 62-73
 function PlayerFreefall:exit(state_data, new_state_name)
 	print("[PlayerFreefall:exit]", "Exiting freefall state")
 	PlayerFreefall.super.exit(self, state_data)
@@ -60,17 +61,17 @@ function PlayerFreefall:exit(state_data, new_state_name)
 	self._ext_camera:shaker():stop(self._shaker_id)
 end
 
--- Lines 78-80
+-- Lines 77-79
 function PlayerFreefall:interaction_blocked()
 	return true
 end
 
--- Lines 82-84
+-- Lines 81-83
 function PlayerFreefall:bleed_out_blocked()
 	return true
 end
 
--- Lines 87-95
+-- Lines 86-94
 function PlayerFreefall:_chk_play_falling_anim()
 	if not self._played_unequip_animation and not self._ext_camera:anim_data().unequipping then
 		self._ext_camera:play_redirect(self.IDS_FALLING)
@@ -80,7 +81,7 @@ function PlayerFreefall:_chk_play_falling_anim()
 	end
 end
 
--- Lines 99-111
+-- Lines 98-110
 function PlayerFreefall:update(t, dt)
 	PlayerFreefall.super.update(self, t, dt)
 
@@ -97,7 +98,7 @@ function PlayerFreefall:update(t, dt)
 	self:_chk_play_falling_anim()
 end
 
--- Lines 115-159
+-- Lines 114-158
 function PlayerFreefall:_update_movement(t, dt)
 	local direction = self._controller:get_input_axis("move")
 
@@ -135,7 +136,7 @@ function PlayerFreefall:_update_movement(t, dt)
 	end
 end
 
--- Lines 163-208
+-- Lines 162-207
 function PlayerFreefall:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -163,24 +164,24 @@ function PlayerFreefall:_update_check_actions(t, dt)
 	end
 end
 
--- Lines 212-214
+-- Lines 211-213
 function PlayerFreefall:_get_walk_headbob()
 	return 0
 end
 
--- Lines 218-221
+-- Lines 217-220
 function PlayerFreefall:_set_camera_limits()
 	self._camera_unit:base():set_pitch(self._tweak_data.camera.target_pitch)
 	self._camera_unit:base():set_limits(self._tweak_data.camera.limits.spin, self._tweak_data.camera.limits.pitch)
 end
 
--- Lines 225-231
+-- Lines 224-230
 function PlayerFreefall:_remove_camera_limits()
 	self._camera_unit:base():remove_limits()
 	self._camera_unit:base():set_target_tilt(0)
 end
 
--- Lines 237-250
+-- Lines 236-249
 function PlayerFreefall:_check_action_interact(t, input)
 	local new_action = nil
 	local interaction_wanted = input.btn_interact_press
@@ -196,7 +197,7 @@ function PlayerFreefall:_check_action_interact(t, input)
 	return new_action
 end
 
--- Lines 254-257
+-- Lines 253-256
 function PlayerFreefall:_pitch_down()
 	local t = Application:time()
 

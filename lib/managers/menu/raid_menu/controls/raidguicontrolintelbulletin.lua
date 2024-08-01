@@ -51,7 +51,7 @@ function RaidGUIControlIntelBulletin:_layout()
 	self._update_person:set_right(self._object:w() - 128)
 
 	local content_panel_scrollable_area_params = {
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		name = "content_panel_scrollable_area",
 		h = 512,
 		y = 208,

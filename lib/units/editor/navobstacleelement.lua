@@ -196,7 +196,7 @@ function NavObstacleElement:_remove_from_obstacle_list(unit_id)
 	end
 end
 
--- Lines 296-338
+-- Lines 296-339
 function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data)
 	local panel = self._panel
 	local panel_sizer = self._panel_sizer
@@ -208,6 +208,7 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 
 	panel_sizer:add(h_sizer, 0, 1, "EXPAND,LEFT")
 
+	local default_obj_idstr = self._get_unit_default_obstacle_object(unit) or obstacle_list_data.obj_name
 	local obj_names_params = {
 		name = "Object:",
 		sizer_proportions = 1,
@@ -218,7 +219,7 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 		panel = panel,
 		sizer = h_sizer,
 		options = all_object_names,
-		value = self._get_indented_obj_name(nil, unit, obstacle_list_data.obj_name)
+		value = self._get_indented_obj_name(nil, unit, default_obj_idstr)
 	}
 	local obj_names = CoreEws.combobox(obj_names_params)
 	self._guis_id = self._guis_id or 0
@@ -245,7 +246,7 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 	panel:layout()
 end
 
--- Lines 340-348
+-- Lines 341-349
 function NavObstacleElement:set_obj_name_data(guis_id)
 	local obj_name = self._guis[guis_id].obj_names:get_value()
 
@@ -258,14 +259,14 @@ function NavObstacleElement:set_obj_name_data(guis_id)
 	end
 end
 
--- Lines 350-352
+-- Lines 351-353
 function NavObstacleElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines 354-366
+-- Lines 355-367
 function NavObstacleElement:select_unit_list_btn()
-	-- Lines 355-360
+	-- Lines 356-361
 	local function f(unit)
 		if not managers.editor:layer("Statics"):category_map()[unit:type():s()] then
 			return false
@@ -281,7 +282,7 @@ function NavObstacleElement:select_unit_list_btn()
 	end
 end
 
--- Lines 368-414
+-- Lines 369-415
 function NavObstacleElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -316,7 +317,7 @@ function NavObstacleElement:_build_panel(panel, panel_sizer)
 	end
 end
 
--- Lines 416-448
+-- Lines 417-449
 function NavObstacleElement:_get_objects_by_unit(unit)
 	local all_object_names = {}
 
@@ -326,7 +327,7 @@ function NavObstacleElement:_get_objects_by_unit(unit)
 		local tree_depth = 1
 		local _process_object_tree = nil
 
-		-- Lines 425-437
+		-- Lines 426-438
 		function _process_object_tree(obj, depth)
 			local indented_name = obj:name():s()
 
@@ -349,7 +350,7 @@ function NavObstacleElement:_get_objects_by_unit(unit)
 	return all_object_names
 end
 
--- Lines 508-513
+-- Lines 509-514
 function NavObstacleElement._unindent_obj_name(obj_name)
 	while string.sub(obj_name, 1, 1) == "-" do
 		obj_name = string.sub(obj_name, 2)
@@ -358,7 +359,7 @@ function NavObstacleElement._unindent_obj_name(obj_name)
 	return obj_name
 end
 
--- Lines 515-525
+-- Lines 516-526
 function NavObstacleElement._get_indented_obj_name(obj, parent, obj_name)
 	if parent then
 		obj = parent:get_object(obj_name) or obj
@@ -372,4 +373,9 @@ function NavObstacleElement._get_indented_obj_name(obj, parent, obj_name)
 	end
 
 	return obj_name
+end
+
+-- Lines 529-531
+function NavObstacleElement._get_unit_default_obstacle_object(unit)
+	return unit:unit_data().default_obstacle_object and Idstring(unit:unit_data().default_obstacle_object) or nil
 end

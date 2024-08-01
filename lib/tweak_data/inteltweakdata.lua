@@ -1,6 +1,6 @@
 IntelTweakData = IntelTweakData or class()
 
--- Lines 3-441
+-- Lines 3-410
 function IntelTweakData:init(tweak_data)
 	self.categories = {
 		bulletins = {}
@@ -293,7 +293,7 @@ function IntelTweakData:init(tweak_data)
 	}
 end
 
--- Lines 443-453
+-- Lines 412-422
 function IntelTweakData:get_control_video_by_path(path)
 	if not self.categories.control_archive then
 		return
@@ -306,7 +306,7 @@ function IntelTweakData:get_control_video_by_path(path)
 	end
 end
 
--- Lines 455-464
+-- Lines 424-433
 function IntelTweakData:get_item_data(category_name, item_id)
 	for _, item_data in ipairs(self.categories[category_name].items) do
 		if tostring(item_data.id) == tostring(item_id) then

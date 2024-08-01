@@ -114,7 +114,7 @@ function TankTurretWeapon:play_singleshot_sound_and_effect(position, normal)
 	end
 end
 
--- Lines 111-157
+-- Lines 111-161
 function TankTurretWeapon:update(unit, t, dt)
 	if self._test_delete_after then
 		for _, object in ipairs(self._test_delete_after) do
@@ -145,32 +145,13 @@ function TankTurretWeapon:update(unit, t, dt)
 		VehicleDrivingExt.cumulative_gravity = 0
 
 		self:_hit_explosion(raycast, raycast.hit_position + Vector3(0, 0, 2))
-
-		if TankTurretWeapon.show_trajectory then
-			local sphere_id = DebugDraw:sphere(Color.green, raycast.hit_position + Vector3(0, 0, 2), 30, 2)
-
-			table.insert(self._test_delete_after, {
-				time = t,
-				id = sphere_id
-			})
-		end
-
 		self._unit:set_extension_update_enabled(Idstring("weapon"), false)
 	else
 		self._tank_shell.position = new_position
-
-		if TankTurretWeapon.show_trajectory then
-			local sphere_id = DebugDraw:sphere(Color.red, new_position, 10, 2)
-
-			table.insert(self._test_delete_after, {
-				time = t,
-				id = sphere_id
-			})
-		end
 	end
 end
 
--- Lines 161-193
+-- Lines 165-197
 function TankTurretWeapon:_hit_explosion(raycast, hit_position)
 	if not Network:is_server() then
 		return
@@ -205,15 +186,14 @@ function TankTurretWeapon:_hit_explosion(raycast, hit_position)
 	managers.network:session():send_to_peers_synched("sync_ai_tank_grenade_explosion", self._unit, pos, damage_radius, damage, player_damage, curve_pow)
 end
 
--- Lines 197-205
+-- Lines 201-214
 function TankTurretWeapon:_hit_explosion_on_client(position, radius, damage, player_damage, curve_pow)
-	local sound_event = "grenade_explode"
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000
 	local custom_params = {
+		sound_event = "grenade_explode",
 		camera_shake_max_mul = 4,
 		sound_muffle_effect = true,
 		effect = self._effect_name,
-		sound_event = sound_event,
 		feedback_range = damage_radius * 2
 	}
 
@@ -221,7 +201,7 @@ function TankTurretWeapon:_hit_explosion_on_client(position, radius, damage, pla
 	managers.explosion:explode_on_client(position, math.UP, nil, damage, damage_radius, curve_pow, custom_params)
 end
 
--- Lines 209-212
+-- Lines 218-221
 function TankTurretWeapon:adjust_target_pos(target_pos)
 	return target_pos - Vector3(0, 0, 150)
 end

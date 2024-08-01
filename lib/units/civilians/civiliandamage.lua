@@ -67,22 +67,14 @@ function CivilianDamage:_unregister_from_enemy_manager(damage_info)
 	managers.enemy:on_civilian_died(self._unit, damage_info)
 end
 
--- Lines 69-80
+-- Lines 69-72
 function CivilianDamage:damage_bullet(attack_data)
-	if managers.player:has_category_upgrade("player", "civ_harmless_bullets") and not self._unit:anim_data().no_intimidation_by_dmg and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
-		self._survive_shot_t = TimerManager:game():time() + 2.5
-
-		self._unit:brain():on_intimidated(1, attack_data.attacker_unit)
-
-		return
-	end
-
 	attack_data.damage = 10
 
 	return CopDamage.damage_bullet(self, attack_data)
 end
 
--- Lines 84-89
+-- Lines 76-81
 function CivilianDamage:damage_explosion(attack_data)
 	if attack_data.variant == "explosion" then
 		attack_data.damage = 10
@@ -91,7 +83,7 @@ function CivilianDamage:damage_explosion(attack_data)
 	return CopDamage.damage_explosion(self, attack_data)
 end
 
--- Lines 91-99
+-- Lines 83-91
 function CivilianDamage:damage_fire(attack_data)
 	if attack_data.variant == "fire" then
 		attack_data.damage = 10
@@ -100,31 +92,15 @@ function CivilianDamage:damage_fire(attack_data)
 	return CopDamage.damage_fire(self, attack_data)
 end
 
--- Lines 103-114
+-- Lines 95-98
 function CivilianDamage:damage_melee(attack_data)
-	if managers.player:has_category_upgrade("player", "civ_harmless_melee") and not self._unit:anim_data().no_intimidation_by_dmg and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
-		self._survive_shot_t = TimerManager:game():time() + 2.5
-
-		self._unit:brain():on_intimidated(1, attack_data.attacker_unit)
-
-		return
-	end
-
 	attack_data.damage = 10
 
 	return CopDamage.damage_melee(self, attack_data)
 end
 
--- Lines 118-129
+-- Lines 102-105
 function CivilianDamage:damage_tase(attack_data)
-	if managers.player:has_category_upgrade("player", "civ_harmless_melee") and not self._unit:anim_data().no_intimidation_by_dmg and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
-		self._survive_shot_t = TimerManager:game():time() + 2.5
-
-		self._unit:brain():on_intimidated(1, attack_data.attacker_unit)
-
-		return
-	end
-
 	attack_data.damage = 10
 
 	return CopDamage.damage_tase(self, attack_data)

@@ -18,9 +18,9 @@ function DramaExt:play_sound(sound, sound_source)
 	self._cue = self._cue or {}
 	self._cue.sound = sound
 	self._cue.sound_source = sound_source
-	local playing = self._unit:sound_source(sound_source):post_event(sound, self.sound_callback, self._unit, "marker", "end_of_event")
+	self._cue.event = self._unit:sound_source(sound_source):post_event(sound, self.sound_callback, self._unit, "marker", "end_of_event")
 
-	if not playing then
+	if not self._cue.event then
 		Application:error("[DramaExt:play_sound] Wasn't able to play sound event " .. sound)
 		Application:stack_dump()
 		self:sound_callback(nil, "end_of_event", self._unit, sound_source, nil, nil, nil)
@@ -49,7 +49,7 @@ function DramaExt:_do_show_subtitle()
 	managers.subtitle:set_enabled(true)
 end
 
--- Lines 49-68
+-- Lines 49-70
 function DramaExt:stop_cue()
 	if self._cue then
 		if self._cue.string_id then
@@ -58,7 +58,9 @@ function DramaExt:stop_cue()
 			managers.subtitle:set_enabled(false)
 		end
 
-		if self._cue.sound then
+		if alive(self._cue.event) then
+			self._cue.event:stop()
+		elseif self._cue.sound then
 			self._unit:sound_source(self._cue.sound_source):stop()
 		end
 
@@ -66,7 +68,7 @@ function DramaExt:stop_cue()
 	end
 end
 
--- Lines 70-91
+-- Lines 72-93
 function DramaExt:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
 	if event_type == "end_of_event" then
 		managers.subtitle:clear_subtitle()
@@ -80,7 +82,7 @@ function DramaExt:sound_callback(instance, event_type, unit, sound_source, label
 	end
 end
 
--- Lines 93-100
+-- Lines 95-102
 function DramaExt:_subtitle_len(id)
 	local text = managers.localization:text(id)
 	local duration = text:len() * tweak_data.dialog.DURATION_PER_CHAR
@@ -92,10 +94,10 @@ function DramaExt:_subtitle_len(id)
 	return duration
 end
 
--- Lines 102-106
+-- Lines 104-108
 function DramaExt:set_voice(voice)
 	local ss = self._unit:sound_source()
 
 	ss:set_switch("hero_switch", voice)
-	ss:set_switch("int_ext", "third")
+	ss:set_switch("actor_switch", "third")
 end

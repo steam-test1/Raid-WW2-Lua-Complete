@@ -18,6 +18,10 @@ RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE = "gold_bar_single"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW = "gold_bar_3"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY = "gold_bar_box"
 RaidGUIControlGoldBarRewardDetails.REWARD_ICON_OUTLAW = "missions_consumable_mission"
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN = 20
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MAX = 100
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_PREFIX = "reward_pile_gold_"
+RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT = 5
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_Y = 304
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_W = 416
 RaidGUIControlGoldBarRewardDetails.DESCRIPTION_FONT = tweak_data.gui.fonts.lato
@@ -31,7 +35,7 @@ RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_H = 64
 RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_FONT_SIZE = tweak_data.gui.font_sizes.size_38
 RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_COLOR = tweak_data.gui.colors.raid_white
 
--- Lines 47-65
+-- Lines 52-70
 function RaidGUIControlGoldBarRewardDetails:init(parent, params)
 	RaidGUIControlGoldBarRewardDetails.super.init(self, parent, params)
 
@@ -50,7 +54,7 @@ function RaidGUIControlGoldBarRewardDetails:init(parent, params)
 	self:_create_item_type()
 end
 
--- Lines 68-77
+-- Lines 73-82
 function RaidGUIControlGoldBarRewardDetails:_create_control_panel()
 	local control_params = clone(self._params)
 	control_params.x = control_params.x
@@ -62,7 +66,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_control_panel()
 	self._object = self._control_panel
 end
 
--- Lines 79-86
+-- Lines 84-91
 function RaidGUIControlGoldBarRewardDetails:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
@@ -72,7 +76,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_left_panel()
 	self._left_panel = self._object:panel(left_panel_params)
 end
 
--- Lines 88-119
+-- Lines 93-124
 function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	local title_description_params = {
 		name = "title_description",
@@ -107,7 +111,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	self:_layout_gold_bar_value()
 end
 
--- Lines 121-128
+-- Lines 126-133
 function RaidGUIControlGoldBarRewardDetails:_layout_gold_bar_value()
 	local _, _, w, h = self._gold_bar_value:text_rect()
 
@@ -117,7 +121,7 @@ function RaidGUIControlGoldBarRewardDetails:_layout_gold_bar_value()
 	self._title_description:set_x(self._gold_bar_value:x())
 end
 
--- Lines 130-148
+-- Lines 135-153
 function RaidGUIControlGoldBarRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
 		name = "reward_image_panel",
@@ -138,7 +142,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_reward_image()
 	self._reward_image:set_center_y(self._reward_image_panel:h() / 2)
 end
 
--- Lines 150-158
+-- Lines 155-163
 function RaidGUIControlGoldBarRewardDetails:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -150,7 +154,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
--- Lines 160-175
+-- Lines 165-180
 function RaidGUIControlGoldBarRewardDetails:_create_description()
 	local description_params = {
 		vertical = "top",
@@ -170,7 +174,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 end
 
--- Lines 177-192
+-- Lines 182-197
 function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 	local item_type_params = {
 		name = "item_type",
@@ -189,7 +193,7 @@ function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 	self._item_type = self._right_panel:text(item_type_params)
 end
 
--- Lines 194-272
+-- Lines 199-277
 function RaidGUIControlGoldBarRewardDetails:show()
 	RaidGUIControlGoldBarRewardDetails.super.show(self)
 
@@ -271,7 +275,7 @@ function RaidGUIControlGoldBarRewardDetails:show()
 	self._item_type:set_x(item_type_x)
 end
 
--- Lines 274-293
+-- Lines 279-308
 function RaidGUIControlGoldBarRewardDetails:set_gold_bar_reward(amount)
 	local text = ""
 
@@ -286,12 +290,22 @@ function RaidGUIControlGoldBarRewardDetails:set_gold_bar_reward(amount)
 
 	local icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE
 
-	if amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY <= amount then
-		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY
-	elseif amount and RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW <= amount then
-		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
+	if amount then
+		if RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN <= amount then
+			local idx = 1
+			local amount_per_tier = (RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MAX - RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN) / RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT
+			local amount_start_point = amount - RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN
+			idx = math.ceil(math.lerp(1, RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT, amount_start_point / amount_per_tier))
+			icon = RaidGUIControlGoldBarRewardDetails.GOLD_PILE_PREFIX .. math.clamp(idx, 1, RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT)
+		elseif RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY <= amount then
+			icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY
+		elseif RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW <= amount then
+			icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
+		end
 	end
 
-	self._reward_image:set_image(tweak_data.gui.icons[icon].texture)
-	self._reward_image:set_texture_rect(unpack(tweak_data.gui.icons[icon].texture_rect))
+	local gui_icon = tweak_data.gui:get_full_gui_data(icon)
+
+	self._reward_image:set_image(gui_icon.texture)
+	self._reward_image:set_texture_rect(unpack(gui_icon.texture_rect))
 end

@@ -16,7 +16,9 @@ function FlamerBrain:init(unit)
 	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, FlamerBrain.UPDATE_INTERVAL)
 
 	self._old_t = Application:time()
-	self._breathing_event = self._unit:sound_source():post_event("flamer_breathing_start")
+
+	self._unit:sound_source():post_event("flamer_breathing_start")
+
 	self.is_flamer = true
 end
 
@@ -42,10 +44,18 @@ function FlamerBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
 	end
 end
 
--- Lines 39-46
+-- Lines 39-59
 function FlamerBrain:queued_update()
 	if not alive(self._unit) then
 		return
+	end
+
+	if not self._physfix and self._unit:inventory() and self._unit:spawn_manager() then
+		self._physfix = true
+
+		for key, part_unit in pairs(self._unit:spawn_manager():get_spawned_units()) do
+			self._unit:inventory():get_weapon():base():add_ignore_unit(part_unit)
+		end
 	end
 
 	local t = Application:time()
@@ -54,7 +64,7 @@ function FlamerBrain:queued_update()
 	self:_queued_update(t, dt)
 end
 
--- Lines 48-112
+-- Lines 61-124
 function FlamerBrain:_queued_update(t, dt)
 	if self._current_logic_name == "inactive" then
 		return
@@ -119,7 +129,6 @@ function FlamerBrain:_queued_update(t, dt)
 		self._old_assault_pos = mvector3.copy(assalut_target.pos)
 		local attack_objective = {
 			type = "free",
-			no_retreat = true,
 			attitude = "engage"
 		}
 
@@ -130,24 +139,23 @@ function FlamerBrain:_queued_update(t, dt)
 	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, FlamerBrain.UPDATE_INTERVAL)
 end
 
--- Lines 114-116
+-- Lines 126-128
 function FlamerBrain:distance_to_target()
 	return self._distance_to_target
 end
 
--- Lines 118-134
+-- Lines 130-146
 function FlamerBrain:_hunt(assalut_target)
 	if self._current_logic_name == "inactive" then
 		return
 	end
 
-	if self._distance_to_target > 1200 then
+	if self:distance_to_target() > 1200 then
 		local objective = {
 			type = "defend_area",
 			area = assalut_target.area,
 			nav_seg = assalut_target.nav_seg,
 			pos = mvector3.copy(assalut_target.pos),
-			no_retreat = true,
 			attitude = "engage"
 		}
 
@@ -155,19 +163,13 @@ function FlamerBrain:_hunt(assalut_target)
 	end
 end
 
--- Lines 137-148
+-- Lines 149-154
 function FlamerBrain:clbk_death(my_unit, damage_info)
 	FlamerBrain.super.clbk_death(self, my_unit, damage_info)
-	self._unit:sound_source():post_event("flamer_breathing_break")
-
-	if alive(self._breathing_event) then
-		self._breathing_event:stop()
-
-		self._breathing_event = nil
-	end
+	self._unit:sound_source():post_event("flamer_breathing_stop")
 end
 
--- Lines 151-154
+-- Lines 157-160
 function FlamerBrain:pre_destroy(unit)
 	managers.queued_tasks:unqueue_all(self._ukey, self)
 	FlamerBrain.super.pre_destroy(self, unit)

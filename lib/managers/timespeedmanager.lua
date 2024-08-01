@@ -87,7 +87,7 @@ function TimeSpeedManager:_update_playing_effects()
 	end
 end
 
--- Lines 116-168
+-- Lines 106-158
 function TimeSpeedManager:play_effect(id, effect_desc)
 	local effect = {
 		desc = effect_desc,
@@ -154,7 +154,7 @@ function TimeSpeedManager:play_effect(id, effect_desc)
 	end
 end
 
--- Lines 172-202
+-- Lines 162-192
 function TimeSpeedManager:stop_effect(id, fade_out_duration)
 	if not self._playing_effects then
 		return
@@ -191,7 +191,7 @@ function TimeSpeedManager:stop_effect(id, fade_out_duration)
 	end
 end
 
--- Lines 206-224
+-- Lines 196-214
 function TimeSpeedManager:_on_effect_expired(effect_id)
 	local effect = self._playing_effects[effect_id]
 
@@ -215,12 +215,12 @@ function TimeSpeedManager:_on_effect_expired(effect_id)
 	end
 end
 
--- Lines 228-230
+-- Lines 218-220
 function TimeSpeedManager:in_effect()
 	return self._playing_effects and true
 end
 
--- Lines 234-241
+-- Lines 224-231
 function TimeSpeedManager:destroy()
 	while self._playing_effects do
 		local eff_id, eff = next(self._playing_effects)

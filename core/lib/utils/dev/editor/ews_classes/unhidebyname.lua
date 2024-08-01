@@ -1,8 +1,11 @@
 UnhideByName = UnhideByName or class(CoreEditorEwsDialog)
 
--- Lines 3-134
+-- Lines 3-139
 function UnhideByName:init(...)
-	CoreEditorEwsDialog.init(self, nil, self.TITLE or "Unhide by name", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
+	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+
+	CoreEditorEwsDialog.init(self, nil, self.TITLE or "Unhide by name", "", Vector3(300, 150, 0), Vector3(500, 540, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(500, 540, 0))
 	self:create_panel("VERTICAL")
 
 	local horizontal_ctrlr_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -19,12 +22,32 @@ function UnhideByName:init(...)
 
 	self._list:clear_all()
 	self._list:append_column("Name")
-	list_sizer:add(self._list, 1, 0, "EXPAND")
-	horizontal_ctrlr_sizer:add(list_sizer, 3, 0, "EXPAND")
+	list_sizer:add(self._list, 1, 2, "EXPAND,BOTTOM")
+	horizontal_ctrlr_sizer:add(list_sizer, 4, 0, "EXPAND")
 
 	local list_ctrlrs = EWS:BoxSizer("VERTICAL")
 	self._layer_cbs = {}
 	local layers_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "List Layers")
+	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
+	local all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
+	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
+	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local none_btn = EWS:Button(self._panel, "None", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
+	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
+	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local invert_btn = EWS:Button(self._panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
+
+	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
+	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
+	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
+
 	local layers = managers.editor:layers()
 	local names_layers = {}
 
@@ -49,34 +72,9 @@ function UnhideByName:init(...)
 		layers_sizer:add(cb, 0, 2, "EXPAND,TOP")
 	end
 
-	local layer_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
-	local all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(all_btn, 0, 2, "TOP,BOTTOM")
-	all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_all_layers"), "")
-	all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local none_btn = EWS:Button(self._panel, "None", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(none_btn, 0, 2, "TOP,BOTTOM")
-	none_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_none_layers"), "")
-	none_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-
-	local invert_btn = EWS:Button(self._panel, "Invert", "", "BU_EXACTFIT,NO_BORDER")
-
-	layer_buttons_sizer:add(invert_btn, 0, 2, "TOP,BOTTOM")
-	invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_layers"), "")
-	invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
-	layers_sizer:add(layer_buttons_sizer, 0, 2, "TOP,BOTTOM")
-	list_ctrlrs:add(layers_sizer, 0, 30, "EXPAND,TOP")
+	list_ctrlrs:add(layers_sizer, 0, 0, "EXPAND")
 
 	local continents_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Continents")
-	self._continents_sizer = EWS:BoxSizer("VERTICAL")
-
-	self:build_continent_cbs()
-	continents_sizer:add(self._continents_sizer, 0, 2, "TOP,BOTTOM")
-	list_ctrlrs:add(continents_sizer, 0, 5, "EXPAND,TOP")
-
 	local continent_buttons_sizer = EWS:BoxSizer("HORIZONTAL")
 	local continent_all_btn = EWS:Button(self._panel, "All", "", "BU_EXACTFIT,NO_BORDER")
 
@@ -96,14 +94,20 @@ function UnhideByName:init(...)
 	continent_invert_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_invert_continents"), "")
 	continent_invert_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	continents_sizer:add(continent_buttons_sizer, 0, 2, "TOP,BOTTOM")
-	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 0, "EXPAND")
-	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 0, "EXPAND")
+
+	self._continents_sizer = EWS:BoxSizer("VERTICAL")
+
+	self:build_continent_cbs()
+	continents_sizer:add(self._continents_sizer, 0, 2, "TOP,BOTTOM")
+	list_ctrlrs:add(continents_sizer, 0, 5, "EXPAND,TOP")
+	horizontal_ctrlr_sizer:add(list_ctrlrs, 2, 5, "EXPAND,LEFT")
+	self._panel_sizer:add(horizontal_ctrlr_sizer, 1, 5, "EXPAND,ALL")
 	self._list:connect("EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "on_mark_unit"), nil)
 	self._list:connect("EVT_COMMAND_LIST_ITEM_ACTIVATED", callback(self, self, "on_unhide"), nil)
 	self._list:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	local button_sizer = EWS:BoxSizer("HORIZONTAL")
-	local unhide_btn = EWS:Button(self._panel, self.BTN_NAME or "Unhide", "", "BU_BOTTOM")
+	local unhide_btn = EWS:Button(self._panel, self.BTN_NAME or "Unhide", "", "")
 
 	button_sizer:add(unhide_btn, 0, 2, "RIGHT,LEFT")
 	unhide_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_unhide"), "")
@@ -115,12 +119,12 @@ function UnhideByName:init(...)
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_cancel"), "")
 	cancel_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 	self._panel_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 4, "EXPAND,ALL")
 	self:fill_unit_list()
 	self._dialog:set_visible(true)
 end
 
--- Lines 136-153
+-- Lines 141-158
 function UnhideByName:build_continent_cbs()
 	self._continents_cbs = {}
 	local continents = managers.editor:continents()
@@ -148,12 +152,12 @@ function UnhideByName:build_continent_cbs()
 	end
 end
 
--- Lines 155-157
+-- Lines 160-162
 function UnhideByName:on_continent_cb()
 	self:fill_unit_list()
 end
 
--- Lines 159-164
+-- Lines 164-169
 function UnhideByName:on_all_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(true)
@@ -162,7 +166,7 @@ function UnhideByName:on_all_layers()
 	self:fill_unit_list()
 end
 
--- Lines 166-171
+-- Lines 171-176
 function UnhideByName:on_none_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(false)
@@ -171,7 +175,7 @@ function UnhideByName:on_none_layers()
 	self:fill_unit_list()
 end
 
--- Lines 173-178
+-- Lines 178-183
 function UnhideByName:on_invert_layers()
 	for name, cb in pairs(self._layer_cbs) do
 		cb:set_value(not cb:get_value())
@@ -180,7 +184,7 @@ function UnhideByName:on_invert_layers()
 	self:fill_unit_list()
 end
 
--- Lines 180-185
+-- Lines 185-190
 function UnhideByName:on_all_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(true)
@@ -189,7 +193,7 @@ function UnhideByName:on_all_continents()
 	self:fill_unit_list()
 end
 
--- Lines 187-192
+-- Lines 192-197
 function UnhideByName:on_none_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(false)
@@ -198,7 +202,7 @@ function UnhideByName:on_none_continents()
 	self:fill_unit_list()
 end
 
--- Lines 194-199
+-- Lines 199-204
 function UnhideByName:on_invert_continents()
 	for name, cb in pairs(self._continents_cbs) do
 		cb:set_value(not cb:get_value())
@@ -207,7 +211,7 @@ function UnhideByName:on_invert_continents()
 	self:fill_unit_list()
 end
 
--- Lines 210-215
+-- Lines 215-220
 function UnhideByName:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -216,17 +220,17 @@ function UnhideByName:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines 217-219
+-- Lines 222-224
 function UnhideByName:on_layer_cb(data)
 	self:fill_unit_list()
 end
 
--- Lines 221-223
+-- Lines 226-228
 function UnhideByName:on_cancel()
 	self._dialog:set_visible(false)
 end
 
--- Lines 225-235
+-- Lines 230-240
 function UnhideByName:on_unhide()
 	managers.editor:freeze_gui_lists()
 
@@ -241,7 +245,7 @@ function UnhideByName:on_unhide()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines 237-243
+-- Lines 242-248
 function UnhideByName:on_delete()
 	managers.editor:freeze_gui_lists()
 
@@ -252,11 +256,11 @@ function UnhideByName:on_delete()
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines 245-249
+-- Lines 250-254
 function UnhideByName:on_mark_unit()
 end
 
--- Lines 261-268
+-- Lines 266-273
 function UnhideByName:_selected_item_units()
 	local units = {}
 
@@ -269,7 +273,7 @@ function UnhideByName:_selected_item_units()
 	return units
 end
 
--- Lines 271-276
+-- Lines 276-281
 function UnhideByName:_selected_item_unit()
 	local index = self._list:selected_item()
 
@@ -278,17 +282,17 @@ function UnhideByName:_selected_item_unit()
 	end
 end
 
--- Lines 278-280
+-- Lines 283-285
 function UnhideByName:select_unit(unit)
 	managers.editor:select_unit(unit)
 end
 
--- Lines 283-285
+-- Lines 288-290
 function UnhideByName:hid_unit(unit)
 	self:_append_unit_to_list(unit)
 end
 
--- Lines 287-293
+-- Lines 292-298
 function UnhideByName:_append_unit_to_list(unit)
 	local i = self._list:append_item(unit:unit_data().name_id)
 	local j = #self._units + 1
@@ -297,12 +301,12 @@ function UnhideByName:_append_unit_to_list(unit)
 	self._list:set_item_data(i, j)
 end
 
--- Lines 296-298
+-- Lines 301-303
 function UnhideByName:unhid_unit(unit)
 	self:_remove_unit_from_list(unit)
 end
 
--- Lines 300-308
+-- Lines 305-313
 function UnhideByName:_remove_unit_from_list(unit)
 	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
@@ -313,7 +317,7 @@ function UnhideByName:_remove_unit_from_list(unit)
 	end
 end
 
--- Lines 311-339
+-- Lines 316-344
 function UnhideByName:unit_name_changed(unit)
 	for i = 0, self._list:item_count() - 1 do
 		if self._units[self._list:get_item_data(i)] == unit then
@@ -349,12 +353,12 @@ function UnhideByName:unit_name_changed(unit)
 	end
 end
 
--- Lines 341-343
+-- Lines 346-348
 function UnhideByName:update_filter()
 	self:fill_unit_list()
 end
 
--- Lines 347-376
+-- Lines 352-381
 function UnhideByName:fill_unit_list()
 	self._list:freeze()
 	self._list:delete_all_items()
@@ -388,7 +392,7 @@ function UnhideByName:fill_unit_list()
 	self._list:thaw()
 end
 
--- Lines 378-384
+-- Lines 383-389
 function UnhideByName:_continent_ok(unit)
 	local continent = unit:unit_data().continent
 
@@ -399,22 +403,22 @@ function UnhideByName:_continent_ok(unit)
 	return self._continents_cbs[continent:name()] and self._continents_cbs[continent:name()]:get_value()
 end
 
--- Lines 386-388
+-- Lines 391-393
 function UnhideByName:reset()
 	self:fill_unit_list()
 end
 
--- Lines 390-392
+-- Lines 395-397
 function UnhideByName:freeze()
 	self._list:freeze()
 end
 
--- Lines 394-396
+-- Lines 399-401
 function UnhideByName:thaw()
 	self._list:thaw()
 end
 
--- Lines 398-406
+-- Lines 403-411
 function UnhideByName:recreate()
 	for name, cb in pairs(self._continents_cbs) do
 		self._continents_sizer:detach(cb)
@@ -431,27 +435,27 @@ HideByName.TITLE = "Hide by Name"
 HideByName.BTN_NAME = "Hide"
 HideByName.IS_HIDE_BY_NAME = true
 
--- Lines 415-417
+-- Lines 420-422
 function HideByName:init(...)
 	HideByName.super.init(self, ...)
 end
 
--- Lines 419-421
+-- Lines 424-426
 function HideByName:hid_unit(unit)
 	self:_remove_unit_from_list(unit)
 end
 
--- Lines 423-425
+-- Lines 428-430
 function HideByName:unhid_unit(unit)
 	self:_append_unit_to_list(unit)
 end
 
--- Lines 427-429
+-- Lines 432-434
 function HideByName:spawned_unit(unit)
 	self:_append_unit_to_list(unit)
 end
 
--- Lines 431-433
+-- Lines 436-438
 function HideByName:deleted_unit(unit)
 	self:_remove_unit_from_list(unit)
 end

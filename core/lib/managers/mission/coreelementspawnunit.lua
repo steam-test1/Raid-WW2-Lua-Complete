@@ -50,7 +50,14 @@ function ElementSpawnUnit:units()
 	return self._units
 end
 
--- Lines 44-49
+-- Lines 45-49
+function ElementSpawnUnit:operation_remove()
+	if Network:is_server() then
+		self:delete_units()
+	end
+end
+
+-- Lines 51-56
 function ElementSpawnUnit:delete_units()
 	for _, unit in ipairs(self._units) do
 		unit:set_slot(0)
@@ -59,7 +66,7 @@ function ElementSpawnUnit:delete_units()
 	self._units = {}
 end
 
--- Lines 51-55
+-- Lines 58-62
 function ElementSpawnUnit:destroy()
 	if Network:is_server() then
 		self:delete_units()

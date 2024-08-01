@@ -68,17 +68,16 @@ function HUDChat:_create_panel(panel)
 	self._object = panel:panel(panel_params)
 end
 
--- Lines 80-108
+-- Lines 80-96
 function HUDChat:_create_background()
-	local background_params = {
+	local background = self._object:bitmap({
 		name = "background",
 		texture = tweak_data.gui.icons[HUDChat.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDChat.BACKGROUND_IMAGE].texture_rect
-	}
-	local background = self._object:bitmap(background_params)
+	})
 end
 
--- Lines 110-175
+-- Lines 98-164
 function HUDChat:_create_input()
 	local input_panel_params = {
 		alpha = 0.3,
@@ -134,6 +133,7 @@ function HUDChat:_create_input()
 	self._input_text = self._input_text_panel:text(input_text_params)
 	local caret_params = {
 		name = "caret",
+		visible = false,
 		layer = 10,
 		x = HUDChat.INPUT_TEXT_X,
 		w = HUDChat.CARET_W,
@@ -145,7 +145,7 @@ function HUDChat:_create_input()
 	self._caret:set_center_y(self._input_text_panel:h() / 2)
 end
 
--- Lines 177-193
+-- Lines 166-182
 function HUDChat:_create_message_panel()
 	local message_panel_layer = self._object:child("background") and self._object:child("background"):layer() + 1 or 20
 	local message_panel_params = {
@@ -161,37 +161,37 @@ function HUDChat:_create_message_panel()
 	self._message_panel = self._object:panel(message_panel_params)
 end
 
--- Lines 197-199
+-- Lines 186-188
 function HUDChat:set_layer(layer)
 	self._object:set_layer(layer)
 end
 
--- Lines 201-203
+-- Lines 190-192
 function HUDChat:layer()
 	return self._object:layer()
 end
 
--- Lines 205-207
+-- Lines 194-196
 function HUDChat:set_bottom(y)
 	self._object:set_bottom(y)
 end
 
--- Lines 209-211
+-- Lines 198-200
 function HUDChat:channel_id()
 	return self._channel_id
 end
 
--- Lines 213-215
+-- Lines 202-204
 function HUDChat:register()
 	managers.chat:register_receiver(self._channel_id, self)
 end
 
--- Lines 217-219
+-- Lines 206-208
 function HUDChat:unregister()
 	managers.chat:unregister_receiver(self._channel_id, self)
 end
 
--- Lines 221-225
+-- Lines 210-214
 function HUDChat:set_channel_id()
 	self:unregister()
 
@@ -200,12 +200,12 @@ function HUDChat:set_channel_id()
 	self:register()
 end
 
--- Lines 227-229
+-- Lines 216-218
 function HUDChat:esc_key_callback()
 	managers.hud:set_chat_focus(false)
 end
 
--- Lines 232-245
+-- Lines 221-234
 function HUDChat:enter_key_callback()
 	local message = self._input_text:text()
 
@@ -220,7 +220,7 @@ function HUDChat:enter_key_callback()
 	managers.hud:set_chat_focus(false)
 end
 
--- Lines 247-263
+-- Lines 236-263
 function HUDChat:_create_input_panel()
 	self._input_panel = self._panel:panel({
 		name = "input_panel",
@@ -755,7 +755,7 @@ function HUDChat:_message_in_same_thread(peer_id, system_message)
 	return false
 end
 
--- Lines 680-747
+-- Lines 680-751
 function HUDChat:receive_message(name, peer_id, message, color, icon, system_message)
 	if peer_id then
 		local peer = managers.network:session():peer(peer_id)
@@ -780,8 +780,11 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 				localized_message = managers.localization:text(message_data[1])
 			end
 		end
+
+		message = localized_message
 	end
 
+	Application:debug("[HUDChat:receive_message] localized message:", message)
 	table.insert(self._recieved_messages, message)
 
 	if ChatManager.MESSAGE_BUFFER_SIZE < #self._recieved_messages then
@@ -822,12 +825,12 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 	end
 end
 
--- Lines 749-751
+-- Lines 753-755
 function HUDChat:ct_cached_messages()
 	return #self._recieved_messages
 end
 
--- Lines 753-766
+-- Lines 757-770
 function HUDChat:_layout_message_panel()
 	local h = 0
 	local bottom = self._message_panel:h()
@@ -843,12 +846,12 @@ function HUDChat:_layout_message_panel()
 	self._message_panel:set_bottom(self._object:h() - self._input_panel:h())
 end
 
--- Lines 768-770
+-- Lines 772-774
 function HUDChat:set_output_alpha(alpha)
 	self._panel:child("output_panel"):set_alpha(alpha)
 end
 
--- Lines 772-778
+-- Lines 776-782
 function HUDChat:remove()
 	self._panel:child("output_panel"):stop()
 	self._input_panel:stop()

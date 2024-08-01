@@ -1,12 +1,8 @@
 core:module("CoreControllerManager")
 core:import("CoreControllerWrapperSettings")
-core:import("CoreControllerWrapperGamepad")
 core:import("CoreControllerWrapperPC")
-core:import("CoreControllerWrapperXbox360")
-core:import("CoreControllerWrapperPS3")
 core:import("CoreControllerWrapperPS4")
 core:import("CoreControllerWrapperXB1")
-core:import("CoreControllerWrapperSteam")
 core:import("CoreControllerWrapperDebug")
 core:import("CoreManagerBase")
 core:import("CoreEvent")
@@ -16,7 +12,7 @@ ControllerManager = ControllerManager or class(CoreManagerBase.ManagerBase)
 ControllerManager.CONTROLLER_SETTINGS_TYPE = ControllerManager.CONTROLLER_SETTINGS_TYPE or "controller_settings"
 ControllerManager.CORE_CONTROLLER_SETTINGS_PATH = ControllerManager.CORE_CONTROLLER_SETTINGS_PATH or "core/settings/core_controller_settings"
 
--- Lines 21-102
+-- Lines 17-88
 function ControllerManager:init(path, default_settings_path)
 	ControllerManager.super.init(self, "controller")
 
@@ -26,7 +22,7 @@ function ControllerManager:init(path, default_settings_path)
 
 	self._skip_controller_map = {}
 
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if not IS_PC then
 		self._skip_controller_map.win32_keyboard = true
 		self._skip_controller_map.win32_mouse = true
 	end
@@ -45,17 +41,14 @@ function ControllerManager:init(path, default_settings_path)
 	self._next_controller_wrapper_id = 1
 	self._supported_wrapper_types = {}
 
-	if _G.IS_PC then
+	if IS_PC then
 		self._supported_wrapper_types[CoreControllerWrapperPC.ControllerWrapperPC.TYPE] = CoreControllerWrapperPC.ControllerWrapperPC
-		self._supported_wrapper_types[CoreControllerWrapperXbox360.ControllerWrapperXbox360.TYPE] = CoreControllerWrapperXbox360.ControllerWrapperXbox360
-	elseif _G.IS_PS3 then
-		self._supported_wrapper_types[CoreControllerWrapperPS3.ControllerWrapperPS3.TYPE] = CoreControllerWrapperPS3.ControllerWrapperPS3
-	elseif _G.IS_PS4 then
-		self._supported_wrapper_types[CoreControllerWrapperPS4.ControllerWrapperPS4.TYPE] = CoreControllerWrapperPS4.ControllerWrapperPS4
-	elseif _G.IS_XB1 then
 		self._supported_wrapper_types[CoreControllerWrapperXB1.ControllerWrapperXB1.TYPE] = CoreControllerWrapperXB1.ControllerWrapperXB1
-	elseif _G.IS_XB360 then
-		self._supported_wrapper_types[CoreControllerWrapperXbox360.ControllerWrapperXbox360.TYPE] = CoreControllerWrapperXbox360.ControllerWrapperXbox360
+		self._supported_wrapper_types[CoreControllerWrapperPS4.ControllerWrapperPS4.TYPE] = CoreControllerWrapperPS4.ControllerWrapperPS4
+	elseif IS_PS4 then
+		self._supported_wrapper_types[CoreControllerWrapperPS4.ControllerWrapperPS4.TYPE] = CoreControllerWrapperPS4.ControllerWrapperPS4
+	elseif IS_XB1 then
+		self._supported_wrapper_types[CoreControllerWrapperXB1.ControllerWrapperXB1.TYPE] = CoreControllerWrapperXB1.ControllerWrapperXB1
 	end
 
 	self._supported_controller_type_map = {}
@@ -85,7 +78,7 @@ function ControllerManager:init(path, default_settings_path)
 	self._hotswap_callback_list = {}
 end
 
--- Lines 105-107
+-- Lines 91-93
 function ControllerManager:add_hotswap_callback(callback_id, callback, priority)
 	self._hotswap_callback_list[callback_id] = {
 		callback,
@@ -93,12 +86,12 @@ function ControllerManager:add_hotswap_callback(callback_id, callback, priority)
 	}
 end
 
--- Lines 109-111
+-- Lines 95-97
 function ControllerManager:remove_hotswap_callback(callback_id)
 	self._hotswap_callback_list[callback_id] = nil
 end
 
--- Lines 113-118
+-- Lines 99-104
 function ControllerManager._compare_callbacks(a, b)
 	local priority1 = a[2] or 1000000
 	local priority2 = b[2] or 1000000
@@ -106,7 +99,7 @@ function ControllerManager._compare_callbacks(a, b)
 	return priority1 < priority2
 end
 
--- Lines 120-134
+-- Lines 106-120
 function ControllerManager:dispatch_hotswap_callbacks()
 	local sorted_callbacks = {}
 
@@ -123,7 +116,7 @@ function ControllerManager:dispatch_hotswap_callbacks()
 	end
 end
 
--- Lines 136-157
+-- Lines 122-143
 function ControllerManager:setup_default_controller_list()
 	if Global.controller_manager.default_wrapper_index then
 		local controller_index_list = self._wrapper_to_controller_list[Global.controller_manager.default_wrapper_index]
@@ -135,14 +128,14 @@ function ControllerManager:setup_default_controller_list()
 
 			table.insert(self._default_controller_list, controller)
 
-			if not self._controller_device_id and controller:type() == "xb1_controller" and SystemInfo:platform() == Idstring("XB1") then
+			if not self._controller_device_id and controller:type() == "xb1_controller" and IS_XB1 then
 				self._controller_device_id = controller:device_id()
 			end
 		end
 	end
 end
 
--- Lines 159-177
+-- Lines 145-155
 function ControllerManager:update(t, dt)
 	for id, controller_wrapper in pairs(self._controller_wrapper_list) do
 		if controller_wrapper:enabled() then
@@ -151,17 +144,9 @@ function ControllerManager:update(t, dt)
 	end
 
 	self:check_connect_change()
-
-	if self:is_using_controller() and managers.hud and managers.raid_menu and not managers.raid_menu:is_any_menu_open() then
-		local toggle_chat_key = Idstring(managers.controller:get_settings("pc"):get_connection("toggle_chat"):get_input_name_list()[1])
-
-		if Input:keyboard():pressed(toggle_chat_key) then
-			managers.hud:toggle_chatinput()
-		end
-	end
 end
 
--- Lines 179-187
+-- Lines 157-165
 function ControllerManager:paused_update(t, dt)
 	for id, controller_wrapper in pairs(self._controller_wrapper_list) do
 		if controller_wrapper:enabled() then
@@ -172,7 +157,7 @@ function ControllerManager:paused_update(t, dt)
 	self:check_connect_change()
 end
 
--- Lines 189-209
+-- Lines 167-187
 function ControllerManager:replace_active_controller(replacement_ctrl_index, replacement_ctrl)
 	local old_ctrl = self._default_controller_list[1]
 	self._default_controller_list[1] = replacement_ctrl
@@ -197,11 +182,11 @@ function ControllerManager:replace_active_controller(replacement_ctrl_index, rep
 	self._controller_device_id = replacement_ctrl:device_id()
 end
 
--- Lines 211-294
+-- Lines 189-272
 function ControllerManager:check_connect_change()
-	if _G.IS_PC then
+	if IS_PC then
 		return
-	elseif (_G.IS_PS4 or SystemInfo:platform() == Idstring("XB1")) and self._default_controller_list then
+	elseif (IS_PS4 or IS_XB1) and self._default_controller_list then
 		local connected = true
 
 		for _, controller in ipairs(self._default_controller_list) do
@@ -209,7 +194,7 @@ function ControllerManager:check_connect_change()
 				connected = false
 
 				break
-			elseif SystemInfo:platform() == Idstring("XB1") and controller:type() == "xb1_controller" and (controller:device_id() ~= self._controller_device_id or XboxLive:current_user() and controller:user_xuid() ~= XboxLive:current_user()) then
+			elseif IS_XB1 and controller:type() == "xb1_controller" and (controller:device_id() ~= self._controller_device_id or XboxLive:current_user() and controller:user_xuid() ~= XboxLive:current_user()) then
 				connected = false
 
 				print("[ControllerManager:check_connect_change] not connected controller:device_id()", controller:device_id(), "self._controller_device_id", self._controller_device_id, "controller:connected()", controller:connected(), "controller:user_xuid()", controller:user_xuid(), "XboxLive:current_user()", XboxLive:current_user())
@@ -218,7 +203,7 @@ function ControllerManager:check_connect_change()
 			end
 		end
 
-		if not connected and SystemInfo:platform() == Idstring("XB1") then
+		if not connected and IS_XB1 then
 			print("[ControllerManager:check_connect_change] not connected")
 
 			local current_user = XboxLive:current_user()
@@ -259,12 +244,12 @@ function ControllerManager:check_connect_change()
 	end
 end
 
--- Lines 296-300
+-- Lines 274-278
 function ControllerManager:default_controller_connect_change(connected)
 	self._default_controller_connect_change_callback_handler:dispatch(connected)
 end
 
--- Lines 302-306
+-- Lines 280-284
 function ControllerManager:add_settings_file_changed_callback(func)
 	self._last_settings_file_changed_callback_id = self._last_settings_file_changed_callback_id + 1
 	self._settings_file_changed_callback_list[self._last_settings_file_changed_callback_id] = func
@@ -272,22 +257,22 @@ function ControllerManager:add_settings_file_changed_callback(func)
 	return self._last_settings_file_changed_callback_id
 end
 
--- Lines 308-310
+-- Lines 286-288
 function ControllerManager:remove_settings_file_changed_callback(id)
 	self._settings_file_changed_callback_list[id] = nil
 end
 
--- Lines 312-315
+-- Lines 290-293
 function ControllerManager:add_default_controller_connect_change_callback(func)
 	self._default_controller_connect_change_callback_handler:add(func)
 end
 
--- Lines 317-320
+-- Lines 295-298
 function ControllerManager:remove_default_controller_connect_change_callback(func)
 	self._default_controller_connect_change_callback_handler:remove(func)
 end
 
--- Lines 322-373
+-- Lines 300-351
 function ControllerManager:create_controller(name, index, debug, prio)
 	local controller_wrapper = nil
 
@@ -342,14 +327,14 @@ function ControllerManager:create_controller(name, index, debug, prio)
 	return controller_wrapper
 end
 
--- Lines 375-379
+-- Lines 353-357
 function ControllerManager:get_controller_by_name(name)
 	if name and self._controller_wrapper_map[name] then
 		return self._controller_wrapper_map[name]
 	end
 end
 
--- Lines 381-393
+-- Lines 359-371
 function ControllerManager:get_preferred_default_wrapper_index()
 	self:update_controller_wrapper_mappings()
 
@@ -362,7 +347,7 @@ function ControllerManager:get_preferred_default_wrapper_index()
 	return 1
 end
 
--- Lines 395-399
+-- Lines 373-377
 function ControllerManager:get_default_wrapper_type()
 	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local wrapper_class = self._wrapper_class_map[index]
@@ -370,7 +355,7 @@ function ControllerManager:get_default_wrapper_type()
 	return wrapper_class.TYPE
 end
 
--- Lines 401-448
+-- Lines 379-426
 function ControllerManager:update_controller_wrapper_mappings()
 	local controller_count = Input:num_real_controllers()
 	local controller_type_to_old_wrapper_map = {}
@@ -417,29 +402,29 @@ function ControllerManager:update_controller_wrapper_mappings()
 	end
 end
 
--- Lines 450-452
+-- Lines 428-430
 function ControllerManager:get_controller_index_list(wrapper_index)
 	return self._wrapper_to_controller_list[wrapper_index]
 end
 
--- Lines 454-456
+-- Lines 432-434
 function ControllerManager:get_wrapper_index(controller_index)
 	return self._controller_to_wrapper_list[controller_index]
 end
 
--- Lines 458-460
+-- Lines 436-438
 function ControllerManager:get_real_controller_count()
 	return Input:num_real_controllers()
 end
 
--- Lines 462-465
+-- Lines 440-443
 function ControllerManager:get_wrapper_count()
 	self:update_controller_wrapper_mappings()
 
 	return self._wrapper_count
 end
 
--- Lines 467-471
+-- Lines 445-449
 function ControllerManager:add_default_wrapper_index_change_callback(func)
 	self._last_default_wrapper_index_change_callback_id = self._last_default_wrapper_index_change_callback_id + 1
 	self._default_wrapper_index_change_callback_map[self._last_default_wrapper_index_change_callback_id] = func
@@ -447,12 +432,12 @@ function ControllerManager:add_default_wrapper_index_change_callback(func)
 	return self._last_default_wrapper_index_change_callback_id
 end
 
--- Lines 473-475
+-- Lines 451-453
 function ControllerManager:remove_default_wrapper_index_change_callback(id)
 	self._default_wrapper_index_change_callback_map[id] = nil
 end
 
--- Lines 477-503
+-- Lines 455-481
 function ControllerManager:set_default_wrapper_index(default_wrapper_index)
 	if Global.controller_manager.default_wrapper_index ~= default_wrapper_index then
 		local controller_index_list = default_wrapper_index and self._wrapper_to_controller_list[default_wrapper_index]
@@ -483,12 +468,12 @@ function ControllerManager:set_default_wrapper_index(default_wrapper_index)
 	end
 end
 
--- Lines 505-507
+-- Lines 483-485
 function ControllerManager:get_default_wrapper_index()
 	return Global.controller_manager.default_wrapper_index
 end
 
--- Lines 509-520
+-- Lines 487-498
 function ControllerManager:controller_wrapper_destroy_callback(controller_wrapper)
 	self:_del_accessobj(controller_wrapper)
 
@@ -504,7 +489,7 @@ function ControllerManager:controller_wrapper_destroy_callback(controller_wrappe
 	end
 end
 
--- Lines 522-555
+-- Lines 500-533
 function ControllerManager:load_core_settings()
 	local result = nil
 
@@ -539,7 +524,7 @@ function ControllerManager:load_core_settings()
 	return result
 end
 
--- Lines 557-636
+-- Lines 535-614
 function ControllerManager:load_settings(path)
 	local result = false
 
@@ -617,19 +602,19 @@ function ControllerManager:load_settings(path)
 	return result
 end
 
--- Lines 638-642
+-- Lines 616-620
 function ControllerManager:set_clean_default_setup(full_setup)
 	if not self._clean_default_setup then
 		self._clean_default_setup = full_setup
 	end
 end
 
--- Lines 644-646
+-- Lines 622-624
 function ControllerManager:get_clean_default_setup()
 	return self._clean_default_setup
 end
 
--- Lines 648-667
+-- Lines 626-645
 function ControllerManager:save_settings(path)
 	if not rawget(_G, "SystemFS") then
 		Application:error("Unable to save controller settings. Not supported on this platform.")
@@ -654,44 +639,44 @@ function ControllerManager:save_settings(path)
 	end
 end
 
--- Lines 669-673
+-- Lines 647-651
 function ControllerManager:rebind_connections()
 	for _, controller_wrapper in pairs(self._controller_wrapper_list) do
 		controller_wrapper:rebind_connections(self._controller_setup[controller_wrapper:get_type()], self._controller_setup)
 	end
 end
 
--- Lines 675-677
+-- Lines 653-655
 function ControllerManager:get_settings_map()
 	return self._controller_setup
 end
 
--- Lines 679-681
+-- Lines 657-659
 function ControllerManager:get_settings(wrapper_type)
 	return self._controller_setup[wrapper_type]
 end
 
--- Lines 683-685
+-- Lines 661-663
 function ControllerManager:get_default_settings_path()
 	return self._default_settings_path
 end
 
--- Lines 687-689
+-- Lines 665-667
 function ControllerManager:set_default_settings_path(path)
 	self._default_settings_path = path
 end
 
--- Lines 691-693
+-- Lines 669-671
 function ControllerManager:get_settings_path()
 	return self._default_settings_path
 end
 
--- Lines 695-697
+-- Lines 673-675
 function ControllerManager:set_settings_path(path)
 	self._settings_path = path
 end
 
--- Lines 701-717
+-- Lines 679-695
 function ControllerManager:change_default_wrapper_mode(mode)
 	if not mode or mode == self._default_wrapper_mode then
 		return
@@ -709,12 +694,12 @@ function ControllerManager:change_default_wrapper_mode(mode)
 	self._default_wrapper_mode = wrapper_class.change_mode(controller, mode)
 end
 
--- Lines 719-721
+-- Lines 697-699
 function ControllerManager:get_default_wrapper_mode()
 	return self._default_wrapper_mode
 end
 
--- Lines 725-729
+-- Lines 703-707
 function ControllerManager:get_default_controller()
 	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local controller_index = self._wrapper_to_controller_list[index] and self._wrapper_to_controller_list[index][1]
@@ -722,7 +707,7 @@ function ControllerManager:get_default_controller()
 	return controller_index and Input:controller(controller_index)
 end
 
--- Lines 733-759
+-- Lines 711-737
 function ControllerManager:create_virtual_pad()
 	self._virtual_game_pad = self._virtual_game_pad or Input:create_virtual_controller("all_gamepads")
 
@@ -757,7 +742,7 @@ function ControllerManager:create_virtual_pad()
 	end
 end
 
--- Lines 761-793
+-- Lines 739-771
 function ControllerManager:verify_parsed_controller_setup_map(parsed_controller_setup_map, path)
 	local result = true
 	local connection_map = {}

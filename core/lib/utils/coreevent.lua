@@ -190,46 +190,38 @@ function CallbackEventHandler:clear()
 end
 
 -- Lines 195-198
-function CallbackEventHandler:add(func)
+function CallbackEventHandler:add(clbk)
 	self._callback_map = self._callback_map or {}
-	self._callback_map[func] = true
+	self._callback_map[clbk] = true
 end
 
--- Lines 200-214
-function CallbackEventHandler:remove(func)
-	if not self._callback_map or not self._callback_map[func] then
+-- Lines 200-210
+function CallbackEventHandler:remove(clbk)
+	if not self._callback_map or not self._callback_map[clbk] then
 		return
 	end
 
-	if self._next_callback == func then
-		self._next_callback = next(self._callback_map, self._next_callback)
-	end
-
-	self._callback_map[func] = nil
+	self._callback_map[clbk] = nil
 
 	if not next(self._callback_map) then
 		self._callback_map = nil
 	end
 end
 
--- Lines 216-229
+-- Lines 212-222
 function CallbackEventHandler:dispatch(...)
-	if self._callback_map then
-		self._next_callback = next(self._callback_map)
+	if not self._callback_map then
+		return
+	end
 
-		self._next_callback(...)
-
-		while self._next_callback do
-			self._next_callback = next(self._callback_map, self._next_callback)
-
-			if self._next_callback then
-				self._next_callback(...)
-			end
+	for clbk, event in pairs(self._callback_map) do
+		if event then
+			clbk(...)
 		end
 	end
 end
 
--- Lines 244-253
+-- Lines 237-246
 function over(seconds, f, fixed_dt)
 	local t = 0
 
@@ -247,7 +239,7 @@ function over(seconds, f, fixed_dt)
 	f(1, seconds)
 end
 
--- Lines 259-270
+-- Lines 252-263
 function seconds(s, t)
 	if not t then
 		return seconds, s, 0
@@ -271,7 +263,7 @@ function seconds(s, t)
 	end
 end
 
--- Lines 273-279
+-- Lines 266-272
 function wait(seconds, fixed_dt)
 	local t = 0
 

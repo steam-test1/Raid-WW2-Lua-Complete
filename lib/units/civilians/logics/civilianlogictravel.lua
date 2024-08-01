@@ -192,7 +192,7 @@ function CivilianLogicTravel.update(data)
 			end
 		end
 	else
-		CopLogicBase._exit(data.unit, "idle")
+		CopLogicBase._exit_to_state(data.unit, "idle")
 	end
 end
 

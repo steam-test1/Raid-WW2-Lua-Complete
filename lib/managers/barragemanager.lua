@@ -8,34 +8,28 @@ BarrageManager.SPOTTER_COOLDOWN = 10
 BarrageManager.FLARE_UNIT = Idstring("units/vanilla/props/props_flare/props_spotter_flare")
 BarrageManager.default_params = tweak_data.barrage.default
 
--- Lines 14-22
+-- Lines 16-18
 function BarrageManager:init()
-	self._running_barrages = {}
-	self._listener_holder = EventListenerHolder:new()
-	self._spotters = {}
-	self._flares = {}
-	self._spotter_barrage_type = BarrageManager.default_params
-	self._queued_projectiles = {}
-	self._soundsource = SoundDevice:create_source("barrage_launch")
+	self:cleanup()
 end
 
--- Lines 24-33
+-- Lines 20-22
 function BarrageManager:on_simulation_ended()
 	self:cleanup()
-
-	self._running_barrages = {}
-	self._listener_holder = EventListenerHolder:new()
-	self._spotters = {}
-	self._flares = {}
-	self._spotter_barrage_type = BarrageManager.default_params
-	self._next_spotter_barrage_time = nil
-
-	self._soundsource:stop()
 end
 
--- Lines 35-44
+-- Lines 24-26
+function BarrageManager:stop_barrages()
+	self:cleanup()
+end
+
+-- Lines 31-58
 function BarrageManager:cleanup()
-	if Network:is_server() then
+	Application:debug("[BarrageManager:cleanup]")
+
+	self._next_spotter_barrage_time = nil
+
+	if Network:is_server() and self._flares and #self._flares > 0 then
 		for _, data in ipairs(self._flares) do
 			if alive(data.unit) then
 				data.unit:set_slot(0)
@@ -44,9 +38,21 @@ function BarrageManager:cleanup()
 	end
 
 	self._flares = {}
+	self._barrage_units = {}
+	self._running_barrages = {}
+	self._spotters = {}
+	self._queued_projectiles = {}
+	self._listener_holder = EventListenerHolder:new()
+	self._spotter_barrage_type = BarrageManager.default_params
+
+	if self._soundsource then
+		self._soundsource:stop()
+	else
+		self._soundsource = SoundDevice:create_source("barrage_launch")
+	end
 end
 
--- Lines 46-91
+-- Lines 62-111
 function BarrageManager:spawn_flare(spotter, target)
 	if not alive(target) then
 		return
@@ -55,9 +61,10 @@ function BarrageManager:spawn_flare(spotter, target)
 	local pos = spotter:position() + Vector3(0, 0, 150)
 	local rot = spotter:rotation()
 
-	self._soundsource:post_event("spotter_flare_thrown")
 	managers.dialog:queue_dialog("player_gen_barrage_flare_drop", {
-		skip_idle_check = true
+		skip_idle_check = true,
+		instigator = target,
+		position = target:position()
 	})
 
 	local target_pos = Vector3(target:position().x, target:position().y, pos.z)
@@ -93,11 +100,9 @@ function BarrageManager:spawn_flare(spotter, target)
 	managers.network:session():send_to_peers_synched("sync_spotter_spawn_flare", flare, pos, rot, forward, v0)
 end
 
--- Lines 93-107
+-- Lines 115-127
 function BarrageManager:sync_spotter_spawn_flare(flare, pos, rot, forward, v, spotter)
-	flare:body("static_body"):set_enabled(true)
-	flare:damage():run_sequence_simple("state_interaction_enabled")
-	flare:damage():run_sequence_simple("effect_start_red")
+	flare:damage():run_sequence_simple("state_barrage_throw")
 
 	local velocity = forward * v
 	local push_str = 10
@@ -116,7 +121,7 @@ function BarrageManager:sync_spotter_spawn_flare(flare, pos, rot, forward, v, sp
 	})
 end
 
--- Lines 110-145
+-- Lines 131-167
 function BarrageManager:update(t, dt)
 	local now = t
 
@@ -130,13 +135,10 @@ function BarrageManager:update(t, dt)
 		local barrage = self._running_barrages[i_barrage]
 
 		if barrage.end_time <= now then
+			managers.queued_tasks:queue(nil, self._comment_on_barrage_end, self, barrage.center_target, 10)
 			table.remove(self._running_barrages, i_barrage)
 			managers.mission:call_global_event("barrage_ended")
 			self:_call_listeners("barrage_ended")
-
-			if alive(barrage._spotter) then
-				barrage._spotter:brain():on_barrage_ended()
-			end
 		elseif barrage.next_projectile_time <= now then
 			barrage.next_projectile_time = self:_get_next_projectile_time(barrage)
 
@@ -160,38 +162,40 @@ function BarrageManager:update(t, dt)
 	self:_check_flare_start_barrage(t)
 end
 
--- Lines 147-163
+-- Lines 171-189
 function BarrageManager:_check_flare_start_barrage(t)
-	for _, data in ipairs(self._flares) do
-		if alive(data.unit) and data.unit:interaction():active() and not data.called and data.barrage_time < t then
-			Application:debug("[BarrageManager][_check_flare_start_barrage] START BARRAGE")
-			self:start_spotter_barrage(data.spotter, data.unit:position())
+	for i = #self._flares, 1, -1 do
+		local data = self._flares[i]
 
-			data.called = true
+		if alive(data.unit) then
+			if data.unit:interaction():active() and not data.called and data.barrage_time < t then
+				Application:debug("[BarrageManager][_check_flare_start_barrage] START BARRAGE")
+				self:start_spotter_barrage(data.spotter, data.unit:position())
 
-			data.unit:damage():run_sequence_simple("state_interaction_disabled")
-			managers.network:session():send_to_peers_synched("sync_spotter_flare_disabled", data.unit)
-		end
+				data.called = true
 
-		if alive(data.unit) and t > data.barrage_time + 20 then
-			data.unit:set_slot(0)
+				data.unit:damage():run_sequence_simple("state_barrage")
+				managers.network:session():send_to_peers_synched("sync_spotter_flare_disabled", data.unit)
+			end
+		else
+			table.remove(self._flares, i)
 		end
 	end
 end
 
--- Lines 165-168
+-- Lines 193-196
 function BarrageManager:is_barrage_running()
 	local barrage_running = #self._running_barrages > 0
 
 	return barrage_running
 end
 
--- Lines 171-173
+-- Lines 199-201
 function BarrageManager:_call_listeners(event, params)
 	self._listener_holder:call(event, params)
 end
 
--- Lines 177-182
+-- Lines 206-211
 function BarrageManager:add_listener(key, events, clbk)
 	if not Network:is_server() then
 		return
@@ -200,7 +204,7 @@ function BarrageManager:add_listener(key, events, clbk)
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 185-190
+-- Lines 215-220
 function BarrageManager:remove_listener(key)
 	if not Network:is_server() then
 		return
@@ -209,7 +213,7 @@ function BarrageManager:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 193-208
+-- Lines 224-240
 function BarrageManager:start_barrage(params)
 	local barrage_params = params
 
@@ -230,23 +234,28 @@ function BarrageManager:start_barrage(params)
 	self:_start_barrage(barrage_params)
 end
 
--- Lines 211-237
+-- Lines 244-295
 function BarrageManager:_start_barrage(barrage_params)
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BARRAGE) then
-		return
-	end
-
 	if not Network:is_server() then
 		return
 	end
 
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BARRAGE) then
+		return
+	end
+
 	local now = TimerManager:game():time()
+	local callout_barrage = false
 
 	if barrage_params.type == BarrageType.ARTILLERY then
 		local delay = barrage_params.initial_delay or 0
 		barrage_params.next_projectile_time = now + delay
 
 		table.insert(self._running_barrages, barrage_params)
+
+		callout_barrage = true
+
+		self:_waypoint_barrage_add(barrage_params)
 	elseif barrage_params.type == BarrageType.AIRPLANE then
 		local airplane_unit = safe_spawn_unit(barrage_params.airplane_unit, barrage_params.center, barrage_params.direction)
 
@@ -258,19 +267,80 @@ function BarrageManager:_start_barrage(barrage_params)
 
 	managers.mission:call_global_event("barrage_started")
 	self:_call_listeners("barrage_started")
+
+	if callout_barrage then
+		for u_key, u_data in pairs(managers.groupai:state():all_player_criminals()) do
+			if u_data and alive(u_data.unit) then
+				local player = u_data.unit
+				local distance = mvector3.distance(barrage_params.center_target, player:position())
+
+				if distance < 6400 then
+					managers.dialog:queue_dialog("player_gen_mortars_started", {
+						skip_idle_check = true,
+						instigator = player
+					})
+
+					break
+				end
+			end
+		end
+	end
 end
 
--- Lines 240-242
+-- Lines 299-311
+function BarrageManager:_comment_on_barrage_end(barrage_pos)
+	for u_key, u_data in pairs(managers.groupai:state():all_player_criminals()) do
+		if u_data and alive(u_data.unit) then
+			local player = u_data.unit
+			local distance = mvector3.distance(barrage_pos, player:position())
+
+			if distance < 6400 then
+				managers.dialog:queue_dialog("player_gen_mortars_end", {
+					skip_idle_check = true,
+					instigator = player
+				})
+
+				break
+			end
+		end
+	end
+end
+
+-- Lines 315-317
 function BarrageManager:sync_airplane_barrage(airplane_unit, sequence_name)
 	airplane_unit:damage():run_sequence_simple(sequence_name)
 end
 
--- Lines 244-246
-function BarrageManager:stop_barrages()
-	self:on_simulation_ended()
+-- Lines 323-345
+function BarrageManager:_waypoint_barrage_add(running_barrage)
+	if not running_barrage then
+		return
+	end
+
+	running_barrage.waypoint_id = "BarrageManager:barrage_wp_" .. (alive(running_barrage._spotter) and running_barrage._spotter:id() or "XXX")
+	local color = tweak_data.gui.colors.raid_red
+	local icon = "waypoint_special_air_strike"
+	local data = {
+		distance = false,
+		waypoint_type = "spotter",
+		icon = icon,
+		lifetime = running_barrage.duration + 7,
+		position = running_barrage.center_target + Vector3(0, 0, 65),
+		range_max = running_barrage.radius and running_barrage.radius * 3.5 or 1000,
+		waypoint_color = color or Color(1, 1, 1)
+	}
+
+	managers.hud:add_waypoint(running_barrage.waypoint_id, data)
 end
 
--- Lines 249-256
+-- Lines 350-354
+function BarrageManager:_waypoint_barrage_remove(running_barrage)
+	if running_barrage.waypoint_id then
+		managers.hud:remove_waypoint(running_barrage.waypoint_id)
+	end
+end
+
+-- Lines 359-366
 function BarrageManager:_get_barrage_position()
 	local pos_rot = managers.criminals:get_valid_player_spawn_pos_rot()
 
@@ -281,21 +351,38 @@ function BarrageManager:_get_barrage_position()
 	return nil
 end
 
--- Lines 258-269
+-- Lines 368-400
 function BarrageManager:_set_barrage_position(barrage_params, target_pos)
 	if barrage_params.type == BarrageType.ARTILLERY then
-		barrage_params.direction = barrage_params.direction:normalized()
-		local distance = barrage_params.distance or BarrageManager.DEFAULT_DISTANCE
-		barrage_params.center = target_pos + barrage_params.direction * -distance
+		if barrage_params.launch_from then
+			local barrage_spawn_unit = table.random(self._barrage_units[barrage_params.launch_from])
+
+			if alive(barrage_spawn_unit) then
+				if barrage_spawn_unit.get_barrage_launch_pos then
+					barrage_params.center_target = target_pos
+					barrage_params.center_from_object = barrage_spawn_unit:attack_blimp():get_barrage_launch_align()
+				else
+					barrage_params.center = barrage_spawn_unit:position()
+				end
+			else
+				Application:error("[BarrageManager:_set_barrage_position] Tried firing barrage from dead unit", barrage_spawn_unit)
+			end
+		else
+			barrage_params.direction = barrage_params.direction:normalized()
+			local distance = barrage_params.distance or BarrageManager.DEFAULT_DISTANCE
+			barrage_params.center = target_pos + barrage_params.direction * -distance
+			barrage_params.center_target = target_pos
+		end
 	elseif barrage_params.type == BarrageType.AIRPLANE then
 		barrage_params.direction = Rotation(math.random(360), 0, 0)
 		barrage_params.center = target_pos
+		barrage_params.center_target = target_pos
 	else
-		Application:error("[BarrageManager] Trying to start nvalid barrage type (not artillery nor aircraft)")
+		Application:error("[BarrageManager] Trying to start invalid barrage type (not artillery nor aircraft)")
 	end
 end
 
--- Lines 272-289
+-- Lines 404-421
 function BarrageManager:_get_next_projectile_time(barrage_params)
 	local now = TimerManager:game():time()
 	local next_projectile_time = 0
@@ -313,7 +400,7 @@ function BarrageManager:_get_next_projectile_time(barrage_params)
 	return next_projectile_time
 end
 
--- Lines 292-300
+-- Lines 425-437
 function BarrageManager:_queue_projectile(barrage_params)
 	local queued_projectile = {
 		barrage_params = barrage_params,
@@ -328,17 +415,28 @@ function BarrageManager:_queue_projectile(barrage_params)
 	table.insert(self._queued_projectiles, queued_projectile)
 end
 
--- Lines 303-305
+-- Lines 441-443
 function BarrageManager:play_barrage_launch_sound(event_name)
 	self._soundsource:post_event(event_name)
 end
 
--- Lines 308-329
+-- Lines 447-484
 function BarrageManager:_spawn_projectile(barrage_params)
 	local x, y = math.uniform_sample_circle(barrage_params.radius)
+	local barrage_from = barrage_params.center or barrage_params.center_from_object and barrage_params.center_from_object:position()
+	local barrage_dir = barrage_params.direction or barrage_params.center_from_object and (barrage_params.center_target - barrage_params.center_from_object:position()):normalized()
+
+	if not barrage_params.ortho_x then
+		barrage_params.ortho_x = barrage_dir:random_orthogonal():normalized()
+	end
+
+	if not barrage_params.ortho_y then
+		barrage_params.ortho_y = math.cross(barrage_dir, barrage_params.ortho_x):normalized()
+	end
+
 	local delta_x = x * barrage_params.ortho_x
 	local delta_y = y * barrage_params.ortho_y
-	local pos = barrage_params.center + delta_x + delta_y
+	local pos = barrage_from + delta_x + delta_y
 
 	if barrage_params.spotting_rounds and barrage_params.spotting_rounds > 0 then
 		if barrage_params.spotting_rounds_min_distance then
@@ -348,17 +446,17 @@ function BarrageManager:_spawn_projectile(barrage_params)
 				local adjustment = barrage_params.spotting_rounds_min_distance / distance
 				delta_x = delta_x * adjustment
 				delta_y = delta_y * adjustment
-				pos = barrage_params.center + delta_x + delta_y
+				pos = barrage_from + delta_x + delta_y
 			end
 		end
 
 		barrage_params.spotting_rounds = barrage_params.spotting_rounds - 1
 	end
 
-	ProjectileBase.throw_projectile(barrage_params.projectile_index, pos, barrage_params.direction * barrage_params.lauch_power)
+	ProjectileBase.throw_projectile(barrage_params.projectile_index, pos, barrage_dir * barrage_params.lauch_power)
 end
 
--- Lines 332-366
+-- Lines 488-526
 function BarrageManager:_prepare_barrage_params(barrage_params)
 	local prepared_params = clone(barrage_params or BarrageManager.default_params)
 
@@ -382,8 +480,12 @@ function BarrageManager:_prepare_barrage_params(barrage_params)
 		prepared_params.end_time = TimerManager:game():time() + prepared_params.duration
 		prepared_params.projectiles_per_minute = managers.groupai:get_difficulty_dependent_value(prepared_params.projectiles_per_minute)
 		prepared_params.time_between_projectiles = 60 / prepared_params.projectiles_per_minute
-		prepared_params.ortho_x = prepared_params.direction:random_orthogonal():normalized()
-		prepared_params.ortho_y = math.cross(prepared_params.direction, prepared_params.ortho_x):normalized()
+
+		if prepared_params.direction then
+			prepared_params.ortho_x = prepared_params.direction:random_orthogonal():normalized()
+			prepared_params.ortho_y = math.cross(prepared_params.direction, prepared_params.ortho_x):normalized()
+		end
+
 		prepared_params.radius = managers.groupai:get_difficulty_dependent_value(prepared_params.area_radius)
 	elseif prepared_params.type ~= BarrageType.AIRPLANE then
 		Application:error("[BarrageManager] Invalid barrage type (not artillery nor aircraft)")
@@ -394,7 +496,7 @@ function BarrageManager:_prepare_barrage_params(barrage_params)
 	return prepared_params
 end
 
--- Lines 369-396
+-- Lines 530-557
 function BarrageManager:_choose_random_type(barrage_params)
 	if not barrage_params.type_table then
 		Application:error("[BarrageManager] Barrage params for random type don't have a table of options")
@@ -432,22 +534,22 @@ function BarrageManager:_choose_random_type(barrage_params)
 	return nil
 end
 
--- Lines 402-404
+-- Lines 563-565
 function BarrageManager:set_spotter_barrage_type(barrage_params)
 	self._spotter_barrage_type = clone(barrage_params)
 end
 
--- Lines 407-409
+-- Lines 569-571
 function BarrageManager:get_spotter_barrage_type()
 	return self._spotter_barrage_type
 end
 
--- Lines 412-421
+-- Lines 575-584
 function BarrageManager:register_spotter(spotter_unit)
 	table.insert(self._spotters, spotter_unit)
 end
 
--- Lines 424-454
+-- Lines 588-619
 function BarrageManager:start_spotter_barrage(spotter, target_pos)
 	local t = TimerManager:game():time()
 
@@ -485,7 +587,7 @@ function BarrageManager:start_spotter_barrage(spotter, target_pos)
 	return true
 end
 
--- Lines 457-468
+-- Lines 623-634
 function BarrageManager:_is_spotter_barrage_off_cooldown(t)
 	return true
 
@@ -498,7 +600,7 @@ function BarrageManager:_is_spotter_barrage_off_cooldown(t)
 	return off_cooldown
 end
 
--- Lines 471-479
+-- Lines 638-646
 function BarrageManager:_remove_dead_spotters()
 	local ct_spotters = #self._spotters
 
@@ -508,5 +610,25 @@ function BarrageManager:_remove_dead_spotters()
 		if not alive(spotter) or spotter:character_damage() and spotter:character_damage():dead() then
 			table.remove(self._spotters, i_spotter)
 		end
+	end
+end
+
+-- Lines 651-657
+function BarrageManager:register_barrage_unit(key, unit)
+	if self._barrage_units[key] then
+		table.insert(self._barrage_units[key], unit)
+	else
+		self._barrage_units[key] = {
+			unit
+		}
+	end
+end
+
+-- Lines 660-666
+function BarrageManager:unregister_barrage_unit(key, unit)
+	if self._barrage_units[key] and self._barrage_units[key].unit then
+		table.delete(self._barrage_units[key], unit)
+	else
+		Application:warn("[BarrageManager:unregister_barrage_unit] Tried to unregister a key unit that wasnt registered!", key, unit)
 	end
 end

@@ -13,7 +13,7 @@ function FeedBackManager:init()
 	self._feedback_map = {}
 end
 
--- Lines 58-98
+-- Lines 58-76
 function FeedBackManager:setup_preset_effects()
 	self._feedback = {
 		mission_triggered = {}
@@ -29,7 +29,7 @@ function FeedBackManager:setup_preset_effects()
 	}
 end
 
--- Lines 100-106
+-- Lines 78-84
 function FeedBackManager:get_effect_names()
 	local names = {}
 
@@ -40,7 +40,7 @@ function FeedBackManager:get_effect_names()
 	return names
 end
 
--- Lines 108-127
+-- Lines 86-105
 function FeedBackManager:create(feedback, ...)
 	local extra_params = {
 		...
@@ -64,24 +64,24 @@ function FeedBackManager:create(feedback, ...)
 	return f
 end
 
--- Lines 129-131
+-- Lines 107-109
 function FeedBackManager:reload(feedback)
 	self:setup_preset_effects()
 end
 
--- Lines 136-138
+-- Lines 114-116
 function FeedBackManager:get_effect_table(name)
 	return self._feedback[name]
 end
 
--- Lines 140-152
+-- Lines 118-130
 function FeedBackManager:stop_all(name)
 	managers.rumble:stop("all")
 end
 
 FeedBack = FeedBack or class()
 
--- Lines 159-165
+-- Lines 137-143
 function FeedBack:init(effect_name, effect_table)
 	self._name = effect_name
 	self._feedback = {}
@@ -91,21 +91,21 @@ function FeedBack:init(effect_name, effect_table)
 	end
 end
 
--- Lines 167-171
+-- Lines 145-149
 function FeedBack:set_enabled(feedback_type, enabled)
 	if self._feedback[feedback_type] then
 		self._feedback[feedback_type]:set_enabled(enabled)
 	end
 end
 
--- Lines 173-176
+-- Lines 151-154
 function FeedBack:is_enabled(feedback_type)
 	local effect = self._feedback[feedback_type]
 
 	return effect and effect:is_enabled()
 end
 
--- Lines 178-186
+-- Lines 156-164
 function FeedBack:set_unit(unit, effect)
 	if not effect then
 		for _, effect in pairs(self._feedback) do
@@ -116,7 +116,7 @@ function FeedBack:set_unit(unit, effect)
 	end
 end
 
--- Lines 188-196
+-- Lines 166-174
 function FeedBack:set_viewport(vp, effect)
 	if effect then
 		self._feedback[effect]:set_viewport(vp)
@@ -127,26 +127,26 @@ function FeedBack:set_viewport(vp, effect)
 	end
 end
 
--- Lines 198-202
+-- Lines 176-180
 function FeedBack:set_param(effect, param_name, value)
 	if self._feedback[effect] then
 		self._feedback[effect]:set_param(param_name, value)
 	end
 end
 
--- Lines 204-208
+-- Lines 182-186
 function FeedBack:reset_params(effect)
 	if self._feedback[effect] then
 		self._feedback[effect]:reset_params()
 	end
 end
 
--- Lines 210-212
+-- Lines 188-190
 function FeedBack:extra_params(effect)
 	return self._extra_params[effect]
 end
 
--- Lines 214-250
+-- Lines 192-228
 function FeedBack:play(...)
 	local extra_params = {
 		...
@@ -185,7 +185,7 @@ function FeedBack:play(...)
 	end
 end
 
--- Lines 252-269
+-- Lines 230-247
 function FeedBack:stop(effect, ...)
 	local extra_params = {
 		...
@@ -208,7 +208,7 @@ function FeedBack:stop(effect, ...)
 	end
 end
 
--- Lines 271-282
+-- Lines 249-260
 function FeedBack:is_playing(effect)
 	if not effect then
 		for name, effect in pairs(self._feedback) do
@@ -225,14 +225,14 @@ end
 
 FeedBackEffect = FeedBackEffect or class()
 
--- Lines 287-291
+-- Lines 265-269
 function FeedBackEffect:init(name)
 	self._params = {}
 	self._name = name
 	self._enabled = true
 end
 
--- Lines 293-301
+-- Lines 271-279
 function FeedBackEffect:set_enabled(enabled)
 	if not self._enabled ~= not enabled then
 		if self._enabled then
@@ -243,35 +243,35 @@ function FeedBackEffect:set_enabled(enabled)
 	end
 end
 
--- Lines 304-306
+-- Lines 282-284
 function FeedBackEffect:is_enabled()
 	return self._enabled
 end
 
--- Lines 308-309
+-- Lines 286-287
 function FeedBackEffect:set_unit(unit)
 end
 
--- Lines 311-312
+-- Lines 289-290
 function FeedBackEffect:set_viewport(vp)
 end
 
--- Lines 314-316
+-- Lines 292-294
 function FeedBackEffect:set_static_param(name, value)
 	self._params[name] = value
 end
 
--- Lines 318-320
+-- Lines 296-298
 function FeedBackEffect:set_param(name, value)
 	self._params[name] = value
 end
 
--- Lines 322-324
+-- Lines 300-302
 function FeedBackEffect:reset_params()
 	self._params = {}
 end
 
--- Lines 326-330
+-- Lines 304-308
 function FeedBackEffect:play()
 	local params = managers.feedback:get_effect_table(self._name)[self._type]
 
@@ -280,37 +280,37 @@ function FeedBackEffect:play()
 	return params
 end
 
--- Lines 332-333
+-- Lines 310-311
 function FeedBackEffect:stop()
 end
 
--- Lines 335-337
+-- Lines 313-315
 function FeedBackEffect:is_playing()
 	return false
 end
 
 FeedBackrumble = FeedBackrumble or class(FeedBackEffect)
 
--- Lines 341-344
+-- Lines 319-322
 function FeedBackrumble:init(name)
 	FeedBackEffect.init(self, name)
 
 	self._type = "rumble"
 end
 
--- Lines 346-348
+-- Lines 324-326
 function FeedBackrumble:set_unit(unit)
 	self._unit = unit
 end
 
--- Lines 350-354
+-- Lines 328-332
 function FeedBackrumble:set_param(name, value)
 	if name == "multiplier_data" and self._id then
 		managers.rumble:set_multiplier(self._id, value)
 	end
 end
 
--- Lines 356-366
+-- Lines 334-344
 function FeedBackrumble:play(extra_params)
 	local params = FeedBackEffect.play(self)
 
@@ -321,14 +321,14 @@ function FeedBackrumble:play(extra_params)
 	end
 end
 
--- Lines 368-371
+-- Lines 346-349
 function FeedBackrumble:stop()
 	managers.rumble:stop(self._id)
 
 	self._id = nil
 end
 
--- Lines 373-391
+-- Lines 351-369
 function FeedBackrumble:is_playing()
 	local rumble = nil
 
@@ -353,25 +353,25 @@ end
 
 FeedBackCameraShake = FeedBackCameraShake or class(FeedBackEffect)
 
--- Lines 396-399
+-- Lines 374-377
 function FeedBackCameraShake:init(name)
 	FeedBackEffect.init(self, name)
 
 	self._type = "camera_shake"
 end
 
--- Lines 401-404
+-- Lines 379-382
 function FeedBackEffect:set_viewport(vp)
 	self._camera = vp:director():shaker()
 	self._playing_camera = self._camera
 end
 
--- Lines 406-408
+-- Lines 384-386
 function FeedBackEffect:set_unit(unit)
 	self._unit_camera = unit:camera()
 end
 
--- Lines 410-428
+-- Lines 388-406
 function FeedBackCameraShake:set_param(name, value)
 	if name == "multiplier" then
 		return
@@ -392,7 +392,7 @@ function FeedBackCameraShake:set_param(name, value)
 	end
 end
 
--- Lines 430-457
+-- Lines 408-432
 function FeedBackCameraShake:play(extra_params)
 	local params = managers.feedback:get_effect_table(self._name)[self._type]
 	local name = extra_params.name or params.name
@@ -421,7 +421,7 @@ function FeedBackCameraShake:play(extra_params)
 	end
 end
 
--- Lines 459-466
+-- Lines 434-441
 function FeedBackCameraShake:stop()
 	if self._unit_camera then
 		self._unit_camera:stop_shaker(self._id)
@@ -432,7 +432,7 @@ function FeedBackCameraShake:stop()
 	self._id = nil
 end
 
--- Lines 468-476
+-- Lines 443-451
 function FeedBackCameraShake:is_playing()
 	if self._unit_camera and self._id then
 		return self._unit_camera:shaker():is_playing(self._id)
@@ -445,7 +445,7 @@ end
 
 FeedBackAboveCameraEffect = FeedBackAboveCameraEffect or class(FeedBackEffect)
 
--- Lines 504-508
+-- Lines 479-483
 function FeedBackAboveCameraEffect:init(name)
 	FeedBackAboveCameraEffect.super.init(self, name)
 
@@ -453,17 +453,17 @@ function FeedBackAboveCameraEffect:init(name)
 	self._offset = Vector3(0, 0, 100)
 end
 
--- Lines 510-512
+-- Lines 485-487
 function FeedBackAboveCameraEffect:set_unit(unit)
 	self._unit_camera = unit:camera()
 end
 
--- Lines 514-516
+-- Lines 489-491
 function FeedBackAboveCameraEffect:set_param(name, value)
 	self._params[name] = value
 end
 
--- Lines 518-531
+-- Lines 493-506
 function FeedBackAboveCameraEffect:play(extra_params)
 	local params = FeedBackAboveCameraEffect.super.play(self)
 	local name = extra_params and extra_params.effect or params.effect
@@ -480,7 +480,7 @@ function FeedBackAboveCameraEffect:play(extra_params)
 	self._id = World:effect_manager():spawn(effect_params)
 end
 
--- Lines 533-537
+-- Lines 508-512
 function FeedBackAboveCameraEffect:stop()
 	if self._id then
 		World:effect_manager():kill(self._id)

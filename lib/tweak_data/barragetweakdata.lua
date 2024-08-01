@@ -5,38 +5,38 @@ BarrageType = {
 	RANDOM = 3
 }
 
--- Lines 13-160
+-- Lines 13-180
 function BarrageTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
 	self.default = {
 		type = BarrageType.ARTILLERY,
-		direction = Vector3(-1, 0, -1),
-		distance = 1000,
+		direction = Vector3(-0.33, 0, -0.33),
+		distance = 16000,
 		projectile_id = "mortar_shell",
-		lauch_power = 25,
-		cooldown = {
-			120,
-			90,
-			60
+		lauch_power = 36,
+		area_radius = {
+			1500,
+			1000,
+			1250
 		},
-		initial_delay = 4,
-		barrage_launch_sound_delay = 5,
+		cooldown = {
+			140,
+			130,
+			100
+		},
+		initial_delay = 3.5,
+		barrage_launch_sound_delay = 3.5,
 		barrage_launch_sound_event = "grenade_launcher"
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.default.projectiles_per_minute = {
-			10,
-			20,
+			30,
+			30,
 			30
 		}
 		self.flare_timer = 15
-		self.default.area_radius = {
-			750,
-			900,
-			1100
-		}
 		self.default.duration = {
 			10,
 			15,
@@ -44,16 +44,11 @@ function BarrageTweakData:init(tweak_data)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.default.projectiles_per_minute = {
-			25,
 			30,
+			35,
 			40
 		}
 		self.flare_timer = 12
-		self.default.area_radius = {
-			850,
-			1000,
-			1250
-		}
 		self.default.duration = {
 			10,
 			15,
@@ -61,20 +56,15 @@ function BarrageTweakData:init(tweak_data)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.default.projectiles_per_minute = {
-			25,
-			35,
+			30,
+			40,
 			45
 		}
 		self.flare_timer = 10
-		self.default.area_radius = {
-			950,
-			1100,
-			1500
-		}
 		self.default.duration = {
-			10,
-			15,
-			20
+			12,
+			17,
+			22
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.default.projectiles_per_minute = {
@@ -83,18 +73,34 @@ function BarrageTweakData:init(tweak_data)
 			50
 		}
 		self.flare_timer = 8
-		self.default.area_radius = {
-			1100,
-			1500,
-			2500
-		}
 		self.default.duration = {
-			10,
-			15,
-			20
+			14,
+			19,
+			24
 		}
 	end
 
+	self.blimp_barrage = deep_clone(self.default)
+	self.blimp_barrage.launch_from = "blimp"
+	self.blimp_barrage.direction = nil
+	self.blimp_barrage.area_radius = {
+		1000,
+		600,
+		1200
+	}
+	self.blimp_barrage.lauch_power = 35
+	self.blimp_barrage.projectiles_per_minute = {
+		90,
+		100,
+		120
+	}
+	self.blimp_barrage.duration = {
+		30,
+		30,
+		30
+	}
+	self.blimp_barrage.initial_delay = 1
+	self.blimp_barrage.barrage_launch_sound_delay = 0.1
 	self.spotted_arty = clone(self.default)
 	self.spotted_arty.direction = Vector3(0, 0, -1)
 	self.spotted_arty.spotting_rounds = 0
@@ -208,7 +214,7 @@ function BarrageTweakData:init(tweak_data)
 	}
 end
 
--- Lines 163-172
+-- Lines 183-192
 function BarrageTweakData:get_barrage_ids()
 	local t = {}
 

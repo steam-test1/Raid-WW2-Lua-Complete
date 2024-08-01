@@ -123,7 +123,7 @@ function ToolHub:get_tool_menu(frame)
 	return tool_menu
 end
 
--- Lines 117-245
+-- Lines 117-237
 function ToolHub:buildmenu()
 	local menu_bar = EWS:MenuBar()
 	local file_menu = EWS:Menu("")
@@ -210,58 +210,56 @@ function ToolHub:buildmenu()
 	self._main_frame:connect("SPECULAR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_visualization"), "specular_visualization")
 	self._main_frame:connect("GLOSSINESS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_visualization"), "glossiness_visualization")
 
-	if SystemInfo:platform() == Idstring("WIN32") then
-		local resolution_menu = EWS:Menu("")
+	local resolution_menu = EWS:Menu("")
 
-		for _, res in ipairs(RenderSettings.modes) do
-			local str = res.x .. "x" .. res.y .. ":" .. res.z
+	for _, res in ipairs(RenderSettings.modes) do
+		local str = res.x .. "x" .. res.y .. ":" .. res.z
 
-			resolution_menu:append_item(str, str, "")
-			self._main_frame:connect(str, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_resolution"), res)
-		end
-
-		resolution_menu:append_separator()
-		resolution_menu:append_item("4/3", "4/3", "")
-		resolution_menu:append_item("16/9", "16/9", "")
-		resolution_menu:append_item("16/10", "16/10", "")
-		resolution_menu:append_item("w/h", "w/h", "")
-		self._main_frame:connect("4/3", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.3333333333333333)
-		self._main_frame:connect("16/9", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.7777777777777777)
-		self._main_frame:connect("16/10", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.6)
-
-		local res = RenderSettings.resolution
-
-		self._main_frame:connect("w/h", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), res.x / res.y)
-		resolution_menu:append_separator()
-		resolution_menu:append_item("TOGGLE_FULLSCREEN", "Toggle Fullscreen", "")
-		self._main_frame:connect("TOGGLE_FULLSCREEN", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_fullscreen"), "")
-		menu_bar:append(resolution_menu, "Resolution")
+		resolution_menu:append_item(str, str, "")
+		self._main_frame:connect(str, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_resolution"), res)
 	end
+
+	resolution_menu:append_separator()
+	resolution_menu:append_item("4/3", "4/3", "")
+	resolution_menu:append_item("16/9", "16/9", "")
+	resolution_menu:append_item("16/10", "16/10", "")
+	resolution_menu:append_item("w/h", "w/h", "")
+	self._main_frame:connect("4/3", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.3333333333333333)
+	self._main_frame:connect("16/9", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.7777777777777777)
+	self._main_frame:connect("16/10", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), 1.6)
+
+	local res = RenderSettings.resolution
+
+	self._main_frame:connect("w/h", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "change_aspect_ratio"), res.x / res.y)
+	resolution_menu:append_separator()
+	resolution_menu:append_item("TOGGLE_FULLSCREEN", "Toggle Fullscreen", "")
+	self._main_frame:connect("TOGGLE_FULLSCREEN", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_fullscreen"), "")
+	menu_bar:append(resolution_menu, "Resolution")
 end
 
--- Lines 247-251
+-- Lines 239-243
 function ToolHub:change_visualization(viz)
 	for _, vp in ipairs(managers.viewport:viewports()) do
 		vp:set_visualization_mode(viz)
 	end
 end
 
--- Lines 253-255
+-- Lines 245-247
 function ToolHub:toggle_fullscreen()
 	managers.viewport:set_fullscreen(not RenderSettings.fullscreen)
 end
 
--- Lines 257-259
+-- Lines 249-251
 function ToolHub:change_resolution(custom_data, event_object)
 	managers.viewport:set_resolution(custom_data)
 end
 
--- Lines 261-263
+-- Lines 253-255
 function ToolHub:change_aspect_ratio(custom_data, event_object)
 	managers.viewport:set_aspect_ratio(custom_data)
 end
 
--- Lines 265-303
+-- Lines 257-295
 function ToolHub:menu_showcommands()
 	self:register_showcommand("show_gui", "show_gui")
 	self:register_showcommand("show_gui_sprites", "show_gui_sprites")
@@ -301,7 +299,7 @@ function ToolHub:menu_showcommands()
 	self:register_showcommand("show_shadow_projection", "show_shadow_projection")
 end
 
--- Lines 305-324
+-- Lines 297-316
 function ToolHub:menu_statsommands()
 	self:register_statscommands("atombatcher", "atombatcher")
 	self:register_statscommands("cullingmanager", "cullingmanager")
@@ -323,19 +321,19 @@ function ToolHub:menu_statsommands()
 	self:register_statscommands("unit_profiler", "unit_profiler")
 end
 
--- Lines 326-329
+-- Lines 318-321
 function ToolHub:register_statscommands(commandname, text)
 	self._statsmenu:append_check_item("TB_" .. commandname, text, "")
 	self._main_frame:connect("TB_" .. commandname, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_stats"), "")
 end
 
--- Lines 331-334
+-- Lines 323-326
 function ToolHub:register_showcommand(commandname, text)
 	self._dbgmenu:append_check_item("TB_" .. commandname, text, "")
 	self._main_frame:connect("TB_" .. commandname, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_gaaa"), "")
 end
 
--- Lines 336-340
+-- Lines 328-332
 function ToolHub:hide()
 	Global.frame:set_focus()
 	self._main_frame:set_visible(false)
@@ -343,7 +341,7 @@ function ToolHub:hide()
 	self._show = false
 end
 
--- Lines 342-346
+-- Lines 334-338
 function ToolHub:show()
 	self._main_frame:set_visible(true)
 	self._main_frame:set_focus()
@@ -351,18 +349,18 @@ function ToolHub:show()
 	self._show = true
 end
 
--- Lines 348-350
+-- Lines 340-342
 function ToolHub:on_close()
 	self:hide()
 end
 
--- Lines 352-355
+-- Lines 344-347
 function ToolHub:add(name, tool_class, init_args)
 	self._shed[name] = tool_class
 	self._init[name] = init_args or {}
 end
 
--- Lines 357-366
+-- Lines 349-358
 function ToolHub:open(name)
 	local tool = self._tools[name]
 
@@ -374,14 +372,14 @@ function ToolHub:open(name)
 	end
 end
 
--- Lines 368-371
+-- Lines 360-363
 function ToolHub:close(name)
 	self._closelist[name] = true
 
 	cat_print("debug", "ToolHub: Tool '" .. name .. "' added to close down list.")
 end
 
--- Lines 373-382
+-- Lines 365-374
 function ToolHub:prepare(name)
 	local tool_class = self._shed[name]
 
@@ -394,13 +392,13 @@ function ToolHub:prepare(name)
 	return nil
 end
 
--- Lines 384-387
+-- Lines 376-379
 function ToolHub:on_opentool(gaa, commandevent)
 	cat_print("debug", "Should Open Toool: " .. commandevent:get_id())
 	self:open(commandevent:get_id())
 end
 
--- Lines 389-393
+-- Lines 381-385
 function ToolHub:on_stats(gaa, commandevent)
 	local cmdname = string.sub(commandevent:get_id(), 4)
 
@@ -408,7 +406,7 @@ function ToolHub:on_stats(gaa, commandevent)
 	cat_print("debug", "stats " .. cmdname)
 end
 
--- Lines 395-405
+-- Lines 387-397
 function ToolHub:on_gaaa(gaa, commandevent)
 	local ischecked = self._dbgmenu:is_checked(commandevent:get_id())
 	local cmdname = string.sub(commandevent:get_id(), 4)
@@ -420,7 +418,7 @@ function ToolHub:on_gaaa(gaa, commandevent)
 	end
 end
 
--- Lines 407-416
+-- Lines 399-408
 function ToolHub:on_catprint(gaa, commandevent)
 	cat_print("debug", "Should Toogle Catprint: " .. commandevent:get_id())
 
@@ -433,13 +431,13 @@ function ToolHub:on_catprint(gaa, commandevent)
 	end
 end
 
--- Lines 418-421
+-- Lines 410-413
 function ToolHub:on_catprint_save(gaa, commandevent)
 	cat_print("debug", "Should Save Catprint")
 	CoreDebug.catprint_save()
 end
 
--- Lines 423-430
+-- Lines 415-422
 function ToolHub:on_catprint_drawdebug(gaa, commandevent)
 	if Global.render_debug == nil then
 		return
@@ -450,7 +448,7 @@ function ToolHub:on_catprint_drawdebug(gaa, commandevent)
 	cat_print("debug", "Toggle draw of debug info: " .. tostring(Global.render_debug.draw_enabled))
 end
 
--- Lines 432-446
+-- Lines 424-438
 function ToolHub:set_screen(gaa, commandevent)
 	cat_print("debug", "Should set_screen: " .. commandevent:get_id())
 
@@ -467,7 +465,7 @@ function ToolHub:set_screen(gaa, commandevent)
 	end
 end
 
--- Lines 448-460
+-- Lines 440-452
 function ToolHub:getscreenpos(screen)
 	if screen == "primary" then
 		return Vector3(100, 100, 0)

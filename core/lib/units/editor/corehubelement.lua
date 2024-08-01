@@ -25,7 +25,7 @@ function CoreHubElement:init(unit)
 	self:_createicon()
 end
 
--- Lines 37-68
+-- Lines 37-67
 function CoreHubElement:_createicon()
 	local iconsize = 128
 
@@ -62,7 +62,7 @@ function CoreHubElement:_createicon()
 	self._icon_script:seticon(self._icon, tostring(self._iconcolor))
 end
 
--- Lines 71-88
+-- Lines 70-75
 function CoreHubElement:_create_panel()
 	if self._panel then
 		return
@@ -71,12 +71,12 @@ function CoreHubElement:_create_panel()
 	self._panel, self._panel_sizer = self:_add_panel(self._parent_panel, self._parent_sizer)
 end
 
--- Lines 93-95
+-- Lines 80-82
 function CoreHubElement:_build_panel()
 	self._panel = nil
 end
 
--- Lines 99-113
+-- Lines 86-100
 function CoreHubElement:panel(id, parent, parent_sizer)
 	if id then
 		if self._panels[id] then
@@ -99,7 +99,7 @@ function CoreHubElement:panel(id, parent, parent_sizer)
 	return self._panel
 end
 
--- Lines 115-128
+-- Lines 102-115
 function CoreHubElement:_add_panel(parent, parent_sizer)
 	local panel = EWS:Panel(parent, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -116,14 +116,14 @@ function CoreHubElement:_add_panel(parent, parent_sizer)
 	return panel, panel_sizer
 end
 
--- Lines 135-140
+-- Lines 122-127
 function CoreHubElement:add_help_text(data)
 	if data.panel and data.sizer then
 		data.sizer:add(EWS:TextCtrl(data.panel, data.text, 0, "TE_MULTILINE,TE_READONLY,TE_WORDWRAP,TE_CENTRE"), 0, 5, "EXPAND,TOP,BOTTOM")
 	end
 end
 
--- Lines 144-153
+-- Lines 131-140
 function CoreHubElement:set_element_data(data)
 	if data.callback then
 		local he = self._unit:hub_element()
@@ -137,45 +137,45 @@ function CoreHubElement:set_element_data(data)
 	end
 end
 
--- Lines 156-157
+-- Lines 143-144
 function CoreHubElement:selected()
 end
 
--- Lines 160-161
+-- Lines 147-148
 function CoreHubElement:update_selected()
 end
 
--- Lines 164-165
+-- Lines 151-152
 function CoreHubElement:update_unselected()
 end
 
--- Lines 167-169
+-- Lines 154-156
 function CoreHubElement:begin_editing()
 end
 
--- Lines 171-173
+-- Lines 158-160
 function CoreHubElement:end_editing()
 end
 
--- Lines 176-177
+-- Lines 163-164
 function CoreHubElement:clone_data()
 end
 
--- Lines 193-194
+-- Lines 180-181
 function CoreHubElement:layer_finished()
 end
 
--- Lines 197-199
+-- Lines 184-186
 function CoreHubElement:action_type()
 	return self._action_type or self._type
 end
 
--- Lines 202-204
+-- Lines 189-191
 function CoreHubElement:trigger_type()
 	return self._trigger_type or self._type
 end
 
--- Lines 207-219
+-- Lines 194-206
 function CoreHubElement:save_mission_action(file, t, hub, dont_save_values)
 	local type = self:action_type()
 
@@ -194,7 +194,7 @@ function CoreHubElement:save_mission_action(file, t, hub, dont_save_values)
 	end
 end
 
--- Lines 222-235
+-- Lines 209-222
 function CoreHubElement:save_mission_action_enemy(file, t, hub)
 	local ha = hub:hub_element():get_hub_action(self._unit)
 	local pos = self._unit:position()
@@ -215,12 +215,12 @@ function CoreHubElement:save_mission_action_enemy(file, t, hub)
 	file:puts(t .. "</action>")
 end
 
--- Lines 239-241
+-- Lines 226-228
 function CoreHubElement:save_data(file, t)
 	self:save_values(file, t)
 end
 
--- Lines 244-251
+-- Lines 231-238
 function CoreHubElement:save_values(file, t)
 	t = t .. "\t"
 
@@ -233,14 +233,14 @@ function CoreHubElement:save_values(file, t)
 	file:puts(t .. "</values>")
 end
 
--- Lines 255-258
+-- Lines 242-245
 function CoreHubElement:save_value(file, t, name)
 	t = t .. "\t"
 
 	file:puts(save_value_string(self._hed, name, t, self._unit))
 end
 
--- Lines 261-273
+-- Lines 248-260
 function CoreHubElement:save_mission_trigger(file, t, hub)
 	if #self._mission_trigger_values > 0 then
 		local type = self:trigger_type()
@@ -259,16 +259,16 @@ function CoreHubElement:save_mission_trigger(file, t, hub)
 	end
 end
 
--- Lines 275-277
+-- Lines 262-264
 function CoreHubElement:name()
 	return self._unit:name() .. self._ud.unit_id
 end
 
--- Lines 281-282
+-- Lines 268-269
 function CoreHubElement:load_data(data)
 end
 
--- Lines 285-294
+-- Lines 272-281
 function CoreHubElement:get_color(type)
 	if type then
 		if type == "activate" or type == "enable" then
@@ -281,7 +281,7 @@ function CoreHubElement:get_color(type)
 	return 0, 1, 0
 end
 
--- Lines 297-302
+-- Lines 284-289
 function CoreHubElement:draw_connections_selected()
 	for _, hub in ipairs(self._hed.hubs) do
 		local r = 1
@@ -292,11 +292,11 @@ function CoreHubElement:draw_connections_selected()
 	end
 end
 
--- Lines 305-307
+-- Lines 292-294
 function CoreHubElement:draw_connections_unselected()
 end
 
--- Lines 309-329
+-- Lines 296-316
 function CoreHubElement:draw_arrow(from, to, r, g, b, thick)
 	self._arrow_brush:set_color(Color(r, g, b))
 
@@ -321,57 +321,57 @@ function CoreHubElement:draw_arrow(from, to, r, g, b, thick)
 	Application:draw_cone(to, to + (from - to):normalized() * 150, 48, r, g, b)
 end
 
--- Lines 333-334
+-- Lines 320-321
 function CoreHubElement:clear()
 end
 
--- Lines 338-340
+-- Lines 325-327
 function CoreHubElement:action_types()
 	return self._action_types
 end
 
--- Lines 342-344
+-- Lines 329-331
 function CoreHubElement:timeline_color()
 	return self._timeline_color
 end
 
--- Lines 347-348
+-- Lines 334-335
 function CoreHubElement:add_triggers()
 end
 
--- Lines 351-352
+-- Lines 338-339
 function CoreHubElement:clear_triggers()
 end
 
--- Lines 355-357
+-- Lines 342-344
 function CoreHubElement:widget_affect_object()
 	return nil
 end
 
--- Lines 360-362
+-- Lines 347-349
 function CoreHubElement:use_widget_position()
 	return nil
 end
 
--- Lines 367-368
+-- Lines 354-355
 function CoreHubElement:set_enabled()
 end
 
--- Lines 373-374
+-- Lines 360-361
 function CoreHubElement:set_disabled()
 end
 
--- Lines 377-379
+-- Lines 364-366
 function CoreHubElement:set_update_selected_on(value)
 	self._update_selected_on = value
 end
 
--- Lines 382-384
+-- Lines 369-371
 function CoreHubElement:update_selected_on()
 	return self._update_selected_on
 end
 
--- Lines 387-397
+-- Lines 374-384
 function CoreHubElement:destroy()
 	if self._panel then
 		self._panel:extension().alive = false

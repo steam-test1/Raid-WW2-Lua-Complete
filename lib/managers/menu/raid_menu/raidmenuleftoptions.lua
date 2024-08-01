@@ -28,7 +28,7 @@ function RaidMenuLeftOptions:close()
 	RaidMenuLeftOptions.super.close(self)
 end
 
--- Lines 30-64
+-- Lines 30-75
 function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
 		selection_enabled = true,
@@ -71,7 +71,7 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	self._reset_progress_button:set_visible(RaidMenuCallbackHandler:is_in_main_menu())
 end
 
--- Lines 66-80
+-- Lines 77-92
 function RaidMenuLeftOptions:_list_menu_options_data_source()
 	local _list_items = {}
 
@@ -82,6 +82,10 @@ function RaidMenuLeftOptions:_list_menu_options_data_source()
 	table.insert(_list_items, {
 		callback = "menu_options_on_click_video",
 		text = utf8.to_upper(managers.localization:text("menu_video"))
+	})
+	table.insert(_list_items, {
+		callback = "menu_options_on_click_interface",
+		text = utf8.to_upper(managers.localization:text("menu_interface"))
 	})
 	table.insert(_list_items, {
 		callback = "menu_options_on_click_sound",
@@ -95,7 +99,7 @@ function RaidMenuLeftOptions:_list_menu_options_data_source()
 	return _list_items
 end
 
--- Lines 82-94
+-- Lines 94-106
 function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	if not data.callback then
 		return
@@ -109,7 +113,7 @@ function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	end
 end
 
--- Lines 98-114
+-- Lines 110-126
 function RaidMenuLeftOptions:bind_controller_inputs()
 	local bindings = {
 		{
@@ -138,7 +142,7 @@ function RaidMenuLeftOptions:bind_controller_inputs()
 	self:set_legend(legend)
 end
 
--- Lines 143-161
+-- Lines 155-173
 function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 	local bindings = {
 		{

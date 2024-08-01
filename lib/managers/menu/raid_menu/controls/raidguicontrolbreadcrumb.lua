@@ -63,7 +63,7 @@ function RaidGUIControlBreadcrumb:_subscribe_to_relevant_events()
 	end
 end
 
--- Lines 64-87
+-- Lines 64-89
 function RaidGUIControlBreadcrumb:check_presence()
 	if not self._params then
 		return
@@ -72,7 +72,7 @@ function RaidGUIControlBreadcrumb:check_presence()
 	local should_be_visible = false
 
 	if self._params.category or self._params.identifiers then
-		should_be_visible = should_be_visible or managers.breadcrumb:category_has_breadcrumbs(self._params.category, self._params.identifiers)
+		should_be_visible = managers.breadcrumb:category_has_breadcrumbs(self._params.category, self._params.identifiers)
 	end
 
 	if self._params.check_callback then
@@ -90,7 +90,7 @@ function RaidGUIControlBreadcrumb:check_presence()
 	end
 end
 
--- Lines 89-100
+-- Lines 91-102
 function RaidGUIControlBreadcrumb:consume()
 	if self._consumed then
 		return
@@ -105,7 +105,7 @@ function RaidGUIControlBreadcrumb:consume()
 	end
 end
 
--- Lines 102-113
+-- Lines 104-115
 function RaidGUIControlBreadcrumb:close()
 	managers.breadcrumb:unregister_breadcrumb_change_listener("breadcrumb_" .. tostring(self._id) .. "_event_listener")
 	managers.breadcrumb:clear_unique_breadcrumb_id(self._id)
@@ -118,7 +118,7 @@ function RaidGUIControlBreadcrumb:close()
 	self._object:clear()
 end
 
--- Lines 115-131
+-- Lines 117-133
 function RaidGUIControlBreadcrumb:_animate_show(icon, delay)
 	local t = 0
 	local duration = 0.25
@@ -137,7 +137,7 @@ function RaidGUIControlBreadcrumb:_animate_show(icon, delay)
 	self:_animate_attract(icon, delay)
 end
 
--- Lines 133-165
+-- Lines 135-167
 function RaidGUIControlBreadcrumb:_animate_attract(icon, delay)
 	while true do
 		local t = 0
@@ -168,12 +168,12 @@ function RaidGUIControlBreadcrumb:_animate_attract(icon, delay)
 	end
 end
 
--- Lines 167-169
+-- Lines 169-171
 function RaidGUIControlBreadcrumb:_get_sine_wave_interpolation(amplitude, t, duration)
 	return amplitude * math.sin(math.deg(math.pi) * t / duration) * math.sin(math.deg(17 * math.pi) * t / duration)
 end
 
--- Lines 171-206
+-- Lines 173-208
 function RaidGUIControlBreadcrumb:_animate_hide(icon)
 	local t = 0
 	local duration = 0.4

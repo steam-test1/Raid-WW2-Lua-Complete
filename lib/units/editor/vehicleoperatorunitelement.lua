@@ -126,7 +126,7 @@ function VehicleOperatorUnitElement:add_unit_list_btn()
 
 	-- Lines 99-108
 	local function f(unit)
-		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
+		if not unit or not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
 		end
 

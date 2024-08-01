@@ -1,21 +1,24 @@
 HUDCarry = HUDCarry or class()
-HUDCarry.H = 64
+HUDCarry.H = 114
 HUDCarry.BOTTOM_DISTANCE_WHILE_HIDDEN = 32
-HUDCarry.ICON_PADDING_RIGHT = 16
-HUDCarry.PROMPT_W = 192
+HUDCarry.ICON_SIZE = 82
+HUDCarry.WEIGHT_ICON = "carry_weight_indicator_bg"
+HUDCarry.WEIGHT_FILL_ICON = "carry_weight_indicator_fill"
+HUDCarry.WEIGHT_FILL_COLOR = tweak_data.gui.colors.raid_gold
+HUDCarry.PROMPT_W = 224
 HUDCarry.PROMPT_FONT = tweak_data.gui.fonts.din_compressed_outlined_24
 HUDCarry.PROMPT_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 HUDCarry.PROMPT_TEXT_ID = "hud_carry_throw_prompt"
 HUDCarry.GENERIC_THROW_ID = "carry_item_generic"
 
--- Lines 14-18
+-- Lines 18-22
 function HUDCarry:init(hud)
 	self:_create_panel(hud)
 	self:_create_icon()
 	self:_create_prompt()
 end
 
--- Lines 20-28
+-- Lines 24-32
 function HUDCarry:_create_panel(hud)
 	local panel_params = {
 		name = "carry_panel",
@@ -27,26 +30,60 @@ function HUDCarry:_create_panel(hud)
 	self._object = hud.panel:panel(panel_params)
 end
 
--- Lines 30-40
+-- Lines 34-72
 function HUDCarry:_create_icon()
-	local placeholder_icon = "carry_planks"
-	local icon_params = {
+	self._icon_panel = self._object:panel({
+		name = "icon_panel",
+		halign = "center",
+		valign = "top",
+		w = HUDCarry.ICON_SIZE,
+		h = HUDCarry.ICON_SIZE
+	})
+	self._icon = self._icon_panel:bitmap({
 		name = "icon",
+		halign = "center",
+		valign = "center",
+		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture,
+		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture_rect,
+		w = HUDCarry.ICON_SIZE,
+		h = HUDCarry.ICON_SIZE
+	})
+	self._icon_fill_left = self._icon_panel:bitmap({
+		name = "icon_fill_left",
 		valign = "center",
 		halign = "left",
-		texture = tweak_data.gui.icons[placeholder_icon].texture,
-		texture_rect = tweak_data.gui.icons[placeholder_icon].texture_rect
-	}
-	self._icon = self._object:bitmap(icon_params)
+		render_template = "VertexColorTexturedRadial",
+		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
+		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
+		x = HUDCarry.ICON_SIZE,
+		y = HUDCarry.ICON_SIZE,
+		w = -HUDCarry.ICON_SIZE,
+		h = -HUDCarry.ICON_SIZE,
+		color = HUDCarry.WEIGHT_FILL_COLOR,
+		layer = self._icon:layer() + 1
+	})
+	self._icon_fill_right = self._icon_panel:bitmap({
+		name = "icon_fill_right",
+		x = 0,
+		valign = "center",
+		halign = "right",
+		render_template = "VertexColorTexturedRadial",
+		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
+		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
+		y = HUDCarry.ICON_SIZE,
+		w = HUDCarry.ICON_SIZE,
+		h = -HUDCarry.ICON_SIZE,
+		color = HUDCarry.WEIGHT_FILL_COLOR,
+		layer = self._icon:layer() + 2
+	})
 end
 
--- Lines 42-55
+-- Lines 74-87
 function HUDCarry:_create_prompt()
 	local prompt_params = {
 		vertical = "top",
-		wrap = true,
-		align = "center",
 		name = "prompt",
+		align = "center",
 		text = "",
 		halign = "left",
 		valign = "top",
@@ -58,28 +95,31 @@ function HUDCarry:_create_prompt()
 	self._prompt = self._object:text(prompt_params)
 end
 
--- Lines 57-70
+-- Lines 91-104
 function HUDCarry:_size_panel()
-	self._icon:set_x(0)
-	self._icon:set_center_y(self._object:h() / 2)
-
 	local _, _, w, h = self._prompt:text_rect()
 
-	self._prompt:set_w(w)
+	self._object:set_w(w + 4)
+	self._object:set_center_x(self._object:parent():w() / 2)
+	self._prompt:set_w(w + 4)
 	self._prompt:set_h(h)
-	self._prompt:set_x(self._icon:x() + self._icon:w() + HUDCarry.ICON_PADDING_RIGHT)
-	self._prompt:set_center_y(self._object:h() / 2 - 3)
-
-	local center_x = self._object:center_x()
-
-	self._object:set_w(self._prompt:x() + self._prompt:w())
-	self._object:set_center_x(center_x)
+	self._prompt:set_center_x(self._object:w() / 2)
+	self._prompt:set_bottom(self._object:h())
+	self._icon_panel:set_center_x(self._object:w() / 2 - 1)
+	self._icon_panel:set_bottom(self._prompt:y() - 3)
 end
 
--- Lines 72-91
+-- Lines 107-134
 function HUDCarry:show_carry_item(carry_id)
 	local carry_data = tweak_data.carry[carry_id]
-	local item_icon = carry_data.hud_icon or "carry_planks"
+
+	if carry_data then
+		self._icon_fill_left:set_visible(not carry_data.cannot_stack)
+		self._icon_fill_right:set_visible(not carry_data.cannot_stack)
+	end
+
+	local item_icon = carry_data.cannot_stack and carry_data.hud_icon
+	item_icon = item_icon or HUDCarry.WEIGHT_ICON
 
 	self._icon:set_image(tweak_data.gui.icons[item_icon].texture)
 	self._icon:set_texture_rect(unpack(tweak_data.gui.icons[item_icon].texture_rect))
@@ -96,33 +136,68 @@ function HUDCarry:show_carry_item(carry_id)
 	self._object:animate(callback(self, self, "_animate_show_carry"))
 end
 
--- Lines 93-96
+-- Lines 137-141
+function HUDCarry:set_carry_weight(weight, over_weight)
+	self._icon:stop()
+	self._icon:animate(callback(self, self, "_animate_set_carry_weight"), weight)
+	self:set_overweight_indication(over_weight)
+end
+
+-- Lines 144-152
+function HUDCarry:shake_carry_icon()
+	if not self._shaking then
+		self._shaking = true
+
+		self._icon_panel:stop()
+		self._icon_panel:animate(callback(self, self, "_animate_shake_icon"))
+	end
+
+	managers.hud:post_event("generic_fail_sound")
+end
+
+-- Lines 155-159
+function HUDCarry:set_carry_fill(weight)
+	local fill = math.min(weight / 2, 0.5)
+
+	self._icon_fill_right:set_position_z(fill)
+	self._icon_fill_left:set_position_z(fill)
+end
+
+-- Lines 162-166
+function HUDCarry:set_overweight_indication(state)
+	local color = state and tweak_data.gui.colors.progress_red or tweak_data.gui.colors.raid_gold
+
+	self._icon_fill_left:set_color(color)
+	self._icon_fill_right:set_color(color)
+end
+
+-- Lines 168-171
 function HUDCarry:hide_carry_item()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_hide_carry"))
 end
 
--- Lines 98-100
+-- Lines 175-177
 function HUDCarry:w()
 	return self._object:w()
 end
 
--- Lines 102-104
+-- Lines 179-181
 function HUDCarry:h()
 	return self._object:h()
 end
 
--- Lines 106-108
+-- Lines 183-185
 function HUDCarry:set_x(x)
 	self._object:set_x(x)
 end
 
--- Lines 110-112
+-- Lines 187-189
 function HUDCarry:set_y(y)
 	self._object:set_y(y)
 end
 
--- Lines 114-131
+-- Lines 193-210
 function HUDCarry:_animate_show_carry()
 	local duration = 0.5
 	local t = self._object:alpha() * duration
@@ -143,7 +218,7 @@ function HUDCarry:_animate_show_carry()
 	self._object:set_bottom(self._object:parent():h())
 end
 
--- Lines 133-150
+-- Lines 212-229
 function HUDCarry:_animate_hide_carry()
 	local duration = 0.25
 	local t = (1 - self._object:alpha()) * duration
@@ -162,4 +237,42 @@ function HUDCarry:_animate_hide_carry()
 
 	self._object:set_alpha(0)
 	self._object:set_bottom(self._object:parent():h() - HUDCarry.BOTTOM_DISTANCE_WHILE_HIDDEN)
+end
+
+-- Lines 231-246
+function HUDCarry:_animate_set_carry_weight(panel, weight)
+	weight = weight or 1
+	local start_weight = self._icon_fill_right:position_z() * 2
+	local duration = 0.45
+	local t = 0
+
+	while duration > t do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_weight = Easing.quadratic_out(t, start_weight, weight - start_weight, duration)
+
+		self:set_carry_fill(current_weight)
+	end
+
+	self:set_carry_fill(weight)
+end
+
+-- Lines 248-266
+function HUDCarry:_animate_shake_icon()
+	local duration = 1
+	local t = 0
+	local freq = 1120
+	local amp = 8
+
+	while t < duration do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_offset = math.sin(t * freq) * amp * (duration - t)
+
+		self._icon_panel:set_center_x(self._object:w() / 2 - current_offset - 1)
+	end
+
+	self._shaking = nil
+
+	self._icon_panel:set_center_x(self._object:w() / 2 - 1)
 end

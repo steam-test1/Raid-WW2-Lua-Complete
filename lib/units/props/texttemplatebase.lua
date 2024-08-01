@@ -22,7 +22,7 @@ function TextTemplateBase:set_template(template)
 	self:_apply_template()
 end
 
--- Lines 22-62
+-- Lines 22-61
 function TextTemplateBase:_stock_ticker()
 	for i = 1, self._unit:text_gui().ROWS do
 		self._unit:text_gui():set_row_gap(i, 20)
@@ -31,155 +31,10 @@ function TextTemplateBase:_stock_ticker()
 	end
 
 	local companies = {
-		"Common Carriers",
-		"Avalon",
-		"Kranich",
-		"Gensec Industries",
-		"Murkywater Solutions",
-		"iPear",
-		"Falcogini",
-		"Monarch",
-		"Garnet Group",
-		"White Mesa",
-		"TimeOut!",
-		"DC Menswear",
-		"Shield Malls",
-		"Harvest & Trustee",
-		"Benevolent Conglomerate",
-		"Sparkle and Spirit",
-		"Triceraopt",
-		"Rated T",
-		"Bodhi's Pool Maintenance & Repair",
-		"Kung Bo China",
-		"Tasteful Club",
-		"Omni Transport",
-		"First World Bank",
-		"Mercy Hospital",
-		"OVERKILL Bombers",
-		"Starbreeze Suns",
-		"SRC Finance Consultants",
-		"Green Air Foundation",
-		"Zecchino",
-		"Telescam",
-		"Smithsonian Bike Rentals",
-		"DC Bus",
-		"Hector the Dog Daycare",
-		"DJ D Enterprises",
-		"Jan SWE Security Corps.",
-		"Jules Baguettes",
-		"Robert's Bank of Savings & Trust",
-		"Sweet Relief",
-		"Ultracoat",
-		"Sanco Gas",
-		"Cheese Toast Inc.",
-		"Kenneth Cleaning Services",
-		"ShasanBox",
-		"Sentinel",
-		"Omni Exports",
-		"Hefty Shipping & Transport LTD",
-		"Almendia Logistics",
-		"Capitol Savings Bank",
-		"Perfect Fits",
-		"Shear Hairmony",
-		"Cosmetics DermoProfessionnel",
-		"Sweat Like A Maniac Gym",
-		"Miss We Bags & Accessories",
-		"Gioielli Di Famiglia",
-		"Douglas Development Corporation",
-		"Raw Deal Sushi",
-		"Apartments 4 Rent",
-		"Twenty Four Seven",
-		"Solid Gold Rifles",
-		"OVE Power Tools",
-		"The Mask Makers Guild",
-		"Berger Combat Gear",
-		"Infamy Eyewear",
-		"Bronco Firearms",
-		"TITAN",
-		"Frans Yaeger Safes",
-		"Precious Things",
-		"Tempfix",
-		"Importante",
-		"Buffler",
-		"Alliance Towing",
-		"Alpha Electric",
-		"Ball Fortress",
-		"Ballinger",
-		"Beacon",
-		"Biggs",
-		"Binksi Logging",
-		"Binski Paper Co",
-		"BLU Builders League United",
-		"BLU Blast Complex",
-		"BLU Brewery",
-		"BLU Co",
-		"BLU Freight & Shipping",
-		"BLU Industries Incorporated",
-		"Blue Corn Co.",
-		"BLU Steel",
-		"Bonk!",
-		"Brown Nugget Prospecting",
-		"Captain Dan's",
-		"Casali Shafting Co.",
-		"Clem's",
-		"Cliffe Rocks Inc.",
-		"Co Op",
-		"Conagher's Tool & Munitions",
-		"Cornwell",
-		"Cracky Pop!",
-		"Crummy's Burgers",
-		"Dalokohs",
-		"Driller",
-		"Farmers Elevator",
-		"Farmers Feed & Seed Co.",
-		"Ferguson System",
-		"Freeman Airboat Tours",
-		"General Industries Co.",
-		"Gilded Gold",
-		"Gold Medal",
-		"Goldstream Fuel Co.",
-		"Gray Gravel Co.",
-		"Hampshire's Heavy Lifting Equipment",
-		"Handy Hoe",
-		"Happy Farmers Cooperative",
-		"Holdingford Mill",
-		"Husky Acres",
-		"Icarus Airliners",
-		"Imperial Mining",
-		"Industrial",
-		"Jenkin Coal Co.",
-		"Jimi Jam",
-		"Jobbs Orchards",
-		"Lucky Plucker",
-		"Mann Co.",
-		"Newell and Sons",
-		"Northern Express",
-		"Old Geezer",
-		"P.R.P.",
-		"Piper & Piper Pipeworks Inc.",
-		"Primaprime",
-		"Projecto",
-		"RED Reliable Excavation Demolition",
-		"Red Bread",
-		"RED Iron",
-		"RED Iron Works",
-		"Red Shed",
-		"Red Valley Mining",
-		"Redstone Cargo",
-		"Regal Plumbing Supplies",
-		"Rib Place",
-		"Rio Grande Coal Co.",
-		"Rolling Stone Mining Logistics",
-		"Sanders BBQ",
-		"Schucker & Sons",
-		"Scoot's Canoe",
-		"Shiny's Bullion",
-		"Sunny Hay",
-		"Superior Feeds",
-		"Telemax",
-		"Wright Shipping",
-		"XXX",
-		"Zippy Plow"
+		"Blammo Co.",
+		"Kurgan-Paintings",
+		"Riveting Baldcappers",
+		"Wolfgang Copy n Co."
 	}
 
 	if not TextTemplateBase.STOCK_PERCENT then
@@ -219,7 +74,7 @@ function TextTemplateBase:_stock_ticker()
 	end
 end
 
--- Lines 64-83
+-- Lines 63-81
 function TextTemplateBase:_big_bank_welcome()
 	self._unit:text_gui():set_row_speed(1, 100)
 	self._unit:text_gui():set_row_speed(2, 240 + 120 * math.rand(1))
@@ -230,55 +85,16 @@ function TextTemplateBase:_big_bank_welcome()
 	end
 
 	local texts = {
-		"Welcome to the Benevolent bank",
+		"What is a sign like this doing in WW2?",
 		" - ",
-		"We know how to take care of your money",
-		" - ",
-		"Welcome to the Benevolent bank",
-		" - ",
-		"You and your money matters",
-		" - ",
-		"Welcome to the Benevolent Bank",
-		" - ",
-		"Your money is safe with us",
-		" - ",
-		"Welcome to the Benevolent bank",
-		" - ",
-		"Give us your money right now",
-		" - ",
-		"Welcome to the Benevolent bank",
-		" - ",
-		"Time to cash out?",
-		" - ",
-		"Welcome to the Benevolent bank",
-		" - ",
-		"We love money",
-		" - ",
-		"Welcome to the Benevolent bank",
-		" - ",
-		"Money as sweet as honey",
-		" - ",
-		"Welcome to the Benevolent bank",
-		" - ",
-		"Why so serious?",
-		" - ",
-		"Welcome to the Benevolent bank",
-		" - ",
-		"A penny saved is a penny earned",
+		"Must be from some silly timetraveling bank robbers...",
 		" - "
 	}
 	local texts2 = {
-		"Loan",
-		"Invest",
-		"Market",
-		"Stock",
-		"Currencies",
-		"Global Markets",
-		"Sell",
-		"Buy",
-		"Portfolio",
-		"Funds",
-		"Inflation"
+		"Sterling",
+		"Wolfgang",
+		"Rivet",
+		"Kurgan"
 	}
 
 	for i, text in ipairs(texts) do
@@ -291,11 +107,11 @@ function TextTemplateBase:_big_bank_welcome()
 	end
 end
 
--- Lines 85-87
+-- Lines 83-85
 function TextTemplateBase:destroy()
 end
 
--- Lines 89-95
+-- Lines 87-93
 function TextTemplateBase:save(data)
 	local state = {
 		template = self.TEMPLATE
@@ -303,7 +119,7 @@ function TextTemplateBase:save(data)
 	data.TextTemplateBase = state
 end
 
--- Lines 97-103
+-- Lines 95-101
 function TextTemplateBase:load(data)
 	local state = data.TextTemplateBase
 

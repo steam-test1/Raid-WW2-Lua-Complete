@@ -1,7 +1,7 @@
 FireManager = FireManager or class()
 FireManager.MAX_FLAMETHROWER_FIRES = 3
-FireManager.FLAMETHROWER_FIRE_CHANCE = 0.1
-FireManager.FLAMETHROWER_FIRE_CHANCE_INC = 0.33
+FireManager.FLAMETHROWER_FIRE_CHANCE = 0
+FireManager.FLAMETHROWER_FIRE_CHANCE_INC = 0.1
 local idstr_explosion_std = Idstring("explosion_std")
 local empty_idstr = Idstring("")
 local molotov_effect = "effects/vanilla/fire/fire_molotov_grenade_001"
@@ -330,7 +330,7 @@ function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	end
 end
 
--- Lines 283-509
+-- Lines 283-507
 function FireManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -465,10 +465,8 @@ function FireManager:detect_and_give_dmg(params)
 						count_civilians = count_civilians + 1
 					elseif CopDamage.is_gangster(type) then
 						count_gangsters = count_gangsters + 1
-					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" and type ~= "american" and type ~= "jowi" then
-						if type ~= "hoxton" then
-							count_cops = count_cops + 1
-						end
+					else
+						count_cops = count_cops + 1
 					end
 				end
 			end
@@ -515,10 +513,8 @@ function FireManager:detect_and_give_dmg(params)
 						count_civilian_kills = count_civilian_kills + 1
 					elseif CopDamage.is_gangster(type) then
 						count_gangster_kills = count_gangster_kills + 1
-					elseif type ~= "russian" and type ~= "german" and type ~= "spanish" then
-						if type ~= "american" then
-							count_cop_kills = count_cop_kills + 1
-						end
+					else
+						count_cop_kills = count_cop_kills + 1
 					end
 				end
 			end
@@ -541,11 +537,11 @@ function FireManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
--- Lines 511-513
+-- Lines 509-511
 function FireManager:units_to_push(units_to_push, hit_pos, range)
 end
 
--- Lines 515-567
+-- Lines 513-565
 function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -589,13 +585,13 @@ function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, dam
 	end
 end
 
--- Lines 569-572
+-- Lines 567-570
 function FireManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 574-594
+-- Lines 572-592
 function FireManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -617,22 +613,22 @@ function FireManager:client_damage_and_push(position, normal, user_unit, dmg, ra
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines 596-600
+-- Lines 594-598
 function FireManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table, custom_params.sound_event_burning, custom_params.sound_event_impact_duration)
 end
 
--- Lines 602-604
+-- Lines 600-602
 function FireManager:player_feedback(position, normal, range, custom_params)
 end
 
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 608-668
+-- Lines 606-670
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration)
-	effect_name = effect_name or "effects/vanilla/fire/fire_molotov_grenade_001"
+	effect_name = effect_name or molotov_effect
 	local effect_id = nil
 
 	if molotov_damage_effect_table ~= nil then
@@ -697,11 +693,11 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 	self:project_decal(ray, decal_ray_from, decal_ray_to, on_unit and ray and ray.unit, idstr_decal, idstr_effect)
 end
 
--- Lines 670-672
+-- Lines 672-674
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 end
 
--- Lines 675-681
+-- Lines 677-683
 function FireManager:_dispose_of_impact_sound(custom_params)
 	local sound_source_burning_loop = SoundDevice:create_source("MolotovBurning")
 
@@ -715,7 +711,7 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 	}), TimerManager:game():time() + tonumber(molotov_tweak.burn_duration) - custom_params.sound_event_impact_duration)
 end
 
--- Lines 685-689
+-- Lines 687-691
 function FireManager:on_simulation_ended()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}

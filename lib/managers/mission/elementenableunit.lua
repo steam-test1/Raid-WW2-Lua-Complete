@@ -2,14 +2,14 @@ core:import("CoreMissionScriptElement")
 
 ElementEnableUnit = ElementEnableUnit or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 5-9
+-- Lines 6-10
 function ElementEnableUnit:init(...)
 	ElementEnableUnit.super.init(self, ...)
 
 	self._units = {}
 end
 
--- Lines 11-22
+-- Lines 13-22
 function ElementEnableUnit:on_script_activated()
 	for _, id in ipairs(self._values.unit_ids) do
 		local unit = managers.worldcollection:get_unit_with_id(id, callback(self, self, "_load_unit"), self._mission_script:sync_id())
@@ -24,17 +24,12 @@ function ElementEnableUnit:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines 24-26
+-- Lines 25-27
 function ElementEnableUnit:_load_unit(unit)
 	table.insert(self._units, unit)
 end
 
--- Lines 28-30
-function ElementEnableUnit:client_on_executed(...)
-	self:on_executed(...)
-end
-
--- Lines 32-43
+-- Lines 31-43
 function ElementEnableUnit:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -47,13 +42,18 @@ function ElementEnableUnit:on_executed(instigator)
 	ElementEnableUnit.super.on_executed(self, instigator)
 end
 
--- Lines 45-48
+-- Lines 47-49
+function ElementEnableUnit:client_on_executed(...)
+	self:on_executed(...)
+end
+
+-- Lines 52-56
 function ElementEnableUnit:save(data)
 	data.save_me = true
 	data.enabled = self._values.enabled
 end
 
--- Lines 50-56
+-- Lines 59-64
 function ElementEnableUnit:load(data)
 	if not self._has_fetched_units then
 		self:on_script_activated()

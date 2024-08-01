@@ -91,69 +91,65 @@ function GroupAIStateEmpty:set_mission_fwd_vector(direction)
 end
 
 -- Lines 25-25
-function GroupAIStateEmpty:set_drama_build_period(period)
-end
-
--- Lines 26-26
 function GroupAIStateEmpty:add_special_objective(id, objective_data)
 end
 
--- Lines 27-27
+-- Lines 26-26
 function GroupAIStateEmpty:remove_special_objective(id)
 end
 
--- Lines 28-28
+-- Lines 27-27
 function GroupAIStateEmpty:save(save_data)
 end
 
--- Lines 29-29
+-- Lines 28-28
 function GroupAIStateEmpty:load(load_data)
 end
 
--- Lines 30-30
+-- Lines 29-29
 function GroupAIStateEmpty:on_cop_jobless(unit)
 end
 
--- Lines 31-31
+-- Lines 30-30
 function GroupAIStateEmpty:spawn_one_teamAI(unit)
 end
 
--- Lines 32-32
+-- Lines 31-31
 function GroupAIStateEmpty:remove_one_teamAI(unit)
 end
 
--- Lines 33-33
+-- Lines 32-32
 function GroupAIStateEmpty:fill_criminal_team_with_AI(unit)
 end
 
--- Lines 34-34
+-- Lines 33-33
 function GroupAIStateEmpty:set_importance_weight(cop_unit, dis_report)
 end
 
--- Lines 35-35
+-- Lines 34-34
 function GroupAIStateEmpty:on_criminal_recovered(criminal_unit)
 end
 
--- Lines 36-36
+-- Lines 35-35
 function GroupAIStateEmpty:on_criminal_disabled(unit)
 end
 
--- Lines 37-37
+-- Lines 36-36
 function GroupAIStateEmpty:on_criminal_neutralized(unit)
 end
 
--- Lines 38-38
+-- Lines 37-37
 function GroupAIStateEmpty:is_detection_persistent()
 end
 
--- Lines 39-39
+-- Lines 38-38
 function GroupAIStateEmpty:on_nav_link_unregistered()
 end
 
--- Lines 40-40
+-- Lines 39-39
 function GroupAIStateEmpty:save()
 end
 
--- Lines 41-41
+-- Lines 40-40
 function GroupAIStateEmpty:load()
 end

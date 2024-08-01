@@ -87,7 +87,7 @@ function UnitDamage:set_update_callback(func_name, ...)
 	UnitDamage.super.set_update_callback(self, func_name, ...)
 end
 
--- Lines 86-105
+-- Lines 86-106
 function UnitDamage:parent_run_sequence(sequence_name)
 	if not sequence_name then
 		Application:error("No sequence_name param passed\n", self._unit:name(), "\n")
@@ -110,26 +110,23 @@ function UnitDamage:parent_run_sequence(sequence_name)
 	end
 end
 
--- Lines 108-113
+-- Lines 110-114
 function UnitDamage:hit_headshot_confirmed(attacker_unit, hit_pos)
 	if attacker_unit == managers.player:player_unit() then
-		Application:debug("[UnitDamage] hit_headshot_confirmed!", attacker_unit)
-		managers.hud:on_headshot_confirmed(hit_pos)
+		managers.hud:on_hit_confirmed(hit_pos, true)
 	end
 end
 
--- Lines 116-121
+-- Lines 117-121
 function UnitDamage:hit_hit_confirmed(attacker_unit, hit_pos)
 	if attacker_unit == managers.player:player_unit() then
-		Application:debug("[UnitDamage] hit_hit_confirmed!", attacker_unit)
-		managers.hud:on_hit_confirmed(hit_pos)
+		managers.hud:on_hit_confirmed(hit_pos, false)
 	end
 end
 
--- Lines 124-129
+-- Lines 124-128
 function UnitDamage:hit_crit_confirmed(attacker_unit, hit_pos)
 	if attacker_unit == managers.player:player_unit() then
-		Application:debug("[UnitDamage] hit_crit_confirmed!", attacker_unit)
-		managers.hud:on_crit_confirmed(hit_pos)
+		managers.hud:on_hit_confirmed(hit_pos, false, true)
 	end
 end
