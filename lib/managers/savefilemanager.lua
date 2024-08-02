@@ -1082,6 +1082,8 @@ end
 
 -- Lines 1069-1086
 function SavefileManager:_set_current_game_cache_slot(current_game_cache_slot, dont_clear_old_cache)
+	Application:trace("[SavefileManager:_set_current_game_cache_slot] current_game_cache_slot, dont_clear_old_cache ", current_game_cache_slot, dont_clear_old_cache)
+
 	if not dont_clear_old_cache then
 		local old_slot = Global.savefile_manager.current_game_cache_slot
 
@@ -1330,13 +1332,6 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 				wrong_version = true
 			end
 
-			if cache and IS_STEAM and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
-				cat_print("savefile_manager", "[SavefileManager:clbk_result_load] User ID missmatch. cache.user_id:", cache.user_id, ". expected user id:", self._USER_ID_OVERRRIDE or Steam:userid())
-
-				cache = nil
-				wrong_user = true
-			end
-
 			self:_set_cache(slot, cache)
 			self:_load_done(slot, false, wrong_user, wrong_version)
 
@@ -1424,7 +1419,7 @@ function SavefileManager:clbk_result_iterate_savegame_slots(task_data, result_da
 	end
 end
 
--- Lines 1410-1439
+-- Lines 1431-1460
 function SavefileManager:clbk_result_save(task_data, result_data)
 	Application:trace("savefile_manager", "[SavefileManager:clbk_result_save] task_data, result_data ", inspect(task_data), inspect(result_data))
 
@@ -1455,7 +1450,7 @@ function SavefileManager:clbk_result_save(task_data, result_data)
 	end
 end
 
--- Lines 1442-1454
+-- Lines 1463-1475
 function SavefileManager:clbk_result_save_platform_setting(task_data, success)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_save_platform_setting]", inspect(task_data), success)
 
@@ -1471,7 +1466,7 @@ function SavefileManager:clbk_result_save_platform_setting(task_data, success)
 	end
 end
 
--- Lines 1458-1473
+-- Lines 1479-1494
 function SavefileManager:clbk_result_space_required(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_space_required] table.size(result_data)", table.size(result_data))
 
@@ -1488,7 +1483,7 @@ function SavefileManager:clbk_result_space_required(task_data, result_data)
 	end
 end
 
--- Lines 1478-1490
+-- Lines 1499-1511
 function SavefileManager:get_active_characters_count()
 	local result = 0
 
@@ -1505,18 +1500,18 @@ end
 
 SavefileInfo = SavefileInfo or class()
 
--- Lines 1499-1502
+-- Lines 1520-1523
 function SavefileInfo:init(slot, text)
 	self._slot = slot
 	self._text = text
 end
 
--- Lines 1504-1506
+-- Lines 1525-1527
 function SavefileInfo:slot()
 	return self._slot
 end
 
--- Lines 1508-1510
+-- Lines 1529-1531
 function SavefileInfo:text()
 	return self._text
 end

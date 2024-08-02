@@ -26,6 +26,11 @@ local UpgradeRally = {
 			self._max_amount = nil
 			self._damage_ratio = nil
 			self._headshot_multiplier = nil
+
+			managers.hud:set_player_special_health({
+				current = 0,
+				total = 0
+			})
 		end
 	end,
 	_on_damage_taken = function (self, attack_data)
