@@ -389,6 +389,7 @@ function CharacterSelectionGui:activate_selected_character()
 	end
 
 	self:_activate_character_profile(new_progress_slot_index)
+	managers.savefile:set_save_progress_slot(new_progress_slot_index)
 end
 
 function CharacterSelectionGui:_activate_character_profile(slot_index)
@@ -517,15 +518,19 @@ function CharacterSelectionGui:back_pressed()
 end
 
 function CharacterSelectionGui:_pre_close_screen()
-	Application:trace("[CharacterSelectionGui][_pre_close_screen]")
 	self:destroy_character_unit()
-	managers.savefile:set_save_progress_slot(self._active_character_slot)
+
+	local last_selected_cache = Global.savefile_manager.current_game_cache_slot
+
 	managers.savefile:_set_current_game_cache_slot(self._active_character_slot, true)
+	managers.savefile:set_save_progress_slot(self._active_character_slot)
 
 	local last_selected_slot = managers.savefile:get_save_progress_slot()
 	self._slot_to_select = last_selected_slot
 
-	if last_selected_slot ~= self._initial_character_slot then
+	Application:trace("[CharacterSelectionGui][_pre_close_screen]", last_selected_slot)
+
+	if last_selected_slot ~= self._initial_character_slot or last_selected_cache ~= self._initial_character_slot then
 		managers.savefile:save_last_selected_character_profile_slot()
 		self:_load_slot_data(last_selected_slot, true)
 	else

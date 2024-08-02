@@ -1020,6 +1020,8 @@ function SavefileManager:_set_current_task_type(task_type)
 end
 
 function SavefileManager:_set_current_game_cache_slot(current_game_cache_slot, dont_clear_old_cache)
+	Application:trace("[SavefileManager:_set_current_game_cache_slot] current_game_cache_slot, dont_clear_old_cache ", current_game_cache_slot, dont_clear_old_cache)
+
 	if not dont_clear_old_cache then
 		local old_slot = Global.savefile_manager.current_game_cache_slot
 
@@ -1250,13 +1252,6 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 			if cache and IS_PC and cache.version ~= SavefileManager.VERSION then
 				cache = nil
 				wrong_version = true
-			end
-
-			if cache and IS_STEAM and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
-				cat_print("savefile_manager", "[SavefileManager:clbk_result_load] User ID missmatch. cache.user_id:", cache.user_id, ". expected user id:", self._USER_ID_OVERRRIDE or Steam:userid())
-
-				cache = nil
-				wrong_user = true
 			end
 
 			self:_set_cache(slot, cache)

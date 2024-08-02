@@ -127,7 +127,7 @@ function UpgradeStats.get_formatted_description(desc_id, macros)
 	local desc = managers.localization:text(desc_id, macros)
 	local desc_colors = {}
 	local range = {}
-	local search_index = 1
+	local search_index = 0
 	local found = 0
 
 	while true do
