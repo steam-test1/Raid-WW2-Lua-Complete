@@ -1,5 +1,5 @@
 GreedManager = GreedManager or class()
-GreedManager.VERSION = 1
+GreedManager.VERSION = 2
 
 -- Lines 7-15
 function GreedManager.get_instance()
@@ -17,7 +17,7 @@ function GreedManager:init()
 	self:reset()
 end
 
--- Lines 23-34
+-- Lines 23-35
 function GreedManager:reset()
 	self._registered_greed_items = {}
 	self._registered_greed_cache_items = {}
@@ -25,9 +25,10 @@ function GreedManager:reset()
 	self._mission_loot_counter = 0
 	self._gold_awarded_in_mission = 0
 	self._active_greed_items = {}
+	self._secured_bounty = false
 end
 
--- Lines 37-48
+-- Lines 38-49
 function GreedManager:register_greed_item(unit, tweak_table, world_id)
 	self._registered_greed_items[world_id] = self._registered_greed_items[world_id] or {}
 	local item_tweak_data = tweak_data.greed.greed_items[tweak_table]
@@ -40,7 +41,7 @@ function GreedManager:register_greed_item(unit, tweak_table, world_id)
 	table.insert(self._registered_greed_items[world_id], greed_item_data)
 end
 
--- Lines 50-59
+-- Lines 51-60
 function GreedManager:register_greed_cache_item(unit, world_id)
 	self._registered_greed_cache_items[world_id] = self._registered_greed_cache_items[world_id] or {}
 	local greed_cache_item_data = {
@@ -51,7 +52,7 @@ function GreedManager:register_greed_cache_item(unit, world_id)
 	table.insert(self._registered_greed_cache_items[world_id], greed_cache_item_data)
 end
 
--- Lines 62-163
+-- Lines 63-164
 function GreedManager:plant_greed_items_on_level(world_id)
 	if not Network:is_server() or Application:editor() or not self._registered_greed_items[world_id] then
 		return
@@ -134,7 +135,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 	end
 end
 
--- Lines 166-197
+-- Lines 167-198
 function GreedManager:remove_greed_items_from_level(world_id)
 	if not Network:is_server() then
 		return
@@ -161,7 +162,7 @@ function GreedManager:remove_greed_items_from_level(world_id)
 	self._registered_greed_cache_items[world_id] = {}
 end
 
--- Lines 199-203
+-- Lines 200-204
 function GreedManager:greed_value_difficulty_multiplier()
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local current_difficulty = tweak_data:difficulty_to_index(difficulty)
@@ -169,9 +170,8 @@ function GreedManager:greed_value_difficulty_multiplier()
 	return tweak_data.greed.difficulty_level_point_multipliers_carry[current_difficulty]
 end
 
--- Lines 234-268
+-- Lines 235-269
 function GreedManager:pickup_greed_item(value, unit)
-	value = math.clamp(value, 1, 4000)
 	local notification_item = {
 		name_id = "menu_greed_loot_title",
 		icon = "carry_gold",
@@ -196,7 +196,7 @@ function GreedManager:pickup_greed_item(value, unit)
 	end
 end
 
--- Lines 272-287
+-- Lines 273-288
 function GreedManager:secure_greed_carry_loot(carry_id, multiplier)
 	local tweak = tweak_data.carry[carry_id]
 	local value = tweak.loot_greed_value
@@ -213,7 +213,7 @@ function GreedManager:secure_greed_carry_loot(carry_id, multiplier)
 	end
 end
 
--- Lines 290-309
+-- Lines 291-310
 function GreedManager:on_loot_pickpocketed()
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 	local current_difficulty = tweak_data:difficulty_to_index(difficulty)
@@ -234,12 +234,31 @@ function GreedManager:on_loot_pickpocketed()
 	end
 end
 
--- Lines 312-314
+-- Lines 313-322
 function GreedManager:pickup_cache_loot(value)
 	self:on_loot_picked_up(value)
 end
 
--- Lines 317-330
+-- Lines 328-335
+function GreedManager:secure_bounty(bars)
+	if not managers.raid_job:is_camp_loaded() and not managers.raid_job:is_in_tutorial() then
+		managers.network:session():send_to_peers_synched("sync_secured_bounty", bars)
+		self:sync_secured_bounty(bars)
+	else
+		Application:warn("[GreedManager:secure_bounty] Cannot award bounty out of a mission!")
+	end
+end
+
+-- Lines 338-343
+function GreedManager:sync_secured_bounty(bars)
+	if not self._secured_bounty then
+		self:on_loot_picked_up(self:loot_needed_for_gold_bar() * bars)
+
+		self._secured_bounty = true
+	end
+end
+
+-- Lines 347-360
 function GreedManager:on_loot_picked_up(value, notification_item)
 	self._mission_loot_counter = self._mission_loot_counter + value
 	local total_loot_counter = self:current_loot_counter() + self:current_mission_loot_counter() - self._gold_awarded_in_mission * self:loot_needed_for_gold_bar()
@@ -252,22 +271,22 @@ function GreedManager:on_loot_picked_up(value, notification_item)
 	managers.hud:on_greed_loot_picked_up(self._current_loot_counter + self._mission_loot_counter - value, self._current_loot_counter + self._mission_loot_counter, notification_item)
 end
 
--- Lines 333-335
+-- Lines 363-365
 function GreedManager:current_loot_counter()
 	return self._current_loot_counter
 end
 
--- Lines 338-340
+-- Lines 368-370
 function GreedManager:current_mission_loot_counter()
 	return self._mission_loot_counter
 end
 
--- Lines 343-345
+-- Lines 373-375
 function GreedManager:loot_needed_for_gold_bar()
 	return tweak_data.greed.item_value.complete_gold_bar
 end
 
--- Lines 349-373
+-- Lines 379-404
 function GreedManager:on_level_exited(success)
 	self._registered_greed_items = {}
 	self._registered_greed_cache_items = {}
@@ -283,41 +302,42 @@ function GreedManager:on_level_exited(success)
 	end
 
 	self._mission_loot_counter = 0
+	self._secured_bounty = false
 
 	if managers.hud then
 		managers.hud:reset_greed_indicators()
 	end
 end
 
--- Lines 375-377
+-- Lines 406-408
 function GreedManager:cache()
 	return self._cache_current, self._cache_mission
 end
 
--- Lines 379-382
+-- Lines 410-413
 function GreedManager:clear_cache()
 	self._cache_current = nil
 	self._cache_mission = nil
 end
 
--- Lines 385-387
+-- Lines 416-418
 function GreedManager:acquired_gold_in_mission()
 	return self._gold_awarded_in_mission > 0
 end
 
--- Lines 390-392
+-- Lines 421-423
 function GreedManager:greed_items_spawned_value()
 	return self._greed_items_spawned_value
 end
 
--- Lines 395-398
+-- Lines 426-429
 function GreedManager:award_gold_picked_up_in_mission()
 	managers.gold_economy:add_gold(self._gold_awarded_in_mission)
 
 	self._gold_awarded_in_mission = 0
 end
 
--- Lines 401-410
+-- Lines 432-441
 function GreedManager:save_profile_slot(data)
 	local state = {
 		version = GreedManager.VERSION,
@@ -326,7 +346,7 @@ function GreedManager:save_profile_slot(data)
 	data.GreedManager = state
 end
 
--- Lines 414-427
+-- Lines 445-458
 function GreedManager:load_profile_slot(data, version)
 	local state = data.GreedManager
 

@@ -142,7 +142,7 @@ function HUDManager:remove_chatinput_changed_callback(callback_func)
 	self._chatinput_changed_callback_handler:remove(callback_func)
 end
 
--- Lines 126-144
+-- Lines 126-145
 function HUDManager:init_finalize()
 	if not self:exists(PlayerBase.PLAYER_CUSTODY_HUD) then
 		managers.hud:load_hud(PlayerBase.PLAYER_CUSTODY_HUD, false, false, true, {})
@@ -154,14 +154,14 @@ function HUDManager:init_finalize()
 	end
 end
 
--- Lines 146-149
+-- Lines 147-150
 function HUDManager:set_safe_rect(rect)
 	self._saferect_size = rect
 
 	self._saferect:set_screen(rect.w, rect.h, rect.x, rect.y, RenderSettings.resolution.x)
 end
 
--- Lines 151-226
+-- Lines 152-227
 function HUDManager:load_hud(name, visible, using_collision, using_saferect, mutex_list, bounding_box_list, using_mid_saferect, using_16_9_fullscreen)
 	if self._component_map[name:key()] then
 		Application:error("ERROR! Component " .. tostring(name) .. " have already been loaded!")
@@ -246,7 +246,7 @@ function HUDManager:load_hud(name, visible, using_collision, using_saferect, mut
 	self:layout(name)
 end
 
--- Lines 229-241
+-- Lines 230-242
 function HUDManager:setup(name)
 	local panel = self:script(name).panel
 
@@ -263,7 +263,7 @@ function HUDManager:setup(name)
 	end
 end
 
--- Lines 244-256
+-- Lines 245-257
 function HUDManager:layout(name)
 	local panel = self:script(name).panel
 
@@ -280,12 +280,12 @@ function HUDManager:layout(name)
 	end
 end
 
--- Lines 258-260
+-- Lines 259-261
 function HUDManager:delete(name)
 	self._component_map[name:key()] = nil
 end
 
--- Lines 262-273
+-- Lines 263-274
 function HUDManager:set_disabled()
 	self._disabled = true
 
@@ -300,7 +300,7 @@ function HUDManager:set_disabled()
 	end
 end
 
--- Lines 275-291
+-- Lines 276-292
 function HUDManager:set_enabled()
 	self._disabled = false
 
@@ -315,7 +315,7 @@ function HUDManager:set_enabled()
 	end
 end
 
--- Lines 293-298
+-- Lines 294-299
 function HUDManager:set_freeflight_disabled()
 	self._saferect:hide()
 	self._workspace:hide()
@@ -323,7 +323,7 @@ function HUDManager:set_freeflight_disabled()
 	self._fullscreen_workspace:hide()
 end
 
--- Lines 300-305
+-- Lines 301-306
 function HUDManager:set_freeflight_enabled()
 	self._saferect:show()
 	self._workspace:show()
@@ -331,7 +331,7 @@ function HUDManager:set_freeflight_enabled()
 	self._fullscreen_workspace:show()
 end
 
--- Lines 307-314
+-- Lines 308-315
 function HUDManager:on_loading_screen_faded_to_black()
 	self:hide_comm_wheel(true)
 	self:hide_stats_screen()
@@ -341,17 +341,17 @@ function HUDManager:on_loading_screen_faded_to_black()
 	self:clear_vehicle_name_labels()
 end
 
--- Lines 317-319
+-- Lines 318-320
 function HUDManager:disabled()
 	return self._disabled
 end
 
--- Lines 321-323
+-- Lines 322-324
 function HUDManager:reload_player_hud()
 	self:reload()
 end
 
--- Lines 326-336
+-- Lines 327-337
 function HUDManager:reload_all()
 	self:reload()
 
@@ -368,12 +368,12 @@ function HUDManager:reload_all()
 	end
 end
 
--- Lines 339-341
+-- Lines 340-342
 function HUDManager:reload()
 	self:_recompile(managers.database:root_path() .. "assets\\guis\\")
 end
 
--- Lines 343-360
+-- Lines 344-361
 function HUDManager:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
@@ -395,7 +395,7 @@ function HUDManager:_recompile(dir)
 	end
 end
 
--- Lines 362-375
+-- Lines 363-376
 function HUDManager:_source_files(dir)
 	local files = {}
 	local entry_path = managers.database:entry_path(dir) .. "/"
@@ -413,7 +413,7 @@ function HUDManager:_source_files(dir)
 	return files
 end
 
--- Lines 377-383
+-- Lines 378-384
 function HUDManager:panel(name)
 	if not self._component_map[name:key()] then
 		Application:error("ERROR! Component " .. tostring(name) .. " isn't loaded!")
@@ -422,14 +422,14 @@ function HUDManager:panel(name)
 	end
 end
 
--- Lines 385-388
+-- Lines 386-389
 function HUDManager:alive(name)
 	local component = self._component_map[name:key()]
 
 	return component and alive(component.panel)
 end
 
--- Lines 390-397
+-- Lines 391-398
 function HUDManager:script(name)
 	local component = self._component_map[name:key()]
 
@@ -438,12 +438,12 @@ function HUDManager:script(name)
 	end
 end
 
--- Lines 399-401
+-- Lines 400-402
 function HUDManager:exists(name)
 	return not not self._component_map[name:key()]
 end
 
--- Lines 403-451
+-- Lines 404-452
 function HUDManager:show(name)
 	if HUDManager.disabled[name:key()] then
 		return
@@ -494,7 +494,7 @@ function HUDManager:show(name)
 	self._hud_chat:hide()
 end
 
--- Lines 453-472
+-- Lines 454-473
 function HUDManager:hide(name)
 	self._visible_huds_states[name:key()] = nil
 	local panel = self:script(name).panel
@@ -518,7 +518,7 @@ function HUDManager:hide(name)
 	end
 end
 
--- Lines 474-480
+-- Lines 475-481
 function HUDManager:visible(name)
 	if self._component_map[name:key()] then
 		return self._component_map[name:key()].panel:visible()
@@ -527,7 +527,7 @@ function HUDManager:visible(name)
 	end
 end
 
--- Lines 482-489
+-- Lines 483-490
 function HUDManager:_collision(rect1_map, rect2_map)
 	if rect2_map.x2 <= rect1_map.x1 then
 		return false
@@ -548,7 +548,7 @@ function HUDManager:_collision(rect1_map, rect2_map)
 	return true
 end
 
--- Lines 491-498
+-- Lines 492-499
 function HUDManager:_inside(rect1_map, rect2_map)
 	if rect1_map.x1 < rect2_map.x1 or rect2_map.x2 < rect1_map.x1 then
 		return false
@@ -569,7 +569,7 @@ function HUDManager:_inside(rect1_map, rect2_map)
 	return true
 end
 
--- Lines 500-510
+-- Lines 501-511
 function HUDManager:_collision_rects(rect1_list, rect2_list)
 	for _, rc1_map in pairs(rect1_list) do
 		for _, rc2_map in pairs(rect2_list) do
@@ -582,7 +582,7 @@ function HUDManager:_collision_rects(rect1_list, rect2_list)
 	return false
 end
 
--- Lines 512-520
+-- Lines 513-521
 function HUDManager:_is_mutex(component_map, name)
 	for _, mutex_name in pairs(component_map.mutex_list) do
 		if mutex_name:key() == name then
@@ -593,7 +593,7 @@ function HUDManager:_is_mutex(component_map, name)
 	return false
 end
 
--- Lines 522-544
+-- Lines 523-545
 function HUDManager:_create_bounding_boxes(panel)
 	local bounding_box_list = {}
 	local childrens = panel:children()
@@ -623,7 +623,7 @@ function HUDManager:_create_bounding_boxes(panel)
 	return bounding_box_list
 end
 
--- Lines 546-569
+-- Lines 547-570
 function HUDManager:_create_overlay_list(name)
 	local component = self._component_map[name:key()]
 	local overlay_list = {}
@@ -645,7 +645,7 @@ function HUDManager:_create_overlay_list(name)
 	return overlay_list
 end
 
--- Lines 571-580
+-- Lines 572-581
 function HUDManager:_validate_components(name)
 	for _, overlay_name in pairs(self._component_map[name:key()].overlay_list) do
 		if self._component_map[overlay_name:key()] and self._component_map[overlay_name:key()].panel:visible() then
@@ -658,7 +658,7 @@ function HUDManager:_validate_components(name)
 	return true
 end
 
--- Lines 583-598
+-- Lines 584-599
 function HUDManager:resolution_changed()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
@@ -674,7 +674,7 @@ function HUDManager:resolution_changed()
 	end
 end
 
--- Lines 600-671
+-- Lines 601-672
 function HUDManager:update(t, dt)
 	for _, cb in pairs(self._updators) do
 		cb(t, dt)
@@ -756,7 +756,7 @@ function HUDManager:update(t, dt)
 	end
 end
 
--- Lines 673-679
+-- Lines 674-680
 function HUDManager:change_map_floor(new_floor)
 	self.current_floor = new_floor
 
@@ -765,12 +765,12 @@ function HUDManager:change_map_floor(new_floor)
 	end
 end
 
--- Lines 681-683
+-- Lines 682-684
 function HUDManager:add_updator(id, cb)
 	self._updators[id] = cb
 end
 
--- Lines 685-687
+-- Lines 686-688
 function HUDManager:remove_updator(id)
 	self._updators[id] = nil
 end
@@ -781,7 +781,7 @@ local nl_dir = Vector3()
 local nl_dir_normalized = Vector3()
 local nl_cam_forward = Vector3()
 
--- Lines 697-712
+-- Lines 698-713
 function HUDManager:_calculate_name_label_screen_position(name_label, cam)
 	if name_label:movement() == nil then
 		return
@@ -802,7 +802,7 @@ function HUDManager:_calculate_name_label_screen_position(name_label, cam)
 	mvector3.set(nl_pos, self._workspace:world_to_screen(cam, nl_w_pos))
 end
 
--- Lines 716-760
+-- Lines 717-761
 function HUDManager:_handle_name_label_overlapping(name_label1, name_label2, cam_pos)
 	if not name_label1 or not name_label2 then
 		return
@@ -846,7 +846,7 @@ function HUDManager:_handle_name_label_overlapping(name_label1, name_label2, cam
 	further_label:panel():set_alpha(alpha)
 end
 
--- Lines 762-826
+-- Lines 763-827
 function HUDManager:_update_name_labels(t, dt)
 	local cam = managers.viewport:get_current_camera()
 
@@ -906,7 +906,7 @@ function HUDManager:_update_name_labels(t, dt)
 	end
 end
 
--- Lines 828-869
+-- Lines 829-870
 function HUDManager:_update_vehicle_name_labels(t, dt)
 	local cam = managers.viewport:get_current_camera()
 
@@ -951,7 +951,7 @@ function HUDManager:_update_vehicle_name_labels(t, dt)
 	end
 end
 
--- Lines 871-881
+-- Lines 872-882
 function HUDManager:_init_player_hud_values()
 	self._hud = self._hud or {}
 	self._hud.waypoints = self._hud.waypoints or {}
@@ -963,17 +963,17 @@ function HUDManager:_init_player_hud_values()
 	self._hud.suspicion_indicators = self._hud.suspicion_indicators or {}
 end
 
--- Lines 883-885
+-- Lines 884-886
 function HUDManager:post_event(event)
 	self._sound_source:post_event(event)
 end
 
--- Lines 887-889
+-- Lines 888-890
 function HUDManager:set_sound_switch(switch, value)
 	self._sound_source:set_switch(switch, value)
 end
 
--- Lines 891-897
+-- Lines 892-898
 function HUDManager:_player_hud_layout()
 	self:_init_player_hud_values()
 
@@ -982,7 +982,7 @@ function HUDManager:_player_hud_layout()
 	end
 end
 
--- Lines 899-915
+-- Lines 900-916
 function HUDManager:add_suspicion_indicator(id, data)
 	if self._hud.suspicion_indicators[id] then
 		self:remove_suspicion_indicator(id)
@@ -1000,7 +1000,7 @@ function HUDManager:add_suspicion_indicator(id, data)
 	self._hud.suspicion_indicators[id] = suspicion
 end
 
--- Lines 917-929
+-- Lines 918-930
 function HUDManager:remove_suspicion_indicator(id)
 	if self._hud.suspicion_indicators[id] then
 		self._hud.suspicion_indicators[id]:destroy()
@@ -1015,7 +1015,7 @@ function HUDManager:remove_suspicion_indicator(id)
 	self._hud_suspicion_direction:remove_suspicion_indicator(id)
 end
 
--- Lines 931-949
+-- Lines 932-950
 function HUDManager:set_suspicion_indicator_state(id, state)
 	if not self._hud.suspicion_indicators[id] then
 		return
@@ -1035,7 +1035,7 @@ function HUDManager:set_suspicion_indicator_state(id, state)
 	self._hud_suspicion_direction:set_state(id, state)
 end
 
--- Lines 951-958
+-- Lines 952-959
 function HUDManager:_get_raid_icon(icon)
 	Application:trace("[HUDManager] _get_raid_icon(): " .. tostring(icon))
 
@@ -1051,7 +1051,7 @@ function HUDManager:_get_raid_icon(icon)
 	end
 end
 
--- Lines 960-1150
+-- Lines 961-1151
 function HUDManager:add_waypoint(id, data)
 	if self._hud.waypoints[id] then
 		self:remove_waypoint(id)
@@ -1253,7 +1253,7 @@ function HUDManager:add_waypoint(id, data)
 	end
 end
 
--- Lines 1152-1193
+-- Lines 1153-1194
 function HUDManager:change_waypoint_icon(id, icon)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1333,7 +1333,7 @@ function HUDManager:change_waypoint_icon(id, icon)
 	end
 end
 
--- Lines 1195-1213
+-- Lines 1196-1214
 function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1349,7 +1349,7 @@ function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	end
 end
 
--- Lines 1215-1233
+-- Lines 1216-1234
 function HUDManager:change_waypoint_icon_color(id, color)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1365,7 +1365,7 @@ function HUDManager:change_waypoint_icon_color(id, color)
 	end
 end
 
--- Lines 1235-1253
+-- Lines 1236-1254
 function HUDManager:change_waypoint_arrow_color(id, color)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1381,7 +1381,7 @@ function HUDManager:change_waypoint_arrow_color(id, color)
 	end
 end
 
--- Lines 1255-1273
+-- Lines 1256-1274
 function HUDManager:change_waypoint_distance_color(id, color)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_distance_color] no waypoint with id", id)
@@ -1397,7 +1397,7 @@ function HUDManager:change_waypoint_distance_color(id, color)
 	end
 end
 
--- Lines 1275-1317
+-- Lines 1276-1318
 function HUDManager:remove_waypoint(id)
 	self._hud.stored_waypoints[id] = nil
 
@@ -1443,7 +1443,7 @@ function HUDManager:remove_waypoint(id)
 	self:_check_and_hide_suspicion()
 end
 
--- Lines 1319-1334
+-- Lines 1320-1335
 function HUDManager:_check_and_hide_suspicion()
 	local found = false
 
@@ -1462,7 +1462,7 @@ function HUDManager:_check_and_hide_suspicion()
 	end
 end
 
--- Lines 1336-1344
+-- Lines 1337-1345
 function HUDManager:set_waypoint_timer_pause(id, pause)
 	if not self._hud.waypoints[id] then
 		return
@@ -1473,17 +1473,17 @@ function HUDManager:set_waypoint_timer_pause(id, pause)
 	end
 end
 
--- Lines 1346-1348
+-- Lines 1347-1349
 function HUDManager:get_waypoint_data(id)
 	return self._hud.waypoints[id]
 end
 
--- Lines 1350-1352
+-- Lines 1351-1353
 function HUDManager:get_all_waypoints()
 	return self._hud.waypoints
 end
 
--- Lines 1354-1365
+-- Lines 1355-1366
 function HUDManager:clear_waypoints()
 	for id, _ in pairs(clone(self._hud.waypoints)) do
 		self:remove_waypoint(id)
@@ -1498,12 +1498,12 @@ function HUDManager:clear_waypoints()
 	self._hud.suspicion_indicators = {}
 end
 
--- Lines 1367-1369
+-- Lines 1368-1370
 function HUDManager:clear_objectives()
 	self._hud_objectives:_clear_objectives()
 end
 
--- Lines 1371-1377
+-- Lines 1372-1378
 function HUDManager:get_waypoint_for_unit(unit)
 	for id, data in pairs(self._hud.waypoints) do
 		if data.unit and data.unit == unit then
@@ -1512,12 +1512,12 @@ function HUDManager:get_waypoint_for_unit(unit)
 	end
 end
 
--- Lines 1379-1381
+-- Lines 1380-1382
 function HUDManager:clear_weapons()
 	self._hud.weapons = {}
 end
 
--- Lines 1383-1454
+-- Lines 1384-1455
 function HUDManager:add_mugshot_by_unit(unit)
 	if unit:base().is_local_player then
 		return
@@ -1588,7 +1588,7 @@ function HUDManager:add_mugshot_by_unit(unit)
 	return mugshot_id, name_label_id
 end
 
--- Lines 1457-1467
+-- Lines 1458-1468
 function HUDManager:add_mugshot_without_unit(char_name, ai, peer_id, name)
 	local character_name = name
 	local character_name_id = char_name
@@ -1603,7 +1603,7 @@ function HUDManager:add_mugshot_without_unit(char_name, ai, peer_id, name)
 	return mugshot_id
 end
 
--- Lines 1469-1483
+-- Lines 1470-1484
 function HUDManager:get_character_name_by_nationality(nationality)
 	local name = "DEFAULT_NAME"
 
@@ -1620,7 +1620,7 @@ function HUDManager:get_character_name_by_nationality(nationality)
 	return utf8.to_upper(name)
 end
 
--- Lines 1486-1512
+-- Lines 1487-1513
 function HUDManager:add_mugshot(data)
 	local panel_id = self:add_teammate_panel(data.character_name_id, data.name, not data.use_lifebar, data.peer_id)
 	managers.criminals:character_data_by_name(data.character_name_id).panel_id = panel_id
@@ -1636,14 +1636,14 @@ function HUDManager:add_mugshot(data)
 	return id
 end
 
--- Lines 1514-1518
+-- Lines 1515-1519
 function HUDManager:remove_hud_info_by_unit(unit)
 	if unit:unit_data().name_label_id then
 		self:_remove_name_label(unit:unit_data().name_label_id)
 	end
 end
 
--- Lines 1520-1527
+-- Lines 1521-1528
 function HUDManager:remove_mugshot_by_character_name(character_name)
 	for i, data in ipairs(self._hud.mugshots) do
 		if data.character_name_id == character_name then
@@ -1654,12 +1654,12 @@ function HUDManager:remove_mugshot_by_character_name(character_name)
 	end
 end
 
--- Lines 1529-1531
+-- Lines 1530-1532
 function HUDManager:remove_mugshot(id)
 	self:_remove_mugshot(id)
 end
 
--- Lines 1533-1542
+-- Lines 1534-1543
 function HUDManager:_remove_mugshot(id)
 	for i, data in ipairs(self._hud.mugshots) do
 		if data.id == id then
@@ -1671,7 +1671,7 @@ function HUDManager:_remove_mugshot(id)
 	end
 end
 
--- Lines 1544-1550
+-- Lines 1545-1551
 function HUDManager:remove_teammate_panel_by_name_id(name_id)
 	local character_data = managers.criminals:character_data_by_name(name_id)
 
@@ -1680,7 +1680,7 @@ function HUDManager:remove_teammate_panel_by_name_id(name_id)
 	end
 end
 
--- Lines 1552-1560
+-- Lines 1553-1561
 function HUDManager:set_mugshot_weapon(id, hud_icon_id, weapon_index)
 	for i, data in ipairs(self._hud.mugshots) do
 		if data.id == id then
@@ -1692,7 +1692,7 @@ function HUDManager:set_mugshot_weapon(id, hud_icon_id, weapon_index)
 	end
 end
 
--- Lines 1562-1572
+-- Lines 1563-1573
 function HUDManager:set_mugshot_armor(id, amount)
 	if not id then
 		return
@@ -1711,7 +1711,7 @@ function HUDManager:set_mugshot_armor(id, amount)
 	end
 end
 
--- Lines 1574-1584
+-- Lines 1575-1585
 function HUDManager:set_mugshot_health(id, amount)
 	if not id then
 		return
@@ -1730,7 +1730,7 @@ function HUDManager:set_mugshot_health(id, amount)
 	end
 end
 
--- Lines 1586-1596
+-- Lines 1587-1597
 function HUDManager:_get_mugshot_data(id)
 	if not id then
 		return nil
@@ -1745,7 +1745,7 @@ function HUDManager:_get_mugshot_data(id)
 	return nil
 end
 
--- Lines 1598-1605
+-- Lines 1599-1606
 function HUDManager:set_mugshot_normal(id)
 	local data = self:_get_mugshot_data(id)
 
@@ -1756,12 +1756,12 @@ function HUDManager:set_mugshot_normal(id)
 	self:set_teammate_condition(managers.criminals:character_data_by_name(data.character_name_id).panel_id, "mugshot_normal", "")
 end
 
--- Lines 1607-1609
+-- Lines 1608-1610
 function HUDManager:set_mugshot_downed(id)
 	self._teammate_panels[id]:go_into_bleedout()
 end
 
--- Lines 1611-1618
+-- Lines 1612-1619
 function HUDManager:set_mugshot_custody(id)
 	local data = self:_set_mugshot_state(id, "mugshot_in_custody", managers.localization:text("debug_mugshot_in_custody"))
 
@@ -1781,7 +1781,7 @@ function HUDManager:set_mugshot_custody(id)
 	end
 end
 
--- Lines 1620-1630
+-- Lines 1621-1631
 function HUDManager:_set_mugshot_state(id, icon_data, text)
 	local data = self:_get_mugshot_data(id)
 
@@ -1796,19 +1796,19 @@ function HUDManager:_set_mugshot_state(id, icon_data, text)
 	return data
 end
 
--- Lines 1635-1636
+-- Lines 1636-1637
 function HUDManager:update_vehicle_label_by_id(label_id, num_players)
 end
 
--- Lines 1640-1641
+-- Lines 1641-1642
 function HUDManager:start_anticipation(data)
 end
 
--- Lines 1643-1645
+-- Lines 1644-1646
 function HUDManager:sync_start_anticipation()
 end
 
--- Lines 1647-1653
+-- Lines 1648-1654
 function HUDManager:check_start_anticipation_music(t)
 	if not self._anticipation_music_started and t < 30 then
 		self._anticipation_music_started = true
@@ -1818,12 +1818,12 @@ function HUDManager:check_start_anticipation_music(t)
 	end
 end
 
--- Lines 1655-1657
+-- Lines 1656-1658
 function HUDManager:sync_start_anticipation_music()
 	managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ANTICIPATION)
 end
 
--- Lines 1659-1663
+-- Lines 1660-1664
 function HUDManager:start_assault(data)
 	self._hud.in_assault = true
 
@@ -1831,7 +1831,7 @@ function HUDManager:start_assault(data)
 	self:sync_start_assault(data)
 end
 
--- Lines 1665-1670
+-- Lines 1666-1671
 function HUDManager:end_assault(result)
 	self._anticipation_music_started = false
 	self._hud.in_assault = false
@@ -1840,7 +1840,7 @@ function HUDManager:end_assault(result)
 	managers.network:session():send_to_peers_synched("sync_end_assault", result)
 end
 
--- Lines 1672-1696
+-- Lines 1673-1697
 function HUDManager:setup_anticipation(total_t)
 	local exists = self._anticipation_dialogs and true or false
 	self._anticipation_dialogs = {}
@@ -1891,14 +1891,14 @@ function HUDManager:setup_anticipation(total_t)
 	end
 end
 
--- Lines 1700-1703
+-- Lines 1701-1704
 function HUDManager:present_mid_text(params)
 	params.present_mid_text = true
 
 	self:present(params)
 end
 
--- Lines 1706-1715
+-- Lines 1707-1716
 function HUDManager:_upd_suspition_waypoint_pos(data)
 	if data.bitmap_over then
 		data.bitmap_over:set_bottom(data.bitmap:bottom())
@@ -1910,7 +1910,7 @@ function HUDManager:_upd_suspition_waypoint_pos(data)
 	end
 end
 
--- Lines 1717-1729
+-- Lines 1718-1730
 function HUDManager:_upd_suspition_waypoint_alpha(data, alpha)
 	local fix = 0
 
@@ -1925,7 +1925,7 @@ function HUDManager:_upd_suspition_waypoint_alpha(data, alpha)
 	end
 end
 
--- Lines 1731-1750
+-- Lines 1732-1751
 function HUDManager:_animate_suspition_waypoint_alpha(data, callback, x, y, z)
 	local fix = 0
 
@@ -1948,7 +1948,7 @@ function HUDManager:_animate_suspition_waypoint_alpha(data, callback, x, y, z)
 	end
 end
 
--- Lines 1752-1768
+-- Lines 1753-1769
 function HUDManager:_upd_suspition_waypoint_state(data, show_on_screen)
 	if not show_on_screen then
 		return
@@ -1976,7 +1976,7 @@ local wp_cam_forward = Vector3()
 local wp_onscreen_direction = Vector3()
 local wp_onscreen_target_pos = Vector3()
 
--- Lines 1777-1884
+-- Lines 1778-1885
 function HUDManager:_update_suspicion_indicators(t, dt)
 	local cam = managers.viewport:get_current_camera()
 
@@ -2108,7 +2108,7 @@ function HUDManager:_update_suspicion_indicators(t, dt)
 	end
 end
 
--- Lines 1886-2216
+-- Lines 1887-2217
 function HUDManager:_update_waypoints(t, dt)
 	local cam = managers.viewport:get_current_camera()
 
@@ -2457,15 +2457,15 @@ function HUDManager:_update_waypoints(t, dt)
 	end
 end
 
--- Lines 2218-2220
+-- Lines 2219-2221
 function HUDManager:show_waypoint(icon, data, new_alpha, duration)
 end
 
--- Lines 2222-2224
+-- Lines 2223-2225
 function HUDManager:hide_waypoint(icon, data, new_alpha, duration)
 end
 
--- Lines 2226-2250
+-- Lines 2227-2251
 function HUDManager:_animate_alpha(icon, data, new_alpha, duration, delay)
 	local t = 0
 	local dt = nil
@@ -2492,7 +2492,7 @@ function HUDManager:_animate_alpha(icon, data, new_alpha, duration, delay)
 	end
 end
 
--- Lines 2252-2263
+-- Lines 2253-2264
 function HUDManager:set_aiming_icon(id, status)
 	local data = self._hud.waypoints[id]
 
@@ -2509,7 +2509,7 @@ function HUDManager:set_aiming_icon(id, status)
 	end
 end
 
--- Lines 2265-2277
+-- Lines 2266-2278
 function HUDManager:set_investigate_icon(id, status)
 	local data = self._hud.waypoints[id]
 
@@ -2526,7 +2526,7 @@ function HUDManager:set_investigate_icon(id, status)
 	end
 end
 
--- Lines 2282-2298
+-- Lines 2283-2299
 function HUDManager:set_stealth_meter(id, target_id, progress)
 	local suspicion_indicator = self._hud.suspicion_indicators[id]
 
@@ -2541,7 +2541,7 @@ function HUDManager:set_stealth_meter(id, target_id, progress)
 	suspicion_indicator:set_progress(max_progress)
 end
 
--- Lines 2301-2312
+-- Lines 2302-2313
 function HUDManager:_set_progress_for_target(id, target_id, progress)
 	self._progress_target[id] = self._progress_target[id] or {}
 	self._progress_target[id][target_id] = math.clamp(progress, 0, 1)
@@ -2556,7 +2556,7 @@ function HUDManager:_set_progress_for_target(id, target_id, progress)
 	return max
 end
 
--- Lines 2314-2326
+-- Lines 2315-2327
 function HUDManager:_upd_suspition_progress(data, dt)
 	local old_h = data.stealth_over_rect and data.stealth_over_rect[4] or 0
 
@@ -2572,7 +2572,7 @@ function HUDManager:_upd_suspition_progress(data, dt)
 	end
 end
 
--- Lines 2328-2343
+-- Lines 2329-2344
 function HUDManager:reset_player_hpbar()
 	local crim_entry = managers.criminals:character_static_data_by_name(managers.criminals:local_character_name())
 
@@ -2585,7 +2585,7 @@ function HUDManager:reset_player_hpbar()
 	self:set_teammate_name(4, managers.network:session():local_peer():name())
 end
 
--- Lines 2349-2356
+-- Lines 2350-2357
 function HUDManager:_create_pd_progress()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 
@@ -2596,22 +2596,22 @@ function HUDManager:_create_pd_progress()
 	self._pd2_hud_interaction = HUDInteraction:new(hud)
 end
 
--- Lines 2358-2360
+-- Lines 2359-2361
 function HUDManager:pd_start_progress(current, total, msg, icon_id)
 	self._pd2_hud_interaction:animate_progress(total)
 end
 
--- Lines 2362-2364
+-- Lines 2363-2365
 function HUDManager:pd_cancel_progress()
 	self._pd2_hud_interaction:hide_interaction_bar(false)
 end
 
--- Lines 2366-2368
+-- Lines 2367-2369
 function HUDManager:pd_complete_progress()
 	self._pd2_hud_interaction:hide_interaction_bar(true)
 end
 
--- Lines 2373-2429
+-- Lines 2374-2430
 function HUDManager:on_simulation_ended()
 	self:remove_updator("point_of_no_return")
 	self:end_assault()
@@ -2641,12 +2641,12 @@ function HUDManager:on_simulation_ended()
 	managers.network.account:remove_overlay_listener("[HUDManager] hide_tab_screen")
 end
 
--- Lines 2431-2433
+-- Lines 2432-2434
 function HUDManager:clean_up()
 	self:clear_waypoints()
 end
 
--- Lines 2436-2446
+-- Lines 2437-2447
 function HUDManager:debug_show_coordinates()
 	if self._debug then
 		return
@@ -2678,7 +2678,7 @@ function HUDManager:debug_show_coordinates()
 	})
 end
 
--- Lines 2448-2456
+-- Lines 2449-2457
 function HUDManager:debug_hide_coordinates()
 	if not self._debug then
 		return
@@ -2690,7 +2690,7 @@ function HUDManager:debug_hide_coordinates()
 	self._debugDogTagDrawData = nil
 end
 
--- Lines 2462-2495
+-- Lines 2463-2496
 function HUDManager:save(d)
 	local state = {
 		waypoints = {},
@@ -2730,7 +2730,7 @@ function HUDManager:save(d)
 	d.HUDManager = state
 end
 
--- Lines 2497-2512
+-- Lines 2498-2513
 function HUDManager:load(data)
 	local state = data.HUDManager
 

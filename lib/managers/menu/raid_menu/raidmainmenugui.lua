@@ -236,7 +236,7 @@ function RaidMainMenuGui:_layout_version_id()
 	local item_params = {
 		name = "version_id",
 		h = 100,
-		w = 400,
+		w = 600,
 		alpha = 0.33,
 		x = 0,
 		y = self._root_panel:h() - 50,

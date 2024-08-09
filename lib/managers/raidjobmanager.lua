@@ -1074,7 +1074,7 @@ function RaidJobManager:load_game(data)
 	end
 end
 
--- Lines 1047-1126
+-- Lines 1047-1129
 function RaidJobManager:save_game(data)
 	data.job_manager = {
 		tutorial_played = not self._play_tutorial
@@ -1089,7 +1089,7 @@ function RaidJobManager:save_game(data)
 	end
 
 	if managers.global_state then
-		if self._current_save_slot and self._current_job and Network:is_server() then
+		if Network:is_server() and self._current_save_slot and self._current_job then
 			local save_data = {
 				global_states = self._initial_global_states or managers.global_state:get_all_global_states()
 			}
@@ -1150,7 +1150,7 @@ function RaidJobManager:save_game(data)
 	end
 end
 
--- Lines 1128-1157
+-- Lines 1131-1159
 function RaidJobManager:_prepare_peer_save_data()
 	local peer_save_data = {}
 	local local_player_data = {
@@ -1166,24 +1166,22 @@ function RaidJobManager:_prepare_peer_save_data()
 	table.insert(peer_save_data, local_player_data)
 
 	for index, peer in pairs(managers.network:session():all_peers()) do
-		if peer ~= managers.network:session():local_peer() then
-			local peer_data = {
-				name = peer:name(),
-				class = peer:class(),
-				nationality = peer:character(),
-				level = peer:level(),
-				player_id = peer:user_id(),
-				statistics = peer:statistics()
-			}
+		local peer_data = {
+			name = peer:name(),
+			class = peer:class(),
+			nationality = peer:character(),
+			level = peer:level(),
+			player_id = peer:user_id(),
+			statistics = peer:statistics()
+		}
 
-			table.insert(peer_save_data, peer_data)
-		end
+		table.insert(peer_save_data, peer_data)
 	end
 
 	return peer_save_data
 end
 
--- Lines 1160-1173
+-- Lines 1162-1175
 function RaidJobManager:sync_current_job(job_id)
 	self._selected_job = nil
 	self._current_job = nil
@@ -1196,7 +1194,7 @@ function RaidJobManager:sync_current_job(job_id)
 	self:on_mission_started()
 end
 
--- Lines 1175-1182
+-- Lines 1177-1184
 function RaidJobManager:set_memory(key, value, is_shortterm)
 	if self.memory and not is_shortterm then
 		self.memory[key] = value
@@ -1207,7 +1205,7 @@ function RaidJobManager:set_memory(key, value, is_shortterm)
 	return false
 end
 
--- Lines 1184-1190
+-- Lines 1186-1192
 function RaidJobManager:get_memory(key, is_shortterm)
 	if is_shortterm then
 		return self.shortterm_memory and self.shortterm_memory[key]
@@ -1216,7 +1214,7 @@ function RaidJobManager:get_memory(key, is_shortterm)
 	end
 end
 
--- Lines 1193-1209
+-- Lines 1195-1211
 function RaidJobManager:sync_save(data)
 	local state = {
 		selected_job_id = self._selected_job and self._selected_job.job_id,
@@ -1236,7 +1234,7 @@ function RaidJobManager:sync_save(data)
 	data.RaidJobManager = state
 end
 
--- Lines 1212-1246
+-- Lines 1214-1248
 function RaidJobManager:sync_load(data)
 	local state = data.RaidJobManager
 
@@ -1276,7 +1274,7 @@ function RaidJobManager:sync_load(data)
 	end
 end
 
--- Lines 1248-1256
+-- Lines 1250-1258
 function RaidJobManager:cleanup()
 	self._current_save_slot = {}
 	self._selected_job = nil
@@ -1286,38 +1284,38 @@ function RaidJobManager:cleanup()
 	self._tutorial_spawned = nil
 end
 
--- Lines 1258-1261
+-- Lines 1260-1263
 function RaidJobManager:reset()
 	self:cleanup()
 
 	self._save_slots = {}
 end
 
--- Lines 1264-1267
+-- Lines 1266-1269
 function RaidJobManager:on_simulation_ended()
 	self._save_slots = {}
 
 	self:cleanup()
 end
 
--- Lines 1269-1271
+-- Lines 1271-1273
 function RaidJobManager:stop_sounds()
 	local cleanup = SoundDevice:create_source("cleanup")
 end
 
--- Lines 1273-1276
+-- Lines 1275-1278
 function RaidJobManager:set_stage_success(success)
 	print("[RaidJobManager:set_stage_success]", success)
 
 	self._stage_success = success
 end
 
--- Lines 1278-1280
+-- Lines 1280-1282
 function RaidJobManager:stage_success()
 	return self._stage_success
 end
 
--- Lines 1282-1293
+-- Lines 1284-1295
 function RaidJobManager:deactivate_current_job()
 	self._current_job = nil
 	self._selected_job = nil
@@ -1332,7 +1330,7 @@ function RaidJobManager:deactivate_current_job()
 	managers.network.matchmake:set_job_info_by_current_job()
 end
 
--- Lines 1296-1300
+-- Lines 1298-1302
 function RaidJobManager:set_camp(job_id)
 	local job = tweak_data.operations.missions[job_id]
 	self._camp = job
@@ -1340,12 +1338,12 @@ function RaidJobManager:set_camp(job_id)
 	return true
 end
 
--- Lines 1302-1304
+-- Lines 1304-1306
 function RaidJobManager:camp()
 	return self._camp
 end
 
--- Lines 1306-1308
+-- Lines 1308-1310
 function RaidJobManager:has_active_job()
 	return self._current_job ~= nil
 end

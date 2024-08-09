@@ -1987,7 +1987,7 @@ function CopActionWalk:_upd_wait(t)
 	end
 end
 
--- Lines 1797-1878
+-- Lines 1797-1899
 function CopActionWalk:_upd_stop_anim_first_frame(t)
 	local enter_t = nil
 	local redir_name = "run_stop_" .. self._stop_anim_side
@@ -1999,7 +1999,18 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 		return
 	end
 
-	local speed_mul = self:_get_current_max_walk_speed(self._stop_anim_side) / self._walk_anim_velocities[self._ext_anim.pose][self._stance.name][self._haste][self._stop_anim_side]
+	local aaa = nil
+
+	if self._ext_anim.pose and self._haste and self._stop_anim_side then
+		aaa = self._walk_anim_velocities[self._ext_anim.pose]
+		aaa = aaa[self._stance.name]
+		aaa = aaa[self._haste]
+		aaa = aaa[self._stop_anim_side]
+	else
+		aaa = 0.1
+	end
+
+	local speed_mul = self:_get_current_max_walk_speed(self._stop_anim_side) / aaa
 
 	self._machine:set_speed(redir_res, speed_mul)
 
@@ -2011,14 +2022,14 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 
 	if self._ext_anim.pose ~= "crouch" then
 		if self._stop_anim_side == "fwd" then
-			-- Lines 1814-1817
+			-- Lines 1835-1838
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local t_clamp = (math.clamp(t, 0, 0.6) / 0.6)^0.8
 
 				return math.lerp(p1, p2, t_clamp)
 			end
 		elseif self._stop_anim_side == "bwd" then
-			-- Lines 1819-1829
+			-- Lines 1840-1850
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local low = 0.97
 				local p_1_5 = 0.9
@@ -2033,7 +2044,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 				return math.lerp(p1, p2, t_clamp)
 			end
 		elseif self._stop_anim_side == "l" then
-			-- Lines 1831-1841
+			-- Lines 1852-1862
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local p_1_5 = 0.6
 				local low = 0.8
@@ -2048,7 +2059,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 				return math.lerp(p1, p2, t_clamp)
 			end
 		else
-			-- Lines 1843-1853
+			-- Lines 1864-1874
 			function self._stop_anim_displacement_f(p1, p2, t)
 				local low = 0.9
 				local p_1_5 = 0.85
@@ -2064,7 +2075,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 			end
 		end
 	elseif self._stop_anim_side == "fwd" or self._stop_anim_side == "bwd" then
-		-- Lines 1857-1861
+		-- Lines 1878-1882
 		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.4) / 0.4
 			t_clamp = t_clamp^0.85
@@ -2072,7 +2083,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 			return math.lerp(p1, p2, t_clamp)
 		end
 	elseif self._stop_anim_side == "l" then
-		-- Lines 1863-1867
+		-- Lines 1884-1888
 		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.3) / 0.3
 			t_clamp = t_clamp^0.85
@@ -2080,7 +2091,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 			return math.lerp(p1, p2, t_clamp)
 		end
 	else
-		-- Lines 1869-1873
+		-- Lines 1890-1894
 		function self._stop_anim_displacement_f(p1, p2, t)
 			local t_clamp = math.clamp(t, 0, 0.6) / 0.6
 			t_clamp = t_clamp^0.85
@@ -2093,7 +2104,7 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 	self:update(t)
 end
 
--- Lines 1882-1911
+-- Lines 1903-1932
 function CopActionWalk:_upd_stop_anim(t)
 	local dt = TimerManager:game():delta_time()
 	local rot_new = self._common_data.rot:slerp(Rotation(self._stop_anim_fwd, math.UP), math.min(1, dt * 5))
@@ -2128,7 +2139,7 @@ function CopActionWalk:_upd_stop_anim(t)
 	self:_set_new_pos(dt)
 end
 
--- Lines 1915-2003
+-- Lines 1936-2024
 function CopActionWalk:stop()
 	local is_initialized = self._init_called
 
@@ -2205,10 +2216,10 @@ function CopActionWalk:stop()
 	end
 end
 
--- Lines 2007-2041
+-- Lines 2028-2062
 function CopActionWalk:append_nav_point(nav_point)
 	if not nav_point.x then
-		-- Lines 2011-2011
+		-- Lines 2032-2032
 		function nav_point.element.value(element, name)
 			return element[name]
 		end
@@ -2240,19 +2251,19 @@ function CopActionWalk:append_nav_point(nav_point)
 	end
 end
 
--- Lines 2045-2047
+-- Lines 2066-2068
 function CopActionWalk:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
--- Lines 2051-2055
+-- Lines 2072-2076
 function CopActionWalk:chk_block_client(action_desc, action_type, t)
 	if self._nav_link or not action_desc or action_desc.body_part ~= 3 then
 		return self:chk_block(action_type, t)
 	end
 end
 
--- Lines 2059-2072
+-- Lines 2080-2093
 function CopActionWalk:set_blocks(preset_name, state)
 	if state then
 		if not self._old_blocks then
@@ -2276,17 +2287,17 @@ function CopActionWalk:set_blocks(preset_name, state)
 	end
 end
 
--- Lines 2076-2078
+-- Lines 2097-2099
 function CopActionWalk:_set_blocks(blocks)
 	self._blocks = blocks
 end
 
--- Lines 2082-2084
+-- Lines 2103-2105
 function CopActionWalk:need_upd()
 	return true
 end
 
--- Lines 2088-2097
+-- Lines 2109-2118
 function CopActionWalk:_upd_nav_link_first_frame(t)
 	if self._next_is_nav_link.element:nav_link_wants_align_pos() and self:_stop_walk() then
 		self:_set_updator("_upd_nav_link_blend_to_idle")
@@ -2297,7 +2308,7 @@ function CopActionWalk:_upd_nav_link_first_frame(t)
 	self:_play_nav_link_anim(t)
 end
 
--- Lines 2101-2110
+-- Lines 2122-2131
 function CopActionWalk:_upd_nav_link_blend_to_idle(t)
 	if self._ext_anim.idle and not self._ext_anim.idle_full_blend then
 		return
@@ -2306,7 +2317,7 @@ function CopActionWalk:_upd_nav_link_blend_to_idle(t)
 	self:_play_nav_link_anim(t)
 end
 
--- Lines 2114-2192
+-- Lines 2135-2213
 function CopActionWalk:_play_nav_link_anim(t)
 	self._old_blocks = self._blocks
 
@@ -2395,7 +2406,7 @@ function CopActionWalk:_play_nav_link_anim(t)
 	end
 end
 
--- Lines 2196-2278
+-- Lines 2217-2299
 function CopActionWalk:_upd_nav_link(t)
 	if self._ext_anim.act and not self._ext_anim.walk then
 		self._last_pos = self._unit:position()
@@ -2486,7 +2497,7 @@ function CopActionWalk:_upd_nav_link(t)
 	end
 end
 
--- Lines 2282-2326
+-- Lines 2303-2347
 function CopActionWalk:_upd_walk_turn_first_frame(t)
 	local pos1 = self._last_pos
 	local pos2 = self._curve_path[self._curve_path_index + 1]
@@ -2529,7 +2540,7 @@ function CopActionWalk:_upd_walk_turn_first_frame(t)
 	end
 end
 
--- Lines 2330-2368
+-- Lines 2351-2389
 function CopActionWalk:_upd_walk_turn(t)
 	if self._ext_anim.walk_turn then
 		self._last_pos = self._unit:position()
@@ -2571,12 +2582,12 @@ function CopActionWalk:_upd_walk_turn(t)
 	end
 end
 
--- Lines 2372-2374
+-- Lines 2393-2395
 function CopActionWalk._nav_point_pos(nav_point)
 	return nav_point.x and nav_point or nav_point.element:value("position")
 end
 
--- Lines 2378-2403
+-- Lines 2399-2424
 function CopActionWalk:_send_nav_point(nav_point)
 	if nav_point.x then
 		self._ext_network:send("action_walk_nav_point", nav_point)
@@ -2599,7 +2610,7 @@ function CopActionWalk:_send_nav_point(nav_point)
 	end
 end
 
--- Lines 2407-2414
+-- Lines 2428-2435
 function CopActionWalk:_set_updator(name)
 	self.update = self[name]
 
@@ -2608,7 +2619,7 @@ function CopActionWalk:_set_updator(name)
 	end
 end
 
--- Lines 2418-2433
+-- Lines 2439-2454
 function CopActionWalk:on_nav_link_unregistered(element_id)
 	if self._next_is_nav_link and self._next_is_nav_link.element._id == element_id then
 		self._ext_movement:action_request({
@@ -2631,7 +2642,7 @@ function CopActionWalk:on_nav_link_unregistered(element_id)
 	end
 end
 
--- Lines 2437-2448
+-- Lines 2458-2469
 function CopActionWalk:anim_act_clbk(anim_act)
 	if not self._sync then
 		return
@@ -2646,7 +2657,7 @@ function CopActionWalk:anim_act_clbk(anim_act)
 	end
 end
 
--- Lines 2452-2459
+-- Lines 2473-2480
 function CopActionWalk:_advance_simplified_path()
 	local s_path = self._simplified_path
 
@@ -2659,7 +2670,7 @@ function CopActionWalk:_advance_simplified_path()
 	self._host_stop_pos_ahead = false
 end
 
--- Lines 2463-2481
+-- Lines 2484-2502
 function CopActionWalk:_husk_needs_speedup()
 	if next(self._ext_movement._queued_actions) then
 		return true
@@ -2682,7 +2693,7 @@ function CopActionWalk:_husk_needs_speedup()
 	end
 end
 
--- Lines 2485-2501
+-- Lines 2506-2522
 function CopActionWalk:_chk_correct_pose()
 	local pose = self._ext_anim.pose
 	local allowed_poses = self._common_data.char_tweak.allowed_poses
@@ -2711,12 +2722,12 @@ function CopActionWalk:_chk_correct_pose()
 	end
 end
 
--- Lines 2505-2507
+-- Lines 2526-2528
 function CopActionWalk:haste()
 	return self._haste
 end
 
--- Lines 2511-2513
+-- Lines 2532-2534
 function CopActionWalk:stopping()
 	return self._stop_anim_init_pos and true or nil
 end

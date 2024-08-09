@@ -13,8 +13,9 @@ WorldDefinition.ASYNC_CALLBACKS = Global.STREAM_ALL_PACKAGES
 WorldDefinition.VEHICLES_CONTINENT_NAME = "NOT_USED_vehicles"
 WorldDefinition.MAX_WORLD_UNIT_ID = 15
 WorldDefinition.UNIT_ID_BASE = 1000000
+local is_editor = Application:editor()
 
--- Lines 22-206
+-- Lines 28-212
 function WorldDefinition:init(params)
 	WorldDefinition.ASYNC_CALLBACKS = Global.STREAM_ALL_PACKAGES
 	self._no_loading_packages = {}
@@ -193,7 +194,7 @@ function WorldDefinition:init(params)
 	self:_measure_lap_time("start end")
 end
 
--- Lines 208-219
+-- Lines 214-225
 function WorldDefinition:_serialize_to_script(type, name)
 	if Application:editor() then
 		return PackageManager:editor_load_script_data(type:id(), name:id())
@@ -206,30 +207,28 @@ function WorldDefinition:_serialize_to_script(type, name)
 	end
 end
 
--- Lines 221-223
+-- Lines 227-229
 function WorldDefinition:translation()
 	return self._translation
 end
 
--- Lines 225-227
+-- Lines 231-233
 function WorldDefinition:world_id()
 	return self._world_id
 end
 
--- Lines 229-231
+-- Lines 235-237
 function WorldDefinition:created_by_editor()
 	return self._created_by_editor
 end
 
--- Lines 233-235
+-- Lines 239-241
 function WorldDefinition:get_max_id()
 	return self._definition.world_data.max_id
 end
 
--- Lines 237-250
+-- Lines 243-255
 function WorldDefinition:_parse_replace_unit()
-	local is_editor = Application:editor()
-
 	if DB:has("xml", self._replace_units_path) then
 		local node = DB:load_node("xml", self._replace_units_path)
 
@@ -245,7 +244,7 @@ function WorldDefinition:_parse_replace_unit()
 	end
 end
 
--- Lines 253-259
+-- Lines 258-264
 function WorldDefinition:_translate_entries(entries)
 	if not entries then
 		return
@@ -257,7 +256,7 @@ function WorldDefinition:_translate_entries(entries)
 	end
 end
 
--- Lines 261-271
+-- Lines 266-276
 function WorldDefinition:_translate_covers(cover_data)
 	if not cover_data then
 		return
@@ -274,7 +273,7 @@ function WorldDefinition:_translate_covers(cover_data)
 	end
 end
 
--- Lines 274-294
+-- Lines 279-299
 function WorldDefinition:_translate_unit_entries(entries, base_id)
 	if not entries then
 		return
@@ -298,7 +297,7 @@ function WorldDefinition:_translate_unit_entries(entries, base_id)
 	end
 end
 
--- Lines 297-310
+-- Lines 302-315
 function WorldDefinition:_add_translation()
 	if not self._translation then
 		return
@@ -314,17 +313,17 @@ function WorldDefinition:_add_translation()
 	end
 end
 
--- Lines 312-314
+-- Lines 317-319
 function WorldDefinition:world_dir()
 	return self._world_dir
 end
 
--- Lines 317-319
+-- Lines 322-324
 function WorldDefinition:continent_excluded(name)
 	return self._excluded_continents[name]
 end
 
--- Lines 322-358
+-- Lines 327-363
 function WorldDefinition:_load_world_package()
 	if self._created_by_editor then
 		return
@@ -364,7 +363,7 @@ function WorldDefinition:_load_world_package()
 	self:_load_sound_package()
 end
 
--- Lines 360-372
+-- Lines 365-377
 function WorldDefinition:_load_sound_package()
 	local package = self._world_dir .. "world_sounds"
 
@@ -383,7 +382,7 @@ function WorldDefinition:_load_sound_package()
 	self._current_sound_package = package
 end
 
--- Lines 375-394
+-- Lines 380-399
 function WorldDefinition:_load_continent_init_package(path, cb_name, key)
 	if self._created_by_editor then
 		return
@@ -406,12 +405,12 @@ function WorldDefinition:_load_continent_init_package(path, cb_name, key)
 	table.insert(self._continent_init_packages, path)
 end
 
--- Lines 396-398
+-- Lines 401-403
 function WorldDefinition:on_world_package_loaded(params, package)
 	Application:debug("[WorldDefinition:on_world_package_loaded()] WORLD PACKAGE LOADED", package, params)
 end
 
--- Lines 400-433
+-- Lines 405-438
 function WorldDefinition:on_continent_package_loaded(params, package)
 	Application:debug("[WorldDefinition:on_continent_package_loaded()] CONTITNENT PACKAGE LOADED", package, inspect(params))
 
@@ -448,7 +447,7 @@ function WorldDefinition:on_continent_package_loaded(params, package)
 	end
 end
 
--- Lines 435-452
+-- Lines 440-457
 function WorldDefinition:on_instance_package_loaded(params, package)
 	Application:debug("[WorldDefinition:on_instance_package_loaded()] INSTANCE PACKAGE LOADED", package, inspect(params))
 
@@ -468,7 +467,7 @@ function WorldDefinition:on_instance_package_loaded(params, package)
 	end
 end
 
--- Lines 454-481
+-- Lines 459-486
 function WorldDefinition:_do_instance_loaded(key)
 	Application:debug("WorldDefinition:_do_instance_loaded(key)", key, inspect(self._package_load_params[key]))
 
@@ -501,7 +500,7 @@ function WorldDefinition:_do_instance_loaded(key)
 	end
 end
 
--- Lines 485-508
+-- Lines 490-513
 function WorldDefinition:_load_continent_package(path, cb_name, key)
 	if self._created_by_editor then
 		return
@@ -528,7 +527,7 @@ function WorldDefinition:_load_continent_package(path, cb_name, key)
 	self:_measure_lap_time("cont end " .. path)
 end
 
--- Lines 511-523
+-- Lines 516-528
 function WorldDefinition:unload_packages()
 	self:_unload_package(self._current_world_package)
 	self:_unload_package(self._current_sound_package)
@@ -544,7 +543,7 @@ function WorldDefinition:unload_packages()
 	end
 end
 
--- Lines 526-533
+-- Lines 531-538
 function WorldDefinition:_unload_package(package)
 	if not package then
 		return
@@ -555,7 +554,7 @@ function WorldDefinition:_unload_package(package)
 	end
 end
 
--- Lines 536-563
+-- Lines 541-568
 function WorldDefinition:_parse_world_setting(world_setting, excluded_continents)
 	Application:debug("[WorldDefinition:_parse_world_setting]", inspect(excluded_continents))
 
@@ -588,7 +587,7 @@ function WorldDefinition:_parse_world_setting(world_setting, excluded_continents
 	end
 end
 
--- Lines 565-618
+-- Lines 570-623
 function WorldDefinition:parse_continents(node, t)
 	Application:debug("[WorldDefinition:parse_continents] parse_continents", node, t)
 
@@ -652,7 +651,7 @@ function WorldDefinition:parse_continents(node, t)
 	end
 end
 
--- Lines 620-626
+-- Lines 625-631
 function WorldDefinition:get_next_unique_id(base_id)
 	local base = base_id or 100000
 	self._unique_id_counter[base] = self._unique_id_counter[base] or 0
@@ -662,14 +661,14 @@ function WorldDefinition:get_next_unique_id(base_id)
 	return id
 end
 
--- Lines 628-631
+-- Lines 633-636
 function WorldDefinition:get_next_unique_instance_id(old_id)
 	local id = self._world_id % WorldDefinition.MAX_WORLD_UNIT_ID * WorldDefinition.UNIT_ID_BASE + old_id
 
 	return id
 end
 
--- Lines 633-638
+-- Lines 638-643
 function WorldDefinition:_get_new_id(old_id, base_id)
 	local new_id = self:get_next_unique_id(base_id)
 	self._id_converter.old_to_new[old_id] = new_id
@@ -678,7 +677,7 @@ function WorldDefinition:_get_new_id(old_id, base_id)
 	return new_id
 end
 
--- Lines 640-645
+-- Lines 645-650
 function WorldDefinition:_get_new_instance_id(old_id, offset)
 	local new_id = self:get_next_unique_instance_id(old_id)
 	self._id_converter.old_to_new[old_id] = new_id
@@ -687,7 +686,7 @@ function WorldDefinition:_get_new_instance_id(old_id, offset)
 	return new_id
 end
 
--- Lines 648-686
+-- Lines 653-691
 function WorldDefinition:_add_continent_translation()
 	if not self._translation then
 		return
@@ -700,7 +699,7 @@ function WorldDefinition:_add_continent_translation()
 	end
 end
 
--- Lines 688-737
+-- Lines 693-742
 function WorldDefinition:_insert_instances()
 	self:_add_loading_counter("on_instance_package_loaded")
 
@@ -758,12 +757,12 @@ function WorldDefinition:_insert_instances()
 	self:_remove_loading_counter("on_instance_package_loaded")
 end
 
--- Lines 740-742
+-- Lines 745-747
 function WorldDefinition:_continent_editor_only(data)
 	return not Application:editor() and data.editor_only
 end
 
--- Lines 745-755
+-- Lines 750-760
 function WorldDefinition:init_done()
 	if self._continent_init_packages then
 		for _, package in ipairs(self._continent_init_packages) do
@@ -776,19 +775,7 @@ function WorldDefinition:init_done()
 	self.is_created = true
 end
 
--- Lines 757-765
-function WorldDefinition:_measure_lap_time(name)
-	return
-
-	self._start_lap = self._start_lap or TimerManager:now()
-	local now = TimerManager:now()
-
-	Application:debug("Lap ", name, now - self._start_lap)
-
-	self._start_lap = now
-end
-
--- Lines 767-1015
+-- Lines 762-1010
 function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 	Application:debug("[WorldDefinition:create]", layer, offset, world_in_world, nav_graph_loaded)
 	Application:check_termination()
@@ -1034,7 +1021,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 	return return_data
 end
 
--- Lines 1017-1023
+-- Lines 1012-1018
 function WorldDefinition:destroy()
 	self.destroyed = true
 
@@ -1044,11 +1031,11 @@ function WorldDefinition:destroy()
 	managers.environment_effects:kill_world_mission_effects(self._world_id)
 end
 
--- Lines 1025-1027
+-- Lines 1020-1022
 function WorldDefinition:_load_level_settings(data, offset)
 end
 
--- Lines 1029-1047
+-- Lines 1024-1042
 function WorldDefinition:_load_ai_nav_graphs(data, offset)
 	local path = self:world_dir() .. data.file
 
@@ -1069,7 +1056,7 @@ function WorldDefinition:_load_ai_nav_graphs(data, offset)
 	self:_measure_lap_time("_load_ai_nav_graphs LOAD")
 end
 
--- Lines 1050-1067
+-- Lines 1045-1062
 function WorldDefinition:_load_ai_mop_graphs(data, offset)
 	local path = self:world_dir() .. data.file
 
@@ -1090,7 +1077,7 @@ function WorldDefinition:_load_ai_mop_graphs(data, offset)
 	values = nil
 end
 
--- Lines 1069-1073
+-- Lines 1064-1068
 function WorldDefinition:_load_ai_settings(data, offset)
 	managers.groupai:set_state(data.ai_settings.group_state, self._world_id)
 	managers.ai_data:load_data(data.ai_data)
@@ -1098,7 +1085,7 @@ function WorldDefinition:_load_ai_settings(data, offset)
 	return data.ai_settings
 end
 
--- Lines 1075-1108
+-- Lines 1070-1103
 function WorldDefinition:_create_portal(data, offset)
 	if not Application:editor() then
 		for _, portal in ipairs(data.portals) do
@@ -1137,7 +1124,7 @@ function WorldDefinition:_create_portal(data, offset)
 	end
 end
 
--- Lines 1110-1133
+-- Lines 1105-1128
 function WorldDefinition:_create_editor_groups()
 	local groups = {}
 	local group_names = {}
@@ -1170,7 +1157,7 @@ function WorldDefinition:_create_editor_groups()
 	}
 end
 
--- Lines 1135-1143
+-- Lines 1130-1138
 function WorldDefinition:_add_sound_translation(values)
 	if not self._translation then
 		return
@@ -1181,7 +1168,7 @@ function WorldDefinition:_add_sound_translation(values)
 	self:_translate_entries(values.sound_area_emitters)
 end
 
--- Lines 1145-1155
+-- Lines 1140-1150
 function WorldDefinition:_create_cover_data()
 	local path = self:world_dir() .. "cover_data"
 
@@ -1196,12 +1183,12 @@ function WorldDefinition:_create_cover_data()
 	end
 end
 
--- Lines 1157-1159
+-- Lines 1152-1154
 function WorldDefinition:get_cover_data()
 	return self._cover_data
 end
 
--- Lines 1161-1184
+-- Lines 1156-1179
 function WorldDefinition:_create_sounds(data)
 	local path = self:world_dir() .. data.file
 
@@ -1234,7 +1221,7 @@ end
 
 local zero_rot = Rotation()
 
--- Lines 1189-1230
+-- Lines 1184-1225
 function WorldDefinition:_create_massunit(data, offset)
 	local path = self:world_dir() .. data.file
 	local spawn_mass = true
@@ -1267,7 +1254,7 @@ function WorldDefinition:_create_massunit(data, offset)
 	end
 end
 
--- Lines 1232-1237
+-- Lines 1227-1232
 function check_is_environment_vanilla(environment_name)
 	local vanilla_env_path = "environments/vanilla"
 
@@ -1276,7 +1263,7 @@ function check_is_environment_vanilla(environment_name)
 	end
 end
 
--- Lines 1239-1251
+-- Lines 1234-1246
 function WorldDefinition:_set_environment(environment_name)
 	check_is_environment_vanilla(environment_name)
 
@@ -1294,7 +1281,7 @@ function WorldDefinition:_set_environment(environment_name)
 	end
 end
 
--- Lines 1253-1310
+-- Lines 1248-1305
 function WorldDefinition:_create_environment(data, offset, world_in_world)
 	if not world_in_world or self.meta_data and self.meta_data.load_env == "true" then
 		self:_set_environment(data.environment_values.environment)
@@ -1362,7 +1349,7 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 	end
 end
 
--- Lines 1312-1323
+-- Lines 1307-1318
 function WorldDefinition:_create_world_cameras(data, translation)
 	local path = self:world_dir() .. data.file
 
@@ -1379,7 +1366,7 @@ function WorldDefinition:_create_world_cameras(data, translation)
 	managers.worldcamera:load(values, self._world_id, world_translation, world_rotation_yaw)
 end
 
--- Lines 1325-1339
+-- Lines 1320-1334
 function WorldDefinition:_create_mission_unit(data, offset)
 	self:preload_unit(data.unit_data.name)
 
@@ -1400,7 +1387,7 @@ function WorldDefinition:_create_mission_unit(data, offset)
 	return unit
 end
 
--- Lines 1341-1355
+-- Lines 1336-1350
 function WorldDefinition:_create_wires_unit(data, offset)
 	self:preload_unit(data.unit_data.name)
 
@@ -1419,21 +1406,21 @@ function WorldDefinition:_create_wires_unit(data, offset)
 	return unit
 end
 
--- Lines 1357-1360
+-- Lines 1352-1355
 function WorldDefinition:_create_statics_unit(data, offset, world_in_world, continent_name)
 	self:preload_unit(data.unit_data.name)
 
 	return self:make_unit(data.unit_data, offset, world_in_world, continent_name)
 end
 
--- Lines 1362-1365
+-- Lines 1357-1360
 function WorldDefinition:_create_dynamics_unit(data, offset)
 	self:preload_unit(data.unit_data.name)
 
 	return self:make_unit(data.unit_data, offset)
 end
 
--- Lines 1367-1375
+-- Lines 1362-1370
 function WorldDefinition:_create_ai_editor_unit(data, offset)
 	local unit = self:_create_statics_unit(data, offset)
 
@@ -1446,10 +1433,8 @@ function WorldDefinition:_create_ai_editor_unit(data, offset)
 	return unit
 end
 
--- Lines 1379-1398
+-- Lines 1374-1392
 function WorldDefinition:preload_unit(name)
-	local is_editor = Application:editor()
-
 	if table.has(self._replace_names, name) then
 		name = self._replace_names[name]
 	elseif is_editor and (not DB:has(IDS_UNIT, name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
@@ -1471,9 +1456,7 @@ function WorldDefinition:preload_unit(name)
 	end
 end
 
-local is_editor = Application:editor()
-
--- Lines 1402-1484
+-- Lines 1395-1498
 function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 	local name = data.name
 
@@ -1491,14 +1474,14 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 
 	data.continent_name = continent_name
 	local pkg = data.package or ""
-	local network_sync = PackageManager:unit_data(name:id(), pkg):network_sync()
-	local need_sync = false
 	local unit = nil
+	local need_sync = false
+	local network_sync = PackageManager:unit_data(name:id(), pkg):network_sync()
 
 	if network_sync ~= "none" and network_sync ~= "client" then
 		need_sync = true
 
-		if not is_editor and not Network:is_server() then
+		if not is_editor and Network:is_client() then
 			local found = false
 
 			for _, u in ipairs(self._temp_units_synced) do
@@ -1506,6 +1489,8 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 					unit = managers.worldcollection:get_unit_with_real_id(u.unit_id)
 
 					if unit then
+						data.need_sync = true
+
 						self:assign_unit_data(unit, data, world_in_world)
 
 						found = true
@@ -1518,7 +1503,7 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 				table.insert(self._temp_units, data)
 			end
 
-			return
+			return nil
 		end
 	end
 
@@ -1555,9 +1540,29 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 	return unit
 end
 
-local is_editor = Application:editor()
+-- Lines 1502-1526
+function WorldDefinition:sync_unit_data(unit, editor_id)
+	local found = false
 
--- Lines 1487-1539
+	for _, data in ipairs(self._temp_units) do
+		if data.unit_id == editor_id then
+			found = true
+			data.found_unit = unit
+
+			self:assign_unit_data(unit, data)
+			self:use_me(unit, Application:editor())
+		end
+	end
+
+	if not found then
+		table.insert(self._temp_units_synced, {
+			synced_editor_id = editor_id,
+			unit_id = unit:id()
+		})
+	end
+end
+
+-- Lines 1528-1584
 function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 	if not unit:unit_data() then
 		Application:error("The unit does not have the required extension unit_data (ScriptUnitData)", unit)
@@ -1577,10 +1582,6 @@ function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 
 	self:_setup_unit_id(unit, data)
 	self:_setup_editor_unit_data(unit, data)
-
-	if unit:unit_data().helper_type and unit:unit_data().helper_type ~= "none" then
-		managers.helper_unit:add_unit(unit, unit:unit_data().helper_type)
-	end
 
 	if data.continent and self._created_by_editor then
 		managers.editor:add_unit_to_continent(data.continent, unit)
@@ -1608,7 +1609,11 @@ function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 	end
 end
 
--- Lines 1542-1554
+-- Lines 1587-1589
+function WorldDefinition:_project_assign_unit_data(...)
+end
+
+-- Lines 1592-1604
 function WorldDefinition:_setup_unit_id(unit, data)
 	unit:unit_data().unit_id = data.unit_id
 
@@ -1627,7 +1632,7 @@ function WorldDefinition:_setup_unit_id(unit, data)
 	self:use_me(unit, Application:editor())
 end
 
--- Lines 1557-1565
+-- Lines 1607-1615
 function WorldDefinition:_setup_editor_unit_data(unit, data)
 	if not Application:editor() then
 		return
@@ -1638,7 +1643,7 @@ function WorldDefinition:_setup_editor_unit_data(unit, data)
 	unit:unit_data().projection_lights = data.projection_lights
 end
 
--- Lines 1568-1601
+-- Lines 1618-1651
 function WorldDefinition:_setup_lights(unit, data)
 	if not data.lights then
 		return
@@ -1680,13 +1685,17 @@ function WorldDefinition:_setup_lights(unit, data)
 	end
 end
 
--- Lines 1604-1606
+-- Lines 1654-1656
 function WorldDefinition:setup_lights(...)
 	self:_setup_lights(...)
 end
 
--- Lines 1609-1627
+-- Lines 1679-1707
 function WorldDefinition:_setup_variations(unit, data)
+	if not data.found_unit and data.need_sync then
+		return
+	end
+
 	if data.mesh_variation and data.mesh_variation ~= "default" then
 		if not Application:editor() or unit:damage() and unit:damage():has_sequence(data.mesh_variation) then
 			unit:unit_data().mesh_variation = data.mesh_variation
@@ -1705,7 +1714,7 @@ function WorldDefinition:_setup_variations(unit, data)
 	end
 end
 
--- Lines 1629-1654
+-- Lines 1709-1734
 function WorldDefinition:_setup_editable_gui(unit, data)
 	if not data.editable_gui then
 		return
@@ -1735,7 +1744,7 @@ function WorldDefinition:_setup_editable_gui(unit, data)
 	end
 end
 
--- Lines 1656-1668
+-- Lines 1736-1748
 function WorldDefinition:_setup_ladder(unit, data)
 	if not data.ladder then
 		return
@@ -1751,7 +1760,7 @@ function WorldDefinition:_setup_ladder(unit, data)
 	unit:ladder():set_height(data.ladder.height)
 end
 
--- Lines 1670-1685
+-- Lines 1750-1765
 function WorldDefinition:_setup_zipline(unit, data)
 	if not data.zipline then
 		return
@@ -1770,12 +1779,12 @@ function WorldDefinition:_setup_zipline(unit, data)
 	unit:zipline():set_ai_ignores_bag(data.zipline.ai_ignores_bag)
 end
 
--- Lines 1688-1690
+-- Lines 1768-1770
 function WorldDefinition:external_set_only_visible_in_editor(unit)
 	self:_set_only_visible_in_editor(unit, nil)
 end
 
--- Lines 1693-1700
+-- Lines 1773-1780
 function WorldDefinition:_set_only_visible_in_editor(unit, data, world_in_world)
 	if Application:editor() and not world_in_world then
 		return
@@ -1786,7 +1795,7 @@ function WorldDefinition:_set_only_visible_in_editor(unit, data, world_in_world)
 	end
 end
 
--- Lines 1703-1710
+-- Lines 1783-1790
 function WorldDefinition:_setup_cutscene_actor(unit, data)
 	if not data.cutscene_actor then
 		return
@@ -1797,7 +1806,7 @@ function WorldDefinition:_setup_cutscene_actor(unit, data)
 	managers.cutscene:register_cutscene_actor(unit)
 end
 
--- Lines 1713-1722
+-- Lines 1793-1802
 function WorldDefinition:_setup_disable_shadow(unit, data)
 	if not data.disable_shadows then
 		return
@@ -1810,7 +1819,7 @@ function WorldDefinition:_setup_disable_shadow(unit, data)
 	unit:set_shadows_disabled(data.disable_shadows)
 end
 
--- Lines 1725-1733
+-- Lines 1805-1813
 function WorldDefinition:_setup_hide_on_projection_light(unit, data)
 	if not data.hide_on_projection_light then
 		return
@@ -1821,7 +1830,7 @@ function WorldDefinition:_setup_hide_on_projection_light(unit, data)
 	end
 end
 
--- Lines 1749-1757
+-- Lines 1829-1837
 function WorldDefinition:_setup_disable_on_ai_graph(unit, data)
 	if not data.disable_on_ai_graph then
 		return
@@ -1832,7 +1841,7 @@ function WorldDefinition:_setup_disable_on_ai_graph(unit, data)
 	end
 end
 
--- Lines 1760-1770
+-- Lines 1840-1850
 function WorldDefinition:_add_to_portal(unit, data)
 	if self._created_by_editor or not self._portal_slot_mask then
 		return
@@ -1843,7 +1852,12 @@ function WorldDefinition:_add_to_portal(unit, data)
 	end
 end
 
--- Lines 1773-1800
+-- Lines 1854-1856
+function WorldDefinition:setup_projection_light(...)
+	self:_setup_projection_light(...)
+end
+
+-- Lines 1859-1886
 function WorldDefinition:_setup_projection_light(unit, data)
 	if not data.projection_light then
 		return
@@ -1878,16 +1892,7 @@ function WorldDefinition:_setup_projection_light(unit, data)
 	light:set_projection_texture(Idstring(texture_name), omni, true)
 end
 
--- Lines 1803-1805
-function WorldDefinition:setup_projection_light(...)
-	self:_setup_projection_light(...)
-end
-
--- Lines 1808-1809
-function WorldDefinition:_project_assign_unit_data(...)
-end
-
--- Lines 1811-1833
+-- Lines 1888-1910
 function WorldDefinition:add_trigger_sequence(unit, triggers)
 	local is_editor = Application:editor()
 
@@ -1916,7 +1921,7 @@ function WorldDefinition:add_trigger_sequence(unit, triggers)
 	end
 end
 
--- Lines 1836-1860
+-- Lines 1913-1937
 function WorldDefinition:use_me(unit, is_editor)
 	local id = unit:unit_data().unit_id
 	id = id ~= 0 and id or unit:editor_id()
@@ -1946,7 +1951,7 @@ function WorldDefinition:use_me(unit, is_editor)
 	end
 end
 
--- Lines 1863-1877
+-- Lines 1940-1954
 function WorldDefinition:get_unit_on_load(id, call)
 	if not id then
 		Application:error("[WorldDefinition:get_unit_on_load( id, call )] id is nill?")
@@ -1965,14 +1970,14 @@ function WorldDefinition:get_unit_on_load(id, call)
 	table.insert(self._use_unit_callbacks[id], call)
 end
 
--- Lines 1879-1881
+-- Lines 1956-1958
 function WorldDefinition:_on_dropin_unit_added(unit)
 	self:_add_to_portal(unit, {
 		original_unit_id = self:id_convert_new_to_old(unit:unit_data().unit_id)
 	})
 end
 
--- Lines 1883-1888
+-- Lines 1960-1965
 function WorldDefinition:get_original_unit_id(id)
 	if not self._translation then
 		return id
@@ -1981,7 +1986,7 @@ function WorldDefinition:get_original_unit_id(id)
 	return self:id_convert_new_to_old(id)
 end
 
--- Lines 1890-1895
+-- Lines 1967-1972
 function WorldDefinition:get_unique_id(id)
 	if not self._translation then
 		return id
@@ -1990,7 +1995,7 @@ function WorldDefinition:get_unique_id(id)
 	return self:id_convert_old_to_new(id)
 end
 
--- Lines 1897-1902
+-- Lines 1974-1979
 function WorldDefinition:id_convert_old_to_new(id)
 	if self._world_id > 0 then
 		return self._id_converter.old_to_new[id]
@@ -1999,7 +2004,7 @@ function WorldDefinition:id_convert_old_to_new(id)
 	return id
 end
 
--- Lines 1904-1909
+-- Lines 1981-1986
 function WorldDefinition:id_convert_new_to_old(id)
 	if self._world_id > 0 then
 		return self._id_converter.new_to_old[id]
@@ -2008,7 +2013,7 @@ function WorldDefinition:id_convert_new_to_old(id)
 	return id
 end
 
--- Lines 1911-1916
+-- Lines 1988-1993
 function WorldDefinition:get_unit_by_id(id)
 	if self._translation then
 		return self._all_units[self._id_converter.old_to_new[id]]
@@ -2017,12 +2022,12 @@ function WorldDefinition:get_unit_by_id(id)
 	return self._all_units[id]
 end
 
--- Lines 1918-1920
+-- Lines 1995-1997
 function WorldDefinition:register_spawned_unit(unit)
 	table.insert(self._spawned_units, unit)
 end
 
--- Lines 1922-1932
+-- Lines 1999-2009
 function WorldDefinition:cleanup_spawned_units(unit)
 	local new_spawend_units = {}
 
@@ -2036,17 +2041,17 @@ function WorldDefinition:cleanup_spawned_units(unit)
 	self._next_cleanup_t = Application:time() + 5
 end
 
--- Lines 1935-1937
+-- Lines 2012-2014
 function WorldDefinition:add_mission_element_unit(unit)
 	self._mission_element_units[unit:unit_data().unit_id] = unit
 end
 
--- Lines 1940-1942
+-- Lines 2017-2019
 function WorldDefinition:get_mission_element_unit(id)
 	return self._mission_element_units[id]
 end
 
--- Lines 1944-1964
+-- Lines 2021-2041
 function WorldDefinition:update_load(t, dt)
 	if managers.worldcollection.concurrent_create ~= self._world_id then
 		return
@@ -2075,7 +2080,7 @@ function WorldDefinition:update_load(t, dt)
 	self.creation_in_progress = not self.load_statics_done or not self.load_dynamics_done
 end
 
--- Lines 1966-2007
+-- Lines 2043-2077
 function WorldDefinition:update_prepare(t, dt)
 	if managers.worldcollection._sync_loading_packages and managers.worldcollection._sync_loading_packages > 0 then
 		Application:debug("[WorldDefinition:update_prepare] Waiting for dropin sync packages to load")
@@ -2115,7 +2120,7 @@ function WorldDefinition:update_prepare(t, dt)
 	end
 end
 
--- Lines 2009-2018
+-- Lines 2079-2088
 function WorldDefinition:_add_loading_counter(callback_method, pkg)
 	Application:trace("[WorldDefinition:_add_loading_counter]", callback_method)
 
@@ -2128,7 +2133,7 @@ function WorldDefinition:_add_loading_counter(callback_method, pkg)
 	end
 end
 
--- Lines 2020-2029
+-- Lines 2090-2099
 function WorldDefinition:_remove_loading_counter(callback_method, pkg)
 	Application:trace("[WorldDefinition:_remove_loading_counter]", callback_method)
 
@@ -2143,7 +2148,7 @@ function WorldDefinition:_remove_loading_counter(callback_method, pkg)
 	end
 end
 
--- Lines 2032-2038
+-- Lines 2102-2108
 function WorldDefinition:_test_loading_counter(callback_method)
 	local result = false
 
@@ -2154,7 +2159,7 @@ function WorldDefinition:_test_loading_counter(callback_method)
 	return result
 end
 
--- Lines 2041-2100
+-- Lines 2111-2170
 function WorldDefinition:_load_package_async(pkg, callback_method, key, init_pkg)
 	self:keep_alive(TimerManager:now())
 
@@ -2223,7 +2228,7 @@ function WorldDefinition:_load_package_async(pkg, callback_method, key, init_pkg
 	end
 end
 
--- Lines 2105-2122
+-- Lines 2175-2192
 function WorldDefinition:_load_package(package)
 	self:keep_alive(TimerManager:now())
 
@@ -2244,29 +2249,7 @@ function WorldDefinition:_load_package(package)
 	PackageManager:load(package)
 end
 
--- Lines 2124-2140
-function WorldDefinition:sync_unit_data(unit, editor_id)
-	local found = false
-
-	for _, data in ipairs(self._temp_units) do
-		if data.unit_id == editor_id then
-			self:assign_unit_data(unit, data)
-			self:use_me(unit, Application:editor())
-
-			found = true
-			data.found_unit = unit
-		end
-	end
-
-	if not found then
-		table.insert(self._temp_units_synced, {
-			synced_editor_id = editor_id,
-			unit_id = unit:id()
-		})
-	end
-end
-
--- Lines 2142-2144
+-- Lines 2194-2200
 function WorldDefinition:sync_unit_reference_data(unit_id, editor_id)
 	table.insert(self._temp_units_synced, {
 		dropin = true,
@@ -2275,14 +2258,14 @@ function WorldDefinition:sync_unit_reference_data(unit_id, editor_id)
 	})
 end
 
--- Lines 2147-2150
+-- Lines 2203-2206
 function WorldDefinition:next_key()
 	self._key_counter = self._key_counter + 1
 
 	return self._key_counter
 end
 
--- Lines 2152-2161
+-- Lines 2208-2217
 function WorldDefinition:_all_world_packages_loaded()
 	if not self._all_world_packages_loaded_called then
 		Application:trace("[WorldDefinition:_all_world_packages_loaded()]")
@@ -2296,7 +2279,7 @@ function WorldDefinition:_all_world_packages_loaded()
 	end
 end
 
--- Lines 2163-2170
+-- Lines 2219-2226
 function WorldDefinition:_all_continent_packages_loaded()
 	if not self._all_continent_packages_loaded_called then
 		Application:trace("[WorldDefinition:_all_continent_packages_loaded()]")
@@ -2308,7 +2291,7 @@ function WorldDefinition:_all_continent_packages_loaded()
 	end
 end
 
--- Lines 2172-2182
+-- Lines 2228-2238
 function WorldDefinition:keep_alive(t)
 	if not managers.network:session() then
 		return
@@ -2321,4 +2304,8 @@ function WorldDefinition:keep_alive(t)
 
 		managers.network:session():send_to_peers_ip_verified("connection_keep_alive")
 	end
+end
+
+-- Lines 2241-2250
+function WorldDefinition:_measure_lap_time(name)
 end

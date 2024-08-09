@@ -11,7 +11,7 @@ function ElementSpawnUnit:init(...)
 	self._units = {}
 end
 
--- Lines 12-20
+-- Lines 12-22
 function ElementSpawnUnit:client_on_executed(...)
 	if self._values.unit_name ~= "none" then
 		local network_sync = PackageManager:unit_data(self._values.unit_name:id(), ""):network_sync()
@@ -24,7 +24,7 @@ function ElementSpawnUnit:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 22-38
+-- Lines 24-40
 function ElementSpawnUnit:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -45,19 +45,19 @@ function ElementSpawnUnit:on_executed(instigator)
 	ElementSpawnUnit.super.on_executed(self, instigator)
 end
 
--- Lines 40-42
+-- Lines 42-44
 function ElementSpawnUnit:units()
 	return self._units
 end
 
--- Lines 45-49
+-- Lines 47-51
 function ElementSpawnUnit:operation_remove()
 	if Network:is_server() then
 		self:delete_units()
 	end
 end
 
--- Lines 51-56
+-- Lines 53-58
 function ElementSpawnUnit:delete_units()
 	for _, unit in ipairs(self._units) do
 		unit:set_slot(0)
@@ -66,7 +66,7 @@ function ElementSpawnUnit:delete_units()
 	self._units = {}
 end
 
--- Lines 58-62
+-- Lines 60-64
 function ElementSpawnUnit:destroy()
 	if Network:is_server() then
 		self:delete_units()

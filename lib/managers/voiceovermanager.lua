@@ -135,30 +135,30 @@ function VoiceOverManager:guard_saw_enemy(source_unit)
 	self:_play_sound(source_unit, "ste_sawenemy")
 end
 
--- Lines 150-156
+-- Lines 150-157
 function VoiceOverManager:guard_saw_body(source_unit)
 	if self._disabled then
 		return
 	end
 
-	self:_play_sound(source_unit, "ste_sawbody")
+	self:_play_sound(source_unit, "ste_raisealarm")
 end
 
--- Lines 159-165
+-- Lines 160-167
 function VoiceOverManager:guard_saw_bag(source_unit)
 	if self._disabled then
 		return
 	end
 
-	self:_play_sound(source_unit, "ste_sawbag")
+	self:_play_sound(source_unit, "ste_raisealarm")
 end
 
--- Lines 168-170
+-- Lines 170-172
 function VoiceOverManager:guard_raise_alarm(source_unit)
 	self:_play_sound(source_unit, "ste_raisealarm")
 end
 
--- Lines 173-179
+-- Lines 175-181
 function VoiceOverManager:guard_back_to_patrol(source_unit)
 	if self._disabled then
 		return
@@ -167,12 +167,12 @@ function VoiceOverManager:guard_back_to_patrol(source_unit)
 	self:_play_sound(source_unit, "ste_investigateresult")
 end
 
--- Lines 182-185
+-- Lines 184-187
 function VoiceOverManager:enemy_reload(source_unit)
 	self:_play_sound(source_unit, "reload", false)
 end
 
--- Lines 188-207
+-- Lines 190-209
 function VoiceOverManager:_play_sound(source_unit, event)
 	if self._disabled then
 		return
@@ -187,24 +187,24 @@ function VoiceOverManager:_play_sound(source_unit, event)
 	end
 end
 
--- Lines 210-212
+-- Lines 212-214
 function VoiceOverManager:on_simulation_ended()
 	self:enable()
 end
 
--- Lines 215-217
+-- Lines 217-219
 function VoiceOverManager:on_tweak_data_reloaded()
 	self:_setup()
 end
 
--- Lines 220-223
+-- Lines 222-225
 function VoiceOverManager:disable()
 	Application:debug("[VoiceOverManager] disable")
 
 	self._disabled = true
 end
 
--- Lines 226-229
+-- Lines 228-231
 function VoiceOverManager:enable()
 	Application:debug("[VoiceOverManager] enable")
 

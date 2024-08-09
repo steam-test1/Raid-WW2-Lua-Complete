@@ -405,12 +405,13 @@ function HUDMultipleChoiceWheel:_recreate_options()
 	self:_activate_pointer(false)
 end
 
--- Lines 376-378
+-- Lines 376-379
 function HUDMultipleChoiceWheel:set_options(options)
 	self._option_data = options
+	self._in_cooldown = false
 end
 
--- Lines 380-392
+-- Lines 381-393
 function HUDMultipleChoiceWheel:add_option(option, index)
 	for i = 1, #self._option_data do
 		if self._option_data[i].id == option.id then
@@ -423,7 +424,7 @@ function HUDMultipleChoiceWheel:add_option(option, index)
 	table.insert(self._option_data, index, option)
 end
 
--- Lines 394-401
+-- Lines 395-402
 function HUDMultipleChoiceWheel:remove_option(option_id)
 	for i = 1, #self._option_data do
 		if self._option_data[i].id == option_id then
@@ -434,7 +435,7 @@ function HUDMultipleChoiceWheel:remove_option(option_id)
 	end
 end
 
--- Lines 403-412
+-- Lines 404-413
 function HUDMultipleChoiceWheel:_fade_in_options()
 	local base_delay = 0.03
 
@@ -447,7 +448,7 @@ function HUDMultipleChoiceWheel:_fade_in_options()
 	self._object:animate(callback(self, self, "_animate_show"))
 end
 
--- Lines 414-429
+-- Lines 415-430
 function HUDMultipleChoiceWheel:_fade_out_options()
 	if self._active_panel then
 		self._options[self._active_panel].text:stop()
@@ -465,7 +466,7 @@ function HUDMultipleChoiceWheel:_fade_out_options()
 	self._object:animate(callback(self, self, "_animate_hide"))
 end
 
--- Lines 431-446
+-- Lines 432-447
 function HUDMultipleChoiceWheel:_animate_show()
 	local duration = 0.1
 	local t = self._object:alpha() * duration
@@ -483,7 +484,7 @@ function HUDMultipleChoiceWheel:_animate_show()
 	self._object:set_alpha(1)
 end
 
--- Lines 448-463
+-- Lines 449-464
 function HUDMultipleChoiceWheel:_animate_hide()
 	local duration = 0.12
 	local t = (1 - self._object:alpha()) * duration
@@ -501,7 +502,7 @@ function HUDMultipleChoiceWheel:_animate_hide()
 	self._selection_arc:set_visible(false)
 end
 
--- Lines 465-493
+-- Lines 466-494
 function HUDMultipleChoiceWheel:_animate_show_option(panel, id, delay)
 	local start_mul = 0.8
 	local change_mul = 0.2
@@ -532,7 +533,7 @@ function HUDMultipleChoiceWheel:_animate_show_option(panel, id, delay)
 	panel:set_alpha(1)
 end
 
--- Lines 495-519
+-- Lines 496-520
 function HUDMultipleChoiceWheel:_animate_hide_option(panel, id)
 	local change_mul = 0.8
 	local duration = 0.12
@@ -558,7 +559,7 @@ function HUDMultipleChoiceWheel:_animate_hide_option(panel, id)
 	panel:set_alpha(0)
 end
 
--- Lines 521-539
+-- Lines 522-540
 function HUDMultipleChoiceWheel:_destroy_options()
 	if self._is_active then
 		self._active_panel = nil
@@ -580,7 +581,7 @@ function HUDMultipleChoiceWheel:_destroy_options()
 	end
 end
 
--- Lines 541-564
+-- Lines 542-565
 function HUDMultipleChoiceWheel:_activate_pointer(controller_activated)
 	self._last_mouse_pos = {
 		x = 0,
@@ -608,7 +609,7 @@ function HUDMultipleChoiceWheel:_activate_pointer(controller_activated)
 	managers.mouse_pointer:set_pointer_image("none")
 end
 
--- Lines 566-574
+-- Lines 567-575
 function HUDMultipleChoiceWheel:_deactivate_pointer()
 	if not self._mouse_active then
 		return
@@ -620,7 +621,7 @@ function HUDMultipleChoiceWheel:_deactivate_pointer()
 	managers.mouse_pointer:release_mouse_pointer()
 end
 
--- Lines 576-587
+-- Lines 577-588
 function HUDMultipleChoiceWheel:_get_pointer_angle(x, y)
 	local vec1 = {
 		x = x,
@@ -640,7 +641,7 @@ function HUDMultipleChoiceWheel:_get_pointer_angle(x, y)
 	return angle
 end
 
--- Lines 590-601
+-- Lines 591-602
 function HUDMultipleChoiceWheel:_get_option_angle(id)
 	local single_option_angle = math.ceil(360 / self._num_segments)
 	local angle = -self._angle_offset
@@ -657,7 +658,7 @@ function HUDMultipleChoiceWheel:_get_option_angle(id)
 	return angle
 end
 
--- Lines 603-620
+-- Lines 604-621
 function HUDMultipleChoiceWheel:_enter_panel(id)
 	self._options[id].text:set_color(HUDMultipleChoiceWheel.TEXT_SELECTED_COLOR)
 	self._options[id].icon:set_color(HUDMultipleChoiceWheel.ICON_SELECTED_COLOR)
@@ -676,7 +677,7 @@ function HUDMultipleChoiceWheel:_enter_panel(id)
 	self._selection_arc:set_visible(true)
 end
 
--- Lines 622-633
+-- Lines 623-634
 function HUDMultipleChoiceWheel:_exit_panel(id)
 	local len = string.len(self._options[id].text:text())
 
@@ -689,7 +690,7 @@ function HUDMultipleChoiceWheel:_exit_panel(id)
 	self._selection_arc:set_visible(false)
 end
 
--- Lines 635-663
+-- Lines 636-664
 function HUDMultipleChoiceWheel:_select_panel(x, y, distance_from_center)
 	local single_option_angle = 360 / self._num_segments
 	local angle = self:_get_pointer_angle(x - self._center.x, y - self._center.y)
@@ -723,7 +724,7 @@ end
 
 local ids_right = Idstring("right")
 
--- Lines 666-674
+-- Lines 667-675
 function HUDMultipleChoiceWheel:_axis_moved(o, axis, value, c)
 	if not self._is_active then
 		return
@@ -734,7 +735,7 @@ function HUDMultipleChoiceWheel:_axis_moved(o, axis, value, c)
 	end
 end
 
--- Lines 676-690
+-- Lines 677-691
 function HUDMultipleChoiceWheel:set_pointer_position(x, y)
 	self._pointer:set_center_x(self._object:w() / 2 + x)
 	self._pointer:set_center_y(self._object:h() / 2 + y)
@@ -751,7 +752,7 @@ function HUDMultipleChoiceWheel:set_pointer_position(x, y)
 	self:_select_panel(self._center.x + x, self._center.y + y, distance_from_center)
 end
 
--- Lines 692-731
+-- Lines 693-732
 function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 	if not self._mouse_active then
 		return
@@ -791,26 +792,26 @@ function HUDMultipleChoiceWheel:_mouse_moved(o, x, y, mouse_ws)
 	end
 end
 
--- Lines 733-734
+-- Lines 734-735
 function HUDMultipleChoiceWheel:_mouse_clicked(o, button, x, y)
 end
 
--- Lines 736-738
+-- Lines 737-739
 function HUDMultipleChoiceWheel:w()
 	return self._object:w()
 end
 
--- Lines 740-742
+-- Lines 741-743
 function HUDMultipleChoiceWheel:h()
 	return self._object:h()
 end
 
--- Lines 745-747
+-- Lines 746-748
 function HUDMultipleChoiceWheel:set_x(x)
 	self._object:set_x(x)
 end
 
--- Lines 749-751
+-- Lines 750-752
 function HUDMultipleChoiceWheel:set_y(y)
 	self._object:set_y(y)
 end

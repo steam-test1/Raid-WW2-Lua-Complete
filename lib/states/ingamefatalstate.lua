@@ -17,7 +17,7 @@ function IngameFatalState.on_local_player_dead()
 	managers.warcry:deactivate_warcry(true)
 end
 
--- Lines 18-38
+-- Lines 18-45
 function IngameFatalState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -27,6 +27,7 @@ function IngameFatalState:update(t, dt)
 
 	if player:character_damage():update_downed(t, dt) then
 		managers.player:force_drop_carry()
+		managers.vehicle:remove_player_from_all_vehicles(player)
 		managers.statistics:downed({
 			death = true
 		})
@@ -39,7 +40,7 @@ function IngameFatalState:update(t, dt)
 	end
 end
 
--- Lines 41-62
+-- Lines 48-69
 function IngameFatalState:at_enter()
 	local players = managers.player:players()
 
@@ -67,7 +68,7 @@ function IngameFatalState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
--- Lines 64-72
+-- Lines 71-79
 function IngameFatalState:at_exit()
 	local player = managers.player:player_unit()
 

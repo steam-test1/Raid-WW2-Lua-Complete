@@ -20,18 +20,17 @@ CoreScriptUnitData.exists_in_stages = {
 	true,
 	true
 }
-CoreScriptUnitData.helper_type = "none"
 CoreScriptUnitData.disable_shadows = nil
 CoreScriptUnitData.hide_on_projection_light = nil
 CoreScriptUnitData.disable_on_ai_graph = nil
 
 if Application:editor() then
-	-- Lines 31-33
+	-- Lines 27-29
 	function CoreScriptUnitData:init()
 		self.unit_groups = {}
 	end
 else
-	-- Lines 35-36
+	-- Lines 31-32
 	function CoreScriptUnitData:init()
 	end
 end

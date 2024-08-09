@@ -112,8 +112,8 @@ function WarcryTweakData:_init_berserk()
 				"warcry_player_kill_heal_bonus_1"
 			},
 			{
-				"warcry_turret_overheat_multiplier",
-				"warcry_player_kill_heal_bonus_2"
+				"warcry_player_kill_heal_bonus_2",
+				"warcry_turret_overheat_multiplier"
 			},
 			{
 				"warcry_player_ammo_consumption_2",

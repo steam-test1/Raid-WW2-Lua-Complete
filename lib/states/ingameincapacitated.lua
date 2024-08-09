@@ -7,7 +7,7 @@ function IngameIncapacitatedState:init(game_state_machine)
 	IngameIncapacitatedState.super.init(self, "ingame_incapacitated", game_state_machine)
 end
 
--- Lines 9-29
+-- Lines 9-36
 function IngameIncapacitatedState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -17,6 +17,7 @@ function IngameIncapacitatedState:update(t, dt)
 
 	if player:character_damage():update_incapacitated(t, dt) then
 		managers.player:force_drop_carry()
+		managers.vehicle:remove_player_from_all_vehicles(player)
 		managers.statistics:downed({
 			death = true
 		})
@@ -29,7 +30,7 @@ function IngameIncapacitatedState:update(t, dt)
 	end
 end
 
--- Lines 31-52
+-- Lines 38-59
 function IngameIncapacitatedState:at_enter()
 	local players = managers.player:players()
 
@@ -57,7 +58,7 @@ function IngameIncapacitatedState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
--- Lines 54-62
+-- Lines 61-69
 function IngameIncapacitatedState:at_exit()
 	local player = managers.player:player_unit()
 

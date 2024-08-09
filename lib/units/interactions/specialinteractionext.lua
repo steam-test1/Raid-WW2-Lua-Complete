@@ -28,12 +28,12 @@ function SpecialInteractionExt:interact(player)
 	return true
 end
 
--- Lines 33-47
+-- Lines 33-46
 function SpecialInteractionExt:special_interaction_done(data)
 	SpecialInteractionExt.super.interact(self, self._player)
 
-	if data and not table.empty(data) then
-		if self._tweak_data.minigame_type == tweak_data.interaction.MINIGAME_CUT_FUSE then
+	if data then
+		if self._tweak_data.minigame_type == tweak_data.interaction.MINIGAME_CUT_FUSE and not table.empty(data) then
 			local max_cuts = self._tweak_data.max_cuts or 9
 			local cuts = math.min(data.successful_cuts, max_cuts)
 
@@ -45,20 +45,20 @@ function SpecialInteractionExt:special_interaction_done(data)
 	end
 end
 
--- Lines 50-53
+-- Lines 49-52
 function SpecialInteractionExt:set_special_interaction_done()
 	Application:debug("[SpecialInteractionExt:set_special_interaction_done()]")
 
 	self._unit:unit_data()._interaction_done = true
 end
 
--- Lines 56-59
+-- Lines 55-58
 function SpecialInteractionExt:set_special_interaction_dynamite_done(cuts)
 	self:set_special_interaction_done()
 	self:_show_fuse_sfx_and_waypoint(cuts)
 end
 
--- Lines 62-89
+-- Lines 61-88
 function SpecialInteractionExt:_show_fuse_sfx_and_waypoint(cuts)
 	local spark_seq = "spark_" .. tostring(cuts)
 

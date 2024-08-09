@@ -1141,12 +1141,12 @@ function MenuCallbackHandler:set_fov_multiplier_raid(value)
 	end
 end
 
--- Lines 1166-1177
+-- Lines 1167-1177
 function MenuCallbackHandler:set_detail_distance_raid(detail_distance)
 	managers.user:set_setting("detail_distance", detail_distance)
 
-	local min_maps = 0.0025
-	local max_maps = 0.05
+	local min_maps = 0.0003
+	local max_maps = 0.02
 	local maps = math.lerp(max_maps, min_maps, detail_distance)
 
 	Application:debug("RaidMenuOptionsVideoAdvanced:on_value_change_detail_distance", detail_distance, maps)

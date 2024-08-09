@@ -7,7 +7,7 @@ function IngameBleedOutState:init(game_state_machine)
 	IngameBleedOutState.super.init(self, "ingame_bleed_out", game_state_machine)
 end
 
--- Lines 9-30
+-- Lines 9-37
 function IngameBleedOutState:update(t, dt)
 	local player = managers.player:player_unit()
 
@@ -15,13 +15,13 @@ function IngameBleedOutState:update(t, dt)
 		return
 	end
 
-	if player:movement():nav_tracker() and player:character_damage():update_downed(t, dt) then
+	if player:character_damage():update_downed(t, dt) then
 		managers.player:force_drop_carry()
+		managers.vehicle:remove_player_from_all_vehicles(player)
 		managers.statistics:downed({
 			death = true
 		})
 		IngameFatalState.on_local_player_dead()
-		player:base():set_enabled(false)
 		game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
 		player:character_damage():set_invulnerable(true)
 		player:character_damage():set_health(0)
@@ -30,7 +30,7 @@ function IngameBleedOutState:update(t, dt)
 	end
 end
 
--- Lines 32-63
+-- Lines 39-70
 function IngameBleedOutState:at_enter()
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE) then
 		managers.player:kill()
@@ -69,7 +69,7 @@ function IngameBleedOutState:at_enter()
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end
 
--- Lines 65-73
+-- Lines 72-80
 function IngameBleedOutState:at_exit()
 	local player = managers.player:player_unit()
 

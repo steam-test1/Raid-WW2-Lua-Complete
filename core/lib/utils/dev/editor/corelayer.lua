@@ -1830,7 +1830,7 @@ end
 
 local idstring_wpn = Idstring("wpn")
 
--- Lines 1661-1692
+-- Lines 1661-1684
 function Layer:save()
 	for _, unit in ipairs(self._created_units) do
 		if alive(unit) then
@@ -1862,7 +1862,7 @@ function Layer:save()
 	end
 end
 
--- Lines 1701-1751
+-- Lines 1686-1736
 function Layer:test_spawn(type)
 	local pos = Vector3()
 	local rot = Rotation()
@@ -1920,17 +1920,17 @@ function Layer:test_spawn(type)
 	print("DONE")
 end
 
--- Lines 1871-1873
+-- Lines 1738-1740
 function Layer:shift()
 	return CoreInput.shift()
 end
 
--- Lines 1874-1876
+-- Lines 1741-1743
 function Layer:ctrl()
 	return CoreInput.ctrl()
 end
 
--- Lines 1877-1879
+-- Lines 1744-1746
 function Layer:alt()
 	return CoreInput.alt()
 end

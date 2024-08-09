@@ -869,42 +869,34 @@ function MenuCallbackHandler:set_fov_multiplier(item)
 	end
 end
 
--- Lines 750-760
+-- Lines 750-753
 function MenuCallbackHandler:set_detail_distance(item)
-	local detail_distance = item:value()
-
-	managers.user:set_setting("detail_distance", detail_distance)
-
-	local min_maps = 0.002
-	local max_maps = 0.15
-	local maps = math.lerp(min_maps, max_maps, detail_distance)
-
-	World:set_min_allowed_projected_size(maps)
+	debug_pause("[MenuCallbackHandler:set_detail_distance] DEPRECATED")
 end
 
--- Lines 762-765
+-- Lines 755-758
 function MenuCallbackHandler:set_use_parallax(item)
 	local use_parallax = item:value() == "on"
 
 	managers.user:set_setting("use_parallax", use_parallax)
 end
 
--- Lines 767-769
+-- Lines 760-762
 function MenuCallbackHandler:toggle_headbob(item)
 	managers.user:set_setting("use_headbob", item:value() == "on")
 end
 
--- Lines 771-773
+-- Lines 764-766
 function MenuCallbackHandler:on_stage_success()
 	managers.mission:on_stage_success()
 end
 
--- Lines 775-777
+-- Lines 768-770
 function MenuCallbackHandler:lobby_start_the_game()
 	MenuCallbackHandler:start_the_game()
 end
 
--- Lines 780-807
+-- Lines 773-800
 function MenuCallbackHandler:leave_lobby()
 	if game_state_machine:current_state_name() == "ingame_lobby_menu" then
 		self:end_game()
@@ -937,7 +929,7 @@ function MenuCallbackHandler:leave_lobby()
 	return true
 end
 
--- Lines 809-828
+-- Lines 802-821
 function MenuCallbackHandler:_dialog_leave_lobby_yes()
 	if managers.network:session() then
 		managers.network:session():local_peer():set_in_lobby(false)
@@ -947,13 +939,13 @@ function MenuCallbackHandler:_dialog_leave_lobby_yes()
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 830-831
+-- Lines 823-824
 function MenuCallbackHandler:_dialog_leave_lobby_no()
 end
 
--- Lines 836-853
+-- Lines 829-846
 function MenuCallbackHandler:connect_to_host_rpc(item)
-	-- Lines 837-850
+	-- Lines 830-843
 	local function f(res)
 		if res == "JOINED_LOBBY" then
 			self:on_enter_lobby()
@@ -971,7 +963,7 @@ function MenuCallbackHandler:connect_to_host_rpc(item)
 	managers.network:join_game_at_host_rpc(item:parameters().rpc, f)
 end
 
--- Lines 855-864
+-- Lines 848-857
 function MenuCallbackHandler:host_multiplayer(item)
 	managers.network:host_game()
 
@@ -984,9 +976,9 @@ function MenuCallbackHandler:host_multiplayer(item)
 	managers.network:session():load_level(level_name, nil, nil, nil, level_id)
 end
 
--- Lines 866-873
+-- Lines 859-866
 function MenuCallbackHandler:join_multiplayer()
-	-- Lines 867-871
+	-- Lines 860-864
 	local function f(new_host_rpc)
 		if new_host_rpc then
 			managers.menu:active_menu().logic:refresh_node("select_host")
@@ -996,10 +988,10 @@ function MenuCallbackHandler:join_multiplayer()
 	managers.network:discover_hosts(f)
 end
 
--- Lines 875-884
+-- Lines 868-877
 function MenuCallbackHandler:find_lan_games()
 	if self:is_win32() then
-		-- Lines 877-881
+		-- Lines 870-874
 		local function f(new_host_rpc)
 			if new_host_rpc then
 				managers.menu:active_menu().logic:refresh_node("play_lan")
@@ -1010,20 +1002,20 @@ function MenuCallbackHandler:find_lan_games()
 	end
 end
 
--- Lines 886-888
+-- Lines 879-881
 function MenuCallbackHandler:find_online_games_with_friends()
 	self:_find_online_games(true)
 end
 
--- Lines 890-892
+-- Lines 883-885
 function MenuCallbackHandler:find_online_games()
 	self:_find_online_games()
 end
 
--- Lines 894-952
+-- Lines 887-945
 function MenuCallbackHandler:_find_online_games(friends_only)
 	if self:is_win32() then
-		-- Lines 896-901
+		-- Lines 889-894
 		local function f(info)
 			print("info in function")
 			print(inspect(info))
@@ -1034,7 +1026,7 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 		managers.network.matchmake:register_callback("search_lobby", f)
 		managers.network.matchmake:search_lobby(friends_only)
 
-		-- Lines 907-918
+		-- Lines 900-911
 		local function usrs_f(success, amount)
 			print("usrs_f", success, amount)
 
@@ -1059,7 +1051,7 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 			return
 		end
 
-		-- Lines 931-936
+		-- Lines 924-929
 		local function f(info_list)
 			print("info_list in function")
 			print(inspect(info_list))
@@ -1072,12 +1064,12 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 	end
 end
 
--- Lines 955-959
+-- Lines 948-952
 function MenuCallbackHandler:connect_to_lobby(item)
 	managers.network.matchmake:join_server_with_check(item:parameters().room_id)
 end
 
--- Lines 961-970
+-- Lines 954-963
 function MenuCallbackHandler:stop_multiplayer()
 	Application:debug("[MenuCallbackHandler:stop_multiplayer()]")
 
@@ -1088,7 +1080,7 @@ function MenuCallbackHandler:stop_multiplayer()
 	end
 end
 
--- Lines 972-982
+-- Lines 965-975
 function MenuCallbackHandler:invite_friends()
 	if managers.network.matchmake.lobby_handler then
 		if MenuCallbackHandler:is_overlay_enabled() then
@@ -1099,7 +1091,7 @@ function MenuCallbackHandler:invite_friends()
 	end
 end
 
--- Lines 984-989
+-- Lines 977-982
 function MenuCallbackHandler:invite_friend(item)
 	if item:parameters().signin_status ~= "signed_in" then
 		return
@@ -1108,32 +1100,32 @@ function MenuCallbackHandler:invite_friend(item)
 	managers.network.matchmake:send_join_invite(item:parameters().friend)
 end
 
--- Lines 992-995
+-- Lines 985-988
 function MenuCallbackHandler:invite_friends_XB1()
 	local platform_id = managers.user:get_platform_id()
 
 	XboxLive:invite_friends_ui(platform_id, managers.network.matchmake._session)
 end
 
--- Lines 998-1001
+-- Lines 991-994
 function MenuCallbackHandler:invite_xbox_live_party()
 	local platform_id = managers.user:get_platform_id()
 
 	XboxLive:show_party_ui(platform_id)
 end
 
--- Lines 1003-1006
+-- Lines 996-999
 function MenuCallbackHandler:invite_friends_ps4()
 	PSN:invite_friends()
 end
 
--- Lines 1008-1013
+-- Lines 1001-1006
 function MenuCallbackHandler:view_invites()
 	print("View invites")
 	print(PSN:display_message_invitation())
 end
 
--- Lines 1015-1025
+-- Lines 1008-1018
 function MenuCallbackHandler:kick_player(item)
 	if managers.vote:is_restarting() then
 		Application:debug("[MenuCallbackHandler:kick_player] No kick during restart.")
@@ -1148,7 +1140,7 @@ function MenuCallbackHandler:kick_player(item)
 	end
 end
 
--- Lines 1027-1032
+-- Lines 1020-1025
 function MenuCallbackHandler:mute_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:mute_player(item:parameters().peer, item:value() == "on")
@@ -1156,7 +1148,7 @@ function MenuCallbackHandler:mute_player(item)
 	end
 end
 
--- Lines 1034-1039
+-- Lines 1027-1032
 function MenuCallbackHandler:mute_xbox_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:set_muted(item:parameters().xuid, item:value() == "on")
@@ -1164,7 +1156,7 @@ function MenuCallbackHandler:mute_xbox_player(item)
 	end
 end
 
--- Lines 1041-1046
+-- Lines 1034-1039
 function MenuCallbackHandler:mute_xb1_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:set_muted(item:parameters().xuid, item:value() == "on")
@@ -1172,7 +1164,7 @@ function MenuCallbackHandler:mute_xb1_player(item)
 	end
 end
 
--- Lines 1048-1054
+-- Lines 1041-1047
 function MenuCallbackHandler:mute_ps4_player(item)
 	if managers.network.voice_chat then
 		managers.network.voice_chat:mute_player(item:parameters().peer, item:value() == "on")
@@ -1180,7 +1172,7 @@ function MenuCallbackHandler:mute_ps4_player(item)
 	end
 end
 
--- Lines 1056-1082
+-- Lines 1049-1075
 function MenuCallbackHandler:restart_mission(item)
 	if not managers.vote:available() or managers.vote:is_restarting() then
 		return
@@ -1213,22 +1205,22 @@ function MenuCallbackHandler:restart_mission(item)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1084-1086
+-- Lines 1077-1079
 function MenuCallbackHandler:view_gamer_card(item)
 	XboxLive:show_gamer_card_ui(managers.user:get_platform_id(), item:parameters().xuid)
 end
 
--- Lines 1088-1090
+-- Lines 1081-1083
 function MenuCallbackHandler:save_settings()
 	managers.savefile:save_setting(true)
 end
 
--- Lines 1092-1094
+-- Lines 1085-1087
 function MenuCallbackHandler:save_progress()
 	managers.savefile:save_progress()
 end
 
--- Lines 1096-1101
+-- Lines 1089-1094
 function MenuCallbackHandler:debug_level_jump(item)
 	local param_map = item:parameters()
 
@@ -1239,7 +1231,7 @@ function MenuCallbackHandler:debug_level_jump(item)
 	managers.network:session():load_level(param_map.level, param_map.mission, param_map.world_setting, param_map.level_class_name, level_id, nil)
 end
 
--- Lines 1103-1114
+-- Lines 1096-1107
 function MenuCallbackHandler:save_game(item)
 	if not managers.savefile:is_active() then
 		local param_map = item:parameters()
@@ -1254,13 +1246,13 @@ function MenuCallbackHandler:save_game(item)
 	end
 end
 
--- Lines 1116-1119
+-- Lines 1109-1112
 function MenuCallbackHandler:save_game_callback()
 	managers.menu:set_save_game_callback(nil)
 	managers.menu:back()
 end
 
--- Lines 1121-1141
+-- Lines 1114-1134
 function MenuCallbackHandler:start_the_game()
 	managers.worldcollection.level_transition_in_progress = true
 	local level_id = Global.game_settings.level_id
@@ -1282,7 +1274,7 @@ function MenuCallbackHandler:start_the_game()
 	managers.network:session():load_level(level_name, mission, world_setting, nil, level_id)
 end
 
--- Lines 1143-1147
+-- Lines 1136-1140
 function MenuCallbackHandler:singleplayer_restart_game_to_camp(item)
 	managers.menu:show_restart_game_dialog({
 		yes_func = function ()
@@ -1291,7 +1283,7 @@ function MenuCallbackHandler:singleplayer_restart_game_to_camp(item)
 	})
 end
 
--- Lines 1149-1153
+-- Lines 1142-1146
 function MenuCallbackHandler:singleplayer_restart_mission(item)
 	managers.menu:show_restart_game_dialog({
 		yes_func = function ()
@@ -1300,12 +1292,12 @@ function MenuCallbackHandler:singleplayer_restart_mission(item)
 	})
 end
 
--- Lines 1155-1157
+-- Lines 1148-1150
 function MenuCallbackHandler:always_hide()
 	return false
 end
 
--- Lines 1159-1164
+-- Lines 1152-1157
 function MenuCallbackHandler:set_music_volume(item)
 	local volume = item:value()
 	local old_volume = managers.user:get_setting("music_volume")
@@ -1313,7 +1305,7 @@ function MenuCallbackHandler:set_music_volume(item)
 	managers.user:set_setting("music_volume", volume)
 end
 
--- Lines 1166-1171
+-- Lines 1159-1164
 function MenuCallbackHandler:set_sfx_volume(item)
 	local volume = item:value()
 	local old_volume = managers.user:get_setting("sfx_volume")
@@ -1321,7 +1313,7 @@ function MenuCallbackHandler:set_sfx_volume(item)
 	managers.user:set_setting("sfx_volume", volume)
 end
 
--- Lines 1173-1178
+-- Lines 1166-1171
 function MenuCallbackHandler:set_voice_volume(item)
 	local volume = item:value()
 	local old_volume = managers.user:get_setting("voice_volume")
@@ -1329,26 +1321,26 @@ function MenuCallbackHandler:set_voice_volume(item)
 	managers.user:set_setting("voice_volume", volume)
 end
 
--- Lines 1180-1183
+-- Lines 1173-1176
 function MenuCallbackHandler:_refresh_brightness()
 	managers.user:set_setting("brightness", managers.user:get_setting("brightness"), true)
 end
 
--- Lines 1185-1188
+-- Lines 1178-1181
 function MenuCallbackHandler:set_brightness(item)
 	local brightness = item:value()
 
 	managers.user:set_setting("brightness", brightness)
 end
 
--- Lines 1190-1194
+-- Lines 1183-1187
 function MenuCallbackHandler:set_effect_quality(item)
 	local effect_quality = item:value()
 
 	managers.user:set_setting("effect_quality", effect_quality)
 end
 
--- Lines 1196-1207
+-- Lines 1189-1200
 function MenuCallbackHandler:set_camera_sensitivity(item)
 	local value = item:value()
 
@@ -1364,7 +1356,7 @@ function MenuCallbackHandler:set_camera_sensitivity(item)
 	end
 end
 
--- Lines 1209-1220
+-- Lines 1202-1213
 function MenuCallbackHandler:set_camera_zoom_sensitivity(item)
 	local value = item:value()
 
@@ -1380,7 +1372,7 @@ function MenuCallbackHandler:set_camera_zoom_sensitivity(item)
 	end
 end
 
--- Lines 1222-1232
+-- Lines 1215-1225
 function MenuCallbackHandler:toggle_zoom_sensitivity(item)
 	local value = item:value() == "on"
 
@@ -1395,12 +1387,12 @@ function MenuCallbackHandler:toggle_zoom_sensitivity(item)
 	end
 end
 
--- Lines 1234-1236
+-- Lines 1227-1229
 function MenuCallbackHandler:is_current_resolution(item)
 	return item:name() == string.format("%d x %d, %dHz", RenderSettings.resolution.x, RenderSettings.resolution.y, RenderSettings.resolution.z)
 end
 
--- Lines 1239-1257
+-- Lines 1232-1250
 function MenuCallbackHandler:end_game()
 	print(" MenuCallbackHandler:end_game() ")
 
@@ -1426,7 +1418,7 @@ function MenuCallbackHandler:end_game()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1259-1293
+-- Lines 1252-1288
 function MenuCallbackHandler:_dialog_end_game_yes()
 	managers.platform:set_playing(false)
 	managers.statistics:stop_session({
@@ -1439,6 +1431,7 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 	managers.consumable_missions:on_level_exited(false)
 	managers.greed:on_level_exited(false)
 	managers.worldcollection:on_simulation_ended()
+	managers.challenge_cards:clear_suggested_cards()
 
 	if Network:multiplayer() then
 		Network:set_multiplayer(false)
@@ -1458,9 +1451,9 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 	setup:load_start_menu()
 end
 
--- Lines 1295-1300
+-- Lines 1290-1295
 function MenuCallbackHandler:leave_safehouse()
-	-- Lines 1296-1298
+	-- Lines 1291-1293
 	local function yes_func()
 		self:_dialog_end_game_yes()
 	end
@@ -1470,13 +1463,13 @@ function MenuCallbackHandler:leave_safehouse()
 	})
 end
 
--- Lines 1302-1313
+-- Lines 1297-1308
 function MenuCallbackHandler:abort_mission()
 	if game_state_machine:current_state_name() == "disconnected" then
 		return
 	end
 
-	-- Lines 1307-1311
+	-- Lines 1302-1306
 	local function yes_func()
 		if game_state_machine:current_state_name() ~= "disconnected" then
 			self:load_start_menu_lobby()
@@ -1488,22 +1481,22 @@ function MenuCallbackHandler:abort_mission()
 	})
 end
 
--- Lines 1315-1317
+-- Lines 1310-1312
 function MenuCallbackHandler:load_start_menu_lobby()
 	managers.network:session():load_lobby()
 end
 
--- Lines 1319-1320
+-- Lines 1314-1315
 function MenuCallbackHandler:_dialog_end_game_no()
 end
 
--- Lines 1322-1325
+-- Lines 1317-1320
 function MenuCallbackHandler:_reset_mainmusic()
 	managers.music:post_event(MusicManager.STOP_ALL_MUSIC)
 	managers.music:post_event(MusicManager.MENU_MUSIC)
 end
 
--- Lines 1327-1337
+-- Lines 1322-1332
 function MenuCallbackHandler:set_default_options()
 	local params = {
 		text = managers.localization:text("dialog_default_options_message"),
@@ -1516,7 +1509,7 @@ function MenuCallbackHandler:set_default_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1339-1345
+-- Lines 1334-1340
 function MenuCallbackHandler:set_default_control_options()
 	local params = {
 		text = managers.localization:text("dialog_default_controls_options_message"),
@@ -1529,7 +1522,7 @@ function MenuCallbackHandler:set_default_control_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1347-1353
+-- Lines 1342-1348
 function MenuCallbackHandler:set_default_video_options()
 	local params = {
 		text = managers.localization:text("dialog_default_video_options_message"),
@@ -1542,7 +1535,7 @@ function MenuCallbackHandler:set_default_video_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1355-1361
+-- Lines 1350-1356
 function MenuCallbackHandler:set_default_sound_options()
 	local params = {
 		text = managers.localization:text("dialog_default_sound_options_message"),
@@ -1556,7 +1549,7 @@ function MenuCallbackHandler:set_default_sound_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1363-1369
+-- Lines 1358-1364
 function MenuCallbackHandler:set_default_network_options()
 	local params = {
 		text = managers.localization:text("dialog_default_network_options_message"),
@@ -1569,16 +1562,16 @@ function MenuCallbackHandler:set_default_network_options()
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1371-1373
+-- Lines 1366-1368
 function MenuCallbackHandler:resume_game()
 	managers.menu:close_menu("menu_pause")
 end
 
--- Lines 1375-1376
+-- Lines 1370-1371
 function MenuCallbackHandler:change_upgrade(menu_item)
 end
 
--- Lines 1378-1386
+-- Lines 1373-1381
 function MenuCallbackHandler:delayed_open_savefile_menu(item)
 	if not self._delayed_open_savefile_menu_callback then
 		if managers.savefile:is_active() then
@@ -1589,7 +1582,7 @@ function MenuCallbackHandler:delayed_open_savefile_menu(item)
 	end
 end
 
--- Lines 1388-1393
+-- Lines 1383-1388
 function MenuCallbackHandler:open_savefile_menu(item)
 	managers.menu:set_delayed_open_savefile_menu_callback(nil)
 
@@ -1600,12 +1593,12 @@ function MenuCallbackHandler:open_savefile_menu(item)
 	})
 end
 
--- Lines 1395-1397
+-- Lines 1390-1392
 function MenuCallbackHandler:hide_huds()
 	managers.hud:set_disabled()
 end
 
--- Lines 1399-1405
+-- Lines 1394-1400
 function MenuCallbackHandler:toggle_hide_huds(item)
 	if item:value() == "on" then
 		managers.hud:set_disabled()
@@ -1614,17 +1607,17 @@ function MenuCallbackHandler:toggle_hide_huds(item)
 	end
 end
 
--- Lines 1407-1409
+-- Lines 1402-1404
 function MenuCallbackHandler:toggle_mission_fading_debug_enabled(item)
 	managers.mission:set_fading_debug_enabled(item:value() == "off")
 end
 
--- Lines 1411-1413
+-- Lines 1406-1408
 function MenuCallbackHandler:menu_back()
 	managers.menu:back()
 end
 
--- Lines 1415-1431
+-- Lines 1410-1426
 function MenuCallbackHandler:set_default_controller(item)
 	local params = {
 		text = managers.localization:text("dialog_use_default_keys_message"),
@@ -1643,14 +1636,14 @@ function MenuCallbackHandler:set_default_controller(item)
 	managers.menu:show_default_option_dialog(params)
 end
 
--- Lines 1433-1436
+-- Lines 1428-1431
 function MenuCallbackHandler:choice_button_layout_category(item)
 	local node_gui = managers.menu:active_menu().renderer:active_node_gui()
 
 	node_gui:set_current_category(item:value())
 end
 
--- Lines 1438-1461
+-- Lines 1433-1456
 function MenuCallbackHandler:debug_goto_custody()
 	local player = managers.player:player_unit()
 
@@ -1678,7 +1671,7 @@ function MenuCallbackHandler:debug_goto_custody()
 	player:base():set_slot(player, 0)
 end
 
--- Lines 1464-1521
+-- Lines 1459-1516
 function MenuCallbackHandler:start_job(job_data)
 	local raid_data = tweak_data.operations:mission_data(job_data.job_id)
 	Global.game_settings.level_id = raid_data.level_id or job_data.job_id
@@ -1722,7 +1715,7 @@ function MenuCallbackHandler:start_job(job_data)
 	managers.raid_job:on_mission_started()
 end
 
--- Lines 1523-1527
+-- Lines 1518-1522
 function MenuCallbackHandler:play_single_player_job(item)
 	self:play_single_player()
 	self:start_single_player_job({
@@ -1731,7 +1724,7 @@ function MenuCallbackHandler:play_single_player_job(item)
 	})
 end
 
--- Lines 1530-1532
+-- Lines 1525-1527
 function MenuCallbackHandler:play_quick_start_job(item)
 	self:start_job({
 		job_id = item:parameter("job_id"),
@@ -1739,7 +1732,7 @@ function MenuCallbackHandler:play_quick_start_job(item)
 	})
 end
 
--- Lines 1534-1544
+-- Lines 1529-1539
 function MenuCallbackHandler:start_single_player_job(job_data)
 	local raid_data = tweak_data.operations:mission_data(job_data.job_id)
 	Global.game_settings.level_id = raid_data.level_id
@@ -1751,7 +1744,7 @@ function MenuCallbackHandler:start_single_player_job(job_data)
 	managers.raid_job:on_mission_started()
 end
 
--- Lines 1546-1559
+-- Lines 1541-1554
 function MenuCallbackHandler:_update_outfit_information()
 	local outfit_string = managers.blackmarket:outfit_string()
 
@@ -1768,7 +1761,7 @@ function MenuCallbackHandler:_update_outfit_information()
 	end
 end
 
--- Lines 1561-1566
+-- Lines 1556-1561
 function MenuCallbackHandler:stage_success()
 	if not managers.raid_job:has_active_job() then
 		return true

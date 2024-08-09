@@ -407,7 +407,7 @@ function HUDSpecialInteractionLockPick:_animate_interaction_complete()
 		starting_progress[i] = self._circles[i].circle:current()
 	end
 
-	local pick_delta_y = 60
+	local pick_delta_y = 32 * #self._circles
 	local pick_start_y = self._lockpick_texture:y()
 
 	while t < duration do
@@ -455,7 +455,7 @@ end
 function HUDSpecialInteractionLockPick:_animate_stage_complete(completed_circle)
 	local duration = 0.4
 	local t = 0
-	local pick_delta_y = 24
+	local pick_delta_y = 32
 	local pick_start_y = self._lockpick_texture:y()
 	local pick_end_y = pick_start_y - pick_delta_y
 	local circle_start_rot = completed_circle:rotation()
