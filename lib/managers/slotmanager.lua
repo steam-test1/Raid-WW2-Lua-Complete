@@ -61,7 +61,7 @@ function SlotManager:init()
 	self._masks.unit_area_damage = self._masks.players + self._masks.enemies
 	self._masks.area_damage_blocker = World:make_slot_mask(1, 3, 8, 11)
 	self._masks.bullet_impact_targets = World:make_slot_mask(1, 2, 8, 11, 12, 14, 16, 17, 18, 21, 22, 25, 26, 33, 34, 35, 39)
-	self._masks.bullet_impact_targets_no_teamai = self._masks.bullet_impact_targets - 16
+	self._masks.bullet_impact_targets_no_teamai = self._masks.bullet_impact_targets - 16 - 21 - 22
 	self._masks.explosion_targets = self._masks.bullet_impact_targets - 2
 	self._masks.bullet_impact_targets_no_police = World:make_slot_mask(1, 2, 8, 11, 14, 16, 17, 25, 33, 34, 35, 39)
 	self._masks.bullet_impact_targets_no_criminals = World:make_slot_mask(1, 8, 11, 12, 14, 17, 33, 34, 35, 39)

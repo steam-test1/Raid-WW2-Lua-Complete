@@ -116,7 +116,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 			engine_rpm_rtpc = "TRD",
 			slip = "car_skid_01",
 			horn_stop = "kubel_horn_stop",
-			broken_engine = "falcogini_engine_broken_loop",
+			broken_engine = "kubel_engine_break",
 			engine_stop = "kubel_final_engine_stop",
 			engine_sound_event = "kubel_final_engine",
 			hit = "car_hits_something",

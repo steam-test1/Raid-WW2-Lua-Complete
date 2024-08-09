@@ -3215,7 +3215,7 @@ function BlackMarketManager:load(data)
 	end
 
 	local default_global = self._global or {}
-	Global.blackmarket_manager = data.blackmarket
+	Global.blackmarket_manager = deep_clone(data.blackmarket)
 	self._global = Global.blackmarket_manager
 
 	if self._global.equipped_armor and type(self._global.equipped_armor) ~= "string" then

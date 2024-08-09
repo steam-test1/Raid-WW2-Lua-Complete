@@ -13,13 +13,13 @@ function IngameBleedOutState:update(t, dt)
 		return
 	end
 
-	if player:movement():nav_tracker() and player:character_damage():update_downed(t, dt) then
+	if player:character_damage():update_downed(t, dt) then
 		managers.player:force_drop_carry()
+		managers.vehicle:remove_player_from_all_vehicles(player)
 		managers.statistics:downed({
 			death = true
 		})
 		IngameFatalState.on_local_player_dead()
-		player:base():set_enabled(false)
 		game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
 		player:character_damage():set_invulnerable(true)
 		player:character_damage():set_health(0)

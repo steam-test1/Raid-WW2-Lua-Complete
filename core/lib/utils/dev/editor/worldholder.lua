@@ -1016,6 +1016,8 @@ function CoreOldWorldDefinition:make_unit(name, data, offset)
 end
 
 function CoreOldWorldDefinition:assign_unit_data(unit, data)
+	debug_pause("[CoreOldWorldDefinition:assign_unit_data] DEPRECATED")
+
 	local is_editor = Application:editor()
 
 	if not unit:unit_data() then

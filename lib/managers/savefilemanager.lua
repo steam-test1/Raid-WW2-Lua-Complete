@@ -851,13 +851,10 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 		self._save_slots_to_load[slot] = nil
 
 		if is_setting_slot then
-			local last_selected_character_profile_slot = managers.user:get_setting("last_selected_character_profile_slot")
+			local progress_slot = math.clamp(managers.user:get_setting("last_selected_character_profile_slot"), SavefileManager.MIN_SLOT, SavefileManager.MAX_SLOT)
 
-			managers.savefile:set_save_progress_slot(last_selected_character_profile_slot)
-
-			if SavefileManager.MIN_SLOT <= last_selected_character_profile_slot and last_selected_character_profile_slot <= SavefileManager.MAX_SLOT then
-				managers.savefile:_load(last_selected_character_profile_slot, nil, nil)
-			end
+			managers.savefile:set_save_progress_slot(progress_slot)
+			managers.savefile:_load(progress_slot, nil, nil)
 		end
 
 		Global.savefile_manager.meta_data_list[slot].is_load_done = true
@@ -1223,7 +1220,7 @@ function SavefileManager:reset_progress_managers()
 end
 
 function SavefileManager:save_last_selected_character_profile_slot()
-	local progress_slot = managers.savefile:get_save_progress_slot()
+	local progress_slot = math.clamp(managers.savefile:get_save_progress_slot(), SavefileManager.MIN_SLOT, SavefileManager.MAX_SLOT)
 
 	managers.user:set_setting("last_selected_character_profile_slot", progress_slot, true)
 	managers.savefile:setting_changed()
@@ -1252,6 +1249,13 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 			if cache and IS_PC and cache.version ~= SavefileManager.VERSION then
 				cache = nil
 				wrong_version = true
+			end
+
+			if cache and IS_STEAM and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
+				cat_print("savefile_manager", "[SavefileManager:clbk_result_load] User ID missmatch. cache.user_id:", cache.user_id, ". expected user id:", self._USER_ID_OVERRRIDE or Steam:userid())
+
+				cache = nil
+				wrong_user = true
 			end
 
 			self:_set_cache(slot, cache)

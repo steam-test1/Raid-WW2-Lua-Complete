@@ -389,6 +389,7 @@ end
 
 function HUDMultipleChoiceWheel:set_options(options)
 	self._option_data = options
+	self._in_cooldown = false
 end
 
 function HUDMultipleChoiceWheel:add_option(option, index)

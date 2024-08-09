@@ -758,15 +758,7 @@ function MenuCallbackHandler:set_fov_multiplier(item)
 end
 
 function MenuCallbackHandler:set_detail_distance(item)
-	local detail_distance = item:value()
-
-	managers.user:set_setting("detail_distance", detail_distance)
-
-	local min_maps = 0.002
-	local max_maps = 0.15
-	local maps = math.lerp(min_maps, max_maps, detail_distance)
-
-	World:set_min_allowed_projected_size(maps)
+	debug_pause("[MenuCallbackHandler:set_detail_distance] DEPRECATED")
 end
 
 function MenuCallbackHandler:set_use_parallax(item)
@@ -1270,6 +1262,7 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 	managers.consumable_missions:on_level_exited(false)
 	managers.greed:on_level_exited(false)
 	managers.worldcollection:on_simulation_ended()
+	managers.challenge_cards:clear_suggested_cards()
 
 	if Network:multiplayer() then
 		Network:set_multiplayer(false)

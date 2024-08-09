@@ -25,8 +25,6 @@ function CharacterCreationGui:_set_initial_data()
 	managers.character_customization:reset_current_version_to_attach()
 
 	self._character_save_done_callback_ref = callback(self, self, "_character_save_done_callback")
-
-	managers.savefile:add_save_done_callback(self._character_save_done_callback_ref)
 end
 
 function CharacterCreationGui:_update_control_visibility()
@@ -632,6 +630,8 @@ function CharacterCreationGui:_callback_no_function()
 end
 
 function CharacterCreationGui:create_new_character(character_profile_name)
+	managers.savefile:add_save_done_callback(self._character_save_done_callback_ref)
+
 	local character_profile_nation = self._selected_nation
 	local character_profile_base_class = self._selected_class
 	local slot_index = managers.savefile:get_create_character_slot()

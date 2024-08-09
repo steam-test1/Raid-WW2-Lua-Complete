@@ -1219,11 +1219,13 @@ function MenuManager:colorblind_setting_changed(name, old_value, new_value)
 end
 
 function MenuManager:detail_distance_setting_changed(name, old_value, new_value)
-	local detail_distance = new_value
-	local min_maps = 0.005
-	local max_maps = 0.15
-	local maps = min_maps * detail_distance + max_maps * (1 - detail_distance)
+	managers.user:set_setting("detail_distance", new_value)
 
+	local min_maps = 0.0003
+	local max_maps = 0.02
+	local maps = math.lerp(max_maps, min_maps, new_value)
+
+	Application:debug("MenuManager:on_value_change_detail_distance was/now/maps", old_value, new_value, maps)
 	World:set_min_allowed_projected_size(maps)
 end
 

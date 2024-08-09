@@ -29,8 +29,8 @@ end
 function SpecialInteractionExt:special_interaction_done(data)
 	SpecialInteractionExt.super.interact(self, self._player)
 
-	if data and not table.empty(data) then
-		if self._tweak_data.minigame_type == tweak_data.interaction.MINIGAME_CUT_FUSE then
+	if data then
+		if self._tweak_data.minigame_type == tweak_data.interaction.MINIGAME_CUT_FUSE and not table.empty(data) then
 			local max_cuts = self._tweak_data.max_cuts or 9
 			local cuts = math.min(data.successful_cuts, max_cuts)
 

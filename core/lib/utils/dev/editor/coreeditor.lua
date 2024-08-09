@@ -908,7 +908,6 @@ function CoreEditor:run_simulation(with_mission)
 			simulation = true
 		})
 		self:set_up_portals(self._portal_units_mask)
-		managers.helper_unit:clear()
 		self:go_through_all_units(self._go_through_units_before_simulaton_mask)
 		managers.sequence:set_collisions_enabled(true)
 		managers.sequence:set_proximity_enabled(true)
@@ -982,10 +981,6 @@ function CoreEditor:go_through_all_units(mask)
 
 			if unit:unit_data().only_exists_in_editor then
 				unit:set_enabled(false)
-			end
-
-			if unit:unit_data().helper_type and unit:unit_data().helper_type ~= "none" then
-				managers.helper_unit:add_unit(unit, unit:unit_data().helper_type)
 			end
 
 			self:_project_check_unit(unit)

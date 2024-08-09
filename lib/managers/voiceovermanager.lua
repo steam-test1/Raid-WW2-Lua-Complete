@@ -130,7 +130,7 @@ function VoiceOverManager:guard_saw_body(source_unit)
 		return
 	end
 
-	self:_play_sound(source_unit, "ste_sawbody")
+	self:_play_sound(source_unit, "ste_raisealarm")
 end
 
 function VoiceOverManager:guard_saw_bag(source_unit)
@@ -138,7 +138,7 @@ function VoiceOverManager:guard_saw_bag(source_unit)
 		return
 	end
 
-	self:_play_sound(source_unit, "ste_sawbag")
+	self:_play_sound(source_unit, "ste_raisealarm")
 end
 
 function VoiceOverManager:guard_raise_alarm(source_unit)

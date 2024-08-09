@@ -15,6 +15,7 @@ PlayerStandard.IDS_RELOAD_EXIT = Idstring("reload_exit")
 PlayerStandard.IDS_RELOAD_NOT_EMPTY_EXIT = Idstring("reload_not_empty_exit")
 PlayerStandard.IDS_START_RUNNING = Idstring("start_running")
 PlayerStandard.IDS_STOP_RUNNING = Idstring("stop_running")
+PlayerStandard.IDS_STOP_RUNNING_STATE = Idstring("fps/stop_running")
 PlayerStandard.IDS_MELEE = Idstring("melee")
 PlayerStandard.IDS_MELEE_MISS = Idstring("melee_miss")
 PlayerStandard.IDS_MELEE_BAYONET = Idstring("melee_bayonet")
@@ -1354,7 +1355,11 @@ function PlayerStandard:_start_action_steelsight(t)
 		self._state_data.steelsight_weight_target = 1
 
 		self._camera_unit:base():set_steelsight_anim_enabled(true)
-	elseif weap_base.has_scope and weap_base:has_scope() then
+	end
+
+	local current_state_name = self._camera_unit:anim_state_machine():segment_state(self.IDS_BASE)
+
+	if current_state_name == self.IDS_STOP_RUNNING_STATE then
 		self._ext_camera:play_redirect(self.IDS_IDLE)
 	end
 
@@ -3988,7 +3993,14 @@ function PlayerStandard:_check_action_mantle(t, input)
 				obstructed = obstructed or hit_body:collides_with_mover()
 			end
 
-			if not obstructed then
+			if obstructed then
+				return false
+			end
+
+			local hit_end_pos = hit_pos + math.DOWN * self._tweak_data.damage.FALL_DAMAGE_FATAL_HEIGHT
+			local fall_ray = World:raycast("ray", hit_pos, hit_end_pos, "slot_mask", self._slotmask_gnd_ray, "ray_type", "body mover", "report")
+
+			if fall_ray then
 				return hit_pos
 			end
 		end
@@ -4370,22 +4382,22 @@ function PlayerStandard:_check_action_ladder(t, input)
 		return
 	end
 
-	if not self._move_dir then
-		return
-	end
+	local action_forbidden = not self._move_dir or self._state_data.on_zipline or self._state_data.mantling
 
-	local u_pos = self._unit:movement():m_pos()
+	if not action_forbidden then
+		local u_pos = self._unit:movement():m_pos()
 
-	for i = 1, math.min(Ladder.LADDERS_PER_FRAME, #Ladder.active_ladders) do
-		local ladder_unit = Ladder.next_ladder()
+		for i = 1, math.min(Ladder.LADDERS_PER_FRAME, #Ladder.active_ladders) do
+			local ladder_unit = Ladder.next_ladder()
 
-		if alive(ladder_unit) then
-			local can_access = ladder_unit:ladder():can_access(u_pos, self._move_dir)
+			if alive(ladder_unit) then
+				local can_access = ladder_unit:ladder():can_access(u_pos, self._move_dir)
 
-			if can_access then
-				self:_start_action_ladder(t, ladder_unit)
+				if can_access then
+					self:_start_action_ladder(t, ladder_unit)
 
-				break
+					break
+				end
 			end
 		end
 	end

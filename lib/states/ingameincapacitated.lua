@@ -15,6 +15,7 @@ function IngameIncapacitatedState:update(t, dt)
 
 	if player:character_damage():update_incapacitated(t, dt) then
 		managers.player:force_drop_carry()
+		managers.vehicle:remove_player_from_all_vehicles(player)
 		managers.statistics:downed({
 			death = true
 		})

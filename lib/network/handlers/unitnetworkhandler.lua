@@ -3525,8 +3525,10 @@ function UnitNetworkHandler:sync_loot_value(unit, value, sender)
 		return
 	end
 
-	if unit and alive(unit) then
+	if unit and alive(unit) and unit:loot_drop() then
 		unit:loot_drop():set_value(value)
+	else
+		Application:error("[UnitNetworkHandler:sync_loot_value] Attempted to sync loot to an invalid lootdrop unit/value", unit, "/", value, ", sender", sender)
 	end
 end
 

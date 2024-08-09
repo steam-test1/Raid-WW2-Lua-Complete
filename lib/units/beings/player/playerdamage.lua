@@ -117,7 +117,7 @@ function PlayerDamage:update(unit, t, dt)
 		self._bleed_out_blocked_by_movement_state = nil
 	end
 
-	if self._regenerate_timer and not self._dead and not self._bleed_out and not self._perseverance then
+	if self._regenerate_timer and not self:dead() and not self._bleed_out and not self._perseverance then
 		if not self._perseverance and not self._bleed_out_blocked_by_zipline then
 			self._regenerate_timer = self._regenerate_timer - dt * (self._regenerate_speed or 1)
 			local top_fade = math.clamp(self._hurt_value - 0.8, 0, 1) / 0.2
@@ -130,7 +130,7 @@ function PlayerDamage:update(unit, t, dt)
 			end
 		end
 	elseif self._hurt_value then
-		if not self._dead and not self._bleed_out and not self._perseverance then
+		if not self:dead() and not self._bleed_out and not self._perseverance then
 			self._hurt_value = math.min(1, self._hurt_value + dt)
 			local top_fade = math.clamp(self._hurt_value - 0.8, 0, 1) / 0.2
 			local hurt = self._hurt_value - (1 - top_fade) * (1 + math.sin(t * 500)) / 2 / 10
@@ -200,7 +200,7 @@ function PlayerDamage:update(unit, t, dt)
 
 	self:_upd_suppression(t, dt)
 
-	if not self._dead and not self._bleed_out and not self._perseverance then
+	if not self:dead() and not self._bleed_out and not self._perseverance then
 		self:_upd_health_regen(t, dt)
 	end
 end
@@ -275,7 +275,7 @@ function PlayerDamage:restore_health(health_restored, is_static)
 end
 
 function PlayerDamage:restore_armor(armor_restored)
-	if self._dead or self._bleed_out or self._perseverance then
+	if self:dead() or self._bleed_out or self._perseverance then
 		return
 	end
 

@@ -71,16 +71,15 @@ end
 function ElementPlayerSpawner:_do_hide_loading_screen()
 	if managers.raid_job:is_camp_loaded() or managers.raid_job:is_in_tutorial() then
 		managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 0.5)
-	else
-		local spawned_weapon_slot = PlayerInventory.SLOT_2
-
-		if managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
-			spawned_weapon_slot = PlayerInventory.SLOT_4
-		end
-
-		managers.player:get_current_state():force_change_weapon_slot(spawned_weapon_slot)
 	end
 
+	local spawned_weapon_slot = PlayerInventory.SLOT_2
+
+	if managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
+		spawned_weapon_slot = PlayerInventory.SLOT_4
+	end
+
+	managers.player:get_current_state():force_change_weapon_slot(spawned_weapon_slot)
 	managers.menu:hide_loading_screen()
 end
 

@@ -464,7 +464,7 @@ function EnvironmentLayer:build_panel(notebook)
 	transition_prio_sizer:add(EWS:StaticText(self._env_panel, "Fade Time [sec]: ", "", ""), 0, 0, "ALIGN_CENTER_VERTICAL")
 
 	local default_transition_text = string.format("%.2f", managers.environment_area:default_transition_time())
-	local transition = EWS:TextCtrl(self._env_panel, default_transition_text, "", "TE_CENTRE")
+	local transition = EWS:TextCtrl(self._env_panel, default_transition_text, "", "TE_CENTRE,TE_PROCESS_ENTER")
 
 	transition_prio_sizer:add(transition, 3, 0, "EXPAND")
 	transition:connect("EVT_CHAR", callback(nil, _G, "verify_number"), transition)
@@ -474,7 +474,7 @@ function EnvironmentLayer:build_panel(notebook)
 	transition_prio_sizer:add(EWS:StaticText(self._env_panel, "Prio (1=highest): ", "", ""), 0, 0, "ALIGN_CENTER_VERTICAL")
 
 	local default_prio_text = tostring(managers.environment_area:default_prio())
-	local prio = EWS:TextCtrl(self._env_panel, default_prio_text, "", "TE_CENTRE")
+	local prio = EWS:TextCtrl(self._env_panel, default_prio_text, "", "TE_CENTRE,TE_PROCESS_ENTER")
 
 	transition_prio_sizer:add(prio, 3, 0, "EXPAND")
 	prio:connect("EVT_CHAR", callback(nil, _G, "verify_number"), prio)

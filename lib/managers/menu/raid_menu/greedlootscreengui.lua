@@ -389,8 +389,6 @@ function GreedLootScreenGui:_set_progress(points)
 	self._progress_bar_progress_panel:set_w(self._progress_bar_background:w() * current_percentage)
 	self._loot_bar_foreground:set_alpha(1)
 	self._second_panel_greed_bar:set_progress(current_percentage)
-
-	return current_percentage
 end
 
 function GreedLootScreenGui:_layout_gold_bar_value_text()
@@ -405,6 +403,7 @@ function GreedLootScreenGui:_animate_giving_points()
 	local t = 0
 	local duration = 2
 	self._gold_bars_added = 0
+	local gold_bars_earned = 0
 	local sound_on_point_value = {}
 
 	while t < duration do
@@ -418,13 +417,15 @@ function GreedLootScreenGui:_animate_giving_points()
 			sound_on_point_value[math.floor(current_progress - self._greed_counter_before_mission)] = true
 		end
 
-		local percentage = self:_set_progress(current_progress)
+		self:_set_progress(current_progress)
 
-		if self._last_percentage and percentage < self._last_percentage then
-			self:_add_gold_bar()
+		local current_gold_bars = math.floor(current_progress / managers.greed:loot_needed_for_gold_bar())
+
+		if gold_bars_earned < current_gold_bars then
+			self:_add_gold_bar(current_gold_bars - gold_bars_earned)
 		end
 
-		self._last_percentage = percentage
+		gold_bars_earned = current_gold_bars
 	end
 
 	wait(1)
@@ -437,8 +438,8 @@ function GreedLootScreenGui:_animate_giving_points()
 	self._central_gold_bar_image:animate(callback(self, self, "_animate_second_panel"))
 end
 
-function GreedLootScreenGui:_add_gold_bar()
-	self._gold_bars_added = self._gold_bars_added + 1
+function GreedLootScreenGui:_add_gold_bar(amount)
+	self._gold_bars_added = self._gold_bars_added + amount
 
 	if not self._animating_lens_flare then
 		self._lens_glint:stop()
@@ -455,17 +456,42 @@ function GreedLootScreenGui:_add_gold_bar()
 	managers.menu_component:post_event("greed_item_picked_up")
 	self._gold_icon:stop()
 	self._gold_icon:animate(callback(self, self, "_animate_pulse"))
+	self:_set_gold_bar_reward(self._gold_bars_added)
+end
 
+function GreedLootScreenGui:_set_gold_bar_reward(amount)
+	amount = amount or 0
 	local text = ""
 
-	if self._gold_bars_added == 1 then
+	if amount == 1 then
 		text = self:translate("menu_loot_screen_gold_bars_single", true)
 	else
-		text = (self._gold_bars_added or 0) .. " " .. self:translate("menu_loot_screen_gold_bars", true)
+		text = amount .. " " .. self:translate("menu_loot_screen_gold_bars", true)
 	end
 
 	self._gold_bar_value:set_text(text)
 	self:_layout_gold_bar_value_text()
+
+	local icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE
+
+	if amount then
+		if RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN <= amount then
+			local idx = 1
+			local amount_start_point = amount - RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN
+			local amount_per_tier = (RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MAX - RaidGUIControlGoldBarRewardDetails.GOLD_PILE_SIZE_MIN) / RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT
+			idx = math.ceil(math.lerp(1, RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT, amount_start_point / amount_per_tier))
+			icon = RaidGUIControlGoldBarRewardDetails.GOLD_PILE_PREFIX .. math.clamp(idx, 1, RaidGUIControlGoldBarRewardDetails.GOLD_PILE_COUNT)
+		elseif RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_MANY <= amount then
+			icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_MANY
+		elseif RaidGUIControlGoldBarRewardDetails.REWARD_QUANTITY_FEW <= amount then
+			icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
+		end
+	end
+
+	local gui_icon = tweak_data.gui:get_full_gui_data(icon)
+
+	self._central_gold_bar_image:set_image(gui_icon.texture)
+	self._central_gold_bar_image:set_texture_rect(unpack(gui_icon.texture_rect))
 end
 
 function GreedLootScreenGui:_animate_lens_flares()

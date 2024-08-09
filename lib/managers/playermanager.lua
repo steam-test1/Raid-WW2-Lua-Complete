@@ -544,6 +544,10 @@ function PlayerManager:_internal_load()
 	self:refill_grenades()
 	self:_setup_upgrades()
 
+	local wheel_params = tweak_data.interaction:get_interaction("com_wheel")
+
+	managers.hud:set_comm_wheel_options(wheel_params.options)
+
 	if self._respawn then
 		self:_add_level_equipment(player)
 
@@ -2212,7 +2216,13 @@ end
 function PlayerManager:local_can_carry_weight(carry_id)
 	local weight_cur = self:get_my_carry_weight()
 	local weight_max = self:get_my_carry_weight_limit(true)
-	local weight_bag = tweak_data.carry[carry_id].weight or tweak_data.carry.default_bag_weight
+	local carry_tweak = tweak_data.carry[carry_id]
+	local weight_bag = carry_tweak.weight or tweak_data.carry.default_bag_weight
+
+	if carry_tweak.upgrade_weight_multiplier then
+		local multiplier = carry_tweak.upgrade_weight_multiplier
+		weight_bag = weight_bag * self:upgrade_value(multiplier.category, multiplier.upgrade, 1)
+	end
 
 	if managers.player:has_category_upgrade("player", "bellhop_weight_increase_off_primary") and weight_cur + weight_bag <= weight_max + managers.player:upgrade_value("player", "bellhop_weight_increase_off_primary", 0) then
 		return true
@@ -4297,12 +4307,12 @@ function PlayerManager:kill()
 	end
 
 	managers.player:force_drop_carry()
+	managers.vehicle:remove_player_from_all_vehicles(player)
 	managers.statistics:downed({
 		death = true
 	})
 	IngameFatalState.on_local_player_dead()
 	managers.warcry:deactivate_warcry(true)
-	player:base():set_enabled(false)
 	game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
 	player:character_damage():set_invulnerable(true)
 	player:character_damage():set_health(0)

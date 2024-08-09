@@ -311,32 +311,25 @@ function CharacterSelectionGui:_rebind_controller_buttons(slot_index)
 end
 
 function CharacterSelectionGui:_load_all_slots()
+	local last_selected_slot = managers.savefile:get_save_progress_slot()
+	local has_last_slot = last_selected_slot ~= -1
+
 	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		if Global.savefile_manager.meta_data_list and Global.savefile_manager.meta_data_list[slot_index] then
 			Global.savefile_manager.meta_data_list[slot_index].is_load_done = false
 			Global.savefile_manager.meta_data_list[slot_index].is_cached_slot = false
 		end
 
-		self:_load_slot_data(slot_index, false)
+		if not has_last_slot or slot_index ~= last_selected_slot then
+			self:_load_slot_data(slot_index, false)
+		end
 	end
 
-	local last_selected_slot = managers.savefile:get_save_progress_slot()
-
-	if last_selected_slot ~= -1 then
+	if has_last_slot then
 		self:_load_slot_data(last_selected_slot, false)
 	end
 
 	self._active_character_slot = last_selected_slot
-end
-
-function CharacterSelectionGui:_load_slot_data(slot_index, save_as_last_selected_slot)
-	managers.warcry:reset()
-
-	self._slots_loaded[slot_index] = false
-	self._is_load_done = false
-	self._is_render_done = false
-
-	managers.savefile:load_game(slot_index, false)
 end
 
 function CharacterSelectionGui:_select_character_slot(slot_index)
@@ -551,7 +544,7 @@ function CharacterSelectionGui:_load_slot_data(slot_index, save_as_last_selected
 	self._is_load_done = false
 	self._is_render_done = false
 
-	managers.savefile:load_game(slot_index, false, nil)
+	managers.savefile:load_game(slot_index, false)
 end
 
 function CharacterSelectionGui:_extra_character_setup()
@@ -634,8 +627,12 @@ function CharacterSelectionGui:close()
 	end
 
 	managers.savefile:remove_load_done_callback(self._pre_close_screen_loading_done_callback)
-	self:_extra_character_setup()
-	self:_enable_dof()
+
+	if self._transition_flag == self.CLOSE_MENU_FLAG then
+		self:_extra_character_setup()
+		self:_enable_dof()
+	end
+
 	CharacterSelectionGui.super.close(self)
 end
 
@@ -705,6 +702,10 @@ function CharacterSelectionGui:on_item_yes_delete_characters_list()
 		self._slots_loaded[13] = false
 		self._slots_loaded[14] = false
 		self._slots_loaded[15] = false
+	else
+		self:_activate_character_profile(new_slot)
+		managers.savefile:set_save_progress_slot(new_slot)
+		managers.savefile:save_last_selected_character_profile_slot()
 	end
 
 	self._character_slot_to_delete = nil

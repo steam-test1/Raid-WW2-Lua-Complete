@@ -691,6 +691,7 @@ function HUDManager:_setup_ingame_hud_saferect()
 	self:_get_tab_objectives()
 	self:_create_watermark(hud)
 	self:_create_crosshair(hud)
+	self:set_motiondot_type(managers.user:get_setting("motion_dot"))
 end
 
 function HUDManager:_create_ammo_test()

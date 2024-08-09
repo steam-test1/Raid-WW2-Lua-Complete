@@ -33,7 +33,7 @@ function WarcryGhost:_find_enemies_in_view()
 	local enemies = {}
 
 	for _, enemy in ipairs(enemies_in_cone) do
-		if mvector3.distance(cone_tip, enemy:position()) < self._tweak_data.tint_distance then
+		if alive(enemy) and mvector3.distance(cone_tip, enemy:position()) < self._tweak_data.tint_distance then
 			table.insert(enemies, enemy)
 		end
 	end

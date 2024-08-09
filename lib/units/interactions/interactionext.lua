@@ -2048,6 +2048,12 @@ function CarryInteractionExt:_get_interaction_details()
 
 	if carry_tweak and not carry_tweak.cannot_stack then
 		local weight = carry_tweak.weight or tweak_data.carry.default_bag_weight
+
+		if carry_tweak.upgrade_weight_multiplier then
+			local multiplier = carry_tweak.upgrade_weight_multiplier
+			weight = weight * managers.player:upgrade_value(multiplier.category, multiplier.upgrade, 1)
+		end
+
 		local details = {
 			icon = "weight_icon",
 			text = weight

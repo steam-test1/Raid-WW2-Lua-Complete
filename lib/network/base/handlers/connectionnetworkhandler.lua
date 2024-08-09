@@ -823,6 +823,14 @@ function ConnectionNetworkHandler:send_loaded_packages(package, count, sender)
 	})
 end
 
+function ConnectionNetworkHandler:sync_secured_bounty(bars, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.greed:sync_secured_bounty(bars)
+end
+
 function ConnectionNetworkHandler:spawn_loot(tweak_table, position, yaw, pitch, roll, sender)
 	if not self._verify_sender(sender) then
 		return

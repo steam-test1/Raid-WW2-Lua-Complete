@@ -184,8 +184,8 @@ function SkillTreeManager:_verify_skilltree_data()
 
 	for type_idx, skilltree_data in pairs(save_data_skilltree) do
 		for skill_id, skill_data in pairs(skilltree_data) do
-			if not tweak_data.skilltree.skills[skill_id] then
-				if skill_data.gold_requirements and self:is_skill_purchased(skill_id) then
+			if not tweak_data.skilltree.skills[skill_id] or tweak_data.skilltree.skills[skill_id].upgrades_type ~= skill_data.upgrades_type then
+				if not tweak_data.skilltree.skills[skill_id] and skill_data.gold_requirements and self:is_skill_purchased(skill_id) then
 					managers.gold_economy:add_loyalty_reward(GoldEconomyManager.LOYALTY_REMOVED_SKILL, skill_data.gold_requirements)
 				end
 

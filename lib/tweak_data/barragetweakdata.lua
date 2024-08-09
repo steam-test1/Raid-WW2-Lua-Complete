@@ -22,7 +22,7 @@ function BarrageTweakData:init(tweak_data)
 		cooldown = {
 			140,
 			130,
-			100
+			120
 		},
 		initial_delay = 3.5,
 		barrage_launch_sound_delay = 3.5,

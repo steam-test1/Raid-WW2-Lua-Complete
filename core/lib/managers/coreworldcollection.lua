@@ -234,14 +234,14 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 		file_type = "world",
 		file_path = file_path,
 		world_dir = world_dir,
-		translation = world.translation,
 		world_id = world_id,
+		translation = world.translation,
 		excluded_continents = excluded_continents
 	}
 	local definition = CoreWorldDefinition.WorldDefinition:new(params)
 	definition.is_created = false
-	definition.editor_name = editor_name
 	definition.creation_in_progress = true
+	definition.editor_name = editor_name
 	definition.spawn_counter = spawn_counter
 	definition.meta_data = world.meta_data
 
@@ -478,13 +478,12 @@ function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
 end
 
 function CoreWorldCollection:_do_complete_world_loading_stage(params)
-	local world_id = params.world_id
-	local stage = params.stage
-
 	if not managers.network:session() then
 		return
 	end
 
+	local world_id = params.world_id
+	local stage = params.stage
 	local peer = managers.network:session():local_peer()
 	peer._synced_worlds[world_id] = peer._synced_worlds[world_id] or {}
 	peer._synced_worlds[world_id][stage] = true
@@ -513,8 +512,6 @@ function CoreWorldCollection:sync_loading_status(t)
 end
 
 function CoreWorldCollection:update_synced_worlds_to_all_peers()
-	Application:trace("[CoreWorldCollection:update_synced_worlds_to_all_peers()]")
-
 	if not managers.network:session() then
 		return
 	end
@@ -617,20 +614,22 @@ function CoreWorldCollection:sync_loading_status_to_peers()
 end
 
 function CoreWorldCollection:check_drop_in_sync()
-	if managers.network:session() then
-		local local_peer = managers.network:session():local_peer()
-
-		if self:all_worlds_created() and local_peer:is_drop_in() and self._atleast_one_world_loaded then
-			Application:set_pause(false)
-			managers.navigation:set_data_ready_flag(true)
-			managers.network:session():chk_send_local_player_ready(true)
-			local_peer:set_drop_in(false)
-			managers.mission:start_root_level_script()
-			self:remove_dropin_package_references()
-		end
-
-		managers.vehicle:process_state_change_queue()
+	if not managers.network:session() then
+		return
 	end
+
+	local local_peer = managers.network:session():local_peer()
+
+	if self:all_worlds_created() and local_peer:is_drop_in() and self._atleast_one_world_loaded then
+		Application:set_pause(false)
+		managers.navigation:set_data_ready_flag(true)
+		managers.network:session():chk_send_local_player_ready(true)
+		local_peer:set_drop_in(false)
+		managers.mission:start_root_level_script()
+		self:remove_dropin_package_references()
+	end
+
+	managers.vehicle:process_state_change_queue()
 end
 
 function CoreWorldCollection:check_queued_world_prepare()
@@ -939,11 +938,12 @@ function CoreWorldCollection:sync_load(data)
 	self._wait_for_worlds_count = state.sync_world_counter
 
 	for _, synced_units in ipairs(state.synced_units) do
-		local world_id = synced_units.world_id
 		local all_units = synced_units.units
-		local world_definition = self:worlddefinition_by_id(world_id)
 
 		if all_units then
+			local world_id = synced_units.world_id
+			local world_definition = self:worlddefinition_by_id(world_id)
+
 			if world_definition then
 				for _, synced_unit in ipairs(all_units) do
 					world_definition:sync_unit_reference_data(synced_unit.unit_id, synced_unit.editor_id)

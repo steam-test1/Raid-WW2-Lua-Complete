@@ -1,5 +1,5 @@
 GreedManager = GreedManager or class()
-GreedManager.VERSION = 1
+GreedManager.VERSION = 2
 
 function GreedManager.get_instance()
 	if not Global.greed_manager then
@@ -22,6 +22,7 @@ function GreedManager:reset()
 	self._mission_loot_counter = 0
 	self._gold_awarded_in_mission = 0
 	self._active_greed_items = {}
+	self._secured_bounty = false
 end
 
 function GreedManager:register_greed_item(unit, tweak_table, world_id)
@@ -162,7 +163,6 @@ function GreedManager:greed_value_difficulty_multiplier()
 end
 
 function GreedManager:pickup_greed_item(value, unit)
-	value = math.clamp(value, 1, 4000)
 	local notification_item = {
 		name_id = "menu_greed_loot_title",
 		icon = "carry_gold",
@@ -227,6 +227,23 @@ function GreedManager:pickup_cache_loot(value)
 	self:on_loot_picked_up(value)
 end
 
+function GreedManager:secure_bounty(bars)
+	if not managers.raid_job:is_camp_loaded() and not managers.raid_job:is_in_tutorial() then
+		managers.network:session():send_to_peers_synched("sync_secured_bounty", bars)
+		self:sync_secured_bounty(bars)
+	else
+		Application:warn("[GreedManager:secure_bounty] Cannot award bounty out of a mission!")
+	end
+end
+
+function GreedManager:sync_secured_bounty(bars)
+	if not self._secured_bounty then
+		self:on_loot_picked_up(self:loot_needed_for_gold_bar() * bars)
+
+		self._secured_bounty = true
+	end
+end
+
 function GreedManager:on_loot_picked_up(value, notification_item)
 	self._mission_loot_counter = self._mission_loot_counter + value
 	local total_loot_counter = self:current_loot_counter() + self:current_mission_loot_counter() - self._gold_awarded_in_mission * self:loot_needed_for_gold_bar()
@@ -266,6 +283,7 @@ function GreedManager:on_level_exited(success)
 	end
 
 	self._mission_loot_counter = 0
+	self._secured_bounty = false
 
 	if managers.hud then
 		managers.hud:reset_greed_indicators()

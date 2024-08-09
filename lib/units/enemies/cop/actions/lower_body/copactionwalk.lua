@@ -1962,7 +1962,18 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 		return
 	end
 
-	local speed_mul = self:_get_current_max_walk_speed(self._stop_anim_side) / self._walk_anim_velocities[self._ext_anim.pose][self._stance.name][self._haste][self._stop_anim_side]
+	local aaa = nil
+
+	if self._ext_anim.pose and self._haste and self._stop_anim_side then
+		aaa = self._walk_anim_velocities[self._ext_anim.pose]
+		aaa = aaa[self._stance.name]
+		aaa = aaa[self._haste]
+		aaa = aaa[self._stop_anim_side]
+	else
+		aaa = 0.1
+	end
+
+	local speed_mul = self:_get_current_max_walk_speed(self._stop_anim_side) / aaa
 
 	self._machine:set_speed(redir_res, speed_mul)
 

@@ -116,7 +116,7 @@ function PlayerDriving:_setup_seat()
 end
 
 function PlayerDriving:exit(state_data, new_state_name)
-	print("[DRIVING] PlayerDriving: Exiting vehicle")
+	Application:debug("[PlayerDriving] PlayerDriving: Exiting vehicle")
 
 	if self._seat.driving then
 		self._vehicle_ext:stop_horn_sound()
