@@ -434,7 +434,7 @@ end
 
 function ChallengeCardsManager:remove_suggested_challenge_card()
 	local local_peer = managers.network:session():local_peer()
-	local remove_suggested_card = self._suggested_cards[local_peer._id]
+	local remove_suggested_card = self._suggested_cards and self._suggested_cards[local_peer._id]
 
 	if not remove_suggested_card then
 		return

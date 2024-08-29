@@ -3,6 +3,8 @@ RaidGUIControlButtonSkillTiny.OUTLINE_THICKNESS = 2
 RaidGUIControlButtonSkillTiny.SPRITE_SCALE = 0.85
 
 function RaidGUIControlButtonSkillTiny:init(parent, params)
+	params.text = params.text or ""
+
 	RaidGUIControlButtonSkillTiny.super.init(self, parent, params)
 
 	params.selected_marker_w = params.selected_marker_w or 8

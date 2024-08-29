@@ -164,18 +164,22 @@ function PlayerManager:on_simulation_started()
 end
 
 function PlayerManager:reset()
-	Application:debug("[PlayerManager] normal reset")
+	Application:info("[PlayerManager] RESET")
 
 	if managers.hud then
 		managers.hud:clear_player_special_equipments()
 	end
 
+	local player = self:local_player()
 	Global.player_manager = nil
 
 	self:_setup()
 	self:_setup_rules()
-	self:_setup_upgrades()
-	self:aquire_default_upgrades()
+
+	if alive(player) then
+		self:_setup_upgrades()
+		self:aquire_default_upgrades()
+	end
 end
 
 function PlayerManager:soft_reset()
@@ -219,8 +223,8 @@ function PlayerManager:_setup()
 			},
 			viewed_content_updates = {},
 			character_profile_name = "",
-			is_character_profile_hardcore = false,
 			character_profile_nation = "",
+			is_character_profile_hardcore = false,
 			customization_equiped_head_name = "",
 			customization_equiped_upper_name = "",
 			customization_equiped_lower_name = "",
@@ -243,33 +247,27 @@ function PlayerManager:_setup()
 	Global.player_manager.synced_deployables = {}
 	Global.player_manager.synced_grenades = {}
 	Global.player_manager.synced_ammo_info = {}
-	Global.player_manager.local_carry_weight = 0
 	Global.player_manager.synced_carry = {}
 	Global.player_manager.synced_team_upgrades = {}
 	Global.player_manager.synced_vehicle_data = {}
 	Global.player_manager.synced_bipod = {}
 	Global.player_manager.synced_turret = {}
 	Global.player_manager.synced_drag_body = {}
+	Global.player_manager.local_carry_weight = 0
 	self._global = Global.player_manager
 end
 
 function PlayerManager:_setup_upgrades()
-	self:update_health_regen_values()
-
-	local player = self:local_player()
-
-	if alive(player) then
-		UpgradeAnatomist:check_activate()
-		UpgradePickpocket:check_activate()
-		UpgradeBrutality:check_activate()
-		UpgradeBlammFu:check_activate()
-		UpgradeBigGame:check_activate()
-		UpgradeHelpCry:check_activate()
-		UpgradeToughness:check_activate()
-		UpgradeRevenant:check_activate()
-		UpgradeLeaded:check_activate()
-		UpgradeRally:check_activate()
-	end
+	UpgradeAnatomist:check_activate()
+	UpgradePickpocket:check_activate()
+	UpgradeBrutality:check_activate()
+	UpgradeBlammFu:check_activate()
+	UpgradeBigGame:check_activate()
+	UpgradeHelpCry:check_activate()
+	UpgradeToughness:check_activate()
+	UpgradeRevenant:check_activate()
+	UpgradeLeaded:check_activate()
+	UpgradeRally:check_activate()
 end
 
 function PlayerManager:get_customization_equiped_head_name()
@@ -1537,13 +1535,17 @@ function PlayerManager:health_regen(health_ratio, real_armor)
 end
 
 function PlayerManager:update_health_regen_values()
-	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(managers.skilltree:get_character_profile_class() or "recon")
+	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class())
 	self._health_regen = class_tweak_data.damage.HEALTH_REGEN
 	local low_regen_limit_multiplier = self:upgrade_value("player", "toughness_low_health_regen_limit_multiplier", 1)
 	self._low_health_regen_limit = class_tweak_data.damage.LOW_HEALTH_REGEN_LIMIT * low_regen_limit_multiplier
 	local low_regen_multiplier = self:upgrade_value("player", "box_o_choc_low_health_regen_multiplier", 1)
 	low_regen_multiplier = low_regen_multiplier * self:upgrade_value("player", "rally_low_health_regen_multiplier", 1)
 	self._low_health_regen = class_tweak_data.damage.LOW_HEALTH_REGEN * low_regen_multiplier
+end
+
+function PlayerManager:get_low_health_regen_limit()
+	return self._low_health_regen_limit
 end
 
 function PlayerManager:damage_reduction_skill_multiplier(damage_type, current_state, health_ratio)
@@ -2199,7 +2201,7 @@ function PlayerManager:modify_local_peer_carry_weight(amount)
 end
 
 function PlayerManager:get_my_carry_weight_limit(ignore_dynamic_upgrades, class)
-	class = class or managers.skilltree:get_character_profile_class() or "recon"
+	class = class or managers.skilltree:get_character_profile_class()
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(class)
 	local base = class_tweak_data.movement.carry.CARRY_WEIGHT_MAX or 5
 	local skill = managers.player:upgrade_value("player", "carry_weight_increase", 0)
@@ -2214,9 +2216,14 @@ function PlayerManager:get_my_carry_weight_limit(ignore_dynamic_upgrades, class)
 end
 
 function PlayerManager:local_can_carry_weight(carry_id)
+	local carry_tweak = tweak_data.carry[carry_id]
+
+	if not carry_tweak then
+		return false
+	end
+
 	local weight_cur = self:get_my_carry_weight()
 	local weight_max = self:get_my_carry_weight_limit(true)
-	local carry_tweak = tweak_data.carry[carry_id]
 	local weight_bag = carry_tweak.weight or tweak_data.carry.default_bag_weight
 
 	if carry_tweak.upgrade_weight_multiplier then
@@ -2249,16 +2256,6 @@ end
 
 function PlayerManager:get_all_synced_carry()
 	return self._global.synced_carry
-end
-
-function PlayerManager:get_drag_body_data()
-	local peer_id = managers.network:session():local_peer():id()
-
-	return self._global.synced_drag_body[peer_id]
-end
-
-function PlayerManager:get_synced_drag_body(peer_id)
-	return self._global.synced_drag_body[peer_id]
 end
 
 function PlayerManager:from_server_interaction_reply(status)
@@ -3285,9 +3282,6 @@ function PlayerManager:on_throw_grenade()
 	self:add_grenade_amount(-1)
 end
 
-function PlayerManager:set_drag_body_data(dragged_unit, dragged_body)
-end
-
 function PlayerManager:add_carry(carry_id, carry_multiplier)
 	local carry_tweak = tweak_data.carry[carry_id]
 
@@ -3496,7 +3490,8 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 		return
 	end
 
-	local carry_needs_headroom = tweak_data.carry[drop_carry_item.carry_id].needs_headroom_to_drop
+	local carry_tweak = tweak_data.carry[drop_carry_item.carry_id]
+	local carry_needs_headroom = carry_tweak.needs_headroom_to_drop
 	local player = self:player_unit()
 
 	if carry_needs_headroom and not player:movement():current_state():_can_stand() then
@@ -3515,14 +3510,9 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 	end
 
 	local player = self:player_unit()
-	local carry_tweak = nil
 
-	if player then
-		carry_tweak = tweak_data.carry[drop_carry_item.carry_id]
-
-		if carry_tweak and carry_tweak.throw_sound then
-			player:sound():play(carry_tweak.throw_sound, nil, false)
-		end
+	if player and carry_tweak and carry_tweak.throw_sound then
+		player:sound():play(carry_tweak.throw_sound, nil, false)
 	end
 
 	local camera_ext = player:camera()

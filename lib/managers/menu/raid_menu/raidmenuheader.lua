@@ -60,6 +60,15 @@ function RaidMenuHeader:set_screen_name_raw(text)
 	self._screen_name_label:set_h(h)
 end
 
+function RaidMenuHeader:set_subtitle_raw(text)
+	self._screen_subtitle_label:set_text(text)
+
+	local _, _, w, h = self._screen_subtitle_label:text_rect()
+
+	self._screen_subtitle_label:set_w(w)
+	self._screen_subtitle_label:set_h(h)
+end
+
 function RaidMenuHeader:set_header_icon(icon_data)
 	self._header_icon = self._root_panel:image({
 		name = "header_icon",

@@ -565,8 +565,6 @@ function NewRaycastWeaponBase:replenish()
 		self:set_ammo_remaining_in_clip(ammo_max_per_clip)
 	end
 
-	self._ammo_pickup = tweak_data.weapon[self._name_id].AMMO_PICKUP
-
 	self:tweak_data_anim_stop("magazine_empty")
 	self:update_damage()
 end

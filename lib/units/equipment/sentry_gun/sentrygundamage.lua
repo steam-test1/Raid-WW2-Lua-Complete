@@ -79,7 +79,11 @@ function SentryGunDamage:damage_bullet(attack_data)
 		local critical_hit, damage = CopDamage.roll_critical_hit(self, dmg_adjusted)
 		dmg_adjusted = damage
 
-		managers.hud:on_hit_confirmed(nil, self._dead and true or false, false, critical_hit, false)
+		managers.hud:on_hit_confirmed({
+			hit_type = HUDHitConfirm.HIT_NORMAL,
+			is_killshot = self._dead and true or false,
+			is_crit = critical_hit
+		})
 	end
 
 	if hit_bag then
@@ -214,7 +218,11 @@ function SentryGunDamage:damage_explosion(attack_data)
 		local critical_hit, crit_damage = CopDamage.roll_critical_hit(self, damage)
 		damage = crit_damage
 
-		managers.hud:on_hit_confirmed(nil, self._dead and true or false, false, critical_hit, false)
+		managers.hud:on_hit_confirmed({
+			hit_type = HUDHitConfirm.HIT_NORMAL,
+			is_killshot = self._dead and true or false,
+			is_crit = critical_hit
+		})
 	end
 
 	damage = damage + self._sync_dmg_leftover

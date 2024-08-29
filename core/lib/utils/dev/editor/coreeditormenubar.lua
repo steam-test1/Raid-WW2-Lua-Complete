@@ -800,6 +800,8 @@ function CoreEditor:toggle_orthographic(data)
 end
 
 function CoreEditor:toggle_light(data)
+	self._light_toggled_data = data
+
 	self._light:set_enable(data[1]:is_checked(data[2]))
 end
 

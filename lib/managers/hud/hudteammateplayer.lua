@@ -29,7 +29,7 @@ HUDTeammatePlayer.PLAYER_LEVEL_FONT = "din_compressed_outlined_22"
 HUDTeammatePlayer.PLAYER_LEVEL_FONT_SIZE = 20
 HUDTeammatePlayer.PLAYER_HEALTH_H = 10
 HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON = "backgrounds_health_bg"
-HUDTeammatePlayer.PLAYER_HEALTH_COLORS = tweak_data.gui.colors.player_health_colors
+HUDTeammatePlayer.PLAYER_HEALTH_COLORS = deep_clone(tweak_data.gui.colors.player_health_colors)
 HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR = tweak_data.gui.colors.progress_dark_red
 HUDTeammatePlayer.PLAYER_HEALTH_HEAL_COLOR = tweak_data.gui.colors.progress_green
 HUDTeammatePlayer.PLAYER_HEALTH_SPECIAL_COLOR = tweak_data.gui.colors.raid_dirty_white:with_alpha(0.5)
@@ -543,6 +543,8 @@ end
 function HUDTeammatePlayer:set_health(data)
 	local health_percentage = math.clamp(data.current / data.total, 0, 1)
 	local healthbar_size = health_percentage * self._full_health_bar_w
+	local low_health_regen_limit = managers.player:get_low_health_regen_limit()
+	HUDTeammatePlayer.PLAYER_HEALTH_COLORS[2].start_percentage = low_health_regen_limit
 
 	self._health_bar:set_color(GuiTweakData.get_color_for_percentage(HUDTeammatePlayer.PLAYER_HEALTH_COLORS, health_percentage))
 	self._health_bar:stop()

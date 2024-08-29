@@ -326,11 +326,41 @@ function RaidMenuOptionsVideo:on_item_selected_refresh_rate()
 end
 
 function RaidMenuOptionsVideo:on_click_apply_resolution_refresh_rate()
+	local settings_changed = false
+	local current = {
+		resolution = RenderSettings.resolution,
+		fullscreen = managers.viewport:is_fullscreen(),
+		borderless = managers.viewport:is_borderless()
+	}
+	local fullscreen = false
+	local borderless = false
+	local window_mode = self._stepper_menu_window_mode:get_value()
+
+	if window_mode == "WINDOWED_FULLSCREEN" then
+		borderless = true
+	elseif window_mode == "FULLSCREEN" then
+		fullscreen = true
+	end
+
+	if current.fullscreen ~= fullscreen or current.borderless ~= borderless then
+		self:set_fullscreen(fullscreen, borderless)
+
+		settings_changed = true
+	end
+
 	local selected_resolution = self._stepper_menu_resolution:get_value()
 	local selected_refresh_rate = self._stepper_menu_refresh_rate:get_value()
 	local resolution = Vector3(selected_resolution.x, selected_resolution.y, selected_refresh_rate)
 
-	managers.menu:active_menu().callback_handler:change_resolution_raid(resolution)
+	if resolution ~= current.resolution then
+		managers.menu:active_menu().callback_handler:change_resolution_raid(resolution)
+
+		settings_changed = true
+	end
+
+	if settings_changed then
+		managers.menu:show_accept_gfx_settings_dialog(callback(self, self, "_callback_graphics_change_cancelled", current))
+	end
 end
 
 function RaidMenuOptionsVideo:on_value_change_effect_quality()
@@ -353,21 +383,27 @@ function RaidMenuOptionsVideo:on_value_change_fov_adjustment()
 end
 
 function RaidMenuOptionsVideo:on_item_selected_window_mode()
-	local mode = self._stepper_menu_window_mode:get_value()
+	if self._stepper_menu_window_mode:get_value() == "WINDOWED_FULLSCREEN" then
+		local resolution = Application:monitor_resolution()
+		local refresh_rates = self:_get_refresh_rates_for_resolution(resolution)
+		local refresh_rate = refresh_rates[#refresh_rates].value
 
-	if mode == "WINDOWED" then
-		self:set_fullscreen(false, managers.viewport:is_fullscreen(), false, managers.viewport:is_borderless())
-	elseif mode == "WINDOWED_FULLSCREEN" then
-		self:set_fullscreen(false, managers.viewport:is_fullscreen(), true, managers.viewport:is_borderless())
-	else
-		self:set_fullscreen(true, managers.viewport:is_fullscreen(), false, managers.viewport:is_borderless())
+		self._stepper_menu_resolution:set_value_and_render({
+			x = resolution.x,
+			y = resolution.y,
+			is_equal = function (self, check)
+				return check.x == self.x and check.y == self.y
+			end
+		}, true)
+		self._stepper_menu_refresh_rate:refresh_data(true)
+		self._stepper_menu_refresh_rate:set_value_and_render(refresh_rate, true)
 	end
 
 	self:_setup_control_visibility()
 end
 
-function RaidMenuOptionsVideo:set_fullscreen(fullscreen, is_fullscreen, borderless, is_borderless)
-	managers.menu:active_menu().callback_handler:toggle_fullscreen_raid(fullscreen, is_fullscreen, borderless, is_borderless, callback(self, self, "fullscreen_toggled_callback"))
+function RaidMenuOptionsVideo:set_fullscreen(fullscreen, borderless)
+	managers.menu:active_menu().callback_handler:toggle_fullscreen_raid(fullscreen, borderless)
 	self:on_value_change_brightness()
 
 	if borderless then
@@ -454,8 +490,18 @@ function RaidMenuOptionsVideo:_callback_default_video()
 	self:_setup_control_visibility()
 end
 
-function RaidMenuOptionsVideo:fullscreen_toggled_callback()
-	self:_reload_video_and_adv_video_options()
+function RaidMenuOptionsVideo:_callback_graphics_change_cancelled(settings)
+	managers.viewport:set_fullscreen(settings.fullscreen)
+	managers.viewport:set_borderless(settings.borderless)
+
+	if managers.viewport:is_fullscreen() then
+		managers.mouse_pointer:acquire_input()
+	else
+		managers.mouse_pointer:unacquire_input()
+	end
+
+	managers.menu:active_menu().callback_handler:change_resolution_raid(settings.resolution)
+	self:_load_video_values()
 	self:_setup_control_visibility()
 end
 
@@ -493,16 +539,10 @@ function RaidMenuOptionsVideo:_setup_control_visibility()
 	end
 end
 
-function RaidMenuOptionsVideo:_reload_video_and_adv_video_options()
-	self:_load_video_values()
-end
-
 function RaidMenuOptionsVideo:_load_video_values()
+	local resolution = RenderSettings.resolution
 	local is_fullscreen = managers.viewport:is_fullscreen()
 	local is_borderless = managers.viewport:is_borderless()
-	local resolution = RenderSettings.resolution
-
-	self._stepper_menu_refresh_rate:set_value_and_render(resolution.z, true)
 
 	if is_borderless then
 		local monitor_res = Application:monitor_resolution()
@@ -516,6 +556,8 @@ function RaidMenuOptionsVideo:_load_video_values()
 			return check.x == self.x and check.y == self.y
 		end
 	}, true)
+	self._stepper_menu_refresh_rate:refresh_data(true)
+	self._stepper_menu_refresh_rate:set_value_and_render(resolution.z, true)
 
 	if is_fullscreen then
 		self._stepper_menu_window_mode:set_value_and_render("FULLSCREEN", true)

@@ -67,6 +67,16 @@ function SkillTreeTweakData:init(tweak_data)
 		max = 0.85,
 		min = 0.1
 	}
+	self.skill_profiles = {
+		0,
+		0,
+		20,
+		40,
+		80,
+		120,
+		240,
+		480
+	}
 
 	self:_init_classes(tweak_data)
 	self:_init_skill_list()

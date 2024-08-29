@@ -2596,7 +2596,7 @@ function BlackMarketManager:on_unaquired_weapon_platform(upgrade, id)
 	if equipped_primariy and equipped_primariy.weapon_id == id then
 		equipped_primariy.equipped = false
 
-		self:_verfify_equipped_category("primaries")
+		self:_verify_equipped_category("primaries")
 	end
 
 	local equipped_secondary = managers.blackmarket:equipped_secondary()
@@ -2604,7 +2604,7 @@ function BlackMarketManager:on_unaquired_weapon_platform(upgrade, id)
 	if equipped_secondary and equipped_secondary.weapon_id == id then
 		equipped_secondary.equipped = false
 
-		self:_verfify_equipped_category("secondaries")
+		self:_verify_equipped_category("secondaries")
 	end
 end
 
@@ -2627,7 +2627,7 @@ function BlackMarketManager:on_unaquired_melee_weapon(upgrade, id)
 	if equipped_melee_weapon and equipped_melee_weapon == id then
 		equipped_melee_weapon.equipped = false
 
-		self:_verfify_equipped_category("melee_weapons")
+		self:_verify_equipped_category("melee_weapons")
 	end
 end
 
@@ -2650,19 +2650,21 @@ function BlackMarketManager:on_unaquired_grenade(upgrade, id)
 	if equipped_grenade and equipped_grenade == id then
 		equipped_grenade.equipped = false
 
-		self:_verfify_equipped_category("grenades")
+		self:_verify_equipped_category("grenades")
 	end
 end
 
 function BlackMarketManager:aquire_default_weapons(only_enable)
-	Application:debug("[BlackMarketManager:aquire_default_weapons]")
-
-	local character_class = managers.skilltree:get_character_profile_class()
+	local character_class = managers.skilltree:has_character_profile_class()
 
 	if character_class then
+		character_class = managers.skilltree:get_character_profile_class()
+
+		Application:debug("[BlackMarketManager:aquire_default_weapons] from class", character_class)
 		self:_aquire_class_default_secondary(character_class, only_enable)
 		self:_aquire_class_default_primary(character_class, only_enable)
 	else
+		Application:debug("[BlackMarketManager:aquire_default_weapons] no class, generic")
 		self:_aquire_generic_default_secondary(only_enable)
 		self:_aquire_generic_default_primary(only_enable)
 	end
@@ -3181,7 +3183,7 @@ function BlackMarketManager:reset()
 	self:_setup_grenades()
 	self:_setup_melee_weapons()
 	self:_setup_unlocked_weapon_slots()
-	self:_verfify_equipped()
+	self:_verify_equipped()
 end
 
 function BlackMarketManager:reset_equipped()
@@ -3191,7 +3193,7 @@ function BlackMarketManager:reset_equipped()
 	self:_setup_melee_weapons()
 	managers.dlc:give_dlc_package()
 	self:_verify_dlc_items()
-	self:_verfify_equipped()
+	self:_verify_equipped()
 end
 
 function BlackMarketManager:save(data)
@@ -3353,7 +3355,7 @@ function BlackMarketManager:_load_done()
 		self:aquire_default_weapons()
 	end
 
-	self:_verfify_equipped()
+	self:_verify_equipped()
 	MenuCallbackHandler:_update_outfit_information()
 end
 
@@ -3599,15 +3601,15 @@ function BlackMarketManager:_verify_dlc_items()
 	end
 end
 
-function BlackMarketManager:_verfify_equipped()
-	self:_verfify_equipped_category("secondaries")
-	self:_verfify_equipped_category("primaries")
-	self:_verfify_equipped_category("armors")
-	self:_verfify_equipped_category("grenades")
-	self:_verfify_equipped_category("melee_weapons")
+function BlackMarketManager:_verify_equipped()
+	self:_verify_equipped_category("secondaries")
+	self:_verify_equipped_category("primaries")
+	self:_verify_equipped_category("armors")
+	self:_verify_equipped_category("grenades")
+	self:_verify_equipped_category("melee_weapons")
 end
 
-function BlackMarketManager:_verfify_equipped_category(category)
+function BlackMarketManager:_verify_equipped_category(category)
 	if category == "armors" then
 		local armor_id = self._defaults.armor
 
@@ -3693,9 +3695,8 @@ function BlackMarketManager:_verfify_equipped_category(category)
 		end
 	end
 
-	local character_class = managers.skilltree:get_character_profile_class()
-
-	if character_class then
+	if managers.skilltree:has_character_profile_class() then
+		local character_class = managers.skilltree:get_character_profile_class()
 		local equipped = false
 
 		if category == "primaries" then

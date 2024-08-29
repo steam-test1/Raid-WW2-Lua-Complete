@@ -188,6 +188,9 @@ function FFCEditorController:start_cube_map(params)
 	self._output_name = params.output_name
 	self._output_name = self._output_name or "cubemap"
 
+	self._camera:set_position(params.light:position())
+	self._camera:set_rotation(params.light:rotation())
+
 	if params.light then
 		self._light = World:create_light("omni")
 
@@ -201,8 +204,6 @@ function FFCEditorController:start_cube_map(params)
 			rot = Rotation(-rot:z(), rot:y())
 
 			self._params.unit:set_rotation(rot)
-		else
-			self._camera:set_rotation(self._params.unit:rotation())
 		end
 	end
 
@@ -259,19 +260,20 @@ function FFCEditorController:create_cube_map()
 	end
 
 	local x1, y1, x2, y2 = self:_get_screen_size()
+	local rot = nil
 
 	if self._cube_counter == 1 then
-		self._camera:set_rotation(Rotation(Vector3(0, 0, 1), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(0, 0, 1), Vector3(0, -1, 0))
 	elseif self._cube_counter == 2 then
-		self._camera:set_rotation(Rotation(Vector3(-1, 0, 0), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(-1, 0, 0), Vector3(0, -1, 0))
 	elseif self._cube_counter == 3 then
-		self._camera:set_rotation(Rotation(Vector3(0, 1, 0), Vector3(0, 0, -1)))
+		rot = Rotation(Vector3(0, 1, 0), Vector3(0, 0, -1))
 	elseif self._cube_counter == 4 then
-		self._camera:set_rotation(Rotation(Vector3(1, 0, 0), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(1, 0, 0), Vector3(0, -1, 0))
 	elseif self._cube_counter == 5 then
-		self._camera:set_rotation(Rotation(Vector3(0, -1, 0), Vector3(0, 0, 1)))
+		rot = Rotation(Vector3(0, -1, 0), Vector3(0, 0, 1))
 	elseif self._cube_counter == 6 then
-		self._camera:set_rotation(Rotation(Vector3(0, 0, -1), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(0, 0, -1), Vector3(0, -1, 0))
 	elseif self._cube_counter == 7 then
 		local output_file = (self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds"
 
@@ -284,6 +286,12 @@ function FFCEditorController:create_cube_map()
 		self:_cubemap_done()
 
 		return true
+	end
+
+	if self._cube_counter < 7 then
+		rot = Rotation(rot:yaw() + self._params.light:rotation():yaw(), rot:pitch() + self._params.light:rotation():pitch(), rot:roll() + self._params.light:rotation():roll())
+
+		self._camera:set_rotation(rot)
 	end
 
 	Application:screenshot(self._names[self._cube_counter], x1, y1, x2, y2)

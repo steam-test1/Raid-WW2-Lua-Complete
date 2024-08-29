@@ -211,11 +211,6 @@ function ProjectileBase:update(unit, t, dt)
 			self._unit:set_position(mvec1)
 			self._unit:set_position(mvec1)
 
-			if self._draw_debug_impact then
-				Draw:brush(Color(0.5, 0, 0, 1), nil, 10):sphere(col_ray.position, 4)
-				Draw:brush(Color(0.5, 1, 0, 0), nil, 10):sphere(self._unit:position(), 3)
-			end
-
 			col_ray.velocity = self._unit:velocity()
 			self._collided = true
 
@@ -236,11 +231,6 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 		local col_ray = World:raycast("ray", self._sweep_data.last_pos, mvec2, "slot_mask", self._sweep_data.slot_mask)
 
 		if col_ray and col_ray.unit then
-			if self._draw_debug_impact then
-				Draw:brush(Color(0.5, 0, 0, 1), nil, 10):sphere(col_ray.position, 4)
-				Draw:brush(Color(0.5, 1, 0, 0), nil, 10):sphere(self._unit:position(), 3)
-			end
-
 			mvector3.direction(mvec1, self._sweep_data.last_pos, col_ray.position)
 			mvector3.add(mvec1, col_ray.position)
 			self._unit:set_position(mvec1)

@@ -2889,23 +2889,6 @@ function WeaponTweakData:_init_data_turrets()
 	}
 end
 
-function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
-	local low, high = nil
-
-	if selection_index == 2 then
-		low = 0.02
-		high = 0.05
-	else
-		low = 0.02
-		high = 0.05
-	end
-
-	return {
-		max_ammo * low,
-		max_ammo * high
-	}
-end
-
 function WeaponTweakData:_init_new_weapons(weapon_data, tweak_data)
 	local total_damage_primary = 300
 	local total_damage_secondary = 150
@@ -3017,7 +3000,6 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data, tweak_data)
 	self.flamethrower_mk2.CLIP_AMMO_MAX = 150
 	self.flamethrower_mk2.NR_CLIPS_MAX = 4
 	self.flamethrower_mk2.AMMO_MAX = self.flamethrower_mk2.CLIP_AMMO_MAX * self.flamethrower_mk2.NR_CLIPS_MAX
-	self.flamethrower_mk2.AMMO_PICKUP = self:_pickup_chance(0, 1)
 	self.flamethrower_mk2.FIRE_MODE = "auto"
 	self.flamethrower_mk2.fire_mode_data = {
 		fire_rate = 0.03
@@ -3121,7 +3103,6 @@ function WeaponTweakData:_init_c96(weapon_data, tweak_data)
 	self.c96.CLIP_AMMO_MAX = 10
 	self.c96.NR_CLIPS_MAX = 5
 	self.c96.AMMO_MAX = self.c96.CLIP_AMMO_MAX * self.c96.NR_CLIPS_MAX
-	self.c96.AMMO_PICKUP = self:_pickup_chance(self.c96.AMMO_MAX, 1)
 	self.c96.ammo_pickup_base = 10
 	self.c96.FIRE_MODE = "single"
 	self.c96.fire_mode_data = {
@@ -3279,7 +3260,6 @@ function WeaponTweakData:_init_tt33(weapon_data, tweak_data)
 	self.tt33.CLIP_AMMO_MAX = 8
 	self.tt33.NR_CLIPS_MAX = 8
 	self.tt33.AMMO_MAX = self.tt33.CLIP_AMMO_MAX * self.tt33.NR_CLIPS_MAX
-	self.tt33.AMMO_PICKUP = self:_pickup_chance(self.tt33.AMMO_MAX, 1)
 	self.tt33.ammo_pickup_base = 10
 	self.tt33.spread = {}
 	self.tt33.spread = {
@@ -3426,7 +3406,6 @@ function WeaponTweakData:_init_webley(weapon_data, tweak_data)
 	self.webley.CLIP_AMMO_MAX = 6
 	self.webley.NR_CLIPS_MAX = 5
 	self.webley.AMMO_MAX = self.webley.CLIP_AMMO_MAX * self.webley.NR_CLIPS_MAX
-	self.webley.AMMO_PICKUP = self:_pickup_chance(self.webley.AMMO_MAX, 1)
 	self.webley.ammo_pickup_base = 6
 	self.webley.FIRE_MODE = "single"
 	self.webley.fire_mode_data = {
@@ -3579,7 +3558,6 @@ function WeaponTweakData:_init_m1911(weapon_data, tweak_data)
 	self.m1911.CLIP_AMMO_MAX = 7
 	self.m1911.NR_CLIPS_MAX = 8
 	self.m1911.AMMO_MAX = self.m1911.CLIP_AMMO_MAX * self.m1911.NR_CLIPS_MAX
-	self.m1911.AMMO_PICKUP = self:_pickup_chance(self.m1911.AMMO_MAX, 1)
 	self.m1911.ammo_pickup_base = 10
 	self.m1911.spread = {}
 	self.m1911.spread = {
@@ -3725,7 +3703,6 @@ function WeaponTweakData:_init_m1912_winchester(weapon_data, tweak_data)
 	self.m1912.CLIP_AMMO_MAX = 6
 	self.m1912.NR_CLIPS_MAX = 4
 	self.m1912.AMMO_MAX = self.m1912.CLIP_AMMO_MAX * self.m1912.NR_CLIPS_MAX
-	self.m1912.AMMO_PICKUP = self:_pickup_chance(self.m1912.AMMO_MAX, 1)
 	self.m1912.ammo_pickup_base = 3
 	self.m1912.FIRE_MODE = "single"
 	self.m1912.fire_mode_data = {
@@ -3869,7 +3846,6 @@ function WeaponTweakData:_init_ithaca(weapon_data, tweak_data)
 	self.ithaca.CLIP_AMMO_MAX = 6
 	self.ithaca.NR_CLIPS_MAX = 4
 	self.ithaca.AMMO_MAX = self.ithaca.CLIP_AMMO_MAX * self.ithaca.NR_CLIPS_MAX
-	self.ithaca.AMMO_PICKUP = self:_pickup_chance(self.ithaca.AMMO_MAX, 1)
 	self.ithaca.ammo_pickup_base = 3
 	self.ithaca.FIRE_MODE = "single"
 	self.ithaca.fire_mode_data = {
@@ -4010,7 +3986,6 @@ function WeaponTweakData:_init_browning(weapon_data, tweak_data)
 	self.browning.CLIP_AMMO_MAX = 5
 	self.browning.NR_CLIPS_MAX = 4
 	self.browning.AMMO_MAX = self.browning.CLIP_AMMO_MAX * self.browning.NR_CLIPS_MAX
-	self.browning.AMMO_PICKUP = self:_pickup_chance(self.browning.AMMO_MAX, 1)
 	self.browning.ammo_pickup_base = 3
 	self.browning.FIRE_MODE = "single"
 	self.browning.fire_mode_data = {
@@ -4155,7 +4130,6 @@ function WeaponTweakData:_init_welrod(weapon_data, tweak_data)
 	self.welrod.CLIP_AMMO_MAX = 5
 	self.welrod.NR_CLIPS_MAX = 4
 	self.welrod.AMMO_MAX = self.welrod.CLIP_AMMO_MAX * self.welrod.NR_CLIPS_MAX
-	self.welrod.AMMO_PICKUP = self:_pickup_chance(self.welrod.AMMO_MAX, 1)
 	self.welrod.ammo_pickup_base = 3
 	self.welrod.spread = {
 		standing = 2,
@@ -4305,7 +4279,6 @@ function WeaponTweakData:_init_shotty(weapon_data, tweak_data)
 	self.shotty.CLIP_AMMO_MAX = 2
 	self.shotty.NR_CLIPS_MAX = 11
 	self.shotty.AMMO_MAX = self.shotty.CLIP_AMMO_MAX * self.shotty.NR_CLIPS_MAX
-	self.shotty.AMMO_PICKUP = self:_pickup_chance(self.shotty.AMMO_MAX, 1)
 	self.shotty.ammo_pickup_base = 1
 	self.shotty.FIRE_MODE = "single"
 	self.shotty.fire_mode_data = {
@@ -4450,7 +4423,6 @@ function WeaponTweakData:_init_geco(weapon_data, tweak_data)
 	self.geco.CLIP_AMMO_MAX = 2
 	self.geco.NR_CLIPS_MAX = 14
 	self.geco.AMMO_MAX = self.geco.CLIP_AMMO_MAX * self.geco.NR_CLIPS_MAX
-	self.geco.AMMO_PICKUP = self:_pickup_chance(self.geco.AMMO_MAX, 1)
 	self.geco.ammo_pickup_base = 2
 	self.geco.FIRE_MODE = "single"
 	self.geco.fire_mode_data = {
@@ -4588,10 +4560,9 @@ function WeaponTweakData:_init_sten_mk2(weapon_data, tweak_data)
 	}
 	self.sten.headshot_multiplier = 2.5
 	self.sten.CLIP_AMMO_MAX = 32
-	self.sten.NR_CLIPS_MAX = 6
+	self.sten.NR_CLIPS_MAX = 5
 	self.sten.AMMO_MAX = self.sten.CLIP_AMMO_MAX * self.sten.NR_CLIPS_MAX
-	self.sten.AMMO_PICKUP = self:_pickup_chance(self.sten.AMMO_MAX, 2)
-	self.sten.ammo_pickup_base = 19
+	self.sten.ammo_pickup_base = 25
 	self.sten.FIRE_MODE = "auto"
 	self.sten.fire_mode_data = {
 		fire_rate = self:convert_rpm(550)
@@ -4751,7 +4722,7 @@ function WeaponTweakData:_init_thompson(weapon_data, tweak_data)
 	self.thompson.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
 	self.thompson.damage_profile = {
 		{
-			damage = 36,
+			damage = 37,
 			range = 1000
 		},
 		{
@@ -4763,8 +4734,7 @@ function WeaponTweakData:_init_thompson(weapon_data, tweak_data)
 	self.thompson.CLIP_AMMO_MAX = 20
 	self.thompson.NR_CLIPS_MAX = 6
 	self.thompson.AMMO_MAX = self.thompson.CLIP_AMMO_MAX * self.thompson.NR_CLIPS_MAX
-	self.thompson.AMMO_PICKUP = self:_pickup_chance(self.thompson.AMMO_MAX, 2)
-	self.thompson.ammo_pickup_base = 20
+	self.thompson.ammo_pickup_base = 25
 	self.thompson.FIRE_MODE = "auto"
 	self.thompson.fire_mode_data = {
 		fire_rate = self:convert_rpm(720)
@@ -4934,8 +4904,7 @@ function WeaponTweakData:_init_mp38(weapon_data, tweak_data)
 	self.mp38.CLIP_AMMO_MAX = 32
 	self.mp38.NR_CLIPS_MAX = 5
 	self.mp38.AMMO_MAX = self.mp38.CLIP_AMMO_MAX * self.mp38.NR_CLIPS_MAX
-	self.mp38.AMMO_PICKUP = self:_pickup_chance(self.mp38.AMMO_MAX, 2)
-	self.mp38.ammo_pickup_base = 19
+	self.mp38.ammo_pickup_base = 20
 	self.mp38.FIRE_MODE = "auto"
 	self.mp38.fire_mode_data = {
 		fire_rate = self:convert_rpm(520)
@@ -5083,10 +5052,9 @@ function WeaponTweakData:_init_sterling(weapon_data, tweak_data)
 	}
 	self.sterling.headshot_multiplier = 2.5
 	self.sterling.CLIP_AMMO_MAX = 20
-	self.sterling.NR_CLIPS_MAX = 6
+	self.sterling.NR_CLIPS_MAX = 7
 	self.sterling.AMMO_MAX = self.sterling.CLIP_AMMO_MAX * self.sterling.NR_CLIPS_MAX
-	self.sterling.AMMO_PICKUP = self:_pickup_chance(self.sterling.AMMO_MAX, 2)
-	self.sterling.ammo_pickup_base = 20
+	self.sterling.ammo_pickup_base = 25
 	self.sterling.FIRE_MODE = "auto"
 	self.sterling.fire_mode_data = {
 		fire_rate = self:convert_rpm(600)
@@ -5238,7 +5206,6 @@ function WeaponTweakData:_init_m1_carbine(weapon_data, tweak_data)
 	self.carbine.CLIP_AMMO_MAX = 15
 	self.carbine.NR_CLIPS_MAX = 6
 	self.carbine.AMMO_MAX = self.carbine.CLIP_AMMO_MAX * self.carbine.NR_CLIPS_MAX
-	self.carbine.AMMO_PICKUP = self:_pickup_chance(self.carbine.AMMO_MAX, 2)
 	self.carbine.ammo_pickup_base = 15
 	self.carbine.FIRE_MODE = "single"
 	self.carbine.fire_mode_data = {
@@ -5406,10 +5373,6 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 	self.garand.CLIP_AMMO_MAX = 8
 	self.garand.NR_CLIPS_MAX = 7
 	self.garand.AMMO_MAX = self.garand.CLIP_AMMO_MAX * self.garand.NR_CLIPS_MAX
-	self.garand.AMMO_PICKUP = {
-		0.7,
-		1
-	}
 	self.garand.ammo_pickup_base = 8
 	self.garand.FIRE_MODE = "single"
 	self.garand.fire_mode_data = {
@@ -5580,7 +5543,6 @@ function WeaponTweakData:_init_mp44(weapon_data, tweak_data)
 	self.mp44.CLIP_AMMO_MAX = 15
 	self.mp44.NR_CLIPS_MAX = 5
 	self.mp44.AMMO_MAX = self.mp44.CLIP_AMMO_MAX * self.mp44.NR_CLIPS_MAX
-	self.mp44.AMMO_PICKUP = self:_pickup_chance(self.mp44.AMMO_MAX, 2)
 	self.mp44.ammo_pickup_base = 15
 	self.mp44.FIRE_MODE = "auto"
 	self.mp44.fire_mode_data = {
@@ -5738,21 +5700,17 @@ function WeaponTweakData:_init_m1918_bar(weapon_data, tweak_data)
 	self.m1918.damage_profile = {
 		{
 			damage = 58,
-			range = 2400
+			range = 3000
 		},
 		{
 			damage = 40,
-			range = 4000
+			range = 4800
 		}
 	}
 	self.m1918.headshot_multiplier = 3
 	self.m1918.CLIP_AMMO_MAX = 20
 	self.m1918.NR_CLIPS_MAX = 5
 	self.m1918.AMMO_MAX = self.m1918.CLIP_AMMO_MAX * self.m1918.NR_CLIPS_MAX
-	self.m1918.AMMO_PICKUP = {
-		10,
-		1
-	}
 	self.m1918.ammo_pickup_base = 20
 	self.m1918.FIRE_MODE = "auto"
 	self.m1918.fire_mode_data = {
@@ -5877,7 +5835,7 @@ function WeaponTweakData:_init_m1918_bar(weapon_data, tweak_data)
 		spread_moving = 5,
 		alert_size = 8,
 		spread = 5,
-		recoil = 5,
+		recoil = 4,
 		value = 9,
 		extra_ammo = 6,
 		suppression = 6,
@@ -5925,10 +5883,6 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 	self.dp28.CLIP_AMMO_MAX = 47
 	self.dp28.NR_CLIPS_MAX = 3
 	self.dp28.AMMO_MAX = self.dp28.CLIP_AMMO_MAX * self.dp28.NR_CLIPS_MAX
-	self.dp28.AMMO_PICKUP = {
-		10,
-		1
-	}
 	self.dp28.ammo_pickup_base = 20
 	self.dp28.FIRE_MODE = "auto"
 	self.dp28.fire_mode_data = {
@@ -5950,29 +5904,29 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 	self.dp28.spread.per_shot_steelsight = 0.2
 	self.dp28.spread.recovery = 1.6
 	self.dp28.spread.recovery_wait_multiplier = 1.8
-	self.dp28.spread.max = 2.5
+	self.dp28.spread.max = 2.7
 	self.dp28.kick = {
 		standing = {
 			1.7,
-			2,
+			1.85,
 			-2.2,
 			2.2
 		},
 		crouching = {
-			1.7,
-			1.9,
+			1.65,
+			1.8,
 			-2.1,
 			2.1
 		},
 		steelsight = {
 			1.5,
-			1.75,
+			1.7,
 			-1.4,
 			1.4
 		},
 		crouching_steelsight = {
 			1.45,
-			1.7,
+			1.65,
 			-1.2,
 			1.2
 		}
@@ -5980,19 +5934,19 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 	self.dp28.minimum_kick = {
 		standing = {
 			0,
-			0.8
+			0.6
 		},
 		crouching = {
 			0,
-			0.8
+			0.6
 		},
 		steelsight = {
 			0,
-			0.85
+			0.65
 		},
 		crouching_steelsight = {
 			0,
-			0.8
+			0.6
 		}
 	}
 	self.dp28.gun_kick = {
@@ -6046,7 +6000,7 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 		spread_moving = 4,
 		alert_size = 8,
 		spread = 5,
-		recoil = 4,
+		recoil = 5,
 		value = 9,
 		extra_ammo = 6,
 		suppression = 6,
@@ -6082,7 +6036,7 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 	}
 	self.bren.damage_profile = {
 		{
-			damage = 59,
+			damage = 63,
 			range = 2400
 		},
 		{
@@ -6092,12 +6046,8 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 	}
 	self.bren.headshot_multiplier = 3
 	self.bren.CLIP_AMMO_MAX = 20
-	self.bren.NR_CLIPS_MAX = 5
+	self.bren.NR_CLIPS_MAX = 6
 	self.bren.AMMO_MAX = self.bren.CLIP_AMMO_MAX * self.bren.NR_CLIPS_MAX
-	self.bren.AMMO_PICKUP = {
-		10,
-		1
-	}
 	self.bren.ammo_pickup_base = 20
 	self.bren.FIRE_MODE = "auto"
 	self.bren.fire_mode_data = {
@@ -6203,7 +6153,7 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 		total_ammo_mod = 21,
 		spread_moving = 4,
 		alert_size = 8,
-		spread = 5,
+		spread = 4,
 		recoil = 5,
 		value = 9,
 		extra_ammo = 6,
@@ -6256,7 +6206,6 @@ function WeaponTweakData:_init_mg42(weapon_data, tweak_data)
 	self.mg42.CLIP_AMMO_MAX = 50
 	self.mg42.NR_CLIPS_MAX = 4
 	self.mg42.AMMO_MAX = self.mg42.CLIP_AMMO_MAX * self.mg42.NR_CLIPS_MAX
-	self.mg42.AMMO_PICKUP = self:_pickup_chance(self.mg42.AMMO_MAX, 1)
 	self.mg42.ammo_pickup_base = 20
 	self.mg42.FIRE_MODE = "auto"
 	self.mg42.fire_mode_data = {
@@ -6398,10 +6347,6 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data, tweak_data)
 	self.m1903.CLIP_AMMO_MAX = 5
 	self.m1903.NR_CLIPS_MAX = 5
 	self.m1903.AMMO_MAX = self.m1903.CLIP_AMMO_MAX * self.m1903.NR_CLIPS_MAX
-	self.m1903.AMMO_PICKUP = {
-		0.7,
-		1
-	}
 	self.m1903.ammo_pickup_base = 5
 	self.m1903.FIRE_MODE = "single"
 	self.m1903.fire_mode_data = {
@@ -6493,7 +6438,7 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data, tweak_data)
 	self.m1903.weapon_hold = "m1903"
 	self.m1903.animations = {
 		equip_id = "equip_m4",
-		recoil_steelsight = true
+		recoil_steelsight_weight = true
 	}
 	self.m1903.can_shoot_through_enemy = 1
 	self.m1903.can_shoot_through_shield = 0
@@ -6573,10 +6518,6 @@ function WeaponTweakData:_init_kar_98k(weapon_data, tweak_data)
 	self.kar_98k.CLIP_AMMO_MAX = 5
 	self.kar_98k.NR_CLIPS_MAX = 6
 	self.kar_98k.AMMO_MAX = self.kar_98k.CLIP_AMMO_MAX * self.kar_98k.NR_CLIPS_MAX
-	self.kar_98k.AMMO_PICKUP = {
-		0.7,
-		1
-	}
 	self.kar_98k.ammo_pickup_base = 5
 	self.kar_98k.FIRE_MODE = "single"
 	self.kar_98k.fire_mode_data = {
@@ -6668,7 +6609,7 @@ function WeaponTweakData:_init_kar_98k(weapon_data, tweak_data)
 	self.kar_98k.weapon_hold = "kar_98k"
 	self.kar_98k.animations = {
 		equip_id = "kar_98k",
-		recoil_steelsight = true
+		recoil_steelsight_weight = true
 	}
 	self.kar_98k.can_shoot_through_enemy = 1
 	self.kar_98k.can_shoot_through_shield = 0
@@ -6749,10 +6690,6 @@ function WeaponTweakData:_init_lee_enfield(weapon_data, tweak_data)
 	self.lee_enfield.CLIP_AMMO_MAX = 5
 	self.lee_enfield.NR_CLIPS_MAX = 6
 	self.lee_enfield.AMMO_MAX = self.lee_enfield.CLIP_AMMO_MAX * self.lee_enfield.NR_CLIPS_MAX
-	self.lee_enfield.AMMO_PICKUP = {
-		0.7,
-		1
-	}
 	self.lee_enfield.ammo_pickup_base = 5
 	self.lee_enfield.FIRE_MODE = "single"
 	self.lee_enfield.fire_mode_data = {
@@ -6844,7 +6781,7 @@ function WeaponTweakData:_init_lee_enfield(weapon_data, tweak_data)
 	self.lee_enfield.weapon_hold = "lee_enfield"
 	self.lee_enfield.animations = {
 		equip_id = "lee_enfield",
-		recoil_steelsight = true
+		recoil_steelsight_weight = true
 	}
 	self.lee_enfield.can_shoot_through_enemy = 1
 	self.lee_enfield.can_shoot_through_shield = 0
@@ -6921,10 +6858,6 @@ function WeaponTweakData:_init_mosin(weapon_data, tweak_data)
 	self.mosin.CLIP_AMMO_MAX = 5
 	self.mosin.NR_CLIPS_MAX = 5
 	self.mosin.AMMO_MAX = self.mosin.CLIP_AMMO_MAX * self.mosin.NR_CLIPS_MAX
-	self.mosin.AMMO_PICKUP = {
-		0.7,
-		1
-	}
 	self.mosin.ammo_pickup_base = 5
 	self.mosin.FIRE_MODE = "single"
 	self.mosin.fire_mode_data = {
@@ -7016,7 +6949,7 @@ function WeaponTweakData:_init_mosin(weapon_data, tweak_data)
 	self.mosin.weapon_hold = "mosin"
 	self.mosin.animations = {
 		equip_id = "equip_mosin",
-		recoil_steelsight = true
+		recoil_steelsight_weight = true
 	}
 	self.mosin.can_shoot_through_enemy = 1
 	self.mosin.can_shoot_through_shield = 0

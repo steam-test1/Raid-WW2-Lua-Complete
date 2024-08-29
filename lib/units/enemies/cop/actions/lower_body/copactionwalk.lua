@@ -1964,9 +1964,9 @@ function CopActionWalk:_upd_stop_anim_first_frame(t)
 
 	local aaa = nil
 
-	if self._ext_anim.pose and self._haste and self._stop_anim_side then
+	if self._walk_anim_velocities and self._ext_anim.pose and self._haste and self._stop_anim_side then
 		aaa = self._walk_anim_velocities[self._ext_anim.pose]
-		aaa = aaa[self._stance.name]
+		aaa = aaa[self._stance and self._stance.name or "ntl"]
 		aaa = aaa[self._haste]
 		aaa = aaa[self._stop_anim_side]
 	else

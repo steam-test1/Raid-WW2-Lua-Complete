@@ -76,7 +76,8 @@ end
 function SkillTreeManager:save_profile_slot(data)
 	local state = {
 		version = SkillTreeManager.VERSION,
-		purchased_skills = self._global.main_profile_purchased_skills
+		purchased_skills = self._global.main_profile_purchased_skills,
+		purchased_profiles = self._global.main_profile_purchased_profiles
 	}
 	data.SkillTreeManager = state
 end
@@ -94,6 +95,15 @@ function SkillTreeManager:load_profile_slot(data, version)
 	end
 
 	self._global.main_profile_purchased_skills = purchased_skills
+	local purchased_profiles = state and state.purchased_profiles or {}
+
+	for profile_index, cost in ipairs(tweak_data.skilltree.skill_profiles) do
+		if cost == 0 then
+			purchased_profiles[profile_index] = true
+		end
+	end
+
+	self._global.main_profile_purchased_profiles = purchased_profiles
 end
 
 function SkillTreeManager:save_character_slot(data)
@@ -104,7 +114,9 @@ function SkillTreeManager:save_character_slot(data)
 		character_profile_base_class = self._global.character_profile_base_class,
 		base_class_skill_tree = cleaned_save_data_skilltree,
 		base_class_automatic_unlock_progression = self._global.base_class_automatic_unlock_progression,
-		display_stats = self:calculate_stats(self._global.character_profile_base_class)
+		display_stats = self:calculate_stats(self._global.character_profile_base_class),
+		skill_profiles = self._global.character_skill_profiles,
+		active_skill_profile = self._global.character_active_skill_profile
 	}
 	data.SkillTreeManager = state
 end
@@ -127,16 +139,19 @@ function SkillTreeManager:load_character_slot(data, version)
 	self._global.character_profile_base_class = state.character_profile_base_class or SkillTreeTweakData.CLASS_RECON
 	self._global.base_class_skill_tree = state.base_class_skill_tree or deep_clone(tweak_data.skilltree:get_skills_organised(self._global.character_profile_base_class))
 	self._global.base_class_automatic_unlock_progression = state.base_class_automatic_unlock_progression or deep_clone(tweak_data.skilltree.automatic_unlock_progressions[self._global.character_profile_base_class])
+	self._global.character_active_skill_profile = state.active_skill_profile or 1
+	self._global.character_skill_profiles = state.skill_profiles
 
+	self:_update_skill_profile_set()
 	self:_verify_skilltree_data()
 
 	if self._global.base_class_skill_tree then
-		self:_activate_skill_tree(self._global.base_class_skill_tree)
+		self:_activate_skill_tree(self._global.base_class_skill_tree, true)
 	end
 
-	self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level(), nil, true)
-	managers.blackmarket:_verfify_equipped_category(WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME)
-	managers.blackmarket:_verfify_equipped_category(WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME)
+	if managers.player:local_player() then
+		self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level(), nil, true)
+	end
 end
 
 function SkillTreeManager:get_team_buff_upgrades()
@@ -341,6 +356,10 @@ end
 
 function SkillTreeManager:get_character_automatic_unlock_progression(class)
 	return tweak_data.skilltree.automatic_unlock_progressions[class or self:get_character_profile_class()]
+end
+
+function SkillTreeManager:has_character_profile_class()
+	return not not self._global.character_profile_base_class
 end
 
 function SkillTreeManager:get_character_profile_class()
@@ -657,6 +676,9 @@ function SkillTreeManager:set_character_profile_base_class(character_profile_bas
 	self._global.character_profile_base_class = character_profile_base_class
 	self._global.base_class_skill_tree = self:_required_save_data(deep_clone(skill_tree))
 	self._global.base_class_automatic_unlock_progression = deep_clone(self:get_character_automatic_unlock_progression(character_profile_base_class))
+
+	self:_update_skill_profile_set()
+
 	local apply_acquires = not skip_aquire
 	local default_warcry = "warcry_" .. tweak_data.skilltree.class_warcry_data[character_profile_base_class][1]
 
@@ -679,10 +701,12 @@ function SkillTreeManager:reset_skills()
 	Application:debug("[SkillTreeManager:reset_skills] ver.", SkillTreeManager.VERSION, "(was", Global.skilltree_manager and Global.skilltree_manager.VERSION, ")")
 
 	local purchased_skills = self._global.main_profile_purchased_skills or {}
+	local purchased_profiles = self._global.main_profile_purchased_profiles or {}
 	Global.skilltree_manager = {
 		reset_message = false,
 		VERSION = SkillTreeManager.VERSION,
-		main_profile_purchased_skills = purchased_skills
+		main_profile_purchased_skills = purchased_skills,
+		main_profile_purchased_profiles = purchased_profiles
 	}
 	self._global = Global.skilltree_manager
 end
@@ -691,6 +715,17 @@ function SkillTreeManager:toggle_skill_by_id(skill_type, skill_id, apply_acquire
 	Application:debug("[SkillTreeManager:toggle_skill_by_id] ---- ", skill_type, skill_id, apply_acquires, activate)
 
 	local skill_entries = self._global.base_class_skill_tree[skill_type]
+	local skill_entry = skill_entries[skill_id]
+	local profile = self:get_active_skill_profile()
+	local equipped_skills = profile.equipped_skills[skill_entry.upgrades_type]
+
+	if activate then
+		if not table.contains(equipped_skills, skill_id) then
+			table.insert(equipped_skills, skill_id)
+		end
+	else
+		table.delete(equipped_skills, skill_id)
+	end
 
 	if activate then
 		if skill_type == SkillTreeTweakData.TYPE_TALENT then
@@ -703,15 +738,14 @@ function SkillTreeManager:toggle_skill_by_id(skill_type, skill_id, apply_acquire
 				return
 			end
 		elseif skill_type == SkillTreeTweakData.TYPE_WARCRY or skill_type == SkillTreeTweakData.TYPE_BOOSTS then
-			for skill_id, skill_entry in pairs(skill_entries) do
-				if skill_entry.active then
-					self:_activate_skill(skill_id, skill_entry, false, false)
+			for skill_id, entry in pairs(skill_entries) do
+				if entry.active then
+					self:_activate_skill(skill_id, entry, false, false)
+					table.delete(equipped_skills, skill_id)
 				end
 			end
 		end
 	end
-
-	local skill_entry = skill_entries[skill_id]
 
 	self:_activate_skill(skill_id, skill_entry, apply_acquires, activate)
 end
@@ -807,9 +841,6 @@ function SkillTreeManager:apply_automatic_unlocks_for_level(level, category_to_a
 end
 
 function SkillTreeManager:_activate_skill(skill_id, savedata_skill_data, apply_acquires, activate)
-	Application:debug("[SkillTreeManager:_activate_skill] savedata_skill_data", skill_id, inspect(savedata_skill_data))
-	Application:debug("[SkillTreeManager:_activate_skill] activating...", inspect(savedata_skill_data))
-
 	savedata_skill_data.active = activate
 	local tweakdata_skill_data = tweak_data.skilltree.skills[skill_id]
 	local upgrades = {}
@@ -849,29 +880,8 @@ function SkillTreeManager:_apply_upgrades(upgrades, apply_acquires, activate)
 	end
 end
 
-function SkillTreeManager:on_respec_tree()
-	MenuCallbackHandler:_update_outfit_information()
-
-	if IS_PC then
-		managers.statistics:publish_skills_to_steam()
-	end
-end
-
-function SkillTreeManager:check_reset_message()
-	local show_reset_message = self._global.reset_message and true or false
-	show_reset_message = true
-
-	if show_reset_message then
-		managers.menu:show_skilltree_reseted()
-
-		self._global.reset_message = false
-
-		MenuCallbackHandler:save_progress()
-	end
-end
-
 function SkillTreeManager:pack_to_string()
-	local packed_string = managers.skilltree:get_character_profile_class()
+	local packed_string = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
 
 	return packed_string
 end
@@ -882,14 +892,151 @@ function SkillTreeManager:pack_to_string_from_list(list)
 	return packed_string
 end
 
-function SkillTreeManager:_activate_skill_tree(skill_tree)
+function SkillTreeManager:_activate_skill_tree(skill_tree, activate)
 	local skill_tree_tweakdata = tweak_data.skilltree:get_skills_organised(self:get_character_profile_class())
 
 	for type_idx, group in ipairs(skill_tree_tweakdata) do
 		for skill_id, _ in pairs(group) do
 			if skill_tree[type_idx] and skill_tree[type_idx][skill_id].active then
+				self:_activate_skill(skill_id, skill_tree[type_idx][skill_id], false, activate)
+			end
+		end
+	end
+end
+
+function SkillTreeManager:active_skill_profile(index)
+	local skill_tree = self._global.base_class_skill_tree
+
+	if self._global.character_active_skill_profile then
+		local old_profile = self._global.character_skill_profiles[self._global.character_active_skill_profile]
+
+		for type_idx, group in ipairs(old_profile.equipped_skills) do
+			for _, skill_id in ipairs(group) do
+				if skill_tree[type_idx] and skill_tree[type_idx][skill_id] then
+					self:_activate_skill(skill_id, skill_tree[type_idx][skill_id], false, false)
+				end
+			end
+		end
+	end
+
+	local profile = self._global.character_skill_profiles[index]
+
+	if not profile or not profile.equipped_skills then
+		return
+	end
+
+	self._global.character_active_skill_profile = index
+
+	for type_idx, group in ipairs(profile.equipped_skills) do
+		for _, skill_id in ipairs(group) do
+			if skill_tree[type_idx] and skill_tree[type_idx][skill_id] then
 				self:_activate_skill(skill_id, skill_tree[type_idx][skill_id], false, true)
 			end
+		end
+	end
+
+	self:_verify_skilltree_data()
+end
+
+function SkillTreeManager:purchase_skill_profile(index)
+	if self._global.main_profile_purchased_profiles[index] then
+		return false
+	end
+
+	local profile_cost = tweak_data.skilltree.skill_profiles[index]
+
+	if profile_cost and profile_cost <= managers.gold_economy:current() then
+		if profile_cost > 0 then
+			managers.gold_economy:spend_gold(profile_cost, false)
+		else
+			Application:warn("[SkillTreeManager:purchase_skill_profile] Bought a skill profile that was free somehow! " .. index)
+		end
+
+		self._global.main_profile_purchased_profiles[index] = true
+
+		managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+
+		return true
+	end
+
+	return false
+end
+
+function SkillTreeManager:is_skill_profile_purchased(index)
+	return self._global.main_profile_purchased_profiles[index]
+end
+
+function SkillTreeManager:get_skill_profile(index)
+	return self._global.character_skill_profiles[index]
+end
+
+function SkillTreeManager:get_skill_profile_name(index)
+	local profile = self._global.character_skill_profiles[index]
+
+	return profile.name or managers.localization:text("skill_profile_name", {
+		NUMBER = index
+	})
+end
+
+function SkillTreeManager:get_active_skill_profile()
+	return self._global.character_skill_profiles[self._global.character_active_skill_profile]
+end
+
+function SkillTreeManager:get_active_skill_profile_index()
+	return self._global.character_active_skill_profile or 1
+end
+
+function SkillTreeManager:get_active_skill_profile_name()
+	local index = self:get_active_skill_profile_index()
+
+	return self:get_skill_profile_name(index)
+end
+
+function SkillTreeManager:_update_skill_profile_set()
+	if not self._global.character_skill_profiles then
+		self._global.character_skill_profiles = {}
+		self._global.character_active_skill_profile = 1
+		local skill_tree = self:get_skills_applied_grouped()
+		local profile = {
+			equipped_skills = {}
+		}
+
+		for type_idx, group in ipairs(skill_tree) do
+			if type_idx == SkillTreeTweakData.TYPE_WARCRY or type_idx == SkillTreeTweakData.TYPE_BOOSTS or type_idx == SkillTreeTweakData.TYPE_TALENT then
+				local skill_group = {}
+				profile.equipped_skills[type_idx] = skill_group
+
+				for skill_id, skill in pairs(group) do
+					if skill.active then
+						local skill_tweak = tweak_data.skilltree.skills[skill_id]
+
+						if skill_tweak and skill_tweak.upgrades_type == type_idx then
+							table.insert(skill_group, skill_id)
+						end
+					end
+				end
+			end
+		end
+
+		table.insert(self._global.character_skill_profiles, profile)
+	end
+
+	local num_profiles = #self._global.character_skill_profiles
+
+	if num_profiles < #tweak_data.skilltree.skill_profiles then
+		local default_warcry = "warcry_" .. tweak_data.skilltree.class_warcry_data[self._global.character_profile_base_class][1]
+
+		for i = num_profiles + 1, #tweak_data.skilltree.skill_profiles do
+			local profile = {
+				equipped_skills = {}
+			}
+			profile.equipped_skills[SkillTreeTweakData.TYPE_WARCRY] = {
+				default_warcry
+			}
+			profile.equipped_skills[SkillTreeTweakData.TYPE_BOOSTS] = {}
+			profile.equipped_skills[SkillTreeTweakData.TYPE_TALENT] = {}
+
+			table.insert(self._global.character_skill_profiles, profile)
 		end
 	end
 end

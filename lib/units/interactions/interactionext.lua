@@ -1943,6 +1943,7 @@ function CarryInteractionExt:_is_cooldown_or_zipline()
 end
 
 function CarryInteractionExt:interact(player)
+	Application:warn("[CarryInteractionExt:interact] player", player)
 	CarryInteractionExt.super.super.interact(self, player)
 	self._unit:carry_data():on_pickup()
 	managers.player:add_carry(self._unit:carry_data():carry_id(), self._unit:carry_data():multiplier())
@@ -2850,35 +2851,51 @@ function GreedCacheItemInteractionExt:_get_interaction_details()
 	return details
 end
 
-ConsumableMissionInteractionExt = ConsumableMissionInteractionExt or class(UseInteractionExt)
+SecretDocumentInteractionExt = SecretDocumentInteractionExt or class(UseInteractionExt)
 
-function ConsumableMissionInteractionExt:interact(player)
-	Application:debug("[ConsumableMissionInteractionExt:interact] called : called consumable mission interaction!")
-	ConsumableMissionInteractionExt.super.interact(self, player)
+function SecretDocumentInteractionExt:interact(player)
+	Application:debug("[SecretDocumentInteractionExt]", self._tweak_data and self._tweak_data.reward_type)
+	SecretDocumentInteractionExt.super.interact(self, player)
 
+	local notification_data = nil
+
+	if self._tweak_data.reward_type == "outlaw" then
+		notification_data = self:_interact_reward_outlaw(player)
+	else
+		debug_pause("[SecretDocumentInteractionExt] Invalid lore here! By player", self._unit, player)
+	end
+
+	if notification_data then
+		managers.notification:add_notification(notification_data)
+	end
+end
+
+function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	local chosen_consumable = tweak_data.operations:get_random_unowned_consumable_raid()
 
 	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
+		doc_text = "hud_hint_consumable_mission_secured",
+		priority = 3,
+		doc_icon = "notification_consumable",
 		id = "hud_hint_consumable_mission",
 		duration = 4,
-		priority = 3,
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 
-	managers.notification:add_notification(notification_data)
+	return notification_data
 end
 
-function ConsumableMissionInteractionExt:can_interact(player)
-	if managers.consumable_missions:is_all_missions_unlocked() then
+function SecretDocumentInteractionExt:can_interact(player)
+	if self._tweak_data.reward_type == "outlaw" and managers.consumable_missions:is_all_missions_unlocked() then
 		return false
 	end
 
-	return ConsumableMissionInteractionExt.super.can_interact(self, player)
+	return SecretDocumentInteractionExt.super.can_interact(self, player)
 end
 
-function ConsumableMissionInteractionExt:on_load_complete()
+function SecretDocumentInteractionExt:on_load_complete()
 	local world_id = managers.worldcollection:get_worlddefinition_by_unit_id(self._unit:unit_data().unit_id):world_id()
 
 	managers.consumable_missions:register_document(self._unit, world_id)

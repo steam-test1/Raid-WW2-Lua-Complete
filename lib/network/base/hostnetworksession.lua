@@ -36,7 +36,7 @@ end
 function HostNetworkSession:create_local_peer(load_outfit)
 	if Application:editor() then
 		managers.blackmarket:aquire_default_weapons()
-		managers.blackmarket:_verfify_equipped()
+		managers.blackmarket:_verify_equipped()
 	end
 
 	HostNetworkSession.super.create_local_peer(self, load_outfit)

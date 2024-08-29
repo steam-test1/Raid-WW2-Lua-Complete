@@ -127,7 +127,7 @@ function GuiTweakData:_setup_hud_colors()
 			color = self.colors.progress_red
 		},
 		{
-			start_percentage = 0.25,
+			start_percentage = 0.5,
 			color = self.colors.light_grey
 		}
 	}
@@ -203,11 +203,22 @@ function GuiTweakData:_setup_hud_colors()
 			color = self.colors.progress_red
 		}
 	}
+	local color = self.colors.grid_item_grey
+	self.colors.list_item_background = {
+		0,
+		color:with_alpha(0),
+		0.1,
+		color,
+		0.9,
+		color,
+		1,
+		color:with_alpha(0)
+	}
 end
 
 function GuiTweakData.get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
+		if color_table[i].start_percentage < (percentage or 0.5) then
 			return color_table[i].color
 		end
 	end
@@ -2248,6 +2259,60 @@ function GuiTweakData:_setup_icons()
 			64,
 			32,
 			32
+		}
+	}
+	self.icons.list_btn_context_bg = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			0,
+			96,
+			48,
+			48
+		}
+	}
+	self.icons.list_btn_context_fg = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			0,
+			144,
+			48,
+			48
+		}
+	}
+	self.icons.list_separator_left = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			64,
+			150,
+			30,
+			2
+		}
+	}
+	self.icons.list_separator_right = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			98,
+			150,
+			30,
+			2
+		}
+	}
+	self.icons.list_separator_center = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			94,
+			150,
+			4,
+			2
+		}
+	}
+	self.icons.arrow_down = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			0,
+			192,
+			25,
+			25
 		}
 	}
 	local wpnskl_x = 40
@@ -4396,12 +4461,12 @@ function GuiTweakData:_setup_hud_icons()
 		}
 	}
 	self.icons.notification_consumable = {
-		texture = "ui/atlas/raid_atlas_hud",
+		texture = "ui/atlas/raid_atlas_notification_intel",
 		texture_rect = {
-			731,
-			963,
-			228,
-			316
+			0,
+			0,
+			256,
+			256
 		}
 	}
 	self.icons.objecives_new_empty_frame = {
@@ -5405,6 +5470,24 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
 			96,
+			992,
+			32,
+			32
+		}
+	}
+	self.icons.indicator_hit_armor = {
+		texture = "ui/atlas/raid_atlas_waypoints",
+		texture_rect = {
+			128,
+			992,
+			32,
+			32
+		}
+	}
+	self.icons.indicator_hit_weakness = {
+		texture = "ui/atlas/raid_atlas_waypoints",
+		texture_rect = {
+			160,
 			992,
 			32,
 			32

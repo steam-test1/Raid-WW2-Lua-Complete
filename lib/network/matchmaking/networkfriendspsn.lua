@@ -125,8 +125,6 @@ function NetworkFriendsPSN:get_friends()
 					online_status = "in_group"
 				elseif managers.network:session() and managers.network:session():is_kicked(tostring(v.friend)) then
 					online_status = "banned"
-				elseif managers.network.group:find(v.friend) then
-					online_status = "in_group"
 				elseif v.status == 0 then
 					-- Nothing
 				elseif v.status == 1 then

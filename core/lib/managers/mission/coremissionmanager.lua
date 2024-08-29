@@ -128,7 +128,7 @@ function MissionManager:_activate_mission(name)
 end
 
 function MissionManager:activate_script(name, ...)
-	Application:debug("[MissionManager:activate_script]", Global.running_simulation, name, inspect(self))
+	Application:debug("[MissionManager:activate_script] Simulating:", Global.running_simulation, "| Name:", name, inspect(self))
 
 	if not self._scripts[name] then
 		if Global.running_simulation then
@@ -140,6 +140,7 @@ function MissionManager:activate_script(name, ...)
 		end
 	end
 
+	Application:debug("[MissionManager:activate_script] Good to activate " .. name)
 	self._scripts[name]:activate(...)
 end
 

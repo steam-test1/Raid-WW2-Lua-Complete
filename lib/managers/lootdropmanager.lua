@@ -137,7 +137,7 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 								break
 							end
 
-							local current_job = managers.raid_job:current_job()
+							local current_job = managers.raid_job:current_job() or managers.raid_job:previously_completed_job()
 
 							if current_job and current_job.job_type then
 								if condition == LootDropTweakData.DROP_CONDITION_IS_RAID and current_job.job_type ~= OperationsTweakData.JOB_TYPE_RAID then

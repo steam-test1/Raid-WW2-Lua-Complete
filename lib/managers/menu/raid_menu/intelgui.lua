@@ -25,13 +25,12 @@ end
 
 function IntelGui:_layout_tab_categories()
 	local category_tabs_params = {
+		tab_align = "center",
 		name = "category_tabs",
 		tab_width = 220,
 		initial_tab_idx = 1,
-		tab_align = "center",
 		tab_height = 64,
 		y = 80,
-		x = 0,
 		tab_font_size = tweak_data.gui.font_sizes.small,
 		on_click_callback = callback(self, self, "on_intel_category_selected"),
 		parent_control_ref = self,
@@ -54,22 +53,19 @@ function IntelGui:_layout_list()
 	local category_items_list_scrollable_area_params = {
 		scrollbar_width = 10,
 		name = "category_items_list_scrollable_area",
-		h = 752,
+		h = 700,
 		y = 192,
-		w = 384,
-		x = 0,
+		w = 460,
 		scroll_step = 19
 	}
 	self._category_items_list_scrollable_area = self._root_panel:scrollable_area(category_items_list_scrollable_area_params)
 	local category_items_list_params = {
 		selection_enabled = true,
 		name = "category_items_list",
-		w = 384,
-		on_mouse_over_sound_event = "highlight",
-		y = 0,
 		item_h = 62,
-		x = 0,
+		on_mouse_over_sound_event = "highlight",
 		use_unlocked = false,
+		w = category_items_list_scrollable_area_params.w,
 		item_font = tweak_data.gui.fonts.lato,
 		item_font_size = tweak_data.gui.font_sizes.size_24,
 		on_item_clicked_callback = callback(self, self, "on_item_clicked_category_items_list"),
@@ -138,19 +134,11 @@ function IntelGui:data_source_category_items_list()
 			end
 
 			if is_unlocked then
-				if #result == 0 then
-					table.insert(result, {
-						selected = true,
-						text = self:translate(list_item_data.list_item_name_id, false),
-						value = list_item_data.id
-					})
-				else
-					table.insert(result, {
-						selected = false,
-						text = self:translate(list_item_data.list_item_name_id, false),
-						value = list_item_data.id
-					})
-				end
+				table.insert(result, {
+					text = self:translate(list_item_data.list_item_name_id, false),
+					value = list_item_data.id,
+					selected = #result == 0
+				})
 			end
 		end
 	end
@@ -159,6 +147,7 @@ function IntelGui:data_source_category_items_list()
 end
 
 function IntelGui:_list_item_selected(list_item_value)
+	Application:trace("[IntelGui:_list_item_selected] list_item_value ", list_item_value)
 	self:_show_selected_list_item_data(list_item_value)
 end
 
@@ -201,6 +190,8 @@ function IntelGui:_create_category_controls(selected_category)
 end
 
 function IntelGui:_setup_category_controls(selected_category)
+	Application:info("[IntelGui:_setup_category_controls] selected_category ", selected_category)
+
 	if selected_category == IntelGui.CATEGORY_BULLETINS then
 		self._active_category_control = self._bulletins_control
 
@@ -241,6 +232,7 @@ function IntelGui:_setup_category_controls(selected_category)
 		self._raid_personel_control:set_visible(false)
 		self._opposite_forces_control:set_visible(false)
 		self._control_archive_control:set_visible(true)
+		self._secret_files_control:set_visible(false)
 	end
 end
 

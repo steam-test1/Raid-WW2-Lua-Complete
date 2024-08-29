@@ -18,6 +18,10 @@ function PlayerTurret:enter(state_data, enter_data)
 	self._turret_overheated = false
 	self._turret_weapon._mode = "player"
 	local turret_weapon_name = self._turret_weapon:get_name_id()
+	local turret_tweak_data = tweak_data.weapon[turret_weapon_name]
+
+	Application:info("[PlayerTurret] Entered", turret_weapon_name, inspect(turret_tweak_data))
+
 	self._use_dof = tweak_data.weapon[turret_weapon_name].use_dof or false
 	self._exit_turret_timer = tweak_data.weapon[turret_weapon_name].exit_turret_speed or 1
 	self._camera_limit_h = tweak_data.weapon[turret_weapon_name].camera_limit_horizontal or 45
@@ -36,7 +40,7 @@ function PlayerTurret:enter(state_data, enter_data)
 	self._turret_unit:interaction():set_active(false, true)
 	self._turret_weapon:set_active(true)
 	managers.network:session():send_to_peers_synched("sync_ground_turret_activate", self._turret_unit)
-	managers.hud:show_turret_hud(self._turret_unit, tweak_data.weapon[turret_weapon_name].bullet_type)
+	managers.hud:show_turret_hud(self._turret_unit, turret_tweak_data.bullet_type)
 	managers.hud:set_player_turret_overheating(self._turret_weapon:is_overheating())
 	self._ext_camera:set_shaker_parameter("breathing", "amplitude", 0)
 
@@ -133,7 +137,7 @@ function PlayerTurret:exit(state_data, new_state_name)
 	self:_start_action_equip()
 
 	if self._player_original_position then
-		self._unit:warp_to(self._unit:rotation(), self._unit:position() - self._player_original_position)
+		self._unit:warp_to(self._unit:rotation(), self._player_original_position)
 	end
 
 	if self._announce_shooting then
@@ -476,8 +480,8 @@ function PlayerTurret:_postion_player()
 
 	self._unit:set_rotation(rot)
 
+	self._player_original_position = self._unit:position()
 	local pos = self._fps_obj:position()
-	self._player_original_position = pos - self._unit:position()
 
 	self._unit:set_position(pos)
 	self._ext_camera:set_rotation(rot)
@@ -503,12 +507,4 @@ function PlayerTurret:pre_destroy(unit)
 end
 
 function PlayerTurret:destroy()
-end
-
-function PlayerTurret:_debug_draw_positions()
-	Application:trace([[
-
------
-PlayerTurret:_postion_player 
- turret rot ]], self._turret_unit:rotation(), "\n turret yaw: ", self._turret_unit:rotation():yaw(), "\n turret y: ", self._turret_unit:rotation():y(), "\n turret spin: ", self._turret_unit:rotation():y():to_polar().spin, "\n\n player rot: ", self._unit:movement():m_head_rot(), "\n player yaw: ", self._unit:movement():m_head_rot():yaw(), "\n player y: ", self._unit:movement():m_head_rot():y(), "\n player spin: ", self._unit:movement():m_head_rot():y():to_polar().spin, "\n\n joint heading rot: ", self._joint_heading:rotation(), "\n joint heading yaw: ", self._joint_heading:rotation():yaw(), "\n joint heading y: ", self._joint_heading:rotation():y(), "\n joint heading spin: ", self._joint_heading:rotation():y():to_polar().spin, "\n\n joint local heading rot: ", self._joint_heading:local_rotation(), "\n joint local heading yaw: ", self._joint_heading:local_rotation():yaw(), "\n joint local heading y: ", self._joint_heading:local_rotation():y(), "\n joint local heading spin: ", self._joint_heading:local_rotation():y():to_polar().spin, "\n\n joint local pitch rot: ", self._joint_pitch:local_rotation(), "\n joint local pitch yaw: ", self._joint_pitch:local_rotation():yaw(), "\n joint local pitch y: ", self._joint_pitch:local_rotation():y(), "\n joint local pitch spin: ", self._joint_pitch:local_rotation():y():to_polar().spin)
 end

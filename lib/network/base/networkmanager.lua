@@ -4,14 +4,10 @@ require("lib/network/base/HostNetworkSession")
 require("lib/network/matchmaking/NetworkAccount")
 require("lib/network/matchmaking/NetworkAccountPSN")
 require("lib/network/matchmaking/NetworkAccountSTEAM")
-require("lib/network/matchmaking/NetworkAccountSTEAMDebug")
 require("lib/network/matchmaking/NetworkAccountXBL")
 require("lib/network/matchmaking/NetworkFriend")
 require("lib/network/matchmaking/NetworkFriendsPSN")
 require("lib/network/matchmaking/NetworkFriendsXBL")
-require("lib/network/matchmaking/NetworkGenericPSN")
-require("lib/network/matchmaking/NetworkGroupLobby")
-require("lib/network/matchmaking/NetworkGroupLobbyPSN")
 require("lib/network/matchmaking/NetworkMatchMaking")
 require("lib/network/matchmaking/NetworkMatchMakingPSN")
 require("lib/network/matchmaking/NetworkMatchMakingSTEAM")
@@ -116,16 +112,10 @@ function NetworkManager:_create_lobby()
 		cat_print("lobby", "Online Lobby is PS4")
 
 		self.friends = NetworkFriendsPSN:new()
-		self.group = NetworkGroupLobbyPSN:new()
 		self.matchmake = NetworkMatchMakingPSN:new()
-		self.shared_psn = NetworkGenericPSN:new()
-		self.shared = self.shared_psn
 		self.account = NetworkAccountPSN:new()
-		self.match = nil
 
 		self:psn_determine_voice()
-
-		self._shared_update = self.shared_psn
 	elseif IS_XB1 then
 		self.friends = NetworkFriendsXBL:new()
 		self.matchmake = NetworkMatchMakingXBL:new()

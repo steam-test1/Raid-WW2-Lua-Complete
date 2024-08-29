@@ -32,6 +32,12 @@ function RaidGUIControlLabel:init(parent, params)
 
 	self._object = self._panel:text(self._params)
 
+	if self._params.fit_text then
+		local x, y, w, h = self._object:text_rect()
+
+		self._object:set_size(w, h)
+	end
+
 	if self._params.text_padding then
 		self._params.x = self._params.x - self._params.text_padding
 
@@ -47,6 +53,12 @@ end
 
 function RaidGUIControlLabel:set_text(text)
 	self._object:set_text(text)
+
+	if self._params.fit_text then
+		local x, y, w, h = self._object:text_rect()
+
+		self._object:set_size(w, h)
+	end
 end
 
 function RaidGUIControlLabel:text()

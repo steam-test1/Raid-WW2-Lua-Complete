@@ -213,7 +213,9 @@ function UnitNetworkHandler:skill_action_knockdown(unit, hit_position, direction
 		return
 	end
 
-	CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_type)
+	if alive(unit) then
+		CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_type)
+	end
 end
 
 function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, sender)
@@ -789,7 +791,7 @@ end
 function UnitNetworkHandler:sync_teammate_start_progress(timer, interact_unit, sender)
 	local sender_peer = self._verify_sender(sender)
 
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not sender_peer then
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not sender_peer or not sender_peer:unit() or not sender_peer:unit():unit_data() then
 		return
 	end
 
@@ -802,7 +804,7 @@ end
 function UnitNetworkHandler:sync_teammate_cancel_progress(sender)
 	local sender_peer = self._verify_sender(sender)
 
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not sender_peer then
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not sender_peer or not sender_peer:unit() or not sender_peer:unit():unit_data() then
 		return
 	end
 
@@ -815,7 +817,7 @@ end
 function UnitNetworkHandler:sync_teammate_complete_progress(sender)
 	local sender_peer = self._verify_sender(sender)
 
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not sender_peer then
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not sender_peer or not sender_peer:unit() or not sender_peer:unit():unit_data() then
 		return
 	end
 
@@ -920,6 +922,7 @@ function UnitNetworkHandler:set_stance(unit, stance_code, instant, execute_queue
 		return
 	end
 
+	Application:debug("[UnitNetworkHandler:set_stance] unit, stance_code, instant, execute_queued, sender:", unit, stance_code, instant, execute_queued, sender)
 	unit:movement():sync_stance(stance_code, instant, execute_queued)
 end
 
@@ -1809,7 +1812,7 @@ function UnitNetworkHandler:set_player_nationality(unit, nationality, unit_id_st
 	local panel_id = character_data and character_data.panel_id
 
 	if panel_id then
-		managers.hud:set_teammate_nationality(panel_id, level)
+		managers.hud:set_teammate_nationality(panel_id, nationality)
 	end
 end
 

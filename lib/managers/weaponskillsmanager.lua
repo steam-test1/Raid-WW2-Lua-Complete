@@ -333,20 +333,26 @@ function WeaponSkillsManager:update_weapon_challenges(weapon_id)
 			for skill_index, skill in pairs(tier_skills) do
 				if skill[1].challenge_id then
 					local challenge_from_manager = managers.challenge._challenges[ChallengeManager.CATEGORY_WEAPON_UPGRADE][skill[1].challenge_id]
+					local tweak_data_challenge_data = tweak_data.weapon_skills.skill_trees[weapon_id][tier_index][skill_index][1]
+					skill[1].challenge_briefing_id = tweak_data_challenge_data.challenge_briefing_id
+					skill[1].challenge_done_text_id = tweak_data_challenge_data.challenge_done_text_id
+					skill[1].weapon_parts = tweak_data_challenge_data.weapon_parts
 
-					if challenge_from_manager._state and challenge_from_manager._state ~= "completed" then
-						local tweak_data_challenge_data = tweak_data.weapon_skills.skill_trees[weapon_id][tier_index][skill_index][1].challenge_tasks[1]
-						skill[1].challenge_tasks[1].target = tweak_data_challenge_data.target
-						skill[1].challenge_tasks[1].reminders = tweak_data_challenge_data.reminders
-						challenge_from_manager._tasks[1]._target = tweak_data_challenge_data.target
-						challenge_from_manager._tasks[1]._reminders = tweak_data_challenge_data.reminders
+					if challenge_from_manager._state then
+						local tweak_task_data = tweak_data_challenge_data.challenge_tasks[1]
+						skill[1].challenge_tasks[1].target = tweak_task_data.target
+						skill[1].challenge_tasks[1].reminders = tweak_task_data.reminders
+						challenge_from_manager._tasks[1]._target = tweak_task_data.target
+						challenge_from_manager._tasks[1]._reminders = tweak_task_data.reminders
 
-						if tweak_data_challenge_data.modifiers then
-							challenge_from_manager._tasks[1]._modifiers = tweak_data_challenge_data.modifiers
-							skill[1].challenge_tasks[1].modifiers = tweak_data_challenge_data.modifiers
+						if tweak_task_data.modifiers then
+							challenge_from_manager._tasks[1]._modifiers = tweak_task_data.modifiers
+							skill[1].challenge_tasks[1].modifiers = tweak_task_data.modifiers
 						end
 
-						if challenge_from_manager._tasks[1]._target <= challenge_from_manager._tasks[1]._count then
+						if challenge_from_manager._state == "completed" then
+							challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
+						elseif challenge_from_manager._tasks[1]._target <= challenge_from_manager._tasks[1]._count then
 							challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
 
 							challenge_from_manager:force_complete()
@@ -1041,9 +1047,10 @@ end
 
 function WeaponSkillsManager:recreate_all_weapons_blueprints(weapon_category_id)
 	local datasource = managers.weapon_inventory:get_owned_weapons(weapon_category_id)
+	local apply_blueprint = true
 
 	for index, weapon_data in pairs(datasource) do
-		self:recreate_weapon_blueprint(weapon_data.weapon_id, weapon_category_id, nil, true)
+		self:recreate_weapon_blueprint(weapon_data.weapon_id, weapon_category_id, nil, apply_blueprint)
 	end
 end
 

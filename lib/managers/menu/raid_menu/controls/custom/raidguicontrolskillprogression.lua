@@ -48,7 +48,7 @@ function RaidGUIControlSkillProgression:_init_control_panel()
 end
 
 function RaidGUIControlSkillProgression:_init_skill_icon()
-	local gui_icon_data = tweak_data.gui:get_full_gui_data("skills_dealing_damage_headshot_multiplier_large")
+	local gui_icon_data = tweak_data.gui:get_full_gui_data("skills_placeholder")
 	local size = self._object:w() * 0.65
 	self._skill_icon = self._object:bitmap({
 		name = "skill_icon",

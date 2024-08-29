@@ -180,6 +180,7 @@ function RaidJobManager:start_selected_job()
 	Global.player_manager.game_settings_difficulty = Global.game_settings.difficulty
 	self._current_job = self._selected_job
 	self._selected_job = nil
+	self._previously_completed_job = nil
 
 	managers.statistics:start_session({
 		drop_in = false,
@@ -271,6 +272,10 @@ end
 
 function RaidJobManager:selected_job_id()
 	return self._selected_job and self._selected_job.job_id
+end
+
+function RaidJobManager:previously_completed_job()
+	return self._previously_completed_job
 end
 
 function RaidJobManager:current_job()
@@ -661,10 +666,6 @@ function RaidJobManager:external_end_mission_clbk()
 	end
 
 	if self._tutorial_spawned then
-		tutorial_wp._action = "despawn"
-
-		tutorial_wp:on_executed()
-
 		if self:is_in_tutorial() then
 			self:restart_camp()
 		end
@@ -892,19 +893,24 @@ function RaidJobManager:start_event(event_id)
 end
 
 function RaidJobManager:complete_job()
-	if Network:is_server() and self._current_job then
-		Application:debug("[RaidJobManager:job_completion_trail] (HOST) complete the whole job (raid finished or operation completed)")
+	if Network:is_server() then
+		if self._current_job then
+			Application:debug("[RaidJobManager:job_completion_trail] (HOST) complete the whole job (raid finished or operation completed)")
 
-		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-			self:delete_save(self._current_save_slot)
+			if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+				self:delete_save(self._current_save_slot)
+			end
+
+			managers.network:session():send_to_peers_synched("sync_complete_job")
+		else
+			Application:warn("[RaidJobManager:job_completion_trail] (HOST) No job to complete? -> self._current_job", self._current_job)
 		end
-
-		managers.network:session():send_to_peers_synched("sync_complete_job")
 	else
 		Application:debug("[RaidJobManager:job_completion_trail] (CLIENT) complete the whole job (raid finished or operation completed)")
 	end
 
 	self._current_save_slot = nil
+	self._previously_completed_job = self._current_job
 	self._current_job = nil
 	self._loot_data = {}
 

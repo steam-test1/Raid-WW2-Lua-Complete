@@ -238,8 +238,8 @@ end
 
 function PlayerTweakData:get_tweak_data_for_class(class)
 	if not class or not self.class_defaults[class] then
-		Application:error("[PlayerTweakData] get_tweak_data_for_class(): trying to get tweak data for non-existent class: ", class)
-		Application:error(debug.traceback())
+		Application:warn("[PlayerTweakData] get_tweak_data_for_class: trying to get tweak data for non-existent class: ", class)
+		Application:warn(debug.traceback())
 
 		return self.class_defaults.default
 	end

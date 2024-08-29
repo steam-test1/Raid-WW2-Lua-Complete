@@ -496,10 +496,8 @@ function MenuManager:init(is_start_menu)
 		self._controller:add_trigger("toggle_chat", callback(self, self, "toggle_chatinput"))
 	end
 
-	if IS_PC or IS_CONSOLE then
-		self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
-		self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
-	end
+	self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
+	self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
 
 	self._active_changed_callback_handler = CoreEvent.CallbackEventHandler:new()
 
@@ -625,10 +623,8 @@ function MenuManager:controller_hotswap_triggered()
 		end
 	end
 
-	if IS_PC or IS_CONSOLE then
-		self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
-		self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
-	end
+	self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
+	self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
 end
 
 function MenuManager:post_event(event)
@@ -640,10 +636,6 @@ end
 
 function MenuManager:_cb_matchmake_player_joined(player_info)
 	print("_cb_matchmake_player_joined")
-
-	if managers.network.group:is_group_leader() then
-		-- Nothing
-	end
 end
 
 function MenuManager:destroy()
@@ -754,7 +746,7 @@ end
 function MenuManager:close_menu(menu_name)
 	self:post_event("menu_exit")
 
-	if Global.game_settings.single_player and menu_name == "menu_pause" then
+	if Application:paused() and menu_name == "menu_pause" then
 		Application:set_pause(false)
 		self:post_event("game_resume")
 		SoundDevice:set_rtpc("ingame_sound", 1)
@@ -861,7 +853,7 @@ function MenuManager:toggle_menu_state()
 			if (not self:active_menu() or #self:active_menu().logic._node_stack == 1 or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().allow_pause_menu) and managers.menu_component:input_focus() ~= 1 then
 				local success = managers.raid_menu:open_menu("raid_main_menu")
 
-				if Global.game_settings.single_player then
+				if Global.game_settings.single_player or managers.network:session():count_all_peers() == 1 then
 					if not managers.raid_job:is_camp_loaded() then
 						Application:debug("[MenuManager:toggle_menu_state()] PAUSING")
 						Application:set_pause(true)

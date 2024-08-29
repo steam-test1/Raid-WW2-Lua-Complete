@@ -325,15 +325,10 @@ function FireManager:detect_and_give_dmg(params)
 	local col_ray = params.col_ray
 	local alert_filter = params.alert_filter or managers.groupai:state():get_unit_type_filter("civilians_enemies")
 	local owner = params.owner
-	local push_units = false
+	local push_units = params.push_units or false
 	local fire_dot_data = params.fire_dot_data
-	local results = {}
 	local alert_radius = params.alert_radius or 3000
-
-	if params.push_units ~= nil then
-		push_units = params.push_units
-	end
-
+	local results = {}
 	local player = managers.player:player_unit()
 
 	if alive(player) and player_dmg ~= 0 then

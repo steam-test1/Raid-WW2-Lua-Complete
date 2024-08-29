@@ -135,7 +135,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_image
 	self:_set_customization_image(RaidGUIControlCharacterCustomizationDetails.DEFAULT_ICON_UPPER)
 end
 
-function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(texture, texture_rect)
+function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(image)
 	local customization_image_panel = self._left_panel:child("customization_image_panel")
 
 	if self._customization_image then
@@ -147,8 +147,8 @@ function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(te
 	local customization_image_params = {
 		name = "customization_image",
 		alpha = 0,
-		texture = texture,
-		texture_rect = texture_rect
+		texture = tweak_data.gui.icons[image].texture,
+		texture_rect = tweak_data.gui.icons[image].texture_rect
 	}
 	self._customization_image = customization_image_panel:bitmap(customization_image_params)
 
@@ -419,7 +419,7 @@ function RaidGUIControlCharacterCustomizationDetails:set_customization(customiza
 			icon = RaidGUIControlCharacterCustomizationDetails.DEFAULT_ICON_LOWER
 		end
 
-		self:_set_customization_image(tweak_data.gui.icons[icon].texture, tweak_data.gui.icons[icon].texture_rect)
+		self:_set_customization_image(icon)
 	end
 
 	self._rarity_info:set_icon(customization.rarity)

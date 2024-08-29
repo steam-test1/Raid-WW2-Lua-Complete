@@ -424,6 +424,8 @@ function NetworkAccountSTEAM:is_ready_to_close()
 end
 
 function NetworkAccountSTEAM:inventory_load(callback_ref)
+	Application:trace("[NetworkAccountSTEAM:inventory_load]", "self._inventory_is_loading: ", self._inventory_is_loading)
+
 	if self._inventory_is_loading then
 		return
 	end

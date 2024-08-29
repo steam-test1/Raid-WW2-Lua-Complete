@@ -51,6 +51,7 @@ function ExplosionManager:give_local_player_dmg(pos, range, damage, ignite_chara
 	})
 
 	if not path_blocked then
+		Application:debug("[ExplosionManager] Damage player")
 		player:character_damage():damage_explosion({
 			variant = "explosion",
 			position = pos,

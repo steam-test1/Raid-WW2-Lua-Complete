@@ -1,6 +1,10 @@
 core:import("CoreEditorUtils")
 
 function CoreEditor:create_projection_light(type)
+	if self._light then
+		self._light:set_enable(false)
+	end
+
 	local lights = {}
 	local units = {}
 
@@ -48,15 +52,11 @@ function CoreEditor:create_projection_light(type)
 		local resolution = unit:unit_data().projection_lights and unit:unit_data().projection_lights[light:name():s()] and unit:unit_data().projection_lights[light:name():s()].x
 		resolution = resolution or EditUnitLight.DEFAULT_SHADOW_RESOLUTION
 
-		if not is_spot then
-			unit:set_rotation(Rotation(0, 0, 0))
-			Application:debug("[CoreEditor:create_projection_light] TEMPFIX: Unit was rotated to fix light baking!", unit)
-		end
-
 		table.insert(lights, {
 			name = "",
 			position = light:position(),
 			rotation = light:rotation(),
+			saved_rotation = unit:rotation(),
 			unit = unit,
 			light = light,
 			enabled = light:enable(),
@@ -186,13 +186,6 @@ end
 function CoreEditor:next_cube()
 	if #self._cubes_que > 0 then
 		local cube = table.remove(self._cubes_que, 1)
-
-		if cube.unit then
-			cube.rotation = Rotation(cube.rotation:x() + cube.unit:rotation():x(), cube.rotation:y() + cube.unit:rotation():y(), cube.rotation:z() + cube.unit:rotation():z())
-		end
-
-		self:set_camera(cube.position, cube.rotation)
-
 		local resolution = cube.resolution or 512
 
 		self:_set_appwin_fixed_resolution(Vector3(resolution + 4, resolution + 4, 0))
@@ -200,13 +193,13 @@ function CoreEditor:next_cube()
 		local params = {
 			done_callback = callback(self, self, "cube_map_done"),
 			name = cube.name,
-			simple_postfix = self._cubemap_params.simple_postfix,
-			source_path = self._cubemap_params.source_path,
-			output_path = self._cubemap_params.output_path,
 			output_name = cube.output_name,
 			unit = cube.unit,
 			light = cube.light,
-			spot = cube.spot
+			spot = cube.spot,
+			simple_postfix = self._cubemap_params.simple_postfix,
+			source_path = self._cubemap_params.source_path,
+			output_path = self._cubemap_params.output_path
 		}
 
 		self._camera_controller:start_cube_map(params)
@@ -293,4 +286,8 @@ function CoreEditor:cube_map_done()
 	self:_set_appwin_fixed_resolution(nil)
 	self._vp:set_width_mul_enabled(true)
 	assert(self._vp:pop_ref_fov())
+
+	if self._light and self._light_toggled_data then
+		self._light:set_enable(self._light_toggled_data[1]:is_checked(self._light_toggled_data[2]))
+	end
 end

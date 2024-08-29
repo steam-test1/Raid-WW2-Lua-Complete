@@ -488,7 +488,14 @@ function CharacterCustomizationManager:request_change_criminal_character(peer_id
 end
 
 function CharacterCustomizationManager:change_criminal_character(peer_id, new_character_name, peer_unit, remove_unit_in_source_slot)
-	local local_peer = managers.network:session():local_peer()
+	local peer = managers.network:session():peer(peer_id)
+
+	if not peer or not alive(peer_unit) then
+		Application:error("[CharacterCustomizationManager:change_criminal_character] missing peer or unit", peer_id, peer_unit)
+
+		return
+	end
+
 	local unit_to_remove = managers.criminals:character_unit_by_name(new_character_name)
 
 	managers.hud:_remove_name_label(peer_unit and peer_unit:unit_data() and peer_unit:unit_data().name_label_id)
@@ -498,10 +505,12 @@ function CharacterCustomizationManager:change_criminal_character(peer_id, new_ch
 	end
 
 	managers.criminals:remove_character_by_peer_id(peer_id)
-	managers.network:session():peer(peer_id):set_character(new_character_name)
+	peer:set_character(new_character_name)
 	managers.criminals:add_character(new_character_name, peer_unit, peer_id, false)
 
-	if local_peer:id() == peer_id then
+	local local_peer = managers.network:session():local_peer()
+
+	if local_peer and local_peer:id() == peer_id then
 		local outfit_string = managers.blackmarket:outfit_string()
 
 		local_peer:set_outfit_string(outfit_string)
@@ -509,7 +518,7 @@ function CharacterCustomizationManager:change_criminal_character(peer_id, new_ch
 		managers.network:session():send_to_peers_synched("set_character_customization", local_peer:unit(), outfit_string, local_peer:outfit_version(), local_peer:id())
 	end
 
-	if Global.game_settings.team_ai and Network:is_server() then
+	if Network:is_server() and Global.game_settings.team_ai then
 		managers.groupai:state():fill_criminal_team_with_AI(nil)
 	end
 end

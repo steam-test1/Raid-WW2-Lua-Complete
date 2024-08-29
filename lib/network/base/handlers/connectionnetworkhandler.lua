@@ -440,6 +440,7 @@ function ConnectionNetworkHandler:leave_ready_up_menu(sender)
 	end
 
 	managers.raid_menu:close_all_menus()
+	managers.challenge_cards:remove_suggested_challenge_card()
 end
 
 function ConnectionNetworkHandler:report_dead_connection(other_peer_id, sender)
@@ -1309,7 +1310,17 @@ function ConnectionNetworkHandler:reset_document_spawn_chance_modifier(sender)
 		return
 	end
 
-	managers.consumable_missions:reset_document_spawn_modifier()
+	managers.consumable_missions:reset_document_spawn_chance_modifier()
+end
+
+function ConnectionNetworkHandler:sync_choose_documents_type(chosen_document_unit, intel_type, sender)
+	local sender_peer = self._verify_sender(sender)
+
+	if not sender_peer then
+		return
+	end
+
+	managers.consumable_missions:sync_choose_documents_type(chosen_document_unit, intel_type)
 end
 
 function ConnectionNetworkHandler:sync_warcry_team_buff(upgrade_id, identifier, acquired, sender)

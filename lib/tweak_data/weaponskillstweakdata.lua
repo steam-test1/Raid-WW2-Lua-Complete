@@ -551,23 +551,20 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 	self.skill_trees.geco[4] = {
 		{
 			{
+				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
 				value = 8,
-				challenge_done_text_id = "weapon_skill_headshot_ss_completed",
-				challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						target = 25,
+						target = 40,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							8,
-							16
+							10,
+							25
 						},
 						modifiers = {
-							headshot = true,
-							enemy_type = {
-								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
-							},
+							max_range = 500,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -1322,56 +1319,57 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				cost = 6,
+				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				value = 5,
-				challenge_done_text_id = "weapon_skill_last_round_kill_completed",
-				challenge_briefing_id = "weapon_skill_last_round_kill_briefing",
+				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+				weapon_parts = {
+					"wpn_fps_smg_thompson_m_drum"
+				},
 				challenge_tasks = {
 					{
-						target = 20,
+						target = 50,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							5,
-							10,
-							15
+							15,
+							25,
+							40
 						},
 						modifiers = {
-							last_round_in_magazine = true,
+							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
-				},
-				weapon_parts = {
-					"wpn_fps_smg_thompson_m_drum"
 				}
 			}
 		},
 		{
 			{
 				cost = 6,
+				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				value = 4,
-				challenge_done_text_id = "weapon_skill_headshot_ss_completed",
-				challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
-				challenge_tasks = {
-					{
-						target = 10,
-						type = ChallengeTweakData.TASK_KILL_ENEMIES,
-						reminders = {
-							3,
-							9
-						},
-						modifiers = {
-							headshot = true,
-							enemy_type = {
-								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
-							},
-							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
-						}
-					}
-				},
 				weapon_parts = {
 					"wpn_fps_smg_thompson_o_m1928"
+				},
+				challenge_tasks = {
+					{
+						target = 35,
+						type = ChallengeTweakData.TASK_KILL_ENEMIES,
+						reminders = {
+							10,
+							25
+						},
+						modifiers = {
+							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+							enemy_type = {
+								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SNIPER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER
+							}
+						}
+					}
 				}
 			}
 		}
@@ -2102,56 +2100,57 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				cost = 1,
+				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				value = 4,
-				challenge_done_text_id = "weapon_skill_headshot_ss_completed",
-				challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
-				challenge_tasks = {
-					{
-						target = 10,
-						type = ChallengeTweakData.TASK_KILL_ENEMIES,
-						reminders = {
-							3,
-							9
-						},
-						modifiers = {
-							headshot = true,
-							enemy_type = {
-								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
-							},
-							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
-						}
-					}
-				},
 				weapon_parts = {
 					"wpn_fps_smg_sten_body_mk3_vented"
+				},
+				challenge_tasks = {
+					{
+						target = 30,
+						type = ChallengeTweakData.TASK_KILL_ENEMIES,
+						reminders = {
+							10,
+							25
+						},
+						modifiers = {
+							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+							enemy_type = {
+								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SNIPER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER
+							}
+						}
+					}
 				}
 			}
 		},
 		{
 			{
 				cost = 6,
+				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				value = 4,
-				challenge_done_text_id = "weapon_skill_last_round_kill_completed",
-				challenge_briefing_id = "weapon_skill_last_round_kill_briefing",
+				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+				weapon_parts = {
+					"wpn_fps_smg_sten_m_long_double"
+				},
 				challenge_tasks = {
 					{
-						target = 20,
+						target = 45,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							5,
-							10,
-							15
+							15,
+							25,
+							40
 						},
 						modifiers = {
-							last_round_in_magazine = true,
+							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
-				},
-				weapon_parts = {
-					"wpn_fps_smg_sten_m_long_double"
 				}
 			}
 		}
@@ -3075,56 +3074,57 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				cost = 6,
+				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				value = 4,
-				challenge_done_text_id = "weapon_skill_headshot_ss_completed",
-				challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
-				challenge_tasks = {
-					{
-						target = 10,
-						type = ChallengeTweakData.TASK_KILL_ENEMIES,
-						reminders = {
-							3,
-							9
-						},
-						modifiers = {
-							headshot = true,
-							enemy_type = {
-								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
-							},
-							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
-						}
-					}
-				},
 				weapon_parts = {
 					"wpn_fps_ass_garand_s_folding"
+				},
+				challenge_tasks = {
+					{
+						target = 35,
+						type = ChallengeTweakData.TASK_KILL_ENEMIES,
+						reminders = {
+							10,
+							25
+						},
+						modifiers = {
+							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+							enemy_type = {
+								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SNIPER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER
+							}
+						}
+					}
 				}
 			}
 		},
 		{
 			{
 				cost = 8,
+				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				value = 2,
-				challenge_done_text_id = "weapon_skill_last_round_kill_completed",
-				challenge_briefing_id = "weapon_skill_last_round_kill_briefing",
+				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+				weapon_parts = {
+					"wpn_fps_ass_garand_m_bar_extended"
+				},
 				challenge_tasks = {
 					{
-						target = 20,
+						target = 50,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							5,
-							10,
-							15
+							15,
+							25,
+							40
 						},
 						modifiers = {
-							last_round_in_magazine = true,
+							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
-				},
-				weapon_parts = {
-					"wpn_fps_ass_garand_m_bar_extended"
 				}
 			}
 		}
@@ -3415,56 +3415,57 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				cost = 6,
+				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				value = 4,
-				challenge_done_text_id = "weapon_skill_headshot_ss_completed",
-				challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+				weapon_parts = {
+					"wpn_fps_ass_garand_s_folding"
+				},
 				challenge_tasks = {
 					{
-						target = 10,
+						target = 35,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							3,
-							9
+							10,
+							25
 						},
 						modifiers = {
-							headshot = true,
+							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 							enemy_type = {
-								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
-							},
-							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
+								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SNIPER,
+								CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER
+							}
 						}
 					}
-				},
-				weapon_parts = {
-					"wpn_fps_ass_garand_golden_s_folding"
 				}
 			}
 		},
 		{
 			{
 				cost = 8,
+				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				value = 2,
-				challenge_done_text_id = "weapon_skill_last_round_kill_completed",
-				challenge_briefing_id = "weapon_skill_last_round_kill_briefing",
+				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+				weapon_parts = {
+					"wpn_fps_ass_garand_m_bar_extended"
+				},
 				challenge_tasks = {
 					{
-						target = 20,
+						target = 50,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							5,
-							10,
-							15
+							15,
+							25,
+							40
 						},
 						modifiers = {
-							last_round_in_magazine = true,
+							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
-				},
-				weapon_parts = {
-					"wpn_fps_ass_garand_golden_m_bar_extended"
 				}
 			}
 		}
@@ -4507,29 +4508,26 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				cost = 4,
+				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
 				value = 8,
-				challenge_done_text_id = "weapon_skill_headshot_ss_completed",
-				challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+				weapon_parts = {
+					"wpn_fps_sho_m1912_b_heat_shield"
+				},
 				challenge_tasks = {
 					{
-						target = 10,
+						target = 50,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							3,
-							9
+							10,
+							25
 						},
 						modifiers = {
-							headshot = true,
-							enemy_type = {
-								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
-							},
+							max_range = 500,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
-				},
-				weapon_parts = {
-					"wpn_fps_sho_m1912_b_heat_shield"
 				}
 			}
 		},
@@ -4802,29 +4800,26 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				cost = 4,
+				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
 				value = 8,
-				challenge_done_text_id = "weapon_skill_headshot_ss_completed",
-				challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+				weapon_parts = {
+					"wpn_fps_sho_ithaca_b_heat_shield"
+				},
 				challenge_tasks = {
 					{
-						target = 10,
+						target = 50,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
-							3,
-							7
+							10,
+							25
 						},
 						modifiers = {
-							headshot = true,
-							enemy_type = {
-								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
-							},
+							max_range = 500,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
-				},
-				weapon_parts = {
-					"wpn_fps_sho_ithaca_b_heat_shield"
 				}
 			}
 		},

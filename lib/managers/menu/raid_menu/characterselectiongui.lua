@@ -320,9 +320,7 @@ function CharacterSelectionGui:_load_all_slots()
 			Global.savefile_manager.meta_data_list[slot_index].is_cached_slot = false
 		end
 
-		if not has_last_slot or slot_index ~= last_selected_slot then
-			self:_load_slot_data(slot_index, false)
-		end
+		self:_load_slot_data(slot_index, false)
 	end
 
 	if has_last_slot then

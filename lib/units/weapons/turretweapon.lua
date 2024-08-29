@@ -246,6 +246,8 @@ function TurretWeapon:debug_deactivate()
 end
 
 function TurretWeapon:update(unit, t, dt)
+	self:_update_shell_movement(dt)
+
 	local is_puppet_alive = alive(self._puppet_unit) and not self._puppet_unit:character_damage():dead()
 	local is_enemy_mode = self._mode and self._mode == "enemy"
 
@@ -279,11 +281,6 @@ function TurretWeapon:update(unit, t, dt)
 	end
 
 	self._sound_fire:set_rtpc("turret_heat_rtpc", self._overheat_current * 100)
-
-	if self._turret_shell then
-		self:_update_shell_movement(dt)
-	end
-
 	self:_update_turret_rot(dt)
 
 	if alive(self._puppet_unit) and self._puppet_stance == "standing" then

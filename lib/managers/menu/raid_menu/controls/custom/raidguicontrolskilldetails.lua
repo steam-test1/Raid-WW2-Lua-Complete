@@ -223,6 +223,14 @@ function RaidGUIControlSkillDetails:_create_skill_flavor()
 end
 
 function RaidGUIControlSkillDetails:set_skill(item_data)
+	if not item_data.exp_requirements then
+		Application:error("[RaidGUIControlSkillDetails:set_skill] Could not set skill:", inspect(item_data))
+
+		return
+	end
+
+	Application:debug("[RaidGUIControlSkillDetails:set_skill] set_skill...", inspect(item_data))
+
 	local bought = item_data.bought
 	local locked = not bought and item_data.level_required and managers.experience:current_level() < item_data.level_required
 	local exp_progression = item_data.exp_progression or 0

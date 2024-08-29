@@ -338,34 +338,35 @@ function MissionSelectionGui:_layout_settings()
 end
 
 function MissionSelectionGui:_layout_operation_tutorialization()
-	local operation_tutorialization_panel_params = {
+	self._operation_tutorialization_panel = self._root_panel:panel({
 		alpha = 0,
-		name = "operation_tutorialization"
-	}
-	self._operation_tutorialization_panel = self._right_panel:panel(operation_tutorialization_panel_params)
-	local op_tutorialization_title_params = {
+		name = "operation_tutorialization",
+		x = self._right_panel:x(),
+		y = self._right_panel:y(),
+		w = self._right_panel:w(),
+		h = self._right_panel:h()
+	})
+	local title = self._operation_tutorialization_panel:text({
 		h = 40,
 		halign = "left",
 		vertical = "center",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		text = self:translate("operations_tutorialization_title", true)
-	}
-	local title = self._operation_tutorialization_panel:text(op_tutorialization_title_params)
+		text = self:translate("operations_tutorialization_title", true),
+		color = tweak_data.gui.colors.raid_dirty_white
+	})
 
 	title:set_center_y(16)
 
-	local op_tutorialization_title_params = {
+	local description = self._operation_tutorialization_panel:text({
 		y = 64,
-		halign = "left",
 		wrap = true,
+		halign = "left",
+		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
-		color = tweak_data.gui.colors.raid_grey,
 		text = self:translate("operations_tutorialization_description", false)
-	}
-	local description = self._operation_tutorialization_panel:text(op_tutorialization_title_params)
+	})
 end
 
 function MissionSelectionGui:_layout_settings_offline()
@@ -1510,6 +1511,9 @@ function MissionSelectionGui:_on_slot_clicked(slot_data)
 
 	self._selected_save_slot = slot_data.value
 
+	self._operation_tutorialization_panel:get_engine_panel():stop()
+	self._operation_tutorialization_panel:get_engine_panel():animate(callback(self, self, "_animate_hide_operation_tutorialization"))
+
 	if managers.progression:operations_state() == ProgressionManager.OPERATIONS_STATE_LOCKED then
 		if Network:is_server() then
 			local message_text = utf8.to_upper(managers.localization:text("operations_locked_progression", {
@@ -1613,6 +1617,8 @@ function MissionSelectionGui:_on_save_selected()
 
 	local difficulty = tweak_data:difficulty_to_index(current_slot_data.difficulty)
 
+	self._primary_paper_subtitle:set_visible(false)
+	self._primary_paper_difficulty_indicator:set_visible(true)
 	self._primary_paper_difficulty_indicator:set_active_difficulty(difficulty)
 
 	if managers.raid_menu:is_pc_controller() and Network:is_server() then
@@ -1647,13 +1653,14 @@ function MissionSelectionGui:_on_empty_slot_selected()
 	self._front_page_icon:animate(callback(self, self, "_animate_change_front_page_data"), "xp_events_missions_operations_category", "menu_mission_selected_mission_type_operation", "folder_mission_op", tweak_data.gui.colors.raid_light_gold)
 	self._front_page_title:stop()
 	self._front_page_title:animate(callback(self, self, "_animate_show_front_page"))
-	self._operation_tutorialization_panel:get_engine_panel():stop()
-	self._operation_tutorialization_panel:get_engine_panel():animate(callback(self, self, "_animate_show_operation_tutorialization"))
 
 	if self._secondary_paper_shown then
 		self._secondary_paper:stop()
 		self._secondary_paper:animate(callback(self, self, "_animate_hide_secondary_paper"))
 	end
+
+	self._operation_tutorialization_panel:get_engine_panel():stop()
+	self._operation_tutorialization_panel:get_engine_panel():animate(callback(self, self, "_animate_show_operation_tutorialization"))
 
 	local slot_list_move_controls = {}
 
@@ -2685,7 +2692,7 @@ function MissionSelectionGui:_fit_front_page_title()
 	end
 end
 
-function MissionSelectionGui:_animate_show_operation_tutorialization()
+function MissionSelectionGui:_animate_show_operation_tutorialization(panel)
 	local fade_out_duration = 0.15
 	local t = (1 - self._right_panel:alpha()) * fade_out_duration
 
@@ -2698,34 +2705,36 @@ function MissionSelectionGui:_animate_show_operation_tutorialization()
 	end
 
 	self._right_panel:set_alpha(0)
+	self._right_panel:set_visible(false)
 
 	local fade_in_duration = 0.15
-	t = self._operation_tutorialization_panel:alpha() * fade_in_duration
+	t = panel:alpha() * fade_in_duration
 
 	while fade_in_duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
 		local current_alpha = Easing.quartic_in_out(t, 0, 1, fade_out_duration)
 
-		self._operation_tutorialization_panel:set_alpha(current_alpha)
+		panel:set_alpha(current_alpha)
 	end
 
-	self._operation_tutorialization_panel:set_alpha(1)
+	panel:set_alpha(1)
 end
 
-function MissionSelectionGui:_animate_hide_operation_tutorialization()
+function MissionSelectionGui:_animate_hide_operation_tutorialization(panel)
 	local fade_out_duration = 0.15
-	local t = (1 - self._operation_tutorialization_panel:alpha()) * fade_out_duration
+	local t = (1 - panel:alpha()) * fade_out_duration
 
 	while fade_out_duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
 		local current_alpha = Easing.quartic_in_out(t, 1, -1, fade_out_duration)
 
-		self._operation_tutorialization_panel:set_alpha(current_alpha)
+		panel:set_alpha(current_alpha)
 	end
 
-	self._operation_tutorialization_panel:set_alpha(0)
+	panel:set_alpha(0)
+	self._right_panel:set_visible(true)
 
 	local fade_in_duration = 0.15
 	t = self._right_panel:alpha() * fade_in_duration

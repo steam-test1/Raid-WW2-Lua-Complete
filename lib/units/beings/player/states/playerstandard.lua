@@ -56,7 +56,7 @@ PlayerStandard.debug_bipod = nil
 
 function PlayerStandard:init(unit)
 	PlayerMovementState.init(self, unit)
-	self:set_class_tweak_data(managers.skilltree:get_character_profile_class() or "recon")
+	self:set_class_tweak_data(managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class())
 
 	self._obj_com = self._unit:get_object(Idstring("rp_mover"))
 	self._slotmask_gnd_ray = managers.slot:get_mask("player_ground_check")
@@ -1028,8 +1028,8 @@ function PlayerStandard:_update_foley(t, input)
 			end
 		end
 
-		self._state_data.diving = nil
-		self._state_data.dive_data = nil
+		self:_interupt_action_diving()
+
 		self._jump_t = nil
 		self._jump_vel_xy = nil
 
@@ -1349,7 +1349,7 @@ function PlayerStandard:_start_action_steelsight(t)
 		weap_base:play_tweak_data_sound("enter_steelsight")
 	end
 
-	if weap_base:weapon_tweak_data().animations.has_steelsight_stance then
+	if weap_base:weapon_tweak_data().animations.recoil_steelsight_weight then
 		self:_need_to_play_idle_redirect()
 
 		self._state_data.steelsight_weight_target = 1
@@ -1399,7 +1399,7 @@ function PlayerStandard:_end_action_steelsight(t)
 		weap_base:play_tweak_data_sound("leave_steelsight")
 	end
 
-	if weap_base.weapon_tweak_data and weap_base:weapon_tweak_data().animations.has_steelsight_stance then
+	if weap_base.weapon_tweak_data and weap_base:weapon_tweak_data().animations.recoil_steelsight_weight then
 		self:_need_to_play_idle_redirect()
 
 		self._state_data.steelsight_weight_target = 0
@@ -1620,6 +1620,21 @@ function PlayerStandard:_check_action_diving()
 	end
 end
 
+function PlayerStandard:_interupt_action_diving(t)
+	if self:_is_diving() then
+		self:_end_action_diving(t)
+	end
+end
+
+function PlayerStandard:_end_action_diving()
+	self._state_data.diving = nil
+	self._state_data.dive_data = nil
+
+	if not self._state_data.on_ladder then
+		self:set_gravity(tweak_data.player.gravity)
+	end
+end
+
 function PlayerStandard:_is_diving()
 	return self:ducking() and self._state_data.diving
 end
@@ -1765,6 +1780,7 @@ function PlayerStandard:interupt_all_actions()
 	self:_interupt_action_use_item(t)
 	self:_interupt_action_cash_inspect(t)
 	self:_interupt_action_mantle(t)
+	self:_interupt_action_diving(t)
 end
 
 function PlayerStandard:_start_action_throw_projectile(t, input)
@@ -2048,23 +2064,6 @@ function PlayerStandard:_is_throwing_grenade()
 	return (self._camera_unit_anim_data.throwing or self._state_data.throw_grenade_expire_t) and true or false
 end
 
-function PlayerStandard:_check_drag_body()
-	local from = self._unit:movement():m_head_pos()
-	local to = from + self._cam_fwd * 200
-	local ray = World:raycast("ray", from, to, "ray_type", "drag_corpse")
-
-	if ray then
-		managers.player:set_player_state("drag_body", {
-			dragging_unit = ray.unit,
-			dragging_body = ray.body
-		})
-
-		return true
-	else
-		return false
-	end
-end
-
 function PlayerStandard:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 	local interaction_wanted = input.btn_interact_press
@@ -2075,7 +2074,11 @@ function PlayerStandard:_check_action_interact(t, input)
 		if not action_forbidden then
 			new_action, timer, interact_object = managers.interaction:interact(self._unit)
 
+			Application:debug("[PlayerStandard:_check_action_interact] interact", new_action, timer, interact_object)
+
 			if timer then
+				Application:debug("[PlayerStandard:_check_action_interact]", timer)
+
 				new_action = true
 
 				self._ext_camera:camera_unit():base():set_limits(80, 50)
@@ -2089,7 +2092,6 @@ function PlayerStandard:_check_action_interact(t, input)
 				end
 			end
 
-			new_action = new_action or self:_check_drag_body()
 			new_action = new_action or self:_start_action_intimidate(t)
 		end
 	end
@@ -4749,11 +4751,11 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 							weap_base:tweak_data_anim_play("fire", fire_rate_multiplier)
 						end
 
-						if use_recoil_anim and fire_mode == "single" and weap_base:get_name_id() ~= "saw" then
-							if not self._state_data.in_steelsight then
+						if use_recoil_anim and fire_mode == "single" then
+							if not self._state_data.in_steelsight or weap_tweak_data.animations.recoil_steelsight_weight then
 								self._ext_camera:play_redirect(self.IDS_RECOIL, fire_rate_multiplier)
 							elseif weap_tweak_data.animations.recoil_steelsight then
-								self._ext_camera:play_redirect(weap_base:is_second_sight_on() and self.IDS_RECOIL or self.IDS_RECOIL_STEELSIGHT, fire_rate_multiplier)
+								self._ext_camera:play_redirect(self.IDS_RECOIL_STEELSIGHT)
 							end
 
 							self._delay_running_expire_t = self._equipped_unit:base():next_fire_allowed()
@@ -4938,27 +4940,29 @@ function PlayerStandard:_start_action_reload(t)
 end
 
 function PlayerStandard:_interupt_action_reload(t)
-	if alive(self._equipped_unit) and self._equipped_unit:base().check_bullet_objects then
-		self._equipped_unit:base():check_bullet_objects()
-	end
+	if alive(self._equipped_unit) then
+		if self._equipped_unit:base().check_bullet_objects then
+			self._equipped_unit:base():check_bullet_objects()
+		end
 
-	if self:_is_reloading() then
-		self._equipped_unit:base():tweak_data_anim_stop("reload_enter")
-		self._equipped_unit:base():tweak_data_anim_stop("reload")
-		self._equipped_unit:base():tweak_data_anim_stop("reload_not_empty")
-		self._equipped_unit:base():tweak_data_anim_stop("reload_exit")
+		if self:_is_reloading() then
+			self._equipped_unit:base():tweak_data_anim_stop("reload_enter")
+			self._equipped_unit:base():tweak_data_anim_stop("reload")
+			self._equipped_unit:base():tweak_data_anim_stop("reload_not_empty")
+			self._equipped_unit:base():tweak_data_anim_stop("reload_exit")
+		end
+
+		if self._equipped_unit:base().can_reload and self._equipped_unit:base():can_reload() and self._equipped_unit:base().clip_empty and self._equipped_unit:base():clip_empty() then
+			managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
+				BTN_RELOAD = managers.localization:btn_macro("reload")
+			})))
+		end
 	end
 
 	self._queue_reload_interupt_t = nil
 	self._state_data.reload_enter_expire_t = nil
 	self._state_data.reload_expire_t = nil
 	self._state_data.reload_exit_expire_t = nil
-
-	if self._equipped_unit:base().can_reload and self._equipped_unit:base():can_reload() and self._equipped_unit:base().clip_empty and self._equipped_unit:base():clip_empty() then
-		managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-			BTN_RELOAD = managers.localization:btn_macro("reload")
-		})))
-	end
 end
 
 function PlayerStandard:_is_reloading()
@@ -5198,7 +5202,7 @@ function PlayerStandard:pre_destroy()
 end
 
 function PlayerStandard:tweak_data_clbk_reload()
-	self:set_class_tweak_data(managers.skilltree:get_character_profile_class())
+	self:set_class_tweak_data(managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class())
 end
 
 function PlayerStandard:set_class_tweak_data(class)

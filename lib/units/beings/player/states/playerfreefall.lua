@@ -9,25 +9,8 @@ end
 
 function PlayerFreefall:enter(state_data, enter_data)
 	print("[PlayerFreefall:enter]", "Enter freefall state")
+	self:interupt_all_actions()
 	PlayerFreefall.super.enter(self, state_data, enter_data)
-
-	if self._state_data.ducking then
-		self:_end_action_ducking()
-	end
-
-	self:_interupt_action_steelsight()
-	self:_interupt_action_melee(managers.player:player_timer():time())
-	self:_interupt_action_ladder(managers.player:player_timer():time())
-
-	local projectile_entry = managers.blackmarket:equipped_projectile()
-
-	if tweak_data.projectiles[projectile_entry].is_a_grenade then
-		self:_interupt_action_throw_grenade(managers.player:player_timer():time())
-	else
-		self:_interupt_action_throw_projectile(managers.player:player_timer():time())
-	end
-
-	self:_interupt_action_charging_weapon(managers.player:player_timer():time())
 
 	self._original_damping = self._unit:mover():damping()
 

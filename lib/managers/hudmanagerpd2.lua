@@ -1356,15 +1356,9 @@ function HUDManager:set_control_info(data)
 end
 
 function HUDManager:sync_start_assault(data)
-	if not managers.groupai:state():get_hunt_mode() then
-		managers.dialog:queue_dialog("gen_ban_b02c", {})
-	end
 end
 
 function HUDManager:sync_end_assault(result)
-	if result then
-		-- Nothing
-	end
 end
 
 function HUDManager:on_progression_cycle_completed()
@@ -1712,9 +1706,9 @@ function HUDManager:_create_hit_confirm(hud)
 	self._hud_hit_confirm = HUDHitConfirm:new(hud)
 end
 
-function HUDManager:on_hit_confirmed(world_hit_pos, is_killshot, is_headshot, is_crit, is_pellet)
+function HUDManager:on_hit_confirmed(data)
 	if HUDHitConfirm.MODE_OFF < managers.user:get_setting("hit_indicator") then
-		self._hud_hit_confirm:on_hit_confirmed(world_hit_pos, is_killshot, is_headshot, is_crit, is_pellet)
+		self._hud_hit_confirm:on_hit_confirmed(data or {})
 	end
 end
 

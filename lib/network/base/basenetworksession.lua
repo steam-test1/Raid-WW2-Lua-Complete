@@ -40,10 +40,12 @@ function BaseNetworkSession:create_local_peer(load_outfit)
 		self._local_peer:set_outfit_string(managers.blackmarket:outfit_string(), nil)
 	end
 
-	local char_class = managers.skilltree:get_character_profile_class()
+	if managers.skilltree:has_character_profile_class() then
+		local cc = managers.skilltree:get_character_profile_class()
 
-	Application:debug("[BaseNetworkSession:create_local_peer] 4 char_class", char_class)
-	self._local_peer:set_class(char_class)
+		Application:debug("[BaseNetworkSession:create_local_peer] character_profile_class", cc)
+		self._local_peer:set_class(cc)
+	end
 end
 
 function BaseNetworkSession:has_other_peers()

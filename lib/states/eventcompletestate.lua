@@ -182,7 +182,7 @@ function EventCompleteState:at_enter(old_state, params)
 	self._current_job_data = clone(managers.raid_job:current_job())
 	self._active_challenge_card = managers.challenge_cards:get_active_card()
 
-	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" and self._active_challenge_card.loot_drop_group then
+	if self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty" and self._active_challenge_card.loot_drop_group then
 		managers.challenge_cards.forced_loot_card = self._active_challenge_card
 	else
 		managers.challenge_cards.forced_loot_card = nil
@@ -305,14 +305,13 @@ function EventCompleteState:_calculate_extra_loot_secured()
 	end
 
 	if extra_loot_value > 0 then
-		local extra_loot_loot_data = {
+		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
 			title = "menu_loot_screen_bonus_loot",
 			total_value = 0,
 			icon = "rewards_extra_loot",
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
 		}
-		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = extra_loot_loot_data
 	end
 end
 
@@ -329,7 +328,7 @@ function EventCompleteState:on_loot_data_ready()
 	end
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
-	local dog_tag_loot_data = {
+	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = {
 		title = "menu_loot_screen_dog_tags",
 		icon = "rewards_dog_tags",
 		acquired = self.loot_acquired,
@@ -337,7 +336,6 @@ function EventCompleteState:on_loot_data_ready()
 		acquired_value = self.loot_acquired * tweak_data.lootdrop.dog_tag.loot_value,
 		total_value = self.loot_spawned * tweak_data.lootdrop.dog_tag.loot_value
 	}
-	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = dog_tag_loot_data
 
 	if self.loot_spawned == self.loot_acquired and self._success then
 		managers.achievment:check_achievement_group_bring_them_home(self._current_job_data)
@@ -345,26 +343,25 @@ function EventCompleteState:on_loot_data_ready()
 end
 
 function EventCompleteState:drop_loot_for_player()
-	Application:trace("[EventCompleteState:drop_loot_for_player()]")
+	Application:info("[EventCompleteState:drop_loot_for_player]")
 
 	local acquired_loot_value = 0
 	local total_loot_value = 0
+	local loot_percentage = 0
+	local forced_loot_group = nil
 
 	for id, loot_item in pairs(self.loot_data) do
 		acquired_loot_value = acquired_loot_value + loot_item.acquired_value
 		total_loot_value = total_loot_value + loot_item.total_value
 	end
 
-	local loot_percentage = 0
-
 	if total_loot_value ~= 0 then
 		loot_percentage = acquired_loot_value / total_loot_value
 	end
 
 	local loot_percentage = math.clamp(loot_percentage, 0, 1)
-	local forced_loot_group = nil
 
-	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" then
+	if self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty" then
 		forced_loot_group = managers.challenge_cards:get_loot_drop_group(self._active_challenge_card.key_name)
 	end
 
@@ -394,34 +391,27 @@ function EventCompleteState:on_loot_dropped_for_peer()
 end
 
 function EventCompleteState:_get_debrief_video(success)
-	local video_list = nil
-
-	if success then
-		video_list = EventCompleteState.SUCCESS_VIDEOS
-	else
-		video_list = EventCompleteState.FAILURE_VIDEOS
-	end
-
+	local video_list = EventCompleteState[success and "SUCCESS_VIDEOS" or "FAILURE_VIDEOS"]
+	local video_path = nil
 	local total = 0
 
 	for _, video in ipairs(video_list) do
 		total = total + video.chance
 	end
 
-	local chosen_video = nil
 	local value = math.rand(total)
 
 	for _, video in ipairs(video_list) do
 		value = value - video.chance
 
 		if value <= 0 then
-			chosen_video = video.path
+			video_path = video.path
 
 			break
 		end
 	end
 
-	return chosen_video
+	return video_path
 end
 
 function EventCompleteState:_create_debrief_video()
@@ -458,7 +448,7 @@ function EventCompleteState:_create_debrief_video()
 	managers.gui_data:layout_workspace(self._safe_rect_workspace)
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
-	local press_any_key_params = {
+	local press_any_key_prompt = self._safe_panel:text({
 		name = "press_any_key_prompt",
 		alpha = 0,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
@@ -466,8 +456,7 @@ function EventCompleteState:_create_debrief_video()
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 		color = tweak_data.gui.colors.raid_dirty_white,
 		layer = self._debrief_video:layer() + 1
-	}
-	local press_any_key_prompt = self._safe_panel:text(press_any_key_params)
+	})
 	local _, _, w, h = press_any_key_prompt:text_rect()
 
 	press_any_key_prompt:set_w(w)
@@ -816,6 +805,8 @@ function EventCompleteState:calculate_xp()
 
 	self.total_xp = additive * multiplicative
 
+	Application:info("[EventCompleteState:calculate_xp] NEW XP Total: " .. tostring(self.total_xp))
+
 	return self.total_xp
 end
 
@@ -912,9 +903,9 @@ function EventCompleteState:_shut_down_network()
 end
 
 function EventCompleteState:_continue_blocked()
-	local in_focus = managers.menu:active_menu() == self._mission_end_menu
+	local out_focus = managers.menu:active_menu() ~= self._mission_end_menu
 
-	if not in_focus then
+	if out_focus then
 		return true
 	end
 
@@ -930,7 +921,9 @@ function EventCompleteState:_continue_blocked()
 		return true
 	end
 
-	if self._continue_block_timer and Application:time() < self._continue_block_timer then
+	local timer_blocking = self._continue_block_timer and Application:time() < self._continue_block_timer
+
+	if timer_blocking then
 		return true
 	end
 
@@ -945,27 +938,20 @@ function EventCompleteState:_continue()
 	Application:trace("[EventCompleteState:_continue()]")
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_DEBRIEF_VIDEO then
-		managers.queued_tasks:unqueue("play_debrief_video")
-
-		if self:is_success() then
-			managers.music:post_event("music_mission_success", true)
-		else
-			managers.music:post_event("music_mission_fail", true)
-		end
-
 		self._active_screen = EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS
+
+		managers.queued_tasks:unqueue("play_debrief_video")
+		managers.music:post_event("music_mission_" .. (self:is_success() and "success" or "fail"), true)
 
 		if managers.network.voice_chat then
 			managers.network.voice_chat:trc_check_unmute()
 		end
 
-		if managers.network:session():amount_of_players() == 1 then
+		if managers.network:session():amount_of_players() > 1 then
+			managers.raid_menu:open_menu("raid_menu_special_honors", false)
+		else
 			self:_continue()
-
-			return
 		end
-
-		managers.raid_menu:open_menu("raid_menu_special_honors", false)
 	elseif self._active_screen == EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS then
 		if self.is_at_last_event and self:is_success() then
 			local success = managers.raid_menu:open_menu("raid_menu_loot_screen", false)

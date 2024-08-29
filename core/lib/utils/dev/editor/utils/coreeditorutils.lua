@@ -159,8 +159,8 @@ end
 GrabInfo = GrabInfo or CoreClass.class()
 
 function GrabInfo:init(o, pos, rot)
-	self._pos = pos or o:position()
-	self._rot = rot or o:rotation()
+	self._pos = pos or o and o:position() or Vector3()
+	self._rot = rot or o and o:rotation() or Rotation()
 end
 
 function GrabInfo:rotation()

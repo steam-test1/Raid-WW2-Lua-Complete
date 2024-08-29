@@ -277,7 +277,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.decoy_coin = {
 		name_id = "bm_coin",
 		unit = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace",
-		unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk",
+		unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_hand",
 		unit_dummy = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk",
 		icon = "frag_grenade",
 		max_amount = 9
@@ -317,9 +317,9 @@ function ProjectilesTweakData:init(tweak_data)
 		push_at_body_index = 0,
 		init_timer = 5,
 		damage = 75,
-		player_damage = 35,
-		range = 1500,
-		killzone_range = 0,
+		player_damage = 25,
+		range = 2400,
+		killzone_range = 0.33,
 		init_timer = 15,
 		effect_name = "effects/vanilla/explosions/exp_artillery_explosion_001",
 		sound_event = "grenade_launcher_explosion",

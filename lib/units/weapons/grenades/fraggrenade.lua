@@ -78,9 +78,9 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	local range = self._range
 	local slot_mask = managers.slot:get_mask("explosion_targets")
 
+	self._unit:set_slot(0)
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
-	self._unit:set_slot(0)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
 		player_damage = 0,

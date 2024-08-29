@@ -65,7 +65,7 @@ function CoreRopeOperatorUnitElement:add_element()
 		mask = managers.slot:get_mask("all")
 	})
 
-	if ray and ray.unit and ray.unit:name() == Idstring("units/vanilla/props/props_rope/props_rope") then
+	if ray and ray.unit and ray.unit:unit_data().is_rope then
 		local id = ray.unit:unit_data().unit_id
 
 		if self._hed.rope_unit_id == id then
@@ -86,7 +86,7 @@ end
 
 function CoreRopeOperatorUnitElement:add_unit_list_btn()
 	local function f(unit)
-		return unit:unit_data().name_id:find("props_rope")
+		return unit:unit_data().is_rope
 	end
 
 	local dialog = SingleSelectUnitByNameModal:new("Add Unit", f)

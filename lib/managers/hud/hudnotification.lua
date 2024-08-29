@@ -383,10 +383,12 @@ HUDNotificationConsumablePickup.WIDTH = 352
 HUDNotificationConsumablePickup.FONT = tweak_data.gui.fonts.din_compressed_outlined_24
 HUDNotificationConsumablePickup.FONT_SIZE = tweak_data.gui.font_sizes.size_24
 HUDNotificationConsumablePickup.DESCRIPTION_COLOR = tweak_data.gui.colors.raid_dirty_white
-HUDNotificationConsumablePickup.DOCUMENT_ICON = "notification_consumable"
 HUDNotificationConsumablePickup.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 
 function HUDNotificationConsumablePickup:init(notification_data)
+	self._doc_icon = notification_data.doc_icon or "notification_consumable"
+	self._doc_text = notification_data.doc_text or "hud_hint_consumable_mission_secured"
+
 	self:_create_panel()
 	self:_create_document_image()
 	self:_create_description()
@@ -444,12 +446,12 @@ function HUDNotificationConsumablePickup:_create_document_image()
 	local folder_image_params = {
 		name = "notification_outlaw_raid_unlocked_document_image",
 		layer = 3,
-		texture = tweak_data.gui.icons[HUDNotificationConsumablePickup.DOCUMENT_ICON].texture,
-		texture_rect = tweak_data.gui.icons[HUDNotificationConsumablePickup.DOCUMENT_ICON].texture_rect
+		texture = tweak_data.gui.icons[self._doc_icon].texture,
+		texture_rect = tweak_data.gui.icons[self._doc_icon].texture_rect
 	}
 	self._folder_image = self._object:bitmap(folder_image_params)
 
-	self._folder_image:set_right(self._object:w() - 32)
+	self._folder_image:set_center_x(self._object:w() / 2)
 end
 
 function HUDNotificationConsumablePickup:_create_description()
@@ -457,19 +459,19 @@ function HUDNotificationConsumablePickup:_create_description()
 		vertical = "center",
 		name = "notification_outlaw_raid_unlocked_description",
 		wrap = true,
-		align = "right",
+		align = "center",
 		layer = 3,
 		font = HUDNotificationConsumablePickup.FONT,
 		font_size = HUDNotificationConsumablePickup.FONT_SIZE,
 		w = self._object:w() - 64,
 		color = HUDNotificationConsumablePickup.DESCRIPTION_COLOR,
-		text = utf8.to_upper(managers.localization:text("hud_hint_consumable_mission_secured"))
+		text = utf8.to_upper(managers.localization:text(self._doc_text))
 	}
 	self._description = self._object:text(description_params)
 	local _, _, _, h = self._description:text_rect()
 
 	self._description:set_h(h)
-	self._description:set_right(self._object:w() - 32)
+	self._description:set_center_x(self._object:w() / 2)
 end
 
 function HUDNotificationConsumablePickup:_fit_size()
@@ -1436,7 +1438,7 @@ function HUDNotificationWeaponChallenge:_create_progress_bar()
 end
 
 function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
-	local challenge, count, target, min_range, briefing_id = nil
+	local challenge, count, target, min_range, max_range, briefing_id = nil
 
 	if challenge_data.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_data.challenge_id)
@@ -1445,6 +1447,7 @@ function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
 		min_range = math.round(tasks[1]:min_range() / 100)
+		max_range = math.round(tasks[1]:max_range() / 100)
 	end
 
 	briefing_id = briefing_id or challenge_data.challenge_briefing_id
@@ -1476,9 +1479,11 @@ function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
 		description_text = briefing_id
 	end
 
+	local range = max_range > 0 and max_range or min_range
+
 	self._description:set_text(managers.localization:text(description_text, {
 		AMOUNT = target,
-		RANGE = min_range,
+		RANGE = range,
 		WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
 	}))
 	self._progress_text:set_text(progress_text)

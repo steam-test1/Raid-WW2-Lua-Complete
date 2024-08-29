@@ -334,6 +334,120 @@ function HUDTabScreen:_create_profile_info()
 
 	level_text:set_bottom(self._profile_info_panel:h() - 3)
 	level_text:set_center_x(self._profile_info_panel:w() - HUDTabScreen.PROFILE_LEVEL_RIGHT_OFFSET)
+
+	local profile_info_panel_params = {
+		halign = "left",
+		name = "profile_info_panel",
+		visible = false,
+		valign = "bottom",
+		y = self._object:h() - HUDTabScreen.PROFILE_INFO_BOTTOM_OFFSET - HUDTabScreen.PROFILE_INFO_H,
+		w = HUDTabScreen.PROFILE_INFO_W,
+		h = HUDTabScreen.PROFILE_INFO_H
+	}
+	self._profile_info_panel = self._object:panel(profile_info_panel_params)
+	local profile_name_params = {
+		name = "profile_name",
+		h = 32,
+		vertical = "bottom",
+		align = "left",
+		text = "",
+		y = 0,
+		x = 0,
+		w = self._profile_info_panel:w(),
+		font = tweak_data.gui:get_font_path(HUDTabScreen.PROFILE_NAME_FONT, HUDTabScreen.PROFILE_NAME_FONT_SIZE),
+		font_size = HUDTabScreen.PROFILE_NAME_FONT_SIZE
+	}
+	local profile_name = self._profile_info_panel:text(profile_name_params)
+	local details_panel_params = {
+		is_root_panel = true,
+		name = "profile_details_panel",
+		y = 64,
+		h = self._profile_info_panel:h() - 64
+	}
+	local profile_details_panel = RaidGUIPanel:new(self._profile_info_panel, details_panel_params)
+	local class_info_icon_params = {
+		name = "class_icon",
+		w = 96,
+		icon = "player_panel_class_assault",
+		h = profile_details_panel:h(),
+		icon_color = Color.white,
+		icon_h = tweak_data.gui:icon_h("player_panel_class_assault"),
+		top_offset_y = (64 - tweak_data.gui:icon_h("player_panel_class_assault")) / 2,
+		text = utf8.to_upper(managers.localization:text("skill_class_assault_name")),
+		text_size = tweak_data.gui.font_sizes.size_24,
+		color = tweak_data.gui.colors.raid_grey
+	}
+	self._class_icon = profile_details_panel:info_icon(class_info_icon_params)
+	local placeholder_nationality = "british"
+	local nationality_info_icon_params = {
+		name = "nationality_icon",
+		w = 96,
+		h = profile_details_panel:h(),
+		icon = "ico_flag_" .. placeholder_nationality,
+		icon_color = Color.white,
+		icon_h = tweak_data.gui:icon_h("ico_flag_" .. placeholder_nationality),
+		text = utf8.to_upper(managers.localization:text("nationality_" .. placeholder_nationality)),
+		text_size = tweak_data.gui.font_sizes.size_24,
+		color = tweak_data.gui.colors.raid_grey
+	}
+	self._nationality_icon = profile_details_panel:info_icon(nationality_info_icon_params)
+
+	self._nationality_icon:set_center_x(profile_details_panel:w() / 2)
+
+	local level_info_icon_params = {
+		name = "level_text",
+		w = 96,
+		title = "6",
+		title_h = 64,
+		y = 7,
+		h = profile_details_panel:h() - 7,
+		title_size = HUDTabScreen.PROFILE_LEVEL_FONT_SIZE,
+		title_color = tweak_data.gui.colors.raid_white,
+		text = utf8.to_upper(managers.localization:text("hud_level")),
+		text_size = tweak_data.gui.font_sizes.size_24,
+		text_color = tweak_data.gui.colors.raid_grey
+	}
+	self._level_text = profile_details_panel:info_icon(level_info_icon_params)
+
+	self._level_text:set_center_x(320)
+
+	local class_icon_params = {
+		name = "class_icon",
+		visible = false,
+		texture = tweak_data.gui.icons.player_panel_class_assault.texture,
+		texture_rect = tweak_data.gui.icons.player_panel_class_assault.texture_rect
+	}
+	local class_icon = self._profile_info_panel:bitmap(class_icon_params)
+
+	class_icon:set_bottom(self._profile_info_panel:h() + 3)
+
+	local initial_nationality_icon = "player_panel_nationality_british"
+	local nationality_icon_params = {
+		name = "nationality_icon",
+		visible = false,
+		texture = tweak_data.gui.icons[initial_nationality_icon].texture,
+		texture_rect = tweak_data.gui.icons[initial_nationality_icon].texture_rect
+	}
+	local nationality_icon = self._profile_info_panel:bitmap(nationality_icon_params)
+
+	nationality_icon:set_bottom(self._profile_info_panel:h() + 3)
+	nationality_icon:set_center_x(self._profile_info_panel:w() / 2 + 3)
+
+	local level_text_params = {
+		vertical = "bottom",
+		name = "level_text",
+		h = 40,
+		w = 40,
+		align = "center",
+		text = "6",
+		visible = false,
+		font = tweak_data.gui:get_font_path(HUDTabScreen.PROFILE_NAME_FONT, HUDTabScreen.PROFILE_LEVEL_FONT_SIZE),
+		font_size = HUDTabScreen.PROFILE_LEVEL_FONT_SIZE
+	}
+	local level_text = self._profile_info_panel:text(level_text_params)
+
+	level_text:set_bottom(self._profile_info_panel:h() - 3)
+	level_text:set_center_x(self._profile_info_panel:w() - HUDTabScreen.PROFILE_LEVEL_RIGHT_OFFSET)
 end
 
 function HUDTabScreen:_create_weapon_challenge_info()

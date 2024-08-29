@@ -76,6 +76,7 @@ end
 function CoreWorldCollection:register_world_despawn(world_id, editor_name)
 	if not self._world_spawns[world_id] then
 		Application:error("[CoreWorldCollection:register_world_despawn] Attempted to despawn a world that was not in the world spawns list!", world_id, editor_name)
+		Application:error(debug.traceback())
 
 		return
 	end
@@ -1418,7 +1419,7 @@ function CoreWorldCollection:level_transition_ended()
 	managers.queued_tasks:queue(nil, self._fire_level_loaded_event, self, nil, ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY + 0.1, nil)
 	self:delete_one_package_ref_from_all()
 
-	if managers.network.matchmake and not managers.network.matchmake.lobby_handler then
+	if IS_PC and managers.network.matchmake and not managers.network.matchmake.lobby_handler then
 		managers.network.matchmake:create_lobby(managers.network:get_matchmake_attributes(), true)
 	end
 
@@ -1505,6 +1506,7 @@ end
 
 function CoreWorldCollection:on_server_left()
 	Application:trace("CoreWorldCollection:on_server_left()")
+	managers.queued_tasks:unqueue_all(nil, nil, true)
 	self:destroy_all_worlds()
 
 	self._skip_loading_counter = CoreWorldCollection.SKIP_LOADING_TICKS

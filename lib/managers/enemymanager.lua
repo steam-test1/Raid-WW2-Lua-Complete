@@ -82,6 +82,7 @@ function EnemyManager:init()
 	self._unit_clbk_key = "EnemyManager"
 	self._corpse_disposal_upd_interval = 5
 	self._commander_active = 0
+	self._difficulty_difference = 0
 end
 
 function EnemyManager:enemy_names()
@@ -1205,7 +1206,7 @@ function EnemyManager:commander_difficulty()
 end
 
 function EnemyManager:is_commander_active()
-	return self._commander_active and self._commander_active > 0
+	return self._commander_active > 0
 end
 
 function EnemyManager:is_spawn_group_allowed(group_type)
@@ -1224,8 +1225,10 @@ function EnemyManager:is_spawn_group_allowed(group_type)
 	return allowed
 end
 
-function EnemyManager:register_commander()
-	Application:debug("[EnemyManager:register_commander()]", self._commander_active)
+function EnemyManager:register_commander(commander_unit)
+	if not alive(commander_unit) then
+		return
+	end
 
 	self._commander_active = self._commander_active + 1
 
@@ -1250,24 +1253,21 @@ function EnemyManager:register_commander()
 				description = managers.localization:text("hint_commander_arrived_desc")
 			})
 		end
-	elseif self._commander_active > 1 then
+	elseif self:is_commander_active() then
 		Application:warn("[EnemyManager:register_commander()] More than one commander is active!!", self._commander_active)
 	end
 end
 
-function EnemyManager:unregister_commander()
-	Application:debug("[EnemyManager:unregister_commander()]", self._commander_active)
-
+function EnemyManager:unregister_commander(commander_unit)
 	self._commander_active = math.clamp(self._commander_active - 1, 0, self._commander_active)
 
-	if self._commander_active == 0 and self._difficulty_difference > 0 then
+	if not self:is_commander_active() and self._difficulty_difference > 0 then
 		local old_diff = managers.groupai:state():get_difficulty()
 		local new_diff = old_diff - self._difficulty_difference
-		new_diff = math.clamp(new_diff, 0, new_diff)
+		new_diff = math.max(new_diff, 0)
+		self._difficulty_difference = 0
 
 		Application:debug("[EnemyManager:unregister_commander()] setting new intensity value (old,new)", old_diff, new_diff)
 		managers.groupai:state():set_difficulty(new_diff)
-
-		self._difficulty_difference = 0
 	end
 end

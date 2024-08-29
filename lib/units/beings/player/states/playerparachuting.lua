@@ -8,11 +8,8 @@ end
 
 function PlayerParachuting:enter(state_data, enter_data)
 	print("[PlayerParachuting:enter]", "Enter parachuting state")
+	self:interupt_all_actions()
 	PlayerParachuting.super.enter(self, state_data, enter_data)
-
-	if self._state_data.ducking then
-		self:_end_action_ducking()
-	end
 
 	self._original_damping = self._unit:mover():damping()
 

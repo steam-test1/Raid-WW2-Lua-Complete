@@ -3,7 +3,6 @@ BarrageManager.MIN_DELAY_VARIANCE = 0.5
 BarrageManager.MAX_DELAY_VARIANCE = 2
 BarrageManager.DEFAULT_DISTANCE = 3000
 BarrageManager.FLARE_SHOOT_ELEVATION = 45
-BarrageManager.FLARE_MASS = 0.4
 BarrageManager.SPOTTER_COOLDOWN = 10
 BarrageManager.FLARE_UNIT = Idstring("units/vanilla/props/props_flare/props_spotter_flare")
 BarrageManager.default_params = tweak_data.barrage.default
@@ -103,8 +102,9 @@ function BarrageManager:sync_spotter_spawn_flare(flare, pos, rot, forward, v, sp
 	local rand1 = push_str - math.random(0, push_str * 2)
 	local rand2 = push_str - math.random(0, push_str * 2)
 	local rand3 = push_str - math.random(0, push_str * 2)
+	local mass = flare:body("dynamic_body"):mass()
 
-	flare:push_at(BarrageManager.FLARE_MASS, velocity, flare:position() + Vector3(rand1, rand2, rand3))
+	flare:push_at(mass, velocity, flare:position() + Vector3(rand1, rand2, rand3))
 
 	local t = Application:time() + tweak_data.barrage.flare_timer
 

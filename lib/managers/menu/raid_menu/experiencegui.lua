@@ -3,7 +3,7 @@ ExperienceGui.BUTTON_PADDING_X = 32
 ExperienceGui.BUTTON_PADDING_Y = 0
 ExperienceGui.DIVIDER_SPACE = 24
 ExperienceGui.MAIN_PANEL_Y = 96
-ExperienceGui.MAIN_PANEL_H = 768
+ExperienceGui.MAIN_PANEL_H = 792
 ExperienceGui.L_PANEL_EQUIPPED_TO_OPTIONS_PADDING = 8
 ExperienceGui.R_PANEL_EXP = 82
 ExperienceGui.R_PANEL_STATS = 104
@@ -20,31 +20,37 @@ function ExperienceGui:_layout()
 	Application:debug("[NewProficiencies] layout everything...")
 	ExperienceGui.super._layout(self)
 	self:_layout_title_text()
+	self:_layout_subtitle_text()
 
-	local menu_shift = 140
-	self._menu_left_side = self._root_panel:panel({
-		name = "menu_left_side",
-		x = 0,
-		layer = 1,
+	self._object = self._root_panel:panel({
+		name = "menu_main_panel",
 		y = ExperienceGui.MAIN_PANEL_Y,
-		w = self._root_panel:w() / 2 - ExperienceGui.DIVIDER_SPACE / 2 - menu_shift,
 		h = ExperienceGui.MAIN_PANEL_H
 	})
-	self._menu_right_side = self._root_panel:panel({
+	local center = self._object:w() / 2 - ExperienceGui.DIVIDER_SPACE / 2
+	local menu_shift = 140
+	local left_padding = 8
+	self._menu_left_side = self._object:panel({
+		name = "menu_left_side",
+		layer = 1,
+		y = left_padding,
+		h = self._object:h() - left_padding * 2,
+		w = center - menu_shift
+	})
+	self._menu_right_side = self._object:panel({
 		name = "menu_right_side",
 		layer = 1,
-		x = self._menu_left_side:w() + ExperienceGui.DIVIDER_SPACE,
-		y = ExperienceGui.MAIN_PANEL_Y,
-		w = self._root_panel:w() / 2 - ExperienceGui.DIVIDER_SPACE / 2 + menu_shift,
-		h = ExperienceGui.MAIN_PANEL_H
+		w = center + menu_shift
 	})
 
+	self._menu_right_side:set_right(self._object:w())
 	self:_layout_player_stats()
 	self:_layout_experience_progress()
 	self:_layout_upgrade_information()
 	self:_layout_equipped_upgrades()
 	self:_layout_equipable_upgrades()
-	self:bind_controller_inputs_initial_state()
+	self:_layout_skill_profile()
+	self:bind_controller_inputs()
 	self:_check_loyalty_reward()
 	Application:debug("[NewProficiencies] done layout!")
 end
@@ -67,8 +73,15 @@ end
 
 function ExperienceGui:_layout_title_text()
 	local character_class = managers.skilltree:get_character_profile_class() or "BROKEN"
+	local title = self:translate("menu_skill_screen_title", true) .. " - " .. self:translate("skill_class_" .. character_class .. "_name", true)
 
-	self._node.components.raid_menu_header:set_screen_name_raw(self:translate("menu_skill_screen_title", true) .. " - " .. self:translate("skill_class_" .. character_class .. "_name", true))
+	self._node.components.raid_menu_header:set_screen_name_raw(title)
+end
+
+function ExperienceGui:_layout_subtitle_text()
+	local profile_name = managers.skilltree:get_active_skill_profile_name()
+
+	self._node.components.raid_menu_header:set_subtitle_raw(utf8.to_upper(profile_name))
 end
 
 function ExperienceGui:_layout_equipped_upgrades()
@@ -79,9 +92,20 @@ function ExperienceGui:_layout_equipped_upgrades()
 	local unlocked_talent_slots = managers.skilltree.get_unlocked_talent_slots()
 	local total_icons = #unlocked_warcry_slots + #unlocked_boost_slots + #unlocked_talent_slots
 	local padding = 8
-	local total_blocks_w = self._menu_left_side:w() - padding * (total_icons - 1)
+	local skill_profiles_w = 42
+	local total_blocks_w = self._menu_left_side:w() - padding * (total_icons - 1) - skill_profiles_w
 	local block_size = math.floor(total_blocks_w / total_icons * 2 + 0.5)
 	block_size = math.floor(block_size / 2 - total_icons * 0.025)
+	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
+	self._equipped_upgrades_area = self._menu_left_side:bitmap({
+		name = "_temp_equipped_upgrades",
+		alpha = 0.8,
+		layer = 0,
+		w = self._menu_left_side:w(),
+		h = block_size + 8,
+		texture = backgrounds_chat_bg.texture,
+		texture_rect = backgrounds_chat_bg.texture_rect
+	})
 	local x = 0
 	local slot_i = 1
 	self._toprow_icons = {}
@@ -110,7 +134,6 @@ function ExperienceGui:_layout_equipped_upgrades()
 			end
 
 			local grid_item = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillTiny, {
-				text = "",
 				y = 4,
 				layer = 1,
 				name = "equippped_slot_" .. slot_type_str .. i,
@@ -139,21 +162,21 @@ function ExperienceGui:_layout_equipped_upgrades()
 	make_skill_button(unlocked_talent_slots, SkillTreeTweakData.TYPE_TALENT)
 	self:_update_equipped_upgrades()
 
-	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
-	self._equipped_upgrades_area = self._menu_left_side:bitmap({
-		name = "_temp_equipped_upgrades",
-		alpha = 0.8,
-		layer = 0,
-		w = self._menu_left_side:w(),
-		h = block_size + 8,
-		texture = backgrounds_chat_bg.texture,
-		texture_rect = backgrounds_chat_bg.texture_rect
+	local grid_item_fg = tweak_data.gui:get_full_gui_data("hslider_arrow_left_base")
+	self._skill_profiles_button = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillProfiles, {
+		name = "skill_profiles_button",
+		y = 4,
+		w = skill_profiles_w,
+		h = block_size,
+		on_click_callback = callback(self, self, "_on_toggle_skill_profiles")
 	})
+
+	self._skill_profiles_button:set_right(self._menu_left_side:w())
 end
 
 function ExperienceGui:on_equipped_selected_upgrade(item_data)
-	if item_data.skill_data and item_data.skill_id then
-		self._upgrade_information:set_skill(item_data.skill_data, item_data.skill_id)
+	if item_data.skill_data then
+		self._upgrade_information:set_skill(item_data.skill_data)
 	end
 end
 
@@ -165,6 +188,29 @@ function ExperienceGui:on_equipped_clicked_upgrade(item_idx, item_data)
 	self:_set_skill_equipped(item_data.skill_data.upgrades_type, item_data.skill_id, false)
 end
 
+function ExperienceGui:_on_toggle_skill_profiles()
+	local profiles_visible = self._skill_profiles_list:visible()
+
+	if profiles_visible then
+		self._skill_profiles_list:hide()
+		self._skill_profiles_list:set_selected(false)
+		self._skill_profiles_button:set_open_state(false)
+		self._equippable_upgrades_scrollable_area:show()
+		self._equippable_upgrades:refresh_items()
+		self._equippable_upgrades:set_selected(true)
+	else
+		local selected_index = managers.skilltree:get_active_skill_profile_index()
+
+		self._skill_profiles_list:show()
+		self._skill_profiles_list:refresh_data()
+		self._skill_profiles_list:set_selected(true)
+		self._skill_profiles_list:select_item_by_index(selected_index)
+		self._skill_profiles_button:set_open_state(true)
+		self._equippable_upgrades_scrollable_area:hide()
+		self._equippable_upgrades:set_selected(false)
+	end
+end
+
 function ExperienceGui:_update_equipped_upgrades()
 	if not self._toprow_icons then
 		Application:error("[ExperienceGui:_update_equipped_upgrades] Toprow icon inputs are not ready!")
@@ -172,22 +218,21 @@ function ExperienceGui:_update_equipped_upgrades()
 		return
 	end
 
-	for slot_type, skills in ipairs(managers.skilltree:get_skills_applied_grouped()) do
-		if self._toprow_icons[slot_type] then
-			local skills_keymap = table.map_keys(skills)
+	local skill_profile = managers.skilltree:get_active_skill_profile()
+	local skills = skill_profile.equipped_skills
 
-			for i, toprow_child in ipairs(self._toprow_icons[slot_type]) do
-				local key = skills_keymap[i]
-				local skill_data = nil
+	for type, type_icons in ipairs(self._toprow_icons) do
+		for i, icon in ipairs(type_icons) do
+			local skill_data = nil
+			local key = skills and skills[type] and skills[type][i]
 
-				if key then
-					local skill = tweak_data.skilltree.skills[key]
-					skill_data = self:_buttonize_skill_data(skill, key)
-					skill_data.tag_color = tweak_data.skilltree.skill_category_colors[slot_type]
-				end
-
-				toprow_child:update_skill_data(skill_data, key)
+			if key then
+				local skill = tweak_data.skilltree.skills[key]
+				skill_data = self:_buttonize_skill_data(skill, key)
+				skill_data.tag_color = tweak_data.skilltree.skill_category_colors[type]
 			end
+
+			icon:update_skill_data(skill_data, key)
 		end
 	end
 end
@@ -198,7 +243,7 @@ function ExperienceGui:_layout_equipable_upgrades()
 	local y = self._equipped_upgrades_area:bottom() + ExperienceGui.L_PANEL_EQUIPPED_TO_OPTIONS_PADDING
 	local h = self._menu_left_side:h() - y
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
-	self._equipable_upgrades_background = self._menu_left_side:image({
+	self._equipable_upgrades_background = self._menu_left_side:bitmap({
 		name = "grid_item_icon_sprite",
 		alpha = 0.5,
 		layer = -1,
@@ -249,6 +294,112 @@ function ExperienceGui:_layout_equipable_upgrades()
 	self._equippable_upgrades:set_selected(true)
 end
 
+function ExperienceGui:_layout_skill_profile()
+	local x_padding = 16
+	local y_padding = 8
+	local x, y, w, h = self._equipable_upgrades_background:shape()
+	self._skill_profiles_list = self._menu_left_side:create_custom_control(RaidGUIControlListSeparated, {
+		selection_enabled = false,
+		name = "skill_profiles_list",
+		loop_items = true,
+		visible = false,
+		x = x + x_padding,
+		y = y + y_padding,
+		w = w - x_padding * 2,
+		h = h - y_padding * 2,
+		item_class = RaidGUIControlListItemSkillProfile,
+		on_item_clicked_callback = callback(self, self, "_on_skill_profile_clicked"),
+		on_item_selected_callback = callback(self, self, "_on_skill_profile_selected"),
+		special_action_callback = callback(self, self, "_on_skill_profile_rename"),
+		data_source_callback = callback(self, self, "_skill_profile_data_source")
+	})
+end
+
+function ExperienceGui:_skill_profile_data_source()
+	local list_items = {}
+
+	for i = 1, #tweak_data.skilltree.skill_profiles do
+		local profile = managers.skilltree:get_skill_profile(i)
+		local profile_name = profile and profile.name or managers.localization:text("skill_profile_name", {
+			NUMBER = i
+		})
+		local profile_purchased = managers.skilltree:is_skill_profile_purchased(i)
+		local purchase_cost = tweak_data.skilltree.skill_profiles[i]
+		local item = {
+			key = i,
+			value = profile_name,
+			unlocked = profile_purchased,
+			purchase_cost = purchase_cost
+		}
+
+		table.insert(list_items, item)
+	end
+
+	return list_items
+end
+
+function ExperienceGui:_on_skill_profile_clicked(data)
+	if not data or not data.key then
+		return
+	end
+
+	local profile_purchased = managers.skilltree:is_skill_profile_purchased(data.key)
+
+	if data.unlocked and profile_purchased then
+		local current_index = managers.skilltree:get_active_skill_profile_index()
+
+		if current_index ~= data.key then
+			managers.skilltree:active_skill_profile(data.key)
+			self:_update_equipped_upgrades()
+			self:_refresh_stats()
+			managers.player:on_upgrades_changed()
+			managers.menu_component:post_event("skill_remove")
+			self:_layout_subtitle_text()
+		end
+
+		managers.menu_component:post_event("menu_enter")
+		self:_on_toggle_skill_profiles()
+	else
+		self._skill_profiles_list:refresh_data()
+		self._skill_profiles_list:select_item_by_index(data.key)
+	end
+end
+
+function ExperienceGui:_on_skill_profile_selected(data)
+	if not data then
+		return
+	end
+
+	if data.unlocked then
+		self:bind_controller_inputs_equip()
+	else
+		self:bind_controller_inputs_buy()
+	end
+end
+
+function ExperienceGui:_on_skill_profile_rename(profile_index)
+	profile_index = profile_index or self._skill_profiles_list:selected_item_index()
+	local profile_name = managers.skilltree:get_skill_profile_name(profile_index)
+
+	managers.menu:show_skill_profile_rename_dialog({
+		capitalize = false,
+		callback_yes = callback(self, self, "_skill_profile_renamed_callback", profile_index),
+		textbox_value = profile_name
+	})
+end
+
+function ExperienceGui:_skill_profile_renamed_callback(profile_index, button, button_data, data)
+	if not profile_index or not data or not data.input_field_text then
+		return
+	end
+
+	local profile = managers.skilltree:get_skill_profile(profile_index)
+	profile.name = trim(data.input_field_text)
+
+	self._skill_profiles_list:refresh_data()
+	self._skill_profiles_list:select_item_by_index(profile_index)
+end
+
 function ExperienceGui:on_item_clicked_upgrade(data)
 	Application:debug("[ExperienceGui:on_item_clicked_upgrade] on_item_clicked_upgrade", data.key_name, "is active:", data.active)
 
@@ -289,6 +440,20 @@ function ExperienceGui:on_item_selected_upgrade(item_idx, item_data)
 	end
 
 	self._upgrade_information:set_skill(item_data)
+
+	local status = item_data.status
+
+	if not status then
+		return
+	end
+
+	if status == RaidGUIControlGridItemSkill.STATE_LOCKED then
+		self:bind_controller_inputs_locked()
+	elseif status == RaidGUIControlGridItemSkill.STATE_PURCHASABLE then
+		self:bind_controller_inputs_buy()
+	else
+		self:bind_controller_inputs()
+	end
 end
 
 function ExperienceGui:data_source_upgrades()
@@ -484,9 +649,6 @@ function ExperienceGui:_layout_upgrade_information()
 	})
 end
 
-function ExperienceGui:on_click_respec_callback()
-end
-
 function ExperienceGui:close()
 	if self._closing then
 		return
@@ -502,13 +664,107 @@ function ExperienceGui:close()
 	ExperienceGui.super.close(self)
 end
 
-function ExperienceGui:bind_controller_inputs_initial_state()
-	Application:debug("[NewProficiencies] bind_controller_inputs_initial_state")
+function ExperienceGui:bind_controller_inputs()
+	local bindings = {
+		{
+			key = Idstring("menu_controller_face_top"),
+			callback = callback(self, self, "_on_toggle_skill_profiles")
+		}
+	}
+
+	self:set_controller_bindings(bindings, true)
 
 	local legend = {
 		controller = {
 			"menu_legend_back",
-			"menu_legend_player_skill_select"
+			"menu_legend_player_skill_select",
+			"menu_legend_player_skill_show_profiles"
+		},
+		keyboard = {
+			{
+				key = "footer_back",
+				callback = callback(self, self, "_on_legend_pc_back", nil)
+			}
+		}
+	}
+
+	self:set_legend(legend)
+end
+
+function ExperienceGui:bind_controller_inputs_buy()
+	local profiles_visible = self._skill_profiles_list:visible()
+	local bindings = {
+		{
+			key = Idstring("menu_controller_face_top"),
+			callback = callback(self, self, "_on_toggle_skill_profiles")
+		}
+	}
+
+	self:set_controller_bindings(bindings, true)
+
+	local legend = {
+		controller = {
+			"menu_legend_back",
+			"menu_legend_character_customization_buy",
+			profiles_visible and "menu_legend_player_skill_hide_profiles" or "menu_legend_player_skill_show_profiles"
+		},
+		keyboard = {
+			{
+				key = "footer_back",
+				callback = callback(self, self, "_on_legend_pc_back", nil)
+			}
+		}
+	}
+
+	self:set_legend(legend)
+end
+
+function ExperienceGui:bind_controller_inputs_equip()
+	local bindings = {
+		{
+			key = Idstring("menu_controller_face_top"),
+			callback = callback(self, self, "_on_toggle_skill_profiles")
+		},
+		{
+			key = Idstring("menu_controller_trigger_right"),
+			callback = callback(self, self, "_on_skill_profile_rename")
+		}
+	}
+
+	self:set_controller_bindings(bindings, true)
+
+	local legend = {
+		controller = {
+			"menu_legend_back",
+			"menu_legend_character_customization_equip",
+			"menu_legend_character_rename",
+			"menu_legend_player_skill_hide_profiles"
+		},
+		keyboard = {
+			{
+				key = "footer_back",
+				callback = callback(self, self, "_on_legend_pc_back", nil)
+			}
+		}
+	}
+
+	self:set_legend(legend)
+end
+
+function ExperienceGui:bind_controller_inputs_locked()
+	local bindings = {
+		{
+			key = Idstring("menu_controller_face_top"),
+			callback = callback(self, self, "_on_toggle_skill_profiles")
+		}
+	}
+
+	self:set_controller_bindings(bindings, true)
+
+	local legend = {
+		controller = {
+			"menu_legend_back",
+			"menu_legend_player_skill_show_profiles"
 		},
 		keyboard = {
 			{
@@ -522,9 +778,13 @@ function ExperienceGui:bind_controller_inputs_initial_state()
 end
 
 function ExperienceGui:confirm_pressed()
-	local selected_item = self._equippable_upgrades:selected_grid_item()
+	if self._equippable_upgrades_scrollable_area:visible() then
+		local selected_item = self._equippable_upgrades:selected_grid_item()
 
-	selected_item:activate()
+		selected_item:activate()
+	elseif self._skill_profiles_list:visible() then
+		self._skill_profiles_list:confirm_pressed()
+	end
 
 	return true
 end

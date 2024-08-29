@@ -144,6 +144,11 @@ end
 
 function RaidGUIControlStepperSimple:_select_item(index, skip_animation)
 	local item = self._stepper_data[index]
+
+	if not item then
+		return
+	end
+
 	local text = item.text or managers.localization:text(item.text_id)
 	local disabled = item.disabled
 	self._selected_item_index = index
@@ -188,7 +193,7 @@ end
 function RaidGUIControlStepperSimple:get_value()
 	local item = self._stepper_data[self._selected_item_index]
 
-	return item.value
+	return item and item.value or false
 end
 
 function RaidGUIControlStepperSimple:set_value_and_render(value_to_select, skip_animation)

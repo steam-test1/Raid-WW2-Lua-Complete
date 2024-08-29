@@ -270,10 +270,6 @@ function NetworkMatchMakingPSN:cancel_find()
 
 	self._room_id = nil
 
-	if managers.network.group:room_id() then
-		managers.network.voice_chat:open_session(managers.network.group:room_id())
-	end
-
 	if not self._join_cb_room then
 		self:_call_callback("cancel_done")
 	else
@@ -318,10 +314,6 @@ function NetworkMatchMakingPSN:leave_game()
 	if self:_is_client() then
 		if self._server_rpc then
 			sent = true
-		end
-
-		if managers.network.group:_is_client() then
-			self:_call_callback("group_leader_left_match")
 		end
 	else
 		for k, v in pairs(self._players) do
@@ -546,10 +538,6 @@ function NetworkMatchMakingPSN:update(time)
 		local closed = false
 
 		if self._room_id then
-			if PSN:is_online() and managers.network.group:room_id() then
-				managers.network.voice_chat:open_session(managers.network.group:room_id())
-			end
-
 			if not self._call_server_timed_out then
 				self._leaving_timer = TimerManager:wall():time() + 10
 			end
@@ -793,7 +781,7 @@ function NetworkMatchMakingPSN:_game_version()
 end
 
 function NetworkMatchMakingPSN:create_lobby(settings, return_to_camp_client)
-	Application:debug("[NetworkGroupLobbyPSN:create_group_lobby] A", inspect(settings))
+	Application:debug("[NetworkMatchMakingPSN:create_lobby] A", inspect(settings))
 
 	if Global.game_settings.single_player then
 		return
@@ -883,7 +871,6 @@ function NetworkMatchMakingPSN:_created_lobby(room_id)
 	local playerinfo = {
 		name = managers.network.account:username(),
 		player_id = managers.network.account:player_id(),
-		group_id = tostring(managers.network.group:room_id()),
 		rpc = Network:self("TCP_IP")
 	}
 
@@ -1745,7 +1732,7 @@ function NetworkMatchMakingPSN:create_server(settings)
 end
 
 function NetworkMatchMakingPSN:_create_server(private)
-	Application:debug("[NetworkGroupLobbyPSN:_create_server] private", private)
+	Application:debug("[NetworkMatchMakingPSN:_create_server] private", private)
 
 	local world_list = PSN:get_world_list()
 	self._server_rpc = nil
@@ -1792,7 +1779,6 @@ function NetworkMatchMakingPSN:_create_server_cb(roomid)
 	local playerinfo = {
 		name = managers.network.account:username(),
 		player_id = managers.network.account:player_id(),
-		group_id = tostring(managers.network.group:room_id()),
 		rpc = Network:self("TCP_IP")
 	}
 

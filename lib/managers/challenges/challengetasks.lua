@@ -126,6 +126,10 @@ function ChallengeTaskKillEnemies:min_range()
 	return self._modifiers.min_range or 0
 end
 
+function ChallengeTaskKillEnemies:max_range()
+	return self._modifiers.max_range or 0
+end
+
 function ChallengeTaskKillEnemies:set_reminders(reminders)
 	self._reminders = reminders
 end
@@ -151,7 +155,15 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 		return
 	end
 
+	if self._modifiers.steelsight and not kill_data.player_used_steelsight then
+		return
+	end
+
 	if self._modifiers.min_range and kill_data.enemy_distance < self._modifiers.min_range then
+		return true
+	end
+
+	if self._modifiers.max_range and self._modifiers.max_range < kill_data.enemy_distance then
 		return true
 	end
 
@@ -253,6 +265,10 @@ function ChallengeTaskCollectAmmo:target()
 end
 
 function ChallengeTaskCollectAmmo:min_range()
+	return 0
+end
+
+function ChallengeTaskCollectAmmo:max_range()
 	return 0
 end
 

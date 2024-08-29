@@ -324,6 +324,8 @@ function CoreEditor:_init_layer_values()
 	self._coordinate_system = "Local"
 	self._grid_sizes = {
 		1,
+		5,
+		10,
 		25,
 		50,
 		100,
@@ -448,6 +450,7 @@ function CoreEditor:_init_title_messages()
 	self:add_title_message("Please help me, Im not meant to be here! ")
 	self:add_title_message("Shoulda, woulda, coulda... ")
 	self:add_title_message("Application has crashed: C++ exception ")
+	self:add_title_message("Don't forget to add your files! ")
 end
 
 function CoreEditor:_init_edit_unit_dialog()
@@ -3184,7 +3187,7 @@ function CoreEditor:do_save(path, dir, save_continents)
 	self:_save_bundle_info_files(dir)
 	self:_recompile(dir)
 	self:output("Saved to " .. path)
-	cat_debug("editor", "Saved to ", path)
+	Application:info("[editor]", "Saved to ", path)
 
 	if wrong_id_found then
 		Application:error("Units with wrong IDs found, please check and finx errors.")

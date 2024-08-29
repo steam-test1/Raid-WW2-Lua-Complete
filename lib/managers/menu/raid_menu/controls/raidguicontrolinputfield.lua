@@ -52,6 +52,7 @@ function RaidGUIControlInputField:init(parent, params)
 	self._enter_callback = callback(self, self, "enter_key_callback")
 	self._typing_callback = 0
 	self._on_text_changed_callback = params.text_changed_callback
+	self._capitalize = params.capitalize == nil and true or params.capitalize
 	self._skip_first = false
 	self._input_panel = self._panel:panel({
 		alpha = 0,
@@ -336,7 +337,9 @@ function RaidGUIControlInputField:update_caret()
 end
 
 function RaidGUIControlInputField:enter_text(o, s)
-	s = utf8.to_upper(s)
+	if self._capitalize then
+		s = utf8.to_upper(s)
+	end
 
 	if self._skip_first then
 		self._skip_first = false

@@ -128,6 +128,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local is_title_outside = preset and preset.is_title_outside or config and config.is_title_outside or false
 	local text_blend_mode = preset and preset.text_blend_mode or config and config.text_blend_mode or "normal"
 	self._allow_moving = config and config.allow_moving or false
+	self._capitalize = config and config.capitalize
 	local preset_or_config_y = y ~= 0
 	title = title and utf8.to_upper(title)
 
@@ -662,20 +663,18 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 
 	textbox_panel:set_h(48)
 
-	local input_field_params = {
+	self._input_field = RaidGUIControlInputField:new(textbox_panel, {
 		name = "input_field",
-		y = 0,
-		x = 0,
 		w = textbox_panel:w(),
 		h = textbox_panel:h(),
 		ws = self._ws,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		text_changed_callback = callback(self, self, "_input_field_text_changed"),
 		text = texbox_value,
+		capitalize = self._capitalize,
 		osk_title = self._osk_title,
 		osk_text = self._osk_text
-	}
-	self._input_field = RaidGUIControlInputField:new(textbox_panel, input_field_params)
+	})
 
 	table.insert(self.controls, self._input_field)
 	self._input_field:set_chat_focus(true)

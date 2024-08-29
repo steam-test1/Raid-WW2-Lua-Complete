@@ -5,21 +5,12 @@ PlayerDamage._ARMOR_DAMAGE_REDUCTION_STEPS = tweak_data.player.damage.ARMOR_DAMA
 
 function PlayerDamage:init(unit)
 	self._unit = unit
-	self._player_class = managers.skilltree:get_character_profile_class() or "recon"
+	self._player_class = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
 	self._class_tweak_data = tweak_data.player:get_tweak_data_for_class(self._player_class)
 	self._revives = 0
-
-	self:replenish()
-
 	self._bleed_out_health = tweak_data.player.damage.BLEED_OUT_HEALTH_INIT
 	self._god_mode = Global.god_mode
 	self._invulnerable = false
-
-	if managers.raid_job:is_camp_loaded() then
-		Application:debug("[PlayerDamage:init] Camp is loaded so player is immortal!")
-		self:set_invulnerable(true)
-	end
-
 	self._mission_damage_blockers = {}
 	self._focus_delay_mul = 1
 	self._listener_holder = EventListenerHolder:new()
@@ -43,8 +34,14 @@ end
 
 function PlayerDamage:post_init()
 	self:setup_upgrades()
+	self:replenish()
+
+	if managers.raid_job:is_camp_loaded() then
+		Application:debug("[PlayerDamage:init] Camp is loaded so player is immortal!")
+		self:set_invulnerable(true)
+	end
+
 	self:send_set_status()
-	managers.hud:set_player_downs(self._revives)
 end
 
 function PlayerDamage:send_set_status()
@@ -141,7 +138,7 @@ function PlayerDamage:update(unit, t, dt)
 
 			managers.hud:set_player_armor({
 				current = self:get_real_armor() * armor_value,
-				total = self:_total_armor(),
+				total = self:_max_armor(),
 				max = self:_max_armor()
 			})
 			SoundDevice:set_rtpc("shield_status", self._hurt_value * 100)
@@ -238,12 +235,6 @@ function PlayerDamage:replenish()
 
 	self:_regenerated()
 	self:_regenerate_armor()
-	self:_update_player_health_hud()
-	managers.hud:set_player_armor({
-		current = self:get_real_armor(),
-		total = self:_total_armor(),
-		max = self:_max_armor()
-	})
 	SoundDevice:set_rtpc("shield_status", 100)
 	SoundDevice:set_rtpc("downed_state_progression", 0)
 
@@ -264,6 +255,11 @@ function PlayerDamage:_regenerate_armor()
 	self._regenerate_speed = nil
 
 	self:_send_set_armor()
+	managers.hud:set_player_armor({
+		current = self:get_real_armor(),
+		total = self:_max_armor(),
+		max = self:_max_armor()
+	})
 end
 
 function PlayerDamage:restore_health(health_restored, is_static)
@@ -288,7 +284,7 @@ function PlayerDamage:restore_armor(armor_restored)
 	managers.hud:set_player_armor({
 		no_hint = true,
 		current = self:get_real_armor(),
-		total = self:_total_armor(),
+		total = self:_max_armor(),
 		max = max_armor
 	})
 end
@@ -387,8 +383,9 @@ end
 function PlayerDamage:set_health(health)
 	local max_health = self:_max_health()
 	self._current_max_health = self._current_max_health or max_health
+	local max_health_different = self._current_max_health ~= max_health
 
-	if self._current_max_health ~= max_health then
+	if max_health_different then
 		local prev_health_ratio = health / self._current_max_health
 		local new_health_ratio = health / max_health
 		local diff_health_ratio = prev_health_ratio - new_health_ratio
@@ -411,9 +408,13 @@ function PlayerDamage:set_health(health)
 		self._said_hurt_half = false
 	end
 
-	self:_update_player_health_hud()
+	local health_different = prev_health ~= self._health
 
-	return prev_health ~= self._health
+	if health_different then
+		self:_update_player_health_hud()
+	end
+
+	return health_different
 end
 
 function PlayerDamage:set_reserved_health(amount)
@@ -445,15 +446,11 @@ function PlayerDamage:_max_health()
 	return base_max_health * skill_multiplier * buff_multiplier + add_health_on_top
 end
 
-function PlayerDamage:_total_armor()
+function PlayerDamage:_max_armor()
 	local base_max_armor = self._class_tweak_data.damage.BASE_ARMOR + managers.player:body_armor_value("armor") + managers.player:body_armor_skill_addend()
 	local mul = managers.player:body_armor_skill_multiplier()
 
 	return base_max_armor * mul
-end
-
-function PlayerDamage:_max_armor()
-	return self:_total_armor()
 end
 
 function PlayerDamage:_armor_steps()
@@ -721,10 +718,10 @@ function PlayerDamage:_calc_armor_damage(attack_data)
 		self:_damage_screen()
 		managers.hud:set_player_armor({
 			current = self:get_real_armor(),
-			total = self:_total_armor(),
+			total = self:_max_armor(),
 			max = self:_max_armor()
 		})
-		SoundDevice:set_rtpc("shield_status", self:get_real_armor() / self:_total_armor() * 100)
+		SoundDevice:set_rtpc("shield_status", self:get_real_armor() / self:_max_armor() * 100)
 		self:_send_set_armor()
 	end
 
@@ -911,7 +908,7 @@ function PlayerDamage:damage_fall(data)
 	managers.hud:set_player_armor({
 		no_hint = true,
 		current = self:get_real_armor(),
-		total = self:_total_armor(),
+		total = self:_max_armor(),
 		max = max_armor
 	})
 	SoundDevice:set_rtpc("shield_status", 0)
@@ -1323,7 +1320,7 @@ function PlayerDamage:revive(helped_self)
 	self._bleedout_timer = nil
 
 	self:set_health(self:_max_health())
-	self:set_armor(self:_total_armor())
+	self:set_armor(self:_max_armor())
 
 	self._revive_miss = 2
 
@@ -1417,7 +1414,7 @@ end
 
 function PlayerDamage:_send_set_armor()
 	if self._unit:network() then
-		local armor = math.round(self:get_real_armor() / self:_total_armor() * 100)
+		local armor = math.round(self:armor_ratio() * 100)
 
 		self._unit:network():send("set_armor", math.clamp(armor, 0, 100))
 	end
@@ -1738,6 +1735,8 @@ function PlayerDamage:setup_upgrades()
 	local event = managers.system_event_listener
 	local interval_multiplier = managers.player:upgrade_value("player", "painkiller_damage_interval_multiplier", 1)
 	self._dmg_interval = tweak_data.player.damage.MIN_DAMAGE_INTERVAL * interval_multiplier
+
+	managers.player:update_health_regen_values()
 end
 
 function PlayerDamage:_perseverance_increase_timer(params)

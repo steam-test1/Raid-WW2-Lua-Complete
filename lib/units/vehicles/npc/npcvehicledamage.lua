@@ -40,7 +40,7 @@ function NpcVehicleDamage:damage_bullet(attack_data)
 	end
 
 	if attack_data.attacker_unit == managers.player:player_unit() then
-		managers.hud:on_hit_confirmed()
+		managers.hud:on_hit_confirmed({})
 	end
 
 	self:_health_recap(attack_data)
@@ -208,7 +208,7 @@ function NpcVehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i
 	attack_data.attack_dir = attack_dir
 
 	if attack_data.attacker_unit and attack_data.attacker_unit == managers.player:player_unit() then
-		managers.hud:on_hit_confirmed()
+		managers.hud:on_hit_confirmed({})
 	end
 
 	self:_health_recap(attack_data)
@@ -321,7 +321,7 @@ function NpcVehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_atta
 	attack_data.attack_dir = attack_dir
 
 	if attack_data.attacker_unit and attack_data.attacker_unit == managers.player:player_unit() then
-		managers.hud:on_hit_confirmed()
+		managers.hud:on_hit_confirmed({})
 	end
 
 	self:_health_recap(attack_data)

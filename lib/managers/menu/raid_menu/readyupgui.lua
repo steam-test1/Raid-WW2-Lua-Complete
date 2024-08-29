@@ -944,6 +944,8 @@ function ReadyUpGui:update(t, dt)
 		Application:debug("[ReadyUpGui:update] Waiting for peers to finish building visuals!")
 
 		return
+	else
+		Application:debug("[ReadyUpGui:update] Peers are finished building visuals!")
 	end
 
 	self:_show_characters()
@@ -954,6 +956,8 @@ function ReadyUpGui:update(t, dt)
 	self:_update_peers()
 
 	if managers.challenge_cards:did_everyone_locked_sugested_card() then
+		Application:debug("[ReadyUpGui:update] Done did_everyone_locked_sugested_card")
+
 		if not self._stinger_played then
 			Application:debug("[ReadyUpGui:update] Ready up stinger...")
 
@@ -964,10 +968,14 @@ function ReadyUpGui:update(t, dt)
 			end
 
 			self._stinger_played = true
+		else
+			Application:debug("[ReadyUpGui:update] Done _stinger_played")
 		end
 
 		for _, unit in pairs(self._spawned_character_units) do
-			if not unit:anim_data().ready_transition_anim_finished then
+			if unit:anim_data().ready_transition_anim_finished then
+				Application:debug("[ReadyUpGui:update] Animation is finished...")
+			else
 				Application:debug("[ReadyUpGui:update] Awaiting animation to finish...")
 
 				return
@@ -1007,6 +1015,8 @@ function ReadyUpGui:update(t, dt)
 				managers.raid_menu:open_menu("challenge_cards_menu")
 			end
 		end
+	else
+		Application:debug("[ReadyUpGui:update] NOT Done did_everyone_locked_sugested_card")
 	end
 end
 

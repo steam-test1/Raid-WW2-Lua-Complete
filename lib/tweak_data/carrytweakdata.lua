@@ -178,10 +178,18 @@ function CarryTweakData:init(tweak_data)
 	self.plank = {
 		type = "normal",
 		name_id = "hud_carry_plank",
-		skip_exit_secure = true,
 		unit = "units/vanilla/pickups/pku_plank_bag/pku_plank_bag",
 		hud_icon = "carry_planks",
-		cannot_stack = true
+		cannot_stack = true,
+		skip_exit_secure = true
+	}
+	self.turret_m2_gun = {
+		type = "normal",
+		name_id = "hud_carry_turret_m2_gun",
+		unit = "units/vanilla/pickups/pku_lootbag/pku_lootbag",
+		hud_icon = "carry_planks",
+		cannot_stack = true,
+		skip_exit_secure = true
 	}
 	self.crate_explosives = {
 		hud_icon = "carry_planks",
@@ -229,6 +237,14 @@ function CarryTweakData:init(tweak_data)
 		throw_rotations = Rotation(0, 20, 0),
 		upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC,
 		weight = self.gold_bar.weight * 3
+	}
+	self.cable_plug = {
+		type = "normal",
+		hud_icon = "carry_planks",
+		cannot_stack = true,
+		skip_exit_secure = true,
+		unit = false,
+		weight = 4
 	}
 	self.corpse_body = {
 		type = "being",
@@ -341,12 +357,6 @@ function CarryTweakData:init(tweak_data)
 	self.torch_tank = {
 		type = "normal",
 		name_id = "hud_carry_torch_tank",
-		skip_exit_secure = true,
-		cannot_stack = true
-	}
-	self.turret_m2_gun = {
-		type = "normal",
-		name_id = "hud_carry_turret_m2_gun",
 		skip_exit_secure = true,
 		cannot_stack = true
 	}

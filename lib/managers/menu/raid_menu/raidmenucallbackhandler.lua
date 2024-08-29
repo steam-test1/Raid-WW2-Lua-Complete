@@ -256,6 +256,7 @@ end
 
 function RaidMenuCallbackHandler:_dialog_leave_ready_up_yes()
 	managers.raid_menu:close_all_menus()
+	managers.challenge_cards:remove_suggested_challenge_card()
 	managers.network:session():send_to_peers_synched("leave_ready_up_menu")
 end
 
@@ -861,7 +862,7 @@ function MenuCallbackHandler:set_resolution_default_raid_no_dialog(resolution)
 	managers.worldcamera:scale_worldcamera_fov(resolution.x / resolution.y)
 end
 
-function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, current_fullscreen, borderless, current_borderless, callback)
+function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, borderless)
 	if fullscreen and managers.viewport:is_fullscreen() then
 		return
 	end
@@ -881,19 +882,6 @@ function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, current_fullscre
 		self:change_resolution_raid(Vector3(monitor_res.x, monitor_res.y, RenderSettings.resolution.z), true)
 	end
 
-	managers.menu:show_accept_gfx_settings_dialog(function ()
-		managers.viewport:set_fullscreen(current_fullscreen)
-		managers.viewport:set_borderless(current_borderless)
-
-		if managers.viewport:is_fullscreen() then
-			managers.mouse_pointer:acquire_input()
-		else
-			managers.mouse_pointer:unacquire_input()
-		end
-
-		self:refresh_node()
-		callback()
-	end)
 	self:refresh_node()
 	self:_refresh_brightness()
 end

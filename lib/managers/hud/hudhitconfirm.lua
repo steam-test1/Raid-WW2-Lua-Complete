@@ -6,10 +6,17 @@ HUDHitConfirm.MODE_TRACK = 4
 HUDHitConfirm.COL_TYPE_HURT = "raid_white"
 HUDHitConfirm.COL_TYPE_KILL = "raid_red"
 HUDHitConfirm.COL_TYPE_CRIT = "raid_gold"
+HUDHitConfirm.COL_TYPE_IMMUNE = "raid_grey"
 HUDHitConfirm.ICO_TYPE_BODY = "indicator_hit_body"
 HUDHitConfirm.ICO_TYPE_HEAD = "indicator_hit_head"
 HUDHitConfirm.ICO_TYPE_PELLET = "indicator_hit_dot"
-HUDHitConfirm.ICO_TYPE_BOMB = "indicator_hit_bomb"
+HUDHitConfirm.ICO_TYPE_ARMOR = "indicator_hit_armor"
+HUDHitConfirm.ICO_TYPE_WEAK = "indicator_hit_weakness"
+HUDHitConfirm.HIT_NORMAL = 1
+HUDHitConfirm.HIT_SPLINTER = 2
+HUDHitConfirm.HIT_ARMOR = 3
+HUDHitConfirm.HIT_WEAKPOINT = 4
+HUDHitConfirm.HIT_KILLSHOT = 5
 HUDHitConfirm.JIGGLE_MIN = 1
 HUDHitConfirm.JIGGLE_MAX = 1
 HUDHitConfirm.MAX_QUEUE = 16
@@ -47,44 +54,69 @@ function HUDHitConfirm:_create_icon(name, icon)
 	return icon
 end
 
-function HUDHitConfirm:on_hit_confirmed(world_hit_pos, is_kill_shot, is_headshot, is_crit, is_pellet)
-	local is_minimalist_mode = managers.user:get_setting("hit_indicator") == HUDHitConfirm.MODE_MINIMAL
-	local hit_con = nil
+function HUDHitConfirm:_on_hit_confirmed_as_pellet(data)
+	local hit_con = self._pellet_hit_confirm[self._pellet_hit_confirm_i]
+	self._pellet_hit_confirm_i = self._pellet_hit_confirm_i + 1
 
-	if is_pellet and not is_minimalist_mode then
-		hit_con = self._pellet_hit_confirm[self._pellet_hit_confirm_i]
-		self._pellet_hit_confirm_i = self._pellet_hit_confirm_i + 1
-
-		if self._pellet_hit_confirm_i == HUDHitConfirm.MAX_QUEUE then
-			self._pellet_hit_confirm_i = 1
-		end
-	else
-		hit_con = self._hit_confirm
-		local jiggle_dir = math.rand_bool()
-
-		hit_con:set_rotation(math.rand(HUDHitConfirm.JIGGLE_MIN, HUDHitConfirm.JIGGLE_MAX) * (jiggle_dir and 1 or -1))
-
-		local gui = tweak_data.gui.icons[is_headshot and HUDHitConfirm.ICO_TYPE_HEAD or HUDHitConfirm.ICO_TYPE_BODY]
-
-		hit_con:set_image(gui.texture)
-		hit_con:set_texture_rect(unpack(gui.texture_rect))
+	if self._pellet_hit_confirm_i == HUDHitConfirm.MAX_QUEUE then
+		self._pellet_hit_confirm_i = 1
 	end
 
-	local priority, col = nil
+	return hit_con
+end
 
-	if is_kill_shot then
+function HUDHitConfirm:_on_hit_confirmed_as_single(data)
+	local is_armor = data.hit_type == HUDHitConfirm.HIT_ARMOR
+	local is_weakpoint = data.hit_type == HUDHitConfirm.HIT_WEAKPOINT
+	local hit_con = self._hit_confirm
+	local color, gui = nil
+
+	if is_armor then
+		gui = tweak_data.gui.icons[HUDHitConfirm.ICO_TYPE_ARMOR]
+	elseif is_weakpoint then
+		gui = tweak_data.gui.icons[HUDHitConfirm.ICO_TYPE_WEAK]
+	else
+		gui = tweak_data.gui.icons[data.is_headshot and HUDHitConfirm.ICO_TYPE_HEAD or HUDHitConfirm.ICO_TYPE_BODY]
+	end
+
+	local jiggle_dir = math.rand_bool()
+
+	hit_con:set_rotation(math.rand(HUDHitConfirm.JIGGLE_MIN, HUDHitConfirm.JIGGLE_MAX) * (jiggle_dir and 1 or -1))
+	hit_con:set_image(gui.texture)
+	hit_con:set_texture_rect(unpack(gui.texture_rect))
+
+	return hit_con
+end
+
+function HUDHitConfirm:on_hit_confirmed(data)
+	local is_minimalist_mode = managers.user:get_setting("hit_indicator") == HUDHitConfirm.MODE_MINIMAL
+	local is_pellet = not is_minimalist_mode and data.hit_type == HUDHitConfirm.HIT_SPLINTER
+	local hit_con = nil
+
+	if is_pellet then
+		hit_con = self:_on_hit_confirmed_as_pellet(data)
+	else
+		hit_con = self:_on_hit_confirmed_as_single(data)
+	end
+
+	local priority = data.is_headshot and 1 or 0
+	local col = nil
+
+	if data.is_killshot then
 		col = tweak_data.gui.colors[HUDHitConfirm.COL_TYPE_KILL]
-		priority = is_headshot and 5 or 4
-	elseif is_crit then
+		priority = priority + 4
+	elseif data.is_crit or data.hit_type == HUDHitConfirm.HIT_WEAKPOINT then
 		col = tweak_data.gui.colors[HUDHitConfirm.COL_TYPE_CRIT]
-		priority = is_headshot and 3 or 2
+		priority = priority + 2
+	elseif data.hit_type == HUDHitConfirm.HIT_ARMOR then
+		col = tweak_data.gui.colors[HUDHitConfirm.COL_TYPE_IMMUNE]
+		priority = priority - 2
 	else
 		col = tweak_data.gui.colors[HUDHitConfirm.COL_TYPE_HURT]
-		priority = is_headshot and 1 or 0
 	end
 
 	hit_con:set_color(col)
-	self:_queue_pop_hit(hit_con, world_hit_pos, is_pellet, priority)
+	self:_queue_pop_hit(hit_con, data.pos, is_pellet, priority)
 end
 
 function HUDHitConfirm:hud_pos_from_world(world_v3)

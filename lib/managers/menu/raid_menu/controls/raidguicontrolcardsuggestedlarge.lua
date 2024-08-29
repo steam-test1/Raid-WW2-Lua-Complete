@@ -222,7 +222,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 			name = "suggested_card_malus_label_" .. self._name,
 			x = self._malus_image:x() + self._malus_image:w() + 10,
 			y = self._malus_image:y(),
-			w = self._challenge_card_panel:w() - self._bonus_image:w() - 10,
+			w = self._challenge_card_panel:w() - self._malus_image:w() - 10,
 			layer = self._challenge_card_panel:layer() + 1,
 			text = malus_description,
 			font = tweak_data.gui.fonts.din_compressed,

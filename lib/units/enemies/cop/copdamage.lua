@@ -442,7 +442,13 @@ function CopDamage:damage_bullet(attack_data)
 		end
 
 		if is_kill_shot or WeaponTweakData.HIT_INDICATOR_ABSOLUTE <= damage or WeaponTweakData.HIT_INDICATOR_PERCENT <= damage / self._HEALTH_INIT then
-			managers.hud:on_hit_confirmed(attack_data.col_ray.position, is_kill_shot, head, death_event_params.critical_hit, wep_type_shotgun)
+			managers.hud:on_hit_confirmed({
+				pos = attack_data.col_ray.position,
+				hit_type = wep_type_shotgun and HUDHitConfirm.HIT_SPLINTER or HUDHitConfirm.HIT_NORMAL,
+				is_killshot = is_kill_shot,
+				is_headshot = head,
+				is_crit = death_event_params.critical_hit
+			})
 		end
 
 		if head then
@@ -1040,7 +1046,12 @@ function CopDamage:damage_explosion(attack_data)
 	if is_attacker_player and damage > 0 then
 		local pos = self._spine2_obj:position()
 
-		managers.hud:on_hit_confirmed(pos, is_kill_shot, false, is_crit_hit, true)
+		managers.hud:on_hit_confirmed({
+			pos = pos,
+			hit_type = HUDHitConfirm.HIT_SPLINTER,
+			is_killshot = is_kill_shot,
+			is_crit = death_event_params.critical_hit
+		})
 	end
 
 	if is_kill_shot then
@@ -1203,7 +1214,10 @@ function CopDamage:damage_tase(attack_data)
 				wep_type_shotgun = true
 			end
 
-			managers.hud:on_hit_confirmed(nil, false, false, critical_hit, wep_type_shotgun)
+			managers.hud:on_hit_confirmed({
+				hit_type = wep_type_shotgun and HUDHitConfirm.HIT_SPLINTER or HUDHitConfirm.HIT_NORMAL,
+				is_crit = death_event_params.critical_hit
+			})
 		end
 	end
 
@@ -1391,7 +1405,12 @@ function CopDamage:damage_melee(attack_data)
 			damage = crit_damage
 		end
 
-		managers.hud:on_hit_confirmed(nil, self._health < damage, attack_data.can_headshot and head, critical_hit, false)
+		managers.hud:on_hit_confirmed({
+			hit_type = HUDHitConfirm.HIT_NORMAL,
+			is_killshot = self._health < damage,
+			is_headshot = attack_data.can_headshot and head,
+			is_crit = critical_hit
+		})
 	end
 
 	damage = damage * (self._marked_dmg_mul or 1)
@@ -2091,7 +2110,10 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 	local is_kill_shot = result.type == "death"
 
 	if attack_data.attacker_unit and attack_data.attacker_unit == managers.player:player_unit() then
-		managers.hud:on_hit_confirmed(nil, is_kill_shot)
+		managers.hud:on_hit_confirmed({
+			hit_type = HUDHitConfirm.HIT_SPLINTER,
+			is_killshot = is_kill_shot
+		})
 	end
 
 	if is_kill_shot then
@@ -3007,7 +3029,7 @@ function CopDamage:_apply_damage_modifier(damage, attack_data)
 end
 
 function CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_type)
-	if unit.movement and unit.character_damage and not unit:character_damage():dead() then
+	if alive(unit) and unit.movement and unit.character_damage and not unit:character_damage():dead() then
 		hurt_type = hurt_type or "knockdown"
 		local client_interrupt = Network:is_client()
 		local action_data = {

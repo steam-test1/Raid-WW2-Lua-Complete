@@ -305,6 +305,8 @@ function IntelTweakData:get_control_video_by_path(path)
 end
 
 function IntelTweakData:get_item_data(category_name, item_id)
+	Application:trace("[IntelTweakData:get_item_data] category_name, item_id ", category_name, item_id)
+
 	for _, item_data in ipairs(self.categories[category_name].items) do
 		if tostring(item_data.id) == tostring(item_id) then
 			return item_data
