@@ -13,18 +13,24 @@ function ElementRopeOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 16-31
+-- Lines 16-37
 function ElementRopeOperator:on_executed(instigator)
+	Application:debug("[ElementRopeOperator:on_executed] enabled/rope_unit_id", self._values.enabled, self._values.rope_unit_id)
+
 	if not self._values.enabled or not self._values.rope_unit_id then
 		return
 	end
 
 	local rope_unit = managers.worldcollection:get_unit_with_id(self._values.rope_unit_id, nil, self._sync_id)
 
+	Application:debug("[ElementRopeOperator:on_executed] rope_unit", rope_unit, self._values.rope_unit_id)
+
 	if rope_unit then
 		if self._values.operation == "attach" then
+			Application:debug("[ElementRopeOperator:on_executed] ATTACH")
 			self:_attach_rope(rope_unit)
 		elseif self._values.operation == "detach" then
+			Application:debug("[ElementRopeOperator:on_executed] DETACH")
 			self:_detach_rope(rope_unit)
 		end
 	end
@@ -32,41 +38,42 @@ function ElementRopeOperator:on_executed(instigator)
 	ElementRopeOperator.super.on_executed(self, instigator)
 end
 
--- Lines 33-52
+-- Lines 39-58
 function ElementRopeOperator:_attach_rope(rope_unit)
 	local dragged_unit = rope_unit
-	local steering_joint = rope_unit:get_object(Idstring("anim_rope_start"))
-	local steering_body = rope_unit:body("body_collision_start")
+	local steering_body = rope_unit:body(rope_unit:unit_data().steering_body)
 	local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
 	local operator_unit = mission:get_element_by_id(self._id)
-
-	steering_body:set_keyframed()
-
 	local target_position = operator_unit._values.position
 	local target_rotation = operator_unit._values.rotation
 
+	steering_body:set_keyframed()
 	steering_body:set_position(target_position)
 	steering_body:set_rotation(target_rotation)
-	steering_joint:set_position(target_position)
-	steering_joint:set_rotation(target_rotation)
+
+	local brush = Draw:brush(Color(0.3, 1, 1, 1), 2)
+
+	brush:sphere(target_position, 5)
+	brush:sphere(steering_body:position(), 5)
+	brush:cylinder(steering_body:position(), target_position, 3, 3)
 end
 
--- Lines 54-59
+-- Lines 60-65
 function ElementRopeOperator:_detach_rope(rope_unit)
 	local dragged_unit = rope_unit
-	local steering_body = rope_unit:body("body_collision_start")
+	local steering_body = rope_unit:body(rope_unit:unit_data().steering_body)
 
 	steering_body:set_dynamic()
 end
 
 ElementRopeTrigger = ElementRopeTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 65-67
+-- Lines 71-73
 function ElementRopeTrigger:init(...)
 	ElementRopeTrigger.super.init(self, ...)
 end
 
--- Lines 69-74
+-- Lines 75-80
 function ElementRopeTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -75,11 +82,11 @@ function ElementRopeTrigger:on_script_activated()
 	end
 end
 
--- Lines 76-78
+-- Lines 82-84
 function ElementRopeTrigger:client_on_executed(...)
 end
 
--- Lines 80-86
+-- Lines 86-92
 function ElementRopeTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

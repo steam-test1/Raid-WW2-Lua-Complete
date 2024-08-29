@@ -4,8 +4,9 @@ RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_DELETE = "button_delete"
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_CREATE = "button_create"
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_RENAME = "button_rename"
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_NATION = "button_nation"
+RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR = Color("313131")
 
--- Lines 10-54
+-- Lines 12-57
 function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	RaidGUIControlListItemCharacterSelectButton.super.init(self, parent, params)
 
@@ -33,6 +34,7 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 		x = 0,
 		texture = tweak_data.gui.icons.list_btn_ico_plus.texture,
 		texture_rect = tweak_data.gui.icons.list_btn_ico_plus.texture_rect,
+		color = RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR,
 		layer = self._background:layer() + 1
 	})
 
@@ -55,7 +57,7 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	self._label:set_center(CharacterSelectionGui.BUTTON_W / 2, CharacterSelectionGui.BUTTON_H / 2)
 end
 
--- Lines 56-87
+-- Lines 59-90
 function RaidGUIControlListItemCharacterSelectButton:set_button(button_type)
 	if button_type == RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_CUSTOMIZE then
 		self._icon:set_image(tweak_data.gui.icons.list_btn_ico_shirt.texture)
@@ -90,7 +92,7 @@ function RaidGUIControlListItemCharacterSelectButton:set_button(button_type)
 	end
 end
 
--- Lines 89-95
+-- Lines 92-98
 function RaidGUIControlListItemCharacterSelectButton:highlight_on()
 	self._background:set_image(tweak_data.gui.icons.btn_list_rect_hover.texture)
 	self._background:set_texture_rect(tweak_data.gui.icons.btn_list_rect_hover.texture_rect)
@@ -98,7 +100,7 @@ function RaidGUIControlListItemCharacterSelectButton:highlight_on()
 	self._icon:set_visible(false)
 end
 
--- Lines 97-103
+-- Lines 100-106
 function RaidGUIControlListItemCharacterSelectButton:highlight_off()
 	self._background:set_image(tweak_data.gui.icons.btn_list_rect.texture)
 	self._background:set_texture_rect(tweak_data.gui.icons.btn_list_rect.texture_rect)
@@ -106,12 +108,12 @@ function RaidGUIControlListItemCharacterSelectButton:highlight_off()
 	self._icon:set_visible(true)
 end
 
--- Lines 105-108
+-- Lines 108-111
 function RaidGUIControlListItemCharacterSelectButton:mouse_released(o, button, x, y)
 	return self:on_mouse_released()
 end
 
--- Lines 110-117
+-- Lines 113-120
 function RaidGUIControlListItemCharacterSelectButton:on_mouse_released()
 	if self._special_action_callback then
 		self._special_action_callback(self._params.slot_index, self._button_type)

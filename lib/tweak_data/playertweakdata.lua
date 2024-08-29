@@ -243,11 +243,11 @@ function PlayerTweakData:init()
 	self:_init_run_delay_tweak_data()
 end
 
--- Lines 271-279
+-- Lines 271-282
 function PlayerTweakData:get_tweak_data_for_class(class)
 	if not class or not self.class_defaults[class] then
-		Application:error("[PlayerTweakData] get_tweak_data_for_class(): trying to get tweak data for non-existent class: ", class)
-		Application:error(debug.traceback())
+		Application:warn("[PlayerTweakData] get_tweak_data_for_class: trying to get tweak data for non-existent class: ", class)
+		Application:warn(debug.traceback())
 
 		return self.class_defaults.default
 	end
@@ -255,7 +255,7 @@ function PlayerTweakData:get_tweak_data_for_class(class)
 	return self.class_defaults[class]
 end
 
--- Lines 281-290
+-- Lines 284-293
 function PlayerTweakData:_init_class_specific_tweak_data()
 	self.class_defaults = {}
 
@@ -266,7 +266,7 @@ function PlayerTweakData:_init_class_specific_tweak_data()
 	self:_init_demolitions_tweak_data()
 end
 
--- Lines 292-298
+-- Lines 295-301
 function PlayerTweakData:_init_team_ai_tweak_data()
 	self.team_ai = {
 		movement = {}
@@ -276,7 +276,7 @@ function PlayerTweakData:_init_team_ai_tweak_data()
 	}
 end
 
--- Lines 301-308
+-- Lines 304-311
 function PlayerTweakData:_init_run_delay_tweak_data()
 	self.run_delay = {
 		use_generic = 0.75,
@@ -286,7 +286,7 @@ function PlayerTweakData:_init_run_delay_tweak_data()
 	}
 end
 
--- Lines 310-370
+-- Lines 313-373
 function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default = {
 		damage = {}
@@ -345,7 +345,7 @@ function PlayerTweakData:_init_default_class_tweak_data()
 	}
 end
 
--- Lines 372-381
+-- Lines 375-384
 function PlayerTweakData:_init_recon_tweak_data()
 	local recon = SkillTreeTweakData.CLASS_RECON
 	self.class_defaults[recon] = deep_clone(self.class_defaults.default)
@@ -356,7 +356,7 @@ function PlayerTweakData:_init_recon_tweak_data()
 	self.class_defaults[recon].movement.carry.CARRY_WEIGHT_MAX = 5
 end
 
--- Lines 383-393
+-- Lines 386-396
 function PlayerTweakData:_init_assault_tweak_data()
 	local assault = SkillTreeTweakData.CLASS_ASSAULT
 	self.class_defaults[assault] = deep_clone(self.class_defaults.default)
@@ -367,7 +367,7 @@ function PlayerTweakData:_init_assault_tweak_data()
 	self.class_defaults[assault].movement.carry.CARRY_WEIGHT_MAX = 3
 end
 
--- Lines 395-404
+-- Lines 398-407
 function PlayerTweakData:_init_insurgent_tweak_data()
 	local insurgent = SkillTreeTweakData.CLASS_INFILTRATOR
 	self.class_defaults[insurgent] = deep_clone(self.class_defaults.default)
@@ -378,13 +378,13 @@ function PlayerTweakData:_init_insurgent_tweak_data()
 	self.class_defaults[insurgent].movement.carry.CARRY_WEIGHT_MAX = 4
 end
 
--- Lines 406-410
+-- Lines 409-413
 function PlayerTweakData:_init_demolitions_tweak_data()
 	local demolitions = SkillTreeTweakData.CLASS_DEMOLITIONS
 	self.class_defaults[demolitions] = deep_clone(self.class_defaults.default)
 end
 
--- Lines 412-457
+-- Lines 415-460
 function PlayerTweakData:_init_parachute()
 	self.freefall = {
 		gravity = 982,
@@ -426,7 +426,7 @@ function PlayerTweakData:_init_parachute()
 	}
 end
 
--- Lines 460-767
+-- Lines 463-770
 function PlayerTweakData:_init_pistol_stances()
 	self.stances.m1911 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.1257, 29.4187, 1.86738)
@@ -620,7 +620,7 @@ function PlayerTweakData:_init_pistol_stances()
 	self.stances.webley.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -55, 0)
 end
 
--- Lines 769-931
+-- Lines 772-934
 function PlayerTweakData:_init_smg_stances()
 	self.stances.sterling = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(7.98744, 8.04285, -5.10392)
@@ -743,7 +743,7 @@ function PlayerTweakData:_init_smg_stances()
 	self.stances.mp38.crouched.vel_overshot.pitch_pos = -5
 end
 
--- Lines 933-1079
+-- Lines 936-1082
 function PlayerTweakData:_init_shotgun_stances()
 	self.stances.geco = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(11.4127, 15.7764, -5.20036)
@@ -851,7 +851,7 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.browning.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
 end
 
--- Lines 1082-1118
+-- Lines 1085-1121
 function PlayerTweakData:_init_carry_stances()
 	self.stances.carrying = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.1257, 29.4187, 1.86738)
@@ -883,7 +883,7 @@ function PlayerTweakData:_init_carry_stances()
 	self.stances.carrying.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -35, 0)
 end
 
--- Lines 1120-1591
+-- Lines 1123-1594
 function PlayerTweakData:_init_new_stances()
 	self.stances.dp28 = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(12.6977, 8.8, -6.68822)

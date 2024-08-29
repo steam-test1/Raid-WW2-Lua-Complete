@@ -105,7 +105,7 @@ function LootDropManager:produce_loot_drop(loot_value, use_reroll_drop_tables, f
 	return drop
 end
 
--- Lines 132-234
+-- Lines 132-235
 function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
 	Application:debug("[LootDropManager:_get_loot_group] get loot:", loot_value, use_reroll_drop_tables, forced_loot_group)
 
@@ -146,7 +146,7 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 								break
 							end
 
-							local current_job = managers.raid_job:current_job()
+							local current_job = managers.raid_job:current_job() or managers.raid_job:previously_completed_job()
 
 							if current_job and current_job.job_type then
 								if condition == LootDropTweakData.DROP_CONDITION_IS_RAID and current_job.job_type ~= OperationsTweakData.JOB_TYPE_RAID then
@@ -187,7 +187,7 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 	return loot_group
 end
 
--- Lines 237-254
+-- Lines 238-255
 function LootDropManager:get_random_item_weighted(collection)
 	local total = 0
 
@@ -211,7 +211,7 @@ function LootDropManager:get_random_item_weighted(collection)
 	return item
 end
 
--- Lines 257-262
+-- Lines 258-263
 function LootDropManager:_get_random_item(collection)
 	local num_items = #collection
 	local index = math.random(#collection)
@@ -220,12 +220,12 @@ function LootDropManager:_get_random_item(collection)
 	return item
 end
 
--- Lines 265-267
+-- Lines 266-268
 function LootDropManager:get_dropped_loot()
 	return self._dropped_loot
 end
 
--- Lines 270-334
+-- Lines 271-335
 function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables, forced_loot_group)
 	self._loot_value = loot_value
 	local need_reroll = false
@@ -284,7 +284,7 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 	self:on_loot_dropped_for_player()
 end
 
--- Lines 336-352
+-- Lines 337-353
 function LootDropManager:card_drop_callback(error, loot_list)
 	if not loot_list then
 		managers.challenge_cards:set_temp_steam_loot(nil)
@@ -302,13 +302,13 @@ function LootDropManager:card_drop_callback(error, loot_list)
 	end
 end
 
--- Lines 354-358
+-- Lines 355-359
 function LootDropManager:on_loot_dropped_for_player()
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 	game_state_machine:current_state():on_loot_dropped_for_player()
 end
 
--- Lines 361-385
+-- Lines 362-386
 function LootDropManager:redeem_dropped_loot_for_xp()
 	local drop = self._dropped_loot
 
@@ -327,7 +327,7 @@ function LootDropManager:redeem_dropped_loot_for_xp()
 	end
 end
 
--- Lines 388-413
+-- Lines 389-414
 function LootDropManager:redeem_dropped_loot_for_goldbars()
 	local drop = self._dropped_loot
 	local drop_redeemed_gold = drop.redeemed_gold or 5
@@ -349,7 +349,7 @@ function LootDropManager:redeem_dropped_loot_for_goldbars()
 	end
 end
 
--- Lines 416-420
+-- Lines 417-421
 function LootDropManager:_give_xp_to_player(drop)
 	drop.awarded_xp = math.round(math.rand(drop.xp_min, drop.xp_max) / 100) * 100
 
@@ -357,7 +357,7 @@ function LootDropManager:_give_xp_to_player(drop)
 	managers.network:session():send_to_peers_synched("sync_loot_to_peers", drop.reward_type, "", drop.awarded_xp, managers.network:session():local_peer():id())
 end
 
--- Lines 423-444
+-- Lines 424-445
 function LootDropManager:_give_character_customization_to_player(drop)
 	local candidate_customizations = tweak_data.character_customization:get_reward_loot_by_rarity(drop.rarity)
 	drop.character_customization_key = self:_get_random_item(candidate_customizations)
@@ -376,7 +376,7 @@ function LootDropManager:_give_character_customization_to_player(drop)
 	end
 end
 
--- Lines 447-451
+-- Lines 448-452
 function LootDropManager:_give_weapon_point_to_player(drop)
 	managers.weapon_skills:add_weapon_skill_points_as_drops(1)
 
@@ -385,7 +385,7 @@ function LootDropManager:_give_weapon_point_to_player(drop)
 	managers.network:session():send_to_peers_synched("sync_loot_to_peers", drop.reward_type, "", drop.reedemed_xp, managers.network:session():local_peer():id())
 end
 
--- Lines 454-473
+-- Lines 455-474
 function LootDropManager:_give_halloween_2017_weapon_to_player(drop)
 	local candidate_melee_weapon = clone(managers.weapon_inventory:get_weapon_data(WeaponInventoryManager.CATEGORY_NAME_MELEE, drop.weapon_id))
 
@@ -403,7 +403,7 @@ function LootDropManager:_give_halloween_2017_weapon_to_player(drop)
 	end
 end
 
--- Lines 476-496
+-- Lines 477-497
 function LootDropManager:_give_melee_weapon_to_player(drop)
 	Application:trace("[LootDropManager:_give_melee_weapon_to_player] drop 1: ", inspect(drop))
 
@@ -424,7 +424,7 @@ function LootDropManager:_give_melee_weapon_to_player(drop)
 	end
 end
 
--- Lines 499-504
+-- Lines 500-505
 function LootDropManager:_give_gold_bars_to_player(drop)
 	drop.awarded_gold_bars = math.round(math.rand(drop.gold_bars_min, drop.gold_bars_max))
 
@@ -433,7 +433,7 @@ function LootDropManager:_give_gold_bars_to_player(drop)
 	managers.network:session():send_to_peers_synched("sync_loot_to_peers", drop.reward_type, "", drop.awarded_gold_bars, managers.network:session():local_peer():id())
 end
 
--- Lines 507-536
+-- Lines 508-537
 function LootDropManager:on_loot_dropped_for_peer(loot_type, name, value, peer_id)
 	Application:trace("[LootDropManager:on_loot_dropped_for_peer]   Loot dropped for peer:  ", loot_type, name, value, peer_id)
 
@@ -467,12 +467,12 @@ function LootDropManager:on_loot_dropped_for_peer(loot_type, name, value, peer_i
 	self:_call_listeners(LootDropManager.EVENT_PEER_LOOT_RECEIVED, drop)
 end
 
--- Lines 539-541
+-- Lines 540-542
 function LootDropManager:get_loot_for_peers()
 	return self._loot_for_peers
 end
 
--- Lines 544-550
+-- Lines 545-551
 function LootDropManager:clear_dropped_loot()
 	self._dropped_loot = nil
 	self._loot_for_peers = {}
@@ -481,12 +481,12 @@ function LootDropManager:clear_dropped_loot()
 	self._card_drop_pack_type = nil
 end
 
--- Lines 554-556
+-- Lines 555-557
 function LootDropManager:convert_loot_register_value(id)
 	return not not LootDropManager._REGISTER_LOOT_CONVERTER[id] and LootDropManager._REGISTER_LOOT_CONVERTER[id] or false
 end
 
--- Lines 560-576
+-- Lines 561-577
 function LootDropManager:register_loot(unit, value_type, world_id)
 	local value = self:convert_loot_register_value(value_type)
 
@@ -510,7 +510,7 @@ function LootDropManager:register_loot(unit, value_type, world_id)
 	self._loot_registered_last_leg = self._loot_registered_last_leg + value
 end
 
--- Lines 578-596
+-- Lines 579-597
 function LootDropManager:remove_loot_from_level(world_id)
 	if not Network:is_server() then
 		return
@@ -528,7 +528,7 @@ function LootDropManager:remove_loot_from_level(world_id)
 	self._active_loot_units = {}
 end
 
--- Lines 601-689
+-- Lines 602-690
 function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 	if not Network:is_server() or Application:editor() then
 		return
@@ -606,7 +606,7 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 	managers.hud:set_loot_total(self._loot_spawned_current_leg)
 end
 
--- Lines 691-708
+-- Lines 692-709
 function LootDropManager:reset_loot_value_counters()
 	self._registered_loot_units = {}
 	self._active_loot_units = {}
@@ -622,7 +622,7 @@ function LootDropManager:reset_loot_value_counters()
 	end
 end
 
--- Lines 710-719
+-- Lines 711-720
 function LootDropManager:current_loot_pickup_ratio()
 	local result = nil
 
@@ -636,71 +636,71 @@ function LootDropManager:current_loot_pickup_ratio()
 	return result
 end
 
--- Lines 721-729
+-- Lines 722-730
 function LootDropManager:pickup_loot(value, unit)
 	self._picked_up_current_leg = self._picked_up_current_leg + value
 
 	managers.hud:set_loot_picked_up(self._picked_up_current_leg)
 end
 
--- Lines 731-734
+-- Lines 732-735
 function LootDropManager:on_simulation_ended()
 	Application:trace("LootDropManager:on_simulation_ended()")
 	self:reset_loot_value_counters()
 end
 
--- Lines 837-844
+-- Lines 838-845
 function LootDropManager:reset()
 	Global.lootdrop_manager = nil
 
 	self:_setup()
 end
 
--- Lines 846-848
+-- Lines 847-849
 function LootDropManager:picked_up_current_leg()
 	return self._picked_up_current_leg
 end
 
--- Lines 850-852
+-- Lines 851-853
 function LootDropManager:picked_up_total()
 	return self._picked_up_total
 end
 
--- Lines 854-856
+-- Lines 855-857
 function LootDropManager:loot_spawned_total()
 	return self._loot_spawned_total
 end
 
--- Lines 858-860
+-- Lines 859-861
 function LootDropManager:loot_spawned_current_leg()
 	return self._loot_spawned_current_leg
 end
 
--- Lines 862-865
+-- Lines 863-866
 function LootDropManager:set_picked_up_current_leg(picked_up_current_leg)
 	self._picked_up_current_leg = picked_up_current_leg
 
 	managers.hud:set_loot_picked_up(self._picked_up_current_leg)
 end
 
--- Lines 867-869
+-- Lines 868-870
 function LootDropManager:set_picked_up_total(picked_up_total)
 	self._picked_up_total = picked_up_total
 end
 
--- Lines 871-873
+-- Lines 872-874
 function LootDropManager:set_loot_spawned_total(loot_spawned_total)
 	self._loot_spawned_total = loot_spawned_total
 end
 
--- Lines 875-878
+-- Lines 876-879
 function LootDropManager:set_loot_spawned_current_leg(loot_spawned_current_leg)
 	self._loot_spawned_current_leg = loot_spawned_current_leg
 
 	managers.hud:set_loot_total(self._loot_spawned_current_leg)
 end
 
--- Lines 881-888
+-- Lines 882-889
 function LootDropManager:sync_load(data)
 	local state = data.LootDropManager
 	self._picked_up_total = state.picked_up_total
@@ -709,7 +709,7 @@ function LootDropManager:sync_load(data)
 	self._loot_spawned_current_leg = state.loot_spawned_current_leg
 end
 
--- Lines 891-899
+-- Lines 892-900
 function LootDropManager:sync_save(data)
 	local state = {
 		picked_up_total = self._picked_up_total,
@@ -720,12 +720,12 @@ function LootDropManager:sync_save(data)
 	data.LootDropManager = state
 end
 
--- Lines 902-904
+-- Lines 903-905
 function LootDropManager:save(data)
 	data.LootDropManager = self._global
 end
 
--- Lines 907-909
+-- Lines 908-910
 function LootDropManager:load(data)
 	self._global = data.LootDropManager
 end

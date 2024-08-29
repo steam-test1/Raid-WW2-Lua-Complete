@@ -63,7 +63,7 @@ function SentryGunDamage:shoot_pos_mid(m_pos)
 	mvector3.set(m_pos, self._ext_movement:m_head_pos())
 end
 
--- Lines 75-155
+-- Lines 75-153
 function SentryGunDamage:damage_bullet(attack_data)
 	if self._dead or self._invulnerable or Network:is_client() and self._ignore_client_damage or PlayerDamage.is_friendly_fire(self, attack_data.attacker_unit) then
 		return
@@ -84,7 +84,11 @@ function SentryGunDamage:damage_bullet(attack_data)
 		local critical_hit, damage = CopDamage.roll_critical_hit(self, dmg_adjusted)
 		dmg_adjusted = damage
 
-		managers.hud:on_hit_confirmed(nil, self._dead and true or false, false, critical_hit, false)
+		managers.hud:on_hit_confirmed({
+			hit_type = HUDHitConfirm.HIT_NORMAL,
+			is_killshot = self._dead and true or false,
+			is_crit = critical_hit
+		})
 	end
 
 	if hit_bag then
@@ -139,7 +143,7 @@ function SentryGunDamage:damage_bullet(attack_data)
 	return result
 end
 
--- Lines 159-213
+-- Lines 157-211
 function SentryGunDamage:damage_fire(attack_data)
 	if self._dead or self._invulnerable or Network:is_client() and self._ignore_client_damage or attack_data.variant == "stun" or not tweak_data.weapon[self._unit:base():get_name_id()].FIRE_DMG_MUL then
 		return
@@ -194,7 +198,7 @@ function SentryGunDamage:damage_fire(attack_data)
 	end
 end
 
--- Lines 217-285
+-- Lines 215-281
 function SentryGunDamage:damage_explosion(attack_data)
 	if self._unit:brain():is_tank() and not self._dead and not Network:is_client() and not self._sabotaged then
 		self:_check_tank_sabotage(attack_data.attacker_unit)
@@ -221,7 +225,11 @@ function SentryGunDamage:damage_explosion(attack_data)
 		local critical_hit, crit_damage = CopDamage.roll_critical_hit(self, damage)
 		damage = crit_damage
 
-		managers.hud:on_hit_confirmed(nil, self._dead and true or false, false, critical_hit, false)
+		managers.hud:on_hit_confirmed({
+			hit_type = HUDHitConfirm.HIT_NORMAL,
+			is_killshot = self._dead and true or false,
+			is_crit = critical_hit
+		})
 	end
 
 	damage = damage + self._sync_dmg_leftover
@@ -262,7 +270,7 @@ function SentryGunDamage:damage_explosion(attack_data)
 	end
 end
 
--- Lines 288-311
+-- Lines 284-307
 function SentryGunDamage:_check_tank_sabotage(attacker_unit)
 	if self._sabotage_allow_t and TimerManager:game():time() < self._sabotage_allow_t then
 		Application:debug("[SentryGunDamage:_check_tank_sabotage]", "Tank sabotage still on cooldown")
@@ -290,12 +298,12 @@ function SentryGunDamage:_check_tank_sabotage(attacker_unit)
 	end
 end
 
--- Lines 315-317
+-- Lines 311-313
 function SentryGunDamage:dead()
 	return self._dead
 end
 
--- Lines 321-327
+-- Lines 317-323
 function SentryGunDamage:sync_sabotaged()
 	self._sabotaged = true
 
@@ -304,12 +312,12 @@ function SentryGunDamage:sync_sabotaged()
 	end
 end
 
--- Lines 331-333
+-- Lines 327-329
 function SentryGunDamage:sabotaged()
 	return self._sabotaged
 end
 
--- Lines 337-352
+-- Lines 333-348
 function SentryGunDamage:repair_sabotage()
 	self._sabotaged = nil
 
@@ -326,22 +334,22 @@ function SentryGunDamage:repair_sabotage()
 	end
 end
 
--- Lines 356-358
+-- Lines 352-354
 function SentryGunDamage:health_ratio()
 	return self._health / self._HEALTH_INIT
 end
 
--- Lines 362-364
+-- Lines 358-360
 function SentryGunDamage:shield_health_ratio()
 	return 1
 end
 
--- Lines 368-370
+-- Lines 364-366
 function SentryGunDamage:focus_delay_mul()
 	return 1
 end
 
--- Lines 374-401
+-- Lines 370-397
 function SentryGunDamage:die()
 	self._health = 0
 	self._dead = true
@@ -373,7 +381,7 @@ function SentryGunDamage:die()
 	managers.mission:call_global_event("tank_destroyed")
 end
 
--- Lines 405-421
+-- Lines 401-417
 function SentryGunDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit_offset_height, death)
 	if self._dead then
 		return
@@ -394,7 +402,7 @@ function SentryGunDamage:sync_damage_bullet(attacker_unit, damage_percent, i_bod
 	end
 end
 
--- Lines 425-446
+-- Lines 421-442
 function SentryGunDamage:sync_damage_fire(attacker_unit, damage_percent, death, direction)
 	if self._dead then
 		return
@@ -415,7 +423,7 @@ function SentryGunDamage:sync_damage_fire(attacker_unit, damage_percent, death, 
 	end
 end
 
--- Lines 450-470
+-- Lines 446-466
 function SentryGunDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	if self._dead then
 		return
@@ -437,7 +445,7 @@ function SentryGunDamage:sync_damage_explosion(attacker_unit, damage_percent, i_
 	end
 end
 
--- Lines 475-506
+-- Lines 471-502
 function SentryGunDamage:_apply_damage(damage, is_local)
 	local damage_percent = nil
 	local body_damage = damage ~= "death" and damage or self._HEALTH_INIT
@@ -470,11 +478,11 @@ function SentryGunDamage:_apply_damage(damage, is_local)
 	return damage_percent
 end
 
--- Lines 510-512
+-- Lines 506-508
 function SentryGunDamage:update_shield_smoke_level(ratio, up)
 end
 
--- Lines 516-523
+-- Lines 512-519
 function SentryGunDamage:save(save_data)
 	local my_save_data = {}
 	save_data.char_damage = my_save_data
@@ -483,7 +491,7 @@ function SentryGunDamage:save(save_data)
 	my_save_data.HEALTH_INIT = self._HEALTH_INIT
 end
 
--- Lines 527-543
+-- Lines 523-539
 function SentryGunDamage:load(save_data)
 	if not save_data or not save_data.char_damage then
 		return
@@ -500,11 +508,11 @@ function SentryGunDamage:load(save_data)
 	end
 end
 
--- Lines 548-549
+-- Lines 544-545
 function SentryGunDamage:destroy(unit)
 end
 
--- Lines 553-555
+-- Lines 549-551
 function SentryGunDamage:shield_smoke_level()
 	return 0
 end

@@ -55,7 +55,7 @@ function RaidMenuHeader:set_screen_name(screen_name_id, subtitle)
 	end
 end
 
--- Lines 62-67
+-- Lines 62-68
 function RaidMenuHeader:set_screen_name_raw(text)
 	self._screen_name_label:set_text(text)
 
@@ -65,7 +65,17 @@ function RaidMenuHeader:set_screen_name_raw(text)
 	self._screen_name_label:set_h(h)
 end
 
--- Lines 70-77
+-- Lines 70-76
+function RaidMenuHeader:set_subtitle_raw(text)
+	self._screen_subtitle_label:set_text(text)
+
+	local _, _, w, h = self._screen_subtitle_label:text_rect()
+
+	self._screen_subtitle_label:set_w(w)
+	self._screen_subtitle_label:set_h(h)
+end
+
+-- Lines 79-86
 function RaidMenuHeader:set_header_icon(icon_data)
 	self._header_icon = self._root_panel:image({
 		name = "header_icon",
@@ -82,29 +92,29 @@ function RaidMenuHeader:set_header_icon(icon_data)
 	self._screen_name_label:set_x(x + icon_data.tex_rect[3] + 16)
 end
 
--- Lines 79-82
+-- Lines 88-91
 function RaidMenuHeader:get_screen_name_rect()
 	local x, y, w, h = self._screen_name_label:text_rect()
 
 	return x, y, w, h
 end
 
--- Lines 84-91
+-- Lines 93-100
 function RaidMenuHeader:set_character_name(character_name)
 	local full_name = ""
 	local steam_name = managers.network:session():local_peer():name()
 	full_name = character_name .. " (" .. steam_name .. ")"
 end
 
--- Lines 94-95
+-- Lines 103-104
 function RaidMenuHeader:back_pressed()
 end
 
--- Lines 97-98
+-- Lines 106-107
 function RaidMenuHeader:on_escape()
 end
 
--- Lines 100-102
+-- Lines 109-111
 function RaidMenuHeader:confirm_pressed()
 	return false
 end

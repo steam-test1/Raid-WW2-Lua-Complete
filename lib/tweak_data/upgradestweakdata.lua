@@ -594,25 +594,25 @@ function UpgradesTweakData:_create_talent_definitions()
 	self:_create_definition("player_fasthand_enter_steelsight_speed_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "fasthand_enter_steelsight_speed_multiplier", UpgradesTweakData.UPG_CAT_PLAYER, false, 1, false, self.description_data_types.generic_multiplier)
 
 	self.values.player.fasthand_climb_speed_increase = {
-		1.55
+		1.5
 	}
 
 	self:_create_definition("player_fasthand_climb_speed_increase", UpgradesTweakData.DEF_CAT_FEATURE, "fasthand_climb_speed_increase", UpgradesTweakData.UPG_CAT_PLAYER, false, 1, false, self.description_data_types.generic_multiplier)
 
 	self.values.player.fasthand_mantle_speed_increase = {
-		1.28
+		1.25
 	}
 
 	self:_create_definition("player_fasthand_mantle_speed_increase", UpgradesTweakData.DEF_CAT_FEATURE, "fasthand_mantle_speed_increase", UpgradesTweakData.UPG_CAT_PLAYER, false, 1, false, self.description_data_types.generic_multiplier)
 
 	self.values.weapon.fasthand_reload_speed_multiplier = {
-		1.34
+		1.2
 	}
 
 	self:_create_definition("weapon_fasthand_reload_speed_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "fasthand_reload_speed_multiplier", UpgradesTweakData.UPG_CAT_WEAPON, false, 1, false, self.description_data_types.generic_multiplier)
 
 	self.values.player.fasthand_swap_speed_multiplier = {
-		1.26
+		1.25
 	}
 
 	self:_create_definition("player_fasthand_swap_speed_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "fasthand_swap_speed_multiplier", UpgradesTweakData.UPG_CAT_PLAYER, false, 1, false, self.description_data_types.generic_multiplier)
@@ -1501,7 +1501,7 @@ function UpgradesTweakData:_create_talent_definitions()
 	self:_create_definition("interaction_predator_corpse_speed_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "predator_corpse_speed_multiplier", UpgradesTweakData.UPG_CAT_INTERACT, true, 1, false, self.description_data_types.reductive_multiplier)
 
 	self.values.player.predator_surprise_kill_leeway_multiplier = {
-		0.42
+		0.47
 	}
 
 	self:_create_definition("player_predator_surprise_kill_leeway_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "predator_surprise_kill_leeway_multiplier", UpgradesTweakData.UPG_CAT_PLAYER, true, 1, false, self.description_data_types.raw_value_amount)

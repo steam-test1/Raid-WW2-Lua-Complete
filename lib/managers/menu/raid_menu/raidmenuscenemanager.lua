@@ -304,7 +304,7 @@ function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
 
 		managers.worldcamera:stop_sequences()
 
-		if Global.game_settings.single_player and game_state_machine:current_state_name() ~= "menu_main" then
+		if Application:paused() and game_state_machine:current_state_name() ~= "menu_main" then
 			Application:set_pause(false)
 			managers.menu_component:post_event("resume_all_gameplay_sounds")
 		end

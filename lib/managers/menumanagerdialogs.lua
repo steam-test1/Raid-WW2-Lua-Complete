@@ -2735,3 +2735,57 @@ function MenuManager:show_loyalty_reward_message(text_id, amount)
 
 	managers.system_menu:show(dialog_data)
 end
+
+-- Lines 2046-2070
+function MenuManager:show_skill_profile_rename_dialog(params)
+	local yes_button = {
+		text = managers.localization:to_upper_text("dialog_rename"),
+		class = RaidGUIControlButtonShortPrimary,
+		callback_func = params.callback_yes
+	}
+	local no_button = {
+		cancel_button = true,
+		text = managers.localization:to_upper_text("dialog_cancel"),
+		class = RaidGUIControlButtonShortSecondary,
+		callback_func = params.callback_no
+	}
+	local dialog_data = {
+		focus_button = 1,
+		capitalize = false,
+		textbox = true,
+		title = managers.localization:to_upper_text("menu_skill_profile_rename_title"),
+		textbox_value = params.textbox_value,
+		button_list = {
+			yes_button,
+			no_button
+		}
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2072-2092
+function MenuManager:show_skill_profile_purchase_dialog(params)
+	local yes_button = {
+		text = managers.localization:to_upper_text("dialog_yes"),
+		class = RaidGUIControlButtonShortPrimaryGold,
+		callback_func = params.callback_yes
+	}
+	local no_button = {
+		cancel_button = true,
+		text = managers.localization:to_upper_text("dialog_no"),
+		class = RaidGUIControlButtonShortSecondary
+	}
+	local dialog_data = {
+		title = managers.localization:text("menu_skill_profile_purchase_title"),
+		text = managers.localization:text("menu_skill_profile_purchase_message", {
+			AMOUNT = params.amount
+		}),
+		button_list = {
+			yes_button,
+			no_button
+		}
+	}
+
+	managers.system_menu:show(dialog_data)
+end

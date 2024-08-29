@@ -330,7 +330,7 @@ function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 	end
 end
 
--- Lines 283-507
+-- Lines 283-503
 function FireManager:detect_and_give_dmg(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -343,15 +343,10 @@ function FireManager:detect_and_give_dmg(params)
 	local col_ray = params.col_ray
 	local alert_filter = params.alert_filter or managers.groupai:state():get_unit_type_filter("civilians_enemies")
 	local owner = params.owner
-	local push_units = false
+	local push_units = params.push_units or false
 	local fire_dot_data = params.fire_dot_data
-	local results = {}
 	local alert_radius = params.alert_radius or 3000
-
-	if params.push_units ~= nil then
-		push_units = params.push_units
-	end
-
+	local results = {}
 	local player = managers.player:player_unit()
 
 	if alive(player) and player_dmg ~= 0 then
@@ -537,11 +532,11 @@ function FireManager:detect_and_give_dmg(params)
 	return hit_units, splinters, results
 end
 
--- Lines 509-511
+-- Lines 505-507
 function FireManager:units_to_push(units_to_push, hit_pos, range)
 end
 
--- Lines 513-565
+-- Lines 509-561
 function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -585,13 +580,13 @@ function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, dam
 	end
 end
 
--- Lines 567-570
+-- Lines 563-566
 function FireManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 572-592
+-- Lines 568-588
 function FireManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -613,20 +608,20 @@ function FireManager:client_damage_and_push(position, normal, user_unit, dmg, ra
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines 594-598
+-- Lines 590-594
 function FireManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table, custom_params.sound_event_burning, custom_params.sound_event_impact_duration)
 end
 
--- Lines 600-602
+-- Lines 596-598
 function FireManager:player_feedback(position, normal, range, custom_params)
 end
 
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 606-670
+-- Lines 602-666
 function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration)
 	effect_name = effect_name or molotov_effect
 	local effect_id = nil
@@ -693,11 +688,11 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 	self:project_decal(ray, decal_ray_from, decal_ray_to, on_unit and ray and ray.unit, idstr_decal, idstr_effect)
 end
 
--- Lines 672-674
+-- Lines 668-670
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 end
 
--- Lines 677-683
+-- Lines 673-679
 function FireManager:_dispose_of_impact_sound(custom_params)
 	local sound_source_burning_loop = SoundDevice:create_source("MolotovBurning")
 
@@ -711,7 +706,7 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 	}), TimerManager:game():time() + tonumber(molotov_tweak.burn_duration) - custom_params.sound_event_impact_duration)
 end
 
--- Lines 687-691
+-- Lines 683-687
 function FireManager:on_simulation_ended()
 	self._enemies_on_fire = {}
 	self._dozers_on_fire = {}

@@ -110,23 +110,7 @@ function UnitDamage:parent_run_sequence(sequence_name)
 	end
 end
 
--- Lines 110-114
-function UnitDamage:hit_headshot_confirmed(attacker_unit, hit_pos)
-	if attacker_unit == managers.player:player_unit() then
-		managers.hud:on_hit_confirmed(hit_pos, true)
-	end
-end
-
--- Lines 117-121
-function UnitDamage:hit_hit_confirmed(attacker_unit, hit_pos)
-	if attacker_unit == managers.player:player_unit() then
-		managers.hud:on_hit_confirmed(hit_pos, false)
-	end
-end
-
--- Lines 124-128
-function UnitDamage:hit_crit_confirmed(attacker_unit, hit_pos)
-	if attacker_unit == managers.player:player_unit() then
-		managers.hud:on_hit_confirmed(hit_pos, false, true)
-	end
+-- Lines 108-110
+function UnitDamage:set_hitmarker_type(hitmarker_type)
+	self.hitmarker_type = hitmarker_type
 end

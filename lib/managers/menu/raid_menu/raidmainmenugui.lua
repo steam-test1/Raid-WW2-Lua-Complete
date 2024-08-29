@@ -45,7 +45,7 @@ function RaidMainMenuGui:_setup_properties()
 	self._background = "ui/backgrounds/raid_main_bg_hud"
 end
 
--- Lines 70-96
+-- Lines 70-100
 function RaidMainMenuGui:_layout()
 	self._display_invite_widget = not IS_PC
 
@@ -72,7 +72,7 @@ function RaidMainMenuGui:_layout()
 	end
 end
 
--- Lines 98-103
+-- Lines 102-107
 function RaidMainMenuGui:close()
 	managers.system_event_listener:remove_listener("main_menu_drop_in")
 	managers.system_event_listener:remove_listener("main_menu_drop_out")
@@ -80,7 +80,7 @@ function RaidMainMenuGui:close()
 	RaidMainMenuGui.super.close(self)
 end
 
--- Lines 105-204
+-- Lines 109-208
 function RaidMainMenuGui:_layout_title_logo()
 	self._title_label = self._root_panel:text({
 		text = "",
@@ -169,11 +169,11 @@ function RaidMainMenuGui:_layout_title_logo()
 	end
 end
 
--- Lines 206-208
+-- Lines 210-212
 function RaidMainMenuGui:_layout_logo()
 end
 
--- Lines 210-268
+-- Lines 214-272
 function RaidMainMenuGui:_layout_list_menu()
 	if Network:multiplayer() then
 		local list_menu_params_multiplayer = {
@@ -215,7 +215,7 @@ function RaidMainMenuGui:_layout_list_menu()
 	self._list_menu:set_selected(true)
 end
 
--- Lines 272-320
+-- Lines 290-338
 function RaidMainMenuGui:_layout_version_id()
 	local text = ""
 	local debug_show_all = false
@@ -245,32 +245,32 @@ function RaidMainMenuGui:_layout_version_id()
 	self._version_id = self._root_panel:label(item_params)
 end
 
--- Lines 323-325
+-- Lines 341-343
 function RaidMainMenuGui:mouse_over_steam_group_button()
 	self._steam_group_button_frame:set_color(Color("ff8880"))
 end
 
--- Lines 328-332
+-- Lines 346-350
 function RaidMainMenuGui:mouse_exit_steam_group_button()
 	self._steam_group_button_frame:set_color(Color.white)
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
 end
 
--- Lines 335-338
+-- Lines 353-356
 function RaidMainMenuGui:mouse_pressed_steam_group_button()
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_press"))
 end
 
--- Lines 341-346
+-- Lines 359-364
 function RaidMainMenuGui:mouse_released_steam_group_button()
 	self._steam_group_button_frame:stop()
 	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
 	Steam:overlay_activate("url", "http://steamcommunity.com/games/414740")
 end
 
--- Lines 349-375
+-- Lines 367-393
 function RaidMainMenuGui:_animate_steam_group_button_press(o)
 	local duration = 0.15
 	local t = self._steam_button_t * duration
@@ -298,7 +298,7 @@ function RaidMainMenuGui:_animate_steam_group_button_press(o)
 	self._steam_button_t = 1
 end
 
--- Lines 378-404
+-- Lines 396-422
 function RaidMainMenuGui:_animate_steam_group_button_release(o)
 	local duration = 0.15
 	local t = (1 - self._steam_button_t) * duration
@@ -326,7 +326,7 @@ function RaidMainMenuGui:_animate_steam_group_button_release(o)
 	self._steam_button_t = 0
 end
 
--- Lines 408-566
+-- Lines 426-584
 function RaidMainMenuGui:_layout_kick_mute_widget()
 	if self._widget_panel then
 		self._widget_panel:clear()
@@ -491,7 +491,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	end
 end
 
--- Lines 568-583
+-- Lines 586-601
 function RaidMainMenuGui:on_widget_button_selected(button)
 	local widget_action = nil
 
@@ -510,12 +510,12 @@ function RaidMainMenuGui:on_widget_button_selected(button)
 	self._widget_action_title:set_text(self:translate(widget_action, true))
 end
 
--- Lines 585-587
+-- Lines 603-605
 function RaidMainMenuGui:on_widget_button_unselected(button)
 	self._widget_action_title:set_text("")
 end
 
--- Lines 589-871
+-- Lines 607-889
 function RaidMainMenuGui:_list_menu_data_source()
 	local _list_items = {}
 
@@ -744,7 +744,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 	return _list_items
 end
 
--- Lines 873-885
+-- Lines 891-903
 function RaidMainMenuGui:_on_list_menu_item_selected(data)
 	if not data.callback then
 		return
@@ -758,7 +758,7 @@ function RaidMainMenuGui:_on_list_menu_item_selected(data)
 	end
 end
 
--- Lines 888-897
+-- Lines 906-915
 function RaidMainMenuGui:refresh_kick_mute_widgets()
 	if self._widgets then
 		for index, widget in pairs(self._widgets) do

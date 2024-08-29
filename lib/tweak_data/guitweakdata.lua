@@ -103,7 +103,7 @@ function GuiTweakData:_setup_colors()
 	self.colors.raid_grey_skills = Color("a9a9ae")
 end
 
--- Lines 104-171
+-- Lines 104-180
 function GuiTweakData:_setup_hud_colors()
 	self.colors.ammo_background_outline = Color("1f1f22")
 	self.colors.ammo_text = Color("222222")
@@ -134,7 +134,7 @@ function GuiTweakData:_setup_hud_colors()
 			color = self.colors.progress_red
 		},
 		{
-			start_percentage = 0.25,
+			start_percentage = 0.5,
 			color = self.colors.light_grey
 		}
 	}
@@ -210,12 +210,23 @@ function GuiTweakData:_setup_hud_colors()
 			color = self.colors.progress_red
 		}
 	}
+	local color = self.colors.grid_item_grey
+	self.colors.list_item_background = {
+		0,
+		color:with_alpha(0),
+		0.1,
+		color,
+		0.9,
+		color,
+		1,
+		color:with_alpha(0)
+	}
 end
 
--- Lines 174-182
+-- Lines 183-196
 function GuiTweakData.get_color_for_percentage(color_table, percentage)
 	for i = #color_table, 1, -1 do
-		if color_table[i].start_percentage < percentage then
+		if color_table[i].start_percentage < (percentage or 0.5) then
 			return color_table[i].color
 		end
 	end
@@ -223,7 +234,7 @@ function GuiTweakData.get_color_for_percentage(color_table, percentage)
 	return color_table[1].color
 end
 
--- Lines 184-214
+-- Lines 198-228
 function GuiTweakData:_setup_fonts()
 	self.fonts = {
 		din_compressed = "din_compressed",
@@ -256,7 +267,7 @@ function GuiTweakData:_setup_fonts()
 	}
 end
 
--- Lines 221-229
+-- Lines 235-243
 function GuiTweakData:_setup_font_paths()
 	self.font_paths = {}
 
@@ -266,7 +277,7 @@ function GuiTweakData:_setup_font_paths()
 	self:_setup_lato_font_paths()
 end
 
--- Lines 231-251
+-- Lines 245-265
 function GuiTweakData:_setup_din_compressed_font_paths()
 	self.font_paths.din_compressed = {
 		[18] = "ui/fonts/pf_din_text_comp_pro_medium_18_mf",
@@ -288,7 +299,7 @@ function GuiTweakData:_setup_din_compressed_font_paths()
 	}
 end
 
--- Lines 253-262
+-- Lines 267-276
 function GuiTweakData:_setup_din_compressed_outlined_fonts()
 	self.fonts.din_compressed_outlined_18 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_18_mf"
 	self.fonts.din_compressed_outlined_20 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_20_mf"
@@ -300,13 +311,13 @@ function GuiTweakData:_setup_din_compressed_outlined_fonts()
 	self.fonts.din_compressed_outlined_42 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_42_mf"
 end
 
--- Lines 264-267
+-- Lines 278-281
 function GuiTweakData:_setup_lato_outlined_fonts()
 	self.fonts.lato_outlined_18 = "ui/fonts/lato_regular_outlined_18_mf"
 	self.fonts.lato_outlined_20 = "ui/fonts/lato_regular_outlined_20_mf"
 end
 
--- Lines 269-282
+-- Lines 283-296
 function GuiTweakData:_setup_lato_font_paths()
 	self.font_paths.lato = {
 		[18] = "ui/fonts/lato_regular_18_mf",
@@ -321,7 +332,7 @@ function GuiTweakData:_setup_lato_font_paths()
 	}
 end
 
--- Lines 284-297
+-- Lines 298-311
 function GuiTweakData:_setup_noto_fonts()
 	self.fonts.noto = {
 		[18] = "ui/fonts/noto_18",
@@ -336,7 +347,7 @@ function GuiTweakData:_setup_noto_fonts()
 	}
 end
 
--- Lines 299-327
+-- Lines 313-341
 function GuiTweakData:get_font_path(font, font_size)
 	local font_paths = self.font_paths[font]
 
@@ -369,7 +380,7 @@ function GuiTweakData:get_font_path(font, font_size)
 	return font_paths.default
 end
 
--- Lines 330-422
+-- Lines 344-436
 function GuiTweakData:_setup_crosshairs()
 	self.crosshairs = {
 		pistol = {
@@ -438,7 +449,7 @@ function GuiTweakData:_setup_crosshairs()
 	}
 end
 
--- Lines 424-1665
+-- Lines 438-1703
 function GuiTweakData:_setup_icons()
 	self.icons = {
 		credits_logo_lgl = {}
@@ -2268,6 +2279,60 @@ function GuiTweakData:_setup_icons()
 			32
 		}
 	}
+	self.icons.list_btn_context_bg = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			0,
+			96,
+			48,
+			48
+		}
+	}
+	self.icons.list_btn_context_fg = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			0,
+			144,
+			48,
+			48
+		}
+	}
+	self.icons.list_separator_left = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			64,
+			150,
+			30,
+			2
+		}
+	}
+	self.icons.list_separator_right = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			98,
+			150,
+			30,
+			2
+		}
+	}
+	self.icons.list_separator_center = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			94,
+			150,
+			4,
+			2
+		}
+	}
+	self.icons.arrow_down = {
+		texture = "ui/atlas/menu/raid_atlas_menu_2",
+		texture_rect = {
+			0,
+			192,
+			25,
+			25
+		}
+	}
 	local wpnskl_x = 40
 	self.icons.wpn_skill_selected = {
 		texture = "ui/atlas/menu/raid_atlas_wpn_upg",
@@ -3126,7 +3191,7 @@ function GuiTweakData:_setup_icons()
 	}
 end
 
--- Lines 1668-1722
+-- Lines 1706-1760
 function GuiTweakData:_setup_reward_icons()
 	self.icons.gold_bar_single = {
 		texture = "ui/icons/rewards/gold_hud",
@@ -3256,7 +3321,7 @@ function GuiTweakData:_setup_reward_icons()
 	}
 end
 
--- Lines 1725-1871
+-- Lines 1763-1909
 function GuiTweakData:_setup_radial_icons()
 	self.icons.interact_lockpick_tool = {
 		texture = "ui/icons/interact_lockpick_tool_hud",
@@ -3567,7 +3632,7 @@ function GuiTweakData:_setup_radial_icons()
 	}
 end
 
--- Lines 1873-2650
+-- Lines 1911-2694
 function GuiTweakData:_setup_hud_icons()
 	self.icons.aa_gun_bg = {
 		texture = "ui/atlas/raid_atlas_hud",
@@ -4417,12 +4482,12 @@ function GuiTweakData:_setup_hud_icons()
 		}
 	}
 	self.icons.notification_consumable = {
-		texture = "ui/atlas/raid_atlas_hud",
+		texture = "ui/atlas/raid_atlas_notification_intel",
 		texture_rect = {
-			731,
-			963,
-			228,
-			316
+			0,
+			0,
+			256,
+			256
 		}
 	}
 	self.icons.objecives_new_empty_frame = {
@@ -5278,7 +5343,7 @@ function GuiTweakData:_setup_hud_icons()
 	}
 end
 
--- Lines 2652-2668
+-- Lines 2696-2712
 function GuiTweakData:_setup_hud_hotswap_icons()
 	self.icons.hotswap_device_keyboard = {
 		texture = "ui/icons/controller_hotswap_icons",
@@ -5318,7 +5383,7 @@ function GuiTweakData:_setup_hud_hotswap_icons()
 	}
 end
 
--- Lines 2670-2704
+-- Lines 2714-2748
 function GuiTweakData:_setup_hud_accessibility_icons()
 	local common_motion_dot_size = {
 		0,
@@ -5360,7 +5425,7 @@ function GuiTweakData:_setup_hud_accessibility_icons()
 	}
 end
 
--- Lines 2707-3024
+-- Lines 2751-3076
 function GuiTweakData:_setup_hud_waypoint_icons()
 	self.icons.damage_indicator_1 = {
 		texture = "ui/atlas/raid_atlas_waypoints",
@@ -5429,6 +5494,24 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
 			96,
+			992,
+			32,
+			32
+		}
+	}
+	self.icons.indicator_hit_armor = {
+		texture = "ui/atlas/raid_atlas_waypoints",
+		texture_rect = {
+			128,
+			992,
+			32,
+			32
+		}
+	}
+	self.icons.indicator_hit_weakness = {
+		texture = "ui/atlas/raid_atlas_waypoints",
+		texture_rect = {
+			160,
 			992,
 			32,
 			32
@@ -6021,7 +6104,7 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 	}
 end
 
--- Lines 3026-3121
+-- Lines 3078-3173
 function GuiTweakData:_setup_hud_reticles()
 	self.icons.weapons_reticles_ass_carbine = {
 		texture = "ui/atlas/raid_atlas_reticles",
@@ -6232,9 +6315,9 @@ function GuiTweakData:_setup_hud_reticles()
 	}
 end
 
--- Lines 3124-3143
+-- Lines 3176-3195
 function GuiTweakData:_setup_hud_status_effects()
-	-- Lines 3125-3130
+	-- Lines 3177-3182
 	local function _make_icon(name, x, y)
 		self.icons[name] = {
 			texture = "ui/atlas/raid_atlas_hud_status_effects",
@@ -6257,7 +6340,7 @@ function GuiTweakData:_setup_hud_status_effects()
 	_make_icon("status_effect_dismemberment_boost", 3, 1)
 end
 
--- Lines 3146-3172
+-- Lines 3198-3224
 function GuiTweakData:_setup_map_icons()
 	self.icons.map = {
 		texture = "ui/atlas/raid_atlas_map",
@@ -6315,9 +6398,9 @@ function GuiTweakData:_setup_map_icons()
 	}
 end
 
--- Lines 3174-3328
+-- Lines 3226-3380
 function GuiTweakData:_setup_skill_icons()
-	-- Lines 3176-3181
+	-- Lines 3228-3233
 	local function _make_icon(name, x, y)
 		self.icons[name] = {
 			texture = "ui/atlas/skilltree/raid_atlas_skills_new",
@@ -6516,7 +6599,7 @@ function GuiTweakData:_setup_skill_icons()
 	}
 end
 
--- Lines 3330-3488
+-- Lines 3382-3540
 function GuiTweakData:_setup_skill_big_icons()
 	self.icons.experience_mission_fail_large = {
 		texture = "ui/atlas/skilltree/raid_atlas_experience",
@@ -6862,7 +6945,7 @@ function GuiTweakData:_setup_skill_big_icons()
 	}
 end
 
--- Lines 3490-3504
+-- Lines 3542-3556
 function GuiTweakData:_setup_backgrounds()
 	self.backgrounds = {
 		splash_screen = {}
@@ -6894,7 +6977,7 @@ function GuiTweakData:_setup_backgrounds()
 	}
 end
 
--- Lines 3506-3512
+-- Lines 3558-3564
 function GuiTweakData:_setup_images()
 	self.images = {
 		menu_paper = {}
@@ -6908,7 +6991,7 @@ function GuiTweakData:_setup_images()
 	}
 end
 
--- Lines 3514-4010
+-- Lines 3566-4128
 function GuiTweakData:_setup_mission_photos()
 	self.mission_photos = {
 		intel_bank_01 = {}
@@ -7948,7 +8031,7 @@ function GuiTweakData:_setup_mission_photos()
 	}
 end
 
--- Lines 4012-4032
+-- Lines 4130-4150
 function GuiTweakData:_setup_optical_flares()
 	self.icons.lens_glint = {
 		texture = "ui/optical_flares/raid_reward_lens_glint_df",
@@ -7997,7 +8080,7 @@ function GuiTweakData:_setup_optical_flares()
 	}
 end
 
--- Lines 4034-4117
+-- Lines 4152-4235
 function GuiTweakData:_setup_xp_icons()
 	self.icons.xp_events_mission_raid_railyard = {
 		texture = "ui/atlas/raid_atlas_xp",
@@ -8181,7 +8264,7 @@ function GuiTweakData:_setup_xp_icons()
 	}
 end
 
--- Lines 4119-4173
+-- Lines 4237-4291
 function GuiTweakData:_setup_paper_icons()
 	self.icons.icon_intel_tape_01 = {
 		texture = "ui/atlas/menu/raid_atlas_papers",
@@ -8293,9 +8376,9 @@ function GuiTweakData:_setup_paper_icons()
 	}
 end
 
--- Lines 4175-4213
+-- Lines 4293-4331
 function GuiTweakData:_setup_nine_rect_icons()
-	-- Lines 4181-4209
+	-- Lines 4299-4327
 	local function make_nine_rect(nine_rect_id, texture, texture_rect, edge_rect)
 		if type(edge_rect) == "number" then
 			edge_rect = {
@@ -8409,7 +8492,7 @@ function GuiTweakData:_setup_nine_rect_icons()
 	}, 16)
 end
 
--- Lines 4241-4372
+-- Lines 4359-4490
 function GuiTweakData:_setup_old_tweak_data()
 	self.content_updates = {
 		title_id = "menu_content_updates",

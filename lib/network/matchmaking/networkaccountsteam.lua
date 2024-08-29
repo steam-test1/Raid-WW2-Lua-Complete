@@ -464,8 +464,10 @@ function NetworkAccountSTEAM:is_ready_to_close()
 	return not self._inventory_is_loading and not self._inventory_outfit_refresh_requested and not self._inventory_outfit_refresh_in_progress
 end
 
--- Lines 505-530
+-- Lines 505-524
 function NetworkAccountSTEAM:inventory_load(callback_ref)
+	Application:trace("[NetworkAccountSTEAM:inventory_load]", "self._inventory_is_loading: ", self._inventory_is_loading)
+
 	if self._inventory_is_loading then
 		return
 	end
@@ -483,7 +485,7 @@ function NetworkAccountSTEAM:inventory_load(callback_ref)
 	end
 end
 
--- Lines 532-571
+-- Lines 526-565
 function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 	self._inventory_is_loading = nil
 
@@ -499,7 +501,7 @@ function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 	})
 end
 
--- Lines 577-620
+-- Lines 571-614
 function NetworkAccountSTEAM:_verify_filter_cards(card_list)
 	local filtered_list = {}
 	local result = {}
@@ -535,12 +537,12 @@ function NetworkAccountSTEAM:_verify_filter_cards(card_list)
 	return result
 end
 
--- Lines 623-625
+-- Lines 617-619
 function NetworkAccountSTEAM:inventory_is_loading()
 	return self._inventory_is_loading
 end
 
--- Lines 627-647
+-- Lines 621-635
 function NetworkAccountSTEAM:inventory_reward(item_def_id, callback_ref)
 	item_def_id = item_def_id or 1
 
@@ -555,34 +557,34 @@ function NetworkAccountSTEAM:inventory_reward(item_def_id, callback_ref)
 	return true
 end
 
--- Lines 649-656
+-- Lines 637-644
 function NetworkAccountSTEAM:_clbk_inventory_reward(error, tradable_list)
 	Application:trace("[NetworkAccountSTEAM:_clbk_inventory_reward] Dummy fallback")
 	Application:trace("\t-error ", inspect(error))
 	Application:trace("\t-tradable_list ", inspect(tradable_list))
 end
 
--- Lines 658-670
+-- Lines 646-658
 function NetworkAccountSTEAM:inventory_remove(instance_id)
 	local return_status = Steam:inventory_remove(instance_id)
 
 	Application:trace("[ChallengeCardsManager:inventory_remove] instance_id ", instance_id, ", status", return_status)
 end
 
--- Lines 672-673
+-- Lines 660-661
 function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
 end
 
--- Lines 675-683
+-- Lines 663-665
 function NetworkAccountSTEAM:inventory_reward_dlc(def_id, reward_promo_callback)
 end
 
--- Lines 685-694
+-- Lines 667-669
 function NetworkAccountSTEAM:inventory_outfit_refresh()
 	self._inventory_outfit_refresh_requested = true
 end
 
--- Lines 696-708
+-- Lines 671-683
 function NetworkAccountSTEAM:_inventory_outfit_refresh()
 	local outfit = managers.blackmarket:tradable_outfit()
 
@@ -600,7 +602,7 @@ function NetworkAccountSTEAM:_inventory_outfit_refresh()
 	end
 end
 
--- Lines 710-722
+-- Lines 685-697
 function NetworkAccountSTEAM:_chk_inventory_outfit_refresh()
 	if not self._inventory_outfit_refresh_requested then
 		return
@@ -615,7 +617,7 @@ function NetworkAccountSTEAM:_chk_inventory_outfit_refresh()
 	self:_inventory_outfit_refresh()
 end
 
--- Lines 724-730
+-- Lines 699-705
 function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outfit_callback)
 	if outfit_data == "" then
 		return outfit_callback and outfit_callback(nil, false, {})
@@ -624,16 +626,16 @@ function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outf
 	Steam:inventory_signature_verify(steam_id, outfit_data, outfit_callback)
 end
 
--- Lines 732-734
+-- Lines 707-709
 function NetworkAccountSTEAM:inventory_outfit_signature()
 	return self._outfit_signature
 end
 
--- Lines 736-737
+-- Lines 711-712
 function NetworkAccountSTEAM:inventory_repair_list(list)
 end
 
--- Lines 739-756
+-- Lines 714-731
 function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 	print("[NetworkAccountSTEAM:_clbk_tradable_outfit_data] error: ", error, ", self._outfit_signature: ", self._outfit_signature, "\n outfit_signature: ", outfit_signature, "\n")
 

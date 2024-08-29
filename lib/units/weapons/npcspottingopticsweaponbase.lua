@@ -20,7 +20,7 @@ end
 function NPCSpottingOpticsWeaponBase:fire_blank(direction, impact)
 end
 
--- Lines 28-66
+-- Lines 28-68
 function NPCSpottingOpticsWeaponBase:singleshot(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	return
 
@@ -65,7 +65,7 @@ local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 local mvec1 = Vector3()
 
--- Lines 74-101
+-- Lines 76-103
 function NPCSpottingOpticsWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	return
 
@@ -96,6 +96,6 @@ function NPCSpottingOpticsWeaponBase:_fire_raycast(user_unit, from_pos, directio
 	return result
 end
 
--- Lines 105-106
+-- Lines 107-108
 function NPCSpottingOpticsWeaponBase:_spawn_muzzle_effect()
 end

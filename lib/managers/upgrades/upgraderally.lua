@@ -73,6 +73,10 @@ local UpgradeRally = {
 			current = 0,
 			total = 0
 		})
+
+		if self._damage_ext then
+			self._damage_ext:set_reserved_health(0)
+		end
 	end
 }
 

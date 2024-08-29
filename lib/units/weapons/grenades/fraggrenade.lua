@@ -74,7 +74,7 @@ function FragGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 95-137
+-- Lines 95-138
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	FragGrenade.super._detonate(self, tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 
@@ -83,9 +83,9 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	local range = self._range
 	local slot_mask = managers.slot:get_mask("explosion_targets")
 
+	self._unit:set_slot(0)
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
-	self._unit:set_slot(0)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
 		player_damage = 0,
@@ -111,7 +111,7 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	self:_detonate_with_clusters()
 end
 
--- Lines 139-176
+-- Lines 140-177
 function FragGrenade:_detonate_with_clusters()
 	if not self._thrower_unit then
 		return
@@ -146,7 +146,7 @@ function FragGrenade:_detonate_with_clusters()
 	end
 end
 
--- Lines 178-186
+-- Lines 179-187
 function FragGrenade:_award_achievement_multi_kill(thrower_peer_id)
 	local achievement_id = "ach_kill_enemies_with_single_grenade_5"
 
@@ -159,7 +159,7 @@ function FragGrenade:_award_achievement_multi_kill(thrower_peer_id)
 	end
 end
 
--- Lines 190-195
+-- Lines 191-196
 function FragGrenade:_detonate_on_client()
 	local pos = self._unit:position() + GrenadeBase.DETONATE_UP_OFFSET
 	local range = self._range
@@ -168,7 +168,7 @@ function FragGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
--- Lines 199-206
+-- Lines 200-207
 function FragGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -179,14 +179,14 @@ function FragGrenade:bullet_hit()
 	self:_detonate()
 end
 
--- Lines 211-218
+-- Lines 212-219
 function FragGrenade:_check_targets()
 	local units = World:find_units_quick("sphere", self._ray_from_pos or self._unit:position(), self._tweak_data.enemy_proximity_range or self._tweak_data.range, self._targets_slotmask)
 
 	return units
 end
 
--- Lines 223-253
+-- Lines 224-254
 function FragGrenade:_filtered_check_targets()
 	if not managers.network:session() then
 		return

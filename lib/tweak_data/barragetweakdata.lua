@@ -16,9 +16,9 @@ function BarrageTweakData:init(tweak_data)
 		projectile_id = "mortar_shell",
 		lauch_power = 36,
 		area_radius = {
-			1500,
+			1200,
 			1000,
-			1250
+			900
 		},
 		cooldown = {
 			140,

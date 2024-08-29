@@ -40,7 +40,7 @@ SkillTreeTweakData._GOLD_REQ_RAMPUP = {
 	1
 }
 
--- Lines 129-195
+-- Lines 129-210
 function SkillTreeTweakData:init(tweak_data)
 	self.skill_warcry_tiers = {
 		[1.0] = 0
@@ -67,6 +67,16 @@ function SkillTreeTweakData:init(tweak_data)
 	self.exp_overlevel_penalty = {
 		max = 0.85,
 		min = 0.1
+	}
+	self.skill_profiles = {
+		0,
+		0,
+		20,
+		40,
+		80,
+		120,
+		240,
+		480
 	}
 
 	self:_init_classes(tweak_data)
@@ -98,7 +108,7 @@ function SkillTreeTweakData:init(tweak_data)
 	self:_init_demolitions_unlock_progression()
 end
 
--- Lines 198-247
+-- Lines 213-262
 function SkillTreeTweakData:_init_classes(tweak_data)
 	self.base_classes = {
 		SkillTreeTweakData.CLASS_RECON,
@@ -198,7 +208,7 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 	}
 end
 
--- Lines 249-268
+-- Lines 264-283
 function SkillTreeTweakData:get_skills_organised(class_id)
 	local t = {
 		[SkillTreeTweakData.TYPE_WARCRY] = {},
@@ -219,7 +229,7 @@ function SkillTreeTweakData:get_skills_organised(class_id)
 	return t
 end
 
--- Lines 270-292
+-- Lines 285-307
 function SkillTreeTweakData:_init_skill_list()
 	self.skills = {}
 
@@ -243,7 +253,7 @@ function SkillTreeTweakData:_init_skill_list()
 	end
 end
 
--- Lines 296-308
+-- Lines 311-323
 function SkillTreeTweakData:is_skill_levelable(skill_id)
 	local skill_data = self.skills[skill_id]
 
@@ -254,7 +264,7 @@ function SkillTreeTweakData:is_skill_levelable(skill_id)
 	return false
 end
 
--- Lines 311-515
+-- Lines 326-530
 function SkillTreeTweakData:_init_skill_list_warcries()
 	self.skills.warcry_sharpshooter = {
 		warcry_id = "sharpshooter",
@@ -431,7 +441,7 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 	}
 end
 
--- Lines 517-681
+-- Lines 532-696
 function SkillTreeTweakData:_init_skill_list_boosts()
 	self.skills.boost_nothing = {
 		info_id = "status_effect_nothing_info",
@@ -621,7 +631,7 @@ function SkillTreeTweakData:_init_skill_list_boosts()
 	}
 end
 
--- Lines 683-1663
+-- Lines 698-1678
 function SkillTreeTweakData:_init_skill_list_talents()
 	self.skills.gunner = {
 		name_id = "skill_gunner_name",
@@ -1949,7 +1959,7 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 end
 
--- Lines 1667-1994
+-- Lines 1682-2009
 function SkillTreeTweakData:_init_skill_list_weapons()
 	self.skills.weapon_tier_unlocked_2 = {
 		icon_large = "skills_weapon_tier_2",
@@ -2300,7 +2310,7 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 	}
 end
 
--- Lines 2009-2028
+-- Lines 2024-2043
 function SkillTreeTweakData:get_weapon_unlock_levels()
 	local t = {}
 
@@ -2323,7 +2333,7 @@ function SkillTreeTweakData:get_weapon_unlock_levels()
 	return t
 end
 
--- Lines 2031-2045
+-- Lines 2046-2060
 function SkillTreeTweakData:get_weapon_unlock_level(weapon_id, class_name)
 	for level, unlock_data in pairs(self.automatic_unlock_progressions[class_name]) do
 		if unlock_data.weapons then
@@ -2340,7 +2350,7 @@ function SkillTreeTweakData:get_weapon_unlock_level(weapon_id, class_name)
 	return nil
 end
 
--- Lines 2049-2150
+-- Lines 2064-2165
 function SkillTreeTweakData:_init_recon_unlock_progression()
 	self.automatic_unlock_progressions.recon = {
 		{
@@ -2466,7 +2476,7 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 	}
 end
 
--- Lines 2154-2221
+-- Lines 2169-2236
 function SkillTreeTweakData:_init_assault_unlock_progression()
 	self.automatic_unlock_progressions.assault = {
 		{
@@ -2588,7 +2598,7 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	}
 end
 
--- Lines 2225-2305
+-- Lines 2240-2320
 function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	self.automatic_unlock_progressions.infiltrator = {
 		{
@@ -2708,7 +2718,7 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	}
 end
 
--- Lines 2309-2386
+-- Lines 2324-2401
 function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions = {
 		{
@@ -2824,7 +2834,7 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	}
 end
 
--- Lines 2390-2403
+-- Lines 2405-2418
 function SkillTreeTweakData.get_skill_exp_requirements(level, multi)
 	local reqs = {}
 
@@ -2844,7 +2854,7 @@ function SkillTreeTweakData.get_skill_exp_requirements(level, multi)
 	return reqs
 end
 
--- Lines 2406-2420
+-- Lines 2421-2435
 function SkillTreeTweakData.get_skill_gold_requirements(level, multi)
 	local cost = 0
 	local a = SkillTreeTweakData._GOLD_REQS[1]
@@ -2863,7 +2873,7 @@ function SkillTreeTweakData.get_skill_gold_requirements(level, multi)
 	return math.max(lowest, math.round(cost, lowest))
 end
 
--- Lines 2423-2436
+-- Lines 2438-2451
 function SkillTreeTweakData:get_skill_icon_tiered(id)
 	if not self.skills[id] then
 		return "skill_slot_unlocked"

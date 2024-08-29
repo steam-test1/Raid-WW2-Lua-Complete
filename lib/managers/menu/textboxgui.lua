@@ -96,7 +96,7 @@ function TextBoxGui:get_osk_text()
 	return self._osk_text or ""
 end
 
--- Lines 70-299
+-- Lines 70-300
 function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._ws = ws
 	self._init_layer = self._ws:panel():layer()
@@ -138,6 +138,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local is_title_outside = preset and preset.is_title_outside or config and config.is_title_outside or false
 	local text_blend_mode = preset and preset.text_blend_mode or config and config.text_blend_mode or "normal"
 	self._allow_moving = config and config.allow_moving or false
+	self._capitalize = config and config.capitalize
 	local preset_or_config_y = y ~= 0
 	title = title and utf8.to_upper(title)
 
@@ -380,7 +381,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	return main
 end
 
--- Lines 302-376
+-- Lines 303-377
 function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	local has_stats = stats_list and #stats_list > 0
 	local stats_panel = scroll_panel:panel({
@@ -574,7 +575,7 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	return stats_panel
 end
 
--- Lines 379-433
+-- Lines 380-434
 function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local has_buttons = button_list and #button_list > 0
 	self._text_box_buttons_panel = info_area:panel({
@@ -649,7 +650,7 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 	return self._text_box_buttons_panel
 end
 
--- Lines 435-481
+-- Lines 436-481
 function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 	local info_area = self._panel:child("info_area")
 	local scroll_panel = info_area:child("scroll_panel")
@@ -675,20 +676,18 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 
 	textbox_panel:set_h(48)
 
-	local input_field_params = {
+	self._input_field = RaidGUIControlInputField:new(textbox_panel, {
 		name = "input_field",
-		y = 0,
-		x = 0,
 		w = textbox_panel:w(),
 		h = textbox_panel:h(),
 		ws = self._ws,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		text_changed_callback = callback(self, self, "_input_field_text_changed"),
 		text = texbox_value,
+		capitalize = self._capitalize,
 		osk_title = self._osk_title,
 		osk_text = self._osk_text
-	}
-	self._input_field = RaidGUIControlInputField:new(textbox_panel, input_field_params)
+	})
 
 	table.insert(self.controls, self._input_field)
 	self._input_field:set_chat_focus(true)

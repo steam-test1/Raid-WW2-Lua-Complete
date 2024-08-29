@@ -148,16 +148,21 @@ function ChallengeTaskKillEnemies:min_range()
 end
 
 -- Lines 139-141
+function ChallengeTaskKillEnemies:max_range()
+	return self._modifiers.max_range or 0
+end
+
+-- Lines 143-145
 function ChallengeTaskKillEnemies:set_reminders(reminders)
 	self._reminders = reminders
 end
 
--- Lines 143-145
+-- Lines 147-149
 function ChallengeTaskKillEnemies:set_modifiers(modifiers)
 	self._modifiers = modifiers
 end
 
--- Lines 147-208
+-- Lines 151-222
 function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 	if kill_data.using_turret then
 		return
@@ -175,7 +180,15 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 		return
 	end
 
+	if self._modifiers.steelsight and not kill_data.player_used_steelsight then
+		return
+	end
+
 	if self._modifiers.min_range and kill_data.enemy_distance < self._modifiers.min_range then
+		return true
+	end
+
+	if self._modifiers.max_range and self._modifiers.max_range < kill_data.enemy_distance then
 		return true
 	end
 
@@ -210,14 +223,14 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 	self:_check_status()
 end
 
--- Lines 210-214
+-- Lines 224-228
 function ChallengeTaskKillEnemies:_check_status()
 	if self._target <= self._count then
 		self:_on_completed()
 	end
 end
 
--- Lines 216-221
+-- Lines 230-235
 function ChallengeTaskKillEnemies:_on_completed()
 	self._state = ChallengeTask.STATE_COMPLETED
 
@@ -225,7 +238,7 @@ function ChallengeTaskKillEnemies:_on_completed()
 	managers.system_event_listener:remove_listener(self._id)
 end
 
--- Lines 223-232
+-- Lines 237-246
 function ChallengeTaskKillEnemies:force_complete()
 	if self:completed() then
 		return
@@ -239,7 +252,7 @@ end
 
 ChallengeTaskCollectAmmo = ChallengeTaskCollectAmmo or class(ChallengeTask)
 
--- Lines 268-280
+-- Lines 282-294
 function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_data)
 	ChallengeTaskCollectAmmo.super.init(self)
 
@@ -254,7 +267,7 @@ function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_da
 	self._reminders = task_data.reminders or {}
 end
 
--- Lines 282-288
+-- Lines 296-302
 function ChallengeTaskCollectAmmo:activate()
 	ChallengeTaskCollectAmmo.super.activate(self)
 	managers.system_event_listener:add_listener(self._id, {
@@ -262,45 +275,50 @@ function ChallengeTaskCollectAmmo:activate()
 	}, callback(self, self, "on_ammo_collected"))
 end
 
--- Lines 290-294
+-- Lines 304-308
 function ChallengeTaskCollectAmmo:deactivate()
 	ChallengeTaskCollectAmmo.super.deactivate(self)
 	managers.system_event_listener:remove_listener(self._id)
 end
 
--- Lines 296-300
+-- Lines 310-314
 function ChallengeTaskCollectAmmo:reset()
 	ChallengeTaskKillEnemies.super.reset(self)
 
 	self._count = 0
 end
 
--- Lines 302-304
+-- Lines 316-318
 function ChallengeTaskCollectAmmo:current_count()
 	return self._count
 end
 
--- Lines 306-308
+-- Lines 320-322
 function ChallengeTaskCollectAmmo:target()
 	return self._target
 end
 
--- Lines 310-312
+-- Lines 324-326
 function ChallengeTaskCollectAmmo:min_range()
 	return 0
 end
 
--- Lines 314-316
+-- Lines 328-330
+function ChallengeTaskCollectAmmo:max_range()
+	return 0
+end
+
+-- Lines 332-334
 function ChallengeTaskCollectAmmo:set_reminders(reminders)
 	self._reminders = reminders
 end
 
--- Lines 318-320
+-- Lines 336-338
 function ChallengeTaskCollectAmmo:set_modifiers(modifiers)
 	self._modifiers = modifiers
 end
 
--- Lines 322-341
+-- Lines 340-359
 function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 	if managers.raid_job:is_camp_loaded() then
 		return
@@ -323,14 +341,14 @@ function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)
 	self:_check_status()
 end
 
--- Lines 343-347
+-- Lines 361-365
 function ChallengeTaskCollectAmmo:_check_status()
 	if self._target <= self._count then
 		self:_on_completed()
 	end
 end
 
--- Lines 349-354
+-- Lines 367-372
 function ChallengeTaskCollectAmmo:_on_completed()
 	self._state = ChallengeTask.STATE_COMPLETED
 
@@ -338,7 +356,7 @@ function ChallengeTaskCollectAmmo:_on_completed()
 	managers.system_event_listener:remove_listener(self._id)
 end
 
--- Lines 356-365
+-- Lines 374-383
 function ChallengeTaskCollectAmmo:force_complete()
 	if self:completed() then
 		return

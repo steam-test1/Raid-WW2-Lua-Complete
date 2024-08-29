@@ -344,7 +344,7 @@ function RaidGUIControlList:refresh_data()
 	self._selected = cached_selected_value
 end
 
--- Lines 349-380
+-- Lines 349-372
 function RaidGUIControlList:set_selected(value, dont_trigger_selected_callback)
 	if self._selected_item and self._selected then
 		self._selected_item:unfocus()
@@ -369,12 +369,12 @@ function RaidGUIControlList:set_selected(value, dont_trigger_selected_callback)
 	end
 end
 
--- Lines 382-384
+-- Lines 374-376
 function RaidGUIControlList:selected_item_index()
 	return self._selected_item_idx
 end
 
--- Lines 386-395
+-- Lines 378-387
 function RaidGUIControlList:move_up()
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlList:move_up] ABORT SELECTION")
@@ -387,7 +387,7 @@ function RaidGUIControlList:move_up()
 	end
 end
 
--- Lines 397-403
+-- Lines 389-395
 function RaidGUIControlList:select_previous_row()
 	if self:_previous_row_idx() then
 		self:select_item_by_index(self._selected_item_idx)
@@ -397,7 +397,7 @@ function RaidGUIControlList:select_previous_row()
 	end
 end
 
--- Lines 405-420
+-- Lines 397-412
 function RaidGUIControlList:move_down()
 	if self:get_abort_selection() then
 		Application:trace("[RaidGUIControlList:move_down] ABORT SELECTION")
@@ -416,7 +416,7 @@ function RaidGUIControlList:move_down()
 	end
 end
 
--- Lines 422-428
+-- Lines 414-420
 function RaidGUIControlList:select_next_row()
 	if self:_next_row_idx() then
 		self:select_item_by_index(self._selected_item_idx)
@@ -426,7 +426,7 @@ function RaidGUIControlList:select_next_row()
 	end
 end
 
--- Lines 430-437
+-- Lines 422-429
 function RaidGUIControlList:confirm_pressed()
 	if self._selected and self._selected_item then
 		self._selected_item:confirm_pressed()
@@ -435,11 +435,11 @@ function RaidGUIControlList:confirm_pressed()
 	end
 end
 
--- Lines 439-440
+-- Lines 431-432
 function RaidGUIControlList:special_btn_pressed(...)
 end
 
--- Lines 443-477
+-- Lines 435-469
 function RaidGUIControlList:_previous_row_idx()
 	self._new_selected_item_idx = self._selected_item_idx - 1
 
@@ -476,7 +476,7 @@ function RaidGUIControlList:_previous_row_idx()
 	return false
 end
 
--- Lines 479-514
+-- Lines 471-506
 function RaidGUIControlList:_next_row_idx()
 	self._new_selected_item_idx = self._selected_item_idx + 1
 

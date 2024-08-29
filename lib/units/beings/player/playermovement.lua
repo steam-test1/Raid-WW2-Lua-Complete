@@ -38,7 +38,7 @@ PlayerMovement.OUT_OF_WORLD_Z = -4000
 -- Lines 41-108
 function PlayerMovement:init(unit)
 	self._unit = unit
-	self._player_class = managers.skilltree:get_character_profile_class() or "recon"
+	self._player_class = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
 	self._class_tweak_data = tweak_data.player:get_tweak_data_for_class(self._player_class)
 
 	unit:set_timer(managers.player:player_timer())

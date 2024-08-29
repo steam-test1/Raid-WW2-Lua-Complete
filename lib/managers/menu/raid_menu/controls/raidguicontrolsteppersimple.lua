@@ -149,9 +149,14 @@ function RaidGUIControlStepperSimple:selected_item()
 	return self._stepper_data[self._selected_item_index]
 end
 
--- Lines 151-180
+-- Lines 151-184
 function RaidGUIControlStepperSimple:_select_item(index, skip_animation)
 	local item = self._stepper_data[index]
+
+	if not item then
+		return
+	end
+
 	local text = item.text or managers.localization:text(item.text_id)
 	local disabled = item.disabled
 	self._selected_item_index = index
@@ -181,7 +186,7 @@ function RaidGUIControlStepperSimple:_select_item(index, skip_animation)
 	end
 end
 
--- Lines 182-191
+-- Lines 186-195
 function RaidGUIControlStepperSimple:select_item_by_value(value)
 	if self._stepper_data then
 		for item_index, item_data in pairs(self._stepper_data) do
@@ -194,14 +199,14 @@ function RaidGUIControlStepperSimple:select_item_by_value(value)
 	end
 end
 
--- Lines 193-196
+-- Lines 197-200
 function RaidGUIControlStepperSimple:get_value()
 	local item = self._stepper_data[self._selected_item_index]
 
-	return item.value
+	return item and item.value or false
 end
 
--- Lines 198-214
+-- Lines 202-218
 function RaidGUIControlStepperSimple:set_value_and_render(value_to_select, skip_animation)
 	if self._stepper_data then
 		for key, value in pairs(self._stepper_data) do
@@ -220,12 +225,12 @@ function RaidGUIControlStepperSimple:set_value_and_render(value_to_select, skip_
 	end
 end
 
--- Lines 216-218
+-- Lines 220-222
 function RaidGUIControlStepperSimple:_delete_stepper_items()
 	self._stepper_panel:clear()
 end
 
--- Lines 221-237
+-- Lines 225-241
 function RaidGUIControlStepperSimple:on_left_arrow_clicked()
 	if not self._enabled then
 		return
@@ -244,7 +249,7 @@ function RaidGUIControlStepperSimple:on_left_arrow_clicked()
 	end
 end
 
--- Lines 240-256
+-- Lines 244-260
 function RaidGUIControlStepperSimple:on_right_arrow_clicked()
 	if not self._enabled then
 		return
@@ -263,7 +268,7 @@ function RaidGUIControlStepperSimple:on_right_arrow_clicked()
 	end
 end
 
--- Lines 259-279
+-- Lines 263-283
 function RaidGUIControlStepperSimple:mouse_moved(o, x, y)
 	if not self:inside(x, y) then
 		if self._mouse_inside then
@@ -290,12 +295,12 @@ function RaidGUIControlStepperSimple:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 282-284
+-- Lines 286-288
 function RaidGUIControlStepperSimple:mouse_released(o, button, x, y)
 	return false
 end
 
--- Lines 286-292
+-- Lines 290-296
 function RaidGUIControlStepperSimple:on_mouse_scroll_up()
 	if not self._enabled then
 		return
@@ -304,7 +309,7 @@ function RaidGUIControlStepperSimple:on_mouse_scroll_up()
 	self:on_right_arrow_clicked()
 end
 
--- Lines 294-300
+-- Lines 298-304
 function RaidGUIControlStepperSimple:on_mouse_scroll_down()
 	if not self._enabled then
 		return
@@ -313,17 +318,17 @@ function RaidGUIControlStepperSimple:on_mouse_scroll_down()
 	self:on_left_arrow_clicked()
 end
 
--- Lines 302-304
+-- Lines 306-308
 function RaidGUIControlStepperSimple:x()
 	return self._stepper_panel._engine_panel:x()
 end
 
--- Lines 306-308
+-- Lines 310-312
 function RaidGUIControlStepperSimple:w()
 	return self._stepper_panel._engine_panel:w()
 end
 
--- Lines 310-320
+-- Lines 314-324
 function RaidGUIControlStepperSimple:confirm_pressed()
 	if not self._enabled then
 		return
@@ -338,16 +343,16 @@ function RaidGUIControlStepperSimple:confirm_pressed()
 	end
 end
 
--- Lines 322-324
+-- Lines 326-328
 function RaidGUIControlStepperSimple:is_selected_control()
 	return self._selected_control
 end
 
--- Lines 327-328
+-- Lines 331-332
 function RaidGUIControlStepperSimple:_select_control(value)
 end
 
--- Lines 332-338
+-- Lines 336-342
 function RaidGUIControlStepperSimple:move_left()
 	if self:is_selected() then
 		Application:trace("[RaidGUIControlStepperSimple:move_left] ", self._name, self._selected)
@@ -357,7 +362,7 @@ function RaidGUIControlStepperSimple:move_left()
 	end
 end
 
--- Lines 340-346
+-- Lines 344-350
 function RaidGUIControlStepperSimple:move_right()
 	if self:is_selected() then
 		Application:trace("[RaidGUIControlStepperSimple:move_right] ", self._name, self._selected)
@@ -367,7 +372,7 @@ function RaidGUIControlStepperSimple:move_right()
 	end
 end
 
--- Lines 348-363
+-- Lines 352-367
 function RaidGUIControlStepperSimple:set_enabled(enabled)
 	RaidGUIControlStepperSimple.super.set_enabled(self, enabled)
 	self._arrow_left:set_enabled(enabled)
@@ -384,7 +389,7 @@ function RaidGUIControlStepperSimple:set_enabled(enabled)
 	end
 end
 
--- Lines 365-402
+-- Lines 369-406
 function RaidGUIControlStepperSimple:_animate_value_change(o, text, disabled)
 	local starting_alpha = self._value_label:alpha()
 	local duration = 0.13

@@ -5454,26 +5454,6 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.special_forces.combat.cone_3.angle = 280
 	presets.vision.special_forces.combat.cone_3.distance = 5200
 	presets.vision.special_forces.combat.cone_3.speed_mul = 0.25
-	presets.vision.spotter = {
-		idle = {},
-		combat = {},
-		combat = {
-			name = "spotter",
-			cone_1 = {},
-			cone_2 = {},
-			cone_3 = {}
-		}
-	}
-	presets.vision.spotter.combat.cone_1.angle = 280
-	presets.vision.spotter.combat.cone_1.distance = 2200
-	presets.vision.spotter.combat.cone_1.speed_mul = 2
-	presets.vision.spotter.combat.cone_2.angle = 280
-	presets.vision.spotter.combat.cone_2.distance = 3200
-	presets.vision.spotter.combat.cone_2.speed_mul = 4
-	presets.vision.spotter.combat.cone_3.angle = 280
-	presets.vision.spotter.combat.cone_3.distance = 5200
-	presets.vision.spotter.combat.cone_3.speed_mul = 6
-	presets.vision.spotter.idle = deep_clone(presets.vision.spotter.combat)
 	presets.vision.civilian = {
 		name = "civilian",
 		cone_1 = {},
@@ -5609,8 +5589,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.detection.sniper.combat.dis_max = 40000
 	presets.detection.sniper.combat.angle_max = 120
 	presets.detection.sniper.combat.delay = {
-		0.5,
-		1
+		2,
+		3
 	}
 	presets.detection.sniper.combat.use_uncover_range = true
 	presets.detection.sniper.combat.avoid_suppressive_firing = true
@@ -5625,10 +5605,30 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.detection.sniper.guard.dis_max = 40000
 	presets.detection.sniper.guard.angle_max = 150
 	presets.detection.sniper.guard.delay = {
-		0.3,
-		1
+		1,
+		2
 	}
 	presets.detection.sniper.ntl = presets.detection.normal.ntl
+	presets.vision.spotter = {
+		idle = {},
+		combat = {},
+		combat = {
+			name = "spotter",
+			cone_1 = {},
+			cone_2 = {},
+			cone_3 = {}
+		}
+	}
+	presets.vision.spotter.combat.cone_1.angle = 280
+	presets.vision.spotter.combat.cone_1.distance = 4000
+	presets.vision.spotter.combat.cone_1.speed_mul = 2
+	presets.vision.spotter.combat.cone_2.angle = 280
+	presets.vision.spotter.combat.cone_2.distance = 6000
+	presets.vision.spotter.combat.cone_2.speed_mul = 4
+	presets.vision.spotter.combat.cone_3.angle = 280
+	presets.vision.spotter.combat.cone_3.distance = 8000
+	presets.vision.spotter.combat.cone_3.speed_mul = 6
+	presets.vision.spotter.idle = deep_clone(presets.vision.spotter.combat)
 	presets.detection.gang_member = {
 		idle = {},
 		combat = {},

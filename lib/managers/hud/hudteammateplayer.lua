@@ -29,7 +29,7 @@ HUDTeammatePlayer.PLAYER_LEVEL_FONT = "din_compressed_outlined_22"
 HUDTeammatePlayer.PLAYER_LEVEL_FONT_SIZE = 20
 HUDTeammatePlayer.PLAYER_HEALTH_H = 10
 HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON = "backgrounds_health_bg"
-HUDTeammatePlayer.PLAYER_HEALTH_COLORS = tweak_data.gui.colors.player_health_colors
+HUDTeammatePlayer.PLAYER_HEALTH_COLORS = deep_clone(tweak_data.gui.colors.player_health_colors)
 HUDTeammatePlayer.PLAYER_HEALTH_HURT_COLOR = tweak_data.gui.colors.progress_dark_red
 HUDTeammatePlayer.PLAYER_HEALTH_HEAL_COLOR = tweak_data.gui.colors.progress_green
 HUDTeammatePlayer.PLAYER_HEALTH_SPECIAL_COLOR = tweak_data.gui.colors.raid_dirty_white:with_alpha(0.5)
@@ -563,10 +563,12 @@ end
 function HUDTeammatePlayer:set_armor(data)
 end
 
--- Lines 533-557
+-- Lines 533-559
 function HUDTeammatePlayer:set_health(data)
 	local health_percentage = math.clamp(data.current / data.total, 0, 1)
 	local healthbar_size = health_percentage * self._full_health_bar_w
+	local low_health_regen_limit = managers.player:get_low_health_regen_limit()
+	HUDTeammatePlayer.PLAYER_HEALTH_COLORS[2].start_percentage = low_health_regen_limit
 
 	self._health_bar:set_color(GuiTweakData.get_color_for_percentage(HUDTeammatePlayer.PLAYER_HEALTH_COLORS, health_percentage))
 	self._health_bar:stop()
@@ -586,7 +588,7 @@ function HUDTeammatePlayer:set_health(data)
 	self._health_data = data
 end
 
--- Lines 559-566
+-- Lines 561-568
 function HUDTeammatePlayer:set_special_health(data)
 	local special_health_percentage = math.clamp(data.current / data.total, 0, 1)
 	local health_percentage = math.clamp(self._health_data.current / self._health_data.total, 0, 1)
@@ -596,7 +598,7 @@ function HUDTeammatePlayer:set_special_health(data)
 	self._special_health_bar:set_visible(special_health_percentage > 0)
 end
 
--- Lines 568-583
+-- Lines 570-585
 function HUDTeammatePlayer:set_stamina(value)
 	local stamina_percentage = math.clamp(value / self._max_stamina, 0, 1)
 
@@ -615,12 +617,12 @@ function HUDTeammatePlayer:set_stamina(value)
 	end
 end
 
--- Lines 585-587
+-- Lines 587-589
 function HUDTeammatePlayer:set_max_stamina(value)
 	self._max_stamina = value
 end
 
--- Lines 589-614
+-- Lines 591-616
 function HUDTeammatePlayer:set_active_warcry(warcry)
 	if self._warcry_icon then
 		self._status_panel:remove(self._warcry_icon)
@@ -642,7 +644,7 @@ function HUDTeammatePlayer:set_active_warcry(warcry)
 	self._warcry_icon:set_center_y(self._status_panel:h() / 2)
 end
 
--- Lines 616-628
+-- Lines 618-630
 function HUDTeammatePlayer:set_warcry_meter_fill(data)
 	local warcry_percentage = data.current / data.total
 	self._true_warcry_percentage = warcry_percentage
@@ -657,18 +659,18 @@ function HUDTeammatePlayer:set_warcry_meter_fill(data)
 	self._true_warcry_percentage_prev = warcry_percentage
 end
 
--- Lines 630-631
+-- Lines 632-633
 function HUDTeammatePlayer:activate_warcry(duration)
 end
 
--- Lines 633-637
+-- Lines 635-639
 function HUDTeammatePlayer:deactivate_warcry()
 	self._warcry_panel:stop()
 	self._warcry_panel:animate(callback(self, self, "_animate_warcry_not_ready"))
 	self:_remove_active_state("warcry")
 end
 
--- Lines 639-649
+-- Lines 641-651
 function HUDTeammatePlayer:set_warcry_ready(value)
 	self._warcry_panel:stop()
 
@@ -681,7 +683,7 @@ function HUDTeammatePlayer:set_warcry_ready(value)
 	end
 end
 
--- Lines 652-660
+-- Lines 654-662
 function HUDTeammatePlayer:set_name(name)
 	self._player_name:set_text(utf8.to_upper(name))
 
@@ -692,7 +694,7 @@ function HUDTeammatePlayer:set_name(name)
 	self._voice_chat_panel:set_top(self._player_name:y())
 end
 
--- Lines 662-667
+-- Lines 664-669
 function HUDTeammatePlayer:set_nationality(nationality)
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
 
@@ -700,48 +702,48 @@ function HUDTeammatePlayer:set_nationality(nationality)
 	self._nationality_icon:set_texture_rect(unpack(tweak_data.gui.icons[nationality_icon].texture_rect))
 end
 
--- Lines 669-671
+-- Lines 671-673
 function HUDTeammatePlayer:set_level(level)
 	self._player_level:set_text(level)
 end
 
--- Lines 673-674
+-- Lines 675-676
 function HUDTeammatePlayer:set_cheater(state)
 end
 
--- Lines 676-678
+-- Lines 678-680
 function HUDTeammatePlayer:go_into_bleedout()
 	HUDTeammatePlayer.super.go_into_bleedout(self)
 end
 
--- Lines 680-682
+-- Lines 682-684
 function HUDTeammatePlayer:on_died()
 	HUDTeammatePlayer.super.on_died(self)
 end
 
--- Lines 684-688
+-- Lines 686-690
 function HUDTeammatePlayer:on_revived()
 	self:_remove_active_state("warcry")
 	HUDTeammatePlayer.super.on_revived(self)
 end
 
--- Lines 692-693
+-- Lines 694-695
 function HUDTeammatePlayer:set_carry_info(carry_id)
 end
 
--- Lines 696-697
+-- Lines 698-699
 function HUDTeammatePlayer:remove_carry_info()
 end
 
--- Lines 699-700
+-- Lines 701-702
 function HUDTeammatePlayer:show_turret_icon()
 end
 
--- Lines 702-703
+-- Lines 704-705
 function HUDTeammatePlayer:hide_turret_icon()
 end
 
--- Lines 705-710
+-- Lines 707-712
 function HUDTeammatePlayer:show_host_indicator()
 	local host_indicator = self._left_panel:child("host_indicator")
 
@@ -749,7 +751,7 @@ function HUDTeammatePlayer:show_host_indicator()
 	host_indicator:animate(callback(self, self, "_animate_show_host_indicator"))
 end
 
--- Lines 712-717
+-- Lines 714-719
 function HUDTeammatePlayer:hide_host_indicator()
 	local host_indicator = self._left_panel:child("host_indicator")
 
@@ -757,7 +759,7 @@ function HUDTeammatePlayer:hide_host_indicator()
 	host_indicator:animate(callback(self, self, "_animate_hide_host_indicator"))
 end
 
--- Lines 721-740
+-- Lines 723-742
 function HUDTeammatePlayer:add_special_equipment(data)
 	local existing_equipment = nil
 
@@ -781,7 +783,7 @@ function HUDTeammatePlayer:add_special_equipment(data)
 	end
 end
 
--- Lines 742-752
+-- Lines 744-754
 function HUDTeammatePlayer:remove_special_equipment(id)
 	for i = #self._equipment, 1, -1 do
 		if self._equipment[i]:id() == id then
@@ -795,7 +797,7 @@ function HUDTeammatePlayer:remove_special_equipment(id)
 	self:_layout_special_equipment()
 end
 
--- Lines 754-760
+-- Lines 756-762
 function HUDTeammatePlayer:set_special_equipment_amount(equipment_id, amount)
 	for i = 1, #self._equipment do
 		if self._equipment[i]:id() == equipment_id then
@@ -804,14 +806,14 @@ function HUDTeammatePlayer:set_special_equipment_amount(equipment_id, amount)
 	end
 end
 
--- Lines 762-765
+-- Lines 764-767
 function HUDTeammatePlayer:clear_special_equipment()
 	self._equipment_panel:clear()
 
 	self._equipment = {}
 end
 
--- Lines 767-775
+-- Lines 769-777
 function HUDTeammatePlayer:_layout_special_equipment()
 	local x = 0
 
@@ -822,11 +824,11 @@ function HUDTeammatePlayer:_layout_special_equipment()
 	end
 end
 
--- Lines 779-780
+-- Lines 781-782
 function HUDTeammatePlayer:set_condition(icon_data, text)
 end
 
--- Lines 784-792
+-- Lines 786-794
 function HUDTeammatePlayer:set_downs_amount(downs_amount)
 	local downs_icon = self._left_panel:child("down_indicator")
 	downs_amount = math.clamp(downs_amount, 1, 5)
@@ -836,7 +838,7 @@ function HUDTeammatePlayer:set_downs_amount(downs_amount)
 	downs_icon:set_color(self._downs_icon_color or guis.color)
 end
 
--- Lines 794-801
+-- Lines 796-803
 function HUDTeammatePlayer:override_downs_color(color)
 	self._downs_icon_color = color
 
@@ -847,7 +849,7 @@ function HUDTeammatePlayer:override_downs_color(color)
 	end
 end
 
--- Lines 805-830
+-- Lines 807-832
 function HUDTeammatePlayer:_animate_health_change(to, o, delay)
 	local from = o:w()
 	local change = to - from
@@ -874,7 +876,7 @@ function HUDTeammatePlayer:_animate_health_change(to, o, delay)
 	o:set_w(to)
 end
 
--- Lines 832-847
+-- Lines 834-849
 function HUDTeammatePlayer:_animate_warcry_fill()
 	local from = self._true_warcry_percentage_prev or 0
 	local to = self._true_warcry_percentage or 0
@@ -891,7 +893,7 @@ function HUDTeammatePlayer:_animate_warcry_fill()
 	self._warcry_bar:set_position_z(to)
 end
 
--- Lines 849-865
+-- Lines 851-867
 function HUDTeammatePlayer:_animate_warcry_ready()
 	local duration = 0.3
 	local t = (self._warcry_bar:color().r - HUDTeammatePlayer.WARCRY_INACTIVE_COLOR.r) / (HUDTeammatePlayer.WARCRY_ACTIVE_COLOR.r - HUDTeammatePlayer.WARCRY_INACTIVE_COLOR.r) * duration
@@ -909,7 +911,7 @@ function HUDTeammatePlayer:_animate_warcry_ready()
 	self._warcry_bar:set_color(HUDTeammatePlayer.WARCRY_ACTIVE_COLOR)
 end
 
--- Lines 867-883
+-- Lines 869-885
 function HUDTeammatePlayer:_animate_warcry_not_ready()
 	local duration = 0.3
 	local t = (1 - (self._warcry_bar:color().r - HUDTeammatePlayer.WARCRY_INACTIVE_COLOR.r) / (HUDTeammatePlayer.WARCRY_ACTIVE_COLOR.r - HUDTeammatePlayer.WARCRY_INACTIVE_COLOR.r)) * duration
@@ -927,7 +929,7 @@ function HUDTeammatePlayer:_animate_warcry_not_ready()
 	self._warcry_bar:set_color(HUDTeammatePlayer.WARCRY_INACTIVE_COLOR)
 end
 
--- Lines 885-898
+-- Lines 887-900
 function HUDTeammatePlayer:_animate_show_host_indicator(host_indicator)
 	local duration = 0.15
 	local t = host_indicator:alpha() * duration
@@ -943,7 +945,7 @@ function HUDTeammatePlayer:_animate_show_host_indicator(host_indicator)
 	host_indicator:set_alpha(1)
 end
 
--- Lines 900-913
+-- Lines 902-915
 function HUDTeammatePlayer:_animate_hide_host_indicator(host_indicator)
 	local duration = 0.15
 	local t = (1 - host_indicator:alpha()) * duration

@@ -132,7 +132,7 @@ function InteractionTweakData:_init_shared_sounds()
 	}
 end
 
--- Lines 126-2237
+-- Lines 126-2274
 function InteractionTweakData:_init_interactions()
 	self.temp_interact_box = {
 		icon = "develop",
@@ -938,6 +938,19 @@ function InteractionTweakData:_init_interactions()
 		sound_interupt = "turret_pick_up_stop",
 		axis = "x"
 	}
+	self.turret_m2_placement = {
+		text_id = "hud_turret_placement",
+		action_text_id = "hud_action_placing_turret",
+		timer = self.INTERACT_TIMER_MEDIUM,
+		upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_GENERIC,
+		start_active = true,
+		carry_consume = true,
+		required_carry = "turret_m2_gun",
+		carry_text_id = "needs_carry_turret_m2_gun",
+		sound_start = "turret_pick_up",
+		sound_interupt = "turret_pick_up_stop",
+		axis = "x"
+	}
 	self.turret_flak_88 = {
 		text_id = "hud_turret_88",
 		action_text_id = "hud_action_mounting_turret",
@@ -1228,6 +1241,12 @@ function InteractionTweakData:_init_interactions()
 		icon = "equipment_dynamite",
 		special_equipment_block = "dynamite_bag",
 		sound_done = "pickup_dynamite"
+	}
+	self.take_cable_instant = {
+		text_id = "hud_take_cable",
+		action_text_id = "hud_action_taking_cable",
+		interact_distance = 200,
+		force_update_position = true
 	}
 	self.take_cable = {
 		text_id = "hud_take_cable",
@@ -1861,13 +1880,14 @@ function InteractionTweakData:_init_interactions()
 		sound_start = "truck_back_door_opening",
 		sound_done = "truck_back_door_open"
 	}
-	self.consumable_mission = {
-		text_id = "hud_interact_consumable_mission",
-		action_text_id = "hud_action_consumable_mission",
-		blocked_hint = "hud_hint_consumable_mission_block",
+	self.folder_outlaw = {
 		start_active = true,
 		timer = self.INTERACT_TIMER_SHORT,
 		upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_GENERIC,
+		text_id = "hud_interact_consumable_mission",
+		action_text_id = "hud_action_consumable_mission",
+		blocked_hint = "hud_hint_consumable_mission_block",
+		reward_type = "outlaw",
 		sound_done = "consumable_mission_unlocked"
 	}
 	self.request_recording_device = {
@@ -2185,7 +2205,7 @@ function InteractionTweakData:_init_interactions()
 	self.activate_switch_medium = deep_clone(self.activate_switch)
 end
 
--- Lines 2240-2479
+-- Lines 2277-2516
 function InteractionTweakData:_init_carry()
 	self.gold_pile = {
 		icon = "interaction_gold",
@@ -2398,11 +2418,11 @@ function InteractionTweakData:_init_carry()
 	self.carry_drop_spy.player_say_interacting = "or_op_spy_picked_up"
 end
 
--- Lines 2481-2720
+-- Lines 2518-2757
 function InteractionTweakData:_init_comwheels()
 	local com_wheel_color = Color(1, 0.8, 0)
 
-	-- Lines 2501-2575
+	-- Lines 2538-2612
 	local function com_wheel_clbk(say_target_id, default_say_id, post_prefix, past_prefix, waypoint_tech)
 		local character = managers.network:session():local_peer()._character
 		local nationality = CriminalsManager.comm_wheel_callout_from_nationality(character)
@@ -2575,7 +2595,7 @@ function InteractionTweakData:_init_comwheels()
 	}
 end
 
--- Lines 2722-3147
+-- Lines 2759-3190
 function InteractionTweakData:_init_minigames()
 	self.minigame_icons = {
 		pick_lock = "player_panel_status_lockpick",
@@ -3106,15 +3126,21 @@ function InteractionTweakData:_init_minigames()
 	self.rewire_fuse_pane.axis = "y"
 	self.rewire_fuse_pane.timer = self.INTERACT_TIMER_LONG
 	self.rewire_fuse_pane.upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_REWIRE
+	self.rewire_fuse_pane.sound_done = "el_cable_connected"
+	self.rewire_fuse_pane.sound_start = "el_cable_connect"
+	self.rewire_fuse_pane.sound_interupt = "el_cable_connect_stop"
 	self.rewire_fuse_pane.interact_distance = 200
 	self.rewire_fuse_pane_easy = deep_clone(self.rewire_fuse_pane)
 	self.rewire_fuse_pane_medium = deep_clone(self.rewire_fuse_pane)
 	self.rewire_fuse_pane_hard = deep_clone(self.rewire_fuse_pane)
 	self.activate_burners = {
+		sound_start = "el_cable_connect",
+		sound_done = "el_cable_connected",
+		text_id = "hud_activate_burners",
 		axis = "y",
 		interact_distance = 200,
-		text_id = "hud_activate_burners",
 		action_text_id = "hud_action_activate_burners",
+		sound_interupt = "el_cable_connect_stop",
 		timer = self.INTERACT_TIMER_LONG,
 		upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_REWIRE
 	}

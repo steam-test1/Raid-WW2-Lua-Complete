@@ -2,8 +2,10 @@ RaidGUIControlButtonSkillTiny = RaidGUIControlButtonSkillTiny or class(RaidGUICo
 RaidGUIControlButtonSkillTiny.OUTLINE_THICKNESS = 2
 RaidGUIControlButtonSkillTiny.SPRITE_SCALE = 0.85
 
--- Lines 12-28
+-- Lines 12-30
 function RaidGUIControlButtonSkillTiny:init(parent, params)
+	params.text = params.text or ""
+
 	RaidGUIControlButtonSkillTiny.super.init(self, parent, params)
 
 	params.selected_marker_w = params.selected_marker_w or 8
@@ -20,7 +22,7 @@ function RaidGUIControlButtonSkillTiny:init(parent, params)
 	self:_layout_grid_item_icon(params)
 end
 
--- Lines 31-75
+-- Lines 33-77
 function RaidGUIControlButtonSkillTiny:_layout_grid_item_icon(params)
 	local image_coord_x = (params.selected_marker_w - params.w) / 2
 	local image_coord_y = (params.selected_marker_h - params.h) / 2
@@ -65,7 +67,7 @@ function RaidGUIControlButtonSkillTiny:_layout_grid_item_icon(params)
 	self._unselected_icon_size = params.w * RaidGUIControlButtonSkillTiny.SPRITE_SCALE
 end
 
--- Lines 77-105
+-- Lines 79-107
 function RaidGUIControlButtonSkillTiny:update_skill_data(skill_data, skill_id)
 	if not self.locked and self.skill_id ~= skill_id then
 		self.skill_id = skill_id
@@ -99,7 +101,7 @@ function RaidGUIControlButtonSkillTiny:update_skill_data(skill_data, skill_id)
 	end
 end
 
--- Lines 108-156
+-- Lines 110-158
 function RaidGUIControlButtonSkillTiny:_layout_locks(params)
 	local layer = params.layer + 10 or 10
 	local cx = self._object:w() / 2
@@ -146,7 +148,7 @@ function RaidGUIControlButtonSkillTiny:_layout_locks(params)
 	self._item_status_lock_text:set_top(self._item_status_lock_icon:bottom())
 end
 
--- Lines 158-167
+-- Lines 160-169
 function RaidGUIControlButtonSkillTiny:highlight_on()
 	if not self.skill_data then
 		return
@@ -157,7 +159,7 @@ function RaidGUIControlButtonSkillTiny:highlight_on()
 	RaidGUIControlButtonSkillTiny.super.highlight_on(self)
 end
 
--- Lines 169-178
+-- Lines 171-180
 function RaidGUIControlButtonSkillTiny:highlight_off()
 	if not self.skill_data then
 		return
@@ -168,14 +170,14 @@ function RaidGUIControlButtonSkillTiny:highlight_off()
 	RaidGUIControlButtonSkillTiny.super.highlight_off(self)
 end
 
--- Lines 180-184
+-- Lines 182-186
 function RaidGUIControlButtonSkillTiny:on_mouse_pressed(button)
 	if self.skill_data then
 		RaidGUIControlButtonSkillTiny.super.on_mouse_pressed(self, button)
 	end
 end
 
--- Lines 186-200
+-- Lines 188-202
 function RaidGUIControlButtonSkillTiny:on_mouse_released(button)
 	if not self.skill_data then
 		return
@@ -191,15 +193,15 @@ function RaidGUIControlButtonSkillTiny:on_mouse_released(button)
 	RaidGUIControlButtonSkillTiny.super.on_mouse_released(self, button)
 end
 
--- Lines 204-205
+-- Lines 207-208
 function RaidGUIControlButtonSkillTiny:_animate_press()
 end
 
--- Lines 207-208
+-- Lines 210-211
 function RaidGUIControlButtonSkillTiny:_animate_release()
 end
 
--- Lines 210-228
+-- Lines 213-231
 function RaidGUIControlButtonSkillTiny:_animate_highlight(highlighted)
 	local t = 0
 	local duration = 0.15
@@ -217,7 +219,7 @@ function RaidGUIControlButtonSkillTiny:_animate_highlight(highlighted)
 	end
 end
 
--- Lines 230-285
+-- Lines 233-288
 function RaidGUIControlButtonSkillTiny:_animate_update()
 	print("RaidGUIControlButtonSkillTiny:_animate_update()")
 

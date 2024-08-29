@@ -229,8 +229,16 @@ function RaidGUIControlSkillDetails:_create_skill_flavor()
 	})
 end
 
--- Lines 295-457
+-- Lines 295-461
 function RaidGUIControlSkillDetails:set_skill(item_data)
+	if not item_data.exp_requirements then
+		Application:error("[RaidGUIControlSkillDetails:set_skill] Could not set skill:", inspect(item_data))
+
+		return
+	end
+
+	Application:debug("[RaidGUIControlSkillDetails:set_skill] set_skill...", inspect(item_data))
+
 	local bought = item_data.bought
 	local locked = not bought and item_data.level_required and managers.experience:current_level() < item_data.level_required
 	local exp_progression = item_data.exp_progression or 0
@@ -360,14 +368,14 @@ function RaidGUIControlSkillDetails:set_skill(item_data)
 	self._description_panel:set_center_y(self._main:h() / 2 + RaidGUIControlSkillDetails.DESCRIPTION_PADDING_Y)
 end
 
--- Lines 459-464
+-- Lines 463-468
 function RaidGUIControlSkillDetails:skill_purchased(item_data)
 	self:set_skill(item_data)
 	self._main:stop()
 	self._main:animate(callback(self, self, "_animate_unlock"))
 end
 
--- Lines 468-495
+-- Lines 472-499
 function RaidGUIControlSkillDetails:_animate_show()
 	local title_y = 4
 	local title_distance = 22
@@ -397,7 +405,7 @@ function RaidGUIControlSkillDetails:_animate_show()
 	self._description_panel:set_x(desc_x)
 end
 
--- Lines 497-513
+-- Lines 501-517
 function RaidGUIControlSkillDetails:_animate_unlock()
 	local desc_x = self._skill_progression:right() + RaidGUIControlSkillDetails.DESCRIPTION_PADDING_X
 	local desc_distance = 65

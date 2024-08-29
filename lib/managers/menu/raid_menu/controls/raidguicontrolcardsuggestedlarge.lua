@@ -38,7 +38,7 @@ end
 function RaidGUIControlCardSuggestedLarge:update()
 end
 
--- Lines 42-179
+-- Lines 42-216
 function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 	self._item_data = card_data
 	self._item_data.peer_id = self._params.peer_id
@@ -226,7 +226,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 			name = "suggested_card_malus_label_" .. self._name,
 			x = self._malus_image:x() + self._malus_image:w() + 10,
 			y = self._malus_image:y(),
-			w = self._challenge_card_panel:w() - self._bonus_image:w() - 10,
+			w = self._challenge_card_panel:w() - self._malus_image:w() - 10,
 			layer = self._challenge_card_panel:layer() + 1,
 			text = malus_description,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -257,7 +257,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 	self:_set_visible_selected_marker(false)
 end
 
--- Lines 181-199
+-- Lines 218-236
 function RaidGUIControlCardSuggestedLarge:_refit_card_title_text(original_font_size)
 	local font_sizes = {}
 
@@ -280,7 +280,7 @@ function RaidGUIControlCardSuggestedLarge:_refit_card_title_text(original_font_s
 	end
 end
 
--- Lines 201-233
+-- Lines 238-270
 function RaidGUIControlCardSuggestedLarge:_show_pass_card_controls()
 	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
 
@@ -331,12 +331,12 @@ function RaidGUIControlCardSuggestedLarge:_show_pass_card_controls()
 	end
 end
 
--- Lines 235-238
+-- Lines 272-275
 function RaidGUIControlCardSuggestedLarge:_set_visible_selected_marker(flag)
 	self._select_marker_panel:set_visible(flag)
 end
 
--- Lines 240-245
+-- Lines 277-282
 function RaidGUIControlCardSuggestedLarge:select()
 	self._selected = true
 
@@ -345,7 +345,7 @@ function RaidGUIControlCardSuggestedLarge:select()
 	end
 end
 
--- Lines 247-252
+-- Lines 284-289
 function RaidGUIControlCardSuggestedLarge:unselect()
 	self._selected = false
 
@@ -354,17 +354,17 @@ function RaidGUIControlCardSuggestedLarge:unselect()
 	end
 end
 
--- Lines 254-256
+-- Lines 291-293
 function RaidGUIControlCardSuggestedLarge:selected()
 	return self._selected
 end
 
--- Lines 258-262
+-- Lines 295-299
 function RaidGUIControlCardSuggestedLarge:mouse_released(o, button, x, y)
 	self:on_mouse_released(button, x, y)
 end
 
--- Lines 264-288
+-- Lines 301-325
 function RaidGUIControlCardSuggestedLarge:on_mouse_released(button, x, y)
 	local is_host = Network:is_server()
 
@@ -391,12 +391,12 @@ function RaidGUIControlCardSuggestedLarge:on_mouse_released(button, x, y)
 	return true
 end
 
--- Lines 290-295
+-- Lines 327-332
 function RaidGUIControlCardSuggestedLarge:on_mouse_over(x, y)
 	RaidGUIControlCardSuggestedLarge.super.on_mouse_over(self, x, y)
 	self._sound_source:post_event("card_mouse_over")
 end
 
--- Lines 299-301
+-- Lines 336-338
 function RaidGUIControlCardSuggestedLarge:close()
 end

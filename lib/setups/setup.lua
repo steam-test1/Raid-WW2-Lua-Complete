@@ -137,9 +137,13 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemRaids")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemOperations")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemSaveSlots")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemWeapons")
+require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlButtonSkillProfiles")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemSkillProfile")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemContextButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItem")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlList")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListActive")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListSeparated")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlStepper")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlStepperSimple")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlSlider")
@@ -254,7 +258,7 @@ script_data = script_data or {}
 game_state_machine = game_state_machine or nil
 Setup = Setup or class(CoreSetup.CoreSetup)
 
--- Lines 296-350
+-- Lines 310-364
 function Setup:init_category_print()
 	CoreSetup.CoreSetup.init_category_print(self)
 
@@ -295,12 +299,12 @@ function Setup:init_category_print()
 	catprint_load()
 end
 
--- Lines 352-356
+-- Lines 366-370
 function Setup:set_resource_loaded_clbk(...)
 	PackageManager:set_resource_loaded_clbk(...)
 end
 
--- Lines 358-380
+-- Lines 372-394
 function Setup:load_packages()
 	Application:debug("[Setup:load_packages()]")
 	setup:set_resource_loaded_clbk(IDS_UNIT, nil)
@@ -320,7 +324,7 @@ function Setup:load_packages()
 	end
 end
 
--- Lines 382-450
+-- Lines 396-464
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
 		drop_in_allowed = true,
@@ -386,7 +390,7 @@ function Setup:init_managers(managers)
 	game_state_machine = GameStateMachine:new()
 end
 
--- Lines 452-457
+-- Lines 466-471
 function Setup:start_boot_loading_screen()
 	if not PackageManager:loaded("packages/boot_screen") then
 		PackageManager:load("packages/boot_screen")
@@ -395,12 +399,12 @@ function Setup:start_boot_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines 459-461
+-- Lines 473-475
 function Setup:start_loading_screen()
 	self:_start_loading_screen()
 end
 
--- Lines 463-473
+-- Lines 477-487
 function Setup:stop_loading_screen()
 	Application:debug("[Setup:stop_loading_screen()]")
 
@@ -414,7 +418,7 @@ function Setup:stop_loading_screen()
 	end
 end
 
--- Lines 475-569
+-- Lines 489-583
 function Setup:_start_loading_screen()
 	Application:debug("[Setup:_start_loading_screen()]")
 	Application:stack_dump()
@@ -533,7 +537,7 @@ function Setup:_start_loading_screen()
 	Global.is_loading = true
 end
 
--- Lines 571-610
+-- Lines 585-624
 function Setup:_setup_loading_environment()
 	local env_map = {
 		deferred = {
@@ -573,7 +577,7 @@ function Setup:_setup_loading_environment()
 	Application:destroy_viewport(dummy_vp)
 end
 
--- Lines 612-624
+-- Lines 626-638
 function Setup:init_game()
 	if not Global.initialized then
 		Global.level_data = {}
@@ -588,7 +592,7 @@ function Setup:init_game()
 	return game_state_machine
 end
 
--- Lines 626-643
+-- Lines 640-657
 function Setup:init_finalize()
 	Setup.super.init_finalize(self)
 	game_state_machine:init_finilize()
@@ -610,7 +614,7 @@ function Setup:init_finalize()
 	tweak_data:add_reload_callback(self, self.on_tweak_data_reloaded)
 end
 
--- Lines 645-668
+-- Lines 659-682
 function Setup:update(t, dt)
 	local main_t = TimerManager:main():time()
 	local main_dt = TimerManager:main():delta_time()
@@ -636,7 +640,7 @@ function Setup:update(t, dt)
 	end
 end
 
--- Lines 670-681
+-- Lines 684-695
 function Setup:paused_update(t, dt)
 	managers.platform:paused_update(t, dt)
 	managers.user:paused_update(t, dt)
@@ -648,7 +652,7 @@ function Setup:paused_update(t, dt)
 	game_state_machine:paused_update(t, dt)
 end
 
--- Lines 683-689
+-- Lines 697-703
 function Setup:end_update(t, dt)
 	game_state_machine:end_update(t, dt)
 
@@ -657,7 +661,7 @@ function Setup:end_update(t, dt)
 	end
 end
 
--- Lines 691-697
+-- Lines 705-711
 function Setup:paused_end_update(t, dt)
 	game_state_machine:end_update(t, dt)
 
@@ -666,7 +670,7 @@ function Setup:paused_end_update(t, dt)
 	end
 end
 
--- Lines 700-705
+-- Lines 714-719
 function Setup:end_frame(t, dt)
 	while self._end_frame_callbacks and #self._end_frame_callbacks > 0 do
 		table.remove(self._end_frame_callbacks)()
@@ -675,25 +679,25 @@ function Setup:end_frame(t, dt)
 	self:_upd_unload_packages()
 end
 
--- Lines 708-711
+-- Lines 722-725
 function Setup:add_end_frame_callback(callback)
 	self._end_frame_callbacks = self._end_frame_callbacks or {}
 
 	table.insert(self._end_frame_callbacks, callback)
 end
 
--- Lines 713-715
+-- Lines 727-729
 function Setup:add_end_frame_clbk(func)
 	table.insert(self._end_frame_clbks, func)
 end
 
--- Lines 717-720
+-- Lines 731-734
 function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 	managers.voice_over:on_tweak_data_reloaded()
 end
 
--- Lines 722-733
+-- Lines 736-747
 function Setup:destroy()
 	managers.system_menu:destroy()
 	managers.menu:destroy()
@@ -705,7 +709,7 @@ function Setup:destroy()
 	end
 end
 
--- Lines 735-752
+-- Lines 749-766
 function Setup:load_level(level, mission, world_setting, level_class_name, level_id)
 	managers.menu:close_all_menus()
 	managers.platform:destroy_context()
@@ -722,14 +726,14 @@ function Setup:load_level(level, mission, world_setting, level_class_name, level
 	self:exec(level)
 end
 
--- Lines 754-759
+-- Lines 768-773
 function Setup:load_start_menu_lobby()
 	self:load_start_menu()
 
 	Global.load_start_menu_lobby = true
 end
 
--- Lines 761-789
+-- Lines 775-803
 function Setup:load_start_menu(save_progress)
 	Application:trace("[Setup:load_start_menu()]")
 	managers.platform:set_playing(false)
@@ -757,7 +761,7 @@ function Setup:load_start_menu(save_progress)
 	self:exec(nil)
 end
 
--- Lines 791-814
+-- Lines 805-828
 function Setup:exec(context)
 	if managers.network then
 		if IS_PS4 then
@@ -789,7 +793,7 @@ function Setup:exec(context)
 	CoreSetup.CoreSetup.exec(self, context)
 end
 
--- Lines 816-823
+-- Lines 830-837
 function Setup:quit()
 	CoreSetup.CoreSetup.quit(self)
 
@@ -799,7 +803,7 @@ function Setup:quit()
 	end
 end
 
--- Lines 826-844
+-- Lines 840-858
 function Setup:return_to_camp_client()
 	if Network:is_client() then
 		game_state_machine:change_state_by_name("ingame_standard")
@@ -822,7 +826,7 @@ function Setup:return_to_camp_client()
 	end
 end
 
--- Lines 847-883
+-- Lines 861-897
 function Setup:quit_to_main_menu()
 	game_state_machine:change_state_by_name("ingame_standard")
 	managers.platform:set_playing(false)
@@ -859,7 +863,7 @@ function Setup:quit_to_main_menu()
 	end
 end
 
--- Lines 885-892
+-- Lines 899-906
 function Setup:restart()
 	local data = Global.level_data
 
@@ -870,7 +874,7 @@ function Setup:restart()
 	end
 end
 
--- Lines 894-956
+-- Lines 908-970
 function Setup:block_exec()
 	if not self._main_thread_loading_screen_gui_visible then
 		self:set_main_thread_loading_screen_visible(true)
@@ -925,12 +929,12 @@ function Setup:block_exec()
 	return result
 end
 
--- Lines 958-960
+-- Lines 972-974
 function Setup:block_quit()
 	return self:block_exec()
 end
 
--- Lines 962-968
+-- Lines 976-982
 function Setup:set_main_thread_loading_screen_visible(visible)
 	if not self._main_thread_loading_screen_gui_visible ~= not visible then
 		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
@@ -940,14 +944,14 @@ function Setup:set_main_thread_loading_screen_visible(visible)
 	end
 end
 
--- Lines 970-974
+-- Lines 984-988
 function Setup:set_fps_cap(value)
 	if not self._framerate_low then
 		Application:cap_framerate(value)
 	end
 end
 
--- Lines 976-985
+-- Lines 990-999
 function Setup:_unload_pkg_with_init(pkg)
 	Application:debug("[Setup:_unload_pkg_with_init] Unloading...", pkg)
 
@@ -962,7 +966,7 @@ function Setup:_unload_pkg_with_init(pkg)
 	end
 end
 
--- Lines 987-1019
+-- Lines 1001-1033
 function Setup:_upd_unload_packages()
 	if self._packages_to_unload then
 		local package_name = table.remove(self._packages_to_unload)
@@ -1002,7 +1006,7 @@ function Setup:_upd_unload_packages()
 	end
 end
 
--- Lines 1022-1024
+-- Lines 1036-1038
 function Setup:is_unloading()
 	return self._started_unloading_packages and true
 end

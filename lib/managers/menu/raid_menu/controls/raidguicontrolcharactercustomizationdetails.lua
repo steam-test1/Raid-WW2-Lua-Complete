@@ -142,8 +142,8 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_image
 	self:_set_customization_image(RaidGUIControlCharacterCustomizationDetails.DEFAULT_ICON_UPPER)
 end
 
--- Lines 174-190
-function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(texture, texture_rect)
+-- Lines 157-173
+function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(image)
 	local customization_image_panel = self._left_panel:child("customization_image_panel")
 
 	if self._customization_image then
@@ -155,8 +155,8 @@ function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(te
 	local customization_image_params = {
 		name = "customization_image",
 		alpha = 0,
-		texture = texture,
-		texture_rect = texture_rect
+		texture = tweak_data.gui.icons[image].texture,
+		texture_rect = tweak_data.gui.icons[image].texture_rect
 	}
 	self._customization_image = customization_image_panel:bitmap(customization_image_params)
 
@@ -164,7 +164,7 @@ function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(te
 	self._customization_image:set_center_y(customization_image_panel:h() / 2)
 end
 
--- Lines 192-228
+-- Lines 175-211
 function RaidGUIControlCharacterCustomizationDetails:_create_redeem_info()
 	local redeem_description_params = {
 		name = "redeem_description",
@@ -201,7 +201,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_redeem_info()
 	self.redeem_xp_button:set_center_x(self._left_panel:w() / 2)
 end
 
--- Lines 230-243
+-- Lines 213-226
 function RaidGUIControlCharacterCustomizationDetails:_layout_redeem_info()
 	local redeem_description = self._left_panel:child("redeem_description")
 	local _, _, w, h = redeem_description:text_rect()
@@ -219,7 +219,7 @@ function RaidGUIControlCharacterCustomizationDetails:_layout_redeem_info()
 	self._xp_redeem_value_text:set_center_y(self._left_panel:h() - RaidGUIControlCharacterCustomizationDetails.REDEEM_VALUE_CENTER_Y_FROM_BOTTOM)
 end
 
--- Lines 245-253
+-- Lines 228-236
 function RaidGUIControlCharacterCustomizationDetails:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -231,7 +231,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_right_panel()
 	self._right_panel:set_right(self._object:w())
 end
 
--- Lines 255-269
+-- Lines 238-252
 function RaidGUIControlCharacterCustomizationDetails:_create_description()
 	local description_params = {
 		vertical = "top",
@@ -251,7 +251,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 end
 
--- Lines 271-287
+-- Lines 254-270
 function RaidGUIControlCharacterCustomizationDetails:_create_item_description_name()
 	local item_type_params = {
 		name = "item_type",
@@ -271,7 +271,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_item_description_na
 	self._item_description_name = self._right_panel:text(item_type_params)
 end
 
--- Lines 289-323
+-- Lines 272-306
 function RaidGUIControlCharacterCustomizationDetails:_create_customization_info()
 	local rarity_info_params = {
 		top_offset_y = 15,
@@ -307,7 +307,7 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_info(
 	self._nationality_info:set_x(self._rarity_info:x() + self._rarity_info:w() + RaidGUIControlCharacterCustomizationDetails.NATIONALITY_PADDING_RIGHT)
 end
 
--- Lines 325-331
+-- Lines 308-314
 function RaidGUIControlCharacterCustomizationDetails:_layout_description()
 	local _, _, _, h = self._description:text_rect()
 
@@ -316,7 +316,7 @@ function RaidGUIControlCharacterCustomizationDetails:_layout_description()
 	self._nationality_info:set_y(self._description:y() + self._description:h() + RaidGUIControlCharacterCustomizationDetails.DESCRIPTION_PADDING_DOWN)
 end
 
--- Lines 333-416
+-- Lines 316-399
 function RaidGUIControlCharacterCustomizationDetails:show()
 	RaidGUIControlCharacterCustomizationDetails.super.show(self)
 
@@ -407,7 +407,7 @@ function RaidGUIControlCharacterCustomizationDetails:show()
 	self._nationality_info:set_x(self._rarity_info:x() + self._rarity_info:w() + RaidGUIControlCharacterCustomizationDetails.NATIONALITY_PADDING_RIGHT)
 end
 
--- Lines 418-469
+-- Lines 401-450
 function RaidGUIControlCharacterCustomizationDetails:set_customization(customization)
 	self._customization = customization
 
@@ -436,7 +436,7 @@ function RaidGUIControlCharacterCustomizationDetails:set_customization(customiza
 			icon = RaidGUIControlCharacterCustomizationDetails.DEFAULT_ICON_LOWER
 		end
 
-		self:_set_customization_image(tweak_data.gui.icons[icon].texture, tweak_data.gui.icons[icon].texture_rect)
+		self:_set_customization_image(icon)
 	end
 
 	self._rarity_info:set_icon(customization.rarity)
@@ -462,7 +462,7 @@ function RaidGUIControlCharacterCustomizationDetails:set_customization(customiza
 	self:_layout_description()
 end
 
--- Lines 471-475
+-- Lines 452-456
 function RaidGUIControlCharacterCustomizationDetails:_on_click_redeem()
 	local params = {
 		callback = callback(self, self, "redeem"),
@@ -472,11 +472,11 @@ function RaidGUIControlCharacterCustomizationDetails:_on_click_redeem()
 	managers.menu:show_redeem_character_customization_dialog(params)
 end
 
--- Lines 477-492
+-- Lines 458-473
 function RaidGUIControlCharacterCustomizationDetails:redeem()
 	managers.lootdrop:redeem_dropped_loot_for_goldbars()
 end
 
--- Lines 494-502
+-- Lines 475-483
 function RaidGUIControlCharacterCustomizationDetails:set_duplicate()
 end

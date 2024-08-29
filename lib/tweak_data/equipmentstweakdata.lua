@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-362
+-- Lines 3-365
 function EquipmentsTweakData:init()
 	self.first_aid_kit = {
 		deploy_time = 1,
@@ -38,9 +38,12 @@ function EquipmentsTweakData:init()
 	self.specials.crowbar_stack = deep_clone(self.specials.crowbar)
 	self.specials.crowbar_stack.transfer_quantity = 4
 	self.specials.dynamite = {
+		quantity = 1,
+		transfer_quantity = 99,
 		sync_possession = true,
-		icon = "equipment_panel_dynamite_stick",
-		text_id = "hud_equipment_dynamite"
+		text_id = "hud_equipment_dynamite",
+		max_quantity = 99,
+		icon = "equipment_panel_dynamite_stick"
 	}
 	self.specials.dynamite_x5 = {
 		quantity = 5,

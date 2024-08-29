@@ -254,9 +254,9 @@ function HUDTabWeaponChallenge:set_challenge(index, animate)
 	end
 end
 
--- Lines 246-295
+-- Lines 246-297
 function HUDTabWeaponChallenge:_set_challenge(challenge_index)
-	local challenge, count, target, min_range, briefing_id = nil
+	local challenge, count, target, min_range, max_range, briefing_id = nil
 	local challenge_data = self._challenges[challenge_index]
 
 	if challenge_data.challenge_id then
@@ -266,15 +266,19 @@ function HUDTabWeaponChallenge:_set_challenge(challenge_index)
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
 		min_range = math.round(tasks[1]:min_range() / 100)
+		max_range = math.round(tasks[1]:max_range() / 100)
 	end
 
 	briefing_id = briefing_id or challenge_data.challenge_briefing_id
 	local skill_tweak_data = tweak_data.weapon_skills.skills[challenge_data.skill_name]
 
 	self._title:set_text(utf8.to_upper(managers.localization:text(skill_tweak_data.name_id)))
+
+	local range = max_range > 0 and max_range or min_range
+
 	self._description:set_text(managers.localization:text(briefing_id, {
 		AMOUNT = target,
-		RANGE = min_range,
+		RANGE = range,
 		WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)
 	}))
 
@@ -305,65 +309,65 @@ function HUDTabWeaponChallenge:_set_challenge(challenge_index)
 	self._currently_shown_challenge = challenge_index
 end
 
--- Lines 298-301
+-- Lines 300-303
 function HUDTabWeaponChallenge:set_x(x)
 	self._object:set_x(x)
 
 	self._initial_x_position = self._object:x()
 end
 
--- Lines 303-305
+-- Lines 305-307
 function HUDTabWeaponChallenge:set_y(y)
 	self._object:set_y(y)
 end
 
--- Lines 307-309
+-- Lines 309-311
 function HUDTabWeaponChallenge:set_bottom(y)
 	self._object:set_bottom(y)
 end
 
--- Lines 311-313
+-- Lines 313-315
 function HUDTabWeaponChallenge:set_top(y)
 	self._object:set_top(y)
 end
 
--- Lines 315-318
+-- Lines 317-320
 function HUDTabWeaponChallenge:set_left(x)
 	self._object:set_left(x)
 
 	self._initial_x_position = self._object:x()
 end
 
--- Lines 320-323
+-- Lines 322-325
 function HUDTabWeaponChallenge:set_right(x)
 	self._object:set_right(x)
 
 	self._initial_x_position = self._object:x()
 end
 
--- Lines 325-328
+-- Lines 327-330
 function HUDTabWeaponChallenge:set_center_x(x)
 	self._object:set_center_x(x)
 
 	self._initial_x_position = self._object:x()
 end
 
--- Lines 330-332
+-- Lines 332-334
 function HUDTabWeaponChallenge:set_center_y(y)
 	self._object:set_center_y(y)
 end
 
--- Lines 334-336
+-- Lines 336-338
 function HUDTabWeaponChallenge:show()
 	self._object:set_visible(true)
 end
 
--- Lines 338-340
+-- Lines 340-342
 function HUDTabWeaponChallenge:hide()
 	self._object:set_visible(false)
 end
 
--- Lines 342-395
+-- Lines 344-397
 function HUDTabWeaponChallenge:_animate_data_change(panel, challenge_data)
 	local fade_out_duration = 0.3
 	local fade_in_duration = 0.3

@@ -54,7 +54,7 @@ function PlayerCarry:_enter(enter_data)
 	managers.raid_job:set_memory("kill_count_no_carry", nil, true)
 end
 
--- Lines 58-75
+-- Lines 58-76
 function PlayerCarry:exit(state_data, new_state_name)
 	PlayerCarry.super.exit(self, state_data, new_state_name)
 	self._camera_unit:base():set_target_tilt(0)
@@ -73,12 +73,12 @@ function PlayerCarry:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines 79-81
+-- Lines 80-87
 function PlayerCarry:update(t, dt)
 	PlayerCarry.super.update(self, t, dt)
 end
 
--- Lines 87-213
+-- Lines 114-240
 function PlayerCarry:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
@@ -147,7 +147,7 @@ function PlayerCarry:_update_check_actions(t, dt)
 	self:_check_stats_screen(t, dt, input)
 end
 
--- Lines 215-237
+-- Lines 242-264
 function PlayerCarry:_check_action_run(t, input)
 	local ratio = managers.player:get_my_carry_weight_ratio()
 	local can_run_value = tweak_data.carry.types[self._tweak_data_name].can_run
@@ -166,7 +166,7 @@ function PlayerCarry:_check_action_run(t, input)
 	end
 end
 
--- Lines 240-287
+-- Lines 267-314
 function PlayerCarry:_check_use_item(t, input)
 	local new_action = nil
 	local action_wanted = input.btn_use_item_release
@@ -215,7 +215,7 @@ function PlayerCarry:_check_use_item(t, input)
 	return new_action
 end
 
--- Lines 289-301
+-- Lines 316-328
 function PlayerCarry:_perform_jump(jump_vec)
 	if not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
 		local ratio = managers.player:get_my_carry_weight_ratio()
@@ -227,7 +227,7 @@ function PlayerCarry:_perform_jump(jump_vec)
 	PlayerCarry.super._perform_jump(self, jump_vec)
 end
 
--- Lines 303-312
+-- Lines 330-339
 function PlayerCarry:inventory_clbk_listener(unit, event)
 	if event == "equip" then
 		managers.hud:hide_carry_wheel(true)
@@ -240,7 +240,7 @@ function PlayerCarry:inventory_clbk_listener(unit, event)
 	PlayerCarry.super.inventory_clbk_listener(self, unit, event)
 end
 
--- Lines 316-352
+-- Lines 343-379
 function PlayerCarry:_get_max_walk_speed(...)
 	local ratio = nil
 
@@ -275,7 +275,7 @@ function PlayerCarry:_get_max_walk_speed(...)
 	return PlayerCarry.super._get_max_walk_speed(self, ...) * multiplier
 end
 
--- Lines 354-358
+-- Lines 381-385
 function PlayerCarry:_get_walk_headbob(...)
 	local ratio = managers.player:get_my_carry_weight_ratio()
 	local multiplier = tweak_data.carry:get_type_value_weighted(self._tweak_data_name, "move_speed_modifier", ratio)
@@ -283,10 +283,10 @@ function PlayerCarry:_get_walk_headbob(...)
 	return PlayerCarry.super._get_walk_headbob(self, ...) * multiplier
 end
 
--- Lines 362-364
+-- Lines 389-391
 function PlayerCarry:pre_destroy(unit)
 end
 
--- Lines 368-370
+-- Lines 395-397
 function PlayerCarry:destroy()
 end

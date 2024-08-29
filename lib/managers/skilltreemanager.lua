@@ -77,16 +77,17 @@ function SkillTreeManager:_required_save_data(real_save_data)
 	return save_data_skilltree
 end
 
--- Lines 128-135
+-- Lines 128-138
 function SkillTreeManager:save_profile_slot(data)
 	local state = {
 		version = SkillTreeManager.VERSION,
-		purchased_skills = self._global.main_profile_purchased_skills
+		purchased_skills = self._global.main_profile_purchased_skills,
+		purchased_profiles = self._global.main_profile_purchased_profiles
 	}
 	data.SkillTreeManager = state
 end
 
--- Lines 137-152
+-- Lines 140-169
 function SkillTreeManager:load_profile_slot(data, version)
 	local state = data.SkillTreeManager
 	local purchased_skills = state and state.purchased_skills or {}
@@ -100,9 +101,18 @@ function SkillTreeManager:load_profile_slot(data, version)
 	end
 
 	self._global.main_profile_purchased_skills = purchased_skills
+	local purchased_profiles = state and state.purchased_profiles or {}
+
+	for profile_index, cost in ipairs(tweak_data.skilltree.skill_profiles) do
+		if cost == 0 then
+			purchased_profiles[profile_index] = true
+		end
+	end
+
+	self._global.main_profile_purchased_profiles = purchased_profiles
 end
 
--- Lines 154-168
+-- Lines 171-189
 function SkillTreeManager:save_character_slot(data)
 	local cleaned_save_data_skilltree = self:_required_save_data(self:get_character_skilltree())
 	local display_stats = self:calculate_stats(self._global.character_profile_base_class)
@@ -111,12 +121,14 @@ function SkillTreeManager:save_character_slot(data)
 		character_profile_base_class = self._global.character_profile_base_class,
 		base_class_skill_tree = cleaned_save_data_skilltree,
 		base_class_automatic_unlock_progression = self._global.base_class_automatic_unlock_progression,
-		display_stats = self:calculate_stats(self._global.character_profile_base_class)
+		display_stats = self:calculate_stats(self._global.character_profile_base_class),
+		skill_profiles = self._global.character_skill_profiles,
+		active_skill_profile = self._global.character_active_skill_profile
 	}
 	data.SkillTreeManager = state
 end
 
--- Lines 170-215
+-- Lines 191-242
 function SkillTreeManager:load_character_slot(data, version)
 	self:reset_skills()
 
@@ -135,19 +147,22 @@ function SkillTreeManager:load_character_slot(data, version)
 	self._global.character_profile_base_class = state.character_profile_base_class or SkillTreeTweakData.CLASS_RECON
 	self._global.base_class_skill_tree = state.base_class_skill_tree or deep_clone(tweak_data.skilltree:get_skills_organised(self._global.character_profile_base_class))
 	self._global.base_class_automatic_unlock_progression = state.base_class_automatic_unlock_progression or deep_clone(tweak_data.skilltree.automatic_unlock_progressions[self._global.character_profile_base_class])
+	self._global.character_active_skill_profile = state.active_skill_profile or 1
+	self._global.character_skill_profiles = state.skill_profiles
 
+	self:_update_skill_profile_set()
 	self:_verify_skilltree_data()
 
 	if self._global.base_class_skill_tree then
-		self:_activate_skill_tree(self._global.base_class_skill_tree)
+		self:_activate_skill_tree(self._global.base_class_skill_tree, true)
 	end
 
-	self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level(), nil, true)
-	managers.blackmarket:_verfify_equipped_category(WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME)
-	managers.blackmarket:_verfify_equipped_category(WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME)
+	if managers.player:local_player() then
+		self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level(), nil, true)
+	end
 end
 
--- Lines 219-251
+-- Lines 246-278
 function SkillTreeManager:get_team_buff_upgrades()
 	local tweak_data_skilltree = tweak_data.skilltree:get_skills_organised(self._global.character_profile_base_class)
 	local save_data_skilltree = self:get_character_skilltree()
@@ -174,7 +189,7 @@ function SkillTreeManager:get_team_buff_upgrades()
 	return t
 end
 
--- Lines 255-265
+-- Lines 282-292
 function SkillTreeManager:debug_reset_active_skills()
 	local tweak_data_skilltree = tweak_data.skilltree:get_skills_organised(self._global.character_profile_base_class)
 	local save_data_skilltree = self._global.base_class_skill_tree
@@ -186,7 +201,7 @@ function SkillTreeManager:debug_reset_active_skills()
 	end
 end
 
--- Lines 273-377
+-- Lines 300-404
 function SkillTreeManager:_verify_skilltree_data()
 	Application:debug("[SkillTreeManager:_verify_skilltree_data] Checking...")
 
@@ -288,7 +303,7 @@ function SkillTreeManager:_verify_skilltree_data()
 	Application:debug("[SkillTreeManager:_verify_skilltree_data] Done checking!")
 end
 
--- Lines 381-405
+-- Lines 408-432
 function SkillTreeManager:_version_migrate_skilltree_data(state)
 	Application:trace("[SkillTreeManager:_version_migrate_skilltree_data] Saved skilltree version: ", state.version, ", current version: ", SkillTreeManager.VERSION)
 
@@ -314,7 +329,7 @@ function SkillTreeManager:_version_migrate_skilltree_data(state)
 	Application:trace("[SkillTreeManager:_version_migrate_skilltree_data] Done rebuilding skilltree manager save data")
 end
 
--- Lines 407-440
+-- Lines 434-467
 function SkillTreeManager:_version_update_skilltree_data()
 	local tweak_data_ref = tweak_data.skilltree:get_skills_organised(self._global.character_profile_base_class)
 	local save_data_ref = self:get_character_skilltree()
@@ -344,32 +359,37 @@ function SkillTreeManager:_version_update_skilltree_data()
 	end
 end
 
--- Lines 444-446
+-- Lines 471-473
 function SkillTreeManager:unpack_from_string(packed_string)
 	return packed_string
 end
 
--- Lines 450-452
+-- Lines 477-479
 function SkillTreeManager:get_character_profile_class_data()
 	return tweak_data.skilltree.classes[self._global.character_profile_base_class]
 end
 
--- Lines 456-458
+-- Lines 483-485
 function SkillTreeManager:get_character_automatic_unlock_progression(class)
 	return tweak_data.skilltree.automatic_unlock_progressions[class or self:get_character_profile_class()]
 end
 
--- Lines 462-464
+-- Lines 489-491
+function SkillTreeManager:has_character_profile_class()
+	return not not self._global.character_profile_base_class
+end
+
+-- Lines 495-503
 function SkillTreeManager:get_character_profile_class()
 	return self._global.character_profile_base_class
 end
 
--- Lines 468-470
+-- Lines 507-509
 function SkillTreeManager:get_character_skilltree()
 	return self._global.base_class_skill_tree
 end
 
--- Lines 474-479
+-- Lines 513-518
 function SkillTreeManager:get_character_skill(type_idx, skill_id)
 	if self._global.base_class_skill_tree[type_idx] then
 		return self._global.base_class_skill_tree[type_idx][skill_id]
@@ -378,7 +398,7 @@ function SkillTreeManager:get_character_skill(type_idx, skill_id)
 	return nil
 end
 
--- Lines 483-496
+-- Lines 522-535
 function SkillTreeManager:get_skills_applied()
 	local skills_applied = {}
 	local character_skilltree = self:get_character_skilltree()
@@ -394,7 +414,7 @@ function SkillTreeManager:get_skills_applied()
 	return skills_applied
 end
 
--- Lines 500-515
+-- Lines 539-554
 function SkillTreeManager:get_skills_applied_grouped()
 	local skills_applied_grouped = {}
 	local character_skilltree = self:get_character_skilltree()
@@ -412,7 +432,7 @@ function SkillTreeManager:get_skills_applied_grouped()
 	return skills_applied_grouped
 end
 
--- Lines 519-531
+-- Lines 558-570
 function SkillTreeManager:get_warcries_applied()
 	local skills_applied_grouped = {}
 	local group_list = self:get_character_skilltree()[SkillTreeTweakData.TYPE_WARCRY]
@@ -426,7 +446,7 @@ function SkillTreeManager:get_warcries_applied()
 	return skills_applied_grouped
 end
 
--- Lines 535-548
+-- Lines 574-587
 function SkillTreeManager:get_warcry_id()
 	local character_skilltree = self:get_character_skilltree()
 	local group_list = character_skilltree[SkillTreeTweakData.TYPE_WARCRY]
@@ -442,7 +462,7 @@ function SkillTreeManager:get_warcry_id()
 	return nil
 end
 
--- Lines 552-564
+-- Lines 591-603
 function SkillTreeManager:get_amount_talents_applied()
 	local amount = 0
 	local character_skilltree = self:get_character_skilltree()
@@ -457,7 +477,7 @@ function SkillTreeManager:get_amount_talents_applied()
 	return amount
 end
 
--- Lines 568-579
+-- Lines 607-618
 function SkillTreeManager:is_type_applied(skill_type)
 	local character_skilltree = self:get_character_skilltree()
 	local group_list = character_skilltree[skill_type]
@@ -471,7 +491,7 @@ function SkillTreeManager:is_type_applied(skill_type)
 	return false
 end
 
--- Lines 583-593
+-- Lines 622-632
 function SkillTreeManager:get_skill_tier(skill_id)
 	local character_skilltree = self:get_character_skilltree()
 
@@ -484,7 +504,7 @@ function SkillTreeManager:get_skill_tier(skill_id)
 	end
 end
 
--- Lines 597-638
+-- Lines 636-677
 function SkillTreeManager:get_skill_button_status(skill_type, skill_id)
 	local tweakdata_skill_data = tweak_data.skilltree.skills[skill_id]
 
@@ -526,7 +546,7 @@ function SkillTreeManager:get_skill_button_status(skill_type, skill_id)
 	return RaidGUIControlGridItemSkill.STATE_LOCKED
 end
 
--- Lines 642-695
+-- Lines 681-734
 function SkillTreeManager:add_skill_points(points)
 	Application:debug("[SkillTreeManager:add_skill_points] Giving:", points)
 
@@ -577,7 +597,7 @@ function SkillTreeManager:add_skill_points(points)
 	end
 end
 
--- Lines 700-740
+-- Lines 739-779
 function SkillTreeManager:purchase_skill(skill_id)
 	if self._global.main_profile_purchased_skills[skill_id] then
 		return false
@@ -616,12 +636,12 @@ function SkillTreeManager:purchase_skill(skill_id)
 	return false
 end
 
--- Lines 742-744
+-- Lines 781-783
 function SkillTreeManager:is_skill_purchased(skill_id)
 	return self._global.main_profile_purchased_skills[skill_id]
 end
 
--- Lines 748-763
+-- Lines 787-802
 function SkillTreeManager:calculate_stats(character_class)
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(character_class)
 	local stats = {
@@ -637,7 +657,7 @@ function SkillTreeManager:calculate_stats(character_class)
 	return stats
 end
 
--- Lines 768-777
+-- Lines 807-816
 function SkillTreeManager:_calculate_health_stat(class_tweak_data)
 	local health_stat_base_rating = class_tweak_data.damage.BASE_HEALTH + managers.player:health_skill_addition_on_top()
 	local max_health_multiplier = managers.player:health_skill_multiplier()
@@ -645,7 +665,7 @@ function SkillTreeManager:_calculate_health_stat(class_tweak_data)
 	return health_stat_base_rating * max_health_multiplier
 end
 
--- Lines 781-789
+-- Lines 820-828
 function SkillTreeManager:_calculate_speed_walk_stat(class_tweak_data)
 	local base_speed_total = class_tweak_data.movement.speed.WALKING_SPEED
 	local speed_base_multiplier = 1
@@ -653,7 +673,7 @@ function SkillTreeManager:_calculate_speed_walk_stat(class_tweak_data)
 	return base_speed_total * speed_base_multiplier, base_speed_total
 end
 
--- Lines 793-801
+-- Lines 832-840
 function SkillTreeManager:_calculate_speed_run_stat(class_tweak_data)
 	local base_speed_total = class_tweak_data.movement.speed.RUNNING_SPEED
 	local speed_base_multiplier = 1
@@ -661,7 +681,7 @@ function SkillTreeManager:_calculate_speed_run_stat(class_tweak_data)
 	return base_speed_total * speed_base_multiplier, base_speed_total
 end
 
--- Lines 805-813
+-- Lines 844-852
 function SkillTreeManager:_calculate_stamina_stat(class_tweak_data)
 	local base_stamina_rating = class_tweak_data.movement.stamina.BASE_STAMINA
 	local stamina_multiplier = managers.player:stamina_multiplier()
@@ -669,7 +689,7 @@ function SkillTreeManager:_calculate_stamina_stat(class_tweak_data)
 	return base_stamina_rating * stamina_multiplier, base_stamina_rating
 end
 
--- Lines 815-823
+-- Lines 854-862
 function SkillTreeManager:_calculate_stamina_regen_stat(class_tweak_data)
 	local base_stamina_regen = class_tweak_data.movement.stamina.BASE_STAMINA_REGENERATION_RATE
 	local regen_multiplier = managers.player:stamina_regen_multiplier()
@@ -677,14 +697,14 @@ function SkillTreeManager:_calculate_stamina_regen_stat(class_tweak_data)
 	return base_stamina_regen * regen_multiplier, base_stamina_regen
 end
 
--- Lines 828-833
+-- Lines 867-872
 function SkillTreeManager:_calculate_carry_limit_stat(character_class)
 	local base_carry_limit = managers.player:get_my_carry_weight_limit(false, character_class)
 
 	return base_carry_limit, base_carry_limit
 end
 
--- Lines 835-861
+-- Lines 874-905
 function SkillTreeManager:set_character_profile_base_class(character_profile_base_class, skip_aquire)
 	Application:debug("[SkillTreeManager:set_character_profile_base_class]", character_profile_base_class, ", skip_aquire:", skip_aquire)
 
@@ -695,6 +715,9 @@ function SkillTreeManager:set_character_profile_base_class(character_profile_bas
 	self._global.character_profile_base_class = character_profile_base_class
 	self._global.base_class_skill_tree = self:_required_save_data(deep_clone(skill_tree))
 	self._global.base_class_automatic_unlock_progression = deep_clone(self:get_character_automatic_unlock_progression(character_profile_base_class))
+
+	self:_update_skill_profile_set()
+
 	local apply_acquires = not skip_aquire
 	local default_warcry = "warcry_" .. tweak_data.skilltree.class_warcry_data[character_profile_base_class][1]
 
@@ -707,31 +730,44 @@ function SkillTreeManager:set_character_profile_base_class(character_profile_bas
 	self:_equip_class_default_weapons()
 end
 
--- Lines 863-867
+-- Lines 907-911
 function SkillTreeManager:_equip_class_default_weapons()
 	managers.blackmarket:equip_class_default_primary()
 	managers.blackmarket:equip_class_default_secondary()
 	managers.blackmarket:equip_generic_default_grenade()
 end
 
--- Lines 869-882
+-- Lines 913-933
 function SkillTreeManager:reset_skills()
 	Application:debug("[SkillTreeManager:reset_skills] ver.", SkillTreeManager.VERSION, "(was", Global.skilltree_manager and Global.skilltree_manager.VERSION, ")")
 
 	local purchased_skills = self._global.main_profile_purchased_skills or {}
+	local purchased_profiles = self._global.main_profile_purchased_profiles or {}
 	Global.skilltree_manager = {
 		reset_message = false,
 		VERSION = SkillTreeManager.VERSION,
-		main_profile_purchased_skills = purchased_skills
+		main_profile_purchased_skills = purchased_skills,
+		main_profile_purchased_profiles = purchased_profiles
 	}
 	self._global = Global.skilltree_manager
 end
 
--- Lines 887-918
+-- Lines 938-986
 function SkillTreeManager:toggle_skill_by_id(skill_type, skill_id, apply_acquires, activate)
 	Application:debug("[SkillTreeManager:toggle_skill_by_id] ---- ", skill_type, skill_id, apply_acquires, activate)
 
 	local skill_entries = self._global.base_class_skill_tree[skill_type]
+	local skill_entry = skill_entries[skill_id]
+	local profile = self:get_active_skill_profile()
+	local equipped_skills = profile.equipped_skills[skill_entry.upgrades_type]
+
+	if activate then
+		if not table.contains(equipped_skills, skill_id) then
+			table.insert(equipped_skills, skill_id)
+		end
+	else
+		table.delete(equipped_skills, skill_id)
+	end
 
 	if activate then
 		if skill_type == SkillTreeTweakData.TYPE_TALENT then
@@ -744,20 +780,19 @@ function SkillTreeManager:toggle_skill_by_id(skill_type, skill_id, apply_acquire
 				return
 			end
 		elseif skill_type == SkillTreeTweakData.TYPE_WARCRY or skill_type == SkillTreeTweakData.TYPE_BOOSTS then
-			for skill_id, skill_entry in pairs(skill_entries) do
-				if skill_entry.active then
-					self:_activate_skill(skill_id, skill_entry, false, false)
+			for skill_id, entry in pairs(skill_entries) do
+				if entry.active then
+					self:_activate_skill(skill_id, entry, false, false)
+					table.delete(equipped_skills, skill_id)
 				end
 			end
 		end
 	end
 
-	local skill_entry = skill_entries[skill_id]
-
 	self:_activate_skill(skill_id, skill_entry, apply_acquires, activate)
 end
 
--- Lines 921-936
+-- Lines 989-1004
 function SkillTreeManager:unlock_weapons_for_level(level)
 	Application:debug("[SkillTreeManager:unlock_weapons_for_level]", level)
 
@@ -776,7 +811,7 @@ function SkillTreeManager:unlock_weapons_for_level(level)
 	end
 end
 
--- Lines 941-961
+-- Lines 1009-1029
 function SkillTreeManager:create_breadcrumbs_for_level(level)
 	Application:warn("[SkillTreeManager:create_breadcrumbs_for_level] This may be non-functional during skilltree rework!")
 
@@ -802,14 +837,14 @@ function SkillTreeManager:create_breadcrumbs_for_level(level)
 	end
 end
 
--- Lines 965-969
+-- Lines 1033-1037
 function SkillTreeManager:apply_automatic_unlocks_for_levels_up_to(level, category_to_apply, skip_breadcrumbs)
 	for i = 1, level do
 		self:apply_automatic_unlocks_for_level(i, category_to_apply, skip_breadcrumbs)
 	end
 end
 
--- Lines 985-1026
+-- Lines 1053-1094
 function SkillTreeManager:apply_automatic_unlocks_for_level(level, category_to_apply, skip_breadcrumbs)
 	local character_unlock_progression = self:get_character_automatic_unlock_progression()
 
@@ -851,11 +886,8 @@ function SkillTreeManager:apply_automatic_unlocks_for_level(level, category_to_a
 	end
 end
 
--- Lines 1031-1084
+-- Lines 1099-1152
 function SkillTreeManager:_activate_skill(skill_id, savedata_skill_data, apply_acquires, activate)
-	Application:debug("[SkillTreeManager:_activate_skill] savedata_skill_data", skill_id, inspect(savedata_skill_data))
-	Application:debug("[SkillTreeManager:_activate_skill] activating...", inspect(savedata_skill_data))
-
 	savedata_skill_data.active = activate
 	local tweakdata_skill_data = tweak_data.skilltree.skills[skill_id]
 	local upgrades = {}
@@ -885,7 +917,7 @@ function SkillTreeManager:_activate_skill(skill_id, savedata_skill_data, apply_a
 	end
 end
 
--- Lines 1086-1094
+-- Lines 1154-1162
 function SkillTreeManager:_apply_upgrades(upgrades, apply_acquires, activate)
 	for _, upgrade in ipairs(upgrades) do
 		if activate then
@@ -896,61 +928,184 @@ function SkillTreeManager:_apply_upgrades(upgrades, apply_acquires, activate)
 	end
 end
 
--- Lines 1098-1103
-function SkillTreeManager:on_respec_tree()
-	MenuCallbackHandler:_update_outfit_information()
-
-	if IS_PC then
-		managers.statistics:publish_skills_to_steam()
-	end
-end
-
--- Lines 1106-1116
-function SkillTreeManager:check_reset_message()
-	local show_reset_message = self._global.reset_message and true or false
-	show_reset_message = true
-
-	if show_reset_message then
-		managers.menu:show_skilltree_reseted()
-
-		self._global.reset_message = false
-
-		MenuCallbackHandler:save_progress()
-	end
-end
-
--- Lines 1120-1125
+-- Lines 1166-1171
 function SkillTreeManager:pack_to_string()
-	local packed_string = managers.skilltree:get_character_profile_class()
+	local packed_string = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
 
 	return packed_string
 end
 
--- Lines 1127-1132
+-- Lines 1173-1178
 function SkillTreeManager:pack_to_string_from_list(list)
 	local packed_string = managers.skilltree:get_character_profile_class()
 
 	return packed_string
 end
 
--- Lines 1136-1148
-function SkillTreeManager:_activate_skill_tree(skill_tree)
+-- Lines 1182-1194
+function SkillTreeManager:_activate_skill_tree(skill_tree, activate)
 	local skill_tree_tweakdata = tweak_data.skilltree:get_skills_organised(self:get_character_profile_class())
 
 	for type_idx, group in ipairs(skill_tree_tweakdata) do
 		for skill_id, _ in pairs(group) do
 			if skill_tree[type_idx] and skill_tree[type_idx][skill_id].active then
-				self:_activate_skill(skill_id, skill_tree[type_idx][skill_id], false, true)
+				self:_activate_skill(skill_id, skill_tree[type_idx][skill_id], false, activate)
 			end
 		end
 	end
 end
 
--- Lines 1151-1152
+-- Lines 1197-1229
+function SkillTreeManager:active_skill_profile(index)
+	local skill_tree = self._global.base_class_skill_tree
+
+	if self._global.character_active_skill_profile then
+		local old_profile = self._global.character_skill_profiles[self._global.character_active_skill_profile]
+
+		for type_idx, group in ipairs(old_profile.equipped_skills) do
+			for _, skill_id in ipairs(group) do
+				if skill_tree[type_idx] and skill_tree[type_idx][skill_id] then
+					self:_activate_skill(skill_id, skill_tree[type_idx][skill_id], false, false)
+				end
+			end
+		end
+	end
+
+	local profile = self._global.character_skill_profiles[index]
+
+	if not profile or not profile.equipped_skills then
+		return
+	end
+
+	self._global.character_active_skill_profile = index
+
+	for type_idx, group in ipairs(profile.equipped_skills) do
+		for _, skill_id in ipairs(group) do
+			if skill_tree[type_idx] and skill_tree[type_idx][skill_id] then
+				self:_activate_skill(skill_id, skill_tree[type_idx][skill_id], false, true)
+			end
+		end
+	end
+
+	self:_verify_skilltree_data()
+end
+
+-- Lines 1232-1254
+function SkillTreeManager:purchase_skill_profile(index)
+	if self._global.main_profile_purchased_profiles[index] then
+		return false
+	end
+
+	local profile_cost = tweak_data.skilltree.skill_profiles[index]
+
+	if profile_cost and profile_cost <= managers.gold_economy:current() then
+		if profile_cost > 0 then
+			managers.gold_economy:spend_gold(profile_cost, false)
+		else
+			Application:warn("[SkillTreeManager:purchase_skill_profile] Bought a skill profile that was free somehow! " .. index)
+		end
+
+		self._global.main_profile_purchased_profiles[index] = true
+
+		managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+
+		return true
+	end
+
+	return false
+end
+
+-- Lines 1256-1258
+function SkillTreeManager:is_skill_profile_purchased(index)
+	return self._global.main_profile_purchased_profiles[index]
+end
+
+-- Lines 1260-1262
+function SkillTreeManager:get_skill_profile(index)
+	return self._global.character_skill_profiles[index]
+end
+
+-- Lines 1264-1268
+function SkillTreeManager:get_skill_profile_name(index)
+	local profile = self._global.character_skill_profiles[index]
+
+	return profile.name or managers.localization:text("skill_profile_name", {
+		NUMBER = index
+	})
+end
+
+-- Lines 1270-1272
+function SkillTreeManager:get_active_skill_profile()
+	return self._global.character_skill_profiles[self._global.character_active_skill_profile]
+end
+
+-- Lines 1274-1276
+function SkillTreeManager:get_active_skill_profile_index()
+	return self._global.character_active_skill_profile or 1
+end
+
+-- Lines 1278-1282
+function SkillTreeManager:get_active_skill_profile_name()
+	local index = self:get_active_skill_profile_index()
+
+	return self:get_skill_profile_name(index)
+end
+
+-- Lines 1284-1335
+function SkillTreeManager:_update_skill_profile_set()
+	if not self._global.character_skill_profiles then
+		self._global.character_skill_profiles = {}
+		self._global.character_active_skill_profile = 1
+		local skill_tree = self:get_skills_applied_grouped()
+		local profile = {
+			equipped_skills = {}
+		}
+
+		for type_idx, group in ipairs(skill_tree) do
+			if type_idx == SkillTreeTweakData.TYPE_WARCRY or type_idx == SkillTreeTweakData.TYPE_BOOSTS or type_idx == SkillTreeTweakData.TYPE_TALENT then
+				local skill_group = {}
+				profile.equipped_skills[type_idx] = skill_group
+
+				for skill_id, skill in pairs(group) do
+					if skill.active then
+						local skill_tweak = tweak_data.skilltree.skills[skill_id]
+
+						if skill_tweak and skill_tweak.upgrades_type == type_idx then
+							table.insert(skill_group, skill_id)
+						end
+					end
+				end
+			end
+		end
+
+		table.insert(self._global.character_skill_profiles, profile)
+	end
+
+	local num_profiles = #self._global.character_skill_profiles
+
+	if num_profiles < #tweak_data.skilltree.skill_profiles then
+		local default_warcry = "warcry_" .. tweak_data.skilltree.class_warcry_data[self._global.character_profile_base_class][1]
+
+		for i = num_profiles + 1, #tweak_data.skilltree.skill_profiles do
+			local profile = {
+				equipped_skills = {}
+			}
+			profile.equipped_skills[SkillTreeTweakData.TYPE_WARCRY] = {
+				default_warcry
+			}
+			profile.equipped_skills[SkillTreeTweakData.TYPE_BOOSTS] = {}
+			profile.equipped_skills[SkillTreeTweakData.TYPE_TALENT] = {}
+
+			table.insert(self._global.character_skill_profiles, profile)
+		end
+	end
+end
+
+-- Lines 1338-1339
 function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
 end
 
--- Lines 1154-1174
+-- Lines 1341-1361
 function SkillTreeManager:digest_value(value, digest, default)
 	if type(value) == "boolean" then
 		return default or 0
@@ -971,7 +1126,7 @@ function SkillTreeManager:digest_value(value, digest, default)
 	return Application:digest_value(value, digest)
 end
 
--- Lines 1206-1212
+-- Lines 1393-1399
 function SkillTreeManager:reset()
 	self:reset_skills()
 
@@ -980,28 +1135,28 @@ function SkillTreeManager:reset()
 	end
 end
 
--- Lines 1217-1220
+-- Lines 1404-1407
 function SkillTreeManager.get_skill_warcry_level_lock(i)
 	local stt = tweak_data.skilltree.skill_warcry_tiers
 
 	return i <= #stt and stt[i]
 end
 
--- Lines 1222-1225
+-- Lines 1409-1412
 function SkillTreeManager.get_skill_boost_level_lock(i)
 	local stt = tweak_data.skilltree.skill_boost_tiers
 
 	return i <= #stt and stt[i]
 end
 
--- Lines 1227-1230
+-- Lines 1414-1417
 function SkillTreeManager.get_skill_talent_level_lock(i)
 	local stt = tweak_data.skilltree.skill_talent_tiers
 
 	return i <= #stt and stt[i]
 end
 
--- Lines 1234-1242
+-- Lines 1421-1429
 function SkillTreeManager.get_unlocked_warcry_slots()
 	local t = {}
 	local level = managers.experience:current_level()
@@ -1014,7 +1169,7 @@ function SkillTreeManager.get_unlocked_warcry_slots()
 	return t
 end
 
--- Lines 1244-1252
+-- Lines 1431-1439
 function SkillTreeManager.get_unlocked_boost_slots()
 	local t = {}
 	local level = managers.experience:current_level()
@@ -1027,7 +1182,7 @@ function SkillTreeManager.get_unlocked_boost_slots()
 	return t
 end
 
--- Lines 1254-1262
+-- Lines 1441-1449
 function SkillTreeManager.get_unlocked_talent_slots()
 	local t = {}
 	local level = managers.experience:current_level()
@@ -1040,7 +1195,7 @@ function SkillTreeManager.get_unlocked_talent_slots()
 	return t
 end
 
--- Lines 1264-1274
+-- Lines 1451-1461
 function SkillTreeManager.get_unused_talent_slots_count()
 	local t = 0
 	local level = managers.experience:current_level()

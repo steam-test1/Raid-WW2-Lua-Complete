@@ -2,7 +2,7 @@ CarryTweakData = CarryTweakData or class()
 CarryTweakData.default_throw_power = 600
 CarryTweakData.corpse_throw_power = 180
 
--- Lines 6-377
+-- Lines 6-387
 function CarryTweakData:init(tweak_data)
 	self:_init_shared_multipliers()
 
@@ -179,10 +179,18 @@ function CarryTweakData:init(tweak_data)
 	self.plank = {
 		type = "normal",
 		name_id = "hud_carry_plank",
-		skip_exit_secure = true,
 		unit = "units/vanilla/pickups/pku_plank_bag/pku_plank_bag",
 		hud_icon = "carry_planks",
-		cannot_stack = true
+		cannot_stack = true,
+		skip_exit_secure = true
+	}
+	self.turret_m2_gun = {
+		type = "normal",
+		name_id = "hud_carry_turret_m2_gun",
+		unit = "units/vanilla/pickups/pku_lootbag/pku_lootbag",
+		hud_icon = "carry_planks",
+		cannot_stack = true,
+		skip_exit_secure = true
 	}
 	self.crate_explosives = {
 		hud_icon = "carry_planks",
@@ -230,6 +238,14 @@ function CarryTweakData:init(tweak_data)
 		throw_rotations = Rotation(0, 20, 0),
 		upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC,
 		weight = self.gold_bar.weight * 3
+	}
+	self.cable_plug = {
+		type = "normal",
+		hud_icon = "carry_planks",
+		cannot_stack = true,
+		skip_exit_secure = true,
+		unit = false,
+		weight = 4
 	}
 	self.corpse_body = {
 		type = "being",
@@ -345,12 +361,6 @@ function CarryTweakData:init(tweak_data)
 		skip_exit_secure = true,
 		cannot_stack = true
 	}
-	self.turret_m2_gun = {
-		type = "normal",
-		name_id = "hud_carry_turret_m2_gun",
-		skip_exit_secure = true,
-		cannot_stack = true
-	}
 	self.money_print_plate = {
 		type = "normal",
 		name_id = "hud_carry_money_print_plate",
@@ -365,7 +375,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
--- Lines 380-385
+-- Lines 390-395
 function CarryTweakData:_init_shared_multipliers()
 	self.WEIGHT_MULTIPLIERS_SHELL = {
 		upgrade = "saboteur_shell_weight_multiplier",
@@ -381,7 +391,7 @@ function CarryTweakData:_init_shared_multipliers()
 	}
 end
 
--- Lines 389-436
+-- Lines 399-446
 function CarryTweakData:_build_missing_corpse_bags(tweak_data)
 	local char_map = tweak_data.character.character_map()
 
@@ -400,7 +410,7 @@ function CarryTweakData:_build_missing_corpse_bags(tweak_data)
 	end
 end
 
--- Lines 439-448
+-- Lines 449-458
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -415,7 +425,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 452-458
+-- Lines 462-468
 function CarryTweakData:get_zipline_offset(carry_id)
 	if self[carry_id] and not not self[carry_id].zipline_offset then
 		return self[carry_id].zipline_offset
@@ -424,7 +434,7 @@ function CarryTweakData:get_zipline_offset(carry_id)
 	return Vector3(15, 0, -8)
 end
 
--- Lines 463-473
+-- Lines 473-483
 function CarryTweakData:get_type_value_weighted(type_id, get_id, weight)
 	local type_data = self.types[type_id]
 

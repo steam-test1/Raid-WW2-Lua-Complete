@@ -6,7 +6,7 @@ HUDCrosshair.DEFAULT_H = 320
 HUDCrosshair.DEFAULT_A = 0.665
 HUDCrosshair.DEFAULT_EDGE_PIP_COUNT = 4
 
--- Lines 14-34
+-- Lines 15-35
 function HUDCrosshair:init(hud)
 	self._hud_panel = hud.panel
 	self._tweak_data = {}
@@ -23,7 +23,7 @@ function HUDCrosshair:init(hud)
 	self._object:set_center(self._hud_panel:center())
 end
 
--- Lines 37-83
+-- Lines 38-84
 function HUDCrosshair:set_crosshair_type(type_id)
 	Application:debug("[HUDCrosshair:set_crosshair_type]", type_id)
 
@@ -72,19 +72,19 @@ function HUDCrosshair:set_crosshair_type(type_id)
 	end
 end
 
--- Lines 86-88
+-- Lines 87-89
 function HUDCrosshair:set_crosshair_offset(offset)
 	self._offset_target = math.lerp(tweak_data.weapon.crosshair.MIN_OFFSET, tweak_data.weapon.crosshair.MAX_OFFSET, offset)
 end
 
--- Lines 91-97
+-- Lines 92-98
 function HUDCrosshair:set_crosshair_offset_instant(offset)
 	self._offset = math.lerp(tweak_data.weapon.crosshair.MIN_KICK_OFFSET, tweak_data.weapon.crosshair.MAX_KICK_OFFSET, offset)
 
 	self:update_crosshair_offset(0, 0)
 end
 
--- Lines 100-107
+-- Lines 101-108
 function HUDCrosshair:set_crosshair_offset_kick(spread_mul)
 	self._offset = self._offset + math.lerp(tweak_data.weapon.crosshair.MIN_KICK_OFFSET, tweak_data.weapon.crosshair.MAX_KICK_OFFSET, spread_mul / 100) + 5
 	self._offset = math.min(self._offset, tweak_data.weapon.crosshair.MAX_KICK_OFFSET)
@@ -92,7 +92,7 @@ function HUDCrosshair:set_crosshair_offset_kick(spread_mul)
 	self:update_crosshair_offset(0, 0)
 end
 
--- Lines 110-151
+-- Lines 111-152
 function HUDCrosshair:update_crosshair_offset(t, dt)
 	local speed = 7
 	self._offset = math.lerp(self._offset, self._offset_target, dt * speed)
@@ -121,12 +121,12 @@ function HUDCrosshair:update_crosshair_offset(t, dt)
 	end
 end
 
--- Lines 155-157
+-- Lines 156-158
 function HUDCrosshair:set_crosshair_visible(visible)
 	self._object:set_visible(visible)
 end
 
--- Lines 161-173
+-- Lines 162-174
 function HUDCrosshair:set_crosshair_fade(visible)
 	if self._crosshair_fade == visible then
 		return
@@ -143,7 +143,7 @@ function HUDCrosshair:set_crosshair_fade(visible)
 	self._crosshair_fade = visible
 end
 
--- Lines 175-183
+-- Lines 176-184
 function HUDCrosshair:_animate_alpha(panel, duration, e)
 	local t = 0
 	local s = panel:alpha()

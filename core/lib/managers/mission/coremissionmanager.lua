@@ -137,9 +137,9 @@ function MissionManager:_activate_mission(name)
 	end
 end
 
--- Lines 133-145
+-- Lines 133-146
 function MissionManager:activate_script(name, ...)
-	Application:debug("[MissionManager:activate_script]", Global.running_simulation, name, inspect(self))
+	Application:debug("[MissionManager:activate_script] Simulating:", Global.running_simulation, "| Name:", name, inspect(self))
 
 	if not self._scripts[name] then
 		if Global.running_simulation then
@@ -151,10 +151,11 @@ function MissionManager:activate_script(name, ...)
 		end
 	end
 
+	Application:debug("[MissionManager:activate_script] Good to activate " .. name)
 	self._scripts[name]:activate(...)
 end
 
--- Lines 147-165
+-- Lines 148-166
 function MissionManager:find_alert_point(position)
 	local distances = {}
 
@@ -178,7 +179,7 @@ function MissionManager:find_alert_point(position)
 	return distances[min]
 end
 
--- Lines 167-177
+-- Lines 168-178
 function MissionManager:debug_enabled_alert_points()
 	local distances = {}
 
@@ -191,7 +192,7 @@ function MissionManager:debug_enabled_alert_points()
 	end
 end
 
--- Lines 179-197
+-- Lines 180-198
 function MissionManager:find_closest_metal_object_position(position)
 	local distances = {}
 
@@ -215,14 +216,14 @@ function MissionManager:find_closest_metal_object_position(position)
 	return min
 end
 
--- Lines 200-205
+-- Lines 201-206
 function MissionManager:update(t, dt)
 	for _, script in pairs(self._scripts) do
 		script:update(t, dt)
 	end
 end
 
--- Lines 208-216
+-- Lines 209-217
 function MissionManager:stop_simulation(...)
 	self:pre_destroy()
 
@@ -234,12 +235,12 @@ function MissionManager:stop_simulation(...)
 	self._runned_unit_sequences_callbacks = {}
 end
 
--- Lines 219-221
+-- Lines 220-222
 function MissionManager:on_simulation_started()
 	self._pre_destroyed = nil
 end
 
--- Lines 224-236
+-- Lines 225-237
 function MissionManager:add_runned_unit_sequence_trigger(id, sequence, callback)
 	if self._runned_unit_sequences_callbacks[id] then
 		if self._runned_unit_sequences_callbacks[id][sequence] then
@@ -259,7 +260,7 @@ function MissionManager:add_runned_unit_sequence_trigger(id, sequence, callback)
 	end
 end
 
--- Lines 239-258
+-- Lines 240-259
 function MissionManager:runned_unit_sequence(unit, sequence, params)
 	if self._pre_destroyed then
 		return
@@ -277,37 +278,37 @@ function MissionManager:runned_unit_sequence(unit, sequence, params)
 	end
 end
 
--- Lines 260-262
+-- Lines 261-263
 function MissionManager:add_area_instigator_categories(category)
 	table.insert(self._area_instigator_categories, category)
 end
 
--- Lines 265-267
+-- Lines 266-268
 function MissionManager:area_instigator_categories()
 	return self._area_instigator_categories
 end
 
--- Lines 270-272
+-- Lines 271-273
 function MissionManager:set_default_area_instigator(default)
 	self._default_area_instigator = default
 end
 
--- Lines 275-277
+-- Lines 276-278
 function MissionManager:default_area_instigator()
 	return self._default_area_instigator
 end
 
--- Lines 281-283
+-- Lines 282-284
 function MissionManager:default_instigator()
 	return nil
 end
 
--- Lines 286-288
+-- Lines 287-289
 function MissionManager:persistent_debug_enabled()
 	return self._persistent_debug_enabled
 end
 
--- Lines 291-298
+-- Lines 292-299
 function MissionManager:set_persistent_debug_enabled(enabled)
 	self._persistent_debug_enabled = enabled
 
@@ -318,7 +319,7 @@ function MissionManager:set_persistent_debug_enabled(enabled)
 	end
 end
 
--- Lines 301-307
+-- Lines 302-308
 function MissionManager:add_persistent_debug_output(debug, color)
 	if not self._persistent_debug_enabled then
 		return
@@ -328,7 +329,7 @@ function MissionManager:add_persistent_debug_output(debug, color)
 	self._persistent_debug_output:script().log(debug, color)
 end
 
--- Lines 310-317
+-- Lines 311-318
 function MissionManager:set_fading_debug_enabled(enabled)
 	self._fading_debug_enabled = enabled
 
@@ -339,7 +340,7 @@ function MissionManager:set_fading_debug_enabled(enabled)
 	end
 end
 
--- Lines 320-347
+-- Lines 321-348
 function MissionManager:add_fading_debug_output(debug, color, as_subtitle)
 	if not Application:production_build() then
 		return
@@ -361,7 +362,7 @@ function MissionManager:add_fading_debug_output(debug, color, as_subtitle)
 	end
 end
 
--- Lines 349-363
+-- Lines 350-364
 function MissionManager:_show_debug_subtitle(debug, color)
 	self._debug_subtitle_text = self._debug_subtitle_text or self._workspace:panel():text({
 		font_size = 20,
@@ -394,7 +395,7 @@ function MissionManager:_show_debug_subtitle(debug, color)
 	end)
 end
 
--- Lines 365-371
+-- Lines 366-372
 function MissionManager:get_element_by_id(id)
 	for name, script in pairs(self._scripts) do
 		if script:element(id) then
@@ -403,7 +404,7 @@ function MissionManager:get_element_by_id(id)
 	end
 end
 
--- Lines 373-381
+-- Lines 374-382
 function MissionManager:get_element_by_name(name)
 	for _, data in pairs(self._scripts) do
 		for id, element in pairs(data:elements()) do
@@ -414,7 +415,7 @@ function MissionManager:get_element_by_name(name)
 	end
 end
 
--- Lines 385-391
+-- Lines 386-392
 function MissionManager:save(data)
 	local state = {}
 
@@ -425,7 +426,7 @@ function MissionManager:save(data)
 	data.MissionManager = state
 end
 
--- Lines 393-413
+-- Lines 394-414
 function MissionManager:load(data)
 	Application:debug("[MissionManager:load]", self._sync_id, inspect(data.MissionManager))
 
@@ -442,7 +443,7 @@ function MissionManager:load(data)
 	end
 end
 
--- Lines 415-420
+-- Lines 416-421
 function MissionManager:pre_destroy()
 	self._pre_destroyed = true
 
@@ -451,7 +452,7 @@ function MissionManager:pre_destroy()
 	end
 end
 
--- Lines 422-427
+-- Lines 423-428
 function MissionManager:destroy()
 	for _, script in pairs(self._scripts) do
 		script:destroy()
@@ -465,7 +466,7 @@ for module_name, _ in pairs(MissionScript.imported_modules) do
 	MissionScript.import(module_name)
 end
 
--- Lines 438-442
+-- Lines 439-443
 function MissionScript.import(module_name)
 	MissionScript.imported_modules[module_name] = true
 	local module = core:import(module_name)
@@ -473,7 +474,7 @@ function MissionScript.import(module_name)
 	return module
 end
 
--- Lines 444-483
+-- Lines 445-484
 function MissionScript:init(data)
 	MissionScript.super.init(self)
 
@@ -510,7 +511,7 @@ function MissionScript:init(data)
 	self:_on_created(self._elements)
 end
 
--- Lines 486-497
+-- Lines 487-498
 function MissionScript:_add_translation(elements)
 	if not self._worlddefinition or not self._worlddefinition:translation() then
 		return
@@ -524,7 +525,7 @@ function MissionScript:_add_translation(elements)
 	end
 end
 
--- Lines 499-506
+-- Lines 500-507
 function MissionScript:external_create_instance_elements(prepare_mission_data)
 	local new_elements = self:create_instance_elements(prepare_mission_data)
 
@@ -535,7 +536,7 @@ function MissionScript:external_create_instance_elements(prepare_mission_data)
 	end
 end
 
--- Lines 508-515
+-- Lines 509-516
 function MissionScript:create_instance_elements(prepare_mission_data)
 	local new_elements = {}
 
@@ -546,7 +547,7 @@ function MissionScript:create_instance_elements(prepare_mission_data)
 	return new_elements
 end
 
--- Lines 517-523
+-- Lines 518-524
 function MissionScript:_preload_instance_class_elements(prepare_mission_data)
 	for _, instance_mission_data in pairs(prepare_mission_data) do
 		for _, element in ipairs(instance_mission_data.elements) do
@@ -555,7 +556,7 @@ function MissionScript:_preload_instance_class_elements(prepare_mission_data)
 	end
 end
 
--- Lines 525-550
+-- Lines 526-551
 function MissionScript:_create_elements(elements)
 	local new_elements = {}
 
@@ -590,19 +591,19 @@ function MissionScript:_create_elements(elements)
 	return new_elements
 end
 
--- Lines 553-555
+-- Lines 554-556
 function MissionScript:activate_on_parsed()
 	return self._activate_on_parsed
 end
 
--- Lines 559-563
+-- Lines 560-564
 function MissionScript:_on_created(elements)
 	for _, element in pairs(elements) do
 		element:on_created()
 	end
 end
 
--- Lines 568-580
+-- Lines 569-581
 function MissionScript:_element_class(module_name, class_name)
 	local element_class = rawget(_G, class_name)
 
@@ -620,7 +621,7 @@ function MissionScript:_element_class(module_name, class_name)
 	return element_class
 end
 
--- Lines 582-589
+-- Lines 583-590
 function MissionScript:activate(...)
 	self._active = true
 
@@ -629,7 +630,7 @@ function MissionScript:activate(...)
 	self:_on_script_activated(CoreTable.clone(self._elements), ...)
 end
 
--- Lines 591-619
+-- Lines 592-620
 function MissionScript:_on_script_activated(elements, ...)
 	for _, element in pairs(elements) do
 		element:on_script_activated()
@@ -643,7 +644,7 @@ function MissionScript:_on_script_activated(elements, ...)
 		end
 	end
 
-	-- Lines 601-612
+	-- Lines 602-613
 	local function sort_func(a, b)
 		local av = a:value("execute_on_startup_priority")
 		local bv = b:value("execute_on_startup_priority")
@@ -666,17 +667,17 @@ function MissionScript:_on_script_activated(elements, ...)
 	end
 end
 
--- Lines 621-623
+-- Lines 622-624
 function MissionScript:add_updator(id, updator)
 	self._updators[id] = updator
 end
 
--- Lines 625-627
+-- Lines 626-628
 function MissionScript:remove_updator(id)
 	self._updators[id] = nil
 end
 
--- Lines 630-637
+-- Lines 631-638
 function MissionScript:update(t, dt)
 	MissionScript.super.update(self, dt)
 
@@ -685,7 +686,7 @@ function MissionScript:update(t, dt)
 	end
 end
 
--- Lines 640-669
+-- Lines 641-670
 function MissionScript:_debug_draw(t, dt)
 	local brush = Draw:brush(Color.red)
 	local name_brush = Draw:brush(Color.red)
@@ -719,63 +720,63 @@ function MissionScript:_debug_draw(t, dt)
 	end
 end
 
--- Lines 672-674
+-- Lines 673-675
 function MissionScript:name()
 	return self._name
 end
 
--- Lines 677-679
+-- Lines 678-680
 function MissionScript:element_groups()
 	return self._element_groups
 end
 
--- Lines 682-684
+-- Lines 683-685
 function MissionScript:element_group(name)
 	return self._element_groups[name]
 end
 
--- Lines 687-689
+-- Lines 688-690
 function MissionScript:elements()
 	return self._elements
 end
 
--- Lines 692-694
+-- Lines 693-695
 function MissionScript:element(id)
 	return self._elements[id]
 end
 
--- Lines 697-700
+-- Lines 698-701
 function MissionScript:debug_output(debug, color)
 	managers.mission:add_persistent_debug_output(Application:date("%X") .. ": " .. debug, color)
 	CoreDebug.cat_print("editor", debug)
 end
 
--- Lines 703-705
+-- Lines 704-706
 function MissionScript:worlddefinition()
 	return self._worlddefinition or managers.worlddefinition
 end
 
--- Lines 707-709
+-- Lines 708-710
 function MissionScript:sync_id()
 	return self._sync_id or 0
 end
 
--- Lines 712-714
+-- Lines 713-715
 function MissionScript:is_debug()
 	return true
 end
 
--- Lines 717-719
+-- Lines 718-720
 function MissionScript:add_save_state_cb(id)
 	self._save_states[id] = true
 end
 
--- Lines 722-724
+-- Lines 723-725
 function MissionScript:remove_save_state_cb(id)
 	self._save_states[id] = nil
 end
 
--- Lines 727-751
+-- Lines 728-752
 function MissionScript:save(data)
 	local state = {}
 
@@ -788,7 +789,7 @@ function MissionScript:save(data)
 	data[self._name] = state
 end
 
--- Lines 754-788
+-- Lines 755-789
 function MissionScript:load(data)
 	local state = data[self._name]
 
@@ -817,7 +818,7 @@ function MissionScript:load(data)
 	end
 end
 
--- Lines 791-796
+-- Lines 792-797
 function MissionScript:stop_simulation(...)
 	for _, element in pairs(self._elements) do
 		element:stop_simulation(...)
@@ -826,7 +827,7 @@ function MissionScript:stop_simulation(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines 799-804
+-- Lines 800-805
 function MissionScript:pre_destroy(...)
 	for _, element in pairs(self._elements) do
 		element:pre_destroy(...)
@@ -835,7 +836,7 @@ function MissionScript:pre_destroy(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines 807-813
+-- Lines 808-814
 function MissionScript:destroy(...)
 	for _, element in pairs(self._elements) do
 		element:destroy(...)

@@ -200,13 +200,16 @@ function FFCEditorController:frustum_frozen()
 	return self._frustum_frozen
 end
 
--- Lines 203-248
+-- Lines 203-251
 function FFCEditorController:start_cube_map(params)
 	self._params = params
 	self._cubemap_name = params.name or ""
 	self._simple_postfix = params.simple_postfix
 	self._output_name = params.output_name
 	self._output_name = self._output_name or "cubemap"
+
+	self._camera:set_position(params.light:position())
+	self._camera:set_rotation(params.light:rotation())
 
 	if params.light then
 		self._light = World:create_light("omni")
@@ -221,8 +224,6 @@ function FFCEditorController:start_cube_map(params)
 			rot = Rotation(-rot:z(), rot:y())
 
 			self._params.unit:set_rotation(rot)
-		else
-			self._camera:set_rotation(self._params.unit:rotation())
 		end
 	end
 
@@ -251,12 +252,12 @@ function FFCEditorController:start_cube_map(params)
 	table.insert(self._name_ordered, self._names[1])
 end
 
--- Lines 250-252
+-- Lines 253-255
 function FFCEditorController:creating_cube_map()
 	return self._creating_cube_map
 end
 
--- Lines 254-304
+-- Lines 257-312
 function FFCEditorController:create_cube_map()
 	if self._wait_frames > 0 then
 		self._wait_frames = self._wait_frames - 1
@@ -281,19 +282,20 @@ function FFCEditorController:create_cube_map()
 	end
 
 	local x1, y1, x2, y2 = self:_get_screen_size()
+	local rot = nil
 
 	if self._cube_counter == 1 then
-		self._camera:set_rotation(Rotation(Vector3(0, 0, 1), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(0, 0, 1), Vector3(0, -1, 0))
 	elseif self._cube_counter == 2 then
-		self._camera:set_rotation(Rotation(Vector3(-1, 0, 0), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(-1, 0, 0), Vector3(0, -1, 0))
 	elseif self._cube_counter == 3 then
-		self._camera:set_rotation(Rotation(Vector3(0, 1, 0), Vector3(0, 0, -1)))
+		rot = Rotation(Vector3(0, 1, 0), Vector3(0, 0, -1))
 	elseif self._cube_counter == 4 then
-		self._camera:set_rotation(Rotation(Vector3(1, 0, 0), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(1, 0, 0), Vector3(0, -1, 0))
 	elseif self._cube_counter == 5 then
-		self._camera:set_rotation(Rotation(Vector3(0, -1, 0), Vector3(0, 0, 1)))
+		rot = Rotation(Vector3(0, -1, 0), Vector3(0, 0, 1))
 	elseif self._cube_counter == 6 then
-		self._camera:set_rotation(Rotation(Vector3(0, 0, -1), Vector3(0, -1, 0)))
+		rot = Rotation(Vector3(0, 0, -1), Vector3(0, -1, 0))
 	elseif self._cube_counter == 7 then
 		local output_file = (self._params.output_path or managers.database:root_path()) .. self._output_name .. ".dds"
 
@@ -308,12 +310,18 @@ function FFCEditorController:create_cube_map()
 		return true
 	end
 
+	if self._cube_counter < 7 then
+		rot = Rotation(rot:yaw() + self._params.light:rotation():yaw(), rot:pitch() + self._params.light:rotation():pitch(), rot:roll() + self._params.light:rotation():roll())
+
+		self._camera:set_rotation(rot)
+	end
+
 	Application:screenshot(self._names[self._cube_counter], x1, y1, x2, y2)
 
 	return false
 end
 
--- Lines 306-315
+-- Lines 314-323
 function FFCEditorController:_cubemap_done()
 	if alive(self._light) then
 		World:delete_light(self._light)
@@ -326,7 +334,7 @@ function FFCEditorController:_cubemap_done()
 	end
 end
 
--- Lines 317-328
+-- Lines 325-333
 function FFCEditorController:_get_screen_size()
 	local res = Application:screen_resolution()
 	local diff = res.x - res.y
@@ -338,7 +346,7 @@ function FFCEditorController:_get_screen_size()
 	return x1, y1, x2, y2
 end
 
--- Lines 331-337
+-- Lines 336-342
 function FFCEditorController:_create_spot_projection()
 	local x1, y1, x2, y2 = self:_get_screen_size()
 
@@ -346,7 +354,7 @@ function FFCEditorController:_create_spot_projection()
 	Application:screenshot(self._name_ordered[1], x1, y1, x2, y2)
 end
 
--- Lines 385-389
+-- Lines 390-394
 function FFCEditorController:_add_meta_data(file, meta)
 	local execute = managers.database:root_path() .. "aux_assets/engine/tools/diesel_dds_tagger.exe "
 	execute = execute .. file .. " " .. meta
@@ -354,7 +362,7 @@ function FFCEditorController:_add_meta_data(file, meta)
 	os.execute(execute)
 end
 
--- Lines 391-400
+-- Lines 396-405
 function FFCEditorController:update_orthographic(time, rel_time)
 	local speed = self._move_speed * rel_time
 	local mov_x = (self._controller:button(Idstring("go_right")) - self._controller:button(Idstring("go_left"))) * speed
@@ -368,14 +376,14 @@ function FFCEditorController:update_orthographic(time, rel_time)
 	self:set_orthographic_screen()
 end
 
--- Lines 402-405
+-- Lines 407-410
 function FFCEditorController:set_orthographic_screen()
 	local res = Application:screen_resolution()
 
 	self._camera:set_orthographic_screen(-(res.x / 2) * self._mul, res.x / 2 * self._mul, -(res.y / 2) * self._mul, res.y / 2 * self._mul)
 end
 
--- Lines 407-427
+-- Lines 412-432
 function FFCEditorController:toggle_orthographic(use)
 	local camera = self._camera
 

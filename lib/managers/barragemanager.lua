@@ -3,27 +3,26 @@ BarrageManager.MIN_DELAY_VARIANCE = 0.5
 BarrageManager.MAX_DELAY_VARIANCE = 2
 BarrageManager.DEFAULT_DISTANCE = 3000
 BarrageManager.FLARE_SHOOT_ELEVATION = 45
-BarrageManager.FLARE_MASS = 0.4
 BarrageManager.SPOTTER_COOLDOWN = 10
 BarrageManager.FLARE_UNIT = Idstring("units/vanilla/props/props_flare/props_spotter_flare")
 BarrageManager.default_params = tweak_data.barrage.default
 
--- Lines 16-18
+-- Lines 15-17
 function BarrageManager:init()
 	self:cleanup()
 end
 
--- Lines 20-22
+-- Lines 19-21
 function BarrageManager:on_simulation_ended()
 	self:cleanup()
 end
 
--- Lines 24-26
+-- Lines 23-25
 function BarrageManager:stop_barrages()
 	self:cleanup()
 end
 
--- Lines 31-58
+-- Lines 30-57
 function BarrageManager:cleanup()
 	Application:debug("[BarrageManager:cleanup]")
 
@@ -52,7 +51,7 @@ function BarrageManager:cleanup()
 	end
 end
 
--- Lines 62-111
+-- Lines 61-110
 function BarrageManager:spawn_flare(spotter, target)
 	if not alive(target) then
 		return
@@ -100,7 +99,7 @@ function BarrageManager:spawn_flare(spotter, target)
 	managers.network:session():send_to_peers_synched("sync_spotter_spawn_flare", flare, pos, rot, forward, v0)
 end
 
--- Lines 115-127
+-- Lines 114-127
 function BarrageManager:sync_spotter_spawn_flare(flare, pos, rot, forward, v, spotter)
 	flare:damage():run_sequence_simple("state_barrage_throw")
 
@@ -109,8 +108,9 @@ function BarrageManager:sync_spotter_spawn_flare(flare, pos, rot, forward, v, sp
 	local rand1 = push_str - math.random(0, push_str * 2)
 	local rand2 = push_str - math.random(0, push_str * 2)
 	local rand3 = push_str - math.random(0, push_str * 2)
+	local mass = flare:body("dynamic_body"):mass()
 
-	flare:push_at(BarrageManager.FLARE_MASS, velocity, flare:position() + Vector3(rand1, rand2, rand3))
+	flare:push_at(mass, velocity, flare:position() + Vector3(rand1, rand2, rand3))
 
 	local t = Application:time() + tweak_data.barrage.flare_timer
 

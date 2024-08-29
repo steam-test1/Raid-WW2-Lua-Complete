@@ -107,22 +107,22 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	self.assault.force_pool = {
 		55,
 		60,
-		65,
-		70
+		68,
+		74
 	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.force_balance_mul = {
 			0.9,
 			1,
-			1.12,
-			1.15
+			1.17,
+			1.32
 		}
 		self.assault.force_pool_balance_mul = {
 			0.9,
 			1,
-			1.12,
-			1.15
+			1.17,
+			1.32
 		}
 		self.assault.push_delay = {
 			6.5,
@@ -133,15 +133,15 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.assault.force_balance_mul = {
 			1,
-			1.12,
-			1.2,
-			1.23
+			1.13,
+			1.28,
+			1.4
 		}
 		self.assault.force_pool_balance_mul = {
 			1,
-			1.12,
-			1.2,
-			1.23
+			1.13,
+			1.28,
+			1.4
 		}
 		self.assault.push_delay = {
 			6.5,
@@ -152,15 +152,15 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.force_balance_mul = {
 			1.04,
-			1.12,
-			1.22,
-			1.24
+			1.14,
+			1.33,
+			1.55
 		}
 		self.assault.force_pool_balance_mul = {
 			1.04,
-			1.12,
-			1.22,
-			1.24
+			1.14,
+			1.33,
+			1.55
 		}
 		self.assault.push_delay = {
 			6.25,
@@ -171,15 +171,15 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.force_balance_mul = {
 			1.07,
-			1.14,
-			1.23,
-			1.25
+			1.16,
+			1.4,
+			1.7
 		}
 		self.assault.force_pool_balance_mul = {
 			1.07,
-			1.14,
-			1.23,
-			1.25
+			1.16,
+			1.4,
+			1.7
 		}
 		self.assault.push_delay = {
 			6,
@@ -261,8 +261,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			commanders = {
 				0,
-				1,
-				2
+				2,
+				3
 			},
 			commander_squad = {
 				0,
@@ -309,8 +309,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			commanders = {
 				1,
-				3,
-				5
+				4,
+				6
 			},
 			commander_squad = {
 				30,
@@ -356,9 +356,9 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				13
 			},
 			commanders = {
-				1,
-				4,
-				6
+				2,
+				6,
+				8
 			},
 			commander_squad = {
 				60,

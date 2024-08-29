@@ -1,6 +1,6 @@
 RaidGUIControlLabel = RaidGUIControlLabel or class(RaidGUIControl)
 
--- Lines 3-43
+-- Lines 3-48
 function RaidGUIControlLabel:init(parent, params)
 	RaidGUIControlLabel.super.init(self, parent, params)
 
@@ -33,6 +33,12 @@ function RaidGUIControlLabel:init(parent, params)
 
 	self._object = self._panel:text(self._params)
 
+	if self._params.fit_text then
+		local x, y, w, h = self._object:text_rect()
+
+		self._object:set_size(w, h)
+	end
+
 	if self._params.text_padding then
 		self._params.x = self._params.x - self._params.text_padding
 
@@ -42,95 +48,101 @@ function RaidGUIControlLabel:init(parent, params)
 	self._params.layer = self._params.layer - 1
 end
 
--- Lines 45-47
+-- Lines 50-52
 function RaidGUIControlLabel:is_alive()
 	return self._object and alive(self._object)
 end
 
--- Lines 49-51
+-- Lines 54-62
 function RaidGUIControlLabel:set_text(text)
 	self._object:set_text(text)
+
+	if self._params.fit_text then
+		local x, y, w, h = self._object:text_rect()
+
+		self._object:set_size(w, h)
+	end
 end
 
--- Lines 53-55
+-- Lines 64-66
 function RaidGUIControlLabel:text()
 	return self._object:text()
 end
 
--- Lines 57-59
+-- Lines 68-70
 function RaidGUIControlLabel:set_align(align)
 	self._object:set_align(align)
 end
 
--- Lines 61-63
+-- Lines 72-74
 function RaidGUIControlLabel:color()
 	self._object:color()
 end
 
--- Lines 65-67
+-- Lines 76-78
 function RaidGUIControlLabel:set_color(color)
 	self._object:set_color(color)
 end
 
--- Lines 69-71
+-- Lines 80-82
 function RaidGUIControlLabel:set_alpha(alpha)
 	self._object:set_alpha(alpha)
 end
 
--- Lines 73-75
+-- Lines 84-86
 function RaidGUIControlLabel:set_font(font)
 	self._object:set_font(font)
 end
 
--- Lines 77-79
+-- Lines 88-90
 function RaidGUIControlLabel:set_font_size(size)
 	self._object:set_font_size(size)
 end
 
--- Lines 81-82
+-- Lines 92-93
 function RaidGUIControlLabel:highlight_on()
 end
 
--- Lines 84-85
+-- Lines 95-96
 function RaidGUIControlLabel:highlight_off()
 end
 
--- Lines 87-89
+-- Lines 98-100
 function RaidGUIControlLabel:center_x(coord)
 	return self._object:center_x(coord)
 end
 
--- Lines 91-93
+-- Lines 102-104
 function RaidGUIControlLabel:center_y(coord)
 	return self._object:center_y(coord)
 end
 
--- Lines 95-97
+-- Lines 106-108
 function RaidGUIControlLabel:set_center_x(coord)
 	self._object:set_center_x(coord)
 end
 
--- Lines 99-101
+-- Lines 110-112
 function RaidGUIControlLabel:set_center_y(coord)
 	self._object:set_center_y(coord)
 end
 
--- Lines 103-105
+-- Lines 114-116
 function RaidGUIControlLabel:text_rect()
 	return self._object:text_rect()
 end
 
--- Lines 107-109
+-- Lines 118-120
 function RaidGUIControlLabel:set_width(width)
 	self._object:set_width(width)
 end
 
--- Lines 111-113
+-- Lines 122-124
 function RaidGUIControlLabel:set_height(height)
 	self._object:set_height(height)
 end
 
--- Lines 115-118
+-- Lines 126-129
 function RaidGUIControlLabel:mouse_released(o, button, x, y)
 	return false
 end

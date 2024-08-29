@@ -834,39 +834,41 @@ function CoreEditor:toggle_orthographic(data)
 	self._camera_controller:toggle_orthographic(self._orthographic)
 end
 
--- Lines 792-794
+-- Lines 792-795
 function CoreEditor:toggle_light(data)
+	self._light_toggled_data = data
+
 	self._light:set_enable(data[1]:is_checked(data[2]))
 end
 
--- Lines 795-797
+-- Lines 796-798
 function CoreEditor:toggle_show_center(data)
 	self._show_center = data[1]:is_checked(data[2])
 end
 
--- Lines 799-802
+-- Lines 800-803
 function CoreEditor:toggle_show_camera_info(data)
 	self._show_camera_position = data[1]:is_checked(data[2])
 
 	self:set_show_camera_info(self._show_camera_position)
 end
 
--- Lines 804-806
+-- Lines 805-807
 function CoreEditor:toggle_draw_marker_ball(data)
 	self._layer_draw_marker = data[1]:is_checked(data[2])
 end
 
--- Lines 811-813
+-- Lines 812-814
 function CoreEditor:on_configuration()
 	self._configuration:show_modal()
 end
 
--- Lines 816-818
+-- Lines 817-819
 function CoreEditor:on_controller_bindings()
 	self:show_dialog("edit_controller_bindings", "EditControllerBindings")
 end
 
--- Lines 821-826
+-- Lines 822-827
 function CoreEditor:on_expert_mode(data)
 	local expert = data[1]:is_checked(data[2])
 
@@ -875,7 +877,7 @@ function CoreEditor:on_expert_mode(data)
 	Global.frame_panel:layout()
 end
 
--- Lines 831-845
+-- Lines 832-846
 function CoreEditor:on_reload_unit(quick)
 	local names = {}
 
@@ -894,31 +896,31 @@ function CoreEditor:on_reload_unit(quick)
 	self:reload_units(names, quick)
 end
 
--- Lines 849-852
+-- Lines 850-853
 function CoreEditor:on_profiler_main(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MAIN", not event_object:is_checked())
 	Application:console_command("stats main")
 end
 
--- Lines 854-857
+-- Lines 855-858
 function CoreEditor:on_profiler_mem(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MEM", not event_object:is_checked())
 	Application:console_command("stats mem")
 end
 
--- Lines 859-862
+-- Lines 860-863
 function CoreEditor:on_profiler_d3d(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_D3D", not event_object:is_checked())
 	Application:console_command("stats d3d")
 end
 
--- Lines 864-867
+-- Lines 865-868
 function CoreEditor:on_profiler_unit_profiler(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_UNIT_PROFILER", not event_object:is_checked())
 	Application:console_command("stats unit_profiler")
 end
 
--- Lines 871-881
+-- Lines 872-882
 function CoreEditor:on_add_workview()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for new work view:", "Add work view", "", Vector3(-1, -1, 0), true)
 
@@ -933,12 +935,12 @@ function CoreEditor:on_add_workview()
 	end
 end
 
--- Lines 883-885
+-- Lines 884-886
 function CoreEditor:on_show_workview()
 	self:show_dialog("workview_by_name", "SelectWorkView")
 end
 
--- Lines 888-922
+-- Lines 889-923
 function CoreEditor:on_check_duality()
 	local units = {}
 	local collisions = {
@@ -1001,7 +1003,7 @@ function CoreEditor:on_check_duality()
 	self._unit_duality = UnitDuality:new(collisions, pos)
 end
 
--- Lines 924-928
+-- Lines 925-929
 function CoreEditor:on_make_screenshot()
 	local name = Application:date("%Y-%m-%d_%H.%M.%S") .. ".tga"
 
@@ -1009,14 +1011,14 @@ function CoreEditor:on_make_screenshot()
 	self:output("Screenshot created: " .. name .. ".")
 end
 
--- Lines 930-932
+-- Lines 931-933
 function CoreEditor:toggle_draw_occluders(data)
 	self._draw_occluders = data[1]:is_checked(data[2])
 end
 
 CoreEditor.MAX_HIDE_HELPERS_PER_FRAME = 15000
 
--- Lines 938-960
+-- Lines 939-961
 function CoreEditor:on_hide_helper_units(data)
 	for name, layer in pairs(self._layers) do
 		local units = clone(layer:created_units())
@@ -1041,7 +1043,7 @@ function CoreEditor:on_hide_helper_units(data)
 	end
 end
 
--- Lines 962-970
+-- Lines 963-971
 function CoreEditor:queue_hide_units(units, data)
 	self._hide_helper_queue = self._hide_helper_queue or {}
 
@@ -1053,7 +1055,7 @@ end
 
 local leveltools_ids = Idstring("leveltools")
 
--- Lines 973-1001
+-- Lines 974-1002
 function CoreEditor:_hide_these_units(units, data)
 	Application:debug("[CoreEditor:_hide_these_units] #units:", #units, "Visibility:", data.vis)
 
@@ -1088,28 +1090,28 @@ function CoreEditor:_hide_these_units(units, data)
 	cache = nil
 end
 
--- Lines 1003-1005
+-- Lines 1004-1006
 function CoreEditor:toggle_render_effects(data)
 	World:effect_manager():set_rendering_enabled(data[1]:is_checked(data[2]))
 end
 
--- Lines 1009-1012
+-- Lines 1010-1013
 function CoreEditor:toggle_show_markers(data)
 	self._marker_panel:set_visible(data[1]:is_checked(data[2]))
 	self._ews_editor_frame:layout()
 end
 
--- Lines 1016-1018
+-- Lines 1017-1019
 function CoreEditor:on_using_the_editor()
 	EWS:launch_url("https://intranet.starbreeze.com/wiki/index.php?title=Category:Level_Design")
 end
 
--- Lines 1020-1022
+-- Lines 1021-1023
 function CoreEditor:on_help()
 	EWS:launch_url("http://mondomonkey.com/MondoMonkeyWhiteB.jpg")
 end
 
--- Lines 1024-1026
+-- Lines 1025-1027
 function CoreEditor:on_about()
 	EWS:MessageDialog(Global.frame_panel, self._editor_name .. [[
 

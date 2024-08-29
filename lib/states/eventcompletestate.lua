@@ -142,7 +142,7 @@ end
 function EventCompleteState:set_controller_enabled(enabled)
 end
 
--- Lines 73-278
+-- Lines 73-222
 function EventCompleteState:at_enter(old_state, params)
 	Application:trace("[EventCompleteState:at_enter()]")
 	managers.player:replenish_player()
@@ -186,7 +186,7 @@ function EventCompleteState:at_enter(old_state, params)
 	self._current_job_data = clone(managers.raid_job:current_job())
 	self._active_challenge_card = managers.challenge_cards:get_active_card()
 
-	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" and self._active_challenge_card.loot_drop_group then
+	if self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty" and self._active_challenge_card.loot_drop_group then
 		managers.challenge_cards.forced_loot_card = self._active_challenge_card
 	else
 		managers.challenge_cards.forced_loot_card = nil
@@ -266,7 +266,7 @@ function EventCompleteState:at_enter(old_state, params)
 	self._difficulty = Global.game_settings.difficulty
 end
 
--- Lines 280-294
+-- Lines 224-238
 function EventCompleteState:_calculate_card_xp_bonuses()
 	local card_bonus_xp = 0
 
@@ -285,17 +285,17 @@ function EventCompleteState:_calculate_card_xp_bonuses()
 	self._card_xp_multiplier = card_xp_multiplier
 end
 
--- Lines 296-298
+-- Lines 240-242
 function EventCompleteState:card_bonus_xp()
 	return self._card_bonus_xp
 end
 
--- Lines 300-302
+-- Lines 244-246
 function EventCompleteState:card_xp_multiplier()
 	return self._card_xp_multiplier
 end
 
--- Lines 304-328
+-- Lines 248-274
 function EventCompleteState:_calculate_extra_loot_secured()
 	local extra_loot_value = 0
 	local extra_loot_count = 0
@@ -313,18 +313,17 @@ function EventCompleteState:_calculate_extra_loot_secured()
 	end
 
 	if extra_loot_value > 0 then
-		local extra_loot_loot_data = {
+		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
 			title = "menu_loot_screen_bonus_loot",
 			total_value = 0,
 			icon = "rewards_extra_loot",
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
 		}
-		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = extra_loot_loot_data
 	end
 end
 
--- Lines 331-361
+-- Lines 277-301
 function EventCompleteState:on_loot_data_ready()
 	self.loot_acquired = managers.raid_job:loot_acquired_in_job()
 	self.loot_spawned = managers.raid_job:loot_spawned_in_job()
@@ -338,7 +337,7 @@ function EventCompleteState:on_loot_data_ready()
 	end
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
-	local dog_tag_loot_data = {
+	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = {
 		title = "menu_loot_screen_dog_tags",
 		icon = "rewards_dog_tags",
 		acquired = self.loot_acquired,
@@ -346,35 +345,33 @@ function EventCompleteState:on_loot_data_ready()
 		acquired_value = self.loot_acquired * tweak_data.lootdrop.dog_tag.loot_value,
 		total_value = self.loot_spawned * tweak_data.lootdrop.dog_tag.loot_value
 	}
-	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = dog_tag_loot_data
 
 	if self.loot_spawned == self.loot_acquired and self._success then
 		managers.achievment:check_achievement_group_bring_them_home(self._current_job_data)
 	end
 end
 
--- Lines 363-388
+-- Lines 303-342
 function EventCompleteState:drop_loot_for_player()
-	Application:trace("[EventCompleteState:drop_loot_for_player()]")
+	Application:info("[EventCompleteState:drop_loot_for_player]")
 
 	local acquired_loot_value = 0
 	local total_loot_value = 0
+	local loot_percentage = 0
+	local forced_loot_group = nil
 
 	for id, loot_item in pairs(self.loot_data) do
 		acquired_loot_value = acquired_loot_value + loot_item.acquired_value
 		total_loot_value = total_loot_value + loot_item.total_value
 	end
 
-	local loot_percentage = 0
-
 	if total_loot_value ~= 0 then
 		loot_percentage = acquired_loot_value / total_loot_value
 	end
 
 	local loot_percentage = math.clamp(loot_percentage, 0, 1)
-	local forced_loot_group = nil
 
-	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" then
+	if self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty" then
 		forced_loot_group = managers.challenge_cards:get_loot_drop_group(self._active_challenge_card.key_name)
 	end
 
@@ -383,7 +380,7 @@ function EventCompleteState:drop_loot_for_player()
 	self._awarded_rewards.loot = true
 end
 
--- Lines 390-397
+-- Lines 344-353
 function EventCompleteState:on_loot_dropped_for_player()
 	Application:trace("[EventCompleteState:on_loot_dropped_for_player()]")
 
@@ -394,7 +391,7 @@ function EventCompleteState:on_loot_dropped_for_player()
 	end
 end
 
--- Lines 399-406
+-- Lines 355-365
 function EventCompleteState:on_loot_dropped_for_peer()
 	Application:trace("[EventCompleteState:on_loot_dropped_for_peer()]")
 
@@ -405,39 +402,32 @@ function EventCompleteState:on_loot_dropped_for_peer()
 	end
 end
 
--- Lines 408-433
+-- Lines 368-389
 function EventCompleteState:_get_debrief_video(success)
-	local video_list = nil
-
-	if success then
-		video_list = EventCompleteState.SUCCESS_VIDEOS
-	else
-		video_list = EventCompleteState.FAILURE_VIDEOS
-	end
-
+	local video_list = EventCompleteState[success and "SUCCESS_VIDEOS" or "FAILURE_VIDEOS"]
+	local video_path = nil
 	local total = 0
 
 	for _, video in ipairs(video_list) do
 		total = total + video.chance
 	end
 
-	local chosen_video = nil
 	local value = math.rand(total)
 
 	for _, video in ipairs(video_list) do
 		value = value - video.chance
 
 		if value <= 0 then
-			chosen_video = video.path
+			video_path = video.path
 
 			break
 		end
 	end
 
-	return chosen_video
+	return video_path
 end
 
--- Lines 435-494
+-- Lines 391-448
 function EventCompleteState:_create_debrief_video()
 	Application:trace("[EventCompleteState:_create_debrief_video()]")
 
@@ -472,7 +462,7 @@ function EventCompleteState:_create_debrief_video()
 	managers.gui_data:layout_workspace(self._safe_rect_workspace)
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
-	local press_any_key_params = {
+	local press_any_key_prompt = self._safe_panel:text({
 		name = "press_any_key_prompt",
 		alpha = 0,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
@@ -480,8 +470,7 @@ function EventCompleteState:_create_debrief_video()
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 		color = tweak_data.gui.colors.raid_dirty_white,
 		layer = self._debrief_video:layer() + 1
-	}
-	local press_any_key_prompt = self._safe_panel:text(press_any_key_params)
+	})
 	local _, _, w, h = press_any_key_prompt:text_rect()
 
 	press_any_key_prompt:set_w(w)
@@ -492,14 +481,14 @@ function EventCompleteState:_create_debrief_video()
 	managers.queued_tasks:queue("play_debrief_video", self._play_debrief_video, self, nil, 2.3)
 end
 
--- Lines 496-500
+-- Lines 450-454
 function EventCompleteState:_play_debrief_video()
 	if self._debrief_video then
 		self._debrief_video:play()
 	end
 end
 
--- Lines 502-517
+-- Lines 456-471
 function EventCompleteState:_animate_show_press_any_key_prompt(prompt)
 	local duration = 0.7
 	local t = 0
@@ -517,7 +506,7 @@ function EventCompleteState:_animate_show_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.75)
 end
 
--- Lines 519-552
+-- Lines 473-506
 function EventCompleteState:_animate_change_press_any_key_prompt(prompt)
 	local fade_out_duration = 0.25
 	local t = (1 - prompt:alpha()) * fade_out_duration
@@ -556,7 +545,7 @@ function EventCompleteState:_animate_change_press_any_key_prompt(prompt)
 	prompt:set_alpha(0.75)
 end
 
--- Lines 554-561
+-- Lines 508-515
 function EventCompleteState:on_controller_hotswap()
 	local press_any_key_prompt = self._safe_panel:child("press_any_key_prompt")
 
@@ -566,12 +555,12 @@ function EventCompleteState:on_controller_hotswap()
 	end
 end
 
--- Lines 564-566
+-- Lines 517-519
 function EventCompleteState:job_data()
 	return self._current_job_data
 end
 
--- Lines 568-616
+-- Lines 521-566
 function EventCompleteState:on_server_left(message)
 	local dialog_data = {
 		title = managers.localization:text("dialog_returning_to_main_menu"),
@@ -641,7 +630,7 @@ function EventCompleteState:on_server_left(message)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 618-715
+-- Lines 583-645
 function EventCompleteState:on_top_stats_ready()
 	Application:trace("[EventCompleteState:on_top_stats_ready()]")
 
@@ -701,7 +690,7 @@ function EventCompleteState:on_top_stats_ready()
 	end
 end
 
--- Lines 717-732
+-- Lines 647-662
 function EventCompleteState:update(t, dt)
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_DEBRIEF_VIDEO and (self:is_playing() and self:is_skipped() or not self:is_playing()) then
 		self._debrief_video:destroy()
@@ -718,12 +707,12 @@ function EventCompleteState:update(t, dt)
 	end
 end
 
--- Lines 734-736
+-- Lines 664-666
 function EventCompleteState:is_playing()
 	return self._debrief_video:loop_count() < 1
 end
 
--- Lines 738-746
+-- Lines 668-676
 function EventCompleteState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -734,7 +723,7 @@ function EventCompleteState:is_skipped()
 	return false
 end
 
--- Lines 748-770
+-- Lines 678-700
 function EventCompleteState:get_personal_stats()
 	local personal_stats = {
 		session_killed = managers.statistics:session_killed().total.count or 0,
@@ -759,7 +748,7 @@ function EventCompleteState:get_personal_stats()
 	self.personal_stats = personal_stats
 end
 
--- Lines 772-814
+-- Lines 702-744
 function EventCompleteState:get_skill_xp_progress()
 	local skills_applied = managers.skilltree:get_skills_applied_grouped()
 	local skill_types = {
@@ -801,7 +790,7 @@ function EventCompleteState:get_skill_xp_progress()
 	return skills_table
 end
 
--- Lines 816-866
+-- Lines 746-796
 function EventCompleteState:get_base_xp_breakdown()
 	local is_in_operation = self._current_job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION
 	local current_operation = is_in_operation and self._current_job_data.job_id or nil
@@ -822,7 +811,7 @@ function EventCompleteState:get_base_xp_breakdown()
 	end
 end
 
--- Lines 869-889
+-- Lines 799-821
 function EventCompleteState:calculate_xp()
 	self:get_base_xp_breakdown()
 
@@ -844,10 +833,12 @@ function EventCompleteState:calculate_xp()
 
 	self.total_xp = additive * multiplicative
 
+	Application:info("[EventCompleteState:calculate_xp] NEW XP Total: " .. tostring(self.total_xp))
+
 	return self.total_xp
 end
 
--- Lines 891-897
+-- Lines 823-829
 function EventCompleteState:recalculate_xp()
 	local total_xp = self:calculate_xp()
 
@@ -856,7 +847,7 @@ function EventCompleteState:recalculate_xp()
 	end
 end
 
--- Lines 899-917
+-- Lines 831-849
 function EventCompleteState:award_xp(value)
 	Application:trace("[EventCompleteState:award_xp()] value: " .. tostring(value))
 	managers.experience:add_points(value, false)
@@ -879,12 +870,12 @@ function EventCompleteState:award_xp(value)
 	self._awarded_rewards.xp = true
 end
 
--- Lines 919-921
+-- Lines 851-853
 function EventCompleteState:is_success()
 	return self._success
 end
 
--- Lines 923-988
+-- Lines 855-911
 function EventCompleteState:at_exit(next_state)
 	Application:trace("[EventCompleteState:at_exit()]")
 	self:_clear_controller()
@@ -936,7 +927,7 @@ function EventCompleteState:at_exit(next_state)
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
 end
 
--- Lines 991-996
+-- Lines 914-919
 function EventCompleteState:_shut_down_network()
 	Network:set_multiplayer(false)
 	managers.network:queue_stop_network()
@@ -944,11 +935,11 @@ function EventCompleteState:_shut_down_network()
 	managers.network.voice_chat:destroy_voice()
 end
 
--- Lines 999-1022
+-- Lines 922-946
 function EventCompleteState:_continue_blocked()
-	local in_focus = managers.menu:active_menu() == self._mission_end_menu
+	local out_focus = managers.menu:active_menu() ~= self._mission_end_menu
 
-	if not in_focus then
+	if out_focus then
 		return true
 	end
 
@@ -964,44 +955,39 @@ function EventCompleteState:_continue_blocked()
 		return true
 	end
 
-	if self._continue_block_timer and Application:time() < self._continue_block_timer then
+	local timer_blocking = self._continue_block_timer and Application:time() < self._continue_block_timer
+
+	if timer_blocking then
 		return true
 	end
 
 	return false
 end
 
--- Lines 1024-1026
+-- Lines 948-950
 function EventCompleteState:continue()
 	self:_continue()
 end
 
--- Lines 1028-1124
+-- Lines 952-1023
 function EventCompleteState:_continue()
 	Application:trace("[EventCompleteState:_continue()]")
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_DEBRIEF_VIDEO then
-		managers.queued_tasks:unqueue("play_debrief_video")
-
-		if self:is_success() then
-			managers.music:post_event("music_mission_success", true)
-		else
-			managers.music:post_event("music_mission_fail", true)
-		end
-
 		self._active_screen = EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS
+
+		managers.queued_tasks:unqueue("play_debrief_video")
+		managers.music:post_event("music_mission_" .. (self:is_success() and "success" or "fail"), true)
 
 		if managers.network.voice_chat then
 			managers.network.voice_chat:trc_check_unmute()
 		end
 
-		if managers.network:session():amount_of_players() == 1 then
+		if managers.network:session():amount_of_players() > 1 then
+			managers.raid_menu:open_menu("raid_menu_special_honors", false)
+		else
 			self:_continue()
-
-			return
 		end
-
-		managers.raid_menu:open_menu("raid_menu_special_honors", false)
 	elseif self._active_screen == EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS then
 		if self.is_at_last_event and self:is_success() then
 			local success = managers.raid_menu:open_menu("raid_menu_loot_screen", false)
@@ -1062,7 +1048,7 @@ function EventCompleteState:_continue()
 	end
 end
 
--- Lines 1126-1136
+-- Lines 1025-1035
 function EventCompleteState:_clear_controller()
 	managers.controller:remove_hotswap_callback("event_complete_state")
 
@@ -1076,12 +1062,12 @@ function EventCompleteState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines 1138-1140
+-- Lines 1037-1039
 function EventCompleteState:game_ended()
 	return true
 end
 
--- Lines 1142-1173
+-- Lines 1041-1072
 function EventCompleteState:check_complete_achievements()
 	if self:is_success() then
 		managers.achievment:check_achievement_complete_raid_with_4_different_classes()
@@ -1090,7 +1076,7 @@ function EventCompleteState:check_complete_achievements()
 	end
 end
 
--- Lines 1175-1196
+-- Lines 1074-1095
 function EventCompleteState:set_statistics_values()
 	local usingChallengeCard = false
 
@@ -1103,7 +1089,7 @@ function EventCompleteState:set_statistics_values()
 	end
 end
 
--- Lines 1199-1201
+-- Lines 1098-1100
 function EventCompleteState:is_joinable()
 	return false
 end

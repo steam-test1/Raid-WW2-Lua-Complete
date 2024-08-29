@@ -1,6 +1,6 @@
 ReadyUpGui = ReadyUpGui or class(RaidGuiBase)
 
--- Lines 5-52
+-- Lines 5-55
 function ReadyUpGui:init(ws, fullscreen_ws, node, component_name)
 	if Network:is_server() then
 		managers.network:session():set_state("in_lobby")
@@ -34,7 +34,7 @@ function ReadyUpGui:init(ws, fullscreen_ws, node, component_name)
 	Global.statistics_manager.playing_from_start = true
 end
 
--- Lines 54-58
+-- Lines 57-61
 function ReadyUpGui:_setup_properties()
 	ReadyUpGui.super._setup_properties(self)
 
@@ -42,7 +42,7 @@ function ReadyUpGui:_setup_properties()
 	self._background_rect = nil
 end
 
--- Lines 60-66
+-- Lines 63-69
 function _get_local_peer_index()
 	for i, peer in pairs(managers.network:session():all_peers()) do
 		if peer == managers.network:session():local_peer() then
@@ -51,7 +51,7 @@ function _get_local_peer_index()
 	end
 end
 
--- Lines 68-95
+-- Lines 71-98
 function ReadyUpGui:_layout()
 	self._is_host = Network:is_server()
 	self._is_single_player = managers.network:session():count_all_peers() == 1
@@ -72,7 +72,7 @@ function ReadyUpGui:_layout()
 	managers.menu_component:_voice_panel_align_bottom_left()
 end
 
--- Lines 97-190
+-- Lines 100-193
 function ReadyUpGui:_layout_buttons()
 	local button_y = 848
 	self._ready_up_button = self._root_panel:short_primary_button({
@@ -159,7 +159,7 @@ function ReadyUpGui:_layout_buttons()
 	end
 end
 
--- Lines 192-248
+-- Lines 195-251
 function ReadyUpGui:_layout_header()
 	local selected_job = managers.raid_job:selected_job()
 	local current_job = managers.raid_job:current_job()
@@ -217,7 +217,7 @@ function ReadyUpGui:_layout_header()
 	self._node.components.raid_menu_header:set_screen_name_raw("")
 end
 
--- Lines 250-263
+-- Lines 253-266
 function ReadyUpGui:_get_list_index(peer_index)
 	local wanted_local_peer_list_index = 2
 
@@ -234,7 +234,7 @@ function ReadyUpGui:_get_list_index(peer_index)
 	return peer_index
 end
 
--- Lines 265-301
+-- Lines 268-304
 function ReadyUpGui:_layout_player_list()
 	self._player_control_list = {}
 	self._current_peer = nil
@@ -273,7 +273,7 @@ function ReadyUpGui:_layout_player_list()
 	end
 end
 
--- Lines 303-328
+-- Lines 306-331
 function ReadyUpGui:_layout_card_info()
 	local card_w = 160
 	local card_params = {
@@ -348,7 +348,7 @@ function ReadyUpGui:_layout_card_info()
 	self._negative_card_effect_label:set_visible(false)
 end
 
--- Lines 330-344
+-- Lines 333-347
 function ReadyUpGui:_get_character_spawn_locations()
 	local units = World:find_units_quick("all", managers.slot:get_mask("env_effect"))
 	local ids_ready_up_scene_name = Idstring("units/vanilla/characters/scenes/ready_up_scene")
@@ -365,7 +365,7 @@ function ReadyUpGui:_get_character_spawn_locations()
 	end
 end
 
--- Lines 346-362
+-- Lines 349-365
 function ReadyUpGui:_spawn_weapon(params)
 	local right_hand_locator = params.character_unit:get_object(Idstring("a_weapon_right_front"))
 	local weapon_unit = safe_spawn_unit(params.unit_path, right_hand_locator:position(), Rotation(0, 0, 0))
@@ -386,7 +386,7 @@ function ReadyUpGui:_spawn_weapon(params)
 	}), true)
 end
 
--- Lines 365-372
+-- Lines 368-375
 function ReadyUpGui:_assemble_completed(params, parts, blueprint)
 	self._spawned_weapon_parts = self._spawned_weapon_parts or {}
 	self._spawned_weapon_parts[params.peer] = {}
@@ -398,13 +398,13 @@ function ReadyUpGui:_assemble_completed(params, parts, blueprint)
 	self._weapon_assembled[params.peer] = true
 end
 
--- Lines 375-383
+-- Lines 378-386
 function ReadyUpGui:_load_character_empty_skeleton()
 	Application:debug("[ReadyUpGui:_load_character_empty_skeleton] Loading skeleton...")
 	managers.dyn_resource:load(IDS_UNIT, Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_character_units"))
 end
 
--- Lines 386-428
+-- Lines 389-431
 function ReadyUpGui:_spawn_character_units()
 	Application:debug("[ReadyUpGui:_spawn_character_units] Spawning skeleton to dress as player...")
 	self:_get_character_spawn_locations()
@@ -446,7 +446,7 @@ function ReadyUpGui:_spawn_character_units()
 	end
 end
 
--- Lines 431-453
+-- Lines 434-456
 function ReadyUpGui:_are_peer_visuals_assembled()
 	if not self._spawned_character_units or not self._weapon_assembled then
 		return false
@@ -467,7 +467,7 @@ function ReadyUpGui:_are_peer_visuals_assembled()
 	return true
 end
 
--- Lines 457-469
+-- Lines 460-472
 function ReadyUpGui:_get_character_spawn_index(control_list_index)
 	if self._is_single_player then
 		return 1
@@ -482,7 +482,7 @@ function ReadyUpGui:_get_character_spawn_index(control_list_index)
 	return control_list_index
 end
 
--- Lines 473-546
+-- Lines 476-549
 function ReadyUpGui:_set_card_selection_controls()
 	self._raid_card_count, self._operation_card_count = managers.challenge_cards:get_cards_count_per_type(managers.challenge_cards:get_readyup_card_cache())
 
@@ -528,12 +528,12 @@ function ReadyUpGui:_set_card_selection_controls()
 	end
 end
 
--- Lines 550-555
+-- Lines 553-558
 function ReadyUpGui:_players_inventory_processed(params)
 	self:_set_card_selection_controls()
 end
 
--- Lines 557-633
+-- Lines 560-636
 function ReadyUpGui:_on_player_click_callback(control, params)
 	Application:trace("[ReadyUpGui:_on_player_click_callback]")
 
@@ -598,7 +598,7 @@ function ReadyUpGui:_on_player_click_callback(control, params)
 	self._current_list_index = params.list_index
 end
 
--- Lines 636-677
+-- Lines 639-680
 function ReadyUpGui:_show_characters()
 	if not self._spawned_character_units then
 		return
@@ -639,7 +639,7 @@ function ReadyUpGui:_show_characters()
 	end
 end
 
--- Lines 680-717
+-- Lines 683-720
 function ReadyUpGui:_show_player_challenge_card_info()
 	local challenge_cards = managers.challenge_cards:get_suggested_cards()
 
@@ -688,7 +688,7 @@ function ReadyUpGui:_show_player_challenge_card_info()
 	end
 end
 
--- Lines 720-725
+-- Lines 723-728
 function ReadyUpGui:_update_challenge_card_selected_icon()
 	local challenge_cards = managers.challenge_cards:get_suggested_cards()
 
@@ -697,7 +697,7 @@ function ReadyUpGui:_update_challenge_card_selected_icon()
 	end
 end
 
--- Lines 727-776
+-- Lines 730-779
 function ReadyUpGui:_update_status()
 	if self._backed_out then
 		self._backed_out = false
@@ -749,7 +749,7 @@ function ReadyUpGui:_update_status()
 	end
 end
 
--- Lines 780-789
+-- Lines 783-792
 function ReadyUpGui:_reset_ready_ups()
 	Application:debug("[ReadyUpGui:_reset_ready_ups] RESET")
 
@@ -762,7 +762,7 @@ function ReadyUpGui:_reset_ready_ups()
 	end
 end
 
--- Lines 792-799
+-- Lines 795-802
 function ReadyUpGui:_on_select_card_button()
 	if not self._suggest_card_button:enabled() then
 		return
@@ -771,7 +771,7 @@ function ReadyUpGui:_on_select_card_button()
 	managers.raid_menu:open_menu("challenge_cards_menu")
 end
 
--- Lines 802-832
+-- Lines 805-835
 function ReadyUpGui:_on_ready_up_button()
 	if not self._ready_up_button:enabled() then
 		return
@@ -802,7 +802,7 @@ function ReadyUpGui:_on_ready_up_button()
 	self:bind_controller_inputs(true, true)
 end
 
--- Lines 834-840
+-- Lines 837-843
 function ReadyUpGui:_on_kick_button()
 	local params = {
 		yes_callback = callback(self, self, "_on_kick_confirmed"),
@@ -812,22 +812,22 @@ function ReadyUpGui:_on_kick_button()
 	managers.menu:show_kick_peer_dialog(params)
 end
 
--- Lines 842-844
+-- Lines 845-847
 function ReadyUpGui:_on_kick_confirmed()
 	managers.vote:host_kick(self._current_peer)
 end
 
--- Lines 846-848
+-- Lines 849-851
 function ReadyUpGui:_on_peer_kicked(params)
 	self:_peer_no_longer_in_lobby(params.peer, "kicked")
 end
 
--- Lines 850-852
+-- Lines 853-855
 function ReadyUpGui:_on_peer_left(params)
 	self:_peer_no_longer_in_lobby(params.peer, "left")
 end
 
--- Lines 854-878
+-- Lines 857-881
 function ReadyUpGui:_peer_no_longer_in_lobby(peer, state)
 	local peer_control = self._player_control_list[peer]
 
@@ -857,7 +857,7 @@ function ReadyUpGui:_peer_no_longer_in_lobby(peer, state)
 	self._spawned_character_units[peer] = nil
 end
 
--- Lines 880-885
+-- Lines 883-888
 function ReadyUpGui:_on_leave_lobby_button()
 	if not self._leave_lobby_button:enabled() then
 		return
@@ -866,7 +866,7 @@ function ReadyUpGui:_on_leave_lobby_button()
 	self._callback_handler:end_game()
 end
 
--- Lines 887-895
+-- Lines 890-898
 function ReadyUpGui:_on_leave_ready_up_button()
 	if not self._leave_lobby_button:enabled() then
 		return
@@ -878,7 +878,7 @@ function ReadyUpGui:_on_leave_ready_up_button()
 	self:_reset_ready_ups()
 end
 
--- Lines 897-942
+-- Lines 900-945
 function ReadyUpGui:close()
 	Application:debug("[ReadyUpGui:close] Closing")
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(false)
@@ -921,7 +921,7 @@ function ReadyUpGui:close()
 	ReadyUpGui.super.close(self)
 end
 
--- Lines 944-977
+-- Lines 947-980
 function ReadyUpGui:_update_controls_contining_mission()
 	if self._continuing_mission then
 		self._suggest_card_button:hide()
@@ -956,7 +956,7 @@ function ReadyUpGui:_update_controls_contining_mission()
 	end
 end
 
--- Lines 981-995
+-- Lines 984-998
 function ReadyUpGui:_update_peers()
 	for control_peer, control in pairs(self._player_control_list) do
 		local peer_present = false
@@ -975,12 +975,14 @@ function ReadyUpGui:_update_peers()
 	end
 end
 
--- Lines 999-1074
+-- Lines 1002-1094
 function ReadyUpGui:update(t, dt)
 	if not self:_are_peer_visuals_assembled() then
 		Application:debug("[ReadyUpGui:update] Waiting for peers to finish building visuals!")
 
 		return
+	else
+		Application:debug("[ReadyUpGui:update] Peers are finished building visuals!")
 	end
 
 	self:_show_characters()
@@ -991,6 +993,8 @@ function ReadyUpGui:update(t, dt)
 	self:_update_peers()
 
 	if managers.challenge_cards:did_everyone_locked_sugested_card() then
+		Application:debug("[ReadyUpGui:update] Done did_everyone_locked_sugested_card")
+
 		if not self._stinger_played then
 			Application:debug("[ReadyUpGui:update] Ready up stinger...")
 
@@ -1001,10 +1005,14 @@ function ReadyUpGui:update(t, dt)
 			end
 
 			self._stinger_played = true
+		else
+			Application:debug("[ReadyUpGui:update] Done _stinger_played")
 		end
 
 		for _, unit in pairs(self._spawned_character_units) do
-			if not unit:anim_data().ready_transition_anim_finished then
+			if unit:anim_data().ready_transition_anim_finished then
+				Application:debug("[ReadyUpGui:update] Animation is finished...")
+			else
 				Application:debug("[ReadyUpGui:update] Awaiting animation to finish...")
 
 				return
@@ -1044,10 +1052,12 @@ function ReadyUpGui:update(t, dt)
 				managers.raid_menu:open_menu("challenge_cards_menu")
 			end
 		end
+	else
+		Application:debug("[ReadyUpGui:update] NOT Done did_everyone_locked_sugested_card")
 	end
 end
 
--- Lines 1079-1085
+-- Lines 1099-1105
 function ReadyUpGui:_ct_players()
 	local ct_players = 0
 
@@ -1058,7 +1068,7 @@ function ReadyUpGui:_ct_players()
 	return ct_players
 end
 
--- Lines 1087-1100
+-- Lines 1107-1120
 function ReadyUpGui:_on_tab_right()
 	local ct_players = self:_ct_players()
 	local next_list_idx = (self._current_list_index + 1) % (ct_players + 1)
@@ -1076,7 +1086,7 @@ function ReadyUpGui:_on_tab_right()
 	end
 end
 
--- Lines 1102-1114
+-- Lines 1122-1134
 function ReadyUpGui:_on_tab_left()
 	local next_list_idx = self._current_list_index - 1
 
@@ -1093,14 +1103,14 @@ function ReadyUpGui:_on_tab_left()
 	end
 end
 
--- Lines 1116-1121
+-- Lines 1136-1141
 function ReadyUpGui:show_gamercard()
 	Application:trace("[ReadyUpGui:show_gamercard] showing gamercard for peer " .. tostring(self._current_peer:name()))
 	Application:debug("[ReadyUpGui:show_gamercard]", inspect(self._current_peer))
 	self._callback_handler:view_gamer_card(self._current_peer:xuid())
 end
 
--- Lines 1123-1213
+-- Lines 1143-1233
 function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 	if not managers.controller:is_controller_present() or managers.menu:is_pc_controller() then
 		if is_current_player and not self._ready then
@@ -1210,7 +1220,7 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 	self:set_legend(legend)
 end
 
--- Lines 1215-1217
+-- Lines 1235-1237
 function ReadyUpGui:back_pressed()
 	return true
 end

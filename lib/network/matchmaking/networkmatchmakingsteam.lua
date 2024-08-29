@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_03"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_04"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 -- Lines 76-85
@@ -899,7 +899,7 @@ end
 -- Lines 950-988
 function NetworkMatchMakingSTEAM:get_all_players_info()
 	local host_level = managers.experience:current_level() or "-"
-	local host_class = managers.skilltree:get_character_profile_class() or "-"
+	local host_class = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class() or "-"
 	local host_name = string.gsub(managers.network.account:username() or "", ",", "")
 	local host_nationality = managers.network:session() and managers.network:session():all_peers() and managers.network:session():all_peers()[1] and managers.network:session():all_peers()[1]:character() or Global.player_manager.character_profile_nation
 	local players_data = {}

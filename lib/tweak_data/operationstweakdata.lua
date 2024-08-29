@@ -331,7 +331,7 @@ function OperationsTweakData:_init_raids()
 		short_audio_briefing_id = "flakturm_brief_short",
 		music_id = "flakturm",
 		region = "germany",
-		xp = 6000,
+		xp = 5800,
 		start_in_stealth = true,
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		dogtags_min = 23,

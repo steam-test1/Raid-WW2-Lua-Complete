@@ -523,13 +523,13 @@ end
 
 -- Lines 592-602
 function CoreEnvironmentControllerManager:_update_post_process_effects()
-	self:set_volumetric_light_scatter_setting(managers.user and managers.user:get_setting("vls_setting") or 0)
-	self:set_motion_blur_setting(managers.user and managers.user:get_setting("motion_blur_setting") or 0)
-	self:set_ssao_setting(managers.user and managers.user:get_setting("ssao_setting") or 0)
-	self:set_AA_setting(managers.user and managers.user:get_setting("AA_setting") or false)
-	self:set_colorblind_mode(managers.user and managers.user:get_setting("colorblind_setting") or "off")
-	self:set_parallax_setting(managers.user and managers.user:get_setting("use_parallax") or true)
-	self._vp:vp():set_post_processor_effect("World", Idstring("color_grading_post"), Idstring("colorgrade"))
+	self:set_volumetric_light_scatter_setting(not managers.user and 0 or managers.user:get_setting("vls_setting"))
+	self:set_motion_blur_setting(not managers.user and 0 or managers.user:get_setting("motion_blur_setting"))
+	self:set_ssao_setting(not managers.user and 0 or managers.user:get_setting("ssao_setting"))
+	self:set_AA_setting(not managers.user and "FXAA" or managers.user:get_setting("AA_setting"))
+	self:set_colorblind_mode(not managers.user and "off" or managers.user:get_setting("colorblind_setting"))
+	self:set_parallax_setting(not managers.user and true or managers.user:get_setting("use_parallax"))
+	self._vp:vp():set_post_processor_effect("World", ids_LUT_post, Idstring("colorgrade"))
 	managers.viewport:first_active_viewport():set_force_feeder_update()
 end
 
