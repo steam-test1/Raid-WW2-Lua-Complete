@@ -1,32 +1,27 @@
-DistractionRock = DistractionRock or class(GrenadeBase)
+ImpactDecoy = ImpactDecoy or class(ImpactHurt)
 
-function DistractionRock:_setup_from_tweak_data()
-	local grenade_entry = self.name_id
-	self._tweak_data = tweak_data.projectiles[grenade_entry]
-	self._init_timer = self._tweak_data.init_timer or 2.5
-	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
+function ImpactDecoy:_setup_from_tweak_data()
+	ImpactDecoy.super._setup_from_tweak_data(self)
+
 	self._range = self._tweak_data.range
 	self._pathing_searches = {}
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
-		camera_shake_max_mul = 4,
+		effect = nil,
+		sound_event = nil,
 		sound_muffle_effect = true,
+		camera_shake_max_mul = 4,
+		feedback_range = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2
 	}
 end
 
-function DistractionRock:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
-	Application:debug("[DistractionRock:clbk_impact]", tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
-end
+function ImpactDecoy:_on_collision(col_ray)
+	ImpactDecoy.super._on_collision(self, col_ray)
 
-function DistractionRock:_on_collision(col_ray)
-	Application:debug("[DistractionRock:_on_collision]")
-end
-
-function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
-	if self._hand_held then
+	if not managers.groupai:state():whisper_mode() then
 		return
 	end
 
@@ -36,11 +31,11 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	local units = World:find_units_quick("sphere", pos, range, slotmask)
 
 	if #units == 0 then
-		Application:debug("[DistractionRock:_detonate] There were no enemies nearby")
+		Application:debug("[ImpactDecoy:_on_collision] There were no enemies nearby")
 
 		return
 	else
-		Application:debug("[DistractionRock:_detonate] There were " .. tostring(#units) .. " enemies nearby")
+		Application:debug("[ImpactDecoy:_on_collision] There were " .. tostring(#units) .. " enemies nearby")
 	end
 
 	local end_position = Vector3(pos.x, pos.y, pos.z - 400)
@@ -51,7 +46,7 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	if is_point_inside_nav then
 		final_lure_position = pos
 
-		Application:debug("[DistractionRock:_detonate] Usable lure position:", final_lure_position)
+		Application:debug("[ImpactDecoy:_on_collision] Usable lure position:", final_lure_position)
 	else
 		local tracker = managers.navigation:create_nav_tracker(end_position, false)
 		final_lure_position = tracker:field_position()
@@ -61,54 +56,58 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 		local dist = mvector3.distance(final_lure_position, end_position)
 
 		if range < dist then
-			Application:debug("[DistractionRock:_detonate] The Nav tracker backup position was too far to be considered usable. dist:", dist)
+			Application:debug("[ImpactDecoy:_on_collision] The Nav tracker backup position was too far to be considered usable. dist:", dist)
 
 			return
 		else
-			Application:debug("[DistractionRock:_detonate] Fell out of navigation, use nav field tracker pos:", final_lure_position)
+			Application:debug("[ImpactDecoy:_on_collision] Fell out of navigation, use nav field tracker pos:", final_lure_position)
 		end
 	end
 
 	if not managers.navigation:is_point_inside(final_lure_position, false) then
-		Application:debug("[DistractionRock:_detonate] There was no hope for this final lure position. Cancelled lure.")
+		Application:debug("[ImpactDecoy:_on_collision] There was no hope for this final lure position. Cancelled lure.")
 
 		return
 	end
 
-	if units then
-		local closest_cop_dist, closest_cop = nil
+	local closest_cop_dist, closest_cop = nil
 
-		for _, cop in ipairs(units) do
-			local dist = mvector3.distance(final_lure_position, cop:position())
+	for _, cop in ipairs(units) do
+		local dist = mvector3.distance(final_lure_position, cop:position())
 
-			if not closest_cop_dist or dist < closest_cop_dist then
-				closest_cop_dist = dist
-				closest_cop = cop
-			end
+		if not closest_cop_dist or dist < closest_cop_dist then
+			closest_cop_dist = dist
+			closest_cop = cop
 		end
+	end
 
-		if closest_cop then
-			Application:debug("[DistractionRock:_detonate] Closest boso is lured.", closest_cop)
+	if alive(closest_cop) then
+		Application:debug("[ImpactDecoy:_on_collision] Closest boso is lured.", closest_cop)
 
-			local search_id = "DistractionRock._detonate" .. tostring(closest_cop:key())
-			local search_params = {
-				finished = false,
-				pos_from = closest_cop:movement():m_pos(),
-				pos_to = final_lure_position,
-				id = search_id,
-				result_clbk = callback(self, self, "clbk_pathing_results", search_id),
-				access_pos = closest_cop:brain()._SO_access,
-				cop = closest_cop
-			}
-			self._pathing_searches[search_id] = search_params
+		local search_id = "ImpactDecoy._on_collision" .. tostring(closest_cop:key())
+		local search_params = {
+			access_pos = nil,
+			cop = nil,
+			result_clbk = nil,
+			id = nil,
+			pos_to = nil,
+			finished = false,
+			pos_from = nil,
+			pos_from = closest_cop:movement():m_pos(),
+			pos_to = final_lure_position,
+			id = search_id,
+			result_clbk = callback(self, self, "clbk_pathing_results", search_id),
+			access_pos = closest_cop:brain()._SO_access,
+			cop = closest_cop
+		}
+		self._pathing_searches[search_id] = search_params
 
-			managers.navigation:search_pos_to_pos(search_params)
-		end
+		managers.navigation:search_pos_to_pos(search_params)
 	end
 end
 
-function DistractionRock:clbk_pathing_results(search_id, path)
-	Application:debug("[DistractionRock:clbk_pathing_results] Whoop", search_id, path)
+function ImpactDecoy:clbk_pathing_results(search_id, path)
+	Application:debug("[ImpactDecoy:clbk_pathing_results] Whoop", search_id, path)
 
 	local search = self._pathing_searches[search_id]
 
@@ -131,21 +130,40 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 		end
 
 		if not search.invalid and search.total_length < self._range * 2 and not self._found_cop then
-			Application:debug("[DistractionRock:clbk_pathing_results] Valid path, route is short enough", search.total_length, self._range * 4)
+			Application:debug("[ImpactDecoy:clbk_pathing_results] Valid path, route is short enough", search.total_length, self._range * 4)
 			self:_abort_all_unfinished_pathing()
 
 			local attention_info = managers.groupai:state():get_AI_attention_objects_by_filter(search.cop:base()._char_tweak.access)[search.cop:key()]
 			attention_info.m_pos = search.pos_to
 			attention_info.settings = {
+				reaction = nil,
 				reaction = AIAttentionObject.REACT_SUSPICIOUS
 			}
 			attention_info.u_key = 1
-			self._found_cop = CopLogicBase.register_search_SO(search.cop, attention_info, search.pos_to)
+			local search_data = {
+				unit = nil,
+				activated_clbk = nil,
+				unit = self._unit,
+				activated_clbk = callback(self, self, "_guard_picked_up")
+			}
+			self._found_cop = CopLogicBase.register_search_SO(search.cop, attention_info, search.pos_to, search_data)
 		end
 	end
 end
 
-function DistractionRock:_abort_all_unfinished_pathing()
+function ImpactDecoy:_guard_picked_up(guard)
+	Application:debug("[ImpactDecoy:clbk_pathing_results] Guard yoinked coin")
+
+	if Network:is_server() then
+		self._unit:set_slot(0)
+	end
+
+	if guard then
+		managers.voice_over:guard_found_coin(guard)
+	end
+end
+
+function ImpactDecoy:_abort_all_unfinished_pathing()
 	for search_id, search in pairs(self._pathing_searches) do
 		if not search.finished then
 			managers.navigation:cancel_pathing_search(search_id)
@@ -153,14 +171,7 @@ function DistractionRock:_abort_all_unfinished_pathing()
 	end
 end
 
-function DistractionRock:_detonate_on_client()
-end
-
-function DistractionRock:bullet_hit()
-	Application:debug("[DistractionRock:bullet_hit]")
-end
-
-function DistractionRock:set_attention_state(state)
+function ImpactDecoy:set_attention_state(state)
 	if state then
 		if not self._attention_setting then
 			self._attention_handler = AIAttentionObject:new(self._unit, true)
@@ -181,7 +192,7 @@ function DistractionRock:set_attention_state(state)
 	end
 end
 
-function DistractionRock:update_attention_settings(descriptor)
+function ImpactDecoy:update_attention_settings(descriptor)
 	local tweak_data = tweak_data.attention.settings[descriptor]
 
 	if tweak_data and self._attention_handler then
