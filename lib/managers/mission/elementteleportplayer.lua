@@ -56,10 +56,10 @@ function ElementTeleportPlayer:on_executed(instigator)
 	if self._values.keep_instigator_rotation then
 		rotation = instigator:rotation()
 	else
-		rotation = self._unit:rotation()
+		rotation = self._values.rotation
 	end
 
-	managers.player:warp_to(position, rotation)
+	managers.player:warp_to(position, rotation or Rotation())
 	managers.player:set_player_state(self._values.state or managers.player:current_state())
 	managers.menu:hide_loading_screen()
 	managers.groupai:state():on_player_spawn_state_set(self._values.state or managers.player:default_player_state())
