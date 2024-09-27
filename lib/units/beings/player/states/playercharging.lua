@@ -41,6 +41,7 @@ function PlayerCharging:_enter(enter_data)
 		self._old_selection = equipped_selection
 
 		self:_start_action_unequip_weapon(t, {
+			selection_wanted = nil,
 			selection_wanted = PlayerInventory.SLOT_4
 		})
 		self:_start_action_equip_weapon(t)
@@ -73,6 +74,7 @@ function PlayerCharging:exit(state_data, new_state_name)
 	self:animate_fov_multiplier(1, PlayerCharging.TRANSITION_T)
 
 	local exit_data = {
+		equip_weapon = nil,
 		skip_equip = true,
 		equip_weapon = self._old_selection
 	}
@@ -224,6 +226,9 @@ end
 
 function PlayerCharging:interaction_blocked()
 	return true
+end
+
+function PlayerCharging:_start_action_ducking(t)
 end
 
 function PlayerCharging:_get_max_walk_speed(t)

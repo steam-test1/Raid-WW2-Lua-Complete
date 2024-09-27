@@ -485,6 +485,9 @@ the effect will be culled while still visible]]
 	self:add_property(p)
 
 	self._stacks = {
+		initializer = nil,
+		simulator = nil,
+		visualizer = nil,
 		initializer = CoreEffectStack:new("initializer"),
 		simulator = CoreEffectStack:new("simulator"),
 		visualizer = CoreEffectStack:new("visualizer")

@@ -310,6 +310,7 @@ function LuaProfilerTreeBox:_on_select()
 
 		self:_highlight_funcnode(fnid)
 		self._gridview:deselect_and_highlight({
+			fnid = nil,
 			fnid = fnid
 		})
 	end

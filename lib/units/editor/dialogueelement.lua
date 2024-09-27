@@ -9,12 +9,15 @@ function DialogueUnitElement:init(unit)
 	self._hed.random = "none"
 	self._hed.execute_on_executed_when_done = false
 	self._hed.use_position = false
+	self._hed.repeat_interval = 35
 
 	table.insert(self._save_values, "dialogue")
 	table.insert(self._save_values, "random")
 	table.insert(self._save_values, "execute_on_executed_when_done")
 	table.insert(self._save_values, "use_position")
 	table.insert(self._save_values, "use_instigator")
+	table.insert(self._save_values, "repeating")
+	table.insert(self._save_values, "repeat_interval")
 end
 
 function DialogueUnitElement:new_save_values(...)
@@ -32,8 +35,11 @@ function DialogueUnitElement:test_element()
 	managers.dialog:quit_dialog()
 
 	local queue_dialog_unit = {
+		on_unit = nil,
+		done_cbk = nil,
 		skip_idle_check = true,
-		on_unit = managers.dialog._ventrilo_unit
+		on_unit = managers.dialog._ventrilo_unit,
+		done_cbk = callback(self, self, "stop_test_element")
 	}
 
 	managers.dialog._ventrilo_unit:set_position(managers.viewport:get_current_camera_position())
@@ -53,7 +59,7 @@ function DialogueUnitElement:test_element()
 end
 
 function DialogueUnitElement:stop_test_element()
-	managers.dialog:quit_dialog()
+	managers.dialog:quit_dialog(true)
 	managers.editor:set_wanted_mute(true)
 	managers.editor:set_listener_enabled(false)
 end
@@ -73,4 +79,10 @@ function DialogueUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "execute_on_executed_when_done", "Execute on executed when done")
 	self:_build_value_checkbox(panel, panel_sizer, "use_position")
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator")
+	self:_build_value_checkbox(panel, panel_sizer, "repeating", "Automatically repeat the dialogue on a set interval")
+	self:_build_value_number(panel, panel_sizer, "repeat_interval", {
+		min = 1,
+		floats = 2,
+		max = 900
+	}, "The interval to repeat the dialog on, in seconds")
 end

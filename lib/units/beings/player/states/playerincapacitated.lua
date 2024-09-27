@@ -24,6 +24,7 @@ function PlayerIncapacitated:enter(state_data, enter_data)
 	self:_interupt_action_charging_weapon(managers.player:player_timer():time())
 
 	self._revive_SO_data = {
+		unit = nil,
 		unit = self._unit
 	}
 
@@ -79,6 +80,7 @@ function PlayerIncapacitated:exit(state_data, new_state_name)
 	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), false, 1, 1)
 
 	return {
+		equip_weapon = nil,
 		equip_weapon = self._reequip_weapon
 	}
 end

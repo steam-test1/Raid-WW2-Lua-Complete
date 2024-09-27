@@ -43,6 +43,8 @@ end
 function LootManager:add_trigger(id, type, amount, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
+		callback = nil,
+		amount = nil,
 		amount = amount,
 		callback = callback
 	}
@@ -82,6 +84,8 @@ end
 
 function LootManager:add_to_respawn(carry_id, multiplier)
 	table.insert(self._respawns, {
+		multiplier = nil,
+		carry_id = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -97,8 +101,10 @@ end
 
 function LootManager:secure(carry_id, multiplier_level, silent)
 	if Network:is_server() then
+		Application:info("[LootManager] SERVER secure loot:", carry_id, multiplier_level, silent)
 		self:server_secure_loot(carry_id, multiplier_level, silent)
 	else
+		Application:info("[LootManager] CLIENT secure loot:", carry_id, multiplier_level, silent)
 		managers.network:session():send_to_host("server_secure_loot", carry_id, multiplier_level, silent)
 	end
 end
@@ -112,6 +118,8 @@ function LootManager:sync_secure_loot(carry_id, multiplier_level, silent)
 	local multiplier = 1
 
 	table.insert(self._global.secured, {
+		multiplier = nil,
+		carry_id = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -133,6 +141,7 @@ function LootManager:_present(carry_id, multiplier)
 	local title = managers.localization:text("hud_loot_secured_title")
 	local type_text = carry_data.name_id and managers.localization:text(carry_data.name_id)
 	local text = managers.localization:text("hud_loot_secured", {
+		CARRY_TYPE = nil,
 		AMOUNT = "",
 		CARRY_TYPE = type_text
 	})
@@ -140,6 +149,9 @@ function LootManager:_present(carry_id, multiplier)
 
 	managers.hud:present_mid_text({
 		time = 4,
+		text = nil,
+		icon = nil,
+		title = nil,
 		text = text,
 		title = title,
 		icon = icon

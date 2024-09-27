@@ -145,10 +145,15 @@ function freeze(...)
 
 			if metatable == nil then
 				setmetatable(instance, {
+					__newindex = nil,
+					__metatable = nil,
 					__newindex = __frozen__newindex
 				})
 			else
 				setmetatable(instance, {
+					__metatable = nil,
+					__newindex = nil,
+					__index = nil,
 					__index = metatable.__index,
 					__newindex = __frozen__newindex,
 					__metatable = metatable
@@ -189,6 +194,7 @@ function responder(...)
 	end
 
 	return setmetatable({}, {
+		__index = nil,
 		__index = function ()
 			return responder_function
 		end
@@ -201,6 +207,7 @@ function responder_map(response_table)
 	for key, value in pairs(response_table) do
 		if key == "default" then
 			setmetatable(responder, {
+				__index = nil,
 				__index = function ()
 					return function ()
 						return value

@@ -5,6 +5,8 @@ function NPCSawWeaponBase:init(unit)
 
 	self._active_effect_name = Idstring("effects/vanilla/weapons/saw/sawing")
 	self._active_effect_table = {
+		parent = nil,
+		effect = nil,
 		force_synch = true,
 		effect = self._active_effect_name,
 		parent = self._obj_fire
@@ -44,6 +46,7 @@ function NPCSawWeaponBase:fire_blank(direction, impact)
 	end
 
 	self._check_shooting_expired = {
+		check_t = nil,
 		check_t = Application:time() + 0.5
 	}
 

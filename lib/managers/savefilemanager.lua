@@ -52,6 +52,8 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
+			meta_data_list = nil,
+			_resave_required = nil,
 			meta_data_list = {}
 		}
 	end
@@ -65,15 +67,11 @@ function SavefileManager:init()
 	self._queued_tasks = {}
 	self._savegame_hdd_space_required = false
 	self._save_slots_to_load = {}
-	self._slot_was_corrupt = {}
-	self._force_load_slot = {}
 
 	SaveGameManager:set_max_nr_slots(self.MAX_SLOT - self.MIN_SLOT + 1)
 end
 
 function SavefileManager:precache_data()
-	Application:debug("[SavefileManager:_precache_data] Starting precache of save data!")
-
 	for slot_index = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		if Global.savefile_manager.meta_data_list and Global.savefile_manager.meta_data_list[slot_index] then
 			Global.savefile_manager.meta_data_list[slot_index].is_load_done = false
@@ -107,7 +105,17 @@ function SavefileManager:set_create_character_slot(slot_index)
 end
 
 function SavefileManager:get_create_character_slot()
-	return Global.savefile_manager.create_character_slot or SavefileManager.PROGRESS_SLOT
+	if not Global.savefile_manager.create_character_slot then
+		for i = self.PROGRESS_SLOT, self.MAX_SLOT do
+			local meta_data = Global.savefile_manager.meta_data_list[i]
+
+			if not meta_data or not meta_data.is_cached_slot then
+				return i
+			end
+		end
+	end
+
+	return Global.savefile_manager.create_character_slot
 end
 
 function SavefileManager:resolution_changed()
@@ -149,6 +157,10 @@ function SavefileManager:storage_changed()
 			all = true
 		}
 		local task_data = {
+			user_index = nil,
+			task_type = nil,
+			last_slot = nil,
+			first_slot = nil,
 			queued_in_save_manager = true,
 			task_type = self.ENUMERATE_SLOTS_TASK_TYPE,
 			user_index = managers.user:get_platform_id(),
@@ -169,6 +181,10 @@ end
 
 function SavefileManager:check_space_required()
 	local task_data = {
+		user_index = nil,
+		task_type = nil,
+		last_slot = nil,
+		first_slot = nil,
 		queued_in_save_manager = true,
 		task_type = self.CHECK_SPACE_REQUIRED_TASK_TYPE,
 		user_index = managers.user:get_platform_id(),
@@ -331,6 +347,9 @@ function SavefileManager:get_save_info_list(include_empty_slot)
 	for slot, meta_data in pairs(Global.savefile_manager.meta_data_list) do
 		if meta_data.is_synched_text and (not include_empty_slot or slot ~= self.AUTO_SAVE_SLOT) and slot ~= self.SETTING_SLOT and slot ~= self:get_save_progress_slot() then
 			table.insert(data_list, {
+				sort_list = nil,
+				text = nil,
+				slot = nil,
 				slot = slot,
 				text = meta_data.text,
 				sort_list = meta_data.sort_list
@@ -456,6 +475,8 @@ function SavefileManager:_save(slot, cache_only, save_system)
 	if is_setting_slot and managers.user.STORE_SETTINGS_ON_PROFILE then
 		Global.savefile_manager.safe_profile_save_time = TimerManager:wall():time() + self.MAX_PROFILE_SAVE_INTERVAL
 		local task_data = {
+			first_slot = nil,
+			task_type = nil,
 			queued_in_save_manager = false,
 			task_type = self.SAVE_TASK_TYPE,
 			first_slot = slot
@@ -466,9 +487,12 @@ function SavefileManager:_save(slot, cache_only, save_system)
 	else
 		local meta_data = self:_meta_data(slot)
 		local task_data = {
-			queued_in_save_manager = true,
+			user_index = nil,
+			task_type = nil,
+			first_slot = nil,
 			date_format = "%c",
 			max_queue_size = 1,
+			queued_in_save_manager = true,
 			first_slot = slot,
 			task_type = self.SAVE_TASK_TYPE,
 			user_index = managers.user:get_platform_id()
@@ -479,6 +503,7 @@ function SavefileManager:_save(slot, cache_only, save_system)
 		end
 
 		task_data.subtitle = managers.localization:text(is_setting_slot and "savefile_setting" or "savefile_progress", {
+			VERSION = nil,
 			VERSION = self.LOWEST_COMPATIBLE_VERSION
 		})
 		task_data.details = managers.localization:text(is_setting_slot and "savefile_setting_description" or "savefile_progress_description")
@@ -513,6 +538,8 @@ function SavefileManager:_save_cache(slot)
 	end
 
 	local cache = {
+		version = nil,
+		version_name = nil,
 		version = SavefileManager.VERSION,
 		version_name = SavefileManager.VERSION_NAME
 	}
@@ -616,7 +643,10 @@ function SavefileManager:_load(slot, cache_only, save_system)
 
 		if is_setting_slot and managers.user.STORE_SETTINGS_ON_PROFILE then
 			local task_data = {
+				user_index = nil,
+				task_type = nil,
 				queued_in_save_manager = false,
+				first_slot = nil,
 				task_type = self.LOAD_TASK_TYPE,
 				first_slot = slot,
 				user_index = managers.user:get_platform_id()
@@ -626,7 +656,10 @@ function SavefileManager:_load(slot, cache_only, save_system)
 			managers.user:load_platform_setting_map(callback(self, self, "clbk_result_load_platform_setting_map", task_data))
 		else
 			local task_data = {
+				user_index = nil,
+				task_type = nil,
 				queued_in_save_manager = true,
+				first_slot = nil,
 				task_type = self.LOAD_TASK_TYPE,
 				first_slot = slot,
 				user_index = managers.user:get_platform_id()
@@ -756,6 +789,7 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 				}
 				dialog_data.id = "savefile_try_again"
 				dialog_data.text = managers.localization:text(error_msg .. "_retry", {
+					VERSION = nil,
 					VERSION = req_version
 				})
 
@@ -778,6 +812,7 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 						local rem_dialog_data = {
 							title = managers.localization:text("dialog_error_title"),
 							text = managers.localization:text(error_msg, {
+								VERSION = nil,
 								VERSION = req_version
 							})
 						}
@@ -805,6 +840,7 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 					return
 				else
 					dialog_data.text = managers.localization:text(error_msg, {
+						VERSION = nil,
 						VERSION = req_version
 					})
 					dialog_data.id = "savefile_new_safefile"
@@ -876,7 +912,10 @@ end
 
 function SavefileManager:_remove(slot, save_system)
 	local task_data = {
+		user_index = nil,
+		first_slot = nil,
 		queued_in_save_manager = true,
+		task_type = nil,
 		first_slot = slot,
 		task_type = self.REMOVE_TASK_TYPE,
 		user_index = managers.user:get_platform_id()
@@ -954,11 +993,13 @@ function SavefileManager:_meta_data(slot)
 
 	if not meta_data then
 		meta_data = {
+			is_synched_text = false,
+			is_synched_cache = false,
+			cache = nil,
+			slot = nil,
+			is_corrupt = false,
 			is_load_done = false,
 			is_cached_slot = false,
-			is_synched_cache = false,
-			is_synched_text = false,
-			is_corrupt = false,
 			slot = slot
 		}
 		Global.savefile_manager.meta_data_list[slot] = meta_data
@@ -1234,7 +1275,7 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 
 	if type_name(result_data) == "table" then
 		for slot, slot_data in pairs(result_data) do
-			cat_print("savefile_manager", "slot:", slot, "\n", inspect(slot_data))
+			print("[SavefileManager:_load]", "slot:", slot, slot_data.status)
 
 			local status = slot_data.status
 			local cache = nil
@@ -1292,6 +1333,7 @@ function SavefileManager:clbk_result_load_backup(task_data, result_data)
 						-- Nothing
 					elseif version <= SavefileManager.VERSION then
 						self._backup_data = {
+							save_data = nil,
 							save_data = slot_data
 						}
 					else

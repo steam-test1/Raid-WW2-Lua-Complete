@@ -33,8 +33,9 @@ function RaidGUIControlScrollGrid:init(parent, params)
 	end
 
 	self._grid_panel = self._wrapper_panel:panel({
-		x = 0,
 		y = 0,
+		x = 0,
+		w = nil,
 		w = self._grid_control_width
 	})
 
@@ -58,15 +59,19 @@ end
 
 function RaidGUIControlScrollGrid:_create_scroll_marker()
 	self._panel_scroll_marker = self._object:panel({
-		w = 8,
 		y = 0,
+		x = nil,
+		h = nil,
+		w = 8,
 		x = self._grid_control_width + 24,
 		h = self._wrapper_panel:h()
 	})
 	self._scroll_marker = self._panel_scroll_marker:rect({
-		h = 128,
 		y = 0,
 		x = 0,
+		color = nil,
+		w = nil,
+		h = 128,
 		w = self._panel_scroll_marker:w(),
 		color = tweak_data.gui.colors.raid_grey:with_alpha(0.2)
 	})

@@ -8,6 +8,11 @@ HUDSuspicionDirection.PLAYER_ACTIVE_ALPHA = 1
 HUDSuspicionDirection.TEAMMATE_ACTIVE_ALPHA = 0.6
 HUDSuspicionDirection.USE_STATE_COLORS = true
 HUDSuspicionDirection.STATE_COLORS = {
+	calling = nil,
+	alarmed = nil,
+	investigating = nil,
+	saw_something = nil,
+	heard_something = nil,
 	heard_something = Color("ececec"),
 	saw_something = Color("ececec"),
 	investigating = Color("dd9a38"),
@@ -31,9 +36,11 @@ end
 function HUDSuspicionDirection:_create_panel(hud)
 	local panel_params = {
 		layer = -5,
-		name = "suspicion_direction_panel",
 		halign = "center",
 		valign = "center",
+		h = nil,
+		w = nil,
+		name = "suspicion_direction_panel",
 		w = HUDSuspicionDirection.W,
 		h = HUDSuspicionDirection.H
 	}
@@ -50,8 +57,12 @@ function HUDSuspicionDirection:create_suspicion_indicator(observer_key, observer
 	local indicator = self:_create_suspicion_indicator(observer_key)
 	local indicator_active_alpha = HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES == true and suspect == "teammate" and HUDSuspicionDirection.TEAMMATE_ACTIVE_ALPHA or HUDSuspicionDirection.PLAYER_ACTIVE_ALPHA
 	self._indicators[observer_key] = {
-		state = "heard_something",
+		suspect = nil,
+		active_alpha = nil,
 		need_to_init = true,
+		state = "heard_something",
+		position = nil,
+		indicator = nil,
 		indicator = indicator,
 		position = observer_position,
 		suspect = suspect,
@@ -64,6 +75,9 @@ end
 
 function HUDSuspicionDirection:_create_suspicion_indicator(id)
 	local indicator_panel_params = {
+		h = nil,
+		w = nil,
+		name = nil,
 		alpha = 0,
 		name = "indicator_panel_" .. tostring(id),
 		w = tweak_data.gui:icon_w(HUDSuspicionDirection.ICON_FILL),
@@ -71,13 +85,17 @@ function HUDSuspicionDirection:_create_suspicion_indicator(id)
 	}
 	local indicator = self._suspicion_direction_panel:panel(indicator_panel_params)
 	local indicator_fill_params = {
+		texture_rect = nil,
 		name = "indicator_fill",
+		texture = nil,
 		texture = tweak_data.gui.icons[HUDSuspicionDirection.ICON_FILL].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionDirection.ICON_FILL].texture_rect
 	}
 	local indicator_fill = indicator:bitmap(indicator_fill_params)
 	local indicator_stroke_params = {
+		texture_rect = nil,
 		name = "indicator_stroke",
+		texture = nil,
 		texture = tweak_data.gui.icons[HUDSuspicionDirection.ICON_STROKE].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionDirection.ICON_STROKE].texture_rect
 	}

@@ -39,10 +39,13 @@ end
 
 function RaidGUIControlCardPeerLoot:_create_card_details()
 	local params_card_image = {
-		texture = "ui/main_menu/textures/cards_atlas",
-		name = "card_image",
 		y = 0,
+		name = "card_image",
+		h = nil,
+		w = nil,
 		x = 0,
+		texture_rect = nil,
+		texture = "ui/main_menu/textures/cards_atlas",
 		w = self._control_panel:w(),
 		h = self._control_panel:w() * 1.45,
 		texture_rect = {
@@ -54,11 +57,17 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 	}
 	self._card_image = self._control_panel:bitmap(params_card_image)
 	local params_player_name = {
-		name = "peer_player_name_label",
+		y = nil,
 		align = "center",
-		text = "PLAYER 1",
-		x = 0,
+		font_size = nil,
+		font = nil,
+		color = nil,
 		layer = 1,
+		text = "PLAYER 1",
+		name = "peer_player_name_label",
+		h = nil,
+		w = nil,
+		x = 0,
 		y = self._card_image:y() + self._card_image:h() + RaidGUIControlCardPeerLoot.IMAGE_PADDING_DOWN,
 		w = self._control_panel:w(),
 		h = RaidGUIControlCardPeerLoot.TEXT_H,
@@ -68,11 +77,18 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 	}
 	self._name_label = self._control_panel:label(params_player_name)
 	local params_card_title = {
-		name = "card_title_label",
-		wrap = true,
+		y = nil,
 		align = "right",
-		text = "22xp",
+		font_size = nil,
+		font = nil,
+		wrap = true,
+		color = nil,
 		layer = 1,
+		text = "22xp",
+		name = "card_title_label",
+		h = nil,
+		w = nil,
+		x = nil,
 		x = self._card_image:w() * RaidGUIControlCardPeerLoot.CARD_TITLE_PADDING_PERCENT / 100,
 		y = self._card_image:y() + self._card_image:h() / 2 - RaidGUIControlCardPeerLoot.TEXT_H / 2,
 		w = self._card_image:w() * (1 - 2 * RaidGUIControlCardPeerLoot.CARD_TITLE_PADDING_PERCENT / 100),

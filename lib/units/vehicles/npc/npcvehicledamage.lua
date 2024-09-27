@@ -19,6 +19,7 @@ function NpcVehicleDamage:damage_bullet(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
+			variant = nil,
 			type = "death",
 			variant = attack_data.variant
 		}
@@ -27,6 +28,7 @@ function NpcVehicleDamage:damage_bullet(attack_data)
 	else
 		attack_data.damage = damage
 		result = {
+			variant = nil,
 			type = "hurt",
 			variant = attack_data.variant
 		}
@@ -121,6 +123,7 @@ function NpcVehicleDamage:damage_explosion(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
+			variant = nil,
 			type = "death",
 			variant = attack_data.variant
 		}
@@ -129,6 +132,7 @@ function NpcVehicleDamage:damage_explosion(attack_data)
 	else
 		attack_data.damage = damage
 		result = {
+			variant = nil,
 			type = "hurt",
 			variant = attack_data.variant
 		}
@@ -164,12 +168,14 @@ function NpcVehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i
 	local variant = "explosion"
 	local damage = damage_percent * self._HEALTH_INIT_PRECENT
 	local attack_data = {
+		variant = nil,
 		variant = variant
 	}
 	local result = nil
 
 	if death then
 		result = {
+			variant = nil,
 			type = "death",
 			variant = variant
 		}
@@ -177,13 +183,16 @@ function NpcVehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i
 		self:die(attack_data.variant)
 
 		local data = {
+			weapon_unit = nil,
 			variant = "explosion",
+			name = nil,
 			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
 	else
 		result = {
+			variant = nil,
 			type = "explosion",
 			variant = variant
 		}
@@ -234,6 +243,7 @@ function NpcVehicleDamage:damage_fire(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
+			variant = nil,
 			type = "death",
 			variant = attack_data.variant
 		}
@@ -242,6 +252,7 @@ function NpcVehicleDamage:damage_fire(attack_data)
 	else
 		attack_data.damage = damage
 		result = {
+			variant = nil,
 			type = "hurt",
 			variant = attack_data.variant
 		}
@@ -277,12 +288,14 @@ function NpcVehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_atta
 	local variant = "fire"
 	local damage = damage_percent * self._HEALTH_INIT_PRECENT
 	local attack_data = {
+		variant = nil,
 		variant = variant
 	}
 	local result = nil
 
 	if death then
 		result = {
+			variant = nil,
 			type = "death",
 			variant = variant
 		}
@@ -290,13 +303,16 @@ function NpcVehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_atta
 		self:die(attack_data.variant)
 
 		local data = {
+			weapon_unit = nil,
 			variant = "fire",
+			name = nil,
 			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
 	else
 		result = {
+			variant = nil,
 			type = "fire",
 			variant = variant
 		}
@@ -343,6 +359,7 @@ function NpcVehicleDamage:damage_collision(attack_data)
 		end
 
 		local damage_info = {
+			result = nil,
 			result = {
 				variant = "collision",
 				type = "hurt"

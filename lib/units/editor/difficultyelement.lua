@@ -14,13 +14,16 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local difficulty_params = {
-		name_proportions = 1,
-		name = "Difficulty:",
 		ctrlr_proportions = 2,
-		tooltip = "Set the current difficulty in level",
-		min = 0,
-		floats = 2,
+		panel = nil,
+		name_proportions = 1,
 		max = 1,
+		min = 0,
+		tooltip = "Set the current difficulty in level",
+		floats = 2,
+		value = nil,
+		sizer = nil,
+		name = "Difficulty:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.difficulty
@@ -29,10 +32,12 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "difficulty",
+		ctrlr = nil,
 		ctrlr = difficulty
 	})
 	difficulty:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "difficulty",
+		ctrlr = nil,
 		ctrlr = difficulty
 	})
 

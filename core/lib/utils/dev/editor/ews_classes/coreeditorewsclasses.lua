@@ -143,72 +143,72 @@ function UnitList:init()
 	self._column_states = {}
 
 	table.insert(self._column_states, {
-		value = "name",
-		state = "ascending"
+		state = "ascending",
+		value = "name"
 	})
 	table.insert(self._column_states, {
-		value = "amount",
-		state = "random"
+		state = "random",
+		value = "amount"
 	})
 	table.insert(self._column_states, {
-		value = "memory",
-		state = "random"
+		state = "random",
+		value = "memory"
 	})
 	table.insert(self._column_states, {
-		value = "models",
-		state = "random"
+		state = "random",
+		value = "models"
 	})
 	table.insert(self._column_states, {
-		value = "nr_bodies",
-		state = "random"
+		state = "random",
+		value = "nr_bodies"
 	})
 	table.insert(self._column_states, {
-		value = "slot",
-		state = "random"
+		state = "random",
+		value = "slot"
 	})
 	table.insert(self._column_states, {
-		value = "mass",
-		state = "random"
+		state = "random",
+		value = "mass"
 	})
 	table.insert(self._column_states, {
-		value = "nr_textures",
-		state = "random"
+		state = "random",
+		value = "nr_textures"
 	})
 	table.insert(self._column_states, {
-		value = "nr_materials",
-		state = "random"
+		state = "random",
+		value = "nr_materials"
 	})
 	table.insert(self._column_states, {
-		value = "vertices_per_tris",
-		state = "random"
+		state = "random",
+		value = "vertices_per_tris"
 	})
 	table.insert(self._column_states, {
-		value = "instanced",
-		state = "random"
+		state = "random",
+		value = "instanced"
 	})
 	table.insert(self._column_states, {
-		value = "author",
-		state = "random"
+		state = "random",
+		value = "author"
 	})
 	table.insert(self._column_states, {
-		value = "unit_filename",
-		state = "random"
+		state = "random",
+		value = "unit_filename"
 	})
 	table.insert(self._column_states, {
-		value = "model_filename",
-		state = "random"
+		state = "random",
+		value = "model_filename"
 	})
 	table.insert(self._column_states, {
-		value = "diesel_filename",
-		state = "random"
+		state = "random",
+		value = "diesel_filename"
 	})
 	table.insert(self._column_states, {
-		value = "material_filename",
-		state = "random"
+		state = "random",
+		value = "material_filename"
 	})
 	table.insert(self._column_states, {
-		value = "last_exported_from",
-		state = "random"
+		state = "random",
+		value = "last_exported_from"
 	})
 	panel_sizer:add(self._list, 2, 0, "EXPAND,TOP,BOTTOM")
 
@@ -924,6 +924,7 @@ function GlobalSelectUnit:init(...)
 
 	cb:set_value(self._only_list_used_units)
 	cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_only_list_used_units"), {
+		cb = nil,
 		cb = cb
 	})
 	cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1006,6 +1007,8 @@ function GlobalSelectUnit:init(...)
 		self._layer_cbs[name] = cb
 
 		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
+			name = nil,
+			cb = nil,
 			cb = cb,
 			name = name
 		})
@@ -1411,6 +1414,9 @@ function ReplaceUnit:init(name, types)
 	units:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "replace_unit_name"), units)
 	units:thaw()
 	unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
+		names = nil,
+		filter = nil,
+		units = nil,
 		filter = unit_filter,
 		units = units,
 		names = unit_names
@@ -1440,6 +1446,9 @@ function ReplaceUnit:init(name, types)
 		units:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "replace_unit_name"), units)
 		units:thaw()
 		unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
+			names = nil,
+			filter = nil,
+			units = nil,
 			filter = unit_filter,
 			units = units,
 			names = names
@@ -1550,6 +1559,7 @@ function LayerReplaceUnit:init(layer)
 
 	cb:set_value(self._only_list_used_units)
 	cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_only_list_used_units"), {
+		cb = nil,
 		cb = cb
 	})
 	cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1560,6 +1570,7 @@ function LayerReplaceUnit:init(layer)
 	self:update_list()
 	self._panel_sizer:add(self._units, 1, 0, "EXPAND")
 	self._units:connect("EVT_COMMAND_LISTBOX_DOUBLECLICKED", callback(self, self, "replace_unit"), {
+		units = nil,
 		all = false,
 		units = self._units
 	})
@@ -1571,6 +1582,7 @@ function LayerReplaceUnit:init(layer)
 	local replace_btn = EWS:Button(self._panel, "Replace", "", "")
 
 	replace_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
+		units = nil,
 		all = false,
 		units = self._units
 	})
@@ -1580,6 +1592,7 @@ function LayerReplaceUnit:init(layer)
 	local replace_all_btn = EWS:Button(self._panel, "Replace All", "", "")
 
 	replace_all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
+		units = nil,
 		all = true,
 		units = self._units
 	})
@@ -1762,19 +1775,27 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -1791,11 +1812,15 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
 		step = 0.1,
+		coor = nil,
+		ctrl = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
 		step = -0.1,
+		coor = nil,
+		ctrl = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -1810,7 +1835,7 @@ function MoveTransformTypeIn:update_spin(data)
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
 	self:update_absolut(data)
 end
 
@@ -1827,7 +1852,7 @@ function MoveTransformTypeIn:update_absolut(data)
 		local pos = self._unit:position()
 		pos = pos["with_" .. data.coor](pos, value)
 
-		data.ctrl:change_value(string.format("%.2f", value / 100))
+		data.ctrl:change_value(string.format("%.3f", value / 100))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_position(pos)
 	end
@@ -1865,15 +1890,15 @@ function MoveTransformTypeIn:update(t, dt)
 		local pos = self._unit:position()
 
 		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", pos.x / 100))
+			self._ax:change_value(string.format("%.3f", pos.x / 100))
 		end
 
 		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", pos.y / 100))
+			self._ay:change_value(string.format("%.3f", pos.y / 100))
 		end
 
 		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", pos.z / 100))
+			self._az:change_value(string.format("%.3f", pos.z / 100))
 		end
 	end
 end
@@ -1916,19 +1941,27 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -1945,11 +1978,15 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
 		step = 0.1,
+		coor = nil,
+		ctrl = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
 		step = -0.1,
+		coor = nil,
+		ctrl = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -1964,7 +2001,7 @@ function RotateTransformTypeIn:update_spin(data)
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
 	self:update_absolut(data)
 end
 
@@ -1986,7 +2023,7 @@ function RotateTransformTypeIn:update_absolut(data)
 			rot = Rotation(rot:yaw(), rot:pitch(), value)
 		end
 
-		data.ctrl:change_value(string.format("%.2f", value))
+		data.ctrl:change_value(string.format("%.3f", value))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_rotation(rot * self._unit:rotation():inverse())
 	end
@@ -2024,15 +2061,15 @@ function RotateTransformTypeIn:update(t, dt)
 		local rot = self._unit:rotation()
 
 		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", rot:yaw()))
+			self._ax:change_value(string.format("%.3f", rot:yaw()))
 		end
 
 		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", rot:pitch()))
+			self._ay:change_value(string.format("%.3f", rot:pitch()))
 		end
 
 		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", rot:roll()))
+			self._az:change_value(string.format("%.3f", rot:roll()))
 		end
 	end
 end
@@ -2074,19 +2111,27 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -2103,11 +2148,15 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
 		step = 0.1,
+		coor = nil,
+		ctrl = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
 		step = -0.1,
+		coor = nil,
+		ctrl = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -2122,7 +2171,7 @@ function ScaleTransformTypeIn:update_spin(data)
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
 	self:update_absolut(data)
 end
 
@@ -2139,7 +2188,7 @@ function ScaleTransformTypeIn:update_absolut(data)
 		local pos = self._unit:position()
 		pos = pos["with_" .. data.coor](pos, value)
 
-		data.ctrl:change_value(string.format("%.2f", value / 100))
+		data.ctrl:change_value(string.format("%.3f", value / 100))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_scale(pos)
 	end
@@ -2177,15 +2226,15 @@ function ScaleTransformTypeIn:update(t, dt)
 		local scale = self._unit:position()
 
 		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", scale.x / 100))
+			self._ax:change_value(string.format("%.3f", scale.x / 100))
 		end
 
 		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", scale.y / 100))
+			self._ay:change_value(string.format("%.3f", scale.y / 100))
 		end
 
 		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", scale.z / 100))
+			self._az:change_value(string.format("%.3f", scale.z / 100))
 		end
 	end
 end
@@ -2273,40 +2322,56 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	if type == "offset" then
 		ctrl:set_tool_tip("Type in absolut " .. coor .. "-rotation in degrees")
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_rotation"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_rotation"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_rotation_spin"), {
 			step = 1,
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_rotation_spin"), {
 			step = -1,
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:set_tool_tip("Type in absolut " .. coor .. "-coordinates in cm")
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_position"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_position"), {
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_position_spin"), {
 			step = 10,
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_position_spin"), {
 			step = -10,
+			coor = nil,
+			ctrl = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -2392,7 +2457,7 @@ function CameraTransformTypeIn:update_far_range()
 
 	value = value * 100
 
-	self._far_range:set_value(string.format("%.2f", value / 100))
+	self._far_range:set_value(string.format("%.3f", value / 100))
 	self._far_range:set_selection(-1, -1)
 	managers.editor:set_camera_far_range(value)
 end
@@ -2431,7 +2496,7 @@ function CameraTransformTypeIn:update(t, dt)
 	end
 
 	if not self._far_range:in_focus() then
-		self._far_range:change_value(string.format("%.2f", managers.editor:camera_far_range() / 100))
+		self._far_range:change_value(string.format("%.3f", managers.editor:camera_far_range() / 100))
 	end
 end
 
@@ -2669,6 +2734,9 @@ function UnitDuality:build_collision(collision)
 	local del1 = EWS:Button(panel, "Del", "", "")
 
 	del1:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "delete_unit"), {
+		panel = nil,
+		unit = nil,
+		text = nil,
 		unit = u1,
 		panel = panel,
 		text = text1
@@ -2682,6 +2750,9 @@ function UnitDuality:build_collision(collision)
 	local del2 = EWS:Button(panel, "Del", "", "")
 
 	del2:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "delete_unit"), {
+		panel = nil,
+		unit = nil,
+		text = nil,
 		unit = u2,
 		panel = panel,
 		text = text2
@@ -2740,12 +2811,12 @@ function BrushLayerDebug:init(...)
 	self._column_states = {}
 
 	table.insert(self._column_states, {
-		value = "name",
-		state = "ascending"
+		state = "ascending",
+		value = "name"
 	})
 	table.insert(self._column_states, {
-		value = "amount",
-		state = "random"
+		state = "random",
+		value = "amount"
 	})
 
 	local toolbar_sizer = EWS:BoxSizer("VERTICAL")
@@ -2822,6 +2893,8 @@ function BrushLayerDebug:fill_unit_list()
 
 		self._unit_list:set_item(i, 1, "" .. stats.amount)
 		self._unit_list:set_item_data(i, {
+			name = nil,
+			amount = nil,
 			name = stats.unit_name:s(),
 			amount = stats.amount
 		})

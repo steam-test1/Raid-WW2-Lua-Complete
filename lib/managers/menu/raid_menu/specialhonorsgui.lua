@@ -59,16 +59,21 @@ end
 function SpecialHonorsGui:_layout_first_screen()
 	local top_stats_big_panel_params = {
 		halign = "scale",
-		name = "top_stats_big_panel",
-		valign = "scale"
+		valign = "scale",
+		name = "top_stats_big_panel"
 	}
 	self._top_stats_big_panel = self._root_panel:panel(top_stats_big_panel_params)
 	local title_text = game_state_machine:current_state():is_success() and SpecialHonorsGui.TOP_STATS_TITLE_TEXT or SpecialHonorsGui.TOP_STATS_TITLE_TEXT_FAILURE
 	local top_stats_title_params = {
+		color = nil,
+		font_size = nil,
+		font = nil,
+		h = nil,
+		align = "center",
+		text = nil,
+		alpha = 0,
 		vertical = "center",
 		name = "top_stats_title",
-		alpha = 0,
-		align = "center",
 		h = SpecialHonorsGui.TOP_STATS_TITLE_H,
 		font = SpecialHonorsGui.FONT,
 		font_size = SpecialHonorsGui.TOP_STATS_TITLE_FONT_SIZE,
@@ -83,6 +88,8 @@ function SpecialHonorsGui:_layout_first_screen()
 
 	for i = 1, 3 do
 		local top_stat_big_params = {
+			x = nil,
+			name = nil,
 			name = "top_stat_big_" .. tostring(i),
 			x = (i - 1) * self._root_panel:w() / 3
 		}
@@ -133,6 +140,16 @@ function SpecialHonorsGui:show_honors()
 		end
 
 		local data = {
+			text_id = nil,
+			stat = nil,
+			player_nickname = nil,
+			mission_successful = nil,
+			score_format = nil,
+			score = nil,
+			icon_texture_rect = nil,
+			sound_effect = nil,
+			icon_texture = nil,
+			icon = nil,
 			player_nickname = honors[i].peer_name,
 			stat = honors[i].id,
 			text_id = tweak_data.statistics[stats_used][honors[i].id].text_id,
@@ -200,19 +217,24 @@ end
 function SpecialHonorsGui:bind_controller_inputs()
 	local bindings = {
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "_continue_button_on_click")
 		}
 	}
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = {
 			{
-				text = "menu_legend_continue",
-				padding = 24
+				padding = 24,
+				text = "menu_legend_continue"
 			}
 		},
 		keyboard = {
 			{
+				callback = nil,
 				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil)
 			}
@@ -237,12 +259,16 @@ function SpecialHonorsGui:bind_controller_inputs()
 				if not found_peer then
 					gamercard_prompts_shown = gamercard_prompts_shown + 1
 					local binding = {
+						callback = nil,
+						key = nil,
 						key = Idstring(SpecialHonorsGui.GAMERCARD_BUTTONS[gamercard_prompts_shown][1]),
 						callback = callback(self, self, "show_gamercard", gamercard_prompts_shown)
 					}
 
 					table.insert(bindings, binding)
 					table.insert(stats_per_peer, {
+						buttons = nil,
+						name = nil,
 						name = peer_name,
 						buttons = {
 							SpecialHonorsGui.GAMERCARD_BUTTONS[gamercard_prompts_shown][3]
@@ -262,6 +288,7 @@ function SpecialHonorsGui:bind_controller_inputs()
 			translated_text = translated_text .. utf8.to_upper(stat.name)
 
 			table.insert(legend.controller, {
+				translated_text = nil,
 				translated_text = translated_text
 			})
 		end

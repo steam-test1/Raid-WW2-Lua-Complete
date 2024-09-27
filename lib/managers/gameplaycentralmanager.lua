@@ -38,6 +38,7 @@ function GamePlayCentralManager:init()
 	self._flashlights_on = lvl_tweak_data and lvl_tweak_data.flashlights_on
 	self._dropped_weapons = {
 		index = 1,
+		units = nil,
 		units = {}
 	}
 	self._flashlights_on_player_on = false
@@ -50,8 +51,8 @@ function GamePlayCentralManager:init()
 
 	self._mission_disabled_units = {}
 	self._heist_timer = {
-		running = false,
-		start_time = 0
+		start_time = 0,
+		running = false
 	}
 end
 
@@ -79,6 +80,7 @@ end
 function GamePlayCentralManager:_init_impact_sources()
 	self._impact_sounds = {
 		index = 1,
+		sources = nil,
 		sources = {}
 	}
 
@@ -226,6 +228,8 @@ function GamePlayCentralManager:request_play_footstep(unit, m_pos)
 
 		if dis < 250000 and #self._footsteps < 3 then
 			table.insert(self._footsteps, {
+				unit = nil,
+				dis = nil,
 				unit = unit,
 				dis = dis
 			})
@@ -295,6 +299,9 @@ function GamePlayCentralManager:play_impact_flesh(params)
 
 		if managers.player:player_unit() and mvector3.distance_sq(col_ray.position, managers.player:player_unit():movement():m_head_pos()) < 40000 then
 			self._effect_manager:spawn({
+				position = nil,
+				effect = nil,
+				rotation = nil,
 				effect = idstr_blood_screen,
 				position = Vector3(),
 				rotation = Rotation()
@@ -313,6 +320,9 @@ function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 	end
 
 	self._effect_manager:spawn({
+		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = idstr_bullet_hit_blood,
 		position = from,
 		normal = dir
@@ -320,6 +330,9 @@ function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 
 	if managers.player:player_unit() and mvector3.distance_sq(splatter_from, managers.player:player_unit():movement():m_head_pos()) < 40000 then
 		self._effect_manager:spawn({
+			position = nil,
+			effect = nil,
+			rotation = nil,
 			effect = idstr_blood_screen,
 			position = Vector3(),
 			rotation = Rotation()
@@ -493,6 +506,9 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 			end
 
 			table.insert(effects, {
+				position = nil,
+				effect = nil,
+				normal = nil,
 				effect = effect or redir_name,
 				position = hit_pos + offset,
 				normal = col_ray.normal
@@ -505,6 +521,9 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 			local generic_effect = effect or idstr_fallback
 
 			table.insert(effects, {
+				position = nil,
+				effect = nil,
+				normal = nil,
 				effect = generic_effect,
 				position = hit_pos,
 				normal = col_ray.normal
@@ -524,6 +543,9 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 
 	if need_sound then
 		table.insert(self._play_sounds, {
+			event = nil,
+			position = nil,
+			sound_switch_name = nil,
 			sound_switch_name = sound_switch_name,
 			position = hit_pos,
 			event = event
@@ -536,6 +558,9 @@ function GamePlayCentralManager:_turret_effect(effects, effect, normal, position
 	local spawn_1 = Vector3(1, 1, 0):rotate_with(spawn_rotation)
 
 	table.insert(effects, {
+		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = effect or redir_name,
 		position = position,
 		normal = spawn_1
@@ -544,6 +569,9 @@ function GamePlayCentralManager:_turret_effect(effects, effect, normal, position
 	local spawn_2 = Vector3(-1, 1, 0):rotate_with(spawn_rotation)
 
 	table.insert(effects, {
+		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = effect or redir_name,
 		position = position,
 		normal = spawn_2
@@ -552,6 +580,9 @@ function GamePlayCentralManager:_turret_effect(effects, effect, normal, position
 	local spawn_3 = Vector3(1, 0, 1):rotate_with(spawn_rotation)
 
 	table.insert(effects, {
+		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = effect or redir_name,
 		position = position,
 		normal = spawn_3
@@ -560,6 +591,9 @@ function GamePlayCentralManager:_turret_effect(effects, effect, normal, position
 	local spawn_4 = Vector3(-1, 0, 1):rotate_with(spawn_rotation)
 
 	table.insert(effects, {
+		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = effect or redir_name,
 		position = position,
 		normal = spawn_4
@@ -638,8 +672,11 @@ function GamePlayCentralManager:weapon_dropped(weapon)
 
 	weapon:set_flashlight_light_lod_enabled(true)
 	table.insert(self._dropped_weapons.units, {
+		unit = nil,
 		t = 0,
+		flashlight_data = nil,
 		state = "wait",
+		last_t = nil,
 		unit = weapon,
 		flashlight_data = flashlight_data,
 		last_t = Application:time()
@@ -706,18 +743,18 @@ function GamePlayCentralManager:mission_disable_unit(unit, destroy)
 	if alive(unit) then
 		self._mission_disabled_units[unit:unit_data().unit_id] = true
 
+		unit:set_enabled(false)
+
+		if unit:base() and unit:base().on_unit_set_enabled then
+			unit:base():on_unit_set_enabled(false)
+		end
+
+		if unit:editable_gui() then
+			unit:editable_gui():on_unit_set_enabled(false)
+		end
+
 		if destroy then
 			unit:set_slot(0)
-		else
-			unit:set_enabled(false)
-
-			if unit:base() and unit:base().on_unit_set_enabled then
-				unit:base():on_unit_set_enabled(false)
-			end
-
-			if unit:editable_gui() then
-				unit:editable_gui():on_unit_set_enabled(false)
-			end
 		end
 	else
 		Application:warn("[GamePlayCentralManager:mission_disable_unit] Cannot disable unit, unit is not alive!", unit)
@@ -826,6 +863,9 @@ end
 function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	self._queue_fire_raycast = self._queue_fire_raycast or {}
 	local data = {
+		data = nil,
+		weapon_unit = nil,
+		expire_t = nil,
 		expire_t = expire_t,
 		weapon_unit = weapon_unit,
 		data = {
@@ -936,6 +976,11 @@ end
 
 function GamePlayCentralManager:save(data)
 	local state = {
+		flashlights_on = nil,
+		heist_timer = nil,
+		heist_timer_running = nil,
+		flashlights_on_player_on = nil,
+		mission_disabled_units = nil,
 		flashlights_on = self._flashlights_on,
 		mission_disabled_units = self._mission_disabled_units,
 		flashlights_on_player_on = self._flashlights_on_player_on,

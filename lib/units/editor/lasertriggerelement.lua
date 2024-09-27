@@ -10,6 +10,11 @@ LaserTriggerUnitElement.ON_EXECUTED_ALTERNATIVES = {
 LaserTriggerUnitElement.USES_INSTIGATOR_RULES = true
 LaserTriggerUnitElement.CLOSE_DISTANCE = 25
 LaserTriggerUnitElement.COLORS = {
+	black = nil,
+	grey = nil,
+	blue = nil,
+	green = nil,
+	red = nil,
 	red = {
 		1,
 		0,
@@ -231,6 +236,8 @@ function LaserTriggerUnitElement:_rmb()
 	end
 
 	table.insert(self._hed.points, {
+		rot = nil,
+		pos = nil,
 		pos = pos,
 		rot = rot
 	})
@@ -270,6 +277,8 @@ function LaserTriggerUnitElement:_lmb()
 
 			if not self:_check_remove_connection(self._creating_connection, index) then
 				table.insert(self._hed.connections, {
+					from = nil,
+					to = nil,
 					from = self._creating_connection,
 					to = index
 				})
@@ -431,8 +440,8 @@ function LaserTriggerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = 0.01
+		min = 0.01,
+		floats = 2
 	}, "Set the check interval for the laser, in seconds", "Check interval:")
 	self:_build_value_combobox(panel, panel_sizer, "instigator", managers.mission:area_instigator_categories(), "Select an instigator type")
 	self:_build_value_combobox(panel, panel_sizer, "color", {
@@ -446,12 +455,12 @@ function LaserTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "skip_dummies")
 	self:_build_value_checkbox(panel, panel_sizer, "flicker_remove", "Will flicker the lasers when removed")
 	self:_build_value_number(panel, panel_sizer, "cycle_interval", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "Set the check cycle interval for the laser, in seconds (0 == disabled)")
 	self:_build_value_number(panel, panel_sizer, "cycle_active_amount", {
-		floats = 0,
-		min = 1
+		min = 1,
+		floats = 0
 	}, "Defines how many are active during cycle")
 	self:_build_value_combobox(panel, panel_sizer, "cycle_type", {
 		"flow",
@@ -487,6 +496,8 @@ function LaserTriggerUnitElement:add_to_mission_package()
 	local unit_name = self._dummy_unit_name
 
 	managers.editor:add_to_world_package({
+		continent = nil,
+		name = nil,
 		category = "units",
 		name = unit_name:s(),
 		continent = self._unit:unit_data().continent
@@ -498,6 +509,8 @@ function LaserTriggerUnitElement:add_to_mission_package()
 
 	for _, file in ipairs(sequence_files) do
 		managers.editor:add_to_world_package({
+			continent = nil,
+			name = nil,
 			init = true,
 			category = "script_data",
 			name = file:s() .. ".sequence_manager",

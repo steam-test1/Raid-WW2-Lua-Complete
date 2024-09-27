@@ -29,9 +29,11 @@ end
 
 function HUDTabWeaponChallenge:_create_panel(panel)
 	local panel_params = {
+		valign = "bottom",
+		h = nil,
+		w = nil,
 		name = "weapon_challenge_panel",
 		halign = "left",
-		valign = "bottom",
 		w = HUDTabWeaponChallenge.WIDTH + HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE,
 		h = HUDTabWeaponChallenge.HEIGHT
 	}
@@ -41,9 +43,10 @@ end
 
 function HUDTabWeaponChallenge:_create_inner_panel()
 	local inner_panel_params = {
+		valign = "grow",
 		name = "weapon_challenge_inner_panel",
 		halign = "grow",
-		valign = "grow",
+		w = nil,
 		w = self._object:w() - HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE
 	}
 	self._inner_panel = self._object:panel(inner_panel_params)
@@ -51,10 +54,11 @@ end
 
 function HUDTabWeaponChallenge:_create_index_bullet_panel()
 	local index_bullet_panel_params = {
-		name = "index_bullet_panel",
-		h = 32,
-		halign = "right",
 		valign = "top",
+		h = 32,
+		w = nil,
+		name = "index_bullet_panel",
+		halign = "right",
 		w = HUDTabWeaponChallenge.INDEX_BULLET_PANEL_W
 	}
 	self._index_bullet_panel = self._object:panel(index_bullet_panel_params)
@@ -65,9 +69,16 @@ end
 function HUDTabWeaponChallenge:_create_title()
 	local title_params = {
 		name = "weapon_challenge_title",
-		vertical = "center",
-		align = "left",
 		text = "INCREASE ACCURACY",
+		h = nil,
+		w = nil,
+		align = "left",
+		color = nil,
+		x = nil,
+		vertical = "center",
+		font = nil,
+		y = nil,
+		font_size = nil,
 		y = HUDTabWeaponChallenge.TITLE_Y,
 		x = HUDTabWeaponChallenge.RIGHT_SIDE_X,
 		w = self._inner_panel:w() - HUDTabWeaponChallenge.RIGHT_SIDE_X,
@@ -82,9 +93,14 @@ end
 function HUDTabWeaponChallenge:_create_tier_label()
 	local tier_label_params = {
 		name = "weapon_challenge_tier",
+		text = "TI",
+		h = nil,
 		vertical = "center",
 		align = "left",
-		text = "TI",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		y = nil,
 		y = HUDTabWeaponChallenge.TITLE_Y,
 		h = HUDTabWeaponChallenge.TITLE_H,
 		font = tweak_data.gui:get_font_path(HUDTabWeaponChallenge.TITLE_FONT, HUDTabWeaponChallenge.TITLE_FONT_SIZE),
@@ -97,7 +113,10 @@ end
 function HUDTabWeaponChallenge:_create_icon()
 	local default_icon = "wpn_skill_accuracy"
 	local icon_params = {
+		texture_rect = nil,
 		name = "weapon_challenge_icon",
+		texture = nil,
+		y = nil,
 		y = HUDTabWeaponChallenge.TITLE_Y + HUDTabWeaponChallenge.TITLE_H,
 		texture = tweak_data.gui.icons[default_icon].texture,
 		texture_rect = tweak_data.gui.icons[default_icon].texture_rect
@@ -107,9 +126,15 @@ end
 
 function HUDTabWeaponChallenge:_create_description()
 	local description_params = {
-		name = "weapon_challenge_description",
-		wrap = true,
+		color = nil,
 		text = "Bla bla bla bla",
+		font_size = nil,
+		w = nil,
+		name = "weapon_challenge_description",
+		x = nil,
+		font = nil,
+		y = nil,
+		wrap = true,
 		x = HUDTabWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDTabWeaponChallenge.TITLE_Y + HUDTabWeaponChallenge.TITLE_H,
 		w = self._inner_panel:w() - HUDTabWeaponChallenge.RIGHT_SIDE_X,
@@ -126,8 +151,10 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	local texture_right = "slider_large_right"
 	local progress_bar_panel_params = {
 		vertical = "bottom",
-		name = "weapon_challenge_progress_bar_panel",
 		is_root_panel = true,
+		h = nil,
+		w = nil,
+		name = "weapon_challenge_progress_bar_panel",
 		x = 0,
 		w = self._inner_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center)
@@ -137,7 +164,13 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	self._progress_bar_panel:set_center_y(self._inner_panel:h() - 32)
 
 	local progress_bar_background_params = {
+		center = nil,
+		right = nil,
+		h = nil,
+		w = nil,
+		color = nil,
 		name = "weapon_challenge_progress_bar_background",
+		left = nil,
 		layer = 1,
 		w = self._progress_bar_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center),
@@ -148,18 +181,26 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
-		halign = "scale",
-		name = "weapon_challenge_progress_bar_foreground_panel",
-		y = 0,
-		layer = 2,
-		x = 0,
 		valign = "scale",
+		y = 0,
+		h = nil,
+		w = nil,
+		layer = 2,
+		name = "weapon_challenge_progress_bar_foreground_panel",
+		x = 0,
+		halign = "scale",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h()
 	}
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel(progress_bar_foreground_panel_params)
 	local progress_bar_background_params = {
+		center = nil,
+		right = nil,
+		h = nil,
+		w = nil,
+		color = nil,
 		name = "weapon_challenge_progress_bar_background",
+		left = nil,
 		w = self._progress_bar_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center),
 		left = texture_left,
@@ -170,11 +211,16 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
 		name = "weapon_challenge_progress_bar_text",
-		vertical = "center",
-		align = "center",
 		text = "123/456",
-		y = -2,
+		h = nil,
+		w = nil,
+		align = "center",
+		color = nil,
 		x = 0,
+		vertical = "center",
+		font = nil,
+		y = -2,
+		font_size = nil,
 		layer = 5,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
@@ -200,6 +246,11 @@ function HUDTabWeaponChallenge:_create_challenge_bullets()
 
 	for i = #self._challenges, 1, -1 do
 		local inactive_bullet_params = {
+			x = nil,
+			y = nil,
+			layer = nil,
+			texture_rect = nil,
+			texture = nil,
 			x = self._index_bullet_panel:w() - tweak_data.gui:icon_w(HUDTabWeaponChallenge.INDEX_BULLET_INACTIVE_ICON) * i - HUDTabWeaponChallenge.INDEX_BULLET_PADDING * (i - 1),
 			y = self._index_bullet_panel:h() / 2 - tweak_data.gui:icon_h(HUDTabWeaponChallenge.INDEX_BULLET_INACTIVE_ICON) / 2,
 			texture = tweak_data.gui.icons[HUDTabWeaponChallenge.INDEX_BULLET_INACTIVE_ICON].texture,
@@ -211,7 +262,10 @@ function HUDTabWeaponChallenge:_create_challenge_bullets()
 		table.insert(self._inactive_bullets, inactive_bullet)
 
 		local active_bullet_params = {
+			texture_rect = nil,
 			alpha = 0,
+			texture = nil,
+			layer = nil,
 			texture = tweak_data.gui.icons[HUDTabWeaponChallenge.INDEX_BULLET_ACTIVE_ICON].texture,
 			texture_rect = tweak_data.gui.icons[HUDTabWeaponChallenge.INDEX_BULLET_ACTIVE_ICON].texture_rect,
 			layer = inactive_bullet:layer() + 1
@@ -264,6 +318,9 @@ function HUDTabWeaponChallenge:_set_challenge(challenge_index)
 	local range = max_range > 0 and max_range or min_range
 
 	self._description:set_text(managers.localization:text(briefing_id, {
+		AMOUNT = nil,
+		WEAPON = nil,
+		RANGE = nil,
 		AMOUNT = target,
 		RANGE = range,
 		WEAPON = managers.localization:text(tweak_data.weapon[challenge_data.weapon_id].name_id)

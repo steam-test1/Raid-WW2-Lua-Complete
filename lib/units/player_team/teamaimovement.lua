@@ -37,6 +37,7 @@ end
 
 function TeamAIMovement:set_character_customization(customization)
 	customization = customization or {
+		nationality = nil,
 		nationality = managers.criminals:character_name_by_unit(self._unit) or "british"
 	}
 	local head_name = customization.equiped_head_name
@@ -201,6 +202,7 @@ end
 
 function TeamAIMovement:save(data)
 	data.movement = {
+		customization = nil,
 		customization = self._customization
 	}
 end

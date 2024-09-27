@@ -34,6 +34,11 @@ end
 function ElementNavigationStitcher:debug_draw()
 	if not self._debug_shape then
 		self._debug_shape = CoreShapeManager.ShapeBoxMiddle:new({
+			position = nil,
+			height = nil,
+			depth = nil,
+			width = nil,
+			rotation = nil,
 			position = self._values.position,
 			rotation = self._values.rotation,
 			width = self._values.width,
@@ -100,8 +105,11 @@ function ElementNavigationStitcher:_create_nav_data()
 		segments = {}
 	}
 	self._nav_data.segments[1] = {
-		location_id = "location_unknown",
+		position = nil,
 		id = 1,
+		vis_groups = nil,
+		location_id = "location_unknown",
+		pos = nil,
 		position = self._values.position,
 		pos = self._values.position,
 		vis_groups = {}
@@ -110,6 +118,9 @@ function ElementNavigationStitcher:_create_nav_data()
 	self._nav_data.segments[1].unique_id = managers.navigation:get_segment_unique_id(self._world_id, 1)
 	self._nav_data.visibility_groups = {
 		{
+			visible_groups = nil,
+			quads = nil,
+			pos = nil,
 			pos = self._values.position,
 			quads = {},
 			visible_groups = {}
@@ -212,6 +223,10 @@ function ElementNavigationStitcher:_collect_external_top_door(x, y, z, i_quad)
 	local external_quad_pos = Vector3(x, y + self._grid_size, z + 0.9)
 
 	table.insert(self._external_doors, {
+		external_quad_pos = nil,
+		stitch_quad_pos = nil,
+		door_low_pos = nil,
+		door_high_pos = nil,
 		side = "top",
 		stitch_quad_pos = stitch_quad_pos,
 		external_quad_pos = external_quad_pos,
@@ -227,6 +242,10 @@ function ElementNavigationStitcher:_collect_external_left_door(x, y, z, i_quad)
 	local external_quad_pos = Vector3(x - self._grid_size, y, z + 0.9)
 
 	table.insert(self._external_doors, {
+		external_quad_pos = nil,
+		stitch_quad_pos = nil,
+		door_low_pos = nil,
+		door_high_pos = nil,
 		side = "left",
 		stitch_quad_pos = stitch_quad_pos,
 		external_quad_pos = external_quad_pos,
@@ -242,6 +261,10 @@ function ElementNavigationStitcher:_collect_external_bottom_door(x, y, z, i_quad
 	local external_quad_pos = Vector3(x, y - self._grid_size, z + 0.9)
 
 	table.insert(self._external_doors, {
+		external_quad_pos = nil,
+		stitch_quad_pos = nil,
+		door_low_pos = nil,
+		door_high_pos = nil,
 		side = "bottom",
 		stitch_quad_pos = stitch_quad_pos,
 		external_quad_pos = external_quad_pos,
@@ -257,6 +280,10 @@ function ElementNavigationStitcher:_collect_external_right_door(x, y, z, i_quad)
 	local external_quad_pos = Vector3(x + self._grid_size, y, z + 0.9)
 
 	table.insert(self._external_doors, {
+		external_quad_pos = nil,
+		stitch_quad_pos = nil,
+		door_low_pos = nil,
+		door_high_pos = nil,
 		side = "right",
 		stitch_quad_pos = stitch_quad_pos,
 		external_quad_pos = external_quad_pos,

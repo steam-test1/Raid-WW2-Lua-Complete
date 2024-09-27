@@ -15,6 +15,10 @@ function Pickup:init(unit)
 	if material then
 		Pickup.randomize_glow_effect(material)
 	end
+
+	if self._beaming then
+		self._unit:damage():run_sequence_simple("show_beam")
+	end
 end
 
 function Pickup.randomize_glow_effect(material)
@@ -30,7 +34,11 @@ function Pickup.randomize_glow_effect(material)
 end
 
 function Pickup:sync_pickup()
-	self:consume()
+	if not self._picked_up then
+		self._picked_up = true
+
+		self:consume()
+	end
 end
 
 function Pickup:_pickup()
@@ -46,6 +54,11 @@ function Pickup:pickup(unit)
 end
 
 function Pickup:consume()
+	if self._unit:interaction() then
+		self._unit:interaction():set_active(false)
+	end
+
+	self._unit:set_enabled(false)
 	self:delete_unit()
 end
 
@@ -57,8 +70,12 @@ function Pickup:delete_unit()
 	if Network:is_server() then
 		managers.drop_loot:despawn_item(self._unit)
 	end
+end
 
-	self._unit:set_slot(0)
+function Pickup:despawn_item()
+	if Network:is_server() then
+		self._unit:set_slot(0)
+	end
 end
 
 function Pickup:save(data)

@@ -7,9 +7,11 @@ end
 
 function RaidMenuProfileSwitcher:_layout()
 	self._object = self._root_panel:panel({
-		name = "profile_switcher_object_panel",
-		y = 0,
 		x = 0,
+		name = "profile_switcher_object_panel",
+		h = nil,
+		w = nil,
+		y = 0,
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	})
@@ -22,7 +24,9 @@ end
 function RaidMenuProfileSwitcher:_bind_raid_controller_inputs()
 	local bindings = {
 		{
+			callback = nil,
 			label = "",
+			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_show_account_picker")
 		}
@@ -31,6 +35,7 @@ function RaidMenuProfileSwitcher:_bind_raid_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
+		controller = nil,
 		controller = {
 			"menu_legend_switch_profile"
 		}

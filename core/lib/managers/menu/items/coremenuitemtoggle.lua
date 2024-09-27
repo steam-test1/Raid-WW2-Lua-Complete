@@ -87,6 +87,7 @@ end
 
 function ItemToggle:setup_gui(node, row_item)
 	row_item.gui_panel = node.item_panel:panel({
+		w = nil,
 		w = managers.menu:get_menu_item_width()
 	})
 	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, node:_right_align())
@@ -118,8 +119,12 @@ function ItemToggle:setup_gui(node, row_item)
 
 	if self:selected_option():parameters().icon then
 		row_item.gui_icon = row_item.gui_panel:bitmap({
+			blend_mode = nil,
+			texture = nil,
+			texture_rect = nil,
 			y = 0,
 			x = 0,
+			layer = nil,
 			layer = node.layers.items,
 			texture_rect = {
 				0,

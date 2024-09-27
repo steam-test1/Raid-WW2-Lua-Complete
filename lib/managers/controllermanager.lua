@@ -130,6 +130,7 @@ function ControllerManager:set_user_mod(connection_name, params)
 
 	if params.axis then
 		Global.controller_manager.user_mod[connection_name] = Global.controller_manager.user_mod[connection_name] or {
+			axis = nil,
 			axis = params.axis
 		}
 		Global.controller_manager.user_mod[connection_name][params.button] = params
@@ -226,10 +227,12 @@ function ControllerManager:_show_controller_changed_dialog()
 			callback_func = callback(self, self, "connect_controller_dialog_callback"),
 			title = managers.localization:text("dialog_connect_controller_title"),
 			text = managers.localization:text("dialog_connect_controller_text", {
+				NR = nil,
 				NR = Global.controller_manager.default_wrapper_index or 1
 			}),
 			button_list = {
 				{
+					text = nil,
 					text = managers.localization:text("dialog_ok")
 				}
 			},
@@ -300,10 +303,12 @@ function ControllerManager:on_level_transition_ended()
 			callback_func = callback(self, self, "connect_controller_dialog_callback"),
 			title = managers.localization:text("dialog_connect_controller_title"),
 			text = managers.localization:text("dialog_connect_controller_text", {
+				NR = nil,
 				NR = Global.controller_manager.default_wrapper_index or 1
 			}),
 			button_list = {
 				{
+					text = nil,
 					text = managers.localization:text("dialog_ok")
 				}
 			},

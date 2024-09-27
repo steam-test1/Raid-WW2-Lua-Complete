@@ -29,11 +29,15 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local instigator_params = {
-		name = "Instigator:",
-		name_proportions = 1,
-		tooltip = "Select an instigator type for the area",
+		panel = nil,
 		sorted = false,
 		ctrlr_proportions = 2,
+		name_proportions = 1,
+		tooltip = "Select an instigator type for the area",
+		value = nil,
+		options = nil,
+		sizer = nil,
+		name = "Instigator:",
 		panel = panel,
 		sizer = panel_sizer,
 		options = managers.mission:area_instigator_categories(),
@@ -43,9 +47,11 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 
 	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "instigator",
+		ctrlr = nil,
 		ctrlr = instigator
 	})
 	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_instigator_changed"), {
+		ctrlr = nil,
 		ctrlr = instigator
 	})
 	self:_build_value_checkbox(panel, panel_sizer, "invert", "Check this to have the rule inverted, i.e. exclude one unit from triggering the connected element", "Invert rule")
@@ -69,6 +75,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 
 	if instigator == "player" then
 		local states_params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Player states:",
 			tooltip = "Select player state rules",
 			panel = panel,
@@ -79,6 +90,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(states_params)
 		local carry_ids_params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Carry ids:",
 			tooltip = "Select player carry ids rules",
 			panel = panel,
@@ -95,6 +111,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		end
 
 		local mission_equipment_params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Mission equipment:",
 			tooltip = "Select player mission equipment rules",
 			panel = panel,
@@ -106,6 +127,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local states = CoreEws.list_selector(mission_equipment_params)
 	elseif instigator == "enemies" then
 		local carry_ids_params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Enemy name:",
 			tooltip = "Select enemy names rules",
 			panel = panel,
@@ -116,6 +142,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(carry_ids_params)
 		local pickups_params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Pickup:",
 			tooltip = "Select a pickup rule",
 			panel = panel,
@@ -127,6 +158,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local pickup = CoreEws.list_selector(pickups_params)
 	elseif instigator == "civilians" then
 		local civilian_names_params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Civilian name:",
 			tooltip = "Select civilian names rules",
 			panel = panel,
@@ -137,6 +173,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(civilian_names_params)
 		local pickups_params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Pickup:",
 			tooltip = "Select a pickup rule",
 			panel = panel,
@@ -148,6 +189,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local pickup = CoreEws.list_selector(pickups_params)
 	elseif instigator == "loot" then
 		local params = {
+			value = nil,
+			sizer = nil,
+			options = nil,
+			panel = nil,
+			updated_callback = nil,
 			name = "Carry ids:",
 			tooltip = "Select a loot carry id rule",
 			panel = panel,

@@ -3,6 +3,7 @@ ShieldLogicAttack = class(TankCopLogicAttack)
 function ShieldLogicAttack.enter(data, new_logic_name, enter_params)
 	local old_internal_data = data.internal_data
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 	data.internal_data = my_data
@@ -111,6 +112,8 @@ function ShieldLogicAttack.queued_update(data)
 				my_data.optimal_pos = nil
 				local ray_params = {
 					trace = true,
+					pos_to = nil,
+					tracker_from = nil,
 					tracker_from = unit:movement():nav_tracker(),
 					pos_to = to_pos
 				}
@@ -156,6 +159,7 @@ function ShieldLogicAttack.queued_update(data)
 					my_data.pathing_to_optimal_pos = true
 					my_data.optimal_path_search_id = tostring(unit:key()) .. "optimal"
 					local reservation = managers.navigation:reserve_pos(TimerManager:game():time(), 1, to_pos, callback(ShieldLogicAttack, ShieldLogicAttack, "_reserve_pos_step_clbk", {
+						unit_pos = nil,
 						unit_pos = data.m_pos
 					}), 70, data.pos_rsrv_id)
 
@@ -164,6 +168,8 @@ function ShieldLogicAttack.queued_update(data)
 					else
 						reservation = {
 							radius = 60,
+							position = nil,
+							filter = nil,
 							position = mvector3.copy(to_pos),
 							filter = data.pos_rsrv_id
 						}
@@ -234,9 +240,11 @@ end
 function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
-			type = "walk",
 			body_part = 2,
 			variant = "walk",
+			nav_path = nil,
+			type = "walk",
+			end_rot = nil,
 			nav_path = my_data.optimal_path,
 			end_rot = end_rot
 		}
@@ -559,6 +567,7 @@ end
 
 function ShieldLogicAttack._get_all_paths(data)
 	return {
+		optimal_path = nil,
 		optimal_path = data.internal_data.optimal_path
 	}
 end
@@ -576,7 +585,10 @@ function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 	local tracker_lost = my_tracker:lost()
 	local my_fwd = data.unit:movement():m_fwd()
 	local ray_params = {
+		pos_to = nil,
 		trace = true,
+		pos_from = nil,
+		tracker_from = nil,
 		tracker_from = not tracker_lost and my_tracker or nil,
 		pos_from = tracker_lost and my_tracker:field_position() or nil,
 		pos_to = pos + my_fwd * data.char_tweak.wall_fwd_offset

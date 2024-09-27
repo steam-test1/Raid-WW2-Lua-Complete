@@ -68,9 +68,14 @@ function SpecialInteractionExt:_show_fuse_sfx_and_waypoint(cuts)
 	local icon = "waypoint_special_explosive"
 
 	managers.hud:add_waypoint(self._wp_id, {
-		text = "BoomBoom",
-		distance = true,
+		unit = nil,
+		icon = nil,
 		waypoint_type = "revive",
+		timer = nil,
+		text = "BoomBoom",
+		position = nil,
+		lifetime = nil,
+		distance = true,
 		icon = icon,
 		unit = self._unit,
 		timer = timer,

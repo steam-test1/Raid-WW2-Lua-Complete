@@ -31,6 +31,7 @@ function CopLogicPhalanxVip.enter(data, new_logic_name, enter_params)
 	print("CopLogicPhalanxVip.enter")
 
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -184,7 +185,9 @@ function CopLogicPhalanxVip.breakup(remote_call)
 		if flee_pos then
 			local flee_nav_seg = managers.navigation:get_nav_seg_from_pos(flee_pos)
 			local new_objective = {
+				pos = nil,
 				attitude = "avoid",
+				nav_seg = nil,
 				type = "flee",
 				pos = flee_pos,
 				nav_seg = flee_nav_seg

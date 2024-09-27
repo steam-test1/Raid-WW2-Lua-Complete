@@ -7,8 +7,8 @@ local SAMPLED_COMPONENTS = {
 }
 local ROTATION_ACCESS_METHODS = {
 	z = "roll",
-	x = "yaw",
-	y = "pitch"
+	y = "pitch",
+	x = "yaw"
 }
 local VALID_MAYA_NODE_TYPES = {}
 

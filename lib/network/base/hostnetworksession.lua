@@ -7,6 +7,11 @@ require("lib/network/base/session_states/HostStateClosing")
 
 HostNetworkSession = HostNetworkSession or class(BaseNetworkSession)
 HostNetworkSession._STATES = {
+	game_end = nil,
+	closing = nil,
+	in_game = nil,
+	loading = nil,
+	in_lobby = nil,
 	in_lobby = HostStateInLobby,
 	loading = HostStateLoading,
 	in_game = HostStateInGame,
@@ -23,6 +28,9 @@ function HostNetworkSession:init()
 	HostNetworkSession.super.init(self)
 
 	self._state_data = {
+		peers = nil,
+		session = nil,
+		kicked_list = nil,
 		session = self,
 		peers = self._peers,
 		kicked_list = self._kicked_list
@@ -127,6 +135,10 @@ function HostNetworkSession:load(data)
 	HostNetworkSession.super.load(self, data)
 
 	self._state_data = {
+		peers = nil,
+		session = nil,
+		kicked_list = nil,
+		local_peer = nil,
 		session = self,
 		peers = self._peers,
 		kicked_list = self._kicked_list,
@@ -585,6 +597,9 @@ function HostNetworkSession:on_dead_connection_reported(reporter_peer_id, other_
 
 	self._dead_con_reports = self._dead_con_reports or {}
 	local entry = {
+		reporter = nil,
+		process_t = nil,
+		reported = nil,
 		process_t = TimerManager:wall():time() + self._DEAD_CONNECTION_REPORT_PROCESS_DELAY,
 		reporter = self._peers[reporter_peer_id],
 		reported = self._peers[other_peer_id]

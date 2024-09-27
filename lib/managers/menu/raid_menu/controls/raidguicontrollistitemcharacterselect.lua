@@ -1,18 +1,22 @@
 RaidGUIControlListItemCharacterSelect = RaidGUIControlListItemCharacterSelect or class(RaidGUIControl)
 RaidGUIControlListItemCharacterSelect.SLOTS = {
 	{
-		x = 416,
-		y = 0
+		y = 0,
+		x = 416
 	},
 	{
 		y = 0,
+		x = nil,
 		x = 416 + CharacterSelectionGui.BUTTON_W
 	},
 	{
+		y = nil,
 		x = 416,
 		y = CharacterSelectionGui.BUTTON_H
 	},
 	{
+		y = nil,
+		x = nil,
 		x = 416 + CharacterSelectionGui.BUTTON_W,
 		y = CharacterSelectionGui.BUTTON_H
 	}
@@ -38,6 +42,10 @@ function RaidGUIControlListItemCharacterSelect:init(parent, params, item_data)
 	end
 
 	self._object = self._panel:panel({
+		y = nil,
+		x = nil,
+		h = nil,
+		w = nil,
 		x = self._params.x,
 		y = self._params.y,
 		w = self._params.w,
@@ -51,46 +59,58 @@ end
 
 function RaidGUIControlListItemCharacterSelect:_layout()
 	self._background = self._object:rect({
+		color = nil,
 		visible = false,
 		y = 0,
-		w = 416,
 		x = 0,
+		h = nil,
+		w = 416,
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_list_background
 	})
 	self._red_selected_line = self._object:rect({
+		color = nil,
 		visible = false,
 		y = 0,
-		w = 2,
 		x = 0,
+		h = nil,
+		w = 2,
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_red
 	})
 	self._profile_name_label = self._object:label({
+		color = nil,
+		font = nil,
+		font_size = nil,
 		text = "",
-		h = 28,
 		y = 21,
-		w = 272,
 		x = 128,
+		h = 28,
+		w = 272,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.medium,
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._character_name_label = self._object:label({
+		color = nil,
+		font = nil,
+		font_size = nil,
 		text = "",
-		h = 22,
 		y = 53,
-		w = 272,
 		x = 128,
+		h = 22,
+		w = 272,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey
 	})
 	self._nationality_flag = self._object:image({
-		h = 64,
+		texture_rect = nil,
+		texture = nil,
 		y = 16,
-		w = 95,
 		x = 16,
+		h = 64,
+		w = 95,
 		texture = tweak_data.gui.icons.ico_flag_empty.texture,
 		texture_rect = tweak_data.gui.icons.ico_flag_empty.texture_rect
 	})
@@ -112,9 +132,13 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 		character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 		self._customize_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
+			special_action_callback = nil,
+			slot_index = nil,
 			name = "customize_button",
 			y = 0,
 			x = 420,
+			h = nil,
+			w = nil,
 			w = CharacterSelectionGui.BUTTON_W,
 			h = CharacterSelectionGui.BUTTON_H,
 			special_action_callback = self.special_action_callback,
@@ -126,9 +150,13 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 
 		self._rename_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
+			special_action_callback = nil,
+			slot_index = nil,
 			name = "rename_button",
 			y = 47,
 			x = 420,
+			h = nil,
+			w = nil,
 			w = CharacterSelectionGui.BUTTON_W,
 			h = CharacterSelectionGui.BUTTON_H,
 			special_action_callback = self.special_action_callback,
@@ -140,9 +168,13 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 
 		self._nationality_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
+			special_action_callback = nil,
+			slot_index = nil,
 			name = "nationality_button",
 			y = 47,
 			x = 420,
+			h = nil,
+			w = nil,
 			w = CharacterSelectionGui.BUTTON_W,
 			h = CharacterSelectionGui.BUTTON_H,
 			special_action_callback = self.special_action_callback,
@@ -154,9 +186,13 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 
 		self._delete_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			visible = false,
+			special_action_callback = nil,
+			slot_index = nil,
 			name = "delete_button",
 			y = 47,
 			x = 420,
+			h = nil,
+			w = nil,
 			w = CharacterSelectionGui.BUTTON_W,
 			h = CharacterSelectionGui.BUTTON_H,
 			special_action_callback = self.special_action_callback,
@@ -167,9 +203,13 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 		table.insert(self._special_action_buttons, self._delete_button)
 	else
 		self._create_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
+			slot_index = nil,
+			special_action_callback = nil,
 			visible = false,
 			y = 0,
 			x = 417,
+			h = nil,
+			w = nil,
 			w = CharacterSelectionGui.BUTTON_W * 2,
 			h = CharacterSelectionGui.BUTTON_H * 2,
 			special_action_callback = self.special_action_callback,
@@ -193,6 +233,8 @@ end
 
 function RaidGUIControlListItemCharacterSelect:_layout_breadcrumb(character_nationality)
 	local breadcrumb_params = {
+		identifiers = nil,
+		category = nil,
 		category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION,
 		identifiers = {
 			character_nationality

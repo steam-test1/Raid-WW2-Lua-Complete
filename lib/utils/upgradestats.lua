@@ -8,7 +8,10 @@ local UpgradeStats = {
 
 function UpgradeStats.get_display_data(skill_name)
 	local display_data = {
+		tiers = nil,
 		tiers = {
+			descriptions = nil,
+			color_ranges = nil,
 			descriptions = {},
 			color_ranges = {}
 		}
@@ -39,6 +42,8 @@ end
 
 function UpgradeStats.get_tier_display_data(skill_data, is_warcry, is_boost)
 	local tier_data = {
+		descriptions = nil,
+		color_ranges = nil,
 		descriptions = {},
 		color_ranges = {}
 	}
@@ -116,6 +121,8 @@ end
 function UpgradeStats.get_info_display_data(info_id)
 	local desc, desc_colors = UpgradeStats.get_formatted_description(info_id)
 	local info_data = {
+		description = nil,
+		color_ranges = nil,
 		description = desc,
 		color_ranges = desc_colors
 	}

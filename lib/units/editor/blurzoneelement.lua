@@ -33,13 +33,16 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local mode_params = {
-		name_proportions = 1,
-		name = "Mode:",
 		ctrlr_proportions = 2,
-		tooltip = "Set the mode, 0 is disable, 2 is flash, 1 is normal",
-		min = 0,
-		floats = 0,
+		panel = nil,
+		name_proportions = 1,
 		max = 2,
+		min = 0,
+		tooltip = "Set the mode, 0 is disable, 2 is flash, 1 is normal",
+		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Mode:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.mode
@@ -48,20 +51,25 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 
 	mode:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "mode",
+		ctrlr = nil,
 		ctrlr = mode
 	})
 	mode:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "mode",
+		ctrlr = nil,
 		ctrlr = mode
 	})
 
 	local radius_params = {
-		name = "Radius:",
 		ctrlr_proportions = 2,
+		panel = nil,
 		name_proportions = 1,
-		tooltip = "Set the radius",
 		min = 1,
+		tooltip = "Set the radius",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Radius:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.radius
@@ -70,20 +78,25 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 
 	radius:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "radius",
+		ctrlr = nil,
 		ctrlr = radius
 	})
 	radius:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "radius",
+		ctrlr = nil,
 		ctrlr = radius
 	})
 
 	local height_params = {
-		name = "Height:",
 		ctrlr_proportions = 2,
+		panel = nil,
 		name_proportions = 1,
-		tooltip = "Set the height",
 		min = 0,
+		tooltip = "Set the height",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Height:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.height
@@ -92,10 +105,12 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 
 	height:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "height",
+		ctrlr = nil,
 		ctrlr = height
 	})
 	height:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "height",
+		ctrlr = nil,
 		ctrlr = height
 	})
 end

@@ -18,6 +18,7 @@ end
 function GenericDLCManager:_set_dlc_save_table()
 	if not Global.dlc_save then
 		Global.dlc_save = {
+			packages = nil,
 			packages = {}
 		}
 	end
@@ -271,6 +272,8 @@ function PS4DLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
+				full_game = nil,
+				preorder = nil,
 				full_game = {
 					verified = true
 				},
@@ -334,8 +337,8 @@ function PS4DLCManager:buy_full_game()
 	managers.menu:show_waiting_NPCommerce_open()
 
 	self._request = {
-		product = "full_game",
-		type = "buy_product"
+		type = "buy_product",
+		product = "full_game"
 	}
 	self._activity = {
 		type = "open"
@@ -357,6 +360,7 @@ function PS4DLCManager:buy_product(product_name)
 
 	self._request = {
 		type = "buy_product",
+		product = nil,
 		product = product_name
 	}
 	self._activity = {
@@ -467,6 +471,8 @@ function XB1DLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
+				full_game = nil,
+				preorder = nil,
 				full_game = {
 					is_default = true,
 					verified = true,
@@ -533,27 +539,33 @@ function WINDLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
+				raid_community = nil,
+				special_edition = nil,
+				full_game = nil,
+				official_soundtrack = nil,
+				preorder = nil,
 				full_game = {
 					verified = true,
 					no_install = true,
 					external = true,
+					app_id = nil,
 					app_id = tostring(self:get_app_id())
 				},
 				preorder = {
-					app_id = "707070",
-					no_install = true
+					no_install = true,
+					app_id = "707070"
 				},
 				special_edition = {
-					app_id = "707080",
-					no_install = true
+					no_install = true,
+					app_id = "707080"
 				},
 				raid_community = {
 					no_install = true,
 					source_id = "103582791460014708"
 				},
 				official_soundtrack = {
-					app_id = "720860",
-					no_install = true
+					no_install = true,
+					app_id = "720860"
 				}
 			}
 		}

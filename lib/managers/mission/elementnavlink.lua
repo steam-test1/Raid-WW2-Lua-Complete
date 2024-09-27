@@ -55,12 +55,12 @@ ElementNavLink._HASTES = {
 	"run"
 }
 ElementNavLink._DEFAULT_VALUES = {
-	base_chance = 1,
-	chance_inc = 0,
-	ai_group = 1,
-	interval = 3,
 	interaction_voice = 1,
-	path_style = 1
+	chance_inc = 0,
+	base_chance = 1,
+	interval = 3,
+	path_style = 1,
+	ai_group = 1
 }
 
 function ElementNavLink:init(...)
@@ -166,6 +166,7 @@ function ElementNavLink:clbk_objective_administered(unit)
 		else
 			unit_rsrv = {
 				radius = 30,
+				position = nil,
 				position = self._values.align_position and self._values.position or unit:position()
 			}
 			self._pos_rsrv[unit:key()] = unit_rsrv
@@ -234,6 +235,7 @@ function ElementNavLink:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
 			radius = 30,
+			position = nil,
 			position = self._values.position
 		}
 		local pos_rsrv = self._tmp_pos_rsrv
@@ -305,7 +307,26 @@ function ElementNavLink:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
+		stance = nil,
+		pose = nil,
+		forced = nil,
+		attitude = nil,
+		interaction_voice = nil,
+		scan = nil,
+		path_style = nil,
+		trigger_on = nil,
+		verification_clbk = nil,
+		complete_clbk = nil,
+		fail_clbk = nil,
+		action_start_clbk = nil,
+		followup_SO = nil,
 		type = "act",
+		element = nil,
+		haste = nil,
+		interrupt_health = nil,
+		interrupt_dis = nil,
+		rot = nil,
+		pos = nil,
 		element = self,
 		pos = pos,
 		rot = rot,
@@ -332,15 +353,17 @@ function ElementNavLink:get_objective(instigator)
 		action = {
 			align_sync = true,
 			needs_full_blend = true,
-			type = "act",
+			blocks = nil,
 			body_part = 1,
+			variant = nil,
+			type = "act",
 			variant = self._values.so_action,
 			blocks = {
-				light_hurt = -1,
-				hurt = -1,
-				action = -1,
+				walk = -1,
 				heavy_hurt = -1,
-				walk = -1
+				hurt = -1,
+				light_hurt = -1,
+				action = -1
 			}
 		}
 		objective.type = "act"
@@ -431,6 +454,7 @@ function ElementNavLink:_administer_objective(unit, objective)
 	if objective.trigger_on == "interact" then
 		if not unit:brain():objective() then
 			local idle_objective = {
+				followup_objective = nil,
 				type = "free",
 				followup_objective = objective
 			}
@@ -492,6 +516,8 @@ function ElementNavLink:choose_followup_SO(unit, skip_element_ids)
 
 			if followup_element and followup_element:enabled() and weight > 0 then
 				table.insert(pool, {
+					element = nil,
+					weight = nil,
 					element = followup_element,
 					weight = weight
 				})

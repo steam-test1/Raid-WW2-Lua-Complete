@@ -2,6 +2,7 @@ CopLogicTurret = class(CopLogicBase)
 
 function CopLogicTurret.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 

@@ -46,6 +46,7 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	engines_sizer:add(engines, 2, 0, "EXPAND")
 	engines:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "rumble_engine",
+		ctrlr = nil,
 		ctrlr = engines
 	})
 	ctrlr_sizer:add(engines_sizer, 0, 0, "EXPAND")
@@ -62,6 +63,7 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	peak:connect("EVT_CHAR", callback(nil, _G, "verify_number"), peak)
 	peak:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
 		value = "rumble_peak",
+		ctrlr = nil,
 		ctrlr = peak
 	})
 	ctrlr_sizer:add(peak_sizer, 0, 0, "EXPAND")
@@ -78,6 +80,7 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	attack:connect("EVT_CHAR", callback(nil, _G, "verify_number"), attack)
 	attack:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
 		value = "rumble_attack",
+		ctrlr = nil,
 		ctrlr = attack
 	})
 	ctrlr_sizer:add(attack_sizer, 0, 0, "EXPAND")
@@ -94,6 +97,7 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	sustain:connect("EVT_CHAR", callback(nil, _G, "verify_number"), sustain)
 	sustain:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
 		value = "rumble_sustain",
+		ctrlr = nil,
 		ctrlr = sustain
 	})
 	ctrlr_sizer:add(sustain_sizer, 0, 0, "EXPAND")
@@ -110,6 +114,7 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	release:connect("EVT_CHAR", callback(nil, _G, "verify_number"), release)
 	release:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
 		value = "rumble_release",
+		ctrlr = nil,
 		ctrlr = release
 	})
 	ctrlr_sizer:add(release_sizer, 0, 0, "EXPAND")

@@ -158,6 +158,11 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 
 	if self._grid_params.use_paging then
 		self._paging_controls_panel_params = {
+			name = nil,
+			w = nil,
+			h = nil,
+			y = nil,
+			x = nil,
 			visible = true,
 			name = self._params.name .. "_paging_controls_panel",
 			x = self._params.w / 2 + 25,
@@ -167,9 +172,22 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 		}
 		self._paging_controls_panel = self._paged_grid_panel:panel(self._paging_controls_panel_params)
 		self._page_stepper_params = {
+			on_item_selected_callback = nil,
+			x = 0,
+			color = nil,
+			data_source_callback = nil,
+			name = nil,
+			button_h = nil,
+			arrow_color = nil,
+			highlight_color = nil,
+			button_w = nil,
+			arrow_highlight_color = nil,
 			h = 25,
 			y = 0,
-			x = 0,
+			w = nil,
+			stepper_w = nil,
+			background_color = nil,
+			on_menu_move = nil,
 			name = self._params.name .. "_page_stepper_stepper",
 			w = self._paging_controls_panel:w(),
 			on_item_selected_callback = callback(self, self, "on_item_selected_grid_page"),
@@ -183,6 +201,9 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 			stepper_w = self._paging_controls_panel:w(),
 			background_color = RaidOptions.BACKGROUND_COLOR_UNSELECTED,
 			on_menu_move = {
+				left = nil,
+				down = nil,
+				up = nil,
 				up = self._params.name .. "_grid",
 				down = self._params.name .. "_grid",
 				left = self._params.name .. "_filter_stepper_stepper"
@@ -199,6 +220,8 @@ function RaidGUIControlPagedGridCharacterCustomization:data_source_grid_page_ste
 
 	for i_page = 1, self._total_pages do
 		table.insert(pages, {
+			value = nil,
+			text = nil,
 			text = i_page .. "/" .. self._total_pages,
 			value = i_page
 		})
@@ -238,8 +261,12 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 	end
 
 	self._filtering_controls_panel_params = {
-		visible = true,
+		name = nil,
+		w = nil,
+		h = nil,
+		y = nil,
 		x = 0,
+		visible = true,
 		name = self._params.name .. "_filtering_controls_panel",
 		y = self._grid_panel:h(),
 		w = self._params.w / 2 - 25,
@@ -247,9 +274,22 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 	}
 	self._filtering_controls_panel = self._paged_grid_panel:panel(self._filtering_controls_panel_params)
 	self._filter_stepper_params = {
+		on_item_selected_callback = nil,
+		x = 0,
+		color = nil,
+		data_source_callback = nil,
+		name = nil,
+		button_h = nil,
+		arrow_color = nil,
+		highlight_color = nil,
+		button_w = nil,
+		arrow_highlight_color = nil,
 		h = 25,
 		y = 0,
-		x = 0,
+		w = nil,
+		stepper_w = nil,
+		background_color = nil,
+		on_menu_move = nil,
 		name = self._params.name .. "_filter_stepper_stepper",
 		w = self._filtering_controls_panel:w(),
 		on_item_selected_callback = callback(self, self, "on_item_selected_grid_filter"),
@@ -263,6 +303,9 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 		stepper_w = self._filtering_controls_panel:w(),
 		background_color = RaidOptions.BACKGROUND_COLOR_UNSELECTED,
 		on_menu_move = {
+			right = nil,
+			down = nil,
+			up = nil,
 			up = self._params.name .. "_grid",
 			down = self._params.name .. "_grid",
 			right = self._params.name .. "_page_stepper_stepper"
@@ -280,14 +323,17 @@ function RaidGUIControlPagedGridCharacterCustomization:data_source_grid_filter_s
 
 	table.insert(filters, {
 		value = 1,
+		text = nil,
 		text = self:translate("character_customization_filter_equipable", true)
 	})
 	table.insert(filters, {
 		value = 2,
+		text = nil,
 		text = self:translate("character_customization_filter_character", true)
 	})
 	table.insert(filters, {
 		value = 3,
+		text = nil,
 		text = self:translate("character_customization_filter_all", true)
 	})
 

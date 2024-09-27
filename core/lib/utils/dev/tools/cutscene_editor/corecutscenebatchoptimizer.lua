@@ -17,6 +17,9 @@ function CoreCutsceneBatchOptimizer:add_project(project_name, optimized_cutscene
 		local queue = project:export_type() == "footage_use" and self.__prioritized_queue or self.__queue
 
 		table.insert(queue, {
+			project_name = nil,
+			optimized_cutscene_name = nil,
+			optimizer = nil,
 			project_name = project_name,
 			optimizer = optimizer,
 			optimized_cutscene_name = optimized_cutscene_name

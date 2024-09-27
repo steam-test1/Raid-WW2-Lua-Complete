@@ -38,8 +38,12 @@ end
 
 function RaidGUIControlLootProgressBar:_create_progress_bar()
 	local progress_bar_params = {
-		name = "progress_bar",
+		h = nil,
+		layer = nil,
 		y = 0,
+		w = nil,
+		x = nil,
+		name = "progress_bar",
 		x = RaidGUIControlLootBracket.DEFAULT_W / 2,
 		w = self._object:w() - RaidGUIControlLootBracket.DEFAULT_W,
 		h = RaidGUIControlLootProgressBar.PROGRESS_BAR_H,
@@ -56,7 +60,10 @@ function RaidGUIControlLootProgressBar:_create_brackets()
 
 	for index, bracket in pairs(brackets) do
 		local bracket_params = {
+			h = nil,
+			layer = nil,
 			y = 0,
+			bracket = nil,
 			x = 0,
 			bracket = RaidGUIControlLootBracket[utf8.to_upper(bracket.tier)],
 			h = self._object:h(),
@@ -69,6 +76,8 @@ function RaidGUIControlLootProgressBar:_create_brackets()
 
 		local new_bracket = {
 			active = false,
+			control = nil,
+			progress = nil,
 			control = bracket_control,
 			progress = bracket_progress
 		}

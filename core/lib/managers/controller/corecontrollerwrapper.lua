@@ -643,6 +643,8 @@ end
 
 function ControllerWrapper:queue_delay_trigger(connection_name, func, ...)
 	self._delay_trigger_queue[connection_name] = {
+		func = nil,
+		func_params = nil,
 		func = func,
 		func_params = {
 			...

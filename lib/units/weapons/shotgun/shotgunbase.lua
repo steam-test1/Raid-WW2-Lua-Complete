@@ -14,6 +14,7 @@ function ShotgunBase:_create_use_setups()
 	local player_setup = {
 		selection_index = tweak_data.weapon[self._name_id].use_data.selection_index,
 		equip = {
+			align_place = nil,
 			align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
 		},
 		unequip = {
@@ -77,6 +78,8 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				local spread_direction = mvector3.copy(mvec_spread_direction)
 
 				table.insert(col_rays, {
+					ray = nil,
+					position = nil,
 					position = ray_to,
 					ray = spread_direction
 				})
@@ -174,6 +177,8 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	end
 
 	managers.statistics:shot_fired({
+		hit = nil,
+		weapon_unit = nil,
 		hit = result.hit_enemy,
 		weapon_unit = self._unit
 	})

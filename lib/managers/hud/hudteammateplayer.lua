@@ -39,20 +39,21 @@ HUDTeammatePlayer.HOST_ICON = "player_panel_host_indicator"
 HUDTeammatePlayer.DOWN_ICON = "player_panel_lives_indicator_"
 HUDTeammatePlayer.STATES = {
 	{
-		id = "downed",
+		hidden = nil,
 		control = "timer_panel",
+		id = "downed",
 		hidden = {
 			"stamina_panel",
 			"warcry_panel"
 		}
 	},
 	{
-		id = "warcry",
-		control = "warcry_icon"
+		control = "warcry_icon",
+		id = "warcry"
 	},
 	{
-		id = "normal",
-		control = "nationality_icon"
+		control = "nationality_icon",
+		id = "normal"
 	}
 }
 HUDTeammatePlayer.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
@@ -64,8 +65,8 @@ function HUDTeammatePlayer:init(i, teammates_panel)
 	self._max_stamina = 1
 	self._equipment = {}
 	self._health_data = {
-		current = 0,
-		total = 0
+		total = 0,
+		current = 0
 	}
 	self._states = HUDTeammatePlayer.STATES
 	self._displayed_state = self._states[#self._states]
@@ -92,6 +93,11 @@ end
 function HUDTeammatePlayer:_create_panel(teammates_panel)
 	local panel_params = {
 		halign = "left",
+		layer = nil,
+		w = nil,
+		h = nil,
+		y = nil,
+		x = nil,
 		valign = "bottom",
 		x = HUDTeammatePlayer.DEFAULT_X,
 		y = teammates_panel:h() - HUDTeammatePlayer.DEFAULT_H,
@@ -111,6 +117,10 @@ end
 
 function HUDTeammatePlayer:_create_left_panel()
 	local left_panel_params = {
+		w = nil,
+		h = nil,
+		y = nil,
+		x = nil,
 		name = "left_panel",
 		x = HUDTeammatePlayer.LEFT_PANEL_X,
 		y = HUDTeammatePlayer.LEFT_PANEL_Y,
@@ -122,15 +132,19 @@ end
 
 function HUDTeammatePlayer:_create_stamina_bar()
 	local stamina_panel_params = {
+		h = nil,
+		w = nil,
 		name = "stamina_panel",
 		w = self._left_panel:w(),
 		h = self._left_panel:h()
 	}
 	local stamina_panel = self._left_panel:panel(stamina_panel_params)
 	local stamina_background_params = {
-		name = "stamina_background",
 		halign = "center",
+		texture_rect = nil,
+		texture = nil,
 		valign = "center",
+		name = "stamina_background",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.STAMINA_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.STAMINA_BG_ICON].texture_rect
 	}
@@ -140,9 +154,14 @@ function HUDTeammatePlayer:_create_stamina_bar()
 	stamina_background:set_center_y(stamina_panel:h() / 2)
 
 	local stamina_bar_params = {
-		name = "stamina_bar",
 		halign = "center",
+		h = nil,
+		w = nil,
 		render_template = "VertexColorTexturedRadial",
+		name = "stamina_bar",
+		texture_rect = nil,
+		layer = nil,
+		texture = nil,
 		valign = "center",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.STAMINA_BAR_ICON].texture,
 		texture_rect = {
@@ -164,15 +183,19 @@ end
 
 function HUDTeammatePlayer:_create_warcry_bar()
 	local warcry_panel_params = {
+		h = nil,
+		w = nil,
 		name = "warcry_panel",
 		w = self._left_panel:w(),
 		h = self._left_panel:h()
 	}
 	self._warcry_panel = self._left_panel:panel(warcry_panel_params)
 	local warcry_background_params = {
-		name = "warcry_background",
 		halign = "center",
+		texture_rect = nil,
+		texture = nil,
 		valign = "center",
+		name = "warcry_background",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.WARCRY_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.WARCRY_BG_ICON].texture_rect
 	}
@@ -182,9 +205,15 @@ function HUDTeammatePlayer:_create_warcry_bar()
 	warcry_background:set_center_y(self._warcry_panel:h() / 2)
 
 	local warcry_bar_params = {
-		name = "warcry_bar",
 		halign = "center",
+		h = nil,
+		w = nil,
 		render_template = "VertexColorTexturedRadial",
+		layer = nil,
+		name = "warcry_bar",
+		texture_rect = nil,
+		color = nil,
+		texture = nil,
 		valign = "center",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.WARCRY_BAR_ICON].texture,
 		texture_rect = {
@@ -220,9 +249,11 @@ function HUDTeammatePlayer:_create_nationality_icon()
 
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
 	local nationality_icon_params = {
-		name = "nationality_icon",
 		halign = "center",
+		texture_rect = nil,
+		texture = nil,
 		valign = "center",
+		name = "nationality_icon",
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}
@@ -235,15 +266,17 @@ end
 function HUDTeammatePlayer:_create_timer()
 	local timer_panel_params = {
 		alpha = 0,
-		name = "timer_panel",
-		layer = 5
+		layer = 5,
+		name = "timer_panel"
 	}
 	self._timer_panel = self._status_panel:panel(timer_panel_params)
 	local timer_background_params = {
-		name = "timer_background",
 		halign = "center",
+		texture_rect = nil,
 		layer = 1,
+		texture = nil,
 		valign = "center",
+		name = "timer_background",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.TIMER_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.TIMER_BG_ICON].texture_rect
 	}
@@ -253,10 +286,14 @@ function HUDTeammatePlayer:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
-		name = "timer_bar",
-		layer = 2,
 		halign = "center",
+		h = nil,
+		w = nil,
 		render_template = "VertexColorTexturedRadial",
+		name = "timer_bar",
+		texture_rect = nil,
+		layer = 2,
+		texture = nil,
 		valign = "center",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.TIMER_BAR_ICON].texture,
 		texture_rect = {
@@ -274,13 +311,17 @@ function HUDTeammatePlayer:_create_timer()
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_text_params = {
-		name = "timer_text",
-		vertical = "center",
-		align = "center",
+		w = nil,
 		text = "37",
+		vertical = "center",
+		h = nil,
 		y = 0,
 		x = 0,
+		align = "center",
+		name = "timer_text",
 		layer = 3,
+		font_size = nil,
+		font = nil,
 		w = self._timer_panel:w(),
 		h = self._timer_panel:h(),
 		font = tweak_data.gui.fonts[HUDTeammatePlayer.TIMER_FONT],
@@ -296,9 +337,11 @@ end
 function HUDTeammatePlayer:_create_host_indicator()
 	local warcry_background = self._warcry_panel:child("warcry_background")
 	local host_indicator_params = {
-		name = "host_indicator",
-		layer = 30,
 		alpha = 0,
+		texture_rect = nil,
+		layer = 30,
+		texture = nil,
+		name = "host_indicator",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.HOST_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.HOST_ICON].texture_rect
 	}
@@ -310,22 +353,28 @@ end
 
 function HUDTeammatePlayer:_create_voice_chat_indicator()
 	local voice_chat_panel_params = {
-		name = " voice_chat_panel",
 		layer = 30,
+		h = nil,
+		w = nil,
+		name = " voice_chat_panel",
 		w = HUDTeammatePlayer.CHAT_PANEL_W,
 		h = HUDTeammatePlayer.CHAT_PANEL_W
 	}
 	self._voice_chat_panel = self._right_panel:panel(voice_chat_panel_params)
 	local chat_indicator_params_speaking = {
-		name = "chat_indicator_speaking",
 		alpha = 0,
+		texture = nil,
+		texture_rect = nil,
+		name = "chat_indicator_speaking",
 		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture_rect
 	}
 	self._chat_indicator_speaking = self._voice_chat_panel:bitmap(chat_indicator_params_speaking)
 	local chat_indicator_params_muted = {
-		name = "chat_indicator_muted",
 		alpha = 0,
+		texture = nil,
+		texture_rect = nil,
+		name = "chat_indicator_muted",
 		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture_rect
 	}
@@ -366,9 +415,12 @@ function HUDTeammatePlayer:_create_down_indicator()
 	local downs = tweak_data.player.class_defaults.default.damage.BASE_LIVES
 	local guis = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
 	local down_indicator_params = {
-		name = "down_indicator",
 		layer = 30,
 		alpha = 1,
+		texture_rect = nil,
+		color = nil,
+		texture = nil,
+		name = "down_indicator",
 		texture = guis.texture,
 		texture_rect = guis.texture_rect,
 		color = guis.color
@@ -381,6 +433,10 @@ end
 
 function HUDTeammatePlayer:_create_right_panel()
 	local right_panel_params = {
+		w = nil,
+		h = nil,
+		y = nil,
+		x = nil,
 		name = "right_panel",
 		x = HUDTeammatePlayer.RIGHT_PANEL_X,
 		y = HUDTeammatePlayer.RIGHT_PANEL_Y,
@@ -392,12 +448,16 @@ end
 
 function HUDTeammatePlayer:_create_player_name()
 	local player_name_params = {
-		name = "player_name",
-		vertical = "center",
-		align = "left",
+		w = nil,
 		text = "",
+		vertical = "center",
+		h = nil,
 		y = 1,
 		x = 0,
+		align = "left",
+		name = "player_name",
+		font_size = nil,
+		font = nil,
 		w = self._right_panel:w() - HUDTeammatePlayer.PLAYER_LEVEL_W - HUDTeammatePeer.CHAT_PANEL_W,
 		h = HUDTeammatePlayer.PLAYER_NAME_H,
 		font = tweak_data.gui.fonts[HUDTeammatePlayer.PLAYER_NAME_FONT],
@@ -409,9 +469,15 @@ end
 function HUDTeammatePlayer:_create_player_level()
 	local player_level_params = {
 		vertical = "center",
-		name = "player_level",
-		align = "right",
 		text = "",
+		w = nil,
+		h = nil,
+		y = nil,
+		x = nil,
+		align = "right",
+		name = "player_level",
+		font_size = nil,
+		font = nil,
 		x = self._right_panel:w() - HUDTeammatePlayer.PLAYER_LEVEL_W,
 		y = HUDTeammatePlayer.PLAYER_LEVEL_Y,
 		w = HUDTeammatePlayer.PLAYER_LEVEL_W,
@@ -429,17 +495,22 @@ end
 
 function HUDTeammatePlayer:_create_player_health()
 	local health_panel = self._right_panel:panel({
-		name = "health_panel",
+		w = nil,
+		h = nil,
+		y = nil,
 		x = 0,
+		name = "health_panel",
 		y = self._right_panel:h() / 2 - HUDTeammatePlayer.PLAYER_HEALTH_H,
 		w = self._right_panel:w(),
 		h = HUDTeammatePlayer.PLAYER_HEALTH_H
 	})
 	local health_icon = tweak_data.gui:get_full_gui_data(HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON)
 	local health_background = health_panel:bitmap({
-		name = "health_background",
 		halign = "center",
+		texture_rect = nil,
+		texture = nil,
 		valign = "center",
+		name = "health_background",
 		texture = health_icon.texture,
 		texture_rect = health_icon.texture_rect
 	})
@@ -447,8 +518,12 @@ function HUDTeammatePlayer:_create_player_health()
 	health_background:set_center(health_panel:w() / 2, health_panel:h() / 2)
 
 	self._special_health_bar = health_panel:rect({
-		name = "special_health_bar",
+		layer = nil,
 		visible = false,
+		w = nil,
+		h = nil,
+		color = nil,
+		name = "special_health_bar",
 		w = health_background:w() - 2,
 		h = health_background:h() - 2,
 		color = HUDTeammatePlayer.PLAYER_HEALTH_SPECIAL_COLOR,
@@ -458,6 +533,10 @@ function HUDTeammatePlayer:_create_player_health()
 	self._special_health_bar:set_center(health_background:center())
 
 	self._health_bar_hurt = health_panel:rect({
+		layer = nil,
+		w = nil,
+		h = nil,
+		color = nil,
 		name = "health_bar_hurt",
 		w = health_background:w() - 2,
 		h = health_background:h() - 2,
@@ -468,6 +547,10 @@ function HUDTeammatePlayer:_create_player_health()
 	self._health_bar_hurt:set_center(health_background:center())
 
 	self._health_bar = health_panel:rect({
+		layer = nil,
+		w = nil,
+		h = nil,
+		color = nil,
 		name = "health_bar",
 		w = health_background:w() - 2,
 		h = health_background:h() - 2,
@@ -482,8 +565,11 @@ end
 
 function HUDTeammatePlayer:_create_equipment_panel()
 	local equipment_panel_params = {
-		name = "equipment_panel",
+		w = nil,
+		h = nil,
+		y = nil,
 		x = 0,
+		name = "equipment_panel",
 		y = self._right_panel:h() / 2,
 		w = self._right_panel:w(),
 		h = HUDTeammatePlayer.EQUIPMENT_H
@@ -602,10 +688,13 @@ function HUDTeammatePlayer:set_active_warcry(warcry)
 
 	local warcry_icon_name = tweak_data.warcry[warcry].hud_icon
 	local warcry_icon_params = {
-		name = "warcry_icon",
 		halign = "center",
 		alpha = 0,
+		texture_rect = nil,
+		color = nil,
+		texture = nil,
 		valign = "center",
+		name = "warcry_icon",
 		texture = tweak_data.gui.icons[warcry_icon_name].texture,
 		texture_rect = tweak_data.gui.icons[warcry_icon_name].texture_rect,
 		color = HUDTeammatePlayer.WARCRY_ACTIVE_COLOR

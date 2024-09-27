@@ -5,6 +5,9 @@ CoreZoomCameraCutsceneKey.ELEMENT_NAME = "camera_zoom"
 CoreZoomCameraCutsceneKey.NAME = "Camera Zoom"
 CoreZoomCameraCutsceneKey.DEFAULT_CAMERA_FOV = 55
 CoreZoomCameraCutsceneKey.INTERPOLATION_FUNCTIONS = {
+	["S curve"] = nil,
+	Linear = nil,
+	["J curve"] = nil,
 	Linear = function (t, bias)
 		return t
 	end,

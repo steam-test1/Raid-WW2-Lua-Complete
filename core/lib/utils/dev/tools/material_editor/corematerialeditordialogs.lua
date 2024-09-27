@@ -84,6 +84,8 @@ function CoreMaterialEditorGlobalDialog:_fill_tree(id, parent, node)
 
 	local new_id = self._tree_ctrl:append(id, text)
 	self._item_map[tostring(new_id)] = {
+		_parent = nil,
+		_node = nil,
 		_node = node,
 		_parent = parent
 	}

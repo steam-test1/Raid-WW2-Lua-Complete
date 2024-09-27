@@ -60,6 +60,8 @@ function CarryAlignAnimator:trigger_store_carry(instigator)
 	local position, rotation = managers.player:carry_align_throw()
 
 	self:client_store_carry({
+		position = nil,
+		rotation = nil,
 		position = position,
 		rotation = rotation
 	}, carry_data.carry_id)
@@ -96,16 +98,16 @@ function CarryAlignAnimator:server_store_carry(carry_unit)
 end
 
 function CarryAlignAnimator:client_store_carry(carry_unit, carry_id)
-	Application:debug("[CarryAlignAnimator:client_store_carry()] Attempting to store '" .. (carry_id or "NIL") .. "' item...")
+	Application:debug("[CarryAlignAnimator:client_store_carry] Attempting to store '" .. (carry_id or "NIL") .. "' item...")
 
 	if type(carry_unit) == "userdata" and not alive(carry_unit) and type(carry_unit) == "table" and table.empty(carry_unit) then
-		Application:error("[CarryAlignAnimator:client_store_carry()] Attempted to store unit that was not valid!", carry_unit)
+		Application:error("[CarryAlignAnimator:client_store_carry] Attempted to store unit that was not valid!", carry_unit)
 
 		return
 	end
 
 	if not carry_id then
-		Application:error("[CarryAlignAnimator:client_store_carry()] Attempted to store a carry item without carry id")
+		Application:error("[CarryAlignAnimator:client_store_carry] Attempted to store a carry item without carry id")
 
 		return
 	end
@@ -113,7 +115,7 @@ function CarryAlignAnimator:client_store_carry(carry_unit, carry_id)
 	local tweak_align = self._loot_align_table and self._loot_align_table[carry_id] or CarryAlignAnimator.DEFAULT_ALIGN
 
 	if not tweak_align then
-		Application:error("[CarryAlignAnimator:client_store_carry()] No tweak_align data for '" .. carry_id .. "'!")
+		Application:error("[CarryAlignAnimator:client_store_carry] No tweak_align data for '" .. carry_id .. "'!")
 
 		return
 	end
@@ -128,7 +130,7 @@ function CarryAlignAnimator:client_store_carry(carry_unit, carry_id)
 		if Network:is_server() then
 			local unit_static_path = self._get_carry_unit_static(carry_id)
 
-			Application:debug("[CarryAlignAnimator:client_store_carry()] Host is creating '" .. carry_id .. "' prop unit.")
+			Application:debug("[CarryAlignAnimator:client_store_carry] Host is creating '" .. carry_id .. "' prop unit.")
 
 			local pos, rot = nil
 
@@ -144,22 +146,27 @@ function CarryAlignAnimator:client_store_carry(carry_unit, carry_id)
 
 			managers.network:session():send_to_peers_synched("sync_pile_store_carry", self._unit, prop_unit, carry_id)
 		else
-			Application:debug("[CarryAlignAnimator:client_store_carry()] Loading '" .. carry_id .. "' prop unit from hosts given unit.", carry_unit)
+			Application:debug("[CarryAlignAnimator:client_store_carry] Loading '" .. carry_id .. "' prop unit from hosts given unit.", carry_unit)
 
 			prop_unit = carry_unit
 		end
 
-		if prop_unit:damage():has_sequence("freeze") then
+		if prop_unit.damage and prop_unit:damage():has_sequence("freeze") then
 			prop_unit:damage():run_sequence_simple("freeze")
 		end
 
-		Application:debug("[CarryAlignAnimator:client_store_carry()] Aligning to '" .. tostring(align_idstr) .. "'.")
+		Application:debug("[CarryAlignAnimator:client_store_carry] Aligning to '" .. tostring(align_idstr) .. "'.")
 		self:add_slot_unit(carry_id, prop_unit)
 
 		local distance = mvector3.distance(prop_unit:position(), self._unit:get_object(align_idstr):position())
 		local duration = CarryAlignAnimator.SPEED_DISTANCE * distance
 
 		table.insert(self._animating_loots, {
+			align_idstr = nil,
+			unit = nil,
+			duration = nil,
+			carry_id = nil,
+			slot_index = nil,
 			slot_index = slot_index,
 			unit = prop_unit,
 			align_idstr = align_idstr,
@@ -168,7 +175,7 @@ function CarryAlignAnimator:client_store_carry(carry_unit, carry_id)
 		})
 		self:set_update_enabled_state(true)
 	else
-		Application:warn("[CarryAlignAnimator:client_store_carry()] No alignment for '" .. tostring(align_idstr) .. "'.")
+		Application:warn("[CarryAlignAnimator:client_store_carry] No alignment for '" .. tostring(align_idstr) .. "'.")
 	end
 
 	Application:debug("[CarryAlignAnimator:client_store_carry] Animation setup success for '" .. carry_id .. "'!")
@@ -185,8 +192,8 @@ end
 local completed_anims = {}
 
 function CarryAlignAnimator:_update_loot_animations(t)
-	for i, data in ipairs(self._animating_loots) do
-		i = i - #completed_anims
+	for i = #self._animating_loots, 1, -1 do
+		local data = self._animating_loots[i]
 		local unit = data.unit
 		local slot_index = data.slot_index
 
@@ -202,13 +209,13 @@ function CarryAlignAnimator:_update_loot_animations(t)
 			local lerp_time = math.clamp(lerp_timer, CarryAlignAnimator.MIN_SPEED, 1)
 
 			if CarryAlignAnimator.SNAP_CAP <= lerp_time then
+				table.remove(self._animating_loots, i)
 				table.insert(completed_anims, {
 					unit,
 					data.align_idstr,
 					data.carry_id,
 					slot_index
 				})
-				table.remove(self._animating_loots, i)
 			else
 				local align = self._unit:get_object(data.align_idstr)
 
@@ -240,9 +247,9 @@ function CarryAlignAnimator:_done_store_carry(unit, align_idstr, carry_id, slot_
 		Application:debug("[CarryAlignAnimator:_done_store_carry()]", slot_index, carry_id, align_idstr, unit)
 
 		if align_idstr then
-			local align_obj = self._unit:get_object(align_idstr)
+			local align_object = self._unit:get_object(align_idstr)
 
-			if not align_obj then
+			if not align_object then
 				Application:warn("[CarryAlignAnimator:_done_store_carry()] Unit doesnt have object for '" .. align_idstr .. "' align_idstr.")
 
 				return
@@ -250,7 +257,7 @@ function CarryAlignAnimator:_done_store_carry(unit, align_idstr, carry_id, slot_
 
 			self._unit:link(align_idstr, unit, unit:orientation_object():name(), true)
 
-			if unit:damage():has_sequence("make_static") then
+			if unit.damage and unit:damage():has_sequence("make_static") then
 				unit:damage():run_sequence_simple("make_static")
 			end
 		end
@@ -259,26 +266,26 @@ function CarryAlignAnimator:_done_store_carry(unit, align_idstr, carry_id, slot_
 	end
 end
 
-function CarryAlignAnimator:add_slot_unit(carry_id, unit)
+function CarryAlignAnimator:add_slot_unit(carry_id, prop_unit)
 	local list = self._loot_props[carry_id]
 
-	self:set_slot_unit(carry_id, list and #list + 1 or 1, unit)
+	self:set_slot_unit(carry_id, list and #list + 1 or 1, prop_unit)
 end
 
-function CarryAlignAnimator:set_slot_unit(carry_id, slot, unit)
+function CarryAlignAnimator:set_slot_unit(carry_id, slot, prop_unit)
 	if not self._loot_props[carry_id] then
 		self._loot_props[carry_id] = {}
 	end
 
 	local list = self._loot_props[carry_id]
 
-	if unit and alive(unit) then
+	if prop_unit and alive(prop_unit) then
 		if list[slot] then
 			list[slot]:set_slot(0)
-			Application:warn("[CarryAlignAnimator:set_slot_unit()] Tried to set slot '" .. slot .. "' that already had a unit for '" .. carry_id .. "'!")
+			Application:warn("[CarryAlignAnimator:set_slot_prop_unit()] Tried to set slot '" .. slot .. "' that already had a prop_unit for '" .. carry_id .. "'!")
 		end
 
-		list[slot] = unit
+		list[slot] = prop_unit
 	else
 		list[slot] = nil
 	end
@@ -345,8 +352,34 @@ end
 function CarryAlignAnimator:save(data)
 	local state = {}
 	data.CarryAlignAnimator = state
+
+	if self._loot_props then
+		state.loot_props = {}
+
+		for carry_id, data in pairs(self._loot_props) do
+			state.loot_props[carry_id] = state.loot_props[carry_id] or {}
+
+			for _, unit in ipairs(data) do
+				if alive(unit) then
+					table.insert(state.loot_props[carry_id], unit:id())
+				end
+			end
+		end
+	end
 end
 
 function CarryAlignAnimator:load(data)
 	local state = data.CarryAlignAnimator
+
+	if state.loot_props then
+		for carry_id, prop_units in pairs(state.loot_props) do
+			for _, prop_unit_id in ipairs(prop_units) do
+				local prop_unit = managers.worldcollection:__get_unit_with_real_id(prop_unit_id)
+
+				if alive(prop_unit) then
+					self:client_store_carry(prop_unit, carry_id)
+				end
+			end
+		end
+	end
 end

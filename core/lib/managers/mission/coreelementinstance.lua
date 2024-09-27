@@ -149,6 +149,8 @@ function ElementInstancePoint:_create()
 
 	if self._values.instance then
 		managers.world_instance:custom_create_instance(self._values.instance, self._sync_id, {
+			position = nil,
+			rotation = nil,
 			position = self._values.position,
 			rotation = self._values.rotation
 		})

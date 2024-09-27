@@ -28,16 +28,20 @@ function LuaProfilerViewer:_create_main_frame()
 	self:_create_menu(self._frame)
 
 	self._treeview = CoreLuaProfilerTreeBox.LuaProfilerTreeBox:new({
+		parent = nil,
 		parent = splitter1
 	})
 	self._gridview = CoreLuaProfilerGridBox.LuaProfilerGridBox:new({
+		parent = nil,
 		parent = splitter1
 	})
 
 	self._treeview:set_gridview({
+		gridview = nil,
 		gridview = self._gridview
 	})
 	self._gridview:set_treeview({
+		treeview = nil,
 		treeview = self._treeview
 	})
 
@@ -191,10 +195,14 @@ function LuaProfilerViewer:_on_open()
 			self:_redraw_menu()
 			self._lpd:buildstructure(true)
 			self._treeview:set_profilerdata({
+				displayformat = nil,
+				lpd = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
 			self._gridview:set_profilerdata({
+				displayformat = nil,
+				lpd = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
@@ -212,17 +220,22 @@ function LuaProfilerViewer:_on_percent()
 
 		if calltree_modified then
 			self._treeview:set_profilerdata({
+				displayformat = nil,
+				lpd = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
 			self._gridview:set_displayformat({
+				displayformat = nil,
 				displayformat = self._displayformat
 			})
 		else
 			self._treeview:set_displayformat({
+				displayformat = nil,
 				displayformat = self._displayformat
 			})
 			self._gridview:set_displayformat({
+				displayformat = nil,
 				displayformat = self._displayformat
 			})
 		end
@@ -237,17 +250,22 @@ function LuaProfilerViewer:_on_seconds()
 
 		if calltree_modified then
 			self._treeview:set_profilerdata({
+				displayformat = nil,
+				lpd = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
 			self._gridview:set_displayformat({
+				displayformat = nil,
 				displayformat = self._displayformat
 			})
 		else
 			self._treeview:set_displayformat({
+				displayformat = nil,
 				displayformat = self._displayformat
 			})
 			self._gridview:set_displayformat({
+				displayformat = nil,
 				displayformat = self._displayformat
 			})
 		end
@@ -264,11 +282,14 @@ function LuaProfilerViewer:_on_custom(diffpeak)
 
 		if calltree_modified then
 			self._treeview:set_profilerdata({
+				displayformat = nil,
+				lpd = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
 		else
 			self._treeview:set_displayformat({
+				displayformat = nil,
 				displayformat = self._displayformat
 			})
 		end
@@ -279,10 +300,14 @@ function LuaProfilerViewer:_on_acc_calls()
 	if self._lpd then
 		self._lpd:buildstructure(true)
 		self._treeview:set_profilerdata({
+			displayformat = nil,
+			lpd = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})
 		self._gridview:set_profilerdata({
+			displayformat = nil,
+			lpd = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})
@@ -293,10 +318,14 @@ function LuaProfilerViewer:_on_no_acc_calls()
 	if self._lpd then
 		self._lpd:buildstructure(false)
 		self._treeview:set_profilerdata({
+			displayformat = nil,
+			lpd = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})
 		self._gridview:set_profilerdata({
+			displayformat = nil,
+			lpd = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})

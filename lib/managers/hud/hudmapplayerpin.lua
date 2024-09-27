@@ -13,7 +13,10 @@ end
 
 function HUDMapPlayerPin:_create_panel(panel)
 	local panel_params = {
+		h = nil,
+		w = nil,
 		visible = false,
+		name = nil,
 		halign = "center",
 		valign = "center",
 		name = "player_pin_" .. tostring(self._id),
@@ -27,9 +30,11 @@ function HUDMapPlayerPin:_create_nationality_icon(params)
 	local nationality = params.nationality or "german"
 	local nationality_icon = "player_panel_nationality_" .. nationality
 	local nationality_icon_params = {
-		name = "nationality_icon",
-		valign = "center",
 		halign = "center",
+		texture_rect = nil,
+		name = "nationality_icon",
+		texture = nil,
+		valign = "center",
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}

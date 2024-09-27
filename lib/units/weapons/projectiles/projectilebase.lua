@@ -149,10 +149,6 @@ function ProjectileBase:throw(params)
 			World:play_physic_effect(physic_effect, self._unit)
 		end
 
-		if tweak_entry.throwable and tweak_entry.add_trail_effect then
-			self:add_trail_effect(tweak_entry.add_trail_effect)
-		end
-
 		local unit_name = tweak_entry.sprint_unit
 
 		if unit_name then
@@ -176,6 +172,8 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
 
 	self:throw({
+		projectile_entry = nil,
+		dir = nil,
 		dir = dir,
 		projectile_entry = projectile_entry
 	})
@@ -324,6 +322,8 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	end
 
 	unit:base():throw({
+		projectile_entry = nil,
+		dir = nil,
 		dir = dir,
 		projectile_entry = projectile_entry
 	})
@@ -335,14 +335,12 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	managers.network:session():send_to_peers_synched("sync_throw_projectile", unit:id() ~= -1 and unit or nil, pos, dir, projectile_type, owner_peer_id or 0, unit:base():get_parent_projectile_id())
 
 	if tweak_data.projectiles[projectile_entry].impact_detonation then
+		Application:debug("[ProjectileBase.throw_projectile] Has impact detonation")
 		unit:damage():add_body_collision_callback(callback(unit:base(), unit:base(), "clbk_impact"))
 		unit:base():create_sweep_data()
 	end
 
 	return unit
-end
-
-function ProjectileBase:add_trail_effect()
 end
 
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)

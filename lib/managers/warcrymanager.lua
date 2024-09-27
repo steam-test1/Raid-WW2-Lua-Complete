@@ -33,6 +33,8 @@ function WarcryManager:_setup()
 	if self._active_warcry then
 		Application:debug("[WarcryManager:_setup] Warcry", self._active_warcry:get_type(), "LV", self._active_warcry:get_level())
 		self:set_active_warcry({
+			name = nil,
+			level = nil,
 			name = self._active_warcry:get_type(),
 			level = self._active_warcry:get_level()
 		})
@@ -79,6 +81,7 @@ function WarcryManager:acquire_warcry(warcry_name)
 	end
 
 	local warcry = {
+		name = nil,
 		level = 1,
 		name = warcry_name
 	}
@@ -180,8 +183,11 @@ function WarcryManager:activate_warcry()
 	if not can_activate then
 		blocked_text_id = blocked_text_id or self.WARCRY_BLOCKED_TEXT
 		local notification_data = {
-			shelf_life = 5,
+			duration = nil,
+			text = nil,
 			sound_effect = "generic_fail_sound",
+			id = nil,
+			shelf_life = 5,
 			id = self.WARCRY_BLOCKED_TEXT,
 			text = managers.localization:text(blocked_text_id),
 			duration = self.WARCRY_BLOCKED_MESSAGE_DURATION
@@ -215,6 +221,7 @@ function WarcryManager:activate_warcry()
 
 	managers.dialog:queue_dialog(self._active_warcry:get_activation_callout(), {
 		skip_idle_check = true,
+		instigator = nil,
 		instigator = managers.player:local_player()
 	})
 
@@ -311,6 +318,8 @@ function WarcryManager:_fill_meter_by_value(value, sync)
 
 	if managers.hud then
 		managers.hud:set_player_warcry_meter_fill({
+			total = nil,
+			current = nil,
 			current = self._meter_value,
 			total = self._meter_max_value
 		})
@@ -323,8 +332,11 @@ end
 
 function WarcryManager:add_warcry_comm_wheel_option(index)
 	local warcry_comm_wheel_option = {
-		id = "warcry",
+		icon = nil,
 		text_id = "com_wheel_warcry",
+		clbk = nil,
+		id = "warcry",
+		color = nil,
 		icon = tweak_data.warcry[self._active_warcry:get_type()].hud_icon,
 		color = Color.white,
 		clbk = callback(self, self, "activate_warcry")
@@ -346,35 +358,45 @@ function WarcryManager:_on_meter_full(skip_notification)
 	if self._active_warcry and not skip_notification then
 		managers.hud:post_event("warcry_available")
 
-		local warcry = self._active_warcry:get_type()
-		local name_id = tweak_data.warcry[warcry].name_id
-		local icon = tweak_data.warcry[warcry].hud_icon
-		local prompt_title = utf8.to_upper(managers.localization:text("hud_hint_warcry_ready_title", {
-			WARCRY = managers.localization:text(name_id)
-		}))
-		local prompt_desc = nil
+		if managers.user:get_setting("warcry_ready_indicator") then
+			local warcry = self._active_warcry:get_type()
+			local name_id = tweak_data.warcry[warcry].name_id
+			local icon = tweak_data.warcry[warcry].hud_icon
+			local prompt_title = utf8.to_upper(managers.localization:text("hud_hint_warcry_ready_title", {
+				WARCRY = nil,
+				WARCRY = managers.localization:text(name_id)
+			}))
+			local prompt_desc = nil
 
-		if managers.controller:is_using_controller() then
-			prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
-				BTN_USE_ITEM = managers.localization:get_default_macros().BTN_TOP_L .. " + " .. managers.localization:get_default_macros().BTN_TOP_R
-			}))
-		else
-			prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
-				BTN_USE_ITEM = managers.localization:btn_macro("activate_warcry")
-			}))
+			if managers.controller:is_using_controller() then
+				prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
+					BTN_USE_ITEM = nil,
+					BTN_USE_ITEM = managers.localization:get_default_macros().BTN_TOP_L .. " + " .. managers.localization:get_default_macros().BTN_TOP_R
+				}))
+			else
+				prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
+					BTN_USE_ITEM = nil,
+					BTN_USE_ITEM = managers.localization:btn_macro("activate_warcry")
+				}))
+			end
+
+			managers.hud:set_big_prompt({
+				title = nil,
+				icon = nil,
+				background = "backgrounds_warcry_msg",
+				flares = true,
+				duration = nil,
+				text_color = nil,
+				id = "warcry_ready",
+				priority = true,
+				description = nil,
+				title = prompt_title,
+				description = prompt_desc,
+				icon = icon,
+				duration = WarcryManager.WARCRY_READY_MESSAGE_DURATION,
+				text_color = tweak_data.gui.colors.raid_gold
+			})
 		end
-
-		managers.hud:set_big_prompt({
-			priority = true,
-			flares = true,
-			background = "backgrounds_warcry_msg",
-			id = "warcry_ready",
-			title = prompt_title,
-			description = prompt_desc,
-			icon = icon,
-			duration = WarcryManager.WARCRY_READY_MESSAGE_DURATION,
-			text_color = tweak_data.gui.colors.raid_gold
-		})
 	end
 end
 
@@ -552,12 +574,16 @@ function WarcryManager:save(data)
 
 		if self._active_warcry then
 			active_warcry = {
+				name = nil,
+				level = nil,
 				name = self._active_warcry:get_type(),
 				level = self._active_warcry:get_level()
 			}
 		end
 
 		local manager_data = {
+			warcries = nil,
+			active_warcry = nil,
 			warcries = self._warcries,
 			active_warcry = active_warcry
 		}
@@ -583,6 +609,8 @@ function WarcryManager:load(data, version)
 			if skill_data.active and skill_data.warcry_id then
 				Application:debug("[WarcryManager:load] warcry_id", skill_data.warcry_id, "Tier", skill_data.exp_tier)
 				self:set_active_warcry({
+					name = nil,
+					level = nil,
 					name = skill_data.warcry_id,
 					level = skill_data.exp_tier or 1
 				})

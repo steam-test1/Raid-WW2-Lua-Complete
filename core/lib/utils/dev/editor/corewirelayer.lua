@@ -31,14 +31,22 @@ function WireLayer:save()
 		local t_pos = math.vector_to_string(target:position())
 		local t_rot = target:rotation()
 		local wire_data = {
+			target_pos = nil,
+			slack = nil,
+			target_rot = nil,
 			target_pos = target:position(),
 			target_rot = target:rotation(),
 			slack = unit:wire_data().slack
 		}
 		local t = {
+			entry = nil,
+			continent = nil,
+			data = nil,
 			entry = self._save_name,
 			continent = unit:unit_data().continent and unit:unit_data().continent:name(),
 			data = {
+				wire_data = nil,
+				unit_data = nil,
 				unit_data = CoreEditorSave.save_data_table(unit),
 				wire_data = wire_data
 			}
@@ -47,7 +55,9 @@ function WireLayer:save()
 		self:_add_project_unit_save_data(unit, t.data)
 		managers.editor:add_save_data(t)
 		managers.editor:add_to_world_package({
+			name = nil,
 			category = "units",
+			continent = nil,
 			name = unit:name():s(),
 			continent = unit:unit_data().continent
 		})
@@ -218,14 +228,16 @@ function WireLayer:build_panel(notebook)
 
 	local slack_params = {
 		value = 0,
+		sizer = nil,
+		panel = nil,
 		name = "Slack:",
-		ctrlr_proportions = 4,
-		slider_ctrlr_proportions = 3,
-		name_proportions = 1,
 		number_ctrlr_proportions = 1,
+		slider_ctrlr_proportions = 3,
+		ctrlr_proportions = 4,
+		name_proportions = 1,
+		max = 2500,
 		min = 0,
 		floats = 0,
-		max = 2500,
 		panel = self._ews_panel,
 		sizer = slack_sizer
 	}

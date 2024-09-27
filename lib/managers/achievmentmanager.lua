@@ -4,10 +4,10 @@ AchievmentManager.FILE_EXTENSION = "achievment"
 
 function AchievmentManager:init()
 	self.exp_awards = {
-		b = 1500,
 		a = 500,
+		none = 0,
 		c = 5000,
-		none = 0
+		b = 1500
 	}
 	self.script_data = {}
 
@@ -24,6 +24,8 @@ function AchievmentManager:init()
 				self.handler:init()
 
 				Global.achievment_manager = {
+					handler = nil,
+					achievments = nil,
 					handler = self.handler,
 					achievments = self.achievments
 				}
@@ -38,6 +40,7 @@ function AchievmentManager:init()
 
 			if not Global.achievment_manager then
 				Global.achievment_manager = {
+					achievments = nil,
 					achievments = self.achievments
 				}
 			end
@@ -49,6 +52,8 @@ function AchievmentManager:init()
 			self:_parse_achievments("PS4")
 
 			Global.achievment_manager = {
+				trophy_requests = nil,
+				achievments = nil,
 				trophy_requests = {},
 				achievments = self.achievments
 			}
@@ -62,6 +67,7 @@ function AchievmentManager:init()
 			self:_parse_achievments("XB1")
 
 			Global.achievment_manager = {
+				achievments = nil,
 				achievments = self.achievments
 			}
 		else
@@ -168,7 +174,11 @@ function AchievmentManager:_parse_achievments(platform)
 			for _, reward in ipairs(ach) do
 				if reward._meta == "reward" and (Application:editor() or not platform or platform == reward.platform) then
 					self.achievments[ach.id] = {
+						dlc_loot = nil,
 						awarded = false,
+						exp = nil,
+						name = nil,
+						id = nil,
 						id = reward.id,
 						name = ach.name,
 						exp = self.exp_awards[ach.awards_exp],
@@ -248,6 +258,7 @@ function AchievmentManager:award_progress(stat, value)
 
 	local stats = {
 		[stat] = {
+			value = nil,
 			type = "int",
 			value = value or 1
 		}
@@ -435,15 +446,17 @@ function AchievmentManager:check_achievement_kill_30_enemies_with_vehicle_on_ban
 end
 
 AchievmentManager._T = {
+	clear_skies = nil,
+	oper_flamable = nil,
 	clear_skies = {
+		hardest_nobleed = "ach_clear_skies_hardest_no_bleedout",
 		hardest = "ach_clear_skies_hardest",
-		nobleed = "ach_clear_skies_no_bleedout",
-		hardest_nobleed = "ach_clear_skies_hardest_no_bleedout"
+		nobleed = "ach_clear_skies_no_bleedout"
 	},
 	oper_flamable = {
+		hardest_nobleed = "ach_burn_hardest_no_bleedout",
 		hardest = "ach_burn_hardest",
-		nobleed = "ach_burn_no_bleedout",
-		hardest_nobleed = "ach_burn_hardest_no_bleedout"
+		nobleed = "ach_burn_no_bleedout"
 	}
 }
 

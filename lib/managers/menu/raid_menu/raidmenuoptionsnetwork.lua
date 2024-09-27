@@ -30,7 +30,13 @@ function RaidMenuOptionsNetwork:_layout_network()
 	local start_y = 320
 	local default_width = 512
 	local packet_throttling_params = {
+		y = nil,
+		on_click_callback = nil,
+		description = nil,
 		name = "packet_throttling_params",
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_packet_throttling")),
 		x = start_x,
 		y = start_y,
@@ -42,7 +48,13 @@ function RaidMenuOptionsNetwork:_layout_network()
 	}
 	self._toggle_menu_packet_throttling = self._root_panel:toggle_button(packet_throttling_params)
 	local forwarding_params = {
+		y = nil,
+		on_click_callback = nil,
+		description = nil,
 		name = "push_to_talk",
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_net_forwarding")),
 		x = start_x,
 		y = packet_throttling_params.y + RaidGuiBase.PADDING,
@@ -55,7 +67,13 @@ function RaidMenuOptionsNetwork:_layout_network()
 	}
 	self._toggle_menu_net_forwarding = self._root_panel:toggle_button(forwarding_params)
 	local use_compression_params = {
+		y = nil,
+		on_click_callback = nil,
+		description = nil,
 		name = "use_compression",
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_net_use_compression")),
 		x = start_x,
 		y = forwarding_params.y + RaidGuiBase.PADDING,
@@ -108,12 +126,15 @@ end
 
 function RaidMenuOptionsNetwork:bind_controller_inputs()
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back"
 		},
 		keyboard = {
 			{
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

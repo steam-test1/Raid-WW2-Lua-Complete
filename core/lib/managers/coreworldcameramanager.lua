@@ -181,6 +181,8 @@ function CoreWorldCameraManager:save(file)
 	end
 
 	local camera_data = {
+		worldcameras = nil,
+		sequences = nil,
 		worldcameras = worldcameras,
 		sequences = self._world_camera_sequences
 	}
@@ -547,6 +549,7 @@ function CoreWorldCameraManager:play_world_camera_sequence(name, sequence, stay_
 
 	if not self._sound_environment_check_object then
 		self._sound_environment_check_object = managers.sound_environment:add_check_object({
+			object = nil,
 			primary = true,
 			active = false,
 			object = self._camera
@@ -608,6 +611,10 @@ function CoreWorldCameraManager:update_dof_values(near_dof, far_dof, dof_padding
 	self._current_dof_clamp = dof_clamp
 
 	managers.DOF:set_effect_parameters(self._dof_effect_id, {
+		near_max = nil,
+		near_min = nil,
+		far_max = nil,
+		far_min = nil,
 		near_min = near_dof,
 		near_max = near_dof - dof_padding,
 		far_min = far_dof,
@@ -664,6 +671,10 @@ function CoreWorldCamera:init(world_camera_name)
 	local far_dof = managers.worldcamera:default_far_dof()
 
 	table.insert(self._keys, {
+		far_dof = nil,
+		near_dof = nil,
+		fov = nil,
+		time = nil,
 		roll = 0,
 		time = time,
 		fov = fov,
@@ -678,6 +689,18 @@ end
 
 function CoreWorldCamera:save_data_table()
 	local t = {
+		in_acc = nil,
+		delay = nil,
+		duration = nil,
+		out_acc = nil,
+		dof_padding = nil,
+		dof_clamp = nil,
+		spline_metadata = nil,
+		curve_type = nil,
+		keys = nil,
+		target_positions = nil,
+		positions = nil,
+		name = nil,
 		name = self._world_camera_name,
 		duration = self._duration,
 		delay = self._delay,
@@ -977,6 +1000,10 @@ function CoreWorldCamera:positions_at_time(s_t)
 			local subsegment_positions, subsegment_distances = self:extract_editor_random_access_data(self._positions, metadata.ctrl_points, metadata.nr_subseg_per_seg)
 			local tar_subsegment_positions, tar_subsegment_distances = self:extract_editor_random_access_data(self._target_positions, metadata.tar_ctrl_points, metadata.nr_subseg_per_seg)
 			self._editor_random_access_data = {
+				tar_subsegment_positions = nil,
+				subsegment_distances = nil,
+				subsegment_positions = nil,
+				tar_subsegment_distances = nil,
 				subsegment_positions = subsegment_positions,
 				subsegment_distances = subsegment_distances,
 				tar_subsegment_positions = tar_subsegment_positions,
@@ -1231,6 +1258,13 @@ function CoreWorldCamera:extract_spline_metadata()
 	local tar_control_points = self:extract_spline_control_points(self._target_positions, 0.5)
 	local tar_segment_lengths, tar_spline_length = self:extract_segment_dis_markers(self._target_positions, tar_control_points, nr_subseg_per_seg)
 	self._spline_metadata = {
+		tar_ctrl_points = nil,
+		ctrl_points = nil,
+		tar_segment_lengths = nil,
+		tar_spline_length = nil,
+		nr_subseg_per_seg = nil,
+		segment_lengths = nil,
+		spline_length = nil,
 		ctrl_points = control_points,
 		segment_lengths = segment_lengths,
 		spline_length = spline_length,
@@ -1495,6 +1529,8 @@ end
 
 function CoreWorldCamera:get_point(point)
 	return {
+		pos = nil,
+		t_pos = nil,
 		pos = self._positions[point],
 		t_pos = self._target_positions[point]
 	}
@@ -1651,6 +1687,11 @@ function CoreWorldCamera:add_key(time)
 	far_dof = math.round(self:value_at_time(time, "far_dof"))
 	roll = math.round(self:value_at_time(time, "roll"))
 	local key = {
+		far_dof = nil,
+		near_dof = nil,
+		fov = nil,
+		time = nil,
+		roll = nil,
 		time = time,
 		fov = fov,
 		near_dof = near_dof,

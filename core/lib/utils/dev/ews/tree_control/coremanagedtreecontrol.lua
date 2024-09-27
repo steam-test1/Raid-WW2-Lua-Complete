@@ -70,6 +70,8 @@ function CoreManagedTreeControl:_change_state(data, event)
 			self._tree_ctrl:thaw()
 			self._tree_ctrl:update()
 			self:_find_and_do_custom_callback(self.CHECKBOX_UPDATED_EVENT_NAME, {
+				_id = nil,
+				_state = nil,
 				_state = state,
 				_id = id
 			})
@@ -192,6 +194,8 @@ end
 function CoreManagedTreeControl:connect(event_type, script_callback, script_data)
 	if event_type == self.CHECKBOX_UPDATED_EVENT_NAME then
 		self._custom_callbacks[script_callback] = {
+			_script_data = nil,
+			_event_type = nil,
 			_event_type = event_type,
 			_script_data = script_data
 		}
@@ -199,6 +203,7 @@ function CoreManagedTreeControl:connect(event_type, script_callback, script_data
 		local function tree_event_wrapper(data, event, ...)
 			local event_metatable = getmetatable(event) or {}
 			local wrapped_event = setmetatable({}, {
+				__index = nil,
 				__index = event_metatable.__index
 			})
 			local item_id = event:get_item()

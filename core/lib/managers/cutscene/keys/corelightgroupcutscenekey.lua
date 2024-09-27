@@ -26,6 +26,7 @@ end
 
 function CoreLightGroupCutsceneKey:revert()
 	local prev_key = self:preceeding_key({
+		group = nil,
 		group = self:group()
 	})
 
@@ -109,6 +110,7 @@ end
 
 function CoreLightGroupCutsceneKey:_eval_prev_group()
 	local prev_key = self:preceeding_key({
+		group = nil,
 		group = self:group()
 	})
 

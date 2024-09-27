@@ -185,6 +185,8 @@ function WorldEditor:project_run_simulation(with_mission)
 		managers.player:set_player_state("standard")
 		managers.groupai:state():set_AI_enabled(false)
 		managers.network:register_spawn_point(-1, {
+			rotation = nil,
+			position = nil,
 			position = self._vp:camera():position(),
 			rotation = Rotation:yaw_pitch_roll(self._vp:camera():rotation():yaw(), 0, 0)
 		})

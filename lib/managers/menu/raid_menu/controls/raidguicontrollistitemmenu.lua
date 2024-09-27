@@ -13,6 +13,11 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 	self._data = data
 	local font, font_size = self:_get_font_desc()
 	self._object = self._panel:panel({
+		y = nil,
+		x = nil,
+		name = nil,
+		h = nil,
+		w = nil,
 		name = "list_item_object_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -20,9 +25,16 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		h = params.h
 	})
 	self._item_label = self._object:label({
-		vertical = "center",
+		font_size = nil,
+		font = nil,
+		text = nil,
 		y = 0,
+		vertical = "center",
+		h = nil,
+		w = nil,
+		name = nil,
 		x = 32,
+		color = nil,
 		name = "list_item_label_" .. self._name,
 		w = params.w,
 		h = params.h,
@@ -33,8 +45,13 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 	})
 	self._item_background = self._object:rect({
 		y = 1,
-		visible = false,
 		x = 0,
+		layer = nil,
+		visible = false,
+		color = nil,
+		name = nil,
+		h = nil,
+		w = nil,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = params.h - 2,
@@ -43,9 +60,12 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 	})
 	self._item_highlight_marker = self._object:rect({
 		y = 1,
-		w = 3,
-		visible = false,
 		x = 0,
+		name = nil,
+		visible = false,
+		color = nil,
+		h = nil,
+		w = 3,
 		name = "list_item_highlight_" .. self._name,
 		h = params.h - 2,
 		color = tweak_data.gui.colors.raid_red
@@ -56,7 +76,13 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		local text_rect = ico_locker.texture_rect
 
 		self._object:image({
+			y = nil,
+			x = nil,
 			name = "locker_icon",
+			texture = nil,
+			texture_rect = nil,
+			h = nil,
+			w = nil,
 			x = self._object:right() - 74,
 			y = self._object:h() / 2 - text_rect[4] / 2,
 			w = text_rect[3],

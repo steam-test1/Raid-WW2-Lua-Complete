@@ -157,14 +157,15 @@ function CarryData:bullet_hit()
 end
 
 CarryData.EXPLOSION_SETTINGS = {
-	damage = 40,
-	range = 1000,
+	effect = "effects/vanilla/explosions/exp_bag_explosion_001",
 	curve_pow = 3,
+	damage = 40,
 	player_damage = 20,
-	effect = "effects/vanilla/explosions/exp_bag_explosion_001"
+	range = 1000
 }
 CarryData.EXPLOSION_CUSTOM_PARAMS = {
 	camera_shake_mul = 4,
+	effect = nil,
 	effect = CarryData.EXPLOSION_SETTINGS.effect
 }
 local mvec1 = Vector3()
@@ -182,7 +183,13 @@ function CarryData:_explode()
 	managers.explosion:play_sound_and_effects(pos, normal, range, CarryData.EXPLOSION_CUSTOM_PARAMS)
 
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
+		collision_slotmask = nil,
+		damage = nil,
+		ignore_unit = nil,
+		curve_pow = nil,
+		hit_pos = nil,
 		player_damage = 0,
+		range = nil,
 		hit_pos = pos,
 		range = range,
 		collision_slotmask = slot_mask,
@@ -410,50 +417,69 @@ function CarryData:_chk_register_steal_SO()
 	end
 
 	local drop_objective = {
-		type = "act",
 		interrupt_health = 0.9,
-		action_duration = 2,
+		interrupt_dis = 700,
+		action = nil,
 		haste = "walk",
 		pose = "crouch",
-		interrupt_dis = 700,
+		action_duration = 2,
+		type = "act",
+		area = nil,
+		nav_seg = nil,
+		pos = nil,
+		complete_clbk = nil,
+		fail_clbk = nil,
 		nav_seg = drop_nav_seg,
 		pos = drop_pos,
 		area = drop_area,
 		fail_clbk = callback(self, self, "on_secure_SO_failed"),
 		complete_clbk = callback(self, self, "on_secure_SO_completed"),
 		action = {
-			variant = "untie",
-			align_sync = true,
 			body_part = 1,
+			align_sync = true,
+			variant = "untie",
 			type = "act"
 		}
 	}
 	local pickup_objective = {
-		destroy_clbk_key = false,
-		type = "act",
-		haste = "run",
 		interrupt_health = 0.9,
-		pose = "crouch",
 		interrupt_dis = 700,
+		haste = "run",
+		destroy_clbk_key = false,
+		action = nil,
+		pose = "crouch",
+		action_duration = nil,
+		type = "act",
+		followup_objective = nil,
+		area = nil,
+		nav_seg = nil,
+		pos = nil,
+		complete_clbk = nil,
+		fail_clbk = nil,
 		nav_seg = pickup_nav_seg,
 		area = pickup_area,
 		pos = pickup_pos,
 		fail_clbk = callback(self, self, "on_pickup_SO_failed"),
 		complete_clbk = callback(self, self, "on_pickup_SO_completed"),
 		action = {
-			variant = "untie",
-			align_sync = true,
 			body_part = 1,
+			align_sync = true,
+			variant = "untie",
 			type = "act"
 		},
 		action_duration = math.lerp(1, 2.5, math.random()),
 		followup_objective = drop_objective
 	}
 	local so_descriptor = {
-		interval = 0,
-		base_chance = 1,
-		chance_inc = 0,
+		admin_clbk = nil,
+		AI_group = nil,
 		usage_amount = 1,
+		verification_clbk = nil,
+		search_pos = nil,
+		interval = 0,
+		chance_inc = 0,
+		base_chance = 1,
+		objective = nil,
 		objective = pickup_objective,
 		search_pos = pickup_objective.pos,
 		verification_clbk = callback(self, self, "clbk_pickup_SO_verification"),
@@ -462,8 +488,11 @@ function CarryData:_chk_register_steal_SO()
 	}
 	local so_id = "carrysteal" .. tostring(self._unit:key())
 	self._steal_SO_data = {
+		pickup_objective = nil,
 		SO_registered = true,
+		pickup_area = nil,
 		picked_up = false,
+		SO_id = nil,
 		SO_id = so_id,
 		pickup_area = pickup_area,
 		pickup_objective = pickup_objective

@@ -67,6 +67,9 @@ function CoreSpawnUnitUnitElement:update_editing(time, rel_time)
 	local from = self._unit:position()
 	local to = from + self._hed.unit_spawn_dir * 100000
 	local ray = managers.editor:unit_by_raycast({
+		to = nil,
+		from = nil,
+		mask = nil,
 		from = from,
 		to = to,
 		mask = managers.slot:get_mask("statics_layer")
@@ -92,12 +95,12 @@ function CoreSpawnUnitUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "unit_name", unit_options, "Select a unit from the combobox")
 	self:_build_value_number(panel, panel_sizer, "unit_spawn_velocity", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Use this to add a velocity to a physic push on the spawned unit(will need mass as well)", "Velocity")
 	self:_build_value_number(panel, panel_sizer, "unit_spawn_mass", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Use this to add a mass to a physic push on the spawned unit(will need velocity as well)", "Mass")
 	self:_add_help_text([[
 Select a unit to be spawned in the unit combobox.
@@ -111,7 +114,9 @@ end
 
 function CoreSpawnUnitUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
+		continent = nil,
 		category = "units",
+		name = nil,
 		name = self._hed.unit_name,
 		continent = self._unit:unit_data().continent
 	})

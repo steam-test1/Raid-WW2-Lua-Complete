@@ -1201,6 +1201,7 @@ function CopActionAct:init(action_desc, common_data)
 
 		if not stand_rsrv or mvector3.distance_sq(stand_rsrv.position, common_data.pos) > 400 then
 			self._unit:brain():add_pos_rsrv("stand", {
+				position = nil,
 				radius = 30,
 				position = mvector3.copy(common_data.pos)
 			})
@@ -1287,6 +1288,9 @@ function CopActionAct:_ik_update_func(t)
 			local old_look_vec = self._modifier_name == Idstring("look_head") and self._unit:get_object(Idstring("Head")):rotation():z() or self._unit:get_object(ids_aim):rotation():y()
 			local duration = math.lerp(0.1, 1, target_vec:angle(old_look_vec) / 90)
 			self._look_trans = {
+				start_vec = nil,
+				start_t = nil,
+				duration = nil,
 				start_t = TimerManager:game():time(),
 				duration = duration,
 				start_vec = old_look_vec

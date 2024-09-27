@@ -27,12 +27,12 @@ function ExplosionUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "damage", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "The damage done to beings and props from the explosion")
 	self:_build_value_number(panel, panel_sizer, "player_damage", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "The player damage from the explosion")
 	self:_build_value_combobox(panel, panel_sizer, "explosion_effect", table.list_add({
 		"none"
@@ -51,6 +51,8 @@ function ExplosionUnitElement:add_to_mission_package()
 	if self._hed.explosion_effect ~= "none" then
 		managers.editor:add_to_world_package({
 			category = "effects",
+			continent = nil,
+			name = nil,
 			name = self._hed.explosion_effect,
 			continent = self._unit:unit_data().continent
 		})

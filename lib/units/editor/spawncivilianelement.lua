@@ -128,6 +128,8 @@ function SpawnCivilianUnitElement:add_to_mission_package()
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
 
 		managers.editor:add_to_world_package({
+			continent = nil,
+			name = nil,
 			category = "units",
 			name = unit_name:s(),
 			continent = self._unit:unit_data().continent
@@ -139,6 +141,8 @@ function SpawnCivilianUnitElement:add_to_mission_package()
 
 		for _, file in ipairs(sequence_files) do
 			managers.editor:add_to_world_package({
+				continent = nil,
+				name = nil,
 				init = true,
 				category = "script_data",
 				name = file:s() .. ".sequence_manager",

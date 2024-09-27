@@ -5,15 +5,19 @@ ChallengeTweakData.TASK_COLLECT_AMMO = "task_collect_ammo"
 
 function ChallengeTweakData:init()
 	self.tighter_spread_easy = {
-		challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 		challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+		challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+		modifiers = nil,
+		reminders = nil,
 		target = 25,
+		type = nil,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			10,
 			20
 		},
 		modifiers = {
+			damage_type = nil,
 			headshot = true,
 			damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 		}
@@ -33,9 +37,11 @@ function ChallengeTweakData:init()
 		35
 	}
 	self.increase_magazine_easy = {
-		challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 		challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
+		challenge_done_text_id = "weapon_skill_collect_ammo_completed",
+		reminders = nil,
 		target = 175,
+		type = nil,
 		type = ChallengeTweakData.TASK_COLLECT_AMMO,
 		reminders = {
 			100,
@@ -56,9 +62,12 @@ function ChallengeTweakData:init()
 		250
 	}
 	self.kill_enemies_hipfire_easy = {
-		challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 		challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+		challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+		modifiers = nil,
+		reminders = nil,
 		target = 100,
+		type = nil,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			40,
@@ -67,6 +76,7 @@ function ChallengeTweakData:init()
 		},
 		modifiers = {
 			hip_fire = true,
+			damage_type = nil,
 			damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 		}
 	}
@@ -87,9 +97,11 @@ function ChallengeTweakData:init()
 		200
 	}
 	self.kill_enemies_basic_easy = {
-		challenge_done_text_id = "weapon_skill_generic_kill_completed",
 		challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+		challenge_done_text_id = "weapon_skill_generic_kill_completed",
+		reminders = nil,
 		target = 200,
+		type = nil,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			60,

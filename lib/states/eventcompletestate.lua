@@ -10,106 +10,106 @@ EventCompleteState.SCREEN_ACTIVE_EXPERIENCE = 6
 EventCompleteState.LOOT_DATA_READY_KEY = "loot_data_ready"
 EventCompleteState.SUCCESS_VIDEOS = {
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007"
+		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007"
+		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_03_salutes_v006"
+		path = "movies/vanilla/debrief_success/s_03_salutes_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008"
+		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006"
+		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006"
+		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007"
+		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_08_chess_v008"
+		path = "movies/vanilla/debrief_success/s_08_chess_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007"
+		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009"
+		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_11_swears_v005"
+		path = "movies/vanilla/debrief_success/s_11_swears_v005",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005"
+		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007"
+		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_14_moustache_v006"
+		path = "movies/vanilla/debrief_success/s_14_moustache_v006",
+		chance = 1
 	}
 }
 EventCompleteState.FAILURE_VIDEOS = {
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007"
+		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007"
+		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_03_toasts_v008"
+		path = "movies/vanilla/debrief_failure/f_03_toasts_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008"
+		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008"
+		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008"
+		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008"
+		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008"
+		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008"
+		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_10_executes_v008"
+		path = "movies/vanilla/debrief_failure/f_10_executes_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_11_sings_v007"
+		path = "movies/vanilla/debrief_failure/f_11_sings_v007",
+		chance = 1
 	}
 }
 
@@ -192,8 +192,9 @@ function EventCompleteState:at_enter(old_state, params)
 	self:check_complete_achievements()
 	self:set_statistics_values()
 	managers.statistics:stop_session({
-		quit = false,
 		type = "victory",
+		quit = false,
+		success = nil,
 		success = self._success
 	})
 	managers.statistics:send_statistics()
@@ -308,6 +309,8 @@ function EventCompleteState:_calculate_extra_loot_secured()
 		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
 			title = "menu_loot_screen_bonus_loot",
 			total_value = 0,
+			acquired_value = nil,
+			acquired = nil,
 			icon = "rewards_extra_loot",
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
@@ -329,7 +332,11 @@ function EventCompleteState:on_loot_data_ready()
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
 	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = {
+		acquired = nil,
 		title = "menu_loot_screen_dog_tags",
+		total_value = nil,
+		acquired_value = nil,
+		total = nil,
 		icon = "rewards_dog_tags",
 		acquired = self.loot_acquired,
 		total = self.loot_spawned,
@@ -423,8 +430,14 @@ function EventCompleteState:_create_debrief_video()
 
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
+		background_color = nil,
 		name = "event_complete_video_root_panel",
 		is_root_panel = true,
+		layer = nil,
+		w = nil,
+		h = nil,
+		y = nil,
+		x = nil,
 		x = full_panel:x(),
 		y = full_panel:y(),
 		h = full_panel:h(),
@@ -435,7 +448,10 @@ function EventCompleteState:_create_debrief_video()
 	self._panel = RaidGUIPanel:new(full_panel, params_root_panel)
 	local video = self:_get_debrief_video(self:is_success())
 	local debrief_video_params = {
+		width = nil,
 		name = "event_complete_debrief_video",
+		video = nil,
+		layer = nil,
 		layer = self._panel:layer() + 1,
 		video = video,
 		width = self._panel:w()
@@ -449,8 +465,13 @@ function EventCompleteState:_create_debrief_video()
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_prompt = self._safe_panel:text({
+		font_size = nil,
 		name = "press_any_key_prompt",
+		text = nil,
+		layer = nil,
+		font = nil,
 		alpha = 0,
+		color = nil,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
@@ -560,14 +581,17 @@ function EventCompleteState:on_server_left(message)
 
 		if dropped_loot.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
 			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_outfit", {
+				OUTFIT = nil,
 				OUTFIT = tostring(managers.localization:text(dropped_loot.character_customization.name))
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
 			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_gold", {
+				GOLD = nil,
 				GOLD = tostring(dropped_loot.awarded_gold_bars)
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
 			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_melee", {
+				MELEE = nil,
 				MELEE = tostring(managers.localization:text(tweak_data.blackmarket.melee_weapons[dropped_loot.weapon_id].name_id))
 			})
 		end
@@ -579,12 +603,14 @@ function EventCompleteState:on_server_left(message)
 		self:award_xp(base_xp)
 
 		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_xp", {
+			XP = nil,
 			XP = tostring(self._awarded_xp)
 		})
 	end
 
 	if not self._awarded_rewards.greed_gold and managers.greed:acquired_gold_in_mission() and self:is_success() then
 		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_greed_gold", {
+			GOLD = nil,
 			GOLD = tostring(managers.greed._gold_awarded_in_mission)
 		})
 
@@ -634,7 +660,11 @@ function EventCompleteState:on_top_stats_ready()
 			end
 
 			local top_stats_loot_data = {
+				acquired = nil,
 				title = "menu_loot_screen_top_stats",
+				total_value = nil,
+				acquired_value = nil,
+				total = nil,
 				icon = "rewards_top_stats",
 				acquired = #self.player_top_stats,
 				total = #self.special_honors,
@@ -749,6 +779,12 @@ function EventCompleteState:get_skill_xp_progress()
 					progress = at_max_tier and 1 or exp_progression / exp_requirement_tier
 
 					table.insert(skills_table, {
+						progress = nil,
+						at_max_tier = nil,
+						tag_color = nil,
+						tier = nil,
+						max_tier = nil,
+						id = nil,
 						id = id,
 						progress = progress,
 						tier = current_tier,

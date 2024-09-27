@@ -14,6 +14,7 @@ TeamAILogicAssault.clbk_heat = TeamAILogicIdle.clbk_heat
 
 function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -220,9 +221,9 @@ function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play
 	if play_action and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
 			variant = "arrest",
-			align_sync = true,
+			type = "act",
 			body_part = 3,
-			type = "act"
+			align_sync = true
 		}
 
 		if criminal:brain():action_request(new_action) then

@@ -15,6 +15,11 @@ NavLinkUnitElement._AI_SO_types = {
 	"AI_sniper"
 }
 NavLinkUnitElement.PRESETS = {
+	security = nil,
+	civilians = nil,
+	team_ai = nil,
+	acrobats = nil,
+	heavies = nil,
 	civilians = {
 		"civ_male",
 		"civ_female"
@@ -122,6 +127,8 @@ function NavLinkUnitElement:test_element()
 	self._test_unit:movement():set_root_blend(false)
 
 	local t = {
+		id = nil,
+		editor_name = nil,
 		id = self._unit:unit_data().unit_id,
 		editor_name = self._unit:unit_data().name_id,
 		values = self:new_save_values()
@@ -133,6 +140,7 @@ function NavLinkUnitElement:test_element()
 	t.values.followup_elements = nil
 	t.values.spawn_instigator_ids = nil
 	self._script = MissionScript:new({
+		elements = nil,
 		elements = {}
 	})
 	self._so_class = ElementSpecialObjective:new(self._script, t)
@@ -247,9 +255,11 @@ function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
 
 			if draw then
 				self:_draw_link({
-					g = 0.75,
 					b = 0,
+					g = 0.75,
 					r = 0,
+					to_unit = nil,
+					from_unit = nil,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -266,8 +276,8 @@ end
 
 function NavLinkUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -283,8 +293,8 @@ end
 
 function NavLinkUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
@@ -375,6 +385,8 @@ function NavLinkUnitElement:_enable_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(true)
 		self:_toggle_nav_link_filter_value({
+			name = nil,
+			ctrlr = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -385,6 +397,8 @@ function NavLinkUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
 		self:_toggle_nav_link_filter_value({
+			name = nil,
+			ctrlr = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -399,6 +413,8 @@ function NavLinkUnitElement:_set_preset_nav_link_filters(value)
 
 		ctrlr:set_value(state)
 		self:_toggle_nav_link_filter_value({
+			name = nil,
+			ctrlr = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -431,11 +447,14 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
-		sorted = true,
 		name = "Preset:",
-		name_proportions = 1,
-		ctrlr_proportions = 2,
 		tooltip = "Select a preset.",
+		options = nil,
+		sizer = nil,
+		ctrlr_proportions = 2,
+		sorted = true,
+		panel = nil,
+		name_proportions = 1,
 		panel = panel,
 		sizer = opt_sizer,
 		options = {
@@ -451,6 +470,7 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	local filter_preset = CoreEWS.combobox(filter_preset_params)
 
 	filter_preset:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_apply_preset"), {
+		ctrlr = nil,
 		ctrlr = filter_preset
 	})
 
@@ -465,6 +485,8 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 
 		check:set_value(table.contains(self._nav_link_filter, o))
 		check:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "_toggle_nav_link_filter_value"), {
+			name = nil,
+			ctrlr = nil,
 			ctrlr = check,
 			name = o
 		})
@@ -498,8 +520,8 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = -1
+		min = -1,
+		floats = 2
 	}, "Used to specify how often the SO should search for an actor. A negative value means it will check only once.")
 
 	local test_units = table.list_add(SpawnCivilianUnitElement._options, managers.enemy:enemy_units())

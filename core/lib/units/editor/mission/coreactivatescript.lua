@@ -34,12 +34,16 @@ function CoreActivateScriptUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	self._script_params = {
+		tooltip = "Select a script from the combobox",
+		value = nil,
+		options = nil,
 		default = "none",
+		sizer = nil,
 		name = "Script:",
+		panel = nil,
+		sorted = true,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select a script from the combobox",
-		sorted = true,
 		panel = panel,
 		sizer = panel_sizer,
 		options = self:_scripts(),
@@ -49,6 +53,7 @@ function CoreActivateScriptUnitElement:_build_panel(panel, panel_sizer)
 
 	scripts:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "activate_script",
+		ctrlr = nil,
 		ctrlr = scripts
 	})
 end

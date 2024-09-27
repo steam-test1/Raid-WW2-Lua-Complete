@@ -10,9 +10,13 @@ function RaidGUIControlScrollbar:init(parent, params)
 
 	self._object = self._parent:panel(params)
 	self._scrollbar_rect = self._object:rect({
+		color = nil,
 		color = RaidGUIControlScrollbar.SCROLLBAR_COLOR
 	})
 	self._scrollbar_bg = self._parent:rect({
+		alpha = nil,
+		w = nil,
+		color = nil,
 		name = "scrollbar_bg",
 		w = self._scrollbar_rect:w() * 0.6,
 		color = RaidGUIControlScrollbar.SCROLLBAR_BACKGROUND_COLOR,

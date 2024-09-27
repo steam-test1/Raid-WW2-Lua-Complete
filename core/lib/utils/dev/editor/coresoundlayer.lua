@@ -68,9 +68,12 @@ end
 function SoundLayer:save(save_params)
 	local file_name = "world_sounds"
 	local t = {
+		entry = nil,
+		data = nil,
 		single_data_block = true,
 		entry = self._save_name,
 		data = {
+			file = nil,
 			file = file_name
 		}
 	}
@@ -96,6 +99,7 @@ function SoundLayer:save(save_params)
 			table.insert(sound_environments, shape_table)
 			managers.editor:add_to_sound_package({
 				category = "soundbanks",
+				name = nil,
 				name = managers.sound_environment:ambience_soundbank(area:ambience_event())
 			})
 		end
@@ -104,6 +108,10 @@ function SoundLayer:save(save_params)
 			local emitter = unit:sound_data().emitter
 
 			table.insert(sound_emitters, {
+				position = nil,
+				rotation = nil,
+				name = nil,
+				emitter_event = nil,
 				emitter_event = emitter:emitter_event(),
 				position = emitter:position(),
 				rotation = emitter:rotation(),
@@ -111,6 +119,7 @@ function SoundLayer:save(save_params)
 			})
 			managers.editor:add_to_sound_package({
 				category = "soundbanks",
+				name = nil,
 				name = managers.sound_environment:emitter_soundbank(emitter:emitter_event())
 			})
 		end
@@ -123,6 +132,7 @@ function SoundLayer:save(save_params)
 			table.insert(sound_area_emitters, shape_table)
 			managers.editor:add_to_sound_package({
 				category = "soundbanks",
+				name = nil,
 				name = managers.sound_environment:emitter_soundbank(unit:sound_data().emitter:emitter_event())
 			})
 		end
@@ -132,6 +142,13 @@ function SoundLayer:save(save_params)
 	local default_occasional = managers.sound_environment:default_occasional()
 	local ambience_enabled = managers.sound_environment:ambience_enabled()
 	local sound_data = {
+		sound_emitters = nil,
+		sound_area_emitters = nil,
+		default_environment = nil,
+		default_ambience = nil,
+		default_occasional = nil,
+		sound_environments = nil,
+		ambience_enabled = nil,
 		default_environment = managers.sound_environment:default_environment(),
 		default_ambience = default_ambience,
 		ambience_enabled = ambience_enabled,
@@ -144,10 +161,12 @@ function SoundLayer:save(save_params)
 	if ambience_enabled then
 		managers.editor:add_to_sound_package({
 			category = "soundbanks",
+			name = nil,
 			name = managers.sound_environment:ambience_soundbank(default_ambience)
 		})
 		managers.editor:add_to_sound_package({
 			category = "soundbanks",
+			name = nil,
 			name = managers.sound_environment:occasional_soundbank(default_occasional)
 		})
 	end
@@ -221,6 +240,7 @@ end
 
 function SoundLayer:build_panel(notebook)
 	SoundLayer.super.build_panel(self, notebook, {
+		units_notebook_min_size = nil,
 		units_noteboook_proportion = 0,
 		units_notebook_min_size = Vector3(-1, 160, 0)
 	})
@@ -254,8 +274,13 @@ function SoundLayer:build_panel(notebook)
 	local default_emitter_path = managers.sound_environment:game_default_emitter_path()
 	local emitter_paths = managers.sound_environment:emitter_paths()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		name = "Categories",
 		sizer_proportions = 1,
+		value = nil,
+		name = "Categories",
+		options = nil,
+		sizer = nil,
+		panel = nil,
+		value_changed_cb = nil,
 		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = self._sound_emitter_sizer,
@@ -269,10 +294,15 @@ function SoundLayer:build_panel(notebook)
 	})
 	self._emitter_path_combobox = combobox_params
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		name = "Events",
 		sizer_proportions = 1,
-		ctrlr_proportions = 3,
+		value = nil,
+		name = "Events",
+		options = nil,
+		sizer = nil,
+		panel = nil,
 		sorted = true,
+		value_changed_cb = nil,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = self._sound_emitter_sizer,
 		options = default_emitter_path and managers.sound_environment:emitter_events(default_emitter_path) or {
@@ -302,11 +332,15 @@ end
 function SoundLayer:_build_defaults(sizer)
 	self._default_environment = {
 		sizer_proportions = 1,
+		value = nil,
 		name = "Environment:",
-		ctrlr_proportions = 3,
+		options = nil,
 		name_proportions = 1,
+		panel = nil,
 		tooltip = "Select default environment from the combobox",
 		sorted = true,
+		sizer = nil,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = sizer,
 		options = managers.sound_environment:environments(),
@@ -320,11 +354,15 @@ function SoundLayer:_build_defaults(sizer)
 	local error_text = "- No ambience soundbanks in project -"
 	self._default_ambience = {
 		sizer_proportions = 1,
+		value = nil,
 		name = "Ambience:",
-		ctrlr_proportions = 3,
+		options = nil,
 		name_proportions = 1,
+		panel = nil,
 		tooltip = "Select default ambience from the combobox",
 		sorted = true,
+		sizer = nil,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = sizer,
 		options = no_ambiences_availible and {
@@ -341,11 +379,15 @@ function SoundLayer:_build_defaults(sizer)
 	local error_text = "- No occasional soundbanks in project -"
 	self._default_occasional = {
 		sizer_proportions = 1,
+		value = nil,
 		name = "Occasional:",
-		ctrlr_proportions = 3,
+		options = nil,
 		name_proportions = 1,
+		panel = nil,
 		tooltip = "Select default occasional from the combobox",
 		sorted = true,
+		sizer = nil,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = sizer,
 		options = no_occasionals_availible and {
@@ -369,15 +411,17 @@ end
 function SoundLayer:_build_environment()
 	local sound_environment_sizer = EWS:StaticBoxSizer(self._sound_panel, "VERTICAL", "Sound Environment")
 	self._priority_params = {
-		name_proportions = 1,
-		name = "Priority:",
-		ctrlr_proportions = 3,
-		value = 9,
-		tooltip = "DISABLED",
-		min = 1,
-		floats = 0,
 		sizer_proportions = 1,
+		value = 9,
 		max = 9,
+		min = 1,
+		sizer = nil,
+		panel = nil,
+		tooltip = "DISABLED",
+		floats = 0,
+		name = "Priority:",
+		name_proportions = 1,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = sound_environment_sizer
 	}
@@ -389,11 +433,15 @@ function SoundLayer:_build_environment()
 	local environment_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._effect_params = {
 		sizer_proportions = 1,
+		value = nil,
 		name = "Effect:",
-		ctrlr_proportions = 3,
+		options = nil,
 		name_proportions = 1,
+		panel = nil,
 		tooltip = "Select an environment effect from the combobox",
 		sorted = true,
+		sizer = nil,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = environment_sizer,
 		options = managers.sound_environment:environments(),
@@ -413,11 +461,15 @@ function SoundLayer:_build_environment()
 	local ambience_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._ambience_params = {
 		sizer_proportions = 1,
+		value = nil,
 		name = "Ambience:",
-		ctrlr_proportions = 3,
+		options = nil,
 		name_proportions = 1,
+		panel = nil,
 		tooltip = "Select an ambience from the combobox",
 		sorted = true,
+		sizer = nil,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = ambience_sizer,
 		options = managers.sound_environment:ambience_events(),
@@ -437,11 +489,15 @@ function SoundLayer:_build_environment()
 	local occasional_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._occasional_params = {
 		sizer_proportions = 1,
+		value = nil,
 		name = "Occasional:",
-		ctrlr_proportions = 3,
+		options = nil,
 		name_proportions = 1,
+		panel = nil,
 		tooltip = "Select an occasional from the combobox",
 		sorted = true,
+		sizer = nil,
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = occasional_sizer,
 		options = managers.sound_environment:occasional_events(),

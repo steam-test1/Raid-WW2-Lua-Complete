@@ -22,9 +22,11 @@ end
 
 function HUDObjectiveMain:_create_panel(objectives_panel)
 	local panel_params = {
+		h = nil,
 		name = "main_objective",
 		halign = "scale",
 		valign = "top",
+		w = nil,
 		w = objectives_panel:w(),
 		h = HUDObjectiveMain.H
 	}
@@ -33,9 +35,11 @@ end
 
 function HUDObjectiveMain:_create_timer()
 	local timer_panel_params = {
+		h = nil,
 		name = "timer_panel",
 		halign = "right",
 		valign = "center",
+		w = nil,
 		w = self._object:h(),
 		h = self._object:h()
 	}
@@ -44,7 +48,9 @@ function HUDObjectiveMain:_create_timer()
 	self._timer_panel:set_x(self._object:w() + HUDObjectiveSub.OBJECTIVE_TEXT_PADDING_RIGHT)
 
 	local timer_background_params = {
+		texture = nil,
 		name = "timer_background",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_BACKGROUND_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDObjectiveMain.TIMER_BACKGROUND_ICON].texture_rect
 	}
@@ -54,8 +60,11 @@ function HUDObjectiveMain:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_static_fill_params = {
+		texture = nil,
 		name = "timer_static_fill",
+		layer = nil,
 		alpha = 0,
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture_rect,
 		layer = timer_background:layer() + 1
@@ -66,9 +75,14 @@ function HUDObjectiveMain:_create_timer()
 	self._timer_static_fill:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_fill_params = {
+		w = nil,
 		name = "timer_fill",
-		visible = false,
+		layer = nil,
 		render_template = "VertexColorTexturedRadial",
+		h = nil,
+		texture = nil,
+		visible = false,
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDObjectiveMain.TIMER_FILL_ICON),
@@ -86,13 +100,16 @@ function HUDObjectiveMain:_create_timer()
 	self._timer_fill:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_minutes_text_params = {
-		vertical = "center",
-		name = "minute_text",
-		visible = false,
-		align = "center",
-		text = "00:00",
 		halign = "center",
+		text = "00:00",
+		vertical = "center",
+		align = "center",
+		font_size = nil,
+		font = nil,
 		valign = "center",
+		layer = nil,
+		visible = false,
+		name = "minute_text",
 		font = HUDObjectiveMain.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveMain.AMOUNT_TEXT_FONT_SIZE,
 		layer = self._timer_fill:layer() + 1
@@ -107,12 +124,15 @@ function HUDObjectiveMain:_create_timer()
 
 	local timer_seconds_text_params = {
 		vertical = "center",
-		name = "seconds_text",
-		visible = false,
-		align = "center",
 		text = "00",
-		halign = "center",
+		layer = nil,
+		align = "center",
+		font_size = nil,
+		font = nil,
 		valign = "center",
+		halign = "center",
+		visible = false,
+		name = "seconds_text",
 		font = HUDObjectiveMain.TIMER_SECONDS_FONT,
 		font_size = HUDObjectiveMain.TIMER_SECONDS_FONT_SIZE,
 		layer = self._timer_fill:layer() + 1

@@ -24,6 +24,7 @@ function RaidGUIControlGrid:init(parent, params)
 
 	self._grid_panel = self._panel:panel({
 		x = 0,
+		w = nil,
 		y = 0,
 		w = self._grid_control_width
 	})
@@ -176,7 +177,9 @@ end
 
 function RaidGUIControlGrid:_on_item_clicked_callback(item_data, key_field_name)
 	self:select_grid_item_by_key_value({
+		value = nil,
 		dont_fire_select_callback = true,
+		key = nil,
 		key = key_field_name,
 		value = item_data[key_field_name]
 	})

@@ -38,6 +38,9 @@ end
 function InstancesLayer:save(save_params)
 	for _, data in ipairs(managers.world_instance:instance_save_data()) do
 		local t = {
+			data = nil,
+			continent = nil,
+			entry = nil,
 			entry = self._save_name,
 			continent = data.continent,
 			data = data
@@ -231,8 +234,9 @@ end
 function InstancesLayer:position_as()
 	if self._selected_instance and not self:condition() then
 		local data = {
-			ray_type = "body editor",
 			sample = true,
+			ray_type = "body editor",
+			mask = nil,
 			mask = self._position_as_slot_mask
 		}
 		local ray = managers.editor:unit_by_raycast(data)
@@ -369,6 +373,11 @@ function InstancesLayer:delete_selected_unit(btn, pressed)
 end
 
 function InstancesLayer:reset_rotation()
+	if self._selected_instance and not self:condition() then
+		local yaw = not self:shift() and self._selected_instance:rotation():yaw() or 0
+
+		self:set_instance_rotations(Rotation(yaw, 0, 0) * self._selected_instance:rotation():inverse())
+	end
 end
 
 function InstancesLayer:add_instance(name, folder, index_size, script, pos, rot, predef)
@@ -795,6 +804,9 @@ function InstancesLayer:_add_predefined_instances_notebook_pages()
 		instance_sizer:add(instances, 1, 0, "EXPAND")
 		instances:connect("EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "_on_gui_select_predefined_instance"), instances)
 		instance_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "_on_gui_instances_update_filter"), {
+			instances = nil,
+			category = nil,
+			filter = nil,
 			filter = instance_filter,
 			instances = instances,
 			category = c
@@ -802,6 +814,8 @@ function InstancesLayer:_add_predefined_instances_notebook_pages()
 
 		local page_name = c
 		self._predefined_instances_notebook_lists[page_name] = {
+			instances = nil,
+			filter = nil,
 			instances = instances,
 			filter = instance_filter
 		}
@@ -820,6 +834,7 @@ end
 
 function InstancesLayer:_predefined_data_by_category()
 	local t = {
+		ALL = nil,
 		ALL = {}
 	}
 
@@ -953,6 +968,7 @@ function InstancesLayer:_set_selected_predefined_instance(name)
 	local folder = self._predefined_instances[name].folder
 	local size = self._predefined_instances[name].size
 	local id, amount, type_amount = managers.world_instance:check_highest_id({
+		folder = nil,
 		folder = folder
 	})
 
@@ -1070,10 +1086,14 @@ end
 
 function InstancesLayer:_on_gui_reload_predefined_instances_file()
 	local t = {
+		verbose = false,
+		platform = nil,
 		target_db_name = "all",
 		send_idstrings = false,
+		target_db_root = nil,
 		preprocessor_definitions = "preprocessor_definitions",
-		verbose = false,
+		source_root = nil,
+		source_files = nil,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
 		target_db_root = Application:base_path() .. "assets",
@@ -1126,9 +1146,10 @@ function InstancesLayer:_create_overlay_gui()
 	self._workspace:hide()
 
 	self._gui_panel = self._workspace:panel():panel({
-		halign = "scale",
-		valign = "scale",
 		h = 16,
+		valign = "scale",
+		y = nil,
+		halign = "scale",
 		y = self._workspace:panel():h() - 16
 	})
 end
@@ -1136,8 +1157,9 @@ end
 function InstancesLayer:_update_overlay_gui()
 	self._gui_panel:clear()
 	self._gui_panel:rect({
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
+		color = nil,
 		color = Color.black
 	})
 
@@ -1151,7 +1173,10 @@ function InstancesLayer:_update_overlay_gui()
 		local w = end_indices[i] * tot_w / tot_indices - x
 
 		self._gui_panel:rect({
+			w = nil,
+			x = nil,
 			layer = 2,
+			color = nil,
 			x = x,
 			w = w,
 			color = Color.green
@@ -1163,7 +1188,10 @@ function InstancesLayer:_update_overlay_gui()
 		local w = instance_data.index_size * tot_w / tot_indices
 
 		self._gui_panel:rect({
+			w = nil,
+			x = nil,
 			layer = 3,
+			color = nil,
 			x = x,
 			w = w,
 			color = Color.blue

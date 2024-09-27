@@ -38,10 +38,14 @@ function BootupState:setup()
 
 	if not is_win32 then
 		table.insert(self._play_data_list, {
-			height = 200,
+			gui = nil,
 			can_skip = false,
-			duration = 6,
+			height = 200,
+			fade_in = nil,
 			width = 600,
+			layer = nil,
+			duration = 6,
+			fade_out = nil,
 			gui = Idstring("guis/autosave_warning"),
 			layer = item_layer,
 			fade_in = fade_time,
@@ -50,7 +54,15 @@ function BootupState:setup()
 	end
 
 	table.insert(self._play_data_list, {
+		layer = nil,
+		height = nil,
+		fade_out = nil,
+		texture_rect = nil,
+		texture = nil,
+		can_skip = nil,
 		duration = 4.5,
+		fade_in = nil,
+		width = nil,
 		can_skip = has_full_game,
 		texture = tweak_data.gui.icons.bootup_logo_sb.texture,
 		texture_rect = tweak_data.gui.icons.bootup_logo_sb.texture_rect,
@@ -61,8 +73,16 @@ function BootupState:setup()
 		fade_out = fade_time
 	})
 	table.insert(self._play_data_list, {
-		auto_skip = true,
+		width = nil,
 		duration = 4.5,
+		fade_out = nil,
+		auto_skip = true,
+		texture_rect = nil,
+		texture = nil,
+		can_skip = nil,
+		height = nil,
+		fade_in = nil,
+		layer = nil,
 		can_skip = has_full_game,
 		texture = tweak_data.gui.icons.bootup_logo_lgl.texture,
 		texture_rect = tweak_data.gui.icons.bootup_logo_lgl.texture_rect,
@@ -73,8 +93,16 @@ function BootupState:setup()
 		fade_out = fade_time
 	})
 	table.insert(self._play_data_list, {
-		auto_skip = true,
+		width = nil,
 		duration = 5,
+		fade_out = nil,
+		auto_skip = true,
+		texture_rect = nil,
+		texture = nil,
+		can_skip = nil,
+		height = nil,
+		fade_in = nil,
+		layer = nil,
 		can_skip = has_full_game,
 		texture = tweak_data.gui.icons.bootup_logo_third_parties.texture,
 		texture_rect = tweak_data.gui.icons.bootup_logo_third_parties.texture_rect,
@@ -91,18 +119,25 @@ function BootupState:setup()
 
 	self._full_panel:rect({
 		layer = 0,
+		color = nil,
 		visible = false,
 		color = Color.red
 	})
 
 	local press_any_key_font_size = tweak_data.gui.font_sizes.medium
 	local press_any_key_prompt_params = {
-		vertical = "bottom",
-		wrap = true,
-		align = "center",
-		name = "press_any_key_text",
-		alpha = 0,
+		text = nil,
 		layer = 3,
+		wrap = true,
+		alpha = 0,
+		vertical = "bottom",
+		color = nil,
+		align = "center",
+		font_size = nil,
+		font = nil,
+		h = nil,
+		w = nil,
+		name = "press_any_key_text",
 		w = self._full_panel:w(),
 		h = press_any_key_font_size,
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
@@ -347,6 +382,11 @@ function BootupState:play_next(is_skipped)
 		local x = (self._panel:w() - width) / 2
 		local y = (self._panel:h() - height) / 2
 		local gui_config = {
+			x = nil,
+			layer = nil,
+			height = nil,
+			y = nil,
+			width = nil,
 			x = x,
 			y = y,
 			width = width,

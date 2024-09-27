@@ -70,6 +70,7 @@ function GrenadeBase:throw(...)
 
 	if weapon_id then
 		managers.statistics:shot_fired({
+			name_id = nil,
 			hit = false,
 			name_id = weapon_id
 		})
@@ -95,6 +96,7 @@ function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 	if weapon_id and not self._recorded_hit then
 		managers.statistics:shot_fired({
 			skip_bullet_count = true,
+			name_id = nil,
 			hit = true,
 			name_id = weapon_id
 		})

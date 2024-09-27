@@ -410,10 +410,14 @@ function CoreMaterialEditor:_save_to_disk(path)
 	local global_file = self:_save_global_to_disk(false)
 
 	Application:data_compile({
+		source_files = nil,
+		platform = nil,
 		target_db_name = "all",
 		send_idstrings = false,
-		preprocessor_definitions = "preprocessor_definitions",
+		target_db_root = nil,
+		source_root = nil,
 		verbose = false,
+		preprocessor_definitions = "preprocessor_definitions",
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
 		target_db_root = Application:base_path() .. "assets",
@@ -441,10 +445,14 @@ function CoreMaterialEditor:_save_global_to_disk(recompile)
 
 	if recompile then
 		Application:data_compile({
+			source_files = nil,
+			platform = nil,
 			target_db_name = "all",
 			send_idstrings = false,
-			preprocessor_definitions = "preprocessor_definitions",
+			target_db_root = nil,
+			source_root = nil,
 			verbose = false,
+			preprocessor_definitions = "preprocessor_definitions",
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),
 			target_db_root = Application:base_path() .. "assets",
@@ -694,6 +702,8 @@ function CoreMaterialEditor:_load_shader_sources_from_db(t)
 			end
 
 			table.insert(t, {
+				_entry = nil,
+				_node = nil,
 				_entry = source,
 				_node = node
 			})
@@ -720,6 +730,8 @@ function CoreMaterialEditor:_load_shader_dropdown()
 				if editor_node then
 					local name = shader:parameter("name")
 					self._compilable_shaders[name] = {
+						_entry = nil,
+						_node = nil,
 						_entry = source._entry,
 						_node = shader
 					}

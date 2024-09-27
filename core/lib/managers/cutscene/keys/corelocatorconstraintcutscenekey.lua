@@ -34,6 +34,7 @@ end
 
 function CoreLocatorConstraintCutsceneKey:revert(player)
 	local preceeding_key = self:preceeding_key({
+		locator_name = nil,
 		locator_name = self:locator_name()
 	})
 

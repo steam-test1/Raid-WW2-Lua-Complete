@@ -22,12 +22,17 @@ function TurretWeapon:init(unit)
 
 	if self._shell_ejection_effect then
 		self._shell_ejection_effect_table = {
+			parent = nil,
+			effect = nil,
 			effect = self._shell_ejection_effect,
 			parent = self._locator_shells
 		}
 	end
 
 	self._trail_effect_table = {
+		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = RaycastWeaponBase.TRAIL_EFFECT,
 		position = Vector3(),
 		normal = Vector3()
@@ -88,6 +93,7 @@ function TurretWeapon:init(unit)
 	self._heat_material = tweak_data.weapon[self.name_id].heat_material
 	self._heat_material_parameter = tweak_data.weapon[self.name_id].heat_material_parameter
 	self._setup = {
+		ignore_units = nil,
 		turret_weapon_initialized = false,
 		ignore_units = {
 			self._unit
@@ -170,6 +176,8 @@ function TurretWeapon:_setup_fire_effects()
 
 		if muzzle_effect_tweak then
 			table.insert(self._muzzle_effect_table, {
+				parent = nil,
+				effect = nil,
 				force_synch = false,
 				effect = self._muzzle_effect,
 				parent = self[fire_locator_property_name]
@@ -189,6 +197,8 @@ function TurretWeapon:_setup_smoke_effects()
 
 		if self[smoke_locator_property_name] then
 			table.insert(self._overheating_smoke_effect_table, {
+				parent = nil,
+				effect = nil,
 				force_synch = false,
 				effect = self._overheating_smoke_effect,
 				parent = self[smoke_locator_property_name]
@@ -802,6 +812,8 @@ end
 
 function TurretWeapon:_fire_shell(from_pos, direction)
 	self._turret_shell = {
+		position = nil,
+		direction = nil,
 		position = from_pos,
 		direction = direction
 	}
@@ -826,6 +838,9 @@ function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 	end
 
 	World:effect_manager():spawn({
+		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = Idstring("effects/vanilla/explosions/vehicle_explosion"),
 		position = shell_position,
 		normal = shell_dir or math.UP
@@ -844,6 +859,15 @@ function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 	local armor_piercing = tweak_data.weapon[self.name_id].armor_piercing
 	local curve_pow = 3
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
+		ignore_unit = nil,
+		damage = nil,
+		hit_pos = nil,
+		range = nil,
+		collision_slotmask = nil,
+		curve_pow = nil,
+		armor_piercing = nil,
+		player_damage = nil,
+		user = nil,
 		alert_radius = 10000,
 		hit_pos = pos,
 		range = damage_radius,
@@ -1079,6 +1103,7 @@ function TurretWeapon:load(save_data)
 	self._auto_reload = my_save_data.auto_reload
 	self._player_on = my_save_data.player_on
 	self._setup = {
+		ignore_units = nil,
 		ignore_units = {
 			self._unit
 		}
@@ -1150,10 +1175,17 @@ function TurretWeapon:_create_turret_SO()
 	managers.navigation:destroy_nav_tracker(tracker_align)
 
 	local turret_objective = {
-		pose = "stand",
+		area = nil,
+		nav_seg = nil,
 		destroy_clbk_key = false,
-		type = "turret",
+		rot = nil,
+		pose = "stand",
 		haste = "run",
+		action = nil,
+		complete_clbk = nil,
+		type = "turret",
+		fail_clbk = nil,
+		pos = nil,
 		nav_seg = align_nav_seg,
 		area = align_area,
 		pos = align_pos,
@@ -1161,25 +1193,33 @@ function TurretWeapon:_create_turret_SO()
 		fail_clbk = callback(self, self, "on_turret_SO_failed"),
 		complete_clbk = callback(self, self, "on_turret_SO_completed"),
 		action = {
-			align_sync = true,
-			needs_full_blend = true,
-			type = "act",
 			body_part = 1,
+			blocks = nil,
+			variant = nil,
+			type = "act",
+			needs_full_blend = true,
+			align_sync = true,
 			variant = variant,
 			blocks = {
+				walk = -1,
 				heavy_hurt = -1,
-				hurt = -1,
 				action = -1,
-				walk = -1
+				hurt = -1
 			}
 		}
 	}
 	local twk_data = tweak_data.weapon[self.name_id]
 	local SO_descriptor = {
-		interval = 1,
-		search_dis_sq = 4000000,
+		access = nil,
 		AI_group = "enemies",
+		admin_clbk = nil,
 		usage_amount = 1,
+		interval = 1,
+		chance_inc = nil,
+		base_chance = nil,
+		search_dis_sq = 4000000,
+		search_pos = nil,
+		objective = nil,
 		objective = turret_objective,
 		search_pos = turret_objective.pos,
 		base_chance = twk_data.SO_CHANCE_BASE or 1,
@@ -1196,6 +1236,8 @@ function TurretWeapon:_create_turret_SO()
 	}
 	local SO_id = "turret_" .. tostring(self._unit:key())
 	self._SO_data = {
+		align_area = nil,
+		SO_id = nil,
 		SO_registered = true,
 		SO_id = SO_id,
 		align_area = align_area
@@ -1210,6 +1252,8 @@ end
 
 function TurretWeapon:sync_administered_unit(unit)
 	self._administered_unit_data = {
+		unit = nil,
+		SO = nil,
 		unit = unit
 	}
 end
@@ -1222,6 +1266,8 @@ function TurretWeapon:on_turret_SO_administered(unit, SO)
 	end
 
 	self._administered_unit_data = {
+		unit = nil,
+		SO = nil,
 		unit = unit,
 		SO = SO
 	}
@@ -1430,9 +1476,9 @@ function TurretWeapon:_cancel_active_SO()
 			admin_unit_brain:set_objective(nil)
 			admin_unit_brain:set_logic("idle", nil)
 			admin_unit_brain:action_request({
-				sync = true,
 				body_part = 2,
-				type = "idle"
+				type = "idle",
+				sync = true
 			})
 			self:on_turret_SO_failed(self._administered_unit_data.unit)
 
@@ -1637,8 +1683,11 @@ function TurretWeapon:_shell_explosion_on_client(position, radius, damage, playe
 	local sound_event = "grenade_explode"
 	local damage_radius = radius or tweak_data.weapon[self.name_id].damage_radius or 1000
 	local custom_params = {
-		camera_shake_max_mul = 4,
 		sound_muffle_effect = true,
+		sound_event = nil,
+		effect = nil,
+		camera_shake_max_mul = 4,
+		feedback_range = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = damage_radius * 2

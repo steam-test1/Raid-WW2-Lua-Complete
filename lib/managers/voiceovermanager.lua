@@ -8,6 +8,9 @@ function VoiceOverManager:_setup()
 	self._disabled = false
 	self._investigated = {}
 	self._idle_timers = {
+		cooldown = nil,
+		delay = nil,
+		rnd_delay = nil,
 		delay = tweak_data.voiceover.idle_delay,
 		rnd_delay = tweak_data.voiceover.idle_rnd_delay,
 		cooldown = tweak_data.voiceover.idle_cooldown
@@ -41,6 +44,9 @@ function VoiceOverManager:_update_idle_chatter()
 			if self._idle_queue[unit_key] then
 				local time_offset = math.random(self._idle_timers.rnd_delay)
 				self._idle_queue[unit_key] = {
+					time_offset = nil,
+					registered_at = nil,
+					unit = nil,
 					unit = self._idle_queue[unit_key].unit,
 					registered_at = Application:time(),
 					time_offset = time_offset
@@ -57,6 +63,7 @@ function VoiceOverManager:_update_idle_chatter()
 				self:_play_sound(data.unit, math.rand_bool() and "ste_idle" or "ste_patrol")
 
 				self._idle_cooldowns[unit_key] = {
+					started_at = nil,
 					started_at = current_time
 				}
 			else
@@ -73,6 +80,9 @@ function VoiceOverManager:guard_register_idle(source_unit)
 
 	local time_offset = math.random(self._idle_timers.rnd_delay)
 	self._idle_queue[source_unit:key()] = {
+		time_offset = nil,
+		registered_at = nil,
+		unit = nil,
 		unit = source_unit,
 		registered_at = Application:time(),
 		time_offset = time_offset
@@ -151,6 +161,14 @@ function VoiceOverManager:guard_back_to_patrol(source_unit)
 	end
 
 	self:_play_sound(source_unit, "ste_investigateresult")
+end
+
+function VoiceOverManager:guard_found_coin(source_unit)
+	if self._disabled then
+		return
+	end
+
+	self:_play_sound(source_unit, "ste_coin_found")
 end
 
 function VoiceOverManager:enemy_reload(source_unit)

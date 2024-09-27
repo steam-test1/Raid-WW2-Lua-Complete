@@ -38,18 +38,26 @@ end
 
 function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 	local params_weapon_point_image = {
-		name = "melee_weapon_image",
+		texture = nil,
 		y = 0,
+		name = "melee_weapon_image",
 		x = 0,
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlMeleeWeaponPeerLoot.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlMeleeWeaponPeerLoot.ICON].texture_rect
 	}
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
 	local params_player_name = {
-		name = "peer_melee_weapon_name_label",
-		align = "left",
-		text = "",
 		layer = 1,
+		text = "",
+		name = "peer_melee_weapon_name_label",
+		color = nil,
+		w = nil,
+		x = nil,
+		y = nil,
+		align = "left",
+		font_size = nil,
+		font = nil,
 		x = RaidGUIControlMeleeWeaponPeerLoot.TEXT_X,
 		y = RaidGUIControlMeleeWeaponPeerLoot.NAME_Y,
 		w = self._object:w() - RaidGUIControlMeleeWeaponPeerLoot.TEXT_X,
@@ -63,9 +71,16 @@ function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 	self._name_label:set_h(h)
 
 	local params_weapon_point_description = {
-		name = "melee_weapon_description_label",
-		align = "left",
 		layer = 1,
+		text = nil,
+		name = "melee_weapon_description_label",
+		color = nil,
+		w = nil,
+		x = nil,
+		y = nil,
+		align = "left",
+		font_size = nil,
+		font = nil,
 		text = self:translate("melee_weapon", true),
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlMeleeWeaponPeerLoot.NAME_PADDING_DOWN,

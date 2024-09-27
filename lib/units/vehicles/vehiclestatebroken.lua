@@ -18,6 +18,7 @@ function VehicleStateBroken:enter(state_data, enter_data)
 	if player_vehicle and player_vehicle.vehicle_unit == self._unit then
 		managers.notification:add_notification({
 			duration = 3,
+			text = nil,
 			shelf_life = 5,
 			id = "hud_vehicle_broken",
 			text = managers.localization:text("hud_vehicle_broken")

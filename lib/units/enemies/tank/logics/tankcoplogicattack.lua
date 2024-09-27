@@ -2,6 +2,7 @@ TankCopLogicAttack = class(CopLogicAttack)
 
 function TankCopLogicAttack.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -116,8 +117,8 @@ function TankCopLogicAttack.update(data)
 
 			if focus_enemy.verified_dis < 800 and unit:anim_data().run then
 				local new_action = {
-					body_part = 2,
-					type = "idle"
+					type = "idle",
+					body_part = 2
 				}
 
 				data.unit:brain():action_request(new_action)
@@ -145,6 +146,7 @@ function TankCopLogicAttack.update(data)
 			my_data.chase_pos = nil
 
 			data.brain:add_pos_rsrv("path", {
+				position = nil,
 				radius = 60,
 				position = mvector3.copy(to_pos)
 			})
@@ -193,8 +195,8 @@ function TankCopLogicAttack._cancel_chase_attempt(data, my_data)
 
 	if my_data.walking_to_chase_pos then
 		local new_action = {
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		}
 
 		data.unit:brain():action_request(new_action)
@@ -251,6 +253,9 @@ function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data,
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
 			type = "walk",
+			nav_path = nil,
+			end_rot = nil,
+			variant = nil,
 			body_part = 2,
 			nav_path = my_data.chase_path,
 			variant = speed or "run",
@@ -273,6 +278,7 @@ end
 
 function TankCopLogicAttack._get_all_paths(data)
 	return {
+		chase_path = nil,
 		chase_path = data.internal_data.chase_path
 	}
 end

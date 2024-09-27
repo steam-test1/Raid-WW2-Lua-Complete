@@ -71,6 +71,7 @@ end
 
 function ItemSlider:setup_gui(node, row_item)
 	row_item.gui_panel = node.item_panel:panel({
+		w = nil,
 		w = node.item_panel:w()
 	})
 	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, node:_right_align())
@@ -84,10 +85,15 @@ function ItemSlider:setup_gui(node, row_item)
 	local bar_w = 192
 	row_item.gui_slider_bg = row_item.gui_panel:rect({
 		visible = false,
-		vertical = "center",
+		layer = nil,
 		h = 22,
-		align = "center",
+		color = nil,
+		vertical = "center",
 		halign = "center",
+		align = "center",
+		y = nil,
+		w = nil,
+		x = nil,
 		x = node:_left_align() - bar_w,
 		y = h / 2 - 11,
 		w = bar_w,
@@ -95,10 +101,18 @@ function ItemSlider:setup_gui(node, row_item)
 		layer = node.layers.items - 1
 	})
 	row_item.gui_slider_gfx = row_item.gui_panel:gradient({
-		vertical = "center",
-		align = "center",
-		halign = "center",
+		gradient_points = nil,
 		orientation = "vertical",
+		layer = nil,
+		h = nil,
+		color = nil,
+		vertical = "center",
+		halign = "center",
+		blend_mode = nil,
+		align = "center",
+		y = nil,
+		w = nil,
+		x = nil,
 		gradient_points = {
 			0,
 			_G.tweak_data.screen_colors.button_stage_3,
@@ -114,14 +128,19 @@ function ItemSlider:setup_gui(node, row_item)
 		layer = node.layers.items
 	})
 	row_item.gui_slider = row_item.gui_panel:rect({
+		layer = nil,
+		color = nil,
 		w = 100,
+		h = nil,
 		color = row_item.color:with_alpha(0),
 		layer = node.layers.items,
 		h = row_item.gui_slider_bg:h() - 4
 	})
 	row_item.gui_slider_marker = row_item.gui_panel:bitmap({
-		texture = "guis/textures/debug_menu_icons",
 		visible = false,
+		texture = "guis/textures/debug_menu_icons",
+		layer = nil,
+		texture_rect = nil,
 		texture_rect = {
 			0,
 			0,
@@ -134,7 +153,22 @@ function ItemSlider:setup_gui(node, row_item)
 	local slider_text_halign = row_item.slider_text_halign == "left" and "right" or row_item.slider_text_halign == "right" and "left" or row_item.slider_text_halign
 	local slider_text_vertical = row_item.vertical == "top" and "bottom" or row_item.vertical == "bottom" and "top" or row_item.vertical
 	row_item.gui_slider_text = row_item.gui_panel:text({
+		visible = nil,
+		valign = nil,
+		render_template = nil,
+		text = nil,
+		layer = nil,
+		font = nil,
+		h = nil,
+		font_size = nil,
+		color = nil,
+		vertical = nil,
+		halign = nil,
+		blend_mode = nil,
+		align = nil,
 		y = 0,
+		w = nil,
+		x = nil,
 		font_size = row_item.font_size or _G.tweak_data.menu.stats_font_size,
 		x = node:_right_align(),
 		h = h,

@@ -15,10 +15,12 @@ function NotificationManager:add_notification(notification_data)
 
 		if notification_data.reaction.duration then
 			prompt = managers.localization:text("hud_notification_hold_stats", {
+				BTN_STATS_VIEW = nil,
 				BTN_STATS_VIEW = managers.localization:btn_macro("stats_screen")
 			})
 		else
 			prompt = managers.localization:text("hud_notification_use_stats", {
+				BTN_STATS_VIEW = nil,
 				BTN_STATS_VIEW = managers.localization:btn_macro("stats_screen")
 			})
 		end

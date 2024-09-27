@@ -30,6 +30,7 @@ function CoreVolumeSetCutsceneKey:play(player, undo, fast_forward)
 
 	if undo then
 		local preceeding_key = self:preceeding_key({
+			name = nil,
 			name = self:name()
 		})
 

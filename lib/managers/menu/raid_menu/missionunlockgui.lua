@@ -61,7 +61,10 @@ end
 
 function MissionUnlockGui:_layout_offered_missions()
 	local offered_missions_panel_params = {
+		h = nil,
 		name = "offered_missions_panel",
+		w = nil,
+		y = nil,
 		y = MissionUnlockGui.CONTENT_Y,
 		w = MissionUnlockGui.CONTENT_WIDTH,
 		h = MissionUnlockGui.CONTENT_HEIGHT
@@ -86,10 +89,16 @@ function MissionUnlockGui:_layout_offered_missions()
 		end
 
 		local offered_mission_params = {
+			mission = nil,
+			name = nil,
+			on_click_callback = nil,
+			on_menu_move = nil,
 			name = "offered_mission_" .. tostring(i),
 			mission = pending_missions[i],
 			on_click_callback = callback(self, self, "on_mission_chosen"),
 			on_menu_move = {
+				left = nil,
+				right = nil,
 				left = left_move,
 				right = right_move
 			}
@@ -114,7 +123,9 @@ end
 
 function MissionUnlockGui:_layout_unlock_button()
 	local unlock_button_params = {
+		on_click_callback = nil,
 		name = "unlock_button",
+		text = nil,
 		layer = 1,
 		text = self:translate("mission_unlock_button_text", true),
 		on_click_callback = callback(self, self, "show_unlock_confirmation_prompt")
@@ -143,6 +154,8 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 
 	if chosen_video_unlock_id then
 		managers.unlock:unlock({
+			identifier = nil,
+			slot = nil,
 			slot = UnlockManager.SLOT_PROFILE,
 			identifier = UnlockManager.CATEGORY_CONTROL_ARCHIVE
 		}, {
@@ -151,20 +164,23 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	end
 
 	local video_panel_params = {
-		is_root_panel = true,
-		layer = 100
+		layer = 100,
+		is_root_panel = true
 	}
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 	local video_panel_background_params = {
-		layer = 1,
 		name = "video_background",
+		color = nil,
 		halign = "scale",
+		layer = 1,
 		valign = "scale",
 		color = Color.black
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
 	local video_params = {
+		width = nil,
 		layer = 2,
+		video = nil,
 		layer = self._video_panel:layer() + 1,
 		video = chosen_video,
 		width = self._video_panel:w()
@@ -180,8 +196,13 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
+		font_size = nil,
 		name = "press_any_key_prompt",
+		text = nil,
+		color = nil,
+		layer = nil,
 		alpha = 0,
+		font = nil,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
@@ -361,6 +382,8 @@ function MissionUnlockGui:show_unlock_confirmation_prompt()
 	end
 
 	local confirmation_dialog_params = {
+		mission_title = nil,
+		yes_func = nil,
 		yes_func = callback(self, self, "on_unlock_confirmed"),
 		mission_title = self:translate(tweak_data.operations.missions[self._selected_mission].name_id)
 	}
@@ -394,6 +417,8 @@ end
 function MissionUnlockGui:_bind_controller_inputs()
 	local bindings = {
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "show_unlock_confirmation_prompt")
 		}
@@ -402,11 +427,14 @@ function MissionUnlockGui:_bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back"
 		},
 		keyboard = {
 			{
+				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -416,6 +444,7 @@ function MissionUnlockGui:_bind_controller_inputs()
 	translated_text = translated_text .. " " .. utf8.to_upper(self:translate("mission_unlock_button_text", true))
 
 	table.insert(legend.controller, {
+		translated_text = nil,
 		translated_text = translated_text
 	})
 	self:set_legend(legend)

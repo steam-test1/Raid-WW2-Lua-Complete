@@ -24,7 +24,7 @@ function DropLootTweakData:_init_pickups_properties()
 		player_voice_over = "player_gain_huge_health"
 	}
 	self.health_medium = {
-		health_restored = 75,
+		health_restored = 55,
 		player_voice_over = "player_gain_moderate_health"
 	}
 	self.health_small = {
@@ -212,13 +212,20 @@ end
 
 function DropLootTweakData:_init_flamer_enemy()
 	self.flamer_enemy = {
+		buff_effects_applied = nil,
+		units = nil,
 		buff_effects_applied = {
 			[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
 		},
 		units = {
+			ammo = nil,
+			health = nil,
 			health = {
 				drop_rate = 60,
+				subtypes = nil,
 				subtypes = {
+					large = nil,
+					medium = nil,
 					large = {
 						drop_rate = 15,
 						unit = "health_big_beam"
@@ -231,7 +238,10 @@ function DropLootTweakData:_init_flamer_enemy()
 			},
 			ammo = {
 				drop_rate = 40,
+				subtypes = nil,
 				subtypes = {
+					large = nil,
+					medium = nil,
 					large = {
 						drop_rate = 15,
 						unit = "ammo_big_beam"
@@ -474,17 +484,19 @@ end
 
 function DropLootTweakData:_init_drop_rate_multipliers()
 	self.drop_rate_multipliers = {
+		grenade = nil,
+		health = nil,
 		health = {
-			min_multiplier = 2,
+			min_ratio = 0.2,
 			max_multiplier = 1.5,
 			max_ratio = 0.5,
-			min_ratio = 0.2
+			min_multiplier = 2
 		},
 		grenade = {
-			min_multiplier = 3,
+			min_ratio = 0.01,
 			max_multiplier = 1.5,
 			max_ratio = 0.5,
-			min_ratio = 0.01
+			min_multiplier = 3
 		}
 	}
 end

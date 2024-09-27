@@ -1,4 +1,4 @@
-require("lib/units/BuffEffect")
+require("lib/managers/buff_effect/BuffEffect")
 
 BuffEffectManager = BuffEffectManager or class()
 BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE = "enemy_loot_drop_reward_increase"
@@ -34,8 +34,7 @@ BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE = "player_pistol_damage"
 BuffEffectManager.EFFECT_ENEMY_HEALTH = "enemy_health"
 BuffEffectManager.EFFECT_PLAYER_DIED = "player_died"
 BuffEffectManager.EFFECT_PLAYER_BLEEDOUT = "player_bleedout"
-BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED = "all_chests_are_locked"
-BuffEffectManager.EFFECT_ALL_CHESTS_ARE_TIER3 = "effect_all_chests_are_tier3"
+BuffEffectManager.EFFECT_FORCED_CRATE_TIER = "forced_crate_tier"
 BuffEffectManager.EFFECT_PLAYER_FAILED_INTERACTION_MINI_GAME = "player_failed_interaction_mini_game"
 BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH = "player_melee_kill_regenerates_health"
 BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH = "player_kill_regenerates_health"
@@ -48,11 +47,13 @@ BuffEffectManager.EFFECT_WARCRIES_DISABLED = "players_warcries_disabled"
 BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR = "attack_only_in_air"
 BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE = "player_low_health_damage"
 BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE = "no_bleedout_pumpkin_revive"
+BuffEffectManager.EFFECT_PUMKIN_HEADS = "pumkin_heads"
 BuffEffectManager.EFFECT_XMAS_FOIL = "effect_xmas_foil"
 BuffEffectManager.EFFECT_XMAS_LOOTBOXES = "effect_xmas_lootboxes"
 BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED = "effect_player_carry_invert_speed"
 BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE = "effect_enemies_melee_damage_increase"
 BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR = "effect_player_equip_crowbar"
+BuffEffectManager.EFFECT_PLAYER_RANDOM_RELOAD = "effect_player_random_reload"
 BuffEffectManager.EFFECT_LUCKY_DAY = "effect_lucky_day"
 BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY = "effect_player_dooms_day"
 BuffEffectManager.EFFECT_PLAYER_CANNOT_ADS = "effect_player_cannot_ads"
@@ -82,6 +83,10 @@ function BuffEffectManager:activate_effect(effect_data)
 
 	if effect_data.name == BuffEffectManager.EFFECT_COMPLETE_RAID_WITHIN then
 		self._timers[effect_data.name] = {
+			effect_name = nil,
+			start_time = nil,
+			value = nil,
+			effect_id = nil,
 			start_time = TimerManager:game():time(),
 			value = effect_data.value,
 			effect_id = effect.effect_id,
@@ -91,7 +96,7 @@ function BuffEffectManager:activate_effect(effect_data)
 		managers.global_state:set_flag("card_snipers_deactivate")
 	elseif effect_data.name == BuffEffectManager.EFFECT_NO_BARRAGE then
 		managers.global_state:set_flag("card_barrage_deactivate")
-	elseif effect_data.name == BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED then
+	elseif effect_data.name == BuffEffectManager.EFFECT_FORCED_CRATE_TIER and effect_data.value == 2 then
 		managers.global_state:set_flag("card_all_chests_are_locked")
 	elseif effect_data.name == BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE then
 		managers.global_state:set_flag("card_only_melee_available")
@@ -223,6 +228,10 @@ end
 
 function BuffEffectManager:save_dropin(data)
 	local state = {
+		effect_id_counter = nil,
+		dt_sum = nil,
+		active_effects = nil,
+		timers = nil,
 		active_effects = self._active_effects,
 		dt_sum = self._dt_sum,
 		effect_id_counter = self._effect_id_counter,

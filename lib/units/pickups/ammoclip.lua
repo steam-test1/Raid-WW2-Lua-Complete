@@ -24,47 +24,54 @@ function AmmoClip:_pickup(unit)
 	if not unit:character_damage():dead() and inventory then
 		local picked_up = false
 		local all_added_ammmo = 0
-		local available_selections = {}
 
-		for i, weapon in pairs(inventory:available_selections()) do
-			if inventory:is_equipped(i) then
-				table.insert(available_selections, 1, weapon)
-			else
-				table.insert(available_selections, weapon)
+		if self._pickup_filter and self._pickup_filter == tweak_data.projectiles[managers.blackmarket:equipped_projectile()].pickup_filter then
+			if managers.player:add_grenade_amount(self._ammo_count or 1) > 0 then
+				picked_up = true
 			end
-		end
+		else
+			local available_selections = {}
 
-		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES) then
-			local grenades_refill_amount = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES)
+			for i, weapon in pairs(inventory:available_selections()) do
+				if inventory:is_equipped(i) then
+					table.insert(available_selections, 1, weapon)
+				else
+					table.insert(available_selections, weapon)
+				end
+			end
 
-			managers.player:add_grenade_amount(grenades_refill_amount or 1)
-		end
+			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES) then
+				local grenades_refill_amount = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES)
 
-		local effect_ammo_pickup_multiplier = 1
+				managers.player:add_grenade_amount(grenades_refill_amount or 1)
+			end
 
-		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) then
-			effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1
-		end
+			local effect_ammo_pickup_multiplier = 1
 
-		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) then
-			effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1
-		end
+			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) then
+				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE) or 1) - 1
+			end
 
-		local base_ammo_amount = tweak_data.drop_loot[self.tweak_data].ammo_multiplier or 1
-		local ammo_pickup_multiplier = 1
-		ammo_pickup_multiplier = ammo_pickup_multiplier + managers.player:upgrade_value("player", "clipazines_pick_up_ammo_multiplier", 1) - 1
-		ammo_pickup_multiplier = ammo_pickup_multiplier + managers.player:upgrade_value("player", "pack_mule_pick_up_ammo_multiplier", 1) - 1
-		local add_ammo_amount_ratio = base_ammo_amount * (ammo_pickup_multiplier + effect_ammo_pickup_multiplier - 1)
-		local success, add_amount, ammo_picked_up = nil
+			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) then
+				effect_ammo_pickup_multiplier = effect_ammo_pickup_multiplier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_AMMO_EFFECT_INCREASE) or 1) - 1
+			end
 
-		for _, weapon in ipairs(available_selections) do
-			if not self._weapon_category or self._weapon_category == weapon.unit:base():weapon_tweak_data().category then
-				success, add_amount, ammo_picked_up = weapon.unit:base():add_ammo(add_ammo_amount_ratio, self._ammo_count)
-				all_added_ammmo = all_added_ammmo + (add_amount or 0)
-				picked_up = success or picked_up
+			local base_ammo_amount = tweak_data.drop_loot[self.tweak_data].ammo_multiplier or 1
+			local ammo_pickup_multiplier = 1
+			ammo_pickup_multiplier = ammo_pickup_multiplier + managers.player:upgrade_value("player", "clipazines_pick_up_ammo_multiplier", 1) - 1
+			ammo_pickup_multiplier = ammo_pickup_multiplier + managers.player:upgrade_value("player", "cache_basket_pick_up_ammo_multiplier", 1) - 1
+			local add_ammo_amount_ratio = base_ammo_amount * (ammo_pickup_multiplier + effect_ammo_pickup_multiplier - 1)
+			local success, add_amount, ammo_picked_up = nil
 
-				if self._ammo_count then
-					self._ammo_count = math.max(math.floor(self._ammo_count - add_amount), 0)
+			for _, weapon in ipairs(available_selections) do
+				if not self._weapon_category or self._weapon_category == weapon.unit:base():weapon_tweak_data().category then
+					success, add_amount, ammo_picked_up = weapon.unit:base():add_ammo(add_ammo_amount_ratio, self._ammo_count)
+					all_added_ammmo = all_added_ammmo + (add_amount or 0)
+					picked_up = success or picked_up
+
+					if self._ammo_count then
+						self._ammo_count = math.max(math.floor(self._ammo_count - add_amount), 0)
+					end
 				end
 			end
 		end

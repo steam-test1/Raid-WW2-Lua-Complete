@@ -79,6 +79,8 @@ function FireManager:leave_flamethrower_patch(player)
 
 		ProjectileBase.throw_projectile(index, pos, rot:z() * 0.01)
 		table.insert(self._flamethrower_fire_patches, {
+			expire_t = nil,
+			pos = nil,
 			pos = pos,
 			expire_t = Application:time() + td.burn_duration
 		})
@@ -122,6 +124,8 @@ function FireManager:check_achievemnts(unit, t)
 	end
 
 	table.insert(self._enemies_on_fire, {
+		unit = nil,
+		t = nil,
 		unit = unit,
 		t = t
 	})
@@ -131,6 +135,8 @@ function FireManager:check_achievemnts(unit, t)
 
 	if unit_type == "tank" or unit_type == "tank_hw" then
 		self._dozers_on_fire[unit_id] = self._dozers_on_fire[unit_id] or {
+			unit = nil,
+			t = nil,
 			t = t,
 			unit = unit
 		}
@@ -165,6 +171,11 @@ function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, wea
 		if not contains then
 			local dot_info = {
 				fire_dot_counter = 0,
+				fire_damage_received_time = nil,
+				weapon_unit = nil,
+				enemy_unit = nil,
+				dot_length = nil,
+				dot_damage = nil,
 				enemy_unit = enemy_unit,
 				fire_damage_received_time = fire_damage_received_time,
 				weapon_unit = weapon_unit,
@@ -217,6 +228,7 @@ function FireManager:start_burn_body_sound(dot_info, delay)
 
 	if delay then
 		managers.enemy:add_delayed_clbk("FireBurnBody", callback(self, self, "_release_sound_source", {
+			sound_source = nil,
 			sound_source = sound_loop_burn_body
 		}), TimerManager:game():time() + delay)
 	end
@@ -240,6 +252,8 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 
 	if bone_spine then
 		bone_spine_effect_id = World:effect_manager():spawn({
+			parent = nil,
+			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_spine
 		})
@@ -247,6 +261,8 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 
 	if bone_left_arm then
 		bone_left_arm_effect_id = World:effect_manager():spawn({
+			parent = nil,
+			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_left_arm
 		})
@@ -254,6 +270,8 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 
 	if bone_right_arm then
 		bone_right_arm_effect_id = World:effect_manager():spawn({
+			parent = nil,
+			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_right_arm
 		})
@@ -261,6 +279,8 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 
 	if bone_left_leg then
 		bone_left_leg_effect_id = World:effect_manager():spawn({
+			parent = nil,
+			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_left_leg
 		})
@@ -268,6 +288,8 @@ function FireManager:_start_enemy_fire_effect(dot_info)
 
 	if bone_right_leg then
 		bone_right_leg_effect_id = World:effect_manager():spawn({
+			parent = nil,
+			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_right_leg
 		})
@@ -287,6 +309,7 @@ function FireManager:_damage_fire_dot(dot_info)
 	if Network:is_server() then
 		local attacker_unit = managers.player:player_unit()
 		local col_ray = {
+			unit = nil,
 			unit = dot_info.enemy_unit
 		}
 		local damage = dot_info.dot_damage
@@ -304,7 +327,11 @@ function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 
 	if player then
 		player:character_damage():damage_fire({
+			damage = nil,
+			position = nil,
 			variant = "fire",
+			ignite_character = nil,
+			range = nil,
 			position = pos,
 			range = range,
 			damage = damage,
@@ -333,7 +360,11 @@ function FireManager:detect_and_give_dmg(params)
 
 	if alive(player) and player_dmg ~= 0 then
 		player:character_damage():damage_fire({
+			damage = nil,
+			position = nil,
 			variant = "fire",
+			ignite_character = nil,
+			range = nil,
 			position = hit_pos,
 			range = range,
 			damage = player_dmg,
@@ -473,6 +504,8 @@ function FireManager:detect_and_give_dmg(params)
 					weapon_unit = owner,
 					ignite_character = params.ignite_character,
 					col_ray = self._col_ray or {
+						position = nil,
+						ray = nil,
 						position = hit_body:position(),
 						ray = dir
 					},
@@ -604,6 +637,9 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 	if molotov_damage_effect_table ~= nil then
 		if effect_name ~= "none" then
 			effect_id = World:effect_manager():spawn({
+				normal = nil,
+				position = nil,
+				effect = nil,
 				effect = Idstring(effect_name),
 				position = position,
 				normal = normal
@@ -611,6 +647,9 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 		end
 
 		table.insert(molotov_damage_effect_table, {
+			detonation_normal = nil,
+			detonation_position = nil,
+			effect_id = nil,
 			effect_id = effect_id,
 			detonation_position = position,
 			detonation_normal = normal
@@ -652,10 +691,13 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 
 		sound_source:post_event(sound_event)
 		managers.enemy:add_delayed_clbk("MolotovImpact", callback(FireManager, FireManager, "_dispose_of_impact_sound", {
+			position = nil,
+			sound_event_impact_duration = nil,
 			position = position,
 			sound_event_impact_duration = sound_event_impact_duration
 		}), TimerManager:game():time() + sound_event_impact_duration)
 		managers.enemy:add_delayed_clbk("MolotovImpact", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", {
+			sound_source = nil,
 			sound_source = sound_source
 		}), TimerManager:game():time() + sound_event_impact_duration)
 	end
@@ -675,6 +717,7 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 	local molotov_tweak = tweak_data.projectiles.molotov
 
 	managers.enemy:add_delayed_clbk("MolotovBurning", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", {
+		sound_source = nil,
 		sound_source = sound_source_burning_loop
 	}), TimerManager:game():time() + tonumber(molotov_tweak.burn_duration) - custom_params.sound_event_impact_duration)
 end

@@ -288,6 +288,8 @@ function ProgressionManager:_unlock_all_missions()
 
 					if chosen_video_unlock_id then
 						managers.unlock:unlock({
+							identifier = nil,
+							slot = nil,
 							slot = UnlockManager.SLOT_PROFILE,
 							identifier = UnlockManager.CATEGORY_CONTROL_ARCHIVE
 						}, {
@@ -462,6 +464,14 @@ end
 
 function ProgressionManager:save_profile_slot(data)
 	local state = {
+		version = nil,
+		mission_unlock_timer = nil,
+		mission_progression = nil,
+		mission_progression_completion_pending = nil,
+		mission_progression_completed = nil,
+		operations_state = nil,
+		first_time_missions_unlocked = nil,
+		unlock_cycles_completed = nil,
 		version = ProgressionManager.VERSION,
 		mission_progression_completed = self._mission_progression_completed,
 		mission_progression_completion_pending = self._mission_progression_completion_pending,

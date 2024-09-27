@@ -14,6 +14,11 @@ function ElementShape:init(...)
 
 	if not self._values.shape_type or self._values.shape_type == "box" then
 		self:_add_shape(CoreShapeManager.ShapeBoxMiddle:new({
+			height = nil,
+			depth = nil,
+			width = nil,
+			rotation = nil,
+			position = nil,
 			position = self._values.position,
 			rotation = self._values.rotation,
 			width = self._values.width,
@@ -22,6 +27,10 @@ function ElementShape:init(...)
 		}))
 	elseif self._values.shape_type == "cylinder" then
 		self:_add_shape(CoreShapeManager.ShapeCylinderMiddle:new({
+			position = nil,
+			radius = nil,
+			height = nil,
+			rotation = nil,
 			position = self._values.position,
 			rotation = self._values.rotation,
 			height = self._values.height,

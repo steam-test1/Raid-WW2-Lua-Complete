@@ -85,6 +85,7 @@ function CoreCutsceneExporter:_problem_map()
 	else
 		local previous_clip = responder_map({
 			end_time = 0,
+			metadata = nil,
 			start_time = 0,
 			metadata = responder_map({
 				is_valid = true

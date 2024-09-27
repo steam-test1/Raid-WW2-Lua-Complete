@@ -105,6 +105,7 @@ function PlayerTurret:_show_hud_prompts()
 		self._out_of_ammo_prompt_hidden = false
 	elseif self._can_reload_prompt_hidden then
 		managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
+			BTN_RELOAD = nil,
 			BTN_RELOAD = managers.localization:btn_macro("reload")
 		})))
 
@@ -145,6 +146,7 @@ function PlayerTurret:exit(state_data, new_state_name)
 	end
 
 	local exit_data = {
+		equip_weapon_expire_t = nil,
 		skip_equip = true,
 		ducking = false,
 		equip_weapon_expire_t = self._equip_weapon_expire_t
@@ -160,6 +162,7 @@ function PlayerTurret:exit(state_data, new_state_name)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 
 	managers.player:set_turret_data_for_peer({
+		peer_id = nil,
 		peer_id = peer_id
 	})
 	self._turret_weapon:enable_automatic_SO(true)
@@ -185,6 +188,12 @@ function PlayerTurret:_husk_turret_data()
 	local exit_animation = tweak_data.weapon[turret_weapon_name].anim_exit
 
 	managers.player:set_turret_data_for_peer({
+		exit_animation = nil,
+		husk_pos = nil,
+		turret_unit = nil,
+		peer_id = nil,
+		enter_animation = nil,
+		turret_rot = nil,
 		peer_id = peer_id,
 		husk_pos = husk_pos,
 		turret_rot = turret_rot,
@@ -323,6 +332,7 @@ function PlayerTurret:_play_announce_shooting()
 	if self._firing then
 		managers.dialog:queue_dialog("player_shooting_turret", {
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = self._unit
 		})
 	else

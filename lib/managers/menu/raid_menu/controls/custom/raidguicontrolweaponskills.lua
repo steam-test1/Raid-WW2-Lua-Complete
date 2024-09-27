@@ -28,6 +28,16 @@ end
 function RaidGUIControlWeaponSkills:_create_items()
 	self._rows = {}
 	local row_params = {
+		toggle_select_item_callback = nil,
+		on_unselected_weapon_skill_callback = nil,
+		on_selected_weapon_skill_callback = nil,
+		on_click_weapon_skill_callback = nil,
+		get_available_points_callback = nil,
+		on_mouse_exit_callback = nil,
+		on_mouse_enter_callback = nil,
+		layer = nil,
+		h = nil,
+		y = nil,
 		x = 0,
 		y = RaidGUIControlWeaponSkills.FIRST_ROW_Y,
 		h = RaidGUIControlWeaponSkills.ROW_HEIGHT,
@@ -51,8 +61,8 @@ end
 
 function RaidGUIControlWeaponSkills:_create_tier_labels()
 	local tier_panel_params = {
-		h = 30,
-		name = "tier_label_panel"
+		name = "tier_label_panel",
+		h = 30
 	}
 	self._tier_panel = self._object:panel(tier_panel_params)
 	self._tier_labels = {}
@@ -60,8 +70,14 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 	for i = 1, #RaidGUIControlWeaponSkills.ROMAN_NUMERALS do
 		local text = self:translate("menu_weapons_stats_tier_abbreviation", true) .. RaidGUIControlWeaponSkills.ROMAN_NUMERALS[i]
 		local tier_label_params = {
-			align = "center",
+			font_size = nil,
+			font = nil,
+			color = nil,
 			vertical = "bottom",
+			name = nil,
+			align = "center",
+			text = nil,
+			alpha = nil,
 			name = "tier_" .. tostring(i) .. "_label",
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.size_24,

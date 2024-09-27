@@ -19,6 +19,9 @@ function ElementExplosionDamage:on_executed(instigator)
 
 	if player then
 		player:character_damage():damage_explosion({
+			damage = nil,
+			range = nil,
+			position = nil,
 			position = self._values.position,
 			range = self._values.range,
 			damage = self._values.damage

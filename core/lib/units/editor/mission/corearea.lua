@@ -366,6 +366,7 @@ end
 
 function CoreAreaUnitElement:set_shape_properties(type, pos, end_pos)
 	local t = {
+		type = nil,
 		type = type,
 		position = pos,
 		rotation = Rotation(),
@@ -456,9 +457,11 @@ function CoreAreaUnitElement:_build_panel(panel, panel_sizer)
 	interval_ctrlr:set_tool_tip("Set the check interval in seconds (set to 0 for every frame).")
 	interval_ctrlr:connect("EVT_CHAR", callback(nil, _G, "verify_number"), interval_ctrlr)
 	interval_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_interval"), {
+		ctrlr = nil,
 		ctrlr = interval_ctrlr
 	})
 	interval_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_interval"), {
+		ctrlr = nil,
 		ctrlr = interval_ctrlr
 	})
 	interval_sizer:add(interval_ctrlr, 3, 0, "EXPAND")
@@ -481,6 +484,7 @@ function CoreAreaUnitElement:_build_panel(panel, panel_sizer)
 	area_type:set_value(self._hed.area_type)
 	types_sizer:add(area_type, 3, 0, "EXPAND")
 	area_type:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "area_type",
 		ctrlr = area_type
 	})
@@ -556,10 +560,14 @@ function CoreAreaUnitElement:_altitude_ctrlr(panel, name, value, type, sizer)
 
 	ctrl:connect("EVT_CHAR", callback(nil, _G, "verify_number"), ctrl)
 	ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_altitude_text"), {
+		ctrl = nil,
+		type = nil,
 		ctrl = ctrl,
 		type = type
 	})
 	ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "set_altitude_text"), {
+		ctrl = nil,
+		type = nil,
 		ctrl = ctrl,
 		type = type
 	})
@@ -570,11 +578,15 @@ function CoreAreaUnitElement:_altitude_ctrlr(panel, name, value, type, sizer)
 	spin:set_min_size(Vector3(-1, 10, 0))
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "set_altitude_spin"), {
 		step = 1,
+		type = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		type = type
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "set_altitude_spin"), {
 		step = -1,
+		type = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		type = type
 	})

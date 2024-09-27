@@ -30,9 +30,11 @@ function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all
 
 		if draw then
 			self:_draw_link({
-				g = 0.75,
 				b = 0,
+				g = 0.75,
 				r = 0,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -42,8 +44,8 @@ end
 
 function SpawnCivilianGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true) then
@@ -87,8 +89,8 @@ function SpawnCivilianGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "random", "Select spawn points randomly")
 	self:_build_value_checkbox(panel, panel_sizer, "ignore_disabled", "Select if disabled spawn points should be ignored or not")
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Specify amount of civilians to spawn from group")
 	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({
 		"default"

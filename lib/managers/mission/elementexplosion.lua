@@ -26,6 +26,9 @@ function ElementExplosion:on_executed(instigator)
 
 	if player then
 		player:character_damage():damage_explosion({
+			range = nil,
+			position = nil,
+			damage = nil,
 			position = pos,
 			range = self._values.range,
 			damage = self._values.player_damage
@@ -36,6 +39,11 @@ function ElementExplosion:on_executed(instigator)
 
 	if Network:is_server() then
 		managers.explosion:detect_and_give_dmg({
+			no_raycast_check_characters = nil,
+			collision_slotmask = nil,
+			hit_pos = nil,
+			damage = nil,
+			range = nil,
 			curve_pow = 5,
 			player_damage = 0,
 			hit_pos = pos,

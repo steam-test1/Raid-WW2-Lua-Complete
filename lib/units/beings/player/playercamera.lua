@@ -15,6 +15,7 @@ function PlayerCamera:init(unit)
 	self:_setup_sound_listener()
 
 	self._sync_dir = {
+		yaw = nil,
 		pitch = 0,
 		yaw = unit:rotation():yaw()
 	}
@@ -164,6 +165,7 @@ function PlayerCamera:_setup_sound_listener()
 
 	self._listener_activation_id = managers.listener:activate_set("main", "player_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
+		object = nil,
 		primary = true,
 		active = true,
 		object = self._unit:orientation_object()

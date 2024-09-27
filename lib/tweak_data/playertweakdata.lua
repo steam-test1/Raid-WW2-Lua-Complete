@@ -49,23 +49,23 @@ end
 function PlayerTweakData:init()
 	self.killzones = {
 		fire = {
-			damage = 4,
-			timer = 0.15
+			timer = 0.15,
+			damage = 4
 		},
 		inferno = {
+			damage = 8,
 			death_on_down = true,
-			timer = 0.15,
-			damage = 8
+			timer = 0.15
 		},
 		gas = {
-			damage = 3,
-			timer = 0.25
+			timer = 0.25,
+			damage = 3
 		},
 		sniper = {
-			warning_timer = 4,
 			warning_chance = 0.75,
-			damage = 50,
-			timer = 1.5
+			warning_timer = 4,
+			timer = 1.5,
+			damage = 50
 		}
 	}
 	self.run_move_dir_treshold = 0.7
@@ -119,21 +119,21 @@ function PlayerTweakData:init()
 	self.long_dis_interaction = {
 		intimidate_range_enemies = 1,
 		highlight_range = 8000,
-		intimidate_range_civilians = 1000,
-		intimidate_strength = 0.5
+		intimidate_strength = 0.5,
+		intimidate_range_civilians = 1000
 	}
 	self.suppression = {
+		tolerance = 1,
+		autohit_chance_mul = 0.9,
+		spread_mul = 1,
 		receive_mul = 7,
 		decay_start_delay = 0.15,
-		spread_mul = 1,
-		tolerance = 1,
-		max_value = 9,
-		autohit_chance_mul = 0.9
+		max_value = 9
 	}
 	self.suspicion = {
-		range_mul = 1,
+		buildup_mul = 1,
 		max_value = 8,
-		buildup_mul = 1
+		range_mul = 1
 	}
 	self.max_nr_following_hostages = 1
 	self.max_floor_jump_angle = 58
@@ -144,18 +144,30 @@ function PlayerTweakData:init()
 	self.PLAYER_EYE_HEIGHT_CROUCH = 75
 	self.PLAYER_EYE_HEIGHT_BLEED_OUT = 58
 	self.stances = {
+		default = nil,
 		default = {
+			steelsight = nil,
+			standard = nil,
+			crouched = nil,
 			standard = {
+				head = nil,
+				vel_overshot = nil,
+				shoulders = nil,
 				head = {},
 				shoulders = {},
 				vel_overshot = {}
 			},
 			crouched = {
+				head = nil,
+				vel_overshot = nil,
+				shoulders = nil,
 				head = {},
 				shoulders = {},
 				vel_overshot = {}
 			},
 			steelsight = {
+				vel_overshot = nil,
+				shoulders = nil,
 				shoulders = {},
 				vel_overshot = {}
 			}
@@ -289,8 +301,9 @@ function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default.damage.FALL_DAMAGE_MIN_HEIGHT = 310
 	self.class_defaults.default.damage.FALL_DAMAGE_FATAL_HEIGHT = 850
 	self.class_defaults.default.damage.FALL_DAMAGE_DEATH_HEIGHT = 1100
-	self.class_defaults.default.damage.FALL_DAMAGE_MIN = 10
-	self.class_defaults.default.damage.FALL_DAMAGE_MAX = 85
+	self.class_defaults.default.damage.FALL_DAMAGE_MIN = 5
+	self.class_defaults.default.damage.FALL_DAMAGE_MAX = 75
+	self.class_defaults.default.damage.FALL_DAMAGE_MUL_LADDER = 0.5
 	self.class_defaults.default.stealth = {
 		FALL_ALERT_MIN_HEIGHT = 250,
 		FALL_ALERT_MAX_HEIGHT = 600,
@@ -310,6 +323,7 @@ function PlayerTweakData:_init_default_class_tweak_data()
 		CARRY_WEIGHT_MAX = 5
 	}
 	self.class_defaults.default.movement.jump_velocity = {
+		xy = nil,
 		xy = {},
 		z = 572
 	}
@@ -1172,6 +1186,8 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.mg42.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.mg42.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -55, 0)
 	self.stances.mg42.bipod = {
+		vel_overshot = nil,
+		shoulders = nil,
 		shoulders = {},
 		vel_overshot = {}
 	}

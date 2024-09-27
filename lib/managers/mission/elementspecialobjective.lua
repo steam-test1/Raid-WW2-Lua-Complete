@@ -55,16 +55,16 @@ ElementSpecialObjective._HASTES = {
 	"run"
 }
 ElementSpecialObjective._DEFAULT_VALUES = {
-	interval = -1,
-	action_duration_min = 0,
-	ai_group = 1,
 	action_duration_max = 0,
+	action_duration_min = 0,
 	interaction_voice = 1,
-	base_chance = 1,
-	chance_inc = 0,
 	interrupt_dmg = 0,
 	interrupt_dis = -1,
-	path_style = 1
+	chance_inc = 0,
+	base_chance = 1,
+	interval = -1,
+	path_style = 1,
+	ai_group = 1
 }
 
 function ElementSpecialObjective:init(...)
@@ -200,6 +200,7 @@ function ElementSpecialObjective:clbk_objective_administered(unit)
 			managers.navigation:unreserve_pos(unit_rsrv)
 		else
 			unit_rsrv = {
+				position = nil,
 				radius = 30,
 				position = self._values.align_position and self._values.position or unit:position()
 			}
@@ -276,6 +277,7 @@ end
 function ElementSpecialObjective:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
+			position = nil,
 			radius = 30,
 			position = self._values.position
 		}
@@ -359,6 +361,17 @@ function ElementSpecialObjective:on_executed(instigator)
 			local search_dis_sq = self._values.search_distance
 			search_dis_sq = search_dis_sq and search_dis_sq * search_dis_sq or nil
 			local so_descriptor = {
+				search_dis_sq = nil,
+				usage_amount = nil,
+				chance_inc = nil,
+				repeatable = nil,
+				objective = nil,
+				admin_clbk = nil,
+				access = nil,
+				AI_group = nil,
+				base_chance = nil,
+				interval = nil,
+				search_pos = nil,
 				objective = objective,
 				base_chance = self:_get_default_value_if_nil("base_chance"),
 				chance_inc = self:_get_default_value_if_nil("chance_inc"),
@@ -392,9 +405,9 @@ function ElementSpecialObjective:operation_remove()
 				if self._receiver_units[u_key] and alive(unit) and not unit:brain()._current_logic.inactive then
 					unit:brain():set_objective(nil)
 					unit:brain():action_request({
-						sync = true,
 						body_part = 2,
-						type = "idle"
+						type = "idle",
+						sync = true
 					})
 				end
 			end
@@ -406,7 +419,27 @@ function ElementSpecialObjective:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
+		haste = nil,
+		pose = nil,
+		verification_clbk = nil,
+		complete_clbk = nil,
+		fail_clbk = nil,
+		action_start_clbk = nil,
+		followup_SO = nil,
+		action_duration = nil,
+		element = nil,
+		attitude = nil,
+		interrupt_health = nil,
+		rot = nil,
+		pos = nil,
+		stance = nil,
+		scan = nil,
+		forced = nil,
+		trigger_on = nil,
+		interaction_voice = nil,
+		interrupt_dis = nil,
 		type = false,
+		path_style = nil,
 		element = self,
 		pos = pos,
 		rot = rot,
@@ -492,17 +525,19 @@ function ElementSpecialObjective:get_objective(instigator)
 
 		if self._values.so_action then
 			action = {
-				align_sync = true,
-				needs_full_blend = true,
-				type = "act",
 				body_part = 1,
+				blocks = nil,
+				type = "act",
+				variant = nil,
+				needs_full_blend = true,
+				align_sync = true,
 				variant = self._values.so_action,
 				blocks = {
 					light_hurt = -1,
-					hurt = -1,
+					walk = -1,
 					action = -1,
 					heavy_hurt = -1,
-					walk = -1
+					hurt = -1
 				}
 			}
 			objective.type = "act"
@@ -701,6 +736,7 @@ function ElementSpecialObjective:_administer_objective(unit, objective)
 		if not unit:brain():objective() then
 			local idle_objective = {
 				type = "free",
+				followup_objective = nil,
 				followup_objective = objective
 			}
 
@@ -782,6 +818,8 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 
 				if followup_element and followup_element:enabled() and weight > 0 then
 					table.insert(pool, {
+						element = nil,
+						weight = nil,
 						element = followup_element,
 						weight = weight
 					})

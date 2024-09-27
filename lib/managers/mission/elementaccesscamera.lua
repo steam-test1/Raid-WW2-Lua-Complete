@@ -58,6 +58,7 @@ end
 function ElementAccessCamera:add_trigger(id, type, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
+		callback = nil,
 		callback = callback
 	}
 end

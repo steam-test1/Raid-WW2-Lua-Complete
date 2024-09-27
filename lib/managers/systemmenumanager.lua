@@ -30,7 +30,9 @@ GenericSystemMenuManager.GENERIC_SPECIALIZATION_CLASS = SpecializationDialog
 
 function GenericSystemMenuManager:init()
 	if not Global.dialog_manager then
-		Global.dialog_manager = {}
+		Global.dialog_manager = {
+			init_show_data_list = nil
+		}
 	end
 
 	self._dialog_shown_callback_handler = CoreEvent.CallbackEventHandler:new()

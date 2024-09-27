@@ -69,6 +69,8 @@ end
 
 function UnlockManager:save_profile_slot(data)
 	local state = {
+		profile_unlocks = nil,
+		version = nil,
 		version = UnlockManager.PROFILE_VERSION,
 		profile_unlocks = self._categories[UnlockManager.SLOT_PROFILE]
 	}

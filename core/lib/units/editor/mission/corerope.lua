@@ -28,9 +28,11 @@ function CoreRopeOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0,
 				b = 1,
+				g = 0,
 				r = 0,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -46,6 +48,7 @@ end
 function CoreRopeOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -62,6 +65,7 @@ end
 function CoreRopeOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -156,9 +160,11 @@ function CoreRopeTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0.85,
 				b = 0.25,
+				g = 0.85,
 				r = 0.85,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -174,6 +180,7 @@ end
 function CoreRopeTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -186,6 +193,7 @@ end
 function CoreRopeTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 

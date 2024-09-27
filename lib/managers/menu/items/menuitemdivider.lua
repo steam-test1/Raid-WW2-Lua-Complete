@@ -12,6 +12,7 @@ end
 function MenuItemDivider:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
 	row_item.gui_panel = node.item_panel:panel({
+		w = nil,
 		w = node.item_panel:w()
 	})
 	local h = row_item.item:parameters().size or 10

@@ -9,6 +9,10 @@ function RaidGUIControlListItemCharacterCreateClass:init(parent, params, item_da
 	self._on_double_click_callback = self._params.on_double_click_callback
 	self._on_item_selected_callback = params.on_item_selected_callback
 	self._object = self._panel:panel({
+		w = nil,
+		y = nil,
+		x = nil,
+		h = nil,
 		x = self._params.x,
 		y = self._params.y,
 		w = self._params.w,
@@ -22,6 +26,9 @@ function RaidGUIControlListItemCharacterCreateClass:_layout()
 	local class_icon_data = tweak_data.gui.icons["ico_class_" .. self._class_name] or tweak_data.gui.icons.ico_flag_empty
 	self._background = self._object:rect({
 		visible = false,
+		color = nil,
+		h = nil,
+		w = nil,
 		y = 0,
 		x = 0,
 		w = self._params.w,
@@ -30,17 +37,23 @@ function RaidGUIControlListItemCharacterCreateClass:_layout()
 	})
 	self._red_selected_line = self._object:rect({
 		visible = false,
-		y = 0,
+		color = nil,
+		h = nil,
 		w = 2,
+		y = 0,
 		x = 0,
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_red
 	})
 	self._class_name_label = self._object:label({
+		font = nil,
+		color = nil,
 		vertical = "center",
+		font_size = nil,
+		align = "left",
+		text = nil,
 		h = 28,
 		w = 174,
-		align = "left",
 		y = 34,
 		x = 96,
 		text = self:translate(tweak_data.skilltree.classes[self._class_name].name_id, true),
@@ -52,6 +65,10 @@ function RaidGUIControlListItemCharacterCreateClass:_layout()
 	self._class_name_label:set_w(self._object:w() - self._class_name_label:x())
 
 	self._class_icon = self._object:image({
+		texture = nil,
+		texture_rect = nil,
+		h = nil,
+		w = nil,
 		y = 20,
 		x = 32,
 		w = class_icon_data.texture_rect[3],

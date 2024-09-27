@@ -46,6 +46,8 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit, pos, rot)
 	end
 
 	local unit_entry = {
+		align_obj_name = nil,
+		unit = nil,
 		align_obj_name = align_obj_name,
 		unit = spawn_unit
 	}
@@ -85,6 +87,7 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 
 	self._sync_spawn_and_link = self._sync_spawn_and_link or {}
 	self._sync_spawn_and_link[unit_id] = {
+		joint_table = nil,
 		joint_table = joint_table
 	}
 
@@ -229,6 +232,8 @@ function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
 
 	for i, spawn_unit in ipairs(spawn_units) do
 		local unit_entry = {
+			align_obj_name = nil,
+			unit = nil,
 			align_obj_name = align_obj_name,
 			unit = spawn_unit
 		}

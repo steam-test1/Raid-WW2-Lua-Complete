@@ -128,6 +128,8 @@ function EnvironmentManager:set_global_environment_modifier(data_path_key, is_ov
 
 	if modifier_func then
 		global_modifier_data = {
+			is_override = nil,
+			modifier_func = nil,
 			is_override = is_override,
 			modifier_func = modifier_func
 		}
@@ -174,9 +176,13 @@ function EnvironmentManager:editor_reload(path)
 
 	local compile_settings = {
 		target_db_name = "all",
+		platform = nil,
+		target_db_root = nil,
 		send_idstrings = false,
-		preprocessor_definitions = "preprocessor_definitions",
+		source_root = nil,
+		source_files = nil,
 		verbose = false,
+		preprocessor_definitions = "preprocessor_definitions",
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
 		target_db_root = Application:base_path() .. "assets",

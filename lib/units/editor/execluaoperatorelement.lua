@@ -33,10 +33,12 @@ function ExecLuaOperatorElement:_build_panel(panel, panel_sizer)
 
 	text:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "lua_string",
+		ctrlr = nil,
 		ctrlr = text
 	})
 	text:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "lua_string",
+		ctrlr = nil,
 		ctrlr = text
 	})
 	text:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_lua_syntax_check"))

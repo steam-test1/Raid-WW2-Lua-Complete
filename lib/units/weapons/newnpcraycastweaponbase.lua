@@ -34,7 +34,9 @@ function NewNPCRaycastWeaponBase:init(unit)
 
 	self._muzzle_effect = Idstring(self:weapon_tweak_data().muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
+		effect = nil,
 		force_synch = false,
+		parent = nil,
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
@@ -44,12 +46,17 @@ function NewNPCRaycastWeaponBase:init(unit)
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
 		self._shell_ejection_effect = Idstring(self:weapon_tweak_data().shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
+			effect = nil,
+			parent = nil,
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection
 		}
 	end
 
 	self._trail_effect_table = {
+		effect = nil,
+		normal = nil,
+		position = nil,
 		effect = self.TRAIL_EFFECT,
 		position = Vector3(),
 		normal = Vector3()
@@ -124,7 +131,9 @@ function NewNPCRaycastWeaponBase:assemble(factory_id)
 	if ammo_muzzle_effect then
 		self._muzzle_effect = ammo_muzzle_effect
 		self._muzzle_effect_table = {
+			effect = nil,
 			force_synch = false,
+			parent = nil,
 			effect = self._muzzle_effect,
 			parent = self._obj_fire
 		}

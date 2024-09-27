@@ -50,6 +50,7 @@ end
 function CarryUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -93,9 +94,11 @@ function CarryUnitElement:update_selected(t, dt, selected_unit, all_units)
 			self._units[id] = nil
 		else
 			self:_draw_link({
-				g = 0.5,
+				from_unit = nil,
 				r = 0,
 				b = 0,
+				g = 0.5,
+				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -123,6 +126,7 @@ end
 function CarryUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})

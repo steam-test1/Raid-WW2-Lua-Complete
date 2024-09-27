@@ -34,7 +34,12 @@ CopMovement = CopMovement or class()
 CopMovement.set_friendly_fire = PlayerMovement.set_friendly_fire
 CopMovement.friendly_fire = PlayerMovement.friendly_fire
 CopMovement._gadgets = {
+	aligns = nil,
+	needle = nil,
 	aligns = {
+		head = nil,
+		hand_r = nil,
+		hand_l = nil,
 		hand_l = Idstring("a_weapon_left_front"),
 		hand_r = Idstring("a_weapon_right_front"),
 		head = Idstring("Head")
@@ -44,7 +49,20 @@ CopMovement._gadgets = {
 	}
 }
 local action_variants = {
+	security = nil,
 	security = {
+		reload = nil,
+		walk = nil,
+		tase = nil,
+		act = nil,
+		dodge = nil,
+		idle = nil,
+		warp = nil,
+		shoot = nil,
+		crouch = nil,
+		stand = nil,
+		hurt = nil,
+		turn = nil,
 		idle = CopActionIdle,
 		act = CopActionAct,
 		walk = CopActionWalk,
@@ -86,6 +104,11 @@ action_variants.german_gasmask_shotgun = security_variant
 action_variants.german_gasmask_commander_backup = security_variant
 action_variants.german_gasmask_commander_backup_shotgun = security_variant
 action_variants.german_light_commander_backup = security_variant
+action_variants.german_light_commander_backup_kar98 = security_variant
+action_variants.german_light_commander_backup_shotgun = security_variant
+action_variants.german_heavy_commander_backup = security_variant
+action_variants.german_heavy_commander_backup_kar98 = security_variant
+action_variants.german_heavy_commander_backup_shotgun = security_variant
 action_variants.german_heavy_commander_backup = security_variant
 action_variants.german_fallschirmjager_light = security_variant
 action_variants.german_fallschirmjager_light_kar98 = security_variant
@@ -143,6 +166,11 @@ action_variants.tank_hw = action_variants.tank
 action_variants.taser = security_variant
 action_variants.inside_man = security_variant
 action_variants.civilian = {
+	hurt = nil,
+	walk = nil,
+	act = nil,
+	idle = nil,
+	turn = nil,
 	idle = CopActionIdle,
 	act = CopActionAct,
 	walk = CivilianActionWalk,
@@ -244,6 +272,7 @@ function CopMovement:post_init()
 	self._machine:set_callback_object(self)
 
 	self._stance = {
+		values = nil,
 		name = "ntl",
 		code = 1,
 		values = {
@@ -312,6 +341,25 @@ function CopMovement:post_init()
 	local weap_name = self._ext_base:default_weapon_name(managers.groupai:state():enemy_weapons_hot() and "primary" or "secondary")
 	local fwd = self._m_rot:y()
 	self._action_common_data = {
+		queued_actions = nil,
+		active_actions = nil,
+		nav_tracker = nil,
+		char_tweak = nil,
+		unit = nil,
+		ext_network = nil,
+		ext_base = nil,
+		ext_inventory = nil,
+		ext_anim = nil,
+		ext_brain = nil,
+		ext_movement = nil,
+		machine = nil,
+		ext_damage = nil,
+		right = nil,
+		rot = nil,
+		pos = nil,
+		stance = nil,
+		fwd = nil,
+		look_vec = nil,
 		stance = self._stance,
 		pos = self._m_pos,
 		rot = self._m_rot,
@@ -460,21 +508,21 @@ function CopMovement:_upd_actions(t)
 
 	if has_no_action and (not self._queued_actions or not next(self._queued_actions)) then
 		self:action_request({
-			body_part = 1,
-			type = "idle"
+			type = "idle",
+			body_part = 1
 		})
 	end
 
 	if not a_actions[1] and not a_actions[2] and (not self._queued_actions or not next(self._queued_actions)) and not self:chk_action_forbidden("action") then
 		if a_actions[3] then
 			self:action_request({
-				body_part = 2,
-				type = "idle"
+				type = "idle",
+				body_part = 2
 			})
 		else
 			self:action_request({
-				body_part = 1,
-				type = "idle"
+				type = "idle",
+				body_part = 1
 			})
 		end
 	end
@@ -955,6 +1003,11 @@ function CopMovement:_change_stance(stance_code, instant)
 
 		local t = TimerManager:game():time()
 		local transition = {
+			start_values = nil,
+			end_values = nil,
+			next_upd_t = nil,
+			duration = nil,
+			start_t = nil,
 			end_values = end_values,
 			start_values = start_values,
 			duration = delay,
@@ -974,8 +1027,10 @@ end
 function CopMovement:sync_stance(i_stance, instant, execute_queued)
 	if execute_queued and (self._active_actions[1] and self._active_actions[1]:type() ~= "idle" or self._active_actions[2] and self._active_actions[2]:type() ~= "idle") then
 		table.insert(self._queued_actions, {
-			block_type = "walk",
 			type = "stance",
+			block_type = "walk",
+			instant = nil,
+			code = nil,
 			code = i_stance,
 			instant = instant
 		})
@@ -1193,6 +1248,8 @@ end
 function CopMovement:linked(state, physical, parent_unit)
 	if state then
 		self._link_data = {
+			parent = nil,
+			physical = nil,
 			physical = physical,
 			parent = parent_unit
 		}
@@ -1278,6 +1335,9 @@ function CopMovement:upd_ground_ray(from_pos)
 	end
 
 	local fake_ray = {
+		position = nil,
+		unit = nil,
+		ray = nil,
 		position = new_pos:with_z(ground_z),
 		ray = math.DOWN,
 		unit = hit_ray and hit_ray.unit
@@ -1295,6 +1355,11 @@ function CopMovement:on_suppressed(state)
 		local t = TimerManager:game():time()
 		local duration = 0.5 * math.abs(end_value - suppression.value)
 		suppression.transition = {
+			start_val = nil,
+			next_upd_t = nil,
+			duration = nil,
+			start_t = nil,
+			end_val = nil,
 			end_val = end_value,
 			start_val = suppression.value,
 			duration = duration,
@@ -1313,8 +1378,10 @@ function CopMovement:on_suppressed(state)
 	if Network:is_server() and state and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.stand) and not self:chk_action_forbidden("walk") then
 		if state == "panic" and not self:chk_action_forbidden("act") then
 			local action_desc = {
-				clamp_to_graph = true,
 				type = "act",
+				clamp_to_graph = true,
+				variant = nil,
+				blocks = nil,
 				body_part = 1,
 				variant = self._ext_anim.run and self._ext_anim.move_fwd and "e_so_sup_fumble_run_fwd" or "e_so_sup_fumble_inplace",
 				blocks = {
@@ -1326,10 +1393,11 @@ function CopMovement:on_suppressed(state)
 			self:action_request(action_desc)
 		elseif self._ext_anim.idle and (not self._active_actions[2] or self._active_actions[2]:type() == "idle") then
 			local action_desc = {
-				clamp_to_graph = true,
 				type = "act",
-				body_part = 1,
+				clamp_to_graph = true,
 				variant = "suppressed_reaction",
+				blocks = nil,
+				body_part = 1,
 				blocks = {
 					walk = -1
 				}
@@ -1338,8 +1406,8 @@ function CopMovement:on_suppressed(state)
 			self:action_request(action_desc)
 		elseif not self._ext_anim.crouch and self._tweak_data.crouch_move and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) then
 			local action_desc = {
-				body_part = 4,
-				type = "crouch"
+				type = "crouch",
+				body_part = 4
 			}
 
 			self:action_request(action_desc)
@@ -1411,11 +1479,11 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 
 	if not lgt_hurt then
 		blocks = {
-			act = -1,
+			walk = -1,
 			aim = -1,
+			act = -1,
 			action = -1,
-			tase = -1,
-			walk = -1
+			tase = -1
 		}
 
 		if hurt_type == "bleedout" then
@@ -1443,6 +1511,20 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 	local tweak = self._tweak_data
 	local action_data = {
 		type = "hurt",
+		fire_dot_data = nil,
+		is_fire_dot_damage = nil,
+		hit_pos = nil,
+		ignite_character = nil,
+		start_dot_damage_roll = nil,
+		blocks = nil,
+		block_type = nil,
+		hurt_type = nil,
+		client_interrupt = nil,
+		death_type = nil,
+		attacker_unit = nil,
+		variant = nil,
+		direction_vec = nil,
+		body_part = nil,
 		block_type = block_type,
 		hurt_type = hurt_type,
 		variant = damage_info.variant,
@@ -1470,6 +1552,8 @@ end
 
 function CopMovement:anim_clbk_spawn_effect(unit, effect_name, object_name)
 	World:effect_manager():spawn({
+		parent = nil,
+		effect = nil,
 		effect = Idstring(effect_name),
 		parent = self._unit:get_object(Idstring(object_name))
 	})
@@ -1882,6 +1966,7 @@ function CopMovement:save(save_data)
 		elseif self._attention.unit:id() == -1 then
 			local attention_pos = self._attention.handler and self._attention.handler:get_detection_m_pos() or self._attention.unit:movement() and self._attention.unit:movement():m_com() or self._unit:position()
 			my_save_data.attention = {
+				pos = nil,
 				pos = attention_pos
 			}
 		else
@@ -1953,7 +2038,7 @@ function CopMovement:load(load_data)
 	if managers.navigation:is_data_ready() then
 		self:_do_load()
 	else
-		Application:debug("[CopMovement:load] queueng cop movement load until navigation is ready")
+		Application:debug("[CopMovement:load] queuing cop movement load until navigation is ready")
 
 		self._nav_ready_listener_key = "CopMovement" .. tostring(self._unit:key())
 
@@ -2202,6 +2287,7 @@ function CopMovement:sync_pose(pose_code)
 
 	local pose = pose_code == 1 and "stand" or "crouch"
 	local new_action_data = {
+		type = nil,
 		body_part = 4,
 		type = pose
 	}
@@ -2217,13 +2303,19 @@ function CopMovement:sync_action_act_start(index, blocks_hurt, clamp_to_graph, n
 	local redir_name = self._actions.act:_get_act_name_from_index(index)
 	local action_data = {
 		type = "act",
+		start_rot = nil,
+		needs_full_blend = nil,
+		clamp_to_graph = nil,
+		variant = nil,
+		start_pos = nil,
+		blocks = nil,
 		body_part = 1,
 		variant = redir_name,
 		blocks = {
-			act = -1,
-			idle = -1,
 			action = -1,
-			walk = -1
+			walk = -1,
+			idle = -1,
+			act = -1
 		},
 		start_rot = start_rot,
 		start_pos = start_pos,
@@ -2266,6 +2358,12 @@ function CopMovement:sync_action_dodge_start(body_part, var, side, rot, speed, s
 
 	local action_data = {
 		type = "dodge",
+		side = nil,
+		speed = nil,
+		direction = nil,
+		shoot_accuracy = nil,
+		variation = nil,
+		body_part = nil,
 		body_part = body_part,
 		variation = CopActionDodge.get_variation_name(var),
 		direction = Rotation(rot):y(),
@@ -2309,17 +2407,18 @@ function CopMovement:sync_action_hurt_end()
 			local action_data = {
 				client_interrupt = true,
 				type = "act",
-				body_part = 1,
 				variant = "stand",
+				blocks = nil,
+				body_part = 1,
 				blocks = {
+					walk = -1,
+					aim = -1,
+					light_hurt = -1,
+					action = -1,
 					heavy_hurt = -1,
 					hurt = -1,
-					action = -1,
 					stand = -1,
-					light_hurt = -1,
-					aim = -1,
-					crouch = -1,
-					walk = -1
+					crouch = -1
 				}
 			}
 			local res = CopMovement.action_request(self, action_data)

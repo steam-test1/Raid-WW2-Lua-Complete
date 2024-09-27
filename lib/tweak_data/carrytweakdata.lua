@@ -191,15 +191,6 @@ function CarryTweakData:init(tweak_data)
 		cannot_stack = true,
 		skip_exit_secure = true
 	}
-	self.crate_explosives = {
-		hud_icon = "carry_planks",
-		cannot_stack = true,
-		unit_static = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_static",
-		type = "normal",
-		name_id = "hud_carry_plank",
-		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
-		skip_exit_secure = true
-	}
 	self.parachute = {
 		type = "normal",
 		name_id = "hud_carry_parachute",

@@ -41,12 +41,17 @@ end
 
 function RaidGUIControlPeerDetails:_create_profile_name()
 	local profile_name_params = {
-		name = "profile_name",
-		h = 32,
-		vertical = "center",
-		align = "left",
 		text = "PROFILE NAME",
+		h = 32,
+		w = nil,
 		y = 0,
+		x = nil,
+		vertical = "center",
+		name = "profile_name",
+		align = "left",
+		color = nil,
+		font_size = nil,
+		font = nil,
 		x = RaidGUIControlPeerDetails.NAME_X,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X - RaidGUIControlPeerDetails.LEVEL_W,
 		font = RaidGUIControlPeerDetails.FONT,
@@ -58,7 +63,10 @@ end
 
 function RaidGUIControlPeerDetails:_create_profile_details()
 	local class_icon_params = {
+		color = nil,
 		name = "class_icon",
+		texture_rect = nil,
+		texture = nil,
 		texture = tweak_data.gui.icons.ico_class_infiltrator.texture,
 		texture_rect = tweak_data.gui.icons.ico_class_infiltrator.texture_rect,
 		color = tweak_data.gui.colors.raid_black
@@ -68,12 +76,17 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 	self._class_icon:set_center_y(self._object:h() / 2)
 
 	local nationality_params = {
-		name = "nationality",
-		h = 32,
-		vertical = "center",
-		align = "left",
 		text = "GERMAN",
+		h = 32,
+		w = nil,
 		y = 0,
+		x = nil,
+		vertical = "center",
+		name = "nationality",
+		align = "left",
+		color = nil,
+		font_size = nil,
+		font = nil,
 		x = RaidGUIControlPeerDetails.NAME_X,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X,
 		font = RaidGUIControlPeerDetails.FONT,
@@ -85,11 +98,15 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 	self._nationality:set_bottom(self._object:h())
 
 	local level_text_params = {
-		vertical = "center",
 		h = 32,
+		w = nil,
+		text = "10",
+		vertical = "center",
 		name = "level_text",
 		align = "center",
-		text = "10",
+		color = nil,
+		font_size = nil,
+		font = nil,
 		w = RaidGUIControlPeerDetails.LEVEL_W,
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -112,6 +129,7 @@ end
 function RaidGUIControlPeerDetails:set_nationality(nationality)
 	local params = {
 		icon_h = 48,
+		text_size = nil,
 		text_size = RaidGUIControlPeerDetails.ICON_FONT_SIZE
 	}
 

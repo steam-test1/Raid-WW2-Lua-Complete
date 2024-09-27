@@ -2,6 +2,7 @@ CopLogicFlee = class(CopLogicBase)
 
 function CopLogicFlee.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -89,8 +90,9 @@ function CopLogicFlee.update(data)
 
 				local new_action_data = {
 					variant = "run",
-					body_part = 2,
 					type = "walk",
+					nav_path = nil,
+					body_part = 2,
 					nav_path = my_data.cover_path
 				}
 				my_data.cover_path = nil
@@ -125,10 +127,11 @@ function CopLogicFlee.update(data)
 		elseif my_data.flee_path then
 			if my_data.path_blocked == false and not unit:movement():chk_action_forbidden("walk") then
 				local new_action_data = {
-					body_part = 2,
-					type = "walk",
-					path_simplified = true,
 					variant = "run",
+					nav_path = nil,
+					body_part = 2,
+					path_simplified = true,
+					type = "walk",
 					nav_path = my_data.flee_path
 				}
 				my_data.flee_path = nil
@@ -207,6 +210,8 @@ function CopLogicFlee.update(data)
 			if flee_pos then
 				local nav_seg = managers.navigation:get_nav_seg_from_pos(flee_pos)
 				my_data.flee_target = {
+					pos = nil,
+					nav_seg = nil,
 					nav_seg = nav_seg,
 					pos = flee_pos
 				}
@@ -573,6 +578,7 @@ end
 
 function CopLogicFlee._get_all_paths(data)
 	return {
+		flee_path = nil,
 		flee_path = data.internal_data.flee_path
 	}
 end

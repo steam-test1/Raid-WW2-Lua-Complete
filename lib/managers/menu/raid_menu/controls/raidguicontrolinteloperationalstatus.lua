@@ -11,6 +11,11 @@ end
 
 function RaidGUIControlIntelOperationalStatus:_layout()
 	self._bg_image = self._object:bitmap({
+		h = nil,
+		texture = nil,
+		texture_rect = nil,
+		w = nil,
+		layer = nil,
 		y = 0,
 		x = 0,
 		layer = self._object:layer() + 1,
@@ -21,10 +26,14 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	})
 	self._update_date = self._object:text({
 		vertical = "center",
-		h = 32,
-		w = 192,
+		font = nil,
 		align = "left",
 		text = "",
+		h = 32,
+		color = nil,
+		font_size = nil,
+		w = 192,
+		layer = nil,
 		y = 112,
 		x = 96,
 		layer = self._object:layer() + 2,
@@ -34,10 +43,14 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	})
 	self._update_person = self._object:text({
 		vertical = "center",
-		h = 32,
-		w = 192,
+		font = nil,
 		align = "right",
 		text = "",
+		h = 32,
+		color = nil,
+		font_size = nil,
+		w = 192,
+		layer = nil,
 		y = 112,
 		x = 96,
 		layer = self._object:layer() + 2,
@@ -49,20 +62,22 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	self._update_person:set_right(self._object:w() - 128)
 
 	local content_panel_scrollable_area_params = {
-		scrollbar_width = 10,
-		name = "content_panel_scrollable_area",
 		h = 512,
-		y = 208,
-		w = 576,
-		x = 256,
+		name = "content_panel_scrollable_area",
 		scroll_step = 19,
+		scrollbar_width = 10,
+		w = 576,
+		layer = nil,
+		y = 208,
+		x = 256,
 		layer = self._object:layer() + 2
 	}
 	self.content_panel_scrollable_area = self._object:scrollable_area(content_panel_scrollable_area_params)
 	local content_panel_params = {
 		h = 512,
-		y = 0,
 		w = 572,
+		layer = nil,
+		y = 0,
 		x = 0,
 		layer = self._object:layer() + 2
 	}
@@ -72,9 +87,14 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 
 	self._title = self._content_panel:text({
 		vertical = "center",
-		wrap = true,
+		font = nil,
 		align = "center",
 		text = "",
+		wrap = true,
+		color = nil,
+		font_size = nil,
+		w = nil,
+		layer = nil,
 		y = 0,
 		x = 0,
 		w = self._content_panel:w(),
@@ -85,9 +105,14 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	})
 	self._text = self._content_panel:text({
 		vertical = "top",
-		wrap = true,
+		font = nil,
 		align = "left",
 		text = "",
+		wrap = true,
+		color = nil,
+		font_size = nil,
+		w = nil,
+		layer = nil,
 		y = 0,
 		x = 0,
 		w = self._content_panel:w(),
@@ -98,8 +123,11 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	})
 	self._title_image = self._content_panel:bitmap({
 		h = 288,
-		y = 0,
+		texture = nil,
+		texture_rect = nil,
 		w = 512,
+		layer = nil,
+		y = 0,
 		x = 32,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_newspapers.texture,

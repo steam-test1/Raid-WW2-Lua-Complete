@@ -83,6 +83,8 @@ end
 
 function PlayerDamage:_update_player_health_hud()
 	managers.hud:set_player_health({
+		current = nil,
+		total = nil,
 		current = self:get_real_health(),
 		total = self:_max_health()
 	})
@@ -137,6 +139,9 @@ function PlayerDamage:update(unit, t, dt)
 			local armor_value = math.max(self._armor_value or 0, self._hurt_value)
 
 			managers.hud:set_player_armor({
+				current = nil,
+				max = nil,
+				total = nil,
 				current = self:get_real_armor() * armor_value,
 				total = self:_max_armor(),
 				max = self:_max_armor()
@@ -256,6 +261,9 @@ function PlayerDamage:_regenerate_armor()
 
 	self:_send_set_armor()
 	managers.hud:set_player_armor({
+		current = nil,
+		max = nil,
+		total = nil,
 		current = self:get_real_armor(),
 		total = self:_max_armor(),
 		max = self:_max_armor()
@@ -282,7 +290,10 @@ function PlayerDamage:restore_armor(armor_restored)
 	self:set_armor(new_armor)
 	self:_send_set_armor()
 	managers.hud:set_player_armor({
+		current = nil,
 		no_hint = true,
+		total = nil,
+		max = nil,
 		current = self:get_real_armor(),
 		total = self:_max_armor(),
 		max = max_armor
@@ -313,10 +324,14 @@ function PlayerDamage:_regenerated(downs_regen)
 	if downs_regen and downs_regen > 0 then
 		if self:_change_revives(downs_regen) then
 			managers.hud:set_big_prompt({
+				title = nil,
+				description = nil,
 				id = "hint_downs_remaining",
 				duration = 3,
 				title = managers.localization:to_upper_text("hud_hint_down_restored_title"),
 				description = managers.localization:to_upper_text("hud_hint_downs_desc", {
+					DOWNS = nil,
+					DOWNSMAX = nil,
 					DOWNS = self._revives - 1,
 					DOWNSMAX = max_lives - 1
 				})
@@ -484,9 +499,10 @@ function PlayerDamage:damage_tase(attack_data)
 		managers.player:set_player_state("tased")
 
 		local damage_info = {
+			result = nil,
 			result = {
-				variant = "tase",
-				type = "hurt"
+				type = "hurt",
+				variant = "tase"
 			}
 		}
 
@@ -528,6 +544,9 @@ function PlayerDamage:damage_melee(attack_data)
 		local rot = self._unit:camera():rotation():z()
 
 		World:effect_manager():spawn({
+			normal = nil,
+			position = nil,
+			effect = nil,
 			effect = tweak_data.common_effects.blood_impact_2,
 			position = pos,
 			normal = rot
@@ -548,11 +567,7 @@ function PlayerDamage:damage_melee(attack_data)
 
 	self._unit:camera():play_shaker(vars[math.random(#vars)], 1 * managers.player:upgrade_value("player", "on_hit_flinch_reduction", 1))
 
-	if managers.player:current_state() == "bipod" then
-		managers.player:set_player_state("standard")
-	end
-
-	if managers.player:current_state() == "turret" then
+	if managers.player:current_state() == "bipod" or managers.player:current_state() == "turret" then
 		managers.player:set_player_state("standard")
 	end
 
@@ -575,6 +590,7 @@ end
 
 function PlayerDamage:play_whizby(position, is_turret)
 	self._unit:sound():play_whizby({
+		position = nil,
 		position = position
 	})
 
@@ -593,9 +609,11 @@ end
 
 function PlayerDamage:damage_bullet(attack_data)
 	local damage_info = {
+		attacker_unit = nil,
+		result = nil,
 		result = {
-			variant = "bullet",
-			type = "hurt"
+			type = "hurt",
+			variant = "bullet"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -698,6 +716,7 @@ function PlayerDamage:damage_bullet(attack_data)
 		self:_send_damage_drama(attack_data, health_subtracted)
 		managers.dialog:queue_dialog("player_gen_taking_fire", {
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = self._unit
 		})
 	end
@@ -717,6 +736,9 @@ function PlayerDamage:_calc_armor_damage(attack_data)
 
 		self:_damage_screen()
 		managers.hud:set_player_armor({
+			current = nil,
+			max = nil,
+			total = nil,
 			current = self:get_real_armor(),
 			total = self:_max_armor(),
 			max = self:_max_armor()
@@ -769,9 +791,10 @@ end
 
 function PlayerDamage:damage_killzone(attack_data)
 	local damage_info = {
+		result = nil,
 		result = {
-			variant = "killzone",
-			type = "hurt"
+			type = "hurt",
+			variant = "killzone"
 		}
 	}
 
@@ -807,9 +830,10 @@ end
 
 function PlayerDamage:damage_fall(data)
 	local damage_info = {
+		result = nil,
 		result = {
-			variant = "fall",
-			type = "hurt"
+			type = "hurt",
+			variant = "fall"
 		}
 	}
 
@@ -906,7 +930,10 @@ function PlayerDamage:damage_fall(data)
 	end
 
 	managers.hud:set_player_armor({
+		current = nil,
 		no_hint = true,
+		total = nil,
+		max = nil,
 		current = self:get_real_armor(),
 		total = self:_max_armor(),
 		max = max_armor
@@ -928,9 +955,10 @@ end
 
 function PlayerDamage:damage_explosion(attack_data)
 	local damage_info = {
+		result = nil,
 		result = {
-			variant = "explosion",
-			type = "hurt"
+			type = "hurt",
+			variant = "explosion"
 		}
 	}
 
@@ -968,9 +996,10 @@ end
 
 function PlayerDamage:damage_fire(attack_data)
 	local damage_info = {
+		result = nil,
 		result = {
-			variant = "fire",
-			type = "hurt"
+			type = "hurt",
+			variant = "fire"
 		}
 	}
 
@@ -1045,6 +1074,7 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 		end
 
 		local event_params = {
+			revives = nil,
 			bleed_out_blocked = false,
 			revives = self._revives
 		}
@@ -1075,12 +1105,17 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				local max_lives = self:get_max_revives()
 
 				managers.hud:set_big_prompt({
-					priority = true,
 					background = "backgrounds_detected_msg",
+					description = nil,
+					priority = true,
+					text_color = nil,
+					title = nil,
 					id = "hint_downed",
 					duration = 4,
 					title = managers.localization:to_upper_text("hud_hint_downs_title"),
 					description = managers.localization:to_upper_text("hud_hint_downs_desc", {
+						DOWNS = nil,
+						DOWNSMAX = nil,
 						DOWNS = self._revives - 1,
 						DOWNSMAX = max_lives - 1
 					}),
@@ -1088,6 +1123,7 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				})
 				managers.dialog:queue_dialog("player_gen_downed", {
 					skip_idle_check = true,
+					instigator = nil,
 					instigator = self._unit
 				})
 			end
@@ -1143,6 +1179,8 @@ function PlayerDamage:_check_activate_perseverance(params)
 	if managers.player:has_category_upgrade("player", "perseverance_killshot_timer_increase") then
 		local timer_increase = managers.player:upgrade_value("player", "perseverance_killshot_timer_increase", 0)
 		local params = {
+			max_duration = nil,
+			timer_increase = nil,
 			max_duration = max_duration,
 			timer_increase = timer_increase
 		}
@@ -1162,7 +1200,9 @@ end
 function PlayerDamage:on_downed()
 	if managers.player:has_category_upgrade("player", "self_administered_adrenaline") then
 		managers.hud:show_interact({
+			text = nil,
 			text = managers.localization:text("skill_interaction_revive_prompt", {
+				BTN_JUMP = nil,
 				BTN_JUMP = managers.localization:btn_macro("jump")
 			})
 		})
@@ -1309,6 +1349,7 @@ function PlayerDamage:revive(helped_self)
 
 		managers.dialog:queue_dialog(callout, {
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = self._unit
 		})
 	end
@@ -1473,6 +1514,7 @@ end
 
 function PlayerDamage:on_fatal_state_enter()
 	local dmg_info = {
+		result = nil,
 		result = {
 			type = "death"
 		}
@@ -1483,6 +1525,7 @@ end
 
 function PlayerDamage:on_incapacitated_state_enter()
 	local dmg_info = {
+		result = nil,
 		result = {
 			type = "death"
 		}
@@ -1592,6 +1635,7 @@ function PlayerDamage:_upd_health_regen(t, dt)
 
 			self:_calc_health_damage({
 				variant = "bullet",
+				damage = nil,
 				damage = math.abs(health_change)
 			})
 		elseif regen_rate > 0 and self:get_real_health() < max_health then
@@ -1660,6 +1704,10 @@ function PlayerDamage:_start_tinnitus(sound_eff_mul)
 		SoundDevice:set_rtpc("downed_state_progression", math.max(self._downed_progression or 0, sound_eff_mul * 100))
 
 		self._tinnitus_data = {
+			end_t = nil,
+			intensity = nil,
+			snd_event = nil,
+			duration = nil,
 			intensity = sound_eff_mul,
 			duration = duration,
 			end_t = managers.player:player_timer():time() + duration,
@@ -1732,7 +1780,6 @@ function PlayerDamage:set_damage_fall_disabled()
 end
 
 function PlayerDamage:setup_upgrades()
-	local event = managers.system_event_listener
 	local interval_multiplier = managers.player:upgrade_value("player", "painkiller_damage_interval_multiplier", 1)
 	self._dmg_interval = tweak_data.player.damage.MIN_DAMAGE_INTERVAL * interval_multiplier
 
@@ -1803,10 +1850,18 @@ function PlayerDamage:on_martyrdom(projectile_entry)
 	local projectile_data = tweak_data.projectiles[projectile_entry]
 	local clusters_to_spawn = projectile_data.max_amount
 	local upgraded = PlayerSkill.skill_data("player", "fragstone_downed_martyrdom", husk_player)
-	local upgrade_amount = projectile_data.upgrade_amount
 
-	if upgraded and upgrade_amount then
-		clusters_to_spawn = clusters_to_spawn + PlayerSkill.skill_data(upgrade_amount.category, upgrade_amount.upgrade, 0, husk_player)
+	if upgraded then
+		if projectile_data.upgrade_amount then
+			local upgrade = projectile_data.upgrade_amount
+			clusters_to_spawn = clusters_to_spawn + PlayerSkill.skill_data(upgrade.category, upgrade.upgrade, 0, husk_player)
+		end
+
+		if projectile_data.upgrade_amounts then
+			for _, upgrade in pairs(projectile_data.upgrade_amounts) do
+				clusters_to_spawn = clusters_to_spawn + PlayerSkill.skill_data(upgrade.category, upgrade.upgrade, 0, husk_player)
+			end
+		end
 	end
 
 	for i = 1, clusters_to_spawn do
@@ -1835,8 +1890,11 @@ function PlayerBodyDamage:damage_fire(attack_unit, normal, position, direction, 
 	print("PlayerBodyDamage:damage_fire", damage)
 
 	local attack_data = {
+		damage = nil,
+		col_ray = nil,
 		damage = damage,
 		col_ray = {
+			ray = nil,
 			ray = -direction
 		}
 	}

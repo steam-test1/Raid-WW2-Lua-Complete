@@ -34,9 +34,12 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	local side_padding = 200
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_16_9_workspace()
 	self._clipping_panel = self._fullscreen_ws:panel():panel({
+		layer = nil,
 		layer = self.layers.background
 	})
 	local bg = self._clipping_panel:rect({
+		layer = nil,
+		color = nil,
 		visible = true,
 		color = Color.black / 2,
 		layer = self.layers.background
@@ -49,6 +52,10 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 
 	local text_offset = self._clipping_panel:height() - 50
 	self._credits_panel = self._clipping_panel:panel({
+		h = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		x = safe_rect_pixels.x + side_padding,
 		y = text_offset,
 		w = safe_rect_pixels.width - side_padding * 2,
@@ -62,9 +69,13 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	bg:set_width(text_width)
 	bg:set_size(self._clipping_panel:size())
 	self._clipping_panel:gradient({
-		y = 0,
-		visible = false,
 		orientation = "vertical",
+		gradient_points = nil,
+		layer = nil,
+		visible = false,
+		h = nil,
+		w = nil,
+		y = 0,
 		x = 0,
 		w = self._clipping_panel:width(),
 		h = 75 * global_scale,
@@ -77,8 +88,13 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		}
 	})
 	self._clipping_panel:gradient({
-		visible = false,
 		orientation = "vertical",
+		gradient_points = nil,
+		layer = nil,
+		visible = false,
+		h = nil,
+		w = nil,
+		y = nil,
 		x = 0,
 		y = self._clipping_panel:height() - 75 * global_scale,
 		w = self._clipping_panel:width(),
@@ -102,6 +118,9 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 
 	local blur = self._fullscreen_ws:panel():bitmap({
 		texture = "guis/textures/test_blur_df",
+		layer = nil,
+		h = nil,
+		w = nil,
 		render_template = "VertexColorTexturedBlur3D",
 		w = self._fullscreen_ws:panel():w(),
 		h = self._fullscreen_ws:panel():h(),
@@ -150,13 +169,20 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 
 			height = height * global_scale
 			local text_field = self._credits_panel:text({
-				vertical = "bottom",
-				h = 0,
-				wrap = true,
-				align = "center",
+				font_size = nil,
+				layer = nil,
+				color = nil,
 				word_wrap = true,
-				halign = "left",
+				h = 0,
+				w = nil,
+				y = nil,
 				x = 0,
+				wrap = true,
+				text = nil,
+				font = nil,
+				vertical = "bottom",
+				halign = "left",
+				align = "center",
 				text = data.text,
 				y = ypos,
 				w = text_width,
@@ -173,6 +199,9 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		elseif data._meta == "image" then
 			local scale = (data.scale or 1) * global_scale
 			local bitmap = self._credits_panel:bitmap({
+				texture = nil,
+				y = nil,
+				layer = nil,
 				x = 0,
 				layer = self.layers.items,
 				y = ypos,
@@ -189,6 +218,9 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 			ypos = ypos + 28 * global_scale
 		elseif data._meta == "command" then
 			table.insert(commands, {
+				pos = nil,
+				param = nil,
+				cmd = nil,
 				pos = ypos - text_offset + (data.offset or 0) * global_scale + self._clipping_panel:height() / 2,
 				cmd = data.cmd,
 				param = data.param

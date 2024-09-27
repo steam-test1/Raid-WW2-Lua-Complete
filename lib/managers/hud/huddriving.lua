@@ -42,10 +42,12 @@ end
 
 function HUDDriving:_create_panel(hud)
 	local panel_params = {
-		visible = false,
-		name = "driving_panel",
 		halign = "center",
+		visible = false,
 		valign = "bottom",
+		h = nil,
+		w = nil,
+		name = "driving_panel",
 		w = HUDDriving.W,
 		h = HUDDriving.H
 	}
@@ -57,9 +59,11 @@ end
 
 function HUDDriving:_create_slot_panel()
 	local slot_panel_params = {
-		name = "slot_panel",
 		halign = "left",
 		valign = "bottom",
+		h = nil,
+		w = nil,
+		name = "slot_panel",
 		w = HUDDriving.SLOT_PANEL_W,
 		h = HUDDriving.SLOT_PANEL_H
 	}
@@ -72,7 +76,10 @@ function HUDDriving:_create_slot_panel()
 
 	for i = 1, 4 do
 		local empty_slot_params = {
+			texture = nil,
 			alpha = 0.5,
+			name = nil,
+			texture_rect = nil,
 			name = "empty_slot_" .. tostring(i),
 			texture = tweak_data.gui.icons[HUDDriving.EMPTY_SEAT_ICON].texture,
 			texture_rect = tweak_data.gui.icons[HUDDriving.EMPTY_SEAT_ICON].texture_rect
@@ -80,6 +87,9 @@ function HUDDriving:_create_slot_panel()
 		local empty_slot = self._slot_panel:bitmap(empty_slot_params)
 		local placeholder_nationality_icon = HUDDriving.SLOT_NATIONALITY_BASE .. "german"
 		local taken_slot_params = {
+			texture = nil,
+			texture_rect = nil,
+			name = nil,
 			layer = 2,
 			name = "taken_slot_" .. tostring(i),
 			texture = tweak_data.gui.icons[placeholder_nationality_icon].texture,
@@ -104,7 +114,9 @@ function HUDDriving:_create_slot_panel()
 		end
 
 		local slot = {
+			empty = nil,
 			free = true,
+			taken = nil,
 			empty = empty_slot,
 			taken = taken_slot
 		}
@@ -117,9 +129,12 @@ function HUDDriving:_create_carry_info()
 	local carry_panel_x = self._slot_panel:x() + self._slot_panel:w() + HUDDriving.CARRY_PANEL_PADDING_LEFT
 	local carry_info_panel_params = {
 		halign = "right",
+		valign = "scale",
+		x = nil,
+		h = nil,
+		w = nil,
 		name = "carry_info_panel",
 		y = 0,
-		valign = "scale",
 		x = carry_panel_x,
 		w = self._object:w() - carry_panel_x,
 		h = self._slot_panel:h() + 20
@@ -129,6 +144,8 @@ function HUDDriving:_create_carry_info()
 	carry_info_panel:set_bottom(self._slot_panel:bottom())
 
 	local carry_panel_background_params = {
+		texture = nil,
+		texture_rect = nil,
 		name = "carry_background",
 		texture = tweak_data.gui.icons[HUDDriving.CARRY_PANEL_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDDriving.CARRY_PANEL_BG_ICON].texture_rect
@@ -138,6 +155,8 @@ function HUDDriving:_create_carry_info()
 	carry_panel_background:set_bottom(carry_info_panel:h())
 
 	local carry_indicator_params = {
+		texture = nil,
+		texture_rect = nil,
 		name = "carry_indicator",
 		layer = 5,
 		texture = tweak_data.gui.icons[HUDDriving.CARRY_PANEL_INDICATOR_ICON].texture,
@@ -150,12 +169,16 @@ function HUDDriving:_create_carry_info()
 
 	local carry_info_text_x = self._carry_indicator:x() + self._carry_indicator:w() + HUDDriving.CARRY_PANEL_PADDING_RIGHT
 	local carry_info_text_params = {
+		halign = "center",
 		vertical = "center",
+		valign = "left",
+		w = nil,
+		text = "",
 		name = "carry_info_text",
 		align = "left",
-		text = "",
-		halign = "center",
-		valign = "left",
+		font_size = nil,
+		font = nil,
+		x = nil,
 		x = carry_info_text_x,
 		w = carry_info_panel:w() - carry_info_text_x,
 		font = HUDDriving.CARRY_INFO_TEXT_FONT,
@@ -168,10 +191,12 @@ end
 
 function HUDDriving:_create_button_prompts()
 	local button_prompts_panel_params = {
-		alpha = 0,
-		name = "button_prompts_panel",
 		halign = "scale",
 		valign = "top",
+		h = nil,
+		w = nil,
+		alpha = 0,
+		name = "button_prompts_panel",
 		w = self._object:w(),
 		h = HUDDriving.BUTTON_PROMPTS_H
 	}
@@ -244,10 +269,14 @@ function HUDDriving:_create_button_prompt(prompt_name, prompt, buttons)
 	end
 
 	local button_prompt_params = {
+		font_size = nil,
+		font = nil,
+		valign = "center",
 		vertical = "center",
 		halign = "center",
+		text = nil,
+		name = nil,
 		align = "center",
-		valign = "center",
 		name = "button_prompt_" .. tostring(prompt_name),
 		font = HUDDriving.BUTTON_PROMPT_TEXT_FONT,
 		font_size = HUDDriving.BUTTON_PROMPT_TEXT_FONT_SIZE,
@@ -295,9 +324,12 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 
 	if player_seat.driving then
 		table.insert(seat_prompts, {
+			buttons = nil,
+			prompt = nil,
 			name = "look_behind",
 			prompt = HUDDriving.BUTTON_PROMPT_LOOK_BEHIND,
 			buttons = {
+				STICK_R = nil,
 				STICK_R = managers.localization:btn_macro("vehicle_rear_camera")
 			}
 		})
@@ -305,25 +337,34 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 
 	if player_seat.has_shooting_mode then
 		table.insert(seat_prompts, {
+			buttons = nil,
+			prompt = nil,
 			name = "switch_pose",
 			prompt = HUDDriving.BUTTON_PROMPT_SWITCH_POSE,
 			buttons = {
+				BTN_B = nil,
 				BTN_B = managers.localization:btn_macro("vehicle_shooting_stance")
 			}
 		})
 	end
 
 	table.insert(seat_prompts, {
+		buttons = nil,
+		prompt = nil,
 		name = "exit_vehicle",
 		prompt = HUDDriving.BUTTON_PROMPT_EXIT_VEHICLE,
 		buttons = {
+			BTN_TOP_R = nil,
 			BTN_TOP_R = managers.localization:btn_macro("vehicle_exit")
 		}
 	})
 	table.insert(seat_prompts, {
+		buttons = nil,
+		prompt = nil,
 		name = "change_seat",
 		prompt = HUDDriving.BUTTON_PROMPT_CHANGE_SEAT,
 		buttons = {
+			BTN_TOP_L = nil,
 			BTN_TOP_L = managers.localization:btn_macro("vehicle_change_seat")
 		}
 	})

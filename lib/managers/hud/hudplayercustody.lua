@@ -21,17 +21,19 @@ function HUDPlayerCustody:init(hud)
 	end
 
 	local custody_panel = self._hud_panel:panel({
-		valign = "grow",
+		halign = "grow",
 		name = "custody_panel",
-		halign = "grow"
+		valign = "grow"
 	})
 	local timer_message_params = {
 		text = "custodddddy in",
-		vertical = "center",
+		font = nil,
 		h = 40,
-		name = "timer_msg",
 		w = 400,
+		vertical = "center",
 		align = "center",
+		name = "timer_msg",
+		font_size = nil,
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24
 	}
@@ -47,10 +49,13 @@ function HUDPlayerCustody:init(hud)
 
 	local timer_params = {
 		text = "00:00",
-		vertical = "bottom",
+		font = nil,
 		h = 32,
-		name = "timer",
+		w = nil,
+		vertical = "bottom",
 		align = "center",
+		name = "timer",
+		font_size = nil,
 		w = custody_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed_outlined_42,
 		font_size = tweak_data.gui.font_sizes.menu_list
@@ -85,9 +90,11 @@ end
 
 function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel = parent:panel({
-		name = "spectator_panel",
-		halign = "left",
 		valign = "bottom",
+		h = nil,
+		w = nil,
+		halign = "left",
+		name = "spectator_panel",
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
 		h = HUDPlayerCustody.SPECTATOR_PANEL_H
 	})
@@ -96,6 +103,10 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel:set_bottom(parent:h() - 25)
 
 	local spectator_background = self._spectator_panel:bitmap({
+		texture = nil,
+		h = nil,
+		w = nil,
+		texture_rect = nil,
 		name = "spectator_background",
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
 		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
@@ -103,24 +114,31 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 		texture_rect = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture_rect
 	})
 	self._spectator_text = self._spectator_panel:text({
+		text = "SPECTATING",
+		layer = nil,
+		valign = "center",
+		halign = "center",
 		name = "spectator_text",
+		font_size = nil,
+		font = nil,
+		h = nil,
 		vertical = "center",
 		align = "center",
-		text = "SPECTATING",
-		halign = "center",
-		valign = "center",
 		font = HUDPlayerCustody.SPECTATOR_TEXT_FONT,
 		font_size = HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE,
 		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
 		layer = spectator_background:layer() + 1
 	})
 	self._button_prompt = self._spectator_panel:text({
+		text = "",
 		name = "prompt_previous",
+		valign = "center",
+		halign = "center",
+		color = nil,
+		font_size = nil,
+		font = nil,
 		vertical = "bottom",
 		align = "center",
-		text = "",
-		halign = "center",
-		valign = "center",
 		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
 		font_size = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE,
 		color = HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR
@@ -134,11 +152,15 @@ function HUDPlayerCustody:_refresh_button_prompt()
 
 	if managers.controller:is_using_controller() then
 		btn_macros = {
+			BTN_LEFT = nil,
+			BTN_RIGHT = nil,
 			BTN_LEFT = managers.localization:get_default_macros().BTN_PRIMARY,
 			BTN_RIGHT = managers.localization:get_default_macros().BTN_SECONDARY
 		}
 	else
 		btn_macros = {
+			BTN_LEFT = nil,
+			BTN_RIGHT = nil,
 			BTN_LEFT = managers.localization:btn_macro("left"),
 			BTN_RIGHT = managers.localization:btn_macro("right")
 		}

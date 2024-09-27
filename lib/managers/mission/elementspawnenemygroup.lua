@@ -80,6 +80,7 @@ function ElementSpawnEnemyGroup:on_executed(instigator)
 				local element = self._spawn_points[self:_get_spawn_point(i)]
 
 				element:produce({
+					team = nil,
 					team = self._values.team
 				})
 			end

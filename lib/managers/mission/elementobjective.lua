@@ -37,10 +37,12 @@ function ElementObjective:on_executed(instigator)
 	if objective ~= "none" then
 		if self._values.state == "activate" then
 			managers.objectives:activate_objective(objective, nil, {
+				amount = nil,
 				amount = amount
 			}, worlddef._world_id)
 		elseif self._values.state == "complete_and_activate" then
 			managers.objectives:complete_and_activate_objective(objective, nil, {
+				amount = nil,
 				amount = amount
 			}, worlddef._world_id)
 		elseif self._values.state == "complete" then
@@ -55,6 +57,7 @@ function ElementObjective:on_executed(instigator)
 			managers.objectives:remove_objective(objective)
 		elseif self._values.state == "remove_and_activate" then
 			managers.objectives:remove_and_activate_objective(objective, nil, {
+				amount = nil,
 				amount = amount
 			}, worlddef._world_id)
 		elseif self._values.state == "set_objective_current_amount" then

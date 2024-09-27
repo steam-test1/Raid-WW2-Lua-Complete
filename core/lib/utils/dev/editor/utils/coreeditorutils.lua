@@ -358,6 +358,8 @@ function find_unit_references(start, prefix)
 				local tt = prefix .. "." .. name
 
 				table.insert(results, {
+					userdata = nil,
+					table = nil,
 					table = tt,
 					userdata = data
 				})
@@ -387,6 +389,8 @@ function find_unit_references_recursive(table_name, t, visited, prefix, results)
 
 			if not string.find(s_name, "userdata") and _G.type_name(data) == "Unit" then
 				table.insert(results, {
+					userdata = nil,
+					table = nil,
 					table = tt,
 					userdata = data
 				})

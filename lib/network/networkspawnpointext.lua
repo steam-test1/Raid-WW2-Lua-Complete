@@ -8,6 +8,8 @@ end
 
 function NetworkSpawnPointExt:get_data(unit)
 	return {
+		rotation = nil,
+		position = nil,
 		position = unit:position(),
 		rotation = unit:rotation()
 	}

@@ -19,6 +19,9 @@ end
 
 function HUDEquipment:_create_panel(equipment_panel, equipment_id)
 	local panel_params = {
+		name = nil,
+		h = nil,
+		w = nil,
 		name = "equipment_" .. tostring(equipment_id) .. "_panel",
 		w = HUDEquipment.DEFAULT_W,
 		h = HUDEquipment.DEFAULT_H
@@ -31,6 +34,9 @@ function HUDEquipment:_create_icon(icon)
 	local icon_params = {
 		name = "icon",
 		layer = 1,
+		color = nil,
+		texture_rect = nil,
+		texture = nil,
 		texture = full_gui.texture,
 		texture_rect = full_gui.texture_rect,
 		color = full_gui.color
@@ -42,13 +48,15 @@ end
 
 function HUDEquipment:_create_amount_text()
 	local amount_text_params = {
-		name = "amount_text",
+		text = "",
 		vertical = "top",
 		align = "right",
-		text = "",
 		y = 0,
 		x = 0,
+		font_size = nil,
+		name = "amount_text",
 		layer = 3,
+		font = nil,
 		font = HUDEquipment.FONT,
 		font_size = HUDEquipment.FONT_SIZE
 	}

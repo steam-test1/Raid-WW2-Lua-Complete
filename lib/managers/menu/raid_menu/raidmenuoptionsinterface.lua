@@ -26,7 +26,13 @@ function RaidMenuOptionsInterface:_layout_menu()
 	local default_width = 576
 	local previous_panel = nil
 	previous_panel = {
+		description = nil,
+		on_click_callback = nil,
 		name = "subtitle",
+		y = nil,
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = managers.localization:to_upper_text("menu_options_video_subtitle"),
 		x = start_x,
 		y = start_y,
@@ -42,20 +48,53 @@ function RaidMenuOptionsInterface:_layout_menu()
 	self._toggle_menu_subtitle:set_selected(true)
 
 	previous_panel = {
+		description = nil,
+		on_click_callback = nil,
 		name = "objective_reminder",
+		y = nil,
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = managers.localization:to_upper_text("menu_objective_reminder"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_objective_reminders"),
 		on_menu_move = {
-			down = "skip_cinematics",
+			down = "warcry_ready_indicator",
+			up = nil,
 			up = previous_panel.name
 		}
 	}
 	self._toggle_objective_reminders = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
+		description = nil,
+		on_click_callback = nil,
+		name = "warcry_ready_indicator",
+		y = nil,
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
+		description = managers.localization:to_upper_text("menu_warcry_ready_indicator"),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		on_click_callback = callback(self, self, "on_click_warcry_ready_indicator"),
+		on_menu_move = {
+			down = "skip_cinematics",
+			up = nil,
+			up = previous_panel.name
+		}
+	}
+	self._toggle_warcry_ready_indicator = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
+		description = nil,
+		on_click_callback = nil,
 		name = "skip_cinematics",
+		y = nil,
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = managers.localization:to_upper_text("menu_skip_cinematics"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
@@ -63,12 +102,19 @@ function RaidMenuOptionsInterface:_layout_menu()
 		on_click_callback = callback(self, self, "on_click_skip_cinematics"),
 		on_menu_move = {
 			down = "hud_special_weapon_panels",
+			up = nil,
 			up = previous_panel.name
 		}
 	}
 	self._toggle_skip_cinematics = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
+		description = nil,
+		on_click_callback = nil,
 		name = "hud_special_weapon_panels",
+		y = nil,
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = managers.localization:to_upper_text("menu_options_video_hud_special_weapon_panels"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING * 2,
@@ -76,12 +122,19 @@ function RaidMenuOptionsInterface:_layout_menu()
 		on_click_callback = callback(self, self, "on_click_hud_special_weapon_panels"),
 		on_menu_move = {
 			down = "hud_crosshairs",
+			up = nil,
 			up = previous_panel.name
 		}
 	}
 	self._toggle_menu_hud_special_weapon_panels = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
+		description = nil,
+		on_click_callback = nil,
 		name = "hud_crosshairs",
+		y = nil,
+		x = nil,
+		w = nil,
+		on_menu_move = nil,
 		description = managers.localization:to_upper_text("menu_options_video_hud_crosshairs"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
@@ -89,12 +142,20 @@ function RaidMenuOptionsInterface:_layout_menu()
 		on_click_callback = callback(self, self, "on_click_hud_crosshairs"),
 		on_menu_move = {
 			down = "hit_confirm_indicator",
+			up = nil,
 			up = previous_panel.name
 		}
 	}
 	self._toggle_menu_hud_crosshairs = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
+		description = nil,
+		w = nil,
 		name = "hit_confirm_indicator",
+		y = nil,
+		x = nil,
+		on_item_selected_callback = nil,
+		on_menu_move = nil,
+		data_source_callback = nil,
 		description = managers.localization:to_upper_text("menu_options_video_hit_confirm_indicator"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
@@ -103,12 +164,20 @@ function RaidMenuOptionsInterface:_layout_menu()
 		on_item_selected_callback = callback(self, self, "on_click_hit_indicator"),
 		on_menu_move = {
 			down = "motion_dot",
+			up = nil,
 			up = previous_panel.name
 		}
 	}
 	self._stepper_menu_hit_indicator = self._root_panel:stepper(previous_panel)
 	previous_panel = {
+		description = nil,
 		name = "motion_dot",
+		on_item_selected_callback = nil,
+		on_menu_move = nil,
+		data_source_callback = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		stepper_w = 280,
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot"),
 		x = start_x,
@@ -118,12 +187,20 @@ function RaidMenuOptionsInterface:_layout_menu()
 		on_item_selected_callback = callback(self, self, "on_click_motion_dot"),
 		on_menu_move = {
 			down = "motion_dot_size",
+			up = nil,
 			up = previous_panel.name
 		}
 	}
 	self._stepper_menu_motion_dot = self._root_panel:stepper(previous_panel)
 	previous_panel = {
+		description = nil,
 		name = "motion_dot_size",
+		on_item_selected_callback = nil,
+		on_menu_move = nil,
+		data_source_callback = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		stepper_w = 280,
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot_size"),
 		x = start_x,
@@ -133,19 +210,25 @@ function RaidMenuOptionsInterface:_layout_menu()
 		on_item_selected_callback = callback(self, self, "on_click_motion_dot_size"),
 		on_menu_move = {
 			down = "default_interface",
+			up = nil,
 			up = previous_panel.name
 		}
 	}
 	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
 	self._default_settings_button = self._root_panel:long_secondary_button({
+		x = 1472,
+		on_click_callback = nil,
 		name = "default_interface",
 		y = 832,
-		x = 1472,
+		text = nil,
+		layer = nil,
+		on_menu_move = nil,
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_interface"),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_menu_move = {
 			down = "subtitle",
+			up = nil,
 			up = previous_panel.name
 		}
 	})
@@ -162,6 +245,9 @@ function RaidMenuOptionsInterface:data_source_stepper_menu_hit_confirm_indicator
 
 	for i = 1, #tweak_data.hit_indicator_modes do
 		table.insert(tb, {
+			value = nil,
+			text_id = nil,
+			info = nil,
 			text_id = "menu_options_video_hit_indicator_mode_" .. tostring(i),
 			info = "menu_options_video_hit_indicator_mode_" .. tostring(i),
 			value = i
@@ -179,6 +265,9 @@ function RaidMenuOptionsInterface:data_source_toggle_menu_hud_crosshairs()
 		"off"
 	} do
 		table.insert(tb, {
+			value = nil,
+			text_id = nil,
+			info = nil,
 			text_id = "menu_options_video_hud_crosshairs_mode_" .. tostring(v),
 			info = "menu_options_video_hud_crosshairs_mode_" .. tostring(v),
 			value = i
@@ -193,6 +282,9 @@ function RaidMenuOptionsInterface:data_source_stepper_menu_motion_dot()
 
 	for i = 1, #tweak_data.motion_dot_modes do
 		table.insert(tb, {
+			value = nil,
+			text_id = nil,
+			info = nil,
 			text_id = "menu_options_video_motion_dot_mode_" .. tostring(i),
 			info = "menu_options_video_motion_dot_mode_" .. tostring(i),
 			value = i
@@ -207,6 +299,9 @@ function RaidMenuOptionsInterface:data_source_stepper_menu_motion_dot_size()
 
 	for i = 1, #tweak_data.motion_dot_modes do
 		table.insert(tb, {
+			value = nil,
+			text_id = nil,
+			info = nil,
 			text_id = "menu_options_video_motion_dot_size_" .. tostring(i),
 			info = "menu_options_video_motion_dot_size_" .. tostring(i),
 			value = i
@@ -224,6 +319,10 @@ function RaidMenuOptionsInterface:_load_menu_values()
 	local skip_cinematics = managers.user:get_setting("skip_cinematics")
 
 	self._toggle_skip_cinematics:set_value_and_render(skip_cinematics, true)
+
+	local warcry_ready_indicator = managers.user:get_setting("warcry_ready_indicator")
+
+	self._toggle_warcry_ready_indicator:set_value_and_render(warcry_ready_indicator, true)
 
 	local subtitle = managers.user:get_setting("subtitle")
 
@@ -267,6 +366,12 @@ function RaidMenuOptionsInterface:on_click_objective_reminders()
 	managers.menu:active_menu().callback_handler:toggle_objective_reminder_raid(reminders)
 end
 
+function RaidMenuOptionsInterface:on_click_warcry_ready_indicator()
+	local warcry_ready_indicator = self._toggle_warcry_ready_indicator:get_value()
+
+	managers.menu:active_menu().callback_handler:toggle_warcry_ready_indicator_raid(warcry_ready_indicator)
+end
+
 function RaidMenuOptionsInterface:on_click_skip_cinematics()
 	local skip_cinematics = self._toggle_skip_cinematics:get_value()
 
@@ -306,6 +411,9 @@ end
 
 function RaidMenuOptionsInterface:on_click_default_interface()
 	local params = {
+		callback = nil,
+		message = nil,
+		title = nil,
 		title = managers.localization:text("dialog_reset_interface_title"),
 		message = managers.localization:text("dialog_reset_interface_message"),
 		callback = callback(self, self, "_callback_default_settings")
@@ -322,6 +430,8 @@ end
 function RaidMenuOptionsInterface:bind_controller_inputs()
 	local bindings = {
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "on_click_default_interface")
 		}
@@ -330,12 +440,15 @@ function RaidMenuOptionsInterface:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
+		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_options_controls_default_controller"
 		},
 		keyboard = {
 			{
+				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back")
 			}

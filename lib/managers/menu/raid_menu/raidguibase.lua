@@ -16,6 +16,13 @@ function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	self._node = node
 	self._ws_panel = self._ws:panel()
 	self._ws_panel = self._ws_panel:panel({
+		name = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		layer = nil,
+		x = nil,
+		background_color = nil,
 		name = self._name .. "_ws_panel",
 		background_color = self._background_color,
 		x = self._panel_x,
@@ -39,6 +46,14 @@ function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	self:_set_initial_data()
 
 	local params_root_panel = {
+		name = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		layer = nil,
+		x = nil,
+		is_root_panel = nil,
+		background_color = nil,
 		name = self._name .. "_panel",
 		background_color = self._background_color,
 		x = self._panel_x,
@@ -99,10 +114,12 @@ function RaidGuiBase:_create_border()
 	local border_thickness = 1.6
 	self._border_left = self._root_panel:gradient({
 		name = "border_left",
+		h = nil,
+		layer = 100,
 		y = 0,
 		orientation = "vertical",
 		x = 0,
-		layer = 100,
+		w = nil,
 		w = border_thickness,
 		h = self._root_panel:h()
 	})
@@ -116,9 +133,12 @@ function RaidGuiBase:_create_border()
 
 	self._border_right = self._root_panel:gradient({
 		name = "border_right",
+		h = nil,
+		layer = 100,
 		y = 0,
 		orientation = "vertical",
-		layer = 100,
+		x = nil,
+		w = nil,
 		x = self._root_panel:w() - border_thickness,
 		w = border_thickness,
 		h = self._root_panel:h()
@@ -133,10 +153,12 @@ function RaidGuiBase:_create_border()
 
 	self._border_up = self._root_panel:gradient({
 		name = "border_up",
+		h = nil,
+		layer = 100,
 		y = 0,
 		orientation = "horizontal",
 		x = 0,
-		layer = 100,
+		w = nil,
 		w = self._root_panel:w(),
 		h = border_thickness
 	})
@@ -156,9 +178,12 @@ function RaidGuiBase:_create_border()
 
 	self._border_down = self._root_panel:gradient({
 		name = "border_down",
+		h = nil,
+		layer = 100,
+		y = nil,
 		orientation = "horizontal",
 		x = 0,
-		layer = 100,
+		w = nil,
 		y = self._root_panel:h() - border_thickness,
 		w = self._root_panel:w(),
 		h = border_thickness

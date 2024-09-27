@@ -52,9 +52,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if self:_should_draw_link(selected_unit, unit) then
 			self:_draw_link({
-				g = 0,
+				from_unit = nil,
 				b = 0,
+				g = 0,
 				r = 0.75,
+				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -68,9 +70,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if alive(unit) then
 				if self:_should_draw_link(selected_unit, unit) then
 					self:_draw_link({
-						g = 0.5,
+						from_unit = nil,
 						b = 0.75,
+						g = 0.5,
 						r = 0,
+						to_unit = nil,
 						from_unit = unit,
 						to_unit = self._unit
 					})
@@ -92,6 +96,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				local r, g, b = unit:mission_element():get_link_color()
 
 				self:_draw_link({
+					from_unit = nil,
+					b = nil,
+					g = nil,
+					r = nil,
+					to_unit = nil,
 					from_unit = unit,
 					to_unit = self._unit,
 					r = r,
@@ -110,6 +119,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				local r, g, b = unit:mission_element():get_link_color()
 
 				self:_draw_link({
+					from_unit = nil,
+					b = nil,
+					g = nil,
+					r = nil,
+					to_unit = nil,
 					from_unit = unit,
 					to_unit = self._unit,
 					r = r,
@@ -148,8 +162,8 @@ end
 
 function CoreAreaTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -195,8 +209,8 @@ function CoreAreaTriggerUnitElement:add_element()
 	end
 
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
-		mask = 1
+		mask = 1,
+		ray_type = "body editor"
 	})
 
 	if ray and ray.unit then
@@ -296,6 +310,9 @@ end
 
 function CoreAreaTriggerUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
+		height = nil,
+		depth = nil,
+		width = nil,
 		width = self._hed.width,
 		depth = self._hed.depth,
 		height = self._hed.height
@@ -304,6 +321,8 @@ function CoreAreaTriggerUnitElement:_create_shapes()
 	self._shape:set_unit(self._unit)
 
 	self._cylinder_shape = CoreShapeManager.ShapeCylinderMiddle:new({
+		radius = nil,
+		height = nil,
 		radius = self._hed.radius,
 		height = self._hed.height
 	})
@@ -332,8 +351,8 @@ end
 
 function CoreAreaTriggerUnitElement:create_values_ctrlrs(panel, panel_sizer, disable)
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = 0.01
+		min = 0.01,
+		floats = 2
 	}, "Set the check interval for the area, in seconds.")
 
 	if not disable or not disable.trigger_type then
@@ -385,8 +404,8 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	end
 
 	local width, width_params = self:_build_value_number(panel, panel_sizer, "width", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Set the width for the shape")
 
 	width_params.name_ctrlr:set_label("Width[cm]:")
@@ -403,8 +422,8 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	})
 
 	local depth, depth_params = self:_build_value_number(panel, panel_sizer, "depth", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Set the depth for the shape")
 
 	depth_params.name_ctrlr:set_label("Depth[cm]:")
@@ -421,8 +440,8 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	})
 
 	local height, height_params = self:_build_value_number(panel, panel_sizer, "height", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Set the height for the shape")
 
 	height_params.name_ctrlr:set_label("Height[cm]:")
@@ -439,8 +458,8 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	})
 
 	local radius, radius_params = self:_build_value_number(panel, panel_sizer, "radius", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Set the radius for the shape")
 
 	radius_params.name_ctrlr:set_label("Radius[cm]:")
@@ -471,21 +490,33 @@ function CoreAreaTriggerUnitElement:scale_slider(panel, sizer, number_ctrlr_para
 
 	slider_sizer:add(slider, 2, 0, "EXPAND")
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_size"), {
+		ctrlr = nil,
+		value = nil,
+		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_size"), {
+		ctrlr = nil,
+		value = nil,
+		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "size_release"), {
+		ctrlr = nil,
+		value = nil,
+		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBRELEASE", callback(self, self, "size_release"), {
+		ctrlr = nil,
+		value = nil,
+		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
@@ -561,9 +592,11 @@ function CoreAreaOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0.75,
+				from_unit = nil,
 				b = 0.25,
+				g = 0.75,
 				r = 0.75,
+				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -576,8 +609,8 @@ end
 
 function CoreAreaOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and ray.unit:name():s() == "core/units/mission_elements/trigger_area/trigger_area" then

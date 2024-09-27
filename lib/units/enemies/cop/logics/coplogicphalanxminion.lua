@@ -28,6 +28,7 @@ CopLogicPhalanxMinion.allowed_transitional_actions = {
 
 function CopLogicPhalanxMinion.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -46,8 +47,8 @@ function CopLogicPhalanxMinion.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 
@@ -182,6 +183,8 @@ function CopLogicPhalanxMinion.breakup(remote_call)
 		local phalanx_area = groupai:get_area_from_nav_seg_id(phalanx_center_nav_seg)
 		local grp_objective = {
 			type = "hunt",
+			area = nil,
+			nav_seg = nil,
 			area = phalanx_area,
 			nav_seg = phalanx_center_nav_seg
 		}

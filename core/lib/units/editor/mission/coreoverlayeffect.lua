@@ -73,12 +73,16 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	end
 
 	local effect_params = {
-		default = "none",
-		name = "Effect:",
 		ctrlr_proportions = 2,
+		sorted = true,
+		panel = nil,
 		name_proportions = 1,
 		tooltip = "Select a preset effect for the combo box",
-		sorted = true,
+		default = "none",
+		sizer = nil,
+		value = nil,
+		name = "Effect:",
+		options = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = options,
@@ -88,6 +92,7 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 
 	effect:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "effect",
+		ctrlr = nil,
 		ctrlr = effect
 	})
 	effect:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "changed_effect"), nil)
@@ -101,10 +106,12 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	fade_in:connect("EVT_CHAR", callback(nil, _G, "verify_number"), fade_in)
 	fade_in:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_option_time"), {
 		value = "fade_in",
+		ctrlr = nil,
 		ctrlr = fade_in
 	})
 	fade_in:connect("EVT_KILL_FOCUS", callback(self, self, "set_option_time"), {
 		value = "fade_in",
+		ctrlr = nil,
 		ctrlr = fade_in
 	})
 	fade_in_sizer:add(fade_in, 3, 0, "EXPAND")
@@ -124,10 +131,12 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	sustain:connect("EVT_CHAR", callback(nil, _G, "verify_number"), sustain)
 	sustain:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_option_time"), {
 		value = "sustain",
+		ctrlr = nil,
 		ctrlr = sustain
 	})
 	sustain:connect("EVT_KILL_FOCUS", callback(self, self, "set_option_time"), {
 		value = "sustain",
+		ctrlr = nil,
 		ctrlr = sustain
 	})
 	sustain_sizer:add(sustain, 3, 0, "EXPAND")
@@ -147,10 +156,12 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	fade_out:connect("EVT_CHAR", callback(nil, _G, "verify_number"), fade_out)
 	fade_out:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_option_time"), {
 		value = "fade_out",
+		ctrlr = nil,
 		ctrlr = fade_out
 	})
 	fade_out:connect("EVT_KILL_FOCUS", callback(self, self, "set_option_time"), {
 		value = "fade_out",
+		ctrlr = nil,
 		ctrlr = fade_out
 	})
 	fade_out_sizer:add(fade_out, 3, 0, "EXPAND")

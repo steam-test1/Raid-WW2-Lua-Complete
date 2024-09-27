@@ -58,8 +58,8 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	self._ip_verified = false
 	self._is_drop_in = false
 	self._dlcs = {
-		dlc2 = false,
 		dlc3 = false,
+		dlc2 = false,
 		dlc1 = false,
 		dlc4 = false
 	}
@@ -83,11 +83,14 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	end
 
 	self._profile = {
-		outfit_string = ""
+		outfit_string = "",
+		chat = nil
 	}
 	self._handshakes = {}
 	self._streaming_status = 0
 	self._outfit_assets = {
+		unit = nil,
+		texture = nil,
 		unit = {},
 		texture = {}
 	}
@@ -461,6 +464,7 @@ function NetworkPeer:mark_cheater(reason)
 	self._cheater = true
 
 	managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(managers.vote:kick_reason_to_string(reason), {
+		name = nil,
 		name = self:name()
 	}))
 
@@ -773,6 +777,12 @@ end
 
 function NetworkPeer:set_statistics(kills, specials_kills, head_shots, accuracy, downs, revives)
 	self._statistics = {
+		revives = nil,
+		downs = nil,
+		accuracy = nil,
+		head_shots = nil,
+		specials_kills = nil,
+		kills = nil,
 		kills = kills,
 		specials_kills = specials_kills,
 		head_shots = head_shots,
@@ -1178,6 +1188,7 @@ function NetworkPeer:set_level(level)
 	self._level = level
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PEER_LEVEL_UP, {
+		peer = nil,
 		peer = self
 	})
 end
@@ -1411,6 +1422,8 @@ function NetworkPeer:_unload_outfit()
 	end
 
 	self._outfit_assets = {
+		unit = nil,
+		texture = nil,
 		unit = {},
 		texture = {}
 	}
@@ -1428,6 +1441,8 @@ function NetworkPeer:_reload_outfit()
 	self._loading_outfit_assets = true
 	local is_local_peer = self == managers.network:session():local_peer()
 	local new_outfit_assets = {
+		unit = nil,
+		texture = nil,
 		unit = {},
 		texture = {}
 	}
@@ -1441,6 +1456,7 @@ function NetworkPeer:_reload_outfit()
 	local factory_id = complete_outfit.primary.factory_id .. (is_local_peer and "" or "_npc")
 	local ids_primary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
 	new_outfit_assets.unit.primary_w = {
+		name = nil,
 		name = ids_primary_u_name
 	}
 	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
@@ -1449,6 +1465,7 @@ function NetworkPeer:_reload_outfit()
 
 	for part_id, part in pairs(primary_w_parts) do
 		new_outfit_assets.unit["prim_w_part_" .. tostring(part_id)] = {
+			name = nil,
 			name = part.name
 		}
 	end
@@ -1456,6 +1473,7 @@ function NetworkPeer:_reload_outfit()
 	local factory_id = complete_outfit.secondary.factory_id .. (is_local_peer and "" or "_npc")
 	local ids_secondary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
 	new_outfit_assets.unit.secondary_w = {
+		name = nil,
 		name = ids_secondary_u_name
 	}
 	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
@@ -1464,6 +1482,7 @@ function NetworkPeer:_reload_outfit()
 
 	for part_id, part in pairs(secondary_w_parts) do
 		new_outfit_assets.unit["sec_w_part_" .. tostring(part_id)] = {
+			name = nil,
 			name = part.name
 		}
 	end
@@ -1473,6 +1492,7 @@ function NetworkPeer:_reload_outfit()
 
 	if melee_u_name then
 		new_outfit_assets.unit.melee_w = {
+			name = nil,
 			name = Idstring(melee_u_name)
 		}
 	end
@@ -1482,6 +1502,7 @@ function NetworkPeer:_reload_outfit()
 
 	if grenade_u_name then
 		new_outfit_assets.unit.grenade_w = {
+			name = nil,
 			name = Idstring(grenade_u_name)
 		}
 	end
@@ -1490,6 +1511,7 @@ function NetworkPeer:_reload_outfit()
 
 	if grenade_sprint_u_name then
 		new_outfit_assets.unit.grenade_sprint_w = {
+			name = nil,
 			name = Idstring(grenade_sprint_u_name)
 		}
 	end
@@ -1499,6 +1521,7 @@ function NetworkPeer:_reload_outfit()
 
 		if grenade_dummy_u_name then
 			new_outfit_assets.unit.grenade_dummy_w = {
+				name = nil,
 				name = Idstring(grenade_dummy_u_name)
 			}
 		end

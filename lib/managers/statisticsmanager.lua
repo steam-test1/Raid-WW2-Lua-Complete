@@ -10,413 +10,518 @@ end
 function StatisticsManager:_setup(reset)
 	self._defaults = {
 		killed = {
+			german_grunt_heavy_shotgun = nil,
+			german_grunt_heavy_kar98 = nil,
+			german_grunt_heavy_mp38 = nil,
+			german_grunt_heavy = nil,
+			german_grunt_mid_shotgun = nil,
+			german_grunt_mid_kar98 = nil,
+			german_grunt_mid_mp38 = nil,
+			german_grunt_mid = nil,
+			german_grunt_light_shotgun = nil,
+			german_grunt_light_kar98 = nil,
+			german_grunt_light_mp38 = nil,
+			german_fallschirmjager_heavy_shotgun = nil,
+			german_waffen_ss = nil,
+			german_waffen_ss_kar98 = nil,
+			german_waffen_ss_shotgun = nil,
+			german_commander = nil,
+			german_grunt_light = nil,
+			total = nil,
+			other = nil,
+			soviet_nkvd_int_security_captain_b = nil,
+			soviet_nkvd_int_security_captain = nil,
+			german_spotter = nil,
+			german_sniper = nil,
+			german_flamer = nil,
+			german_officer = nil,
+			german_og_commander = nil,
+			german_fallschirmjager_heavy_kar98 = nil,
+			german_fallschirmjager_heavy_mp38 = nil,
+			german_fallschirmjager_heavy = nil,
+			german_fallschirmjager_light_shotgun = nil,
+			german_fallschirmjager_light_kar98 = nil,
+			german_fallschirmjager_light_mp38 = nil,
+			german_fallschirmjager_light = nil,
+			german_gasmask_commander_backup_shotgun = nil,
+			german_gasmask_commander_backup = nil,
+			german_heavy_commander_backup_shotgun = nil,
+			german_heavy_commander_backup_kar98 = nil,
+			german_heavy_commander_backup = nil,
+			german_light_commander_backup_shotgun = nil,
+			german_light_commander_backup_kar98 = nil,
+			german_light_commander_backup = nil,
+			german_gasmask_shotgun = nil,
+			german_gasmask = nil,
+			german_heavy_shotgun = nil,
+			german_heavy_kar98 = nil,
+			german_heavy = nil,
+			german_light_shotgun = nil,
+			german_light_kar98 = nil,
+			german_light = nil,
+			german_gebirgsjager_heavy_shotgun = nil,
+			german_gebirgsjager_heavy_kar98 = nil,
+			german_gebirgsjager_heavy_mp38 = nil,
+			german_gebirgsjager_heavy = nil,
+			german_gebirgsjager_light_shotgun = nil,
+			german_gebirgsjager_light_kar98 = nil,
+			german_gebirgsjager_light_mp38 = nil,
+			german_gebirgsjager_light = nil,
 			german_grunt_light = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_light_mp38 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_mid = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_mid_mp38 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_mid_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_mid_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_heavy = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_heavy_mp38 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_grunt_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_light = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_light_mp38 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy_mp38 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_light = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_heavy = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_heavy_mp38 = {
-				melee = 0,
 				dismembered = 0,
-				count = 0,
-				head_shots = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light = {
-				melee = 0,
 				dismembered = 0,
-				count = 0,
-				head_shots = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light_mp38 = {
 				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light_kar98 = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_fallschirmjager_light_shotgun = {
-				melee = 0,
-				dismembered = 0,
-				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
+				head_shots = 0
 			},
 			german_gasmask = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_gasmask_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
+			},
+			german_light_commander_backup = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_light_commander_backup_kar98 = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_light_commander_backup_shotgun = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_heavy_commander_backup = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_heavy_commander_backup_kar98 = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_heavy_commander_backup_shotgun = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_gasmask_commander_backup = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_gasmask_commander_backup_shotgun = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_fallschirmjager_light = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_fallschirmjager_light_mp38 = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_fallschirmjager_light_kar98 = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
+			},
+			german_fallschirmjager_light_shotgun = {
+				count = 0,
+				dismembered = 0,
+				tied = 0,
+				explosion = 0,
+				melee = 0,
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy_mp38 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_waffen_ss = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
-				explosion = 0,
-				tied = 0
-			},
-			german_waffen_ss_mp38 = {
-				melee = 0,
 				dismembered = 0,
-				count = 0,
-				head_shots = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_waffen_ss_kar98 = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_waffen_ss_shotgun = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_commander = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_og_commander = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_officer = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_flamer = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_sniper = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			german_spotter = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			soviet_nkvd_int_security_captain = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			soviet_nkvd_int_security_captain_b = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			other = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			},
 			total = {
-				melee = 0,
-				dismembered = 0,
 				count = 0,
-				head_shots = 0,
+				dismembered = 0,
+				tied = 0,
 				explosion = 0,
-				tied = 0
+				melee = 0,
+				head_shots = 0
 			}
 		},
 		killed_by_melee = {},
@@ -438,19 +543,19 @@ function StatisticsManager:_setup(reset)
 
 	for _, lvl in ipairs(tweak_data.statistics:statistics_table()) do
 		self._defaults.sessions.levels[lvl] = {
-			from_beginning = 0,
 			time = 0,
-			started = 0,
-			completed = 0,
+			from_beginning = 0,
 			drop_in = 0,
-			quited = 0
+			quited = 0,
+			completed = 0,
+			started = 0
 		}
 	end
 
 	self._defaults.sessions.jobs = {}
 	self._defaults.revives = {
-		npc_count = 0,
-		player_count = 0
+		player_count = 0,
+		npc_count = 0
 	}
 	self._defaults.objectives = {
 		count = 0
@@ -460,10 +565,10 @@ function StatisticsManager:_setup(reset)
 		hits = 0
 	}
 	self._defaults.downed = {
-		death = 0,
+		fatal = 0,
 		bleed_out = 0,
-		incapacitated = 0,
-		fatal = 0
+		death = 0,
+		incapacitated = 0
 	}
 	self._defaults.reloads = {
 		count = 0
@@ -478,20 +583,20 @@ function StatisticsManager:_setup(reset)
 	}
 	self._defaults.camp = {}
 	self._defaults.challenge_cards = {
-		complete_raid_common_count = 0,
-		start_operation_rare_count = 0,
-		start_raid_common_count = 0,
-		start_operation_uncommon_count = 0,
-		complete_operation_common_count = 0,
-		complete_raid_rare_count = 0,
-		complete_operation_uncommon_count = 0,
-		complete_raid_uncommon_count = 0,
-		complete_operation_rare_count = 0,
-		complete_mission_grand_total = 0,
 		complete_mission_rare_total = 0,
+		complete_mission_grand_total = 0,
+		complete_operation_rare_count = 0,
+		complete_operation_uncommon_count = 0,
+		complete_operation_common_count = 0,
+		start_operation_rare_count = 0,
+		start_operation_uncommon_count = 0,
 		start_operation_common_count = 0,
+		complete_raid_rare_count = 0,
+		complete_raid_uncommon_count = 0,
+		complete_raid_common_count = 0,
 		start_raid_rare_count = 0,
-		start_raid_uncommon_count = 0
+		start_raid_uncommon_count = 0,
+		start_raid_common_count = 0
 	}
 	self._defaults.tier_4_weapon_skill_bought = {}
 
@@ -792,8 +897,9 @@ function StatisticsManager:publish_camp_stats_to_steam()
 
 	for stat_name, stat_value in pairs(camp_values) do
 		stats[stat_name] = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = tonumber(stat_value) or 0
 		}
 	end
@@ -808,13 +914,15 @@ function StatisticsManager:publish_top_stats_to_steam()
 
 	local stats = {
 		ach_top_stats_award = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = self._global.misc.best_of_stats or 0
 		},
 		ach_all_3_top_stats_award = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = self._global.misc.best_of_stats_all_3 or 0
 		}
 	}
@@ -931,26 +1039,32 @@ end
 function StatisticsManager:write_level_stats(session, stats)
 	for level_name, level_data in pairs(sessions.levels) do
 		stats["level_" .. level_name .. "_completed"] = {
+			value = nil,
 			type = "int",
 			value = level_data.completed
 		}
 		stats["level_" .. level_name .. "_started"] = {
+			value = nil,
 			type = "int",
 			value = level_data.started
 		}
 		stats["level_" .. level_name .. "_drop_in"] = {
+			value = nil,
 			type = "int",
 			value = level_data.drop_in
 		}
 		stats["level_" .. level_name .. "_quit"] = {
+			value = nil,
 			type = "int",
 			value = level_data.quited
 		}
 		stats["level_" .. level_name .. "_from_beginning"] = {
+			value = nil,
 			type = "int",
 			value = level_data.from_beginning
 		}
 		stats["level_" .. level_name .. "_time"] = {
+			value = nil,
 			type = "int",
 			value = level_data.time
 		}
@@ -987,10 +1101,12 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 					type = "int"
 				}
 				stats["weapon_shots_" .. weapon_name] = {
+					value = nil,
 					type = "int",
 					value = weapon_data.total
 				}
 				stats["weapon_hits_" .. weapon_name] = {
+					value = nil,
 					type = "int",
 					value = weapon_data.hits
 				}
@@ -1015,6 +1131,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	for weapon_name, weapon_data in pairs(session.killed_by_weapon) do
 		if weapon_data.count > 0 and table.contains(weapon_list, weapon_name) then
 			stats["weapon_kills_" .. weapon_name] = {
+				value = nil,
 				type = "int",
 				value = weapon_data.count
 			}
@@ -1024,6 +1141,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	for melee_name, melee_kill in pairs(session.killed_by_melee) do
 		if melee_kill > 0 and table.contains(melee_list, melee_name) then
 			stats["melee_kills_" .. melee_name] = {
+				value = nil,
 				type = "int",
 				value = melee_kill
 			}
@@ -1033,6 +1151,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	for grenade_name, grenade_kill in pairs(session.killed_by_grenade) do
 		if grenade_kill > 0 and table.contains(grenade_list, grenade_name) then
 			stats["grenade_kills_" .. grenade_name] = {
+				value = nil,
 				type = "int",
 				value = grenade_kill
 			}
@@ -1042,6 +1161,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	for enemy_name, enemy_data in pairs(session.killed) do
 		if enemy_data.count > 0 and enemy_name ~= "total" and table.contains(enemy_list, enemy_name) then
 			stats["enemy_kills_" .. enemy_name] = {
+				value = nil,
 				type = "int",
 				value = enemy_data.count
 			}
@@ -1049,146 +1169,177 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	end
 
 	stats.ach_kill_enemies = {
+		value = nil,
 		type = "int",
 		value = session.killed.total.count
 	}
 	stats.ach_dismember_enemies = {
+		value = nil,
 		type = "int",
 		value = session.killed.total.dismembered
 	}
 	stats.ach_kill_enemies_with_headshot = {
+		value = nil,
 		type = "int",
 		value = session.killed.total.head_shots
 	}
 	stats.ach_kill_enemies_with_melee = {
+		value = nil,
 		type = "int",
 		value = self:session_killed_by_melee()
 	}
 	stats.ach_kill_enemies_with_grenades = {
+		value = nil,
 		type = "int",
 		value = self:session_killed_by_stat_group("grenade")
 	}
 	stats.ach_kill_enemies_with_mines = {
+		value = nil,
 		type = "int",
 		value = self:session_killed_by_stat_group("mine")
 	}
 	stats.ach_kill_enemies_with_secondary_weap = {
+		value = nil,
 		type = "int",
 		value = self:session_killed_by_secondary_weapons()
 	}
 	stats.ach_kill_enemies_with_turret = {
+		value = nil,
 		type = "int",
 		value = session.killed_by_turret.count or 0
 	}
 	stats.ach_run_over_enemies_with_jeep = {
+		value = nil,
 		type = "int",
 		value = session.killed_by_vehicle.count or 0
 	}
 	stats.challenge_cards_complete_operation_common_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_operation_common_count or 0
 	}
 	stats.challenge_cards_complete_operation_rare_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_operation_rare_count or 0
 	}
 	stats.challenge_cards_complete_operation_uncommon_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_raid_common_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_raid_common_count or 0
 	}
 	stats.challenge_cards_complete_raid_rare_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_raid_rare_count or 0
 	}
 	stats.challenge_cards_complete_raid_uncommon_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_start_operation_common_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_operation_common_count or 0
 	}
 	stats.challenge_cards_start_operation_rare_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_operation_rare_count or 0
 	}
 	stats.challenge_cards_start_operation_uncommon_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_start_raid_common_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_raid_common_count or 0
 	}
 	stats.challenge_cards_start_raid_rare_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_raid_rare_count or 0
 	}
 	stats.challenge_cards_start_raid_uncommon_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_operation_total_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.complete_operation_common_count or 0) + (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_operation_uncommon_count or 0)
 	}
 	stats.challenge_cards_complete_raid_total_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.complete_raid_common_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0) + (self._global.challenge_cards.complete_raid_uncommon_count or 0)
 	}
 	stats.challenge_cards_start_operation_total_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.start_operation_common_count or 0) + (self._global.challenge_cards.start_operation_rare_count or 0) + (self._global.challenge_cards.start_operation_uncommon_count or 0)
 	}
 	stats.challenge_cards_start_raid_total_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.start_raid_common_count or 0) + (self._global.challenge_cards.start_raid_rare_count or 0) + (self._global.challenge_cards.start_raid_uncommon_count or 0)
 	}
 	stats.challenge_cards_complete_mission_grand_total = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_mission_grand_total or 0
 	}
 	stats.challenge_cards_complete_mission_rare_total = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0)
 	}
 	stats.ach_open_loot_crates = {
+		value = nil,
 		type = "int",
 		value = session.misc.open_loot_crate or 0
 	}
 	stats.ach_reach_level_40_count = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = self._global.misc.character_level_40_count or 0
 	}
 	stats.dogtags_collected = {
+		value = nil,
 		type = "int",
 		value = session.misc.dogtags_collected or 0
 	}
 	local count_revives = session.revives.player_count + session.revives.npc_count
 	stats.ach_revive_teammates = {
+		value = nil,
 		type = "int",
 		value = count_revives
 	}
@@ -1248,27 +1399,39 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	if table.contains(level_list, level_id) then
 		for level_name, level_data in pairs(self._global.sessions.levels) do
 			stats["level_" .. level_name .. "_completed"] = {
+				value = nil,
 				type = "int",
+				method = "set",
 				value = level_data.completed
 			}
 			stats["level_" .. level_name .. "_started"] = {
+				value = nil,
 				type = "int",
+				method = "set",
 				value = level_data.started
 			}
 			stats["level_" .. level_name .. "_drop_in"] = {
+				value = nil,
 				type = "int",
+				method = "set",
 				value = level_data.drop_in
 			}
 			stats["level_" .. level_name .. "_quit"] = {
+				value = nil,
 				type = "int",
+				method = "set",
 				value = level_data.quited
 			}
 			stats["level_" .. level_name .. "_from_beginning"] = {
+				value = nil,
 				type = "int",
+				method = "set",
 				value = level_data.from_beginning
 			}
 			stats["level_" .. level_name .. "_time"] = {
+				value = nil,
 				type = "int",
+				method = "set",
 				value = level_data.time
 			}
 		end
@@ -1279,6 +1442,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	if table.contains(job_list, job_id) then
 		for job_name, job_data in pairs(self._global.sessions.jobs) do
 			stats["jobs_" .. job_name] = {
+				value = nil,
 				type = "int",
 				value = job_data
 			}
@@ -1290,6 +1454,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 			print("Mission Statistics: mission_" .. name, count)
 
 			stats["mission_" .. name] = {
+				value = nil,
 				type = "int",
 				value = count
 			}
@@ -1307,8 +1472,9 @@ function StatisticsManager:publish_level_to_steam()
 	local stats = {}
 	local current_level = managers.experience:current_level()
 	stats.player_level = {
-		method = "set",
+		value = nil,
 		type = "int",
+		method = "set",
 		value = current_level
 	}
 	local max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false)
@@ -1316,16 +1482,16 @@ function StatisticsManager:publish_level_to_steam()
 	for i = 0, max_level, 10 do
 		stats["player_level_" .. i] = {
 			value = 0,
-			method = "set",
-			type = "int"
+			type = "int",
+			method = "set"
 		}
 	end
 
 	local level_range = max_level <= current_level and max_level or math.floor(current_level / 10) * 10
 	stats["player_level_" .. level_range] = {
 		value = 1,
-		method = "set",
-		type = "int"
+		type = "int",
+		method = "set"
 	}
 
 	managers.network.account:publish_statistics(stats)
@@ -1341,8 +1507,9 @@ function StatisticsManager:publish_gold_to_steam()
 
 	if player_gold_amount then
 		stats.player_gold_amount = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = player_gold_amount
 		}
 
@@ -1398,8 +1565,9 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if primary_index then
 		stats.equipped_primary = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = primary_index
 		}
 	end
@@ -1409,8 +1577,9 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if secondary_index then
 		stats.equipped_secondary = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = secondary_index
 		}
 	end
@@ -1420,8 +1589,9 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if melee_index then
 		stats.equipped_melee = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = melee_index
 		}
 	end
@@ -1431,8 +1601,9 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if grenade_index then
 		stats.equipped_grenade = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = grenade_index
 		}
 	end
@@ -1442,8 +1613,9 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if character_index then
 		stats.equipped_character = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = character_index
 		}
 	end
@@ -1472,28 +1644,29 @@ function StatisticsManager:check_version()
 	for _, res in pairs(resolution_list) do
 		stats["option_resolution_" .. res] = {
 			value = 0,
-			method = "set",
-			type = "int"
+			type = "int",
+			method = "set"
 		}
 	end
 
 	stats.option_resolution_other = {
 		value = 0,
-		method = "set",
-		type = "int"
+		type = "int",
+		method = "set"
 	}
 	stats[table.contains(resolution_list, resolution) and "option_resolution_" .. resolution or "option_resolution_other"] = {
 		value = 1,
-		method = "set",
-		type = "int"
+		type = "int",
+		method = "set"
 	}
 
 	if managers.network.account:get_stat("stat_version") < CURRENT_VERSION then
 		self:publish_skills_to_steam(true)
 
 		stats.stat_version = {
-			method = "set",
+			value = nil,
 			type = "int",
+			method = "set",
 			value = CURRENT_VERSION
 		}
 	end
@@ -1580,7 +1753,7 @@ function StatisticsManager:killed(data)
 	data.type = tweak_data.character[data.name] and tweak_data.character[data.name].challenges.type
 
 	if not self._global.killed[stats_name] or not self._global.session.killed[stats_name] then
-		Application:error("Bad name id applied to killed, " .. tostring(stats_name) .. ". Defaulting to 'other'")
+		Application:error("[StatisticsManager:killed] Bad name id applied to killed, " .. tostring(stats_name) .. ". Defaulting to 'other'")
 
 		stats_name = "other"
 	end
@@ -1899,6 +2072,7 @@ end
 function StatisticsManager:recieved_experience(data)
 	self._global.experience[data.size] = self._global.experience[data.size] or {
 		count = 0,
+		actions = nil,
 		actions = {}
 	}
 	self._global.experience[data.size].count = self._global.experience[data.size].count + 1
@@ -1908,6 +2082,7 @@ function StatisticsManager:recieved_experience(data)
 	if self._session_started then
 		self._global.session.experience[data.size] = self._global.session.experience[data.size] or {
 			count = 0,
+			actions = nil,
 			actions = {}
 		}
 		self._global.session.experience[data.size].count = self._global.session.experience[data.size].count + 1
@@ -2340,8 +2515,9 @@ function StatisticsManager:calculate_top_stats()
 	for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
 		stats[stat_id] = {
 			score = 0,
-			score_difference = 0,
 			weight = 0,
+			score_difference = 0,
+			id = nil,
 			id = stat_id
 		}
 	end
@@ -2419,6 +2595,7 @@ function StatisticsManager:calculate_bottom_stats()
 
 	for index, bottom_stat in pairs(tweak_data.statistics.bottom_stats_calculated) do
 		stats[bottom_stat] = {
+			id = nil,
 			weight = 0,
 			score_difference = 0,
 			id = bottom_stat
@@ -2482,18 +2659,30 @@ function StatisticsManager:set_top_stats(top_stat_1_id, top_stat_1_peer_id, top_
 	self.top_stats = {}
 
 	table.insert(self.top_stats, {
+		id = nil,
+		peer_name = nil,
+		peer_id = nil,
+		score = nil,
 		id = top_stat_1_id,
 		peer_id = top_stat_1_peer_id,
 		peer_name = top_stat_1_peer_name,
 		score = top_stat_1_score
 	})
 	table.insert(self.top_stats, {
+		id = nil,
+		peer_name = nil,
+		peer_id = nil,
+		score = nil,
 		id = top_stat_2_id,
 		peer_id = top_stat_2_peer_id,
 		peer_name = top_stat_2_peer_name,
 		score = top_stat_2_score
 	})
 	table.insert(self.top_stats, {
+		id = nil,
+		peer_name = nil,
+		peer_id = nil,
+		score = nil,
 		id = top_stat_3_id,
 		peer_id = top_stat_3_peer_id,
 		peer_name = top_stat_3_peer_name,
@@ -2519,18 +2708,30 @@ function StatisticsManager:set_bottom_stats(bottom_stat_1_id, bottom_stat_1_peer
 	self.bottom_stats = {}
 
 	table.insert(self.bottom_stats, {
+		id = nil,
+		peer_name = nil,
+		peer_id = nil,
+		score = nil,
 		id = bottom_stat_1_id,
 		peer_id = bottom_stat_1_peer_id,
 		peer_name = bottom_stat_1_peer_name,
 		score = bottom_stat_1_score
 	})
 	table.insert(self.bottom_stats, {
+		id = nil,
+		peer_name = nil,
+		peer_id = nil,
+		score = nil,
 		id = bottom_stat_2_id,
 		peer_id = bottom_stat_2_peer_id,
 		peer_name = bottom_stat_2_peer_name,
 		score = bottom_stat_2_score
 	})
 	table.insert(self.bottom_stats, {
+		id = nil,
+		peer_name = nil,
+		peer_id = nil,
+		score = nil,
 		id = bottom_stat_3_id,
 		peer_id = bottom_stat_3_peer_id,
 		peer_name = bottom_stat_3_peer_name,
@@ -2589,6 +2790,7 @@ end
 
 function StatisticsManager:sync_save(data)
 	local state = {
+		session_started = nil,
 		session_started = self._session_started
 	}
 	data.StatisticsManager = state
@@ -2599,14 +2801,34 @@ function StatisticsManager:sync_load(data)
 
 	if state and state.session_started then
 		self:start_session({
-			drop_in = true,
-			from_beginning = false
+			from_beginning = false,
+			drop_in = true
 		})
 	end
 end
 
 function StatisticsManager:save(data)
 	local state = {
+		revives = nil,
+		play_time = nil,
+		misc = nil,
+		experience = nil,
+		killed = nil,
+		reloads = nil,
+		killed_by_turret = nil,
+		tier_4_weapon_skill_bought = nil,
+		sessions = nil,
+		shots_by_weapon = nil,
+		killed_by_vehicle = nil,
+		health = nil,
+		killed_by_grenade = nil,
+		killed_by_weapon = nil,
+		killed_by_melee = nil,
+		downed = nil,
+		shots_fired = nil,
+		objectives = nil,
+		challenge_cards = nil,
+		camp = nil,
 		downed = self._global.downed,
 		killed = self._global.killed,
 		objectives = self._global.objectives,

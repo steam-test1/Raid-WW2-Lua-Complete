@@ -149,6 +149,10 @@ function GreedTweakData:_init_cache_items()
 	self.cache_items.regular_cache_box.interaction_timer = 0.6
 	self.cache_items.regular_cache_box.lockpick = {
 		number_of_circles = 3,
+		sounds = nil,
+		circle_difficulty = nil,
+		circle_rotation_direction = nil,
+		circle_rotation_speed = nil,
 		circle_rotation_speed = {
 			240,
 			260,
@@ -165,39 +169,40 @@ function GreedTweakData:_init_cache_items()
 			0.94
 		},
 		sounds = {
-			dialog_fail = "player_gen_lockpick_fail",
 			dialog_success = "player_gen_lock_picked",
+			circles = nil,
 			dialog_enter = "player_gen_picking_lock",
 			failed = "lock_fail",
 			success = "success",
+			dialog_fail = "player_gen_lockpick_fail",
 			circles = {
 				{
-					mechanics = "lock_mechanics_a",
-					lock = "lock_a"
+					lock = "lock_a",
+					mechanics = "lock_mechanics_a"
 				},
 				{
-					mechanics = "lock_mechanics_b",
-					lock = "lock_b"
+					lock = "lock_b",
+					mechanics = "lock_mechanics_b"
 				},
 				{
-					mechanics = "lock_mechanics_c",
-					lock = "lock_c"
+					lock = "lock_c",
+					mechanics = "lock_mechanics_c"
 				}
 			}
 		}
 	}
 	self.cache_items.regular_cache_box.sequences = {
 		{
-			sequence = "chest_open_empty",
-			max_value = 0
+			max_value = 0,
+			sequence = "chest_open_empty"
 		},
 		{
-			sequence = "chest_open_half_full",
-			max_value = 0.5
+			max_value = 0.5,
+			sequence = "chest_open_half_full"
 		},
 		{
-			sequence = "chest_open_full",
-			max_value = 1
+			max_value = 1,
+			sequence = "chest_open_full"
 		}
 	}
 end
@@ -211,6 +216,7 @@ function GreedTweakData:_init_value_weights()
 					chance = 55
 				},
 				{
+					value = nil,
 					chance = 45,
 					value = self.item_value.low_end
 				}
@@ -221,6 +227,7 @@ function GreedTweakData:_init_value_weights()
 					chance = 60
 				},
 				{
+					value = nil,
 					chance = 43,
 					value = self.item_value.low_end
 				}
@@ -231,10 +238,12 @@ function GreedTweakData:_init_value_weights()
 					chance = 55
 				},
 				{
+					value = nil,
 					chance = 35,
 					value = self.item_value.low_end
 				},
 				{
+					value = nil,
 					chance = 10,
 					value = self.item_value.mid_end
 				}
@@ -245,14 +254,17 @@ function GreedTweakData:_init_value_weights()
 					chance = 50
 				},
 				{
+					value = nil,
 					chance = 32,
 					value = self.item_value.low_end
 				},
 				{
+					value = nil,
 					chance = 12,
 					value = self.item_value.mid_end
 				},
 				{
+					value = nil,
 					chance = 6,
 					value = self.item_value.high_end
 				}

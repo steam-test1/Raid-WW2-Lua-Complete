@@ -22,6 +22,8 @@ function WeaponFlashLight:init(unit)
 
 	local effect_path = "effects/vanilla/weapons/flashlight/fp_flashlight"
 	self._light_effect = World:effect_manager():spawn({
+		parent = nil,
+		effect = nil,
 		force_synch = true,
 		effect = Idstring(effect_path),
 		parent = self._a_flashlight_obj
@@ -38,6 +40,8 @@ function WeaponFlashLight:set_npc()
 	local obj = self._unit:get_object(Idstring("a_flashlight"))
 	local effect_path = "effects/vanilla/weapons/flashlight/flashlight"
 	self._light_effect = World:effect_manager():spawn({
+		parent = nil,
+		effect = nil,
 		effect = Idstring(effect_path),
 		parent = obj
 	})

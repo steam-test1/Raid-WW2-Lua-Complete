@@ -197,25 +197,36 @@ function Shape:_create_size_ctrl(name, property, value, parent, sizer)
 	ctrl:connect("EVT_CHAR", callback(nil, _G, "verify_number"), ctrl)
 	ctrl:set_tool_tip("Type in property " .. name)
 	ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_size"), {
+		property = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		property = property
 	})
 	ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_size"), {
+		property = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		property = property
 	})
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_size_spin"), {
 		step = 0.1,
+		property = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		property = property
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_size_spin"), {
 		step = -0.1,
+		property = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		property = property
 	})
 
 	local params = {
+		slider = nil,
+		property = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		slider = slider,
 		property = property

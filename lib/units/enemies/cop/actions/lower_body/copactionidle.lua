@@ -67,6 +67,7 @@ function CopActionIdle:init(action_desc, common_data)
 		if not stand_rsrv or mvector3.distance_sq(stand_rsrv.position, common_data.pos) > 400 then
 			self._unit:brain():add_pos_rsrv("stand", {
 				radius = 30,
+				position = nil,
 				position = mvector3.copy(common_data.pos)
 			})
 		end
@@ -150,8 +151,9 @@ function CopActionIdle:update(t)
 					if math.abs(spin) > 70 then
 						self._rot_offset = -spin
 						local new_action_data = {
-							body_part = 2,
 							type = "turn",
+							body_part = 2,
+							angle = nil,
 							angle = spin
 						}
 
@@ -168,8 +170,9 @@ function CopActionIdle:update(t)
 		self._modifier:set_target_z(target_vec)
 	elseif self._rot_offset then
 		local new_action_data = {
-			body_part = 2,
 			type = "turn",
+			body_part = 2,
+			angle = nil,
 			angle = self._start_fwd:to_polar_with_reference(self._common_data.fwd, math.UP).spin
 		}
 
@@ -220,6 +223,9 @@ function CopActionIdle:on_attention(attention)
 		mrot_set_lookat(start_rot, start_vec, math.UP)
 
 		self._look_trans = {
+			start_rot = nil,
+			duration = nil,
+			start_t = nil,
 			start_t = TimerManager:game():time(),
 			duration = duration,
 			start_rot = start_rot

@@ -516,12 +516,18 @@ end
 
 function ChallengeCardsManager:card_failed_warning(challenge_card_key, effect_id, peer_id)
 	local notification_data = {
+		notification_type = nil,
+		id = nil,
+		reaction = nil,
 		priority = 1,
+		card = nil,
 		duration = 10,
 		id = challenge_card_key,
 		notification_type = HUDNotification.CARD_FAIL,
 		card = challenge_card_key,
 		reaction = {
+			callback = nil,
+			callback_self = nil,
 			callback = managers.hud.show_stats_screen,
 			callback_self = managers.hud
 		}
@@ -536,6 +542,8 @@ end
 
 function ChallengeCardsManager:save_dropin(data)
 	local state = {
+		active_card = nil,
+		suggested_cards = nil,
 		active_card = self._active_card,
 		suggested_cards = self._suggested_cards
 	}

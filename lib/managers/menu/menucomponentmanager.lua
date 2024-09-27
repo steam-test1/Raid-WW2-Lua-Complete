@@ -53,134 +53,200 @@ function MenuComponentManager:init()
 	self._is_game_installing = is_installing
 	self._active_components = {
 		raid_menu_mission_selection = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_mission_selection_gui"),
 			close = callback(self, self, "close_raid_menu_mission_selection_gui")
 		},
 		raid_menu_mission_unlock = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_mission_unlock_gui"),
 			close = callback(self, self, "close_raid_menu_mission_unlock_gui")
 		},
 		raid_menu_mission_join = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_mission_join_gui"),
 			close = callback(self, self, "close_raid_menu_mission_join_gui")
 		},
 		raid_menu_weapon_select = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_weapon_select_gui"),
 			close = callback(self, self, "close_raid_menu_weapon_select_gui")
 		},
 		raid_menu_profile_selection = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_select_character_profile_gui"),
 			close = callback(self, self, "close_raid_menu_select_character_profile_gui")
 		},
 		raid_menu_profile_creation = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_create_character_profile_gui"),
 			close = callback(self, self, "close_raid_menu_create_character_profile_gui")
 		},
 		raid_menu_character_customization = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_character_customization_gui"),
 			close = callback(self, self, "close_raid_menu_character_customization_gui")
 		},
 		raid_menu_main = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_main_menu_gui"),
 			close = callback(self, self, "close_raid_menu_main_menu_gui")
 		},
 		raid_menu_header = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_header_gui"),
 			close = callback(self, self, "close_raid_menu_header_gui")
 		},
 		raid_menu_footer = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_footer_gui"),
 			close = callback(self, self, "close_raid_menu_footer_gui")
 		},
 		raid_menu_left_options = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_left_options_gui"),
 			close = callback(self, self, "close_raid_menu_left_options_gui")
 		},
 		raid_menu_options_controls = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_controls_gui"),
 			close = callback(self, self, "close_raid_menu_options_controls_gui")
 		},
 		raid_menu_options_controls_keybinds = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_controls_keybinds_gui"),
 			close = callback(self, self, "close_raid_menu_options_controls_keybinds_gui")
 		},
 		raid_menu_options_controller_mapping = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_controller_mapping_gui"),
 			close = callback(self, self, "close_raid_menu_options_controller_mapping_gui")
 		},
 		raid_menu_options_sound = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_sound_gui"),
 			close = callback(self, self, "close_raid_menu_options_sound_gui")
 		},
 		raid_menu_options_network = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_network_gui"),
 			close = callback(self, self, "close_raid_menu_options_network_gui")
 		},
 		raid_menu_options_video = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_video_gui"),
 			close = callback(self, self, "close_raid_menu_options_video_gui")
 		},
 		raid_menu_options_video_advanced = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_video_advanced_gui"),
 			close = callback(self, self, "close_raid_menu_options_video_advanced_gui")
 		},
 		raid_menu_options_interface = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_options_interface_gui"),
 			close = callback(self, self, "close_raid_menu_options_interface_gui")
 		},
 		raid_options_background = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_options_background_gui"),
 			close = callback(self, self, "close_raid_options_background_gui")
 		},
 		raid_menu_ready_up = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_ready_up_gui"),
 			close = callback(self, self, "close_raid_ready_up_gui")
 		},
 		raid_menu_challenge_cards = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_challenge_cards_gui"),
 			close = callback(self, self, "close_raid_challenge_cards_gui")
 		},
 		raid_menu_challenge_cards_view = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_challenge_cards_view_gui"),
 			close = callback(self, self, "close_raid_challenge_cards_view_gui")
 		},
 		raid_menu_challenge_cards_loot_reward = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_challenge_cards_loot_reward_gui"),
 			close = callback(self, self, "close_raid_challenge_cards_loot_reward_gui")
 		},
 		raid_menu_xp = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_xp"),
 			close = callback(self, self, "close_raid_menu_xp")
 		},
 		raid_menu_post_game_breakdown = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_post_game_breakdown"),
 			close = callback(self, self, "close_raid_menu_post_game_breakdown")
 		},
 		raid_menu_special_honors = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_special_honors"),
 			close = callback(self, self, "close_raid_menu_special_honors")
 		},
 		raid_menu_loot = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_loot"),
 			close = callback(self, self, "close_raid_menu_loot")
 		},
 		raid_menu_greed_loot = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_greed_loot"),
 			close = callback(self, self, "close_raid_menu_greed_loot")
 		},
 		raid_menu_gold_asset_store = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_gold_asset_store_gui"),
 			close = callback(self, self, "close_raid_menu_gold_asset_store_gui")
 		},
 		raid_menu_intel = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_intel_gui"),
 			close = callback(self, self, "close_raid_menu_intel_gui")
 		},
 		raid_menu_comic_book = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_comic_book_gui"),
 			close = callback(self, self, "close_raid_menu_comic_book_gui")
 		},
 		raid_menu_credits = {
+			close = nil,
+			create = nil,
 			create = callback(self, self, "create_raid_menu_credits"),
 			close = callback(self, self, "close_raid_menu_credits")
 		}
@@ -968,12 +1034,12 @@ function MenuComponentManager:create_chat_gui()
 	self:close_chat_gui()
 
 	local config = {
-		w = 540,
 		use_minimize_legend = true,
-		h = 220,
-		header_type = "fit",
 		no_close_legend = true,
-		x = 290
+		h = 220,
+		w = 540,
+		x = 290,
+		header_type = "fit"
 	}
 	self._chat_book = BookBoxGui:new(self._ws, nil, config)
 
@@ -1065,6 +1131,8 @@ function MenuComponentManager:create_lobby_profile_gui(peer_id, x, y)
 
 	self._lobby_profile_gui = LobbyProfileBoxGui:new(self._ws, nil, nil, nil, {
 		h = 160,
+		y = nil,
+		x = nil,
 		x = x,
 		y = y
 	}, peer_id)
@@ -1093,10 +1161,10 @@ function MenuComponentManager:create_view_character_profile_gui(user, x, y)
 	self:close_view_character_profile_gui()
 
 	self._view_character_profile_gui = ViewCharacterProfileBoxGui:new(self._ws, nil, nil, nil, {
-		w = 360,
 		x = 837,
+		y = 100,
 		h = 160,
-		y = 100
+		w = 360
 	}, user)
 
 	self._view_character_profile_gui:set_title(nil)
@@ -1127,20 +1195,23 @@ function MenuComponentManager:add_minimized(config)
 	self._minimized_list = self._minimized_list or {}
 	self._minimized_id = (self._minimized_id or 0) + 1
 	local panel = self._main_panel:panel({
-		w = 100,
+		layer = nil,
 		h = 20,
+		w = 100,
 		layer = tweak_data.gui.MENU_COMPONENT_LAYER
 	})
 	local text = nil
 
 	if config.text then
 		text = panel:text({
-			vertical = "center",
-			hvertical = "center",
 			halign = "left",
-			font_size = 22,
+			hvertical = "center",
 			align = "center",
 			layer = 2,
+			font_size = 22,
+			font = nil,
+			text = nil,
+			vertical = "center",
 			text = config.text,
 			font = tweak_data.menu.default_font
 		})
@@ -1154,12 +1225,16 @@ function MenuComponentManager:add_minimized(config)
 	end
 
 	local help_text = panel:parent():text({
-		halign = "left",
-		vertical = "center",
+		color = nil,
+		layer = 3,
+		font_size = nil,
+		font = nil,
 		hvertical = "center",
+		vertical = "center",
+		halign = "left",
 		align = "left",
 		visible = false,
-		layer = 3,
+		text = nil,
 		text = config.help_text or "CLICK TO MAXIMIZE WEAPON INFO",
 		font = tweak_data.menu.small_font,
 		font_size = tweak_data.menu.small_font_size,
@@ -1177,8 +1252,8 @@ function MenuComponentManager:add_minimized(config)
 	unselected:set_center_y(panel:center_y())
 
 	local selected = panel:bitmap({
-		texture = "guis/textures/menu_selected",
 		visible = false,
+		texture = "guis/textures/menu_selected",
 		layer = 1
 	})
 
@@ -1187,14 +1262,22 @@ function MenuComponentManager:add_minimized(config)
 	panel:set_bottom(self._main_panel:h() - CoreMenuRenderer.Renderer.border_height)
 
 	local top_line = panel:parent():bitmap({
+		w = nil,
+		visible = false,
 		texture = "guis/textures/headershadow",
 		layer = 1,
-		visible = false,
 		w = panel:w()
 	})
 
 	top_line:set_bottom(panel:top())
 	table.insert(self._minimized_list, {
+		selected = nil,
+		callback = nil,
+		panel = nil,
+		top_line = nil,
+		id = nil,
+		help_text = nil,
+		text = nil,
 		mouse_over = false,
 		id = self._minimized_id,
 		panel = panel,
@@ -1276,6 +1359,8 @@ function MenuComponentManager:request_texture(texture, done_cb)
 
 	if not entry then
 		entry = {
+			texture_ids = nil,
+			owners = nil,
 			next_index = 1,
 			owners = {},
 			texture_ids = texture_ids
@@ -1285,6 +1370,7 @@ function MenuComponentManager:request_texture(texture, done_cb)
 
 	local index = entry.next_index
 	entry.owners[index] = {
+		clbk = nil,
 		clbk = done_cb
 	}
 	local next_index = index + 1
@@ -3001,8 +3087,10 @@ end
 
 function MenuComponentManager:_create_voice_chat_status_info()
 	local widget_panel_params = {
+		h = nil,
 		name = "voice_chat_panel",
 		x = 0,
+		w = nil,
 		w = HUDPlayerVoiceChatStatus.DEFAULT_W,
 		h = HUDPlayerVoiceChatStatus.DEFAULT_H * 4
 	}

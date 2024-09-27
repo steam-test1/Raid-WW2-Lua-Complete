@@ -64,6 +64,8 @@ end
 function RaidGUIControlWeaponPointRewardDetails:_create_left_panel()
 	local left_panel_params = {
 		name = "left_panel",
+		h = nil,
+		w = nil,
 		w = RaidGUIControlWeaponPointRewardDetails.LEFT_PANEL_W,
 		h = self._object:h()
 	}
@@ -72,9 +74,14 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_title()
 	local title_description_params = {
-		align = "left",
 		vertical = "center",
 		name = "title_description",
+		h = nil,
+		color = nil,
+		font_size = nil,
+		font = nil,
+		text = nil,
+		align = "left",
 		h = RaidGUIControlWeaponPointRewardDetails.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.TITLE_DESCRIPTION_FONT_SIZE,
@@ -87,9 +94,14 @@ function RaidGUIControlWeaponPointRewardDetails:_create_title()
 	title_description:set_w(w)
 
 	local title_params = {
-		align = "center",
 		vertical = "top",
 		name = "customization_name",
+		align = "center",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		y = nil,
+		text = nil,
 		y = title_description:y() + title_description:h() + RaidGUIControlWeaponPointRewardDetails.TITLE_PADDING_TOP,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.TITLE_FONT_SIZE,
@@ -115,14 +127,19 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
+		h = nil,
 		name = "reward_image_panel",
+		y = nil,
+		w = nil,
 		y = RaidGUIControlWeaponPointRewardDetails.REWARD_ICON_PANEL_Y,
 		w = self._left_panel:w(),
 		h = RaidGUIControlWeaponPointRewardDetails.REWARD_ICON_PANEL_H
 	}
 	local reward_image_panel = self._left_panel:panel(reward_image_panel_params)
 	local reward_image_params = {
+		texture = nil,
 		name = "reward_image",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlWeaponPointRewardDetails.REWARD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlWeaponPointRewardDetails.REWARD_ICON].texture_rect
 	}
@@ -135,6 +152,10 @@ end
 function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	local redeem_description_params = {
 		name = "redeem_description",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		text = nil,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.REDEEM_DESCRIPTION_FONT_SIZE,
 		color = RaidGUIControlWeaponPointRewardDetails.REDEEM_DESCRIPTION_COLOR,
@@ -143,6 +164,10 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	local redeem_description = self._left_panel:text(redeem_description_params)
 	local redeem_value_params = {
 		name = "redeem_value",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		text = nil,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_FONT_SIZE,
 		color = RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_COLOR,
@@ -153,8 +178,12 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	self:_layout_redeem_info()
 
 	local redeem_xp_button_params = {
+		y = nil,
 		name = "redeem_xp_button",
 		x = 0,
+		on_click_callback = nil,
+		text = nil,
+		layer = nil,
 		y = self._left_panel:h() - RaidGUIControlWeaponPointRewardDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM,
 		text = self:translate("menu_loot_screen_redeem_xp", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -185,6 +214,8 @@ end
 function RaidGUIControlWeaponPointRewardDetails:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
+		h = nil,
+		w = nil,
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
@@ -195,9 +226,16 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_item_type()
 	local item_type_params = {
+		h = nil,
+		color = nil,
+		text = nil,
 		vertical = "center",
 		name = "item_type",
 		align = "right",
+		w = nil,
+		font_size = nil,
+		font = nil,
+		y = nil,
 		y = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_Y,
 		w = self._right_panel:w(),
 		h = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_H,
@@ -211,10 +249,16 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_description()
 	local description_params = {
+		w = nil,
+		wrap = true,
+		text = nil,
 		vertical = "top",
 		name = "description",
-		wrap = true,
 		align = "left",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		y = nil,
 		y = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_Y,
 		w = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_W,
 		font = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_FONT,
@@ -229,6 +273,8 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_on_click_redeem()
 	local params = {
+		callback = nil,
+		xp = nil,
 		callback = callback(self, self, "redeem"),
 		xp = self._xp_redeem_value
 	}

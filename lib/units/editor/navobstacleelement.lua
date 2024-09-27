@@ -18,6 +18,8 @@ function NavObstacleElement:layer_finished()
 
 	if self._hed.obstacle_unit_id then
 		table.insert(self._hed.obstacle_list, {
+			unit_id = nil,
+			obj_name = nil,
 			unit_id = self._hed.obstacle_unit_id,
 			obj_name = self._hed.obstacle_obj_name
 		})
@@ -58,6 +60,11 @@ function NavObstacleElement:_check_alive_units_and_draw(type, selected_unit, all
 			self._obstacle_units[id] = nil
 		elseif self:_should_draw_link(selected_unit, unit) then
 			local params = {
+				from_unit = nil,
+				b = nil,
+				to_unit = nil,
+				g = nil,
+				r = nil,
 				from_unit = self._unit,
 				to_unit = unit,
 				r = r,
@@ -91,8 +98,9 @@ end
 
 function NavObstacleElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
+		mask = nil,
 		mask = self:_select_unit_mask()
 	})
 
@@ -103,8 +111,9 @@ end
 
 function NavObstacleElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
+		mask = nil,
 		mask = self:_select_unit_mask()
 	})
 
@@ -117,6 +126,8 @@ function NavObstacleElement:_check_add_unit(unit)
 	local all_object_names = self:_get_objects_by_unit(unit)
 	self._obstacle_units[unit:unit_data().unit_id] = unit
 	local obstacle_list_data = {
+		unit_id = nil,
+		obj_name = nil,
 		unit_id = unit:unit_data().unit_id,
 		obj_name = Idstring(self._unindent_obj_name(all_object_names[1]))
 	}
@@ -195,12 +206,16 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 
 	local default_obj_idstr = self._get_unit_default_obstacle_object(unit) or obstacle_list_data.obj_name
 	local obj_names_params = {
-		name = "Object:",
+		panel = nil,
+		sorted = true,
 		sizer_proportions = 1,
+		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select an object from the combobox",
-		sorted = true,
-		ctrlr_proportions = 2,
+		value = nil,
+		options = nil,
+		sizer = nil,
+		name = "Object:",
 		panel = panel,
 		sizer = h_sizer,
 		options = all_object_names,
@@ -217,6 +232,13 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 	toolbar:realize()
 
 	self._guis[self._guis_id] = {
+		guis_id = nil,
+		name_ctrlr = nil,
+		unit = nil,
+		toolbar = nil,
+		unit_id = nil,
+		obj_names = nil,
+		unit_id_ctrlr = nil,
 		unit_id_ctrlr = unit_id,
 		unit = unit,
 		unit_id = unit:unit_data().unit_id,

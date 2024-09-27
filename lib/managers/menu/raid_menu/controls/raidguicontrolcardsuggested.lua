@@ -22,9 +22,13 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 	if self._on_remove_callback and self._grid_params and self._grid_params.remove_texture and params.peer_id == managers.network:session():local_peer():id() then
 		self._remove_card_button = self._card_panel:image({
 			name = "remove_card_button",
+			texture_rect = nil,
 			h = 36,
-			y = 0,
+			texture = nil,
 			w = 36,
+			y = 0,
+			x = nil,
+			layer = nil,
 			x = self._card_panel:w() - 38,
 			texture = tweak_data.gui.icons.btn_circ_x.texture,
 			texture_rect = tweak_data.gui.icons.btn_circ_x.texture_rect,
@@ -35,10 +39,13 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 	if self._on_lock_callback and self._grid_params and self._grid_params.lock_texture and params.peer_id == managers.network:session():local_peer():id() then
 		self._lock_card_button = self._card_panel:image({
 			name = "lock_card_button",
+			texture_rect = nil,
 			h = 36,
-			y = 0,
+			texture = nil,
 			w = 36,
+			y = 0,
 			x = 4,
+			layer = nil,
 			texture = tweak_data.gui.icons.btn_circ_lock.texture,
 			texture_rect = tweak_data.gui.icons.btn_circ_lock.texture_rect,
 			layer = self._card_image:layer() + 1
@@ -48,8 +55,13 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 	if self._grid_params and self._grid_params.lock_texture then
 		self._lock_card_image = self._card_panel:image({
 			name = "lock_card_image",
+			texture_rect = nil,
 			h = 48,
+			texture = nil,
 			w = 48,
+			y = nil,
+			x = nil,
+			layer = nil,
 			x = self._card_panel:w() / 2 - 18,
 			y = self._card_panel:h() / 4,
 			texture = tweak_data.gui.icons.btn_circ_lock.texture,
@@ -77,10 +89,17 @@ function RaidGUIControlCardSuggested:_show_controls_for_empty_cardback()
 	self._card_image:set_texture_rect(unpack(empty_slot_texture.texture_rect))
 
 	self._card_not_selected_label = self._card_panel:label({
+		color = nil,
 		name = "card_not_selected_label",
-		h = 128,
 		wrap = true,
+		font_size = nil,
+		font = nil,
 		align = "center",
+		h = 128,
+		text = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		x = self._card_image:x() + 5,
 		y = self._card_image:top() + 90,
 		w = self._card_image:w() - 10,
@@ -120,10 +139,17 @@ function RaidGUIControlCardSuggested:_show_controls_for_empty_suggestion()
 	self._card_image:set_texture_rect(unpack(empty_slot_texture.texture_rect))
 
 	self._card_not_selected_label = self._card_panel:label({
+		color = nil,
 		name = "card_not_selected_label",
-		h = 128,
 		wrap = true,
+		font_size = nil,
+		font = nil,
 		align = "center",
+		h = 128,
+		text = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		x = self._card_image:x() + 5,
 		y = self._card_image:top() + 90,
 		w = self._card_image:w() - 10,

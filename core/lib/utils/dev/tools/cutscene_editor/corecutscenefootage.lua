@@ -131,6 +131,7 @@ function CoreCutsceneFootage:_camera_cut_list()
 			end
 
 			local previous_key = responder_map({
+				camera = nil,
 				frame = 0,
 				camera = self._cutscene:default_camera()
 			})

@@ -403,6 +403,7 @@ function CoreHub:layer_finished()
 
 		if type_name(value) == "number" then
 			v = {
+				unit_id = nil,
 				type = "",
 				unit_id = v
 			}
@@ -448,8 +449,9 @@ function CoreHub:add_action(a)
 
 	local s = self:id_string(a)
 	self._hed.actions_data[s] = {
-		type = "",
 		action_delay = 0,
+		unit_id = nil,
+		type = "",
 		unit_id = a:unit_data().unit_id
 	}
 
@@ -476,6 +478,7 @@ function CoreHub:add_trigger(t)
 
 	local s = self:id_string(t)
 	self._hed.triggers_data[s] = {
+		unit_id = nil,
 		type = "",
 		unit_id = t:unit_data().unit_id
 	}
@@ -569,6 +572,7 @@ function CoreHub:_build_panel()
 	use_as_start_cb:set_tool_tip("Tell the mission that this is the start hub, not the one without triggers.")
 	use_as_start_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "use_as_start",
+		ctrlr = nil,
 		ctrlr = use_as_start_cb
 	})
 
@@ -578,6 +582,7 @@ function CoreHub:_build_panel()
 	trigger_once_cb:set_tool_tip("The hub will only perform actions once.")
 	trigger_once_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "trigger_once",
+		ctrlr = nil,
 		ctrlr = trigger_once_cb
 	})
 
@@ -587,6 +592,7 @@ function CoreHub:_build_panel()
 	trigger_on_inverse_cb:set_tool_tip("Will have the hub perform actions when triggers reaches start state again.")
 	trigger_on_inverse_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "trigger_on_inverse",
+		ctrlr = nil,
 		ctrlr = trigger_on_inverse_cb
 	})
 
@@ -636,16 +642,21 @@ function CoreHub:_build_panel()
 	action_delay:connect("EVT_CHAR", callback(nil, _G, "verify_number"), action_delay)
 	action_delay:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		callback = "set_action_delay",
+		ctrlr = nil,
 		ctrlr = action_delay
 	})
 	action_delay:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		callback = "set_action_delay",
+		ctrlr = nil,
 		ctrlr = action_delay
 	})
 	actions_sizer:add(action_delay_sizer, 0, 0, "EXPAND")
 	self._panel_sizer:add(actions_sizer, 0, 0, "EXPAND")
 
 	self._actions_ctrlrs = {
+		action_delay = nil,
+		actions = nil,
+		action_types = nil,
 		actions = actions,
 		action_delay = action_delay,
 		action_types = action_types
@@ -660,6 +671,7 @@ function CoreHub:_build_panel()
 	required_trigger_sizer:add(self._required_triggers, ctrl_prop, 0, "EXPAND")
 	self._required_triggers:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "required_triggers",
+		ctrlr = nil,
 		ctrlr = self._required_triggers
 	})
 	triggers_sizer:add(required_trigger_sizer, 0, 0, "EXPAND")
@@ -685,6 +697,8 @@ function CoreHub:_build_panel()
 	self._panel_sizer:add(triggers_sizer, 0, 0, "EXPAND")
 
 	self._triggers_ctrlrs = {
+		triggers = nil,
+		trigger_types = nil,
 		triggers = triggers,
 		trigger_types = trigger_types
 	}

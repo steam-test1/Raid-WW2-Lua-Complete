@@ -142,8 +142,11 @@ end
 
 function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_completed_list)
 	local obj_data = {
-		prio = 1,
+		description = nil,
+		id = nil,
+		text = nil,
 		xp_weight = 1,
+		prio = 1,
 		id = "dyn_" .. obj_id,
 		text = obj_id .. "_hl",
 		description = obj_id .. "_desc"
@@ -153,6 +156,10 @@ function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_
 	for _, t in ipairs(sub_id_list or {}) do
 		local subid = "dyn_" .. t .. "_sub"
 		obj_data[i] = {
+			id = nil,
+			prio = nil,
+			text = nil,
+			start_completed = nil,
 			id = subid,
 			text = t .. "_sub_hl",
 			prio = i,
@@ -183,8 +190,8 @@ function RaidJobManager:start_selected_job()
 	self._previously_completed_job = nil
 
 	managers.statistics:start_session({
-		drop_in = false,
-		from_beginning = true
+		from_beginning = true,
+		drop_in = false
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", true, false)
 	managers.network:session():send_to_peers_synched("sync_current_job", self._current_job.job_id)
@@ -884,8 +891,8 @@ function RaidJobManager:start_event(event_id)
 	managers.global_state:reset_flags_for_job("level_flag")
 	managers.global_state:set_flag(self._current_job.current_event_data.mission_flag)
 	managers.statistics:start_session({
-		drop_in = false,
-		from_beginning = false
+		from_beginning = false,
+		drop_in = false
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", false, false)
 	managers.lootdrop:reset_loot_value_counters()

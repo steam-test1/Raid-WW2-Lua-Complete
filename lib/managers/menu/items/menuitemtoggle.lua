@@ -12,11 +12,13 @@ function MenuItemToggleWithIcon:setup_gui(node, row_item, ...)
 	MenuItemToggleWithIcon.super.setup_gui(self, node, row_item, ...)
 
 	self._icon = row_item.gui_panel:bitmap({
-		name = "icon",
-		h = 16,
-		y = 6,
-		w = 16,
 		layer = 0,
+		texture = nil,
+		name = "icon",
+		blend_mode = nil,
+		h = 16,
+		w = 16,
+		y = 6,
 		texture = self._icon_texture,
 		blend_mode = node.row_item_blend_mode
 	})

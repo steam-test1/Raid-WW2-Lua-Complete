@@ -335,14 +335,16 @@ end
 
 function MissionManager:_show_debug_subtitle(debug, color)
 	self._debug_subtitle_text = self._debug_subtitle_text or self._workspace:panel():text({
-		font_size = 20,
-		name = "debug_fading_subtitle_text",
-		wrap = true,
 		word_wrap = true,
-		align = "center",
-		font = "core/fonts/diesel",
-		halign = "center",
 		valign = "center",
+		halign = "center",
+		align = "center",
+		wrap = true,
+		name = "debug_fading_subtitle_text",
+		font_size = 20,
+		font = "core/fonts/diesel",
+		text = nil,
+		color = nil,
 		text = debug,
 		color = color or Color.white
 	})

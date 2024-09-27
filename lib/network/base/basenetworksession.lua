@@ -88,6 +88,9 @@ function BaseNetworkSession:load(data)
 
 		for _, report in ipairs(data.dead_con_reports) do
 			local report = {
+				process_t = nil,
+				reported = nil,
+				reporter = nil,
 				process_t = report.process_t,
 				reporter = self._peers[report.reporter],
 				reported = self._peers[report.reported]
@@ -140,6 +143,9 @@ function BaseNetworkSession:save(data)
 
 		for _, report in ipairs(self._dead_con_reports) do
 			local save_report = {
+				process_t = nil,
+				reported = nil,
+				reporter = nil,
 				process_t = report.process_t,
 				reporter = report.reporter:id(),
 				reported = report.reported:id()
@@ -351,10 +357,12 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 
 	if reason == "kicked" then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KICKED, {
+			peer = nil,
 			peer = peer
 		})
 	else
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_LEFT, {
+			peer = nil,
 			peer = peer
 		})
 	end
@@ -362,18 +370,22 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 	if managers.chat then
 		if reason == "left" then
 			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_peer_left", {
+				name = nil,
 				name = peer:name()
 			}))
 		elseif reason == "kicked" then
 			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_peer_kicked", {
+				name = nil,
 				name = peer:name()
 			}))
 		elseif reason == "auth_fail" then
 			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_peer_failed", {
+				name = nil,
 				name = peer:name()
 			}))
 		else
 			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_peer_lost", {
+				name = nil,
 				name = peer:name()
 			}))
 		end
@@ -453,6 +465,13 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 
 				local unit = managers.groupai:state():spawn_one_teamAI(true, player_character)
 				self._old_players[peer_ident] = {
+					hostages_killed = nil,
+					member_downed = nil,
+					used_deployable = nil,
+					member_dead = nil,
+					respawn_penalty = nil,
+					health = nil,
+					t = nil,
 					t = Application:time(),
 					member_downed = member_downed,
 					health = member_health,
@@ -497,6 +516,8 @@ end
 function BaseNetworkSession:_soft_remove_peer(peer)
 	self._soft_remove_peers = self._soft_remove_peers or {}
 	self._soft_remove_peers[peer:rpc():ip_at_index(0)] = {
+		expire_t = nil,
+		peer = nil,
 		peer = peer,
 		expire_t = TimerManager:wall():time() + 1.5
 	}
@@ -896,6 +917,8 @@ function BaseNetworkSession:add_connection_to_trash(rpc)
 		print("[BaseNetworkSession:add_connection_to_trash]", wanted_ip)
 
 		self._trash_connections[wanted_ip] = {
+			expire_t = nil,
+			rpc = nil,
 			rpc = rpc,
 			expire_t = TimerManager:wall():time() + self.CONNECTION_TIMEOUT
 		}
@@ -1010,6 +1033,7 @@ function BaseNetworkSession:psn_disconnected()
 		Global.requestShowDisconnectedMessage = true
 	else
 		managers.menu:show_mp_disconnected_internet_dialog({
+			ok_func = nil,
 			ok_func = function ()
 				MenuCallbackHandler:_dialog_end_game_yes()
 			end
@@ -1040,6 +1064,7 @@ function BaseNetworkSession:xbox_disconnected()
 
 	managers.network.voice_chat:destroy_voice(true)
 	managers.menu:show_mp_disconnected_internet_dialog({
+		ok_func = nil,
 		ok_func = function ()
 			MenuCallbackHandler:_dialog_end_game_yes()
 		end
@@ -1688,17 +1713,21 @@ function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_spe
 	local total_specials_kills = 0
 	local total_head_shots = 0
 	local best_killer = {
+		peer_id = nil,
 		score = 0
 	}
 	local best_special_killer = {
+		peer_id = nil,
 		score = 0
 	}
 	local best_accuracy = {
+		peer_id = nil,
 		score = 0
 	}
 	local group_accuracy = 0
 	local group_downs = 0
 	local most_downs = {
+		peer_id = nil,
 		score = 0
 	}
 

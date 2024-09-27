@@ -302,6 +302,7 @@ function memory_report(limit)
 	local seen = {}
 	local count = {}
 	local name = {
+		_G = nil,
 		_G = _G
 	}
 

@@ -27,6 +27,7 @@ function EnableSoundEnvironmentElement:_build_panel(panel, panel_sizer)
 	enable_sound_env:set_value(self._hed.enable)
 	enable_sound_env:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "enable",
+		ctrlr = nil,
 		ctrlr = enable_sound_env
 	})
 	panel_sizer:add(enable_sound_env, 0, 0, "EXPAND")
@@ -40,8 +41,10 @@ function EnableSoundEnvironmentElement:update_selected(t, dt)
 		for _, name in ipairs(self._hed.elements) do
 			if area:name() == name then
 				self:_draw_link({
-					g = 0.5,
+					to_unit = nil,
+					from_unit = nil,
 					b = 1,
+					g = 0.5,
 					r = 0.9,
 					from_unit = self._unit,
 					to_unit = area:unit()

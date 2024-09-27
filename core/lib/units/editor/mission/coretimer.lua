@@ -3,8 +3,8 @@ CoreTimerUnitElement.SAVE_UNIT_POSITION = false
 CoreTimerUnitElement.SAVE_UNIT_ROTATION = false
 CoreTimerUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "timer",
-		type = "number"
+		type = "number",
+		value = "timer"
 	}
 }
 TimerUnitElement = TimerUnitElement or class(CoreTimerUnitElement)
@@ -60,9 +60,11 @@ function CoreTimerUnitElement:update_selected()
 			self._digital_gui_units[id] = nil
 		else
 			local params = {
-				g = 1,
 				b = 0,
+				g = 1,
 				r = 0,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			}
@@ -96,9 +98,11 @@ function CoreTimerUnitElement:draw_links_unselected(...)
 
 	for id, unit in pairs(self._digital_gui_units) do
 		local params = {
-			g = 0.5,
 			b = 0,
+			g = 0.5,
 			r = 0,
+			to_unit = nil,
+			from_unit = nil,
 			from_unit = self._unit,
 			to_unit = unit
 		}
@@ -110,8 +114,9 @@ end
 
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -122,8 +127,9 @@ end
 
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -173,14 +179,18 @@ function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_add_remove_static_unit_from_list(panel, panel_sizer, {
+		remove_filter = nil,
+		add_result = nil,
+		add_filter = nil,
+		remove_result = nil,
 		add_filter = callback(self, self, "_add_unit_filter"),
 		add_result = callback(self, self, "_add_unit"),
 		remove_filter = callback(self, self, "_remove_unit_filter"),
 		remove_result = callback(self, self, "_remove_unit")
 	})
 	self:_build_value_number(panel, panel_sizer, "timer", {
-		floats = 1,
-		min = 0
+		min = 0,
+		floats = 1
 	}, "Specifies how long time (in seconds) to wait before execute")
 	self:_add_help_text("Creates a timer element. When the timer runs out, execute will be run. The timer element can be operated on using the logic_timer_operator")
 end
@@ -221,9 +231,11 @@ function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 
 		if draw then
 			self:_draw_link({
-				g = 0.75,
 				b = 0.25,
+				g = 0.75,
 				r = 0.75,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -290,8 +302,8 @@ function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 		"hide_hud_timer"
 	}, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "time", {
-		floats = 1,
-		min = 0
+		min = 0,
+		floats = 1
 	}, "Amount of time to add, subtract or set to the timers.")
 	self:_add_help_text("This element can modify logic_timer element. Select timers to modify using insert and clicking on the elements.")
 end
@@ -322,9 +334,11 @@ function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0.85,
 				b = 0.25,
+				g = 0.85,
 				r = 0.85,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -380,8 +394,8 @@ function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_number(panel, panel_sizer, "time", {
-		floats = 1,
-		min = 0
+		min = 0,
+		floats = 1
 	}, "Specify how much time should be left on the timer to trigger.")
 	self:_add_help_text("This element is a trigger to logic_timer element.")
 end

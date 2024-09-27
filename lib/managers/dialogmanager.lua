@@ -1,68 +1,84 @@
 DialogManager = DialogManager or class()
 DialogManager.MAX_CASE_PLAYER_NUM = 4
 DialogManager.MRS_WHITE = {
-	sound_switch = "mrs_white",
-	char = "MRS_WHITE"
+	char = "MRS_WHITE",
+	unit = nil,
+	sound_switch = "mrs_white"
 }
 DialogManager.NIGHT_WITCH = {
-	sound_switch = "night_whitch",
-	char = "NIGHT_WITCH"
+	char = "NIGHT_WITCH",
+	unit = nil,
+	sound_switch = "night_whitch"
 }
 DialogManager.FRANZ = {
-	sound_switch = "franz",
-	char = "FRANZ"
+	char = "FRANZ",
+	unit = nil,
+	sound_switch = "franz"
 }
 DialogManager.BOAT_DRIVER_BRIDGE = {
-	sound_switch = "boat_driver_bridge",
-	char = "BOAT_DRIVER_BRIDGE"
+	char = "BOAT_DRIVER_BRIDGE",
+	unit = nil,
+	sound_switch = "boat_driver_bridge"
 }
 DialogManager.TRUCK_DRIVER_BRIDGE = {
-	sound_switch = "truck_driver_bridge",
-	char = "TRUCK_DRIVER_BRIDGE"
+	char = "TRUCK_DRIVER_BRIDGE",
+	unit = nil,
+	sound_switch = "truck_driver_bridge"
 }
 DialogManager.RESIST_PILOT_BANK = {
-	sound_switch = "resist_pilot_bank",
-	char = "RESIST_PILOT_BANK"
+	char = "RESIST_PILOT_BANK",
+	unit = nil,
+	sound_switch = "resist_pilot_bank"
 }
 DialogManager.TRAIN_ENGINEER = {
-	sound_switch = "train_engineer",
-	char = "TRAIN_ENGINEER"
+	char = "TRAIN_ENGINEER",
+	unit = nil,
+	sound_switch = "train_engineer"
 }
 DialogManager.CASTLE_TRUCK_DRIVER = {
-	sound_switch = "castle_truck_driver",
-	char = "CASTLE_TRUCK_DRIVER"
+	char = "CASTLE_TRUCK_DRIVER",
+	unit = nil,
+	sound_switch = "castle_truck_driver"
 }
 DialogManager.MINIRAID2_TRUCK_DRIVER = {
-	sound_switch = "miniraid2_truck_driver",
-	char = "MINIRAID2_TRUCK_DRIVER"
+	char = "MINIRAID2_TRUCK_DRIVER",
+	unit = nil,
+	sound_switch = "miniraid2_truck_driver"
 }
 DialogManager.BANK_TRUCK_DRIVER = {
-	sound_switch = "bank_truck_driver",
-	char = "BANK_TRUCK_DRIVER"
+	char = "BANK_TRUCK_DRIVER",
+	unit = nil,
+	sound_switch = "bank_truck_driver"
 }
 DialogManager.DR_REINHARDT = {
-	sound_switch = "dr_reinhardt",
-	char = "DR_REINHARDT"
+	char = "DR_REINHARDT",
+	unit = nil,
+	sound_switch = "dr_reinhardt"
 }
 DialogManager.TANK_GENERAL = {
-	sound_switch = "tank_general",
-	char = "TANK_GENERAL"
+	char = "TANK_GENERAL",
+	unit = nil,
+	sound_switch = "tank_general"
 }
 DialogManager.RUSSIAN_GENERAL = {
-	sound_switch = "russian_general",
-	char = "RUSSIAN_GENERAL"
+	char = "RUSSIAN_GENERAL",
+	unit = nil,
+	sound_switch = "russian_general"
 }
 DialogManager.RUSSIAN_GENERAL2 = {
-	sound_switch = "russian_general2",
-	char = "RUSSIAN_GENERAL2"
+	char = "RUSSIAN_GENERAL2",
+	unit = nil,
+	sound_switch = "russian_general2"
 }
 DialogManager.MALE_SPY = {
-	sound_switch = "male_spy",
-	char = "MALE_SPY"
+	char = "MALE_SPY",
+	unit = nil,
+	sound_switch = "male_spy"
 }
 DialogManager.FEMALE_SPY = {
-	sound_switch = "female_spy",
-	char = "FEMALE_SPY"
+	char = "FEMALE_SPY",
+	unit = nil,
+	sound_switch = "female_spy"
 }
 DialogManager.CHARS = {
 	DialogManager.MRS_WHITE,
@@ -226,6 +242,7 @@ function DialogManager:sync_queue_dialog(id, instigator)
 	end
 
 	self:do_queue_dialog(id, {
+		instigator = nil,
 		instigator = instigator
 	})
 end
@@ -350,6 +367,7 @@ function DialogManager:do_queue_dialog(id, params, test)
 		self._current_dialog.params = params
 
 		self:_play_dialog({
+			dialog = nil,
 			dialog = self._current_dialog
 		})
 	else
@@ -363,6 +381,7 @@ function DialogManager:do_queue_dialog(id, params, test)
 			self._next_dialog = nil
 
 			self:_play_dialog({
+				dialog = nil,
 				dialog = self._current_dialog
 			})
 		else
@@ -387,6 +406,7 @@ function DialogManager:finished()
 			self._next_dialog = nil
 
 			managers.queued_tasks:queue(nil, self._play_dialog, self, {
+				dialog = nil,
 				dialog = self._current_dialog
 			}, 1.5, nil)
 		elseif self._current_dialog.line then
@@ -396,6 +416,8 @@ function DialogManager:finished()
 				local delay = self._current_dialog.lines[self._current_dialog.line].delay or 0.5
 
 				managers.queued_tasks:queue(nil, self._play_dialog, self, {
+					dialog = nil,
+					line = nil,
 					dialog = self._current_dialog,
 					line = line
 				}, delay, nil)
@@ -623,6 +645,13 @@ function DialogManager:_load_dialog_data(name)
 			end
 
 			self._dialog_list[node.id] = {
+				priority = nil,
+				string_id = nil,
+				chance = nil,
+				character = nil,
+				id = nil,
+				sound = nil,
+				file_name = nil,
 				id = node.id,
 				character = node.character,
 				sound = node.sound,
@@ -657,6 +686,8 @@ function DialogManager:_load_dialog_data(name)
 			end
 
 			self._random_list[node.id] = {
+				id = nil,
+				dialogs = nil,
 				id = node.id,
 				dialogs = {}
 			}
@@ -682,6 +713,10 @@ function DialogManager:_parse_line_node(node)
 	end
 
 	return {
+		delay = nil,
+		sound = nil,
+		string_id = nil,
+		character = nil,
 		sound = sound,
 		character = node.character,
 		string_id = node.string_id,
@@ -692,6 +727,9 @@ end
 function DialogManager:_parse_case_node(parent_id, node)
 	self._dialog_list[parent_id].cases = self._dialog_list[parent_id].cases or {}
 	local case_node = {
+		id = nil,
+		players_no = nil,
+		lines = nil,
 		lines = {},
 		id = node.id,
 		players_no = node.players

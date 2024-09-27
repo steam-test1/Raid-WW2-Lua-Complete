@@ -54,11 +54,16 @@ function MountedWeapon:main_cannon_fire()
 		self._main_cannon_locator = self._unit:get_object(Idstring(self._unit:vehicle_driving()._tweak_data.seats.gunner.fire_point))
 		local direction = self._main_cannon_locator:rotation():y()
 		self._tank_shell = {
+			direction = nil,
+			position = nil,
 			position = self._main_cannon_locator:position(),
 			direction = direction
 		}
 
 		World:effect_manager():spawn({
+			normal = nil,
+			effect = nil,
+			position = nil,
 			effect = Idstring(self._tweak_data.effect.main_cannon_fire),
 			position = self._main_cannon_locator:position(),
 			normal = direction
@@ -152,6 +157,9 @@ function MountedWeapon:update_turret(t, dt)
 
 		if raycast then
 			World:effect_manager():spawn({
+				normal = nil,
+				effect = nil,
+				position = nil,
 				effect = Idstring(self._tweak_data.effect.main_cannon_fire_hit),
 				position = raycast.hit_position,
 				normal = raycast.normal
@@ -233,7 +241,16 @@ function MountedWeapon:_tank_main_cannon_hit_explosion(raycast, hit_position)
 	managers.explosion:give_local_player_dmg(pos, damage_radius, player_damage)
 
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
+		range = nil,
+		damage = nil,
+		curve_pow = nil,
+		armor_piercing = nil,
+		player_damage = nil,
+		user = nil,
 		alert_radius = 10000,
+		ignore_unit = nil,
+		collision_slotmask = nil,
+		hit_pos = nil,
 		hit_pos = pos,
 		range = damage_radius,
 		collision_slotmask = slot_mask,
@@ -252,8 +269,11 @@ function MountedWeapon:_tank_main_cannon_hit_explosion_on_client(position, radiu
 	local sound_event = "grenade_explode"
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000
 	local custom_params = {
-		camera_shake_max_mul = 4,
+		feedback_range = nil,
+		effect = nil,
+		sound_event = nil,
 		sound_muffle_effect = true,
+		camera_shake_max_mul = 4,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = damage_radius * 2

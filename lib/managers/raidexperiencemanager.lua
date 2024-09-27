@@ -114,6 +114,8 @@ end
 
 function RaidExperienceManager:next_level_data()
 	return {
+		current_points = nil,
+		points = nil,
 		points = self:next_level_data_points(),
 		current_points = self:next_level_data_current_points()
 	}
@@ -152,6 +154,8 @@ end
 
 function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id, success)
 	local exp_table = {
+		multiplicative = nil,
+		additive = nil,
 		additive = {},
 		multiplicative = {}
 	}
@@ -476,6 +480,11 @@ end
 
 function RaidExperienceManager:save(data)
 	local state = {
+		next_level_data = nil,
+		level = nil,
+		total = nil,
+		xp_gained = nil,
+		version = nil,
 		version = self._global.version,
 		total = self._global.total,
 		xp_gained = self._global.xp_gained,
@@ -495,6 +504,8 @@ function RaidExperienceManager:load(data)
 			Application:trace("[RaidExperienceManager:load] The save data and manager version are mismatched! Migrating...")
 
 			local temp = {
+				level = nil,
+				max_level = nil,
 				level = Application:digest_value(state.level, false),
 				max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false)
 			}
@@ -510,6 +521,8 @@ function RaidExperienceManager:load(data)
 			end
 
 			self._global.next_level_data = {
+				current_points = nil,
+				points = nil,
 				points = tweak_data.experience_manager.levels[next_level].points,
 				current_points = Application:digest_value(Application:digest_value(tweak_data.experience_manager.levels[next_level].points, false) * current_xp_ratio, true)
 			}

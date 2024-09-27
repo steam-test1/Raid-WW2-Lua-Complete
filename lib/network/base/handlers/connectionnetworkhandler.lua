@@ -363,6 +363,10 @@ function ConnectionNetworkHandler:lobby_info(level, character, mask_set, sender)
 
 		if lobby_menu and lobby_menu.renderer:is_open() then
 			lobby_menu.renderer:_set_player_slot(peer:id(), {
+				name = nil,
+				level = nil,
+				peer_id = nil,
+				character = nil,
 				name = peer:name(),
 				peer_id = peer:id(),
 				level = level,
@@ -707,12 +711,14 @@ function ConnectionNetworkHandler:sync_explosion_results(count_cops, count_gangs
 		local enemies_killed = (count_gangster_kills or 0) + (count_cop_kills or 0)
 
 		managers.statistics:shot_fired({
+			weapon_unit = nil,
 			hit = false,
 			weapon_unit = weapon_unit
 		})
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
+				weapon_unit = nil,
 				skip_bullet_count = true,
 				hit = true,
 				weapon_unit = weapon_unit
@@ -736,12 +742,14 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 		local enemies_killed = (count_gangster_kills or 0) + (count_cop_kills or 0)
 
 		managers.statistics:shot_fired({
+			weapon_unit = nil,
 			hit = false,
 			weapon_unit = weapon_unit
 		})
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
+				weapon_unit = nil,
 				skip_bullet_count = true,
 				hit = true,
 				weapon_unit = weapon_unit
@@ -819,6 +827,8 @@ function ConnectionNetworkHandler:send_loaded_packages(package, count, sender)
 	Global.game_settings.packages_packed = Global.game_settings.packages_packed or {}
 
 	table.insert(Global.game_settings.packages_packed, {
+		package = nil,
+		count = nil,
 		package = package,
 		count = count
 	})
@@ -956,9 +966,12 @@ function ConnectionNetworkHandler:sync_picked_up_loot_values(picked_up_current_l
 	managers.lootdrop:set_picked_up_current_leg(picked_up_current_leg)
 	managers.lootdrop:set_picked_up_total(picked_up_total)
 	managers.notification:add_notification({
+		acquired = nil,
+		shelf_life = 5,
+		notification_type = nil,
 		id = "hud_hint_grabbed_nazi_gold",
 		duration = 2,
-		shelf_life = 5,
+		total = nil,
 		notification_type = HUDNotification.DOG_TAG,
 		acquired = picked_up_current_leg,
 		total = picked_up_total
@@ -980,6 +993,8 @@ function ConnectionNetworkHandler:start_statistics_session(from_beginning, drop_
 	end
 
 	managers.statistics:start_session({
+		from_beginning = nil,
+		drop_in = nil,
 		from_beginning = from_beginning,
 		drop_in = drop_in
 	})
@@ -991,6 +1006,9 @@ function ConnectionNetworkHandler:stop_statistics_session(success, quit, end_typ
 	end
 
 	managers.statistics:stop_session({
+		quit = nil,
+		success = nil,
+		type = nil,
 		success = success,
 		quit = quit,
 		type = end_type
@@ -1093,6 +1111,7 @@ function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percent
 
 	if managers.hud and character_data then
 		managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
+			current = nil,
 			total = 100,
 			current = fill_percentage
 		})
@@ -1164,6 +1183,7 @@ function ConnectionNetworkHandler:sync_queue_dialog(id, instigator, sender)
 	if Network:is_server() then
 		managers.dialog:queue_dialog(id, {
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = instigator
 		})
 	else

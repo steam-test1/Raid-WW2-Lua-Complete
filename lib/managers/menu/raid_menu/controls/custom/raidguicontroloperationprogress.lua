@@ -66,16 +66,23 @@ end
 
 function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph_id)
 	local panel_params = {
+		name = nil,
 		x = 0,
+		y = nil,
+		w = nil,
 		name = "part_" .. tostring(i),
 		y = y,
 		w = self._inner_panel:w()
 	}
 	local part_panel = self._inner_panel:panel(panel_params)
 	local header_params = {
+		font = nil,
 		name = "header",
+		text = nil,
 		y = 0,
 		x = 0,
+		color = nil,
+		font_size = nil,
 		font = RaidGUIControlOperationProgress.HEADING_FONT,
 		font_size = RaidGUIControlOperationProgress.HEADING_FONT_SIZE,
 		color = RaidGUIControlOperationProgress.HEADING_COLOR,
@@ -91,6 +98,11 @@ function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph
 	local paragraph_params = {
 		name = "paragraph",
 		wrap = true,
+		text = nil,
+		color = nil,
+		font_size = nil,
+		font = nil,
+		w = nil,
 		y = 48,
 		x = 0,
 		w = part_panel:w(),

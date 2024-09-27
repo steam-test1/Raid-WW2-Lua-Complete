@@ -22,6 +22,7 @@ function MissionElementListFlow:init(...)
 	toolbar:set_tool_state("LOOK_AT", self._use_look_at)
 	toolbar:connect("LOOK_AT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_toolbar_toggle"), {
 		value = "_use_look_at",
+		toolbar = nil,
 		toolbar = toolbar
 	})
 	toolbar:add_tool("HELP", "Help", CoreEws.image_path("help_16x16.png"), nil)
@@ -128,6 +129,7 @@ function MissionElementListFlow:on_unit_selected(unit)
 
 		self._selected_list:set_item(i, 1, "" .. unit_id)
 		self._selected_list:set_item_data(i, {
+			unit = nil,
 			unit = unit
 		})
 		self:_autosize_columns(self._selected_list)
@@ -142,6 +144,7 @@ function MissionElementListFlow:on_unit_selected(unit)
 			self._on_executed_list:set_item(i, 2, "" .. (data.alternative and data.alternative or "N/A"))
 			self._on_executed_list:set_item(i, 3, "" .. (data.delay and data.delay or "N/A"))
 			self._on_executed_list:set_item_data(i, {
+				unit = nil,
 				unit = on_executed_unit
 			})
 		end
@@ -154,6 +157,7 @@ function MissionElementListFlow:on_unit_selected(unit)
 			self._executers_list:set_item(i, 2, "" .. (data.alternative and data.alternative or "N/A"))
 			self._executers_list:set_item(i, 3, "" .. (data.delay and data.delay or "N/A"))
 			self._executers_list:set_item_data(i, {
+				unit = nil,
 				unit = link_unit
 			})
 		end

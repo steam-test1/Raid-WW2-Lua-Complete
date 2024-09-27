@@ -49,6 +49,9 @@ function RaidGUIControlCategorizedGrid:_create_items()
 		local category, items = self:_create_category(category_data, vertical_offset)
 
 		table.insert(self._grid_categories, {
+			category = nil,
+			items = nil,
+			name = nil,
 			name = category_data.name or category_data.title,
 			category = category,
 			items = items
@@ -63,14 +66,22 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 	local padding = self._selected_marker_h + self._vertical_spacing
 	local category_name = category_data.name or "category_panel_" .. category_data.title
 	local category_panel = self._grid_panel:panel({
+		y = nil,
+		h = nil,
+		name = nil,
 		name = category_name,
 		y = vertical_offset,
 		h = RaidGUIControlCategorizedGrid.LABEL_H + row_count * padding
 	})
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	local background = category_panel:image({
-		name = "category_background",
+		y = nil,
+		h = nil,
 		alpha = 0.4,
+		name = "category_background",
+		texture = nil,
+		w = nil,
+		texture_rect = nil,
 		layer = -1,
 		y = RaidGUIControlCategorizedGrid.LABEL_H - self._vertical_spacing / 2,
 		w = category_panel:w(),
@@ -80,6 +91,7 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 	})
 	local items = {}
 	local label = self:_create_label(category_panel, {
+		text = nil,
 		text = category_data.title
 	})
 	local item_params = clone(self._item_params)

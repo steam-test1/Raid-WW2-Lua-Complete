@@ -43,6 +43,7 @@ function UpgradeBigGame.update()
 		if play_callout then
 			managers.dialog:queue_dialog("shout_feel_spotter", {
 				skip_idle_check = true,
+				instigator = nil,
 				instigator = player
 			})
 		end

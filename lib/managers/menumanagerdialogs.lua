@@ -104,6 +104,8 @@ function MenuManager:show_does_not_own_heist_info(heist, player)
 	local dialog_data = {
 		title = managers.localization:text("dialog_error_title"),
 		text = managers.localization:text("dialog_does_not_own_heist_info", {
+			HEIST = nil,
+			PLAYER = nil,
 			HEIST = string.upper(heist),
 			PLAYER = string.upper(player)
 		})
@@ -152,19 +154,27 @@ function MenuManager:show_smartmatch_inexact_match_dialog(params)
 	local dialog_data = {
 		id = "confirm_inexact_match",
 		title = managers.localization:text("menu_smm_contract_inexact_match_title", {
+			timeout = nil,
 			timeout = params.timeout
 		}),
 		text = managers.localization:text("menu_smm_contract_inexact_match_body", {
+			host = nil,
+			difficulty = nil,
+			job_name = nil,
 			host = params.host_name,
 			job_name = params.job_name,
 			difficulty = params.difficulty
 		})
 	}
 	local yes_button = {
+		text = nil,
+		callback_func = nil,
 		text = managers.localization:text("dialog_inexact_match_yes"),
 		callback_func = params.yes_clbk
 	}
 	local no_button = {
+		text = nil,
+		callback_func = nil,
 		text = managers.localization:text("dialog_inexact_match_no"),
 		callback_func = params.no_clbk,
 		class = RaidGUIControlButtonShortSecondary
@@ -188,6 +198,7 @@ function MenuManager:show_smartmatch_inexact_match_dialog(params)
 
 				if dlg then
 					dlg:set_title(utf8.to_upper(managers.localization:text("menu_smm_contract_inexact_match_title", {
+						timeout = nil,
 						timeout = count
 					})))
 				end
@@ -259,6 +270,8 @@ end
 function MenuManager:show_searching_match_dialog(params)
 	local cancel_button = {
 		cancel_button = true,
+		text = nil,
+		callback_func = nil,
 		text = managers.localization:text("dialog_cancel"),
 		callback_func = params.cancel_func
 	}
@@ -305,6 +318,7 @@ end
 function MenuManager:show_person_joining(id, nick)
 	local dialog_data = {
 		title = managers.localization:text("dialog_dropin_title", {
+			USER = nil,
 			USER = string.upper(nick)
 		}),
 		text = managers.localization:text("dialog_wait") .. " 0%",
@@ -512,6 +526,7 @@ function MenuManager:show_respec_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("menu_character_skills_retrain_dialog_title"),
 		text = managers.localization:text("menu_character_skills_retrain_dialog_text", {
+			GOLD = nil,
 			GOLD = params.gold
 		})
 	}
@@ -537,6 +552,8 @@ function MenuManager:show_character_customization_purchase_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("character_customization_purchase_confirm_title"),
 		text = managers.localization:text("character_customization_purchase_confirm_text", {
+			CUSTOMIZATION_NAME = nil,
+			AMOUNT = nil,
 			AMOUNT = params.amount,
 			CUSTOMIZATION_NAME = params.customization_name
 		})
@@ -563,6 +580,8 @@ function MenuManager:show_gold_asset_store_purchase_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("gold_asset_store_dialog_buy_title"),
 		text = managers.localization:text("gold_asset_store_dialog_buy_message", {
+			GOLD_ITEM_NAME = nil,
+			AMOUNT = nil,
 			AMOUNT = params.amount,
 			GOLD_ITEM_NAME = params.item_name
 		})
@@ -629,6 +648,7 @@ function MenuManager:show_kick_peer_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_kick_confirm_title")),
 		text = utf8.to_upper(managers.localization:text("menu_kick_confirm_text", {
+			PLAYER = nil,
 			PLAYER = params.player_name
 		})),
 		focus_button = 2
@@ -676,6 +696,7 @@ end
 function MenuManager:show_redeem_character_customization_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_loot_screen_redeem_character_customization_dialog_title", {
+			XP = nil,
 			XP = params.xp
 		})),
 		text = utf8.to_upper(managers.localization:text("menu_loot_screen_dialog_text")),
@@ -702,6 +723,7 @@ end
 function MenuManager:show_redeem_weapon_point_dialog(params)
 	local dialog_data = {
 		title = utf8.to_upper(managers.localization:text("menu_loot_screen_redeem_weapon_point_dialog_title", {
+			XP = nil,
 			XP = params.xp
 		})),
 		text = utf8.to_upper(managers.localization:text("menu_loot_screen_dialog_text")),
@@ -1291,6 +1313,7 @@ function MenuManager:show_accept_gfx_settings_dialog(func)
 	local dialog_data = {
 		title = managers.localization:text("dialog_accept_changes_title"),
 		text = managers.localization:text("dialog_accept_changes", {
+			TIME = nil,
 			TIME = count
 		}),
 		id = "accept_changes"
@@ -1321,6 +1344,7 @@ function MenuManager:show_accept_gfx_settings_dialog(func)
 
 				if dlg then
 					dlg:set_text(managers.localization:text("dialog_accept_changes", {
+						TIME = nil,
 						TIME = count
 					}))
 				end
@@ -1395,6 +1419,7 @@ function MenuManager:show_and_more_tradable_item_received(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_and_more_tradable_item_title"),
 		text = managers.localization:text("dialog_and_more_tradable_item", {
+			amount = nil,
 			amount = tostring(params.amount_more)
 		})
 	}
@@ -1431,6 +1456,10 @@ function MenuManager:show_confirm_skillpoints(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_place_title"),
 		text = managers.localization:text(params.text_string, {
+			remaining_points = nil,
+			points = nil,
+			cost = nil,
+			skill = nil,
 			skill = params.skill_name_localized,
 			points = params.points,
 			remaining_points = params.remaining_points,
@@ -1461,6 +1490,7 @@ function MenuManager:show_confirm_respec_skilltree(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_respec_title"),
 		text = managers.localization:text("dialog_respec_skilltree", {
+			tree = nil,
 			tree = tree_name
 		}),
 		focus_button = 2
@@ -1528,6 +1558,9 @@ function MenuManager:show_confirm_infamypoints(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_place_title"),
 		text = managers.localization:text(params.text_string, {
+			item = nil,
+			points = nil,
+			remaining_points = nil,
 			item = params.infamy_item,
 			points = params.points,
 			remaining_points = params.remaining_points
@@ -1676,8 +1709,10 @@ function MenuManager:show_confirm_blackmarket_sell_no_slot(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_sell_title"),
 		text = managers.localization:text("dialog_blackmarket_item", {
+			item = nil,
 			item = params.name
 		}) .. "\n\n" .. managers.localization:text("dialog_blackmarket_slot_item_sell", {
+			money = nil,
 			money = params.money
 		}),
 		focus_button = 2
@@ -1704,10 +1739,14 @@ function MenuManager:show_confirm_blackmarket_mask_remove(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
 		text = managers.localization:text("dialog_blackmarket_slot_item", {
+			slot = nil,
+			item = nil,
 			slot = params.slot,
 			item = params.name
 		}) .. "\n\n" .. managers.localization:text("dialog_blackmarket_slot_mask_remove", {
+			suffix = nil,
 			suffix = params.skip_money and "" or " " .. managers.localization:text("dialog_blackmarket_slot_mask_remove_suffix", {
+				money = nil,
 				money = params.money
 			})
 		})
@@ -1718,6 +1757,7 @@ function MenuManager:show_confirm_blackmarket_mask_remove(params)
 
 		for _, mod_id in ipairs(params.mods_readded) do
 			dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("dialog_blackmarket_mask_sell_mod_readded", {
+				mod = nil,
 				mod = mod_id
 			})
 		end
@@ -1746,9 +1786,12 @@ function MenuManager:show_confirm_blackmarket_mask_sell(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
 		text = managers.localization:text("dialog_blackmarket_slot_item", {
+			slot = nil,
+			item = nil,
 			slot = params.slot,
 			item = params.name
 		}) .. "\n\n" .. managers.localization:text("dialog_blackmarket_slot_item_sell", {
+			money = nil,
 			money = params.money
 		})
 	}
@@ -1758,6 +1801,7 @@ function MenuManager:show_confirm_blackmarket_mask_sell(params)
 
 		for _, mod_id in ipairs(params.mods_readded) do
 			dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("dialog_blackmarket_mask_sell_mod_readded", {
+				mod = nil,
 				mod = mod_id
 			})
 		end
@@ -1786,9 +1830,12 @@ function MenuManager:show_confirm_blackmarket_sell(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
 		text = managers.localization:text("dialog_blackmarket_slot_item", {
+			slot = nil,
+			item = nil,
 			slot = params.slot,
 			item = params.name
 		}) .. "\n\n" .. managers.localization:text("dialog_blackmarket_slot_item_sell", {
+			money = nil,
 			money = params.money
 		}),
 		focus_button = 2
@@ -1815,6 +1862,7 @@ function MenuManager:show_confirm_blackmarket_buy_weapon_slot(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_weapon_buy_title"),
 		text = managers.localization:text("dialog_blackmarket_buy_weapon_slot", {
+			money = nil,
 			money = params.money
 		}),
 		focus_button = 2
@@ -1841,6 +1889,7 @@ function MenuManager:show_confirm_blackmarket_buy_mask_slot(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_weapon_buy_title"),
 		text = managers.localization:text("dialog_blackmarket_buy_mask_slot", {
+			money = nil,
 			money = params.money
 		}),
 		focus_button = 2
@@ -1869,6 +1918,8 @@ function MenuManager:show_confirm_blackmarket_buy(params)
 
 	if num_of_same > 0 then
 		num_in_inventory = managers.localization:text("dialog_blackmarket_num_in_inventory", {
+			item = nil,
+			amount = nil,
 			item = params.name,
 			amount = num_of_same
 		})
@@ -1877,6 +1928,9 @@ function MenuManager:show_confirm_blackmarket_buy(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_weapon_buy_title"),
 		text = managers.localization:text("dialog_blackmarket_buy_item", {
+			item = nil,
+			num_in_inventory = nil,
+			money = nil,
 			item = params.name,
 			money = params.money,
 			num_in_inventory = num_in_inventory
@@ -1907,9 +1961,12 @@ function MenuManager:show_confirm_blackmarket_mod(params)
 		focus_button = 2,
 		title = l_local:text("dialog_bm_weapon_modify_title"),
 		text = l_local:text("dialog_blackmarket_slot_item", {
+			slot = nil,
+			item = nil,
 			slot = params.slot,
 			item = params.weapon_name
 		}) .. "\n\n" .. l_local:text("dialog_blackmarket_mod_" .. (params.add and "add" or "remove"), {
+			mod = nil,
 			mod = params.name
 		}) .. "\n"
 	}
@@ -1917,6 +1974,7 @@ function MenuManager:show_confirm_blackmarket_mod(params)
 
 	if params.add and params.replaces and #params.replaces > 0 then
 		dialog_data.text = dialog_data.text .. l_local:text("dialog_blackmarket_mod_replace", {
+			mod = nil,
 			mod = managers.weapon_factory:get_part_name_by_part_id(params.replaces[1])
 		}) .. "\n"
 		warn_lost_mods = true
@@ -1934,6 +1992,7 @@ function MenuManager:show_confirm_blackmarket_mod(params)
 		end
 
 		dialog_data.text = dialog_data.text .. "\n" .. l_local:text("dialog_blackmarket_mod_conflict", {
+			mods = nil,
 			mods = mods
 		}) .. "\n"
 		warn_lost_mods = true
@@ -1945,6 +2004,7 @@ function MenuManager:show_confirm_blackmarket_mod(params)
 
 	if params.add and params.money then
 		dialog_data.text = dialog_data.text .. "\n" .. l_local:text("dialog_blackmarket_mod_cost", {
+			money = nil,
 			money = params.money
 		})
 	end
@@ -1974,15 +2034,19 @@ function MenuManager:show_confirm_weapon_cosmetics(params)
 		focus_button = 2,
 		title = l_local:text("dialog_bm_weapon_modify_title"),
 		text = l_local:text("dialog_blackmarket_slot_item", {
+			slot = nil,
+			item = nil,
 			slot = params.slot,
 			item = params.weapon_name
 		}) .. "\n\n" .. l_local:text("dialog_weapon_cosmetics_" .. (params.item_has_cosmetic and "add" or "remove"), {
+			cosmetic = nil,
 			cosmetic = params.name
 		})
 	}
 
 	if params.item_has_cosmetic and params.crafted_has_cosmetic then
 		dialog_data.text = dialog_data.text .. "\n" .. l_local:text("dialog_weapon_cosmetics_replace", {
+			cosmetic = nil,
 			cosmetic = params.crafted_name
 		})
 	end
@@ -2021,6 +2085,8 @@ function MenuManager:show_confirm_blackmarket_assemble(params)
 
 	if num_of_same > 0 then
 		num_in_inventory = managers.localization:text("dialog_blackmarket_num_in_inventory", {
+			item = nil,
+			amount = nil,
 			item = params.name,
 			amount = num_of_same
 		})
@@ -2029,6 +2095,8 @@ function MenuManager:show_confirm_blackmarket_assemble(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_assemble_title"),
 		text = managers.localization:text("dialog_blackmarket_assemble_item", {
+			item = nil,
+			num_in_inventory = nil,
 			item = params.name,
 			num_in_inventory = num_in_inventory
 		}),
@@ -2080,8 +2148,12 @@ function MenuManager:show_confirm_blackmarket_finalize(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_custom_final_title"),
 		text = managers.localization:text("dialog_blackmarket_finalize_item", {
+			money = nil,
+			ITEM = nil,
 			money = params.money,
 			ITEM = managers.localization:text("dialog_blackmarket_slot_item", {
+				item = nil,
+				slot = nil,
 				item = params.name,
 				slot = params.slot
 			})
@@ -2395,6 +2467,7 @@ function MenuManager:show_challenge_warn_choose_reward(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_challenge_warn_choose_reward_title"),
 		text = managers.localization:text("dialog_challenge_warn_choose_reward", {
+			reward = nil,
 			reward = params.reward
 		})
 	}
@@ -2546,6 +2619,7 @@ end
 function MenuManager:show_unlock_mission_confirm_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("mission_unlock_screen_confirm_unlock_title", {
+			RAID = nil,
 			RAID = params.mission_title
 		}),
 		text = managers.localization:text("mission_unlock_screen_confirm_unlock_subtitle")
@@ -2597,12 +2671,17 @@ end
 
 function MenuManager:show_loyalty_reward_message(text_id, amount)
 	local dialog_data = {
+		title = nil,
+		button_list = nil,
+		text = nil,
 		title = managers.localization:text("dialog_loyalty_reward_title"),
 		text = managers.localization:text(text_id, {
+			AMOUNT = nil,
 			AMOUNT = amount
 		}),
 		button_list = {
 			{
+				text = nil,
 				text = managers.localization:text("dialog_ok")
 			}
 		}
@@ -2613,20 +2692,29 @@ end
 
 function MenuManager:show_skill_profile_rename_dialog(params)
 	local yes_button = {
+		text = nil,
+		callback_func = nil,
+		class = nil,
 		text = managers.localization:to_upper_text("dialog_rename"),
 		class = RaidGUIControlButtonShortPrimary,
 		callback_func = params.callback_yes
 	}
 	local no_button = {
 		cancel_button = true,
+		text = nil,
+		class = nil,
+		callback_func = nil,
 		text = managers.localization:to_upper_text("dialog_cancel"),
 		class = RaidGUIControlButtonShortSecondary,
 		callback_func = params.callback_no
 	}
 	local dialog_data = {
-		focus_button = 1,
+		title = nil,
+		textbox_value = nil,
 		capitalize = false,
 		textbox = true,
+		button_list = nil,
+		focus_button = 1,
 		title = managers.localization:to_upper_text("menu_skill_profile_rename_title"),
 		textbox_value = params.textbox_value,
 		button_list = {
@@ -2640,18 +2728,27 @@ end
 
 function MenuManager:show_skill_profile_purchase_dialog(params)
 	local yes_button = {
+		text = nil,
+		callback_func = nil,
+		class = nil,
 		text = managers.localization:to_upper_text("dialog_yes"),
 		class = RaidGUIControlButtonShortPrimaryGold,
 		callback_func = params.callback_yes
 	}
 	local no_button = {
 		cancel_button = true,
+		text = nil,
+		class = nil,
 		text = managers.localization:to_upper_text("dialog_no"),
 		class = RaidGUIControlButtonShortSecondary
 	}
 	local dialog_data = {
+		title = nil,
+		button_list = nil,
+		text = nil,
 		title = managers.localization:text("menu_skill_profile_purchase_title"),
 		text = managers.localization:text("menu_skill_profile_purchase_message", {
+			AMOUNT = nil,
 			AMOUNT = params.amount
 		}),
 		button_list = {

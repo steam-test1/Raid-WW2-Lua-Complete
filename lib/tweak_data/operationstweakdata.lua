@@ -112,19 +112,11 @@ function OperationsTweakData:_init_loading_screens()
 		image = "loading_raid_ww2",
 		text = "loading_trainyard"
 	}
-	self._loading_screens.train_yard_expo = {
-		image = "loading_raid_ww2",
-		text = "loading_trainyard_expo"
-	}
 	self._loading_screens.gold_rush = {
 		image = "loading_raid_ww2",
 		text = "loading_treasury"
 	}
 	self._loading_screens.bridge = {
-		image = "loading_raid_ww2",
-		text = "loading_bridge"
-	}
-	self._loading_screens.bridge_expo = {
 		image = "loading_raid_ww2",
 		text = "loading_bridge"
 	}
@@ -184,10 +176,6 @@ function OperationsTweakData:_init_loading_screens()
 		image = "loading_screens_07",
 		text = "loading_bridge"
 	}
-	self._loading_screens.spies_crash_test = {
-		image = "loading_screens_07",
-		text = "loading_bridge"
-	}
 	self._loading_screens.sto = {
 		image = "loading_screens_07",
 		text = "loading_bridge"
@@ -239,6 +227,26 @@ function OperationsTweakData:_init_raids()
 		"silo",
 		"kelly"
 	}
+	self.dogtag_types = {
+		small = nil,
+		large = nil,
+		medium = nil,
+		small = {
+			max = 18,
+			min = 14,
+			diff_bonus = 1
+		},
+		medium = {
+			max = 20,
+			min = 15,
+			diff_bonus = 2
+		},
+		large = {
+			max = 22,
+			min = 16,
+			diff_bonus = 3
+		}
+	}
 	self.missions.streaming_level = {
 		name_id = "menu_stream",
 		level_id = "streaming_level"
@@ -255,8 +263,8 @@ function OperationsTweakData:_init_raids()
 		icon_menu = "missions_camp",
 		icon_hud = "mission_camp",
 		loading = {
-			text = "loading_camp",
-			image = "camp_loading_screen"
+			image = "camp_loading_screen",
+			text = "loading_camp"
 		},
 		loading_success = {
 			image = "success_loading_screen_01"
@@ -290,28 +298,28 @@ function OperationsTweakData:_init_raids()
 		icon_menu = "missions_tutorial",
 		icon_hud = "miissions_raid_flaktower",
 		loading = {
-			text = "loading_tutorial",
-			image = "raid_loading_tutorial"
+			image = "raid_loading_tutorial",
+			text = "loading_tutorial"
 		},
 		photos = {
 			{
-				title_id = "forest_mission_photo_1_title",
 				description_id = "forest_mission_photo_1_description",
+				title_id = "forest_mission_photo_1_title",
 				photo = "intel_forest_01"
 			},
 			{
-				title_id = "forest_mission_photo_2_title",
 				description_id = "forest_mission_photo_2_description",
+				title_id = "forest_mission_photo_2_title",
 				photo = "intel_forest_02"
 			},
 			{
-				title_id = "forest_mission_photo_3_title",
 				description_id = "forest_mission_photo_3_description",
+				title_id = "forest_mission_photo_3_title",
 				photo = "intel_forest_03"
 			},
 			{
-				title_id = "forest_mission_photo_4_title",
 				description_id = "forest_mission_photo_4_description",
+				title_id = "forest_mission_photo_4_title",
 				photo = "intel_forest_04"
 			}
 		}
@@ -327,11 +335,10 @@ function OperationsTweakData:_init_raids()
 		xp = 5800,
 		start_in_stealth = true,
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
-		dogtags_min = 23,
-		dogtags_max = 26,
+		dogtags = self.dogtag_types.medium,
 		trophy = {
-			position = "snap_01",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_flaktower"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_flaktower",
+			position = "snap_01"
 		},
 		greed_items = {
 			max = 1500,
@@ -354,38 +361,38 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b2_assassination_v004"
 		},
 		loading = {
-			text = "menu_ger_miss_01_loading_desc",
-			image = "loading_flak"
+			image = "loading_flak",
+			text = "menu_ger_miss_01_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "flak_mission_photo_1_title",
 				description_id = "flak_mission_photo_1_description",
+				title_id = "flak_mission_photo_1_title",
 				photo = "intel_flak_01"
 			},
 			{
-				title_id = "flak_mission_photo_2_title",
 				description_id = "flak_mission_photo_2_description",
+				title_id = "flak_mission_photo_2_title",
 				photo = "intel_flak_02"
 			},
 			{
-				title_id = "flak_mission_photo_3_title",
 				description_id = "flak_mission_photo_3_description",
+				title_id = "flak_mission_photo_3_title",
 				photo = "intel_flak_03"
 			},
 			{
-				title_id = "flak_mission_photo_4_title",
 				description_id = "flak_mission_photo_4_description",
+				title_id = "flak_mission_photo_4_title",
 				photo = "intel_flak_04"
 			},
 			{
-				title_id = "flak_mission_photo_5_title",
 				description_id = "flak_mission_photo_5_description",
+				title_id = "flak_mission_photo_5_title",
 				photo = "intel_flak_05"
 			},
 			{
-				title_id = "flak_mission_photo_6_title",
 				description_id = "flak_mission_photo_6_description",
+				title_id = "flak_mission_photo_6_title",
 				photo = "intel_flak_06"
 			}
 		}
@@ -401,11 +408,10 @@ function OperationsTweakData:_init_raids()
 		music_id = "reichsbank",
 		stealth_description = OperationsTweakData.RAID_NOT_STEALTHABLE,
 		xp = 4000,
-		dogtags_min = 12,
-		dogtags_max = 16,
+		dogtags = self.dogtag_types.small,
 		trophy = {
-			position = "snap_02",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank",
+			position = "snap_02"
 		},
 		greed_items = {
 			max = 500,
@@ -428,28 +434,28 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
 		loading = {
-			text = "menu_ger_miss_03_ld_loading_desc",
-			image = "loading_bank"
+			image = "loading_bank",
+			text = "menu_ger_miss_03_ld_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "treasury_mission_photo_1_title",
 				description_id = "treasury_mission_photo_1_description",
+				title_id = "treasury_mission_photo_1_title",
 				photo = "intel_bank_01"
 			},
 			{
-				title_id = "treasury_mission_photo_2_title",
 				description_id = "treasury_mission_photo_2_description",
+				title_id = "treasury_mission_photo_2_title",
 				photo = "intel_bank_02"
 			},
 			{
-				title_id = "treasury_mission_photo_3_title",
 				description_id = "treasury_mission_photo_3_description",
+				title_id = "treasury_mission_photo_3_title",
 				photo = "intel_bank_03"
 			},
 			{
-				title_id = "treasury_mission_photo_4_title",
 				description_id = "treasury_mission_photo_4_description",
+				title_id = "treasury_mission_photo_4_title",
 				photo = "intel_bank_04"
 			}
 		}
@@ -465,11 +471,10 @@ function OperationsTweakData:_init_raids()
 		start_in_stealth = true,
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		xp = 5000,
-		dogtags_min = 18,
-		dogtags_max = 25,
+		dogtags = self.dogtag_types.large,
 		trophy = {
-			position = "snap_03",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard",
+			position = "snap_03"
 		},
 		greed_items = {
 			max = 1600,
@@ -491,28 +496,28 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
 		loading = {
-			text = "menu_ger_miss_05_loading_desc",
-			image = "loading_trainyard"
+			image = "loading_trainyard",
+			text = "menu_ger_miss_05_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "rail_yard_mission_photo_1_title",
 				description_id = "rail_yard_mission_photo_1_description",
+				title_id = "rail_yard_mission_photo_1_title",
 				photo = "intel_train_01"
 			},
 			{
-				title_id = "rail_yard_mission_photo_2_title",
 				description_id = "rail_yard_mission_photo_2_description",
+				title_id = "rail_yard_mission_photo_2_title",
 				photo = "intel_train_02"
 			},
 			{
-				title_id = "rail_yard_mission_photo_4_title",
 				description_id = "rail_yard_mission_photo_4_description",
+				title_id = "rail_yard_mission_photo_4_title",
 				photo = "intel_train_04"
 			},
 			{
-				title_id = "rail_yard_mission_photo_5_title",
 				description_id = "rail_yard_mission_photo_5_description",
+				title_id = "rail_yard_mission_photo_5_title",
 				photo = "intel_train_05"
 			}
 		}
@@ -528,11 +533,10 @@ function OperationsTweakData:_init_raids()
 		xp = 4500,
 		start_in_stealth = true,
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
-		dogtags_min = 20,
-		dogtags_max = 25,
+		dogtags = self.dogtag_types.medium,
 		trophy = {
-			position = "snap_24",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_radio"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_radio",
+			position = "snap_24"
 		},
 		greed_items = {
 			max = 1800,
@@ -551,33 +555,33 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_a5_rescue_v005"
 		},
 		loading = {
-			text = "menu_afr_miss_04_loading_desc",
-			image = "loading_radio"
+			image = "loading_radio",
+			text = "menu_afr_miss_04_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "radio_base_mission_photo_1_title",
 				description_id = "radio_base_mission_photo_1_description",
+				title_id = "radio_base_mission_photo_1_title",
 				photo = "intel_radio_01"
 			},
 			{
-				title_id = "radio_base_mission_photo_2_title",
 				description_id = "radio_base_mission_photo_2_description",
+				title_id = "radio_base_mission_photo_2_title",
 				photo = "intel_radio_02"
 			},
 			{
-				title_id = "radio_base_mission_photo_3_title",
 				description_id = "radio_base_mission_photo_3_description",
+				title_id = "radio_base_mission_photo_3_title",
 				photo = "intel_radio_03"
 			},
 			{
-				title_id = "radio_base_mission_photo_4_title",
 				description_id = "radio_base_mission_photo_4_description",
+				title_id = "radio_base_mission_photo_4_title",
 				photo = "intel_radio_04"
 			},
 			{
-				title_id = "radio_base_mission_photo_5_title",
 				description_id = "radio_base_mission_photo_5_description",
+				title_id = "radio_base_mission_photo_5_title",
 				photo = "intel_radio_05"
 			}
 		}
@@ -599,11 +603,10 @@ function OperationsTweakData:_init_raids()
 			OperationsTweakData.PROGRESSION_GROUP_STANDARD
 		},
 		xp = 3600,
-		dogtags_min = 8,
-		dogtags_max = 12,
+		dogtags = self.dogtag_types.small,
 		trophy = {
-			position = "snap_23",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bridge"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bridge",
+			position = "snap_23"
 		},
 		icon_menu_big = "xp_events_missions_raid_bridge",
 		greed_items = {
@@ -616,36 +619,36 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_a1_demolition_v005"
 		},
 		loading = {
-			text = "menu_ger_bridge_00_hl_loading_desc",
-			image = "loading_bridge"
+			image = "loading_bridge",
+			text = "menu_ger_bridge_00_hl_loading_desc"
 		},
 		excluded_continents = {
 			"operation"
 		},
 		photos = {
 			{
-				title_id = "bridge_mission_photo_1_title",
 				description_id = "bridge_mission_photo_1_description",
+				title_id = "bridge_mission_photo_1_title",
 				photo = "intel_bridge_01"
 			},
 			{
-				title_id = "bridge_mission_photo_2_title",
 				description_id = "bridge_mission_photo_2_description",
+				title_id = "bridge_mission_photo_2_title",
 				photo = "intel_bridge_02"
 			},
 			{
-				title_id = "bridge_mission_photo_3_title",
 				description_id = "bridge_mission_photo_3_description",
+				title_id = "bridge_mission_photo_3_title",
 				photo = "intel_bridge_03"
 			},
 			{
-				title_id = "bridge_mission_photo_4_title",
 				description_id = "bridge_mission_photo_4_description",
+				title_id = "bridge_mission_photo_4_title",
 				photo = "intel_bridge_04"
 			},
 			{
-				title_id = "bridge_mission_photo_5_title",
 				description_id = "bridge_mission_photo_5_description",
+				title_id = "bridge_mission_photo_5_title",
 				photo = "intel_bridge_05"
 			}
 		}
@@ -660,11 +663,10 @@ function OperationsTweakData:_init_raids()
 		music_id = "castle",
 		stealth_description = OperationsTweakData.RAID_NOT_STEALTHABLE,
 		xp = 5000,
-		dogtags_min = 22,
-		dogtags_max = 25,
+		dogtags = self.dogtag_types.large,
 		trophy = {
-			position = "snap_22",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle",
+			position = "snap_22"
 		},
 		greed_items = {
 			max = 1800,
@@ -687,33 +689,33 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
 		loading = {
-			text = "menu_afr_miss_05_loading_desc",
-			image = "loading_castle"
+			image = "loading_castle",
+			text = "menu_afr_miss_05_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "castle_mission_photo_1_title",
 				description_id = "castle_mission_photo_1_description",
+				title_id = "castle_mission_photo_1_title",
 				photo = "intel_castle_01"
 			},
 			{
-				title_id = "castle_mission_photo_2_title",
 				description_id = "castle_mission_photo_2_description",
+				title_id = "castle_mission_photo_2_title",
 				photo = "intel_castle_02"
 			},
 			{
-				title_id = "castle_mission_photo_3_title",
 				description_id = "castle_mission_photo_3_description",
+				title_id = "castle_mission_photo_3_title",
 				photo = "intel_castle_03"
 			},
 			{
-				title_id = "castle_mission_photo_4_title",
 				description_id = "castle_mission_photo_4_description",
+				title_id = "castle_mission_photo_4_title",
 				photo = "intel_castle_05"
 			},
 			{
-				title_id = "castle_mission_photo_5_title",
 				description_id = "castle_mission_photo_5_description",
+				title_id = "castle_mission_photo_5_title",
 				photo = "intel_castle_04"
 			}
 		}
@@ -737,28 +739,28 @@ function OperationsTweakData:_init_raids()
 		icon_menu = "missions_menu_consumable_forest",
 		icon_hud = "missions_menu_consumable_forest",
 		loading = {
-			text = "menu_forest_gumpy_hl_loading_desc",
-			image = "raid_loading_forest"
+			image = "raid_loading_forest",
+			text = "menu_forest_gumpy_hl_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "forest_mission_photo_1_title",
 				description_id = "forest_mission_photo_1_description",
+				title_id = "forest_mission_photo_1_title",
 				photo = "intel_forest_01"
 			},
 			{
-				title_id = "forest_mission_photo_2_title",
 				description_id = "forest_mission_photo_2_description",
+				title_id = "forest_mission_photo_2_title",
 				photo = "intel_forest_02"
 			},
 			{
-				title_id = "forest_mission_photo_3_title",
 				description_id = "forest_mission_photo_3_description",
+				title_id = "forest_mission_photo_3_title",
 				photo = "intel_forest_03"
 			},
 			{
-				title_id = "forest_mission_photo_4_title",
 				description_id = "forest_mission_photo_4_description",
+				title_id = "forest_mission_photo_4_title",
 				photo = "intel_forest_04"
 			}
 		}
@@ -773,11 +775,10 @@ function OperationsTweakData:_init_raids()
 		music_id = "random",
 		region = "germany",
 		xp = 3000,
-		dogtags_min = 18,
-		dogtags_max = 22,
+		dogtags = self.dogtag_types.small,
 		trophy = {
-			position = "snap_08",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bunker"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bunker",
+			position = "snap_08"
 		},
 		greed_items = {
 			max = 900,
@@ -799,30 +800,30 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
 		loading = {
-			text = "loading_bunker_test",
-			image = "raid_loading_bunkers"
+			image = "raid_loading_bunkers",
+			text = "loading_bunker_test"
 		},
 		start_in_stealth = true,
 		stealth_description = OperationsTweakData.RAID_STARTS_STEALTHABLE,
 		photos = {
 			{
-				title_id = "bunker_mission_photo_1_title",
 				description_id = "bunker_mission_photo_1_description",
+				title_id = "bunker_mission_photo_1_title",
 				photo = "intel_bunkers_05"
 			},
 			{
-				title_id = "bunker_mission_photo_2_title",
 				description_id = "bunker_mission_photo_2_description",
+				title_id = "bunker_mission_photo_2_title",
 				photo = "intel_bunkers_04"
 			},
 			{
-				title_id = "bunker_mission_photo_3_title",
 				description_id = "bunker_mission_photo_3_description",
+				title_id = "bunker_mission_photo_3_title",
 				photo = "intel_bunkers_01"
 			},
 			{
-				title_id = "bunker_mission_photo_4_title",
 				description_id = "bunker_mission_photo_4_description",
+				title_id = "bunker_mission_photo_4_title",
 				photo = "intel_bunkers_02"
 			}
 		}
@@ -837,11 +838,10 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		xp = 2500,
-		dogtags_min = 18,
-		dogtags_max = 22,
+		dogtags = self.dogtag_types.small,
 		trophy = {
-			position = "snap_13",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_tank"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_tank",
+			position = "snap_13"
 		},
 		greed_items = {
 			max = 900,
@@ -863,28 +863,28 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
 		loading = {
-			text = "loading_tnd",
-			image = "raid_loading_tank_depot"
+			image = "raid_loading_tank_depot",
+			text = "loading_tnd"
 		},
 		photos = {
 			{
-				title_id = "tank_depot_mission_photo_1_title",
 				description_id = "tank_depot_mission_photo_1_description",
+				title_id = "tank_depot_mission_photo_1_title",
 				photo = "intel_tank_depot_05"
 			},
 			{
-				title_id = "tank_depot_mission_photo_2_title",
 				description_id = "tank_depot_mission_photo_2_description",
+				title_id = "tank_depot_mission_photo_2_title",
 				photo = "intel_tank_depot_01"
 			},
 			{
-				title_id = "tank_depot_mission_photo_3_title",
 				description_id = "tank_depot_mission_photo_3_description",
+				title_id = "tank_depot_mission_photo_3_title",
 				photo = "intel_tank_depot_03"
 			},
 			{
-				title_id = "tank_depot_mission_photo_4_title",
 				description_id = "tank_depot_mission_photo_4_description",
+				title_id = "tank_depot_mission_photo_4_title",
 				photo = "intel_tank_depot_02"
 			}
 		}
@@ -899,11 +899,10 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_COMPLETELY_STEALTHABLE,
 		xp = 2500,
-		dogtags_min = 18,
-		dogtags_max = 22,
+		dogtags = self.dogtag_types.medium,
 		trophy = {
-			position = "snap_06",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters",
+			position = "snap_06"
 		},
 		greed_items = {
 			max = 2400,
@@ -925,24 +924,24 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b5_steal-valuables_cause-carnage_v004"
 		},
 		loading = {
-			text = "loading_hunters",
-			image = "raid_loading_hunters"
+			image = "raid_loading_hunters",
+			text = "loading_hunters"
 		},
 		start_in_stealth = true,
 		photos = {
 			{
-				title_id = "hunters_mission_photo_1_title",
 				description_id = "hunters_mission_photo_1_description",
+				title_id = "hunters_mission_photo_1_title",
 				photo = "intel_hunters_01"
 			},
 			{
-				title_id = "hunters_mission_photo_2_title",
 				description_id = "hunters_mission_photo_2_description",
+				title_id = "hunters_mission_photo_2_title",
 				photo = "intel_hunters_02"
 			},
 			{
-				title_id = "hunters_mission_photo_4_title",
 				description_id = "hunters_mission_photo_4_description",
+				title_id = "hunters_mission_photo_4_title",
 				photo = "intel_hunters_04"
 			}
 		}
@@ -957,11 +956,10 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		xp = 2500,
-		dogtags_min = 18,
-		dogtags_max = 22,
+		dogtags = self.dogtag_types.small,
 		trophy = {
-			position = "snap_09",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_convoy"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_convoy",
+			position = "snap_09"
 		},
 		greed_items = {
 			max = 400,
@@ -980,28 +978,28 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_a3_ambush_v005"
 		},
 		loading = {
-			text = "loading_convoy",
-			image = "raid_loading_convoy"
+			image = "raid_loading_convoy",
+			text = "loading_convoy"
 		},
 		photos = {
 			{
-				title_id = "convoy_mission_photo_1_title",
 				description_id = "convoy_mission_photo_1_description",
+				title_id = "convoy_mission_photo_1_title",
 				photo = "intel_convoy_01"
 			},
 			{
-				title_id = "convoy_mission_photo_2_title",
 				description_id = "convoy_mission_photo_2_description",
+				title_id = "convoy_mission_photo_2_title",
 				photo = "intel_convoy_03"
 			},
 			{
-				title_id = "convoy_mission_photo_3_title",
 				description_id = "convoy_mission_photo_3_description",
+				title_id = "convoy_mission_photo_3_title",
 				photo = "intel_convoy_02"
 			},
 			{
-				title_id = "convoy_mission_photo_4_title",
 				description_id = "convoy_mission_photo_4_description",
+				title_id = "convoy_mission_photo_4_title",
 				photo = "intel_convoy_04"
 			}
 		}
@@ -1017,11 +1015,10 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		xp = 3000,
-		dogtags_min = 22,
-		dogtags_max = 28,
+		dogtags = self.dogtag_types.medium,
 		trophy = {
-			position = "snap_19",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies",
+			position = "snap_19"
 		},
 		greed_items = {
 			max = 950,
@@ -1040,29 +1037,29 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b3_steal-intel_v004"
 		},
 		loading = {
-			text = "loading_spies_test",
-			image = "raid_loading_spies"
+			image = "raid_loading_spies",
+			text = "loading_spies_test"
 		},
 		start_in_stealth = true,
 		photos = {
 			{
-				title_id = "spies_mission_photo_1_title",
 				description_id = "spies_mission_photo_1_description",
+				title_id = "spies_mission_photo_1_title",
 				photo = "intel_spies_05"
 			},
 			{
-				title_id = "spies_mission_photo_2_title",
 				description_id = "spies_mission_photo_2_description",
+				title_id = "spies_mission_photo_2_title",
 				photo = "intel_spies_02"
 			},
 			{
-				title_id = "spies_mission_photo_3_title",
 				description_id = "spies_mission_photo_3_description",
+				title_id = "spies_mission_photo_3_title",
 				photo = "intel_spies_03"
 			},
 			{
-				title_id = "spies_mission_photo_4_title",
 				description_id = "spies_mission_photo_4_description",
+				title_id = "spies_mission_photo_4_title",
 				photo = "intel_spies_04"
 			}
 		}
@@ -1086,29 +1083,29 @@ function OperationsTweakData:_init_raids()
 		icon_menu = "missions_art_storage",
 		icon_hud = "missions_raid_flaktower",
 		loading = {
-			text = "loading_sto",
-			image = "raid_loading_art_storage"
+			image = "raid_loading_art_storage",
+			text = "loading_sto"
 		},
 		start_in_stealth = true,
 		photos = {
 			{
-				title_id = "art_storage_mission_photo_1_title",
 				description_id = "art_storage_mission_photo_1_description",
+				title_id = "art_storage_mission_photo_1_title",
 				photo = "intel_art_storage_01"
 			},
 			{
-				title_id = "art_storage_mission_photo_2_title",
 				description_id = "art_storage_mission_photo_2_description",
+				title_id = "art_storage_mission_photo_2_title",
 				photo = "intel_art_storage_02"
 			},
 			{
-				title_id = "art_storage_mission_photo_3_title",
 				description_id = "art_storage_mission_photo_3_description",
+				title_id = "art_storage_mission_photo_3_title",
 				photo = "intel_art_storage_03"
 			},
 			{
-				title_id = "art_storage_mission_photo_4_title",
 				description_id = "art_storage_mission_photo_4_description",
+				title_id = "art_storage_mission_photo_4_title",
 				photo = "intel_art_storage_05"
 			}
 		}
@@ -1123,11 +1120,10 @@ function OperationsTweakData:_init_raids()
 		music_id = "random",
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_STARTS_STEALTHABLE,
-		dogtags_min = 23,
-		dogtags_max = 28,
+		dogtags = self.dogtag_types.medium,
 		trophy = {
-			position = "snap_17",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo",
+			position = "snap_17"
 		},
 		xp = 5500,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -1144,33 +1140,33 @@ function OperationsTweakData:_init_raids()
 			"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004"
 		},
 		loading = {
-			text = "menu_silo_loading_desc",
-			image = "loading_silo"
+			image = "loading_silo",
+			text = "menu_silo_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "silo_mission_photo_1_title",
 				description_id = "silo_mission_photo_1_description",
+				title_id = "silo_mission_photo_1_title",
 				photo = "intel_silo_01"
 			},
 			{
-				title_id = "silo_mission_photo_2_title",
 				description_id = "silo_mission_photo_2_description",
+				title_id = "silo_mission_photo_2_title",
 				photo = "intel_silo_02"
 			},
 			{
-				title_id = "silo_mission_photo_3_title",
 				description_id = "silo_mission_photo_3_description",
+				title_id = "silo_mission_photo_3_title",
 				photo = "intel_silo_03"
 			},
 			{
-				title_id = "silo_mission_photo_4_title",
 				description_id = "silo_mission_photo_4_description",
+				title_id = "silo_mission_photo_4_title",
 				photo = "intel_silo_04"
 			},
 			{
-				title_id = "silo_mission_photo_5_title",
 				description_id = "silo_mission_photo_5_description",
+				title_id = "silo_mission_photo_5_title",
 				photo = "intel_silo_05"
 			}
 		}
@@ -1184,8 +1180,7 @@ function OperationsTweakData:_init_raids()
 		music_id = "random",
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_COMPLETELY_STEALTHABLE,
-		dogtags_min = 14,
-		dogtags_max = 16,
+		dogtags = self.dogtag_types.medium,
 		xp = 3200,
 		greed_items = {
 			max = 400,
@@ -1208,28 +1203,28 @@ function OperationsTweakData:_init_raids()
 		},
 		start_in_stealth = true,
 		loading = {
-			text = "menu_kelly_loading_desc",
-			image = "loading_kelly"
+			image = "loading_kelly",
+			text = "menu_kelly_loading_desc"
 		},
 		photos = {
 			{
-				title_id = "kelly_mission_photo_1_title",
 				description_id = "kelly_mission_photo_1_description",
+				title_id = "kelly_mission_photo_1_title",
 				photo = "intel_kelly_01"
 			},
 			{
-				title_id = "kelly_mission_photo_2_title",
 				description_id = "kelly_mission_photo_2_description",
+				title_id = "kelly_mission_photo_2_title",
 				photo = "intel_kelly_02"
 			},
 			{
-				title_id = "kelly_mission_photo_3_title",
 				description_id = "kelly_mission_photo_3_description",
+				title_id = "kelly_mission_photo_3_title",
 				photo = "intel_kelly_03"
 			},
 			{
-				title_id = "kelly_mission_photo_4_title",
 				description_id = "kelly_mission_photo_4_description",
+				title_id = "kelly_mission_photo_4_title",
 				photo = "intel_kelly_04"
 			}
 		}
@@ -1252,29 +1247,29 @@ function OperationsTweakData:_init_raids()
 		icon_menu = "missions_fury_railway",
 		icon_hud = "missions_consumable_fury_railway",
 		loading = {
-			text = "loading_fury_railway_text",
-			image = "loading_fury_railway"
+			image = "loading_fury_railway",
+			text = "loading_fury_railway_text"
 		},
 		start_in_stealth = true,
 		photos = {
 			{
-				title_id = "fury_railway_mission_photo_1_title",
 				description_id = "fury_railway_mission_photo_1_description",
+				title_id = "fury_railway_mission_photo_1_title",
 				photo = "intel_fury_railway_01"
 			},
 			{
-				title_id = "fury_railway_mission_photo_2_title",
 				description_id = "fury_railway_mission_photo_2_description",
+				title_id = "fury_railway_mission_photo_2_title",
 				photo = "intel_fury_railway_02"
 			},
 			{
-				title_id = "fury_railway_mission_photo_3_title",
 				description_id = "fury_railway_mission_photo_3_description",
+				title_id = "fury_railway_mission_photo_3_title",
 				photo = "intel_fury_railway_03"
 			},
 			{
-				title_id = "fury_railway_mission_photo_4_title",
 				description_id = "fury_railway_mission_photo_4_description",
+				title_id = "fury_railway_mission_photo_4_title",
 				photo = "intel_fury_railway_04"
 			}
 		}
@@ -1295,46 +1290,46 @@ function OperationsTweakData:_init_operations()
 		region = "germany",
 		xp = 11000,
 		trophy = {
-			position = "snap_05",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_clear_sky"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_clear_sky",
+			position = "snap_05"
 		},
 		job_type = OperationsTweakData.JOB_TYPE_OPERATION,
 		icon_menu = "missions_operation_clear_skies_menu",
 		icon_hud = "missions_operation_clear_skies",
 		events = {},
 		loading = {
-			text = "menu_ger_oper_01",
-			image = "raid_loading_clear_skies_00"
+			image = "raid_loading_clear_skies_00",
+			text = "menu_ger_oper_01"
 		},
 		photos = {
 			{
-				title_id = "clear_skies_mission_photo_1_title",
 				description_id = "clear_skies_mission_photo_1_description",
+				title_id = "clear_skies_mission_photo_1_title",
 				photo = "intel_clear_skies_01"
 			},
 			{
-				title_id = "clear_skies_mission_photo_2_title",
 				description_id = "clear_skies_mission_photo_2_description",
+				title_id = "clear_skies_mission_photo_2_title",
 				photo = "intel_clear_skies_02"
 			},
 			{
-				title_id = "clear_skies_mission_photo_3_title",
 				description_id = "clear_skies_mission_photo_3_description",
+				title_id = "clear_skies_mission_photo_3_title",
 				photo = "intel_clear_skies_03"
 			},
 			{
-				title_id = "clear_skies_mission_photo_4_title",
 				description_id = "clear_skies_mission_photo_4_description",
+				title_id = "clear_skies_mission_photo_4_title",
 				photo = "intel_clear_skies_04"
 			},
 			{
-				title_id = "clear_skies_mission_photo_5_title",
 				description_id = "clear_skies_mission_photo_5_description",
+				title_id = "clear_skies_mission_photo_5_title",
 				photo = "intel_clear_skies_05"
 			},
 			{
-				title_id = "clear_skies_mission_photo_6_title",
 				description_id = "clear_skies_mission_photo_6_description",
+				title_id = "clear_skies_mission_photo_6_title",
 				photo = "intel_clear_skies_06"
 			}
 		}
@@ -1353,8 +1348,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
 		level_id = "zone_germany",
 		loading = {
-			text = "menu_ger_oper_01_event_1_loading_text",
-			image = "raid_loading_clear_skies_01"
+			image = "raid_loading_clear_skies_01",
+			text = "menu_ger_oper_01_event_1_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission2",
@@ -1377,8 +1372,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
 		level_id = "zone_germany_park",
 		loading = {
-			text = "menu_ger_oper_01_event_1_loading_text",
-			image = "raid_loading_clear_skies_01"
+			image = "raid_loading_clear_skies_01",
+			text = "menu_ger_oper_01_event_1_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission2",
@@ -1401,8 +1396,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
 		level_id = "zone_germany_destroyed",
 		loading = {
-			text = "menu_ger_oper_01_event_1_loading_text",
-			image = "raid_loading_clear_skies_01"
+			image = "raid_loading_clear_skies_01",
+			text = "menu_ger_oper_01_event_1_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission2",
@@ -1425,8 +1420,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
 		level_id = "zone_germany_roundabout",
 		loading = {
-			text = "menu_ger_oper_01_event_1_loading_text",
-			image = "raid_loading_clear_skies_01"
+			image = "raid_loading_clear_skies_01",
+			text = "menu_ger_oper_01_event_1_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission2",
@@ -1451,8 +1446,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_01_event_2_progress_text",
 		level_id = "gold_rush",
 		loading = {
-			text = "menu_ger_oper_01_event_2_loading_text",
-			image = "raid_loading_clear_skies_02"
+			image = "raid_loading_clear_skies_02",
+			text = "menu_ger_oper_01_event_2_loading_text"
 		}
 	}
 	self.missions.clear_skies.events.mini_raid_2 = {
@@ -1469,8 +1464,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_3_progress_text",
 		loading = {
-			text = "menu_ger_oper_01_event_3_loading_text",
-			image = "raid_loading_clear_skies_03"
+			image = "raid_loading_clear_skies_03",
+			text = "menu_ger_oper_01_event_3_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1493,8 +1488,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_3_progress_text",
 		loading = {
-			text = "menu_ger_oper_01_event_3_loading_text",
-			image = "raid_loading_clear_skies_03"
+			image = "raid_loading_clear_skies_03",
+			text = "menu_ger_oper_01_event_3_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1517,8 +1512,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_3_progress_text",
 		loading = {
-			text = "menu_ger_oper_01_event_3_loading_text",
-			image = "raid_loading_clear_skies_03"
+			image = "raid_loading_clear_skies_03",
+			text = "menu_ger_oper_01_event_3_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1542,8 +1537,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_01_event_4_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_4_progress_text",
 		loading = {
-			text = "menu_ger_oper_01_event_4_loading_text",
-			image = "raid_loading_clear_skies_04"
+			image = "raid_loading_clear_skies_04",
+			text = "menu_ger_oper_01_event_4_loading_text"
 		}
 	}
 	self.missions.clear_skies.events.mini_raid_3 = {
@@ -1560,8 +1555,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_01_event_5_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_5_progress_text",
 		loading = {
-			text = "menu_ger_oper_01_event_5_loading_text",
-			image = "loading_clear_skies_01"
+			image = "loading_clear_skies_01",
+			text = "menu_ger_oper_01_event_5_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1584,8 +1579,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_01_event_6_progress_title",
 		progress_text_id = "menu_ger_oper_01_event_6_progress_text",
 		loading = {
-			text = "menu_ger_oper_01_event_6_loading_text",
-			image = "raid_loading_clear_skies_05"
+			image = "raid_loading_clear_skies_05",
+			text = "menu_ger_oper_01_event_6_loading_text"
 		}
 	}
 	self.missions.clear_skies.events.flakturm = {
@@ -1605,8 +1600,8 @@ function OperationsTweakData:_init_operations()
 			"world"
 		},
 		loading = {
-			text = "menu_ger_oper_01_event_7_loading_text",
-			image = "raid_loading_clear_skies_06"
+			image = "raid_loading_clear_skies_06",
+			text = "menu_ger_oper_01_event_7_loading_text"
 		}
 	}
 	self.missions.clear_skies.events_index_template = {
@@ -1641,41 +1636,41 @@ function OperationsTweakData:_init_operations()
 		region = "germany",
 		xp = 10000,
 		trophy = {
-			position = "snap_18",
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_rhinegold"
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_rhinegold",
+			position = "snap_18"
 		},
 		job_type = OperationsTweakData.JOB_TYPE_OPERATION,
 		icon_menu = "missions_operation_rhinegold_menu",
 		icon_hud = "missions_operation_rhinegold",
 		events = {},
 		loading = {
-			text = "menu_ger_oper_rhinegold",
-			image = "loading_rhinegold_00"
+			image = "loading_rhinegold_00",
+			text = "menu_ger_oper_rhinegold"
 		},
 		photos = {
 			{
-				title_id = "rhinegold_mission_photo_1_title",
 				description_id = "rhinegold_mission_photo_1_description",
+				title_id = "rhinegold_mission_photo_1_title",
 				photo = "intel_rhinegold_01"
 			},
 			{
-				title_id = "rhinegold_mission_photo_2_title",
 				description_id = "rhinegold_mission_photo_2_description",
+				title_id = "rhinegold_mission_photo_2_title",
 				photo = "intel_rhinegold_02"
 			},
 			{
-				title_id = "rhinegold_mission_photo_3_title",
 				description_id = "rhinegold_mission_photo_3_description",
+				title_id = "rhinegold_mission_photo_3_title",
 				photo = "intel_rhinegold_03"
 			},
 			{
-				title_id = "rhinegold_mission_photo_4_title",
 				description_id = "rhinegold_mission_photo_4_description",
+				title_id = "rhinegold_mission_photo_4_title",
 				photo = "intel_rhinegold_04"
 			},
 			{
-				title_id = "rhinegold_mission_photo_5_title",
 				description_id = "rhinegold_mission_photo_5_description",
+				title_id = "rhinegold_mission_photo_5_title",
 				photo = "intel_rhinegold_05"
 			}
 		}
@@ -1694,8 +1689,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
 		level_id = "zone_germany_park",
 		loading = {
-			text = "menu_ger_oper_rhinegold_event_1_loading_text",
-			image = "loading_rhinegold_01"
+			image = "loading_rhinegold_01",
+			text = "menu_ger_oper_rhinegold_event_1_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1718,8 +1713,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
 		level_id = "zone_germany_destroyed",
 		loading = {
-			text = "menu_ger_oper_rhinegold_event_1_loading_text",
-			image = "loading_rhinegold_01"
+			image = "loading_rhinegold_01",
+			text = "menu_ger_oper_rhinegold_event_1_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1742,8 +1737,8 @@ function OperationsTweakData:_init_operations()
 		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
 		level_id = "zone_germany_roundabout",
 		loading = {
-			text = "menu_ger_oper_rhinegold_event_1_loading_text",
-			image = "loading_rhinegold_01"
+			image = "loading_rhinegold_01",
+			text = "menu_ger_oper_rhinegold_event_1_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1767,8 +1762,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_rhinegold_event_2_progress_title",
 		progress_text_id = "menu_ger_oper_rhinegold_event_2_progress_text",
 		loading = {
-			text = "menu_ger_oper_rhinegold_event_2_loading_text",
-			image = "loading_rhinegold_02"
+			image = "loading_rhinegold_02",
+			text = "menu_ger_oper_rhinegold_event_2_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1791,8 +1786,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_rhinegold_event_2_progress_title",
 		progress_text_id = "menu_ger_oper_rhinegold_event_2_progress_text",
 		loading = {
-			text = "menu_ger_oper_rhinegold_event_2_loading_text",
-			image = "loading_rhinegold_02"
+			image = "loading_rhinegold_02",
+			text = "menu_ger_oper_rhinegold_event_2_loading_text"
 		},
 		excluded_continents = {
 			"operation1mission1",
@@ -1804,23 +1799,26 @@ function OperationsTweakData:_init_operations()
 	self.missions.oper_flamable.events.bridge = {
 		camp_objective_id = "obj_camp_goto_oper_rhinegold_03",
 		music_id = "ger_bridge",
-		xp = 2400,
-		dogtags_min = 20,
-		dogtags_max = 25,
-		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
-		checkpoint = true,
-		icon_menu = "missions_raid_bridge_menu",
-		icon_hud = "missions_raid_bridge",
-		name_id = "menu_ger_oper_02_event_3_name",
-		mission_flag = "level_operation_02_mission_03",
-		progress_title_id = "menu_ger_oper_rhinegold_event_3_progress_title",
-		progress_text_id = "menu_ger_oper_rhinegold_event_3_progress_text",
-		loading = {
-			text = "menu_ger_oper_rhinegold_event_3_loading_text",
-			image = "loading_rhinegold_03"
-		},
-		level_id = "ger_bridge_operation"
+		xp = 2400
 	}
+	self.missions.oper_flamable.events.dogtags = {
+		max = 8,
+		min = 5,
+		diff_bonus = 3
+	}
+	self.missions.oper_flamable.events.bridge.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
+	self.missions.oper_flamable.events.bridge.checkpoint = true
+	self.missions.oper_flamable.events.bridge.icon_menu = "missions_raid_bridge_menu"
+	self.missions.oper_flamable.events.bridge.icon_hud = "missions_raid_bridge"
+	self.missions.oper_flamable.events.bridge.name_id = "menu_ger_oper_02_event_3_name"
+	self.missions.oper_flamable.events.bridge.mission_flag = "level_operation_02_mission_03"
+	self.missions.oper_flamable.events.bridge.progress_title_id = "menu_ger_oper_rhinegold_event_3_progress_title"
+	self.missions.oper_flamable.events.bridge.progress_text_id = "menu_ger_oper_rhinegold_event_3_progress_text"
+	self.missions.oper_flamable.events.bridge.loading = {
+		image = "loading_rhinegold_03",
+		text = "menu_ger_oper_rhinegold_event_3_loading_text"
+	}
+	self.missions.oper_flamable.events.bridge.level_id = "ger_bridge_operation"
 	self.missions.oper_flamable.events.castle = {
 		camp_objective_id = "obj_camp_goto_oper_rhinegold_04",
 		music_id = "castle",
@@ -1834,8 +1832,8 @@ function OperationsTweakData:_init_operations()
 		progress_title_id = "menu_ger_oper_rhinegold_event_4_progress_title",
 		progress_text_id = "menu_ger_oper_rhinegold_event_4_progress_text",
 		loading = {
-			text = "menu_ger_oper_rhinegold_event_4_loading_text",
-			image = "loading_rhinegold_04"
+			image = "loading_rhinegold_04",
+			text = "menu_ger_oper_rhinegold_event_4_loading_text"
 		},
 		level_id = "settlement"
 	}

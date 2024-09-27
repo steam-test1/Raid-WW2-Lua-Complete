@@ -15,6 +15,7 @@ function PlayerBleedOut:enter(state_data, enter_data)
 
 	local t = managers.player:player_timer():time()
 	self._revive_SO_data = {
+		unit = nil,
 		unit = self._unit
 	}
 
@@ -40,6 +41,8 @@ function PlayerBleedOut:enter(state_data, enter_data)
 	end
 
 	self:_start_action_unequip_weapon(t, {
+		delay = nil,
+		selection_wanted = nil,
 		selection_wanted = selection_wanted,
 		delay = self.TILT_BLEND_TIME
 	})
@@ -151,6 +154,10 @@ function PlayerBleedOut:exit(state_data, new_state_name)
 
 	self._tilt_blend_t = nil
 	local exit_data = {
+		change_weapon_data = nil,
+		unequip_weapon_expire_t = nil,
+		equip_weapon = nil,
+		equip_weapon_expire_t = nil,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 		change_weapon_data = self._change_weapon_data,
@@ -325,28 +332,38 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	end
 
 	local followup_objective = {
-		scan = true,
 		type = "act",
+		action = nil,
+		scan = true,
 		action = {
-			variant = "crouch",
 			body_part = 1,
 			type = "act",
+			variant = "crouch",
+			blocks = nil,
 			blocks = {
-				heavy_hurt = -1,
-				hurt = -1,
 				action = -1,
 				aim = -1,
+				heavy_hurt = -1,
+				hurt = -1,
 				walk = -1
 			}
 		}
 	}
 	local objective = {
-		type = "revive",
-		pose = "stand",
-		called = true,
-		haste = "run",
 		scan = true,
+		type = "revive",
+		nav_seg = nil,
+		follow_unit = nil,
 		destroy_clbk_key = false,
+		called = true,
+		followup_objective = nil,
+		pose = "stand",
+		action_start_clbk = nil,
+		haste = "run",
+		complete_clbk = nil,
+		action = nil,
+		fail_clbk = nil,
+		action_duration = nil,
 		follow_unit = revive_SO_data.unit,
 		nav_seg = revive_SO_data.unit:movement():nav_tracker():nav_segment(),
 		action_duration = tweak_data.interaction[variant].timer,
@@ -355,25 +372,30 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
 		followup_objective = followup_objective,
 		action = {
-			body_part = 1,
 			type = "act",
-			align_sync = true,
+			body_part = 1,
 			variant = "revive",
+			align_sync = true,
+			blocks = nil,
 			blocks = {
+				heavy_hurt = -1,
+				action = -1,
+				aim = -1,
 				light_hurt = -1,
 				hurt = -1,
-				action = -1,
-				heavy_hurt = -1,
-				aim = -1,
 				walk = -1
 			}
 		}
 	}
 	local so_descriptor = {
-		interval = 0,
-		AI_group = "friendlies",
-		base_chance = 1,
 		chance_inc = 0,
+		base_chance = 1,
+		interval = 0,
+		objective = nil,
+		verification_clbk = nil,
+		admin_clbk = nil,
+		AI_group = "friendlies",
+		search_pos = nil,
 		usage_amount = 1,
 		objective = objective,
 		search_pos = revive_SO_data.unit:position(),

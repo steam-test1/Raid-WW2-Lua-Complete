@@ -26,8 +26,11 @@ end
 function HUDSpecialInteractionRoulette:_create_bg_plate()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.BACKGROUND_PLATE_IMAGE)
 	self._bg_plate = self._object:bitmap({
-		name = "special_interaction_bg_plate",
 		valign = "center",
+		color = nil,
+		texture_rect = nil,
+		texture = nil,
+		name = "special_interaction_bg_plate",
 		halign = "center",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
@@ -40,8 +43,12 @@ end
 function HUDSpecialInteractionRoulette:_create_pointer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.POINTER_GUI_ID)
 	self._pointer_texture = self._object:bitmap({
-		name = "special_interaction_pointer_texture",
+		layer = nil,
 		valign = "center",
+		color = nil,
+		texture_rect = nil,
+		texture = nil,
+		name = "special_interaction_pointer_texture",
 		halign = "center",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
@@ -56,7 +63,12 @@ end
 function HUDSpecialInteractionRoulette:_create_timer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.TIMER_GUI_ID)
 	self._timer = CircleBitmapGuiObject:new(self._object, {
+		total = nil,
+		sides = nil,
+		color = nil,
+		image = nil,
 		radius = 128,
+		layer = nil,
 		use_bg = false,
 		image = gui_data.texture,
 		color = gui_data.color,
@@ -71,8 +83,13 @@ end
 function HUDSpecialInteractionRoulette:_create_wheel()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.WHEEL_GUI_ID)
 	local circle = self._object:bitmap({
-		name = "special_interaction_circle_texture",
+		rotation = nil,
 		valign = "center",
+		color = nil,
+		texture_rect = nil,
+		texture = nil,
+		layer = nil,
+		name = "special_interaction_circle_texture",
 		halign = "center",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
@@ -84,8 +101,9 @@ function HUDSpecialInteractionRoulette:_create_wheel()
 	circle:set_center(self._object:center())
 
 	self._circle = {
-		completed = false,
 		valid = true,
+		completed = false,
+		circle = nil,
 		circle = circle
 	}
 end

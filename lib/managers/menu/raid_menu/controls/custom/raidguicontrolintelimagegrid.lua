@@ -44,8 +44,11 @@ function RaidGUIControlIntelImageGrid:_create_photos(only_first_n_events)
 
 	for i = 1, #self._mission_photos do
 		local photo_params = {
+			photo = nil,
+			y = nil,
 			x = 0,
 			layer = 1,
+			on_click_callback = nil,
 			y = y,
 			photo = self._mission_photos[i].photo,
 			on_click_callback = callback(self, self, "_on_photo_clicked", i)

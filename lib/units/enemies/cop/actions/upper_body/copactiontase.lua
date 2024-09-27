@@ -156,8 +156,8 @@ function CopActionTase:on_exit()
 
 		if self._expired then
 			self._ext_movement:action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 	end
@@ -269,6 +269,8 @@ function CopActionTase:update(t)
 			end
 
 			self._tase_effect = World:effect_manager():spawn({
+				effect = nil,
+				parent = nil,
 				force_synch = true,
 				effect = tweak_data.common_effects.taser_thread,
 				parent = self._ext_inventory:equipped_unit():get_object(Idstring("fire"))
@@ -288,6 +290,7 @@ function CopActionTase:update(t)
 						self._common_data.ext_network:send("action_tase_event", 3)
 
 						local attack_data = {
+							attacker_unit = nil,
 							attacker_unit = self._unit
 						}
 
@@ -344,9 +347,9 @@ end
 
 function CopActionTase:get_husk_interrupt_desc()
 	local action_desc = {
-		block_type = "action",
 		body_part = 3,
-		type = "tase"
+		type = "tase",
+		block_type = "action"
 	}
 
 	return action_desc
@@ -360,18 +363,27 @@ function CopActionTase:clbk_malfunction()
 	end
 
 	World:effect_manager():spawn({
+		normal = nil,
+		effect = nil,
+		position = nil,
 		effect = tweak_data.common_effects.taser_stop,
 		position = self._ext_movement:m_head_pos(),
 		normal = math.UP
 	})
 
 	local action_data = {
+		col_ray = nil,
+		damage_effect = nil,
 		damage = 0,
+		attacker_unit = nil,
 		variant = "melee",
+		attack_dir = nil,
 		damage_effect = self._unit:character_damage()._HEALTH_INIT * 10,
 		attacker_unit = managers.player:player_unit() or self._unit,
 		attack_dir = -self._common_data.fwd,
 		col_ray = {
+			body = nil,
+			position = nil,
 			position = mvector3.copy(self._ext_movement:m_head_pos()),
 			body = self._unit:body("body")
 		}

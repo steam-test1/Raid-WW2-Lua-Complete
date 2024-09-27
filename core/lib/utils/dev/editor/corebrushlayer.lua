@@ -51,9 +51,12 @@ end
 function BrushLayer:save(save_params)
 	local file_name = "massunit"
 	local t = {
+		data = nil,
 		single_data_block = true,
+		entry = nil,
 		entry = self._save_name,
 		data = {
+			file = nil,
 			file = file_name
 		}
 	}
@@ -66,12 +69,14 @@ end
 function BrushLayer:_save_brushfile(path)
 	MassUnitManager:save(path)
 	managers.editor:add_to_world_package({
+		name = nil,
 		category = "massunits",
 		name = managers.database:entry_path(path:s())
 	})
 
 	for _, unit_name in ipairs(MassUnitManager:list()) do
 		managers.editor:add_to_world_package({
+			name = nil,
 			category = "units",
 			name = unit_name:s()
 		})
@@ -472,7 +477,7 @@ function BrushLayer:build_panel(notebook)
 
 	sizer_pb:add(self:create_slider("Density [/m2]", "_brush_density", 0, 30), 0, 0, "EXPAND")
 	sizer_pb:add(self:create_slider("Pressure", "_brush_pressure", 1, 20), 0, 0, "EXPAND")
-	sizer_pb:add(self:create_slider("Radius [cm]", "_brush_size", 1, 1000), 0, 0, "EXPAND")
+	sizer_pb:add(self:create_slider("Radius [cm]", "_brush_size", 1, 400), 0, 0, "EXPAND")
 	sizer_pb:add(self:create_slider("Smoothness", "_brush_smoothness", 1, 16), 0, 0, "EXPAND")
 	h_sizer:add(sizer_pb, 1, 2, "EXPAND")
 
@@ -498,6 +503,7 @@ function BrushLayer:build_panel(notebook)
 	brush_toggles_sizer:add(pressure_cb, 0, 0, "EXPAND")
 	pressure_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_erase_with_pressure",
+		cb = nil,
 		cb = pressure_cb
 	})
 
@@ -507,6 +513,7 @@ function BrushLayer:build_panel(notebook)
 	brush_toggles_sizer:add(erase_cb, 0, 0, "EXPAND")
 	erase_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_erase_with_units",
+		cb = nil,
 		cb = erase_cb
 	})
 
@@ -516,6 +523,7 @@ function BrushLayer:build_panel(notebook)
 	brush_toggles_sizer:add(force_up_cb, 0, 0, "EXPAND")
 	force_up_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_overide_surface_normal",
+		cb = nil,
 		cb = force_up_cb
 	})
 
@@ -525,6 +533,7 @@ function BrushLayer:build_panel(notebook)
 	brush_toggles_sizer:add(brush_on_editor_bodies_cb, 0, 0, "EXPAND")
 	brush_on_editor_bodies_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_brush_on_editor_bodies",
+		cb = nil,
 		cb = brush_on_editor_bodies_cb
 	})
 	ctrl_sizer:add(brush_toggles_sizer, 0, 0, "EXPAND")
@@ -574,7 +583,9 @@ function BrushLayer:build_panel(notebook)
 	toolbar:add_check_tool("DEBUG_DRAW", "Draw unit orientations", CoreEws.image_path("image_16x16.png"), "Draw unit orientations")
 	toolbar:set_tool_state("DEBUG_DRAW", self._debug_draw_unit_orientation)
 	toolbar:connect("DEBUG_DRAW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
+		toolbar = nil,
 		value = "_debug_draw_unit_orientation",
+		class = nil,
 		class = self,
 		toolbar = toolbar
 	})
@@ -591,6 +602,7 @@ function BrushLayer:build_panel(notebook)
 	debug_sizer:add(self._debug_units_unique, 0, 0, "EXPAND")
 
 	local units_params = {
+		unit_events = nil,
 		style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING",
 		unit_events = {
 			"EVT_COMMAND_LIST_ITEM_DESELECTED"
@@ -623,9 +635,11 @@ function BrushLayer:build_panel(notebook)
 	self._brushes_ctrlr = brushes
 
 	brushes:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "select_brush"), {
+		brushes = nil,
 		brushes = brushes
 	})
 	create_brush_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_create_brush"), {
+		brushes = nil,
 		brushes = brushes
 	})
 	remove_brush_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "remove_brush"), brushes)
@@ -722,9 +736,14 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 	slider_sizer:add(EWS:StaticText(self._ews_panel, name, "", "ALIGN_LEFT"), 0, 0, "EXPAND")
 
 	local slider_params = {
-		floats = 0,
 		slider_ctrlr_proportions = 0.2,
 		number_ctrlr_proportions = 0.1,
+		value = nil,
+		max = nil,
+		min = nil,
+		floats = 0,
+		sizer = nil,
+		panel = nil,
 		panel = self._ews_panel,
 		sizer = slider_sizer,
 		value = default_value or s_value,
@@ -734,18 +753,26 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 
 	CoreEws.slider_and_number_controller(slider_params)
 	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider"), {
+		slider_params = nil,
+		value = nil,
 		slider_params = slider_params,
 		value = value
 	})
 	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider"), {
+		slider_params = nil,
+		value = nil,
 		slider_params = slider_params,
 		value = value
 	})
 	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider"), {
+		slider_params = nil,
+		value = nil,
 		slider_params = slider_params,
 		value = value
 	})
 	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider"), {
+		slider_params = nil,
+		value = nil,
 		slider_params = slider_params,
 		value = value
 	})
@@ -804,6 +831,10 @@ function BrushLayer:get_brush_stats(filter)
 			local rotations = MassUnitManager:unit_rotations(unit_name)
 			local positions = MassUnitManager:unit_positions(unit_name)
 			local stats = {
+				unit_name = nil,
+				amount = nil,
+				rotations = nil,
+				positions = nil,
 				unit_name = unit_name,
 				amount = #positions,
 				positions = positions,

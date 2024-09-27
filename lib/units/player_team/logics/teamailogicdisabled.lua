@@ -5,6 +5,7 @@ TeamAILogicDisabled.on_long_dis_interacted = TeamAILogicIdle.on_long_dis_interac
 
 function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -221,38 +222,48 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	local followup_objective = {
 		scan = true,
 		type = "act",
+		action = nil,
 		action = {
-			variant = "crouch",
 			body_part = 1,
 			type = "act",
+			variant = "crouch",
+			blocks = nil,
 			blocks = {
+				aim = -1,
+				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				action = -1,
-				aim = -1,
 				walk = -1
 			}
 		}
 	}
 	local objective = {
-		type = "revive",
-		called = true,
-		scan = true,
+		action_duration = nil,
+		nav_seg = nil,
 		destroy_clbk_key = false,
+		called = true,
+		follow_unit = nil,
+		followup_objective = nil,
+		type = "revive",
+		action = nil,
+		scan = true,
+		fail_clbk = nil,
 		follow_unit = data.unit,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
 		fail_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_failed", data),
 		action = {
-			align_sync = true,
+			blocks = nil,
 			type = "act",
+			variant = nil,
 			body_part = 1,
+			align_sync = true,
 			variant = rescue_type,
 			blocks = {
+				aim = -1,
 				light_hurt = -1,
-				hurt = -1,
 				action = -1,
 				heavy_hurt = -1,
-				aim = -1,
+				hurt = -1,
 				walk = -1
 			}
 		},
@@ -260,12 +271,15 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 		followup_objective = followup_objective
 	}
 	local so_descriptor = {
-		interval = 6,
-		search_dis_sq = 1000000,
 		AI_group = "friendlies",
-		base_chance = 1,
-		chance_inc = 0,
 		usage_amount = 1,
+		search_pos = nil,
+		search_dis_sq = 1000000,
+		interval = 6,
+		chance_inc = 0,
+		base_chance = 1,
+		objective = nil,
+		admin_clbk = nil,
 		objective = objective,
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_administered", data)

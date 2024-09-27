@@ -1,7 +1,7 @@
 HuskCopBrain = HuskCopBrain or class()
 HuskCopBrain._NET_EVENTS = {
-	weapon_laser_off = 2,
-	weapon_laser_on = 1
+	weapon_laser_on = 1,
+	weapon_laser_off = 2
 }
 
 function HuskCopBrain:init(unit)
@@ -13,12 +13,12 @@ function HuskCopBrain:post_init()
 	local alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, {
-		aggression = true,
-		bullet = true,
 		vo_intimidate = true,
-		explosion = true,
+		vo_cbt = true,
+		bullet = true,
 		footstep = true,
-		vo_cbt = true
+		explosion = true,
+		aggression = true
 	}, self._unit:movement():m_head_pos())
 
 	self._last_alert_t = 0
@@ -28,7 +28,7 @@ function HuskCopBrain:post_init()
 		"death"
 	}, callback(self, self, "clbk_death"))
 
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() then
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PUMKIN_HEADS) and self._unit:damage() then
 		self._unit:damage():has_then_run_sequence_simple("halloween_2017")
 	end
 end

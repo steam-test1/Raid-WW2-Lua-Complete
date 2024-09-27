@@ -199,6 +199,8 @@ function BarrageTweakData:init(tweak_data)
 	self.random = {
 		type = BarrageType.RANDOM,
 		type_table = {
+			stuka_bomb = nil,
+			cluster = nil,
 			cluster = {
 				4,
 				5,

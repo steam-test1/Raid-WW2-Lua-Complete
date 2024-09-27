@@ -11,6 +11,7 @@ function SpawnManager:spawn_enemy_group_in_vis_group(event, i_vis_group)
 
 	for unit_name, unit_data in pairs(event.groups) do
 		spawn_request.groups[unit_name] = {
+			amount = nil,
 			amount = unit_data.amount
 		}
 	end
@@ -46,6 +47,7 @@ function SpawnManager:spawn_enemy_group(event)
 
 	for unit_name, unit_data in pairs(event.groups) do
 		spawn_request.groups[unit_name] = {
+			amount = nil,
 			amount = unit_data.amount
 		}
 	end
@@ -61,6 +63,7 @@ function SpawnManager:spawn_enemy_group(event)
 		end
 
 		local vis_group_pos, i_vis_group = managers.navigation:find_hide_position({
+			trackers = nil,
 			trackers = hide_from_trackers
 		})
 

@@ -475,6 +475,10 @@ function Layer:build_units(params)
 		units:autosize_column(0)
 		units_sizer:add(units, 1, 0, "EXPAND")
 		short_name:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_short_name"), {
+			units = nil,
+			short_name = nil,
+			category = nil,
+			filter = nil,
 			filter = unit_filter,
 			units = units,
 			category = c,
@@ -487,6 +491,10 @@ function Layer:build_units(params)
 		end
 
 		unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
+			units = nil,
+			short_name = nil,
+			category = nil,
+			filter = nil,
 			filter = unit_filter,
 			units = units,
 			category = c,
@@ -495,6 +503,8 @@ function Layer:build_units(params)
 
 		local page_name = managers.editor:category_name(c)
 		self._notebook_units_lists[page_name] = {
+			units = nil,
+			filter = nil,
 			units = units,
 			filter = unit_filter
 		}
@@ -848,6 +858,11 @@ function Layer:prepare_replace(names, rules)
 
 				if not rules.only_current_continent or not continent or managers.editor:current_continent() == continent then
 					local unit_params = {
+						rotation = nil,
+						continent = nil,
+						groups = nil,
+						name = nil,
+						position = nil,
 						name = unit:name(),
 						continent = continent,
 						position = unit:position(),
@@ -994,8 +1009,9 @@ end
 function Layer:unit_sampler()
 	if not self._grab and not self:condition() then
 		local data = {
-			ray_type = "body editor",
 			sample = true,
+			ray_type = "body editor",
+			mask = nil,
 			mask = managers.slot:get_mask("editor_all")
 		}
 		local ray = managers.editor:unit_by_raycast(data)
@@ -1032,6 +1048,7 @@ function Layer:set_drag_select()
 	self:remove_polyline()
 
 	self._polyline = managers.editor._gui:polyline({
+		color = nil,
 		color = Color(0.5, 1, 1, 1)
 	})
 
@@ -1703,9 +1720,13 @@ function Layer:save()
 
 			if not unit_data.instance then
 				local t = {
+					data = nil,
+					continent = nil,
+					entry = nil,
 					entry = self._save_name,
 					continent = unit_data.continent and unit_data.continent:name(),
 					data = {
+						unit_data = nil,
 						unit_data = CoreEditorSave.save_data_table(unit)
 					}
 				}
@@ -1715,6 +1736,8 @@ function Layer:save()
 
 				if unit:type() ~= idstring_wpn then
 					managers.editor:add_to_world_package({
+						continent = nil,
+						name = nil,
 						category = "units",
 						name = unit:name():s(),
 						continent = unit_data.continent

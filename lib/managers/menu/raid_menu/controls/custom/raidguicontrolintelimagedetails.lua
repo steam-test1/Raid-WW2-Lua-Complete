@@ -28,17 +28,23 @@ end
 
 function RaidGUIControlIntelImageDetails:_create_details()
 	local intel_image_panel_params = {
-		name = "intel_image_panel",
-		h = 309,
+		w = nil,
 		y = 0,
 		x = 0,
+		layer = nil,
+		name = "intel_image_panel",
+		h = 309,
 		w = self._object:w(),
 		layer = self._object:layer() + 1
 	}
 	self._image_panel = self._object:panel(intel_image_panel_params)
 	local intel_image_background_params = {
-		texture = "ui/main_menu/textures/mission_paper_background",
+		w = nil,
 		name = "intel_image_background",
+		h = nil,
+		layer = nil,
+		texture_rect = nil,
+		texture = "ui/main_menu/textures/mission_paper_background",
 		texture_rect = {
 			1063,
 			5,
@@ -54,8 +60,11 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_image_background:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
 
 	local intel_image_params = {
-		texture = "ui/loading_screens/loading_trainyard",
+		w = nil,
 		name = "intel_image",
+		layer = nil,
+		texture_rect = nil,
+		texture = "ui/loading_screens/loading_trainyard",
 		texture_rect = {
 			256,
 			0,
@@ -71,10 +80,14 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_image:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
 
 	local intel_title_params = {
+		x = 20,
+		y = nil,
+		font = nil,
+		font_size = nil,
 		text = "",
 		name = "intel_title",
-		x = 20,
 		wrap = true,
+		color = nil,
 		y = self._image_panel:y() + self._image_panel:h() + 32,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.large,
@@ -87,9 +100,14 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_title:set_h(h)
 
 	local intel_subtitle_params = {
+		x = nil,
+		y = nil,
+		font = nil,
+		font_size = nil,
 		text = "",
 		name = "intel_subtitle",
 		wrap = true,
+		color = nil,
 		x = self._intel_title:x(),
 		y = self._intel_title:y() + self._intel_title:h() + 12,
 		font = tweak_data.gui.fonts.lato,

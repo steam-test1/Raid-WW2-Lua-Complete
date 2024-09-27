@@ -187,6 +187,8 @@ function CoreCutsceneKeyBase:play(player, undo, fast_forward)
 			self:revert(player)
 		else
 			local preceeding_key = self:preceeding_key({
+				object_name = nil,
+				unit_name = nil,
 				unit_name = self.unit_name and self:unit_name(),
 				object_name = self.object_name and self:object_name()
 			})

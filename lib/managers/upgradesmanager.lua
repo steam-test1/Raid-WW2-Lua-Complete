@@ -598,6 +598,7 @@ function UpgradesManager:get_upgrade_locks(upgrade_id)
 	local upgrade = tweak_data.upgrades.definitions[upgrade_id]
 
 	return {
+		dlc = nil,
 		dlc = upgrade.dlc
 	}
 end
@@ -864,6 +865,7 @@ function UpgradesManager:print_aquired_tree()
 
 	for name, data in pairs(self._global.aquired) do
 		tree[data.level] = {
+			name = nil,
 			name = name
 		}
 	end
@@ -903,6 +905,8 @@ function UpgradesManager:analyze()
 						features[data.upgrade.category] = features[data.upgrade.category] or {}
 
 						table.insert(features[data.upgrade.category], {
+							name = nil,
+							level = nil,
 							level = lvl,
 							name = name
 						})
@@ -941,14 +945,17 @@ function UpgradesManager:tree_stats()
 	local t = {
 		{
 			a = 0,
+			u = nil,
 			u = {}
 		},
 		{
 			a = 0,
+			u = nil,
 			u = {}
 		},
 		{
 			a = 0,
+			u = nil,
 			u = {}
 		}
 	}
@@ -969,6 +976,10 @@ end
 
 function UpgradesManager:save(data)
 	local state = {
+		disabled_visual_upgrades = nil,
+		automanage = nil,
+		target_tree = nil,
+		progress = nil,
 		automanage = self._global.automanage,
 		progress = self._global.progress,
 		target_tree = self._global.target_tree,

@@ -9,6 +9,12 @@ function RaidGUIControlTabFilter:init(parent, params)
 	RaidGUIControlTabFilter.super.init(self, parent, params)
 
 	self._object = parent:panel({
+		layer = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		name = nil,
 		name = "tab_panel_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -17,10 +23,18 @@ function RaidGUIControlTabFilter:init(parent, params)
 		layer = parent:layer() + 1
 	})
 	self._tab_label = self._object:label({
-		vertical = "center",
+		font = nil,
 		align = "center",
+		font_size = nil,
+		vertical = "center",
+		text = nil,
+		layer = nil,
+		color = nil,
+		h = nil,
+		w = nil,
 		y = 0,
 		x = 0,
+		name = nil,
 		name = "tab_control_label_" .. self._name,
 		w = params.w,
 		h = params.h,
@@ -45,6 +59,11 @@ end
 
 function RaidGUIControlTabFilter:set_divider()
 	self._divider = self._object:rect({
+		color = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		x = self._tab_label:right() - RaidGUIControlTabFilter.DIVIDER_WIDTH / 2,
 		y = (self._params.h - RaidGUIControlTabFilter.DIVIDER_HEIGHT) / 2,
 		w = RaidGUIControlTabFilter.DIVIDER_WIDTH,

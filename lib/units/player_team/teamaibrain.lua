@@ -9,6 +9,12 @@ require("lib/units/player_team/logics/TeamAILogicSurrender")
 TeamAIBrain = TeamAIBrain or class(CopBrain)
 TeamAIBrain._create_attention_setting_from_descriptor = PlayerMovement._create_attention_setting_from_descriptor
 TeamAIBrain._logics = {
+	travel = nil,
+	disabled = nil,
+	surrender = nil,
+	idle = nil,
+	inactive = nil,
+	assault = nil,
 	inactive = TeamAILogicInactive,
 	idle = TeamAILogicIdle,
 	surrender = TeamAILogicSurrender,
@@ -68,8 +74,8 @@ function TeamAIBrain:post_init()
 	local alert_listen_filter = managers.groupai:state():get_unit_type_filter("combatant")
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, {
-		bullet = true,
-		vo_intimidate = true
+		vo_intimidate = true,
+		bullet = true
 	}, self._unit:movement():m_head_pos())
 end
 

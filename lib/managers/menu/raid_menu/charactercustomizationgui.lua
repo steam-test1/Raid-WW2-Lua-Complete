@@ -43,20 +43,27 @@ function CharacterCustomizationGui:_layout()
 	self:_disable_dof()
 
 	self._filter_body_part = self._root_panel:tabs({
-		tab_align = "center",
-		name = "filter_body_part",
-		tab_width = 240,
 		initial_tab_idx = 1,
+		tab_align = "center",
 		tab_height = 64,
+		tab_width = 240,
 		y = 96,
 		x = 0,
+		tabs_params = nil,
+		name = "filter_body_part",
+		on_click_callback = nil,
 		on_click_callback = callback(self, self, "_on_click_filter_body_part"),
 		tabs_params = {
 			{
 				name = "tab_upper",
+				text = nil,
+				breadcrumb = nil,
+				callback_param = nil,
 				text = self:translate("character_customization_filter_body_part_upper", true),
 				callback_param = CharacterCustomizationTweakData.PART_TYPE_UPPER,
 				breadcrumb = {
+					identifiers = nil,
+					category = nil,
 					category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION_UPPER,
 					identifiers = {
 						character_nationality
@@ -65,9 +72,14 @@ function CharacterCustomizationGui:_layout()
 			},
 			{
 				name = "tab_lower",
+				text = nil,
+				breadcrumb = nil,
+				callback_param = nil,
 				text = self:translate("character_customization_filter_body_part_lower", true),
 				callback_param = CharacterCustomizationTweakData.PART_TYPE_LOWER,
 				breadcrumb = {
+					identifiers = nil,
+					category = nil,
 					category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION_LOWER,
 					identifiers = {
 						character_nationality
@@ -78,42 +90,55 @@ function CharacterCustomizationGui:_layout()
 	})
 	self._selected_filter_body_part = CharacterCustomizationTweakData.PART_TYPE_UPPER
 	local customization_grid_scrollable_area_params = {
-		name = "customization_grid_scrollable_area",
-		h = 598,
-		y = 190,
-		w = 484,
 		x = 0,
-		scroll_step = 30
+		h = 598,
+		scroll_step = 30,
+		name = "customization_grid_scrollable_area",
+		y = 190,
+		w = 484
 	}
 	self._customization_grid_scrollable_area = self._root_panel:scrollable_area(customization_grid_scrollable_area_params)
 	local customization_grid_params = {
+		x = 0,
+		grid_params = nil,
+		item_params = nil,
 		name = "customization_grid",
 		y = 0,
 		w = 480,
-		x = 0,
+		scrollable_area_ref = nil,
 		scrollable_area_ref = self._customization_grid_scrollable_area,
 		grid_params = {
+			on_double_click_callback = nil,
+			data_source_callback = nil,
 			scroll_marker_w = 32,
 			vertical_spacing = 5,
+			on_select_callback = nil,
+			on_click_callback = nil,
 			data_source_callback = callback(self, self, "_data_source_character_customizations"),
 			on_click_callback = callback(self, self, "_on_click_character_customizations"),
 			on_double_click_callback = callback(self, self, "_on_double_click_character_customizations"),
 			on_select_callback = callback(self, self, "_on_selected_character_customizations")
 		},
 		item_params = {
-			item_w = 134,
-			grid_item_icon = "path_icon",
-			key_value_field = "key_name",
-			item_h = 134,
 			selected_marker_h = 148,
 			selected_marker_w = 148,
+			item_h = 134,
+			item_w = 134,
+			key_value_field = "key_name",
+			grid_item_icon = "path_icon",
+			row_class = nil,
 			row_class = RaidGUIControlGridItemActive
 		}
 	}
 	self._character_customizations_grid = self._customization_grid_scrollable_area:get_panel():grid_active(customization_grid_params)
 	local icon_data = self:get_icon_data_for_body_part(self._selected_filter_body_part)
 	self._body_part_icon = self._root_panel:image({
+		texture = nil,
+		texture_rect = nil,
 		y = 300,
+		w = nil,
+		h = nil,
+		x = nil,
 		x = self._root_panel:right() - 520,
 		w = icon_data.texture_rect[3],
 		h = icon_data.texture_rect[4],
@@ -122,9 +147,15 @@ function CharacterCustomizationGui:_layout()
 	})
 	local body_part_data = self._all_customizations[self._selected_upper_name]
 	self._body_part_title = self._root_panel:label({
+		x = nil,
+		y = nil,
+		w = 288,
 		wor_wrap = true,
 		wrap = true,
-		w = 288,
+		text = nil,
+		color = nil,
+		font = nil,
+		font_size = nil,
 		x = self._body_part_icon:x() + 48,
 		y = self._body_part_icon:y(),
 		text = self:translate(body_part_data.name, true),
@@ -133,9 +164,14 @@ function CharacterCustomizationGui:_layout()
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._body_part_description = self._root_panel:label({
-		h = 448,
 		wrap = true,
+		text = nil,
+		x = nil,
+		color = nil,
+		font = nil,
+		h = 448,
 		w = 352,
+		font_size = nil,
 		x = self._body_part_icon:x(),
 		text = self:translate(body_part_data.description, false),
 		font = tweak_data.gui.fonts.lato,
@@ -147,9 +183,12 @@ function CharacterCustomizationGui:_layout()
 
 	self._coord_center_y = 864
 	self._equip_button = self._root_panel:short_primary_button({
-		name = "equip_button",
+		layer = nil,
+		text = nil,
 		visible = false,
+		name = "equip_button",
 		x = 0,
+		on_click_callback = nil,
 		text = self:translate("character_customization_equip_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_button_equip")
@@ -158,9 +197,12 @@ function CharacterCustomizationGui:_layout()
 	self._equip_button:set_center_y(self._coord_center_y)
 
 	self._equip_gold_button = self._root_panel:short_primary_gold_button({
-		name = "equip_gold_button",
+		layer = nil,
+		text = nil,
 		visible = false,
+		name = "equip_gold_button",
 		x = 0,
+		on_click_callback = nil,
 		text = self:translate("character_customization_equip_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_button_equip")
@@ -169,9 +211,12 @@ function CharacterCustomizationGui:_layout()
 	self._equip_gold_button:set_center_y(self._coord_center_y)
 
 	self._buy_button = self._root_panel:short_primary_gold_button({
-		name = "buy_button",
+		layer = nil,
+		text = nil,
 		visible = false,
+		name = "buy_button",
 		x = 0,
+		on_click_callback = nil,
 		text = self:translate("character_customization_buy_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_button_buy")
@@ -181,12 +226,16 @@ function CharacterCustomizationGui:_layout()
 
 	self._info_label = self._root_panel:label({
 		name = "info_label",
-		h = 60,
-		wrap = true,
-		w = 520,
-		word_wrap = true,
-		visible = false,
+		text = nil,
 		x = 0,
+		word_wrap = true,
+		h = 60,
+		w = 520,
+		wrap = true,
+		layer = nil,
+		visible = false,
+		font = nil,
+		font_size = nil,
 		text = self:translate("character_customization_insuficient_gold_label", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -196,10 +245,14 @@ function CharacterCustomizationGui:_layout()
 	self._info_label:set_center_y(self._coord_center_y)
 
 	self._gold_currency_label = self._root_panel:label({
+		layer = nil,
 		text = "",
-		name = "gold_currency_label",
 		visible = false,
+		color = nil,
+		name = "gold_currency_label",
+		font = nil,
 		x = 250,
+		font_size = nil,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		color = tweak_data.gui.colors.gold_orange,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -213,8 +266,12 @@ function CharacterCustomizationGui:_layout()
 	self._gold_currency_label:set_right(512)
 
 	self._gold_currency_icon = self._root_panel:bitmap({
-		name = "gold_currency_icon",
+		texture = nil,
+		layer = nil,
 		visible = false,
+		color = nil,
+		name = "gold_currency_icon",
+		texture_rect = nil,
 		x = 200,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		color = tweak_data.gui.colors.gold_orange,
@@ -226,8 +283,11 @@ function CharacterCustomizationGui:_layout()
 	self._gold_currency_icon:set_right(self._gold_currency_label:x() - 14)
 
 	self._gold_item_bought_icon = self._root_panel:bitmap({
-		name = "gold_item_bought_icon",
+		texture = nil,
+		layer = nil,
 		visible = false,
+		texture_rect = nil,
+		name = "gold_item_bought_icon",
 		x = 200,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		texture = tweak_data.gui.icons.consumable_purchased_confirmed.texture,
@@ -242,12 +302,14 @@ function CharacterCustomizationGui:_layout()
 
 	local selected_item = self._character_customizations_grid:select_grid_item_by_key_value({
 		key = "key_name",
+		value = nil,
 		value = self._equipped_upper_name
 	})
 
 	self:show_character_description(selected_item:get_data())
 	self._character_customizations_grid:activate_item_by_value({
 		key = "key_name",
+		value = nil,
 		value = self._equipped_upper_name
 	})
 	self:_process_controls_states()
@@ -270,6 +332,9 @@ function CharacterCustomizationGui:_on_click_button_buy()
 	local selected_item = self._character_customizations_grid:selected_grid_item()
 	local selected_item_data = selected_item:get_data()
 	local dialog_params = {
+		callback_yes = nil,
+		customization_name = nil,
+		amount = nil,
 		amount = selected_item_data.gold_price,
 		customization_name = self:translate(selected_item_data.name, true),
 		callback_yes = callback(self, self, "_buy_customization_yes_callback")
@@ -321,6 +386,7 @@ function CharacterCustomizationGui:_equip_selected_customization()
 
 	self._character_customizations_grid:activate_item_by_value({
 		key = "key_name",
+		value = nil,
 		value = selected_item_data.key_name
 	})
 
@@ -355,10 +421,12 @@ function CharacterCustomizationGui:_buy_customization_yes_callback()
 	self:_process_body_part_filter(self._selected_filter_body_part)
 	self._character_customizations_grid:select_grid_item_by_key_value({
 		key = "key_name",
+		value = nil,
 		value = selected_item_data.key_name
 	})
 	self._character_customizations_grid:activate_item_by_value({
 		key = "key_name",
+		value = nil,
 		value = selected_item_data.key_name
 	})
 
@@ -482,6 +550,7 @@ function CharacterCustomizationGui:_process_body_part_filter(data)
 
 	self._character_customizations_grid:select_grid_item_by_key_value({
 		key = "key_name",
+		value = nil,
 		value = active_item_data.key_name
 	})
 	self:_equip_selected_customization()
@@ -503,12 +572,14 @@ function CharacterCustomizationGui:_process_body_part_filter(data)
 
 	local selected_item = self._character_customizations_grid:select_grid_item_by_key_value({
 		key = "key_name",
+		value = nil,
 		value = body_part_name
 	})
 
 	self:show_character_description(selected_item:get_data())
 	self._character_customizations_grid:activate_item_by_value({
 		key = "key_name",
+		value = nil,
 		value = selected_item:get_data().key_name
 	})
 	self:_process_controls_states()
@@ -544,6 +615,7 @@ function CharacterCustomizationGui:_select_grid_item(item_data)
 	self:_process_controls_states()
 	managers.dialog:queue_dialog("player_gen_custom_right_clothes", {
 		skip_idle_check = true,
+		instigator = nil,
 		instigator = managers.player:local_player()
 	})
 
@@ -671,10 +743,14 @@ end
 function CharacterCustomizationGui:bind_controller_inputs()
 	local bindings = {
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_filter_body_part_left")
 		},
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_filter_body_part_right")
 		}
@@ -683,6 +759,8 @@ function CharacterCustomizationGui:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_character_customization_shoulder"
@@ -690,6 +768,7 @@ function CharacterCustomizationGui:bind_controller_inputs()
 		keyboard = {
 			{
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -703,10 +782,14 @@ end
 function CharacterCustomizationGui:bind_controller_inputs_equip()
 	local bindings = {
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_filter_body_part_left")
 		},
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_filter_body_part_right")
 		}
@@ -726,10 +809,13 @@ function CharacterCustomizationGui:bind_controller_inputs_equip()
 	end
 
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = controller_legend,
 		keyboard = {
 			{
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -743,10 +829,14 @@ end
 function CharacterCustomizationGui:bind_controller_inputs_buy()
 	local bindings = {
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_filter_body_part_left")
 		},
 		{
+			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_filter_body_part_right")
 		}
@@ -755,6 +845,8 @@ function CharacterCustomizationGui:bind_controller_inputs_buy()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_character_customization_shoulder",
@@ -763,6 +855,7 @@ function CharacterCustomizationGui:bind_controller_inputs_buy()
 		keyboard = {
 			{
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

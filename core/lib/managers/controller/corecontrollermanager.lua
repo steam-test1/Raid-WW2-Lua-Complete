@@ -16,7 +16,9 @@ function ControllerManager:init(path, default_settings_path)
 	ControllerManager.super.init(self, "controller")
 
 	if not Global.controller_manager then
-		Global.controller_manager = {}
+		Global.controller_manager = {
+			default_controller_connected = nil
+		}
 	end
 
 	self._skip_controller_map = {}
@@ -587,7 +589,9 @@ function ControllerManager:save_settings(path)
 	elseif self._last_version and path then
 		local file = SystemFS:open("./" .. tostring(path), "w")
 		local data = {
+			version = nil,
 			_meta = "controller_settings",
+			core_version = nil,
 			core_version = self._last_core_version,
 			version = self._last_version
 		}

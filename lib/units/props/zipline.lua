@@ -619,6 +619,7 @@ end
 function ZipLine:run_sequence(sequence_name, user_unit)
 	if self._unit:damage():has_sequence(sequence_name) then
 		self._unit:damage():run_sequence_simple(sequence_name, {
+			unit = nil,
 			unit = user_unit
 		})
 	end

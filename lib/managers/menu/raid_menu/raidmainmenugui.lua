@@ -21,6 +21,8 @@ end
 function RaidMainMenuGui:_mod_overrides_warning()
 	if RaidMenuCallbackHandler:is_in_main_menu() and SystemFS:exists(Application:base_path() .. "assets/mod_overrides") then
 		managers.menu:show_mod_overrides_warning_dialog({
+			callback_no = nil,
+			callback_yes = nil,
 			callback_yes = callback(self, self, "_mod_overrides_warning_callback_yes_function"),
 			callback_no = callback(self, self, "_mod_overrides_warning_callback_no_function")
 		})
@@ -75,19 +77,24 @@ end
 
 function RaidMainMenuGui:_layout_title_logo()
 	self._title_label = self._root_panel:text({
-		text = "",
-		h = 64,
 		y = 0,
 		x = 0,
+		text = "",
+		font_size = nil,
+		font = nil,
+		h = 64,
+		w = nil,
 		w = self._root_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_56
 	})
 	self._title_icon = self._root_panel:bitmap({
-		h = 64,
 		y = 0,
-		w = 64,
 		x = 0,
+		texture_rect = nil,
+		texture = nil,
+		h = 64,
+		w = 64,
 		texture = tweak_data.gui.icons.missions_camp.texture,
 		texture_rect = tweak_data.gui.icons.missions_camp.texture_rect
 	})
@@ -110,9 +117,11 @@ function RaidMainMenuGui:_layout_title_logo()
 	end
 
 	self._raid_logo_small = self._root_panel:image({
-		name = "raid_logo_small",
 		y = 0,
 		x = 0,
+		texture_rect = nil,
+		texture = nil,
+		name = "raid_logo_small",
 		texture = logo_texture,
 		texture_rect = logo_texture_rect
 	})
@@ -167,13 +176,16 @@ end
 function RaidMainMenuGui:_layout_list_menu()
 	if Network:multiplayer() then
 		local list_menu_params_multiplayer = {
-			selection_enabled = true,
+			y = 120,
+			loop_items = true,
+			on_menu_move = nil,
 			name = "list_menu",
 			h = 972,
 			w = 480,
-			loop_items = true,
-			y = 120,
+			selection_enabled = true,
 			x = 15,
+			data_source_callback = nil,
+			on_item_clicked_callback = nil,
 			on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
 			data_source_callback = callback(self, self, "_list_menu_data_source"),
 			on_menu_move = {}
@@ -188,13 +200,16 @@ function RaidMainMenuGui:_layout_list_menu()
 		self._list_menu = self._root_panel:list(list_menu_params_multiplayer)
 	else
 		local list_menu_params = {
-			selection_enabled = true,
+			y = 120,
+			loop_items = true,
+			on_menu_move = nil,
 			name = "list_menu",
 			h = 972,
 			w = 480,
-			loop_items = true,
-			y = 120,
+			selection_enabled = true,
 			x = 15,
+			data_source_callback = nil,
+			on_item_clicked_callback = nil,
 			on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
 			data_source_callback = callback(self, self, "_list_menu_data_source"),
 			on_menu_move = {}
@@ -223,11 +238,13 @@ function RaidMainMenuGui:_layout_version_id()
 	end
 
 	local item_params = {
+		y = nil,
+		x = 0,
+		text = nil,
+		alpha = 0.33,
 		name = "version_id",
 		h = 100,
 		w = 600,
-		alpha = 0.33,
-		x = 0,
 		y = self._root_panel:h() - 50,
 		text = text
 	}
@@ -314,9 +331,12 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 		self._widget_panel:clear()
 	else
 		local widget_panel_params = {
+			y = nil,
+			valign = "top",
 			halign = "right",
 			name = "widget_panel",
-			valign = "top",
+			h = nil,
+			w = nil,
 			y = RaidMainMenuGui.WIDGET_PANEL_Y,
 			w = RaidMainMenuGui.WIDGET_PANEL_W,
 			h = RaidMainMenuGui.WIDGET_PANEL_H
@@ -328,10 +348,10 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 
 	if not alive(self._widget_label_panel) then
 		local label_panel_params = {
-			visible = false,
 			name = "widget_label_panel",
+			halign = "scale",
 			h = 64,
-			halign = "scale"
+			visible = false
 		}
 		self._widget_label_panel = self._widget_panel:get_engine_panel():panel(label_panel_params)
 
@@ -339,12 +359,17 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	end
 
 	local widget_title_params = {
-		name = "widget_title",
-		h = 64,
+		font_size = nil,
 		vertical = "center",
-		align = "left",
-		halign = "left",
 		x = 32,
+		align = "left",
+		name = "widget_title",
+		font = nil,
+		h = 64,
+		w = nil,
+		halign = "left",
+		color = nil,
+		text = nil,
 		w = self._widget_panel:w() - 32,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.menu_list),
 		font_size = tweak_data.gui.font_sizes.menu_list,
@@ -353,13 +378,16 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	}
 	local widget_title = self._widget_label_panel:text(widget_title_params)
 	local widget_action_title_params = {
-		name = "widget_action_title",
-		h = 64,
+		font_size = nil,
 		vertical = "center",
-		w = 150,
-		align = "right",
-		text = "",
 		halign = "right",
+		align = "right",
+		name = "widget_action_title",
+		font = nil,
+		h = 64,
+		w = 150,
+		color = nil,
+		text = "",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.extra_small),
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey_effects
@@ -375,6 +403,12 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 
 		for i = 1, 3 do
 			local widget_params = {
+				y = nil,
+				menu_move = nil,
+				name = nil,
+				on_button_selected_callback = nil,
+				index = nil,
+				on_button_unselected_callback = nil,
 				index = i,
 				name = "kick_mute_widget_" .. tostring(i),
 				y = i * 64,
@@ -500,6 +534,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 
 	table.insert(_list_items, {
 		callback = "resume_game_raid",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
 		},
@@ -507,8 +543,10 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "raid_play_tutorial",
-		item_h = 72,
+		text = nil,
 		item_font_size = 48,
+		item_h = 72,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL
 		},
@@ -516,6 +554,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "raid_skip_tutorial",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
 			RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL_SKIP
@@ -524,8 +564,10 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "raid_play_online",
-		item_h = 72,
+		text = nil,
 		item_font_size = 60,
+		item_h = 72,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
 			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
@@ -534,6 +576,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "raid_play_offline",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
 			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
@@ -542,6 +586,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "singleplayer_restart_mission",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
 		},
@@ -549,6 +595,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "singleplayer_restart_game_to_camp",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
 		},
@@ -556,6 +604,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "restart_mission",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
@@ -564,6 +614,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "restart_to_camp",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE
 		},
@@ -571,6 +623,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "restart_to_camp_client",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT
 		},
@@ -578,6 +632,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "restart_vote",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.RESTART_VOTE_VISIBLE,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
@@ -586,17 +642,23 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "on_mission_selection_clicked",
+		breadcrumb = nil,
+		availability_flags = nil,
+		text = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
 		},
 		breadcrumb = {
 			delay = 0.2,
+			category = nil,
 			category = BreadcrumbManager.CATEGORY_MISSIONS
 		},
 		text = utf8.to_upper(managers.localization:text("menu_mission_selection"))
 	})
 	table.insert(_list_items, {
 		callback = "on_multiplayer_clicked",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
 			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
@@ -605,6 +667,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "on_multiplayer_clicked",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER
@@ -613,51 +677,69 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "on_select_character_profile_clicked",
+		breadcrumb = nil,
+		availability_flags = nil,
+		text = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
 		},
 		breadcrumb = {
 			delay = 0.2,
+			category = nil,
 			category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION
 		},
 		text = utf8.to_upper(managers.localization:text("menu_character_setup"))
 	})
 	table.insert(_list_items, {
 		callback = "on_weapon_select_clicked",
+		breadcrumb = nil,
+		availability_flags = nil,
+		text = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
 		},
 		text = utf8.to_upper(managers.localization:text("menu_header_weapons_screen_name")),
 		breadcrumb = {
 			delay = 0.2,
+			check_callback = nil,
 			check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs")
 		}
 	})
 	table.insert(_list_items, {
 		callback = "on_select_character_skills_clicked",
+		breadcrumb = nil,
+		availability_flags = nil,
+		text = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
 		},
 		breadcrumb = {
 			delay = 0.2,
+			category = nil,
 			category = BreadcrumbManager.CATEGORY_RANK_REWARD
 		},
 		text = utf8.to_upper(managers.localization:text("menu_skills"))
 	})
 	table.insert(_list_items, {
 		callback = "on_select_challenge_cards_view_clicked",
+		breadcrumb = nil,
+		availability_flags = nil,
+		text = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER
 		},
 		breadcrumb = {
 			delay = 0.2,
+			category = nil,
 			category = BreadcrumbManager.CATEGORY_CARD
 		},
 		text = utf8.to_upper(managers.localization:text("menu_challenge_cards"))
 	})
 	table.insert(_list_items, {
 		callback = "on_options_clicked",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
@@ -666,6 +748,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "on_options_clicked",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
 		},
@@ -673,6 +757,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "on_options_clicked",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
 		},
@@ -680,6 +766,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "show_credits",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
 		},
@@ -687,6 +775,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "end_game",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
@@ -695,6 +785,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "quit_game",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
@@ -703,6 +795,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "quit_game",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
@@ -712,6 +806,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 	})
 	table.insert(_list_items, {
 		callback = "quit_game_pause_menu",
+		text = nil,
+		availability_flags = nil,
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,

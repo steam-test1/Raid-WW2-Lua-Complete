@@ -1,8 +1,8 @@
 ServerSyncedCivilianDamage = ServerSyncedCivilianDamage or class(CivilianDamage)
 ServerSyncedCivilianDamage._RESULT_INDEX_TABLE = {
+	heavy_hurt = 3,
 	light_hurt = 2,
 	hurt = 1,
-	heavy_hurt = 3,
 	death = 4
 }
 

@@ -234,8 +234,10 @@ function GuiDataManager:scaled_size()
 	local h = math.round(self:_get_safe_rect().height * base_res.y)
 
 	return {
-		x = 0,
+		width = nil,
 		y = 0,
+		height = nil,
+		x = 0,
 		width = w,
 		height = h
 	}

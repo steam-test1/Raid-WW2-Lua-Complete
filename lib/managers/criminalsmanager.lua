@@ -27,6 +27,9 @@ function CriminalsManager:_create_characters()
 		local static_data = deep_clone(character.static_data)
 		local character_data = {
 			peer_id = 0,
+			name = nil,
+			static_data = nil,
+			data = nil,
 			taken = false,
 			name = character.name,
 			static_data = static_data,

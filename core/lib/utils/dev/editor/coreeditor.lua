@@ -193,6 +193,7 @@ function CoreEditor:_init_listener()
 
 	self._listener_always_enabled = false
 	self._sound_check_object = managers.sound_environment:add_check_object({
+		object = nil,
 		primary = true,
 		active = true,
 		object = self:camera()
@@ -202,8 +203,8 @@ end
 function CoreEditor:_init_mute()
 	self._mute_source = SoundDevice:create_source("editor_mute")
 	self._mute_states = {
-		current = false,
-		wanted = true
+		wanted = true,
+		current = false
 	}
 end
 
@@ -215,10 +216,10 @@ function CoreEditor:_init_gui()
 	self._gui = self._workspace:panel():gui(Idstring("core/guis/core_editor"))
 
 	self._gui:child("camera"):text({
-		text = "",
+		font_size = 20,
 		name = "select_units_amount",
-		font = "core/fonts/nice_editor_font",
-		font_size = 20
+		text = "",
+		font = "core/fonts/nice_editor_font"
 	})
 	self:_align_gui()
 end
@@ -511,6 +512,7 @@ function CoreEditor:check_news(file, devices)
 		local f = SystemFS:open(managers.database:base_path() .. self._version_path .. ".editor_version", "w")
 
 		f:puts(ScriptSerializer:to_generic_xml({
+			news = nil,
 			news = self._news_version
 		}))
 		SystemFS:close(f)
@@ -549,16 +551,21 @@ function CoreEditor:_parse_controller_file(file, devices)
 			for button in controller:children() do
 				if controller:name() == "base" then
 					self._bindings[button:name()] = {
+						key = nil,
+						device = nil,
 						device = devices[button:parameter("device")],
 						key = button:parameter("shortkey")
 					}
 				elseif controller:name() == "layer" then
 					self._layer_bindings[button:name()] = {
+						key = nil,
+						device = nil,
 						device = devices[button:parameter("device")],
 						key = button:parameter("shortkey")
 					}
 				elseif controller:name() == "menu" then
 					self._menu_bindings[button:name()] = {
+						key = nil,
 						key = button:parameter("shortkey")
 					}
 				end
@@ -571,6 +578,8 @@ function CoreEditor:_init_controller()
 	local mouse = Input:mouse()
 	local kb = Input:keyboard()
 	local devices = {
+		mouse = nil,
+		keyboard = nil,
 		keyboard = kb,
 		mouse = mouse
 	}
@@ -855,7 +864,9 @@ function CoreEditor:run_simulation(with_mission)
 		end
 
 		self._world_holder = WorldHolder:new({
+			file_path = nil,
 			file_type = "world",
+			cube_lights_path = nil,
 			file_path = managers.database:entry_path(file),
 			cube_lights_path = managers.database:entry_path(self._lastdir) .. "/"
 		})
@@ -898,6 +909,8 @@ function CoreEditor:run_simulation(with_mission)
 
 			local script = mission:simulate_with_current_script() and mission:current_script()
 			local mission_params = {
+				file_path = nil,
+				activate_mission = nil,
 				file_path = managers.database:entry_path(self._simulation_path .. "\\mission"),
 				activate_mission = script
 			}
@@ -1602,6 +1615,8 @@ function CoreEditor:save_editor_settings(path, dir)
 
 	table.delete(self._recent_files, self:recent_file(self._lastfile))
 	table.insert(self._recent_files, 1, {
+		path = nil,
+		dir = nil,
 		path = self._lastfile,
 		dir = self._lastdir
 	})
@@ -1642,6 +1657,8 @@ function CoreEditor:_load_editor_settings()
 				local index = tonumber(setting:parameter("index"))
 
 				table.insert(self._recent_files, index, {
+					path = nil,
+					dir = nil,
 					path = setting:parameter("path"),
 					dir = setting:parameter("dir")
 				})
@@ -1652,6 +1669,10 @@ end
 
 function CoreEditor:save_layout()
 	local params = {
+		dialogs = nil,
+		save_dialog_states = nil,
+		file = nil,
+		dialogs_settings = nil,
 		save_dialog_states = self._save_dialog_states,
 		dialogs = self._dialogs,
 		dialogs_settings = self._dialogs_settings,
@@ -1664,6 +1685,8 @@ end
 function CoreEditor:load_layout()
 	if DB:has("editor_layout", self._layout_path) then
 		local params = {
+			file = nil,
+			dialogs_settings = nil,
 			dialogs_settings = self._dialogs_settings,
 			file = DB:open("editor_layout", self._layout_path)
 		}
@@ -1888,10 +1911,14 @@ function CoreEditor:reload_units(unit_names, small_compile, skip_replace_units)
 		end
 
 		Application:data_compile({
-			target_db_name = "all",
-			send_idstrings = false,
+			source_root = nil,
 			preprocessor_definitions = "preprocessor_definitions",
+			send_idstrings = false,
+			platform = nil,
+			source_files = nil,
+			target_db_name = "all",
 			verbose = false,
+			target_db_root = nil,
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),
 			target_db_root = Application:base_path() .. "assets",
@@ -2184,6 +2211,7 @@ end
 function CoreEditor:left_mouse_btn()
 	if self._trigger_add_unit then
 		local ray = self:unit_by_raycast({
+			mask = nil,
 			sample = true,
 			mask = managers.slot:get_mask("all")
 		})
@@ -2265,6 +2293,7 @@ function CoreEditor:set_world_holder(path)
 	Application:error("FIXME: Either unused or broken.")
 
 	self._world_holder = WorldHolder:new({
+		file_path = nil,
 		file_type = "world",
 		file_path = path
 	})
@@ -2685,8 +2714,9 @@ function CoreEditor:update_ruler(t, dt)
 	Application:draw_sphere(pos, 10, 1, 1, 1)
 
 	local ray = self:unit_by_raycast({
-		sample = true,
+		mask = nil,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -3073,6 +3103,7 @@ function CoreEditor:_copy_files(src, dest, rules)
 
 	for _, file in ipairs(SystemFS:list(src)) do
 		table.insert(files, {
+			file = nil,
 			sub_dir = "",
 			file = src .. "/" .. file
 		})
@@ -3081,6 +3112,8 @@ function CoreEditor:_copy_files(src, dest, rules)
 	for _, sub_dir in ipairs(SystemFS:list(src, true)) do
 		for _, file in ipairs(SystemFS:list(src .. "/" .. sub_dir)) do
 			table.insert(files, {
+				file = nil,
+				sub_dir = nil,
 				file = src .. "/" .. sub_dir .. "/" .. file,
 				sub_dir = sub_dir .. "\\"
 			})
@@ -3147,6 +3180,9 @@ function CoreEditor:do_save(path, dir, save_continents)
 	self._continent_save_tables = {}
 	self._world_save_table.world_data = {
 		continents_file = "continents",
+		values = nil,
+		markers = nil,
+		max_id = nil,
 		max_id = self._max_id,
 		markers = self._markers,
 		values = self._values.world
@@ -3154,8 +3190,10 @@ function CoreEditor:do_save(path, dir, save_continents)
 
 	for continent, values in pairs(self._values) do
 		local t = {
+			data = nil,
 			single_data_block = true,
 			entry = "values",
+			continent = nil,
 			continent = continent,
 			data = values
 		}
@@ -3165,6 +3203,7 @@ function CoreEditor:do_save(path, dir, save_continents)
 
 	for _, layer in pairs(self._layers) do
 		local save_params = {
+			dir = nil,
 			dir = dir
 		}
 
@@ -3266,10 +3305,14 @@ end
 function CoreEditor:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
-		target_db_name = "all",
-		send_idstrings = false,
+		source_root = nil,
 		preprocessor_definitions = "preprocessor_definitions",
+		send_idstrings = false,
+		platform = nil,
+		source_files = nil,
+		target_db_name = "all",
 		verbose = false,
+		target_db_root = nil,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
 		target_db_root = Application:base_path() .. "assets",
@@ -3345,6 +3388,9 @@ function CoreEditor:_save_packages(dir)
 	local chunk_name = managers.editor:layer("Level Settings"):get_setting("chunk_name")
 	local is_not_init_chunk = chunk_name ~= "init"
 	local streaming_options = {
+		ps4 = nil,
+		win32 = nil,
+		xb1 = nil,
 		win32 = {
 			"texture"
 		},
@@ -3521,6 +3567,7 @@ function CoreEditor:_save_shadow_textures(dir)
 	print("managers.database:entry_relative_path( path )", path, managers.database:entry_relative_path(path))
 	managers.editor:add_to_world_package({
 		category = "guis",
+		path = nil,
 		path = managers.database:entry_path(path)
 	})
 end
@@ -3546,6 +3593,7 @@ function CoreEditor:_add_files_to_package(dir)
 			if type == managers.database:entry_type(file) then
 				self:add_to_world_package({
 					category = "script_data",
+					name = nil,
 					name = file
 				})
 			end
@@ -3555,12 +3603,14 @@ end
 
 function CoreEditor:_save_continent_files(dir)
 	local layer_files = {
-		mission_scripts = "mission",
-		mission = "mission"
+		mission = "mission",
+		mission_scripts = "mission"
 	}
 
 	for continent, data in pairs(self._continent_save_tables) do
 		local files = {
+			mission = nil,
+			continent = nil,
 			continent = {},
 			mission = {}
 		}
@@ -3587,6 +3637,10 @@ function CoreEditor:_save_continent_files(dir)
 		f:puts(ScriptSerializer:to_generic_xml(files.mission))
 		SystemFS:close(f)
 		self:_save_continent_mission_file({
+			name = nil,
+			dir = nil,
+			path = nil,
+			continent = nil,
 			path = continent_dir .. continent .. ".mission",
 			dir = continent_dir,
 			name = continent,
@@ -3620,6 +3674,7 @@ function CoreEditor:_save_mission_file(dir)
 
 	for name, continent in pairs(self._continents) do
 		t[name] = {
+			file = nil,
 			file = name .. "/" .. name
 		}
 	end
@@ -3641,6 +3696,8 @@ end
 function CoreEditor:_save_cover_ai_data(dir)
 	local all_cover_units = World:find_units_quick("all", managers.slot:get_mask("cover"))
 	local covers = {
+		positions = nil,
+		rotations = nil,
 		positions = {},
 		rotations = {}
 	}
@@ -3667,6 +3724,9 @@ function CoreEditor:_open_file(path, continent, init, skip_package)
 	if not skip_package then
 		managers.editor:add_to_world_package({
 			category = "script_data",
+			init = nil,
+			path = nil,
+			continent = nil,
 			path = managers.database:entry_relative_path(path),
 			continent = continent,
 			init = init
@@ -3860,6 +3920,7 @@ function CoreEditor:load_level(dir, path)
 
 	self._load_progress = EWS:ProgressDialog(Global.frame_panel, "Loading..", "Parsing world file", 100, "PD_AUTO_HIDE,PD_SMOOTH,PD_ESTIMATED_TIME,PD_REMAINING_TIME")
 	self._world_holder = WorldHolder:new({
+		file_path = nil,
 		file_type = "world",
 		file_path = managers.database:entry_path(path)
 	})
@@ -4225,6 +4286,11 @@ function CoreEditor:create_continent(name, values)
 	local continent = self._continents[name]
 
 	self._continents_panel:add_continent({
+		visible = nil,
+		editor_only = nil,
+		enabled_in_simulation = nil,
+		locked = nil,
+		continent = nil,
 		visible = continent:value("visible"),
 		locked = continent:value("locked"),
 		enabled_in_simulation = continent:value("enabled_in_simulation"),
@@ -4341,8 +4407,9 @@ end
 
 function CoreEditor:change_continent_by_unit()
 	local ray = self:unit_by_raycast({
-		sample = true,
+		mask = nil,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -4390,7 +4457,9 @@ end
 function CoreEditor:add_workview(name)
 	local continent = self:current_continent_name()
 	self._values[continent].workviews[name] = {
+		rotation = nil,
 		text = "",
+		position = nil,
 		position = self:camera():position(),
 		rotation = self:camera():rotation()
 	}
@@ -4418,8 +4487,9 @@ function CoreEditor:set_ruler_points()
 	end
 
 	local ray = self:unit_by_raycast({
-		sample = true,
+		mask = nil,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 

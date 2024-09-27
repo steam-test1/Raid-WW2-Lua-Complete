@@ -47,6 +47,17 @@ function _light_data_table(unit)
 
 	for _, light in ipairs(lights) do
 		local data = {
+			clipping_values = nil,
+			linear_attenuation_factor = nil,
+			falloff_exponent = nil,
+			multiplier = nil,
+			spot_angle_end = nil,
+			spot_angle_start = nil,
+			color = nil,
+			near_range = nil,
+			far_range = nil,
+			enabled = nil,
+			name = nil,
 			name = light:name():s(),
 			enabled = light:enable(),
 			far_range = light:far_range(),
@@ -85,6 +96,11 @@ function _triggers_data_table(unit)
 				if trigger_data and #trigger_data > 0 then
 					for _, data in ipairs(trigger_data) do
 						table.insert(t, {
+							notify_unit_sequence = nil,
+							time = nil,
+							notify_unit_id = nil,
+							id = nil,
+							name = nil,
 							name = data.trigger_name,
 							id = data.id,
 							notify_unit_id = data.notify_unit:unit_data().unit_id,
@@ -105,6 +121,18 @@ function _editable_gui_data_table(unit)
 
 	if unit:editable_gui() then
 		t = {
+			shape = nil,
+			alpha = nil,
+			word_wrap = nil,
+			wrap = nil,
+			render_template = nil,
+			blend_mode = nil,
+			vertical = nil,
+			align = nil,
+			font = nil,
+			font_size = nil,
+			font_color = nil,
+			text = nil,
 			text = unit:editable_gui():text(),
 			font_color = unit:editable_gui():font_color(),
 			font_size = unit:editable_gui():font_size(),
@@ -128,6 +156,8 @@ function _editable_ladder_table(unit)
 
 	if unit:ladder() then
 		t = {
+			height = nil,
+			width = nil,
 			width = unit:ladder():width(),
 			height = unit:ladder():height()
 		}
@@ -141,6 +171,11 @@ function _editable_zipline_table(unit)
 
 	if unit:zipline() then
 		t = {
+			speed = nil,
+			end_pos = nil,
+			ai_ignores_bag = nil,
+			usage_type = nil,
+			slack = nil,
 			end_pos = unit:zipline():end_pos(),
 			speed = unit:zipline():speed(),
 			slack = unit:zipline():slack(),
@@ -158,6 +193,10 @@ function save_layout(params)
 	if params.save_dialog_states then
 		for name, dialog in pairs(params.dialogs) do
 			dialogs[name] = {
+				position = nil,
+				size = nil,
+				visible = nil,
+				class = nil,
 				class = CoreDebug.class_name(getmetatable(dialog)),
 				position = dialog:position(),
 				size = dialog:size(),
@@ -168,6 +207,10 @@ function save_layout(params)
 		for name, setting in pairs(params.dialogs_settings) do
 			if not params.dialogs[name] then
 				dialogs[name] = {
+					position = nil,
+					size = nil,
+					visible = nil,
+					class = nil,
 					class = setting.class,
 					position = setting.position,
 					size = setting.size,
@@ -178,6 +221,11 @@ function save_layout(params)
 	end
 
 	local data = {
+		position = nil,
+		is_iconized = nil,
+		dialogs = nil,
+		is_maximized = nil,
+		size = nil,
 		is_maximized = Global.frame:is_maximized(),
 		is_iconized = Global.frame:is_iconized(),
 		size = Global.frame:get_size(),

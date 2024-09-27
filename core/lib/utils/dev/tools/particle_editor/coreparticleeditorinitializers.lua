@@ -348,8 +348,8 @@ function CoreParticleEditorInitializers:create_lightcone()
 
 	distance_keys:set_key_type("float")
 	distance_keys:add_key({
-		v = "20",
-		t = 0
+		t = 0,
+		v = "20"
 	})
 	distance_keys:set_min_max_keys(min_keys, max_keys)
 	initializer:add_property(distance_keys)
@@ -359,8 +359,8 @@ function CoreParticleEditorInitializers:create_lightcone()
 
 	size_keys:set_key_type("vector2")
 	size_keys:add_key({
-		v = "100 100",
-		t = 0
+		t = 0,
+		v = "100 100"
 	})
 	size_keys:set_min_max_keys(min_keys, max_keys)
 	initializer:add_property(size_keys)
@@ -370,8 +370,8 @@ function CoreParticleEditorInitializers:create_lightcone()
 
 	opacity_keys:set_key_type("opacity")
 	opacity_keys:add_key({
-		v = "255",
-		t = 0
+		t = 0,
+		v = "255"
 	})
 	opacity_keys:set_min_max_keys(min_keys, max_keys)
 	initializer:add_property(opacity_keys)

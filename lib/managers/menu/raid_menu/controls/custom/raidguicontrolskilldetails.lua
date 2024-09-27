@@ -48,6 +48,11 @@ function RaidGUIControlSkillDetails:_create_control_panel()
 	self._object = self._panel:panel(control_params)
 	self._main = self._object:panel({
 		name = "main_frame",
+		layer = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		x = RaidGUIControlSkillDetails.FRAME_MARGIN_W,
 		y = RaidGUIControlSkillDetails.FRAME_MARGIN_H,
 		w = self._object:w() - RaidGUIControlSkillDetails.FRAME_MARGIN_W * 2,
@@ -58,10 +63,13 @@ end
 
 function RaidGUIControlSkillDetails:_create_control_panel_bg()
 	self._background = self._object:nine_cut_bitmap({
-		name = "background",
-		alpha = 0.8,
-		icon = "dialog_rect",
 		corner_size = 64,
+		name = "background",
+		icon = "dialog_rect",
+		h = nil,
+		w = nil,
+		layer = nil,
+		alpha = 0.8,
 		w = self._object:w(),
 		h = self._object:h(),
 		layer = self._object:layer() - 1
@@ -70,10 +78,16 @@ end
 
 function RaidGUIControlSkillDetails:_create_skill_title()
 	self._title = self._main:label({
-		name = "skill_title",
+		font_size = nil,
 		align = "center",
+		h = nil,
 		text = "DEFAULT DABBLER",
+		w = nil,
+		layer = nil,
+		name = "skill_title",
+		color = nil,
 		y = 4,
+		font = nil,
 		w = self._main:w(),
 		h = RaidGUIControlSkillDetails.TITLE_H,
 		font = RaidGUIControlSkillDetails.TITLE_FONT,
@@ -83,9 +97,11 @@ function RaidGUIControlSkillDetails:_create_skill_title()
 	})
 	self._seperator_title = self._main:gradient({
 		name = "seperator_title",
-		h = 4,
 		orientation = "horizontal",
 		layer = 2,
+		h = 4,
+		w = nil,
+		y = nil,
 		y = self._title:top() - 4,
 		w = self._main:w()
 	})
@@ -107,6 +123,7 @@ function RaidGUIControlSkillDetails:_create_skill_progression()
 	self._skill_progression = self._main:create_custom_control(RaidGUIControlSkillProgression, {
 		name = "skill_progression",
 		layer = 1,
+		x = nil,
 		x = RaidGUIControlSkillDetails.PROGRESSION_PADDING_X
 	})
 
@@ -118,6 +135,10 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	local y = self._title:bottom() + RaidGUIControlSkillDetails.DESCRIPTION_PADDING_Y
 	self._description_panel = self._main:panel({
 		name = "description_panel",
+		h = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		x = x,
 		y = y,
 		w = self._main:w() - x,
@@ -129,12 +150,18 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	local text = "Sunburn can occur in less than 15 minutes, and in seconds when exposed to non-shielded welding arcs or other sources of intense ultraviolet light."
 	local template = {
 		vertical = "center",
-		h = 68,
-		wrap = true,
 		align = "left",
-		word_wrap = true,
-		y = 0,
 		rotation = 360,
+		word_wrap = true,
+		w = nil,
+		wrap = true,
+		layer = nil,
+		font = nil,
+		font_size = nil,
+		h = 68,
+		color = nil,
+		y = 0,
+		x = nil,
 		x = tier_icon_size + padding,
 		w = self._description_panel:w() - tier_icon_size - padding,
 		font = RaidGUIControlSkillDetails.DESCRIPTION_FONT,
@@ -152,6 +179,12 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 		self._descriptions[i] = description
 		local tier_icon_gui = tweak_data.gui.icons["skills_weapon_tier_" .. i]
 		local tier_icon = self._description_panel:bitmap({
+			name = nil,
+			h = nil,
+			w = nil,
+			color = nil,
+			texture_rect = nil,
+			texture = nil,
 			name = "skill_icon_tier_" .. i,
 			w = tier_icon_size,
 			h = tier_icon_size,
@@ -172,6 +205,10 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	local info_icon_gui = tweak_data.gui.icons.ico_info
 	self._info_icon = self._description_panel:bitmap({
 		name = "skill_icon_info",
+		h = nil,
+		w = nil,
+		texture_rect = nil,
+		texture = nil,
 		w = info_icon_size,
 		h = info_icon_size,
 		texture = info_icon_gui.texture,
@@ -186,9 +223,17 @@ function RaidGUIControlSkillDetails:_create_skill_flavor()
 	local text = "Cuba is the largest island in the Caribbean, it is the second-most populous after Hispaniola!"
 	local h = RaidGUIControlSkillDetails.FLAVOR_FONT_SIZE * 2
 	self._flavor = self._main:label({
-		name = "skill_flavor",
 		vertical = "center",
 		align = "center",
+		h = nil,
+		text = nil,
+		w = nil,
+		font_size = nil,
+		layer = nil,
+		name = "skill_flavor",
+		color = nil,
+		y = nil,
+		font = nil,
 		text = text,
 		y = self._main:h() - h,
 		w = self._main:w(),
@@ -201,9 +246,12 @@ function RaidGUIControlSkillDetails:_create_skill_flavor()
 	local padding = 50
 	self._seperator_flavor = self._main:gradient({
 		name = "seperator_flavor",
-		h = 2,
 		orientation = "horizontal",
 		layer = 2,
+		h = 2,
+		w = nil,
+		y = nil,
+		x = nil,
 		x = padding,
 		y = self._flavor:top() - 4,
 		w = self._main:w() - padding * 2
@@ -257,11 +305,13 @@ function RaidGUIControlSkillDetails:set_skill(item_data)
 		status = RaidGUIControlSkillProgression.STATUS_OWNED_OR_PURCHASED
 		title = title .. " " .. RaidGUIControlGridItemSkill.ROMAN_NUMBERS[current_tier]
 		progress_title = utf8.to_upper(managers.localization:text("menu_skills_progress_title_xp", {
+			XP = nil,
 			XP = exp_string
 		}))
 	elseif locked then
 		status = RaidGUIControlSkillProgression.STATUS_LOCKED
 		progress_title = utf8.to_upper(managers.localization:text("menu_skills_progress_title_level", {
+			LEVEL = nil,
 			LEVEL = item_data.level_required
 		}))
 	end

@@ -39,6 +39,11 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_panel()
 	local panel_params = {
+		y = nil,
+		x = nil,
+		h = nil,
+		w = nil,
+		name = nil,
 		name = "list_item_" .. self._name,
 		x = self._params.x or 0,
 		y = self._params.y or 0,
@@ -50,7 +55,11 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_sideline()
 	local sideline_params = {
+		y = nil,
+		color = nil,
+		h = nil,
 		alpha = 0,
+		w = nil,
 		x = 0,
 		y = (self._params.h - RaidGUIControlListItemIconDescription.ICON_HEIGHT) / 2,
 		w = RaidGUIControlListItemIconDescription.SIDELINE_W,
@@ -62,6 +71,13 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_icon()
 	local icon_params = {
+		y = nil,
+		texture_rect = nil,
+		h = nil,
+		texture = nil,
+		x = nil,
+		w = nil,
+		name = nil,
 		name = "list_item_icon_" .. self._name,
 		x = self._sideline:x() + self._sideline:w() + RaidGUIControlListItemIconDescription.ICON_PADDING,
 		y = (self._params.h - RaidGUIControlListItemIconDescription.ICON_HEIGHT) / 2,
@@ -79,8 +95,16 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_title()
 	local title_params = {
+		font = nil,
+		h = nil,
+		color = nil,
 		vertical = "center",
+		font_size = nil,
+		name = nil,
 		y = 0,
+		text = nil,
+		w = nil,
+		x = nil,
 		name = "list_item_title_" .. tostring(self._name),
 		x = self._icon:x() + self._icon:w() + RaidGUIControlListItemIconDescription.ICON_PADDING_RIGHT,
 		w = self._params.w,
@@ -102,8 +126,17 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_description()
 	local description_params = {
-		wrap = true,
+		font = nil,
+		h = nil,
+		color = nil,
 		vertical = "center",
+		font_size = nil,
+		name = nil,
+		y = nil,
+		text = nil,
+		wrap = true,
+		w = nil,
+		x = nil,
 		name = "list_item_description_" .. tostring(self._name),
 		x = self._title:x(),
 		y = self._title:y() + self._title:h() + RaidGUIControlListItemIconDescription.TITLE_PADDING_DOWN,

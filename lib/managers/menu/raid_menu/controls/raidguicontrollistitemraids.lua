@@ -75,6 +75,11 @@ end
 
 function RaidGUIControlListItemRaids:_layout_panel(params)
 	local panel_params = {
+		name = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		x = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -86,8 +91,12 @@ end
 
 function RaidGUIControlListItemRaids:_layout_background(params)
 	local background_params = {
-		y = 1,
+		color = nil,
 		visible = false,
+		name = nil,
+		h = nil,
+		w = nil,
+		y = 1,
 		x = 0,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
@@ -99,9 +108,12 @@ end
 
 function RaidGUIControlListItemRaids:_layout_highlight_marker()
 	local marker_params = {
-		y = 1,
-		w = 3,
+		color = nil,
 		visible = false,
+		name = nil,
+		h = nil,
+		w = 3,
+		y = 1,
 		x = 0,
 		name = "list_item_highlight_" .. self._name,
 		h = self._object:h() - 2,
@@ -112,6 +124,12 @@ end
 
 function RaidGUIControlListItemRaids:_layout_icon(params, data)
 	local icon_params = {
+		color = nil,
+		name = nil,
+		texture = nil,
+		texture_rect = nil,
+		y = nil,
+		x = nil,
 		name = "list_item_icon_" .. self._name,
 		x = RaidGUIControlListItemRaids.ICON_PADDING,
 		y = (RaidGUIControlListItemRaids.HEIGHT - data.icon.texture_rect[4]) / 2,
@@ -127,7 +145,15 @@ end
 
 function RaidGUIControlListItemRaids:_layout_raid_name(params, data)
 	local raid_name_params = {
+		w = nil,
+		text = nil,
+		name = nil,
+		color = nil,
 		vertical = "center",
+		h = nil,
+		font_size = nil,
+		x = nil,
+		font = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
 		w = params.w,
@@ -145,8 +171,13 @@ end
 function RaidGUIControlListItemRaids:_layout_exp(params, data)
 	local xp_value = tweak_data.operations.missions[self._data.value].xp
 	self._exp_label = self._object:text({
-		vertical = "center",
 		align = "right",
+		vertical = "center",
+		text = nil,
+		name = nil,
+		font_size = nil,
+		color = nil,
+		font = nil,
 		name = "list_item_exp_label_" .. self._name,
 		text = utf8.to_upper(xp_value .. " XP"),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -162,7 +193,13 @@ end
 
 function RaidGUIControlListItemRaids:_layout_consumable_mission_label()
 	local consumable_mission_label_params = {
+		color = nil,
 		vertical = "center",
+		text = nil,
+		name = nil,
+		font_size = nil,
+		x = nil,
+		font = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
 		text = self:translate("menu_mission_selected_mission_type_consumable", true),
@@ -183,7 +220,13 @@ end
 function RaidGUIControlListItemRaids:_layout_difficulty_locked()
 	local locked_subtext = self:translate("raid_next_raid_in_description", true)
 	local difficulty_locked_params = {
+		color = nil,
 		vertical = "center",
+		text = nil,
+		name = nil,
+		font_size = nil,
+		x = nil,
+		font = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
 		text = locked_subtext,
@@ -201,6 +244,8 @@ end
 
 function RaidGUIControlListItemRaids:_layout_difficulty()
 	local difficulty_params = {
+		x = nil,
+		amount = nil,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
 		amount = tweak_data:number_of_difficulties()
 	}
@@ -211,6 +256,9 @@ end
 
 function RaidGUIControlListItemRaids:_layout_lock_icon()
 	local lock_icon_params = {
+		color = nil,
+		texture = nil,
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlListItemRaids.LOCK_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlListItemRaids.LOCK_ICON].texture_rect,
 		color = tweak_data.gui.colors.raid_dark_grey
@@ -227,6 +275,8 @@ end
 
 function RaidGUIControlListItemRaids:_layout_breadcrumb()
 	local breadcrumb_params = {
+		identifiers = nil,
+		category = nil,
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}

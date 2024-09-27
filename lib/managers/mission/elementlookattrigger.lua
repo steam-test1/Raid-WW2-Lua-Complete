@@ -50,35 +50,24 @@ function ElementLookAtTrigger:update_lookat()
 	end
 
 	local player = managers.player:player_unit()
+	local is_player_looking_at = managers.player:is_player_looking_at(self._values.position, {
+		raycheck = nil,
+		sensitivity = nil,
+		player_unit = nil,
+		at_facing = nil,
+		distance = nil,
+		distance = self._values.distance,
+		at_facing = self._values.in_front and self._values.rotation:y(),
+		sensitivity = self._values.sensitivity,
+		raycheck = self._values.raycheck,
+		player_unit = player
+	})
 
-	if alive(player) then
-		local dir = self._values.position - player:camera():position()
-
-		if self._values.distance and self._values.distance > 0 then
-			local distance = dir:length()
-
-			if self._values.distance < distance then
-				return
-			end
-		end
-
-		if self._values.in_front then
-			local dot = player:camera():forward():dot(self._values.rotation:y())
-
-			if dot > 0 then
-				return
-			end
-		end
-
-		dir = dir:normalized()
-		local dot = player:camera():forward():dot(dir)
-
-		if self._values.sensitivity <= dot then
-			if Network:is_client() then
-				managers.network:session():send_to_host("to_server_mission_element_trigger", self._sync_id, self._id, player)
-			else
-				self:on_executed(player)
-			end
+	if is_player_looking_at then
+		if Network:is_client() then
+			managers.network:session():send_to_host("to_server_mission_element_trigger", self._sync_id, self._id, player)
+		else
+			self:on_executed(player)
 		end
 	end
 end

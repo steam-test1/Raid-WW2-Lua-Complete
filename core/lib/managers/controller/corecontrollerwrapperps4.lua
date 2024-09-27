@@ -14,8 +14,10 @@ function ControllerWrapperPS4:init(manager, id, name, controller, setup, debug, 
 	}
 
 	ControllerWrapperPS4.super.init(self, manager, id, name, {
+		ps4pad = nil,
 		ps4pad = controller
 	}, "ps4pad", setup, debug, skip_virtual_controller, {
+		ps4pad = nil,
 		ps4pad = func_map
 	})
 end

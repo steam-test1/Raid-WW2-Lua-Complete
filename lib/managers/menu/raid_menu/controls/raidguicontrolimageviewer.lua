@@ -19,10 +19,15 @@ function RaidGUIControlImageViewer:_layout()
 	self._bullets = {}
 	self._bullets_active = {}
 	self._image_frame_1 = self._object:bitmap({
-		name = "_image_frame_1",
-		alpha = 1,
+		h = nil,
+		w = nil,
 		y = 0,
 		x = 0,
+		texture_rect = nil,
+		texture = nil,
+		layer = nil,
+		name = "_image_frame_1",
+		alpha = 1,
 		w = self._params.w,
 		h = self._params.h - RaidGUIControlImageViewer.BULLET_PANEL_HEIGHT,
 		layer = self._object:layer() + 1,
@@ -33,9 +38,15 @@ function RaidGUIControlImageViewer:_layout()
 	table.insert(self._image_frames, self._image_frame_1)
 
 	self._image_frame_2 = self._object:bitmap({
+		h = nil,
+		w = nil,
+		y = 0,
+		x = nil,
+		texture_rect = nil,
+		texture = nil,
+		layer = nil,
 		name = "_image_frame_2",
 		alpha = 1,
-		y = 0,
 		x = self._params.w,
 		w = self._params.w,
 		h = self._params.h - RaidGUIControlImageViewer.BULLET_PANEL_HEIGHT,
@@ -47,6 +58,9 @@ function RaidGUIControlImageViewer:_layout()
 	table.insert(self._image_frames, self._image_frame_2)
 
 	self._bullet_panel = self._object:panel({
+		h = nil,
+		w = nil,
+		y = nil,
 		x = 0,
 		y = self._image_frame_1:h(),
 		w = self._params.w,
@@ -97,6 +111,13 @@ function RaidGUIControlImageViewer:start()
 	if #self._data > 1 then
 		for i = 1, #self._data do
 			table.insert(self._bullets, self._bullet_panel:bitmap({
+				h = nil,
+				w = nil,
+				y = nil,
+				x = nil,
+				texture = nil,
+				layer = nil,
+				texture_rect = nil,
 				x = (i - 1) * (RaidGUIControlImageViewer.BULLET_WIDTH + RaidGUIControlImageViewer.BULLET_PADDING),
 				y = RaidGUIControlImageViewer.BULLET_HEIGHT / 2,
 				w = RaidGUIControlImageViewer.BULLET_WIDTH,
@@ -108,6 +129,11 @@ function RaidGUIControlImageViewer:start()
 			table.insert(self._bullets_active, self._bullet_panel:bitmap({
 				h = 0,
 				w = 0,
+				y = nil,
+				x = nil,
+				texture = nil,
+				layer = nil,
+				texture_rect = nil,
 				x = (i - 1) * (RaidGUIControlImageViewer.BULLET_WIDTH + RaidGUIControlImageViewer.BULLET_PADDING),
 				y = RaidGUIControlImageViewer.BULLET_HEIGHT / 2,
 				layer = self._object:layer() + 2,

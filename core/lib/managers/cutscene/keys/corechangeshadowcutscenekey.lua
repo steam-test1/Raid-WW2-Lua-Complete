@@ -38,6 +38,8 @@ end
 
 function CoreChangeShadowCutsceneKey:evaluate(player, fast_forward)
 	local preceeding_key = self:preceeding_key({
+		unit_name = nil,
+		object_name = nil,
 		unit_name = self.unit_name and self:unit_name(),
 		object_name = self.object_name and self:object_name()
 	})

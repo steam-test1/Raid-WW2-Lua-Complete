@@ -29,19 +29,23 @@ FlamerActionWalk = FlamerActionWalk or class(CopActionWalk)
 FlamerActionWalk.DISTANCE_SPRINT_START = 30000
 FlamerActionWalk.DISTANCE_SPRINT_END = 1200
 FlamerActionWalk._walk_anim_velocities = {
+	stand = nil,
 	stand = {
+		cbt = nil,
 		cbt = {
+			run = nil,
+			walk = nil,
 			walk = {
-				bwd = 112.85,
-				l = 118.53,
 				fwd = 144,
-				r = 122.48
+				r = 122.48,
+				l = 118.53,
+				bwd = 112.85
 			},
 			run = {
-				bwd = 357.23,
-				l = 287.43,
 				fwd = 361.5,
-				r = 318.33
+				r = 318.33,
+				l = 287.43,
+				bwd = 357.23
 			}
 		}
 	}
@@ -51,19 +55,23 @@ FlamerActionWalk._walk_anim_velocities.stand.hos = FlamerActionWalk._walk_anim_v
 FlamerActionWalk._walk_anim_velocities.stand.wnd = FlamerActionWalk._walk_anim_velocities.stand.cbt
 FlamerActionWalk._walk_anim_velocities.crouch = FlamerActionWalk._walk_anim_velocities.stand
 FlamerActionWalk._walk_anim_lengths = {
+	stand = nil,
 	stand = {
+		cbt = nil,
 		cbt = {
+			run = nil,
+			walk = nil,
 			walk = {
-				bwd = 40,
-				l = 40,
 				fwd = 34,
-				r = 38
+				r = 38,
+				l = 40,
+				bwd = 40
 			},
 			run = {
-				bwd = 21,
-				l = 20,
 				fwd = 20,
-				r = 21
+				r = 21,
+				l = 20,
+				bwd = 21
 			}
 		}
 	}

@@ -268,7 +268,13 @@ end
 
 function IngameWaitingForPlayersState:show_intro_video()
 	local params_root_panel = {
+		x = nil,
+		background_color = nil,
 		is_root_panel = true,
+		layer = nil,
+		w = nil,
+		h = nil,
+		y = nil,
 		x = self._full_panel:x(),
 		y = self._full_panel:y(),
 		h = self._full_panel:h(),
@@ -279,6 +285,9 @@ function IngameWaitingForPlayersState:show_intro_video()
 	self._panel = RaidGUIPanel:new(self._full_panel, params_root_panel)
 	local video = "movies/vanilla/intro/01_intro_v014"
 	local intro_video_params = {
+		layer = nil,
+		width = nil,
+		video = nil,
 		layer = self._panel:layer() + 1,
 		video = video,
 		width = self._panel:w()
@@ -290,8 +299,13 @@ function IngameWaitingForPlayersState:show_intro_video()
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		name = "press_any_key_prompt",
+		font = nil,
+		color = nil,
+		font_size = nil,
 		alpha = 0,
+		layer = nil,
+		text = nil,
+		name = "press_any_key_prompt",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),

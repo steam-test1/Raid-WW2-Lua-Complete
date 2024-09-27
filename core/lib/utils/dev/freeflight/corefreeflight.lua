@@ -226,6 +226,8 @@ function FreeFlight:_setup_gui()
 	end
 
 	local text_script = {
+		fade_in = nil,
+		fade_out = nil,
 		fade_out = anim_fade_out_func,
 		fade_in = anim_fade_in_func
 	}

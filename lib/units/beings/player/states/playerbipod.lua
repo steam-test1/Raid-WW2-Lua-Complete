@@ -77,6 +77,7 @@ function PlayerBipod:exit(state_data, new_state_name)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 
 	managers.player:set_bipod_data_for_peer({
+		peer_id = nil,
 		peer_id = peer_id
 	})
 
@@ -100,6 +101,9 @@ function PlayerBipod:_husk_bipod_data()
 	local body_pos = Vector3(self._m_pos.x, self._m_pos.y, self._m_pos.z)
 
 	managers.player:set_bipod_data_for_peer({
+		peer_id = nil,
+		body_pos = nil,
+		bipod_pos = nil,
 		peer_id = peer_id,
 		bipod_pos = bipod_pos,
 		body_pos = body_pos

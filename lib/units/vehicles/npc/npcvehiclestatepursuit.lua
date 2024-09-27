@@ -7,31 +7,33 @@ function NpcVehicleStatePursuit:init(unit)
 	self._vehicle = self._unit:vehicle()
 	self._next_checkpoint_distance = {
 		{
-			v_min = 30,
 			distance = 1200,
-			relative_angle_min = 30,
+			v_max = 40,
+			v_min = 30,
 			relative_angle_max = 60,
-			v_max = 40
+			relative_angle_min = 30
 		},
 		{
-			v_min = 40,
 			distance = 1400,
-			relative_angle_min = 30,
+			v_max = 60,
+			v_min = 40,
 			relative_angle_max = 90,
-			v_max = 60
+			relative_angle_min = 30
 		},
 		{
-			v_min = 60,
 			distance = 2000,
-			relative_angle_min = 30,
+			v_max = 90,
+			v_min = 60,
 			relative_angle_max = 90,
-			v_max = 90
+			relative_angle_min = 30
 		}
 	}
 	local cop_position = self._unit:position()
 	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
 		distance = 0,
+		last_pos = nil,
+		tick_at = nil,
 		timeframe = 1,
 		tick_at = delayed_tick,
 		last_pos = cop_position
@@ -45,6 +47,8 @@ function NpcVehicleStatePursuit:on_enter(npc_driving_ext)
 	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
 		distance = 0,
+		last_pos = nil,
+		tick_at = nil,
 		timeframe = 1,
 		tick_at = delayed_tick,
 		last_pos = cop_position
@@ -171,9 +175,10 @@ function NpcVehicleStatePursuit:_loco_unit_proximity(npc_driving_ext, target_ste
 		npc_driving_ext:set_state(NpcVehicleDrivingExt.STATE_PLAYER_PROXIMITY)
 
 		retval = {
-			acceleration = 0,
-			handbrake = 1,
 			brake = 1,
+			acceleration = 0,
+			steering = nil,
+			handbrake = 1,
 			steering = target_steering
 		}
 	end

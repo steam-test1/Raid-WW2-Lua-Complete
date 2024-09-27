@@ -49,6 +49,11 @@ function HUDWeaponClipShots:set_current_clip(current_clip)
 			local h = scale * self._ammo_panel:h()
 			local w = h * gui_ratio
 			bullet = self._ammo_panel:bitmap({
+				layer = nil,
+				alpha = nil,
+				w = nil,
+				name = nil,
+				h = nil,
 				name = "clip_bullet" .. i,
 				w = w,
 				h = h,

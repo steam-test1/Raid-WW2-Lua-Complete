@@ -26,7 +26,14 @@ function GenericUserManager:init()
 
 	if not self:is_global_initialized() then
 		Global.user_manager = {
+			setting_map = nil,
+			reset_network_setting_map = nil,
 			initializing = true,
+			[""] = nil,
+			add_setting_changed_callback = nil,
+			user_map = nil,
+			setting_data_id_to_name_map = nil,
+			setting_data_map = nil,
 			setting_map = {},
 			setting_data_map = {},
 			setting_data_id_to_name_map = {},
@@ -152,6 +159,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(73, "camera_shake", 1)
 	self:setup_setting(74, "hud_crosshairs", true)
 	self:setup_setting(75, "skip_cinematics", false)
+	self:setup_setting(76, "warcry_ready_indicator", true)
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)
@@ -159,6 +167,8 @@ function GenericUserManager:setup_setting(id, name, default_value)
 	assert(not Global.user_manager.setting_data_id_to_name_map[id], "[UserManager] Setting id \"" .. tostring(id) .. "\" already exists.")
 
 	local setting_data = {
+		id = nil,
+		default_value = nil,
 		id = id,
 		default_value = self:get_clone_value(default_value)
 	}
@@ -266,7 +276,8 @@ function GenericUserManager:reset_interface_setting_map()
 		"motion_dot_color",
 		"motion_dot_toggle_aim",
 		"objective_reminder",
-		"skip_cinematics"
+		"skip_cinematics",
+		"warcry_ready_indicator"
 	}
 
 	for _, name in pairs(settings) do
@@ -433,6 +444,11 @@ end
 function GenericUserManager:set_user_soft(user_index, platform_id, storage_id, username, signin_state, ignore_username_change)
 	local old_user_data = self:_get_user_data(user_index)
 	local user_data = {
+		username = nil,
+		storage_id = nil,
+		platform_id = nil,
+		user_index = nil,
+		signin_state = nil,
 		user_index = user_index,
 		platform_id = platform_id,
 		storage_id = storage_id,
@@ -445,6 +461,11 @@ end
 function GenericUserManager:set_user(user_index, platform_id, storage_id, username, signin_state, ignore_username_change)
 	local old_user_data = self:_get_user_data(user_index)
 	local user_data = {
+		username = nil,
+		storage_id = nil,
+		platform_id = nil,
+		user_index = nil,
+		signin_state = nil,
 		user_index = user_index,
 		platform_id = platform_id,
 		storage_id = storage_id,
@@ -710,6 +731,7 @@ function GenericUserManager:confirm_select_user_callback(callback_func, success)
 	if success then
 		managers.system_menu:show_select_user({
 			count = 1,
+			callback_func = nil,
 			callback_func = callback(self, self, "select_user_callback", callback_func)
 		})
 	elseif callback_func then
@@ -754,7 +776,10 @@ function GenericUserManager:check_storage(callback_func, auto_select)
 		end
 
 		managers.system_menu:show_select_storage({
+			callback_func = nil,
+			min_bytes = nil,
 			count = 1,
+			auto_select = nil,
 			min_bytes = managers.savefile.RESERVED_BYTES,
 			callback_func = wrapped_callback_func,
 			auto_select = auto_select
@@ -907,6 +932,7 @@ UserManager.PLATFORM_CLASS_MAP[Idstring("XB1"):key()] = XB1UserManager
 
 function XB1UserManager:init()
 	self._platform_setting_conversion_func_map = {
+		gamer_control_sensitivity = nil,
 		gamer_control_sensitivity = callback(self, self, "convert_gamer_control_sensitivity")
 	}
 

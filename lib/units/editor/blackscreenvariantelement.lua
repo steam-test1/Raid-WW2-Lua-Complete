@@ -18,6 +18,7 @@ function BlackscreenVariantElement:_build_panel(panel, panel_sizer)
 
 	bscreen:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "variant",
+		ctrlr = nil,
 		ctrlr = bscreen
 	})
 
@@ -33,11 +34,15 @@ end
 function BlackscreenVariantElement:_get_params(panel, panel_sizer)
 	local bscreen_params = {
 		default = "0",
-		name = "Blackscreen variant:",
+		sorted = false,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		options = nil,
 		tooltip = "Select variant, from level_tweak_data.level.intro_event",
-		sorted = false,
+		name = "Blackscreen variant:",
+		sizer = nil,
+		panel = nil,
+		value = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = {
@@ -87,11 +92,15 @@ end
 function EndscreenVariantElement:_get_params(panel, panel_sizer)
 	local bscreen_params = {
 		default = "0",
-		name = "Endscreen variant:",
+		sorted = false,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		options = nil,
 		tooltip = "Select variant, from level_tweak_data.level.outro_event",
-		sorted = false,
+		name = "Endscreen variant:",
+		sizer = nil,
+		panel = nil,
+		value = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = {

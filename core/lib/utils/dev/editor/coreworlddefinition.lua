@@ -36,6 +36,8 @@ function WorldDefinition:init(params)
 	self._world_id = params.world_id or 0
 	self._key_counter = 0
 	self._id_converter = {
+		new_to_old = nil,
+		old_to_new = nil,
 		old_to_new = {},
 		new_to_old = {}
 	}
@@ -586,6 +588,8 @@ function WorldDefinition:parse_continents(node, t)
 				local path = self:world_dir() .. name .. "/" .. name
 				local pkg_key = self:next_key()
 				self._package_load_params[pkg_key] = {
+					name = nil,
+					pkg = nil,
 					name = name,
 					pkg = path
 				}
@@ -685,6 +689,9 @@ function WorldDefinition:_insert_instances()
 					local package_data = managers.world_instance:packages_by_instance(instance)
 					local pkg_key = self:next_key()
 					self._package_load_params[pkg_key] = {
+						instance = nil,
+						data = nil,
+						pkg = nil,
 						data = data,
 						instance = instance,
 						pkg = package_data.package
@@ -1111,6 +1118,8 @@ function WorldDefinition:_create_editor_groups()
 	end
 
 	return {
+		groups = nil,
+		group_names = nil,
 		groups = groups,
 		group_names = group_names
 	}
@@ -1257,6 +1266,9 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 
 			if DB:has("effect", name) then
 				managers.portal:add_effect({
+					effect = nil,
+					position = nil,
+					rotation = nil,
 					effect = name,
 					position = unit_effect.position,
 					rotation = unit_effect.rotation
@@ -1474,6 +1486,8 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 
 	if Network:is_server() and need_sync then
 		table.insert(self._units_synced_on_dropin, {
+			editor_id = nil,
+			unit_id = nil,
 			unit_id = unit:id(),
 			editor_id = unit:editor_id()
 		})
@@ -1498,6 +1512,8 @@ function WorldDefinition:sync_unit_data(unit, editor_id)
 
 	if not found then
 		table.insert(self._temp_units_synced, {
+			unit_id = nil,
+			synced_editor_id = nil,
 			synced_editor_id = editor_id,
 			unit_id = unit:id()
 		})
@@ -1829,12 +1845,16 @@ function WorldDefinition:add_trigger_sequence(unit, triggers)
 			unit:damage():add_trigger_sequence(trigger.name, trigger.notify_unit_sequence, notify_unit, trigger.time, nil, nil, is_editor)
 		elseif self._trigger_units[trigger.notify_unit_id] then
 			table.insert(self._trigger_units[trigger.notify_unit_id], {
+				unit = nil,
+				trigger = nil,
 				unit = unit,
 				trigger = trigger
 			})
 		else
 			self._trigger_units[trigger.notify_unit_id] = {
 				{
+					unit = nil,
+					trigger = nil,
 					unit = unit,
 					trigger = trigger
 				}
@@ -1892,6 +1912,7 @@ end
 
 function WorldDefinition:_on_dropin_unit_added(unit)
 	self:_add_to_portal(unit, {
+		original_unit_id = nil,
 		original_unit_id = self:id_convert_new_to_old(unit:unit_data().unit_id)
 	})
 end
@@ -2082,6 +2103,9 @@ function WorldDefinition:_load_package_async(pkg, callback_method, key, init_pkg
 	end
 
 	local params = {
+		init_pkg = nil,
+		key = nil,
+		dep_pkg = nil,
 		key = key,
 		dep_pkg = dep_pkg,
 		init_pkg = init_pkg
@@ -2154,7 +2178,9 @@ end
 
 function WorldDefinition:sync_unit_reference_data(unit_id, editor_id)
 	table.insert(self._temp_units_synced, {
+		unit_id = nil,
 		dropin = true,
+		synced_editor_id = nil,
 		synced_editor_id = editor_id,
 		unit_id = unit_id
 	})

@@ -79,7 +79,10 @@ end
 
 function RaidGUIControlSlider:_create_slider_controls()
 	local sideline_params = {
+		color = nil,
 		alpha = 0,
+		h = nil,
+		w = nil,
 		y = 0,
 		x = 0,
 		w = RaidGUIControlSlider.SIDELINE_W,
@@ -88,9 +91,16 @@ function RaidGUIControlSlider:_create_slider_controls()
 	}
 	self._sideline = self._object:rect(sideline_params)
 	local value_label_params = {
-		vertical = "center",
 		align = "left",
+		w = nil,
+		layer = nil,
+		color = nil,
 		y = 0,
+		x = nil,
+		font_size = nil,
+		h = nil,
+		font = nil,
+		vertical = "center",
 		x = self._object:w() - RaidGUIControlSlider.VALUE_LABEL_W,
 		w = RaidGUIControlSlider.VALUE_LABEL_W,
 		h = self._object:h(),
@@ -101,8 +111,10 @@ function RaidGUIControlSlider:_create_slider_controls()
 	}
 	self._value_label = self._object:text(value_label_params)
 	self._slider = self._object:slider_simple({
-		x = 0,
+		on_value_change_callback = nil,
 		y = 0,
+		x = 0,
+		name = nil,
 		name = "slider_simple_" .. self._name,
 		on_value_change_callback = callback(self, self, "_on_value_changed")
 	})
@@ -111,9 +123,17 @@ function RaidGUIControlSlider:_create_slider_controls()
 	self._slider:set_y(self._object:h() / 2 - self._slider:h() / 2)
 
 	local description_params = {
-		vertical = "center",
 		align = "left",
+		w = nil,
+		text = nil,
+		layer = nil,
+		color = nil,
 		y = 0,
+		x = nil,
+		font_size = nil,
+		h = nil,
+		font = nil,
+		vertical = "center",
 		x = RaidGUIControlSlider.SIDELINE_W + RaidGUIControlSlider.TEXT_PADDING,
 		w = self._object:w() - RaidGUIControlSlider.SIDELINE_W - RaidGUIControlSlider.VALUE_LABEL_W - RaidGUIControlSlider.TEXT_PADDING * 2,
 		h = self._object:h(),

@@ -79,6 +79,9 @@ function LootDropManager:produce_consumable_mission_drop()
 	end
 
 	local drop = {
+		gold_bars_max = nil,
+		gold_bars_min = nil,
+		reward_type = nil,
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 		gold_bars_min = gold_bars_earned,
 		gold_bars_max = gold_bars_earned
@@ -414,6 +417,9 @@ function LootDropManager:on_loot_dropped_for_peer(loot_type, name, value, peer_i
 	Application:trace("[LootDropManager:on_loot_dropped_for_peer]   Loot dropped for peer:  ", loot_type, name, value, peer_id)
 
 	local drop = {
+		peer_name = nil,
+		peer_id = nil,
+		reward_type = nil,
 		peer_id = peer_id,
 		peer_name = managers.network:session():peer(peer_id) and managers.network:session():peer(peer_id):name() or "",
 		reward_type = loot_type
@@ -472,6 +478,9 @@ function LootDropManager:register_loot(unit, value_type, world_id)
 
 	self._registered_loot_units[world_id] = self._registered_loot_units[world_id] or {}
 	local loot_data = {
+		value = nil,
+		world_id = nil,
+		unit = nil,
 		unit = unit,
 		value = value,
 		world_id = world_id
@@ -487,6 +496,8 @@ function LootDropManager:remove_loot_from_level(world_id)
 		return
 	end
 
+	Application:info("[LootDropManager:remove_loot_from_level] Clearing loots from world", world_id)
+
 	self._registered_loot_units[world_id] = self._registered_loot_units[world_id] or {}
 
 	for _, loot_data in ipairs(self._registered_loot_units[world_id]) do
@@ -495,8 +506,21 @@ function LootDropManager:remove_loot_from_level(world_id)
 		loot_data.deleted = true
 	end
 
+	if self._active_loot_units then
+		for i = #self._active_loot_units, 1, -1 do
+			local unit = self._active_loot_units[i]
+
+			if not alive(unit) then
+				table.remove(self._active_loot_units, i)
+			end
+		end
+
+		Application:info("[LootDropManager:remove_loot_from_level] Remaining loots in ALL worlds", #self._active_loot_units)
+	else
+		Application:info("[LootDropManager:remove_loot_from_level] Remaining loots in ALL worlds was empty")
+	end
+
 	self._registered_loot_units[world_id] = {}
-	self._active_loot_units = {}
 end
 
 function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
@@ -504,14 +528,14 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 		return
 	end
 
-	Application:debug("[LootDropManager:plant_loot_on_level()] Planting loot on level, loot value (value, mission):", total_value, job_id)
+	Application:info("[LootDropManager:plant_loot_on_level] Planting loot on level, loot value (world, value, mission):", world_id, total_value, job_id)
 
 	self._loot_spawned_current_leg = 0
 	self._registered_loot_units[world_id] = self._registered_loot_units[world_id] or {}
-	self._active_loot_units = {}
+	self._active_loot_units = self._active_loot_units or {}
 
 	if #self._registered_loot_units[world_id] == 0 then
-		Application:debug("[LootDropManager:plant_loot_on_level()] no loot units registered on the level")
+		Application:info("[LootDropManager:plant_loot_on_level] no loot units registered on the level")
 
 		return
 	end
@@ -529,7 +553,8 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 			end
 
 			if not should_remove_loot_unit then
-				local min_distance = 200
+				local dogtags_data = managers.raid_job:current_job().dogtags
+				local min_distance = dogtags_data and dogtags_data.min_dist or 200
 
 				for _, existing_loot_unit in ipairs(self._active_loot_units) do
 					if mvector3.distance(loot_data.unit:position(), existing_loot_unit:position()) < min_distance then
@@ -553,9 +578,9 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 	end
 
 	if self._loot_spawned_current_leg < total_value then
-		print("[LootDropManager:plant_loot_on_level()] All loot units on level used, level loot cap still not reached (curr_value, total_value):", self._loot_spawned_current_leg, total_value)
+		Application:info("[LootDropManager:plant_loot_on_level] All loot units on level used, level loot cap still not reached (curr_value, total_value):", self._loot_spawned_current_leg, total_value)
 	else
-		print("[LootDropManager:plant_loot_on_level()] Loot value placed on level:", self._loot_spawned_current_leg)
+		Application:info("[LootDropManager:plant_loot_on_level] Loot value placed on level:", self._loot_spawned_current_leg)
 	end
 
 	self._loot_spawned_total = self._loot_spawned_total + self._loot_spawned_current_leg

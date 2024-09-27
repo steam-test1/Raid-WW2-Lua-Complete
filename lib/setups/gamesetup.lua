@@ -149,12 +149,13 @@ require("lib/units/weapons/NewFlamethrowerBase")
 require("lib/units/weapons/NewNPCFlamethrowerBase")
 require("lib/units/weapons/NPCFlamethrowerBase")
 require("lib/units/weapons/projectiles/ProjectileBase")
+require("lib/units/weapons/projectiles/ImpactHurt")
+require("lib/units/weapons/projectiles/ImpactDecoy")
 require("lib/units/weapons/grenades/GrenadeBase")
 require("lib/units/weapons/grenades/FragGrenade")
 require("lib/units/weapons/grenades/MineGrenade")
 require("lib/units/weapons/grenades/GrenadeCluster")
 require("lib/units/weapons/grenades/NpcGrenade")
-require("lib/units/weapons/grenades/DistractionRock")
 require("lib/units/weapons/grenades/MolotovGrenade")
 require("lib/units/weapons/grenades/SmokeGrenade")
 require("lib/units/equipment/repel_rope/RepelRopeBase")
@@ -369,7 +370,9 @@ function GameSetup:init_game()
 
 			local level_path = "levels/" .. tostring(level)
 			local t = {
+				world_setting = nil,
 				file_type = "world",
+				file_path = nil,
 				file_path = level_path .. "/world",
 				world_setting = world_setting
 			}

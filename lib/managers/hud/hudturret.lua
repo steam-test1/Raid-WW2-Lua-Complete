@@ -37,19 +37,21 @@ end
 
 function HUDTurret:_create_panel(hud)
 	local panel_params = {
-		alpha = 0,
+		valign = "center",
 		name = "turret_panel",
 		halign = "center",
-		valign = "center"
+		alpha = 0
 	}
 	self._object = hud.panel:panel(panel_params)
 end
 
 function HUDTurret:_create_heat_indicator()
 	local heat_indicator_panel_params = {
-		name = "heat_indicator_panel",
-		halign = "center",
 		valign = "bottom",
+		w = nil,
+		name = "heat_indicator_panel",
+		h = nil,
+		halign = "center",
 		w = HUDTurret.HEAT_INDICATOR_W,
 		h = HUDTurret.HEAT_INDICATOR_H
 	}
@@ -59,24 +61,31 @@ function HUDTurret:_create_heat_indicator()
 	self._heat_indicator_panel:set_bottom(self._object:h())
 
 	local heat_indicator_background_params = {
+		texture = nil,
 		name = "background",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[HUDTurret.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.BACKGROUND_IMAGE].texture_rect
 	}
 	self._heat_indicator_background = self._heat_indicator_panel:bitmap(heat_indicator_background_params)
 	local heat_indicator_foreground_panel_params = {
-		halign = "scale",
-		name = "heat_indicator_foreground_panel",
-		y = 0,
+		h = nil,
+		w = nil,
 		x = 0,
+		y = 0,
+		name = "heat_indicator_foreground_panel",
 		valign = "scale",
+		halign = "scale",
+		layer = nil,
 		w = self._heat_indicator_panel:w(),
 		h = self._heat_indicator_panel:h(),
 		layer = self._heat_indicator_background:layer() + 1
 	}
 	self._heat_indicator_foreground_panel = self._heat_indicator_panel:panel(heat_indicator_foreground_panel_params)
 	local heat_indicator_foreground_params = {
+		texture = nil,
 		name = "heat_indicator_foreground",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[HUDTurret.FOREGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.FOREGROUND_IMAGE].texture_rect
 	}
@@ -85,10 +94,12 @@ end
 
 function HUDTurret:_create_dismount_prompt()
 	local dismount_prompt_panel_params = {
-		alpha = 0,
-		name = "dismount_prompt_panel",
-		halign = "scale",
 		valign = "top",
+		w = nil,
+		name = "dismount_prompt_panel",
+		h = nil,
+		alpha = 0,
+		halign = "scale",
 		w = self._object:w(),
 		h = HUDTurret.DISMOUNT_PROMPT_H
 	}
@@ -97,15 +108,19 @@ function HUDTurret:_create_dismount_prompt()
 	self._dismount_prompt_panel:set_y(self._heat_indicator_panel:y() - 200)
 
 	local dismount_prompt_text_params = {
-		layer = 5,
 		vertical = "center",
-		name = "text",
 		align = "center",
+		font_size = nil,
+		font = nil,
+		text = nil,
 		halign = "center",
 		valign = "center",
+		name = "text",
+		layer = 5,
 		font = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT,
 		font_size = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT_SIZE,
 		text = utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT, {
+			BTN_INTERACT = nil,
 			BTN_INTERACT = managers.localization:btn_macro("interact")
 		}))
 	}
@@ -120,10 +135,12 @@ end
 
 function HUDTurret:_create_reticle()
 	self._reticle = self._object:bitmap({
-		name = "turret_reticle",
-		halign = "center",
-		alpha = 0,
 		valign = "center",
+		texture = nil,
+		name = "turret_reticle",
+		alpha = 0,
+		halign = "center",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture_rect
 	})
@@ -132,10 +149,12 @@ function HUDTurret:_create_reticle()
 	self._reticle:set_center_y(self._object:h() / 2)
 
 	self._reticle_static = self._object:bitmap({
-		name = "turret_reticle_static",
-		halign = "center",
-		alpha = 0,
 		valign = "center",
+		texture = nil,
+		name = "turret_reticle_static",
+		alpha = 0,
+		halign = "center",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture_rect
 	})
@@ -146,11 +165,13 @@ end
 
 function HUDTurret:_create_shell()
 	local params_bg = {
-		name = "shell_bg",
-		halign = "center",
-		alpha = 0,
-		layer = 1,
 		valign = "center",
+		texture = nil,
+		name = "shell_bg",
+		layer = 1,
+		alpha = 0,
+		halign = "center",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons.aa_gun_bg.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_bg.texture_rect
 	}
@@ -160,11 +181,13 @@ function HUDTurret:_create_shell()
 	self._shell_bg:set_bottom(self._object:h() - 32)
 
 	local params_fade = {
-		name = "shell_fade",
-		halign = "center",
-		alpha = 0,
-		layer = 2,
 		valign = "center",
+		texture = nil,
+		name = "shell_fade",
+		layer = 2,
+		alpha = 0,
+		halign = "center",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect
 	}
@@ -174,11 +197,13 @@ function HUDTurret:_create_shell()
 	self._shell_fade:set_x(self._shell_bg:x() + 2)
 
 	local params_shell = {
-		name = "shell",
-		halign = "center",
-		alpha = 0,
-		layer = 3,
 		valign = "center",
+		texture = nil,
+		name = "shell",
+		layer = 3,
+		alpha = 0,
+		halign = "center",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect
 	}
@@ -279,6 +304,7 @@ end
 function HUDTurret:show_prompt()
 	self._dismount_prompt_panel:stop()
 	self._dismount_prompt_text:set_text(utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT, {
+		BTN_INTERACT = nil,
 		BTN_INTERACT = managers.localization:btn_macro("interact")
 	})))
 	self._dismount_prompt_panel:animate(callback(self, self, "_animate_show"))

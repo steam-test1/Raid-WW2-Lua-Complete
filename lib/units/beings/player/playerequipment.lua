@@ -286,6 +286,8 @@ function PlayerEquipment:throw_flash_grenade()
 	local unit = ProjectileBase.spawn(self._grenade_name, to, Rotation())
 
 	unit:base():throw({
+		dir = nil,
+		owner = nil,
 		dir = self._unit:movement():m_head_rot():y(),
 		owner = self._unit
 	})

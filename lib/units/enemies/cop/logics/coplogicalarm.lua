@@ -3,6 +3,7 @@ CopLogicAlarm.ALARM_SAFE_RANGE = 2000
 
 function CopLogicAlarm.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -67,8 +68,8 @@ function CopLogicAlarm.exit(data, new_logic_name, enter_params)
 
 	if my_data.calling_the_police then
 		local action_data = {
-			body_part = 3,
-			type = "idle"
+			type = "idle",
+			body_part = 3
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -154,8 +155,8 @@ function CopLogicAlarm._upd_enemy_detection(data)
 		if wanted_state and wanted_state ~= data.name then
 			if my_data.calling_the_police then
 				data.unit:brain():action_request({
-					body_part = 3,
-					type = "idle"
+					type = "idle",
+					body_part = 3
 				})
 			end
 
@@ -469,8 +470,8 @@ function CopLogicAlarm._cancel_advance(data, my_data)
 
 	if my_data.advancing then
 		local action_data = {
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -585,17 +586,17 @@ end
 
 function CopLogicAlarm._say_call_the_police(data, my_data)
 	local blame_list = {
-		body_bag = "saw_bag",
-		drill = "saw_drill",
-		criminal = "spotted_player",
-		trip_mine = "saw_trip_mine",
-		w_hot = "spotted_player",
 		civilian = "saw_civilian",
+		body_bag = "saw_bag",
+		dead_civ = "saw_body",
+		trip_mine = "saw_trip_mine",
+		criminal = "spotted_player",
 		sentry_gun = "saw_sentry_gun",
-		dead_cop = "saw_body",
+		drill = "saw_drill",
 		hostage_cop = "saw_hostage_cop",
 		hostage_civ = "saw_hostage_civ",
-		dead_civ = "saw_body"
+		w_hot = "spotted_player",
+		dead_cop = "saw_body"
 	}
 	local event = blame_list[my_data.call_in_event] or "spotted_player"
 

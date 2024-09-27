@@ -87,6 +87,11 @@ end
 
 function MenuInitiatorBase:create_divider(node, id, text_id, size, color)
 	local params = {
+		text_id = nil,
+		no_text = nil,
+		name = nil,
+		color = nil,
+		size = nil,
 		name = "divider_" .. id,
 		no_text = not text_id,
 		text_id = text_id,
@@ -106,31 +111,31 @@ end
 function MenuInitiatorBase:create_toggle(node, params)
 	local data_node = {
 		{
+			h = 24,
 			w = 24,
 			y = 0,
-			h = 24,
-			s_y = 24,
-			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "ui/main_menu/textures/debug_menu_tickbox",
 			x = 24,
+			value = "on",
+			icon = "ui/main_menu/textures/debug_menu_tickbox",
+			_meta = "option",
+			s_h = 24,
+			s_w = 24,
+			s_y = 24,
+			s_x = 24,
 			s_icon = "ui/main_menu/textures/debug_menu_tickbox"
 		},
 		{
+			h = 24,
 			w = 24,
 			y = 0,
-			h = 24,
-			s_y = 24,
-			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "ui/main_menu/textures/debug_menu_tickbox",
 			x = 0,
+			value = "off",
+			icon = "ui/main_menu/textures/debug_menu_tickbox",
+			_meta = "option",
+			s_h = 24,
+			s_w = 24,
+			s_y = 24,
+			s_x = 0,
 			s_icon = "ui/main_menu/textures/debug_menu_tickbox"
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
@@ -177,6 +182,10 @@ end
 function MenuInitiatorBase:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
+		step = nil,
+		max = nil,
+		min = nil,
+		show_value = nil,
 		show_value = params.show_value,
 		min = params.min,
 		max = params.max,
@@ -206,11 +215,11 @@ function MenuInitiatorBase:add_back_button(node)
 	node:delete_item("back")
 
 	local params = {
-		visible_callback = "is_pc_controller",
-		name = "back",
-		back = true,
-		text_id = "menu_back",
 		last_item = true,
+		text_id = "menu_back",
+		visible_callback = "is_pc_controller",
+		back = true,
+		name = "back",
 		previous_node = true
 	}
 	local new_item = node:create_item(nil, params)

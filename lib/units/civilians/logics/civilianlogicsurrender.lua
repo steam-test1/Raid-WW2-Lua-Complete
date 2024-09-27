@@ -6,6 +6,7 @@ CivilianLogicSurrender.wants_rescue = CivilianLogicFlee.wants_rescue
 
 function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 	local my_data = {
+		unit = nil,
 		unit = data.unit
 	}
 
@@ -141,8 +142,8 @@ function CivilianLogicSurrender.queued_update(rubbish, data)
 	if my_data.submission_meter == 0 and not data.is_tied and (not data.unit:anim_data().react_enter or not not data.unit:anim_data().idle) then
 		if data.unit:anim_data().drop then
 			local new_action = {
-				variant = "stand",
 				body_part = 1,
+				variant = "stand",
 				type = "act"
 			}
 
@@ -193,15 +194,16 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied)
 		data.unit:character_damage():set_pickup(nil)
 	else
 		local action_data = {
-			variant = "tied",
 			body_part = 1,
+			variant = "tied",
+			blocks = nil,
 			type = "act",
 			blocks = {
-				heavy_hurt = -1,
+				walk = -1,
 				hurt_sick = -1,
+				heavy_hurt = -1,
 				hurt = -1,
-				light_hurt = -1,
-				walk = -1
+				light_hurt = -1
 			}
 		}
 		local action_res = data.unit:brain():action_request(action_data)
@@ -256,6 +258,7 @@ function CivilianLogicSurrender._do_initial_act(data, amount, aggressor_unit, in
 	my_data.scare_meter = math.max(0, my_data.scare_meter + adj_scare)
 	local action_data = {
 		clamp_to_graph = true,
+		variant = nil,
 		body_part = 1,
 		type = "act",
 		variant = initial_act
@@ -333,6 +336,7 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 		elseif anim_data.react or anim_data.panic or anim_data.halt then
 			local action_data = {
 				clamp_to_graph = true,
+				variant = nil,
 				body_part = 1,
 				type = "act",
 				variant = anim_data.move and "halt" or "drop"
@@ -421,6 +425,7 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 			else
 				data.unit:brain():set_objective({
 					is_default = true,
+					alert_data = nil,
 					type = "free",
 					alert_data = clone(alert_data)
 				})

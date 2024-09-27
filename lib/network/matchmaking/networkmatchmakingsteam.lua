@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_04"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_05"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -169,6 +169,8 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 
 		if num_updated_lobbies >= #lobbies then
 			local info = {
+				attribute_list = nil,
+				room_list = nil,
 				room_list = {},
 				attribute_list = {}
 			}
@@ -179,11 +181,15 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 
 					if ikey ~= "value_missing" and ikey ~= "value_pending" then
 						table.insert(info.room_list, {
+							owner_name = nil,
+							owner_id = nil,
+							room_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id()
 						})
 						table.insert(info.attribute_list, {
+							numbers = nil,
 							numbers = self:_lobby_to_numbers(lobby)
 						})
 					end
@@ -227,6 +233,8 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 
 	if #lobbies == 0 then
 		local info = {
+			attribute_list = nil,
+			room_list = nil,
 			room_list = {},
 			attribute_list = {}
 		}
@@ -280,6 +288,9 @@ end
 
 function NetworkMatchMakingSTEAM:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
+		comparision_type = nil,
+		key = nil,
+		value = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -313,22 +324,29 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only)
 				return
 			end
 
-			local lobbies = self.browser:lobbies()
 			local info = {
+				attribute_list = nil,
+				room_list = nil,
 				room_list = {},
 				attribute_list = {}
 			}
+			local lobbies = self.browser:lobbies()
 
 			if lobbies then
 				for _, lobby in ipairs(lobbies) do
 					if self._difficulty_filter == 0 or self._difficulty_filter == tonumber(lobby:key_value("difficulty")) then
 						table.insert(info.room_list, {
+							owner_name = nil,
+							owner_id = nil,
+							custom_text = nil,
+							room_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id(),
 							custom_text = lobby:key_value("custom_text")
 						})
 						table.insert(info.attribute_list, {
+							numbers = nil,
 							numbers = self:_lobby_to_numbers(lobby)
 						})
 					end
@@ -470,8 +488,6 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 				return
 			end
 		end
-
-		print(inspect(attributes))
 
 		local server_ok, ok_error = self:is_server_ok(nil, room_id, attributes, is_invite)
 
@@ -666,6 +682,7 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 			managers.network._restart_in_camp = managers.player and managers.player:local_player_in_camp()
 
 			managers.menu:show_waiting_for_server_response({
+				cancel_func = nil,
 				cancel_func = function ()
 					Application:debug("[ NetworkMatchMakingSTEAM:join_server:f] Pressed cancel")
 					managers.network:session():on_join_request_cancelled()
@@ -764,10 +781,14 @@ function NetworkMatchMakingSTEAM:create_lobby(settings, return_to_camp_client)
 
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
+				text = nil,
+				title = nil,
 				title = title,
 				text = managers.localization:text("dialog_err_failed_creating_lobby"),
 				button_list = {
 					{
+						callback_func = nil,
+						text = nil,
 						text = managers.localization:text("dialog_ok"),
 						callback_func = callback(setup, setup, "quit_to_main_menu")
 					}
@@ -951,6 +972,29 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 		"private"
 	}
 	local lobby_attributes = {
+		players_info_1 = nil,
+		region = nil,
+		job_plan = nil,
+		job_class_max = nil,
+		job_class_min = nil,
+		kick_option = nil,
+		min_level = nil,
+		job_id = nil,
+		num_players = nil,
+		permission = nil,
+		level = nil,
+		state = nil,
+		difficulty = nil,
+		custom_text = nil,
+		drop_in = nil,
+		players_info_4 = nil,
+		challenge_card_id = nil,
+		mission_type = nil,
+		progress = nil,
+		owner_name = nil,
+		owner_id = nil,
+		players_info_3 = nil,
+		players_info_2 = nil,
 		owner_name = managers.network.account:username_id(),
 		owner_id = managers.network.account:player_id(),
 		custom_text = Global.game_settings.custom_text or "",

@@ -132,11 +132,15 @@ function MissionScriptElement:_trigger_execute_on_executed(instigator, alternati
 
 	if base_delay > 0 then
 		self._mission_script:add(callback(self, self, "_execute_on_executed", {
+			instigator = nil,
+			alternative = nil,
 			instigator = instigator,
 			alternative = alternative
 		}), base_delay, 1)
 	else
 		self:execute_on_executed({
+			instigator = nil,
+			alternative = nil,
 			instigator = instigator,
 			alternative = alternative
 		})

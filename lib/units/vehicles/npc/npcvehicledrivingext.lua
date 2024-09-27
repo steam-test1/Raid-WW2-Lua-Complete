@@ -34,18 +34,18 @@ function NpcVehicleDrivingExt:init(unit)
 	self._drive_controls = {
 		accelerate = {
 			acceleration = 1,
-			brake = 0,
-			handbrake = 0
+			handbrake = 0,
+			brake = 0
 		},
 		brake = {
 			acceleration = 0,
-			brake = 1,
-			handbrake = 0
+			handbrake = 0,
+			brake = 1
 		},
 		handbrake = {
 			acceleration = 0,
-			brake = 1,
-			handbrake = 1
+			handbrake = 1,
+			brake = 1
 		}
 	}
 	self._current_drive_controls = "accelerate"
@@ -133,35 +133,35 @@ function NpcVehicleDrivingExt:_start()
 			self._drive_controls = {
 				accelerate = {
 					acceleration = 1,
-					brake = 0,
-					handbrake = 0
+					handbrake = 0,
+					brake = 0
 				},
 				brake = {
 					acceleration = 0,
-					brake = 1,
-					handbrake = 0
+					handbrake = 0,
+					brake = 1
 				},
 				handbrake = {
 					acceleration = 0,
-					brake = 1,
-					handbrake = 1
+					handbrake = 1,
+					brake = 1
 				}
 			}
 			self._current_drive_controls = "accelerate"
 			self._next_checkpoint_distance = {
 				{
-					v_min = 30,
 					distance = 1200,
-					relative_angle_min = 30,
+					v_max = 40,
+					v_min = 30,
 					relative_angle_max = 60,
-					v_max = 40
+					relative_angle_min = 30
 				},
 				{
-					v_min = 40,
 					distance = 1500,
-					relative_angle_min = 30,
+					v_max = 60,
+					v_min = 40,
 					relative_angle_max = 90,
-					v_max = 60
+					relative_angle_min = 30
 				}
 			}
 			self._last_checkpoint_reached = false
@@ -353,6 +353,8 @@ function NpcVehicleDrivingExt:drive_to_point(cop_path, unit_and_pos, dt)
 
 	if self._debug then
 		self._debug.nav_paths.ai_cost = {
+			cost = nil,
+			fps = nil,
 			cost = profiler_time * 1000,
 			fps = percentage_of_current_fps
 		}
@@ -407,6 +409,9 @@ function NpcVehicleDrivingExt:calc_cop_position_info(cop_points, unit_and_pos)
 	end
 
 	return {
+		target_spin = nil,
+		angle_to_target = nil,
+		checkpoint_distance = nil,
 		target_spin = target_spin_relative_to_vehicle,
 		angle_to_target = angle_to_target,
 		checkpoint_distance = target_distance
@@ -494,6 +499,7 @@ function NpcVehicleDrivingExt:_find_bridge(cop_path, target_path, unit_and_pos)
 	local player_position = player_unit:position()
 	local cop_on_checkpoint = cop_path.marker_checkpoints[point_id_in_direction]
 	local min_distance_marker = {
+		direction = nil,
 		distance = 2000000
 	}
 
@@ -577,6 +583,14 @@ end
 function NpcVehicleDrivingExt:_init_states()
 	local unit = self._unit
 	self._states = {
+		maneuver = nil,
+		player_proximity = nil,
+		maneuver_back_left = nil,
+		pursuit = nil,
+		maneuver_back_right = nil,
+		inactive = nil,
+		maneuver_u_turn = nil,
+		broken = nil,
 		inactive = NpcVehicleStateInactive:new(unit),
 		pursuit = NpcVehicleStatePursuit:new(unit),
 		player_proximity = NpcVehicleStatePlayerProximity:new(unit),
@@ -612,11 +626,14 @@ function NpcVehicleDrivingExt:_debug_show()
 	}
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.info = self._debug.panel:text({
-		text = "",
-		name = "debug_info",
-		font_size = 14,
-		x = 14,
 		layer = 2000,
+		color = nil,
+		name = "debug_info",
+		x = 14,
+		font_size = 14,
+		text = "",
+		y = nil,
+		font = nil,
 		y = 100 + debug_output_offset,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, 14),
 		color = Color.yellow

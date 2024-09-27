@@ -57,9 +57,12 @@ end
 
 function RaidGUIControlStepper:_create_stepper_controls()
 	local sideline_params = {
-		alpha = 0,
-		y = 0,
 		x = 0,
+		color = nil,
+		alpha = 0,
+		h = nil,
+		w = nil,
+		y = 0,
 		w = RaidGUIControlStepper.SIDELINE_W,
 		h = self._object:h(),
 		color = RaidGUIControlStepper.SIDELINE_COLOR
@@ -67,6 +70,12 @@ function RaidGUIControlStepper:_create_stepper_controls()
 	self._sideline = self._object:rect(sideline_params)
 	local stepper_w = self._params.stepper_w or RaidGUIControlStepperSimple.DEFAULT_WIDTH
 	local stepper_params = {
+		x = nil,
+		data_source_callback = nil,
+		name = nil,
+		start_from_last = nil,
+		on_item_selected_callback = nil,
+		w = nil,
 		y = 0,
 		name = self._name .. "_stepper",
 		x = self._object:w() - stepper_w,
@@ -77,9 +86,17 @@ function RaidGUIControlStepper:_create_stepper_controls()
 	}
 	self._stepper = self._object:stepper_simple(stepper_params)
 	self._description = self._object:text({
+		layer = nil,
+		x = nil,
+		color = nil,
+		font_size = nil,
+		font = nil,
+		y = 0,
 		vertical = "center",
 		align = "left",
-		y = 0,
+		text = nil,
+		h = nil,
+		w = nil,
 		x = RaidGUIControlStepper.SIDELINE_W + RaidGUIControlStepper.TEXT_PADDING,
 		w = self._object:w() - stepper_w - RaidGUIControlStepper.SIDELINE_W - RaidGUIControlStepper.TEXT_PADDING * 2,
 		h = self._object:h(),

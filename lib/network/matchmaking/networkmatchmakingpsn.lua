@@ -74,6 +74,7 @@ function NetworkMatchMakingPSN:_xmb_join_invite_cb(message)
 	end
 
 	managers.menu:show_invite_join_message({
+		ok_func = nil,
 		ok_func = ok_func
 	})
 end
@@ -156,6 +157,7 @@ function NetworkMatchMakingPSN:getting_world_list()
 	self._getting_world_list = true
 
 	managers.menu:show_get_world_list_dialog({
+		cancel_func = nil,
 		cancel_func = callback(self, self, "_getting_world_list_failed")
 	})
 end
@@ -909,6 +911,9 @@ end
 
 function NetworkMatchMakingPSN:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
+		comparision_type = nil,
+		key = nil,
+		value = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -933,10 +938,14 @@ function NetworkMatchMakingPSN:_filter_out_the_host(info)
 
 		if room_id ~= self._room_id then
 			table.insert(new_info.attribute_list, {
+				numbers = nil,
+				strings = nil,
 				numbers = numbers,
 				strings = strings
 			})
 			table.insert(new_info.room_list, {
+				owner_id = nil,
+				room_id = nil,
 				owner_id = owner_id,
 				room_id = room_id
 			})
@@ -1018,10 +1027,14 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 
 						if not full and not closed and attributes.numbers[self.GAME_VERSION] == self:_game_version() then
 							table.insert(info.attribute_list, {
+								numbers = nil,
+								strings = nil,
 								numbers = numbers,
 								strings = strings
 							})
 							table.insert(info.room_list, {
+								owner_id = nil,
+								room_id = nil,
 								owner_id = owner_id,
 								room_id = room_id
 							})
@@ -1037,6 +1050,7 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 				PSN:set_matchmaking_callback("fetch_session_attributes", f2)
 
 				local wanted_attributes = {
+					numbers = nil,
 					numbers = {
 						1,
 						2,
@@ -1068,6 +1082,8 @@ end
 function NetworkMatchMakingPSN:search_lobby(friends_only)
 	self._search_friends_only = friends_only
 	local table_description = {
+		numbers = nil,
+		strings = nil,
 		numbers = {
 			1,
 			2,
@@ -1084,6 +1100,7 @@ function NetworkMatchMakingPSN:search_lobby(friends_only)
 		}
 	}
 	local filter = {
+		numbers = nil,
 		full = false,
 		numbers = {
 			{
@@ -1327,6 +1344,8 @@ function NetworkMatchMakingPSN:_set_attributes(settings)
 		S2
 	}
 	local attributes = {
+		numbers = nil,
+		strings = nil,
 		numbers = numbers,
 		strings = strings
 	}
@@ -1383,6 +1402,7 @@ function NetworkMatchMakingPSN:set_server_attributes(settings)
 	self._attributes_numbers[self.PROGRESS] = settings.numbers[15]
 
 	self:_set_attributes({
+		numbers = nil,
 		numbers = self._attributes_numbers
 	})
 end
@@ -1396,6 +1416,7 @@ function NetworkMatchMakingPSN:set_server_state(state)
 	self._attributes_numbers[self.STATE_ID] = state_id
 
 	self:_set_attributes({
+		numbers = nil,
 		numbers = self._attributes_numbers
 	})
 end
@@ -1420,6 +1441,7 @@ end
 
 function NetworkMatchMakingPSN:test_search_session()
 	local search_params = {
+		numbers = nil,
 		numbers = {
 			1,
 			2,
@@ -1923,6 +1945,7 @@ function NetworkMatchMakingPSN:join_server_with_check(room_id, skip_permission_c
 	PSN:set_matchmaking_callback("fetch_session_attributes", f)
 
 	local wanted_attributes = {
+		numbers = nil,
 		numbers = {
 			1,
 			2,
@@ -1959,6 +1982,7 @@ function NetworkMatchMakingPSN:update_session_attributes(rooms, cb_func)
 	PSN:set_matchmaking_callback("fetch_session_attributes", callback(self, self, "_update_session_attributes_result"))
 
 	local wanted_attributes = {
+		numbers = nil,
 		numbers = {
 			1,
 			2,
@@ -1995,6 +2019,8 @@ function NetworkMatchMakingPSN:_update_session_attributes_result(results)
 			if not full and not closed and attributes.numbers[self.GAME_VERSION] == self:_game_version() then
 				table.insert(info.attribute_list, attributes)
 				table.insert(info.room_list, {
+					owner_id = nil,
+					room_id = nil,
 					owner_id = owner_id,
 					room_id = room_id
 				})
@@ -2120,6 +2146,7 @@ function NetworkMatchMakingPSN:_joined_game(res, level_index, difficulty_index, 
 		end
 
 		managers.network.voice_chat:set_drop_in({
+			room_id = nil,
 			room_id = managers.network.matchmake:room_id()
 		})
 
@@ -2238,6 +2265,7 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 
 		managers.network.voice_chat:open_session(self._room_id)
 		managers.menu:show_waiting_for_server_response({
+			cancel_func = nil,
 			cancel_func = function ()
 				managers.network.matchmake._retry_join_time = nil
 				managers.network.matchmake._retry_join_flag = false
@@ -2361,12 +2389,14 @@ function NetworkMatchMakingPSN:_error_message_solver(info)
 
 	local error_texts = {
 		["80550d19"] = "dialog_err_room_is_full",
-		["80550d13"] = "dialog_err_room_no_longer_exists",
-		["80550C3A"] = "dialog_err_failed_joining_lobby",
-		["80550d15"] = "dialog_err_room_no_longer_exists",
 		["80550D15"] = "dialog_err_failed_joining_lobby",
-		["80022328"] = "dialog_err_room_allready_joined",
+		["80550C3A"] = "dialog_err_failed_joining_lobby",
 		["80550c30"] = "dialog_err_room_no_longer_exists",
+		["8002231d"] = nil,
+		["80022328"] = "dialog_err_room_allready_joined",
+		["80550d13"] = "dialog_err_room_no_longer_exists",
+		["80550d15"] = "dialog_err_room_no_longer_exists",
+		["8002233a"] = nil,
 		["8002233a"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil,
 		["8002231d"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil
 	}
@@ -2420,8 +2450,14 @@ function NetworkMatchMakingPSN:send_join_invite(friend)
 	end
 
 	PSN:send_message_gui({
+		list_npid = nil,
 		type = "INVITE",
+		body = nil,
+		subject = nil,
+		attachment = nil,
 		attachment = {
+			version = nil,
+			room_id = nil,
 			version = self:_game_version(),
 			room_id = self._room_id
 		},
@@ -2441,6 +2477,7 @@ function NetworkMatchMakingPSN:_recived_join_invite(message)
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_groupinvite_title"),
 		text = managers.localization:text("dialog_mp_groupinvite_message", {
+			GROUP = nil,
 			GROUP = tostring(message.sender)
 		})
 	}

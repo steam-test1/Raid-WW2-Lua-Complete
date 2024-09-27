@@ -22,9 +22,9 @@ function CoreLogicChanceUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "chance", {
-		min = 0,
 		floats = 0,
-		max = 100
+		max = 100,
+		min = 0
 	}, "Specifies chance that this element will call its on executed elements (in percent)")
 end
 
@@ -65,8 +65,10 @@ function CoreLogicChanceOperatorUnitElement:draw_links(t, dt, selected_unit, all
 		if draw then
 			self:_draw_link({
 				g = 0.75,
-				b = 0.25,
 				r = 0.75,
+				to_unit = nil,
+				from_unit = nil,
+				b = 0.25,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -129,9 +131,9 @@ function CoreLogicChanceOperatorUnitElement:_build_panel(panel, panel_sizer)
 		"set_chance"
 	}, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "chance", {
-		min = 0,
 		floats = 0,
-		max = 100
+		max = 100,
+		min = 0
 	}, "Amount of chance to add, subtract or set to the logic chance elements.")
 	self:_add_help_text("This element can modify logic_chance element. Select logic chance elements to modify using insert and clicking on the elements.")
 end
@@ -163,8 +165,10 @@ function CoreLogicChanceTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 		if draw then
 			self:_draw_link({
 				g = 0.85,
-				b = 0.25,
 				r = 0.85,
+				to_unit = nil,
+				from_unit = nil,
+				b = 0.25,
 				from_unit = unit,
 				to_unit = self._unit
 			})

@@ -432,6 +432,7 @@ function NetworkVoiceChatXBL:set_muted(xuid, state)
 
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
 			status_type = "mute",
+			user_data = nil,
 			user_data = user_info
 		})
 	end
@@ -476,6 +477,7 @@ function NetworkVoiceChatXBL:voice_ui_update_callback(user_info)
 	if user_info and managers.network and managers.network:session() then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
 			status_type = "talk",
+			user_data = nil,
 			user_data = user_info
 		})
 	end

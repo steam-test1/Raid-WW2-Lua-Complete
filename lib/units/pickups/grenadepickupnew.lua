@@ -66,8 +66,12 @@ function GrenadePickupNew:delete_unit()
 	if Network:is_server() then
 		managers.drop_loot:despawn_item(self._unit)
 	end
+end
 
-	self._unit:set_slot(0)
+function GrenadePickupNew:despawn_item()
+	if Network:is_server() then
+		self._unit:set_slot(0)
+	end
 end
 
 function GrenadePickupNew:pickup(player_unit)
@@ -136,6 +140,7 @@ function GrenadePickupNew:_pickup(player_unit)
 			end
 
 			managers.network:session():send_to_peers_synched("sync_pickup_munitions_stack", self._unit, amount_taken)
+			player_unit:sound():play(self._pickup_event or "pickup_grenade")
 			self:consume(amount_taken)
 
 			return true

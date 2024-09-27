@@ -3,28 +3,28 @@ AchievementTweakData = AchievementTweakData or class()
 function AchievementTweakData:init(tweak_data)
 	self.levels = {
 		{
-			achievement = "ach_reach_level_2",
-			level = 2
+			level = 2,
+			achievement = "ach_reach_level_2"
 		},
 		{
-			achievement = "ach_reach_level_5",
-			level = 5
+			level = 5,
+			achievement = "ach_reach_level_5"
 		},
 		{
-			achievement = "ach_reach_level_10",
-			level = 10
+			level = 10,
+			achievement = "ach_reach_level_10"
 		},
 		{
-			achievement = "ach_reach_level_20",
-			level = 20
+			level = 20,
+			achievement = "ach_reach_level_20"
 		},
 		{
-			achievement = "ach_reach_level_30",
-			level = 30
+			level = 30,
+			achievement = "ach_reach_level_30"
 		},
 		{
-			achievement = "ach_reach_level_40",
-			level = 40
+			level = 40,
+			achievement = "ach_reach_level_40"
 		}
 	}
 end

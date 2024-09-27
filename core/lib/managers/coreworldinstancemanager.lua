@@ -276,6 +276,8 @@ function CoreWorldInstanceManager:packages_by_instance(instance)
 	local init_package = folder .. "/" .. "world_init"
 
 	return {
+		init_package = nil,
+		package = nil,
 		package = package,
 		init_package = init_package
 	}
@@ -698,6 +700,7 @@ end
 
 function CoreWorldInstanceManager:sync_save(data)
 	data.CoreWorldInstanceManager = {
+		instance_params = nil,
 		instance_params = self._instance_params
 	}
 end

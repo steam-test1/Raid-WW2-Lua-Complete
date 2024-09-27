@@ -33,8 +33,10 @@ function CoreRandomUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0.85,
+				to_unit = nil,
+				from_unit = nil,
 				b = 0.25,
+				g = 0.85,
 				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
@@ -93,6 +95,10 @@ function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_add_remove_static_unit_from_list(panel, panel_sizer, {
+		remove_result = nil,
+		remove_filter = nil,
+		add_result = nil,
+		add_filter = nil,
 		single = true,
 		add_filter = callback(self, self, "_add_counter_filter"),
 		add_result = callback(self, self, "_set_counter_id"),

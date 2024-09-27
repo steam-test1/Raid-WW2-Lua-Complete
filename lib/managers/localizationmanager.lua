@@ -147,6 +147,7 @@ function LocalizationManager:debug_file(file)
 	for i, ids in ipairs(ids_in_file) do
 		local s = ids:s()
 		local text = self:text(s, {
+			BTN_INTERACT = nil,
 			BTN_INTERACT = self:btn_macro("interact")
 		})
 		t[s] = text

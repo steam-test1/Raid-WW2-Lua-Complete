@@ -162,6 +162,15 @@ end
 function VehicleDrivingExt:_setup_states()
 	local unit = self._unit
 	self._states = {
+		blocked = nil,
+		frozen = nil,
+		secured = nil,
+		locked = nil,
+		broken = nil,
+		driving = nil,
+		parked = nil,
+		inactive = nil,
+		invalid = nil,
 		broken = VehicleStateBroken:new(unit),
 		driving = VehicleStateDriving:new(unit),
 		inactive = VehicleStateInactive:new(unit),
@@ -183,6 +192,10 @@ function VehicleDrivingExt:set_tweak_data(data)
 	self._seats = deep_clone(self._tweak_data.seats)
 	self._loot_points = deep_clone(self._tweak_data.loot_points)
 	self._secure_loot = self._tweak_data.secure_loot
+
+	if self._secure_loot then
+		self:enable_securing_loot()
+	end
 
 	for _, seat in pairs(self._seats) do
 		seat.occupant = nil
@@ -308,7 +321,9 @@ function VehicleDrivingExt:_create_position_reservation()
 
 	if self._pos_reservation_id then
 		self._pos_reservation = {
+			filter = nil,
 			radius = 500,
+			position = nil,
 			position = self._unit:position(),
 			filter = self._pos_reservation_id
 		}
@@ -461,6 +476,8 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	end
 
 	table.insert(self._loot, {
+		multiplier = nil,
+		carry_id = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -479,11 +496,10 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 		self._unit:damage():run_sequence_simple("action_add_bag")
 	end
 
-	if self._secure_loot then
-		Application:trace("[VehicleDrivingExt:add_loot] secure the loot", carry_id, multiplier)
-
+	if self:is_securing_loot_enabled() then
 		local silent = self._secure_loot == "secure_silent"
 
+		Application:trace("[VehicleDrivingExt:add_loot] secure the loot", carry_id, multiplier, silent)
 		managers.loot:secure(carry_id, multiplier, silent)
 	end
 end
@@ -494,6 +510,8 @@ function VehicleDrivingExt:sync_loot(carry_id, multiplier)
 	end
 
 	table.insert(self._loot, {
+		multiplier = nil,
+		carry_id = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -880,6 +898,32 @@ function VehicleDrivingExt:is_accepting_loot_enabled()
 	return self._accepting_loot_enabled
 end
 
+function VehicleDrivingExt:enable_securing_loot()
+	Application:trace("[VehicleDrivingExt][enable_securing_loot] Securing loot enabled")
+
+	if Network:is_server() then
+		managers.network:session():send_to_peers_synched("sync_vehicle_securing_loot", self._unit, true)
+	end
+
+	self._securing_loot_enabled = true
+	self._secure_loot = self._tweak_data.secure_loot or "secure"
+end
+
+function VehicleDrivingExt:disable_securing_loot()
+	Application:trace("[VehicleDrivingExt][disable_securing_loot] Securing loot disabled")
+
+	if Network:is_server() then
+		managers.network:session():send_to_peers_synched("sync_vehicle_securing_loot", self._unit, false)
+	end
+
+	self._securing_loot_enabled = false
+	self._secure_loot = false
+end
+
+function VehicleDrivingExt:is_securing_loot_enabled()
+	return self._securing_loot_enabled
+end
+
 function VehicleDrivingExt:enter_vehicle(player)
 	local seat = self:find_seat_for_player(player)
 
@@ -971,6 +1015,7 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 					local dialog = seat == self._seats.driver and "gen_vehicle_player_in_driver_position" or "gen_vehicle_player_in_passenger_position"
 
 					managers.dialog:queue_dialog(dialog, {
+						instigator = nil,
 						skip_idle_check = true,
 						instigator = player
 					})
@@ -993,7 +1038,8 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			skip_idle_check = true
+			skip_idle_check = true,
+			position = nil
 		})
 	end
 
@@ -1145,9 +1191,9 @@ function VehicleDrivingExt:evacuate_seat(seat)
 		-- Nothing
 	elseif Network:is_server() then
 		seat.occupant:movement():action_request({
-			sync = true,
 			body_part = 1,
-			type = "idle"
+			type = "idle",
+			sync = true
 		})
 	end
 
@@ -1164,6 +1210,8 @@ function VehicleDrivingExt:find_exit_position(player)
 	local seat = self:find_seat_for_player(player)
 	local exit_position = self._unit:get_object(Idstring(VehicleDrivingExt.EXIT_PREFIX .. seat.name))
 	local result = {
+		rotation = nil,
+		position = nil,
 		position = exit_position:position(),
 		rotation = exit_position:rotation()
 	}
@@ -1211,6 +1259,8 @@ function VehicleDrivingExt:find_exit_position(player)
 		end
 
 		result = {
+			rotation = nil,
+			position = nil,
 			position = exit_position:position(),
 			rotation = exit_position:rotation()
 		}
@@ -1370,9 +1420,9 @@ function VehicleDrivingExt:on_team_ai_enter(ai_unit)
 
 			if Network:is_server() then
 				ai_unit:movement():action_request({
-					sync = true,
 					body_part = 1,
-					type = "idle"
+					type = "idle",
+					sync = true
 				})
 			end
 
@@ -1442,6 +1492,7 @@ function VehicleDrivingExt:on_vehicle_death()
 
 	if occupant then
 		managers.dialog:queue_dialog("gen_vehicle_at_0_percent", {
+			instigator = nil,
 			skip_idle_check = true,
 			instigator = occupant
 		})
@@ -1632,6 +1683,7 @@ function VehicleDrivingExt:_detect_npc_collisions()
 
 			if occupant then
 				managers.dialog:queue_dialog("gen_vehicle_hits_enemy", {
+					instigator = nil,
 					skip_idle_check = true,
 					instigator = occupant
 				})
@@ -1640,6 +1692,7 @@ function VehicleDrivingExt:_detect_npc_collisions()
 			local damage_ext = unit:character_damage()
 			local attack_data = {
 				variant = "explosion",
+				damage = nil,
 				damage = damage_ext._HEALTH_INIT or 1000
 			}
 
@@ -1776,6 +1829,7 @@ function VehicleDrivingExt:_detect_invalid_possition(t, dt)
 
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_rough_ride", {
+				instigator = nil,
 				skip_idle_check = true,
 				instigator = occupant
 			})
@@ -1927,6 +1981,7 @@ function VehicleDrivingExt:_play_sound_events(t, dt)
 
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_rough_ride", {
+				instigator = nil,
 				skip_idle_check = true,
 				instigator = occupant
 			})
@@ -2109,9 +2164,17 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	end
 
 	local ride_objective = {
-		pose = "stand",
 		destroy_clbk_key = false,
+		rot = nil,
+		action = nil,
+		fail_clbk = nil,
+		area = nil,
+		nav_seg = nil,
+		pos = nil,
+		pose = "stand",
 		type = "act",
+		objective_type = nil,
+		haste = nil,
 		haste = haste,
 		nav_seg = align_nav_seg,
 		area = align_area,
@@ -2119,27 +2182,33 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		rot = align_rot,
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
-			align_sync = false,
-			needs_full_blend = true,
-			type = "act",
 			body_part = 1,
+			align_sync = false,
+			type = "act",
+			variant = nil,
+			needs_full_blend = true,
+			blocks = nil,
 			variant = team_ai_animation,
 			blocks = {
 				act = 1,
-				hurt = -1,
-				action = -1,
 				heavy_hurt = -1,
-				walk = -1
+				action = -1,
+				walk = -1,
+				hurt = -1
 			}
 		},
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING
 	}
 	local SO_descriptor = {
-		interval = 0,
-		base_chance = 1,
+		admin_clbk = nil,
 		AI_group = "friendlies",
-		chance_inc = 0,
 		usage_amount = 1,
+		verification_clbk = nil,
+		search_pos = nil,
+		interval = 0,
+		chance_inc = 0,
+		base_chance = 1,
+		objective = nil,
 		objective = ride_objective,
 		search_pos = ride_objective.pos,
 		verification_clbk = callback(self, self, "clbk_drive_SO_verification"),
@@ -2147,7 +2216,10 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	}
 	local SO_id = "ride_" .. tostring(self._unit:key()) .. seat.name
 	seat.drive_SO_data = {
+		ride_objective = nil,
 		SO_registered = true,
+		SO_id = nil,
+		align_area = nil,
 		SO_id = SO_id,
 		align_area = align_area,
 		ride_objective = ride_objective
@@ -2293,6 +2365,8 @@ function VehicleDrivingExt:on_impact(ray, gforce, velocity)
 	end
 
 	local attack_data = {
+		col_ray = nil,
+		damage = nil,
 		damage = damage_ammount,
 		col_ray = ray
 	}
@@ -2357,6 +2431,9 @@ end
 
 function VehicleDrivingExt:save(data)
 	data.vehicle_driving = {
+		sequence_applied = nil,
+		accepting_loot_enabled = nil,
+		loot_interaction_enabled = nil,
 		loot_interaction_enabled = self._loot_interaction_enabled,
 		accepting_loot_enabled = self._accepting_loot_enabled,
 		sequence_applied = self._skin_sequence

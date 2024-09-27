@@ -53,6 +53,7 @@ function CoroutineManager:_add()
 	for name, func in pairs(self._buffer) do
 		local thread = coroutine.create(func)
 		self._coroutines[name] = {
+			thread = nil,
 			thread = thread
 		}
 	end

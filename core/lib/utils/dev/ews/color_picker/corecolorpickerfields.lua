@@ -159,8 +159,8 @@ function ColorPickerFields:_create_hsv_fields(parent_frame)
 	local fields = {
 		"Hue",
 		{
-			wrap = true,
-			max = 359
+			max = 359,
+			wrap = true
 		},
 		"Sat",
 		{
@@ -220,10 +220,10 @@ function ColorPickerFields:_on_field_edited(edited_field, event)
 		"Blue"
 	}, edited_field_label) then
 		local rgb_values = self:_parse_values({
+			Red = 255,
 			Blue = 255,
 			Green = 255,
-			Alpha = 255,
-			Red = 255
+			Alpha = 255
 		})
 
 		if rgb_values then
@@ -235,10 +235,10 @@ function ColorPickerFields:_on_field_edited(edited_field, event)
 		"Value"
 	}, edited_field_label) then
 		local hsv_values = self:_parse_values({
+			Hue = 1,
 			Value = 100,
 			Sat = 100,
-			Alpha = 255,
-			Hue = 1
+			Alpha = 255
 		})
 
 		if hsv_values then
@@ -282,6 +282,13 @@ end
 function ColorPickerFields:_set_field_values_except(skipped_field_name, color)
 	hue, saturation, value = CoreMath.rgb_to_hsv(color.red, color.green, color.blue)
 	local field_values = {
+		Red = nil,
+		Hue = nil,
+		Alpha = nil,
+		Sat = nil,
+		Blue = nil,
+		Value = nil,
+		Green = nil,
 		Red = color.red * 255,
 		Green = color.green * 255,
 		Blue = color.blue * 255,

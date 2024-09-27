@@ -10,12 +10,14 @@ function SineSpline:init(position_table, nr_subseg, curviness, first_control_poi
 
 	if first_control_point then
 		self._control_points[1] = {
+			p2 = nil,
 			p2 = first_control_point
 		}
 	end
 
 	if last_control_point then
 		self._control_points[#position_table] = {
+			p1 = nil,
 			p1 = last_control_point
 		}
 	end

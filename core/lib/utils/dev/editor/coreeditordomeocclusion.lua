@@ -9,6 +9,9 @@ function CoreEditor:init_create_dome_occlusion(shape, res)
 
 	local saved_environment = managers.viewport:default_environment()
 	local params = {
+		saved_environment = nil,
+		shape = nil,
+		res = nil,
 		res = res,
 		shape = shape,
 		saved_environment = saved_environment
@@ -42,8 +45,8 @@ function CoreEditor:_create_dome_occlusion(params)
 	self._show_center = false
 
 	self:on_hide_helper_units({
-		vis = false,
-		ignore_max_per_frame = true
+		ignore_max_per_frame = true,
+		vis = false
 	})
 
 	self._saved_hidden_object = {}
@@ -184,8 +187,8 @@ function CoreEditor:dome_occlusion_done()
 	self._show_center = self._saved_show_center
 
 	self:on_hide_helper_units({
-		vis = true,
-		ignore_max_per_frame = false
+		ignore_max_per_frame = false,
+		vis = true
 	})
 
 	for _, obj in ipairs(self._saved_hidden_object) do

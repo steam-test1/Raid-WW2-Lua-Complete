@@ -77,10 +77,14 @@ end
 
 function CreateWorldSettingFile:_compile(path)
 	local t = {
+		target_db_root = nil,
+		platform = nil,
+		source_files = nil,
+		source_root = nil,
 		target_db_name = "all",
-		send_idstrings = false,
-		preprocessor_definitions = "preprocessor_definitions",
 		verbose = false,
+		preprocessor_definitions = "preprocessor_definitions",
+		send_idstrings = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
 		target_db_root = Application:base_path() .. "assets",

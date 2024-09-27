@@ -30,6 +30,8 @@ end
 
 function CircleGuiObject:set_current(current)
 	local triangles = self:_create_triangles({
+		current = nil,
+		total = nil,
 		current = current,
 		total = self._total
 	})
@@ -148,6 +150,10 @@ function CircleBitmapGuiObject:set_center(x, y)
 	if self._bg_circle then
 		self._bg_circle:set_center(x, y)
 	end
+end
+
+function CircleBitmapGuiObject:center()
+	return self._circle:center()
 end
 
 function CircleBitmapGuiObject:set_visible(visible)

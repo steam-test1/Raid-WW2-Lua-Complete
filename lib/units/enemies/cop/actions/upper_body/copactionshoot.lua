@@ -23,17 +23,19 @@ local bezier_curve = {
 }
 CopActionShoot = CopActionShoot or class()
 CopActionShoot._ik_presets = {
+	r_arm = nil,
+	spine = nil,
 	spine = {
-		update = "_update_ik_spine",
 		start = "_begin_ik_spine",
-		get_blend = "_get_blend_ik_spine",
-		stop = "_stop_ik_spine"
+		update = "_update_ik_spine",
+		stop = "_stop_ik_spine",
+		get_blend = "_get_blend_ik_spine"
 	},
 	r_arm = {
-		update = "_update_ik_r_arm",
 		start = "_begin_ik_r_arm",
-		get_blend = "_get_blend_ik_r_arm",
-		stop = "_stop_ik_r_arm"
+		update = "_update_ik_r_arm",
+		stop = "_stop_ik_r_arm",
+		get_blend = "_get_blend_ik_r_arm"
 	}
 }
 
@@ -164,7 +166,9 @@ function CopActionShoot:on_attention(attention, old_attention)
 		if vis_state and vis_state < 3 and self[self._ik_preset.get_blend](self) > 0 then
 			local t = TimerManager:game():time()
 			self._aim_transition = {
+				start_vec = nil,
 				duration = 0.333,
+				start_t = nil,
 				start_t = t + 0.0001,
 				start_vec = mvector3.copy(self._common_data.look_vec)
 			}
@@ -212,6 +216,10 @@ function CopActionShoot:on_attention(attention, old_attention)
 				shoot_hist.m_last_pos = mvector3.copy(target_pos)
 			else
 				shoot_hist = {
+					focus_start_t = nil,
+					focus_delay = nil,
+					m_last_pos = nil,
+					focus_error_roll = nil,
 					focus_error_roll = focus_error_roll,
 					focus_start_t = TimerManager:game():time(),
 					focus_delay = usage_tweak.focus_delay,
@@ -302,8 +310,9 @@ function CopActionShoot:update(t)
 				if fwd_dot_flat < 0.87 then
 					local spin = tar_vec_flat:to_polar_with_reference(fwd, math.UP).spin
 					local new_action_data = {
-						body_part = 2,
 						type = "turn",
+						angle = nil,
+						body_part = 2,
 						angle = spin
 					}
 
@@ -646,9 +655,9 @@ end
 
 function CopActionShoot:get_husk_interrupt_desc()
 	local old_action_desc = {
+		type = "shoot",
 		block_type = "action",
-		body_part = 3,
-		type = "shoot"
+		body_part = 3
 	}
 
 	return old_action_desc
@@ -941,13 +950,21 @@ function CopActionShoot:anim_clbk_melee_strike()
 	end
 
 	local action_data = {
+		damage = nil,
+		attacker_unit = nil,
+		col_ray = nil,
+		push_vel = nil,
+		melee_weapon = nil,
 		variant = "melee",
+		weapon_unit = nil,
 		damage = damage,
 		weapon_unit = self._weapon_unit,
 		attacker_unit = self._common_data.unit,
 		melee_weapon = melee_weapon,
 		push_vel = push_vel,
 		col_ray = {
+			position = nil,
+			ray = nil,
 			position = shoot_from_pos + fwd * 50,
 			ray = mvector3.copy(target_vec)
 		}
@@ -957,11 +974,16 @@ function CopActionShoot:anim_clbk_melee_strike()
 	if defense_data == "countered" then
 		self._common_data.melee_countered_t = TimerManager:game():time()
 		local action_data = {
-			damage_effect = 1,
 			damage = 0,
+			attacker_unit = nil,
+			attack_dir = nil,
+			col_ray = nil,
 			variant = "counter_spooc",
+			damage_effect = 1,
 			attacker_unit = self._strike_unit,
 			col_ray = {
+				position = nil,
+				body = nil,
 				body = self._unit:body("body"),
 				position = self._common_data.pos + math.UP * 100
 			},

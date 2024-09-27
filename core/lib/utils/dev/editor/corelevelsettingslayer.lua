@@ -43,9 +43,12 @@ end
 
 function LevelSettingsLayer:save(save_params)
 	local t = {
+		entry = nil,
+		data = nil,
 		single_data_block = true,
 		entry = self._save_name,
 		data = {
+			settings = nil,
 			settings = self._settings
 		}
 	}
@@ -79,13 +82,16 @@ end
 function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	local id = "simulation_level_id"
 	local params = {
-		default = "none",
+		sizer = nil,
+		sorted = true,
+		options = nil,
+		panel = nil,
 		name = "Simulation level id:",
-		value = "none",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select a level id to use when simulating the level.",
-		sorted = true,
+		value = "none",
+		default = "none",
 		panel = self._ews_panel,
 		sizer = sizer,
 		options = rawget(_G, "tweak_data").levels:get_level_index()
@@ -93,13 +99,17 @@ function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	local ctrlr = CoreEws.combobox(params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_data"), {
+		value = nil,
+		ctrlr = nil,
 		ctrlr = ctrlr,
 		value = id
 	})
 
 	self._settings_ctrlrs[id] = {
+		ctrlr = nil,
 		default = "none",
 		type = "combobox",
+		params = nil,
 		params = params,
 		ctrlr = ctrlr
 	}
@@ -108,13 +118,16 @@ end
 function LevelSettingsLayer:_add_simulation_mission_flag(sizer)
 	local id = "simulation_mission_flag"
 	local params = {
-		default = "none",
+		sizer = nil,
+		sorted = true,
+		options = nil,
+		panel = nil,
 		name = "Simulation mission flag:",
-		value = "none",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select a mission flag to use when simulating the level.",
-		sorted = true,
+		value = "none",
+		default = "none",
 		panel = self._ews_panel,
 		sizer = sizer,
 		options = rawget(_G, "tweak_data").operations:get_all_mission_flags()
@@ -122,13 +135,17 @@ function LevelSettingsLayer:_add_simulation_mission_flag(sizer)
 	local ctrlr = CoreEws.combobox(params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_data"), {
+		value = nil,
+		ctrlr = nil,
 		ctrlr = ctrlr,
 		value = id
 	})
 
 	self._settings_ctrlrs[id] = {
+		ctrlr = nil,
 		default = "none",
 		type = "combobox",
+		params = nil,
 		params = params,
 		ctrlr = ctrlr
 	}
@@ -141,6 +158,8 @@ function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 
 		ctrlr:set_value(false)
 		ctrlr:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "_set_data"), {
+			value = nil,
+			ctrlr = nil,
 			ctrlr = ctrlr,
 			value = id
 		})
@@ -149,6 +168,7 @@ function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 		self._settings_ctrlrs[id] = {
 			default = false,
 			type = "checkbox",
+			ctrlr = nil,
 			ctrlr = ctrlr
 		}
 	end
@@ -165,12 +185,16 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 		"init"
 	}
 	local combobox_params = {
-		name = "Chunk Name",
+		sizer = nil,
+		sorted = false,
 		sizer_proportions = 1,
+		options = nil,
+		panel = nil,
+		name = "Chunk Name",
+		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select an option from the combobox",
-		sorted = false,
-		ctrlr_proportions = 2,
+		value = nil,
 		panel = panel,
 		sizer = horizontal_sizer,
 		options = options,
@@ -179,12 +203,17 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	local ctrlr = CoreEws.combobox(combobox_params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_data"), {
+		value = nil,
+		ctrlr = nil,
 		ctrlr = ctrlr,
 		value = id
 	})
 
 	self._settings_ctrlrs[id] = {
+		ctrlr = nil,
+		default = nil,
 		type = "combobox",
+		params = nil,
 		params = combobox_params,
 		ctrlr = ctrlr,
 		default = options[1]

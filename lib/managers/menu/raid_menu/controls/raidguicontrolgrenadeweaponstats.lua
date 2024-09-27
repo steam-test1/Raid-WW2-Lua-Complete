@@ -6,20 +6,28 @@ end
 
 function RaidGUIControlGrenadeWeaponStats:_set_default_values()
 	self._values = {
+		distance = nil,
+		damage = nil,
+		capacity = nil,
+		range = nil,
 		damage = {
 			value = "00-000",
+			text = nil,
 			text = self:translate("menu_weapons_stats_damage", true)
 		},
 		range = {
 			value = "000",
+			text = nil,
 			text = self:translate("menu_weapons_stats_grenade_diameter", true)
 		},
 		distance = {
 			value = "000",
+			text = nil,
 			text = self:translate("menu_weapons_stats_grenade_throw", true)
 		},
 		capacity = {
 			value = "0-00",
+			text = nil,
 			text = self:translate("menu_weapons_stats_grenade_capacity", true)
 		}
 	}
@@ -28,22 +36,30 @@ end
 function RaidGUIControlGrenadeWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
+			value = nil,
 			name = "damage",
+			text = nil,
 			text = self._values.damage.text,
 			value = self._values.damage.value
 		},
 		{
+			value = nil,
 			name = "range",
+			text = nil,
 			text = self._values.range.text,
 			value = self._values.range.value
 		},
 		{
+			value = nil,
 			name = "distance",
+			text = nil,
 			text = self._values.distance.text,
 			value = self._values.distance.value
 		},
 		{
+			value = nil,
 			name = "capacity",
+			text = nil,
 			text = self._values.capacity.text,
 			value = self._values.capacity.value
 		}

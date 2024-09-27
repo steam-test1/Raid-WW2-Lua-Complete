@@ -49,6 +49,12 @@ function RaidGUIControlListSeparated:_create_separator(parent_item)
 	local texture_right = "list_separator_right"
 	local texture_center = "list_separator_center"
 	local separator = self._object:three_cut_bitmap({
+		color = nil,
+		h = nil,
+		y = nil,
+		right = nil,
+		center = nil,
+		left = nil,
 		y = parent_item and parent_item:bottom(),
 		h = self._list_params.separator_height,
 		left = texture_left,

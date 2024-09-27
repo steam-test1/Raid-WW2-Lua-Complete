@@ -43,8 +43,10 @@ function EnableUnitUnitElement:update_selected()
 			self._units[id] = nil
 		else
 			local params = {
-				g = 1,
+				to_unit = nil,
+				from_unit = nil,
 				b = 0,
+				g = 1,
 				r = 0,
 				from_unit = self._unit,
 				to_unit = unit
@@ -79,8 +81,10 @@ function EnableUnitUnitElement:draw_links_unselected(...)
 
 	for id, unit in pairs(self._units) do
 		local params = {
-			g = 0.5,
+			to_unit = nil,
+			from_unit = nil,
 			b = 0,
+			g = 0.5,
 			r = 0,
 			from_unit = self._unit,
 			to_unit = unit
@@ -94,6 +98,7 @@ end
 function EnableUnitUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -106,6 +111,7 @@ end
 function EnableUnitUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})

@@ -81,6 +81,8 @@ function NetworkAccountXBL:_clbk_inventory_load(error, list)
 	local filtered_list = self:_verify_filter_cards(list)
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, {
+		error = nil,
+		list = nil,
 		error = error,
 		list = filtered_list
 	})
@@ -110,6 +112,7 @@ function NetworkAccountXBL:_verify_filter_cards(card_list)
 
 					local instance_id = cc_steamdata.instance_id or #filtered_list[cc_tweakdata.key_name].steam_instances
 					filtered_list[cc_tweakdata.key_name].steam_instances[tostring(instance_id)] = {
+						stack_amount = nil,
 						stack_amount = cc_steamdata.amount or 1
 					}
 				end

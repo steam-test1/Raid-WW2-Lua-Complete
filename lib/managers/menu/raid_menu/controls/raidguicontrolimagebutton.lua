@@ -9,6 +9,7 @@ function RaidGUIControlImageButton:init(parent, params)
 	end
 
 	self._data = {
+		value = nil,
 		value = params.value
 	}
 	self._pointer_type = "link"

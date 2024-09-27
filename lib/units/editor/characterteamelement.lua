@@ -30,9 +30,11 @@ function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0.75,
 				b = 0,
+				g = 0.75,
 				r = 0,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -42,8 +44,8 @@ end
 
 function CharacterTeamElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true)) then
@@ -85,6 +87,7 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 
 	use_instigator:set_value(self._hed.use_instigator)
 	use_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "use_instigator",
 		ctrlr = use_instigator
 	})
@@ -95,17 +98,22 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	ignore_disabled:set_tool_tip("Select if disabled spawn points should be ignored or not")
 	ignore_disabled:set_value(self._hed.ignore_disabled)
 	ignore_disabled:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "ignore_disabled",
 		ctrlr = ignore_disabled
 	})
 	panel_sizer:add(ignore_disabled, 0, 0, "EXPAND")
 
 	local team_params = {
+		panel = nil,
+		name_proportions = 1,
+		value = nil,
+		tooltip = "Select wanted team for the character.",
 		default = "",
 		name = "Team:",
 		ctrlr_proportions = 2,
-		name_proportions = 1,
-		tooltip = "Select wanted team for the character.",
+		options = nil,
+		sizer = nil,
 		sorted = true,
 		panel = panel,
 		sizer = panel_sizer,
@@ -115,10 +123,12 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	local team_combo_box = CoreEWS.combobox(team_params)
 
 	team_combo_box:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "team",
 		ctrlr = team_combo_box
 	})
 	team_combo_box:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "team",
 		ctrlr = team_combo_box
 	})

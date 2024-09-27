@@ -12,10 +12,12 @@ function CopInventory:init(unit)
 	self._align_places = {
 		right_hand = {
 			on_body = true,
+			obj3d_name = nil,
 			obj3d_name = Idstring("a_weapon_right_front")
 		},
 		back = {
 			on_body = true,
+			obj3d_name = nil,
 			obj3d_name = Idstring("Hips")
 		}
 	}

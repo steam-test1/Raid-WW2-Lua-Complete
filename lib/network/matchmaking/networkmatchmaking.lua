@@ -1,6 +1,6 @@
 NetworkMatchMaking = NetworkMatchMaking or class()
 NetworkMatchMaking.OPEN_SLOTS = 4
-NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_04"
+NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_05"
 NetworkMatchMaking.RETRY_CONNECT_COUNT = 15
 
 function NetworkMatchMaking:init()
@@ -161,6 +161,8 @@ function NetworkMatchMaking:get_friends_lobbies()
 
 		if num_updated_lobbies >= #lobbies then
 			local info = {
+				attribute_list = nil,
+				room_list = nil,
 				room_list = {},
 				attribute_list = {}
 			}
@@ -171,11 +173,15 @@ function NetworkMatchMaking:get_friends_lobbies()
 
 					if ikey ~= "value_missing" and ikey ~= "value_pending" then
 						table.insert(info.room_list, {
+							room_id = nil,
+							owner_name = nil,
+							owner_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id()
 						})
 						table.insert(info.attribute_list, {
+							numbers = nil,
 							numbers = self:_lobby_to_numbers(lobby)
 						})
 					end
@@ -188,6 +194,8 @@ function NetworkMatchMaking:get_friends_lobbies()
 
 	if #lobbies == 0 then
 		local info = {
+			attribute_list = nil,
+			room_list = nil,
 			room_list = {},
 			attribute_list = {}
 		}
@@ -237,6 +245,9 @@ end
 
 function NetworkMatchMaking:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
+		value = nil,
+		key = nil,
+		comparision_type = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -272,6 +283,8 @@ function NetworkMatchMaking:search_lobby(friends_only)
 
 			local lobbies = self.browser:lobbies()
 			local info = {
+				attribute_list = nil,
+				room_list = nil,
 				room_list = {},
 				attribute_list = {}
 			}
@@ -280,11 +293,15 @@ function NetworkMatchMaking:search_lobby(friends_only)
 				for _, lobby in ipairs(lobbies) do
 					if self._difficulty_filter == 0 or self._difficulty_filter == tonumber(lobby:key_value("difficulty")) then
 						table.insert(info.room_list, {
+							room_id = nil,
+							owner_name = nil,
+							owner_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id()
 						})
 						table.insert(info.attribute_list, {
+							numbers = nil,
 							numbers = self:_lobby_to_numbers(lobby)
 						})
 					end
@@ -472,6 +489,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 			managers.network._restart_in_camp = true
 
 			managers.menu:show_waiting_for_server_response({
+				cancel_func = nil,
 				cancel_func = function ()
 					managers.network:session():on_join_request_cancelled()
 					managers.network:queue_stop_network()
@@ -601,10 +619,13 @@ function NetworkMatchMaking:create_lobby(settings)
 
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
+				title = nil,
+				text = nil,
 				title = title,
 				text = managers.localization:text("dialog_err_failed_creating_lobby"),
 				button_list = {
 					{
+						text = nil,
 						text = managers.localization:text("dialog_ok")
 					}
 				}
@@ -674,6 +695,20 @@ function NetworkMatchMaking:set_attributes(settings)
 	}
 	local level_index, job_index = self:_split_attribute_number(settings.numbers[1], 1000)
 	local lobby_attributes = {
+		job_class_max = nil,
+		job_class_min = nil,
+		kick_option = nil,
+		min_level = nil,
+		drop_in = nil,
+		state = nil,
+		permission = nil,
+		level = nil,
+		difficulty = nil,
+		num_players = nil,
+		owner_name = nil,
+		owner_id = nil,
+		job_id = nil,
+		job_plan = nil,
 		owner_name = managers.network.account:username_id(),
 		owner_id = managers.network.account:player_id(),
 		level = level_index,

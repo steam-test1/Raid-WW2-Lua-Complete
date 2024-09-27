@@ -15,28 +15,28 @@ function RaidMenuOptionsControlsControllerMapping:_layout()
 	RaidMenuOptionsControlsControllerMapping.super._layout(self)
 
 	self._controller_image = self._root_panel:bitmap({
-		texture = "ui/main_menu/textures/controller",
+		x = 0,
 		name = "controller_image",
+		texture = "ui/main_menu/textures/controller",
 		h = 600,
-		y = 0,
 		w = 1200,
-		x = 0
+		y = 0
 	})
 
 	self._controller_image:set_center_x(self._root_panel:w() / 2)
 	self._controller_image:set_center_y(self._root_panel:h() / 2)
 
 	self._panel_on_foot = self._root_panel:panel({
-		y = 0,
-		name = "panel_on_foot",
 		x = 0,
-		visible = true
+		visible = true,
+		name = "panel_on_foot",
+		y = 0
 	})
 	self._panel_in_vehicle = self._root_panel:panel({
-		y = 0,
-		name = "panel_on_foot",
 		x = 0,
-		visible = false
+		visible = false,
+		name = "panel_on_foot",
+		y = 0
 	})
 
 	if IS_PS4 then
@@ -67,7 +67,10 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	end
 
 	self._controller_keybind_lean = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "lean",
+		font = nil,
 		text = self:translate("menu_controller_keybind_lean", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -76,11 +79,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_lean
 	})
 
 	self._controller_keybind_comm_wheel = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "communication_wheel",
+		font = nil,
 		text = self:translate("menu_controller_keybind_comm_wheel", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -89,11 +96,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.402,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_comm_wheel
 	})
 
 	self._controller_keybind_grenade = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "grenade",
+		font = nil,
 		text = self:translate("menu_controller_keybind_grenade", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -102,11 +113,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.482,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_grenade
 	})
 
 	self._controller_keybind_knife = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "knife",
+		font = nil,
 		text = self:translate("menu_controller_keybind_knife", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -115,11 +130,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.647,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_knife
 	})
 
 	self._controller_keybind_fire_mode = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "fire_mode",
+		font = nil,
 		text = self:translate("menu_controller_keybind_weap_fire_mode", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -128,11 +147,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.547,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_fire_mode
 	})
 
 	self._controller_keybind_move = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "move",
+		font = nil,
 		text = controller_bind_move_text,
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -141,24 +164,32 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.85,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_move
 	})
 
 	self._controller_keybind_melee_attack = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "melee_attack",
+		font = nil,
 		text = controller_bind_malee_text,
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "bottom",
 		coord_x = 0.6,
+		align = "bottom",
+		control = nil,
 		control = self._controller_keybind_melee_attack
 	})
 
 	self._controller_keybind_interact = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "interact",
+		font = nil,
 		text = self:translate("menu_controller_keybind_interact", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -167,11 +198,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_interact
 	})
 
 	self._controller_keybind_switch_weapons = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "switch_weapons",
+		font = nil,
 		text = self:translate("menu_controller_keybind_switch_weapons", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -180,11 +215,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.402,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_switch_weapons
 	})
 
 	self._controller_keybind_crouch = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "crouch",
+		font = nil,
 		text = self:translate("menu_controller_keybind_crouch", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -193,11 +232,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.482,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_crouch
 	})
 
 	self._controller_keybind_jump = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "jump",
+		font = nil,
 		text = self:translate("menu_controller_keybind_jump", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -206,11 +249,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.568,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_jump
 	})
 
 	self._controller_keybind_reload = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "reload",
+		font = nil,
 		text = self:translate("menu_controller_keybind_reload", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -219,58 +266,75 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.647,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_reload
 	})
 
 	self._controller_keybind_aim = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "aim_down_sight",
+		font = nil,
 		text = self:translate("menu_controller_keybind_aim_down_sight", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.182,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_aim
 	})
 
 	self._controller_keybind_mission_info = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "mission_info",
+		font = nil,
 		text = self:translate("menu_controller_keybind_mission_info", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.63,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_mission_info
 	})
 
 	self._controller_keybind_ingame_menu = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "ingame_menu",
+		font = nil,
 		text = self:translate("menu_controller_keybind_ingame_menu", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.445,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_ingame_menu
 	})
 
 	self._controller_keybind_fire_weapon = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "fire_weapon",
+		font = nil,
 		text = self:translate("menu_controller_keybind_fire_weapon", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.792,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_fire_weapon
 	})
 end
@@ -286,7 +350,10 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	end
 
 	self._controller_keybind_change_seat = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "change_seat",
+		font = nil,
 		text = self:translate("menu_controller_keybind_change_seat", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -295,11 +362,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_change_seat
 	})
 
 	self._controller_keybind_na2 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na2",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -308,11 +379,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.402,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_na2
 	})
 
 	self._controller_keybind_na3 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na3",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -321,11 +396,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.482,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_na3
 	})
 
 	self._controller_keybind_na5 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na5",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -334,11 +413,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.647,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_na5
 	})
 
 	self._controller_keybind_na4 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na4",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -347,11 +430,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.547,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_na4
 	})
 
 	self._controller_keybind_steering = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "move",
+		font = nil,
 		text = controller_bind_steering_text,
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -360,24 +447,32 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.85,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_steering
 	})
 
 	self._controller_keybind_look_back = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "look_back",
+		font = nil,
 		text = controller_bind_look_back_text,
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "bottom",
 		coord_x = 0.6,
+		align = "bottom",
+		control = nil,
 		control = self._controller_keybind_look_back
 	})
 
 	self._controller_keybind_exit_vehicle = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "exit_vehicle",
+		font = nil,
 		text = self:translate("menu_controller_keybind_exit_vehicle", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -386,11 +481,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_exit_vehicle
 	})
 
 	self._controller_keybind_na8 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na8",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -399,11 +498,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.402,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_na8
 	})
 
 	self._controller_keybind_switch_pose = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "switch_pose",
+		font = nil,
 		text = self:translate("menu_controller_keybind_switch_pose", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -412,11 +515,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.482,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_switch_pose
 	})
 
 	self._controller_keybind_handbrake = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "handbrake",
+		font = nil,
 		text = self:translate("menu_controller_keybind_handbrake", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -425,11 +532,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.568,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_handbrake
 	})
 
 	self._controller_keybind_na10 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na10",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -438,58 +549,75 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.647,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_na10
 	})
 
 	self._controller_keybind_reverse = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "reverse",
+		font = nil,
 		text = self:translate("menu_controller_keybind_reverse", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.215,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_reverse
 	})
 
 	self._controller_keybind_mission_info_vehicle = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "mission_info_vehicle",
+		font = nil,
 		text = self:translate("menu_controller_keybind_mission_info", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.63,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_mission_info_vehicle
 	})
 
 	self._controller_keybind_ingame_menu_vehicle = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "ingame_menu_vehicle",
+		font = nil,
 		text = self:translate("menu_controller_keybind_ingame_menu", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.445,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_ingame_menu_vehicle
 	})
 
 	self._controller_keybind_accelerate = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "accelerate",
+		font = nil,
 		text = self:translate("menu_controller_keybind_accelerate", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.786,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_accelerate
 	})
 end
@@ -505,7 +633,10 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	end
 
 	self._controller_keybind_aim = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "aim_down_sight",
+		font = nil,
 		text = self:translate("menu_controller_keybind_aim_down_sight", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -514,11 +645,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.13,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_aim
 	})
 
 	self._controller_keybind_lean = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "lean",
+		font = nil,
 		text = self:translate("menu_controller_keybind_lean", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -527,11 +662,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_lean
 	})
 
 	self._controller_keybind_move = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "move",
+		font = nil,
 		text = controller_bind_move_text,
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -540,11 +679,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.44,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_move
 	})
 
 	self._controller_keybind_comm_wheel = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "communication_wheel",
+		font = nil,
 		text = self:translate("menu_controller_keybind_comm_wheel", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -553,11 +696,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.57,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_comm_wheel
 	})
 
 	self._controller_keybind_grenade = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "grenade",
+		font = nil,
 		text = self:translate("menu_controller_keybind_grenade", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -566,11 +713,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.635,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_grenade
 	})
 
 	self._controller_keybind_fire_mode = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "fire_mode",
+		font = nil,
 		text = self:translate("menu_controller_keybind_weap_fire_mode", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -579,37 +730,49 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.83,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_fire_mode
 	})
 
 	self._controller_keybind_knife = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "knife",
+		font = nil,
 		text = self:translate("menu_controller_keybind_knife", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "bottom",
 		coord_x = 0.47,
+		align = "bottom",
+		control = nil,
 		control = self._controller_keybind_knife
 	})
 
 	self._controller_keybind_melee_attack = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "melee_attack",
+		font = nil,
 		text = controller_bind_malee_text,
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "bottom",
 		coord_x = 0.6,
+		align = "bottom",
+		control = nil,
 		control = self._controller_keybind_melee_attack
 	})
 
 	self._controller_keybind_fire_weapon = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "fire_weapon",
+		font = nil,
 		text = self:translate("menu_controller_keybind_fire_weapon", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -618,11 +781,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.13,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_fire_weapon
 	})
 
 	self._controller_keybind_interact = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "interact",
+		font = nil,
 		text = self:translate("menu_controller_keybind_interact", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -631,11 +798,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_interact
 	})
 
 	self._controller_keybind_switch_weapons = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "switch_weapons",
+		font = nil,
 		text = self:translate("menu_controller_keybind_switch_weapons", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -644,11 +815,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.36,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_switch_weapons
 	})
 
 	self._controller_keybind_crouch = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "crouch",
+		font = nil,
 		text = self:translate("menu_controller_keybind_crouch", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -657,11 +832,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.44,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_crouch
 	})
 
 	self._controller_keybind_jump = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "jump",
+		font = nil,
 		text = self:translate("menu_controller_keybind_jump", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -670,11 +849,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.52,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_jump
 	})
 
 	self._controller_keybind_reload = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "reload",
+		font = nil,
 		text = self:translate("menu_controller_keybind_reload", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -683,37 +866,49 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.59,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_reload
 	})
 
 	self._controller_keybind_mission_info = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "mission_info",
+		font = nil,
 		text = self:translate("menu_controller_keybind_mission_info", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.465,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_mission_info
 	})
 
 	self._controller_keybind_ingame_menu = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "ingame_menu",
+		font = nil,
 		text = self:translate("menu_controller_keybind_ingame_menu", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.56,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_ingame_menu
 	})
 
 	self._controller_keybind_warcry = self._panel_on_foot:label({
+		text = nil,
+		font_size = nil,
 		name = "warcry",
+		font = nil,
 		text = self:translate("menu_controller_keybind_warcry", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -738,7 +933,10 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	end
 
 	self._controller_keybind_reverse = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "reverse",
+		font = nil,
 		text = self:translate("menu_controller_keybind_reverse", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -747,11 +945,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.13,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_reverse
 	})
 
 	self._controller_keybind_change_seat = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "change_seat",
+		font = nil,
 		text = self:translate("menu_controller_keybind_change_seat", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -760,11 +962,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_change_seat
 	})
 
 	self._controller_keybind_steering = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "move",
+		font = nil,
 		text = controller_bind_steering_text,
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -773,11 +979,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.44,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_steering
 	})
 
 	self._controller_keybind_na2 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na2",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -786,11 +996,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.57,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_na2
 	})
 
 	self._controller_keybind_na3 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na3",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -799,11 +1013,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.635,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_na3
 	})
 
 	self._controller_keybind_na4 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na4",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -812,37 +1030,49 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.83,
 		align = "left",
+		control = nil,
 		control = self._controller_keybind_na4
 	})
 
 	self._controller_keybind_na5 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na5",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "bottom",
 		coord_x = 0.47,
+		align = "bottom",
+		control = nil,
 		control = self._controller_keybind_na5
 	})
 
 	self._controller_keybind_look_back = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "look_back",
+		font = nil,
 		text = controller_bind_look_back_text,
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "bottom",
 		coord_x = 0.6,
+		align = "bottom",
+		control = nil,
 		control = self._controller_keybind_look_back
 	})
 
 	self._controller_keybind_na7 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "accelerate",
+		font = nil,
 		text = self:translate("menu_controller_keybind_accelerate", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -851,11 +1081,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.13,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_na7
 	})
 
 	self._controller_keybind_exit_vehicle = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "exit_vehicle",
+		font = nil,
 		text = self:translate("menu_controller_keybind_exit_vehicle", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -864,11 +1098,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.25,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_exit_vehicle
 	})
 
 	self._controller_keybind_na8 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na8",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -877,11 +1115,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.36,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_na8
 	})
 
 	self._controller_keybind_switch_pose = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "switch_pose",
+		font = nil,
 		text = self:translate("menu_controller_keybind_switch_pose", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -890,11 +1132,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.44,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_switch_pose
 	})
 
 	self._controller_keybind_handbrake = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "handbrake",
+		font = nil,
 		text = self:translate("menu_controller_keybind_handbrake", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -903,11 +1149,15 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.52,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_handbrake
 	})
 
 	self._controller_keybind_na10 = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "na10",
+		font = nil,
 		text = self:translate("menu_controller_keybind_not_available", true),
 		font = self._label_font,
 		font_size = self._label_font_size
@@ -916,32 +1166,41 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	self:_set_position_size_controller_keybind_label({
 		coord_y = 0.59,
 		align = "right",
+		control = nil,
 		control = self._controller_keybind_na10
 	})
 
 	self._controller_keybind_mission_info_vehicle = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "mission_info_vehicle",
+		font = nil,
 		text = self:translate("menu_controller_keybind_mission_info", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.465,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_mission_info_vehicle
 	})
 
 	self._controller_keybind_ingame_menu_vehicle = self._panel_in_vehicle:label({
+		text = nil,
+		font_size = nil,
 		name = "ingame_menu_vehicle",
+		font = nil,
 		text = self:translate("menu_controller_keybind_ingame_menu", true),
 		font = self._label_font,
 		font_size = self._label_font_size
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "top",
 		coord_x = 0.56,
+		align = "top",
+		control = nil,
 		control = self._controller_keybind_ingame_menu_vehicle
 	})
 end
@@ -971,6 +1230,8 @@ end
 function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_on_foot()
 	local bindings = {
 		{
+			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_show_vehicle_mapping")
 		}
@@ -979,6 +1240,8 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_on_foot
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_options_controller_mapping_in_vehicle"
@@ -986,6 +1249,7 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_on_foot
 		keyboard = {
 			{
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -997,6 +1261,8 @@ end
 function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_in_vehicle()
 	local bindings = {
 		{
+			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_show_on_foot_mapping")
 		}
@@ -1005,6 +1271,8 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_in_vehi
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
+		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_options_controller_mapping_on_foot"
@@ -1012,6 +1280,7 @@ function RaidMenuOptionsControlsControllerMapping:bind_controller_inputs_in_vehi
 		keyboard = {
 			{
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

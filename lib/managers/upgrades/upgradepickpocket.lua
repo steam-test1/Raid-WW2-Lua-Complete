@@ -29,7 +29,7 @@ local UpgradePickpocket = {
 		local success = false
 		local steal_amount_ammo = self._ammo_steal and self._ammo_steal[1] or 1
 		steal_amount_ammo = (steal_amount_ammo - 1) * 10
-		local _, ammo_gained = managers.player:add_ammo_to_equipped_weapon(steal_amount_ammo)
+		local _, ammo_gained = local_player:inventory():add_ammo_to_equipped(steal_amount_ammo)
 		success = ammo_gained and ammo_gained > 0
 
 		if self._health_steal > 0 and not local_player:character_damage():dead() then

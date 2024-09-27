@@ -66,6 +66,10 @@ function MenuNodeBaseGui:create_text_button(params)
 	local font = params.font or self.small_font
 	local font_size = params.font_size or self.small_font_size
 	local button_panel = self.safe_rect_panel:panel({
+		x = nil,
+		visible = nil,
+		layer = nil,
+		y = nil,
 		x = left,
 		y = top,
 		layer = layer,
@@ -74,14 +78,19 @@ function MenuNodeBaseGui:create_text_button(params)
 	local gui_blur = button_panel:bitmap({
 		texture = "guis/textures/test_blur_df",
 		name = "button_blur",
-		render_template = "VertexColorTexturedBlur3D",
 		layer = -1,
+		visible = nil,
+		render_template = "VertexColorTexturedBlur3D",
 		visible = not hide_blur
 	})
 	local gui_text = button_panel:text({
-		name = "button_text",
-		blend_mode = "add",
+		text = nil,
+		font_size = nil,
+		font = nil,
 		layer = 0,
+		color = nil,
+		blend_mode = "add",
+		name = "button_text",
 		text = text,
 		font = font,
 		font_size = font_size,
@@ -120,7 +129,13 @@ function MenuNodeBaseGui:create_text_button(params)
 	end
 
 	table.insert(self._text_buttons, {
+		legend_text = nil,
+		params = nil,
+		text = nil,
+		blur = nil,
 		highlighted = false,
+		panel = nil,
+		clbk = nil,
 		panel = button_panel,
 		text = gui_text,
 		blur = gui_blur,
@@ -137,6 +152,7 @@ function MenuNodeBaseGui:create_gui_box(panel, params)
 	end
 
 	local box = BoxGuiObject:new(panel, params or {
+		sides = nil,
 		sides = {
 			1,
 			1,
@@ -257,12 +273,17 @@ function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio,
 	end
 
 	local texture_count = managers.menu_component:request_texture(texture_path, callback(self, self, "texture_done_clbk", {
+		keep_aspect_ratio = nil,
+		blend_mode = nil,
+		panel = nil,
 		panel = panel,
 		keep_aspect_ratio = keep_aspect_ratio,
 		blend_mode = blend_mode
 	}))
 
 	table.insert(self._requested_textures, {
+		texture = nil,
+		texture_count = nil,
 		texture_count = texture_count,
 		texture = texture_path
 	})
@@ -292,6 +313,9 @@ function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 	end
 
 	local image = panel:bitmap({
+		texture = nil,
+		blend_mode = nil,
+		name = nil,
 		name = name,
 		texture = texture_ids,
 		blend_mode = blend_mode

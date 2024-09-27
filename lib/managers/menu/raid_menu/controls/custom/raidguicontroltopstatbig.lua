@@ -51,11 +51,16 @@ end
 
 function RaidGUIControlTopStatBig:_create_stat_info()
 	local player_name_params = {
+		h = nil,
+		w = nil,
 		vertical = "center",
-		name = "player_name_label",
-		align = "center",
 		alpha = 0,
+		align = "center",
+		color = nil,
+		font_size = nil,
+		font = nil,
 		text = "PLAYER NAME",
+		name = "player_name_label",
 		layer = 1,
 		w = self._object:w(),
 		h = RaidGUIControlTopStatBig.PLAYER_NAME_H,
@@ -68,13 +73,18 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 	self._player_name_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.PLAYER_NAME_CENTER_Y_FROM_BOTTOM)
 
 	local stat_name_params = {
+		h = nil,
+		w = nil,
 		vertical = "center",
-		wrap = true,
-		align = "center",
-		name = "stat_name_label",
-		word_wrap = true,
-		text = "Most things done well",
 		alpha = 0,
+		align = "center",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		word_wrap = true,
+		wrap = true,
+		text = "Most things done well",
+		name = "stat_name_label",
 		layer = 3,
 		w = self._object:w(),
 		h = RaidGUIControlTopStatBig.STAT_NAME_H,
@@ -87,13 +97,18 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 	self._stat_name_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.STAT_NAME_CENTER_Y_FROM_BOTTOM)
 
 	local stat_value_params = {
+		h = nil,
+		w = nil,
 		vertical = "center",
-		wrap = true,
-		align = "center",
-		name = "stat_value_label",
-		word_wrap = true,
-		text = "1",
 		alpha = 0,
+		align = "center",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		word_wrap = true,
+		wrap = true,
+		text = "1",
+		name = "stat_value_label",
 		layer = 3,
 		w = self._object:w(),
 		h = RaidGUIControlTopStatBig.STAT_VALUE_H,
@@ -108,8 +123,10 @@ end
 
 function RaidGUIControlTopStatBig:_create_icon_background()
 	local icon_background_params = {
-		name = "icon_background",
+		texture = nil,
+		texture_rect = nil,
 		alpha = 0,
+		name = "icon_background",
 		texture = tweak_data.gui.icons[RaidGUIControlTopStatBig.ICON_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlTopStatBig.ICON_BACKGROUND].texture_rect
 	}
@@ -132,8 +149,10 @@ function RaidGUIControlTopStatBig:set_data(data)
 	self._stat_value_label:set_text(score)
 
 	local icon_params = {
-		name = "stat_icon",
+		texture = nil,
+		texture_rect = nil,
 		alpha = 0,
+		name = "stat_icon",
 		texture = tweak_data.gui.icons[data.icon].texture,
 		texture_rect = tweak_data.gui.icons[data.icon].texture_rect
 	}

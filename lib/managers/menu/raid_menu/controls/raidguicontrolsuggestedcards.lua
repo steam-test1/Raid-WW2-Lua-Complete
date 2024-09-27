@@ -17,7 +17,11 @@ end
 
 function RaidGUIControlSuggestedCards:layout()
 	self._suggested_cards_panel = self._panel:panel({
+		x = nil,
+		w = nil,
 		name = "suggested_cards_panel",
+		h = nil,
+		y = nil,
 		x = self._params.x,
 		y = self._params.y,
 		w = self._params.w,
@@ -51,11 +55,17 @@ function RaidGUIControlSuggestedCards:_create_items()
 		end
 
 		self._label_peer_name = self._suggested_cards_panel:label({
+			x = nil,
+			font = nil,
 			name = "label_peer_name",
+			font_size = nil,
+			text = nil,
 			h = 30,
 			wrap = true,
-			align = "center",
+			w = nil,
 			vertical = "center",
+			align = "center",
+			y = nil,
 			x = item_params.x,
 			y = self._suggested_cards_panel:h() - 30,
 			w = self._item_width,

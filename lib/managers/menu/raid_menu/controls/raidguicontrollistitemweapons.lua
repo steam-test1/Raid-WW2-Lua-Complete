@@ -19,7 +19,14 @@ function RaidGUIControlListItemWeapons:init(parent, params, data)
 
 		local text_rect = ico_weapon.texture_rect
 		local weapon_icon_object = self._object:image({
+			color = nil,
+			w = nil,
+			h = nil,
+			y = nil,
+			x = nil,
+			texture_rect = nil,
 			name = "weapon_icon",
+			texture = nil,
 			x = RaidGUIControlListItemWeapons.TEXT_X_OFFSET / 2 - text_rect[3] / 2,
 			y = self._object:h() / 2 - text_rect[4] / 2,
 			w = text_rect[3],

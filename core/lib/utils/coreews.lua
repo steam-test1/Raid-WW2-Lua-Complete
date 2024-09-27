@@ -168,6 +168,7 @@ function EwsTextDialog:init(name, init_text)
 
 	button_sizer:add(ok_btn, 0, 0, "EXPAND")
 	ok_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "close"), {
+		dialog = nil,
 		cancel = false,
 		dialog = self._dialog
 	})
@@ -176,6 +177,7 @@ function EwsTextDialog:init(name, init_text)
 
 	button_sizer:add(cancel_btn, 0, 0, "EXPAND")
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "close"), {
+		dialog = nil,
 		cancel = true,
 		dialog = self._dialog
 	})
@@ -652,6 +654,7 @@ function combobox_and_list(params)
 
 	toolbar:add_tool("SELECT_NAME_LIST", "Select from list", image_path("world_editor\\unit_by_name_list.png"), nil)
 	toolbar:connect("SELECT_NAME_LIST", "EVT_COMMAND_MENU_SELECTED", callback(nil, _G, "_on_gui_value_combobox_toolbar_select_dialog"), {
+		combobox_params = nil,
 		combobox_params = params
 	})
 	toolbar:realize()

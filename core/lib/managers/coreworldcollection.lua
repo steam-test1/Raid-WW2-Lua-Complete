@@ -62,6 +62,8 @@ end
 
 function CoreWorldCollection:register_world_spawn(world_id, editor_name, spawn_loot)
 	self._world_spawns[world_id] = {
+		editor_name = nil,
+		plant_loot = nil,
 		active = true,
 		editor_name = editor_name,
 		plant_loot = spawn_loot
@@ -232,7 +234,12 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	Application:debug("[CoreWorldCollection:prepare_world()] world_id:", world_id, spawn_counter)
 
 	local params = {
+		world_dir = nil,
+		excluded_continents = nil,
+		file_path = nil,
+		world_id = nil,
 		file_type = "world",
+		translation = nil,
 		file_path = file_path,
 		world_dir = world_dir,
 		world_id = world_id,
@@ -260,6 +267,7 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	table.insert(self.queued_world_creation, world_id)
 
 	if definition.is_prepared then
+		Application:debug("[CoreWorldCollection:prepare_world] Stage Prepare", definition._world_id)
 		self:complete_world_loading_stage(definition._world_id, CoreWorldCollection.STAGE_PREPARE)
 	end
 
@@ -288,6 +296,9 @@ function CoreWorldCollection:create(index, nav_graph_loaded)
 
 	self._missions[index] = MissionManager:new()
 	self._mission_params[index] = {
+		file_path = nil,
+		worlddefinition = nil,
+		sync_id = nil,
 		file_path = self._mission_paths[index],
 		worlddefinition = definition,
 		sync_id = index
@@ -467,6 +478,8 @@ end
 
 function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
 	local params = {
+		world_id = nil,
+		stage = nil,
 		world_id = world_id,
 		stage = stage
 	}
@@ -686,6 +699,7 @@ function CoreWorldCollection:check_finished_destroy()
 				definition.queued_destroyed = true
 
 				managers.queued_tasks:queue(nil, self.finish_destroy, self, {
+					world_id = nil,
 					world_id = key
 				}, 0.8, nil)
 
@@ -893,6 +907,8 @@ function CoreWorldCollection:sync_save(data)
 	Application:debug("[CoreWorldCollection:sync_save]", inspect(self._synced_peers))
 
 	local state = {
+		missions = nil,
+		synced_units = nil,
 		missions = {},
 		synced_units = {}
 	}
@@ -910,6 +926,8 @@ function CoreWorldCollection:sync_save(data)
 
 	for world_id, world in pairs(self._world_definitions) do
 		table.insert(state.synced_units, {
+			world_id = nil,
+			units = nil,
 			world_id = world_id,
 			units = world._units_synced_on_dropin
 		})
@@ -1183,6 +1201,7 @@ function CoreWorldCollection:set_alarm_for_world(editor_name, alarm)
 
 	if not found then
 		self._world_spawns[editor_name] = {
+			alarm = nil,
 			alarm = alarm
 		}
 	end
@@ -1462,8 +1481,21 @@ function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	local job_id = job_data and job_data.job_id
 	local total_value = LootDropTweakData.TOTAL_DOGTAGS_DEFAULT
 
-	if job_data and job_data.dogtags_min and job_data.dogtags_max then
-		total_value = math.random(job_data.dogtags_min, job_data.dogtags_max)
+	if job_data and job_data.dogtags and job_data.dogtags.min and job_data.dogtags.max then
+		total_value = math.random(job_data.dogtags.min, job_data.dogtags.max)
+
+		if job_data.dogtags.diff_bonus then
+			local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+			local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+			local diff_value = job_data.dogtags.diff_bonus * (difficulty_index - 1)
+			total_value = total_value + diff_value
+
+			Application:info("[CoreWorldCollection:_plant_loot_on_spawned_levels] total dogtag value", total_value, "+difficulty value", diff_value, "- index", difficulty_index)
+		else
+			Application:info("[CoreWorldCollection:_plant_loot_on_spawned_levels] total dogtag value", total_value, "without difficulty values")
+		end
+	else
+		Application:warn("[CoreWorldCollection:_plant_loot_on_spawned_levels] Cant get a total dogtag value from job_id:", job_id)
 	end
 
 	if not self._world_spawns or self:count_world_spawns() == 0 then

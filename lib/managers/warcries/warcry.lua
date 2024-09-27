@@ -108,7 +108,11 @@ function Warcry:activate()
 
 	if self._tweak_data.activation_spawn_unit and alive(self._local_player) then
 		self._activation_spawned_unit = managers.game_play_central:spawn_warcry_unit({
+			level = nil,
 			world_id = 0,
+			rotation = nil,
+			position = nil,
+			name = nil,
 			name = self._tweak_data.activation_spawn_unit,
 			position = self._local_player:position(),
 			rotation = self._local_player:rotation(),
@@ -116,7 +120,9 @@ function Warcry:activate()
 		})
 	end
 
-	self._local_player:character_damage():set_health_effects_blocked(true)
+	if alive(self._local_player) then
+		self._local_player:character_damage():set_health_effects_blocked(true)
+	end
 end
 
 function Warcry:deactivate()
@@ -136,7 +142,9 @@ function Warcry:deactivate()
 		managers.warcry:set_warcry_post_effect(ids_empty)
 	end
 
-	self._local_player:character_damage():set_health_effects_blocked(false)
+	if alive(self._local_player) then
+		self._local_player:character_damage():set_health_effects_blocked(false)
+	end
 
 	if self._tweak_data.activation_spawn_unit and alive(self._activation_spawned_unit) then
 		if self._activation_spawned_unit:damage() then

@@ -17,6 +17,7 @@ function FadeToBlackElement:_build_panel(panel, panel_sizer)
 
 	state:set_value(self._hed.state)
 	state:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "state",
 		ctrlr = state
 	})

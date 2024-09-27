@@ -56,7 +56,10 @@ function RaidGUIControlLootBreakdownItem:_add_point(main_icon, duration)
 	local y_move = 160
 	local fade_out_distance = 40
 	local icon_params = {
+		texture_rect = nil,
 		name = "icon_clone",
+		layer = nil,
+		texture = nil,
 		texture = tweak_data.gui.icons[self._params.icon].texture,
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect,
 		layer = self._icon:layer() + 1
@@ -85,6 +88,7 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_panel()
 	local panel_params = {
+		w = nil,
 		name = "loot_breakdown_item",
 		alpha = 0,
 		w = RaidGUIControlLootBreakdownItem.W
@@ -94,7 +98,9 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_icon()
 	local icon_params = {
+		texture_rect = nil,
 		name = "loot_item_icon",
+		texture = nil,
 		texture = tweak_data.gui.icons[self._params.icon].texture,
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect
 	}
@@ -105,6 +111,7 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_text_panel()
 	local text_panel_params = {
+		h = nil,
 		name = "text_panel",
 		h = RaidGUIControlLootBreakdownItem.TEXT_PANEL_H
 	}
@@ -115,12 +122,16 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_counter()
 	local counter_params = {
-		vertical = "center",
+		h = nil,
 		name = "counter",
-		align = "center",
 		text = "",
+		vertical = "center",
+		align = "center",
 		halign = "scale",
 		valign = "top",
+		color = nil,
+		font_size = nil,
+		font = nil,
 		h = RaidGUIControlLootBreakdownItem.COUNTER_H,
 		font = RaidGUIControlLootBreakdownItem.FONT,
 		font_size = RaidGUIControlLootBreakdownItem.COUNTER_FONT_SIZE,
@@ -143,11 +154,17 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_title()
 	local title_params = {
+		y = nil,
+		h = nil,
 		name = "counter",
+		text = nil,
 		vertical = "center",
 		align = "center",
 		halign = "scale",
 		valign = "top",
+		color = nil,
+		font_size = nil,
+		font = nil,
 		y = self._counter:y() + self._counter:h(),
 		h = RaidGUIControlLootBreakdownItem.TITLE_H,
 		font = RaidGUIControlLootBreakdownItem.FONT,

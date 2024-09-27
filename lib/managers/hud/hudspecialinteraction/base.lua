@@ -29,6 +29,7 @@ function HUDSpecialInteraction:_create_panel(hud)
 	self._object = hud.panel:panel({
 		name = "special_interaction_panel",
 		visible = false,
+		layer = nil,
 		halign = "center",
 		valign = "center",
 		layer = HUDSpecialInteraction.PANEL_LAYER
@@ -40,8 +41,12 @@ function HUDSpecialInteraction:_create_background()
 	self._bg_panel = self._workspace:panel()
 	self._background = self._bg_panel:bitmap({
 		name = "special_interaction_background",
+		layer = nil,
 		valign = "center",
 		halign = "center",
+		alpha = nil,
+		texture_rext = nil,
+		texture = nil,
 		texture = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture,
 		texture_rext = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture_rext,
 		alpha = HUDSpecialInteraction.BACKGROUND_ALPHA,
@@ -53,10 +58,13 @@ end
 
 function HUDSpecialInteraction:_create_legend()
 	self._legend_interact_text = self._object:text({
-		text = "[F] LOCKPICK",
 		name = "legend_interact_text",
-		align = "center",
 		vertical = "center",
+		align = "center",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		text = "[F] LOCKPICK",
 		valign = "bottom",
 		font = HUDSpecialInteraction.LEGEND_FONT,
 		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
@@ -67,10 +75,13 @@ function HUDSpecialInteraction:_create_legend()
 	self._legend_interact_text:set_center_y(self._object:center_y())
 
 	self._legend_exit_text = self._object:text({
-		text = "[SPACE] CANCEL",
 		name = "legend_exit_text",
-		align = "center",
 		vertical = "center",
+		align = "center",
+		color = nil,
+		font_size = nil,
+		font = nil,
+		text = "[SPACE] CANCEL",
 		valign = "bottom",
 		font = HUDSpecialInteraction.LEGEND_FONT,
 		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
@@ -88,12 +99,14 @@ function HUDSpecialInteraction:show()
 	local interact_text_id = self._tweak_data.legend_interact_text_id or HUDSpecialInteraction.INTERACT_TEXT_ID
 
 	self._legend_interact_text:set_text(managers.localization:to_upper_text(interact_text_id, {
+		BTN_INTERACT = nil,
 		BTN_INTERACT = managers.localization:btn_macro("interact")
 	}))
 
 	local exit_text_id = self._tweak_data.legend_exit_text_id or HUDSpecialInteraction.EXIT_TEXT_ID
 
 	self._legend_exit_text:set_text(managers.localization:to_upper_text(exit_text_id, {
+		BTN_CANCEL = nil,
 		BTN_CANCEL = managers.localization:btn_macro("jump") or utf8.char(57344)
 	}))
 	self._object:stop()

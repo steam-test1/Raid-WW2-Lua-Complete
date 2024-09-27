@@ -76,6 +76,7 @@ function CoreWorldCameraTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self._sequences:set_value(self._hed.worldcamera_trigger_sequence)
 	self._sequences:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "worldcamera_trigger_sequence",
+		ctrlr = nil,
 		ctrlr = self._sequences
 	})
 	self._sequences:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_populate_after_clip"), nil)
@@ -92,6 +93,7 @@ function CoreWorldCameraTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self._after_clip:set_value(self._hed.worldcamera_trigger_after_clip)
 	self._after_clip:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "worldcamera_trigger_after_clip",
+		ctrlr = nil,
 		ctrlr = self._after_clip
 	})
 	after_clip_sizer:add(self._after_clip, 3, 0, "EXPAND")

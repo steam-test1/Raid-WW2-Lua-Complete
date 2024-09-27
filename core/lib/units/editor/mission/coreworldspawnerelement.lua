@@ -102,6 +102,8 @@ function CoreWorldEventUnitElement:_add_world_by_name(world_name)
 	local world = managers.worldcollection:world_names()[world_name].world
 	local events = self:_get_events(world)
 	local event_list_data = {
+		event = nil,
+		world_name = nil,
 		world_name = world_name,
 		event = events[1]
 	}
@@ -122,11 +124,15 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	h_sizer:add(world_name_ctrlr, 2, 1, "LEFT,ALIGN_CENTER_VERTICAL")
 
 	local events_params = {
+		panel = nil,
+		options = nil,
+		sizer = nil,
+		value = nil,
+		sorted = true,
+		sizer_proportions = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 0,
 		tooltip = "Select an event from the combobox",
-		sorted = true,
-		sizer_proportions = 2,
 		panel = panel,
 		sizer = h_sizer,
 		options = events,
@@ -139,6 +145,11 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	toolbar:connect("SELECT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "remove_entry"), event_list_data)
 	toolbar:realize()
 	table.insert(self._guis, {
+		world_name = nil,
+		event = nil,
+		name_ctrlr = nil,
+		world_name_ctrlr = nil,
+		toolbar = nil,
 		world_name_ctrlr = world_name_ctrlr,
 		world_name = world_name,
 		event = event,
@@ -265,10 +276,12 @@ function CoreWorldInputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "event",
 		ctrlr = event
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "event",
 		ctrlr = event
 	})
@@ -293,10 +306,12 @@ function CoreWorldOutputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "event",
 		ctrlr = event
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
+		ctrlr = nil,
 		value = "event",
 		ctrlr = event
 	})

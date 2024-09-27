@@ -1,7 +1,7 @@
 MenuBackdropGUI = MenuBackdropGUI or class()
 MenuBackdropGUI.BASE_RES = {
-	w = 1920,
-	h = 1080
+	h = 1080,
+	w = 1920
 }
 
 function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
@@ -14,10 +14,11 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 		self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
 		self._black_bg_ws:panel():rect({
-			valign = "scale",
 			name = "bg",
+			valign = "scale",
 			halign = "scale",
 			layer = -1000,
+			color = nil,
 			color = Color.black
 		})
 
@@ -31,47 +32,47 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 	debug_pause("ASDFASDFASFASFASDFASFSADFASFSAFSA")
 
 	self._panel = self._workspace:panel():panel({
-		valign = "grow",
 		name = "panel",
-		layer = 0,
-		halign = "grow"
+		valign = "grow",
+		halign = "grow",
+		layer = 0
 	})
 
 	self._panel:panel({
-		valign = "grow",
 		name = "base_layer",
-		layer = 0,
-		halign = "grow"
+		valign = "grow",
+		halign = "grow",
+		layer = 0
 	})
 	self._panel:panel({
-		valign = "grow",
 		name = "pattern_layer",
-		layer = 1,
-		halign = "grow"
+		valign = "grow",
+		halign = "grow",
+		layer = 1
 	})
 	self._panel:panel({
-		valign = "grow",
 		name = "item_background_layer",
-		layer = 2,
-		halign = "grow"
+		valign = "grow",
+		halign = "grow",
+		layer = 2
 	})
 	self._panel:panel({
-		valign = "grow",
 		name = "particles_layer",
-		layer = 3,
-		halign = "grow"
+		valign = "grow",
+		halign = "grow",
+		layer = 3
 	})
 	self._panel:panel({
-		valign = "grow",
 		name = "light_layer",
-		layer = 4,
-		halign = "grow"
+		valign = "grow",
+		halign = "grow",
+		layer = 4
 	})
 	self._panel:panel({
-		valign = "grow",
 		name = "item_foreground_layer",
-		layer = 5,
-		halign = "grow"
+		valign = "grow",
+		halign = "grow",
+		layer = 5
 	})
 	self:setup_saferect_shape()
 
@@ -89,6 +90,8 @@ function MenuBackdropGUI:setup_saferect_shape()
 	local safe_scaled_size = (self._gui_data_manager or managers.gui_data):safe_scaled_size()
 	local temp_saferect_panel = self._panel:panel({
 		name = "temp_saferect_panel",
+		h = nil,
+		w = nil,
 		w = safe_scaled_size.w,
 		h = safe_scaled_size.h
 	})
@@ -121,10 +124,11 @@ function MenuBackdropGUI:create_black_borders()
 	self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
 	self._black_bg_ws:panel():rect({
-		valign = "scale",
 		name = "bg",
+		valign = "scale",
 		halign = "scale",
 		layer = -1000,
+		color = nil,
 		color = Color.black
 	})
 end
@@ -194,6 +198,7 @@ function MenuBackdropGUI:_create_base_layer()
 	local bd_base_layer = self._panel:bitmap({
 		texture = "ui/loading_screens/loading_raid_ww2",
 		name = "bd_base_layer",
+		h = nil,
 		h = self._workspace:height()
 	})
 
@@ -214,8 +219,8 @@ function MenuBackdropGUI:enable_light(enabled)
 	self:_set_layers_of_layer(5, 1)
 
 	local bd_light = light_layer:bitmap({
-		texture = "guis/textures/pd2/menu_backdrop/bd_light",
-		name = "bd_light"
+		name = "bd_light",
+		texture = "guis/textures/pd2/menu_backdrop/bd_light"
 	})
 
 	bd_light:set_size(light_layer:size())
@@ -254,7 +259,9 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 	end
 
 	local object = bg_layer:bitmap({
+		texture = nil,
 		name = "object",
+		blend_mode = nil,
 		texture = bitmap_texture,
 		blend_mode = blend_mode
 	})
@@ -361,8 +368,10 @@ function MenuBackdropGUI:_create_particle()
 	local texture_rect_y = (math.random(self._column) - 1) * 32
 	local particle = particles_layer:bitmap({
 		alpha = 0,
+		texture_rect = nil,
 		h = 32,
 		w = 32,
+		texture = nil,
 		texture = self._bitmap_texture,
 		texture_rect = {
 			texture_rect_x,
@@ -440,6 +449,7 @@ end
 
 function MenuBackdropGUI:get_new_base_layer()
 	local new_layer = self._panel:child("base_layer"):panel({
+		layer = nil,
 		layer = self._layer_layers[1]
 	})
 
@@ -450,6 +460,7 @@ end
 
 function MenuBackdropGUI:get_new_background_layer()
 	local new_layer = self._panel:child("item_background_layer"):panel({
+		layer = nil,
 		layer = self._layer_layers[3]
 	})
 
@@ -460,6 +471,7 @@ end
 
 function MenuBackdropGUI:get_new_foreground_layer()
 	local new_layer = self._panel:child("item_foreground_layer"):panel({
+		layer = nil,
 		layer = self._layer_layers[3]
 	})
 

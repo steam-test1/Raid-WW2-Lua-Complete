@@ -41,6 +41,7 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	end
 
 	managers.statistics:shot_fired({
+		weapon_unit = nil,
 		hit = false,
 		weapon_unit = self._unit
 	})

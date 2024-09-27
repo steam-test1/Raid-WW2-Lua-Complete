@@ -27,8 +27,8 @@ end
 function EscortUnitElement:_raycast_get_type()
 	local unit_type, unit, id = nil
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -80,9 +80,10 @@ function EscortUnitElement:test_element()
 
 	test_unit:anim_data().panic = true
 	local action = {
+		variant = nil,
 		clamp_to_graph = true,
-		body_part = 1,
 		type = "act",
+		body_part = 1,
 		variant = self._hed.break_so
 	}
 
@@ -134,6 +135,8 @@ function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 	local visited = {}
 
 	table.insert(next_points_list, {
+		to = nil,
+		from = nil,
 		from = self._ud.unit_id,
 		to = self._hed.next_points
 	})
@@ -159,6 +162,8 @@ function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 				if not visited[next_point] then
 					table.insert(next_points_list, {
+						to = nil,
+						from = nil,
 						from = next_point,
 						to = unit:mission_element()._hed.next_points
 					})
@@ -175,8 +180,10 @@ function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 			for _, unit in ipairs(units) do
 				self:_draw_link({
-					g = 0.85,
+					to_unit = nil,
+					from_unit = nil,
 					b = 0,
+					g = 0.85,
 					r = 0,
 					from_unit = from_unit,
 					to_unit = unit
@@ -190,8 +197,10 @@ function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if unit == selected_unit or self._unit == selected_unit then
 			self:_draw_link({
-				g = 0.85,
+				to_unit = nil,
+				from_unit = nil,
 				b = 0.85,
+				g = 0.85,
 				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit

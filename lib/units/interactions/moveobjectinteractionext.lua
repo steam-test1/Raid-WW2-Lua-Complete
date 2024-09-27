@@ -16,6 +16,7 @@ function MoveObjectInteractionExt:interact(player)
 	MoveObjectInteractionExt.super.super.interact(self, player)
 	Application:trace("MoveObjectInteractionExt:interact: ", inspect(self._unit))
 	managers.player:set_player_state("move_object", {
+		moving_unit = nil,
 		moving_unit = self._unit
 	})
 end

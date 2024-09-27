@@ -10,6 +10,7 @@ end
 function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 	local right_align = node:_right_align()
 	row_item.gui_panel = node.item_panel:panel({
+		w = nil,
 		w = node.item_panel:w()
 	})
 	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
@@ -19,13 +20,21 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 
 	local choice_text_align = row_item.align == "left" and "right" or row_item.align == "right" and "left" or row_item.align
 	row_item.choice_panel = row_item.gui_panel:panel({
+		w = nil,
 		w = node.item_panel:w()
 	})
 	row_item.choice_text = row_item.choice_panel:text({
-		vertical = "center",
+		blend_mode = nil,
+		render_template = nil,
+		layer = nil,
 		align = "center",
+		color = nil,
+		font = nil,
+		vertical = "center",
 		y = 0,
 		x = 0,
+		font_size = nil,
+		text = nil,
 		font_size = row_item.font_size,
 		font = row_item.font,
 		color = node.row_item_hightlight_color,
@@ -39,9 +48,14 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 	local base = 20
 	local height = 15
 	row_item.arrow_left = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
+		visible = nil,
 		y = 0,
+		texture_rect = nil,
+		layer = nil,
+		texture = "guis/textures/menu_arrows",
+		color = nil,
 		x = 0,
+		blend_mode = nil,
 		texture_rect = {
 			0,
 			0,
@@ -54,9 +68,14 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 		blend_mode = node.row_item_blend_mode
 	})
 	row_item.arrow_right = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
+		visible = nil,
 		y = 0,
+		texture_rect = nil,
+		layer = nil,
+		texture = "guis/textures/menu_arrows",
+		color = nil,
 		x = 0,
+		blend_mode = nil,
 		texture_rect = {
 			24,
 			0,

@@ -4,12 +4,12 @@ DynamicResourceManager.STREAMING_PROFILE_INGAME = "ingame"
 DynamicResourceManager.STREAMING_PROFILE_LOADING = "loading"
 DynamicResourceManager.STREAMING_PROFILES = {
 	[DynamicResourceManager.STREAMING_PROFILE_INGAME] = {
-		sleep_time = 5,
-		chunk_size = 1048576
+		chunk_size = 1048576,
+		sleep_time = 5
 	},
 	[DynamicResourceManager.STREAMING_PROFILE_LOADING] = {
-		sleep_time = 1,
-		chunk_size = 5242880
+		chunk_size = 5242880,
+		sleep_time = 1
 	}
 }
 DynamicResourceManager.listener_events = {
@@ -19,6 +19,8 @@ DynamicResourceManager.listener_events = {
 function DynamicResourceManager:init()
 	if not Global.dyn_resource_manager_data then
 		Global.dyn_resource_manager_data = {
+			streaming_settings = nil,
+			dyn_resources = nil,
 			streaming_settings = self.STREAMING_PROFILES[self.STREAMING_PROFILE_INGAME],
 			dyn_resources = {}
 		}
@@ -124,7 +126,11 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 		end
 	else
 		entry = {
+			callbacks = nil,
 			ref_c = 1,
+			resource_name = nil,
+			resource_type = nil,
+			package_name = nil,
 			resource_type = resource_type,
 			resource_name = resource_name,
 			package_name = package_name,

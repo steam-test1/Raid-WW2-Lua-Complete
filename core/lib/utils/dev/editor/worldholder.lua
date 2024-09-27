@@ -52,6 +52,8 @@ function WorldHolder:init(params)
 			self:_error("World " .. file_path .. "." .. file_type .. " is old format! Will soon result in crash, please resave.")
 
 			local t = {
+				world_setting = nil,
+				world_dir = nil,
 				world_dir = self._world_dir,
 				world_setting = params.world_setting
 			}
@@ -242,6 +244,8 @@ function CoreOldWorldDefinition:init(params)
 	end
 
 	self._definitions.editor_groups = self._definitions.editor_groups or {
+		group_names = nil,
+		groups = nil,
 		groups = self._old_groups.groups,
 		group_names = self._old_groups.group_names
 	}
@@ -598,6 +602,9 @@ end
 function CoreOldWorldDefinition:create(layer, offset)
 	if self._level_file then
 		self:create_from_level_file({
+			layer = nil,
+			level_file = nil,
+			offset = nil,
 			layer = layer,
 			level_file = self._level_file,
 			offset = offset
@@ -644,6 +651,9 @@ function CoreOldWorldDefinition:_create_continent_level(layer, offset)
 					local level_file = Level:load(path)
 
 					self:create_from_level_file({
+						layer = nil,
+						level_file = nil,
+						offset = nil,
 						layer = layer,
 						level_file = level_file,
 						offset = offset
@@ -778,6 +788,8 @@ function CoreOldWorldDefinition:create_from_level_file(params)
 	if layer == "wires" or layer == "all" then
 		local t = self:create_level_units({
 			layer = "wires",
+			level_file = nil,
+			offset = nil,
 			offset = offset,
 			level_file = level_file
 		})
@@ -799,6 +811,8 @@ function CoreOldWorldDefinition:create_from_level_file(params)
 	if layer == "statics" or layer == "all" then
 		self:create_level_units({
 			layer = "statics",
+			level_file = nil,
+			offset = nil,
 			offset = offset,
 			level_file = level_file
 		})
@@ -807,6 +821,8 @@ function CoreOldWorldDefinition:create_from_level_file(params)
 	if layer == "dynamics" or layer == "all" then
 		self:create_level_units({
 			layer = "dynamics",
+			level_file = nil,
+			offset = nil,
 			offset = offset,
 			level_file = level_file
 		})
@@ -904,6 +920,9 @@ function CoreOldWorldDefinition:create_environment(data, offset)
 
 			if DB:has("effect", name) then
 				managers.portal:add_effect({
+					position = nil,
+					effect = nil,
+					rotation = nil,
 					effect = name,
 					position = effect.position,
 					rotation = effect.rotation
@@ -1169,12 +1188,16 @@ function CoreOldWorldDefinition:add_trigger_sequence(unit, triggers)
 			unit:damage():add_trigger_sequence(trigger.name, trigger.notify_unit_sequence, self._all_units[trigger.notify_unit_id], trigger.time, nil, nil, is_editor)
 		elseif self._trigger_units[trigger.notify_unit_id] then
 			table.insert(self._trigger_units[trigger.notify_unit_id], {
+				unit = nil,
+				trigger = nil,
 				unit = unit,
 				trigger = trigger
 			})
 		else
 			self._trigger_units[trigger.notify_unit_id] = {
 				{
+					unit = nil,
+					trigger = nil,
 					unit = unit,
 					trigger = trigger
 				}
@@ -1393,6 +1416,9 @@ function CoreEnvironment:parse_unit_effect(node)
 
 	local name = node:parameter("name")
 	local t = {
+		pos = nil,
+		name = nil,
+		rot = nil,
 		pos = pos,
 		rot = rot,
 		name = name
@@ -1442,6 +1468,9 @@ function CoreEnvironment:create(offset)
 
 			if DB:has("effect", name) then
 				managers.portal:add_effect({
+					position = nil,
+					effect = nil,
+					rotation = nil,
 					effect = name,
 					position = unit_effect.pos,
 					rotation = unit_effect.rot
@@ -1479,6 +1508,10 @@ function CorePortal:parse_portal_list(node)
 	local bottom = tonumber(node:parameter("bottom")) or 0
 	local draw_base = tonumber(node:parameter("draw_base")) or 0
 	self._portal_shapes[name] = {
+		draw_base = nil,
+		portal = nil,
+		bottom = nil,
+		top = nil,
 		portal = {},
 		top = top,
 		bottom = bottom,
@@ -1490,6 +1523,7 @@ function CorePortal:parse_portal_list(node)
 		local p = math.string_to_vector(o:parameter("pos"))
 
 		table.insert(portal, {
+			pos = nil,
 			pos = p
 		})
 	end
@@ -1791,6 +1825,15 @@ function Generic:parse_light(node)
 	end
 
 	table.insert(self._lights, {
+		enable = nil,
+		multiplier = nil,
+		angle_end = nil,
+		linear_attenuation_factor = nil,
+		name = nil,
+		angle_start = nil,
+		color = nil,
+		far_range = nil,
+		falloff_exponent = nil,
 		name = name,
 		far_range = far_range,
 		enable = enable,
@@ -1856,6 +1899,17 @@ function Generic:parse_editable_gui(node)
 	local alpha = tonumber(node:parameter("alpha"))
 	local shape = string.split(node:parameter("shape"), " ")
 	self._editable_gui = {
+		text = nil,
+		vertical = nil,
+		word_wrap = nil,
+		align = nil,
+		alpha = nil,
+		font_size = nil,
+		font_color = nil,
+		shape = nil,
+		wrap = nil,
+		render_template = nil,
+		blend_mode = nil,
 		text = text,
 		font_color = font_color,
 		font_size = font_size,

@@ -28,9 +28,11 @@ function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_
 
 		if draw then
 			self:_draw_link({
-				g = 0.25,
 				b = 0.25,
+				g = 0.25,
 				r = 0.75,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -43,9 +45,11 @@ function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_
 
 		if draw and alive(unit) and alive(self._unit) then
 			self:_draw_link({
-				g = 0.55,
 				b = 0.05,
+				g = 0.55,
 				r = 0.95,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -60,8 +64,9 @@ end
 
 function CoreMotionPathOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -77,6 +82,7 @@ end
 function CoreMotionPathOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -181,9 +187,11 @@ function CoreMotionPathTriggerUnitElement:draw_links(t, dt, selected_unit, all_u
 
 		if draw then
 			self:_draw_link({
-				g = 0.85,
 				b = 0.25,
+				g = 0.85,
 				r = 0.85,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -198,8 +206,9 @@ end
 
 function CoreMotionPathTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -211,6 +220,7 @@ end
 function CoreMotionPathTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 

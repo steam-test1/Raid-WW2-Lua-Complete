@@ -17,10 +17,14 @@ function ControllerWrapperPC:init(manager, id, name, controller, setup, debug, s
 	}
 
 	ControllerWrapperPC.super.init(self, manager, id, name, {
+		gamepads = nil,
+		mouse = nil,
+		keyboard = nil,
 		keyboard = Input:keyboard(),
 		mouse = Input:mouse(),
 		gamepads = gamepads
 	}, "keyboard", setup, debug, skip_virtual_controller, {
+		keyboard = nil,
 		keyboard = func_map
 	})
 end

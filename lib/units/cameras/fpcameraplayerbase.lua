@@ -36,10 +36,12 @@ function FPCameraPlayerBase:init(unit)
 	self._obj_eye = self._unit:orientation_object()
 	self._weap_align = self._unit:get_object(Idstring("right_weapon_align"))
 	self._camera_properties = {
-		pitch = 0.5,
-		spin = 0
+		spin = 0,
+		pitch = 0.5
 	}
 	self._output_data = {
+		rotation = nil,
+		position = nil,
 		position = unit:position(),
 		rotation = unit:rotation()
 	}
@@ -82,6 +84,8 @@ function FPCameraPlayerBase:init(unit)
 	self._camera_properties.current_tilt = 0
 	self._view_kick = {
 		velocity = 0,
+		direction = nil,
+		delta = nil,
 		direction = Vector3(),
 		delta = Vector3()
 	}
@@ -157,6 +161,9 @@ function FPCameraPlayerBase:check_flashlight_enabled()
 
 		if not self._light_effect then
 			self._light_effect = World:effect_manager():spawn({
+				rotation = nil,
+				position = nil,
+				effect = nil,
 				effect = tweak_data.common_effects.fps_flashlight,
 				position = self._unit:position(),
 				rotation = Rotation()
@@ -1620,6 +1627,8 @@ function FPCameraPlayerBase:set_limits(spin, pitch, mid_spin, mid_pitch)
 	if spin then
 		local mid = mid_spin or self._camera_properties.spin
 		self._limits.spin = {
+			mid = nil,
+			offset = nil,
 			mid = mid,
 			offset = spin
 		}
@@ -1628,6 +1637,8 @@ function FPCameraPlayerBase:set_limits(spin, pitch, mid_spin, mid_pitch)
 	if pitch then
 		local mid = mid_pitch or self._camera_properties.pitch
 		self._limits.pitch = {
+			mid = nil,
+			offset = nil,
 			mid = mid,
 			offset = pitch
 		}
@@ -1767,6 +1778,9 @@ function FPCameraPlayerBase:counter_taser()
 			local align_obj = self._unit:get_object(Idstring("a_weapon_right"))
 
 			World:effect_manager():spawn({
+				position = nil,
+				normal = nil,
+				effect = nil,
 				effect = tweak_data.common_effects.taser_stop,
 				position = align_obj:position(),
 				normal = align_obj:rotation():y()

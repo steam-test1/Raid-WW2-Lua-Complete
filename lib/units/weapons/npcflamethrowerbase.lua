@@ -26,6 +26,7 @@ function NPCFlamethrowerBase:fire_blank(direction, impact)
 	end
 
 	self._check_shooting_expired = {
+		check_t = nil,
 		check_t = Application:time() + 0.3
 	}
 
